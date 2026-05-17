@@ -1,0 +1,36 @@
+{
+  "id": "Policy_PostgresStateStoreEvaluation_P1",
+  "description": "Conditional evaluation policy for deciding whether Sanguo-RAG state should move from JSONL/manifest files to PostgreSQL.",
+  "decisionMode": "evaluate-only",
+  "recommendationThresholds": {
+    "runHistoryRowCount": 100000,
+    "reviewStateRowCount": 50000,
+    "incrementalStateFileCount": 250,
+    "averageResumeScanSeconds": 30.0,
+    "manifestFanoutCount": 80
+  },
+  "stateDomains": [
+    {
+      "name": "runHistory",
+      "description": "Detached run summaries, manifests, and progress history."
+    },
+    {
+      "name": "reviewState",
+      "description": "Pending review queues, human decisions, and campaign state."
+    },
+    {
+      "name": "incrementalState",
+      "description": "Resume fingerprints, vector ingestion state, and rolling dedupe manifests."
+    }
+  ],
+  "allowedRecommendations": [
+    "stay-jsonl-manifest",
+    "prepare-postgres-adapter",
+    "migrate-state-store"
+  ],
+  "postgresMigrationGuards": [
+    "no-runtime-schema-change-before-adapter",
+    "jsonl-export-remains-canonical-until-cutover",
+    "regression-harness-required-before-migration"
+  ]
+}

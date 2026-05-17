@@ -47,6 +47,7 @@ from sanguo_governance_loader import (
     load_npc_dialogue_runtime_cue_rules,
     load_npc_dialogue_runtime_service_policy,
     load_progress_runner_governance,
+    load_postgres_state_store_evaluation_policy,
     load_relationship_evidence_extraction_rules,
     load_relationship_runtime_canon_policy,
     load_relationship_type_refinement_rules,
@@ -60,6 +61,7 @@ from sanguo_governance_loader import (
     load_source_browser_vector_readiness_policy,
     load_source_event_packet_policy,
     load_stable_bootstrap_governance,
+    load_vector_ingestion_hardening_policy,
     read_governance_json,
     read_governance_jsonl,
     resolve_governance_root,
@@ -192,6 +194,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     runtime_batch_keyword_policy = load_runtime_batch_keyword_readiness_policy(root)
     convergence_loop_state_policy = load_convergence_loop_state_policy(root)
     governance_regression_harness_policy = load_governance_regression_harness_policy(root)
+    postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
+    vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
     relationship_evidence_extraction_rules = load_relationship_evidence_extraction_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
@@ -1352,6 +1356,30 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not harness_sensors or any(not item for item in harness_sensors):
         raise SanguoGovernanceError("policy-governance-regression-harness requiredSensorNames cannot be empty")
 
+    postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
+    if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
+        raise SanguoGovernanceError("policy-postgres-state-store-evaluation recommendationThresholds must be positive")
+    postgres_domains = postgres_state_policy.get("stateDomains") if isinstance(postgres_state_policy.get("stateDomains"), list) else []
+    if not postgres_domains:
+        raise SanguoGovernanceError("policy-postgres-state-store-evaluation stateDomains cannot be empty")
+    postgres_recommendations = [str(item).strip() for item in postgres_state_policy.get("allowedRecommendations") or []]
+    if sorted(postgres_recommendations) != sorted({"stay-jsonl-manifest", "prepare-postgres-adapter", "migrate-state-store"}):
+        raise SanguoGovernanceError("policy-postgres-state-store-evaluation allowedRecommendations must include all decision states")
+    vector_provider_policy = vector_ingestion_hardening_policy.get("providerPolicy") if isinstance(vector_ingestion_hardening_policy.get("providerPolicy"), dict) else {}
+    allowed_vector_providers = [str(item).strip() for item in vector_provider_policy.get("allowedProviders") or []]
+    if not allowed_vector_providers or any(not item for item in allowed_vector_providers):
+        raise SanguoGovernanceError("policy-vector-ingestion-hardening providerPolicy.allowedProviders cannot be empty")
+    vector_upsert_policy = vector_ingestion_hardening_policy.get("upsertPolicy") if isinstance(vector_ingestion_hardening_policy.get("upsertPolicy"), dict) else {}
+    if int(vector_upsert_policy.get("retryCount") or 0) < 0 or float(vector_upsert_policy.get("retryBackoffSeconds") or 0.0) < 0:
+        raise SanguoGovernanceError("policy-vector-ingestion-hardening retry settings cannot be negative")
+    vector_resume_policy = vector_ingestion_hardening_policy.get("resumePolicy") if isinstance(vector_ingestion_hardening_policy.get("resumePolicy"), dict) else {}
+    vector_state_keys = [str(item).strip() for item in vector_resume_policy.get("stateFileRequiredKeys") or []]
+    if not vector_state_keys or any(not item for item in vector_state_keys):
+        raise SanguoGovernanceError("policy-vector-ingestion-hardening resumePolicy.stateFileRequiredKeys cannot be empty")
+    vector_probe_policy = vector_ingestion_hardening_policy.get("probePolicy") if isinstance(vector_ingestion_hardening_policy.get("probePolicy"), dict) else {}
+    if int(vector_probe_policy.get("defaultTopK") or 0) <= 0:
+        raise SanguoGovernanceError("policy-vector-ingestion-hardening probePolicy.defaultTopK must be positive")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1502,6 +1530,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "convergenceStopReasonCount": len(allowed_stop_reasons),
         "governanceRegressionPhaseCount": len(harness_phases),
         "governanceRegressionSensorCount": len(harness_sensors),
+        "postgresStateThresholdCount": len(postgres_thresholds),
+        "postgresStateDomainCount": len(postgres_domains),
+        "vectorIngestionProviderCount": len(allowed_vector_providers),
+        "vectorIngestionStateKeyCount": len(vector_state_keys),
     }
 
 

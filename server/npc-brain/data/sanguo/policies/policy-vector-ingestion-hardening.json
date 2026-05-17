@@ -1,0 +1,41 @@
+{
+  "id": "Policy_VectorIngestionHardening_P1",
+  "description": "Production hardening governance for Sanguo vector export, upsert, query probe, dedupe, and resume behavior.",
+  "providerPolicy": {
+    "allowedProviders": [
+      "pinecone",
+      "qdrant"
+    ],
+    "defaultProviders": [
+      "pinecone",
+      "qdrant"
+    ]
+  },
+  "upsertPolicy": {
+    "defaultLimit": 20,
+    "maxSmokeLimit": 500,
+    "retryCount": 2,
+    "retryBackoffSeconds": 2.0,
+    "dedupeKeyFields": [
+      "namespace",
+      "id",
+      "sha256"
+    ]
+  },
+  "resumePolicy": {
+    "stateFileRequiredKeys": [
+      "inputFingerprint",
+      "fileCount",
+      "files",
+      "providers",
+      "updatedAt"
+    ],
+    "forceIngestionReasonRequired": false,
+    "manifestWriteMode": "atomic-json"
+  },
+  "probePolicy": {
+    "defaultTopK": 5,
+    "minRequiredMatchCount": 1,
+    "expectedRecordMustAppear": true
+  }
+}

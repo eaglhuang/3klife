@@ -16,6 +16,8 @@
     {"phase": 24, "name": "Source Browser / Vector Readiness Governance", "plan": "refactor-phase24-plan.zh-TW.md"},
     {"phase": 25, "name": "Runtime Profile Batch / Keyword Governance", "plan": "refactor-phase25-plan.zh-TW.md"},
     {"phase": 26, "name": "Convergence Loop State Governance", "plan": "refactor-phase26-plan.zh-TW.md"},
-    {"phase": 27, "name": "Governance Regression Harness", "plan": "refactor-phase27-plan.zh-TW.md"}
+    {"phase": 27, "name": "Governance Regression Harness", "plan": "refactor-phase27-plan.zh-TW.md"},
+    {"phase": 28, "name": "PostgreSQL State Store Evaluation", "plan": "refactor-phase28-plan.zh-TW.md"},
+    {"phase": 29, "name": "Production Vector Ingestion Hardening", "plan": "refactor-phase29-plan.zh-TW.md"}
   ]
 }

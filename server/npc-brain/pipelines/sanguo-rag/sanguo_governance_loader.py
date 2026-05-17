@@ -785,6 +785,34 @@ def load_governance_regression_harness_policy(
     return read_governance_json(path, required_id="Policy_GovernanceRegressionHarness_P1")
 
 
+def load_postgres_state_store_evaluation_policy(
+    root: str | Path | None = None,
+    *,
+    postgres_state_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(postgres_state_policy).resolve()
+        if postgres_state_policy
+        else _path(base, "policies", "policy-postgres-state-store-evaluation.json")
+    )
+    return read_governance_json(path, required_id="Policy_PostgresStateStoreEvaluation_P1")
+
+
+def load_vector_ingestion_hardening_policy(
+    root: str | Path | None = None,
+    *,
+    vector_ingestion_hardening_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(vector_ingestion_hardening_policy).resolve()
+        if vector_ingestion_hardening_policy
+        else _path(base, "policies", "policy-vector-ingestion-hardening.json")
+    )
+    return read_governance_json(path, required_id="Policy_VectorIngestionHardening_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "policies", "file": "policy-full-roster-scoreboard.json", "consumer": "build_full_roster_scoreboard.py"},
@@ -794,6 +822,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-runtime-batch-keyword-readiness.json", "consumer": "export_runtime_profiles_batch.py / build_keyword_options.py / build_api_readiness_index.py"},
         {"section": "policies", "file": "policy-convergence-loop-state.json", "consumer": "run_full_roster_convergence_loop.py / run_progress_advancement_loop.py"},
         {"section": "policies", "file": "policy-governance-regression-harness.json", "consumer": "run_sanguo_governance_regression_harness.py"},
+        {"section": "policies", "file": "policy-postgres-state-store-evaluation.json", "consumer": "evaluate_postgres_state_store_readiness.py"},
+        {"section": "policies", "file": "policy-vector-ingestion-hardening.json", "consumer": "run_vector_ingestion_gate.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-faction-timeline-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-event-location-seeds.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

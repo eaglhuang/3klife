@@ -10,7 +10,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from repo_layout import resolve_npc_brain_root, resolve_repo_root
-from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_source_browser_vector_readiness_policy
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    default_governance_root,
+    load_source_browser_vector_readiness_policy,
+    load_vector_ingestion_hardening_policy,
+)
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = Path(__file__).resolve().parent
@@ -54,6 +59,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--skip-readiness", action="store_true", help="skip build_api_readiness_index")
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
     parser.add_argument("--source-browser-vector-policy", default=None, help="Override policy-source-browser-vector-readiness.json path")
+    parser.add_argument("--vector-ingestion-hardening-policy", default=None, help="Override policy-vector-ingestion-hardening.json path")
     return parser.parse_args()
 
 
@@ -220,6 +226,10 @@ def main() -> None:
         load_source_browser_vector_readiness_policy(
             args.governance_root,
             source_browser_vector_policy=args.source_browser_vector_policy,
+        )
+        load_vector_ingestion_hardening_policy(
+            args.governance_root,
+            vector_ingestion_hardening_policy=args.vector_ingestion_hardening_policy,
         )
     except SanguoGovernanceError as exc:
         print(f"[run_vector_ingestion_gate] governance error: {exc}")
