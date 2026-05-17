@@ -14165,7 +14165,8 @@
 | `doc_other_0036` | docs/ai_atomic_framework/3klife-tooling-fate.md | 3KLife 既有治理工具命運表（Tooling Fate） |
 | `doc_other_0045` | docs/ai_atomic_framework/原子行為參考手冊.md | 原子行為參考手冊（Atom Behavior Reference） |
 | `doc_other_0044` | docs/ai_atomic_framework/關於進化版的原子提案.md | ATM 框架穩定性保護分析 + ATM-1 全卡檢核報告 |
-| `doc_other_0145` | docs/ai_atomic_framework/agent-pack-onboarding/ATM_agent_pack_onboarding計畫書.md | ATM Agent Pack / Onboarding 計畫書 |
+| `doc_other_0145` | docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md | ATM Agent Pack / Onboarding 計畫書 |
+| `doc_other_0146` | docs/ai_atomic_framework/agent-pack-onboarding/01_ATM_spec-kit融合計畫書.md | ATM × spec-kit 融合計畫（最終版） |
 | `doc_other_0031` | docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md | AI Atomic Framework 優化藍圖 v0.2 |
 | `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap |
 | `doc_other_0028` | docs/ai_atomic_framework/AI原子框架開發計畫書.md | AI 原子框架（ATM）開發計畫書 |

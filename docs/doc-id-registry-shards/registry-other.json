@@ -811,8 +811,14 @@
   },
   {
     "id": "doc_other_0145",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/ATM_agent_pack_onboarding計畫書.md",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md",
     "title": "ATM Agent Pack / Onboarding 計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0146",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/01_ATM_spec-kit融合計畫書.md",
+    "title": "ATM × spec-kit 融合計畫（最終版）",
     "category": "other"
   }
 ]

@@ -9,6 +9,19 @@ MRP 已把 ATM 升級為「大型功能正式替代表面」，但 agent 進到�
 
 本計畫不是外部靜態 prompt 框架翻版，也不是替代 ATM 既有的 `atm next --json` 動態路由。它在 ATM 既有 Agent Operating Layer 之上添加「入口注入 + 規則渲染 + 一鍵串接」三個薄層，所有產出仍以 `default-guards.json` / JSON Schema / atomic-spec 為唯一真相來源（Single Source of Truth, SSoT）。
 
+### 0.1 2026-05-17 裁決：本計畫升格為第二主計畫
+
+經與目前正在實作的 `ATM × spec-kit 融合計畫` 對齊後，本計畫不應被併成該融合計畫底下的一個普通 milestone，而應升格為第二份主計畫獨立推進。理由是 `ATM × spec-kit` 是「把 spec-kit 的配送與引導工程優點轉譯到 ATM」的消費者計畫；本計畫則是「任何使用者專案、任何 agent 進入 ATM 時都必須先接住的入口層」。後者是 ATM 開源框架的通用能力，不可綁定 spec-kit，也不可綁定 3KLife 或任何單一 host project。
+
+裁決後的關係如下：
+
+1. `ATM × spec-kit 融合計畫` 保留為第一主線：處理 AtomicCharter、Integration Adapter Layer、skill template compiler、script parity、spec-kit 概念轉譯與 framework-neutral governance。
+2. `ATM Agent Pack / Onboarding 計畫書` 升格為第二主線：處理使用者專案 first-touch、agent-native entry files、welcome、rule render、freshness verify、CI / hook enforcement recipe。
+3. 兩者不可互相取代：spec-kit 融合計畫不能把 onboarding 寫成 spec-kit-only；Onboarding 計畫也不能把 spec-kit 的流程 baked-in prompt。
+4. 交會點只允許發生在 `atm next --json`、AtomicCharter invariants、InstallManifest / sha256、evidence gate、CI / doctor 這些 ATM 自有契約上。
+
+「無法繞過 / 無法跳過」在開源框架中的正式定義也需校準：ATM 不能物理阻止一個擁有檔案系統權限的人惡意手改檔案，但 ATM 必須讓官方支援的 agent 路徑無法跳過入口，且任何跳過入口的結果都能被 `doctor`、pre-commit、CI、release gate 或 branch protection 偵測並阻擋。
+
 ## 1. ATM 目前已具備的基礎
 
 目前 ATM repo 已具備下列 Agent Operating Layer 骨架：
@@ -34,9 +47,16 @@ MRP 已把 ATM 升級為「大型功能正式替代表面」，但 agent 進到�
 
 `default-guards.json`、`atomic-map.schema.json`、`map-equivalence-report.schema.json` 等 machine-readable 契約是規則的唯一真相。`constitution.md`、`.claude/commands/atm-*.md`、`.cursor/rules/atm-*.md` 等都是「**渲染產物**」，必須由 CLI 從 SSoT 重新渲染，並透過 sha256 manifest 追蹤漂移。
 
-### 2.3 Agent Pack ≠ Adapter
+### 2.3 Agent Pack 是產品語言，Integration Adapter 是實作語言
 
-ATM 既有的 `packages/adapter-local-git/` 是 I/O / host integration 抽象；本計畫的 `packages/agent-pack-*/` 是 agent 視角的檔案注入與 prompt 包。兩者不同層、不可同名。命名一律 `packages/agent-pack-<id>/`，避免污染 adapter 語義。
+ATM 既有的 `packages/adapter-local-git/` 是 I/O / host integration 抽象；目前 AI-Atomic repo 已採納的 agent 入口實作語言則是 `packages/integrations-core/` + `packages/integration-<agent>/`。因此本計畫中的「Agent Pack / Onboarding」應定義為使用者可理解的產品層與流程層名稱，不再要求另建一套平行的 `packages/agent-pack-sdk/` 或 `packages/agent-pack-<id>/` 作為必要實作。
+
+實作裁決：
+
+1. 既有 `IntegrationAdapter` 是注入、verify、uninstall、manifest hash 的唯一底層契約。
+2. Agent Pack 是由一個或多個 `IntegrationAdapter`、Rule Render Pipeline、`atm welcome`、`create-atm` 組成的 onboarding bundle。
+3. 若未來 npm publish 需要 `@ai-atomic-framework/agent-pack-*` 名稱，也只能作為薄 wrapper 或 re-export，不可複製第二套 manifest / renderer / uninstall 邏輯。
+4. 文件、人類任務卡可使用 Agent Pack 語言；code package 與 validator 以 Integration Adapter Layer 為準，避免污染 adapter / pack 邊界。
 
 ### 2.4 三層發佈共存，不取代
 
@@ -257,6 +277,8 @@ Onboarding lifecycle 是 agent 接入 ATM 的階段標記，與 MRP 的 replacem
 
 ## 10. MVP 里程碑
 
+> **2026-05-17 里程碑重基準**：本節原始 M1–M8 保留作為概念拆解，但實作順序須改以目前 AI-Atomic repo 已落地的 `IntegrationAdapter` 為基礎。已完成的 `packages/integrations-core/` 與四大 `packages/integration-<agent>/` 不再回頭改名為 `agent-pack-*`。後續執行時，任務卡與 commit 應以 §18 的裁決與重排里程碑為準。
+
 依賴關係：M1 → M2 → M3 → M4 → M5 / M6 / M7 並行 → M8。其中 M3 / M5 / M7 可在 M4 完成後並行。
 
 ### Milestone 1：文件定稿（M1）
@@ -416,7 +438,7 @@ node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit 
 
 對應任務卡：TASK-APO-0000 / 0001
 
-- [x] 本計畫書（`docs/ai_atomic_framework/agent-pack-onboarding/ATM_agent_pack_onboarding計畫書.md`）存在且包含 §0–§17
+- [x] 本計畫書（`docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md`）存在且包含 §0–§18
 - [ ] 文件被 ATM `README.md` 與 `docs/ARCHITECTURE.md` 引用；ATM repo 端只保留英文公開說明（暫定 `docs/AGENT_PACK_ONBOARDING.md`）
 - [ ] 文件通過 UTF-8 編碼檢查（無 BOM、無 U+FFFD）
 - [ ] 目標 A、B 在 §14 有明確達成判斷
@@ -575,3 +597,80 @@ M6 啟動前必須確認開源拆出計畫已決定 `packages/cli/` 與 `package
 4. **企業版 Onboarding** —— 多專案、多 agent 共用同一份 constitution 的場景。
 
 以上應另開計畫書，不應併入本計畫主線。
+
+## 18. 與 ATM × spec-kit 融合計畫的整合裁決
+
+### 18.1 建議方案
+
+建議採用「雙主線、單權威」方案：`ATM × spec-kit 融合計畫` 與本計畫並列為兩份重要計畫書，但兩者共享同一組 ATM 權威來源。也就是說，spec-kit 融合計畫負責把外部好用的引導工程轉譯成 ATM 的框架語言；本計畫負責讓任何 agent 進到任何使用者專案時，自動被導到 ATM 的入口、規則與 gate。
+
+不建議把本計畫直接塞進 `ATM × spec-kit 融合計畫` 後段 milestone。若這樣做，Onboarding 很容易被誤讀成「spec-kit integration 的一部分」，進而破壞 ATM 作為開源框架的獨立性。更好的做法是：spec-kit 融合計畫只在自己的 M6 之後宣告「必須消費 Agent Pack / Onboarding 的能力」，但不擁有它。
+
+### 18.2 邊界劃分
+
+| 維度 | ATM × spec-kit 融合計畫 | 本計畫 |
+|---|---|---|
+| 定位 | 外部方法轉譯與 ATM governance 對齊 | 開源使用者 first-touch 與 agent entry enforcement |
+| 成功標準 | spec-kit 優點被 ATM 化，且不引入第二套 registry / task flow | agent 進專案後自動走 `atm next --json` / AtomicCharter / evidence gate |
+| package 擁有權 | `integrations-core`、skill compiler、script parity、schema alignment | welcome、rule render freshness、create-atm、CI / hook recipe、e2e onboarding |
+| 對 host project 的要求 | 不綁 host，只提供 neutral contract | 不綁 host，只安裝可驗證、可卸載的 agent-native entry files |
+| 與 spec-kit 的關係 | 可參考、可轉譯、不可依賴其 runtime | 不直接依賴 spec-kit；只接收 ATM 自有 next/action hint |
+
+### 18.3 開源框架與不可綁專案原則
+
+本計畫所有實作都必須符合下列約束：
+
+1. **Adopter-neutral**：template、prompt、README、schema fixture 不得寫入 3KLife、MRP 私有任務卡或任何單一 host project 的規則。
+2. **可選安裝、可強制驗證**：使用者可選擇安裝哪個 agent adapter；但一旦宣告專案使用 ATM official onboarding，CI / doctor 必須能驗證入口檔是否存在且未漂移。
+3. **可乾淨卸載**：所有寫入使用者專案的 agent-native file 都必須有 sha256 manifest；使用者修改過的檔案不可被 uninstall 誤刪。
+4. **不下沉 core**：agent-specific 邏輯不得進入 `packages/core/`；只能存在於 Agent Operating Layer、Integration Adapter Layer、templates、CLI facade。
+5. **裸 CLI 路徑永遠有效**：沒有 agent pack、沒有 slash command、沒有 Copilot / Claude / Cursor 時，使用者仍必須能用 `node atm.mjs next --json` 與 deterministic CLI 完成治理流程。
+
+### 18.4 「無法繞過」的五層落地模型
+
+開源框架不能靠 prompt 宣稱絕對控制，必須用五層疊加：
+
+1. **Agent-native entry layer**：各 adapter 寫入該 agent 會自動讀取的入口檔，且第一個可執行步驟固定導向 `node atm.mjs next --json`。
+2. **Dynamic router layer**：`atm next --json` 根據 AtomicCharter、lock、evidence、context budget、integration health 回傳下一步，模板不得自建狀態機。
+3. **Manifest / doctor layer**：`atm integration verify`、`atm doctor` 偵測入口檔 missing、hash drift、charter 缺失、host rule conflict。
+4. **Local enforcement layer**：pre-commit / pre-push hook 呼叫 `doctor`、`integration verify`、rule render freshness check；失敗即阻擋提交或推送。
+5. **Remote enforcement layer**：CI / release workflow / branch protection 重新跑同一組 deterministic check；因此 agent 即使本地跳過，主分支仍不接受未通過 ATM 入口與 evidence gate 的變更。
+
+正式語句應避免承諾「任何人都不能手動刪檔」；正確承諾是「官方支援流程不能跳過，跳過後必被偵測，且可在提交、CI 或 release 階段被阻擋」。
+
+### 18.5 ATM × spec-kit 融合計畫的里程碑修正
+
+`ATM × spec-kit 融合計畫` 的 M0–M5 已經完成 AtomicCharter 與 Integration Adapter Layer 的基礎。後續 milestone 應改成下列方向，避免和本計畫重疊：
+
+| 原里程碑 | 修正後定位 | 是否仍屬 ATM × spec-kit |
+|---|---|---|
+| M6 `atm integration` 子指令 | 保留。這是 spec-kit 融合計畫交給 Onboarding 計畫消費的底層 CLI facade | 是 |
+| M7 Slash Skill 模板與 Charter 注入 | 保留但改名為 `Entry Template Compiler`，只負責把 ATM skill source 編譯到各 adapter 格式 | 是 |
+| M8 sh / ps 雙腳本同捆與 parity | 保留。這是開源框架與 Windows 第一公民能力，不屬於單一 onboarding UX | 是 |
+| M9 端到端 Example 與 Multi-agent 驗證 | 拆分：framework-neutral example 留在 ATM × spec-kit；first-touch welcome e2e 交給本計畫 | 部分 |
+| M10 Rollout 與 Adoption 指標 | 拆分：framework metrics 留在 ATM × spec-kit；first-command-correctness、onboarding drift rate 交給本計畫 | 部分 |
+
+因此，`ATM × spec-kit` 不需要新增 `create-atm`、`welcome`、Rule Render freshness、npm onboarding 文案等交付；這些都移到本計畫。反過來，本計畫也不應實作 spec-kit 的 `/specify -> /plan -> /tasks` 工作流、presets 或 extension ecosystem。
+
+### 18.6 本計畫的重排里程碑
+
+以目前 AI-Atomic repo 已完成的 `IntegrationAdapter` / 四大 adapter 為基底，本計畫後續建議重排為：
+
+1. **APO-M1：文件與 cross-link 收斂**：本計畫書加入 ATM README / ARCHITECTURE 引用，並明確宣告第二主計畫地位。
+2. **APO-M2：Rule Render / AtomicCharter 摘要管線**：從 `default-guards.json`、charter invariants、schema hashes 渲染 agent 可讀摘要，並提供 freshness verify。
+3. **APO-M3：Welcome lifecycle**：新增 `atm welcome` 與 `.atm/runtime/welcome.lineage.json`，把 installed / rendered / adapter-applied / operational 狀態 machine-readable 化。
+4. **APO-M4：Onboarding enforcement recipe**：提供 pre-commit、CI、branch protection 範本，串接 `atm doctor`、`atm integration verify`、rule freshness check。
+5. **APO-M5：create-atm / npm fourth distribution layer**：在不破壞 root-drop / onefile / source routing 的前提下，提供公開使用者低摩擦入口。
+6. **APO-M6：Multi-agent matrix generator**：由 adapter registry 反向產生 compatibility matrix，禁止人類手抄漂移。
+7. **APO-M7：First-touch e2e examples**：空 repo 在 60 秒內完成 init、rule render、adapter install、welcome、first `atm next --json`。
+8. **APO-M8：Onboarding adoption metrics**：量測 first-command-correctness、integration-drift、welcome-completion、CI block reason。
+
+### 18.7 對後續實作的明確建議
+
+1. 不要把已完成的 `packages/integration-claude-code/`、`packages/integration-copilot/`、`packages/integration-cursor/`、`packages/integration-gemini/` 改名為 `agent-pack-*`。
+2. 下一個 AI-Atomic 實作階段應先完成 `atm integration list/add/verify/remove`，因為這是 Onboarding 計畫能被 CLI 消費的最低必要入口。
+3. `create-atm` 與 `atm welcome` 應排在 integration CLI 與 rule freshness 之後，避免先做漂亮入口卻沒有可驗證的底層狀態。
+4. spec-kit 相關 hint 只能以 `atm next --json` 的 `agent_pack_hint` 或 `nextActionHint` 形式輸出，不得讓 prompt 直接決定流程。
+5. 所有「無法跳過」都要有對應 deterministic check；沒有 check 的規則只能稱為 guidance，不可稱為 gate。
+
+結論：本計畫應成為第二份重要計畫書完整實作；`ATM × spec-kit` 則在 milestone 後段引用它，並消費它提供的 entry enforcement 能力。這樣 ATM 才能同時保留開源框架獨立性、避免綁專案，並讓 agent 進入使用者專案時被自動導回 ATM 規則流程。
