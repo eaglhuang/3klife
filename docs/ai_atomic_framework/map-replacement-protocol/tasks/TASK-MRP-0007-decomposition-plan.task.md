@@ -4,7 +4,7 @@ task_id: TASK-MRP-0007
 title: Decomposition Plan → Map
 milestone: M7
 status: pending
-blocked_by: [TASK-MRP-0002, TASK-MRP-0006]
+blocked_by: [TASK-MRP-0002, TASK-MRP-0006, TASK-MRP-0009]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
@@ -21,12 +21,14 @@ public_tracking: false
 
 - TASK-MRP-0002
 - TASK-MRP-0006
+- TASK-MRP-0009
 
 ## 輸入
 
 - 計畫書 §14.1、§6.1
 - 既有 `packages/core/src/registry/map-generator.ts`
 - TASK-MRP-0002 完成的 0.2.0 schema
+- TASK-MRP-0009 完成的 `create-map --spec` deterministic artifact 入口
 
 ## 輸出
 
@@ -36,7 +38,7 @@ public_tracking: false
    - 缺 `legacyUris` 或 `proposedMapId` 時 hard-fail，error code `ATM_DECOMP_PLAN_INVALID`
    - 自動把 `legacyUris` 寫入新 map 的 `replacement.legacyUris`
 3. 示範 plan：`samples/checkout-mini.plan.json`
-4. End-to-end smoke：plan → create-map → test --map → equivalence runner → upgrade gate → replacement-lane transition
+4. End-to-end smoke：plan → create-map → test --map → equivalence runner → upgrade gate → replacement-lane transition。若 TASK-MRP-0010 已完成，smoke 必須同時驗證 active evidence closure。
 
 ## 驗收條件
 
@@ -45,6 +47,7 @@ public_tracking: false
 - [ ] CLI 對 invalid plan 回非零 exit 並輸出 ATM_DECOMP_PLAN_INVALID
 - [ ] 示範 plan 走完 e2e smoke
 - [ ] map registry entry 包含 `replacement.legacyUris`
+- [ ] plan 產生的 draft map 可再由 `create-map --spec` 路徑 round-trip
 
 ## 影響檔案
 

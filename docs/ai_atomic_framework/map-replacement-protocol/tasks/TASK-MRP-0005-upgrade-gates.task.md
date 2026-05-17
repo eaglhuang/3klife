@@ -36,7 +36,10 @@ public_tracking: false
    - target = map 且要求 `active` → 需 `map-equivalence` 且 `passed:true`
    - target = map 且要求 `legacy-retired` → 需 `rollback-proof` 且 `valid:true`
 3. 缺證據時 proposal `status:"blocked"` 且 `blockedGateNames` 包含 `map-equivalence` / `rollback-proof`
-4. `upgrade-map-propose.ts` CLI wrapper 暴露 `--equivalence-report <path>` / `--rollback-proof <path>`
+4. blocked proposal 需輸出 `requiredJustification` 或同等欄位，指明缺哪一種 evidence 或 human review 才能放行
+5. `upgrade-map-propose.ts` CLI wrapper 暴露 `--equivalence-report <path>` / `--rollback-proof <path>`
+
+完整 active / legacy-retired evidence 閉環（propagation、review-advisory、human-review、retirement-proof）由 TASK-MRP-0010 承接；本卡先完成 upgrade proposal 的基礎 evidence gate。
 
 ## 驗收條件
 
@@ -45,6 +48,7 @@ public_tracking: false
 - [ ] positive fixture：完整 evidence 時 status = accepted
 - [ ] CLI wrapper 旗標可被 `--help` 列出
 - [ ] 測試覆蓋兩個方向
+- [ ] blocked proposal JSON 含可機器讀取的 justification requirement
 
 ## 影響檔案
 
@@ -63,4 +67,5 @@ public_tracking: false
 - [ ] gate builder 實作
 - [ ] CLI wrapper 旗標
 - [ ] 正反測試
+- [ ] justification requirement output
 - [ ] CHANGELOG 補一句

@@ -32,7 +32,7 @@ public_tracking: false
    - 匯出 `ReplacementMode` enum
    - 匯出 `transitionReplacementMode(map, to, evidence)`
    - 違法轉移 throw `ATM_REPLACEMENT_TRANSITION_INVALID`
-2. 轉移記錄寫入 `atomic_workbench/maps/<id>/lineage-log.json`，欄位與 MAP-0002 lineage 對齊
+2. 轉移記錄寫入 `atomic_workbench/maps/<id>/lineage-log.json`，欄位與 MAP-0002 lineage 對齊，至少包含 `from` / `to` / `reason` / `evidenceRefs` / `actor` / `timestamp`
 3. 新增 CLI 子命令：`atm replacement-lane transition --map <id> --to <mode> [--evidence <path>]`
 4. 明確規則：registry status change 不會觸發 replacement.mode change，反向亦然
 
@@ -41,7 +41,7 @@ public_tracking: false
 - [ ] 合法五段轉移正向測試
 - [ ] 跳階轉移（draft → active）被擋
 - [ ] 缺 evidence 時被擋（active 與 legacy-retired）
-- [ ] lineage-log 寫入正確 ISO timestamp 與 actor
+- [ ] lineage-log 寫入正確 ISO timestamp、actor、reason 與 evidenceRefs
 - [ ] registry status 改變不會自動改 replacement.mode
 
 ## 影響檔案

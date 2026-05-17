@@ -197,9 +197,25 @@ Replacement lifecycle 是 map replacement 的 rollout lane，不取代 registry 
 
 擴充 `upgrade/propose.ts`，納入 `map-equivalence` 與 `rollback-proof` input kind。
 
-### Milestone 6：ScopeLock 與 polymorph 後補
+### Milestone 6：Replacement Rollout Lane Transition
+
+把 `draft → shadow → canary → active → legacy-retired` 落成 transition validator、CLI 與 lineage log，且 registry status 與 replacement mode 不自動同步。
+
+### Milestone 7：Decomposition Plan → Map
+
+新增 decomposition plan schema 與 `create-map --from-plan`，讓大型功能拆解產物強制包含 map 入口與 replacement target。
+
+### Milestone 8：ScopeLock 與 polymorph 後補
 
 ScopeLock 0.2.0 與 polymorph impact gate 放在後續，避免阻塞 MVP。
+
+### Milestone 9：Create Map From Spec 與 Agent Next Hints
+
+補齊 `create-map --spec <path>`，作為 deterministic artifact workflow 的優先入口；同時讓 replacement 相關 CLI JSON output 能提供 `nextActionHint`，但不引入 slash command runtime。
+
+### Milestone 10：Replacement Evidence Closure 與 Retirement Proof
+
+補齊 active / legacy-retired gate 的 evidence 閉環：propagation pass、review-advisory pass、human review approved，以及 rollback proof 或 retirement proof 的正式 input kind / schema / gate 行為。
 
 ## 11. 成功標準
 
@@ -262,9 +278,9 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 | 目標 A 子條件 | 由哪個機制保證 | 對應里程碑 | 對應任務卡 |
 |---|---|---|---|
-| 大功能拆解→ map 入口 | `decomposition-plan` schema + `create-map --from-plan` | M2 / M7 | TASK-MRP-0001 / 0007 |
+| 大功能拆解→ map 入口 | `create-map --spec` + `decomposition-plan` schema + `create-map --from-plan` | M7 / M9 | TASK-MRP-0007 / 0009 |
 | Map 宣告替代目標 | Schema 0.2.0 `replacement.legacyUris[]` | M2 | TASK-MRP-0002 |
-| 沒證據不准接管 | `upgrade/propose.ts` 新增 `map-equivalence` / `rollback-proof` input kind | M5 | TASK-MRP-0005 |
+| 沒證據不准接管 | `upgrade/propose.ts` evidence gate + active evidence closure | M5 / M10 | TASK-MRP-0005 / 0010 |
 
 達成判斷：以一個示範大功能（建議 `legacy://samples/checkout-mini`）走完「plan → map → integration → equivalence → shadow→canary→active」全流程，且 active gate 真的在沒 equivalence 時被拒絕一次，即視為目標 A 達成。
 
@@ -286,7 +302,7 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 | 結構語義 | Schema 0.2.0：`members[].role` + `edges[].edgeKind` | M2 | TASK-MRP-0002 |
 | 替代契約 | Schema 0.2.0：`replacement.*` 區塊 + mapHash 邊界 | M2 | TASK-MRP-0002 |
 | 可驗證等價 | `map-equivalence-report.schema.json` + `test --map --equivalence-fixtures` | M3 / M4 | TASK-MRP-0003 / 0004 |
-| 退場安全 | upgrade gate 對 `active → legacy-retired` 要求 rollback-proof | M5 | TASK-MRP-0005 |
+| 退場安全 | upgrade / lane gate 對 `active → legacy-retired` 要求 rollback-proof 或 retirement-proof | M5 / M10 | TASK-MRP-0005 / 0010 |
 
 達成判斷：對示範 map 執行 `upgrade --target map`，proposal 必須能在 JSON 輸出中同時引用 `map-equivalence` 與 `rollback-proof` input kind，且 rollout lane 的 lineage 能還原 `draft → shadow → canary → active → legacy-retired` 五段轉移歷史。
 
@@ -305,13 +321,13 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 對應任務卡：TASK-MRP-0000
 
-- [x] `docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md` 存在且包含 §0–§16
+- [x] `docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md` 存在且包含 §0–§17
 - [x] 文件已被 ATM `README.md` 與 `docs/ARCHITECTURE.md` 引用；ATM repo 端只保留英文公開文件 `docs/MAP_REPLACEMENT_PROTOCOL.md`
 - [x] 文件通過 UTF-8 編碼檢查（無 BOM、無 U+FFFD）
 - [x] 目標 A、B 在 §14 有明確達成判斷
 - [x] 風險清單 §12 + §14.3 已合併，沒有矛盾
 
-執行狀態（2026-05-17）：TASK-MRP-0000 與 TASK-MRP-0001 已完成。ATM repo 已移除中文內部計畫與 TASK-MRP 任務卡，只保留英文公開說明與架構入口；後續 M2–M8 仍依 §15 順序執行。
+執行狀態（2026-05-17）：TASK-MRP-0000 與 TASK-MRP-0001 已完成。ATM repo 已移除中文內部計畫與 TASK-MRP 任務卡，只保留英文公開說明與架構入口；後續 M2–M10 仍依 §15 順序執行。
 
 ### Milestone 2：Atomic Map Schema 0.2.0（M2）
 
@@ -334,7 +350,8 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 - [ ] 新增 `schemas/governance/map-equivalence-report.schema.json`
 - [ ] schemaId = `atm.mapEquivalenceReport`，specVersion = `0.1.0`，含 `migration` 區塊
 - [ ] `cases[]` 復用 regression-case 的 metric/evidence 形狀
-- [ ] 必填欄位：`mapId` / `legacyUris` / `fixtures` / `cases` / `summary` / `passed`
+- [ ] 必填欄位：`mapId` / `legacyUris` / `fixtures` / `cases` / `summary` / `metrics` / `artifacts` / `evidence` / `passed`
+- [ ] `knownDivergences[]` 支援 `justification` 與 `reviewRef`，不能只有自由文字 reason
 - [ ] 至少 1 個 positive fixture + 1 個 negative fixture 存在於 `tests/schema-fixtures/`
 - [ ] AJV 編譯通過、`atm spec --validate` 驗證通過
 
@@ -356,6 +373,7 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 - [ ] target = map 時，`active` 需 `map-equivalence` 為 passed
 - [ ] target = map 時，`legacy-retired` 需 `rollback-proof` 為 valid
 - [ ] 缺 evidence 時 proposal `status:"blocked"` 且 `blockedGateNames` 包含對應名稱
+- [ ] blocked proposal 需輸出 `requiredJustification` 或同等欄位，指明需要 evidence 或 human review 才能放行
 - [ ] `upgrade-map-propose.ts` CLI wrapper 暴露 `--equivalence-report` / `--rollback-proof` 旗標
 - [ ] 至少 1 個 negative fixture 證明 gate 真的會擋
 
@@ -365,7 +383,7 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 - [ ] 新增 `packages/core/src/registry/replacement-lane.ts`：定義合法轉移表
 - [ ] `draft→shadow / shadow→canary / canary→active / active→legacy-retired` 各自有 evidence 前置條件
-- [ ] 轉移寫入 map `lineage-log.json`，與 MAP-0002 寫法一致
+- [ ] 轉移寫入 map `lineage-log.json`，至少包含 `from` / `to` / `reason` / `evidenceRefs` / `actor` / `timestamp`
 - [ ] 違法轉移時 throw `ATM_REPLACEMENT_TRANSITION_INVALID`
 - [ ] registry status 與 replacement mode 互不自動同步（雙向獨立）
 - [ ] 提供 `atm replacement-lane transition --map <id> --to <mode>` CLI 子命令
@@ -380,6 +398,7 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 - [ ] plan 缺 `legacyUris` 或 `proposedMapId` 時 hard-fail
 - [ ] 至少 1 個示範 plan（建議 `samples/checkout-mini.plan.json`）
 - [ ] 走完 plan → create-map → test --map → equivalence → upgrade gate 一次
+- [ ] plan 產生的 draft map 可再由 `create-map --spec` 路徑 round-trip
 
 ### Milestone 8：ScopeLock 0.2.0 與 Polymorph Impact（M8，可延後）
 
@@ -391,6 +410,28 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 - [ ] polymorph impact gate：對 replacement map 的 member atoms 掃描 template
 - [ ] 產出 `polymorph-impact-report.json` 且 active gate 在報告未通過時 block
 - [ ] 既有 0.1.0 lock 仍能 round-trip
+
+### Milestone 9：Create Map From Spec + Replacement Next Hints（M9）
+
+對應任務卡：TASK-MRP-0009
+
+- [ ] `create-map --spec <path>` 可讀取完整 draft map spec 並建立 canonical map workspace
+- [ ] spec 輸入通過 `atomic-map.schema.json` 驗證，invalid spec 回傳非零 exit code 與 `ATM_MAP_SPEC_INVALID`
+- [ ] `--spec` 支援 0.1.0 / 0.2.0 map，且 0.2.0 replacement 欄位不丟失
+- [ ] replacement 相關 CLI JSON output 提供 `nextActionHint`，指向下一個 deterministic command
+- [ ] `nextActionHint` 只引導 `atm next --json` 或既有 CLI，不引入 slash command runtime
+- [ ] Windows PowerShell 空白路徑 smoke test 通過
+
+### Milestone 10：Replacement Evidence Closure + Retirement Proof（M10）
+
+對應任務卡：TASK-MRP-0010
+
+- [ ] 定義或正式接入 `propagation-report` / `review-advisory` / `human-review` / `retirement-proof` input kind
+- [ ] `canary→active` gate 需要 map equivalence pass、propagation pass、review-advisory pass、human review approved
+- [ ] `active→legacy-retired` gate 接受 valid rollback-proof 或 valid retirement-proof，且需 caller / entrypoint risk cleared
+- [ ] 缺任一 evidence 時 proposal 或 transition `status:"blocked"`，並列出缺口名稱
+- [ ] positive / negative fixture 覆蓋 active 與 legacy-retired 兩條路徑
+- [ ] 若最終決策不新增 retirement-proof，必須回改本計畫與 TASK-MRP-0005，明確收斂為只接受 rollback-proof
 
 ## 16. 任務卡索引
 
@@ -405,7 +446,83 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 | TASK-MRP-0004 | Map Equivalence Test CLI | M4 | TASK-MRP-0003 | CLI runner + report 落地 |
 | TASK-MRP-0005 | Upgrade Gates: equivalence + rollback | M5 | TASK-MRP-0003 / TASK-MRP-0004 | propose.ts input kind + gate |
 | TASK-MRP-0006 | Replacement Lane Transition | M6 | TASK-MRP-0002 | lane validator + CLI + lineage |
-| TASK-MRP-0007 | Decomposition Plan → Map | M7 | TASK-MRP-0002 / TASK-MRP-0006 | plan schema + `create-map --from-plan` |
+| TASK-MRP-0007 | Decomposition Plan → Map | M7 | TASK-MRP-0002 / TASK-MRP-0006 / TASK-MRP-0009 | plan schema + `create-map --from-plan` |
 | TASK-MRP-0008 | ScopeLock 0.2.0 + Polymorph Impact | M8 | TASK-MRP-0006 | lock schema + impact report |
+| TASK-MRP-0009 | Create Map From Spec + Replacement Next Hints | M9 | TASK-MRP-0002 | `create-map --spec` + `nextActionHint` |
+| TASK-MRP-0010 | Replacement Evidence Closure + Retirement Proof | M10 | TASK-MRP-0003 / TASK-MRP-0004 / TASK-MRP-0005 / TASK-MRP-0006 | propagation / review / human / retirement gates |
 
-依賴順序建議執行：0000 → 0001 → 0002 → 0003 → 0004 → 0005 → 0006 → 0007 → 0008。其中 0003 / 0004 可在 0002 完成後並行，0008 可延後。
+依賴順序建議執行：0000 → 0001 → 0002 → 0009 → 0003 → 0004 → 0005 → 0006 → 0010 → 0007 → 0008。其中 0003 / 0006 / 0009 可在 0002 完成後並行，0008 可延後。
+
+## 17. 外部五機制導入論述評估與本計畫關係
+
+本章評估「AI-Atomic-Framework × 外部五機制導入優化計畫」是否應補入本計畫。結論是：**應補入取捨與邊界，但不應把它併成 M3–M10 的核心實作任務**。
+
+原因很清楚：本計畫的主題是 **Map Replacement Protocol**，目標是讓 map 成為新功能 / legacy 大功能的正式替代表面；外部五機制導入的主題則是 **ATM 無痛導入與 Agent Operating Layer 強化**，目標是讓 agent 一進專案就自動遵守 ATM 精神。兩者高度互補，但責任邊界不同。
+
+因此，本計畫只吸收與 map replacement 直接相關的「Agent 入口與規則注入原則」，其餘應另開「ATM Agent Pack / Onboarding」計畫，不阻塞 M3–M10。
+
+### 17.1 總判斷
+
+| 外部導入機制 | 是否值得加 | 是否放入本計畫主線 | 判斷 |
+|---|---|---|---|
+| Agent Pack SDK + Claude Code Pack | 值得 | 不放入 M3–M10，另案 | 解決 ATM 規則靠 agent 自願讀的摩擦，但屬於 onboarding / agent integration，不是 map replacement 核心 |
+| Constitution Render Pipeline | 部分值得 | 不放入 M3–M10，另案；M5 可借鑑 gate 思路 | `guards.json` → markdown constitution 的渲染可改善規則可見性，但 ATM 仍應以 machine-readable contract 為 source of truth |
+| Slash command 模板 + `atm next` 動態槽位 | 值得 | 可作為 M7 後的 optional UX layer | 與 ATM 哲學相容，前提是模板只引導呼叫 `atm next --json`，不可 baked-in 完整流程 |
+| npm publish + `npx create-atm` | 值得 | 不放入本計畫 | 是 ATM 開源採用策略，不影響 replacement map schema / equivalence / rollout gate |
+| `atm welcome` + next chain | 值得 | 不放入本計畫；可列為後續入口體驗 | 可幫助 agent 進入 ATM，但不應變成 replacement protocol 的前置條件 |
+
+### 17.2 值得吸收的部分
+
+以下概念應納入本計畫的設計約束，但不必變成本計畫的新里程碑：
+
+1. **靜態入口模板只能是導引，不是權威**：若未來有 `/atm-map-replace`、`/atm-next` 或 Claude / Copilot prompt 模板，模板只能要求 agent 呼叫 `node atm.mjs next --json` 或 replacement CLI，不可把完整 M3–M10 流程寫死在 prompt 裡。
+2. **map replacement gate 需要 justification pattern**：M5 upgrade gates 可以借鑑外部規則閘門的「違規必須說明」模式。若 equivalence 缺失、known divergence 未被接受、或 rollback proof 不足，proposal 必須 blocked；若允許例外，例外必須出現在 evidence / human review 裡，而不是口頭放行。
+3. **多 agent 注入要保持 source of truth 單一**：若未來 agent-pack 會產出 ATM map replacement prompt，prompt 內容必須由 schema / guards / protocol 文件渲染，不得讓 Claude、Copilot、Cursor 各自長出不同規則。
+4. **Windows 第一公民**：外部導入流程常見的 sh / ps 雙版腳本提醒有價值。M4 / M7 若新增 equivalence runner 或 `create-map --from-plan` 周邊 helper，必須確認 Windows PowerShell 路徑與空白路徑可用。
+5. **manifest sha256 防漂移**：未來若 M7 後提供示範 project injection 或 sample command，應用 manifest hash 追蹤產物，避免 agent 手改後還以為是 canonical template。
+
+### 17.3 不應放入本計畫主線的部分
+
+以下內容有價值，但應另開「ATM Agent Pack / Onboarding」計畫，不應污染 Map Replacement Protocol：
+
+1. `packages/agent-pack-sdk/` 與多 agent pack 套件。
+2. `packages/create-atm/`、npm publish、`npx create-atm`。
+3. `atm welcome` 一鍵入門命令。
+4. 自動生成 `docs/multi-agent-compatibility-matrix.md`。
+5. 通用 constitution render pipeline。
+
+這些屬於 ATM 開源採用與 agent operating layer 的橫向能力。若把它們塞進本計畫，M3–M10 的 replacement protocol 會被 onboarding 工程拖慢，且驗收邊界會混亂。
+
+### 17.4 明確不採用的部分
+
+以下外部導入做法不適合直接套到 ATM map replacement：
+
+1. **不採用完整 baked-in slash command 流程**：ATM 的核心優勢是 `atm next --json` 動態路由。若把完整步驟寫進 prompt，ATM 會退化成靜態 prompt 框架，且與 registry / evidence / upgrade gate 脫節。
+2. **不採用外部專案工作目錄取代 `.atm/`**：ATM 已有 `.atm/runtime`、`.atm/tasks`、`.atm/locks`、`.atm/evidence`、`.atm/history/handoff` 等治理樹。新增另一套隱含工作目錄會造成雙狀態源。
+3. **不把 `constitution.md` 當唯一真相來源**：ATM 的 source of truth 應保持 JSON Schema / machine-readable guards / registry contracts。Markdown constitution 可以是渲染產物，不應反過來變成權威。
+4. **不把 agent-pack 命名成 adapter**：ATM adapter 是 I/O / host integration 抽象；agent-pack 是 agent 視角的檔案注入與 prompt 包。兩者混名會破壞架構語意。
+5. **不讓 onboarding 成為 replacement 的 gate 前置**：map replacement 應可在沒有 agent-pack、沒有 slash command 的情況下用 CLI / schema / tests 完成。Agent-pack 只能改善體驗，不能成為 protocol 正確性的必要條件。
+
+### 17.5 對 M3–M10 的調整建議
+
+本章不新增 M3–M10 的硬依賴，但建議在後續實作時套用以下微調：
+
+1. **M3 Map Equivalence Report Schema**：新增 `justification` / `knownDivergences[].reviewRef` 欄位時，可參考 constitution gate 的「違規必須說明」模式。
+2. **M4 Map Equivalence Test CLI**：CLI help 與 JSON output 可提供 `nextActionHint`，但不要引入 slash command runtime。
+3. **M5 Upgrade Gates**：blocked proposal 應要求 evidence 或 human review justification，這是分段閘門思想在 ATM contract 世界中的正確落點。
+4. **M6 Replacement Rollout Lane**：lineage log 可記錄 transition 的 `reason` / `evidenceRefs` / `actor`，避免 shadow→canary→active 變成口頭流程。
+5. **M7 Decomposition Plan → Map**：未來若 agent-pack 介入，應只是幫 agent 產出或定位 decomposition plan；真正建立 map 仍由 `create-map --from-plan` 負責。
+6. **M9 Create Map From Spec + Replacement Next Hints**：`nextActionHint` 只能指向 deterministic CLI 或 `atm next --json`，不可變成靜態 prompt workflow。
+7. **M10 Replacement Evidence Closure + Retirement Proof**：propagation / review / human evidence 應落在 machine-readable gate，不應只寫在 markdown checklist。
+
+### 17.6 後續另案建議
+
+建議另開一份獨立計畫書：`docs/ai_atomic_framework/agent-pack-onboarding/ATM_agent_pack_onboarding計畫書.md`。該計畫才適合承接：
+
+1. Agent Pack SDK。
+2. Claude Code / Cursor / Copilot / Gemini / Windsurf pack。
+3. Constitution Render Pipeline。
+4. npm publish / `npx create-atm`。
+5. `atm welcome`。
+
+該另案應以「無痛引入 ATM」為主題，而不是以「map replacement」為主題。兩案的關係是：Agent Pack / Onboarding 讓 agent 更容易正確使用 ATM；Map Replacement Protocol 則定義大型功能拆解後 map 如何正式接管 legacy / new feature。前者是入口體驗，後者是治理語義，不能互相取代。

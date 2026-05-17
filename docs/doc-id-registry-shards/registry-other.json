@@ -796,5 +796,23 @@
     "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0008-scopelock-polymorph.task.md",
     "title": "TASK-MRP-0008 — ScopeLock 0.2.0 + Polymorph Impact",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0143",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0009-create-map-from-spec-next-hints.task.md",
+    "title": "TASK-MRP-0009 — Create Map From Spec + Replacement Next Hints",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0144",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0010-evidence-closure-retirement-proof.task.md",
+    "title": "TASK-MRP-0010 — Replacement Evidence Closure + Retirement Proof",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0145",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/ATM_agent_pack_onboarding計畫書.md",
+    "title": "ATM Agent Pack / Onboarding 計畫書",
+    "category": "other"
   }
 ]

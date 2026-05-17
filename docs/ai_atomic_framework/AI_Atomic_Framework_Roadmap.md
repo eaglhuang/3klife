@@ -39,7 +39,7 @@ AI Vibe Coding 失控時，真正的問題通常不是單純「某段程式碼�
 - **Self-Hosting Alpha Gate**：v0.1 alpha 必須先在 standalone upstream repo 內證明 AI agent 只讀 README / AGENTS / `.atm/profile` 就能完成 first task、scope lock、artifact/log/evidence 與 first atom smoke；在此之前不得拿 3KLife 當成功前提。
 - **Docs Neutrality / Boundary Guard**：上游 protected surfaces（README / AGENTS / docs / examples / templates）不得夾帶 3KLife、Cocos、html-to-ucuf 或本地治理工具前提，且需由 deterministic guard 持續掃描，必要時再用 semantic audit 補抓隱性耦合。
 - **Agent Governance Bundle**：`encoding guard`、`context budget guard` 與 `docs neutrality / boundary guard` 應被視為同一組 model-neutral agent governance bundle；3KLife 既有 keep/token 規則只能透過 adapter 映射，不得回寫成 upstream 私有前提。
-- **無硬依賴**：Core 不得硬依賴 GitHub Spec Kit、Atomic Agents、LangGraph、PR-Agent、PostgreSQL、pgvector、OpenTelemetry、Prometheus、Deno sandbox 或任何單一 LLM vendor。這些只能透過 `packages/adapter-*` 或 `packages/plugin-*` 啟用。
+- **無硬依賴**：Core 不得硬依賴任何外部規格工具、agent pipeline、workflow engine、AI review 工具、資料平台、observability stack、sandbox 或任何單一 LLM vendor。這些只能透過 `packages/adapter-*` 或 `packages/plugin-*` 啟用。
 - **PEV Loop 標準化**：所有原子工作都遵守 Plan（spec/task card）→ Execute（AI 只改 allowed files）→ Verify（test/police/regression/hash）→ Converge（registry/living spec/版本紀錄）。
 - **6 週 MVP 節奏**：前 6 週以可注入第一個 low-risk atom 為目標；Performance Police、Capability Sandbox、Vector Index、完整 Observability 與多 agent workflow 均不阻塞 v0.1 alpha。
 - **Living Spec 先輕後重**：MVP 只要求 spec 與 code 變更有差異提示；自動同步器列為後續 optional feature，不得成為早期核心 gate。

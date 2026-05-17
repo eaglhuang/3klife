@@ -27,7 +27,7 @@ completed_by_agent: vs-insiders-github-copilot
 
 ## 輸入
 
-- 已落地的 `docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md`（§0–§16）。
+- 已落地的 `docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md`（§0–§17）。
 
 ## 輸出
 
@@ -37,7 +37,7 @@ completed_by_agent: vs-insiders-github-copilot
 
 ## 驗收條件
 
-- [x] 計畫書包含 §0–§16
+- [x] 計畫書包含 §0–§17
 - [x] §14 明確標出目標 A / B 的達成判斷
 - [x] §15 每個里程碑都有可勾選 checklist
 - [x] README 與至少一份 governance doc 有指向本計畫的連結

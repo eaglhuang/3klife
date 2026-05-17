@@ -48,7 +48,7 @@ function main() {
   // ── list by category ──
   if (query === '--list') {
     const cat = args[1];
-    if (!cat) { console.error('Specify a category after --list'); process.exit(1); }
+    if (!cat) { console.error('Provide a category after --list'); process.exit(1); }
     const entries = Object.entries(registry)
       .filter(([, v]) => {
         if (cat.startsWith('server:')) {

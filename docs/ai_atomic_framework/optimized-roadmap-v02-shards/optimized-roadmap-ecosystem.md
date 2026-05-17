@@ -6,7 +6,7 @@
 
 ### 高度相關的現有框架（2026-05）
 - **Atomic Agents**（BrainBlend-AI）：最接近的 atomicity 理念，可互補使用。
-- **Spec-Driven Development 工具**：GitHub Spec Kit、Kiro、Tessl、Augment Intent（living spec + multi-agent）。
+- **Spec-Driven Development 工具**：外部 SDD / living spec 工具（living spec + multi-agent）。
 - **Harness Engineering**：Martin Fowler 專文 + 多篇論文 + nexu-io 指南。你的框架正是「Code-level Atomic Harness」的完美實作。
 - **AI Governance**：FINOS、Databricks、ruslanmv 等（偏合規層）；Exceeds AI、Checkmarx（偏安全/ROI 追蹤）。
 - **Agentic Frameworks**：LangGraph、CrewAI、AutoGen、OpenAI Agents SDK、Mastra（負責「怎麼跑」；你的框架負責「跑出來的 code 要怎麼治理」）。
@@ -27,7 +27,7 @@ Harness Engineering 核心三要素（Context / Constraint / Convergence）與�
 |-----------------------------|---------------------------------------|---------------------------|---------------------------------------|-----------------------------------------------|-------------------------------|
 | **AI Atomic Framework** (v0.2) | **契約優先 + 原子治理 + Harness**    | 「受控純函數加工機」 + LEGO + 細胞 | Atomic Spec（契約）、Police、HashLock、Regression Matrix、Strangler 注入、PEV Loop | 把大工程拆成可驗證原子 + 嚴格邊界 + 防退轉 + 漸進替換 Legacy | —（自身） |
 | **Atomic Agents** (BrainBlend-AI) | **Atomicity + 無魔法透明模組化**     | LEGO 積木                 | Single-purpose 組件、Pydantic Schema、顯式控制流、標準 Python 函數 | 強調「你的程式碼還是你的程式碼」，避免黑箱，透過可組合小組件維持可維護性 | **最接近的「原子」理念**，但聚焦在 Agent Pipeline 而非 Code Governance |
-| **GitHub Spec Kit / SDD**   | **Spec 作為第一公民 + Intent-driven** | 規格書是源頭              | Constitution、Specify → Plan → Tasks → Implement、多步精煉、Agent-agnostic | 用豐富、結構化的 Spec 取代模糊提示，讓 AI 精準執行意圖 | **高度互補**：Atomic Spec 可視為 SDD 在「程式碼層」的深化版 |
+| **外部 SDD 工具**   | **Spec 作為第一公民 + Intent-driven** | 規格書是源頭              | 規則憲章、Spec → Plan → Tasks → Implement、多步精煉、Agent-agnostic | 用豐富、結構化的 Spec 取代模糊提示，讓 AI 精準執行意圖 | **高度互補**：Atomic Spec 可視為 SDD 在「程式碼層」的深化版 |
 | **Harness Engineering** (Martin Fowler 等) | **Feed-forward + Feedback 調節器**   | 控制系統 / Cybernetic Governor | Context + Constraint + Convergence、機械強制器、漸進揭露、Guardrails | 建立「圍繞模型的 harness」，用明確邊界與回饋迴路讓 Agent 可靠執行 | **哲學最接近**，AI Atomic Framework 可視為「Code-level 專用 Harness 實作」 |
 | **LangGraph** (LangChain)   | **Stateful Graph Orchestration**     | 有向圖 / 狀態機           | Nodes + Edges + State + Persistence + Cycles | 用顯式圖結構控制複雜多步、分支、持久化流程，避免隱式混亂 | **互補而非競爭**：可用來實作 Atomic Map 的複雜執行層 |
 

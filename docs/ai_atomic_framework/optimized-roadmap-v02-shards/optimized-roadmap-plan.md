@@ -120,7 +120,7 @@ Converge（更新 registry + living spec + commit）
 ### 核心原則（最重要）
 **Core Framework 必須保持極度單純、完全獨立、不耦合任何外部大型專案。**
 
-- **絕不硬依賴** GitHub Spec Kit、Atomic Agents、LangGraph、PR-Agent 等任何外部開源工具。
+- **絕不硬依賴** 任何外部規格工具、agent pipeline、workflow engine、AI review 工具等外部開源工具。
 - 所有外部工具**只能透過 Plugin SDK / Adapter 介面** 以鬆耦合方式接入。
 - 使用者可以**完全不安裝任何外部工具**，框架依然能完整運作（使用內建的簡單實作）。
 - 這樣才能同時達成「**保持單純 + 可選增強 + 易維護**」三大目標。
@@ -145,7 +145,7 @@ Converge（更新 registry + living spec + commit）
 - **Orchestration**：透過 `OrchestratorAdapter` 介面，可選擇使用 LangGraph 驅動複雜 Atomic Map（預設使用內建簡單流程引擎）
 - **Indexing 與語意搜尋**：PostgreSQL + pgvector（>80 atoms 時啟用，透過 `VectorIndexAdapter`）
 - **可觀測性**：OpenTelemetry + Prometheus（強烈建議，屬於基礎設施層，非「外部框架」）
-- **Living Spec 同步**：自建輕量同步器，或透過 `SpecProviderAdapter` 與 GitHub Spec Kit 概念對接
+- **Living Spec 同步**：自建輕量同步器，或透過 `SpecProviderAdapter` 與外部 SDD 工具概念對接
 
 另有一組不應被拖到後期的治理基線：`encoding guard`、`context budget guard`、`docs neutrality / boundary guard`。它們應在 MVP 就有最小版本，因為這些能力不是豪華功能，而是防止 agent 失控的最小 harness。
 
@@ -161,7 +161,7 @@ Converge（更新 registry + living spec + commit）
 
 | 外部工具              | 整合方式                          | 建議時機          | 備註 |
 |-----------------------|-----------------------------------|-------------------|------|
-| GitHub Spec Kit      | `SpecProviderAdapter`            | 需要更豐富的 spec 格式時 | 只借用概念與部分 schema，Core 有自己的 Atomic Spec 格式 |
+| 外部 SDD 工具        | `SpecProviderAdapter`            | 需要更豐富的 spec 格式時 | 只借用概念與部分 schema，Core 有自己的 Atomic Spec 格式 |
 | Atomic Agents        | `OrchestratorAdapter`            | 想用現成 agent pipeline 時 | 理念最接近，可作為 Manager 的可選後端 |
 | PR-Agent (Qodo)      | `CodeReviewAdapter`              | 需要額外 AI code review 層時 | 補強 Police 的可選工具 |
 | LangGraph            | `WorkflowAdapter`                | 複雜 stateful workflow 時 | 僅在需要時使用 |

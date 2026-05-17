@@ -101,7 +101,7 @@ v0.2 版本讓原規劃從「宏大藍圖」變成「可立即執行的 6 週 MV
 
 **附錄 B：推薦閱讀（2026）**
 - Martin Fowler: "Harness engineering for coding agent users"
-- GitHub Spec Kit 官方文件
+- 外部規格驅動開發工具文件
 - BrainBlend-AI/atomic-agents README
 - Red Hat: "How spec-driven development improves AI coding quality"
 

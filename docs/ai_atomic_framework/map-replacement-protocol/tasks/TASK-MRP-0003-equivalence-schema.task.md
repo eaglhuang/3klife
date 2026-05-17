@@ -30,9 +30,9 @@ public_tracking: false
 
 - 新檔：`schemas/governance/map-equivalence-report.schema.json`
 - schemaId = `atm.mapEquivalenceReport`，specVersion = `0.1.0`，含 `migration` 區塊
-- 必填：`mapId`、`legacyUris[]`、`fixtures[]`、`cases[]`、`summary`、`passed`
+- 必填：`mapId`、`legacyUris[]`、`fixtures[]`、`cases[]`、`summary`、`metrics`、`artifacts[]`、`evidence[]`、`passed`
 - `cases[]` 子欄位：`caseId`、`input`、`expected`、`actual`、`metric`、`evidenceRefs[]`、`passed`、`knownDivergence`
-- 允許 `knownDivergences[]` 區塊（caseId + reason + reviewer）
+- 允許 `knownDivergences[]` 區塊（caseId + reason + justification + reviewer + reviewRef）
 
 ## 驗收條件
 
@@ -40,6 +40,7 @@ public_tracking: false
 - [ ] positive fixture + negative fixture 各 1 存放於 `tests/schema-fixtures/map-equivalence-report/`
 - [ ] `atm spec --validate` 可校驗報告
 - [ ] schema 與 `regression-matrix` 欄位名稱對齊（metric/evidenceRefs）
+- [ ] `knownDivergences[]` 缺 `justification` 或 `reviewRef` 時 negative fixture 會被拒絕
 
 ## 影響檔案
 
