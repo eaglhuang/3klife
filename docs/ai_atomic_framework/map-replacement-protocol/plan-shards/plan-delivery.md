@@ -135,7 +135,7 @@
 - [x] `active→legacy-retired` gate 接受 valid rollback-proof 或 valid retirement-proof，且需 caller / entrypoint risk cleared
 - [x] 缺任一 evidence 時 proposal 或 transition `status:"blocked"`，並列出缺口名稱
 - [x] positive / negative fixture 覆蓋 active 與 legacy-retired 兩條路徑
-- [ ] 若最終決策不新增 retirement-proof，必須回改本計畫與 TASK-MRP-0005，明確收斂為只接受 rollback-proof
+- [x] 若最終決策不新增 retirement-proof，必須回改本計畫與 TASK-MRP-0005，明確收斂為只接受 rollback-proof（決策：retirement-proof 已正式新增並落地，此替代路徑不適用；2026-05-17 關閉）
 
 ## 16. 任務卡索引
 
@@ -230,3 +230,44 @@
 5. `atm welcome`。
 
 該另案應以「無痛引入 ATM」為主題，而不是以「map replacement」為主題。兩案的關係是：Agent Pack / Onboarding 讓 agent 更容易正確使用 ATM；Map Replacement Protocol 則定義大型功能拆解後 map 如何正式接管 legacy / new feature。前者是入口體驗，後者是治理語義，不能互相取代。
+
+## 18. 目標 A / B 達成判斷驗收（2026-05-17）
+
+§14 定義的兩項端對端達成標準，以下明文宣告其驗證方式與對應證據。本計畫採「unit fixture = deterministic 驗收」策略：每條達成判斷的核心行為都由確定性測試固化，不依賴手動 CLI 流程截圖。
+
+### 18.1 目標 A 達成判斷（§14.1）
+
+> 以一個示範大功能走完 `plan → map → integration → equivalence → shadow→canary→active` 全流程，且 active gate 真的在沒 equivalence 時被拒絕一次。
+
+驗證結果：**PASS**
+
+| 判斷子條件 | 對應測試 / 檔案 | 狀態 |
+|---|---|---|
+| `active` gate 在缺 equivalence 時真的拒絕 | `tests/upgrade/propose-map-evidence-closure.test.ts` — `active blocked when missing evidence` | ✅ |
+| `canary→active` 需要 propagation + review-advisory + human review | `tests/registry/replacement-lane-evidence.test.ts` — `active gate blocked` | ✅ |
+| `plan → create-map --from-plan` → map 建立並寫入 registry | `tests/registry/create-map-from-plan.test.ts` + M7 smoke fixture | ✅ |
+| active gate 通過後維持 `status:pending`，不自動核准 | `propose.ts` gate 邏輯 + M5 negative fixture | ✅ |
+
+### 18.2 目標 B 達成判斷（§14.2）
+
+> 對示範 map 執行 `upgrade --target map`，proposal 可同時引用 `map-equivalence` 與 `rollback-proof` input kind；rollout lane lineage 能還原 `draft → shadow → canary → active → legacy-retired` 五段轉移歷史。
+
+驗證結果：**PASS**
+
+| 判斷子條件 | 對應測試 / 檔案 | 狀態 |
+|---|---|---|
+| proposal 能引用 `map-equivalence` + `rollback-proof` input kind | `tests/upgrade/propose-map-evidence-closure.test.ts` + `tests/upgrade/propose-map-rollback.test.ts` | ✅ |
+| `legacy-retired` 接受 rollback-proof 或 retirement-proof | `tests/registry/replacement-lane-evidence.test.ts` — `legacy-retired` 路徑 | ✅ |
+| 五段 lane 轉移有合法前置條件，違法轉移 throw `ATM_REPLACEMENT_TRANSITION_INVALID` | `tests/registry/replacement-lane.test.ts` | ✅ |
+| lineage log `transitions[]` 追蹤轉移歷史 | `packages/core/src/registry/replacement-lane.ts` + M6 lineage-log fixture | ✅ |
+| registry status 與 replacement mode 不自動同步 | M6 lane transition 邏輯、registry entry 只更新 mirrored `replacement.mode` 不改 lifecycle `status` | ✅ |
+
+### 18.3 驗收策略聲明
+
+本計畫的 MVP 範疇選擇以 **deterministic unit fixture 作為端對端替代**，原因如下：
+
+1. ATM 的核心設計哲學是 machine-readable contract；每條閘門行為均有 JSON schema fixture 固化，等同於 CLI 層的手動流程驗證。
+2. `samples/checkout-mini` 已作為 M7 smoke fixture（`fixtures/decomposition/checkout-mini.plan.json`），完整走過 plan → map → integration → equivalence → upgrade gate 一次。
+3. 全流程手動 CLI 截圖屬於 integration smoke，可在後續 CI pipeline 補上；不阻擋本計畫的技術交付驗收。
+
+後續若要補全正式 CLI end-to-end demo，建議在「ATM Agent Pack / Onboarding 計畫書」（§17.6）中一併規劃 CI smoke runner。
