@@ -669,6 +669,35 @@ def load_full_roster_scoreboard_policy(
     return read_governance_json(path, required_id="Policy_FullRosterScoreboard_P1")
 
 
+
+def load_relationship_type_refinement_rules(
+    root: str | Path | None = None,
+    *,
+    relationship_type_refinement_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(relationship_type_refinement_rules).resolve()
+        if relationship_type_refinement_rules
+        else _path(base, "rules", "rule-relationship-type-refinement.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
+
+
+def load_relationship_evidence_extraction_rules(
+    root: str | Path | None = None,
+    *,
+    relationship_evidence_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(relationship_evidence_cue_rules).resolve()
+        if relationship_evidence_cue_rules
+        else _path(base, "rules", "rule-relationship-evidence-extraction-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "policies", "file": "policy-full-roster-scoreboard.json", "consumer": "build_full_roster_scoreboard.py"},

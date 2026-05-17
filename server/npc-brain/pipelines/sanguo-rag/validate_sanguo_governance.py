@@ -42,7 +42,9 @@ from sanguo_governance_loader import (
     load_npc_dialogue_runtime_cue_rules,
     load_npc_dialogue_runtime_service_policy,
     load_progress_runner_governance,
+    load_relationship_evidence_extraction_rules,
     load_relationship_runtime_canon_policy,
+    load_relationship_type_refinement_rules,
     load_runtime_general_profile_export_policy,
     load_runtime_profile_item_cue_rules,
     load_runtime_profile_label_catalog,
@@ -176,6 +178,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     three_kweb_check_policy = load_three_kweb_check_runner_policy(root)
     three_kweb_check_cues = load_three_kweb_check_cue_rules(root)
     deepseek_reasoning_policy = load_deepseek_reasoning_trial_policy(root)
+    relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
+    relationship_evidence_extraction_rules = load_relationship_evidence_extraction_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -1110,6 +1114,107 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if float(deepseek_reasoning.get("repeatPenalty") or 0.0) <= 0.0:
         raise SanguoGovernanceError("policy-deepseek-reasoning-trial reasoningDefaults.repeatPenalty must be positive")
 
+
+    relationship_type_required = {
+        "COARSE_RELATIONSHIP_TYPES",
+        "STABLE_RELATIONSHIP_TYPES",
+        "KINSHIP_RELATIONSHIP_TYPES",
+        "RELATIONSHIP_TYPE_FAMILIES",
+        "TYPE_LABELS",
+        "BETRAYAL_TERMS",
+        "MENTOR_TERMS",
+        "PATRON_TERMS",
+        "ALLIANCE_TERMS",
+        "ENEMY_TERMS",
+        "COMMAND_TERMS",
+        "SPOUSE_TERMS",
+        "PARENT_CHILD_TERMS",
+        "SIBLING_TERMS",
+        "SWORN_SIBLING_TERMS",
+    }
+    relationship_evidence_required = {
+        "DIRECT_PAIR_CONFRONT_TERMS",
+        "DIRECTED_CONFRONT_TERMS",
+        "COMMAND_TERMS",
+        "PROTECT_TERMS",
+        "ALLY_TERMS",
+        "FALSE_POSITIVE_TERMS",
+        "SINGLE_CHAR_ALIAS_ALLOWLIST",
+    }
+
+    def validate_governance_value_row(row: dict[str, Any], *, expected_consumer: str, source_name: str) -> int:
+        consumer = str(row.get("consumer") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        kind = str(row.get("kind") or "").strip()
+        if consumer != expected_consumer:
+            raise SanguoGovernanceError(f"{source_name} {constant_name} invalid consumer: {consumer}")
+        if not constant_name:
+            raise SanguoGovernanceError(f"{source_name} has blank constantName")
+        value = row.get("value")
+        if kind == "mapping":
+            if not isinstance(value, dict) or not value:
+                raise SanguoGovernanceError(f"{source_name} {constant_name} mapping value cannot be empty")
+            for key, item in value.items():
+                if not str(key).strip() or not str(item).strip():
+                    raise SanguoGovernanceError(f"{source_name} {constant_name} mapping has blank key/value")
+            return len(value)
+        if kind == "aliasAllowlist":
+            if not isinstance(value, dict) or not value:
+                raise SanguoGovernanceError(f"{source_name} {constant_name} aliasAllowlist value cannot be empty")
+            count = 0
+            for key, aliases in value.items():
+                if not str(key).strip() or not isinstance(aliases, list) or not aliases:
+                    raise SanguoGovernanceError(f"{source_name} {constant_name} aliasAllowlist has invalid entry")
+                normalized_aliases = [str(alias).strip() for alias in aliases]
+                if any(not alias for alias in normalized_aliases):
+                    raise SanguoGovernanceError(f"{source_name} {constant_name} aliasAllowlist has blank alias")
+                if len(set(normalized_aliases)) != len(normalized_aliases):
+                    raise SanguoGovernanceError(f"{source_name} {constant_name} aliasAllowlist has duplicate alias")
+                count += len(normalized_aliases)
+            return count
+        if kind in {"set", "terms"}:
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"{source_name} {constant_name} list value cannot be empty")
+            normalized_terms = [str(term).strip() for term in value]
+            if any(not term for term in normalized_terms):
+                raise SanguoGovernanceError(f"{source_name} {constant_name} has blank cue")
+            if len(set(normalized_terms)) != len(normalized_terms):
+                raise SanguoGovernanceError(f"{source_name} {constant_name} has duplicate cue")
+            return len(normalized_terms)
+        raise SanguoGovernanceError(f"{source_name} {constant_name} unsupported kind: {kind}")
+
+    relationship_type_by_name: dict[str, dict[str, Any]] = {}
+    relationship_type_refinement_term_count = 0
+    for row in relationship_type_refinement_rules:
+        constant_name = str(row.get("constantName") or "")
+        if constant_name in relationship_type_by_name:
+            raise SanguoGovernanceError(f"rule-relationship-type-refinement duplicate constantName: {constant_name}")
+        relationship_type_by_name[constant_name] = row
+        relationship_type_refinement_term_count += validate_governance_value_row(
+            row,
+            expected_consumer="relationship_type_refinement.py",
+            source_name="rule-relationship-type-refinement",
+        )
+    missing_relationship_type = sorted(relationship_type_required - relationship_type_by_name.keys())
+    if missing_relationship_type:
+        raise SanguoGovernanceError(f"rule-relationship-type-refinement missing rules: {', '.join(missing_relationship_type)}")
+
+    relationship_evidence_by_name: dict[str, dict[str, Any]] = {}
+    relationship_evidence_extraction_cue_count = 0
+    for row in relationship_evidence_extraction_rules:
+        constant_name = str(row.get("constantName") or "")
+        if constant_name in relationship_evidence_by_name:
+            raise SanguoGovernanceError(f"rule-relationship-evidence-extraction-cues duplicate constantName: {constant_name}")
+        relationship_evidence_by_name[constant_name] = row
+        relationship_evidence_extraction_cue_count += validate_governance_value_row(
+            row,
+            expected_consumer="extract_relationship_evidence.py",
+            source_name="rule-relationship-evidence-extraction-cues",
+        )
+    missing_relationship_evidence = sorted(relationship_evidence_required - relationship_evidence_by_name.keys())
+    if missing_relationship_evidence:
+        raise SanguoGovernanceError(f"rule-relationship-evidence-extraction-cues missing rules: {', '.join(missing_relationship_evidence)}")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1243,6 +1348,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "deepseekReasoningPathDefaultCount": len(deepseek_paths),
         "deepseekReasoningPromptLimitCount": len(deepseek_limits),
         "deepseekReasoningSamplingParamCount": len(deepseek_reasoning),
+        "relationshipTypeRefinementRuleCount": len(relationship_type_refinement_rules),
+        "relationshipTypeRefinementTermCount": relationship_type_refinement_term_count,
+        "relationshipEvidenceExtractionRuleCount": len(relationship_evidence_extraction_rules),
+        "relationshipEvidenceExtractionCueCount": relationship_evidence_extraction_cue_count,
     }
 
 

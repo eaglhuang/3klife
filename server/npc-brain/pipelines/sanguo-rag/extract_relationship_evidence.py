@@ -8,25 +8,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from relationship_type_refinement import refine_relationship_type
+from relationship_type_refinement import apply_relationship_type_refinement_rules, refine_relationship_type
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_relationship_evidence_extraction_rules
 
 
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/relationship-evidence")
 
-DIRECT_PAIR_CONFRONT_TERMS = ["交鋒", "廝殺", "交戰", "大戰", "酣戰", "便戰", "親戰"]
-DIRECTED_CONFRONT_TERMS = ["直取", "截住", "追趕", "追襲", "殺敗", "攻打"]
-COMMAND_TERMS = ["令", "命", "使", "遣", "差", "教", "撥"]
-PROTECT_TERMS = ["救", "護", "保", "扶"]
-ALLY_TERMS = ["同救", "共破", "合兵", "會合", "同往", "同入", "共守"]
-FALSE_POSITIVE_TERMS = ["現居何職", "表陳", "薦爲", "除", "遷", "奏其功", "白身", "司馬", "縣令"]
-SINGLE_CHAR_ALIAS_ALLOWLIST = {
-    "cao-cao": ["操"],
-    "dong-zhuo": ["卓"],
-    "lu-bu": ["布"],
-    "zhang-fei": ["飛"],
-}
+DIRECT_PAIR_CONFRONT_TERMS: list[str] = []
+DIRECTED_CONFRONT_TERMS: list[str] = []
+COMMAND_TERMS: list[str] = []
+PROTECT_TERMS: list[str] = []
+ALLY_TERMS: list[str] = []
+FALSE_POSITIVE_TERMS: list[str] = []
+SINGLE_CHAR_ALIAS_ALLOWLIST: dict[str, list[str]] = {}
 
 
 def parse_args() -> argparse.Namespace:
@@ -34,6 +30,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--observed-mentions", default=str(DEFAULT_OBSERVED_MENTIONS_PATH))
     parser.add_argument("--stable-knowledge", default=str(DEFAULT_STABLE_KNOWLEDGE_PATH))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--relationship-evidence-cue-rules", default=None, help="Override rule-relationship-evidence-extraction-cues.jsonl path")
+    parser.add_argument("--relationship-type-refinement-rules", default=None, help="Override rule-relationship-type-refinement.jsonl path")
     parser.add_argument("--max-scene-participants", type=int, default=8)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
@@ -270,6 +269,12 @@ def render_markdown(summary: dict[str, Any], examples: list[dict[str, Any]]) -> 
 
 def main() -> None:
     args = parse_args()
+    try:
+        apply_relationship_evidence_extraction_rules(args.governance_root, args.relationship_evidence_cue_rules)
+        apply_relationship_type_refinement_rules(args.governance_root, args.relationship_type_refinement_rules)
+    except SanguoGovernanceError as exc:
+        print(f"[extract_relationship_evidence] governance error: {exc}")
+        raise SystemExit(2) from None
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     jsonl_path = output_root / "source-grounded-relationship-edges.jsonl"

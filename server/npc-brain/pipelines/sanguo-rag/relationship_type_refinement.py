@@ -1,165 +1,94 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import SanguoGovernanceError, load_relationship_type_refinement_rules
 
-COARSE_RELATIONSHIP_TYPES = {"commands", "allies", "confronts", "killing"}
-STABLE_RELATIONSHIP_TYPES = {"spouse", "parent_child", "sibling", "sworn_sibling", "protects"}
-KINSHIP_RELATIONSHIP_TYPES = {"spouse", "parent_child", "sibling", "sworn_sibling"}
 
-RELATIONSHIP_TYPE_FAMILIES = {
-    "spouse": "kinship",
-    "parent_child": "kinship",
-    "sibling": "kinship",
-    "sworn_sibling": "kinship",
-    "protects": "support",
-    "ruler_subject": "authority",
-    "patron_client": "authority",
-    "mentor_student": "instruction",
-    "betrayal_surrender": "conflict",
-    "enemy_rival": "conflict",
-    "alliance_oath": "oath",
-}
+COARSE_RELATIONSHIP_TYPES: set[str] = set()
+STABLE_RELATIONSHIP_TYPES: set[str] = set()
+KINSHIP_RELATIONSHIP_TYPES: set[str] = set()
 
-TYPE_LABELS = {
-    "spouse": "夫妻婚配",
-    "parent_child": "親子關係",
-    "sibling": "手足關係",
-    "sworn_sibling": "結義兄弟",
-    "ruler_subject": "君臣關係",
-    "patron_client": "庇護依附",
-    "mentor_student": "師徒傳授",
-    "betrayal_surrender": "背叛投降",
-    "enemy_rival": "敵對競爭",
-    "alliance_oath": "盟約結盟",
-}
+RELATIONSHIP_TYPE_FAMILIES: dict[str, str] = {}
 
-BETRAYAL_TERMS = [
-    "背叛",
-    "反叛",
-    "叛",
-    "降",
-    "投降",
-    "歸降",
-    "歸附",
-    "叛離",
-    "離去",
-    "棄",
-    "賣",
-]
-MENTOR_TERMS = [
-    "師",
-    "授",
-    "教",
-    "傳授",
-    "受業",
-    "學藝",
-    "求教",
-    "門生",
-    "弟子",
-    "拜師",
-]
-PATRON_TERMS = [
-    "庇護",
-    "依附",
-    "投靠",
-    "歸附",
-    "門客",
-    "賓客",
-    "屬下",
-    "部曲",
-    "附屬",
-    "收留",
-    "部屬",
-]
-ALLIANCE_TERMS = [
-    "結盟",
-    "盟約",
-    "同盟",
-    "盟誓",
-    "會盟",
-    "盟友",
-    "盟",
-    "聯盟",
-    "誓盟",
-]
-ENEMY_TERMS = [
-    "仇",
-    "敵",
-    "怨",
-    "冤家",
-    "對立",
-    "對峙",
-    "相攻",
-    "交戰",
-    "攻伐",
-    "征討",
-    "討伐",
-    "相鬥",
-]
-COMMAND_TERMS = [
-    "命",
-    "令",
-    "統領",
-    "率",
-    "領",
-    "奉命",
-    "受命",
-]
-SPOUSE_TERMS = [
-    "婚配",
-    "夫妻",
-    "夫婦",
-    "配偶",
-    "成婚",
-    "結婚",
-    "聯姻",
-    "妻子",
-    "丈夫",
-    "夫人",
-    "嫁娶",
-]
-PARENT_CHILD_TERMS = [
-    "親子",
-    "父子",
-    "母子",
-    "父女",
-    "母女",
-    "子女",
-    "兒子",
-    "女兒",
-    "養子",
-    "養女",
-    "繼子",
-    "繼女",
-    "嗣子",
-    "嫡子",
-    "庶子",
-]
-SIBLING_TERMS = [
-    "兄弟",
-    "姐妹",
-    "兄妹",
-    "姊妹",
-    "手足",
-    "兄長",
-    "弟弟",
-    "姊姊",
-    "姐姐",
-    "妹妹",
-]
-SWORN_SIBLING_TERMS = [
-    "結義",
-    "結拜",
-    "桃園",
-    "義兄",
-    "義弟",
-    "義姐",
-    "義妹",
-    "義兄弟",
-    "義姐妹",
-]
+TYPE_LABELS: dict[str, str] = {}
+
+BETRAYAL_TERMS: list[str] = []
+MENTOR_TERMS: list[str] = []
+PATRON_TERMS: list[str] = []
+ALLIANCE_TERMS: list[str] = []
+ENEMY_TERMS: list[str] = []
+COMMAND_TERMS: list[str] = []
+SPOUSE_TERMS: list[str] = []
+PARENT_CHILD_TERMS: list[str] = []
+SIBLING_TERMS: list[str] = []
+SWORN_SIBLING_TERMS: list[str] = []
+
+
+_RELATIONSHIP_TYPE_REFINEMENT_RULES_LOADED = False
+
+
+def _required_rule_value(by_name: dict[str, dict[str, Any]], constant_name: str) -> Any:
+    row = by_name.get(constant_name)
+    if row is None:
+        raise SanguoGovernanceError(f"rule-relationship-type-refinement missing constantName: {constant_name}")
+    return row.get("value")
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if str(item)]
+
+
+def _string_set(value: Any) -> set[str]:
+    return set(_string_list(value))
+
+
+def _string_mapping(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict):
+        return {}
+    return {str(key): str(item) for key, item in value.items() if str(key) and str(item)}
+
+
+def apply_relationship_type_refinement_rules(
+    governance_root: str | Path | None = None,
+    relationship_type_refinement_rules: str | Path | None = None,
+) -> None:
+    global _RELATIONSHIP_TYPE_REFINEMENT_RULES_LOADED
+    global COARSE_RELATIONSHIP_TYPES, STABLE_RELATIONSHIP_TYPES, KINSHIP_RELATIONSHIP_TYPES
+    global RELATIONSHIP_TYPE_FAMILIES, TYPE_LABELS
+    global BETRAYAL_TERMS, MENTOR_TERMS, PATRON_TERMS, ALLIANCE_TERMS, ENEMY_TERMS, COMMAND_TERMS
+    global SPOUSE_TERMS, PARENT_CHILD_TERMS, SIBLING_TERMS, SWORN_SIBLING_TERMS
+
+    rows = load_relationship_type_refinement_rules(
+        governance_root,
+        relationship_type_refinement_rules=relationship_type_refinement_rules,
+    )
+    by_name = {str(row.get("constantName") or ""): row for row in rows}
+    COARSE_RELATIONSHIP_TYPES = _string_set(_required_rule_value(by_name, "COARSE_RELATIONSHIP_TYPES"))
+    STABLE_RELATIONSHIP_TYPES = _string_set(_required_rule_value(by_name, "STABLE_RELATIONSHIP_TYPES"))
+    KINSHIP_RELATIONSHIP_TYPES = _string_set(_required_rule_value(by_name, "KINSHIP_RELATIONSHIP_TYPES"))
+    RELATIONSHIP_TYPE_FAMILIES = _string_mapping(_required_rule_value(by_name, "RELATIONSHIP_TYPE_FAMILIES"))
+    TYPE_LABELS = _string_mapping(_required_rule_value(by_name, "TYPE_LABELS"))
+    BETRAYAL_TERMS = _string_list(_required_rule_value(by_name, "BETRAYAL_TERMS"))
+    MENTOR_TERMS = _string_list(_required_rule_value(by_name, "MENTOR_TERMS"))
+    PATRON_TERMS = _string_list(_required_rule_value(by_name, "PATRON_TERMS"))
+    ALLIANCE_TERMS = _string_list(_required_rule_value(by_name, "ALLIANCE_TERMS"))
+    ENEMY_TERMS = _string_list(_required_rule_value(by_name, "ENEMY_TERMS"))
+    COMMAND_TERMS = _string_list(_required_rule_value(by_name, "COMMAND_TERMS"))
+    SPOUSE_TERMS = _string_list(_required_rule_value(by_name, "SPOUSE_TERMS"))
+    PARENT_CHILD_TERMS = _string_list(_required_rule_value(by_name, "PARENT_CHILD_TERMS"))
+    SIBLING_TERMS = _string_list(_required_rule_value(by_name, "SIBLING_TERMS"))
+    SWORN_SIBLING_TERMS = _string_list(_required_rule_value(by_name, "SWORN_SIBLING_TERMS"))
+    _RELATIONSHIP_TYPE_REFINEMENT_RULES_LOADED = True
+
+
+def ensure_relationship_type_refinement_rules_loaded() -> None:
+    if not _RELATIONSHIP_TYPE_REFINEMENT_RULES_LOADED:
+        apply_relationship_type_refinement_rules()
 
 
 def compact_text(value: Any) -> str:
