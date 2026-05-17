@@ -158,6 +158,8 @@ ATM Framework Version 與 ATMChart Version 是「分層座標、同一 release t
 
 本計畫不另起第二套 lifecycle 政策。Framework SemVer、tier、deprecation cycle 仍以 `docs/ai_atomic_framework/upstream-versioning-policy.md` 為背景政策；本節只補足 onboarding / ATMChart / manifest 層的版本契約。
 
+**權威順序**：三層文件衝突時以以下順序仲裁——L1 上游 `compatibility-matrix.json` + `docs/LIFECYCLE.md`（程式可讀真相）＞L2 `upstream-versioning-policy.md`（書面背景政策）＞L3 本計畫書（onboarding 落地對照）。任何本計畫中關於版本治理的描述若與 L1 / L2 衝突，以 L1 / L2 為準，並連動修正本計畫。
+
 與 `upstream-versioning-policy.md` 的落地對照如下：
 
 | Upstream policy 要求 | 引導工程落地規則 |
@@ -271,7 +273,19 @@ node atm.mjs upgrade rollback --backup <backup-id>
 | TASK-APO-0009 | Command Hint Chain | 讓 `atm next --json` 提供 agent-pack 可讀 hint | `agent_pack_hint`、prompt schema 擴充 | done |
 | TASK-APO-0010 | Matrix Generator | 由 adapter registry 反向產生 multi-agent matrix | matrix renderer、drift check | done |
 | TASK-APO-0011 | Version Contract | 定義 Framework / ATMChart / Template 三層版本契約 | 計畫書、upstream versioning policy 對照、任務索引 | done |
-| TASK-APO-0012 | Version Compatibility Gate | 讓 CLI / validator 偵測 version drift 與 breaking change | version compatibility validator、doctor / welcome version output | open |
+| TASK-APO-0012 | Version Compatibility Gate | 讓 CLI / validator 偵測 version drift 與 breaking change | version compatibility validator、doctor / welcome version output | done |
+| TASK-APO-0013 | Migration Tooling Contract | codemod 守則、多階段遷移鏈、fixture 庫、migration guide 模板 | `atm migrate` 契約、fixture 集、migration guide template | open |
+| TASK-APO-0014 | Release Trust Chain | npm provenance、SBOM、`integrity.json`、CLI 啟動驗 matrix sha256 | release workflow signing step、CLI startup verification | open |
+| TASK-APO-0015 | Release Incident Response | known-bad release 回收與黑名單 | `known-bad-versions.json`、yank SOP、CLI deny gate | open |
+| TASK-APO-0016 | Version Skew Matrix CI | CLI × Plugin SDK × Adapter 組合驗證 | skew matrix workflow、fixture combinations | open |
+| TASK-APO-0017 | Long-tail User Safeguards | append-only matrix、時間窗 unsupported、offline first-touch、downgrade detection | matrix.legacy.json、downgrade detect validator | open |
+| TASK-APO-0018 | Security Policy | SECURITY.md、advisory branch、dependency scanning gate | `SECURITY.md`、Dependabot config、advisory workflow | open |
+| TASK-APO-0019 | Dist-tag 政策 | `latest` / `next` / `beta` / `lts` 對應于 tier、`create-atm` 預設 tag | dist-tag policy table、create-atm tag selection | open |
+| TASK-APO-0020 | Telemetry + Sentinel + Dashboard | opt-in telemetry、adopter sentinel CI、deprecation dashboard | `atm telemetry` opt-in flow、adopter sentinel workflow、`DEPRECATIONS.md` | open |
+| TASK-APO-0021 | Meta-schema Versioning | invariants / InstallManifest / ATMChart frontmatter 各 schemaVersion | schemaVersion 字段、向後讀舊 manifest 證明 | open |
+| TASK-APO-0022 | Bridge Minor + Experimental API | major bump 前同時讀寫新舊 schema、`@experimental` 通道 | bridge minor SOP、experimental opt-in flag | open |
+| TASK-APO-0023 | Policy Self-Versioning + Auto Matrix PR | 政策文件加 `policy_version`、release workflow 自動產 matrix PR | policy frontmatter、auto-PR workflow | open |
+| TASK-APO-0024 | Time+minor Deprecation + Canary Rollout | alpha≥30d / beta≥90d / stable≥180d / lts≥365d、`upgrade apply --canary` | deprecation policy update、canary apply flag | open |
 
 ## 6. 里程碑
 

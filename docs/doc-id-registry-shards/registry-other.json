@@ -922,5 +922,77 @@
     "path": "docs/ai_atomic_framework/default-governance/ATM預設治理能力計畫書.md",
     "title": "ATM 預設治理能力計畫書",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0166",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0013-migration-tooling-contract.task.md",
+    "title": "TASK-APO-0013 — Migration Tooling Contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0167",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0014-release-trust-chain.task.md",
+    "title": "TASK-APO-0014 — Release Trust Chain",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0168",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0015-release-incident-response.task.md",
+    "title": "TASK-APO-0015 — Release Incident Response",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0169",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0016-version-skew-matrix-ci.task.md",
+    "title": "TASK-APO-0016 — Version Skew Matrix CI",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0170",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0017-longtail-user-safeguards.task.md",
+    "title": "TASK-APO-0017 — Long-tail User Safeguards",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0171",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0018-security-policy.task.md",
+    "title": "TASK-APO-0018 — Security Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0172",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0019-dist-tag-policy.task.md",
+    "title": "TASK-APO-0019 — Dist-tag Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0173",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0020-telemetry-sentinel-dashboard.task.md",
+    "title": "TASK-APO-0020 — Telemetry + Sentinel + Dashboard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0174",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0021-meta-schema-versioning.task.md",
+    "title": "TASK-APO-0021 — Meta-schema Versioning",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0175",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0022-bridge-minor-experimental.task.md",
+    "title": "TASK-APO-0022 — Bridge Minor + Experimental API",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0176",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0023-policy-self-versioning.task.md",
+    "title": "TASK-APO-0023 — Policy Self-Versioning + Auto Matrix PR",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0177",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0024-time-minor-deprecation-canary.task.md",
+    "title": "TASK-APO-0024 — Time+minor Deprecation + Canary Rollout",
+    "category": "other"
   }
 ]

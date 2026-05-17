@@ -21,6 +21,16 @@
 
 政策更新流程：先更新 canonical docs，再視需要回補本背景文件，避免雙重真相。
 
+### 權威順序（衝突仲裁）
+
+當以下三層內容衝突時，永遠以較高優先級為準：
+
+1. **L1 程式可讀真相**：上游 `compatibility-matrix.json` 與 `docs/LIFECYCLE.md`。CLI、validator、release workflow 直接讀此層。
+2. **L2 背景政策**：本文件（`upstream-versioning-policy.md`），描述 tier、SemVer、deprecation、release trust、incident response 的書面承諾。
+3. **L3 落地對照**：`ATM引導工程計畫書.md` §3.8 / §4.3 / §4.4，把 L1+L2 翻譯為 onboarding 操作。
+
+落地對照若與背景政策衝突，視為背景政策的 bug，應回補背景政策後再回寫對照；背景政策若與 L1 衝突，視為 L1 待補的 advisory，CLI / release gate 仍以 L1 為唯一執行依據。
+
 ---
 
 ## 為什麼需要本政策
@@ -120,10 +130,10 @@ export function normalizeCssColor(input: string): string { ... }
 ### 4.1 維護位置
 上游 repo 根目錄：`compatibility-matrix.json`
 
-格式：
+格式（schemaVersion 採 `atm.compatibilityMatrix.vX.Y` 命名，與實作 fixture 一致；舊範例的 `"1.0"` 已棄用）：
 ```json
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "atm.compatibilityMatrix.v0.1",
   "atmVersions": {
     "0.5.0": {
       "minPlatform": "node@22",
@@ -152,10 +162,11 @@ node tools_node/adapters/atm-3klife/compat-check.js \
 # 退轉者立即 rollback
 ```
 
-### 4.3 維護節奏
+### 4.3 維護節奏（append-only）
 - 每次 minor 釋出時更新
 - 上游 release PR 必含 compatibility-matrix.json diff
-- 移除過期版本（>4 個 minor）
+- **歷史條目不刪**：matrix 採 append-only。超過 4 個 minor 的舊版本只能標 `status: "unsupported"` 並補 `removedFromActiveSupportAt`，不得物理移除；保留條目讓離線環境的 `doctor` 仍能 self-diagnose。如需控檔大小，可把過期條目分檔到 `compatibility-matrix.legacy.json`，仍隨 release 出貨。
+- release workflow 應自動從 source registry 推導矩陣 diff PR，由人類審核而非手工抄寫（避免 alpha 期高頻 minor 漏更）。
 
 ### 4.4 ATMChart / Onboarding 相容矩陣擴充
 
@@ -218,7 +229,7 @@ ATM 的版本治理必須優先保護既有使用者專案。任何版本落後�
 | `supported` | 正常執行 | 可建議更新，但不得阻擋 |
 | `deprecated` | 正常執行 + 警告 | 顯示 migration hint、目標版本與最晚支援期限 |
 | `unsupported` | 阻擋 official onboarding / release path；允許 read-only doctor | 不自動修改檔案，輸出 rollback / upgrade plan |
-| `unknown` | fail closed for publish，local 端進入 diagnostic mode | 要求更新 compatibility matrix 或手動指定版本 |
+| `unknown` | fail closed for publish；**local 端預設拒絕對 unknown chart 寫入**，僅允許 read-only diagnostic。需要 explicit `--allow-unknown-chart` 才能執行升級流程 | 要求更新 compatibility matrix 或手動指定版本 |
 
 ---
 
@@ -406,3 +417,26 @@ Chart major 不必自動等於 Framework major；若同一個 Framework minor �
 - 本政策引用 [Semantic Versioning 2.0.0](https://semver.org)
 - Deprecation cycle 參考 [Node.js Long Term Support](https://github.com/nodejs/Release)
 - Multi-language SPI 設計借鑒 [LSP / DAP](https://microsoft.github.io/language-server-protocol/) 模式
+
+---
+
+## 11. 後續強化（TASK-APO-0013 ~ 0024）
+
+本政策骨架已完整，但開源框架實務上仍需補下列子計畫；每項對應一張任務卡，落於 `docs/ai_atomic_framework/agent-pack-onboarding/tasks/` 下：
+
+| 任務 | 補強面向 | 主要落點 |
+|---|---|---|
+| TASK-APO-0013 | Migration tooling contract（codemod 守則、多階段遷移鏈、fixture 庫、migration guide 模板） | §5 / 新 §5.2 |
+| TASK-APO-0014 | Release trust chain（npm `--provenance`、SBOM、`integrity.json`、CLI 啟動驗 bundled matrix sha256） | 新 §4.6 |
+| TASK-APO-0015 | Release incident response（`known-bad-versions.json`、yank SOP、CLI 內建黑名單） | 新 §4.7 |
+| TASK-APO-0016 | Version skew matrix CI（CLI × Plugin SDK × Adapter 組合測試） | §4 / §6 |
+| TASK-APO-0017 | Long-tail user safeguards（append-only matrix、時間窗 unsupported、offline first-touch、downgrade detection） | §4.3 / §4.5 |
+| TASK-APO-0018 | Security policy（`SECURITY.md`、advisory branch、dependency scanning gate） | 新 §3.6 |
+| TASK-APO-0019 | Dist-tag 政策（`latest` / `next` / `beta` / `lts` 對應 + pre-release 規則 + `create-atm` 預設 tag） | 新 §8.5 |
+| TASK-APO-0020 | Telemetry + adopter sentinel + deprecation dashboard（opt-in only） | 新 §8.6 / `docs/DEPRECATIONS.md` |
+| TASK-APO-0021 | Meta-schema versioning（invariants / `InstallManifest` / ATMChart frontmatter 各自 schemaVersion） | §7 |
+| TASK-APO-0022 | Bridge minor（major bump 前一個 minor 同時讀寫新舊 schema）+ `@experimental` API 通道 | §2 / §7 |
+| TASK-APO-0023 | Policy self-versioning（本文件加 `policy_version` 並對齊 `framework_version_range`）+ 自動產生矩陣 PR | §9 |
+| TASK-APO-0024 | Time+minor 雙保險 deprecation（alpha ≥30d / beta ≥90d / stable ≥180d / lts ≥365d）+ staged rollout `--canary` | §3.1 / §4.5 |
+
+本節僅作為「政策補強路線圖」，實際章節落點與規則由各任務卡實作時回寫；任何節落實前，CLI / validator / release workflow 仍以本文件目前正文與上游 `compatibility-matrix.json` 為準。
