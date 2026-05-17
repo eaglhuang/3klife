@@ -3,12 +3,16 @@ doc_id: doc_other_0140
 task_id: TASK-MRP-0006
 title: Replacement Lane Transition
 milestone: M6
-status: pending
+status: done
 blocked_by: [TASK-MRP-0002]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T17:59:12.9966815+08:00
+started_by_agent: vs-insiders-github-copilot
+completed_at: 2026-05-17T18:04:26.6234416+08:00
+completed_by_agent: vs-insiders-github-copilot
 ---
 
 # TASK-MRP-0006 — Replacement Lane Transition
@@ -38,11 +42,11 @@ public_tracking: false
 
 ## 驗收條件
 
-- [ ] 合法五段轉移正向測試
-- [ ] 跳階轉移（draft → active）被擋
-- [ ] 缺 evidence 時被擋（active 與 legacy-retired）
-- [ ] lineage-log 寫入正確 ISO timestamp、actor、reason 與 evidenceRefs
-- [ ] registry status 改變不會自動改 replacement.mode
+- [x] 合法五段轉移正向測試
+- [x] 跳階轉移（draft → active）被擋
+- [x] 缺 evidence 時被擋（active 與 legacy-retired）
+- [x] lineage-log 寫入正確 ISO timestamp、actor、reason 與 evidenceRefs
+- [x] registry status 改變不會自動改 replacement.mode
 
 ## 影響檔案
 
@@ -57,8 +61,12 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] transition table 實作
-- [ ] lineage 寫入
-- [ ] CLI 子命令
-- [ ] 正反測試
-- [ ] CHANGELOG 補一句
+- [x] transition table 實作
+- [x] lineage 寫入
+- [x] CLI 子命令
+- [x] 正反測試
+- [x] CHANGELOG 補一句
+
+## Notes
+
+2026-05-17 | 狀態: done | 驗證: replacement-lane.test.ts pass（含 core transition + CLI help/command smoke） | 變更: 新增 `packages/core/src/registry/replacement-lane.ts`、`atm replacement-lane transition --map <id> --to <mode>`、lineage `transitions[]` 附加寫入，並以 focused test 驗證 forward chain / jump block / missing evidence / registry status independence | 阻塞: none

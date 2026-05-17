@@ -23,7 +23,7 @@ public_tracking: false
 | [TASK-MRP-0003](./TASK-MRP-0003-equivalence-schema.task.md) | Map Equivalence Report Schema | M3 | done | 0002 |
 | [TASK-MRP-0004](./TASK-MRP-0004-equivalence-cli.task.md) | Map Equivalence Test CLI | M4 | done | 0003 |
 | [TASK-MRP-0005](./TASK-MRP-0005-upgrade-gates.task.md) | Upgrade Gates: equivalence + rollback | M5 | done | 0003 / 0004 |
-| [TASK-MRP-0006](./TASK-MRP-0006-replacement-lane.task.md) | Replacement Lane Transition | M6 | pending | 0002 |
+| [TASK-MRP-0006](./TASK-MRP-0006-replacement-lane.task.md) | Replacement Lane Transition | M6 | done | 0002 |
 | [TASK-MRP-0007](./TASK-MRP-0007-decomposition-plan.task.md) | Decomposition Plan → Map | M7 | pending | 0002 / 0006 / 0009 |
 | [TASK-MRP-0008](./TASK-MRP-0008-scopelock-polymorph.task.md) | ScopeLock 0.2.0 + Polymorph Impact | M8 | deferred | 0006 |
 | [TASK-MRP-0009](./TASK-MRP-0009-create-map-from-spec-next-hints.task.md) | Create Map From Spec + Replacement Next Hints | M9 | pending | 0002 |

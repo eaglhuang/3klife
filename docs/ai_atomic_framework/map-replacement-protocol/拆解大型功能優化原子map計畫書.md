@@ -387,12 +387,14 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 對應任務卡：TASK-MRP-0006
 
-- [ ] 新增 `packages/core/src/registry/replacement-lane.ts`：定義合法轉移表
-- [ ] `draft→shadow / shadow→canary / canary→active / active→legacy-retired` 各自有 evidence 前置條件
-- [ ] 轉移寫入 map `lineage-log.json`，至少包含 `from` / `to` / `reason` / `evidenceRefs` / `actor` / `timestamp`
-- [ ] 違法轉移時 throw `ATM_REPLACEMENT_TRANSITION_INVALID`
-- [ ] registry status 與 replacement mode 互不自動同步（雙向獨立）
-- [ ] 提供 `atm replacement-lane transition --map <id> --to <mode>` CLI 子命令
+- [x] 新增 `packages/core/src/registry/replacement-lane.ts`：定義合法轉移表
+- [x] `draft→shadow / shadow→canary / canary→active / active→legacy-retired` 各自有 evidence 前置條件
+- [x] 轉移寫入 map `lineage-log.json`，至少包含 `from` / `to` / `reason` / `evidenceRefs` / `actor` / `timestamp`
+- [x] 違法轉移時 throw `ATM_REPLACEMENT_TRANSITION_INVALID`
+- [x] registry status 與 replacement mode 互不自動同步（雙向獨立）
+- [x] 提供 `atm replacement-lane transition --map <id> --to <mode>` CLI 子命令
+
+已完成最小 M6 實作：lane transition 以 canonical map spec 為控制面，forward-only rollout 會把 transition append 到 `lineage-log.json` 的 `transitions[]`，並同步更新 registry entry 的 mirrored `replacement.mode`，但不會改動 registry lifecycle `status`。
 
 ### Milestone 7：Decomposition Plan → Map（M7）
 
