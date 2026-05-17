@@ -3,7 +3,7 @@ doc_id: doc_other_0161
 task_id: TASK-APO-0010
 title: 多 agent 矩陣自動生成
 milestone: M5
-status: open
+status: done
 blocked_by: [TASK-APO-0006]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -13,8 +13,14 @@ hostKind: upstream-framework
 alphaGate: validate:standard
 public_tracking: false
 executionMode: planned-upstream-change
+started_at: 2026-05-17T23:44:15.5517787+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-17T23:48:46.3937263+08:00
+completed_by_agent: vs-insiders-gpt-5.4
 allowed_files:
   - scripts/render-agent-matrix.ts
+  - scripts/validate-multi-agent-confidence.ts
+  - scripts/validators.config.json
   - docs/multi-agent-compatibility-matrix.md
   - packages/agent-pack-*/**
   - tests/**
@@ -51,14 +57,16 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收條件
 
-- [ ] `scripts/render-agent-matrix.ts` 從 agent-pack registry 自動生成 `docs/multi-agent-compatibility-matrix.md`。
-- [ ] CI 比對 matrix sha256，漂移即 block。
-- [ ] matrix 內容涵蓋 Claude Code、Cursor、Copilot、Gemini、Windsurf。
-- [ ] 手改 matrix 但未更新 source registry 時 validator 會失敗。
+- [x] `scripts/render-agent-matrix.ts` 從 agent-pack registry 自動生成 `docs/multi-agent-compatibility-matrix.md`。
+- [x] CI 比對 matrix sha256，漂移即 block。
+- [x] matrix 內容涵蓋 Claude Code、Cursor、Copilot、Gemini、Windsurf。
+- [x] 手改 matrix 但未更新 source registry 時 validator 會失敗。
 
 ## 影響檔案
 
 - `scripts/render-agent-matrix.ts`
+- `scripts/validate-multi-agent-confidence.ts`
+- `scripts/validators.config.json`
 - `docs/multi-agent-compatibility-matrix.md`
 - `packages/agent-pack-*/**`
 - `tests/**`
@@ -75,11 +83,12 @@ cmd /c npm run validate:standard
 
 ## Checklist
 
-- [ ] generator
-- [ ] generated matrix
-- [ ] CI drift check
-- [ ] multi-agent coverage
+- [x] generator
+- [x] generated matrix
+- [x] CI drift check
+- [x] multi-agent coverage
 
 ## Notes
 
 2026-05-17 | 狀態: open | 驗證: pending | 變更: 依計畫書 §15/M5 開卡，尚未接手實作 | 阻塞: TASK-APO-0006
+2026-05-17 | 狀態: done | 驗證: `node --experimental-strip-types c:/Users/User/AI-Atomic-Framework/scripts/render-agent-matrix.ts --check` pass；`node --experimental-strip-types c:/Users/User/AI-Atomic-Framework/scripts/validate-multi-agent-confidence.ts --mode validate` pass；`npm --prefix c:/Users/User/AI-Atomic-Framework run validate:standard` pass；encoding touched / AI UTF-8 check pass；`node c:/Users/User/3KLife/tools_node/compute-gate.js --profile standard --agent-feedback` pass | 變更: upstream commit `d2c7e10 feat: generate multi-agent compatibility matrix`，新增 renderer、產出 generated compatibility matrix，並將 exact generated-output drift check 接入 standard validator | 阻塞: none
