@@ -373,13 +373,15 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 對應任務卡：TASK-MRP-0005
 
-- [ ] `packages/core/src/upgrade/propose.ts` 新增 input kind：`map-equivalence`、`rollback-proof`
-- [ ] target = map 時，`active` 需 `map-equivalence` 為 passed
-- [ ] target = map 時，`legacy-retired` 需 `rollback-proof` 為 valid
-- [ ] 缺 evidence 時 proposal `status:"blocked"` 且 `blockedGateNames` 包含對應名稱
-- [ ] blocked proposal 需輸出 `requiredJustification` 或同等欄位，指明需要 evidence 或 human review 才能放行
-- [ ] `upgrade-map-propose.ts` CLI wrapper 暴露 `--equivalence-report` / `--rollback-proof` 旗標
-- [ ] 至少 1 個 negative fixture 證明 gate 真的會擋
+- [x] `packages/core/src/upgrade/propose.ts` 新增 input kind：`map-equivalence`、`rollback-proof`
+- [x] target = map 時，`active` 需 `map-equivalence` 為 passed
+- [x] target = map 時，`legacy-retired` 需 `rollback-proof` 的 `verificationStatus = passed` 且 validator 通過
+- [x] 缺 evidence 時 proposal `status:"blocked"` 且 `blockedGateNames` 包含對應名稱
+- [x] blocked proposal 需輸出 `requiredJustification` 或同等欄位，指明需要 evidence 或 human review 才能放行
+- [x] `upgrade-map-propose.ts` CLI wrapper 暴露 `--replacement-mode` / `--equivalence-report` / `--rollback-proof` 旗標
+- [x] 至少 1 個 negative fixture 證明 gate 真的會擋
+
+已完成最小 gate 版本：`requestedReplacementMode=active` 會啟用 `mapEquivalence` gate，`requestedReplacementMode=legacy-retired` 會啟用 `rollbackProof` gate；proposal 通過後仍維持既有 contract 的 `status = pending`，由後續 human review / lane transition 接手，不直接自動核准。
 
 ### Milestone 6：Replacement Rollout Lane Transition（M6）
 

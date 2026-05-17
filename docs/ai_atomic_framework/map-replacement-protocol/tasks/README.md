@@ -22,7 +22,7 @@ public_tracking: false
 | [TASK-MRP-0002](./TASK-MRP-0002-schema-0.2.0.task.md) | Atomic Map Schema 0.2.0 | M2 | done | 0000 |
 | [TASK-MRP-0003](./TASK-MRP-0003-equivalence-schema.task.md) | Map Equivalence Report Schema | M3 | done | 0002 |
 | [TASK-MRP-0004](./TASK-MRP-0004-equivalence-cli.task.md) | Map Equivalence Test CLI | M4 | done | 0003 |
-| [TASK-MRP-0005](./TASK-MRP-0005-upgrade-gates.task.md) | Upgrade Gates: equivalence + rollback | M5 | pending | 0003 / 0004 |
+| [TASK-MRP-0005](./TASK-MRP-0005-upgrade-gates.task.md) | Upgrade Gates: equivalence + rollback | M5 | done | 0003 / 0004 |
 | [TASK-MRP-0006](./TASK-MRP-0006-replacement-lane.task.md) | Replacement Lane Transition | M6 | pending | 0002 |
 | [TASK-MRP-0007](./TASK-MRP-0007-decomposition-plan.task.md) | Decomposition Plan → Map | M7 | pending | 0002 / 0006 / 0009 |
 | [TASK-MRP-0008](./TASK-MRP-0008-scopelock-polymorph.task.md) | ScopeLock 0.2.0 + Polymorph Impact | M8 | deferred | 0006 |
