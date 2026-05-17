@@ -1,0 +1,37 @@
+{
+  "id": "Policy_KnowledgeGrowthRoundRunner_P1",
+  "description": "Externalized deterministic knowledge growth round runner defaults copied from run_knowledge_growth_round.py Phase 16 baseline.",
+  "defaultRoundId": "round-001-relationship-location",
+  "defaultPaths": {
+    "pilotReport": "artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json",
+    "candidates": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+    "outputRoot": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds",
+    "reviewRoot": "artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot",
+    "chaptersRoot": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters"
+  },
+  "cohortDefaults": {
+    "maxGenerals": 5,
+    "cohortOffset": 0,
+    "topPerGeneral": 3
+  },
+  "reviewerDefaults": {
+    "preset": "fast",
+    "provider": "",
+    "apiUrl": "http://172.31.80.1:11435/api/chat",
+    "model": "",
+    "timeoutMs": null,
+    "numPredict": null
+  },
+  "contextWindowDefaults": {
+    "windowBefore": 2,
+    "windowAfter": 2
+  },
+  "gateDefaults": {
+    "humanQuestionThreshold": 20,
+    "stepTimeoutSeconds": 30
+  },
+  "snapshotPolicy": {
+    "snapshotSubdirSuffix": ".snapshots",
+    "reviewOutputPrefix": "event-review-"
+  }
+}

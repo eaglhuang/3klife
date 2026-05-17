@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_root, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, load_knowledge_growth_round_runner_policy
 
 
 DEFAULT_PILOT_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json")
@@ -23,27 +24,99 @@ REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 
 
+KNOWLEDGE_GROWTH_ROUND_POLICY: dict[str, Any] = {}
+
+
+def apply_knowledge_growth_round_governance(policy: dict[str, Any]) -> None:
+    global KNOWLEDGE_GROWTH_ROUND_POLICY, DEFAULT_CHAPTERS_ROOT, DEFAULT_DEEPSEEK_API_URL
+    KNOWLEDGE_GROWTH_ROUND_POLICY = dict(policy)
+    paths = knowledge_growth_section("defaultPaths")
+    chapters_root = str(paths.get("chaptersRoot") or "").strip()
+    if chapters_root:
+        DEFAULT_CHAPTERS_ROOT = Path(chapters_root)
+    reviewer = knowledge_growth_section("reviewerDefaults")
+    api_url = str(reviewer.get("apiUrl") or "").strip()
+    if api_url:
+        DEFAULT_DEEPSEEK_API_URL = api_url
+
+
+def knowledge_growth_section(name: str) -> dict[str, Any]:
+    section = KNOWLEDGE_GROWTH_ROUND_POLICY.get(name)
+    return section if isinstance(section, dict) else {}
+
+
+def knowledge_growth_text_arg(cli_value: str | None, section: dict[str, Any], key: str, fallback: str | Path) -> str:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return str(Path(value)) if value else str(fallback)
+
+
+def knowledge_growth_optional_text_arg(cli_value: str | None, section: dict[str, Any], key: str) -> str | None:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return value or None
+
+
+def knowledge_growth_int_arg(cli_value: int | None, section: dict[str, Any], key: str, fallback: int) -> int:
+    if cli_value is not None:
+        return cli_value
+    try:
+        return int(section.get(key, fallback))
+    except (TypeError, ValueError):
+        return fallback
+
+
+def apply_knowledge_growth_round_arg_defaults(args: argparse.Namespace) -> None:
+    paths = knowledge_growth_section("defaultPaths")
+    cohort = knowledge_growth_section("cohortDefaults")
+    reviewer = knowledge_growth_section("reviewerDefaults")
+    context_window = knowledge_growth_section("contextWindowDefaults")
+    gates = knowledge_growth_section("gateDefaults")
+    args.round_id = knowledge_growth_text_arg(args.round_id, KNOWLEDGE_GROWTH_ROUND_POLICY, "defaultRoundId", "round-001-relationship-location")
+    args.pilot_report = knowledge_growth_text_arg(args.pilot_report, paths, "pilotReport", DEFAULT_PILOT_REPORT_PATH)
+    args.candidates = knowledge_growth_text_arg(args.candidates, paths, "candidates", DEFAULT_CANDIDATES_PATH)
+    args.review_root = knowledge_growth_text_arg(args.review_root, paths, "reviewRoot", DEFAULT_REVIEW_ROOT)
+    args.output_root = knowledge_growth_text_arg(args.output_root, paths, "outputRoot", DEFAULT_OUTPUT_ROOT)
+    args.max_generals = knowledge_growth_int_arg(args.max_generals, cohort, "maxGenerals", 5)
+    args.cohort_offset = knowledge_growth_int_arg(args.cohort_offset, cohort, "cohortOffset", 0)
+    args.top_per_general = knowledge_growth_int_arg(args.top_per_general, cohort, "topPerGeneral", 3)
+    args.reviewer_preset = knowledge_growth_text_arg(args.reviewer_preset, reviewer, "preset", "fast")
+    args.reviewer_provider = knowledge_growth_optional_text_arg(args.reviewer_provider, reviewer, "provider")
+    args.api_url = knowledge_growth_text_arg(args.api_url, reviewer, "apiUrl", DEFAULT_DEEPSEEK_API_URL)
+    args.model = knowledge_growth_optional_text_arg(args.model, reviewer, "model")
+    args.timeout_ms = knowledge_growth_int_arg(args.timeout_ms, reviewer, "timeoutMs", 0) or None
+    args.num_predict = knowledge_growth_int_arg(args.num_predict, reviewer, "numPredict", 0) or None
+    args.window_before = knowledge_growth_int_arg(args.window_before, context_window, "windowBefore", 2)
+    args.window_after = knowledge_growth_int_arg(args.window_after, context_window, "windowAfter", 2)
+    args.human_question_threshold = knowledge_growth_int_arg(args.human_question_threshold, gates, "humanQuestionThreshold", 20)
+    args.step_timeout_seconds = knowledge_growth_int_arg(args.step_timeout_seconds, gates, "stepTimeoutSeconds", 30)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run one Sanguo knowledge growth round over a selected review cohort.")
-    parser.add_argument("--round-id", default="round-001-relationship-location", help="Round id for batch and summary outputs")
-    parser.add_argument("--pilot-report", default=str(DEFAULT_PILOT_REPORT_PATH), help="ETL pilot report JSON path")
-    parser.add_argument("--candidates", default=str(DEFAULT_CANDIDATES_PATH), help="Live event candidates JSONL path used for cohort selection and review generation")
-    parser.add_argument("--review-root", default=str(DEFAULT_REVIEW_ROOT), help="Root for per-general event review files")
-    parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Knowledge growth round output directory")
-    parser.add_argument("--max-generals", type=int, default=5, help="Maximum generals to process")
-    parser.add_argument("--cohort-offset", type=int, default=0, help="Skip this many ranked generic-candidate generals before selecting the cohort")
+    parser.add_argument("--round-id", default=None, help="Round id for batch and summary outputs. Defaults to governance policy.")
+    parser.add_argument("--pilot-report", default=None, help="ETL pilot report JSON path. Defaults to governance policy.")
+    parser.add_argument("--candidates", default=None, help="Live event candidates JSONL path used for cohort selection and review generation. Defaults to governance policy.")
+    parser.add_argument("--review-root", default=None, help="Root for per-general event review files. Defaults to governance policy.")
+    parser.add_argument("--output-root", default=None, help="Knowledge growth round output directory. Defaults to governance policy.")
+    parser.add_argument("--max-generals", type=int, default=None, help="Maximum generals to process. Defaults to governance policy.")
+    parser.add_argument("--cohort-offset", type=int, default=None, help="Skip this many ranked generic-candidate generals before selecting the cohort. Defaults to governance policy.")
     parser.add_argument("--general-id", action="append", default=[], help="Explicit general id to include; can be provided multiple times")
-    parser.add_argument("--top-per-general", type=int, default=3, help="Maximum questions per general")
-    parser.add_argument("--reviewer-preset", default="fast", help="Reviewer preset: agent, fast, balanced, quality/deepseek, or hints-only")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--knowledge-growth-round-policy", default=None, help="Override policy-knowledge-growth-round-runner.json path")
+    parser.add_argument("--top-per-general", type=int, default=None, help="Maximum questions per general. Defaults to governance policy.")
+    parser.add_argument("--reviewer-preset", default=None, help="Reviewer preset: agent, fast, balanced, quality/deepseek, or hints-only. Defaults to governance policy.")
     parser.add_argument("--reviewer-provider", default=None, help="Reviewer provider: agent-reviewer, ollama, or hints-only")
-    parser.add_argument("--api-url", default=DEFAULT_DEEPSEEK_API_URL, help="Ollama /api/chat URL")
+    parser.add_argument("--api-url", default=None, help="Ollama /api/chat URL. Defaults to governance policy.")
     parser.add_argument("--model", default=None, help="Override reviewer preset model")
-    parser.add_argument("--window-before", type=int, default=2, help="Paragraph context before source ref")
-    parser.add_argument("--window-after", type=int, default=2, help="Paragraph context after source ref")
+    parser.add_argument("--window-before", type=int, default=None, help="Paragraph context before source ref. Defaults to governance policy.")
+    parser.add_argument("--window-after", type=int, default=None, help="Paragraph context after source ref. Defaults to governance policy.")
     parser.add_argument("--timeout-ms", type=int, default=None, help="Override reviewer preset timeout in milliseconds")
     parser.add_argument("--num-predict", type=int, default=None, help="Override reviewer preset generated token limit")
-    parser.add_argument("--human-question-threshold", type=int, default=20, help="Surface human MCQ only when manual review count reaches this threshold")
-    parser.add_argument("--step-timeout-seconds", type=int, default=30, help="Timeout for each generate/enrich subprocess step")
+    parser.add_argument("--human-question-threshold", type=int, default=None, help="Surface human MCQ only when manual review count reaches this threshold. Defaults to governance policy.")
+    parser.add_argument("--step-timeout-seconds", type=int, default=None, help="Timeout for each generate/enrich subprocess step. Defaults to governance policy.")
     parser.add_argument("--prompt-only", action="store_true", help="Only generate expanded context bundles")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
     return parser.parse_args()
@@ -571,6 +644,12 @@ def render_markdown(report: dict) -> str:
 
 def main() -> None:
     args = parse_args()
+    knowledge_growth_policy = load_knowledge_growth_round_runner_policy(
+        args.governance_root,
+        knowledge_growth_round_policy=args.knowledge_growth_round_policy,
+    )
+    apply_knowledge_growth_round_governance(knowledge_growth_policy)
+    apply_knowledge_growth_round_arg_defaults(args)
     candidates = read_jsonl(Path(args.candidates))
     pilot_path = Path(args.pilot_report)
     cohort_source = "live-candidates"
@@ -647,4 +726,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        print(f"[run_knowledge_growth_round] governance error: {exc}", file=sys.stderr)
+        raise SystemExit(2) from None

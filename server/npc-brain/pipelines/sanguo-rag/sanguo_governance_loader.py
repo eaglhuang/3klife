@@ -595,6 +595,21 @@ def load_repair_review_campaign_policy(
     return read_governance_json(path, required_id="Policy_RepairReviewCampaign_P1")
 
 
+
+def load_knowledge_growth_round_runner_policy(
+    root: str | Path | None = None,
+    *,
+    knowledge_growth_round_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(knowledge_growth_round_policy).resolve()
+        if knowledge_growth_round_policy
+        else _path(base, "policies", "policy-knowledge-growth-round-runner.json")
+    )
+    return read_governance_json(path, required_id="Policy_KnowledgeGrowthRoundRunner_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

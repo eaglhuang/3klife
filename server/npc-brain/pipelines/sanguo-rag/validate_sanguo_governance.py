@@ -17,6 +17,7 @@ from sanguo_governance_loader import (
     load_resolution_loop_runner_policy,
     load_three_lane_progress_scheduler_policy,
     load_repair_review_campaign_policy,
+    load_knowledge_growth_round_runner_policy,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
@@ -166,6 +167,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     resolution_loop_cues = load_resolution_loop_recommendation_cue_rules(root)
     three_lane_scheduler_policy = load_three_lane_progress_scheduler_policy(root)
     repair_review_campaign_policy = load_repair_review_campaign_policy(root)
+    knowledge_growth_round_policy = load_knowledge_growth_round_runner_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -1022,6 +1024,33 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         except Exception as exc:
             raise SanguoGovernanceError(f"policy-repair-review-campaign invalid roundSelectionPatterns.{key}: {exc}") from exc
 
+
+    knowledge_growth_paths = knowledge_growth_round_policy.get("defaultPaths") if isinstance(knowledge_growth_round_policy.get("defaultPaths"), dict) else {}
+    required_growth_paths = {"pilotReport", "candidates", "outputRoot", "reviewRoot", "chaptersRoot"}
+    missing_growth_paths = sorted(required_growth_paths - set(knowledge_growth_paths.keys()))
+    if missing_growth_paths:
+        raise SanguoGovernanceError(f"policy-knowledge-growth-round-runner missing defaultPaths: {', '.join(missing_growth_paths)}")
+    if any(not str(value or "").strip() for value in knowledge_growth_paths.values()):
+        raise SanguoGovernanceError("policy-knowledge-growth-round-runner defaultPaths cannot contain blank value")
+    knowledge_growth_cohort = knowledge_growth_round_policy.get("cohortDefaults") if isinstance(knowledge_growth_round_policy.get("cohortDefaults"), dict) else {}
+    for key in ("maxGenerals", "topPerGeneral"):
+        if int(knowledge_growth_cohort.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-knowledge-growth-round-runner cohortDefaults.{key} must be positive")
+    if int(knowledge_growth_cohort.get("cohortOffset") or 0) < 0:
+        raise SanguoGovernanceError("policy-knowledge-growth-round-runner cohortDefaults.cohortOffset cannot be negative")
+    knowledge_growth_reviewer = knowledge_growth_round_policy.get("reviewerDefaults") if isinstance(knowledge_growth_round_policy.get("reviewerDefaults"), dict) else {}
+    for key in ("preset", "apiUrl"):
+        if not str(knowledge_growth_reviewer.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-knowledge-growth-round-runner reviewerDefaults.{key} cannot be blank")
+    knowledge_growth_context = knowledge_growth_round_policy.get("contextWindowDefaults") if isinstance(knowledge_growth_round_policy.get("contextWindowDefaults"), dict) else {}
+    for key in ("windowBefore", "windowAfter"):
+        if int(knowledge_growth_context.get(key) or -1) < 0:
+            raise SanguoGovernanceError(f"policy-knowledge-growth-round-runner contextWindowDefaults.{key} cannot be negative")
+    knowledge_growth_gates = knowledge_growth_round_policy.get("gateDefaults") if isinstance(knowledge_growth_round_policy.get("gateDefaults"), dict) else {}
+    for key in ("humanQuestionThreshold", "stepTimeoutSeconds"):
+        if int(knowledge_growth_gates.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-knowledge-growth-round-runner gateDefaults.{key} must be positive")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1075,6 +1104,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "repairReviewCampaignPathDefaultCount": len(repair_paths),
         "repairReviewCampaignFallbackInputCount": len(repair_inputs),
         "repairReviewCampaignRoundPatternCount": len(repair_patterns),
+        "knowledgeGrowthRoundPathDefaultCount": len(knowledge_growth_paths),
+        "knowledgeGrowthRoundCohortDefaultCount": len(knowledge_growth_cohort),
+        "knowledgeGrowthRoundGateDefaultCount": len(knowledge_growth_gates),
     }
 
 
