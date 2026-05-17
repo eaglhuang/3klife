@@ -5,13 +5,30 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_runtime_batch_keyword_readiness_policy
+
 
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
 DEFAULT_KEYWORD_PACK_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/keyword-options/zhang-fei.keywords.json")
 DEFAULT_PERSONA_CARD_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/persona-cards/zhang-fei.persona.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/api-readiness")
-DEFAULT_GENERAL_ID = "zhang-fei"
-PERSONA_NAMESPACE = "general_persona_v2"
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
+DEFAULT_GENERAL_ID = ""
+PERSONA_NAMESPACE = ""
+
+
+def apply_api_readiness_governance(
+    governance_root: str | Path | None = None,
+    runtime_batch_keyword_policy: str | Path | None = None,
+) -> None:
+    global DEFAULT_GENERAL_ID, PERSONA_NAMESPACE
+    policy = load_runtime_batch_keyword_readiness_policy(
+        governance_root,
+        runtime_batch_keyword_policy=runtime_batch_keyword_policy,
+    )
+    api_policy = policy.get("apiReadiness") if isinstance(policy.get("apiReadiness"), dict) else {}
+    DEFAULT_GENERAL_ID = str(api_policy.get("defaultGeneralId") or "")
+    PERSONA_NAMESPACE = str(api_policy.get("personaNamespace") or "")
 
 
 def parse_args() -> argparse.Namespace:
@@ -22,6 +39,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory")
     parser.add_argument("--general-id", default=DEFAULT_GENERAL_ID, help="General id for fixture responses")
     parser.add_argument("--vector-check-report", default="", help="optional vector backend check JSON report path")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--runtime-batch-keyword-policy", default=None, help="Override policy-runtime-batch-keyword-readiness.json path")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
     return parser.parse_args()
 
@@ -195,6 +214,13 @@ def render_report(context_options: dict, keyword_options: dict, persona_card: di
 
 def main() -> None:
     args = parse_args()
+    try:
+        apply_api_readiness_governance(args.governance_root, args.runtime_batch_keyword_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[build_api_readiness_index] governance error: {exc}")
+        raise SystemExit(2) from None
+    if not args.general_id:
+        args.general_id = DEFAULT_GENERAL_ID
     output_root = Path(args.output_root)
     ensure_output_root(output_root, args.overwrite)
     events = load_events(Path(args.events))

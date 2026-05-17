@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from repo_layout import resolve_npc_brain_root, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_source_browser_vector_readiness_policy
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = Path(__file__).resolve().parent
@@ -28,6 +29,7 @@ DEFAULT_VECTOR_READY_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/v
 DEFAULT_API_READINESS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/api-readiness")
 DEFAULT_STATE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/vector-ready/vector-ingestion-state.json")
 DEFAULT_CHECK_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/api-readiness/vector-backend-check.json")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
 
 def parse_args() -> argparse.Namespace:
@@ -50,6 +52,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--persona-card", default="", help="explicit persona card path for readiness (optional)")
     parser.add_argument("--force-ingestion", action="store_true", help="force export + upsert even when inputs did not change")
     parser.add_argument("--skip-readiness", action="store_true", help="skip build_api_readiness_index")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--source-browser-vector-policy", default=None, help="Override policy-source-browser-vector-readiness.json path")
     return parser.parse_args()
 
 
@@ -212,6 +216,14 @@ def run_query_probe(provider: str, namespace: str, record_id: str, query_text: s
 
 def main() -> None:
     args = parse_args()
+    try:
+        load_source_browser_vector_readiness_policy(
+            args.governance_root,
+            source_browser_vector_policy=args.source_browser_vector_policy,
+        )
+    except SanguoGovernanceError as exc:
+        print(f"[run_vector_ingestion_gate] governance error: {exc}")
+        raise SystemExit(2) from None
     load_local_env(REPO_ROOT)
 
     events_path = resolve_path(args.events)

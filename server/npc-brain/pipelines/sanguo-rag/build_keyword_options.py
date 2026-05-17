@@ -9,6 +9,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 from repo_layout import pipeline_config_path, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_runtime_batch_keyword_readiness_policy
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -16,42 +17,34 @@ DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
 DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/keyword-options")
-DEFAULT_GENERAL_ID = "zhang-fei"
-DEFAULT_UI_LABEL_MAX_CHARS = 10
-CATEGORY_LABEL_LIMITS = {
-    "person": 8,
-    "event": 10,
-    "location": 8,
-    "item": 8,
-    "creature": 8,
-}
-EVENT_LABEL_OVERRIDES = {
-    "changban-bridge": "長坂橋斷後",
-}
-KNOWN_ITEM_KEYWORDS = {
-    "寶刀": "treasured-saber",
-    "矛": "serpent-spear",
-    "蛇矛": "serpent-spear",
-    "丈八蛇矛": "serpent-spear",
-    "青龍寶刀": "green-dragon-blade",
-    "青龍刀": "green-dragon-blade",
-    "青龍偃月刀": "green-dragon-blade",
-    "赤兔": "red-hare",
-    "赤兔馬": "red-hare",
-    "橋樑": "bridge-beam",
-    "傘蓋": "command-canopy",
-    "旌旗": "battle-flags",
-}
-ITEM_DISPLAY_LABELS = {
-    "treasured-saber": "寶刀",
-    "serpent-spear": "蛇矛",
-    "green-dragon-blade": "青龍刀",
-    "red-hare": "赤兔馬",
-    "bridge-beam": "橋樑",
-    "command-canopy": "傘蓋",
-    "battle-flags": "旌旗",
-}
-KNOWN_CREATURE_KEYWORDS = {"馬": "warhorse"}
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
+DEFAULT_GENERAL_ID = ""
+DEFAULT_UI_LABEL_MAX_CHARS = 0
+CATEGORY_LABEL_LIMITS: dict[str, int] = {}
+EVENT_LABEL_OVERRIDES: dict[str, str] = {}
+KNOWN_ITEM_KEYWORDS: dict[str, str] = {}
+ITEM_DISPLAY_LABELS: dict[str, str] = {}
+KNOWN_CREATURE_KEYWORDS: dict[str, str] = {}
+
+
+def apply_keyword_option_governance(
+    governance_root: str | Path | None = None,
+    runtime_batch_keyword_policy: str | Path | None = None,
+) -> None:
+    global DEFAULT_GENERAL_ID, DEFAULT_UI_LABEL_MAX_CHARS, CATEGORY_LABEL_LIMITS
+    global EVENT_LABEL_OVERRIDES, KNOWN_ITEM_KEYWORDS, ITEM_DISPLAY_LABELS, KNOWN_CREATURE_KEYWORDS
+    policy = load_runtime_batch_keyword_readiness_policy(
+        governance_root,
+        runtime_batch_keyword_policy=runtime_batch_keyword_policy,
+    )
+    keyword_policy = policy.get("keywordOptions") if isinstance(policy.get("keywordOptions"), dict) else {}
+    DEFAULT_GENERAL_ID = str(keyword_policy.get("defaultGeneralId") or "")
+    DEFAULT_UI_LABEL_MAX_CHARS = int(keyword_policy.get("defaultUiLabelMaxChars") or 0)
+    CATEGORY_LABEL_LIMITS = {str(key): int(value) for key, value in (keyword_policy.get("categoryLabelLimits") or {}).items()}
+    EVENT_LABEL_OVERRIDES = {str(key): str(value) for key, value in (keyword_policy.get("eventLabelOverrides") or {}).items()}
+    KNOWN_ITEM_KEYWORDS = {str(key): str(value) for key, value in (keyword_policy.get("knownItemKeywords") or {}).items()}
+    ITEM_DISPLAY_LABELS = {str(key): str(value) for key, value in (keyword_policy.get("itemDisplayLabels") or {}).items()}
+    KNOWN_CREATURE_KEYWORDS = {str(key): str(value) for key, value in (keyword_policy.get("knownCreatureKeywords") or {}).items()}
 
 
 class KeywordOption(BaseModel):
@@ -83,6 +76,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory for keyword packs")
     parser.add_argument("--general-id", default=DEFAULT_GENERAL_ID, help="General id to build keyword options for")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting output files")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--runtime-batch-keyword-policy", default=None, help="Override policy-runtime-batch-keyword-readiness.json path")
     return parser.parse_args()
 
 
@@ -310,6 +305,15 @@ def render_summary(pack: KeywordPack) -> str:
 
 def main() -> None:
     args = parse_args()
+    try:
+        apply_keyword_option_governance(args.governance_root, args.runtime_batch_keyword_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[build_keyword_options] governance error: {exc}")
+        raise SystemExit(2) from None
+    if not args.general_id:
+        args.general_id = DEFAULT_GENERAL_ID
+    if not args.ui_label_max_chars:
+        args.ui_label_max_chars = DEFAULT_UI_LABEL_MAX_CHARS
     events_path = Path(args.events)
     output_root = Path(args.output_root)
     ensure_output_root(output_root, args.general_id, args.overwrite)

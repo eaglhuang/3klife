@@ -1,0 +1,52 @@
+{
+  "id": "Policy_RuntimeBatchKeywordReadiness_P1",
+  "description": "Externalized runtime batch, keyword option, and API readiness deterministic defaults.",
+  "runtimeBatch": {
+    "policyMode": "readiness-only",
+    "description": "Batch export path defaults remain CLI driven in Phase 25."
+  },
+  "keywordOptions": {
+    "defaultGeneralId": "zhang-fei",
+    "defaultUiLabelMaxChars": 10,
+    "categoryLabelLimits": {
+      "person": 8,
+      "event": 10,
+      "location": 8,
+      "item": 8,
+      "creature": 8
+    },
+    "eventLabelOverrides": {
+      "changban-bridge": "長坂橋斷後"
+    },
+    "knownItemKeywords": {
+      "寶刀": "treasured-saber",
+      "矛": "serpent-spear",
+      "蛇矛": "serpent-spear",
+      "丈八蛇矛": "serpent-spear",
+      "青龍寶刀": "green-dragon-blade",
+      "青龍刀": "green-dragon-blade",
+      "青龍偃月刀": "green-dragon-blade",
+      "赤兔": "red-hare",
+      "赤兔馬": "red-hare",
+      "橋樑": "bridge-beam",
+      "傘蓋": "command-canopy",
+      "旌旗": "battle-flags"
+    },
+    "itemDisplayLabels": {
+      "treasured-saber": "寶刀",
+      "serpent-spear": "蛇矛",
+      "green-dragon-blade": "青龍刀",
+      "red-hare": "赤兔馬",
+      "bridge-beam": "橋樑",
+      "command-canopy": "傘蓋",
+      "battle-flags": "旌旗"
+    },
+    "knownCreatureKeywords": {
+      "馬": "warhorse"
+    }
+  },
+  "apiReadiness": {
+    "defaultGeneralId": "zhang-fei",
+    "personaNamespace": "general_persona_v2"
+  }
+}

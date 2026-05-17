@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_source_browser_vector_readiness_policy
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
@@ -17,33 +18,31 @@ DEFAULT_SOURCES_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sour
 DEFAULT_SCOREBOARD_JSON = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard/full-roster-scoreboard.json")
 DEFAULT_SOURCE_HEALTH_SCRIPT = PIPELINE_ROOT / "run_3kweb_check.py"
 DEFAULT_BROWSER_FALLBACK_RULES = pipeline_config_path(REPO_ROOT, "browser-fallback-adapters.json")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
-FAIL_STATUSES = {"http-error", "url-error", "timeout", "fetch-error", "output-contract-error", "backend-unavailable", "network-blocked"}
-PASS_STATUSES = {"ok", "manual-only"}
+FAIL_STATUSES: set[str] = set()
+PASS_STATUSES: set[str] = set()
 
-BUILTIN_403_FALLBACK_RULES: dict[str, dict[str, Any]] = {
-    "ctext-sanguozhi": {
-        "adapterType": "browser-static-html",
-        "autoApply": True,
-        "priority": "high",
-        "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback and keep source layer as history.",
-        "rationale": "ctext commonly blocks default CLI user-agent and needs browser-like fetch semantics.",
-    },
-    "rekowiki-musou-character-list": {
-        "adapterType": "browser-static-html",
-        "autoApply": True,
-        "priority": "high",
-        "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback and keep source layer as game/worldbuilding.",
-        "rationale": "fandom mirrors frequently reject non-browser clients with 403.",
-    },
-    "chiculture-romance-vs-history": {
-        "adapterType": "browser-static-html",
-        "autoApply": True,
-        "priority": "high",
-        "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback with strict citation extraction.",
-        "rationale": "site may enforce anti-bot policies for non-browser requests.",
-    },
-}
+BUILTIN_403_FALLBACK_RULES: dict[str, dict[str, object]] = {}
+
+
+def apply_browser_gate_governance(
+    governance_root: str | Path | None = None,
+    source_browser_vector_policy: str | Path | None = None,
+) -> None:
+    global FAIL_STATUSES, PASS_STATUSES, BUILTIN_403_FALLBACK_RULES
+    policy = load_source_browser_vector_readiness_policy(
+        governance_root,
+        source_browser_vector_policy=source_browser_vector_policy,
+    )
+    browser_policy = policy.get("browserGate") if isinstance(policy.get("browserGate"), dict) else {}
+    FAIL_STATUSES = {str(item) for item in browser_policy.get("failStatuses") or []}
+    PASS_STATUSES = {str(item) for item in browser_policy.get("passStatuses") or []}
+    BUILTIN_403_FALLBACK_RULES = {
+        str(key): value
+        for key, value in (browser_policy.get("builtin403FallbackRules") or {}).items()
+        if isinstance(value, dict)
+    }
 
 
 def utc_now() -> str:
@@ -95,6 +94,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--include-non-approved", action="store_true", help="Include non-approved sources in precheck.")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting run outputs.")
     parser.add_argument("--dry-run", action="store_true", help="Skip live fetch in precheck.")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--source-browser-vector-policy", default=None, help="Override policy-source-browser-vector-readiness.json path")
     return parser.parse_args()
 
 
@@ -292,6 +293,11 @@ def run_source_health(args: argparse.Namespace, source_health_run_id: str) -> Pa
 
 def main() -> None:
     args = parse_args()
+    try:
+        apply_browser_gate_governance(args.governance_root, args.source_browser_vector_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[run_two_layer_browser_gate] governance error: {exc}")
+        raise SystemExit(2) from None
     run_id = args.run_id or f"two-layer-browser-gate-{utc_stamp()}"
     source_health_run_id = args.source_health_run_id or f"{run_id}-precheck"
     run_root = resolve_path(Path(args.output_root) / run_id)

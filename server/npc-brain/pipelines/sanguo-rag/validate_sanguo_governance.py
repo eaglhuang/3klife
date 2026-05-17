@@ -54,6 +54,8 @@ from sanguo_governance_loader import (
     load_runtime_readiness_matrix_policy,
     load_runtime_relationship_refinement_rules,
     load_runtime_voice_presets,
+    load_runtime_batch_keyword_readiness_policy,
+    load_source_browser_vector_readiness_policy,
     load_source_event_packet_policy,
     load_stable_bootstrap_governance,
     read_governance_json,
@@ -184,6 +186,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     alias_mention_policy = load_alias_mention_intake_policy(root)
     alias_mention_cues = load_alias_mention_intake_cue_rules(root)
     external_evidence_scoring_policy = load_external_evidence_scoring_policy(root)
+    source_browser_vector_policy = load_source_browser_vector_readiness_policy(root)
+    runtime_batch_keyword_policy = load_runtime_batch_keyword_readiness_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
     relationship_evidence_extraction_rules = load_relationship_evidence_extraction_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
@@ -1286,6 +1290,38 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if abs(sum(float(value) for value in external_raw_weights.values()) - 1.0) > 0.000001:
         raise SanguoGovernanceError("policy-external-evidence-scoring rawSeedScoreWeights must sum to 1.0")
 
+    crawler_policy = source_browser_vector_policy.get("crawler") if isinstance(source_browser_vector_policy.get("crawler"), dict) else {}
+    crawlable_classes = [str(item).strip() for item in crawler_policy.get("crawlableSourceClasses") or []]
+    if not crawlable_classes or any(not item for item in crawlable_classes):
+        raise SanguoGovernanceError("policy-source-browser-vector-readiness crawler.crawlableSourceClasses cannot be empty")
+    class_sample_size = crawler_policy.get("classSampleSize") if isinstance(crawler_policy.get("classSampleSize"), dict) else {}
+    if not class_sample_size or any(int(value) <= 0 for value in class_sample_size.values()):
+        raise SanguoGovernanceError("policy-source-browser-vector-readiness crawler.classSampleSize values must be positive")
+    browser_policy = source_browser_vector_policy.get("browserGate") if isinstance(source_browser_vector_policy.get("browserGate"), dict) else {}
+    fail_statuses = {str(item).strip() for item in browser_policy.get("failStatuses") or []}
+    pass_statuses = {str(item).strip() for item in browser_policy.get("passStatuses") or []}
+    if not fail_statuses or not pass_statuses or fail_statuses & pass_statuses:
+        raise SanguoGovernanceError("policy-source-browser-vector-readiness browserGate pass/fail statuses must be non-empty and disjoint")
+    fallback_rules = browser_policy.get("builtin403FallbackRules") if isinstance(browser_policy.get("builtin403FallbackRules"), dict) else {}
+    if not fallback_rules:
+        raise SanguoGovernanceError("policy-source-browser-vector-readiness browserGate.builtin403FallbackRules cannot be empty")
+
+    keyword_policy = runtime_batch_keyword_policy.get("keywordOptions") if isinstance(runtime_batch_keyword_policy.get("keywordOptions"), dict) else {}
+    if not str(keyword_policy.get("defaultGeneralId") or "").strip():
+        raise SanguoGovernanceError("policy-runtime-batch-keyword-readiness keywordOptions.defaultGeneralId cannot be empty")
+    if int(keyword_policy.get("defaultUiLabelMaxChars") or 0) <= 0:
+        raise SanguoGovernanceError("policy-runtime-batch-keyword-readiness keywordOptions.defaultUiLabelMaxChars must be positive")
+    category_limits = keyword_policy.get("categoryLabelLimits") if isinstance(keyword_policy.get("categoryLabelLimits"), dict) else {}
+    if not category_limits or any(int(value) <= 0 for value in category_limits.values()):
+        raise SanguoGovernanceError("policy-runtime-batch-keyword-readiness keywordOptions.categoryLabelLimits values must be positive")
+    item_keywords = keyword_policy.get("knownItemKeywords") if isinstance(keyword_policy.get("knownItemKeywords"), dict) else {}
+    creature_keywords = keyword_policy.get("knownCreatureKeywords") if isinstance(keyword_policy.get("knownCreatureKeywords"), dict) else {}
+    if not item_keywords or not creature_keywords:
+        raise SanguoGovernanceError("policy-runtime-batch-keyword-readiness keywordOptions known keyword maps cannot be empty")
+    api_policy = runtime_batch_keyword_policy.get("apiReadiness") if isinstance(runtime_batch_keyword_policy.get("apiReadiness"), dict) else {}
+    if not str(api_policy.get("defaultGeneralId") or "").strip() or not str(api_policy.get("personaNamespace") or "").strip():
+        raise SanguoGovernanceError("policy-runtime-batch-keyword-readiness apiReadiness fields cannot be empty")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1428,6 +1464,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "aliasMentionSourceLabelCount": len(alias_policy_labels),
         "externalEvidenceScoreTableValueCount": external_score_value_count,
         "externalEvidenceRawWeightCount": len(external_raw_weights),
+        "sourceBrowserCrawlerClassCount": len(crawlable_classes),
+        "sourceBrowserFallbackRuleCount": len(fallback_rules),
+        "runtimeKeywordCategoryLimitCount": len(category_limits),
+        "runtimeKeywordKnownItemCount": len(item_keywords),
     }
 
 

@@ -729,11 +729,41 @@ def load_external_evidence_scoring_policy(
     return read_governance_json(path, required_id="Policy_ExternalEvidenceScoring_P1")
 
 
+def load_source_browser_vector_readiness_policy(
+    root: str | Path | None = None,
+    *,
+    source_browser_vector_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(source_browser_vector_policy).resolve()
+        if source_browser_vector_policy
+        else _path(base, "policies", "policy-source-browser-vector-readiness.json")
+    )
+    return read_governance_json(path, required_id="Policy_SourceBrowserVectorReadiness_P1")
+
+
+def load_runtime_batch_keyword_readiness_policy(
+    root: str | Path | None = None,
+    *,
+    runtime_batch_keyword_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(runtime_batch_keyword_policy).resolve()
+        if runtime_batch_keyword_policy
+        else _path(base, "policies", "policy-runtime-batch-keyword-readiness.json")
+    )
+    return read_governance_json(path, required_id="Policy_RuntimeBatchKeywordReadiness_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "policies", "file": "policy-full-roster-scoreboard.json", "consumer": "build_full_roster_scoreboard.py"},
         {"section": "policies", "file": "policy-alias-mention-intake.json", "consumer": "build_alias_dict.py / collect_observed_mentions.py"},
         {"section": "policies", "file": "policy-external-evidence-scoring.json", "consumer": "score_external_evidence_seeds.py"},
+        {"section": "policies", "file": "policy-source-browser-vector-readiness.json", "consumer": "universal_source_crawler.py / run_two_layer_browser_gate.py / run_vector_ingestion_gate.py"},
+        {"section": "policies", "file": "policy-runtime-batch-keyword-readiness.json", "consumer": "export_runtime_profiles_batch.py / build_keyword_options.py / build_api_readiness_index.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-faction-timeline-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-event-location-seeds.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

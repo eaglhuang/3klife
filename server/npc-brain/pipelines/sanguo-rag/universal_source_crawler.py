@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_source_browser_vector_readiness_policy
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
@@ -18,18 +19,28 @@ DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth")
 DEFAULT_SOURCE_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
 DEFAULT_SOURCE_SCHEMA = pipeline_config_path(REPO_ROOT, "source-policy.schema.json")
 DEFAULT_BENCHMARK_SCRIPT = PIPELINE_ROOT / "benchmark_external_source.py"
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
-CRAWLABLE_SOURCE_CLASSES = (
-    "high-yield-character-site",
-    "primary-text-site",
-    "community-worldbuilding-site",
-)
+CRAWLABLE_SOURCE_CLASSES: tuple[str, ...] = ()
 
-DEFAULT_CLASS_SAMPLE_SIZE = {
-    "high-yield-character-site": 30,
-    "primary-text-site": 5,
-    "community-worldbuilding-site": 5,
-}
+DEFAULT_CLASS_SAMPLE_SIZE: dict[str, int] = {}
+
+
+def apply_source_crawler_governance(
+    governance_root: str | Path | None = None,
+    source_browser_vector_policy: str | Path | None = None,
+) -> None:
+    global CRAWLABLE_SOURCE_CLASSES, DEFAULT_CLASS_SAMPLE_SIZE
+    policy = load_source_browser_vector_readiness_policy(
+        governance_root,
+        source_browser_vector_policy=source_browser_vector_policy,
+    )
+    crawler_policy = policy.get("crawler") if isinstance(policy.get("crawler"), dict) else {}
+    CRAWLABLE_SOURCE_CLASSES = tuple(str(item) for item in crawler_policy.get("crawlableSourceClasses") or ())
+    DEFAULT_CLASS_SAMPLE_SIZE = {
+        str(key): int(value)
+        for key, value in (crawler_policy.get("classSampleSize") or {}).items()
+    }
 
 
 def utc_now() -> str:
@@ -424,11 +435,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sample-size", type=int, default=None)
     parser.add_argument("--timeout-seconds", type=float, default=20.0)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--source-browser-vector-policy", default=None, help="Override policy-source-browser-vector-readiness.json path")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    try:
+        apply_source_crawler_governance(args.governance_root, args.source_browser_vector_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[universal_source_crawler] governance error: {exc}")
+        return 2
     run_id = args.run_id or f"universal-source-crawler-{utc_stamp()}"
     output_root = resolve_path(args.output_root)
     run_root = output_root / run_id

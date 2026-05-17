@@ -1,0 +1,58 @@
+{
+  "id": "Policy_SourceBrowserVectorReadiness_P1",
+  "description": "Externalized source crawler, two-layer browser fallback, and vector readiness governance defaults.",
+  "crawler": {
+    "crawlableSourceClasses": [
+      "high-yield-character-site",
+      "primary-text-site",
+      "community-worldbuilding-site"
+    ],
+    "classSampleSize": {
+      "high-yield-character-site": 30,
+      "primary-text-site": 5,
+      "community-worldbuilding-site": 5
+    }
+  },
+  "browserGate": {
+    "failStatuses": [
+      "backend-unavailable",
+      "fetch-error",
+      "http-error",
+      "network-blocked",
+      "output-contract-error",
+      "timeout",
+      "url-error"
+    ],
+    "passStatuses": [
+      "manual-only",
+      "ok"
+    ],
+    "builtin403FallbackRules": {
+      "ctext-sanguozhi": {
+        "adapterType": "browser-static-html",
+        "autoApply": true,
+        "priority": "high",
+        "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback and keep source layer as history.",
+        "rationale": "ctext commonly blocks default CLI user-agent and needs browser-like fetch semantics."
+      },
+      "rekowiki-musou-character-list": {
+        "adapterType": "browser-static-html",
+        "autoApply": true,
+        "priority": "high",
+        "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback and keep source layer as game/worldbuilding.",
+        "rationale": "fandom mirrors frequently reject non-browser clients with 403."
+      },
+      "chiculture-romance-vs-history": {
+        "adapterType": "browser-static-html",
+        "autoApply": true,
+        "priority": "high",
+        "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback with strict citation extraction.",
+        "rationale": "site may enforce anti-bot policies for non-browser requests."
+      }
+    }
+  },
+  "vectorGate": {
+    "policyMode": "readiness-only",
+    "description": "Phase 24 registers governance policy for vector ingestion readiness without changing path/env driven CLI defaults."
+  }
+}

@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_runtime_batch_keyword_readiness_policy
+
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 PIPELINE_ROOT = Path("server/npc-brain/pipelines/sanguo-rag")
@@ -37,6 +39,7 @@ DEFAULT_STABLE_KNOWLEDGE_PATH = Path(
 DEFAULT_SOURCE_EVENT_PACKETS_PATH = Path(
     "artifacts/data-pipeline/sanguo-rag/extracted/source-event-packets/source-event-packets.jsonl"
 )
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,6 +56,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--per-general-timeout", type=float, default=10.0)
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--runtime-batch-keyword-policy", default=None, help="Override policy-runtime-batch-keyword-readiness.json path")
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--skip-existing", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
@@ -194,6 +199,14 @@ def run_export(args: argparse.Namespace, general_id: str) -> dict[str, Any]:
 
 def main() -> None:
     args = parse_args()
+    try:
+        load_runtime_batch_keyword_readiness_policy(
+            args.governance_root,
+            runtime_batch_keyword_policy=args.runtime_batch_keyword_policy,
+        )
+    except SanguoGovernanceError as exc:
+        print(f"[export_runtime_profiles_batch] governance error: {exc}")
+        raise SystemExit(2) from None
     general_ids = unique([*read_general_ids(Path(args.general_id_file)), *args.general_id])
     if args.offset:
         general_ids = general_ids[max(args.offset, 0) :]
