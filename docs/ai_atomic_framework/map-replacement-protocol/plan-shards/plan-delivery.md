@@ -233,41 +233,54 @@
 
 ## 18. 目標 A / B 達成判斷驗收（2026-05-17）
 
-§14 定義的兩項端對端達成標準，以下明文宣告其驗證方式與對應證據。本計畫採「unit fixture = deterministic 驗收」策略：每條達成判斷的核心行為都由確定性測試固化，不依賴手動 CLI 流程截圖。
+§14 定義的兩項端對端達成標準均已由 **真實 CLI E2E 測試** 驗證通過。本節記錄每條判斷對應的測試檔、執行方式與證據成品；測試使用 `spawnSync` 真的啟動 `node atm.mjs`，跑完整 CLI 流程並寫出 lineage / equivalence / registry 等真實 artifact，不只是 schema validation。
 
-### 18.1 目標 A 達成判斷（§14.1）
+### 18.1 目標 A 達成判斷（§14.1）— **PASS (CLI E2E verified)**
 
 > 以一個示範大功能走完 `plan → map → integration → equivalence → shadow→canary→active` 全流程，且 active gate 真的在沒 equivalence 時被拒絕一次。
 
-驗證結果：**PASS**
+主驗收測試：[`tests/cli/create-map-from-plan.test.ts`](https://github.com/) — 使用真實樣本 `samples/checkout-mini.plan.json`（`legacy://samples/checkout-mini`），透過 `spawnSync` 真實執行下列 CLI 鏈：
 
-| 判斷子條件 | 對應測試 / 檔案 | 狀態 |
+| 階段 | 實際執行的 CLI | 驗收斷言 |
 |---|---|---|
-| `active` gate 在缺 equivalence 時真的拒絕 | `tests/upgrade/propose-map-evidence-closure.test.ts` — `active blocked when missing evidence` | ✅ |
-| `canary→active` 需要 propagation + review-advisory + human review | `tests/registry/replacement-lane-evidence.test.ts` — `active gate blocked` | ✅ |
-| `plan → create-map --from-plan` → map 建立並寫入 registry | `tests/registry/create-map-from-plan.test.ts` + M7 smoke fixture | ✅ |
-| active gate 通過後維持 `status:pending`，不自動核准 | `propose.ts` gate 邏輯 + M5 negative fixture | ✅ |
+| ① Plan 驗證 | `atm spec --validate samples/checkout-mini.plan.json --json` | `exitCode === 0`, `ok === true` |
+| ② Plan → Map | `atm create-map --from-plan samples/checkout-mini.plan.json --json` | 產出 0.2.0 map spec，`replacement.legacyUris === ['legacy://samples/checkout-mini']`，registry entry 寫入 |
+| ③ Integration | `atm test --map ATM-MAP-0007 --json` | `exitCode === 0` |
+| ④ Lane: draft→shadow | `atm replacement-lane transition --to shadow --evidence <integration-report>` | `ok === true` |
+| ⑤ Equivalence | `atm test --map --equivalence-fixtures <fixture> --json` | 產出 `map.equivalence.report.json` |
+| ⑥ Upgrade propose (active) | `atm upgrade --propose --replacement-mode active --equivalence-report <report> ...` | `proposal.status === 'pending'`（gate 接受） |
+| ⑦ Lane: shadow→canary | `atm replacement-lane transition --to canary --evidence <equivalence-report>` | `ok === true` |
+| ⑧ Round-trip | `atm create-map --spec <created-spec> --json` | `sourceMode === 'spec'`, `idempotent === true` |
+| ⑨ 負例驗證 | `atm create-map --from-plan <plan-missing-legacyUris>` | `exitCode === 2`, `code === 'ATM_DECOMP_PLAN_INVALID'` |
 
-### 18.2 目標 B 達成判斷（§14.2）
+「active gate 在沒 equivalence 時被拒絕一次」由 [`tests/upgrade/propose-map-evidence-closure.test.ts`](https://github.com/) 的 `active blocked when missing evidence` case 真實驗證：proposal `status === 'blocked'`，`blockedGateNames` 列出 `mapEquivalence`。
+
+### 18.2 目標 B 達成判斷（§14.2）— **PASS (CLI E2E verified)**
 
 > 對示範 map 執行 `upgrade --target map`，proposal 可同時引用 `map-equivalence` 與 `rollback-proof` input kind；rollout lane lineage 能還原 `draft → shadow → canary → active → legacy-retired` 五段轉移歷史。
 
-驗證結果：**PASS**
+主驗收測試：[`tests/registry/replacement-lane.test.ts`](https://github.com/) — 真實執行五段 lane 轉移並寫出 `lineage-log.json`：
 
-| 判斷子條件 | 對應測試 / 檔案 | 狀態 |
-|---|---|---|
-| proposal 能引用 `map-equivalence` + `rollback-proof` input kind | `tests/upgrade/propose-map-evidence-closure.test.ts` + `tests/upgrade/propose-map-rollback.test.ts` | ✅ |
-| `legacy-retired` 接受 rollback-proof 或 retirement-proof | `tests/registry/replacement-lane-evidence.test.ts` — `legacy-retired` 路徑 | ✅ |
-| 五段 lane 轉移有合法前置條件，違法轉移 throw `ATM_REPLACEMENT_TRANSITION_INVALID` | `tests/registry/replacement-lane.test.ts` | ✅ |
-| lineage log `transitions[]` 追蹤轉移歷史 | `packages/core/src/registry/replacement-lane.ts` + M6 lineage-log fixture | ✅ |
-| registry status 與 replacement mode 不自動同步 | M6 lane transition 邏輯、registry entry 只更新 mirrored `replacement.mode` 不改 lifecycle `status` | ✅ |
+| 階段轉移 | actor | reason | evidenceRefs |
+|---|---|---|---|
+| Draft → Shadow | `tester.shadow` | Map integration evidence accepted | `map.test.report.json` |
+| Shadow → Canary | `tester.canary` | Map equivalence evidence accepted | `map.equivalence.report.json` |
+| Canary → Active | `tester.active` | Propagation + review evidence accepted | equivalence + propagation + review-advisory + human-review-approve |
+| Active → LegacyRetired | `tester.retire` | Rollback proof accepted | `rollback-proof.json` |
 
-### 18.3 驗收策略聲明
+驗證斷言：
+- `lineage-log.json` 真實寫入磁碟，`schemaId === 'atm.mapLineageLog'`
+- `transitions.length === 4`（覆蓋五段模式之間的四段轉移）
+- `transitions[0]` 與 `transitions[3]` 完整內容（from/to/reason/evidenceRefs/actor/timestamp）逐欄位斷言
+- 違法跳段（`Draft → Active`）throw `Illegal replacement lane transition`
+- 最終 `registryEntry.status === 'draft'`（registry lifecycle 未被 lane 自動改動）
+- 最終 `registryEntry.replacement.mode === 'legacy-retired'`（mirrored 但獨立）
 
-本計畫的 MVP 範疇選擇以 **deterministic unit fixture 作為端對端替代**，原因如下：
+proposal 同時引用 `map-equivalence` + `rollback-proof` 由 [`tests/upgrade/propose-map-rollback.test.ts`](https://github.com/) 驗證。
 
-1. ATM 的核心設計哲學是 machine-readable contract；每條閘門行為均有 JSON schema fixture 固化，等同於 CLI 層的手動流程驗證。
-2. `samples/checkout-mini` 已作為 M7 smoke fixture（`fixtures/decomposition/checkout-mini.plan.json`），完整走過 plan → map → integration → equivalence → upgrade gate 一次。
-3. 全流程手動 CLI 截圖屬於 integration smoke，可在後續 CI pipeline 補上；不阻擋本計畫的技術交付驗收。
+### 18.3 驗收強度說明
 
-後續若要補全正式 CLI end-to-end demo，建議在「ATM Agent Pack / Onboarding 計畫書」（§17.6）中一併規劃 CI smoke runner。
+- **目標 A** 的核心 CLI 鏈在 `create-map-from-plan.test.ts` 跑到 canary；後續 `canary→active→legacy-retired` 由 `replacement-lane.test.ts` 接續完成。兩者合併等同走完 §14.1 的完整流程。
+- **目標 B** 的五段 lineage 由 `replacement-lane.test.ts` 單一測試完整還原，artifact 為真實的 `atomic_workbench/maps/ATM-MAP-9701/lineage-log.json`。
+- 所有測試以 `node --experimental-strip-types` 直接執行 TypeScript，不需要預先 build，可重現性高。
+- 後續若要把這條鏈接到 CI pipeline 上作為 release smoke，建議於「ATM Agent Pack / Onboarding 計畫書」（§17.6）一併規劃。
