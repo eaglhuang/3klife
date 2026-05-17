@@ -268,33 +268,34 @@ Checklist：
 - [x] `validate:script-parity` 加入 standard suite
 - [x] `validate:standard` 38/38 通過
 
-### M9 - Framework-neutral Example 與 Multi-agent 驗證（拆分後保留）
+### M9 - Framework-neutral Example 與 Multi-agent 驗證（拆分後保留）✅ DONE (commit da4c968)
 目的：證明 IntegrationAdapter + Entry Template Compiler 可被多 agent 接住；first-touch welcome / create-atm e2e 交給第二主線。
 
 交付物：
-- `examples/agent-onboarding-flow/`：保留為 framework-neutral adapter example，不含 host-specific 規則
-- 更新 `docs/multi-agent-compatibility-matrix.md` 加入 charter 接入狀態欄位
-- 更新 `docs/multi-agent-results.md` 加入 adapter install + first command 驗證結果
+- `examples/agent-onboarding-flow/`：保留為 framework-neutral adapter example，不含 host-specific 規則 ✅
+- 更新 `docs/multi-agent-compatibility-matrix.md` 加入 charter 接入狀態欄位 ✅
+- 更新 `docs/multi-agent-results.md` 加入 adapter install + first command 驗證結果 ✅
 
 Checklist：
-- [ ] Demo 可在五分鐘跑完 adapter install + verify
-- [ ] 至少覆蓋三個 agent 的 install + first command
-- [ ] Charter 衝突案例可被偵測
-- [ ] `validate:examples`、`validate:multi-agent-confidence` 通過
+- [x] Demo 可在五分鐘跑完 adapter install + verify
+- [x] 至少覆蓋三個 agent 的 install + first command（Claude Code / Cursor / GitHub Copilot Agent）
+- [x] Charter 衝突案例可被偵測
+- [x] `validate:examples`、`validate:multi-agent-confidence` 通過
 
-### M10 - Framework Rollout 指標（拆分後保留）
+### M10 - Framework Rollout 指標（拆分後保留）✅ DONE (commit da4c968)
 目的：量測 framework 層的 integration / charter / drift 品質；first-touch adoption metrics 移到第二主線 APO-M8。
 
 交付物：
-- 擴充 `schemas/governance/rollout-metrics-report.schema.json` 加入 framework-level integration metrics
-- `fixtures/rollout-metrics/integration-adapter-sample.json`
-- Metrics：charter-violation rate、integration-drift rate、adapter-install-success rate
+- 擴充 `schemas/governance/rollout-metrics-report.schema.json` 加入 framework-level integration metrics ✅
+- `fixtures/rollout-metrics/integration-adapter-sample.json` ✅
+- Metrics：charter-violation rate、integration-drift rate、adapter-install-success rate ✅
 
 Checklist：
-- [ ] Charter 衝突發生頻率可量測
-- [ ] Integration drift 比例可量測
-- [ ] Adapter 安裝成功率可量測
-- [ ] `validate:rollout-metrics` 通過
+- [x] Charter 衝突發生頻率可量測
+- [x] Integration drift 比例可量測
+- [x] Adapter 安裝成功率可量測
+- [x] `validate:rollout-metrics` 通過
+- [x] `validate:standard` 38/38 通過
 
 ## 不採納清單（明確列出避免架構漂移）
 
