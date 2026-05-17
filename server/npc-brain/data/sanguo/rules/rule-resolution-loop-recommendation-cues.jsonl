@@ -1,0 +1,3 @@
+{"id": "Rule_ResolutionLoopRecommendationCues_P1_DECORATIVE_WRAPPER_CHARS", "consumer": "run_resolution_loop.py", "constantName": "DECORATIVE_WRAPPER_CHARS", "kind": "characterSet", "value": "【】[]()（）「」『』《》〈〉"}
+{"id": "Rule_ResolutionLoopRecommendationCues_P1_COMPOUND_NOISE_SUFFIXES", "consumer": "run_resolution_loop.py", "constantName": "COMPOUND_NOISE_SUFFIXES", "kind": "termSet", "terms": ["兵", "卒", "士", "眾", "糧", "船", "草", "軍", "陣", "隊", "馬"]}
+{"id": "Rule_ResolutionLoopRecommendationCues_P1_COMPOUND_TITLE_OR_PLACE_SUFFIXES", "consumer": "run_resolution_loop.py", "constantName": "COMPOUND_TITLE_OR_PLACE_SUFFIXES", "kind": "termSet", "terms": ["侯", "公", "君", "國", "城", "寨", "山", "州", "帝", "水", "河", "海", "王", "縣", "郡", "關"]}

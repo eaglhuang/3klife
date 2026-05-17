@@ -8,9 +8,15 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 from urllib.request import Request, urlopen
 
 from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    load_resolution_loop_recommendation_cue_rules,
+    load_resolution_loop_runner_policy,
+)
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -26,15 +32,69 @@ DEFAULT_ALIAS_OVERRIDE_PATH = pipeline_config_path(REPO_ROOT, "general-alias-ove
 DEFAULT_CHOICES_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop")
 DEFAULT_POSTGRES_IMPORTER = PIPELINE_ROOT / "import_resolution_seed_to_postgres.py"
 DEFAULT_PG_DSN_ENV = "SANGUO_RAG_PG_DSN"
-ROMANCE_CHARACTER_LIST_RAW_URL = "https://zh.wikipedia.org/w/index.php?title=%E4%B8%89%E5%9B%BD%E6%BC%94%E4%B9%89%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8&action=raw"
+ROMANCE_CHARACTER_LIST_RAW_URL = ""
 DEFAULT_ROMANCE_CHARACTER_CACHE_PATH = DEFAULT_CHOICES_ROOT / "romance-character-list-cache.json"
-DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
+DECORATIVE_WRAPPER_CHARS = ""
 ROMANCE_LINK_RE = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|([^\]]+))?\]\]")
-COMPOUND_NOISE_SUFFIXES = set("兵軍卒士眾隊陣船糧草馬")
-COMPOUND_TITLE_OR_PLACE_SUFFIXES = set("王侯公帝君州郡縣城國關寨河山水海")
-OPTION_RANK_ORDER = {"A": 0, "B": 1, "C": 2, "D": 3}
-CONFIDENCE_RANK = {"low": 0, "medium": 1, "high": 2}
+COMPOUND_NOISE_SUFFIXES: set[str] = set()
+COMPOUND_TITLE_OR_PLACE_SUFFIXES: set[str] = set()
+OPTION_RANK_ORDER: dict[str, int] = {}
+CONFIDENCE_RANK: dict[str, int] = {}
 PIPELINE_PYTHON_CACHE: str | None = None
+
+
+RESOLUTION_LOOP_POLICY: dict[str, Any] = {}
+RESOLUTION_LOOP_RECOMMENDATION_CUES: list[dict[str, Any]] = []
+
+
+def apply_resolution_loop_governance(policy: dict[str, Any], cue_rules: list[dict[str, Any]]) -> None:
+    global RESOLUTION_LOOP_POLICY, RESOLUTION_LOOP_RECOMMENDATION_CUES
+    global ROMANCE_CHARACTER_LIST_RAW_URL, DECORATIVE_WRAPPER_CHARS
+    global COMPOUND_NOISE_SUFFIXES, COMPOUND_TITLE_OR_PLACE_SUFFIXES
+    global OPTION_RANK_ORDER, CONFIDENCE_RANK
+
+    RESOLUTION_LOOP_POLICY = dict(policy)
+    RESOLUTION_LOOP_RECOMMENDATION_CUES = list(cue_rules)
+    ROMANCE_CHARACTER_LIST_RAW_URL = str(policy.get("romanceCharacterListRawUrl") or "")
+    OPTION_RANK_ORDER = {
+        str(key): int(value)
+        for key, value in (policy.get("optionRankOrder") or {}).items()
+    }
+    CONFIDENCE_RANK = {
+        str(key): int(value)
+        for key, value in (policy.get("confidenceRank") or {}).items()
+    }
+    by_name = {str(row.get("constantName") or ""): row for row in cue_rules}
+    DECORATIVE_WRAPPER_CHARS = str(by_name.get("DECORATIVE_WRAPPER_CHARS", {}).get("value") or "")
+    COMPOUND_NOISE_SUFFIXES = {
+        str(term)
+        for term in by_name.get("COMPOUND_NOISE_SUFFIXES", {}).get("terms") or []
+        if str(term)
+    }
+    COMPOUND_TITLE_OR_PLACE_SUFFIXES = {
+        str(term)
+        for term in by_name.get("COMPOUND_TITLE_OR_PLACE_SUFFIXES", {}).get("terms") or []
+        if str(term)
+    }
+
+
+def resolution_loop_score(key: str, fallback: int) -> int:
+    scoring = RESOLUTION_LOOP_POLICY.get("recommendationScoring")
+    if not isinstance(scoring, dict):
+        return fallback
+    try:
+        return int(scoring.get(key, fallback))
+    except (TypeError, ValueError):
+        return fallback
+
+
+def effective_resolution_loop_int_arg(cli_value: int | None, key: str, fallback: int) -> int:
+    if cli_value is not None:
+        return cli_value
+    try:
+        return int(RESOLUTION_LOOP_POLICY.get(key, fallback))
+    except (TypeError, ValueError):
+        return fallback
 
 
 def python_can_import_pydantic(python_path: str) -> bool:
@@ -90,7 +150,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--manual-roster", default=str(DEFAULT_MANUAL_ROSTER_PATH), help="Manual roster seed JSON used when auto-applying answers")
     parser.add_argument("--alias-overrides", default=str(DEFAULT_ALIAS_OVERRIDE_PATH), help="Curated alias override JSON used as secondary recommendation evidence")
     parser.add_argument("--choices-root", default=str(DEFAULT_CHOICES_ROOT), help="Output directory for generated MCQ files")
-    parser.add_argument("--top", type=int, default=30, help="Number of unresolved labels to turn into MCQs")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--resolution-loop-policy", default=None, help="Override policy-resolution-loop-runner.json path")
+    parser.add_argument("--resolution-loop-cue-rules", default=None, help="Override rule-resolution-loop-recommendation-cues.jsonl path")
+    parser.add_argument("--top", type=int, default=None, help="Number of unresolved labels to turn into MCQs. Defaults to governance policy.")
     parser.add_argument(
         "--top-source",
         choices=("auto", "summary", "postgres"),
@@ -102,7 +165,7 @@ def parse_args() -> argparse.Namespace:
         default="",
         help=f"PostgreSQL DSN. If omitted, read from env {DEFAULT_PG_DSN_ENV}.",
     )
-    parser.add_argument("--max-iterations", type=int, default=1, help="Number of automatic loop iterations to run")
+    parser.add_argument("--max-iterations", type=int, default=None, help="Number of automatic loop iterations to run. Defaults to governance policy.")
     parser.add_argument("--apply-answers", action="store_true", help="Apply any existing answered MCQs before rebuilding the loop")
     parser.add_argument(
         "--auto-fill-suggestions",
@@ -800,7 +863,7 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
     )
     curated_person_record = pick_curated_person_record(label, curated_hits)
     if romance_hits:
-        scores["A"] += 8
+        scores["A"] += resolution_loop_score("romanceCharacterListHitWeight", 8)
         reasons.append(f"命中《三國演義角色列表》：{romance_hits[0]}")
         evidence.append(
             {
@@ -812,7 +875,7 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
         )
 
     if curated_hits:
-        weight = 7 if any(str((hit.get("personRecord") or {}).get("faction") or "").strip() for hit in curated_hits) else 6
+        weight = resolution_loop_score("curatedPersonHitWeightWithFaction", 7) if any(str((hit.get("personRecord") or {}).get("faction") or "").strip() for hit in curated_hits) else resolution_loop_score("curatedPersonHitWeightWithoutFaction", 6)
         scores["A"] += weight
         reasons.append(f"命中本地人物白名單：{curated_matched_labels[0]} -> {curated_general_ids[0]}")
         evidence.append(
@@ -825,7 +888,7 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
             }
         )
         if len(curated_general_ids) > 1:
-            scores["C"] += 6
+            scores["C"] += resolution_loop_score("curatedPersonConflictWeight", 6)
             reasons.append("本地人物白名單對應到多個 generalId，建議人工確認")
             evidence.append(
                 {
@@ -840,7 +903,7 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
     suffixes, compounds = collect_following_compounds(label, question.get("sampleSnippets") or [])
     noise_compounds = [compound for compound, suffix in zip(compounds, suffixes) if suffix in COMPOUND_NOISE_SUFFIXES]
     if noise_compounds:
-        weight = 6 if len(noise_compounds) >= 2 else 4
+        weight = resolution_loop_score("compoundNoiseWeightMultiple", 6) if len(noise_compounds) >= 2 else resolution_loop_score("compoundNoiseWeightSingle", 4)
         scores["B"] += weight
         reasons.append(f"片段常出現「{noise_compounds[0]}」這類兵種/物資複合詞")
         evidence.append(
@@ -854,7 +917,7 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
 
     title_or_place_compounds = [compound for compound, suffix in zip(compounds, suffixes) if suffix in COMPOUND_TITLE_OR_PLACE_SUFFIXES]
     if title_or_place_compounds and not romance_hits:
-        weight = 5 if len(label) <= 2 else 3
+        weight = resolution_loop_score("compoundTitleOrPlaceWeightShortLabel", 5) if len(label) <= 2 else resolution_loop_score("compoundTitleOrPlaceWeightLongLabel", 3)
         scores["B"] += weight
         reasons.append(f"片段常把它接成「{title_or_place_compounds[0]}」，較像稱號/地名片段")
         evidence.append(
@@ -868,7 +931,7 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
 
     person_signal_labels = unique_preserving_order(romance_hits + curated_matched_labels)
     if person_signal_labels and (noise_compounds or title_or_place_compounds):
-        scores["C"] += 5
+        scores["C"] += resolution_loop_score("conflictSignalWeight", 5)
         reasons.append("人物來源命中，但片段也有複合詞斷詞訊號，建議人工再看一次")
         evidence.append(
             {
@@ -884,7 +947,7 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
     top_score = ranked[0][1]
     second_score = ranked[1][1]
 
-    if top_score <= 1:
+    if top_score <= resolution_loop_score("noSignalMaxScore", 1):
         recommended_key = "D"
         confidence = "low"
         if romance_index.get("loadedFrom") == "unavailable":
@@ -895,9 +958,9 @@ def build_recommendation(question: dict, romance_index: dict, curated_index: dic
         recommended_key = "C"
         confidence = "low"
         reasons.insert(0, "正反訊號接近，先建議走 ambiguous")
-    elif top_score - second_score >= 4:
+    elif top_score - second_score >= resolution_loop_score("highConfidenceMargin", 4):
         confidence = "high"
-    elif top_score - second_score >= 2:
+    elif top_score - second_score >= resolution_loop_score("mediumConfidenceMargin", 2):
         confidence = "medium"
     else:
         confidence = "low"
@@ -1130,6 +1193,17 @@ def generate_choices(
 
 def main() -> None:
     args = parse_args()
+    policy = load_resolution_loop_runner_policy(
+        args.governance_root,
+        resolution_loop_policy=args.resolution_loop_policy,
+    )
+    cue_rules = load_resolution_loop_recommendation_cue_rules(
+        args.governance_root,
+        resolution_loop_cue_rules=args.resolution_loop_cue_rules,
+    )
+    apply_resolution_loop_governance(policy, cue_rules)
+    top = effective_resolution_loop_int_arg(args.top, "defaultTop", 30)
+    max_iterations = effective_resolution_loop_int_arg(args.max_iterations, "defaultMaxIterations", 1)
     chapters_root = Path(args.chapters_root)
     alias_output_root = Path(args.alias_output_root)
     observed_output_root = Path(args.observed_output_root)
@@ -1163,10 +1237,10 @@ def main() -> None:
     describe_json_artifact(observed_path, "data")
     describe_json_artifact(summary_path, "topUnresolvedLabels")
 
-    for iteration in range(1, args.max_iterations + 1):
+    for iteration in range(1, max_iterations + 1):
         print(f"[resolution_loop] iteration={iteration}")
         build_alias_dict(alias_output_root, observed_path, retry_without_observed=True)
-        collect_observed_mentions(chapters_root, alias_output_root, observed_output_root, decision_path, args.top)
+        collect_observed_mentions(chapters_root, alias_output_root, observed_output_root, decision_path, top)
         build_alias_dict(alias_output_root, observed_path)
 
     if args.top_source in {"auto", "postgres"}:
@@ -1186,7 +1260,7 @@ def main() -> None:
         summary_path,
         decision_path,
         choices_root,
-        args.top,
+        top,
         manual_roster_path,
         alias_override_path,
         args.top_source,
@@ -1207,4 +1281,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        print(f"[resolution_loop] governance error: {exc}", file=sys.stderr)
+        raise SystemExit(2) from None

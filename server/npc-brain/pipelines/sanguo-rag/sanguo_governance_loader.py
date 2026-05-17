@@ -540,6 +540,31 @@ def load_dialogue_mention_resolution_cue_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
 
 
+
+def load_resolution_loop_runner_policy(
+    root: str | Path | None = None,
+    *,
+    resolution_loop_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = Path(resolution_loop_policy).resolve() if resolution_loop_policy else _path(base, "policies", "policy-resolution-loop-runner.json")
+    return read_governance_json(path, required_id="Policy_ResolutionLoopRunner_P1")
+
+
+def load_resolution_loop_recommendation_cue_rules(
+    root: str | Path | None = None,
+    *,
+    resolution_loop_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(resolution_loop_cue_rules).resolve()
+        if resolution_loop_cue_rules
+        else _path(base, "rules", "rule-resolution-loop-recommendation-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

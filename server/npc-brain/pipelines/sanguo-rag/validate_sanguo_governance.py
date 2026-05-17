@@ -13,6 +13,8 @@ from sanguo_governance_loader import (
     load_core_person_completion_policy,
     load_dialogue_mention_resolution_cue_rules,
     load_dialogue_mention_resolution_policy,
+    load_resolution_loop_recommendation_cue_rules,
+    load_resolution_loop_runner_policy,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
@@ -158,6 +160,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     runtime_readiness_policy = load_runtime_readiness_matrix_policy(root)
     dialogue_mention_policy = load_dialogue_mention_resolution_policy(root)
     dialogue_mention_cues = load_dialogue_mention_resolution_cue_rules(root)
+    resolution_loop_policy = load_resolution_loop_runner_policy(root)
+    resolution_loop_cues = load_resolution_loop_recommendation_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -879,6 +883,56 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if missing_dialogue_cues:
         raise SanguoGovernanceError(f"rule-dialogue-mention-resolution-cues missing rules: {', '.join(missing_dialogue_cues)}")
 
+
+    resolution_option_rank = resolution_loop_policy.get("optionRankOrder")
+    if not isinstance(resolution_option_rank, dict) or set(resolution_option_rank.keys()) != {"A", "B", "C", "D"}:
+        raise SanguoGovernanceError("policy-resolution-loop-runner optionRankOrder must define A/B/C/D")
+    resolution_confidence_rank = resolution_loop_policy.get("confidenceRank")
+    if not isinstance(resolution_confidence_rank, dict) or set(resolution_confidence_rank.keys()) != {"low", "medium", "high"}:
+        raise SanguoGovernanceError("policy-resolution-loop-runner confidenceRank must define low/medium/high")
+    for key in ("defaultTop", "defaultMaxIterations"):
+        if int(resolution_loop_policy.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-resolution-loop-runner {key} must be positive")
+    resolution_scoring = resolution_loop_policy.get("recommendationScoring")
+    if not isinstance(resolution_scoring, dict) or not resolution_scoring:
+        raise SanguoGovernanceError("policy-resolution-loop-runner recommendationScoring cannot be empty")
+    for key, value in resolution_scoring.items():
+        if int(value) < 0:
+            raise SanguoGovernanceError(f"policy-resolution-loop-runner recommendationScoring.{key} cannot be negative")
+    required_resolution_loop_cues = {
+        "DECORATIVE_WRAPPER_CHARS",
+        "COMPOUND_NOISE_SUFFIXES",
+        "COMPOUND_TITLE_OR_PLACE_SUFFIXES",
+    }
+    seen_resolution_loop_cues: set[str] = set()
+    resolution_loop_cue_value_count = 0
+    for row in resolution_loop_cues:
+        consumer = str(row.get("consumer") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        kind = str(row.get("kind") or "").strip()
+        if consumer != "run_resolution_loop.py":
+            raise SanguoGovernanceError("rule-resolution-loop-recommendation-cues invalid consumer")
+        if constant_name in seen_resolution_loop_cues:
+            raise SanguoGovernanceError(f"rule-resolution-loop-recommendation-cues duplicate constantName: {constant_name}")
+        seen_resolution_loop_cues.add(constant_name)
+        if kind == "characterSet":
+            value = str(row.get("value") or "")
+            if not value:
+                raise SanguoGovernanceError(f"rule-resolution-loop-recommendation-cues {constant_name} value cannot be blank")
+            resolution_loop_cue_value_count += len(value)
+        elif kind == "termSet":
+            terms = [str(term).strip() for term in row.get("terms") or []]
+            if not terms or any(not term for term in terms):
+                raise SanguoGovernanceError(f"rule-resolution-loop-recommendation-cues {constant_name} terms cannot be blank")
+            if len(set(terms)) != len(terms):
+                raise SanguoGovernanceError(f"rule-resolution-loop-recommendation-cues {constant_name} terms cannot contain duplicates")
+            resolution_loop_cue_value_count += len(terms)
+        else:
+            raise SanguoGovernanceError(f"rule-resolution-loop-recommendation-cues {constant_name} unsupported kind: {kind}")
+    missing_resolution_loop_cues = sorted(required_resolution_loop_cues - seen_resolution_loop_cues)
+    if missing_resolution_loop_cues:
+        raise SanguoGovernanceError(f"rule-resolution-loop-recommendation-cues missing rules: {', '.join(missing_resolution_loop_cues)}")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -923,6 +977,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "runtimeReadinessStatusGateCount": len(fail_gates) + len(warn_gates),
         "dialogueMentionCueRuleCount": len(dialogue_mention_cues),
         "dialogueMentionCueEntryCount": dialogue_cue_entry_count,
+        "resolutionLoopCueRuleCount": len(resolution_loop_cues),
+        "resolutionLoopCueValueCount": resolution_loop_cue_value_count,
+        "resolutionLoopRecommendationScoreCount": len(resolution_scoring),
     }
 
 
