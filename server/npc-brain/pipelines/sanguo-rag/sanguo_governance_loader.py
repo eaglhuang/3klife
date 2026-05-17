@@ -335,6 +335,35 @@ def load_event_question_angle_cue_rules(
     return read_governance_jsonl(path, required_fields=("id", "extractor", "angleFamily", "terms"))
 
 
+
+def load_external_source_benchmark_policy(
+    root: str | Path | None = None,
+    *,
+    external_source_benchmark_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(external_source_benchmark_policy).resolve()
+        if external_source_benchmark_policy
+        else _path(base, "policies", "policy-external-source-benchmark.json")
+    )
+    return read_governance_json(path, required_id="Policy_ExternalSourceBenchmark_P1")
+
+
+def load_external_source_benchmark_cue_rules(
+    root: str | Path | None = None,
+    *,
+    external_source_benchmark_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(external_source_benchmark_cue_rules).resolve()
+        if external_source_benchmark_cue_rules
+        else _path(base, "rules", "rule-external-source-benchmark-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

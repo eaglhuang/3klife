@@ -1,0 +1,55 @@
+{
+  "id": "Policy_ExternalSourceBenchmark_P1",
+  "description": "Externalized deterministic external source benchmark defaults copied from benchmark_external_source.py Phase 8 baseline.",
+  "sourceClasses": [
+    "high-yield-character-site",
+    "primary-text-site",
+    "community-worldbuilding-site"
+  ],
+  "precheckDefaults": {
+    "likelyThreshold": 3,
+    "possibleThreshold": 1,
+    "minimumTermHitCount": 1,
+    "hintKeywords": [
+      "歷史",
+      "历史",
+      "演義",
+      "演义"
+    ],
+    "loginPatterns": [
+      "登入",
+      "登录",
+      "sign in",
+      "log in",
+      "建立帳號",
+      "创建账号"
+    ],
+    "javascriptShellContentTypePrefixes": [
+      "application/javascript"
+    ],
+    "loginGatedMaxTermHitCount": 1,
+    "loginGatedMaxBytesRead": 8000
+  },
+  "stage2GateDefaults": {
+    "fetchSuccessRateMin": 0.9,
+    "relevantPageRateMin": 0.7,
+    "errorRateMax": 0.1,
+    "duplicateLinkRateMax": 0.05
+  },
+  "stage3ClassGateDefaults": {
+    "high-yield-character-site": {
+      "seedPerPageMin": 1.0,
+      "candidateCardPerPageMin": 0.4,
+      "canonicalMatchPageRateMin": 0.4,
+      "shadowPeopleMin": 15
+    },
+    "primary-text-site": {
+      "quoteLocatorHashCoverageMin": 0.9,
+      "claimBearingPassageCountMin": 20
+    },
+    "community-worldbuilding-site": {
+      "seedPerPageMin": 0.8,
+      "candidateCardPerPageMin": 0.2
+    }
+  }
+}

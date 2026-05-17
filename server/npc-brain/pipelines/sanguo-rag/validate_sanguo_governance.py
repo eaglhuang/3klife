@@ -20,6 +20,8 @@ from sanguo_governance_loader import (
     load_event_candidate_extraction_policy,
     load_event_question_angle_cue_rules,
     load_event_question_seed_bank_policy,
+    load_external_source_benchmark_cue_rules,
+    load_external_source_benchmark_policy,
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
     load_knowledge_completion_policy,
@@ -128,6 +130,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     event_candidate_cues = load_event_candidate_cue_rules(root)
     event_question_policy = load_event_question_seed_bank_policy(root)
     event_question_angle_cues = load_event_question_angle_cue_rules(root)
+    external_source_benchmark_policy = load_external_source_benchmark_policy(root)
+    external_source_benchmark_cues = load_external_source_benchmark_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -492,6 +496,58 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not any(isinstance(rule, dict) and rule.get("default") is True for rule in slot_rules):
         raise SanguoGovernanceError("policy-event-question-seed-bank slotStrengthRules must include default rule")
 
+
+    external_source_classes = external_source_benchmark_policy.get("sourceClasses")
+    if not isinstance(external_source_classes, list) or not external_source_classes:
+        raise SanguoGovernanceError("policy-external-source-benchmark sourceClasses must be non-empty list")
+    normalized_source_classes = [str(item).strip() for item in external_source_classes]
+    if any(not item for item in normalized_source_classes):
+        raise SanguoGovernanceError("policy-external-source-benchmark sourceClasses cannot contain blank value")
+    if len(set(normalized_source_classes)) != len(normalized_source_classes):
+        raise SanguoGovernanceError("policy-external-source-benchmark sourceClasses cannot contain duplicate value")
+    precheck_defaults = external_source_benchmark_policy.get("precheckDefaults") if isinstance(external_source_benchmark_policy.get("precheckDefaults"), dict) else {}
+    for key in ("likelyThreshold", "possibleThreshold", "minimumTermHitCount", "loginGatedMaxBytesRead"):
+        if int(precheck_defaults.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-external-source-benchmark precheckDefaults.{key} must be positive")
+    for key in ("hintKeywords", "loginPatterns", "javascriptShellContentTypePrefixes"):
+        values = precheck_defaults.get(key)
+        if not isinstance(values, list) or not values:
+            raise SanguoGovernanceError(f"policy-external-source-benchmark precheckDefaults.{key} must be non-empty list")
+        normalized = [str(item).strip() for item in values]
+        if any(not item for item in normalized) or len(set(normalized)) != len(normalized):
+            raise SanguoGovernanceError(f"policy-external-source-benchmark precheckDefaults.{key} has blank or duplicate value")
+    stage2_defaults = external_source_benchmark_policy.get("stage2GateDefaults") if isinstance(external_source_benchmark_policy.get("stage2GateDefaults"), dict) else {}
+    for key in ("fetchSuccessRateMin", "relevantPageRateMin", "errorRateMax", "duplicateLinkRateMax"):
+        value = float(stage2_defaults.get(key, -1.0))
+        if value < 0.0 or value > 1.0:
+            raise SanguoGovernanceError(f"policy-external-source-benchmark stage2GateDefaults.{key} must be between 0 and 1")
+    stage3_defaults = external_source_benchmark_policy.get("stage3ClassGateDefaults")
+    if not isinstance(stage3_defaults, dict) or not stage3_defaults:
+        raise SanguoGovernanceError("policy-external-source-benchmark stage3ClassGateDefaults cannot be empty")
+    invalid_stage3_classes = sorted(set(str(key) for key in stage3_defaults.keys()) - set(normalized_source_classes))
+    if invalid_stage3_classes:
+        raise SanguoGovernanceError(f"policy-external-source-benchmark has invalid stage3 class defaults: {invalid_stage3_classes}")
+    external_source_by_name: dict[str, dict[str, Any]] = {}
+    for row in external_source_benchmark_cues:
+        consumer = str(row.get("consumer") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        kind = str(row.get("kind") or "").strip()
+        if consumer != "benchmark_external_source.py":
+            raise SanguoGovernanceError(f"rule-external-source-benchmark-cues invalid consumer: {consumer}")
+        if constant_name in external_source_by_name:
+            raise SanguoGovernanceError(f"rule-external-source-benchmark-cues duplicate constantName: {constant_name}")
+        external_source_by_name[constant_name] = row
+        if kind != "termList":
+            raise SanguoGovernanceError(f"rule-external-source-benchmark-cues {constant_name} unsupported kind: {kind}")
+        terms = row.get("terms")
+        if not isinstance(terms, list) or not terms:
+            raise SanguoGovernanceError(f"rule-external-source-benchmark-cues {constant_name} terms must be non-empty list")
+        normalized_terms = [str(term).strip() for term in terms]
+        if any(not term for term in normalized_terms) or len(set(normalized_terms)) != len(normalized_terms):
+            raise SanguoGovernanceError(f"rule-external-source-benchmark-cues {constant_name} has blank or duplicate term")
+    if "DEFAULT_TERM_HIT_KEYWORDS" not in external_source_by_name:
+        raise SanguoGovernanceError("rule-external-source-benchmark-cues missing DEFAULT_TERM_HIT_KEYWORDS")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -521,6 +577,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "eventCandidateCueRuleCount": len(event_candidate_cues),
         "eventQuestionAngleCueRuleCount": len(event_question_angle_cues),
         "eventQuestionClaimMappingCount": len(claim_to_angle),
+        "externalSourceBenchmarkCueRuleCount": len(external_source_benchmark_cues),
+        "externalSourceBenchmarkSourceClassCount": len(external_source_classes),
     }
 
 

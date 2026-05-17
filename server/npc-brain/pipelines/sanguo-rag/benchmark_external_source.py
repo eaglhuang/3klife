@@ -15,7 +15,13 @@ from urllib.parse import quote, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
-from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    default_governance_root,
+    load_external_source_benchmark_cue_rules,
+    load_external_source_benchmark_policy,
+    load_relationship_runtime_canon_policy,
+)
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -29,14 +35,39 @@ DEFAULT_SCOREBOARD_JSON = Path(
 )
 NPC_BRAIN_ROOT = resolve_npc_brain_root(REPO_ROOT)
 DEFAULT_GOVERNANCE_ROOT = default_governance_root()
-RELATIONSHIP_RUNTIME_CANON_POLICY = load_relationship_runtime_canon_policy(DEFAULT_GOVERNANCE_ROOT)
-RELATIONSHIP_POLICY_TEXT = (
-    RELATIONSHIP_RUNTIME_CANON_POLICY.get("policyText") if isinstance(RELATIONSHIP_RUNTIME_CANON_POLICY.get("policyText"), dict) else {}
-)
-A_ROMANCE_REVIEW_CAUTION_ZH_TW = str(
-    RELATIONSHIP_POLICY_TEXT.get("aRomanceReviewCautionZhTw")
-    or "這是演義層資料；《三國演義》本文可作本專案 canonical A-romance，但不要標成 A-history 史實。"
-)
+RELATIONSHIP_RUNTIME_CANON_POLICY: dict[str, Any] = {}
+RELATIONSHIP_POLICY_TEXT: dict[str, Any] = {}
+A_ROMANCE_REVIEW_CAUTION_ZH_TW = ""
+
+
+
+def apply_external_source_benchmark_governance(policy: dict[str, Any], cue_rules: list[dict[str, Any]]) -> None:
+    global SOURCE_CLASSES, DEFAULT_TERM_HIT_KEYWORDS, DEFAULT_PRECHECK_POLICY, DEFAULT_STAGE2_GATE_POLICY, DEFAULT_STAGE3_CLASS_GATE_POLICY
+    SOURCE_CLASSES = tuple(str(item).strip() for item in policy.get("sourceClasses") or [] if str(item).strip())
+    DEFAULT_PRECHECK_POLICY = dict(policy.get("precheckDefaults") or {})
+    DEFAULT_STAGE2_GATE_POLICY = dict(policy.get("stage2GateDefaults") or {})
+    DEFAULT_STAGE3_CLASS_GATE_POLICY = {
+        str(key): dict(value)
+        for key, value in (policy.get("stage3ClassGateDefaults") or {}).items()
+        if isinstance(value, dict)
+    }
+    by_name = {str(row.get("constantName") or ""): row for row in cue_rules}
+    term_row = by_name.get("DEFAULT_TERM_HIT_KEYWORDS", {})
+    DEFAULT_TERM_HIT_KEYWORDS = tuple(str(item).strip() for item in term_row.get("terms") or [] if str(item).strip())
+
+
+def apply_relationship_runtime_canon_governance(policy: dict[str, Any]) -> None:
+    global RELATIONSHIP_RUNTIME_CANON_POLICY, RELATIONSHIP_POLICY_TEXT, A_ROMANCE_REVIEW_CAUTION_ZH_TW
+    RELATIONSHIP_RUNTIME_CANON_POLICY = dict(policy)
+    RELATIONSHIP_POLICY_TEXT = (
+        RELATIONSHIP_RUNTIME_CANON_POLICY.get("policyText")
+        if isinstance(RELATIONSHIP_RUNTIME_CANON_POLICY.get("policyText"), dict)
+        else {}
+    )
+    A_ROMANCE_REVIEW_CAUTION_ZH_TW = str(
+        RELATIONSHIP_POLICY_TEXT.get("aRomanceReviewCautionZhTw")
+        or "A-romance may be runtime canon only when sourceFamily/sourceLayer remain explicit."
+    )
 
 
 def resolve_default_cli(cli_name: str) -> Path:
@@ -66,59 +97,12 @@ DEFAULT_SEED_HARVESTER = PIPELINE_ROOT / "harvest_external_evidence_seeds.py"
 DEFAULT_SEED_SCORER = PIPELINE_ROOT / "score_external_evidence_seeds.py"
 DEFAULT_SEED_PROMOTER = PIPELINE_ROOT / "promote_seed_to_evidence_card.py"
 
-SOURCE_CLASSES = (
-    "high-yield-character-site",
-    "primary-text-site",
-    "community-worldbuilding-site",
-)
+SOURCE_CLASSES: tuple[str, ...] = ()
 
-DEFAULT_TERM_HIT_KEYWORDS = (
-    "\u4e09\u570b",
-    "\u4e09\u56fd",
-    "\u66f9\u64cd",
-    "\u5289\u5099",
-    "\u5218\u5907",
-    "\u5b6b\u6b0a",
-    "\u5b59\u6743",
-    "\u95dc\u7fbd",
-    "\u5173\u7fbd",
-    "\u8af8\u845b\u4eae",
-    "\u8bf8\u845b\u4eae",
-    "\u53f8\u99ac\u61ff",
-    "\u53f8\u9a6c\u61ff",
-)
-DEFAULT_PRECHECK_POLICY = {
-    "likelyThreshold": 3,
-    "possibleThreshold": 1,
-    "minimumTermHitCount": 1,
-    "hintKeywords": ["歷史", "历史", "演義", "演义"],
-    "loginPatterns": ["登入", "登录", "sign in", "log in", "建立帳號", "创建账号"],
-    "javascriptShellContentTypePrefixes": ["application/javascript"],
-    "loginGatedMaxTermHitCount": 1,
-    "loginGatedMaxBytesRead": 8000,
-}
-DEFAULT_STAGE2_GATE_POLICY = {
-    "fetchSuccessRateMin": 0.90,
-    "relevantPageRateMin": 0.70,
-    "errorRateMax": 0.10,
-    "duplicateLinkRateMax": 0.05,
-}
-DEFAULT_STAGE3_CLASS_GATE_POLICY = {
-    "high-yield-character-site": {
-        "seedPerPageMin": 1.0,
-        "candidateCardPerPageMin": 0.40,
-        "canonicalMatchPageRateMin": 0.40,
-        "shadowPeopleMin": 15,
-    },
-    "primary-text-site": {
-        "quoteLocatorHashCoverageMin": 0.90,
-        "claimBearingPassageCountMin": 20,
-    },
-    "community-worldbuilding-site": {
-        "seedPerPageMin": 0.80,
-        "candidateCardPerPageMin": 0.20,
-    },
-}
+DEFAULT_TERM_HIT_KEYWORDS: tuple[str, ...] = ()
+DEFAULT_PRECHECK_POLICY: dict[str, Any] = {}
+DEFAULT_STAGE2_GATE_POLICY: dict[str, Any] = {}
+DEFAULT_STAGE3_CLASS_GATE_POLICY: dict[str, dict[str, Any]] = {}
 
 
 def utc_now() -> str:
@@ -1306,11 +1290,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Benchmark one external evidence source through deterministic three-stage gates.")
     parser.add_argument("--source-id", required=True)
     parser.add_argument("--url", default=None)
-    parser.add_argument("--source-class", choices=SOURCE_CLASSES, default=None)
+    parser.add_argument("--source-class", default=None)
     parser.add_argument("--sample-size", type=int, default=30)
     parser.add_argument("--run-id", default=None)
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--source-config", default=str(DEFAULT_SOURCE_CONFIG))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
+    parser.add_argument("--external-source-benchmark-policy", default=None)
+    parser.add_argument("--external-source-benchmark-cue-rules", default=None)
     parser.add_argument("--alias-map", default=str(DEFAULT_ALIAS_MAP))
     parser.add_argument("--scoreboard-json", default=str(DEFAULT_SCOREBOARD_JSON))
     parser.add_argument("--source-health-cli", default=str(DEFAULT_SOURCE_HEALTH_CLI))
@@ -1325,6 +1312,21 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    try:
+        benchmark_policy = load_external_source_benchmark_policy(
+            args.governance_root,
+            external_source_benchmark_policy=args.external_source_benchmark_policy,
+        )
+        benchmark_cue_rules = load_external_source_benchmark_cue_rules(
+            args.governance_root,
+            external_source_benchmark_cue_rules=args.external_source_benchmark_cue_rules,
+        )
+        relationship_policy = load_relationship_runtime_canon_policy(args.governance_root)
+    except SanguoGovernanceError as exc:
+        raise SystemExit(f"[benchmark_external_source] FAIL {exc}") from None
+    apply_external_source_benchmark_governance(benchmark_policy, benchmark_cue_rules)
+    apply_relationship_runtime_canon_governance(relationship_policy)
+
     source_config_path = resolve_path(args.source_config)
     source_config_payload = read_json(source_config_path)
     if not isinstance(source_config_payload, dict):
