@@ -844,5 +844,71 @@
     "path": "docs/ai_atomic_framework/map-replacement-protocol/plan-shards/plan-delivery.md",
     "title": "拆解大型功能優化原子map計畫書 — 里程碑與任務索引（§15–§17）",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0151",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0000-doc-finalize.task.md",
+    "title": "TASK-APO-0000 — 文件定稿與 cross-link",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0152",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0001-architecture-readme-crosslink.task.md",
+    "title": "TASK-APO-0001 — 對齊 ATM ARCHITECTURE / README cross-link",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0153",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0002-agent-pack-sdk-manifest.task.md",
+    "title": "TASK-APO-0002 — Agent Pack SDK 介面 + manifest schema",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0154",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0003-claude-code-pack-mvp.task.md",
+    "title": "TASK-APO-0003 — Claude Code Pack MVP",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0155",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0004-atmchart-render-pipeline.task.md",
+    "title": "TASK-APO-0004 — Rule Render / ATMChart Pipeline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0156",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0005-rule-justification-gate.task.md",
+    "title": "TASK-APO-0005 — Rule Justification Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0157",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0006-multi-agent-pack-expansion.task.md",
+    "title": "TASK-APO-0006 — Multi-Agent Pack 擴張",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0158",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0007-npm-create-atm.task.md",
+    "title": "TASK-APO-0007 — npm publish + create-atm",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0159",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0008-atm-welcome-entry.task.md",
+    "title": "TASK-APO-0008 — atm welcome 一鍵入口",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0160",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0009-next-action-hint-mrp.task.md",
+    "title": "TASK-APO-0009 — Slash Command nextActionHint 對接 MRP",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0161",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0010-agent-matrix-generator.task.md",
+    "title": "TASK-APO-0010 — 多 agent 矩陣自動生成",
+    "category": "other"
   }
 ]

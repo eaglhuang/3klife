@@ -45,7 +45,7 @@ MRP 已把 ATM 升級為「大型功能正式替代表面」，但 agent 進到�
 
 ### 2.2 Single Source of Truth 不可漂移
 
-`default-guards.json`、`atomic-map.schema.json`、`map-equivalence-report.schema.json` 等 machine-readable 契約是規則的唯一真相。`constitution.md`、`.claude/commands/atm-*.md`、`.cursor/rules/atm-*.md` 等都是「**渲染產物**」，必須由 CLI 從 SSoT 重新渲染，並透過 sha256 manifest 追蹤漂移。
+`default-guards.json`、`atomic-map.schema.json`、`map-equivalence-report.schema.json` 等 machine-readable 契約是規則的唯一真相。`atm-chart.md`、`.claude/commands/atm-*.md`、`.cursor/rules/atm-*.md` 等都是「**渲染產物**」，必須由 CLI 從 SSoT 重新渲染，並透過 sha256 manifest 追蹤漂移。
 
 ### 2.3 Agent Pack 是產品語言，Integration Adapter 是實作語言
 
@@ -134,17 +134,17 @@ interface RenderedManifest {
 ```
 default-guards.json  ─┐
 atomic-map.schema    ─┤
-map-equivalence-     ─┼─►  atm constitution render  ─►  .atm/memory/constitution.md
+map-equivalence-     ─┼─►  node atm.mjs atm-chart render  ─►  .atm/memory/atm-chart.md
 report.schema        ─┤                            └─►  agent-pack-* render()
 upgrade-input-       ─┤                                   ├─► .claude/commands/atm-*.md
 kinds                ─┘                                   ├─► .cursor/rules/atm-*.md
                                                           └─► .gemini/commands/atm-*.toml
 ```
 
-新增 `packages/cli/src/commands/constitution.ts`：
+新增 `packages/cli/src/commands/atm-chart.ts`：
 
-1. `atm constitution render --out .atm/memory/constitution.md`：從 SSoT 渲染專案憲法，frontmatter 帶 `source_guards_sha256` 與 `source_schema_sha256s`。
-2. `atm constitution verify`：檢查 `constitution.md` 的 frontmatter sha256 是否符合當前 SSoT，不一致則 block 後續 `agent-pack install`。
+1. `node atm.mjs atm-chart render --out .atm/memory/atm-chart.md`：從 SSoT 渲染 ATMChart，frontmatter 帶 `source_guards_sha256` 與 `source_schema_sha256s`。
+2. `node atm.mjs atm-chart verify`：檢查 `atm-chart.md` 的 frontmatter sha256 是否符合當前 SSoT，不一致則 block 後續 `agent-pack install`。
 
 新增 `packages/cli/src/commands/agent-pack.ts`：
 
@@ -165,7 +165,7 @@ npx create-atm <project-name> --agent claude-code
 # 等價於：
 git clone / 下載 onefile
 node atm.mjs bootstrap
-node atm.mjs constitution render
+node atm.mjs atm-chart render
 node atm.mjs agent-pack install --id claude-code
 node atm.mjs welcome
 ```
@@ -179,14 +179,14 @@ node atm.mjs agent-pack diff --id claude-code
 node atm.mjs agent-pack uninstall --id claude-code
 ```
 
-### 6.3 constitution 渲染
+### 6.3 ATMChart 渲染
 
 ```bash
-node atm.mjs constitution render
-node atm.mjs constitution verify
+node atm.mjs atm-chart render
+node atm.mjs atm-chart verify
 ```
 
-`constitution render` 必須在 `default-guards.json` 變更後重跑；`verify` 在 CI 與 pre-commit 都應呼叫。
+`atm-chart render` 必須在 `default-guards.json` 變更後重跑；`verify` 在 CI 與 pre-commit 都應呼叫。
 
 ### 6.4 welcome 串接
 
@@ -195,7 +195,7 @@ node atm.mjs welcome [--agent <id>] [--dry-run]
 ```
 
 行為：
-1. 印出 constitution 摘要（從 `.atm/memory/constitution.md` 讀取，不再 baked-in 模板）
+1. 印出 ATMChart 摘要（從 `.atm/memory/atm-chart.md` 讀取，不再 baked-in 模板）
 2. 印出已安裝 agent-pack 清單與漂移狀態
 3. 印出 `atm next --json` 的下一個建議動作
 4. `--dry-run` 模式不做任何寫入，只 echo
@@ -209,16 +209,16 @@ node atm.mjs welcome [--agent <id>] [--dry-run]
 Onboarding lifecycle 是 agent 接入 ATM 的階段標記，與 MRP 的 replacement rollout lane 完全獨立：
 
 1. `uninstalled`：使用者專案內無 `.atm/` 或 agent-pack manifest。
-2. `installed`：`atm bootstrap` 完成，`.atm/` 樹建立，但尚未 render constitution。
-3. `constitution-rendered`：`atm constitution render` 完成，`.atm/memory/constitution.md` 帶有最新 SSoT sha256。
+2. `installed`：`atm bootstrap` 完成，`.atm/` 樹建立，但尚未 render ATMChart。
+3. `atm-chart-rendered`：`node atm.mjs atm-chart render` 完成，`.atm/memory/atm-chart.md` 帶有最新 SSoT sha256。
 4. `agent-pack-applied`：至少一個 agent-pack 已 install，對應目錄（`.claude/`、`.cursor/` 等）有產出。
 5. `welcomed`：使用者已執行 `atm welcome` 至少一次（記錄於 `.atm/runtime/welcome.lineage.json`）。
 6. `operational`：agent 已透過 slash command 或 CLI 至少完成一次 `atm next --json` 字面執行。
 
 轉移規則：
 1. `uninstalled → installed`：需要 git repo + `node atm.mjs bootstrap` 成功。
-2. `installed → constitution-rendered`：需要 SSoT 完整、`constitution render` 成功且 verify 通過。
-3. `constitution-rendered → agent-pack-applied`：需要 install 至少一個 pack、manifest 寫入成功。
+2. `installed → atm-chart-rendered`：需要 SSoT 完整、`atm-chart render` 成功且 verify 通過。
+3. `atm-chart-rendered → agent-pack-applied`：需要 install 至少一個 pack、manifest 寫入成功。
 4. `agent-pack-applied → welcomed`：需要 `atm welcome` 完整跑完且沒有 user 中斷。
 5. 任何階段都可降級（uninstall、user 刪檔），降級不 trigger gate，但會反映在 `welcome` 輸出的 status。
 
@@ -272,7 +272,7 @@ Onboarding lifecycle 是 agent 接入 ATM 的階段標記，與 MRP 的 replacem
 為避免 npm 一鍵裝稀釋 ATM 的「先讀規則、後執行」嚴肅性：
 
 1. `create-atm` 預設**不**安裝 agent-pack，除非 `--agent <id>` 顯式指定。
-2. `atm welcome` 必須先印 constitution 摘要（不是「安裝完成」），讓使用者實際看到規則。
+2. `atm welcome` 必須先印 ATMChart 摘要（不是「安裝完成」），讓使用者實際看到規則。
 3. README 與 npm package description 必須明確標示 ATM 是「治理框架」，不是「CLI 工具」。
 
 ## 10. MVP 里程碑
@@ -291,9 +291,9 @@ Onboarding lifecycle 是 agent 接入 ATM 的階段標記，與 MRP 的 replacem
 
 ### Milestone 3：Rule Render Pipeline（M3）
 
-新增 `atm constitution render` / `verify`，agent-pack `render()` 強制吃 SSoT sha256。對應 TASK-APO-0004。
+新增 `node atm.mjs atm-chart render` / `verify`，agent-pack `render()` 強制吃 SSoT sha256。對應 TASK-APO-0004。
 
-### Milestone 4：Constitution Gate（M4）
+### Milestone 4：Rule Justification Gate（M4）
 
 擴充 `plugin-rule-guard`：違反守衛要求 evidence 含 `justification` 欄位，缺則 `atm verify` 非零 exit。對應 TASK-APO-0005。
 
@@ -335,8 +335,8 @@ Onboarding lifecycle 是 agent 接入 ATM 的階段標記，與 MRP 的 replacem
 
 ### 12.2 規則五重漂移
 
-風險：guards.json / constitution.md / 5 個 agent-pack 模板各自一份，改一處不同步全部。
-避免：§4 manifest sha256 + §5 `atm constitution verify` + `agent-pack verify-fresh`，CI 強制檢查。
+風險：guards.json / atm-chart.md / 5 個 agent-pack 模板各自一份，改一處不同步全部。
+避免：§4 manifest sha256 + §5 `node atm.mjs atm-chart verify` + `agent-pack verify-fresh`，CI 強制檢查。
 
 ### 12.3 跨 agent 模板維護成本爆炸
 
@@ -345,7 +345,7 @@ Onboarding lifecycle 是 agent 接入 ATM 的階段標記，與 MRP 的 replacem
 
 ### 12.4 npm publish 稀釋治理嚴肅性
 
-風險：一鍵裝太方便，使用者跳過讀 constitution。
+風險：一鍵裝太方便，使用者跳過讀 ATMChart。
 避免：§9.4，`create-atm` 預設不裝 pack、`atm welcome` 強制印規則摘要、README 明示「治理框架」定位。
 
 ### 12.5 Onboarding 變成 MRP 的前置條件
@@ -391,18 +391,18 @@ ATM 下一步應在不阻塞 MRP M3–M10 的前提下，啟動本計畫 M1–M4
 | 規則被 agent 看到 | Agent Pack SDK + 至少 Claude Code Pack | M2 / M5 | TASK-APO-0002 / 0003 / 0006 |
 | 不需口頭交代 | Rule Render Pipeline + welcome 首跑印規則摘要 | M3 / M7 | TASK-APO-0004 / 0008 |
 
-達成判斷：在一個全新的空 git repo 中執行 `npx create-atm demo --agent claude-code`，60 秒內出現 `.claude/commands/atm-*.md` 6 個檔 + `.atm/memory/constitution.md`，且 Claude Code 用 `/atm-next` 立刻得到 `atm next --json` 的 deterministic action，即視為目標 A 達成。
+達成判斷：在一個全新的空 git repo 中執行 `npx create-atm demo --agent claude-code`，60 秒內出現 `.claude/commands/atm-*.md` 6 個檔 + `.atm/memory/atm-chart.md`，且 Claude Code 用 `/atm-next` 立刻得到 `atm next --json` 的 deterministic action，即視為目標 A 達成。
 
 ### 14.2 目標 B：規則改動，agent 看到的指引同步更新
 
-目標原文（推導自使用者前述對話）：「不靠 git template 或 boilerplate clone，而是用 5 個機制疊加把框架塞進使用者專案。」其中「Constitution Render Pipeline + Manifest sha256」是「規則改動自動同步」的對應機制。
+目標原文（推導自使用者前述對話）：「不靠 git template 或 boilerplate clone，而是用 5 個機制疊加把框架塞進使用者專案。」其中「ATMChart Render Pipeline + Manifest sha256」是「規則改動自動同步」的對應機制。
 
 要可達成必須同時具備四件事：
 
 1. **SSoT 單一**：`default-guards.json` / schemas 是唯一真相，markdown / prompt 都是渲染產物。
 2. **漂移可偵測**：使用 sha256 manifest，任何 SSoT 變更必須讓 stale 的 render 產物 fail verify。
 3. **乾淨卸載**：使用者手動修改過的檔案不會被 uninstall 誤刪，而是保留並警告。
-4. **CI 強制檢查**：`atm constitution verify` 與 `atm agent-pack verify-fresh` 必須在 CI / pre-commit 跑，避免漂移進主分支。
+4. **CI 強制檢查**：`node atm.mjs atm-chart verify` 與 `node atm.mjs agent-pack verify-fresh` 必須在 CI / pre-commit 跑，避免漂移進主分支。
 
 對映到本計畫的具體交付：
 
@@ -411,7 +411,7 @@ ATM 下一步應在不阻塞 MRP M3–M10 的前提下，啟動本計畫 M1–M4
 | SSoT 單一 | §2.2 + §5 Rule Render Pipeline | M3 | TASK-APO-0004 |
 | 漂移可偵測 | §4 Manifest sha256 + `verify-fresh` | M2 / M3 | TASK-APO-0002 / 0004 |
 | 乾淨卸載 | `uninstall` 偵測 user-modified + `*.bak` | M2 | TASK-APO-0003 |
-| CI 強制檢查 | compute-gate 整合 `constitution verify` + `agent-pack verify-fresh` | M3 / M4 | TASK-APO-0004 / 0005 |
+| CI 強制檢查 | compute-gate 整合 `atm-chart verify` + `agent-pack verify-fresh` | M3 / M4 | TASK-APO-0004 / 0005 |
 
 達成判斷：對示範專案執行下列流程能正確 block 漂移即視為目標 B 達成：
 
@@ -419,7 +419,7 @@ ATM 下一步應在不阻塞 MRP M3–M10 的前提下，啟動本計畫 M1–M4
 node atm.mjs agent-pack install --id claude-code
 echo "{ \"newGuard\": {} }" >> .atm/runtime/default-guards.json   # 模擬 SSoT 變動
 node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit code 2
-node atm.mjs constitution render && node atm.mjs agent-pack install --id claude-code --force
+node atm.mjs atm-chart render && node atm.mjs agent-pack install --id claude-code --force
 node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit code 0
 ```
 
@@ -428,7 +428,7 @@ node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit 
 1. **被誤判為「另一個外部靜態 prompt 框架 clone」**：避免方式 = 每個任務卡的 deterministic check 必須引用 `atm next --json` 為權威，code review 拒絕任何 baked-in 完整流程的 PR。
 2. **MRP 完成但 Onboarding 還沒做完，agent 不知道用 MRP**：避免方式 = M2 Claude Code Pack 首發版本就要包含 `atm-map-create`、`atm-map-equivalence`、`atm-map-rollout` 等模板（即使它們只 echo 「呼叫 `atm next --json`」），不要等 MRP 完成才補 pack。
 3. **使用者手抄舊範例**：避免方式 = M2 完成同時 deprecate `examples/claude-code-slash-commands/`，README 指向 `agent-pack install`。
-4. **Schema 漂移與 pack 漂移雙頭爆**：避免方式 = compute-gate 標準 profile 必須同時跑 `constitution verify` + `agent-pack verify-fresh`，兩者任一失敗即 block。
+4. **Schema 漂移與 pack 漂移雙頭爆**：避免方式 = compute-gate 標準 profile 必須同時跑 `atm-chart verify` + `agent-pack verify-fresh`，兩者任一失敗即 block。
 
 ## 15. 里程碑總表與 Checklist
 
@@ -463,14 +463,14 @@ node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit 
 
 對應任務卡：TASK-APO-0004
 
-- [ ] `packages/cli/src/commands/constitution.ts` 提供 `render` + `verify`
-- [ ] `.atm/memory/constitution.md` 渲染後 frontmatter 含 `source_guards_sha256` 與 `source_schema_sha256s`
-- [ ] `default-guards.json` 變更後 `atm constitution verify` exit code 2
+- [ ] `packages/cli/src/commands/atm-chart.ts` 提供 `render` + `verify`
+- [ ] `.atm/memory/atm-chart.md` 渲染後 frontmatter 含 `source_guards_sha256` 與 `source_schema_sha256s`
+- [ ] `default-guards.json` 變更後 `node atm.mjs atm-chart verify` exit code 2
 - [ ] `atm agent-pack verify-fresh --id <packId>` 偵測 SSoT 漂移正確 exit code 2
-- [ ] `compute-gate.js --profile standard` 整合 constitution verify + verify-fresh
+- [ ] `compute-gate.js --profile standard` 整合 `atm-chart verify` + verify-fresh
 - [ ] 渲染管線是純函數：相同輸入 sha256 → 相同 output sha256
 
-### Milestone 4：Constitution Gate（M4）
+### Milestone 4：Rule Justification Gate（M4）
 
 對應任務卡：TASK-APO-0005
 
@@ -507,7 +507,7 @@ node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit 
 對應任務卡：TASK-APO-0008
 
 - [ ] `packages/cli/src/commands/welcome.ts` 存在
-- [ ] `atm welcome` 印出 constitution 摘要 + agent-pack 狀態 + `atm next --json` 建議
+- [ ] `atm welcome` 印出 ATMChart 摘要 + agent-pack 狀態 + `atm next --json` 建議
 - [ ] `--dry-run` 不寫入任何檔案
 - [ ] `.atm/runtime/welcome.lineage.json` 記錄首次 welcome 時間戳
 - [ ] welcome 不取代 `atm next`：印完摘要後仍提示 agent 呼叫 `atm next --json`
@@ -524,7 +524,7 @@ node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit 
 
 ## 16. 任務卡索引
 
-所有任務卡規劃放在 `docs/ai_atomic_framework/agent-pack-onboarding/tasks/` 下（**本計畫書建立時尚未開出實體任務卡，待使用者後續授權再批次開單**）。任務卡格式與 MRP 一致：Markdown + YAML frontmatter，欄位與 `governance-bundle` 的 `taskStorePath` 兼容。
+所有任務卡規劃放在 `docs/ai_atomic_framework/agent-pack-onboarding/tasks/` 下（**2026-05-17 已依本節索引批次開出實體任務卡**）。任務卡格式與 MRP 一致：Markdown + YAML frontmatter，欄位與 `governance-bundle` 的 `taskStorePath` 兼容。
 
 | Task ID | 標題 | 對應里程碑 | 阻擋者 | 主要交付 |
 |---|---|---|---|---|
@@ -532,8 +532,8 @@ node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit 
 | TASK-APO-0001 | 對齊 ATM ARCHITECTURE / README cross-link | M1 | TASK-APO-0000 | ARCHITECTURE.md + README 補章 |
 | TASK-APO-0002 | Agent Pack SDK 介面 + manifest schema | M2 | TASK-APO-0000 | sdk package + manifest schema |
 | TASK-APO-0003 | Claude Code Pack MVP | M2 | TASK-APO-0002 | claude-code pack + e2e test |
-| TASK-APO-0004 | Rule Render Pipeline | M3 | TASK-APO-0002 | constitution render + verify CLI |
-| TASK-APO-0005 | Constitution Gate（justification） | M4 | TASK-APO-0004 | plugin-rule-guard 擴充 |
+| TASK-APO-0004 | Rule Render / ATMChart Pipeline | M3 | TASK-APO-0002 | atm-chart render + verify CLI |
+| TASK-APO-0005 | Rule Justification Gate | M4 | TASK-APO-0004 | plugin-rule-guard 擴充 |
 | TASK-APO-0006 | Multi-Agent Pack 擴張（Cursor / Copilot / Gemini / Windsurf） | M5 | TASK-APO-0003 | 4 個 pack package |
 | TASK-APO-0007 | npm publish + create-atm | M6 | TASK-APO-0003 / 0004 | create-atm package + release workflow |
 | TASK-APO-0008 | atm welcome 一鍵入口 | M7 | TASK-APO-0003 / 0004 | welcome command + lineage |
@@ -552,7 +552,7 @@ node atm.mjs agent-pack verify-fresh --id claude-code             # 預期 exit 
 |------|-----|--------------------------------|
 | 主題 | Map Replacement Protocol：map 接管 legacy / new feature | Agent Operating Layer：agent 無痛入門 + 規則同步 |
 | 處理 | 治理語義（map 結構、equivalence、rollout、retirement） | 入口體驗（CLI 入口、prompt 注入、規則渲染） |
-| 交付 | schemas、CLI（create-map、test --map、upgrade）、gate | agent-pack SDK、constitution render、welcome |
+| 交付 | schemas、CLI（create-map、test --map、upgrade）、gate | agent-pack SDK、ATMChart render、welcome |
 | 阻塞關係 | 不阻塞本計畫 | 不阻塞 MRP；本計畫的 M8 與 MRP M9 對接但可獨立完成 |
 | 共享 | §17.2 設計約束（justification pattern、SSoT、Windows 第一公民、sha256） | 同左，本計畫 §2 已內化 |
 
@@ -592,9 +592,9 @@ M6 啟動前必須確認開源拆出計畫已決定 `packages/cli/` 與 `package
 本計畫完成後，可能衍生但**不**屬於本計畫範圍的後續工作：
 
 1. **Agent Pack Marketplace** —— 社群貢獻的第三方 pack（如 Aider、Continue、Cline）治理流程。
-2. **Constitution Versioning** —— 當 `default-guards.json` 演進到 0.2.0、0.3.0 時的 migration 策略。
+2. **ATMChart Versioning** —— 當 `default-guards.json` 演進到 0.2.0、0.3.0 時的 migration 策略。
 3. **Telemetry / Observability** —— 收集 agent 是否實際走過 `atm next` 路徑、是否觸發 gate 等。
-4. **企業版 Onboarding** —— 多專案、多 agent 共用同一份 constitution 的場景。
+4. **企業版 Onboarding** —— 多專案、多 agent 共用同一份 ATMChart 的場景。
 
 以上應另開計畫書，不應併入本計畫主線。
 

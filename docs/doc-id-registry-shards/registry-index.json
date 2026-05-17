@@ -106,5 +106,11 @@
     "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/README.md",
     "title": "Replacement Protocol Task Cards",
     "category": "index"
+  },
+  {
+    "id": "doc_index_0020",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/README.md",
+    "title": "Agent Pack Onboarding Task Cards",
+    "category": "index"
   }
 ]
