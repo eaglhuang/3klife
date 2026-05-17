@@ -55,11 +55,11 @@ started_by_agent: vs-insiders-gpt-5.4
 ## 驗收條件
 
 - [x] 本計畫書存在且包含 §0–§18。
-- [ ] 文件被 ATM `README.md` 與 `docs/ARCHITECTURE.md` 引用；ATM repo 端只保留英文公開說明。
-- [ ] 文件通過 UTF-8 編碼檢查（無 BOM、無 U+FFFD）。
-- [ ] 目標 A、B 在 §14 有明確達成判斷。
-- [ ] 風險清單 §12 + §14.3 已合併，沒有矛盾。
-- [ ] 與 MRP（`doc_other_0133`）責任邊界在 §17 明確劃分。
+- [x] 文件被 ATM `README.md` 與 `docs/ARCHITECTURE.md` 引用；ATM repo 端只保留英文公開說明。
+- [x] 文件通過 UTF-8 編碼檢查（無 BOM、無 U+FFFD）。
+- [x] 目標 A、B 在 §14 有明確達成判斷。
+- [x] 風險清單 §12 + §14.3 已合併，沒有矛盾。
+- [x] 與 MRP（`doc_other_0133`）責任邊界在 §17 明確劃分。
 
 ## 影響檔案
 
@@ -81,11 +81,12 @@ cmd /c npm run validate:standard
 
 ## Checklist
 
-- [ ] 計畫書命名與 `ATMChart` 收斂一致。
-- [ ] ATM repo 公開文件 cross-link 完成。
-- [ ] 編碼掃描通過。
+- [x] 計畫書命名與 `ATMChart` 收斂一致。
+- [x] ATM repo 公開文件 cross-link 完成。
+- [x] 編碼掃描通過。
 - [ ] 任務卡 `status` 改為 `done`。
 
 ## Notes
 
 2026-05-17 | 狀態: in-progress | 驗證: pending | 變更: 已鎖定 TASK-APO-0000，開始文件定稿與 cross-link | 阻塞: none
+2026-05-17 | 狀態: in-progress | 驗證: `git diff --check` pass；`validate:neutrality` pass；`validate:standard` blocked by pre-existing `upgrade --help` snapshot mismatch in `tests/cli-fixtures/help-snapshots/upgrade.json` | 變更: AI-Atomic commit `79189c2 docs: add agent pack onboarding overview`，新增公開 `docs/AGENT_PACK_ONBOARDING.md` 並補 README / ARCHITECTURE cross-link | 阻塞: unrelated CLI fixture drift
