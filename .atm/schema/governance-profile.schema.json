@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atomicframework.org/schema/governance-profile/v0.1",
+  "title": "ATM Default Governance Profile Schema",
+  "description": "Schema for the Default Governance Bundle profile configuration",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "profileId",
+    "profileVersion",
+    "generatedAt",
+    "releaseTrain",
+    "capabilities",
+    "migration"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^atm\\.defaultGovernanceProfile\\.v\\d+\\.\\d+$",
+      "description": "Schema version identifier (e.g., atm.defaultGovernanceProfile.v0.1)"
+    },
+    "profileId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Unique identifier for this governance profile"
+    },
+    "profileVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this profile (e.g., 0.1.0)"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this profile was generated"
+    },
+    "releaseTrain": {
+      "type": "object",
+      "required": [
+        "frameworkVersion",
+        "atmChartVersion",
+        "minimumFrameworkVersion"
+      ],
+      "properties": {
+        "frameworkVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "ATM framework version for this profile"
+        },
+        "atmChartVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "ATMChart version for this profile"
+        },
+        "minimumFrameworkVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Minimum supported ATM framework version"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Enabled capabilities and their versions",
+      "properties": {
+        "documentIdentity": {
+          "$ref": "#/definitions/capabilityConfig"
+        },
+        "documentSharding": {
+          "$ref": "#/definitions/capabilityConfig"
+        },
+        "taskCards": {
+          "$ref": "#/definitions/capabilityConfig"
+        },
+        "scopeLock": {
+          "$ref": "#/definitions/capabilityConfig"
+        },
+        "contextBudget": {
+          "$ref": "#/definitions/capabilityConfig"
+        },
+        "encodingGuard": {
+          "$ref": "#/definitions/capabilityConfig"
+        },
+        "handoff": {
+          "$ref": "#/definitions/capabilityConfig"
+        },
+        "projectMemory": {
+          "$ref": "#/definitions/capabilityConfig"
+        }
+      },
+      "additionalProperties": false
+    },
+    "migration": {
+      "type": "object",
+      "required": [
+        "strategy",
+        "fromVersion",
+        "notes"
+      ],
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "none",
+            "auto-upgrade",
+            "manual-review",
+            "read-only-diagnostic"
+          ],
+          "description": "Migration strategy for this profile"
+        },
+        "fromVersion": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^(\\d+\\.\\d+\\.\\d+|null)$",
+          "description": "Previous profile version (null for initial)"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Migration notes or changelog"
+        },
+        "backupPath": {
+          "type": "string",
+          "description": "Path to backup of previous profile"
+        },
+        "rollbackCommand": {
+          "type": "string",
+          "description": "Command to rollback to previous profile"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "capabilityConfig": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "version",
+        "mode"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this capability is enabled"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Version of this capability"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "advisory",
+            "local-enforced",
+            "ci-enforced",
+            "adapter",
+            "host-local"
+          ],
+          "description": "Enforcement mode for this capability"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "deprecated",
+            "unsupported",
+            "unknown"
+          ],
+          "description": "Compatibility status of this capability",
+          "default": "supported"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "$schema": "https://atomicframework.org/schema/governance-profile/v0.1",
+  "schemaVersion": "atm.defaultGovernanceProfile.v0.1",
+  "profileId": "default-local-governance",
+  "profileVersion": "0.1.0",
+  "generatedAt": "2026-05-18T10:30:00Z",
+  "releaseTrain": {
+    "frameworkVersion": "0.0.0",
+    "atmChartVersion": "0.1.0",
+    "minimumFrameworkVersion": "0.0.0"
+  },
+  "capabilities": {
+    "documentIdentity": {
+      "enabled": true,
+      "version": "0.1.0",
+      "mode": "advisory",
+      "status": "supported"
+    },
+    "documentSharding": {
+      "enabled": true,
+      "version": "0.1.0",
+      "mode": "advisory",
+      "status": "supported"
+    },
+    "taskCards": {
+      "enabled": false,
+      "version": "0.1.0",
+      "mode": "adapter",
+      "status": "supported"
+    },
+    "scopeLock": {
+      "enabled": true,
+      "version": "0.1.0",
+      "mode": "local-enforced",
+      "status": "supported"
+    },
+    "contextBudget": {
+      "enabled": true,
+      "version": "0.1.0",
+      "mode": "advisory",
+      "status": "supported"
+    },
+    "encodingGuard": {
+      "enabled": true,
+      "version": "0.1.0",
+      "mode": "local-enforced",
+      "status": "supported"
+    },
+    "handoff": {
+      "enabled": true,
+      "version": "0.1.0",
+      "mode": "advisory",
+      "status": "supported"
+    },
+    "projectMemory": {
+      "enabled": false,
+      "version": "0.1.0",
+      "mode": "host-local",
+      "status": "supported"
+    }
+  },
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "Initial default governance profile v0.1.0"
+  },
+  "compatibilityMatrix": {
+    "metadata": {
+      "description": "Compatibility matrix for ATM Default Governance Profile",
+      "lastUpdated": "2026-05-18T10:30:00Z",
+      "rows": [
+        "profileVersion",
+        "frameworkVersion",
+        "atmChartVersion",
+        "documentIdentity",
+        "documentSharding",
+        "taskCards",
+        "scopeLock",
+        "contextBudget",
+        "encodingGuard",
+        "handoff",
+        "projectMemory"
+      ]
+    },
+    "profiles": [
+      {
+        "profileVersion": "0.1.0",
+        "frameworkVersion": "0.0.0",
+        "atmChartVersion": "0.1.0",
+        "documentIdentity": "supported",
+        "documentSharding": "supported",
+        "taskCards": "supported",
+        "scopeLock": "supported",
+        "contextBudget": "supported",
+        "encodingGuard": "supported",
+        "handoff": "supported",
+        "projectMemory": "supported",
+        "releaseDate": "2026-05-18",
+        "releaseNotes": "Initial alpha release of Default Governance Bundle"
+      }
+    ],
+    "frameworkCompatibility": {
+      "0.0.0": {
+        "supportedProfiles": [
+          "0.1.0"
+        ],
+        "minimumProfile": "0.1.0",
+        "status": "alpha"
+      },
+      "0.1.0": {
+        "supportedProfiles": [
+          "0.1.0"
+        ],
+        "minimumProfile": "0.1.0",
+        "status": "beta"
+      },
+      "0.2.0": {
+        "supportedProfiles": [
+          "0.1.0",
+          "0.2.0"
+        ],
+        "minimumProfile": "0.1.0",
+        "status": "planned"
+      }
+    },
+    "atmChartCompatibility": {
+      "0.1.0": {
+        "supportedProfiles": [
+          "0.1.0"
+        ],
+        "minimumProfile": "0.1.0",
+        "status": "alpha"
+      },
+      "0.2.0": {
+        "supportedProfiles": [
+          "0.1.0",
+          "0.2.0"
+        ],
+        "minimumProfile": "0.1.0",
+        "status": "beta"
+      },
+      "1.0.0": {
+        "supportedProfiles": [
+          "0.1.0",
+          "1.0.0"
+        ],
+        "minimumProfile": "0.1.0",
+        "status": "planned"
+      }
+    },
+    "capabilitySupport": {
+      "documentIdentity": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "advisory",
+          "breakingChanges": []
+        }
+      },
+      "documentSharding": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "advisory",
+          "supportedModes": [
+            "markdown-heading",
+            "json-array",
+            "json-object-key",
+            "manual"
+          ],
+          "breakingChanges": []
+        }
+      },
+      "taskCards": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "adapter",
+          "adapterType": "markdown-frontmatter",
+          "breakingChanges": []
+        }
+      },
+      "scopeLock": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "local-enforced",
+          "enforcementModes": [
+            "off",
+            "advisory",
+            "local-enforced",
+            "ci-enforced"
+          ],
+          "breakingChanges": []
+        }
+      },
+      "contextBudget": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "advisory",
+          "configurableThresholds": [
+            "warningTokens",
+            "summarizeTokens",
+            "hardStopTokens",
+            "maxInlineArtifacts"
+          ],
+          "breakingChanges": []
+        }
+      },
+      "encodingGuard": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "local-enforced",
+          "checksSupported": [
+            "utf8-bom",
+            "replacement-char",
+            "mojibake-pattern",
+            "non-utf8-decode"
+          ],
+          "breakingChanges": []
+        }
+      },
+      "handoff": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "advisory",
+          "artifactTypes": [
+            "context-summary",
+            "turn-report",
+            "validation-evidence"
+          ],
+          "breakingChanges": []
+        }
+      },
+      "projectMemory": {
+        "0.1.0": {
+          "status": "supported",
+          "mode": "host-local",
+          "enabled": false,
+          "notes": "Optional capability; not enabled by default in alpha release",
+          "breakingChanges": []
+        }
+      }
+    },
+    "migrationPaths": {
+      "0.0.0-to-0.1.0": {
+        "strategy": "auto-upgrade",
+        "steps": [
+          "initialize-profile-config",
+          "enable-core-capabilities",
+          "validate-schema",
+          "backup-previous-config"
+        ],
+        "rollbackSupported": true
+      }
+    },
+    "deprecationSchedule": {
+      "0.1.0": {
+        "deprecatedDate": null,
+        "sunsetDate": null,
+        "successor": null,
+        "notes": "Current release, no deprecation planned"
+      }
+    }
+  }
+}

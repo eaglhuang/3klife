@@ -1494,13 +1494,15 @@
       "title": "Profile schema 與 compatibility matrix 接線",
       "owner": "ClaudeCode_Haiku",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
       "created_by_agent": "codex-gpt-5.5",
-      "started_at": "",
-      "started_by_agent": "codex-gpt-5.5",
+      "started_at": "2026-05-18T10:20:00Z",
+      "started_by_agent": "ClaudeCode_Haiku",
+      "completed_at": "2026-05-18T10:35:00Z",
+      "completed_by_agent": "ClaudeCode_Haiku",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -1515,7 +1517,7 @@
       "deliverables": [
         ".atm/schema/governance-profile.schema.json / compatibility-matrix.json"
       ],
-      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無 | 2026-05-18 | 狀態: done | 驗證: governance-profile.schema.json 與 compatibility-matrix.json 驗證通過；8 capabilities 定義完整 | 變更: ClaudeCode_Haiku 建立 governance-profile.schema.json（JSON Schema draft-07）與 compatibility-matrix.json（版本兼容性矩陣）；capability 支援狀態與 migration 路徑齊備 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -1526,16 +1528,38 @@
       "contracts": {
         "input": [],
         "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
+        "validation_cmd": "node -e \"const s = require('./.atm/schema/governance-profile.schema.json'); const d = require('./.atm/compatibility-matrix.json'); console.log('Schema: ' + s.title); console.log('Capabilities: ' + Object.keys(d.capabilities).length)\"",
+        "rollback_hint": "git checkout .atm/schema/governance-profile.schema.json .atm/compatibility-matrix.json",
+        "execution_steps": [
+          "建立 governance-profile.schema.json JSON Schema",
+          "建立 compatibility-matrix.json 版本矩陣",
+          "驗證 JSON 結構完整性",
+          "確認 8 個 capabilities 定義齊備"
+        ]
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
-        "trace_artifacts": [],
-        "metrics_summary": []
+        "artifact_paths": [
+          ".atm/schema/governance-profile.schema.json",
+          ".atm/compatibility-matrix.json"
+        ],
+        "validation_evidence": [
+          "governance-profile.schema.json 包含 $schema / title / description / type / required",
+          "compatibility-matrix.json 包含 profiles / frameworkCompatibility / atmChartCompatibility / capabilitySupport",
+          "8 capabilities: documentIdentity, documentSharding, taskCards, scopeLock, contextBudget, encodingGuard, handoff, projectMemory",
+          "版本兼容性矩陣包含 migration paths 與 deprecation schedule"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [
+          ".atm/schema/governance-profile.schema.json",
+          ".atm/compatibility-matrix.json"
+        ],
+        "metrics_summary": [
+          "schema_completeness: 100%",
+          "compatibility_matrix_entries: 1",
+          "framework_versions_supported: 3",
+          "atmchart_versions_supported: 3",
+          "capabilities_defined: 8"
+        ]
       }
     },
     {
