@@ -347,13 +347,15 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 對應任務卡：TASK-MRP-0003
 
-- [ ] 新增 `schemas/governance/map-equivalence-report.schema.json`
-- [ ] schemaId = `atm.mapEquivalenceReport`，specVersion = `0.1.0`，含 `migration` 區塊
-- [ ] `cases[]` 復用 regression-case 的 metric/evidence 形狀
-- [ ] 必填欄位：`mapId` / `legacyUris` / `fixtures` / `cases` / `summary` / `metrics` / `artifacts` / `evidence` / `passed`
-- [ ] `knownDivergences[]` 支援 `justification` 與 `reviewRef`，不能只有自由文字 reason
-- [ ] 至少 1 個 positive fixture + 1 個 negative fixture 存在於 `tests/schema-fixtures/`
-- [ ] AJV 編譯通過、`atm spec --validate` 驗證通過
+- [x] 新增 `schemas/governance/map-equivalence-report.schema.json`
+- [x] schemaId = `atm.mapEquivalenceReport`，specVersion = `0.1.0`，含 `migration` 區塊
+- [x] `cases[]` 復用 regression-case 的 metric/evidence 形狀
+- [x] 必填欄位：`mapId` / `legacyUris` / `fixtures` / `cases` / `summary` / `metrics` / `artifacts` / `evidence` / `passed`
+- [x] `knownDivergences[]` 支援 `justification` 與 `reviewRef`，不能只有自由文字 reason
+- [x] 至少 1 個 positive fixture + 1 個 negative fixture 存在於 `tests/schema-fixtures/`
+- [x] AJV 編譯通過、`atm spec --validate` 驗證通過
+
+執行狀態（2026-05-17）：TASK-MRP-0003 已完成。新增 `atm.mapEquivalenceReport` schema、正負 fixtures、schema manifest 註冊與 `atm spec --validate` report dispatch；`knownDivergences[]` 缺 `reviewRef` 時會被 deterministic schema 驗證拒絕。
 
 ### Milestone 4：Map Equivalence Test CLI（M4）
 

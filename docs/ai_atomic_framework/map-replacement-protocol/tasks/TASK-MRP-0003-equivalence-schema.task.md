@@ -3,12 +3,16 @@ doc_id: doc_other_0137
 task_id: TASK-MRP-0003
 title: Map Equivalence Report Schema
 milestone: M3
-status: pending
+status: done
 blocked_by: [TASK-MRP-0002]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T13:17:35.3159251+08:00
+started_by_agent: vs-insiders-github-copilot
+completed_at: 2026-05-17T13:17:35.3159251+08:00
+completed_by_agent: vs-insiders-github-copilot
 ---
 
 # TASK-MRP-0003 — Map Equivalence Report Schema
@@ -36,11 +40,11 @@ public_tracking: false
 
 ## 驗收條件
 
-- [ ] AJV 編譯通過
-- [ ] positive fixture + negative fixture 各 1 存放於 `tests/schema-fixtures/map-equivalence-report/`
-- [ ] `atm spec --validate` 可校驗報告
-- [ ] schema 與 `regression-matrix` 欄位名稱對齊（metric/evidenceRefs）
-- [ ] `knownDivergences[]` 缺 `justification` 或 `reviewRef` 時 negative fixture 會被拒絕
+- [x] AJV 編譯通過
+- [x] positive fixture + negative fixture 各 1 存放於 `tests/schema-fixtures/map-equivalence-report/`
+- [x] `atm spec --validate` 可校驗報告
+- [x] schema 與 `regression-matrix` 欄位名稱對齊（metric/evidenceRefs）
+- [x] `knownDivergences[]` 缺 `justification` 或 `reviewRef` 時 negative fixture 會被拒絕
 
 ## 影響檔案
 
@@ -54,7 +58,11 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] schema 完成
-- [ ] fixtures 完成
-- [ ] AJV / validate 測試綠
-- [ ] CHANGELOG 補一句
+- [x] schema 完成
+- [x] fixtures 完成
+- [x] AJV / validate 測試綠
+- [x] CHANGELOG 補一句
+
+## Notes
+
+2026-05-17 | 狀態: done | 驗證: map-equivalence-report.test.ts / validate-schemas.ts --mode validate / map-generator.test.ts + --self-check pass；`atm spec --validate` positive pass、negative 正確拒絕缺 `reviewRef` | 變更: 新增 `atm.mapEquivalenceReport` schema、positive/negative fixture、schema manifest 註冊與 CLI spec validate dispatch | 阻塞: none
