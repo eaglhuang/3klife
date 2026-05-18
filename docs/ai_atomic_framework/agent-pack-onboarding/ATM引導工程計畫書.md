@@ -282,8 +282,8 @@ node atm.mjs upgrade rollback --backup <backup-id>
 | TASK-APO-0018 | Security Policy | SECURITY.md、advisory branch、dependency scanning gate | `SECURITY.md`、Dependabot config、advisory workflow | open |
 | TASK-APO-0019 | Dist-tag 政策 | `latest` / `next` / `beta` / `lts` 對應于 tier、`create-atm` 預設 tag | dist-tag policy table、create-atm tag selection | open |
 | TASK-APO-0020 | Telemetry + Sentinel + Dashboard | opt-in telemetry、adopter sentinel CI、deprecation dashboard | `atm telemetry` opt-in flow、adopter sentinel workflow、`DEPRECATIONS.md` | open |
-| TASK-APO-0021 | Meta-schema Versioning | invariants / InstallManifest / ATMChart frontmatter 各 schemaVersion | schemaVersion 字段、向後讀舊 manifest 證明 | open |
-| TASK-APO-0022 | Bridge Minor + Experimental API | major bump 前同時讀寫新舊 schema、`@experimental` 通道 | bridge minor SOP、experimental opt-in flag | open |
+| TASK-APO-0021 | Meta-schema Versioning | invariants / InstallManifest / ATMChart frontmatter 各 schemaVersion | schemaVersion 字段、向後讀舊 manifest 證明 | done |
+| TASK-APO-0022 | Bridge Minor + Experimental API | major bump 前同時讀寫新舊 schema、`@experimental` 通道 | bridge minor SOP、experimental opt-in flag | done |
 | TASK-APO-0023 | Policy Self-Versioning + Auto Matrix PR | 政策文件加 `policy_version`、release workflow 自動產 matrix PR | policy frontmatter、auto-PR workflow | open |
 | TASK-APO-0024 | Time+minor Deprecation + Canary Rollout | alpha≥30d / beta≥90d / stable≥180d / lts≥365d、`upgrade apply --canary` | deprecation policy update、canary apply flag | open |
 

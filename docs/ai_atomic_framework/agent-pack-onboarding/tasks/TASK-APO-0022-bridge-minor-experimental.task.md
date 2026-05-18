@@ -3,7 +3,9 @@ doc_id: doc_other_0175
 task_id: TASK-APO-0022
 title: Bridge minor + @experimental API 通道
 milestone: M9
-status: open
+status: done
+started_at: 2026-05-18T10:37:24+08:00
+started_by_agent: vs-insiders-gpt-5.4
 blocked_by: [TASK-APO-0013]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -28,6 +30,9 @@ non_goals:
   - 取代既有 migration tooling（屬 TASK-APO-0013）
   - 提供具體的 0.x → 1.0 bridge release
 created_at: 2026-05-18T00:00:00+08:00
+completed_at: 2026-05-18T10:52:40+08:00
+completed_by_agent: vs-insiders-gpt-5.4
+commit: e3769a8 (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
 ---
 
@@ -47,9 +52,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] major bump fixture 缺前置 bridge minor 時 CI 阻擋。
-- [ ] experimental API fixture 預設拒絕，加旗標後可呼叫。
-- [ ] validate-bridge-minor.ts 加入 standard profile。
+- [x] major bump fixture 缺前置 bridge minor 時 CI 阻擋。
+- [x] experimental API fixture 預設拒絕，加旗標後可呼叫。
+- [x] validate-bridge-minor.ts 加入 standard profile。
 
 ## 驗證方式
 
@@ -60,4 +65,4 @@ node --experimental-strip-types scripts/validate-bridge-minor.ts --mode validate
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 bridge minor + experimental API 後續卡；採 Option A（mandatory bridge minor） | 阻塞: TASK-APO-0013
+2026-05-18 | 狀態: done | 驗證: `node --experimental-strip-types scripts/validate-bridge-minor.ts --mode validate` pass；`node --experimental-strip-types tests/bridge-minor/bridge-minor.test.ts` pass；`node --experimental-strip-types scripts/run-validators.ts standard --filter bridge-minor` pass；`npm run validate:standard` pass；encoding spot-check pass | 變更: upstream commit `e3769a8`，新增 mandatory bridge minor validator / fixtures / docs、release workflow gate、SDK `@experimental` channel、`upgrade experimental-api --allow-experimental` opt-in route 與 welcome experimental notice | 阻塞: none
