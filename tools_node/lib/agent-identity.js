@@ -73,6 +73,17 @@ function fallbackOriginIdentity() {
   return normalized;
 }
 
+// Detect Claude Code (claude-code CLI / Claude Desktop agent).
+// Claude Code sets CLAUDECODE=1 in its execution environment.
+// To include the model name, set: $env:CLAUDE_CODE_MODEL="sonnet4.6"
+function claudeCodeIdentity() {
+  if (process.env.CLAUDECODE !== '1') return '';
+  const modelSuffix = normalizeAgentSlug(
+    String(process.env.CLAUDE_CODE_MODEL || '').trim()
+  );
+  return modelSuffix ? `claude_code_${modelSuffix}` : 'claude_code';
+}
+
 function deriveAgentIdentity(options = {}) {
   const cwd = options.cwd ? path.resolve(options.cwd) : ROOT;
   const fromEnv = normalizeAgentSlug(process.env.AGENT_IDENTITY);
@@ -81,6 +92,15 @@ function deriveAgentIdentity(options = {}) {
       ok: true,
       agentName: fromEnv,
       source: 'env',
+    };
+  }
+
+  const ccName = claudeCodeIdentity();
+  if (ccName) {
+    return {
+      ok: true,
+      agentName: ccName,
+      source: 'claude-code-env',
     };
   }
 
