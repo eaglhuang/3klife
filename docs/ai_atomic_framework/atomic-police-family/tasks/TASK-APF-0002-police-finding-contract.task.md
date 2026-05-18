@@ -4,6 +4,9 @@ task_id: TASK-APF-0002
 title: PoliceFinding family contract
 milestone: M2
 status: done
+artifact_status: spec-done
+runtime_status: upstream-api-not-applied
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0001]
@@ -71,11 +74,13 @@ TASK-APF-0001
 - [x] contract 覆蓋 trigger / scope / severity / action / routeHint / readModel / mode
 - [x] 明定 police finding 不直接 mutate registry
 - [x] 明定 lifecycle-police 是唯一 quarantine writer 例外
-- [x] 明定 ReviewAdvisory.machine-finding + HumanReviewQueue + follow-up-task 三接點作為 routeHint 終點（**不另造 task-router**）
+- [x] 明定 ReviewAdvisory.machine-finding + HumanReviewQueue + follow-up-task 三接點作為 routeHint 終點（不新增獨立任務路由器）
 - [x] API 變更仍停留在規劃層
 - [x] contract 必須與既有 `LifecyclePoliceFinding`、`ReviewAdvisoryFinding` 共存，不另立第三套
-- [x] `evidenceRefs` 對應到 upstream evidence types：`usage-feedback / quality-baseline / quality-comparison / rollback-proof / map-propagation-log / fingerprint-snapshot`
-- [x] 刪除「直寫 task-router」的暗示，改為 ReviewAdvisory routing
+- [x] `evidenceRefs` 分成 official evidence type（usage-feedback / quality-baseline / quality-comparison / rollback-proof / human-review-decision）與 police-local artifact refs（map-propagation-log / fingerprint-snapshot 等）
+- [x] 刪除「直寫獨立任務路由器」的暗示，改為 ReviewAdvisory routing
+
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
 
 ## 影響檔案
 
@@ -98,9 +103,10 @@ contract review; neutrality checklist
 
 ## 回滾策略
 
-本卡文件階段可用 git diff 回退 tomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
+本卡文件階段可用 git diff 回退 atomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
-2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0002-police-finding-contract.md 完成；明定接 ReviewAdvisory.machine-finding，不另造 task-router；evidence schema 對應 upstream | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0002-police-finding-contract.md 完成；明定接 ReviewAdvisory.machine-finding，不新增獨立任務路由器；evidenceRefs 分成 official evidence type 與 police-local artifact ref | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=upstream-api-not-applied、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

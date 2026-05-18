@@ -1,0 +1,95 @@
+---
+doc_id: doc_other_0645
+task_id: TASK-APF-0018
+title: ReviewAdvisory bridge fixtures
+milestone: M7
+status: open
+artifact_status: spec-done
+runtime_status: not-started
+upstream_mutation_status: not-applied
+started_at: "2026-05-18T00:00:00+08:00"
+started_by_agent: "codex"
+blocked_by: [TASK-APF-0014, TASK-APF-0017]
+owner: atm-core
+priority: P0
+related_plan: docs/ai_atomic_framework/atomic-police-family/原子警察家族計畫書.md
+upstream_repo: AI-Atomic-Framework
+targetRepo: AI-Atomic-Framework
+hostKind: upstream-roadmap
+alphaGate: validate:review-advisory + police family fixtures
+public_tracking: false
+executionMode: planned-upstream-change
+allowed_files:
+  - C:/Users/User/3KLife/docs/ai_atomic_framework/atomic-police-family/**
+  - C:/Users/User/AI-Atomic-Framework/packages/**
+  - C:/Users/User/AI-Atomic-Framework/schemas/**
+  - C:/Users/User/AI-Atomic-Framework/scripts/**
+  - C:/Users/User/AI-Atomic-Framework/tests/**
+  - C:/Users/User/AI-Atomic-Framework/fixtures/**
+  - C:/Users/User/AI-Atomic-Framework/docs/**
+forbidden_files:
+  - C:/Users/User/AI-Atomic-Framework protected docs hard-code 3KLife
+  - C:/Users/User/3KLife/.atm/**
+  - C:/Users/User/3KLife/.atm-temp/**
+non_goals:
+  - 不直接修改 upstream runtime，除非本卡進入實作階段
+  - 不建立第二套 approval workflow
+  - 不讓 police finding 直接 mutate registry
+  - 不新增獨立任務路由器
+  - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
+created_at: 2026-05-18T00:00:00+08:00
+created_by_agent: codex
+---
+
+# TASK-APF-0018 — ReviewAdvisory bridge fixtures
+
+## 背景
+
+Police finding 進入 ReviewAdvisory 必須走既有 `machine-finding + metadata.policeFinding`，不得繞過 HumanReviewDecision。
+
+## 目標
+
+新增 ReviewAdvisory bridge positive / negative fixtures，驗證 advisory finding、blocking finding、evidence refs 與 forbidden payload/quarantine 語義。
+
+## 前置依賴
+
+TASK-APF-0014、TASK-APF-0017
+
+## 輸入
+
+- `packages/plugin-review-advisory/src/index.ts`
+- `packages/plugin-human-review/src/index.ts`
+- `specs/APF-0018-review-advisory-bridge-fixtures.md`
+
+## 輸出
+
+- positive police machine finding fixture
+- negative payload-as-current-contract fixture
+- negative non-lifecycle quarantine fixture
+- HumanReviewDecision bypass guard
+
+## 驗收條件
+
+- [ ] `validate:review-advisory` 能吃進 `metadata.policeFinding`
+- [ ] advisory finding 不會直接產 approved human decision
+- [ ] 非 lifecycle police 不可 quarantine
+- [ ] protected public fixtures 不含 3KLife / Cocos / private path
+
+## 驗證方式
+
+~~~bash
+npm --prefix C:/Users/User/AI-Atomic-Framework run validate:review-advisory
+npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police-family
+~~~
+
+## 回滾策略
+
+若 fixture 與既有 ReviewAdvisory schema 衝突，先回到 `metadata.policeFinding` 最小 bridge，不推進 payload proposal。
+
+## 共通提醒
+
+本卡 artifact_status=spec-done 僅代表 APF 文件 / spec artifact 已完成；status=open 與 runtime_status=not-started 表示 upstream runtime / validator 接線尚未完成。
+
+## Notes
+
+2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0018-* | 阻塞: TASK-APF-0014, TASK-APF-0017

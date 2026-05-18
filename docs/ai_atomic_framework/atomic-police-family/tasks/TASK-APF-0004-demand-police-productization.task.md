@@ -4,6 +4,9 @@ task_id: TASK-APF-0004
 title: Demand Police 產品化
 milestone: M3
 status: done
+artifact_status: spec-done
+runtime_status: not-started
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0002]
@@ -41,7 +44,7 @@ created_by_agent: codex
 
 ## 背景
 
-本卡由「原子警察家族計畫書」拆分而來，用來把 AI-Atomic-Framework 中已部分落地但尚未產品化的 police family 收斂成可驗證、可回寫 upstream 的工作單。
+本卡由「原子警察家族計畫書」拆分而來，用來把 AI-Atomic-Framework 中已部分落地但尚未產品化的 police family 收斂成可驗證、可回寫 upstream 的工作單；本卡目前僅完成 design spec，named runtime scanner 尚未落地。
 
 ## 目標
 
@@ -73,10 +76,12 @@ TASK-APF-0002
 - [x] finding 引用 caller distribution evidence
 - [x] 支援 guidance route engine 現有語意
 - [x] 不把 demand scanner 寫成 host-specific 工具
-- [x] 明說 `demandThreshold` 為新增識別字（上游不存在），需 APF-0010 backwrite 補入 upstream
+- [x] 明說 `demandThreshold` 為 code-level 既有欄位（上游不存在），需 APF-0010 backwrite 補入 upstream
 - [x] 引用 `decomposition-decision.ts:atom-extract / atom-bump` 作為 finding action
 - [x] 引用 `legacy-route-plan.ts:callerDemand` 作為 evidence 來源
 - [x] usage-feedback evidence type 對應 caller distribution
+
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
 
 ## 影響檔案
 
@@ -99,9 +104,10 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:guidance
 
 ## 回滾策略
 
-本卡文件階段可用 git diff 回退 tomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
+本卡文件階段可用 git diff 回退 atomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
-2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0004-demand-police-design.md 完成；demandThreshold 標記為新增識別字；引用 decomposition-decision 與 legacy-route-plan.callerDemand | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0004-demand-police-design.md 完成；demandThreshold 標記為 code-level 既有欄位；引用 decomposition-decision 與 legacy-route-plan.callerDemand | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=not-started、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

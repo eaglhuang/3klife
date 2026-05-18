@@ -4,6 +4,9 @@ task_id: TASK-APF-0010
 title: Roadmap backwrite 與 promotion gate
 milestone: M6
 status: done
+artifact_status: spec-done
+runtime_status: upstream-api-not-applied
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0009, TASK-APF-0012]
@@ -76,7 +79,9 @@ TASK-APF-0009
 - [x] 對齊 alpha0 / alpha1 排程，引用 AI原子框架開發計畫書
 - [x] 引用三角策略規劃書 shadow adapter pathway
 - [x] 逐 police 標記 advisory / blocker 升級條件（見主計畫書 §7 表）
-- [x] 補上 `demandThreshold` 新增識別字的 upstream 路線
+- [x] 補上 `demandThreshold` 從 code-level 欄位升為 public config 的 additive proposal 路線
+
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
 
 ## 影響檔案
 
@@ -99,9 +104,10 @@ neutrality scan; docs review; npm --prefix C:/Users/User/AI-Atomic-Framework run
 
 ## 回滾策略
 
-本卡文件階段可用 git diff 回退 tomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
+本卡文件階段可用 git diff 回退 atomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0010-roadmap-backwrite.md 完成；引用 alpha 排程與三角策略 shadow adapter pathway；advisory/blocker promotion 條件已寫入 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=upstream-api-not-applied、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

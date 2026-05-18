@@ -4,6 +4,9 @@ task_id: TASK-APF-0008
 title: Lifecycle / Boundary Police 對齊
 milestone: M5
 status: done
+artifact_status: spec-done
+runtime_status: wrapper-not-started
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0002]
@@ -76,6 +79,8 @@ TASK-APF-0002
 - [x] 沿用既有 `LifecyclePoliceFinding` 不重寫，作為 APF-0002 PoliceFinding contract 的相容性參考
 - [x] 與 APF-0011 dependency-graph police 對齊 cross-link
 
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
+
 ## 影響檔案
 
 ### 允許修改
@@ -97,9 +102,10 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police; npm --prefix
 
 ## 回滾策略
 
-本卡文件階段可用 git diff 回退 tomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
+本卡文件階段可用 git diff 回退 atomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0008-lifecycle-boundary-alignment.md 完成；沿用 LifecyclePoliceFinding 不重寫；與 APF-0011 cross-link | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=wrapper-not-started、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

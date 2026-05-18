@@ -6,7 +6,7 @@
 | 構件 | 上游現況 | 對應策略 |
 |---|---|---|
 | `callerDemand` | `legacy-route-plan.ts` 既有欄位 | 直接讀 |
-| `demandThreshold` | **不存在於 upstream** | APF-0010 backwrite 補入；本卡只規格化 |
+| `demandThreshold` | `legacy-route-plan.ts` code-level 既有欄位（目前預設 6） | public config / governance-bundle surface 需 APF-0010 additive proposal |
 | `decomposition-decision` | `atom-extract / atom-bump / extract-shared` 既有 | 作為 finding action 路由 |
 | guidance route engine | `packages/core/src/guidance/` 既有 | 不重寫 |
 
@@ -22,9 +22,9 @@ sub-function S with callers C[]
     └──► skip
 ```
 
-`demandThreshold` 預設 `2`（外部 atom 引用數），可在 governance bundle 覆寫。
+`demandThreshold` 目前在 `legacy-route-plan.ts` code-level 預設為 `6`；若要提供 governance bundle 覆寫，需另走 APF-0010 的 additive public config proposal。
 
-## 3. finding payload
+## 3. finding shape
 
 ```ts
 {
@@ -59,3 +59,6 @@ sub-function S with callers C[]
 ## 6. alphaGate
 
 `validate:guidance` + `validate:police`。
+## EvidenceRef 分層修訂
+
+本 spec 內的 `evidenceRefs` 需分成 upstream official `EvidenceRecord.evidenceType` 與 police-local artifact/readModel ref。`usage-feedback / quality-baseline / quality-comparison / rollback-proof / human-review-decision` 才是 official evidence type；`fingerprint-snapshot / map-propagation-log / neutrality-scan / dep-graph-snapshot / caller-graph-snapshot / dry-run-patch` 先視為 police-local artifact ref，不宣稱為 upstream evidence type。

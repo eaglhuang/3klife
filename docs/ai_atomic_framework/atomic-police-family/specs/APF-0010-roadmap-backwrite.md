@@ -61,11 +61,10 @@ shadow adapter 是唯一允許 3KLife 加私有 routing 的層次；upstream pol
 
 ## 5. `demandThreshold` 補入路徑
 
-upstream 缺 `demandThreshold` 識別字，本 backwrite 將其補入：
-- `schemas/governance-bundle.schema.json` 加 `demandThreshold: number` (default=2)
-- `packages/core/src/guidance/legacy-route-plan.ts` 接讀
-- `validate:guidance` fixture 補 positive / negative case
-
+`demandThreshold` 在 upstream code-level 已存在於 `legacy-route-plan.ts` 與 guidance 驗證流程；本 backwrite 不得寫成「上游完全缺識別字」。若要把它提升為 public config / governance-bundle surface，仍需 additive proposal：
+- `schemas/governance-bundle.schema.json` 加 optional `demandThreshold: number`（default 需另由 proposal 決定）
+- `packages/core/src/guidance/legacy-route-plan.ts` 保持 code-level 讀取相容
+- `validate:guidance` fixture 補 public config positive / negative case
 ## 6. Release note guidance
 
 每次 promotion（advisory → blocker）必須在 release note 註明：

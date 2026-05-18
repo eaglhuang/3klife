@@ -4,6 +4,9 @@ task_id: TASK-APF-0009
 title: Police orchestrator / CLI / validator profile 規劃
 milestone: M6
 status: done
+artifact_status: spec-done
+runtime_status: wrapper-not-started
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0003, TASK-APF-0004, TASK-APF-0005, TASK-APF-0006, TASK-APF-0007, TASK-APF-0008, TASK-APF-0011]
@@ -45,7 +48,7 @@ created_by_agent: codex
 
 ## 目標
 
-定義 Police family registry、orchestrator、CLI 與 validator profile 的進場順序，先 advisory 後 blocker。
+定義 Police family registry、orchestrator、CLI 與 validator profile 的進場順序，先 advisory 後 blocker；這是 roadmap target，不是目前 upstream profile 現況。
 
 ## 前置依賴
 
@@ -71,12 +74,14 @@ TASK-APF-0003, TASK-APF-0004, TASK-APF-0005, TASK-APF-0006, TASK-APF-0007, TASK-
 - [x] 不建立第二套 approval workflow
 - [x] standard profile 初期只 advisory
 - [x] full profile 可先接完整 scanner
-- [x] orchestrator output 可餵 ReviewAdvisory.machine-finding（**不另造 task-router**）
+- [x] orchestrator output 可餵 ReviewAdvisory.machine-finding（不新增獨立任務路由器）
 - [x] 定義 promotion 成 blocker 的明確條件
 - [x] validator profile 對應 `validate:quick / validate:standard / validate:full` 三層既有 profile
 - [x] advisory mode binding `validate:standard`
 - [x] blocker mode binding `validate:full`
 - [x] 涵蓋 11 個 police family（含 dependency-graph police）的執行順序
+
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
 
 ## 影響檔案
 
@@ -99,9 +104,10 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police; npm --prefix
 
 ## 回滾策略
 
-本卡文件階段可用 git diff 回退 tomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
+本卡文件階段可用 git diff 回退 atomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0009-orchestrator-design.md 完成；對應 validate:quick/standard/full 三層；補入 APF-0011 dep-graph 對齊 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=wrapper-not-started、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

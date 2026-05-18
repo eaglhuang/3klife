@@ -4,6 +4,9 @@ task_id: TASK-APF-0011
 title: Dependency Graph Police 對齊
 milestone: M1.5
 status: done
+artifact_status: spec-done
+runtime_status: wrapper-not-started
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0001]
@@ -73,6 +76,8 @@ TASK-APF-0001
 - [x] readModel 對應 dependency graph 快照
 - [x] 與 APF-0008 boundary police 不重疊（boundary 管 layer，dep-graph 管 cycle）
 
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
+
 ## 影響檔案
 
 ### 允許修改
@@ -99,3 +104,4 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police
 ## Notes
 
 2026-05-18 | 狀態: done | 驗證: pass | 變更: 補入 11 個 police family 之缺漏；specs/APF-0011-dependency-graph-police-alignment.md 完成 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=wrapper-not-started、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

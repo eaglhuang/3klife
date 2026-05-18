@@ -253,3 +253,16 @@
 | `doc_other_0630` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0030-multi-agent-confidence-report.task.md | TASK-ATD-0030 — Multi-agent confidence report 沿用既有 matrix / result |
 | `doc_other_0631` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0031-contributor-devcontainer-docker.task.md | TASK-ATD-0031 — Docker / devcontainer 作 contributor reproducibility |
 | `doc_other_0632` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0032-root-drop-sandbox-e2e.task.md | TASK-ATD-0032 — Root-drop sandbox E2E |
+| `doc_other_0633` | docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0001-agent-entry-guidance-evidence.md | TASK-ATD-0001 — Agent Entry Guidance Execution Evidence |
+| `doc_other_0634` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0013-validation-gate-activation-policy.md | APF-0013 — Validation Gate Activation Policy |
+| `doc_other_0635` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0014-police-family-gate-report-contract.md | APF-0014 — PoliceFamilyGateReport Contract |
+| `doc_other_0636` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0015-core-police-gate-runner.md | APF-0015 — Core Police Gate Runner |
+| `doc_other_0637` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0016-embedded-police-advisory-adapters.md | APF-0016 — Embedded Police Advisory Adapters |
+| `doc_other_0638` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0017-validator-profile-wiring.md | APF-0017 — Validator Profile Wiring |
+| `doc_other_0639` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0018-review-advisory-bridge-fixtures.md | APF-0018 — ReviewAdvisory Bridge Fixtures |
+| `doc_other_0640` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0013-validation-gate-activation-policy.task.md | TASK-APF-0013 — Validation gate activation policy |
+| `doc_other_0641` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0014-police-family-gate-report-contract.task.md | TASK-APF-0014 — PoliceFamilyGateReport contract |
+| `doc_other_0642` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0015-core-police-gate-runner.task.md | TASK-APF-0015 — Core police gate runner |
+| `doc_other_0643` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0016-embedded-police-advisory-adapters.task.md | TASK-APF-0016 — Embedded police advisory adapters |
+| `doc_other_0644` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0017-validator-profile-wiring.task.md | TASK-APF-0017 — Validator profile wiring |
+| `doc_other_0645` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0018-review-advisory-bridge-fixtures.task.md | TASK-APF-0018 — ReviewAdvisory bridge fixtures |

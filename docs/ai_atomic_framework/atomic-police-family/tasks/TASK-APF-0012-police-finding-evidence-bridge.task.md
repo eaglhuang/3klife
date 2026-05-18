@@ -4,6 +4,9 @@ task_id: TASK-APF-0012
 title: PoliceFinding evidence schema bridge
 milestone: M2.5
 status: done
+artifact_status: spec-done
+runtime_status: upstream-api-not-applied
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0002]
@@ -32,7 +35,7 @@ non_goals:
   - 不直接修改 upstream API，除非任務卡明確進入實作階段
   - 不建立第二套 approval workflow
   - 不讓 police finding 直接 mutate registry
-  - 不另造 task-router
+  - 不新增獨立任務路由器
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: ClaudeCode_Sonnet4.6
@@ -42,11 +45,11 @@ created_by_agent: ClaudeCode_Sonnet4.6
 
 ## 背景
 
-APF-0002 定義了 PoliceFinding 共用 contract，但 `evidenceRefs` / `readModel` 兩個欄位若沒接到上游既有 evidence types，就會漂浮為新 schema。同時上游已有 `ReviewAdvisoryFinding.trigger = machine-finding` 入口，是 police finding 進 advisory queue 的標準通道。本卡負責把 PoliceFinding 與既有 evidence + ReviewAdvisory 接線。
+APF-0002 定義了 PoliceFinding 共用 contract，但 `evidenceRefs` / `readModel` 兩個欄位若沒接到上游既有 evidence types，就會漂浮為新 schema。同時上游已有 `ReviewAdvisoryFinding.trigger = machine-finding` 入口，是 police finding 進 advisory queue 的標準通道。本卡負責把 PoliceFinding 與既有 evidence + ReviewAdvisory.metadata.policeFinding 接線。
 
 ## 目標
 
-把 PoliceFinding 的 `evidenceRefs` / `readModel` 對應到 upstream 既有 evidence types，並完整串接 `ReviewAdvisory.machine-finding + HumanReviewQueue + follow-up-task` 三接點，不另造 task-router。
+把 PoliceFinding 的 `evidenceRefs` / `readModel` 分層對應 official evidence type 與 police-local artifact ref，並完整串接 `ReviewAdvisory.machine-finding + HumanReviewQueue + follow-up-task` 三接點，不新增獨立任務路由器。
 
 ## 前置依賴
 
@@ -71,8 +74,10 @@ TASK-APF-0002
 - [x] `evidenceRefs` 對應 `usage-feedback / quality-baseline / quality-comparison / rollback-proof / map-propagation-log / fingerprint-snapshot`
 - [x] `readModel` 對應上游 artifact path / URI
 - [x] 全部非 lifecycle 的 PoliceFinding 走 `ReviewAdvisory.machine-finding` 入口
-- [x] 不另造 task-router，由 `routeHint` 觸發 HumanReviewQueue 或 follow-up-task
+- [x] 不新增獨立任務路由器，由 `routeHint` 觸發 HumanReviewQueue 或 follow-up-task
 - [x] lifecycle-police 例外（沿用 `LifecyclePoliceFinding` quarantine writer）
+
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
 
 ## 影響檔案
 
@@ -99,4 +104,5 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police; npm --prefix
 
 ## Notes
 
-2026-05-18 | 狀態: done | 驗證: pass | 變更: evidence schema 對應上游 6 種 evidence types；routing 統一 ReviewAdvisory.machine-finding；specs/APF-0012-evidence-schema-bridge.md 完成 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: evidenceRefs 分成 official evidence type 與 police-local artifact ref；routing 統一 ReviewAdvisory.machine-finding + metadata.policeFinding；specs/APF-0012-evidence-schema-bridge.md 完成 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=upstream-api-not-applied、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

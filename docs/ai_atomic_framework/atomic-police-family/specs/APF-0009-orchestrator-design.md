@@ -34,7 +34,7 @@ const policeFamilyRegistry: Record<PoliceFamilyName, FamilyEntry> = {
 # 既有 entry 不變
 npm run validate:police       # 仍跑 runPoliceChecks 4 check
 npm run validate:quick        # quick profile
-npm run validate:standard     # standard profile（advisory only）
+npm run validate:standard     # APF 目標 standard profile（advisory-first）
 npm run validate:full         # full profile（全部 11 family）
 
 # 新增（advisory）
@@ -56,3 +56,6 @@ advisory → blocker 的升級條件，由 APF-0010 backwrite 規格定義：
 - standard profile 初期只 advisory，避免 CI 過早 fail。
 - full profile 為 opt-in，由 release branch CI 啟動。
 - orchestrator finding 自身可 advisory（family 健康度 telemetry）。
+## 6. Current vs target profile 修訂
+
+目前 upstream `validators.config.json` 中，`validate:police` 位於 `full` profile；`validate:map-curator` 與 `validate:regression-compare` 已在 `standard` profile。上方 family registry 是 APF 目標設計，不是 upstream 現況。實作時必須先以 advisory report 進場，等 APF-0010 promotion 條件滿足後才可升 blocker。

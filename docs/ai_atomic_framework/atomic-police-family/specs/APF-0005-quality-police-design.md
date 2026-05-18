@@ -10,7 +10,7 @@
 | automated gates | `nonRegression / qualityImprovement / newCapability` | 既有 promotion gate |
 | Markdown renderer | quality markdown report | **projection**，非 source of truth |
 
-## 2. finding payload
+## 2. finding shape
 
 ```ts
 {
@@ -44,3 +44,6 @@
 - promotion gate 語意不改；本 police 只做 finding 包裝。
 - Markdown renderer 只是 projection，所有 routing 必須走 JSON evidence。
 - metric-driven proposal 與 evidence-driven proposal **共用後段 gate**。
+## EvidenceRef 分層修訂
+
+本 spec 內的 `evidenceRefs` 需分成 upstream official `EvidenceRecord.evidenceType` 與 police-local artifact/readModel ref。`usage-feedback / quality-baseline / quality-comparison / rollback-proof / human-review-decision` 才是 official evidence type；`fingerprint-snapshot / map-propagation-log / neutrality-scan / dep-graph-snapshot / caller-graph-snapshot / dry-run-patch` 先視為 police-local artifact ref，不宣稱為 upstream evidence type。

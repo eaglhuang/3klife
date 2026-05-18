@@ -1468,5 +1468,83 @@
     "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0032-root-drop-sandbox-e2e.task.md",
     "title": "TASK-ATD-0032 — Root-drop sandbox E2E",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0633",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0001-agent-entry-guidance-evidence.md",
+    "title": "TASK-ATD-0001 — Agent Entry Guidance Execution Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0634",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0013-validation-gate-activation-policy.md",
+    "title": "APF-0013 — Validation Gate Activation Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0635",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0014-police-family-gate-report-contract.md",
+    "title": "APF-0014 — PoliceFamilyGateReport Contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0636",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0015-core-police-gate-runner.md",
+    "title": "APF-0015 — Core Police Gate Runner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0637",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0016-embedded-police-advisory-adapters.md",
+    "title": "APF-0016 — Embedded Police Advisory Adapters",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0638",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0017-validator-profile-wiring.md",
+    "title": "APF-0017 — Validator Profile Wiring",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0639",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0018-review-advisory-bridge-fixtures.md",
+    "title": "APF-0018 — ReviewAdvisory Bridge Fixtures",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0640",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0013-validation-gate-activation-policy.task.md",
+    "title": "TASK-APF-0013 — Validation gate activation policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0641",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0014-police-family-gate-report-contract.task.md",
+    "title": "TASK-APF-0014 — PoliceFamilyGateReport contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0642",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0015-core-police-gate-runner.task.md",
+    "title": "TASK-APF-0015 — Core police gate runner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0643",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0016-embedded-police-advisory-adapters.task.md",
+    "title": "TASK-APF-0016 — Embedded police advisory adapters",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0644",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0017-validator-profile-wiring.task.md",
+    "title": "TASK-APF-0017 — Validator profile wiring",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0645",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0018-review-advisory-bridge-fixtures.task.md",
+    "title": "TASK-APF-0018 — ReviewAdvisory bridge fixtures",
+    "category": "other"
   }
 ]

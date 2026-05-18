@@ -4,6 +4,9 @@ task_id: TASK-APF-0001
 title: Upstream police inventory 與狀態矩陣
 milestone: M1
 status: done
+artifact_status: spec-done
+runtime_status: n/a
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0000]
@@ -77,6 +80,8 @@ TASK-APF-0000
 - [x] 列出 `runPoliceChecks` 既有 4 check（dependency-graph / layer-boundary / forbidden-import / registry-consistency）與 `runLifecyclePolice` 分離設計
 - [x] 區分 RegistryIndex（讀模型）與 police（檢查器），不互相混淆
 
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
+
 ## 影響檔案
 
 ### 允許修改
@@ -98,9 +103,10 @@ manual inventory review; npm --prefix C:/Users/User/AI-Atomic-Framework run vali
 
 ## 回滾策略
 
-本卡文件階段可用 git diff 回退 tomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
+本卡文件階段可用 git diff 回退 atomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0001-upstream-police-inventory.md 完成；補入 dependency-graph police、PoliceCheckKind 7 kind 對應、runPoliceChecks/runLifecyclePolice 分離說明 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=n/a、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

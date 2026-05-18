@@ -6,7 +6,7 @@
 | 構件 | 上游現況 | 對應策略 |
 |---|---|---|
 | `map-curator.ts` | 既有 4 signal | 包 facade |
-| `mapImpactScope` | regression-compare 既有欄位 | 作為 finding payload |
+| `mapImpactScope` | regression-compare 既有欄位 | 作為 finding shape |
 | `propagationStatus[]` | regression-compare 既有 | per-member status |
 | `integrationTestPassed` | per-member 既有 boolean | 是否觸發 block |
 
@@ -19,7 +19,7 @@
 | `recurring-failure-cluster` | evidence cluster | needs-review |
 | `zero-caller-sweep` | unused-caller scan | follow-up-task → lifecycle sweep |
 
-## 3. finding payload
+## 3. finding shape
 
 ```ts
 {
@@ -55,3 +55,6 @@
 | positive/recurring-failure | finding(severity=block) |
 | positive/zero-caller-member | finding(sweep, follow-up-task) |
 | negative/all-tests-pass | no finding |
+## EvidenceRef 分層修訂
+
+本 spec 內的 `evidenceRefs` 需分成 upstream official `EvidenceRecord.evidenceType` 與 police-local artifact/readModel ref。`usage-feedback / quality-baseline / quality-comparison / rollback-proof / human-review-decision` 才是 official evidence type；`fingerprint-snapshot / map-propagation-log / neutrality-scan / dep-graph-snapshot / caller-graph-snapshot / dry-run-patch` 先視為 police-local artifact ref，不宣稱為 upstream evidence type。

@@ -20,7 +20,7 @@
 | Family | 現況 | 落點 |
 |---|---|---|
 | Dedup Police | embedded + fixture-only | `RegistryIndex` + `regression-compare:dedupCandidates` + `plugin-behavior-pack/dedup-merge.ts` |
-| Demand Police | embedded + missing scanner | `legacy-route-plan:callerDemand`；`demandThreshold` 為新增識別字 |
+| Demand Police | embedded + missing scanner | `legacy-route-plan:callerDemand`；`demandThreshold` 為 code-level 既有欄位 |
 | Quality Police | embedded | `regression-compare.ts` + `mapImpactScope/propagationStatus` |
 | Atomization Police | embedded | `neutrality-scanner.ts` + `decomposition-decision.ts (atomize/infect)` |
 | Police Orchestrator | embedded | `runPoliceChecks` + `validate-police.ts` |
@@ -46,12 +46,12 @@
 
 ## 5. evidence path inventory
 
-| Police family | evidence type | upstream artifact |
+| Police family | evidence/readModel ref | 分層 | upstream artifact |
 |---|---|---|
-| Dedup | fingerprint-snapshot | `RegistryIndex` snapshot |
+| Dedup | fingerprint-snapshot | police-local artifact ref | `RegistryIndex` snapshot |
 | Demand | usage-feedback | caller distribution log |
 | Quality | quality-baseline / quality-comparison | `regression-compare` report |
-| Map Integration | map-propagation-log | `map-curator` report |
-| Atomization | rollback-proof + neutrality scan | `neutrality-scanner` + dry-run patch |
+| Map Integration | map-propagation-log | police-local artifact ref | `map-curator` report |
+| Atomization | rollback-proof + neutrality-scan + dry-run-patch | official evidence/readModel ref + police-local artifact refs | `neutrality-scanner` + dry-run patch |
 | Lifecycle | TTL / unused-caller scan | `lifecycle-police` finding |
 | Boundary / Dep-graph | static scan | `runPoliceChecks` violations[] |

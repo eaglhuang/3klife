@@ -28,7 +28,7 @@ decomposition-decision.derive(L)
     │ decision=='extract-shared' ──► finding(severity=info)
 ```
 
-## 3. finding payload
+## 3. finding shape
 
 ```ts
 {
@@ -54,3 +54,6 @@ decomposition-decision.derive(L)
 ## 5. alphaGate
 
 `validate:neutrality-scanner` + `validate:behavior-pack` + `validate:police`。
+## EvidenceRef 分層修訂
+
+本 spec 內的 `evidenceRefs` 需分成 upstream official `EvidenceRecord.evidenceType` 與 police-local artifact/readModel ref。`usage-feedback / quality-baseline / quality-comparison / rollback-proof / human-review-decision` 才是 official evidence type；`fingerprint-snapshot / map-propagation-log / neutrality-scan / dep-graph-snapshot / caller-graph-snapshot / dry-run-patch` 先視為 police-local artifact ref，不宣稱為 upstream evidence type。

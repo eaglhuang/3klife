@@ -4,6 +4,9 @@ task_id: TASK-APF-0000
 title: 文件定稿與治理索引
 milestone: M0
 status: done
+artifact_status: spec-done
+runtime_status: n/a
+upstream_mutation_status: not-applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: []
@@ -75,6 +78,8 @@ none
 - [x] 不修改 upstream public API
 - [x] encoding guard pass
 
+- [x] 本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
+
 ## 影響檔案
 
 ### 允許修改
@@ -96,9 +101,10 @@ node tools_node/doc-id-registry.js --verify; npm run check:encoding:touched -- -
 
 ## 回滾策略
 
-本卡文件階段可用 git diff 回退 tomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
+本卡文件階段可用 git diff 回退 atomic-police-family 相關檔案。若後續進入 upstream runtime 實作，必須保留 evidence 摘要，再用 revert 或新 proposal 回退；不得手動覆蓋其他 repo 的未關聯變更。
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: 文件區、13 個任務卡、doc-id registry 皆已建立；encoding guard pass；README.md 索引完整 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=n/a、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none

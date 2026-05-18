@@ -13,7 +13,7 @@
 | cycle 偵測 | DFS / Tarjan SCC（依實作） |
 | 既有 finding | `PoliceCheckResult.violations[]` |
 
-## 3. finding payload
+## 3. finding shape
 
 ```ts
 {

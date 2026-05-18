@@ -1,7 +1,7 @@
 <!-- doc_id: doc_index_0024 -->
 # Atomic Police Family Specs
 
-本目錄收錄 `TASK-APF-0001` ~ `TASK-APF-0012` 的 design markdown 輸出。每份 spec 是任務卡 acceptance criteria 的具體落地設計，不重述任務卡內容，只記錄：
+本目錄收錄 `TASK-APF-0001` ~ `TASK-APF-0018` 的 design markdown 輸出。每份 spec 是任務卡 acceptance criteria 的具體落地設計，不重述任務卡內容，只記錄：
 
 - 與既有 upstream module 的對應關係
 - finding / contract / schema 結構
@@ -24,3 +24,9 @@
 | [APF-0010](./APF-0010-roadmap-backwrite.md) | TASK-APF-0010 |
 | [APF-0011](./APF-0011-dependency-graph-police-alignment.md) | TASK-APF-0011 |
 | [APF-0012](./APF-0012-evidence-schema-bridge.md) | TASK-APF-0012 |
+| [APF-0013](./APF-0013-validation-gate-activation-policy.md) | TASK-APF-0013 |
+| [APF-0014](./APF-0014-police-family-gate-report-contract.md) | TASK-APF-0014 |
+| [APF-0015](./APF-0015-core-police-gate-runner.md) | TASK-APF-0015 |
+| [APF-0016](./APF-0016-embedded-police-advisory-adapters.md) | TASK-APF-0016 |
+| [APF-0017](./APF-0017-validator-profile-wiring.md) | TASK-APF-0017 |
+| [APF-0018](./APF-0018-review-advisory-bridge-fixtures.md) | TASK-APF-0018 |
