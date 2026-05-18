@@ -124,5 +124,17 @@
     "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/README.md",
     "title": "3KLife ATM Triangle Strategy Task Cards",
     "category": "index"
+  },
+  {
+    "id": "doc_index_0023",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/README.md",
+    "title": "原子警察家族 Task Cards",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0024",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/README.md",
+    "title": "Atomic Police Family Specs",
+    "category": "index"
   }
 ]

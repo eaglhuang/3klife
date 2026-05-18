@@ -174,54 +174,46 @@
 | `doc_other_0175` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0022-bridge-minor-experimental.task.md | TASK-APO-0022 — Bridge Minor + Experimental API |
 | `doc_other_0176` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0023-policy-self-versioning.task.md | TASK-APO-0023 — Policy Self-Versioning + Auto Matrix PR |
 | `doc_other_0177` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0024-time-minor-deprecation-canary.task.md | TASK-APO-0024 — Time+minor Deprecation + Canary Rollout |
-| `doc_other_0178` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-01.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0179` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-02.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0180` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-03.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0181` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-04.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0182` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-05.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0183` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-06.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0184` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-07.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0185` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-08.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0186` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-09.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0187` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-10.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0188` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-11.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0189` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-12.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0190` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-13.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0191` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-14.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0192` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-15.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0193` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-16.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0194` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-17.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0195` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-18.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0196` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-19.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0197` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-20.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0198` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-21.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0199` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-22.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0200` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-23.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0201` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-24.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0202` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-25.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0203` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-26.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0204` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-27.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0205` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-28.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0206` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-29.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0207` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-30.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0208` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-31.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0209` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-32.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0210` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-33.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0211` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-34.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0212` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-35.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0213` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-36.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0214` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-37.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0215` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-38.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0216` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-39.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0217` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-40.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0218` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-41.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0219` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-42.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0220` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-43.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0221` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-44.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0222` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-45.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0223` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-46.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0224` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-47.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
-| `doc_other_0225` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-48.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
 | `doc_other_0226` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-01.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_0227` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-02.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_0228` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-03.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_0229` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md | 3KLife ATM 採用三角策略規劃書 |
+| `doc_other_0230` | docs/ai_atomic_framework/atm-tech-debt-refactor/ATM 技術債重構計畫書.md | ATM 技術債重構計畫書 |
+| `doc_other_0231` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0001-docs-language-boundary-and-move.task.md | TASK-ATS-0001 — Public docs language gate and strategy directory migration |
+| `doc_other_0232` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0002-npc-brain-baseline-fixture-inventory.task.md | TASK-ATS-0002 — npc-brain baseline freeze and fixture inventory |
+| `doc_other_0233` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0003-official-onboarding-smoke.task.md | TASK-ATS-0003 — npc-brain official ATM onboarding smoke |
+| `doc_other_0234` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0004-atom-behavior-core-suite.task.md | TASK-ATS-0004 — Atom behavior core suite on npc-brain |
+| `doc_other_0235` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0005-legacy-python-infect-atomize.task.md | TASK-ATS-0005 — Legacy Python infect and atomize validation |
+| `doc_other_0236` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0006-atomic-map-decomposition-validation.task.md | TASK-ATS-0006 — Atomic Map decomposition and replacement validation |
+| `doc_other_0237` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0007-atom-evolution-polymorph-validation.task.md | TASK-ATS-0007 — Atom evolution and polymorphize validation |
+| `doc_other_0238` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0008-adopter-sentinel-evidence-routing.task.md | TASK-ATS-0008 — Adopter sentinel integration and evidence routing |
+| `doc_other_0239` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0009-upstream-blocker-repair-batch.task.md | TASK-ATS-0009 — Upstream blocker repair batch from npc-brain evidence |
+| `doc_other_0240` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0010-graduation-release-gate.task.md | TASK-ATS-0010 — 3KLife experiment graduation and ATM release gate |
+| `doc_other_0241` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/AI-Atomic-Framework docs public-language audit.md | AI-Atomic-Framework docs public-language audit |
+| `doc_other_0242` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0000-doc-finalize-governance-index.task.md | TASK-APF-0000 — 文件定稿與治理索引 |
+| `doc_other_0243` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0001-upstream-police-inventory.task.md | TASK-APF-0001 — Upstream police inventory 與狀態矩陣 |
+| `doc_other_0244` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0002-police-finding-contract.task.md | TASK-APF-0002 — PoliceFinding family contract |
+| `doc_other_0245` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0003-dedup-police-productization.task.md | TASK-APF-0003 — Dedup Police 產品化 |
+| `doc_other_0246` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0004-demand-police-productization.task.md | TASK-APF-0004 — Demand Police 產品化 |
+| `doc_other_0247` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0005-quality-police-productization.task.md | TASK-APF-0005 — Quality Police 產品化 |
+| `doc_other_0248` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0006-map-integration-police-productization.task.md | TASK-APF-0006 — Map Integration Police 產品化 |
+| `doc_other_0249` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0007-atomization-police-productization.task.md | TASK-APF-0007 — Atomization Police 產品化 |
+| `doc_other_0250` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0008-lifecycle-boundary-police-alignment.task.md | TASK-APF-0008 — Lifecycle / Boundary Police 對齊 |
+| `doc_other_0251` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0009-police-orchestrator-planning.task.md | TASK-APF-0009 — Police orchestrator / CLI / validator profile 規劃 |
+| `doc_other_0252` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0010-roadmap-backwrite-promotion-gate.task.md | TASK-APF-0010 — Roadmap backwrite 與 promotion gate |
+| `doc_other_0253` | docs/ai_atomic_framework/atomic-police-family/原子警察家族計畫書.md | 原子警察家族計畫書 |
+| `doc_other_0254` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/ATOM_EVOLUTION_PLAN.zh-TW.md | Atom 證據驅動進化規劃書 |
+| `doc_other_0255` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0012-police-finding-evidence-bridge.task.md | TASK-APF-0012 — PoliceFinding evidence schema bridge |
+| `doc_other_0256` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0001-upstream-police-inventory.md | APF-0001 — Upstream Police Inventory |
+| `doc_other_0257` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0002-police-finding-contract.md | APF-0002 — PoliceFinding Contract |
+| `doc_other_0258` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0003-dedup-police-design.md | APF-0003 — Dedup Police Design |
+| `doc_other_0259` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0004-demand-police-design.md | APF-0004 — Demand Police Design |
+| `doc_other_0260` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0005-quality-police-design.md | APF-0005 — Quality Police Design |
+| `doc_other_0261` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0006-map-integration-police-design.md | APF-0006 — Map Integration Police Design |
+| `doc_other_0262` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0007-atomization-police-design.md | APF-0007 — Atomization Police Design |
+| `doc_other_0263` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0008-lifecycle-boundary-alignment.md | APF-0008 — Lifecycle / Boundary Police 對齊 |
+| `doc_other_0264` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0009-orchestrator-design.md | APF-0009 — Police Orchestrator Design |
+| `doc_other_0265` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0010-roadmap-backwrite.md | APF-0010 — Roadmap Backwrite & Promotion Gate |
+| `doc_other_0266` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0011-dependency-graph-police-alignment.md | APF-0011 — Dependency Graph Police 對齊 |
+| `doc_other_0267` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0012-evidence-schema-bridge.md | APF-0012 — PoliceFinding Evidence Schema Bridge |
+| `doc_other_0268` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0011-dependency-graph-police-alignment.task.md | TASK-APF-0011 — Dependency Graph Police 對齊 |

@@ -210,3 +210,7 @@
 | `doc_index_0018` | docs/cross-ref/cross-ref-M6後同步檢查清單.md | Cross-Ref M6 後同步檢查清單 |
 | `doc_index_0019` | docs/ai_atomic_framework/map-replacement-protocol/tasks/README.md | Replacement Protocol Task Cards |
 | `doc_index_0020` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/README.md | ATM 引導工程 Task Cards |
+| `doc_index_0021` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/README.md | ATM 技術債重構 Task Cards |
+| `doc_index_0022` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/README.md | 3KLife ATM Triangle Strategy Task Cards |
+| `doc_index_0023` | docs/ai_atomic_framework/atomic-police-family/tasks/README.md | 原子警察家族 Task Cards |
+| `doc_index_0024` | docs/ai_atomic_framework/atomic-police-family/specs/README.md | Atomic Police Family Specs |

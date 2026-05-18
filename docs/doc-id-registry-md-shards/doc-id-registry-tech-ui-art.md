@@ -31,7 +31,6 @@
 | `doc_tech_0021` | docs/特效研究/Cocos 3D 粒子生成器 Agent Skill.md | **Cocos Creator 3D 粒子特效 AI 代理技能之市場現狀與技術實作深度報告** |
 | `doc_tech_0022` | docs/特效研究/vfx-health-report.md | VFX Prefab Health Report |
 | `doc_tech_0080` | docs/tech/npc-brain-memory/overview.md | NPC Brain Memory System — Overview（§1-§3） |
-| `doc_tech_0081` | server/npc-brain/pipelines/sanguo-rag/full-roster-convergence-highway.zh-TW.md | 全量武將收斂高速公路設計 |
 
 ## 畫面UI類 (`doc_ui`)
 
