@@ -10,11 +10,11 @@
     "releaseReadinessFailureCount"
   ],
   "baselineMinimums": {
-    "expectedFileCount": 69,
-    "phasePlanCount": 25,
+    "expectedFileCount": 71,
+    "phasePlanCount": 27,
     "fixtureManifestCount": 1,
     "handoffSectionCount": 4,
-    "handoffConsumerCount": 36
+    "handoffConsumerCount": 38
   },
   "maxAllowed": {
     "releaseReadinessFailureCount": 0,

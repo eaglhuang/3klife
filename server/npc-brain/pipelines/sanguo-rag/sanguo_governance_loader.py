@@ -967,6 +967,34 @@ def load_governance_runbook_policy(
     return read_governance_json(path, required_id="Policy_GovernanceRunbook_P1")
 
 
+def load_residual_hardcode_freeze_audit_policy(
+    root: str | Path | None = None,
+    *,
+    residual_hardcode_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(residual_hardcode_policy).resolve()
+        if residual_hardcode_policy
+        else _path(base, "policies", "policy-residual-hardcode-freeze-audit.json")
+    )
+    return read_governance_json(path, required_id="Policy_ResidualHardcodeFreezeAudit_P1")
+
+
+def load_postgres_state_migration_plan_policy(
+    root: str | Path | None = None,
+    *,
+    postgres_migration_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(postgres_migration_policy).resolve()
+        if postgres_migration_policy
+        else _path(base, "policies", "policy-postgres-state-migration-plan.json")
+    )
+    return read_governance_json(path, required_id="Policy_PostgresStateMigrationPlan_P1")
+
+
 def load_postgres_state_store_evaluation_policy(
     root: str | Path | None = None,
     *,
@@ -1016,6 +1044,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-governance-harness-snapshots.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "policies", "file": "policy-governance-ci-entrypoint.json", "consumer": "run_sanguo_governance_ci.py"},
         {"section": "policies", "file": "policy-governance-runbook.json", "consumer": "governance-runbook.zh-TW.md"},
+        {"section": "policies", "file": "policy-residual-hardcode-freeze-audit.json", "consumer": "residual-hardcode-freeze-audit.zh-TW.md"},
+        {"section": "policies", "file": "policy-postgres-state-migration-plan.json", "consumer": "postgres-state-migration-plan.zh-TW.md"},
         {"section": "policies", "file": "policy-postgres-state-store-evaluation.json", "consumer": "evaluate_postgres_state_store_readiness.py"},
         {"section": "policies", "file": "policy-vector-ingestion-hardening.json", "consumer": "run_vector_ingestion_gate.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

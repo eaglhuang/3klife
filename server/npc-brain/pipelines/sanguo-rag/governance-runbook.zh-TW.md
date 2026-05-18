@@ -72,4 +72,5 @@ Consumer index 的單一來源是 `sanguo_governance_loader.expected_governance_
 - Phase 30-39：建立 validation stabilization、fixture、handoff index、release readiness、drift、triage、completion ledger、run profile、report bundle。
 - Phase 40-42：修補 plan encoding、建立 schema registry、加入 golden snapshot diff。
 - Phase 43-44：加入單一 CI 入口與人工 runbook。
-- Phase 45：建議下一步做 residual hardcode freeze audit，把剩餘 hardcode 標成 done / intentional fallback / postponed，停止無限拆。
+- Phase 45-46：完成 residual hardcode freeze audit 與條件式 PostgreSQL migration plan。
+- Phase 47：建議下一步做 Conditional Vector Production Rollout Plan，仍先維持 plan-only。

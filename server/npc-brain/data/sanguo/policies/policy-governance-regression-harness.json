@@ -19,7 +19,9 @@
     "schema-registry",
     "golden-snapshot",
     "ci-entrypoint",
-    "runbook"
+    "runbook",
+    "residual-hardcode-freeze-audit",
+    "postgres-state-migration-plan"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
   "fixtureManifests": [
@@ -153,6 +155,16 @@
       "phase": 44,
       "name": "Governance Runbook / Consumer Index",
       "plan": "refactor-phase44-plan.zh-TW.md"
+    },
+    {
+      "phase": 45,
+      "name": "Residual Hardcode Freeze Audit",
+      "plan": "refactor-phase45-plan.zh-TW.md"
+    },
+    {
+      "phase": 46,
+      "name": "Conditional PostgreSQL Migration Plan",
+      "plan": "refactor-phase46-plan.zh-TW.md"
     }
   ]
 }

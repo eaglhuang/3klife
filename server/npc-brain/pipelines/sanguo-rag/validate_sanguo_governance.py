@@ -60,10 +60,12 @@ from sanguo_governance_loader import (
     load_npc_dialogue_runtime_cue_rules,
     load_npc_dialogue_runtime_service_policy,
     load_progress_runner_governance,
+    load_postgres_state_migration_plan_policy,
     load_postgres_state_store_evaluation_policy,
     load_relationship_evidence_extraction_rules,
     load_relationship_runtime_canon_policy,
     load_relationship_type_refinement_rules,
+    load_residual_hardcode_freeze_audit_policy,
     load_runtime_general_profile_export_policy,
     load_runtime_profile_item_cue_rules,
     load_runtime_profile_label_catalog,
@@ -220,6 +222,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     governance_snapshot_policy = load_governance_harness_snapshot_policy(root)
     governance_ci_policy = load_governance_ci_entrypoint_policy(root)
     governance_runbook_policy = load_governance_runbook_policy(root)
+    residual_hardcode_policy = load_residual_hardcode_freeze_audit_policy(root)
+    postgres_migration_policy = load_postgres_state_migration_plan_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1629,6 +1633,68 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         raise SanguoGovernanceError("policy-governance-runbook consumerIndexSource must be expected_governance_files")
     runbook_consumer_count = len({row["consumer"] for row in expected_governance_files()})
 
+    residual_allowed_statuses = {
+        str(item).strip() for item in residual_hardcode_policy.get("allowedStatuses") or [] if str(item).strip()
+    }
+    if residual_allowed_statuses != {"done-governed", "intentional-fallback", "postponed"}:
+        raise SanguoGovernanceError("policy-residual-hardcode-freeze-audit allowedStatuses mismatch")
+    if str(residual_hardcode_policy.get("freezeDecision") or "") != "stop-unbounded-governance-extraction":
+        raise SanguoGovernanceError("policy-residual-hardcode-freeze-audit freezeDecision mismatch")
+    residual_report_path = Path(__file__).resolve().parent / str(residual_hardcode_policy.get("auditReportPath") or "")
+    if not residual_report_path.exists():
+        raise SanguoGovernanceError(f"policy-residual-hardcode-freeze-audit report missing: {residual_report_path}")
+    residual_items = residual_hardcode_policy.get("auditItems")
+    if not isinstance(residual_items, list) or not residual_items:
+        raise SanguoGovernanceError("policy-residual-hardcode-freeze-audit auditItems cannot be empty")
+    residual_ids: set[str] = set()
+    residual_postponed_count = 0
+    repo_root = Path(__file__).resolve().parents[4]
+    for row in residual_items:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-residual-hardcode-freeze-audit auditItems must be objects")
+        row_id = str(row.get("id") or "").strip()
+        status = str(row.get("status") or "").strip()
+        target_path = str(row.get("targetPath") or "").strip()
+        decision = str(row.get("decision") or "").strip()
+        if not row_id or row_id in residual_ids:
+            raise SanguoGovernanceError(f"policy-residual-hardcode-freeze-audit duplicate or blank id: {row_id}")
+        residual_ids.add(row_id)
+        if status not in residual_allowed_statuses:
+            raise SanguoGovernanceError(f"policy-residual-hardcode-freeze-audit invalid status: {row_id}={status}")
+        if status == "postponed":
+            residual_postponed_count += 1
+        if not target_path or not (repo_root / target_path).exists():
+            raise SanguoGovernanceError(f"policy-residual-hardcode-freeze-audit target missing: {row_id} {target_path}")
+        if not decision:
+            raise SanguoGovernanceError(f"policy-residual-hardcode-freeze-audit decision cannot be empty: {row_id}")
+
+    postgres_migration_steps = postgres_migration_policy.get("migrationSteps")
+    if str(postgres_migration_policy.get("decisionMode") or "") != "plan-only":
+        raise SanguoGovernanceError("policy-postgres-state-migration-plan decisionMode must be plan-only")
+    if postgres_migration_policy.get("enabledByDefault") is not False:
+        raise SanguoGovernanceError("policy-postgres-state-migration-plan enabledByDefault must be false")
+    trigger_recommendations = [
+        str(item).strip() for item in postgres_migration_policy.get("triggerRecommendations") or [] if str(item).strip()
+    ]
+    allowed_recommendations = {str(item).strip() for item in postgres_state_policy.get("allowedRecommendations") or []}
+    if not trigger_recommendations or any(item not in allowed_recommendations for item in trigger_recommendations):
+        raise SanguoGovernanceError("policy-postgres-state-migration-plan triggerRecommendations must be allowed evaluation recommendations")
+    adapter_layers = [str(item).strip() for item in postgres_migration_policy.get("requiredAdapterLayers") or [] if str(item).strip()]
+    if sorted(adapter_layers) != sorted({"stateRepository", "jsonlExportMirror", "migrationBackfill", "rollbackPlan"}):
+        raise SanguoGovernanceError("policy-postgres-state-migration-plan requiredAdapterLayers mismatch")
+    if not isinstance(postgres_migration_steps, list) or len(postgres_migration_steps) < 4:
+        raise SanguoGovernanceError("policy-postgres-state-migration-plan migrationSteps must include at least 4 steps")
+    step_ids: set[str] = set()
+    for row in postgres_migration_steps:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-postgres-state-migration-plan migrationSteps must be objects")
+        step_id = str(row.get("id") or "").strip()
+        if not step_id or step_id in step_ids:
+            raise SanguoGovernanceError(f"policy-postgres-state-migration-plan duplicate or blank step id: {step_id}")
+        step_ids.add(step_id)
+        if not str(row.get("name") or "").strip() or not str(row.get("checkpoint") or "").strip():
+            raise SanguoGovernanceError(f"policy-postgres-state-migration-plan step name/checkpoint cannot be empty: {step_id}")
+
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
         raise SanguoGovernanceError("policy-postgres-state-store-evaluation recommendationThresholds must be positive")
@@ -1826,6 +1892,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "governanceCiEntrypointRequiredCheckCount": len(ci_required_checks),
         "governanceRunbookSectionCount": len(runbook_required_sections),
         "governanceRunbookConsumerCount": runbook_consumer_count,
+        "residualHardcodeAuditItemCount": len(residual_items),
+        "residualHardcodePostponedCount": residual_postponed_count,
+        "postgresMigrationPlanStepCount": len(postgres_migration_steps),
+        "postgresMigrationAdapterLayerCount": len(adapter_layers),
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

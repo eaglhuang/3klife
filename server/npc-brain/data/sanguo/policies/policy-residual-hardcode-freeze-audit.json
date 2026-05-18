@@ -1,0 +1,69 @@
+{
+  "id": "Policy_ResidualHardcodeFreezeAudit_P1",
+  "description": "Freezes the remaining Sanguo-RAG hardcode review into explicit done, intentional fallback, and postponed buckets.",
+  "freezeDecision": "stop-unbounded-governance-extraction",
+  "auditReportPath": "residual-hardcode-freeze-audit.zh-TW.md",
+  "allowedStatuses": [
+    "done-governed",
+    "intentional-fallback",
+    "postponed"
+  ],
+  "auditItems": [
+    {
+      "id": "ResidualHardcode_GoldSeedBattleSpecs",
+      "domain": "event-bootstrap-catalog",
+      "targetPath": "server/npc-brain/pipelines/sanguo-rag/gold_seed_registry.py",
+      "status": "intentional-fallback",
+      "decision": "Keep battle seed registry in Python until a dedicated catalog migration has its own baseline."
+    },
+    {
+      "id": "ResidualHardcode_ValidatorAllowedSets",
+      "domain": "governance-validation",
+      "targetPath": "server/npc-brain/pipelines/sanguo-rag/validate_sanguo_governance.py",
+      "status": "intentional-fallback",
+      "decision": "Keep validator allowed sets in code because they guard governance shape rather than runtime behavior."
+    },
+    {
+      "id": "ResidualHardcode_HarnessPayloadKeys",
+      "domain": "governance-harness",
+      "targetPath": "server/npc-brain/pipelines/sanguo-rag/run_sanguo_governance_regression_harness.py",
+      "status": "intentional-fallback",
+      "decision": "Keep harness payload key names in code so the snapshot contract remains explicit and deterministic."
+    },
+    {
+      "id": "ResidualHardcode_RuntimeConsumptionFallback",
+      "domain": "runtime-service",
+      "targetPath": "server/npc-brain/app/npc_dialogue_service.py",
+      "status": "intentional-fallback",
+      "decision": "Keep safe fallback text and request guards in service code; governance controls deterministic policy, not emergency runtime safety."
+    },
+    {
+      "id": "ResidualHardcode_ConvergenceOrchestration",
+      "domain": "runner-orchestration",
+      "targetPath": "server/npc-brain/pipelines/sanguo-rag/run_full_roster_convergence_loop.py",
+      "status": "intentional-fallback",
+      "decision": "Keep subprocess orchestration and manifest plumbing in Python; policy values are already externalized."
+    },
+    {
+      "id": "ResidualHardcode_ProgressAdvancementOrchestration",
+      "domain": "runner-orchestration",
+      "targetPath": "server/npc-brain/pipelines/sanguo-rag/run_progress_advancement_loop.py",
+      "status": "intentional-fallback",
+      "decision": "Keep loop control flow in Python; governance covers retry, stop reason, and location rules."
+    },
+    {
+      "id": "ResidualHardcode_VectorProductionRollout",
+      "domain": "conditional-vector-production",
+      "targetPath": "server/npc-brain/pipelines/sanguo-rag/run_vector_ingestion_gate.py",
+      "status": "postponed",
+      "decision": "Do not productionize vector ingestion until Phase 47 conditions are met."
+    },
+    {
+      "id": "ResidualHardcode_PostgresStateStore",
+      "domain": "conditional-state-store",
+      "targetPath": "server/npc-brain/data/sanguo/policies/policy-postgres-state-store-evaluation.json",
+      "status": "postponed",
+      "decision": "Keep JSONL and manifest canonical until the migration thresholds require a PostgreSQL adapter."
+    }
+  ]
+}

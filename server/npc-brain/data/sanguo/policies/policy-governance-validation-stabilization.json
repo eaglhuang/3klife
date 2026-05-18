@@ -32,7 +32,9 @@
     "governanceSchemaRegistryEntryCount",
     "governanceHarnessSnapshotCount",
     "governanceCiEntrypointRequiredCheckCount",
-    "governanceRunbookSectionCount"
+    "governanceRunbookSectionCount",
+    "residualHardcodeAuditItemCount",
+    "postgresMigrationPlanStepCount"
   ],
   "coverageReport": {
     "failOnMissingSummaryKey": true,

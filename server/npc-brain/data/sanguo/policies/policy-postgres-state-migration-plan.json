@@ -1,0 +1,53 @@
+{
+  "id": "Policy_PostgresStateMigrationPlan_P1",
+  "description": "Plan-only migration policy for moving Sanguo-RAG run/review/incremental state to PostgreSQL after evaluation thresholds are met.",
+  "decisionMode": "plan-only",
+  "enabledByDefault": false,
+  "triggerRecommendations": [
+    "prepare-postgres-adapter",
+    "migrate-state-store"
+  ],
+  "requiredAdapterLayers": [
+    "stateRepository",
+    "jsonlExportMirror",
+    "migrationBackfill",
+    "rollbackPlan"
+  ],
+  "migrationSteps": [
+    {
+      "id": "Step_PostgresMigration_01",
+      "name": "Confirm evaluation thresholds",
+      "checkpoint": "policy-postgres-state-store-evaluation recommends prepare-postgres-adapter or migrate-state-store"
+    },
+    {
+      "id": "Step_PostgresMigration_02",
+      "name": "Introduce read-only state repository adapter",
+      "checkpoint": "JSONL remains canonical and adapter reads mirror state only"
+    },
+    {
+      "id": "Step_PostgresMigration_03",
+      "name": "Backfill run history and review state",
+      "checkpoint": "Backfill report row counts match JSONL/manifest baseline"
+    },
+    {
+      "id": "Step_PostgresMigration_04",
+      "name": "Enable dual-write behind a feature flag",
+      "checkpoint": "Regression harness passes with JSONL and PostgreSQL mirrors equivalent"
+    },
+    {
+      "id": "Step_PostgresMigration_05",
+      "name": "Cut read path to PostgreSQL",
+      "checkpoint": "Rollback command and JSONL export mirror are verified"
+    },
+    {
+      "id": "Step_PostgresMigration_06",
+      "name": "Keep JSONL export as audit artifact",
+      "checkpoint": "Pipeline artifacts remain inspectable without direct DB access"
+    }
+  ],
+  "nonGoals": [
+    "No PostgreSQL dependency is added during governance planning.",
+    "No runtime output schema changes before adapter cutover.",
+    "No vector ingestion production rollout in this phase."
+  ]
+}
