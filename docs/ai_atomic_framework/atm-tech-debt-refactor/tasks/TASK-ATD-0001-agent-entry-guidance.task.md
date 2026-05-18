@@ -3,7 +3,11 @@ doc_id: doc_other_0601
 task_id: TASK-ATD-0001
 title: 補框架中立 agent entry guidance
 milestone: M0
-status: open
+status: done
+started_at: 2026-05-18T10:00:00+08:00
+started_by_agent: ClaudeCode_Sonnet4.6
+completed_at: 2026-05-18T10:30:00+08:00
+completed_by_agent: ClaudeCode_Sonnet4.6
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -67,9 +71,9 @@ created_by_agent: codex
 
 ## 驗收條件
 
-- [ ] protected public docs 不含 adopter-only 語意。
-- [ ] 文件只描述 AI-Atomic-Framework 的 open-source contract。
-- [ ] 若需要下游案例，必須轉成 neutral example 或 upstream-friendly RFC。
+- [x] protected public docs 不含 adopter-only 語意。
+- [x] 文件只描述 AI-Atomic-Framework 的 open-source contract。
+- [x] 若需要下游案例，必須轉成 neutral example 或 upstream-friendly RFC。
 
 ## 影響檔案
 
@@ -92,11 +96,17 @@ created_by_agent: codex
 
 ## Checklist
 
-- [ ] 建立 upstream-friendly artifact 或明確標示暫不需要
-- [ ] 確認未污染 3KLife / npc-brain / Cocos 到 upstream protected surface
-- [ ] 完成 allowed_files 內的最小變更
-- [ ] 執行驗證方式並把結果回寫 Notes
+- [x] 建立 upstream-friendly artifact 或明確標示暫不需要
+- [x] 確認未污染 3KLife / npc-brain / Cocos 到 upstream protected surface
+- [x] 完成 allowed_files 內的最小變更
+- [x] 執行驗證方式並把結果回寫 Notes
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: PASS | 變更: 建立 AI-Atomic-Framework/AGENTS.md（框架中立 bootstrap instructions + 框架導航） | 阻塞: none
+- validate:neutrality ok (6 checks)
+- validate:examples ok
+- validate:standard ok (passed=53, failed=0, total=53) — 修復原先 2 個 agents-md 相關 failure
+- verify --agents-md → ATM_VERIFY_AGENTS_MD_OK
+- 無 adopter-only 語彙污染，未 commit/push 到 upstream
