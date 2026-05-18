@@ -357,19 +357,19 @@ def edge_has_pair_relation_cue(
         return False
 
     type_cues = {
-        "enemy_rival": r"(戰|攻|伐|討|拒|敗|破|敵|圍|殺|官度)",
-        "alliance_oath": r"(盟|會盟|同盟|結盟|約)",
-        "betrayal_surrender": r"(降|叛|背|歸|投)",
-        "mentor_student": r"(師|教|授|學|問計)",
-        "parent_child": r"(父|母|子|女|生|養)",
-        "patron_client": r"(主公|麾下|部下|投|歸|事|仕|從)",
-        "ruler_subject": r"(主公|麾下|部下|臣|將|令|命|遣|拜|使|從|事|仕|歸)",
-        "sibling": r"(兄|弟|姊|妹)",
-        "spouse": r"(妻|夫|婦|夫人|娶|嫁|婚)",
-        "sworn_sibling": r"(結義|義兄|義弟|誓|拜)",
+        "enemy_rival": r"(攻|討|伐|擊|拒|敗|破|戰|大戰|交戰|殺敗|追|圍|敵|檄|征|誅)",
+        "alliance_oath": r"(盟|同盟|結盟|相約|連和|結好|合兵|同攻|會)",
+        "betrayal_surrender": r"(叛|背|反|降|歸降|執|縛|誘殺|背盟)",
+        "mentor_student": r"(師|師事|教|授|問|學|從學|受業|訓|誨)",
+        "parent_child": r"(父|母|子|嗣|嗣子|養子|繼嗣|其父|其子|叔父|伯父)",
+        "patron_client": r"(薦|舉|辟|召|任|用|拔|表|拜|任命|提拔|厚遇)",
+        "ruler_subject": r"(主|臣|事|從|隨|使|令|遣|拜|表|為|屬|部下|將|太守|刺史|主簿|從事|牧|守|歸|仕|召)",
+        "sibling": r"(兄|弟|姊|妹|兄弟|昆弟|從兄|從弟)",
+        "spouse": r"(夫人|妻|妻子|婦|嫁|娶|婚|成婚|納|配|以女妻|女妻之|尚主)",
+        "sworn_sibling": r"(結義|義兄|義弟|桃園|義結|兄弟相稱)",
     }
-    cue = re.compile(type_cues.get(rel_type, r"(與|及|同|共|和)"))
-    connectors = ("與", "及", "同", "共", "和", "、")
+    cue = re.compile(type_cues.get(rel_type, r"(與|及|同|共|和|並|俱)"))
+    connectors = ('與', '及', '同', '共', '和', '並', '俱', '從', '隨', '使', '令', '遣', '拜', '表', '為', '事')
 
     def positions(token: str) -> list[int]:
         result: list[int] = []

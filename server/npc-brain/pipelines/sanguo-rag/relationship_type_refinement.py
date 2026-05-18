@@ -40,7 +40,13 @@ def _required_rule_value(by_name: dict[str, dict[str, Any]], constant_name: str)
 def _string_list(value: Any) -> list[str]:
     if not isinstance(value, list):
         return []
-    return [str(item) for item in value if str(item)]
+    result: list[str] = []
+    for item in value:
+        text = str(item).strip()
+        if not text or chr(0xFFFD) in text or set(text) == {"?"}:
+            continue
+        result.append(text)
+    return result
 
 
 def _string_set(value: Any) -> set[str]:
@@ -110,11 +116,13 @@ def contains_any(text: str, terms: list[str]) -> bool:
 
 
 def relationship_type_family(relation_type: str) -> str:
+    ensure_relationship_type_refinement_rules_loaded()
     normalized = str(relation_type or "").strip()
     return RELATIONSHIP_TYPE_FAMILIES.get(normalized, "relationship")
 
 
 def refine_relationship_type(edge: dict[str, Any], fallback_text: str = "") -> tuple[str, list[str]]:
+    ensure_relationship_type_refinement_rules_loaded()
     original_type = str(edge.get("type") or "").strip()
     text = edge_text(edge, fallback_text)
     reasons: list[str] = []
