@@ -1,0 +1,19 @@
+{
+  "id": "Policy_GovernanceCiEntrypoint_P1",
+  "description": "Defines the single local/CI entrypoint for Sanguo governance validation.",
+  "command": "python server/npc-brain/pipelines/sanguo-rag/run_sanguo_governance_ci.py",
+  "defaultRunProfile": "strict-local",
+  "defaultNoWrite": true,
+  "timeoutSeconds": 120,
+  "requiredChecks": [
+    "validate",
+    "harness",
+    "snapshot"
+  ],
+  "successStatus": "ok",
+  "failureBehavior": {
+    "singleLineGovernanceError": true,
+    "includeExitCode": true,
+    "includeHarnessStatus": true
+  }
+}

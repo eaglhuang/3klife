@@ -30,7 +30,9 @@
     "vectorIngestionProviderCount",
     "governancePlanEncodingTargetCount",
     "governanceSchemaRegistryEntryCount",
-    "governanceHarnessSnapshotCount"
+    "governanceHarnessSnapshotCount",
+    "governanceCiEntrypointRequiredCheckCount",
+    "governanceRunbookSectionCount"
   ],
   "coverageReport": {
     "failOnMissingSummaryKey": true,

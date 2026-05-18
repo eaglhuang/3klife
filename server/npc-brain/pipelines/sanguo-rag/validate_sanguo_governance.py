@@ -48,9 +48,11 @@ from sanguo_governance_loader import (
     load_governance_report_bundle_policy,
     load_governance_schema_registry,
     load_governance_harness_snapshot_policy,
+    load_governance_ci_entrypoint_policy,
     load_governance_plan_encoding_repair_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
+    load_governance_runbook_policy,
     load_governance_validation_stabilization_policy,
     load_full_roster_scoreboard_policy,
     load_knowledge_completion_policy,
@@ -216,6 +218,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     governance_plan_encoding_policy = load_governance_plan_encoding_repair_policy(root)
     governance_schema_registry = load_governance_schema_registry(root)
     governance_snapshot_policy = load_governance_harness_snapshot_policy(root)
+    governance_ci_policy = load_governance_ci_entrypoint_policy(root)
+    governance_runbook_policy = load_governance_runbook_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1595,6 +1599,36 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
             raise SanguoGovernanceError(f"policy-governance-harness-snapshots comparedPayloadKeys mismatch: {snapshot_id}")
         snapshot_compared_key_count += len(compared_keys)
 
+    ci_command = str(governance_ci_policy.get("command") or "").strip()
+    ci_required_checks = [str(item).strip() for item in governance_ci_policy.get("requiredChecks") or [] if str(item).strip()]
+    if not ci_command.endswith("run_sanguo_governance_ci.py"):
+        raise SanguoGovernanceError("policy-governance-ci-entrypoint command must end with run_sanguo_governance_ci.py")
+    if not str(governance_ci_policy.get("defaultRunProfile") or "").strip():
+        raise SanguoGovernanceError("policy-governance-ci-entrypoint defaultRunProfile cannot be empty")
+    if not isinstance(governance_ci_policy.get("defaultNoWrite"), bool):
+        raise SanguoGovernanceError("policy-governance-ci-entrypoint defaultNoWrite must be boolean")
+    if int(governance_ci_policy.get("timeoutSeconds") or 0) <= 0:
+        raise SanguoGovernanceError("policy-governance-ci-entrypoint timeoutSeconds must be positive")
+    if set(ci_required_checks) != {"validate", "harness", "snapshot"}:
+        raise SanguoGovernanceError("policy-governance-ci-entrypoint requiredChecks must be validate/harness/snapshot")
+
+    runbook_path_text = str(governance_runbook_policy.get("runbookPath") or "").strip()
+    runbook_required_sections = [
+        str(item).strip() for item in governance_runbook_policy.get("requiredSections") or [] if str(item).strip()
+    ]
+    if not runbook_path_text.endswith(".md"):
+        raise SanguoGovernanceError("policy-governance-runbook runbookPath must point to markdown")
+    runbook_path = Path(__file__).resolve().parent / runbook_path_text
+    if not runbook_path.exists():
+        raise SanguoGovernanceError(f"policy-governance-runbook file missing: {runbook_path}")
+    runbook_text = runbook_path.read_text(encoding="utf-8-sig")
+    for section in runbook_required_sections:
+        if f"## {section}" not in runbook_text:
+            raise SanguoGovernanceError(f"policy-governance-runbook missing section: {section}")
+    if str(governance_runbook_policy.get("consumerIndexSource") or "") != "expected_governance_files":
+        raise SanguoGovernanceError("policy-governance-runbook consumerIndexSource must be expected_governance_files")
+    runbook_consumer_count = len({row["consumer"] for row in expected_governance_files()})
+
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
         raise SanguoGovernanceError("policy-postgres-state-store-evaluation recommendationThresholds must be positive")
@@ -1789,6 +1823,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "governanceSchemaRegistryRequiredSectionCount": len(registry_sections),
         "governanceHarnessSnapshotCount": len(harness_snapshots),
         "governanceHarnessSnapshotComparedKeyCount": snapshot_compared_key_count,
+        "governanceCiEntrypointRequiredCheckCount": len(ci_required_checks),
+        "governanceRunbookSectionCount": len(runbook_required_sections),
+        "governanceRunbookConsumerCount": runbook_consumer_count,
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

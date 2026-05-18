@@ -1,0 +1,19 @@
+{
+  "id": "Policy_GovernanceRunbook_P1",
+  "description": "Defines the human-facing Sanguo governance runbook and required handoff sections.",
+  "runbookPath": "governance-runbook.zh-TW.md",
+  "consumerIndexSource": "expected_governance_files",
+  "requiredSections": [
+    "Summary",
+    "Commands",
+    "Consumer Index",
+    "Failure SOP",
+    "Phase Roadmap"
+  ],
+  "requiredCommands": [
+    "python server/npc-brain/pipelines/sanguo-rag/run_sanguo_governance_ci.py --run-profile strict-local",
+    "python server/npc-brain/pipelines/sanguo-rag/validate_sanguo_governance.py --dry-run-report",
+    "python server/npc-brain/pipelines/sanguo-rag/run_sanguo_governance_regression_harness.py --run-profile strict-local --no-write"
+  ],
+  "owner": "sanguo-governance-maintainer"
+}

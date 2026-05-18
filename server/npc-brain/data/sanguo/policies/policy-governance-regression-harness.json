@@ -17,7 +17,9 @@
     "report-bundle",
     "plan-encoding",
     "schema-registry",
-    "golden-snapshot"
+    "golden-snapshot",
+    "ci-entrypoint",
+    "runbook"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
   "fixtureManifests": [
@@ -141,6 +143,16 @@
       "phase": 42,
       "name": "Harness Golden Snapshot Diff",
       "plan": "refactor-phase42-plan.zh-TW.md"
+    },
+    {
+      "phase": 43,
+      "name": "Governance CI Entrypoint",
+      "plan": "refactor-phase43-plan.zh-TW.md"
+    },
+    {
+      "phase": 44,
+      "name": "Governance Runbook / Consumer Index",
+      "plan": "refactor-phase44-plan.zh-TW.md"
     }
   ]
 }

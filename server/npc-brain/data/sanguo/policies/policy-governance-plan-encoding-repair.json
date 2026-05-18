@@ -14,7 +14,9 @@
     "refactor-phase39-plan.zh-TW.md",
     "refactor-phase40-plan.zh-TW.md",
     "refactor-phase41-plan.zh-TW.md",
-    "refactor-phase42-plan.zh-TW.md"
+    "refactor-phase42-plan.zh-TW.md",
+    "refactor-phase43-plan.zh-TW.md",
+    "refactor-phase44-plan.zh-TW.md"
   ],
   "requiredChecks": [
     "exists",
