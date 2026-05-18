@@ -3,7 +3,7 @@ id: "TASK-DGB-0009"
 title: "Project Memory optional capability 與 conflict finder"
 owner: "ClaudeCode_Haiku"
 priority: "P2"
-status: "open"
+status: "done"
 type: "implementation"
 phase: "M0"
 created: "2026-05-17"
@@ -11,7 +11,7 @@ created_by_agent: "codex-gpt-5.5"
 related_cards: []
 depends:
   - TASK-DGB-0001
-notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無"
+notes: "2026-05-18 | 狀態: done | 驗證: node-syntax-check=pass, conflict-finder 空目錄=clean | 變更: project-memory-schema.json / conflict-finder.js / memory-authority-boundary-validator.js 建立完成 | 阻塞: 無"
 ---
 
 # TASK-DGB-0009 Project Memory optional capability 與 conflict finder

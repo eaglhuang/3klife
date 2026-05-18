@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "rollback-test-fixtures.json — TASK-DGB-0010\n\nrollback 驗證測試用的 fixture 資料集。\n每個 fixture 描述一個升降版本場景，用於驗證 upgrade-planner.js 和 backup-validator.js 的行為。\n\n測試時搭配使用：\n  node tools_node/upgrade-planner.js --current fixtures/rollback/from-0.1.0.json --target fixtures/rollback/to-0.2.0.json",
+  "type": "object",
+  "description": "rollback-test-fixtures.json — governance profile upgrade / rollback 驗證測試集",
+  "fixtures": [
+    {
+      "id": "fixture-001-minor-capability-enable",
+      "description": "啟用 projectMemory capability：0.1.0 → 0.1.1（minor bump）",
+      "tags": ["minor", "capability-enable", "projectMemory"],
+      "fromProfile": {
+        "schemaVersion": "atm.defaultGovernanceProfile.v0.1",
+        "profileId": "default-local-governance",
+        "profileVersion": "0.1.0",
+        "generatedAt": "2026-05-18T10:30:00Z",
+        "releaseTrain": {
+          "frameworkVersion": "0.0.0",
+          "atmChartVersion": "0.1.0",
+          "minimumFrameworkVersion": "0.0.0"
+        },
+        "capabilities": {
+          "projectMemory": { "enabled": false, "version": "0.1.0", "mode": "host-local" }
+        },
+        "migration": { "strategy": "none", "fromVersion": null, "notes": "initial profile" }
+      },
+      "toProfile": {
+        "schemaVersion": "atm.defaultGovernanceProfile.v0.1",
+        "profileId": "default-local-governance",
+        "profileVersion": "0.1.1",
+        "generatedAt": "2026-05-19T08:00:00Z",
+        "releaseTrain": {
+          "frameworkVersion": "0.0.0",
+          "atmChartVersion": "0.1.0",
+          "minimumFrameworkVersion": "0.0.0"
+        },
+        "capabilities": {
+          "projectMemory": { "enabled": true, "version": "0.1.0", "mode": "host-local" }
+        },
+        "migration": {
+          "strategy": "auto-upgrade",
+          "fromVersion": "0.1.0",
+          "notes": "Enable projectMemory capability",
+          "rollbackCommand": "node tools_node/backup-validator.js verify-backup --backup-dir .atm/backups/backup-20260518T103000"
+        }
+      },
+      "expectedDiffs": [
+        { "type": "profile-version", "field": "profileVersion", "from": "0.1.0", "to": "0.1.1", "bumpType": "patch" },
+        { "type": "capability-changed", "capability": "projectMemory" }
+      ],
+      "expectedUpgradeSteps": 2,
+      "rollbackScenario": {
+        "description": "若啟用 projectMemory 後發現 conflict-finder 報告衝突，需要回滾",
+        "rollbackSteps": [
+          "node tools_node/backup-validator.js verify-backup --backup-dir .atm/backups/<backup-id>",
+          "cp .atm/backups/<backup-id>/.atm/compatibility-matrix.json .atm/compatibility-matrix.json",
+          "node tools_node/upgrade-planner.js --current .atm/compatibility-matrix.json --json"
+        ],
+        "verificationCommand": "node tools_node/backup-validator.js verify-backup --backup-dir .atm/backups/<backup-id> --json"
+      }
+    },
+    {
+      "id": "fixture-002-major-version-bump",
+      "description": "主版本升級：0.1.0 → 1.0.0（major bump，需要 manual-review）",
+      "tags": ["major", "manual-review", "high-risk"],
+      "fromProfile": {
+        "schemaVersion": "atm.defaultGovernanceProfile.v0.1",
+        "profileId": "default-local-governance",
+        "profileVersion": "0.1.0",
+        "generatedAt": "2026-05-18T10:30:00Z",
+        "releaseTrain": {
+          "frameworkVersion": "0.0.0",
+          "atmChartVersion": "0.1.0",
+          "minimumFrameworkVersion": "0.0.0"
+        },
+        "capabilities": {
+          "scopeLock": { "enabled": true, "version": "0.1.0", "mode": "local-enforced" },
+          "encodingGuard": { "enabled": true, "version": "0.1.0", "mode": "local-enforced" }
+        },
+        "migration": { "strategy": "none", "fromVersion": null, "notes": "initial" }
+      },
+      "toProfile": {
+        "schemaVersion": "atm.defaultGovernanceProfile.v1.0",
+        "profileId": "default-local-governance",
+        "profileVersion": "1.0.0",
+        "generatedAt": "2026-06-01T00:00:00Z",
+        "releaseTrain": {
+          "frameworkVersion": "1.0.0",
+          "atmChartVersion": "1.0.0",
+          "minimumFrameworkVersion": "0.1.0"
+        },
+        "capabilities": {
+          "scopeLock": { "enabled": true, "version": "1.0.0", "mode": "ci-enforced" },
+          "encodingGuard": { "enabled": true, "version": "1.0.0", "mode": "ci-enforced" }
+        },
+        "migration": {
+          "strategy": "manual-review",
+          "fromVersion": "0.1.0",
+          "notes": "Major version upgrade: switch all local-enforced capabilities to ci-enforced",
+          "rollbackCommand": "node tools_node/backup-validator.js verify-backup --backup-dir .atm/backups/backup-v0.1.0-pre-major"
+        }
+      },
+      "expectedDiffs": [
+        { "type": "profile-version", "field": "profileVersion", "from": "0.1.0", "to": "1.0.0", "bumpType": "major" },
+        { "type": "release-train", "field": "releaseTrain.frameworkVersion" },
+        { "type": "release-train", "field": "releaseTrain.atmChartVersion" },
+        { "type": "release-train", "field": "releaseTrain.minimumFrameworkVersion" },
+        { "type": "capability-changed", "capability": "scopeLock" },
+        { "type": "capability-changed", "capability": "encodingGuard" }
+      ],
+      "expectedUpgradeSteps": 6,
+      "rollbackScenario": {
+        "description": "Major 升級後若 CI 管線失敗需要緊急回滾",
+        "rollbackSteps": [
+          "node tools_node/backup-validator.js verify-backup --backup-dir .atm/backups/backup-v0.1.0-pre-major",
+          "cp .atm/backups/backup-v0.1.0-pre-major/.atm/compatibility-matrix.json .atm/compatibility-matrix.json",
+          "git add .atm/compatibility-matrix.json",
+          "git commit -m 'rollback: revert governance profile to v0.1.0'"
+        ],
+        "verificationCommand": "node tools_node/upgrade-planner.js --current .atm/compatibility-matrix.json --json"
+      }
+    },
+    {
+      "id": "fixture-003-capability-removed",
+      "description": "移除 taskCards capability（廢棄清理場景）",
+      "tags": ["capability-removed", "cleanup"],
+      "fromProfile": {
+        "schemaVersion": "atm.defaultGovernanceProfile.v0.1",
+        "profileId": "default-local-governance",
+        "profileVersion": "0.1.0",
+        "generatedAt": "2026-05-18T10:30:00Z",
+        "releaseTrain": {
+          "frameworkVersion": "0.0.0",
+          "atmChartVersion": "0.1.0",
+          "minimumFrameworkVersion": "0.0.0"
+        },
+        "capabilities": {
+          "taskCards": { "enabled": false, "version": "0.1.0", "mode": "adapter" },
+          "handoff": { "enabled": true, "version": "0.1.0", "mode": "advisory" }
+        },
+        "migration": { "strategy": "none", "fromVersion": null, "notes": "initial" }
+      },
+      "toProfile": {
+        "schemaVersion": "atm.defaultGovernanceProfile.v0.1",
+        "profileId": "default-local-governance",
+        "profileVersion": "0.1.2",
+        "generatedAt": "2026-05-20T00:00:00Z",
+        "releaseTrain": {
+          "frameworkVersion": "0.0.0",
+          "atmChartVersion": "0.1.0",
+          "minimumFrameworkVersion": "0.0.0"
+        },
+        "capabilities": {
+          "handoff": { "enabled": true, "version": "0.1.1", "mode": "advisory" }
+        },
+        "migration": {
+          "strategy": "auto-upgrade",
+          "fromVersion": "0.1.0",
+          "notes": "Remove unused taskCards capability; upgrade handoff to 0.1.1"
+        }
+      },
+      "expectedDiffs": [
+        { "type": "profile-version", "field": "profileVersion", "from": "0.1.0", "to": "0.1.2", "bumpType": "patch" },
+        { "type": "capability-removed", "capability": "taskCards" },
+        { "type": "capability-changed", "capability": "handoff" }
+      ],
+      "expectedUpgradeSteps": 3,
+      "rollbackScenario": {
+        "description": "移除 taskCards 後若 agent 仍需要 task card 功能，需要回滾",
+        "rollbackSteps": [
+          "node tools_node/backup-validator.js verify-backup --backup-dir .atm/backups/<backup-id>",
+          "cp .atm/backups/<backup-id>/.atm/compatibility-matrix.json .atm/compatibility-matrix.json"
+        ],
+        "verificationCommand": "node tools_node/upgrade-planner.js --current .atm/compatibility-matrix.json --json"
+      }
+    },
+    {
+      "id": "fixture-004-no-change",
+      "description": "無差異場景：current 和 target 完全相同",
+      "tags": ["no-op", "identical"],
+      "fromProfile": {
+        "schemaVersion": "atm.defaultGovernanceProfile.v0.1",
+        "profileId": "default-local-governance",
+        "profileVersion": "0.1.0",
+        "generatedAt": "2026-05-18T10:30:00Z",
+        "releaseTrain": {
+          "frameworkVersion": "0.0.0",
+          "atmChartVersion": "0.1.0",
+          "minimumFrameworkVersion": "0.0.0"
+        },
+        "capabilities": {
+          "encodingGuard": { "enabled": true, "version": "0.1.0", "mode": "local-enforced" }
+        },
+        "migration": { "strategy": "none", "fromVersion": null, "notes": "initial" }
+      },
+      "expectedDiffs": [],
+      "expectedUpgradeSteps": 0,
+      "rollbackScenario": null
+    }
+  ],
+  "testInstructions": {
+    "description": "如何使用這份 fixture 執行 upgrade-planner 驗證",
+    "steps": [
+      "1. 從各 fixture 的 fromProfile / toProfile 產生臨時 JSON：",
+      "   node -e \"require('fs').writeFileSync('tmp-from.json', JSON.stringify(fixture.fromProfile, null, 2))\"",
+      "2. 執行 upgrade-planner：",
+      "   node tools_node/upgrade-planner.js --current tmp-from.json --target tmp-to.json --json",
+      "3. 比對輸出的 diffs 數量和類型是否符合 expectedDiffs",
+      "4. 執行 backup-validator create-backup 並驗證備份完整性：",
+      "   node tools_node/backup-validator.js create-backup --profile tmp-from.json --backup-dir /tmp/test-backup",
+      "   node tools_node/backup-validator.js verify-backup --backup-dir /tmp/test-backup/<backup-id>"
+    ]
+  }
+}

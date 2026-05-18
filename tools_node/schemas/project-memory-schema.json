@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project-memory-schema.json",
+  "title": "Project Memory Record v1",
+  "description": "Host consensus memory 條目格式。Project Memory 是可選能力（governance-profile 中的 projectMemory capability），讓 host project 跨對話保留共識，但不得覆蓋比它優先級更高的 authority 文件（ATMChart、AtomicCharter、governance-profile）。",
+  "$comment": "Authority 由高到低：atm-charter > governance-profile > project-memory > agent-runtime。project-memory 只能宣告 authorityLevel='project-memory' 或更低。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "id",
+    "capturedAt",
+    "authorityLevel",
+    "scope",
+    "content"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "project-memory/v1"
+    },
+    "kind": {
+      "const": "project-memory"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^pm-[a-z0-9-]+$",
+      "description": "唯一識別符，格式 pm-<kebab-case>，例如 pm-battle-unit-name-convention"
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "此條目建立或最後更新的 ISO 8601 timestamp"
+    },
+    "authorityLevel": {
+      "enum": ["project-memory", "agent-runtime"],
+      "description": "此條目的權威等級。project-memory 條目最高只能宣告 project-memory 或 agent-runtime，不得宣告 governance-profile 或 atm-charter。"
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "description": "此條目的作用範疇，例如 'battle-system' / 'ui-pipeline' / 'global'"
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary"],
+      "description": "條目的實際內容",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "人類可讀的共識摘要（1-5 句）"
+        },
+        "rules": {
+          "type": "array",
+          "description": "衍生的行為規則清單（非強制，advisory 性質）",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ruleId", "description"],
+            "properties": {
+              "ruleId": {
+                "type": "string",
+                "description": "規則識別符"
+              },
+              "description": {
+                "type": "string"
+              },
+              "overridePolicy": {
+                "enum": ["allow", "warn", "deny"],
+                "default": "warn",
+                "description": "其他低 authority 條目試圖覆蓋此規則時的處理策略"
+              }
+            }
+          }
+        },
+        "keyValuePairs": {
+          "type": "object",
+          "description": "任意 key-value 共識資料，值只能是 string",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "overridePolicy": {
+      "enum": ["allow", "warn", "deny"],
+      "default": "warn",
+      "description": "較低 authority 條目嘗試覆蓋此記憶條目時的全域策略（也適用於 conflict-finder）"
+    },
+    "sourceRef": {
+      "type": "string",
+      "description": "來源文件路徑或 URL（可選）"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "分類標籤（可選）"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "條目失效時間，過期後 conflict-finder 不再考慮此條目（可選）"
+    }
+  },
+  "$defs": {
+    "authorityRank": {
+      "description": "Authority 等級數值對照，數字越大優先級越高（僅供文件說明）",
+      "type": "object",
+      "properties": {
+        "agent-runtime":    { "const": 10 },
+        "project-memory":   { "const": 20 },
+        "governance-profile": { "const": 30 },
+        "atm-charter":      { "const": 40 }
+      }
+    }
+  }
+}
