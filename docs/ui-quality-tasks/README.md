@@ -8,6 +8,7 @@
 - `docs/ui-quality-tasks/*.json` 是可編輯的小 shard。
 - `docs/ui-quality-todo.json` 是由 shard 合併後生成的 aggregate manifest。
 - `docs/ui-quality-todo.json` 現在是 thin index，只含 shard 索引與 summary；完整任務資料在 shard 檔中。
+- 大型 phase shard 可以再拆成多個子 shard；父檔只保留 index stub，不放 tasks 本體。
 - `docs/agent-briefs/tasks_index.md (doc_task_0002)` (doc_task_0002) 是由 aggregate manifest 再生成的人類可讀索引。
 - shard 內的任務 `id` / 卡號格式仍以 [名詞定義文件](C:\Users\User\3KLife\docs\遊戲規格文件\系統規格書\名詞定義文件.md (doc_spec_0008)) (doc_spec_0008) 為準；本文件只規範 UI shard 的結構與生成流程。
 

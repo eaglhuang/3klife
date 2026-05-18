@@ -1,0 +1,155 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "source": "phase-dc-datacenter.json",
+  "group": "DC-3",
+  "title": "DC-3 ????",
+  "tasks": [
+    {
+      "id": "DC-3-0001",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "data-structure",
+      "title": "PersonRegistry 介面 + 資料表定義",
+      "description": "建立 assets/scripts/core/models/PersonRegistry.ts，定義 PersonRecord 介面（uid, template_id, name, gene_refs: string[], ep_base, faction, is_virtual）與 BloodlineLink 介面（child_uid, parent_uid, relation: 'F'|'M', generation）。建立對應的 person-registry.json 空骨架。",
+      "related": [
+        "DC-3-0002",
+        "DC-3-0003"
+      ],
+      "depends": [
+        "DC-1-0001"
+      ],
+      "acceptance": [
+        "PersonRecord + BloodlineLink 介面完整，0 TS errors",
+        "person-registry.json 骨架合法",
+        "型別與 GeneralUnit.ts 無衝突"
+      ],
+      "deliverables": [
+        "assets/scripts/core/models/PersonRegistry.ts",
+        "assets/resources/data/person-registry.json（空骨架）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.3 | 阻塞: DC-1-0001"
+    },
+    {
+      "id": "DC-3-0002",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "BloodlineGraph 服務實作",
+      "description": "建立 assets/scripts/core/services/BloodlineGraph.ts，提供：loadRegistry()（載入 PersonRegistry）、getAncestorChain(uid, depth): string[]（回溯祖先 uid 鏈）、calculateEP(uid): number（從 PersonRegistry 計算 EP）、getDescendants(uid): string[]（查後代）。",
+      "related": [
+        "DC-3-0001",
+        "DC-3-0003",
+        "DC-3-0004"
+      ],
+      "depends": [
+        "DC-3-0001",
+        "DC-2-0001"
+      ],
+      "acceptance": [
+        "getAncestorChain 可正確回傳 3 代 14 人 uid",
+        "calculateEP 數值與現有 BloodlineGenerator 無斷裂",
+        "5 代 500 位 + 2000 虛擬祖先模擬資料下記憶體 < 舊嵌套方案 70%",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/services/BloodlineGraph.ts"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.3, §六 M3 | 阻塞: DC-3-0001, DC-2-0001"
+    },
+    {
+      "id": "DC-3-0003",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "tooling",
+      "title": "Ancestors_JSON → ancestor_chain 遷移腳本",
+      "description": "建立 tools_node/migrate-bloodline-to-registry.js，讀取現有 generals.json 的 Ancestors_JSON 嵌套結構，自動建立 PersonRegistry 條目，並將 Ancestors_JSON 改為 ancestor_chain: string[] 格式（14 個 uid）。支援 --dry-run 旗標。遷移前自動備份。",
+      "related": [
+        "DC-3-0001",
+        "DC-3-0002",
+        "DC-3-0005"
+      ],
+      "depends": [
+        "DC-3-0001"
+      ],
+      "acceptance": [
+        "工具可執行，--dry-run 不修改檔案",
+        "遷移後 generals.json 的 ancestor_chain 含 14 個 uid",
+        "所有祖先均在 person-registry.json 中有對應條目",
+        "遷移前自動輸出 .bak 備份檔"
+      ],
+      "deliverables": [
+        "tools_node/migrate-bloodline-to-registry.js"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.3, §六 M3 | 阻塞: DC-3-0001"
+    },
+    {
+      "id": "DC-3-0004",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "BloodlineTreePanel 改為從 PersonRegistry 渲染",
+      "description": "更新現有 BloodlineTreePanel（或對應 UI 元件），改為呼叫 BloodlineGraph.getAncestorChain() 取得祖先 uid，再從 PersonRegistry 查表取得各祖先資料，取代直接讀 Ancestors_JSON 嵌套。",
+      "related": [
+        "DC-3-0002"
+      ],
+      "depends": [
+        "DC-3-0002",
+        "DC-3-0003"
+      ],
+      "acceptance": [
+        "BloodlineTreePanel 渲染結果視覺不變（截圖比對或人工確認）",
+        "不再直接讀 Ancestors_JSON 嵌套",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/panels/BloodlineTreePanel.ts（或對應檔案，更新）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M3 | 阻塞: DC-3-0002, DC-3-0003"
+    },
+    {
+      "id": "DC-3-0005",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "tooling",
+      "title": "validate-bloodline-integrity.js 完整性驗證工具",
+      "description": "建立 tools_node/validate-bloodline-integrity.js，驗證 person-registry.json 的圖完整性：所有 ancestor_chain uid 均有對應 PersonRecord、不存在孤立節點、generation 計算一致、無循環引用。",
+      "related": [
+        "DC-3-0001",
+        "DC-3-0003"
+      ],
+      "depends": [
+        "DC-3-0001"
+      ],
+      "acceptance": [
+        "工具可執行：node tools_node/validate-bloodline-integrity.js",
+        "5 代 500 位 + 2000 虛擬祖先的完整模擬資料下零 error",
+        "存在循環引用時報 error 並 exit(1)"
+      ],
+      "deliverables": [
+        "tools_node/validate-bloodline-integrity.js"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M3 | 阻塞: DC-3-0001"
+    }
+  ]
+}

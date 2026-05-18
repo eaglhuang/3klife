@@ -1,0 +1,193 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "source": "phase-dc-datacenter.json",
+  "group": "DC-2",
+  "title": "DC-2 ????????",
+  "tasks": [
+    {
+      "id": "DC-2-0001",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "DataStorageAdapter 抽象類 (IndexedDB/SQLite 雙實作)",
+      "description": "建立 assets/scripts/core/storage/DataStorageAdapter.ts（抽象類）與 IndexedDbAdapter.ts（Web 實作）、SqliteAdapter.ts（Native 實作）。統一 API：get(key)、set(key, value)、query(filter)、delete(key)、clear()、getStorageSize()。",
+      "related": [
+        "DC-2-0002",
+        "DC-2-0003",
+        "DC-2-0004",
+        "DC-2-0005"
+      ],
+      "depends": [
+        "DC-1-0001"
+      ],
+      "acceptance": [
+        "DataStorageAdapter 抽象類定義完整，0 TS errors",
+        "IndexedDbAdapter 可在 Web preview 中實際寫入/讀取",
+        "SqliteAdapter 含 stub，標記 TODO: Native 平台",
+        "API 文件完整（JSDoc）"
+      ],
+      "deliverables": [
+        "assets/scripts/core/storage/DataStorageAdapter.ts",
+        "assets/scripts/core/storage/IndexedDbAdapter.ts",
+        "assets/scripts/core/storage/SqliteAdapter.ts"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.2 | 阻塞: DC-1-0001（master 格式確定後）"
+    },
+    {
+      "id": "DC-2-0002",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "DataCatalog L0 索引層實作",
+      "description": "建立 assets/scripts/core/storage/DataCatalog.ts，從 generals-index.json 載入 L0 索引（武將 uid、name、faction、rarityTier、layerKey），提供 find(uid)、search(filter)、getActivePage() 等查詢方法。App 啟動時載入，目標 < 100ms。",
+      "related": [
+        "DC-2-0001",
+        "DC-2-0003"
+      ],
+      "depends": [
+        "DC-2-0001"
+      ],
+      "acceptance": [
+        "DataCatalog 可在 App 啟動時正確載入 generals-index.json",
+        "350 武將模擬資料下啟動 < 100ms",
+        "find() 與 search() 可正確過濾",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/storage/DataCatalog.ts",
+        "assets/resources/data/generals-index.json（空骨架）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.2 L0 | 阻塞: DC-2-0001"
+    },
+    {
+      "id": "DC-2-0003",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "DataPageLoader L1-L5 分頁載入器實作",
+      "description": "建立 assets/scripts/core/storage/DataPageLoader.ts，依 layer level (L1-L5) 和 page cursor 實作分頁載入。L1 進入 Lobby 時預載當前陣容；L2 用 page cursor 懶載倉庫；L3-L5 按需載入。搭配 DataStorageAdapter 底層。",
+      "related": [
+        "DC-2-0001",
+        "DC-2-0002",
+        "DC-2-0004"
+      ],
+      "depends": [
+        "DC-2-0001",
+        "DC-2-0002"
+      ],
+      "acceptance": [
+        "DataPageLoader 可正確載入 L1 active generals",
+        "L2 倉庫分頁 page cursor 可翻頁",
+        "倉庫分頁載入 < 50ms（350 武將模擬資料）",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/storage/DataPageLoader.ts"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.2 L1-L5 | 阻塞: DC-2-0001, DC-2-0002"
+    },
+    {
+      "id": "DC-2-0004",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "ResourceManager 擴充 loadPagedData() API",
+      "description": "在 assets/scripts/core/ResourceManager.ts 中新增 loadPagedData(layer: LayerLevel, page: number) 方法，統一對外暴露分層載入接口，底層委託 DataPageLoader。Unity 對照：Addressables.LoadAssetsAsync。",
+      "related": [
+        "DC-2-0003",
+        "DC-2-0005"
+      ],
+      "depends": [
+        "DC-2-0003"
+      ],
+      "acceptance": [
+        "loadPagedData() 方法存在且型別完整",
+        "現有 ResourceManager 功能不受影響（回歸測試）",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/ResourceManager.ts（loadPagedData 更新）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M2 | 阻塞: DC-2-0003"
+    },
+    {
+      "id": "DC-2-0005",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "MemoryManager 擴充 data scope 管理",
+      "description": "在 assets/scripts/core/MemoryManager.ts 中新增 data scope：'master-active'（Lobby 常駐）、'master-storage'（倉庫按需）、'lore'（故事 LRU 20）。實作 LRU 快取（最多 20 位武將完整故事常駐）與自動 eviction。Unity 對照：Addressables memory group。",
+      "related": [
+        "DC-2-0003",
+        "DC-2-0004"
+      ],
+      "depends": [
+        "DC-2-0003"
+      ],
+      "acceptance": [
+        "三個 data scope 均可正確管理生命週期",
+        "LRU 快取滿 20 時自動 evict 最舊武將故事",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/MemoryManager.ts（data scope 擴充）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M2 | 阻塞: DC-2-0003"
+    },
+    {
+      "id": "DC-2-0006",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "testing",
+      "title": "M2 分層載入效能基準測試",
+      "description": "撰寫 tools_node/benchmark-storage.js，模擬 350 位武將資料，量測：App 啟動 L0 載入時間、倉庫分頁 (L2) 載入時間、L3 單筆故事載入時間、記憶體峰值估算。輸出基準報告。",
+      "related": [
+        "DC-2-0001",
+        "DC-2-0002",
+        "DC-2-0003"
+      ],
+      "depends": [
+        "DC-2-0001",
+        "DC-2-0002",
+        "DC-2-0003",
+        "DC-2-0004",
+        "DC-2-0005"
+      ],
+      "acceptance": [
+        "benchmark 腳本可執行（Node.js）",
+        "L0 < 100ms、L2 分頁 < 50ms",
+        "報告含時間（ms）與估算記憶體（MB）"
+      ],
+      "deliverables": [
+        "tools_node/benchmark-storage.js",
+        "docs/tasks/benchmark-storage-report.md（首次執行報告）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M2 驗收 | 阻塞: DC-2-0001~0005"
+    }
+  ]
+}

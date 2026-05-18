@@ -1,0 +1,99 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "source": "phase-dc-datacenter.json",
+  "group": "DC-4",
+  "title": "DC-4 ??????",
+  "tasks": [
+    {
+      "id": "DC-4-0001",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "MessagePack 序列化整合",
+      "description": "在 package.json 引入 @msgpack/msgpack（純 JS 版本，無 WASM）。建立 assets/scripts/core/serialization/MsgpackCodec.ts，封裝 encode/decode，確保與 Cocos Creator 3.8 相容（不依賴 Node.js built-in）。",
+      "related": [
+        "DC-4-0002",
+        "DC-4-0003"
+      ],
+      "depends": [
+        "DC-3-0002"
+      ],
+      "acceptance": [
+        "@msgpack/msgpack 安裝正確",
+        "MsgpackCodec.encode/decode 可在 Cocos Creator Web Preview 執行",
+        "encode + decode 來回無資料損失",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/serialization/MsgpackCodec.ts",
+        "package.json（@msgpack/msgpack dependency 新增）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.4, §六 M4 | 阻塞: DC-3-0002"
+    },
+    {
+      "id": "DC-4-0002",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "pako gzip 壓縮整合",
+      "description": "整合 pako 函式庫（或確認已有依賴）。建立 assets/scripts/core/serialization/GzipCodec.ts，封裝 compress/decompress，確保在 Web 與 Native 環境均可用。",
+      "related": [
+        "DC-4-0001",
+        "DC-4-0003"
+      ],
+      "depends": [
+        "DC-4-0001"
+      ],
+      "acceptance": [
+        "GzipCodec.compress/decompress 可在 Web Preview 執行",
+        "2MB 測試資料壓縮後 < 600KB",
+        "壓縮/解壓來回無資料損失",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/serialization/GzipCodec.ts"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.4 | 阻塞: DC-4-0001"
+    },
+    {
+      "id": "DC-4-0003",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "SaveSerializer 服務實作（序列化 + 壓縮管線）",
+      "description": "建立 assets/scripts/core/services/SaveSerializer.ts，整合 MsgpackCodec + GzipCodec，提供 serialize(data): Uint8Array 與 deserialize(bytes): object。同時實作 JSON 欄位縮寫映射表（壓縮模式/展開模式雙向轉換），確保 2MB JSON → < 500KB compressed。",
+      "related": [
+        "DC-4-0001",
+        "DC-4-0002"
+      ],
+      "depends": [
+        "DC-4-0001",
+        "DC-4-0002"
+      ],
+      "acceptance": [
+        "SaveSerializer.serialize/deserialize 來回無資料損失",
+        "2MB JSON → serialize → < 500KB",
+        "deserialize < 50ms（中期存檔大小）",
+        "欄位縮寫映射表 JSON 可獨立編輯"
+      ],
+      "deliverables": [
+        "assets/scripts/core/services/SaveSerializer.ts",
+        "assets/resources/data/field-abbreviation-map.json"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.4, §六 M4 驗收 | 阻塞: DC-4-0001, DC-4-0002"
+    }
+  ]
+}

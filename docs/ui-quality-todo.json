@@ -1,15 +1,45 @@
 {
   "kind": "ui-quality-task-manifest",
   "version": 1,
-  "generated": "2026-05-18T01:47:14.711Z",
+  "generated": "2026-05-18T01:55:40.299Z",
   "_note": "Thin index. Full task data is in docs/ui-quality-tasks/*.json shards.",
   "_usage": "Read specific shard: docs/ui-quality-tasks/<shard>.json",
   "_rebuild": "node tools_node/build-ui-task-manifest.js",
   "shards": [
     {
-      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter.json",
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-0.json",
       "version": 1,
-      "taskCount": 35
+      "taskCount": 3
+    },
+    {
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-1.json",
+      "version": 1,
+      "taskCount": 7
+    },
+    {
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-2.json",
+      "version": 1,
+      "taskCount": 6
+    },
+    {
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-3.json",
+      "version": 1,
+      "taskCount": 5
+    },
+    {
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-4.json",
+      "version": 1,
+      "taskCount": 3
+    },
+    {
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-5.json",
+      "version": 1,
+      "taskCount": 5
+    },
+    {
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-6.json",
+      "version": 1,
+      "taskCount": 6
     },
     {
       "file": "docs\\ui-quality-tasks\\phase-g-agent1.json",

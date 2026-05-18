@@ -1,0 +1,228 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "source": "phase-dc-datacenter.json",
+  "group": "DC-1",
+  "title": "DC-1 ??????",
+  "tasks": [
+    {
+      "id": "DC-1-0001",
+      "priority": "P0",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "tooling",
+      "title": "建立 master/ 目錄結構與 JSON 骨架",
+      "description": "建立 assets/resources/data/master/ 目錄，並在其中放置以下 6 個空白骨架 JSON：generals-base.json、generals-lore.json、generals-stories.json、gene-dictionary.json、bloodline-templates.json、troop-definitions.json。每個檔案需有正確的根物件結構（含版本欄位與空 data 陣列）。",
+      "related": [
+        "DC-1-0003",
+        "DC-1-0004",
+        "DC-1-0006"
+      ],
+      "depends": [],
+      "acceptance": [
+        "6 個 JSON 骨架均存在且可 JSON.parse()",
+        "每個骨架含 version、updatedAt、data 欄位",
+        "validate-generals-data.js 可掃描該目錄（即使無資料也零 error）"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/generals-base.json",
+        "assets/resources/data/master/generals-lore.json",
+        "assets/resources/data/master/generals-stories.json",
+        "assets/resources/data/master/gene-dictionary.json",
+        "assets/resources/data/master/bloodline-templates.json",
+        "assets/resources/data/master/troop-definitions.json"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.1 | 阻塞: 無"
+    },
+    {
+      "id": "DC-1-0002",
+      "priority": "P0",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "tooling",
+      "title": "validate-generals-data.js 資料品質驗證工具",
+      "description": "建立 tools_node/validate-generals-data.js，讀取 assets/resources/data/master/*.json，依欄位規則驗證：必填欄位存在、型別正確、數值範圍合法（Stats 0-100、EP >= 0）、gene_refs 格式符合 GENE_ID pattern。輸出 error/warning 清單，零 error 才視為通過。",
+      "related": [
+        "DC-1-0001",
+        "DC-1-0004",
+        "DC-1-0006"
+      ],
+      "depends": [
+        "DC-1-0001"
+      ],
+      "acceptance": [
+        "工具存在且可執行：node tools_node/validate-generals-data.js",
+        "空骨架時零 error",
+        "含非法型別時回報 error 並 exit(1)",
+        "含超範圍數值時回報 error"
+      ],
+      "deliverables": [
+        "tools_node/validate-generals-data.js"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M1 | 阻塞: DC-1-0001"
+    },
+    {
+      "id": "DC-1-0003",
+      "priority": "P0",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "tooling",
+      "title": "merge-generals-master.js 資料合併工具",
+      "description": "建立 tools_node/merge-generals-master.js，從多個原始 JSON 來源（raw-wiki.json、raw-ai.json）合併去重、欄位映射，輸出至 master/generals-base.json 與 master/generals-lore.json。支援 --dry-run 旗標。",
+      "related": [
+        "DC-1-0001",
+        "DC-1-0002",
+        "DC-1-0004"
+      ],
+      "depends": [
+        "DC-1-0001",
+        "DC-1-0002"
+      ],
+      "acceptance": [
+        "工具可執行：node tools_node/merge-generals-master.js",
+        "--dry-run 不寫入檔案，只印 diff 報告",
+        "重複 uid 以已有資料為優先，不覆蓋",
+        "合併後自動執行 validate-generals-data.js"
+      ],
+      "deliverables": [
+        "tools_node/merge-generals-master.js"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.1 | 阻塞: DC-1-0001, DC-1-0002"
+    },
+    {
+      "id": "DC-1-0004",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "tooling",
+      "title": "ingest-generals-wiki.js Wiki 爬取工具",
+      "description": "建立 tools_node/ingest-generals-wiki.js，爬取維基百科三國志人物列表與光榮 Wiki 的武將數值，映射至 25 個核心欄位 + 6 大屬性 + 適性，輸出至 temp_workspace/raw-wiki.json。加入 User-Agent 設定與速率限制避免封鎖。",
+      "related": [
+        "DC-1-0003",
+        "DC-1-0005"
+      ],
+      "depends": [
+        "DC-1-0001"
+      ],
+      "acceptance": [
+        "工具可執行，成功爬取至少 10 位武將作為 smoke test",
+        "輸出 JSON 符合 GeneralBase 欄位格式",
+        "User-Agent 與速率限制已設定",
+        "遇到封鎖時不崩潰，回報 warning"
+      ],
+      "deliverables": [
+        "tools_node/ingest-generals-wiki.js"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.1, M1-A | 阻塞: DC-1-0001"
+    },
+    {
+      "id": "DC-1-0005",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "tooling",
+      "title": "ingest-generals-ai.js AI 故事生成工具",
+      "description": "建立 tools_node/ingest-generals-ai.js，從 generals-base.json 讀取武將資訊，呼叫本機 Copilot Skills（general-story-writer skill）批次生成歷史趣聞/血脈傳聞/故事條，輸出至 temp_workspace/raw-ai.json，供 merge-generals-master.js 合入。",
+      "related": [
+        "DC-1-0003",
+        "DC-1-0004"
+      ],
+      "depends": [
+        "DC-1-0001"
+      ],
+      "acceptance": [
+        "工具腳本存在且文檔清楚說明使用方式",
+        "輸出欄位包含 historicalAnecdote / bloodlineRumor / storyStripCells",
+        "遇 AI 呼叫失敗時回報 warning 並跳過，不整批失敗"
+      ],
+      "deliverables": [
+        "tools_node/ingest-generals-ai.js"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.1, M1-A | 阻塞: DC-1-0001"
+    },
+    {
+      "id": "DC-1-0006",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "content",
+      "title": "首批 50 位核心武將資料落地",
+      "description": "利用 ingest-generals-wiki.js + ingest-generals-ai.js + merge-generals-master.js pipeline，完成首批 50 位核心武將（含 generals.json 現有 10 位）的完整資料落地至 master/generals-base.json + generals-lore.json + generals-stories.json。確保 validate-generals-data.js 零 error。",
+      "related": [
+        "DC-1-0001",
+        "DC-1-0002",
+        "DC-1-0003",
+        "DC-1-0004",
+        "DC-1-0005"
+      ],
+      "depends": [
+        "DC-1-0002",
+        "DC-1-0003",
+        "DC-1-0004",
+        "DC-1-0005"
+      ],
+      "acceptance": [
+        "master/ 中含 >= 50 位武將",
+        "node tools_node/validate-generals-data.js 零 error",
+        "每位武將均有 historicalAnecdote、至少 3 格 storyStripCells",
+        "rarityTier 與 characterCategory 欄位均已填寫"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/generals-base.json（50 位）",
+        "assets/resources/data/master/generals-lore.json（50 位对应）",
+        "assets/resources/data/master/generals-stories.json（50 位对应）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M1 驗收 | 阻塞: DC-1-0002~0005"
+    },
+    {
+      "id": "DC-1-0007",
+      "priority": "P1",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "documentation",
+      "title": "武將資料管線規格書建立",
+      "description": "建立 docs/遊戲規格文件/系統規格書/武將資料管線規格書.md，說明 M1 工具鏈（ingest-wiki / ingest-ai / merge / validate 的流程、欄位映射規則、執行順序、手動審核步驟、品質標準）。",
+      "related": [
+        "DC-1-0001",
+        "DC-1-0002",
+        "DC-1-0003",
+        "DC-1-0004",
+        "DC-1-0005"
+      ],
+      "depends": [
+        "DC-1-0002"
+      ],
+      "acceptance": [
+        "docs/遊戲規格文件/系統規格書/武將資料管線規格書.md 存在",
+        "包含工具鏈流程圖（文字圖也可）",
+        "包含欄位映射表（25 核心欄位）",
+        "包含人工審核 checklist"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/武將資料管線規格書.md"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M1 | 阻塞: DC-1-0002"
+    }
+  ]
+}

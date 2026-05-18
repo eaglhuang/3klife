@@ -1,0 +1,189 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "source": "phase-dc-datacenter.json",
+  "group": "DC-6",
+  "title": "DC-6 ?????",
+  "tasks": [
+    {
+      "id": "DC-6-0001",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "content",
+      "title": "200+ 武將完整資料擴充",
+      "description": "利用 M1 管線工具，將 master/ 中武將資料從 50 位擴充至 200+ 位，每位含完整基礎屬性 + 故事條（historicalAnecdote/bloodlineRumor）+ 虛擬祖先 uid 鏈。validate-generals-data.js 零 error。",
+      "related": [
+        "DC-1-0006",
+        "DC-3-0001"
+      ],
+      "depends": [
+        "DC-1-0006",
+        "DC-3-0003"
+      ],
+      "acceptance": [
+        "master/generals-base.json 含 >= 200 位武將",
+        "validate-generals-data.js 零 error",
+        "每位均有 rarityTier、characterCategory、ancestor_chain"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/generals-base.json（200+ 位）",
+        "assets/resources/data/master/generals-lore.json（200+ 位）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M6 | 阻塞: DC-1-0006, DC-3-0003"
+    },
+    {
+      "id": "DC-6-0002",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "戰鬥日誌歸檔策略實作",
+      "description": "在 DataStorageAdapter 或 SyncManager 中實作戰鬥日誌歸檔：最近 100 場保留完整；101-200 場壓縮為季度摘要；200 場以上 2 年前刪除。提供 archiveBattleLogs() 方法供定期呼叫。",
+      "related": [
+        "DC-6-0005",
+        "DC-6-0006"
+      ],
+      "depends": [
+        "DC-2-0001",
+        "DC-3-0002"
+      ],
+      "acceptance": [
+        "超過 100 場時自動建立季度摘要",
+        "季度摘要含總勝敗/平均傷亡/關鍵事件計數",
+        "2 年前日誌可安全刪除且不影響核心存檔",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/services/BattleLogArchiver.ts"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.6, §六 M6 | 阻塞: DC-2-0001, DC-3-0002"
+    },
+    {
+      "id": "DC-6-0003",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "已故武將歸檔機制（Spirit_Card 快照）",
+      "description": "實作已故武將歸檔流程：武將死亡時，根據主職（武官/文官）建立 Spirit_Card 快照，主體資料移至 L5 歸檔層，從 L1 活躍列表移除。SpiritCard 保留 uid/name/gene_refs/ep_snapshot/deathContext。",
+      "related": [
+        "DC-2-0002",
+        "DC-6-0005"
+      ],
+      "depends": [
+        "DC-2-0001",
+        "DC-3-0002"
+      ],
+      "acceptance": [
+        "武將死亡後 Spirit_Card 建立，L1 記憶體釋放",
+        "SpiritCard 含規格書定義的全部欄位",
+        "可從 Spirit_Card uid 反查完整歸檔資料",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/services/GeneralArchiver.ts",
+        "assets/scripts/core/models/SpiritCard.ts"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.6, §六 M6 | 阻塞: DC-2-0001, DC-3-0002"
+    },
+    {
+      "id": "DC-6-0004",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "LRU 故事快取（20 位武將常駐）",
+      "description": "在 MemoryManager 的 lore scope 中實作 LRU（Least Recently Used）快取，最多允許 20 位武將的完整故事資料（generals-lore-{id}.json）同時常駐記憶體，超過時 evict 最久未存取的。",
+      "related": [
+        "DC-2-0005"
+      ],
+      "depends": [
+        "DC-2-0005"
+      ],
+      "acceptance": [
+        "LRU 快取上限 20，超過自動 evict",
+        "被 evict 的故事下次存取時可自動重載",
+        "LRU 可在 dev 模式下查看當前快取清單",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/MemoryManager.ts（LRU 故事快取更新）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §2.6 | 阻塞: DC-2-0005"
+    },
+    {
+      "id": "DC-6-0005",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "feature",
+      "title": "DataGrowthMonitor 服務實作",
+      "description": "建立 assets/scripts/core/services/DataGrowthMonitor.ts，定期（每 10 分鐘或場景切換時）評估本地儲存使用量，分為正常/warning(>5MB)/error(>10MB) 三級，warning/error 時觸發事件（EventBus 或 callback）通知玩家。",
+      "related": [
+        "DC-6-0006"
+      ],
+      "depends": [
+        "DC-2-0001"
+      ],
+      "acceptance": [
+        "DataGrowthMonitor 可在 App 初始化後靜默啟動",
+        "> 5MB 觸發 warning 事件",
+        "> 10MB 觸發 error 事件",
+        "0 TS errors"
+      ],
+      "deliverables": [
+        "assets/scripts/core/services/DataGrowthMonitor.ts"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M6 | 阻塞: DC-2-0001"
+    },
+    {
+      "id": "DC-6-0006",
+      "priority": "P2",
+      "phase": "DC",
+      "owner": "Agent1",
+      "status": "done",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "type": "testing",
+      "title": "M6 長期成長模擬測試",
+      "description": "撰寫 tools_node/simulate-data-growth.js，模擬 1000 天遊玩、500 位武將、10000 場戰鬥的儲存增長情境，輸出每個里程碑節點的預估存檔大小（compressed）。驗收：500 位武將 + 10000 場戰鬥 → 存檔 < 5MB compressed。",
+      "related": [
+        "DC-6-0002",
+        "DC-6-0003",
+        "DC-6-0005"
+      ],
+      "depends": [
+        "DC-6-0002",
+        "DC-6-0003",
+        "DC-6-0004",
+        "DC-6-0005"
+      ],
+      "acceptance": [
+        "simulate 腳本可執行（Node.js）",
+        "1000 天/500 武將/10000 場戰鬥模擬存檔 < 5MB compressed",
+        "報告含各資料類型的分項大小"
+      ],
+      "deliverables": [
+        "tools_node/simulate-data-growth.js",
+        "docs/tasks/simulate-data-growth-report.md（首次執行報告）"
+      ],
+      "notes": "2026-04-06 | 狀態: open | 來源: 資料中心架構規格書.md §六 M6 驗收 | 阻塞: DC-6-0002~0005"
+    }
+  ]
+}
