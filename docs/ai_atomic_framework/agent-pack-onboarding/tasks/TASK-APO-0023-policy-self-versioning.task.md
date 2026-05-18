@@ -3,9 +3,11 @@ doc_id: doc_other_0176
 task_id: TASK-APO-0023
 title: Policy self-versioning + auto matrix PR
 milestone: M10
-status: in-progress
+status: done
 started_at: 2026-05-18T11:01:40+08:00
 started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-18T11:15:21+08:00
+completed_by_agent: vs-insiders-gpt-5.4
 blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -30,6 +32,7 @@ forbidden_files:
 non_goals:
   - 改寫整份政策內容（僅加 self-versioning 機制）
 created_at: 2026-05-18T00:00:00+08:00
+commit: f3f904a (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
 ---
 
@@ -48,9 +51,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] policy_version 為非法 semver 時 validate-policy-self-version.ts 失敗。
-- [ ] auto-matrix-pr workflow 在 fixture release 後產出可機器解析 diff PR。
-- [ ] validator 加入 standard profile。
+- [x] policy_version 為非法 semver 時 validate-policy-self-version.ts 失敗。
+- [x] auto-matrix-pr workflow 在 fixture release 後產出可機器解析 diff PR。
+- [x] validator 加入 standard profile。
 
 ## 驗證方式
 
@@ -62,3 +65,4 @@ node --experimental-strip-types scripts/validate-policy-self-version.ts --mode v
 ## Notes
 
 2026-05-18 | 狀態: in-progress | 驗證: pending | 變更: vs-insiders-gpt-5.4 接手實作 policy self-versioning + auto matrix PR；補入 README.md / CONTRIBUTING.md scope 以滿足本卡目標 4 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: `node --experimental-strip-types scripts/validate-policy-self-version.ts --mode validate` pass；`node --experimental-strip-types tests/policy-version/policy-self-version.test.ts` pass；`npm run validate:standard` pass（53/53） | 變更: AI-Atomic-Framework commit f3f904a 新增 upstream policy frontmatter、自動 compatibility-matrix diff PR workflow、matrix diff generator、policy validator、README/CONTRIBUTING 流程說明與 standard profile gate | 阻塞: none

@@ -3,9 +3,11 @@ doc_id: doc_other_0177
 task_id: TASK-APO-0024
 title: Time+minor deprecation + canary rollout
 milestone: M10
-status: in-progress
+status: done
 started_at: 2026-05-18T11:01:40+08:00
 started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-18T11:15:21+08:00
+completed_by_agent: vs-insiders-gpt-5.4
 blocked_by: [TASK-APO-0013]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -30,6 +32,7 @@ non_goals:
   - 重做整套 SemVer 規則
   - 提供具體 deprecation 條目（屬 release-time 決策）
 created_at: 2026-05-18T00:00:00+08:00
+commit: f3f904a (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
 ---
 
@@ -48,9 +51,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] 條目時間未到但 minor 已過 → validator 失敗（雙條件 AND）。
-- [ ] `upgrade apply --canary 25` fixture 只套用 25% 檔案，可 rollback。
-- [ ] validator 加入 standard profile。
+- [x] 條目時間未到但 minor 已過 → validator 失敗（雙條件 AND）。
+- [x] `upgrade apply --canary 25` fixture 只套用 25% 檔案，可 rollback。
+- [x] validator 加入 standard profile。
 
 ## 驗證方式
 
@@ -62,3 +65,4 @@ node --experimental-strip-types scripts/validate-deprecation-policy.ts --mode va
 ## Notes
 
 2026-05-18 | 狀態: in-progress | 驗證: pending | 變更: vs-insiders-gpt-5.4 接手實作 time+minor deprecation + canary rollout；補入 release-npm workflow scope 以滿足本卡目標 4 | 阻塞: TASK-APO-0013（已完成）
+2026-05-18 | 狀態: done | 驗證: `node --experimental-strip-types scripts/validate-deprecation-policy.ts --mode validate` pass；`node --experimental-strip-types tests/deprecation/deprecation-policy.test.ts` pass；`npm run validate:standard` pass（53/53） | 變更: AI-Atomic-Framework commit f3f904a 新增 time+minor deprecation validator、DEPRECATIONS 表格契約、release reminder issue workflow、`upgrade apply --canary <percent>` canary state 與 rollback smoke、standard profile gate | 阻塞: TASK-APO-0013 已完成
