@@ -1312,5 +1312,65 @@
     "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/ATM 技術債重構計畫書.md",
     "title": "ATM 技術債重構計畫書",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0231",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0025-triangle-plan-normalization.task.md",
+    "title": "TASK-APO-0025 — Triangle strategy plan normalization and task split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0232",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0026-npc-brain-baseline-freeze.task.md",
+    "title": "TASK-APO-0026 — npc-brain baseline freeze and eligibility report",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0233",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-disposable-first-touch-lab.task.md",
+    "title": "TASK-APO-0027 — Disposable lab first-touch evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0234",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0028-evidence-triage-routing.task.md",
+    "title": "TASK-APO-0028 — Evidence triage and upstream routing",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0235",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0029-upstream-blocker-repair-batch.task.md",
+    "title": "TASK-APO-0029 — Upstream blocker repair batch",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0236",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0030-candidate-onboarding-branch.task.md",
+    "title": "TASK-APO-0030 — npc-brain candidate official onboarding branch",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0237",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0031-adopter-sentinel-integration.task.md",
+    "title": "TASK-APO-0031 — Existing adopter sentinel integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0238",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0032-adopter-evidence-sop.task.md",
+    "title": "TASK-APO-0032 — Adopter evidence feedback SOP",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0239",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0033-3klife-experiment-graduation.task.md",
+    "title": "TASK-APO-0033 — 3KLife experiment graduation SOP",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0240",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0034-release-gate-promotion.task.md",
+    "title": "TASK-APO-0034 — Release gate promotion for adopter validation",
+    "category": "other"
   }
 ]
