@@ -1707,13 +1707,14 @@
       "title": "Document Identity registry schema / resolver",
       "owner": "ClaudeCode_Haiku",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
       "created_by_agent": "codex-gpt-5.5",
-      "started_at": "",
-      "started_by_agent": "codex-gpt-5.5",
+      "started_at": "2026-05-18T09:11:00+08:00",
+      "started_by_agent": "vs-code-gpt-5.4-mini",
+      "completed_at": "2026-05-18T09:14:30.3842956+08:00",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -1739,16 +1740,33 @@
       "contracts": {
         "input": [],
         "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
+        "validation_cmd": "node --check tools_node/assign-doc-id.js && node -e \"require('./.atm/schema/document-id.schema.json');\" && node tools_node/resolve-doc-id.js doc_spec_0001 && node tools_node/doc-id-registry.js --verify",
+        "rollback_hint": "remove .atm/schema/document-id.schema.json and tools_node/assign-doc-id.js, then continue using tools_node/doc-id-registry.js directly",
+        "execution_steps": [
+          "新增 document-id schema",
+          "新增 assign-doc-id wrapper",
+          "沿用既有 resolver 與 registry 實作"
+        ]
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
-        "trace_artifacts": [],
-        "metrics_summary": []
+        "artifact_paths": [
+          ".atm/schema/document-id.schema.json",
+          "tools_node/assign-doc-id.js"
+        ],
+        "validation_evidence": [
+          "schema parsed successfully from .atm/schema/document-id.schema.json",
+          "resolver lookup for doc_spec_0001 succeeded",
+          "registry verify executed against current doc-id registry"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [
+          ".atm/schema/document-id.schema.json"
+        ],
+        "metrics_summary": [
+          "schema_parse: pass",
+          "resolver_lookup: pass",
+          "wrapper_entrypoint: pass"
+        ]
       }
     },
     {

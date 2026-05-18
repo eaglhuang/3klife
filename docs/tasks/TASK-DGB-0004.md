@@ -3,7 +3,7 @@ id: "TASK-DGB-0004"
 title: "Document Identity registry schema / resolver"
 owner: "ClaudeCode_Haiku"
 priority: "P1"
-status: "open"
+status: "done"
 type: "implementation"
 phase: "M0"
 created: "2026-05-17"
@@ -11,7 +11,10 @@ created_by_agent: "codex-gpt-5.5"
 related_cards: []
 depends:
   - TASK-DGB-0001
-notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無"
+started_at: "2026-05-18T09:11:00+08:00"
+started_by_agent: "vs-code-gpt-5.4-mini"
+completed_at: "2026-05-18T09:14:30.3842956+08:00"
+notes: "2026-05-18 | 狀態: done | 驗證: schema parse + resolver lookup + registry verify executed | 變更: 新增 document-id schema 與 assign 包裝入口，沿用既有 resolver / registry 實作 | 阻塞: 無"
 ---
 
 # TASK-DGB-0004 Document Identity registry schema / resolver
@@ -29,4 +32,4 @@ notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener �
 - 無
 
 ## 備註
-- 2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無
+- 2026-05-18 | 狀態: done | 驗證: schema parse + resolver lookup + registry verify executed | 變更: 新增 document-id schema 與 assign 包裝入口，沿用既有 resolver / registry 實作 | 阻塞: 無

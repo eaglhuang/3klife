@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://3klife.local/schema/document-id-registry/v0.1",
+  "title": "Document Identity Registry Source Payload",
+  "description": "Canonical payload used to rebuild and shard the document identity registry.",
+  "type": "object",
+  "required": [
+    "generated",
+    "note",
+    "entries"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "generated": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Generation date for the registry payload."
+    },
+    "note": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registry provenance note."
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/registryEntry"
+      },
+      "description": "Registry entries sorted by doc_id."
+    }
+  },
+  "definitions": {
+    "docId": {
+      "type": "string",
+      "pattern": "^(doc_(tech|ui|art|data|spec|index|task|ai|agentskill|other)_\\d{4}|doc_server_(service|pipeline|data|ops|other)_\\d{4})$"
+    },
+    "registryEntry": {
+      "type": "object",
+      "required": [
+        "id",
+        "path",
+        "title",
+        "category"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/docId"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$",
+          "description": "Repository-relative markdown path."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable document title."
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "tech",
+            "ui",
+            "art",
+            "data",
+            "spec",
+            "index",
+            "task",
+            "ai",
+            "agentskill",
+            "server",
+            "other"
+          ]
+        },
+        "subtype": {
+          "type": "string",
+          "enum": [
+            "service",
+            "pipeline",
+            "data",
+            "ops",
+            "other"
+          ],
+          "description": "Required only for server documents."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "const": "server"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "subtype"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
