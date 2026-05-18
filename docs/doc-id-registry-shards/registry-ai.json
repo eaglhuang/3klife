@@ -109,13 +109,13 @@
   },
   {
     "id": "doc_ai_0019",
-    "path": "docs/agent-briefs/agent1-instructions.md",
+    "path": "docs/legacy/agent-collaboration/agent1-instructions.md",
     "title": "Agent1 Instructions",
     "category": "ai"
   },
   {
     "id": "doc_ai_0020",
-    "path": "docs/agent-briefs/agent2-instructions.md",
+    "path": "docs/legacy/agent-collaboration/agent2-instructions.md",
     "title": "Agent2 Instructions",
     "category": "ai"
   },

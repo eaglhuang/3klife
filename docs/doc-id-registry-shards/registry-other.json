@@ -994,5 +994,311 @@
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0024-time-minor-deprecation-canary.task.md",
     "title": "TASK-APO-0024 — Time+minor Deprecation + Canary Rollout",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0178",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-01.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0179",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-02.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0180",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-03.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0181",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-04.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0182",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-05.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0183",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-06.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0184",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-07.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0185",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-08.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0186",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-09.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0187",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-10.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0188",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-11.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0189",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-12.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0190",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-13.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0191",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-14.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0192",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-15.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0193",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-16.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0194",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-17.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0195",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-18.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0196",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-19.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0197",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-20.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0198",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-21.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0199",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-22.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0200",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-23.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0201",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-24.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0202",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-25.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0203",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-26.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0204",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-27.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0205",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-28.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0206",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-29.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0207",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-30.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0208",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-31.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0209",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-32.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0210",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-33.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0211",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-34.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0212",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-35.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0213",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-36.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0214",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-37.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0215",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-38.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0216",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-39.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0217",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-40.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0218",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-41.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0219",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-42.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0220",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-43.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0221",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-44.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0222",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-45.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0223",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-46.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0224",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-47.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0225",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server-part-48.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0226",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-01.md",
+    "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0227",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-02.md",
+    "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0228",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-03.md",
+    "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "category": "other"
   }
 ]

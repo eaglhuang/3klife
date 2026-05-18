@@ -86,3 +86,12 @@ Design System*.zip
 # LangGraph runtime
 #//////////////////////////
 server/npc-brain/.langgraph_api/
+
+#//////////////////////////
+# Server NPC-Brain generated output
+# (already covered by root-level `local/` and `artifacts/` above,
+#  but listed explicitly here to prevent doc-id scanner ambiguity)
+#//////////////////////////
+server/npc-brain/local/
+server/npc-brain/artifacts/
+server/npc-brain/server/npc-brain/

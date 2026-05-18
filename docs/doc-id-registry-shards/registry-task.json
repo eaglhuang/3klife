@@ -1,7 +1,7 @@
 [
   {
     "id": "doc_task_0001",
-    "path": "docs/agent-briefs/tasks_index_worldbuilding_2026-04-02.md",
+    "path": "docs/legacy/agent-collaboration/tasks_index_worldbuilding_2026-04-02.md",
     "title": "世界觀後續任務索引",
     "category": "task"
   },
@@ -2193,6 +2193,72 @@
     "id": "doc_task_0374",
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0056.md",
     "title": "[ATM-2-0056] Single-source governance profile for shared enforcement surfaces",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0375",
+    "path": "docs/tasks/TASK-DGB-0000.md",
+    "title": "TASK-DGB-0000 Default Governance Profile 計畫定稿與中立性掃描",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0376",
+    "path": "docs/tasks/TASK-DGB-0001.md",
+    "title": "TASK-DGB-0001 Profile schema 與 compatibility matrix 接線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0377",
+    "path": "docs/tasks/TASK-DGB-0002.md",
+    "title": "TASK-DGB-0002 Encoding Guard profile 升級",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0378",
+    "path": "docs/tasks/TASK-DGB-0003.md",
+    "title": "TASK-DGB-0003 Context Budget policy 配置化",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0379",
+    "path": "docs/tasks/TASK-DGB-0004.md",
+    "title": "TASK-DGB-0004 Document Identity registry schema / resolver",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0380",
+    "path": "docs/tasks/TASK-DGB-0005.md",
+    "title": "TASK-DGB-0005 Document Sharding manager / health check",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0381",
+    "path": "docs/tasks/TASK-DGB-0006.md",
+    "title": "TASK-DGB-0006 Markdown task card adapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0382",
+    "path": "docs/tasks/TASK-DGB-0007.md",
+    "title": "TASK-DGB-0007 Scope Guard / dirty tree validator",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0383",
+    "path": "docs/tasks/TASK-DGB-0008.md",
+    "title": "TASK-DGB-0008 Handoff / turn artifact schema",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0384",
+    "path": "docs/tasks/TASK-DGB-0009.md",
+    "title": "TASK-DGB-0009 Project Memory optional capability 與 conflict finder",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0385",
+    "path": "docs/tasks/TASK-DGB-0010.md",
+    "title": "TASK-DGB-0010 Upgrade plan / backup / rollback validation",
     "category": "task"
   }
 ]

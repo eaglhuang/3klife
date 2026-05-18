@@ -43,7 +43,7 @@
       "name": "registry-task",
       "title": "任務卡類（task）",
       "path": "docs/doc-id-registry-shards/registry-task.json",
-      "count": 366
+      "count": 377
     },
     {
       "name": "registry-ai",
@@ -61,13 +61,13 @@
       "name": "registry-server",
       "title": "Server 文件類（server）",
       "path": "docs/doc-id-registry-shards/registry-server.json",
-      "count": 13338
+      "count": 71
     },
     {
       "name": "registry-other",
       "title": "其它類（other）",
       "path": "docs/doc-id-registry-shards/registry-other.json",
-      "count": 166
+      "count": 217
     }
   ]
 }

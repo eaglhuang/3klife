@@ -26,7 +26,9 @@ const ROOT = path.resolve(__dirname, '..');
 const REGISTRY_JSON = registryStore.REGISTRY_JSON;
 const REGISTRY_MD = registryStore.REGISTRY_MD;
 const REGISTRY_SHARD_DIR = registryStore.SHARD_DIR;
+const REGISTRY_MD_SHARD_DIR = path.join(ROOT, 'docs', 'doc-id-registry-md-shards');
 const SERVER_REF_MD = path.join(ROOT, 'server', 'server_docs_reference.md');
+const REGISTRY_MD_MAX_LINES = 300;
 
 const STANDARD_DOC_ID_RE = /^doc_(tech|ui|art|data|spec|index|task|ai|agentskill|other)_(\d{4})$/i;
 const SERVER_DOC_ID_RE = /^doc_server_(service|pipeline|data|ops|other)_(\d{4})$/i;
@@ -49,6 +51,33 @@ const SERVER_SUBTYPES = ['service', 'pipeline', 'data', 'ops', 'other'];
 
 const CAT_PREFIX = Object.fromEntries(CATEGORIES.map(([category, prefix]) => [category, prefix]));
 const CAT_LABEL = Object.fromEntries(CATEGORIES.map(([category, , label]) => [category, label]));
+const REGISTRY_MD_GROUPS = [
+  {
+    name: 'doc-id-registry-stats',
+    title: '分類統計',
+    categories: ['__stats__'],
+  },
+  {
+    name: 'doc-id-registry-tech-ui-art',
+    title: 'Tech / UI / Art / Data',
+    categories: ['tech', 'ui', 'art', 'data'],
+  },
+  {
+    name: 'doc-id-registry-spec-index-task',
+    title: 'Spec / Index / Task',
+    categories: ['spec', 'index', 'task'],
+  },
+  {
+    name: 'doc-id-registry-agent-server',
+    title: 'AI / AgentSkill / Server',
+    categories: ['ai', 'agentskill', 'server'],
+  },
+  {
+    name: 'doc-id-registry-other',
+    title: '其它類',
+    categories: ['other'],
+  },
+];
 const documentIndexAdapter = createDocumentIndexAdapter({
   profilePath: path.join(ROOT, 'tools_node', 'adapters', 'atm-3klife', 'doc-index-profile.json'),
 });
@@ -174,12 +203,35 @@ function testTech(fileName, normalizedPath) {
   return false;
 }
 
+// Directories whose name alone is enough to skip (anywhere in tree).
+// These are always generated/transient outputs and must never hold permanent doc_id.
+const SCAN_SKIP_DIR_NAMES = new Set([
+  'node_modules', 'library', 'temp', '.git',
+  'local',        // server/npc-brain/local — codex-smoke run outputs
+  'artifacts',    // server/npc-brain/artifacts — pipeline intermediate products
+  'generated',    // generic generated output dir
+  'dist',         // build output
+  '.langgraph_api',
+  '__pycache__',
+]);
+
+// Full absolute subtree exclusions — anything inside these paths is excluded.
+// Used for nested duplicates like server/npc-brain/server/npc-brain.
+const SCAN_SKIP_SUBTREES = [
+  path.join(ROOT, 'server', 'npc-brain', 'server'),
+].map((p) => p.replace(/\\/g, '/'));
+
+function isInSkippedSubtree(absPath) {
+  const normalized = absPath.replace(/\\/g, '/');
+  return SCAN_SKIP_SUBTREES.some((sub) => normalized === sub || normalized.startsWith(sub + '/'));
+}
+
 function scanMdFiles(rootDirs) {
   const files = [];
-  const skipDirs = new Set(['node_modules', 'library', 'temp', '.git']);
 
   function walk(dirPath) {
     if (!fs.existsSync(dirPath)) return;
+    if (isInSkippedSubtree(dirPath)) return;
 
     let entries;
     try {
@@ -189,7 +241,7 @@ function scanMdFiles(rootDirs) {
     }
 
     for (const entry of entries) {
-      if (skipDirs.has(entry.name)) continue;
+      if (SCAN_SKIP_DIR_NAMES.has(entry.name)) continue;
       const fullPath = path.join(dirPath, entry.name);
       if (entry.isDirectory()) {
         walk(fullPath);
@@ -328,6 +380,13 @@ function allocateNextDocId(nextNumbers, category, subtype) {
     ? `${CAT_PREFIX[category]}_${subtype || 'other'}`
     : CAT_PREFIX[category];
   const nextNumber = nextNumbers[prefix] || 1;
+  if (nextNumber > 9999) {
+    throw new Error(
+      `\u26d4  doc_id namespace exhausted for prefix '${prefix}' (next=${nextNumber}, max=9999).\n` +
+      '   Root cause: generated/local/artifact paths are being scanned as permanent docs.\n' +
+      '   Fix: check SCAN_SKIP_DIR_NAMES / SCAN_SKIP_SUBTREES in doc-id-registry.js.'
+    );
+  }
   nextNumbers[prefix] = nextNumber + 1;
   return `${prefix}_${String(nextNumber).padStart(4, '0')}`;
 }
@@ -505,22 +564,27 @@ function writeRegistryJsonSharded(registry, generatedDate) {
 }
 
 function writeRegistryMarkdown(registry, generatedDate) {
+  fs.mkdirSync(REGISTRY_MD_SHARD_DIR, { recursive: true });
+
   const catCounts = {};
   for (const [, data] of Object.entries(registry)) {
     catCounts[data.category] = (catCounts[data.category] || 0) + 1;
   }
   const total = Object.values(catCounts).reduce((sum, count) => sum + count, 0);
 
+  const groupFiles = REGISTRY_MD_GROUPS.map((group) => writeRegistryMarkdownGroup(group, registry, catCounts, total, generatedDate));
+
   const lines = [
     '# 文件代號 Registry (doc-id-registry)',
     '',
     `> 生成日期: ${generatedDate}`,
     '> 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。',
-    '> **唯一真相來源。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。',
+    '> **已拆分為可讀分片，本檔為索引入口。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。',
     '> `docs/doc-id-registry.json` 現在是 index stub；實際 machine-readable 內容位於 `docs/doc-id-registry-shards/registry-*.json`。',
+    '> 人工閱讀請優先讀 `docs/doc-id-registry-md-shards/*.md`；若分片仍偏大，先開對應 part 索引。',
     '> 若只是人工閱讀大 shard，優先看 auto-parts：`docs/doc-id-registry-shards/registry-spec/registry-spec-part-*.json`、`docs/doc-id-registry-shards/registry-task/registry-task-part-*.json`。',
     '> 新增文件：`node tools_node/doc-id-registry.js --assign <path>`',
-    '> 只想重建 shards：`node tools_node/doc-id-registry.js --reshard-current`',
+    '> 重建：`node tools_node/doc-id-registry.js`',
     '',
     '## 分類統計',
     '',
@@ -534,38 +598,26 @@ function writeRegistryMarkdown(registry, generatedDate) {
   }
 
   lines.push(`| **合計** | — | **${total}** |`);
-  lines.push('', '---', '');
+  lines.push('');
+  lines.push('## Markdown 分片');
+  lines.push('');
+  lines.push('| 分片 | 路徑 | 行數 | 說明 |');
+  lines.push('|------|------|-----:|------|');
 
-  for (const [category, prefix, label] of CATEGORIES) {
-    const entries = Object.entries(registry).filter(([, value]) => value.category === category);
-    if (!entries.length) continue;
-
-    if (category === 'server') {
-      lines.push(`## ${label} (\`doc_server_<subtype>\`)`);
-      lines.push('');
-      lines.push('| doc_id | 子類型 | 路徑 | 標題 |');
-      lines.push('|--------|--------|------|------|');
-      for (const [id, data] of entries) {
-        const safeTitle = data.title.replace(/\|/g, '&#124;');
-        lines.push(`| \`${id}\` | ${data.subtype || 'other'} | ${data.path} | ${safeTitle} |`);
-      }
-      lines.push('');
-      continue;
-    }
-
-    lines.push(`## ${label} (\`${prefix}\`)`);
-    lines.push('');
-    lines.push('| doc_id | 路徑 | 標題 |');
-    lines.push('|--------|------|------|');
-    for (const [id, data] of entries) {
-      const safeTitle = data.title.replace(/\|/g, '&#124;');
-      lines.push(`| \`${id}\` | ${data.path} | ${safeTitle} |`);
-    }
-    lines.push('');
+  for (const groupFile of groupFiles) {
+    lines.push(`| ${groupFile.title} | ${groupFile.path} | ${groupFile.lineCount} | ${groupFile.description} |`);
   }
 
-  writeTextAtomicSync(REGISTRY_MD, lines.join('\n'));
-  console.log('✅ Written: docs/doc-id-registry.md');
+  lines.push('');
+  lines.push('## 使用方式');
+  lines.push('');
+  lines.push('- 需要查某個 doc_id：直接用 `node tools_node/resolve-doc-id.js <doc_id>`。');
+  lines.push('- 需要看某個大類：先開對應 markdown 分片；若該分片是索引 stub，再往下讀 part。');
+  lines.push('- 需要 machine-readable 真相：讀 `docs/doc-id-registry-shards/registry-*.json`，不要把本檔當完整 registry。');
+  lines.push('');
+
+  writeTextAtomicSync(REGISTRY_MD, `${lines.join('\n').trimEnd()}\n`);
+  console.log(`✅ Written: docs/doc-id-registry.md (index stub + ${groupFiles.length} shard entries)`);
 }
 
 function writeRegistry(registry, options = {}) {
@@ -617,6 +669,208 @@ function writeServerDocsReference(registry) {
   console.log('✅ Written: server/server_docs_reference.md');
 }
 
+function writeRegistryMarkdownGroup(group, registry, catCounts, total, generatedDate) {
+  const basePath = path.join(REGISTRY_MD_SHARD_DIR, `${group.name}.md`);
+  cleanupRegistryMarkdownParts(group.name);
+
+  const units = buildRegistryMarkdownUnits(group, registry, catCounts, total);
+  const parts = packRegistryMarkdownUnits(group, units, generatedDate);
+
+  if (parts.length <= 1) {
+    const partLines = parts.length === 1
+      ? parts[0].lines
+      : buildRegistryMarkdownShardLines(group, generatedDate, [`## ${group.title}`, '', '_目前無資料_', '']);
+    writeTextAtomicSync(basePath, `${partLines.join('\n').trimEnd()}\n`);
+    return {
+      title: group.title,
+      path: `docs/doc-id-registry-md-shards/${group.name}.md`,
+      lineCount: partLines.length,
+      description: '單一分片',
+    };
+  }
+
+  const partRows = [];
+  for (let index = 0; index < parts.length; index += 1) {
+    const partNumber = String(index + 1).padStart(2, '0');
+    const partName = `${group.name}-part-${partNumber}.md`;
+    const partPath = path.join(REGISTRY_MD_SHARD_DIR, partName);
+    const partLines = buildRegistryMarkdownShardLines(
+      group,
+      generatedDate,
+      parts[index].bodyLines,
+      { partIndex: index + 1, totalParts: parts.length }
+    );
+    writeTextAtomicSync(partPath, `${partLines.join('\n').trimEnd()}\n`);
+    partRows.push({
+      path: `docs/doc-id-registry-md-shards/${partName}`,
+      lineCount: partLines.length,
+    });
+  }
+
+  const stubLines = [
+    `# Doc ID Registry Markdown Index — ${group.title}`,
+    '',
+    `> 生成日期: ${generatedDate}`,
+    `> 這是 \`doc-id-registry.md\` 的「${group.title}」分片索引。`,
+    `> 本分片已再切成 ${parts.length} 個 part；每份不超過 ${REGISTRY_MD_MAX_LINES} 行。`,
+    '',
+    '| Part | 路徑 | 行數 |',
+    '|------|------|-----:|',
+    ...partRows.map((row, index) => `| ${index + 1} | ${row.path} | ${row.lineCount} |`),
+    '',
+  ];
+
+  writeTextAtomicSync(basePath, `${stubLines.join('\n').trimEnd()}\n`);
+  return {
+    title: group.title,
+    path: `docs/doc-id-registry-md-shards/${group.name}.md`,
+    lineCount: stubLines.length,
+    description: `${parts.length} 個 parts`,
+  };
+}
+
+function buildRegistryMarkdownUnits(group, registry, catCounts, total) {
+  if (group.categories.includes('__stats__')) {
+    return [
+      {
+        lines: buildRegistryStatsLines(catCounts, total),
+      },
+    ];
+  }
+
+  const units = [];
+  for (const category of group.categories) {
+    const entries = Object.entries(registry)
+      .filter(([, value]) => value.category === category)
+      .sort(([leftId], [rightId]) => leftId.localeCompare(rightId));
+    if (!entries.length) {
+      continue;
+    }
+
+    units.push(...buildRegistryCategorySectionChunks(category, entries));
+  }
+
+  return units;
+}
+
+function buildRegistryStatsLines(catCounts, total) {
+  const lines = [
+    '## 分類統計',
+    '',
+    '| 類別 | 前綴 | 數量 |',
+    '|------|------|-----:|',
+  ];
+
+  for (const [category, prefix, label] of CATEGORIES) {
+    const prefixDisplay = category === 'server' ? '`doc_server_<subtype>`' : `\`${prefix}\``;
+    lines.push(`| ${label} | ${prefixDisplay} | ${catCounts[category] || 0} |`);
+  }
+
+  lines.push(`| **合計** | — | **${total}** |`);
+  lines.push('');
+  return lines;
+}
+
+function buildRegistryCategorySectionChunks(category, entries) {
+  const prefix = CAT_PREFIX[category];
+  const label = CAT_LABEL[category];
+  const isServer = category === 'server';
+  const tableHeader = isServer
+    ? ['| doc_id | 子類型 | 路徑 | 標題 |', '|--------|--------|------|------|']
+    : ['| doc_id | 路徑 | 標題 |', '|--------|------|------|'];
+  const baseHeading = isServer
+    ? `${label} (\`doc_server_<subtype>\`)`
+    : `${label} (\`${prefix}\`)`;
+  const rowLines = entries.map(([id, data]) => {
+    const safeTitle = escapeRegistryMarkdownCell(data.title);
+    if (isServer) {
+      return `| \`${id}\` | ${data.subtype || 'other'} | ${data.path} | ${safeTitle} |`;
+    }
+    return `| \`${id}\` | ${data.path} | ${safeTitle} |`;
+  });
+
+  const fixedLineCount = 5;
+  const maxRowsPerChunk = Math.max(1, REGISTRY_MD_MAX_LINES - 8 - fixedLineCount);
+  const totalChunks = Math.ceil(rowLines.length / maxRowsPerChunk);
+  const chunks = [];
+
+  for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex += 1) {
+    const start = chunkIndex * maxRowsPerChunk;
+    const rows = rowLines.slice(start, start + maxRowsPerChunk);
+    const heading = totalChunks > 1
+      ? `## ${baseHeading} — Part ${chunkIndex + 1}/${totalChunks}`
+      : `## ${baseHeading}`;
+    chunks.push({
+      lines: [heading, '', ...tableHeader, ...rows, ''],
+    });
+  }
+
+  return chunks;
+}
+
+function packRegistryMarkdownUnits(group, units, generatedDate) {
+  if (!units.length) {
+    return [];
+  }
+
+  const headerLineBudget = buildRegistryMarkdownShardLines(group, generatedDate, []).length;
+  const maxBodyLines = Math.max(1, REGISTRY_MD_MAX_LINES - headerLineBudget);
+  const parts = [];
+  let currentBodyLines = [];
+  let currentLineCount = 0;
+
+  for (const unit of units) {
+    if (currentBodyLines.length > 0 && currentLineCount + unit.lines.length > maxBodyLines) {
+      parts.push({ bodyLines: currentBodyLines.slice(), lines: buildRegistryMarkdownShardLines(group, generatedDate, currentBodyLines.slice()) });
+      currentBodyLines = [];
+      currentLineCount = 0;
+    }
+
+    currentBodyLines.push(...unit.lines);
+    currentLineCount += unit.lines.length;
+  }
+
+  if (currentBodyLines.length > 0) {
+    parts.push({ bodyLines: currentBodyLines.slice(), lines: buildRegistryMarkdownShardLines(group, generatedDate, currentBodyLines.slice()) });
+  }
+
+  return parts;
+}
+
+function buildRegistryMarkdownShardLines(group, generatedDate, bodyLines, options = {}) {
+  const isPart = Number.isInteger(options.partIndex) && Number.isInteger(options.totalParts) && options.totalParts > 1;
+  const note = isPart
+    ? `> 這是 \`doc-id-registry.md\` 的「${group.title}」分片，第 ${options.partIndex}/${options.totalParts} part。完整分片索引見 \`docs/doc-id-registry-md-shards/${group.name}.md\`。`
+    : `> 這是 \`doc-id-registry.md\` 的「${group.title}」分片。`;
+
+  return [
+    `# Doc ID Registry Markdown Index — ${group.title}`,
+    '',
+    `> 生成日期: ${generatedDate}`,
+    note,
+    '> 本檔由 `node tools_node/doc-id-registry.js` 自動生成。',
+    '',
+    ...bodyLines,
+  ];
+}
+
+function cleanupRegistryMarkdownParts(groupName) {
+  if (!fs.existsSync(REGISTRY_MD_SHARD_DIR)) {
+    return;
+  }
+
+  const partRegex = new RegExp(`^${groupName}-part-\\d+\\.md$`, 'u');
+  for (const entry of fs.readdirSync(REGISTRY_MD_SHARD_DIR, { withFileTypes: true })) {
+    if (entry.isFile() && partRegex.test(entry.name)) {
+      fs.unlinkSync(path.join(REGISTRY_MD_SHARD_DIR, entry.name));
+    }
+  }
+}
+
+function escapeRegistryMarkdownCell(value) {
+  return String(value || '').replace(/\|/g, '&#124;');
+}
+
 function verifyRegistry() {
   if (!fs.existsSync(REGISTRY_JSON)) {
     console.error('Registry not found. Run without --verify first.');
@@ -634,6 +888,22 @@ function verifyRegistry() {
     if (seenPaths.has(data.path)) errors.push(`Duplicate path: ${data.path} (${id})`);
     seenIds.add(id);
     seenPaths.add(data.path);
+
+    // Validate doc_id format (must parse cleanly)
+    const parsed = parseDocIdMeta(id);
+    if (!parsed) {
+      errors.push(`Invalid doc_id format (does not match schema): ${id}`);
+      continue;
+    }
+    if (parsed.number > 9999) {
+      errors.push(`doc_id exceeds 4-digit limit: ${id} (number=${parsed.number}) — run a clean rebuild after fixing scan exclusions`);
+    }
+
+    // Warn about paths that are inside excluded subtrees
+    const absPath = path.join(ROOT, data.path).replace(/\\/g, '/');
+    if (isInSkippedSubtree(absPath)) {
+      warnings.push(`Registered path is inside an excluded subtree: ${data.path} (${id})`);
+    }
 
     const fullPath = path.join(ROOT, data.path);
     if (!fs.existsSync(fullPath)) {
