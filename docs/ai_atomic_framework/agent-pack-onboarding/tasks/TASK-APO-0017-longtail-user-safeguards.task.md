@@ -3,7 +3,12 @@ doc_id: doc_other_0170
 task_id: TASK-APO-0017
 title: Long-tail user safeguards — append-only matrix + offline first-touch + downgrade detect
 milestone: M9
-status: open
+status: done
+started_at: 2026-05-18T09:43:50+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-18T10:02:46+08:00
+completed_by_agent: vs-insiders-gpt-5.4
+commit: 8a4fc9d (AI-Atomic-Framework main)
 blocked_by: [TASK-APO-0012]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -14,12 +19,18 @@ alphaGate: validate:standard
 public_tracking: false
 executionMode: planned-upstream-change
 allowed_files:
+  - compatibility-matrix.json
   - compatibility-matrix.legacy.json
   - schemas/governance/compatibility-matrix.schema.json
   - packages/cli/src/commands/atm-chart.ts
+  - packages/cli/src/commands/command-specs.ts
   - packages/cli/src/commands/doctor.ts
   - packages/cli/src/commands/upgrade.ts
+  - scripts/build-release-integrity.ts
+  - scripts/build-root-drop-release.ts
+  - scripts/validate-upgrade-rollback.ts
   - scripts/validate-version-compatibility.ts
+  - tests/cli-fixtures/help-snapshots/upgrade.json
   - tests/longtail/**
   - docs/LONGTAIL_USERS.md
 forbidden_files:
@@ -48,9 +59,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] downgrade fixture 觸發 read-only mode + warn message。
-- [ ] offline fixture 不會 fail，僅 warn 並繼續 read-only。
-- [ ] unknown chart 預設拒寫；加 `--allow-unknown-chart` 後可進入 upgrade plan。
+- [x] downgrade fixture 觸發 read-only mode + warn message。
+- [x] offline fixture 不會 fail，僅 warn 並繼續 read-only。
+- [x] unknown chart 預設拒寫；加 `--allow-unknown-chart` 後可進入 upgrade plan。
 
 ## 驗證方式
 
@@ -62,3 +73,4 @@ node --experimental-strip-types scripts/validate-version-compatibility.ts --mode
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 long-tail user safeguards 後續卡 | 阻塞: TASK-APO-0012
+2026-05-18 | 狀態: done | 驗證: `longtail-user-safeguards.test.ts` PASS；`validate-version-compatibility.ts --mode validate` PASS；`validate-upgrade-rollback.ts --mode validate` PASS；`validate-cli.ts --mode validate` PASS；root-drop / onefile release validators PASS；`build-release-integrity.ts --dry-run` PASS；`validate:standard` 中本卡相關 gate PASS，但既有 `multi-agent-confidence` generated matrix stale 仍使整體 profile exit 1 | 變更: AI-Atomic-Framework commit `8a4fc9d` 新增 legacy matrix、compatibility schema、bundled snapshot fallback warning、framework downgrade cache/read-only diagnostic、unknown chart fail-closed override、release bundle/integrity 同捆與長尾測試文件；補列 task allowed_files 中實作必要的主 matrix、CLI help snapshot、release scripts 與 upgrade rollback validator | 阻塞: none
