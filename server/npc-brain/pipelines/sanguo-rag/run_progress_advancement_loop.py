@@ -356,16 +356,38 @@ def existing_round_json_paths(base_progress_path: str | Path) -> list[str]:
     resolved_rows: list[str] = []
     seen: set[str] = set()
     for row in rows:
-        raw = Path(str(row))
-        resolved = raw if raw.is_absolute() else (REPO_ROOT / raw)
+        resolved = resolve_existing_path(str(row))
         if not resolved.exists():
             continue
         key = str(resolved.resolve())
         if key in seen:
             continue
         seen.add(key)
-        resolved_rows.append(str(raw))
+        resolved_rows.append(str(resolved))
     return resolved_rows
+
+
+def _coerce_float(value: Any) -> float | None:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def campaign_progress_score(summary: dict[str, Any]) -> tuple[int, float]:
+    result_score = _coerce_float(summary.get("resultOverallPercent"))
+    if result_score is not None:
+        return (2, result_score)
+    delta_score = _coerce_float(summary.get("deltaOverallPercent"))
+    if delta_score is not None:
+        return (1, delta_score)
+    return (0, 0.0)
+
+
+def campaign_summary_is_better(candidate: dict[str, Any], current: dict[str, Any]) -> bool:
+    if not current:
+        return True
+    return campaign_progress_score(candidate) > campaign_progress_score(current)
 
 
 def _to_int(value: Any) -> int:
@@ -2741,6 +2763,14 @@ def main() -> None:
         final_repair_task_summary: dict[str, Any] = {}
         round_pending_items: list[dict[str, Any]] = []
         success = False
+        best_round_id = final_round_id
+        best_summary_path = final_summary_path
+        best_output_paths = final_output_paths
+        best_command_result: dict[str, Any] = {}
+        best_campaign_summary: dict[str, Any] = {}
+        best_repair_task_summary: dict[str, Any] = {}
+        best_pending_items: list[dict[str, Any]] = []
+        best_success = False
 
         while True:
             pass_round_id = round_id_base if rerun_count <= 0 else f"{round_id_base}-rerun{rerun_count}"
@@ -2812,11 +2842,32 @@ def main() -> None:
                 }
                 if args.emit_ready_eval:
                     pass_base_paths["readyEvalEvents"] = output_paths["readyEvalEvents"]
+                if campaign_summary_is_better(campaign_summary, best_campaign_summary):
+                    best_round_id = pass_round_id
+                    best_summary_path = summary_path
+                    best_output_paths = output_paths
+                    best_command_result = command_result
+                    best_campaign_summary = campaign_summary
+                    best_repair_task_summary = repair_task_summary
+                    best_pending_items = pass_pending_items
+                    best_success = True
 
             if rerun_triggered:
                 rerun_count += 1
                 continue
             break
+
+        if best_success:
+            final_round_id = best_round_id
+            final_summary_path = best_summary_path
+            final_output_paths = best_output_paths
+            final_command_result = best_command_result
+            final_campaign_summary = best_campaign_summary
+            final_repair_task_summary = best_repair_task_summary
+            round_pending_items = best_pending_items
+            success = best_success
+        for pass_record in round_passes:
+            pass_record["selectedAsBestPass"] = str(pass_record.get("roundId") or "") == str(final_round_id)
 
         delta = (final_campaign_summary or {}).get("deltaOverallPercent")
         try:

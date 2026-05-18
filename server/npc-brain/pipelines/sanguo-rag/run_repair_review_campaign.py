@@ -264,15 +264,14 @@ def existing_round_json_paths(base_progress_path: str) -> list[str]:
     resolved_rows: list[str] = []
     seen: set[str] = set()
     for row in rows:
-        raw = Path(str(row))
-        resolved = raw if raw.is_absolute() else (REPO_ROOT / raw)
+        resolved = resolve_existing_path(str(row))
         if not resolved.exists():
             continue
         key = str(resolved.resolve())
         if key in seen:
             continue
         seen.add(key)
-        resolved_rows.append(str(raw))
+        resolved_rows.append(str(resolved))
     return resolved_rows
 
 
