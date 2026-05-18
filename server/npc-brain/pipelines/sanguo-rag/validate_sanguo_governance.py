@@ -46,6 +46,7 @@ from sanguo_governance_loader import (
     load_governance_completion_ledger_policy,
     load_governance_run_profiles_policy,
     load_governance_report_bundle_policy,
+    load_governance_plan_encoding_repair_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -210,6 +211,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     governance_completion_ledger_policy = load_governance_completion_ledger_policy(root)
     governance_run_profiles_policy = load_governance_run_profiles_policy(root)
     governance_report_bundle_policy = load_governance_report_bundle_policy(root)
+    governance_plan_encoding_policy = load_governance_plan_encoding_repair_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1504,6 +1506,37 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not required_payload_keys or any(not item for item in required_payload_keys):
         raise SanguoGovernanceError("policy-governance-report-bundle requiredPayloadKeys cannot be empty")
 
+
+    plan_targets = [str(item).strip() for item in governance_plan_encoding_policy.get("targetPlanFiles") or []]
+    forbidden_fragments = ["\ufffd" if str(item).upper() == "U+FFFD" else str(item) for item in governance_plan_encoding_policy.get("forbiddenFragments") or []]
+    required_title_prefix = str(governance_plan_encoding_policy.get("requiredTitlePrefix") or "").strip()
+    if not plan_targets or any(not item for item in plan_targets):
+        raise SanguoGovernanceError("policy-governance-plan-encoding-repair targetPlanFiles cannot be empty")
+    if not forbidden_fragments:
+        raise SanguoGovernanceError("policy-governance-plan-encoding-repair forbiddenFragments cannot be empty")
+    plan_root = Path(__file__).resolve().parent
+    for relative_name in plan_targets:
+        if Path(relative_name).name != relative_name:
+            raise SanguoGovernanceError(f"policy-governance-plan-encoding-repair target must be filename only: {relative_name}")
+        plan_path = plan_root / relative_name
+        if not plan_path.exists():
+            raise SanguoGovernanceError(f"phase plan missing: {plan_path}")
+        data = plan_path.read_bytes()
+        if data.startswith(b"\xef\xbb\xbf"):
+            raise SanguoGovernanceError(f"phase plan must not contain UTF-8 BOM: {plan_path}")
+        try:
+            text = data.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise SanguoGovernanceError(f"phase plan is not UTF-8 readable: {plan_path}:{exc.start}") from exc
+        for fragment in forbidden_fragments:
+            if fragment and fragment in text:
+                raise SanguoGovernanceError(f"phase plan contains forbidden fragment {fragment!r}: {plan_path}")
+        title = next((line.strip() for line in text.splitlines() if line.startswith("# ")), "")
+        if not title:
+            raise SanguoGovernanceError(f"phase plan title missing: {plan_path}")
+        if required_title_prefix and not title.startswith(f"# {required_title_prefix}"):
+            raise SanguoGovernanceError(f"phase plan title prefix mismatch: {plan_path} title={title}")
+
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
         raise SanguoGovernanceError("policy-postgres-state-store-evaluation recommendationThresholds must be positive")
@@ -1693,6 +1726,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "governanceRunProfileFlagCount": len(run_profile_flag_names),
         "governanceReportBundleFileCount": len(report_files),
         "governanceReportBundleRequiredPayloadKeyCount": len(required_payload_keys),
+        "governancePlanEncodingTargetCount": len(plan_targets),
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

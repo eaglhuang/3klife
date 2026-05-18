@@ -27,7 +27,8 @@
     "governanceRunProfileCount",
     "governanceReportBundleFileCount",
     "postgresStateThresholdCount",
-    "vectorIngestionProviderCount"
+    "vectorIngestionProviderCount",
+    "governancePlanEncodingTargetCount"
   ],
   "coverageReport": {
     "failOnMissingSummaryKey": true,

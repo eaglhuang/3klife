@@ -14,7 +14,8 @@
     "failure-triage",
     "completion-ledger",
     "run-profile",
-    "report-bundle"
+    "report-bundle",
+    "plan-encoding"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
   "fixtureManifests": [
@@ -123,6 +124,11 @@
       "phase": 39,
       "name": "Governance Report Bundle Manifest",
       "plan": "refactor-phase39-plan.zh-TW.md"
+    },
+    {
+      "phase": 40,
+      "name": "Governance Plan Encoding Repair",
+      "plan": "refactor-phase40-plan.zh-TW.md"
     }
   ]
 }

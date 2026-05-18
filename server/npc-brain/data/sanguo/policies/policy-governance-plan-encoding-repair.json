@@ -1,0 +1,26 @@
+{
+  "id": "Policy_GovernancePlanEncodingRepair_P1",
+  "description": "Defines Phase 40 plan encoding repair targets and guards against unreadable phase plan titles.",
+  "requiredTitlePrefix": "NPC-brain / Sanguo-RAG",
+  "forbiddenFragments": [
+    "????",
+    "U+FFFD"
+  ],
+  "targetPlanFiles": [
+    "refactor-phase8-plan.zh-TW.md",
+    "refactor-phase36-plan.zh-TW.md",
+    "refactor-phase37-plan.zh-TW.md",
+    "refactor-phase38-plan.zh-TW.md",
+    "refactor-phase39-plan.zh-TW.md",
+    "refactor-phase40-plan.zh-TW.md"
+  ],
+  "requiredChecks": [
+    "exists",
+    "utf8-readable",
+    "no-bom",
+    "no-replacement-character",
+    "title-present",
+    "title-readable",
+    "title-prefix"
+  ]
+}
