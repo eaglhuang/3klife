@@ -1306,5 +1306,11 @@
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md",
     "title": "3KLife ATM 採用三角策略規劃書",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0230",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/ATM 技術債重構計畫書.md",
+    "title": "ATM 技術債重構計畫書",
+    "category": "other"
   }
 ]
