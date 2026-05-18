@@ -10,6 +10,8 @@ from sanguo_governance_loader import (
     SanguoGovernanceError,
     load_governance_drift_detection_policy,
     load_governance_operator_summary_policy,
+    load_governance_failure_triage_policy,
+    load_governance_completion_ledger_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -33,12 +35,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--release-readiness-policy", default=None, help="Override policy-governance-release-readiness.json path")
     parser.add_argument("--drift-detection-policy", default=None, help="Override policy-governance-drift-detection.json path")
     parser.add_argument("--operator-summary-policy", default=None, help="Override policy-governance-operator-summary.json path")
+    parser.add_argument("--failure-triage-policy", default=None, help="Override policy-governance-failure-triage.json path")
+    parser.add_argument("--completion-ledger-policy", default=None, help="Override policy-governance-completion-ledger.json path")
     parser.add_argument("--output-root", default=None, help="Output root for harness reports")
     parser.add_argument("--strict-phase-plans", action="store_true", help="Fail if a planned phase document is missing")
     parser.add_argument("--strict-validation-coverage", action="store_true", help="Fail if required validation summary keys are missing")
     parser.add_argument("--strict-fixtures", action="store_true", help="Fail if fixture manifests or referenced files are missing")
     parser.add_argument("--strict-release-readiness", action="store_true", help="Fail if release readiness checks are not satisfied")
     parser.add_argument("--strict-drift", action="store_true", help="Fail if governance drift checks are not satisfied")
+    parser.add_argument("--strict-triage", action="store_true", help="Fail if governance failure triage has any open item")
+    parser.add_argument("--strict-completion-ledger", action="store_true", help="Fail if governance completion ledger has missing plans")
     parser.add_argument("--no-write", action="store_true", help="Print JSON payload without writing report files")
     return parser.parse_args()
 
@@ -213,6 +219,8 @@ def operator_summary(
         "status": payload_status,
         "releaseReadiness": readiness["status"],
         "governanceDrift": drift["status"],
+        "failureTriage": f"{summary.get('governanceFailureTriageItemCount', 0)} items / {summary.get('governanceFailureTriageHighSeverityCount', 0)} high severity",
+        "completionLedger": f"{summary.get('governanceCompletionLedgerCompletedCount', 0)} completed / {summary.get('governanceCompletionLedgerPhaseCount', 0)} phases",
         "handoffIndex": f"{summary.get('handoffSectionCount', 0)} sections / {summary.get('handoffConsumerCount', 0)} consumers",
         "fixtureMatrix": f"{summary.get('fixtureManifestCount', 0)} manifests / {summary.get('missingFixtureFileCount', 0)} missing files",
     }
@@ -232,6 +240,86 @@ def operator_summary(
         "audiences": [str(item) for item in policy.get("audiences") or []],
         "sectionCount": len(sections),
         "sections": sections,
+    }
+
+
+def completion_ledger(policy: dict[str, Any], phase_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    phase_range = policy.get("phaseRange") if isinstance(policy.get("phaseRange"), dict) else {}
+    min_phase = int(phase_range.get("min") or 0)
+    max_phase = int(phase_range.get("max") or 0)
+    labels = policy.get("statusLabels") if isinstance(policy.get("statusLabels"), dict) else {}
+    completed_label = str(labels.get("completed") or "completed")
+    missing_label = str(labels.get("missingPlan") or "missing-plan")
+    rows: list[dict[str, Any]] = []
+    for row in phase_rows:
+        phase_value = int(row.get("phase") or 0)
+        if phase_value < min_phase or phase_value > max_phase:
+            continue
+        status = completed_label if row.get("planExists") else missing_label
+        rows.append(
+            {
+                "phase": phase_value,
+                "name": row.get("name"),
+                "plan": row.get("plan"),
+                "status": status,
+            }
+        )
+    missing = [row for row in rows if row["status"] == missing_label]
+    return {
+        "status": "ok" if not missing else "failed",
+        "phaseCount": len(rows),
+        "completedCount": len(rows) - len(missing),
+        "missingPlanCount": len(missing),
+        "rows": rows,
+    }
+
+
+def failure_triage(
+    policy: dict[str, Any],
+    summary: dict[str, Any],
+    coverage: dict[str, Any],
+    readiness: dict[str, Any],
+    drift: dict[str, Any],
+    completion: dict[str, Any],
+    fixture_rows: list[dict[str, Any]],
+    missing_phase_plans: list[dict[str, Any]],
+) -> dict[str, Any]:
+    source_values = dict(summary)
+    source_values["governanceCompletionLedgerMissingPlanCount"] = completion.get("missingPlanCount", 0)
+    examples = {
+        "missingPhasePlanCount": [str(row.get("plan") or "") for row in missing_phase_plans[:5]],
+        "missingValidationSummaryKeyCount": [str(item) for item in (coverage.get("missingSummaryKeys") or [])[:5]],
+        "missingFixtureFileCount": [str(item) for row in fixture_rows for item in (row.get("missingFiles") or [])][:5],
+        "fixtureManifestErrorCount": [str(row.get("path") or "") for row in fixture_rows if row.get("manifestError")][:5],
+        "releaseReadinessFailureCount": [str(row.get("key") or "") for row in readiness.get("checks", []) if not row.get("ok")][:5],
+        "governanceDriftFailureCount": [str(row.get("key") or "") for row in drift.get("checks", []) if not row.get("ok")][:5],
+        "governanceCompletionLedgerMissingPlanCount": [str(row.get("plan") or "") for row in completion.get("rows", []) if row.get("status") == "missing-plan"][:5],
+    }
+    items: list[dict[str, Any]] = []
+    for row in policy.get("categories") or []:
+        if not isinstance(row, dict):
+            continue
+        source_metric = str(row.get("sourceMetric") or "")
+        count = int(source_values.get(source_metric, 0) or 0)
+        if count <= 0:
+            continue
+        items.append(
+            {
+                "key": str(row.get("key") or source_metric),
+                "sourceMetric": source_metric,
+                "count": count,
+                "severity": str(row.get("severity") or "medium"),
+                "owner": str(row.get("owner") or "governance-maintainer"),
+                "action": str(row.get("action") or "Inspect the harness payload."),
+                "examples": examples.get(source_metric, []),
+            }
+        )
+    high_severity = [item for item in items if item["severity"] in {"critical", "high"}]
+    return {
+        "status": "ok" if not items else "attention",
+        "itemCount": len(items),
+        "highSeverityCount": len(high_severity),
+        "items": items,
     }
 
 
@@ -293,6 +381,18 @@ def render_markdown(payload: dict[str, Any]) -> str:
     lines.append(f"- Status: `{drift['status']}`")
     lines.append(f"- Checks: `{drift['checkCount']}`")
     lines.append(f"- Failures: `{drift['failureCount']}`")
+    lines.extend(["", "## Failure Triage", ""])
+    triage = payload["failureTriage"]
+    lines.append(f"- Status: `{triage['status']}`")
+    lines.append(f"- Items: `{triage['itemCount']}`")
+    lines.append(f"- High Severity Items: `{triage['highSeverityCount']}`")
+    for item in triage["items"]:
+        lines.append(f"- `{item['key']}` severity=`{item['severity']}` owner=`{item['owner']}` count=`{item['count']}`")
+    lines.extend(["", "## Completion Ledger", ""])
+    ledger = payload["completionLedger"]
+    lines.append(f"- Status: `{ledger['status']}`")
+    lines.append(f"- Completed: `{ledger['completedCount']}` / `{ledger['phaseCount']}`")
+    lines.append(f"- Missing Plans: `{ledger['missingPlanCount']}`")
     lines.extend(["", "## Operator Summary", ""])
     for row in payload["operatorSummary"]["sections"]:
         lines.append(f"- {row['label']}: `{row['value']}`")
@@ -327,6 +427,14 @@ def main() -> None:
             root,
             governance_operator_summary_policy=args.operator_summary_policy,
         )
+        failure_triage_policy = load_governance_failure_triage_policy(
+            root,
+            governance_failure_triage_policy=args.failure_triage_policy,
+        )
+        completion_ledger_policy = load_governance_completion_ledger_policy(
+            root,
+            governance_completion_ledger_policy=args.completion_ledger_policy,
+        )
         expected_rows = validate_expected_files(root)
         shape_summary = validate_minimum_shapes(root)
     except SanguoGovernanceError as exc:
@@ -359,6 +467,13 @@ def main() -> None:
     drift = governance_drift(drift_policy, summary)
     summary["governanceDriftCheckCount"] = drift["checkCount"]
     summary["governanceDriftFailureCount"] = drift["failureCount"]
+    completion = completion_ledger(completion_ledger_policy, phase_rows)
+    summary["governanceCompletionLedgerPhaseCount"] = completion["phaseCount"]
+    summary["governanceCompletionLedgerCompletedCount"] = completion["completedCount"]
+    summary["governanceCompletionLedgerMissingPlanCount"] = completion["missingPlanCount"]
+    triage = failure_triage(failure_triage_policy, summary, coverage, readiness, drift, completion, fixture_rows, missing_phase_plans)
+    summary["governanceFailureTriageItemCount"] = triage["itemCount"]
+    summary["governanceFailureTriageHighSeverityCount"] = triage["highSeverityCount"]
     status = "ok"
     if args.strict_phase_plans and missing_phase_plans:
         status = "failed"
@@ -369,6 +484,10 @@ def main() -> None:
     if args.strict_release_readiness and readiness["status"] != "ok":
         status = "failed"
     if args.strict_drift and drift["status"] != "ok":
+        status = "failed"
+    if args.strict_completion_ledger and completion["status"] != "ok":
+        status = "failed"
+    if args.strict_triage and triage["itemCount"]:
         status = "failed"
     operator = operator_summary(operator_policy, status, summary, readiness, drift)
     summary["operatorSummarySectionCount"] = operator["sectionCount"]
@@ -383,6 +502,8 @@ def main() -> None:
         "handoffIndex": handoff,
         "releaseReadiness": readiness,
         "governanceDrift": drift,
+        "failureTriage": triage,
+        "completionLedger": completion,
         "operatorSummary": operator,
         "expectedGovernanceFiles": expected_rows,
         "minimumShapeSummary": shape_summary,

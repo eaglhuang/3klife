@@ -1,0 +1,70 @@
+{
+  "id": "Policy_GovernanceFailureTriage_P1",
+  "description": "Defines deterministic failure triage categories for Sanguo governance regression harness results.",
+  "severityOrder": [
+    "critical",
+    "high",
+    "medium",
+    "low"
+  ],
+  "requiredCategories": [
+    "missingPhasePlans",
+    "missingValidationSummaryKeys",
+    "missingFixtureFiles",
+    "fixtureManifestErrors",
+    "releaseReadinessFailures",
+    "governanceDriftFailures",
+    "completionLedgerMissingPlans"
+  ],
+  "categories": [
+    {
+      "key": "missingPhasePlans",
+      "sourceMetric": "missingPhasePlanCount",
+      "severity": "high",
+      "owner": "pipeline-governance",
+      "action": "Add or repair the missing phase plan document, then update the phase matrix if needed."
+    },
+    {
+      "key": "missingValidationSummaryKeys",
+      "sourceMetric": "missingValidationSummaryKeyCount",
+      "severity": "high",
+      "owner": "governance-validator",
+      "action": "Add the missing validator summary metric or remove the stale required key from validation policy."
+    },
+    {
+      "key": "missingFixtureFiles",
+      "sourceMetric": "missingFixtureFileCount",
+      "severity": "high",
+      "owner": "regression-fixtures",
+      "action": "Restore the fixture file or update the fixture manifest with the new deterministic path."
+    },
+    {
+      "key": "fixtureManifestErrors",
+      "sourceMetric": "fixtureManifestErrorCount",
+      "severity": "high",
+      "owner": "regression-fixtures",
+      "action": "Fix fixture manifest JSON syntax and required file references."
+    },
+    {
+      "key": "releaseReadinessFailures",
+      "sourceMetric": "releaseReadinessFailureCount",
+      "severity": "critical",
+      "owner": "release-review",
+      "action": "Inspect releaseReadiness.checks before treating governance as releasable."
+    },
+    {
+      "key": "governanceDriftFailures",
+      "sourceMetric": "governanceDriftFailureCount",
+      "severity": "medium",
+      "owner": "governance-maintainer",
+      "action": "Compare current harness summary against drift policy baselines and update only if the change is intentional."
+    },
+    {
+      "key": "completionLedgerMissingPlans",
+      "sourceMetric": "governanceCompletionLedgerMissingPlanCount",
+      "severity": "medium",
+      "owner": "pipeline-governance",
+      "action": "Add the missing completion ledger plan or mark the phase out of scope in the ledger policy."
+    }
+  ]
+}

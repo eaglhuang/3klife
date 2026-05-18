@@ -22,6 +22,8 @@
     "runtimeKeywordCategoryLimitCount",
     "convergenceResumeManifestKeyCount",
     "governanceRegressionPhaseCount",
+    "governanceFailureTriageCategoryCount",
+    "governanceCompletionLedgerRequiredPhaseCount",
     "postgresStateThresholdCount",
     "vectorIngestionProviderCount"
   ],

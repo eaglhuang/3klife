@@ -7,11 +7,34 @@
     "release-reviewer"
   ],
   "summarySections": [
-    {"key": "status", "label": "Harness Status"},
-    {"key": "releaseReadiness", "label": "Release Readiness"},
-    {"key": "governanceDrift", "label": "Governance Drift"},
-    {"key": "handoffIndex", "label": "Handoff Coverage"},
-    {"key": "fixtureMatrix", "label": "Fixture Coverage"}
+    {
+      "key": "status",
+      "label": "Harness Status"
+    },
+    {
+      "key": "releaseReadiness",
+      "label": "Release Readiness"
+    },
+    {
+      "key": "governanceDrift",
+      "label": "Governance Drift"
+    },
+    {
+      "key": "failureTriage",
+      "label": "Failure Triage"
+    },
+    {
+      "key": "completionLedger",
+      "label": "Completion Ledger"
+    },
+    {
+      "key": "handoffIndex",
+      "label": "Handoff Coverage"
+    },
+    {
+      "key": "fixtureMatrix",
+      "label": "Fixture Coverage"
+    }
   ],
   "requiredPayloadKeys": [
     "status",
@@ -19,6 +42,8 @@
     "releaseReadiness",
     "governanceDrift",
     "handoffIndex",
-    "fixtureMatrix"
+    "fixtureMatrix",
+    "failureTriage",
+    "completionLedger"
   ]
 }

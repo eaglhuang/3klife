@@ -42,6 +42,8 @@ from sanguo_governance_loader import (
     load_full_roster_runner_governance,
     load_governance_drift_detection_policy,
     load_governance_operator_summary_policy,
+    load_governance_failure_triage_policy,
+    load_governance_completion_ledger_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -202,6 +204,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     governance_release_policy = load_governance_release_readiness_policy(root)
     governance_drift_policy = load_governance_drift_detection_policy(root)
     governance_operator_policy = load_governance_operator_summary_policy(root)
+    governance_failure_triage_policy = load_governance_failure_triage_policy(root)
+    governance_completion_ledger_policy = load_governance_completion_ledger_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1412,6 +1416,44 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         if not isinstance(row, dict) or not str(row.get("key") or "").strip() or not str(row.get("label") or "").strip():
             raise SanguoGovernanceError("policy-governance-operator-summary summarySections require key/label")
 
+    triage_severity_order = [str(item).strip() for item in governance_failure_triage_policy.get("severityOrder") or []]
+    if not triage_severity_order or any(not item for item in triage_severity_order):
+        raise SanguoGovernanceError("policy-governance-failure-triage severityOrder cannot be empty")
+    triage_required = [str(item).strip() for item in governance_failure_triage_policy.get("requiredCategories") or []]
+    triage_categories = governance_failure_triage_policy.get("categories")
+    if not isinstance(triage_categories, list) or not triage_categories:
+        raise SanguoGovernanceError("policy-governance-failure-triage categories cannot be empty")
+    triage_keys: set[str] = set()
+    for row in triage_categories:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-governance-failure-triage category rows must be objects")
+        key = str(row.get("key") or "").strip()
+        severity = str(row.get("severity") or "").strip()
+        owner = str(row.get("owner") or "").strip()
+        action = str(row.get("action") or "").strip()
+        source_metric = str(row.get("sourceMetric") or "").strip()
+        if not key or not severity or not owner or not action or not source_metric:
+            raise SanguoGovernanceError("policy-governance-failure-triage categories require key/sourceMetric/severity/owner/action")
+        if severity not in triage_severity_order:
+            raise SanguoGovernanceError(f"policy-governance-failure-triage unsupported severity: {severity}")
+        if key in triage_keys:
+            raise SanguoGovernanceError(f"policy-governance-failure-triage duplicate category: {key}")
+        triage_keys.add(key)
+    missing_triage = sorted(set(triage_required) - triage_keys)
+    if missing_triage:
+        raise SanguoGovernanceError(f"policy-governance-failure-triage missing required categories: {', '.join(missing_triage)}")
+    ledger_phase_range = governance_completion_ledger_policy.get("phaseRange") if isinstance(governance_completion_ledger_policy.get("phaseRange"), dict) else {}
+    ledger_min_phase = int(ledger_phase_range.get("min") or 0)
+    ledger_max_phase = int(ledger_phase_range.get("max") or 0)
+    if ledger_min_phase <= 0 or ledger_max_phase < ledger_min_phase:
+        raise SanguoGovernanceError("policy-governance-completion-ledger phaseRange must be positive and ordered")
+    ledger_status_labels = governance_completion_ledger_policy.get("statusLabels") if isinstance(governance_completion_ledger_policy.get("statusLabels"), dict) else {}
+    if not str(ledger_status_labels.get("completed") or "").strip() or not str(ledger_status_labels.get("missingPlan") or "").strip():
+        raise SanguoGovernanceError("policy-governance-completion-ledger statusLabels must include completed/missingPlan")
+    ledger_fields = [str(item).strip() for item in governance_completion_ledger_policy.get("requiredLedgerFields") or []]
+    if not ledger_fields or any(not item for item in ledger_fields):
+        raise SanguoGovernanceError("policy-governance-completion-ledger requiredLedgerFields cannot be empty")
+
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
         raise SanguoGovernanceError("policy-postgres-state-store-evaluation recommendationThresholds must be positive")
@@ -1594,6 +1636,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "governanceDriftBaselineMinimumCount": len(drift_baseline_minimums),
         "governanceOperatorSummaryAudienceCount": len(operator_audiences),
         "governanceOperatorSummarySectionCount": len(operator_sections),
+        "governanceFailureTriageCategoryCount": len(triage_categories),
+        "governanceCompletionLedgerRequiredPhaseCount": ledger_max_phase - ledger_min_phase + 1,
+        "governanceCompletionLedgerFieldCount": len(ledger_fields),
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

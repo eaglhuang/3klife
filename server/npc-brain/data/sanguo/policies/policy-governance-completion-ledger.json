@@ -1,0 +1,21 @@
+{
+  "id": "Policy_GovernanceCompletionLedger_P1",
+  "description": "Defines the phase completion ledger emitted by the Sanguo governance regression harness.",
+  "phaseRange": {
+    "min": 20,
+    "max": 37
+  },
+  "completedWhen": {
+    "planExists": true
+  },
+  "statusLabels": {
+    "completed": "completed",
+    "missingPlan": "missing-plan"
+  },
+  "requiredLedgerFields": [
+    "phase",
+    "name",
+    "plan",
+    "status"
+  ]
+}

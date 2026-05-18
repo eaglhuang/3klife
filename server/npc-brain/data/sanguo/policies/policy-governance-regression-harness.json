@@ -10,7 +10,9 @@
     "release-readiness",
     "drift-detection",
     "operator-summary",
-    "encoding"
+    "encoding",
+    "failure-triage",
+    "completion-ledger"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
   "fixtureManifests": [
@@ -20,21 +22,95 @@
     }
   ],
   "phaseMatrix": [
-    {"phase": 20, "name": "Full Roster Scoreboard Scoring Governance", "plan": "refactor-phase20-plan.zh-TW.md"},
-    {"phase": 21, "name": "Relationship Extraction / Refinement Governance", "plan": "refactor-phase21-plan.zh-TW.md"},
-    {"phase": 22, "name": "Alias / Mention Intake Governance", "plan": "refactor-phase22-plan.zh-TW.md"},
-    {"phase": 23, "name": "External Evidence Scoring Governance", "plan": "refactor-phase23-plan.zh-TW.md"},
-    {"phase": 24, "name": "Source Browser / Vector Readiness Governance", "plan": "refactor-phase24-plan.zh-TW.md"},
-    {"phase": 25, "name": "Runtime Profile Batch / Keyword Governance", "plan": "refactor-phase25-plan.zh-TW.md"},
-    {"phase": 26, "name": "Convergence Loop State Governance", "plan": "refactor-phase26-plan.zh-TW.md"},
-    {"phase": 27, "name": "Governance Regression Harness", "plan": "refactor-phase27-plan.zh-TW.md"},
-    {"phase": 28, "name": "PostgreSQL State Store Evaluation", "plan": "refactor-phase28-plan.zh-TW.md"},
-    {"phase": 29, "name": "Production Vector Ingestion Hardening", "plan": "refactor-phase29-plan.zh-TW.md"},
-    {"phase": 30, "name": "Governance Validation Stabilization", "plan": "refactor-phase30-plan.zh-TW.md"},
-    {"phase": 31, "name": "Regression Fixture Consolidation", "plan": "refactor-phase31-plan.zh-TW.md"},
-    {"phase": 32, "name": "Governance Handoff Index", "plan": "refactor-phase32-plan.zh-TW.md"},
-    {"phase": 33, "name": "Governance Release Readiness Gate", "plan": "refactor-phase33-plan.zh-TW.md"},
-    {"phase": 34, "name": "Governance Drift Detection", "plan": "refactor-phase34-plan.zh-TW.md"},
-    {"phase": 35, "name": "Governance Operator Summary", "plan": "refactor-phase35-plan.zh-TW.md"}
+    {
+      "phase": 20,
+      "name": "Full Roster Scoreboard Scoring Governance",
+      "plan": "refactor-phase20-plan.zh-TW.md"
+    },
+    {
+      "phase": 21,
+      "name": "Relationship Extraction / Refinement Governance",
+      "plan": "refactor-phase21-plan.zh-TW.md"
+    },
+    {
+      "phase": 22,
+      "name": "Alias / Mention Intake Governance",
+      "plan": "refactor-phase22-plan.zh-TW.md"
+    },
+    {
+      "phase": 23,
+      "name": "External Evidence Scoring Governance",
+      "plan": "refactor-phase23-plan.zh-TW.md"
+    },
+    {
+      "phase": 24,
+      "name": "Source Browser / Vector Readiness Governance",
+      "plan": "refactor-phase24-plan.zh-TW.md"
+    },
+    {
+      "phase": 25,
+      "name": "Runtime Profile Batch / Keyword Governance",
+      "plan": "refactor-phase25-plan.zh-TW.md"
+    },
+    {
+      "phase": 26,
+      "name": "Convergence Loop State Governance",
+      "plan": "refactor-phase26-plan.zh-TW.md"
+    },
+    {
+      "phase": 27,
+      "name": "Governance Regression Harness",
+      "plan": "refactor-phase27-plan.zh-TW.md"
+    },
+    {
+      "phase": 28,
+      "name": "PostgreSQL State Store Evaluation",
+      "plan": "refactor-phase28-plan.zh-TW.md"
+    },
+    {
+      "phase": 29,
+      "name": "Production Vector Ingestion Hardening",
+      "plan": "refactor-phase29-plan.zh-TW.md"
+    },
+    {
+      "phase": 30,
+      "name": "Governance Validation Stabilization",
+      "plan": "refactor-phase30-plan.zh-TW.md"
+    },
+    {
+      "phase": 31,
+      "name": "Regression Fixture Consolidation",
+      "plan": "refactor-phase31-plan.zh-TW.md"
+    },
+    {
+      "phase": 32,
+      "name": "Governance Handoff Index",
+      "plan": "refactor-phase32-plan.zh-TW.md"
+    },
+    {
+      "phase": 33,
+      "name": "Governance Release Readiness Gate",
+      "plan": "refactor-phase33-plan.zh-TW.md"
+    },
+    {
+      "phase": 34,
+      "name": "Governance Drift Detection",
+      "plan": "refactor-phase34-plan.zh-TW.md"
+    },
+    {
+      "phase": 35,
+      "name": "Governance Operator Summary",
+      "plan": "refactor-phase35-plan.zh-TW.md"
+    },
+    {
+      "phase": 36,
+      "name": "Governance Failure Triage",
+      "plan": "refactor-phase36-plan.zh-TW.md"
+    },
+    {
+      "phase": 37,
+      "name": "Governance Completion Ledger",
+      "plan": "refactor-phase37-plan.zh-TW.md"
+    }
   ]
 }

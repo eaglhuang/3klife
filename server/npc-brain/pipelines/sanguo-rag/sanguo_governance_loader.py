@@ -841,6 +841,34 @@ def load_governance_operator_summary_policy(
     return read_governance_json(path, required_id="Policy_GovernanceOperatorSummary_P1")
 
 
+def load_governance_failure_triage_policy(
+    root: str | Path | None = None,
+    *,
+    governance_failure_triage_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(governance_failure_triage_policy).resolve()
+        if governance_failure_triage_policy
+        else _path(base, "policies", "policy-governance-failure-triage.json")
+    )
+    return read_governance_json(path, required_id="Policy_GovernanceFailureTriage_P1")
+
+
+def load_governance_completion_ledger_policy(
+    root: str | Path | None = None,
+    *,
+    governance_completion_ledger_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(governance_completion_ledger_policy).resolve()
+        if governance_completion_ledger_policy
+        else _path(base, "policies", "policy-governance-completion-ledger.json")
+    )
+    return read_governance_json(path, required_id="Policy_GovernanceCompletionLedger_P1")
+
+
 def load_postgres_state_store_evaluation_policy(
     root: str | Path | None = None,
     *,
@@ -882,6 +910,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-governance-release-readiness.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "policies", "file": "policy-governance-drift-detection.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "policies", "file": "policy-governance-operator-summary.json", "consumer": "run_sanguo_governance_regression_harness.py"},
+        {"section": "policies", "file": "policy-governance-failure-triage.json", "consumer": "run_sanguo_governance_regression_harness.py"},
+        {"section": "policies", "file": "policy-governance-completion-ledger.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "policies", "file": "policy-postgres-state-store-evaluation.json", "consumer": "evaluate_postgres_state_store_readiness.py"},
         {"section": "policies", "file": "policy-vector-ingestion-hardening.json", "consumer": "run_vector_ingestion_gate.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
