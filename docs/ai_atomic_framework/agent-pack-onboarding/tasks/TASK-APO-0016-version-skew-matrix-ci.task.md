@@ -3,7 +3,12 @@ doc_id: doc_other_0169
 task_id: TASK-APO-0016
 title: Version skew matrix CI — CLI × Plugin SDK × Adapter 組合測試
 milestone: M8
-status: open
+status: done
+started_at: 2026-05-18T12:05:00+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-18T12:45:00+08:00
+completed_by_agent: vs-insiders-gpt-5.4
+commit: 39c785b (AI-Atomic-Framework main)
 blocked_by: [TASK-APO-0012]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -17,6 +22,7 @@ allowed_files:
   - .github/workflows/version-skew-matrix.yml
   - scripts/validate-skew-matrix.ts
   - scripts/skew-matrix.config.json
+  - scripts/validators.config.json
   - fixtures/skew/**
   - tests/skew/**
   - docs/VERSION_SKEW.md
@@ -45,9 +51,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] PR 蓄意引入不相容組合會被 CI 阻擋。
-- [ ] matrix 完整通過時輸出 summary artefact。
-- [ ] validate-skew-matrix.ts 加入 standard profile。
+- [x] PR 蓄意引入不相容組合會被 CI 阻擋。
+- [x] matrix 完整通過時輸出 summary artefact。
+- [x] validate-skew-matrix.ts 加入 standard profile。
 
 ## 驗證方式
 
@@ -59,3 +65,4 @@ node --experimental-strip-types scripts/validate-skew-matrix.ts --mode validate
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 version skew matrix CI 後續卡 | 阻塞: TASK-APO-0012
+2026-05-18 | 狀態: done | 驗證: `validate-skew-matrix --mode validate` PASS；`skew-matrix.test.ts` PASS；`validate:standard` 中新增 skew gate PASS，但既有 `multi-agent-confidence` generated matrix stale 仍使整體 profile exit 1 | 變更: 新增 CLI × Plugin SDK × Adapter skew matrix config、validator、CI workflow、summary artefact、PR failure comment、負向 fixture、測試與文件；因驗收要求 standard profile，補列並修改 `scripts/validators.config.json` | 阻塞: none
