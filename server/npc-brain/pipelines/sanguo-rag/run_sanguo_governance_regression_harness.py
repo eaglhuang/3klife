@@ -12,6 +12,8 @@ from sanguo_governance_loader import (
     load_governance_operator_summary_policy,
     load_governance_failure_triage_policy,
     load_governance_completion_ledger_policy,
+    load_governance_run_profiles_policy,
+    load_governance_report_bundle_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -37,6 +39,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--operator-summary-policy", default=None, help="Override policy-governance-operator-summary.json path")
     parser.add_argument("--failure-triage-policy", default=None, help="Override policy-governance-failure-triage.json path")
     parser.add_argument("--completion-ledger-policy", default=None, help="Override policy-governance-completion-ledger.json path")
+    parser.add_argument("--run-profile", default=None, help="Named governance run profile from policy-governance-run-profiles.json")
+    parser.add_argument("--run-profile-policy", default=None, help="Override policy-governance-run-profiles.json path")
+    parser.add_argument("--report-bundle-policy", default=None, help="Override policy-governance-report-bundle.json path")
     parser.add_argument("--output-root", default=None, help="Output root for harness reports")
     parser.add_argument("--strict-phase-plans", action="store_true", help="Fail if a planned phase document is missing")
     parser.add_argument("--strict-validation-coverage", action="store_true", help="Fail if required validation summary keys are missing")
@@ -221,6 +226,8 @@ def operator_summary(
         "governanceDrift": drift["status"],
         "failureTriage": f"{summary.get('governanceFailureTriageItemCount', 0)} items / {summary.get('governanceFailureTriageHighSeverityCount', 0)} high severity",
         "completionLedger": f"{summary.get('governanceCompletionLedgerCompletedCount', 0)} completed / {summary.get('governanceCompletionLedgerPhaseCount', 0)} phases",
+        "runProfile": str(summary.get("governanceRunProfileName") or ""),
+        "reportBundle": f"{summary.get('governanceReportBundleFileCount', 0)} files",
         "handoffIndex": f"{summary.get('handoffSectionCount', 0)} sections / {summary.get('handoffConsumerCount', 0)} consumers",
         "fixtureMatrix": f"{summary.get('fixtureManifestCount', 0)} manifests / {summary.get('missingFixtureFileCount', 0)} missing files",
     }
@@ -240,6 +247,49 @@ def operator_summary(
         "audiences": [str(item) for item in policy.get("audiences") or []],
         "sectionCount": len(sections),
         "sections": sections,
+    }
+
+
+def run_profile_selection(policy: dict[str, Any], profile_name: str | None) -> dict[str, Any]:
+    profiles = {str(row.get("name") or ""): row for row in policy.get("profiles") or [] if isinstance(row, dict)}
+    selected_name = str(profile_name or policy.get("defaultProfile") or "default")
+    if selected_name not in profiles:
+        available = ", ".join(sorted(profiles))
+        raise SanguoGovernanceError(f"governance run profile not found: {selected_name}; available={available}")
+    selected = profiles[selected_name]
+    return {
+        "name": selected_name,
+        "label": str(selected.get("label") or selected_name),
+        "description": str(selected.get("description") or ""),
+        "strictFlags": dict(selected.get("strictFlags") or {}),
+    }
+
+
+def strict_enabled(args: argparse.Namespace, cli_attr: str, profile: dict[str, Any], profile_key: str) -> bool:
+    return bool(getattr(args, cli_attr) or (profile.get("strictFlags") or {}).get(profile_key))
+
+
+def report_bundle(policy: dict[str, Any], output_root: Path, no_write: bool) -> dict[str, Any]:
+    files: list[dict[str, Any]] = []
+    for row in policy.get("defaultFiles") or []:
+        if not isinstance(row, dict):
+            continue
+        relative_path = str(row.get("path") or "")
+        files.append(
+            {
+                "key": str(row.get("key") or ""),
+                "path": (output_root / relative_path).as_posix(),
+                "relativePath": relative_path,
+                "format": str(row.get("format") or ""),
+                "purpose": str(row.get("purpose") or ""),
+                "writeEnabled": not no_write,
+            }
+        )
+    return {
+        "fileCount": len(files),
+        "outputRoot": output_root.as_posix(),
+        "writeEnabled": not no_write,
+        "files": files,
     }
 
 
@@ -393,6 +443,12 @@ def render_markdown(payload: dict[str, Any]) -> str:
     lines.append(f"- Status: `{ledger['status']}`")
     lines.append(f"- Completed: `{ledger['completedCount']}` / `{ledger['phaseCount']}`")
     lines.append(f"- Missing Plans: `{ledger['missingPlanCount']}`")
+    lines.extend(["", "## Report Bundle", ""])
+    bundle = payload["reportBundle"]
+    lines.append(f"- Files: `{bundle['fileCount']}`")
+    lines.append(f"- Write Enabled: `{bundle['writeEnabled']}`")
+    for item in bundle["files"]:
+        lines.append(f"- `{item['key']}` -> `{item['relativePath']}`")
     lines.extend(["", "## Operator Summary", ""])
     for row in payload["operatorSummary"]["sections"]:
         lines.append(f"- {row['label']}: `{row['value']}`")
@@ -435,6 +491,15 @@ def main() -> None:
             root,
             governance_completion_ledger_policy=args.completion_ledger_policy,
         )
+        run_profiles_policy = load_governance_run_profiles_policy(
+            root,
+            governance_run_profiles_policy=args.run_profile_policy,
+        )
+        report_bundle_policy = load_governance_report_bundle_policy(
+            root,
+            governance_report_bundle_policy=args.report_bundle_policy,
+        )
+        selected_run_profile = run_profile_selection(run_profiles_policy, args.run_profile)
         expected_rows = validate_expected_files(root)
         shape_summary = validate_minimum_shapes(root)
     except SanguoGovernanceError as exc:
@@ -474,21 +539,25 @@ def main() -> None:
     triage = failure_triage(failure_triage_policy, summary, coverage, readiness, drift, completion, fixture_rows, missing_phase_plans)
     summary["governanceFailureTriageItemCount"] = triage["itemCount"]
     summary["governanceFailureTriageHighSeverityCount"] = triage["highSeverityCount"]
+    summary["governanceRunProfileName"] = selected_run_profile["name"]
     status = "ok"
-    if args.strict_phase_plans and missing_phase_plans:
+    if strict_enabled(args, "strict_phase_plans", selected_run_profile, "strictPhasePlans") and missing_phase_plans:
         status = "failed"
-    if args.strict_validation_coverage and coverage["missingSummaryKeys"]:
+    if strict_enabled(args, "strict_validation_coverage", selected_run_profile, "strictValidationCoverage") and coverage["missingSummaryKeys"]:
         status = "failed"
-    if args.strict_fixtures and (missing_fixture_count or fixture_error_count):
+    if strict_enabled(args, "strict_fixtures", selected_run_profile, "strictFixtures") and (missing_fixture_count or fixture_error_count):
         status = "failed"
-    if args.strict_release_readiness and readiness["status"] != "ok":
+    if strict_enabled(args, "strict_release_readiness", selected_run_profile, "strictReleaseReadiness") and readiness["status"] != "ok":
         status = "failed"
-    if args.strict_drift and drift["status"] != "ok":
+    if strict_enabled(args, "strict_drift", selected_run_profile, "strictDrift") and drift["status"] != "ok":
         status = "failed"
-    if args.strict_completion_ledger and completion["status"] != "ok":
+    if strict_enabled(args, "strict_completion_ledger", selected_run_profile, "strictCompletionLedger") and completion["status"] != "ok":
         status = "failed"
-    if args.strict_triage and triage["itemCount"]:
+    if strict_enabled(args, "strict_triage", selected_run_profile, "strictTriage") and triage["itemCount"]:
         status = "failed"
+    output_root = Path(args.output_root or policy.get("defaultOutputRoot") or "local/codex-smoke/governance-regression")
+    bundle = report_bundle(report_bundle_policy, output_root, args.no_write)
+    summary["governanceReportBundleFileCount"] = bundle["fileCount"]
     operator = operator_summary(operator_policy, status, summary, readiness, drift)
     summary["operatorSummarySectionCount"] = operator["sectionCount"]
     payload = {
@@ -504,6 +573,8 @@ def main() -> None:
         "governanceDrift": drift,
         "failureTriage": triage,
         "completionLedger": completion,
+        "runProfile": selected_run_profile,
+        "reportBundle": bundle,
         "operatorSummary": operator,
         "expectedGovernanceFiles": expected_rows,
         "minimumShapeSummary": shape_summary,
@@ -511,13 +582,22 @@ def main() -> None:
     if args.no_write:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
     else:
-        output_root = Path(args.output_root or policy.get("defaultOutputRoot") or "local/codex-smoke/governance-regression")
         output_root.mkdir(parents=True, exist_ok=True)
         (output_root / "governance-regression-harness.json").write_text(
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
         (output_root / "governance-regression-harness.md").write_text(render_markdown(payload), encoding="utf-8")
+        manifest = {
+            "generatedAt": payload["generatedAt"],
+            "status": payload["status"],
+            "summary": payload["summary"],
+            "files": bundle["files"],
+        }
+        (output_root / "governance-regression-manifest.json").write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
         print(f"[run_sanguo_governance_regression_harness] wrote {output_root}")
     if status != "ok":
         raise SystemExit(1)

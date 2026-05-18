@@ -12,7 +12,9 @@
     "operator-summary",
     "encoding",
     "failure-triage",
-    "completion-ledger"
+    "completion-ledger",
+    "run-profile",
+    "report-bundle"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
   "fixtureManifests": [
@@ -111,6 +113,16 @@
       "phase": 37,
       "name": "Governance Completion Ledger",
       "plan": "refactor-phase37-plan.zh-TW.md"
+    },
+    {
+      "phase": 38,
+      "name": "Governance Run Profile Presets",
+      "plan": "refactor-phase38-plan.zh-TW.md"
+    },
+    {
+      "phase": 39,
+      "name": "Governance Report Bundle Manifest",
+      "plan": "refactor-phase39-plan.zh-TW.md"
     }
   ]
 }

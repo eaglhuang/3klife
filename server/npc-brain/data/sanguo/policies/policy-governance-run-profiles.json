@@ -1,0 +1,58 @@
+{
+  "id": "Policy_GovernanceRunProfiles_P1",
+  "description": "Defines named Sanguo governance harness run profiles without changing legacy CLI defaults.",
+  "defaultProfile": "default",
+  "flagNames": [
+    "strictPhasePlans",
+    "strictValidationCoverage",
+    "strictFixtures",
+    "strictReleaseReadiness",
+    "strictDrift",
+    "strictTriage",
+    "strictCompletionLedger"
+  ],
+  "profiles": [
+    {
+      "name": "default",
+      "label": "Legacy-compatible default",
+      "description": "Do not enable extra strict gates unless CLI flags are passed.",
+      "strictFlags": {
+        "strictPhasePlans": false,
+        "strictValidationCoverage": false,
+        "strictFixtures": false,
+        "strictReleaseReadiness": false,
+        "strictDrift": false,
+        "strictTriage": false,
+        "strictCompletionLedger": false
+      }
+    },
+    {
+      "name": "strict-local",
+      "label": "Strict local governance check",
+      "description": "Enable all current deterministic strict checks for local handoff.",
+      "strictFlags": {
+        "strictPhasePlans": true,
+        "strictValidationCoverage": true,
+        "strictFixtures": true,
+        "strictReleaseReadiness": true,
+        "strictDrift": true,
+        "strictTriage": true,
+        "strictCompletionLedger": true
+      }
+    },
+    {
+      "name": "release-gate",
+      "label": "Release gate governance check",
+      "description": "Same strict checks as strict-local, intended for release readiness review.",
+      "strictFlags": {
+        "strictPhasePlans": true,
+        "strictValidationCoverage": true,
+        "strictFixtures": true,
+        "strictReleaseReadiness": true,
+        "strictDrift": true,
+        "strictTriage": true,
+        "strictCompletionLedger": true
+      }
+    }
+  ]
+}

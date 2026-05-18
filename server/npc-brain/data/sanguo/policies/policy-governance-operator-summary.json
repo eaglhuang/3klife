@@ -28,6 +28,14 @@
       "label": "Completion Ledger"
     },
     {
+      "key": "runProfile",
+      "label": "Run Profile"
+    },
+    {
+      "key": "reportBundle",
+      "label": "Report Bundle"
+    },
+    {
       "key": "handoffIndex",
       "label": "Handoff Coverage"
     },
@@ -44,6 +52,8 @@
     "handoffIndex",
     "fixtureMatrix",
     "failureTriage",
-    "completionLedger"
+    "completionLedger",
+    "runProfile",
+    "reportBundle"
   ]
 }

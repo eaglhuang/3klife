@@ -24,6 +24,8 @@
     "governanceRegressionPhaseCount",
     "governanceFailureTriageCategoryCount",
     "governanceCompletionLedgerRequiredPhaseCount",
+    "governanceRunProfileCount",
+    "governanceReportBundleFileCount",
     "postgresStateThresholdCount",
     "vectorIngestionProviderCount"
   ],

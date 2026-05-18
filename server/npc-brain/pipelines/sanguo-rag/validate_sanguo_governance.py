@@ -44,6 +44,8 @@ from sanguo_governance_loader import (
     load_governance_operator_summary_policy,
     load_governance_failure_triage_policy,
     load_governance_completion_ledger_policy,
+    load_governance_run_profiles_policy,
+    load_governance_report_bundle_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -206,6 +208,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     governance_operator_policy = load_governance_operator_summary_policy(root)
     governance_failure_triage_policy = load_governance_failure_triage_policy(root)
     governance_completion_ledger_policy = load_governance_completion_ledger_policy(root)
+    governance_run_profiles_policy = load_governance_run_profiles_policy(root)
+    governance_report_bundle_policy = load_governance_report_bundle_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1454,6 +1458,52 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not ledger_fields or any(not item for item in ledger_fields):
         raise SanguoGovernanceError("policy-governance-completion-ledger requiredLedgerFields cannot be empty")
 
+    run_profile_flag_names = [str(item).strip() for item in governance_run_profiles_policy.get("flagNames") or []]
+    if not run_profile_flag_names or any(not item for item in run_profile_flag_names):
+        raise SanguoGovernanceError("policy-governance-run-profiles flagNames cannot be empty")
+    run_profiles = governance_run_profiles_policy.get("profiles")
+    if not isinstance(run_profiles, list) or not run_profiles:
+        raise SanguoGovernanceError("policy-governance-run-profiles profiles cannot be empty")
+    profile_names: set[str] = set()
+    for row in run_profiles:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-governance-run-profiles profile rows must be objects")
+        name = str(row.get("name") or "").strip()
+        if not name:
+            raise SanguoGovernanceError("policy-governance-run-profiles profile name cannot be blank")
+        if name in profile_names:
+            raise SanguoGovernanceError(f"policy-governance-run-profiles duplicate profile: {name}")
+        profile_names.add(name)
+        strict_flags = row.get("strictFlags") if isinstance(row.get("strictFlags"), dict) else {}
+        if set(strict_flags.keys()) != set(run_profile_flag_names):
+            raise SanguoGovernanceError(f"policy-governance-run-profiles strictFlags mismatch: {name}")
+        if any(not isinstance(value, bool) for value in strict_flags.values()):
+            raise SanguoGovernanceError(f"policy-governance-run-profiles strictFlags must be boolean: {name}")
+    default_profile = str(governance_run_profiles_policy.get("defaultProfile") or "").strip()
+    if default_profile not in profile_names:
+        raise SanguoGovernanceError("policy-governance-run-profiles defaultProfile must exist in profiles")
+    report_files = governance_report_bundle_policy.get("defaultFiles")
+    if not isinstance(report_files, list) or not report_files:
+        raise SanguoGovernanceError("policy-governance-report-bundle defaultFiles cannot be empty")
+    report_keys: set[str] = set()
+    allowed_formats = {"json", "markdown"}
+    for row in report_files:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-governance-report-bundle file rows must be objects")
+        key = str(row.get("key") or "").strip()
+        path_text = str(row.get("path") or "").strip()
+        format_text = str(row.get("format") or "").strip()
+        if not key or not path_text or not format_text:
+            raise SanguoGovernanceError("policy-governance-report-bundle files require key/path/format")
+        if key in report_keys:
+            raise SanguoGovernanceError(f"policy-governance-report-bundle duplicate file key: {key}")
+        if format_text not in allowed_formats:
+            raise SanguoGovernanceError(f"policy-governance-report-bundle unsupported format: {format_text}")
+        report_keys.add(key)
+    required_payload_keys = [str(item).strip() for item in governance_report_bundle_policy.get("requiredPayloadKeys") or []]
+    if not required_payload_keys or any(not item for item in required_payload_keys):
+        raise SanguoGovernanceError("policy-governance-report-bundle requiredPayloadKeys cannot be empty")
+
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
         raise SanguoGovernanceError("policy-postgres-state-store-evaluation recommendationThresholds must be positive")
@@ -1639,6 +1689,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "governanceFailureTriageCategoryCount": len(triage_categories),
         "governanceCompletionLedgerRequiredPhaseCount": ledger_max_phase - ledger_min_phase + 1,
         "governanceCompletionLedgerFieldCount": len(ledger_fields),
+        "governanceRunProfileCount": len(run_profiles),
+        "governanceRunProfileFlagCount": len(run_profile_flag_names),
+        "governanceReportBundleFileCount": len(report_files),
+        "governanceReportBundleRequiredPayloadKeyCount": len(required_payload_keys),
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

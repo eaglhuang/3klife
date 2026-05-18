@@ -1,0 +1,35 @@
+{
+  "id": "Policy_GovernanceReportBundle_P1",
+  "description": "Defines the files and manifest metadata emitted by the Sanguo governance regression harness.",
+  "defaultFiles": [
+    {
+      "key": "payloadJson",
+      "path": "governance-regression-harness.json",
+      "format": "json",
+      "purpose": "Machine-readable complete governance harness payload."
+    },
+    {
+      "key": "reviewMarkdown",
+      "path": "governance-regression-harness.md",
+      "format": "markdown",
+      "purpose": "Human-readable governance harness report."
+    },
+    {
+      "key": "bundleManifest",
+      "path": "governance-regression-manifest.json",
+      "format": "json",
+      "purpose": "Small manifest listing generated governance report files."
+    }
+  ],
+  "requiredPayloadKeys": [
+    "status",
+    "summary",
+    "phaseMatrix",
+    "validationCoverage",
+    "releaseReadiness",
+    "governanceDrift",
+    "failureTriage",
+    "completionLedger",
+    "operatorSummary"
+  ]
+}
