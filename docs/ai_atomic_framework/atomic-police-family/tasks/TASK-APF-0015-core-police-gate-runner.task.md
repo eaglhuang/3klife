@@ -3,10 +3,10 @@ doc_id: doc_other_0642
 task_id: TASK-APF-0015
 title: Core police gate runner
 milestone: M7
-status: open
-artifact_status: spec-done
-runtime_status: not-started
-upstream_mutation_status: not-applied
+status: done
+artifact_status: done
+runtime_status: done
+upstream_mutation_status: applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "codex"
 blocked_by: [TASK-APF-0014]
@@ -72,8 +72,8 @@ TASK-APF-0014
 
 - [x] core runner 呼叫既有 `runPoliceChecks`（specs/APF-0015 §3 行為設計已明定）
 - [x] Lifecycle Police 保留既有 writer / finding schema（specs/APF-0015 §3 保留 quarantine writer 特例）
-- [ ] blocker family 有 blocking finding 時 exit non-zero（**runtime 行為**：需 `validate-police-family.ts` 實作）
-- [ ] runner 產出 `PoliceFamilyGateReport`（**runtime 行為**：需實際 normalize 輸出）
+- [x] blocker family 有 blocking finding 時 exit non-zero（validate-police-family.ts 已實作：dependency cycle / lifecycle hard-fail 觸發 gate ok=false）
+- [x] runner 產出 `PoliceFamilyGateReport`（validate-police-family.ts 產出含 schemaId / specVersion / families / blockingFindings / advisoryFindings）
 
 ## 驗證方式
 
@@ -85,11 +85,8 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police-family
 
 若 gate runner 造成 false positive，先從 `validate:standard` 移回 advisory-only profile，不刪除既有 scanner。
 
-## 共通提醒
-
-本卡 artifact_status=spec-done 僅代表 APF 文件 / spec artifact 已完成；status=open 與 runtime_status=not-started 表示 upstream runtime / validator 接線尚未完成。
-
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0015-* | 阻塞: TASK-APF-0014
 2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: spec §3 已明定的 2 項設計（呼叫 runPoliceChecks、保留 Lifecycle writer schema）已勾選；exit non-zero 與 report 產出屬 runtime 行為，待 validate-police-family.ts 實作後再驗 | 阻塞: upstream runner 實作
+2026-05-19 | 狀態: done | 驗證: pass | 變更: scripts/validate-police-family.ts 完成（buildPoliceFamilyGateReport 含 5 blocker + 4 advisory families），blocker exit / report 產出已驗證 | 完成

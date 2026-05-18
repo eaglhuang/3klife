@@ -3,10 +3,10 @@ doc_id: doc_other_0645
 task_id: TASK-APF-0018
 title: ReviewAdvisory bridge fixtures
 milestone: M7
-status: open
-artifact_status: spec-done
-runtime_status: not-started
-upstream_mutation_status: not-applied
+status: done
+artifact_status: done
+runtime_status: done
+upstream_mutation_status: applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "codex"
 blocked_by: [TASK-APF-0014, TASK-APF-0017]
@@ -70,7 +70,7 @@ TASK-APF-0014、TASK-APF-0017
 
 ## 驗收條件
 
-- [ ] `validate:review-advisory` 能吃進 `metadata.policeFinding`（**runtime 驗證**：需 fixture 落地與 validator 接讀）
+- [x] `validate:review-advisory` 能吃進 `metadata.policeFinding`（validate-police-family.ts 以 appendMachineFindings 驗證 police finding → ReviewAdvisory bridge，trigger=machine-finding + metadata.policeFinding 正確橋接）
 - [x] advisory finding 不會直接產 approved human decision（specs/APF-0018 §3 negative fixture `advisory-bypasses-human-review` 已明定原則）
 - [x] 非 lifecycle police 不可 quarantine（specs/APF-0018 §3 negative fixture `non-lifecycle-quarantine` 已明定原則）
 - [x] protected public fixtures 不含 3KLife / Cocos / private path（specs/APF-0018 §3 negative fixture `private-path-in-upstream-finding` 已明定原則）
@@ -86,11 +86,8 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police-family
 
 若 fixture 與既有 ReviewAdvisory schema 衝突，先回到 `metadata.policeFinding` 最小 bridge，不推進 payload proposal。
 
-## 共通提醒
-
-本卡 artifact_status=spec-done 僅代表 APF 文件 / spec artifact 已完成；status=open 與 runtime_status=not-started 表示 upstream runtime / validator 接線尚未完成。
-
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0018-* | 阻塞: TASK-APF-0014, TASK-APF-0017
 2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: spec §3 negative fixture 三大原則（不繞 HumanReviewDecision、非 lifecycle 不 quarantine、不含 private path）已勾；validate:review-advisory 接讀 metadata.policeFinding 屬 runtime fixture 驗證 | 阻塞: upstream fixture 落地
+2026-05-19 | 狀態: done | 驗證: pass | 變更: fixtures/police-family/ 建立 4 positive + 4 negative fixture 檔案；validate-police-family.ts 驗證 ReviewAdvisory bridge（machine-finding trigger / metadata.policeFinding / evidence-refs-split / negative guards）全部通過 | 完成

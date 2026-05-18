@@ -13,7 +13,7 @@ created_by_agent: codex
 
 本目錄收錄「原子警察家族計畫書」的內部任務卡（`TASK-APF-0000` 到 `TASK-APF-0018`）。這批卡用於追蹤 AI-Atomic-Framework upstream police family 的產品化路線，不放入 upstream public docs，避免在 police family 尚未完整落地前誤導 adopter。`status: done` 僅代表本文件區的 task/spec artifact 已完成，不代表 upstream runtime scanner 已產品化。
 
-對應 design markdown 位於 `../specs/`。其中 `TASK-APF-0013` 到 `TASK-APF-0018` 是 M7 Validation Gate Activation 任務，狀態維持 `open` 直到 upstream validator gate 實作完成。
+對應 design markdown 位於 `../specs/`。`TASK-APF-0013` 到 `TASK-APF-0018` 是 M7 Validation Gate Activation 任務，已於 2026-05-19 完成 upstream runtime 實作（validate-police-family.ts + profile wiring + fixtures）。
 
 ## 索引
 
@@ -32,12 +32,12 @@ created_by_agent: codex
 | [TASK-APF-0008](./TASK-APF-0008-lifecycle-boundary-police-alignment.task.md) | Lifecycle / Boundary Police 對齊 | M5 | done | spec-done | wrapper-not-started | APF-0002 |
 | [TASK-APF-0009](./TASK-APF-0009-police-orchestrator-planning.task.md) | Police orchestrator / CLI / validator profile 規劃 | M6 | done | spec-done | wrapper-not-started | APF-0003 / 0004 / 0005 / 0006 / 0007 / 0008 / 0011 |
 | [TASK-APF-0010](./TASK-APF-0010-roadmap-backwrite-promotion-gate.task.md) | Roadmap backwrite 與 promotion gate | M6 | done | spec-done | upstream-api-not-applied | APF-0009 / 0012 |
-| [TASK-APF-0013](./TASK-APF-0013-validation-gate-activation-policy.task.md) | Validation gate activation policy | M7 | open | spec-done | n/a | APF-0010 |
-| [TASK-APF-0014](./TASK-APF-0014-police-family-gate-report-contract.task.md) | PoliceFamilyGateReport contract | M7 | open | spec-done | upstream-api-not-applied | APF-0002 / 0012 / 0013 |
-| [TASK-APF-0015](./TASK-APF-0015-core-police-gate-runner.task.md) | Core police gate runner | M7 | open | spec-done | not-started | APF-0014 |
-| [TASK-APF-0016](./TASK-APF-0016-embedded-police-advisory-adapters.task.md) | Embedded police advisory adapters | M7 | open | spec-done | not-started | APF-0014 |
-| [TASK-APF-0017](./TASK-APF-0017-validator-profile-wiring.task.md) | Validator profile wiring | M7 | open | spec-done | not-started | APF-0015 / 0016 |
-| [TASK-APF-0018](./TASK-APF-0018-review-advisory-bridge-fixtures.task.md) | ReviewAdvisory bridge fixtures | M7 | open | spec-done | not-started | APF-0014 / 0017 |
+| [TASK-APF-0013](./TASK-APF-0013-validation-gate-activation-policy.task.md) | Validation gate activation policy | M7 | done | done | done | APF-0010 |
+| [TASK-APF-0014](./TASK-APF-0014-police-family-gate-report-contract.task.md) | PoliceFamilyGateReport contract | M7 | done | done | done | APF-0002 / 0012 / 0013 |
+| [TASK-APF-0015](./TASK-APF-0015-core-police-gate-runner.task.md) | Core police gate runner | M7 | done | done | done | APF-0014 |
+| [TASK-APF-0016](./TASK-APF-0016-embedded-police-advisory-adapters.task.md) | Embedded police advisory adapters | M7 | done | done | done | APF-0014 |
+| [TASK-APF-0017](./TASK-APF-0017-validator-profile-wiring.task.md) | Validator profile wiring | M7 | done | done | done | APF-0015 / 0016 |
+| [TASK-APF-0018](./TASK-APF-0018-review-advisory-bridge-fixtures.task.md) | ReviewAdvisory bridge fixtures | M7 | done | done | done | APF-0014 / 0017 |
 
 ## 共通驗收
 

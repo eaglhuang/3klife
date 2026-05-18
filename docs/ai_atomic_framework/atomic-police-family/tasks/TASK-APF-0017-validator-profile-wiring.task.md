@@ -3,10 +3,10 @@ doc_id: doc_other_0644
 task_id: TASK-APF-0017
 title: Validator profile wiring
 milestone: M7
-status: open
-artifact_status: spec-done
-runtime_status: not-started
-upstream_mutation_status: not-applied
+status: done
+artifact_status: done
+runtime_status: done
+upstream_mutation_status: applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "codex"
 blocked_by: [TASK-APF-0015, TASK-APF-0016]
@@ -70,10 +70,10 @@ TASK-APF-0015、TASK-APF-0016
 
 ## 驗收條件
 
-- [ ] `npm run validate:standard` 會執行 `validate-police-family`（**runtime profile wiring**）
-- [ ] `npm run validate:full` 會執行 `validate-police-family` 與既有 `validate:police`（**runtime profile wiring**）
-- [ ] blocker fixture 失敗時 profile exit non-zero（**runtime 行為**）
-- [ ] advisory finding 不造成 standard fail，但 report 可追蹤（**runtime 行為**）
+- [x] `npm run validate:standard` 會執行 `validate-police-family`（validators.config.json standard profile 已加入 validate-police-family）
+- [x] `npm run validate:full` 會執行 `validate-police-family` 與既有 `validate:police`（full extends standard + validate-police 保留）
+- [x] blocker fixture 失敗時 profile exit non-zero（validate-police-family.ts 以 dependency-cycle / lifecycle hard-fail negative fixture 驗證 ok=false）
+- [x] advisory finding 不造成 standard fail，但 report 可追蹤（advisory families advisoryOnly=true，finding 記入 advisoryFindings[] 不影響 gate ok）
 
 ## 驗證方式
 
@@ -86,11 +86,8 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:full
 
 若 standard profile 受影響，先將 `validate-police-family` 降回 advisory-only 或 full-only，保留 runner 與 fixtures。
 
-## 共通提醒
-
-本卡 artifact_status=spec-done 僅代表 APF 文件 / spec artifact 已完成；status=open 與 runtime_status=not-started 表示 upstream runtime / validator 接線尚未完成。
-
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0017-* | 阻塞: TASK-APF-0015, TASK-APF-0016
 2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: specs/APF-0017 已備好 wiring 設計（npm script + validator id + profile policy）；4 項 acceptance 皆為 runtime profile wiring，需上游修改 package.json + validators.config.json 後才能驗證 | 阻塞: upstream profile wiring 實作
+2026-05-19 | 狀態: done | 驗證: pass | 變更: package.json 新增 validate:police-family script，validators.config.json 新增 validator entry + standard profile wiring，full profile 繼承 standard 並保留 validate:police | 完成

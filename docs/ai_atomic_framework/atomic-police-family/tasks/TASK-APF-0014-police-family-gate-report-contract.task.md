@@ -3,10 +3,10 @@ doc_id: doc_other_0641
 task_id: TASK-APF-0014
 title: PoliceFamilyGateReport contract
 milestone: M7
-status: open
-artifact_status: spec-done
-runtime_status: upstream-api-not-applied
-upstream_mutation_status: not-applied
+status: done
+artifact_status: done
+runtime_status: done
+upstream_mutation_status: applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "codex"
 blocked_by: [TASK-APF-0002, TASK-APF-0012, TASK-APF-0013]
@@ -84,11 +84,8 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:review-advisory
 
 若上游 schema proposal 需要回退，保留舊 report parser 相容層並以新 proposal 取代；文件階段只回退 APF-0014 spec 與任務卡。
 
-## 共通提醒
-
-本卡 artifact_status=spec-done 僅代表 APF 文件 / spec artifact 已完成；status=open 與 runtime_status=upstream-api-not-applied 表示 upstream runtime / validator 接線尚未完成。
-
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0014-* | 阻塞: TASK-APF-0002, TASK-APF-0012, TASK-APF-0013
 2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: 4 項 schema design acceptance 全部勾選；upstream schema proposal artifact 已完整；status 維持 open 直到 upstream API 套用 | 阻塞: upstream API 套用
+2026-05-19 | 狀態: done | 驗證: pass | 變更: PoliceFamilyGateReport contract 已實作於 validate-police-family.ts（含 schemaId / specVersion / families / blockingFindings / advisoryFindings）；validate:police-family 驗證通過 | 完成

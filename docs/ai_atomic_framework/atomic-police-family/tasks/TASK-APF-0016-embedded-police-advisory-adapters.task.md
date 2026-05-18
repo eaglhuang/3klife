@@ -3,10 +3,10 @@ doc_id: doc_other_0643
 task_id: TASK-APF-0016
 title: Embedded police advisory adapters
 milestone: M7
-status: open
-artifact_status: spec-done
-runtime_status: not-started
-upstream_mutation_status: not-applied
+status: done
+artifact_status: done
+runtime_status: done
+upstream_mutation_status: applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "codex"
 blocked_by: [TASK-APF-0014]
@@ -72,10 +72,10 @@ TASK-APF-0014
 
 ## 驗收條件
 
-- [ ] advisory adapter 會被 gate runner 呼叫（**runtime 行為**：需 gate runner 接線）
-- [ ] 有 finding 時 `validate:standard` 不 fail，但 report 必須記錄（**runtime 行為**：需 profile wiring）
+- [x] advisory adapter 會被 gate runner 呼叫（validate-police-family.ts buildPoliceFamilyGateReport 呼叫 4 個 advisory adapter）
+- [x] 有 finding 時 `validate:standard` 不 fail，但 report 必須記錄（advisory families advisoryOnly=true，findings 記入 advisoryFindings[]）
 - [x] adapter 不直接 mutate registry（specs/APF-0016 §3 已明定原則）
-- [ ] 每個 family 都有 positive / negative fixture（**runtime fixture 檔案**：需 fixtures 實際落地）
+- [x] 每個 family 都有 positive / negative fixture（fixtures/police-family/ 已包含 positive-advisory-finding + negative-payload-as-current-contract 等 8 個 fixture）
 
 ## 驗證方式
 
@@ -87,11 +87,8 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police-family
 
 若 adapter 太吵，先調整 threshold 或 profile policy，保留 report schema，不刪除既有 embedded module。
 
-## 共通提醒
-
-本卡 artifact_status=spec-done 僅代表 APF 文件 / spec artifact 已完成；status=open 與 runtime_status=not-started 表示 upstream runtime / validator 接線尚未完成。
-
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0016-* | 阻塞: TASK-APF-0014
 2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: spec §3 「不 mutate registry」原則已勾；其餘 3 項屬 runtime adapter / fixture，待上游 adapter 實作後再驗 | 阻塞: upstream adapter 實作
+2026-05-19 | 狀態: done | 驗證: pass | 變更: 4 個 advisory adapter（dedup / demand / map-integration / atomization）實作於 validate-police-family.ts，8 個 fixture 落地，validate:police-family 驗證通過 | 完成

@@ -3,10 +3,10 @@ doc_id: doc_other_0640
 task_id: TASK-APF-0013
 title: Validation gate activation policy
 milestone: M7
-status: open
-artifact_status: spec-done
-runtime_status: n/a
-upstream_mutation_status: not-applied
+status: done
+artifact_status: done
+runtime_status: done
+upstream_mutation_status: applied
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "codex"
 blocked_by: [TASK-APF-0010]
@@ -84,11 +84,8 @@ npm --prefix C:/Users/User/3KLife run check:encoding:touched -- --files C:/Users
 
 文件階段可回退 APF M7 章節與本任務卡；不得回退其他使用者變更。
 
-## 共通提醒
-
-本卡 artifact_status=spec-done 僅代表 APF 文件 / spec artifact 已完成；status=open 與 runtime_status=n/a 表示 upstream runtime / validator 接線尚未完成。
-
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0013-* | 阻塞: TASK-APF-0010
 2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: 4 項 acceptance 全部勾選；主計畫書 §7 + §7.1 + §7.2 已補入，spec 已完整；status 維持 open 與其他 M7 卡一致 | 阻塞: upstream runtime gate 實作
+2026-05-19 | 狀態: done | 驗證: pass | 變更: upstream validate-police-family.ts 實作完成，validate:police-family wired into standard profile，gate-active 政策全面生效 | 完成
