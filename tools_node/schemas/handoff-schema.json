@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "handoff-schema.json",
+  "title": "Handoff Record v1",
+  "description": "跨 Agent 交班紀錄 schema。由 turn-report-generator.js 產生，記錄本輪做了什麼、改了哪些檔、驗證結果以及交班後的待處理風險。",
+  "$comment": "Versioning: schemaVersion=handoff-record/v1 在欄位名稱、必填欄位、語意不變的情況下保持不變。新增、刪除或改名頂層欄位，或改變 required 語意，必須升版為 handoff-record/v2。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "generatedAt",
+    "workItemId",
+    "agentName",
+    "summary",
+    "changedFiles",
+    "validationEvidence",
+    "remainingRisks"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "handoff-record/v1",
+      "description": "固定值 'handoff-record/v1'，用於 schema 路由"
+    },
+    "kind": {
+      "const": "handoff-record",
+      "description": "固定值，區分不同 artifact 種類"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "交班紀錄產生的 ISO 8601 timestamp"
+    },
+    "workItemId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "本輪主要工作項目 ID，例如 TASK-DGB-0007"
+    },
+    "agentName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "執行本輪工作的 Agent 識別名稱"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "本輪工作的人類可讀摘要（1-5 句）"
+    },
+    "changedFiles": {
+      "type": "array",
+      "description": "本輪實際變更的檔案路徑（相對 repo root，posix 分隔符）",
+      "items": {
+        "type": "string",
+        "pattern": "^[^\\\\]+$"
+      },
+      "uniqueItems": true
+    },
+    "validationEvidence": {
+      "type": "array",
+      "description": "本輪執行過的驗證項目及結果，供接手 Agent 確認品質基線",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "outcome"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "驗證類型，例如 node-syntax-check / encoding-check / unit-test / compute-gate"
+          },
+          "outcome": {
+            "enum": ["pass", "warn", "fail", "skip"],
+            "description": "驗證結果"
+          },
+          "detail": {
+            "type": "string",
+            "description": "補充說明（可選），例如錯誤訊息或測試數量"
+          },
+          "evidenceRef": {
+            "type": "string",
+            "description": "可追溯的 EvidenceStore 或 artifact 路徑（可選）"
+          }
+        }
+      }
+    },
+    "remainingRisks": {
+      "type": "array",
+      "description": "本輪未解決的風險或已知問題，接手 Agent 需優先處理",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "continuationHints": {
+      "type": "array",
+      "description": "給接手 Agent 的行動提示（可選），例如『先跑 compute-gate 再 commit』",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidenceStoreRef": {
+      "type": "string",
+      "description": "指向 EvidenceStore 根目錄或特定 run ID 的路徑/URI（可選）"
+    },
+    "taskLockSnapshot": {
+      "type": "object",
+      "description": "交班時刻的 task lock 快照（可選）",
+      "additionalProperties": false,
+      "properties": {
+        "taskId": { "type": "string" },
+        "agentName": { "type": "string" },
+        "lockedAt": { "type": "string", "format": "date-time" },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {}
+}

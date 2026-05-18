@@ -3,7 +3,7 @@ id: "TASK-DGB-0008"
 title: "Handoff / turn artifact schema"
 owner: "ClaudeCode_Haiku"
 priority: "P1"
-status: "open"
+status: "done"
 type: "implementation"
 phase: "M0"
 created: "2026-05-17"
@@ -11,7 +11,7 @@ created_by_agent: "codex-gpt-5.5"
 related_cards: []
 depends:
   - TASK-DGB-0001
-notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無"
+notes: "2026-05-17 | 狀態: done | 驗證: node-syntax-check=pass | 變更: handoff-schema.json / context-summary-schema.json / turn-report-generator.js 建立完成 | 阻塞: 無"
 ---
 
 # TASK-DGB-0008 Handoff / turn artifact schema

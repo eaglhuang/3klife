@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "context-summary-schema.json",
+  "title": "Context Summary v1",
+  "description": "輕量版回合內 context 快照 schema。用於 mid-turn 或 session memory 存檔，記錄當前進度、關鍵決策與阻塞點，讓 context 壓縮後仍能快速重建狀態。",
+  "$comment": "Versioning: schemaVersion=context-summary/v1 在欄位名稱、必填欄位、語意不變的情況下保持不變。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "capturedAt",
+    "workItemId",
+    "currentPhase",
+    "keyDecisions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "context-summary/v1",
+      "description": "固定值 'context-summary/v1'"
+    },
+    "kind": {
+      "const": "context-summary",
+      "description": "固定值，區分不同 artifact 種類"
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "快照產生的 ISO 8601 timestamp"
+    },
+    "workItemId": {
+      "type": "string",
+      "description": "當前工作項目 ID（可含多個，逗號分隔）"
+    },
+    "currentPhase": {
+      "type": "string",
+      "minLength": 1,
+      "description": "目前所在的工作階段，例如 'implementation' / 'review' / 'commit'"
+    },
+    "keyDecisions": {
+      "type": "array",
+      "description": "本輪已確定的重要決策，接手時不需重複討論",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "blockers": {
+      "type": "array",
+      "description": "目前阻塞進度的問題，需要解決後才能繼續",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nextActions": {
+      "type": "array",
+      "description": "下一步的具體行動清單（優先順序由高到低）",
+      "items": {
+        "type": "string"
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "description": "尚未解答的技術或規格問題",
+      "items": {
+        "type": "string"
+      }
+    },
+    "touchedFiles": {
+      "type": "array",
+      "description": "本輪已修改或讀取的關鍵檔案（posix 相對路徑）",
+      "items": {
+        "type": "string",
+        "pattern": "^[^\\\\]+$"
+      },
+      "uniqueItems": true
+    },
+    "contextBudgetUsed": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "預估已使用的 context 預算佔比（0.0-1.0），供 token guard 判斷是否需要壓縮"
+    },
+    "agentName": {
+      "type": "string",
+      "description": "產生此快照的 Agent 識別名稱（可選）"
+    },
+    "sessionRef": {
+      "type": "string",
+      "description": "session ID 或 handoff record 的路徑參照（可選）"
+    }
+  }
+}
