@@ -40,6 +40,8 @@ from sanguo_governance_loader import (
     load_external_source_benchmark_policy,
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
+    load_governance_drift_detection_policy,
+    load_governance_operator_summary_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -198,6 +200,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     governance_regression_harness_policy = load_governance_regression_harness_policy(root)
     governance_validation_policy = load_governance_validation_stabilization_policy(root)
     governance_release_policy = load_governance_release_readiness_policy(root)
+    governance_drift_policy = load_governance_drift_detection_policy(root)
+    governance_operator_policy = load_governance_operator_summary_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1385,6 +1389,28 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     release_sections = [str(item).strip() for item in governance_release_policy.get("requiredHandoffSections") or []]
     if sorted(set(release_sections)) != ["catalogs", "policies", "rules", "schemas"]:
         raise SanguoGovernanceError("policy-governance-release-readiness requiredHandoffSections must cover catalogs/policies/rules/schemas")
+    drift_tracked_keys = [str(item).strip() for item in governance_drift_policy.get("trackedHarnessSummaryKeys") or []]
+    if not drift_tracked_keys or any(not item for item in drift_tracked_keys):
+        raise SanguoGovernanceError("policy-governance-drift-detection trackedHarnessSummaryKeys cannot be empty")
+    drift_baseline_minimums = governance_drift_policy.get("baselineMinimums")
+    if not isinstance(drift_baseline_minimums, dict) or not drift_baseline_minimums:
+        raise SanguoGovernanceError("policy-governance-drift-detection baselineMinimums cannot be empty")
+    if any(float(value) < 0 for value in drift_baseline_minimums.values()):
+        raise SanguoGovernanceError("policy-governance-drift-detection baselineMinimums cannot contain negative values")
+    drift_max_allowed = governance_drift_policy.get("maxAllowed")
+    if not isinstance(drift_max_allowed, dict) or not drift_max_allowed:
+        raise SanguoGovernanceError("policy-governance-drift-detection maxAllowed cannot be empty")
+    if any(float(value) < 0 for value in drift_max_allowed.values()):
+        raise SanguoGovernanceError("policy-governance-drift-detection maxAllowed cannot contain negative values")
+    operator_audiences = [str(item).strip() for item in governance_operator_policy.get("audiences") or []]
+    if not operator_audiences or any(not item for item in operator_audiences):
+        raise SanguoGovernanceError("policy-governance-operator-summary audiences cannot be empty")
+    operator_sections = governance_operator_policy.get("summarySections")
+    if not isinstance(operator_sections, list) or not operator_sections:
+        raise SanguoGovernanceError("policy-governance-operator-summary summarySections cannot be empty")
+    for row in operator_sections:
+        if not isinstance(row, dict) or not str(row.get("key") or "").strip() or not str(row.get("label") or "").strip():
+            raise SanguoGovernanceError("policy-governance-operator-summary summarySections require key/label")
 
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
@@ -1564,6 +1590,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "governanceValidationRequiredSummaryKeyCount": len(validation_summary_keys),
         "governanceReleaseReadinessRequiredKeyCount": len(release_required_keys),
         "governanceReleaseReadinessSectionCount": len(release_sections),
+        "governanceDriftTrackedMetricCount": len(drift_tracked_keys),
+        "governanceDriftBaselineMinimumCount": len(drift_baseline_minimums),
+        "governanceOperatorSummaryAudienceCount": len(operator_audiences),
+        "governanceOperatorSummarySectionCount": len(operator_sections),
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

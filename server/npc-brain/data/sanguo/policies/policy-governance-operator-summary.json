@@ -1,0 +1,24 @@
+{
+  "id": "Policy_GovernanceOperatorSummary_P1",
+  "description": "Defines the human-facing operator summary emitted by the Sanguo governance regression harness.",
+  "audiences": [
+    "next-agent",
+    "maintainer",
+    "release-reviewer"
+  ],
+  "summarySections": [
+    {"key": "status", "label": "Harness Status"},
+    {"key": "releaseReadiness", "label": "Release Readiness"},
+    {"key": "governanceDrift", "label": "Governance Drift"},
+    {"key": "handoffIndex", "label": "Handoff Coverage"},
+    {"key": "fixtureMatrix", "label": "Fixture Coverage"}
+  ],
+  "requiredPayloadKeys": [
+    "status",
+    "summary",
+    "releaseReadiness",
+    "governanceDrift",
+    "handoffIndex",
+    "fixtureMatrix"
+  ]
+}

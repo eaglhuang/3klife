@@ -8,6 +8,8 @@ from typing import Any
 
 from sanguo_governance_loader import (
     SanguoGovernanceError,
+    load_governance_drift_detection_policy,
+    load_governance_operator_summary_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -29,11 +31,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--regression-harness-policy", default=None, help="Override policy-governance-regression-harness.json path")
     parser.add_argument("--validation-policy", default=None, help="Override policy-governance-validation-stabilization.json path")
     parser.add_argument("--release-readiness-policy", default=None, help="Override policy-governance-release-readiness.json path")
+    parser.add_argument("--drift-detection-policy", default=None, help="Override policy-governance-drift-detection.json path")
+    parser.add_argument("--operator-summary-policy", default=None, help="Override policy-governance-operator-summary.json path")
     parser.add_argument("--output-root", default=None, help="Output root for harness reports")
     parser.add_argument("--strict-phase-plans", action="store_true", help="Fail if a planned phase document is missing")
     parser.add_argument("--strict-validation-coverage", action="store_true", help="Fail if required validation summary keys are missing")
     parser.add_argument("--strict-fixtures", action="store_true", help="Fail if fixture manifests or referenced files are missing")
     parser.add_argument("--strict-release-readiness", action="store_true", help="Fail if release readiness checks are not satisfied")
+    parser.add_argument("--strict-drift", action="store_true", help="Fail if governance drift checks are not satisfied")
     parser.add_argument("--no-write", action="store_true", help="Print JSON payload without writing report files")
     return parser.parse_args()
 
@@ -160,6 +165,76 @@ def release_readiness(policy: dict[str, Any], summary: dict[str, Any], handoff: 
     }
 
 
+def governance_drift(policy: dict[str, Any], summary: dict[str, Any]) -> dict[str, Any]:
+    checks: list[dict[str, Any]] = []
+    for key, minimum in (policy.get("baselineMinimums") or {}).items():
+        key_text = str(key)
+        actual = float(summary.get(key_text, 0))
+        expected = float(minimum)
+        checks.append(
+            {
+                "key": key_text,
+                "direction": "min",
+                "actual": actual,
+                "expected": expected,
+                "ok": actual >= expected,
+            }
+        )
+    for key, maximum in (policy.get("maxAllowed") or {}).items():
+        key_text = str(key)
+        actual = float(summary.get(key_text, 0))
+        expected = float(maximum)
+        checks.append(
+            {
+                "key": key_text,
+                "direction": "max",
+                "actual": actual,
+                "expected": expected,
+                "ok": actual <= expected,
+            }
+        )
+    failed = [row for row in checks if not row["ok"]]
+    return {
+        "status": "ok" if not failed else "failed",
+        "checkCount": len(checks),
+        "failureCount": len(failed),
+        "checks": checks,
+    }
+
+
+def operator_summary(
+    policy: dict[str, Any],
+    payload_status: str,
+    summary: dict[str, Any],
+    readiness: dict[str, Any],
+    drift: dict[str, Any],
+) -> dict[str, Any]:
+    section_values = {
+        "status": payload_status,
+        "releaseReadiness": readiness["status"],
+        "governanceDrift": drift["status"],
+        "handoffIndex": f"{summary.get('handoffSectionCount', 0)} sections / {summary.get('handoffConsumerCount', 0)} consumers",
+        "fixtureMatrix": f"{summary.get('fixtureManifestCount', 0)} manifests / {summary.get('missingFixtureFileCount', 0)} missing files",
+    }
+    sections: list[dict[str, str]] = []
+    for row in policy.get("summarySections") or []:
+        if not isinstance(row, dict):
+            continue
+        key = str(row.get("key") or "")
+        sections.append(
+            {
+                "key": key,
+                "label": str(row.get("label") or key),
+                "value": str(section_values.get(key, "")),
+            }
+        )
+    return {
+        "audiences": [str(item) for item in policy.get("audiences") or []],
+        "sectionCount": len(sections),
+        "sections": sections,
+    }
+
+
 def render_markdown(payload: dict[str, Any]) -> str:
     lines = [
         "# Sanguo Governance Regression Harness",
@@ -174,6 +249,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"- Missing Fixture Files: `{payload['summary']['missingFixtureFileCount']}`",
         f"- Handoff Consumers: `{payload['summary']['handoffConsumerCount']}`",
         f"- Release Readiness: `{payload['releaseReadiness']['status']}`",
+        f"- Governance Drift: `{payload['governanceDrift']['status']}`",
         "",
         "## Phase Matrix",
         "",
@@ -212,6 +288,14 @@ def render_markdown(payload: dict[str, Any]) -> str:
             lines.append(f"- Missing Handoff Section: `{section}`")
     else:
         lines.append("- Missing Handoff Section: `none`")
+    lines.extend(["", "## Governance Drift", ""])
+    drift = payload["governanceDrift"]
+    lines.append(f"- Status: `{drift['status']}`")
+    lines.append(f"- Checks: `{drift['checkCount']}`")
+    lines.append(f"- Failures: `{drift['failureCount']}`")
+    lines.extend(["", "## Operator Summary", ""])
+    for row in payload["operatorSummary"]["sections"]:
+        lines.append(f"- {row['label']}: `{row['value']}`")
     lines.extend(["", "## Governance Consumers", ""])
     for row in payload["expectedGovernanceFiles"]:
         lines.append(f"- `{row['section']}/{row['file']}` -> {row['consumer']}")
@@ -234,6 +318,14 @@ def main() -> None:
         release_policy = load_governance_release_readiness_policy(
             root,
             governance_release_readiness_policy=args.release_readiness_policy,
+        )
+        drift_policy = load_governance_drift_detection_policy(
+            root,
+            governance_drift_detection_policy=args.drift_detection_policy,
+        )
+        operator_policy = load_governance_operator_summary_policy(
+            root,
+            governance_operator_summary_policy=args.operator_summary_policy,
         )
         expected_rows = validate_expected_files(root)
         shape_summary = validate_minimum_shapes(root)
@@ -264,6 +356,9 @@ def main() -> None:
     summary["releaseReadinessCheckCount"] = readiness["checkCount"]
     summary["releaseReadinessFailureCount"] = readiness["failureCount"]
     summary["releaseReadinessMissingSectionCount"] = readiness["missingSectionCount"]
+    drift = governance_drift(drift_policy, summary)
+    summary["governanceDriftCheckCount"] = drift["checkCount"]
+    summary["governanceDriftFailureCount"] = drift["failureCount"]
     status = "ok"
     if args.strict_phase_plans and missing_phase_plans:
         status = "failed"
@@ -273,6 +368,10 @@ def main() -> None:
         status = "failed"
     if args.strict_release_readiness and readiness["status"] != "ok":
         status = "failed"
+    if args.strict_drift and drift["status"] != "ok":
+        status = "failed"
+    operator = operator_summary(operator_policy, status, summary, readiness, drift)
+    summary["operatorSummarySectionCount"] = operator["sectionCount"]
     payload = {
         "generatedAt": utc_now(),
         "status": status,
@@ -283,6 +382,8 @@ def main() -> None:
         "fixtureMatrix": fixture_rows,
         "handoffIndex": handoff,
         "releaseReadiness": readiness,
+        "governanceDrift": drift,
+        "operatorSummary": operator,
         "expectedGovernanceFiles": expected_rows,
         "minimumShapeSummary": shape_summary,
     }

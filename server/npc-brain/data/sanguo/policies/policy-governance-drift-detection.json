@@ -1,0 +1,25 @@
+{
+  "id": "Policy_GovernanceDriftDetection_P1",
+  "description": "Defines non-runtime drift checks for Sanguo governance harness summary metrics.",
+  "trackedHarnessSummaryKeys": [
+    "expectedFileCount",
+    "phasePlanCount",
+    "fixtureManifestCount",
+    "handoffSectionCount",
+    "handoffConsumerCount",
+    "releaseReadinessFailureCount"
+  ],
+  "baselineMinimums": {
+    "expectedFileCount": 60,
+    "phasePlanCount": 16,
+    "fixtureManifestCount": 1,
+    "handoffSectionCount": 4,
+    "handoffConsumerCount": 34
+  },
+  "maxAllowed": {
+    "releaseReadinessFailureCount": 0,
+    "missingPhasePlanCount": 0,
+    "missingValidationSummaryKeyCount": 0,
+    "missingFixtureFileCount": 0
+  }
+}

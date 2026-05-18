@@ -8,6 +8,8 @@
     "fixture-manifests",
     "handoff-index",
     "release-readiness",
+    "drift-detection",
+    "operator-summary",
     "encoding"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
@@ -31,6 +33,8 @@
     {"phase": 30, "name": "Governance Validation Stabilization", "plan": "refactor-phase30-plan.zh-TW.md"},
     {"phase": 31, "name": "Regression Fixture Consolidation", "plan": "refactor-phase31-plan.zh-TW.md"},
     {"phase": 32, "name": "Governance Handoff Index", "plan": "refactor-phase32-plan.zh-TW.md"},
-    {"phase": 33, "name": "Governance Release Readiness Gate", "plan": "refactor-phase33-plan.zh-TW.md"}
+    {"phase": 33, "name": "Governance Release Readiness Gate", "plan": "refactor-phase33-plan.zh-TW.md"},
+    {"phase": 34, "name": "Governance Drift Detection", "plan": "refactor-phase34-plan.zh-TW.md"},
+    {"phase": 35, "name": "Governance Operator Summary", "plan": "refactor-phase35-plan.zh-TW.md"}
   ]
 }
