@@ -28,8 +28,8 @@
 先開 `npc-brain` API：
 
 ```powershell
-Set-Location C:\Users\User\3KLife\server\npc-brain
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+Set-Location C:\Users\User\3klife-npc-brain
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8765
 ```
 
 再開靜態頁面：
@@ -48,7 +48,7 @@ http://127.0.0.1:8787/examples/liu-bei-memory-intent-game/index.html
 如果要指定別的 API base 或別的人物，可以加 query string：
 
 ```text
-http://127.0.0.1:8787/examples/liu-bei-memory-intent-game/index.html?generalId=liu-bei&apiBase=http://127.0.0.1:8000
+http://127.0.0.1:8787/examples/liu-bei-memory-intent-game/index.html?generalId=liu-bei&apiBase=http://127.0.0.1:8765
 ```
 
 ## 插圖與台詞能力
@@ -70,7 +70,7 @@ Stop-Process -Id <PID> -Force
 再重啟新版：
 
 ```powershell
-cmd /c start "" /b C:\Users\User\3KLife\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --app-dir C:\Users\User\3KLife\server\npc-brain
+cmd /c start "" /b python -m uvicorn app.main:app --host 127.0.0.1 --port 8765 --app-dir C:\Users\User\3klife-npc-brain
 ```
 
 ## 設計重點

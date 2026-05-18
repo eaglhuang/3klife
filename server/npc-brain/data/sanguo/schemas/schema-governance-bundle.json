@@ -1,9 +1,0 @@
-{
-  "id": "Schema_GovernanceBundle_Minimal",
-  "requiredSections": [
-    "catalogs",
-    "policies",
-    "rules",
-    "schemas"
-  ]
-}

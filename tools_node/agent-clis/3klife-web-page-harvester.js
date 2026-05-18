@@ -22,12 +22,16 @@ const {
 } = require('../lib/agent-cli-common');
 
 const TOOL_NAME = '3klife-web-page-harvester';
-const DEFAULT_SOURCES_CONFIG = path.resolve(
-  __dirname,
-  '..',
-  '..',
-  'server',
-  'npc-brain',
+
+function resolveNpcBrainRepo() {
+  if (process.env.NPC_BRAIN_REPO) {
+    return path.resolve(process.env.NPC_BRAIN_REPO);
+  }
+  return path.resolve(__dirname, '..', '..', '..', '3klife-npc-brain');
+}
+
+const DEFAULT_SOURCES_CONFIG = path.join(
+  resolveNpcBrainRepo(),
   'pipelines',
   'sanguo-rag',
   'config',

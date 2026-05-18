@@ -38,11 +38,22 @@ const GENERIC_NOISE_LABELS = new Set([
   '\u7687\u53d4',
 ]);
 
+function resolveNpcBrainRepo() {
+  if (process.env.NPC_BRAIN_REPO) {
+    return path.resolve(process.env.NPC_BRAIN_REPO);
+  }
+  return path.resolve(PROJECT_ROOT, '..', '3klife-npc-brain');
+}
+
+function npcBrainPath(...segments) {
+  return path.join(resolveNpcBrainRepo(), ...segments);
+}
+
 const PATHS = {
   generals: path.join(PROJECT_ROOT, 'assets', 'resources', 'data', 'generals.json'),
   personRegistry: path.join(PROJECT_ROOT, 'assets', 'resources', 'data', 'person-registry.json'),
-  manualRoster: path.join(PROJECT_ROOT, 'server', 'npc-brain', 'pipelines', 'sanguo-rag', 'config', 'manual-roster-seeds.json'),
-  aliasOverrides: path.join(PROJECT_ROOT, 'server', 'npc-brain', 'pipelines', 'sanguo-rag', 'config', 'general-alias-overrides.json'),
+  manualRoster: npcBrainPath('pipelines', 'sanguo-rag', 'config', 'manual-roster-seeds.json'),
+  aliasOverrides: npcBrainPath('pipelines', 'sanguo-rag', 'config', 'general-alias-overrides.json'),
   courtesyAliases: path.join(PROJECT_ROOT, 'artifacts', 'data-pipeline', 'sanguo-rag', 'extracted', 'alias-dictionary', 'romance-courtesy-aliases.json'),
 };
 

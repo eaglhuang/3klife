@@ -59,7 +59,7 @@ npm run check:ui-spec
 - 系統主規格：`docs/遊戲規格文件/系統規格書/`
 - 人物頁規格：`docs/遊戲規格文件/系統規格書/武將人物介面規格書.md`
 - 資料契約：`docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md`
-- NPC Brain 服務入口：`server/npc-brain/README.md`
+- NPC Brain 服務入口：`C:\Users\User\3klife-npc-brain\README.md`
 
 ## 開發提醒
 

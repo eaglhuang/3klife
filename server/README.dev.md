@@ -55,7 +55,8 @@ override 預設映射：
 `npc-brain` 已獨立成第二份 compose：
 
 ```bash
-docker compose -f docker-compose.npc-brain.yml --env-file server/npc-brain/.env up -d --build
+cd C:\Users\User\3klife-npc-brain
+docker compose -f docker-compose.dev.yml up -d --build
 ```
 
 ## Smoke Commands
@@ -94,7 +95,7 @@ npm run smoke:all:strict
 
 - Root env template: `.env.example`
 - Server env template: `server/.env.example`
-- NPC brain env template: `server/npc-brain/.env.example`
+- NPC brain env template: `C:\Users\User\3klife-npc-brain\.env.example`
 
 `server` 會先讀 `server/.env`，找不到時再讀 root `.env`。
 

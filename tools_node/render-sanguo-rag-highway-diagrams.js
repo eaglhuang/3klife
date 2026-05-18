@@ -7,9 +7,20 @@ const path = require('path');
 const puppeteer = require('puppeteer-core');
 const { findBrowser } = require('./render-html-snapshot');
 
+function resolveNpcBrainRepo() {
+  if (process.env.NPC_BRAIN_REPO) {
+    return path.resolve(process.env.NPC_BRAIN_REPO);
+  }
+  return path.resolve(__dirname, '..', '..', '3klife-npc-brain');
+}
+
+function defaultSanguoDiagramOutDir() {
+  return path.join(resolveNpcBrainRepo(), 'pipelines', 'sanguo-rag', 'diagram-assets');
+}
+
 function parseArgs(argv) {
   const args = {
-    outDir: 'server/npc-brain/pipelines/sanguo-rag/diagram-assets',
+    outDir: defaultSanguoDiagramOutDir(),
     browser: null,
   };
 
