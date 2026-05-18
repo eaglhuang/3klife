@@ -3,7 +3,9 @@ doc_id: doc_other_0168
 task_id: TASK-APO-0015
 title: Release incident response + known-bad-versions 黑名單
 milestone: M8
-status: open
+status: done
+started_at: 2026-05-18T11:35:00+08:00
+started_by_agent: vs-insiders-gpt-5.4
 blocked_by: [TASK-APO-0014]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -29,6 +31,9 @@ non_goals:
   - 安全揭露程序（屬 TASK-APO-0018）
   - dist-tag 切換（屬 TASK-APO-0019）
 created_at: 2026-05-18T00:00:00+08:00
+completed_at: 2026-05-18T11:55:00+08:00
+completed_by_agent: vs-insiders-gpt-5.4
+commit: 8b6c672 (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
 ---
 
@@ -48,9 +53,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] `known-bad-versions.json` fixture 中標記目前 CLI 版本 → CLI 拒絕寫入動作。
-- [ ] CLI 顯示 replacement version + reason summary。
-- [ ] validate-known-bad-versions.ts 失敗訊息可機器解析。
+- [x] `known-bad-versions.json` fixture 中標記目前 CLI 版本 → CLI 拒絕寫入動作。
+- [x] CLI 顯示 replacement version + reason summary。
+- [x] validate-known-bad-versions.ts 失敗訊息可機器解析。
 
 ## 驗證方式
 
@@ -62,3 +67,4 @@ node --experimental-strip-types scripts/validate-known-bad-versions.ts --mode va
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 release incident response 後續卡 | 阻塞: TASK-APO-0014
+2026-05-18 | 狀態: done | 驗證: `node --experimental-strip-types scripts/validate-known-bad-versions.ts --mode validate` pass；`tests/known-bad/known-bad-version.test.ts` pass；`build-release-integrity.ts --dry-run` pass 且已包含 `known-bad-versions.json`；`npm run validate:standard` 已跑到本卡 validator pass，但因既有 `multi-agent-confidence` matrix stale 失敗（非本卡 touched files） | 變更: 新增 known-bad manifest/schema/SOP、CLI deny-write gate、`doctor --known-bad` 診斷、release integrity bundle sync、validator 與 fixture | 阻塞: none
