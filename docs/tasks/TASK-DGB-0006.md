@@ -3,15 +3,18 @@ id: "TASK-DGB-0006"
 title: "Markdown task card adapter"
 owner: "ClaudeCode_Haiku"
 priority: "P2"
-status: "open"
+status: "done"
 type: "implementation"
 phase: "M0"
 created: "2026-05-17"
 created_by_agent: "codex-gpt-5.5"
+started_at: "2026-05-18T09:20:00+08:00"
+started_by_agent: "vs-code-gpt-5.4-mini"
+completed_at: "2026-05-18T09:26:28.4813734+08:00"
 related_cards: []
 depends:
   - TASK-DGB-0001
-notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無"
+notes: "2026-05-18 | 狀態: done | 驗證: markdown-task-adapter read successful + notes-protocol-converter parse+format passed | 變更: 新增 frontmatter-mapping schema、markdown-task-adapter 讀寫、notes-protocol-converter 日誌協作協議 | 阻塞: 無"
 ---
 
 # TASK-DGB-0006 Markdown task card adapter
@@ -29,4 +32,4 @@ notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener �
 - 無
 
 ## 備註
-- 2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無
+- 2026-05-18 | 狀態: done | 驗證: markdown-task-adapter read successful + notes-protocol-converter parse+format passed | 變更: 新增 frontmatter-mapping schema、markdown-task-adapter 讀寫、notes-protocol-converter 日誌協作協議 | 阻塞: 無

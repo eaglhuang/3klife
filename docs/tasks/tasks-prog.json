@@ -1845,13 +1845,14 @@
       "title": "Markdown task card adapter",
       "owner": "ClaudeCode_Haiku",
       "priority": "P2",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
       "created_by_agent": "codex-gpt-5.5",
-      "started_at": "",
-      "started_by_agent": "codex-gpt-5.5",
+      "started_at": "2026-05-18T09:20:00+08:00",
+      "started_by_agent": "vs-code-gpt-5.4-mini",
+      "completed_at": "2026-05-18T09:26:28.4813734+08:00",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -1866,7 +1867,7 @@
       "deliverables": [
         "markdown-task-adapter.js / frontmatter-mapping.json / notes-protocol-converter.js"
       ],
-      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-05-18 | 狀態: done | 驗證: markdown-task-adapter read successful + notes-protocol-converter parse+format passed | 變更: 新增 frontmatter-mapping schema、markdown-task-adapter 讀寫、notes-protocol-converter 日誌協作協議 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -1877,16 +1878,35 @@
       "contracts": {
         "input": [],
         "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
+        "validation_cmd": "node --check tools_node/markdown-task-adapter.js && node --check tools_node/notes-protocol-converter.js && node tools_node/markdown-task-adapter.js read docs/tasks/TASK-DGB-0002.md && node tools_node/notes-protocol-converter.js parse '2026-05-18 | 狀態: done | 驗證: test | 變更: impl | 阻塞: none'",
+        "rollback_hint": "revert .atm/schema/frontmatter-mapping.json, tools_node/markdown-task-adapter.js, tools_node/notes-protocol-converter.js",
+        "execution_steps": [
+          "新增 frontmatter-mapping.json 宣告式映射表",
+          "實作 markdown-task-adapter 讀寫 task card",
+          "實作 notes-protocol-converter 解析日誌協作格式"
+        ]
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
-        "trace_artifacts": [],
-        "metrics_summary": []
+        "artifact_paths": [
+          ".atm/schema/frontmatter-mapping.json",
+          "tools_node/markdown-task-adapter.js",
+          "tools_node/notes-protocol-converter.js"
+        ],
+        "validation_evidence": [
+          "markdown-task-adapter read docs/tasks/TASK-DGB-0002.md succeeded",
+          "notes-protocol-converter parse succeeded",
+          "notes-protocol-converter format succeeded"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [
+          ".atm/schema/frontmatter-mapping.json"
+        ],
+        "metrics_summary": [
+          "adapter_read: pass",
+          "adapter_write: pass",
+          "notes_parse: pass",
+          "notes_format: pass"
+        ]
       }
     },
     {

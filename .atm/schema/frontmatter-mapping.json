@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://3klife.local/schema/frontmatter-mapping/v0.1",
+  "title": "Markdown Task Card Frontmatter Mapping",
+  "description": "Maps Markdown task card frontmatter fields to JSON WorkItem fields.",
+  "type": "object",
+  "required": [
+    "version",
+    "mappings"
+  ],
+  "properties": {
+    "version": {
+      "type": "number"
+    },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "markdown_field",
+          "json_field"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "markdown_field": {
+            "type": "string",
+            "minLength": 1,
+            "description": "YAML frontmatter key in markdown task card"
+          },
+          "json_field": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Corresponding JSON WorkItem field"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "array",
+              "datetime",
+              "object"
+            ],
+            "description": "Data type in JSON"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this field is required"
+          },
+          "list_separator": {
+            "type": "string",
+            "description": "For array types: how to parse comma-separated values"
+          },
+          "converter": {
+            "type": "string",
+            "description": "Optional custom converter function name"
+          }
+        }
+      }
+    }
+  }
+}
