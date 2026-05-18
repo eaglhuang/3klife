@@ -1,0 +1,72 @@
+{
+  "id": "Policy_VectorProductionRolloutPlan_P1",
+  "description": "Conditional, plan-only production rollout policy for Sanguo vector ingestion. This does not enable production writes.",
+  "decisionMode": "plan-only",
+  "enabledByDefault": false,
+  "allowedProviders": [
+    "pinecone",
+    "qdrant"
+  ],
+  "triggerConditions": [
+    {
+      "id": "Trigger_VectorProductionRollout_ConfirmedProductionNeed",
+      "label": "confirmed-production-need",
+      "description": "A production consumer needs vector-backed Sanguo lookup beyond local smoke fixtures."
+    },
+    {
+      "id": "Trigger_VectorProductionRollout_DryRunStable",
+      "label": "dry-run-stable",
+      "description": "Strict-local harness and vector dry-run exports are stable across repeated runs."
+    },
+    {
+      "id": "Trigger_VectorProductionRollout_ProviderQuotaApproved",
+      "label": "provider-quota-approved",
+      "description": "Provider namespace, quota, rollback window, and operator owner are approved before production upsert."
+    }
+  ],
+  "requiredRolloutSteps": [
+    {
+      "id": "RolloutStep_Vector_01_DryRunParity",
+      "name": "dry-run export parity",
+      "checkpoint": "Compare local JSONL export manifest against strict-local harness snapshot before any provider write."
+    },
+    {
+      "id": "RolloutStep_Vector_02_UpsertManifest",
+      "name": "upsert manifest",
+      "checkpoint": "Create a deterministic upsert manifest with input fingerprint, namespace, provider, dedupe keys, and record counts."
+    },
+    {
+      "id": "RolloutStep_Vector_03_SmokeNamespace",
+      "name": "provider smoke namespace",
+      "checkpoint": "Write only to a smoke namespace first and verify query probes before production namespace promotion."
+    },
+    {
+      "id": "RolloutStep_Vector_04_DedupeResumeProbe",
+      "name": "dedupe and resume probe",
+      "checkpoint": "Re-run the same manifest and confirm dedupe/resume prevents duplicate records."
+    },
+    {
+      "id": "RolloutStep_Vector_05_ProductionPromotion",
+      "name": "production namespace promotion",
+      "checkpoint": "Promote only with explicit approval and with rollback manifest available."
+    },
+    {
+      "id": "RolloutStep_Vector_06_RollbackRecord",
+      "name": "rollback record",
+      "checkpoint": "Persist rollback manifest, provider response summary, and post-rollout query probe report."
+    }
+  ],
+  "resumeGuards": [
+    "inputFingerprint",
+    "providerNamespace",
+    "dedupeManifest",
+    "upsertManifest",
+    "rollbackManifest"
+  ],
+  "nonGoals": [
+    "Do not enable production provider writes in this phase.",
+    "Do not add a new vector provider in this phase.",
+    "Do not change vector record schema or source ranking behavior."
+  ],
+  "reportPath": "server/npc-brain/pipelines/sanguo-rag/vector-production-rollout-plan.zh-TW.md"
+}

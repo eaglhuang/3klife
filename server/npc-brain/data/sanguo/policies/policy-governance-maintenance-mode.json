@@ -1,0 +1,33 @@
+{
+  "id": "Policy_GovernanceMaintenanceMode_P1",
+  "description": "Closure policy for Sanguo-RAG governance after Phase 48. Future work should use maintenance triggers instead of adding endless phases.",
+  "mode": "maintenance-only",
+  "phaseRange": {
+    "min": 1,
+    "max": 48
+  },
+  "defaultAction": "do-not-add-new-phase",
+  "allowedFutureTriggers": [
+    "confirmed-production-bottleneck",
+    "schema-breaking-source-change",
+    "security-or-data-loss-risk",
+    "new-runtime-consumer",
+    "operator-runbook-gap"
+  ],
+  "reviewCadence": [
+    "quarterly-governance-review",
+    "after-major-ingestion",
+    "before-production-rollout"
+  ],
+  "requiredExitChecks": [
+    "strict-local-ci",
+    "snapshot-match",
+    "dirty-scope-check"
+  ],
+  "closureReportPath": "server/npc-brain/pipelines/sanguo-rag/governance-maintenance-mode.zh-TW.md",
+  "nonGoals": [
+    "Do not create Phase 49+ unless an allowedFutureTrigger is met.",
+    "Do not change pipeline behavior while closing governance planning.",
+    "Do not mix unrelated game, UI, or tools_node changes into Sanguo governance commits."
+  ]
+}

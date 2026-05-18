@@ -74,3 +74,9 @@ Consumer index 的單一來源是 `sanguo_governance_loader.expected_governance_
 - Phase 43-44：加入單一 CI 入口與人工 runbook。
 - Phase 45-46：完成 residual hardcode freeze audit 與條件式 PostgreSQL migration plan。
 - Phase 47：建議下一步做 Conditional Vector Production Rollout Plan，仍先維持 plan-only。
+
+## Phase 47-48 Tail Governance
+
+- Phase 47：補 `policy-vector-production-rollout-plan.json`，只規劃 production vector rollout 的觸發條件、manifest、dedupe/resume 與 rollback，不啟用 production provider write。
+- Phase 48：補 `policy-governance-maintenance-mode.json`，預設不再新增 Phase 49+；除非有 production bottleneck、schema breaking change、資料安全風險或新 runtime consumer，否則走維護 commit。
+- Operator checklist：後續 Sanguo governance 變更先跑 strict-local CI、確認 snapshot match，再檢查 stage 範圍沒有 unrelated dirty files。

@@ -1023,6 +1023,35 @@ def load_vector_ingestion_hardening_policy(
     return read_governance_json(path, required_id="Policy_VectorIngestionHardening_P1")
 
 
+
+def load_vector_production_rollout_plan_policy(
+    root: str | Path | None = None,
+    *,
+    vector_production_rollout_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(vector_production_rollout_policy).resolve()
+        if vector_production_rollout_policy
+        else _path(base, "policies", "policy-vector-production-rollout-plan.json")
+    )
+    return read_governance_json(path, required_id="Policy_VectorProductionRolloutPlan_P1")
+
+
+def load_governance_maintenance_mode_policy(
+    root: str | Path | None = None,
+    *,
+    governance_maintenance_mode_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(governance_maintenance_mode_policy).resolve()
+        if governance_maintenance_mode_policy
+        else _path(base, "policies", "policy-governance-maintenance-mode.json")
+    )
+    return read_governance_json(path, required_id="Policy_GovernanceMaintenanceMode_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "policies", "file": "policy-full-roster-scoreboard.json", "consumer": "build_full_roster_scoreboard.py"},
@@ -1048,6 +1077,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-postgres-state-migration-plan.json", "consumer": "postgres-state-migration-plan.zh-TW.md"},
         {"section": "policies", "file": "policy-postgres-state-store-evaluation.json", "consumer": "evaluate_postgres_state_store_readiness.py"},
         {"section": "policies", "file": "policy-vector-ingestion-hardening.json", "consumer": "run_vector_ingestion_gate.py"},
+        {"section": "policies", "file": "policy-vector-production-rollout-plan.json", "consumer": "vector-production-rollout-plan.zh-TW.md"},
+        {"section": "policies", "file": "policy-governance-maintenance-mode.json", "consumer": "governance-maintenance-mode.zh-TW.md"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-faction-timeline-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-event-location-seeds.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

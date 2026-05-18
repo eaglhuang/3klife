@@ -40,5 +40,9 @@
     "failOnMissingSummaryKey": true,
     "includeExpectedFiles": true,
     "includeFixtureMatrix": true
-  }
+  },
+  "requiredValidatorSummaryKeys": [
+    "vectorProductionRolloutStepCount",
+    "governanceMaintenanceAllowedTriggerCount"
+  ]
 }

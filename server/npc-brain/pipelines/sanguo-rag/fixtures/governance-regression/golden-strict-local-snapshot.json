@@ -1,24 +1,17 @@
 {
   "id": "GoldenSnapshot_SanguoGovernance_StrictLocal_P1",
-  "description": "Deterministic strict-local governance harness snapshot refreshed by Phase 46.",
-  "runProfile": "strict-local",
-  "comparedPayloadKeys": [
-    "summary",
-    "sensors",
-    "phaseMatrix",
-    "reportBundle"
-  ],
+  "description": "Deterministic strict-local governance harness snapshot for compared payload keys.",
   "payload": {
     "summary": {
-      "expectedFileCount": 71,
-      "phasePlanCount": 27,
+      "expectedFileCount": 73,
+      "phasePlanCount": 29,
       "missingPhasePlanCount": 0,
       "missingValidationSummaryKeyCount": 0,
       "fixtureManifestCount": 1,
       "missingFixtureFileCount": 0,
       "fixtureManifestErrorCount": 0,
-      "minimumShapeMetricCount": 109,
-      "handoffConsumerCount": 38,
+      "minimumShapeMetricCount": 113,
+      "handoffConsumerCount": 40,
       "handoffSectionCount": 4,
       "releaseReadinessCheckCount": 4,
       "releaseReadinessFailureCount": 0,
@@ -56,7 +49,9 @@
       "ci-entrypoint",
       "runbook",
       "residual-hardcode-freeze-audit",
-      "postgres-state-migration-plan"
+      "postgres-state-migration-plan",
+      "vector-production-rollout-plan",
+      "governance-maintenance-mode"
     ],
     "phaseMatrix": [
       {
@@ -219,6 +214,18 @@
         "phase": 46,
         "name": "Conditional PostgreSQL Migration Plan",
         "plan": "refactor-phase46-plan.zh-TW.md",
+        "planExists": true
+      },
+      {
+        "phase": 47,
+        "name": "Conditional Vector Production Rollout Plan",
+        "plan": "",
+        "planExists": true
+      },
+      {
+        "phase": 48,
+        "name": "Governance Maintenance Mode",
+        "plan": "",
         "planExists": true
       }
     ],

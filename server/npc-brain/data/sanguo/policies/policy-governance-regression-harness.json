@@ -21,7 +21,9 @@
     "ci-entrypoint",
     "runbook",
     "residual-hardcode-freeze-audit",
-    "postgres-state-migration-plan"
+    "postgres-state-migration-plan",
+    "vector-production-rollout-plan",
+    "governance-maintenance-mode"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
   "fixtureManifests": [
@@ -165,6 +167,34 @@
       "phase": 46,
       "name": "Conditional PostgreSQL Migration Plan",
       "plan": "refactor-phase46-plan.zh-TW.md"
+    },
+    {
+      "phase": 47,
+      "name": "Conditional Vector Production Rollout Plan",
+      "planFile": "refactor-phase47-plan.zh-TW.md",
+      "status": "completed",
+      "commitScope": "plan-only vector production rollout governance"
+    },
+    {
+      "phase": 48,
+      "name": "Governance Maintenance Mode",
+      "planFile": "refactor-phase48-plan.zh-TW.md",
+      "status": "completed",
+      "commitScope": "governance closure and maintenance triggers"
+    }
+  ],
+  "sensors": [
+    {
+      "id": "vector-production-rollout-plan",
+      "label": "Vector production rollout plan",
+      "required": true,
+      "summaryKey": "vectorProductionRolloutStepCount"
+    },
+    {
+      "id": "governance-maintenance-mode",
+      "label": "Governance maintenance mode",
+      "required": true,
+      "summaryKey": "governanceMaintenanceAllowedTriggerCount"
     }
   ]
 }

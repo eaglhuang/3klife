@@ -77,6 +77,8 @@ from sanguo_governance_loader import (
     load_source_event_packet_policy,
     load_stable_bootstrap_governance,
     load_vector_ingestion_hardening_policy,
+    load_vector_production_rollout_plan_policy,
+    load_governance_maintenance_mode_policy,
     read_governance_json,
     read_governance_jsonl,
     resolve_governance_root,
@@ -226,6 +228,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     postgres_migration_policy = load_postgres_state_migration_plan_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
+    vector_production_rollout_policy = load_vector_production_rollout_plan_policy(root)
+    governance_maintenance_mode_policy = load_governance_maintenance_mode_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
     relationship_evidence_extraction_rules = load_relationship_evidence_extraction_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
@@ -1719,6 +1723,56 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if int(vector_probe_policy.get("defaultTopK") or 0) <= 0:
         raise SanguoGovernanceError("policy-vector-ingestion-hardening probePolicy.defaultTopK must be positive")
 
+
+    vector_allowed = set(vector_ingestion_hardening_policy.get("providerPolicy", {}).get("allowedProviders") or [])
+    rollout_allowed = set(vector_production_rollout_policy.get("allowedProviders") or [])
+    if vector_production_rollout_policy.get("decisionMode") != "plan-only":
+        raise SanguoGovernanceError("policy-vector-production-rollout-plan decisionMode must be plan-only")
+    if vector_production_rollout_policy.get("enabledByDefault") is not False:
+        raise SanguoGovernanceError("policy-vector-production-rollout-plan enabledByDefault must be false")
+    if not rollout_allowed or not rollout_allowed.issubset(vector_allowed):
+        raise SanguoGovernanceError("policy-vector-production-rollout-plan allowedProviders must be non-empty subset of vector ingestion allowedProviders")
+    rollout_steps = vector_production_rollout_policy.get("requiredRolloutSteps")
+    if not isinstance(rollout_steps, list) or len(rollout_steps) < 4:
+        raise SanguoGovernanceError("policy-vector-production-rollout-plan requiredRolloutSteps must contain at least 4 steps")
+    rollout_step_ids: set[str] = set()
+    for step in rollout_steps:
+        if not isinstance(step, dict):
+            raise SanguoGovernanceError("policy-vector-production-rollout-plan requiredRolloutSteps rows must be objects")
+        step_id = str(step.get("id") or "").strip()
+        if not step_id or not str(step.get("name") or "").strip() or not str(step.get("checkpoint") or "").strip():
+            raise SanguoGovernanceError("policy-vector-production-rollout-plan rollout steps require id, name, checkpoint")
+        if step_id in rollout_step_ids:
+            raise SanguoGovernanceError(f"policy-vector-production-rollout-plan duplicate rollout step id: {step_id}")
+        rollout_step_ids.add(step_id)
+    resume_guards = [str(item).strip() for item in vector_production_rollout_policy.get("resumeGuards") or []]
+    required_resume_guards = {"inputFingerprint", "upsertManifest", "rollbackManifest"}
+    if not required_resume_guards.issubset(set(resume_guards)):
+        raise SanguoGovernanceError("policy-vector-production-rollout-plan resumeGuards must include inputFingerprint, upsertManifest, rollbackManifest")
+    rollout_report = repo_root / str(vector_production_rollout_policy.get("reportPath") or "")
+    if not rollout_report.exists():
+        raise SanguoGovernanceError(f"policy-vector-production-rollout-plan reportPath missing: {rollout_report}")
+
+    if governance_maintenance_mode_policy.get("mode") != "maintenance-only":
+        raise SanguoGovernanceError("policy-governance-maintenance-mode mode must be maintenance-only")
+    if governance_maintenance_mode_policy.get("defaultAction") != "do-not-add-new-phase":
+        raise SanguoGovernanceError("policy-governance-maintenance-mode defaultAction must be do-not-add-new-phase")
+    phase_range = governance_maintenance_mode_policy.get("phaseRange") if isinstance(governance_maintenance_mode_policy.get("phaseRange"), dict) else {}
+    if int(phase_range.get("max") or 0) < 48:
+        raise SanguoGovernanceError("policy-governance-maintenance-mode phaseRange.max must be at least 48")
+    maintenance_triggers = [str(item).strip() for item in governance_maintenance_mode_policy.get("allowedFutureTriggers") or []]
+    if not maintenance_triggers or any(not item for item in maintenance_triggers):
+        raise SanguoGovernanceError("policy-governance-maintenance-mode allowedFutureTriggers cannot be empty")
+    review_cadence = [str(item).strip() for item in governance_maintenance_mode_policy.get("reviewCadence") or []]
+    if not review_cadence or any(not item for item in review_cadence):
+        raise SanguoGovernanceError("policy-governance-maintenance-mode reviewCadence cannot be empty")
+    exit_checks = set(str(item).strip() for item in governance_maintenance_mode_policy.get("requiredExitChecks") or [])
+    if not {"strict-local-ci", "snapshot-match", "dirty-scope-check"}.issubset(exit_checks):
+        raise SanguoGovernanceError("policy-governance-maintenance-mode requiredExitChecks must include strict-local-ci, snapshot-match, dirty-scope-check")
+    closure_report = repo_root / str(governance_maintenance_mode_policy.get("closureReportPath") or "")
+    if not closure_report.exists():
+        raise SanguoGovernanceError(f"policy-governance-maintenance-mode closureReportPath missing: {closure_report}")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1896,6 +1950,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "residualHardcodePostponedCount": residual_postponed_count,
         "postgresMigrationPlanStepCount": len(postgres_migration_steps),
         "postgresMigrationAdapterLayerCount": len(adapter_layers),
+        "vectorProductionRolloutStepCount": len(rollout_steps),
+        "vectorProductionResumeGuardCount": len(resume_guards),
+        "governanceMaintenanceAllowedTriggerCount": len(maintenance_triggers),
+        "governanceMaintenanceReviewCadenceCount": len(review_cadence),
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),
