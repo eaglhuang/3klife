@@ -1546,5 +1546,17 @@
     "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0018-review-advisory-bridge-fixtures.task.md",
     "title": "TASK-APF-0018 — ReviewAdvisory bridge fixtures",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0646",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0025-existing-root-entry-injection.task.md",
+    "title": "TASK-APO-0025 — 既有 README / AGENTS 的 loop-free ATM 入口注入",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0647",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0026-codex-official-integration.task.md",
+    "title": "TASK-APO-0026 — Codex editor integration 正式化",
+    "category": "other"
   }
 ]

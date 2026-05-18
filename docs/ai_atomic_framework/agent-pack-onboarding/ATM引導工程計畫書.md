@@ -91,6 +91,15 @@ Integration Adapter 負責把同一組 ATM skill template 編譯成不同 agent 
 - `remove / uninstall`：安全移除未被修改的檔案。
 - `diff`：報告 user-modified、missing、stale 等狀態。
 
+### 3.2.1 Editor Support 不得半支援
+
+若 framework 內部已經存在某個 editor / agent target 的 adapter factory、template source、guide install 路徑或 compatibility 文件（例如 Codex），就不得長期維持「文件有寫、CLI 不可安裝」的半支援狀態。正式對外時只能二選一：
+
+- 成為 `atm integration add <id>` / `verify` / `remove` 可管理的官方 adapter。
+- 明確標示為 experimental / guide-only，且不得出現在官方支援矩陣的 stable 欄位。
+
+不允許同時存在「核心程式碼認得該 target」但 `integration list` 不可見、官方任務矩陣也無驗證責任人的灰色地帶。
+
 ### 3.3 Skill Template Compiler
 
 Template source 必須集中在單一目錄，由 compiler 針對不同 adapter 產生 markdown、prompt 或 TOML。所有模板共同遵守：
@@ -129,6 +138,17 @@ Hint 是建議路由，不是新的權威流程。真正可執行的下一步仍
 4. `adapter-applied`
 5. `welcomed`
 6. `operational`
+
+### 3.6.1 Existing Repo Root Entry Injection
+
+`bootstrap` / `init --adopt default` 不得假設新 repo 一定沒有既有 `README.md` 或 `AGENTS.md`。對既有 repo 而言，official onboarding 必須在第一次產生 `.atm/` 時，同步處理 root entry surface，讓 agent 不會因為只讀到原始 README / AGENTS 而錯過 ATM 啟動命令。
+
+最低要求如下：
+
+- 若 root 已有 `AGENTS.md`，ATM 應插入最小必要的 kickoff 區塊，而不是整份覆蓋使用者原文。
+- 若 root 已有 `README.md`，ATM 應插入簡短的 AI agent 入口區塊；該區塊要直接導向 `node atm.mjs next --json`，不得再把 agent 轉回 `AGENTS.md` 形成 loop。
+- `AGENTS.md` 可要求 agent 先讀 root `README.md` 取得專案脈絡，再執行 `node atm.mjs next --json`；`README.md` 則只能導向 `node atm.mjs next --json`，不得反向要求先讀 `AGENTS.md`。
+- 注入策略必須可重跑、可 diff、可驗證、可保留使用者既有內容，且第二次 bootstrap 在無變更時應維持 idempotent。
 
 ### 3.7 Distribution Layer
 
@@ -286,6 +306,8 @@ node atm.mjs upgrade rollback --backup <backup-id>
 | TASK-APO-0022 | Bridge Minor + Experimental API | major bump 前同時讀寫新舊 schema、`@experimental` 通道 | bridge minor SOP、experimental opt-in flag | done |
 | TASK-APO-0023 | Policy Self-Versioning + Auto Matrix PR | 政策文件加 `policy_version`、release workflow 自動產 matrix PR | policy frontmatter、auto-PR workflow | done |
 | TASK-APO-0024 | Time+minor Deprecation + Canary Rollout | alpha≥30d / beta≥90d / stable≥180d / lts≥365d、`upgrade apply --canary` | deprecation policy update、canary apply flag | done |
+| TASK-APO-0025 | Existing Root Entry Injection | 既有 `README.md` / `AGENTS.md` 也能被 bootstrap 補上不迴圈 ATM 入口 | bootstrap patch policy、fixture coverage、verify gate | done |
+| TASK-APO-0026 | Codex Official Integration | Codex 從內部線索提升為官方 integration adapter | `integration-codex`、CLI support、verify matrix | done |
 
 ## 6. 里程碑
 
@@ -318,21 +340,24 @@ node atm.mjs upgrade rollback --backup <backup-id>
 
 ### M3：多 Agent Entry 擴張
 
-對應：TASK-APO-0006、TASK-APO-0010
+對應：TASK-APO-0006、TASK-APO-0010、TASK-APO-0026
 
 - [x] 多 adapter 使用同一組 template source。
 - [x] 不同格式輸出仍共享同一 ATM first command。
 - [x] compatibility matrix 由 source registry 產生，不靠手抄。
 - [x] matrix drift 可在 CI 中被偵測。
+- [x] Codex 進入 official integration matrix，`integration list / add / verify / remove` 與文件支援矩陣一致。
 
 ### M4：First-Touch 與 Distribution
 
-對應：TASK-APO-0007、TASK-APO-0008
+對應：TASK-APO-0007、TASK-APO-0008、TASK-APO-0025
 
 - [x] `create-atm` 可在空 repo 啟動 bootstrap / render / adapter install。
 - [x] npm publish recipe 保留 validation gate。
 - [x] `atm welcome` 顯示 ATMChart、integration health 與 next action。
 - [x] dry-run 不寫入 lineage；正式模式寫入 welcome lineage。
+- [x] `bootstrap` / `init --adopt default` 在既有 `README.md` / `AGENTS.md` 上注入最小必要的 ATM 入口文案。
+- [x] root `README.md` 與 `AGENTS.md` 同時存在時，兩者不形成互相跳轉 loop，而是共同導向 `node atm.mjs next --json`。
 
 ### M5：Command Hint Chain
 
@@ -411,6 +436,18 @@ node atm.mjs upgrade rollback --backup <backup-id>
 
 控制：InstallManifest 記錄 install-time framework / chart / template version；`atm-chart verify --version-check`、`doctor`、`welcome` 與 standard validator 同時檢查 hash freshness 與 version compatibility。unsupported chart 必須阻擋 official onboarding path，deprecated chart 必須輸出 migration hint。任何版本落後處理都必須走 safe upgrade / rollback flow，不得在偵測到落後時自動覆蓋使用者檔案。
 
+### 8.8 Existing Root Docs 造成入口失焦或 loop
+
+風險：既有 repo 原本就有 `README.md`、`AGENTS.md` 或其他 editor 指令文件時，bootstrap 若只新增 `.atm/` 與一份通用 `AGENTS.md`，agent 可能讀錯入口、完全沒看到 ATM 指令，或在 README / AGENTS 之間來回跳轉。
+
+控制：bootstrap 必須把 root-level kickoff 視為 official onboarding 的一部分；對 `README.md` / `AGENTS.md` 執行最小必要注入、保持 idempotent，並以 fixture 驗證「README only / AGENTS only / both / none」四種情境。
+
+### 8.9 Editor Support Shadow State
+
+風險：framework 內部已經有某 editor 的 adapter 片段、skill 來源或文件矩陣，但 CLI 的正式安裝路徑沒有跟上，形成「看起來有支援、實際無法官方安裝」的 shadow state。
+
+控制：每個出現在官方 compatibility matrix 的 editor，都必須有明確的 `integration list / add / verify / remove` 責任鏈，或明確標示 experimental / guide-only；Codex 不得再停留在半支援狀態。
+
 ## 9. 完成定義
 
 本計畫完成時，ATM 必須能回答下列問題：
@@ -423,6 +460,8 @@ node atm.mjs upgrade rollback --backup <backup-id>
 6. 違反守衛且缺 evidence justification 時是否會被 block？目標：必須。
 7. 文件是否保持 framework-neutral？目標：計畫文件與模板不得出現 adopter-specific 或 external-project-specific 語意。
 8. Framework、ATMChart 與 entry template 版本是否可診斷？目標：welcome / doctor / verify 都能回答目前版本是否 supported、deprecated 或 unsupported。
+9. 既有 repo 已經有 `README.md` / `AGENTS.md` 時，第一次 bootstrap 是否仍能幫 agent 找到正確入口？目標：可，且不覆蓋使用者原文、不形成 loop。
+10. Codex 是否與 Claude Code / Copilot / Cursor / Gemini 一樣屬於官方可驗證的 integration target？目標：是，或明確標示為非官方實驗路徑，不再模糊。
 
 ## 10. 維護規則
 
