@@ -48,18 +48,30 @@ function readCfg(shardDir) {
   if (!fs.existsSync(rcPath)) die(`No .shardrc.json in: ${absDir}`);
 
   const cfg = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+  cfg.type       = normalizeShardType(cfg.type);
   cfg._dir       = absDir;
   cfg._sourceAbs = path.resolve(absDir, cfg.source);
 
   // Pre-compile shard patterns
   for (const shard of cfg.shards) {
-    shard._rx = new RegExp(shard.pattern, 'u');
+    if (shard.pattern) {
+      shard._rx = new RegExp(shard.pattern, 'u');
+    }
   }
   return cfg;
 }
 
+function normalizeShardType(type) {
+  const normalized = String(type || '').trim();
+  if (normalized === 'markdown-heading') return 'markdown-h2';
+  return normalized;
+}
+
 function matchShardFor(cfg, text) {
   for (const shard of cfg.shards) {
+    if (!shard._rx) {
+      continue;
+    }
     if (shard._rx.test(text)) return shard;
   }
   // Fallback to defaultShard or first shard
@@ -105,6 +117,84 @@ function shardMarkdownH2(cfg) {
   } else {
     info(`keepSourceIntact=true — skipping index stub rebuild for ${path.basename(cfg._sourceAbs)}`);
   }
+}
+
+function shardJsonObject(cfg) {
+  if (!fs.existsSync(cfg._sourceAbs)) die(`Source not found: ${cfg._sourceAbs}`);
+
+  const raw = JSON.parse(fs.readFileSync(cfg._sourceAbs, 'utf8'));
+  const sourceObject = readJsonObjectSource(raw, cfg);
+  if (!sourceObject || typeof sourceObject !== 'object' || Array.isArray(sourceObject)) {
+    die(`objectPath "${cfg.objectPath || '(root)'}" is not a JSON object`);
+  }
+
+  const bufs = {};
+  for (const s of cfg.shards) bufs[s.name] = {};
+
+  for (const [key, value] of Object.entries(sourceObject)) {
+    const matchText = resolveJsonObjectMatchText(key, value, cfg);
+    const shard = cfg.shards.find(s => s._rx && s._rx.test(matchText))
+      ?? cfg.shards.find(s => s.name === cfg.defaultShard)
+      ?? cfg.shards[0];
+    bufs[shard.name][key] = value;
+  }
+
+  const shardRelDir = relDir(cfg._dir);
+  for (const shard of cfg.shards) {
+    const out = path.join(cfg._dir, shard.name + '.json');
+    fs.writeFileSync(out, JSON.stringify(bufs[shard.name], null, 2), 'utf8');
+    info(`Wrote ${shardRelDir}/${shard.name}.json  (${Object.keys(bufs[shard.name]).length} entries)`);
+  }
+
+  if (!cfg.keepSourceIntact) {
+    rebuildJsonObjectIndex(cfg, bufs);
+  } else {
+    info(`keepSourceIntact=true — skipping index stub rebuild for ${path.basename(cfg._sourceAbs)}`);
+  }
+}
+
+function readJsonObjectSource(raw, cfg) {
+  if (cfg.objectPath) {
+    const value = cfg.objectPath.split('.').reduce((current, segment) => (current && typeof current === 'object' ? current[segment] : undefined), raw);
+    return value;
+  }
+  return raw;
+}
+
+function resolveJsonObjectMatchText(key, value, cfg) {
+  const field = cfg.splitField || '__key';
+  if (field === '__key') {
+    return String(key || '');
+  }
+  if (value && typeof value === 'object' && !Array.isArray(value) && value[field] !== undefined) {
+    return String(value[field]);
+  }
+  return String(key || '');
+}
+
+function rebuildJsonObjectIndex(cfg, bufs) {
+  const shardRelDir = relDir(cfg._dir);
+  const merged = {};
+  for (const shard of cfg.shards) {
+    const entries = bufs ? bufs[shard.name] : {};
+    Object.assign(merged, entries || {});
+  }
+
+  const index = {
+    _note:    `索引 stub。完整資料見 ${shardRelDir}/ 目錄。`,
+    _usage:   `讀取特定分片：直接讀 ${shardRelDir}/<shard>.json`,
+    _rebuild: `node tools_node/shard-manager.js rebuild-index ${shardRelDir}`,
+    shards: cfg.shards.map(s => ({
+      name:  s.name,
+      title: s.title,
+      path:  `${shardRelDir}/${s.name}.json`,
+      count: bufs ? Object.keys(bufs[s.name] || {}).length : null,
+    })),
+    entries: merged,
+  };
+
+  fs.writeFileSync(cfg._sourceAbs, JSON.stringify(index, null, 2), 'utf8');
+  ok(`Rebuilt JSON object index stub → ${path.relative(process.cwd(), cfg._sourceAbs).replace(/\\/g, '/')}`);
 }
 
 function buildMdShardHeader(cfg, shard) {
@@ -155,17 +245,23 @@ function rebuildMarkdownIndex(cfg, bufs) {
 
 // ── JSON-ARRAY shard ─────────────────────────────────────────────────────────
 function shardJsonArray(cfg) {
+  return shardJsonCollection(cfg);
+}
+
+function shardJsonCollection(cfg) {
   if (!fs.existsSync(cfg._sourceAbs)) die(`Source not found: ${cfg._sourceAbs}`);
 
   const raw = JSON.parse(fs.readFileSync(cfg._sourceAbs, 'utf8'));
-  const arr = cfg.arrayPath ? raw[cfg.arrayPath] : raw;
-  if (!Array.isArray(arr)) die(`arrayPath "${cfg.arrayPath}" is not an array`);
+  const arr = cfg.type === 'json-object'
+    ? extractJsonObjectItems(raw, cfg)
+    : extractJsonArrayItems(raw, cfg);
+  if (!Array.isArray(arr)) die(cfg.type === 'json-object' ? `objectPath "${cfg.objectPath || '(root)'}" is not an object` : `arrayPath "${cfg.arrayPath}" is not an array`);
 
   const bufs = {};
   for (const s of cfg.shards) bufs[s.name] = [];
 
   for (const item of arr) {
-    const fieldVal = String(item[cfg.splitField] ?? '');
+    const fieldVal = String(item[cfg.splitField] ?? item.__key ?? '');
     const shard    = cfg.shards.find(s => s._rx.test(fieldVal))
                      ?? cfg.shards[cfg.shards.length - 1];
     bufs[shard.name].push(item);
@@ -174,15 +270,58 @@ function shardJsonArray(cfg) {
   const shardRelDir = relDir(cfg._dir);
   for (const shard of cfg.shards) {
     const out = path.join(cfg._dir, shard.name + '.json');
-    fs.writeFileSync(out, JSON.stringify(bufs[shard.name], null, 2), 'utf8');
+    const payload = cfg.type === 'json-object' ? buildJsonObjectPayload(bufs[shard.name]) : bufs[shard.name];
+    fs.writeFileSync(out, JSON.stringify(payload, null, 2), 'utf8');
     info(`Wrote ${shardRelDir}/${shard.name}.json  (${bufs[shard.name].length} items)`);
   }
 
   if (!cfg.keepSourceIntact) {
-    rebuildJsonIndex(cfg, bufs);
+    if (cfg.type === 'json-object') rebuildJsonObjectIndex(cfg, bufsToObjectMap(bufs));
+    else rebuildJsonIndex(cfg, bufs);
   } else {
     info(`keepSourceIntact=true — skipping index stub rebuild for ${path.basename(cfg._sourceAbs)}`);
   }
+}
+
+function extractJsonArrayItems(raw, cfg) {
+  const arr = cfg.arrayPath ? raw[cfg.arrayPath] : raw;
+  if (!Array.isArray(arr)) return null;
+  return arr.map((item) => (item && typeof item === 'object' && !Array.isArray(item) ? item : { value: item }));
+}
+
+function extractJsonObjectItems(raw, cfg) {
+  const obj = cfg.objectPath ? cfg.objectPath.split('.').reduce((current, segment) => (current && typeof current === 'object' ? current[segment] : undefined), raw) : raw;
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return null;
+  return Object.entries(obj).map(([key, value]) => {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return { __key: key, ...value };
+    }
+    return { __key: key, value };
+  });
+}
+
+function buildJsonObjectPayload(items) {
+  const out = {};
+  for (const item of items) {
+    const key = item.__key;
+    if (!key) continue;
+    const clone = { ...item };
+    delete clone.__key;
+    if (Object.keys(clone).length === 1 && Object.prototype.hasOwnProperty.call(clone, 'value')) {
+      out[key] = clone.value;
+    } else {
+      out[key] = clone;
+    }
+  }
+  return out;
+}
+
+function bufsToObjectMap(bufs) {
+  const mapped = {};
+  for (const [name, items] of Object.entries(bufs || {})) {
+    mapped[name] = buildJsonObjectPayload(items);
+  }
+  return mapped;
 }
 
 function rebuildJsonIndex(cfg, bufs) {
@@ -206,22 +345,27 @@ function rebuildJsonIndex(cfg, bufs) {
 // ── REBUILD-INDEX (from existing shard files) ────────────────────────────────
 function rebuildIndex(shardDir) {
   const cfg = readCfg(shardDir);
-  if (cfg.type === 'json-array') {
+  if (cfg.type === 'json-array' || cfg.type === 'json-object') {
     const bufs = {};
     // shardArrayPath: key inside each shard file that holds the array
     // (differs from arrayPath which is the key in the source/index file)
-    const shardAP = cfg.shardArrayPath ?? cfg.arrayPath ?? null;
     for (const s of cfg.shards) {
       const p = path.join(cfg._dir, s.name + '.json');
       if (fs.existsSync(p)) {
         const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-        const arr  = Array.isArray(data) ? data : (shardAP ? data[shardAP] : null);
-        bufs[s.name] = Array.isArray(arr) ? arr : [];
+        if (cfg.type === 'json-object') {
+          bufs[s.name] = (data && typeof data === 'object' && !Array.isArray(data)) ? data : {};
+        } else {
+          const shardAP = cfg.shardArrayPath ?? cfg.arrayPath ?? null;
+          const arr  = Array.isArray(data) ? data : (shardAP ? data[shardAP] : null);
+          bufs[s.name] = Array.isArray(arr) ? arr : [];
+        }
       } else {
-        bufs[s.name] = [];
+        bufs[s.name] = cfg.type === 'json-object' ? {} : [];
       }
     }
-    rebuildJsonIndex(cfg, bufs);
+    if (cfg.type === 'json-object') rebuildJsonObjectIndex(cfg, bufs);
+    else rebuildJsonIndex(cfg, bufs);
   } else {
     const bufs = {};
     for (const s of cfg.shards) {
@@ -236,7 +380,7 @@ function rebuildIndex(shardDir) {
 function validate(shardDir) {
   const cfg = readCfg(shardDir);
   let allOk = true;
-  const ext = cfg.type === 'json-array' ? '.json' : '.md';
+  const ext = cfg.type === 'json-array' || cfg.type === 'json-object' ? '.json' : '.md';
 
   for (const s of cfg.shards) {
     const p    = path.join(cfg._dir, s.name + ext);
@@ -289,7 +433,7 @@ function validate(shardDir) {
 // ── STATUS ────────────────────────────────────────────────────────────────────
 function statusCmd(shardDir) {
   const cfg = readCfg(shardDir);
-  const ext = cfg.type === 'json-array' ? '.json' : '.md';
+  const ext = cfg.type === 'json-array' || cfg.type === 'json-object' ? '.json' : '.md';
 
   console.log(`\n[shard-manager] ${cfg.indexTitle}`);
   console.log(`  source  : ${cfg.source}  (${cfg.type})`);
@@ -429,7 +573,7 @@ function scanCmd(scanDir, thresholdKB = shardAdapter.getScanThresholdKB()) {
  */
 function autoSplitCmd(shardDir, thresholdKB = shardAdapter.getAutoSplitThresholdKB()) {
   const cfg  = readCfg(shardDir);
-  const ext  = cfg.type === 'json-array' ? '.json' : '.md';
+  const ext  = cfg.type === 'json-array' || cfg.type === 'json-object' ? '.json' : '.md';
   let   didSplit = false;
 
   for (const shard of cfg.shards) {
@@ -443,7 +587,7 @@ function autoSplitCmd(shardDir, thresholdKB = shardAdapter.getAutoSplitThreshold
     }
 
     info(`  ${shard.name}${ext}  ${sizeKB.toFixed(1)} KB  > ${thresholdKB} KB → auto-split`);
-    if (cfg.type === 'json-array') {
+    if (cfg.type === 'json-array' || cfg.type === 'json-object') {
       splitJsonShardIntoParts(cfg, shard, shardPath, thresholdKB);
     } else {
       splitMarkdownShardIntoParts(cfg, shard, shardPath, thresholdKB);
@@ -457,6 +601,21 @@ function autoSplitCmd(shardDir, thresholdKB = shardAdapter.getAutoSplitThreshold
 /** Extract items array from a shard file (handles both plain array and wrapped object). */
 function getItemsFromShardFile(shardPath, cfg) {
   const raw = JSON.parse(fs.readFileSync(shardPath, 'utf8'));
+  if (cfg.type === 'json-object') {
+    const objectSource = cfg.shardObjectPath
+      ? cfg.shardObjectPath.split('.').reduce((current, segment) => (current && typeof current === 'object' ? current[segment] : undefined), raw)
+      : raw;
+    if (objectSource && typeof objectSource === 'object' && !Array.isArray(objectSource)) {
+      return Object.entries(objectSource).map(([key, value]) => {
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+          return { __key: key, ...value };
+        }
+        return { __key: key, value };
+      });
+    }
+    return null;
+  }
+
   if (Array.isArray(raw)) return raw;
   const arrayKey  = cfg.shardArrayPath ?? cfg.arrayPath ?? null;
   if (arrayKey && Array.isArray(raw[arrayKey])) return raw[arrayKey];
@@ -486,7 +645,8 @@ function splitJsonShardIntoParts(cfg, shard, shardPath, thresholdKB) {
     const batch    = items.slice(start, end);
     const partName = shardAdapter.buildPartName(shard.name, partIdx);
     const outPath  = path.join(subDir, partName + '.json');
-    fs.writeFileSync(outPath, JSON.stringify(batch, null, 2), 'utf8');
+    const payload = cfg.type === 'json-object' ? buildJsonObjectPayload(batch) : batch;
+    fs.writeFileSync(outPath, JSON.stringify(payload, null, 2), 'utf8');
     const kb = (fs.statSync(outPath).size / 1024).toFixed(1);
     info(`    → ${relDir(subDir)}/${partName}.json  (${batch.length} items, ${kb} KB)`);
     partDefs.push({
@@ -497,7 +657,7 @@ function splitJsonShardIntoParts(cfg, shard, shardPath, thresholdKB) {
     partIdx++;
   }
 
-  writeAutoPartsRc(subDir, cfg, shard, 'json', partDefs, thresholdKB);
+  writeAutoPartsRc(subDir, cfg, shard, 'json', partDefs, thresholdKB, cfg.type);
   ok(`Auto-split ${shard.name}.json → ${partDefs.length} parts in ${relDir(subDir)}/`);
 }
 
@@ -531,7 +691,7 @@ function splitMarkdownShardIntoParts(cfg, shard, shardPath, thresholdKB) {
   ok(`Auto-split ${shard.name}.md → ${partDefs.length} parts in ${relDir(subDir)}/`);
 }
 
-function writeAutoPartsRc(subDir, parentCfg, shard, ext, partDefs, thresholdKB) {
+function writeAutoPartsRc(subDir, parentCfg, shard, ext, partDefs, thresholdKB, partFormat) {
   const rc = {
     _autoGenerated:  true,
     _generatedBy:    'shard-manager auto-split',
@@ -541,6 +701,7 @@ function writeAutoPartsRc(subDir, parentCfg, shard, ext, partDefs, thresholdKB) 
     indexTitle:      `${shard.title} (auto-parts)`,
     type:            'auto-parts',
     keepSourceIntact: true,
+    partFormat:      partFormat || (ext === 'json' ? 'json-array' : 'markdown-h2'),
     shards:          partDefs,
   };
   fs.writeFileSync(path.join(subDir, '.shardrc.json'), JSON.stringify(rc, null, 2), 'utf8');
@@ -591,9 +752,10 @@ Commands:
     "source":       "../keep.md",           // relative to shardDir
     "indexTitle":   "Keep Consensus",
     "indexPath":    "docs/keep.md",         // how to reference it in shard headers
-    "type":         "markdown-h2",          // or "json-array"
+    "type":         "markdown-h2",          // or "json-array" / "json-object"
     "preambleShard":"core",                 // markdown-h2: shard for pre-first-heading content
     "arrayPath":    "tasks",                // json-array: top-level key holding the array (omit if root)
+    "objectPath":   "entries",             // json-object: top-level key holding the object (omit if root)
     "splitField":   "id",                   // json-array: field to match patterns against
     "defaultShard": "core",                 // fallback when no pattern matches
     "shards": [
@@ -609,7 +771,7 @@ switch (cmd) {
   case 'shard': {
     if (!args[1]) die('shard requires a shardDir argument');
     const cfg = readCfg(args[1]);
-    if (cfg.type === 'json-array') shardJsonArray(cfg);
+    if (cfg.type === 'json-array' || cfg.type === 'json-object') shardJsonCollection(cfg);
     else shardMarkdownH2(cfg);
     break;
   }
@@ -633,7 +795,7 @@ switch (cmd) {
     if (!dirs.length) die('shard-all requires at least one shardDir argument');
     for (const d of dirs) {
       const cfg = readCfg(d);
-      if (cfg.type === 'json-array') shardJsonArray(cfg);
+      if (cfg.type === 'json-array' || cfg.type === 'json-object') shardJsonCollection(cfg);
       else shardMarkdownH2(cfg);
     }
     break;

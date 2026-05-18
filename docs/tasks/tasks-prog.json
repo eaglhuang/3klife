@@ -1775,13 +1775,14 @@
       "title": "Document Sharding manager / health check",
       "owner": "ClaudeCode_Haiku",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
       "created_by_agent": "codex-gpt-5.5",
-      "started_at": "",
-      "started_by_agent": "codex-gpt-5.5",
+      "started_at": "2026-05-18T09:15:30+08:00",
+      "started_by_agent": "vs-code-gpt-5.4-mini",
+      "completed_at": "2026-05-18T09:19:08.6328260+08:00",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -1807,16 +1808,35 @@
       "contracts": {
         "input": [],
         "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
+        "validation_cmd": "node --check tools_node/shard-manager.js && node --check tools_node/check-doc-shard-health.js && node --check tools_node/shard-health-check.js && node tools_node/shard-manager.js validate docs/doc-id-registry-shards && node tools_node/shard-health-check.js",
+        "rollback_hint": "revert .atm/schema/shard-config.schema.json, tools_node/shard-health-check.js, tools_node/check-doc-shard-health.js, and shard-manager json-object support",
+        "execution_steps": [
+          "新增 shard config schema",
+          "讓 shard-manager 支援 json-object 與 markdown-heading 別名",
+          "新增 health check wrapper 並保留既有 checker 主流程"
+        ]
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
-        "trace_artifacts": [],
-        "metrics_summary": []
+        "artifact_paths": [
+          ".atm/schema/shard-config.schema.json",
+          "tools_node/shard-health-check.js",
+          "tools_node/check-doc-shard-health.js",
+          "tools_node/shard-manager.js"
+        ],
+        "validation_evidence": [
+          "shard-manager validate docs/doc-id-registry-shards passed",
+          "shard-health-check wrapper executed successfully",
+          "schema parse reported Document Shard Config"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [
+          ".atm/schema/shard-config.schema.json"
+        ],
+        "metrics_summary": [
+          "schema_parse: pass",
+          "registry_shard_validate: pass",
+          "health_wrapper: pass"
+        ]
       }
     },
     {

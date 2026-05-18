@@ -126,7 +126,7 @@ function getPartExtension(cfg) {
   if (cfg.type === 'auto-parts') {
     return path.extname(cfg.source || '') || '.json';
   }
-  if (cfg.type === 'json-array') {
+  if (cfg.type === 'json-array' || cfg.type === 'json-object') {
     return '.json';
   }
   return '.md';
@@ -227,6 +227,7 @@ function validateAutoPartsGroup(group) {
   const thresholdLines = Number.isFinite(Number(group.cfg._thresholdLines)) && Number(group.cfg._thresholdLines) > 0
     ? Number(group.cfg._thresholdLines)
     : null;
+  const partFormat = String(group.cfg.partFormat || 'json-array').trim();
 
   if (!Array.isArray(group.cfg.shards) || group.cfg.shards.length === 0) {
     issues.push(`${relativePath(group.rcPath)} does not list any auto-parts shards`);
@@ -247,7 +248,11 @@ function validateAutoPartsGroup(group) {
     if (group.partExt === '.json') {
       try {
         const parsed = JSON.parse(rawText);
-        if (!Array.isArray(parsed)) {
+        if (partFormat === 'json-object') {
+          if (Array.isArray(parsed) || parsed === null || typeof parsed !== 'object') {
+            issues.push(`${relativePath(partPath)} is not a JSON object`);
+          }
+        } else if (!Array.isArray(parsed)) {
           issues.push(`${relativePath(partPath)} is not a JSON array`);
         }
       } catch (error) {
@@ -434,8 +439,21 @@ function main() {
   console.log(`[doc-shard-health] OK: ${affected.size} affected shard group(s), ${changedFiles.length} changed docs file(s) checked`);
 }
 
-try {
-  main();
-} catch (error) {
-  fail([error instanceof Error ? error.message : String(error)]);
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    fail([error instanceof Error ? error.message : String(error)]);
+  }
 }
+
+module.exports = {
+  buildShardGroups,
+  collectAffectedGroups,
+  collectChangedFiles,
+  fail,
+  main,
+  runShardManagerValidate,
+  validateAutoPartsGroup,
+  validateTasksAtmThinIndexIfPresent,
+};

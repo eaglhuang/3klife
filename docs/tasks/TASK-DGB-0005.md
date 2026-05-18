@@ -3,7 +3,7 @@ id: "TASK-DGB-0005"
 title: "Document Sharding manager / health check"
 owner: "ClaudeCode_Haiku"
 priority: "P1"
-status: "open"
+status: "done"
 type: "implementation"
 phase: "M0"
 created: "2026-05-17"
@@ -11,7 +11,10 @@ created_by_agent: "codex-gpt-5.5"
 related_cards: []
 depends:
   - TASK-DGB-0001
-notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無"
+started_at: "2026-05-18T09:15:30+08:00"
+started_by_agent: "vs-code-gpt-5.4-mini"
+completed_at: "2026-05-18T09:19:08.6328260+08:00"
+notes: "2026-05-18 | 狀態: done | 驗證: shard-manager validate + health check wrapper + schema parse passed | 變更: 新增 shard-config schema、shard-health-check wrapper，並讓 shard-manager 支援 markdown-heading / json-object / auto-parts 健康檢查 | 阻塞: 無"
 ---
 
 # TASK-DGB-0005 Document Sharding manager / health check
@@ -29,4 +32,4 @@ notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener �
 - 無
 
 ## 備註
-- 2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無
+- 2026-05-18 | 狀態: done | 驗證: shard-manager validate + health check wrapper + schema parse passed | 變更: 新增 shard-config schema、shard-health-check wrapper，並讓 shard-manager 支援 markdown-heading / json-object / auto-parts 健康檢查 | 阻塞: 無
