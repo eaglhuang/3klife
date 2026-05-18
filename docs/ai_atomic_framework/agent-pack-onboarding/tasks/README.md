@@ -11,7 +11,7 @@ created_by_agent: vs-insiders-gpt-5.4
 
 # ATM 引導工程 Task Cards
 
-本目錄收錄「ATM 引導工程計畫書」的內部任務卡（TASK-APO-0000 ~ TASK-APO-0034）。這批卡用於追蹤 upstream framework 的引導工程改造、三角策略 adopter 驗收與 3KLife 實驗畢業流程，不放入公開 repo，避免污染 ATM 未來開源時的核心文件面。
+本目錄收錄「ATM 引導工程計畫書」的內部任務卡（TASK-APO-0000 ~ TASK-APO-0024）。這批卡用於追蹤 upstream framework 的引導工程改造，不放入公開 repo，避免污染 ATM 未來開源時的核心文件面。
 
 任務卡 = 一張可獨立認領、可獨立驗收的工作單。每張卡都對應計畫書 §15 的里程碑 checklist，並以目前已收斂的 `ATMChart` / `atm-chart` 命名為準。
 
@@ -44,16 +44,6 @@ created_by_agent: vs-insiders-gpt-5.4
 | [TASK-APO-0022](./TASK-APO-0022-bridge-minor-experimental.task.md) | Bridge minor + `@experimental` API 通道 | M9 | open | 0013 |
 | [TASK-APO-0023](./TASK-APO-0023-policy-self-versioning.task.md) | Policy self-versioning + auto matrix PR | M10 | open | — |
 | [TASK-APO-0024](./TASK-APO-0024-time-minor-deprecation-canary.task.md) | Time+minor deprecation + canary rollout | M10 | open | 0013 |
-| [TASK-APO-0025](./TASK-APO-0025-triangle-plan-normalization.task.md) | Triangle strategy plan normalization and task split | M0 | done | — |
-| [TASK-APO-0026](./TASK-APO-0026-npc-brain-baseline-freeze.task.md) | npc-brain baseline freeze and eligibility report | M1 | open | 0025 |
-| [TASK-APO-0027](./TASK-APO-0027-disposable-first-touch-lab.task.md) | Disposable lab first-touch evidence | M2 | open | 0026 |
-| [TASK-APO-0028](./TASK-APO-0028-evidence-triage-routing.task.md) | Evidence triage and upstream routing | M3 | open | 0027 |
-| [TASK-APO-0029](./TASK-APO-0029-upstream-blocker-repair-batch.task.md) | Upstream blocker repair batch | M4 | open | 0028 |
-| [TASK-APO-0030](./TASK-APO-0030-candidate-onboarding-branch.task.md) | npc-brain candidate official onboarding branch | M5 | open | 0029 |
-| [TASK-APO-0031](./TASK-APO-0031-adopter-sentinel-integration.task.md) | Existing adopter sentinel integration | M6 | open | 0030 |
-| [TASK-APO-0032](./TASK-APO-0032-adopter-evidence-sop.task.md) | Adopter evidence feedback SOP | M7 | open | 0028 |
-| [TASK-APO-0033](./TASK-APO-0033-3klife-experiment-graduation.task.md) | 3KLife experiment graduation SOP | M8 | open | 0025 |
-| [TASK-APO-0034](./TASK-APO-0034-release-gate-promotion.task.md) | Release gate promotion for adopter validation | M9 | open | 0031 |
 
 ## 共通驗收
 

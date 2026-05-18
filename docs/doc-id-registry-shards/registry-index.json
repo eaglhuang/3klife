@@ -118,5 +118,11 @@
     "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/README.md",
     "title": "ATM 技術債重構 Task Cards",
     "category": "index"
+  },
+  {
+    "id": "doc_index_0022",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/README.md",
+    "title": "3KLife ATM Triangle Strategy Task Cards",
+    "category": "index"
   }
 ]

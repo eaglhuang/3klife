@@ -1303,7 +1303,7 @@
   },
   {
     "id": "doc_other_0229",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md",
     "title": "3KLife ATM 採用三角策略規劃書",
     "category": "other"
   },
@@ -1315,62 +1315,74 @@
   },
   {
     "id": "doc_other_0231",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0025-triangle-plan-normalization.task.md",
-    "title": "TASK-APO-0025 — Triangle strategy plan normalization and task split",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0001-docs-language-boundary-and-move.task.md",
+    "title": "TASK-ATS-0001 — Public docs language gate and strategy directory migration",
     "category": "other"
   },
   {
     "id": "doc_other_0232",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0026-npc-brain-baseline-freeze.task.md",
-    "title": "TASK-APO-0026 — npc-brain baseline freeze and eligibility report",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0002-npc-brain-baseline-fixture-inventory.task.md",
+    "title": "TASK-ATS-0002 — npc-brain baseline freeze and fixture inventory",
     "category": "other"
   },
   {
     "id": "doc_other_0233",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-disposable-first-touch-lab.task.md",
-    "title": "TASK-APO-0027 — Disposable lab first-touch evidence",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0003-official-onboarding-smoke.task.md",
+    "title": "TASK-ATS-0003 — npc-brain official ATM onboarding smoke",
     "category": "other"
   },
   {
     "id": "doc_other_0234",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0028-evidence-triage-routing.task.md",
-    "title": "TASK-APO-0028 — Evidence triage and upstream routing",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0004-atom-behavior-core-suite.task.md",
+    "title": "TASK-ATS-0004 — Atom behavior core suite on npc-brain",
     "category": "other"
   },
   {
     "id": "doc_other_0235",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0029-upstream-blocker-repair-batch.task.md",
-    "title": "TASK-APO-0029 — Upstream blocker repair batch",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0005-legacy-python-infect-atomize.task.md",
+    "title": "TASK-ATS-0005 — Legacy Python infect and atomize validation",
     "category": "other"
   },
   {
     "id": "doc_other_0236",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0030-candidate-onboarding-branch.task.md",
-    "title": "TASK-APO-0030 — npc-brain candidate official onboarding branch",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0006-atomic-map-decomposition-validation.task.md",
+    "title": "TASK-ATS-0006 — Atomic Map decomposition and replacement validation",
     "category": "other"
   },
   {
     "id": "doc_other_0237",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0031-adopter-sentinel-integration.task.md",
-    "title": "TASK-APO-0031 — Existing adopter sentinel integration",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0007-atom-evolution-polymorph-validation.task.md",
+    "title": "TASK-ATS-0007 — Atom evolution and polymorphize validation",
     "category": "other"
   },
   {
     "id": "doc_other_0238",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0032-adopter-evidence-sop.task.md",
-    "title": "TASK-APO-0032 — Adopter evidence feedback SOP",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0008-adopter-sentinel-evidence-routing.task.md",
+    "title": "TASK-ATS-0008 — Adopter sentinel integration and evidence routing",
     "category": "other"
   },
   {
     "id": "doc_other_0239",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0033-3klife-experiment-graduation.task.md",
-    "title": "TASK-APO-0033 — 3KLife experiment graduation SOP",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0009-upstream-blocker-repair-batch.task.md",
+    "title": "TASK-ATS-0009 — Upstream blocker repair batch from npc-brain evidence",
     "category": "other"
   },
   {
     "id": "doc_other_0240",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0034-release-gate-promotion.task.md",
-    "title": "TASK-APO-0034 — Release gate promotion for adopter validation",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0010-graduation-release-gate.task.md",
+    "title": "TASK-ATS-0010 — 3KLife experiment graduation and ATM release gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0241",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/AI-Atomic-Framework docs public-language audit.md",
+    "title": "AI-Atomic-Framework docs public-language audit",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0254",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/ATOM_EVOLUTION_PLAN.zh-TW.md",
+    "title": "Atom 證據驅動進化規劃書（中文詳版）",
     "category": "other"
   }
 ]

@@ -16,7 +16,7 @@ related:
   - C:/Users/User/AI-Atomic-Framework/docs/HOST_GOVERNANCE_INTEGRATION.md
   - C:/Users/User/AI-Atomic-Framework/docs/LONGTAIL_USERS.md
   - C:/Users/User/AI-Atomic-Framework/docs/governance/DOCS_NEUTRALITY_AUDIT.md
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md
+  - C:/Users/User/3KLife/docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
   - C:/Users/User/3KLife/docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
 -->
 
@@ -488,7 +488,7 @@ node --experimental-strip-types scripts/validate-release-trust.ts --mode validat
 
 ### 11.3 跨 repo 銜接
 
-- 與 `agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md` interlock：三角策略回收 adopter evidence，本計畫決定 upstream 如何吸收。
+- 與 `3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md` interlock：三角策略回收 adopter evidence，本計畫決定 upstream 如何吸收。
 
 ### 11.4 不取代
 
