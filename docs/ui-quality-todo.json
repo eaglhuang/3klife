@@ -1,31 +1,30 @@
 {
-  "_note": "索引 stub。完整任務資料見 docs/tasks/ 目錄。",
-  "_usage": "讀取特定分片：直接讀 docs/tasks/<shard>.json",
-  "_rebuild": "node tools_node/shard-manager.js rebuild-index docs/tasks",
+  "kind": "ui-quality-task-manifest",
+  "version": 1,
+  "generated": "2026-05-18T01:47:14.711Z",
+  "_note": "Thin index. Full task data is in docs/ui-quality-tasks/*.json shards.",
+  "_usage": "Read specific shard: docs/ui-quality-tasks/<shard>.json",
+  "_rebuild": "node tools_node/build-ui-task-manifest.js",
   "shards": [
     {
-      "name": "tasks-ui",
-      "title": "UI Tasks（UI-*）",
-      "path": "docs/tasks/tasks-ui.json",
-      "count": 100
+      "file": "docs\\ui-quality-tasks\\phase-dc-datacenter.json",
+      "version": 1,
+      "taskCount": 35
     },
     {
-      "name": "tasks-prog",
-      "title": "Prog Tasks（PROG-*）",
-      "path": "docs/tasks/tasks-prog.json",
-      "count": 16
+      "file": "docs\\ui-quality-tasks\\phase-g-agent1.json",
+      "version": 1,
+      "taskCount": 4
     },
     {
-      "name": "tasks-dc",
-      "title": "DataCenter Tasks（DC-*）",
-      "path": "docs/tasks/tasks-dc.json",
-      "count": 37
-    },
-    {
-      "name": "tasks-data",
-      "title": "Data Tasks（DATA-*）",
-      "path": "docs/tasks/tasks-data.json",
-      "count": 1
+      "file": "docs\\ui-quality-tasks\\phase-prog-opening.json",
+      "version": 1,
+      "taskCount": 16
     }
-  ]
+  ],
+  "summary": {
+    "done": 35,
+    "in-progress": 3,
+    "open": 17
+  }
 }

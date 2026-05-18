@@ -32,30 +32,6 @@ function walkJsonFiles(dirPath) {
   return files.sort((a, b) => a.localeCompare(b));
 }
 
-function mergeTasks(baseTasks, shardTasks) {
-  const merged = [...baseTasks];
-  const indexById = new Map();
-
-  merged.forEach((task, index) => {
-    if (task && task.id) {
-      indexById.set(task.id, index);
-    }
-  });
-
-  for (const task of shardTasks) {
-    if (!task || !task.id) {
-      continue;
-    }
-    if (indexById.has(task.id)) {
-      merged[indexById.get(task.id)] = task;
-    } else {
-      indexById.set(task.id, merged.length);
-      merged.push(task);
-    }
-  }
-
-  return merged;
-}
 
 function buildSummary(tasks) {
   const summary = {};
@@ -93,7 +69,7 @@ function buildIndexMarkdown(tasks, summary) {
     '# Tasks Index / UI Quality',
     '',
     '> `docs/ui-quality-tasks/*.json` 是可編輯 shard 來源。',
-    '> `docs/ui-quality-todo.json` 與本檔由 `node tools_node/build-ui-task-manifest.js` 生成。',
+    '> `docs/ui-quality-todo.json` 是 shard 索引（thin manifest）；本檔由 `node tools_node/build-ui-task-manifest.js` 重建。',
     '> New UI tasks must also follow `template family -> content contract -> skin fragment -> smoke route -> docs backwrite`.',
     '> See [UI-task-card-template.md](./UI-task-card-template.md).',
     '',
@@ -112,9 +88,9 @@ function buildIndexMarkdown(tasks, summary) {
 }
 
 function main() {
-  const manifest = readJson(manifestPath);
   const shardFiles = walkJsonFiles(shardRoot);
   const shardTasks = [];
+  const shardIndex = [];
 
   for (const shardFile of shardFiles) {
     const shard = readJson(shardFile);
@@ -122,25 +98,36 @@ function main() {
       continue;
     }
     shardTasks.push(...shard.tasks);
+    shardIndex.push({
+      file: path.relative(ROOT, shardFile),
+      version: shard.version || 1,
+      taskCount: shard.tasks.length
+    });
   }
 
-  const mergedTasks = mergeTasks(Array.isArray(manifest.tasks) ? manifest.tasks : [], shardTasks);
-  const summary = buildSummary(mergedTasks);
-  const nextManifest = {
-    ...manifest,
-    tasks: mergedTasks,
+  const summary = buildSummary(shardTasks);
+  const thinManifest = {
+    kind: 'ui-quality-task-manifest',
+    version: 1,
+    generated: new Date().toISOString(),
+    _note: 'Thin index. Full task data is in docs/ui-quality-tasks/*.json shards.',
+    _usage: 'Read specific shard: docs/ui-quality-tasks/<shard>.json',
+    _rebuild: 'node tools_node/build-ui-task-manifest.js',
+    shards: shardIndex,
     summary
   };
 
-  fs.writeFileSync(manifestPath, `${JSON.stringify(nextManifest, null, 2)}\n`, 'utf8');
-  fs.writeFileSync(indexPath, buildIndexMarkdown(mergedTasks, summary), 'utf8');
+  fs.writeFileSync(manifestPath, `${JSON.stringify(thinManifest, null, 2)}\n`, 'utf8');
+  fs.writeFileSync(indexPath, buildIndexMarkdown(shardTasks, summary), 'utf8');
 
   console.log(
     JSON.stringify(
       {
         shardFiles: shardFiles.length,
-        mergedTasks: mergedTasks.length,
+        totalTasks: shardTasks.length,
         summary
+        ,
+        manifestPath: 'docs/ui-quality-todo.json (thin index)'
       },
       null,
       2

@@ -7,6 +7,7 @@
 
 - `docs/ui-quality-tasks/*.json` 是可編輯的小 shard。
 - `docs/ui-quality-todo.json` 是由 shard 合併後生成的 aggregate manifest。
+- `docs/ui-quality-todo.json` 現在是 thin index，只含 shard 索引與 summary；完整任務資料在 shard 檔中。
 - `docs/agent-briefs/tasks_index.md (doc_task_0002)` (doc_task_0002) 是由 aggregate manifest 再生成的人類可讀索引。
 - shard 內的任務 `id` / 卡號格式仍以 [名詞定義文件](C:\Users\User\3KLife\docs\遊戲規格文件\系統規格書\名詞定義文件.md (doc_spec_0008)) (doc_spec_0008) 為準；本文件只規範 UI shard 的結構與生成流程。
 
@@ -51,3 +52,9 @@ node tools_node/build-ui-task-manifest.js
 - 舊資料目前仍保留在 `docs/ui-quality-todo.json`。
 - 新任務優先寫入 shard，再用生成器併回 aggregate。
 - 後續可再逐批把舊任務搬到 shard，不需要一次全部重做。
+
+## 現行流程
+- 所有任務資料現在完全位於 `docs/ui-quality-tasks/*.json` shards。
+- `docs/ui-quality-todo.json` 是 thin index，僅用於索引與彙總；不再儲存任務本體。
+- 生成器 `node tools_node/build-ui-task-manifest.js` 只從 shard 讀取，自動重建 index 與人類可讀索引。
+- 增量新增任務時，直接寫入對應的 shard JSON，再執行生成器；無需手動編輯 aggregate。
