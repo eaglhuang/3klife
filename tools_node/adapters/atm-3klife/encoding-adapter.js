@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
+const { loadEncodingProfile, validateEncodingProfile } = require('../../encoding-profile-loader');
 
 class EncodingAdapter {
   constructor(options = {}) {
@@ -11,15 +12,24 @@ class EncodingAdapter {
       : path.resolve(__dirname, '..', '..', '..');
     this.configPath = options.configPath
       ? path.resolve(options.configPath)
-      : path.join(this.projectRoot, 'tools_node', 'encoding-integrity.config.json');
-    this.config = this.loadConfig();
+      : path.join(this.projectRoot, '.atm', 'encoding-guard-profile.json');
+    this.profile = this.loadConfig();
+    this.config = this.profile.policy;
     this.allowedExtensions = new Set(this.config.allowedExtensions || []);
     this.highRiskEntries = this.config.highRiskFiles || {};
     this.ignoredTrackedPrefixes = ['@cocos/creator-types/'];
   }
 
   loadConfig() {
-    return JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
+    const profile = loadEncodingProfile({
+      projectRoot: this.projectRoot,
+      profilePath: this.configPath,
+    });
+    const validation = validateEncodingProfile(profile);
+    if (!validation.ok) {
+      throw new Error(`Invalid encoding guard profile: ${validation.errors.join('; ')}`);
+    }
+    return profile;
   }
 
   toPosixPath(filePath) {

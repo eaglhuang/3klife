@@ -4,11 +4,15 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { spawnSync } = require('child_process');
+const { loadEncodingProfile, validateEncodingProfile } = require('./encoding-profile-loader');
 
 const projectRoot = path.resolve(__dirname, '..');
-const configPath = path.join(__dirname, 'encoding-integrity.config.json');
-const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-const highRiskFiles = new Set(Object.keys(config.highRiskFiles || {}));
+const profile = loadEncodingProfile({ projectRoot, profilePath: path.join(projectRoot, '.atm', 'encoding-guard-profile.json') });
+const validation = validateEncodingProfile(profile);
+if (!validation.ok) {
+    throw new Error(`Invalid encoding guard profile: ${validation.errors.join('; ')}`);
+}
+const highRiskFiles = new Set(Object.keys(validation.policy.highRiskFiles || {}));
 
 function toPosixPath(filePath) {
     return filePath.replace(/\\/g, '/');

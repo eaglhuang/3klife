@@ -1,0 +1,71 @@
+{
+  "$schema": "https://atomicframework.org/schema/encoding-guard-profile/v0.1",
+  "schemaVersion": "atm.encodingGuardProfile.v0.1",
+  "profileId": "default-encoding-guard",
+  "profileVersion": "0.1.0",
+  "generatedAt": "2026-05-18T10:40:00Z",
+  "capability": "encodingGuard",
+  "enabled": true,
+  "compatibility": {
+    "frameworkVersion": "0.0.0",
+    "atmChartVersion": "0.1.0",
+    "mode": "local-enforced",
+    "checksSupported": [
+      "utf8-bom",
+      "replacement-char",
+      "mojibake-pattern",
+      "non-utf8-decode"
+    ]
+  },
+  "policy": {
+    "allowedExtensions": [
+      ".ts",
+      ".js",
+      ".json",
+      ".md",
+      ".ps1"
+    ],
+    "latinMojibakeFragments": [
+      "Ã",
+      "Â",
+      "ðŸ",
+      "ï»¿"
+    ],
+    "weirdCjkFragments": [],
+    "latinMojibakeMinCount": 3,
+    "latinMojibakeMinRatio": 0.003,
+    "weirdCjkMinCount": 999999,
+    "highRiskFiles": {
+      "assets/scripts/ui/core/UIPreviewBuilder.ts": {
+        "label": "UI Preview Builder",
+        "baselineNonAscii": 1787,
+        "maxNonAsciiDelta": 300,
+        "allowBom": true
+      },
+      "assets/scripts/ui/core/UISkinResolver.ts": {
+        "label": "UI Skin Resolver",
+        "baselineNonAscii": 439,
+        "maxNonAsciiDelta": 80
+      },
+      "assets/scripts/ui/scenes/LoadingScene.ts": {
+        "label": "Loading Scene",
+        "baselineNonAscii": 301,
+        "maxNonAsciiDelta": 80
+      },
+      "assets/scripts/core/systems/ResourceManager.ts": {
+        "label": "Resource Manager",
+        "baselineNonAscii": 443,
+        "maxNonAsciiDelta": 80
+      }
+    },
+    "legacyAllowlist": {
+      "replacementChar": [],
+      "mojibake": [
+        "tools_node/encoding-integrity.config.json"
+      ],
+      "bom": [
+        "assets/scripts/ui/core/UIPreviewBuilder.ts"
+      ]
+    }
+  }
+}

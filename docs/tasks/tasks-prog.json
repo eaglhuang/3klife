@@ -1568,13 +1568,14 @@
       "title": "Encoding Guard profile 升級",
       "owner": "ClaudeCode_Haiku",
       "priority": "P0",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
       "created_by_agent": "codex-gpt-5.5",
-      "started_at": "",
-      "started_by_agent": "codex-gpt-5.5",
+      "started_at": "2026-05-18T08:55:00+08:00",
+      "started_by_agent": "vs-code-gpt-5.4-mini",
+      "completed_at": "2026-05-18T09:04:34.5112983+08:00",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -1600,16 +1601,35 @@
       "contracts": {
         "input": [],
         "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
+        "validation_cmd": "node .atm/encoding-guard-validator.js --self-test && node tools_node/check-encoding-touched.js --files .atm/encoding-guard-profile.json .atm/encoding-guard-validator.js tools_node/encoding-profile-loader.js tools_node/adapters/atm-3klife/encoding-adapter.js tools_node/prepare-high-risk-edit.js",
+        "rollback_hint": "restore tools_node/encoding-integrity.config.json fallback and revert .atm/encoding-guard-profile.json / .atm/encoding-guard-validator.js / tools_node/encoding-profile-loader.js",
+        "execution_steps": [
+          "新增 canonical encoding guard profile",
+          "新增 profile validator self-test",
+          "讓 adapter / high-risk edit 讀取 profile"
+        ]
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
-        "trace_artifacts": [],
-        "metrics_summary": []
+        "artifact_paths": [
+          ".atm/encoding-guard-profile.json",
+          ".atm/encoding-guard-validator.js",
+          "tools_node/encoding-profile-loader.js"
+        ],
+        "validation_evidence": [
+          "[encoding-profile] Self-test passed.",
+          "[encoding-touched] Integrity check passed.",
+          "Encoding guard profile 可從 profile config 讀取，且 BOM / U+FFFD / mojibake self-test 皆通過"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [
+          ".atm/encoding-guard-profile.json",
+          ".atm/encoding-guard-validator.js"
+        ],
+        "metrics_summary": [
+          "profile_schema_check: pass",
+          "self_test_samples: 4/4 pass",
+          "touched_encoding_check: pass"
+        ]
       }
     },
     {
