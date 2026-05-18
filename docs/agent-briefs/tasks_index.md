@@ -1,13 +1,13 @@
 ---
 title: UI Quality Tasks Index
-generated: 2026-05-17
+generated: 2026-05-18
 manifest: ../ui-quality-todo.json
 ---
 
 # Tasks Index / UI Quality
 
 > `docs/ui-quality-tasks/*.json` 是可編輯 shard 來源。
-> `docs/ui-quality-todo.json` 與本檔由 `node tools_node/build-ui-task-manifest.js` 生成。
+> `docs/ui-quality-todo.json` 是 shard 索引（thin manifest）；本檔由 `node tools_node/build-ui-task-manifest.js` 重建。
 > New UI tasks must also follow `template family -> content contract -> skin fragment -> smoke route -> docs backwrite`.
 > See [UI-task-card-template.md](./UI-task-card-template.md).
 

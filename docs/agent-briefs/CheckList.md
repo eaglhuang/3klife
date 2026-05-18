@@ -9,7 +9,8 @@
 
 本表是任務卡總覽。狀態更新時，必須同步修改：
 - 任務卡本身
-- [ui-quality-todo.json](C:\Users\User\3KLife\docs\ui-quality-todo.json)
+- 對應 docs/tasks/*.json 或 docs/ui-quality-tasks/*.json shard
+- 需要時重建 docs/ui-quality-todo.json aggregate 與 	asks_index.md (doc_task_0002)
 - 本檔
 
 共通硬規則以 [keep.md](C:\Users\User\3KLife\docs\keep.md (doc_index_0011)) (doc_index_0011) 為準。
@@ -25,7 +26,7 @@
 
 ## UI 視覺介面系統
 
-| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | 負責 Agent |
+| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
 |---|---|---|---|---|---|
 | P0 | [UI-1-0001](tasks/UI-1-0001.md (doc_task_0009)) (doc_task_0009) | 搬遷 `nav_ink` 按鈕 family 至 runtime 路徑 | done | 100% | Agent2 |
 | P0 | [UI-1-0002](tasks/UI-1-0002.md (doc_task_0010)) (doc_task_0010) | 搬遷 `paper_utility` 按鈕 family 至 runtime 路徑 | done | 100% | Agent2 |
@@ -71,7 +72,7 @@
 
 ## HTML-to-UCUF Plan5 Tooling
 
-| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | 負責 Agent |
+| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
 |---|---|---|---|---|---|
 | P0 | [PROG-2-0001](tasks/PROG-2-0001.md (doc_task_0177)) (doc_task_0177) | 建立 Plan5、任務卡與 shard bootstrap | done | 100% | GitHubCopilot |
 | P0 | [PROG-2-0002](tasks/PROG-2-0002.md (doc_task_0178)) (doc_task_0178) | HTML-to-UCUF 舊規則與衝突流程審計 | done | 100% | GitHubCopilot |
@@ -84,7 +85,7 @@
 
 ## Harness Engineering Rollout
 
-| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | 負責 Agent |
+| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
 |---|---|---|---|---|---|
 | P0 | [HARN-ART-0001](tasks/HARN/HARN-ART-0001.md) | 建立 Turn Artifact Schema 與版本契約 | done | 100% | GitHubCopilot |
 | P0 | [HARN-ART-0002](tasks/HARN/HARN-ART-0002.md) | 建立 Turn Artifact Validator CLI | done | 100% | GitHubCopilot |
@@ -121,14 +122,15 @@
 
 ## 依賴維護原則
 
-- 依賴的單一真相仍是 [ui-quality-todo.json](C:\Users\User\3KLife\docs\ui-quality-todo.json) 與各任務卡。
+- 依賴的單一真相是任務卡本身與對應 shard；docs/ui-quality-todo.json 只作為生成用 aggregate manifest。
 - 本檔只保留總覽，不再複製過長的依賴敘事。
 - 若新增 blocker 或前後置關係，請同步更新任務卡與 manifest。
 
 ## 更新流程
 
 1. 更新任務卡 frontmatter 與 notes。
-2. 更新 [ui-quality-todo.json](C:\Users\User\3KLife\docs\ui-quality-todo.json)。
+2. 更新對應 task shard，必要時執行
+`node tools_node/build-ui-task-manifest.js` 重建 aggregate manifest.
 3. 更新本表狀態。
 4. 若要正式 commit，確認 commit message 已帶任務卡號與 Agent 標籤。
 5. 若是 bug commit，確認 message 也寫了系統代碼、問題描述與修改描述。

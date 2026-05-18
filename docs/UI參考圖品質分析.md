@@ -472,7 +472,7 @@
 
 > 本章節取代舊版抽象建議，改為**可直接執行的 task-level 行動方案**。每個 task 包含驗收條件、所有者標記與依賴關係。
 > 所有者標記：`[SPR]` = Sprite 生產 Agent、`[SKN]` = Skin/JSON 架構 Agent、`[RND]` = Renderer/程式 Agent、`[QA]` = 視覺 QA（人工）。
-> 完整 To-Do 追蹤計畫見 `docs/ui-quality-todo.md (doc_ui_0035)` (doc_ui_0035)。
+> 現行任務入口見 `docs/ui-quality-tasks/README.md (doc_index_0014)` (doc_index_0014)、`docs/agent-briefs/tasks_index.md (doc_task_0002)` (doc_task_0002) 與對應 task shard；舊 `docs/legacy/agent-collaboration/ui-quality-todo.md (doc_ui_0035)` (doc_ui_0035) 僅供歷史查閱。
 
 ### Phase 0：立即落地（已有 preview，可直接接入）
 
@@ -668,13 +668,13 @@ Agent2                              Agent1
                                      [6] 契約驗證腳本更新
 ```
 
-### 10.5 To-Do 文件作為協調中心
+### 10.5 任務卡 / shard 作為協調中心
 
-- 所有可分配的 task 統一在 `docs/ui-quality-todo.md (doc_ui_0035)` (doc_ui_0035) 中追蹤
-- 每個 task 標記 `owner: Agent2 / Agent1 / 待分配`
-- Agent 開始工作前先讀 To-Do 文件，確認目前進度
-- Agent 完成 task 後立即更新 To-Do 文件的狀態
-- **人類開發者可隨時介入接管任何 task**，只需在 To-Do 中改 owner 為人名
+- 所有可分配的 task 統一由任務卡與 `docs/tasks/*.json` / `docs/ui-quality-tasks/*.json` shard 追蹤。
+- 每個 task 標記 owner / status / depends；owner 是審計欄位，不再代表固定 Agent1/Agent2 分工。
+- Agent 開始工作前先讀對應任務卡與 shard，確認目前進度。
+- Agent 完成 task 後更新任務卡、對應 shard，必要時重建 generated manifest。
+- **人類開發者可隨時介入接管任何 task**，只需更新任務卡與 shard 的 owner / notes。
 
 ### 10.6 打斷恢復機制
 
@@ -682,9 +682,9 @@ Agent2                              Agent1
 
 1. 新 Agent 啟動時，**必讀三份文件**：
    - `docs/keep.md (doc_index_0011)` (doc_index_0011)（最高準則）
-   - `docs/ui-quality-todo.md (doc_ui_0035)` (doc_ui_0035)（當前進度）
+   - `docs/agent-briefs/tasks_index.md (doc_task_0002)` (doc_task_0002) 與對應 task shard（當前進度）
    - `docs/UI參考圖品質分析.md (doc_ui_0051)` (doc_ui_0051)（品質目標）
-2. To-Do 文件中 `status: in-progress` 的項目就是上一個 Agent 被中斷的點
+2. 任務卡或 shard 中 `status: in-progress` 的項目就是上一個 Agent 被中斷的點
 3. 新 Agent 應先完成 `in-progress` 項目，再按優先序推進 `not-started` 項目
 4. 若 `in-progress` 項目的產出物不完整（例如 sprite 生成到一半），新 Agent 應重做該項目而非嘗試續接半成品
 
@@ -728,7 +728,7 @@ Agent2                              Agent1
 
 ---
 
-> **本文件的定位**：作為 UI 框體品質目標的**可執行基準**，所有後續 skin JSON 設計、sprite 製作、UI 驗收、Agent 分工均需參考此文件。相關規格連結：`docs/UI技術規格書.md (doc_ui_0049)` (doc_ui_0049)、`docs/UI 規格書.md (doc_ui_0027)` (doc_ui_0027)、`assets/resources/ui-spec/ui-design-tokens.json`、`docs/ui-quality-todo.md (doc_ui_0035)` (doc_ui_0035)。
+> **本文件的定位**：作為 UI 框體品質目標的**可執行基準**，所有後續 skin JSON 設計、sprite 製作、UI 驗收、Agent 分工均需參考此文件。相關規格連結：`docs/UI技術規格書.md (doc_ui_0049)` (doc_ui_0049)、`docs/UI 規格書.md (doc_ui_0027)` (doc_ui_0027)、`assets/resources/ui-spec/ui-design-tokens.json`、`docs/ui-quality-tasks/README.md (doc_index_0014)` (doc_index_0014)。
 
 
 ---

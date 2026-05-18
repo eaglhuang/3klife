@@ -42,23 +42,23 @@
 
 ## 目錄與檔案
 
-- `agent1-instructions.md` (doc_ai_0019)、`agent2-instructions.md` (doc_ai_0020)
-  - 各 Agent 的角色、責任與目前任務摘要。
+- `docs/legacy/agent-collaboration/agent1-instructions.md` (doc_ai_0019)、`docs/legacy/agent-collaboration/agent2-instructions.md` (doc_ai_0020)
+  - 舊 Agent1/Agent2 固定分工模式封存，只保留歷史參考；現行開工入口一律走任務卡與 shard。
 - `tasks/`
   - 每張任務卡一個 Markdown 檔。
 - [tasks_index.md](C:\Users\User\3KLife\docs\agent-briefs\tasks_index.md (doc_task_0002)) (doc_task_0002)
   - 任務索引。
 - [CheckList.md](C:\Users\User\3KLife\docs\agent-briefs\CheckList.md (doc_ai_0022)) (doc_ai_0022)
   - 任務總表與依賴摘要。
-- [ui-quality-todo.json](C:\Users\User\3KLife\docs\ui-quality-todo.json)
-  - UI 任務狀態 single source of truth。
+- `docs/tasks/*.json` / `docs/ui-quality-tasks/*.json` shard
+  - 現行任務卡合作的可編輯來源；`docs/ui-quality-todo.json` 只保留為生成用 aggregate manifest。
 
 ## 起手式
 
 0. 先讀 [docs/agent-identity-map.md](docs/agent-identity-map.md)，設定自己的身份（正式變數為 `AGENT_IDENTITY`）。
-1. 先讀 [keep.md](C:\Users\User\3KLife\docs\keep.md (doc_index_0011)) (doc_index_0011)。
-2. 讀自己的 `agentX-instructions.md`。
-3. 查 [ui-quality-todo.json](C:\Users\User\3KLife\docs\ui-quality-todo.json) 與 [CheckList.md](C:\Users\User\3KLife\docs\agent-briefs\CheckList.md (doc_ai_0022)) (doc_ai_0022)，確認目前卡片狀態、依賴與 owner。
+1. 先讀 [keep.summary.md](C:\Users\User\3KLife\docs\keep.summary.md (doc_index_0012)) (doc_index_0012)，需要修改共識時才讀 keep 全文。
+2. 查對應任務卡與 `docs/tasks/*.json` / `docs/ui-quality-tasks/*.json` shard；不要再以 Agent1/Agent2 legacy 指南作為開工入口。
+3. 查 [tasks_index.md](C:\Users\User\3KLife\docs\agent-briefs\tasks_index.md (doc_task_0002)) (doc_task_0002) 與 [CheckList.md](C:\Users\User\3KLife\docs\agent-briefs\CheckList.md (doc_ai_0022)) (doc_ai_0022)，確認目前卡片狀態、依賴與 owner。
 4. 若要做的是新範圍，先開卡再開始。
 - ATM 系列 open 卡請先套用 [atm-task-template.md](atm-task-template.md)，並優先回填 `hostKind`、`targetRepo`、`alphaGate`、`allowed_files`、`forbidden_files`、`non_goals`、`executionMode`。
 5. 若決定開始做，先鎖卡：`status=in-progress`、補 `started_at` / `started_by_agent`、更新 `notes`。
