@@ -14,7 +14,15 @@ function countOccurrences(text, fragments) {
   }, 0);
 }
 
-function analyzeBuffer(buffer, policy) {
+function compileForbiddenPatterns(policy) {
+  return (Array.isArray(policy.forbiddenPatterns) ? policy.forbiddenPatterns : []).map((rule) => ({
+    message: rule.message || 'Forbidden pattern detected.',
+    pathRegex: new RegExp(rule.pathPattern, 'u'),
+    contentRegex: new RegExp(rule.regex, 'u'),
+  }));
+}
+
+function analyzeBuffer(buffer, policy, relativePath = '') {
   const hasBom = buffer.length >= 3 && buffer[0] === 0xef && buffer[1] === 0xbb && buffer[2] === 0xbf;
   const textBuffer = hasBom ? buffer.subarray(3) : buffer;
   const text = textBuffer.toString('utf8');
@@ -43,6 +51,14 @@ function analyzeBuffer(buffer, policy) {
     issues.push('mojibake-pattern');
   }
 
+  const forbiddenPatterns = compileForbiddenPatterns(policy);
+  for (const rule of forbiddenPatterns) {
+    if (rule.pathRegex.test(relativePath) && rule.contentRegex.test(text)) {
+      issues.push('forbidden-pattern');
+      break;
+    }
+  }
+
   return {
     hasBom,
     replacementCount,
@@ -56,7 +72,7 @@ function analyzeBuffer(buffer, policy) {
 function analyzeFile(filePath, policy) {
   const absolutePath = path.resolve(filePath);
   const buffer = fs.readFileSync(absolutePath);
-  return analyzeBuffer(buffer, policy);
+  return analyzeBuffer(buffer, policy, String(filePath || '').replace(/\\/g, '/'));
 }
 
 function usage() {
@@ -119,11 +135,17 @@ function runSelfTest(policy) {
       buffer: Buffer.from('encoding guard baseline', 'utf8'),
       expected: [],
     },
+    {
+      name: 'forbidden-pattern',
+      buffer: Buffer.from('{"title":"DC-0 ????"}', 'utf8'),
+      relativePath: 'docs/ui-quality-tasks/phase-demo.json',
+      expected: ['forbidden-pattern'],
+    },
   ];
 
   const failures = [];
   for (const sample of samples) {
-    const result = analyzeBuffer(sample.buffer, policy);
+    const result = analyzeBuffer(sample.buffer, policy, sample.relativePath || 'self-test/sample.txt');
     const issueSet = new Set(result.issues);
     const expectedSet = new Set(sample.expected);
     const matches = result.issues.length === sample.expected.length

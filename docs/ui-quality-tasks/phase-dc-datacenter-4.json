@@ -3,7 +3,7 @@
   "version": 1,
   "source": "phase-dc-datacenter.json",
   "group": "DC-4",
-  "title": "DC-4 ??????",
+  "title": "DC-4 序列化與壓縮",
   "tasks": [
     {
       "id": "DC-4-0001",

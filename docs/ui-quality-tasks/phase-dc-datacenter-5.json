@@ -3,7 +3,7 @@
   "version": 1,
   "source": "phase-dc-datacenter.json",
   "group": "DC-5",
-  "title": "DC-5 ?????",
+  "title": "DC-5 同步與增量",
   "tasks": [
     {
       "id": "DC-5-0001",

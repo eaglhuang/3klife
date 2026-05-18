@@ -16,6 +16,13 @@
   "latinMojibakeMinCount": 3,
   "latinMojibakeMinRatio": 0.003,
   "weirdCjkMinCount": 999999,
+  "forbiddenPatterns": [
+    {
+      "pathPattern": "^docs/ui-quality-tasks/phase-.*\\.json$",
+      "regex": "\"title\"\\s*:\\s*\"[^\"]*\\?{3,}[^\"]*\"",
+      "message": "Suspicious question-mark placeholder detected in shard title."
+    }
+  ],
   "highRiskFiles": {
     "assets/scripts/ui/core/UIPreviewBuilder.ts": {
       "label": "UI Preview Builder",

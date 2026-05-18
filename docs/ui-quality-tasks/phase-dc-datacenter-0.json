@@ -3,7 +3,7 @@
   "version": 1,
   "source": "phase-dc-datacenter.json",
   "group": "DC-0",
-  "title": "DC-0 ????",
+  "title": "DC-0 核心基礎",
   "tasks": [
     {
       "id": "DC-0-0001",

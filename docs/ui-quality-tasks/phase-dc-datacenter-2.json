@@ -3,7 +3,7 @@
   "version": 1,
   "source": "phase-dc-datacenter.json",
   "group": "DC-2",
-  "title": "DC-2 ????????",
+  "title": "DC-2 分層載入與記憶體",
   "tasks": [
     {
       "id": "DC-2-0001",

@@ -104,6 +104,28 @@ function validateEncodingProfile(profile) {
     errors.push('legacyAllowlist must be an object.');
   }
 
+  if (policy.forbiddenPatterns !== undefined) {
+    if (!Array.isArray(policy.forbiddenPatterns)) {
+      errors.push('forbiddenPatterns must be an array when provided.');
+    } else {
+      policy.forbiddenPatterns.forEach((rule, index) => {
+        if (!rule || typeof rule !== 'object' || Array.isArray(rule)) {
+          errors.push(`forbiddenPatterns[${index}] must be an object.`);
+          return;
+        }
+        if (typeof rule.pathPattern !== 'string' || !rule.pathPattern.trim()) {
+          errors.push(`forbiddenPatterns[${index}].pathPattern must be a non-empty string.`);
+        }
+        if (typeof rule.regex !== 'string' || !rule.regex.trim()) {
+          errors.push(`forbiddenPatterns[${index}].regex must be a non-empty string.`);
+        }
+        if (rule.message !== undefined && (typeof rule.message !== 'string' || !rule.message.trim())) {
+          errors.push(`forbiddenPatterns[${index}].message must be a non-empty string when provided.`);
+        }
+      });
+    }
+  }
+
   if (profile && typeof profile === 'object' && profile.enabled === false) {
     errors.push('Encoding guard profile must be enabled for this capability.');
   }

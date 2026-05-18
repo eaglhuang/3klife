@@ -3,7 +3,7 @@
   "version": 1,
   "source": "phase-dc-datacenter.json",
   "group": "DC-1",
-  "title": "DC-1 ??????",
+  "title": "DC-1 武將資料管線",
   "tasks": [
     {
       "id": "DC-1-0001",

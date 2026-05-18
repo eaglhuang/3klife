@@ -6,43 +6,43 @@
   "shards": [
     {
       "name": "phase-dc-datacenter-0",
-      "title": "DC-0 ????",
+      "title": "DC-0 核心基礎",
       "path": "./phase-dc-datacenter-0.json",
       "taskCount": 3
     },
     {
       "name": "phase-dc-datacenter-1",
-      "title": "DC-1 ??????",
+      "title": "DC-1 武將資料管線",
       "path": "./phase-dc-datacenter-1.json",
       "taskCount": 7
     },
     {
       "name": "phase-dc-datacenter-2",
-      "title": "DC-2 ????????",
+      "title": "DC-2 分層載入與記憶體",
       "path": "./phase-dc-datacenter-2.json",
       "taskCount": 6
     },
     {
       "name": "phase-dc-datacenter-3",
-      "title": "DC-3 ????",
+      "title": "DC-3 血統圖譜",
       "path": "./phase-dc-datacenter-3.json",
       "taskCount": 5
     },
     {
       "name": "phase-dc-datacenter-4",
-      "title": "DC-4 ??????",
+      "title": "DC-4 序列化與壓縮",
       "path": "./phase-dc-datacenter-4.json",
       "taskCount": 3
     },
     {
       "name": "phase-dc-datacenter-5",
-      "title": "DC-5 ?????",
+      "title": "DC-5 同步與增量",
       "path": "./phase-dc-datacenter-5.json",
       "taskCount": 5
     },
     {
       "name": "phase-dc-datacenter-6",
-      "title": "DC-6 ?????",
+      "title": "DC-6 成長與歸檔",
       "path": "./phase-dc-datacenter-6.json",
       "taskCount": 6
     }

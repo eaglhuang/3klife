@@ -17,6 +17,7 @@ class EncodingAdapter {
     this.config = this.profile.policy;
     this.allowedExtensions = new Set(this.config.allowedExtensions || []);
     this.highRiskEntries = this.config.highRiskFiles || {};
+    this.forbiddenPatterns = this.compileForbiddenPatterns(this.config.forbiddenPatterns || []);
     this.ignoredTrackedPrefixes = ['@cocos/creator-types/'];
   }
 
@@ -146,6 +147,36 @@ class EncodingAdapter {
     }, 0);
   }
 
+  compileForbiddenPatterns(rules) {
+    return (Array.isArray(rules) ? rules : []).map((rule, index) => {
+      try {
+        return {
+          index,
+          message: rule.message || 'Forbidden pattern detected.',
+          pathPattern: rule.pathPattern,
+          regex: rule.regex,
+          pathRegex: new RegExp(rule.pathPattern, 'u'),
+          contentRegex: new RegExp(rule.regex, 'u'),
+        };
+      } catch (error) {
+        throw new Error(`Invalid forbiddenPatterns[${index}] regex: ${error.message}`);
+      }
+    });
+  }
+
+  collectForbiddenPatternIssues(relativePath, text) {
+    const issues = [];
+    for (const rule of this.forbiddenPatterns) {
+      if (!rule.pathRegex.test(relativePath)) {
+        continue;
+      }
+      if (rule.contentRegex.test(text)) {
+        issues.push(`${rule.message} (rule ${rule.index + 1})`);
+      }
+    }
+    return issues;
+  }
+
   countNonAscii(text) {
     let count = 0;
     for (const char of String(text || '')) {
@@ -227,6 +258,8 @@ class EncodingAdapter {
         `Suspicious mojibake signature detected (latin=${latinMojibakeCount}, weird-cjk=${weirdCjkCount}, ratio=${suspiciousRatio.toFixed(4)}).`
       );
     }
+
+    issues.push(...this.collectForbiddenPatternIssues(relativePath, text));
 
     if (highRiskConfig && Number.isFinite(highRiskConfig.baselineNonAscii)) {
       const delta = Math.abs(nonAsciiCount - highRiskConfig.baselineNonAscii);
