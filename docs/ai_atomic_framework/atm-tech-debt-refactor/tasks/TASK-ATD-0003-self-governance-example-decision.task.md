@@ -3,7 +3,11 @@ doc_id: doc_other_0603
 task_id: TASK-ATD-0003
 title: 決策 upstream self-governance 範例位置（不預設 commit `.atm/` runtime）
 milestone: M0
-status: open
+status: done
+started_at: 2026-05-18T11:00:00+08:00
+started_by_agent: ClaudeCode_Sonnet4.6
+completed_at: 2026-05-18T12:00:00+08:00
+completed_by_agent: ClaudeCode_Sonnet4.6
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-rfc
@@ -97,11 +101,14 @@ TASK-ATD-0002
 
 ## Checklist
 
-- [ ] 建立 upstream-friendly artifact 或明確標示暫不需要
-- [ ] 確認未污染 3KLife / npc-brain / Cocos 到 upstream protected surface
-- [ ] 完成 allowed_files 內的最小變更
-- [ ] 執行驗證方式並把結果回寫 Notes
+- [x] 建立 upstream-friendly artifact 或明確標示暫不需要
+- [x] 確認未污染 3KLife / npc-brain / Cocos 到 upstream protected surface
+- [x] 完成 allowed_files 內的最小變更
+- [x] 執行驗證方式並把結果回寫 Notes
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0002
+2026-05-18 | 狀態: done | 驗證: PASS | 決策: diagnostic-only（不建 .atm.example/ / examples/self-host/）；SELF_HOSTING_ALPHA.md 補決策說明 | 阻塞: none
+- validate:root-drop-release ok
+- validate:standard ok (53/53)

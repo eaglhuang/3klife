@@ -3,7 +3,11 @@ doc_id: doc_other_0604
 task_id: TASK-ATD-0004
 title: 模組邊界硬化：package runtime 不 import `scripts/`
 milestone: M1
-status: open
+status: done
+started_at: 2026-05-18T11:00:00+08:00
+started_by_agent: ClaudeCode_Sonnet4.6
+completed_at: 2026-05-18T12:00:00+08:00
+completed_by_agent: ClaudeCode_Sonnet4.6
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -89,11 +93,14 @@ created_by_agent: codex
 
 ## Checklist
 
-- [ ] 建立 upstream-friendly artifact 或明確標示暫不需要
-- [ ] 確認未污染 3KLife / npc-brain / Cocos 到 upstream protected surface
-- [ ] 完成 allowed_files 內的最小變更
-- [ ] 執行驗證方式並把結果回寫 Notes
+- [x] 建立 upstream-friendly artifact 或明確標示暫不需要
+- [x] 確認未污染 3KLife / npc-brain / Cocos 到 upstream protected surface
+- [x] 完成 allowed_files 內的最小變更
+- [x] 執行驗證方式並把結果回寫 Notes
 
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: PASS | 修復: doctor.ts/self-host-alpha.ts 移除 scripts/ 直接 import；新增 packages/cli/src/temp-workspace.ts 與 packages/cli/src/commands/hash-placeholder-audit.ts；scripts/ 改為 re-export shim | 阻塞: none
+- validate:quick ok (4/4)
+- validate:standard ok (53/53)
