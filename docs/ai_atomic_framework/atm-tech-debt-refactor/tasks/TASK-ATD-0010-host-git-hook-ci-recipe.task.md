@@ -3,7 +3,11 @@ doc_id: doc_other_0610
 task_id: TASK-ATD-0010
 title: Git hook / CI enforcement 改為 opt-in host recipe
 milestone: M1
-status: open
+status: done
+started_at: 2026-05-18T16:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-18T17:00:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -98,3 +102,8 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+
+2026-05-18 | 狀態: done | 完成:
+- examples/git-hooks-enforcement/README.md 標題改為「Opt-in Host Recipe」+ 明確宣告 ATM core 不會自動安裝 hook
+- docs/HOST_GOVERNANCE_INTEGRATION.md 在 Enforcement Layers 表加 Provided by 欄位 + 新增「What ATM core does NOT do」小節 (4 條明確邊界)
+- validate:neutrality ok; validate:examples ok; validate:standard passed=53/53

@@ -3,7 +3,11 @@ doc_id: doc_other_0608
 task_id: TASK-ATD-0008
 title: framework version 來源改為 package / release manifest
 milestone: M1
-status: open
+status: done
+started_at: 2026-05-18T16:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-18T17:00:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -96,3 +100,9 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+
+2026-05-18 | 狀態: done | 完成:
+- shared.ts 新增 readFrameworkVersion() 中央 helper (讀 package.json 帶 fallback)
+- init.ts 改用 readFrameworkVersion() 取代 hardcoded const
+- atm-chart.ts readFrameworkPackageVersion() 改為 delegate 到 shared
+- validate:cli ok; validate:standard passed=53/53; typecheck packages/ 清零

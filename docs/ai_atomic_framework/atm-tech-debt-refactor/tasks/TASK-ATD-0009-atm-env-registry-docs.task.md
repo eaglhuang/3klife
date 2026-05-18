@@ -3,7 +3,11 @@ doc_id: doc_other_0609
 task_id: TASK-ATD-0009
 title: 環境變數 registry 與 docs
 milestone: M1
-status: open
+status: done
+started_at: 2026-05-18T16:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-18T17:00:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -98,3 +102,9 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+
+2026-05-18 | 狀態: done | 完成:
+- packages/cli/src/config/env-registry.ts 新增 typed registry (7 個 ATM_* 變數)
+- docs/environment-variables.md 新增公開文件 (按 surface 分區: public / internal-test)
+- 未動既有 process.env.ATM_* 讀取點 (out of scope, 設計為漸進式採用)
+- validate:neutrality ok; validate:examples ok; validate:standard passed=53/53

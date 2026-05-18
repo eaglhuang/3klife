@@ -37,7 +37,7 @@ revised_at: 2026-05-18T00:00:00+08:00
 |------|------|
 | 已拆 | 32 / 32 |
 | 進行中 | 0 |
-| 完成 | 7 |
+| 完成 | 10 |
 
 ---
 
@@ -52,9 +52,9 @@ revised_at: 2026-05-18T00:00:00+08:00
 | [TASK-ATD-0005](./TASK-ATD-0005-module-boundary-deny-rule-fixture.task.md) | `validate-module-boundaries` deny rule + negative fixture | M1 | done | TASK-ATD-0004 | — | pending-github-issue |
 | [TASK-ATD-0006](./TASK-ATD-0006-eslint-baseline-warning-budget.task.md) | ESLint baseline / warning budget | M1 | done | — | — | pending-github-issue |
 | [TASK-ATD-0007](./TASK-ATD-0007-cli-shared-result-types.task.md) | CLI 公共型別與 shared command result 收斂 | M1 | done | TASK-ATD-0006 | I1 | pending-github-issue |
-| [TASK-ATD-0008](./TASK-ATD-0008-framework-version-source.task.md) | framework version 來源改為 package / release manifest | M1 | open | — | I6 | pending-github-issue |
-| [TASK-ATD-0009](./TASK-ATD-0009-atm-env-registry-docs.task.md) | 環境變數 registry 與 docs | M1 | open | — | — | pending-github-issue |
-| [TASK-ATD-0010](./TASK-ATD-0010-host-git-hook-ci-recipe.task.md) | Git hook / CI enforcement 改為 opt-in host recipe | M1 | open | — | I4 | pending-github-issue |
+| [TASK-ATD-0008](./TASK-ATD-0008-framework-version-source.task.md) | framework version 來源改為 package / release manifest | M1 | done | — | I6 | pending-github-issue |
+| [TASK-ATD-0009](./TASK-ATD-0009-atm-env-registry-docs.task.md) | 環境變數 registry 與 docs | M1 | done | — | — | pending-github-issue |
+| [TASK-ATD-0010](./TASK-ATD-0010-host-git-hook-ci-recipe.task.md) | Git hook / CI enforcement 改為 opt-in host recipe | M1 | done | — | I4 | pending-github-issue |
 | [TASK-ATD-0011](./TASK-ATD-0011-validator-harness-consolidation.task.md) | Validator harness 分批收斂 | M2 | open | — | — | pending-github-issue |
 | [TASK-ATD-0012](./TASK-ATD-0012-ajv-factory-cache.task.md) | 共用 AJV factory/cache 且保持 pass/fail 行為 | M2 | open | TASK-ATD-0011 | I2 | pending-github-issue |
 | [TASK-ATD-0013](./TASK-ATD-0013-cli-error-policy.task.md) | CLI error policy：`CliError` + typed code + usage exit code | M2 | open | TASK-ATD-0007 | I1 | pending-github-issue |
