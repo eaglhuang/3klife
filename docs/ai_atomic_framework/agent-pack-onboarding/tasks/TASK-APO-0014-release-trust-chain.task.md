@@ -3,7 +3,9 @@ doc_id: doc_other_0167
 task_id: TASK-APO-0014
 title: Release trust chain — npm provenance + SBOM + integrity manifest
 milestone: M8
-status: open
+status: done
+started_at: 2026-05-18T11:00:00+08:00
+started_by_agent: copilot-claude-sonnet-4.6
 blocked_by: [TASK-APO-0012]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -29,6 +31,9 @@ non_goals:
   - 重做整套 release workflow（僅補 trust 層）
   - 處理 known-bad / yank（屬 TASK-APO-0015）
 created_at: 2026-05-18T00:00:00+08:00
+completed_at: 2026-05-18T11:25:00+08:00
+completed_by_agent: copilot-claude-sonnet-4.6
+commit: c4983ec (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
 ---
 
@@ -48,10 +53,10 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] release workflow 在 dry-run mode 可產 attestation + SBOM。
-- [ ] `atm doctor --trust` 輸出 bundled hash 與 expected hash 對照。
-- [ ] tampered bundled matrix 會被 CLI 拒絕（fixture）。
-- [ ] validate-release-trust.ts 失敗訊息可機器解析。
+- [x] release workflow 在 dry-run mode 可產 attestation + SBOM。
+- [x] `atm doctor --trust` 輸出 bundled hash 與 expected hash 對照。
+- [x] tampered bundled matrix 會被 CLI 拒絕（fixture）。
+- [x] validate-release-trust.ts 失敗訊息可機器解析。
 
 ## 驗證方式
 
@@ -63,3 +68,4 @@ node --experimental-strip-types scripts/validate-release-trust.ts --mode validat
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 release trust chain 後續卡 | 阻塞: TASK-APO-0012
+2026-05-18 | 狀態: done | 驗證: `node --experimental-strip-types scripts/validate-release-trust.ts --mode validate` pass；`tests/release/release-trust.test.ts` pass；`build-release-integrity.ts --dry-run` pass；`npm run validate:standard` 已跑到本卡 validator pass，但因既有 `multi-agent-confidence` matrix stale 失敗（非本卡 touched files） | 變更: release workflow 加 dry-run provenance/SBOM、integrity manifest builder、CLI startup trust gate、`doctor --trust` hash 對照、tamper fixture、standard profile validator entry | 阻塞: none
