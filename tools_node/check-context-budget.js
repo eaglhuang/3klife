@@ -3,50 +3,14 @@
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
+const { loadContextBudgetPolicy } = require('./context-budget-policy-loader');
 
 const ROOT = process.cwd();
-
-const TEXT_EXTS = new Set([
-  '.md',
-  '.json',
-  '.ts',
-  '.tsx',
-  '.js',
-  '.jsx',
-  '.mjs',
-  '.cjs',
-  '.ps1',
-  '.txt',
-  '.log',
-  '.yml',
-  '.yaml',
-  '.toml',
-  '.csv',
-]);
-
-const IMAGE_EXTS = new Set([
-  '.png',
-  '.jpg',
-  '.jpeg',
-  '.webp',
-  '.gif',
-  '.bmp',
-]);
-
-const DEFAULT_SCAN_DIRS = [
-  'docs',
-  '.agents/workflows',
-  '.github/skills',
-  'artifacts',
-];
-
-const THRESHOLDS = {
-  singleWarnTokens: 6000,
-  bundleWarnTokens: 18000,
-  bundleHardTokens: 30000,
-  imageWarnCount: 3,
-  imageWarnBytes: 4 * 1024 * 1024,
-};
+const contextBudgetPolicy = loadContextBudgetPolicy({ projectRoot: ROOT });
+const TEXT_EXTS = new Set(contextBudgetPolicy.scan.textExtensions);
+const IMAGE_EXTS = new Set(contextBudgetPolicy.scan.imageExtensions);
+const DEFAULT_SCAN_DIRS = contextBudgetPolicy.scan.defaultScanDirs;
+const THRESHOLDS = contextBudgetPolicy.thresholds;
 
 function parseArgs(argv) {
   const args = {
@@ -230,7 +194,7 @@ function analyzeFile(relPath) {
   if (kind === 'text') {
     const buffer = fs.readFileSync(absPath);
     item.estTokens = estimateTextTokens(buffer);
-    if (item.estTokens >= THRESHOLDS.singleWarnTokens) {
+    if (item.estTokens >= THRESHOLDS.warningTokens) {
       item.risk.push('single_file_large');
     }
     if (/keep\.md$/i.test(relPath)) {
@@ -263,15 +227,15 @@ function buildReport(items) {
   };
 
   const reasons = [];
-  if (totals.estTokens >= THRESHOLDS.bundleHardTokens) {
+  if (totals.estTokens >= THRESHOLDS.hardStopTokens) {
     reasons.push('bundle_hard_stop');
-  } else if (totals.estTokens >= THRESHOLDS.bundleWarnTokens) {
+  } else if (totals.estTokens >= THRESHOLDS.summarizeTokens) {
     reasons.push('bundle_warn');
   }
-  if (totals.imageFiles >= THRESHOLDS.imageWarnCount) {
+  if (totals.imageFiles > THRESHOLDS.maxInlineArtifacts || totals.imageFiles >= THRESHOLDS.imageWarningCount) {
     reasons.push('too_many_images');
   }
-  if (totals.imageBytes >= THRESHOLDS.imageWarnBytes) {
+  if (totals.imageBytes >= THRESHOLDS.imageWarningBytes) {
     reasons.push('image_bytes_high');
   }
   if (items.some((item) => item.risk.includes('visual_diff_asset'))) {
@@ -385,6 +349,12 @@ function main() {
     const payload = {
       ...report,
       keepNote: args.emitKeepNote ? buildKeepNote(report) : null,
+      policy: {
+        sourcePath: contextBudgetPolicy.sourcePath,
+        thresholds: contextBudgetPolicy.thresholds,
+        routing: contextBudgetPolicy.routing,
+        output: contextBudgetPolicy.output,
+      },
     };
     console.log(JSON.stringify(payload, null, 2));
     process.exit(report.status === 'hard-stop' ? 2 : report.status === 'warn' ? 1 : 0);

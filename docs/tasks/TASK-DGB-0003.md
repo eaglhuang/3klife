@@ -3,15 +3,18 @@ id: "TASK-DGB-0003"
 title: "Context Budget policy 配置化"
 owner: "ClaudeCode_Haiku"
 priority: "P0"
-status: "open"
+status: "done"
 type: "implementation"
 phase: "M0"
 created: "2026-05-17"
 created_by_agent: "codex-gpt-5.5"
+started_at: "2026-05-18T09:05:00+08:00"
+started_by_agent: "vs-code-gpt-5.4-mini"
+completed_at: "2026-05-18T09:08:16.4034478+08:00"
 related_cards: []
 depends:
   - TASK-DGB-0001
-notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無"
+notes: "2026-05-18 | 狀態: done | 驗證: policy loader + check-context-budget JSON output passed | 變更: 新增 context budget policy / loader，讓 check-context-budget 從 policy 讀取 token / image 閾值與策略 | 阻塞: 無"
 ---
 
 # TASK-DGB-0003 Context Budget policy 配置化
@@ -29,4 +32,4 @@ notes: "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener �
 - 無
 
 ## 備註
-- 2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無
+- 2026-05-18 | 狀態: done | 驗證: policy loader + check-context-budget JSON output passed | 變更: 新增 context budget policy / loader，讓 check-context-budget 從 policy 讀取 token / image 閾值與策略 | 阻塞: 無

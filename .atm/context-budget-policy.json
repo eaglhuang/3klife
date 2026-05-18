@@ -1,0 +1,60 @@
+{
+  "$schema": "https://atomicframework.org/schema/context-budget-policy/v0.1",
+  "schemaVersion": "atm.contextBudgetPolicy.v0.1",
+  "profileId": "default-context-budget",
+  "profileVersion": "0.1.0",
+  "generatedAt": "2026-05-18T09:10:00Z",
+  "enabled": true,
+  "policy": {
+    "thresholds": {
+      "warningTokens": 6000,
+      "summarizeTokens": 18000,
+      "hardStopTokens": 30000,
+      "maxInlineArtifacts": 2,
+      "imageWarningCount": 2,
+      "imageWarningBytes": 4194304
+    },
+    "scan": {
+      "textExtensions": [
+        ".md",
+        ".json",
+        ".ts",
+        ".tsx",
+        ".js",
+        ".jsx",
+        ".mjs",
+        ".cjs",
+        ".ps1",
+        ".txt",
+        ".log",
+        ".yml",
+        ".yaml",
+        ".toml",
+        ".csv"
+      ],
+      "imageExtensions": [
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+        ".gif",
+        ".bmp"
+      ],
+      "defaultScanDirs": [
+        "docs",
+        ".agents/workflows",
+        ".github/skills",
+        "artifacts"
+      ]
+    },
+    "routing": {
+      "largeDocumentStrategy": "summarize-first",
+      "structuredDiffStrategy": "summarize-before-read",
+      "imageStrategy": "thumbnail-first"
+    },
+    "output": {
+      "topRiskFiles": 20,
+      "emitKeepNoteOnWarn": true
+    }
+  }
+}

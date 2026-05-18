@@ -1638,13 +1638,14 @@
       "title": "Context Budget policy 配置化",
       "owner": "ClaudeCode_Haiku",
       "priority": "P0",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
       "created_by_agent": "codex-gpt-5.5",
-      "started_at": "",
-      "started_by_agent": "codex-gpt-5.5",
+      "started_at": "2026-05-18T09:05:00+08:00",
+      "started_by_agent": "vs-code-gpt-5.4-mini",
+      "completed_at": "2026-05-18T09:08:16.4034478+08:00",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -1670,16 +1671,34 @@
       "contracts": {
         "input": [],
         "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
+        "validation_cmd": "node --check tools_node/check-context-budget.js && node --check tools_node/context-budget-policy-loader.js && node tools_node/check-context-budget.js --json --files docs/ai_atomic_framework/default-governance/ATM預設治理能力計畫書.md",
+        "rollback_hint": "restore hardcoded thresholds in tools_node/check-context-budget.js and remove .atm/context-budget-policy.json / tools_node/context-budget-policy-loader.js",
+        "execution_steps": [
+          "新增 context budget policy",
+          "讓 check-context-budget 讀取 policy thresholds",
+          "輸出 policy JSON 供驗證"
+        ]
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
-        "handoff_diff_status": "",
-        "trace_artifacts": [],
-        "metrics_summary": []
+        "artifact_paths": [
+          ".atm/context-budget-policy.json",
+          "tools_node/context-budget-policy-loader.js",
+          "tools_node/check-context-budget.js"
+        ],
+        "validation_evidence": [
+          "[context-budget] status=ok",
+          "warningTokens=6000 / summarizeTokens=18000 / hardStopTokens=30000 / maxInlineArtifacts=2",
+          "policy loader + JSON report verified"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [
+          ".atm/context-budget-policy.json"
+        ],
+        "metrics_summary": [
+          "policy_thresholds_loaded: pass",
+          "json_report_policy_echo: pass",
+          "touched_encoding_check: pass"
+        ]
       }
     },
     {
