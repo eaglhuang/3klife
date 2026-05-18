@@ -150,6 +150,19 @@ Hint 是建議路由，不是新的權威流程。真正可執行的下一步仍
 - `AGENTS.md` 可要求 agent 先讀 root `README.md` 取得專案脈絡，再執行 `node atm.mjs next --json`；`README.md` 則只能導向 `node atm.mjs next --json`，不得反向要求先讀 `AGENTS.md`。
 - 注入策略必須可重跑、可 diff、可驗證、可保留使用者既有內容，且第二次 bootstrap 在無變更時應維持 idempotent。
 
+### 3.6.2 Pinned Runner Auto-Install
+
+Official onboarding 不能要求使用者知道「先去 upstream release 複製 `atm.mjs`」這種框架內部細節。第一次 `bootstrap` / `init --adopt default` 建立 `.atm/` 時，必須同步在 host root 安裝 pinned onefile runner，讓 root `README.md` / `AGENTS.md` 裡的 `node atm.mjs next --json` 立刻可執行。
+
+最低要求如下：
+
+- `bootstrap` / `init --adopt default` 會把目前 onefile launcher 或 release 產物安裝到 host root `atm.mjs`。
+- `.atm/runtime/pinned-runner.json` 必須記錄 runner path、sha256、source kind、size、generatedAt 與第一個建議命令。
+- 外部 onefile launcher 從別的目錄執行時，extracted runtime 必須能知道原始 launcher 路徑，不能只依賴 upstream repo 相對路徑。
+- 第二次 bootstrap 若 runner hash 相同，必須回報 unchanged 並保持 idempotent。
+- 若 host root 已有 hash 不同的 `atm.mjs`，預設不得靜默覆蓋；只有 explicit `--force` 或等價安全流程才能替換。
+- 不得複製 upstream `.atm/` 到 adopter repo；adopter repo 的 `.atm/` 必須由自身 bootstrap 流程生成。
+
 ### 3.7 Distribution Layer
 
 ATM 維持多層發佈共存：source routing、root drop、onefile、npm package。`create-atm` 是低摩擦入口，但不能稀釋治理嚴肅性；預設行為要讓使用者看見 ATMChart / welcome 摘要，而不是只顯示安裝成功。
@@ -308,6 +321,7 @@ node atm.mjs upgrade rollback --backup <backup-id>
 | TASK-APO-0024 | Time+minor Deprecation + Canary Rollout | alpha≥30d / beta≥90d / stable≥180d / lts≥365d、`upgrade apply --canary` | deprecation policy update、canary apply flag | done |
 | TASK-APO-0025 | Existing Root Entry Injection | 既有 `README.md` / `AGENTS.md` 也能被 bootstrap 補上不迴圈 ATM 入口 | bootstrap patch policy、fixture coverage、verify gate | done |
 | TASK-APO-0026 | Codex Official Integration | Codex 從內部線索提升為官方 integration adapter | `integration-codex`、CLI support、verify matrix | done |
+| TASK-APO-0027 | Pinned Runner Auto-Install | bootstrap / init 自動安裝 root `atm.mjs` pinned runner，不要求使用者手動複製 | onefile launcher path、pinned-runner metadata、external bootstrap fixture | done |
 
 ## 6. 里程碑
 
@@ -350,7 +364,7 @@ node atm.mjs upgrade rollback --backup <backup-id>
 
 ### M4：First-Touch 與 Distribution
 
-對應：TASK-APO-0007、TASK-APO-0008、TASK-APO-0025
+對應：TASK-APO-0007、TASK-APO-0008、TASK-APO-0025、TASK-APO-0027
 
 - [x] `create-atm` 可在空 repo 啟動 bootstrap / render / adapter install。
 - [x] npm publish recipe 保留 validation gate。
@@ -358,6 +372,8 @@ node atm.mjs upgrade rollback --backup <backup-id>
 - [x] dry-run 不寫入 lineage；正式模式寫入 welcome lineage。
 - [x] `bootstrap` / `init --adopt default` 在既有 `README.md` / `AGENTS.md` 上注入最小必要的 ATM 入口文案。
 - [x] root `README.md` 與 `AGENTS.md` 同時存在時，兩者不形成互相跳轉 loop，而是共同導向 `node atm.mjs next --json`。
+- [x] `bootstrap` / `init --adopt default` 會自動安裝 root `atm.mjs` pinned runner，讓 `node atm.mjs next --json` 立即可執行。
+- [x] `.atm/runtime/pinned-runner.json` 記錄 runner hash、source kind、安裝狀態與 first command。
 
 ### M5：Command Hint Chain
 
@@ -448,6 +464,12 @@ node atm.mjs upgrade rollback --backup <backup-id>
 
 控制：每個出現在官方 compatibility matrix 的 editor，都必須有明確的 `integration list / add / verify / remove` 責任鏈，或明確標示 experimental / guide-only；Codex 不得再停留在半支援狀態。
 
+### 8.10 Missing Pinned Runner
+
+風險：bootstrap 已產生 `.atm/`、`README.md` 與 `AGENTS.md`，但 host root 沒有 `atm.mjs`，導致 agent 讀到正確入口後仍因找不到 runner 而中斷。這會把 official onboarding 變成「看似成功、實際不可執行」的半完成狀態。
+
+控制：pinned runner 安裝是 official onboarding 的一部分；bootstrap evidence 必須回報 runner status，validator 必須覆蓋外部 onefile launcher bootstrap、第二次 bootstrap idempotency、root `atm.mjs next --json` 可執行，以及既有不同 hash `atm.mjs` 不被靜默覆蓋。
+
 ## 9. 完成定義
 
 本計畫完成時，ATM 必須能回答下列問題：
@@ -462,6 +484,7 @@ node atm.mjs upgrade rollback --backup <backup-id>
 8. Framework、ATMChart 與 entry template 版本是否可診斷？目標：welcome / doctor / verify 都能回答目前版本是否 supported、deprecated 或 unsupported。
 9. 既有 repo 已經有 `README.md` / `AGENTS.md` 時，第一次 bootstrap 是否仍能幫 agent 找到正確入口？目標：可，且不覆蓋使用者原文、不形成 loop。
 10. Codex 是否與 Claude Code / Copilot / Cursor / Gemini 一樣屬於官方可驗證的 integration target？目標：是，或明確標示為非官方實驗路徑，不再模糊。
+11. 第一次 bootstrap 後 root `atm.mjs` 是否存在且可執行？目標：可，並有 `.atm/runtime/pinned-runner.json` 作為 hash / source / command evidence。
 
 ## 10. 維護規則
 

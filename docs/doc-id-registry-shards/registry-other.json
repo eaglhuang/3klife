@@ -1558,5 +1558,11 @@
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0026-codex-official-integration.task.md",
     "title": "TASK-APO-0026 — Codex editor integration 正式化",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0648",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-pinned-runner-auto-install.task.md",
+    "title": "TASK-APO-0027 — Pinned Runner Auto-Install During Init/Bootstrap",
+    "category": "other"
   }
 ]

@@ -23,8 +23,8 @@
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 80 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
-| 其它類 | `doc_other` | 260 |
-| **合計** | — | **1027** |
+| 其它類 | `doc_other` | 261 |
+| **合計** | — | **1028** |
 
 ## Markdown 分片
 
@@ -34,7 +34,7 @@
 | Tech / UI / Art / Data | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | 101 | 單一分片 |
 | Spec / Index / Task | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | 12 | 3 個 parts |
 | AI / AgentSkill / Server | docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md | 135 | 單一分片 |
-| 其它類 | docs/doc-id-registry-md-shards/doc-id-registry-other.md | 271 | 單一分片 |
+| 其它類 | docs/doc-id-registry-md-shards/doc-id-registry-other.md | 272 | 單一分片 |
 
 ## 使用方式
 

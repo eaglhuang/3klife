@@ -268,3 +268,4 @@
 | `doc_other_0645` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0018-review-advisory-bridge-fixtures.task.md | TASK-APF-0018 — ReviewAdvisory bridge fixtures |
 | `doc_other_0646` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0025-existing-root-entry-injection.task.md | TASK-APO-0025 — 既有 README / AGENTS 的 loop-free ATM 入口注入 |
 | `doc_other_0647` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0026-codex-official-integration.task.md | TASK-APO-0026 — Codex editor integration 正式化 |
+| `doc_other_0648` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-pinned-runner-auto-install.task.md | TASK-APO-0027 — Pinned Runner Auto-Install During Init/Bootstrap |

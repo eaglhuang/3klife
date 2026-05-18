@@ -7,12 +7,12 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
-last_updated: 2026-05-18T00:00:00+08:00
+last_updated: 2026-05-19T00:00:00+08:00
 ---
 
 # ATM 引導工程 Task Cards
 
-本索引追蹤 `ATM引導工程計畫書.md` 對應的 upstream framework 任務卡。任務卡只描述 AI-Atomic-Framework 的引導層、agent entry、integration adapter、版本治理與 release 安全網，不直接治理 3KLife 或 npc-brain 的業務功能。
+本索引追蹤 `ATM引導工程計畫書.md` 對應的 upstream framework 任務卡。任務卡只描述 AI-Atomic-Framework 的引導層、agent entry、integration adapter、版本治理、pinned runner 與 release 安全網，不直接治理 3KLife 或 npc-brain 的業務功能。
 
 ## 任務索引
 
@@ -45,6 +45,7 @@ last_updated: 2026-05-18T00:00:00+08:00
 | [TASK-APO-0024](./TASK-APO-0024-time-minor-deprecation-canary.task.md) | Time+minor deprecation + canary rollout | M10 | open | 0013 |
 | [TASK-APO-0025](./TASK-APO-0025-existing-root-entry-injection.task.md) | 既有 README / AGENTS 的 loop-free ATM 入口注入 | M4 | done | 0007 / 0008 |
 | [TASK-APO-0026](./TASK-APO-0026-codex-official-integration.task.md) | Codex editor integration 正式化 | M3 | done | 0006 |
+| [TASK-APO-0027](./TASK-APO-0027-pinned-runner-auto-install.task.md) | Pinned Runner Auto-Install During Init/Bootstrap | M4 | done | 0025 |
 
 ## 維護規則
 
@@ -52,3 +53,4 @@ last_updated: 2026-05-18T00:00:00+08:00
 - 任務若改動 public-facing 文件，需同步更新 doc-id registry 或相關 shard。
 - Agent-specific 任務不得直接修改 `packages/core/`，除非該任務明確被升級為 core behavior 或 registry contract。
 - 所有 editor / agent entry 最後都必須回到 `node atm.mjs next --json`，不得形成第二套治理協議。
+- root `atm.mjs` 是 official onboarding 的一部分；使用者不應被要求手動從 upstream 複製 onefile runner。
