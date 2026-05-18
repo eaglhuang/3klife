@@ -3,7 +3,12 @@ doc_id: doc_other_0173
 task_id: TASK-APO-0020
 title: Telemetry + adopter sentinel + deprecation dashboard
 milestone: M10
-status: open
+status: done
+started_at: 2026-05-18T10:23:46+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-18T10:34:15+08:00
+completed_by_agent: vs-insiders-gpt-5.4
+commit: c81da68 (AI-Atomic-Framework main)
 blocked_by: [TASK-APO-0018]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -53,9 +58,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] CLI 預設不發送任何 telemetry payload（fixture 校驗網路請求次數=0）。
-- [ ] opt-in 後送出 payload schema 通過 fixture 校驗。
-- [ ] sentinel workflow 在故意破壞 fixture 時會失敗。
+- [x] CLI 預設不發送任何 telemetry payload（fixture 校驗網路請求次數=0）。
+- [x] opt-in 後送出 payload schema 通過 fixture 校驗。
+- [x] sentinel workflow 在故意破壞 fixture 時會失敗。
 
 ## 驗證方式
 
@@ -66,4 +71,4 @@ node --experimental-strip-types scripts/adopter-sentinel.ts --mode validate
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 telemetry + sentinel + dashboard 後續卡；採 Option A（opt-in only） | 阻塞: TASK-APO-0018
+2026-05-18 | 狀態: done | 驗證: `telemetry.test.ts` PASS；`adopter-sentinel --mode validate` PASS（VS Code / Cursor / Claude Code smoke，且 broken fixture 失敗如預期）；`validate-cli --mode validate` PASS；`run-validators.ts standard --filter sentinel` PASS；`validate:standard` 中新增 sentinel gate PASS，但既有 `multi-agent-confidence` generated matrix stale 仍使整體 profile exit 1 | 變更: 新增 opt-in `atm telemetry`、telemetry config/payload helper、welcome telemetry notice、`docs/TELEMETRY.md`、`docs/DEPRECATIONS.md`、adopter sentinel workflow/script 與 telemetry fixture；為完成 CLI/help 驗證同步更新 command registry 與 help snapshots；upstream commit c81da68 | 阻塞: none
