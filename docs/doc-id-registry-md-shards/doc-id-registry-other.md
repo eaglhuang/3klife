@@ -217,3 +217,39 @@
 | `doc_other_0266` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0011-dependency-graph-police-alignment.md | APF-0011 — Dependency Graph Police 對齊 |
 | `doc_other_0267` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0012-evidence-schema-bridge.md | APF-0012 — PoliceFinding Evidence Schema Bridge |
 | `doc_other_0268` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0011-dependency-graph-police-alignment.task.md | TASK-APF-0011 — Dependency Graph Police 對齊 |
+| `doc_other_0269` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0001-public-docs-language-gate.md | TASK-ATS-0001 public docs language gate execution evidence |
+| `doc_other_0270` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0002-npc-brain-baseline-report.md | TASK-ATS-0002 npc-brain baseline report |
+| `doc_other_0271` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0002-legacy-python-fixture-inventory.md | TASK-ATS-0002 legacy Python fixture inventory |
+| `doc_other_0272` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0002-risk-matrix.md | TASK-ATS-0002 npc-brain baseline risk matrix |
+| `doc_other_0601` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0001-agent-entry-guidance.task.md | TASK-ATD-0001 — 補框架中立 agent entry guidance |
+| `doc_other_0602` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0002-next-json-repo-state-semantics.task.md | TASK-ATD-0002 — 釐清 `atm next --json` 對 framework / adopter / unbootstrapped repo 的語意 |
+| `doc_other_0603` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0003-self-governance-example-decision.task.md | TASK-ATD-0003 — 決策 upstream self-governance 範例位置（不預設 commit `.atm/` runtime） |
+| `doc_other_0604` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0004-module-boundary-runtime-no-scripts.task.md | TASK-ATD-0004 — 模組邊界硬化：package runtime 不 import `scripts/` |
+| `doc_other_0605` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0005-module-boundary-deny-rule-fixture.task.md | TASK-ATD-0005 — `validate-module-boundaries` deny rule + negative fixture |
+| `doc_other_0606` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0006-eslint-baseline-warning-budget.task.md | TASK-ATD-0006 — ESLint baseline / warning budget |
+| `doc_other_0607` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0007-cli-shared-result-types.task.md | TASK-ATD-0007 — CLI 公共型別與 shared command result 收斂 |
+| `doc_other_0608` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0008-framework-version-source.task.md | TASK-ATD-0008 — framework version 來源改為 package / release manifest |
+| `doc_other_0609` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0009-atm-env-registry-docs.task.md | TASK-ATD-0009 — 環境變數 registry 與 docs |
+| `doc_other_0610` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0010-host-git-hook-ci-recipe.task.md | TASK-ATD-0010 — Git hook / CI enforcement 改為 opt-in host recipe |
+| `doc_other_0611` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0011-validator-harness-consolidation.task.md | TASK-ATD-0011 — Validator harness 分批收斂 |
+| `doc_other_0612` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0012-ajv-factory-cache.task.md | TASK-ATD-0012 — 共用 AJV factory/cache 且保持 pass/fail 行為 |
+| `doc_other_0613` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0013-cli-error-policy.task.md | TASK-ATD-0013 — CLI error policy：`CliError` + typed code + usage exit code |
+| `doc_other_0614` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0014-test-layering-profile.task.md | TASK-ATD-0014 — 測試分層：unit / validator / release smoke / self-host alpha |
+| `doc_other_0615` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0015-fast-unit-test-batch.task.md | TASK-ATD-0015 — 第一批快速單元測試（URN / allocator / shared helpers） |
+| `doc_other_0616` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0016-upgrade-command-split.task.md | TASK-ATD-0016 — `upgrade.ts` 拆分並鎖 public CLI JSON 行為 |
+| `doc_other_0617` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0017-governance-local-export-inventory.task.md | TASK-ATD-0017 — `plugin-governance-local` export maturity inventory + 拆分 |
+| `doc_other_0618` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0018-upgrade-propose-split.task.md | TASK-ATD-0018 — `propose.ts` 拆分 proposal analysis / gate / output |
+| `doc_other_0619` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0019-atm-chart-command-split.task.md | TASK-ATD-0019 — `atm-chart.ts` 拆分 render / verify / compatibility helper |
+| `doc_other_0620` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0020-command-specs-split.task.md | TASK-ATD-0020 — `command-specs.ts` 拆分 command metadata 與 renderer |
+| `doc_other_0621` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0021-integrations-core-split.task.md | TASK-ATD-0021 — `integrations-core` 拆分 compiler / manifest / verify |
+| `doc_other_0622` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0022-map-generator-split.task.md | TASK-ATD-0022 — `map-generator.ts` 拆分 allocation / scaffold / provenance |
+| `doc_other_0623` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0023-any-debt-budget.task.md | TASK-ATD-0023 — `any` debt budget（package / public contract 分層） |
+| `doc_other_0624` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0024-opensource-docs-env-troubleshooting-adapters.task.md | TASK-ATD-0024 — 開源文件補強（env / troubleshooting / adapter examples） |
+| `doc_other_0625` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0025-release-parity-gate.task.md | TASK-ATD-0025 — Release parity gate（source / root-drop / onefile / npm route） |
+| `doc_other_0626` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0026-version-known-bad-release-trust.task.md | TASK-ATD-0026 — Version compatibility / known-bad / release trust 持續驗證 |
+| `doc_other_0627` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0027-root-drop-wrapper-dedup.task.md | TASK-ATD-0027 — root-drop PS1/SH wrapper 去重並保留 parity |
+| `doc_other_0628` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0028-synthetic-adopter-fixture-neutral.task.md | TASK-ATD-0028 — Synthetic adopter fixture（neutral，不污染 protected surface） |
+| `doc_other_0629` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0029-adopter-sentinel-external-profile.task.md | TASK-ATD-0029 — Adopter sentinel external profile 作為下游 evidence |
+| `doc_other_0630` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0030-multi-agent-confidence-report.task.md | TASK-ATD-0030 — Multi-agent confidence report 沿用既有 matrix / result |
+| `doc_other_0631` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0031-contributor-devcontainer-docker.task.md | TASK-ATD-0031 — Docker / devcontainer 作 contributor reproducibility |
+| `doc_other_0632` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0032-root-drop-sandbox-e2e.task.md | TASK-ATD-0032 — Root-drop sandbox E2E |

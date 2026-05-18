@@ -18,5 +18,5 @@
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 80 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
-| 其它類 | `doc_other` | 209 |
-| **合計** | — | **976** |
+| 其它類 | `doc_other` | 245 |
+| **合計** | — | **1012** |
