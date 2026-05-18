@@ -3,7 +3,12 @@ doc_id: doc_other_0171
 task_id: TASK-APO-0018
 title: Security policy — SECURITY.md + advisory branch + dependency scanning gate
 milestone: M8
-status: open
+status: done
+started_at: 2026-05-18T10:09:14+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-18T10:16:30+08:00
+completed_by_agent: vs-insiders-gpt-5.4
+commit: 6622e5a (AI-Atomic-Framework main)
 blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -46,9 +51,9 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收
 
-- [ ] dependency-scan workflow 對既有 fixture 通過。
-- [ ] validate-security-policy.ts 加入 standard profile。
-- [ ] SECURITY.md 通過內部 review checklist（揭露 / SLA / key fingerprint）。
+- [x] dependency-scan workflow 對既有 fixture 通過。
+- [x] validate-security-policy.ts 加入 standard profile。
+- [x] SECURITY.md 通過內部 review checklist（揭露 / SLA / key fingerprint）。
 
 ## 驗證方式
 
@@ -59,4 +64,4 @@ node --experimental-strip-types scripts/validate-security-policy.ts --mode valid
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 security policy 後續卡 | 阻塞: none
+2026-05-18 | 狀態: done | 驗證: `validate-security-policy --mode validate` PASS；`run-validators.ts standard --filter security` PASS；`npm audit --omit=dev --audit-level=high` PASS；`validate:standard` 中新增 security gate PASS，但既有 `multi-agent-confidence` generated matrix stale 仍使整體 profile exit 1；`npm run typecheck` 仍有既有 core / rollout 型別錯誤，未指向本卡新增檔案 | 變更: 新增 root SECURITY.md、docs/SECURITY.md 維護者 SOP、Dependabot weekly npm PR 設定、dependency-scan workflow、validate-security-policy.ts，並納入 standard profile；upstream commit 6622e5a | 阻塞: none
