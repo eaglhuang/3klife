@@ -3,7 +3,9 @@ doc_id: doc_other_0177
 task_id: TASK-APO-0024
 title: Time+minor deprecation + canary rollout
 milestone: M10
-status: open
+status: in-progress
+started_at: 2026-05-18T11:01:40+08:00
+started_by_agent: vs-insiders-gpt-5.4
 blocked_by: [TASK-APO-0013]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -20,6 +22,7 @@ allowed_files:
   - scripts/validate-deprecation-policy.ts
   - scripts/validators.config.json
   - tests/deprecation/**
+  - .github/workflows/release-npm.yml
 forbidden_files:
   - packages/core/**
   - assets/**
@@ -58,4 +61,4 @@ node --experimental-strip-types scripts/validate-deprecation-policy.ts --mode va
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 time+minor deprecation + canary rollout 後續卡 | 阻塞: TASK-APO-0013
+2026-05-18 | 狀態: in-progress | 驗證: pending | 變更: vs-insiders-gpt-5.4 接手實作 time+minor deprecation + canary rollout；補入 release-npm workflow scope 以滿足本卡目標 4 | 阻塞: TASK-APO-0013（已完成）

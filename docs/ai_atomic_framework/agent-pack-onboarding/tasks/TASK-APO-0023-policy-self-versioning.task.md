@@ -3,7 +3,9 @@ doc_id: doc_other_0176
 task_id: TASK-APO-0023
 title: Policy self-versioning + auto matrix PR
 milestone: M10
-status: open
+status: in-progress
+started_at: 2026-05-18T11:01:40+08:00
+started_by_agent: vs-insiders-gpt-5.4
 blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -20,6 +22,8 @@ allowed_files:
   - scripts/validate-policy-self-version.ts
   - scripts/validators.config.json
   - tests/policy-version/**
+  - README.md
+  - CONTRIBUTING.md
 forbidden_files:
   - packages/core/**
   - assets/**
@@ -57,4 +61,4 @@ node --experimental-strip-types scripts/validate-policy-self-version.ts --mode v
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 policy self-versioning + auto matrix PR 後續卡 | 阻塞: none
+2026-05-18 | 狀態: in-progress | 驗證: pending | 變更: vs-insiders-gpt-5.4 接手實作 policy self-versioning + auto matrix PR；補入 README.md / CONTRIBUTING.md scope 以滿足本卡目標 4 | 阻塞: none
