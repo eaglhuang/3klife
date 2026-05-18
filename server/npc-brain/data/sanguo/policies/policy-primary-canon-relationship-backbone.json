@@ -1,0 +1,42 @@
+{
+  "id": "Policy_PrimaryCanonRelationshipBackbone_P1",
+  "description": "Build a reusable A-canon relationship backbone from primary history and romance relationship claims, then classify remaining claims against that backbone.",
+  "primarySourceFamilies": [
+    "houhanshu",
+    "sanguozhi",
+    "zizhitongjian",
+    "sanguoyanyi",
+    "romance-mao-hant"
+  ],
+  "primaryCanonGrades": [
+    "A-history",
+    "A-history-cross-source",
+    "A-romance"
+  ],
+  "comparisonGrades": [
+    "A-baseline",
+    "B-history",
+    "B-history-profile-baseline",
+    "B-romance",
+    "B-secondary"
+  ],
+  "gapQueue": {
+    "targetPrimaryCanonClaimsPerGeneral": 3,
+    "maxRows": 250,
+    "missingCanonWeight": 3.0,
+    "conflictWeight": 2.0,
+    "unmatchedExternalWeight": 1.0
+  },
+  "outputFiles": {
+    "backbone": "primary-canon-relationship-backbone.jsonl",
+    "alignment": "primary-canon-external-alignment.jsonl",
+    "gapQueue": "primary-canon-gap-queue.jsonl",
+    "summary": "primary-canon-relationship-backbone-summary.json",
+    "report": "primary-canon-relationship-backbone-report.md"
+  },
+  "policyText": {
+    "backboneRule": "Primary history and romance A-canon claims form the local correction backbone for downstream relationship evidence.",
+    "alignmentRule": "External or lower-grade claims are classified against the primary canon backbone as exact-support, pair-type-conflict, or no-primary-canon-match.",
+    "gapRule": "Generals with low primary-canon relationship coverage and many unmatched/conflicting claims should be prioritized for full-book primary corpus extraction."
+  }
+}

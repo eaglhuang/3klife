@@ -1,24 +1,69 @@
-<!-- doc_id: doc_server_pipeline_0059 -->
-# NPC-brain / Sanguo-RAG 第四十八階段計畫：Governance Maintenance Mode
+<!-- doc_id: doc_server_pipeline_0048 -->
+# NPC-brain / Sanguo-RAG Phase 48：Primary Canon Relationship Backbone
 
 ## Summary
 
-Phase 48 是 governance 收斂封口。前面 Phase 1-47 已把大多數 deterministic policy、rule、catalog、schema、harness、CI、runbook 與條件式 PostgreSQL/vector 計畫收攏；本階段的目標是宣告維護模式，之後不再為了「看起來還能拆」而無限新增 phase。
+Phase 48 的目標是把「正史 + 三國演義」的 A 級關係證據先整理成可重算的主幹骨架，讓後續外部資料不再各自為政，而是能快速跟 `A-history / A-romance / A-canon` 對照。
 
-## Key Changes
+本階段第一片不重跑外網、不改既有 claim graph、不改 canonical write 行為，只讀現有 `relationship-claim-graph` 產物，輸出：
 
-- 新增 `Policy_GovernanceMaintenanceMode_P1`。
-- 預設動作為 `do-not-add-new-phase`。
-- 定義少數允許重新開大型治理工作的 trigger。
-- 要求後續變更先跑 strict-local CI、snapshot-match 與 dirty-scope-check。
+- `primary-canon-relationship-backbone.jsonl`
+- `primary-canon-external-alignment.jsonl`
+- `primary-canon-gap-queue.jsonl`
+- `primary-canon-relationship-backbone-summary.json`
+- `primary-canon-relationship-backbone-report.md`
 
-## Test Plan
+## Why This Matters
 
-- validator 必須檢查 maintenance mode、phase range、allowed triggers、review cadence 與 exit checks。
-- strict-local harness 必須納入 Phase 48 phase matrix。
-- 文件與 policy 必須通過 UTF-8 / BOM / U+FFFD 檢查。
+大白話：先有一張可信的「人物關係骨架圖」，後面所有外部資料就不用每筆從零判斷真假，只要問：
 
-## Assumptions
+- 是否跟 A-canon 完全一致？
+- 是否同一對人物但關係類型衝突？
+- 是否 A-canon 還沒有覆蓋，需要回頭補正史/演義原文？
 
-- Phase 48 後，Sanguo-RAG governance 進入維護模式。
-- 新 phase 不是禁止，而是必須有 production bottleneck、schema break、資料安全風險或新 runtime consumer 這類明確原因。
+這會把後續資料吸收從「開放式查證」變成「封閉式比對」，速度會快很多。
+
+## Scope
+
+- 使用 `Policy_PrimaryCanonRelationshipBackbone_P1`。
+- 預設 primary source family：
+  - `sanguozhi`
+  - `houhanshu`
+  - `zizhitongjian`
+  - `sanguoyanyi`
+  - `romance-mao-hant`
+- 預設 primary canon grade：
+  - `A-history`
+  - `A-history-cross-source`
+  - `A-romance`
+
+## Non-goals
+
+- 不把所有正史/演義重新抓網頁。
+- 不在本階段修改 relationship extraction cue。
+- 不把 B 級或 external proposal 自動升 A。
+- 不改 runtime profile、scoreboard 或 stable bootstrap schema。
+- 不導入 PostgreSQL。
+
+## Next Slice
+
+下一片應該接 `Primary Canon Corpus Extraction Queue`：
+
+- 讀 `primary-canon-gap-queue.jsonl`。
+- 對高優先 general/pair 回頭跑 primary-text source。
+- 只接受有 `quote / locator / textHash / directPairSignal` 的結果進 A-canon。
+- 把新產物併回 relationship claim graph，再重算 completion。
+
+## R1 Execution Notes: primary-canon top-20 extraction
+
+本輪依 `primary-canon-gap-queue.jsonl` 前 20 名人物，使用本機已收集的 Wikisource primary-text sample 執行 extraction，來源優先序涵蓋 `三國志 / 後漢書 / 資治通鑑 / 三國演義`。
+
+- Extracted seeds: `1413` rows across four primary source families.
+- Candidate evidence cards after scoring/promote: `396` rows.
+- Relationship overlay edges: `145` rows, all with quote / locator / textHash coverage from the extractor output.
+- Merged relationship evidence rows: `213` rows after base + new primary-text overlay dedupe.
+- Knowledge completion: `51.50% -> 52.23%` (`+0.73pp`).
+- Core person completion average: `59.42% -> 66.73%` (`+7.31pp`).
+- Relationship claim graph: total claims `2228 -> 2349`, but A-canon `357 -> 334` in the isolated after graph.
+
+Interpretation: this run proves primary-text extraction can push downstream completion immediately, but A-canon did not rise yet because the newly merged overlay edges are still typed as generic `relationship_external`. The next improvement should refine primary-text relationship types before claim graph grading, so source-backed edges can align with A-history / A-romance / A-canon promotion rules instead of remaining broad external relationship evidence.
