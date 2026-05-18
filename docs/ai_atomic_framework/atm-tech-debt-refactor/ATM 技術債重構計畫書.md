@@ -4,478 +4,448 @@ title: ATM 技術債重構計畫書
 author: claude_code_opus4.7
 revised_by:
   - user-report-baseline
+  - codex-review
 created: 2026-05-18
 revised: 2026-05-18
-status: proposed
+status: proposed-revised
 supersedes: use-the-engineering-tech-debt-skill-gentle-tiger（臨時 plan，過於通用）
 related:
   - C:/Users/User/AI-Atomic-Framework/README.md
-  - C:/Users/User/AI-Atomic-Framework/eslint.config.mjs
-  - C:/Users/User/AI-Atomic-Framework/tsconfig.json
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/upgrade.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/doctor.ts
-  - C:/Users/User/AI-Atomic-Framework/scripts/adopter-sentinel.ts
+  - C:/Users/User/AI-Atomic-Framework/docs/ARCHITECTURE.md
+  - C:/Users/User/AI-Atomic-Framework/docs/AGENT_PACK_ONBOARDING.md
+  - C:/Users/User/AI-Atomic-Framework/docs/HOST_GOVERNANCE_INTEGRATION.md
+  - C:/Users/User/AI-Atomic-Framework/docs/LONGTAIL_USERS.md
+  - C:/Users/User/AI-Atomic-Framework/docs/governance/DOCS_NEUTRALITY_AUDIT.md
   - C:/Users/User/3KLife/docs/ai_atomic_framework/agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md
   - C:/Users/User/3KLife/docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
 -->
 
 # ATM 技術債重構計畫書
 
-## 0. 核心結論
+## 0. Codex 複核結論
 
-本計畫的對象是 `AI-Atomic-Framework`（ATM upstream），不是 3KLife，也不是 npc-brain。它與「3KLife ATM 採用三角策略規劃書」是**互補上下游**：
+本計畫的方向**合理且可行性中高**：ATM 上游確實需要把一般 TypeScript 技術債，重新套回開源治理框架的核心契約來排優先序。單純追求 lint、拆檔或測試數量，無法保證 ATM 作為 open-source framework 時最重要的事情：adopter-neutral、root-drop / onefile release parity、public CLI 穩定、schema / manifest 相容、long-tail adopter 可診斷。
+
+但原版計畫有幾個需要修正的地方，否則會把 3KLife 內部治理習慣誤寫成 ATM 上游契約：
+
+1. `node atm.mjs next --json` 在 upstream checkout 回 `needs-bootstrap` 不必直接判定為 bug。它可先視為 self-governance diagnosis：ATM 需要更清楚地說明 framework repo、adopter repo 與未 bootstrap repo 的差異，而不是立刻要求把 `.atm/` runtime 狀態 commit 進 upstream。
+2. `docs/keep.summary.md` 是 3KLife 的協作慣例，不是 AI-Atomic-Framework 開源框架 public surface 的必要檔案。ATM upstream 應使用 `README.md`、`AGENTS.md`、AtomicCharter、ATMChart、`docs/AGENT_PACK_ONBOARDING.md` 等框架中立入口。
+3. pre-commit hook 只能是 host-side opt-in recipe。ATM 可以提供 Git hook / CI 範例，但不能把 husky、lefthook、3KLife task-lock 或任何單一 host workflow 變成 core 或 root-drop runtime 硬依賴。
+4. 本目錄的 `TASK-ATD-*` 任務卡只能當作 3KLife 內部協作鏡像。真正進入 AI-Atomic-Framework 的工作，應以 GitHub issue、RFC、PR checklist、validator fixture 與 release gate 表達，不應要求 public contributors 使用 3KLife 私有任務卡格式。
+5. 原計畫中的部分數字與命令已過期：目前觀測到 `upgrade.ts` 約 1231 行，`tests/` 已有大量 test 檔，問題不是「沒有測試」，而是 validator-heavy、層級混雜、快速單元測試與 release smoke 邊界仍可加強。部分驗證命令也需改用現有 `package.json` script 或直接呼叫 `node --experimental-strip-types scripts/...`。
+
+修訂後的主判斷是：**先保開源框架邊界，再做一般工程重構**。能提升可維護性的事項仍應做，但所有任務必須先回答：它是否保持 ATM 的中立性、可發佈性、可替換 adapter/plugin 邊界，以及長尾使用者相容性。
+
+---
+
+## 0.1 本計畫與其他計畫的邊界
+
+本計畫只管 `AI-Atomic-Framework` 上游技術債與開源框架品質，不管 3KLife 遊戲本體，也不把 npc-brain 當成 framework truth source。
 
 ```text
-本計畫（ATM Tech Debt Refactor） -> 修 upstream 框架本身
-三角策略規劃書（Triangle Strategy） -> 用 adopter 驗收 upstream
+ATM 技術債重構計畫 -> 修 AI-Atomic-Framework 上游工程品質
+ATM 引導工程計畫書 -> 管 first-touch / agent pack / ATMChart / integration adapter
+3KLife ATM 採用三角策略規劃書 -> 用 adopter evidence 驗收 upstream
 ```
 
-兩者的執行 cadence 應該交錯：upstream 修一輪 → adopter 驗收一輪 → 找出新 bug → upstream 再修一輪。
+三者可以互相提供 evidence，但權威邊界不同：
 
-核心判斷如下：
-
-1. **一般 Tech-Debt 框架不夠用**。原始 `tech-debt skill` 給的優先序（型別、ESLint、巨型檔案）是泛用 TypeScript 評估，**不會考慮 ATM 的治理契約**（adopter-neutral、root-drop parity、self-host、version governance、deterministic guards）。
-2. **ATM upstream 自身的「自我治理入口」尚未閉環**。在 upstream checkout 跑 `node atm.mjs next --json` 回傳 `needs-bootstrap`，代表 ATM 連自己都還沒採用自己。這比一般 lint 更先優先處理。
-3. **巨型檔案實際比原審計報告更多**。確認共有 10 個檔案超過 500 行（不是 5 個），最大為 `upgrade.ts` 1306 行（不是 1135）。
-4. **「測試完全空白」是錯的**。`tests/` 已有 35 個 `.test.ts/.test.js`，問題應重新表述為「**測試層級混雜、validator-heavy、缺快速單元測試分層**」。
-5. **「Pre-commit hooks 缺失」需要 ATM 化**。不能只是裝 husky 跑 lint，應做成 ATM evidence-style enforcement（`atm doctor`、ATMChart freshness、agent-pack freshness、git evidence）。
-6. **`frameworkVersion = '0.0.0'` 不是小事**。ATM 有 ATMChart、known-bad-versions、version skew、release trust chain 等版本治理面；版本寫死會讓所有版本相關 telemetry 失真。
-7. **缺「release parity」**：source 修好不等於 `release/atm-root-drop`、`release/atm-onefile`、npm `create-atm` 都安全。每個 refactor PR 都需要 release smoke。
-
-本計畫的精神是：**先確保 ATM 治理契約不破，再優化一般工程品質**。
+| 文件 | 權威範圍 | 不應做的事 |
+|---|---|---|
+| 本計畫 | AI-Atomic-Framework 技術債、驗證分層、release parity | 把 3KLife / npc-brain 寫成 upstream public contract |
+| ATM 引導工程計畫書 | Agent Operating Layer、ATMChart、integration adapter、first-touch | 重新定義 core schema 或 host 私有流程 |
+| 三角策略規劃書 | 3KLife / npc-brain 作為實驗與 adopter 驗收場 | 私下維護 upstream fork 或把 adopter 特例塞進 core |
 
 ---
 
-## 0.1 不可破壞契約（Invariants）
+## 0.2 不可破壞契約（Invariants）
 
-本計畫所有 milestone 與 task 都必須遵守以下硬契約，**任何 PR 若違反，必須拒絕合併或回退**：
+所有 milestone 與 task 都必須先通過以下開源框架契約檢查。若 PR 觸碰相關 surface，必須在 PR 描述、issue 或內部任務卡標註 invariant risk 與緩解策略。
 
 ### I1：Public CLI surface 穩定
-- `node atm.mjs <command> --json` 的輸出 schema 不得在 patch / minor 內 breaking change。
-- 命令名稱、`--json` 欄位名稱、exit code 語意不得變更。
 
-### I2：Schema 版本契約
-- `schemaVersion` 欄位（如 `atm.config.v0.1`、`atm.evidence.v0.1`）不得在 patch 內遞增；minor 必須有 migration tooling。
-- AJV cache 重構不得改變驗證結果（pass/fail 行為），只能改快取/效能。
+- `node atm.mjs <command> --json` 的輸出 shape、命令名稱、exit code 語意不得在 patch / minor 內無遷移地 breaking change。
+- `atm next --json` 是 deterministic router；welcome、agent pack、hook、README 只能導路，不能取代它。
+
+### I2：Schema 與 manifest 版本契約
+
+- `schemaVersion`、ATMChart frontmatter、InstallManifest、integration manifest 等 machine-readable surface 必須 additive-first。
+- 破壞性 schema 變更必須有 migration guide、validator fixture 與 long-tail diagnostic。
 
 ### I3：Release wire format
-- `release/atm-root-drop/` 目錄結構與 entry contract 不得變動。
-- `release/atm-onefile/` 的 bootstrap shape 不得變動。
-- npm `create-atm` 的 install layout 不得變動。
+
+- `release/atm-root-drop/`、`release/atm-onefile/atm.mjs`、npm / `create-atm` 的 install layout 與啟動路徑必須同步驗證。
+- source checkout 綠燈不等於 release bundle 綠燈。
 
 ### I4：Adopter-neutral 保證
-- 重構過程不得寫入 `3KLife` / `npc-brain` / 任何私有 repo 名稱進 framework public surface。
-- `neutrality scan`（validator）必須在 CI 持續通過。
 
-### I5：Hash-locked manifests
-- `.atm/agent-pack/*.manifest.json` 的 hash 算法不得變動（含字串正規化、行尾、編碼處理）。
-- `installManifest` 的格式不得 breaking change。
+- AI-Atomic-Framework 的 protected public surface 不得寫入 3KLife、npc-brain、Cocos、task-lock、tools_node 或其他 adopter-only 語意。
+- 需要 adopter 案例時，放在下游 case study、adapter docs 或本機內部計畫，不回寫 protected upstream docs。
+
+### I5：Hash-locked integration manifests
+
+- 實際 integration manifest 位於 `.atm/integrations/<id>.manifest.json`；hash 計算、路徑正規化、行尾、編碼處理不得無遷移地改變。
+- agent entry files 是渲染產物，不是第二套權威規則。
 
 ### I6：Long-tail compatibility
-- 已 published 的 schema 不得在無 migration 與 deprecation window 下移除欄位。
-- `docs/LONGTAIL_USERS.md` 列舉的相容承諾不得無故撤銷。
 
-任何 Mx 任務卡若會碰到 Invariant 範圍，**必須在 task header 明確標示 `invariant_risk: I{n}` 與緩解策略**，由 maintainer 二次審核。
-
----
-
-## 0.2 與三角策略規劃書的關係
-
-| 視角 | 本計畫（ATM Tech Debt Refactor） | 三角策略規劃書（Triangle Strategy） |
-|------|-------------------------------|----------------------------------|
-| 對象 repo | AI-Atomic-Framework | npc-brain + 3KLife |
-| 角色 | upstream 工程品質與治理閉環 | adopter 驗收與 evidence 回流 |
-| 主要動作 | 拆檔、型別、邊界、harness、release parity | dry-run、evidence、sentinel |
-| 主要產物 | typed CLI、validator harness、release smoke | evidence、adopter sentinel、handoff |
-| 啟動順序 | M0（self-governance loop）必須先 | 三角策略 M1（lab dry run）才能跑 |
-
-**啟動約束：本計畫 M0 完成前，三角策略 M1 dry-run 結果不可信**——因為 `atm doctor` 自己的診斷能力都還沒閉環，npc-brain 跑 doctor 失敗時很難判斷是 ATM bug 還是 adopter 環境問題。
+- 已發佈 chart / template / schema 不得在無 migration 與 deprecation window 下移除。
+- `docs/LONGTAIL_USERS.md` 的原則是 diagnosable first, mutable second；未知、過舊、離線或 downgrade 狀態應 fail closed 到 read-only diagnostic。
 
 ---
 
-## 1. ATM 契合度判斷
+## 1. 可行性與不合理處複核
 
-### 1.1 符合 ATM 精神的部分（從原審計繼承）
+### 1.1 合理且應保留的判斷
 
-| 項目 | 為何符合 |
-|------|--------|
-| 模組邊界修正（CLI runtime 不 import scripts/） | 對應 core / plugin / adapter 分層 |
-| 驗證腳本 harness 統一 | 對應 deterministic guard + evidence-first |
-| 「先警告再嚴格」的 ESLint 策略 | 對應 alpha 階段漸進治理 |
-| 「先測試再拆分」 | 對應 lock / scope / evidence 的保守演進 |
-| any 預算化（不一次清零） | 對應 ATM 的 budget-aware governance |
+| 原判斷 | 複核結果 |
+|---|---|
+| 一般 tech-debt skill 不足 | 正確。ATM 的技術債排序必須看治理契約，不只看行數與 lint。 |
+| 先測試再拆大檔 | 正確。尤其 `upgrade.ts`、`propose.ts`、`atm-chart.ts` 都牽涉 public CLI 或 schema 行為。 |
+| release parity 是硬需求 | 正確。root-drop / onefile / package 發佈是 ATM adopter 的主要入口。 |
+| `frameworkVersion = '0.0.0'` 不是小事 | 正確。它會影響 ATMChart compatibility、known-bad、version skew、telemetry 與 release trust。 |
+| hook 需要 ATM 化 | 方向正確，但必須改成 opt-in host recipe，而不是強制 upstream runtime 依賴。 |
 
-### 1.2 需要 ATM 化的部分（原審計不足）
+### 1.2 必須修正的判斷
 
-| 原審計建議 | ATM 化補強 |
-|-----------|----------|
-| 裝 husky 跑 lint/typecheck | ATM 已有 host governance hook example，應 opt-in host-neutral，並記錄 staged-tree evidence（不能變成所有 adopter 的硬依賴） |
-| 補 README、補文件 | 開源 ATM 文件優先序是：adopter-neutral / root-drop / self-host alpha / version / migration / security，不是 package README 行數 |
-| `frameworkVersion = '0.0.0'` 是小問題 | 不是小問題。ATM 有 ATMChart、known-bad、version skew、release trust 等版本治理面 |
-| 用 Vitest 加單元測試 | 先評估 Node 24 內建 `node:test`（zero runtime dependency）；Vitest 可用但不應破壞 root-drop / zero-dep 心智 |
-| 沒提 release artifact parity | 必須每次 CLI/core 重構都驗證 build / root-drop / onefile / create-atm / version skew / known-bad / release trust |
-| 沒提 ATM 自我治理閉環 | M0 必須先處理：upstream checkout 跑 `atm next --json` 不應回 `needs-bootstrap` 還無解釋 |
+| 原判斷 | 問題 | 修正後策略 |
+|---|---|---|
+| upstream `needs-bootstrap` 代表 ATM 連自己都沒採用自己 | 過度推論。framework repo 可不同於 adopter repo。 | M0 改為 self-governance diagnosis：釐清 framework/adopter/unbootstrapped 三種狀態與 next action。 |
+| 補 `docs/keep.summary.md` 是 M0 必做 | 這是 3KLife 慣例，不是開源 ATM 契約。 | 上游只補框架中立 agent entry guidance；keep summary 留在 3KLife。 |
+| pre-commit hook task 放 `.husky/pre-commit` | 會把特定 hook 工具與 host policy 寫進 upstream。 | 改為 host governance example / CI recipe；不進 root-drop / onefile runtime。 |
+| 任務卡是上游實作入口 | 3KLife task card 格式不是 public contributor contract。 | 內部可保留鏡像；上游正式追蹤用 issue / RFC / PR checklist。 |
+| `tests/` 只有 35 個 test | 現況不符。 | 改描述為測試數量不少，但 validator-heavy、unit / integration / release smoke 邊界可加強。 |
+| `npm run validate:version-skew` 等 script | 現有 `package.json` 沒有這些 script 名稱。 | 用 `npm run validate:standard`，或直接呼叫對應 `scripts/validate-*.ts`。 |
 
-### 1.3 額外缺失（本版新增）
+### 1.3 開源框架特性帶來的額外要求
 
-- **缺 `AGENTS.md` 或等價 agent contract 文件**：AI-Atomic-Framework 沒有給 agent 看的「進來請先讀這個」共識文件，導致每個 agent 進來都得自己摸索。
-- **缺 `docs/keep.summary.md`**：原審計訊息提到 AGENTS 指定 keep summary 但檔案不存在，這是治理共識文件落差。
-- **缺 dependency boundary validator 的 deny list**：現有 `validate-module-boundaries.ts` 只擋 `.mjs`，沒擋 `packages/*/src` 對 `scripts/` 的 import。
-- **缺 context budget 自我約束**：ATM 已有 context budget policy schema，但 upstream 自己沒套用。
+- **Public docs 不能綁 adopter**：AI-Atomic-Framework 的 README、docs、schemas、templates、examples 需要通過 neutrality scan；3KLife 相關內容只能留在本目錄或 downstream docs。
+- **Core 不依賴 default bundle**：技術債重構不能把 default governance bundle、agent pack、hook 或 local task store 下沉進 `packages/core`。
+- **Adapter/plugin 是替換邊界**：host storage、Git hook、issue tracker、language tooling、Cocos 或 3KLife workflow 都只能透過 adapter/plugin 表達。
+- **Release artifact 是產品面**：開源 adopter 多半拿 root-drop、onefile 或 npm，而非 source checkout；任何 CLI / core refactor 都要驗 release wrapper。
+- **Long-tail 使用者要可診斷**：舊版 chart、unknown chart、downgrade、offline matrix 都不能被重構破壞。
 
 ---
 
-## 2. 修訂後優先序（含 file path / 工期 / Mx / Task-card-id 預定）
+## 2. 修訂後優先序
 
-格式：`P{n}. {標題} [Mx | 工期 PD | TASK-ATD-{NNNN}]`
+PD = person-days；`TASK-ATD-*` 是 3KLife 內部鏡像編號，不是 upstream public issue 編號。正式進 AI-Atomic-Framework 時，需另開 GitHub issue / RFC / PR。
 
-PD = person-days；NNNN 為任務卡編號預定值，實際以 `tasks/` 目錄分配為準。
+### M0：Self-Governance Diagnosis（先釐清，不急著 commit runtime）
 
-### M0：治理入口閉環（必須先做）
-
-| P | 項目 | 工期 | 任務卡 | 關鍵檔案 |
-|---|------|------|-------|---------|
-| P0 | 補 `AGENTS.md` 與 `docs/keep.summary.md` 共識文件 | 0.5 PD | TASK-ATD-0001 | `AGENTS.md`（新）、`docs/keep.summary.md`（新） |
-| P0 | 修 `atm next --json` 對 upstream checkout 的行為（要嘛 self-bootstrap 完成、要嘛回明確 unsupported 狀態） | 1 PD | TASK-ATD-0002 | `packages/cli/src/commands/next.ts`、`bootstrap-entry.ts` |
-| P0 | upstream 自我採用 bootstrap：在 upstream repo 跑 official onboarding，產生可驗證 `.atm/runtime/` lineage | 1 PD | TASK-ATD-0003 | `.atm/runtime/welcome.lineage.json`（新）、`packages/cli/src/commands/welcome.ts` |
+| P | 項目 | 工期 | 內部卡 | 關鍵檔案 / surface |
+|---|---|---:|---|---|
+| P0 | 補框架中立 `AGENTS.md` 或等價 agent entry guidance | 0.5 PD | TASK-ATD-0001 | `AGENTS.md`（新）、`README.md` |
+| P0 | 釐清 `atm next --json` 在 framework repo / adopter repo / unbootstrapped repo 的語意 | 1 PD | TASK-ATD-0002 | `packages/cli/src/commands/next.ts`、`docs/SELF_HOSTING_ALPHA.md` |
+| P0 | 決定 upstream 是否需要 `.atm.example/`、`examples/self-host/` 或只保留 diagnostic | 1 PD | TASK-ATD-0003 | `docs/SELF_HOSTING_ALPHA.md`、`examples/` |
 
 **M0 退出條件：**
-- `node atm.mjs next --json` 在 upstream checkout 回 `ok: true` 與一個明確 next action
-- `node atm.mjs doctor --json` 回 `ATM_DOCTOR_OK` 或只剩 known-limitation
-- `AGENTS.md` 與 `docs/keep.summary.md` 存在且互相對齊
 
-### M1：快速致勝（邊界 + ESLint baseline + CLI 型別 + version registry）
+- `node atm.mjs doctor --json` 在 upstream 維持 `ATM_DOCTOR_OK` 或有明確 known-limitation。
+- `node atm.mjs next --json` 的 `needs-bootstrap` 若仍存在，文件與 JSON reason 必須清楚指出這是未採用 / 未啟動狀態，而非 silent failure。
+- 不把 3KLife 的 `docs/keep.summary.md` 或 task-lock 規則寫進 AI-Atomic-Framework protected surface。
 
-| P | 項目 | 工期 | 任務卡 | 關鍵檔案 |
-|---|------|------|-------|---------|
-| P1 | 模組邊界硬化（CLI runtime 不 import scripts/） | 0.5 PD | TASK-ATD-0004 | `packages/cli/src/commands/doctor.ts:3`、`packages/cli/src/commands/self-host-alpha.ts` |
-| P1 | 擴充 `validate-module-boundaries.ts` 加 deny rule | 0.5 PD | TASK-ATD-0005 | `scripts/validate-module-boundaries.ts` |
-| P1 | ESLint baseline：`no-explicit-any: warn`、`no-unused-vars: error`、`max-lines: warn`、`no-empty-catch`、`no-restricted-imports` | 1 PD | TASK-ATD-0006 | `eslint.config.mjs` |
-| P1 | CLI 公共型別：`CliMessage` / `CommandResult` / `CommandHandler` / typed `parseArgsForCommand` | 3 PD | TASK-ATD-0007 | `packages/cli/src/commands/shared.ts`、`packages/cli/src/atm.ts` |
-| P1 | 版本來源從 `package.json` 讀，不寫死 `0.0.0` | 1 PD | TASK-ATD-0008 | `packages/cli/src/commands/shared.ts:5`（含 release/onefile fallback） |
-| P1 | 環境變數 registry：集中宣告 `ATM_*` / `AGENT_IDENTITY` / `CODEX_HOME` | 1 PD | TASK-ATD-0009 | `packages/cli/src/config/env-registry.ts`（新） |
-| P1 | Pre-commit hook ATM-style：跑 `atm doctor` / typecheck / lint，可 opt-out | 0.5 PD | TASK-ATD-0010 | `.husky/pre-commit`（新）、文件說明 opt-out 方式 |
+### M1：開源邊界與快速治理修正
+
+| P | 項目 | 工期 | 內部卡 | 關鍵檔案 / surface |
+|---|---|---:|---|---|
+| P1 | 模組邊界硬化：package runtime 不直接 import `scripts/` | 0.5 PD | TASK-ATD-0004 | `packages/cli/src/commands/doctor.ts`、`self-host-alpha.ts` |
+| P1 | 擴充 `validate-module-boundaries.ts`：加入 package runtime -> scripts deny fixture | 0.5 PD | TASK-ATD-0005 | `scripts/validate-module-boundaries.ts` |
+| P1 | ESLint baseline：先 warning / budget，不一次升級成全 repo error | 1 PD | TASK-ATD-0006 | `eslint.config.mjs` |
+| P1 | CLI 公共型別與 shared command result 收斂 | 3 PD | TASK-ATD-0007 | `packages/cli/src/commands/shared.ts`、`packages/cli/src/atm.ts` |
+| P1 | framework version 來源改為 package / release manifest，而非寫死 `0.0.0` | 1 PD | TASK-ATD-0008 | `packages/cli/src/commands/shared.ts`、`packages/cli/src/index.ts` |
+| P1 | 環境變數 registry / docs：集中宣告 `ATM_*` 與 agent-related env | 1 PD | TASK-ATD-0009 | `packages/cli/src/config/`、`docs/environment-variables.md` |
+| P1 | Git hook / CI enforcement 改為 opt-in host recipe | 0.5 PD | TASK-ATD-0010 | `examples/git-hooks-enforcement/`、`docs/HOST_GOVERNANCE_INTEGRATION.md` |
 
 **M1 退出條件：**
-- `npm run lint` 顯示 warning 但不因既有 `any` 全面阻塞
-- `npm run typecheck` 通過
-- `npm run validate:module-boundaries` 能抓到 package runtime import `scripts/` 並 fail
-- `node atm.mjs --version` 回正確版本（不是 `0.0.0`）
 
-### M2：治理驗證底座（harness + AJV cache + 錯誤處理 + 測試分層）
+- `npm run typecheck`、`npm run lint` 通過或有明確 baseline policy。
+- `npm run validate:module-boundaries` 能阻擋 package runtime import `scripts/`。
+- `node atm.mjs --version` 與 version compatibility report 不再依賴散落的硬編碼 `0.0.0`。
+- hook 相關變更不進入 core、root-drop runtime 或 onefile runtime。
 
-| P | 項目 | 工期 | 任務卡 | 關鍵檔案 |
-|---|------|------|-------|---------|
-| P2 | Validator harness 批次遷移（50 個 validator 用 `createValidator()`） | 2 PD | TASK-ATD-0011 | `scripts/lib/validator-harness.ts`、`scripts/validate-*.ts` |
-| P2 | 共用 AJV factory/cache（6 個 source + scripts 端） | 0.5 PD | TASK-ATD-0012 | `packages/core/src/validation/ajv-cache.ts`（新）、6 處呼叫點 |
-| P2 | 錯誤處理政策：`CliError` + typed error code + `EXPECTED:` 註解規範 | 2 PD | TASK-ATD-0013 | `packages/cli/src/commands/shared.ts`（CliError）、所有 catch 點 |
-| P2 | 測試分層：unit / validator / release smoke / self-host alpha | 3 PD | TASK-ATD-0014 | `tests/unit/`（新）、`vitest.config.ts` 或 `node:test` script |
-| P2 | 第一批單元測試：`urn`、`map-id-allocator`、`shared.ts` | 2 PD | TASK-ATD-0015 | `tests/unit/registry/urn.test.ts` 等 |
+### M2：驗證底座與測試分層
+
+| P | 項目 | 工期 | 內部卡 | 關鍵檔案 / surface |
+|---|---|---:|---|---|
+| P2 | Validator harness 分批收斂，降低每支 validator 手寫重複 | 2 PD | TASK-ATD-0011 | `scripts/lib/validator-harness.ts`、`scripts/validate-*.ts` |
+| P2 | AJV factory/cache 共用化，但 pass/fail 行為不得改變 | 0.5 PD | TASK-ATD-0012 | `packages/core/src/validation/`、schema validators |
+| P2 | CLI error policy：`CliError`、typed code、usage error exit code 分層 | 2 PD | TASK-ATD-0013 | `packages/cli/src/commands/shared.ts` |
+| P2 | 測試分層：unit / validator / release smoke / self-host alpha | 3 PD | TASK-ATD-0014 | `tests/`、`scripts/run-validators.ts` |
+| P2 | 第一批快速單元測試：URN、map allocator、shared command helpers | 2 PD | TASK-ATD-0015 | `tests/unit/` 或現有測試目錄 |
 
 **M2 退出條件：**
-- `npm run validate:quick` 在 30 秒內跑完
-- `npm run validate:standard` 穩定
-- 50 個 validator 至少 40 個已遷移 harness
-- 單元測試覆蓋率 ≥ 20%（core/src）
 
-### M3：架構拆分（巨型檔案 + any 預算）
+- `npm run validate:quick` 維持快速且結果穩定。
+- `npm run validate:standard` 不因 harness refactor 產生行為差異。
+- 新增測試分層文件，說明何時用 validator fixture、何時用 unit test、何時用 release smoke。
 
-| P | 項目 | 工期 | 任務卡 | 關鍵檔案 |
-|---|------|------|-------|---------|
-| P3 | `upgrade.ts`（1306 行）拆分為 `upgrade/` 子目錄 | 5 PD | TASK-ATD-0016 | `packages/cli/src/commands/upgrade.ts` |
-| P3 | `plugin-governance-local/index.ts`（1069 行）拆分 | 4 PD | TASK-ATD-0017 | `packages/plugin-governance-local/src/index.ts` |
-| P3 | `propose.ts`（1018 行）拆分 | 3 PD | TASK-ATD-0018 | `packages/core/src/upgrade/propose.ts` |
-| P3 | `atm-chart.ts`（885 行）拆分 | 3 PD | TASK-ATD-0019 | `packages/cli/src/commands/atm-chart.ts` |
-| P3 | `command-specs.ts`（673 行）拆分 | 2 PD | TASK-ATD-0020 | `packages/cli/src/commands/command-specs.ts` |
-| P3 | `integrations-core/index.ts`（668 行）拆分 | 2 PD | TASK-ATD-0021 | `packages/integrations-core/src/index.ts` |
-| P3 | `map-generator.ts`（663 行）拆分 | 2 PD | TASK-ATD-0022 | `packages/core/src/manager/map-generator.ts` |
-| P3 | any debt budget：per-package 預算表，core 先降 | 8 PD（分散） | TASK-ATD-0023 | `eslint.config.mjs` + 多個 source |
-| P3 | 開源文件補強：環境變數、troubleshooting、adapter examples | 2 PD | TASK-ATD-0024 | `docs/environment-variables.md`（新）、`docs/troubleshooting.md`（新） |
+### M3：架構拆分與 any debt budget
+
+目前觀測大檔以 source 為準，約略如下：`upgrade.ts` 1231 行、`plugin-governance-local/src/index.ts` 982 行、`propose.ts` 942 行、`atm-chart.ts` 806 行、`command-specs.ts` 669 行、`map-generator.ts` 607 行、`integrations-core/src/index.ts` 600 行、`stores.ts` 596 行。行數會隨上游變動，任務啟動時需重新量測。
+
+| P | 項目 | 工期 | 內部卡 | 關鍵檔案 / surface |
+|---|---|---:|---|---|
+| P3 | `upgrade.ts` 拆分，保持 public CLI JSON contract | 5 PD | TASK-ATD-0016 | `packages/cli/src/commands/upgrade.ts` |
+| P3 | `plugin-governance-local` 拆分前先做 export maturity inventory | 4 PD | TASK-ATD-0017 | `packages/plugin-governance-local/src/index.ts` |
+| P3 | `propose.ts` 拆分 proposal analysis / gate / output | 3 PD | TASK-ATD-0018 | `packages/core/src/upgrade/propose.ts` |
+| P3 | `atm-chart.ts` 拆分 render / verify / compatibility helper | 3 PD | TASK-ATD-0019 | `packages/cli/src/commands/atm-chart.ts` |
+| P3 | `command-specs.ts` 拆分 command metadata 與 renderer | 2 PD | TASK-ATD-0020 | `packages/cli/src/commands/command-specs.ts` |
+| P3 | `integrations-core` 拆分 adapter compiler / manifest / verify | 2 PD | TASK-ATD-0021 | `packages/integrations-core/src/index.ts` |
+| P3 | `map-generator.ts` 拆分 allocation / scaffold / provenance | 2 PD | TASK-ATD-0022 | `packages/core/src/manager/map-generator.ts` |
+| P3 | `any` debt budget：以 package / public contract 風險分層，不一次清零 | 8 PD（分散） | TASK-ATD-0023 | `eslint.config.mjs`、多個 source |
+| P3 | 開源文件補強：env、troubleshooting、adapter examples | 2 PD | TASK-ATD-0024 | `docs/environment-variables.md`、`docs/troubleshooting.md` |
 
 **M3 退出條件：**
-- 沒有超過 500 行的 source/scripts 檔案
-- `core/src/` 的 `any` 數量降 50%
-- `npm run test`、`npm run validate:full`、release wrapper smoke 全部通過
 
-### M4：開源採用者信任（release parity + 腳本去重）
+- 大檔拆分 PR 不混入 bug fix；每個 PR 都有 before/after behavior evidence。
+- `npm test`、`npm run validate:full`、release wrapper smoke 通過。
+- 任何超過 500 行仍保留的檔案需標註理由，例如 transitional alpha 或生成檔。
 
-| P | 項目 | 工期 | 任務卡 | 關鍵檔案 |
-|---|------|------|-------|---------|
-| P4 | Release parity CI：每個 PR 都驗證 build / root-drop / onefile / create-atm | 2 PD | TASK-ATD-0025 | `.github/workflows/release-parity.yml`（新） |
-| P4 | Version skew / known-bad / release trust 持續綠燈 | 1 PD | TASK-ATD-0026 | 既有 workflows |
-| P4 | 28 個重複腳本（PS1/SH）改 codegen 或 Node thin launcher | 3 PD | TASK-ATD-0027 | `templates/root-drop/.atm/scripts/`、`release/atm-root-drop/templates/` |
-| P4 | Adopter sentinel synthetic Python fixture（與三角策略 M5 共用） | 2 PD | TASK-ATD-0028 | `scripts/adopter-sentinel.ts`、`fixtures/synthetic-python-adopter/`（新） |
+### M4：開源採用者信任與 release parity
+
+| P | 項目 | 工期 | 內部卡 | 關鍵檔案 / surface |
+|---|---|---:|---|---|
+| P4 | Release parity gate：source / root-drop / onefile / npm route | 2 PD | TASK-ATD-0025 | `.github/workflows/`、`scripts/validate-*-release.ts` |
+| P4 | Version compatibility、known-bad、release trust 持續驗證 | 1 PD | TASK-ATD-0026 | `scripts/validate-version-compatibility.ts`、`validate-known-bad-versions.ts`、`validate-release-trust.ts` |
+| P4 | root-drop PS1/SH wrapper 去重，保留跨平台 parity | 3 PD | TASK-ATD-0027 | `templates/root-drop/.atm/scripts/`、`release/atm-root-drop/templates/` |
+| P4 | Synthetic adopter fixture：只用中立樣本，不放 3KLife / npc-brain 到 protected surface | 2 PD | TASK-ATD-0028 | `scripts/adopter-sentinel.ts`、`fixtures/` |
 
 **M4 退出條件：**
-- Release smoke 每 PR 自動跑
-- 28 個重複腳本減為 1 source + codegen
-- synthetic Python fixture 可在無 secret 的 PR 上通過
 
-### M5：長期可重現性（E2E + 容器化 + 多 agent）
+- 每 PR 有 quick release smoke；merge / release 前有 full release smoke。
+- root-drop / onefile 行為與 source command 保持等價。
+- synthetic fixture 不含 adopter-only banned terms。
 
-| P | 項目 | 工期 | 任務卡 | 關鍵檔案 |
-|---|------|------|-------|---------|
-| P5 | 正式化 adopter sentinel：external npc-brain profile | 3 PD | TASK-ATD-0029 | `scripts/adopter-sentinel.ts` |
-| P5 | Multi-agent confidence report | 2 PD | TASK-ATD-0030 | `scripts/multi-agent-confidence.ts`（新） |
-| P5 | Docker / devcontainer（CI/release reproducibility，不作核心依賴） | 3 PD | TASK-ATD-0031 | `Dockerfile`（新）、`.devcontainer/`（新） |
-| P5 | Root-drop sandbox E2E | 3 PD | TASK-ATD-0032 | `tests/e2e/root-drop-sandbox.test.ts`（新） |
+### M5：長期可重現性與 adopter evidence loop
+
+| P | 項目 | 工期 | 內部卡 | 關鍵檔案 / surface |
+|---|---|---:|---|---|
+| P5 | 正式化 adopter sentinel external profile，但只作下游 evidence | 3 PD | TASK-ATD-0029 | `scripts/adopter-sentinel.ts` |
+| P5 | Multi-agent confidence report 沿用既有 matrix / result 機制 | 2 PD | TASK-ATD-0030 | `docs/multi-agent-*.md`、generator scripts |
+| P5 | Docker / devcontainer 僅作 contributor reproducibility，不作 runtime requirement | 3 PD | TASK-ATD-0031 | `Dockerfile`、`.devcontainer/` |
+| P5 | Root-drop sandbox E2E | 3 PD | TASK-ATD-0032 | `tests/e2e/` 或 release validator fixture |
 
 **M5 退出條件：**
-- CI 可重現完整 release smoke
-- adopter sentinel external profile 連續多輪通過
-- Multi-agent confidence report 在每次 release 產出
+
+- CI 可重現 release smoke。
+- adopter evidence 能回流成 upstream issue / proposal，不污染 protected docs。
+- multi-agent report 能作 advisory，不阻塞 alpha0 基線。
 
 ---
 
 ## 3. 依賴關係圖
 
 ```text
-[M0 自我治理閉環]                      <-- 必須先完成
+[M0 Self-Governance Diagnosis]
         |
-        +--> [M1.邊界修正] --> [M1.ESLint baseline] --> [M1.CLI 型別]
-        |              \                                       |
-        |               +--> [M1.版本 registry] --> [M1.env registry]
-        |                                                      |
-        +--> [M2.測試分層] -----------+--> [M3.大檔拆分]
-                                       |
-        [M2.validator harness] --------+
-        [M2.AJV cache]
-        [M2.錯誤處理政策]
+        +--> [M1 Open-source Boundary] --> [M1 CLI Types / Version]
+        |              \                         |
+        |               +--> [M1 Host Recipe]    |
+        |                                         v
+        +--> [M2 Test Layers / Validator Harness] --> [M3 Large-file Split]
                                        |
                                        v
-                              [M4.release parity]
+                              [M4 Release Parity]
                                        |
                                        v
-                              [M5.E2E / 容器化 / multi-agent]
+                              [M5 Reproducibility / Evidence Loop]
 
 跨計畫銜接：
-[本計畫 M0 完成] -> [三角策略 M1 dry-run 可信]
-[本計畫 M4 release parity 穩定] -> [三角策略 M5 sentinel 整合]
+[本計畫 M0 診斷清楚] -> [三角策略 M1 dry-run 可解讀]
+[本計畫 M4 release parity 穩定] -> [三角策略 M5 sentinel evidence 可回流]
 ```
 
 ---
 
-## 4. 任務卡拆分策略（本目錄之用）
+## 4. 任務追蹤策略
 
-本目錄將收錄上述 32 張任務卡（TASK-ATD-0001 ~ TASK-ATD-0032）。
+本目錄的 `tasks/` 是 3KLife 內部協作鏡像，用於幫本地 agent 拆工、鎖卡與保留思路。它不是 AI-Atomic-Framework public contributor contract。
 
-### 4.1 命名規則
+### 4.1 內部任務卡命名
 
 ```text
 TASK-ATD-{NNNN}-{slug}.task.md
 ```
 
-- `ATD` = ATM Tech Debt
-- `NNNN` = 從 0001 起序號（與 APO/TDR 等其他系列不衝突）
-- `slug` = 英文短描述，dash 分隔
-- 副檔名固定 `.task.md`
+- `ATD` = ATM Tech Debt。
+- `NNNN` = 內部序號。
+- 狀態欄位需明確標示 `internal-mirror` 或同等語意，避免被誤解為 upstream issue。
 
-### 4.2 任務卡必填欄位
+### 4.2 上游正式追蹤
 
-對齊既有 `TASK-APO-*` 格式：
+當某張 ATD 卡真的要進 AI-Atomic-Framework，必須轉成至少一種 upstream-friendly artifact：
+
+- GitHub issue 或 PR checklist。
+- RFC / design note。
+- validator fixture / failing test。
+- release gate 或 CI check。
+- docs update，且通過 neutrality scan。
+
+### 4.3 任務卡 frontmatter 修訂方向
+
+內部卡可保留 3KLife 欄位，但需要新增：
 
 ```yaml
----
-doc_id: doc_other_0230        # 由 doc-id-registry.js 分配
-task_id: TASK-ATD-XXXX
-title: ...
-milestone: M0|M1|M2|M3|M4|M5
-status: open|in-progress|done|blocked
-blocked_by: [TASK-ATD-XXXX]
-owner: atm-core
-related_plan: docs/ai_atomic_framework/atm-tech-debt-refactor/ATM 技術債重構計畫書.md
-upstream_repo: AI-Atomic-Framework
-targetRepo: AI-Atomic-Framework
-hostKind: upstream-framework
-invariant_risk: I1|I2|I3|I4|I5|I6  # 若觸及 §0.1 invariant
-allowed_files: [...]
-forbidden_files: [...]
-non_goals: [...]
-created_at: ISO
-created_by_agent: <agent identity>
----
+tracking_scope: internal-mirror
+upstream_tracking: pending-github-issue|pending-rfc|linked-pr|not-needed
+public_surface_risk: none|docs|cli|schema|release|manifest
+neutrality_required: true|false
 ```
 
-### 4.3 索引維護
-
-`tasks/README.md` 必須維護索引表（同 `agent-pack-onboarding/tasks/README.md` 格式）：
-
-| Task ID | 標題 | 里程碑 | 狀態 | 阻擋者 | Invariant Risk |
-|---------|------|-------|------|--------|---------------|
-| TASK-ATD-0001 | 補 AGENTS.md 與 keep summary | M0 | open | — | — |
-| TASK-ATD-0002 | 修 atm next 對 upstream 行為 | M0 | open | 0001 | I1 |
-| ... | | | | | |
-
-### 4.4 拆卡執行順序建議
-
-1. 先把 M0 三張卡（0001-0003）開出來，因為它是其他卡的前置。
-2. M1 七張卡（0004-0010）可平行開卡，但 0007（CLI 型別）會被 0006（ESLint）影響，建議 0006 先做。
-3. M2~M5 卡可延後到對應 milestone 啟動前再拆。
+`allowed_files` 若指向 AI-Atomic-Framework protected surface，必須補 `neutrality_required: true` 與對應 validator。
 
 ---
 
-## 5. Test Plan（分層 + per-milestone gate）
+## 5. Test Plan
 
-### 5.1 基線（每 PR 必跑）
+### 5.1 每 PR 基線
+
 - `npm run typecheck`
 - `npm run lint`
 - `npm test`
 
-### 5.2 治理（每 PR 必跑，分 quick/standard/full）
-- `npm run validate:quick`（30 秒級）
-- `npm run validate:standard`（2 分鐘級）
-- `npm run validate:full`（5 分鐘級，weekly）
+### 5.2 治理 validator
 
-### 5.3 ATM 自我驗證（M0 必過）
-- `node atm.mjs next --json`
+- `npm run validate:quick`
+- `npm run validate:standard`
+- `npm run validate:full`（週期性或 release 前）
+- `node atm.mjs verify --neutrality --json`
+
+### 5.3 版本與 release trust
+
+現有 `package.json` 未提供 `validate:version-skew`、`validate:known-bad`、`validate:release-trust` 這些 script 名稱；若需要單跑，使用實際 validator：
+
+```bash
+node --experimental-strip-types scripts/validate-version-compatibility.ts --mode validate
+node --experimental-strip-types scripts/validate-skew-matrix.ts --mode validate
+node --experimental-strip-types scripts/validate-known-bad-versions.ts --mode validate
+node --experimental-strip-types scripts/validate-release-trust.ts --mode validate
+```
+
+### 5.4 Self-governance sanity
+
 - `node atm.mjs doctor --json`
+- `node atm.mjs next --json`
 - `node atm.mjs self-host-alpha --verify --json`
 
-### 5.4 Release parity（M4 必過）
+`next --json` 若回 `needs-bootstrap`，驗收重點不是強迫它變 `ok: true`，而是確認 reason、allowed commands、blocked commands 與 docs 能讓 framework maintainer 正確理解狀態。
+
+### 5.5 Release parity
+
 - `npm run build`
 - `node release/atm-root-drop/atm.mjs next --json`
 - `node release/atm-onefile/atm.mjs next --json`
-
-### 5.5 Invariant 守護（每 PR）
-- `node atm.mjs verify --neutrality --json`
-- `npm run validate:version-skew`
-- `npm run validate:known-bad`
-- `npm run validate:release-trust`
+- `npm run validate:root-drop-release`
+- `npm run validate:onefile-release`
 
 ### 5.6 邊界驗證
-- 新增 negative fixture：證明 package runtime import `scripts/` 會被擋
-- 但 `package.json` script 呼叫 validator 仍允許
+
+- negative fixture：package runtime import `scripts/` 必須被擋。
+- positive fixture：`package.json` scripts 呼叫 `scripts/validate-*.ts` 仍允許。
+- protected surface neutrality：不能出現 adopter-only term 或 non-ASCII protected filename。
 
 ---
 
 ## 6. 風險登記簿
 
-### R1：M0 卡死，後續全部延後
-**機率：** 中  
-**衝擊：** 高  
-**緣由：** `atm next --json` 在 upstream 回 `needs-bootstrap` 可能是因為 ATM 對 self-host 的支援不完整，而不是 trivially 加一行就能修。  
-**緩解：**
-- 給 M0 一個 hard timebox（5 PD）。
-- 若 5 PD 內無法閉環，先回傳 `unsupported-upstream-self-host` 明確狀態，並開 follow-up issue。
-- 不讓 M0 完美主義拖延 M1。
+### R1：M0 被「一定要 dogfood 自己」綁死
 
-### R2：ESLint 從 warn 升 error 觸發大批 CI 紅燈
-**機率：** 高  
-**衝擊：** 中  
-**緩解：**
-- M1 只用 warn，M3 才考慮局部升 error。
-- 設置 `--max-warnings` 但不啟用，保留將來啟動空間。
-- baseline file（如 `.eslint-baseline.json`）紀錄當下 warning 數，禁止新增但不擋既有。
+**機率：** 中
+**衝擊：** 高
+**修正後緩解：** M0 改成 diagnosis，不要求第一輪就 commit `.atm/` runtime。候選解法是 `.atm.example/`、`examples/self-host/`、或明確 framework repo diagnostic。是否 dogfood root runtime 需 RFC 決策。
 
-### R3：拆 upgrade.ts 破壞既有行為
-**機率：** 中  
-**衝擊：** 高  
-**緣由：** 1306 行裡有大量隱含的執行順序與副作用。  
-**緩解：**
-- M2 單元測試必須先覆蓋 upgrade 的主要 flow，才動 M3 拆檔。
-- 拆檔 PR 必須在 release parity smoke 通過。
-- 拆檔 PR 不得同時修 bug；bug fix 與 refactor 分開 PR。
+### R2：把 3KLife keep / task-lock 習慣誤升為 upstream contract
 
-### R4：Pre-commit hook 變成 adopter 硬依賴
-**機率：** 中  
-**衝擊：** 高（違反 adopter-neutral）  
-**緣由：** 若 ATM CLI 主動安裝 husky 並寫入 hook，會強制 adopter 也接受。  
-**緩解：**
-- Pre-commit hook 只在 upstream repo 啟用，不 ship 進 root-drop / onefile。
-- ATM 對 adopter 只提供「**可選的 hook example**」，不強制安裝。
-- 文件明確說明 adopter 可用自己的 hook 系統（pre-commit framework、husky、lefthook 等）。
+**機率：** 高
+**衝擊：** 高
+**緩解：** AI-Atomic-Framework protected docs 只能引用 ATM 中立入口；3KLife 協作規則留在本 repo 或 downstream adapter docs。
 
-### R5：Release parity smoke 太慢拖累 PR
-**機率：** 高  
-**衝擊：** 中  
-**緩解：**
-- M4 release parity 分 quick smoke（每 PR）與 full smoke（merge to main）兩層。
-- Quick smoke 只跑 root-drop entry contract，不重 build 全部 packages。
+### R3：Pre-commit hook 變成 adopter 硬依賴
 
-### R6：Invariant 被無意打破
-**機率：** 中  
-**衝擊：** 極高  
-**緩解：**
-- 任務卡必填 `invariant_risk` 欄位。
-- CI 加 invariant guard：偵測 public CLI surface diff、schema version 變動。
-- Maintainer review checklist 包含「**這個 PR 有沒有改 §0.1 列舉的東西？**」。
+**機率：** 中
+**衝擊：** 高
+**緩解：** hook 只做 examples / recipe，不 ship 成 root-drop 必裝項；CI gate 也應可由 host 自行選擇。
 
-### R7：Vitest vs node:test 選擇成為延遲源
-**機率：** 中  
-**衝擊：** 低  
-**緩解：**
-- M2 先用 `node:test`（zero runtime dep，符合 root-drop 心智）。
-- 若覆蓋率工具不便利，M3 才評估換 Vitest。
-- 不在 M2 階段做選型 RFC，先動手寫測試。
+### R4：拆大檔破壞 public CLI 或 schema 行為
 
-### R8：M3 大檔拆分時觸碰 plugin-governance-local 的 transitional alpha 邏輯
-**機率：** 高  
-**衝擊：** 高  
-**緣由：** 該檔開頭註解明說「Transitional alpha implementation」，內部混雜了多個生命週期不同的邏輯。  
-**緩解：**
-- TASK-ATD-0017 必須先做 inventory：列出 53 個 export 各自的成熟度。
-- 拆檔策略：「成熟的」搬到 stable 子模組，「transitional 的」維持原檔但標記 `@transitional`。
-- 不為拆檔而強制把 transitional 邏輯也搬走。
+**機率：** 中
+**衝擊：** 高
+**緩解：** M2 測試與 validator fixture 先行；拆檔 PR 不同時修 bug；每 PR 跑 release wrapper smoke。
 
-### R9：本計畫與三角策略規劃書 cadence 對不上
-**機率：** 中  
-**衝擊：** 中  
-**緣由：** Upstream 修一輪、adopter 驗收一輪本來該交錯，但實務上可能 upstream 還沒 release，adopter 就跑 dry-run。  
-**緩解：**
-- 每個 M 完成都標記一個內部 tag（如 `atm-td-m0-done`）。
-- 三角策略 M1 dry-run 必須指定基於哪個 tag 跑。
-- 若 dry-run 結果與 tag 不符（PR 多塞了東西），evidence 失效需重跑。
+### R5：Release parity smoke 太慢
+
+**機率：** 高
+**衝擊：** 中
+**緩解：** quick smoke 每 PR；full smoke release 前或 merge queue；慢測試保留清楚 tag。
+
+### R6：版本命令與 script 名稱漂移
+
+**機率：** 中
+**衝擊：** 中
+**緩解：** 文件優先引用 `package.json` 實際 scripts；沒有 script 時直接列 `node --experimental-strip-types scripts/...`。
+
+### R7：internal task cards 被誤認成 open-source workflow
+
+**機率：** 高
+**衝擊：** 中
+**緩解：** `tasks/README.md` 明確標示 internal mirror；上游實作必須轉 GitHub issue / RFC / PR checklist。
+
+### R8：Adopter sentinel 污染 protected docs
+
+**機率：** 中
+**衝擊：** 高
+**緩解：** sentinel 可收 external evidence，但 public framework docs 只描述 neutral fixture 與 adapter boundary，不寫 adopter 名稱。
 
 ---
 
 ## 7. 開放議題
 
-### Q1：M0 的「upstream self-bootstrap」是否該 commit `.atm/` 進 AI-Atomic-Framework？
-**選項：**
-- A：commit 進 main → upstream 真的「dogfooding」自己。
-- B：放 `.atm.example/` 模板但 main 不含 runtime → 避免污染 release artifact。
-- C：在 `examples/self-host/` 下示範，不放 repo root。
-**決策時機：** M0 啟動時。
+### Q1：AI-Atomic-Framework 是否要 commit `.atm/` runtime？
 
-### Q2：Pre-commit hook 該強制（拒絕 commit）還是 advisory（只警告）？
-**決策時機：** TASK-ATD-0010 啟動時。
+建議預設：**不在 M0 直接 commit**。先用 diagnostic / example / RFC 釐清。若要真正 dogfood root runtime，需確認 release artifact 不會把 maintainer-local runtime 狀態帶給 adopter。
 
-### Q3：any 預算的單位是「每 package 上限」還是「絕對數字」？
-**決策時機：** M3 啟動時。
+### Q2：是否需要上游 `AGENTS.md`？
 
-### Q4：M4 的 28 個重複腳本去重，採 codegen 還是 Node thin launcher？
-**選項：**
-- A：codegen（保留 PS1/SH 雙寫，但 source 是單一 spec）
-- B：Node thin launcher（所有 OS 一律用 node 啟動）
-**決策時機：** TASK-ATD-0027 啟動時。
+建議：可以新增，但內容必須框架中立，只導向 README、`node atm.mjs next --json`、ATMChart / AtomicCharter，不引用 3KLife keep summary 或私有任務卡。
 
-### Q5：Docker / devcontainer 是 M5 任務還是 P5（永遠不做）？
-**決策時機：** M4 完成時複評。
+### Q3：pre-commit 是 blocking 還是 advisory？
+
+建議：在 upstream repo 可 blocking；對 adopter 只能提供 advisory / opt-in recipe。
+
+### Q4：大檔拆分的行數目標是否硬性 500 行？
+
+建議：500 行作為 warning budget，不作絕對門檻。transitional alpha、generated dist 或密集 command spec 可用例外，但需要理由。
+
+### Q5：Docker / devcontainer 是否進 M5？
+
+建議：保持 M5 optional contributor reproducibility，不成為 runtime 或 adopter bootstrap 前提。
 
 ---
 
 ## 8. 立即執行順序
 
-### 第一週（M0 + 部分 M1 準備）
-1. **拆 M0 三張任務卡**（TASK-ATD-0001/0002/0003），放 `tasks/`。
-2. **拆 M0 任務卡的同時補寫 `tasks/README.md` 索引**。
-3. **跑 `node atm.mjs next --json` 在 upstream**，記錄 exact output 與 stderr，作為 TASK-ATD-0002 的 acceptance baseline。
-4. **撰寫 `AGENTS.md` 與 `docs/keep.summary.md` 草稿**（TASK-ATD-0001）。
+### 第一輪：文件與診斷校正
 
-### 第二週（M0 收尾 + M1 啟動）
-5. M0 退出條件全部滿足，打 `atm-td-m0-done` 內部 tag。
-6. 並行拆 M1 七張任務卡。
-7. 開始 M1.邊界修正（TASK-ATD-0004/0005）—— 最小風險先動。
+1. 更新本計畫與 `tasks/README.md`，標示 feasibility、open-source boundary、internal mirror。
+2. 記錄 upstream 現況：`node atm.mjs doctor --json`、`node atm.mjs next --json`、大檔行數、現有 test 數量。
+3. 把 `needs-bootstrap` 從「必定是 bug」改成「需要診斷語意更清楚」。
+4. 確認所有引用命令在 AI-Atomic-Framework `package.json` 或 `scripts/` 中存在。
 
-### 之後
-8. 依序執行 M1 → M2 → M3 → M4 → M5，每 M 退出後打 tag。
-9. 每 M 完成時與三角策略規劃書 owner 確認下一輪 adopter dry-run 該等哪個 tag。
+### 第二輪：M0 / M1 開工
+
+5. 若新增上游 `AGENTS.md`，只寫框架中立入口。
+6. 擴充 module boundary validator 與 negative fixture。
+7. 修 version 來源與 CLI shared result types。
+8. 將 hook work 改到 `examples/git-hooks-enforcement/` 或 docs recipe。
 
 ### 明確暫緩
-- 不在 M0 之前動任何 lint / typecheck 重構（避免擾亂 M0 baseline）。
-- 不在 M2 之前拆任何巨型檔案（沒測試保護）。
-- 不在 M4 之前對 release artifact format 動刀。
-- 不為這份計畫做 Docker / Vitest 選型 RFC（先動手，後決策）。
+
+- 不在 M0 diagnosis 前 commit `.atm/` runtime 到 upstream。
+- 不把 `docs/keep.summary.md` 加進 AI-Atomic-Framework 作為 public contract。
+- 不在 M2 前拆 `upgrade.ts`、`propose.ts` 等高風險大檔。
+- 不在 M4 前改 release artifact format。
+- 不把 3KLife / npc-brain 寫入 upstream protected docs。
 
 ---
 
@@ -483,84 +453,89 @@ created_by_agent: <agent identity>
 
 本計畫成功時，應同時滿足：
 
-1. AI-Atomic-Framework 在自己 checkout 上跑 `node atm.mjs next --json` 與 `node atm.mjs doctor --json` 都 green。
-2. `npm run lint` 顯示 warning 但不擋 CI；`npm run typecheck` 通過；`npm run validate:standard` 穩定。
-3. 沒有 source/script 檔案超過 500 行（除明確 `@transitional` 標記）。
-4. 50 個 validator 全部用統一 harness；AJV 只有一個 shared cache。
-5. `frameworkVersion` 從 `package.json` 讀取，不再寫死 `0.0.0`。
-6. Release parity（root-drop + onefile + create-atm）每 PR 自動驗證。
-7. Adopter sentinel 含 synthetic Python fixture，且與三角策略 M5 整合完成。
-8. `§0.1 Invariants` 全部沒被破壞（neutrality / public CLI / schema / release format / hash-locked / long-tail）。
-9. 本目錄 `tasks/` 32 張卡全部 `status: done`，或明確標記為 `cancelled` 並記錄原因。
+1. AI-Atomic-Framework 的 public docs、schemas、templates、examples 維持 adopter-neutral。
+2. `atm next --json`、`doctor --json`、`welcome`、ATMChart 與 integration adapter 的權威邊界清楚，沒有第二套 task / approval / rule model。
+3. `npm run typecheck`、`npm run lint`、`npm test`、`npm run validate:standard` 穩定。
+4. release parity 覆蓋 source、root-drop、onefile 與 npm route。
+5. `frameworkVersion` 與 compatibility matrix / known-bad / release trust chain 對齊，不再靠散落硬編碼。
+6. 大檔拆分在測試保護下進行，public CLI JSON 與 schema 行為不破。
+7. internal `TASK-ATD-*` 卡能映射到 upstream issue / RFC / PR evidence，但不要求 public contributor 使用 3KLife 任務卡。
+8. 三角策略收集到的 adopter evidence 能回流 upstream，而不把 adopter 特例下沉到 core。
 
 ---
 
 ## 10. 假設與前提
 
-- **A1**：AI-Atomic-Framework 是 ATM 上游真相來源，本計畫所有 PR 都進這個 repo。
-- **A2**：3KLife 是研發試驗場，不為本計畫做任何重構（其角色由三角策略規劃書管轄）。
-- **A3**：npc-brain 是 adopter 驗收場，與本計畫透過三角策略規劃書 M1 / M5 interlock。
-- **A4**：Dev dependency 可以增加（如 husky、Vitest），但 release / root-drop / onefile **runtime 必須維持輕量與可移植**。
-- **A5**：`any` 不一次清零；以公共契約與高扇出檔案先降風險。
-- **A6**：Pre-commit hook 是 host-side enforcement，不應變成 ATM core 對所有 adopters 的硬依賴。
-- **A7**：本計畫不要求所有 milestone 連續執行；可與功能開發穿插。
+- **A1**：AI-Atomic-Framework 是 ATM 上游真相來源。
+- **A2**：3KLife 是研發試驗場與內部協作場，不是 ATM public workflow 的模板。
+- **A3**：npc-brain 或其他 adopter repo 可作 evidence source，但不是 upstream public contract。
+- **A4**：Dev dependency 可以增加，但 root-drop / onefile runtime 必須保持輕量、可攜、可離線診斷。
+- **A5**：`any`、大檔、ESLint debt 採 budget 化漸進治理，不一次清零。
+- **A6**：Hook / CI enforcement 是 host-side layer，不是 ATM core contract。
+- **A7**：本計畫可分批交付；每批都必須留下 validator、evidence 或 release smoke。
 
 ---
 
 ## 11. 與其他文件的關係
 
 ### 11.1 取代
+
 - 取代臨時 plan `C:/Users/User/.claude/plans/use-the-engineering-tech-debt-skill-gentle-tiger.md`（過於通用，未 ATM 化）。
 
 ### 11.2 上游互補
-- 與 `agent-pack-onboarding/ATM引導工程計畫書.md` 並列：那份管 ATM 對 adopter 的 first-touch 契約；本份管 ATM 自身的工程品質。
+
+- 與 `agent-pack-onboarding/ATM引導工程計畫書.md` 並列：那份管 first-touch / agent pack；本份管 upstream 技術債。
 
 ### 11.3 跨 repo 銜接
-- 與 `agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md` interlock：upstream（本計畫）與 adopter（三角策略）的 cadence 必須交錯。
+
+- 與 `agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md` interlock：三角策略回收 adopter evidence，本計畫決定 upstream 如何吸收。
 
 ### 11.4 不取代
-- 不取代 `AI_Atomic_Framework_Roadmap.md`（功能 roadmap）。
-- 不取代 `upstream-versioning-policy.md`（版本治理規則）。
-- 不取代 `default-governance/` 目錄下的 governance bundle 設計。
+
+- 不取代 AI-Atomic-Framework 的 `README.md`、`docs/ARCHITECTURE.md`、`docs/AGENT_PACK_ONBOARDING.md`、`docs/HOST_GOVERNANCE_INTEGRATION.md`、`docs/LONGTAIL_USERS.md`。
+- 不取代 upstream versioning policy 或 compatibility matrix。
+- 不取代 default governance bundle 設計。
 
 ---
 
 ## 12. 參考資料
 
-### 內部文件
-- ATM 引導工程計畫書：`C:/Users/User/3KLife/docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md`
-- 三角策略規劃書：`C:/Users/User/3KLife/docs/ai_atomic_framework/agent-pack-onboarding/3KLife ATM 採用三角策略規劃書.md`
-- 上游版本政策：`C:/Users/User/AI-Atomic-Framework/docs/ai_atomic_framework/upstream-versioning-policy.md`
-- 長尾使用者保護：`C:/Users/User/AI-Atomic-Framework/docs/LONGTAIL_USERS.md`
-- Long-tail safeguard validator：`C:/Users/User/AI-Atomic-Framework/scripts/validate-longtail-user-safeguards.ts`
-- Adopter sentinel：`C:/Users/User/AI-Atomic-Framework/scripts/adopter-sentinel.ts`
+### 上游文件
 
-### 上游檔案（M0~M1 主戰場）
 - `C:/Users/User/AI-Atomic-Framework/README.md`
-- `C:/Users/User/AI-Atomic-Framework/eslint.config.mjs`
-- `C:/Users/User/AI-Atomic-Framework/tsconfig.json`
-- `C:/Users/User/AI-Atomic-Framework/package.json`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/atm.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/shared.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/doctor.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/welcome.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/bootstrap-entry.ts`
+- `C:/Users/User/AI-Atomic-Framework/docs/ARCHITECTURE.md`
+- `C:/Users/User/AI-Atomic-Framework/docs/AGENT_PACK_ONBOARDING.md`
+- `C:/Users/User/AI-Atomic-Framework/docs/HOST_GOVERNANCE_INTEGRATION.md`
+- `C:/Users/User/AI-Atomic-Framework/docs/LONGTAIL_USERS.md`
+- `C:/Users/User/AI-Atomic-Framework/docs/governance/DOCS_NEUTRALITY_AUDIT.md`
 
-### 上游檔案（M3 拆分主戰場）
-- `packages/cli/src/commands/upgrade.ts`（1306 行）
-- `packages/plugin-governance-local/src/index.ts`（1069 行）
-- `packages/core/src/upgrade/propose.ts`（1018 行）
-- `packages/cli/src/commands/atm-chart.ts`（885 行）
-- `packages/cli/src/commands/command-specs.ts`（673 行）
-- `packages/integrations-core/src/index.ts`（668 行）
-- `packages/core/src/manager/map-generator.ts`（663 行）
-- `packages/plugin-governance-local/src/stores.ts`（637 行）
-- `packages/core/src/registry/replacement-lane.ts`（543 行）
-- `packages/core/src/upgrade/map-curator.ts`（505 行）
+### 上游檢查命令
+
+```bash
+node atm.mjs doctor --json
+node atm.mjs next --json
+npm run typecheck
+npm run lint
+npm test
+npm run validate:standard
+node atm.mjs verify --neutrality --json
+```
+
+### 上游大檔觀測（2026-05-18）
+
+- `packages/cli/src/commands/upgrade.ts`：約 1231 行
+- `packages/plugin-governance-local/src/index.ts`：約 982 行
+- `packages/core/src/upgrade/propose.ts`：約 942 行
+- `packages/cli/src/commands/atm-chart.ts`：約 806 行
+- `packages/cli/src/commands/command-specs.ts`：約 669 行
+- `packages/core/src/manager/map-generator.ts`：約 607 行
+- `packages/integrations-core/src/index.ts`：約 600 行
+- `packages/plugin-governance-local/src/stores.ts`：約 596 行
+
+行數是風險訊號，不是唯一成功標準；任務啟動時需重新量測。
 
 ---
 
 ## 13. 本計畫的開卡入口
 
-下一步：開 `tasks/README.md`，並依 §2 表格拆 32 張卡。建議先拆 M0 三張，跑通後再拆 M1 七張，最後再批次拆 M2~M5。
+下一步不是直接開 32 張 public 任務，而是先修 `tasks/README.md`：明確標示 ATD 任務卡是 3KLife 內部鏡像，並把 M0 改成 self-governance diagnosis。完成後再把 M0 / M1 中真正要進 upstream 的項目轉成 GitHub issue、RFC 或 PR checklist。
