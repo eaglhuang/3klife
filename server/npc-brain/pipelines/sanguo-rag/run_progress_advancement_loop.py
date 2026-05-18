@@ -881,7 +881,7 @@ def round_output_paths(run_root: Path, round_id: str) -> dict[str, Path]:
     repair_root = run_root / "repair-review"
     progress_root = repair_root / "knowledge-growth-progress"
     merged_round_id = f"{round_id}-merged"
-    core_progress_root = REPO_ROOT / "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress"
+    core_progress_root = repair_root / "core-person-progress"
     return {
         "repairRoot": repair_root,
         "progressRoot": progress_root,
@@ -960,6 +960,8 @@ def build_campaign_command_for_round_id(
         repo_relative(outputs["repairRoot"] / "source-event-packets"),
         "--progress-root",
         repo_relative(outputs["progressRoot"]),
+        "--staged-output-root",
+        repo_relative(outputs["baseEvents"].parent),
         "--top-generals",
         str(max(args.top_generals, 0)),
         "--top-per-general",

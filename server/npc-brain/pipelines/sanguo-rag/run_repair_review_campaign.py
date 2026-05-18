@@ -32,6 +32,7 @@ DEFAULT_ROUNDS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowled
 DEFAULT_EVENT_SEED_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds")
 DEFAULT_PACKET_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/source-event-packets")
 DEFAULT_PROGRESS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress")
+DEFAULT_STAGED_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress")
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
@@ -91,6 +92,7 @@ def apply_repair_review_campaign_arg_defaults(args: argparse.Namespace) -> None:
     args.event_seed_root = repair_campaign_text_arg(args.event_seed_root, paths, "eventSeedRoot", DEFAULT_EVENT_SEED_ROOT)
     args.packet_root = repair_campaign_text_arg(args.packet_root, paths, "packetRoot", DEFAULT_PACKET_ROOT)
     args.progress_root = repair_campaign_text_arg(args.progress_root, paths, "progressRoot", DEFAULT_PROGRESS_ROOT)
+    args.staged_output_root = repair_campaign_text_arg(args.staged_output_root, paths, "stagedOutputRoot", DEFAULT_STAGED_OUTPUT_ROOT)
     args.observed_mentions_default = repair_campaign_text_arg(None, fallback_inputs, "observedMentions", DEFAULT_OBSERVED_MENTIONS_PATH)
     args.observed_summary_default = repair_campaign_text_arg(None, fallback_inputs, "observedSummary", DEFAULT_OBSERVED_SUMMARY_PATH)
     args.stable_knowledge_default = repair_campaign_text_arg(None, fallback_inputs, "stableKnowledge", DEFAULT_STABLE_KNOWLEDGE_PATH)
@@ -124,6 +126,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--event-seed-root", default=None, help="Event question seed output root. Defaults to governance policy.")
     parser.add_argument("--packet-root", default=None, help="Source packet output root. Defaults to governance policy.")
     parser.add_argument("--progress-root", default=None, help="Knowledge progress output root. Defaults to governance policy.")
+    parser.add_argument("--staged-output-root", default=None, help="Staged ready-events / relationship-evidence output root. Defaults to governance policy.")
     parser.add_argument("--general-id", action="append", default=[], help="Explicit general id to include; can be repeated")
     parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
     parser.add_argument("--repair-review-campaign-policy", default=None, help="Override policy-repair-review-campaign.json path")
@@ -389,6 +392,7 @@ def main() -> None:
     event_seed_root = Path(args.event_seed_root) / merged_round_id
     packet_root = Path(args.packet_root) / merged_round_id
     progress_root = Path(args.progress_root)
+    staged_output_root = Path(args.staged_output_root)
     summary_json_path = progress_root / f"{round_id}-campaign-summary.json"
     summary_md_path = progress_root / f"{round_id}-campaign-summary.md"
     if not args.overwrite and (summary_json_path.exists() or summary_md_path.exists()):
@@ -529,6 +533,8 @@ def main() -> None:
         str(base_events_path),
         "--base-relationship-evidence",
         str(base_relationship_evidence_path),
+        "--output-root",
+        str(staged_output_root),
     ]
     if args.emit_ready_eval:
         stage_args.append("--emit-ready-eval")
@@ -545,9 +551,9 @@ def main() -> None:
         }
     )
 
-    merged_ready_events_path = REPO_ROOT / f"artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/{merged_round_id}-staged-ready-events.jsonl"
-    merged_relationships_path = REPO_ROOT / f"artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/{merged_round_id}-staged-relationship-evidence.jsonl"
-    ready_eval_events_path = REPO_ROOT / f"artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/{merged_round_id}-ready-eval-events.jsonl"
+    merged_ready_events_path = staged_output_root / f"{merged_round_id}-staged-ready-events.jsonl"
+    merged_relationships_path = staged_output_root / f"{merged_round_id}-staged-relationship-evidence.jsonl"
+    ready_eval_events_path = staged_output_root / f"{merged_round_id}-ready-eval-events.jsonl"
 
     commands.append(
         {
