@@ -911,6 +911,34 @@ def load_governance_plan_encoding_repair_policy(
     return read_governance_json(path, required_id="Policy_GovernancePlanEncodingRepair_P1")
 
 
+def load_governance_schema_registry(
+    root: str | Path | None = None,
+    *,
+    governance_schema_registry: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(governance_schema_registry).resolve()
+        if governance_schema_registry
+        else _path(base, "schemas", "schema-governance-registry.json")
+    )
+    return read_governance_json(path, required_id="Schema_GovernanceRegistry_P1")
+
+
+def load_governance_harness_snapshot_policy(
+    root: str | Path | None = None,
+    *,
+    governance_snapshot_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(governance_snapshot_policy).resolve()
+        if governance_snapshot_policy
+        else _path(base, "policies", "policy-governance-harness-snapshots.json")
+    )
+    return read_governance_json(path, required_id="Policy_GovernanceHarnessSnapshots_P1")
+
+
 def load_postgres_state_store_evaluation_policy(
     root: str | Path | None = None,
     *,
@@ -957,6 +985,7 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-governance-run-profiles.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "policies", "file": "policy-governance-report-bundle.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "policies", "file": "policy-governance-plan-encoding-repair.json", "consumer": "validate_sanguo_governance.py"},
+        {"section": "policies", "file": "policy-governance-harness-snapshots.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "policies", "file": "policy-postgres-state-store-evaluation.json", "consumer": "evaluate_postgres_state_store_readiness.py"},
         {"section": "policies", "file": "policy-vector-ingestion-hardening.json", "consumer": "run_vector_ingestion_gate.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -1006,4 +1035,5 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "rules", "file": "rule-3kweb-check-cues.jsonl", "consumer": "run_3kweb_check.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},
         {"section": "schemas", "file": "schema-governance-bundle.json", "consumer": "validate_sanguo_governance.py"},
+        {"section": "schemas", "file": "schema-governance-registry.json", "consumer": "validate_sanguo_governance.py"},
     ]

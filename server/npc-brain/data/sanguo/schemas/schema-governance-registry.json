@@ -1,0 +1,67 @@
+{
+  "id": "Schema_GovernanceRegistry_P1",
+  "description": "Minimal registry for Sanguo governance file shape validation. This is intentionally lighter than full JSON Schema draft validation.",
+  "schemaEntries": [
+    {
+      "id": "SchemaEntry_GovernancePoliciesJson_P1",
+      "section": "policies",
+      "formats": [
+        "json"
+      ],
+      "requiredTopLevelFields": [
+        "id"
+      ],
+      "idPrefixes": [
+        "Policy_"
+      ]
+    },
+    {
+      "id": "SchemaEntry_GovernanceRulesJsonOrJsonl_P1",
+      "section": "rules",
+      "formats": [
+        "json",
+        "jsonl"
+      ],
+      "requiredTopLevelFields": [
+        "id"
+      ],
+      "idPrefixes": [
+        "Rule_"
+      ]
+    },
+    {
+      "id": "SchemaEntry_GovernanceCatalogsJsonOrJsonl_P1",
+      "section": "catalogs",
+      "formats": [
+        "json",
+        "jsonl"
+      ],
+      "requiredTopLevelFields": [
+        "id"
+      ],
+      "idPrefixes": [
+        "Catalog_"
+      ]
+    },
+    {
+      "id": "SchemaEntry_GovernanceSchemasJson_P1",
+      "section": "schemas",
+      "formats": [
+        "json"
+      ],
+      "requiredTopLevelFields": [
+        "id"
+      ],
+      "idPrefixes": [
+        "Schema_"
+      ]
+    }
+  ],
+  "registryChecks": [
+    "entry-id-unique",
+    "section-covered",
+    "format-supported",
+    "required-fields-non-empty",
+    "id-prefix-non-empty"
+  ]
+}

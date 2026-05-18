@@ -14,6 +14,7 @@ from sanguo_governance_loader import (
     load_governance_completion_ledger_policy,
     load_governance_run_profiles_policy,
     load_governance_report_bundle_policy,
+    load_governance_harness_snapshot_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
@@ -42,6 +43,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-profile", default=None, help="Named governance run profile from policy-governance-run-profiles.json")
     parser.add_argument("--run-profile-policy", default=None, help="Override policy-governance-run-profiles.json path")
     parser.add_argument("--report-bundle-policy", default=None, help="Override policy-governance-report-bundle.json path")
+    parser.add_argument("--snapshot-policy", default=None, help="Override policy-governance-harness-snapshots.json path")
+    parser.add_argument("--skip-snapshot-check", action="store_true", help="Skip golden snapshot comparison when refreshing snapshot files")
     parser.add_argument("--output-root", default=None, help="Output root for harness reports")
     parser.add_argument("--strict-phase-plans", action="store_true", help="Fail if a planned phase document is missing")
     parser.add_argument("--strict-validation-coverage", action="store_true", help="Fail if required validation summary keys are missing")
@@ -373,6 +376,52 @@ def failure_triage(
     }
 
 
+def comparable_snapshot_payload(payload: dict[str, Any], compared_keys: list[str]) -> dict[str, Any]:
+    return {key: payload.get(key) for key in compared_keys}
+
+
+def golden_snapshot_diff(policy: dict[str, Any], payload: dict[str, Any], *, skip: bool = False) -> dict[str, Any]:
+    snapshots = [row for row in policy.get("snapshots") or [] if isinstance(row, dict)]
+    results: list[dict[str, Any]] = []
+    mismatch_count = 0
+    for row in snapshots:
+        snapshot_id = str(row.get("id") or "")
+        compared_keys = [str(item) for item in row.get("comparedPayloadKeys") or []]
+        snapshot_path = PIPELINE_ROOT / str(row.get("path") or "")
+        current_payload = comparable_snapshot_payload(payload, compared_keys)
+        if skip:
+            results.append({"id": snapshot_id, "path": snapshot_path.as_posix(), "status": "skipped", "comparedKeys": compared_keys})
+            continue
+        if not snapshot_path.exists():
+            mismatch_count += 1
+            results.append({"id": snapshot_id, "path": snapshot_path.as_posix(), "status": "missing", "comparedKeys": compared_keys})
+            continue
+        try:
+            snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            mismatch_count += 1
+            results.append({"id": snapshot_id, "path": snapshot_path.as_posix(), "status": "unreadable", "error": str(exc), "comparedKeys": compared_keys})
+            continue
+        expected_payload = snapshot.get("payload") if isinstance(snapshot, dict) else None
+        ok = expected_payload == current_payload
+        if not ok:
+            mismatch_count += 1
+        results.append(
+            {
+                "id": snapshot_id,
+                "path": snapshot_path.as_posix(),
+                "status": "ok" if ok else "mismatch",
+                "comparedKeys": compared_keys,
+            }
+        )
+    return {
+        "status": "ok" if mismatch_count == 0 else "failed",
+        "snapshotCount": len(snapshots),
+        "mismatchCount": mismatch_count,
+        "results": results,
+    }
+
+
 def render_markdown(payload: dict[str, Any]) -> str:
     lines = [
         "# Sanguo Governance Regression Harness",
@@ -499,6 +548,10 @@ def main() -> None:
             root,
             governance_report_bundle_policy=args.report_bundle_policy,
         )
+        snapshot_policy = load_governance_harness_snapshot_policy(
+            root,
+            governance_snapshot_policy=args.snapshot_policy,
+        )
         selected_run_profile = run_profile_selection(run_profiles_policy, args.run_profile)
         expected_rows = validate_expected_files(root)
         shape_summary = validate_minimum_shapes(root)
@@ -560,6 +613,8 @@ def main() -> None:
     summary["governanceReportBundleFileCount"] = bundle["fileCount"]
     operator = operator_summary(operator_policy, status, summary, readiness, drift)
     summary["operatorSummarySectionCount"] = operator["sectionCount"]
+    summary["governanceHarnessSnapshotCount"] = len(snapshot_policy.get("snapshots") or [])
+    summary["governanceHarnessSnapshotMismatchCount"] = 0
     payload = {
         "generatedAt": utc_now(),
         "status": status,
@@ -579,6 +634,15 @@ def main() -> None:
         "expectedGovernanceFiles": expected_rows,
         "minimumShapeSummary": shape_summary,
     }
+    snapshot_result = golden_snapshot_diff(snapshot_policy, payload, skip=args.skip_snapshot_check)
+    summary["governanceHarnessSnapshotMismatchCount"] = snapshot_result["mismatchCount"]
+    if snapshot_result["status"] != "ok" and not args.skip_snapshot_check:
+        status = "failed"
+        payload["status"] = status
+        operator = operator_summary(operator_policy, status, summary, readiness, drift)
+        summary["operatorSummarySectionCount"] = operator["sectionCount"]
+        payload["operatorSummary"] = operator
+    payload["goldenSnapshot"] = snapshot_result
     if args.no_write:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
     else:

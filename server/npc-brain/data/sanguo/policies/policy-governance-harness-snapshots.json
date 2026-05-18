@@ -1,0 +1,26 @@
+{
+  "id": "Policy_GovernanceHarnessSnapshots_P1",
+  "description": "Defines deterministic golden snapshots for Sanguo governance regression harness payloads.",
+  "snapshots": [
+    {
+      "id": "GoldenSnapshot_SanguoGovernance_StrictLocal_P1",
+      "runProfile": "strict-local",
+      "path": "fixtures/governance-regression/golden-strict-local-snapshot.json",
+      "comparedPayloadKeys": [
+        "summary",
+        "sensors",
+        "phaseMatrix",
+        "reportBundle"
+      ],
+      "ignoredPayloadKeys": [
+        "generatedAt"
+      ]
+    }
+  ],
+  "comparisonPolicy": {
+    "failOnMismatch": true,
+    "failOnMissingSnapshot": true,
+    "normalizeGeneratedAt": true,
+    "normalizeAbsolutePaths": true
+  }
+}

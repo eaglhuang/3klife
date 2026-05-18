@@ -46,6 +46,8 @@ from sanguo_governance_loader import (
     load_governance_completion_ledger_policy,
     load_governance_run_profiles_policy,
     load_governance_report_bundle_policy,
+    load_governance_schema_registry,
+    load_governance_harness_snapshot_policy,
     load_governance_plan_encoding_repair_policy,
     load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
@@ -212,6 +214,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     governance_run_profiles_policy = load_governance_run_profiles_policy(root)
     governance_report_bundle_policy = load_governance_report_bundle_policy(root)
     governance_plan_encoding_policy = load_governance_plan_encoding_repair_policy(root)
+    governance_schema_registry = load_governance_schema_registry(root)
+    governance_snapshot_policy = load_governance_harness_snapshot_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1537,6 +1541,60 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         if required_title_prefix and not title.startswith(f"# {required_title_prefix}"):
             raise SanguoGovernanceError(f"phase plan title prefix mismatch: {plan_path} title={title}")
 
+
+    schema_registry_entries = governance_schema_registry.get("schemaEntries")
+    if not isinstance(schema_registry_entries, list) or not schema_registry_entries:
+        raise SanguoGovernanceError("schema-governance-registry schemaEntries cannot be empty")
+    registry_ids: set[str] = set()
+    registry_sections: set[str] = set()
+    allowed_registry_formats = {"json", "jsonl"}
+    for entry in schema_registry_entries:
+        if not isinstance(entry, dict):
+            raise SanguoGovernanceError("schema-governance-registry entries must be objects")
+        entry_id = str(entry.get("id") or "").strip()
+        section = str(entry.get("section") or "").strip()
+        formats = [str(item).strip() for item in entry.get("formats") or []]
+        required_fields = [str(item).strip() for item in entry.get("requiredTopLevelFields") or []]
+        id_prefixes = [str(item).strip() for item in entry.get("idPrefixes") or []]
+        if not entry_id or entry_id in registry_ids:
+            raise SanguoGovernanceError(f"schema-governance-registry duplicate or blank entry id: {entry_id}")
+        registry_ids.add(entry_id)
+        if section not in {"policies", "rules", "catalogs", "schemas"}:
+            raise SanguoGovernanceError(f"schema-governance-registry unsupported section: {section}")
+        registry_sections.add(section)
+        if not formats or any(item not in allowed_registry_formats for item in formats):
+            raise SanguoGovernanceError(f"schema-governance-registry invalid formats for {entry_id}: {formats}")
+        if not required_fields or any(not item for item in required_fields):
+            raise SanguoGovernanceError(f"schema-governance-registry required fields cannot be empty: {entry_id}")
+        if "id" not in required_fields:
+            raise SanguoGovernanceError(f"schema-governance-registry required fields must include id: {entry_id}")
+        if not id_prefixes or any(not item for item in id_prefixes):
+            raise SanguoGovernanceError(f"schema-governance-registry id prefixes cannot be empty: {entry_id}")
+    missing_registry_sections = sorted({"policies", "rules", "catalogs", "schemas"} - registry_sections)
+    if missing_registry_sections:
+        raise SanguoGovernanceError(f"schema-governance-registry missing sections: {', '.join(missing_registry_sections)}")
+
+    harness_snapshots = governance_snapshot_policy.get("snapshots")
+    if not isinstance(harness_snapshots, list) or not harness_snapshots:
+        raise SanguoGovernanceError("policy-governance-harness-snapshots snapshots cannot be empty")
+    snapshot_ids: set[str] = set()
+    snapshot_compared_key_count = 0
+    required_snapshot_keys = {"summary", "sensors", "phaseMatrix", "reportBundle"}
+    for row in harness_snapshots:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-governance-harness-snapshots snapshot rows must be objects")
+        snapshot_id = str(row.get("id") or "").strip()
+        path_text = str(row.get("path") or "").strip()
+        compared_keys = [str(item).strip() for item in row.get("comparedPayloadKeys") or []]
+        if not snapshot_id or snapshot_id in snapshot_ids:
+            raise SanguoGovernanceError(f"policy-governance-harness-snapshots duplicate or blank id: {snapshot_id}")
+        snapshot_ids.add(snapshot_id)
+        if not path_text.endswith(".json") or not path_text.startswith("fixtures/governance-regression/"):
+            raise SanguoGovernanceError(f"policy-governance-harness-snapshots invalid path: {path_text}")
+        if set(compared_keys) != required_snapshot_keys:
+            raise SanguoGovernanceError(f"policy-governance-harness-snapshots comparedPayloadKeys mismatch: {snapshot_id}")
+        snapshot_compared_key_count += len(compared_keys)
+
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
         raise SanguoGovernanceError("policy-postgres-state-store-evaluation recommendationThresholds must be positive")
@@ -1727,6 +1785,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "governanceReportBundleFileCount": len(report_files),
         "governanceReportBundleRequiredPayloadKeyCount": len(required_payload_keys),
         "governancePlanEncodingTargetCount": len(plan_targets),
+        "governanceSchemaRegistryEntryCount": len(schema_registry_entries),
+        "governanceSchemaRegistryRequiredSectionCount": len(registry_sections),
+        "governanceHarnessSnapshotCount": len(harness_snapshots),
+        "governanceHarnessSnapshotComparedKeyCount": snapshot_compared_key_count,
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

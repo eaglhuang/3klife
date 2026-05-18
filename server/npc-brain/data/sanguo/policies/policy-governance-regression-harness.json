@@ -15,7 +15,9 @@
     "completion-ledger",
     "run-profile",
     "report-bundle",
-    "plan-encoding"
+    "plan-encoding",
+    "schema-registry",
+    "golden-snapshot"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
   "fixtureManifests": [
@@ -129,6 +131,16 @@
       "phase": 40,
       "name": "Governance Plan Encoding Repair",
       "plan": "refactor-phase40-plan.zh-TW.md"
+    },
+    {
+      "phase": 41,
+      "name": "Governance Schema Registry",
+      "plan": "refactor-phase41-plan.zh-TW.md"
+    },
+    {
+      "phase": 42,
+      "name": "Harness Golden Snapshot Diff",
+      "plan": "refactor-phase42-plan.zh-TW.md"
     }
   ]
 }

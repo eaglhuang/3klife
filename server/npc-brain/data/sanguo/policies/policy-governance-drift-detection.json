@@ -10,8 +10,8 @@
     "releaseReadinessFailureCount"
   ],
   "baselineMinimums": {
-    "expectedFileCount": 65,
-    "phasePlanCount": 21,
+    "expectedFileCount": 67,
+    "phasePlanCount": 23,
     "fixtureManifestCount": 1,
     "handoffSectionCount": 4,
     "handoffConsumerCount": 34
@@ -20,6 +20,7 @@
     "releaseReadinessFailureCount": 0,
     "missingPhasePlanCount": 0,
     "missingValidationSummaryKeyCount": 0,
-    "missingFixtureFileCount": 0
+    "missingFixtureFileCount": 0,
+    "governanceHarnessSnapshotMismatchCount": 0
   }
 }
