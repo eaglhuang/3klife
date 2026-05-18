@@ -25,12 +25,53 @@ FALSE_POSITIVE_TERMS: list[str] = []
 SINGLE_CHAR_ALIAS_ALLOWLIST: dict[str, list[str]] = {}
 
 
+def _relationship_evidence_rule_by_name(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {str(row.get("constantName") or ""): row for row in rows}
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if str(item)]
+
+
+def _alias_allowlist(value: Any) -> dict[str, list[str]]:
+    if not isinstance(value, dict):
+        return {}
+    return {
+        str(general_id): _string_list(aliases)
+        for general_id, aliases in value.items()
+        if str(general_id) and isinstance(aliases, list)
+    }
+
+
+def apply_relationship_evidence_extraction_rules(
+    governance_root: str | Path | None = None,
+    relationship_evidence_cue_rules: str | Path | None = None,
+) -> None:
+    global DIRECT_PAIR_CONFRONT_TERMS, DIRECTED_CONFRONT_TERMS, COMMAND_TERMS
+    global PROTECT_TERMS, ALLY_TERMS, FALSE_POSITIVE_TERMS, SINGLE_CHAR_ALIAS_ALLOWLIST
+
+    rows = load_relationship_evidence_extraction_rules(
+        governance_root,
+        relationship_evidence_cue_rules=relationship_evidence_cue_rules,
+    )
+    by_name = _relationship_evidence_rule_by_name(rows)
+    DIRECT_PAIR_CONFRONT_TERMS = _string_list(by_name.get("DIRECT_PAIR_CONFRONT_TERMS", {}).get("value"))
+    DIRECTED_CONFRONT_TERMS = _string_list(by_name.get("DIRECTED_CONFRONT_TERMS", {}).get("value"))
+    COMMAND_TERMS = _string_list(by_name.get("COMMAND_TERMS", {}).get("value"))
+    PROTECT_TERMS = _string_list(by_name.get("PROTECT_TERMS", {}).get("value"))
+    ALLY_TERMS = _string_list(by_name.get("ALLY_TERMS", {}).get("value"))
+    FALSE_POSITIVE_TERMS = _string_list(by_name.get("FALSE_POSITIVE_TERMS", {}).get("value"))
+    SINGLE_CHAR_ALIAS_ALLOWLIST = _alias_allowlist(by_name.get("SINGLE_CHAR_ALIAS_ALLOWLIST", {}).get("value"))
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Extract source-grounded relationship evidence edges from observed mentions.")
     parser.add_argument("--observed-mentions", default=str(DEFAULT_OBSERVED_MENTIONS_PATH))
     parser.add_argument("--stable-knowledge", default=str(DEFAULT_STABLE_KNOWLEDGE_PATH))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
-    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--governance-root", default=str(default_governance_root()), help="Sanguo governance root")
     parser.add_argument("--relationship-evidence-cue-rules", default=None, help="Override rule-relationship-evidence-extraction-cues.jsonl path")
     parser.add_argument("--relationship-type-refinement-rules", default=None, help="Override rule-relationship-type-refinement.jsonl path")
     parser.add_argument("--max-scene-participants", type=int, default=8)
