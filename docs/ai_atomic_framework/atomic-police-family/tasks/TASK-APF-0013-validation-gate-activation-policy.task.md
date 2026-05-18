@@ -69,10 +69,10 @@ TASK-APF-0010
 
 ## 驗收條件
 
-- [ ] 主計畫書新增 M7 Validation Gate Activation 章節
-- [ ] `gate-active` 被定義為 validator profile 可啟動且可產 report / finding
-- [ ] `standard` 的 blocker/advisory family 列表完成
-- [ ] 不宣稱 named scanners 已完成 runtime 產品化
+- [x] 主計畫書新增 M7 Validation Gate Activation 章節（§7 M7 row + §7.1 profile policy + §7.2 alpha 排程）
+- [x] `gate-active` 被定義為 validator profile 可啟動且可產 report / finding（specs/APF-0013 §1）
+- [x] `standard` 的 blocker/advisory family 列表完成（specs/APF-0013 §2）
+- [x] 不宣稱 named scanners 已完成 runtime 產品化（artifact_status/runtime_status 雙軌欄位已生效）
 
 ## 驗證方式
 
@@ -91,3 +91,4 @@ npm --prefix C:/Users/User/3KLife run check:encoding:touched -- --files C:/Users
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0013-* | 阻塞: TASK-APF-0010
+2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: 4 項 acceptance 全部勾選；主計畫書 §7 + §7.1 + §7.2 已補入，spec 已完整；status 維持 open 與其他 M7 卡一致 | 阻塞: upstream runtime gate 實作

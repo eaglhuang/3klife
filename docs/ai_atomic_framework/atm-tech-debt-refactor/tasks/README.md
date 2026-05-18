@@ -37,7 +37,7 @@ revised_at: 2026-05-18T00:00:00+08:00
 |------|------|
 | 已拆 | 32 / 32 |
 | 進行中 | 0 |
-| 完成 | 4 |
+| 完成 | 7 |
 
 ---
 
@@ -49,9 +49,9 @@ revised_at: 2026-05-18T00:00:00+08:00
 | [TASK-ATD-0002](./TASK-ATD-0002-next-json-repo-state-semantics.task.md) | 釐清 `atm next --json` 對 framework / adopter / unbootstrapped repo 的語意 | M0 | done | — | I1 | pending-github-issue |
 | [TASK-ATD-0003](./TASK-ATD-0003-self-governance-example-decision.task.md) | 決策 upstream self-governance 範例位置（不預設 commit `.atm/` runtime） | M0 | done | TASK-ATD-0002 | I3 | pending-rfc |
 | [TASK-ATD-0004](./TASK-ATD-0004-module-boundary-runtime-no-scripts.task.md) | 模組邊界硬化：package runtime 不 import `scripts/` | M1 | done | — | — | pending-github-issue |
-| [TASK-ATD-0005](./TASK-ATD-0005-module-boundary-deny-rule-fixture.task.md) | `validate-module-boundaries` deny rule + negative fixture | M1 | open | TASK-ATD-0004 | — | pending-github-issue |
-| [TASK-ATD-0006](./TASK-ATD-0006-eslint-baseline-warning-budget.task.md) | ESLint baseline / warning budget | M1 | open | — | — | pending-github-issue |
-| [TASK-ATD-0007](./TASK-ATD-0007-cli-shared-result-types.task.md) | CLI 公共型別與 shared command result 收斂 | M1 | open | TASK-ATD-0006 | I1 | pending-github-issue |
+| [TASK-ATD-0005](./TASK-ATD-0005-module-boundary-deny-rule-fixture.task.md) | `validate-module-boundaries` deny rule + negative fixture | M1 | done | TASK-ATD-0004 | — | pending-github-issue |
+| [TASK-ATD-0006](./TASK-ATD-0006-eslint-baseline-warning-budget.task.md) | ESLint baseline / warning budget | M1 | done | — | — | pending-github-issue |
+| [TASK-ATD-0007](./TASK-ATD-0007-cli-shared-result-types.task.md) | CLI 公共型別與 shared command result 收斂 | M1 | done | TASK-ATD-0006 | I1 | pending-github-issue |
 | [TASK-ATD-0008](./TASK-ATD-0008-framework-version-source.task.md) | framework version 來源改為 package / release manifest | M1 | open | — | I6 | pending-github-issue |
 | [TASK-ATD-0009](./TASK-ATD-0009-atm-env-registry-docs.task.md) | 環境變數 registry 與 docs | M1 | open | — | — | pending-github-issue |
 | [TASK-ATD-0010](./TASK-ATD-0010-host-git-hook-ci-recipe.task.md) | Git hook / CI enforcement 改為 opt-in host recipe | M1 | open | — | I4 | pending-github-issue |

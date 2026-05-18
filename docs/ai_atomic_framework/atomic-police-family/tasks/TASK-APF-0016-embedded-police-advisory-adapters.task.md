@@ -72,10 +72,10 @@ TASK-APF-0014
 
 ## 驗收條件
 
-- [ ] advisory adapter 會被 gate runner 呼叫
-- [ ] 有 finding 時 `validate:standard` 不 fail，但 report 必須記錄
-- [ ] adapter 不直接 mutate registry
-- [ ] 每個 family 都有 positive / negative fixture
+- [ ] advisory adapter 會被 gate runner 呼叫（**runtime 行為**：需 gate runner 接線）
+- [ ] 有 finding 時 `validate:standard` 不 fail，但 report 必須記錄（**runtime 行為**：需 profile wiring）
+- [x] adapter 不直接 mutate registry（specs/APF-0016 §3 已明定原則）
+- [ ] 每個 family 都有 positive / negative fixture（**runtime fixture 檔案**：需 fixtures 實際落地）
 
 ## 驗證方式
 
@@ -94,3 +94,4 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police-family
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0016-* | 阻塞: TASK-APF-0014
+2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: spec §3 「不 mutate registry」原則已勾；其餘 3 項屬 runtime adapter / fixture，待上游 adapter 實作後再驗 | 阻塞: upstream adapter 實作

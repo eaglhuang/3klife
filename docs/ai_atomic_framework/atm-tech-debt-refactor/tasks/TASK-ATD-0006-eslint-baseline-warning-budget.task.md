@@ -3,7 +3,11 @@ doc_id: doc_other_0606
 task_id: TASK-ATD-0006
 title: ESLint baseline / warning budget
 milestone: M1
-status: open
+status: done
+started_at: 2026-05-18T13:00:00+08:00
+started_by_agent: ClaudeCode_Sonnet4.6
+completed_at: 2026-05-18T15:00:00+08:00
+completed_by_agent: ClaudeCode_Sonnet4.6
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -99,3 +103,9 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+
+2026-05-18 | 狀態: done | 完成:
+- eslint.config.mjs 加入 .atm-temp/** ignore
+- packages/cli/src/commands/agent-pack.ts 合併重複 import
+- tests/agent-pack/install-uninstall-roundtrip.test.ts 合併重複 import
+- eslint . --max-warnings 0 → 0 errors, 0 warnings; validate:standard passed=53/53

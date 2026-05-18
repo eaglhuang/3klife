@@ -69,10 +69,10 @@ TASK-APF-0002、TASK-APF-0012、TASK-APF-0013
 
 ## 驗收條件
 
-- [ ] report 包含 `schemaId="atm.policeFamilyGateReport"` 與 `specVersion="0.1.0"`
-- [ ] `findings / advisoryFindings / blockingFindings` 分流清楚
-- [ ] PoliceFinding 預設放在 `ReviewAdvisoryFinding.metadata.policeFinding`
-- [ ] `payload` 僅保留為未來 additive proposal
+- [x] report 包含 `schemaId="atm.policeFamilyGateReport"` 與 `specVersion="0.1.0"`（specs/APF-0014 §1）
+- [x] `findings / advisoryFindings / blockingFindings` 分流清楚（specs/APF-0014 §1）
+- [x] PoliceFinding 預設放在 `ReviewAdvisoryFinding.metadata.policeFinding`（specs/APF-0014 §3）
+- [x] `payload` 僅保留為未來 additive proposal（specs/APF-0014 §3）
 
 ## 驗證方式
 
@@ -91,3 +91,4 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:review-advisory
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0014-* | 阻塞: TASK-APF-0002, TASK-APF-0012, TASK-APF-0013
+2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: 4 項 schema design acceptance 全部勾選；upstream schema proposal artifact 已完整；status 維持 open 直到 upstream API 套用 | 阻塞: upstream API 套用

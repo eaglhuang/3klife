@@ -70,10 +70,10 @@ TASK-APF-0014、TASK-APF-0017
 
 ## 驗收條件
 
-- [ ] `validate:review-advisory` 能吃進 `metadata.policeFinding`
-- [ ] advisory finding 不會直接產 approved human decision
-- [ ] 非 lifecycle police 不可 quarantine
-- [ ] protected public fixtures 不含 3KLife / Cocos / private path
+- [ ] `validate:review-advisory` 能吃進 `metadata.policeFinding`（**runtime 驗證**：需 fixture 落地與 validator 接讀）
+- [x] advisory finding 不會直接產 approved human decision（specs/APF-0018 §3 negative fixture `advisory-bypasses-human-review` 已明定原則）
+- [x] 非 lifecycle police 不可 quarantine（specs/APF-0018 §3 negative fixture `non-lifecycle-quarantine` 已明定原則）
+- [x] protected public fixtures 不含 3KLife / Cocos / private path（specs/APF-0018 §3 negative fixture `private-path-in-upstream-finding` 已明定原則）
 
 ## 驗證方式
 
@@ -93,3 +93,4 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police-family
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0018-* | 阻塞: TASK-APF-0014, TASK-APF-0017
+2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: spec §3 negative fixture 三大原則（不繞 HumanReviewDecision、非 lifecycle 不 quarantine、不含 private path）已勾；validate:review-advisory 接讀 metadata.policeFinding 屬 runtime fixture 驗證 | 阻塞: upstream fixture 落地

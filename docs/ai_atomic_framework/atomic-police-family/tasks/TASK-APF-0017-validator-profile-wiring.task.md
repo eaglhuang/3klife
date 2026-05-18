@@ -70,10 +70,10 @@ TASK-APF-0015、TASK-APF-0016
 
 ## 驗收條件
 
-- [ ] `npm run validate:standard` 會執行 `validate-police-family`
-- [ ] `npm run validate:full` 會執行 `validate-police-family` 與既有 `validate:police`
-- [ ] blocker fixture 失敗時 profile exit non-zero
-- [ ] advisory finding 不造成 standard fail，但 report 可追蹤
+- [ ] `npm run validate:standard` 會執行 `validate-police-family`（**runtime profile wiring**）
+- [ ] `npm run validate:full` 會執行 `validate-police-family` 與既有 `validate:police`（**runtime profile wiring**）
+- [ ] blocker fixture 失敗時 profile exit non-zero（**runtime 行為**）
+- [ ] advisory finding 不造成 standard fail，但 report 可追蹤（**runtime 行為**）
 
 ## 驗證方式
 
@@ -93,3 +93,4 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:full
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0017-* | 阻塞: TASK-APF-0015, TASK-APF-0016
+2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: specs/APF-0017 已備好 wiring 設計（npm script + validator id + profile policy）；4 項 acceptance 皆為 runtime profile wiring，需上游修改 package.json + validators.config.json 後才能驗證 | 阻塞: upstream profile wiring 實作

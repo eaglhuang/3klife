@@ -3,7 +3,11 @@ doc_id: doc_other_0607
 task_id: TASK-ATD-0007
 title: CLI 公共型別與 shared command result 收斂
 milestone: M1
-status: open
+status: done
+started_at: 2026-05-18T13:00:00+08:00
+started_by_agent: ClaudeCode_Sonnet4.6
+completed_at: 2026-05-18T15:30:00+08:00
+completed_by_agent: ClaudeCode_Sonnet4.6
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -98,3 +102,10 @@ TASK-ATD-0006
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0006
+
+2026-05-18 | 狀態: done | 完成:
+- shared.ts 新增 MessageLevel / CommandMessage / CommandResult 介面
+- message/makeResult/writeResult/formatPrettyResult/configPathFor/relativePathFrom/ensureAtmDirectory/readJsonFile/writeJsonFile 替換 any → 明確型別
+- 修正 4 個 caller site (next.ts, self-host-alpha.ts, welcome.ts)
+- typecheck: 只剩 6 個 pre-existing scripts/ 錯誤；packages/ 全部清零
+- validate:standard passed=53/53; validate:cli ok (23 commands)

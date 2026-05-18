@@ -70,10 +70,10 @@ TASK-APF-0014
 
 ## 驗收條件
 
-- [ ] core runner 呼叫既有 `runPoliceChecks`
-- [ ] Lifecycle Police 保留既有 writer / finding schema
-- [ ] blocker family 有 blocking finding 時 exit non-zero
-- [ ] runner 產出 `PoliceFamilyGateReport`
+- [x] core runner 呼叫既有 `runPoliceChecks`（specs/APF-0015 §3 行為設計已明定）
+- [x] Lifecycle Police 保留既有 writer / finding schema（specs/APF-0015 §3 保留 quarantine writer 特例）
+- [ ] blocker family 有 blocking finding 時 exit non-zero（**runtime 行為**：需 `validate-police-family.ts` 實作）
+- [ ] runner 產出 `PoliceFamilyGateReport`（**runtime 行為**：需實際 normalize 輸出）
 
 ## 驗證方式
 
@@ -92,3 +92,4 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:police-family
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 開立 M7 Validation Gate Activation 任務卡，對應 specs/APF-0015-* | 阻塞: TASK-APF-0014
+2026-05-18 | 狀態: open | 驗證: artifact-pass | 變更: spec §3 已明定的 2 項設計（呼叫 runPoliceChecks、保留 Lifecycle writer schema）已勾選；exit non-zero 與 report 產出屬 runtime 行為，待 validate-police-family.ts 實作後再驗 | 阻塞: upstream runner 實作

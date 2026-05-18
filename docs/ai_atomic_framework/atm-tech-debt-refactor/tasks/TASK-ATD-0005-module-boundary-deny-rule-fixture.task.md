@@ -3,7 +3,11 @@ doc_id: doc_other_0605
 task_id: TASK-ATD-0005
 title: `validate-module-boundaries` deny rule + negative fixture
 milestone: M1
-status: open
+status: done
+started_at: 2026-05-18T13:00:00+08:00
+started_by_agent: ClaudeCode_Sonnet4.6
+completed_at: 2026-05-18T15:00:00+08:00
+completed_by_agent: ClaudeCode_Sonnet4.6
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -99,3 +103,8 @@ TASK-ATD-0004
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0004
+
+2026-05-18 | 狀態: done | 完成:
+- scripts/validate-module-boundaries.ts 加入 resolvesIntoScripts() helper + deny rule loop
+- fixtures/module-boundaries/deny-runtime-scripts.fixture.ts 新增 negative fixture
+- validate:standard passed=53/53
