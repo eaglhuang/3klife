@@ -47,6 +47,8 @@ last_updated: 2026-05-19T00:00:00+08:00
 | [TASK-APO-0026](./TASK-APO-0026-codex-official-integration.task.md) | Codex editor integration 正式化 | M3 | done | 0006 |
 | [TASK-APO-0027](./TASK-APO-0027-pinned-runner-auto-install.task.md) | Pinned Runner Auto-Install During Init/Bootstrap | M4 | done | 0025 |
 | [TASK-APO-0028](./TASK-APO-0028-first-use-user-notice.task.md) | First-use user notice 與 suggested actions | M4 | done | 0027 |
+| [TASK-APO-0029](./TASK-APO-0029-atm-task-plan-import-flow.task.md) | ATM Task Plan Import and Work Item Opening Flow | M5 | open | 0028 |
+| [TASK-APO-0030](./TASK-APO-0030-python-language-adapter-plugin.task.md) | Python Language Adapter / Plugin | M5 | open | 0028 |
 
 ## 維護規則
 

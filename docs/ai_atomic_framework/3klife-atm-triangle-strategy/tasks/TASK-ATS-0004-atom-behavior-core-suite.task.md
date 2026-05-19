@@ -4,7 +4,7 @@ task_id: TASK-ATS-0004
 title: Atom behavior core suite on npc-brain
 owner: atm-core
 priority: P0
-status: open
+status: in_progress
 milestone: M3
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: TASK-ATS-0003
@@ -47,3 +47,18 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+<!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:START -->
+## 2026-05-19 驗收重估
+
+狀態：in_progress。
+
+子驗收：
+- TASK-ATS-0004A Explicit ATM Prompt Smoke：pass。
+- TASK-ATS-0004B Natural Prompt Auto Skill Trigger：partial fail。
+- TASK-ATS-0004C Python Pipeline Ranking Quality：pass as advisory, not yet fully deterministic。
+- TASK-ATS-0004D Candidate Ranking Artifact：implemented upstream, needs npc-brain retest。
+- TASK-ATS-0004E Source Inventory + Police Evidence：implemented upstream, needs npc-brain retest。
+- TASK-ATS-0004F Python-Only Blocker Neutrality：implemented upstream, needs npc-brain retest。
+
+下一步：刷新 npc-brain 的 pinned ATM release，重跑「明確說 ATM」與「完全不說 ATM」兩種 prompt，確認兩者都能產生或引用 candidate ranking artifact、source inventory artifact、police artifact 與 split / atomize / infect route。
+<!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:END -->

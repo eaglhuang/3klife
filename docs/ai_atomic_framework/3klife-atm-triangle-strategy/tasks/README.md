@@ -21,7 +21,7 @@ created_by_agent: codex
 |---|---|---|---|---|
 | [TASK-ATS-0001](./TASK-ATS-0001-docs-language-boundary-and-move.task.md) | Public docs language gate and strategy directory migration | M0 | completed | — |
 | [TASK-ATS-0002](./TASK-ATS-0002-npc-brain-baseline-fixture-inventory.task.md) | npc-brain baseline freeze and fixture inventory | M1 | completed | TASK-ATS-0001 |
-| [TASK-ATS-0003](./TASK-ATS-0003-official-onboarding-smoke.task.md) | npc-brain official ATM onboarding smoke | M2 | open | TASK-ATS-0002 |
+| [TASK-ATS-0003](./TASK-ATS-0003-official-onboarding-smoke.task.md) | npc-brain official ATM onboarding smoke | M2 | in_progress | TASK-ATS-0002 |
 | [TASK-ATS-0004](./TASK-ATS-0004-atom-behavior-core-suite.task.md) | Atom behavior core suite on npc-brain | M3 | open | TASK-ATS-0003 |
 | [TASK-ATS-0005](./TASK-ATS-0005-legacy-python-infect-atomize.task.md) | Legacy Python infect and atomize validation | M4 | open | TASK-ATS-0004 |
 | [TASK-ATS-0006](./TASK-ATS-0006-atomic-map-decomposition-validation.task.md) | Atomic Map decomposition and replacement validation | M5 | open | TASK-ATS-0005 |
@@ -33,3 +33,6 @@ created_by_agent: codex
 ## 任務排序原則
 
 任務卡代號已依執行優先序重排。越小的編號越早做：先處理文件邊界與 baseline，再做 onboarding，接著驗證十種原子行為、legacy Python strangler、Atomic Map、evolution，最後才做 sentinel、upstream repair 與 release gate。
+## 2026-05-19 Status Update
+
+TASK-ATS-0003 is now in progress. The first natural-language Codex smoke test is a partial pass: the Agent discovered ATM routing without explicit user prompting, ran `node atm.mjs next --json`, executed the onboarding refresh command, then returned to the original data-pipeline progress request. Remaining M2 work is to refresh npc-brain with the latest first-use notice contract and re-run the same style of black-box prompt.

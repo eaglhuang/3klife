@@ -232,6 +232,36 @@ npc-brain 在治理轉換期應視為雙軌運作，而不是單一路徑：
 - 3KLife 的實驗成果可以轉成 upstream RFC、fixture、validator 或 docs patch。
 - 仍需留在 3KLife 的內容標為 local governance，不污染 AI-Atomic public surface。
 
+
+## 5.1 2026-05-19 測試狀態更新
+
+本次測試屬於 TASK-ATS-0003 / M2 official onboarding smoke 的自然語言黑箱測試。使用者沒有提示 `AGENTS.md`、`README.md`、`atm.mjs` 或 ATM 規則，只下普通需求：「請幫我看看目前專案的資料管線進度已經進行到哪裡了？」
+
+判定結果：M2 進行中，讀取型 onboarding smoke partial pass。
+
+已通過：
+- Agent 自行做前置檢查，讀取 README / 專案入口資訊。
+- Agent 自行執行 `node atm.mjs next --json`。
+- Agent 照 ATM 回傳結果執行 `node atm.mjs atm-chart render --cwd . --json`。
+- Agent 完成 onboarding refresh 後，有回到使用者原始需求，整理資料管線進度。
+- 使用者截圖顯示資料管線已被整理為可讀摘要，包含目前約在「內容擴充 + residual 修補 + canonical 發布前治理」階段、pipelineReliability=100%、ready_events 數量偏低等重點。
+
+尚未完全通過：
+- ATM 治理提示存在感偏弱；Agent 有走 ATM route，但使用者不一定清楚「系統已加入 ATM 治理」這件事。
+- 目前 npc-brain root `AGENTS.md` / README 仍是較早版入口文案，尚未包含最新 `ATM_USER_NOTICE` / `evidence.userNotice` 顯示規則。
+- `.atm/`、`AGENTS.md`、`atm.mjs`、README 仍是 adopter onboarding 變更，尚未視為正式完成狀態。
+
+下一步測試：
+- 完成 TASK-ATS-0003B：使用最新版 pinned runner 重新 refresh npc-brain，確認 root README / AGENTS 入口文案包含 user notice 顯示規則。
+- 再開一個全新 Codex 對話，只下自然語言需求，不提示 ATM，驗證是否同時做到：顯示 ATM welcome/user notice、執行 ATM next route、回到使用者原始任務。
+- 若 TASK-ATS-0003B 通過，TASK-ATS-0003 可關閉，進入 TASK-ATS-0004 atom behavior core suite。
+
+大幅修改 npc-brain 管線的解凍條件：
+- TASK-ATS-0003 完成，表示 onboarding route 可以穩定接手自然語言需求。
+- TASK-ATS-0004 至少完成 minimum dry-run suite，確認 split / merge / compose / dedup-merge / sweep / expire 在 npc-brain fixture 上不會直接破壞 legacy surface。
+- 針對真正會動到 legacy Python 管線的工作，需等 TASK-ATS-0005 的 infect + atomize dry-run proposal 產出並人工 review 後再進入大幅修改。
+
+因此目前可以做的是：read-only 分析、fixture/evidence 補強、小型非破壞性修補；還不建議直接大幅改寫 `pipelines/sanguo-rag/*.py`。
 ## 6. AI-Atomic docs 中文文件處置結論
 
 本輪掃描 `C:/Users/User/AI-Atomic-Framework/docs/**/*.md` 共 35 份 Markdown。只有 1 份含中文內容：
@@ -289,3 +319,72 @@ Read README.md if present, then run "node atm.mjs next --json" from the reposito
 ```
 
 若要驗證 AI-Atomic docs public-language gate，可在 AI-Atomic-Framework 執行 CJK 掃描腳本，期望只剩 `docs/ATOM_EVOLUTION_PLAN.md` 或其英文化替代進度。
+<!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:START -->
+## 5.2 2026-05-19 TASK-ATS-0004 驗收重估：顯式 ATM prompt 通過，自然黑箱仍需補強
+
+### 測試判定
+
+這次測試不能算「完全黑箱成功」，因為 prompt 裡有明確說「請用 ATM」。
+但它可以算一個重要的 ATM 顯式引導成功測試。
+
+已通過：
+- Explicit ATM Prompt Compliance：使用者明確要求「用 ATM」時，Agent 有先開 guidance session。
+- Blocker Awareness：Agent 有發現 package-json-missing、docs/QUICK_START.md 缺失、docs/keep.summary.md 缺失。
+- Graceful Fallback：Agent 沒有因為缺檔卡死，而是改走 docs-first / inventory-first 盤點。
+- Return To User Intent：Agent 最後有回到原需求，排序哪些 Python pipeline 最值得整理。
+- ATM-Style Reasoning：第二輪有提出 atom-style 拆分計畫、低風險切法、共同 gate。
+
+尚未通過：
+- Natural Black-Box Skill Trigger：使用者不提 ATM 時，Agent 仍可能用自己的靜態分析方式繞過治理。
+- Deterministic Candidate Ranking：目前排序品質可用，但尚未全部來自 atm candidates rank artifact。
+- Source Inventory Artifact：需要正式 ATM source inventory report。
+- Police Artifact：需要 decomposition / atomization / guidance drift police report。
+- Python-Only Adopter Neutrality：ATM 不能把 Python-only adopter 的 package-json-missing 當 release blocker。
+
+結論：2026-05-19 測試顯示，ATM 在明確提示下已能導引 Agent 進入治理式分析，且能在缺少部分文件時回到使用者任務。但自然語句自動觸發、deterministic candidate ranking、source inventory / police artifact 尚未完全完成，因此 TASK-ATS-0004 維持 in_progress。
+
+### TASK-ATS-0004 子驗收狀態
+
+| 子項 | 狀態 | 判定 |
+|---|---|---|
+| TASK-ATS-0004A Explicit ATM Prompt Smoke | pass | 明確要求用 ATM 時，Agent 會進入 guidance session。 |
+| TASK-ATS-0004B Natural Prompt Auto Skill Trigger | partial fail | 自然口語 prompt 仍可能漏接 ATM。 |
+| TASK-ATS-0004C Python Pipeline Ranking Quality | pass-advisory | 排序品質可用，但還不是完全 deterministic artifact。 |
+| TASK-ATS-0004D Candidate Ranking Artifact | implemented-upstream / needs adopter retest | AI-Atomic 已新增 atm candidates rank，npc-brain 需刷新 release 後重測。 |
+| TASK-ATS-0004E Source Inventory + Police Evidence | implemented-upstream / needs adopter retest | atm candidates rank 會輸出 source inventory 與 police-family report。 |
+| TASK-ATS-0004F Python-Only Blocker Neutrality | implemented-upstream / needs adopter retest | package-json-missing 在 Python-only adopter 應降為 advisory。 |
+
+### 更新後 TASK-ATS-0004 里程碑
+
+1. TASK-ATS-0004A：回寫顯式 ATM prompt 測試證據，標記 pass。
+2. TASK-ATS-0004B：回寫自然黑箱 prompt 漏接證據，標記 partial fail。
+3. TASK-ATS-0004C：新增全英文 atm-governance-router skill。
+4. TASK-ATS-0004D：新增 legacy-candidate-ranking intent。
+5. TASK-ATS-0004E：修正 Python-only adopter 的 package-json-missing blocker 語意。
+6. TASK-ATS-0004F：新增 guided fallback contract：missingDocs、fallbackSources、continuedOriginalRequest。
+7. TASK-ATS-0004G：新增 atm candidates rank。
+8. TASK-ATS-0004H：把 candidates rank 接到 source inventory 與 police family。
+9. TASK-ATS-0004I：新增 Guidance Drift Police 與 skill miss learning loop。
+10. TASK-ATS-0004J：刷新 npc-brain 後重跑兩種測試：明確說 ATM、完全不說 ATM。
+
+### 下一輪驗收標準
+
+明確 ATM prompt：
+```text
+請用 ATM 幫我看看目前這個 repo 裡，哪些 Python 資料管線最亂、最值得先整理，先幫我排一下優先順序。
+```
+
+自然黑箱 prompt：
+```text
+請幫我看看目前這個 repo 裡，哪些 Python 資料管線最亂、最值得先整理，先幫我排一下優先順序。
+```
+
+兩者最後都應該產生或引用：
+- ATM guidance result
+- candidate ranking artifact
+- source inventory artifact
+- police artifact
+- recommended split / atomize / infect route
+
+下一輪重點不是重做整套 ATM，而是補三個缺口：讓 skill 自然觸發、讓 ranking deterministic artifact 化、讓 Python-only host 不被 Node 假設卡住。
+<!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:END -->

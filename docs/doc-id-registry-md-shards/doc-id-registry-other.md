@@ -269,3 +269,5 @@
 | `doc_other_0646` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0025-existing-root-entry-injection.task.md | TASK-APO-0025 — 既有 README / AGENTS 的 loop-free ATM 入口注入 |
 | `doc_other_0647` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0026-codex-official-integration.task.md | TASK-APO-0026 — Codex editor integration 正式化 |
 | `doc_other_0648` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-pinned-runner-auto-install.task.md | TASK-APO-0027 — Pinned Runner Auto-Install During Init/Bootstrap |
+| `doc_other_0719` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0029-atm-task-plan-import-flow.task.md | TASK-APO-0029 - ATM Task Plan Import and Work Item Opening Flow |
+| `doc_other_0720` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0030-python-language-adapter-plugin.task.md | TASK-APO-0030 - Python Language Adapter / Plugin |

@@ -1984,5 +1984,17 @@
     "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0053-validator-profile-naming-advisory-only-hardening.md",
     "title": "APF-0053 Validator profile naming and advisory-only hardening",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0719",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0029-atm-task-plan-import-flow.task.md",
+    "title": "TASK-APO-0029 - ATM Task Plan Import and Work Item Opening Flow",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0720",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0030-python-language-adapter-plugin.task.md",
+    "title": "TASK-APO-0030 - Python Language Adapter / Plugin",
+    "category": "other"
   }
 ]
