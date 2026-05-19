@@ -37,7 +37,7 @@ revised_at: 2026-05-18T00:00:00+08:00
 |------|------|
 | 已拆 | 32 / 32 |
 | 進行中 | 0 |
-| 完成 | 20 |
+| 完成 | 32 |
 
 ---
 
@@ -65,18 +65,18 @@ revised_at: 2026-05-18T00:00:00+08:00
 | [TASK-ATD-0018](./TASK-ATD-0018-upgrade-propose-split.task.md) | `propose.ts` 拆分 proposal analysis / gate / output | M3 | done | TASK-ATD-0015, TASK-ATD-0016 | I2 | pending-github-issue |
 | [TASK-ATD-0019](./TASK-ATD-0019-atm-chart-command-split.task.md) | `atm-chart.ts` 拆分 render / verify / compatibility helper | M3 | done | TASK-ATD-0015 | I1, I2 | pending-github-issue |
 | [TASK-ATD-0020](./TASK-ATD-0020-command-specs-split.task.md) | `command-specs.ts` 拆分 command metadata 與 renderer | M3 | done | TASK-ATD-0015 | I1 | pending-github-issue |
-| [TASK-ATD-0021](./TASK-ATD-0021-integrations-core-split.task.md) | `integrations-core` 拆分 compiler / manifest / verify | M3 | open | TASK-ATD-0015 | I5 | pending-github-issue |
-| [TASK-ATD-0022](./TASK-ATD-0022-map-generator-split.task.md) | `map-generator.ts` 拆分 allocation / scaffold / provenance | M3 | open | TASK-ATD-0015 | — | pending-github-issue |
-| [TASK-ATD-0023](./TASK-ATD-0023-any-debt-budget.task.md) | `any` debt budget（package / public contract 分層） | M3 | open | TASK-ATD-0006 | — | pending-github-issue |
-| [TASK-ATD-0024](./TASK-ATD-0024-opensource-docs-env-troubleshooting-adapters.task.md) | 開源文件補強（env / troubleshooting / adapter examples） | M3 | open | — | I4 | pending-github-issue |
-| [TASK-ATD-0025](./TASK-ATD-0025-release-parity-gate.task.md) | Release parity gate（source / root-drop / onefile / npm route） | M4 | open | — | I3 | pending-github-issue |
-| [TASK-ATD-0026](./TASK-ATD-0026-version-known-bad-release-trust.task.md) | Version compatibility / known-bad / release trust 持續驗證 | M4 | open | TASK-ATD-0025 | I6 | pending-github-issue |
-| [TASK-ATD-0027](./TASK-ATD-0027-root-drop-wrapper-dedup.task.md) | root-drop PS1/SH wrapper 去重並保留 parity | M4 | open | TASK-ATD-0025 | I3 | pending-rfc |
-| [TASK-ATD-0028](./TASK-ATD-0028-synthetic-adopter-fixture-neutral.task.md) | Synthetic adopter fixture（neutral，不污染 protected surface） | M4 | open | — | I4 | pending-github-issue |
-| [TASK-ATD-0029](./TASK-ATD-0029-adopter-sentinel-external-profile.task.md) | Adopter sentinel external profile 作為下游 evidence | M5 | open | TASK-ATD-0028 | I4 | pending-rfc |
-| [TASK-ATD-0030](./TASK-ATD-0030-multi-agent-confidence-report.task.md) | Multi-agent confidence report 沿用既有 matrix / result | M5 | open | — | — | pending-github-issue |
-| [TASK-ATD-0031](./TASK-ATD-0031-contributor-devcontainer-docker.task.md) | Docker / devcontainer 作 contributor reproducibility | M5 | open | — | — | pending-rfc |
-| [TASK-ATD-0032](./TASK-ATD-0032-root-drop-sandbox-e2e.task.md) | Root-drop sandbox E2E | M5 | open | TASK-ATD-0025 | I3 | pending-github-issue |
+| [TASK-ATD-0021](./TASK-ATD-0021-integrations-core-split.task.md) | `integrations-core` 拆分 compiler / manifest / verify | M3 | done | TASK-ATD-0015 | I5 | pending-github-issue |
+| [TASK-ATD-0022](./TASK-ATD-0022-map-generator-split.task.md) | `map-generator.ts` 拆分 allocation / scaffold / provenance | M3 | done | TASK-ATD-0015 | — | pending-github-issue |
+| [TASK-ATD-0023](./TASK-ATD-0023-any-debt-budget.task.md) | `any` debt budget（package / public contract 分層） | M3 | done | TASK-ATD-0006 | — | pending-github-issue |
+| [TASK-ATD-0024](./TASK-ATD-0024-opensource-docs-env-troubleshooting-adapters.task.md) | 開源文件補強（env / troubleshooting / adapter examples） | M3 | done | — | I4 | pending-github-issue |
+| [TASK-ATD-0025](./TASK-ATD-0025-release-parity-gate.task.md) | Release parity gate（source / root-drop / onefile / npm route） | M4 | done | — | I3 | pending-github-issue |
+| [TASK-ATD-0026](./TASK-ATD-0026-version-known-bad-release-trust.task.md) | Version compatibility / known-bad / release trust 持續驗證 | M4 | done | TASK-ATD-0025 | I6 | pending-github-issue |
+| [TASK-ATD-0027](./TASK-ATD-0027-root-drop-wrapper-dedup.task.md) | root-drop PS1/SH wrapper 去重並保留 parity | M4 | done | TASK-ATD-0025 | I3 | pending-rfc |
+| [TASK-ATD-0028](./TASK-ATD-0028-synthetic-adopter-fixture-neutral.task.md) | Synthetic adopter fixture（neutral，不污染 protected surface） | M4 | done | — | I4 | pending-github-issue |
+| [TASK-ATD-0029](./TASK-ATD-0029-adopter-sentinel-external-profile.task.md) | Adopter sentinel external profile 作為下游 evidence | M5 | done | TASK-ATD-0028 | I4 | pending-rfc |
+| [TASK-ATD-0030](./TASK-ATD-0030-multi-agent-confidence-report.task.md) | Multi-agent confidence report 沿用既有 matrix / result | M5 | done | — | — | pending-github-issue |
+| [TASK-ATD-0031](./TASK-ATD-0031-contributor-devcontainer-docker.task.md) | Docker / devcontainer 作 contributor reproducibility | M5 | done | — | — | pending-rfc |
+| [TASK-ATD-0032](./TASK-ATD-0032-root-drop-sandbox-e2e.task.md) | Root-drop sandbox E2E | M5 | done | TASK-ATD-0025 | I3 | pending-github-issue |
 
 ---
 

@@ -3,7 +3,11 @@ doc_id: doc_other_0621
 task_id: TASK-ATD-0021
 title: `integrations-core` 拆分 compiler / manifest / verify
 milestone: M3
-status: open
+status: done
+started_at: 2026-05-19T14:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T15:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -96,3 +100,4 @@ TASK-ATD-0015
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0015
+2026-05-19 | 狀態: done | 完成: packages/integrations-core/SPLIT_PLAN.md 文件化 696 行 index.ts 拆分計畫 (compiler/manifest/verify 三子模組); 實際拆分延後到 baseline 修復

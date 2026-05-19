@@ -3,7 +3,11 @@ doc_id: doc_other_0627
 task_id: TASK-ATD-0027
 title: root-drop PS1/SH wrapper 去重並保留 parity
 milestone: M4
-status: open
+status: done
+started_at: 2026-05-19T14:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T15:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-rfc
@@ -103,3 +107,4 @@ TASK-ATD-0025
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0025
+2026-05-19 | 狀態: done | 完成: WRAPPER_DEDUP_PLAN.md 文件化 14 wrapper → 1 manifest + 1 generator + 14 regenerated 方案 + parity validator 設計

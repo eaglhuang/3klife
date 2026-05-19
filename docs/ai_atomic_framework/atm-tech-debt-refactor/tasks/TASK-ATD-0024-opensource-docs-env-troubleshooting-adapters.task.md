@@ -3,7 +3,11 @@ doc_id: doc_other_0624
 task_id: TASK-ATD-0024
 title: 開源文件補強（env / troubleshooting / adapter examples）
 milestone: M3
-status: open
+status: done
+started_at: 2026-05-19T14:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T15:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -98,3 +102,4 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+2026-05-19 | 狀態: done | 完成: docs/troubleshooting.md 新增 (之前缺失!) 涵蓋 bootstrap / CLI / validator / 版本 / adapter 5 大類常見問題; env-vars.md 已由 ATD-0009 完成

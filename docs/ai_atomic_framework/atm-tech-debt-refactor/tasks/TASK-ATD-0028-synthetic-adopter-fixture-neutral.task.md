@@ -3,7 +3,11 @@ doc_id: doc_other_0628
 task_id: TASK-ATD-0028
 title: Synthetic adopter fixture（neutral，不污染 protected surface）
 milestone: M4
-status: open
+status: done
+started_at: 2026-05-19T14:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T15:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -98,3 +102,4 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+2026-05-19 | 狀態: done | 完成: fixtures/adopter-sentinel/ 新建 (之前缺失!) + neutrality 契約 README + canonical synthetic-adopter.fixture.json (全部 generic placeholders, 沒有 3KLife/npc-brain/Cocos)

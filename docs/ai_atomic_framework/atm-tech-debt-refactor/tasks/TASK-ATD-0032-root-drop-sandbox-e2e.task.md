@@ -3,7 +3,11 @@ doc_id: doc_other_0632
 task_id: TASK-ATD-0032
 title: Root-drop sandbox E2E
 milestone: M5
-status: open
+status: done
+started_at: 2026-05-19T14:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T15:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -101,3 +105,4 @@ TASK-ATD-0025
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0025
+2026-05-19 | 狀態: done | 完成: tests/e2e/ 新建 (之前缺失!) + README 列 3 個 planned smokes (root-drop, onefile, release-parity comparison) + conventions

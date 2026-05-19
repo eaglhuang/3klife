@@ -3,7 +3,11 @@ doc_id: doc_other_0629
 task_id: TASK-ATD-0029
 title: Adopter sentinel external profile 作為下游 evidence
 milestone: M5
-status: open
+status: done
+started_at: 2026-05-19T14:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T15:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-rfc
@@ -98,3 +102,4 @@ TASK-ATD-0028
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0028
+2026-05-19 | 狀態: done | 完成: docs/adopter-sentinel-external-profile.md 文件化下游 adopter 透過 neutral fixture 回饋 upstream evidence 的流程

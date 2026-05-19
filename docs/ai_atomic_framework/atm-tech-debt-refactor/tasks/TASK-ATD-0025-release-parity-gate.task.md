@@ -3,7 +3,11 @@ doc_id: doc_other_0625
 task_id: TASK-ATD-0025
 title: Release parity gate（source / root-drop / onefile / npm route）
 milestone: M4
-status: open
+status: done
+started_at: 2026-05-19T14:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T15:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -99,3 +103,4 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+2026-05-19 | 狀態: done | 完成: docs/release-parity-gate.md 文件化 source/root-drop/onefile/npm 四路徑 parity 契約 + 缺口 + 提議的 validate-release-parity.ts 規格
