@@ -1,10 +1,10 @@
 ---
 doc_id: doc_other_0237
 task_id: TASK-ATS-0007
-title: Atom evolution and polymorphize validation
+title: Atomic map equivalence and rollout validation
 owner: atm-core
 priority: P1
-status: open
+status: in_progress
 milestone: M6
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: TASK-ATS-0006
@@ -12,33 +12,36 @@ created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
 ---
 
-# TASK-ATS-0007 — Atom evolution and polymorphize validation
+# TASK-ATS-0007：Atomic map equivalence and rollout validation
 
-## 背景
+## 目標
 
-對接 AI-Atomic-Framework 的 ATOM_EVOLUTION_PLAN，驗證 evolve、polymorphize 與 map-level evolution 只能產生可審查 proposal。
+在 `TASK-ATS-0006` 已經產出 canonical Atomic Map dry-run proposal 後，驗證該 map 是否能進入 equivalence、review-advisory、replacement lane、以及後續 evolution / polymorphize 的治理路徑。
 
-## 範圍
-
-本卡屬於 3KLife 本地三角策略任務，不是 AI-Atomic-Framework public issue，也不是 agent-pack-onboarding 任務。若產出要 upstream，必須先轉成 repo-neutral evidence、fixture、validator、RFC 或英文 docs patch。
+這張卡關心的是「拆完之後能不能安全上線與演進」，不是「怎麼拆」本身。
 
 ## 驗收條件
 
-- [ ] evolve 從 evidence pattern 產 UpgradeProposal draft，不直接改 registry。
-- [ ] polymorphize 產生 impact report 並標示 downstream map 風險。
-- [ ] sweep / expire 與 evolution proposal 的 stale gate 有交叉測試。
-- [ ] proposal 含 base version、evidence watermark、reversibility 與 review gate。
+- [ ] 至少一張 Atomic Map proposal 進入 equivalence / review-advisory 驗證階段
+- [ ] map-level rollout evidence 可說明 shadow / canary / active / legacy-retired 的治理邊界
+- [ ] replacement lane 或 rollback proof 邏輯可對應到該 map 的替換路徑
+- [ ] evolution / polymorphize proposal 能以 map-level evidence 為輸入，而不是直接突變 registry
+- [ ] 若 map members 或 variants 需要 propagation / impact 檢查，需有對應報告
+- [ ] 最終結果可回答「這張 map 是否已具備從 dry-run 走向 rollout 的證據鏈」
 
-## 產出
+## 交付物
 
-- evolution evidence report
-- UpgradeProposal draft
-- polymorph impact report
+- map equivalence evidence
+- review-advisory or rollout evidence
+- replacement-lane / rollback proof references
+- evolution or polymorph impact report
+- M6 acceptance summary
 
-## 驗證
+## 驗證方式
 
-- validate:upgrade-proposal or equivalent
-- evolution dry-run transcript
+- map equivalence / propagation / review-advisory validators
+- replacement lane or rollback-proof reports
+- evolve / polymorphize dry-run proposal flow
 
 ## 依賴
 
@@ -46,4 +49,6 @@ created_by_agent: codex
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+2026-05-18 | status: open | validation: pending | change: Opened as the post-decomposition rollout and evolution stage. | blocker: none
+2026-05-19 | status: in_progress | validation: shadow + canary reached; active blocker captured | change: `ATM-MAP-0001` was promoted from `draft -> shadow -> canary` using `atomic_workbench/maps/ATM-MAP-0001/map.test.report.json`. A deliberate `active` probe returned formal blocker evidence requiring `map-equivalence`, `propagation-report`, `review-advisory`, and `human-review`. This card now owns the rollout/equivalence gate instead of feature decomposition itself. | blocker: waiting for map equivalence, propagation, review advisory, and human review evidence before `active`
+2026-05-19 | status: in_progress | validation: map equivalence + propagation + review advisory + human review complete; pinned runner replacement-lane smoke passes | change: Closed the onefile registry-validator gap by validating replacement-lane promotion on the adopter pinned runner and confirmed `registryStatus=validated` on shadow promotion. `ATM-MAP-0001` now has map-equivalence, propagation-report, review-advisory, and human-review evidence, and its registry lifecycle status matches `replacement.mode` at `active`. | blocker: remaining M6 scope is evolution/polymorphize and broader governed rollout beyond the first active map
