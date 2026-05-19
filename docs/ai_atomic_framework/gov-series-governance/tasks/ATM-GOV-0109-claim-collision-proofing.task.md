@@ -1,0 +1,55 @@
+---
+doc_id: doc_other_0810
+task_id: ATM-GOV-0109
+title: Claim Collision Proofing and Conflict Evidence Flow
+milestone: M2
+status: in-progress
+blocked_by: [ATM-GOV-0102, ATM-GOV-0108]
+owner: atm-core
+related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
+upstream_repo: AI-Atomic-Framework
+targetRepo: AI-Atomic-Framework
+hostKind: upstream-framework
+alphaGate: validate:standard
+public_tracking: false
+executionMode: planned-upstream-change
+created_at: 2026-05-19T00:00:00+08:00
+created_by_agent: codex-gpt-5
+started_at: 2026-05-19T23:18:55+08:00
+started_by_agent: codex-gpt-5.5
+---
+
+# ATM-GOV-0109 Claim Collision Proofing and Conflict Evidence Flow
+
+## Background
+
+Parallel actors may race to claim the same task or overlapping scopes.
+Conflict handling must be deterministic and auditable.
+
+## Outputs
+
+1. Collision-safe claim checks and conflict reporting.
+2. Takeover/override evidence requirements for disputed ownership.
+3. Guidance for retry/backoff and operator escalation.
+
+## Acceptance Criteria
+
+- [ ] Concurrent claim races produce a single winner.
+- [ ] Losing attempts get clear conflict evidence.
+- [ ] Takeover requires reason plus evidence.
+
+## Target Files
+
+- `packages/cli/src/commands/tasks.ts`
+- `docs/governance/task-claim-lease-model.md`
+
+## Validation Commands
+
+```bash
+node atm.mjs tasks claim --task ATM-GOV-0109 --actor <actor-a> --files <csv> --json
+node atm.mjs tasks claim --task ATM-GOV-0109 --actor <actor-b> --files <csv> --json
+```
+
+## Notes
+
+2026-05-19 | status: open | validation: pending | change: formal card opened
