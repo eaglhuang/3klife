@@ -37,7 +37,7 @@ revised_at: 2026-05-18T00:00:00+08:00
 |------|------|
 | 已拆 | 32 / 32 |
 | 進行中 | 0 |
-| 完成 | 10 |
+| 完成 | 20 |
 
 ---
 
@@ -55,16 +55,16 @@ revised_at: 2026-05-18T00:00:00+08:00
 | [TASK-ATD-0008](./TASK-ATD-0008-framework-version-source.task.md) | framework version 來源改為 package / release manifest | M1 | done | — | I6 | pending-github-issue |
 | [TASK-ATD-0009](./TASK-ATD-0009-atm-env-registry-docs.task.md) | 環境變數 registry 與 docs | M1 | done | — | — | pending-github-issue |
 | [TASK-ATD-0010](./TASK-ATD-0010-host-git-hook-ci-recipe.task.md) | Git hook / CI enforcement 改為 opt-in host recipe | M1 | done | — | I4 | pending-github-issue |
-| [TASK-ATD-0011](./TASK-ATD-0011-validator-harness-consolidation.task.md) | Validator harness 分批收斂 | M2 | open | — | — | pending-github-issue |
-| [TASK-ATD-0012](./TASK-ATD-0012-ajv-factory-cache.task.md) | 共用 AJV factory/cache 且保持 pass/fail 行為 | M2 | open | TASK-ATD-0011 | I2 | pending-github-issue |
-| [TASK-ATD-0013](./TASK-ATD-0013-cli-error-policy.task.md) | CLI error policy：`CliError` + typed code + usage exit code | M2 | open | TASK-ATD-0007 | I1 | pending-github-issue |
-| [TASK-ATD-0014](./TASK-ATD-0014-test-layering-profile.task.md) | 測試分層：unit / validator / release smoke / self-host alpha | M2 | open | — | — | pending-github-issue |
-| [TASK-ATD-0015](./TASK-ATD-0015-fast-unit-test-batch.task.md) | 第一批快速單元測試（URN / allocator / shared helpers） | M2 | open | TASK-ATD-0014 | — | pending-github-issue |
-| [TASK-ATD-0016](./TASK-ATD-0016-upgrade-command-split.task.md) | `upgrade.ts` 拆分並鎖 public CLI JSON 行為 | M3 | open | TASK-ATD-0015 | I1 | pending-github-issue |
-| [TASK-ATD-0017](./TASK-ATD-0017-governance-local-export-inventory.task.md) | `plugin-governance-local` export maturity inventory + 拆分 | M3 | open | TASK-ATD-0015 | I5 | pending-github-issue |
-| [TASK-ATD-0018](./TASK-ATD-0018-upgrade-propose-split.task.md) | `propose.ts` 拆分 proposal analysis / gate / output | M3 | open | TASK-ATD-0015, TASK-ATD-0016 | I2 | pending-github-issue |
-| [TASK-ATD-0019](./TASK-ATD-0019-atm-chart-command-split.task.md) | `atm-chart.ts` 拆分 render / verify / compatibility helper | M3 | open | TASK-ATD-0015 | I1, I2 | pending-github-issue |
-| [TASK-ATD-0020](./TASK-ATD-0020-command-specs-split.task.md) | `command-specs.ts` 拆分 command metadata 與 renderer | M3 | open | TASK-ATD-0015 | I1 | pending-github-issue |
+| [TASK-ATD-0011](./TASK-ATD-0011-validator-harness-consolidation.task.md) | Validator harness 分批收斂 | M2 | done | — | — | pending-github-issue |
+| [TASK-ATD-0012](./TASK-ATD-0012-ajv-factory-cache.task.md) | 共用 AJV factory/cache 且保持 pass/fail 行為 | M2 | done | TASK-ATD-0011 | I2 | pending-github-issue |
+| [TASK-ATD-0013](./TASK-ATD-0013-cli-error-policy.task.md) | CLI error policy：`CliError` + typed code + usage exit code | M2 | done | TASK-ATD-0007 | I1 | pending-github-issue |
+| [TASK-ATD-0014](./TASK-ATD-0014-test-layering-profile.task.md) | 測試分層：unit / validator / release smoke / self-host alpha | M2 | done | — | — | pending-github-issue |
+| [TASK-ATD-0015](./TASK-ATD-0015-fast-unit-test-batch.task.md) | 第一批快速單元測試（URN / allocator / shared helpers） | M2 | done | TASK-ATD-0014 | — | pending-github-issue |
+| [TASK-ATD-0016](./TASK-ATD-0016-upgrade-command-split.task.md) | `upgrade.ts` 拆分並鎖 public CLI JSON 行為 | M3 | done | TASK-ATD-0015 | I1 | pending-github-issue |
+| [TASK-ATD-0017](./TASK-ATD-0017-governance-local-export-inventory.task.md) | `plugin-governance-local` export maturity inventory + 拆分 | M3 | done | TASK-ATD-0015 | I5 | pending-github-issue |
+| [TASK-ATD-0018](./TASK-ATD-0018-upgrade-propose-split.task.md) | `propose.ts` 拆分 proposal analysis / gate / output | M3 | done | TASK-ATD-0015, TASK-ATD-0016 | I2 | pending-github-issue |
+| [TASK-ATD-0019](./TASK-ATD-0019-atm-chart-command-split.task.md) | `atm-chart.ts` 拆分 render / verify / compatibility helper | M3 | done | TASK-ATD-0015 | I1, I2 | pending-github-issue |
+| [TASK-ATD-0020](./TASK-ATD-0020-command-specs-split.task.md) | `command-specs.ts` 拆分 command metadata 與 renderer | M3 | done | TASK-ATD-0015 | I1 | pending-github-issue |
 | [TASK-ATD-0021](./TASK-ATD-0021-integrations-core-split.task.md) | `integrations-core` 拆分 compiler / manifest / verify | M3 | open | TASK-ATD-0015 | I5 | pending-github-issue |
 | [TASK-ATD-0022](./TASK-ATD-0022-map-generator-split.task.md) | `map-generator.ts` 拆分 allocation / scaffold / provenance | M3 | open | TASK-ATD-0015 | — | pending-github-issue |
 | [TASK-ATD-0023](./TASK-ATD-0023-any-debt-budget.task.md) | `any` debt budget（package / public contract 分層） | M3 | open | TASK-ATD-0006 | — | pending-github-issue |

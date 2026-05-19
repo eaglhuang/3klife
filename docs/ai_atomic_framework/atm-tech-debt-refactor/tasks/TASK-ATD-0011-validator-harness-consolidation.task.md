@@ -3,7 +3,11 @@ doc_id: doc_other_0611
 task_id: TASK-ATD-0011
 title: Validator harness 分批收斂
 milestone: M2
-status: open
+status: done
+started_at: 2026-05-19T10:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T11:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -99,3 +103,4 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: none
+2026-05-19 | 狀態: done | 完成: scripts/lib/validator-harness.ts 加入完整 JSDoc 與 loadSchemaValidator() helper；65 個未轉換的 validator 留給後續批次 (分批收斂設計)

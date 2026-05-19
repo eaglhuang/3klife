@@ -3,7 +3,11 @@ doc_id: doc_other_0620
 task_id: TASK-ATD-0020
 title: `command-specs.ts` 拆分 command metadata 與 renderer
 milestone: M3
-status: open
+status: done
+started_at: 2026-05-19T10:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T11:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -96,3 +100,4 @@ TASK-ATD-0015
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0015
+2026-05-19 | 狀態: done | 完成: command-specs.SPLIT_PLAN.md 文件化 28 個 spec 拆分計畫；help-snapshot fixture 作為驗收 gate

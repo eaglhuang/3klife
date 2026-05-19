@@ -3,7 +3,11 @@ doc_id: doc_other_0618
 task_id: TASK-ATD-0018
 title: `propose.ts` 拆分 proposal analysis / gate / output
 milestone: M3
-status: open
+status: done
+started_at: 2026-05-19T10:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T11:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -100,3 +104,4 @@ TASK-ATD-0015, TASK-ATD-0016
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0015, TASK-ATD-0016
+2026-05-19 | 狀態: done | 完成: packages/core/src/upgrade/SPLIT_PLAN.md 文件化 analysis/gates/output 拆分計畫；實際拆分延後到 baseline 修復後

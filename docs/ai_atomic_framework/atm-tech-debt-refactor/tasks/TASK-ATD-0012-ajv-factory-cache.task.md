@@ -3,7 +3,11 @@ doc_id: doc_other_0612
 task_id: TASK-ATD-0012
 title: 共用 AJV factory/cache 且保持 pass/fail 行為
 milestone: M2
-status: open
+status: done
+started_at: 2026-05-19T10:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T11:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -98,3 +102,4 @@ TASK-ATD-0011
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0011
+2026-05-19 | 狀態: done | 完成: packages/core/src/validation/ajv-factory.ts 新增 createAtmAjv() + createSchemaValidator<T>()；行為加性，現有 pass/fail 不變

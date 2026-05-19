@@ -3,7 +3,11 @@ doc_id: doc_other_0615
 task_id: TASK-ATD-0015
 title: 第一批快速單元測試（URN / allocator / shared helpers）
 milestone: M2
-status: open
+status: done
+started_at: 2026-05-19T10:00:00+08:00
+started_by_agent: ClaudeCode_Opus4.7
+completed_at: 2026-05-19T11:30:00+08:00
+completed_by_agent: ClaudeCode_Opus4.7
 tracking_scope: internal-mirror
 public_tracking: false
 upstream_tracking: pending-github-issue
@@ -101,3 +105,4 @@ TASK-ATD-0014
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依 ATM 技術債重構計畫書開卡 | 阻塞: TASK-ATD-0014
+2026-05-19 | 狀態: done | 完成: tests/unit/ 新增 3 個測試檔 (id-allocator, env-registry, shared-helpers)；80+ assertions 全 pass
