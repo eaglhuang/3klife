@@ -11,9 +11,28 @@ created_by_agent: codex
 
 # 原子警察家族 Task Cards
 
-本目錄追蹤 APF 原子警察家族任務卡。APF-0030～0039 已於 2026-05-19 完成 Decomposition Police 與 Evolution Police 的 runtime 產品化；APF-0040～0050 也已於 2026-05-19 完成 Polymorph Police、Rollback Police 與 shared gates（Evidence Integrity / Reversibility / Noise Control）的 runtime 產品化，以及 Registry Consistency Police 內建 Contract Drift Check。
+本目錄追蹤 APF 原子警察家族任務卡。M14 後的讀法是：`status` 表示任務卡生命週期，`artifact_status` 表示文件/spec 狀態，`runtime_status` 才表示 scanner/facade/gate 是否已接進 upstream runtime。
 
-`status: open` 表示 upstream runtime 尚未完成。`artifact_status` 表示文件/spec 狀態，`runtime_status` 才表示實際 scanner/facade/gate 是否落地。
+APF-0003～0007 是 design spec；APF-0021～0025 是對應 runtime scanner。APF-0043/0044 Rollback Police 是現有 atomize/evolve/map replacement 流程的 critical path，排序優先於擴大 APF-0041/0042 Polymorph Police 使用。
+
+## Spec -> Runtime scanner 對照
+
+| Spec card | Runtime scanner card | 說明 |
+|---|---|---|
+| TASK-APF-0003 | TASK-APF-0021 | Dedup Police |
+| TASK-APF-0004 | TASK-APF-0022 | Demand Police |
+| TASK-APF-0005 | TASK-APF-0023 | Quality Police |
+| TASK-APF-0006 | TASK-APF-0024 | Map Integration Police |
+| TASK-APF-0007 | TASK-APF-0025 | Atomization Police |
+
+## Rollback critical path
+
+| 順位 | Task | 理由 |
+|---|---|---|
+| 1 | TASK-APF-0043 / TASK-APF-0044 | 先守住 reversibility / rollback proof，保護已 active 的 atomize、evolve、map replacement |
+| 2 | TASK-APF-0041 / TASK-APF-0042 | 再擴大 polymorph template / instance governance |
+| 3 | TASK-APF-0045～0048 | shared gates / contract drift hardening |
+| 4 | TASK-APF-0049～0050 | profile、CLI、fixtures closure |
 
 ## 索引
 
@@ -37,14 +56,16 @@ created_by_agent: codex
 | [TASK-APF-0045](./TASK-APF-0045-evidence-integrity-gate-shared-contract.task.md) | Evidence Integrity Gate shared contract | M12 | done | done | shared-gate-active | TASK-APF-0040 |
 | [TASK-APF-0046](./TASK-APF-0046-reversibility-gate-shared-contract.task.md) | Reversibility Gate shared contract | M12 | done | done | shared-gate-active | TASK-APF-0043 |
 | [TASK-APF-0047](./TASK-APF-0047-noise-control-gate-shared-contract.task.md) | Noise Control Gate shared contract | M12 | done | done | shared-gate-active | TASK-APF-0036 / TASK-APF-0040 |
-| [TASK-APF-0048](./TASK-APF-0048-contract-drift-check-registry-consistency.task.md) | Contract Drift Check inside Registry Consistency Police | M12 | done | done | done | TASK-APF-0040 |
+| [TASK-APF-0048](./TASK-APF-0048-contract-drift-check-registry-consistency.task.md) | Contract Drift Check inside Registry Consistency Police | M12 | done | done | registry-consistency-extension-active | TASK-APF-0040 |
 | [TASK-APF-0049](./TASK-APF-0049-orchestrator-profile-cli-wiring-polymorph-rollback-shared-gates.task.md) | Orchestrator/profile/CLI wiring for Polymorph/Rollback/shared gates | M13 | done | done | done | TASK-APF-0042 / TASK-APF-0044 / TASK-APF-0045 / TASK-APF-0046 / TASK-APF-0047 / TASK-APF-0048 |
 | [TASK-APF-0050](./TASK-APF-0050-fixtures-validators-m12-m13-closure.task.md) | Fixtures, validators, and M12/M13 closure | M13 | done | done | done | TASK-APF-0049 |
+| [TASK-APF-0051](./TASK-APF-0051.task.md) | APF roadmap/task metadata consistency repair | M14 | done | done | n/a | TASK-APF-0050 |
+| [TASK-APF-0052](./TASK-APF-0052.task.md) | Adopter-neutrality scanner and negative fixtures | M14 | done | done | registry-consistency-extension-active | TASK-APF-0051 |
+| [TASK-APF-0053](./TASK-APF-0053.task.md) | Validator profile naming and advisory-only hardening | M14 | done | done | done | TASK-APF-0051 |
 
 ## 補充規則
 
-- APF-0030～0050 已於 2026-05-19 完成 runtime 產品化：Decomposition + Evolution + Polymorph + Rollback Police 皆為 productized-gate-active；Evidence Integrity / Reversibility / Noise Control shared gates 皆為 shared-gate-active；Contract Drift Check 已併入 Registry Consistency Police 並運作中。
-- Polymorph / Rollback 是 named police family；Evidence Integrity / Reversibility / Noise Control / Contract Drift 是 shared gates。
 - 所有 police finding 都必須走 ReviewAdvisory.machine-finding + metadata.policeFinding + HumanReviewDecision。
 - 不新增獨立任務路由器或第二套 approval workflow。
 - 新 scanner 產品化前必須有 positive / negative fixtures。
+- APF-0052 / APF-0053 hardening 任務已於 2026-05-19 完成：runAdopterNeutralityCheck（registry-consistency extension）+ verifyAdvisoryOnlyHardening + VALIDATOR_PROFILE_NAMING_CONTRACT；既有 M12/M13 runtime 未被降級。
