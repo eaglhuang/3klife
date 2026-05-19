@@ -11,39 +11,40 @@ created_by_agent: codex
 
 # 原子警察家族 Task Cards
 
-本目錄收錄「原子警察家族計畫書」的內部任務卡（`TASK-APF-0000` 到 `TASK-APF-0018`）。這批卡用於追蹤 AI-Atomic-Framework upstream police family 的產品化路線，不放入 upstream public docs，避免在 police family 尚未完整落地前誤導 adopter。`status: done` 僅代表本文件區的 task/spec artifact 已完成，不代表 upstream runtime scanner 已產品化。
+本目錄追蹤 APF 原子警察家族任務卡。APF-0030～0039 已於 2026-05-19 完成 Decomposition Police 與 Evolution Police 的 runtime 產品化；APF-0040～0050 是 Polymorph Police、Rollback Police 與 shared gates 規劃，仍 planned。
 
-對應 design markdown 位於 `../specs/`。`TASK-APF-0013` 到 `TASK-APF-0018` 是 M7 Validation Gate Activation 任務，已於 2026-05-19 完成 upstream runtime 實作（validate-police-family.ts + profile wiring + fixtures）。
+`status: open` 表示 upstream runtime 尚未完成。`artifact_status` 表示文件/spec 狀態，`runtime_status` 才表示實際 scanner/facade/gate 是否落地。
 
 ## 索引
 
-| Task ID | 標題 | 里程碑 | 狀態 | artifact_status | runtime_status | 阻擋者 |
+| Task ID | 標題 | Milestone | 狀態 | artifact_status | runtime_status | Depends |
 |---|---|---|---|---|---|---|
-| [TASK-APF-0000](./TASK-APF-0000-doc-finalize-governance-index.task.md) | 文件定稿與治理索引 | M0 | done | spec-done | n/a | none |
-| [TASK-APF-0001](./TASK-APF-0001-upstream-police-inventory.task.md) | Upstream police inventory 與狀態矩陣 | M1 | done | spec-done | n/a | APF-0000 |
-| [TASK-APF-0011](./TASK-APF-0011-dependency-graph-police-alignment.task.md) | Dependency Graph Police 對齊 | M1.5 | done | spec-done | wrapper-not-started | APF-0001 |
-| [TASK-APF-0002](./TASK-APF-0002-police-finding-contract.task.md) | PoliceFinding family contract | M2 | done | spec-done | upstream-api-not-applied | APF-0001 |
-| [TASK-APF-0012](./TASK-APF-0012-police-finding-evidence-bridge.task.md) | PoliceFinding evidence schema bridge | M2.5 | done | spec-done | upstream-api-not-applied | APF-0002 |
-| [TASK-APF-0003](./TASK-APF-0003-dedup-police-productization.task.md) | Dedup Police 產品化 | M3 | done | spec-done | not-started | APF-0002 |
-| [TASK-APF-0004](./TASK-APF-0004-demand-police-productization.task.md) | Demand Police 產品化 | M3 | done | spec-done | not-started | APF-0002 |
-| [TASK-APF-0005](./TASK-APF-0005-quality-police-productization.task.md) | Quality Police 產品化 | M3 | done | spec-done | not-started | APF-0002 |
-| [TASK-APF-0006](./TASK-APF-0006-map-integration-police-productization.task.md) | Map Integration Police 產品化 | M4 | done | spec-done | not-started | APF-0002 |
-| [TASK-APF-0007](./TASK-APF-0007-atomization-police-productization.task.md) | Atomization Police 產品化 | M4 | done | spec-done | not-started | APF-0002 |
-| [TASK-APF-0008](./TASK-APF-0008-lifecycle-boundary-police-alignment.task.md) | Lifecycle / Boundary Police 對齊 | M5 | done | spec-done | wrapper-not-started | APF-0002 |
-| [TASK-APF-0009](./TASK-APF-0009-police-orchestrator-planning.task.md) | Police orchestrator / CLI / validator profile 規劃 | M6 | done | spec-done | wrapper-not-started | APF-0003 / 0004 / 0005 / 0006 / 0007 / 0008 / 0011 |
-| [TASK-APF-0010](./TASK-APF-0010-roadmap-backwrite-promotion-gate.task.md) | Roadmap backwrite 與 promotion gate | M6 | done | spec-done | upstream-api-not-applied | APF-0009 / 0012 |
-| [TASK-APF-0013](./TASK-APF-0013-validation-gate-activation-policy.task.md) | Validation gate activation policy | M7 | done | done | done | APF-0010 |
-| [TASK-APF-0014](./TASK-APF-0014-police-family-gate-report-contract.task.md) | PoliceFamilyGateReport contract | M7 | done | done | done | APF-0002 / 0012 / 0013 |
-| [TASK-APF-0015](./TASK-APF-0015-core-police-gate-runner.task.md) | Core police gate runner | M7 | done | done | done | APF-0014 |
-| [TASK-APF-0016](./TASK-APF-0016-embedded-police-advisory-adapters.task.md) | Embedded police advisory adapters | M7 | done | done | done | APF-0014 |
-| [TASK-APF-0017](./TASK-APF-0017-validator-profile-wiring.task.md) | Validator profile wiring | M7 | done | done | done | APF-0015 / 0016 |
-| [TASK-APF-0018](./TASK-APF-0018-review-advisory-bridge-fixtures.task.md) | ReviewAdvisory bridge fixtures | M7 | done | done | done | APF-0014 / 0017 |
+| [TASK-APF-0030](./TASK-APF-0030-police-family-taxonomy-extension-decomposition-evolution.task.md) | Police family taxonomy extension for Decomposition and Evolution Police | M10 | done | done | done | TASK-APF-0029 |
+| [TASK-APF-0031](./TASK-APF-0031-source-inventory-large-surface-scanner-contract.task.md) | Source inventory and large-surface scanner contract | M10 | done | done | done | TASK-APF-0030 |
+| [TASK-APF-0032](./TASK-APF-0032-decomposition-police-named-scanner.task.md) | Decomposition Police named scanner | M10 | done | done | done | TASK-APF-0031 |
+| [TASK-APF-0033](./TASK-APF-0033-decomposition-plan-atomic-map-recommendation-bridge.task.md) | Decomposition plan to atomic-map recommendation bridge | M10 | done | done | done | TASK-APF-0032 |
+| [TASK-APF-0034](./TASK-APF-0034-evidence-evolution-signal-policy.task.md) | Evidence evolution signal policy | M10 | done | done | done | TASK-APF-0030 |
+| [TASK-APF-0035](./TASK-APF-0035-evolution-police-named-scanner.task.md) | Evolution Police named scanner | M10 | done | done | done | TASK-APF-0034 |
+| [TASK-APF-0036](./TASK-APF-0036-suppression-recurrence-stale-base-safeguards.task.md) | Suppression, recurrence, and stale-base safeguards | M11 | done | done | done | TASK-APF-0034 / TASK-APF-0035 |
+| [TASK-APF-0037](./TASK-APF-0037-orchestrator-profile-cli-wiring-decomposition-evolution.task.md) | Orchestrator, profile, and CLI wiring for Decomposition/Evolution Police | M11 | done | done | done | TASK-APF-0032 / TASK-APF-0035 |
+| [TASK-APF-0038](./TASK-APF-0038-fixtures-validators-new-police-families.task.md) | Fixtures and validators for new police families | M11 | done | done | done | TASK-APF-0037 |
+| [TASK-APF-0039](./TASK-APF-0039-roadmap-backwrite-m10-m11-closure.task.md) | Roadmap backwrite and M10/M11 closure | M11 | done | done | done | TASK-APF-0038 |
+| [TASK-APF-0040](./TASK-APF-0040-police-taxonomy-extension-polymorph-rollback.task.md) | Police taxonomy extension for Polymorph and Rollback Police | M12 | open | planned | upstream-api-not-applied | TASK-APF-0039 |
+| [TASK-APF-0041](./TASK-APF-0041-polymorph-police-contract-read-model.task.md) | Polymorph Police contract and read model | M12 | open | planned | not-started | TASK-APF-0040 |
+| [TASK-APF-0042](./TASK-APF-0042-polymorph-police-named-scanner.task.md) | Polymorph Police named scanner | M12 | open | planned | not-started | TASK-APF-0041 |
+| [TASK-APF-0043](./TASK-APF-0043-rollback-police-contract-reversibility-model.task.md) | Rollback Police contract and reversibility model | M12 | open | planned | upstream-api-not-applied | TASK-APF-0040 |
+| [TASK-APF-0044](./TASK-APF-0044-rollback-police-named-scanner.task.md) | Rollback Police named scanner | M12 | open | planned | not-started | TASK-APF-0043 |
+| [TASK-APF-0045](./TASK-APF-0045-evidence-integrity-gate-shared-contract.task.md) | Evidence Integrity Gate shared contract | M12 | open | planned | shared-gate-planned | TASK-APF-0040 |
+| [TASK-APF-0046](./TASK-APF-0046-reversibility-gate-shared-contract.task.md) | Reversibility Gate shared contract | M12 | open | planned | shared-gate-planned | TASK-APF-0043 |
+| [TASK-APF-0047](./TASK-APF-0047-noise-control-gate-shared-contract.task.md) | Noise Control Gate shared contract | M12 | open | planned | shared-gate-planned | TASK-APF-0036 / TASK-APF-0040 |
+| [TASK-APF-0048](./TASK-APF-0048-contract-drift-check-registry-consistency.task.md) | Contract Drift Check inside Registry Consistency Police | M12 | open | planned | not-started | TASK-APF-0040 |
+| [TASK-APF-0049](./TASK-APF-0049-orchestrator-profile-cli-wiring-polymorph-rollback-shared-gates.task.md) | Orchestrator/profile/CLI wiring for Polymorph/Rollback/shared gates | M13 | open | planned | not-started | TASK-APF-0042 / TASK-APF-0044 / TASK-APF-0045 / TASK-APF-0046 / TASK-APF-0047 / TASK-APF-0048 |
+| [TASK-APF-0050](./TASK-APF-0050-fixtures-validators-m12-m13-closure.task.md) | Fixtures, validators, and M12/M13 closure | M13 | open | planned | not-started | TASK-APF-0049 |
 
-## 共通驗收
+## 補充規則
 
-- 任務卡進入 `done` 前，需提交對應 validation command 與證據摘要。`done` 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化。
-- 新增 upstream runtime 時不得 hard-code 3KLife、Cocos、private path 或 adopter-specific 語意。
-- 新 police scanner 必須先有 positive / negative fixtures，再接 validator profile。
-- police finding 不得繞過 ReviewAdvisory.machine-finding / metadata.policeFinding / HumanReviewQueue / follow-up-task route / HumanReviewDecision。
-- `validate:police` 必須維持通過；M7 之後 `validate:standard` 目標是接入 `validate-police-family`，blocker family 可 fail，advisory family 必須產 report 但不直接 fail。
-- touched Markdown 必須通過 UTF-8 / encoding 檢查。
+- APF-0030～0039 已於 2026-05-19 完成 runtime 產品化（Decomposition + Evolution）；APF-0040～0050 仍 planned / not-started，不得宣稱新增警察已 runtime 產品化。
+- Polymorph / Rollback 是 named police family；Evidence Integrity / Reversibility / Noise Control / Contract Drift 是 shared gates。
+- 所有 police finding 都必須走 ReviewAdvisory.machine-finding + metadata.policeFinding + HumanReviewDecision。
+- 不新增獨立任務路由器或第二套 approval workflow。
+- 新 scanner 產品化前必須有 positive / negative fixtures。
