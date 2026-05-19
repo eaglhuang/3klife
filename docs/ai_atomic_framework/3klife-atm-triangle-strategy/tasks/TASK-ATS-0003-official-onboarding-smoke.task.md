@@ -16,7 +16,7 @@ created_by_agent: codex
 
 ## 背景
 
-在 npc-brain 乾淨分支上驗證 official ATM 入場導覽，作為後續原子行為驗證的共同入口。
+在 npc-brain 乾淨分支上驗證 official ATM 入場導覽，確認既有 repo 能先走 official adopt/install，再進入 README-only 單一入口，作為後續原子行為驗證的共同入口。
 
 ## 範圍
 
@@ -25,6 +25,8 @@ created_by_agent: codex
 ## 驗收條件
 
 - [ ] 不引用 3KLife local fork 或私有 patch。
+- [ ] 既有 repo 的第一步是 official install/adopt route，不要求使用者手動複製 `atm.mjs` 或 release artifact。
+- [ ] adopt 完成後，README / AGENTS 單一入口可導向 `node atm.mjs next --json`。
 - [ ] 初始化、verify 與 evidence output 走 official CLI 或 official package。
 - [ ] 失敗時產生 machine-readable blocker report。
 - [ ] 所有人工步驟都有 transcript。
@@ -32,6 +34,7 @@ created_by_agent: codex
 ## 產出
 
 - onboarding transcript
+- adopt/install transcript
 - blocker report if failed
 - official command list
 
@@ -46,4 +49,4 @@ created_by_agent: codex
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+2026-05-18 | 狀態: open | 驗證: pending | 變更: 採用流程明確改為「先 official install/adopt，再進入 README-only 單一入口」，排除手動複製 runtime artifact 作為 adopter 正式步驟 | 阻塞: none

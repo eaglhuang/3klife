@@ -1564,5 +1564,425 @@
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-pinned-runner-auto-install.task.md",
     "title": "TASK-APO-0027 — Pinned Runner Auto-Install During Init/Bootstrap",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0649",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0019-policefinding-public-contract-stabilization.task.md",
+    "title": "TASK-APF-0019 — PoliceFinding public contract stabilization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0650",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0020-core-blocker-police-family-facades.task.md",
+    "title": "TASK-APF-0020 — Core blocker police family facades",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0651",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0021-dedup-police-named-scanner.task.md",
+    "title": "TASK-APF-0021 — Dedup Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0652",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0022-demand-police-named-scanner.task.md",
+    "title": "TASK-APF-0022 — Demand Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0653",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0023-quality-police-named-scanner.task.md",
+    "title": "TASK-APF-0023 — Quality Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0654",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0024-map-integration-police-named-scanner.task.md",
+    "title": "TASK-APF-0024 — Map Integration Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0655",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0025-atomization-police-named-scanner.task.md",
+    "title": "TASK-APF-0025 — Atomization Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0656",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0026-police-orchestrator-and-cli-report-producer.task.md",
+    "title": "TASK-APF-0026 — Police orchestrator and CLI report producer",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0657",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0027-reviewadvisory-bridge-hardening.task.md",
+    "title": "TASK-APF-0027 — ReviewAdvisory bridge hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0658",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0028-profile-promotion-and-blocker-policy.task.md",
+    "title": "TASK-APF-0028 — Profile promotion and blocker policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0659",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0029-roadmap-backwrite-and-risk-closure.task.md",
+    "title": "TASK-APF-0029 — Roadmap backwrite and risk closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0660",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0019-policefinding-public-contract-stabilization.md",
+    "title": "APF-0019 — PoliceFinding public contract stabilization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0661",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0020-core-blocker-police-family-facades.md",
+    "title": "APF-0020 — Core blocker police family facades",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0662",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0021-dedup-police-named-scanner.md",
+    "title": "APF-0021 — Dedup Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0663",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0022-demand-police-named-scanner.md",
+    "title": "APF-0022 — Demand Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0664",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0023-quality-police-named-scanner.md",
+    "title": "APF-0023 — Quality Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0665",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0024-map-integration-police-named-scanner.md",
+    "title": "APF-0024 — Map Integration Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0666",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0025-atomization-police-named-scanner.md",
+    "title": "APF-0025 — Atomization Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0667",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0026-police-orchestrator-and-cli-report-producer.md",
+    "title": "APF-0026 — Police orchestrator and CLI report producer",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0668",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0027-reviewadvisory-bridge-hardening.md",
+    "title": "APF-0027 — ReviewAdvisory bridge hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0669",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0028-profile-promotion-and-blocker-policy.md",
+    "title": "APF-0028 — Profile promotion and blocker policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0670",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0029-roadmap-backwrite-and-risk-closure.md",
+    "title": "APF-0029 — Roadmap backwrite and risk closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0671",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0030-police-family-taxonomy-extension-decomposition-evolution.task.md",
+    "title": "TASK-APF-0030 — Police family taxonomy extension for Decomposition and Evolution Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0672",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0031-source-inventory-large-surface-scanner-contract.task.md",
+    "title": "TASK-APF-0031 — Source inventory and large-surface scanner contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0673",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0032-decomposition-police-named-scanner.task.md",
+    "title": "TASK-APF-0032 — Decomposition Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0674",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0033-decomposition-plan-atomic-map-recommendation-bridge.task.md",
+    "title": "TASK-APF-0033 — Decomposition plan to atomic-map recommendation bridge",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0675",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0034-evidence-evolution-signal-policy.task.md",
+    "title": "TASK-APF-0034 — Evidence evolution signal policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0676",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0035-evolution-police-named-scanner.task.md",
+    "title": "TASK-APF-0035 — Evolution Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0677",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0036-suppression-recurrence-stale-base-safeguards.task.md",
+    "title": "TASK-APF-0036 — Suppression, recurrence, and stale-base safeguards",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0678",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0037-orchestrator-profile-cli-wiring-decomposition-evolution.task.md",
+    "title": "TASK-APF-0037 — Orchestrator, profile, and CLI wiring for Decomposition/Evolution Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0679",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0038-fixtures-validators-new-police-families.task.md",
+    "title": "TASK-APF-0038 — Fixtures and validators for new police families",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0680",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0039-roadmap-backwrite-m10-m11-closure.task.md",
+    "title": "TASK-APF-0039 — Roadmap backwrite and M10/M11 closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0681",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0030-police-family-taxonomy-extension-decomposition-evolution.md",
+    "title": "APF-0030 — Police family taxonomy extension for Decomposition and Evolution Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0682",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0031-source-inventory-large-surface-scanner-contract.md",
+    "title": "APF-0031 — Source inventory and large-surface scanner contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0683",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0032-decomposition-police-named-scanner.md",
+    "title": "APF-0032 — Decomposition Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0684",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0033-decomposition-plan-atomic-map-recommendation-bridge.md",
+    "title": "APF-0033 — Decomposition plan to atomic-map recommendation bridge",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0685",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0034-evidence-evolution-signal-policy.md",
+    "title": "APF-0034 — Evidence evolution signal policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0686",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0035-evolution-police-named-scanner.md",
+    "title": "APF-0035 — Evolution Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0687",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0036-suppression-recurrence-stale-base-safeguards.md",
+    "title": "APF-0036 — Suppression, recurrence, and stale-base safeguards",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0688",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0037-orchestrator-profile-cli-wiring-decomposition-evolution.md",
+    "title": "APF-0037 — Orchestrator, profile, and CLI wiring for Decomposition/Evolution Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0689",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0038-fixtures-validators-new-police-families.md",
+    "title": "APF-0038 — Fixtures and validators for new police families",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0690",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0039-roadmap-backwrite-m10-m11-closure.md",
+    "title": "APF-0039 — Roadmap backwrite and M10/M11 closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0691",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0040-police-taxonomy-extension-polymorph-rollback.task.md",
+    "title": "TASK-APF-0040 — Police taxonomy extension for Polymorph and Rollback Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0692",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0041-polymorph-police-contract-read-model.task.md",
+    "title": "TASK-APF-0041 — Polymorph Police contract and read model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0693",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0042-polymorph-police-named-scanner.task.md",
+    "title": "TASK-APF-0042 — Polymorph Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0694",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0043-rollback-police-contract-reversibility-model.task.md",
+    "title": "TASK-APF-0043 — Rollback Police contract and reversibility model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0695",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0044-rollback-police-named-scanner.task.md",
+    "title": "TASK-APF-0044 — Rollback Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0696",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0045-evidence-integrity-gate-shared-contract.task.md",
+    "title": "TASK-APF-0045 — Evidence Integrity Gate shared contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0697",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0046-reversibility-gate-shared-contract.task.md",
+    "title": "TASK-APF-0046 — Reversibility Gate shared contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0698",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0047-noise-control-gate-shared-contract.task.md",
+    "title": "TASK-APF-0047 — Noise Control Gate shared contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0699",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0048-contract-drift-check-registry-consistency.task.md",
+    "title": "TASK-APF-0048 — Contract Drift Check inside Registry Consistency Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0700",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0049-orchestrator-profile-cli-wiring-polymorph-rollback-shared-gates.task.md",
+    "title": "TASK-APF-0049 — Orchestrator/profile/CLI wiring for Polymorph/Rollback/shared gates",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0701",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0050-fixtures-validators-m12-m13-closure.task.md",
+    "title": "TASK-APF-0050 — Fixtures, validators, and M12/M13 closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0702",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0040-police-taxonomy-extension-polymorph-rollback.md",
+    "title": "APF-0040 — Police taxonomy extension for Polymorph and Rollback Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0703",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0041-polymorph-police-contract-read-model.md",
+    "title": "APF-0041 — Polymorph Police contract and read model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0704",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0042-polymorph-police-named-scanner.md",
+    "title": "APF-0042 — Polymorph Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0705",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0043-rollback-police-contract-reversibility-model.md",
+    "title": "APF-0043 — Rollback Police contract and reversibility model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0706",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0044-rollback-police-named-scanner.md",
+    "title": "APF-0044 — Rollback Police named scanner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0707",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0045-evidence-integrity-gate-shared-contract.md",
+    "title": "APF-0045 — Evidence Integrity Gate shared contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0708",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0046-reversibility-gate-shared-contract.md",
+    "title": "APF-0046 — Reversibility Gate shared contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0709",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0047-noise-control-gate-shared-contract.md",
+    "title": "APF-0047 — Noise Control Gate shared contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0710",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0048-contract-drift-check-registry-consistency.md",
+    "title": "APF-0048 — Contract Drift Check inside Registry Consistency Police",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0711",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0049-orchestrator-profile-cli-wiring-polymorph-rollback-shared-gates.md",
+    "title": "APF-0049 — Orchestrator/profile/CLI wiring for Polymorph/Rollback/shared gates",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0712",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0050-fixtures-validators-m12-m13-closure.md",
+    "title": "APF-0050 — Fixtures, validators, and M12/M13 closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0713",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0051-apf-roadmap-task-metadata-consistency-repair.task.md",
+    "title": "TASK-APF-0051 — APF roadmap/task metadata consistency repair",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0714",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0052-adopter-neutrality-scanner-negative-fixtures.task.md",
+    "title": "TASK-APF-0052 — Adopter-neutrality scanner and negative fixtures",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0715",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0053-validator-profile-naming-advisory-only-hardening.task.md",
+    "title": "TASK-APF-0053 — Validator profile naming and advisory-only hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0716",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0051-apf-roadmap-task-metadata-consistency-repair.md",
+    "title": "APF-0051 APF roadmap/task metadata consistency repair",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0717",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0052-adopter-neutrality-scanner-negative-fixtures.md",
+    "title": "APF-0052 Adopter-neutrality scanner and negative fixtures",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0718",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0053-validator-profile-naming-advisory-only-hardening.md",
+    "title": "APF-0053 Validator profile naming and advisory-only hardening",
+    "category": "other"
   }
 ]

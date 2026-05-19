@@ -19,8 +19,8 @@ created_by_agent: codex
 
 | Task ID | 標題 | 里程碑 | 狀態 | 阻擋者 |
 |---|---|---|---|---|
-| [TASK-ATS-0001](./TASK-ATS-0001-docs-language-boundary-and-move.task.md) | Public docs language gate and strategy directory migration | M0 | open | — |
-| [TASK-ATS-0002](./TASK-ATS-0002-npc-brain-baseline-fixture-inventory.task.md) | npc-brain baseline freeze and fixture inventory | M1 | open | TASK-ATS-0001 |
+| [TASK-ATS-0001](./TASK-ATS-0001-docs-language-boundary-and-move.task.md) | Public docs language gate and strategy directory migration | M0 | completed | — |
+| [TASK-ATS-0002](./TASK-ATS-0002-npc-brain-baseline-fixture-inventory.task.md) | npc-brain baseline freeze and fixture inventory | M1 | completed | TASK-ATS-0001 |
 | [TASK-ATS-0003](./TASK-ATS-0003-official-onboarding-smoke.task.md) | npc-brain official ATM onboarding smoke | M2 | open | TASK-ATS-0002 |
 | [TASK-ATS-0004](./TASK-ATS-0004-atom-behavior-core-suite.task.md) | Atom behavior core suite on npc-brain | M3 | open | TASK-ATS-0003 |
 | [TASK-ATS-0005](./TASK-ATS-0005-legacy-python-infect-atomize.task.md) | Legacy Python infect and atomize validation | M4 | open | TASK-ATS-0004 |

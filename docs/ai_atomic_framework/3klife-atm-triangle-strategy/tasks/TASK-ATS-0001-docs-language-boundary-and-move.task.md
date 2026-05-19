@@ -4,12 +4,13 @@ task_id: TASK-ATS-0001
 title: Public docs language gate and strategy directory migration
 owner: atm-core
 priority: P0
-status: open
+status: completed
 milestone: M0
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: none
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+completed_at: 2026-05-18T00:00:00+08:00
 ---
 
 # TASK-ATS-0001 — Public docs language gate and strategy directory migration
@@ -24,16 +25,17 @@ created_by_agent: codex
 
 ## 驗收條件
 
-- [ ] 三角策略規劃書位於 docs/ai_atomic_framework/3klife-atm-triangle-strategy/。
-- [ ] agent-pack-onboarding/tasks 只保留 TASK-APO-0000 到 TASK-APO-0024。
-- [ ] AI-Atomic-Framework docs 中文掃描結果寫入 audit 文件。
-- [ ] doc-id registry 更新到新路徑。
+- [x] 三角策略規劃書位於 docs/ai_atomic_framework/3klife-atm-triangle-strategy/。
+- [x] agent-pack-onboarding/tasks 只保留 TASK-APO-0000 到 TASK-APO-0024。
+- [x] AI-Atomic-Framework docs 中文掃描結果寫入 audit 文件。
+- [x] doc-id registry 更新到新路徑。
 
 ## 產出
 
 - 新目錄與計畫書
 - TASK-ATS 任務索引
 - AI-Atomic docs public-language audit
+- 執行證據：../evidence/TASK-ATS-0001-public-docs-language-gate.md
 
 ## 驗證
 
@@ -46,4 +48,4 @@ created_by_agent: codex
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+2026-05-18 | 狀態: completed | 驗證: PASS | 變更: 完成 M0 gate 複核；AI-Atomic docs CJK scan 為 0，APO 任務序列保留 0000-0024，registry 已指向三角策略新路徑 | 阻塞: none

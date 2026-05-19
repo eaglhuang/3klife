@@ -1,32 +1,27 @@
-<!-- doc_id: doc_index_0024 -->
-# Atomic Police Family Specs
+---
+doc_id: doc_index_0024 -->
+owner: atm-core
+status: active
+related_plan: docs/ai_atomic_framework/atomic-police-family/原子警察家族計畫書.md
+upstream_repo: AI-Atomic-Framework
+public_tracking: false
+created_at: 2026-05-18T00:00:00+08:00
+created_by_agent: codex
+---
 
-本目錄收錄 `TASK-APF-0001` ~ `TASK-APF-0018` 的 design markdown 輸出。每份 spec 是任務卡 acceptance criteria 的具體落地設計，不重述任務卡內容，只記錄：
+# 原子警察家族 Specs
 
-- 與既有 upstream module 的對應關係
-- finding / contract / schema 結構
-- routing pipeline
-- alphaGate / validator profile 接線
+本目錄放 APF 任務卡的設計補充規格。M14 起，spec 文件必須避免把 3KLife control-plane wording 寫成 upstream protected public contract。
 
-## 索引
+## M14 Specs
 
-| Spec | 來源任務卡 |
+| Spec | 內容 |
 |---|---|
-| [APF-0001](./APF-0001-upstream-police-inventory.md) | TASK-APF-0001 |
-| [APF-0002](./APF-0002-police-finding-contract.md) | TASK-APF-0002 |
-| [APF-0003](./APF-0003-dedup-police-design.md) | TASK-APF-0003 |
-| [APF-0004](./APF-0004-demand-police-design.md) | TASK-APF-0004 |
-| [APF-0005](./APF-0005-quality-police-design.md) | TASK-APF-0005 |
-| [APF-0006](./APF-0006-map-integration-police-design.md) | TASK-APF-0006 |
-| [APF-0007](./APF-0007-atomization-police-design.md) | TASK-APF-0007 |
-| [APF-0008](./APF-0008-lifecycle-boundary-alignment.md) | TASK-APF-0008 |
-| [APF-0009](./APF-0009-orchestrator-design.md) | TASK-APF-0009 |
-| [APF-0010](./APF-0010-roadmap-backwrite.md) | TASK-APF-0010 |
-| [APF-0011](./APF-0011-dependency-graph-police-alignment.md) | TASK-APF-0011 |
-| [APF-0012](./APF-0012-evidence-schema-bridge.md) | TASK-APF-0012 |
-| [APF-0013](./APF-0013-validation-gate-activation-policy.md) | TASK-APF-0013 |
-| [APF-0014](./APF-0014-police-family-gate-report-contract.md) | TASK-APF-0014 |
-| [APF-0015](./APF-0015-core-police-gate-runner.md) | TASK-APF-0015 |
-| [APF-0016](./APF-0016-embedded-police-advisory-adapters.md) | TASK-APF-0016 |
-| [APF-0017](./APF-0017-validator-profile-wiring.md) | TASK-APF-0017 |
-| [APF-0018](./APF-0018-review-advisory-bridge-fixtures.md) | TASK-APF-0018 |
+| [APF-0051](./APF-0051-apf-roadmap-task-metadata-consistency-repair.md) | roadmap/task metadata consistency repair |
+| [APF-0052](./APF-0052-adopter-neutrality-scanner-negative-fixtures.md) | adopter-neutrality scanner and negative fixtures |
+| [APF-0053](./APF-0053-validator-profile-naming-advisory-only-hardening.md) | validator profile naming and advisory-only hardening |
+
+## Status rule
+
+- Spec `done` 表示規格文件完成。
+- Runtime 是否完成以對應 task card 的 `runtime_status` 與 upstream validator 證據為準。

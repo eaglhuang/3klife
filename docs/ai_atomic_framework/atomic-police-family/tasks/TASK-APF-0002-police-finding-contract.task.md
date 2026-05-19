@@ -7,6 +7,7 @@ status: done
 artifact_status: spec-done
 runtime_status: upstream-api-not-applied
 upstream_mutation_status: not-applied
+runtime_successor_task: TASK-APF-0019
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0001]
@@ -110,3 +111,4 @@ contract review; neutrality checklist
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0002-police-finding-contract.md 完成；明定接 ReviewAdvisory.machine-finding，不新增獨立任務路由器；evidenceRefs 分成 official evidence type 與 police-local artifact ref | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=upstream-api-not-applied、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none
+2026-05-19 | 狀態: done | 驗證: M14 metadata repair | 變更: 本卡維持 contract spec 狀態；runtime/API stabilization 由 TASK-APF-0019 接手，避免把 upstream-api-not-applied 誤讀為下游 scanner 不可能落地。

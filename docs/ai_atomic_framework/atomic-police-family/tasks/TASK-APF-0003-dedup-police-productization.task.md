@@ -1,12 +1,13 @@
 ---
 doc_id: doc_other_0245
 task_id: TASK-APF-0003
-title: Dedup Police 產品化
+title: Dedup Police 產品化規格 / design spec
 milestone: M3
 status: done
 artifact_status: spec-done
 runtime_status: not-started
 upstream_mutation_status: not-applied
+runtime_successor_task: TASK-APF-0021
 started_at: "2026-05-18T00:00:00+08:00"
 started_by_agent: "ClaudeCode_Sonnet4.6"
 blocked_by: [TASK-APF-0002]
@@ -40,7 +41,7 @@ created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
 ---
 
-# TASK-APF-0003 — Dedup Police 產品化
+# TASK-APF-0003 — Dedup Police 產品化規格 / design spec
 
 ## 背景
 
@@ -111,3 +112,4 @@ npm --prefix C:/Users/User/AI-Atomic-Framework run validate:regression-compare; 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 由原子警察家族計畫書建立初始任務卡 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: specs/APF-0003-dedup-police-design.md 完成；引用 plugin-behavior-pack/dedup-merge.ts 與 regression-compare.dedupCandidates；fingerprint-snapshot evidence 對應 | 阻塞: none
 2026-05-18 | 狀態: done | 驗證: pass | 變更: 回寫狀態語義；artifact_status=spec-done、runtime_status=not-started、upstream_mutation_status=not-applied；本卡 done 僅代表 APF 文件 / spec artifact 完成，不代表 upstream runtime scanner 已產品化 | 阻塞: none
+2026-05-19 | 狀態: done | 驗證: M14 metadata repair | 變更: 本卡是產品化規格 / design spec，不代表 runtime scanner 已由本卡落地；runtime scanner 由 TASK-APF-0021 接手。

@@ -52,7 +52,7 @@ npc-brain 不能只驗證 ATM 的入場導覽。它應該成為 ATM 對外 adopt
 
 | 層級 | 驗證主題 | 成功標準 |
 |---|---|---|
-| L1 | official onboarding | 不依賴 3KLife local fork，可從官方入口完成初始化、verify、evidence output |
+| L1 | official onboarding | 既有 repo 可先走 official install/adopt，再進入 README-only 單一入口，完成初始化、verify、evidence output |
 | L2 | 十種原子行為 | `split`、`merge`、`compose`、`dedup-merge`、`sweep`、`evolve`、`expire`、`polymorphize`、`infect`、`atomize` 都有 dry-run / fixture / report |
 | L3 | Legacy Python strangler | 可對 npc-brain 的 legacy Python 腳本做 `infect` + `atomize`，產生可審查 proposal，不直接破壞原始腳本 |
 | L4 | Atomic Map / Evolution | 可用大型功能拆解計畫產生 canonical Atomic Map，並用 evidence-driven evolution 產生可審查升級提案 |
@@ -80,7 +80,7 @@ npc-brain 不能只驗證 ATM 的入場導覽。它應該成為 ATM 對外 adopt
 |---|---|---|---|
 | 1 | TASK-ATS-0001 | 文件邊界與 public-language gate | 先把計畫與任務卡搬離錯誤目錄，並確認 AI-Atomic public docs 不帶中文內部文件 |
 | 2 | TASK-ATS-0002 | npc-brain baseline 與 fixture inventory | 沒有 frozen baseline，就無法判定後續 ATM 行為是改善還是污染 |
-| 3 | TASK-ATS-0003 | official onboarding smoke | 先證明官方入口能跑，後續行為測試才有共同起點 |
+| 3 | TASK-ATS-0003 | official onboarding smoke | 先證明既有 repo 的 official adopt 路線可把 npc-brain 轉成 README-only 單一入口，後續行為測試才有共同起點 |
 | 4 | TASK-ATS-0004 | 原子行為核心套件 | 先測 split / merge / compose / dedup-merge / sweep / expire 這些低耦合核心行為 |
 | 5 | TASK-ATS-0005 | Legacy Python infect + atomize | 使用者特別指定的高價值能力，需在真實 Python 腳本上驗證 |
 | 6 | TASK-ATS-0006 | Atomic Map 大功能拆解驗證 | 對接 `拆解大型功能優化原子map計畫書` 與 `create-map --from-plan` |
@@ -111,12 +111,56 @@ npc-brain 不能只驗證 ATM 的入場導覽。它應該成為 ATM 對外 adopt
 - 候選腳本至少包含 parser / service helper / workflow 或 ETL 類腳本。
 - 每個候選都有 source URI、風險、預期 atom 行為。
 
+### 治理轉換期開發凍結規則
+
+這裡的「凍結」是 `governance transition freeze`，不是全面 `code freeze`。它的目的，是在 npc-brain 正式切入 ATM 長期治理之前，先把驗證基準、onboarding 證據與第一批原子行為證據穩住，避免一邊導入治理、一邊大幅改動核心流程，讓目標一直漂移。
+
+#### 凍結的對象
+
+在 `TASK-ATS-0003` 到 `TASK-ATS-0005` 完成前，應暫停以下高變動開發：
+
+- 大型 ETL / workflow 結構重寫。
+- 會改變 artifact schema、輸出目錄、governance root、fixture contract 的變更。
+- `pipelines/sanguo-rag/*.py` 這類核心腳本的大型重構。
+- 未經 ATM proposal / dry-run review 的 legacy Python 大拆小與直接落地修改。
+
+#### 允許繼續的工作
+
+以下工作可以持續進行，且應優先支援三角策略驗證：
+
+- 文件、規劃書、evidence、fixture inventory 與 validator 補強。
+- baseline 清理、乾淨 checkout / worktree 建立、驗證腳本整理。
+- 不改治理邊界的小型 bugfix。
+- 只產生 proposal、report、dry-run patch，不直接改寫 legacy Python 主流程。
+
+#### 執行模式
+
+npc-brain 在治理轉換期應視為雙軌運作，而不是單一路徑：
+
+- `baseline-clean`：固定在可重現的乾淨 checkout，用來跑 `TASK-ATS-0003` 到 `TASK-ATS-0005` 的官方 onboarding、原子行為與 strangler 試點驗證。
+- `active-dev`：若確實有必要繼續開發，必須在另一個 branch、worktree 或 clone 進行，不得把尚未審查的開發狀態直接混入 baseline 驗證證據。
+
+目前 `main@036d264e7fd56a969e9ef182d9ea3ac96df60fcb` 是 baseline 參考點；本地 dirty working tree 代表「不能當作乾淨驗證基準」，不代表「不能繼續開發」。
+
+#### 解凍條件
+
+只有在以下三個關卡通過後，npc-brain 才應回到「以 ATM 為主流程的常態開發」：
+
+- `TASK-ATS-0003` 通過：official onboarding smoke 可重現。
+- `TASK-ATS-0004` 通過：第一批核心原子行為在 npc-brain fixture 上得到 deterministic output。
+- `TASK-ATS-0005` 通過：完成第一個 legacy Python `infect + atomize` 試點，且結果經 review 接受。
+
+在這三項完成之前，開發不是禁止，而是必須服從 baseline 保護與證據優先。
+
 ### M2：official onboarding smoke
 
-產出：乾淨分支上的 ATM official onboarding transcript。
+產出：乾淨分支上的 ATM official onboarding transcript、adopt/install transcript、README-only 進場 transcript。
 
 驗收：
 
+- 既有 repo 先走 official install/adopt route，例如 `atm init --adopt default` 或等價 official package route。
+- install/adopt 步驟必須負責把 host repo 變成可 README-only 啟動的狀態，不得要求一般使用者手動從 framework repo 複製 `atm.mjs`、`root-drop` 或 `onefile` artifact。
+- adopt 完成後，agent 可以只靠官方單一入口 `Read README.md if present, then run "node atm.mjs next --json" from the repository root and execute exactly the returned next action.` 啟動。
 - 不引用 3KLife local fork。
 - 不手工建立 `.atm` 內部檔繞過 CLI。
 - 失敗時產生 machine-readable blocker report。
@@ -217,6 +261,8 @@ npc-brain 不能只驗證 ATM 的入場導覽。它應該成為 ATM 對外 adopt
 |---|---|
 | 清空 3KLife `.atm/` 後重跑初始化 | 會破壞 3KLife 作為 ATM 母專案與研發試驗場的連續性 |
 | 把 3KLife 當 clean adopter | 3KLife 已有 local fork、Cocos governance、doc-id 與大量 ATM dogfooding 歷史，不乾淨 |
+| 全面停止 npc-brain 所有開發 | 會把治理導入期需要的文件、fixture、validator 與小型修補一併凍住；本計畫採「治理轉換期凍結」，不是全面停工 |
+| 要求使用者手動複製 `release/atm-onefile/atm.mjs` 到 host repo | 這只是工程驗證手段，不是 adopter UX；正式路線應由 official install/adopt 自動完成 runtime 物化，再進入 README-only 模式 |
 | 只測 onboarding | 無法證明 ATM 的原子行為、map replacement 與 evolution 能用於真實 legacy strangler |
 | 將三角策略留在 agent-pack-onboarding | 語意錯位，會讓後續任務卡、doc-id 與責任邊界混線 |
 
@@ -227,6 +273,19 @@ npc-brain 不能只驗證 ATM 的入場導覽。它應該成為 ATM 對外 adopt
 ```powershell
 npm run check:encoding:touched -- --files <touched-files>
 git diff --check
+```
+
+若要驗證 M2 的 adopter 路線，應優先驗證「先 official adopt，再 README-only」：
+
+```powershell
+node atm.mjs init --adopt default --cwd <npc-brain-repo> --dry-run --json
+node atm.mjs next --cwd <npc-brain-repo> --json
+```
+
+M2 通過後，host repo 的正式 agent 入口才應收斂成：
+
+```text
+Read README.md if present, then run "node atm.mjs next --json" from the repository root and execute exactly the returned next action.
 ```
 
 若要驗證 AI-Atomic docs public-language gate，可在 AI-Atomic-Framework 執行 CJK 掃描腳本，期望只剩 `docs/ATOM_EVOLUTION_PLAN.md` 或其英文化替代進度。

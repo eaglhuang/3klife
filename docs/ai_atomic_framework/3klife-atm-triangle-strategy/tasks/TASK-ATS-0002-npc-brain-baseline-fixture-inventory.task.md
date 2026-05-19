@@ -4,12 +4,13 @@ task_id: TASK-ATS-0002
 title: npc-brain baseline freeze and fixture inventory
 owner: atm-core
 priority: P0
-status: open
+status: completed
 milestone: M1
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: TASK-ATS-0001
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+completed_at: 2026-05-18T00:00:00+08:00
 ---
 
 # TASK-ATS-0002 — npc-brain baseline freeze and fixture inventory
@@ -24,16 +25,19 @@ created_by_agent: codex
 
 ## 驗收條件
 
-- [ ] 記錄 npc-brain repo path、branch、HEAD、baseline tag 或 branch。
-- [ ] 盤點至少三類 legacy Python 候選：parser、service helper、workflow 或 ETL。
-- [ ] 每個候選都有 source URI、風險、預期原子行為與 rollback 注意事項。
-- [ ] baseline 可在乾淨 checkout 上重跑。
+- [x] 記錄 npc-brain repo path、branch、HEAD、baseline tag 或 branch。
+- [x] 盤點至少三類 legacy Python 候選：parser、service helper、workflow 或 ETL。
+- [x] 每個候選都有 source URI、風險、預期原子行為與 rollback 注意事項。
+- [x] baseline 可在乾淨 checkout 上重跑。
 
 ## 產出
 
 - baseline report
 - legacy Python fixture inventory
 - risk matrix
+- 執行證據：../evidence/TASK-ATS-0002-npc-brain-baseline-report.md
+- 執行證據：../evidence/TASK-ATS-0002-legacy-python-fixture-inventory.md
+- 執行證據：../evidence/TASK-ATS-0002-risk-matrix.md
 
 ## 驗證
 
@@ -46,4 +50,4 @@ created_by_agent: codex
 
 ## Notes
 
-2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+2026-05-18 | 狀態: completed | 驗證: PASS with caveat | 變更: 凍結 npc-brain baseline 為 main@036d264e7fd56a969e9ef182d9ea3ac96df60fcb，盤點 7 個 legacy Python fixture 候選並建立風險矩陣 | 阻塞: npc-brain 目前有一個既有 dirty file，已排除於 clean baseline
