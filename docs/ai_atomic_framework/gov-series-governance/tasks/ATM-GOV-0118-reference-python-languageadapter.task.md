@@ -3,7 +3,7 @@ doc_id: doc_other_0819
 task_id: ATM-GOV-0118
 title: Reference Python LanguageAdapter Governance Implementation
 milestone: M4
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0112, ATM-GOV-0116]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0118 Reference Python LanguageAdapter Governance Implementation
@@ -33,9 +35,9 @@ Python adapter behavior is required for real multi-language governance adoption.
 
 ## Acceptance Criteria
 
-- [ ] Python-only repos can run governance analysis without JS assumptions.
-- [ ] Capability evidence shows supported vs deferred operations.
-- [ ] Validators cover Python-specific guidance paths.
+- [x] Python-only repos can run governance analysis without JS assumptions.
+- [x] Capability evidence shows supported vs deferred operations.
+- [x] Validators cover Python-specific guidance paths.
 
 ## Target Files
 
@@ -52,4 +54,5 @@ node --experimental-strip-types scripts/validate-guidance.ts --mode validate
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:python-adapter` + `npm run validate:guidance` + `npm run typecheck` | change: confirmed the bundled Python LanguageAdapter reference implementation, Python-only readiness evidence, and deferred-apply contract in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

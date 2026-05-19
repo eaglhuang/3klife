@@ -3,7 +3,7 @@ doc_id: doc_other_0822
 task_id: ATM-GOV-0121
 title: LanguageAdapter Governance Authoring Guide
 milestone: M4
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0112, ATM-GOV-0120]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0121 LanguageAdapter Governance Authoring Guide
@@ -33,9 +35,9 @@ Framework contributors need one canonical guide for adding/updating language ada
 
 ## Acceptance Criteria
 
-- [ ] Guide explains required capability declarations.
-- [ ] Guide covers unsupported-language advisory behavior.
-- [ ] Guide includes validation and release checklist.
+- [x] Guide explains required capability declarations.
+- [x] Guide covers unsupported-language advisory behavior.
+- [x] Guide includes validation and release checklist.
 
 ## Target Files
 
@@ -52,4 +54,5 @@ node atm.mjs verify --agents-md --json
 
 ## Notes
 
+2026-05-19 | status: done | validation: `node atm.mjs verify --agents-md --cwd C:\\tmp\\ai-atomic-framework-gov-series-governance --json` + `npm run typecheck` | change: aligned rendered/template AGENTS bootstrap guidance to vendor-neutral adapter ids and confirmed authoring-guide-facing verification now passes in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

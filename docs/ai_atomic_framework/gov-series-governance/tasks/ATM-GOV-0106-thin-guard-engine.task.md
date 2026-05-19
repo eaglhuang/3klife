@@ -3,7 +3,7 @@ doc_id: doc_other_0807
 task_id: ATM-GOV-0106
 title: Thin Guard Engine for Mutation and Git Checks
 milestone: M1
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0102, ATM-GOV-0105]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0106 Thin Guard Engine for Mutation and Git Checks
@@ -34,9 +36,9 @@ Core guard should be thin, deterministic, and independent of editor runtime.
 
 ## Acceptance Criteria
 
-- [ ] Guard API can validate claimed file scope.
-- [ ] Guard API can validate git-governance contract.
-- [ ] Hook and non-hook workflows use the same core guard behavior.
+- [x] Guard API can validate claimed file scope.
+- [x] Guard API can validate git-governance contract.
+- [x] Hook and non-hook workflows use the same core guard behavior.
 
 ## Target Files
 
@@ -52,5 +54,6 @@ node atm.mjs guard git --task ATM-GOV-0106 --actor <actor> --json
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:governance-commands` + `npm run typecheck` | change: validated thin mutation and git guards, fail-open behavior, and shared non-hook guard surface for integrations and CI in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: in-progress | validation: pending | change: locked by codex-gpt-5.5 for M1 guard engine implementation pass in isolated AI-Atomic-Framework worktree | blocker: waiting on shared foundation updates
 2026-05-19 | status: open | validation: pending | change: formal card opened

@@ -3,7 +3,7 @@ doc_id: doc_other_0809
 task_id: ATM-GOV-0108
 title: No-Hook and Human Collaboration Fallback Profile
 milestone: M2
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0106]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0108 No-Hook and Human Collaboration Fallback Profile
@@ -34,9 +36,9 @@ ATM must still prevent unsafe merges through claim, evidence, and git gates.
 
 ## Acceptance Criteria
 
-- [ ] Unclaimed work cannot pass commit/PR governance checks.
-- [ ] Human and AI workflows share the same core contracts.
-- [ ] Fallback profile is explicit in docs and examples.
+- [x] Unclaimed work cannot pass commit/PR governance checks.
+- [x] Human and AI workflows share the same core contracts.
+- [x] Fallback profile is explicit in docs and examples.
 
 ## Target Files
 
@@ -52,4 +54,5 @@ node atm.mjs evidence verify --task ATM-GOV-0108 --gate commit --json
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:governance-commands` + `npm run typecheck` | change: validated no-hook fallback through shared mutation, git, and commit-evidence gates so human and AI workflows follow the same core claim/evidence contract in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

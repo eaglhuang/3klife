@@ -3,7 +3,7 @@ doc_id: doc_other_0821
 task_id: ATM-GOV-0120
 title: Multi-language Onefile Validation Matrix for Governance Analysis
 milestone: M4
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0117, ATM-GOV-0118, ATM-GOV-0119]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0120 Multi-language Onefile Validation Matrix for Governance Analysis
@@ -33,9 +35,9 @@ Onefile distribution must validate governance behavior across language profiles.
 
 ## Acceptance Criteria
 
-- [ ] Matrix includes supported, deprecated, unsupported capability states.
-- [ ] Onefile runner outputs consistent evidence across matrix fixtures.
-- [ ] CI gate can fail on matrix drift.
+- [x] Matrix includes supported, deprecated, unsupported capability states.
+- [x] Onefile runner outputs consistent evidence across matrix fixtures.
+- [x] CI gate can fail on matrix drift.
 
 ## Target Files
 
@@ -52,4 +54,5 @@ npm run typecheck
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:guidance` + `npm run typecheck` | change: confirmed the multi-language governance matrix across JavaScript, Python, mixed, and unsupported fixtures stays deterministic and CI-verifiable in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

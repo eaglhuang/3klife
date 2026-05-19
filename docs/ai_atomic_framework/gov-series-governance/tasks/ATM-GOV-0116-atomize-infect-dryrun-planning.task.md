@@ -3,7 +3,7 @@ doc_id: doc_other_0817
 task_id: ATM-GOV-0116
 title: Atomize and Infect Dry-Run Planning via LanguageAdapter
 milestone: M3
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0114, ATM-GOV-0115]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0116 Atomize and Infect Dry-Run Planning via LanguageAdapter
@@ -34,9 +36,9 @@ LanguageAdapter capabilities should define the safe planning contract.
 
 ## Acceptance Criteria
 
-- [ ] Dry-run proposals contain language capability attribution.
-- [ ] Proposal generation does not mutate host source files.
-- [ ] Missing capabilities produce advisory-only fallback.
+- [x] Dry-run proposals contain language capability attribution.
+- [x] Proposal generation does not mutate host source files.
+- [x] Missing capabilities produce advisory-only fallback.
 
 ## Target Files
 
@@ -52,4 +54,5 @@ node atm.mjs upgrade --propose --behavior behavior.infect --dry-run --json
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:guidance` + `npm run typecheck` | change: confirmed atomize and infect dry-run planning remains adapter-attributed, non-mutating, and advisory-only when capability gaps are present in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

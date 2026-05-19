@@ -3,7 +3,7 @@ doc_id: doc_other_0813
 task_id: ATM-GOV-0112
 title: LanguageAdapter Governance Capability Contract
 milestone: M3
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0110]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0112 LanguageAdapter Governance Capability Contract
@@ -34,9 +36,9 @@ ATM needs a formal contract to decide what language adapters can guarantee.
 
 ## Acceptance Criteria
 
-- [ ] Capability declarations are machine-readable.
-- [ ] Missing capabilities are visible in CLI evidence.
-- [ ] Contract can serve multiple language adapters.
+- [x] Capability declarations are machine-readable.
+- [x] Missing capabilities are visible in CLI evidence.
+- [x] Contract can serve multiple language adapters.
 
 ## Target Files
 
@@ -53,4 +55,5 @@ node atm.mjs next --json
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:guidance` + `npm run validate:python-adapter` + `npm run typecheck` | change: confirmed the LanguageAdapter governance capability contract, readiness evidence, and multi-adapter routing surfaces in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

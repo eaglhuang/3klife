@@ -3,7 +3,7 @@ doc_id: doc_other_0802
 task_id: ATM-GOV-0101
 title: Actor Identity Registry and Git Identity Contract
 milestone: M1
-status: in-progress
+status: done
 blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0101 Actor Identity Registry and Git Identity Contract
@@ -34,9 +36,9 @@ Git author identity and ATM actor identity must be explicitly aligned.
 
 ## Acceptance Criteria
 
-- [ ] Actor kinds support `human`, `ai-agent`, and `automation`.
-- [ ] Git name/email mismatch is detectable and actionable.
-- [ ] CLI emits machine-readable identity evidence.
+- [x] Actor kinds support `human`, `ai-agent`, and `automation`.
+- [x] Git name/email mismatch is detectable and actionable.
+- [x] CLI emits machine-readable identity evidence.
 
 ## Target Files
 
@@ -53,6 +55,7 @@ node atm.mjs actor verify-git --id <actor-id> --json
 
 ## Notes
 
+2026-05-19 | status: done | validation: `atm.mjs actor register` + `atm.mjs actor verify-git --id codex-gpt-5.5 --json` + `npm run typecheck` | change: validated actor registry creation, AGENT_IDENTITY compatibility alias, and deterministic git identity evidence in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: in-progress | validation: actor register + actor verify-git pass in isolated AI-Atomic-Framework worktree | change: exercised actor registry creation, AGENT_IDENTITY compatibility, and git identity verification end-to-end with codex-gpt-5.5 | blocker: none
 2026-05-19 | status: in-progress | validation: pending | change: locked by codex-gpt-5.5 and started M1 governance foundations in isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

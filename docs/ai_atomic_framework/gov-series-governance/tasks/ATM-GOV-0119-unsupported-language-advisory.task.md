@@ -3,7 +3,7 @@ doc_id: doc_other_0820
 task_id: ATM-GOV-0119
 title: Unsupported Language Advisory and Deferred Apply Contract
 milestone: M4
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0113, ATM-GOV-0118]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0119 Unsupported Language Advisory and Deferred Apply Contract
@@ -34,9 +36,9 @@ ATM should provide useful advisory output while deferring unsafe operations.
 
 ## Acceptance Criteria
 
-- [ ] Unsupported language apply paths are blocked by contract.
-- [ ] Advisory messages include precise deferred reasons.
-- [ ] Non-mutating workflows remain available.
+- [x] Unsupported language apply paths are blocked by contract.
+- [x] Advisory messages include precise deferred reasons.
+- [x] Non-mutating workflows remain available.
 
 ## Target Files
 
@@ -52,4 +54,5 @@ node atm.mjs explain --why blocked --json
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:guidance` + `npm run validate:python-adapter` + `npm run typecheck` | change: confirmed unsupported-language advisory output keeps discovery/ranking/docs-first flows available while deferring unsafe apply paths in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

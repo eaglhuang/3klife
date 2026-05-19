@@ -3,7 +3,7 @@ doc_id: doc_other_0810
 task_id: ATM-GOV-0109
 title: Claim Collision Proofing and Conflict Evidence Flow
 milestone: M2
-status: in-progress
+status: done
 blocked_by: [ATM-GOV-0102, ATM-GOV-0108]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
@@ -17,6 +17,8 @@ created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
+completed_at: 2026-05-19T23:55:38.2492514+08:00
+completed_by_agent: codex-gpt-5.5
 ---
 
 # ATM-GOV-0109 Claim Collision Proofing and Conflict Evidence Flow
@@ -34,9 +36,9 @@ Conflict handling must be deterministic and auditable.
 
 ## Acceptance Criteria
 
-- [ ] Concurrent claim races produce a single winner.
-- [ ] Losing attempts get clear conflict evidence.
-- [ ] Takeover requires reason plus evidence.
+- [x] Concurrent claim races produce a single winner.
+- [x] Losing attempts get clear conflict evidence.
+- [x] Takeover requires reason plus evidence.
 
 ## Target Files
 
@@ -52,4 +54,5 @@ node atm.mjs tasks claim --task ATM-GOV-0109 --actor <actor-b> --files <csv> --j
 
 ## Notes
 
+2026-05-19 | status: done | validation: `npm run validate:governance-commands` + `npm run typecheck` | change: validated single-winner claim conflicts, explicit-reason takeover, and takeover evidence trail preservation in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened
