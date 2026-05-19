@@ -61,3 +61,26 @@ A custom proposal id was used so this second governed leaf would not overwrite t
 ## Remaining Scope
 
 TASK-ATS-0007 stays open. Polymorphize evidence now exists and passes, but real evolve proof is still blocked until the adopter registry carries atom-level version lineage that can produce a machine-generated hash diff for `ATM-NPCBRAIN-0002`.
+## Human Review Decision
+
+The second governed leaf inside `ATM-MAP-0001` was formally approved for actual patch planning through ATM human review.
+
+Artifact path:
+
+- `.atm/history/evidence/LEGACY-GUIDED-ATOMIZE.json`
+
+Approved proposal:
+
+- `guided-legacy-atomize-guidance-20260519151625-f417f5a6f2-apply-convergence-loop-state-governance`
+- target: `pipelines/sanguo-rag/run_full_roster_convergence_loop.py#apply_convergence_loop_state_governance`
+
+Review reason summary:
+
+- single-call governance initializer
+- narrow global-state boundary
+- no trunk orchestration edits
+- straightforward inline rollback path
+
+## Router Follow-up Observation
+
+After the approval was recorded, `atm next` still returned the same dry-run proposal recommendation instead of advancing to an apply-oriented next action. This suggests the current guidance router is not yet consuming the approved custom proposal record as satisfying the guidance-session recommendation.
