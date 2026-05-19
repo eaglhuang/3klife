@@ -320,71 +320,74 @@ Read README.md if present, then run "node atm.mjs next --json" from the reposito
 
 若要驗證 AI-Atomic docs public-language gate，可在 AI-Atomic-Framework 執行 CJK 掃描腳本，期望只剩 `docs/ATOM_EVOLUTION_PLAN.md` 或其英文化替代進度。
 <!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:START -->
-## 5.2 2026-05-19 TASK-ATS-0004 驗收重估：顯式 ATM prompt 通過，自然黑箱仍需補強
+## 5.2 2026-05-19 TASK-ATS-0004 驗收結案：跨編輯器黑箱治理鏈通過
 
-### 測試判定
+### 結論
 
-這次測試不能算「完全黑箱成功」，因為 prompt 裡有明確說「請用 ATM」。
-但它可以算一個重要的 ATM 顯式引導成功測試。
-
-已通過：
-- Explicit ATM Prompt Compliance：使用者明確要求「用 ATM」時，Agent 有先開 guidance session。
-- Blocker Awareness：Agent 有發現 package-json-missing、docs/QUICK_START.md 缺失、docs/keep.summary.md 缺失。
-- Graceful Fallback：Agent 沒有因為缺檔卡死，而是改走 docs-first / inventory-first 盤點。
-- Return To User Intent：Agent 最後有回到原需求，排序哪些 Python pipeline 最值得整理。
-- ATM-Style Reasoning：第二輪有提出 atom-style 拆分計畫、低風險切法、共同 gate。
-
-尚未通過：
-- Natural Black-Box Skill Trigger：使用者不提 ATM 時，Agent 仍可能用自己的靜態分析方式繞過治理。
-- Deterministic Candidate Ranking：目前排序品質可用，但尚未全部來自 atm candidates rank artifact。
-- Source Inventory Artifact：需要正式 ATM source inventory report。
-- Police Artifact：需要 decomposition / atomization / guidance drift police report。
-- Python-Only Adopter Neutrality：ATM 不能把 Python-only adopter 的 package-json-missing 當 release blocker。
-
-結論：2026-05-19 測試顯示，ATM 在明確提示下已能導引 Agent 進入治理式分析，且能在缺少部分文件時回到使用者任務。但自然語句自動觸發、deterministic candidate ranking、source inventory / police artifact 尚未完全完成，因此 TASK-ATS-0004 維持 in_progress。
+2026-05-19 補充驗收顯示，Copilot、Codex、Claude Code、Google Antigravity 都已能在自然語句下先回到 ATM `next` / `guide` / `candidates rank` 治理鏈，再用 candidate ranking、source inventory、police-family、guidance-drift-police artifact 回答 Python 管線優先序問題。因此 TASK-ATS-0004 正式完成。
 
 ### TASK-ATS-0004 子驗收狀態
 
 | 子項 | 狀態 | 判定 |
 |---|---|---|
-| TASK-ATS-0004A Explicit ATM Prompt Smoke | pass | 明確要求用 ATM 時，Agent 會進入 guidance session。 |
-| TASK-ATS-0004B Natural Prompt Auto Skill Trigger | partial fail | 自然口語 prompt 仍可能漏接 ATM。 |
-| TASK-ATS-0004C Python Pipeline Ranking Quality | pass-advisory | 排序品質可用，但還不是完全 deterministic artifact。 |
-| TASK-ATS-0004D Candidate Ranking Artifact | implemented-upstream / needs adopter retest | AI-Atomic 已新增 atm candidates rank，npc-brain 需刷新 release 後重測。 |
-| TASK-ATS-0004E Source Inventory + Police Evidence | implemented-upstream / needs adopter retest | atm candidates rank 會輸出 source inventory 與 police-family report。 |
-| TASK-ATS-0004F Python-Only Blocker Neutrality | implemented-upstream / needs adopter retest | package-json-missing 在 Python-only adopter 應降為 advisory。 |
+| TASK-ATS-0004A Explicit ATM Prompt Smoke | pass | 顯式要求用 ATM 時，Agent 會進入 guidance session。 |
+| TASK-ATS-0004B Natural Prompt Auto Skill Trigger | pass | Copilot、Codex、Claude Code、Antigravity 在自然黑箱 prompt 下都能先走 ATM 路由。 |
+| TASK-ATS-0004C Python Pipeline Ranking Quality | pass | Python pipeline 排序已由 `atm candidates rank` artifact 直接支撐。 |
+| TASK-ATS-0004D Candidate Ranking Artifact | pass | 多編輯器最終回答都能引用 candidate ranking report。 |
+| TASK-ATS-0004E Source Inventory + Police Evidence | pass | source inventory、police-family、guidance-drift-police artifact 已進入最終回答證據鏈。 |
+| TASK-ATS-0004F Python-Only Blocker Neutrality | pass | Python-only adopter 的 `package-json-missing` 已降為 advisory，不再阻擋候選排序與 dry-run proposal。 |
 
-### 更新後 TASK-ATS-0004 里程碑
+### 後續移轉
 
-1. TASK-ATS-0004A：回寫顯式 ATM prompt 測試證據，標記 pass。
-2. TASK-ATS-0004B：回寫自然黑箱 prompt 漏接證據，標記 partial fail。
-3. TASK-ATS-0004C：新增全英文 atm-governance-router skill。
-4. TASK-ATS-0004D：新增 legacy-candidate-ranking intent。
-5. TASK-ATS-0004E：修正 Python-only adopter 的 package-json-missing blocker 語意。
-6. TASK-ATS-0004F：新增 guided fallback contract：missingDocs、fallbackSources、continuedOriginalRequest。
-7. TASK-ATS-0004G：新增 atm candidates rank。
-8. TASK-ATS-0004H：把 candidates rank 接到 source inventory 與 police family。
-9. TASK-ATS-0004I：新增 Guidance Drift Police 與 skill miss learning loop。
-10. TASK-ATS-0004J：刷新 npc-brain 後重跑兩種測試：明確說 ATM、完全不說 ATM。
-
-### 下一輪驗收標準
-
-明確 ATM prompt：
-```text
-請用 ATM 幫我看看目前這個 repo 裡，哪些 Python 資料管線最亂、最值得先整理，先幫我排一下優先順序。
-```
-
-自然黑箱 prompt：
-```text
-請幫我看看目前這個 repo 裡，哪些 Python 資料管線最亂、最值得先整理，先幫我排一下優先順序。
-```
-
-兩者最後都應該產生或引用：
-- ATM guidance result
-- candidate ranking artifact
-- source inventory artifact
-- police artifact
-- recommended split / atomize / infect route
-
-下一輪重點不是重做整套 ATM，而是補三個缺口：讓 skill 自然觸發、讓 ranking deterministic artifact 化、讓 Python-only host 不被 Node 假設卡住。
+1. TASK-ATS-0005 轉為 `in_progress`。
+2. 第一支 legacy Python pilot 選擇 `pipelines/sanguo-rag/sanguo_governance_loader.py`。
+3. 2026-05-19 已產出 guidance session `guidance-20260519125514-b1f15ab8ab`，並產生 `behavior.split` guided dry-run proposal `guided-legacy-split-guidance-20260519125514-b1f15ab8ab`，等待 human review 後再決定是否進一步做 atomize / infect。
+4. 另開 upstream 任務 `ATM-GOV-0111 Antigravity Integration Adapter`，把已通過的 Antigravity 行為正式產品化。
 <!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:END -->
+
+<!-- TASK-ATS-0005-0007-2026-05-19-PROGRESSION:START -->
+## 5.3 2026-05-19 TASK-ATS-0005 ~ TASK-ATS-0007 推進更新
+
+### 結論
+
+- `TASK-ATS-0005` 已可視為完成：ATM 已在 `3klife-npc-brain` 真實 Python host 上，對 `pipelines/sanguo-rag/sanguo_governance_loader.py#default_governance_root` 同時產出 `atomize` 與 `infect` 的 guided dry-run proposal，且未直接修改 host Python 原始碼。
+- `TASK-ATS-0006` 已進入主戰場：目標不再是 helper，而是高價值大功能 `pipelines/sanguo-rag/run_full_roster_convergence_loop.py`。已建立正式 decomposition plan，並用官方 `create-map --from-plan` surface materialize 出 canonical map `ATM-MAP-0001`。
+- `TASK-ATS-0007` 已從等待狀態進入 rollout 驗收：`ATM-MAP-0001` 已通過 map integration test，replacement lane 已從 `draft -> shadow -> canary`，而 `active` transition 的正式 blocker 也已被 ATM 機器可讀地捕捉。
+
+### TASK-ATS-0005 完成證據
+
+- Guidance session: `guidance-20260519134240-815ea27a83`
+- Leaf target: `pipelines/sanguo-rag/sanguo_governance_loader.py#default_governance_root`
+- Atomize proposal: `guided-legacy-atomize-guidance-20260519134240-815ea27a83`
+- Infect proposal: `guided-legacy-infect-guidance-20260519134240-815ea27a83`
+- Queue path: `.atm/history/reports/upgrade-proposals.json`
+
+### TASK-ATS-0006 目前證據
+
+- High-value feature target: `pipelines/sanguo-rag/run_full_roster_convergence_loop.py`
+- Decomposition plan: `.atm/history/reports/decomposition-plan.full-roster-convergence-v1.json`
+- Canonical map: `ATM-MAP-0001`
+- Workbench path: `atomic_workbench/maps/ATM-MAP-0001`
+- Registry path: `atomic-registry.json`
+
+### TASK-ATS-0007 目前證據
+
+- Map integration report: `atomic_workbench/maps/ATM-MAP-0001/map.test.report.json`
+- Lineage log: `atomic_workbench/maps/ATM-MAP-0001/lineage-log.json`
+- Replacement lane progress: `draft -> shadow -> canary`
+- `active` blocker:
+  - `map-equivalence`
+  - `propagation-report`
+  - `review-advisory`
+  - `human-review`
+
+### 現在可以怎麼做
+
+這代表 `3klife-npc-brain` 已經不是停留在「leaf-level dry-run 可不可用」的階段，而是正式進入：
+
+1. 以大功能為對象的 Atomic Map 拆解；
+2. 以 canonical map 為中心的 rollout/equivalence 驗收；
+3. 用 machine-readable blocker 決定何時能從 `canary` 走到 `active`。
+
+因此，後續若要開始第一支「受治理的大改 pilot」，應以 `ATM-MAP-0001` 為邊界，而不是直接粗暴重寫整支 `run_full_roster_convergence_loop.py`。
+<!-- TASK-ATS-0005-0007-2026-05-19-PROGRESSION:END -->

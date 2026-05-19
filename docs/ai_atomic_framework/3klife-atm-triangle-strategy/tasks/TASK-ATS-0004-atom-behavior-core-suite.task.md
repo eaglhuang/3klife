@@ -4,7 +4,7 @@ task_id: TASK-ATS-0004
 title: Atom behavior core suite on npc-brain
 owner: atm-core
 priority: P0
-status: in_progress
+status: completed
 milestone: M3
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: TASK-ATS-0003
@@ -47,18 +47,21 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+2026-05-19 | 狀態: completed | 驗證: cross-editor black-box pass | 變更: Copilot、Codex、Claude Code、Antigravity 已能在自然語句下引用 candidate ranking / source inventory / police artifact 回答排序問題，TASK-ATS-0004 正式結案 | 阻塞: none
 <!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:START -->
-## 2026-05-19 驗收重估
+## 2026-05-19 驗收結案
 
-狀態：in_progress。
+狀態：completed。
 
 子驗收：
 - TASK-ATS-0004A Explicit ATM Prompt Smoke：pass。
-- TASK-ATS-0004B Natural Prompt Auto Skill Trigger：partial fail。
-- TASK-ATS-0004C Python Pipeline Ranking Quality：pass as advisory, not yet fully deterministic。
-- TASK-ATS-0004D Candidate Ranking Artifact：implemented upstream, needs npc-brain retest。
-- TASK-ATS-0004E Source Inventory + Police Evidence：implemented upstream, needs npc-brain retest。
-- TASK-ATS-0004F Python-Only Blocker Neutrality：implemented upstream, needs npc-brain retest。
+- TASK-ATS-0004B Natural Prompt Auto Skill Trigger：pass。
+- TASK-ATS-0004C Python Pipeline Ranking Quality：pass。
+- TASK-ATS-0004D Candidate Ranking Artifact：pass。
+- TASK-ATS-0004E Source Inventory + Police Evidence：pass。
+- TASK-ATS-0004F Python-Only Blocker Neutrality：pass。
 
-下一步：刷新 npc-brain 的 pinned ATM release，重跑「明確說 ATM」與「完全不說 ATM」兩種 prompt，確認兩者都能產生或引用 candidate ranking artifact、source inventory artifact、police artifact 與 split / atomize / infect route。
+完成判定：Copilot、Codex、Claude Code、Google Antigravity 都已能在自然語句下先進 ATM 路由，再引用 candidate ranking、source inventory、police-family、guidance-drift-police artifact 回答 Python 管線排序問題。
+
+下一步：TASK-ATS-0005 轉為 in_progress，第一支 legacy Python pilot 以 `pipelines/sanguo-rag/sanguo_governance_loader.py` 產生 guided split dry-run proposal，待 review 後再決定 atomize / infect 後續路徑。
 <!-- TASK-ATS-0004-2026-05-19-REASSESSMENT:END -->

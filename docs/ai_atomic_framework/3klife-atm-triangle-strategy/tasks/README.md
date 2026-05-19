@@ -22,10 +22,10 @@ created_by_agent: codex
 | [TASK-ATS-0001](./TASK-ATS-0001-docs-language-boundary-and-move.task.md) | Public docs language gate and strategy directory migration | M0 | completed | — |
 | [TASK-ATS-0002](./TASK-ATS-0002-npc-brain-baseline-fixture-inventory.task.md) | npc-brain baseline freeze and fixture inventory | M1 | completed | TASK-ATS-0001 |
 | [TASK-ATS-0003](./TASK-ATS-0003-official-onboarding-smoke.task.md) | npc-brain official ATM onboarding smoke | M2 | in_progress | TASK-ATS-0002 |
-| [TASK-ATS-0004](./TASK-ATS-0004-atom-behavior-core-suite.task.md) | Atom behavior core suite on npc-brain | M3 | open | TASK-ATS-0003 |
-| [TASK-ATS-0005](./TASK-ATS-0005-legacy-python-infect-atomize.task.md) | Legacy Python infect and atomize validation | M4 | open | TASK-ATS-0004 |
-| [TASK-ATS-0006](./TASK-ATS-0006-atomic-map-decomposition-validation.task.md) | Atomic Map decomposition and replacement validation | M5 | open | TASK-ATS-0005 |
-| [TASK-ATS-0007](./TASK-ATS-0007-atom-evolution-polymorph-validation.task.md) | Atom evolution and polymorphize validation | M6 | open | TASK-ATS-0006 |
+| [TASK-ATS-0004](./TASK-ATS-0004-atom-behavior-core-suite.task.md) | Atom behavior core suite on npc-brain | M3 | completed | TASK-ATS-0003 |
+| [TASK-ATS-0005](./TASK-ATS-0005-legacy-python-infect-atomize.task.md) | Leaf-level legacy Python atomize and infect dry-run pass | M4 | completed | TASK-ATS-0004 |
+| [TASK-ATS-0006](./TASK-ATS-0006-atomic-map-decomposition-validation.task.md) | Legacy Python feature decomposition to atomic map dry-run | M5 | in_progress | TASK-ATS-0005 |
+| [TASK-ATS-0007](./TASK-ATS-0007-atom-evolution-polymorph-validation.task.md) | Atomic map equivalence and rollout validation | M6 | in_progress | TASK-ATS-0006 |
 | [TASK-ATS-0008](./TASK-ATS-0008-adopter-sentinel-evidence-routing.task.md) | Adopter sentinel integration and evidence routing | M7 | open | TASK-ATS-0007 |
 | [TASK-ATS-0009](./TASK-ATS-0009-upstream-blocker-repair-batch.task.md) | Upstream blocker repair batch from npc-brain evidence | M8 | open | TASK-ATS-0008 |
 | [TASK-ATS-0010](./TASK-ATS-0010-graduation-release-gate.task.md) | 3KLife experiment graduation and ATM release gate | M9 | open | TASK-ATS-0009 |
@@ -36,3 +36,9 @@ created_by_agent: codex
 ## 2026-05-19 Status Update
 
 TASK-ATS-0003 is now in progress. The first natural-language Codex smoke test is a partial pass: the Agent discovered ATM routing without explicit user prompting, ran `node atm.mjs next --json`, executed the onboarding refresh command, then returned to the original data-pipeline progress request. Remaining M2 work is to refresh npc-brain with the latest first-use notice contract and re-run the same style of black-box prompt.
+
+TASK-ATS-0005 is completed. The pinned adopter runner in `3klife-npc-brain` produced both `guided-legacy-atomize-guidance-20260519134240-815ea27a83` and `guided-legacy-infect-guidance-20260519134240-815ea27a83` for `pipelines/sanguo-rag/sanguo_governance_loader.py#default_governance_root`, confirming the leaf-level legacy Python dry-run path.
+
+TASK-ATS-0006 is now in progress. A feature-level decomposition plan for `pipelines/sanguo-rag/run_full_roster_convergence_loop.py` was written to `.atm/history/reports/decomposition-plan.full-roster-convergence-v1.json`, and the official `create-map --from-plan` flow materialized canonical map `ATM-MAP-0001`.
+
+TASK-ATS-0007 is now in progress. `ATM-MAP-0001` passed `test --map`, then advanced through the replacement lane from `draft -> shadow -> canary`. A deliberate `active` transition probe produced the formal blocker demanding `map-equivalence`, `propagation-report`, `review-advisory`, and `human-review` evidence.
