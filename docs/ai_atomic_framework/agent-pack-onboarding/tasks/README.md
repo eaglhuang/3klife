@@ -46,6 +46,7 @@ last_updated: 2026-05-19T00:00:00+08:00
 | [TASK-APO-0025](./TASK-APO-0025-existing-root-entry-injection.task.md) | 既有 README / AGENTS 的 loop-free ATM 入口注入 | M4 | done | 0007 / 0008 |
 | [TASK-APO-0026](./TASK-APO-0026-codex-official-integration.task.md) | Codex editor integration 正式化 | M3 | done | 0006 |
 | [TASK-APO-0027](./TASK-APO-0027-pinned-runner-auto-install.task.md) | Pinned Runner Auto-Install During Init/Bootstrap | M4 | done | 0025 |
+| [TASK-APO-0028](./TASK-APO-0028-first-use-user-notice.task.md) | First-use user notice 與 suggested actions | M4 | done | 0027 |
 
 ## 維護規則
 
@@ -54,3 +55,4 @@ last_updated: 2026-05-19T00:00:00+08:00
 - Agent-specific 任務不得直接修改 `packages/core/`，除非該任務明確被升級為 core behavior 或 registry contract。
 - 所有 editor / agent entry 最後都必須回到 `node atm.mjs next --json`，不得形成第二套治理協議。
 - root `atm.mjs` 是 official onboarding 的一部分；使用者不應被要求手動從 upstream 複製 onefile runner。
+- first-use notice 是給 Agent 轉述的人類提示，不是新的流程權威；真正下一步仍以 `nextAction.command` 為準。
