@@ -2524,5 +2524,29 @@
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0304.task.md",
     "title": "ATM-LANG-CSHARP-0304 - C# advisory readiness gate and threshold profile",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0973",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0400.task.md",
+    "title": "ATM-LANG-CSHARP-0400 C# capability baseline realignment",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0974",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0401.task.md",
+    "title": "ATM-LANG-CSHARP-0401 C# source inventory full promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0975",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0402.task.md",
+    "title": "ATM-LANG-CSHARP-0402 C# dependency and artifact graph full promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0976",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0403.task.md",
+    "title": "ATM-LANG-CSHARP-0403 C# validator and readiness baseline hardening",
+    "category": "other"
   }
 ]

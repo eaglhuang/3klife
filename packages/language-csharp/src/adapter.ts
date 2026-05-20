@@ -84,7 +84,7 @@ export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
   languageId: 'csharp',
   contractVersion: 'v2',
   capabilities: {
-    sourceInventory: 'partial',
+    sourceInventory: 'full',
     symbolNormalization: 'full',
     legacyRoutePlanning: 'full',
     atomizeDryRun: 'partial',
@@ -93,9 +93,9 @@ export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
     diagnosticsParsing: 'partial',
     equivalenceContract: 'partial',
     atomicMapDecomposition: 'full',
-    dependencyGraph: 'partial',
+    dependencyGraph: 'full',
     callGraph: 'full',
-    artifactGraph: 'partial',
+    artifactGraph: 'full',
   },
   detectProjectProfile(repositoryRoot: string) {
     return detectCSharpProjectProfile(repositoryRoot);

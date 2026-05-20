@@ -35,6 +35,7 @@ const REQUIRED_FILES = [
   'tests/fixtures/language-csharp/enterprise-solution/tests/Contoso.App.Tests/Contoso.App.Tests.csproj',
   'tests/fixtures/language-csharp/enterprise-solution/expected-smoke.json',
   'tests/fixtures/language-csharp/expected-report.json',
+  'tests/fixtures/language-csharp/capability-baseline.json',
   'tests/fixtures/language-csharp/dry-run-requests.json',
   'tests/fixtures/language-csharp/diagnostics-sample.txt',
   'tests/fixtures/language-csharp/diagnostics-sarif.json',
@@ -108,10 +109,13 @@ const REQUIRED_SNIPPETS = [
   {
     path: 'packages/language-csharp/src/adapter.ts',
     snippets: [
+      "sourceInventory: 'full'",
       "symbolNormalization: 'full'",
       "legacyRoutePlanning: 'full'",
       "atomicMapDecomposition: 'full'",
+      "dependencyGraph: 'full'",
       "callGraph: 'full'",
+      "artifactGraph: 'full'",
       'buildLegacyRoutePlan(request)',
       'buildAtomicMapDecomposition(request)',
     ],
@@ -131,6 +135,15 @@ function edgeExists(edges, expected) {
       edge.to === expected.to &&
       edge.relation === expected.relation
   );
+}
+
+function isSorted(values, selector) {
+  for (let index = 1; index < values.length; index += 1) {
+    if (selector(values[index - 1]).localeCompare(selector(values[index])) > 0) {
+      return false;
+    }
+  }
+  return true;
 }
 
 async function runFixtureCheck() {
@@ -161,6 +174,9 @@ async function runFixtureCheck() {
   const fixtureRoot = repoPath('tests/fixtures/language-csharp/sample-project');
   const expected = JSON.parse(
     fs.readFileSync(repoPath('tests/fixtures/language-csharp/expected-report.json'), 'utf8')
+  );
+  const capabilityBaseline = JSON.parse(
+    fs.readFileSync(repoPath('tests/fixtures/language-csharp/capability-baseline.json'), 'utf8')
   );
   const dryRunRequests = JSON.parse(
     fs.readFileSync(repoPath('tests/fixtures/language-csharp/dry-run-requests.json'), 'utf8')
@@ -405,6 +421,51 @@ async function runFixtureCheck() {
       `missing artifact edge: ${JSON.stringify(requiredEdge)}`
     );
   }
+  assert.equal(
+    isSorted(analysis.inventory.files ?? [], (entry) => entry.filePath),
+    true,
+    'inventory files should be sorted by filePath'
+  );
+  for (const fileEntry of analysis.inventory.files ?? []) {
+    assert.equal(
+      isSorted(
+        fileEntry.symbols ?? [],
+        (symbol) =>
+          `${symbol.range.startLine}:${symbol.range.startColumn}:${symbol.range.endLine}:${symbol.range.endColumn}|${symbol.kind}|${symbol.displayName}|${symbol.symbolId}`
+      ),
+      true,
+      `symbols should be sorted deterministically: ${fileEntry.filePath}`
+    );
+  }
+  assert.equal(
+    isSorted(
+      analysis.inventory.dependencyEdges ?? [],
+      (edge) => `${edge.from}|${edge.to}|${edge.relation}|${edge.evidence ?? ''}`
+    ),
+    true,
+    'dependency edges should be sorted deterministically'
+  );
+  assert.equal(
+    isSorted(
+      analysis.inventory.callEdges ?? [],
+      (edge) => `${edge.from}|${edge.to}|${edge.relation}|${edge.evidence ?? ''}`
+    ),
+    true,
+    'call edges should be sorted deterministically'
+  );
+  assert.equal(
+    isSorted(
+      analysis.inventory.artifactEdges ?? [],
+      (edge) => `${edge.from}|${edge.to}|${edge.relation}|${edge.evidence ?? ''}`
+    ),
+    true,
+    'artifact edges should be sorted deterministically'
+  );
+  assert.equal(
+    isSorted(analysis.inventory.warnings ?? [], (warning) => warning),
+    true,
+    'inventory warnings should be sorted deterministically'
+  );
   for (const partialTypeKey of expected.requiredPartialTypeKeys ?? []) {
     assert.ok(
       partialIndex.groups.some((group) => group.fullTypeKey === partialTypeKey),
@@ -547,28 +608,19 @@ async function runFixtureCheck() {
 
   assert.equal(csharpLanguageAdapterV2.languageId, 'csharp', 'adapter languageId mismatch');
   assert.equal(csharpLanguageAdapterV2.contractVersion, 'v2', 'adapter contractVersion mismatch');
-  assert.equal(csharpLanguageAdapterV2.capabilities?.sourceInventory, 'partial', 'sourceInventory capability mismatch');
-  assert.equal(csharpLanguageAdapterV2.capabilities?.atomizeDryRun, 'partial', 'atomize capability mismatch');
-  assert.equal(csharpLanguageAdapterV2.capabilities?.infectDryRun, 'partial', 'infect capability mismatch');
-  assert.equal(csharpLanguageAdapterV2.capabilities?.diagnosticsParsing, 'partial', 'diagnostics capability mismatch');
-  assert.equal(csharpLanguageAdapterV2.capabilities?.runtimeCommandDetection, 'partial', 'runtime command capability mismatch');
+  assert.equal(csharpLanguageAdapterV2.adapterId, capabilityBaseline.adapterId, 'adapterId baseline mismatch');
   assert.equal(
-    csharpLanguageAdapterV2.capabilities?.legacyRoutePlanning,
-    'full',
-    'legacy route capability mismatch'
+    csharpLanguageAdapterV2.languageId,
+    capabilityBaseline.languageId,
+    'languageId baseline mismatch'
   );
-  assert.equal(
-    csharpLanguageAdapterV2.capabilities?.symbolNormalization,
-    'full',
-    'symbol normalization capability mismatch'
-  );
-  assert.equal(
-    csharpLanguageAdapterV2.capabilities?.atomicMapDecomposition,
-    'full',
-    'atomic map capability mismatch'
-  );
-  assert.equal(csharpLanguageAdapterV2.capabilities?.callGraph, 'full', 'call graph capability mismatch');
-  assert.equal(csharpLanguageAdapterV2.capabilities?.equivalenceContract, 'partial', 'equivalence capability mismatch');
+  for (const [capability, level] of Object.entries(capabilityBaseline.capabilities ?? {})) {
+    assert.equal(
+      csharpLanguageAdapterV2.capabilities?.[capability],
+      level,
+      `capability baseline mismatch: ${capability}`
+    );
+  }
   assert.equal(typeof csharpLanguageAdapterV2.buildLegacyRoutePlan, 'function', 'buildLegacyRoutePlan should exist');
   assert.equal(typeof csharpLanguageAdapterV2.buildAtomicMapDecomposition, 'function', 'buildAtomicMapDecomposition should exist');
 
@@ -600,8 +652,8 @@ async function runFixtureCheck() {
   assert.equal(resolution.selected?.adapterId, 'csharp-future', 'resolver should select csharp adapter');
   assert.equal(resolution.ok, true, 'resolver should pass with partial capability allowed');
   assert.ok(
-    resolution.selected?.fallback.advisory.includes('sourceInventory'),
-    'resolver advisory should include sourceInventory partial capability'
+    resolution.selected?.fallback.advisory.includes('runtimeCommandDetection'),
+    'resolver advisory should include runtimeCommandDetection partial capability'
   );
 
   const delegatedRoute = await planLegacyRouteWithAdapter({

@@ -645,7 +645,11 @@ function dedupeEdges(edges: readonly EdgeRef[]): EdgeRef[] {
       byKey.set(key, edge);
     }
   }
-  return Array.from(byKey.values());
+  return Array.from(byKey.values()).sort((left, right) => {
+    const leftKey = `${left.from}|${left.to}|${left.relation}|${left.evidence ?? ''}`;
+    const rightKey = `${right.from}|${right.to}|${right.relation}|${right.evidence ?? ''}`;
+    return leftKey.localeCompare(rightKey);
+  });
 }
 
 export function buildCSharpPartialDeclarationIndex(
@@ -705,14 +709,27 @@ export function buildCSharpInventory(request: SourceInventoryRequest): CSharpPro
   const files: SourceFileEntry[] = moduleAnalyses.map((analysis) => ({
     filePath: analysis.filePath,
     languageId: 'csharp',
-    symbols: analysis.symbols,
+    symbols: [...analysis.symbols].sort((left, right) => {
+      const leftRange = `${left.range.startLine}:${left.range.startColumn}:${left.range.endLine}:${left.range.endColumn}`;
+      const rightRange = `${right.range.startLine}:${right.range.startColumn}:${right.range.endLine}:${right.range.endColumn}`;
+      const byRange = leftRange.localeCompare(rightRange);
+      if (byRange !== 0) {
+        return byRange;
+      }
+      const leftKey = `${left.kind}|${left.displayName}|${left.symbolId}`;
+      const rightKey = `${right.kind}|${right.displayName}|${right.symbolId}`;
+      return leftKey.localeCompare(rightKey);
+    }),
   }));
   const dependencyEdges = dedupeEdges(
     moduleAnalyses.flatMap((analysis) => analysis.dependencyEdges)
   );
   const callEdges = dedupeEdges(moduleAnalyses.flatMap((analysis) => analysis.callEdges));
   const artifactEdges = dedupeEdges(moduleAnalyses.flatMap((analysis) => analysis.artifactEdges));
-  const warnings = moduleAnalyses.flatMap((analysis) => analysis.warnings);
+  const warnings = moduleAnalyses
+    .flatMap((analysis) => analysis.warnings)
+    .filter(Boolean)
+    .sort((left, right) => left.localeCompare(right));
   const partialIndex = buildCSharpPartialDeclarationIndex(moduleAnalyses);
 
   return {
@@ -722,7 +739,9 @@ export function buildCSharpInventory(request: SourceInventoryRequest): CSharpPro
       dependencyEdges,
       callEdges,
       artifactEdges,
-      warnings: [...warnings, ...partialIndex.warnings],
+      warnings: [...new Set([...warnings, ...partialIndex.warnings])].sort((left, right) =>
+        left.localeCompare(right)
+      ),
     },
     moduleAnalyses,
     partialIndex,

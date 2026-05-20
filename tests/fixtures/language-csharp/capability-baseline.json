@@ -1,0 +1,18 @@
+{
+  "adapterId": "csharp-future",
+  "languageId": "csharp",
+  "capabilities": {
+    "sourceInventory": "full",
+    "symbolNormalization": "full",
+    "legacyRoutePlanning": "full",
+    "atomizeDryRun": "partial",
+    "infectDryRun": "partial",
+    "runtimeCommandDetection": "partial",
+    "diagnosticsParsing": "partial",
+    "equivalenceContract": "partial",
+    "atomicMapDecomposition": "full",
+    "dependencyGraph": "full",
+    "callGraph": "full",
+    "artifactGraph": "full"
+  }
+}
