@@ -1,0 +1,16 @@
+{
+  "atomizeRequest": {
+    "repositoryRoot": "fixtures/language-js-adapter/sample-project",
+    "operation": "atomize",
+    "goal": "extract service atom",
+    "entrypoint": "src/index.ts",
+    "includeGlobs": ["**/*.ts"]
+  },
+  "infectRequest": {
+    "repositoryRoot": "fixtures/language-js-adapter/sample-project",
+    "operation": "infect",
+    "goal": "inject adapter shim into entrypoint path",
+    "entrypoint": "src/index.ts",
+    "includeGlobs": ["**/*.ts"]
+  }
+}

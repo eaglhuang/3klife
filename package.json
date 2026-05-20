@@ -72,6 +72,7 @@
     "validate:plugin-sdk": "node scripts/validate-plugin-sdk.ts",
     "validate:schemas": "node scripts/validate-schemas.ts",
     "validate:python-adapter": "node scripts/validate-python-adapter.ts --mode validate",
+    "validate:language-js": "node scripts/validate-language-js.ts --mode validate",
     "validate:map-curator": "node scripts/validate-map-curator.ts --mode validate",
     "validate:guide": "node scripts/validate-guide.ts --mode validate",
     "atm:flow": "node tools_node/atm-flow.js",

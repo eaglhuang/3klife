@@ -1,0 +1,52 @@
+{
+  "requiredFiles": [
+    "src/api.ts",
+    "src/index.ts",
+    "src/service.ts"
+  ],
+  "requiredDependencyEdges": [
+    {
+      "from": "src/index.ts",
+      "to": "module:./service",
+      "relation": "imports"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "module:./api",
+      "relation": "imports"
+    },
+    {
+      "from": "src/service.ts",
+      "to": "module:node:fs",
+      "relation": "imports"
+    },
+    {
+      "from": "src/api.ts",
+      "to": "module:./service",
+      "relation": "imports"
+    }
+  ],
+  "requiredCallEdges": [
+    {
+      "from": "src/index.ts",
+      "to": "symbol:runService",
+      "relation": "calls"
+    },
+    {
+      "from": "src/index.ts",
+      "to": "symbol:ApiFacade",
+      "relation": "calls"
+    }
+  ],
+  "requiredArtifactEdges": [
+    {
+      "from": "src/service.ts",
+      "to": "artifact:artifacts/output.json",
+      "relation": "writes"
+    }
+  ],
+  "requiredRuntimeCategories": [
+    "cli-entrypoint",
+    "api-surface"
+  ]
+}

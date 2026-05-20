@@ -4,7 +4,10 @@ task_id: ATM-LANG-0801
 title: JS/TS inventory and route planning
 atomic_map: ATM-MAP-LANG-0800
 milestone: M5
-status: open
+status: done
+started_at: 2026-05-20T10:00:00+08:00
+started_by_agent: claude-code-claude-sonnet-4-6
+completed_at: 2026-05-20T11:00:00+08:00
 owner: atm-core
 priority: P1
 type: implementation
@@ -58,9 +61,9 @@ notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: 由 ATM 通用語�
 
 ## Outputs
 
-- [ ] JS/TS source inventory report
-- [ ] route planning report
-- [ ] fixtures for imports/entrypoints
+- [x] JS/TS source inventory report
+- [x] route planning report
+- [x] fixtures for imports/entrypoints
 
 ## Acceptance Criteria
 
@@ -102,4 +105,4 @@ npm run validate:language-js
 
 ## Notes
 
-2026-05-20 | 狀態: open | 驗證: pending | 變更: opened full task card for ATM-MAP-LANG-0800 delivery | 阻塞: none
+2026-05-20 | 狀態: done | 驗證: PASS | 變更: 實作 packages/language-js/src/js-static-analysis.ts (import scan, call/artifact graph, route plan, symbol normalize) + fixtures/language-js-adapter/sample-project | command: npm run validate:language-js → PASS
