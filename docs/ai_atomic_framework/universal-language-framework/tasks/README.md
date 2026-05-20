@@ -64,9 +64,9 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-0901 | English guide: complete Go adapter code example | ATM-MAP-LANG-0900 | done | 0900 |
 | ATM-LANG-0902 | English guide: Go atom/map development example | ATM-MAP-LANG-0900 | done | 0901 |
 | ATM-LANG-0903 | English guide: Go validator and thin facade example | ATM-MAP-LANG-0900 | done | 0902 |
-| ATM-LANG-1000 | Java/C#/Go adapter feasibility notes | ATM-MAP-LANG-1000 | open | 0903 |
-| ATM-LANG-1001 | PHP dynamic include RFC | ATM-MAP-LANG-1000 | open | 1000 |
-| ATM-LANG-1002 | Future adapter conformance checklist | ATM-MAP-LANG-1000 | open | 1001 |
+| ATM-LANG-1000 | Java/C#/Go adapter feasibility notes | ATM-MAP-LANG-1000 | done | 0903 |
+| ATM-LANG-1001 | PHP dynamic include RFC | ATM-MAP-LANG-1000 | done | 1000 |
+| ATM-LANG-1002 | Future adapter conformance checklist | ATM-MAP-LANG-1000 | done | 1001 |
 | ATM-LANG-1100 | Cross-map validator suite | ATM-MAP-LANG-1100 | open | 0802 |
 | ATM-LANG-1104 | Docs neutrality and bilingual positioning validator | ATM-MAP-LANG-1100 | open | 0903 |
 

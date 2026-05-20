@@ -18,6 +18,7 @@ Use these labels when documenting a language:
 | Official | A package exists in the repo, has validators, and can be resolved by policy. | Python after the Python adapter tasks are complete. |
 | Advisory | The guide shows code and contracts, but no official package is delivered yet. | The Go examples in this document. |
 | Future | Feasibility or risk notes only. Do not imply runtime support. | Java, C#, PHP, or future Go package work. |
+| RFC | A high-risk design note that is not part of the core contract yet. | PHP dynamic include and runtime autoload behavior. |
 
 Do not confuse those document statuses with SDK capability levels. SDK capabilities use `'full'`, `'partial'`, or `'none'`.
 
@@ -597,6 +598,19 @@ Validator ownership rules:
 - CLI and validators are thin facades over adapter package logic.
 - Docs clearly separate official, advisory, and future support.
 
+### 9.1 Future Adapter Readiness Rules
+
+These rules keep future language planning honest:
+
+| Language | Current Status | Blocking Risk | Next Contract | Not In Scope |
+| --- | --- | --- | --- | --- |
+| Go | Advisory example in this guide. | modules/workspaces, generated code, build tags, multi-binary projects | fixture-backed inventory, diagnostics parser, dry-run reports, thin validator | no official Go package in this milestone; no host command execution |
+| Java | Future feasibility only. | Maven/Gradle multi-module projects, annotation processing, generated sources | project profile, source inventory, symbol ID rules, diagnostics fixtures | no official Java package; no Maven/Gradle execution |
+| C# | Future feasibility only. | solution/project graph, partial classes, generated files, Unity toolchains | project profile, range rules, diagnostics fixtures, dry-run evidence | no official C# package; no MSBuild or Unity runtime introspection |
+| PHP | RFC only. | dynamic include/require, Composer autoload, weak symbols, magic methods | advisory symbol resolution policy, autoload evidence, unresolved include diagnostics | no PHP core guarantee; no PHP/Composer execution |
+
+Do not promote any language from `Advisory`, `Future`, or `RFC` to `Official` until it has a package, validators, fixtures, and policy resolution. Dynamic or generated behavior should be reported as partial evidence unless fixtures prove a deterministic contract.
+
 ## 10. Tables Produced By The Plan
 
 The Chinese master plan owns the canonical `ATM-LANG-TABLE-*` registry and classifies tables into `Core Required` and `Optional Extension`.
@@ -610,4 +624,3 @@ The Chinese master plan owns the canonical `ATM-LANG-TABLE-*` registry and class
 | ATM-LANG-TABLE-0010 | Optional Extension | Official, advisory, and future adapter positioning. | Enabled when future-language roadmap content is in scope. |
 
 Any validator/script-produced table added to this companion must first be registered in the Chinese master plan section `5.1`.
-

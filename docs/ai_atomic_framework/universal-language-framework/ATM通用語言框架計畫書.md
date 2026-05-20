@@ -353,14 +353,78 @@ core guidance、police、candidate ranking 的路線：
 
 ## 10. Future Adapter Strategy
 
-| Language | 本輪定位 | 主要風險 | 建議下一步 |
+本節對應 `ATM-LANG-TABLE-0010`。它的用途不是宣布更多語言已經支援，而是把「未來可做、目前不能承諾、下一步要補什麼 evidence」先寫清楚。
+
+既有 reference adapter 的定位仍保留：
+
+- Python：以既有 bundled adapter 升級到 v2 conformance 為主，風險在 AST / graph 精準度、side-effect detection、dry-run evidence。
+- JS/TS：以既有 reference adapter 對齊 v2 為主，風險在舊 import scanner 與 v2 schema、route plan delegation 的一致性。
+
+### 10.1 Support Level Taxonomy
+
+| Support Level | 意思 | 可用話術 | 禁止話術 |
 | --- | --- | --- | --- |
-| Python | 既有 bundled adapter 的 v2 reference | AST / graph 精準度、side-effect detection、dry-run evidence | 升級 inventory / graph / diagnostics / dry-run validators |
-| JS/TS | 既有 reference adapter 對齊 v2 | 舊 import scanner 與 v2 schema 對齊、route plan delegation | 補 capability alignment 與 fixtures |
-| Go | 英文 companion 範例 | module/workspace、多 binary、generated code | 先以 guide + conformance checklist 表達 |
-| Java | feasibility | Maven/Gradle、多 module、annotation processing | 先定 source inventory 與 runtime command detection |
-| C# | feasibility | solution/project、Unity/Cocos 外部工具鏈、partial class | 先定 diagnostics / project profile |
-| PHP | RFC | dynamic include、runtime autoload、弱型別 symbol resolution | 先寫 PHP dynamic include RFC |
+| Official | repo 內有 package、validator、fixtures，且 policy 能解析到該 adapter | `official bundled adapter` | 只有範例或 RFC 就宣稱正式支援 |
+| Advisory | 文件有完整示範或建議流程，但本輪沒有正式 package | `advisory example` / `guide example` | 說 ATM 會自動處理該語言 |
+| Future | 只有可行性、風險與下一步契約 | `future adapter candidate` | 暗示已能掃描、atomize、infect |
+| RFC | 先記錄高風險設計議題，還不能放進 core contract | `RFC / design note` | 把未驗證規則寫成 core guarantee |
+
+### 10.2 Future Adapter Readiness Matrix
+
+| Language | Current Status | Blocking Risk | Next Contract | Not In Scope |
+| --- | --- | --- | --- | --- |
+| Go | Advisory example；英文 companion 使用 Go 示範 `LanguageAdapter v2`，但本輪不交付 official Go package | `go.mod` / workspace、多 binary、generated code、vendor 與 build tag 導致 inventory 不穩 | fixture-backed source inventory、diagnostics parser、dry-run reports、thin validator facade | 不宣稱 Go 已正式支援；不執行 `go test` / `go build`；不修改 host Go source |
+| Java | Future feasibility；先記錄 adapter 輪廓 | Maven / Gradle、多 module、source set、annotation processing、generated sources | project profile detection、source inventory schema、symbol ID rule、runtime command detection advisory、diagnostics fixtures | 不交付 official Java package；不執行 Maven / Gradle；不執行 annotation processor |
+| C# | Future feasibility；先記錄 adapter 輪廓 | solution / project graph、partial class、generated code、Unity/Cocos 外部工具鏈、analyzer output | solution profile、symbol/range rule、diagnostics parser、dry-run fixture、project profile evidence | 不交付 official C# package；不執行 MSBuild；不做 Unity runtime introspection |
+| PHP | RFC only；先處理 dynamic include / autoload 風險 | `include` / `require` 可用 runtime expression、Composer autoload、弱型別 symbol、magic method | advisory symbol resolution policy、Composer manifest / classmap evidence、include evidence model | 不放進 core contract；不保證解析 dynamic include；不執行 PHP / Composer |
+
+### 10.3 Java Feasibility Notes
+
+Java adapter 的第一版不應從「跑 Maven / Gradle」開始，而應從靜態 evidence 開始。最低可行範圍是：
+
+- 偵測 `pom.xml`、`build.gradle`、`settings.gradle`、`src/main/java`、`src/test/java` 等 project profile evidence。
+- 掃描 source inventory，回報 file、package、class/interface/enum、method、range reference。
+- annotation processing 或 generated sources 只能標成 `generated-or-processor-dependent`，不能假裝已完整解析。
+- runtime command detection 只產出 advisory command，例如 `mvn test`、`gradle test`，不得在 adapter 內執行。
+- diagnostics parser 必須以 fixture 測試 javac / Maven / Gradle 常見格式。
+
+### 10.4 C# Feasibility Notes
+
+C# adapter 的主要難點是 solution/project 與 partial class。最低可行範圍是：
+
+- 偵測 `.sln`、`.csproj`、`Directory.Build.props`、`Assets/` 或 Unity 相關 project profile evidence。
+- source inventory 要能標示 namespace、type、method/property、partial declaration、generated file risk。
+- Unity / Cocos 外部工具鏈只當作 profile evidence，不做 runtime introspection。
+- diagnostics parser 必須以 fixture 覆蓋 Roslyn / MSBuild 常見格式。
+- dry-run 只能提出 atomize / infect plan，不改 `.cs`、`.csproj` 或 generated files。
+
+### 10.5 PHP Dynamic Include RFC
+
+PHP 不應直接塞進 core contract，原因是 include/autoload 常在 runtime 才知道答案。RFC 規則如下：
+
+- literal `include 'path.php'` / `require_once __DIR__ . '/path.php'` 可作為 strong evidence。
+- Composer `composer.json`、`composer.lock`、autoload classmap / PSR-4 可作為 advisory evidence。
+- 變數 include、function-return include、conditional include、magic autoload 只能標為 unresolved，不可當 hard gate。
+- symbol resolution policy 必須保守：找不到 evidence 時回報 `partial` 或 `none`，不得猜成 `full`。
+- future PHP adapter 必須把 include evidence、autoload evidence、unresolved include list 寫入 diagnostics 或 inventory extension。
+
+### 10.6 Future Adapter Conformance Checklist
+
+未來任何 Java / C# / Go / PHP adapter 要升級狀態，至少通過：
+
+- adapter 可 assign 到 `LanguageAdapterV2`，且 `adapterId`、`languageId`、`contractVersion` 穩定。
+- capability 宣告必須對應實際 method 與 fixture；沒有 evidence 的能力只能標 `partial` 或 `none`。
+- source inventory 必須回傳 file、symbol、range；graph evidence 不足時要明確降級。
+- `planAtomizeDryRun()` / `planInfectDryRun()` 必須保持 `executionMode: 'dry-run'` 與 `evidence.mutates: []`。
+- runtime command detection 不得安裝 dependency、不得執行 host code，只能建議 command。
+- diagnostics parser 必須 deterministic，且用 fixture-backed validation。
+- validator / CLI 只能是 thin facade，語言解析邏輯必須在 adapter package 或 atomized implementation。
+- 文件必須維持 Official / Advisory / Future / RFC 區分，不能把 roadmap 寫成已支援能力。
+- 若 adapter 會產出 Atomic Maps table，必須先回寫 §5.1 的 Table ID，再補 validator。
+
+### 10.7 Not-In-Scope Rules
+
+本輪不交付 official Java / C# / Go / PHP production adapter；不在 dry-run 階段執行 host toolchain；不把 dynamic include、annotation processing、partial class、generated code 這類高風險語意寫成 core guarantee。這些內容只允許作為 future contract 或 RFC evidence。
 
 ## 11. Test Plan
 
