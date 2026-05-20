@@ -3,7 +3,11 @@ import type {
   RuntimeCommandReport,
   RuntimeCommandRequest,
 } from '../../../plugin-sdk/src/language-adapter';
-import { collectCSharpProjectEvidence } from './csharp-profile';
+import {
+  collectCSharpProjectEvidence,
+  type CSharpProjectEvidence,
+} from './csharp-profile';
+import { resolveCSharpRuntimePolicy } from './csharp-policy-matrix';
 
 function toPosix(value: string): string {
   return value.replace(/\\/g, '/');
@@ -23,8 +27,7 @@ interface RuntimeTargetSet {
   evidenceLabel: string;
 }
 
-function pickRuntimeTargets(repositoryRoot: string): RuntimeTargetSet {
-  const evidence = collectCSharpProjectEvidence(repositoryRoot);
+function pickRuntimeTargets(evidence: CSharpProjectEvidence): RuntimeTargetSet {
   const primarySolution = evidence.solutionProfiles
     .map((profile) => profile.relativePath)
     .sort((left, right) => left.localeCompare(right))[0];
@@ -136,7 +139,9 @@ function dedupeAndSortCommands(commands: readonly RuntimeCommandEntry[]): Runtim
 export async function detectCSharpRuntimeCommands(
   request: RuntimeCommandRequest
 ): Promise<RuntimeCommandReport> {
-  const targets = pickRuntimeTargets(request.repositoryRoot);
+  const projectEvidence = collectCSharpProjectEvidence(request.repositoryRoot);
+  const targets = pickRuntimeTargets(projectEvidence);
+  const runtimePolicy = resolveCSharpRuntimePolicy(projectEvidence, request.includeRisky ?? false);
   const commands = [
     ...buildBaseCommands(targets),
     ...((request.includeRisky ?? false) ? buildRiskyCommands(targets) : []),
@@ -148,6 +153,8 @@ export async function detectCSharpRuntimeCommands(
     ...(request.includeRisky ?? false)
       ? ['risky command variants are listed for planning only and remain non-executing']
       : [],
+    `runtime policy ids: ${runtimePolicy.policyIds.join(', ') || 'none'}`,
+    `runtime policy tags: ${runtimePolicy.tags.join(', ') || 'none'}`,
   ];
   return {
     commands: sorted,

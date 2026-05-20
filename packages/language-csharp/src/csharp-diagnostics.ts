@@ -3,6 +3,7 @@ import type {
   DiagnosticsParseRequest,
   DiagnosticsReport,
 } from '../../../plugin-sdk/src/language-adapter';
+import { resolveCSharpDiagnosticsPolicy } from './csharp-policy-matrix';
 
 interface SarifRegion {
   startLine?: number;
@@ -262,13 +263,53 @@ function looksLikeSarif(source: string, trimmedRaw: string): boolean {
   return trimmedRaw.includes('"runs"') && trimmedRaw.includes('"results"');
 }
 
+function finalizeDiagnostics(
+  diagnostics: readonly DiagnosticEntry[],
+  tags: readonly string[]
+): DiagnosticsReport {
+  const shouldNormalizeCode = tags.includes('normalize-code-uppercase');
+  const shouldTrimMessage = tags.includes('trim-message');
+  const shouldDedupe = tags.includes('dedupe-exact-entry');
+  const normalized = diagnostics.map((diagnostic) => ({
+    ...diagnostic,
+    code:
+      shouldNormalizeCode && diagnostic.code
+        ? diagnostic.code.toUpperCase()
+        : diagnostic.code,
+    message: shouldTrimMessage ? diagnostic.message.trim() : diagnostic.message,
+  }));
+  if (!shouldDedupe) {
+    return { diagnostics: normalized };
+  }
+
+  const deduped = new Map<string, DiagnosticEntry>();
+  for (const diagnostic of normalized) {
+    const key = [
+      diagnostic.severity,
+      diagnostic.code ?? '',
+      diagnostic.message,
+      diagnostic.location?.filePath ?? '',
+      diagnostic.location?.startLine ?? '',
+      diagnostic.location?.startColumn ?? '',
+      diagnostic.location?.endLine ?? '',
+      diagnostic.location?.endColumn ?? '',
+    ].join('|');
+    if (!deduped.has(key)) {
+      deduped.set(key, diagnostic);
+    }
+  }
+
+  return { diagnostics: Array.from(deduped.values()) };
+}
+
 export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): DiagnosticsReport {
   const source = (request.source ?? '').toLowerCase();
+  const diagnosticsPolicy = resolveCSharpDiagnosticsPolicy(source);
   const trimmedRaw = request.rawDiagnostics.trim();
   if (looksLikeSarif(source, trimmedRaw)) {
     const sarifReport = parseSarifDiagnostics(trimmedRaw);
     if (sarifReport) {
-      return sarifReport;
+      return finalizeDiagnostics(sarifReport.diagnostics, diagnosticsPolicy.tags);
     }
   }
 
@@ -304,25 +345,5 @@ export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): Diagno
       message: trimmed,
     });
   }
-  const deduped = new Map<string, DiagnosticEntry>();
-  for (const diagnostic of diagnostics) {
-    const key = [
-      diagnostic.severity,
-      (diagnostic.code ?? '').toUpperCase(),
-      diagnostic.message.trim(),
-      diagnostic.location?.filePath ?? '',
-      diagnostic.location?.startLine ?? '',
-      diagnostic.location?.startColumn ?? '',
-      diagnostic.location?.endLine ?? '',
-      diagnostic.location?.endColumn ?? '',
-    ].join('|');
-    if (!deduped.has(key)) {
-      deduped.set(key, {
-        ...diagnostic,
-        code: diagnostic.code ? diagnostic.code.toUpperCase() : undefined,
-        message: diagnostic.message.trim(),
-      });
-    }
-  }
-  return { diagnostics: Array.from(deduped.values()) };
+  return finalizeDiagnostics(diagnostics, diagnosticsPolicy.tags);
 }

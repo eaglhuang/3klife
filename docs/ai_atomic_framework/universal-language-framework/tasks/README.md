@@ -8,7 +8,7 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
-last_updated: 2026-05-20T23:29:50+08:00
+last_updated: 2026-05-21T00:22:06+08:00
 ---
 
 # ATM 通用語言框架 Task Cards
@@ -114,6 +114,11 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0502 | C# dry-run planner full promotion | ATM-MAP-LANG-CSHARP-0502 | done | CSHARP-0501 | 0007, 0009, 0010 |
 | ATM-LANG-CSHARP-0503 | C# equivalence contract full promotion | ATM-MAP-LANG-CSHARP-0503 | done | CSHARP-0502 | 0006, 0009, 0010 |
 | ATM-LANG-CSHARP-0504 | C# validator and capability full-baseline hardening | ATM-MAP-LANG-CSHARP-0504 | done | CSHARP-0503 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0600 | C# advisory-stage messaging and readiness wording alignment | ATM-MAP-LANG-CSHARP-0600 | done | CSHARP-0504 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0601 | C# symbol resolution precision for extension/qualified calls | ATM-MAP-LANG-CSHARP-0601 | done | CSHARP-0600 | 0006, 0010 |
+| ATM-LANG-CSHARP-0602 | C# large-solution benchmark baseline and determinism checks | ATM-MAP-LANG-CSHARP-0602 | done | CSHARP-0601 | 0006, 0008, 0010 |
+| ATM-LANG-CSHARP-0603 | C# runtime and diagnostics policy matrix integration | ATM-MAP-LANG-CSHARP-0603 | done | CSHARP-0602 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0604 | C# promotion gate for advisory to pilot readiness | ATM-MAP-LANG-CSHARP-0604 | done | CSHARP-0603 | 0006, 0009, 0010 |
 
 ## 維護規則
 

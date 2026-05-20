@@ -141,7 +141,7 @@ export function buildCSharpLegacyRoutePlan(request: LegacyRoutePlanRequest): Leg
     routeId: buildRouteId(parsed, profile),
     steps,
     warnings: [
-      'C# adapter is future-stage and route planning remains advisory-only.',
+      'C# adapter runs in advisory stage; route planning remains proposal-only.',
       `Profile: ${profile.profileId} (${profile.confidence.toFixed(2)})`,
       `Solution graph projects=${solutionGraph.summary.projectCount}, references=${solutionGraph.summary.projectReferenceCount}, orphans=${solutionGraph.summary.orphanProjectCount}.`,
       `CSProj risk findings=${csprojRisk.summary.findingCount}, errors=${csprojRisk.summary.errorCount}.`,

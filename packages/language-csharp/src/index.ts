@@ -13,3 +13,6 @@ export * from './csharp-symbol-index';
 export * from './csharp-solution-graph';
 export * from './csharp-csproj-risk';
 export * from './csharp-readiness';
+export * from './csharp-policy-matrix';
+export * from './csharp-benchmark';
+export * from './csharp-promotion-gate';

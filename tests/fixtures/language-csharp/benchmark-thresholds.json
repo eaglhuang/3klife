@@ -1,0 +1,16 @@
+{
+  "sample": {
+    "maxInventoryMs": 400,
+    "maxSymbolIndexMs": 250,
+    "maxMapMs": 300,
+    "maxTotalMs": 1000,
+    "minFilesPerSecond": 20
+  },
+  "enterprise": {
+    "maxInventoryMs": 500,
+    "maxSymbolIndexMs": 300,
+    "maxMapMs": 350,
+    "maxTotalMs": 1200,
+    "minFilesPerSecond": 20
+  }
+}

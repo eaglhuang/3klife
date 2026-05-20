@@ -74,7 +74,7 @@
     },
     {
       "from": "src/Core/SyntaxPlayground.cs#MyApp.Core.SyntaxPlayground.Compose:method",
-      "to": "symbol:Identity",
+      "to": "symbol:numeric.Identity",
       "relation": "calls"
     },
     {

@@ -1,0 +1,26 @@
+{
+  "runtimePolicyIds": [
+    "csharp-runtime-solution-root",
+    "csharp-runtime-csproj-root",
+    "csharp-runtime-test-project-detected",
+    "csharp-runtime-multi-target-framework",
+    "csharp-runtime-risky-request"
+  ],
+  "diagnosticsPolicyIds": [
+    "csharp-diagnostics-dotnet-build-log",
+    "csharp-diagnostics-sarif",
+    "csharp-diagnostics-sarif-variant",
+    "csharp-diagnostics-default"
+  ],
+  "requiredRuntimeTags": [
+    "solution-target",
+    "test-target-route",
+    "multi-tfm-detected",
+    "risky-planning-only"
+  ],
+  "requiredDiagnosticsTags": [
+    "normalize-code-uppercase",
+    "dedupe-exact-entry",
+    "trim-message"
+  ]
+}

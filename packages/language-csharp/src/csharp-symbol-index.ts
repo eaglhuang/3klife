@@ -357,9 +357,21 @@ function filterCandidatesByContext(
   if (callContext.argumentCount != null) {
     const methodCandidates = output.filter((candidate) => candidate.kind === 'method');
     if (methodCandidates.length > 0) {
+      const extensionExpectedCount = callContext.hasQualifier ? callContext.argumentCount + 1 : undefined;
       const filteredByArgs = methodCandidates.filter((candidate) => {
         const meta = matchIndex.declarationMetaBySymbolId.get(candidate.symbolId);
-        return meta?.parameterCount === callContext.argumentCount;
+        const parameterCount = meta?.parameterCount;
+        if (parameterCount == null) {
+          return false;
+        }
+        if (
+          callContext.hasQualifier &&
+          meta?.isExtensionMethod &&
+          extensionExpectedCount != null
+        ) {
+          return parameterCount === extensionExpectedCount;
+        }
+        return parameterCount === callContext.argumentCount;
       });
       if (filteredByArgs.length > 0) {
         output = filteredByArgs;

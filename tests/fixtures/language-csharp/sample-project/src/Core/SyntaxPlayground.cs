@@ -23,6 +23,11 @@ public static class AliasToolkit
   {
     return $"alias:{value}";
   }
+
+  public static int Identity()
+  {
+    return 99;
+  }
 }
 
 public static class SyntaxPlayground
@@ -34,7 +39,7 @@ public static class SyntaxPlayground
     var numeric = overload.Sum(1, 2);
     var tagged = JoinTokens(items, ",");
     var aliasTagged = CoreAlias.Tag(tagged);
-    var stable = Identity<int>(numeric);
+    var stable = numeric.Identity();
     return $"{stable}:{aliasTagged}";
   }
 }

@@ -26,7 +26,7 @@ export interface CSharpReadinessCheck {
 }
 
 export interface CSharpReadinessGateReport {
-  stage: 'future-partial' | 'ready-for-advisory';
+  stage: 'advisory-blocked' | 'ready-for-advisory';
   score: number;
   checks: CSharpReadinessCheck[];
   blockingReasons: string[];
@@ -142,7 +142,7 @@ export function evaluateCSharpReadinessGate(
   const score = checks.length === 0 ? 0 : checks.filter((check) => check.passed).length / checks.length;
 
   return {
-    stage: blockingReasons.length === 0 ? 'ready-for-advisory' : 'future-partial',
+    stage: blockingReasons.length === 0 ? 'ready-for-advisory' : 'advisory-blocked',
     score: roundRatio(score),
     checks,
     blockingReasons,

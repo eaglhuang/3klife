@@ -54,7 +54,7 @@ function validateCSharpComputeAtom(repositoryRoot: string): LanguageAdapterRepor
     contractVersion: 'v2',
     messages: [
       `C# profile accepted with confidence=${profile.confidence.toFixed(2)}.`,
-      'Support level remains future feasibility mode with mixed capability maturity.',
+      'C# adapter capabilities are full; execution remains advisory-only and dry-run gated.',
     ],
   };
 }

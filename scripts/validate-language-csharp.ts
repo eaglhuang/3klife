@@ -20,6 +20,9 @@ const REQUIRED_FILES = [
   'packages/language-csharp/src/csharp-solution-graph.ts',
   'packages/language-csharp/src/csharp-csproj-risk.ts',
   'packages/language-csharp/src/csharp-readiness.ts',
+  'packages/language-csharp/src/csharp-policy-matrix.ts',
+  'packages/language-csharp/src/csharp-benchmark.ts',
+  'packages/language-csharp/src/csharp-promotion-gate.ts',
   'tests/fixtures/language-csharp/sample-project/MyApp.sln',
   'tests/fixtures/language-csharp/sample-project/src/MyApp.csproj',
   'tests/fixtures/language-csharp/sample-project/src/Shared/Shared.csproj',
@@ -42,6 +45,9 @@ const REQUIRED_FILES = [
   'tests/fixtures/language-csharp/diagnostics-sarif.json',
   'tests/fixtures/language-csharp/diagnostics-sarif-variant.json',
   'tests/fixtures/language-csharp/readiness-thresholds.json',
+  'tests/fixtures/language-csharp/benchmark-thresholds.json',
+  'tests/fixtures/language-csharp/runtime-diagnostics-policy-matrix.json',
+  'tests/fixtures/language-csharp/promotion-gate-thresholds.json',
   'tests/fixtures/language-csharp/equivalence-fixtures.json',
   'tests/atm-lang-csharp.test.ts',
 ];
@@ -65,12 +71,19 @@ const REQUIRED_SNIPPETS = [
       'parseCSharpDiagnostics(',
       'parseSarifDiagnostics(',
       'parseCompactLocationDiagnostic(',
-      'deduped',
+      'finalizeDiagnostics(',
+      'resolveCSharpDiagnosticsPolicy(',
     ],
   },
   {
     path: 'packages/language-csharp/src/csharp-runtime.ts',
-    snippets: ['detectCSharpRuntimeCommands(', 'buildRiskyCommands(', 'includeRisky'],
+    snippets: [
+      'detectCSharpRuntimeCommands(',
+      'buildRiskyCommands(',
+      'includeRisky',
+      'resolveCSharpRuntimePolicy(',
+      'runtime policy tags:',
+    ],
   },
   {
     path: 'packages/language-csharp/src/csharp-map.ts',
@@ -106,7 +119,24 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-readiness.ts',
-    snippets: ['evaluateCSharpReadinessGate('],
+    snippets: ['evaluateCSharpReadinessGate(', "'advisory-blocked'"],
+  },
+  {
+    path: 'packages/language-csharp/src/csharp-policy-matrix.ts',
+    snippets: [
+      'CSHARP_RUNTIME_POLICY_MATRIX',
+      'CSHARP_DIAGNOSTICS_POLICY_MATRIX',
+      'resolveCSharpRuntimePolicy(',
+      'resolveCSharpDiagnosticsPolicy(',
+    ],
+  },
+  {
+    path: 'packages/language-csharp/src/csharp-benchmark.ts',
+    snippets: ['evaluateCSharpBenchmark(', 'files-per-second'],
+  },
+  {
+    path: 'packages/language-csharp/src/csharp-promotion-gate.ts',
+    snippets: ['evaluateCSharpPromotionGate(', "stage: 'blocked' | 'advisory-ready' | 'pilot-ready'"],
   },
   {
     path: 'packages/language-csharp/src/csharp-dry-run.ts',
@@ -134,6 +164,7 @@ const REQUIRED_SNIPPETS = [
       "artifactGraph: 'full'",
       'buildLegacyRoutePlan(request)',
       'buildAtomicMapDecomposition(request)',
+      'capabilities are full',
     ],
   },
 ];
@@ -183,9 +214,49 @@ async function runFixtureCheck() {
     buildCSharpSolutionProjectGraph,
     buildCSharpCsprojRiskModel,
     evaluateCSharpReadinessGate,
+    CSHARP_RUNTIME_POLICY_MATRIX,
+    CSHARP_DIAGNOSTICS_POLICY_MATRIX,
+    resolveCSharpDiagnosticsPolicy,
+    evaluateCSharpBenchmark,
+    evaluateCSharpPromotionGate,
   } = require('../packages/language-csharp/src');
   const { resolveLanguageAdapter } = require('../packages/core/src/guidance/language-adapter-resolver');
   const { planLegacyRouteWithAdapter } = require('../packages/core/src/guidance/legacy-route-delegation');
+
+  async function measureBenchmarkSample(label, repositoryRoot, mapId) {
+    const inventoryStart = Date.now();
+    const benchmarkAnalysis = buildCSharpInventory({
+      repositoryRoot,
+      includeGlobs: ['**/*.cs'],
+    });
+    const inventoryMs = Date.now() - inventoryStart;
+    const symbolStart = Date.now();
+    const benchmarkSymbolIndex = buildCSharpSymbolReferenceIndex(benchmarkAnalysis);
+    const symbolIndexMs = Date.now() - symbolStart;
+    const mapStart = Date.now();
+    const benchmarkMap = await buildCSharpAtomicMapDecomposition({
+      mapId,
+      repositoryRoot,
+      sourceInventory: benchmarkAnalysis.inventory,
+    });
+    const mapMs = Date.now() - mapStart;
+    const totalMs = Date.now() - inventoryStart;
+    return {
+      sample: {
+        label,
+        inventoryMs,
+        symbolIndexMs,
+        mapMs,
+        totalMs,
+        inventoryFileCount: benchmarkAnalysis.inventory.files.length,
+        resolvedReferenceCount: benchmarkSymbolIndex.resolvedCount,
+        mapMemberCount: benchmarkMap.members.length,
+      },
+      analysis: benchmarkAnalysis,
+      symbolIndex: benchmarkSymbolIndex,
+      mapReport: benchmarkMap,
+    };
+  }
 
   const fixtureRoot = repoPath('tests/fixtures/language-csharp/sample-project');
   const expected = JSON.parse(
@@ -220,6 +291,21 @@ async function runFixtureCheck() {
   );
   const readinessThresholds = JSON.parse(
     fs.readFileSync(repoPath('tests/fixtures/language-csharp/readiness-thresholds.json'), 'utf8')
+  );
+  const benchmarkThresholds = JSON.parse(
+    fs.readFileSync(repoPath('tests/fixtures/language-csharp/benchmark-thresholds.json'), 'utf8')
+  );
+  const runtimeDiagnosticsPolicyMatrix = JSON.parse(
+    fs.readFileSync(
+      repoPath('tests/fixtures/language-csharp/runtime-diagnostics-policy-matrix.json'),
+      'utf8'
+    )
+  );
+  const promotionGateThresholds = JSON.parse(
+    fs.readFileSync(
+      repoPath('tests/fixtures/language-csharp/promotion-gate-thresholds.json'),
+      'utf8'
+    )
   );
   const equivalenceFixtures = JSON.parse(
     fs.readFileSync(repoPath('tests/fixtures/language-csharp/equivalence-fixtures.json'), 'utf8')
@@ -419,9 +505,10 @@ async function runFixtureCheck() {
   assert.ok(
     symbolReferenceIndex.references.some(
       (reference) =>
-        reference.callee.toLowerCase().startsWith('identity') && reference.resolution === 'resolved'
+        reference.callee.toLowerCase().startsWith('numeric.identity') &&
+        reference.resolution === 'resolved'
     ),
-    'symbol reference index should resolve generic Identity call'
+    'symbol reference index should resolve qualified extension-style Identity call'
   );
 
   for (const requiredEdge of expected.requiredDependencyEdges) {
@@ -555,6 +642,30 @@ async function runFixtureCheck() {
   assert.equal(compactDiagnostics.diagnostics.length, 1, 'compact diagnostics should parse one entry');
   assert.equal(compactDiagnostics.diagnostics[0].code, 'CS0219', 'compact diagnostics code should normalize to uppercase');
   assert.equal(compactDiagnostics.diagnostics[0].severity, 'warning', 'compact diagnostics severity mismatch');
+  const diagnosticsPolicy = resolveCSharpDiagnosticsPolicy('dotnet-build-log');
+  assert.ok(
+    diagnosticsPolicy.tags.includes('normalize-code-uppercase') &&
+      diagnosticsPolicy.tags.includes('dedupe-exact-entry') &&
+      diagnosticsPolicy.tags.includes('trim-message'),
+    'diagnostics policy tags should include normalization + dedupe + trim'
+  );
+
+  assert.deepEqual(
+    CSHARP_RUNTIME_POLICY_MATRIX.map((row) => row.policyId),
+    runtimeDiagnosticsPolicyMatrix.runtimePolicyIds,
+    'runtime policy matrix fixture mismatch'
+  );
+  assert.deepEqual(
+    CSHARP_DIAGNOSTICS_POLICY_MATRIX.map((row) => row.policyId),
+    runtimeDiagnosticsPolicyMatrix.diagnosticsPolicyIds,
+    'diagnostics policy matrix fixture mismatch'
+  );
+  for (const requiredTag of runtimeDiagnosticsPolicyMatrix.requiredDiagnosticsTags) {
+    assert.ok(
+      diagnosticsPolicy.tags.includes(requiredTag),
+      `diagnostics policy should include required tag: ${requiredTag}`
+    );
+  }
 
   const safeCommandIds = new Set(runtimeCommandsSafe.commands.map((command) => command.commandId));
   const riskyCommandIds = new Set(runtimeCommandsRisky.commands.map((command) => command.commandId));
@@ -611,6 +722,20 @@ async function runFixtureCheck() {
     ),
     'runtime risky warnings should mention planning-only risky variants'
   );
+  assert.ok(
+    (runtimeCommandsSafe.warnings ?? []).some((warning) => warning.includes('runtime policy ids:')),
+    'runtime warnings should include policy id projection'
+  );
+  assert.ok(
+    (runtimeCommandsSafe.warnings ?? []).some((warning) => warning.includes('runtime policy tags:')),
+    'runtime warnings should include policy tag projection'
+  );
+  for (const requiredTag of runtimeDiagnosticsPolicyMatrix.requiredRuntimeTags) {
+    assert.ok(
+      (runtimeCommandsRisky.warnings ?? []).some((warning) => warning.includes(requiredTag)),
+      `runtime warnings should include required policy tag: ${requiredTag}`
+    );
+  }
 
   const atomizePlan = await csharpLanguageAdapterV2.planAtomizeDryRun(dryRunRequests.atomizeRequest);
   const infectPlan = await csharpLanguageAdapterV2.planInfectDryRun(dryRunRequests.infectRequest);
@@ -736,6 +861,64 @@ async function runFixtureCheck() {
     enterpriseReadiness.checks.some((check) => check.checkId === 'resolved-references'),
     'enterprise readiness should include resolved reference threshold check'
   );
+  assert.equal(sampleReadiness.stage, 'ready-for-advisory', 'sample readiness stage should be ready-for-advisory');
+  assert.equal(enterpriseReadiness.stage, 'ready-for-advisory', 'enterprise readiness stage should be ready-for-advisory');
+
+  const sampleBenchmarkMeasured = await measureBenchmarkSample(
+    'sample',
+    fixtureRoot,
+    'ATM-MAP-LANG-CSHARP-0602-SAMPLE'
+  );
+  const enterpriseBenchmarkMeasured = await measureBenchmarkSample(
+    'enterprise',
+    enterpriseRoot,
+    'ATM-MAP-LANG-CSHARP-0602-ENTERPRISE'
+  );
+  const sampleBenchmark = evaluateCSharpBenchmark(
+    sampleBenchmarkMeasured.sample,
+    benchmarkThresholds.sample
+  );
+  const enterpriseBenchmark = evaluateCSharpBenchmark(
+    enterpriseBenchmarkMeasured.sample,
+    benchmarkThresholds.enterprise
+  );
+  assert.equal(sampleBenchmark.stage, 'pass', 'sample benchmark stage should pass');
+  assert.equal(enterpriseBenchmark.stage, 'pass', 'enterprise benchmark stage should pass');
+  assert.ok(
+    sampleBenchmark.checks.every((check) => check.passed),
+    'sample benchmark checks should all pass'
+  );
+  assert.ok(
+    enterpriseBenchmark.checks.every((check) => check.passed),
+    'enterprise benchmark checks should all pass'
+  );
+
+  const samplePromotionGate = evaluateCSharpPromotionGate(
+    sampleReadiness,
+    sampleBenchmark,
+    csharpLanguageAdapterV2.capabilities,
+    promotionGateThresholds.sample
+  );
+  const enterprisePromotionGate = evaluateCSharpPromotionGate(
+    enterpriseReadiness,
+    enterpriseBenchmark,
+    csharpLanguageAdapterV2.capabilities,
+    promotionGateThresholds.enterprise
+  );
+  assert.notEqual(samplePromotionGate.stage, 'blocked', 'sample promotion gate should not be blocked');
+  assert.notEqual(
+    enterprisePromotionGate.stage,
+    'blocked',
+    'enterprise promotion gate should not be blocked'
+  );
+  assert.ok(
+    samplePromotionGate.summary.fullCapabilityCount >= 12,
+    'sample promotion gate should report >= 12 full capabilities'
+  );
+  assert.ok(
+    enterprisePromotionGate.summary.fullCapabilityCount >= 12,
+    'enterprise promotion gate should report >= 12 full capabilities'
+  );
 
   for (const fixture of equivalenceFixtures.cases) {
     const result = computeCSharpEquivalenceContract({
@@ -818,8 +1001,8 @@ async function runFixtureCheck() {
   const validationReport = csharpLanguageAdapterV2.validateComputeAtom({ repositoryRoot: fixtureRoot });
   assert.equal(validationReport.ok, true, 'validateComputeAtom should pass on fixture');
   assert.ok(
-    validationReport.messages.some((message) => message.includes('future feasibility mode')),
-    'validateComputeAtom should mention future feasibility mode'
+    validationReport.messages.some((message) => message.includes('capabilities are full')),
+    'validateComputeAtom should mention full capabilities + advisory execution'
   );
 
   return {
@@ -840,6 +1023,10 @@ async function runFixtureCheck() {
     enterpriseRiskFindingCount: enterpriseRisk.findings.length,
     sampleReadinessStage: sampleReadiness.stage,
     enterpriseReadinessStage: enterpriseReadiness.stage,
+    sampleBenchmarkStage: sampleBenchmark.stage,
+    enterpriseBenchmarkStage: enterpriseBenchmark.stage,
+    samplePromotionStage: samplePromotionGate.stage,
+    enterprisePromotionStage: enterprisePromotionGate.stage,
     atomizeStepCount: atomizePlan.steps.length,
     infectStepCount: infectPlan.steps.length,
     equivalenceCaseCount: equivalenceFixtures.cases.length,

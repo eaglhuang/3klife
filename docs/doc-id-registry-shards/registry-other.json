@@ -2578,5 +2578,35 @@
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0502.task.md",
     "title": "ATM-LANG-CSHARP-0502 C# dry-run planner full promotion",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0982",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0600.task.md",
+    "title": "ATM-LANG-CSHARP-0600 C# advisory-stage messaging and readiness wording alignment",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0983",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0601.task.md",
+    "title": "ATM-LANG-CSHARP-0601 C# symbol resolution precision for extension/qualified calls",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0984",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0602.task.md",
+    "title": "ATM-LANG-CSHARP-0602 C# large-solution benchmark baseline and determinism checks",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0985",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0603.task.md",
+    "title": "ATM-LANG-CSHARP-0603 C# runtime and diagnostics policy matrix integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0986",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0604.task.md",
+    "title": "ATM-LANG-CSHARP-0604 C# promotion gate for advisory to pilot readiness",
+    "category": "other"
   }
 ]

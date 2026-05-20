@@ -1,0 +1,16 @@
+{
+  "sample": {
+    "minFullCapabilities": 12,
+    "minReadinessScore": 0.85,
+    "requireReadinessStage": "ready-for-advisory",
+    "requireBenchmarkStage": "pass",
+    "pilotMinReadinessScore": 1
+  },
+  "enterprise": {
+    "minFullCapabilities": 12,
+    "minReadinessScore": 0.85,
+    "requireReadinessStage": "ready-for-advisory",
+    "requireBenchmarkStage": "pass",
+    "pilotMinReadinessScore": 1
+  }
+}
