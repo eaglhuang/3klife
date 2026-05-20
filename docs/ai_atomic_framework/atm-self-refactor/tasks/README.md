@@ -29,10 +29,10 @@ last_updated: 2026-05-20T02:10:00+08:00
 
 | 狀態 | 數量 |
 |------|------|
-| 已拆 | 14 |
+| 已拆 | 15 |
 | 進行中 | 0 |
-| 完成 | 14 |
-| Deferred (future cards) | 1+ |
+| 完成 | 15 |
+| Deferred (future cards) | 0 |
 
 ---
 
@@ -54,6 +54,7 @@ last_updated: 2026-05-20T02:10:00+08:00
 | [TASK-ASR-0012](./TASK-ASR-0012-propose-full-split.task.md) | propose.ts 完整拆分 normalize-input + gates | L3-complete | done | TASK-ASR-0007 | I2 | c46e690 |
 | [TASK-ASR-0013](./TASK-ASR-0013-integrations-core-full-split.task.md) | integrations-core 完整 compiler/manifest/verify split | L3-complete | done | TASK-ASR-0008 | I5 | 613dd73 |
 | [TASK-ASR-0014](./TASK-ASR-0014-upgrade-full-split.task.md) | upgrade.ts 完整拆分（experimental/safe-upgrade/scan/proposal） | L3-complete | done | TASK-ASR-0001~0003 | I1 | 13fea94 |
+| [TASK-ASR-0015](./TASK-ASR-0015-plugin-governance-local-split.task.md) | plugin-governance-local 完整拆分（bootstrap/prompt/budget） | L3-complete | done | — | I5 | 1cbf229 |
 
 ---
 
@@ -96,6 +97,6 @@ last_updated: 2026-05-20T02:10:00+08:00
 | ~~TASK-ASR-0010~~ | ~~root-drop wrappers generator 與 parity validator~~ | ✅ done (69fe931) |
 | ~~TASK-ASR-0014~~ | ~~upgrade.ts safe-upgrade / scan / proposal split~~ | ✅ done (13fea94, 1203→114 行) |
 | ~~TASK-ASR-0011~~ | ~~command-specs per-file split~~ | ✅ done (779f74e, 39 specs) |
-| TASK-ASR-00XX | plugin-governance-local bootstrap/prompt/budget split | manifest hash + install-uninstall roundtrip |
+| ~~TASK-ASR-0015~~ | ~~plugin-governance-local bootstrap/prompt/budget split~~ | ✅ done (1cbf229, 1431→54 行) |
 
 詳見 `../evidence/LAYER-3-summary.md` 中 Future cards 段落。
