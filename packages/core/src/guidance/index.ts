@@ -6,3 +6,4 @@ export * from './legacy-route-delegation';
 export * from './source-inventory-service';
 export * from './candidate-ranking-signal-model';
 export * from './candidates-rank-service';
+export * from './atomic-map-decomposition';

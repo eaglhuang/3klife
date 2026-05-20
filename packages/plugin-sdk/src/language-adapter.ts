@@ -238,6 +238,13 @@ export function isDryRunProposalSafe(report: DryRunPlanReport): boolean {
 export interface AtomicMapDecompositionRequest {
   mapId: string;
   repositoryRoot: string;
+  sourceInventory?: SourceInventoryReport;
+  dependencyEdges?: EdgeRef[];
+  callEdges?: EdgeRef[];
+  artifactEdges?: EdgeRef[];
+  minMembers?: number;
+  minEdges?: number;
+  minEntrypoints?: number;
 }
 
 export interface AtomicMapMember {
@@ -249,13 +256,43 @@ export interface AtomicMapEdge {
   from: string;
   to: string;
   relation: string;
+  graphKind?: 'dependency' | 'call' | 'artifact';
+}
+
+export interface AtomicMapEntrypoint {
+  entrypointId: string;
+  reason?: string;
+  evidence?: string;
+}
+
+export interface AtomicMapDecompositionGraphSummary {
+  dependencyEdgeCount: number;
+  callEdgeCount: number;
+  artifactEdgeCount: number;
+  totalEdgeCount: number;
+}
+
+export interface AtomicMapDecompositionEvidenceGate {
+  accepted: boolean;
+  requiredEvidence: string[];
+  missing: string[];
+  messages: string[];
 }
 
 export interface AtomicMapDecompositionReport {
   mapId: string;
   members: AtomicMapMember[];
   edges: AtomicMapEdge[];
-  entrypoints: string[];
+  entrypoints: AtomicMapEntrypoint[];
+  graphSummary?: AtomicMapDecompositionGraphSummary;
+  evidenceGate?: AtomicMapDecompositionEvidenceGate;
+  warnings?: string[];
+}
+
+export function isAtomicMapDecompositionGateAccepted(
+  report: AtomicMapDecompositionReport
+): boolean {
+  return report.evidenceGate?.accepted ?? false;
 }
 
 /**

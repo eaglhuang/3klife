@@ -10,6 +10,8 @@ const SCHEMAS = [
   'schemas/language-dry-run-plan-request.schema.json',
   'schemas/language-dry-run-plan-report.schema.json',
   'schemas/language-dry-run-evidence-envelope.schema.json',
+  'schemas/language-atomic-map-decomposition-request.schema.json',
+  'schemas/language-atomic-map-decomposition-report.schema.json',
 ];
 
 function readJson(filePath) {

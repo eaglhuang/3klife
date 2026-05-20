@@ -49,9 +49,9 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-0500 | Generic atomize/infect dry-run plan contracts | ATM-MAP-LANG-0500 | done | 0102 |
 | ATM-LANG-0501 | Import rewrite, shim, rollback plan contracts | ATM-MAP-LANG-0500 | done | 0500 |
 | ATM-LANG-0502 | Dry-run proposal evidence envelope | ATM-MAP-LANG-0500 | done | 0501 |
-| ATM-LANG-0600 | Atomic map decomposition contract | ATM-MAP-LANG-0600 | open | 0101 |
-| ATM-LANG-0601 | Graph-to-map decomposition proposal | ATM-MAP-LANG-0600 | open | 0600 |
-| ATM-LANG-0602 | Large-feature decomposition evidence gate | ATM-MAP-LANG-0600 | open | 0601 |
+| ATM-LANG-0600 | Atomic map decomposition contract | ATM-MAP-LANG-0600 | done | 0101 |
+| ATM-LANG-0601 | Graph-to-map decomposition proposal | ATM-MAP-LANG-0600 | done | 0600 |
+| ATM-LANG-0602 | Large-feature decomposition evidence gate | ATM-MAP-LANG-0600 | done | 0601 |
 | ATM-LANG-0700 | Python AST inventory and symbol ranges | ATM-MAP-LANG-0700 | open | 0101 |
 | ATM-LANG-0701 | Python dependency/call/artifact graph | ATM-MAP-LANG-0700 | open | 0700 |
 | ATM-LANG-0702 | Python CLI/API/side-effect surface detection | ATM-MAP-LANG-0700 | open | 0701 |

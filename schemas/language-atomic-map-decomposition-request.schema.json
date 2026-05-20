@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-atomic-map-decomposition-request.schema.json",
+  "title": "Language Atomic Map Decomposition Request",
+  "type": "object",
+  "required": [
+    "mapId",
+    "repositoryRoot"
+  ],
+  "properties": {
+    "mapId": {
+      "type": "string"
+    },
+    "repositoryRoot": {
+      "type": "string"
+    },
+    "sourceInventory": {
+      "$ref": "atm://schemas/language-source-inventory.schema.json"
+    },
+    "dependencyEdges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "relation"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "relation": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "callEdges": {
+      "$ref": "#/properties/dependencyEdges"
+    },
+    "artifactEdges": {
+      "$ref": "#/properties/dependencyEdges"
+    },
+    "minMembers": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "minEdges": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "minEntrypoints": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}

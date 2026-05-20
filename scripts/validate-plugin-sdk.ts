@@ -23,6 +23,11 @@ const REQUIRED_SNIPPETS = [
   'proposalArtifacts: DryRunProposalArtifact[];',
   'reviewGate: DryRunReviewGate;',
   'isDryRunProposalSafe(report: DryRunPlanReport)',
+  'interface AtomicMapEntrypoint',
+  'interface AtomicMapDecompositionGraphSummary',
+  'interface AtomicMapDecompositionEvidenceGate',
+  'entrypoints: AtomicMapEntrypoint[];',
+  'isAtomicMapDecompositionGateAccepted(',
 ];
 
 const REQUIRED_SCHEMA_FILES = [
@@ -34,6 +39,8 @@ const REQUIRED_SCHEMA_FILES = [
   'schemas/language-dry-run-plan-request.schema.json',
   'schemas/language-dry-run-plan-report.schema.json',
   'schemas/language-dry-run-evidence-envelope.schema.json',
+  'schemas/language-atomic-map-decomposition-request.schema.json',
+  'schemas/language-atomic-map-decomposition-report.schema.json',
 ];
 
 function ensure(condition, message, failures) {

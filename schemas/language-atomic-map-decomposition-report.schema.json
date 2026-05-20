@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-atomic-map-decomposition-report.schema.json",
+  "title": "Language Atomic Map Decomposition Report",
+  "type": "object",
+  "required": [
+    "mapId",
+    "members",
+    "edges",
+    "entrypoints",
+    "graphSummary",
+    "evidenceGate"
+  ],
+  "properties": {
+    "mapId": {
+      "type": "string"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "atomId",
+          "title"
+        ],
+        "properties": {
+          "atomId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "relation"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "relation": {
+            "type": "string"
+          },
+          "graphKind": {
+            "type": "string",
+            "enum": [
+              "dependency",
+              "call",
+              "artifact"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "entrypoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "entrypointId"
+        ],
+        "properties": {
+          "entrypointId": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "graphSummary": {
+      "type": "object",
+      "required": [
+        "dependencyEdgeCount",
+        "callEdgeCount",
+        "artifactEdgeCount",
+        "totalEdgeCount"
+      ],
+      "properties": {
+        "dependencyEdgeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "callEdgeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "artifactEdgeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalEdgeCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidenceGate": {
+      "type": "object",
+      "required": [
+        "accepted",
+        "requiredEvidence",
+        "missing",
+        "messages"
+      ],
+      "properties": {
+        "accepted": {
+          "type": "boolean"
+        },
+        "requiredEvidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

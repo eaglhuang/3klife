@@ -1,0 +1,189 @@
+{
+  "cases": [
+    {
+      "id": "simple-graph-pass",
+      "request": {
+        "mapId": "ATM-MAP-SIMPLE-001",
+        "repositoryRoot": "/workspace/repo",
+        "sourceInventory": {
+          "files": [
+            {
+              "filePath": "src/main.ts",
+              "languageId": "typescript",
+              "symbols": [
+                {
+                  "symbolId": "src/main.ts#bootstrap",
+                  "displayName": "bootstrap",
+                  "kind": "function",
+                  "range": {
+                    "filePath": "src/main.ts",
+                    "startLine": 1,
+                    "startColumn": 1,
+                    "endLine": 8,
+                    "endColumn": 1
+                  }
+                }
+              ]
+            },
+            {
+              "filePath": "src/service.ts",
+              "languageId": "typescript"
+            }
+          ]
+        },
+        "dependencyEdges": [
+          {
+            "from": "src/main.ts",
+            "to": "src/service.ts",
+            "relation": "imports"
+          }
+        ],
+        "minMembers": 2,
+        "minEdges": 1,
+        "minEntrypoints": 1
+      },
+      "expect": {
+        "accepted": true,
+        "minMembers": 2,
+        "minEdges": 1
+      }
+    },
+    {
+      "id": "large-feature-pass",
+      "request": {
+        "mapId": "ATM-MAP-LARGE-001",
+        "repositoryRoot": "/workspace/repo",
+        "sourceInventory": {
+          "files": [
+            {
+              "filePath": "src/main.py",
+              "languageId": "python"
+            },
+            {
+              "filePath": "src/domain/user.py",
+              "languageId": "python"
+            },
+            {
+              "filePath": "src/domain/order.py",
+              "languageId": "python"
+            },
+            {
+              "filePath": "src/infra/db.py",
+              "languageId": "python"
+            }
+          ]
+        },
+        "dependencyEdges": [
+          {
+            "from": "src/main.py",
+            "to": "src/domain/user.py",
+            "relation": "imports"
+          },
+          {
+            "from": "src/main.py",
+            "to": "src/domain/order.py",
+            "relation": "imports"
+          }
+        ],
+        "callEdges": [
+          {
+            "from": "src/domain/user.py#load",
+            "to": "src/infra/db.py#query",
+            "relation": "calls"
+          },
+          {
+            "from": "src/domain/order.py#create",
+            "to": "src/infra/db.py#save",
+            "relation": "calls"
+          }
+        ],
+        "artifactEdges": [
+          {
+            "from": "src/main.py",
+            "to": "artifacts/runtime/user-cache.json",
+            "relation": "writes"
+          }
+        ],
+        "minMembers": 6,
+        "minEdges": 5,
+        "minEntrypoints": 1
+      },
+      "expect": {
+        "accepted": true,
+        "minMembers": 6,
+        "minEdges": 5
+      }
+    },
+    {
+      "id": "missing-members-fail",
+      "request": {
+        "mapId": "ATM-MAP-FAIL-MEMBERS",
+        "repositoryRoot": "/workspace/repo",
+        "sourceInventory": {
+          "files": [
+            {
+              "filePath": "src/main.go",
+              "languageId": "go"
+            }
+          ]
+        },
+        "minMembers": 3,
+        "minEdges": 0,
+        "minEntrypoints": 1
+      },
+      "expect": {
+        "accepted": false,
+        "missingContains": "members<3"
+      }
+    },
+    {
+      "id": "missing-edges-fail",
+      "request": {
+        "mapId": "ATM-MAP-FAIL-EDGES",
+        "repositoryRoot": "/workspace/repo",
+        "sourceInventory": {
+          "files": [
+            {
+              "filePath": "src/main.cs",
+              "languageId": "csharp"
+            }
+          ]
+        },
+        "minMembers": 1,
+        "minEdges": 1,
+        "minEntrypoints": 1
+      },
+      "expect": {
+        "accepted": false,
+        "missingContains": "edges<1"
+      }
+    },
+    {
+      "id": "missing-entrypoints-fail",
+      "request": {
+        "mapId": "ATM-MAP-FAIL-ENTRYPOINTS",
+        "repositoryRoot": "/workspace/repo",
+        "dependencyEdges": [
+          {
+            "from": "node-a",
+            "to": "node-b",
+            "relation": "depends-on"
+          },
+          {
+            "from": "node-b",
+            "to": "node-a",
+            "relation": "depends-on"
+          }
+        ],
+        "minMembers": 1,
+        "minEdges": 1,
+        "minEntrypoints": 1
+      },
+      "expect": {
+        "accepted": false,
+        "missingContains": "entrypoints<1"
+      }
+    }
+  ]
+}
+
