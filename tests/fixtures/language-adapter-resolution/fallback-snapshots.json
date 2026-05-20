@@ -1,0 +1,65 @@
+{
+  "cases": [
+    {
+      "id": "full-support-message",
+      "input": {
+        "adapterId": "py-bundled",
+        "languageId": "python",
+        "requiredCapabilities": ["sourceInventory"],
+        "capabilitySet": {
+          "sourceInventory": "full"
+        },
+        "allowPartial": true
+      },
+      "expect": {
+        "ok": true,
+        "advisory": [],
+        "unsupported": [],
+        "messages": [
+          "Adapter py-bundled fully supports requested capabilities for python."
+        ]
+      }
+    },
+    {
+      "id": "advisory-message",
+      "input": {
+        "adapterId": "py-bundled",
+        "languageId": "python",
+        "requiredCapabilities": ["runtimeCommandDetection"],
+        "capabilitySet": {
+          "runtimeCommandDetection": "partial"
+        },
+        "allowPartial": true
+      },
+      "expect": {
+        "ok": true,
+        "advisory": ["runtimeCommandDetection"],
+        "unsupported": [],
+        "messages": [
+          "Adapter py-bundled can proceed with advisory support for runtime command detection; evidence + review gate is required."
+        ]
+      }
+    },
+    {
+      "id": "unsupported-message",
+      "input": {
+        "adapterId": "js-bundled",
+        "languageId": "javascript",
+        "requiredCapabilities": ["atomizeDryRun"],
+        "capabilitySet": {
+          "atomizeDryRun": "none"
+        },
+        "allowPartial": false
+      },
+      "expect": {
+        "ok": false,
+        "advisory": [],
+        "unsupported": ["atomizeDryRun"],
+        "messages": [
+          "Adapter js-bundled cannot fully support javascript; missing atomize dry-run."
+        ]
+      }
+    }
+  ]
+}
+

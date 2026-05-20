@@ -1,0 +1,148 @@
+{
+  "cases": [
+    {
+      "id": "bundled-python-preferred",
+      "request": {
+        "languageId": "python",
+        "requiredCapabilities": [
+          "sourceInventory",
+          "atomizeDryRun",
+          "runtimeCommandDetection"
+        ],
+        "allowPartialCapability": true,
+        "discoveryInput": {
+          "bundledAdapters": [
+            {
+              "adapterId": "py-bundled",
+              "moduleName": "@ai-atomic-framework/language-python",
+              "source": "bundled",
+              "languageIds": ["python"],
+              "contractVersion": "v2",
+              "priority": 5,
+              "capabilities": {
+                "sourceInventory": "full",
+                "atomizeDryRun": "full",
+                "runtimeCommandDetection": "partial"
+              }
+            }
+          ],
+          "externalAdapters": [
+            {
+              "adapterId": "py-external",
+              "moduleName": "@vendor/language-python",
+              "source": "external",
+              "languageIds": ["python"],
+              "contractVersion": "v2",
+              "priority": 50,
+              "capabilities": {
+                "sourceInventory": "full",
+                "atomizeDryRun": "full",
+                "runtimeCommandDetection": "full"
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "selectedAdapterId": "py-bundled",
+        "ok": true,
+        "advisory": ["runtimeCommandDetection"],
+        "unsupported": []
+      }
+    },
+    {
+      "id": "external-go-only",
+      "request": {
+        "languageId": "go",
+        "requiredCapabilities": ["sourceInventory", "runtimeCommandDetection"],
+        "allowPartialCapability": true,
+        "discoveryInput": {
+          "externalAdapters": [
+            {
+              "adapterId": "go-external",
+              "moduleName": "@vendor/language-go",
+              "source": "external",
+              "languageIds": ["go"],
+              "contractVersion": "v2",
+              "priority": 10,
+              "capabilities": {
+                "sourceInventory": "full",
+                "runtimeCommandDetection": "full"
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "selectedAdapterId": "go-external",
+        "ok": true,
+        "advisory": [],
+        "unsupported": []
+      }
+    },
+    {
+      "id": "missing-capability",
+      "request": {
+        "languageId": "javascript",
+        "requiredCapabilities": ["sourceInventory", "atomizeDryRun"],
+        "allowPartialCapability": false,
+        "discoveryInput": {
+          "bundledAdapters": [
+            {
+              "adapterId": "js-bundled",
+              "moduleName": "@ai-atomic-framework/language-js",
+              "source": "bundled",
+              "languageIds": ["javascript", "typescript"],
+              "contractVersion": "v2",
+              "priority": 3,
+              "capabilities": {
+                "sourceInventory": "full",
+                "atomizeDryRun": "none"
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "selectedAdapterId": "js-bundled",
+        "ok": false,
+        "advisory": [],
+        "unsupported": ["atomizeDryRun"],
+        "messageIncludes": "cannot fully support"
+      }
+    },
+    {
+      "id": "external-blocked-by-allow-list",
+      "request": {
+        "languageId": "go",
+        "requiredCapabilities": ["sourceInventory"],
+        "allowPartialCapability": true,
+        "discoveryInput": {
+          "policy": {
+            "externalAllowList": ["@ai-atomic-framework/language-python"]
+          },
+          "externalAdapters": [
+            {
+              "adapterId": "go-external",
+              "moduleName": "@vendor/language-go",
+              "source": "external",
+              "languageIds": ["go"],
+              "contractVersion": "v2",
+              "priority": 10,
+              "capabilities": {
+                "sourceInventory": "full"
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "selectedAdapterId": null,
+        "ok": false,
+        "rejectedCount": 1,
+        "messageIncludes": "No adapters were discovered"
+      }
+    }
+  ]
+}
+

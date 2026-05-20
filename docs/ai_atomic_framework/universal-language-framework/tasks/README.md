@@ -8,7 +8,7 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
-last_updated: 2026-05-20T14:05:30+08:00
+last_updated: 2026-05-20T13:30:56+08:00
 ---
 
 # ATM 通用語言框架 Task Cards
@@ -37,9 +37,9 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-0100 | `LanguageAdapter v2` public contract | ATM-MAP-LANG-0100 | done | 0003 |
 | ATM-LANG-0101 | Shared language analysis schemas | ATM-MAP-LANG-0100 | done | 0100 |
 | ATM-LANG-0102 | Runtime/equivalence/evidence contracts | ATM-MAP-LANG-0100 | done | 0101 |
-| ATM-LANG-0200 | Adapter registry and resolver | ATM-MAP-LANG-0200 | open | 0100 |
-| ATM-LANG-0201 | Capability fallback and user messages | ATM-MAP-LANG-0200 | open | 0200 |
-| ATM-LANG-0202 | Bundled/external adapter discovery strategy | ATM-MAP-LANG-0200 | open | 0200 |
+| ATM-LANG-0200 | Adapter registry and resolver | ATM-MAP-LANG-0200 | done | 0100 |
+| ATM-LANG-0201 | Capability fallback and user messages | ATM-MAP-LANG-0200 | done | 0200 |
+| ATM-LANG-0202 | Bundled/external adapter discovery strategy | ATM-MAP-LANG-0200 | done | 0200 |
 | ATM-LANG-0300 | LegacyRoutePlan adapter delegation | ATM-MAP-LANG-0300 | open | 0201 |
 | ATM-LANG-0301 | Remove core language regex ownership | ATM-MAP-LANG-0300 | open | 0300 |
 | ATM-LANG-0302 | Guidance and police integration update | ATM-MAP-LANG-0300 | open | 0300 |

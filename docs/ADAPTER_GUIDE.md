@@ -191,3 +191,20 @@ This section is a concise contract snapshot used by ATM-LANG-0100 ~ ATM-LANG-010
 - `schemas/language-runtime-commands.schema.json`
 - `schemas/language-equivalence-fixture.schema.json`
 - `schemas/language-dry-run-evidence-envelope.schema.json`
+
+## 11. Bundled vs External Discovery
+
+Resolver discovery should keep policy explicit and auditable:
+
+- bundled adapters are enabled by default and preferred in default source order;
+- external adapters can be enabled/disabled by policy;
+- external allow-list can be keyed by module name or adapter id;
+- rejected discovery candidates must keep a machine-readable reason;
+- fallback messages must never claim full support when capability is advisory or missing.
+
+Recommended default source order:
+
+1. `bundled`
+2. `external`
+
+This default can be overridden by host policy when a host needs to prioritize a vetted external adapter.
