@@ -2,11 +2,13 @@
   "requiredFiles": [
     "src/Contracts/IService.cs",
     "src/Core/Overloads.cs",
+    "src/Core/SyntaxPlayground.cs",
     "src/Core/Service.cs",
     "src/Generated/Designer.Designer.cs",
     "src/Generated/FileBridge.g.cs",
     "src/GlobalUsings.cs",
     "src/Models/ApiResult.cs",
+    "src/Models/WorkflowSnapshot.cs",
     "src/Program.cs",
     "src/Program.Partial.cs",
     "src/TopLevelRunner.cs"
@@ -58,6 +60,21 @@
     {
       "from": "src/Program.cs#MyApp.App.Program.Main(string[]):method",
       "to": "symbol:FileBridge.WriteOutput",
+      "relation": "calls"
+    },
+    {
+      "from": "src/Core/SyntaxPlayground.cs#MyApp.Core.SyntaxPlayground.Compose:method",
+      "to": "symbol:CoreAlias.Tag",
+      "relation": "calls"
+    },
+    {
+      "from": "src/Core/SyntaxPlayground.cs#MyApp.Core.SyntaxPlayground.Compose:method",
+      "to": "symbol:JoinTokens",
+      "relation": "calls"
+    },
+    {
+      "from": "src/Core/SyntaxPlayground.cs#MyApp.Core.SyntaxPlayground.Compose:method",
+      "to": "symbol:Identity",
       "relation": "calls"
     },
     {

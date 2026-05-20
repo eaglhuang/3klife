@@ -15,21 +15,41 @@ interface SarifLocation {
   physicalLocation?: {
     artifactLocation?: {
       uri?: string;
+      uriBaseId?: string;
     };
     region?: SarifRegion;
   };
 }
 
+interface SarifRuleConfiguration {
+  level?: string;
+}
+
+interface SarifRule {
+  id?: string;
+  defaultConfiguration?: SarifRuleConfiguration;
+}
+
+interface SarifDriver {
+  rules?: SarifRule[];
+}
+
 interface SarifResult {
   ruleId?: string;
+  ruleIndex?: number;
   level?: string;
   message?: {
     text?: string;
+    markdown?: string;
   };
+  properties?: Record<string, unknown>;
   locations?: SarifLocation[];
 }
 
 interface SarifRun {
+  tool?: {
+    driver?: SarifDriver;
+  };
   results?: SarifResult[];
 }
 
@@ -37,9 +57,17 @@ interface SarifReport {
   runs?: SarifRun[];
 }
 
+function toPosix(value: string): string {
+  return value.replace(/\\/g, '/');
+}
+
+function normalizeLocationPath(value: string): string {
+  return toPosix(value.trim().replace(/^['"]|['"]$/g, ''));
+}
+
 function mapSeverity(value: string): 'info' | 'warning' | 'error' {
   const normalized = value.toLowerCase();
-  if (normalized.startsWith('error')) {
+  if (normalized.startsWith('error') || normalized === 'fatal') {
     return 'error';
   }
   if (normalized.startsWith('warning')) {
@@ -48,60 +76,58 @@ function mapSeverity(value: string): 'info' | 'warning' | 'error' {
   return 'info';
 }
 
-function parseProjectStyleDiagnostic(line: string): DiagnosticEntry | null {
+function parseLocationDiagnostic(line: string): DiagnosticEntry | null {
   const match = line.match(
-    /^(.+?)\((\d+),(\d+)\):\s*(error|warning|info)\s+([A-Za-z]{2,5}\d+)\s*:\s*(.+?)(?:\s+\[[^\]]+\])?$/
+    /^(.+?)\((\d+),(\d+)(?:,(\d+),(\d+))?\):\s*(error|warning|info)\s+([A-Za-z]{2,8}\d+)\s*:\s*(.+?)(?:\s+\[[^\]]+\])?$/
   );
   if (!match) {
     return null;
   }
-  const [, filePath, lineNo, columnNo, severity, code, message] = match;
+  const [, filePath, startLine, startColumn, endLine, endColumn, severity, code, message] = match;
   return {
     severity: mapSeverity(severity),
     code,
     message: message.trim(),
     location: {
-      filePath,
-      startLine: Number(lineNo),
-      startColumn: Number(columnNo),
-      endLine: Number(lineNo),
-      endColumn: Number(columnNo),
+      filePath: normalizeLocationPath(filePath),
+      startLine: Number(startLine),
+      startColumn: Number(startColumn),
+      endLine: Number(endLine ?? startLine),
+      endColumn: Number(endColumn ?? startColumn),
     },
   };
 }
 
-function parseMsbuildStyleDiagnostic(line: string): DiagnosticEntry | null {
+function parseToolDiagnostic(line: string): DiagnosticEntry | null {
   const match = line.match(
-    /^(.+?)\((\d+),(\d+)\):\s*(error|warning|info)\s+([A-Za-z]{2,5}\d+)\s*:\s*(.+)$/
+    /^([^:]+?)\s*:\s*(error|warning|info)\s+([A-Za-z]{2,8}\d+)\s*:\s*(.+?)(?:\s+\[([^\]]+)\])?$/
   );
   if (!match) {
     return null;
   }
-  const [, filePath, lineNo, columnNo, severity, code, message] = match;
+  const [, source, severity, code, message, projectPath] = match;
+  const sourceLabel = source.trim();
+  const projectLabel = projectPath ? ` [${normalizeLocationPath(projectPath)}]` : '';
   return {
     severity: mapSeverity(severity),
     code,
-    message: message.trim(),
-    location: {
-      filePath,
-      startLine: Number(lineNo),
-      startColumn: Number(columnNo),
-      endLine: Number(lineNo),
-      endColumn: Number(columnNo),
-    },
+    message: `${sourceLabel}: ${message.trim()}${projectLabel}`,
   };
 }
 
-function parseShortDiagnostic(line: string): DiagnosticEntry | null {
-  const match = line.match(/^(.+?):\s*(error|warning|info)\s+([A-Za-z]{2,5}\d+)\s*:\s*(.+)$/);
+function parseNoLocationDiagnostic(line: string): DiagnosticEntry | null {
+  const match = line.match(
+    /^(error|warning|info)\s+([A-Za-z]{2,8}\d+)\s*:\s*(.+?)(?:\s+\[([^\]]+)\])?$/
+  );
   if (!match) {
     return null;
   }
-  const [, source, severity, code, message] = match;
+  const [, severity, code, message, projectPath] = match;
+  const projectSuffix = projectPath ? ` [${normalizeLocationPath(projectPath)}]` : '';
   return {
     severity: mapSeverity(severity),
     code,
-    message: `${source}: ${message}`.trim(),
+    message: `${message.trim()}${projectSuffix}`,
   };
 }
 
@@ -121,33 +147,46 @@ function parseJsonSafely(raw: string): unknown | undefined {
 }
 
 function mapSarifLevel(value: string | undefined): 'info' | 'warning' | 'error' {
-  const normalized = (value ?? '').toLowerCase();
-  if (normalized === 'error') {
-    return 'error';
-  }
-  if (normalized === 'warning') {
+  if (!value) {
     return 'warning';
   }
-  return 'info';
+  return mapSeverity(value);
 }
 
-function toDiagnosticFromSarifResult(result: SarifResult): DiagnosticEntry {
-  const message = result.message?.text?.trim() || 'sarif diagnostic';
+function toSarifMessage(result: SarifResult): string {
+  const text = result.message?.text?.trim() || result.message?.markdown?.trim();
+  if (text) {
+    return text;
+  }
+  return 'sarif diagnostic';
+}
+
+function toDiagnosticFromSarifResult(
+  result: SarifResult,
+  defaultLevel: string | undefined,
+  fallbackRuleId: string | undefined
+): DiagnosticEntry {
   const location = result.locations?.[0]?.physicalLocation;
   const region = location?.region;
-  if (!location?.artifactLocation?.uri) {
+  const path = location?.artifactLocation?.uri;
+  const effectiveLevel =
+    result.level ??
+    (typeof result.properties?.level === 'string' ? String(result.properties?.level) : undefined) ??
+    defaultLevel;
+  const code = result.ruleId ?? fallbackRuleId;
+  if (!path) {
     return {
-      severity: mapSarifLevel(result.level),
-      code: result.ruleId,
-      message,
+      severity: mapSarifLevel(effectiveLevel),
+      code,
+      message: toSarifMessage(result),
     };
   }
   return {
-    severity: mapSarifLevel(result.level),
-    code: result.ruleId,
-    message,
+    severity: mapSarifLevel(effectiveLevel),
+    code,
+    message: toSarifMessage(result),
     location: {
-      filePath: location.artifactLocation.uri,
+      filePath: normalizeLocationPath(path),
       startLine: Math.max(region?.startLine ?? 1, 1),
       startColumn: Math.max(region?.startColumn ?? 1, 1),
       endLine: Math.max(region?.endLine ?? region?.startLine ?? 1, 1),
@@ -157,28 +196,54 @@ function toDiagnosticFromSarifResult(result: SarifResult): DiagnosticEntry {
 }
 
 function parseSarifDiagnostics(rawDiagnostics: string): DiagnosticsReport | null {
-  const parsed = parseJsonSafely(rawDiagnostics) as SarifReport | undefined;
-  if (!parsed || !Array.isArray(parsed.runs)) {
+  const parsed = parseJsonSafely(rawDiagnostics);
+  if (!parsed) {
     return null;
   }
+  const reports = Array.isArray(parsed) ? parsed : [parsed];
   const diagnostics: DiagnosticEntry[] = [];
-  for (const run of parsed.runs) {
-    for (const result of run.results ?? []) {
-      diagnostics.push(toDiagnosticFromSarifResult(result));
+
+  for (const report of reports) {
+    const sarifReport = report as SarifReport;
+    if (!Array.isArray(sarifReport.runs)) {
+      continue;
+    }
+    for (const run of sarifReport.runs) {
+      const rules = run.tool?.driver?.rules ?? [];
+      for (const result of run.results ?? []) {
+        const ruleByIndex =
+          typeof result.ruleIndex === 'number' ? rules[result.ruleIndex] : undefined;
+        diagnostics.push(
+          toDiagnosticFromSarifResult(
+            result,
+            ruleByIndex?.defaultConfiguration?.level,
+            ruleByIndex?.id
+          )
+        );
+      }
     }
   }
+
   if (diagnostics.length === 0) {
     return null;
   }
-  return {
-    diagnostics,
-  };
+  return { diagnostics };
+}
+
+function looksLikeSarif(source: string, trimmedRaw: string): boolean {
+  if (source.includes('sarif')) {
+    return true;
+  }
+  if (!trimmedRaw.startsWith('{') && !trimmedRaw.startsWith('[')) {
+    return false;
+  }
+  return trimmedRaw.includes('"runs"') && trimmedRaw.includes('"results"');
 }
 
 export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): DiagnosticsReport {
   const source = (request.source ?? '').toLowerCase();
   const trimmedRaw = request.rawDiagnostics.trim();
-  if (source.includes('sarif') || trimmedRaw.startsWith('{')) {
+  if (looksLikeSarif(source, trimmedRaw)) {
     const sarifReport = parseSarifDiagnostics(trimmedRaw);
     if (sarifReport) {
       return sarifReport;
@@ -193,14 +258,16 @@ export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): Diagno
     if (!trimmed) {
       continue;
     }
+
     const parsed =
-      parseProjectStyleDiagnostic(trimmed) ??
-      parseMsbuildStyleDiagnostic(trimmed) ??
-      parseShortDiagnostic(trimmed);
+      parseLocationDiagnostic(trimmed) ??
+      parseToolDiagnostic(trimmed) ??
+      parseNoLocationDiagnostic(trimmed);
     if (parsed) {
       diagnostics.push(parsed);
       continue;
     }
+
     if (/^\s+/.test(line) && diagnostics.length > 0) {
       diagnostics[diagnostics.length - 1] = appendContinuation(
         diagnostics[diagnostics.length - 1],
@@ -208,6 +275,7 @@ export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): Diagno
       );
       continue;
     }
+
     diagnostics.push({
       severity: 'info',
       message: trimmed,

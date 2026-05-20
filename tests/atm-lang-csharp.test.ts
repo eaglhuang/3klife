@@ -11,6 +11,7 @@ const {
   buildCSharpSymbolReferenceIndex,
   buildCSharpSolutionProjectGraph,
   buildCSharpCsprojRiskModel,
+  evaluateCSharpReadinessGate,
 } = require('../packages/language-csharp/src');
 const { resolveLanguageAdapter } = require('../packages/core/src/guidance/language-adapter-resolver');
 const { planLegacyRouteWithAdapter } = require('../packages/core/src/guidance/legacy-route-delegation');
@@ -19,6 +20,10 @@ async function main() {
   const fixtureRoot = path.resolve('tests/fixtures/language-csharp/sample-project');
   const profile = csharpLanguageAdapterV2.detectProjectProfile(fixtureRoot);
   assert.equal(profile.languageId, 'csharp');
+  assert.ok(
+    (profile.evidence ?? []).some((entry) => entry.toLowerCase().includes('directory.packages.props')),
+    'profile should include Directory.Packages.props evidence'
+  );
 
   const inventory = await csharpLanguageAdapterV2.scanSourceInventory({
     repositoryRoot: fixtureRoot,
@@ -73,12 +78,37 @@ async function main() {
   });
   const symbolIndex = buildCSharpSymbolReferenceIndex(analysis);
   assert.ok(symbolIndex.references.length >= 5);
+  assert.ok(
+    symbolIndex.references.some(
+      (reference) =>
+        reference.callee.toLowerCase().startsWith('corealias.tag') &&
+        reference.resolution === 'resolved'
+    ),
+    'symbol index should resolve alias using call'
+  );
 
   const enterpriseRoot = path.resolve('tests/fixtures/language-csharp/enterprise-solution');
   const enterpriseGraph = buildCSharpSolutionProjectGraph(enterpriseRoot);
   assert.ok(enterpriseGraph.summary.projectCount >= 4);
   const enterpriseRisk = buildCSharpCsprojRiskModel(enterpriseRoot, undefined, enterpriseGraph);
   assert.ok(enterpriseRisk.findings.length >= 2);
+  assert.ok(
+    enterpriseRisk.findings.some((finding) => finding.kind === 'multi-target-framework'),
+    'enterprise risk should include multi-target framework finding'
+  );
+  const sampleRisk = buildCSharpCsprojRiskModel(fixtureRoot);
+  assert.ok(
+    sampleRisk.findings.some((finding) => finding.kind === 'central-package-management-detected'),
+    'sample risk should include central package management signal'
+  );
+
+  const readiness = evaluateCSharpReadinessGate({
+    inventoryFileCount: analysis.inventory.files.length,
+    symbolReferenceIndex: symbolIndex,
+    csprojRisk: sampleRisk,
+    mapReport,
+  });
+  assert.ok(readiness.checks.length >= 6);
 }
 
 main().then(

@@ -100,6 +100,11 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0208 | C# legacy route deep planning | ATM-MAP-LANG-CSHARP-0208 | done | CSHARP-0206 | 0006, 0009, 0010 |
 | ATM-LANG-CSHARP-0209 | C# atomic map large-solution threshold profile | ATM-MAP-LANG-CSHARP-0209 | done | CSHARP-0208 | 0008, 0009, 0010 |
 | ATM-LANG-CSHARP-0210 | C# enterprise multi-project smoke fixture | ATM-MAP-LANG-CSHARP-0210 | done | CSHARP-0209 | 0006, 0008, 0010 |
+| ATM-LANG-CSHARP-0300 | C# modern syntax inventory coverage expansion | ATM-MAP-LANG-CSHARP-0300 | done | CSHARP-0210 | 0006, 0010 |
+| ATM-LANG-CSHARP-0301 | C# symbol resolution hardening for alias static and generic calls | ATM-MAP-LANG-CSHARP-0301 | done | CSHARP-0300 | 0006, 0010 |
+| ATM-LANG-CSHARP-0302 | C# csproj and solution deep profile v2 | ATM-MAP-LANG-CSHARP-0302 | done | CSHARP-0301 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0303 | C# diagnostics parser normalization v2 | ATM-MAP-LANG-CSHARP-0303 | done | CSHARP-0302 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0304 | C# advisory readiness gate and threshold profile | ATM-MAP-LANG-CSHARP-0304 | done | CSHARP-0303 | 0006, 0008, 0009, 0010 |
 
 ## 維護規則
 

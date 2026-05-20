@@ -1,0 +1,69 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "dotnet-analyzer",
+          "rules": [
+            {
+              "id": "CA1303",
+              "defaultConfiguration": {
+                "level": "warning"
+              }
+            },
+            {
+              "id": "CS8602",
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleIndex": 0,
+          "message": {
+            "text": "Do not pass literals as localized parameters."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Program.cs"
+                },
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Dereference of a possibly null reference."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Core/Service.cs"
+                },
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 11,
+                  "endLine": 22,
+                  "endColumn": 19
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

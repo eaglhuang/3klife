@@ -5,3 +5,6 @@ src/Models/ApiResult.cs(4,15): warning CA1822: Member 'ApiResult' does not acces
 warning CS8032: An instance of analyzer SomeAnalyzer cannot be created
 src/TopLevelRunner.cs(3,1): error CS0168: The variable 'unused' is declared but never used
   Additional context: this warning was promoted by TreatWarningsAsErrors.
+CSC : error CS5001: Program does not contain a static 'Main' method suitable for an entry point [src/MyApp.csproj]
+MSBuild : warning MSB3277: Found conflicts between different versions of "System.Runtime". [src/MyApp.csproj]
+error NU1605: Detected package downgrade: Newtonsoft.Json from 13.0.2 to 12.0.3. [src/MyApp.csproj]

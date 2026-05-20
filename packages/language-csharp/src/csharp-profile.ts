@@ -32,7 +32,12 @@ export interface CSharpCsprojProfile {
   treatWarningsAsErrors?: string;
   isTestProject: boolean;
   packageReferences: string[];
+  packageReferenceVersions: string[];
+  packageReferencesWithoutVersion: string[];
   projectReferences: string[];
+  conditionalPropertyGroups: string[];
+  conditionalItemGroups: string[];
+  usesCentralPackageManagement: boolean;
 }
 
 export interface CSharpDirectoryBuildPropsProfile {
@@ -42,16 +47,24 @@ export interface CSharpDirectoryBuildPropsProfile {
   treatWarningsAsErrors?: string;
 }
 
+export interface CSharpDirectoryPackagesPropsProfile {
+  relativePath: string;
+  managePackageVersionsCentrally?: string;
+  centralPackageVersions: string[];
+}
+
 export interface CSharpProjectEvidence {
   hasSolution: boolean;
   hasCsproj: boolean;
   hasDirectoryBuildProps: boolean;
+  hasDirectoryPackagesProps: boolean;
   hasCSharpSource: boolean;
   hasUnityEvidence: boolean;
   evidence: string[];
   solutionProfiles: CSharpSolutionProfile[];
   csprojProfiles: CSharpCsprojProfile[];
   directoryBuildPropsProfiles: CSharpDirectoryBuildPropsProfile[];
+  directoryPackagesPropsProfiles: CSharpDirectoryPackagesPropsProfile[];
   warnings: string[];
 }
 
@@ -110,6 +123,64 @@ function parseAttribute(fragment: string, attributeName: string): string | undef
   return fragment.match(regex)?.[1];
 }
 
+function parseConditionalGroupValues(xml: string, groupTag: 'PropertyGroup' | 'ItemGroup'): string[] {
+  const regex = new RegExp(`<${groupTag}\\b([^>]*)>`, 'gi');
+  const values: string[] = [];
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(xml)) != null) {
+    const condition = parseAttribute(match[1], 'Condition');
+    if (condition) {
+      values.push(condition.trim());
+    }
+  }
+  return Array.from(new Set(values));
+}
+
+function collectPackageReferences(xml: string): Array<{ include: string; version?: string }> {
+  const references: Array<{ include: string; version?: string }> = [];
+
+  const selfClosingRegex = /<PackageReference\b([^>]*)\/>/gi;
+  let selfClosingMatch: RegExpExecArray | null;
+  while ((selfClosingMatch = selfClosingRegex.exec(xml)) != null) {
+    const include = parseAttribute(selfClosingMatch[1], 'Include');
+    if (!include) {
+      continue;
+    }
+    references.push({
+      include,
+      version: parseAttribute(selfClosingMatch[1], 'Version'),
+    });
+  }
+
+  const blockRegex = /<PackageReference\b([^>]*)>([\s\S]*?)<\/PackageReference>/gi;
+  let blockMatch: RegExpExecArray | null;
+  while ((blockMatch = blockRegex.exec(xml)) != null) {
+    const include = parseAttribute(blockMatch[1], 'Include');
+    if (!include) {
+      continue;
+    }
+    const versionFromAttribute = parseAttribute(blockMatch[1], 'Version');
+    const versionFromNode = collectXmlFirstValue(blockMatch[2], 'Version');
+    references.push({
+      include,
+      version: versionFromAttribute ?? versionFromNode,
+    });
+  }
+
+  const deduped = new Map<string, { include: string; version?: string }>();
+  for (const reference of references) {
+    const existing = deduped.get(reference.include.toLowerCase());
+    if (!existing) {
+      deduped.set(reference.include.toLowerCase(), reference);
+      continue;
+    }
+    if (!existing.version && reference.version) {
+      deduped.set(reference.include.toLowerCase(), reference);
+    }
+  }
+  return Array.from(deduped.values());
+}
+
 function parseCsprojProfile(relativePath: string, xml: string): CSharpCsprojProfile {
   const projectOpenTagMatch = xml.match(/<Project\b([^>]*)>/i);
   const sdk = projectOpenTagMatch ? parseAttribute(projectOpenTagMatch[1], 'Sdk') : undefined;
@@ -118,13 +189,16 @@ function parseCsprojProfile(relativePath: string, xml: string): CSharpCsprojProf
     ...collectXmlTagValues(xml, 'TargetFrameworks'),
   ]);
 
-  const packageReferences = Array.from(
-    new Set(
-      [...xml.matchAll(/<PackageReference\b([^>]*)\/?>/gi)]
-        .map((match) => parseAttribute(match[1], 'Include'))
-        .filter((value): value is string => Boolean(value))
-    )
-  );
+  const packageReferenceEntries = collectPackageReferences(xml);
+  const packageReferences = packageReferenceEntries.map((entry) => entry.include);
+  const packageReferenceVersions = packageReferenceEntries
+    .filter((entry) => Boolean(entry.version))
+    .map((entry) => `${entry.include}@${entry.version}`)
+    .sort((left, right) => left.localeCompare(right));
+  const packageReferencesWithoutVersion = packageReferenceEntries
+    .filter((entry) => !entry.version)
+    .map((entry) => entry.include)
+    .sort((left, right) => left.localeCompare(right));
   const projectReferences = Array.from(
     new Set(
       [...xml.matchAll(/<ProjectReference\b([^>]*)\/?>/gi)]
@@ -151,7 +225,12 @@ function parseCsprojProfile(relativePath: string, xml: string): CSharpCsprojProf
     treatWarningsAsErrors: collectXmlFirstValue(xml, 'TreatWarningsAsErrors'),
     isTestProject,
     packageReferences,
+    packageReferenceVersions,
+    packageReferencesWithoutVersion,
     projectReferences,
+    conditionalPropertyGroups: parseConditionalGroupValues(xml, 'PropertyGroup'),
+    conditionalItemGroups: parseConditionalGroupValues(xml, 'ItemGroup'),
+    usesCentralPackageManagement: packageReferencesWithoutVersion.length > 0,
   };
 }
 
@@ -218,6 +297,32 @@ function parseDirectoryBuildPropsProfile(
   };
 }
 
+function parseDirectoryPackagesPropsProfile(
+  relativePath: string,
+  xml: string
+): CSharpDirectoryPackagesPropsProfile {
+  const packageVersions = Array.from(
+    new Set(
+      [...xml.matchAll(/<PackageVersion\b([^>]*)\/?>/gi)]
+        .map((match) => {
+          const include = parseAttribute(match[1], 'Include');
+          const version = parseAttribute(match[1], 'Version');
+          if (!include || !version) {
+            return undefined;
+          }
+          return `${include}@${version}`;
+        })
+        .filter((value): value is string => Boolean(value))
+    )
+  ).sort((left, right) => left.localeCompare(right));
+
+  return {
+    relativePath,
+    managePackageVersionsCentrally: collectXmlFirstValue(xml, 'ManagePackageVersionsCentrally'),
+    centralPackageVersions: packageVersions,
+  };
+}
+
 function readTextFile(filePath: string): string {
   return fs.readFileSync(filePath, 'utf8');
 }
@@ -225,7 +330,12 @@ function readTextFile(filePath: string): string {
 function formatCsprojEvidence(profile: CSharpCsprojProfile): string {
   const tfmLabel = profile.targetFrameworks.length > 0 ? profile.targetFrameworks.join(',') : 'unknown';
   const testTag = profile.isTestProject ? ';test=true' : '';
-  return `${profile.relativePath}#tfm=${tfmLabel}${testTag}`;
+  const cpmTag = profile.usesCentralPackageManagement ? ';cpm=true' : '';
+  const conditionalTag =
+    profile.conditionalPropertyGroups.length > 0 || profile.conditionalItemGroups.length > 0
+      ? ';conditional=true'
+      : '';
+  return `${profile.relativePath}#tfm=${tfmLabel}${testTag}${cpmTag}${conditionalTag}`;
 }
 
 export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProjectEvidence {
@@ -234,6 +344,7 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
   const solutionProfiles: CSharpSolutionProfile[] = [];
   const csprojProfiles: CSharpCsprojProfile[] = [];
   const directoryBuildPropsProfiles: CSharpDirectoryBuildPropsProfile[] = [];
+  const directoryPackagesPropsProfiles: CSharpDirectoryPackagesPropsProfile[] = [];
   let hasCSharpSource = false;
 
   if (!fs.existsSync(root)) {
@@ -241,12 +352,14 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
       hasSolution: false,
       hasCsproj: false,
       hasDirectoryBuildProps: false,
+      hasDirectoryPackagesProps: false,
       hasCSharpSource: false,
       hasUnityEvidence: false,
       evidence: [],
       solutionProfiles: [],
       csprojProfiles: [],
       directoryBuildPropsProfiles: [],
+      directoryPackagesPropsProfiles: [],
       warnings,
     };
   }
@@ -291,6 +404,19 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
           `${relativePath}: failed to parse Directory.Build.props (${error instanceof Error ? error.message : String(error)})`
         );
       }
+      return;
+    }
+
+    if (lower.endsWith('/directory.packages.props') || lower === 'directory.packages.props') {
+      try {
+        directoryPackagesPropsProfiles.push(
+          parseDirectoryPackagesPropsProfile(relativePath, readTextFile(absolutePath))
+        );
+      } catch (error) {
+        warnings.push(
+          `${relativePath}: failed to parse Directory.Packages.props (${error instanceof Error ? error.message : String(error)})`
+        );
+      }
     }
   });
 
@@ -307,6 +433,10 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
       ...solutionProfiles.map((profile) => `${profile.relativePath}#projects=${profile.projectCount}`),
       ...csprojProfiles.map(formatCsprojEvidence),
       ...directoryBuildPropsProfiles.map((profile) => `${profile.relativePath}#props`),
+      ...directoryPackagesPropsProfiles.map((profile) => {
+        const central = (profile.managePackageVersionsCentrally ?? '').toLowerCase() === 'true';
+        return `${profile.relativePath}#central=${central ? 'true' : 'false'};packages=${profile.centralPackageVersions.length}`;
+      }),
       ...(hasCSharpSource ? ['*.cs'] : []),
       ...(fs.existsSync(unityProjectVersionPath) ? ['ProjectSettings/ProjectVersion.txt'] : []),
       ...(fs.existsSync(unityPackagesPath) ? ['Packages/manifest.json'] : []),
@@ -319,12 +449,14 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
     hasSolution: solutionProfiles.length > 0,
     hasCsproj: csprojProfiles.length > 0,
     hasDirectoryBuildProps: directoryBuildPropsProfiles.length > 0,
+    hasDirectoryPackagesProps: directoryPackagesPropsProfiles.length > 0,
     hasCSharpSource,
     hasUnityEvidence,
     evidence,
     solutionProfiles,
     csprojProfiles,
     directoryBuildPropsProfiles,
+    directoryPackagesPropsProfiles,
     warnings,
   };
 }
@@ -348,6 +480,9 @@ export function detectCSharpProjectProfile(repositoryRoot: string): LanguageProj
 
   if (projectEvidence.hasDirectoryBuildProps) {
     confidence = Math.max(confidence, 0.82);
+  }
+  if (projectEvidence.hasDirectoryPackagesProps) {
+    confidence = Math.max(confidence, 0.9);
   }
   if (projectEvidence.csprojProfiles.some((profile) => profile.targetFrameworks.length > 0)) {
     confidence = Math.max(confidence, 0.93);

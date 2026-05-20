@@ -354,3 +354,8 @@
 | `doc_other_0965` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0208.task.md | ATM-LANG-CSHARP-0208 - C# legacy route deep planning |
 | `doc_other_0966` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0209.task.md | ATM-LANG-CSHARP-0209 - C# atomic map large-solution threshold profile |
 | `doc_other_0967` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0210.task.md | ATM-LANG-CSHARP-0210 - C# enterprise multi-project smoke fixture |
+| `doc_other_0968` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0300.task.md | ATM-LANG-CSHARP-0300 - C# modern syntax inventory coverage expansion |
+| `doc_other_0969` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0301.task.md | ATM-LANG-CSHARP-0301 - C# symbol resolution hardening for alias static and generic calls |
+| `doc_other_0970` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0302.task.md | ATM-LANG-CSHARP-0302 - C# csproj and solution deep profile v2 |
+| `doc_other_0971` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0303.task.md | ATM-LANG-CSHARP-0303 - C# diagnostics parser normalization v2 |
+| `doc_other_0972` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0304.task.md | ATM-LANG-CSHARP-0304 - C# advisory readiness gate and threshold profile |

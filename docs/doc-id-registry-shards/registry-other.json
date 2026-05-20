@@ -2494,5 +2494,35 @@
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0210.task.md",
     "title": "ATM-LANG-CSHARP-0210 - C# enterprise multi-project smoke fixture",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0968",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0300.task.md",
+    "title": "ATM-LANG-CSHARP-0300 - C# modern syntax inventory coverage expansion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0969",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0301.task.md",
+    "title": "ATM-LANG-CSHARP-0301 - C# symbol resolution hardening for alias static and generic calls",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0970",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0302.task.md",
+    "title": "ATM-LANG-CSHARP-0302 - C# csproj and solution deep profile v2",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0971",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0303.task.md",
+    "title": "ATM-LANG-CSHARP-0303 - C# diagnostics parser normalization v2",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0972",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0304.task.md",
+    "title": "ATM-LANG-CSHARP-0304 - C# advisory readiness gate and threshold profile",
+    "category": "other"
   }
 ]

@@ -12,3 +12,4 @@ export * from './csharp-registry';
 export * from './csharp-symbol-index';
 export * from './csharp-solution-graph';
 export * from './csharp-csproj-risk';
+export * from './csharp-readiness';

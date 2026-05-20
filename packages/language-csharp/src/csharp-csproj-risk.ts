@@ -16,7 +16,11 @@ export interface CSharpCsprojRiskFinding {
     | 'warnings-as-errors-disabled'
     | 'project-not-in-solution'
     | 'missing-project-reference-target'
-    | 'test-project-detected';
+    | 'test-project-detected'
+    | 'package-reference-without-version'
+    | 'central-package-management-detected'
+    | 'central-package-management-config-missing'
+    | 'conditional-build-configuration';
   severity: 'info' | 'warning' | 'error';
   projectPath: string;
   evidence: string;
@@ -100,6 +104,39 @@ function evaluateCsprojProfile(profile: CSharpCsprojProfile): CSharpCsprojRiskFi
     );
   }
 
+  if (profile.packageReferencesWithoutVersion.length > 0 && !profile.usesCentralPackageManagement) {
+    findings.push(
+      buildFinding(
+        'package-reference-without-version',
+        'error',
+        profile.relativePath,
+        `PackageReference missing version=${profile.packageReferencesWithoutVersion.join(',')}`
+      )
+    );
+  }
+
+  if (profile.usesCentralPackageManagement) {
+    findings.push(
+      buildFinding(
+        'central-package-management-detected',
+        'info',
+        profile.relativePath,
+        'PackageReference omits Version and expects Directory.Packages.props central management'
+      )
+    );
+  }
+
+  if (profile.conditionalPropertyGroups.length > 0 || profile.conditionalItemGroups.length > 0) {
+    findings.push(
+      buildFinding(
+        'conditional-build-configuration',
+        'info',
+        profile.relativePath,
+        `conditional groups detected property=${profile.conditionalPropertyGroups.length}, item=${profile.conditionalItemGroups.length}`
+      )
+    );
+  }
+
   return findings;
 }
 
@@ -117,6 +154,20 @@ export function buildCSharpCsprojRiskModel(
   const findings: CSharpCsprojRiskFinding[] = [];
   for (const profile of projectEvidence.csprojProfiles) {
     findings.push(...evaluateCsprojProfile(profile));
+  }
+
+  if (
+    projectEvidence.csprojProfiles.some((profile) => profile.usesCentralPackageManagement) &&
+    !projectEvidence.hasDirectoryPackagesProps
+  ) {
+    findings.push(
+      buildFinding(
+        'central-package-management-config-missing',
+        'warning',
+        '.',
+        'PackageReference without explicit Version detected but Directory.Packages.props is missing'
+      )
+    );
   }
 
   if (projectGraph.solutionPath) {

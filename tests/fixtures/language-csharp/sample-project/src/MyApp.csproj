@@ -7,8 +7,14 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DefineConstants>TRACE;ATM_FIXTURE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>TRACE;ATM_FIXTURE;RELEASE_BUILD</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="3.1.0" />
+    <PackageReference Include="Serilog" />
     <ProjectReference Include="Shared/Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="FluentAssertions" />
   </ItemGroup>
 </Project>

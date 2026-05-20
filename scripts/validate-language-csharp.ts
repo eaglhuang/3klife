@@ -19,11 +19,15 @@ const REQUIRED_FILES = [
   'packages/language-csharp/src/csharp-symbol-index.ts',
   'packages/language-csharp/src/csharp-solution-graph.ts',
   'packages/language-csharp/src/csharp-csproj-risk.ts',
+  'packages/language-csharp/src/csharp-readiness.ts',
   'tests/fixtures/language-csharp/sample-project/MyApp.sln',
   'tests/fixtures/language-csharp/sample-project/src/MyApp.csproj',
   'tests/fixtures/language-csharp/sample-project/src/Shared/Shared.csproj',
   'tests/fixtures/language-csharp/sample-project/tests/MyApp.Tests.csproj',
   'tests/fixtures/language-csharp/sample-project/Directory.Build.props',
+  'tests/fixtures/language-csharp/sample-project/Directory.Packages.props',
+  'tests/fixtures/language-csharp/sample-project/src/Core/SyntaxPlayground.cs',
+  'tests/fixtures/language-csharp/sample-project/src/Models/WorkflowSnapshot.cs',
   'tests/fixtures/language-csharp/enterprise-solution/Contoso.sln',
   'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.App/Contoso.App.csproj',
   'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.Domain/Contoso.Domain.csproj',
@@ -34,6 +38,8 @@ const REQUIRED_FILES = [
   'tests/fixtures/language-csharp/dry-run-requests.json',
   'tests/fixtures/language-csharp/diagnostics-sample.txt',
   'tests/fixtures/language-csharp/diagnostics-sarif.json',
+  'tests/fixtures/language-csharp/diagnostics-sarif-variant.json',
+  'tests/fixtures/language-csharp/readiness-thresholds.json',
   'tests/fixtures/language-csharp/equivalence-fixtures.json',
   'tests/atm-lang-csharp.test.ts',
 ];
@@ -92,6 +98,10 @@ const REQUIRED_SNIPPETS = [
     snippets: ['buildCSharpCsprojRiskModel('],
   },
   {
+    path: 'packages/language-csharp/src/csharp-readiness.ts',
+    snippets: ['evaluateCSharpReadinessGate('],
+  },
+  {
     path: 'packages/language-csharp/src/csharp-dry-run.ts',
     snippets: ['planCSharpAtomizeDryRun(', 'planCSharpInfectDryRun(', 'mutates: []'],
   },
@@ -136,6 +146,7 @@ async function runFixtureCheck() {
     buildCSharpSymbolReferenceIndex,
     buildCSharpSolutionProjectGraph,
     buildCSharpCsprojRiskModel,
+    evaluateCSharpReadinessGate,
   } = require('../packages/language-csharp/src');
   const { resolveLanguageAdapter } = require('../packages/core/src/guidance/language-adapter-resolver');
   const { planLegacyRouteWithAdapter } = require('../packages/core/src/guidance/legacy-route-delegation');
@@ -161,6 +172,13 @@ async function runFixtureCheck() {
     repoPath('tests/fixtures/language-csharp/diagnostics-sarif.json'),
     'utf8'
   );
+  const diagnosticsSarifVariantRaw = fs.readFileSync(
+    repoPath('tests/fixtures/language-csharp/diagnostics-sarif-variant.json'),
+    'utf8'
+  );
+  const readinessThresholds = JSON.parse(
+    fs.readFileSync(repoPath('tests/fixtures/language-csharp/readiness-thresholds.json'), 'utf8')
+  );
   const equivalenceFixtures = JSON.parse(
     fs.readFileSync(repoPath('tests/fixtures/language-csharp/equivalence-fixtures.json'), 'utf8')
   );
@@ -180,7 +198,20 @@ async function runFixtureCheck() {
     'profile should include .csproj deep parse evidence'
   );
   assert.ok(profile.evidence.some((entry) => entry.toLowerCase().includes('directory.build.props')), 'profile should include Directory.Build.props');
+  assert.ok(
+    profile.evidence.some((entry) => entry.toLowerCase().includes('directory.packages.props')),
+    'profile should include Directory.Packages.props'
+  );
   assert.ok(projectEvidence.csprojProfiles.length >= 2, 'csproj deep parse should collect >= 2 projects');
+  assert.equal(projectEvidence.hasDirectoryPackagesProps, true, 'Directory.Packages.props evidence missing');
+  assert.ok(
+    projectEvidence.directoryPackagesPropsProfiles.some(
+      (entry) =>
+        entry.relativePath === 'Directory.Packages.props' &&
+        (entry.managePackageVersionsCentrally ?? '').toLowerCase() === 'true'
+    ),
+    'Directory.Packages.props should enable central package management'
+  );
   assert.ok(
     projectEvidence.csprojProfiles.some((entry) => entry.relativePath === 'tests/MyApp.Tests.csproj' && entry.isTestProject),
     'csproj deep parse should detect test project'
@@ -197,6 +228,23 @@ async function runFixtureCheck() {
     appProject.projectReferences.includes('Shared/Shared.csproj'),
     'src/MyApp.csproj should include Shared/Shared.csproj reference'
   );
+  assert.equal(
+    appProject.usesCentralPackageManagement,
+    true,
+    'src/MyApp.csproj should enable central package management pattern'
+  );
+  assert.ok(
+    appProject.packageReferencesWithoutVersion.includes('Serilog'),
+    'src/MyApp.csproj should include Serilog without explicit version'
+  );
+  assert.ok(
+    appProject.conditionalPropertyGroups.length >= 1,
+    'src/MyApp.csproj should include conditional property group'
+  );
+  assert.ok(
+    appProject.conditionalItemGroups.length >= 1,
+    'src/MyApp.csproj should include conditional item group'
+  );
   assert.ok(
     projectEvidence.directoryBuildPropsProfiles.some(
       (entry) => entry.relativePath === 'Directory.Build.props' && entry.treatWarningsAsErrors === 'true'
@@ -211,6 +259,14 @@ async function runFixtureCheck() {
   assert.ok(
     csprojRisk.findings.some((finding) => finding.kind === 'multi-target-framework'),
     'csproj risk should detect multi-target framework'
+  );
+  assert.ok(
+    csprojRisk.findings.some((finding) => finding.kind === 'central-package-management-detected'),
+    'csproj risk should detect central package management signal'
+  );
+  assert.ok(
+    csprojRisk.findings.some((finding) => finding.kind === 'conditional-build-configuration'),
+    'csproj risk should detect conditional build configuration signal'
   );
 
   const analysis = buildCSharpInventory({
@@ -227,6 +283,10 @@ async function runFixtureCheck() {
   const diagnosticsSarif = parseCSharpDiagnostics({
     rawDiagnostics: diagnosticsSarifRaw,
     source: 'sarif',
+  });
+  const diagnosticsSarifVariant = parseCSharpDiagnostics({
+    rawDiagnostics: diagnosticsSarifVariantRaw,
+    source: 'sarif-variant',
   });
   const runtimeCommands = await detectCSharpRuntimeCommands({
     repositoryRoot: fixtureRoot,
@@ -295,6 +355,28 @@ async function runFixtureCheck() {
     symbolReferenceIndex.resolvedCount >= 2,
     'symbol reference index should resolve at least 2 references'
   );
+  assert.ok(
+    symbolReferenceIndex.references.some(
+      (reference) =>
+        reference.callee.toLowerCase().startsWith('jointokens') && reference.resolution === 'resolved'
+    ),
+    'symbol reference index should resolve JoinTokens call from using static context'
+  );
+  assert.ok(
+    symbolReferenceIndex.references.some(
+      (reference) =>
+        reference.callee.toLowerCase().startsWith('corealias.tag') &&
+        reference.resolution === 'resolved'
+    ),
+    'symbol reference index should resolve alias using call target'
+  );
+  assert.ok(
+    symbolReferenceIndex.references.some(
+      (reference) =>
+        reference.callee.toLowerCase().startsWith('identity') && reference.resolution === 'resolved'
+    ),
+    'symbol reference index should resolve generic Identity call'
+  );
 
   for (const requiredEdge of expected.requiredDependencyEdges) {
     assert.ok(
@@ -344,6 +426,18 @@ async function runFixtureCheck() {
   assert.ok(
     diagnosticsSarif.diagnostics.some((entry) => entry.code === 'CS8618' && entry.severity === 'error'),
     'sarif diagnostics should include CS8618 error'
+  );
+  assert.ok(
+    diagnosticsSarifVariant.diagnostics.some(
+      (entry) => entry.code === 'CA1303' && entry.severity === 'warning'
+    ),
+    'sarif variant diagnostics should include CA1303 warning'
+  );
+  assert.ok(
+    diagnosticsSarifVariant.diagnostics.some(
+      (entry) => entry.code === 'CS8602' && entry.severity === 'error'
+    ),
+    'sarif variant diagnostics should include CS8602 error'
   );
 
   assert.ok(runtimeCommands.commands.length >= 3, 'runtime command detection should return advisory commands');
@@ -411,6 +505,29 @@ async function runFixtureCheck() {
   assert.ok(
     enterpriseRisk.findings.some((finding) => finding.kind === 'multi-target-framework'),
     'enterprise csproj risk should detect multi-target framework'
+  );
+  const sampleReadiness = evaluateCSharpReadinessGate({
+    inventoryFileCount: analysis.inventory.files.length,
+    symbolReferenceIndex,
+    csprojRisk,
+    mapReport,
+    thresholds: readinessThresholds.sample,
+  });
+  const enterpriseReadiness = evaluateCSharpReadinessGate({
+    inventoryFileCount: enterpriseAnalysis.inventory.files.length,
+    symbolReferenceIndex: enterpriseSymbolIndex,
+    csprojRisk: enterpriseRisk,
+    mapReport: enterpriseMapReport,
+    thresholds: readinessThresholds.enterprise,
+  });
+  assert.ok(sampleReadiness.checks.length >= 6, 'sample readiness should include threshold checks');
+  assert.ok(
+    sampleReadiness.checks.some((check) => check.checkId === 'map-evidence-gate'),
+    'sample readiness should include map evidence gate check'
+  );
+  assert.ok(
+    enterpriseReadiness.checks.some((check) => check.checkId === 'resolved-references'),
+    'enterprise readiness should include resolved reference threshold check'
   );
 
   for (const fixture of equivalenceFixtures.cases) {
@@ -502,6 +619,8 @@ async function runFixtureCheck() {
     enterpriseProjectCount: enterpriseGraph.summary.projectCount,
     enterpriseMapMemberCount: enterpriseMapReport.members.length,
     enterpriseRiskFindingCount: enterpriseRisk.findings.length,
+    sampleReadinessStage: sampleReadiness.stage,
+    enterpriseReadinessStage: enterpriseReadiness.stage,
     atomizeStepCount: atomizePlan.steps.length,
     infectStepCount: infectPlan.steps.length,
     equivalenceCaseCount: equivalenceFixtures.cases.length,
