@@ -7,12 +7,12 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
-last_updated: 2026-05-19T00:00:00+08:00
+last_updated: 2026-05-20T00:00:00+08:00
 ---
 
 # ATM GOV Task Cards
 
-This directory is the formal task-card set for ATM-GOV-0101 through ATM-GOV-0122.
+This directory is the formal task-card set for ATM-GOV-0101 through ATM-GOV-0123.
 It mirrors the same "plan + tasks/README + per-task card" layout used in 3KLife.
 
 | Task ID | Title | Milestone | Status |
@@ -38,6 +38,8 @@ It mirrors the same "plan + tasks/README + per-task card" layout used in 3KLife.
 | [ATM-GOV-0119](./ATM-GOV-0119-unsupported-language-advisory.task.md) | Unsupported Language Advisory and Deferred Apply Contract | M4 | open |
 | [ATM-GOV-0120](./ATM-GOV-0120-multilanguage-onefile-validation-matrix.task.md) | Multi-language Onefile Validation Matrix for Governance Analysis | M4 | open |
 | [ATM-GOV-0121](./ATM-GOV-0121-languageadapter-governance-authoring-guide.task.md) | LanguageAdapter Governance Authoring Guide | M4 | open |
+| [ATM-GOV-0122](./ATM-GOV-0122-adopter-atom-version-lineage.task.md) | Adopter Atom Version Lineage for Evolve Proof | M5 | open |
+| [ATM-GOV-0123](./ATM-GOV-0123-registry-lineage-backfill-command.task.md) | Registry Lineage Backfill Command | M5 | open |
 
 ## Notes
 

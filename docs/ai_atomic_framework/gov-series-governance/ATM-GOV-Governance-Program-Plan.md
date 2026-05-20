@@ -7,16 +7,16 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
-last_updated: 2026-05-19T00:00:00+08:00
+last_updated: 2026-05-20T00:00:00+08:00
 ---
 
 # ATM GOV Governance Program Plan
 
 ## 0. Summary
 
-This plan formalizes ATM-GOV-0101 through ATM-GOV-0121 as one upstream governance program.
+This plan formalizes ATM-GOV-0101 through ATM-GOV-0123 as one upstream governance program.
 The program keeps ATM core host-neutral and moves editor-specific automation into integration plugins.
-The core contract covers identity, claim/lease, evidence, git governance, and language-adapter capability routing.
+The core contract covers identity, claim/lease, evidence, git governance, language-adapter capability routing, and adopter atom lineage governance.
 
 ## 1. Objectives
 
@@ -38,6 +38,7 @@ The core contract covers identity, claim/lease, evidence, git governance, and la
 - Reference JS/Python governance adapter implementations.
 - Unsupported-language advisory and deferred apply contract.
 - Multi-language onefile validation matrix and authoring guide.
+- Adopter atom version lineage and deterministic registry lineage backfill.
 
 ## 3. Out of Scope
 
@@ -76,6 +77,10 @@ The core contract covers identity, claim/lease, evidence, git governance, and la
 - ATM-GOV-0120
 - ATM-GOV-0121
 
+## M5 Adopter Atom Lineage and Registry Backfill
+- ATM-GOV-0122
+- ATM-GOV-0123
+
 ## 5. Task Inventory
 
 | Task ID | Title | Milestone | Status | Blocked By |
@@ -101,6 +106,8 @@ The core contract covers identity, claim/lease, evidence, git governance, and la
 | ATM-GOV-0119 | Unsupported Language Advisory and Deferred Apply Contract | M4 | open | ATM-GOV-0113, ATM-GOV-0118 |
 | ATM-GOV-0120 | Multi-language Onefile Validation Matrix for Governance Analysis | M4 | open | ATM-GOV-0117, ATM-GOV-0118, ATM-GOV-0119 |
 | ATM-GOV-0121 | LanguageAdapter Governance Authoring Guide | M4 | open | ATM-GOV-0112, ATM-GOV-0120 |
+| ATM-GOV-0122 | Adopter Atom Version Lineage for Evolve Proof | M5 | open | ATM-GOV-0116, ATM-GOV-0118, ATM-GOV-0120 |
+| ATM-GOV-0123 | Registry Lineage Backfill Command | M5 | open | ATM-GOV-0122 |
 
 ## 6. Validation Baseline
 
