@@ -7,6 +7,8 @@ const SCHEMAS = [
   'schemas/language-diagnostics.schema.json',
   'schemas/language-runtime-commands.schema.json',
   'schemas/language-equivalence-fixture.schema.json',
+  'schemas/language-dry-run-plan-request.schema.json',
+  'schemas/language-dry-run-plan-report.schema.json',
   'schemas/language-dry-run-evidence-envelope.schema.json',
 ];
 
@@ -63,4 +65,3 @@ function main() {
 }
 
 main();
-

@@ -16,6 +16,13 @@ const REQUIRED_SNIPPETS = [
   'parseDiagnostics?(',
   'computeEquivalenceContract?(',
   'buildAtomicMapDecomposition?(',
+  'executionMode: \'dry-run\';',
+  'interface DryRunImportRewritePlan',
+  'interface DryRunHostShimPlan',
+  'interface DryRunRollbackPlan',
+  'proposalArtifacts: DryRunProposalArtifact[];',
+  'reviewGate: DryRunReviewGate;',
+  'isDryRunProposalSafe(report: DryRunPlanReport)',
 ];
 
 const REQUIRED_SCHEMA_FILES = [
@@ -24,6 +31,8 @@ const REQUIRED_SCHEMA_FILES = [
   'schemas/language-diagnostics.schema.json',
   'schemas/language-runtime-commands.schema.json',
   'schemas/language-equivalence-fixture.schema.json',
+  'schemas/language-dry-run-plan-request.schema.json',
+  'schemas/language-dry-run-plan-report.schema.json',
   'schemas/language-dry-run-evidence-envelope.schema.json',
 ];
 
@@ -76,4 +85,3 @@ function main() {
 }
 
 main();
-

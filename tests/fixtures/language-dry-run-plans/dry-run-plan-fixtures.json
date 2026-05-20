@@ -1,0 +1,190 @@
+{
+  "cases": [
+    {
+      "id": "atomize-valid",
+      "request": {
+        "repositoryRoot": "/workspace/repo",
+        "operation": "atomize",
+        "atomId": "py.extract.user-service",
+        "goal": "extract user service atom",
+        "entrypoint": "src/main.py",
+        "includeGlobs": ["src/**/*.py"]
+      },
+      "report": {
+        "operation": "atomize",
+        "executionMode": "dry-run",
+        "steps": [
+          {
+            "stage": "inventory",
+            "description": "Collect source inventory before extraction."
+          },
+          {
+            "stage": "rewrite",
+            "description": "Plan import rewrite for host entrypoint.",
+            "filePath": "src/main.py",
+            "subcontract": "import-rewrite"
+          },
+          {
+            "stage": "gate",
+            "description": "Require review gate before apply.",
+            "subcontract": "evidence-gate"
+          }
+        ],
+        "evidence": {
+          "planKind": "atomize",
+          "requiredEvidence": ["unit-test-report", "source-inventory-report"],
+          "proposalArtifacts": [
+            {
+              "artifactId": "inventory",
+              "kind": "source-inventory",
+              "path": "artifacts/atm/atomize/inventory.json",
+              "required": true
+            },
+            {
+              "artifactId": "rewrite-plan",
+              "kind": "import-rewrite",
+              "path": "artifacts/atm/atomize/rewrite-plan.json",
+              "required": true
+            }
+          ],
+          "reviewGate": {
+            "gateId": "gate-atomize-01",
+            "gateType": "dual-review",
+            "required": true,
+            "reason": "涉及 host 入口調整，需人工與 police 共審。"
+          },
+          "importRewrite": {
+            "rewriteId": "rewrite-01",
+            "filePath": "src/main.py",
+            "fromImport": "legacy.user",
+            "toImport": "atoms.user"
+          },
+          "shim": {
+            "shimId": "shim-01",
+            "filePath": "src/main.py",
+            "strategy": "forwarding-function",
+            "preservesEntrypoint": true
+          },
+          "rollback": {
+            "rollbackId": "rollback-01",
+            "steps": ["restore import path", "restore shim target"],
+            "restoreTargets": ["src/main.py"],
+            "proofHint": "git diff must be empty after rollback"
+          },
+          "mutates": []
+        }
+      },
+      "expect": {
+        "reportValid": true
+      }
+    },
+    {
+      "id": "infect-valid",
+      "request": {
+        "repositoryRoot": "/workspace/repo",
+        "operation": "infect",
+        "atomId": "js.inject.audit-hook",
+        "entrypoint": "src/app.ts",
+        "excludeGlobs": ["**/*.spec.ts"]
+      },
+      "report": {
+        "operation": "infect",
+        "executionMode": "dry-run",
+        "steps": [
+          {
+            "stage": "plan-shim",
+            "description": "Plan shim for host app entrypoint.",
+            "filePath": "src/app.ts",
+            "subcontract": "shim"
+          }
+        ],
+        "evidence": {
+          "planKind": "infect",
+          "requiredEvidence": ["integration-test-report"],
+          "proposalArtifacts": [
+            {
+              "artifactId": "shim-plan",
+              "kind": "host-shim",
+              "path": "artifacts/atm/infect/shim-plan.json",
+              "required": true
+            }
+          ],
+          "reviewGate": {
+            "gateId": "gate-infect-01",
+            "gateType": "human-review",
+            "required": true
+          },
+          "rollback": {
+            "rollbackId": "rollback-02",
+            "steps": ["remove injected shim"],
+            "restoreTargets": ["src/app.ts"]
+          },
+          "mutates": []
+        }
+      },
+      "expect": {
+        "reportValid": true
+      }
+    },
+    {
+      "id": "invalid-mutates-non-empty",
+      "request": {
+        "repositoryRoot": "/workspace/repo",
+        "operation": "atomize"
+      },
+      "report": {
+        "operation": "atomize",
+        "executionMode": "dry-run",
+        "steps": [],
+        "evidence": {
+          "planKind": "atomize",
+          "requiredEvidence": [],
+          "proposalArtifacts": [],
+          "reviewGate": {
+            "gateId": "gate-atomize-02",
+            "gateType": "police-review",
+            "required": true
+          },
+          "rollback": {
+            "rollbackId": "rollback-03",
+            "steps": [],
+            "restoreTargets": []
+          },
+          "mutates": ["src/main.py"]
+        }
+      },
+      "expect": {
+        "reportValid": false,
+        "errorIncludes": "must NOT have more than 0 items"
+      }
+    },
+    {
+      "id": "invalid-missing-review-gate",
+      "request": {
+        "repositoryRoot": "/workspace/repo",
+        "operation": "infect"
+      },
+      "report": {
+        "operation": "infect",
+        "executionMode": "dry-run",
+        "steps": [],
+        "evidence": {
+          "planKind": "infect",
+          "requiredEvidence": [],
+          "proposalArtifacts": [],
+          "rollback": {
+            "rollbackId": "rollback-04",
+            "steps": [],
+            "restoreTargets": []
+          },
+          "mutates": []
+        }
+      },
+      "expect": {
+        "reportValid": false,
+        "errorIncludes": "must have required property 'reviewGate'"
+      }
+    }
+  ]
+}
+

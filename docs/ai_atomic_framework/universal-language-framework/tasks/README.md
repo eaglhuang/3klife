@@ -46,9 +46,9 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-0400 | Adapter-driven source inventory service | ATM-MAP-LANG-0400 | done | 0101 |
 | ATM-LANG-0401 | Candidate ranking signal model | ATM-MAP-LANG-0400 | done | 0400 |
 | ATM-LANG-0402 | `candidates rank` thin facade conversion | ATM-MAP-LANG-0400 | done | 0401 |
-| ATM-LANG-0500 | Generic atomize/infect dry-run plan contracts | ATM-MAP-LANG-0500 | open | 0102 |
-| ATM-LANG-0501 | Import rewrite, shim, rollback plan contracts | ATM-MAP-LANG-0500 | open | 0500 |
-| ATM-LANG-0502 | Dry-run proposal evidence envelope | ATM-MAP-LANG-0500 | open | 0501 |
+| ATM-LANG-0500 | Generic atomize/infect dry-run plan contracts | ATM-MAP-LANG-0500 | done | 0102 |
+| ATM-LANG-0501 | Import rewrite, shim, rollback plan contracts | ATM-MAP-LANG-0500 | done | 0500 |
+| ATM-LANG-0502 | Dry-run proposal evidence envelope | ATM-MAP-LANG-0500 | done | 0501 |
 | ATM-LANG-0600 | Atomic map decomposition contract | ATM-MAP-LANG-0600 | open | 0101 |
 | ATM-LANG-0601 | Graph-to-map decomposition proposal | ATM-MAP-LANG-0600 | open | 0600 |
 | ATM-LANG-0602 | Large-feature decomposition evidence gate | ATM-MAP-LANG-0600 | open | 0601 |

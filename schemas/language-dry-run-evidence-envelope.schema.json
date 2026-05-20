@@ -6,7 +6,9 @@
   "required": [
     "planKind",
     "requiredEvidence",
-    "rollbackStrategy",
+    "proposalArtifacts",
+    "reviewGate",
+    "rollback",
     "mutates"
   ],
   "properties": {
@@ -23,19 +25,151 @@
         "type": "string"
       }
     },
-    "rollbackStrategy": {
-      "type": "string"
+    "proposalArtifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifactId",
+          "kind",
+          "path",
+          "required"
+        ],
+        "properties": {
+          "artifactId": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
     },
-    "shimStrategy": {
-      "type": "string"
+    "reviewGate": {
+      "type": "object",
+      "required": [
+        "gateId",
+        "gateType",
+        "required"
+      ],
+      "properties": {
+        "gateId": {
+          "type": "string"
+        },
+        "gateType": {
+          "type": "string",
+          "enum": [
+            "human-review",
+            "police-review",
+            "dual-review"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "importRewrite": {
+      "type": "object",
+      "required": [
+        "rewriteId",
+        "filePath",
+        "fromImport",
+        "toImport"
+      ],
+      "properties": {
+        "rewriteId": {
+          "type": "string"
+        },
+        "filePath": {
+          "type": "string"
+        },
+        "fromImport": {
+          "type": "string"
+        },
+        "toImport": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "shim": {
+      "type": "object",
+      "required": [
+        "shimId",
+        "filePath",
+        "strategy",
+        "preservesEntrypoint"
+      ],
+      "properties": {
+        "shimId": {
+          "type": "string"
+        },
+        "filePath": {
+          "type": "string"
+        },
+        "strategy": {
+          "type": "string"
+        },
+        "preservesEntrypoint": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "rollback": {
+      "type": "object",
+      "required": [
+        "rollbackId",
+        "steps",
+        "restoreTargets"
+      ],
+      "properties": {
+        "rollbackId": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "restoreTargets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "proofHint": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     },
     "mutates": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "maxItems": 0
     }
   },
   "additionalProperties": false
 }
-

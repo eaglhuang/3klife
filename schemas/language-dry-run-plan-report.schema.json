@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-dry-run-plan-report.schema.json",
+  "title": "Language Dry-Run Plan Report",
+  "type": "object",
+  "required": [
+    "operation",
+    "executionMode",
+    "steps",
+    "evidence"
+  ],
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": [
+        "atomize",
+        "infect"
+      ]
+    },
+    "executionMode": {
+      "const": "dry-run"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "stage",
+          "description"
+        ],
+        "properties": {
+          "stage": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "filePath": {
+            "type": "string"
+          },
+          "subcontract": {
+            "type": "string",
+            "enum": [
+              "import-rewrite",
+              "shim",
+              "rollback",
+              "evidence-gate"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "$ref": "atm://schemas/language-dry-run-evidence-envelope.schema.json"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -161,25 +161,78 @@ export interface EquivalenceContractReport {
 export interface DryRunPlanRequest {
   repositoryRoot: string;
   operation: 'atomize' | 'infect';
+  atomId?: string;
+  goal?: string;
+  entrypoint?: string;
+  includeGlobs?: string[];
+  excludeGlobs?: string[];
 }
 
 export interface DryRunPlanStep {
   stage: string;
   description: string;
+  filePath?: string;
+  subcontract?: 'import-rewrite' | 'shim' | 'rollback' | 'evidence-gate';
+}
+
+export interface DryRunImportRewritePlan {
+  rewriteId: string;
+  filePath: string;
+  fromImport: string;
+  toImport: string;
+  rationale?: string;
+}
+
+export interface DryRunHostShimPlan {
+  shimId: string;
+  filePath: string;
+  strategy: string;
+  preservesEntrypoint: boolean;
+  notes?: string;
+}
+
+export interface DryRunRollbackPlan {
+  rollbackId: string;
+  steps: string[];
+  restoreTargets: string[];
+  proofHint?: string;
+}
+
+export interface DryRunProposalArtifact {
+  artifactId: string;
+  kind: string;
+  path: string;
+  required: boolean;
+}
+
+export interface DryRunReviewGate {
+  gateId: string;
+  gateType: 'human-review' | 'police-review' | 'dual-review';
+  required: boolean;
+  reason?: string;
 }
 
 export interface DryRunEvidenceEnvelope {
   planKind: 'atomize' | 'infect';
   requiredEvidence: string[];
-  rollbackStrategy: string;
-  shimStrategy?: string;
+  proposalArtifacts: DryRunProposalArtifact[];
+  reviewGate: DryRunReviewGate;
+  importRewrite?: DryRunImportRewritePlan;
+  shim?: DryRunHostShimPlan;
+  rollback: DryRunRollbackPlan;
   mutates: string[];
 }
 
 export interface DryRunPlanReport {
   operation: 'atomize' | 'infect';
+  executionMode: 'dry-run';
   steps: DryRunPlanStep[];
   evidence: DryRunEvidenceEnvelope;
+  warnings?: string[];
+}
+
+export function isDryRunProposalSafe(report: DryRunPlanReport): boolean {
+  return report.executionMode === 'dry-run' && report.evidence.mutates.length === 0;
 }
 
 export interface AtomicMapDecompositionRequest {
@@ -241,4 +294,3 @@ export interface LanguageAdapterV2<
   computeEquivalenceContract?(request: EquivalenceContractRequest): MaybePromise<EquivalenceContractReport>;
   buildAtomicMapDecomposition?(request: AtomicMapDecompositionRequest): MaybePromise<AtomicMapDecompositionReport>;
 }
-

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-dry-run-plan-request.schema.json",
+  "title": "Language Dry-Run Plan Request",
+  "type": "object",
+  "required": [
+    "repositoryRoot",
+    "operation"
+  ],
+  "properties": {
+    "repositoryRoot": {
+      "type": "string"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "atomize",
+        "infect"
+      ]
+    },
+    "atomId": {
+      "type": "string"
+    },
+    "goal": {
+      "type": "string"
+    },
+    "entrypoint": {
+      "type": "string"
+    },
+    "includeGlobs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "excludeGlobs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
