@@ -1,0 +1,8 @@
+{
+  "minProjects": 4,
+  "minCsFiles": 14,
+  "minProjectReferenceEdges": 4,
+  "minResolvedSymbolReferences": 5,
+  "minMapMembers": 14,
+  "requiredThresholdProfile": "large"
+}

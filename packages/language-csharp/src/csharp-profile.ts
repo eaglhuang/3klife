@@ -4,16 +4,23 @@ import type { LanguageProjectProfile } from '../../../plugin-sdk/src/language-ad
 
 const SKIP_DIRS = new Set(['.git', 'node_modules', 'Library', 'Temp', 'obj', 'bin']);
 
-interface CSharpSolutionProfile {
+export interface CSharpSolutionProjectEntry {
+  name: string;
+  projectPath: string;
+  projectGuid?: string;
+}
+
+export interface CSharpSolutionProfile {
   relativePath: string;
   formatVersion?: string;
   visualStudioVersion?: string;
   minimumVisualStudioVersion?: string;
   projectCount: number;
   configurations: string[];
+  projectEntries: CSharpSolutionProjectEntry[];
 }
 
-interface CSharpCsprojProfile {
+export interface CSharpCsprojProfile {
   relativePath: string;
   sdk?: string;
   targetFrameworks: string[];
@@ -28,7 +35,7 @@ interface CSharpCsprojProfile {
   projectReferences: string[];
 }
 
-interface CSharpDirectoryBuildPropsProfile {
+export interface CSharpDirectoryBuildPropsProfile {
   relativePath: string;
   nullable?: string;
   langVersion?: string;
@@ -161,7 +168,25 @@ function parseSolutionProfile(relativePath: string, raw: string): CSharpSolution
     ?.split('=')
     ?.[1]
     ?.trim();
-  const projectCount = lines.filter((line) => /^Project\(/.test(line.trim())).length;
+  const projectEntries: CSharpSolutionProjectEntry[] = [];
+  for (const line of lines) {
+    const match = line.match(
+      /^Project\(".*?"\)\s*=\s*"([^"]+)",\s*"([^"]+)",\s*"([^"]+)"\s*$/
+    );
+    if (!match) {
+      continue;
+    }
+    const [, name, projectPath, projectGuid] = match;
+    if (!projectPath.toLowerCase().endsWith('.csproj')) {
+      continue;
+    }
+    projectEntries.push({
+      name: name.trim(),
+      projectPath: toPosix(projectPath.trim()),
+      projectGuid: projectGuid.trim(),
+    });
+  }
+  const projectCount = projectEntries.length;
   const configurations = Array.from(
     new Set(
       lines
@@ -177,6 +202,7 @@ function parseSolutionProfile(relativePath: string, raw: string): CSharpSolution
     minimumVisualStudioVersion,
     projectCount,
     configurations,
+    projectEntries,
   };
 }
 

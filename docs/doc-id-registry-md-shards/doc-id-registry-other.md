@@ -347,3 +347,10 @@
 | `doc_other_0958` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0201.task.md | ATM-LANG-CSHARP-0201 - C# legacy route planning integration |
 | `doc_other_0959` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0202.task.md | ATM-LANG-CSHARP-0202 - C# symbol stability hardening |
 | `doc_other_0960` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0203.task.md | ATM-LANG-CSHARP-0203 - C# csproj deep profile parsing |
+| `doc_other_0961` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0204.task.md | ATM-LANG-CSHARP-0204 - C# cross-file symbol reference index |
+| `doc_other_0962` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0205.task.md | ATM-LANG-CSHARP-0205 - C# solution and project graph |
+| `doc_other_0963` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0206.task.md | ATM-LANG-CSHARP-0206 - C# csproj risk rules |
+| `doc_other_0964` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0207.task.md | ATM-LANG-CSHARP-0207 - C# diagnostics parser SARIF expansion |
+| `doc_other_0965` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0208.task.md | ATM-LANG-CSHARP-0208 - C# legacy route deep planning |
+| `doc_other_0966` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0209.task.md | ATM-LANG-CSHARP-0209 - C# atomic map large-solution threshold profile |
+| `doc_other_0967` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0210.task.md | ATM-LANG-CSHARP-0210 - C# enterprise multi-project smoke fixture |

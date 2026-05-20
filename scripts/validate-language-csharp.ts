@@ -16,14 +16,24 @@ const REQUIRED_FILES = [
   'packages/language-csharp/src/csharp-equivalence.ts',
   'packages/language-csharp/src/csharp-legacy-route.ts',
   'packages/language-csharp/src/csharp-registry.ts',
+  'packages/language-csharp/src/csharp-symbol-index.ts',
+  'packages/language-csharp/src/csharp-solution-graph.ts',
+  'packages/language-csharp/src/csharp-csproj-risk.ts',
   'tests/fixtures/language-csharp/sample-project/MyApp.sln',
   'tests/fixtures/language-csharp/sample-project/src/MyApp.csproj',
   'tests/fixtures/language-csharp/sample-project/src/Shared/Shared.csproj',
   'tests/fixtures/language-csharp/sample-project/tests/MyApp.Tests.csproj',
   'tests/fixtures/language-csharp/sample-project/Directory.Build.props',
+  'tests/fixtures/language-csharp/enterprise-solution/Contoso.sln',
+  'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.App/Contoso.App.csproj',
+  'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.Domain/Contoso.Domain.csproj',
+  'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.Infrastructure/Contoso.Infrastructure.csproj',
+  'tests/fixtures/language-csharp/enterprise-solution/tests/Contoso.App.Tests/Contoso.App.Tests.csproj',
+  'tests/fixtures/language-csharp/enterprise-solution/expected-smoke.json',
   'tests/fixtures/language-csharp/expected-report.json',
   'tests/fixtures/language-csharp/dry-run-requests.json',
   'tests/fixtures/language-csharp/diagnostics-sample.txt',
+  'tests/fixtures/language-csharp/diagnostics-sarif.json',
   'tests/fixtures/language-csharp/equivalence-fixtures.json',
   'tests/atm-lang-csharp.test.ts',
 ];
@@ -43,7 +53,7 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-diagnostics.ts',
-    snippets: ['parseCSharpDiagnostics('],
+    snippets: ['parseCSharpDiagnostics(', 'parseSarifDiagnostics('],
   },
   {
     path: 'packages/language-csharp/src/csharp-runtime.ts',
@@ -51,7 +61,11 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-map.ts',
-    snippets: ['buildCSharpAtomicMapDecomposition('],
+    snippets: [
+      'buildCSharpAtomicMapDecomposition(',
+      'deriveCSharpMapThresholdProfile(',
+      'threshold-profile=',
+    ],
   },
   {
     path: 'packages/language-csharp/src/csharp-equivalence.ts',
@@ -64,6 +78,18 @@ const REQUIRED_SNIPPETS = [
   {
     path: 'packages/language-csharp/src/csharp-registry.ts',
     snippets: ['createCSharpAdapterCatalogEntry('],
+  },
+  {
+    path: 'packages/language-csharp/src/csharp-symbol-index.ts',
+    snippets: ['buildCSharpSymbolReferenceIndex('],
+  },
+  {
+    path: 'packages/language-csharp/src/csharp-solution-graph.ts',
+    snippets: ['buildCSharpSolutionProjectGraph('],
+  },
+  {
+    path: 'packages/language-csharp/src/csharp-csproj-risk.ts',
+    snippets: ['buildCSharpCsprojRiskModel('],
   },
   {
     path: 'packages/language-csharp/src/csharp-dry-run.ts',
@@ -107,6 +133,9 @@ async function runFixtureCheck() {
     computeCSharpEquivalenceContract,
     createCSharpAdapterCatalogEntry,
     parseCSharpLegacyRouteIntent,
+    buildCSharpSymbolReferenceIndex,
+    buildCSharpSolutionProjectGraph,
+    buildCSharpCsprojRiskModel,
   } = require('../packages/language-csharp/src');
   const { resolveLanguageAdapter } = require('../packages/core/src/guidance/language-adapter-resolver');
   const { planLegacyRouteWithAdapter } = require('../packages/core/src/guidance/legacy-route-delegation');
@@ -118,8 +147,18 @@ async function runFixtureCheck() {
   const dryRunRequests = JSON.parse(
     fs.readFileSync(repoPath('tests/fixtures/language-csharp/dry-run-requests.json'), 'utf8')
   );
+  const enterpriseSmokeExpect = JSON.parse(
+    fs.readFileSync(
+      repoPath('tests/fixtures/language-csharp/enterprise-solution/expected-smoke.json'),
+      'utf8'
+    )
+  );
   const diagnosticsRaw = fs.readFileSync(
     repoPath('tests/fixtures/language-csharp/diagnostics-sample.txt'),
+    'utf8'
+  );
+  const diagnosticsSarifRaw = fs.readFileSync(
+    repoPath('tests/fixtures/language-csharp/diagnostics-sarif.json'),
     'utf8'
   );
   const equivalenceFixtures = JSON.parse(
@@ -128,6 +167,8 @@ async function runFixtureCheck() {
 
   const profile = detectCSharpProjectProfile(fixtureRoot);
   const projectEvidence = collectCSharpProjectEvidence(fixtureRoot);
+  const solutionGraph = buildCSharpSolutionProjectGraph(fixtureRoot, projectEvidence);
+  const csprojRisk = buildCSharpCsprojRiskModel(fixtureRoot, projectEvidence, solutionGraph);
   assert.equal(profile.languageId, 'csharp', 'profile languageId mismatch');
   assert.ok(profile.confidence >= 0.75, 'profile confidence should be >= 0.75');
   assert.ok(
@@ -162,21 +203,50 @@ async function runFixtureCheck() {
     ),
     'Directory.Build.props should include TreatWarningsAsErrors=true'
   );
+  assert.ok(solutionGraph.summary.projectCount >= 2, 'solution graph should include >= 2 projects');
+  assert.ok(
+    solutionGraph.edges.some((edge) => edge.relation === 'project-reference'),
+    'solution graph should include project-reference edges'
+  );
+  assert.ok(
+    csprojRisk.findings.some((finding) => finding.kind === 'multi-target-framework'),
+    'csproj risk should detect multi-target framework'
+  );
 
   const analysis = buildCSharpInventory({
     repositoryRoot: fixtureRoot,
     includeGlobs: ['**/*.cs'],
   });
   const partialIndex = buildCSharpPartialDeclarationIndex(analysis.moduleAnalyses);
+  const symbolReferenceIndex = buildCSharpSymbolReferenceIndex(analysis);
   const risk = buildCSharpRiskModel(analysis.moduleAnalyses);
   const diagnostics = parseCSharpDiagnostics({
     rawDiagnostics: diagnosticsRaw,
     source: 'dotnet-build-log',
   });
+  const diagnosticsSarif = parseCSharpDiagnostics({
+    rawDiagnostics: diagnosticsSarifRaw,
+    source: 'sarif',
+  });
   const runtimeCommands = await detectCSharpRuntimeCommands({
     repositoryRoot: fixtureRoot,
     includeRisky: false,
   });
+
+  const enterpriseRoot = repoPath('tests/fixtures/language-csharp/enterprise-solution');
+  const enterpriseProfile = detectCSharpProjectProfile(enterpriseRoot);
+  const enterpriseEvidence = collectCSharpProjectEvidence(enterpriseRoot);
+  const enterpriseAnalysis = buildCSharpInventory({
+    repositoryRoot: enterpriseRoot,
+    includeGlobs: ['**/*.cs'],
+  });
+  const enterpriseSymbolIndex = buildCSharpSymbolReferenceIndex(enterpriseAnalysis);
+  const enterpriseGraph = buildCSharpSolutionProjectGraph(enterpriseRoot, enterpriseEvidence);
+  const enterpriseRisk = buildCSharpCsprojRiskModel(
+    enterpriseRoot,
+    enterpriseEvidence,
+    enterpriseGraph
+  );
 
   for (const requiredFile of expected.requiredFiles) {
     assert.ok(
@@ -216,6 +286,14 @@ async function runFixtureCheck() {
     new Set(overloadMethods.map((symbol) => symbol.symbolId)).size,
     overloadMethods.length,
     'overload method symbolIds should be stable and unique'
+  );
+  assert.ok(
+    symbolReferenceIndex.references.length >= 5,
+    'symbol reference index should include >= 5 call references'
+  );
+  assert.ok(
+    symbolReferenceIndex.resolvedCount >= 2,
+    'symbol reference index should resolve at least 2 references'
   );
 
   for (const requiredEdge of expected.requiredDependencyEdges) {
@@ -258,6 +336,15 @@ async function runFixtureCheck() {
     diagnostics.diagnostics.some((entry) => entry.message.includes('promoted by TreatWarningsAsErrors')),
     'diagnostics should preserve multiline continuation context'
   );
+  assert.ok(diagnosticsSarif.diagnostics.length >= 2, 'sarif diagnostics should parse >= 2 entries');
+  assert.ok(
+    diagnosticsSarif.diagnostics.some((entry) => entry.code === 'CA1822' && entry.severity === 'warning'),
+    'sarif diagnostics should include CA1822 warning'
+  );
+  assert.ok(
+    diagnosticsSarif.diagnostics.some((entry) => entry.code === 'CS8618' && entry.severity === 'error'),
+    'sarif diagnostics should include CS8618 error'
+  );
 
   assert.ok(runtimeCommands.commands.length >= 3, 'runtime command detection should return advisory commands');
   assert.ok(
@@ -279,12 +366,52 @@ async function runFixtureCheck() {
     minEdges: 1,
     minEntrypoints: 1,
   });
+  const enterpriseMapReport = await buildCSharpAtomicMapDecomposition({
+    mapId: 'ATM-MAP-LANG-CSHARP-0210',
+    repositoryRoot: enterpriseRoot,
+    sourceInventory: enterpriseAnalysis.inventory,
+  });
   assert.equal(atomizePlan.executionMode, 'dry-run', 'atomize execution mode mismatch');
   assert.equal(infectPlan.executionMode, 'dry-run', 'infect execution mode mismatch');
   assert.deepEqual(atomizePlan.evidence.mutates, [], 'atomize mutates should be empty');
   assert.deepEqual(infectPlan.evidence.mutates, [], 'infect mutates should be empty');
   assert.equal(mapReport.evidenceGate?.accepted, true, 'atomic map decomposition evidence gate should pass');
   assert.ok((mapReport.entrypoints ?? []).length >= 1, 'atomic map decomposition should include entrypoints');
+  assert.ok(
+    enterpriseProfile.confidence >= 0.9,
+    'enterprise profile confidence should be >= 0.9'
+  );
+  assert.ok(
+    enterpriseGraph.summary.projectCount >= enterpriseSmokeExpect.minProjects,
+    `enterprise solution should include >= ${enterpriseSmokeExpect.minProjects} projects`
+  );
+  assert.ok(
+    enterpriseAnalysis.inventory.files.length >= enterpriseSmokeExpect.minCsFiles,
+    `enterprise inventory should include >= ${enterpriseSmokeExpect.minCsFiles} C# files`
+  );
+  assert.ok(
+    enterpriseGraph.edges.filter((edge) => edge.relation === 'project-reference').length >=
+      enterpriseSmokeExpect.minProjectReferenceEdges,
+    `enterprise graph should include >= ${enterpriseSmokeExpect.minProjectReferenceEdges} project-reference edges`
+  );
+  assert.ok(
+    enterpriseSymbolIndex.resolvedCount >= enterpriseSmokeExpect.minResolvedSymbolReferences,
+    `enterprise symbol index should resolve >= ${enterpriseSmokeExpect.minResolvedSymbolReferences} references`
+  );
+  assert.ok(
+    enterpriseMapReport.members.length >= enterpriseSmokeExpect.minMapMembers,
+    `enterprise map members should be >= ${enterpriseSmokeExpect.minMapMembers}`
+  );
+  assert.ok(
+    (enterpriseMapReport.evidenceGate?.messages ?? []).some((message) =>
+      message.includes(`threshold-profile=${enterpriseSmokeExpect.requiredThresholdProfile}`)
+    ),
+    `enterprise map should use threshold profile ${enterpriseSmokeExpect.requiredThresholdProfile}`
+  );
+  assert.ok(
+    enterpriseRisk.findings.some((finding) => finding.kind === 'multi-target-framework'),
+    'enterprise csproj risk should detect multi-target framework'
+  );
 
   for (const fixture of equivalenceFixtures.cases) {
     const result = computeCSharpEquivalenceContract({
@@ -371,6 +498,10 @@ async function runFixtureCheck() {
     runtimeCommandCount: runtimeCommands.commands.length,
     mapMemberCount: mapReport.members.length,
     mapEdgeCount: mapReport.edges.length,
+    resolvedSymbolReferenceCount: symbolReferenceIndex.resolvedCount,
+    enterpriseProjectCount: enterpriseGraph.summary.projectCount,
+    enterpriseMapMemberCount: enterpriseMapReport.members.length,
+    enterpriseRiskFindingCount: enterpriseRisk.findings.length,
     atomizeStepCount: atomizePlan.steps.length,
     infectStepCount: infectPlan.steps.length,
     equivalenceCaseCount: equivalenceFixtures.cases.length,

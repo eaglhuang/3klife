@@ -10,6 +10,15 @@ import type {
   SymbolRef,
 } from '../../../plugin-sdk/src/language-adapter';
 import { buildCSharpInventory } from './csharp-inventory';
+import { buildCSharpSolutionProjectGraph } from './csharp-solution-graph';
+
+export interface CSharpMapThresholdProfile {
+  level: 'small' | 'medium' | 'large' | 'explicit';
+  minMembers: number;
+  minEdges: number;
+  minEntrypoints: number;
+  reason: string;
+}
 
 function toMemberId(mapId: string, filePath: string): string {
   return `${mapId}:${filePath}`;
@@ -93,6 +102,37 @@ function buildGraphSummary(
   };
 }
 
+export function deriveCSharpMapThresholdProfile(
+  memberCount: number,
+  projectCount: number
+): CSharpMapThresholdProfile {
+  if (memberCount >= 14 || projectCount >= 4) {
+    return {
+      level: 'large',
+      minMembers: 8,
+      minEdges: 10,
+      minEntrypoints: 1,
+      reason: `large solution profile (members=${memberCount}, projects=${projectCount})`,
+    };
+  }
+  if (memberCount >= 8 || projectCount >= 2) {
+    return {
+      level: 'medium',
+      minMembers: 4,
+      minEdges: 4,
+      minEntrypoints: 1,
+      reason: `medium solution profile (members=${memberCount}, projects=${projectCount})`,
+    };
+  }
+  return {
+    level: 'small',
+    minMembers: 1,
+    minEdges: 0,
+    minEntrypoints: 1,
+    reason: `small solution profile (members=${memberCount}, projects=${projectCount})`,
+  };
+}
+
 export async function buildCSharpAtomicMapDecomposition(
   request: AtomicMapDecompositionRequest
 ): Promise<AtomicMapDecompositionReport> {
@@ -113,10 +153,23 @@ export async function buildCSharpAtomicMapDecomposition(
   pushEdges(request.mapId, artifactEdges, 'artifact', files, edges);
   const entrypoints = buildEntrypoints(request.mapId, inventory);
   const graphSummary = buildGraphSummary(dependencyEdges, callEdges, artifactEdges);
+  const projectGraph = buildCSharpSolutionProjectGraph(request.repositoryRoot);
 
-  const minMembers = request.minMembers ?? 1;
-  const minEdges = request.minEdges ?? 0;
-  const minEntrypoints = request.minEntrypoints ?? 1;
+  const explicitThresholdRequested =
+    request.minMembers != null || request.minEdges != null || request.minEntrypoints != null;
+  const thresholdProfile: CSharpMapThresholdProfile = explicitThresholdRequested
+    ? {
+        level: 'explicit',
+        minMembers: request.minMembers ?? 1,
+        minEdges: request.minEdges ?? 0,
+        minEntrypoints: request.minEntrypoints ?? 1,
+        reason: 'explicit threshold from request',
+      }
+    : deriveCSharpMapThresholdProfile(members.length, projectGraph.summary.projectCount);
+
+  const minMembers = thresholdProfile.minMembers;
+  const minEdges = thresholdProfile.minEdges;
+  const minEntrypoints = thresholdProfile.minEntrypoints;
   const missing: string[] = [];
   if (members.length < minMembers) {
     missing.push(`members>=${minMembers}`);
@@ -136,13 +189,30 @@ export async function buildCSharpAtomicMapDecomposition(
     graphSummary,
     evidenceGate: {
       accepted: missing.length === 0,
-      requiredEvidence: ['csharp-source-inventory', 'csharp-graph-summary', 'csharp-entrypoints'],
+      requiredEvidence: [
+        'csharp-source-inventory',
+        'csharp-graph-summary',
+        'csharp-entrypoints',
+        `csharp-threshold-profile:${thresholdProfile.level}`,
+      ],
       missing,
       messages:
         missing.length === 0
-          ? ['C# map decomposition evidence gate accepted.']
-          : [`Missing evidence constraints: ${missing.join(', ')}`],
+          ? [
+              'C# map decomposition evidence gate accepted.',
+              `threshold-profile=${thresholdProfile.level}; ${thresholdProfile.reason}`,
+            ]
+          : [
+              `Missing evidence constraints: ${missing.join(', ')}`,
+              `threshold-profile=${thresholdProfile.level}; ${thresholdProfile.reason}`,
+            ],
     },
-    warnings: inventory.warnings ?? [],
+    warnings: [
+      ...(inventory.warnings ?? []),
+      ...projectGraph.warnings.slice(0, 3),
+      ...(thresholdProfile.level === 'large'
+        ? ['large solution threshold profile enabled for decomposition evidence gate']
+        : []),
+    ],
   };
 }

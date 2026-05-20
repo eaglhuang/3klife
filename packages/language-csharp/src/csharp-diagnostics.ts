@@ -4,6 +4,39 @@ import type {
   DiagnosticsReport,
 } from '../../../plugin-sdk/src/language-adapter';
 
+interface SarifRegion {
+  startLine?: number;
+  startColumn?: number;
+  endLine?: number;
+  endColumn?: number;
+}
+
+interface SarifLocation {
+  physicalLocation?: {
+    artifactLocation?: {
+      uri?: string;
+    };
+    region?: SarifRegion;
+  };
+}
+
+interface SarifResult {
+  ruleId?: string;
+  level?: string;
+  message?: {
+    text?: string;
+  };
+  locations?: SarifLocation[];
+}
+
+interface SarifRun {
+  results?: SarifResult[];
+}
+
+interface SarifReport {
+  runs?: SarifRun[];
+}
+
 function mapSeverity(value: string): 'info' | 'warning' | 'error' {
   const normalized = value.toLowerCase();
   if (normalized.startsWith('error')) {
@@ -79,7 +112,79 @@ function appendContinuation(entry: DiagnosticEntry, continuation: string): Diagn
   };
 }
 
+function parseJsonSafely(raw: string): unknown | undefined {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return undefined;
+  }
+}
+
+function mapSarifLevel(value: string | undefined): 'info' | 'warning' | 'error' {
+  const normalized = (value ?? '').toLowerCase();
+  if (normalized === 'error') {
+    return 'error';
+  }
+  if (normalized === 'warning') {
+    return 'warning';
+  }
+  return 'info';
+}
+
+function toDiagnosticFromSarifResult(result: SarifResult): DiagnosticEntry {
+  const message = result.message?.text?.trim() || 'sarif diagnostic';
+  const location = result.locations?.[0]?.physicalLocation;
+  const region = location?.region;
+  if (!location?.artifactLocation?.uri) {
+    return {
+      severity: mapSarifLevel(result.level),
+      code: result.ruleId,
+      message,
+    };
+  }
+  return {
+    severity: mapSarifLevel(result.level),
+    code: result.ruleId,
+    message,
+    location: {
+      filePath: location.artifactLocation.uri,
+      startLine: Math.max(region?.startLine ?? 1, 1),
+      startColumn: Math.max(region?.startColumn ?? 1, 1),
+      endLine: Math.max(region?.endLine ?? region?.startLine ?? 1, 1),
+      endColumn: Math.max(region?.endColumn ?? region?.startColumn ?? 1, 1),
+    },
+  };
+}
+
+function parseSarifDiagnostics(rawDiagnostics: string): DiagnosticsReport | null {
+  const parsed = parseJsonSafely(rawDiagnostics) as SarifReport | undefined;
+  if (!parsed || !Array.isArray(parsed.runs)) {
+    return null;
+  }
+  const diagnostics: DiagnosticEntry[] = [];
+  for (const run of parsed.runs) {
+    for (const result of run.results ?? []) {
+      diagnostics.push(toDiagnosticFromSarifResult(result));
+    }
+  }
+  if (diagnostics.length === 0) {
+    return null;
+  }
+  return {
+    diagnostics,
+  };
+}
+
 export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): DiagnosticsReport {
+  const source = (request.source ?? '').toLowerCase();
+  const trimmedRaw = request.rawDiagnostics.trim();
+  if (source.includes('sarif') || trimmedRaw.startsWith('{')) {
+    const sarifReport = parseSarifDiagnostics(trimmedRaw);
+    if (sarifReport) {
+      return sarifReport;
+    }
+  }
+
   const diagnostics: DiagnosticEntry[] = [];
   const lines = request.rawDiagnostics.replace(/\r\n/g, '\n').split('\n');
   for (const rawLine of lines) {

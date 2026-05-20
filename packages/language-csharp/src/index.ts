@@ -9,3 +9,6 @@ export * from './csharp-map';
 export * from './csharp-equivalence';
 export * from './csharp-legacy-route';
 export * from './csharp-registry';
+export * from './csharp-symbol-index';
+export * from './csharp-solution-graph';
+export * from './csharp-csproj-risk';

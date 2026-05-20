@@ -4,7 +4,14 @@ const path = require('path');
 process.env.TS_NODE_PROJECT = process.env.TS_NODE_PROJECT || 'tsconfig.test.json';
 require('ts-node/register/transpile-only');
 
-const { csharpLanguageAdapterV2, createCSharpAdapterCatalogEntry } = require('../packages/language-csharp/src');
+const {
+  csharpLanguageAdapterV2,
+  createCSharpAdapterCatalogEntry,
+  buildCSharpInventory,
+  buildCSharpSymbolReferenceIndex,
+  buildCSharpSolutionProjectGraph,
+  buildCSharpCsprojRiskModel,
+} = require('../packages/language-csharp/src');
 const { resolveLanguageAdapter } = require('../packages/core/src/guidance/language-adapter-resolver');
 const { planLegacyRouteWithAdapter } = require('../packages/core/src/guidance/legacy-route-delegation');
 
@@ -59,6 +66,19 @@ async function main() {
     adapterDelegate: (request) => csharpLanguageAdapterV2.buildLegacyRoutePlan(request),
   });
   assert.equal(routeResult.mode, 'adapter-delegated');
+
+  const analysis = buildCSharpInventory({
+    repositoryRoot: fixtureRoot,
+    includeGlobs: ['**/*.cs'],
+  });
+  const symbolIndex = buildCSharpSymbolReferenceIndex(analysis);
+  assert.ok(symbolIndex.references.length >= 5);
+
+  const enterpriseRoot = path.resolve('tests/fixtures/language-csharp/enterprise-solution');
+  const enterpriseGraph = buildCSharpSolutionProjectGraph(enterpriseRoot);
+  assert.ok(enterpriseGraph.summary.projectCount >= 4);
+  const enterpriseRisk = buildCSharpCsprojRiskModel(enterpriseRoot, undefined, enterpriseGraph);
+  assert.ok(enterpriseRisk.findings.length >= 2);
 }
 
 main().then(

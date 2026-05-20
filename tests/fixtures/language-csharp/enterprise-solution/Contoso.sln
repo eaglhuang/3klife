@@ -1,0 +1,18 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contoso.App", "src\\Contoso.App\\Contoso.App.csproj", "{A1F6A21-0D4A-4B62-A39A-14D2286E3D35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contoso.Domain", "src\\Contoso.Domain\\Contoso.Domain.csproj", "{B1F6A21-0D4A-4B62-A39A-14D2286E3D35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contoso.Infrastructure", "src\\Contoso.Infrastructure\\Contoso.Infrastructure.csproj", "{C1F6A21-0D4A-4B62-A39A-14D2286E3D35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contoso.App.Tests", "tests\\Contoso.App.Tests\\Contoso.App.Tests.csproj", "{D1F6A21-0D4A-4B62-A39A-14D2286E3D35}"
+EndProject
+Global
+  GlobalSection(SolutionConfigurationPlatforms) = preSolution
+    Debug|Any CPU = Debug|Any CPU
+    Release|Any CPU = Release|Any CPU
+  EndGlobalSection
+EndGlobal

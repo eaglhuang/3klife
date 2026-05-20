@@ -93,6 +93,13 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0201 | C# legacy route planning integration | ATM-MAP-LANG-CSHARP-0201 | done | CSHARP-0200 | 0006, 0009, 0010 |
 | ATM-LANG-CSHARP-0202 | C# symbol stability hardening | ATM-MAP-LANG-CSHARP-0202 | done | CSHARP-0200 | 0006, 0010 |
 | ATM-LANG-CSHARP-0203 | C# csproj deep profile parsing | ATM-MAP-LANG-CSHARP-0203 | done | CSHARP-0202 | 0006, 0010 |
+| ATM-LANG-CSHARP-0204 | C# cross-file symbol reference index | ATM-MAP-LANG-CSHARP-0204 | done | CSHARP-0202 | 0006, 0010 |
+| ATM-LANG-CSHARP-0205 | C# solution and project graph | ATM-MAP-LANG-CSHARP-0205 | done | CSHARP-0203 | 0006, 0010 |
+| ATM-LANG-CSHARP-0206 | C# csproj risk rules | ATM-MAP-LANG-CSHARP-0206 | done | CSHARP-0205 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0207 | C# diagnostics parser SARIF expansion | ATM-MAP-LANG-CSHARP-0207 | done | CSHARP-0206 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0208 | C# legacy route deep planning | ATM-MAP-LANG-CSHARP-0208 | done | CSHARP-0206 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0209 | C# atomic map large-solution threshold profile | ATM-MAP-LANG-CSHARP-0209 | done | CSHARP-0208 | 0008, 0009, 0010 |
+| ATM-LANG-CSHARP-0210 | C# enterprise multi-project smoke fixture | ATM-MAP-LANG-CSHARP-0210 | done | CSHARP-0209 | 0006, 0008, 0010 |
 
 ## 維護規則
 

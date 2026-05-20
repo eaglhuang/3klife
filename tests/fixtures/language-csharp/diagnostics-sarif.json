@@ -1,0 +1,56 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Roslynator"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CA1822",
+          "level": "warning",
+          "message": {
+            "text": "Member can be made static."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Contoso.App/Controllers/OrderController.cs"
+                },
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 15,
+                  "endLine": 7,
+                  "endColumn": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "error",
+          "message": {
+            "text": "Non-nullable field must contain a non-null value."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/Contoso.Domain/Entities/Customer.cs"
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 17
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
