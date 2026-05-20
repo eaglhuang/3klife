@@ -29,10 +29,10 @@ last_updated: 2026-05-20T02:10:00+08:00
 
 | 狀態 | 數量 |
 |------|------|
-| 已拆 | 11 |
+| 已拆 | 12 |
 | 進行中 | 0 |
-| 完成 | 11 |
-| Deferred (future cards) | 4+ |
+| 完成 | 12 |
+| Deferred (future cards) | 3+ |
 
 ---
 
@@ -51,6 +51,7 @@ last_updated: 2026-05-20T02:10:00+08:00
 | [TASK-ASR-0009](./TASK-ASR-0009-root-drop-wrappers-manifest.task.md) | root-drop wrappers.json SSoT | L3 | done | — | I3 | 947849f |
 | [TASK-ASR-0010](./TASK-ASR-0010-root-drop-wrappers-generator.task.md) | root-drop wrappers generator + validator 接 SSoT | L3-follow | done | TASK-ASR-0009 | I3 | 69fe931 |
 | [TASK-ASR-0011](./TASK-ASR-0011-command-specs-per-file-split.task.md) | command-specs 39 spec per-file split | L2-complete | done | TASK-ASR-0004 | I1 | 779f74e |
+| [TASK-ASR-0012](./TASK-ASR-0012-propose-full-split.task.md) | propose.ts 完整拆分 normalize-input + gates | L3-complete | done | TASK-ASR-0007 | I2 | c46e690 |
 
 ---
 
@@ -88,7 +89,7 @@ last_updated: 2026-05-20T02:10:00+08:00
 
 | Future Card | 描述 | Blocked on |
 |------------|------|-----------|
-| TASK-ASR-00XX | propose.ts 完整 analysis/gates/output split | upgrade JSON snapshot diff fixture |
+| ~~TASK-ASR-0012~~ | ~~propose.ts 完整拆分~~ | ✅ done (c46e690, 995→443 行) |
 | TASK-ASR-00XX | integrations-core 完整 compiler/manifest/verify split | manifest hash regression fixture |
 | ~~TASK-ASR-0010~~ | ~~root-drop wrappers generator 與 parity validator~~ | ✅ done (69fe931) |
 | TASK-ASR-00XX | upgrade.ts safe-upgrade / scan / proposal split | upgrade JSON envelope diff per action |
