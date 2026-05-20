@@ -28,7 +28,7 @@ created_by_agent: codex
 | [TASK-ATS-0007](./TASK-ATS-0007-atom-evolution-polymorph-validation.task.md) | Atomic map equivalence and rollout validation | M6 | completed | TASK-ATS-0006 |
 | [TASK-ATS-0008](./TASK-ATS-0008-adopter-sentinel-evidence-routing.task.md) | Adopter sentinel integration and evidence routing | M7 | completed | TASK-ATS-0007 |
 | [TASK-ATS-0009](./TASK-ATS-0009-upstream-blocker-repair-batch.task.md) | Upstream blocker repair batch from npc-brain evidence | M8 | completed | TASK-ATS-0008 |
-| [TASK-ATS-0010](./TASK-ATS-0010-graduation-release-gate.task.md) | 3KLife experiment graduation and ATM release gate | M9 | in_progress | TASK-ATS-0009 |
+| [TASK-ATS-0010](./TASK-ATS-0010-graduation-release-gate.task.md) | 3KLife experiment graduation and ATM release gate | M9 | completed | TASK-ATS-0009 |
 
 ## 任務排序原則
 
@@ -77,3 +77,11 @@ Primary evidence:
 - `evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md`
 
 TASK-ATS-0010 is now in progress and owns the final graduation / release gate decision.
+
+## 2026-05-20 Graduation Closeout
+
+TASK-ATS-0010 is completed. The triangle strategy experiment graduates as a completed evidence program and is ready for AI-Atomic-Framework release-candidate review, but not automatic publish.
+
+Primary evidence:
+
+- `evidence/TASK-ATS-0010-graduation-release-gate-2026-05-20.md`

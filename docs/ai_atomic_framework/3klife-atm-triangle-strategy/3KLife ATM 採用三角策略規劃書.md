@@ -527,3 +527,61 @@ node --experimental-strip-types scripts/adopter-sentinel.ts --mode validate
 
 `TASK-ATS-0010` 轉為 `in_progress`。下一步是把 M0-M8 全部 evidence 做 graduation / release gate review，決定三角策略是否可以畢業，並整理下一輪 ATM release readiness summary。
 <!-- TASK-ATS-0009-2026-05-20-CLOSEOUT:END -->
+
+<!-- TASK-ATS-0010-2026-05-20-CLOSEOUT:START -->
+## 5.7 2026-05-20 TASK-ATS-0010 畢業與 release gate 結案
+
+### 大白話
+
+三角策略這一輪可以畢業。
+
+這不等於「現在立刻 npm publish」，而是代表 3KLife / npc-brain 這個真實 adopter 實驗已經完成它該證明的事：
+
+- AI 在自然語句下能被 ATM 入口拉回治理流程。
+- Python-only adopter 可以不被 Node 假設卡死。
+- legacy Python 能進入 atomize / infect dry-run。
+- 大功能能拆成 canonical Atomic Map，而不是零散 helper。
+- map rollout / equivalence / evolve proof 能用 evidence 收口。
+- 真實 adopter 踩到的框架缺口能被中立化後回流 upstream。
+
+### 結論
+
+`TASK-ATS-0010` 已完成。
+
+Graduation decision:
+
+```text
+PASS — triangle strategy experiment graduates as a completed evidence program.
+```
+
+Release readiness decision:
+
+```text
+READY FOR AI-Atomic-Framework release-candidate review, not an automatic publish.
+```
+
+### 主要 evidence
+
+- `docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0010-graduation-release-gate-2026-05-20.md`
+
+### release gate dry-run
+
+已在 `C:\Users\User\AI-Atomic-Framework` 通過：
+
+```powershell
+npm run validate:registry-lineage-backfill
+npm run validate:registry-diff
+npm run validate:neutrality
+npm run validate:onefile-release
+npm run validate:cli
+node --experimental-strip-types scripts/validate-integration-adapter.ts --mode validate
+node --experimental-strip-types scripts/adopter-sentinel.ts --mode validate
+```
+
+### 後續策略
+
+1. `3klife-npc-brain` 可以恢復受治理的大幅開發，但應以 Atomic Map / governed proposal 為邊界，不回到自由重寫。
+2. AI-Atomic-Framework 若要正式發版，應另開乾淨 release-candidate review，跑完整 release checklist。
+3. 後續 adopter 失敗案例一律走三桶分流：`upstream-blocker`、`adopter-local`、`host-governance-overlap`。
+4. 3KLife 繼續保留中文詳版與策略脈絡，AI-Atomic-Framework public surface 維持英文與 repo-neutral。
+<!-- TASK-ATS-0010-2026-05-20-CLOSEOUT:END -->
