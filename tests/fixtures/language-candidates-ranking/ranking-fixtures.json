@@ -1,0 +1,158 @@
+{
+  "cases": [
+    {
+      "id": "python-delegated-inventory",
+      "request": {
+        "repositoryRoot": "/workspace/repo",
+        "inventoryArtifactPath": "artifacts/atm/candidates/python/source-inventory.json",
+        "resolutionRequest": {
+          "languageId": "python",
+          "requiredCapabilities": ["sourceInventory"],
+          "allowPartialCapability": true,
+          "discoveryInput": {
+            "bundledAdapters": [
+              {
+                "adapterId": "py-bundled",
+                "moduleName": "@ai-atomic-framework/language-python",
+                "source": "bundled",
+                "languageIds": ["python"],
+                "contractVersion": "v2",
+                "priority": 10,
+                "capabilities": {
+                  "sourceInventory": "full",
+                  "symbolNormalization": "full",
+                  "dependencyGraph": "partial",
+                  "callGraph": "none",
+                  "artifactGraph": "none"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "inventory": {
+        "files": [
+          {
+            "filePath": "src/main.py",
+            "languageId": "python",
+            "symbols": [
+              {
+                "symbolId": "main:run",
+                "displayName": "run",
+                "kind": "function",
+                "range": {
+                  "filePath": "src/main.py",
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 4,
+                  "endColumn": 1
+                }
+              }
+            ]
+          },
+          {
+            "filePath": "src/helpers.py",
+            "languageId": "python",
+            "symbols": [
+              {
+                "symbolId": "helpers:load_cfg",
+                "displayName": "load_cfg",
+                "kind": "function",
+                "range": {
+                  "filePath": "src/helpers.py",
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 3,
+                  "endColumn": 1
+                }
+              }
+            ]
+          }
+        ],
+        "dependencyEdges": [
+          {
+            "from": "src/main.py",
+            "to": "src/helpers.py",
+            "relation": "imports"
+          }
+        ]
+      },
+      "expect": {
+        "ok": true,
+        "mode": "adapter-delegated",
+        "selectedAdapterId": "py-bundled",
+        "inventoryArtifactPath": "artifacts/atm/candidates/python/source-inventory.json",
+        "scoreTotal": 69,
+        "advisorySignalIds": ["dependency-graph", "call-graph", "artifact-graph"],
+        "unsupportedSignalIds": ["call-graph", "artifact-graph"]
+      }
+    },
+    {
+      "id": "typescript-unsupported-is-advisory",
+      "request": {
+        "repositoryRoot": "/workspace/repo",
+        "inventoryArtifactPath": "artifacts/atm/candidates/typescript/source-inventory.json",
+        "resolutionRequest": {
+          "languageId": "typescript",
+          "requiredCapabilities": ["sourceInventory"],
+          "allowPartialCapability": true,
+          "discoveryInput": {
+            "bundledAdapters": [
+              {
+                "adapterId": "ts-bundled",
+                "moduleName": "@ai-atomic-framework/language-js",
+                "source": "bundled",
+                "languageIds": ["javascript", "typescript"],
+                "contractVersion": "v2",
+                "priority": 8,
+                "capabilities": {
+                  "sourceInventory": "full",
+                  "symbolNormalization": "partial",
+                  "dependencyGraph": "none",
+                  "callGraph": "partial",
+                  "artifactGraph": "full"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "inventory": {
+        "files": [
+          {
+            "filePath": "src/index.ts",
+            "languageId": "typescript"
+          },
+          {
+            "filePath": "src/api.ts",
+            "languageId": "typescript"
+          }
+        ],
+        "dependencyEdges": [
+          {
+            "from": "src/index.ts",
+            "to": "src/api.ts",
+            "relation": "imports"
+          }
+        ],
+        "callEdges": [
+          {
+            "from": "src/index.ts#bootstrap",
+            "to": "src/api.ts#request",
+            "relation": "calls"
+          }
+        ]
+      },
+      "expect": {
+        "ok": true,
+        "mode": "adapter-delegated",
+        "selectedAdapterId": "ts-bundled",
+        "inventoryArtifactPath": "artifacts/atm/candidates/typescript/source-inventory.json",
+        "scoreTotal": 56,
+        "advisorySignalIds": ["symbol-normalization", "dependency-graph", "call-graph"],
+        "unsupportedSignalIds": ["dependency-graph"]
+      }
+    }
+  ]
+}
+

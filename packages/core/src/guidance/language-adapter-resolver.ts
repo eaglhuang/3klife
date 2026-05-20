@@ -10,6 +10,7 @@ import {
   type LanguageCapabilityName,
 } from './language-adapter-fallback';
 import { LanguageAdapterRegistry, type AdapterCatalogEntry } from './language-adapter-registry';
+import type { LanguageAdapterCapabilitySet } from '../../../plugin-sdk/src/language-adapter';
 
 export interface LanguageAdapterResolutionRequest {
   languageId: string;
@@ -24,6 +25,7 @@ export interface AdapterResolutionCandidate {
   moduleName: string;
   source: 'bundled' | 'external';
   languageIds: readonly string[];
+  capabilities?: LanguageAdapterCapabilitySet;
   score: number;
   fallback: CapabilityFallbackReport;
   reasons: string[];
@@ -104,6 +106,7 @@ function toResolutionCandidate(
     moduleName: entry.moduleName,
     source: entry.source,
     languageIds: entry.languageIds,
+    capabilities: entry.capabilities,
     score,
     fallback,
     reasons,
@@ -156,4 +159,3 @@ export function resolveLanguageAdapter(request: LanguageAdapterResolutionRequest
     notes: discovery.notes,
   };
 }
-

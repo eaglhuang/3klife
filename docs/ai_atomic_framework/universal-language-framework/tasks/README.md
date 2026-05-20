@@ -43,9 +43,9 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-0300 | LegacyRoutePlan adapter delegation | ATM-MAP-LANG-0300 | done | 0201 |
 | ATM-LANG-0301 | Remove core language regex ownership | ATM-MAP-LANG-0300 | done | 0300 |
 | ATM-LANG-0302 | Guidance and police integration update | ATM-MAP-LANG-0300 | done | 0300 |
-| ATM-LANG-0400 | Adapter-driven source inventory service | ATM-MAP-LANG-0400 | open | 0101 |
-| ATM-LANG-0401 | Candidate ranking signal model | ATM-MAP-LANG-0400 | open | 0400 |
-| ATM-LANG-0402 | `candidates rank` thin facade conversion | ATM-MAP-LANG-0400 | open | 0401 |
+| ATM-LANG-0400 | Adapter-driven source inventory service | ATM-MAP-LANG-0400 | done | 0101 |
+| ATM-LANG-0401 | Candidate ranking signal model | ATM-MAP-LANG-0400 | done | 0400 |
+| ATM-LANG-0402 | `candidates rank` thin facade conversion | ATM-MAP-LANG-0400 | done | 0401 |
 | ATM-LANG-0500 | Generic atomize/infect dry-run plan contracts | ATM-MAP-LANG-0500 | open | 0102 |
 | ATM-LANG-0501 | Import rewrite, shim, rollback plan contracts | ATM-MAP-LANG-0500 | open | 0500 |
 | ATM-LANG-0502 | Dry-run proposal evidence envelope | ATM-MAP-LANG-0500 | open | 0501 |
