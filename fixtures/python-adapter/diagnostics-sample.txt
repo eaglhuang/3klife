@@ -1,0 +1,4 @@
+app/main.py:10:5: E302 expected 2 blank lines, found 1
+app/service.py:6: error: Incompatible return value type (got "str", expected "int") [return-value]
+app/api.py:4:1: W391 blank line at end of file
+

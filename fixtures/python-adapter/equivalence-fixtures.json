@@ -1,0 +1,15 @@
+{
+  "cases": [
+    {
+      "fixtureId": "python-equivalence-happy-path",
+      "expectedBehavior": "inventory graph dry-run evidence is preserved across adapter and validator",
+      "accepted": true
+    },
+    {
+      "fixtureId": "python-equivalence-missing-dry-run",
+      "expectedBehavior": "inventory graph evidence only",
+      "accepted": false
+    }
+  ]
+}
+

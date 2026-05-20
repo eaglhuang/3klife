@@ -10,6 +10,11 @@ import {
   detectPythonRuntimeCommands,
   scanPythonSourceInventory,
 } from './python-static-analysis';
+import { planPythonAtomizeDryRun, planPythonInfectDryRun } from './python-dry-run';
+import {
+  computePythonEquivalenceContract,
+  parsePythonDiagnostics,
+} from './python-diagnostics';
 
 function hasPythonFile(repositoryRoot: string): boolean {
   const root = path.resolve(repositoryRoot);
@@ -96,11 +101,11 @@ export const pythonLanguageAdapterV2: LanguageAdapterV2 = {
     sourceInventory: 'full',
     symbolNormalization: 'partial',
     legacyRoutePlanning: 'partial',
-    atomizeDryRun: 'partial',
-    infectDryRun: 'partial',
+    atomizeDryRun: 'full',
+    infectDryRun: 'full',
     runtimeCommandDetection: 'full',
-    diagnosticsParsing: 'partial',
-    equivalenceContract: 'partial',
+    diagnosticsParsing: 'full',
+    equivalenceContract: 'full',
     dependencyGraph: 'full',
     callGraph: 'partial',
     artifactGraph: 'full',
@@ -116,5 +121,17 @@ export const pythonLanguageAdapterV2: LanguageAdapterV2 = {
   },
   detectRuntimeCommands(request) {
     return detectPythonRuntimeCommands(request);
+  },
+  planAtomizeDryRun(request) {
+    return planPythonAtomizeDryRun(request);
+  },
+  planInfectDryRun(request) {
+    return planPythonInfectDryRun(request);
+  },
+  parseDiagnostics(request) {
+    return parsePythonDiagnostics(request);
+  },
+  computeEquivalenceContract(request) {
+    return computePythonEquivalenceContract(request);
   },
 };

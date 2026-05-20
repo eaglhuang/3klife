@@ -8,18 +8,43 @@ const REQUIRED_FILES = [
   'packages/language-python/src/index.ts',
   'packages/language-python/src/adapter.ts',
   'packages/language-python/src/python-static-analysis.ts',
+  'packages/language-python/src/python-dry-run.ts',
+  'packages/language-python/src/python-diagnostics.ts',
   'fixtures/python-adapter/sample-project/app/main.py',
   'fixtures/python-adapter/sample-project/app/service.py',
   'fixtures/python-adapter/sample-project/app/api.py',
   'fixtures/python-adapter/expected-report.json',
+  'fixtures/python-adapter/dry-run-requests.json',
+  'fixtures/python-adapter/diagnostics-sample.txt',
+  'fixtures/python-adapter/equivalence-fixtures.json',
 ];
 
 const REQUIRED_SNIPPETS = [
-  'buildPythonAstInventory(',
-  'buildPythonDependencyCallArtifactGraph(',
-  'detectPythonCliApiSideEffects(',
-  'scanPythonSourceInventory(',
-  'detectPythonRuntimeCommands(',
+  {
+    path: 'packages/language-python/src/python-static-analysis.ts',
+    snippets: [
+      'buildPythonAstInventory(',
+      'buildPythonDependencyCallArtifactGraph(',
+      'detectPythonCliApiSideEffects(',
+      'scanPythonSourceInventory(',
+      'detectPythonRuntimeCommands(',
+    ],
+  },
+  {
+    path: 'packages/language-python/src/python-dry-run.ts',
+    snippets: [
+      'planPythonAtomizeDryRun(',
+      'planPythonInfectDryRun(',
+      'mutates: []',
+    ],
+  },
+  {
+    path: 'packages/language-python/src/python-diagnostics.ts',
+    snippets: [
+      'parsePythonDiagnostics(',
+      'computePythonEquivalenceContract(',
+    ],
+  },
 ];
 
 function ensure(condition, message, failures) {
@@ -44,12 +69,24 @@ async function runFixtureCheck() {
   const {
     analyzePythonProject,
     detectPythonRuntimeCommands,
+    parsePythonDiagnostics,
+    computePythonEquivalenceContract,
     pythonLanguageAdapterV2,
   } = require('../packages/language-python/src');
 
   const fixtureRoot = repoPath('fixtures/python-adapter/sample-project');
   const expected = JSON.parse(
     fs.readFileSync(repoPath('fixtures/python-adapter/expected-report.json'), 'utf8')
+  );
+  const dryRunRequests = JSON.parse(
+    fs.readFileSync(repoPath('fixtures/python-adapter/dry-run-requests.json'), 'utf8')
+  );
+  const diagnosticsRaw = fs.readFileSync(
+    repoPath('fixtures/python-adapter/diagnostics-sample.txt'),
+    'utf8'
+  );
+  const equivalenceFixtures = JSON.parse(
+    fs.readFileSync(repoPath('fixtures/python-adapter/equivalence-fixtures.json'), 'utf8')
   );
 
   const analysis = await analyzePythonProject({
@@ -107,6 +144,71 @@ async function runFixtureCheck() {
 
   assert.equal(pythonLanguageAdapterV2.languageId, 'python', 'adapter languageId mismatch');
   assert.equal(pythonLanguageAdapterV2.contractVersion, 'v2', 'adapter contractVersion mismatch');
+  assert.equal(
+    pythonLanguageAdapterV2.capabilities?.atomizeDryRun,
+    'full',
+    'atomizeDryRun capability mismatch'
+  );
+  assert.equal(
+    pythonLanguageAdapterV2.capabilities?.infectDryRun,
+    'full',
+    'infectDryRun capability mismatch'
+  );
+
+  assert.ok(
+    typeof pythonLanguageAdapterV2.planAtomizeDryRun === 'function',
+    'planAtomizeDryRun should exist'
+  );
+  assert.ok(
+    typeof pythonLanguageAdapterV2.planInfectDryRun === 'function',
+    'planInfectDryRun should exist'
+  );
+  assert.ok(
+    typeof pythonLanguageAdapterV2.parseDiagnostics === 'function',
+    'parseDiagnostics should exist'
+  );
+  assert.ok(
+    typeof pythonLanguageAdapterV2.computeEquivalenceContract === 'function',
+    'computeEquivalenceContract should exist'
+  );
+
+  const atomizePlan = await pythonLanguageAdapterV2.planAtomizeDryRun(dryRunRequests.atomizeRequest);
+  assert.equal(atomizePlan.executionMode, 'dry-run', 'atomize dry-run execution mode mismatch');
+  assert.equal(atomizePlan.evidence.planKind, 'atomize', 'atomize evidence planKind mismatch');
+  assert.deepEqual(atomizePlan.evidence.mutates, [], 'atomize mutates should be empty');
+  assert.ok(atomizePlan.evidence.importRewrite, 'atomize importRewrite should exist');
+  assert.ok(atomizePlan.evidence.shim, 'atomize shim should exist');
+  assert.ok(atomizePlan.evidence.rollback, 'atomize rollback should exist');
+
+  const infectPlan = await pythonLanguageAdapterV2.planInfectDryRun(dryRunRequests.infectRequest);
+  assert.equal(infectPlan.executionMode, 'dry-run', 'infect dry-run execution mode mismatch');
+  assert.equal(infectPlan.evidence.planKind, 'infect', 'infect evidence planKind mismatch');
+  assert.deepEqual(infectPlan.evidence.mutates, [], 'infect mutates should be empty');
+  assert.ok(infectPlan.evidence.importRewrite, 'infect importRewrite should exist');
+  assert.ok(infectPlan.evidence.shim, 'infect shim should exist');
+  assert.ok(infectPlan.evidence.rollback, 'infect rollback should exist');
+
+  const diagnostics = parsePythonDiagnostics({
+    rawDiagnostics: diagnosticsRaw,
+    source: 'pytest',
+  });
+  assert.ok(diagnostics.diagnostics.length >= 3, 'diagnostics parser should parse >= 3 entries');
+  assert.ok(
+    diagnostics.diagnostics.some((entry) => entry.severity === 'error'),
+    'diagnostics parser should include error severity'
+  );
+
+  for (const fixture of equivalenceFixtures.cases) {
+    const result = computePythonEquivalenceContract({
+      fixtureId: fixture.fixtureId,
+      expectedBehavior: fixture.expectedBehavior,
+    });
+    assert.equal(
+      result.accepted,
+      fixture.accepted,
+      `equivalence acceptance mismatch: ${fixture.fixtureId}`
+    );
+  }
 
   return {
     inventoryFileCount: analysis.inventory.files.length,
@@ -115,6 +217,10 @@ async function runFixtureCheck() {
     artifactEdgeCount: analysis.inventory.artifactEdges?.length ?? 0,
     runtimeCommandCount: runtimeReport.commands.length,
     runtimeWarningCount: runtimeReport.warnings?.length ?? 0,
+    atomizeStepCount: atomizePlan.steps.length,
+    infectStepCount: infectPlan.steps.length,
+    diagnosticsCount: diagnostics.diagnostics.length,
+    equivalenceCaseCount: equivalenceFixtures.cases.length,
   };
 }
 
@@ -131,11 +237,15 @@ async function main() {
     ensure(fs.existsSync(repoPath(relativePath)), `missing required file: ${relativePath}`, failures);
   }
 
-  const analysisPath = repoPath('packages/language-python/src/python-static-analysis.ts');
-  if (fs.existsSync(analysisPath)) {
-    const source = fs.readFileSync(analysisPath, 'utf8');
-    for (const snippet of REQUIRED_SNIPPETS) {
-      ensure(source.includes(snippet), `missing snippet in python-static-analysis.ts: ${snippet}`, failures);
+  for (const snippetFile of REQUIRED_SNIPPETS) {
+    const fullPath = repoPath(snippetFile.path);
+    if (!fs.existsSync(fullPath)) {
+      failures.push(`cannot check snippets; file missing: ${snippetFile.path}`);
+      continue;
+    }
+    const source = fs.readFileSync(fullPath, 'utf8');
+    for (const snippet of snippetFile.snippets) {
+      ensure(source.includes(snippet), `missing snippet in ${snippetFile.path}: ${snippet}`, failures);
     }
   }
 
@@ -161,4 +271,3 @@ async function main() {
 }
 
 main();
-

@@ -1,0 +1,17 @@
+{
+  "atomizeRequest": {
+    "repositoryRoot": "fixtures/python-adapter/sample-project",
+    "operation": "atomize",
+    "goal": "extract app service atom",
+    "entrypoint": "app/main.py",
+    "includeGlobs": ["**/*.py"]
+  },
+  "infectRequest": {
+    "repositoryRoot": "fixtures/python-adapter/sample-project",
+    "operation": "infect",
+    "goal": "inject adapter shim into entrypoint path",
+    "entrypoint": "app/main.py",
+    "includeGlobs": ["**/*.py"]
+  }
+}
+
