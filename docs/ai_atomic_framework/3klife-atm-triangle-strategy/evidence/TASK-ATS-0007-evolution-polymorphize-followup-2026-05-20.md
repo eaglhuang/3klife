@@ -84,3 +84,34 @@ Review reason summary:
 ## Router Follow-up Observation
 
 After the approval was recorded, `atm next` still returned the same dry-run proposal recommendation instead of advancing to an apply-oriented next action. This suggests the current guidance router is not yet consuming the approved custom proposal record as satisfying the guidance-session recommendation.
+## Rollout-ready Verification (2026-05-20)
+
+The approved second governed leaf now passes the rollout-ready closeout gate end-to-end.
+
+Verified proposal id:
+
+- guided-legacy-atomize-guidance-20260519151625-f417f5a6f2-apply-convergence-loop-state-governance
+
+Verified commands:
+
+- node atm.mjs next --json
+- node atm.mjs review rollout-ready "guided-legacy-atomize-guidance-20260519151625-f417f5a6f2-apply-convergence-loop-state-governance" --json
+
+Observed result:
+
+- nextAction.command now routes to review rollout-ready ... --json
+- nextRouteState = proposal-rollout-ready
+- missingEvidence = []
+- rolloutCloseout.smokeEvidenceSatisfied = true
+- rolloutCloseout.rollbackReadySatisfied = true
+- rolloutCloseout.patchFiles includes:
+  - pipelines/sanguo-rag/run_full_roster_convergence_loop.py
+  - pipelines/sanguo-rag/full_roster_convergence_state_governance.py
+
+Root-cause fix that unlocked this gate:
+
+- Framework CLI now parses report JSON with UTF-8 BOM tolerance, preventing false ATM_REVIEW_ROLLOUT_READY_EVIDENCE_MISSING failures when adopter evidence files are valid but begin with BOM.
+
+Leaf decision update:
+
+- apply_convergence_loop_state_governance is now marked rollout closeout complete under TASK-ATS-0007.

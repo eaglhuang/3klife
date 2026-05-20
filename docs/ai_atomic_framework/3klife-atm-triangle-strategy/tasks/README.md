@@ -42,3 +42,12 @@ TASK-ATS-0005 is completed. The pinned adopter runner in `3klife-npc-brain` prod
 TASK-ATS-0006 is now in progress. A feature-level decomposition plan for `pipelines/sanguo-rag/run_full_roster_convergence_loop.py` was written to `.atm/history/reports/decomposition-plan.full-roster-convergence-v1.json`, and the official `create-map --from-plan` flow materialized canonical map `ATM-MAP-0001`.
 
 TASK-ATS-0007 is now in progress. `ATM-MAP-0001` passed `test --map`, then advanced through the replacement lane from `draft -> shadow -> canary`. A deliberate `active` transition probe produced the formal blocker demanding `map-equivalence`, `propagation-report`, `review-advisory`, and `human-review` evidence.
+
+## 2026-05-20 Rollout-ready Update
+
+TASK-ATS-0007 remains `in_progress` at map-level scope, but the governed leaf `run_full_roster_convergence_loop.py#apply_convergence_loop_state_governance` is now `rollout closeout complete`.
+
+Evidence confirmed through adopter pinned runner:
+
+- `node atm.mjs next --json` routes to `review rollout-ready ... --json`
+- `node atm.mjs review rollout-ready ... --json` returns `smokeEvidenceSatisfied=true` and `rollbackReadySatisfied=true`
