@@ -52,9 +52,9 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-0600 | Atomic map decomposition contract | ATM-MAP-LANG-0600 | done | 0101 |
 | ATM-LANG-0601 | Graph-to-map decomposition proposal | ATM-MAP-LANG-0600 | done | 0600 |
 | ATM-LANG-0602 | Large-feature decomposition evidence gate | ATM-MAP-LANG-0600 | done | 0601 |
-| ATM-LANG-0700 | Python AST inventory and symbol ranges | ATM-MAP-LANG-0700 | open | 0101 |
-| ATM-LANG-0701 | Python dependency/call/artifact graph | ATM-MAP-LANG-0700 | open | 0700 |
-| ATM-LANG-0702 | Python CLI/API/side-effect surface detection | ATM-MAP-LANG-0700 | open | 0701 |
+| ATM-LANG-0700 | Python AST inventory and symbol ranges | ATM-MAP-LANG-0700 | done | 0101 |
+| ATM-LANG-0701 | Python dependency/call/artifact graph | ATM-MAP-LANG-0700 | done | 0700 |
+| ATM-LANG-0702 | Python CLI/API/side-effect surface detection | ATM-MAP-LANG-0700 | done | 0701 |
 | ATM-LANG-0703 | Python precise atomize/infect dry-run | ATM-MAP-LANG-0700 | open | 0502 |
 | ATM-LANG-0704 | Python equivalence fixtures and diagnostics | ATM-MAP-LANG-0700 | open | 0703 |
 | ATM-LANG-0800 | JS/TS v2 capability alignment | ATM-MAP-LANG-0800 | open | 0102 |

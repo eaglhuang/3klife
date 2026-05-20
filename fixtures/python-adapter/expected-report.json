@@ -1,0 +1,49 @@
+{
+  "requiredFiles": [
+    "app/api.py",
+    "app/main.py",
+    "app/service.py"
+  ],
+  "requiredDependencyEdges": [
+    {
+      "from": "app/main.py",
+      "to": "module:argparse",
+      "relation": "imports"
+    },
+    {
+      "from": "app/main.py",
+      "to": "module:app.service",
+      "relation": "imports"
+    }
+  ],
+  "requiredCallEdges": [
+    {
+      "from": "app/main.py#main",
+      "to": "symbol:run_job",
+      "relation": "calls"
+    },
+    {
+      "from": "app/api.py#ApiFacade.get_health",
+      "to": "symbol:create_app",
+      "relation": "calls"
+    }
+  ],
+  "requiredArtifactEdges": [
+    {
+      "from": "app/main.py#main",
+      "to": "artifact:artifacts/output.txt",
+      "relation": "writes"
+    },
+    {
+      "from": "app/service.py#run_job",
+      "to": "artifact:cache/data.json",
+      "relation": "writes"
+    }
+  ],
+  "requiredRuntimeCategories": [
+    "cli-entrypoint",
+    "api-surface",
+    "side-effect"
+  ]
+}
+
