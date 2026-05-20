@@ -425,3 +425,47 @@ Read README.md if present, then run "node atm.mjs next --json" from the reposito
 
 完成 0008 後，三角策略才適合把更多 governed pilot 推進到可持續開發節奏。
 <!-- TASK-ATS-0007-2026-05-20-CLOSEOUT:END -->
+
+<!-- TASK-ATS-0008-2026-05-20-CLOSEOUT:START -->
+## 5.5 2026-05-20 TASK-ATS-0008 evidence routing 結案
+
+### 大白話
+
+這一階段不是再讓 AI 去改更多 Python，而是建立一個「證據分流站」。
+
+同一批 npc-brain 證據可能有三種用途：
+
+1. `upstream-blocker`：ATM 框架真的需要修的缺口。
+2. `adopter-local`：npc-brain 自己的資料管線事實與重構素材。
+3. `host-governance-overlap`：3KLife 母專案必須保存的決策與驗收紀錄。
+
+如果不分流，ATM upstream 會被 adopter 細節污染；如果完全不回流，真實使用者踩到的框架問題又無法進步。`TASK-ATS-0008` 的價值就在這裡。
+
+### 結論
+
+`TASK-ATS-0008` 已完成。
+
+完成內容：
+
+- 未新增 3KLife 私有 adopter CI。
+- 使用 AI-Atomic-Framework 既有 `adopter-sentinel` baseline，非沙盒重跑通過。
+- 建立 npc-brain sentinel case：`npc-brain-atm-map-rollout-2026-05-20`。
+- 將 evidence 分成 `upstream-blocker`、`adopter-local`、`host-governance-overlap`。
+- 明確規定 upstream 只能收 neutral fixture、validator、schema patch、English RFC/design note 或 framework patch。
+
+### 主要 evidence
+
+- `docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0008-adopter-sentinel-evidence-routing-2026-05-20.md`
+
+### 下一步
+
+`TASK-ATS-0009` 可以開始接手：把 `upstream-blocker` bucket 中真正值得回流的項目，轉成 upstream-friendly artifact。
+
+第一批候選：
+
+1. registry lineage continuity fixture
+2. approved custom proposal router fixture
+3. BOM-tolerant rollout-ready evidence parser fixture
+4. onefile validator dependency parity fixture
+5. Antigravity integration adapter fixture
+<!-- TASK-ATS-0008-2026-05-20-CLOSEOUT:END -->

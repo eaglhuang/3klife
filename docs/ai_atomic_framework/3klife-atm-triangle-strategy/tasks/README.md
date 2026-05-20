@@ -26,7 +26,7 @@ created_by_agent: codex
 | [TASK-ATS-0005](./TASK-ATS-0005-legacy-python-infect-atomize.task.md) | Leaf-level legacy Python atomize and infect dry-run pass | M4 | completed | TASK-ATS-0004 |
 | [TASK-ATS-0006](./TASK-ATS-0006-atomic-map-decomposition-validation.task.md) | Legacy Python feature decomposition to atomic map dry-run | M5 | completed | TASK-ATS-0005 |
 | [TASK-ATS-0007](./TASK-ATS-0007-atom-evolution-polymorph-validation.task.md) | Atomic map equivalence and rollout validation | M6 | completed | TASK-ATS-0006 |
-| [TASK-ATS-0008](./TASK-ATS-0008-adopter-sentinel-evidence-routing.task.md) | Adopter sentinel integration and evidence routing | M7 | in_progress | TASK-ATS-0007 |
+| [TASK-ATS-0008](./TASK-ATS-0008-adopter-sentinel-evidence-routing.task.md) | Adopter sentinel integration and evidence routing | M7 | completed | TASK-ATS-0007 |
 | [TASK-ATS-0009](./TASK-ATS-0009-upstream-blocker-repair-batch.task.md) | Upstream blocker repair batch from npc-brain evidence | M8 | open | TASK-ATS-0008 |
 | [TASK-ATS-0010](./TASK-ATS-0010-graduation-release-gate.task.md) | 3KLife experiment graduation and ATM release gate | M9 | open | TASK-ATS-0009 |
 
@@ -59,3 +59,11 @@ TASK-ATS-0006 is completed. The canonical Atomic Map `ATM-MAP-0001` exists, has 
 TASK-ATS-0007 is completed. The previous evolve blocker for `ATM-NPCBRAIN-0002` was resolved by adopter atom-level version lineage: `.atm/history/reports/registry-diff.ATM-NPCBRAIN-0002.0.1.0-to-0.1.1.json` returns `ok=true`, `lineageContinuity=true`, and only `codeHash` drift.
 
 TASK-ATS-0008 is now in progress. The next focus is not another feature patch; it is evidence routing: classify adopter evidence into upstream-blocker, adopter-local, and host-governance-overlap so the triangle strategy can decide what should return upstream.
+
+## 2026-05-20 Evidence Routing Closeout
+
+TASK-ATS-0008 is completed. The upstream adopter sentinel baseline passed outside the local tool sandbox, and the npc-brain evidence set is now classified into `upstream-blocker`, `adopter-local`, and `host-governance-overlap`.
+
+Primary evidence:
+
+- `evidence/TASK-ATS-0008-adopter-sentinel-evidence-routing-2026-05-20.md`
