@@ -89,6 +89,10 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0104 | C# advisory runtime command detection | ATM-MAP-LANG-CSHARP-0104 | done | CSHARP-0103 | 0006, 0010 |
 | ATM-LANG-CSHARP-0105 | C# atomic map decomposition implementation | ATM-MAP-LANG-CSHARP-0105 | done | CSHARP-0104 | 0008, 0009, 0010 |
 | ATM-LANG-CSHARP-0106 | C# equivalence contract fixture implementation | ATM-MAP-LANG-CSHARP-0106 | done | CSHARP-0105 | 0006, 0007, 0009, 0010 |
+| ATM-LANG-CSHARP-0200 | C# registry integration with language adapter resolver | ATM-MAP-LANG-CSHARP-0200 | done | CSHARP-0106 | 0006, 0010 |
+| ATM-LANG-CSHARP-0201 | C# legacy route planning integration | ATM-MAP-LANG-CSHARP-0201 | done | CSHARP-0200 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0202 | C# symbol stability hardening | ATM-MAP-LANG-CSHARP-0202 | done | CSHARP-0200 | 0006, 0010 |
+| ATM-LANG-CSHARP-0203 | C# csproj deep profile parsing | ATM-MAP-LANG-CSHARP-0203 | done | CSHARP-0202 | 0006, 0010 |
 
 ## 維護規則
 

@@ -343,3 +343,7 @@
 | `doc_other_0954` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0104.task.md | ATM-LANG-CSHARP-0104 - C# advisory runtime command detection |
 | `doc_other_0955` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0105.task.md | ATM-LANG-CSHARP-0105 - C# atomic map decomposition implementation |
 | `doc_other_0956` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0106.task.md | ATM-LANG-CSHARP-0106 - C# equivalence contract fixture implementation |
+| `doc_other_0957` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0200.task.md | ATM-LANG-CSHARP-0200 - C# registry integration with language adapter resolver |
+| `doc_other_0958` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0201.task.md | ATM-LANG-CSHARP-0201 - C# legacy route planning integration |
+| `doc_other_0959` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0202.task.md | ATM-LANG-CSHARP-0202 - C# symbol stability hardening |
+| `doc_other_0960` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0203.task.md | ATM-LANG-CSHARP-0203 - C# csproj deep profile parsing |

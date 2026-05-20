@@ -2428,5 +2428,29 @@
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0106.task.md",
     "title": "ATM-LANG-CSHARP-0106 - C# equivalence contract fixture implementation",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0957",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0200.task.md",
+    "title": "ATM-LANG-CSHARP-0200 - C# registry integration with language adapter resolver",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0958",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0201.task.md",
+    "title": "ATM-LANG-CSHARP-0201 - C# legacy route planning integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0959",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0202.task.md",
+    "title": "ATM-LANG-CSHARP-0202 - C# symbol stability hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0960",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0203.task.md",
+    "title": "ATM-LANG-CSHARP-0203 - C# csproj deep profile parsing",
+    "category": "other"
   }
 ]

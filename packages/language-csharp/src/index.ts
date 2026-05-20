@@ -7,3 +7,5 @@ export * from './csharp-dry-run';
 export * from './csharp-runtime';
 export * from './csharp-map';
 export * from './csharp-equivalence';
+export * from './csharp-legacy-route';
+export * from './csharp-registry';

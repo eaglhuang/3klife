@@ -1,8 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DefineConstants>TRACE;ATM_FIXTURE</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="3.1.0" />
+    <ProjectReference Include="Shared/Shared.csproj" />
+  </ItemGroup>
 </Project>

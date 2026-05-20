@@ -4,7 +4,9 @@ const path = require('path');
 process.env.TS_NODE_PROJECT = process.env.TS_NODE_PROJECT || 'tsconfig.test.json';
 require('ts-node/register/transpile-only');
 
-const { csharpLanguageAdapterV2 } = require('../packages/language-csharp/src');
+const { csharpLanguageAdapterV2, createCSharpAdapterCatalogEntry } = require('../packages/language-csharp/src');
+const { resolveLanguageAdapter } = require('../packages/core/src/guidance/language-adapter-resolver');
+const { planLegacyRouteWithAdapter } = require('../packages/core/src/guidance/legacy-route-delegation');
 
 async function main() {
   const fixtureRoot = path.resolve('tests/fixtures/language-csharp/sample-project');
@@ -36,6 +38,27 @@ async function main() {
     sourceInventory: inventory,
   });
   assert.ok((mapReport.members ?? []).length >= 3);
+
+  const catalogEntry = createCSharpAdapterCatalogEntry();
+  const resolution = resolveLanguageAdapter({
+    languageId: 'csharp',
+    requiredCapabilities: ['sourceInventory', 'legacyRoutePlanning'],
+    allowPartialCapability: true,
+    discoveryInput: {
+      bundledAdapters: [catalogEntry],
+    },
+  });
+  assert.equal(resolution.selected?.adapterId, 'csharp-future');
+  assert.equal(resolution.ok, true);
+
+  const routeResult = await planLegacyRouteWithAdapter({
+    intent: 'plan atomize route',
+    repositoryRoot: fixtureRoot,
+    languageId: 'csharp',
+    adapterResolution: resolution,
+    adapterDelegate: (request) => csharpLanguageAdapterV2.buildLegacyRoutePlan(request),
+  });
+  assert.equal(routeResult.mode, 'adapter-delegated');
 }
 
 main().then(

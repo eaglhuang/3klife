@@ -14,13 +14,25 @@ import { planCSharpAtomizeDryRun, planCSharpInfectDryRun } from './csharp-dry-ru
 import { detectCSharpRuntimeCommands } from './csharp-runtime';
 import { buildCSharpAtomicMapDecomposition } from './csharp-map';
 import { computeCSharpEquivalenceContract } from './csharp-equivalence';
+import { buildCSharpLegacyRoutePlan } from './csharp-legacy-route';
+
+function canonicalizeCSharpSymbol(rawSymbolId: string): string {
+  return rawSymbolId
+    .replace(/\\/g, '/')
+    .replace(/::/g, '.')
+    .replace(/\s+/g, '')
+    .replace(/`[0-9]+/g, '')
+    .replace(/global::/g, '')
+    .replace(/[^a-z0-9_\.\:\#\@\(\)\[\]\/\?]/gi, '')
+    .toLowerCase();
+}
 
 function normalizeCSharpSymbolId(rawSymbolId: string, filePath: string | undefined): NormalizedSymbolId {
-  const normalizedSource = rawSymbolId.replace(/::/g, '.').replace(/\s+/g, '');
+  const normalizedSource = canonicalizeCSharpSymbol(rawSymbolId);
   const withFile = filePath ? `${filePath}#${normalizedSource}` : normalizedSource;
   return {
-    normalized: withFile.toLowerCase(),
-    strategy: 'csharp-lowercase-qualified-symbol',
+    normalized: canonicalizeCSharpSymbol(withFile),
+    strategy: 'csharp-canonical-qualified-symbol',
   };
 }
 
@@ -74,7 +86,7 @@ export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
   capabilities: {
     sourceInventory: 'partial',
     symbolNormalization: 'partial',
-    legacyRoutePlanning: 'none',
+    legacyRoutePlanning: 'partial',
     atomizeDryRun: 'partial',
     infectDryRun: 'partial',
     runtimeCommandDetection: 'partial',
@@ -96,6 +108,9 @@ export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
   },
   normalizeSymbolId(request) {
     return normalizeCSharpSymbolId(request.rawSymbolId, request.filePath);
+  },
+  buildLegacyRoutePlan(request) {
+    return buildCSharpLegacyRoutePlan(request);
   },
   parseDiagnostics(request) {
     return parseCSharpDiagnostics(request);

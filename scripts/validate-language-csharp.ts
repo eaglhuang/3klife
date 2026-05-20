@@ -14,8 +14,12 @@ const REQUIRED_FILES = [
   'packages/language-csharp/src/csharp-runtime.ts',
   'packages/language-csharp/src/csharp-map.ts',
   'packages/language-csharp/src/csharp-equivalence.ts',
+  'packages/language-csharp/src/csharp-legacy-route.ts',
+  'packages/language-csharp/src/csharp-registry.ts',
   'tests/fixtures/language-csharp/sample-project/MyApp.sln',
   'tests/fixtures/language-csharp/sample-project/src/MyApp.csproj',
+  'tests/fixtures/language-csharp/sample-project/src/Shared/Shared.csproj',
+  'tests/fixtures/language-csharp/sample-project/tests/MyApp.Tests.csproj',
   'tests/fixtures/language-csharp/sample-project/Directory.Build.props',
   'tests/fixtures/language-csharp/expected-report.json',
   'tests/fixtures/language-csharp/dry-run-requests.json',
@@ -27,11 +31,11 @@ const REQUIRED_FILES = [
 const REQUIRED_SNIPPETS = [
   {
     path: 'packages/language-csharp/src/csharp-profile.ts',
-    snippets: ['collectCSharpProjectEvidence(', 'detectCSharpProjectProfile('],
+    snippets: ['collectCSharpProjectEvidence(', 'parseCsprojProfile(', 'detectCSharpProjectProfile('],
   },
   {
     path: 'packages/language-csharp/src/csharp-inventory.ts',
-    snippets: ['buildCSharpInventory(', 'scanCSharpSourceInventory('],
+    snippets: ['buildCSharpInventory(', 'buildMethodSignature(', 'createSymbolIdAllocator(', 'scanCSharpSourceInventory('],
   },
   {
     path: 'packages/language-csharp/src/csharp-risk-model.ts',
@@ -54,8 +58,20 @@ const REQUIRED_SNIPPETS = [
     snippets: ['computeCSharpEquivalenceContract('],
   },
   {
+    path: 'packages/language-csharp/src/csharp-legacy-route.ts',
+    snippets: ['parseCSharpLegacyRouteIntent(', 'buildCSharpLegacyRoutePlan('],
+  },
+  {
+    path: 'packages/language-csharp/src/csharp-registry.ts',
+    snippets: ['createCSharpAdapterCatalogEntry('],
+  },
+  {
     path: 'packages/language-csharp/src/csharp-dry-run.ts',
     snippets: ['planCSharpAtomizeDryRun(', 'planCSharpInfectDryRun(', 'mutates: []'],
+  },
+  {
+    path: 'packages/language-csharp/src/adapter.ts',
+    snippets: ["legacyRoutePlanning: 'partial'", 'buildLegacyRoutePlan(request)'],
   },
 ];
 
@@ -81,6 +97,7 @@ async function runFixtureCheck() {
   const {
     csharpLanguageAdapterV2,
     detectCSharpProjectProfile,
+    collectCSharpProjectEvidence,
     buildCSharpInventory,
     buildCSharpPartialDeclarationIndex,
     buildCSharpRiskModel,
@@ -88,7 +105,11 @@ async function runFixtureCheck() {
     detectCSharpRuntimeCommands,
     buildCSharpAtomicMapDecomposition,
     computeCSharpEquivalenceContract,
+    createCSharpAdapterCatalogEntry,
+    parseCSharpLegacyRouteIntent,
   } = require('../packages/language-csharp/src');
+  const { resolveLanguageAdapter } = require('../packages/core/src/guidance/language-adapter-resolver');
+  const { planLegacyRouteWithAdapter } = require('../packages/core/src/guidance/legacy-route-delegation');
 
   const fixtureRoot = repoPath('tests/fixtures/language-csharp/sample-project');
   const expected = JSON.parse(
@@ -106,11 +127,41 @@ async function runFixtureCheck() {
   );
 
   const profile = detectCSharpProjectProfile(fixtureRoot);
+  const projectEvidence = collectCSharpProjectEvidence(fixtureRoot);
   assert.equal(profile.languageId, 'csharp', 'profile languageId mismatch');
   assert.ok(profile.confidence >= 0.75, 'profile confidence should be >= 0.75');
-  assert.ok(profile.evidence.some((entry) => entry.toLowerCase().endsWith('.sln')), 'profile should include .sln evidence');
-  assert.ok(profile.evidence.some((entry) => entry.toLowerCase().endsWith('.csproj')), 'profile should include .csproj evidence');
+  assert.ok(
+    profile.evidence.some((entry) => entry.toLowerCase().includes('.sln#projects=')),
+    'profile should include .sln deep parse evidence'
+  );
+  assert.ok(
+    profile.evidence.some((entry) => entry.toLowerCase().includes('.csproj#tfm=')),
+    'profile should include .csproj deep parse evidence'
+  );
   assert.ok(profile.evidence.some((entry) => entry.toLowerCase().includes('directory.build.props')), 'profile should include Directory.Build.props');
+  assert.ok(projectEvidence.csprojProfiles.length >= 2, 'csproj deep parse should collect >= 2 projects');
+  assert.ok(
+    projectEvidence.csprojProfiles.some((entry) => entry.relativePath === 'tests/MyApp.Tests.csproj' && entry.isTestProject),
+    'csproj deep parse should detect test project'
+  );
+  const appProject = projectEvidence.csprojProfiles.find((entry) => entry.relativePath === 'src/MyApp.csproj');
+  assert.ok(appProject, 'missing src/MyApp.csproj profile');
+  assert.ok(appProject.targetFrameworks.includes('net8.0'), 'src/MyApp.csproj should include net8.0');
+  assert.ok(appProject.targetFrameworks.includes('net9.0'), 'src/MyApp.csproj should include net9.0');
+  assert.ok(
+    appProject.packageReferences.includes('Serilog'),
+    'src/MyApp.csproj should include Serilog package reference'
+  );
+  assert.ok(
+    appProject.projectReferences.includes('Shared/Shared.csproj'),
+    'src/MyApp.csproj should include Shared/Shared.csproj reference'
+  );
+  assert.ok(
+    projectEvidence.directoryBuildPropsProfiles.some(
+      (entry) => entry.relativePath === 'Directory.Build.props' && entry.treatWarningsAsErrors === 'true'
+    ),
+    'Directory.Build.props should include TreatWarningsAsErrors=true'
+  );
 
   const analysis = buildCSharpInventory({
     repositoryRoot: fixtureRoot,
@@ -153,6 +204,19 @@ async function runFixtureCheck() {
       );
     }
   }
+  const overloadFile = analysis.inventory.files.find(
+    (entry) => entry.filePath === 'src/Core/Overloads.cs'
+  );
+  assert.ok(overloadFile, 'missing overload fixture file');
+  const overloadMethods = (overloadFile.symbols ?? []).filter(
+    (symbol) => symbol.kind === 'method' && symbol.displayName.endsWith('.Sum')
+  );
+  assert.equal(overloadMethods.length, 2, 'overload fixture should emit two Sum methods');
+  assert.equal(
+    new Set(overloadMethods.map((symbol) => symbol.symbolId)).size,
+    overloadMethods.length,
+    'overload method symbolIds should be stable and unique'
+  );
 
   for (const requiredEdge of expected.requiredDependencyEdges) {
     assert.ok(
@@ -237,8 +301,59 @@ async function runFixtureCheck() {
   assert.equal(csharpLanguageAdapterV2.capabilities?.infectDryRun, 'partial', 'infect capability mismatch');
   assert.equal(csharpLanguageAdapterV2.capabilities?.diagnosticsParsing, 'partial', 'diagnostics capability mismatch');
   assert.equal(csharpLanguageAdapterV2.capabilities?.runtimeCommandDetection, 'partial', 'runtime command capability mismatch');
+  assert.equal(
+    csharpLanguageAdapterV2.capabilities?.legacyRoutePlanning,
+    'partial',
+    'legacy route capability mismatch'
+  );
   assert.equal(csharpLanguageAdapterV2.capabilities?.atomicMapDecomposition, 'partial', 'atomic map capability mismatch');
   assert.equal(csharpLanguageAdapterV2.capabilities?.equivalenceContract, 'partial', 'equivalence capability mismatch');
+  assert.equal(typeof csharpLanguageAdapterV2.buildLegacyRoutePlan, 'function', 'buildLegacyRoutePlan should exist');
+
+  const normalizedSymbol = csharpLanguageAdapterV2.normalizeSymbolId({
+    rawSymbolId: 'MyApp.Core.Overloads.Sum(string left, string right)',
+    filePath: 'src/Core/Overloads.cs',
+  });
+  assert.ok(
+    normalizedSymbol.normalized.includes('src/core/overloads.cs#'),
+    'normalizeSymbolId should keep file path and canonical casing'
+  );
+
+  const routeIntent = parseCSharpLegacyRouteIntent('plan atomize route for generated outputs');
+  assert.equal(routeIntent.action, 'atomize', 'legacy route intent action mismatch');
+  assert.ok(routeIntent.focus.includes('generated'), 'legacy route intent should preserve focus tokens');
+
+  const catalogEntry = createCSharpAdapterCatalogEntry();
+  assert.equal(catalogEntry.adapterId, 'csharp-future', 'catalog entry adapterId mismatch');
+  assert.ok(catalogEntry.languageIds.includes('csharp'), 'catalog entry should include csharp language id');
+  assert.ok(catalogEntry.languageIds.includes('c#'), 'catalog entry should include c# alias');
+  const resolution = resolveLanguageAdapter({
+    languageId: 'csharp',
+    requiredCapabilities: ['sourceInventory', 'legacyRoutePlanning', 'runtimeCommandDetection'],
+    allowPartialCapability: true,
+    discoveryInput: {
+      bundledAdapters: [catalogEntry],
+    },
+  });
+  assert.equal(resolution.selected?.adapterId, 'csharp-future', 'resolver should select csharp adapter');
+  assert.equal(resolution.ok, true, 'resolver should pass with partial capability allowed');
+  assert.ok(
+    resolution.selected?.fallback.advisory.includes('legacyRoutePlanning'),
+    'resolver advisory should include legacyRoutePlanning'
+  );
+
+  const delegatedRoute = await planLegacyRouteWithAdapter({
+    intent: 'plan atomize route',
+    repositoryRoot: fixtureRoot,
+    languageId: 'csharp',
+    adapterResolution: resolution,
+    adapterDelegate: (request) => csharpLanguageAdapterV2.buildLegacyRoutePlan(request),
+  });
+  assert.equal(delegatedRoute.mode, 'adapter-delegated', 'legacy route should be adapter delegated');
+  assert.ok(
+    delegatedRoute.routeReport.routeId.startsWith('csharp-future-'),
+    'legacy route id should use csharp future prefix'
+  );
 
   const validationReport = csharpLanguageAdapterV2.validateComputeAtom({ repositoryRoot: fixtureRoot });
   assert.equal(validationReport.ok, true, 'validateComputeAtom should pass on fixture');

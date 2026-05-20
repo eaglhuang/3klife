@@ -1,6 +1,7 @@
 {
   "requiredFiles": [
     "src/Contracts/IService.cs",
+    "src/Core/Overloads.cs",
     "src/Core/Service.cs",
     "src/Generated/Designer.Designer.cs",
     "src/Generated/FileBridge.g.cs",
@@ -50,12 +51,12 @@
   ],
   "requiredCallEdges": [
     {
-      "from": "src/Program.cs",
+      "from": "src/Program.cs#MyApp.App.Program.Main(string[]):method",
       "to": "symbol:service.BuildMessage",
       "relation": "calls"
     },
     {
-      "from": "src/Program.cs",
+      "from": "src/Program.cs#MyApp.App.Program.Main(string[]):method",
       "to": "symbol:FileBridge.WriteOutput",
       "relation": "calls"
     },
@@ -67,12 +68,12 @@
   ],
   "requiredArtifactEdges": [
     {
-      "from": "src/Core/Service.cs",
+      "from": "src/Core/Service.cs#MyApp.Core.Service.BuildMessage(string):method",
       "to": "artifact:templates/message.txt",
       "relation": "reads"
     },
     {
-      "from": "src/Generated/FileBridge.g.cs",
+      "from": "src/Generated/FileBridge.g.cs#MyApp.Generated.FileBridge.WriteOutput(string,string):method",
       "to": "artifact:artifacts/generated-output.txt",
       "relation": "writes"
     }

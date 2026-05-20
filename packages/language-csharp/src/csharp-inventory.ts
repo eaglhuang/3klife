@@ -92,6 +92,13 @@ interface MutableScope {
   kind: 'namespace' | 'type' | 'method';
   depth: number;
   symbolId?: string;
+  awaitingBrace?: boolean;
+}
+
+interface SymbolIdInput {
+  kind: string;
+  displayName: string;
+  signature?: string;
 }
 
 function toPosix(filePath: string): string {
@@ -162,12 +169,14 @@ function collectCSharpFilePaths(request: SourceInventoryRequest): string[] {
 }
 
 function buildRange(filePath: string, line: number, startColumn: number, endColumn: number): SourceRange {
+  const safeStartColumn = startColumn >= 0 ? startColumn : 0;
+  const safeEndColumn = endColumn >= safeStartColumn ? endColumn : safeStartColumn;
   return {
     filePath,
     startLine: line,
-    startColumn,
+    startColumn: safeStartColumn,
     endLine: line,
-    endColumn,
+    endColumn: safeEndColumn,
   };
 }
 
@@ -219,10 +228,85 @@ function buildSymbolId(filePath: string, displayName: string, kind: string): str
   return `${filePath}#${displayName}:${kind}`;
 }
 
+function canonicalizeSymbolToken(token: string): string {
+  return token
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/`[0-9]+/g, '')
+    .replace(/global::/g, '')
+    .replace(/[^a-z0-9_\.\[\]\?]/g, '');
+}
+
+function buildStableSymbolKey(input: SymbolIdInput): string {
+  const display = input.displayName
+    .split('.')
+    .map((part) => canonicalizeSymbolToken(part))
+    .filter(Boolean)
+    .join('.');
+  const signature = input.signature ? `(${input.signature})` : '';
+  return `${canonicalizeSymbolToken(input.kind)}|${display}${signature}`;
+}
+
+function buildMethodSignature(parametersRaw: string): string {
+  const normalized = parametersRaw.trim();
+  if (!normalized) {
+    return '';
+  }
+
+  const parameterKinds = normalized
+    .split(',')
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+    .map((segment) => {
+      const withoutDefault = segment.split('=')[0].trim();
+      const withoutAttributes = withoutDefault.replace(/\[[^\]]+\]\s*/g, '');
+      const tokens = withoutAttributes
+        .split(/\s+/)
+        .map((token) => token.trim())
+        .filter(Boolean)
+        .filter((token) => !['ref', 'out', 'in', 'params', 'this', 'scoped'].includes(token));
+      if (tokens.length <= 1) {
+        return canonicalizeSymbolToken(tokens[0] ?? withoutAttributes);
+      }
+      return canonicalizeSymbolToken(tokens.slice(0, -1).join(' '));
+    });
+
+  return parameterKinds.join(',');
+}
+
+function createSymbolIdAllocator(filePath: string): (input: SymbolIdInput) => string {
+  const counters = new Map<string, number>();
+  return (input: SymbolIdInput) => {
+    const stableKey = buildStableSymbolKey(input);
+    const count = (counters.get(stableKey) ?? 0) + 1;
+    counters.set(stableKey, count);
+    const signatureSuffix = input.signature && input.signature.length > 0 ? `(${input.signature})` : '';
+    const baseId = buildSymbolId(filePath, `${input.displayName}${signatureSuffix}`, input.kind);
+    if (count === 1) {
+      return baseId;
+    }
+    return `${baseId}@${count}`;
+  };
+}
+
 function countBraceDelta(line: string): number {
   const opens = (line.match(/\{/g) ?? []).length;
   const closes = (line.match(/\}/g) ?? []).length;
   return opens - closes;
+}
+
+function activateAwaitingScopes(scopeStack: MutableScope[], braceDepth: number): void {
+  for (let index = scopeStack.length - 1; index >= 0; index -= 1) {
+    const scope = scopeStack[index];
+    if (!scope.awaitingBrace) {
+      continue;
+    }
+    if (braceDepth > scope.depth) {
+      scope.depth = braceDepth;
+      scope.awaitingBrace = false;
+    }
+  }
 }
 
 function buildTypeKey(kind: string, displayName: string): string {
@@ -240,6 +324,7 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
   const generatedEvidence: CSharpGeneratedEvidence[] = [];
   const scopeStack: MutableScope[] = [];
   let braceDepth = 0;
+  const allocateSymbolId = createSymbolIdAllocator(filePath);
 
   const lowerFileName = filePath.toLowerCase();
   if (/\.(g|generated|designer)\.cs$/.test(lowerFileName)) {
@@ -257,6 +342,7 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     const trimmed = raw.trim();
     if (!trimmed) {
       braceDepth += countBraceDelta(raw);
+      activateAwaitingScopes(scopeStack, braceDepth);
       while (scopeStack.length > 0 && braceDepth < scopeStack[scopeStack.length - 1].depth) {
         scopeStack.pop();
       }
@@ -286,21 +372,33 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     if (fileNamespaceMatch) {
       const namespaceName = cleanIdentifier(fileNamespaceMatch[1]);
       const displayName = namespaceName;
-      const symbolId = buildSymbolId(filePath, displayName, 'namespace');
+      const symbolId = allocateSymbolId({
+        kind: 'namespace',
+        displayName,
+      });
       symbols.push({
         symbolId,
         displayName,
         kind: 'namespace',
         range: buildRange(filePath, lineNo, raw.indexOf('namespace'), raw.length),
       });
-      scopeStack.push({ name: namespaceName, kind: 'namespace', depth: braceDepth, symbolId });
+      scopeStack.push({
+        name: namespaceName,
+        kind: 'namespace',
+        depth: Number.NEGATIVE_INFINITY,
+        symbolId,
+        awaitingBrace: false,
+      });
     }
 
     const blockNamespaceMatch = trimmed.match(/^namespace\s+([A-Za-z_][A-Za-z0-9_\.]*)\s*$/);
     if (blockNamespaceMatch) {
       const namespaceName = cleanIdentifier(blockNamespaceMatch[1]);
       const displayName = namespaceName;
-      const symbolId = buildSymbolId(filePath, displayName, 'namespace');
+      const symbolId = allocateSymbolId({
+        kind: 'namespace',
+        displayName,
+      });
       symbols.push({
         symbolId,
         displayName,
@@ -311,8 +409,9 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
       scopeStack.push({
         name: namespaceName,
         kind: 'namespace',
-        depth: Math.max(enterDepth, braceDepth + 1),
+        depth: Math.max(enterDepth, braceDepth),
         symbolId,
+        awaitingBrace: !raw.includes('{'),
       });
     }
 
@@ -325,7 +424,10 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
       const typeName = cleanIdentifier(typeMatch[3]);
       const kind = typeMatch[2];
       const displayName = buildDisplayName(namespaceName, parentTypePath, typeName);
-      const symbolId = buildSymbolId(filePath, displayName, kind);
+      const symbolId = allocateSymbolId({
+        kind,
+        displayName,
+      });
       symbols.push({
         symbolId,
         displayName,
@@ -346,8 +448,9 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
       scopeStack.push({
         name: typeName,
         kind: 'type',
-        depth: Math.max(typeDepth, braceDepth + 1),
+        depth: Math.max(typeDepth, braceDepth),
         symbolId,
+        awaitingBrace: !raw.includes('{'),
       });
     }
 
@@ -360,7 +463,10 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
       const typePath = currentTypePath(scopeStack);
       const displayName = buildDisplayName(namespaceName, typePath, propertyName);
       symbols.push({
-        symbolId: buildSymbolId(filePath, displayName, 'property'),
+        symbolId: allocateSymbolId({
+          kind: 'property',
+          displayName,
+        }),
         displayName,
         kind: 'property',
         range: buildRange(filePath, lineNo, raw.indexOf(propertyName), raw.length),
@@ -376,7 +482,10 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
       const typePath = currentTypePath(scopeStack);
       const displayName = buildDisplayName(namespaceName, typePath, fieldName);
       symbols.push({
-        symbolId: buildSymbolId(filePath, displayName, 'field'),
+        symbolId: allocateSymbolId({
+          kind: 'field',
+          displayName,
+        }),
         displayName,
         kind: 'field',
         range: buildRange(filePath, lineNo, raw.indexOf(fieldName), raw.length),
@@ -384,7 +493,7 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     }
 
     const methodMatch = trimmed.match(
-      /^(?:\[[^\]]+\]\s*)*(?:public|private|protected|internal|static|virtual|override|sealed|new|async|extern|partial|\s)+\s+[A-Za-z_][A-Za-z0-9_<>,\[\]\?\.]*\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^\)]*\)\s*(?:\{|=>|where|$|;)/
+      /^(?:\[[^\]]+\]\s*)*(?:public|private|protected|internal|static|virtual|override|sealed|new|async|extern|partial|\s)+\s+[A-Za-z_][A-Za-z0-9_<>,\[\]\?\.]*\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^\)]*)\)\s*(?:\{|=>|where|$|;)/
     );
     let declaredMethodName: string | undefined;
     if (methodMatch) {
@@ -394,20 +503,30 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
         const namespaceName = currentNamespace(scopeStack);
         const typePath = currentTypePath(scopeStack);
         const displayName = buildDisplayName(namespaceName, typePath, methodName);
-        const symbolId = buildSymbolId(filePath, displayName, 'method');
+        const signature = buildMethodSignature(methodMatch[2] ?? '');
+        const symbolId = allocateSymbolId({
+          kind: 'method',
+          displayName,
+          signature,
+        });
         symbols.push({
           symbolId,
           displayName,
           kind: 'method',
           range: buildRange(filePath, lineNo, raw.indexOf(methodName), raw.length),
         });
-        const methodDepth = braceDepth + (raw.includes('{') ? 1 : 0);
-        scopeStack.push({
-          name: methodName,
-          kind: 'method',
-          depth: Math.max(methodDepth, braceDepth + 1),
-          symbolId,
-        });
+        const hasInlineBody = raw.includes('{');
+        const hasExplicitNoBody = trimmed.includes('=>') || trimmed.endsWith(';');
+        if (!hasExplicitNoBody) {
+          const methodDepth = braceDepth + (hasInlineBody ? 1 : 0);
+          scopeStack.push({
+            name: methodName,
+            kind: 'method',
+            depth: Math.max(methodDepth, braceDepth),
+            symbolId,
+            awaitingBrace: !hasInlineBody,
+          });
+        }
       }
     }
 
@@ -449,6 +568,7 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     }
 
     braceDepth += countBraceDelta(raw);
+    activateAwaitingScopes(scopeStack, braceDepth);
     while (scopeStack.length > 0 && braceDepth < scopeStack[scopeStack.length - 1].depth) {
       scopeStack.pop();
     }
