@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-source-inventory.schema.json",
+  "title": "Language Source Inventory Report",
+  "type": "object",
+  "required": [
+    "files"
+  ],
+  "properties": {
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "filePath",
+          "languageId"
+        ],
+        "properties": {
+          "filePath": {
+            "type": "string"
+          },
+          "languageId": {
+            "type": "string"
+          },
+          "symbols": {
+            "type": "array",
+            "items": {
+              "$ref": "language-symbol-range-reference.schema.json#/$defs/symbolRef"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "dependencyEdges": {
+      "$ref": "language-symbol-range-reference.schema.json#/$defs/edgeArray"
+    },
+    "callEdges": {
+      "$ref": "language-symbol-range-reference.schema.json#/$defs/edgeArray"
+    },
+    "artifactEdges": {
+      "$ref": "language-symbol-range-reference.schema.json#/$defs/edgeArray"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
+

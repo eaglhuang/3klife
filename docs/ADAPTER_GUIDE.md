@@ -157,3 +157,37 @@ Adapter 文件只能承諾：
 2. `docs/agent-briefs/tasks/ATM/ATM-3-0001.md`
 3. `tools_node/adapters/atm-3klife/project-adapter.js`
 4. `tools_node/adapters/atm-3klife/governance-adapter.js`
+
+## 10. LanguageAdapter v2 Contract Snapshot
+
+This section is a concise contract snapshot used by ATM-LANG-0100 ~ ATM-LANG-0102.
+
+### v1 baseline (must keep)
+
+- `detectProjectProfile(repositoryRoot)`
+- `validateComputeAtom(request)`
+
+### v2 additive surface (optional by capability)
+
+- `scanSourceInventory(request)`
+- `normalizeSymbolId(request)`
+- `buildLegacyRoutePlan(request)`
+- `planAtomizeDryRun(request)`
+- `planInfectDryRun(request)`
+- `detectRuntimeCommands(request)`
+- `parseDiagnostics(request)`
+- `computeEquivalenceContract(request)`
+- `buildAtomicMapDecomposition(request)`
+
+### Capability declaration
+
+`LanguageAdapterV2` uses a capability set so core can discover support level without embedding language-specific logic.
+
+### Schema anchors
+
+- `schemas/language-source-inventory.schema.json`
+- `schemas/language-symbol-range-reference.schema.json`
+- `schemas/language-diagnostics.schema.json`
+- `schemas/language-runtime-commands.schema.json`
+- `schemas/language-equivalence-fixture.schema.json`
+- `schemas/language-dry-run-evidence-envelope.schema.json`

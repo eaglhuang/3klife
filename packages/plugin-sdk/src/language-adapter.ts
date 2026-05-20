@@ -1,0 +1,244 @@
+/**
+ * ATM language adapter contracts (v1 + additive v2 surface).
+ * This module is intentionally framework-neutral and host-neutral.
+ */
+
+export type MaybePromise<T> = T | Promise<T>;
+
+export type AdapterSupportLevel = 'none' | 'partial' | 'full';
+
+export interface LanguageAdapterCapabilitySet {
+  sourceInventory?: AdapterSupportLevel;
+  symbolNormalization?: AdapterSupportLevel;
+  legacyRoutePlanning?: AdapterSupportLevel;
+  atomizeDryRun?: AdapterSupportLevel;
+  infectDryRun?: AdapterSupportLevel;
+  runtimeCommandDetection?: AdapterSupportLevel;
+  diagnosticsParsing?: AdapterSupportLevel;
+  equivalenceContract?: AdapterSupportLevel;
+  atomicMapDecomposition?: AdapterSupportLevel;
+  dependencyGraph?: AdapterSupportLevel;
+  callGraph?: AdapterSupportLevel;
+  artifactGraph?: AdapterSupportLevel;
+}
+
+export interface LanguageProjectProfile {
+  languageId: string;
+  profileId: string;
+  confidence: number;
+  evidence?: string[];
+}
+
+export interface LanguageAdapterValidationRequest {
+  repositoryRoot: string;
+  changedFiles?: string[];
+  strict?: boolean;
+}
+
+export interface LanguageAdapterReport {
+  ok: boolean;
+  adapterId: string;
+  contractVersion?: 'v1' | 'v2';
+  messages: string[];
+}
+
+export interface SourceRange {
+  filePath: string;
+  startLine: number;
+  startColumn: number;
+  endLine: number;
+  endColumn: number;
+}
+
+export interface SymbolRef {
+  symbolId: string;
+  displayName: string;
+  kind: string;
+  range: SourceRange;
+  references?: SourceRange[];
+}
+
+export interface SourceInventoryRequest {
+  repositoryRoot: string;
+  includeGlobs?: string[];
+  excludeGlobs?: string[];
+}
+
+export interface SourceFileEntry {
+  filePath: string;
+  languageId: string;
+  symbols?: SymbolRef[];
+}
+
+export interface EdgeRef {
+  from: string;
+  to: string;
+  relation: string;
+  evidence?: string;
+}
+
+export interface SourceInventoryReport {
+  files: SourceFileEntry[];
+  dependencyEdges?: EdgeRef[];
+  callEdges?: EdgeRef[];
+  artifactEdges?: EdgeRef[];
+  warnings?: string[];
+}
+
+export interface NormalizeSymbolIdRequest {
+  rawSymbolId: string;
+  filePath?: string;
+  languageId?: string;
+}
+
+export interface NormalizedSymbolId {
+  normalized: string;
+  strategy: string;
+}
+
+export interface LegacyRoutePlanRequest {
+  intent: string;
+  repositoryRoot: string;
+}
+
+export interface LegacyRoutePlanStep {
+  phase: string;
+  description: string;
+}
+
+export interface LegacyRoutePlanReport {
+  routeId: string;
+  steps: LegacyRoutePlanStep[];
+  warnings?: string[];
+}
+
+export interface RuntimeCommandRequest {
+  repositoryRoot: string;
+  includeRisky?: boolean;
+}
+
+export interface RuntimeCommandEntry {
+  commandId: string;
+  command: string;
+  category: string;
+  mutates: boolean;
+  confidence?: number;
+}
+
+export interface RuntimeCommandReport {
+  commands: RuntimeCommandEntry[];
+  warnings?: string[];
+}
+
+export interface DiagnosticsParseRequest {
+  rawDiagnostics: string;
+  source?: string;
+}
+
+export interface DiagnosticEntry {
+  severity: 'info' | 'warning' | 'error';
+  code?: string;
+  message: string;
+  location?: SourceRange;
+}
+
+export interface DiagnosticsReport {
+  diagnostics: DiagnosticEntry[];
+}
+
+export interface EquivalenceContractRequest {
+  fixtureId: string;
+  expectedBehavior: string;
+}
+
+export interface EquivalenceContractReport {
+  fixtureId: string;
+  accepted: boolean;
+  rationale: string;
+  evidencePaths?: string[];
+}
+
+export interface DryRunPlanRequest {
+  repositoryRoot: string;
+  operation: 'atomize' | 'infect';
+}
+
+export interface DryRunPlanStep {
+  stage: string;
+  description: string;
+}
+
+export interface DryRunEvidenceEnvelope {
+  planKind: 'atomize' | 'infect';
+  requiredEvidence: string[];
+  rollbackStrategy: string;
+  shimStrategy?: string;
+  mutates: string[];
+}
+
+export interface DryRunPlanReport {
+  operation: 'atomize' | 'infect';
+  steps: DryRunPlanStep[];
+  evidence: DryRunEvidenceEnvelope;
+}
+
+export interface AtomicMapDecompositionRequest {
+  mapId: string;
+  repositoryRoot: string;
+}
+
+export interface AtomicMapMember {
+  atomId: string;
+  title: string;
+}
+
+export interface AtomicMapEdge {
+  from: string;
+  to: string;
+  relation: string;
+}
+
+export interface AtomicMapDecompositionReport {
+  mapId: string;
+  members: AtomicMapMember[];
+  edges: AtomicMapEdge[];
+  entrypoints: string[];
+}
+
+/**
+ * v1 baseline contract.
+ * Keep this additive to avoid breaking existing adapters.
+ */
+export interface LanguageAdapter<
+  Profile = LanguageProjectProfile,
+  ValidateRequest = LanguageAdapterValidationRequest,
+  ValidateReport = LanguageAdapterReport
+> {
+  readonly adapterId: string;
+  readonly languageId: string;
+  detectProjectProfile(repositoryRoot: string): MaybePromise<Profile>;
+  validateComputeAtom(request: ValidateRequest): MaybePromise<ValidateReport>;
+}
+
+/**
+ * v2 additive contract surface.
+ */
+export interface LanguageAdapterV2<
+  Profile = LanguageProjectProfile,
+  ValidateRequest = LanguageAdapterValidationRequest,
+  ValidateReport = LanguageAdapterReport
+> extends LanguageAdapter<Profile, ValidateRequest, ValidateReport> {
+  readonly contractVersion?: 'v2';
+  readonly capabilities?: LanguageAdapterCapabilitySet;
+
+  scanSourceInventory?(request: SourceInventoryRequest): MaybePromise<SourceInventoryReport>;
+  normalizeSymbolId?(request: NormalizeSymbolIdRequest): MaybePromise<NormalizedSymbolId>;
+  buildLegacyRoutePlan?(request: LegacyRoutePlanRequest): MaybePromise<LegacyRoutePlanReport>;
+  planAtomizeDryRun?(request: DryRunPlanRequest): MaybePromise<DryRunPlanReport>;
+  planInfectDryRun?(request: DryRunPlanRequest): MaybePromise<DryRunPlanReport>;
+  detectRuntimeCommands?(request: RuntimeCommandRequest): MaybePromise<RuntimeCommandReport>;
+  parseDiagnostics?(request: DiagnosticsParseRequest): MaybePromise<DiagnosticsReport>;
+  computeEquivalenceContract?(request: EquivalenceContractRequest): MaybePromise<EquivalenceContractReport>;
+  buildAtomicMapDecomposition?(request: AtomicMapDecompositionRequest): MaybePromise<AtomicMapDecompositionReport>;
+}
+

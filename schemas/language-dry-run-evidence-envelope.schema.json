@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-dry-run-evidence-envelope.schema.json",
+  "title": "Language Dry-Run Evidence Envelope",
+  "type": "object",
+  "required": [
+    "planKind",
+    "requiredEvidence",
+    "rollbackStrategy",
+    "mutates"
+  ],
+  "properties": {
+    "planKind": {
+      "type": "string",
+      "enum": [
+        "atomize",
+        "infect"
+      ]
+    },
+    "requiredEvidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rollbackStrategy": {
+      "type": "string"
+    },
+    "shimStrategy": {
+      "type": "string"
+    },
+    "mutates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
+

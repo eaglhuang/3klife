@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-runtime-commands.schema.json",
+  "title": "Language Runtime Command Report",
+  "type": "object",
+  "required": [
+    "commands"
+  ],
+  "properties": {
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "commandId",
+          "command",
+          "category",
+          "mutates"
+        ],
+        "properties": {
+          "commandId": {
+            "type": "string"
+          },
+          "command": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "mutates": {
+            "type": "boolean"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
+

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/language-symbol-range-reference.schema.json",
+  "title": "Language Symbol / Range / Reference / Edge",
+  "$defs": {
+    "sourceRange": {
+      "type": "object",
+      "required": [
+        "filePath",
+        "startLine",
+        "startColumn",
+        "endLine",
+        "endColumn"
+      ],
+      "properties": {
+        "filePath": {
+          "type": "string"
+        },
+        "startLine": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "startColumn": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endLine": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "endColumn": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "symbolRef": {
+      "type": "object",
+      "required": [
+        "symbolId",
+        "displayName",
+        "kind",
+        "range"
+      ],
+      "properties": {
+        "symbolId": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/$defs/sourceRange"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceRange"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "edgeRef": {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "relation"
+      ],
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "relation": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "edgeArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edgeRef"
+      }
+    }
+  }
+}
+
