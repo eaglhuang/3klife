@@ -2548,5 +2548,35 @@
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0403.task.md",
     "title": "ATM-LANG-CSHARP-0403 C# validator and readiness baseline hardening",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0977",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0500.task.md",
+    "title": "ATM-LANG-CSHARP-0500 C# runtime command detection full promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0978",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0501.task.md",
+    "title": "ATM-LANG-CSHARP-0501 C# diagnostics parsing full promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0979",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0504.task.md",
+    "title": "ATM-LANG-CSHARP-0504 C# validator and capability full-baseline hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0980",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0503.task.md",
+    "title": "ATM-LANG-CSHARP-0503 C# equivalence contract full promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0981",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0502.task.md",
+    "title": "ATM-LANG-CSHARP-0502 C# dry-run planner full promotion",
+    "category": "other"
   }
 ]

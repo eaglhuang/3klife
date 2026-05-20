@@ -37,6 +37,7 @@ const REQUIRED_FILES = [
   'tests/fixtures/language-csharp/expected-report.json',
   'tests/fixtures/language-csharp/capability-baseline.json',
   'tests/fixtures/language-csharp/dry-run-requests.json',
+  'tests/fixtures/language-csharp/runtime-command-requests.json',
   'tests/fixtures/language-csharp/diagnostics-sample.txt',
   'tests/fixtures/language-csharp/diagnostics-sarif.json',
   'tests/fixtures/language-csharp/diagnostics-sarif-variant.json',
@@ -60,11 +61,16 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-diagnostics.ts',
-    snippets: ['parseCSharpDiagnostics(', 'parseSarifDiagnostics('],
+    snippets: [
+      'parseCSharpDiagnostics(',
+      'parseSarifDiagnostics(',
+      'parseCompactLocationDiagnostic(',
+      'deduped',
+    ],
   },
   {
     path: 'packages/language-csharp/src/csharp-runtime.ts',
-    snippets: ['detectCSharpRuntimeCommands('],
+    snippets: ['detectCSharpRuntimeCommands(', 'buildRiskyCommands(', 'includeRisky'],
   },
   {
     path: 'packages/language-csharp/src/csharp-map.ts',
@@ -76,7 +82,7 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-equivalence.ts',
-    snippets: ['computeCSharpEquivalenceContract('],
+    snippets: ['computeCSharpEquivalenceContract(', 'requiredAll', 'forbidden'],
   },
   {
     path: 'packages/language-csharp/src/csharp-legacy-route.ts',
@@ -104,7 +110,12 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-dry-run.ts',
-    snippets: ['planCSharpAtomizeDryRun(', 'planCSharpInfectDryRun(', 'mutates: []'],
+    snippets: [
+      'planCSharpAtomizeDryRun(',
+      'planCSharpInfectDryRun(',
+      'mutates: []',
+      'shim: shimPlan',
+    ],
   },
   {
     path: 'packages/language-csharp/src/adapter.ts',
@@ -112,6 +123,11 @@ const REQUIRED_SNIPPETS = [
       "sourceInventory: 'full'",
       "symbolNormalization: 'full'",
       "legacyRoutePlanning: 'full'",
+      "atomizeDryRun: 'full'",
+      "infectDryRun: 'full'",
+      "runtimeCommandDetection: 'full'",
+      "diagnosticsParsing: 'full'",
+      "equivalenceContract: 'full'",
       "atomicMapDecomposition: 'full'",
       "dependencyGraph: 'full'",
       "callGraph: 'full'",
@@ -180,6 +196,9 @@ async function runFixtureCheck() {
   );
   const dryRunRequests = JSON.parse(
     fs.readFileSync(repoPath('tests/fixtures/language-csharp/dry-run-requests.json'), 'utf8')
+  );
+  const runtimeRequests = JSON.parse(
+    fs.readFileSync(repoPath('tests/fixtures/language-csharp/runtime-command-requests.json'), 'utf8')
   );
   const enterpriseSmokeExpect = JSON.parse(
     fs.readFileSync(
@@ -311,9 +330,13 @@ async function runFixtureCheck() {
     rawDiagnostics: diagnosticsSarifVariantRaw,
     source: 'sarif-variant',
   });
-  const runtimeCommands = await detectCSharpRuntimeCommands({
-    repositoryRoot: fixtureRoot,
-    includeRisky: false,
+  const runtimeCommandsSafe = await detectCSharpRuntimeCommands({
+    repositoryRoot: repoPath(runtimeRequests.safe.repositoryRoot),
+    includeRisky: runtimeRequests.safe.includeRisky,
+  });
+  const runtimeCommandsRisky = await detectCSharpRuntimeCommands({
+    repositoryRoot: repoPath(runtimeRequests.risky.repositoryRoot),
+    includeRisky: runtimeRequests.risky.includeRisky,
   });
 
   const enterpriseRoot = repoPath('tests/fixtures/language-csharp/enterprise-solution');
@@ -508,14 +531,85 @@ async function runFixtureCheck() {
     'sarif variant diagnostics should include CS8602 error'
   );
 
-  assert.ok(runtimeCommands.commands.length >= 3, 'runtime command detection should return advisory commands');
   assert.ok(
-    runtimeCommands.commands.some((command) => command.command.startsWith('dotnet build')),
-    'runtime commands should include dotnet build advisory'
+    diagnostics.diagnostics.some((entry) => entry.code === 'CS0168'),
+    'diagnostics should parse CS0168 entry'
+  );
+  const duplicateDiagnostics = parseCSharpDiagnostics({
+    rawDiagnostics: [
+      'src/Program.cs(14,13): error CS0103: The name \'UnknownSymbol\' does not exist in the current context [src/MyApp.csproj]',
+      'src/Program.cs(14,13): error CS0103: The name \'UnknownSymbol\' does not exist in the current context [src/MyApp.csproj]',
+    ].join('\n'),
+    source: 'dotnet-build-log',
+  });
+  assert.equal(
+    duplicateDiagnostics.diagnostics.length,
+    1,
+    'diagnostics parser should dedupe duplicate location diagnostics'
+  );
+  const compactDiagnostics = parseCSharpDiagnostics({
+    rawDiagnostics:
+      'src/Program.cs:9:11: warning cs0219: The variable x is assigned but its value is never used',
+    source: 'dotnet-build-log',
+  });
+  assert.equal(compactDiagnostics.diagnostics.length, 1, 'compact diagnostics should parse one entry');
+  assert.equal(compactDiagnostics.diagnostics[0].code, 'CS0219', 'compact diagnostics code should normalize to uppercase');
+  assert.equal(compactDiagnostics.diagnostics[0].severity, 'warning', 'compact diagnostics severity mismatch');
+
+  const safeCommandIds = new Set(runtimeCommandsSafe.commands.map((command) => command.commandId));
+  const riskyCommandIds = new Set(runtimeCommandsRisky.commands.map((command) => command.commandId));
+  assert.ok(runtimeCommandsSafe.commands.length >= 5, 'runtime safe command detection should return >= 5 commands');
+  assert.ok(
+    runtimeCommandsSafe.commands.every((command) => command.mutates === false),
+    'runtime safe commands should be non-mutating'
   );
   assert.ok(
-    (runtimeCommands.warnings ?? []).some((warning) => warning.includes('advisory commands only')),
-    'runtime command warnings should mention advisory-only behavior'
+    safeCommandIds.has('csharp-dotnet-build') &&
+      safeCommandIds.has('csharp-dotnet-restore') &&
+      safeCommandIds.has('csharp-dotnet-test') &&
+      safeCommandIds.has('csharp-dotnet-publish') &&
+      safeCommandIds.has('csharp-dotnet-format'),
+    'runtime safe commands should include build/restore/test/publish/format'
+  );
+  assert.ok(
+    runtimeCommandsRisky.commands.length > runtimeCommandsSafe.commands.length,
+    'runtime risky commands should include additional entries'
+  );
+  assert.ok(
+    riskyCommandIds.has('csharp-dotnet-clean') &&
+      riskyCommandIds.has('csharp-dotnet-workload-restore'),
+    'runtime risky commands should include clean/workload restore variants'
+  );
+  assert.ok(
+    runtimeCommandsRisky.commands.some(
+      (command) => command.commandId === 'csharp-dotnet-clean' && command.mutates === true
+    ),
+    'runtime clean command should be marked mutating'
+  );
+  assert.ok(
+    runtimeCommandsRisky.commands.some(
+      (command) =>
+        command.commandId === 'csharp-dotnet-workload-restore' && command.mutates === true
+    ),
+    'runtime workload restore command should be marked mutating'
+  );
+  assert.ok(
+    (runtimeCommandsSafe.warnings ?? []).some((warning) =>
+      warning.includes('runtime command target selected from solution:')
+    ),
+    'runtime safe warnings should include target evidence'
+  );
+  assert.ok(
+    (runtimeCommandsSafe.warnings ?? []).some((warning) =>
+      warning.includes('advisory commands only')
+    ),
+    'runtime safe warnings should mention advisory-only behavior'
+  );
+  assert.ok(
+    (runtimeCommandsRisky.warnings ?? []).some((warning) =>
+      warning.includes('risky command variants are listed for planning only')
+    ),
+    'runtime risky warnings should mention planning-only risky variants'
   );
 
   const atomizePlan = await csharpLanguageAdapterV2.planAtomizeDryRun(dryRunRequests.atomizeRequest);
@@ -537,6 +631,51 @@ async function runFixtureCheck() {
   assert.equal(infectPlan.executionMode, 'dry-run', 'infect execution mode mismatch');
   assert.deepEqual(atomizePlan.evidence.mutates, [], 'atomize mutates should be empty');
   assert.deepEqual(infectPlan.evidence.mutates, [], 'infect mutates should be empty');
+  assert.ok(atomizePlan.evidence.shim, 'atomize dry-run should include shim evidence');
+  assert.ok(infectPlan.evidence.shim, 'infect dry-run should include shim evidence');
+  assert.ok(
+    atomizePlan.evidence.requiredEvidence.includes('csharp-host-shim-plan'),
+    'atomize required evidence should include host shim plan'
+  );
+  assert.ok(
+    infectPlan.evidence.requiredEvidence.includes('csharp-host-shim-plan'),
+    'infect required evidence should include host shim plan'
+  );
+  assert.ok(
+    atomizePlan.steps.some((step) => step.stage === 'shim'),
+    'atomize dry-run steps should include shim stage'
+  );
+  assert.ok(
+    infectPlan.steps.some((step) => step.stage === 'shim'),
+    'infect dry-run steps should include shim stage'
+  );
+  assert.equal(
+    infectPlan.evidence.reviewGate.gateType,
+    'dual-review',
+    'infect dry-run review gate should require dual-review'
+  );
+  assert.equal(
+    infectPlan.evidence.reviewGate.gateId,
+    'csharp-infect-dual-review',
+    'infect dry-run review gate id mismatch'
+  );
+  assert.equal(
+    infectPlan.evidence.shim?.strategy,
+    'inject-advisory-bridge-shim',
+    'infect shim strategy mismatch'
+  );
+  assert.ok(
+    (atomizePlan.evidence.rollback.steps ?? []).some((step) =>
+      step.includes('shim proposal was not applied')
+    ),
+    'atomize rollback steps should mention shim no-apply proof'
+  );
+  assert.ok(
+    (infectPlan.evidence.rollback.steps ?? []).some((step) =>
+      step.includes('shim proposal was not applied')
+    ),
+    'infect rollback steps should mention shim no-apply proof'
+  );
   assert.equal(mapReport.evidenceGate?.accepted, true, 'atomic map decomposition evidence gate should pass');
   assert.ok((mapReport.entrypoints ?? []).length >= 1, 'atomic map decomposition should include entrypoints');
   assert.ok(
@@ -650,10 +789,17 @@ async function runFixtureCheck() {
     },
   });
   assert.equal(resolution.selected?.adapterId, 'csharp-future', 'resolver should select csharp adapter');
-  assert.equal(resolution.ok, true, 'resolver should pass with partial capability allowed');
+  assert.equal(resolution.ok, true, 'resolver should pass with full capability support');
+  assert.deepEqual(
+    resolution.selected?.fallback.advisory ?? [],
+    [],
+    'resolver advisory should be empty when all required capabilities are full'
+  );
   assert.ok(
-    resolution.selected?.fallback.advisory.includes('runtimeCommandDetection'),
-    'resolver advisory should include runtimeCommandDetection partial capability'
+    (resolution.selected?.fallback.messages ?? []).some((message) =>
+      message.includes('fully supports requested capabilities')
+    ),
+    'resolver fallback messages should confirm full capability support'
   );
 
   const delegatedRoute = await planLegacyRouteWithAdapter({
@@ -685,7 +831,7 @@ async function runFixtureCheck() {
     riskFindingCount: risk.findings.length,
     partialGroupCount: partialIndex.groups.length,
     diagnosticsCount: diagnostics.diagnostics.length,
-    runtimeCommandCount: runtimeCommands.commands.length,
+    runtimeCommandCount: runtimeCommandsSafe.commands.length,
     mapMemberCount: mapReport.members.length,
     mapEdgeCount: mapReport.edges.length,
     resolvedSymbolReferenceCount: symbolReferenceIndex.resolvedCount,

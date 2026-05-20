@@ -98,6 +98,28 @@ function parseLocationDiagnostic(line: string): DiagnosticEntry | null {
   };
 }
 
+function parseCompactLocationDiagnostic(line: string): DiagnosticEntry | null {
+  const match = line.match(
+    /^(.+?):(\d+):(\d+):\s*(error|warning|info)\s+([A-Za-z]{2,16}\d+)\s*:\s*(.+)$/
+  );
+  if (!match) {
+    return null;
+  }
+  const [, filePath, startLine, startColumn, severity, code, message] = match;
+  return {
+    severity: mapSeverity(severity),
+    code: code.trim().toUpperCase(),
+    message: message.trim(),
+    location: {
+      filePath: normalizeLocationPath(filePath),
+      startLine: Number(startLine),
+      startColumn: Number(startColumn),
+      endLine: Number(startLine),
+      endColumn: Number(startColumn),
+    },
+  };
+}
+
 function parseToolDiagnostic(line: string): DiagnosticEntry | null {
   const match = line.match(
     /^([^:]+?)\s*:\s*(error|warning|info)\s+([A-Za-z]{2,8}\d+)\s*:\s*(.+?)(?:\s+\[([^\]]+)\])?$/
@@ -261,6 +283,7 @@ export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): Diagno
 
     const parsed =
       parseLocationDiagnostic(trimmed) ??
+      parseCompactLocationDiagnostic(trimmed) ??
       parseToolDiagnostic(trimmed) ??
       parseNoLocationDiagnostic(trimmed);
     if (parsed) {
@@ -281,5 +304,25 @@ export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): Diagno
       message: trimmed,
     });
   }
-  return { diagnostics };
+  const deduped = new Map<string, DiagnosticEntry>();
+  for (const diagnostic of diagnostics) {
+    const key = [
+      diagnostic.severity,
+      (diagnostic.code ?? '').toUpperCase(),
+      diagnostic.message.trim(),
+      diagnostic.location?.filePath ?? '',
+      diagnostic.location?.startLine ?? '',
+      diagnostic.location?.startColumn ?? '',
+      diagnostic.location?.endLine ?? '',
+      diagnostic.location?.endColumn ?? '',
+    ].join('|');
+    if (!deduped.has(key)) {
+      deduped.set(key, {
+        ...diagnostic,
+        code: diagnostic.code ? diagnostic.code.toUpperCase() : undefined,
+        message: diagnostic.message.trim(),
+      });
+    }
+  }
+  return { diagnostics: Array.from(deduped.values()) };
 }

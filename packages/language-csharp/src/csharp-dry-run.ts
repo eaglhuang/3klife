@@ -1,4 +1,5 @@
 import type {
+  DryRunHostShimPlan,
   DryRunPlanReport,
   DryRunPlanRequest,
   DryRunProposalArtifact,
@@ -32,6 +33,14 @@ function buildDefaultArtifacts(operation: 'atomize' | 'infect'): DryRunProposalA
 }
 
 function buildReviewGate(operation: 'atomize' | 'infect', hasBlockingRisk: boolean): DryRunReviewGate {
+  if (operation === 'infect') {
+    return {
+      gateId: `csharp-${operation}-dual-review`,
+      gateType: 'dual-review',
+      required: true,
+      reason: 'infect route requires human + police review even in dry-run feasibility stage',
+    };
+  }
   if (hasBlockingRisk) {
     return {
       gateId: `csharp-${operation}-generated-code-review`,
@@ -54,10 +63,33 @@ function buildRollback(operation: 'atomize' | 'infect', restoreTargets: string[]
     steps: [
       'discard dry-run proposal artifacts',
       'confirm host project files were never modified',
+      'confirm shim proposal was not applied to host code',
       'rerun inventory and risk baseline for deterministic comparison',
     ],
     restoreTargets,
     proofHint: `artifacts/atm/candidates/csharp/${operation}-rollback-proof.json`,
+  };
+}
+
+function buildHostShimPlan(
+  operation: 'atomize' | 'infect',
+  entrypoint: string,
+  hasBlockingRisk: boolean
+): DryRunHostShimPlan {
+  return {
+    shimId: `csharp-${operation}-host-shim`,
+    filePath: entrypoint,
+    strategy:
+      operation === 'infect'
+        ? 'inject-advisory-bridge-shim'
+        : hasBlockingRisk
+          ? 'generated-risk-guard-shim'
+          : 'entrypoint-wrapper-shim',
+    preservesEntrypoint: true,
+    notes:
+      operation === 'infect'
+        ? 'shim is proposal-only and must remain review-gated before apply'
+        : 'shim proposal remains dry-run and non-mutating',
   };
 }
 
@@ -98,6 +130,7 @@ function buildDryRunReport(operation: 'atomize' | 'infect', request: DryRunPlanR
   const files = inventoryReport.inventory.files.map((entry) => entry.filePath);
   const entrypoint = selectEntrypoint(request, files);
   const rewriteCandidate = selectRewriteCandidate(inventoryReport.inventory.dependencyEdges ?? []);
+  const shimPlan = buildHostShimPlan(operation, entrypoint, riskReport.hasBlockingRisk);
 
   return {
     operation,
@@ -128,6 +161,12 @@ function buildDryRunReport(operation: 'atomize' | 'infect', request: DryRunPlanR
         subcontract: 'import-rewrite',
       },
       {
+        stage: 'shim',
+        description: `propose host shim strategy ${shimPlan.strategy} at ${entrypoint}`,
+        filePath: entrypoint,
+        subcontract: 'shim',
+      },
+      {
         stage: 'rollback',
         description: 'prepare rollback proof and no-mutation evidence',
         subcontract: 'rollback',
@@ -140,6 +179,7 @@ function buildDryRunReport(operation: 'atomize' | 'infect', request: DryRunPlanR
         'csharp-source-inventory',
         'csharp-risk-model',
         'csharp-dry-run-proposal',
+        'csharp-host-shim-plan',
       ],
       proposalArtifacts: buildDefaultArtifacts(operation),
       reviewGate: buildReviewGate(operation, riskReport.hasBlockingRisk),
@@ -150,6 +190,7 @@ function buildDryRunReport(operation: 'atomize' | 'infect', request: DryRunPlanR
         toImport: operation === 'infect' ? rewriteCandidate.toImport.replace('Atoms.', 'Infected.Atoms.') : rewriteCandidate.toImport,
         rationale: 'advisory rewrite for dry-run planning only',
       },
+      shim: shimPlan,
       rollback: buildRollback(operation, files),
       mutates: [],
     },

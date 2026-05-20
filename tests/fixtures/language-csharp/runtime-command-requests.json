@@ -1,0 +1,10 @@
+{
+  "safe": {
+    "repositoryRoot": "tests/fixtures/language-csharp/sample-project",
+    "includeRisky": false
+  },
+  "risky": {
+    "repositoryRoot": "tests/fixtures/language-csharp/sample-project",
+    "includeRisky": true
+  }
+}

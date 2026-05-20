@@ -2,13 +2,23 @@
   "cases": [
     {
       "fixtureId": "csharp-equivalence-happy-path",
-      "expectedBehavior": "inventory diagnostics dry-run partial risk runtime map",
+      "expectedBehavior": "inventory diagnostics dry-run partial risk runtime map advisory gate",
       "accepted": true
     },
     {
       "fixtureId": "csharp-equivalence-missing-map",
       "expectedBehavior": "inventory dry-run diagnostics",
       "accepted": false
+    },
+    {
+      "fixtureId": "csharp-equivalence-exec-risk",
+      "expectedBehavior": "inventory diagnostics dry-run execute apply",
+      "accepted": false
+    },
+    {
+      "fixtureId": "csharp-equivalence-minimal-advisory",
+      "expectedBehavior": "inventory dry-run runtime review gate",
+      "accepted": true
     }
   ]
 }

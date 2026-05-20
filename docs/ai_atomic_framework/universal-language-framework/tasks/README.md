@@ -8,7 +8,7 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
-last_updated: 2026-05-20T23:05:14+08:00
+last_updated: 2026-05-20T23:29:50+08:00
 ---
 
 # ATM 通用語言框架 Task Cards
@@ -109,6 +109,11 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0401 | C# source inventory full promotion | ATM-MAP-LANG-CSHARP-0401 | done | CSHARP-0400 | 0006, 0010 |
 | ATM-LANG-CSHARP-0402 | C# dependency and artifact graph full promotion | ATM-MAP-LANG-CSHARP-0402 | done | CSHARP-0401 | 0006, 0008, 0010 |
 | ATM-LANG-CSHARP-0403 | C# validator and readiness baseline hardening | ATM-MAP-LANG-CSHARP-0403 | done | CSHARP-0402 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0500 | C# runtime command detection full promotion | ATM-MAP-LANG-CSHARP-0500 | done | CSHARP-0403 | 0006, 0010 |
+| ATM-LANG-CSHARP-0501 | C# diagnostics parsing full promotion | ATM-MAP-LANG-CSHARP-0501 | done | CSHARP-0500 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0502 | C# dry-run planner full promotion | ATM-MAP-LANG-CSHARP-0502 | done | CSHARP-0501 | 0007, 0009, 0010 |
+| ATM-LANG-CSHARP-0503 | C# equivalence contract full promotion | ATM-MAP-LANG-CSHARP-0503 | done | CSHARP-0502 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0504 | C# validator and capability full-baseline hardening | ATM-MAP-LANG-CSHARP-0504 | done | CSHARP-0503 | 0006, 0009, 0010 |
 
 ## 維護規則
 
