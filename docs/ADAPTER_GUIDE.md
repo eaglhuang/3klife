@@ -208,3 +208,18 @@ Recommended default source order:
 2. `external`
 
 This default can be overridden by host policy when a host needs to prioritize a vetted external adapter.
+
+## 12. Language Adapter Author Entry Point
+
+For programming-language adapters, use the English companion guide:
+
+- `docs/ai_atomic_framework/universal-language-framework/universal-language-framework-plan.md`
+
+That guide is the public author-facing entry point for `LanguageAdapter v2`. It explains:
+
+1. how to classify support as official, advisory, or future;
+2. how to declare SDK capability levels as `full`, `partial`, or `none`;
+3. how a future Go adapter should structure `scanSourceInventory`, dry-run planning, diagnostics, and atomic map decomposition;
+4. why validators and CLI commands must stay thin facades over package logic.
+
+The Go material in that companion is advisory documentation, not an official bundled Go adapter package.

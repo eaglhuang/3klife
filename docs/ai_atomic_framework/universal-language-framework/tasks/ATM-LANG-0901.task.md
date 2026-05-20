@@ -4,7 +4,10 @@ task_id: ATM-LANG-0901
 title: English guide: complete Go adapter code example
 atomic_map: ATM-MAP-LANG-0900
 milestone: M6
-status: open
+status: done
+started_at: 2026-05-20T16:19:58+08:00
+started_by_agent: codex-gpt-5
+completed_at: 2026-05-20T16:23:48+08:00
 owner: atm-core
 priority: P1
 type: docs
@@ -34,7 +37,7 @@ non_goals:
   - 不繞過主計畫書 §5.1 的 Atomic Maps table registry。
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
-notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: 由 ATM 通用語言框架計畫書開立 | 阻塞: none"
+notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide（PASS） | 變更: Go adapter TypeScript example 對齊現行 LanguageAdapterV2 與 SDK report shapes | 阻塞: none"
 ---
 
 # ATM-LANG-0901 English guide: complete Go adapter code example
@@ -56,17 +59,17 @@ notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: 由 ATM 通用語�
 
 ## Outputs
 
-- [ ] complete TypeScript Go adapter example
-- [ ] capabilities example
-- [ ] runtime/diagnostics/dry-run examples
+- [x] complete TypeScript Go adapter example
+- [x] capabilities example
+- [x] runtime/diagnostics/dry-run examples
 
 ## Acceptance Criteria
 
-- [ ] owned surface 與主計畫書、tasks/README.md 完全一致。
-- [ ] 相關 Atomic Maps table 已更新，或在 Notes 明確標記本卡不需更新表格。
-- [ ] 若有程式或 schema 變更，核心邏輯落在 package module / atomized implementation，不落在 CLI/script facade。
-- [ ] 若有 public-facing 文件變更，文件仍維持 ATM framework 中立，不引用採用者私有語意。
-- [ ] 完成前 Notes 寫入實際 validation command 與結果。
+- [x] owned surface 與主計畫書、tasks/README.md 完全一致。
+- [x] 相關 Atomic Maps table 已更新，或在 Notes 明確標記本卡不需更新表格。
+- [x] 若有程式或 schema 變更，核心邏輯落在 package module / atomized implementation，不落在 CLI/script facade。
+- [x] 若有 public-facing 文件變更，文件仍維持 ATM framework 中立，不引用採用者私有語意。
+- [x] 完成前 Notes 寫入實際 validation command 與結果。
 
 ## Target Files / Surfaces
 
@@ -90,12 +93,14 @@ npm run validate:guide
 
 ## Checklist
 
-- [ ] Scope confirmed against master plan.
-- [ ] Atomic table impact checked.
-- [ ] Implementation or document update completed.
-- [ ] Validation command executed.
-- [ ] Notes updated with validation evidence.
+- [x] Scope confirmed against master plan.
+- [x] Atomic table impact checked.
+- [x] Implementation or document update completed.
+- [x] Validation command executed.
+- [x] Notes updated with validation evidence.
 
 ## Notes
 
 2026-05-20 | 狀態: open | 驗證: pending | 變更: opened full task card for ATM-MAP-LANG-0900 delivery | 阻塞: none
+2026-05-20 | 狀態: in-progress | 驗證: pending | 變更: lock card and start complete Go adapter example | 阻塞: none
+2026-05-20 | 狀態: done | 驗證: npm run validate:guide（PASS） | 變更: complete Go adapter example、capabilities、runtime/diagnostics/dry-run 範例完成 | 阻塞: none
