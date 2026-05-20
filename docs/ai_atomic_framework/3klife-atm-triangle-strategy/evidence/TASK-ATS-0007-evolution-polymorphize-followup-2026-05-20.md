@@ -1,7 +1,7 @@
 # TASK-ATS-0007 Evidence: Evolution and Polymorphize Follow-up
 
 Date: 2026-05-20
-Status: in_progress
+Status: completed
 
 ## Polymorphize Evidence
 
@@ -60,7 +60,7 @@ A custom proposal id was used so this second governed leaf would not overwrite t
 
 ## Remaining Scope
 
-TASK-ATS-0007 stays open. Polymorphize evidence now exists and passes, but real evolve proof is still blocked until the adopter registry carries atom-level version lineage that can produce a machine-generated hash diff for `ATM-NPCBRAIN-0002`.
+This was the correct blocker at the time it was captured. It has since been resolved by adding adopter atom-level version lineage and re-running registry diff.
 ## Human Review Decision
 
 The second governed leaf inside `ATM-MAP-0001` was formally approved for actual patch planning through ATM human review.
@@ -115,3 +115,28 @@ Root-cause fix that unlocked this gate:
 Leaf decision update:
 
 - apply_convergence_loop_state_governance is now marked rollout closeout complete under TASK-ATS-0007.
+
+## Map-level Registry Diff Closeout (2026-05-20)
+
+The map-level evolve blocker is now resolved.
+
+Artifact:
+
+- `.atm/history/reports/registry-diff.ATM-NPCBRAIN-0002.0.1.0-to-0.1.1.json`
+
+Observed result:
+
+- `ok = true`
+- `lineageContinuity = true`
+- `sourceKind = member-version-lineage`
+- `sourceRef = atomic_workbench/maps/ATM-MAP-0001/lineage-log.json`
+- changed field: `codeHash`
+- unchanged fields: `specHash`, `testHash`
+
+Supporting closeout evidence:
+
+- `.atm/history/evidence/TASK-ATS-0007.json`
+
+Closeout interpretation:
+
+`TASK-ATS-0007` can close. The original evolve blocker `ATM_DIFF_ATOM_NOT_FOUND` was a real and useful signal; after adopter atom lineage was present, the same route produced a deterministic registry diff with continuity intact.

@@ -40,13 +40,13 @@ created_by_agent: codex
 
 ## 驗收條件
 
-- [ ] 選定一個高價值大型 Python feature target，並留下為何不選小 helper 的治理理由
-- [ ] 產出 feature decomposition plan，而不是只有 leaf extraction plan
-- [ ] `create-map --from-plan` 或等價官方 surface 能對該 decomposition dry-run 建立 canonical Atomic Map proposal
-- [ ] map proposal 具備成員角色、入口點、邊關係、replaceable contract 與 rollback boundary
-- [ ] 至少一份 map integration evidence 產出
-- [ ] 至少一份 map equivalence / review-advisory 類 evidence 產出
-- [ ] 最終結果可回答「這個大功能被拆成哪些 atoms，為什麼這樣分，而不是零散 helper」
+- [x] 選定一個高價值大型 Python feature target，並留下為何不選小 helper 的治理理由
+- [x] 產出 feature decomposition plan，而不是只有 leaf extraction plan
+- [x] `create-map --from-plan` 或等價官方 surface 能對該 decomposition dry-run 建立 canonical Atomic Map proposal
+- [x] map proposal 具備成員角色、入口點、邊關係、replaceable contract 與 rollback boundary
+- [x] 至少一份 map integration evidence 產出
+- [x] 至少一份 map equivalence / review-advisory 類 evidence 產出
+- [x] 最終結果可回答「這個大功能被拆成哪些 atoms，為什麼這樣分，而不是零散 helper」
 
 ## 交付物
 

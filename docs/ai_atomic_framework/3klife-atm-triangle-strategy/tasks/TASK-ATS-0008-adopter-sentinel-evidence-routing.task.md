@@ -4,7 +4,7 @@ task_id: TASK-ATS-0008
 title: Adopter sentinel integration and evidence routing
 owner: atm-core
 priority: P1
-status: open
+status: in_progress
 milestone: M7
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: TASK-ATS-0007
@@ -47,3 +47,4 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+2026-05-20 | 狀態: in_progress | 驗證: TASK-ATS-0007 completed | 變更: `ATM-MAP-0001` map-level closeout 已完成，下一步改由本卡接手 evidence routing，將 adopter reports 分成 upstream-blocker、adopter-local、host-governance-overlap 三類。 | 阻塞: none

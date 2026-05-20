@@ -4,7 +4,7 @@ task_id: TASK-ATS-0003
 title: npc-brain official ATM onboarding smoke
 owner: atm-core
 priority: P0
-status: in_progress
+status: completed
 milestone: M2
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: TASK-ATS-0002
@@ -24,12 +24,12 @@ created_by_agent: codex
 
 ## 驗收條件
 
-- [ ] 不引用 3KLife local fork 或私有 patch。
-- [ ] 既有 repo 的第一步是 official install/adopt route，不要求使用者手動複製 `atm.mjs` 或 release artifact。
-- [ ] adopt 完成後，README / AGENTS 單一入口可導向 `node atm.mjs next --json`。
-- [ ] 初始化、verify 與 evidence output 走 official CLI 或 official package。
-- [ ] 失敗時產生 machine-readable blocker report。
-- [ ] 所有人工步驟都有 transcript。
+- [x] 不引用 3KLife local fork 或私有 patch。
+- [x] 既有 repo 的第一步是 official install/adopt route，不要求使用者手動複製 `atm.mjs` 或 release artifact。
+- [x] adopt 完成後，README / AGENTS 單一入口可導向 `node atm.mjs next --json`。
+- [x] 初始化、verify 與 evidence output 走 official CLI 或 official package。
+- [x] 失敗時產生 machine-readable blocker report。
+- [x] 所有人工步驟都有 transcript。
 
 ## 產出
 
@@ -82,3 +82,9 @@ created_by_agent: codex
 - `node atm.mjs next --json` 已驗證會回傳 top-level `ATM_USER_NOTICE` message 與 `evidence.userNotice.mustShowBeforeAction = true`。
 
 下一步：開全新 Codex 對話，只下自然語言需求，不提示 ATM，確認 Agent 是否會先自然轉述 ATM welcome/user notice，執行 `node atm.mjs next --json` 回傳的 onboarding route，然後回到原始需求。
+
+## Closeout - 2026-05-20
+
+狀態：completed。
+
+本卡由後續跨編輯器黑箱驗收補足：Copilot、Codex、Claude Code、Google Antigravity 均能在自然語句下進入 ATM entry route，並回到使用者原始資料管線需求。TASK-ATS-0004 已完成，因此本卡不再維持 partial 狀態。

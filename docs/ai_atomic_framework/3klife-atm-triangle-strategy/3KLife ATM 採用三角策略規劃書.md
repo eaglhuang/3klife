@@ -391,3 +391,37 @@ Read README.md if present, then run "node atm.mjs next --json" from the reposito
 
 因此，後續若要開始第一支「受治理的大改 pilot」，應以 `ATM-MAP-0001` 為邊界，而不是直接粗暴重寫整支 `run_full_roster_convergence_loop.py`。
 <!-- TASK-ATS-0005-0007-2026-05-19-PROGRESSION:END -->
+
+<!-- TASK-ATS-0007-2026-05-20-CLOSEOUT:START -->
+## 5.4 2026-05-20 TASK-ATS-0007 結案與 TASK-ATS-0008 交接
+
+### 結論
+
+`TASK-ATS-0007` 已完成。`ATM-MAP-0001` 不只完成 canonical map 建立與 first governed leaf rollout-ready，還完成 map-level evolve proof 的最後缺口：`ATM-NPCBRAIN-0002` 已能從 `0.1.0 -> 0.1.1` 產出 deterministic registry diff。
+
+這代表三角策略已經從「AI 會不會進 ATM」推進到「真實 Python 大功能能否被拆成 Atomic Map，並以 evidence 驗證 rollout / evolve」的階段。
+
+### 完成證據
+
+- Map: `ATM-MAP-0001`
+- Adopter atom: `ATM-NPCBRAIN-0002`
+- Registry diff report: `.atm/history/reports/registry-diff.ATM-NPCBRAIN-0002.0.1.0-to-0.1.1.json`
+- Closeout evidence: `.atm/history/evidence/TASK-ATS-0007.json`
+- Result: `ok=true`, `lineageContinuity=true`, only `codeHash` drift
+- Supporting evidence:
+  - `atomic_workbench/maps/ATM-MAP-0001/lineage-log.json`
+  - `atomic_workbench/maps/ATM-MAP-0001/map.equivalence.report.json`
+  - `.atm/history/reports/propagation-report.ATM-NPCBRAIN-0002.json`
+  - `.atm/history/reports/review-advisory.ATM-MAP-0001-pilot.json`
+  - `.atm/history/reports/human-review.guided-legacy-atomize-guidance-20260519151625-f417f5a6f2.json`
+
+### 下一步
+
+`TASK-ATS-0008` 轉為 `in_progress`。下一步不是再大改 Python，而是先建立 evidence routing：
+
+1. `upstream-blocker`：應回流 AI-Atomic-Framework 的框架缺口，例如 onefile、router、lineage automation。
+2. `adopter-local`：只屬於 npc-brain 的資料管線風險與 fixture。
+3. `host-governance-overlap`：3KLife 作為母專案需要保存的策略、決策與驗收紀錄。
+
+完成 0008 後，三角策略才適合把更多 governed pilot 推進到可持續開發節奏。
+<!-- TASK-ATS-0007-2026-05-20-CLOSEOUT:END -->
