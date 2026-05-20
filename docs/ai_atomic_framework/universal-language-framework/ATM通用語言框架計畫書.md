@@ -446,14 +446,18 @@ npm run validate:language-js
 npm run validate:guidance
 npm run validate:guide
 npm run validate:neutrality
+npm run validate:full
 ```
 
 ### 11.3 新增專用驗證
 
-- roadmap no-shrink / traceability validator。
-- atom / map coverage validator。
-- script facade boundary validator。
-- docs neutrality and bilingual positioning validator。
+| Validator | Tables Checked | Failure Mode | Command |
+| --- | --- | --- | --- |
+| `scripts/roadmap-traceability-check.ts` | `ATM-LANG-TABLE-0002`, `ATM-LANG-TABLE-0003`, `ATM-LANG-TABLE-0004` | 任務數縮水、原始需求覆蓋遺失、舊主題吸收不足 | `node scripts/roadmap-traceability-check.ts --mode validate` |
+| `scripts/atom-map-coverage-check.ts` | `ATM-LANG-TABLE-0002`, `ATM-LANG-TABLE-0005`, all registered table IDs | task card / README / plan map 不一致，或引用未登記 table | `node scripts/atom-map-coverage-check.ts --mode validate` |
+| `scripts/script-facade-boundary.ts` | `ATM-LANG-TABLE-0009` | CLI / script 持有核心語言解析邏輯，沒有走 package / atomized implementation | `node scripts/script-facade-boundary.ts --mode validate` |
+| `scripts/validate-neutrality.ts` | `ATM-LANG-TABLE-0009`, `ATM-LANG-TABLE-0010` | 文件誤宣稱 future language 為 official，或把 adopter 私有語意寫進 public contract | `npm run validate:neutrality` |
+| `scripts/validate-full.ts` | `ATM-LANG-TABLE-0006`, `ATM-LANG-TABLE-0007`, `ATM-LANG-TABLE-0009` | type/schema/guidance/adapter/validator 任一橫向 regression 失敗 | `npm run validate:full` |
 
 ## 12. Assumptions
 

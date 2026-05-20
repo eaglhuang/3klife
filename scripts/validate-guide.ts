@@ -38,6 +38,7 @@ const CHAINED_VALIDATORS = [
   'scripts/roadmap-traceability-check.ts',
   'scripts/atom-map-coverage-check.ts',
   'scripts/script-facade-boundary.ts',
+  'scripts/validate-neutrality.ts',
 ];
 
 function ensure(condition, message, failures) {
@@ -120,4 +121,3 @@ function main() {
 }
 
 main();
-

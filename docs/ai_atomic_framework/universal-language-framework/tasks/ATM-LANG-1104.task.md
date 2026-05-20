@@ -4,7 +4,10 @@ task_id: ATM-LANG-1104
 title: Docs neutrality and bilingual positioning validator
 atomic_map: ATM-MAP-LANG-1100
 milestone: M7
-status: open
+status: done
+started_at: 2026-05-20T16:48:12.4013667+08:00
+started_by_agent: codex-gpt-5
+completed_at: 2026-05-20T16:51:48.7593831+08:00
 owner: atm-core
 priority: P1
 type: validation
@@ -22,6 +25,7 @@ atomic_tables:
 depends:
   - ATM-LANG-0903
 allowed_files:
+  - package.json
   - scripts/**
   - docs/ai_atomic_framework/universal-language-framework/**
   - tests/**
@@ -37,7 +41,7 @@ non_goals:
   - 不繞過主計畫書 §5.1 的 Atomic Maps table registry。
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
-notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: 由 ATM 通用語言框架計畫書開立 | 阻塞: none"
+notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:neutrality（PASS）, npm run validate:guide（PASS）, npm run check:encoding:touched（PASS） | 變更: 新增 docs neutrality/bilingual positioning validator 與 npm script | 阻塞: none"
 ---
 
 # ATM-LANG-1104 Docs neutrality and bilingual positioning validator
@@ -59,23 +63,24 @@ notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: 由 ATM 通用語�
 
 ## Outputs
 
-- [ ] neutrality scanner coverage
-- [ ] bilingual positioning checks
-- [ ] English guide canonical role validation
+- [x] neutrality scanner coverage
+- [x] bilingual positioning checks
+- [x] English guide canonical role validation
 
 ## Acceptance Criteria
 
-- [ ] owned surface 與主計畫書、tasks/README.md 完全一致。
-- [ ] 相關 Atomic Maps table 已更新，或在 Notes 明確標記本卡不需更新表格。
-- [ ] 若有程式或 schema 變更，核心邏輯落在 package module / atomized implementation，不落在 CLI/script facade。
-- [ ] 若有 public-facing 文件變更，文件仍維持 ATM framework 中立，不引用採用者私有語意。
-- [ ] 完成前 Notes 寫入實際 validation command 與結果。
+- [x] owned surface 與主計畫書、tasks/README.md 完全一致。
+- [x] 相關 Atomic Maps table 已更新，或在 Notes 明確標記本卡不需更新表格。
+- [x] 若有程式或 schema 變更，核心邏輯落在 package module / atomized implementation，不落在 CLI/script facade。
+- [x] 若有 public-facing 文件變更，文件仍維持 ATM framework 中立，不引用採用者私有語意。
+- [x] 完成前 Notes 寫入實際 validation command 與結果。
 
 ## Target Files / Surfaces
 
 - scripts/**
 - docs/ai_atomic_framework/universal-language-framework/**
 - tests/**
+- package.json
 
 ## Atomic Maps Tables
 
@@ -96,12 +101,14 @@ npm run validate:neutrality
 
 ## Checklist
 
-- [ ] Scope confirmed against master plan.
-- [ ] Atomic table impact checked.
-- [ ] Implementation or document update completed.
-- [ ] Validation command executed.
-- [ ] Notes updated with validation evidence.
+- [x] Scope confirmed against master plan.
+- [x] Atomic table impact checked.
+- [x] Implementation or document update completed.
+- [x] Validation command executed.
+- [x] Notes updated with validation evidence.
 
 ## Notes
 
+2026-05-20 | 狀態: done | 驗證: npm run validate:neutrality（PASS）, npm run validate:guide（PASS）, npm run check:encoding:touched（PASS） | 變更: docs neutrality scanner、official/advisory/future/RFC positioning、English canonical role checks 完成 | 阻塞: none
+2026-05-20 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-5 接手 docs neutrality validator | 阻塞: none
 2026-05-20 | 狀態: open | 驗證: pending | 變更: opened full task card for ATM-MAP-LANG-1100 delivery | 阻塞: none

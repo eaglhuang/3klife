@@ -75,6 +75,8 @@
     "validate:language-js": "node scripts/validate-language-js.ts --mode validate",
     "validate:map-curator": "node scripts/validate-map-curator.ts --mode validate",
     "validate:guide": "node scripts/validate-guide.ts --mode validate",
+    "validate:neutrality": "node scripts/validate-neutrality.ts --mode validate",
+    "validate:full": "node scripts/validate-full.ts --mode validate",
     "atm:flow": "node tools_node/atm-flow.js",
     "atm:flow:dev": "node tools_node/atm-flow.js --mode dev",
     "atm:flow:pr": "node tools_node/atm-flow.js --mode pr --from-mode dev",

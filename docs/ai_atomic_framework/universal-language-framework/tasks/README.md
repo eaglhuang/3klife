@@ -57,9 +57,9 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-0702 | Python CLI/API/side-effect surface detection | ATM-MAP-LANG-0700 | done | 0701 |
 | ATM-LANG-0703 | Python precise atomize/infect dry-run | ATM-MAP-LANG-0700 | done | 0502 |
 | ATM-LANG-0704 | Python equivalence fixtures and diagnostics | ATM-MAP-LANG-0700 | done | 0703 |
-| ATM-LANG-0800 | JS/TS v2 capability alignment | ATM-MAP-LANG-0800 | open | 0102 |
-| ATM-LANG-0801 | JS/TS inventory and route planning | ATM-MAP-LANG-0800 | open | 0800 |
-| ATM-LANG-0802 | JS/TS dry-run and validator expansion | ATM-MAP-LANG-0800 | open | 0801 |
+| ATM-LANG-0800 | JS/TS v2 capability alignment | ATM-MAP-LANG-0800 | done | 0102 |
+| ATM-LANG-0801 | JS/TS inventory and route planning | ATM-MAP-LANG-0800 | done | 0800 |
+| ATM-LANG-0802 | JS/TS dry-run and validator expansion | ATM-MAP-LANG-0800 | done | 0801 |
 | ATM-LANG-0900 | English guide: adding a new language adapter | ATM-MAP-LANG-0900 | done | 0102 |
 | ATM-LANG-0901 | English guide: complete Go adapter code example | ATM-MAP-LANG-0900 | done | 0900 |
 | ATM-LANG-0902 | English guide: Go atom/map development example | ATM-MAP-LANG-0900 | done | 0901 |
@@ -67,8 +67,8 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-1000 | Java/C#/Go adapter feasibility notes | ATM-MAP-LANG-1000 | done | 0903 |
 | ATM-LANG-1001 | PHP dynamic include RFC | ATM-MAP-LANG-1000 | done | 1000 |
 | ATM-LANG-1002 | Future adapter conformance checklist | ATM-MAP-LANG-1000 | done | 1001 |
-| ATM-LANG-1100 | Cross-map validator suite | ATM-MAP-LANG-1100 | open | 0802 |
-| ATM-LANG-1104 | Docs neutrality and bilingual positioning validator | ATM-MAP-LANG-1100 | open | 0903 |
+| ATM-LANG-1100 | Cross-map validator suite | ATM-MAP-LANG-1100 | done | 0802 |
+| ATM-LANG-1104 | Docs neutrality and bilingual positioning validator | ATM-MAP-LANG-1100 | done | 0903 |
 
 ## 維護規則
 
