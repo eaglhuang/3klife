@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {
+      "fixtureId": "csharp-equivalence-happy-path",
+      "expectedBehavior": "inventory diagnostics dry-run partial risk runtime map",
+      "accepted": true
+    },
+    {
+      "fixtureId": "csharp-equivalence-missing-map",
+      "expectedBehavior": "inventory dry-run diagnostics",
+      "accepted": false
+    }
+  ]
+}

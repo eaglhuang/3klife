@@ -17,7 +17,7 @@ function mapSeverity(value: string): 'info' | 'warning' | 'error' {
 
 function parseProjectStyleDiagnostic(line: string): DiagnosticEntry | null {
   const match = line.match(
-    /^(.+?)\((\d+),(\d+)\):\s*(error|warning|info)\s+([A-Za-z]{2,4}\d+)\s*:\s*(.+?)(?:\s+\[[^\]]+\])?$/
+    /^(.+?)\((\d+),(\d+)\):\s*(error|warning|info)\s+([A-Za-z]{2,5}\d+)\s*:\s*(.+?)(?:\s+\[[^\]]+\])?$/
   );
   if (!match) {
     return null;
@@ -39,7 +39,7 @@ function parseProjectStyleDiagnostic(line: string): DiagnosticEntry | null {
 
 function parseMsbuildStyleDiagnostic(line: string): DiagnosticEntry | null {
   const match = line.match(
-    /^(.+?)\((\d+),(\d+)\):\s*(error|warning|info)\s+([A-Za-z]{2,4}\d+)\s*:\s*(.+)$/
+    /^(.+?)\((\d+),(\d+)\):\s*(error|warning|info)\s+([A-Za-z]{2,5}\d+)\s*:\s*(.+)$/
   );
   if (!match) {
     return null;
@@ -59,22 +59,53 @@ function parseMsbuildStyleDiagnostic(line: string): DiagnosticEntry | null {
   };
 }
 
+function parseShortDiagnostic(line: string): DiagnosticEntry | null {
+  const match = line.match(/^(.+?):\s*(error|warning|info)\s+([A-Za-z]{2,5}\d+)\s*:\s*(.+)$/);
+  if (!match) {
+    return null;
+  }
+  const [, source, severity, code, message] = match;
+  return {
+    severity: mapSeverity(severity),
+    code,
+    message: `${source}: ${message}`.trim(),
+  };
+}
+
+function appendContinuation(entry: DiagnosticEntry, continuation: string): DiagnosticEntry {
+  return {
+    ...entry,
+    message: `${entry.message} ${continuation}`.trim(),
+  };
+}
+
 export function parseCSharpDiagnostics(request: DiagnosticsParseRequest): DiagnosticsReport {
   const diagnostics: DiagnosticEntry[] = [];
   const lines = request.rawDiagnostics.replace(/\r\n/g, '\n').split('\n');
   for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line) {
+    const line = rawLine.replace(/\r$/, '');
+    const trimmed = line.trim();
+    if (!trimmed) {
       continue;
     }
-    const parsed = parseProjectStyleDiagnostic(line) ?? parseMsbuildStyleDiagnostic(line);
+    const parsed =
+      parseProjectStyleDiagnostic(trimmed) ??
+      parseMsbuildStyleDiagnostic(trimmed) ??
+      parseShortDiagnostic(trimmed);
     if (parsed) {
       diagnostics.push(parsed);
       continue;
     }
+    if (/^\s+/.test(line) && diagnostics.length > 0) {
+      diagnostics[diagnostics.length - 1] = appendContinuation(
+        diagnostics[diagnostics.length - 1],
+        trimmed
+      );
+      continue;
+    }
     diagnostics.push({
       severity: 'info',
-      message: line,
+      message: trimmed,
     });
   }
   return { diagnostics };

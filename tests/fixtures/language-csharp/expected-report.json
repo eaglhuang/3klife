@@ -4,13 +4,17 @@
     "src/Core/Service.cs",
     "src/Generated/Designer.Designer.cs",
     "src/Generated/FileBridge.g.cs",
+    "src/GlobalUsings.cs",
+    "src/Models/ApiResult.cs",
     "src/Program.cs",
-    "src/Program.Partial.cs"
+    "src/Program.Partial.cs",
+    "src/TopLevelRunner.cs"
   ],
   "requiredSymbolKinds": [
     "namespace",
     "class",
     "interface",
+    "record",
     "struct",
     "enum",
     "method",
@@ -32,6 +36,16 @@
       "from": "src/Core/Service.cs",
       "to": "module:System.IO",
       "relation": "imports"
+    },
+    {
+      "from": "src/GlobalUsings.cs",
+      "to": "module:System.Collections.Generic",
+      "relation": "imports-global"
+    },
+    {
+      "from": "src/TopLevelRunner.cs",
+      "to": "module:MyApp.Models",
+      "relation": "imports"
     }
   ],
   "requiredCallEdges": [
@@ -43,6 +57,11 @@
     {
       "from": "src/Program.cs",
       "to": "symbol:FileBridge.WriteOutput",
+      "relation": "calls"
+    },
+    {
+      "from": "src/TopLevelRunner.cs",
+      "to": "symbol:Console.WriteLine",
       "relation": "calls"
     }
   ],
@@ -57,5 +76,8 @@
       "to": "artifact:artifacts/generated-output.txt",
       "relation": "writes"
     }
+  ],
+  "requiredPartialTypeKeys": [
+    "class:myapp.app.program"
   ]
 }

@@ -337,3 +337,9 @@
 | `doc_other_0948` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0005.task.md | ATM-LANG-CSHARP-0005 - diagnostics parser fixture |
 | `doc_other_0949` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0006.task.md | ATM-LANG-CSHARP-0006 - dry-run planner |
 | `doc_other_0950` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0007.task.md | ATM-LANG-CSHARP-0007 - validate-language-csharp validator |
+| `doc_other_0951` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0101.task.md | ATM-LANG-CSHARP-0101 - C# fixture expansion for modern syntax surface |
+| `doc_other_0952` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0102.task.md | ATM-LANG-CSHARP-0102 - C# partial declaration merge index |
+| `doc_other_0953` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0103.task.md | ATM-LANG-CSHARP-0103 - C# diagnostics parser multi-format hardening |
+| `doc_other_0954` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0104.task.md | ATM-LANG-CSHARP-0104 - C# advisory runtime command detection |
+| `doc_other_0955` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0105.task.md | ATM-LANG-CSHARP-0105 - C# atomic map decomposition implementation |
+| `doc_other_0956` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0106.task.md | ATM-LANG-CSHARP-0106 - C# equivalence contract fixture implementation |

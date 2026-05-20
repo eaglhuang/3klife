@@ -1,3 +1,7 @@
 src/Program.cs(14,13): error CS0103: The name 'UnknownSymbol' does not exist in the current context [src/MyApp.csproj]
 src/Core/Service.cs(19,17): warning CS8618: Non-nullable property 'LastMessage' must contain a non-null value when exiting constructor. [src/MyApp.csproj]
 C:\Program Files\dotnet\sdk\8.0.100\Microsoft.Common.CurrentVersion.targets(5,5): error MSB1003: Specify a project or solution file.
+src/Models/ApiResult.cs(4,15): warning CA1822: Member 'ApiResult' does not access instance data and can be marked as static. [src/MyApp.csproj]
+warning CS8032: An instance of analyzer SomeAnalyzer cannot be created
+src/TopLevelRunner.cs(3,1): error CS0168: The variable 'unused' is declared but never used
+  Additional context: this warning was promoted by TreatWarningsAsErrors.

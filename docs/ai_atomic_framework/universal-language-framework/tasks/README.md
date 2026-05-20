@@ -83,6 +83,12 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0005 | diagnostics parser fixture | ATM-MAP-LANG-CSHARP-0005 | done | CSHARP-0004 | 0006, 0009, 0010 |
 | ATM-LANG-CSHARP-0006 | dry-run planner | ATM-MAP-LANG-CSHARP-0006 | done | CSHARP-0005 | 0007, 0010 |
 | ATM-LANG-CSHARP-0007 | validate-language-csharp validator | ATM-MAP-LANG-CSHARP-0007 | done | CSHARP-0006 | 0006, 0007, 0009, 0010 |
+| ATM-LANG-CSHARP-0101 | C# fixture expansion for modern syntax surface | ATM-MAP-LANG-CSHARP-0101 | done | CSHARP-0007 | 0006, 0010 |
+| ATM-LANG-CSHARP-0102 | C# partial declaration merge index | ATM-MAP-LANG-CSHARP-0102 | done | CSHARP-0101 | 0006, 0010 |
+| ATM-LANG-CSHARP-0103 | C# diagnostics parser multi-format hardening | ATM-MAP-LANG-CSHARP-0103 | done | CSHARP-0102 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0104 | C# advisory runtime command detection | ATM-MAP-LANG-CSHARP-0104 | done | CSHARP-0103 | 0006, 0010 |
+| ATM-LANG-CSHARP-0105 | C# atomic map decomposition implementation | ATM-MAP-LANG-CSHARP-0105 | done | CSHARP-0104 | 0008, 0009, 0010 |
+| ATM-LANG-CSHARP-0106 | C# equivalence contract fixture implementation | ATM-MAP-LANG-CSHARP-0106 | done | CSHARP-0105 | 0006, 0007, 0009, 0010 |
 
 ## 維護規則
 

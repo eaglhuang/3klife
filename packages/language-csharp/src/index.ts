@@ -4,3 +4,6 @@ export * from './csharp-inventory';
 export * from './csharp-risk-model';
 export * from './csharp-diagnostics';
 export * from './csharp-dry-run';
+export * from './csharp-runtime';
+export * from './csharp-map';
+export * from './csharp-equivalence';

@@ -1,13 +1,19 @@
 import type {
+  AtomicMapDecompositionRequest,
+  EquivalenceContractRequest,
   LanguageAdapterReport,
   LanguageAdapterV2,
   NormalizedSymbolId,
+  RuntimeCommandRequest,
   SourceInventoryRequest,
 } from '../../../plugin-sdk/src/language-adapter';
 import { detectCSharpProjectProfile } from './csharp-profile';
 import { scanCSharpSourceInventory } from './csharp-inventory';
 import { parseCSharpDiagnostics } from './csharp-diagnostics';
 import { planCSharpAtomizeDryRun, planCSharpInfectDryRun } from './csharp-dry-run';
+import { detectCSharpRuntimeCommands } from './csharp-runtime';
+import { buildCSharpAtomicMapDecomposition } from './csharp-map';
+import { computeCSharpEquivalenceContract } from './csharp-equivalence';
 
 function normalizeCSharpSymbolId(rawSymbolId: string, filePath: string | undefined): NormalizedSymbolId {
   const normalizedSource = rawSymbolId.replace(/::/g, '.').replace(/\s+/g, '');
@@ -45,6 +51,22 @@ async function scanSourceInventory(request: SourceInventoryRequest) {
   return scanCSharpSourceInventory(request);
 }
 
+async function detectRuntimeCommands(request: RuntimeCommandRequest) {
+  return detectCSharpRuntimeCommands(request);
+}
+
+async function buildAtomicMapDecomposition(request: AtomicMapDecompositionRequest) {
+  return buildCSharpAtomicMapDecomposition(request);
+}
+
+function computeEquivalenceContract(request: EquivalenceContractRequest) {
+  return computeCSharpEquivalenceContract(request);
+}
+
+export function createCSharpLanguageAdapter(): LanguageAdapterV2 {
+  return csharpLanguageAdapterV2;
+}
+
 export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
   adapterId: 'csharp-future',
   languageId: 'csharp',
@@ -55,10 +77,10 @@ export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
     legacyRoutePlanning: 'none',
     atomizeDryRun: 'partial',
     infectDryRun: 'partial',
-    runtimeCommandDetection: 'none',
+    runtimeCommandDetection: 'partial',
     diagnosticsParsing: 'partial',
-    equivalenceContract: 'none',
-    atomicMapDecomposition: 'none',
+    equivalenceContract: 'partial',
+    atomicMapDecomposition: 'partial',
     dependencyGraph: 'partial',
     callGraph: 'partial',
     artifactGraph: 'partial',
@@ -78,10 +100,19 @@ export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
   parseDiagnostics(request) {
     return parseCSharpDiagnostics(request);
   },
+  detectRuntimeCommands(request) {
+    return detectRuntimeCommands(request);
+  },
   planAtomizeDryRun(request) {
     return planCSharpAtomizeDryRun(request);
   },
   planInfectDryRun(request) {
     return planCSharpInfectDryRun(request);
+  },
+  buildAtomicMapDecomposition(request) {
+    return buildAtomicMapDecomposition(request);
+  },
+  computeEquivalenceContract(request) {
+    return computeEquivalenceContract(request);
   },
 };

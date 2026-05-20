@@ -9,7 +9,14 @@ import type {
   SymbolRef,
 } from '../../../plugin-sdk/src/language-adapter';
 
-const CSHARP_EXCLUDE_DEFAULT = ['**/.git/**', '**/node_modules/**', '**/obj/**', '**/bin/**', '**/Library/**', '**/Temp/**'];
+const CSHARP_EXCLUDE_DEFAULT = [
+  '**/.git/**',
+  '**/node_modules/**',
+  '**/obj/**',
+  '**/bin/**',
+  '**/Library/**',
+  '**/Temp/**',
+];
 const CALL_KEYWORDS = new Set([
   'if',
   'for',
@@ -33,6 +40,7 @@ export interface CSharpTypeEvidence {
   isPartial: boolean;
   filePath: string;
   line: number;
+  fullTypeKey: string;
 }
 
 export interface CSharpGeneratedEvidence {
@@ -53,9 +61,30 @@ export interface CSharpModuleAnalysis {
   generatedEvidence: CSharpGeneratedEvidence[];
 }
 
+export interface CSharpPartialDeclarationRef {
+  symbolId: string;
+  displayName: string;
+  kind: string;
+  filePath: string;
+  line: number;
+}
+
+export interface CSharpPartialDeclarationGroup {
+  groupId: string;
+  fullTypeKey: string;
+  declarationCount: number;
+  declarations: CSharpPartialDeclarationRef[];
+}
+
+export interface CSharpPartialDeclarationIndex {
+  groups: CSharpPartialDeclarationGroup[];
+  warnings: string[];
+}
+
 export interface CSharpProjectAnalysisReport {
   inventory: SourceInventoryReport;
   moduleAnalyses: CSharpModuleAnalysis[];
+  partialIndex: CSharpPartialDeclarationIndex;
 }
 
 interface MutableScope {
@@ -83,7 +112,11 @@ function globToRegExp(glob: string): RegExp {
   return new RegExp(`^${escaped}$`);
 }
 
-function shouldIncludePath(relativePath: string, includeMatchers: readonly RegExp[], excludeMatchers: readonly RegExp[]): boolean {
+function shouldIncludePath(
+  relativePath: string,
+  includeMatchers: readonly RegExp[],
+  excludeMatchers: readonly RegExp[]
+): boolean {
   if (!relativePath.toLowerCase().endsWith('.cs')) {
     return false;
   }
@@ -151,13 +184,17 @@ function currentNamespace(scopeStack: readonly MutableScope): string | undefined
   return undefined;
 }
 
-function currentType(scopeStack: readonly MutableScope): string | undefined {
-  for (let i = scopeStack.length - 1; i >= 0; i -= 1) {
-    if (scopeStack[i].kind === 'type') {
-      return scopeStack[i].name;
+function currentTypePath(scopeStack: readonly MutableScope): string | undefined {
+  const names: string[] = [];
+  for (const scope of scopeStack) {
+    if (scope.kind === 'type') {
+      names.push(scope.name);
     }
   }
-  return undefined;
+  if (names.length === 0) {
+    return undefined;
+  }
+  return names.join('.');
 }
 
 function currentMethod(scopeStack: readonly MutableScope): string | undefined {
@@ -169,8 +206,12 @@ function currentMethod(scopeStack: readonly MutableScope): string | undefined {
   return undefined;
 }
 
-function buildDisplayName(namespaceName: string | undefined, typeName: string | undefined, memberName: string): string {
-  const parts = [namespaceName, typeName, memberName].filter(Boolean);
+function buildDisplayName(
+  namespaceName: string | undefined,
+  typePath: string | undefined,
+  memberName: string
+): string {
+  const parts = [namespaceName, typePath, memberName].filter(Boolean);
   return parts.join('.');
 }
 
@@ -182,6 +223,10 @@ function countBraceDelta(line: string): number {
   const opens = (line.match(/\{/g) ?? []).length;
   const closes = (line.match(/\}/g) ?? []).length;
   return opens - closes;
+}
+
+function buildTypeKey(kind: string, displayName: string): string {
+  return `${kind}:${displayName}`.toLowerCase();
 }
 
 function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
@@ -227,12 +272,12 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
       });
     }
 
-    const usingMatch = trimmed.match(/^using\s+([A-Za-z0-9_\.]+)\s*;/);
+    const usingMatch = trimmed.match(/^(global\s+)?using\s+([A-Za-z0-9_\.]+)\s*;/);
     if (usingMatch) {
       dependencyEdges.push({
         from: filePath,
-        to: `module:${usingMatch[1]}`,
-        relation: 'imports',
+        to: `module:${usingMatch[2]}`,
+        relation: usingMatch[1] ? 'imports-global' : 'imports',
         evidence: `${filePath}:${lineNo}`,
       });
     }
@@ -263,15 +308,23 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
         range: buildRange(filePath, lineNo, raw.indexOf('namespace'), raw.length),
       });
       const enterDepth = braceDepth + (raw.includes('{') ? 1 : 0);
-      scopeStack.push({ name: namespaceName, kind: 'namespace', depth: Math.max(enterDepth, braceDepth + 1), symbolId });
+      scopeStack.push({
+        name: namespaceName,
+        kind: 'namespace',
+        depth: Math.max(enterDepth, braceDepth + 1),
+        symbolId,
+      });
     }
 
-    const typeMatch = trimmed.match(/\b(partial\s+)?(class|interface|struct|enum|record)\s+([A-Za-z_][A-Za-z0-9_]*)\b/);
+    const typeMatch = trimmed.match(
+      /\b(partial\s+)?(class|interface|struct|enum|record)\s+(?:class\s+|struct\s+)?([A-Za-z_][A-Za-z0-9_]*)\b/
+    );
     if (typeMatch) {
       const namespaceName = currentNamespace(scopeStack);
+      const parentTypePath = currentTypePath(scopeStack);
       const typeName = cleanIdentifier(typeMatch[3]);
       const kind = typeMatch[2];
-      const displayName = buildDisplayName(namespaceName, undefined, typeName);
+      const displayName = buildDisplayName(namespaceName, parentTypePath, typeName);
       const symbolId = buildSymbolId(filePath, displayName, kind);
       symbols.push({
         symbolId,
@@ -287,9 +340,15 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
         isPartial,
         filePath,
         line: lineNo,
+        fullTypeKey: buildTypeKey(kind, displayName),
       });
       const typeDepth = braceDepth + (raw.includes('{') ? 1 : 0);
-      scopeStack.push({ name: typeName, kind: 'type', depth: Math.max(typeDepth, braceDepth + 1), symbolId });
+      scopeStack.push({
+        name: typeName,
+        kind: 'type',
+        depth: Math.max(typeDepth, braceDepth + 1),
+        symbolId,
+      });
     }
 
     const propertyMatch = trimmed.match(
@@ -298,8 +357,8 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     if (propertyMatch) {
       const propertyName = cleanIdentifier(propertyMatch[1]);
       const namespaceName = currentNamespace(scopeStack);
-      const typeName = currentType(scopeStack);
-      const displayName = buildDisplayName(namespaceName, typeName, propertyName);
+      const typePath = currentTypePath(scopeStack);
+      const displayName = buildDisplayName(namespaceName, typePath, propertyName);
       symbols.push({
         symbolId: buildSymbolId(filePath, displayName, 'property'),
         displayName,
@@ -314,8 +373,8 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     if (fieldMatch && !trimmed.includes('(')) {
       const fieldName = cleanIdentifier(fieldMatch[1]);
       const namespaceName = currentNamespace(scopeStack);
-      const typeName = currentType(scopeStack);
-      const displayName = buildDisplayName(namespaceName, typeName, fieldName);
+      const typePath = currentTypePath(scopeStack);
+      const displayName = buildDisplayName(namespaceName, typePath, fieldName);
       symbols.push({
         symbolId: buildSymbolId(filePath, displayName, 'field'),
         displayName,
@@ -325,14 +384,16 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     }
 
     const methodMatch = trimmed.match(
-      /^(?:\[[^\]]+\]\s*)*(?:public|private|protected|internal|static|virtual|override|sealed|new|async|extern|partial|\s)+\s+[A-Za-z_][A-Za-z0-9_<>,\[\]\?\.]*\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^\)]*\)\s*(?:\{|=>|where|$)/
+      /^(?:\[[^\]]+\]\s*)*(?:public|private|protected|internal|static|virtual|override|sealed|new|async|extern|partial|\s)+\s+[A-Za-z_][A-Za-z0-9_<>,\[\]\?\.]*\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^\)]*\)\s*(?:\{|=>|where|$|;)/
     );
+    let declaredMethodName: string | undefined;
     if (methodMatch) {
       const methodName = cleanIdentifier(methodMatch[1]);
+      declaredMethodName = methodName;
       if (!CALL_KEYWORDS.has(methodName)) {
         const namespaceName = currentNamespace(scopeStack);
-        const typeName = currentType(scopeStack);
-        const displayName = buildDisplayName(namespaceName, typeName, methodName);
+        const typePath = currentTypePath(scopeStack);
+        const displayName = buildDisplayName(namespaceName, typePath, methodName);
         const symbolId = buildSymbolId(filePath, displayName, 'method');
         symbols.push({
           symbolId,
@@ -341,7 +402,12 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
           range: buildRange(filePath, lineNo, raw.indexOf(methodName), raw.length),
         });
         const methodDepth = braceDepth + (raw.includes('{') ? 1 : 0);
-        scopeStack.push({ name: methodName, kind: 'method', depth: Math.max(methodDepth, braceDepth + 1), symbolId });
+        scopeStack.push({
+          name: methodName,
+          kind: 'method',
+          depth: Math.max(methodDepth, braceDepth + 1),
+          symbolId,
+        });
       }
     }
 
@@ -350,7 +416,7 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
     const actor = currentMethod(scopeStack) ?? filePath;
     while ((match = callRegex.exec(raw)) != null) {
       const callee = cleanIdentifier(match[1]);
-      if (CALL_KEYWORDS.has(callee) || callee.endsWith('new')) {
+      if (CALL_KEYWORDS.has(callee) || callee.endsWith('new') || callee === declaredMethodName) {
         continue;
       }
       callEdges.push({
@@ -361,7 +427,9 @@ function parseModule(filePath: string, content: string): CSharpModuleAnalysis {
       });
     }
 
-    const writeMatch = raw.match(/File\.(WriteAllText|AppendAllText|WriteAllBytes)\s*\(\s*["']([^"']+)["']/);
+    const writeMatch = raw.match(
+      /File\.(WriteAllText|AppendAllText|WriteAllBytes)\s*\(\s*["']([^"']+)["']/
+    );
     if (writeMatch) {
       artifactEdges.push({
         from: actor,
@@ -413,6 +481,49 @@ function dedupeEdges(edges: readonly EdgeRef[]): EdgeRef[] {
   return Array.from(byKey.values());
 }
 
+export function buildCSharpPartialDeclarationIndex(
+  moduleAnalyses: readonly CSharpModuleAnalysis[]
+): CSharpPartialDeclarationIndex {
+  const groupsByType = new Map<string, CSharpPartialDeclarationRef[]>();
+
+  for (const moduleAnalysis of moduleAnalyses) {
+    for (const type of moduleAnalysis.typeEvidence) {
+      if (!type.isPartial) {
+        continue;
+      }
+      const list = groupsByType.get(type.fullTypeKey) ?? [];
+      list.push({
+        symbolId: type.symbolId,
+        displayName: type.displayName,
+        kind: type.kind,
+        filePath: type.filePath,
+        line: type.line,
+      });
+      groupsByType.set(type.fullTypeKey, list);
+    }
+  }
+
+  const groups = Array.from(groupsByType.entries())
+    .map(([fullTypeKey, declarations]) => ({
+      groupId: `partial-group:${fullTypeKey}`,
+      fullTypeKey,
+      declarationCount: declarations.length,
+      declarations: declarations.sort((left, right) =>
+        `${left.filePath}:${left.line}`.localeCompare(`${right.filePath}:${right.line}`)
+      ),
+    }))
+    .sort((left, right) => left.fullTypeKey.localeCompare(right.fullTypeKey));
+
+  const warnings = groups
+    .filter((group) => group.declarationCount === 1)
+    .map((group) => `${group.fullTypeKey} only has one partial declaration in fixture scope`);
+
+  return {
+    groups,
+    warnings,
+  };
+}
+
 export function buildCSharpInventory(request: SourceInventoryRequest): CSharpProjectAnalysisReport {
   const root = path.resolve(request.repositoryRoot);
   const filePaths = collectCSharpFilePaths(request);
@@ -429,10 +540,13 @@ export function buildCSharpInventory(request: SourceInventoryRequest): CSharpPro
     languageId: 'csharp',
     symbols: analysis.symbols,
   }));
-  const dependencyEdges = dedupeEdges(moduleAnalyses.flatMap((analysis) => analysis.dependencyEdges));
+  const dependencyEdges = dedupeEdges(
+    moduleAnalyses.flatMap((analysis) => analysis.dependencyEdges)
+  );
   const callEdges = dedupeEdges(moduleAnalyses.flatMap((analysis) => analysis.callEdges));
   const artifactEdges = dedupeEdges(moduleAnalyses.flatMap((analysis) => analysis.artifactEdges));
   const warnings = moduleAnalyses.flatMap((analysis) => analysis.warnings);
+  const partialIndex = buildCSharpPartialDeclarationIndex(moduleAnalyses);
 
   return {
     inventory: {
@@ -440,12 +554,15 @@ export function buildCSharpInventory(request: SourceInventoryRequest): CSharpPro
       dependencyEdges,
       callEdges,
       artifactEdges,
-      warnings,
+      warnings: [...warnings, ...partialIndex.warnings],
     },
     moduleAnalyses,
+    partialIndex,
   };
 }
 
-export async function scanCSharpSourceInventory(request: SourceInventoryRequest): Promise<SourceInventoryReport> {
+export async function scanCSharpSourceInventory(
+  request: SourceInventoryRequest
+): Promise<SourceInventoryReport> {
   return buildCSharpInventory(request).inventory;
 }
