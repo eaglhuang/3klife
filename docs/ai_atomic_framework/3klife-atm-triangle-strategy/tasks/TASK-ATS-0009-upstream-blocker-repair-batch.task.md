@@ -4,7 +4,7 @@ task_id: TASK-ATS-0009
 title: Upstream blocker repair batch from npc-brain evidence
 owner: atm-core
 priority: P1
-status: open
+status: completed
 milestone: M8
 related_plan: docs/ai_atomic_framework/3klife-atm-triangle-strategy/3KLife ATM 採用三角策略規劃書.md
 depends_on: TASK-ATS-0008
@@ -24,10 +24,10 @@ created_by_agent: codex
 
 ## 驗收條件
 
-- [ ] 每個修補都有對應 evidence。
-- [ ] 不得 hard-code 3KLife 或 npc-brain。
-- [ ] public docs 修補採英文或英文摘要。
-- [ ] 修補能被 upstream CI 或 validator 重現。
+- [x] 每個修補都有對應 evidence。
+- [x] 不得 hard-code 3KLife 或 npc-brain。
+- [x] public docs 修補採英文或英文摘要。
+- [x] 修補能被 upstream CI 或 validator 重現。
 
 ## 產出
 
@@ -47,3 +47,4 @@ created_by_agent: codex
 ## Notes
 
 2026-05-18 | 狀態: open | 驗證: pending | 變更: 依使用者要求重開為 TASK-ATS 序列並按執行優先序排序 | 阻塞: none
+2026-05-20 | 狀態: completed | 驗證: `validate:registry-lineage-backfill`; `validate:registry-diff`; `validate:neutrality`; `validate:onefile-release`; `validate:cli`; `validate-integration-adapter`; `adopter-sentinel` PASS | 變更: 新增 `evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md`，將 npc-brain upstream-blocker bucket 對應到 neutral upstream artifacts、framework commits、validators 與 public docs surfaces。 | 阻塞: none

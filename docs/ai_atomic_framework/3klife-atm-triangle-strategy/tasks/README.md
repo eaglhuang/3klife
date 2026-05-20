@@ -27,8 +27,8 @@ created_by_agent: codex
 | [TASK-ATS-0006](./TASK-ATS-0006-atomic-map-decomposition-validation.task.md) | Legacy Python feature decomposition to atomic map dry-run | M5 | completed | TASK-ATS-0005 |
 | [TASK-ATS-0007](./TASK-ATS-0007-atom-evolution-polymorph-validation.task.md) | Atomic map equivalence and rollout validation | M6 | completed | TASK-ATS-0006 |
 | [TASK-ATS-0008](./TASK-ATS-0008-adopter-sentinel-evidence-routing.task.md) | Adopter sentinel integration and evidence routing | M7 | completed | TASK-ATS-0007 |
-| [TASK-ATS-0009](./TASK-ATS-0009-upstream-blocker-repair-batch.task.md) | Upstream blocker repair batch from npc-brain evidence | M8 | open | TASK-ATS-0008 |
-| [TASK-ATS-0010](./TASK-ATS-0010-graduation-release-gate.task.md) | 3KLife experiment graduation and ATM release gate | M9 | open | TASK-ATS-0009 |
+| [TASK-ATS-0009](./TASK-ATS-0009-upstream-blocker-repair-batch.task.md) | Upstream blocker repair batch from npc-brain evidence | M8 | completed | TASK-ATS-0008 |
+| [TASK-ATS-0010](./TASK-ATS-0010-graduation-release-gate.task.md) | 3KLife experiment graduation and ATM release gate | M9 | in_progress | TASK-ATS-0009 |
 
 ## 任務排序原則
 
@@ -67,3 +67,13 @@ TASK-ATS-0008 is completed. The upstream adopter sentinel baseline passed outsid
 Primary evidence:
 
 - `evidence/TASK-ATS-0008-adopter-sentinel-evidence-routing-2026-05-20.md`
+
+## 2026-05-20 Upstream Repair Batch Closeout
+
+TASK-ATS-0009 is completed. The upstream-blocker bucket from TASK-ATS-0008 is now mapped to neutral upstream artifacts, framework commits, validators, and public docs surfaces.
+
+Primary evidence:
+
+- `evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md`
+
+TASK-ATS-0010 is now in progress and owns the final graduation / release gate decision.

@@ -469,3 +469,61 @@ Read README.md if present, then run "node atm.mjs next --json" from the reposito
 4. onefile validator dependency parity fixture
 5. Antigravity integration adapter fixture
 <!-- TASK-ATS-0008-2026-05-20-CLOSEOUT:END -->
+
+<!-- TASK-ATS-0009-2026-05-20-CLOSEOUT:START -->
+## 5.6 2026-05-20 TASK-ATS-0009 upstream blocker repair batch 結案
+
+### 大白話
+
+`TASK-ATS-0009` 是把 0008 分出來的「ATM 框架真的要吸收的問題」整理成 upstream 能接受的形式。
+
+不能做的事：
+
+- 不能把 npc-brain 的真實 pipeline 路徑直接塞進 AI-Atomic-Framework public docs。
+- 不能把 3KLife 的治理決策假裝成 framework 通用規則。
+- 不能只用口頭描述說「這個之後要修」。
+
+要做的事：
+
+- 每個 blocker 都要對應 neutral artifact、validator、schema/CLI contract、英文 public docs patch 或 framework code patch。
+- 每個修補都要能被 upstream validator 重跑。
+
+### 結論
+
+`TASK-ATS-0009` 已完成。
+
+第一批 upstream blocker 已完成回流整理：
+
+1. adopter atom version lineage / registry-diff
+2. registry lineage backfill command
+3. approved custom proposal router
+4. BOM-tolerant rollout-ready evidence parser
+5. onefile validator dependency parity
+6. Antigravity integration adapter
+7. neutrality guard
+8. adopter sentinel baseline
+
+### 驗證
+
+在 `C:\Users\User\AI-Atomic-Framework` 執行並通過：
+
+```powershell
+npm run validate:registry-lineage-backfill
+npm run validate:registry-diff
+npm run validate:neutrality
+npm run validate:onefile-release
+npm run validate:cli
+node --experimental-strip-types scripts/validate-integration-adapter.ts --mode validate
+node --experimental-strip-types scripts/adopter-sentinel.ts --mode validate
+```
+
+`validate:neutrality`、`validate:onefile-release`、`validate:cli`、`validate-integration-adapter` 與 `adopter-sentinel` 因需要 nested CLI / child process，在本地工具沙盒中可能假失敗；本次以非沙盒方式重跑通過，記錄為 local execution caveat，不列為 upstream blocker。
+
+### 主要 evidence
+
+- `docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md`
+
+### 下一步
+
+`TASK-ATS-0010` 轉為 `in_progress`。下一步是把 M0-M8 全部 evidence 做 graduation / release gate review，決定三角策略是否可以畢業，並整理下一輪 ATM release readiness summary。
+<!-- TASK-ATS-0009-2026-05-20-CLOSEOUT:END -->
