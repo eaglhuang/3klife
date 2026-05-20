@@ -80,5 +80,5 @@
 
 1. changelog entry（含 breaking/deprecation/migration）。
 2. compatibility matrix 更新證據。
-3. proposal / decision / rollback proof 鏈接（參見 [UPGRADE_PROPOSAL_PUBLIC_RULES.md](./UPGRADE_PROPOSAL_PUBLIC_RULES.md)）。
-4. checklist sign-off（參見 [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md)）。
+3. proposal / decision / rollback proof 鏈接（參見 [UPGRADE_PROPOSAL_PUBLIC_RULES.md](./ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md)）。
+4. checklist sign-off（參見 [RELEASE_CHECKLIST.md](./ai_atomic_framework/release_version_flow/RELEASE_CHECKLIST.md)）。

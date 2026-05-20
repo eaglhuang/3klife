@@ -136,5 +136,11 @@
     "path": "docs/ai_atomic_framework/atomic-police-family/specs/README.md",
     "title": "Atomic Police Family Specs",
     "category": "index"
+  },
+  {
+    "id": "doc_index_0025",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/README.md",
+    "title": "ATM 通用語言框架 Task Cards",
+    "category": "index"
   }
 ]

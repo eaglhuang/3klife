@@ -104,12 +104,12 @@
 | `doc_other_0100` | docs/LIFECYCLE.md | ATM Lifecycle Policy |
 | `doc_other_0101` | docs/GOVERNANCE.md | ATM Governance Policy |
 | `doc_other_0102` | docs/ATOM_COMPATIBILITY.md | ATM Atom Compatibility Matrix |
-| `doc_other_0103` | docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md | ATM Upgrade Proposal Public Rules |
-| `doc_other_0104` | docs/RELEASE_CHECKLIST.md | ATM Release Checklist |
+| `doc_other_0103` | docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md | ATM Upgrade Proposal Public Rules moved |
+| `doc_other_0104` | docs/RELEASE_CHECKLIST.md | ATM Release Checklist moved |
 | `doc_other_0106` | docs/ADAPTER_GUIDE.md | ATM Adapter Guide |
 | `doc_other_0107` | docs/PLUGIN_SDK.md | ATM Plugin SDK Guide |
-| `doc_other_0108` | docs/releases/atm-v0.1.0-alpha-release-draft.md | AI-Atomic-Framework v0.1.0-alpha (Draft) |
-| `doc_other_0109` | docs/releases/atm-v0.1.0-alpha-npm-dry-run-plan.md | ATM v0.1.0-alpha npm Dry-Run Plan |
+| `doc_other_0108` | docs/releases/atm-v0.1.0-alpha-release-draft.md | AI-Atomic-Framework v0.1.0-alpha release draft moved |
+| `doc_other_0109` | docs/releases/atm-v0.1.0-alpha-npm-dry-run-plan.md | ATM v0.1.0-alpha npm dry-run plan moved |
 | `doc_other_0110` | docs/LIVING_SPEC.md | ATM Living Spec Sync Contract |
 | `doc_other_0111` | docs/PEV_LOOP.md | ATM Plan-Execute-Verify-Converge (PEV) Loop |
 | `doc_other_0112` | docs/templates/pev-upgrade-proposal-template.md | PEV Upgrade Proposal Template |
@@ -271,3 +271,62 @@
 | `doc_other_0648` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-pinned-runner-auto-install.task.md | TASK-APO-0027 — Pinned Runner Auto-Install During Init/Bootstrap |
 | `doc_other_0719` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0029-atm-task-plan-import-flow.task.md | TASK-APO-0029 - ATM Task Plan Import and Work Item Opening Flow |
 | `doc_other_0720` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0030-python-language-adapter-plugin.task.md | TASK-APO-0030 - Python Language Adapter / Plugin |
+| `doc_other_0721` | docs/ai_atomic_framework/release_version_flow/README.md | ATM Release Version Flow |
+| `doc_other_0722` | docs/ai_atomic_framework/release_version_flow/ATM版本升級策略規劃書.md | ATM 版本升級策略規劃書 |
+| `doc_other_0723` | docs/ai_atomic_framework/release_version_flow/OPEN_SOURCE_VERSIONING_POLICY.md | ATM Open Source Versioning Policy |
+| `doc_other_0724` | docs/ai_atomic_framework/release_version_flow/CONTRIBUTOR_RELEASE_IMPACT.md | Contributor Release Impact Guide |
+| `doc_other_0725` | docs/ai_atomic_framework/release_version_flow/CORE_CHANGE_POLICY.md | ATM Core Change Policy |
+| `doc_other_0726` | docs/ai_atomic_framework/release_version_flow/PACKAGE_GROUPS.md | ATM Package Groups |
+| `doc_other_0727` | docs/ai_atomic_framework/release_version_flow/CODEOWNERS_POLICY.md | ATM CODEOWNERS Policy |
+| `doc_other_0728` | docs/ai_atomic_framework/release_version_flow/CHANGESET_POLICY.md | ATM Changeset and Release Intent Policy |
+| `doc_other_0729` | docs/ai_atomic_framework/release_version_flow/ATM版本升級規則書.md | ATM 版本升級規則書 |
+| `doc_other_0730` | docs/ai_atomic_framework/release_version_flow/RELEASE_CHECKLIST.md | ATM Release Checklist |
+| `doc_other_0731` | docs/ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md | ATM Upgrade Proposal Public Rules |
+| `doc_other_0732` | docs/ai_atomic_framework/release_version_flow/release_runs/atm-v0.1.0-alpha-release-draft.md | AI-Atomic-Framework v0.1.0-alpha (Draft) |
+| `doc_other_0733` | docs/ai_atomic_framework/release_version_flow/release_runs/atm-v0.1.0-alpha-npm-dry-run-plan.md | ATM v0.1.0-alpha npm Dry-Run Plan |
+| `doc_other_0734` | docs/ai_atomic_framework/release_version_flow/release-note-template.md | ATM Release Note Template |
+| `doc_other_0735` | docs/ai_atomic_framework/release_version_flow/release-run-record-template.md | ATM Release Run Record Template |
+| `doc_other_0736` | docs/ai_atomic_framework/release_version_flow/release-freeze-notice-template.md | ATM Release Freeze Notice Template |
+| `doc_other_0901` | docs/ai_atomic_framework/universal-language-framework/ATM通用語言框架計畫書.md | ATM 通用語言框架計畫書 |
+| `doc_other_0902` | docs/ai_atomic_framework/universal-language-framework/universal-language-framework-plan.md | Universal Language Framework Plan |
+| `doc_other_0903` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0001.task.md | ATM-LANG-0001 - 繁中主規劃書與 atomic-map roadmap |
+| `doc_other_0904` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0002.task.md | ATM-LANG-0002 - 英文 companion 教學文件骨架 |
+| `doc_other_0905` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0003.task.md | ATM-LANG-0003 - 新舊需求 traceability matrix |
+| `doc_other_0906` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0100.task.md | ATM-LANG-0100 - LanguageAdapter v2 public contract |
+| `doc_other_0907` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0101.task.md | ATM-LANG-0101 - Shared language analysis schemas |
+| `doc_other_0908` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0102.task.md | ATM-LANG-0102 - Runtime/equivalence/evidence contracts |
+| `doc_other_0909` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0200.task.md | ATM-LANG-0200 - Adapter registry and resolver |
+| `doc_other_0910` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0201.task.md | ATM-LANG-0201 - Capability fallback and user messages |
+| `doc_other_0911` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0202.task.md | ATM-LANG-0202 - Bundled/external adapter discovery strategy |
+| `doc_other_0912` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0300.task.md | ATM-LANG-0300 - LegacyRoutePlan adapter delegation |
+| `doc_other_0913` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0301.task.md | ATM-LANG-0301 - Remove core language regex ownership |
+| `doc_other_0914` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0302.task.md | ATM-LANG-0302 - Guidance and police integration update |
+| `doc_other_0915` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0400.task.md | ATM-LANG-0400 - Adapter-driven source inventory service |
+| `doc_other_0916` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0401.task.md | ATM-LANG-0401 - Candidate ranking signal model |
+| `doc_other_0917` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0402.task.md | ATM-LANG-0402 - candidates rank thin facade conversion |
+| `doc_other_0918` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0500.task.md | ATM-LANG-0500 - Generic atomize/infect dry-run plan contracts |
+| `doc_other_0919` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0501.task.md | ATM-LANG-0501 - Import rewrite, shim, rollback plan contracts |
+| `doc_other_0920` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0502.task.md | ATM-LANG-0502 - Dry-run proposal evidence envelope |
+| `doc_other_0921` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0600.task.md | ATM-LANG-0600 - Atomic map decomposition contract |
+| `doc_other_0922` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0601.task.md | ATM-LANG-0601 - Graph-to-map decomposition proposal |
+| `doc_other_0923` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0602.task.md | ATM-LANG-0602 - Large-feature decomposition evidence gate |
+| `doc_other_0924` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0700.task.md | ATM-LANG-0700 - Python AST inventory and symbol ranges |
+| `doc_other_0925` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0701.task.md | ATM-LANG-0701 - Python dependency/call/artifact graph |
+| `doc_other_0926` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0702.task.md | ATM-LANG-0702 - Python CLI/API/side-effect surface detection |
+| `doc_other_0927` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0703.task.md | ATM-LANG-0703 - Python precise atomize/infect dry-run |
+| `doc_other_0928` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0704.task.md | ATM-LANG-0704 - Python equivalence fixtures and diagnostics |
+| `doc_other_0929` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0800.task.md | ATM-LANG-0800 - JS/TS v2 capability alignment |
+| `doc_other_0930` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0801.task.md | ATM-LANG-0801 - JS/TS inventory and route planning |
+| `doc_other_0931` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0802.task.md | ATM-LANG-0802 - JS/TS dry-run and validator expansion |
+| `doc_other_0932` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0900.task.md | ATM-LANG-0900 - English guide: adding a new language adapter |
+| `doc_other_0933` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0901.task.md | ATM-LANG-0901 - English guide: complete Go adapter code example |
+| `doc_other_0934` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0902.task.md | ATM-LANG-0902 - English guide: Go atom/map development example |
+| `doc_other_0935` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0903.task.md | ATM-LANG-0903 - English guide: Go validator and thin facade example |
+| `doc_other_0936` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1000.task.md | ATM-LANG-1000 - Java/C#/Go adapter feasibility notes |
+| `doc_other_0937` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1001.task.md | ATM-LANG-1001 - PHP dynamic include RFC |
+| `doc_other_0938` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1002.task.md | ATM-LANG-1002 - Future adapter conformance checklist |
+| `doc_other_0939` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1100.task.md | ATM-LANG-1100 - Cross-map validator suite |
+| `doc_other_0940` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1101.task.md | ATM-LANG-1101 - Roadmap no-shrink and traceability validator |
+| `doc_other_0941` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1102.task.md | ATM-LANG-1102 - Atom/map coverage validator |
+| `doc_other_0942` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1103.task.md | ATM-LANG-1103 - Script facade boundary validator |
+| `doc_other_0943` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1104.task.md | ATM-LANG-1104 - Docs neutrality and bilingual positioning validator |

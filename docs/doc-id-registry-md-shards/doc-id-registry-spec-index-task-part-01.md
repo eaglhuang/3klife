@@ -214,3 +214,4 @@
 | `doc_index_0022` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/README.md | 3KLife ATM Triangle Strategy Task Cards |
 | `doc_index_0023` | docs/ai_atomic_framework/atomic-police-family/tasks/README.md | 原子警察家族 Task Cards |
 | `doc_index_0024` | docs/ai_atomic_framework/atomic-police-family/specs/README.md | Atomic Police Family Specs |
+| `doc_index_0025` | docs/ai_atomic_framework/universal-language-framework/tasks/README.md | ATM 通用語言框架 Task Cards |

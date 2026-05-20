@@ -19,8 +19,8 @@
 1. [LIFECYCLE.md](/C:/Users/User/3KLife/docs/LIFECYCLE.md)
 2. [ATOM_COMPATIBILITY.md](/C:/Users/User/3KLife/docs/ATOM_COMPATIBILITY.md)
 3. [GOVERNANCE.md](/C:/Users/User/3KLife/docs/GOVERNANCE.md)
-4. [UPGRADE_PROPOSAL_PUBLIC_RULES.md](/C:/Users/User/3KLife/docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md)
-5. [RELEASE_CHECKLIST.md](/C:/Users/User/3KLife/docs/RELEASE_CHECKLIST.md)
+4. [UPGRADE_PROPOSAL_PUBLIC_RULES.md](../release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md)
+5. [RELEASE_CHECKLIST.md](../release_version_flow/RELEASE_CHECKLIST.md)
 6. [CHANGELOG.md](/C:/Users/User/3KLife/CHANGELOG.md)
 
 政策更新流程：先更新 canonical docs，再視需要回補本背景文件，避免雙重真相。

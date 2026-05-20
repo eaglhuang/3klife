@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "path": "packages/core/src/registry.ts"
+    }
+  ],
+  "releaseIntents": [
+    ".atm/release-intents/0001-core-release-intent.md"
+  ],
+  "expected": {
+    "highestReleaseImpact": "patch",
+    "highestCoreImpact": "patch",
+    "packageGroups": [
+      "core"
+    ],
+    "requiresReleaseNote": true,
+    "requiresMigration": false
+  }
+}

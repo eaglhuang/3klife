@@ -57,5 +57,5 @@ Any governance-impacting change must go through reviewable proposal artifacts.
 ## 7. References
 
 1. `docs/PEV_LOOP.md`
-2. `docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md`
-3. `docs/RELEASE_CHECKLIST.md`
+2. `docs/ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md`
+3. `docs/ai_atomic_framework/release_version_flow/RELEASE_CHECKLIST.md`

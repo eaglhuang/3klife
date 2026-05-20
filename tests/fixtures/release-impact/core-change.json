@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "path": "packages/core/src/registry.ts"
+    }
+  ],
+  "expected": {
+    "highestReleaseImpact": "patch",
+    "highestCoreImpact": "patch",
+    "packageGroups": [
+      "core"
+    ],
+    "requiresReleaseNote": true
+  }
+}

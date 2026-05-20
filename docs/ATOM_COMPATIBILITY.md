@@ -60,4 +60,4 @@
 ## 7. Related Contracts
 
 1. version policy：參見 [LIFECYCLE.md](./LIFECYCLE.md)。
-2. proposal 審核：參見 [UPGRADE_PROPOSAL_PUBLIC_RULES.md](./UPGRADE_PROPOSAL_PUBLIC_RULES.md)。
+2. proposal 審核：參見 [UPGRADE_PROPOSAL_PUBLIC_RULES.md](./ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md)。

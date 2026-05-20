@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "path": "packages/adapter-local-git/src/local-git-adapter.ts"
+    }
+  ],
+  "expected": {
+    "highestReleaseImpact": "patch",
+    "highestCoreImpact": "none",
+    "packageGroups": [
+      "adapter"
+    ],
+    "requiresReleaseNote": true
+  }
+}

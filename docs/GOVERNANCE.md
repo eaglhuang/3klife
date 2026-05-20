@@ -26,7 +26,7 @@
 
 ## 3. PEV / Upgrade Proposal Review Flow
 
-1. Proposal Author 提交 proposal（參見 [UPGRADE_PROPOSAL_PUBLIC_RULES.md](./UPGRADE_PROPOSAL_PUBLIC_RULES.md)）。
+1. Proposal Author 提交 proposal（參見 [UPGRADE_PROPOSAL_PUBLIC_RULES.md](./ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md)）。
 2. Maintainer 做初審：確認範圍、SemVer 建議、compatibility impact。
 3. Validator Owner 附 deterministic 驗證結果與風險 findings。
 4. Release Owner 做決策：`approve` / `request-changes` / `reject`。
@@ -57,4 +57,4 @@
 
 1. Lifecycle：參見 [LIFECYCLE.md](./LIFECYCLE.md)。
 2. Compatibility：參見 [ATOM_COMPATIBILITY.md](./ATOM_COMPATIBILITY.md)。
-3. Release Execution：參見 [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md)。
+3. Release Execution：參見 [RELEASE_CHECKLIST.md](./ai_atomic_framework/release_version_flow/RELEASE_CHECKLIST.md)。

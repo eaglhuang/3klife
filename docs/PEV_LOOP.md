@@ -12,7 +12,7 @@ The PEV loop applies to:
 2. Atom schema or compatibility-impacting changes.
 3. Plugin SDK and adapter contract changes.
 
-It does not replace release execution. Release packaging and sign-off remain in `RELEASE_CHECKLIST.md`.
+It does not replace release execution. Release packaging and sign-off remain in `docs/ai_atomic_framework/release_version_flow/RELEASE_CHECKLIST.md`.
 
 ## 2. Inputs and Outputs
 
@@ -46,7 +46,7 @@ Output contracts:
 
 1. Validate proposal payload with `schemas/pev/upgrade-proposal-public.schema.json`.
 2. Validate drift prompt payload with `schemas/pev/spec-drift-prompt.schema.json` when drift exists.
-3. Complete governance review gates from `UPGRADE_PROPOSAL_PUBLIC_RULES.md`.
+3. Complete governance review gates from `docs/ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md`.
 
 ### Converge
 
@@ -73,4 +73,4 @@ Every converged proposal must include:
 1. `docs/LIFECYCLE.md`
 2. `docs/ATOM_COMPATIBILITY.md`
 3. `docs/GOVERNANCE.md`
-4. `docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md`
+4. `docs/ai_atomic_framework/release_version_flow/UPGRADE_PROPOSAL_PUBLIC_RULES.md`

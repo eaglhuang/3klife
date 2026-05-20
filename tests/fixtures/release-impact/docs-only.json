@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "path": "docs/troubleshooting.md"
+    }
+  ],
+  "expected": {
+    "highestReleaseImpact": "none",
+    "highestCoreImpact": "none",
+    "packageGroups": [
+      "docs"
+    ],
+    "requiresReleaseNote": false
+  }
+}
