@@ -7,7 +7,10 @@ export interface CSharpRuntimePolicyRow {
     | 'csproj-root'
     | 'test-project-detected'
     | 'multi-target-framework'
-    | 'risky-request';
+    | 'risky-request'
+    | 'sdk-pinned'
+    | 'nuget-source-mapped'
+    | 'restore-locked-mode';
   tags: string[];
 }
 
@@ -42,6 +45,21 @@ export const CSHARP_RUNTIME_POLICY_MATRIX: readonly CSharpRuntimePolicyRow[] = [
     policyId: 'csharp-runtime-risky-request',
     appliesWhen: 'risky-request',
     tags: ['risky-planning-only', 'mutating-command-listed'],
+  },
+  {
+    policyId: 'csharp-runtime-sdk-pinned',
+    appliesWhen: 'sdk-pinned',
+    tags: ['sdk-version-pinned', 'toolchain-reproducible'],
+  },
+  {
+    policyId: 'csharp-runtime-nuget-source-mapped',
+    appliesWhen: 'nuget-source-mapped',
+    tags: ['nuget-source-mapped', 'package-governance-enabled'],
+  },
+  {
+    policyId: 'csharp-runtime-restore-locked-mode',
+    appliesWhen: 'restore-locked-mode',
+    tags: ['restore-locked-mode-enabled', 'repeatable-restore-guard'],
   },
 ] as const;
 
@@ -81,6 +99,20 @@ function hasTestProject(projectEvidence: CSharpProjectEvidence): boolean {
   return projectEvidence.csprojProfiles.some((profile) => profile.isTestProject);
 }
 
+function hasPinnedSdk(projectEvidence: CSharpProjectEvidence): boolean {
+  return projectEvidence.globalJsonProfiles.some((profile) => Boolean(profile.sdkVersion));
+}
+
+function hasNugetSourceMapping(projectEvidence: CSharpProjectEvidence): boolean {
+  return projectEvidence.nugetConfigProfiles.some((profile) => profile.packageSourceMappingEnabled);
+}
+
+function hasRestoreLockedMode(projectEvidence: CSharpProjectEvidence): boolean {
+  return projectEvidence.nugetConfigProfiles.some(
+    (profile) => (profile.restoreLockedMode ?? '').toLowerCase() === 'true'
+  );
+}
+
 export function resolveCSharpRuntimePolicy(
   projectEvidence: CSharpProjectEvidence,
   includeRisky: boolean
@@ -99,6 +131,15 @@ export function resolveCSharpRuntimePolicy(
   }
   if (includeRisky) {
     conditions.add('risky-request');
+  }
+  if (hasPinnedSdk(projectEvidence)) {
+    conditions.add('sdk-pinned');
+  }
+  if (hasNugetSourceMapping(projectEvidence)) {
+    conditions.add('nuget-source-mapped');
+  }
+  if (hasRestoreLockedMode(projectEvidence)) {
+    conditions.add('restore-locked-mode');
   }
 
   const matched = CSHARP_RUNTIME_POLICY_MATRIX.filter((row) => conditions.has(row.appliesWhen));
@@ -137,4 +178,3 @@ export function resolveCSharpDiagnosticsPolicy(source?: string): CSharpDiagnosti
     tags: [...matched.tags].sort((left, right) => left.localeCompare(right)),
   };
 }
-

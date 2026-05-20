@@ -5,7 +5,9 @@
     "maxUnresolvedRatio": 0.65,
     "maxAmbiguousRatio": 0.5,
     "maxErrorRiskFindings": 0,
-    "requireMapEvidenceGateAccepted": true
+    "requireMapEvidenceGateAccepted": true,
+    "requireSdkPinning": true,
+    "requireNugetSourceMapping": true
   },
   "enterprise": {
     "minInventoryFiles": 12,
@@ -13,6 +15,8 @@
     "maxUnresolvedRatio": 0.6,
     "maxAmbiguousRatio": 0.55,
     "maxErrorRiskFindings": 0,
-    "requireMapEvidenceGateAccepted": true
+    "requireMapEvidenceGateAccepted": true,
+    "requireSdkPinning": true,
+    "requireNugetSourceMapping": true
   }
 }

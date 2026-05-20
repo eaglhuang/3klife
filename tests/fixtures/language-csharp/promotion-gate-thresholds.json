@@ -4,13 +4,15 @@
     "minReadinessScore": 0.85,
     "requireReadinessStage": "ready-for-advisory",
     "requireBenchmarkStage": "pass",
-    "pilotMinReadinessScore": 1
+    "pilotMinReadinessScore": 1,
+    "requireGovernanceChecksPassed": true
   },
   "enterprise": {
     "minFullCapabilities": 12,
     "minReadinessScore": 0.85,
     "requireReadinessStage": "ready-for-advisory",
     "requireBenchmarkStage": "pass",
-    "pilotMinReadinessScore": 1
+    "pilotMinReadinessScore": 1,
+    "requireGovernanceChecksPassed": true
   }
 }

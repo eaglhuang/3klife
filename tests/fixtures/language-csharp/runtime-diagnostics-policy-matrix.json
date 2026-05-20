@@ -4,7 +4,10 @@
     "csharp-runtime-csproj-root",
     "csharp-runtime-test-project-detected",
     "csharp-runtime-multi-target-framework",
-    "csharp-runtime-risky-request"
+    "csharp-runtime-risky-request",
+    "csharp-runtime-sdk-pinned",
+    "csharp-runtime-nuget-source-mapped",
+    "csharp-runtime-restore-locked-mode"
   ],
   "diagnosticsPolicyIds": [
     "csharp-diagnostics-dotnet-build-log",
@@ -16,7 +19,10 @@
     "solution-target",
     "test-target-route",
     "multi-tfm-detected",
-    "risky-planning-only"
+    "risky-planning-only",
+    "sdk-version-pinned",
+    "nuget-source-mapped",
+    "restore-locked-mode-enabled"
   ],
   "requiredDiagnosticsTags": [
     "normalize-code-uppercase",

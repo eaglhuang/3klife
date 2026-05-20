@@ -53,11 +53,27 @@ export interface CSharpDirectoryPackagesPropsProfile {
   centralPackageVersions: string[];
 }
 
+export interface CSharpGlobalJsonProfile {
+  relativePath: string;
+  sdkVersion?: string;
+  rollForward?: string;
+  allowPrerelease?: boolean;
+}
+
+export interface CSharpNuGetConfigProfile {
+  relativePath: string;
+  packageSources: string[];
+  packageSourceMappingEnabled: boolean;
+  restoreLockedMode?: string;
+}
+
 export interface CSharpProjectEvidence {
   hasSolution: boolean;
   hasCsproj: boolean;
   hasDirectoryBuildProps: boolean;
   hasDirectoryPackagesProps: boolean;
+  hasGlobalJson: boolean;
+  hasNugetConfig: boolean;
   hasCSharpSource: boolean;
   hasUnityEvidence: boolean;
   evidence: string[];
@@ -65,6 +81,8 @@ export interface CSharpProjectEvidence {
   csprojProfiles: CSharpCsprojProfile[];
   directoryBuildPropsProfiles: CSharpDirectoryBuildPropsProfile[];
   directoryPackagesPropsProfiles: CSharpDirectoryPackagesPropsProfile[];
+  globalJsonProfiles: CSharpGlobalJsonProfile[];
+  nugetConfigProfiles: CSharpNuGetConfigProfile[];
   warnings: string[];
 }
 
@@ -323,6 +341,57 @@ function parseDirectoryPackagesPropsProfile(
   };
 }
 
+function parseGlobalJsonProfile(relativePath: string, rawJson: string): CSharpGlobalJsonProfile {
+  const parsed = JSON.parse(rawJson) as {
+    sdk?: {
+      version?: unknown;
+      rollForward?: unknown;
+      allowPrerelease?: unknown;
+    };
+  };
+  const sdk = parsed.sdk ?? {};
+  const sdkVersion = typeof sdk.version === 'string' ? sdk.version.trim() : undefined;
+  const rollForward = typeof sdk.rollForward === 'string' ? sdk.rollForward.trim() : undefined;
+  const allowPrerelease =
+    typeof sdk.allowPrerelease === 'boolean' ? sdk.allowPrerelease : undefined;
+  return {
+    relativePath,
+    sdkVersion: sdkVersion || undefined,
+    rollForward: rollForward || undefined,
+    allowPrerelease,
+  };
+}
+
+function parseNuGetConfigProfile(relativePath: string, xml: string): CSharpNuGetConfigProfile {
+  const packageSourcesSection = xml.match(
+    /<packageSources\b[^>]*>([\s\S]*?)<\/packageSources>/i
+  )?.[1];
+  const packageSources = Array.from(
+    new Set(
+      [...(packageSourcesSection ?? '').matchAll(/<add\b([^>]*)\/?>/gi)]
+        .map((match) => parseAttribute(match[1], 'value') ?? parseAttribute(match[1], 'key'))
+        .filter((value): value is string => Boolean(value))
+        .map((value) => value.trim())
+        .filter(Boolean)
+    )
+  ).sort((left, right) => left.localeCompare(right));
+
+  const restoreLockedMode = [...xml.matchAll(/<add\b([^>]*)\/?>/gi)]
+    .map((match) => ({
+      key: parseAttribute(match[1], 'key'),
+      value: parseAttribute(match[1], 'value'),
+    }))
+    .find((entry) => (entry.key ?? '').toLowerCase() === 'restorelockedmode')
+    ?.value;
+
+  return {
+    relativePath,
+    packageSources,
+    packageSourceMappingEnabled: /<packageSourceMapping\b/i.test(xml),
+    restoreLockedMode: restoreLockedMode?.trim() || undefined,
+  };
+}
+
 function readTextFile(filePath: string): string {
   return fs.readFileSync(filePath, 'utf8');
 }
@@ -345,6 +414,8 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
   const csprojProfiles: CSharpCsprojProfile[] = [];
   const directoryBuildPropsProfiles: CSharpDirectoryBuildPropsProfile[] = [];
   const directoryPackagesPropsProfiles: CSharpDirectoryPackagesPropsProfile[] = [];
+  const globalJsonProfiles: CSharpGlobalJsonProfile[] = [];
+  const nugetConfigProfiles: CSharpNuGetConfigProfile[] = [];
   let hasCSharpSource = false;
 
   if (!fs.existsSync(root)) {
@@ -353,6 +424,8 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
       hasCsproj: false,
       hasDirectoryBuildProps: false,
       hasDirectoryPackagesProps: false,
+      hasGlobalJson: false,
+      hasNugetConfig: false,
       hasCSharpSource: false,
       hasUnityEvidence: false,
       evidence: [],
@@ -360,6 +433,8 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
       csprojProfiles: [],
       directoryBuildPropsProfiles: [],
       directoryPackagesPropsProfiles: [],
+      globalJsonProfiles: [],
+      nugetConfigProfiles: [],
       warnings,
     };
   }
@@ -417,6 +492,28 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
           `${relativePath}: failed to parse Directory.Packages.props (${error instanceof Error ? error.message : String(error)})`
         );
       }
+      return;
+    }
+
+    if (lower.endsWith('/global.json') || lower === 'global.json') {
+      try {
+        globalJsonProfiles.push(parseGlobalJsonProfile(relativePath, readTextFile(absolutePath)));
+      } catch (error) {
+        warnings.push(
+          `${relativePath}: failed to parse global.json (${error instanceof Error ? error.message : String(error)})`
+        );
+      }
+      return;
+    }
+
+    if (lower.endsWith('/nuget.config') || lower === 'nuget.config') {
+      try {
+        nugetConfigProfiles.push(parseNuGetConfigProfile(relativePath, readTextFile(absolutePath)));
+      } catch (error) {
+        warnings.push(
+          `${relativePath}: failed to parse NuGet.Config (${error instanceof Error ? error.message : String(error)})`
+        );
+      }
     }
   });
 
@@ -437,6 +534,17 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
         const central = (profile.managePackageVersionsCentrally ?? '').toLowerCase() === 'true';
         return `${profile.relativePath}#central=${central ? 'true' : 'false'};packages=${profile.centralPackageVersions.length}`;
       }),
+      ...globalJsonProfiles.map((profile) => {
+        const sdk = profile.sdkVersion ?? 'unknown';
+        const roll = profile.rollForward ?? 'default';
+        const prerelease =
+          typeof profile.allowPrerelease === 'boolean' ? String(profile.allowPrerelease) : 'unset';
+        return `${profile.relativePath}#sdk=${sdk};roll=${roll};prerelease=${prerelease}`;
+      }),
+      ...nugetConfigProfiles.map((profile) => {
+        const locked = profile.restoreLockedMode ?? 'unset';
+        return `${profile.relativePath}#sources=${profile.packageSources.length};mapping=${profile.packageSourceMappingEnabled ? 'true' : 'false'};locked=${locked}`;
+      }),
       ...(hasCSharpSource ? ['*.cs'] : []),
       ...(fs.existsSync(unityProjectVersionPath) ? ['ProjectSettings/ProjectVersion.txt'] : []),
       ...(fs.existsSync(unityPackagesPath) ? ['Packages/manifest.json'] : []),
@@ -450,6 +558,8 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
     hasCsproj: csprojProfiles.length > 0,
     hasDirectoryBuildProps: directoryBuildPropsProfiles.length > 0,
     hasDirectoryPackagesProps: directoryPackagesPropsProfiles.length > 0,
+    hasGlobalJson: globalJsonProfiles.length > 0,
+    hasNugetConfig: nugetConfigProfiles.length > 0,
     hasCSharpSource,
     hasUnityEvidence,
     evidence,
@@ -457,6 +567,8 @@ export function collectCSharpProjectEvidence(repositoryRoot: string): CSharpProj
     csprojProfiles,
     directoryBuildPropsProfiles,
     directoryPackagesPropsProfiles,
+    globalJsonProfiles,
+    nugetConfigProfiles,
     warnings,
   };
 }
@@ -483,6 +595,12 @@ export function detectCSharpProjectProfile(repositoryRoot: string): LanguageProj
   }
   if (projectEvidence.hasDirectoryPackagesProps) {
     confidence = Math.max(confidence, 0.9);
+  }
+  if (projectEvidence.globalJsonProfiles.some((profile) => Boolean(profile.sdkVersion))) {
+    confidence = Math.max(confidence, 0.95);
+  }
+  if (projectEvidence.nugetConfigProfiles.some((profile) => profile.packageSourceMappingEnabled)) {
+    confidence = Math.max(confidence, 0.94);
   }
   if (projectEvidence.csprojProfiles.some((profile) => profile.targetFrameworks.length > 0)) {
     confidence = Math.max(confidence, 0.93);

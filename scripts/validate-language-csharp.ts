@@ -27,6 +27,8 @@ const REQUIRED_FILES = [
   'tests/fixtures/language-csharp/sample-project/src/MyApp.csproj',
   'tests/fixtures/language-csharp/sample-project/src/Shared/Shared.csproj',
   'tests/fixtures/language-csharp/sample-project/tests/MyApp.Tests.csproj',
+  'tests/fixtures/language-csharp/sample-project/global.json',
+  'tests/fixtures/language-csharp/sample-project/NuGet.Config',
   'tests/fixtures/language-csharp/sample-project/Directory.Build.props',
   'tests/fixtures/language-csharp/sample-project/Directory.Packages.props',
   'tests/fixtures/language-csharp/sample-project/src/Core/SyntaxPlayground.cs',
@@ -36,6 +38,8 @@ const REQUIRED_FILES = [
   'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.Domain/Contoso.Domain.csproj',
   'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.Infrastructure/Contoso.Infrastructure.csproj',
   'tests/fixtures/language-csharp/enterprise-solution/tests/Contoso.App.Tests/Contoso.App.Tests.csproj',
+  'tests/fixtures/language-csharp/enterprise-solution/global.json',
+  'tests/fixtures/language-csharp/enterprise-solution/NuGet.Config',
   'tests/fixtures/language-csharp/enterprise-solution/expected-smoke.json',
   'tests/fixtures/language-csharp/expected-report.json',
   'tests/fixtures/language-csharp/capability-baseline.json',
@@ -55,7 +59,13 @@ const REQUIRED_FILES = [
 const REQUIRED_SNIPPETS = [
   {
     path: 'packages/language-csharp/src/csharp-profile.ts',
-    snippets: ['collectCSharpProjectEvidence(', 'parseCsprojProfile(', 'detectCSharpProjectProfile('],
+    snippets: [
+      'collectCSharpProjectEvidence(',
+      'parseCsprojProfile(',
+      'parseGlobalJsonProfile(',
+      'parseNuGetConfigProfile(',
+      'detectCSharpProjectProfile(',
+    ],
   },
   {
     path: 'packages/language-csharp/src/csharp-inventory.ts',
@@ -119,7 +129,7 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-readiness.ts',
-    snippets: ['evaluateCSharpReadinessGate(', "'advisory-blocked'"],
+    snippets: ['evaluateCSharpReadinessGate(', "'advisory-blocked'", "'sdk-pinning'", "'nuget-source-mapping'"],
   },
   {
     path: 'packages/language-csharp/src/csharp-policy-matrix.ts',
@@ -136,7 +146,11 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-promotion-gate.ts',
-    snippets: ['evaluateCSharpPromotionGate(', "stage: 'blocked' | 'advisory-ready' | 'pilot-ready'"],
+    snippets: [
+      'evaluateCSharpPromotionGate(',
+      "stage: 'blocked' | 'advisory-ready' | 'pilot-ready'",
+      "'readiness-governance'",
+    ],
   },
   {
     path: 'packages/language-csharp/src/csharp-dry-run.ts',
@@ -330,8 +344,33 @@ async function runFixtureCheck() {
     profile.evidence.some((entry) => entry.toLowerCase().includes('directory.packages.props')),
     'profile should include Directory.Packages.props'
   );
+  assert.ok(
+    profile.evidence.some((entry) => entry.toLowerCase().includes('global.json#sdk=')),
+    'profile should include global.json sdk evidence'
+  );
+  assert.ok(
+    profile.evidence.some((entry) => entry.toLowerCase().includes('nuget.config#sources=')),
+    'profile should include NuGet.Config source evidence'
+  );
   assert.ok(projectEvidence.csprojProfiles.length >= 2, 'csproj deep parse should collect >= 2 projects');
+  assert.equal(projectEvidence.hasGlobalJson, true, 'global.json evidence missing');
+  assert.equal(projectEvidence.hasNugetConfig, true, 'NuGet.Config evidence missing');
   assert.equal(projectEvidence.hasDirectoryPackagesProps, true, 'Directory.Packages.props evidence missing');
+  assert.ok(
+    projectEvidence.globalJsonProfiles.some(
+      (entry) => entry.relativePath === 'global.json' && entry.sdkVersion === '9.0.100'
+    ),
+    'global.json profile should include sdk version pin'
+  );
+  assert.ok(
+    projectEvidence.nugetConfigProfiles.some(
+      (entry) =>
+        entry.relativePath === 'NuGet.Config' &&
+        entry.packageSourceMappingEnabled === true &&
+        (entry.restoreLockedMode ?? '').toLowerCase() === 'true'
+    ),
+    'NuGet.Config profile should include source mapping and restoreLockedMode=true'
+  );
   assert.ok(
     projectEvidence.directoryPackagesPropsProfiles.some(
       (entry) =>
@@ -842,6 +881,7 @@ async function runFixtureCheck() {
     inventoryFileCount: analysis.inventory.files.length,
     symbolReferenceIndex,
     csprojRisk,
+    projectEvidence,
     mapReport,
     thresholds: readinessThresholds.sample,
   });
@@ -849,13 +889,22 @@ async function runFixtureCheck() {
     inventoryFileCount: enterpriseAnalysis.inventory.files.length,
     symbolReferenceIndex: enterpriseSymbolIndex,
     csprojRisk: enterpriseRisk,
+    projectEvidence: enterpriseEvidence,
     mapReport: enterpriseMapReport,
     thresholds: readinessThresholds.enterprise,
   });
-  assert.ok(sampleReadiness.checks.length >= 6, 'sample readiness should include threshold checks');
+  assert.ok(sampleReadiness.checks.length >= 8, 'sample readiness should include threshold checks');
   assert.ok(
     sampleReadiness.checks.some((check) => check.checkId === 'map-evidence-gate'),
     'sample readiness should include map evidence gate check'
+  );
+  assert.ok(
+    sampleReadiness.checks.some((check) => check.checkId === 'sdk-pinning' && check.passed),
+    'sample readiness should include passed sdk pinning check'
+  );
+  assert.ok(
+    sampleReadiness.checks.some((check) => check.checkId === 'nuget-source-mapping' && check.passed),
+    'sample readiness should include passed NuGet source mapping check'
   );
   assert.ok(
     enterpriseReadiness.checks.some((check) => check.checkId === 'resolved-references'),
@@ -916,8 +965,16 @@ async function runFixtureCheck() {
     'sample promotion gate should report >= 12 full capabilities'
   );
   assert.ok(
+    samplePromotionGate.checks.some((check) => check.checkId === 'readiness-governance' && check.passed),
+    'sample promotion gate should include passed readiness governance check'
+  );
+  assert.ok(
     enterprisePromotionGate.summary.fullCapabilityCount >= 12,
     'enterprise promotion gate should report >= 12 full capabilities'
+  );
+  assert.ok(
+    enterprisePromotionGate.checks.some((check) => check.checkId === 'readiness-governance' && check.passed),
+    'enterprise promotion gate should include passed readiness governance check'
   );
 
   for (const fixture of equivalenceFixtures.cases) {

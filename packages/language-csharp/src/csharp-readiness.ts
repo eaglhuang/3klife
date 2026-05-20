@@ -1,5 +1,6 @@
 import type { AtomicMapDecompositionReport } from '../../../plugin-sdk/src/language-adapter';
 import type { CSharpCsprojRiskReport } from './csharp-csproj-risk';
+import type { CSharpProjectEvidence } from './csharp-profile';
 import type { CSharpSymbolReferenceIndex } from './csharp-symbol-index';
 
 export interface CSharpReadinessThresholds {
@@ -9,6 +10,8 @@ export interface CSharpReadinessThresholds {
   maxAmbiguousRatio: number;
   maxErrorRiskFindings: number;
   requireMapEvidenceGateAccepted: boolean;
+  requireSdkPinning: boolean;
+  requireNugetSourceMapping: boolean;
 }
 
 export interface CSharpReadinessCheck {
@@ -18,7 +21,9 @@ export interface CSharpReadinessCheck {
     | 'unresolved-ratio'
     | 'ambiguous-ratio'
     | 'csproj-error-risk'
-    | 'map-evidence-gate';
+    | 'map-evidence-gate'
+    | 'sdk-pinning'
+    | 'nuget-source-mapping';
   passed: boolean;
   actual: number | boolean;
   expected: string;
@@ -40,6 +45,8 @@ export interface CSharpReadinessGateReport {
     ambiguousRatio: number;
     csprojErrorRiskCount: number;
     mapEvidenceAccepted?: boolean;
+    sdkPinned?: boolean;
+    nugetSourceMapped?: boolean;
   };
 }
 
@@ -47,6 +54,7 @@ export interface CSharpReadinessGateInput {
   inventoryFileCount: number;
   symbolReferenceIndex: CSharpSymbolReferenceIndex;
   csprojRisk: CSharpCsprojRiskReport;
+  projectEvidence?: Pick<CSharpProjectEvidence, 'globalJsonProfiles' | 'nugetConfigProfiles'>;
   mapReport?: AtomicMapDecompositionReport;
   thresholds?: Partial<CSharpReadinessThresholds>;
 }
@@ -58,6 +66,8 @@ const DEFAULT_THRESHOLDS: CSharpReadinessThresholds = {
   maxAmbiguousRatio: 0.45,
   maxErrorRiskFindings: 0,
   requireMapEvidenceGateAccepted: true,
+  requireSdkPinning: true,
+  requireNugetSourceMapping: true,
 };
 
 function roundRatio(value: number): number {
@@ -71,6 +81,19 @@ function makeCheck(
     ...check,
     detail: check.detail ?? '',
   };
+}
+
+function hasPinnedSdk(projectEvidence: CSharpReadinessGateInput['projectEvidence']): boolean {
+  return (
+    projectEvidence?.globalJsonProfiles?.some((profile) => Boolean(profile.sdkVersion)) ?? false
+  );
+}
+
+function hasNugetSourceMapping(projectEvidence: CSharpReadinessGateInput['projectEvidence']): boolean {
+  return (
+    projectEvidence?.nugetConfigProfiles?.some((profile) => profile.packageSourceMappingEnabled) ??
+    false
+  );
 }
 
 export function evaluateCSharpReadinessGate(
@@ -89,6 +112,8 @@ export function evaluateCSharpReadinessGate(
   const ambiguousRatio = referenceCount > 0 ? ambiguousCount / referenceCount : 1;
   const csprojErrorRiskCount = input.csprojRisk.summary.errorCount;
   const mapAccepted = input.mapReport?.evidenceGate?.accepted;
+  const sdkPinned = hasPinnedSdk(input.projectEvidence);
+  const nugetSourceMapped = hasNugetSourceMapping(input.projectEvidence);
 
   const checks: CSharpReadinessCheck[] = [
     makeCheck({
@@ -133,6 +158,20 @@ export function evaluateCSharpReadinessGate(
       expected: thresholds.requireMapEvidenceGateAccepted ? 'true' : 'optional',
       detail: 'Atomic map evidence gate must pass for promotion readiness.',
     }),
+    makeCheck({
+      checkId: 'sdk-pinning',
+      passed: thresholds.requireSdkPinning ? sdkPinned : true,
+      actual: sdkPinned,
+      expected: thresholds.requireSdkPinning ? 'true' : 'optional',
+      detail: 'global.json sdk.version pinning is required for reproducible advisory planning.',
+    }),
+    makeCheck({
+      checkId: 'nuget-source-mapping',
+      passed: thresholds.requireNugetSourceMapping ? nugetSourceMapped : true,
+      actual: nugetSourceMapped,
+      expected: thresholds.requireNugetSourceMapping ? 'true' : 'optional',
+      detail: 'NuGet.Config packageSourceMapping should be enabled for source governance.',
+    }),
   ];
 
   const blockingReasons = checks
@@ -156,6 +195,8 @@ export function evaluateCSharpReadinessGate(
       ambiguousRatio: roundRatio(ambiguousRatio),
       csprojErrorRiskCount,
       mapEvidenceAccepted: mapAccepted,
+      sdkPinned,
+      nugetSourceMapped,
     },
   };
 }

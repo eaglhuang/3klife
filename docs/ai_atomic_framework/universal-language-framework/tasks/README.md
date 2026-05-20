@@ -8,7 +8,7 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
-last_updated: 2026-05-21T00:22:06+08:00
+last_updated: 2026-05-21T00:41:58+08:00
 ---
 
 # ATM 通用語言框架 Task Cards
@@ -119,6 +119,11 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0602 | C# large-solution benchmark baseline and determinism checks | ATM-MAP-LANG-CSHARP-0602 | done | CSHARP-0601 | 0006, 0008, 0010 |
 | ATM-LANG-CSHARP-0603 | C# runtime and diagnostics policy matrix integration | ATM-MAP-LANG-CSHARP-0603 | done | CSHARP-0602 | 0006, 0009, 0010 |
 | ATM-LANG-CSHARP-0604 | C# promotion gate for advisory to pilot readiness | ATM-MAP-LANG-CSHARP-0604 | done | CSHARP-0603 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0700 | C# global.json and NuGet.Config profile detection | ATM-MAP-LANG-CSHARP-0700 | done | CSHARP-0604 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0701 | C# reproducible-restore risk findings from project evidence | ATM-MAP-LANG-CSHARP-0701 | done | CSHARP-0700 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0702 | C# runtime policy matrix governance tags expansion | ATM-MAP-LANG-CSHARP-0702 | done | CSHARP-0701 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0703 | C# readiness gate governance checks | ATM-MAP-LANG-CSHARP-0703 | done | CSHARP-0702 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0704 | C# promotion gate governance hardening and validator uplift | ATM-MAP-LANG-CSHARP-0704 | done | CSHARP-0703 | 0006, 0009, 0010 |
 
 ## 維護規則
 

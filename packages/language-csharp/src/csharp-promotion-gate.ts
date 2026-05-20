@@ -8,6 +8,7 @@ export interface CSharpPromotionGateThresholds {
   requireReadinessStage: CSharpReadinessGateReport['stage'];
   requireBenchmarkStage: CSharpBenchmarkReport['stage'];
   pilotMinReadinessScore: number;
+  requireGovernanceChecksPassed: boolean;
 }
 
 export interface CSharpPromotionGateCheck {
@@ -15,7 +16,8 @@ export interface CSharpPromotionGateCheck {
     | 'full-capabilities'
     | 'readiness-stage'
     | 'readiness-score'
-    | 'benchmark-stage';
+    | 'benchmark-stage'
+    | 'readiness-governance';
   passed: boolean;
   actual: string | number;
   expected: string;
@@ -30,6 +32,7 @@ export interface CSharpPromotionGateReport {
     readinessStage: CSharpReadinessGateReport['stage'];
     readinessScore: number;
     benchmarkStage: CSharpBenchmarkReport['stage'];
+    governanceChecksPassed: boolean;
   };
 }
 
@@ -39,6 +42,7 @@ const DEFAULT_THRESHOLDS: CSharpPromotionGateThresholds = {
   requireReadinessStage: 'ready-for-advisory',
   requireBenchmarkStage: 'pass',
   pilotMinReadinessScore: 1,
+  requireGovernanceChecksPassed: true,
 };
 
 function countFullCapabilities(capabilities: LanguageAdapterCapabilitySet | undefined): number {
@@ -60,6 +64,16 @@ function compareBenchmarkStage(
   return rank[stage] >= rank[requiredStage];
 }
 
+function readinessGovernanceChecksPassed(readiness: CSharpReadinessGateReport): boolean {
+  const governanceChecks = readiness.checks.filter(
+    (check) => check.checkId === 'sdk-pinning' || check.checkId === 'nuget-source-mapping'
+  );
+  if (governanceChecks.length === 0) {
+    return false;
+  }
+  return governanceChecks.every((check) => check.passed);
+}
+
 export function evaluateCSharpPromotionGate(
   readiness: CSharpReadinessGateReport,
   benchmark: CSharpBenchmarkReport,
@@ -71,6 +85,7 @@ export function evaluateCSharpPromotionGate(
     ...thresholds,
   };
   const fullCapabilityCount = countFullCapabilities(capabilities);
+  const governancePassed = readinessGovernanceChecksPassed(readiness);
   const checks: CSharpPromotionGateCheck[] = [
     {
       checkId: 'full-capabilities',
@@ -96,6 +111,12 @@ export function evaluateCSharpPromotionGate(
       actual: benchmark.stage,
       expected: `>= ${resolvedThresholds.requireBenchmarkStage}`,
     },
+    {
+      checkId: 'readiness-governance',
+      passed: resolvedThresholds.requireGovernanceChecksPassed ? governancePassed : true,
+      actual: governancePassed ? 'pass' : 'fail',
+      expected: resolvedThresholds.requireGovernanceChecksPassed ? 'pass' : 'optional',
+    },
   ];
 
   const blockingReasons = checks
@@ -118,7 +139,7 @@ export function evaluateCSharpPromotionGate(
       readinessStage: readiness.stage,
       readinessScore: readiness.score,
       benchmarkStage: benchmark.stage,
+      governanceChecksPassed: governancePassed,
     },
   };
 }
-

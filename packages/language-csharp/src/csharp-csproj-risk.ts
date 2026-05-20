@@ -20,7 +20,10 @@ export interface CSharpCsprojRiskFinding {
     | 'package-reference-without-version'
     | 'central-package-management-detected'
     | 'central-package-management-config-missing'
-    | 'conditional-build-configuration';
+    | 'conditional-build-configuration'
+    | 'sdk-version-missing'
+    | 'nuget-source-mapping-missing'
+    | 'restore-locked-mode-disabled';
   severity: 'info' | 'warning' | 'error';
   projectPath: string;
   evidence: string;
@@ -166,6 +169,46 @@ export function buildCSharpCsprojRiskModel(
         'warning',
         '.',
         'PackageReference without explicit Version detected but Directory.Packages.props is missing'
+      )
+    );
+  }
+
+  const hasPinnedSdk = projectEvidence.globalJsonProfiles.some((profile) => Boolean(profile.sdkVersion));
+  if (!hasPinnedSdk) {
+    findings.push(
+      buildFinding(
+        'sdk-version-missing',
+        'warning',
+        '.',
+        'global.json sdk.version is missing; reproducible toolchain pin is weak'
+      )
+    );
+  }
+
+  const hasNugetMapping = projectEvidence.nugetConfigProfiles.some(
+    (profile) => profile.packageSourceMappingEnabled
+  );
+  if (!hasNugetMapping) {
+    findings.push(
+      buildFinding(
+        'nuget-source-mapping-missing',
+        'warning',
+        '.',
+        'NuGet.Config packageSourceMapping is missing; package source governance is weak'
+      )
+    );
+  }
+
+  const restoreLockedModeEnabled = projectEvidence.nugetConfigProfiles.some(
+    (profile) => (profile.restoreLockedMode ?? '').toLowerCase() === 'true'
+  );
+  if (!restoreLockedModeEnabled) {
+    findings.push(
+      buildFinding(
+        'restore-locked-mode-disabled',
+        'warning',
+        '.',
+        'NuGet restoreLockedMode is not enabled; repeatable restore guard is weaker'
       )
     );
   }

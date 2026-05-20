@@ -7,6 +7,7 @@ require('ts-node/register/transpile-only');
 const {
   csharpLanguageAdapterV2,
   createCSharpAdapterCatalogEntry,
+  collectCSharpProjectEvidence,
   buildCSharpInventory,
   buildCSharpSymbolReferenceIndex,
   buildCSharpSolutionProjectGraph,
@@ -23,6 +24,14 @@ async function main() {
   assert.ok(
     (profile.evidence ?? []).some((entry) => entry.toLowerCase().includes('directory.packages.props')),
     'profile should include Directory.Packages.props evidence'
+  );
+  assert.ok(
+    (profile.evidence ?? []).some((entry) => entry.toLowerCase().includes('global.json#sdk=')),
+    'profile should include global.json sdk evidence'
+  );
+  assert.ok(
+    (profile.evidence ?? []).some((entry) => entry.toLowerCase().includes('nuget.config#sources=')),
+    'profile should include NuGet.Config evidence'
   );
 
   const inventory = await csharpLanguageAdapterV2.scanSourceInventory({
@@ -76,6 +85,7 @@ async function main() {
     repositoryRoot: fixtureRoot,
     includeGlobs: ['**/*.cs'],
   });
+  const sampleEvidence = collectCSharpProjectEvidence(fixtureRoot);
   const symbolIndex = buildCSharpSymbolReferenceIndex(analysis);
   assert.ok(symbolIndex.references.length >= 5);
   assert.ok(
@@ -106,9 +116,18 @@ async function main() {
     inventoryFileCount: analysis.inventory.files.length,
     symbolReferenceIndex: symbolIndex,
     csprojRisk: sampleRisk,
+    projectEvidence: sampleEvidence,
     mapReport,
   });
-  assert.ok(readiness.checks.length >= 6);
+  assert.ok(readiness.checks.length >= 8);
+  assert.ok(
+    readiness.checks.some((check) => check.checkId === 'sdk-pinning' && check.passed),
+    'readiness should pass sdk pinning check'
+  );
+  assert.ok(
+    readiness.checks.some((check) => check.checkId === 'nuget-source-mapping' && check.passed),
+    'readiness should pass NuGet source mapping check'
+  );
 }
 
 main().then(
