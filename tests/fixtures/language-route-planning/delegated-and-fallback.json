@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "id": "delegated-route-plan",
+      "request": {
+        "intent": "plan atomize dry-run route",
+        "repositoryRoot": "/workspace/repo",
+        "languageId": "python",
+        "adapterResolution": {
+          "ok": true,
+          "languageId": "python",
+          "selected": {
+            "adapterId": "py-bundled",
+            "moduleName": "@ai-atomic-framework/language-python",
+            "source": "bundled",
+            "languageIds": ["python"],
+            "score": 120,
+            "reasons": ["source-score=100", "capability-score=20"],
+            "fallback": {
+              "adapterId": "py-bundled",
+              "languageId": "python",
+              "requiredCapabilities": ["legacyRoutePlanning"],
+              "supported": ["legacyRoutePlanning"],
+              "advisory": [],
+              "unsupported": [],
+              "messages": ["Adapter py-bundled fully supports requested capabilities for python."],
+              "ok": true
+            }
+          },
+          "alternatives": [],
+          "rejected": [],
+          "messages": ["Selected adapter py-bundled (@ai-atomic-framework/language-python) for python."],
+          "notes": []
+        }
+      },
+      "delegateResult": {
+        "routeId": "py-route-01",
+        "steps": [
+          { "phase": "analyze", "description": "Analyze symbols." },
+          { "phase": "plan", "description": "Build adapter-native route plan." }
+        ]
+      },
+      "expect": {
+        "mode": "adapter-delegated",
+        "routeId": "py-route-01",
+        "messageIncludes": "Delegated legacy route planning to adapter"
+      }
+    },
+    {
+      "id": "fallback-route-plan",
+      "request": {
+        "intent": "plan atomize dry-run route",
+        "repositoryRoot": "/workspace/repo",
+        "languageId": "javascript",
+        "adapterResolution": {
+          "ok": false,
+          "languageId": "javascript",
+          "selected": {
+            "adapterId": "js-bundled",
+            "moduleName": "@ai-atomic-framework/language-js",
+            "source": "bundled",
+            "languageIds": ["javascript"],
+            "score": 70,
+            "reasons": ["source-score=100", "capability-score=-30"],
+            "fallback": {
+              "adapterId": "js-bundled",
+              "languageId": "javascript",
+              "requiredCapabilities": ["legacyRoutePlanning"],
+              "supported": [],
+              "advisory": [],
+              "unsupported": ["legacyRoutePlanning"],
+              "messages": ["Adapter js-bundled cannot fully support javascript; missing legacy route planning."],
+              "ok": false
+            }
+          },
+          "alternatives": [],
+          "rejected": [],
+          "messages": ["Selected adapter js-bundled (@ai-atomic-framework/language-js) for javascript."],
+          "notes": []
+        }
+      },
+      "expect": {
+        "mode": "generic-fallback",
+        "routeIdPrefix": "fallback-javascript-",
+        "messageIncludes": "Used generic fallback route plan"
+      }
+    }
+  ]
+}
+
