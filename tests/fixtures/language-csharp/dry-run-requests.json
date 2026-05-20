@@ -1,0 +1,16 @@
+{
+  "atomizeRequest": {
+    "repositoryRoot": "tests/fixtures/language-csharp/sample-project",
+    "operation": "atomize",
+    "goal": "extract a service atom from csharp fixture",
+    "entrypoint": "src/Program.cs",
+    "includeGlobs": ["**/*.cs"]
+  },
+  "infectRequest": {
+    "repositoryRoot": "tests/fixtures/language-csharp/sample-project",
+    "operation": "infect",
+    "goal": "inject dry-run shim planning for csharp fixture",
+    "entrypoint": "src/Program.cs",
+    "includeGlobs": ["**/*.cs"]
+  }
+}

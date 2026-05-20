@@ -2350,5 +2350,47 @@
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1104.task.md",
     "title": "ATM-LANG-1104 - Docs neutrality and bilingual positioning validator",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0944",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0001.task.md",
+    "title": "ATM-LANG-CSHARP-0001 - C# adapter package skeleton",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0945",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0002.task.md",
+    "title": "ATM-LANG-CSHARP-0002 - .sln / .csproj profile detection",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0946",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0003.task.md",
+    "title": "ATM-LANG-CSHARP-0003 - C# source inventory and symbol range",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0947",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0004.task.md",
+    "title": "ATM-LANG-CSHARP-0004 - partial class and generated file risk model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0948",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0005.task.md",
+    "title": "ATM-LANG-CSHARP-0005 - diagnostics parser fixture",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0949",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0006.task.md",
+    "title": "ATM-LANG-CSHARP-0006 - dry-run planner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0950",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0007.task.md",
+    "title": "ATM-LANG-CSHARP-0007 - validate-language-csharp validator",
+    "category": "other"
   }
 ]

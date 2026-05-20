@@ -73,6 +73,7 @@
     "validate:schemas": "node scripts/validate-schemas.ts",
     "validate:python-adapter": "node scripts/validate-python-adapter.ts --mode validate",
     "validate:language-js": "node scripts/validate-language-js.ts --mode validate",
+    "validate:language-csharp": "node scripts/validate-language-csharp.ts --mode validate",
     "validate:map-curator": "node scripts/validate-map-curator.ts --mode validate",
     "validate:guide": "node scripts/validate-guide.ts --mode validate",
     "validate:neutrality": "node scripts/validate-neutrality.ts --mode validate",

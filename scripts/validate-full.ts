@@ -9,6 +9,7 @@ const VALIDATORS = [
   { path: 'scripts/validate-guidance.ts', args: ['--mode', 'validate'] },
   { path: 'scripts/validate-python-adapter.ts', args: ['--mode', 'validate'] },
   { path: 'scripts/validate-language-js.ts', args: ['--mode', 'validate'] },
+  { path: 'scripts/validate-language-csharp.ts', args: ['--mode', 'validate'] },
   { path: 'scripts/validate-map-curator.ts', args: ['--mode', 'validate'] },
   { path: 'scripts/roadmap-traceability-check.ts', args: ['--mode', 'validate'] },
   { path: 'scripts/atom-map-coverage-check.ts', args: ['--mode', 'validate'] },

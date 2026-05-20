@@ -330,3 +330,10 @@
 | `doc_other_0941` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1102.task.md | ATM-LANG-1102 - Atom/map coverage validator |
 | `doc_other_0942` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1103.task.md | ATM-LANG-1103 - Script facade boundary validator |
 | `doc_other_0943` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1104.task.md | ATM-LANG-1104 - Docs neutrality and bilingual positioning validator |
+| `doc_other_0944` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0001.task.md | ATM-LANG-CSHARP-0001 - C# adapter package skeleton |
+| `doc_other_0945` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0002.task.md | ATM-LANG-CSHARP-0002 - .sln / .csproj profile detection |
+| `doc_other_0946` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0003.task.md | ATM-LANG-CSHARP-0003 - C# source inventory and symbol range |
+| `doc_other_0947` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0004.task.md | ATM-LANG-CSHARP-0004 - partial class and generated file risk model |
+| `doc_other_0948` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0005.task.md | ATM-LANG-CSHARP-0005 - diagnostics parser fixture |
+| `doc_other_0949` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0006.task.md | ATM-LANG-CSHARP-0006 - dry-run planner |
+| `doc_other_0950` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0007.task.md | ATM-LANG-CSHARP-0007 - validate-language-csharp validator |

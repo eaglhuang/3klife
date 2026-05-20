@@ -1,0 +1,61 @@
+{
+  "requiredFiles": [
+    "src/Contracts/IService.cs",
+    "src/Core/Service.cs",
+    "src/Generated/Designer.Designer.cs",
+    "src/Generated/FileBridge.g.cs",
+    "src/Program.cs",
+    "src/Program.Partial.cs"
+  ],
+  "requiredSymbolKinds": [
+    "namespace",
+    "class",
+    "interface",
+    "struct",
+    "enum",
+    "method",
+    "property",
+    "field"
+  ],
+  "requiredDependencyEdges": [
+    {
+      "from": "src/Program.cs",
+      "to": "module:MyApp.Core",
+      "relation": "imports"
+    },
+    {
+      "from": "src/Program.cs",
+      "to": "module:MyApp.Generated",
+      "relation": "imports"
+    },
+    {
+      "from": "src/Core/Service.cs",
+      "to": "module:System.IO",
+      "relation": "imports"
+    }
+  ],
+  "requiredCallEdges": [
+    {
+      "from": "src/Program.cs",
+      "to": "symbol:service.BuildMessage",
+      "relation": "calls"
+    },
+    {
+      "from": "src/Program.cs",
+      "to": "symbol:FileBridge.WriteOutput",
+      "relation": "calls"
+    }
+  ],
+  "requiredArtifactEdges": [
+    {
+      "from": "src/Core/Service.cs",
+      "to": "artifact:templates/message.txt",
+      "relation": "reads"
+    },
+    {
+      "from": "src/Generated/FileBridge.g.cs",
+      "to": "artifact:artifacts/generated-output.txt",
+      "relation": "writes"
+    }
+  ]
+}

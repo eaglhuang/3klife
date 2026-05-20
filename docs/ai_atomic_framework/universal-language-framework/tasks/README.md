@@ -70,6 +70,20 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-1100 | Cross-map validator suite | ATM-MAP-LANG-1100 | done | 0802 |
 | ATM-LANG-1104 | Docs neutrality and bilingual positioning validator | ATM-MAP-LANG-1100 | done | 0903 |
 
+## C# Future Adapter Task Pack
+
+這組任務是 `ATM-LANG-CSHARP-*` extension pack，不列入核心 41 張 `ATM-LANG-\d{4}` task count。它承接 `ATM-LANG-TABLE-0010` 的 future adapter readiness，目標是先建立 fixture-backed、dry-run-only、validator-backed 的 C# 可行性層，不宣稱 C# 已成為 official support。
+
+| C# Task ID | 任務 | Map | 狀態 | 依賴 | Atomic Tables |
+|---|---|---|---|---|---|
+| ATM-LANG-CSHARP-0001 | C# adapter package skeleton | ATM-MAP-LANG-CSHARP-0001 | done | ATM-LANG-1002 | 0006, 0010 |
+| ATM-LANG-CSHARP-0002 | `.sln` / `.csproj` profile detection | ATM-MAP-LANG-CSHARP-0002 | done | CSHARP-0001 | 0006, 0010 |
+| ATM-LANG-CSHARP-0003 | C# source inventory + symbol range | ATM-MAP-LANG-CSHARP-0003 | done | CSHARP-0002 | 0006, 0010 |
+| ATM-LANG-CSHARP-0004 | partial class / generated file risk model | ATM-MAP-LANG-CSHARP-0004 | done | CSHARP-0003 | 0006, 0010 |
+| ATM-LANG-CSHARP-0005 | diagnostics parser fixture | ATM-MAP-LANG-CSHARP-0005 | done | CSHARP-0004 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0006 | dry-run planner | ATM-MAP-LANG-CSHARP-0006 | done | CSHARP-0005 | 0007, 0010 |
+| ATM-LANG-CSHARP-0007 | validate-language-csharp validator | ATM-MAP-LANG-CSHARP-0007 | done | CSHARP-0006 | 0006, 0007, 0009, 0010 |
+
 ## 維護規則
 
 - 任務進入 `done` 前必須在 task card 的 Notes 寫入實際 validation command。
@@ -93,3 +107,5 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-TABLE-0008 | Core Required | ATM-LANG-0600, ATM-LANG-0602 | decomposition graph 必須列 members / edges / entrypoints | 一律啟用 |
 | ATM-LANG-TABLE-0009 | Core Required | ATM-LANG-1100 | validator ownership 與 failure mode 必須明確 | 一律啟用 |
 | ATM-LANG-TABLE-0010 | Optional Extension | ATM-LANG-1000, ATM-LANG-1002 | future adapter readiness 不可誤宣稱正式支援 | 涉及未來語言規劃時啟用 |
+
+`ATM-LANG-CSHARP-*` task pack 會消費上表既有 table registry，不新增新的 Atomic Maps table。後續若 C# adapter 需要獨立產出新的 map table，必須先回主計畫書 §5.1 登記新的 `ATM-LANG-TABLE-*`，再更新 validator。

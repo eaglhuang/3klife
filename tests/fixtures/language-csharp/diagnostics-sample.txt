@@ -1,0 +1,3 @@
+src/Program.cs(14,13): error CS0103: The name 'UnknownSymbol' does not exist in the current context [src/MyApp.csproj]
+src/Core/Service.cs(19,17): warning CS8618: Non-nullable property 'LastMessage' must contain a non-null value when exiting constructor. [src/MyApp.csproj]
+C:\Program Files\dotnet\sdk\8.0.100\Microsoft.Common.CurrentVersion.targets(5,5): error MSB1003: Specify a project or solution file.
