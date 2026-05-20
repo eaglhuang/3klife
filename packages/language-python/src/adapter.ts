@@ -7,7 +7,9 @@ import type {
   SourceInventoryRequest,
 } from '../../../plugin-sdk/src/language-adapter';
 import {
+  buildPythonLegacyRoutePlan,
   detectPythonRuntimeCommands,
+  normalizePythonSymbolId,
   scanPythonSourceInventory,
 } from './python-static-analysis';
 import { planPythonAtomizeDryRun, planPythonInfectDryRun } from './python-dry-run';
@@ -15,6 +17,7 @@ import {
   computePythonEquivalenceContract,
   parsePythonDiagnostics,
 } from './python-diagnostics';
+import { buildPythonAtomicMapDecomposition } from './python-map';
 
 function hasPythonFile(repositoryRoot: string): boolean {
   const root = path.resolve(repositoryRoot);
@@ -99,15 +102,16 @@ export const pythonLanguageAdapterV2: LanguageAdapterV2 = {
   contractVersion: 'v2',
   capabilities: {
     sourceInventory: 'full',
-    symbolNormalization: 'partial',
-    legacyRoutePlanning: 'partial',
+    symbolNormalization: 'full',
+    legacyRoutePlanning: 'full',
     atomizeDryRun: 'full',
     infectDryRun: 'full',
     runtimeCommandDetection: 'full',
     diagnosticsParsing: 'full',
     equivalenceContract: 'full',
+    atomicMapDecomposition: 'full',
     dependencyGraph: 'full',
-    callGraph: 'partial',
+    callGraph: 'full',
     artifactGraph: 'full',
   },
   detectProjectProfile(repositoryRoot: string) {
@@ -118,6 +122,12 @@ export const pythonLanguageAdapterV2: LanguageAdapterV2 = {
   },
   scanSourceInventory(request) {
     return scanSourceInventory(request);
+  },
+  normalizeSymbolId(request) {
+    return normalizePythonSymbolId(request.rawSymbolId, request.filePath);
+  },
+  async buildLegacyRoutePlan(request) {
+    return buildPythonLegacyRoutePlan(request.intent, request.repositoryRoot);
   },
   detectRuntimeCommands(request) {
     return detectPythonRuntimeCommands(request);
@@ -133,5 +143,8 @@ export const pythonLanguageAdapterV2: LanguageAdapterV2 = {
   },
   computeEquivalenceContract(request) {
     return computePythonEquivalenceContract(request);
+  },
+  buildAtomicMapDecomposition(request) {
+    return buildPythonAtomicMapDecomposition(request);
   },
 };

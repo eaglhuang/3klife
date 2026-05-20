@@ -54,7 +54,7 @@ function validateCSharpComputeAtom(repositoryRoot: string): LanguageAdapterRepor
     contractVersion: 'v2',
     messages: [
       `C# profile accepted with confidence=${profile.confidence.toFixed(2)}.`,
-      'Support level remains future/partial and dry-run only.',
+      'Support level remains future feasibility mode with mixed capability maturity.',
     ],
   };
 }
@@ -85,16 +85,16 @@ export const csharpLanguageAdapterV2: LanguageAdapterV2 = {
   contractVersion: 'v2',
   capabilities: {
     sourceInventory: 'partial',
-    symbolNormalization: 'partial',
-    legacyRoutePlanning: 'partial',
+    symbolNormalization: 'full',
+    legacyRoutePlanning: 'full',
     atomizeDryRun: 'partial',
     infectDryRun: 'partial',
     runtimeCommandDetection: 'partial',
     diagnosticsParsing: 'partial',
     equivalenceContract: 'partial',
-    atomicMapDecomposition: 'partial',
+    atomicMapDecomposition: 'full',
     dependencyGraph: 'partial',
-    callGraph: 'partial',
+    callGraph: 'full',
     artifactGraph: 'partial',
   },
   detectProjectProfile(repositoryRoot: string) {

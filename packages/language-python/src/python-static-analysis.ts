@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type {
   EdgeRef,
+  LegacyRoutePlanReport,
   RuntimeCommandEntry,
   RuntimeCommandReport,
   RuntimeCommandRequest,
@@ -45,6 +46,11 @@ export interface PythonSurfaceReport {
 export interface PythonProjectAnalysisReport {
   inventory: SourceInventoryReport;
   surface: PythonSurfaceReport;
+}
+
+interface PythonLegacyRouteIntent {
+  action: 'atomize' | 'infect' | 'inventory' | 'validate' | 'plan';
+  focus: string[];
 }
 
 const CALL_KEYWORDS = new Set([
@@ -440,6 +446,36 @@ function dedupeEdges(edges: readonly EdgeRef[]): EdgeRef[] {
   return Array.from(byKey.values());
 }
 
+function canonicalizePythonSymbol(rawSymbolId: string): string {
+  return rawSymbolId
+    .replace(/\\/g, '/')
+    .replace(/::/g, '.')
+    .replace(/\s+/g, '')
+    .replace(/[^A-Za-z0-9_./:#()[\]-]/g, '')
+    .toLowerCase();
+}
+
+function normalizeIntent(intent: string): string[] {
+  return intent
+    .toLowerCase()
+    .replace(/[^a-z0-9_\-\s]/g, ' ')
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+}
+
+function parsePythonLegacyRouteIntent(intent: string): PythonLegacyRouteIntent {
+  const tokens = normalizeIntent(intent);
+  const action =
+    (['atomize', 'infect', 'inventory', 'validate', 'plan'] as const).find((keyword) =>
+      tokens.includes(keyword)
+    ) ?? 'plan';
+  return {
+    action,
+    focus: tokens.filter((token) => token !== action),
+  };
+}
+
 export interface PythonAstInventoryReport {
   files: SourceFileEntry[];
   moduleAnalyses: PythonModuleAnalysis[];
@@ -595,4 +631,72 @@ export async function detectPythonRuntimeCommands(
     inventoryBase.moduleAnalyses,
     request.includeRisky ?? false
   ).runtimeCommands;
+}
+
+export function normalizePythonSymbolId(rawSymbolId: string, filePath?: string) {
+  const normalized = canonicalizePythonSymbol(rawSymbolId);
+  if (!filePath) {
+    return {
+      normalized,
+      strategy: 'python-canonical-qualified-symbol',
+    };
+  }
+  return {
+    normalized: canonicalizePythonSymbol(`${toPosix(filePath)}#${normalized}`),
+    strategy: 'python-canonical-qualified-symbol',
+  };
+}
+
+export async function buildPythonLegacyRoutePlan(
+  intent: string,
+  repositoryRoot: string
+): Promise<LegacyRoutePlanReport> {
+  const parsed = parsePythonLegacyRouteIntent(intent);
+  const analysis = await analyzePythonProject({
+    repositoryRoot,
+    includeGlobs: ['**/*.py'],
+  });
+  const focusLabel = parsed.focus.length > 0 ? parsed.focus.join(', ') : 'workspace scope';
+  const sideEffectCount = analysis.surface.sideEffectWarnings.length;
+  const routeIdBase = Buffer.from(`${parsed.action}:${focusLabel}`)
+    .toString('base64')
+    .replace(/=+$/g, '')
+    .slice(0, 16);
+
+  return {
+    routeId: `python-legacy-${parsed.action}-${routeIdBase}`,
+    steps: [
+      {
+        phase: 'inventory',
+        description: `scan python source inventory under ${repositoryRoot}`,
+      },
+      {
+        phase: 'entrypoint-resolution',
+        description: `resolve entrypoint candidates for ${focusLabel}`,
+      },
+      {
+        phase: 'dependency-graph',
+        description: `trace import graph across ${analysis.inventory.files.length} python files`,
+      },
+      {
+        phase: 'call-graph',
+        description: `build deterministic call graph (${analysis.inventory.callEdges?.length ?? 0} edges)`,
+      },
+      {
+        phase: 'side-effect-gate',
+        description:
+          sideEffectCount > 0
+            ? `mark side-effect review gates (${sideEffectCount} findings)`
+            : 'no side-effect findings detected in fixture scope',
+      },
+      {
+        phase: 'dry-run-route',
+        description: `propose ${parsed.action} dry-run routing with no source mutation`,
+      },
+    ],
+    warnings: [
+      'Python route planning is deterministic and dry-run only.',
+      ...analysis.surface.sideEffectWarnings.slice(0, 5),
+    ],
+  };
 }

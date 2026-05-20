@@ -107,7 +107,14 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/adapter.ts',
-    snippets: ["legacyRoutePlanning: 'partial'", 'buildLegacyRoutePlan(request)'],
+    snippets: [
+      "symbolNormalization: 'full'",
+      "legacyRoutePlanning: 'full'",
+      "atomicMapDecomposition: 'full'",
+      "callGraph: 'full'",
+      'buildLegacyRoutePlan(request)',
+      'buildAtomicMapDecomposition(request)',
+    ],
   },
 ];
 
@@ -547,12 +554,23 @@ async function runFixtureCheck() {
   assert.equal(csharpLanguageAdapterV2.capabilities?.runtimeCommandDetection, 'partial', 'runtime command capability mismatch');
   assert.equal(
     csharpLanguageAdapterV2.capabilities?.legacyRoutePlanning,
-    'partial',
+    'full',
     'legacy route capability mismatch'
   );
-  assert.equal(csharpLanguageAdapterV2.capabilities?.atomicMapDecomposition, 'partial', 'atomic map capability mismatch');
+  assert.equal(
+    csharpLanguageAdapterV2.capabilities?.symbolNormalization,
+    'full',
+    'symbol normalization capability mismatch'
+  );
+  assert.equal(
+    csharpLanguageAdapterV2.capabilities?.atomicMapDecomposition,
+    'full',
+    'atomic map capability mismatch'
+  );
+  assert.equal(csharpLanguageAdapterV2.capabilities?.callGraph, 'full', 'call graph capability mismatch');
   assert.equal(csharpLanguageAdapterV2.capabilities?.equivalenceContract, 'partial', 'equivalence capability mismatch');
   assert.equal(typeof csharpLanguageAdapterV2.buildLegacyRoutePlan, 'function', 'buildLegacyRoutePlan should exist');
+  assert.equal(typeof csharpLanguageAdapterV2.buildAtomicMapDecomposition, 'function', 'buildAtomicMapDecomposition should exist');
 
   const normalizedSymbol = csharpLanguageAdapterV2.normalizeSymbolId({
     rawSymbolId: 'MyApp.Core.Overloads.Sum(string left, string right)',
@@ -582,8 +600,8 @@ async function runFixtureCheck() {
   assert.equal(resolution.selected?.adapterId, 'csharp-future', 'resolver should select csharp adapter');
   assert.equal(resolution.ok, true, 'resolver should pass with partial capability allowed');
   assert.ok(
-    resolution.selected?.fallback.advisory.includes('legacyRoutePlanning'),
-    'resolver advisory should include legacyRoutePlanning'
+    resolution.selected?.fallback.advisory.includes('sourceInventory'),
+    'resolver advisory should include sourceInventory partial capability'
   );
 
   const delegatedRoute = await planLegacyRouteWithAdapter({
@@ -601,7 +619,10 @@ async function runFixtureCheck() {
 
   const validationReport = csharpLanguageAdapterV2.validateComputeAtom({ repositoryRoot: fixtureRoot });
   assert.equal(validationReport.ok, true, 'validateComputeAtom should pass on fixture');
-  assert.ok(validationReport.messages.some((message) => message.includes('future/partial')), 'validateComputeAtom should mention future/partial');
+  assert.ok(
+    validationReport.messages.some((message) => message.includes('future feasibility mode')),
+    'validateComputeAtom should mention future feasibility mode'
+  );
 
   return {
     inventoryFileCount: analysis.inventory.files.length,

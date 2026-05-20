@@ -10,6 +10,7 @@ const REQUIRED_FILES = [
   'packages/language-python/src/python-static-analysis.ts',
   'packages/language-python/src/python-dry-run.ts',
   'packages/language-python/src/python-diagnostics.ts',
+  'packages/language-python/src/python-map.ts',
   'fixtures/python-adapter/sample-project/app/main.py',
   'fixtures/python-adapter/sample-project/app/service.py',
   'fixtures/python-adapter/sample-project/app/api.py',
@@ -28,6 +29,8 @@ const REQUIRED_SNIPPETS = [
       'detectPythonCliApiSideEffects(',
       'scanPythonSourceInventory(',
       'detectPythonRuntimeCommands(',
+      'normalizePythonSymbolId(',
+      'buildPythonLegacyRoutePlan(',
     ],
   },
   {
@@ -43,6 +46,13 @@ const REQUIRED_SNIPPETS = [
     snippets: [
       'parsePythonDiagnostics(',
       'computePythonEquivalenceContract(',
+    ],
+  },
+  {
+    path: 'packages/language-python/src/python-map.ts',
+    snippets: [
+      'buildPythonAtomicMapDecomposition(',
+      'evidenceGate',
     ],
   },
 ];
@@ -154,6 +164,26 @@ async function runFixtureCheck() {
     'full',
     'infectDryRun capability mismatch'
   );
+  assert.equal(
+    pythonLanguageAdapterV2.capabilities?.symbolNormalization,
+    'full',
+    'symbolNormalization capability mismatch'
+  );
+  assert.equal(
+    pythonLanguageAdapterV2.capabilities?.legacyRoutePlanning,
+    'full',
+    'legacyRoutePlanning capability mismatch'
+  );
+  assert.equal(
+    pythonLanguageAdapterV2.capabilities?.atomicMapDecomposition,
+    'full',
+    'atomicMapDecomposition capability mismatch'
+  );
+  assert.equal(
+    pythonLanguageAdapterV2.capabilities?.callGraph,
+    'full',
+    'callGraph capability mismatch'
+  );
 
   assert.ok(
     typeof pythonLanguageAdapterV2.planAtomizeDryRun === 'function',
@@ -170,6 +200,18 @@ async function runFixtureCheck() {
   assert.ok(
     typeof pythonLanguageAdapterV2.computeEquivalenceContract === 'function',
     'computeEquivalenceContract should exist'
+  );
+  assert.ok(
+    typeof pythonLanguageAdapterV2.normalizeSymbolId === 'function',
+    'normalizeSymbolId should exist'
+  );
+  assert.ok(
+    typeof pythonLanguageAdapterV2.buildLegacyRoutePlan === 'function',
+    'buildLegacyRoutePlan should exist'
+  );
+  assert.ok(
+    typeof pythonLanguageAdapterV2.buildAtomicMapDecomposition === 'function',
+    'buildAtomicMapDecomposition should exist'
   );
 
   const atomizePlan = await pythonLanguageAdapterV2.planAtomizeDryRun(dryRunRequests.atomizeRequest);
@@ -210,6 +252,33 @@ async function runFixtureCheck() {
     );
   }
 
+  const normalizedSymbol = pythonLanguageAdapterV2.normalizeSymbolId({
+    rawSymbolId: 'App.Service::run_job(raw_text)',
+    filePath: 'app/service.py',
+  });
+  assert.ok(
+    normalizedSymbol.normalized.includes('app/service.py#'),
+    'normalizeSymbolId should preserve file path prefix'
+  );
+
+  const legacyRoute = await pythonLanguageAdapterV2.buildLegacyRoutePlan({
+    intent: 'plan atomize route',
+    repositoryRoot: fixtureRoot,
+  });
+  assert.ok(
+    legacyRoute.routeId.startsWith('python-legacy-'),
+    'legacy route id should use python-legacy prefix'
+  );
+  assert.ok(legacyRoute.steps.length >= 5, 'legacy route should include >= 5 steps');
+
+  const mapReport = await pythonLanguageAdapterV2.buildAtomicMapDecomposition({
+    mapId: 'ATM-MAP-LANG-0700',
+    repositoryRoot: fixtureRoot,
+    sourceInventory: analysis.inventory,
+  });
+  assert.equal(mapReport.evidenceGate?.accepted, true, 'atomic map evidence gate should pass');
+  assert.ok((mapReport.entrypoints ?? []).length >= 1, 'map decomposition should include entrypoints');
+
   return {
     inventoryFileCount: analysis.inventory.files.length,
     dependencyEdgeCount: analysis.inventory.dependencyEdges?.length ?? 0,
@@ -221,6 +290,9 @@ async function runFixtureCheck() {
     infectStepCount: infectPlan.steps.length,
     diagnosticsCount: diagnostics.diagnostics.length,
     equivalenceCaseCount: equivalenceFixtures.cases.length,
+    legacyRouteStepCount: legacyRoute.steps.length,
+    mapMemberCount: mapReport.members.length,
+    mapEdgeCount: mapReport.edges.length,
   };
 }
 
