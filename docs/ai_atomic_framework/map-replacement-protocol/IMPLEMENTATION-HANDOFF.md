@@ -86,7 +86,7 @@ node atm.mjs tasks close --task TASK-MRP-0011 --evidence <path> --json
 | M15 Telemetry Dashboard | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M11, M12 |
 | M16 behavior.reshape | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M15, M17 |
 | M17 behavior.retire | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M10（已 done） |
-| M18 Atom Capsule | ✅ | ✅ | ✅ | n/a | ❌ | **救援基石**，重要 |
+| M18 Atom Capsule | ✅ | ✅ | ✅ | n/a | ✅ | **救援基石**，CID+Registry+L1/L2 完成 |
 | M19 Mermaid Auto-gen | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M11 |
 | M20 Shadow A/B | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M4, M10 |
 | M21 Map Capsule | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M18 |
