@@ -3,13 +3,16 @@ doc_id: doc_other_1003
 task_id: TASK-ASA-0001
 title: 定義 ATM 100% 原子化覆蓋口徑與排除政策
 milestone: M1
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: [none]
 related_plan: docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-21T00:00:00Z
+started_by_agent: CopilotAgent
+completed_at: 2026-05-21T00:05:00Z
 ---
 
 # TASK-ASA-0001 定義 ATM 100% 原子化覆蓋口徑與排除政策
@@ -62,4 +65,9 @@ docs review + node atm.mjs next --json
 
 ## Notes
 
-- 2026-05-21 | 狀態: planned | 驗證: pending | 變更: 建立 ATM 100% 自我原子化任務卡 | 阻塞: none
+- 2026-05-21 | 狀態: done | 驗證: completed | 變更: 實作 ATOMIZATION_COVERAGE_TAXONOMY.md, exclusion-inventory.json, path-to-atom-map.json | 阻塞: none
+- Evidence: ATM repo commit 4884a19 with coverage taxonomy, exclusion schema, and initial path mappings
+- Deliverables: 
+  - ATM repo: docs/ATOMIZATION_COVERAGE_TAXONOMY.md (分類規則 + DogfoodScore schema)
+  - ATM repo: atomic_workbench/atomization-coverage/exclusion-inventory.json (17 排除路徑)
+  - ATM repo: atomic_workbench/atomization-coverage/path-to-atom-map.json (12 production path 對應)
