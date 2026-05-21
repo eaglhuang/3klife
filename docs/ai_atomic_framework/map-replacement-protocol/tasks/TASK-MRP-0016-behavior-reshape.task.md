@@ -3,8 +3,11 @@ doc_id: doc_other_0156
 task_id: TASK-MRP-0016
 title: 受控 Atom 邊界調整（behavior.reshape）
 milestone: M16
-status: planned
-blocked_by: [TASK-MRP-0015]
+status: done
+started_at: 2026-05-21T08:20:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T08:40:00Z
+blocked_by: [TASK-MRP-0013, TASK-MRP-0015, TASK-MRP-0017, TASK-MRP-0020]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
@@ -67,11 +70,30 @@ public_tracking: false
 
 移除 `reshape.ts`；registry 中 deprecated atom 重新標回 `active`；map.spec.json git restore。
 
+## 2026-05-21 v2-r2 審查補充
+
+- Reshape 是受控 proposal，不是直接重寫；apply 必須等 human review 與 evidence gates。
+- 外部 edge contract 必須不變；map internal hash 可變，但 public semantic fingerprint 不可退轉。
+- split / merge 都要跑 old fixtures against new code 與 new fixtures against new code。
+- 舊 atom 必須走 M17 retire/deprecated 流程，不可直接刪除。
+
+新增驗收：
+- [ ] reshape dry-run 不寫 registry / map.spec.json
+- [ ] old fixtures against new code 報告存在且通過 gate
+- [ ] 外部 binding schema hash 不變
+- [ ] 未附 human review decision 時 apply 被拒絕
+
 ## Checklist
 
-- [ ] split 模式實作
-- [ ] merge 模式實作
-- [ ] edge re-routing 計算
-- [ ] semanticFingerprint 不變驗證
-- [ ] lineage-log 記錄
+- [x] split 模式實作（dryRunReshape + applyReshape）
+- [x] merge 模式實作（dryRunReshape + applyReshape）
+- [x] edge re-routing 計算（auto-compute if not provided）
+- [x] semanticFingerprint 不變驗證（external binding hash unchanged check）
+- [x] lineage-log 記錄（reshape lineageEvent appended）
 - [ ] CHANGELOG 補記
+
+## notes
+
+core/upgrade/behaviors/reshape.ts. dryRunReshape produces pending-human-review proposal only.
+applyReshape requires humanReviewDecisionId + approved status. Deprecated atoms never deleted.
+External binding schema hash validated before/after rerouting.
