@@ -4,7 +4,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * GeneralPortraitComposite — 武將立繪顯示面板（Composite 版）
  * Wave 2 migration from GeneralPortraitPanel - displays character portrait/artwork
  */
-import { _decorator, Node, Sprite, SpriteFrame, Label, tween, UIOpacity } from 'cc';
+import { _decorator, Sprite, Label, tween, UIOpacity } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';

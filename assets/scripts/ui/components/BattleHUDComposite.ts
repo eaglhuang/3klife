@@ -242,7 +242,7 @@ export class BattleHUDComposite extends CompositePanel {
             const fillTf = fillNode.addComponent(UITransform);
             fillTf.setContentSize(totalW, totalH);
 
-            const anchorPoint = fillNode.getComponent(UITransform) ?? fillTf;
+            const _anchorPoint = fillNode.getComponent(UITransform) ?? fillTf;
             const pos = fillNode.position.clone();
             fillNode.setPosition(-(totalW / 2), pos.y, pos.z);
         }

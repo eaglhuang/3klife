@@ -14,14 +14,12 @@
  *
  * Unity 對照：相當於 UIStyleApplier + UILayoutHelper 的組合
  */
-import { Node, Sprite, UITransform, Label, Button, Font, Color, Vec2 } from 'cc';
+import { Node, Sprite, Label, Button, Font, Color, Vec2 } from 'cc';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
 import { GradientBackground, GradientColorStop } from '../components/GradientBackground';
 import { ShadowBackground, ShadowLayerDef } from '../components/ShadowBackground';
 import { UISkinResolver, ResolvedButtonSkin, ResolvedLabelStyle } from './UISkinResolver';
-import type { UILayoutNodeSpec } from './UISpecTypes';
-import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
 
 /** 按鈕視覺狀態（對照 Unity Selectable.SelectionState） */
 export type ButtonVisualState = 'normal' | 'pressed' | 'hover' | 'disabled' | 'selected';

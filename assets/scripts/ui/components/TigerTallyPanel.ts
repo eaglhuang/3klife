@@ -18,7 +18,6 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { _decorator, Button, Color, Label, Node, Sprite, SpriteFrame } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UI_EVENTS } from '../core/UIEvents';
 

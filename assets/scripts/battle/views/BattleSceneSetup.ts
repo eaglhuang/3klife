@@ -1,4 +1,4 @@
-import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+import { IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 // @spec-source → 見 docs/cross-reference-index.md
 // [UCUF M9] 從 BattleScene.ts 提取的場景設置函數。
 // 所有函數僅依賴傳入的 Cocos Node 參數，不持有 BattleScene 實例引用。

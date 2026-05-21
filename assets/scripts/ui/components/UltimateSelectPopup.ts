@@ -17,12 +17,11 @@ import { _decorator, Button, Color, Label, Layout, Node, tween, UIOpacity, UITra
 import { EVENT_NAMES } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { UITemplateResolver } from '../core/UITemplateResolver';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { SolidBackground } from './SolidBackground';
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 /** 奧義技能項目 */
 export interface UltimateSkillItem {

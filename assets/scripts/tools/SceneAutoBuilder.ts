@@ -86,7 +86,7 @@ export class SceneAutoBuilder extends Component {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private createBattleSceneNode(parent: Node): void {
-    const node = this.getOrCreateNode(parent, "BattleScene");
+    this.getOrCreateNode(parent, "BattleScene");
     UCUFLogger.info(LogCategory.DATA, "  ✓ BattleScene 節點");
     UCUFLogger.info(LogCategory.DATA, "    → 請添加 BattleScene 元件");
     UCUFLogger.info(LogCategory.DATA, "    → 綁定：hud(BattleHUDComposite), deployPanel, resultPopup(ResultPopupComposite)");

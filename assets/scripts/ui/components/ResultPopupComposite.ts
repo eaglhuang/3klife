@@ -3,7 +3,7 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, Button, Label, Node, tween, UIOpacity } from 'cc';
+import { _decorator, Button, Node, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 

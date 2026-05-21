@@ -71,7 +71,7 @@ export class RuntimeRuleChecker {
             let passed = false;
             try {
                 passed = rule.checkFn(context);
-            } catch (err) {
+            } catch (_err) {
                 passed = false;
             }
             const result: RuleResult = {

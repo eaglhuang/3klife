@@ -73,11 +73,11 @@ export class DataLifecycleScheduler {
 
         // 注入降級回調
         this.monitor
-            .onRollupNeeded(async (result) => {
+            .onRollupNeeded(async (_result) => {
                 // 非同步觸發，不阻塞監控回調
                 void this.rollup.rollupSeason(1, 0); // fallback：無法得知當前季節時的 best-effort
             })
-            .onSweepNeeded(async (result) => {
+            .onSweepNeeded(async (_result) => {
                 void this.pendingDelete.forceSweep(1, 0);
             });
     }

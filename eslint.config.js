@@ -65,6 +65,16 @@ module.exports = [
       'settings/**',
       '**/dist/**',
       'tools_node/templates/**',
+      // 暫存分析腳本、根目錄測試腳本（非正式程式碼）
+      'scratch/**',
+      'dump-battlelog.js',
+      'dump-battlelog2.js',
+      'test-parser.js',
+      'test-parser2.js',
+      // sprite pipeline 工具（非 TS 核心）
+      'tools/**',
+      // 已廢棄的工具腳本
+      'tools_node/.deprecated/**',
     ],
   },
 

@@ -392,7 +392,7 @@ export function extractUnityParticlePrefab(text: string): UnityParticlePrefabSum
 
     const nodeMap = new Map<string, UnityPrefabNodeInternal>();
 
-    for (const [gameObjectId, gameObjectDoc] of gameObjects.entries()) {
+    for (const [, gameObjectDoc] of gameObjects.entries()) {
         const componentRefs = Array.isArray(gameObjectDoc.data.m_Component) ? gameObjectDoc.data.m_Component : [];
         let transformDoc: UnityYamlDocument | null = null;
         let particleDoc: UnityYamlDocument | null = null;

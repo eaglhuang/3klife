@@ -13,11 +13,10 @@
  *
  * Unity 對照：ConfirmDialog，但透過 CompositePanel 統一生命週期管理
  */
-import { _decorator, Button, tween, UIOpacity, Node } from 'cc';
+import { _decorator, Button, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateResolver } from '../core/UITemplateResolver';
 import { UITemplateBinder } from '../core/UITemplateBinder';
-import { services } from '../../core/managers/ServiceLoader';
 
 const { ccclass } = _decorator;
 

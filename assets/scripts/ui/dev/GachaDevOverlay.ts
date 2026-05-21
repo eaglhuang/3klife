@@ -72,6 +72,7 @@ function formatTimestamp(timestamp: number): string {
     return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function truncateText(value: unknown, limit = 180): string {
     try {
         const text = JSON.stringify(value);

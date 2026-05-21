@@ -1,6 +1,6 @@
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Label, Button, Sprite, SpriteFrame, Color, Texture2D, resources } from 'cc';
+import { _decorator, Label, Button, Sprite, SpriteFrame, Texture2D, resources } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { services } from '../../core/managers/ServiceLoader';

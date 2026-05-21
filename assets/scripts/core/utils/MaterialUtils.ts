@@ -17,14 +17,14 @@ export function setMaterialSafe(mr: MeshRenderer, mat: Material | null, index = 
             try {
                 anyMr.setMaterial(mat, index);
                 return;
-            } catch (e) {
+            } catch (_e) {
                 // fallback
             }
             // Try (index, material)
             try {
                 anyMr.setMaterial(index, mat);
                 return;
-            } catch (e) {
+            } catch (_e) {
                 // fallback
             }
         }

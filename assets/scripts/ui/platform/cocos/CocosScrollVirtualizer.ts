@@ -15,7 +15,7 @@ import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
  *
  * Unity 對照：RecyclingListView（Asset Store）/ UGUI ScrollRect + ObjectPool
  */
-import { Node, UITransform, ScrollView, EventTouch, Vec2 } from 'cc';
+import { Node, UITransform, ScrollView, EventTouch } from 'cc';
 import type { IScrollVirtualizer } from '../../core/interfaces/IScrollVirtualizer';
 import type { NodeHandle } from '../../core/interfaces/INodeFactory';
 

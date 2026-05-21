@@ -5,7 +5,6 @@ import {
     Label,
     Layout,
     Node,
-    Sprite,
     UITransform,
     VerticalTextAlignment,
 } from 'cc';

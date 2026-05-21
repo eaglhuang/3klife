@@ -74,7 +74,7 @@ const CREST_VISUAL_STATE: Record<GeneralDetailCrestState, { label: string; glow:
 };
 
 // ── Ink palette ──
-const INK_TOKENS = {
+const _INK_TOKENS = {
     strong: 'gdv3LabelName',
     quiet: 'gdv3LabelMeta',
     section: 'gdv3LabelSection',

@@ -15,14 +15,13 @@
 
 import { _decorator } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
-import type { ChildPanelBase } from '../core/ChildPanelBase';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
 import type { ContentContractRef } from '../core/UISpecTypes';
-import { services } from '../../core/managers/ServiceLoader';
 
 const { ccclass } = _decorator;
 
 /** Content Contract 宣告（與 screen spec 中 contentRequirements 對應） */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CONTRACT: ContentContractRef = {
     schemaId: 'hud-overlay-content',
     familyId: 'hud-overlay',
@@ -74,7 +73,7 @@ export class BattleHudOverlayCompositePanel extends CompositePanel {
      *
      * Unity 對照：MonoBehaviour.Start()，此時 Prefab 節點已全部就緒。
      */
-    protected override _onAfterBuildReady(binder: UITemplateBinder): void {
+    protected override _onAfterBuildReady(_binder: UITemplateBinder): void {
         // ── 1. 登記 ChildPanel（每個 lazySlot 都需要一個 ChildPanel）──────────
         // TODO: 替換為實際的 ChildPanel 子類，例如：
         // this.registerChildPanel('SlotMain',    this._overviewChild);

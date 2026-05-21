@@ -540,7 +540,7 @@ export class BuffGainEffectPool extends Component {
         slot.sparkRoot.setRotationFromEuler(slot.iconEulerBuf);
     }
 
-    private playSparkBursts(slot: EffectSlot, isHpStyle: boolean): void {
+    private playSparkBursts(slot: EffectSlot, _isHpStyle: boolean): void {
         const { sparkRoot, accentRoot, sparkQuads, sparkParticles, accentParticles } = slot;
         const profile = this.getVariantParticleProfile();
         if (sparkParticles.length > 0 || accentParticles.length > 0) {

@@ -1,4 +1,3 @@
-import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 /**
  * BattleUIInitializer.ts — 戰鬥 UI 元件自動建立輔助函式
  *

@@ -21,10 +21,9 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * Skin   JSON：assets/resources/ui-spec/skins/general-quickview-default.json
  */
 import { _decorator, Button, Label, Node } from 'cc';
-import { EVENT_NAMES, Faction } from '../../core/config/Constants';
+import { EVENT_NAMES } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 
 const { ccclass } = _decorator;

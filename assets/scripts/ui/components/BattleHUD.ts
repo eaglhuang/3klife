@@ -21,7 +21,6 @@ import { EVENT_NAMES, Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { SolidBackground } from './SolidBackground';
 

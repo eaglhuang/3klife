@@ -995,7 +995,7 @@ export class LobbyScene extends Component {
         return false;
     }
 
-    private _openGeneralListFromSmokeEntry(source: GeneralDetailEntrySmokeSource): void {
+    private _openGeneralListFromSmokeEntry(_source: GeneralDetailEntrySmokeSource): void {
         const host = this._lobbyMainHost;
         const button = host?.binder?.getButton('btnGenerals') ?? null;
         if (!host || !button) {

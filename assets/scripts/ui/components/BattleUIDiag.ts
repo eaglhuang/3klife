@@ -8,7 +8,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * 用途：在瀏覽器 F12 console 中快速查看 Canvas / Camera / Widget 佈局
  *       與節點世界座標，協助排查 Editor vs Browser 位置不一致問題。
  */
-import { Node, UITransform, Widget, view, director, Canvas } from 'cc';
+import { Node, UITransform, Widget, view, director } from 'cc';
 
 /**
  * 記錄一個 UI 根節點的位置診斷資訊到 console。

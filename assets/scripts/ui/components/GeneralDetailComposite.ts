@@ -1,4 +1,4 @@
-import { _decorator, Button, Color, Label, Node, Sprite, UIOpacity, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, Label, Node, Sprite, UIOpacity, UITransform } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
 import type { ChildPanelBase } from '../core/ChildPanelBase';

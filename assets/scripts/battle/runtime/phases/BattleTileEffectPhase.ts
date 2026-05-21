@@ -1,4 +1,4 @@
-import { EVENT_NAMES, Faction } from '../../../core/config/Constants';
+import { Faction } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';

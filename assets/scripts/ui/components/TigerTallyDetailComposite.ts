@@ -21,9 +21,9 @@ const UNITINFO_TYPE_ICON_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underl
 const TROOP_TYPE_SUITE_GLYPH_PREFIX = 'sprites/battle/battle_unit_type_glyph_';
 const TALLY_CARD_ART_FALLBACK_PATH = 'sprites/battle/tally_card_art_placeholder/spriteFrame';
 const WHITE = new Color(255, 255, 255, 255);
-const DETAIL_TITLE_COLOR = new Color(245, 228, 180, 255);
+const _DETAIL_TITLE_COLOR = new Color(245, 228, 180, 255);
 const DETAIL_BODY_COLOR = new Color(224, 216, 198, 255);
-const DETAIL_MUTED_COLOR = new Color(196, 182, 156, 255);
+const _DETAIL_MUTED_COLOR = new Color(196, 182, 156, 255);
 const DETAIL_TRAIT_COLOR = new Color(149, 212, 198, 255);
 const DETAIL_ABILITY_COLOR = new Color(244, 203, 129, 255);
 

@@ -63,7 +63,7 @@ export class UCUFLogger {
 
     // ── 效能計時 API ───────────────────────────────────────────────────────────
 
-    static perfBegin(label: string): number {
+    static perfBegin(_label: string): number {
         return (typeof performance !== 'undefined') ? performance.now() : Date.now();
     }
 

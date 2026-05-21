@@ -13,7 +13,6 @@ import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig, GeneralTacticSlotConfig, GeneralUltimateSlotConfig } from '../../../core/models/GeneralUnit';
 import {
     formatBulletList,
-    formatList,
     formatSkillSource,
     formatTacticCategory,
     SKILL_DISPLAY_NAME,

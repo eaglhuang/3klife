@@ -1,4 +1,3 @@
-import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 
 // @spec-source → 見 docs/cross-reference-index.md
 import {
@@ -478,7 +477,7 @@ export class UnitRenderer extends Component {
     await this.waitSeconds(attackerUnit?.type === TroopType.Cavalry ? BATTLE_VISUAL_TIMING.cavalryAttackAwaitSec : BATTLE_VISUAL_TIMING.attackAwaitSec);
   }
 
-  public playHitAnimation(defenderId: string, attackerId: string | null): void {
+  public playHitAnimation(defenderId: string, _attackerId: string | null): void {
     const defenderView = this.unitViews.get(defenderId);
     const defenderNode = defenderView?.worldNode ?? null;
     const defenderUnit = this.findUnitById(defenderId);
@@ -581,7 +580,7 @@ export class UnitRenderer extends Component {
       .start();
   }
 
-  public playGeneralHitAnimation(defenderFaction: Faction, attackerId: string | null): void {
+  public playGeneralHitAnimation(defenderFaction: Faction, _attackerId: string | null): void {
     const defenderNode = this.generalViews.get(defenderFaction)?.worldNode ?? null;
     if (!defenderNode) return;
 

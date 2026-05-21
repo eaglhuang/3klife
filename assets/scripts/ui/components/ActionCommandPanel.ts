@@ -18,7 +18,6 @@ import { _decorator, Button, Label, Node, Sprite } from 'cc';
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UltimateSelectPopup, UltimateSkillItem } from './UltimateSelectPopup';
 

@@ -12,7 +12,7 @@
  * Unity 對照：EditorWindow 驗證器 + Automated UI testing
  */
 
-import type { UILayoutSpec, UISkinManifest, UILayoutNodeSpec, SkinSlot } from './UISpecTypes';
+import type { UILayoutSpec, UISkinManifest, UILayoutNodeSpec } from './UISpecTypes';
 import { resolveSize } from './UISpecTypes';
 
 /** 單一驗證問題 */

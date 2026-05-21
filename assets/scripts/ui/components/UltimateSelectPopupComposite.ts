@@ -3,7 +3,7 @@
  * UltimateSelectPopupComposite — 奧義選擇小窗（Composite 版）
  * Wave 2 migration from UltimateSelectPopup + Template-driven composition
  */
-import { _decorator, Button, Label, Layout, Node, tween, UIOpacity, ScrollView } from 'cc';
+import { _decorator, Button, Label, Node, tween, UIOpacity, ScrollView } from 'cc';
 import { EVENT_NAMES } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';

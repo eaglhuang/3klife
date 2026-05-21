@@ -10,14 +10,13 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *   3. 點擊卡片 → emit CardSelected 事件
  *   4. 冷卻卡片只顯示遮罩，點擊仍可查看資訊
  */
-import { _decorator, Button, Color, EventTouch, Label, Node, Sprite, SpriteFrame, UITransform, view, Widget } from 'cc';
+import { _decorator, Button, Color, EventTouch, Label, Node, Sprite, SpriteFrame } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UI_EVENTS } from '../core/UIEvents';
 import { emitDeployDragDebug } from './DeployDragDebug';
 import { logBattleUIPosition } from './BattleUIDiag';
-import type { BattleSkillTargetMode, BattleSkillTiming, SkillSourceType } from '../../shared/SkillRuntimeContract';
 
 const { ccclass } = _decorator;
 

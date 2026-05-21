@@ -1,4 +1,4 @@
-import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+import { IBattleHUDLike, IBattleLogLike, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { Color } from 'cc';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';

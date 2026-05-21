@@ -1,7 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Node, Button } from 'cc';
+import { _decorator, Node } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { services } from '../../core/managers/ServiceLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';

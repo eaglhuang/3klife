@@ -3,8 +3,7 @@
  * GeneralQuickViewComposite — 武將快速檢視卡片（Composite 版）
  * Wave 2 migration from GeneralQuickViewPanel - compact general info popup
  */
-import { _decorator, Label, Node, Sprite, tween, UIOpacity } from 'cc';
-import { services } from '../../core/managers/ServiceLoader';
+import { _decorator, Node, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';

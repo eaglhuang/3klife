@@ -16,9 +16,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  */
 import { _decorator, Button, Label, Node, ScrollView, tween, UITransform } from "cc";
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
-import { EVENT_NAMES, Faction } from '../../core/config/Constants';
+import { EVENT_NAMES } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 
 const { ccclass, property } = _decorator;

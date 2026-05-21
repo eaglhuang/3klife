@@ -16,7 +16,7 @@ import { UISkinResolver, ResolvedButtonSkin } from './UISkinResolver';
 import { services } from '../../core/managers/ServiceLoader';
 import { resolveSize, DEFAULT_TRANSITION } from './UISpecTypes';
 import type { UILayoutNodeSpec, UILayoutSpec, UISkinManifest, TransitionDef,
-               SkinLayerDef, CompositeImageLayerDef } from './UISpecTypes';
+               SkinLayerDef } from './UISpecTypes';
 import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
 import { UIPreviewStyleBuilder, ButtonVisualState } from './UIPreviewStyleBuilder';
 // TODO: UIPreviewShadowManager 已移至 _pending-delete/，待所有面板遷移至 CompositePanel 後可一併刪除
@@ -246,7 +246,7 @@ export class UIPreviewBuilder extends Component {
         }
 
         UIPreviewDiagnostics.populateListStart(listPath, data.length);
-        const contentT = content.getComponent(UITransform);
+        const _contentT = content.getComponent(UITransform);
         // Row 子欄位的百分比間距應相對於 Row 內容區（扣掉 Row 自身的 paddingLeft/paddingRight）。
         // Content.width 在 Layout.CONTAINER 且尚未建立子節點時，可能只剩 paddingLeft + paddingRight。
         // viewPort（view）本身是 Widget(all=0) 撐滿 DataList，post-Widget 後尺寸會更可靠。

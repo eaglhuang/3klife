@@ -1,4 +1,3 @@
-import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 
 // @spec-source → 見 docs/cross-reference-index.md
 // [UCUF M9] 從 BattleScene.ts 提取的純載入 / 資料建構函數。
@@ -8,11 +7,10 @@ import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, I
 import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
-import { Faction, TroopType, TROOP_DEPLOY_COST, Weather, BattleTactic } from "../../core/config/Constants";
+import { Faction, TroopType, TROOP_DEPLOY_COST } from "../../core/config/Constants";
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 import { VFX_BLOCK_REGISTRY } from '../../core/config/vfx-block-registry';
-import { TerrainGrid } from "../../shared/CommonEnums";
 import { EncounterConfig } from "../../shared/BattleEntryParams";
 import { buildIdMap } from "../../shared/SkillRuntimeContract";
 import type {

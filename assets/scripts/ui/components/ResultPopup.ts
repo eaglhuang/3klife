@@ -10,9 +10,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Unity 對照：PopupController + Animator（狀態機:win/lose/draw）
  */
-import { _decorator, Label, Node } from 'cc';
+import { _decorator } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { UISpecLoader } from '../core/UISpecLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { services } from '../../core/managers/ServiceLoader';
 

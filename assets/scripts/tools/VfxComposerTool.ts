@@ -6,16 +6,12 @@ import { UCUFLogger, LogCategory } from '../core/utils/UCUFLogger';
 
 import {
     _decorator, Component, Node, Label, Button, Color, UITransform, Widget,
-    Graphics, Vec3, Vec4, assetManager, AssetManager, Material, MeshRenderer,
-    Texture2D, ImageAsset, AudioClip, EffectAsset, gfx, utils, primitives, Layers,
-    Canvas, director, Enum, Sprite, SpriteFrame, Prefab, instantiate,
-    ParticleSystem, resources, EditBox, ScrollView, Mask, Layout, Animation,
-    tween, Tween,
+    Graphics, Vec3, Vec4, assetManager, AssetManager, MeshRenderer,
+    Texture2D, utils, primitives,
+    Canvas, director, Enum, Sprite, SpriteFrame, Prefab,
+    EditBox, ScrollView, Mask,
 } from "cc";
 import { VFX_BLOCK_REGISTRY, VFX_CATEGORIES, VfxBlockDef } from '../core/config/vfx-block-registry';
-import { services } from "../core/managers/ServiceLoader";
-import { setMaterialSafe } from "../core/utils/MaterialUtils";
-import { applyParticleOverride } from "../core/utils/ParticleUtils";
 
 const { ccclass, property } = _decorator;
 
@@ -40,16 +36,16 @@ const ROW_H     = 86;
 const MAX_ROWS  = 5;
 const PREVIEW_POS = new Vec3(0, 0.5, 0); 
 const PREVIEW_DURATION = 5;              
-const THUMB_SIZE = 64;
+const _THUMB_SIZE = 64;
 const DEFAULT_FLOOD_RIVER_DIR = new Vec4(-0.5, -0.866, 1.05, 0.78);
 const DEFAULT_FLOOD_FOAM_DIR = new Vec4(-1.0, 0.0, 1.0, 1.0);
 const LARGE_PREVIEW_SIZE = 220;
 const PANEL_SCALE = 0.80;
 const TAB_COLS = 5;
 const TAB_H = 50;
-const PARTICLE_PREVIEW_ROOT_SCALE = 0.22;
+const _PARTICLE_PREVIEW_ROOT_SCALE = 0.22;
 
-const DEFAULT_PARTICLE_PREFAB_PATHS: Record<string, string> = {
+const _DEFAULT_PARTICLE_PREFAB_PATHS: Record<string, string> = {
     ring_addatk: 'fx/buff/buff_gain_3d',
     icon_addatk: 'fx/buff/buff_gain_3d',
     ring_addlife: 'fx/buff/buff_gain_3d',
@@ -108,7 +104,7 @@ const ALL_VFX_BLOCKS: VfxBlockDef[] = [
     ...PROCEDURAL_VFX_BLOCKS,
 ];
 
-const PROCEDURAL_SHADER_PROFILES: Record<string, ProceduralShaderProfile> = {
+const _PROCEDURAL_SHADER_PROFILES: Record<string, ProceduralShaderProfile> = {
     shader_water_ripple: {
         effectPath: 'shaders/water-ripple',
         noiseTexPath: 'shaders/tex_noise_perlin',
@@ -125,7 +121,7 @@ const PROCEDURAL_SHADER_PROFILES: Record<string, ProceduralShaderProfile> = {
     },
 };
 
-const STATUS_BUFF_POOL_CONFIGS: Record<string, any> = {
+const _STATUS_BUFF_POOL_CONFIGS: Record<string, any> = {
     ring_addatk: {
         variant: 'AtkGain',
         ringTexturePath:  'vfx_core:textures/rings/tex_ring_addatk',
@@ -476,7 +472,7 @@ export class VfxComposerTool extends Component {
         this.previewEntries = [];
     }
 
-    private async createWorldQuad(block: VfxBlockDef, stackIndex: number): Promise<PreviewEntry | null> {
+    private async createWorldQuad(block: VfxBlockDef, _stackIndex: number): Promise<PreviewEntry | null> {
         if (!block.texPath || !this.vfxBundle) return null;
         const texture = await this.loadVfxTexture(block.texPath);
         if (!texture) return null;

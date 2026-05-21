@@ -19,7 +19,7 @@
  *   可 mock ParticleSystem 物件後對每個覆寫欄位進行驗證。
  */
 
-import { Burst, Color, CurveRange, GradientRange, ParticleSystem } from 'cc';
+import { Burst, Color, ParticleSystem } from 'cc';
 
 // ─────────────────────────────────────────────────────────
 //  覆寫參數介面

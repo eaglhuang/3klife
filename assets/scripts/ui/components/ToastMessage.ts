@@ -2,7 +2,6 @@
 import { _decorator, Color, Label, Node, Tween, tween, UITransform, UIOpacity, Widget } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { UIPreviewBuilder } from "../core/UIPreviewBuilder";
-import { UISpecLoader } from "../core/UISpecLoader";
 import { SolidBackground } from './SolidBackground';
 
 const { ccclass } = _decorator;

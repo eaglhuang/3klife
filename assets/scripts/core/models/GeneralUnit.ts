@@ -41,7 +41,7 @@ export interface GeneralBloodlineProfileConfig {
 }
 // @spec-source → 見 docs/cross-reference-index.md
 import { Faction, TerrainType } from "../config/Constants";
-import type { HeroRarity, HeroElement, HeroInitialRole } from './HeroBase';
+import type { HeroElement, HeroInitialRole } from './HeroBase';
 
 /**
  * 武將資料模型 — 純資料，不依賴 Cocos 節點。

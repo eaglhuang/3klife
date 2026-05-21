@@ -3,7 +3,7 @@
  * ToastMessageComposite — 全域吐司提示系統（Composite 版）
  * Wave 2 migration from ToastMessage - temporary floating notifications
  */
-import { _decorator, Color, Label, Node, Tween, tween, UIOpacity } from 'cc';
+import { _decorator, Color, Label, Tween, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 
