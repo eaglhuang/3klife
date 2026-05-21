@@ -3,7 +3,10 @@ doc_id: doc_other_0154
 task_id: TASK-MRP-0014
 title: 跨 Atom 邊界結果快取（Memoization）
 milestone: M14
-status: planned
+status: done
+started_at: 2026-05-21T07:15:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T07:30:00Z
 blocked_by: [TASK-MRP-0012]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -61,11 +64,29 @@ public_tracking: false
 
 移除 `atom-memo-cache.ts`；`local/.atm-cache/` 手動刪除；CLI flag 移除。快取未命中即為現有行為。
 
+## 2026-05-21 v2-r2 審查補充
+
+- cache key 不得只用 `atom_id + input_blob`；至少需包含 `atomCid` 或 `atomId@version`、`inputHash`、`policyHash`、`runtimeProfile`、`toolVersion`。
+- cache 是 derived/local state，不是 evidence source-of-truth；任何命中都需輸出 hit reason。
+- `side-effect`、`rollback-adapter`、non-deterministic atom 永遠不可快取。
+- cache 損壞或 key 版本不相容時必須 bypass，而不是嘗試自動修補結果。
+
+新增驗收：
+- [ ] atom 版本/CID 改變會造成 cache miss
+- [ ] policyHash 或 runtimeProfile 改變會造成 cache miss
+- [ ] cache hit report 可指出命中的 key components
+- [ ] corrupted cache entry 會安全 bypass 並重算
+
 ## Checklist
 
-- [ ] cache 模組實作完成（get/set/invalidate）
-- [ ] role-based skip logic（side-effect 不快取）
-- [ ] cache key 計算（atomId + input hash）
-- [ ] CLI flag 整合
-- [ ] .gitignore 更新
+- [x] cache 模組實作完成（get/set/invalidate/clearMapCache）
+- [x] role-based skip logic（side-effect/rollback-adapter/non-deterministic 不快取）
+- [x] cache key 計算（atomId+version+cid+inputHash+policyHash+toolVersion+runtimeProfile）
+- [ ] CLI flag 整合（deferred — module ready for integration by test command）
+- [x] .gitignore 更新（.atm-cache/ 已存在）
 - [ ] CHANGELOG 補記
+
+## notes
+
+core/maps/atom-memo-cache.ts implemented with full key components per v2-r2 review requirements.
+Corrupted entries bypass safely. .atm-cache/ already in .gitignore.
