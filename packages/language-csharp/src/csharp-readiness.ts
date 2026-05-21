@@ -12,6 +12,7 @@ export interface CSharpReadinessThresholds {
   requireMapEvidenceGateAccepted: boolean;
   requireSdkPinning: boolean;
   requireNugetSourceMapping: boolean;
+  requirePackagesLockProfile: boolean;
 }
 
 export interface CSharpReadinessCheck {
@@ -23,7 +24,8 @@ export interface CSharpReadinessCheck {
     | 'csproj-error-risk'
     | 'map-evidence-gate'
     | 'sdk-pinning'
-    | 'nuget-source-mapping';
+    | 'nuget-source-mapping'
+    | 'packages-lock-profile';
   passed: boolean;
   actual: number | boolean;
   expected: string;
@@ -47,6 +49,7 @@ export interface CSharpReadinessGateReport {
     mapEvidenceAccepted?: boolean;
     sdkPinned?: boolean;
     nugetSourceMapped?: boolean;
+    packagesLockProfilePresent?: boolean;
   };
 }
 
@@ -54,7 +57,10 @@ export interface CSharpReadinessGateInput {
   inventoryFileCount: number;
   symbolReferenceIndex: CSharpSymbolReferenceIndex;
   csprojRisk: CSharpCsprojRiskReport;
-  projectEvidence?: Pick<CSharpProjectEvidence, 'globalJsonProfiles' | 'nugetConfigProfiles'>;
+  projectEvidence?: Pick<
+    CSharpProjectEvidence,
+    'globalJsonProfiles' | 'nugetConfigProfiles' | 'packagesLockProfiles'
+  >;
   mapReport?: AtomicMapDecompositionReport;
   thresholds?: Partial<CSharpReadinessThresholds>;
 }
@@ -68,6 +74,7 @@ const DEFAULT_THRESHOLDS: CSharpReadinessThresholds = {
   requireMapEvidenceGateAccepted: true,
   requireSdkPinning: true,
   requireNugetSourceMapping: true,
+  requirePackagesLockProfile: true,
 };
 
 function roundRatio(value: number): number {
@@ -96,6 +103,10 @@ function hasNugetSourceMapping(projectEvidence: CSharpReadinessGateInput['projec
   );
 }
 
+function hasPackagesLockProfile(projectEvidence: CSharpReadinessGateInput['projectEvidence']): boolean {
+  return (projectEvidence?.packagesLockProfiles?.length ?? 0) > 0;
+}
+
 export function evaluateCSharpReadinessGate(
   input: CSharpReadinessGateInput
 ): CSharpReadinessGateReport {
@@ -114,6 +125,7 @@ export function evaluateCSharpReadinessGate(
   const mapAccepted = input.mapReport?.evidenceGate?.accepted;
   const sdkPinned = hasPinnedSdk(input.projectEvidence);
   const nugetSourceMapped = hasNugetSourceMapping(input.projectEvidence);
+  const packagesLockProfilePresent = hasPackagesLockProfile(input.projectEvidence);
 
   const checks: CSharpReadinessCheck[] = [
     makeCheck({
@@ -172,6 +184,13 @@ export function evaluateCSharpReadinessGate(
       expected: thresholds.requireNugetSourceMapping ? 'true' : 'optional',
       detail: 'NuGet.Config packageSourceMapping should be enabled for source governance.',
     }),
+    makeCheck({
+      checkId: 'packages-lock-profile',
+      passed: thresholds.requirePackagesLockProfile ? packagesLockProfilePresent : true,
+      actual: packagesLockProfilePresent,
+      expected: thresholds.requirePackagesLockProfile ? 'true' : 'optional',
+      detail: 'packages.lock.json profile should exist for deterministic dependency closure evidence.',
+    }),
   ];
 
   const blockingReasons = checks
@@ -197,6 +216,7 @@ export function evaluateCSharpReadinessGate(
       mapEvidenceAccepted: mapAccepted,
       sdkPinned,
       nugetSourceMapped,
+      packagesLockProfilePresent,
     },
   };
 }

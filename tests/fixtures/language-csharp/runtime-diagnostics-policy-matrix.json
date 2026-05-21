@@ -7,7 +7,8 @@
     "csharp-runtime-risky-request",
     "csharp-runtime-sdk-pinned",
     "csharp-runtime-nuget-source-mapped",
-    "csharp-runtime-restore-locked-mode"
+    "csharp-runtime-restore-locked-mode",
+    "csharp-runtime-packages-lock-file-present"
   ],
   "diagnosticsPolicyIds": [
     "csharp-diagnostics-dotnet-build-log",
@@ -22,7 +23,8 @@
     "risky-planning-only",
     "sdk-version-pinned",
     "nuget-source-mapped",
-    "restore-locked-mode-enabled"
+    "restore-locked-mode-enabled",
+    "packages-lock-file-detected"
   ],
   "requiredDiagnosticsTags": [
     "normalize-code-uppercase",

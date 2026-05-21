@@ -33,6 +33,10 @@ async function main() {
     (profile.evidence ?? []).some((entry) => entry.toLowerCase().includes('nuget.config#sources=')),
     'profile should include NuGet.Config evidence'
   );
+  assert.ok(
+    (profile.evidence ?? []).some((entry) => entry.toLowerCase().includes('packages.lock.json#version=')),
+    'profile should include packages.lock.json evidence'
+  );
 
   const inventory = await csharpLanguageAdapterV2.scanSourceInventory({
     repositoryRoot: fixtureRoot,
@@ -44,6 +48,10 @@ async function main() {
     includeRisky: false,
   });
   assert.ok((runtime.commands ?? []).length >= 3);
+  assert.ok(
+    (runtime.warnings ?? []).some((entry) => entry.includes('packages-lock-file-detected')),
+    'runtime warnings should include packages lock policy tag'
+  );
 
   const plan = await csharpLanguageAdapterV2.planAtomizeDryRun({
     repositoryRoot: fixtureRoot,
@@ -86,6 +94,16 @@ async function main() {
     includeGlobs: ['**/*.cs'],
   });
   const sampleEvidence = collectCSharpProjectEvidence(fixtureRoot);
+  assert.equal(sampleEvidence.hasPackagesLock, true, 'sample evidence should detect packages lock');
+  assert.ok(
+    sampleEvidence.packagesLockProfiles.some(
+      (entry) =>
+        entry.relativePath === 'src/packages.lock.json' &&
+        entry.lockFileVersion === 1 &&
+        entry.targetCount >= 2
+    ),
+    'sample packages lock profile should include lock version and targets'
+  );
   const symbolIndex = buildCSharpSymbolReferenceIndex(analysis);
   assert.ok(symbolIndex.references.length >= 5);
   assert.ok(
@@ -119,7 +137,7 @@ async function main() {
     projectEvidence: sampleEvidence,
     mapReport,
   });
-  assert.ok(readiness.checks.length >= 8);
+  assert.ok(readiness.checks.length >= 9);
   assert.ok(
     readiness.checks.some((check) => check.checkId === 'sdk-pinning' && check.passed),
     'readiness should pass sdk pinning check'
@@ -127,6 +145,10 @@ async function main() {
   assert.ok(
     readiness.checks.some((check) => check.checkId === 'nuget-source-mapping' && check.passed),
     'readiness should pass NuGet source mapping check'
+  );
+  assert.ok(
+    readiness.checks.some((check) => check.checkId === 'packages-lock-profile' && check.passed),
+    'readiness should pass packages lock profile check'
   );
 }
 

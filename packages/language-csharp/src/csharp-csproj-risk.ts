@@ -23,7 +23,9 @@ export interface CSharpCsprojRiskFinding {
     | 'conditional-build-configuration'
     | 'sdk-version-missing'
     | 'nuget-source-mapping-missing'
-    | 'restore-locked-mode-disabled';
+    | 'restore-locked-mode-disabled'
+    | 'packages-lock-file-missing'
+    | 'packages-lock-version-missing';
   severity: 'info' | 'warning' | 'error';
   projectPath: string;
   evidence: string;
@@ -209,6 +211,29 @@ export function buildCSharpCsprojRiskModel(
         'warning',
         '.',
         'NuGet restoreLockedMode is not enabled; repeatable restore guard is weaker'
+      )
+    );
+  }
+
+  const hasPackagesLock = projectEvidence.packagesLockProfiles.length > 0;
+  if (!hasPackagesLock) {
+    findings.push(
+      buildFinding(
+        'packages-lock-file-missing',
+        'warning',
+        '.',
+        'packages.lock.json is missing; deterministic package closure evidence is absent'
+      )
+    );
+  } else if (
+    projectEvidence.packagesLockProfiles.some((profile) => profile.lockFileVersion == null)
+  ) {
+    findings.push(
+      buildFinding(
+        'packages-lock-version-missing',
+        'warning',
+        '.',
+        'packages.lock.json found but lock file version is missing or unparsable'
       )
     );
   }

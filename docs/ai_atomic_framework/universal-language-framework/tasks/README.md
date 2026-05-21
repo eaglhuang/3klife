@@ -8,7 +8,7 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
-last_updated: 2026-05-21T00:41:58+08:00
+last_updated: 2026-05-21T08:45:51+08:00
 ---
 
 # ATM 通用語言框架 Task Cards
@@ -124,6 +124,11 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 | ATM-LANG-CSHARP-0702 | C# runtime policy matrix governance tags expansion | ATM-MAP-LANG-CSHARP-0702 | done | CSHARP-0701 | 0006, 0009, 0010 |
 | ATM-LANG-CSHARP-0703 | C# readiness gate governance checks | ATM-MAP-LANG-CSHARP-0703 | done | CSHARP-0702 | 0006, 0009, 0010 |
 | ATM-LANG-CSHARP-0704 | C# promotion gate governance hardening and validator uplift | ATM-MAP-LANG-CSHARP-0704 | done | CSHARP-0703 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0800 | C# packages.lock.json profile detection | ATM-MAP-LANG-CSHARP-0800 | done | CSHARP-0704 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0801 | C# lock-file governance risk model expansion | ATM-MAP-LANG-CSHARP-0801 | done | CSHARP-0800 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0802 | C# runtime lock-governance policy tags | ATM-MAP-LANG-CSHARP-0802 | done | CSHARP-0801 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0803 | C# readiness gate lock-file checks | ATM-MAP-LANG-CSHARP-0803 | done | CSHARP-0802 | 0006, 0009, 0010 |
+| ATM-LANG-CSHARP-0804 | C# promotion gate lock-governance uplift | ATM-MAP-LANG-CSHARP-0804 | done | CSHARP-0803 | 0006, 0009, 0010 |
 
 ## 維護規則
 

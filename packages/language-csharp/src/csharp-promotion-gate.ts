@@ -66,7 +66,10 @@ function compareBenchmarkStage(
 
 function readinessGovernanceChecksPassed(readiness: CSharpReadinessGateReport): boolean {
   const governanceChecks = readiness.checks.filter(
-    (check) => check.checkId === 'sdk-pinning' || check.checkId === 'nuget-source-mapping'
+    (check) =>
+      check.checkId === 'sdk-pinning' ||
+      check.checkId === 'nuget-source-mapping' ||
+      check.checkId === 'packages-lock-profile'
   );
   if (governanceChecks.length === 0) {
     return false;

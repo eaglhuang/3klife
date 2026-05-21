@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net8.0": {
+      "Serilog": {
+        "type": "Direct",
+        "requested": "[4.0.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "fixture-serilog-hash"
+      }
+    },
+    "net9.0": {
+      "Serilog": {
+        "type": "Direct",
+        "requested": "[4.0.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "fixture-serilog-hash"
+      },
+      "FluentAssertions": {
+        "type": "Direct",
+        "requested": "[6.0.0, )",
+        "resolved": "6.12.1",
+        "contentHash": "fixture-fluentassertions-hash"
+      }
+    }
+  }
+}

@@ -10,7 +10,8 @@ export interface CSharpRuntimePolicyRow {
     | 'risky-request'
     | 'sdk-pinned'
     | 'nuget-source-mapped'
-    | 'restore-locked-mode';
+    | 'restore-locked-mode'
+    | 'packages-lock-file-present';
   tags: string[];
 }
 
@@ -60,6 +61,11 @@ export const CSHARP_RUNTIME_POLICY_MATRIX: readonly CSharpRuntimePolicyRow[] = [
     policyId: 'csharp-runtime-restore-locked-mode',
     appliesWhen: 'restore-locked-mode',
     tags: ['restore-locked-mode-enabled', 'repeatable-restore-guard'],
+  },
+  {
+    policyId: 'csharp-runtime-packages-lock-file-present',
+    appliesWhen: 'packages-lock-file-present',
+    tags: ['packages-lock-file-detected', 'dependency-closure-evidence'],
   },
 ] as const;
 
@@ -113,6 +119,10 @@ function hasRestoreLockedMode(projectEvidence: CSharpProjectEvidence): boolean {
   );
 }
 
+function hasPackagesLockFile(projectEvidence: CSharpProjectEvidence): boolean {
+  return projectEvidence.packagesLockProfiles.length > 0;
+}
+
 export function resolveCSharpRuntimePolicy(
   projectEvidence: CSharpProjectEvidence,
   includeRisky: boolean
@@ -140,6 +150,9 @@ export function resolveCSharpRuntimePolicy(
   }
   if (hasRestoreLockedMode(projectEvidence)) {
     conditions.add('restore-locked-mode');
+  }
+  if (hasPackagesLockFile(projectEvidence)) {
+    conditions.add('packages-lock-file-present');
   }
 
   const matched = CSHARP_RUNTIME_POLICY_MATRIX.filter((row) => conditions.has(row.appliesWhen));

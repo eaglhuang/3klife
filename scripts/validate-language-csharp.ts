@@ -25,6 +25,7 @@ const REQUIRED_FILES = [
   'packages/language-csharp/src/csharp-promotion-gate.ts',
   'tests/fixtures/language-csharp/sample-project/MyApp.sln',
   'tests/fixtures/language-csharp/sample-project/src/MyApp.csproj',
+  'tests/fixtures/language-csharp/sample-project/src/packages.lock.json',
   'tests/fixtures/language-csharp/sample-project/src/Shared/Shared.csproj',
   'tests/fixtures/language-csharp/sample-project/tests/MyApp.Tests.csproj',
   'tests/fixtures/language-csharp/sample-project/global.json',
@@ -35,6 +36,7 @@ const REQUIRED_FILES = [
   'tests/fixtures/language-csharp/sample-project/src/Models/WorkflowSnapshot.cs',
   'tests/fixtures/language-csharp/enterprise-solution/Contoso.sln',
   'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.App/Contoso.App.csproj',
+  'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.App/packages.lock.json',
   'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.Domain/Contoso.Domain.csproj',
   'tests/fixtures/language-csharp/enterprise-solution/src/Contoso.Infrastructure/Contoso.Infrastructure.csproj',
   'tests/fixtures/language-csharp/enterprise-solution/tests/Contoso.App.Tests/Contoso.App.Tests.csproj',
@@ -64,6 +66,7 @@ const REQUIRED_SNIPPETS = [
       'parseCsprojProfile(',
       'parseGlobalJsonProfile(',
       'parseNuGetConfigProfile(',
+      'parsePackagesLockProfile(',
       'detectCSharpProjectProfile(',
     ],
   },
@@ -125,17 +128,24 @@ const REQUIRED_SNIPPETS = [
   },
   {
     path: 'packages/language-csharp/src/csharp-csproj-risk.ts',
-    snippets: ['buildCSharpCsprojRiskModel('],
+    snippets: ['buildCSharpCsprojRiskModel(', "'packages-lock-file-missing'"],
   },
   {
     path: 'packages/language-csharp/src/csharp-readiness.ts',
-    snippets: ['evaluateCSharpReadinessGate(', "'advisory-blocked'", "'sdk-pinning'", "'nuget-source-mapping'"],
+    snippets: [
+      'evaluateCSharpReadinessGate(',
+      "'advisory-blocked'",
+      "'sdk-pinning'",
+      "'nuget-source-mapping'",
+      "'packages-lock-profile'",
+    ],
   },
   {
     path: 'packages/language-csharp/src/csharp-policy-matrix.ts',
     snippets: [
       'CSHARP_RUNTIME_POLICY_MATRIX',
       'CSHARP_DIAGNOSTICS_POLICY_MATRIX',
+      "'packages-lock-file-present'",
       'resolveCSharpRuntimePolicy(',
       'resolveCSharpDiagnosticsPolicy(',
     ],
@@ -352,9 +362,14 @@ async function runFixtureCheck() {
     profile.evidence.some((entry) => entry.toLowerCase().includes('nuget.config#sources=')),
     'profile should include NuGet.Config source evidence'
   );
+  assert.ok(
+    profile.evidence.some((entry) => entry.toLowerCase().includes('packages.lock.json#version=')),
+    'profile should include packages.lock.json evidence'
+  );
   assert.ok(projectEvidence.csprojProfiles.length >= 2, 'csproj deep parse should collect >= 2 projects');
   assert.equal(projectEvidence.hasGlobalJson, true, 'global.json evidence missing');
   assert.equal(projectEvidence.hasNugetConfig, true, 'NuGet.Config evidence missing');
+  assert.equal(projectEvidence.hasPackagesLock, true, 'packages.lock.json evidence missing');
   assert.equal(projectEvidence.hasDirectoryPackagesProps, true, 'Directory.Packages.props evidence missing');
   assert.ok(
     projectEvidence.globalJsonProfiles.some(
@@ -370,6 +385,16 @@ async function runFixtureCheck() {
         (entry.restoreLockedMode ?? '').toLowerCase() === 'true'
     ),
     'NuGet.Config profile should include source mapping and restoreLockedMode=true'
+  );
+  assert.ok(
+    projectEvidence.packagesLockProfiles.some(
+      (entry) =>
+        entry.relativePath === 'src/packages.lock.json' &&
+        entry.lockFileVersion === 1 &&
+        entry.targetCount >= 2 &&
+        entry.dependencyCount >= 2
+    ),
+    'packages.lock.json profile should include version, target count, and dependency count'
   );
   assert.ok(
     projectEvidence.directoryPackagesPropsProfiles.some(
@@ -893,7 +918,7 @@ async function runFixtureCheck() {
     mapReport: enterpriseMapReport,
     thresholds: readinessThresholds.enterprise,
   });
-  assert.ok(sampleReadiness.checks.length >= 8, 'sample readiness should include threshold checks');
+  assert.ok(sampleReadiness.checks.length >= 9, 'sample readiness should include threshold checks');
   assert.ok(
     sampleReadiness.checks.some((check) => check.checkId === 'map-evidence-gate'),
     'sample readiness should include map evidence gate check'
@@ -905,6 +930,10 @@ async function runFixtureCheck() {
   assert.ok(
     sampleReadiness.checks.some((check) => check.checkId === 'nuget-source-mapping' && check.passed),
     'sample readiness should include passed NuGet source mapping check'
+  );
+  assert.ok(
+    sampleReadiness.checks.some((check) => check.checkId === 'packages-lock-profile' && check.passed),
+    'sample readiness should include passed packages lock profile check'
   );
   assert.ok(
     enterpriseReadiness.checks.some((check) => check.checkId === 'resolved-references'),
