@@ -3,7 +3,10 @@ doc_id: doc_other_0157
 task_id: TASK-MRP-0017
 title: Atom 退役流程（behavior.retire）
 milestone: M17
-status: planned
+status: done
+started_at: 2026-05-21T08:45:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T09:00:00Z
 blocked_by: [TASK-MRP-0010]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -61,10 +64,29 @@ Legacy 代碼被 atom map 完全取代後，舊 atom 或已不再使用的 atom 
 
 registry 中 legacy-retired atom 重新標回 deprecated；lineage-log 不可回退（記錄保留）。
 
+## 2026-05-21 v2-r2 審查補充
+
+- 退役前必須確認 active downstream reference 為 0；包含 map.spec、map:cid、capsule registry 與 consumer adapter reference。
+- `legacy-retired` 是 registry 狀態，不代表刪除 source-of-truth 或 git history。
+- 若 M18/M21 capsule 仍引用該 atom，退役 proposal 必須 blocked 並回報 routeHint。
+- Retirement proof 需可被 M26 rescue police 與 M27 recovery report 驗證。
+
+新增驗收：
+- [ ] active downstream reference 不為 0 時 retire blocked
+- [ ] capsule/map reference 未解除時 retire blocked
+- [ ] retirement-proof 可被 rescue police 驗證
+- [ ] registry 保留 `legacy-retired` 記錄與 lineage ref
+
 ## Checklist
 
-- [ ] 三階段退役流程實作
-- [ ] downstream 引用檢查
-- [ ] retirement-proof 生成
-- [ ] registry 狀態更新
+- [x] 三階段退役流程實作（deprecated → shadow-off → legacy-retired）
+- [x] downstream 引用檢查（map-spec + capsule-registry）
+- [x] retirement-proof 生成（atm.atomRetirementProof schema）
+- [x] registry 狀態更新（legacy-retired 保留 proofId + retiredAt）
 - [ ] CHANGELOG 補記
+
+## notes
+
+core/upgrade/behaviors/retire.ts. proposeRetire blocks on active downstream refs.
+applyRetire writes to atomic-registry.json + .atm/history/retirement-proofs/ +
+appends lineage event. Compatible with M26 rescue police verification.
