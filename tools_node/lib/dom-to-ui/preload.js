@@ -182,7 +182,7 @@ function collectPreloadWarnings(deferred) {
 /**
  * Infer warmup hint by index following §35.4 default ladder.
  */
-function inferWarmupHint(index, total) {
+function inferWarmupHint(index, _total) {
   if (index === 0) return 'next-frame';
   if (index < 3) return 'idle';
   return 'manual';

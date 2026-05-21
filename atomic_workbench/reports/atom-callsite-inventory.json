@@ -1,0 +1,63 @@
+{
+  "schemaId": "atm.atomCallsiteInventory",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-05-20T20:48:04.872Z",
+  "catalog": [
+    {
+      "kind": "atom",
+      "id": "ATM-CORE-0005",
+      "refName": "cssColorCanonicalizerAtom",
+      "logicalName": "atom.html-to-ucuf.normalize-css-color",
+      "purpose": "Readable atom ref for atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs.",
+      "sourcePaths": [
+        "atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs"
+      ],
+      "members": [],
+      "entrypoints": []
+    },
+    {
+      "kind": "atom",
+      "id": "ATM-CORE-0006",
+      "refName": "cssPxLengthParserAtom",
+      "logicalName": "atom.html-to-ucuf.parse-css-length",
+      "purpose": "Readable atom ref for atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs.",
+      "sourcePaths": [
+        "atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs"
+      ],
+      "members": [],
+      "entrypoints": []
+    },
+    {
+      "kind": "atom",
+      "id": "ATM-CORE-0007",
+      "refName": "fragmentTokenParserAtom",
+      "logicalName": "atom.html-to-ucuf.parse-fragment-list",
+      "purpose": "Readable atom ref for atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs.",
+      "sourcePaths": [
+        "atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs"
+      ],
+      "members": [],
+      "entrypoints": []
+    },
+    {
+      "kind": "map",
+      "id": "ATM-MAP-0003",
+      "refName": "htmlToUcufParsingNormalizersMap",
+      "logicalName": "h2u-map-evolution",
+      "purpose": "h2u-map-evolution",
+      "sourcePaths": [
+        "atomic_workbench/maps/ATM-MAP-0003/map.spec.json",
+        "atomic_workbench/maps/ATM-MAP-0003/map.test.report.json"
+      ],
+      "members": [
+        "ATM-CORE-0005",
+        "ATM-CORE-0006",
+        "ATM-CORE-0007"
+      ],
+      "entrypoints": [
+        "ATM-CORE-0005"
+      ]
+    }
+  ],
+  "callsites": []
+}

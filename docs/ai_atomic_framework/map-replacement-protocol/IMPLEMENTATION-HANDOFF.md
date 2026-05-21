@@ -89,13 +89,13 @@ node atm.mjs tasks close --task TASK-MRP-0011 --evidence <path> --json
 | M18 Atom Capsule | ✅ | ✅ | ✅ | n/a | ✅ | **救援基石**，CID+Registry+L1/L2 完成 |
 | M19 Mermaid Auto-gen | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M11 |
 | M20 Shadow A/B | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M4, M10 |
-| M21 Map Capsule | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M18 |
-| **M22 Daemon** | ✅ | ✅ | ✅ | **✅** | ❌ | 🔴 高風險，預設 OFF |
-| M23 atm do | ✅ | ✅ | ✅ | n/a | ❌ | 中風險 |
-| **M24 Guide Cache** | ✅ | ✅ | ✅ | **✅** | ❌ | 🔴 最高風險（AI drift），預設 OFF |
-| M25 Diff-evidence | ✅ | ✅ | ✅ | n/a | ❌ | 中風險 |
-| M26 Rescue Police | ✅ | ✅ | ✅ | n/a | ❌ | **救援核心** |
-| M27 Disaster Recovery | ✅ | ✅ | ✅ | n/a | ❌ | **救援工具** |
+| M21 Map Capsule | ✅ | ✅ | ✅ | n/a | ✅ | map:cid Merkle tree + Registry 完成 |
+| **M22 Daemon** | ✅ | ✅ | ✅ | **✅** | ✅ | 🔴 高風險，預設 OFF，triple-gate + kill switch 完成 |
+| M23 atm do | ✅ | ✅ | ✅ | n/a | ✅ | 中風險，do/complete/status 完成 |
+| **M24 Guide Cache** | ✅ | ✅ | ✅ | **✅** | ✅ | 🔴 最高風險，預設 OFF，dirty bypass + checksum 完成 |
+| M25 Diff-evidence | ✅ | ✅ | ✅ | n/a | ✅ | 中風險，evidence diff 完成 |
+| M26 Rescue Police | ✅ | ✅ | ✅ | n/a | ✅ | **救援核心**，INV-001~010 全部完成 |
+| M27 Disaster Recovery | ✅ | ✅ | ✅ | n/a | ✅ | **救援工具**，7 subcommands 完成 |
 
 ---
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const path = require('node:path');
+const _path = require('node:path');
 
 const DEFAULT_H2U_WORKTREE_STATUS_FILE = 'artifacts/legacy-h2u-first-win/worktree-status.txt';
 const DEFAULT_H2U_BASELINE_WORKTREE_STATUS_FILE = 'artifacts/legacy-h2u-first-win/worktree-baseline.txt';

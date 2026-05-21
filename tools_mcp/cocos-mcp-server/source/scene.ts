@@ -328,7 +328,7 @@ export const methods: { [key: string]: (...any: any) => any } = {
      */
     createPrefabFromNode(nodeUuid: string, prefabPath: string) {
         try {
-            const { director, instantiate } = require('cc');
+            const { director, _instantiate } = require('cc');
             const scene = director.getScene();
             if (!scene) {
                 return { success: false, error: 'No active scene' };

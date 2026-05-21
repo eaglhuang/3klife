@@ -49,7 +49,7 @@ function loadRegistry() {
 // Returns null if not found, '[AMBIGUOUS]' string if multiple matches
 // ──────────────────────────────────────────────
 function resolveRef(refStr, sourceRelPath, registry) {
-  let r = refStr.replace(/\\/g, '/').replace(/^\.\//, '');
+  const r = refStr.replace(/\\/g, '/').replace(/^\.\//, '');
 
   // 1. Direct byRelPath lookup - try resolving from source dir
   const sourceDir = path.dirname(sourceRelPath).replace(/\\/g, '/');
@@ -85,7 +85,7 @@ function processLine(line, sourceRelPath, registry) {
   if (/^<!--\s*doc_id:/.test(line.trim()) || /^\s*doc_id:\s*doc_/.test(line)) return line;
 
   let result = line;
-  let offset = 0; // tracks how much we've inserted so far
+  const _offset = 0; // tracks how much we've inserted so far
 
   // Collect all spans to annotate FIRST, then apply in reverse order
   // (to avoid messing up indices when inserting)
@@ -130,7 +130,7 @@ function processLine(line, sourceRelPath, registry) {
   while ((m = bareRe.exec(line)) !== null) {
     const p = m[1];
     if (p.startsWith('http')) continue;
-    const startPos = m.index + m[0].indexOf(p);
+    const _startPos = m.index + m[0].indexOf(p);
     const endPos = m.index + m[0].length;
     const afterRef = line.slice(endPos);
     if (isAlreadyAnnotated(afterRef)) continue;

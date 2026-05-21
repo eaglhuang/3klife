@@ -19,8 +19,8 @@ import {
   Button,
   Color,
   Vec3,
-  Camera,
-  Canvas,
+  _Camera,
+  _Canvas,
   EventHandler,
 } from 'cc';
 

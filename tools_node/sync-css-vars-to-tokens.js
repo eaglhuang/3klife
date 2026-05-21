@@ -13,7 +13,7 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
+const _path = require('path');
 
 function parseArgs(argv) {
   const opts = { css: null, tokens: 'assets/resources/ui-spec/ui-design-tokens.json', mode: 'dry-run' };

@@ -92,7 +92,7 @@ function resolveColor(tokenName, tokenMap, fallback) {
   return tokenMap[tokenName] || fallback || null;
 }
 
-function widgetToCss(widget, hasExplicitSize) {
+function widgetToCss(widget, _hasExplicitSize) {
   if (!widget) return '';
   const parts = ['position:absolute'];
   const { top, left, right, bottom } = widget;

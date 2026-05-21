@@ -527,14 +527,14 @@ function resolveFillChildWidths(node, childNodes) {
 
   // Sum up widths of fixed children (those without _flexFill already removed).
   let fixedSum = 0;
-  let fixedCount = 0;
+  let _fixedCount = 0;
   for (const child of childNodes) {
     if (!child || typeof child !== 'object') continue;
     if (typeof child.width === 'number') { fixedSum += child.width; fixedCount++; }
   }
   // Subtract fill children that might already have a width assigned.
   for (const child of fillChildren) {
-    if (typeof child.width === 'number') { fixedSum -= child.width; fixedCount--; }
+    if (typeof child.width === 'number') { fixedSum -= child.width; _fixedCount--; }
   }
 
   const spacingX = typeof node.layout.spacingX === 'number' ? node.layout.spacingX : 0;
@@ -2340,7 +2340,7 @@ function resolveRadiusDimension(candidates) {
   return null;
 }
 
-function emitSkinLayers(ctx, name, style, attrs) {
+function emitSkinLayers(ctx, name, style, _attrs) {
   // 多層視覺合併建議：背景圖 + 背景色 + 描邊 -> 三層 skinLayers
   const layers = [];
   if (style.backgroundColor && style.backgroundImage) {
@@ -2791,7 +2791,7 @@ function buildFontFaceRegistry(styleSheets, customResolver) {
 //   `fonts/<sanitized-family>/font` (matches existing repo layout
 //    assets/resources/fonts/<family>/font.ttf)
 // `src` is currently unused but retained for future hash-based mapping.
-function resolveFontAssetByConvention(family, src) {
+function resolveFontAssetByConvention(family, _src) {
   if (!family) return null;
   const known = PROJECT_FONT_REGISTRY.find(entry => entry.match && entry.match.test(String(family).trim()));
   if (known && known.asset) return known.asset;
@@ -2838,7 +2838,7 @@ function parseSimpleTextShadow(value) {
   const colorRe = /^(#[0-9a-f]{3,8}|rgba?\(|hsla?\(|[a-z]+)/i;
   const isLength = (t) => /^-?\d+(?:\.\d+)?(px|em|rem|%)?$/.test(t);
   let colorTok = null;
-  let lengths = [];
+  const lengths = [];
   for (const t of tokens) {
     if (isLength(t)) lengths.push(t);
     else if (!colorTok && colorRe.test(t)) colorTok = t;

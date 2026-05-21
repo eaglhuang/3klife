@@ -18,24 +18,6 @@ import { TestSuite, assert } from './TestRunner';
 
 // ─── Mock 服務 ──────────────────────────────────────────────────────────────
 
-/**
- * 建立一個簡易 mock ServiceLoader，讓 ActionSystem 在純 Node.js 下可執行。
- * 利用 require 攔截 ServiceLoader.getInstance() 的回傳值。
- */
-function buildMockServices() {
-    const log: { type: string; args: unknown[] }[] = [];
-
-    const mockServices = {
-        event:     { emit: (name: string, data: unknown) => log.push({ type: 'event', args: [name, data] }) },
-        audio:     { playSfx: (clip: string) => log.push({ type: 'audio', args: [clip] }) },
-        effect:    { playBlock: (id: string) => log.push({ type: 'vfx', args: [id] }) },
-        floatText: { show: (type: string, text: string) => log.push({ type: 'floatText', args: [type, text] }) },
-        buff:      { applyBuff: (uid: string, eff: string, dur: number) => log.push({ type: 'buff', args: [uid, eff, dur] }) },
-    };
-
-    return { log, mockServices };
-}
-
 // ─── 測試用技能定義 ─────────────────────────────────────────────────────────
 
 const SIMPLE_SKILL: SkillDef = {
@@ -108,7 +90,7 @@ export function createActionSystemSuite(): TestSuite {
 
     // ── playSkill：找不到技能 ────────────────────────────────────────────────
 
-    suite.test('playSkill：找不到技能時呼叫 onComplete（不卡住）', (done?: () => void) => {
+    suite.test('playSkill：找不到技能時呼叫 onComplete（不卡住）', (_done?: () => void) => {
         const sys = new ActionSystem();
         let completed = false;
         sys.playSkill('non-existent', {

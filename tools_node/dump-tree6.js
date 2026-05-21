@@ -26,7 +26,7 @@ const puppeteer = require('puppeteer-core');
                     gameWin = iframes[i].contentWindow;
                     break;
                 }
-            } catch(e) {}
+            } catch(_e) {}
         }
         
         const cc = gameWin.cc;
@@ -40,7 +40,7 @@ const puppeteer = require('puppeteer-core');
             if (parent.name === 'PlayerPortrait') targetNode = parent;
             if (parent.name === 'TopBar') tsBarNode = parent;
             if (parent.name === 'PlayerSide') pSideNode = parent;
-            for (let c of parent.children) findNode(c);
+            for (const c of parent.children) findNode(c);
         };
         findNode(scene);
         

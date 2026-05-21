@@ -101,7 +101,7 @@ function bench(label, fn) {
     return { label, avg: +avg.toFixed(2), min: +min.toFixed(2), max: +max.toFixed(2), runs: RUNS };
 }
 
-async function benchAsync(label, fn) {
+async function _benchAsync(label, fn) {
     const times = [];
     for (let r = 0; r < RUNS; r++) {
         const start = performance.now();

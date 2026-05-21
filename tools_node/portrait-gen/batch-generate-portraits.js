@@ -127,8 +127,8 @@ for (const general of targets) {
     const steps = ['legendary','SSR'].includes(tier) ? 40
                 : ['epic','SR'].includes(tier)         ? 35
                 :                                        30;
-    const lora1 = 0;
-    const lora2 = 0;
+    const _lora1 = 0;
+    const _lora2 = 0;
     const cfg   = ['legendary','SSR'].includes(tier) ? 7.5
                 : ['epic','SR'].includes(tier)         ? 7.0
                 :                                        6.5;

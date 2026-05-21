@@ -3,7 +3,10 @@ doc_id: doc_other_0168
 task_id: TASK-MRP-0027
 title: Disaster Recovery & Atom Reload CLI（災難恢復與原子重載工具）
 milestone: M27
-status: planned
+status: done
+started_at: 2026-05-21T03:15:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T03:45:00Z
 blocked_by: [TASK-MRP-0018, TASK-MRP-0021, TASK-MRP-0026]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -222,6 +225,19 @@ node atm.mjs rescue factory-reset --confirm --i-understand-this-deletes-state --
 移除 `rescue/` 目錄與 CLI subcommand；如果使用者已用本工具修復過 ATM，修復結果不受影響（已寫入的 registry / lineage 仍有效）。回滾僅移除「再次救援的能力」，不破壞既有救援成果。
 
 `.atm/rescue-backup/` 目錄保留，作為歷史備份。
+
+## 2026-05-21 v2-r2 審查補充
+
+- 所有 mutating rescue command 預設 `--dry-run`；實際修復必須加 `--confirm`。
+- 修復前需備份 `.atm/`、registry、lineage projection 與 cache manifest 到 `.atm/rescue-backup/<timestamp>/`。
+- `factory-reset` 必須需要長確認字串，不可被 M23 `atm do` 自動觸發。
+- Recovery report 必須可附到 task evidence，包含 repairedFiles、backupPath、sourceOfTruthUsed、remainingFindings。
+
+新增驗收：
+- [ ] mutating command 無 `--confirm` 時只 dry-run
+- [ ] 修復前自動建立 backup 且 report 指向 backupPath
+- [ ] factory-reset 需要長確認字串
+- [ ] recovery report 可被 M25/M23 evidence flow 驗證
 
 ## Checklist
 

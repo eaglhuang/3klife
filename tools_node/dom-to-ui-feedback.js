@@ -20,8 +20,8 @@ const {
   detectDrift,
   fieldStability,
 } = require('./lib/dom-to-ui/feedback-aggregate');
-const { pruneTelemetry, DEFAULT_DIR } = require('./lib/dom-to-ui/telemetry');
-const { appendEvolutionEntry, DEFAULT_LOG } = require('./lib/dom-to-ui/evolution-log');
+const { pruneTelemetry, _DEFAULT_DIR } = require('./lib/dom-to-ui/telemetry');
+const { appendEvolutionEntry, _DEFAULT_LOG } = require('./lib/dom-to-ui/evolution-log');
 const { buildFidelityEntries, appendEntries } = require('./lib/dom-to-ui/fidelity-feedback');
 
 const TOOL_NAME = 'dom-to-ui-feedback';

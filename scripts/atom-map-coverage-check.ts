@@ -7,7 +7,6 @@ const {
   parseFrontmatter,
   parseMode,
   readLines,
-  readText,
 } = require('./atm-lang-validator-common.ts');
 
 const PLAN_PATH = 'docs/ai_atomic_framework/universal-language-framework/ATM通用語言框架計畫書.md';

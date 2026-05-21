@@ -3,7 +3,9 @@ doc_id: doc_other_0159
 task_id: TASK-MRP-0019
 title: Map 拓樸圖 Mermaid 自動生成
 milestone: M19
-status: planned
+status: done
+started_at: 2026-05-21T06:10:00Z
+started_by_agent: ClaudeCode_haiku-4.5
 blocked_by: [TASK-MRP-0011]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -60,6 +62,19 @@ public_tracking: false
 ## 回滾策略
 
 移除 mermaid-generator；CI step 移除；`map-topology.mermaid.md` 手動刪除。
+
+## 2026-05-21 v2-r2 審查補充
+
+- Mermaid 是 derived artifact，不是 source-of-truth；source-of-truth 仍是 `map.spec.json`。
+- CI 應檢查 `map.spec.json` 與 `map-topology.mermaid.md` 是否 drift。
+- Mermaid label 必須 repo-neutral，不得輸出 adopter 私有路徑、內部 repo 名稱或 prompt 內容。
+- 生成器需穩定排序，避免每次產生非語意 diff。
+
+新增驗收：
+- [ ] map.spec.json 改動但 Mermaid 未更新時 CI fail
+- [ ] Mermaid 生成結果 deterministic
+- [ ] label 通過 neutrality / adopter-private scan
+- [ ] drift report 指出需要重生成的 mapId
 
 ## Checklist
 

@@ -3,8 +3,11 @@ doc_id: doc_other_0164
 task_id: TASK-MRP-0023
 title: atm do --task X（Agent 一行指令執行任務）
 milestone: M23
-status: planned
-blocked_by: []
+status: done
+started_at: 2026-05-21T04:15:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T04:35:00Z
+blocked_by: [TASK-MRP-0025, TASK-MRP-0027]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
@@ -116,6 +119,19 @@ reserve OK → promote OK → claim FAIL
 **Level 2（殘留任務狀態清理）**：如果某任務卡因 `do` 失敗導致狀態混亂，使用既有 `node atm.mjs unclaim TASK-ID` 等指令手動清理。
 
 **Level 3（災難恢復）**：使用 TASK-MRP-0027 的 `rescue diagnose` 找出所有處於僵屍狀態的任務卡。
+
+## 2026-05-21 v2-r2 審查補充
+
+- `atm do --task` 是 lifecycle UX，不是自動完成器；不可自動填寫 intent / impact / evidence。
+- 對 locked、blocked、stale dependency 的 task 必須 fail closed，不得搶鎖或重置狀態。
+- `complete` 必須讀取 M25 evidence，且 `_isValid=true` 才能 close。
+- 需要 `--dry-run` 顯示將執行的 reserve / promote / claim / complete 步驟。
+
+新增驗收：
+- [ ] locked task 回傳 lock owner 與 routeHint，不進入 reserve
+- [ ] blocked_by 未完成時不進入 reserve
+- [ ] `_isValid=false` evidence 不能 complete
+- [ ] `--dry-run` 不寫任何 task state
 
 ## Checklist
 

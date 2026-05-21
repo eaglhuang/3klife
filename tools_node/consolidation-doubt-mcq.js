@@ -42,7 +42,7 @@ const registryStore = require('./lib/doc-id-registry-loader');
 
 const ROOT = process.cwd();
 const DOUBT_FILE = path.join(ROOT, 'docs/遊戲規格文件/整併疑問書.md');
-const CONFLICT_FILE = path.join(ROOT, 'docs/遊戲規格文件/正式規格矛盾審查.md');
+const _CONFLICT_FILE = path.join(ROOT, 'docs/遊戲規格文件/正式規格矛盾審查.md');
 const DEFAULT_MANIFEST = path.join(ROOT, 'docs/遊戲規格文件/consolidation-manifest.json');
 
 const args = process.argv.slice(2);
@@ -71,7 +71,7 @@ function getMaxQuestionNumber() {
 }
 
 // ── Helper: 讀取 manifest ────────────────────────────────────────────────────
-function loadManifest() {
+function _loadManifest() {
   if (!fs.existsSync(DEFAULT_MANIFEST)) {
     console.error(`[ERROR] Manifest not found: ${DEFAULT_MANIFEST}`);
     process.exit(1);
@@ -80,7 +80,7 @@ function loadManifest() {
 }
 
 // ── Helper: 寫入 manifest ────────────────────────────────────────────────────
-function saveManifest(manifest) {
+function _saveManifest(manifest) {
   fs.writeFileSync(DEFAULT_MANIFEST, JSON.stringify(manifest, null, 2), 'utf8');
 }
 

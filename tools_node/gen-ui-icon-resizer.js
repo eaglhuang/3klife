@@ -5,7 +5,7 @@ const path = require('path');
 let puppeteer;
 try {
     puppeteer = require('puppeteer-core');
-} catch (e) {
+} catch (_e) {
     process.exit(1);
 }
 
@@ -37,9 +37,9 @@ const VARIANTS = [
     { name: 'v2c', src: srcV2C },
 ];
 
-for (let v of VARIANTS) {
+for (const v of VARIANTS) {
     if (v.src) {
-        for (let size of SIZES) {
+        for (const size of SIZES) {
             jobs.push({
                 target: `unitinfo_type_icon_spear_${v.name}_${size}.png`,
                 src: v.src,

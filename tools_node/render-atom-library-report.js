@@ -327,7 +327,7 @@ function renderDetailsBlock(row) {
   ].join('\n');
 }
 
-function buildLookupSnapshot({ kind, row, entry, input, version, versionRecord }) {
+function buildLookupSnapshot({ kind, row, entry, input, _version, versionRecord }) {
   const logicalNameHits = row.logicalName ? input.registryIndex.findByLogicalName(row.logicalName).length : 0;
   const fingerprintValue = resolveFingerprint(entry);
   const fingerprintHits = fingerprintValue ? input.registryIndex.findBySemanticFingerprint(fingerprintValue).length : 0;

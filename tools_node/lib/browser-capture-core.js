@@ -16,7 +16,7 @@ let puppeteer;
 try {
     // eslint-disable-next-line global-require
     puppeteer = require('puppeteer-core');
-} catch (error) {
+} catch (_error) {
     // Deferred error; will throw when first method is called
 }
 
@@ -193,7 +193,7 @@ async function waitForFonts(page) {
             }
             return Promise.resolve();
         });
-    } catch (error) {
+    } catch (_error) {
         // Fonts API not available; non-fatal
     }
 }

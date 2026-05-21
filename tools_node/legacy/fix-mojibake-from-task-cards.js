@@ -77,7 +77,7 @@ function parseFrontmatter(content) {
 // ---------------------------------------------------------------------------
 // 從 frontmatter 內的多行 notes 提取（notes 後面的值可能是多行引號字串）
 // ---------------------------------------------------------------------------
-function extractNotesFromFrontmatter(content) {
+function _extractNotesFromFrontmatter(content) {
     const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (!match) return null;
     const yamlBlock = match[1];
@@ -131,7 +131,7 @@ function main() {
                 }
                 cardMap.set(fm.id, fm);
             }
-        } catch (e) {
+        } catch (_e) {
             // skip parse errors
         }
     }

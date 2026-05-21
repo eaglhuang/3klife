@@ -73,7 +73,7 @@ class StubPanel {
         return changedKeys;
     }
 
-    onDataUpdate(data: unknown): void {
+    onDataUpdate(_data: unknown): void {
         this.onDataUpdateCalled++;
     }
 

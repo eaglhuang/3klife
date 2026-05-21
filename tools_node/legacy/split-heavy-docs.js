@@ -58,7 +58,7 @@ function splitKeep() {
   // Split lines into sections by ## headings
   const sections = []; // { heading, lines: [...], shard }
   let current = null;
-  let preamble = []; // lines before first ## heading
+  const preamble = []; // lines before first ## heading
 
   for (const line of lines) {
     if (/^## /.test(line)) {
@@ -222,7 +222,7 @@ function splitCrossRef() {
   // Split at top-level ## sections: ## A., ## B., ## C.
   const SECTION_RE = /^## ([A-C])\. /;
   const sections = {}; // 'A' | 'B' | 'C' → lines[]
-  let preamble = [];
+  const preamble = [];
   let currentSection = null;
 
   for (const line of lines) {

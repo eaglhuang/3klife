@@ -220,7 +220,7 @@ function injectUiConfigEntry(uiId, family, dryRun) {
         return true;
     }
     const layer = FAMILY_TO_LAYER[family] ?? 'PopUp';
-    const layerComment = {
+    const _layerComment = {
         'UI':     '// ── 主頁面層（LayerType.UI）',
         'PopUp':  '// ── 彈窗層（LayerType.PopUp）',
         'Dialog': '// ── 對話框層（LayerType.Dialog）',

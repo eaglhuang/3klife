@@ -93,7 +93,7 @@ function getHotFingerprint(entry) {
   );
 }
 
-function hasHistoricalPayload(version) {
+function _hasHistoricalPayload(version) {
   if (!version || typeof version !== 'object') {
     return false;
   }

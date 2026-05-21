@@ -8,7 +8,7 @@ const { spawnSync } = require('child_process');
 let puppeteer;
 try {
   puppeteer = require('puppeteer-core');
-} catch (error) {
+} catch (_error) {
   console.error('[postprocess-ui-asset] 缺少依賴 puppeteer-core');
   process.exit(1);
 }
@@ -214,7 +214,7 @@ function parseTrimStats(stdout) {
   }
   try {
     return JSON.parse(stdout.slice(jsonStart));
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }

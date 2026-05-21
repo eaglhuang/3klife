@@ -5,12 +5,12 @@ const path = require('path');
 let puppeteer;
 try {
     puppeteer = require('puppeteer-core');
-} catch (e) {
+} catch (_e) {
     process.exit(1);
 }
 
 const FINAL_DIR = path.resolve(__dirname, '..', 'assets', 'resources', 'sprites', 'ui_families', 'general_detail', 'v3_final');
-const ARTIFACT_DIR = path.resolve(process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share"), '../.gemini/antigravity/brain/16e54070-ebe9-46f9-a875-de60756048f9');
+const ARTIFACT_DIR = path.resolve(process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share"), '../.gemini/antigravity/brain/16e54070-ebe9-46f9-a875-de60756048f9');
 
 // fallback directory logic for artifacts depending on OS/user path
 const fallbacks = [
@@ -19,7 +19,7 @@ const fallbacks = [
 
 let actualArtifactDir = ARTIFACT_DIR;
 if(!fs.existsSync(ARTIFACT_DIR)) {
-    for (let f of fallbacks) {
+    for (const f of fallbacks) {
         if(fs.existsSync(f)) {
             actualArtifactDir = f;
             break;
@@ -64,7 +64,7 @@ async function main() {
     const browserPath = resolveBrowser();
     if (!browserPath) { console.error("No browser"); return; }
     
-    for (let job of JOBS) {
+    for (const job of JOBS) {
         if(!job.src) { console.warn("Skipping", job.target, "no source"); continue; }
     }
 

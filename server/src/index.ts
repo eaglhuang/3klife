@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { Pool } from 'pg';
 
-import { ActionRecord, SyncRequest, SyncResponse } from '../../shared/protocols';
+import { SyncRequest, SyncResponse } from '../../shared/protocols';
 
 function loadEnvFiles(): void {
     const envCandidates = [

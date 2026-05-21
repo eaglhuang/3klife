@@ -24,7 +24,7 @@ const path = require('path');
 
 const ROOT = process.cwd();
 const DEFAULT_MANIFEST = path.join(ROOT, 'docs/遊戲規格文件/consolidation-manifest.json');
-const STATUS_FILE = path.join(ROOT, 'docs/遊戲規格文件/討論來源整併狀態.md');
+const _STATUS_FILE = path.join(ROOT, 'docs/遊戲規格文件/討論來源整併狀態.md');
 const SPECS_DIR = path.join(ROOT, 'docs/遊戲規格文件/系統規格書');
 
 const args = process.argv.slice(2);

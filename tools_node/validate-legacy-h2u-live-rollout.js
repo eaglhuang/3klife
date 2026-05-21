@@ -10,7 +10,7 @@ const {
   DEFAULT_LIVE_ROLLOUT_FIRST_WIN_REPORT,
   findLatestRunDir,
   readJson,
-  readJsonIfExists,
+  _readJsonIfExists,
   writeJson,
 } = require('./lib/h2u-live-rollout');
 
@@ -138,7 +138,7 @@ function runValidation(opts) {
 
   const startEvidence = start && start.parsed && start.parsed.evidence ? start.parsed.evidence : null;
   const nextEvidence = next && next.parsed && next.parsed.evidence ? next.parsed.evidence : null;
-  const upgradeEvidence = upgrade && upgrade.parsed && upgrade.parsed.evidence ? upgrade.parsed.evidence : null;
+  const _upgradeEvidence = upgrade && upgrade.parsed && upgrade.parsed.evidence ? upgrade.parsed.evidence : null;
   const orientationEvidence = startEvidence && startEvidence.session && startEvidence.session.orientation ? startEvidence.session.orientation : null;
 
   checks.push(buildCheck('orient-start-next-upgrade', Boolean(

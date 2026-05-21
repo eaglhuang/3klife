@@ -28,7 +28,7 @@ import { resolveBattleVictory } from '../runtime/BattleVictoryResolver';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { services } from "../../core/managers/ServiceLoader";
 import type { BattleRuntimeContext } from '../runtime/BattleRuntimeContext';
-import type { BattleRuntimePhaseName, BattleRuntimePhaseOutcome, BattleResult as RuntimeBattleResult } from '../runtime/BattleRuntimeContract';
+import type { BattleRuntimePhaseName, BattleRuntimePhaseOutcome } from '../runtime/BattleRuntimeContract';
 import { createBattlePhaseExecutor, type BattlePhaseExecutor } from '../runtime/phases/BattlePhaseExecutor';
 import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoController';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';

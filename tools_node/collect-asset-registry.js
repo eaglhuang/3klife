@@ -31,7 +31,7 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const SCREENS_DIR  = path.join(PROJECT_ROOT, 'assets', 'resources', 'ui-spec', 'screens');
 const LAYOUTS_DIR  = path.join(PROJECT_ROOT, 'assets', 'resources', 'ui-spec', 'layouts');
 const SKINS_DIR    = path.join(PROJECT_ROOT, 'assets', 'resources', 'ui-spec', 'skins');
-const FRAGMENTS_DIR = path.join(PROJECT_ROOT, 'assets', 'resources', 'ui-spec', 'fragments');
+const _FRAGMENTS_DIR = path.join(PROJECT_ROOT, 'assets', 'resources', 'ui-spec', 'fragments');
 
 // ─── CLI ─────────────────────────────────────────────────────────────────────
 
@@ -78,7 +78,7 @@ function loadJson(filePath) {
     if (!fs.existsSync(filePath)) return null;
     try {
         return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch (e) {
+    } catch (_e) {
         return null;
     }
 }
@@ -99,7 +99,7 @@ function resolveFragmentPath(fragmentRef) {
 
 // ─── 路徑相對化工具 ────────────────────────────────────────────────────────────
 
-function toRelative(absPath) {
+function _toRelative(absPath) {
     return path.relative(path.join(PROJECT_ROOT, 'assets', 'resources'), absPath)
         .replace(/\\/g, '/');
 }

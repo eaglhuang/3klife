@@ -7,7 +7,7 @@ const {
   ROOT,
   LIFECYCLE_MODES,
   default3KLifeGovernanceConfig,
-  default3KLifeGovernanceLayout,
+  _default3KLifeGovernanceLayout,
   threeKLifeGovernancePhaseMatrix,
   build3KLifeGovernanceMappingMatrix,
   create3KLifeGovernanceAdapter,

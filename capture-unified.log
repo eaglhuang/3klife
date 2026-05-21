@@ -1,4 +1,4 @@
-﻿======================================================================
+======================================================================
 [capture-ui-screens] Headless capture start
 - host: http://localhost:7456
 - targets: GeneralDetailOverview

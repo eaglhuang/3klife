@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const fs = require('node:fs');
+const _fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
 

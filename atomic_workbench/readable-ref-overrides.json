@@ -1,0 +1,6 @@
+{
+  "ATM-CORE-0005": "cssColorCanonicalizerAtom",
+  "ATM-CORE-0006": "cssPxLengthParserAtom",
+  "ATM-CORE-0007": "fragmentTokenParserAtom",
+  "ATM-MAP-0003": "htmlToUcufParsingNormalizersMap"
+}

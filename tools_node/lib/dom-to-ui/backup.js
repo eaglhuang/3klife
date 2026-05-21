@@ -70,7 +70,7 @@ function createBackup({ screenId, files, backupRoot, repoRoot, now }) {
     // 建立目錄（延遲至確認有檔案需備份時才建立，避免產生空目錄）
     fs.mkdirSync(backupDir, { recursive: true });
     // 保留原始檔名；若同名衝突（不同路徑），以後綴數字區分
-    let destName = path.basename(full);
+    const destName = path.basename(full);
     let dest = path.join(backupDir, destName);
     let counter = 1;
     while (fs.existsSync(dest)) {

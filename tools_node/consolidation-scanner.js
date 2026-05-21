@@ -19,7 +19,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const cp = require('child_process');
+const _cp = require('child_process');
 const crypto = require('crypto');
 
 const ROOT = process.cwd();
@@ -103,7 +103,7 @@ function cmdScan() {
   let manifest;
   try {
     manifest = loadManifest();
-  } catch (e) {
+  } catch (_e) {
     console.log(`[INFO] Manifest not found or empty, creating new one\n`);
     manifest = {
       _meta: {

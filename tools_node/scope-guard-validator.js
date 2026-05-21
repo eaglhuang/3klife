@@ -19,8 +19,8 @@
  *   1  fail, or warn when --strict
  */
 
-const fs = require('fs');
-const path = require('path');
+const _fs = require('fs');
+const _path = require('path');
 const cp = require('child_process');
 
 const config = require('./lib/project-config');

@@ -17,7 +17,7 @@ const {
   stripHtml,
   toInt,
   truncate,
-  uniqueStrings,
+  _uniqueStrings,
   writeJsonFile,
 } = require('../lib/agent-cli-common');
 

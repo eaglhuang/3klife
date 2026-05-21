@@ -33,7 +33,7 @@ function checkCreatorTypesVersion(version) {
             return true; // 如果获取失败，跳过检查
         }
         
-        let output = result.stdout.toString().trim();
+        const output = result.stdout.toString().trim();
         
         // 尝试解析JSON
         try {
@@ -43,7 +43,7 @@ function checkCreatorTypesVersion(version) {
             } else if (typeof versions === 'string') {
                 return versions.includes(version);
             }
-        } catch (parseError) {
+        } catch (_parseError) {
             // 如果JSON解析失败，尝试作为字符串处理
             return output.includes(version);
         }

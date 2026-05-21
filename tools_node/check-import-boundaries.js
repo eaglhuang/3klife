@@ -113,7 +113,7 @@ function extractImports(source) {
 }
 
 // ─── 判斷 import 路徑指向哪個模組 ──────────────────────────
-function resolveImportModule(importPath, sourceModule) {
+function resolveImportModule(importPath, _sourceModule) {
   // 排除外部依賴（cc、node_modules 等）
   if (importPath.startsWith('cc') || importPath.startsWith('@')) return null;
   if (!importPath.startsWith('.') && !importPath.startsWith('/')) return null;
@@ -124,7 +124,7 @@ function resolveImportModule(importPath, sourceModule) {
     // 檢查路徑中是否包含跨模組引用
     // 正規化：../../battle/ 或 ../battle/ 等
     const modSegment = `/${mod}/`;
-    const altSegment = `../${mod}/`;
+    const _altSegment = `../${mod}/`;
     if (importPath.includes(modSegment) || importPath.startsWith(`../${mod}/`) || importPath === `../${mod}`) {
       return mod;
     }

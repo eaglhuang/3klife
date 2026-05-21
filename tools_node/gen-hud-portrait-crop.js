@@ -18,7 +18,7 @@ const path = require('path');
 let puppeteer;
 try {
     puppeteer = require('puppeteer-core');
-} catch (e) {
+} catch (_e) {
     console.error('[gen-hud-portrait-crop] 缺少依賴 puppeteer-core，請先執行: npm i -D puppeteer-core');
     process.exit(1);
 }

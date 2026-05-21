@@ -37,7 +37,7 @@ async function auditFonts(page) {
       let ok = false;
       try {
         ok = document.fonts.check(`12px "${f}"`);
-      } catch (e) {}
+      } catch (_e) {}
       if (ok) available.push(f);
       else missing.push(f);
     }

@@ -3,7 +3,7 @@ const path = require('path');
 const puppeteer = require('puppeteer-core');
 
 const FORMAL_DIR = path.resolve(__dirname, '..', 'assets', 'resources', 'sprites', 'ui_families', 'general_detail', 'formal');
-const ARTIFACT_DIR = path.resolve(process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share"), '../.gemini/antigravity/brain/16e54070-ebe9-46f9-a875-de60756048f9');
+const ARTIFACT_DIR = path.resolve(process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share"), '../.gemini/antigravity/brain/16e54070-ebe9-46f9-a875-de60756048f9');
 
 let actualArtifactDir = ARTIFACT_DIR;
 if(!fs.existsSync(ARTIFACT_DIR)) {

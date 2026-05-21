@@ -1,8 +1,8 @@
-/* eslint-disable vue/one-component-per-file */
+
 
 import { readFileSync } from 'fs-extra';
 import { join } from 'path';
-import { createApp, App, defineComponent, ref, computed, onMounted, watch, nextTick } from 'vue';
+import { createApp, App, defineComponent, ref, computed, onMounted, watch, _nextTick } from 'vue';
 
 const panelDataMap = new WeakMap<any, App>();
 
@@ -15,7 +15,7 @@ interface ToolConfig {
 }
 
 // 定义配置接口
-interface Configuration {
+interface _Configuration {
     id: string;
     name: string;
     description: string;

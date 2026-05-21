@@ -27,7 +27,7 @@ const puppeteer = require('puppeteer-core');
                     gameWin = iframes[i].contentWindow;
                     break;
                 }
-            } catch(e) {}
+            } catch(_e) {}
         }
         
         const cc = gameWin.cc;
@@ -37,11 +37,11 @@ const puppeteer = require('puppeteer-core');
         
         const dumpTree = (parent, indent) => {
             let s = indent + parent.name + "\n";
-            for (let c of parent.children) s += dumpTree(c, indent + "  ");
+            for (const c of parent.children) s += dumpTree(c, indent + "  ");
             return s;
         };
         let res = "";
-        for (let c of scene.children) res += dumpTree(c, "");
+        for (const c of scene.children) res += dumpTree(c, "");
         return res;
     });
     

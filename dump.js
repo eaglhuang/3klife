@@ -9,7 +9,7 @@ const     puppeteer = require('puppeteer-core');
     const data = await page.evaluate(() => { 
         const scene = document.querySelector('iframe')?.contentWindow?.cc?.director.getScene(); 
         if(!scene) return "NO SCENE";
-        let h = []; 
+        const h = []; 
         const getPName = (n) => n.parent ? getPName(n.parent) + '/' + n.name : n.name;
         const f = (p) => { 
             if(p.name==='Header') h.push({path: getPName(p), actH: p.activeInHierarchy, act: p.active}); 

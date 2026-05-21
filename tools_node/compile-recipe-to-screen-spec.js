@@ -21,7 +21,7 @@ const {
   writeRuntimeVerdictSkeleton,
 } = require('./lib/ui-factory-manifest-validator');
 
-function slugify(value) {
+function _slugify(value) {
   return String(value || '')
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/[^a-zA-Z0-9]+/g, '-')

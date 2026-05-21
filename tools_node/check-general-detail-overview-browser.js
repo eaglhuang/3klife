@@ -19,7 +19,7 @@
 
 'use strict';
 
-const path = require('path');
+const _path = require('path');
 const fs = require('fs');
 
 let puppeteer;

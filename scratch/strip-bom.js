@@ -1,0 +1,1 @@
+const fs = require('fs'); const cp = require('child_process'); const paths = cp.execSync('git ls-files').toString().trim().split('\n'); paths.forEach(f => { if(fs.existsSync(f)) { const d = fs.readFileSync(f); if(d.length >= 3 && d[0] === 0xef && d[1] === 0xbb && d[2] === 0xbf) { fs.writeFileSync(f, d.slice(3)); console.log('stripped BOM: ' + f); } } });

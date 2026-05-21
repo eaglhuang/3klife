@@ -203,7 +203,7 @@ console.log('[OK]    master/generals-lore.json 已更新。');
 console.log('\n[INFO]  執行 validate-generals-data.js...');
 try {
   execSync(`node "${VALIDATE_SCRIPT}"`, { stdio: 'inherit' });
-} catch (e) {
+} catch (_e) {
   console.error('[ERROR] 驗證發現問題，請修正後重新合併。');
   process.exit(1);
 }
@@ -211,7 +211,7 @@ try {
 console.log('\n[INFO]  執行 build-generals-runtime.js...');
 try {
   execSync(`node "${BUILD_RUNTIME_SCRIPT}"`, { stdio: 'inherit' });
-} catch (e) {
+} catch (_e) {
   console.error('[ERROR] runtime build 失敗，master 與 runtime 可能不同步。');
   process.exit(1);
 }

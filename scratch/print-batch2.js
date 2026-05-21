@@ -1,0 +1,1 @@
+const fs = require('fs'); let data = fs.readFileSync('scratch/batch2_errors.json', 'utf16le'); if (data.charCodeAt(0) === 0xFEFF) data = data.slice(1); const r = JSON.parse(data); r.forEach(f => f.messages.forEach(m => { if(m.severity === 2) console.log(f.filePath + ':' + m.line + ' ' + m.message); }));

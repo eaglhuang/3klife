@@ -26,7 +26,7 @@ function analyzeLayout(layoutDraft) {
   const root = layoutRoot(layoutDraft);
   let nodeCount = 0;
   let deferredNodeCount = 0;
-  let totalNodeCount = 0;
+  const _totalNodeCount = 0;
   let maxDepth = 0;
   let colorRectCount = 0;
   let lazySlotCount = 0;

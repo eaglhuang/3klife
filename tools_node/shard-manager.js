@@ -119,7 +119,7 @@ function shardMarkdownH2(cfg) {
   }
 }
 
-function shardJsonObject(cfg) {
+function _shardJsonObject(cfg) {
   if (!fs.existsSync(cfg._sourceAbs)) die(`Source not found: ${cfg._sourceAbs}`);
 
   const raw = JSON.parse(fs.readFileSync(cfg._sourceAbs, 'utf8'));
@@ -244,7 +244,7 @@ function rebuildMarkdownIndex(cfg, bufs) {
 }
 
 // ── JSON-ARRAY shard ─────────────────────────────────────────────────────────
-function shardJsonArray(cfg) {
+function _shardJsonArray(cfg) {
   return shardJsonCollection(cfg);
 }
 

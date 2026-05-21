@@ -99,7 +99,7 @@ function parseSimpleYaml(text) {
 
     const stripInlineComment = (value) => value.replace(/\s*#.*$/, '').trim();
 
-    for (let raw of lines) {
+    for (const raw of lines) {
         // 去除行尾空白
         const line = raw.trimEnd();
 
@@ -149,7 +149,7 @@ function parseSimpleYaml(text) {
 // Validation rules R-TC-01 ~ R-TC-10
 // ─────────────────────────────────────────────────────────────────────────────
 
-function validate(fields, cardPath) {
+function validate(fields, _cardPath) {
     const failures = [];
     const warnings = [];
 

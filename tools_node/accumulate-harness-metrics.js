@@ -419,7 +419,7 @@ function accumulateHarnessMetrics(options = {}) {
   const avgContextBytes = divide(sumNumbers(turns, (turn) => turn.totalBytes), turnCount);
   const artifactCoverage = divide(artifactHistory.scan.matchedArtifactCount, artifactHistory.scan.matchedArtifactCount + artifactHistory.scan.skippedCount);
   const traceCoverageRate = divide(traceJoinedCount, turnCount);
-  const handoffCoverageRate = divide(handoffAvailableCount, turnCount);
+  const _handoffCoverageRate = divide(handoffAvailableCount, turnCount);
   const handoffMismatchRate = divide(handoffMismatchCount, handoffAvailableCount);
   const gateFailRate = divide(traceErrorTurnCount, traceJoinedCount);
   const avgTraceDurationMs = divide(totalTraceDurationMs, traceJoinedCount);

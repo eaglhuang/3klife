@@ -24,7 +24,7 @@ import { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { AIPopulationConfig, getBreedingCap, DEFAULT_AI_POPULATION_CONFIG } from '../models/AIPopulationConfig';
 
 const STORE_BREEDING_RECORDS = 'breeding_quota_records';
-const STORE_POPULATION_STATS = 'population_stats_cache';
+const _STORE_POPULATION_STATS = 'population_stats_cache';
 
 /**
  * 繁殖閘道介面（Hook），供繁殖系統在產生新武將前呼叫。

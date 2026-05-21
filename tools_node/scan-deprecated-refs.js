@@ -27,7 +27,7 @@ const path = require('path');
 
 const args = process.argv.slice(2);
 const jsonMode  = args.includes('--json');
-const strictMode = args.includes('--strict');
+const _strictMode = args.includes('--strict');
 
 let rootArg = 'assets/scripts';
 const rootIdx = args.indexOf('--root');

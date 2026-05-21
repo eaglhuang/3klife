@@ -57,7 +57,7 @@ const runtimeArr   = JSON.parse(runtimeRaw);           // plain array
 
 const masterRaw    = fs.readFileSync(MASTER_PATH, 'utf8');
 const masterObj    = JSON.parse(masterRaw);            // { version, updatedAt, data: [] }
-const masterMap    = new Map(masterObj.data.map(g => [g.id, g]));
+const _masterMap    = new Map(masterObj.data.map(g => [g.id, g]));
 
 const changes = [];
 let deltaGe5 = 0;
@@ -91,7 +91,7 @@ console.log(`[fix-ep-recalc] 共 ${changes.length} 筆有差異（|delta|≥5 �
 // 排序：delta 最大的在前
 changes.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
 
-const header  = ['#', 'id', '名稱', 'tier', 'oldEP', 'newEP', 'Δ', 'oldRating', 'newRating'];
+const _header  = ['#', 'id', '名稱', 'tier', 'oldEP', 'newEP', 'Δ', 'oldRating', 'newRating'];
 const pad = (s, n) => String(s).padEnd(n);
 console.log(
   pad('#', 4) +

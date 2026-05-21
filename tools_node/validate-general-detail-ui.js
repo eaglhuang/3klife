@@ -17,8 +17,8 @@ const skinPath = path.join(projectRoot, 'assets/resources/ui-spec/skins/general-
 const screenPath = path.join(projectRoot, 'assets/resources/ui-spec/screens/general-detail-screen.json');
 const panelPath = path.join(projectRoot, 'assets/scripts/ui/components/GeneralDetailComposite.ts');
 
-const skinDir = path.join(projectRoot, 'assets/resources/ui-spec/skins');
-const layoutDir = path.join(projectRoot, 'assets/resources/ui-spec/layouts');
+const _skinDir = path.join(projectRoot, 'assets/resources/ui-spec/skins');
+const _layoutDir = path.join(projectRoot, 'assets/resources/ui-spec/layouts');
 const fragmentDir = path.join(projectRoot, 'assets/resources/ui-spec/fragments');
 
 function readJson(filePath) {
@@ -132,11 +132,11 @@ function parsePercent(value) {
     return Number.isFinite(number) ? number : null;
 }
 
-function hasNode(path) {
+function _hasNode(path) {
     return allPaths.has(path);
 }
 
-function hasAnyNode(paths) {
+function _hasAnyNode(paths) {
     return paths.some((path) => allPaths.has(path));
 }
 

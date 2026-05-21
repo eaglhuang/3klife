@@ -391,7 +391,7 @@ export class PrefabTools implements ToolExecutor {
     private async manuallyEstablishPrefabConnection(nodeUuid: string, prefabUuid: string, rootFileId: string): Promise<void> {
         try {
             // 尝试使用dump API修改节点的_prefab属性
-            const prefabConnectionData = {
+            const _prefabConnectionData = {
                 [nodeUuid]: {
                     '_prefab': {
                         '__uuid__': prefabUuid,
@@ -815,7 +815,7 @@ export class PrefabTools implements ToolExecutor {
         });
     }
 
-    private async createPrefabNative(nodeUuid: string, prefabPath: string): Promise<ToolResponse> {
+    private async createPrefabNative(_nodeUuid: string, _prefabPath: string): Promise<ToolResponse> {
         return new Promise((resolve) => {
             // 根据官方API文档，不存在直接的预制体创建API
             // 预制体创建需要手动在编辑器中完成
@@ -844,7 +844,7 @@ export class PrefabTools implements ToolExecutor {
                 const prefabUuid = this.generateUUID();
 
                 // 3. 创建预制体数据结构
-                const prefabData = this.createPrefabData(nodeData, prefabName, prefabUuid);
+                const _prefabData = this.createPrefabData(nodeData, prefabName, prefabUuid);
 
                 // 4. 基于官方格式创建预制体数据结构
                 console.log('=== 开始创建预制体 ===');
@@ -1148,7 +1148,7 @@ export class PrefabTools implements ToolExecutor {
         return [prefabAsset, ...processedNodeData];
     }
 
-    private processNodeForPrefab(nodeData: any, prefabUuid: string): any[] {
+    private processNodeForPrefab(nodeData: any, _prefabUuid: string): any[] {
         // 处理节点数据以符合预制体格式
         const processedData: any[] = [];
         let idCounter = 1;
@@ -1430,7 +1430,7 @@ export class PrefabTools implements ToolExecutor {
                                     message: validationResult.isValid ? '预制体格式有效' : '预制体格式存在问题'
                                 }
                             });
-                        } catch (parseError) {
+                        } catch (_parseError) {
                             resolve({
                                 success: false,
                                 error: '预制体文件格式错误，无法解析JSON'
@@ -1480,7 +1480,7 @@ export class PrefabTools implements ToolExecutor {
         }
 
         // 统计节点和组件
-        prefabData.forEach((item: any, index: number) => {
+        prefabData.forEach((item: any, _index: number) => {
             if (item.__type__ === 'cc.Node') {
                 nodeCount++;
             } else if (item.__type__ && item.__type__.includes('cc.')) {
@@ -1504,7 +1504,7 @@ export class PrefabTools implements ToolExecutor {
     private async duplicatePrefab(args: any): Promise<ToolResponse> {
         return new Promise(async (resolve) => {
             try {
-                const { sourcePrefabPath, targetPrefabPath, newPrefabName } = args;
+                const { sourcePrefabPath, _targetPrefabPath, newPrefabName } = args;
                 
                 // 读取源预制体
                 const sourceInfo = await this.getPrefabInfo(sourcePrefabPath);
@@ -1530,10 +1530,10 @@ export class PrefabTools implements ToolExecutor {
                 const newUuid = this.generateUUID();
                 
                 // 修改预制体数据
-                const modifiedData = this.modifyPrefabForDuplication(sourceContent.data, newPrefabName, newUuid);
+                const _modifiedData = this.modifyPrefabForDuplication(sourceContent.data, newPrefabName, newUuid);
                 
                 // 创建新的meta数据
-                const newMetaData = this.createMetaData(newPrefabName || 'DuplicatedPrefab', newUuid);
+                const _newMetaData = this.createMetaData(newPrefabName || 'DuplicatedPrefab', newUuid);
                 
                 // 预制体复制功能暂时禁用，因为涉及复杂的序列化格式
                 resolve({
@@ -1557,7 +1557,7 @@ export class PrefabTools implements ToolExecutor {
                 try {
                     const prefabData = JSON.parse(content);
                     resolve({ success: true, data: prefabData });
-                } catch (parseError) {
+                } catch (_parseError) {
                     resolve({ success: false, error: '预制体文件格式错误' });
                 }
             }).catch((error: any) => {
@@ -1566,7 +1566,7 @@ export class PrefabTools implements ToolExecutor {
         });
     }
 
-    private modifyPrefabForDuplication(prefabData: any[], newName: string, newUuid: string): any[] {
+    private modifyPrefabForDuplication(prefabData: any[], newName: string, _newUuid: string): any[] {
         // 修改预制体数据以创建副本
         const modifiedData = [...prefabData];
         
@@ -1877,7 +1877,7 @@ export class PrefabTools implements ToolExecutor {
         nodeUuidToIndex?: Map<string, number>,
         componentUuidToIndex?: Map<string, number>
     }): any {
-        let componentType = componentData.type || componentData.__type__ || 'cc.Component';
+        const componentType = componentData.type || componentData.__type__ || 'cc.Component';
         const enabled = componentData.enabled !== undefined ? componentData.enabled : true;
         
         // console.log(`创建组件对象 - 原始类型: ${componentType}`);
@@ -2343,7 +2343,7 @@ export class PrefabTools implements ToolExecutor {
     /**
      * 尝试将原始节点转换为预制体实例
      */
-    private async convertNodeToPrefabInstance(nodeUuid: string, prefabUuid: string, prefabPath: string): Promise<{ success: boolean; error?: string }> {
+    private async convertNodeToPrefabInstance(_nodeUuid: string, _prefabUuid: string, _prefabPath: string): Promise<{ success: boolean; error?: string }> {
         return new Promise((resolve) => {
             // 这个功能需要深入的场景编辑器集成，暂时返回失败
             // 在实际的引擎中，这涉及到复杂的预制体实例化和节点替换逻辑
@@ -2675,7 +2675,7 @@ export class PrefabTools implements ToolExecutor {
     }
     
     // Button组件属性
-    private addButtonProperties(component: any, componentData: any): void {
+    private addButtonProperties(component: any, _componentData: any): void {
         component.clickEvents = [];
         component._interactable = true;
         component._transition = 2;

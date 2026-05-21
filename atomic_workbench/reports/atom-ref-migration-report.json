@@ -1,0 +1,11 @@
+{
+  "schemaId": "atm.atomRefMigrationReport",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-05-20T20:48:04.872Z",
+  "generatedRefPaths": [
+    "atomic_workbench/refs/atom-refs.ts",
+    "atomic_workbench/refs/map-refs.ts"
+  ],
+  "rewrittenCallsites": [],
+  "skippedCallsites": []
+}

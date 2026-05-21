@@ -50,10 +50,10 @@ function ok(file, msg) {
 }
 
 // ─────────────────────────── 讀取 rarity-thresholds ────────
-let rarityThresholds = null;
+const _rarityThresholds = null;
 if (fs.existsSync(RARITY_FILE)) {
   try {
-    rarityThresholds = JSON.parse(fs.readFileSync(RARITY_FILE, 'utf8'));
+    _rarityThresholds = JSON.parse(fs.readFileSync(RARITY_FILE, 'utf8'));
     console.log(`[INFO]  Loaded rarity-thresholds.json`);
   } catch (e) {
     console.warn(`[WARN]  Cannot parse rarity-thresholds.json: ${e.message}`);

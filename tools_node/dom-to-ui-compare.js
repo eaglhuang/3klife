@@ -23,7 +23,7 @@
 const fs   = require('fs');
 const path = require('path');
 const os   = require('os');
-const { execFileSync, execSync } = require('child_process');
+const { execFileSync, _execSync } = require('child_process');
 
 // New M13-M20 lib modules (high-fidelity stack)
 const { captureComputedStyles } = require('./lib/dom-to-ui/computed-style-capture');
@@ -192,7 +192,7 @@ function inlineLocalStylesheets(html, htmlDir) {
 
   return html.replace(
     /<link([^>]*\brel=["']stylesheet["'][^>]*)\bhref=["']([^"']+)["']([^>]*)>/gi,
-    (fullMatch, before, href, after) => {
+    (fullMatch, before, href, _after) => {
       if (/^(https?:|data:|file:|\/\/)/i.test(href)) return fullMatch;
       const directPath = path.resolve(htmlDir, href);
       if (fs.existsSync(directPath)) return fullMatch; // base href will handle it

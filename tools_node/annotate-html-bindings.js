@@ -110,7 +110,7 @@ function annotate(html, opts) {
     const tagName = tagMatch[1].toLowerCase();
 
     // Find inner text between this open tag and matching close tag (shallow, single-line ok)
-    const closeTag = `</${tagName}`;
+    const _closeTag = `</${tagName}`;
     const closeIdx = findShallowClose(html, tagEnd + 1, tagName);
     const innerText = closeIdx > 0 ? extractTextOnly(html.slice(tagEnd + 1, closeIdx)) : '';
 
@@ -186,7 +186,7 @@ function injectAttributes(rawTag, adds) {
   const selfClose = /\/\s*>$/.test(rawTag);
   const closeLen = selfClose ? rawTag.match(/\/\s*>$/)[0].length : 1;
   const head = rawTag.slice(0, rawTag.length - closeLen).replace(/\s+$/, '');
-  const tail = rawTag.slice(rawTag.length - closeLen);
+  const _tail = rawTag.slice(rawTag.length - closeLen);
 
   // If the tag already has any of the keys, skip those (idempotent).
   const existingAttrs = new Set();

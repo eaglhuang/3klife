@@ -938,8 +938,7 @@ export class UnitRenderer extends Component {
 
     this.alignNodeToFactionFacing(view.worldNode, faction);
 
-    const baseScale = this.unitScale * this.generalScaleMultiplier;
-    const hScale = this.unitHeight * this.generalScaleMultiplier;
+
     if (view.usingHeroModel) {
       view.worldNode.setScale(Vec3.ONE);
       view.bodyNode.active = false;

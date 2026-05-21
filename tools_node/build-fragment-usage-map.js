@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./lib/project-config');
 
-const projectRoot = config.ROOT;
+const _projectRoot = config.ROOT;
 const layoutsDir = config.paths.layoutsDir;
 
 function collectRefs(node, refs) {
@@ -81,7 +81,7 @@ function main() {
                     usageMap[ref].usedBy.push(`[fragment] ${file.replace('.json', '')}`);
                     usageMap[ref].usageCount++;
                 }
-            } catch (e) { /* skip */ }
+            } catch (_e) { /* skip */ }
         }
     }
 

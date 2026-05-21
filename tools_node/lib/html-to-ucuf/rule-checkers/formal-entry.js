@@ -3,7 +3,7 @@
 // formal-entry.js — H2U-P4-001~009、P4-018~019、P4-021~023、P4-025~028 等工作流正式入口驗證。
 // validateWorkflowSummary 是 rule-guard.js 的主要呼叫入口。
 
-const path = require('path');
+const _path = require('path');
 const {
   addViolation,
   buildViolation,

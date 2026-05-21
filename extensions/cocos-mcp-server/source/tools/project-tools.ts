@@ -448,7 +448,7 @@ export class ProjectTools implements ToolExecutor {
 
     private async runProject(platform: string = 'browser'): Promise<ToolResponse> {
         return new Promise((resolve) => {
-            const previewConfig = {
+            const _previewConfig = {
                 platform: platform,
                 scenes: [] // Will use current scene
             };
@@ -468,7 +468,7 @@ export class ProjectTools implements ToolExecutor {
 
     private async buildProject(args: any): Promise<ToolResponse> {
         return new Promise((resolve) => {
-            const buildOptions = {
+            const _buildOptions = {
                 platform: args.platform,
                 debug: args.debug !== false,
                 sourceMaps: args.debug !== false,
@@ -717,7 +717,7 @@ export class ProjectTools implements ToolExecutor {
         });
     }
 
-    private async startPreviewServer(port: number = 7456): Promise<ToolResponse> {
+    private async startPreviewServer(_port: number = 7456): Promise<ToolResponse> {
         return new Promise((resolve) => {
             resolve({
                 success: false,
@@ -837,7 +837,7 @@ export class ProjectTools implements ToolExecutor {
 
     private async deleteAsset(url: string): Promise<ToolResponse> {
         return new Promise((resolve) => {
-            Editor.Message.request('asset-db', 'delete-asset', url).then((result: any) => {
+            Editor.Message.request('asset-db', 'delete-asset', url).then((_result: any) => {
                 resolve({
                     success: true,
                     data: {
@@ -973,7 +973,7 @@ export class ProjectTools implements ToolExecutor {
                 }
                 
                 const allAssets = allAssetsResponse.data.assets as any[];
-                let matchedAssets: any[] = [];
+                const matchedAssets: any[] = [];
                 
                 // Search for matching assets
                 for (const asset of allAssets) {

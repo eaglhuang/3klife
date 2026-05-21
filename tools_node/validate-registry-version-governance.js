@@ -240,7 +240,7 @@ function materializeEntryFromVersion(entry, version) {
   return entry;
 }
 
-function buildReport(registryDocument, options = {}) {
+function buildReport(registryDocument, _options = {}) {
   const generatedAt = normalizeText(registryDocument?.generatedAt) || new Date().toISOString();
   const entries = Array.isArray(registryDocument?.entries) ? registryDocument.entries : [];
   const findings = [];
@@ -280,7 +280,7 @@ function buildReport(registryDocument, options = {}) {
     const isHistoryValidated = validatedHistory.length > 0;
     const isPointerAligned = currentPointer && latestValidatedKey && currentPointer === latestValidatedKey;
     const needsBackfill = !hasHistory;
-    const needsPointerAlignment = hasHistory && isHistoryValidated && !isPointerAligned;
+    const _needsPointerAlignment = hasHistory && isHistoryValidated && !isPointerAligned;
     const historyUnverifiable = hasHistory && !isHistoryValidated;
 
     if (needsBackfill) {

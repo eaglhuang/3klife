@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { parseMode, readLines, readText, repoPath } = require('./atm-lang-validator-common.ts');
+const { parseMode, readLines, repoPath } = require('./atm-lang-validator-common.ts');
 
 const PLAN_PATH = 'docs/ai_atomic_framework/universal-language-framework/ATM通用語言框架計畫書.md';
 const CLI_DIR = 'packages/cli/src';

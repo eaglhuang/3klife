@@ -484,7 +484,7 @@ export class AssetAdvancedTools implements ToolExecutor {
         });
     }
 
-    private async getAssetDependencies(urlOrUUID: string, direction: string = 'dependencies'): Promise<ToolResponse> {
+    private async getAssetDependencies(urlOrUUID: string, _direction: string = 'dependencies'): Promise<ToolResponse> {
         return new Promise((resolve) => {
             // Note: This would require scene analysis or additional APIs not available in current documentation
             resolve({
@@ -494,7 +494,7 @@ export class AssetAdvancedTools implements ToolExecutor {
         });
     }
 
-    private async getUnusedAssets(directory: string = 'db://assets', excludeDirectories: string[] = []): Promise<ToolResponse> {
+    private async getUnusedAssets(_directory: string = 'db://assets', _excludeDirectories: string[] = []): Promise<ToolResponse> {
         return new Promise((resolve) => {
             // Note: This would require comprehensive project analysis
             resolve({
@@ -504,7 +504,7 @@ export class AssetAdvancedTools implements ToolExecutor {
         });
     }
 
-    private async compressTextures(directory: string = 'db://assets', format: string = 'auto', quality: number = 0.8): Promise<ToolResponse> {
+    private async compressTextures(_directory: string = 'db://assets', _format: string = 'auto', _quality: number = 0.8): Promise<ToolResponse> {
         return new Promise((resolve) => {
             // Note: Texture compression would require image processing APIs
             resolve({
@@ -537,7 +537,7 @@ export class AssetAdvancedTools implements ToolExecutor {
                             if (assetInfo && assetInfo.meta) {
                                 manifestEntry.meta = assetInfo.meta;
                             }
-                        } catch (err) {
+                        } catch (_err) {
                             // Skip metadata if not available
                         }
                     }

@@ -23,7 +23,7 @@ async function inspectChecker(num) {
   // Sample bottom-center region (where checker usually is) - last 30% rows
   const startY = Math.floor(height * 0.7);
   const cx = Math.floor(width / 2);
-  const sampleX = [cx - 20, cx, cx + 20];
+  const _sampleX = [cx - 20, cx, cx + 20];
 
   let opaqueCounts = 0, transparentCounts = 0;
   const colorSamples = [];

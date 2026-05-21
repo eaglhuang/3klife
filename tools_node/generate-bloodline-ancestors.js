@@ -253,7 +253,7 @@ const weightProfiles = new Map(
   blTemplates.filter(t => t.templateType === 'weight-profile').map(t => [t.id, t])
 );
 const surnamePool = blTemplates.find(t => t.templateType === 'maternal-surname-pool');
-const surnames    = surnamePool ? surnamePool.surnames || [] : ['王', '李', '張', '劉', '陳'];
+const _surnames    = surnamePool ? surnamePool.surnames || [] : ['王', '李', '張', '劉', '陳'];
 
 if (!slotTemplate) {
   console.error('[ERROR] 找不到 ancestor-slot-template，請確認 bloodline-templates.json 格式。');

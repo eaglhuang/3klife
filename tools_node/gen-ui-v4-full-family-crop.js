@@ -12,7 +12,7 @@ const path = require('path');
 let puppeteer;
 try {
     puppeteer = require('puppeteer-core');
-} catch (e) {
+} catch (_e) {
     process.exit(1);
 }
 

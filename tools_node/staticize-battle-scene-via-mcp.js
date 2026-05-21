@@ -136,7 +136,7 @@ class McpClient {
 
     try {
       return JSON.parse(text);
-    } catch (error) {
+    } catch (_error) {
       return { success: true, data: text };
     }
   }

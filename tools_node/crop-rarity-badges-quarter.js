@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer-core');
 
-const RARITY_NAMES = ['common', 'rare', 'epic', 'legendary'];
+const _RARITY_NAMES = ['common', 'rare', 'epic', 'legendary'];
 
 function parseArgs(argv) {
     const options = {

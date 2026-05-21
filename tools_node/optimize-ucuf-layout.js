@@ -356,7 +356,7 @@ function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames
   if (!node) return node;
   if (Array.isArray(node.children)) {
     const nextChildren = [];
-    for (let child of node.children) {
+    for (const child of node.children) {
       let folded = foldOnce(child, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames);
       if (!folded) continue;
       if (isBrPlaceholder(folded) || isEmptyLeaf(folded)) {

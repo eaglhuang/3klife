@@ -31,7 +31,7 @@ const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const TASKS_DIR = path.join(PROJECT_ROOT, 'docs', 'agent-briefs', 'tasks');
-const DOC_ID_REGISTRY = path.join(PROJECT_ROOT, 'docs', 'doc-id-registry.json');
+const _DOC_ID_REGISTRY = path.join(PROJECT_ROOT, 'docs', 'doc-id-registry.json');
 
 // ─── 參數解析 ─────────────────────────────────────────────
 function parseArgs(argv) {

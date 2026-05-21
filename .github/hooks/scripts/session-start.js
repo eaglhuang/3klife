@@ -15,7 +15,7 @@ process.stdin.on('end', () => {
   let summaryContent = '';
   try {
     summaryContent = fs.readFileSync(summaryPath, 'utf8').trim();
-  } catch (e) {
+  } catch (_e) {
     summaryContent = '[keep.summary.md 未找到，請檢查 docs/ 目錄]';
   }
 

@@ -25,7 +25,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const ROOT = process.cwd();
-const SOURCES_DIR = path.join(ROOT, 'docs/遊戲規格文件/討論來源');
+const _SOURCES_DIR = path.join(ROOT, 'docs/遊戲規格文件/討論來源');
 const SPECS_DIR = path.join(ROOT, 'docs/遊戲規格文件/系統規格書');
 const MANIFEST_PATH = path.join(ROOT, 'docs/遊戲規格文件/consolidation-manifest.json');
 const EXTRACTION_DIR = path.join(ROOT, 'artifacts/consolidation/extraction');
@@ -231,7 +231,7 @@ function cmdGapReport() {
   }
 
   // Analyze gaps
-  const gapItems = [];
+  const _gapItems = [];
   const allSpecTopics = new Set();
   for (const spec of Object.values(specIndex)) {
     for (const t of spec.topics) allSpecTopics.add(t);
@@ -254,7 +254,7 @@ function cmdGapReport() {
 
   // Find potentially uncovered topics
   const uncovered = Object.entries(topicCoverage)
-    .filter(([t, v]) => v.discussion > 0 && v.specs.length === 0)
+    .filter(([_t, v]) => v.discussion > 0 && v.specs.length === 0)
     .sort((a, b) => b[1].discussion - a[1].discussion);
 
   // Find files with content not mapped to specs
@@ -292,7 +292,7 @@ function cmdGapReport() {
   report += `## 3. 主題覆蓋分析\n\n`;
   report += `### 3.1 規格書已涵蓋的討論主題\n\n`;
   const covered = Object.entries(topicCoverage)
-    .filter(([t, v]) => v.discussion > 0 && v.specs.length > 0)
+    .filter(([_t, v]) => v.discussion > 0 && v.specs.length > 0)
     .sort((a, b) => b[1].discussion - a[1].discussion);
   for (const [topic, val] of covered.slice(0, 20)) {
     report += `- **${topic}**: 出現於 ${val.discussion} 份討論，已有 ${val.specs.length} 份規格涵蓋\n`;

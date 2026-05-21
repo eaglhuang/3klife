@@ -283,7 +283,7 @@ async function captureComputedStyles(page) {
       }
       // Capture inline SVG outerHTML so the renderer can replay vector content.
       if (tag === 'svg') {
-        try { styles._svgOuter = el.outerHTML; } catch (e) {}
+        try { styles._svgOuter = el.outerHTML; } catch (_e) {}
       }
       const parentId = parentIdOf(el);
       const offsetParentId = offsetParentIdOf(el);

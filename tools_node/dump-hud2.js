@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer-core');
-const os = require('os');
-const path = require('path');
+const _os = require('os');
+const _path = require('path');
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -47,7 +47,7 @@ const path = require('path');
             if (parent.name === 'PlayerPortrait') targetNode = parent;
             if (parent.name === 'TopBar') tsBarNode = parent;
             if (parent.name === 'PlayerSide') pSideNode = parent;
-            for (let c of parent.children) {
+            for (const c of parent.children) {
                 findNode(c);
             }
         };

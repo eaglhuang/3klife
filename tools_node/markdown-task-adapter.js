@@ -2,7 +2,7 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
+const _path = require('path');
 const yaml = require('js-yaml');
 
 const FRONTMATTER_MAPPING = {
@@ -164,7 +164,7 @@ function main() {
       process.exit(1);
     }
   } else if (cmd === 'validate-mapping') {
-    const schema = require('./.atm/schema/frontmatter-mapping.json');
+    const _schema = require('./.atm/schema/frontmatter-mapping.json');
     const mappingObj = {
       version: 1,
       mappings: Object.entries(FRONTMATTER_MAPPING).map(([mdKey, config]) => ({

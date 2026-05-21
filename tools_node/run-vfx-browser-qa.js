@@ -21,13 +21,13 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const https = require('https');
-const { execSync } = require('child_process');
+const { _execSync } = require('child_process');
 
 let puppeteer;
 try {
     // eslint-disable-next-line global-require
     puppeteer = require('puppeteer-core');
-} catch (error) {
+} catch (_error) {
     console.error('[run-vfx-browser-qa] 缺少依賴 puppeteer-core，請先安裝後再執行。');
     process.exit(1);
 }
@@ -287,7 +287,7 @@ function ensureTsRuntime() {
 
 function loadVfxBlockDefs() {
     ensureTsRuntime();
-    // eslint-disable-next-line global-require, import/no-dynamic-require
+
     const mod = require(path.join(ROOT, 'assets/scripts/core/config/vfx-block-registry'));
     const list = Array.isArray(mod?.VFX_BLOCK_REGISTRY) ? mod.VFX_BLOCK_REGISTRY : [];
     const mapped = list.map((item) => ({

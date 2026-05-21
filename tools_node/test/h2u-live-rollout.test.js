@@ -3,7 +3,7 @@
 
 const cp = require('node:child_process');
 const fs = require('node:fs');
-const os = require('node:os');
+const _os = require('node:os');
 const path = require('node:path');
 
 const generator = require('../run-h2u-guided-leaf-rollout');

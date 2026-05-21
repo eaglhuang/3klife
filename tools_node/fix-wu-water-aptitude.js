@@ -95,14 +95,14 @@ function setGrade(g, blockKey, fieldKey, grade) {
 // 主體
 // ──────────────────────────────────────────────────────────────────────────────
 
-function applyFix(arr, label) {
+function applyFix(arr, _label) {
   const log = [];
 
   for (const g of arr) {
     if (!ALL_WU.has(g.id)) continue;
 
     const changes = [];
-    const before = JSON.stringify({
+    const _before = JSON.stringify({
       troop: g.troopAptitude,
       terrain: g.terrainAptitude,
     });
@@ -132,11 +132,11 @@ function applyFix(arr, label) {
     if (changes.length === 0) continue;
 
     // 預算控制：降最低 A 直到合法
-    const beforeAs = countAs(g) - changes.length; // rough
+    const _beforeAs = countAs(g) - changes.length; // rough
     enforceAsBudget(g);
     const afterAs  = countAs(g);
 
-    const after = JSON.stringify({
+    const _after = JSON.stringify({
       troop: g.troopAptitude,
       terrain: g.terrainAptitude,
     });

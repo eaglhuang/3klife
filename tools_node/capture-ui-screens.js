@@ -1127,7 +1127,7 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
                     if (cc && cc.director) {
                         scene = cc.director.getScene();
                     }
-                } catch(e) {}
+                } catch(_e) {}
 
                 if (!scene) return "No scene";
 

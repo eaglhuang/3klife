@@ -126,7 +126,7 @@ function parseGitStatusLines(text) {
     .filter(Boolean);
 }
 
-function runGitStatusShort() {
+function _runGitStatusShort() {
   const proc = cp.spawnSync('git', ['status', '--short'], {
     cwd: ROOT,
     encoding: 'utf8',
@@ -136,7 +136,7 @@ function runGitStatusShort() {
   return proc;
 }
 
-function readWorktreeStatusFromFile(inputPath) {
+function _readWorktreeStatusFromFile(inputPath) {
   const raw = String(inputPath || '').trim();
   if (!raw) {
     return {
@@ -165,7 +165,7 @@ function readWorktreeStatusFromFile(inputPath) {
   }
 }
 
-function isPathAllowed(filePath, allowPrefixes) {
+function _isPathAllowed(filePath, allowPrefixes) {
   const normalized = normalizePath(filePath);
   for (const prefixRaw of allowPrefixes) {
     const prefix = normalizePath(prefixRaw);

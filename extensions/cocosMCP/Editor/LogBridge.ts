@@ -20,7 +20,7 @@ interface CommandResponse {
 }
 
 // 场景脚本接口类型定义
-interface ExecuteSceneScriptOptions {
+interface _ExecuteSceneScriptOptions {
     name: string;
     method: string;
     args?: any[];
@@ -203,7 +203,7 @@ export class LogBridge {
         }
     }
 
-    private async handleClearLogs(params: any): Promise<any> {
+    private async handleClearLogs(_params: any): Promise<any> {
         try {
             console.log('Clearing logs with Editor.Logger.clear()...');
             // @ts-ignore - Editor.Logger 是 Cocos Creator 编辑器 API
@@ -218,7 +218,7 @@ export class LogBridge {
         }
     }
 
-    private async handlePing(params: any): Promise<any> {
+    private async handlePing(_params: any): Promise<any> {
         return { message: 'pong' };
     }
 
@@ -246,7 +246,7 @@ export class LogBridge {
     /**
      * 处理获取场景信息命令
      */
-    private async handleGetSceneInfo(params: any): Promise<any> {
+    private async handleGetSceneInfo(_params: any): Promise<any> {
         try {
             // 调用场景脚本的 getSceneInfo 方法
             const result = await Editor.Message.request('scene', 'execute-scene-script', {
@@ -265,7 +265,7 @@ export class LogBridge {
     /**
      * 处理列出场景节点命令
      */
-    private async handleListSceneNodes(params: any): Promise<any> {
+    private async handleListSceneNodes(_params: any): Promise<any> {
         try {
             // 调用场景脚本的 listSceneNodes 方法
             const result = await Editor.Message.request('scene', 'execute-scene-script', {

@@ -15,7 +15,7 @@ const { createLockAdapterConfig } = require('./lock-adapter-config');
 let yamlParser = null;
 try {
     yamlParser = require('yaml');
-} catch (error) {
+} catch (_error) {
     yamlParser = null;
 }
 
@@ -200,7 +200,7 @@ class LockAdapter {
         if (yamlParser && typeof yamlParser.parse === 'function') {
             try {
                 return yamlParser.parse(rawFrontmatter) || {};
-            } catch (error) {
+            } catch (_error) {
                 return this.parseSimpleFrontmatter(rawFrontmatter);
             }
         }

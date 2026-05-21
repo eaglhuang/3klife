@@ -289,7 +289,7 @@ document.title = 'DONE';
 }
 
 // 用 base64 母圖縮放成小尺寸（比直接 re-render 品質好）
-function buildThumbHTML(base64PNG, targetSize, srcSize) {
+function buildThumbHTML(base64PNG, targetSize, _srcSize) {
   return `<!DOCTYPE html>
 <html>
 <head>

@@ -157,7 +157,7 @@ function applyFloodAttackBoundaryDamage(
   });
 }
 
-function resolveFloodCurrentDeath(
+function _resolveFloodCurrentDeath(
   unit: TroopUnit,
   state: BattleState,
   context: BattleTurnAdvanceContext | undefined,

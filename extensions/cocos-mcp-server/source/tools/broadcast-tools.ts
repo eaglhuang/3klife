@@ -142,7 +142,7 @@ export class BroadcastTools implements ToolExecutor {
     private removeBroadcastListener(messageType: string): void {
         const listeners = this.listeners.get(messageType);
         if (listeners) {
-            listeners.forEach(listener => {
+            listeners.forEach(_listener => {
                 // Editor.Message.off(messageType, listener);
                 console.log(`[BroadcastTools] Removed listener for ${messageType} (simulated)`);
             });

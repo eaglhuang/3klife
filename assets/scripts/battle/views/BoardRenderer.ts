@@ -5,8 +5,6 @@ import { BattleState } from '../models/BattleState';
 
 import { FLOOD_ATTACK_PUSH_DEPTH_DELTA, FLOOD_ATTACK_PUSH_LANE_DELTA } from '../shared/BattleTacticBehavior';
 import { resolveBattleSceneDisplayRule, type BattleSceneBaseStyle } from '../shared/BattleSceneMode';
-import { type BattleSceneMode } from '../shared/BattleSceneMode';
-
 const { ccclass, property } = _decorator;
 
 interface TileBuffFxView {
@@ -43,7 +41,6 @@ interface ImpactFxView {
     tween: Tween<{ alpha: number; scale: number }>;
 }
 
-type SceneEffectOverlayKind = 'fire' | 'water' | 'rock';
 
 type SceneEffectMaterialSet = {
     primary: Material | null;
@@ -1194,7 +1191,7 @@ export class BoardRenderer extends Component {
      */
     public renderState(state: BattleState) {
         this.lastRenderedState = state;
-        const riverCurrentCount = Array.from(state.tileEffects.values()).filter((effect) => effect.state === 'river-current').length;
+
         this.tryEnsureFloodRippleMaterial(state.battleTactic);
         this.tryEnsureLightningArcMaterial(state.battleTactic);
         this.tryEnsurePoisonFogMaterial(state.battleTactic);

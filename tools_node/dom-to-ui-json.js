@@ -247,7 +247,7 @@ function deriveScreenSidecarPath(layoutOutputPath, suffix) {
   return path.join(targetDir, `${base}${suffix}`);
 }
 
-function pascal(s) {
+function _pascal(s) {
   return String(s || 'Screen').replace(/(^|[-_\s]+)(\w)/g, (_, __, c) => c.toUpperCase());
 }
 
@@ -840,7 +840,7 @@ async function main(argv) {
   const durationMs = Date.now() - startedAt;
 
   // M2/M3 — post-validate by spawning validate-ui-specs.js
-  let validateResult = { passed: true, failureCodes: [], strict: !!opts.strict, ran: false };
+  const validateResult = { passed: true, failureCodes: [], strict: !!opts.strict, ran: false };
   if (opts.validate) {
     const validatorPath = path.join(__dirname, 'validate-ui-specs.js');
     if (fs.existsSync(validatorPath)) {

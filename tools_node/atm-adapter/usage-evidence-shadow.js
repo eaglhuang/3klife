@@ -122,7 +122,7 @@ function getByPath(obj, pathExpr) {
   return current;
 }
 
-function setByPath(obj, pathExpr, value) {
+function _setByPath(obj, pathExpr, value) {
   const segments = String(pathExpr)
     .replace(/\[(\d+)\]/g, '.$1')
     .split('.')

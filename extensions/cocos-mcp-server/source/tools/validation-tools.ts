@@ -80,7 +80,7 @@ export class ValidationTools implements ToolExecutor {
                 const fixed = this.fixJsonString(jsonString);
                 try {
                     parsed = JSON.parse(fixed);
-                } catch (secondError) {
+                } catch (_secondError) {
                     return {
                         success: false,
                         error: `Cannot fix JSON: ${error.message}`,

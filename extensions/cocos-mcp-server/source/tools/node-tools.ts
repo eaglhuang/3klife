@@ -327,7 +327,7 @@ export class NodeTools implements ToolExecutor {
                                 targetParentUuid = currentScene.uuid;
                             }
                         }
-                    } catch (err) {
+                    } catch (_err) {
                         console.warn('Failed to get scene root, will use default behavior');
                     }
                 }
@@ -968,7 +968,7 @@ export class NodeTools implements ToolExecutor {
         });
     }
 
-    private async moveNode(nodeUuid: string, newParentUuid: string, siblingIndex: number = -1): Promise<ToolResponse> {
+    private async moveNode(nodeUuid: string, newParentUuid: string, _siblingIndex: number = -1): Promise<ToolResponse> {
         return new Promise((resolve) => {
             // Use correct set-parent API instead of move-node
             Editor.Message.request('scene', 'set-parent', {
@@ -986,7 +986,7 @@ export class NodeTools implements ToolExecutor {
         });
     }
 
-    private async duplicateNode(uuid: string, includeChildren: boolean = true): Promise<ToolResponse> {
+    private async duplicateNode(uuid: string, _includeChildren: boolean = true): Promise<ToolResponse> {
         return new Promise((resolve) => {
             // Note: includeChildren parameter is accepted for future use but not currently implemented
             Editor.Message.request('scene', 'duplicate-node', uuid).then((result: any) => {

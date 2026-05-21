@@ -1,4 +1,4 @@
-import { ToolDefinition, ToolResponse, ToolExecutor, ComponentInfo } from '../types';
+import { ToolDefinition, ToolResponse, ToolExecutor, _ComponentInfo } from '../types';
 
 export class ComponentTools implements ToolExecutor {
     getTools(): ToolDefinition[] {
@@ -227,7 +227,7 @@ export class ComponentTools implements ToolExecutor {
             Editor.Message.request('scene', 'create-component', {
                 uuid: nodeUuid,
                 component: componentType
-            }).then(async (result: any) => {
+            }).then(async (_result: any) => {
                 // 等待一段时间让Editor完成组件添加
                 await new Promise(resolve => setTimeout(resolve, 100));
                 // 重新查询节点信息验证组件是否真的添加成功
@@ -747,7 +747,7 @@ export class ComponentTools implements ToolExecutor {
                 }
                 
                 // 构建正确的属性路径
-                let propertyPath = `__comps__.${rawComponentIndex}.${property}`;
+                const propertyPath = `__comps__.${rawComponentIndex}.${property}`;
                 
                 // 特殊处理资源类属性
                 if (propertyType === 'asset' || propertyType === 'spriteFrame' || propertyType === 'prefab' || 
@@ -984,7 +984,7 @@ export class ComponentTools implements ToolExecutor {
                         
                         if (!targetComponent) {
                             // 如果没找到，列出可用组件让用户了解，显示场景中的真实ID
-                            const availableComponents = targetNodeData.__comps__.map((comp: any, index: number) => {
+                            const availableComponents = targetNodeData.__comps__.map((comp: any, _index: number) => {
                                 let sceneId = 'unknown';
                                 // 从组件的value.uuid.value获取场景ID
                                 if (comp.value && comp.value.uuid && comp.value.uuid.value) {
@@ -1117,7 +1117,7 @@ export class ComponentTools implements ToolExecutor {
             Editor.Message.request('scene', 'create-component', {
                 uuid: nodeUuid,
                 component: scriptName  // 使用脚本名称而非UUID
-            }).then(async (result: any) => {
+            }).then(async (_result: any) => {
                 // 等待一段时间让Editor完成组件添加
                 await new Promise(resolve => setTimeout(resolve, 100));
                 // 重新查询节点信息验证脚本是否真的添加成功
@@ -1272,7 +1272,7 @@ export class ComponentTools implements ToolExecutor {
                             try {
                                 const propKeys = Object.keys(propInfo);
                                 propertyValue = propKeys.includes('value') ? propInfo.value : propInfo;
-                            } catch (error) {
+                            } catch (_error) {
                                 // 如果检查失败，直接使用propInfo
                                 propertyValue = propInfo;
                             }
@@ -1291,7 +1291,7 @@ export class ComponentTools implements ToolExecutor {
                             try {
                                 const propKeys = Object.keys(propInfo);
                                 propertyValue = propKeys.includes('value') ? propInfo.value : propInfo;
-                            } catch (error) {
+                            } catch (_error) {
                                 // 如果检查失败，直接使用propInfo
                                 propertyValue = propInfo;
                             }
@@ -1367,7 +1367,7 @@ export class ComponentTools implements ToolExecutor {
                 } else {
                     type = 'object';
                 }
-            } catch (error) {
+            } catch (_error) {
                 console.warn(`[analyzeProperty] Error checking property type for: ${JSON.stringify(propertyValue)}`);
                 type = 'object';
             }
@@ -1429,7 +1429,7 @@ export class ComponentTools implements ToolExecutor {
                                 a: inputValue.a !== undefined ? Math.min(255, Math.max(0, Number(inputValue.a))) : 255
                             };
                         }
-                    } catch (error) {
+                    } catch (_error) {
                         console.warn(`[smartConvertValue] Invalid color object: ${JSON.stringify(inputValue)}`);
                     }
                 }
@@ -1651,7 +1651,7 @@ export class ComponentTools implements ToolExecutor {
      * 检测是否为节点属性，如果是则重定向到对应的节点方法
      */
     private async checkAndRedirectNodeProperties(args: any): Promise<ToolResponse | null> {
-        const { nodeUuid, componentType, property, propertyType, value } = args;
+        const { nodeUuid, componentType, property, _propertyType, value } = args;
         
         // 检测是否为节点基础属性（应该使用 set_node_property）
         const nodeBasicProperties = [

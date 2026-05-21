@@ -8,7 +8,7 @@ const {
   calculateByteMetrics,
   emitPayload,
   ensureDir,
-  fileExists,
+  _fileExists,
   parseArgs,
   readJsonFile,
   readStdin,

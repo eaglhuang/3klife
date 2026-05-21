@@ -151,7 +151,7 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
 
   // 決定掃描範圍
-  let filesToScan = [];
+  const filesToScan = [];
   if (args.files.length > 0) {
     for (const f of args.files) {
       const absPath = path.resolve(PROJECT_ROOT, f);

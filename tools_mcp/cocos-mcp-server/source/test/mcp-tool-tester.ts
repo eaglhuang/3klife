@@ -1,4 +1,4 @@
-declare const Editor: any;
+declare const _Editor: any;
 
 /**
  * MCP 工具测试器 - 直接测试通过 WebSocket 的 MCP 工具
@@ -153,7 +153,7 @@ export class MCPToolTester {
                         nodeUuid = resultData.data.uuid;
                         console.log('成功获取节点UUID:', nodeUuid);
                     }
-                } catch (e) {
+                } catch (_e) {
                 }
             }
             
@@ -186,7 +186,7 @@ export class MCPToolTester {
                             nodeUuid = findData.data.uuid;
                             console.log('通过名称查找成功获取UUID:', nodeUuid);
                         }
-                    } catch (e) {
+                    } catch (_e) {
                     }
                 }
                 

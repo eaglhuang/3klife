@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ToolConfig, ToolConfiguration, ToolManagerSettings, ToolDefinition } from '../types';
+import { ToolConfig, ToolConfiguration, ToolManagerSettings, _ToolDefinition } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 

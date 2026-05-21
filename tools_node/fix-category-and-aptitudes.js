@@ -32,7 +32,7 @@ function computeSuggestedCategory(record, tier) {
 }
 
 // ─── Aptitude helpers ────────────────────────────────────────────────────────
-const GRADES = ['S', 'A', 'B', 'C', 'D'];
+const _GRADES = ['S', 'A', 'B', 'C', 'D'];
 
 function countAorS(block) {
   if (!block || typeof block !== 'object') return 0;

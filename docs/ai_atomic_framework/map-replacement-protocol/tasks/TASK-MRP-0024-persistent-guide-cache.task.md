@@ -3,8 +3,11 @@ doc_id: doc_other_0165
 task_id: TASK-MRP-0024
 title: Persistent Guide Cache（candidates rank 結果快取）
 milestone: M24
-status: planned
-blocked_by: []
+status: done
+started_at: 2026-05-21T05:15:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T05:45:00Z
+blocked_by: [TASK-MRP-0026, TASK-MRP-0027]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
@@ -161,6 +164,19 @@ cache 損壞偵測（讀取時 checksum 不符）
 **Level 3（移除功能）**：移除 `guide-cache.ts`、`cache.ts`；`candidates.ts` 還原不走 cache；`.atm-guide-cache/` 手動刪除。原有 candidates rank 行為完全不受影響。
 
 **Level 4（災難恢復）**：cache 即使全毀也只是慢，不影響正確性，因此本 Level 主要透過 Rescue Police（M26）持續監控防止使用者誤判 cache 狀態。
+
+## 2026-05-21 v2-r2 審查補充
+
+- Guide Cache 必須晚於 M26/M27；cache poisoning 是 AI 漂移的高風險來源。
+- cache key 需包含 `goal`、`glob`、`gitCommitHash`、`toolVersion`、`policyHash`、`profileHash`。
+- Dirty working tree 一律 bypass cache，且不得寫入新 cache entry。
+- Cache 是 local derived state；Rescue Police 必須能偵測 stale/poisoned cache，M27 必須能清除。
+
+新增驗收：
+- [ ] dirty working tree 時 cache bypass 且輸出 bypass reason
+- [ ] toolVersion/policyHash/profileHash 改變造成 cache miss
+- [ ] stale cache 指向不存在 git commit 時 M26 產生 finding
+- [ ] `rescue clear-cache` 可清除 guide cache 並輸出 report
 
 ## Checklist
 

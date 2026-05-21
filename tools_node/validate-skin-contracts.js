@@ -272,7 +272,7 @@ for (const file of layoutFiles) {
   try {
     const layout = JSON.parse(fs.readFileSync(path.join(LAYOUTS_DIR, file), 'utf8'));
     if (layout.root) checkRefs(layout.root, file);
-  } catch (e) {}
+  } catch (_e) {}
 }
 
 // ── 輸出結果 ─────────────────────────────────────────────────────────────────

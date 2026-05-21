@@ -7,7 +7,7 @@ const path = require('path');
 let puppeteer;
 try {
   puppeteer = require('puppeteer-core');
-} catch (error) {
+} catch (_error) {
   console.error('[bake-css-background-asset] puppeteer-core is required');
   process.exit(1);
 }

@@ -3,7 +3,9 @@ doc_id: doc_other_0152
 task_id: TASK-MRP-0012
 title: Map Edge Contract 自動合約測試
 milestone: M12
-status: planned
+status: done
+started_at: 2026-05-21T05:50:00Z
+started_by_agent: ClaudeCode_haiku-4.5
 blocked_by: [TASK-MRP-0011]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -52,6 +54,18 @@ Map 的每條 edge（例如 `ATM-NPCBRAIN-0002 → ATM-NPCBRAIN-0003`，binding=
 ## 回滾策略
 
 移除 `--edge-contracts` flag 與 `edge-contract-runner.ts`；`binding-schema-registry.json` 可選保留。
+
+## 2026-05-21 v2-r2 審查補充
+
+- Schema 來源順序必須是 explicit JSON Schema / atom spec 優先；TypeScript type 推導只能作為輔助，不可取代契約。
+- `edgeContractResults[]` 需包含 `edgeId`、`binding`、`fromAtom`、`toAtom`、`schemaHash`、`passed`、`failReason`，方便 M13/M20/M26 直接消費。
+- CI 選擇性觸發前要先輸出 affected edge 清單；若無法可靠判斷 affected edges，必須 fail closed 改跑完整 map contract。
+- Public report 不得包含 adopter 私有路徑或 repo 名稱。
+
+新增驗收：
+- [ ] fixture 覆蓋 explicit schema 優先、type inference fallback、schemaHash drift 三種情境
+- [ ] affected edge selector 有 machine-readable dry-run report
+- [ ] report 通過 neutrality / adopter-private scan
 
 ## Checklist
 

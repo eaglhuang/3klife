@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer-core');
-const os = require('os');
+const _os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 

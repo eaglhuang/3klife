@@ -1,7 +1,7 @@
 // doc_id: doc_other_0009 — declarative HTML interaction -> UCUF interaction draft
 'use strict';
 
-function extractInteraction(el, node, opts) {
+function extractInteraction(el, node, _opts) {
   const attrs = (el && el.attrs) || {};
   const tag = el && el.tag;
   const nodeName = node && node.name;

@@ -71,7 +71,7 @@ process.stdin.on('end', () => {
     execSync(cmd, { cwd, stdio: 'pipe' });
     // 編碼正常，靜默通過
     process.exit(0);
-  } catch (e) {
+  } catch (_e) {
     // 編碼異常，注入警告到 Agent 對話
     const badFiles = relPaths.join(', ');
     const output = {

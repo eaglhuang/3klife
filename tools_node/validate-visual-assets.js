@@ -259,7 +259,7 @@ function checkR6(slotKey, slot, cfg, failures, warnings) {
 function loadJson(filePath) {
     try {
         return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch (e) {
+    } catch (_e) {
         return null;
     }
 }

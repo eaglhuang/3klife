@@ -341,10 +341,10 @@ function validateRecipeRef(recipeRef, filePath, recipes, failures, warnings, con
 // ─── R18: no-override-immutable ($ref 不可覆寫的欄位) ────────────
 const REF_IMMUTABLE_KEYS = ['type'];
 
-function validateRefImmutableOverrides(layoutJson, filePath, failures, warnings) {
+function validateRefImmutableOverrides(layoutJson, filePath, failures, _warnings) {
     const rel = relative(filePath);
     const exceptions = (layoutJson.validation && layoutJson.validation.exceptions) || null;
-    const fragBase = path.join(uiSpecRoot, 'fragments');
+    const _fragBase = path.join(uiSpecRoot, 'fragments');
 
     function checkNode(node) {
         if (!node) return;
@@ -364,7 +364,7 @@ function validateRefImmutableOverrides(layoutJson, filePath, failures, warnings)
                             );
                         }
                     }
-                } catch (e) { /* fragment parse error handled elsewhere */ }
+                } catch (_e) { /* fragment parse error handled elsewhere */ }
             }
         }
         if (node.children) node.children.forEach(checkNode);

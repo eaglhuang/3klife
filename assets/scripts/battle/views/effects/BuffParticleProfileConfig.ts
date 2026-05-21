@@ -34,39 +34,6 @@ export interface BuffParticleProfileTable {
     variants: Record<BuffEffectVariant, BuffParticleProfile>;
 }
 
-type PartialParticleColorValue = number[] | ParticleColorValue;
-
-interface ParticleLayerProfileInput {
-    capacity?: number;
-    rateOverTime?: number;
-    burstCount?: number;
-    burstTime?: number;
-    startSize?: number;
-    startLifetime?: number;
-    startSpeed?: number;
-    gravityModifier?: number;
-    startDelay?: number;
-    simulationSpeed?: number;
-    shapeRadius?: number;
-    shapeAngle?: number;
-    startY?: number;
-    floatY?: number;
-    quadCount?: number;
-    quadRadius?: number;
-    quadRise?: number;
-    color?: PartialParticleColorValue;
-}
-
-interface BuffParticleProfileInput {
-    spark?: ParticleLayerProfileInput;
-    accent?: ParticleLayerProfileInput;
-}
-
-interface BuffParticleProfileTableInput {
-    version?: number;
-    variants?: Partial<Record<BuffEffectVariant, BuffParticleProfileInput>>;
-}
-
 const VARIANTS: BuffEffectVariant[] = ["AtkGain", "AtkLoss", "HpGain", "HpLoss"];
 
 export const DEFAULT_BUFF_PARTICLE_PROFILES: Record<BuffEffectVariant, BuffParticleProfile> = {

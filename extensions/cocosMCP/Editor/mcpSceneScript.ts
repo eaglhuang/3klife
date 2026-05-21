@@ -6,7 +6,7 @@ module.paths.push(join(Editor.App.path, 'node_modules'));
 
 // 导入Cocos Creator引擎模块
 // @ts-ignore - cc模块在运行时可用
-import { director, Node, Vec3 } from 'cc';
+import { director, Node, _Vec3 } from 'cc';
 
 /**
  * 场景脚本加载时触发的函数

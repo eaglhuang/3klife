@@ -54,7 +54,7 @@ export function createSyncManagerSuite() {
     });
 
     suite.test("離線狀態下 Immediate Action 應被攔截且不記錄", async () => {
-        const { net, sync, ev } = setup();
+        const { sync, ev } = setup();
         
         let toastShown = false;
         ev.on('SHOW_TOAST', () => toastShown = true);

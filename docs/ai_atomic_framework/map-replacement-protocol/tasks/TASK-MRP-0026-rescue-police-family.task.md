@@ -3,7 +3,10 @@ doc_id: doc_other_0167
 task_id: TASK-MRP-0026
 title: Rescue Police Family（救援警察家族）
 milestone: M26
-status: planned
+status: done
+started_at: 2026-05-21T02:25:00Z
+started_by_agent: ClaudeCode_sonnet-4.6
+completed_at: 2026-05-21T03:10:00Z
 blocked_by: [TASK-MRP-0018, TASK-MRP-0021]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -131,6 +134,19 @@ node atm.mjs rescue police --log --tail 20 --json
 ## 回滾策略（本卡功能回滾）
 
 移除 `rescue-family.ts` 與 10 個 invariant 檔案；CLI subcommand 移除；core police gate runner 不再呼叫 rescue family。ATM 回到「不檢查自身健康」狀態（不推薦，但功能上完全可運作）。
+
+## 2026-05-21 v2-r2 審查補充
+
+- Findings 必須 machine-readable，至少包含 `trigger`、`scope`、`severity`、`action`、`routeHint`。
+- Critical finding 必須 block all mutation，包含 daemon start、cache write、registry update、map capsule import。
+- Rescue Police 需區分 source-of-truth 損壞與 derived state 損壞；derived state 優先建議 rebuild/clear。
+- 每次 mutating CLI 前都應可呼叫 rescue preflight。
+
+新增驗收：
+- [ ] critical finding 會阻擋 governed mutation
+- [ ] derived-state corruption 產生 rebuild/clear routeHint
+- [ ] source-of-truth corruption 產生 manual-review routeHint
+- [ ] finding JSON schema 覆蓋所有 INV-RESCUE-* 不變項
 
 ## Checklist
 

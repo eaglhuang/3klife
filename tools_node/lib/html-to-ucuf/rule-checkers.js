@@ -66,14 +66,14 @@ function addViolation(out, ruleId, detail) {
   out.push(buildViolation(ruleId, detail || {}));
 }
 
-function loadWorkflowSummary(opts) {
+function _loadWorkflowSummary(opts) {
   if (opts.workflowSummary && typeof opts.workflowSummary === 'object') return opts.workflowSummary;
   const filePath = opts.workflowSummaryPath || opts.summary;
   if (!filePath) return null;
   return readJsonIfExists(filePath);
 }
 
-function loadSourceHtml(opts, workflowSummary) {
+function _loadSourceHtml(opts, workflowSummary) {
   if (typeof opts.sourceHtml === 'string') return opts.sourceHtml;
   const sourcePath = opts.sourceHtmlPath
     || (workflowSummary && workflowSummary.input ? path.resolve(opts.repoRoot || process.cwd(), workflowSummary.input) : null);
@@ -85,7 +85,7 @@ function loadSourceHtml(opts, workflowSummary) {
   }
 }
 
-function loadCaptureReport(opts, workflowSummary) {
+function _loadCaptureReport(opts, workflowSummary) {
   const fromSummary = workflowSummary
     && workflowSummary.finalCapture
     && workflowSummary.finalCapture.captureReport;
@@ -98,7 +98,7 @@ function loadCaptureReport(opts, workflowSummary) {
   return report ? { filePath: full, report } : { filePath: full, report: null };
 }
 
-function scanCoreSource(repoRoot, violations) {
+function _scanCoreSource(repoRoot, violations) {
   for (const relPath of DEFAULT_CORE_FILES) {
     const filePath = path.join(repoRoot, relPath);
     const text = readTextIfExists(filePath);
@@ -203,7 +203,7 @@ function extractFunctionBody(sourceText, functionName) {
   return source.slice(match.index, cursor);
 }
 
-function scanSkillDoc(repoRoot, violations) {
+function _scanSkillDoc(repoRoot, violations) {
   const skillPath = path.join(repoRoot, RULE_REGISTRY.skillDocPath || '.github/skills/html-to-ucuf/SKILL.md');
   const text = readTextIfExists(skillPath);
   if (!text) {
@@ -228,7 +228,7 @@ function scanSkillDoc(repoRoot, violations) {
   }
 }
 
-function scanDraftBuilderRegistry(repoRoot, violations) {
+function _scanDraftBuilderRegistry(repoRoot, violations) {
   const text = readTextIfExists(path.join(repoRoot, 'tools_node', 'lib', 'dom-to-ui', 'draft-builder.js'));
   if (!/draftBuilderStageRules|ruleRegistry|rule-registry\.json/.test(text)) {
     addViolation(violations, 'H2U-P4-012', {
@@ -238,7 +238,7 @@ function scanDraftBuilderRegistry(repoRoot, violations) {
   }
 }
 
-function validateDraftBuilderStageRules(repoRoot, violations) {
+function _validateDraftBuilderStageRules(repoRoot, violations) {
   const draftBuilderPath = path.join(repoRoot, 'tools_node', 'lib', 'dom-to-ui', 'draft-builder.js');
   const text = readTextIfExists(draftBuilderPath);
   const stageRules = getDraftBuilderStageRules();
@@ -313,7 +313,7 @@ function validateDraftBuilderStageRules(repoRoot, violations) {
   }
 }
 
-function validatePlan5RegistryContracts(violations) {
+function _validatePlan5RegistryContracts(violations) {
   validateFidelityThresholdRegistry(violations);
   validateKnownGapRegistry(violations);
 }
@@ -416,7 +416,7 @@ function validateKnownGapRegistry(violations) {
   }
 }
 
-function validateWorkflowSummary(repoRoot, summary, sourceHtml, violations, warnings) {
+function _validateWorkflowSummary(repoRoot, summary, sourceHtml, violations, warnings) {
   const debugOnly = summary.debugOnly === true;
   const reasons = Array.isArray(summary.debugOnlyReasons) ? summary.debugOnlyReasons : [];
   const sourcePackage = summary.sourcePackage || null;
@@ -814,7 +814,7 @@ function compareVersions(a, b) {
   return aPat - bPat;
 }
 
-function validateCaptureReportArtifact(payload, args) {
+function _validateCaptureReportArtifact(payload, args) {
   const violations = args.violations;
   if (!payload.report) {
     addViolation(violations, 'H2U-P4-021', {
@@ -858,7 +858,7 @@ function validateCaptureReportArtifact(payload, args) {
   }
 }
 
-function validateRadarGeometryFromSummary(repoRoot, summary, violations) {
+function _validateRadarGeometryFromSummary(repoRoot, summary, violations) {
   const paths = summary.paths || {};
   const candidates = [
     paths.finalLayout,

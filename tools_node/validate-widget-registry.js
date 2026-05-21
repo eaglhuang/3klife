@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./lib/project-config');
 
-const projectRoot = config.ROOT;
+const _projectRoot = config.ROOT;
 const widgetsDir = config.paths.widgetFragmentsDir;
 const registryPath = config.paths.widgetRegistryJson;
 

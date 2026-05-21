@@ -353,6 +353,22 @@ node atm.mjs registry atom-capsule recover \
 `sharedRef` 退回只支援 `atom://` 格式；
 `~/.atm/capsule-registry.json` 保留（歷史記錄，不影響功能）。
 
+## 2026-05-21 v2-r2 審查補充
+
+> 本卡目前已有進行中鎖定。以下補充不改變既有實作內容，但在收工前必須納入驗收或於 Notes 說明 deferred reason。
+
+- `blocked_by` 目前仍含未完成的 M17；若維持 in-progress，需在 Notes 補 dependency exception 與安全理由，或退回 planned。
+- Atom Capsule 的 CID 是內容位址與版本指標；不可承諾所有 capsule 都能短到 200-400 字元，CLI 應支援短 CID 指向本機/registry bundle。
+- 進 hash 的 canonical content 必須 deterministic；provenance 不進 CID，但 registry / export report 必須保留 provenance、toolVersion、source route。
+- M18 實作需輸出可被 M26/M27 消費的 corruption / rebuild evidence，包含 decompression fail、missing vendor bundle、registry mismatch。
+- Public capsule/export report 不得包含 adopter 私有路徑或 repo 名稱。
+
+新增驗收：
+- [ ] 若 M17 未完成仍繼續本卡，Notes 記錄 dependency exception
+- [ ] provenance 改變不會改變 CID，canonical content 改變會改變 CID
+- [ ] corrupted capsule 產生 machine-readable finding，且 routeHint 指向 M27 rescue command
+- [ ] export/import report 通過 neutrality / adopter-private scan
+
 ## Checklist
 
 - [x] bundle 結構定義完成（AtomBundle interface）

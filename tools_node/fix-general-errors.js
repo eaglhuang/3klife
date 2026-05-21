@@ -60,7 +60,7 @@ function applyStatRebalance(g, stats) {
 }
 
 // 建立替換角色的完整資料
-function buildReplacement(spec, existingEntry) {
+function buildReplacement(spec, _existingEntry) {
   const stats = { str: spec.str, int: spec.int, lea: spec.lea, pol: spec.pol, cha: spec.cha, luk: spec.luk };
   const ep = calcEP(stats);
   return {
@@ -397,7 +397,7 @@ log.forEach(l => console.log(l));
 // ================================================================
 const nameCount = {};
 generals.forEach(g => { nameCount[g.name] = (nameCount[g.name] || 0) + 1; });
-const stillDups = Object.entries(nameCount).filter(([n, c]) => c > 1);
+const stillDups = Object.entries(nameCount).filter(([_n, c]) => c > 1);
 if (stillDups.length > 0) {
   console.log('\n[WARNING] 仍有重複名稱:');
   stillDups.forEach(([n, c]) => console.log('  ' + n + ' x' + c));
@@ -410,7 +410,7 @@ if (stillDups.length > 0) {
 // ================================================================
 const idCount = {};
 generals.forEach(g => { idCount[g.id] = (idCount[g.id] || 0) + 1; });
-const dupIds = Object.entries(idCount).filter(([id, c]) => c > 1);
+const dupIds = Object.entries(idCount).filter(([_id, c]) => c > 1);
 if (dupIds.length > 0) {
   console.log('[WARNING] 仍有重複 ID:');
   dupIds.forEach(([id, c]) => console.log('  ' + id + ' x' + c));

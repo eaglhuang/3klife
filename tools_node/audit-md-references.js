@@ -45,7 +45,7 @@ function loadRegistry() {
 // ──────────────────────────────────────────────
 function resolveRef(refStr, sourceRelPath, registry) {
   // Normalise to forward slash, strip leading ./
-  let r = refStr.replace(/\\/g, '/').replace(/^\.\//, '');
+  const r = refStr.replace(/\\/g, '/').replace(/^\.\//, '');
 
   // 1. Try direct relative path resolution from source file directory
   const sourceDir  = path.dirname(sourceRelPath).replace(/\\/g, '/');
@@ -113,7 +113,7 @@ function extractRefs(line) {
 // Check if a ref ALREADY has a doc_id annotation nearby
 // (in the same cell/line segment)
 // ──────────────────────────────────────────────
-function alreadyAnnotated(line, refRaw) {
+function alreadyAnnotated(line, _refRaw) {
   // Look for doc_id pattern anywhere on same line
   return /doc_[a-z]+_\d{4}/.test(line);
 }
@@ -142,7 +142,7 @@ function scanFiles() {
 // ──────────────────────────────────────────────
 function main() {
   const MISSING_ONLY = process.argv.includes('--missing');
-  const OUT_FILE     = process.argv.includes('--out')
+  const _OUT_FILE     = process.argv.includes('--out')
     ? process.argv[process.argv.indexOf('--out') + 1]
     : null;
   const log = (...args) => { const s = args.join(' '); process.stdout.write(s + '\n'); };

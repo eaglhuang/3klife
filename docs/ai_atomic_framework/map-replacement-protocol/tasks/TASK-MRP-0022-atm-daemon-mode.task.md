@@ -3,8 +3,11 @@ doc_id: doc_other_0163
 task_id: TASK-MRP-0022
 title: ATM Daemon Mode（背景守護進程）
 milestone: M22
-status: planned
-blocked_by: [TASK-MRP-0011]
+status: done
+started_at: 2026-05-21T04:40:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T05:10:00Z
+blocked_by: [TASK-MRP-0011, TASK-MRP-0026, TASK-MRP-0027]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
@@ -157,6 +160,19 @@ node atm.mjs daemon enable --json
 **Level 2（移除功能）**：移除 `daemon.ts` 與 `daemon-watcher.ts`；刪除 `.atm/daemon/` 目錄；schema 移除。現有 police gate 和 fingerprint check 不受影響（因為 daemon 只是觸發器）。
 
 **Level 3（災難恢復）**：如果 daemon 寫亂了 capsule registry 或 lineage-log，使用 TASK-MRP-0027 的 `rescue rebuild-registry` 或 `rescue replay-lineage` 還原。
+
+## 2026-05-21 v2-r2 審查補充
+
+- Daemon 必須晚於 M26 Rescue Police 與 M27 Disaster Recovery；否則背景流程損壞時沒有可靠救援路徑。
+- 預設只能 read-only advisory，不得自動 mutate registry、map.spec 或 evidence。
+- 必須具備 kill switch、single instance lock、debounce、event queue、crash recovery。
+- 每個 event action 都需輸出 machine-readable finding，並標明 `action: advisory | block | route-to-rescue`。
+
+新增驗收：
+- [ ] Rescue Police critical finding 存在時 daemon start 被拒絕
+- [ ] daemon 無 human command 時不會寫入 governed state
+- [ ] kill switch 啟用後 daemon start/status 行為穩定
+- [ ] duplicate start 不會產生第二個 watcher
 
 ## Checklist
 

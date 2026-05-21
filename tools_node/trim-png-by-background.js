@@ -7,7 +7,7 @@ const path = require('path');
 let puppeteer;
 try {
     puppeteer = require('puppeteer-core');
-} catch (error) {
+} catch (_error) {
     console.error('[trim-png-by-background] 缺少依賴 puppeteer-core');
     process.exit(1);
 }

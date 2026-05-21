@@ -320,7 +320,7 @@ export class PreferencesTools implements ToolExecutor {
         });
     }
 
-    private async importPreferences(importPath: string): Promise<ToolResponse> {
+    private async importPreferences(_importPath: string): Promise<ToolResponse> {
         return new Promise((resolve) => {
             resolve({
                 success: false,

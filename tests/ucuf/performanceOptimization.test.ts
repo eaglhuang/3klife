@@ -17,9 +17,6 @@
 import { TestSuite, assert } from '../TestRunner';
 import type { UILayoutNodeSpec } from '../../assets/scripts/ui/core/UISpecTypes';
 import type { LazySlotEntry } from '../../assets/scripts/ui/core/CompositePanel';
-import type { UISkinResolver } from '../../assets/scripts/ui/core/UISkinResolver';
-import type { ResourceManager } from '../../assets/scripts/core/systems/ResourceManager';
-import type { UINodePool } from '../../assets/scripts/ui/core/UINodePool';
 
 // ─── 純 TS 深拷貝合約函式（與 UITemplateResolver._cloneLayoutSpec 邏輯一致）──────
 //

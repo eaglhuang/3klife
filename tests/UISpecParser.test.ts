@@ -60,7 +60,7 @@ describe('UI Layout Spec Data Contract Validation', () => {
 
             try {
                 jsonSpec = JSON.parse(content);
-            } catch (e) {
+            } catch (_e) {
                 throw new Error(`Invalid JSON syntax in file: ${file}`);
             }
 

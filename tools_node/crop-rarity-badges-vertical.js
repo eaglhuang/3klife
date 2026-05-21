@@ -327,7 +327,7 @@ async function main() {
         });
 
         const row = normalizeRow(options.row);
-        const names = ['common', 'rare', 'epic', 'legendary'];
+        const _names = ['common', 'rare', 'epic', 'legendary'];
         const selectedDataUrls = result.selected;
 
         if (!selectedDataUrls || selectedDataUrls.length < 4) {

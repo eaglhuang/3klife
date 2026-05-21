@@ -3,7 +3,10 @@ doc_id: doc_other_0162
 task_id: TASK-MRP-0021
 title: Map Capsule — map:cid 機制（MID）
 milestone: M21
-status: planned
+status: done
+started_at: 2026-05-21T02:00:00Z
+started_by_agent: ClaudeCode_sonnet-4.6
+completed_at: 2026-05-21T02:20:00Z
 blocked_by: [TASK-MRP-0018]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -211,6 +214,19 @@ node atm.mjs registry map-capsule import --cid "map:cid:MAP-ABC..." --vendor
 ## 回滾策略（本卡功能回滾）
 
 移除 `map-capsule.ts` 與 `map-registry.ts`；`vendor/maps/` 手動清除；`map.spec.json` 移除 `mapCid` 欄位（schema 降回無此欄位）；Atom Capsule 功能不受影響。
+
+## 2026-05-21 v2-r2 審查補充
+
+- Map bundle 必須使用 atom CID 鎖定成員版本，不可只用 mutable atomId。
+- map:cid hash 內容需納入 members、edges、entrypoints、qualityTargets、runtime policy hash 與 schema version。
+- Provenance 不進 hash，但 import/export report 必須保留 provenance、source route、toolVersion。
+- map:cid 是共享與回滾指標，不取代 human-readable semverHint。
+
+新增驗收：
+- [ ] 任一 member atomCid 改變會導致 map:cid 改變
+- [ ] provenance 改變不會導致 map:cid 改變
+- [ ] runtime policy hash 改變會導致 map:cid 改變或產生 blocked finding
+- [ ] import/export report 保留 provenance 且通過 neutrality scan
 
 ## Checklist
 

@@ -1,6 +1,6 @@
 import * as http from 'http';
 import * as url from 'url';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as _uuidv4 } from 'uuid';
 import { MCPServerSettings, ServerStatus, MCPClient, ToolDefinition } from './types';
 import { SceneTools } from './tools/scene-tools';
 import { NodeTools } from './tools/node-tools';
@@ -220,7 +220,7 @@ export class MCPServer {
                     try {
                         message = JSON.parse(fixedBody);
                         console.log('[MCPServer] Fixed JSON parsing issue');
-                    } catch (secondError) {
+                    } catch (_secondError) {
                         throw new Error(`JSON parsing failed: ${parseError.message}. Original body: ${body.substring(0, 500)}...`);
                     }
                 }
@@ -362,7 +362,7 @@ export class MCPServer {
                     try {
                         params = JSON.parse(fixedBody);
                         console.log('[MCPServer] Fixed API JSON parsing issue');
-                    } catch (secondError: any) {
+                    } catch (_secondError: any) {
                         res.writeHead(400);
                         res.end(JSON.stringify({
                             error: 'Invalid JSON in request body',

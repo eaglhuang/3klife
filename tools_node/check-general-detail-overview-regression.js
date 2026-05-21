@@ -30,7 +30,7 @@ function resolveRefs(node) {
         const fragPath = path.join(fragmentsBase, node.$ref + '.json');
         try {
             const fragment = readJson(fragPath);
-            const originalRef = node.$ref;
+            const _originalRef = node.$ref;
             delete node.$ref;
             const merged = { ...fragment, ...node };
             Object.assign(node, merged);

@@ -3,8 +3,11 @@ doc_id: doc_other_0166
 task_id: TASK-MRP-0025
 title: Diff-as-evidence（混合版）
 milestone: M25
-status: planned
-blocked_by: []
+status: done
+started_at: 2026-05-21T03:50:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T04:10:00Z
+blocked_by: [TASK-MRP-0010]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
@@ -135,6 +138,19 @@ node atm.mjs evidence diff --task TASK-MRP-0022 --from HEAD~3 --to HEAD --json
 **Level 2（移除功能）**：移除 `diff-evidence.ts`、`evidence diff` CLI subcommand；現有 evidence schema 和 close 流程完全不受影響。
 
 **Level 3（已 close 的 task evidence 不可信）**：如果發現某個時段的 diff-as-evidence 被亂用導致 close 不可信，使用 TASK-MRP-0027 的 `rescue diagnose --evidence-audit` 反查問題 evidence。
+
+## 2026-05-21 v2-r2 審查補充
+
+- Diff-as-evidence 只自動產生 what changed；不得由 AI 自動假造 intent、impact、testCoverage。
+- `intent` / `impact` / `testCoverage` 任一缺失時 `_isValid=false`，close validator 必須拒絕。
+- Patch summary 需限長與結構化，避免大型 diff 汙染 AI context。
+- affectedAtoms 需來自 map/spec/registry 查詢，不可只靠檔名猜測。
+
+新增驗收：
+- [ ] 未填 intent/impact/testCoverage 時 `_isValid=false`
+- [ ] complete/close 遇到 `_isValid=false` evidence 會 fail
+- [ ] 大型 diff 只輸出限長摘要與統計
+- [ ] affectedAtoms 由 registry/map 反查，並覆蓋找不到 atom 的 warning case
 
 ## Checklist
 

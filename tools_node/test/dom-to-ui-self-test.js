@@ -1035,7 +1035,7 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
   // structured list, and (c) extend the converter font registry per
   // conversion so the new family resolves without code change.
   {
-    const { classifyCssProperty, buildCssCapabilityReport, extractFontFaceMappings } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+    const { _classifyCssProperty, buildCssCapabilityReport, extractFontFaceMappings } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
     const { buildFontFaceRegistry, resolveFontAssetByConvention, resolveFontFamilyToAsset, PROJECT_FONT_DEFAULT } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'draft-builder.js'));
     const css = `
       @font-face {
@@ -2246,7 +2246,7 @@ function runAdditionalAccuracyBaselines() {
     ['general-detail-tabs', 'formal-ui'],
     ['battle-hud', 'formal-ui'],
   ];
-  for (const [name, profile] of cases) {
+  for (const [name, _profile] of cases) {
     const html = fs.readFileSync(path.join(REPO_ROOT, 'tests', 'fixtures', 'dom-to-ui', `${name}.html`), 'utf8');
     const baseline = JSON.parse(fs.readFileSync(
       path.join(REPO_ROOT, 'tests', 'fixtures', 'dom-to-ui', `${name}.accuracy-baseline.json`),

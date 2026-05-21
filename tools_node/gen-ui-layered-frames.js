@@ -52,7 +52,7 @@ async function listJsonFiles(dir) {
     try {
         const names = await fs.readdir(dir);
         return names.filter(n => n.endsWith('.json')).map(n => path.join(dir, n));
-    } catch (e) {
+    } catch (_e) {
         return [];
     }
 }

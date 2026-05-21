@@ -1,4 +1,4 @@
-﻿// heroine-toon.effect — 女主角專用卡通渲染器 — PBR-Toon 混合著色器
+// heroine-toon.effect — 女主角專用卡通渲染器 — PBR-Toon 混合著色器
 // ════════════════════════════════════════════════════════════════════════════
 //  設計參考（類比 Unity URP / ShaderGraph 架構）：
 //  1. Outline-free PBR-Toon Hybrid    — 無描邊 PBR 卡通混合模式
