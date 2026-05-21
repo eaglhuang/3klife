@@ -153,7 +153,7 @@ export abstract class ChildPanelBase {
      * @param data        新的完整資料物件
      * @param changedKeys 淺比對後偵測到改變的 key 清單
      */
-    onDiffUpdate(data: unknown, changedKeys: string[]): void {   // eslint-disable-line @typescript-eslint/no-unused-vars
+    onDiffUpdate(data: unknown, changedKeys: string[]): void {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[ChildPanelBase] onDiffUpdate → onDataUpdate (default fallback)', {
             panel: this.constructor.name,
             changedKeys,
@@ -246,6 +246,5 @@ export abstract class ChildPanelBase {
      * 自訂屬性變更鉤子。
      * 子類別可覆寫以在屬性改變時驅動視覺更新。
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected onCustomPropChanged(_key: string, _value: unknown): void { /* no-op */ }
 }

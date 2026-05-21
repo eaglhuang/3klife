@@ -58,7 +58,7 @@ export class TurnFlowManager {
       }
     }, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec);
 
-    let playerResult = c.ctrl.resolvePlayerTurn();
+    const playerResult = c.ctrl.resolvePlayerTurn();
     this.scene.scheduleOnce(() => this.pollCombatDrain(0, () => {
       if (playerResult !== 'ongoing') {
         this.finalizeAdvance();

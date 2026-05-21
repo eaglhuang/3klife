@@ -103,7 +103,6 @@ export class GridPanel extends ChildPanelBase {
      */
     private _createCellNode(name: string): Node {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
             const cc = require('cc');
             return new cc.Node(name) as Node;
         } catch {

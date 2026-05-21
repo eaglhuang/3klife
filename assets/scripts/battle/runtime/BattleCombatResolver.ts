@@ -162,7 +162,7 @@ export class BattleCombatResolver {
       return;
     }
 
-    let nextState = {
+    const nextState = {
       ...actionReset,
       firstHitPending: false,
     };

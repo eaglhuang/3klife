@@ -428,7 +428,6 @@ export class UIPreviewBuilder extends Component {
      * 基類為空實作；CompositePanel 覆寫此方法以記錄插槽 entry。
      * Unity 對照：Component.OnEnable() 虛函式鉤子模式。
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected _onLazySlotCreated(_spec: UILayoutNodeSpec, _node: Node, _w: number, _h: number): void { /* no-op */ }
 
     private _dedupeTabSwitchNodes(rootNode: Node): void {

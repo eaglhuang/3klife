@@ -108,10 +108,10 @@ export class UCUFLogger {
                 console.log(full, ...args); // eslint-disable-line
                 break;
             case LogLevel.WARN:
-                console.warn(full, ...args); // eslint-disable-line
+                console.warn(full, ...args);
                 break;
             case LogLevel.ERROR:
-                console.error(full, ...args); // eslint-disable-line
+                console.error(full, ...args);
                 break;
         }
     }

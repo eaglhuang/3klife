@@ -885,7 +885,7 @@ export class BuffGainEffectPool extends Component {
             if (bundleName === "resources") {
                 doLoad(resources);
             } else {
-                let existingBundle = assetManager.getBundle(bundleName);
+                const existingBundle = assetManager.getBundle(bundleName);
                 if (existingBundle) {
                     doLoad(existingBundle);
                 } else {

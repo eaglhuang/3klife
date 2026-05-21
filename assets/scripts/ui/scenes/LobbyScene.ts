@@ -112,7 +112,7 @@ export class LobbyScene extends Component {
         // 為 LobbyScene 大背板生成穩定的組件背景
         const bgNode = this.node.getChildByName('Background');
         if (bgNode) {
-            let bg = bgNode.getComponent(SolidBackground) || bgNode.addComponent(SolidBackground);
+            const bg = bgNode.getComponent(SolidBackground) || bgNode.addComponent(SolidBackground);
             bg.color = new Color(15, 20, 25, 255);
         }
 

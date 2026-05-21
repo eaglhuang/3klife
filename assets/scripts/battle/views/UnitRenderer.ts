@@ -1540,7 +1540,7 @@ export class UnitRenderer extends Component {
     } else {
       // 將軍節點（無 Visual 子節點）：直接動世界座標
       const worldPos = node.worldPosition;
-      let forward = this.getBoardForwardVector(faction) || new Vec3(0, 0, 1);
+      const forward = this.getBoardForwardVector(faction) || new Vec3(0, 0, 1);
       const bumpPos = worldPos.clone().add(forward.clone().normalize().multiplyScalar(distance));
       tween(node)
         .to(BATTLE_VISUAL_TIMING.attackBumpForwardSec, { worldPosition: bumpPos }, { easing: "quadIn" })
@@ -1567,8 +1567,8 @@ export class UnitRenderer extends Component {
     } else {
       // 將軍節點（無 Visual 子節點）：直接動世界座標
       const worldPos = node.worldPosition;
-      let forward = this.getBoardForwardVector(defenderFaction) || new Vec3(0, 0, 1);
-      let recoilDir = forward.clone().multiplyScalar(-0.2);
+      const forward = this.getBoardForwardVector(defenderFaction) || new Vec3(0, 0, 1);
+      const recoilDir = forward.clone().multiplyScalar(-0.2);
       const recoilPos = worldPos.clone().add(recoilDir);
       tween(node)
         .delay(BATTLE_VISUAL_TIMING.recoilStartDelaySec)
