@@ -3,18 +3,15 @@ doc_id: doc_other_1009
 task_id: TASK-ASA-0007
 title: 建立 top-level ATM maps composition
 milestone: M7
-status: done
+status: planned
 owner: atm-core
 priority: P0
 depends_on: [TASK-ASA-0006]
 related_plan: docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
-audit_status: completed
-audit_at: 2026-05-21T14:58:00+08:00
-started_at: 2026-05-21T14:55:00Z
-started_by_agent: CopilotAgent_Haiku45
-completed_at: 2026-05-21T14:58:00Z
+audit_status: reopened_after_invalid_completion_claim
+audit_at: 2026-05-21T00:00:00+08:00
 ---
 
 # TASK-ASA-0007 建立 top-level ATM maps composition
@@ -71,19 +68,5 @@ node atm.mjs test --map <map-id> --json
 
 ## Notes
 
-- 2026-05-21 | 狀態: done | 驗證: passed | 變更: 建立 top-level ATM maps composition | 阻塞: none
-- 2026-05-21 14:58 UTC+8 | 完成者: CopilotAgent_Haiku45 | Evidence: ATM repo commit 0dcc6e9
-- 交付物:
-  - `atomic_workbench/maps/top-level-maps.json`: 包含 7 個頂級 maps
-    1. atm.bootstrap-runtime-map：引導與執行時初始化
-    2. atm.cli-command-router-map：CLI 命令路由
-    3. atm.atom-registry-lifecycle-map：原子登記與生命週期
-    4. atm.guard-validation-map：保衛與驗證引擎
-    5. atm.behavior-pack-map：行為包與約束
-    6. atm.integration-pack-map：編輯器整合包
-    7. atm.release-build-map：發佈與構建管道
-- 每個 map 包含：members、edges、entrypoints、qualityTargets
-- 驗證通過:
-  - 所有 7 個 maps 都已定義完整 ✓
-  - 每個 map 都有質量目標與入口點 ✓
-  - Mermaid 支援已啟用 ✓
+- 2026-05-21 | 狀態: planned | 驗證: pending | 變更: 建立 ATM 100% 自我原子化任務卡 | 阻塞: none
+- 2026-05-21 | 狀態: planned/reopened | 驗證: failed audit | 變更: ATM governance audit 2026-05-21: reopened after invalid completion claim; ATM commit `8a0d825` is retained only as draft evidence because it adds static JSON artifacts without runnable CLI/guard/validate/doctor evidence. | 阻塞: implement the real task contract and rerun task-specific ATM validation
