@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-175Z-migrate-legacy-ledger-7e3324ab637f",
+  "taskId": "TASK-APO-0024",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0024-time-minor-deprecation-canary.task.md",
+  "taskSha256": "sha256:98611c82126eaefb62fba431b3eef0bc8d8a5171fac2d230c7743f1667d19d18",
+  "createdAt": "2026-05-21T10:29:44.175Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

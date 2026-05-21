@@ -19,6 +19,14 @@ started_by_agent: ClaudeCode_Opus4.7
 completed_at: 2026-05-20T02:10:00+08:00
 completed_by_agent: ClaudeCode_Opus4.7
 upstream_commit: 947849f
+lastTransitionId: 2026-05-21T10-29-44-192Z-migrate-legacy-ledger-749ae3d5ab44
+lastTransitionAt: 2026-05-21T10:29:44.192Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.192Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:c2173a4f479913bba24cb068818b2a2f9c98b1f7bb89ad053aa98177540b262c
 ---
 
 # TASK-ASR-0009 — root-drop wrappers.json SSoT manifest

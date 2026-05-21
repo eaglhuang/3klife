@@ -12,6 +12,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-341Z-migrate-legacy-ledger-a74344d7efa2
+lastTransitionAt: 2026-05-21T10:29:44.341Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.341Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:228d4a1fae9b9a14d36daacbd032c6b46476581b2a267da17ab183cb940a848c
 ---
 
 # TASK-MRP-0020 — Shadow 模式 A/B 定量比對報告

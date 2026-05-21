@@ -35,6 +35,14 @@ started_at: 2026-05-18T00:31:02.1882413+08:00
 started_by_agent: vs-insiders-gpt-5.4
 completed_at: 2026-05-18T00:37:45.5471514+08:00
 completed_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-161Z-migrate-legacy-ledger-f732a3c92447
+lastTransitionAt: 2026-05-21T10:29:44.161Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.161Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:a002cb1d791e9d41523da2ffb64b2a1dd9557a66c8107882bd44a787345130cf
 ---
 
 # TASK-APO-0011 — Framework / ATMChart 版本契約

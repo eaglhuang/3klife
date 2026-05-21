@@ -43,6 +43,14 @@ non_goals:
 created_at: 2026-05-21T00:11:31+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; npm run validate:full PASS | 變更: 新增 csharp-promotion-gate 與 thresholds fixture，完成 advisory->pilot gate 驗證並回寫 0600~0604 文件 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-439Z-migrate-legacy-ledger-030eb923af43
+lastTransitionAt: 2026-05-21T10:29:44.439Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.439Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1f06e8650ac504356def01b3eb2e8e5059313044044dff6feebca002773636b8
 ---
 
 # ATM-LANG-CSHARP-0604 C# promotion gate for advisory to pilot readiness

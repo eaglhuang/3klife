@@ -34,6 +34,14 @@ completed_at: 2026-05-18T10:52:40+08:00
 completed_by_agent: vs-insiders-gpt-5.4
 commit: e3769a8 (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-173Z-migrate-legacy-ledger-19c0856f2dc9
+lastTransitionAt: 2026-05-21T10:29:44.173Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.173Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:029f0ca67ba6eb158e01406e146fe2b23a3f2d5a8a51c9a909f56ae3e6064680
 ---
 
 # TASK-APO-0022 — Bridge Minor + Experimental API

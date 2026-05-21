@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-20T21:45:08+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; node tests/atm-lang-csharp.test.ts（PASS）; npm run validate:full（PASS） | 變更: 新增 C# advisory readiness gate 與 sample/enterprise threshold fixture，validator 回報 readiness stage | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-424Z-migrate-legacy-ledger-5746665ade2b
+lastTransitionAt: 2026-05-21T10:29:44.424Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.424Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:f7123db619e1019d37b9efc187a09666d355fa5189749d6dc828e55c0cbcdc6e
 ---
 
 # ATM-LANG-CSHARP-0304 C# advisory readiness gate and threshold profile

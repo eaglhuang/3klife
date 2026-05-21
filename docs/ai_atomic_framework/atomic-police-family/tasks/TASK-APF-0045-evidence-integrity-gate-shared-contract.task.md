@@ -39,6 +39,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-285Z-migrate-legacy-ledger-f15ef4bd5a39
+lastTransitionAt: 2026-05-21T10:29:44.285Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.285Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1273f8ef8c50698c754cbc451abf4f8516ad393825fa4e5a4b066742fbcd8058
 ---
 
 # TASK-APF-0045 — Evidence Integrity Gate shared contract

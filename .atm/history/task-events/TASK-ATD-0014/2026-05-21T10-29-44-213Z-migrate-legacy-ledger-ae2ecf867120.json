@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-213Z-migrate-legacy-ledger-ae2ecf867120",
+  "taskId": "TASK-ATD-0014",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0014-test-layering-profile.task.md",
+  "taskSha256": "sha256:e35c77f2e5ccc4c75f5bda9f22fc83b37ccc0660c7f6325da10e767e204a4dc3",
+  "createdAt": "2026-05-21T10:29:44.213Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-210Z-migrate-legacy-ledger-976690cac314",
+  "taskId": "TASK-ATD-0011",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0011-validator-harness-consolidation.task.md",
+  "taskSha256": "sha256:9cce0f45bade329a8f6074d439e28667566af7550b8ec1c4ee64ac273b4b1565",
+  "createdAt": "2026-05-21T10:29:44.210Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

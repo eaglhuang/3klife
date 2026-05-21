@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-259Z-migrate-legacy-ledger-487a8bae70df",
+  "taskId": "TASK-APF-0023",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0023-quality-police-named-scanner.task.md",
+  "taskSha256": "sha256:c3b0be16c2f100f47c4cf21e9d8d5354f62847436d100b7fd0a966f382d260c6",
+  "createdAt": "2026-05-21T10:29:44.259Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

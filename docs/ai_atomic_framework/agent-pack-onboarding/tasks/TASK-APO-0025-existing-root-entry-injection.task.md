@@ -30,6 +30,14 @@ non_goals:
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex-gpt-5
 completed_at: 2026-05-18T00:00:00+08:00
+lastTransitionId: 2026-05-21T10-29-44-176Z-migrate-legacy-ledger-dbe780435a2e
+lastTransitionAt: 2026-05-21T10:29:44.176Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.176Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:c4d7a09fb42668e622e99c178a02400daed74010668ebfa4dcdf0bb3f2452302
 ---
 
 # TASK-APO-0025 既有 README / AGENTS 的 loop-free ATM 入口注入

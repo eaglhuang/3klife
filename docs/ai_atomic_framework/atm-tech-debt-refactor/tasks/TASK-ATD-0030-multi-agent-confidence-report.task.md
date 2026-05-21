@@ -37,6 +37,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-229Z-migrate-legacy-ledger-63ef3b314f36
+lastTransitionAt: 2026-05-21T10:29:44.229Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.229Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:5258f87a888c5426b27edd3aff6d3629016ef3c7c7abb077bcb3397455adbc38
 ---
 
 # TASK-ATD-0030 — Multi-agent confidence report 沿用既有 matrix / result

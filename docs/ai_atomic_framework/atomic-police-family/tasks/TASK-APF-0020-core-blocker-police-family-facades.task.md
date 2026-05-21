@@ -37,6 +37,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-256Z-migrate-legacy-ledger-fa4bc521f826
+lastTransitionAt: 2026-05-21T10:29:44.256Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.256Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:fb3ad9a08bdbea8df2c6c845a9911086e304dc2ad6a50deaaca174783be9fd29
 ---
 
 # TASK-APF-0020 — Core blocker police family facades

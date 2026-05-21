@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-349Z-migrate-legacy-ledger-fcd5cdf82da8",
+  "taskId": "TASK-MRP-0027",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0027-disaster-recovery-cli.task.md",
+  "taskSha256": "sha256:e70fb4b9ffb7cd2cc368fe6ef8ae8608d178e72f1383fba210d30fca0111a838",
+  "createdAt": "2026-05-21T10:29:44.349Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

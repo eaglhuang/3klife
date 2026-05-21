@@ -35,6 +35,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-220Z-migrate-legacy-ledger-fab37882b3a9
+lastTransitionAt: 2026-05-21T10:29:44.220Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.220Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:06b10672e6ab6be51fef12599396cae0b492dccac1ca329bcbabe0a82c505445
 ---
 
 # TASK-ATD-0020 — `command-specs.ts` 拆分 command metadata 與 renderer

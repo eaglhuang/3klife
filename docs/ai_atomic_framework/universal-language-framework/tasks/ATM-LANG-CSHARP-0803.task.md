@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-21T08:40:31+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; node tests/atm-lang-csharp.test.ts PASS; npm run validate:full PASS | 變更: readiness gate 新增 packages lock profile 檢查與 threshold 控制 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-448Z-migrate-legacy-ledger-4722c6fe5470
+lastTransitionAt: 2026-05-21T10:29:44.448Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.448Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:80732e9315ac87969d173e0b793c831ac791fc6455f559813d6dce166e820f18
 ---
 
 # ATM-LANG-CSHARP-0803 C# readiness gate lock-file checks

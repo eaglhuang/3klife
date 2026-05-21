@@ -21,6 +21,14 @@ public_tracking: false
 executionMode: upstream-runtime-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-276Z-migrate-legacy-ledger-5bb197e3a391
+lastTransitionAt: 2026-05-21T10:29:44.276Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.276Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:6df4e5daab35952679af34efc14c8dc43f0b873781c17bac35159995dfe8490b
 ---
 
 # TASK-APF-0038 — Fixtures and validators for new police families

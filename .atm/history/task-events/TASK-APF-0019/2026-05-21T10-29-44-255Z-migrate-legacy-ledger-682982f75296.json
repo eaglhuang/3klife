@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-255Z-migrate-legacy-ledger-682982f75296",
+  "taskId": "TASK-APF-0019",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0019-policefinding-public-contract-stabilization.task.md",
+  "taskSha256": "sha256:93232e270365f620884460e63c8514127a2572e40a997b6468ff37171713fdf8",
+  "createdAt": "2026-05-21T10:29:44.255Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

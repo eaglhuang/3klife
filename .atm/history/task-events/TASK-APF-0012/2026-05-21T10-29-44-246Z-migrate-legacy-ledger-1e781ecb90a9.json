@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-246Z-migrate-legacy-ledger-1e781ecb90a9",
+  "taskId": "TASK-APF-0012",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0012-police-finding-evidence-bridge.task.md",
+  "taskSha256": "sha256:ba99fa293d1f2cddb591cddd1b993cf21c16730b2309a2c8cf4a2c2309799f23",
+  "createdAt": "2026-05-21T10:29:44.246Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

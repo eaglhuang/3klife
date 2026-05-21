@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:map-curator + npm run validate:schemas（PASS） | 變更: map curator validator 與 decomposition fixture/test 建立，missing members/edges/entrypoints 失敗路徑可追蹤 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-371Z-migrate-legacy-ledger-e2110a6d7d77
+lastTransitionAt: 2026-05-21T10:29:44.371Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.371Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:ab4a6d6f10628518c32ad3c4807963b5a97f673daf351b02b21b689ac223965e
 ---
 
 # ATM-LANG-0602 Large-feature decomposition evidence gate

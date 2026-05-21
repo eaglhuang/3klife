@@ -38,6 +38,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-227Z-migrate-legacy-ledger-dfba5e62bc7d
+lastTransitionAt: 2026-05-21T10:29:44.227Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.227Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:999748d83211887867b38902229f4efd63b5f86dd696b4dfe4cb10515497fee8
 ---
 
 # TASK-ATD-0027 — root-drop PS1/SH wrapper 去重並保留 parity

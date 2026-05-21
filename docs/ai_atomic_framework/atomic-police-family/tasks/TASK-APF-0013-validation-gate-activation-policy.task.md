@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-247Z-migrate-legacy-ledger-c3e928783307
+lastTransitionAt: 2026-05-21T10:29:44.247Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.247Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0170e9b0c32ef8a0e42d553f926662458257552dd1bf91f5a872ae7d8d69b479
 ---
 
 # TASK-APF-0013 — Validation gate activation policy

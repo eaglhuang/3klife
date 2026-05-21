@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-299Z-migrate-legacy-ledger-d972b2da5328
+lastTransitionAt: 2026-05-21T10:29:44.299Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.299Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:dff6ed19e3004c39bfd9a090a49f5d84029220b0e88d103ba4bc3392b58df1fa
 ---
 
 # ATM-GOV-0105 Git Governance and Commit Trailer Validation

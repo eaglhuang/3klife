@@ -37,6 +37,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-218Z-migrate-legacy-ledger-d30a8d7f231e
+lastTransitionAt: 2026-05-21T10:29:44.218Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.218Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:df719b25c23cf31f158ed17cf22c67e23672c1439c834daa2bd1d90d49966a43
 ---
 
 # TASK-ATD-0018 — `propose.ts` 拆分 proposal analysis / gate / output

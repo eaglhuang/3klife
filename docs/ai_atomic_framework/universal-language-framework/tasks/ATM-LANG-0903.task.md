@@ -39,6 +39,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide（PASS） | 變更: Go validator thin facade example、failure ownership、future adapter checklist 完成 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-384Z-migrate-legacy-ledger-33ba871f9e62
+lastTransitionAt: 2026-05-21T10:29:44.384Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.384Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:57013b04ee339ed8c5da018437579e14f09fb574aee6140f5a4b1209919f11ee
 ---
 
 # ATM-LANG-0903 English guide: Go validator and thin facade example

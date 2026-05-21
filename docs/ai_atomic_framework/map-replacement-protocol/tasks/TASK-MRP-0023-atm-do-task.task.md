@@ -12,6 +12,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-344Z-migrate-legacy-ledger-27b21e1e8b10
+lastTransitionAt: 2026-05-21T10:29:44.344Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.344Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:c9b5409a13461af7d9758630f29f3849c08d1263f973fb5c9dfc7526a6e6eafd
 ---
 
 # TASK-MRP-0023 — atm do --task X（Agent 一行指令執行任務）

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-256Z-migrate-legacy-ledger-fa4bc521f826",
+  "taskId": "TASK-APF-0020",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0020-core-blocker-police-family-facades.task.md",
+  "taskSha256": "sha256:6a9122ba49ab3fcd0c76f786b4774b9c9b8088555d93b9e7de6a92328d291958",
+  "createdAt": "2026-05-21T10:29:44.256Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

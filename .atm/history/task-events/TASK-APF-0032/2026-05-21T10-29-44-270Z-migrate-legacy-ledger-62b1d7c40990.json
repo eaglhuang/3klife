@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-270Z-migrate-legacy-ledger-62b1d7c40990",
+  "taskId": "TASK-APF-0032",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0032-decomposition-police-named-scanner.task.md",
+  "taskSha256": "sha256:77480bdcc478b6768e38216fcd4d2c3353db62aa047771415102cdafe28a986d",
+  "createdAt": "2026-05-21T10:29:44.270Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

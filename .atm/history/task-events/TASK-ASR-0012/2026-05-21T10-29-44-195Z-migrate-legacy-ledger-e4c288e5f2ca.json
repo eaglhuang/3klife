@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-195Z-migrate-legacy-ledger-e4c288e5f2ca",
+  "taskId": "TASK-ASR-0012",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0012-propose-full-split.task.md",
+  "taskSha256": "sha256:3e264a52ebff8c219b69c90cce239fcf7464f8db5f9fc7d2056b406f5a1d649c",
+  "createdAt": "2026-05-21T10:29:44.195Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

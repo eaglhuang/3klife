@@ -39,6 +39,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-283Z-migrate-legacy-ledger-9b23af320ab4
+lastTransitionAt: 2026-05-21T10:29:44.283Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.283Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:c575b504db9c87c38c52b22b7dc57d822cf171a913c6e2a10aefbb33c27dc0bb
 ---
 
 # TASK-APF-0043 — Rollback Police contract and reversibility model

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-278Z-migrate-legacy-ledger-44d3cabbcee6",
+  "taskId": "TASK-APF-0039",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0039-roadmap-backwrite-m10-m11-closure.task.md",
+  "taskSha256": "sha256:88bad0006ccb1617b7d91b268b24aabf8c48fcd4babb36b0fc506ed9f29f5526",
+  "createdAt": "2026-05-21T10:29:44.278Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

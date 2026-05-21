@@ -11,6 +11,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-333Z-migrate-legacy-ledger-f5f2f1c3facc
+lastTransitionAt: 2026-05-21T10:29:44.333Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.333Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:bec5d00999f796291fb21206a8cf53fe0b425ec363392962b736f6b139db241a
 ---
 
 # TASK-MRP-0012 — Map Edge Contract 自動合約測試

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-264Z-migrate-legacy-ledger-49a6c67ab0a5",
+  "taskId": "TASK-APF-0027",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0027-reviewadvisory-bridge-hardening.task.md",
+  "taskSha256": "sha256:520c5b28a36043204ab3bf10a1f0f1678760ecca5c87ab89eaccf95e66d33fd5",
+  "createdAt": "2026-05-21T10:29:44.264Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

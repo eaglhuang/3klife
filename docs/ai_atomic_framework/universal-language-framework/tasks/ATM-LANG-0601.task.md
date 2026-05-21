@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:map-curator + npm run validate:guide（PASS） | 變更: graph-to-map proposal builder 與 evidence gate builder 完成並匯出 guidance index | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-370Z-migrate-legacy-ledger-1df5c919e5ae
+lastTransitionAt: 2026-05-21T10:29:44.370Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.370Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:e350b54315bcfa5aa187d7e1d38c40332f320bb5c7aa7a5feec267d917f84169
 ---
 
 # ATM-LANG-0601 Graph-to-map decomposition proposal

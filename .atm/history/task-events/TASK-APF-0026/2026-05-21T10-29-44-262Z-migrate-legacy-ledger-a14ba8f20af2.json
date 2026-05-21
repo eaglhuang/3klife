@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-262Z-migrate-legacy-ledger-a14ba8f20af2",
+  "taskId": "TASK-APF-0026",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0026-police-orchestrator-and-cli-report-producer.task.md",
+  "taskSha256": "sha256:1ee6bba3c8c7e1392070014eeb7f0faef932e1745fda6d112e7c8f3102eb3d2a",
+  "createdAt": "2026-05-21T10:29:44.262Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

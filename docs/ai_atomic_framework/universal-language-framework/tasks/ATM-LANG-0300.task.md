@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: node scripts/validate-guidance.ts + route delegation tests (passed) | 變更: 完成 LegacyRoutePlan adapter delegation 與 explicit fallback route | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-359Z-migrate-legacy-ledger-0209c10cb611
+lastTransitionAt: 2026-05-21T10:29:44.359Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.359Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:94500f23b30aef9c9dac98631cdc0d014845cce00636b28c7639ab354be827cd
 ---
 
 # ATM-LANG-0300 LegacyRoutePlan adapter delegation

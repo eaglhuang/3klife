@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: 由 ATM 通用語言框架計畫書開立 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-378Z-migrate-legacy-ledger-1966adf3bd8d
+lastTransitionAt: 2026-05-21T10:29:44.378Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.378Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:f0590ba6995a1380abd98901ce914409ca198647280b33027697a012911ac52d
 ---
 
 # ATM-LANG-0801 JS/TS inventory and route planning

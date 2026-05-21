@@ -36,6 +36,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-212Z-migrate-legacy-ledger-afed029cb98b
+lastTransitionAt: 2026-05-21T10:29:44.212Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.212Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:e2dd97b180ef48620a2f451138032216c2eaeed1790538214f6542c58e8bb1b5
 ---
 
 # TASK-ATD-0012 — 共用 AJV factory/cache 且保持 pass/fail 行為

@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:python-adapter（PASS） | 變更: Python atomize/infect dry-run plan（含 import rewrite/shim/rollback/evidence gate）完成，mutates 維持空陣列 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-375Z-migrate-legacy-ledger-3d1e4e2e998c
+lastTransitionAt: 2026-05-21T10:29:44.375Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.375Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0587d399f7d0c752e4addcd303358458579bb778a2c71eea0e73148b4f41c0f2
 ---
 
 # ATM-LANG-0703 Python precise atomize/infect dry-run

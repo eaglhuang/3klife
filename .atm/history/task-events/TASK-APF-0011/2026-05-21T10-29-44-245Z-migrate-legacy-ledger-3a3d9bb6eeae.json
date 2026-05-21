@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-245Z-migrate-legacy-ledger-3a3d9bb6eeae",
+  "taskId": "TASK-APF-0011",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0011-dependency-graph-police-alignment.task.md",
+  "taskSha256": "sha256:999000f94f42a6d201bc6262b763e83714ca8b9d12e2ff556c3266888f1ce38b",
+  "createdAt": "2026-05-21T10:29:44.245Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

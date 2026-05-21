@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-312Z-migrate-legacy-ledger-3a1c66a731cb
+lastTransitionAt: 2026-05-21T10:29:44.312Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.312Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:28dbde7da6543e4f656e9fb2c8339fbb0fffa3018aa1da92bb340df36892d684
 ---
 
 # ATM-GOV-0117 Reference JavaScript LanguageAdapter Governance Implementation

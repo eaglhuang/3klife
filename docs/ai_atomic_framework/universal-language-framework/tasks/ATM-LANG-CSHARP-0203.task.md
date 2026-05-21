@@ -43,6 +43,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: 新增 .sln/.csproj/Directory.Build.props 深度解析，輸出 tfm/test/reference evidence 並納入 profile confidence | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-410Z-migrate-legacy-ledger-a8b285667fea
+lastTransitionAt: 2026-05-21T10:29:44.410Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.410Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:26b99ba02ea83280c6aa865ba32bda5d4676aac1554f4af49e6bca6f663f0b83
 ---
 
 # ATM-LANG-CSHARP-0203 C# csproj deep profile parsing

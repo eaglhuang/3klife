@@ -38,6 +38,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-214Z-migrate-legacy-ledger-121cb3d1cdfe
+lastTransitionAt: 2026-05-21T10:29:44.214Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.214Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:b76ffce2deb311ac131fb28dee7e4caa01e709edb71c9e200ec0984e0395980b
 ---
 
 # TASK-ATD-0015 — 第一批快速單元測試（URN / allocator / shared helpers）

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-292Z-migrate-legacy-ledger-2dd96c0c12f3",
+  "taskId": "TASK-APF-0052",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0052-adopter-neutrality-scanner-negative-fixtures.task.md",
+  "taskSha256": "sha256:8e5511c73d51ccecef13f17240810c2821a33d1757ce20a14f16a8344ad67bc2",
+  "createdAt": "2026-05-21T10:29:44.292Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

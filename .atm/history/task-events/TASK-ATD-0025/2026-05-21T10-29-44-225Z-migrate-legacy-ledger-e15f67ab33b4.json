@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-225Z-migrate-legacy-ledger-e15f67ab33b4",
+  "taskId": "TASK-ATD-0025",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0025-release-parity-gate.task.md",
+  "taskSha256": "sha256:73116132f84f27b8502a8230d3f5fd40dcd8482e2e328aa2c44b61ad6d53f8da",
+  "createdAt": "2026-05-21T10:29:44.225Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

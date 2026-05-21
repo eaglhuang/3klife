@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-297Z-migrate-legacy-ledger-4978923aecb5",
+  "taskId": "ATM-GOV-0103",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md",
+  "taskSha256": "sha256:60599cd8147db0e4d59594fa26a61220db4d88cd064e8e98467a427b38f3fdb6",
+  "createdAt": "2026-05-21T10:29:44.297Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

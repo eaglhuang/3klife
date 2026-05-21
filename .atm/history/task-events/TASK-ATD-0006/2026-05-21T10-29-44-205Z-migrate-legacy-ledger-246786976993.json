@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-205Z-migrate-legacy-ledger-246786976993",
+  "taskId": "TASK-ATD-0006",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0006-eslint-baseline-warning-budget.task.md",
+  "taskSha256": "sha256:c74f38a0e1f90b216820f9f61c26d23406c9530688145d38caa67bb9926a98aa",
+  "createdAt": "2026-05-21T10:29:44.205Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

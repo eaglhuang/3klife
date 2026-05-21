@@ -35,6 +35,14 @@ completed_at: 2026-05-18T11:25:00+08:00
 completed_by_agent: copilot-claude-sonnet-4.6
 commit: c4983ec (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-164Z-migrate-legacy-ledger-9e93c643ead0
+lastTransitionAt: 2026-05-21T10:29:44.164Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.164Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:4e8ff87f7cb4b70c3da6f05509c716c9b16011965fcf1d00c01cf8a5a1d8f776
 ---
 
 # TASK-APO-0014 — Release Trust Chain

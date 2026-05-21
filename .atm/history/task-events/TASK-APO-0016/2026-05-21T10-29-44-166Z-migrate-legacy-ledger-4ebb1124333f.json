@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-166Z-migrate-legacy-ledger-4ebb1124333f",
+  "taskId": "TASK-APO-0016",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0016-version-skew-matrix-ci.task.md",
+  "taskSha256": "sha256:9fae44150c6a566c171d6da1256f4fbd12a39758b74bcdadb3811d4b3aeaa201",
+  "createdAt": "2026-05-21T10:29:44.166Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

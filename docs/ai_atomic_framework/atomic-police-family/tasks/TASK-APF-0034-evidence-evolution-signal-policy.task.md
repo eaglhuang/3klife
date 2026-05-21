@@ -21,6 +21,14 @@ public_tracking: false
 executionMode: upstream-runtime-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-272Z-migrate-legacy-ledger-e0cdb36645f9
+lastTransitionAt: 2026-05-21T10:29:44.272Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.272Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:ca70ccc556dc8bffbdec16956248049c014a4e1a2e56ed81e9efe12a88d432ce
 ---
 
 # TASK-APF-0034 — Evidence evolution signal policy

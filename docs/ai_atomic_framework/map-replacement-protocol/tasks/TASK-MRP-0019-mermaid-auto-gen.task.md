@@ -11,6 +11,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-340Z-migrate-legacy-ledger-c501fcdf6fb7
+lastTransitionAt: 2026-05-21T10:29:44.340Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.340Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:df289b864b62998c39597b8fb47c740eb14f4b56ca5fbe3e8a6e17a0bd085dfe
 ---
 
 # TASK-MRP-0019 — Map 拓樸圖 Mermaid 自動生成

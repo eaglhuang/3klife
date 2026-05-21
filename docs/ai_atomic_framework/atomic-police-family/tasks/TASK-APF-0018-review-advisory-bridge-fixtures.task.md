@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-254Z-migrate-legacy-ledger-c9ae760c240c
+lastTransitionAt: 2026-05-21T10:29:44.254Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.254Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:108fc06d9a99bc3478e2893d530768bc684a54439b83f1adc516c373044f267e
 ---
 
 # TASK-APF-0018 — ReviewAdvisory bridge fixtures

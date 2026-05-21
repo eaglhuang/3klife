@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-244Z-migrate-legacy-ledger-89765ecdc004",
+  "taskId": "TASK-APF-0010",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0010-roadmap-backwrite-promotion-gate.task.md",
+  "taskSha256": "sha256:7528cbe21bbc82d9b2f63ac96e759de2bbe9712cbaa113ba9c681bff7427f7b4",
+  "createdAt": "2026-05-21T10:29:44.244Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

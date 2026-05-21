@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: 新增 csproj risk model（multi-target/legacy/warnings-as-errors/reference drift）並串接 legacy route gate | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-413Z-migrate-legacy-ledger-080185c79a45
+lastTransitionAt: 2026-05-21T10:29:44.413Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.413Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:066c76e5316cb22dab3e9d4fdf8bf656a1cc4d3d8467861e88864561b8b3f3fa
 ---
 
 # ATM-LANG-CSHARP-0206 C# csproj risk rules

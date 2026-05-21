@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-295Z-migrate-legacy-ledger-12cda52e9d5c
+lastTransitionAt: 2026-05-21T10:29:44.295Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.295Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:3ef12a4162af7eff8a8163dc870f5769131579515b4e876dcf91f6cfcf22a2b0
 ---
 
 # ATM-GOV-0101 Actor Identity Registry and Git Identity Contract

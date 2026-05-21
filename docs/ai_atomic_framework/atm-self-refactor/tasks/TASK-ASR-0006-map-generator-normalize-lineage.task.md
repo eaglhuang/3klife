@@ -20,6 +20,14 @@ started_by_agent: ClaudeCode_Opus4.7
 completed_at: 2026-05-20T01:40:00+08:00
 completed_by_agent: ClaudeCode_Opus4.7
 upstream_commit: 525381e
+lastTransitionId: 2026-05-21T10-29-44-189Z-migrate-legacy-ledger-f1287ccd839c
+lastTransitionAt: 2026-05-21T10:29:44.189Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.189Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:6f974752df889949dff6efb6ca481f0c38a3e86d2c0e56537c9e510038d2ef07
 ---
 
 # TASK-ASR-0006 — map-generator.ts 抽出 normalize-lineage

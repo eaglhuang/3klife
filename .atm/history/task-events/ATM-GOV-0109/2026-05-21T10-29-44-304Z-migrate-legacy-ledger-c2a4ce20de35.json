@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-304Z-migrate-legacy-ledger-c2a4ce20de35",
+  "taskId": "ATM-GOV-0109",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0109-claim-collision-proofing.task.md",
+  "taskSha256": "sha256:db1df7fb74764eb64f33e2f19dbdb4dba3afbb8d4607490e776450eded8303f0",
+  "createdAt": "2026-05-21T10:29:44.304Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

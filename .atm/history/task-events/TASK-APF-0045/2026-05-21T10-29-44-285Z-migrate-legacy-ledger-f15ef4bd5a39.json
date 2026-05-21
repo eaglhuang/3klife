@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-285Z-migrate-legacy-ledger-f15ef4bd5a39",
+  "taskId": "TASK-APF-0045",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0045-evidence-integrity-gate-shared-contract.task.md",
+  "taskSha256": "sha256:d41b5fbe3dd697dcd6ff86028fb219a8cce2c1904eb6600782051708b428f16d",
+  "createdAt": "2026-05-21T10:29:44.285Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

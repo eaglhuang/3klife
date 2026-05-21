@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-188Z-migrate-legacy-ledger-58a43ef33e33",
+  "taskId": "TASK-ASR-0005",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0005-map-generator-normalize-fields.task.md",
+  "taskSha256": "sha256:01da9663138cb7d58dcae0b9e988f723a16407d381e6e4d6d4cec26bbcde87b1",
+  "createdAt": "2026-05-21T10:29:44.188Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

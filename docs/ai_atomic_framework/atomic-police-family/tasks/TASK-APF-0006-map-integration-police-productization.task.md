@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-240Z-migrate-legacy-ledger-06b096ec4219
+lastTransitionAt: 2026-05-21T10:29:44.240Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.240Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:bd55a07ffd25ab820e4b49376b48d5434c8857bed9ce9a5f321708c37e8453e7
 ---
 
 # TASK-APF-0006 — Map Integration Police 產品化規格 / design spec

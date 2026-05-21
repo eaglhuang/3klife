@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-299Z-migrate-legacy-ledger-d972b2da5328",
+  "taskId": "ATM-GOV-0105",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0105-git-governance-contract.task.md",
+  "taskSha256": "sha256:6197fc7c09f053b22d306f37ce8f9cb89ece855cbce3e570de2fdc412f156f26",
+  "createdAt": "2026-05-21T10:29:44.299Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

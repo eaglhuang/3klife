@@ -13,6 +13,14 @@ started_at: 2026-05-17T02:44:13.6757334+08:00
 started_by_agent: vs-insiders-github-copilot
 completed_at: 2026-05-17T02:44:13.6757334+08:00
 completed_by_agent: vs-insiders-github-copilot
+lastTransitionId: 2026-05-21T10-29-44-320Z-migrate-legacy-ledger-6ecdbff36450
+lastTransitionAt: 2026-05-21T10:29:44.320Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.320Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:abea29e64abdeb2dce1da32c83326c5b5ae5e69891ec4f56463ec5269484784a
 ---
 
 # TASK-MRP-0001 — Replacement Protocol 概念對齊 ARCHITECTURE

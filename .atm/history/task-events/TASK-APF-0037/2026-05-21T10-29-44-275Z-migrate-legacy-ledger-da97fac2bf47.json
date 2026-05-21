@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-275Z-migrate-legacy-ledger-da97fac2bf47",
+  "taskId": "TASK-APF-0037",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0037-orchestrator-profile-cli-wiring-decomposition-evolution.task.md",
+  "taskSha256": "sha256:6f360de37665718c2ab3cf706cfd763a1fb3edf77b357437a97fcdb516e5e6ab",
+  "createdAt": "2026-05-21T10:29:44.275Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

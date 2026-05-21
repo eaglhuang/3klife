@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-168Z-migrate-legacy-ledger-5ae8e5515904",
+  "taskId": "TASK-APO-0017",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0017-longtail-user-safeguards.task.md",
+  "taskSha256": "sha256:e1551c62b6d672cab3fec84f63b8b8bdd6c2fc3b6009f1666fbb3d7d13048acf",
+  "createdAt": "2026-05-21T10:29:44.168Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

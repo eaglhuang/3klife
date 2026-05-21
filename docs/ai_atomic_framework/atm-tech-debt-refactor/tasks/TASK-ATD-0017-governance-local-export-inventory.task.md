@@ -35,6 +35,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-217Z-migrate-legacy-ledger-53de310900f1
+lastTransitionAt: 2026-05-21T10:29:44.217Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.217Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:688017dc4ec9882972132181832a259ac3868c2a56022b876345d774fd6f4dcf
 ---
 
 # TASK-ATD-0017 — `plugin-governance-local` export maturity inventory + 拆分

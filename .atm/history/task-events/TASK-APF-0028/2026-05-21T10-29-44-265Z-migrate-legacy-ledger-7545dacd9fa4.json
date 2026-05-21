@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-265Z-migrate-legacy-ledger-7545dacd9fa4",
+  "taskId": "TASK-APF-0028",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0028-profile-promotion-and-blocker-policy.task.md",
+  "taskSha256": "sha256:1281c5ff5421f66e9ce3928cf31537d5bfeb9924e61f343d9c0aaa11e5db188a",
+  "createdAt": "2026-05-21T10:29:44.265Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

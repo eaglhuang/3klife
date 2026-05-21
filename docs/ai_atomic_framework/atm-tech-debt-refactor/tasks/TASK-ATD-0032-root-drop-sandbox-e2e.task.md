@@ -37,6 +37,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-232Z-migrate-legacy-ledger-3d8f4d99f442
+lastTransitionAt: 2026-05-21T10:29:44.232Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.232Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:f99052f5310f33cd39002cdc70da79bc9634a10790bb5cfe93f07b2118a8f506
 ---
 
 # TASK-ATD-0032 — Root-drop sandbox E2E

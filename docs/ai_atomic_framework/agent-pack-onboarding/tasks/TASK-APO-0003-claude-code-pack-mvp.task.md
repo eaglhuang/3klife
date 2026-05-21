@@ -28,6 +28,14 @@ created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
 started_at: 2026-05-17T23:30:00+08:00
 started_by_agent: vs-insiders-claude-sonnet-4.6
+lastTransitionId: 2026-05-21T10-29-44-152Z-migrate-legacy-ledger-1c5b06c3b511
+lastTransitionAt: 2026-05-21T10:29:44.152Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.152Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:be4cc2df721372b45bc0fd7407c67cea00333a12404075dd94cfbed7599f1407
 ---
 
 # TASK-APO-0003 — Claude Code Pack MVP

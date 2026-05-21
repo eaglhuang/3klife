@@ -12,6 +12,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-343Z-migrate-legacy-ledger-1a9e98423061
+lastTransitionAt: 2026-05-21T10:29:44.343Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.343Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:a0fe26a09a3e7aa600188798863fa78bf0beb2c714b56453ecae489f2a422083
 ---
 
 # TASK-MRP-0022 — ATM Daemon Mode（背景守護進程）

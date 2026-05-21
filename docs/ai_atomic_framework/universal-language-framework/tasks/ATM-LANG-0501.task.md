@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:schemas + tests/atm-lang-0500-0502.test.ts（PASS） | 變更: import rewrite/shim/rollback 子合約型別與 schema 完成 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-367Z-migrate-legacy-ledger-0d4f33c47623
+lastTransitionAt: 2026-05-21T10:29:44.367Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.367Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:6e62378c31d98fd7bca1418aaf20e8d23472b86666a0e4edb0a636fc145e0b82
 ---
 
 # ATM-LANG-0501 Import rewrite, shim, rollback plan contracts

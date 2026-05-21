@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide + TS_NODE_PROJECT=tsconfig.test.json tests/atm-lang-0400-0402.test.ts（PASS） | 變更: source inventory service、ranking 基礎模組與 fixture 落地 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-362Z-migrate-legacy-ledger-02920e94201c
+lastTransitionAt: 2026-05-21T10:29:44.362Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.362Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:97eee7c11385d3f15411bfc88ac521cdfb1d5d596f34a63c8d33e507b66314ac
 ---
 
 # ATM-LANG-0400 Adapter-driven source inventory service

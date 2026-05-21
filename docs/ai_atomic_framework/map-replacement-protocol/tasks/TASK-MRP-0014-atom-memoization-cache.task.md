@@ -12,6 +12,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-335Z-migrate-legacy-ledger-7d4e3a6cd7e2
+lastTransitionAt: 2026-05-21T10:29:44.335Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.335Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:3920ebd8984755c6ce73490bda4f24c3f242e7daf13d684f4a3fec5b45781053
 ---
 
 # TASK-MRP-0014 — 跨 Atom 邊界結果快取（Memoization）

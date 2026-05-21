@@ -29,6 +29,14 @@ non_goals:
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 completed_at: 2026-05-19T00:00:00+08:00
+lastTransitionId: 2026-05-21T10-29-44-178Z-migrate-legacy-ledger-0c509b416bc8
+lastTransitionAt: 2026-05-21T10:29:44.178Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.178Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:375865f55881e7ce7df61b5fe7b62537a55d39388f11a7906b0048c542ed0a12
 ---
 
 # TASK-APO-0027 Pinned Runner Auto-Install During Init/Bootstrap

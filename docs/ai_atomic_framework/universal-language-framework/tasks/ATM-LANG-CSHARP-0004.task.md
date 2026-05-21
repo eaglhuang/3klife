@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: opened partial/generated risk model task card | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-396Z-migrate-legacy-ledger-61987d7056f5
+lastTransitionAt: 2026-05-21T10:29:44.396Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.396Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:7d81af2e90cb965e5b60dc16ad4374a627c4214c296146fef61ce03667f3ca9f
 ---
 
 # ATM-LANG-CSHARP-0004 partial class and generated file risk model

@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T23:01:12+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: dependencyGraph/artifactGraph capability 升級 full，graph baseline 與 validator 對齊 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-427Z-migrate-legacy-ledger-2d0b1f6d284e
+lastTransitionAt: 2026-05-21T10:29:44.427Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.427Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:f3ec63a6e3b9c8e792e689faad5a6dd7b7f4abee1a2ccbb99d006ff479f8a1a7
 ---
 
 # ATM-LANG-CSHARP-0402 C# dependency and artifact graph full promotion

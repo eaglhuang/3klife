@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-230Z-migrate-legacy-ledger-8838354c9983",
+  "taskId": "TASK-ATD-0031",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0031-contributor-devcontainer-docker.task.md",
+  "taskSha256": "sha256:8a2e45f3c7d6ee3fcdaff7fcc7759c19c41b0271c0c39d34e81cb4d711b0c6c8",
+  "createdAt": "2026-05-21T10:29:44.230Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

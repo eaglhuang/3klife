@@ -12,6 +12,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-347Z-migrate-legacy-ledger-f219c5c93926
+lastTransitionAt: 2026-05-21T10:29:44.347Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.347Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:9f30540e8d5adbcd2434e2e7bfe03ba6f173407702d0a4705c2e28059371888a
 ---
 
 # TASK-MRP-0026 — Rescue Police Family（救援警察家族）

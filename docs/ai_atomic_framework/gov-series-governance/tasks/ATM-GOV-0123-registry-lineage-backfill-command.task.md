@@ -17,6 +17,14 @@ public_tracking: false
 executionMode: planned-upstream-change
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-318Z-migrate-legacy-ledger-cf9c7676869c
+lastTransitionAt: 2026-05-21T10:29:44.318Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.318Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:67b3744b83014289c9cd992b5ae532b890c659c40b23afecd3c2af7cc32e4028
 ---
 
 # ATM-GOV-0123 Registry Lineage Backfill Command

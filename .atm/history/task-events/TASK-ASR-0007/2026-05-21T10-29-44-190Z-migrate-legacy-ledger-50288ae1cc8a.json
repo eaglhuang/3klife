@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-190Z-migrate-legacy-ledger-50288ae1cc8a",
+  "taskId": "TASK-ASR-0007",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0007-propose-failure-reason.task.md",
+  "taskSha256": "sha256:a2b9f9486d0e2104e5cd59bac44f5c559768e8d176372645b906a7608037cb2d",
+  "createdAt": "2026-05-21T10:29:44.190Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

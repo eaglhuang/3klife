@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-181Z-migrate-legacy-ledger-4574d4603357",
+  "taskId": "TASK-ASA-0002",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0002-atomize-inventory-cli.task.md",
+  "taskSha256": "sha256:08d2528eac45bd1ece5b37a8e72167658c28cb43ad27857a684f39e4ba92d7a9",
+  "createdAt": "2026-05-21T10:29:44.181Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

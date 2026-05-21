@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: TS_NODE_PROJECT=tsconfig.test.json + fallback snapshots (passed) | 變更: 完成 capability fallback report 與 user-facing snapshot fixtures | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-357Z-migrate-legacy-ledger-dc4bbb26e17b
+lastTransitionAt: 2026-05-21T10:29:44.357Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.357Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:70ebe6eba685e743ffd9f9ab232a0fbddb569b359b0042e289e0c491197d9b05
 ---
 
 # ATM-LANG-0201 Capability fallback and user messages

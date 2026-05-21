@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-199Z-migrate-legacy-ledger-16b027578c51",
+  "taskId": "TASK-ATD-0001",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0001-agent-entry-guidance.task.md",
+  "taskSha256": "sha256:c97eec32825e2afbaf654658e2bb809a405976e9e16431446d9e117eedc0d7f5",
+  "createdAt": "2026-05-21T10:29:44.199Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

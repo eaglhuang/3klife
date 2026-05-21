@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; node tests/atm-lang-csharp.test.ts（PASS）; npm run validate:full（PASS） | 變更: 新增 csharp-registry catalog entry 工具，完成 resolver registry 整合驗證 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-407Z-migrate-legacy-ledger-d1e9db189eb2
+lastTransitionAt: 2026-05-21T10:29:44.407Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.407Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:53c37ed5972c179e79c50304de59ee51abc41e0bb8537a7e14af6153cdf34d12
 ---
 
 # ATM-LANG-CSHARP-0200 C# registry integration with language adapter resolver

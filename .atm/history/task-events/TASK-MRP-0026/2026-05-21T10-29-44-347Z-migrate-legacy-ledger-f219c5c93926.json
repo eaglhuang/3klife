@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-347Z-migrate-legacy-ledger-f219c5c93926",
+  "taskId": "TASK-MRP-0026",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0026-rescue-police-family.task.md",
+  "taskSha256": "sha256:1f0260a31e6c43d71d426046ba9c238101b30cf6387039791563074100305a97",
+  "createdAt": "2026-05-21T10:29:44.347Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

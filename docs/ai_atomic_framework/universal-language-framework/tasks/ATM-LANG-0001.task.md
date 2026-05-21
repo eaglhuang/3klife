@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: manual document review + node tools_node/check-encoding-touched.js (passed) | 變更: 完成主計畫書/任務索引 Atomic Maps 規則降複雜度改版 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-350Z-migrate-legacy-ledger-24c098837980
+lastTransitionAt: 2026-05-21T10:29:44.350Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.350Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:8ddef4d83c452280844907f52042fdbe888a82c97da32da7a1ec44a6ef1246fa
 ---
 
 # ATM-LANG-0001 繁中主規劃書與 atomic-map roadmap

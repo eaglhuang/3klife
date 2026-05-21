@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-242Z-migrate-legacy-ledger-ec1b0994c2c6",
+  "taskId": "TASK-APF-0008",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0008-lifecycle-boundary-police-alignment.task.md",
+  "taskSha256": "sha256:de11f522b02c92b611d96fe3216c328f53a1483dcf72809a2ddb1801a88d32e7",
+  "createdAt": "2026-05-21T10:29:44.242Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

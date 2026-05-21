@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T21:45:08+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; node tests/atm-lang-csharp.test.ts（PASS）; npm run validate:full（PASS） | 變更: diagnostics parser 升級支援 dotnet build/test/publish 常見格式與 SARIF ruleIndex/default level 變體 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-422Z-migrate-legacy-ledger-60511398d494
+lastTransitionAt: 2026-05-21T10:29:44.422Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.422Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1bf90d5d1714c5d7d157a60c1e6d50ac82513610d0c8bf7a285dba89ee50ac30
 ---
 
 # ATM-LANG-CSHARP-0303 C# diagnostics parser normalization v2

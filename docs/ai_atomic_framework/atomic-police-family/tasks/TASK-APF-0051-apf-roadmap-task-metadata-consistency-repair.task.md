@@ -39,6 +39,14 @@ non_goals:
   - 不把 adopter/private path 寫入 upstream protected public contract。
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-291Z-migrate-legacy-ledger-1151d53921b5
+lastTransitionAt: 2026-05-21T10:29:44.291Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.291Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:4f1ec8b56e7ce98ad64b1af0ccd59faf2472f5c35df7d092c398fc5cb01cf5e5
 ---
 
 # TASK-APF-0051 — APF roadmap/task metadata consistency repair

@@ -13,6 +13,14 @@ started_at: 2026-05-17T21:14:09.1021640+08:00
 started_by_agent: vs-insiders-gpt-5.4
 completed_at: 2026-05-17T21:26:39.0106386+08:00
 completed_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-328Z-migrate-legacy-ledger-c5781c99ddf6
+lastTransitionAt: 2026-05-21T10:29:44.328Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.328Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:81535e36b7e58ec040ebfd845c5b2db14836736998f0ad8a64b1dd3bf93a0090
 ---
 
 # TASK-MRP-0008 — ScopeLock 0.2.0 + Polymorph Impact

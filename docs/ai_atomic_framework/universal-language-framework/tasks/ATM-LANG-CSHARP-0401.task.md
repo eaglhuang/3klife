@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T23:01:12+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: sourceInventory capability 升級 full，inventory files/symbols/edges/warnings 排序穩定化 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-426Z-migrate-legacy-ledger-8bec6aba46b7
+lastTransitionAt: 2026-05-21T10:29:44.426Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.426Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:f8a2e7c7108e1e0a4e28274cccd942f1e6a0fa7062f774de1e1de62a7253c70c
 ---
 
 # ATM-LANG-CSHARP-0401 C# source inventory full promotion

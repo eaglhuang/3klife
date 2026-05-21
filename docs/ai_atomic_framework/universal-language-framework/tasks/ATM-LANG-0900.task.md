@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide（PASS） | 變更: English companion 改為 adapter author guide，補 official/advisory/future 與 ADAPTER_GUIDE 入口 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-380Z-migrate-legacy-ledger-d72a35f45f9d
+lastTransitionAt: 2026-05-21T10:29:44.380Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.380Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:a408889921742726704949a00c5d7f3e80c78b1132d3f3b807e668a7629bef72
 ---
 
 # ATM-LANG-0900 English guide: adding a new language adapter

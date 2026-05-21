@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: validate-guidance + regex ownership regression tests (passed) | 變更: 移除 core language-specific regex ownership，保留 generic parser | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-360Z-migrate-legacy-ledger-38f51db7267c
+lastTransitionAt: 2026-05-21T10:29:44.360Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.360Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0da7d978555303ddc9f6e0b850edcc49437426f9ddda42892720bdce7f370ec1
 ---
 
 # ATM-LANG-0301 Remove core language regex ownership

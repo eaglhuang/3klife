@@ -34,6 +34,14 @@ non_goals:
   - 重做 release workflow 全貌（僅補 tag 行為）
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-170Z-migrate-legacy-ledger-cb8f30e0aca5
+lastTransitionAt: 2026-05-21T10:29:44.170Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.170Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:bce9fa8cfadcdbfa9965e05deded8a04a718d97926118bbf3a6cded3ef5b744a
 ---
 
 # TASK-APO-0019 — Dist-tag Policy

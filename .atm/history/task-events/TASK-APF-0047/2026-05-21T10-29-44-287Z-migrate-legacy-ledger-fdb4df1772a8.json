@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-287Z-migrate-legacy-ledger-fdb4df1772a8",
+  "taskId": "TASK-APF-0047",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0047-noise-control-gate-shared-contract.task.md",
+  "taskSha256": "sha256:483859e92ef83610c9e751c834e010866642f9a5fe25446943e2ef6b1caf7cf5",
+  "createdAt": "2026-05-21T10:29:44.287Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

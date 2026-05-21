@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-315Z-migrate-legacy-ledger-e07ee8582612",
+  "taskId": "ATM-GOV-0120",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0120-multilanguage-onefile-validation-matrix.task.md",
+  "taskSha256": "sha256:3702d8b801352b901fa353f337f07e8f77f5a95838893e6b29b0c570aaef2099",
+  "createdAt": "2026-05-21T10:29:44.315Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-291Z-migrate-legacy-ledger-1151d53921b5",
+  "taskId": "TASK-APF-0051",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0051-apf-roadmap-task-metadata-consistency-repair.task.md",
+  "taskSha256": "sha256:33b90f7f4e758fcb4487a8f302a14da25ac68c3ec938034f88a44ae4a1f0cba9",
+  "createdAt": "2026-05-21T10:29:44.291Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

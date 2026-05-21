@@ -38,6 +38,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-234Z-migrate-legacy-ledger-f516cd7005fb
+lastTransitionAt: 2026-05-21T10:29:44.234Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.234Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:326aa56829fca6cccd7b890f9c281135cecab02d13638e1aebec0032dbbd49cc
 ---
 
 # TASK-APF-0000 — 文件定稿與治理索引

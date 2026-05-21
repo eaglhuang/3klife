@@ -39,6 +39,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-289Z-migrate-legacy-ledger-f8deba2dd570
+lastTransitionAt: 2026-05-21T10:29:44.289Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.289Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:6a01438df9bb487ecee11b00d273520ce2f994d6318b560eedc536a76810e7c5
 ---
 
 # TASK-APF-0049 — Orchestrator/profile/CLI wiring for Polymorph/Rollback/shared gates

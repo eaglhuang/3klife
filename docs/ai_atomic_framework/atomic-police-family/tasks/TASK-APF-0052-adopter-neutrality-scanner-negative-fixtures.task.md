@@ -39,6 +39,14 @@ non_goals:
   - 不把 adopter/private path 寫入 upstream protected public contract。
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-292Z-migrate-legacy-ledger-2dd96c0c12f3
+lastTransitionAt: 2026-05-21T10:29:44.292Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.292Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:4f4f70cfbd92fd9b53b794efb4f9ad024b1e464e4de61de599b5c3d7c93b5507
 ---
 
 # TASK-APF-0052 — Adopter-neutrality scanner and negative fixtures

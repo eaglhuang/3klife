@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: node scripts/validate-schemas.ts (passed) | 變更: 新增共用語言分析 schema 與 schema validator | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-354Z-migrate-legacy-ledger-bc8409f5eee4
+lastTransitionAt: 2026-05-21T10:29:44.354Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.354Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:46a5772b00627ffc158a26a2936a72f833e888d3a38dac7c5cfabd6fbd0e0210
 ---
 
 # ATM-LANG-0101 Shared language analysis schemas

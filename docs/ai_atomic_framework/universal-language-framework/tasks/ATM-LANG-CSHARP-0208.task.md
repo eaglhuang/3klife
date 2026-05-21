@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; node tests/atm-lang-csharp.test.ts（PASS）; npm run validate:full（PASS） | 變更: legacy route 依 profile/solution/risk 自適應步驟與 warning，並保留 advisory-only 模式 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-415Z-migrate-legacy-ledger-ef75b2e85ee2
+lastTransitionAt: 2026-05-21T10:29:44.415Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.415Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:2623e637d2ddb6119c7bf25e9a898de627898f9b1307b5f0095ef0b5721c1193
 ---
 
 # ATM-LANG-CSHARP-0208 C# legacy route deep planning

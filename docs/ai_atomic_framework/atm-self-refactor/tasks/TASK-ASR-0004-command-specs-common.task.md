@@ -26,6 +26,14 @@ started_by_agent: ClaudeCode_Opus4.7
 completed_at: 2026-05-20T01:15:00+08:00
 completed_by_agent: ClaudeCode_Opus4.7
 upstream_commit: 48dd41b
+lastTransitionId: 2026-05-21T10-29-44-187Z-migrate-legacy-ledger-6d8d9282496c
+lastTransitionAt: 2026-05-21T10:29:44.187Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.187Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:2edfb533fdd41e183da995d10df093b915923a2d5233f21f0d956b5c51fbb74f
 ---
 
 # TASK-ASR-0004 — command-specs.ts 抽出 _common shared options

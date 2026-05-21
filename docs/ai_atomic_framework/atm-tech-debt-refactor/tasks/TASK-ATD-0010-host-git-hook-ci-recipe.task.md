@@ -36,6 +36,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-209Z-migrate-legacy-ledger-1ee592cee7df
+lastTransitionAt: 2026-05-21T10:29:44.209Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.209Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:86b8246da246207cfcb5b81a83941c08f8511b3fa572e28d75cbe81838d3b721
 ---
 
 # TASK-ATD-0010 — Git hook / CI enforcement 改為 opt-in host recipe

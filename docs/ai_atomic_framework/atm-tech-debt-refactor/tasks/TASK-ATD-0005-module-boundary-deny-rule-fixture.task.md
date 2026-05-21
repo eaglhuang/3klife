@@ -37,6 +37,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-204Z-migrate-legacy-ledger-0eff530a5387
+lastTransitionAt: 2026-05-21T10:29:44.204Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.204Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:292818c3264f03b4ce2cb4cfcaf3365e7aefe43317fa522208b3652f0cdfb8dd
 ---
 
 # TASK-ATD-0005 — `validate-module-boundaries` deny rule + negative fixture

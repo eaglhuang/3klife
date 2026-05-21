@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:plugin-sdk + tests/atm-lang-0500-0502.test.ts（PASS） | 變更: 新增 dry-run request/report contract 與 executionMode/安全檢查 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-366Z-migrate-legacy-ledger-683fd6a588df
+lastTransitionAt: 2026-05-21T10:29:44.366Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.366Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:3bdbe93173ae9b9fbbb125e7f726d5c3ccd8a8f72d093993663fa341a412cd68
 ---
 
 # ATM-LANG-0500 Generic atomize/infect dry-run plan contracts

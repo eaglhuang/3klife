@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-184Z-migrate-legacy-ledger-fc952d0a4953",
+  "taskId": "TASK-ASR-0001",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0001-upgrade-path-helpers.task.md",
+  "taskSha256": "sha256:ddeea1230ad8e08a5402a73fb0aa3b57a892c81207d550c5c0ebd43748617cfe",
+  "createdAt": "2026-05-21T10:29:44.184Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

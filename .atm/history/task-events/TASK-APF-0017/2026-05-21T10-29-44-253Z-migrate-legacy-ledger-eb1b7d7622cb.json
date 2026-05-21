@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-253Z-migrate-legacy-ledger-eb1b7d7622cb",
+  "taskId": "TASK-APF-0017",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0017-validator-profile-wiring.task.md",
+  "taskSha256": "sha256:69fb726b56ae5a3f6d7cfd1724fd4c986fca6681e14333189f6c689ce7ea24a6",
+  "createdAt": "2026-05-21T10:29:44.253Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

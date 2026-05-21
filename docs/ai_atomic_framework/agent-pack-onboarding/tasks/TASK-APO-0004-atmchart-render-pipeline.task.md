@@ -32,6 +32,14 @@ non_goals:
   - 不改 registry / map replacement protocol
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-153Z-migrate-legacy-ledger-c9a6a06f512d
+lastTransitionAt: 2026-05-21T10:29:44.153Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.153Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:77778cd497a9a62dc4aea656bf44a445f78f028ccd869aac510c32fecd9a0a90
 ---
 
 # TASK-APO-0004 — Rule Render / ATMChart Pipeline

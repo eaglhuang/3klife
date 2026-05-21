@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: node scripts/script-facade-boundary.ts --mode validate (passed) | 變更: 新增 script facade boundary validator，確認無 CLI 邊界違規 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-391Z-migrate-legacy-ledger-dbea38fd2231
+lastTransitionAt: 2026-05-21T10:29:44.391Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.391Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:df0a871014ba8dc0a82a7343bc0722c1a5aeecf1fa943e890c5d943f94d7d53b
 ---
 
 # ATM-LANG-1103 Script facade boundary validator

@@ -28,6 +28,14 @@ started_by_agent: ClaudeCode_Sonnet4.6
 completed_at: 2026-05-20T07:45:00+08:00
 completed_by_agent: ClaudeCode_Sonnet4.6
 upstream_commit: 613dd73
+lastTransitionId: 2026-05-21T10-29-44-196Z-migrate-legacy-ledger-024ab29d0ead
+lastTransitionAt: 2026-05-21T10:29:44.196Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.196Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:44e4d634aeddf3a34ec7d89e13f5f87dde4996d8efb7b5095ae2ad6c3e9092f3
 ---
 
 # TASK-ASR-0013 — integrations-core 完整 compiler/manifest/verify split

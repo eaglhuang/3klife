@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-298Z-migrate-legacy-ledger-bd83aa00c463",
+  "taskId": "ATM-GOV-0104",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0104-evidence-bound-gates.task.md",
+  "taskSha256": "sha256:05c3dc1a7a6b5dcb65382cd2d2a45872c4a329a40894d584a13f5f7605d98b56",
+  "createdAt": "2026-05-21T10:29:44.298Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-340Z-migrate-legacy-ledger-c501fcdf6fb7",
+  "taskId": "TASK-MRP-0019",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0019-mermaid-auto-gen.task.md",
+  "taskSha256": "sha256:e18e54215d4fafa789fb340154fa812e811a1b53b4db9e65fe9348aadcc51a74",
+  "createdAt": "2026-05-21T10:29:44.340Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-214Z-migrate-legacy-ledger-121cb3d1cdfe",
+  "taskId": "TASK-ATD-0015",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0015-fast-unit-test-batch.task.md",
+  "taskSha256": "sha256:3dc1521aa64b6593b23a2f43a80188b099193dac2a5c9edf017273dedf4b7542",
+  "createdAt": "2026-05-21T10:29:44.214Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

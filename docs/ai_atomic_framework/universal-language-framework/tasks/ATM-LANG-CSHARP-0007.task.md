@@ -46,6 +46,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: opened validate-language-csharp validator task card | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-399Z-migrate-legacy-ledger-4df68dd5123d
+lastTransitionAt: 2026-05-21T10:29:44.399Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.399Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:e4a7bfc443297e82455027de6ed5e501eab225f51f096cd18eab425f8294a66e
 ---
 
 # ATM-LANG-CSHARP-0007 validate-language-csharp validator

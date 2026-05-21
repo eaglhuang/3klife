@@ -39,6 +39,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-290Z-migrate-legacy-ledger-53b31ca22025
+lastTransitionAt: 2026-05-21T10:29:44.290Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.290Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:42c3eeea6abddd568a3d13678d96cc2c2c1bd6ca834fbc0f1806dd709112cc74
 ---
 
 # TASK-APF-0050 — Fixtures, validators, and M12/M13 closure

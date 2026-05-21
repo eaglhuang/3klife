@@ -22,6 +22,14 @@ started_by_agent: ClaudeCode_Sonnet4.6
 completed_at: 2026-05-20T03:30:00+08:00
 completed_by_agent: ClaudeCode_Sonnet4.6
 upstream_commit: 69fe931
+lastTransitionId: 2026-05-21T10-29-44-193Z-migrate-legacy-ledger-5f678c5c2d51
+lastTransitionAt: 2026-05-21T10:29:44.193Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.193Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:6aabad489332ff3bf039b44e6e85b85a1408ff72baae198db928dbc32d48ae45
 ---
 
 # TASK-ASR-0010 — root-drop wrappers generator + parity validator 接 SSoT

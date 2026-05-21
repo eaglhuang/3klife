@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-186Z-migrate-legacy-ledger-83f483924825",
+  "taskId": "TASK-ASR-0003",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0003-upgrade-canary.task.md",
+  "taskSha256": "sha256:adeae51ad2805f00f04e94bf475769cab4728a7fc390751bd5afa0933bd6cd3c",
+  "createdAt": "2026-05-21T10:29:44.186Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

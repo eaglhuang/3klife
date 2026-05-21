@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-328Z-migrate-legacy-ledger-c5781c99ddf6",
+  "taskId": "TASK-MRP-0008",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0008-scopelock-polymorph.task.md",
+  "taskSha256": "sha256:377b0600585aa51d96b41e9ea91ac262c1ee7382b49cdaa531e0d23dd00cc4c6",
+  "createdAt": "2026-05-21T10:29:44.328Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

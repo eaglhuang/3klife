@@ -36,6 +36,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-208Z-migrate-legacy-ledger-b767751aee08
+lastTransitionAt: 2026-05-21T10:29:44.208Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.208Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:4fc0a49d2c165877e212907337befed094c578f6d2920bdf9534204092fcede5
 ---
 
 # TASK-ATD-0009 — 環境變數 registry 與 docs

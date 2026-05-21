@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-247Z-migrate-legacy-ledger-c3e928783307",
+  "taskId": "TASK-APF-0013",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0013-validation-gate-activation-policy.task.md",
+  "taskSha256": "sha256:00e4f017540e8a0644118308a3d5b745f9214a09dcedf08788f5a7ae8a59f741",
+  "createdAt": "2026-05-21T10:29:44.247Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

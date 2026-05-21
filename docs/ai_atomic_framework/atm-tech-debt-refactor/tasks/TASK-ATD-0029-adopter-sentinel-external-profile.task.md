@@ -36,6 +36,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-229Z-migrate-legacy-ledger-e365b689f742
+lastTransitionAt: 2026-05-21T10:29:44.229Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.229Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:567b2ffcd8fa920edf31d24339ce558db2e7e6bd4698a9e295b56e066dbc41df
 ---
 
 # TASK-ATD-0029 — Adopter sentinel external profile 作為下游 evidence

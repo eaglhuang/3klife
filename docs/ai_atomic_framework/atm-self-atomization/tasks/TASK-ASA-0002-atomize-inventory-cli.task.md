@@ -15,6 +15,14 @@ started_by_agent: CopilotAgent
 completed_at: 2026-05-21T08:20:00Z
 audit_status: completed
 audit_at: 2026-05-21T08:20:00+08:00
+lastTransitionId: 2026-05-21T10-29-44-181Z-migrate-legacy-ledger-4574d4603357
+lastTransitionAt: 2026-05-21T10:29:44.181Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.181Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:3f88c720bbcf93564701a53d274de23b8ed2b6ff59214380ed93d9bd8ef47cb8
 ---
 
 # TASK-ASA-0002 新增 atomize inventory 覆蓋盤點 CLI

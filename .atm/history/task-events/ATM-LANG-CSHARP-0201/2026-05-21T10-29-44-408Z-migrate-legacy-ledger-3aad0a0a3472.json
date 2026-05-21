@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-408Z-migrate-legacy-ledger-3aad0a0a3472",
+  "taskId": "ATM-LANG-CSHARP-0201",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0201.task.md",
+  "taskSha256": "sha256:b1703f22a9623d0d0d7aba9d3fe9d9b0aa9ec7d1ea31574e9ad97df8098cfd3f",
+  "createdAt": "2026-05-21T10:29:44.408Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

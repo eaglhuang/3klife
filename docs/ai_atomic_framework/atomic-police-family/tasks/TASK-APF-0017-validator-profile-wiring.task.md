@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-253Z-migrate-legacy-ledger-eb1b7d7622cb
+lastTransitionAt: 2026-05-21T10:29:44.253Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.253Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:55031b58870c37f2567395f68b7a1a86ac9981e6bf3d94f9a2d38b85aed8b617
 ---
 
 # TASK-APF-0017 — Validator profile wiring

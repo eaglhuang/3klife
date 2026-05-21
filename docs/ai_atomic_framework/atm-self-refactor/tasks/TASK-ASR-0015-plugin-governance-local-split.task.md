@@ -24,6 +24,14 @@ started_by_agent: ClaudeCode_Opus4.7
 completed_at: 2026-05-20T10:30:00+08:00
 completed_by_agent: ClaudeCode_Opus4.7
 upstream_commit: 1cbf229
+lastTransitionId: 2026-05-21T10-29-44-198Z-migrate-legacy-ledger-145d729d51cd
+lastTransitionAt: 2026-05-21T10:29:44.198Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.198Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:67cc9c1c5c70e383f8ee139729c539ac23347358d0c86a3f463b3071b62826e0
 ---
 
 # TASK-ASR-0015 — plugin-governance-local 完整拆分（bootstrap / prompt / budget）

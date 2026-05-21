@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-284Z-migrate-legacy-ledger-989a10c82206",
+  "taskId": "TASK-APF-0044",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0044-rollback-police-named-scanner.task.md",
+  "taskSha256": "sha256:2c63261c4f7a2f89250adf5155828b87f7b36426f145d140bf11c3684cec272a",
+  "createdAt": "2026-05-21T10:29:44.284Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -21,6 +21,14 @@ public_tracking: false
 executionMode: upstream-runtime-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-268Z-migrate-legacy-ledger-0deaa65b4e50
+lastTransitionAt: 2026-05-21T10:29:44.268Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.268Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:ad531a61ead646d8e2a0e63c3a96801af6f1c8db0fc6246eab010866384f1488
 ---
 
 # TASK-APF-0030 — Police family taxonomy extension for Decomposition and Evolution Police

@@ -21,6 +21,14 @@ public_tracking: false
 executionMode: upstream-runtime-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-269Z-migrate-legacy-ledger-7ac064c904d9
+lastTransitionAt: 2026-05-21T10:29:44.269Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.269Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:051b3afc89e4b989b06a3e46e10571a416579065e2bb0fbf9286c6cdf7e8097d
 ---
 
 # TASK-APF-0031 — Source inventory and large-surface scanner contract

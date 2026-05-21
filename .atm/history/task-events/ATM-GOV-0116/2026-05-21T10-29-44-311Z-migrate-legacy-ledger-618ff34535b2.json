@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-311Z-migrate-legacy-ledger-618ff34535b2",
+  "taskId": "ATM-GOV-0116",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0116-atomize-infect-dryrun-planning.task.md",
+  "taskSha256": "sha256:cc31cc7f526f45e03ba2135dbd06c4266cc18249668e68b8c3872f732c8f40ba",
+  "createdAt": "2026-05-21T10:29:44.311Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

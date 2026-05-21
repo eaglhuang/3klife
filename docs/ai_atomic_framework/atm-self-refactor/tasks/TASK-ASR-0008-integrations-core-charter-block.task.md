@@ -20,6 +20,14 @@ started_by_agent: ClaudeCode_Opus4.7
 completed_at: 2026-05-20T02:00:00+08:00
 completed_by_agent: ClaudeCode_Opus4.7
 upstream_commit: b54120c
+lastTransitionId: 2026-05-21T10-29-44-191Z-migrate-legacy-ledger-511386198856
+lastTransitionAt: 2026-05-21T10:29:44.191Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.191Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:49dbd18d43f144d11400e356c1d5c9c0e8bd7e75d034af82fd19a1b8f8245277
 ---
 
 # TASK-ASR-0008 — integrations-core 抽出 charter-block renderer

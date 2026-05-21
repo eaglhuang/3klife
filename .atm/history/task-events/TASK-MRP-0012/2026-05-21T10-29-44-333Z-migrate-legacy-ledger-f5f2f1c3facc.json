@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-333Z-migrate-legacy-ledger-f5f2f1c3facc",
+  "taskId": "TASK-MRP-0012",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0012-edge-contract-auto-test.task.md",
+  "taskSha256": "sha256:188090dfc3caefcc82cd01b34647fee872f696ad0933c98880c04df3cc301703",
+  "createdAt": "2026-05-21T10:29:44.333Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

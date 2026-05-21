@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: ClaudeCode_Sonnet4.6
+lastTransitionId: 2026-05-21T10-29-44-246Z-migrate-legacy-ledger-1e781ecb90a9
+lastTransitionAt: 2026-05-21T10:29:44.246Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.246Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:dba67cfb8bf64d8b937031f7d60a8ba36102d757444d66c5287260074d3b8cec
 ---
 
 # TASK-APF-0012 — PoliceFinding evidence schema bridge

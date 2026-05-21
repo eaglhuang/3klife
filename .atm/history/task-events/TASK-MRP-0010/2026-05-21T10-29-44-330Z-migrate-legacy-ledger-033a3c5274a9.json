@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-330Z-migrate-legacy-ledger-033a3c5274a9",
+  "taskId": "TASK-MRP-0010",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0010-evidence-closure-retirement-proof.task.md",
+  "taskSha256": "sha256:3b46ff7a6a2e9023f4efad7d1a6546776e59f9175a3e4e0eb09b96b084f94b27",
+  "createdAt": "2026-05-21T10:29:44.330Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

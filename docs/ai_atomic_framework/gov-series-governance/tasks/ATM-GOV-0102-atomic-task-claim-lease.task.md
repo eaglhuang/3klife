@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-296Z-migrate-legacy-ledger-79ef76ad179e
+lastTransitionAt: 2026-05-21T10:29:44.296Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.296Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:615001e2a6d602879bd2b7c04b9d23b8cbc64677d77a607b71e270fa62ba0cdb
 ---
 
 # ATM-GOV-0102 Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover

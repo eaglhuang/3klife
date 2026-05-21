@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide + TS_NODE_PROJECT=tsconfig.test.json tests/atm-lang-0400-0402.test.ts（PASS） | 變更: ranking signal model 補齊 provenance/score inputs/advisory unsupported | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-363Z-migrate-legacy-ledger-0dcacf1b9341
+lastTransitionAt: 2026-05-21T10:29:44.363Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.363Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:00db614b639113110600bc845757d681077103eeefb63a984db5dd75e70e264c
 ---
 
 # ATM-LANG-0401 Candidate ranking signal model

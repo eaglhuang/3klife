@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:python-adapter（PASS） | 變更: Python dependency/call/artifact graph 萃取完成並以 fixture 驗證 required edges | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-373Z-migrate-legacy-ledger-8c0de323ef1f
+lastTransitionAt: 2026-05-21T10:29:44.373Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.373Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:c93939a254c31fd9191be8776c1a9937f00e3bdf2b68c8e549dc9f330a067977
 ---
 
 # ATM-LANG-0701 Python dependency/call/artifact graph

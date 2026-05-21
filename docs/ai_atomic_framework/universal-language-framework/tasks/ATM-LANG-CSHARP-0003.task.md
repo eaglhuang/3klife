@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: opened C# source inventory and symbol range task card | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-395Z-migrate-legacy-ledger-5d1f686bd9b1
+lastTransitionAt: 2026-05-21T10:29:44.395Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.395Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:268e92f8a22bf67a8ff22416237f29766d7796e054538dbd42b19b3c3dd859fc
 ---
 
 # ATM-LANG-CSHARP-0003 C# source inventory and symbol range

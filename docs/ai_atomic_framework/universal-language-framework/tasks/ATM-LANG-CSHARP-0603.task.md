@@ -43,6 +43,14 @@ non_goals:
 created_at: 2026-05-21T00:11:31+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; npm run validate:full PASS | 變更: 新增 csharp-policy-matrix 與 runtime/diagnostics policy tags，validator 與 fixture 同步檢查 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-438Z-migrate-legacy-ledger-32dd16e0d2e9
+lastTransitionAt: 2026-05-21T10:29:44.438Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.438Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1f172a4b8ef73543a9316eeb2d3a2c101b0600aba3f131a0e0041cf0e317fb07
 ---
 
 # ATM-LANG-CSHARP-0603 C# runtime and diagnostics policy matrix integration

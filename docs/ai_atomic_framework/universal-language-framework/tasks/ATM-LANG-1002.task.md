@@ -39,6 +39,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide（PASS）; npm run check:encoding:touched（PASS） | 變更: 補齊 future adapter checklist、support taxonomy、not-in-scope rules | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-387Z-migrate-legacy-ledger-4ec04b9e8b9f
+lastTransitionAt: 2026-05-21T10:29:44.387Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.387Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:eca7a97005a350906a25a6b5b4d2cf9665072a17c62a0a0027b6822bb5f6f50f
 ---
 
 # ATM-LANG-1002 Future adapter conformance checklist

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-272Z-migrate-legacy-ledger-e0cdb36645f9",
+  "taskId": "TASK-APF-0034",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0034-evidence-evolution-signal-policy.task.md",
+  "taskSha256": "sha256:b59682c36395c47813780e4a093083eaaac56ed4e07df0b75cbb90349247c36f",
+  "createdAt": "2026-05-21T10:29:44.272Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

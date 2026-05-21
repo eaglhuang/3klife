@@ -21,6 +21,14 @@ public_tracking: false
 executionMode: upstream-runtime-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-273Z-migrate-legacy-ledger-48c2ccbad0e1
+lastTransitionAt: 2026-05-21T10:29:44.273Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.273Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:3f89e74d0fa76ce61896de709cd3e27858479cfbb7eec9d57b14acbecccb3cee
 ---
 
 # TASK-APF-0035 — Evolution Police named scanner

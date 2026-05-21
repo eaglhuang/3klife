@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-21T00:11:31+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; npm run validate:full PASS | 變更: adapter/readiness/legacy-route wording 對齊 full capability + advisory stage | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-435Z-migrate-legacy-ledger-beaf2ded8af3
+lastTransitionAt: 2026-05-21T10:29:44.435Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.435Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:de1db33a99f05a63470d20cba32aa019274c16f0ef5e8672fe6f65ee2989e343
 ---
 
 # ATM-LANG-CSHARP-0600 C# advisory-stage messaging and readiness wording alignment

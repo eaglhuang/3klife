@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "atm.pinnedRunner.v0.1",
+  "runnerPath": "atm.mjs",
+  "metadataPath": ".atm/runtime/pinned-runner.json",
+  "command": "node atm.mjs next --json",
+  "status": "replaced",
+  "sourceKind": "internal-build-sync",
+  "sourcePath": "C:\\Users\\User\\AI-Atomic-Framework\\release\\atm-onefile\\atm.mjs",
+  "sha256": "e2a26da5a92d3b644bf3b780a4c2ea5370d818e5e21f81c8129dda1e30424863",
+  "existingSha256": "7ef7a86897e92639b083d23749898306b7a1628b9988e696356d4a1a7346d9c1",
+  "sizeBytes": 2922756,
+  "frameworkVersion": "0.1.0",
+  "sourceCommit": "500edfb9df2f6148687b6c98ff3ef3578c4beb3c",
+  "generatedAt": "2026-05-21T10:28:43.326Z"
+}

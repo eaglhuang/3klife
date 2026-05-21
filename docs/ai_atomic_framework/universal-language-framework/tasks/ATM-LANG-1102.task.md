@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: node scripts/atom-map-coverage-check.ts --mode validate (passed) | 變更: 新增 atom/map coverage validator，通過 41 任務 map 對齊與 conflict=0 檢查 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-390Z-migrate-legacy-ledger-1f4d898c6d25
+lastTransitionAt: 2026-05-21T10:29:44.390Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.390Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:13a6740b1350c0c75d318b852fb517e363a67e0380fd3a9ed7e32366a0ec5410
 ---
 
 # ATM-LANG-1102 Atom/map coverage validator

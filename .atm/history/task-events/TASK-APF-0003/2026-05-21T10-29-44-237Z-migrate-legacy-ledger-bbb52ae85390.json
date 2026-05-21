@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-237Z-migrate-legacy-ledger-bbb52ae85390",
+  "taskId": "TASK-APF-0003",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0003-dedup-police-productization.task.md",
+  "taskSha256": "sha256:e8b52a7250ae47e55674707d98c8cd536fddd9c2aa81782ffd776d3e7fd4d74a",
+  "createdAt": "2026-05-21T10:29:44.237Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; node tests/atm-lang-csharp.test.ts（PASS）; npm run validate:full（PASS） | 變更: 新增 enterprise multi-project fixture 與 smoke expectation，覆蓋 map large-threshold / symbol index / solution graph / csproj risk | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-417Z-migrate-legacy-ledger-78d1cb9ef343
+lastTransitionAt: 2026-05-21T10:29:44.417Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.417Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:8b38e9afc8b2298c0873a79434679cc49849a3580364e5eb32ec1413b8490117
 ---
 
 # ATM-LANG-CSHARP-0210 C# enterprise multi-project smoke fixture

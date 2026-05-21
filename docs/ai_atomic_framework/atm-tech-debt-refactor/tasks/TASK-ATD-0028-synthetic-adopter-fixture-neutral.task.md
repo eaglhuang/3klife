@@ -36,6 +36,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-228Z-migrate-legacy-ledger-96afca88e44a
+lastTransitionAt: 2026-05-21T10:29:44.228Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.228Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:c9250f964417043051453582e7ad124b0656a5179f117df45e41c812b0133db1
 ---
 
 # TASK-ATD-0028 — Synthetic adopter fixture（neutral，不污染 protected surface）

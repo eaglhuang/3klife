@@ -38,6 +38,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide（PASS） | 變更: Go adapter TypeScript example 對齊現行 LanguageAdapterV2 與 SDK report shapes | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-381Z-migrate-legacy-ledger-9f578f1c900c
+lastTransitionAt: 2026-05-21T10:29:44.381Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.381Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:fccec34f3490eff8755b2393b28c7ce501a2e01f1714c24ab27ad40cadd847f1
 ---
 
 # ATM-LANG-0901 English guide: complete Go adapter code example

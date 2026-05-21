@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-241Z-migrate-legacy-ledger-fb067a9afb4a
+lastTransitionAt: 2026-05-21T10:29:44.241Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.241Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:e05923540cb88bf28e1dac42e7829f55272c818b09d7fd7686ab402696b9619e
 ---
 
 # TASK-APF-0007 — Atomization Police 產品化規格 / design spec

@@ -35,6 +35,14 @@ non_goals:
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex-gpt-5
 completed_at: 2026-05-18T00:00:00+08:00
+lastTransitionId: 2026-05-21T10-29-44-177Z-migrate-legacy-ledger-6f371a05a41c
+lastTransitionAt: 2026-05-21T10:29:44.177Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.177Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:bb8d013869124ba9d1b7494c31e68b5e27c9b5ccb0fb5ae9c4c472d9dc6e0cde
 ---
 
 # TASK-APO-0026 Codex editor integration 正式化

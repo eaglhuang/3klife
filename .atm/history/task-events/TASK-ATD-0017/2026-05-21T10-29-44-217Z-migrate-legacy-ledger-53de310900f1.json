@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-217Z-migrate-legacy-ledger-53de310900f1",
+  "taskId": "TASK-ATD-0017",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0017-governance-local-export-inventory.task.md",
+  "taskSha256": "sha256:cde3755a8b09317f07f364320691a025ab0fd73e8c7d196f7faac27ac73c8153",
+  "createdAt": "2026-05-21T10:29:44.217Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

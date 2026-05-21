@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-337Z-migrate-legacy-ledger-9237a567bdc5",
+  "taskId": "TASK-MRP-0016",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0016-behavior-reshape.task.md",
+  "taskSha256": "sha256:f6f506df62f46f6f0a84d53ad65a5d2fdc88d58d459b182f62fed6d1ff3adf64",
+  "createdAt": "2026-05-21T10:29:44.337Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

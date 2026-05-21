@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T23:18:34+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp PASS; npm run validate:full PASS | 變更: dry-run evidence 補 host shim plan、infect dual-review gate、rollback shim no-apply proof，capability 升 full | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-431Z-migrate-legacy-ledger-bff9b2f37e76
+lastTransitionAt: 2026-05-21T10:29:44.431Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.431Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:95beed6cade40d2e2df0d0198f8abc10ce15cd4ca1ff70878af830b13a943f95
 ---
 
 # ATM-LANG-CSHARP-0502 C# dry-run planner full promotion

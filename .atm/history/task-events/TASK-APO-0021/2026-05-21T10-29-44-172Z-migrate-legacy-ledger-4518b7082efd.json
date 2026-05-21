@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-172Z-migrate-legacy-ledger-4518b7082efd",
+  "taskId": "TASK-APO-0021",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0021-meta-schema-versioning.task.md",
+  "taskSha256": "sha256:555acd77e1fe97a79c937c5705a997d1c6b537f8645bf5cef28a92839b8ae5b2",
+  "createdAt": "2026-05-21T10:29:44.172Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

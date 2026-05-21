@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-239Z-migrate-legacy-ledger-a6b52859ac33",
+  "taskId": "TASK-APF-0005",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0005-quality-police-productization.task.md",
+  "taskSha256": "sha256:99862cc596c8337754e9ae55210ce48074425a6ca02a94cd57b1e1e99c2a24dc",
+  "createdAt": "2026-05-21T10:29:44.239Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

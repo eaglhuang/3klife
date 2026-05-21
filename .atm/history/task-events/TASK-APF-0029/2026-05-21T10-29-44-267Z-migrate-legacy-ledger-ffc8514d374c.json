@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-267Z-migrate-legacy-ledger-ffc8514d374c",
+  "taskId": "TASK-APF-0029",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0029-roadmap-backwrite-and-risk-closure.task.md",
+  "taskSha256": "sha256:ce56232825ca192543ce945e640e08bf24404c6342ec29f3541647a464193b25",
+  "createdAt": "2026-05-21T10:29:44.267Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-318Z-migrate-legacy-ledger-cf9c7676869c",
+  "taskId": "ATM-GOV-0123",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0123-registry-lineage-backfill-command.task.md",
+  "taskSha256": "sha256:f2c7d8592a4f4aee5b0ef40a7df7b99ec49fd9c9de86599f10fff022f2c7da0b",
+  "createdAt": "2026-05-21T10:29:44.318Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

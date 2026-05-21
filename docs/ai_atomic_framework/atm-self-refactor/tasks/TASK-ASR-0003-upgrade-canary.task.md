@@ -29,6 +29,14 @@ non_goals:
   - 不改 selectedFiles 排序規則
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: ClaudeCode_Opus4.7
+lastTransitionId: 2026-05-21T10-29-44-186Z-migrate-legacy-ledger-83f483924825
+lastTransitionAt: 2026-05-21T10:29:44.186Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.186Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:086d5dd1c7ad9d35bb139302b6106e3804a2bf1015037f176f985e93feb3691c
 ---
 
 # TASK-ASR-0003 — upgrade.ts 抽出 canary helpers

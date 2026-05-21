@@ -12,6 +12,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-349Z-migrate-legacy-ledger-fcd5cdf82da8
+lastTransitionAt: 2026-05-21T10:29:44.349Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.349Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:6ff7a40a54e8a051afdff96cbffbfb572c13762fad2c5b7cff18e9ae80fad3ab
 ---
 
 # TASK-MRP-0027 — Disaster Recovery & Atom Reload CLI（災難恢復與原子重載工具）

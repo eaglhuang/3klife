@@ -39,6 +39,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-280Z-migrate-legacy-ledger-0e0e51c68996
+lastTransitionAt: 2026-05-21T10:29:44.280Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.280Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:b45bae4b1ad0016bc5bb449d71822a7135694e2122f9344f01e4213cf736a1c5
 ---
 
 # TASK-APF-0041 — Polymorph Police contract and read model

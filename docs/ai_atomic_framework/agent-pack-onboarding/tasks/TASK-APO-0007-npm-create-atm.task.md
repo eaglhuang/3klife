@@ -32,6 +32,14 @@ non_goals:
   - 不取代 root-drop / onefile / source routing
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-157Z-migrate-legacy-ledger-5c7050c26766
+lastTransitionAt: 2026-05-21T10:29:44.157Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.157Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0660a727d900aa4e8fc2a124a583f30d23cb319297759089bdcece30e9379707
 ---
 
 # TASK-APO-0007 — npm publish + create-atm

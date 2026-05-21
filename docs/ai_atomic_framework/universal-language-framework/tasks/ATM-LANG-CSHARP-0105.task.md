@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: 新增 buildCSharpAtomicMapDecomposition 與 evidence gate | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-405Z-migrate-legacy-ledger-653b5a573b23
+lastTransitionAt: 2026-05-21T10:29:44.405Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.405Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:d8c18c060f4c87a7c2eefcdb3635075cb53bc4f97fd7a3c2511624a562a41522
 ---
 
 # ATM-LANG-CSHARP-0105 C# atomic map decomposition implementation

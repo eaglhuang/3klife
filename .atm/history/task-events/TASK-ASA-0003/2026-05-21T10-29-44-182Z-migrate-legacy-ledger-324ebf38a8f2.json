@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-182Z-migrate-legacy-ledger-324ebf38a8f2",
+  "taskId": "TASK-ASA-0003",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0003-atm-dogfood-score.task.md",
+  "taskSha256": "sha256:1ee38fb856faee29b2f9276e4a4db601f03923049078faa6e64d1959b042cdb6",
+  "createdAt": "2026-05-21T10:29:44.182Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

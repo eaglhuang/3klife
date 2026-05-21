@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-297Z-migrate-legacy-ledger-4978923aecb5
+lastTransitionAt: 2026-05-21T10:29:44.297Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.297Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:317f21856a3c2a1e0da27e62a9e3e95ee2405969a4e3e5e0ab14f82ffdcd604c
 ---
 
 # ATM-GOV-0103 Task Opening and Reservation Lifecycle

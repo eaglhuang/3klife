@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-303Z-migrate-legacy-ledger-8560082b5dd9",
+  "taskId": "ATM-GOV-0108",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0108-no-hook-human-fallback.task.md",
+  "taskSha256": "sha256:85f18c33be88195639eb6770059a722622bafe970a0280637810e13684e395ac",
+  "createdAt": "2026-05-21T10:29:44.303Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

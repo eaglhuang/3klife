@@ -13,6 +13,14 @@ started_at: 2026-05-17T17:59:12.9966815+08:00
 started_by_agent: vs-insiders-github-copilot
 completed_at: 2026-05-17T18:04:26.6234416+08:00
 completed_by_agent: vs-insiders-github-copilot
+lastTransitionId: 2026-05-21T10-29-44-326Z-migrate-legacy-ledger-303eb05f2d27
+lastTransitionAt: 2026-05-21T10:29:44.326Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.326Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:8ed98380efe5b7c8b662547032fc01e34b9bac9f6c0a2d6811175181d8503e16
 ---
 
 # TASK-MRP-0006 — Replacement Lane Transition

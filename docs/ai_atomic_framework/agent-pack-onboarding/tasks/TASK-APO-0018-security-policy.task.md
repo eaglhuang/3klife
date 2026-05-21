@@ -33,6 +33,14 @@ non_goals:
   - 撰寫具體 CVE 處理（屬 incident response 範疇）
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-169Z-migrate-legacy-ledger-7c2713d050ed
+lastTransitionAt: 2026-05-21T10:29:44.169Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.169Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:f0d32c242541f77ff5770e1f152db5e88d03c32004caf4a27fec673c2681ed15
 ---
 
 # TASK-APO-0018 — Security Policy

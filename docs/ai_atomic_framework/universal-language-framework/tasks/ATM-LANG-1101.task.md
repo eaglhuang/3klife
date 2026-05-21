@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: node scripts/roadmap-traceability-check.ts --mode validate (passed) | 變更: 新增 roadmap traceability validator 並通過 41 任務/10 需求/8 主題檢查 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-389Z-migrate-legacy-ledger-4f7cb3d5cca5
+lastTransitionAt: 2026-05-21T10:29:44.389Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.389Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:6bb4bd83fa0f6bbedfa0e57f85c495c51eda0538dbe8ebd6a91450c5f857bdf9
 ---
 
 # ATM-LANG-1101 Roadmap no-shrink and traceability validator

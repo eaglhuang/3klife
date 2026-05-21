@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T23:01:12+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: validator 改為 capability baseline 驗證，resolver fallback 斷言調整為 runtimeCommandDetection advisory | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-428Z-migrate-legacy-ledger-09da208578b2
+lastTransitionAt: 2026-05-21T10:29:44.428Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.428Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:a804937e4df04c891a312888e893cd0d6a83759e31f90a97cd63293eaafcb345
 ---
 
 # ATM-LANG-CSHARP-0403 C# validator and readiness baseline hardening

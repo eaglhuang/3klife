@@ -38,6 +38,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-230Z-migrate-legacy-ledger-8838354c9983
+lastTransitionAt: 2026-05-21T10:29:44.230Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.230Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:2d089c5b6850741efec69eb10bfd5c1c802b78db572d2db4018317506af3f436
 ---
 
 # TASK-ATD-0031 — Docker / devcontainer 作 contributor reproducibility

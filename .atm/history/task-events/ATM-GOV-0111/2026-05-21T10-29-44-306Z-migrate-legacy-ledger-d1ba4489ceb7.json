@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-306Z-migrate-legacy-ledger-d1ba4489ceb7",
+  "taskId": "ATM-GOV-0111",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0111-antigravity-integration-adapter.task.md",
+  "taskSha256": "sha256:a8c70d805368cc8529a45410ac52f24835b0ef37cf76315b844b7aa84a9ea511",
+  "createdAt": "2026-05-21T10:29:44.306Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

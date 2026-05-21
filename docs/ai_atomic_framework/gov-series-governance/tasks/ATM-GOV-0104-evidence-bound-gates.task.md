@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-298Z-migrate-legacy-ledger-bd83aa00c463
+lastTransitionAt: 2026-05-21T10:29:44.298Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.298Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:7be3a033f8a4a333c9b01b899ae09e04dab9437d259bb1a36dd7f24438c3bd25
 ---
 
 # ATM-GOV-0104 Evidence-Bound Close and Commit/PR Gate

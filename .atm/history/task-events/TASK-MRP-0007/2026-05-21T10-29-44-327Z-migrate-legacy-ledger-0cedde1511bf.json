@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-327Z-migrate-legacy-ledger-0cedde1511bf",
+  "taskId": "TASK-MRP-0007",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0007-decomposition-plan.task.md",
+  "taskSha256": "sha256:294495e5c79a3a79a10b8346acbd8faeaf820edc38326d52806a83e62c41ef55",
+  "createdAt": "2026-05-21T10:29:44.327Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

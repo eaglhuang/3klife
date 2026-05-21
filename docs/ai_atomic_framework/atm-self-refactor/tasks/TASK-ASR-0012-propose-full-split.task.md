@@ -21,6 +21,14 @@ started_by_agent: ClaudeCode_Sonnet4.6
 completed_at: 2026-05-20T06:30:00+08:00
 completed_by_agent: ClaudeCode_Sonnet4.6
 upstream_commit: c46e690
+lastTransitionId: 2026-05-21T10-29-44-195Z-migrate-legacy-ledger-e4c288e5f2ca
+lastTransitionAt: 2026-05-21T10:29:44.195Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.195Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:623c4ec947d1e5dd85c167a4039f8171337e42640b3d91c583a87f3e607d9d3c
 ---
 
 # TASK-ASR-0012 — propose.ts 完整拆分（normalize-input + gates）

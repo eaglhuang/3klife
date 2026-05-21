@@ -34,6 +34,14 @@ non_goals:
 created_at: 2026-05-18T00:00:00+08:00
 commit: f3f904a (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-174Z-migrate-legacy-ledger-c8682fb53c40
+lastTransitionAt: 2026-05-21T10:29:44.174Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.174Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:756fa3de212a449f779192d317d593e1e96a457f3d40b8d1c521fa41c72dd9f9
 ---
 
 # TASK-APO-0023 — Policy Self-Versioning + Auto Matrix PR

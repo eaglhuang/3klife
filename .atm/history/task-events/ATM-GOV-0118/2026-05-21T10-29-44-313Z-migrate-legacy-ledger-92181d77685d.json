@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-313Z-migrate-legacy-ledger-92181d77685d",
+  "taskId": "ATM-GOV-0118",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0118-reference-python-languageadapter.task.md",
+  "taskSha256": "sha256:8d364e778573fa5e7bb4551c71da91430553d6c864bf40c1bc998d99cbe6a2bb",
+  "createdAt": "2026-05-21T10:29:44.313Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

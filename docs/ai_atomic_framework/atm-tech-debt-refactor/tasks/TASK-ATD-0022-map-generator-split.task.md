@@ -37,6 +37,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-222Z-migrate-legacy-ledger-0d2da004ea67
+lastTransitionAt: 2026-05-21T10:29:44.222Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.222Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:7383b8524c1476143c21e0bf97d05adba8051d0fa81f6baf73e9ccad4b77f01a
 ---
 
 # TASK-ATD-0022 — `map-generator.ts` 拆分 allocation / scaffold / provenance

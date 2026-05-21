@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-315Z-migrate-legacy-ledger-e07ee8582612
+lastTransitionAt: 2026-05-21T10:29:44.315Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.315Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0e4472dfa6d0c88ec50de1ce5cfec7bb3992174394858ade620146f824002cf4
 ---
 
 # ATM-GOV-0120 Multi-language Onefile Validation Matrix for Governance Analysis

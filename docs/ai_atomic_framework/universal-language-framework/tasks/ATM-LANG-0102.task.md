@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: node scripts/validate-plugin-sdk.ts + node scripts/validate-schemas.ts (passed) | 變更: 完成 runtime/equivalence/evidence contracts 及對應 schema | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-355Z-migrate-legacy-ledger-b39e5c8f3cbd
+lastTransitionAt: 2026-05-21T10:29:44.355Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.355Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:04fd6e5bf6f396a03d6a64580b0ec5b67ad4c5f6814e4ce00fe4a0b4291f3a36
 ---
 
 # ATM-LANG-0102 Runtime/equivalence/evidence contracts

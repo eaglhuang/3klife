@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-307Z-migrate-legacy-ledger-d49f0a32620e",
+  "taskId": "ATM-GOV-0113",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0113-languageadapter-capability-resolution-fallback.task.md",
+  "taskSha256": "sha256:3553f5456176a8b7ae125464b032c6f690407df8808dd408b27b1b3b5fcffb62",
+  "createdAt": "2026-05-21T10:29:44.307Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

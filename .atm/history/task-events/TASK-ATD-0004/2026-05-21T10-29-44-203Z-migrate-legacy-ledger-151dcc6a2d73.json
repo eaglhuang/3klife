@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-203Z-migrate-legacy-ledger-151dcc6a2d73",
+  "taskId": "TASK-ATD-0004",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0004-module-boundary-runtime-no-scripts.task.md",
+  "taskSha256": "sha256:dc838228e8c071d7ea110293054318d9f2afebdec8ffe88449670f0013a1dbfc",
+  "createdAt": "2026-05-21T10:29:44.203Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -39,6 +39,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; node tests/atm-lang-csharp.test.ts（PASS）; npm run validate:full（PASS） | 變更: 新增 cross-file symbol reference index（resolved/ambiguous/unresolved）與 validator 斷言 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-411Z-migrate-legacy-ledger-71f9072e0cc1
+lastTransitionAt: 2026-05-21T10:29:44.411Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.411Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:d49c979cc2cb3c3d7a200d1ce39880643c624e11c7e7a415461e40019b00e1c9
 ---
 
 # ATM-LANG-CSHARP-0204 C# cross-file symbol reference index

@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:neutrality（PASS）, npm run validate:guide（PASS）, npm run check:encoding:touched（PASS） | 變更: 新增 docs neutrality/bilingual positioning validator 與 npm script | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-392Z-migrate-legacy-ledger-46ee784d242d
+lastTransitionAt: 2026-05-21T10:29:44.392Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.392Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:7d77ec8b8917cb1fb9b316ea84db2f3afbb6048ec6e1e244657c1e05e4f161c9
 ---
 
 # ATM-LANG-1104 Docs neutrality and bilingual positioning validator

@@ -13,6 +13,14 @@ started_at: 2026-05-17T14:07:27.5766827+08:00
 started_by_agent: vs-insiders-github-copilot
 completed_at: 2026-05-17T14:07:27.5766827+08:00
 completed_by_agent: vs-insiders-github-copilot
+lastTransitionId: 2026-05-21T10-29-44-324Z-migrate-legacy-ledger-4a18d7aac083
+lastTransitionAt: 2026-05-21T10:29:44.324Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.324Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:7205ff9f0fe394c6d6c9139fb99601e3907f660330ac997e0f483558b5acf7e2
 ---
 
 # TASK-MRP-0004 — Map Equivalence Test CLI

@@ -19,6 +19,14 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
+lastTransitionId: 2026-05-21T10-29-44-304Z-migrate-legacy-ledger-c2a4ce20de35
+lastTransitionAt: 2026-05-21T10:29:44.304Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.304Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:17a07b566cb4971277b49d9ff0720b219a4859d7cf18920493725a4598ce740d
 ---
 
 # ATM-GOV-0109 Claim Collision Proofing and Conflict Evidence Flow

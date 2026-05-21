@@ -13,6 +13,14 @@ started_at: 2026-05-17T02:44:13.6757334+08:00
 started_by_agent: vs-insiders-github-copilot
 completed_at: 2026-05-17T13:11:07.4980237+08:00
 completed_by_agent: vs-insiders-github-copilot
+lastTransitionId: 2026-05-21T10-29-44-321Z-migrate-legacy-ledger-71260fc61e2c
+lastTransitionAt: 2026-05-21T10:29:44.321Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.321Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:af3f8972b60b4a0ad457da8ef7a86ab98d34ef24f5e128225c989d5775006928
 ---
 
 # TASK-MRP-0002 — Atomic Map Schema 0.2.0

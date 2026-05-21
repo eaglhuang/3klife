@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-173Z-migrate-legacy-ledger-19c0856f2dc9",
+  "taskId": "TASK-APO-0022",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0022-bridge-minor-experimental.task.md",
+  "taskSha256": "sha256:04ca6f97b6db1f04760acb0eb735ff761088062289cc35024c90d27d5f1381f5",
+  "createdAt": "2026-05-21T10:29:44.173Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

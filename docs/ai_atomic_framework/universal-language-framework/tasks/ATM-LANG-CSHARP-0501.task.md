@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T23:18:39+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp PASS; npm run validate:full PASS | 變更: diagnostics parser 補 compact 格式、code normalization、dedupe；validator 補對應斷言 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-430Z-migrate-legacy-ledger-233ca52f6173
+lastTransitionAt: 2026-05-21T10:29:44.430Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.430Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:de0175ff75066627c676f5a1c9d7f98ce99a16cfc63ede5a9d8da5c062a24035
 ---
 
 # ATM-LANG-CSHARP-0501 C# diagnostics parsing full promotion

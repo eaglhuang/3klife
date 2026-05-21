@@ -21,6 +21,14 @@ started_by_agent: ClaudeCode_Sonnet4.6
 completed_at: 2026-05-20T05:00:00+08:00
 completed_by_agent: ClaudeCode_Sonnet4.6
 upstream_commit: 779f74e
+lastTransitionId: 2026-05-21T10-29-44-194Z-migrate-legacy-ledger-8b47d2d2984f
+lastTransitionAt: 2026-05-21T10:29:44.194Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.194Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:71020ca029eb7354f7c81008ec529fdd1762908650ac383699c984598597c3b9
 ---
 
 # TASK-ASR-0011 — command-specs 38 spec per-file split

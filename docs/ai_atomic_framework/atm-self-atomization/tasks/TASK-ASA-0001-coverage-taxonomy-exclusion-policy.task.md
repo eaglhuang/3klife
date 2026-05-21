@@ -13,6 +13,14 @@ public_tracking: false
 started_at: 2026-05-21T00:00:00Z
 started_by_agent: CopilotAgent
 completed_at: 2026-05-21T00:05:00Z
+lastTransitionId: 2026-05-21T10-29-44-180Z-migrate-legacy-ledger-ba2282c08160
+lastTransitionAt: 2026-05-21T10:29:44.180Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.180Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:a836bbbafcf40022e29275339d846471d5d70d40b29fbb88e788038f7e496ff7
 ---
 
 # TASK-ASA-0001 定義 ATM 100% 原子化覆蓋口徑與排除政策

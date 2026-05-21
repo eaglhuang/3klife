@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-290Z-migrate-legacy-ledger-53b31ca22025",
+  "taskId": "TASK-APF-0050",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0050-fixtures-validators-m12-m13-closure.task.md",
+  "taskSha256": "sha256:a952edf5d267c6a5723b039e59db9d2aafab22c047df390b05d1ee68b861728d",
+  "createdAt": "2026-05-21T10:29:44.290Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

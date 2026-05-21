@@ -34,6 +34,14 @@ non_goals:
 created_at: 2026-05-18T00:00:00+08:00
 commit: f3f904a (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-175Z-migrate-legacy-ledger-7e3324ab637f
+lastTransitionAt: 2026-05-21T10:29:44.175Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.175Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1a4d3341a2e37bb000b5948bb9ee1ae6380a58478bcc00dec96071eb35dd69b3
 ---
 
 # TASK-APO-0024 — Time+minor Deprecation + Canary Rollout

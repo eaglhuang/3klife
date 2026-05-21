@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:python-adapter（PASS） | 變更: Python diagnostics parser、equivalence fixture 與 validator 擴充完成 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-376Z-migrate-legacy-ledger-5e42eec7f346
+lastTransitionAt: 2026-05-21T10:29:44.376Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.376Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0ef3513ddbd98313d595cd2b0308a7c3554ecd85f024bd5ec5876bb1224dca79
 ---
 
 # ATM-LANG-0704 Python equivalence fixtures and diagnostics

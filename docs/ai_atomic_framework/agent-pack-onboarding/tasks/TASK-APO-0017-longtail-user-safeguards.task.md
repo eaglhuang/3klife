@@ -41,6 +41,14 @@ non_goals:
   - 移除既有 matrix 條目
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-168Z-migrate-legacy-ledger-5ae8e5515904
+lastTransitionAt: 2026-05-21T10:29:44.168Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.168Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1c36f0af91f721405708f3e16833b40d9d340e7db222900420a42771d7d4dbc8
 ---
 
 # TASK-APO-0017 — Long-tail User Safeguards

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-268Z-migrate-legacy-ledger-0deaa65b4e50",
+  "taskId": "TASK-APF-0030",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0030-police-family-taxonomy-extension-decomposition-evolution.task.md",
+  "taskSha256": "sha256:ec72e4134f2a14eafd26510845307b7a2f35a36b237d06c3962818960c637510",
+  "createdAt": "2026-05-21T10:29:44.268Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -29,6 +29,14 @@ non_goals:
   - 不改 JSON envelope shape
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: ClaudeCode_Opus4.7
+lastTransitionId: 2026-05-21T10-29-44-185Z-migrate-legacy-ledger-6bad3c885166
+lastTransitionAt: 2026-05-21T10:29:44.185Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.185Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:c4432e53c3e05ad69e07582680ac069d1601dcc58a6ab77a3d85bb5e907495bd
 ---
 
 # TASK-ASR-0002 — upgrade.ts 抽出 next-action-hint

@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: TS_NODE_PROJECT=tsconfig.test.json + resolver tests (passed) | 變更: 完成 adapter registry/resolver/discovery 模組與 fixtures | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-356Z-migrate-legacy-ledger-1e3b83b0b6c5
+lastTransitionAt: 2026-05-21T10:29:44.356Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.356Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:e5e56430fc8402223cc6ab0486acbdeacd5f4669d291b65f24f7ec9944e42c3a
 ---
 
 # ATM-LANG-0200 Adapter registry and resolver

@@ -40,6 +40,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-288Z-migrate-legacy-ledger-d381e233625e
+lastTransitionAt: 2026-05-21T10:29:44.288Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.288Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:722faf3d639b11505f0ee3162a8171b9a12c8ccd02096c5dca1158f7f9ab287d
 ---
 
 # TASK-APF-0048 — Contract Drift Check inside Registry Consistency Police

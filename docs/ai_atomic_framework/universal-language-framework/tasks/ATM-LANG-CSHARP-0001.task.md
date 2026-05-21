@@ -43,6 +43,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: opened C# adapter package skeleton task card | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-393Z-migrate-legacy-ledger-4a9c8b2ec143
+lastTransitionAt: 2026-05-21T10:29:44.393Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.393Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:26f781f50cd3d745b116ac34530107065327ab69c2abd2695e6702ae1b366771
 ---
 
 # ATM-LANG-CSHARP-0001 C# adapter package skeleton

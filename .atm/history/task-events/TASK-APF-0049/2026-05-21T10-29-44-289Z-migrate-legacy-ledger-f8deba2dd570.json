@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-289Z-migrate-legacy-ledger-f8deba2dd570",
+  "taskId": "TASK-APF-0049",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0049-orchestrator-profile-cli-wiring-polymorph-rollback-shared-gates.task.md",
+  "taskSha256": "sha256:262addd2ca209bba15522f7dff280e21118b9d67ba4a26fd8812b960f6b25051",
+  "createdAt": "2026-05-21T10:29:44.289Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

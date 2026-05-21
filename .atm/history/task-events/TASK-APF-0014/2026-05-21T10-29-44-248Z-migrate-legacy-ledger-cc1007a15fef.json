@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-248Z-migrate-legacy-ledger-cc1007a15fef",
+  "taskId": "TASK-APF-0014",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0014-police-family-gate-report-contract.task.md",
+  "taskSha256": "sha256:76ae0f42e253e14f5053cb067e5a415e8c837d25868adb71b714615856800d21",
+  "createdAt": "2026-05-21T10:29:44.248Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

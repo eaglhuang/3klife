@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:schemas + npm run validate:plugin-sdk + npm run validate:map-curator（PASS） | 變更: decomposition request/report contract 與 SDK 介面補齊 members/edges/entrypoints/graphSummary/evidenceGate | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-369Z-migrate-legacy-ledger-2a81a9204eba
+lastTransitionAt: 2026-05-21T10:29:44.369Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.369Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:afb2a617aa793e4aceda4b2a3bbb59b553c103a07cd37c709c2249a87ac8c9be
 ---
 
 # ATM-LANG-0600 Atomic map decomposition contract

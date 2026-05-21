@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-218Z-migrate-legacy-ledger-d30a8d7f231e",
+  "taskId": "TASK-ATD-0018",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0018-upgrade-propose-split.task.md",
+  "taskSha256": "sha256:86b6b94baa9b2078943f57a7e74064a5f3a8a934603353793b6aadc257a69cb1",
+  "createdAt": "2026-05-21T10:29:44.218Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -35,6 +35,14 @@ non_goals:
   - 預設啟用（必須 opt-in）
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-171Z-migrate-legacy-ledger-7ec38437beec
+lastTransitionAt: 2026-05-21T10:29:44.171Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.171Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:b7717f1cea2004977c58498c6c0f3942baa475065ffc713ef783ce0302afb76e
 ---
 
 # TASK-APO-0020 — Telemetry + Sentinel + Dashboard

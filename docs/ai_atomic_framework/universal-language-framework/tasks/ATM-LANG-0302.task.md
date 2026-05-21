@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: validate-police-family + guidance route integration tests (passed) | 變更: guidance/police 完成 adapter evidence integration，覆蓋 delegated/fallback fixtures | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-362Z-migrate-legacy-ledger-5cda920f82f2
+lastTransitionAt: 2026-05-21T10:29:44.362Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.362Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:cb35eab9a2b269c166a58540ee499ca93a9f4f6eb9b85fdface70a523c0860be
 ---
 
 # ATM-LANG-0302 Guidance and police integration update

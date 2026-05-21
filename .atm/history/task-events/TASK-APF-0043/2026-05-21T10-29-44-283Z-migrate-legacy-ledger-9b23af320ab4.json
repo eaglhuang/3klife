@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-283Z-migrate-legacy-ledger-9b23af320ab4",
+  "taskId": "TASK-APF-0043",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0043-rollback-police-contract-reversibility-model.task.md",
+  "taskSha256": "sha256:a53988c17547f317e011adc1a6f85dbc63fc59882dbab0f15f482e67f427652e",
+  "createdAt": "2026-05-21T10:29:44.283Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

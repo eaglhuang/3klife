@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-152Z-migrate-legacy-ledger-1c5b06c3b511",
+  "taskId": "TASK-APO-0003",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0003-claude-code-pack-mvp.task.md",
+  "taskSha256": "sha256:5bfe0d1a0d3467717c527e1ec507ccd051e59274e13d3c181c4fc7931a8b2052",
+  "createdAt": "2026-05-21T10:29:44.152Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

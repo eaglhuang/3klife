@@ -21,6 +21,14 @@ public_tracking: false
 executionMode: upstream-runtime-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-270Z-migrate-legacy-ledger-62b1d7c40990
+lastTransitionAt: 2026-05-21T10:29:44.270Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.270Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:9b89a784173517b85d0d5f8e539bb7a9207b8c31d9ad8a4c8a2d0683b0cc8100
 ---
 
 # TASK-APF-0032 — Decomposition Police named scanner

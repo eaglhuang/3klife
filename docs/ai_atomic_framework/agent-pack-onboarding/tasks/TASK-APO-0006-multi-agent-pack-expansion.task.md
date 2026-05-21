@@ -37,6 +37,14 @@ non_goals:
   - 不新增 marketplace governance
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-156Z-migrate-legacy-ledger-e1890fc56dbd
+lastTransitionAt: 2026-05-21T10:29:44.156Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.156Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:be831632b6885e9871094b34d34ebbc75e8a214e25841aba485281f14d8d9cd3
 ---
 
 # TASK-APO-0006 — Multi-Agent Pack 擴張

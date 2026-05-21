@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-224Z-migrate-legacy-ledger-593e7cc27091",
+  "taskId": "TASK-ATD-0024",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0024-opensource-docs-env-troubleshooting-adapters.task.md",
+  "taskSha256": "sha256:49e4a09a06bc7afc3abb5b7557f6e583433970d3b2ec3d0b9b4b3b7c92db37a3",
+  "createdAt": "2026-05-21T10:29:44.224Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

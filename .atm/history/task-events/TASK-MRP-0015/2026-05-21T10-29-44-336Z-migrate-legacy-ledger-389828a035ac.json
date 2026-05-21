@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-336Z-migrate-legacy-ledger-389828a035ac",
+  "taskId": "TASK-MRP-0015",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0015-atom-telemetry-dashboard.task.md",
+  "taskSha256": "sha256:e089f52f781a4d509cde9752d24327256269089442bcbda1657d32be05e73031",
+  "createdAt": "2026-05-21T10:29:44.336Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

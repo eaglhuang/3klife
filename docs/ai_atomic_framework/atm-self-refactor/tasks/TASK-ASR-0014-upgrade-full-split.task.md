@@ -25,6 +25,14 @@ started_by_agent: ClaudeCode_Sonnet4.6
 completed_at: 2026-05-20T09:00:00+08:00
 completed_by_agent: ClaudeCode_Sonnet4.6
 upstream_commit: 13fea94
+lastTransitionId: 2026-05-21T10-29-44-197Z-migrate-legacy-ledger-73f122cd9dab
+lastTransitionAt: 2026-05-21T10:29:44.197Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.197Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1d24d27268806b24ad88f68b91243228f68c7b5d7fe7adbf709f5ddaa98c9abe
 ---
 
 # TASK-ASR-0014 — upgrade.ts 完整拆分（experimental / safe-upgrade / scan / proposal）

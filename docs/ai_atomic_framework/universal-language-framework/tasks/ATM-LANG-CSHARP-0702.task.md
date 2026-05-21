@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-21T00:33:49+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; node tests/atm-lang-csharp.test.ts PASS; npm run validate:full PASS | 變更: runtime policy matrix 新增 sdk pin / source mapping / restore lock 標記並同步 fixture | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-442Z-migrate-legacy-ledger-9ac67586e53f
+lastTransitionAt: 2026-05-21T10:29:44.442Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.442Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:faf562e844c69eea6e30c54633418563fefe03dee52099d7447883ae0c4a032c
 ---
 
 # ATM-LANG-CSHARP-0702 C# runtime policy matrix governance tags expansion

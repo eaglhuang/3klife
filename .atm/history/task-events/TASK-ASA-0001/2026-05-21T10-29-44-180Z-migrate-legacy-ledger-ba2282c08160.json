@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-180Z-migrate-legacy-ledger-ba2282c08160",
+  "taskId": "TASK-ASA-0001",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0001-coverage-taxonomy-exclusion-policy.task.md",
+  "taskSha256": "sha256:4525fea47865fa90ba299beb833d93c1314edb7e0cffdb7749f69e84ac8956d0",
+  "createdAt": "2026-05-21T10:29:44.180Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

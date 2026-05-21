@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-21T00:11:31+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; npm run validate:full PASS | 變更: 新增 csharp-benchmark 模組與 benchmark-thresholds fixture，validator 補 sample/enterprise baseline 檢查 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-437Z-migrate-legacy-ledger-616fea1e0326
+lastTransitionAt: 2026-05-21T10:29:44.437Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.437Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:ff08c03c36a4f4409b5b2cf49a0b8c9970c1a123fece89aad1a41d57d987fb8c
 ---
 
 # ATM-LANG-CSHARP-0602 C# large-solution benchmark baseline and determinism checks

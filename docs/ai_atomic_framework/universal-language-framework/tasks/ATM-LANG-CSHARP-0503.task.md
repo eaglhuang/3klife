@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-20T23:18:34+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp PASS; npm run validate:full PASS | 變更: equivalence evaluator 改 requiredAll/requiredAny/forbidden 規則，fixture 擴充為 4 cases，capability 升 full | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-432Z-migrate-legacy-ledger-47174b418694
+lastTransitionAt: 2026-05-21T10:29:44.432Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.432Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:55192f5d0922df10537917943a94cc44441c09944805d4d6c06499d34a35728a
 ---
 
 # ATM-LANG-CSHARP-0503 C# equivalence contract full promotion

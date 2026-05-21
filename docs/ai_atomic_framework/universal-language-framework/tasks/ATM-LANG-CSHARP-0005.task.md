@@ -43,6 +43,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: open | 驗證: pending | 變更: opened diagnostics parser fixture task card | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-397Z-migrate-legacy-ledger-7c892152d0cb
+lastTransitionAt: 2026-05-21T10:29:44.397Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.397Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:a09a49b6f4b4215c0a67edf684c3d525aeffb4c0b286db78bd924c0d86836907
 ---
 
 # ATM-LANG-CSHARP-0005 diagnostics parser fixture

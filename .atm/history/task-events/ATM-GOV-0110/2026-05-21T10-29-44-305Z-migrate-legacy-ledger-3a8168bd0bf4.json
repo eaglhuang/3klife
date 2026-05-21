@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-305Z-migrate-legacy-ledger-3a8168bd0bf4",
+  "taskId": "ATM-GOV-0110",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0110-adapter-neutrality-boundary.task.md",
+  "taskSha256": "sha256:3d5240b1e629ef15798f547978deed7154d62b537441e1a4c69abf615c8dffc5",
+  "createdAt": "2026-05-21T10:29:44.305Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

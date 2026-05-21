@@ -39,6 +39,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: map decomposition 新增 small/medium/large threshold profile 與 evidenceGate 訊息化 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-416Z-migrate-legacy-ledger-661a39c5cc83
+lastTransitionAt: 2026-05-21T10:29:44.416Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.416Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:f7d3a7a6245cb87f0023e9c5d6ddb56b2ce7f459cef96c2adf1c9bee1d08e156
 ---
 
 # ATM-LANG-CSHARP-0209 C# atomic map large-solution threshold profile

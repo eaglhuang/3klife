@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-189Z-migrate-legacy-ledger-f1287ccd839c",
+  "taskId": "TASK-ASR-0006",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0006-map-generator-normalize-lineage.task.md",
+  "taskSha256": "sha256:135b2e59a33123eaf1b60e815249e0cddc7653d980cd503de103f4fcd0ac5147",
+  "createdAt": "2026-05-21T10:29:44.189Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

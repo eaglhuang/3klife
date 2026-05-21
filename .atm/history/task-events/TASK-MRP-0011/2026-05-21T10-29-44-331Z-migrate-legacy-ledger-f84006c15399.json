@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-331Z-migrate-legacy-ledger-f84006c15399",
+  "taskId": "TASK-MRP-0011",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0011-semantic-fingerprint-monitor.task.md",
+  "taskSha256": "sha256:b7ba07d6861e22843951ddc85959705f8dc0362e47d1e5b214d097b3e45abc61",
+  "createdAt": "2026-05-21T10:29:44.331Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -38,6 +38,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:neutrality（failed: Missing script）; npm run validate:guide（PASS）; npm run check:encoding:touched（PASS） | 變更: 補齊 PHP dynamic include RFC、advisory symbol policy、future constraints | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-386Z-migrate-legacy-ledger-ed40be39ecd3
+lastTransitionAt: 2026-05-21T10:29:44.386Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.386Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:718b7e6df1ff4d8a765105302179f709895a1228130c9ccd8bf6b128dfe10f35
 ---
 
 # ATM-LANG-1001 PHP dynamic include RFC

@@ -43,6 +43,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:full（PASS）, npm run validate:guide（PASS）, npm run check:encoding:touched（PASS） | 變更: 新增 validate-full suite、package scripts、validator ownership matrix | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-388Z-migrate-legacy-ledger-5fb77e1c8e8b
+lastTransitionAt: 2026-05-21T10:29:44.388Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.388Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:67cbeffc0e4f81d02ba6d30f404bf0f013a4c53b1a416c7bba4fe4cf60e6b2b1
 ---
 
 # ATM-LANG-1100 Cross-map validator suite

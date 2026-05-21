@@ -12,6 +12,14 @@ owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+lastTransitionId: 2026-05-21T10-29-44-331Z-migrate-legacy-ledger-f84006c15399
+lastTransitionAt: 2026-05-21T10:29:44.331Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.331Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:27b9a76e17bae19fb0835f6064e9cf86d355dd5c590ade9ccc7bf366ec2b5175
 ---
 
 # TASK-MRP-0011 — Atom Semantic Fingerprint 持續監控

@@ -13,6 +13,14 @@ started_at: 2026-05-17T13:17:35.3159251+08:00
 started_by_agent: vs-insiders-github-copilot
 completed_at: 2026-05-17T13:17:35.3159251+08:00
 completed_by_agent: vs-insiders-github-copilot
+lastTransitionId: 2026-05-21T10-29-44-323Z-migrate-legacy-ledger-348875ad4607
+lastTransitionAt: 2026-05-21T10:29:44.323Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.323Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:56ac0f9bb6714cc3f8db379fc0a733df90538b3c5b030a021e057c047148b8f5
 ---
 
 # TASK-MRP-0003 — Map Equivalence Report Schema

@@ -30,6 +30,14 @@ non_goals:
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 completed_at: 2026-05-19T00:00:00+08:00
+lastTransitionId: 2026-05-21T10-29-44-179Z-migrate-legacy-ledger-34ad0df30991
+lastTransitionAt: 2026-05-21T10:29:44.179Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.179Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:cbd44cf70a79a11e61df4ec9d593ab2e8deb436888829b3f5b1e27f31f41f25d
 ---
 
 # TASK-APO-0028 First-Use User Notice and Suggested Actions

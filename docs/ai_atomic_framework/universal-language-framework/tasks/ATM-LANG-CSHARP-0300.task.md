@@ -41,6 +41,14 @@ non_goals:
 created_at: 2026-05-20T21:45:08+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; node tests/atm-lang-csharp.test.ts（PASS）; npm run validate:full（PASS） | 變更: fixture 擴充 file-scoped namespace / record class primary constructor / required init property，inventory parser 補 coverage | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-418Z-migrate-legacy-ledger-daba8def982f
+lastTransitionAt: 2026-05-21T10:29:44.418Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.418Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:07596b6aaf1b13f35f616f4d0d4751187ac211ef9839ebcf4cfec4610deedb0a
 ---
 
 # ATM-LANG-CSHARP-0300 C# modern syntax inventory coverage expansion

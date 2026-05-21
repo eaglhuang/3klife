@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-236Z-migrate-legacy-ledger-9590b0f45e12
+lastTransitionAt: 2026-05-21T10:29:44.236Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.236Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:e96b776b62ce9d6c0ce6fdc2b2a8e732088cbd49250ed652b5d39b2dccafb3fe
 ---
 
 # TASK-APF-0002 — PoliceFinding family contract

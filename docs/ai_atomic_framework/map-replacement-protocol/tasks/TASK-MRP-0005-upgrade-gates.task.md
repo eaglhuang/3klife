@@ -13,6 +13,14 @@ started_at: 2026-05-17T17:45:45.4823360+08:00
 started_by_agent: vs-insiders-github-copilot
 completed_at: 2026-05-17T17:55:00.1648762+08:00
 completed_by_agent: vs-insiders-github-copilot
+lastTransitionId: 2026-05-21T10-29-44-325Z-migrate-legacy-ledger-e8bd4af16ace
+lastTransitionAt: 2026-05-21T10:29:44.325Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.325Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:d90835660ca90916d8fc9bed18d907b83f7a2a9e031bb7dd1323b0a6abc0f935
 ---
 
 # TASK-MRP-0005 — Upgrade Gates: equivalence + rollback

@@ -44,6 +44,14 @@ started_at: 2026-05-18T00:42:58.1533308+08:00
 started_by_agent: vs-insiders-gpt-5.4
 completed_at: 2026-05-18T00:59:15.1823418+08:00
 completed_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-162Z-migrate-legacy-ledger-40bf867f25c4
+lastTransitionAt: 2026-05-21T10:29:44.162Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.162Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:1c0a0e04d83f16912e451545bd4f1cb0afb69476f1d270dbb7da73b31789eb0b
 ---
 
 # TASK-APO-0012 — Version compatibility 與 breaking-change gate

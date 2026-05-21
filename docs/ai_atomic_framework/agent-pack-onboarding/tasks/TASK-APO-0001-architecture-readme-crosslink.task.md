@@ -28,6 +28,14 @@ created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
 started_at: 2026-05-17T22:40:29.9784044+08:00
 started_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-149Z-migrate-legacy-ledger-e26ab014413b
+lastTransitionAt: 2026-05-21T10:29:44.149Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.149Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:b1b4bfc212626657a03c6c92a091d264e53e76e17222b64f8972d5a96a60bb37
 ---
 
 # TASK-APO-0001 — 對齊 ATM ARCHITECTURE / README cross-link

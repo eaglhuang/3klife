@@ -46,6 +46,14 @@ non_goals:
 created_at: 2026-05-21T00:33:49+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; node tests/atm-lang-csharp.test.ts PASS; npm run validate:full PASS | 變更: 新增 global.json / NuGet.Config profile detection，sample+enterprise fixture 補齊並完成 validator 驗證 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-440Z-migrate-legacy-ledger-c7e946f66099
+lastTransitionAt: 2026-05-21T10:29:44.440Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.440Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:bd7647cbc4a6722b49987bd0c482804b0d36208b68ff2567d4785f0f037d2a1d
 ---
 
 # ATM-LANG-CSHARP-0700 C# global.json and NuGet.Config profile detection

@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-21T08:40:31+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-21 | 狀態: done | 驗證: npm run validate:language-csharp PASS; node tests/atm-lang-csharp.test.ts PASS; npm run validate:full PASS | 變更: promotion gate readiness governance 併入 packages lock profile 並回寫索引 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-450Z-migrate-legacy-ledger-6ff335ba39d4
+lastTransitionAt: 2026-05-21T10:29:44.450Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.450Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:7e335433ab46e02121ddfede2b02f97cea8cb1782e9da9219bcaec2f300eeee0
 ---
 
 # ATM-LANG-CSHARP-0804 C# promotion gate lock-governance uplift

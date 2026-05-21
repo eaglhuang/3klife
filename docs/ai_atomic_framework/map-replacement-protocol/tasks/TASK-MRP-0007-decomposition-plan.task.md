@@ -13,6 +13,14 @@ started_at: 2026-05-17T20:39:07.4267792+08:00
 started_by_agent: vs-insiders-gpt-5.4
 completed_at: 2026-05-17T20:48:50.9607822+08:00
 completed_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-327Z-migrate-legacy-ledger-0cedde1511bf
+lastTransitionAt: 2026-05-21T10:29:44.327Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.327Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:748d828cbd93e72211e5fe7278e6144db87881d75e8542f47f10cd4e89c8a1ea
 ---
 
 # TASK-MRP-0007 — Decomposition Plan → Map

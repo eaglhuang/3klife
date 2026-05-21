@@ -13,6 +13,14 @@ started_at: 2026-05-17T02:44:13.6757334+08:00
 started_by_agent: vs-insiders-github-copilot
 completed_at: 2026-05-17T02:44:13.6757334+08:00
 completed_by_agent: vs-insiders-github-copilot
+lastTransitionId: 2026-05-21T10-29-44-319Z-migrate-legacy-ledger-550824fd374a
+lastTransitionAt: 2026-05-21T10:29:44.319Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.319Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:043612cece854b3ed8e253bd17893bfffd8cf24e3e6a0ebd6c5ee5e9f7edc91a
 ---
 
 # TASK-MRP-0000 — 文件定稿與 cross-link

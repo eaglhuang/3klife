@@ -21,6 +21,14 @@ public_tracking: false
 executionMode: upstream-runtime-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-274Z-migrate-legacy-ledger-24685caf79f7
+lastTransitionAt: 2026-05-21T10:29:44.274Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.274Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:b5406156314dc0c7ebd5c271178a8b21ce80a336c2efb1d182f30d6f849e0626
 ---
 
 # TASK-APF-0036 — Suppression, recurrence, and stale-base safeguards

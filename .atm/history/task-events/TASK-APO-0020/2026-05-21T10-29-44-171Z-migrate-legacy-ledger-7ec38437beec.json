@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-171Z-migrate-legacy-ledger-7ec38437beec",
+  "taskId": "TASK-APO-0020",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0020-telemetry-sentinel-dashboard.task.md",
+  "taskSha256": "sha256:e7cd8c6fc8e39b734efe69579946cf317cdf6938b74525910d2c789284058e1e",
+  "createdAt": "2026-05-21T10:29:44.171Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

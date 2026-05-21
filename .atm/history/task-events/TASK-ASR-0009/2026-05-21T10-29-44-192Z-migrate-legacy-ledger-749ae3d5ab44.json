@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-192Z-migrate-legacy-ledger-749ae3d5ab44",
+  "taskId": "TASK-ASR-0009",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0009-root-drop-wrappers-manifest.task.md",
+  "taskSha256": "sha256:7166ac327c49cc49bfff79f2bd3835161cfa1d2d71d603ee411e585a2d98d8e0",
+  "createdAt": "2026-05-21T10:29:44.192Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-228Z-migrate-legacy-ledger-96afca88e44a",
+  "taskId": "TASK-ATD-0028",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0028-synthetic-adopter-fixture-neutral.task.md",
+  "taskSha256": "sha256:9a067621ef26eb22528fa9fdf19c6370ede94d23cd8e625d2ea6abf7eff310a0",
+  "createdAt": "2026-05-21T10:29:44.228Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

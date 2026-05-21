@@ -39,6 +39,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-252Z-migrate-legacy-ledger-2b120868d95d
+lastTransitionAt: 2026-05-21T10:29:44.252Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.252Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:8a1a7859166b8bd8649cbef66a4f12860e8f2af828ba2f64747f8c3225f2227d
 ---
 
 # TASK-APF-0016 — Embedded police advisory adapters

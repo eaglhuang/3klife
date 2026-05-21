@@ -42,6 +42,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: 修正 brace scope 追蹤，導入 method signature symbolId，重載方法 symbolId 穩定且唯一 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-409Z-migrate-legacy-ledger-ba4f240d06d7
+lastTransitionAt: 2026-05-21T10:29:44.409Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.409Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:861259c10b6925702f42543fea2b9fc2b97f18eae5fe68a07029d109d7f05d9d
 ---
 
 # ATM-LANG-CSHARP-0202 C# symbol stability hardening

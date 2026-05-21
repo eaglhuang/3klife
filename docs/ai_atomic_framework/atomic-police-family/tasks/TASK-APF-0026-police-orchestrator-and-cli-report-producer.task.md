@@ -37,6 +37,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-262Z-migrate-legacy-ledger-a14ba8f20af2
+lastTransitionAt: 2026-05-21T10:29:44.262Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.262Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0ec2c1a51b8234407ee08c2a0afc7ecd2a4af7e1525456fd6ec136b6b792836f
 ---
 
 # TASK-APF-0026 — Police orchestrator and CLI report producer

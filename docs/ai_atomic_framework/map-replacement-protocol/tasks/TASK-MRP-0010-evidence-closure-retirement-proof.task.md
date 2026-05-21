@@ -13,6 +13,14 @@ started_at: 2026-05-17T21:50:21.7118521+08:00
 started_by_agent: vs-insiders-gpt-5.4
 completed_at: 2026-05-17T22:07:40.7734045+08:00
 completed_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-330Z-migrate-legacy-ledger-033a3c5274a9
+lastTransitionAt: 2026-05-21T10:29:44.330Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.330Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:0eeb419733e71fddb0ee68560a620a4af2fd5ee9521b4ea9b8e211c3f1117ee2
 ---
 
 # TASK-MRP-0010 — Replacement Evidence Closure + Retirement Proof

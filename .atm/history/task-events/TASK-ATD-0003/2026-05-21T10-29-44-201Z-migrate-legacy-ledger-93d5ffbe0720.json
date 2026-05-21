@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-201Z-migrate-legacy-ledger-93d5ffbe0720",
+  "taskId": "TASK-ATD-0003",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/TASK-ATD-0003-self-governance-example-decision.task.md",
+  "taskSha256": "sha256:cbeb453b114508bc1bfba32a7d0d84236dc8f1138ab079e25071779dc639459a",
+  "createdAt": "2026-05-21T10:29:44.201Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

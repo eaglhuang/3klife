@@ -38,6 +38,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:guide（PASS） | 變更: Go capability atom table 與 atomic map YAML（members/edges/entrypoints）完成 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-383Z-migrate-legacy-ledger-aa62a4faf104
+lastTransitionAt: 2026-05-21T10:29:44.383Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.383Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:16a8e41f6eef3fb08af828c8a5564605593e76fecc14233973c0a7f60b4444bb
 ---
 
 # ATM-LANG-0902 English guide: Go atom/map development example

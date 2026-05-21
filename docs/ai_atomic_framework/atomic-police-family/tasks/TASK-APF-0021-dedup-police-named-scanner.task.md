@@ -38,6 +38,14 @@ non_goals:
   - 不把 3KLife / Cocos / private path 寫入 upstream protected public contract
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-257Z-migrate-legacy-ledger-83ae84ac5a0c
+lastTransitionAt: 2026-05-21T10:29:44.257Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.257Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:92110a772a0d4c145c21aea56451de58fa3e72d72855e68b6701a407eb68733f
 ---
 
 # TASK-APF-0021 — Dedup Police named scanner

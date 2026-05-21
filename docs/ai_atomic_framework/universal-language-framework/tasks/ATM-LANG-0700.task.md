@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:python-adapter（PASS） | 變更: 建立 Python static AST inventory 與 symbol range 產出、fixture sample project、validator 腳本 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-372Z-migrate-legacy-ledger-c92c9579c109
+lastTransitionAt: 2026-05-21T10:29:44.372Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.372Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:b28024c88b24f41c0966cf1b8319b8c31450ed778c598afbb7d64d724151281c
 ---
 
 # ATM-LANG-0700 Python AST inventory and symbol ranges

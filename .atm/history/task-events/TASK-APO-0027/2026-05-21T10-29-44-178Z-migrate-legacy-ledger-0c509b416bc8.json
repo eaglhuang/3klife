@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-178Z-migrate-legacy-ledger-0c509b416bc8",
+  "taskId": "TASK-APO-0027",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-pinned-runner-auto-install.task.md",
+  "taskSha256": "sha256:b7edf858ac0b3acaba7f5337c355ad87b0c3dea4ed61859cf63a3e97571f959d",
+  "createdAt": "2026-05-21T10:29:44.178Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

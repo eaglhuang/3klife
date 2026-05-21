@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-197Z-migrate-legacy-ledger-73f122cd9dab",
+  "taskId": "TASK-ASR-0014",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0014-upgrade-full-split.task.md",
+  "taskSha256": "sha256:af94e56a6fdfddf6116a110a41d15b35f01bb84ae2104c603681b787408ee525",
+  "createdAt": "2026-05-21T10:29:44.197Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

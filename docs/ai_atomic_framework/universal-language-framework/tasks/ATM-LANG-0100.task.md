@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: node scripts/validate-plugin-sdk.ts (passed) | 變更: 新增 LanguageAdapter v2 可選能力契約與 SDK validator | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-353Z-migrate-legacy-ledger-daaca8c16e75
+lastTransitionAt: 2026-05-21T10:29:44.353Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.353Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:ce00f28c2442f814d882a1990b5d2ea36ed9be694c18eb8982153f53bb15594b
 ---
 
 # ATM-LANG-0100 LanguageAdapter v2 public contract

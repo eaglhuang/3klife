@@ -30,6 +30,14 @@ started_at: 2026-05-17T21:30:00+08:00
 started_by_agent: vs-insiders-claude-sonnet-4.6
 completed_at: 2026-05-17T22:30:00+08:00
 completed_by_agent: vs-insiders-claude-sonnet-4.6
+lastTransitionId: 2026-05-21T10-29-44-159Z-migrate-legacy-ledger-da86a06128ed
+lastTransitionAt: 2026-05-21T10:29:44.159Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.159Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:646bd9120131a927b63bbb1dfe08a1dc0d0cec09d337af4df793bce118057059
 ---
 
 # TASK-APO-0009 — Slash Command nextActionHint 對接 MRP

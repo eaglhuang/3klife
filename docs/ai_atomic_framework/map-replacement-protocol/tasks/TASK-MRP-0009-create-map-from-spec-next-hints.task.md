@@ -13,6 +13,14 @@ started_at: 2026-05-17T20:56:40.1303430+08:00
 started_by_agent: vs-insiders-gpt-5.4
 completed_at: 2026-05-17T21:02:56.9087336+08:00
 completed_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-329Z-migrate-legacy-ledger-f8b39a738e43
+lastTransitionAt: 2026-05-21T10:29:44.329Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.329Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:e2d0ac4bee568321826cec22faa574f6995621dc2d10acacf9866233e1025d24
 ---
 
 # TASK-MRP-0009 — Create Map From Spec + Replacement Next Hints

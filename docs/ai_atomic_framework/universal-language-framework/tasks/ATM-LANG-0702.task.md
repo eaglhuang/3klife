@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:python-adapter（PASS） | 變更: CLI entrypoint / API hint / side-effect runtime command detection 完成並納入 validator 檢查 | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-374Z-migrate-legacy-ledger-95a929eb9424
+lastTransitionAt: 2026-05-21T10:29:44.374Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.374Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:17f7433f9b42c2cbd452862c655bb0b7335cab1da5f247dec24f7f67c48b37e0
 ---
 
 # ATM-LANG-0702 Python CLI/API/side-effect surface detection

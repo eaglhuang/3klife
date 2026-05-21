@@ -39,6 +39,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-279Z-migrate-legacy-ledger-378e1e22983f
+lastTransitionAt: 2026-05-21T10:29:44.279Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.279Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:4e5882562c4ba664792af711a6a7eea80914705b2418f687b3cb918d6116ff7b
 ---
 
 # TASK-APF-0040 — Police taxonomy extension for Polymorph and Rollback Police

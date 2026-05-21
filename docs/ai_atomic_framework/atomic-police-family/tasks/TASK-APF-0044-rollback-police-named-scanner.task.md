@@ -39,6 +39,14 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/schemas/**
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-284Z-migrate-legacy-ledger-989a10c82206
+lastTransitionAt: 2026-05-21T10:29:44.284Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.284Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:ce7d5442fc0108395a265a6436b5a594ae59b033aac2879132648d0b9697d6fb
 ---
 
 # TASK-APF-0044 — Rollback Police named scanner

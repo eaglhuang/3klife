@@ -34,6 +34,14 @@ non_goals:
   - 增加 adapter 數量（僅以現有 adapter 矩陣為基線）
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+lastTransitionId: 2026-05-21T10-29-44-166Z-migrate-legacy-ledger-4ebb1124333f
+lastTransitionAt: 2026-05-21T10:29:44.166Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.166Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:4cfd572c9b7e20ab83069ff365a4d674f341cd2f6a4e9b92f6d1eb2cef8f1246
 ---
 
 # TASK-APO-0016 — Version Skew Matrix CI

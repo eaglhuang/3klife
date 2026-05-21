@@ -39,6 +39,14 @@ non_goals:
   - 不修改與本卡 allowed_files 無關的 surface
 created_at: 2026-05-18T00:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-21T10-29-44-201Z-migrate-legacy-ledger-93d5ffbe0720
+lastTransitionAt: 2026-05-21T10:29:44.201Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.201Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:4dd58c1e9154112d3a9043abd0270ad453a9e0eb64f753213d621bcf10d08898
 ---
 
 # TASK-ATD-0003 — 決策 upstream self-governance 範例位置（不預設 commit `.atm/` runtime）

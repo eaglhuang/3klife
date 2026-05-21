@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-335Z-migrate-legacy-ledger-7d4e3a6cd7e2",
+  "taskId": "TASK-MRP-0014",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0014-atom-memoization-cache.task.md",
+  "taskSha256": "sha256:62522938cc3f47ca4bc71d70094805a9b24dfa66bcae87d56b33624965dd6c69",
+  "createdAt": "2026-05-21T10:29:44.335Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

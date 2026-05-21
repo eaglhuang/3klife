@@ -40,6 +40,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:language-csharp（PASS）; npm run validate:full（PASS） | 變更: fixture 補齊 record/generic/nested/attribute/top-level/global using | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-401Z-migrate-legacy-ledger-6f56aa387c3d
+lastTransitionAt: 2026-05-21T10:29:44.401Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.401Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:35cdf120fa997e3eb2993fe274dec4a6ff7c25e6ffe3d47bc910efae6f83fbbd
 ---
 
 # ATM-LANG-CSHARP-0101 C# fixture expansion for modern syntax surface

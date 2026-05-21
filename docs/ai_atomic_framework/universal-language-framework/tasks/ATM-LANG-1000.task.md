@@ -38,6 +38,14 @@ non_goals:
 created_at: 2026-05-20T00:00:00+08:00
 created_by_agent: codex-gpt-5
 notes: "2026-05-20 | 狀態: done | 驗證: npm run validate:neutrality（failed: Missing script）; npm run validate:guide（PASS）; npm run check:encoding:touched（PASS） | 變更: 補齊 Java/C#/Go feasibility notes 與 ATM-LANG-TABLE-0010 readiness matrix | 阻塞: none"
+lastTransitionId: 2026-05-21T10-29-44-385Z-migrate-legacy-ledger-937366dfe035
+lastTransitionAt: 2026-05-21T10:29:44.385Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.385Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:20f15ed251578a8e50cee834e2fb07b79719c892622801adee312c7afef5c3ac
 ---
 
 # ATM-LANG-1000 Java/C#/Go adapter feasibility notes

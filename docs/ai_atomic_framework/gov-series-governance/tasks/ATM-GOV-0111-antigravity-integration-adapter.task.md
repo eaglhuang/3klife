@@ -15,6 +15,14 @@ public_tracking: false
 executionMode: planned-upstream-change
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
+lastTransitionId: 2026-05-21T10-29-44-306Z-migrate-legacy-ledger-d1ba4489ceb7
+lastTransitionAt: 2026-05-21T10:29:44.306Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-21T10:29:44.306Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:b5e2e9792230fc3155d75cff273843ae27f51939946d8ed6dd53f5219f6907c1
 ---
 
 # ATM-GOV-0111 Antigravity Integration Adapter

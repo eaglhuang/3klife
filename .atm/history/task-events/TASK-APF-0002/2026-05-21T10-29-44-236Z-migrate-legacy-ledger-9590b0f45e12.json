@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-21T10-29-44-236Z-migrate-legacy-ledger-9590b0f45e12",
+  "taskId": "TASK-APF-0002",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0002-police-finding-contract.task.md",
+  "taskSha256": "sha256:3e5fcbb19059eac6a252322f0ed7251b722ba3e39d76c01846e8f0cd4ae53deb",
+  "createdAt": "2026-05-21T10:29:44.236Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}
