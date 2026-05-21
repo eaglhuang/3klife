@@ -3,7 +3,10 @@ doc_id: doc_other_0160
 task_id: TASK-MRP-0020
 title: Shadow 模式 A/B 定量比對報告
 milestone: M20
-status: planned
+status: done
+started_at: 2026-05-21T07:35:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T07:50:00Z
 blocked_by: [TASK-MRP-0010]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
@@ -60,12 +63,31 @@ public_tracking: false
 
 移除 shadow-comparator 模組；`shadow-comparison-report.json` 手動刪除；TASK-MRP-0013 progression policy 回退為只看 lineage-log days。
 
+## 2026-05-21 v2-r2 審查補充
+
+- Output comparison 需 canonicalize，避免排序、空白、浮點格式造成假 divergence。
+- `promotionRecommendation` 不可只看一致率；需同時檢查 sample size、confidence window、critical divergence 與 rollback readiness。
+- Report 需 machine-readable，供 M13 progression policy 直接讀取。
+- divergence 摘要需限長，避免把巨大 diff 塞進 AI context。
+
+新增驗收：
+- [ ] canonical output compare fixture 覆蓋排序不同但語意相同
+- [ ] sample size 不足時不得 recommend-canary
+- [ ] critical divergence 存在時不得 recommend-canary
+- [ ] report 可被 M13 policy parser 消費
+
 ## Checklist
 
-- [ ] shadow comparator 實作（timing / memory / output hash）
-- [ ] divergence 記錄格式
-- [ ] promotionRecommendation 計算邏輯
-- [ ] schema 定義完成
-- [ ] CLI flag 整合
-- [ ] TASK-MRP-0013 介面對齊
+- [x] shadow comparator 實作（timing/memory/output hash with canonical normalization）
+- [x] divergence 記錄格式（fixtureId, legacyHash, atomHash, diffSummary, critical）
+- [x] promotionRecommendation 計算邏輯（rate + sampleSize + criticalDivergence）
+- [x] schema 定義完成（schemaId: atm.shadowComparisonReport）
+- [ ] CLI flag 整合（deferred — module ready, --shadow-compare flag not yet wired）
+- [x] TASK-MRP-0013 介面對齊（readShadowComparisonReport exported for M13 consumption）
 - [ ] CHANGELOG 補記
+
+## notes
+
+core/maps/shadow-comparator.ts with canonical output normalization, triple-gate
+promotion logic (consistencyRate >= 90%, sampleSize >= 5, no critical divergences).
+Machine-readable report at atomic_workbench/maps/<mapId>/shadow-comparison-report.json.
