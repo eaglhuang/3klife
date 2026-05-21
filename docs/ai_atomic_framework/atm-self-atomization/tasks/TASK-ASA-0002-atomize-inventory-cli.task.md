@@ -3,13 +3,16 @@ doc_id: doc_other_1004
 task_id: TASK-ASA-0002
 title: 新增 atomize inventory 覆蓋盤點 CLI
 milestone: M2
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: [TASK-ASA-0001]
 related_plan: docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-21T00:10:00Z
+started_by_agent: CopilotAgent
+completed_at: 2026-05-21T00:15:00Z
 ---
 
 # TASK-ASA-0002 新增 atomize inventory 覆蓋盤點 CLI
@@ -63,4 +66,9 @@ node atm.mjs atomize inventory --repo . --json
 
 ## Notes
 
-- 2026-05-21 | 狀態: planned | 驗證: pending | 變更: 建立 ATM 100% 自我原子化任務卡 | 阻塞: none
+- 2026-05-21 | 狀態: done | 驗證: completed | 變更: 實作 atomize-inventory.js CLI 腳本 | 阻塞: none
+- Evidence: ATM repo commit with atomize-inventory.js command implementation
+- Deliverables: 
+  - scripts/src/atomize-inventory.js: Production source inventory scanner
+  - Integrated with CLI router for `node atm.mjs atomize inventory` command
+  - Generated inventory reports with coverage statistics, gap analysis, and suggested actions
