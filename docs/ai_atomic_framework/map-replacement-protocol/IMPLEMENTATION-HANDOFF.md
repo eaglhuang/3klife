@@ -79,7 +79,7 @@ node atm.mjs tasks close --task TASK-MRP-0011 --evidence <path> --json
 
 | 任務卡 | 規劃 | 護欄設計 | 回滾策略 | opt-in | 實作 | 備註 |
 |--------|------|---------|---------|--------|------|------|
-| M11 Fingerprint | ✅ | ✅ | ✅ | n/a | ❌ | 純監控、最低風險、首推實作 |
+| M11 Fingerprint | ✅ | ✅ | ✅ | n/a | ✅ | 純監控、已完成，無漂移 |
 | M12 Edge Contract | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M11 |
 | M13 Progression Auto | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M12, M20 |
 | M14 Memoization Cache | ✅ | ✅ | ✅ | n/a | ❌ | 依賴 M12 |
