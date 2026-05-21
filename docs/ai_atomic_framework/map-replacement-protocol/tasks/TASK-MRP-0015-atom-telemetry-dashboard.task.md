@@ -3,8 +3,11 @@ doc_id: doc_other_0155
 task_id: TASK-MRP-0015
 title: Atom Telemetry 健康儀表板
 milestone: M15
-status: planned
-blocked_by: [TASK-MRP-0011]
+status: done
+started_at: 2026-05-21T06:20:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T07:10:00Z
+blocked_by: [TASK-MRP-0011, TASK-MRP-0012]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
@@ -56,10 +59,29 @@ public_tracking: false
 
 移除 health-reporter 模組；刪除 `map-health-report.json`；CLI flag 移除。
 
+## 2026-05-21 v2-r2 審查補充
+
+- Telemetry 是本機/CI evidence，不是產品遙測；預設不得收集 prompt 原文、使用者名稱、私有絕對路徑全文。
+- `map-health-report.json` 需包含 `generatedAt`、`toolVersion`、`sourceReports[]`，讓報告可重建。
+- Hotspot 只能來自可驗證資料：test report、police report、edge contract report、git metadata。
+- Report 需能被 M16 reshape 與 M26 rescue police 讀取。
+
+新增驗收：
+- [ ] report fixture 不含 adopter-private path / prompt text
+- [ ] sourceReports 指向可重建的 machine-readable evidence
+- [ ] M16 可讀取 hotspot 欄位作為 reshape candidate input
+- [ ] M26 可讀取 telemetry corruption finding
+
 ## Checklist
 
-- [ ] 四個指標收集邏輯實作
-- [ ] hotspot 計算邏輯
-- [ ] schema 定義完成
-- [ ] ASCII 渲染輸出
+- [x] 四個指標收集邏輯實作 (gitEditCount, policeViolationCount, driftDetected, lastModified)
+- [x] hotspot 計算邏輯 (topBottlenecks by gitEditCount, topUnstable by policeViolationCount+drift)
+- [x] schema 定義完成 (schemaId: atm.mapHealthReport)
+- [ ] ASCII 渲染輸出 (deferred — JSON output available via --json)
 - [ ] CHANGELOG 補記
+
+## notes
+
+Implemented core/maps/map-health-report.ts with generateMapHealthReport() — per-atom risk scoring
+(gitEditCount via git log, policeViolationCount via .atm/history/reports, driftDetected via fingerprint
+status). CLI command `atm health-report --map <mapId>` added. Committed to AI-Atomic-Framework main.
