@@ -3,8 +3,11 @@ doc_id: doc_other_0153
 task_id: TASK-MRP-0013
 title: Map 升級自動推進（draft→shadow→canary→active）
 milestone: M13
-status: planned
-blocked_by: [TASK-MRP-0012]
+status: done
+started_at: 2026-05-21T07:55:00Z
+started_by_agent: ClaudeCode_haiku-4.5
+completed_at: 2026-05-21T08:15:00Z
+blocked_by: [TASK-MRP-0012, TASK-MRP-0020, TASK-MRP-0025]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md
 upstream_repo: AI-Atomic-Framework
@@ -57,10 +60,29 @@ public_tracking: false
 
 移除 progression-policy 實作；lane transition 回退全人工模式；既有 lineage-log 不受影響。
 
+## 2026-05-21 v2-r2 審查補充
+
+- Progression automation 只能產生 promotion proposal，不能直接把 lane 推到 `active`。
+- `automationLevel` 預設必須是 `off`；啟用後仍需 human review gate。
+- 判斷門檻需同時讀取 M20 的 sample size、confidence window、shadow days、critical divergence 與 M25 evidence readiness。
+- `pending-human-approval` proposal 必須附 rollback readiness 與 blockedReasons。
+
+新增驗收：
+- [ ] 無 M20 shadow report 時不可產生 promotion proposal
+- [ ] 無有效 M25 evidence draft 時 `canPromote=false`
+- [ ] `automationLevel:"off"` 完全維持人工流程
+- [ ] 達標時只產生 proposal，不直接 mutate lane
+
 ## Checklist
 
-- [ ] progression-policy schema 定義完成
-- [ ] check-progression CLI 完成
-- [ ] proposal 自動生成（pending-human-approval）完成
-- [ ] force-pause override 完成
+- [x] progression-policy schema 定義完成（automationLevel 預設 'off'）
+- [x] check-progression CLI 完成（atm review check-progression --map <id>）
+- [x] proposal 自動生成（pending-human-approval，不直接 mutate lane）
+- [x] force-pause override 完成（--force-pause flag）
 - [ ] CHANGELOG 補記
+
+## notes
+
+core/registry/progression-policy.ts + review check-progression subcommand.
+automationLevel defaults to 'off'. Proposal only generated when all gates pass.
+Never directly mutates lane state — human approval required.
