@@ -3,7 +3,7 @@ doc_id: doc_other_1004
 task_id: TASK-ASA-0002
 title: 新增 atomize inventory 覆蓋盤點 CLI
 milestone: M2
-status: done
+status: partial
 owner: atm-core
 priority: P0
 depends_on: [TASK-ASA-0001]
@@ -12,7 +12,8 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 started_at: 2026-05-21T00:10:00Z
 started_by_agent: CopilotAgent
-completed_at: 2026-05-21T00:15:00Z
+audit_status: partial_after_governance_review
+audit_at: 2026-05-21T00:00:00+08:00
 ---
 
 # TASK-ASA-0002 新增 atomize inventory 覆蓋盤點 CLI
@@ -72,3 +73,4 @@ node atm.mjs atomize inventory --repo . --json
   - scripts/src/atomize-inventory.js: Production source inventory scanner
   - Integrated with CLI router for `node atm.mjs atomize inventory` command
   - Generated inventory reports with coverage statistics, gap analysis, and suggested actions
+- 2026-05-21 | 狀態: partial | 驗證: failed | 變更: ATM governance audit 2026-05-21: TASK-ASA-0002 partial; script exists, but `node atm.mjs atomize inventory --repo . --json` returns `ATM_CLI_UNKNOWN_COMMAND`, so it is not wired into the ATM public CLI contract. | 阻塞: wire command into atm.mjs, add CLI tests, and record runnable evidence

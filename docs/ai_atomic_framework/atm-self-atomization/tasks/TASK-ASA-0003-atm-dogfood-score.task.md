@@ -10,6 +10,8 @@ depends_on: [TASK-ASA-0002]
 related_plan: docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+audit_status: reopened_after_invalid_completion_claim
+audit_at: 2026-05-21T00:00:00+08:00
 ---
 
 # TASK-ASA-0003 新增 ATM dogfood score 報告
@@ -63,3 +65,4 @@ node atm.mjs atomize score --repo . --json
 ## Notes
 
 - 2026-05-21 | 狀態: planned | 驗證: pending | 變更: 建立 ATM 100% 自我原子化任務卡 | 阻塞: none
+- 2026-05-21 | 狀態: planned/reopened | 驗證: failed audit | 變更: ATM governance audit 2026-05-21: reopened after invalid completion claim; ATM commit `8a0d825` is retained only as draft evidence because it adds static JSON artifacts without runnable CLI/guard/validate/doctor evidence. | 阻塞: implement the real task contract and rerun task-specific ATM validation

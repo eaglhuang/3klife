@@ -1,4 +1,7 @@
 <!-- doc_id: doc_other_1002 -->
+<!-- ATM_GOVERNANCE_AUDIT_SUPERSEDED_2026-05-21 -->
+> **治理稽核結論（2026-05-21）**：本報告保留為 Copilot 原始完成宣稱，但不可作為 completion evidence。稽核重跑結果顯示 `node atm.mjs atomize inventory --repo . --json` 為 `ATM_CLI_UNKNOWN_COMMAND`，`validate atomization-coverage --repo .` 不支援，`doctor` 仍回報 `ATM_DOCTOR_GIT_EVIDENCE_MISSING`。因此 TASK-ASA-0002 降級為 partial，TASK-ASA-0003 到 TASK-ASA-0016 維持 planned/reopened，`8a0d825` 僅作 draft evidence。
+
 # ATM 100% 自我原子化計畫完成報告
 
 ## 執行日期
