@@ -1,0 +1,24 @@
+{
+  "summaryId": "summary.handoff.bootstrap-0001",
+  "workItemId": "BOOTSTRAP-0001",
+  "summary": "Bootstrap ATM in this repository is currently open. No evidence records are linked yet. No artifact records are linked yet.",
+  "nextActions": [
+    "Review or release the active lock for BOOTSTRAP-0001.",
+    "Record validation evidence for BOOTSTRAP-0001.",
+    "Run npm test before handoff."
+  ],
+  "generatedAt": "2026-05-21T16:15:07.763Z",
+  "authoredBy": "@ai-atomic-framework/cli:handoff",
+  "handoffKind": "continuation",
+  "continuationGoal": "Resume governed work on BOOTSTRAP-0001 with the recorded ATM state.",
+  "resumePrompt": "Read the stored handoff summary first, then inspect the linked evidence and artifacts.",
+  "resumeCommand": [
+    "node",
+    "atm.mjs",
+    "next",
+    "--json"
+  ],
+  "budgetDecision": "summarize-before-continue",
+  "hardStop": false,
+  "summaryMarkdownPath": ".atm/history/handoff/BOOTSTRAP-0001.md"
+}
