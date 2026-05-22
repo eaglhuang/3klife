@@ -4,6 +4,12 @@
 1. **全繁體中文模式**: 推理與回覆一律繁體中文，使用台灣慣用術語。
 2. **Unity 對照**: 解釋 Cocos Creator 概念時，主動對照 Unity 的對應概念與設計理念。
 
+## ATM Governance Entry
+
+- 本檔保留 3KLife / Cocos 專案主規則；ATM integration 不得覆蓋本檔內容。
+- 進行受治理修改前，先執行 `node atm.mjs next --json`，若出現 `ATM_USER_NOTICE` 必須先回報使用者。
+- ATM 詳細路由放在 `.github/instructions/atm-*.instructions.md` 與 `.github/prompts/atm-*.prompt.md`。
+
 # Cocos Creator Project Guidelines
 
 ## Code Style & TypeScript Setup
