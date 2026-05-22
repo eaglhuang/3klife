@@ -36,6 +36,8 @@ node_modules/
 temp.ts
 temp_workspace/
 test-parser*.js
+scratch/atm-build-repo/
+scratch/atm-upstream-patch/
 
 #//////////////////////////
 # Generated QA / Preview Artifacts
