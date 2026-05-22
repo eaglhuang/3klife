@@ -1,0 +1,12 @@
+{
+    "schemaId":  "atm.internalReleaseSyncSummary.v1",
+    "generatedAt":  "2026-05-22T00:56:34.8102275Z",
+    "frameworkCommit":  "72e55da37c1fe582ca81114ecf6f0f0d60655020",
+    "hostCommitCovered":  "333ad746c4ecac59cbaf1ab237c4de084f722306",
+    "purpose":  "Record downstream ATM runner sync and Copilot integration manifest refresh after preserving host Copilot instructions.",
+    "notes":  [
+                  "ATM runner was synced from AI-Atomic-Framework release/atm-onefile/atm.mjs.",
+                  "Copilot manifest now owns .github/instructions and .github/prompts only.",
+                  ".github/copilot-instructions.md remains host-owned and keeps 3KLife/Cocos rules."
+              ]
+}
