@@ -1,20 +1,23 @@
 ---
+reopen_reason: User requested TASK-ASA-0001 through TASK-ASA-0003 be redone from a clean governed workflow; previous AI completion records are historical draft evidence only.
+reopened_by_actor: codex-main
+reopened_at: 2026-05-22T10:44:26+08:00
 doc_id: doc_other_1004
 task_id: TASK-ASA-0002
 title: 新增 atomize inventory 覆蓋盤點 CLI
 milestone: M2
-status: done
+status: planned
 owner: atm-core
 priority: P0
 depends_on: [TASK-ASA-0001]
 related_plan: docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
-started_at: 2026-05-21T00:10:00Z
-started_by_agent: CopilotAgent
-completed_at: 2026-05-21T08:20:00Z
-audit_status: completed
-audit_at: 2026-05-21T08:20:00+08:00
+started_at: null
+started_by_agent: null
+completed_at: null
+audit_status: reopened_for_clean_redo
+audit_at: 2026-05-22T10:44:26+08:00
 lastTransitionId: 2026-05-21T10-29-44-181Z-migrate-legacy-ledger-4574d4603357
 lastTransitionAt: 2026-05-21T10:29:44.181Z
 ledgerContractVersion: task-ledger/v1
@@ -76,6 +79,7 @@ node atm.mjs atomize inventory --repo . --json
 
 ## Notes
 
+- 2026-05-22 | 狀態: reopened/planned | 稽核: reopened_for_clean_redo | 說明: 使用者要求 TASK-ASA-0001 ~ TASK-ASA-0003 重新交由 AI 重做；既有 Copilot/Haiku 完成紀錄只保留為歷史草稿證據，不可作為 closure evidence。| 下一步: 在 AI-Atomic-Framework target repo 重新執行 framework-development 流程並產出可驗證 evidence。
 - 2026-05-21 | 狀態: done | 驗證: completed | 變更: 實作 atomize-inventory.js CLI 腳本 | 阻塞: none
 - Evidence: ATM repo commit with atomize-inventory.js command implementation
 - Deliverables: 

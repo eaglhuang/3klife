@@ -5,18 +5,18 @@
       "evidenceKind": "validation",
       "summary": "Git commit tree is covered by ATM Integration Hook Contract v1.",
       "artifactPaths": [],
-      "createdAt": "2026-05-22T00:56:37.937Z",
+      "createdAt": "2026-05-22T02:45:26.512Z",
       "producedBy": "atm-framework-development-hooks/v1",
       "commandRuns": [],
       "details": {
         "git": {
-          "treeSha": "3135acbe140f5b13081a5823140e24550a34f9ab",
+          "treeSha": "9a0d3e5bdc0988999c8b4d861ae9e9cfdab5b23d",
           "parentCommitShas": [
-            "333ad746c4ecac59cbaf1ab237c4de084f722306"
+            "49b793c262fd9c99a8ea139feefe38d93ce7e558"
           ],
-          "stagedPathCount": 1,
+          "stagedPathCount": 3,
           "evidencePath": ".atm/history/evidence/git-head.json",
-          "generatedAt": "2026-05-22T00:56:37.937Z"
+          "generatedAt": "2026-05-22T02:45:26.512Z"
         },
         "hookContractVersion": "atm.integration-hooks/v1",
         "runnerVersion": "0.0.0"
