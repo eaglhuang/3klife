@@ -21,7 +21,7 @@
       "specPath": "specs/normalize-css-color.atom.json",
       "hashLock": {
         "algorithm": "sha256",
-        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "digest": "sha256:d27318b84c343b90e38be020d547852351aa5c16aeb408d6f5ab4a1359db722f",
         "canonicalization": "json-stable-v1"
       },
       "owner": {
@@ -93,7 +93,7 @@
           "testHash": "sha256:49a14556f5863cebf5e4feeb33cf24c8a446c1c667017bfe7b5a2adf758aaec9",
           "hashLock": {
             "algorithm": "sha256",
-            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "digest": "sha256:d27318b84c343b90e38be020d547852351aa5c16aeb408d6f5ab4a1359db722f",
             "canonicalization": "json-stable-v1"
           },
           "evidence": [
@@ -128,7 +128,7 @@
       "specPath": "specs/parse-css-length.atom.json",
       "hashLock": {
         "algorithm": "sha256",
-        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "digest": "sha256:b390bc528fd0a97fef29ec8ded2f3c57013b693f954709df6095f247bba0554f",
         "canonicalization": "json-stable-v1"
       },
       "owner": {
@@ -200,7 +200,7 @@
           "testHash": "sha256:c2dd9c0fcd9c8991457b49356cc2f06842ac68e55606c3fda8371ce1dd5d11e3",
           "hashLock": {
             "algorithm": "sha256",
-            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "digest": "sha256:b390bc528fd0a97fef29ec8ded2f3c57013b693f954709df6095f247bba0554f",
             "canonicalization": "json-stable-v1"
           },
           "evidence": [
@@ -235,7 +235,7 @@
       "specPath": "specs/parse-fragment-list.atom.json",
       "hashLock": {
         "algorithm": "sha256",
-        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "digest": "sha256:5f855ed85d2d8c87131506d0e1d2e870b51e819a9d0cafee298626372dee7285",
         "canonicalization": "json-stable-v1"
       },
       "owner": {
@@ -307,7 +307,7 @@
           "testHash": "sha256:91fa2a2509a12f7e8b7870e513d8c6ac201341f6093d5499053c8dbf159a6b58",
           "hashLock": {
             "algorithm": "sha256",
-            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "digest": "sha256:5f855ed85d2d8c87131506d0e1d2e870b51e819a9d0cafee298626372dee7285",
             "canonicalization": "json-stable-v1"
           },
           "evidence": [

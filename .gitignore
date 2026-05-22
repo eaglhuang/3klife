@@ -78,3 +78,15 @@ temp_doc_id_changed.txt
 #//////////////////////////
 Design System*/
 Design System*.zip
+
+#//////////////////////////
+# ATM local runtime noise
+#//////////////////////////
+.atm/runtime/current-task.json
+.atm/runtime/locks/
+.atm/runtime/version-cache.json
+.atm/runtime/welcome.lineage.json
+.atm/runtime/guidance/
+.atm/history/reports/context-budget/
+.atm/history/reports/continuation/
+.atm/history/reports/internal-release-sync/*/atm.mjs.previous

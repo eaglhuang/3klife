@@ -1,6 +1,23 @@
 <!-- doc_id: doc_index_0019 -->
 # 3KLife
 
+
+<!-- ATM README ENTRY:START -->
+
+## AI Agent Entry
+
+After reading this repository overview, run:
+
+```bash
+node atm.mjs next --json
+```
+
+If the result includes an `ATM_USER_NOTICE` message or `evidence.userNotice`, show it to the user in natural language before running the returned next action.
+
+After an onboarding or refresh command succeeds, return to the user original request and continue the actual work.
+
+<!-- ATM README ENTRY:END -->
+
 `3KLife` 是一個以三國人物養成、血脈傳承、戰場策略與長局治理為核心的 Cocos Creator 專案。
 
 這個 repo 是 **主要遊戲 repo**，GitHub 名稱已是 `3klife`。這裡放的是遊戲本體、Cocos 前端、核心資料、正式規格、驗證工具與日常開發腳本，不是 ATM 上游 repo，也不是 NPC Brain 獨立服務 repo，亦非個人分享網站 repo。

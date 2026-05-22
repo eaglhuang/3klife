@@ -1,0 +1,83 @@
+{
+  "schemaId": "atm.integrationInstallManifest",
+  "schemaVersion": "atm.installManifest.v0.1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "Initial integration adapter install manifest."
+  },
+  "adapterId": "codex",
+  "adapterVersion": "0.0.0",
+  "installedAt": "2026-05-21T15:50:25.601Z",
+  "installedBy": "codex-gpt-5",
+  "targetDir": "integrations/codex-skills",
+  "files": [
+    {
+      "path": "integrations/codex-skills/atm-next/SKILL.md",
+      "sha256": "sha256:410dc7251235ad9f31e2c2b42c38ad3eda3aa37567a170cebad581985b9809d0",
+      "sizeBytes": 3595,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-orient/SKILL.md",
+      "sha256": "sha256:9b19acc0030aa04194fc86904b5baf8349d59305f7df2c88d4ab1ce14f75f018",
+      "sizeBytes": 3075,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-governance-router/SKILL.md",
+      "sha256": "sha256:f2c001cbaeed6551579822ba81cf3ccb094eaa18153ba0a0fed120867c53d3d6",
+      "sizeBytes": 8263,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-create/SKILL.md",
+      "sha256": "sha256:67fd5548675710dda8d3153533421eb1843988b0f1566a6ec6e4313cb585fc4c",
+      "sizeBytes": 3112,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-lock/SKILL.md",
+      "sha256": "sha256:0334d5bb412e486e2fc7b4977b82abe4c6a7c30ee18026fa1c9dc6a4466d09e0",
+      "sizeBytes": 3285,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-evidence/SKILL.md",
+      "sha256": "sha256:f3c8080ae28fd1f0a086b4efdf691258200821048c8fa74933361835f53d92da",
+      "sizeBytes": 3089,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-upgrade-scan/SKILL.md",
+      "sha256": "sha256:0f3f476d0ef7935f390c99d84b0ff37ccd753ba427f47df2cf8bd2ccfae9cf34",
+      "sizeBytes": 3107,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-handoff/SKILL.md",
+      "sha256": "sha256:c3aa8a5d3beb357b1e9dd8238516727a188a17fbb15a1322f35f394a29d8559c",
+      "sizeBytes": 3087,
+      "source": "template",
+      "fileFormat": "skill"
+    },
+    {
+      "path": "integrations/codex-skills/atm-internal-build-sync/SKILL.md",
+      "sha256": "sha256:60a9a0b5ab66c45f8b4b025a56760081256f1511eacfa9af5091caa21f97eb24",
+      "sizeBytes": 4026,
+      "source": "template",
+      "fileFormat": "skill"
+    }
+  ],
+  "metadata": {
+    "sourceFileCount": 9
+  }
+}

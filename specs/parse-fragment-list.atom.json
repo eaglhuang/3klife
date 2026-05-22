@@ -42,7 +42,7 @@
   },
   "hashLock": {
     "algorithm": "sha256",
-    "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "digest": "sha256:5f855ed85d2d8c87131506d0e1d2e870b51e819a9d0cafee298626372dee7285",
     "canonicalization": "json-stable-v1"
   },
   "dependencyPolicy": {
