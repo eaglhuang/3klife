@@ -14,6 +14,8 @@ priority: P0
 depends_on: [none]
 related_plan: docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md
 upstream_repo: AI-Atomic-Framework
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 public_tracking: false
 started_at: null
 started_by_agent: null

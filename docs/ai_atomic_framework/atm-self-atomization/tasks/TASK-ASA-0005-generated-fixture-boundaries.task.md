@@ -9,6 +9,8 @@ priority: P1
 depends_on: [TASK-ASA-0001, TASK-ASA-0004]
 related_plan: docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md
 upstream_repo: AI-Atomic-Framework
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 public_tracking: false
 audit_status: reopened_after_invalid_completion_claim
 audit_at: 2026-05-21T00:00:00+08:00
