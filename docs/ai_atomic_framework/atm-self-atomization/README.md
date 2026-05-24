@@ -91,9 +91,10 @@ TASK-ASA 任務卡 reset 規則：
 
 目前整理後的 ATM 重測基線重點如下：
 
-- 3KLife 整理前 base commit：`79c74bac3e40f22c7e4cfa8543f5d812d3a62fa6`
-- 同步後 runner 來源 ATM commit：`2590a193ab9b96c288a58eb0a00e80b26122d119`
-- 同步後 runner SHA256：`4d2e6cdc609bfde677f756dc5187e3637d117825a553855bafb90451afedf4d7`
+- 3KLife 對齊前協調 commit：`2a54ad450fb6ba8c16f8fb77ce02f3ed5d8de504`
+- ATM 重測 baseline tag：`atm-redteam-baseline-2026-05-24`
+- 同步後 runner 來源 ATM commit：`cff4a162b6f79f65383956973496551b182388c7`
+- 同步後 runner SHA256：`067cd1087f1a859b7e367cb9fe2cab1debf6de793913d92965f580a1e39b19a8`
 
 TASK-ASA-0001 到 TASK-ASA-0016 目前都應視為新的未開始狀態。
 
