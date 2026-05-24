@@ -2876,6 +2876,24 @@
       elements.sceneMeta.innerHTML = items.map((item) => `<span>${item}</span>`).join("");
     }
 
+    function chapterTagFromSourceRefs(sourceRefs) {
+      const firstRef = (sourceRefs || []).map((ref) => String(ref || "").trim()).find(Boolean);
+      const match = firstRef ? firstRef.match(/^(\d{3})#/) : null;
+      return match ? `第 ${Number(match[1])} 回` : "runtime 線索";
+    }
+
+    function buildDirectorMetaChips(bundle, directorPayload) {
+      const beats = directorPayload?.beats || {};
+      const sourceRefs = Array.isArray(beats.sourceRefs) ? beats.sourceRefs.filter(Boolean) : [];
+      return [
+        `第 ${state.turn} 幕`,
+        angleDefinitions[bundle.card?.angle]?.label || "",
+        bundle.target?.label || "",
+        chapterTagFromSourceRefs(sourceRefs),
+        `可信度 ${((Number(bundle.card?.confidence || 0) || 0) * 100).toFixed(0)}%`,
+      ].filter(Boolean);
+    }
+
     function buildIllustrationPrompt(bundle) {
       const target = bundle.target;
       const card = bundle.card;
@@ -3157,9 +3175,11 @@ ${evidenceLine}
       state.currentBundle = bundle;
       bundle.directorPayload = null;
       state.narrativeRequestToken += 1;
+      const runToken = state.narrativeRequestToken;
       abortAllNarrativeControllers();
+      const isStaleRun = () => runToken !== state.narrativeRequestToken || state.currentBundle !== bundle;
       const renderingGuard = window.setTimeout(() => {
-        if (!state.rendering || state.currentBundle !== bundle) {
+        if (!state.rendering || isStaleRun()) {
           return;
         }
         state.revealToken += 1;
@@ -3167,6 +3187,9 @@ ${evidenceLine}
         elements.sceneNote.textContent = `${bundle.sceneNote}；本回合逾時保護已觸發，可直接切換角度或按下一幕。`;
       }, 12000);
       try {
+        if (isStaleRun()) {
+          return;
+        }
         elements.sceneTitle.textContent = bundle.sceneTitle;
         elements.sceneNote.textContent = bundle.sceneNote;
         elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles"
@@ -3184,6 +3207,9 @@ ${evidenceLine}
         refreshIllustrationPrompt();
         const directorPromise = requestSceneDirector(bundle);
         const directorPayload = await directorPromise;
+        if (isStaleRun()) {
+          return;
+        }
         bundle.directorPayload = directorPayload || null;
         refreshIllustrationPrompt();
         void requestSceneIllustration(bundle).catch(() => null);
@@ -3207,23 +3233,47 @@ ${evidenceLine}
         const sourceLabel = dataStatus
           ? `scene-director/${dataStatus}`
           : (directorPayload ? "scene-director" : "scene-director unavailable");
+        renderMetaChips(buildDirectorMetaChips(bundle, directorPayload));
         elements.sceneNote.textContent = `${bundle.sceneNote}；${sourceLabel}${isEmpty ? "；本角度/人物目前無資料" : ""}${storyMissing ? "；小劇本暫未生成" : ""}`;
 
         await wait(220);
+        if (isStaleRun()) {
+          return;
+        }
         elements.sceneText.textContent = sceneText;
         await revealText(elements.memoryText, memoryText, 320);
+        if (isStaleRun()) {
+          return;
+        }
         await revealText(elements.emotionText, emotionText, 320);
+        if (isStaleRun()) {
+          return;
+        }
         await revealText(elements.dialogueText, dialogueText, 300);
+        if (isStaleRun()) {
+          return;
+        }
         await revealText(elements.intentText, intentText, 320);
+        if (isStaleRun()) {
+          return;
+        }
         await revealText(elements.storyText, storyText, 260);
+        if (isStaleRun()) {
+          return;
+        }
         renderDirectorChorusLines(Array.isArray(directorPayload?.chorusLines) ? directorPayload.chorusLines : []);
         bundle.runtimeIntentText = intentText;
       } catch (error) {
+        if (isStaleRun()) {
+          return;
+        }
         console.error("playBundle failed:", error);
         elements.sceneNote.textContent = `${bundle.sceneNote}；本回合中斷，已自動復原，可直接按下一則重試。`;
       } finally {
         window.clearTimeout(renderingGuard);
-        state.rendering = false;
+        if (!isStaleRun()) {
+          state.rendering = false;
+        }
       }
     }
 
