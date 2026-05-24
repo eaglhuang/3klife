@@ -924,7 +924,7 @@
     const API_BASE = searchParams.get("apiBase") || "http://127.0.0.1:8765";
     const DEFAULT_AUTO_DELAY = 12000;
     const DEFAULT_DIALOGUE_TIMEOUT_MS = 12000;
-    const DEFAULT_SCENE_DIRECTOR_TIMEOUT_MS = 10000;
+    const DEFAULT_SCENE_DIRECTOR_TIMEOUT_MS = 18000;
     const DEFAULT_ILLUSTRATION_TIMEOUT_MS = 32000;
     const DEFAULT_PROFILE_TIMEOUT_MS = 10000;
     const DEFAULT_NARRATIVE_TIMEOUT_MS = 16000;
@@ -1637,8 +1637,8 @@
         generalId: currentGeneralId(),
         angle: bundle.card?.angle || state.activeAngle,
         targetId: bundle.target?.targetId || state.activePerson,
-        evidenceId: bundle.card?.evidenceId || null,
-        renderMode: "llm_polish",
+        evidenceId: null,
+        renderMode: "data_first",
         chorusTargetIds: targets.map((target) => target.targetId),
         locale: "zh-TW",
         llmModelPreset: "scene_director_fast",
@@ -2278,9 +2278,7 @@
           ensureLinkedSelection({ prefer: "angle" });
           renderAngles();
           renderRelationships();
-          if (state.currentBundle) {
-            refreshIllustrationPrompt();
-          }
+          clearSceneOutputsForSelectionChange();
         });
       });
       updateAngleCoverageNote();
@@ -2300,9 +2298,7 @@
           ensureLinkedSelection({ prefer: "target" });
           renderAngles();
           renderRelationships();
-          if (state.currentBundle) {
-            refreshIllustrationPrompt();
-          }
+          clearSceneOutputsForSelectionChange();
         });
       });
     }
@@ -2750,7 +2746,12 @@
       if (!pool.length) {
         return null;
       }
-      return pool[(state.turn - 1) % pool.length];
+      const ranked = [...pool].sort((left, right) => {
+        const leftScore = Number(left?.confidence || 0) * 100 + Math.min((left?.sourceRefs || []).length, 6) * 4 + (left?.chapterNo ? 2 : 0);
+        const rightScore = Number(right?.confidence || 0) * 100 + Math.min((right?.sourceRefs || []).length, 6) * 4 + (right?.chapterNo ? 2 : 0);
+        return rightScore - leftScore;
+      });
+      return ranked[0];
     }
 
     function applyMeterChanges(card, target) {
@@ -2878,6 +2879,31 @@
     function buildIllustrationPrompt(bundle) {
       const target = bundle.target;
       const card = bundle.card;
+      const director = bundle.directorPayload || {};
+      const beats = director.beats || {};
+      const facts = beats.sceneFacts || {};
+      const locations = Array.isArray(facts.locations) ? facts.locations.filter(Boolean) : [];
+      const objects = Array.isArray(facts.objects) ? facts.objects.filter(Boolean) : [];
+      const seedLines = [
+        beats.sceneText && `本幕事件：${shortenText(beats.sceneText, 100)}`,
+        beats.memoryText && `回憶焦點：${shortenText(beats.memoryText, 90)}`,
+        beats.emotionText && `情緒：${shortenText(beats.emotionText, 70)}`,
+        beats.intentText && `下一步：${shortenText(beats.intentText, 70)}`,
+        director.storyText && `小劇本：${shortenText(director.storyText, 160)}`,
+      ].filter(Boolean);
+      const moodFromDirector = beats.emotionText || (target.femaleFocus ? "情感、家室與去留牽掛" : angleDefinitions[card.angle].desc);
+      const locationLine = locations.length ? `場景位置：${locations.slice(0, 3).join("、")}` : (card.location ? `場景位置：${card.location}` : "");
+      const objectLine = objects.length ? `可見物件：${objects.slice(0, 4).join("、")}` : "";
+      const evidenceLine = seedLines.length ? seedLines.join("\n") : `關鍵文字線索：${shortenText(card.summary, 100)}`;
+      return `${state.data.illustrationPromptBase}
+場景主題：${bundle.sceneTitle}
+互動對象：${target.label}（${target.role}）
+畫面情緒：${moodFromDirector}
+${locationLine}
+${objectLine}
+${evidenceLine}
+畫風要求：清爽、輕鬆、易讀的劇情角色插畫，乾淨線條、柔和色彩、自然表情、溫暖電影光感；不要水墨山水、卷軸感、厚重筆刷或過度史詩化構圖。
+構圖要求：半身到全身，人物與互動對象在同一個可理解的場景中，像剛從回憶中回神、準備安排行動。畫面中不要出現任何文字、中文字、字幕或招牌字。`;
       const mood = target.femaleFocus ? "含蓄情感、家室牽掛、亂世去留" : angleDefinitions[card.angle].desc;
       const detail = card.location ? `場景位置：${card.location}；` : "";
       return `${state.data.illustrationPromptBase}\n場景主題：${bundle.sceneTitle}\n互動對象：${target.label}（${target.role}）\n畫面情緒：${mood}\n${detail}關鍵文字線索：${shortenText(card.summary, 80)}\n畫風要求：清爽、輕鬆、易讀的劇情角色插畫，乾淨線條、柔和色彩、自然表情、溫暖電影光感；不要水墨山水、卷軸感、厚重筆刷或過度史詩化構圖。\n構圖要求：半身到全身，人物與互動對象在營火或軍帳光源旁，像剛從回憶中回神、準備安排行動。畫面中不要出現任何文字、中文字、字幕或招牌字。`;
@@ -3129,6 +3155,7 @@
       state.rendering = true;
       state.revealToken += 1;
       state.currentBundle = bundle;
+      bundle.directorPayload = null;
       state.narrativeRequestToken += 1;
       abortAllNarrativeControllers();
       const renderingGuard = window.setTimeout(() => {
@@ -3156,8 +3183,10 @@
         renderDirectorChorusLines([]);
         refreshIllustrationPrompt();
         const directorPromise = requestSceneDirector(bundle);
-        void requestSceneIllustration(bundle).catch(() => null);
         const directorPayload = await directorPromise;
+        bundle.directorPayload = directorPayload || null;
+        refreshIllustrationPrompt();
+        void requestSceneIllustration(bundle).catch(() => null);
         const beats = directorPayload?.beats || {};
         const dataStatus = String(directorPayload?.dataStatus || "").trim();
         const sceneText = sanitizeDisplayText(beats.sceneText || "", { removeActor: false });
@@ -3174,10 +3203,11 @@
           && !intentText
           && !storyText
         );
+        const storyMissing = !isEmpty && !storyText;
         const sourceLabel = dataStatus
           ? `scene-director/${dataStatus}`
           : (directorPayload ? "scene-director" : "scene-director unavailable");
-        elements.sceneNote.textContent = `${bundle.sceneNote}；${sourceLabel}${isEmpty ? "；本角度/人物目前無資料" : ""}`;
+        elements.sceneNote.textContent = `${bundle.sceneNote}；${sourceLabel}${isEmpty ? "；本角度/人物目前無資料" : ""}${storyMissing ? "；小劇本暫未生成" : ""}`;
 
         await wait(220);
         elements.sceneText.textContent = sceneText;
@@ -3185,7 +3215,7 @@
         await revealText(elements.emotionText, emotionText, 320);
         await revealText(elements.dialogueText, dialogueText, 300);
         await revealText(elements.intentText, intentText, 320);
-        await revealText(elements.storyText, storyText || sceneText, 260);
+        await revealText(elements.storyText, storyText, 260);
         renderDirectorChorusLines(Array.isArray(directorPayload?.chorusLines) ? directorPayload.chorusLines : []);
         bundle.runtimeIntentText = intentText;
       } catch (error) {
@@ -3310,6 +3340,39 @@
         elements.chorusGrid.innerHTML = "";
       }
       elements.timeline.innerHTML = "";
+    }
+
+    function clearSceneOutputsForSelectionChange() {
+      state.revealToken += 1;
+      state.imageRequestToken += 1;
+      state.dialogueRequestToken += 1;
+      state.narrativeRequestToken += 1;
+      abortIfAlive(state.imageAbortController);
+      abortIfAlive(state.dialogueAbortController);
+      abortIfAlive(state.sceneDirectorAbortController);
+      abortAllNarrativeControllers();
+      state.imageAbortController = null;
+      state.dialogueAbortController = null;
+      state.sceneDirectorAbortController = null;
+      state.currentBundle = null;
+      elements.sceneTitle.textContent = `角度：${angleDefinitions[state.activeAngle]?.label || ""} / 對象：${activeTarget()?.label || ""}`;
+      elements.sceneNote.textContent = "已切換角度或對象，請按「下一幕」載入新場景。";
+      elements.sourceBadge.textContent = "";
+      elements.sceneMeta.innerHTML = "";
+      elements.sceneText.textContent = "";
+      elements.memoryText.textContent = "";
+      elements.emotionText.textContent = "";
+      elements.dialogueText.textContent = "";
+      elements.intentText.textContent = "";
+      elements.storyText.textContent = "";
+      elements.illustrationPrompt.textContent = "";
+      elements.illustrationHint.textContent = "已切換角度或對象，等待新場景後再生成插圖提示。";
+      elements.illustrationImage.hidden = true;
+      elements.illustrationImage.removeAttribute("src");
+      setIllustrationVisualState("等待下一幕。", { showPlaceholder: true });
+      if (elements.chorusGrid) {
+        elements.chorusGrid.innerHTML = "";
+      }
     }
 
     function resetGame() {
