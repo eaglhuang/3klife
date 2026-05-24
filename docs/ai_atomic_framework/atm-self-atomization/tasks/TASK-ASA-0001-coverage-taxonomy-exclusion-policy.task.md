@@ -1,9 +1,4 @@
 ---
-reopen_reason: User requested TASK-ASA-0001 through TASK-ASA-0003 be redone from a clean governed workflow; previous AI completion records are historical draft evidence only.
-reopened_by_actor: codex-main
-reopened_at: 2026-05-22T10:44:26+08:00
-audit_at: 2026-05-22T10:44:26+08:00
-audit_status: reopened_for_clean_redo
 doc_id: doc_other_1003
 task_id: TASK-ASA-0001
 title: 定義 ATM 100% 原子化覆蓋口徑與排除政策

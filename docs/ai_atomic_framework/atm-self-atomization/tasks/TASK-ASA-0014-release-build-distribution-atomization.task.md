@@ -12,8 +12,9 @@ upstream_repo: AI-Atomic-Framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 public_tracking: false
-audit_status: reopened_after_invalid_completion_claim
-audit_at: 2026-05-21T00:00:00+08:00
+started_at: null
+started_by_agent: null
+completed_at: null
 ---
 
 # TASK-ASA-0014 完成 release build 與 distribution 原子化

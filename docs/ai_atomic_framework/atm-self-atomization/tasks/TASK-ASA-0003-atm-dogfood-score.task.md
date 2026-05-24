@@ -1,7 +1,4 @@
 ---
-reopen_reason: User requested TASK-ASA-0001 through TASK-ASA-0003 be redone from a clean governed workflow; previous AI completion records are historical draft evidence only.
-reopened_by_actor: codex-main
-reopened_at: 2026-05-22T10:44:26+08:00
 doc_id: doc_other_1005
 task_id: TASK-ASA-0003
 title: 新增 ATM dogfood score 報告
@@ -18,8 +15,6 @@ public_tracking: false
 started_at: null
 started_by_agent: null
 completed_at: null
-audit_status: reopened_for_clean_redo
-audit_at: 2026-05-22T10:44:26+08:00
 lastTransitionId: 2026-05-21T10-29-44-182Z-migrate-legacy-ledger-324ebf38a8f2
 lastTransitionAt: 2026-05-21T10:29:44.182Z
 ledgerContractVersion: task-ledger/v1
