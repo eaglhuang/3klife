@@ -29,3 +29,20 @@ Related plan: ../ATM框架100%自我原子化計畫書.md
 - 實作 commit 應發生在 `AI-Atomic-Framework`，中文推進紀錄留在本目錄。
 - 任務完成時，補 evidence 或連回 ATM repo 的 commit / report path。
 - 不直接修改 ATM `.atm/` runtime state。
+
+## Non-ASA follow-up
+
+ASA 系列只處理 ATM 框架自我原子化本體。
+如果問題已經超出 ownership / evidence / release atomization 範圍，改由 AAO 系列承接：
+
+- 系列入口：[`../atm-agent-first-operability/README.md`](../atm-agent-first-operability/README.md)
+- 任務索引：[`../atm-agent-first-operability/tasks/README.md`](../atm-agent-first-operability/tasks/README.md)
+
+AAO 專注的主題包括：
+
+- Agent-First operability
+- CLI surface 與 command spec drift guard
+- `next` 的結構化決策摘要
+- validator failure 的可修輸出
+- docs / schema / command drift guard
+- onefile size / startup budget
