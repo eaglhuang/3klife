@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-05-25T03-37-06-570Z-migrate-legacy-ledger-06082a39a406",
+  "taskId": "TASK-AAO-0000",
+  "action": "migrate-legacy-ledger",
+  "actorId": "codex-main",
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0000-doc-finalize-bridge-index.task.md",
+  "taskSha256": "sha256:1df03e666709adc68b15fce75b36d7f8de5388d978b08738506c2908f29b3b1f",
+  "createdAt": "2026-05-25T03:37:06.570Z",
+  "command": "node atm.mjs tasks migrate-legacy-ledger"
+}

@@ -39,6 +39,14 @@ doc_refs:
   - doc_other_1001
 created_at: 2026-05-25T09:00:00+08:00
 created_by_agent: codex
+lastTransitionId: 2026-05-25T03-37-06-570Z-migrate-legacy-ledger-06082a39a406
+lastTransitionAt: 2026-05-25T03:37:06.570Z
+ledgerContractVersion: task-ledger/v1
+ledgerBaselineKind: legacy-transition-backfill
+ledgerBaselineByActor: codex-main
+ledgerBaselineAt: 2026-05-25T03:37:06.570Z
+ledgerBaselineReason: Backfilled task-ledger/v1 baseline transition for legacy task state that predates CLI-controlled task transitions.
+ledgerBaselineSourceSha256: sha256:2ab4acaaf42b9fa4af4bab55c2e76085cb03ab890023b6e5ba9b4ff088266296
 ---
 
 # TASK-AAO-0000 — AAO 文件區初始化與 ASA 橋接索引
