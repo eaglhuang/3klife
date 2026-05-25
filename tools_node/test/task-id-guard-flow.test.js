@@ -10,8 +10,6 @@ const tempRoot = path.join(projectRoot, 'temp', 'task-id-guard-flow');
 const taskCardDir = path.join(tempRoot, 'docs', 'agent-briefs', 'tasks');
 const lockDir = path.join(tempRoot, '.task-locks');
 const taskCardOpenerCli = path.join(projectRoot, 'tools_node', 'task-card-opener.js');
-const taskLockCli = path.join(projectRoot, 'tools_node', 'task-lock.js');
-
 const {
   inspectTaskId,
   releaseReservedTaskId,
@@ -70,7 +68,10 @@ function runNode(args, expectedStatus = 0) {
 }
 
 function cleanupRealProjectArtifacts(taskId) {
-  runNode([taskLockCli, 'unlock', taskId, 'task-id-flow-agent'], 0);
+  const lockFilePath = path.join(projectRoot, '.task-locks', `${taskId}.lock.json`);
+  if (fs.existsSync(lockFilePath)) {
+    fs.unlinkSync(lockFilePath);
+  }
   for (const entryName of [
     `${taskId}.md`,
     `${taskId}.json`,
@@ -118,8 +119,54 @@ function testReserveNextAndRelease() {
   assert(inspectTaskId(tempRoot, reservation.taskId).occupied === false, 'released reservation should free the id');
 }
 
-function testTaskCardOpenerPromotion() {
-  const taskId = 'ATM-FLOW-9001';
+function testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks() {
+  const taskIds = ['ATM-FLOW-9001', 'ATM-FLOW-9002'];
+  const sharedJsonPath = 'temp/task-id-flow-shared.json';
+  taskIds.forEach(cleanupRealProjectArtifacts);
+  const sharedJsonAbsPath = path.join(projectRoot, sharedJsonPath);
+  if (fs.existsSync(sharedJsonAbsPath)) {
+    fs.unlinkSync(sharedJsonAbsPath);
+  }
+
+  try {
+    for (const taskId of taskIds) {
+      runNode([
+        taskCardOpenerCli,
+        '--id',
+        taskId,
+        '--title',
+        'Task id flow regression',
+        '--owner',
+        'task-id-flow-agent',
+        '--md-out',
+        `temp/${taskId}.md`,
+        '--json-out',
+        sharedJsonPath,
+        '--json-kind',
+        'task-aggregate',
+        '--write',
+      ]);
+
+      assert(!fs.existsSync(path.join(projectRoot, '.task-locks', `${taskId}.lock.json`)), 'open task card should release reservation instead of leaving a formal lock');
+      const taskJson = readJson(path.join(projectRoot, 'temp', `${taskId}.json`));
+      assert(taskJson.started_at === '', 'open task card json should not include started_at value');
+      assert(taskJson.started_by_agent === '', 'open task card json should not include started_by_agent value');
+    }
+
+    const aggregate = readJson(sharedJsonAbsPath);
+    assert(Array.isArray(aggregate.tasks), 'task aggregate should keep tasks array');
+    assert(aggregate.tasks.some((entry) => entry.id === taskIds[0]), 'shared aggregate should contain first open task');
+    assert(aggregate.tasks.some((entry) => entry.id === taskIds[1]), 'shared aggregate should contain second open task');
+  } finally {
+    taskIds.forEach(cleanupRealProjectArtifacts);
+    if (fs.existsSync(sharedJsonAbsPath)) {
+      fs.unlinkSync(sharedJsonAbsPath);
+    }
+  }
+}
+
+function testTaskCardOpenerInProgressPromotion() {
+  const taskId = 'ATM-FLOW-9003';
   cleanupRealProjectArtifacts(taskId);
   try {
     runNode([
@@ -130,6 +177,8 @@ function testTaskCardOpenerPromotion() {
       'Task id flow regression',
       '--owner',
       'task-id-flow-agent',
+      '--status',
+      'in-progress',
       '--md-out',
       `temp/${taskId}.md`,
       '--json-out',
@@ -138,9 +187,12 @@ function testTaskCardOpenerPromotion() {
     ]);
 
     const lock = readJson(path.join(projectRoot, '.task-locks', `${taskId}.lock.json`));
-    assert(lock.reservationOnly === undefined, 'task-card-opener should promote reservation to formal lock');
+    assert(lock.reservationOnly === undefined, 'in-progress task-card-opener should promote reservation to formal lock');
     assert(lock.files.includes(`temp/${taskId}.md`), 'promoted lock should include markdown output');
     assert(lock.files.includes(`temp/${taskId}.json`), 'promoted lock should include json output');
+    const taskJson = readJson(path.join(projectRoot, 'temp', `${taskId}.json`));
+    assert(Boolean(taskJson.started_at), 'in-progress task card json should include started_at value');
+    assert(Boolean(taskJson.started_by_agent), 'in-progress task card json should include started_by_agent value');
   } finally {
     cleanupRealProjectArtifacts(taskId);
   }
@@ -149,7 +201,8 @@ function testTaskCardOpenerPromotion() {
 function main() {
   testGuardReservationAndPromotion();
   testReserveNextAndRelease();
-  testTaskCardOpenerPromotion();
+  testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks();
+  testTaskCardOpenerInProgressPromotion();
   resetTempRoot();
   console.log('task-id guard flow tests passed');
 }

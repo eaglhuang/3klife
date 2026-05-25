@@ -262,10 +262,10 @@ function buildTask(options) {
   const deliverables = options.deliverables.length > 0 ? options.deliverables : [];
   const startedAt = status === 'in-progress'
     ? (options.startedAt || nowRfc3339())
-    : (options.startedAt || '');
+    : '';
   const startedByAgent = status === 'in-progress'
     ? (options.startedByAgent || options.createdByAgent || options.owner)
-    : (options.startedByAgent || '');
+    : '';
   const notes = options.notes || `${created} | 狀態: ${status} | 驗證: pending | 變更: task-card-opener 產生${options.briefStyle === 'harn-rich' ? ' HARN rich brief' : '骨架'} | 阻塞: ${options.briefStyle === 'harn-rich' ? 'none' : '無'}`;
 
   return {
@@ -678,6 +678,21 @@ function promoteReservationToLock(taskId, agentName, files) {
   clearTaskIdReservation();
 }
 
+function finalizePendingTaskIdReservation(task, agentName, files) {
+  if (!pendingTaskIdReservation) {
+    return;
+  }
+
+  const normalizedStatus = normalizeStatus(task && task.status);
+  if (normalizedStatus === 'in-progress') {
+    promoteReservationToLock(task.id, agentName, files);
+    return;
+  }
+
+  taskAdapter.releaseReservedTaskId(pendingTaskIdReservation.taskId, pendingTaskIdReservation.agentName);
+  clearTaskIdReservation();
+}
+
 async function main() {
   if (hasFlag(process.argv, 'help')) {
     printHelp();
@@ -849,7 +864,7 @@ async function main() {
     if (assignDocId && mdKind === 'agent-briefs') {
       lockFiles.push('docs/doc-id-registry-shards/registry-task.json');
     }
-    promoteReservationToLock(task.id, owner, lockFiles);
+    finalizePendingTaskIdReservation(task, owner, lockFiles);
   }
 
   const outputSummary = {
