@@ -14,10 +14,32 @@ refactor, split, atomize, infect, migrate, or modernize existing source code.
 The goal is to keep the user request natural while still routing the work
 through ATM evidence before choosing a local implementation path.
 
+## Delivery Principle
+
+The objective is to deliver the task content, not to close task cards. A task
+card is a delivery contract. `done` is only the record after the requested
+code, data, pipeline, document, or artifact exists and validators/evidence pass.
+
+Do not optimize for making many cards become `done`. Optimize for producing the
+requested non-.atm deliverables for the current task or current batch queue
+head.
+
+If the natural-language request mentions a task id, task card, plan document, or
+scoped task batch, invoke `atm-task-intent-resolver` first. It must write
+`.atm/runtime/task-intent.json` from semantic reading of the user prompt and then
+call:
+
+```bash
+node atm.mjs next --intent .atm/runtime/task-intent.json --json
+```
+
+Do not rely on keyword-only `next --prompt` extraction when the task intent
+resolver skill is available.
+
 ## First Command
 
 ```bash
-node atm.mjs next --json
+node atm.mjs next --prompt "$ARGUMENTS" --json
 ```
 
 If the first command returns a user notice, surface it briefly, then continue the
@@ -51,11 +73,21 @@ Follow the returned `nextCommand`. If the matched intent is
 source analysis by hand. If the matched intent is `task-plan-import`, run the
 task import dry run before creating or editing any task files.
 
-Before mutating repository files for implementation work, claim the task:
+Before mutating repository files for implementation work, claim the prompt-scoped task:
 
 ```bash
-node atm.mjs next --claim --actor "$ATM_ACTOR_ID" --json
+node atm.mjs next --claim --actor "$ATM_ACTOR_ID" --prompt "$ARGUMENTS" --json
 ```
+
+If the claim result says `recommendedChannel: "batch"`, the governed route is:
+
+1. Deliver the current queue head only.
+2. Run validators and evidence for that queue-head deliverable.
+3. Run `node atm.mjs batch checkpoint --actor "$ATM_ACTOR_ID" --json`.
+4. Commit only the checkpoint-approved task change before moving on.
+
+Do not manually loop through `tasks reserve`, `tasks promote`, `tasks claim`,
+`tasks close`, or old close commits. That is governance bypass, not batch.
 
 ATM's default task ledger is the active flow monitor when `taskLedger.enabled`
 is true. Use the repo-local `.atm/history/tasks` store for adopter work; use the
@@ -134,6 +166,11 @@ Then continue the user's original request with the fallback sources.
   evidence exist.
 - Do not mutate host files during candidate ranking; ranking is advisory until
   a later governed dry run is selected.
+- Do not treat task closure as the work. Implement the task's requested
+  deliverables first, then close.
+- Do not hand-roll batch task completion with low-level task lifecycle commands;
+  if `recommendedChannel` is `batch`, finish each queue head with
+  `node atm.mjs batch checkpoint --actor "$ATM_ACTOR_ID" --json`.
 - Do not start implementation edits before a task is in `ready` and has an
   active claim.
 - Do not bypass the default task ledger when it is enabled; task status changes
