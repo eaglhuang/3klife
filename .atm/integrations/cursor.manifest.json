@@ -1,0 +1,89 @@
+{
+  "schemaId": "atm.integrationInstallManifest",
+  "schemaVersion": "atm.installManifest.v0.1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "Initial integration adapter install manifest."
+  },
+  "adapterId": "cursor",
+  "adapterVersion": "0.0.0",
+  "installedAt": "2026-05-25T06:56:15.757Z",
+  "targetDir": ".cursor/rules/skills",
+  "files": [
+    {
+      "path": ".cursor/rules/skills/atm-next/SKILL.md",
+      "sha256": "sha256:db211158d6998784d1ad35dac433cd15e416677e34190a10f920890c3eb9e1ca",
+      "sizeBytes": 4688,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-task-intent-resolver/SKILL.md",
+      "sha256": "sha256:358808c892c53e2425446733cd61ee1e0d902817d9123eb88604306f561e9c68",
+      "sizeBytes": 5328,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-orient/SKILL.md",
+      "sha256": "sha256:3381a1d84562e60729d84d2df6d79fef2a263609c6ff9141d75947fa693c3878",
+      "sizeBytes": 3151,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-governance-router/SKILL.md",
+      "sha256": "sha256:65c733261fda81bd78ef84493a3d6b90497a682cdec0ce5f42782bbd9b70e7bb",
+      "sizeBytes": 9955,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-create/SKILL.md",
+      "sha256": "sha256:c2c4710251005fa36be62079fe03e4b00e36ad872a2a5581ccde6e0cb1702a55",
+      "sizeBytes": 3188,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-lock/SKILL.md",
+      "sha256": "sha256:702da5d87cc036be701afa8317ed51b9c3d87f91e7e9a9d14ff683695e1236c5",
+      "sizeBytes": 3374,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-evidence/SKILL.md",
+      "sha256": "sha256:486225ba273ef96bdc9b337f84a102adc2f71da01aede886f8d3cd336be31104",
+      "sizeBytes": 3160,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-upgrade-scan/SKILL.md",
+      "sha256": "sha256:67d61ab4490e46fe6d670329b24cde857f34d1dd13fb3dc217066a3e00d46caa",
+      "sizeBytes": 3178,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-handoff/SKILL.md",
+      "sha256": "sha256:b0c5ba8feffb783f8b78583d5b85c0703a512bc2c9f56690292cfaf34bb0662e",
+      "sizeBytes": 3175,
+      "source": "template",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".cursor/rules/skills/atm-internal-build-sync/SKILL.md",
+      "sha256": "sha256:3d5e59a2eca17382914c85ff1081dc655ed515beda9430eea11d49c64db54dd5",
+      "sizeBytes": 4037,
+      "source": "template",
+      "fileFormat": "markdown"
+    }
+  ],
+  "metadata": {
+    "sourceFileCount": 10
+  }
+}
