@@ -1052,19 +1052,19 @@
   {
     "id": "doc_other_0235",
     "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0005-legacy-python-infect-atomize.task.md",
-    "title": "TASK-ATS-0005 — Legacy Python infect and atomize validation",
+    "title": "TASK-ATS-0005：Leaf-level legacy Python atomize and infect dry-run pass",
     "category": "other"
   },
   {
     "id": "doc_other_0236",
     "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0006-atomic-map-decomposition-validation.task.md",
-    "title": "TASK-ATS-0006 — Atomic Map decomposition and replacement validation",
+    "title": "TASK-ATS-0006：Legacy Python feature decomposition to atomic map dry-run",
     "category": "other"
   },
   {
     "id": "doc_other_0237",
     "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/TASK-ATS-0007-atom-evolution-polymorph-validation.task.md",
-    "title": "TASK-ATS-0007 — Atom evolution and polymorphize validation",
+    "title": "TASK-ATS-0007：Atomic map equivalence and rollout validation",
     "category": "other"
   },
   {
@@ -1112,31 +1112,31 @@
   {
     "id": "doc_other_0245",
     "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0003-dedup-police-productization.task.md",
-    "title": "TASK-APF-0003 — Dedup Police 產品化",
+    "title": "TASK-APF-0003 — Dedup Police 產品化規格 / design spec",
     "category": "other"
   },
   {
     "id": "doc_other_0246",
     "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0004-demand-police-productization.task.md",
-    "title": "TASK-APF-0004 — Demand Police 產品化",
+    "title": "TASK-APF-0004 — Demand Police 產品化規格 / design spec",
     "category": "other"
   },
   {
     "id": "doc_other_0247",
     "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0005-quality-police-productization.task.md",
-    "title": "TASK-APF-0005 — Quality Police 產品化",
+    "title": "TASK-APF-0005 — Quality Police 產品化規格 / design spec",
     "category": "other"
   },
   {
     "id": "doc_other_0248",
     "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0006-map-integration-police-productization.task.md",
-    "title": "TASK-APF-0006 — Map Integration Police 產品化",
+    "title": "TASK-APF-0006 — Map Integration Police 產品化規格 / design spec",
     "category": "other"
   },
   {
     "id": "doc_other_0249",
     "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0007-atomization-police-productization.task.md",
-    "title": "TASK-APF-0007 — Atomization Police 產品化",
+    "title": "TASK-APF-0007 — Atomization Police 產品化規格 / design spec",
     "category": "other"
   },
   {
@@ -1550,19 +1550,19 @@
   {
     "id": "doc_other_0646",
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0025-existing-root-entry-injection.task.md",
-    "title": "TASK-APO-0025 — 既有 README / AGENTS 的 loop-free ATM 入口注入",
+    "title": "TASK-APO-0025 既有 README / AGENTS 的 loop-free ATM 入口注入",
     "category": "other"
   },
   {
     "id": "doc_other_0647",
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0026-codex-official-integration.task.md",
-    "title": "TASK-APO-0026 — Codex editor integration 正式化",
+    "title": "TASK-APO-0026 Codex editor integration 正式化",
     "category": "other"
   },
   {
     "id": "doc_other_0648",
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0027-pinned-runner-auto-install.task.md",
-    "title": "TASK-APO-0027 — Pinned Runner Auto-Install During Init/Bootstrap",
+    "title": "TASK-APO-0027 Pinned Runner Auto-Install During Init/Bootstrap",
     "category": "other"
   },
   {
@@ -1988,13 +1988,13 @@
   {
     "id": "doc_other_0719",
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0029-atm-task-plan-import-flow.task.md",
-    "title": "TASK-APO-0029 - ATM Task Plan Import and Work Item Opening Flow",
+    "title": "TASK-APO-0029 ATM Task Plan Import and Work Item Opening Flow",
     "category": "other"
   },
   {
     "id": "doc_other_0720",
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0030-python-language-adapter-plugin.task.md",
-    "title": "TASK-APO-0030 - Python Language Adapter / Plugin",
+    "title": "TASK-APO-0030 Python Language Adapter / Plugin",
     "category": "other"
   },
   {
@@ -2094,6 +2094,150 @@
     "category": "other"
   },
   {
+    "id": "doc_other_0801",
+    "path": "docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md",
+    "title": "ATM GOV Governance Program Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0802",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0101-actor-identity-registry.task.md",
+    "title": "ATM-GOV-0101 Actor Identity Registry and Git Identity Contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0803",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0102-atomic-task-claim-lease.task.md",
+    "title": "ATM-GOV-0102 Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0804",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md",
+    "title": "ATM-GOV-0103 Task Opening and Reservation Lifecycle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0805",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0104-evidence-bound-gates.task.md",
+    "title": "ATM-GOV-0104 Evidence-Bound Close and Commit/PR Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0806",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0105-git-governance-contract.task.md",
+    "title": "ATM-GOV-0105 Git Governance and Commit Trailer Validation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0807",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0106-thin-guard-engine.task.md",
+    "title": "ATM-GOV-0106 Thin Guard Engine for Mutation and Git Checks",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0808",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0107-integration-plugins.task.md",
+    "title": "ATM-GOV-0107 Integration Plugins for Claude Code, Codex, Gemini, Cursor",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0809",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0108-no-hook-human-fallback.task.md",
+    "title": "ATM-GOV-0108 No-Hook and Human Collaboration Fallback Profile",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0810",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0109-claim-collision-proofing.task.md",
+    "title": "ATM-GOV-0109 Claim Collision Proofing and Conflict Evidence Flow",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0811",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0110-adapter-neutrality-boundary.task.md",
+    "title": "ATM-GOV-0110 Adapter Neutrality Boundary and Governance Externalization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0812",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0111-antigravity-integration-adapter.task.md",
+    "title": "ATM-GOV-0111 Antigravity Integration Adapter",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0813",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0112-languageadapter-governance-capability-contract.task.md",
+    "title": "ATM-GOV-0112 LanguageAdapter Governance Capability Contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0814",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0113-languageadapter-capability-resolution-fallback.task.md",
+    "title": "ATM-GOV-0113 LanguageAdapter Capability Resolution and Fallback Semantics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0815",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0114-legacyrouteplan-via-languageadapter.task.md",
+    "title": "ATM-GOV-0114 LegacyRoutePlan via LanguageAdapter",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0816",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0115-source-inventory-candidate-ranking-signals.task.md",
+    "title": "ATM-GOV-0115 Source Inventory and Candidate Ranking Signals via LanguageAdapter",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0817",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0116-atomize-infect-dryrun-planning.task.md",
+    "title": "ATM-GOV-0116 Atomize and Infect Dry-Run Planning via LanguageAdapter",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0818",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0117-reference-javascript-languageadapter.task.md",
+    "title": "ATM-GOV-0117 Reference JavaScript LanguageAdapter Governance Implementation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0819",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0118-reference-python-languageadapter.task.md",
+    "title": "ATM-GOV-0118 Reference Python LanguageAdapter Governance Implementation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0820",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0119-unsupported-language-advisory.task.md",
+    "title": "ATM-GOV-0119 Unsupported Language Advisory and Deferred Apply Contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0821",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0120-multilanguage-onefile-validation-matrix.task.md",
+    "title": "ATM-GOV-0120 Multi-language Onefile Validation Matrix for Governance Analysis",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0822",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0121-languageadapter-governance-authoring-guide.task.md",
+    "title": "ATM-GOV-0121 LanguageAdapter Governance Authoring Guide",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0823",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0122-adopter-atom-version-lineage.task.md",
+    "title": "ATM-GOV-0122 Adopter Atom Version Lineage for Evolve Proof",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0824",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0123-registry-lineage-backfill-command.task.md",
+    "title": "ATM-GOV-0123 Registry Lineage Backfill Command",
+    "category": "other"
+  },
+  {
     "id": "doc_other_0901",
     "path": "docs/ai_atomic_framework/universal-language-framework/ATM通用語言框架計畫書.md",
     "title": "ATM 通用語言框架計畫書",
@@ -2108,421 +2252,421 @@
   {
     "id": "doc_other_0903",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0001.task.md",
-    "title": "ATM-LANG-0001 - 繁中主規劃書與 atomic-map roadmap",
+    "title": "ATM-LANG-0001 繁中主規劃書與 atomic-map roadmap",
     "category": "other"
   },
   {
     "id": "doc_other_0904",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0002.task.md",
-    "title": "ATM-LANG-0002 - 英文 companion 教學文件骨架",
+    "title": "ATM-LANG-0002 英文 companion 教學文件骨架",
     "category": "other"
   },
   {
     "id": "doc_other_0905",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0003.task.md",
-    "title": "ATM-LANG-0003 - 新舊需求 traceability matrix",
+    "title": "ATM-LANG-0003 新舊需求 traceability matrix",
     "category": "other"
   },
   {
     "id": "doc_other_0906",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0100.task.md",
-    "title": "ATM-LANG-0100 - LanguageAdapter v2 public contract",
+    "title": "ATM-LANG-0100 LanguageAdapter v2 public contract",
     "category": "other"
   },
   {
     "id": "doc_other_0907",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0101.task.md",
-    "title": "ATM-LANG-0101 - Shared language analysis schemas",
+    "title": "ATM-LANG-0101 Shared language analysis schemas",
     "category": "other"
   },
   {
     "id": "doc_other_0908",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0102.task.md",
-    "title": "ATM-LANG-0102 - Runtime/equivalence/evidence contracts",
+    "title": "ATM-LANG-0102 Runtime/equivalence/evidence contracts",
     "category": "other"
   },
   {
     "id": "doc_other_0909",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0200.task.md",
-    "title": "ATM-LANG-0200 - Adapter registry and resolver",
+    "title": "ATM-LANG-0200 Adapter registry and resolver",
     "category": "other"
   },
   {
     "id": "doc_other_0910",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0201.task.md",
-    "title": "ATM-LANG-0201 - Capability fallback and user messages",
+    "title": "ATM-LANG-0201 Capability fallback and user messages",
     "category": "other"
   },
   {
     "id": "doc_other_0911",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0202.task.md",
-    "title": "ATM-LANG-0202 - Bundled/external adapter discovery strategy",
+    "title": "ATM-LANG-0202 Bundled/external adapter discovery strategy",
     "category": "other"
   },
   {
     "id": "doc_other_0912",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0300.task.md",
-    "title": "ATM-LANG-0300 - LegacyRoutePlan adapter delegation",
+    "title": "ATM-LANG-0300 LegacyRoutePlan adapter delegation",
     "category": "other"
   },
   {
     "id": "doc_other_0913",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0301.task.md",
-    "title": "ATM-LANG-0301 - Remove core language regex ownership",
+    "title": "ATM-LANG-0301 Remove core language regex ownership",
     "category": "other"
   },
   {
     "id": "doc_other_0914",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0302.task.md",
-    "title": "ATM-LANG-0302 - Guidance and police integration update",
+    "title": "ATM-LANG-0302 Guidance and police integration update",
     "category": "other"
   },
   {
     "id": "doc_other_0915",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0400.task.md",
-    "title": "ATM-LANG-0400 - Adapter-driven source inventory service",
+    "title": "ATM-LANG-0400 Adapter-driven source inventory service",
     "category": "other"
   },
   {
     "id": "doc_other_0916",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0401.task.md",
-    "title": "ATM-LANG-0401 - Candidate ranking signal model",
+    "title": "ATM-LANG-0401 Candidate ranking signal model",
     "category": "other"
   },
   {
     "id": "doc_other_0917",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0402.task.md",
-    "title": "ATM-LANG-0402 - candidates rank thin facade conversion",
+    "title": "ATM-LANG-0402 candidates rank thin facade conversion",
     "category": "other"
   },
   {
     "id": "doc_other_0918",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0500.task.md",
-    "title": "ATM-LANG-0500 - Generic atomize/infect dry-run plan contracts",
+    "title": "ATM-LANG-0500 Generic atomize/infect dry-run plan contracts",
     "category": "other"
   },
   {
     "id": "doc_other_0919",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0501.task.md",
-    "title": "ATM-LANG-0501 - Import rewrite, shim, rollback plan contracts",
+    "title": "ATM-LANG-0501 Import rewrite, shim, rollback plan contracts",
     "category": "other"
   },
   {
     "id": "doc_other_0920",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0502.task.md",
-    "title": "ATM-LANG-0502 - Dry-run proposal evidence envelope",
+    "title": "ATM-LANG-0502 Dry-run proposal evidence envelope",
     "category": "other"
   },
   {
     "id": "doc_other_0921",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0600.task.md",
-    "title": "ATM-LANG-0600 - Atomic map decomposition contract",
+    "title": "ATM-LANG-0600 Atomic map decomposition contract",
     "category": "other"
   },
   {
     "id": "doc_other_0922",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0601.task.md",
-    "title": "ATM-LANG-0601 - Graph-to-map decomposition proposal",
+    "title": "ATM-LANG-0601 Graph-to-map decomposition proposal",
     "category": "other"
   },
   {
     "id": "doc_other_0923",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0602.task.md",
-    "title": "ATM-LANG-0602 - Large-feature decomposition evidence gate",
+    "title": "ATM-LANG-0602 Large-feature decomposition evidence gate",
     "category": "other"
   },
   {
     "id": "doc_other_0924",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0700.task.md",
-    "title": "ATM-LANG-0700 - Python AST inventory and symbol ranges",
+    "title": "ATM-LANG-0700 Python AST inventory and symbol ranges",
     "category": "other"
   },
   {
     "id": "doc_other_0925",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0701.task.md",
-    "title": "ATM-LANG-0701 - Python dependency/call/artifact graph",
+    "title": "ATM-LANG-0701 Python dependency/call/artifact graph",
     "category": "other"
   },
   {
     "id": "doc_other_0926",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0702.task.md",
-    "title": "ATM-LANG-0702 - Python CLI/API/side-effect surface detection",
+    "title": "ATM-LANG-0702 Python CLI/API/side-effect surface detection",
     "category": "other"
   },
   {
     "id": "doc_other_0927",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0703.task.md",
-    "title": "ATM-LANG-0703 - Python precise atomize/infect dry-run",
+    "title": "ATM-LANG-0703 Python precise atomize/infect dry-run",
     "category": "other"
   },
   {
     "id": "doc_other_0928",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0704.task.md",
-    "title": "ATM-LANG-0704 - Python equivalence fixtures and diagnostics",
+    "title": "ATM-LANG-0704 Python equivalence fixtures and diagnostics",
     "category": "other"
   },
   {
     "id": "doc_other_0929",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0800.task.md",
-    "title": "ATM-LANG-0800 - JS/TS v2 capability alignment",
+    "title": "ATM-LANG-0800 JS/TS v2 capability alignment",
     "category": "other"
   },
   {
     "id": "doc_other_0930",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0801.task.md",
-    "title": "ATM-LANG-0801 - JS/TS inventory and route planning",
+    "title": "ATM-LANG-0801 JS/TS inventory and route planning",
     "category": "other"
   },
   {
     "id": "doc_other_0931",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0802.task.md",
-    "title": "ATM-LANG-0802 - JS/TS dry-run and validator expansion",
+    "title": "ATM-LANG-0802 JS/TS dry-run and validator expansion",
     "category": "other"
   },
   {
     "id": "doc_other_0932",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0900.task.md",
-    "title": "ATM-LANG-0900 - English guide: adding a new language adapter",
+    "title": "ATM-LANG-0900 English guide: adding a new language adapter",
     "category": "other"
   },
   {
     "id": "doc_other_0933",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0901.task.md",
-    "title": "ATM-LANG-0901 - English guide: complete Go adapter code example",
+    "title": "ATM-LANG-0901 English guide: complete Go adapter code example",
     "category": "other"
   },
   {
     "id": "doc_other_0934",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0902.task.md",
-    "title": "ATM-LANG-0902 - English guide: Go atom/map development example",
+    "title": "ATM-LANG-0902 English guide: Go atom/map development example",
     "category": "other"
   },
   {
     "id": "doc_other_0935",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0903.task.md",
-    "title": "ATM-LANG-0903 - English guide: Go validator and thin facade example",
+    "title": "ATM-LANG-0903 English guide: Go validator and thin facade example",
     "category": "other"
   },
   {
     "id": "doc_other_0936",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1000.task.md",
-    "title": "ATM-LANG-1000 - Java/C#/Go adapter feasibility notes",
+    "title": "ATM-LANG-1000 Java/C#/Go adapter feasibility notes",
     "category": "other"
   },
   {
     "id": "doc_other_0937",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1001.task.md",
-    "title": "ATM-LANG-1001 - PHP dynamic include RFC",
+    "title": "ATM-LANG-1001 PHP dynamic include RFC",
     "category": "other"
   },
   {
     "id": "doc_other_0938",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1002.task.md",
-    "title": "ATM-LANG-1002 - Future adapter conformance checklist",
+    "title": "ATM-LANG-1002 Future adapter conformance checklist",
     "category": "other"
   },
   {
     "id": "doc_other_0939",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1100.task.md",
-    "title": "ATM-LANG-1100 - Cross-map validator suite",
+    "title": "ATM-LANG-1100 Cross-map validator suite",
     "category": "other"
   },
   {
     "id": "doc_other_0940",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1101.task.md",
-    "title": "ATM-LANG-1101 - Roadmap no-shrink and traceability validator",
+    "title": "ATM-LANG-1101 Roadmap no-shrink and traceability validator",
     "category": "other"
   },
   {
     "id": "doc_other_0941",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1102.task.md",
-    "title": "ATM-LANG-1102 - Atom/map coverage validator",
+    "title": "ATM-LANG-1102 Atom/map coverage validator",
     "category": "other"
   },
   {
     "id": "doc_other_0942",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1103.task.md",
-    "title": "ATM-LANG-1103 - Script facade boundary validator",
+    "title": "ATM-LANG-1103 Script facade boundary validator",
     "category": "other"
   },
   {
     "id": "doc_other_0943",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-1104.task.md",
-    "title": "ATM-LANG-1104 - Docs neutrality and bilingual positioning validator",
+    "title": "ATM-LANG-1104 Docs neutrality and bilingual positioning validator",
     "category": "other"
   },
   {
     "id": "doc_other_0944",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0001.task.md",
-    "title": "ATM-LANG-CSHARP-0001 - C# adapter package skeleton",
+    "title": "ATM-LANG-CSHARP-0001 C# adapter package skeleton",
     "category": "other"
   },
   {
     "id": "doc_other_0945",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0002.task.md",
-    "title": "ATM-LANG-CSHARP-0002 - .sln / .csproj profile detection",
+    "title": "ATM-LANG-CSHARP-0002 .sln / .csproj profile detection",
     "category": "other"
   },
   {
     "id": "doc_other_0946",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0003.task.md",
-    "title": "ATM-LANG-CSHARP-0003 - C# source inventory and symbol range",
+    "title": "ATM-LANG-CSHARP-0003 C# source inventory and symbol range",
     "category": "other"
   },
   {
     "id": "doc_other_0947",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0004.task.md",
-    "title": "ATM-LANG-CSHARP-0004 - partial class and generated file risk model",
+    "title": "ATM-LANG-CSHARP-0004 partial class and generated file risk model",
     "category": "other"
   },
   {
     "id": "doc_other_0948",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0005.task.md",
-    "title": "ATM-LANG-CSHARP-0005 - diagnostics parser fixture",
+    "title": "ATM-LANG-CSHARP-0005 diagnostics parser fixture",
     "category": "other"
   },
   {
     "id": "doc_other_0949",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0006.task.md",
-    "title": "ATM-LANG-CSHARP-0006 - dry-run planner",
+    "title": "ATM-LANG-CSHARP-0006 dry-run planner",
     "category": "other"
   },
   {
     "id": "doc_other_0950",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0007.task.md",
-    "title": "ATM-LANG-CSHARP-0007 - validate-language-csharp validator",
+    "title": "ATM-LANG-CSHARP-0007 validate-language-csharp validator",
     "category": "other"
   },
   {
     "id": "doc_other_0951",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0101.task.md",
-    "title": "ATM-LANG-CSHARP-0101 - C# fixture expansion for modern syntax surface",
+    "title": "ATM-LANG-CSHARP-0101 C# fixture expansion for modern syntax surface",
     "category": "other"
   },
   {
     "id": "doc_other_0952",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0102.task.md",
-    "title": "ATM-LANG-CSHARP-0102 - C# partial declaration merge index",
+    "title": "ATM-LANG-CSHARP-0102 C# partial declaration merge index",
     "category": "other"
   },
   {
     "id": "doc_other_0953",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0103.task.md",
-    "title": "ATM-LANG-CSHARP-0103 - C# diagnostics parser multi-format hardening",
+    "title": "ATM-LANG-CSHARP-0103 C# diagnostics parser multi-format hardening",
     "category": "other"
   },
   {
     "id": "doc_other_0954",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0104.task.md",
-    "title": "ATM-LANG-CSHARP-0104 - C# advisory runtime command detection",
+    "title": "ATM-LANG-CSHARP-0104 C# advisory runtime command detection",
     "category": "other"
   },
   {
     "id": "doc_other_0955",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0105.task.md",
-    "title": "ATM-LANG-CSHARP-0105 - C# atomic map decomposition implementation",
+    "title": "ATM-LANG-CSHARP-0105 C# atomic map decomposition implementation",
     "category": "other"
   },
   {
     "id": "doc_other_0956",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0106.task.md",
-    "title": "ATM-LANG-CSHARP-0106 - C# equivalence contract fixture implementation",
+    "title": "ATM-LANG-CSHARP-0106 C# equivalence contract fixture implementation",
     "category": "other"
   },
   {
     "id": "doc_other_0957",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0200.task.md",
-    "title": "ATM-LANG-CSHARP-0200 - C# registry integration with language adapter resolver",
+    "title": "ATM-LANG-CSHARP-0200 C# registry integration with language adapter resolver",
     "category": "other"
   },
   {
     "id": "doc_other_0958",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0201.task.md",
-    "title": "ATM-LANG-CSHARP-0201 - C# legacy route planning integration",
+    "title": "ATM-LANG-CSHARP-0201 C# legacy route planning integration",
     "category": "other"
   },
   {
     "id": "doc_other_0959",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0202.task.md",
-    "title": "ATM-LANG-CSHARP-0202 - C# symbol stability hardening",
+    "title": "ATM-LANG-CSHARP-0202 C# symbol stability hardening",
     "category": "other"
   },
   {
     "id": "doc_other_0960",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0203.task.md",
-    "title": "ATM-LANG-CSHARP-0203 - C# csproj deep profile parsing",
+    "title": "ATM-LANG-CSHARP-0203 C# csproj deep profile parsing",
     "category": "other"
   },
   {
     "id": "doc_other_0961",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0204.task.md",
-    "title": "ATM-LANG-CSHARP-0204 - C# cross-file symbol reference index",
+    "title": "ATM-LANG-CSHARP-0204 C# cross-file symbol reference index",
     "category": "other"
   },
   {
     "id": "doc_other_0962",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0205.task.md",
-    "title": "ATM-LANG-CSHARP-0205 - C# solution and project graph",
+    "title": "ATM-LANG-CSHARP-0205 C# solution and project graph",
     "category": "other"
   },
   {
     "id": "doc_other_0963",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0206.task.md",
-    "title": "ATM-LANG-CSHARP-0206 - C# csproj risk rules",
+    "title": "ATM-LANG-CSHARP-0206 C# csproj risk rules",
     "category": "other"
   },
   {
     "id": "doc_other_0964",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0207.task.md",
-    "title": "ATM-LANG-CSHARP-0207 - C# diagnostics parser SARIF expansion",
+    "title": "ATM-LANG-CSHARP-0207 C# diagnostics parser SARIF expansion",
     "category": "other"
   },
   {
     "id": "doc_other_0965",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0208.task.md",
-    "title": "ATM-LANG-CSHARP-0208 - C# legacy route deep planning",
+    "title": "ATM-LANG-CSHARP-0208 C# legacy route deep planning",
     "category": "other"
   },
   {
     "id": "doc_other_0966",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0209.task.md",
-    "title": "ATM-LANG-CSHARP-0209 - C# atomic map large-solution threshold profile",
+    "title": "ATM-LANG-CSHARP-0209 C# atomic map large-solution threshold profile",
     "category": "other"
   },
   {
     "id": "doc_other_0967",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0210.task.md",
-    "title": "ATM-LANG-CSHARP-0210 - C# enterprise multi-project smoke fixture",
+    "title": "ATM-LANG-CSHARP-0210 C# enterprise multi-project smoke fixture",
     "category": "other"
   },
   {
     "id": "doc_other_0968",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0300.task.md",
-    "title": "ATM-LANG-CSHARP-0300 - C# modern syntax inventory coverage expansion",
+    "title": "ATM-LANG-CSHARP-0300 C# modern syntax inventory coverage expansion",
     "category": "other"
   },
   {
     "id": "doc_other_0969",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0301.task.md",
-    "title": "ATM-LANG-CSHARP-0301 - C# symbol resolution hardening for alias static and generic calls",
+    "title": "ATM-LANG-CSHARP-0301 C# symbol resolution hardening for alias static and generic calls",
     "category": "other"
   },
   {
     "id": "doc_other_0970",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0302.task.md",
-    "title": "ATM-LANG-CSHARP-0302 - C# csproj and solution deep profile v2",
+    "title": "ATM-LANG-CSHARP-0302 C# csproj and solution deep profile v2",
     "category": "other"
   },
   {
     "id": "doc_other_0971",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0303.task.md",
-    "title": "ATM-LANG-CSHARP-0303 - C# diagnostics parser normalization v2",
+    "title": "ATM-LANG-CSHARP-0303 C# diagnostics parser normalization v2",
     "category": "other"
   },
   {
     "id": "doc_other_0972",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0304.task.md",
-    "title": "ATM-LANG-CSHARP-0304 - C# advisory readiness gate and threshold profile",
+    "title": "ATM-LANG-CSHARP-0304 C# advisory readiness gate and threshold profile",
     "category": "other"
   },
   {
@@ -2607,6 +2751,852 @@
     "id": "doc_other_0986",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0604.task.md",
     "title": "ATM-LANG-CSHARP-0604 C# promotion gate for advisory to pilot readiness",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1001",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md",
+    "title": "ATM 框架 100% 自我原子化計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1002",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/ATM_COMPLETION_REPORT.md",
+    "title": "ATM 100% 自我原子化計畫完成報告",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1003",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0001-coverage-taxonomy-exclusion-policy.task.md",
+    "title": "TASK-ASA-0001 定義 ATM 100% 原子化覆蓋口徑與排除政策",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1004",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0002-atomize-inventory-cli.task.md",
+    "title": "TASK-ASA-0002 新增 atomize inventory 覆蓋盤點 CLI",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1005",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0003-atm-dogfood-score.task.md",
+    "title": "TASK-ASA-0003 新增 ATM dogfood score 報告",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1006",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/ATM_COMPLETION_REPORT_AUDIT_2026-05-21.md",
+    "title": "ATM Self-Atomization Completion Claim Audit",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1007",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0005-generated-fixture-boundaries.task.md",
+    "title": "TASK-ASA-0005 建立 generated 與 fixture 邊界清單",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1008",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0006-bulk-atom-spec-backfill.task.md",
+    "title": "TASK-ASA-0006 實作 bulk atom spec backfill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1009",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0007-top-level-maps-composition.task.md",
+    "title": "TASK-ASA-0007 建立 top-level ATM maps composition",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1010",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0008-packages-core-coverage-wave.task.md",
+    "title": "TASK-ASA-0008 完成 packages/core 第一波自我原子化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1011",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0009-packages-cli-coverage-wave.task.md",
+    "title": "TASK-ASA-0009 完成 packages/cli 第一波自我原子化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1012",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0010-validators-evidence-pipeline.task.md",
+    "title": "TASK-ASA-0010 補齊 validators 與 evidence pipeline 原子化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1013",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0011-behavior-pack-atomization.task.md",
+    "title": "TASK-ASA-0011 完成 behavior pack 自我原子化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1014",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0012-integration-agent-pack-enforcement.task.md",
+    "title": "TASK-ASA-0012 更新 integration 與 agent pack enforcement",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1015",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0013-readable-entrypoint-dogfood-migration.task.md",
+    "title": "TASK-ASA-0013 執行 readable entrypoint dogfood migration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1016",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0014-release-build-distribution-atomization.task.md",
+    "title": "TASK-ASA-0014 完成 release build 與 distribution 原子化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1017",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0015-doctor-git-head-evidence-gap.task.md",
+    "title": "TASK-ASA-0015 關閉 doctor Git HEAD evidence gap",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1018",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0016-self-atomization-graduation-gate.task.md",
+    "title": "TASK-ASA-0016 建立 100% 自我原子化 graduation gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1200",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0700.task.md",
+    "title": "ATM-LANG-CSHARP-0700 C# global.json and NuGet.Config profile detection",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1201",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0701.task.md",
+    "title": "ATM-LANG-CSHARP-0701 C# reproducible-restore risk findings from project evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1202",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0702.task.md",
+    "title": "ATM-LANG-CSHARP-0702 C# runtime policy matrix governance tags expansion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1203",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0703.task.md",
+    "title": "ATM-LANG-CSHARP-0703 C# readiness gate governance checks",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1204",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0704.task.md",
+    "title": "ATM-LANG-CSHARP-0704 C# promotion gate governance hardening and validator uplift",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1210",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0800.task.md",
+    "title": "ATM-LANG-CSHARP-0800 C# packages.lock.json profile detection",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1211",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0801.task.md",
+    "title": "ATM-LANG-CSHARP-0801 C# lock-file governance risk model expansion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1212",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0802.task.md",
+    "title": "ATM-LANG-CSHARP-0802 C# runtime lock-governance policy tags",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1213",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0803.task.md",
+    "title": "ATM-LANG-CSHARP-0803 C# readiness gate lock-file checks",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1214",
+    "path": "docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0804.task.md",
+    "title": "ATM-LANG-CSHARP-0804 C# promotion gate lock-governance uplift",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1215",
+    "path": ".github/prompts/atm-create.prompt.md",
+    "title": "ATM Create",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1216",
+    "path": ".github/prompts/atm-evidence.prompt.md",
+    "title": "ATM Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1217",
+    "path": ".github/prompts/atm-governance-router.prompt.md",
+    "title": "ATM Governance Router",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1218",
+    "path": ".github/prompts/atm-handoff.prompt.md",
+    "title": "ATM Handoff",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1219",
+    "path": ".github/prompts/atm-internal-build-sync.prompt.md",
+    "title": "ATM Internal Build Sync",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1220",
+    "path": ".github/prompts/atm-lock.prompt.md",
+    "title": "ATM Lock",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1221",
+    "path": ".github/prompts/atm-next.prompt.md",
+    "title": "ATM Next",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1222",
+    "path": ".github/prompts/atm-orient.prompt.md",
+    "title": "ATM Orient",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1223",
+    "path": ".github/prompts/atm-upgrade-scan.prompt.md",
+    "title": "ATM Upgrade Scan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1224",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0003-natural-language-onboarding-smoke-2026-05-19.md",
+    "title": "TASK-ATS-0003 natural-language onboarding smoke evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1225",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0003B-first-use-notice-refresh-2026-05-19.md",
+    "title": "TASK-ATS-0003B first-use notice refresh evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1226",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0004-cross-editor-blackbox-closeout-2026-05-19.md",
+    "title": "TASK-ATS-0004 Evidence: Cross-Editor Black-Box Closeout",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1227",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0004-explicit-atm-prompt-and-blackbox-retest-2026-05-19.md",
+    "title": "TASK-ATS-0004 Evidence: Explicit ATM Prompt / Natural Black-Box Reassessment",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1228",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0005-first-legacy-python-dry-run-2026-05-19.md",
+    "title": "TASK-ATS-0005 Evidence: First Legacy Python Dry-Run Pilot",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1229",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0005-governed-leaf-pilot-smoke-2026-05-19.md",
+    "title": "TASK-ATS-0005 Evidence: Governed Leaf Pilot Smoke",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1230",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0006-canonical-map-closeout-2026-05-19.md",
+    "title": "TASK-ATS-0006 Evidence: Canonical Map Closeout",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1231",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0007-evolution-polymorphize-followup-2026-05-20.md",
+    "title": "TASK-ATS-0007 Evidence: Evolution and Polymorphize Follow-up",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1232",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0007-replacement-lane-active-gate-2026-05-19.md",
+    "title": "TASK-ATS-0007 Evidence: Replacement-Lane Active Gate and Pinned Runner Closeout",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1233",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0008-adopter-sentinel-evidence-routing-2026-05-20.md",
+    "title": "TASK-ATS-0008 Evidence: Adopter Sentinel Evidence Routing",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1234",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md",
+    "title": "TASK-ATS-0009 Evidence: Upstream Blocker Repair Batch",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1235",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0010-graduation-release-gate-2026-05-20.md",
+    "title": "TASK-ATS-0010 Evidence: Graduation and Release Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1236",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0028-first-use-user-notice.task.md",
+    "title": "TASK-APO-0028 First-Use User Notice and Suggested Actions",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1237",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0004-atomization-coverage-guard-validate.task.md",
+    "title": "TASK-ASA-0004 新增 atomization-coverage guard 與 validate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1238",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/ATM自我治理拆分計畫書.md",
+    "title": "ATM 自我治理拆分計畫書（ATM Self-Refactor）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1239",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-1-summary.md",
+    "title": "Evidence — Layer 1（Pure helpers）完成總結",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1240",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-2-summary.md",
+    "title": "Evidence — Layer 2（Module-level splits）完成總結",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1241",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-3-summary.md",
+    "title": "Evidence — Layer 3（High-risk splits, minimal slices）完成總結",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1242",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0010-evidence.md",
+    "title": "Evidence — TASK-ASR-0010 — wrappers generator + parity validator 接 SSoT",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1243",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0011-evidence.md",
+    "title": "Evidence — TASK-ASR-0011 — command-specs 39 spec per-file split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1244",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0012-evidence.md",
+    "title": "Evidence — TASK-ASR-0012 — propose.ts 完整拆分（normalize-input + gates）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1245",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0013-evidence.md",
+    "title": "Evidence — TASK-ASR-0013 — integrations-core 完整 compiler/manifest/verify split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1246",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0014-evidence.md",
+    "title": "Evidence — TASK-ASR-0014 — upgrade.ts 完整拆分（experimental / safe-upgrade / scan / proposal）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1247",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/evidence/TASK-ASR-0015-evidence.md",
+    "title": "Evidence — TASK-ASR-0015 — plugin-governance-local 完整拆分（bootstrap / prompt / budget）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1248",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0001-upgrade-path-helpers.task.md",
+    "title": "TASK-ASR-0001 — upgrade.ts 抽出 path-helpers",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1249",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0002-upgrade-next-action-hint.task.md",
+    "title": "TASK-ASR-0002 — upgrade.ts 抽出 next-action-hint",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1250",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0003-upgrade-canary.task.md",
+    "title": "TASK-ASR-0003 — upgrade.ts 抽出 canary helpers",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1251",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0004-command-specs-common.task.md",
+    "title": "TASK-ASR-0004 — command-specs.ts 抽出 _common shared options",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1252",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0005-map-generator-normalize-fields.task.md",
+    "title": "TASK-ASR-0005 — map-generator.ts 抽出 normalize-fields + errors",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1253",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0006-map-generator-normalize-lineage.task.md",
+    "title": "TASK-ASR-0006 — map-generator.ts 抽出 normalize-lineage",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1254",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0007-propose-failure-reason.task.md",
+    "title": "TASK-ASR-0007 — propose.ts 抽出 failure-reason renderers",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1255",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0008-integrations-core-charter-block.task.md",
+    "title": "TASK-ASR-0008 — integrations-core 抽出 charter-block renderer",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1256",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0009-root-drop-wrappers-manifest.task.md",
+    "title": "TASK-ASR-0009 — root-drop wrappers.json SSoT manifest",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1257",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0010-root-drop-wrappers-generator.task.md",
+    "title": "TASK-ASR-0010 — root-drop wrappers generator + parity validator 接 SSoT",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1258",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0011-command-specs-per-file-split.task.md",
+    "title": "TASK-ASR-0011 — command-specs 38 spec per-file split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1259",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0012-propose-full-split.task.md",
+    "title": "TASK-ASR-0012 — propose.ts 完整拆分（normalize-input + gates）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1260",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0013-integrations-core-full-split.task.md",
+    "title": "TASK-ASR-0013 — integrations-core 完整 compiler/manifest/verify split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1261",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0014-upgrade-full-split.task.md",
+    "title": "TASK-ASR-0014 — upgrade.ts 完整拆分（experimental / safe-upgrade / scan / proposal）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1262",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/TASK-ASR-0015-plugin-governance-local-split.task.md",
+    "title": "TASK-ASR-0015 — plugin-governance-local 完整拆分（bootstrap / prompt / budget）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1263",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0002-next-json-semantics-evidence.md",
+    "title": "TASK-ATD-0002 — next --json Semantics Execution Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1264",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0003-self-governance-decision-evidence.md",
+    "title": "TASK-ATD-0003 — Self-Governance Example Decision Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1265",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0004-module-boundary-evidence.md",
+    "title": "TASK-ATD-0004 — Module Boundary Hardening Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1266",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0005-module-boundary-deny-rule-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1267",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0006-eslint-baseline-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1268",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0007-cli-shared-result-types-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1269",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0008-framework-version-source-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1270",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0009-env-registry-docs-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1271",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0010-host-recipe-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1272",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0011-validator-harness-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1273",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0012-ajv-factory-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1274",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0013-cli-error-policy-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1275",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0014-test-layering-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1276",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0015-first-unit-tests-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1277",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0016-upgrade-split-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1278",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0017-governance-local-inventory-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1279",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0018-propose-split-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1280",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0019-atm-chart-split-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1281",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0020-command-specs-split-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1282",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0021-integrations-core-split-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1283",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0022-map-generator-split-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1284",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0023-any-debt-budget-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1285",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0024-opensource-docs-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1286",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0025-release-parity-gate-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1287",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0026-release-trust-ops-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1288",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0027-wrapper-dedup-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1289",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0028-synthetic-adopter-fixture-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1290",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0029-external-profile-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1291",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0030-multi-agent-results-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1292",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0031-devcontainer-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1293",
+    "path": "docs/ai_atomic_framework/atm-tech-debt-refactor/evidence/TASK-ATD-0032-e2e-plan-evidence.md",
+    "title": "Summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1294",
+    "path": "docs/ai_atomic_framework/framework-drafts/adopter-sentinel-external-profile.md",
+    "title": "Adopter Sentinel — External Profile as Downstream Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1295",
+    "path": "docs/ai_atomic_framework/framework-drafts/release-parity-gate.md",
+    "title": "Release Parity Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1296",
+    "path": "docs/ai_atomic_framework/framework-drafts/release-trust-ops.md",
+    "title": "Release Trust Continuous Verification",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1297",
+    "path": "docs/ai_atomic_framework/governance-overview/governance-overview.md",
+    "title": "ATM 框架治理機制全景 (zh-TW)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1298",
+    "path": "docs/ai_atomic_framework/governance-overview/PLAN.md",
+    "title": "Plan: ATM 框架治理機制完整解釋文件 (zh-TW)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1299",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md",
+    "title": "拆解大型功能優化原子 Map 計畫書 v2-r2",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1300",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/IMPLEMENTATION-HANDOFF.md",
+    "title": "Map Replacement Protocol v2 — Implementation Handoff",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1301",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0011-semantic-fingerprint-monitor.task.md",
+    "title": "TASK-MRP-0011 — Atom Semantic Fingerprint 持續監控",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1302",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0012-edge-contract-auto-test.task.md",
+    "title": "TASK-MRP-0012 — Map Edge Contract 自動合約測試",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1303",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0013-progression-automation.task.md",
+    "title": "TASK-MRP-0013 — Map 升級自動推進（draft→shadow→canary→active）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1304",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0014-atom-memoization-cache.task.md",
+    "title": "TASK-MRP-0014 — 跨 Atom 邊界結果快取（Memoization）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1305",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0015-atom-telemetry-dashboard.task.md",
+    "title": "TASK-MRP-0015 — Atom Telemetry 健康儀表板",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1306",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0016-behavior-reshape.task.md",
+    "title": "TASK-MRP-0016 — 受控 Atom 邊界調整（behavior.reshape）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1307",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0017-behavior-retire.task.md",
+    "title": "TASK-MRP-0017 — Atom 退役流程（behavior.retire）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1308",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0018-content-addressed-atom-federation.task.md",
+    "title": "TASK-MRP-0018 — Content-Addressed Atom Federation（Atom Capsule）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1309",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0019-mermaid-auto-gen.task.md",
+    "title": "TASK-MRP-0019 — Map 拓樸圖 Mermaid 自動生成",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1310",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0020-shadow-ab-metrics.task.md",
+    "title": "TASK-MRP-0020 — Shadow 模式 A/B 定量比對報告",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1311",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0021-map-capsule-mid.task.md",
+    "title": "TASK-MRP-0021 — Map Capsule：map:cid 機制（MID）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1312",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0022-atm-daemon-mode.task.md",
+    "title": "TASK-MRP-0022 — ATM Daemon Mode（背景守護進程）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1313",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0023-atm-do-task.task.md",
+    "title": "TASK-MRP-0023 — atm do --task X（Agent 一行指令執行任務）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1314",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0024-persistent-guide-cache.task.md",
+    "title": "TASK-MRP-0024 — Persistent Guide Cache（candidates rank 結果快取）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1315",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0025-diff-as-evidence.task.md",
+    "title": "TASK-MRP-0025 — Diff-as-evidence（混合版）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1316",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0026-rescue-police-family.task.md",
+    "title": "TASK-MRP-0026 — Rescue Police Family（救援警察家族）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1317",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0027-disaster-recovery-cli.task.md",
+    "title": "TASK-MRP-0027 — Disaster Recovery & Atom Reload CLI（災難恢復與原子重載工具）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1318",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md",
+    "title": "ATM Agent-First 可操作性優化計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1319",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0001-report-overlap-matrix-routing.task.md",
+    "title": "TASK-AAO-0001 — 報告問題 overlap matrix 與任務路由裁決",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1320",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0002-cli-spec-runner-ssot-drift-guard.task.md",
+    "title": "TASK-AAO-0002 — CLI command spec / runner SSOT drift guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1321",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0003-next-decisiontrail-json-contract.task.md",
+    "title": "TASK-AAO-0003 — `next` decisionTrail JSON contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1322",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0004-validator-failure-envelope-normalization.task.md",
+    "title": "TASK-AAO-0004 — validator failure envelope 標準化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1323",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0005-cli-context-slimming-wave1.task.md",
+    "title": "TASK-AAO-0005 — CLI 巨型檔案 context slimming wave 1",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1324",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0006-docs-schema-command-drift-guard.task.md",
+    "title": "TASK-AAO-0006 — docs / schema / command drift guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1325",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0007-onefile-size-startup-budget.task.md",
+    "title": "TASK-AAO-0007 — onefile size / startup budget",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1326",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0008-roadmap-backwrite-bridge-closure.task.md",
+    "title": "TASK-AAO-0008 — AAO roadmap backwrite 與 ASA bridge closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1327",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0000-doc-finalize-bridge-index.task.md",
+    "title": "TASK-AAO-0000 — AAO 文件區初始化與 ASA 橋接索引",
     "category": "other"
   }
 ]

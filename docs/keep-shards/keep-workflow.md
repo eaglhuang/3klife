@@ -57,6 +57,16 @@ curl.exe http://localhost:7456/asset-db/refresh
 - **根因優先修復**：除非使用者明示批准，debug 不以「刪功能 / 關特效 / 降級視覺」作為預設解法；應優先追 lifecycle、資料流、資產契約與初始化時序的根因。若只能先止血，必須在註解 / 任務卡 / handoff 中標記為短期 workaround，且保留根因修復 follow-up。
 - **Transient FX / Callback 生命週期**：任何綁在暫態節點上的 tween、schedule、async callback，都必須在 `rebuild`、換場、`onDestroy` 前顯式 `stop + dispose`。若仍發現失效 node，應記 `UCUFLogger.error` 並安全中止該 FX，不得讓 Preview / runtime 直接崩潰。
 
+### 3.4 資料驅動敘事 / NPC Service 準則（2026-05-25）
+
+- 正式資料真相在上游資料管線與對應 service；demo HTML、單頁原型或局部 script 只負責顯示、互動、選項聯動、loading 與 empty-state。
+- 不得為了修單一人物或單一案例，在 HTML / service 內硬寫主角、對象、關係、角度、條件分支、人名白名單、固定台詞或固定修辭。
+- 導演式小劇場、旁人台詞、情緒句、意圖句必須以結構化輸入生成，至少包含：`mainActor / targetActor / angle / relationship / people / event / time / place / objects / emotion`。不可只靠一兩句殘句直接拼裝成故事。
+- 若原始證據過短，先補上下文，再抽結構化種子；必要時先翻成可理解白話，再交給 LLM 或 renderer。不要拿片段殘句直接瞎補。
+- 當資料不足、證據 unresolved、台詞無直接來源、或 provider 不可用時，允許回空字串、`無資料`、`unavailable` 或中止生成；不得改用萬用句、 stock phrase、舊模板句假裝內容完整。
+- 舊的 fallback 套句、dead code、已退役模板、只為歷史 bug 留下的特殊分支，視為技術債。只要正式路徑不再依賴，就應主動刪除，不保留「也許以後還會用到」的 dormant branch。
+- 若前端或 service 真的需要 fallback，fallback 的責任僅限於狀態標示與安全停止；不得偷偷變成第二套敘事邏輯或資料修正來源。
+
 ### 3.1 Preview Hub Workflow（2026-04-08）
 
 - `LoadingScene.ts` 是正式 preview hub，screen-driven smoke route 優先走這裡，不再各畫面各自發明 preview 入口。

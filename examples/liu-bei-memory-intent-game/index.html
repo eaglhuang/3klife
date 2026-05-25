@@ -1064,8 +1064,6 @@
       sceneDirectorAbortController: null,
       sceneDirectorCircuitOpenUntil: 0,
       narrativeAbortControllers: {},
-      chorusQuoteCache: {},
-      storyFusionCache: {},
       autoDelayMs: DEFAULT_AUTO_DELAY,
       currentBundle: null,
       data: null,
@@ -1396,233 +1394,6 @@
       "runtime",
       "sourceRef",
     ];
-
-    function fallbackBeatSegmentFromData(bundle, segment) {
-      const card = bundle?.card || {};
-      const angle = angleDefinitions[card.angle]?.label || "人物角度";
-      const summaryText = cleanNarrativeFragment(card.summary || card.title || "");
-      const quoteText = cleanNarrativeFragment(card.quote || "");
-      const location = cleanNarrativeFragment(card.location || "");
-      const targetLabel = String(bundle?.target?.label || "").trim();
-      const persona = state.data?.persona || {};
-      const profile = persona.profile || {};
-      const personalityText = humanizeTextList([
-        ...(Array.isArray(profile.personalityTags) ? profile.personalityTags : []),
-        ...(Array.isArray(persona.personalityTraits) ? persona.personalityTraits : []),
-      ]).join("、");
-      const baseScene = [location, summaryText || quoteText].filter(Boolean).join("，");
-      const memoryLead = quoteText || summaryText || location || "未取得可用原文線索";
-      const emotionLead = personalityText || buildDecisionFocus(card.angle);
-      const targetLead = targetLabel ? `關於「${targetLabel}」` : "關於眼前局勢";
-      const fallbackMap = {
-        scene: baseScene || `${angle}${targetLabel ? `／${targetLabel}` : ""}`,
-        memory: `原文線索：${memoryLead}`,
-        emotion: `${currentActorName()}的性格底色仍是${emotionLead}。`,
-        intent: `${targetLead}，最後他決定以「${buildDecisionFocus(card.angle)}」為判斷軸。`,
-      };
-      return fallbackMap[segment] || baseScene;
-    }
-
-    function buildCompactFallbackStory(bundle, parts = {}) {
-      const actor = currentActorName();
-      const target = String(bundle?.target?.label || "關聯對象").trim();
-      const scene = cleanNarrativeFragment(parts?.sceneText);
-      const memory = cleanNarrativeFragment(parts?.memoryText);
-      const emotion = cleanNarrativeFragment(parts?.emotionText);
-      const dialogue = cleanNarrativeFragment(parts?.dialogueText);
-      const intent = cleanNarrativeFragment(parts?.intentText);
-      const sentences = [];
-      if (scene) {
-        sentences.push(scene);
-      }
-      if (memory) {
-        sentences.push(`${actor}想起：${memory}`);
-      }
-      if (emotion) {
-        sentences.push(`${actor}心中的傾向因此更接近${emotion}`);
-      }
-      if (dialogue) {
-        sentences.push(`${actor}低聲道：「${dialogue}」`);
-      }
-      if (intent) {
-        sentences.push(intent.startsWith("最後") ? intent : `最後，他決定${intent}`);
-      }
-      const story = sentences
-        .map((text) => String(text || "").trim())
-        .filter(Boolean)
-        .map((text) => (/[。！？]$/.test(text) ? text : `${text}。`))
-        .join("");
-      return story || `${actor}與${target}的這一幕，暫時還在等待可用敘事素材。`;
-    }
-
-    function buildImmediateBeatParts(bundle) {
-      return {
-        sceneText: bundle?.sceneText || fallbackBeatSegmentFromData(bundle, "scene"),
-        memoryText: bundle?.memoryText || fallbackBeatSegmentFromData(bundle, "memory"),
-        emotionText: bundle?.emotionText || fallbackBeatSegmentFromData(bundle, "emotion"),
-        intentText: bundle?.intentText || fallbackBeatSegmentFromData(bundle, "intent"),
-      };
-    }
-
-    async function buildNarrativeBeatParts(bundle, directorPayload) {
-      if (directorPayload?.beats) {
-        return directorPayload.beats;
-      }
-      const [scenePayload, memoryPayload, emotionPayload, intentPayload] = await Promise.all([
-        requestNarrativeSegment(bundle, "scene"),
-        requestNarrativeSegment(bundle, "memory"),
-        requestNarrativeSegment(bundle, "emotion"),
-        requestNarrativeSegment(bundle, "intent"),
-      ]);
-      return {
-        sceneText: selectSegmentNarrativeText("scene", bundle, scenePayload, fallbackBeatSegmentFromData(bundle, "scene")),
-        memoryText: selectSegmentNarrativeText("memory", bundle, memoryPayload, fallbackBeatSegmentFromData(bundle, "memory")),
-        emotionText: selectSegmentNarrativeText("emotion", bundle, emotionPayload, fallbackBeatSegmentFromData(bundle, "emotion")),
-        intentText: selectSegmentNarrativeText("intent", bundle, intentPayload, fallbackBeatSegmentFromData(bundle, "intent")),
-      };
-    }
-    function buildStoryFusionCacheKey(bundle, parts) {
-      const refs = (bundle?.card?.sourceRefs || []).slice(0, 4).join("|");
-      const keyParts = [
-        currentGeneralId(),
-        bundle?.card?.evidenceId || "",
-        bundle?.card?.contextKey || "",
-        bundle?.card?.angle || "",
-        bundle?.target?.targetId || "",
-        refs,
-        parts?.sceneText || "",
-        parts?.memoryText || "",
-        parts?.emotionText || "",
-        parts?.dialogueText || "",
-        parts?.intentText || "",
-      ];
-      return keyParts.map((part) => normalizeMatchText(part)).join("||").slice(0, 1400);
-    }
-
-    function storyFusionQualityCheck(bundle, text) {
-      const normalized = normalizeNarrativeText(text, "").trim();
-      if (!normalized) {
-        return { ok: false, reason: "empty" };
-      }
-      if (normalized.length < 120) {
-        return { ok: false, reason: "too-short" };
-      }
-      const targetName = String(bundle?.target?.label || "").trim();
-      if (targetName && !normalized.includes(targetName)) {
-        return { ok: false, reason: "target-mismatch" };
-      }
-      const cueHits = [
-        /想起|記起|念及|回憶|舊事|原文|線索/.test(normalized),
-        /心裡|心中|警惕|犧牲|分寸|大義|人心|情緒|決策/.test(normalized),
-        /「[^」]{4,}」/.test(normalized),
-        /於是|接著|隨即|決定|先|退路|下一步/.test(normalized),
-      ].filter(Boolean).length;
-      if (cueHits < 3) {
-        return { ok: false, reason: "abcd-incomplete" };
-      }
-      for (const phrase of storyDirectorForbiddenPhrases) {
-        if (phrase && normalized.includes(phrase)) {
-          return { ok: false, reason: "forbidden-phrase" };
-        }
-      }
-      return { ok: true, reason: "pass" };
-    }
-
-    async function requestStoryFusion(bundle, parts, fallbackText) {
-      const requestToken = state.narrativeRequestToken;
-      const cacheKey = buildStoryFusionCacheKey(bundle, parts);
-      const cached = state.storyFusionCache[cacheKey];
-      if (cached?.text) {
-        return cached;
-      }
-      const timeout = createTimeoutController(DEFAULT_STORY_FUSION_TIMEOUT_MS);
-      abortIfAlive(state.narrativeAbortControllers.storyFusion);
-      state.narrativeAbortControllers.storyFusion = timeout.controller;
-      const selectedKeywordKeys = uniqueList([
-        ...pickNarrativeKeywordKeys(bundle, "scene", 4),
-        ...pickNarrativeKeywordKeys(bundle, "emotion", 3),
-        ...pickNarrativeKeywordKeys(bundle, "intent", 3),
-      ], 6);
-      const actor = currentActorName();
-      const target = String(bundle?.target?.label || "關聯對象");
-      const sceneText = String(parts?.sceneText || "").trim();
-      const memoryText = String(parts?.memoryText || "").trim();
-      const emotionText = String(parts?.emotionText || "").trim();
-      const intentText = String(parts?.intentText || "").trim();
-      const sourceRefs = Array.isArray(bundle?.card?.sourceRefs)
-        ? bundle.card.sourceRefs.slice(0, 3).join("；")
-        : "";
-      const body = {
-        generalId: currentGeneralId(),
-        contextKey: resolveDialogueContextKey(bundle),
-        selectedKeywordKeys,
-        toneMode: "narrative_fusion",
-        locale: "zh-TW",
-        speechContextMode: "inner_monologue",
-        llmModelPreset: "fallback_chain",
-        maxChars: 560,
-        saveId: `demo-story-fusion-${currentGeneralId()}`,
-        memoryContext: {
-          saveId: `demo-story-fusion-${currentGeneralId()}`,
-          shortTerm: `主角：${actor}；對象：${target}；主題：${angleDefinitions[bundle?.card?.angle]?.label || "現況判斷"}。`.trim(),
-          longTerm: `場景素材：${sceneText ? shortenText(sceneText, 120) : "無"}。${sourceRefs ? `來源摘要：${sourceRefs}` : ""}`.trim(),
-          playerProfile: [
-            `本幕以${bundle?.target?.relationshipType || "互動"}軸，並沿用證據：${bundle?.card?.contextKey || "runtime 線索"}。`,
-            `${actor}的敘事可保留原文脈絡，不要捏造不存在的場景關係。`,
-            memoryText ? `回憶素材：${shortenText(memoryText, 110)}` : "",
-            emotionText ? `情緒素材：${shortenText(emotionText, 84)}` : "",
-            intentText ? `意圖素材：${shortenText(intentText, 84)}` : "",
-          ].filter(Boolean).join(" "),
-          promises: `請直接一次輸出 350-550 字、連續且可閱讀的完整敘事：需融合 scene/memory/emotion/intent 四段，明確保留與目標人物的關係。`,
-        },
-      };
-      try {
-        const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-          signal: timeout.signal,
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const payload = await response.json();
-        if (requestToken !== state.narrativeRequestToken) {
-          return null;
-        }
-        const text = normalizeNarrativeText(payload?.text, fallbackText || "");
-        if (!text) {
-          return null;
-        }
-        const quality = storyFusionQualityCheck(bundle, text);
-        if (!quality.ok) {
-          return {
-            text: fallbackText || text,
-            provider: payload?.provider || null,
-            model: payload?.model || null,
-            fallbackUsed: true,
-            qualityReason: quality.reason,
-          };
-        }
-        const result = {
-          text,
-          provider: payload?.provider || null,
-          model: payload?.model || null,
-          fallbackUsed: false,
-          qualityReason: quality.reason,
-        };
-        state.storyFusionCache[cacheKey] = result;
-        return result;
-      } catch (error) {
-        console.warn("story-fusion fallback:", error);
-        return null;
-      } finally {
-        timeout.clear();
-        if (state.narrativeAbortControllers.storyFusion === timeout.controller) {
-          delete state.narrativeAbortControllers.storyFusion;
-        }
-      }
-    }
 
     async function requestSceneDirector(bundle) {
       if (Date.now() < (state.sceneDirectorCircuitOpenUntil || 0)) {
@@ -2215,6 +1986,20 @@
       `).join("");
     }
 
+    function portraitSrcForGeneral(generalId) {
+      const slug = String(generalId || "")
+        .trim()
+        .replace(/[^a-z0-9-]/gi, "")
+        .replace(/-/g, "_");
+      return slug && AVAILABLE_PORTRAIT_IDS.has(slug)
+        ? `../../assets/resources/sprites/generals/${slug}_portrait.png`
+        : "";
+    }
+
+    function avatarInitial(label) {
+      return Array.from(String(label || "").trim())[0] || "人";
+    }
+
     function updateProfilePortrait(generalId, label = "") {
       const displayLabel = label || generalOptionById(generalId)?.label || generalId;
       const src = portraitSrcForGeneral(generalId);
@@ -2611,7 +2396,7 @@
       setStatus(data.dataMode, data.dataHint);
       elements.sourceBadge.textContent = data.sourceMode === "runtime-general-profiles" ? "真資料模式" : "服務待補";
       if (elements.chorusHint) {
-        elements.chorusHint.textContent = `每幕最多 4 人；以 NPC service 先輸出感想，缺漏時保持短句占位。可用互動人物 ${data.relationships.length} 位。`;
+        elements.chorusHint.textContent = `???? 4 ????????? NPC service ??????????? ${data.relationships.length} ??`;
       }
       ensureLinkedSelection({ prefer: "angle" });
     }
@@ -2973,140 +2758,10 @@ ${evidenceLine}
       return candidates;
     }
 
-    function buildChorusTopicLabel(bundle) {
-      return humanizeSymbolicText(bundle?.card?.title || angleDefinitions[bundle?.card?.angle]?.label || "這幕局勢");
-    }
-
-    function buildChorusRoleHint(target) {
-      const role = normalizeSentenceBody(target?.role || "");
-      if (role) {
-        return role;
-      }
-      if (target?.femaleFocus) {
-        return "家室牽掛";
-      }
-      return "人物線索";
-    }
-
-    function fallbackChorusLine(bundle, target) {
-      const sourceLine = normalizeSentenceBody(target?.dialogueTone || target?.thoughtTone || "");
-      if (sourceLine) {
-        return `「${shortenText(stripOuterQuotes(sourceLine), 86)}」`;
-      }
-      return `「${target?.label || "這位角色"}待取得對應觀點回應。」`;
-    }
-
-    function isWeakChorusLine(text) {
-      const normalized = normalizeSentenceBody(normalizeNarrativeText(text, ""));
-      if (!normalized) {
-        return true;
-      }
-      const blockedPatterns = [
-        /看著.+提起/,
-        /角色定位/,
-        /決策傾向/,
-        /心裡先浮起/,
-        /這條線索/,
-        /想法是/,
-      ];
-      if (blockedPatterns.some((pattern) => pattern.test(normalized))) {
-        return true;
-      }
-      return normalized.length < 16;
-    }
-
-    function chorusCacheKey(bundle, target) {
-      const refs = (bundle.card?.sourceRefs || []).slice(0, 3).join("|");
-      return `${currentGeneralId()}|${target.targetId}|${bundle.card?.angle || ""}|${bundle.card?.contextKey || ""}|${refs}`;
-    }
-
-    async function requestChorusDialogueLine(bundle, target) {
-      const cacheKey = chorusCacheKey(bundle, target);
-      if (state.chorusQuoteCache[cacheKey]) {
-        return state.chorusQuoteCache[cacheKey];
-      }
-      const actorName = currentActorName();
-      const topic = buildChorusTopicLabel(bundle);
-      const body = {
-        generalId: target.targetId,
-        contextKey: resolveDialogueContextKey(bundle),
-        selectedKeywordKeys: pickChorusKeywordKeys(bundle, target, 4),
-        toneMode: "in-character",
-        locale: "zh-TW",
-        speechContextMode: "encounter_speech",
-        llmModelPreset: "fallback_chain",
-        maxChars: 110,
-        saveId: `demo-chorus-${currentGeneralId()}`,
-        memoryContext: {
-          saveId: `demo-chorus-${currentGeneralId()}`,
-          shortTerm: shortenText(bundle.sceneText || "", 150),
-          longTerm: shortenText(`${bundle.memoryText || ""} ${bundle.emotionText || ""}`.trim(), 150),
-          playerProfile: shortenText(`${target.label}的角色關係是${buildChorusRoleHint(target)}。請用${target.label}本人的性格，對${actorName}此刻面對的「${topic}」說一句感想或內心話。`, 150),
-          promises: shortenText(`限制：只輸出一句繁體中文台詞或內心獨白，不要旁白，不要套用「看著某人提起」句型。可用原文線索：${bundle.card?.quote || bundle.card?.summary || ""}`, 180),
-        },
-      };
-      try {
-        const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const payload = await response.json();
-        if (payload?.fallbackUsed && payload?.provider === "deterministic") {
-          return null;
-        }
-        const text = normalizeNarrativeText(payload?.text, "");
-        if (!text || isWeakChorusLine(text)) {
-          return null;
-        }
-        state.chorusQuoteCache[cacheKey] = text;
-        return text;
-      } catch (error) {
-        console.warn(`chorus-line fallback: ${target.targetId}`, error);
-        return null;
-      }
-    }
-
-    function portraitSrcForGeneral(generalId) {
-      const slug = String(generalId || "")
-        .trim()
-        .replace(/[^a-z0-9-]/gi, "")
-        .replace(/-/g, "_");
-      return slug && AVAILABLE_PORTRAIT_IDS.has(slug)
-        ? `../../assets/resources/sprites/generals/${slug}_portrait.png`
-        : "";
-    }
-
-    function avatarInitial(label) {
-      return Array.from(String(label || "").trim())[0] || "人";
-    }
-
     function renderChorusAvatar(targetId, label) {
       const src = portraitSrcForGeneral(targetId);
       const img = src ? `<img src="${src}" alt="" onerror="this.remove();">` : "";
       return `<span class="chorus-avatar">${img}<span>${avatarInitial(label)}</span></span>`;
-    }
-
-    function renderChorusCards(targets, bundle, overrideQuotes = {}) {
-      if (!elements.chorusGrid) {
-        return;
-      }
-      elements.chorusGrid.innerHTML = targets.map((target) => {
-        const quote = overrideQuotes[target.targetId] || fallbackChorusLine(bundle, target);
-        const role = target.role || "人物線索";
-        return `
-          <article class="chorus-card" data-target-id="${target.targetId}">
-            ${renderChorusAvatar(target.targetId, target.label)}
-            <div class="chorus-copy">
-              <strong>${target.label}・${role}</strong>
-              <p>${quote}</p>
-            </div>
-          </article>
-        `;
-      }).join("");
     }
 
     function renderDirectorChorusLines(lines = []) {
@@ -3137,36 +2792,6 @@ ${evidenceLine}
         `;
       }).filter(Boolean);
       elements.chorusGrid.innerHTML = cards.join("");
-    }
-
-    async function renderChorusLines(bundle) {
-      const runToken = state.narrativeRequestToken;
-      const targets = selectChorusTargets(bundle, 4);
-      if (!targets.length) {
-        if (elements.chorusGrid) {
-          elements.chorusGrid.innerHTML = "";
-        }
-        return;
-      }
-      renderChorusCards(targets, bundle, {});
-      const quotes = {};
-      const llmTargetCount = state.auto ? 2 : Math.min(4, targets.length);
-      const llmTargets = targets.slice(0, llmTargetCount);
-      const results = await Promise.all(
-        llmTargets.map(async (target) => {
-          const line = await requestChorusDialogueLine(bundle, target);
-          return { targetId: target.targetId, line };
-        }),
-      );
-      if (runToken !== state.narrativeRequestToken) {
-        return;
-      }
-      for (const result of results) {
-        if (result.line) {
-          quotes[result.targetId] = result.line;
-        }
-      }
-      renderChorusCards(targets, bundle, quotes);
     }
 
     async function playBundle(bundle) {
@@ -3461,8 +3086,6 @@ ${evidenceLine}
       state.activeAngle = "";
       state.activePerson = "";
       state.currentBundle = null;
-      state.chorusQuoteCache = {};
-      state.storyFusionCache = {};
       state.sceneDirectorCircuitOpenUntil = 0;
       state.meters = {
         benevolence: 74,

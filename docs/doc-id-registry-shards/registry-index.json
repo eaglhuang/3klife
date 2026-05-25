@@ -134,13 +134,49 @@
   {
     "id": "doc_index_0024",
     "path": "docs/ai_atomic_framework/atomic-police-family/specs/README.md",
-    "title": "Atomic Police Family Specs",
+    "title": "原子警察家族 Specs",
     "category": "index"
   },
   {
     "id": "doc_index_0025",
     "path": "docs/ai_atomic_framework/universal-language-framework/tasks/README.md",
     "title": "ATM 通用語言框架 Task Cards",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0031",
+    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/README.md",
+    "title": "ATM GOV Task Cards",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1001",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/README.md",
+    "title": "ATM 框架 100% 自我原子化協調區",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1002",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/README.md",
+    "title": "ATM 100% 自我原子化任務卡索引",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1003",
+    "path": "docs/ai_atomic_framework/atm-self-refactor/tasks/README.md",
+    "title": "ATM 自我治理拆分 Task Cards",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1004",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/README.md",
+    "title": "ATM Agent-First 可操作性系列",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1005",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+    "title": "ATM Agent-First 可操作性任務索引",
     "category": "index"
   }
 ]

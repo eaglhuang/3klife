@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 22,
+    "done": 29,
     "in_progress": 0,
-    "open": 30,
-    "total": 52
+    "open": 29,
+    "total": 58
   },
   "tasks": [
     {
@@ -2087,6 +2087,352 @@
         "upgrade-planner.js / backup-validator.js / rollback-test-fixtures.json"
       ],
       "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0012",
+      "title": "Scene Quality Pipeline 收斂總卡",
+      "owner": "codex-desktop",
+      "priority": "P1",
+      "status": "open",
+      "type": "planning",
+      "phase": "SceneQuality",
+      "created": "2026-05-25",
+      "created_by_agent": "codex-desktop",
+      "started_at": "",
+      "started_by_agent": "codex-desktop",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "收斂 npc-brain scene-director / chorus / HTML demo 的資料真相、結構化種子、fallback 契約、cache 汙染防護與驗收路線。本卡只負責整體收斂與交付檢核，不把單點修補混成同一張卡。",
+      "related": [
+        "PROG-2-0013",
+        "PROG-2-0014",
+        "PROG-2-0015",
+        "PROG-2-0016",
+        "PROG-2-0017"
+      ],
+      "depends": [],
+      "acceptance": [
+        "子卡 PROG-2-0013 ~ PROG-2-0017 全部建立並串好 related/depends",
+        "定義 scene quality 驗收矩陣，至少涵蓋資料正確性、六種子、story、chorus、fallback、cache",
+        "結案時能對固定案例輸出 pass/fail 摘要"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0012.md",
+        "docs/tasks/tasks-prog.json"
+      ],
+      "notes": "2026-05-25 | 狀態: open | 驗證: pending | 變更: 依 Scene Quality Pipeline 規劃建立總卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0013",
+      "title": "scene-director 可觀測性與 quality metadata 補強",
+      "owner": "codex-desktop",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "SceneQuality",
+      "created": "2026-05-25",
+      "created_by_agent": "codex-desktop",
+      "started_at": "",
+      "started_by_agent": "codex-desktop",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "替 scene-director 與 chorus 路徑補齊 debug / quality metadata，讓每次異常能分辨是資料錯、seed 不足、provider 未命中、cache 汙染、fallback 介入，還是角色/對象交換。",
+      "related": [
+        "PROG-2-0012",
+        "PROG-2-0014",
+        "PROG-2-0015",
+        "PROG-2-0016",
+        "PROG-2-0017"
+      ],
+      "depends": [],
+      "acceptance": [
+        "scene-director response 或 debug evidence 可見 seedQuality/sourceCoverage/provider/cache/fallback/rejectedReasons/selectedEvidenceRefs",
+        "同一幕 story 與 chorus 都能看出 providerTrace 與 cache 命中來源",
+        "遇到主角/對象翻轉、模板句、空資料時可從 metadata 直接定位原因"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0013.md",
+        "docs/tasks/tasks-prog.json",
+        "C:\\Users\\User\\3klife-npc-brain\\app\\npc_dialogue_service.py",
+        "C:\\Users\\User\\3klife-npc-brain\\app\\llm_dialogue_renderer.py"
+      ],
+      "notes": "2026-05-25 | 狀態: open | 驗證: pending | 變更: 建立可觀測性與 metadata 補強卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0014",
+      "title": "Scene quality regression gate 與 cache 汙染檢查",
+      "owner": "codex-desktop",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "SceneQuality",
+      "created": "2026-05-25",
+      "created_by_agent": "codex-desktop",
+      "started_at": "",
+      "started_by_agent": "codex-desktop",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "建立固定案例回歸 gate，檢查角色翻轉、關係錯置、模板台詞、內部 token、空資料卡死、舊 history cache 汙染與前後幕串台。",
+      "related": [
+        "PROG-2-0012",
+        "PROG-2-0013",
+        "PROG-2-0015",
+        "PROG-2-0016",
+        "PROG-2-0017"
+      ],
+      "depends": [
+        "PROG-2-0013"
+      ],
+      "acceptance": [
+        "至少 10 個固定案例可批次輸出 pass/fail",
+        "gate 能抓到角色翻轉、同模板 chorus、內部 token、舊 cache 汙染",
+        "瀏覽器端切 3 個角度與 3 個人物時，不再因舊 response 寫回造成串台"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0014.md",
+        "docs/tasks/tasks-prog.json",
+        "回歸案例清單與驗證腳本"
+      ],
+      "notes": "2026-05-25 | 狀態: open | 驗證: pending | 變更: 建立 scene quality regression gate 卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0015",
+      "title": "HTML 顯示契約與 fallback 退役清理",
+      "owner": "codex-desktop",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "SceneQuality",
+      "created": "2026-05-25",
+      "created_by_agent": "codex-desktop",
+      "started_at": "",
+      "started_by_agent": "codex-desktop",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 demo HTML 收斂為顯示、loading、empty-state 與選項聯動層；移除仍留在正式路徑上的故事補句、模板字串、舊 stock fallback 與死碼。",
+      "related": [
+        "PROG-2-0012",
+        "PROG-2-0013",
+        "PROG-2-0014"
+      ],
+      "depends": [],
+      "acceptance": [
+        "HTML 只做資料是否可顯示、狀態提示與角度/對象聯動，不再補故事",
+        "service 與前端中的 retired fallback / stock phrase / dead branch 清乾淨",
+        "資料不足時畫面顯示空字串、無資料或 unavailable，不再套模板句"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0015.md",
+        "docs/tasks/tasks-prog.json",
+        "examples/liu-bei-memory-intent-game/index.html"
+      ],
+      "notes": "2026-05-25 | 狀態: open | 驗證: pending | 變更: 建立 HTML 契約與 fallback 清理卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0016",
+      "title": "短證據上下文擴張與六種子抽取",
+      "owner": "codex-desktop",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "SceneQuality",
+      "created": "2026-05-25",
+      "created_by_agent": "codex-desktop",
+      "started_at": "",
+      "started_by_agent": "codex-desktop",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "針對原文過短、單句不足以形成小劇場的 case，先擴前後文、轉成可理解語意，再抽出人 / 事 / 時 / 地 / 物 / 情感與 actor/target/angle/relationship 等結構化種子。",
+      "related": [
+        "PROG-2-0012",
+        "PROG-2-0013",
+        "PROG-2-0014",
+        "PROG-2-0017"
+      ],
+      "depends": [],
+      "acceptance": [
+        "短證據 case 會先拉上下文而不是直接拿殘句生成",
+        "導演與旁人台詞輸入可見六種子與 actor/target/angle/relationship",
+        "若六種子不足，系統回空或 unavailable，不以萬用句硬補"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0016.md",
+        "docs/tasks/tasks-prog.json",
+        "C:\\Users\\User\\3klife-npc-brain\\app\\npc_dialogue_service.py"
+      ],
+      "notes": "2026-05-25 | 狀態: open | 驗證: pending | 變更: 建立短證據上下文擴張與六種子抽取卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0017",
+      "title": "關係邊 / 互動對象 / readiness 稽核",
+      "owner": "codex-desktop",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "SceneQuality",
+      "created": "2026-05-25",
+      "created_by_agent": "codex-desktop",
+      "started_at": "",
+      "started_by_agent": "codex-desktop",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "稽核 relationship artifact、pair evidence 與互動對象候選池，排除順帶提及人名造成的假 pair，整理關係衝突，並對核心人物與 top50 執行 readiness 檢查。",
+      "related": [
+        "PROG-2-0012",
+        "PROG-2-0013",
+        "PROG-2-0014",
+        "PROG-2-0016"
+      ],
+      "depends": [],
+      "acceptance": [
+        "可指出哪些錯 pair 來自關係邊、哪些來自 narrative-profile 候選池",
+        "順帶提及的人名不再直接變成互動對象 pair",
+        "核心人物與 top50 的 unresolved / conflict / wrong-pair 問題有正式盤點與回歸報告"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0017.md",
+        "docs/tasks/tasks-prog.json",
+        "core50 或 top50 readiness 報告"
+      ],
+      "notes": "2026-05-25 | 狀態: open | 驗證: pending | 變更: 建立關係邊與 readiness 稽核卡 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

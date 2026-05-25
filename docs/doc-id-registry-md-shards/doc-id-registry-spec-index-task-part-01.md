@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-05-18
+> 生成日期: 2026-05-25
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 1/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -213,5 +213,9 @@
 | `doc_index_0021` | docs/ai_atomic_framework/atm-tech-debt-refactor/tasks/README.md | ATM 技術債重構 Task Cards |
 | `doc_index_0022` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/tasks/README.md | 3KLife ATM Triangle Strategy Task Cards |
 | `doc_index_0023` | docs/ai_atomic_framework/atomic-police-family/tasks/README.md | 原子警察家族 Task Cards |
-| `doc_index_0024` | docs/ai_atomic_framework/atomic-police-family/specs/README.md | Atomic Police Family Specs |
+| `doc_index_0024` | docs/ai_atomic_framework/atomic-police-family/specs/README.md | 原子警察家族 Specs |
 | `doc_index_0025` | docs/ai_atomic_framework/universal-language-framework/tasks/README.md | ATM 通用語言框架 Task Cards |
+| `doc_index_0031` | docs/ai_atomic_framework/gov-series-governance/tasks/README.md | ATM GOV Task Cards |
+| `doc_index_1001` | docs/ai_atomic_framework/atm-self-atomization/README.md | ATM 框架 100% 自我原子化協調區 |
+| `doc_index_1002` | docs/ai_atomic_framework/atm-self-atomization/tasks/README.md | ATM 100% 自我原子化任務卡索引 |
+| `doc_index_1003` | docs/ai_atomic_framework/atm-self-refactor/tasks/README.md | ATM 自我治理拆分 Task Cards |

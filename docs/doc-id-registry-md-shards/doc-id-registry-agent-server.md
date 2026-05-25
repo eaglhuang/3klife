@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — AI / AgentSkill / Server
 
-> 生成日期: 2026-05-18
+> 生成日期: 2026-05-25
 > 這是 `doc-id-registry.md` 的「AI / AgentSkill / Server」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -25,7 +25,7 @@
 | `doc_ai_0015` | .github/instructions/token-guard.instructions.md | Token Guard |
 | `doc_ai_0016` | .github/instructions/ui-factory-routing.instructions.md | UI Factory Routing |
 | `doc_ai_0017` | .github/instructions/ui-pipeline.instructions.md | UI 開發流程指引 |
-| `doc_ai_0018` | AGENTS.md | 3KLife Agent Overrides |
+| `doc_ai_0018` | AGENTS.md | ATM Governance Entry |
 | `doc_ai_0019` | docs/legacy/agent-collaboration/agent1-instructions.md | Agent1 Instructions |
 | `doc_ai_0020` | docs/legacy/agent-collaboration/agent2-instructions.md | Agent2 Instructions |
 | `doc_ai_0021` | docs/agent-briefs/agent2-visual-qa-playbook.md | Agent2 Visual QA Playbook |
@@ -39,6 +39,15 @@
 | `doc_ai_0033` | .agents/workflows/ui-verify.md | Context Budget Guard |
 | `doc_ai_0034` | .github/instructions/ucuf-compliance.instructions.md | UCUF CompositePanel 合規指令 |
 | `doc_ai_0035` | docs/agent-briefs/atm-task-template.md | ATM 任務卡模板 |
+| `doc_ai_0036` | .github/instructions/atm-create.instructions.md | ATM Create |
+| `doc_ai_0037` | .github/instructions/atm-evidence.instructions.md | ATM Evidence |
+| `doc_ai_0038` | .github/instructions/atm-governance-router.instructions.md | ATM Governance Router |
+| `doc_ai_0039` | .github/instructions/atm-handoff.instructions.md | ATM Handoff |
+| `doc_ai_0040` | .github/instructions/atm-internal-build-sync.instructions.md | ATM Internal Build Sync |
+| `doc_ai_0041` | .github/instructions/atm-lock.instructions.md | ATM Lock |
+| `doc_ai_0042` | .github/instructions/atm-next.instructions.md | ATM Next |
+| `doc_ai_0043` | .github/instructions/atm-orient.instructions.md | ATM Orient |
+| `doc_ai_0044` | .github/instructions/atm-upgrade-scan.instructions.md | ATM Upgrade Scan |
 
 ## Agent Skill 專用 (`doc_agentskill`)
 
@@ -123,7 +132,8 @@
 | `doc_agentskill_0096` | .github/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
 | `doc_agentskill_0097` | .github/skills/task-card-required-adjustment/SKILL.md | 任務卡的必要調整 |
 | `doc_agentskill_0101` | .agents/skills/3kweb-check/SKILL.md | 3kweb-check |
-| `doc_agentskill_0102` | .github/skills/3kweb-check/SKILL.md | 3kweb-check |
+| `doc_agentskill_0102` | .agents/skills/atm-version-upgrade/SKILL.md | ATM Version Upgrade Skill |
+| `doc_agentskill_0103` | .github/skills/3kweb-check/SKILL.md | 3kweb-check |
 
 ## Server 文件類 (`doc_server_<subtype>`)
 

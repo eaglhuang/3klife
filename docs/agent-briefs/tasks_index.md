@@ -13,10 +13,13 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 55
-- done: 35
-- in-progress: 3
-- open: 17
+- Total: 321
+- done: 233
+- completed: 8
+- in-progress: 22
+- in-review: 5
+- open: 52
+- not-started: 1
 
 ## Tasks
 
@@ -57,9 +60,9 @@ manifest: ../ui-quality-todo.json
 | DC-6-0004 | Agent1 | done | P2 | DC | feature | [DC-6-0004](./tasks/DC-6-0004.md) |
 | DC-6-0005 | Agent1 | done | P2 | DC | feature | [DC-6-0005](./tasks/DC-6-0005.md) |
 | DC-6-0006 | Agent1 | done | P2 | DC | testing | [DC-6-0006](./tasks/DC-6-0006.md) |
-| UI-2-0092 | Agent1 | in-progress | P1 | G | asset-generation | [UI-2-0092](./tasks/UI-2-0092.md) |
+| UI-2-0092 | Agent1 | open | P1 | G | asset-generation | [UI-2-0092](./tasks/UI-2-0092.md) |
 | UI-2-0093 | Agent2 | in-progress | P1 | G | layout-content-polish | [UI-2-0093](./tasks/UI-2-0093.md) |
-| UI-2-0094 | Agent1 | open | P1 | G | asset-finish | [UI-2-0094](./tasks/UI-2-0094.md) |
+| UI-2-0094 | Agent1 | in-review | P1 | G | asset-finish | [UI-2-0094](./tasks/UI-2-0094.md) |
 | UI-2-0108 | Agent2 | in-progress | P1 | G | system-ui-art-integration | [UI-2-0108](./tasks/UI-2-0108.md) |
 | PROG-1-0001 | Agent1 | open | P0 | P | data-structure | [PROG-1-0001](./tasks/PROG-1-0001.md) |
 | PROG-1-0002 | Agent1 | open | P0 | P | data-structure | [PROG-1-0002](./tasks/PROG-1-0002.md) |
@@ -70,7 +73,7 @@ manifest: ../ui-quality-todo.json
 | PROG-1-0007 | Agent1 | open | P1 | P | implementation | [PROG-1-0007](./tasks/PROG-1-0007.md) |
 | PROG-1-0008 | Agent1 | open | P1 | P | implementation | [PROG-1-0008](./tasks/PROG-1-0008.md) |
 | PROG-1-0009 | Agent1 | open | P1 | P | implementation | [PROG-1-0009](./tasks/PROG-1-0009.md) |
-| PROG-1-0010 | Agent1 | open | P1 | P | ui-component | [PROG-1-0010](./tasks/PROG-1-0010.md) |
+| PROG-1-0010 | Agent1 | done | P1 | P | ui-component | [PROG-1-0010](./tasks/PROG-1-0010.md) |
 | PROG-1-0011 | Agent1 | open | P1 | P | ui-component | [PROG-1-0011](./tasks/PROG-1-0011.md) |
 | PROG-1-0012 | Agent1 | open | P2 | P | validation | [PROG-1-0012](./tasks/PROG-1-0012.md) |
 | PROG-1-0013 | Agent1 | open | P2 | P | validation | [PROG-1-0013](./tasks/PROG-1-0013.md) |

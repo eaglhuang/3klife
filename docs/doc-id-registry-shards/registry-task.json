@@ -2260,5 +2260,47 @@
     "path": "docs/tasks/TASK-DGB-0010.md",
     "title": "TASK-DGB-0010 Upgrade plan / backup / rollback validation",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0386",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0012.md",
+    "title": "[PROG-2-0012] Scene Quality Pipeline 收斂總卡",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0387",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0013.md",
+    "title": "[PROG-2-0013] scene-director 可觀測性與 quality metadata 補強",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0388",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0014.md",
+    "title": "[PROG-2-0014] Scene quality regression gate 與 cache 汙染檢查",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0389",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0015.md",
+    "title": "[PROG-2-0015] HTML 顯示契約與 fallback 退役清理",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0390",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0016.md",
+    "title": "[PROG-2-0016] 短證據上下文擴張與六種子抽取",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0391",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0017.md",
+    "title": "[PROG-2-0017] 關係邊 / 互動對象 / readiness 稽核",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0392",
+    "path": "docs/agent-briefs/tasks/WEB/TASK-WEB-0001.md",
+    "title": "[TASK-WEB-0001] ATM Petri 培養皿互動 web demo",
+    "category": "task"
   }
 ]

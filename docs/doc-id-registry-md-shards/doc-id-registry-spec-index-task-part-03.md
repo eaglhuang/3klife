@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-05-18
+> 生成日期: 2026-05-25
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 3/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -98,3 +98,10 @@
 | `doc_task_0383` | docs/tasks/TASK-DGB-0008.md | TASK-DGB-0008 Handoff / turn artifact schema |
 | `doc_task_0384` | docs/tasks/TASK-DGB-0009.md | TASK-DGB-0009 Project Memory optional capability 與 conflict finder |
 | `doc_task_0385` | docs/tasks/TASK-DGB-0010.md | TASK-DGB-0010 Upgrade plan / backup / rollback validation |
+| `doc_task_0386` | docs/agent-briefs/tasks/PROG/PROG-2-0012.md | [PROG-2-0012] Scene Quality Pipeline 收斂總卡 |
+| `doc_task_0387` | docs/agent-briefs/tasks/PROG/PROG-2-0013.md | [PROG-2-0013] scene-director 可觀測性與 quality metadata 補強 |
+| `doc_task_0388` | docs/agent-briefs/tasks/PROG/PROG-2-0014.md | [PROG-2-0014] Scene quality regression gate 與 cache 汙染檢查 |
+| `doc_task_0389` | docs/agent-briefs/tasks/PROG/PROG-2-0015.md | [PROG-2-0015] HTML 顯示契約與 fallback 退役清理 |
+| `doc_task_0390` | docs/agent-briefs/tasks/PROG/PROG-2-0016.md | [PROG-2-0016] 短證據上下文擴張與六種子抽取 |
+| `doc_task_0391` | docs/agent-briefs/tasks/PROG/PROG-2-0017.md | [PROG-2-0017] 關係邊 / 互動對象 / readiness 稽核 |
+| `doc_task_0392` | docs/agent-briefs/tasks/WEB/TASK-WEB-0001.md | [TASK-WEB-0001] ATM Petri 培養皿互動 web demo |

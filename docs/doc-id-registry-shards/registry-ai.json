@@ -104,7 +104,7 @@
   {
     "id": "doc_ai_0018",
     "path": "AGENTS.md",
-    "title": "3KLife Agent Overrides",
+    "title": "ATM Governance Entry",
     "category": "ai"
   },
   {
@@ -183,6 +183,60 @@
     "id": "doc_ai_0035",
     "path": "docs/agent-briefs/atm-task-template.md",
     "title": "ATM 任務卡模板",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0036",
+    "path": ".github/instructions/atm-create.instructions.md",
+    "title": "ATM Create",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0037",
+    "path": ".github/instructions/atm-evidence.instructions.md",
+    "title": "ATM Evidence",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0038",
+    "path": ".github/instructions/atm-governance-router.instructions.md",
+    "title": "ATM Governance Router",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0039",
+    "path": ".github/instructions/atm-handoff.instructions.md",
+    "title": "ATM Handoff",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0040",
+    "path": ".github/instructions/atm-internal-build-sync.instructions.md",
+    "title": "ATM Internal Build Sync",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0041",
+    "path": ".github/instructions/atm-lock.instructions.md",
+    "title": "ATM Lock",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0042",
+    "path": ".github/instructions/atm-next.instructions.md",
+    "title": "ATM Next",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0043",
+    "path": ".github/instructions/atm-orient.instructions.md",
+    "title": "ATM Orient",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0044",
+    "path": ".github/instructions/atm-upgrade-scan.instructions.md",
+    "title": "ATM Upgrade Scan",
     "category": "ai"
   }
 ]
