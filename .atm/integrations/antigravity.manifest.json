@@ -7,76 +7,83 @@
     "fromVersion": null,
     "notes": "Initial integration adapter install manifest."
   },
-  "adapterId": "claude-code",
+  "adapterId": "antigravity",
   "adapterVersion": "0.0.0",
-  "installedAt": "2026-05-25T07:57:45.521Z",
-  "targetDir": ".claude/skills",
+  "installedAt": "2026-05-25T07:57:46.718Z",
+  "targetDir": ".",
   "files": [
     {
-      "path": ".claude/skills/atm-next/SKILL.md",
+      "path": "GEMINI.md",
+      "sha256": "sha256:8d6a3379440e72ea223056b4d213622ce9522a85764ae887e37d5b6b87cc2750",
+      "sizeBytes": 3783,
+      "source": "generated",
+      "fileFormat": "markdown"
+    },
+    {
+      "path": ".agents/skills/atm-next/SKILL.md",
       "sha256": "sha256:88e9f68f2307299f65087f99b88e4d11f6f63cf5abde87d727b25a74a7d8828d",
       "sizeBytes": 5332,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-task-intent-resolver/SKILL.md",
+      "path": ".agents/skills/atm-task-intent-resolver/SKILL.md",
       "sha256": "sha256:c621bbc4265c28afcafdcfdf8c2bbd63dff4e9383d524bcc11e11d56d25c1f59",
       "sizeBytes": 5322,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-orient/SKILL.md",
+      "path": ".agents/skills/atm-orient/SKILL.md",
       "sha256": "sha256:db843559997f8fd591edf4212bd04d9d7214bceec460f58335289c352f2f8fd7",
       "sizeBytes": 3097,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-governance-router/SKILL.md",
+      "path": ".agents/skills/atm-governance-router/SKILL.md",
       "sha256": "sha256:7a70f78a736a52d227a6cb3630327a50933e9f6d5f2b4a7095527769419f987d",
       "sizeBytes": 10629,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-create/SKILL.md",
+      "path": ".agents/skills/atm-create/SKILL.md",
       "sha256": "sha256:c7cb71c4ea1dfe3f4b913b8e7d950d22bc18649c2ad15d0c1aff18305d2057bd",
       "sizeBytes": 3134,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-lock/SKILL.md",
+      "path": ".agents/skills/atm-lock/SKILL.md",
       "sha256": "sha256:13f366b44131e872100b991c89d5fc9275db4f22280b6e56f982c7b97fe43955",
       "sizeBytes": 3307,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-evidence/SKILL.md",
+      "path": ".agents/skills/atm-evidence/SKILL.md",
       "sha256": "sha256:b6c78ab1c87120c8fc5f05e7f604086d56ee28f7f138c53767a9547afcc0d6dc",
       "sizeBytes": 3111,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-upgrade-scan/SKILL.md",
+      "path": ".agents/skills/atm-upgrade-scan/SKILL.md",
       "sha256": "sha256:c7b6040c863453884cff96369a4a61146986f088568073f29a5aed20798fed21",
       "sizeBytes": 3129,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-handoff/SKILL.md",
+      "path": ".agents/skills/atm-handoff/SKILL.md",
       "sha256": "sha256:b7852b481882fc4bad4732b79f3f44ffd81f0453690deadd617cb2d754d8d93e",
       "sizeBytes": 3109,
       "source": "template",
       "fileFormat": "skill"
     },
     {
-      "path": ".claude/skills/atm-internal-build-sync/SKILL.md",
+      "path": ".agents/skills/atm-internal-build-sync/SKILL.md",
       "sha256": "sha256:ca34c33e9d82f0d34d6a71329c5bfe7daa30906df30e35a4a89fbce488a30081",
       "sizeBytes": 4048,
       "source": "template",
@@ -84,18 +91,6 @@
     }
   ],
   "metadata": {
-    "sourceFileCount": 10
-  },
-  "hookContractVersion": "atm.integration-hooks/v1",
-  "hookProvider": "atm-framework-development-hooks/v1",
-  "supportedHookEvents": [
-    "UserPromptSubmit",
-    "PreToolUse",
-    "Stop"
-  ],
-  "installedHookFiles": [
-    ".claude/settings.json"
-  ],
-  "frameworkDevelopmentWakeMode": "auto",
-  "mandatoryForFrameworkRepo": true
+    "sourceFileCount": 11
+  }
 }

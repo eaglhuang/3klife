@@ -9,76 +9,76 @@
   },
   "adapterId": "gemini",
   "adapterVersion": "0.0.0",
-  "installedAt": "2026-05-25T06:56:16.169Z",
+  "installedAt": "2026-05-25T07:57:46.336Z",
   "targetDir": ".gemini/commands",
   "files": [
     {
       "path": ".gemini/commands/atm-next.toml",
-      "sha256": "sha256:d186566d1d38cdaf20e22568e8bdf83f00506b50c97032230fcd296cf660e0ae",
-      "sizeBytes": 3086,
+      "sha256": "sha256:449033b2321995a39095b5165118212fcbbb3f823ff313c26eb4a74bcf872693",
+      "sizeBytes": 8272,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-task-intent-resolver.toml",
-      "sha256": "sha256:9a6fa2c356147fec3008977f0877a755bff6e1eb7a2d7039ec31d661c5782589",
-      "sizeBytes": 3205,
+      "sha256": "sha256:0d34750eaa10b5fa8d1cbe5a8be830123b8f6cfd3d201ff6104bce83e31d873b",
+      "sizeBytes": 8338,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-orient.toml",
-      "sha256": "sha256:d052cfa2c50643d1053b30c7756bdfcec534262301336df96373a46e3f0d63d5",
-      "sizeBytes": 3055,
+      "sha256": "sha256:551703de7d91df3f648da2792c4d636699efb3aca09d3071d5c783655431730d",
+      "sizeBytes": 6011,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-governance-router.toml",
-      "sha256": "sha256:3d96d02d344b662b42a002338f64949cf26f9b22960cd3f1b0f131a5eb1c080a",
-      "sizeBytes": 3174,
+      "sha256": "sha256:740fb11e1ab64b9571776ff3154e5787ca211638e04249513e5f9479f7958de9",
+      "sizeBytes": 13596,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-create.toml",
-      "sha256": "sha256:8d69493c98e10942651259b77d3c6366b2dc5ba2bbd522fc6e3d71b43d875800",
-      "sizeBytes": 3133,
+      "sha256": "sha256:7991edcd667e66005d09dc81286f7f72e8e5283f9e714c345aef346456b3c8d1",
+      "sizeBytes": 6126,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-lock.toml",
-      "sha256": "sha256:0ecc6f0039a17747df0761e43738b05fdd84e8019e6c6d1cd545a54e4ec17324",
-      "sizeBytes": 3032,
+      "sha256": "sha256:2d29a8e02a14379a18521c3a5563d9ffe0a455d55c2c733f8d68304227efd0fa",
+      "sizeBytes": 6211,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-evidence.toml",
-      "sha256": "sha256:a9fea80627833cd785b5740dd20947193484255bf09fb8e3e3342bdcf8fe5d71",
-      "sizeBytes": 3076,
+      "sha256": "sha256:360509f327d481499a3a5560d3a30b28164fbda32fa96a9661dea20c08cd2797",
+      "sizeBytes": 6041,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-upgrade-scan.toml",
-      "sha256": "sha256:afcc5e01a6356f43dd08fd6cf1d73060c5dda691da2e966b9faa80174e052001",
-      "sizeBytes": 3112,
+      "sha256": "sha256:c1acd5cc091cffb71c05450045052571c6c3c9350601c75c379e6e28d498a0a7",
+      "sizeBytes": 6095,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-handoff.toml",
-      "sha256": "sha256:8e50819033f4e5528ccef59bc61e516a6dfa59516a93d336299840407d297d59",
-      "sizeBytes": 3094,
+      "sha256": "sha256:7dc8aa7cb7f56e59a954d16ff83af675703fa5c629d1501a1395a07d54bcfa6d",
+      "sizeBytes": 6074,
       "source": "template",
       "fileFormat": "toml"
     },
     {
       "path": ".gemini/commands/atm-internal-build-sync.toml",
-      "sha256": "sha256:1e5f05954e80882958309b3e714702b78773ab382be2b96ebc9d8591c1126702",
-      "sizeBytes": 3169,
+      "sha256": "sha256:3e8d25d5a0fc46c5a728a42a9bc1fc90dbddeed71e86a304f5302c2e2183c35f",
+      "sizeBytes": 7011,
       "source": "template",
       "fileFormat": "toml"
     }

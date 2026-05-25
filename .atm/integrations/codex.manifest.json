@@ -9,13 +9,13 @@
   },
   "adapterId": "codex",
   "adapterVersion": "0.0.0",
-  "installedAt": "2026-05-25T06:56:14.460Z",
+  "installedAt": "2026-05-25T07:57:44.688Z",
   "targetDir": "integrations/codex-skills",
   "files": [
     {
       "path": "integrations/codex-skills/atm-next/SKILL.md",
-      "sha256": "sha256:f01a989209ecbc9db6b885e82bd7e07ff602876a59265be47ddfefaf59064cf3",
-      "sizeBytes": 4639,
+      "sha256": "sha256:88e9f68f2307299f65087f99b88e4d11f6f63cf5abde87d727b25a74a7d8828d",
+      "sizeBytes": 5332,
       "source": "template",
       "fileFormat": "skill"
     },
@@ -35,8 +35,8 @@
     },
     {
       "path": "integrations/codex-skills/atm-governance-router/SKILL.md",
-      "sha256": "sha256:80fa631d38d5c4636180b9f5e439ba8f5259944d52b22572684fe857891f488f",
-      "sizeBytes": 9967,
+      "sha256": "sha256:7a70f78a736a52d227a6cb3630327a50933e9f6d5f2b4a7095527769419f987d",
+      "sizeBytes": 10629,
       "source": "template",
       "fileFormat": "skill"
     },

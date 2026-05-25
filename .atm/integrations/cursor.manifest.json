@@ -9,13 +9,13 @@
   },
   "adapterId": "cursor",
   "adapterVersion": "0.0.0",
-  "installedAt": "2026-05-25T06:56:15.757Z",
+  "installedAt": "2026-05-25T07:57:45.952Z",
   "targetDir": ".cursor/rules/skills",
   "files": [
     {
       "path": ".cursor/rules/skills/atm-next/SKILL.md",
-      "sha256": "sha256:db211158d6998784d1ad35dac433cd15e416677e34190a10f920890c3eb9e1ca",
-      "sizeBytes": 4688,
+      "sha256": "sha256:2a6eccc3ea119c811d3cd843e3d6d3d22d4c1b1272adaa8082d41cef339b793e",
+      "sizeBytes": 5381,
       "source": "template",
       "fileFormat": "markdown"
     },
@@ -35,8 +35,8 @@
     },
     {
       "path": ".cursor/rules/skills/atm-governance-router/SKILL.md",
-      "sha256": "sha256:65c733261fda81bd78ef84493a3d6b90497a682cdec0ce5f42782bbd9b70e7bb",
-      "sizeBytes": 9955,
+      "sha256": "sha256:5ac350569f013fa4d5943024f679b1bd19f4725d03e47ebee267b73722fff45c",
+      "sizeBytes": 10617,
       "source": "template",
       "fileFormat": "markdown"
     },

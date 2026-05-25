@@ -9,20 +9,20 @@
   },
   "adapterId": "copilot",
   "adapterVersion": "0.0.0",
-  "installedAt": "2026-05-25T06:56:14.874Z",
+  "installedAt": "2026-05-25T07:57:45.068Z",
   "targetDir": ".github",
   "files": [
     {
       "path": ".github/instructions/atm-next.instructions.md",
-      "sha256": "sha256:04882cdc80da453ad79f2ae7037df2345856a435e7351f0d23d3080e37d5b1ce",
-      "sizeBytes": 4610,
+      "sha256": "sha256:32975b387e1545af467ab798459a2521bec61df829470a1cbe7ff551b39f66cf",
+      "sizeBytes": 5303,
       "source": "template",
       "fileFormat": "instructions-md"
     },
     {
       "path": ".github/prompts/atm-next.prompt.md",
-      "sha256": "sha256:59fc865c7e4170b9fea7bf542f5663fb78e7f67761c895f27a942eb51470ed88",
-      "sizeBytes": 4638,
+      "sha256": "sha256:6e01bb70a25523f2ced01942cc5b02c3060f584675bb058f1cd25de9e10bfb2e",
+      "sizeBytes": 5331,
       "source": "template",
       "fileFormat": "prompt-md"
     },
@@ -56,15 +56,15 @@
     },
     {
       "path": ".github/instructions/atm-governance-router.instructions.md",
-      "sha256": "sha256:76b99b35ca6abe009d9a5c646a21afa0d9acfd31660e32282bd8bbf0f1053700",
-      "sizeBytes": 9877,
+      "sha256": "sha256:a79f7170357e6d079a24af845125f8cb40a15ad2fb07ca2d11c92854c4420f00",
+      "sizeBytes": 10539,
       "source": "template",
       "fileFormat": "instructions-md"
     },
     {
       "path": ".github/prompts/atm-governance-router.prompt.md",
-      "sha256": "sha256:faaf19b6fd00279cc35103c7de5e08e62da36abba39f3dc32e4b14bac7369591",
-      "sizeBytes": 9953,
+      "sha256": "sha256:135381e2e37bd083b4a63600c91a6116004b4235445137c0f39e38051a004bba",
+      "sizeBytes": 10615,
       "source": "template",
       "fileFormat": "prompt-md"
     },
