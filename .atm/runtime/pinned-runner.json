@@ -6,10 +6,10 @@
   "status": "replaced",
   "sourceKind": "internal-build-sync",
   "sourcePath": "C:\\Users\\User\\AI-Atomic-Framework\\release\\atm-onefile\\atm.mjs",
-  "sha256": "28bb4d2f33a35e9edecf8a9b4fa8681e6c4742695505276a6f4ffe8b897fc785",
-  "existingSha256": "e0f177cee7518bf72e34808f0a1d70f20829a56256c86eedfcf4d49f06517c3d",
-  "sizeBytes": 3251241,
+  "sha256": "94ea18341cad6e566c73bb09ba90718047dd634f40b03b9402f6c216eb222973",
+  "existingSha256": "28bb4d2f33a35e9edecf8a9b4fa8681e6c4742695505276a6f4ffe8b897fc785",
+  "sizeBytes": 3259401,
   "frameworkVersion": "0.1.0",
-  "sourceCommit": "026d4db4e68f8d81e33bad758fdf01af0246234b",
-  "generatedAt": "2026-05-25T05:25:21.861Z"
+  "sourceCommit": "31f3db7995eee9a5accda5f3cdc3049821a64066",
+  "generatedAt": "2026-05-25T06:32:54.861Z"
 }
