@@ -692,24 +692,83 @@ function finalizePendingTaskIdReservation(task, agentName, files) {
   clearTaskIdReservation();
 }
 
-async function main() {
-  if (hasFlag(process.argv, 'help')) {
+function parseTaskCardOpenerOptions(argv = process.argv) {
+  const explicitId = getArg(argv, 'id') || getArg(argv, 'card-id');
+  const nextIdPrefix = getArg(argv, 'next-id-prefix', '');
+  const mdOutArg = getArg(argv, 'md-out', '');
+  const jsonOutArg = getArg(argv, 'json-out', '');
+  const normalizedId = explicitId || '';
+
+  return {
+    showHelp: hasFlag(argv, 'help'),
+    recipePath: getArg(argv, 'recipe', ''),
+    recipeArgs: Array.isArray(argv) ? argv.slice(2) : [],
+    explicitId,
+    nextIdPrefix,
+    allowExistingId: hasFlag(argv, 'allow-existing-id'),
+    id: normalizedId,
+    title: getArg(argv, 'title'),
+    docId: getArg(argv, 'doc-id', ''),
+    assignDocId: hasFlag(argv, 'assign-doc-id'),
+    dryRun: !hasFlag(argv, 'write'),
+    mdOutArg,
+    jsonOutArg,
+    mdKind: getArg(argv, 'md-kind', inferMdKind(mdOutArg)),
+    jsonKind: getArg(argv, 'json-kind', inferJsonKind(jsonOutArg)),
+    owner: getArg(argv, 'owner', getDefaultAgentName()),
+    priority: getArg(argv, 'priority', 'P1'),
+    status: getArg(argv, 'status', 'open'),
+    type: getArg(argv, 'type', 'implementation'),
+    phase: getArg(argv, 'phase', 'M0'),
+    created: getArg(argv, 'created', todayIso()),
+    createdByAgent: getArg(argv, 'created-by-agent', getDefaultAgentName()),
+    startedAt: getArg(argv, 'started-at', ''),
+    startedByAgent: getArg(argv, 'started-by-agent', getDefaultAgentName()),
+    chainId: getArg(argv, 'chain-id', ''),
+    chainStep: getArg(argv, 'chain-step', ''),
+    sensorTriggeredBy: getArg(argv, 'sensor-triggered-by', ''),
+    description: getArg(argv, 'description', ''),
+    related: splitList(getArg(argv, 'related', '')),
+    depends: splitList(getArg(argv, 'depends', '')),
+    acceptance: splitList(getArg(argv, 'acceptance', '')),
+    deliverables: splitList(getArg(argv, 'deliverables', '')),
+    notes: getArg(argv, 'notes', ''),
+    briefStyle: inferBriefStyle({ id: normalizedId }, getArg(argv, 'brief-style', ''), getArg(argv, 'md-kind', inferMdKind(mdOutArg))),
+    briefLabel: getArg(argv, 'brief-label', ''),
+    briefSummary: getArg(argv, 'brief-summary', ''),
+    briefPosition: getArg(argv, 'brief-position', ''),
+    briefPrereq: getArg(argv, 'brief-prereq', ''),
+    inputContract: splitList(getArg(argv, 'input-contract', '')),
+    outputContract: splitList(getArg(argv, 'output-contract', '')),
+    validationCmd: getArg(argv, 'validation-cmd', ''),
+    rollbackHint: getArg(argv, 'rollback-hint', ''),
+    executionSteps: splitList(getArg(argv, 'execution-steps', '')),
+    artifactPaths: splitList(getArg(argv, 'artifact-paths', '')),
+    validationEvidence: splitList(getArg(argv, 'validation-evidence', '')),
+    handoffDiffStatus: getArg(argv, 'handoff-diff-status', ''),
+    traceArtifacts: splitList(getArg(argv, 'trace-artifacts', '')),
+    metricsSummary: splitList(getArg(argv, 'metrics-summary', '')),
+  };
+}
+
+async function main(options = {}) {
+  if (options.showHelp) {
     printHelp();
     return;
   }
 
-  if (getArg(process.argv, 'recipe')) {
-    runRecipeMode();
+  if (options.recipePath) {
+    runRecipeMode(options.recipeArgs);
     return;
   }
 
-  const explicitId = getArg(process.argv, 'id') || getArg(process.argv, 'card-id');
-  const nextIdPrefix = getArg(process.argv, 'next-id-prefix', '');
-  const allowExistingId = hasFlag(process.argv, 'allow-existing-id');
+  const explicitId = options.explicitId;
+  const nextIdPrefix = options.nextIdPrefix;
+  const allowExistingId = options.allowExistingId;
   let id = explicitId;
-  const title = getArg(process.argv, 'title');
-  const docId = getArg(process.argv, 'doc-id', '');
-  const assignDocId = hasFlag(process.argv, 'assign-doc-id');
+  const title = options.title;
+  const docId = options.docId;
+  const assignDocId = options.assignDocId;
   if ((explicitId && nextIdPrefix) || (!explicitId && !nextIdPrefix)) {
     printHelp();
     throw new Error('exactly one of --id / --next-id-prefix is required');
@@ -722,13 +781,13 @@ async function main() {
     throw new Error('--doc-id 與 --assign-doc-id 不能同時使用');
   }
 
-  const dryRun = !hasFlag(process.argv, 'write');
-  const mdOutArg = getArg(process.argv, 'md-out', '');
-  const jsonOutArg = getArg(process.argv, 'json-out', '');
-  const mdKind = getArg(process.argv, 'md-kind', inferMdKind(mdOutArg));
-  const jsonKind = getArg(process.argv, 'json-kind', inferJsonKind(jsonOutArg));
-  const briefStyle = inferBriefStyle({ id }, getArg(process.argv, 'brief-style', ''), mdKind);
-  const owner = getArg(process.argv, 'owner', getDefaultAgentName());
+  const dryRun = typeof options.dryRun === 'boolean' ? options.dryRun : true;
+  const mdOutArg = options.mdOutArg || '';
+  const jsonOutArg = options.jsonOutArg || '';
+  const mdKind = options.mdKind || inferMdKind(mdOutArg);
+  const jsonKind = options.jsonKind || inferJsonKind(jsonOutArg);
+  const briefStyle = options.briefStyle || inferBriefStyle({ id }, '', mdKind);
+  const owner = options.owner || getDefaultAgentName();
   const mdPath = mdOutArg ? resolvePath(mdOutArg) : '';
 
   if (nextIdPrefix) {
@@ -763,38 +822,38 @@ async function main() {
     id,
     title,
     owner,
-    priority: getArg(process.argv, 'priority', 'P1'),
-    status: getArg(process.argv, 'status', 'open'),
-    type: getArg(process.argv, 'type', 'implementation'),
-    phase: getArg(process.argv, 'phase', 'M0'),
-    created: getArg(process.argv, 'created', todayIso()),
-    createdByAgent: getArg(process.argv, 'created-by-agent', getDefaultAgentName()),
-    startedAt: getArg(process.argv, 'started-at', ''),
-    startedByAgent: getArg(process.argv, 'started-by-agent', getDefaultAgentName()),
-    chainId: getArg(process.argv, 'chain-id', ''),
-    chainStep: getArg(process.argv, 'chain-step', ''),
-    sensorTriggeredBy: getArg(process.argv, 'sensor-triggered-by', ''),
-    description: getArg(process.argv, 'description', ''),
-    related: splitList(getArg(process.argv, 'related', '')),
-    depends: splitList(getArg(process.argv, 'depends', '')),
-    acceptance: splitList(getArg(process.argv, 'acceptance', '')),
-    deliverables: splitList(getArg(process.argv, 'deliverables', '')),
-    notes: getArg(process.argv, 'notes', ''),
+    priority: options.priority || 'P1',
+    status: options.status || 'open',
+    type: options.type || 'implementation',
+    phase: options.phase || 'M0',
+    created: options.created || todayIso(),
+    createdByAgent: options.createdByAgent || getDefaultAgentName(),
+    startedAt: options.startedAt || '',
+    startedByAgent: options.startedByAgent || getDefaultAgentName(),
+    chainId: options.chainId || '',
+    chainStep: options.chainStep || '',
+    sensorTriggeredBy: options.sensorTriggeredBy || '',
+    description: options.description || '',
+    related: Array.isArray(options.related) ? options.related : [],
+    depends: Array.isArray(options.depends) ? options.depends : [],
+    acceptance: Array.isArray(options.acceptance) ? options.acceptance : [],
+    deliverables: Array.isArray(options.deliverables) ? options.deliverables : [],
+    notes: options.notes || '',
     briefStyle,
-    briefLabel: getArg(process.argv, 'brief-label', ''),
-    briefSummary: getArg(process.argv, 'brief-summary', ''),
-    briefPosition: getArg(process.argv, 'brief-position', ''),
-    briefPrereq: getArg(process.argv, 'brief-prereq', ''),
-    inputContract: splitList(getArg(process.argv, 'input-contract', '')),
-    outputContract: splitList(getArg(process.argv, 'output-contract', '')),
-    validationCmd: getArg(process.argv, 'validation-cmd', ''),
-    rollbackHint: getArg(process.argv, 'rollback-hint', ''),
-    executionSteps: splitList(getArg(process.argv, 'execution-steps', '')),
-    artifactPaths: splitList(getArg(process.argv, 'artifact-paths', '')),
-    validationEvidence: splitList(getArg(process.argv, 'validation-evidence', '')),
-    handoffDiffStatus: getArg(process.argv, 'handoff-diff-status', ''),
-    traceArtifacts: splitList(getArg(process.argv, 'trace-artifacts', '')),
-    metricsSummary: splitList(getArg(process.argv, 'metrics-summary', '')),
+    briefLabel: options.briefLabel || '',
+    briefSummary: options.briefSummary || '',
+    briefPosition: options.briefPosition || '',
+    briefPrereq: options.briefPrereq || '',
+    inputContract: Array.isArray(options.inputContract) ? options.inputContract : [],
+    outputContract: Array.isArray(options.outputContract) ? options.outputContract : [],
+    validationCmd: options.validationCmd || '',
+    rollbackHint: options.rollbackHint || '',
+    executionSteps: Array.isArray(options.executionSteps) ? options.executionSteps : [],
+    artifactPaths: Array.isArray(options.artifactPaths) ? options.artifactPaths : [],
+    validationEvidence: Array.isArray(options.validationEvidence) ? options.validationEvidence : [],
+    handoffDiffStatus: options.handoffDiffStatus || '',
+    traceArtifacts: Array.isArray(options.traceArtifacts) ? options.traceArtifacts : [],
+    metricsSummary: Array.isArray(options.metricsSummary) ? options.metricsSummary : [],
   });
 
   if (!mdOutArg && !jsonOutArg && !dryRun) {
@@ -880,17 +939,12 @@ async function main() {
   return outputSummary;
 }
 
+async function runTaskCardOpenerWithOptions(options = {}) {
+  return main(options);
+}
+
 async function runTaskCardOpener(argv = process.argv) {
-  const originalArgv = process.argv;
-  try {
-    process.argv = Array.isArray(argv) ? [...argv] : originalArgv;
-    return await main();
-  } catch (error) {
-    cleanupPendingTaskIdReservation();
-    throw error;
-  } finally {
-    process.argv = originalArgv;
-  }
+  return runTaskCardOpenerWithOptions(parseTaskCardOpenerOptions(argv));
 }
 
 async function runCli(argv = process.argv) {
@@ -907,6 +961,8 @@ if (require.main === module) {
 }
 
 module.exports = {
+  parseTaskCardOpenerOptions,
   runCli,
   runTaskCardOpener,
+  runTaskCardOpenerWithOptions,
 };

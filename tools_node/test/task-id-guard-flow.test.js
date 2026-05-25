@@ -8,7 +8,7 @@ const projectRoot = path.resolve(__dirname, '..', '..');
 const tempRoot = path.join(projectRoot, 'temp', 'task-id-guard-flow');
 const taskCardDir = path.join(tempRoot, 'docs', 'agent-briefs', 'tasks');
 const lockDir = path.join(tempRoot, '.task-locks');
-const { runTaskCardOpener } = require('../task-card-opener');
+const { runTaskCardOpenerWithOptions } = require('../task-card-opener');
 const {
   inspectTaskId,
   releaseReservedTaskId,
@@ -45,15 +45,16 @@ function buildTempLockAdapter() {
   }));
 }
 
-async function runTaskCardOpenerArgs(args) {
+async function runTaskCardOpenerOptions(overrides = {}) {
   const originalAgentIdentity = process.env.AGENT_IDENTITY;
   process.env.AGENT_IDENTITY = 'task-id-flow-agent';
   try {
-    return await runTaskCardOpener([
-      process.execPath,
-      path.join(projectRoot, 'tools_node', 'task-card-opener.js'),
-      ...args,
-    ]);
+    return await runTaskCardOpenerWithOptions({
+      dryRun: false,
+      owner: 'task-id-flow-agent',
+      createdByAgent: 'task-id-flow-agent',
+      ...overrides,
+    });
   } finally {
     if (typeof originalAgentIdentity === 'string') {
       process.env.AGENT_IDENTITY = originalAgentIdentity;
@@ -126,21 +127,14 @@ async function testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks() {
 
   try {
     for (const taskId of taskIds) {
-      await runTaskCardOpenerArgs([
-        '--id',
-        taskId,
-        '--title',
-        'Task id flow regression',
-        '--owner',
-        'task-id-flow-agent',
-        '--md-out',
-        `temp/${taskId}.md`,
-        '--json-out',
-        sharedJsonPath,
-        '--json-kind',
-        'task-aggregate',
-        '--write',
-      ]);
+      await runTaskCardOpenerOptions({
+        id: taskId,
+        explicitId: taskId,
+        title: 'Task id flow regression',
+        mdOutArg: `temp/${taskId}.md`,
+        jsonOutArg: sharedJsonPath,
+        jsonKind: 'task-aggregate',
+      });
 
       assert(!fs.existsSync(path.join(projectRoot, '.task-locks', `${taskId}.lock.json`)), 'open task card should release reservation instead of leaving a formal lock');
       const aggregateSnapshot = readJson(sharedJsonAbsPath);
@@ -168,21 +162,14 @@ async function testTaskCardOpenerInProgressPromotion() {
   const taskId = 'ATM-FLOW-9003';
   cleanupRealProjectArtifacts(taskId);
   try {
-    await runTaskCardOpenerArgs([
-      '--id',
-      taskId,
-      '--title',
-      'Task id flow regression',
-      '--owner',
-      'task-id-flow-agent',
-      '--status',
-      'in-progress',
-      '--md-out',
-      `temp/${taskId}.md`,
-      '--json-out',
-      `temp/${taskId}.json`,
-      '--write',
-    ]);
+    await runTaskCardOpenerOptions({
+      id: taskId,
+      explicitId: taskId,
+      title: 'Task id flow regression',
+      status: 'in-progress',
+      mdOutArg: `temp/${taskId}.md`,
+      jsonOutArg: `temp/${taskId}.json`,
+    });
 
     const lock = readJson(path.join(projectRoot, '.task-locks', `${taskId}.lock.json`));
     assert(lock.reservationOnly === undefined, 'in-progress task-card-opener should promote reservation to formal lock');
