@@ -3,13 +3,12 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 const tempRoot = path.join(projectRoot, 'temp', 'task-id-guard-flow');
 const taskCardDir = path.join(tempRoot, 'docs', 'agent-briefs', 'tasks');
 const lockDir = path.join(tempRoot, '.task-locks');
-const taskCardOpenerCli = path.join(projectRoot, 'tools_node', 'task-card-opener.js');
+const { runTaskCardOpener } = require('../task-card-opener');
 const {
   inspectTaskId,
   releaseReservedTaskId,
@@ -46,25 +45,22 @@ function buildTempLockAdapter() {
   }));
 }
 
-function runNode(args, expectedStatus = 0) {
-  const result = spawnSync(process.execPath, args, {
-    cwd: projectRoot,
-    encoding: 'utf8',
-    shell: false,
-    env: {
-      ...process.env,
-      AGENT_IDENTITY: 'task-id-flow-agent',
-    },
-  });
-  if (result.status !== expectedStatus) {
-    throw new Error([
-      `node ${args.join(' ')} exited ${result.status}, expected ${expectedStatus}`,
-      String(result.stdout || '').trim(),
-      String(result.stderr || '').trim(),
-      result.error ? result.error.message : '',
-    ].filter(Boolean).join('\n'));
+async function runTaskCardOpenerArgs(args) {
+  const originalAgentIdentity = process.env.AGENT_IDENTITY;
+  process.env.AGENT_IDENTITY = 'task-id-flow-agent';
+  try {
+    return await runTaskCardOpener([
+      process.execPath,
+      path.join(projectRoot, 'tools_node', 'task-card-opener.js'),
+      ...args,
+    ]);
+  } finally {
+    if (typeof originalAgentIdentity === 'string') {
+      process.env.AGENT_IDENTITY = originalAgentIdentity;
+    } else {
+      delete process.env.AGENT_IDENTITY;
+    }
   }
-  return result;
 }
 
 function cleanupRealProjectArtifacts(taskId) {
@@ -119,7 +115,7 @@ function testReserveNextAndRelease() {
   assert(inspectTaskId(tempRoot, reservation.taskId).occupied === false, 'released reservation should free the id');
 }
 
-function testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks() {
+async function testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks() {
   const taskIds = ['ATM-FLOW-9001', 'ATM-FLOW-9002'];
   const sharedJsonPath = 'temp/task-id-flow-shared.json';
   taskIds.forEach(cleanupRealProjectArtifacts);
@@ -130,8 +126,7 @@ function testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks() {
 
   try {
     for (const taskId of taskIds) {
-      runNode([
-        taskCardOpenerCli,
+      await runTaskCardOpenerArgs([
         '--id',
         taskId,
         '--title',
@@ -148,9 +143,13 @@ function testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks() {
       ]);
 
       assert(!fs.existsSync(path.join(projectRoot, '.task-locks', `${taskId}.lock.json`)), 'open task card should release reservation instead of leaving a formal lock');
-      const taskJson = readJson(path.join(projectRoot, 'temp', `${taskId}.json`));
-      assert(taskJson.started_at === '', 'open task card json should not include started_at value');
-      assert(taskJson.started_by_agent === '', 'open task card json should not include started_by_agent value');
+      const aggregateSnapshot = readJson(sharedJsonAbsPath);
+      const taskEntry = Array.isArray(aggregateSnapshot.tasks)
+        ? aggregateSnapshot.tasks.find((entry) => entry && entry.id === taskId)
+        : null;
+      assert(taskEntry, 'shared aggregate should contain the newly opened task');
+      assert(taskEntry.started_at === '', 'open task card aggregate entry should not include started_at value');
+      assert(taskEntry.started_by_agent === '', 'open task card aggregate entry should not include started_by_agent value');
     }
 
     const aggregate = readJson(sharedJsonAbsPath);
@@ -165,12 +164,11 @@ function testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks() {
   }
 }
 
-function testTaskCardOpenerInProgressPromotion() {
+async function testTaskCardOpenerInProgressPromotion() {
   const taskId = 'ATM-FLOW-9003';
   cleanupRealProjectArtifacts(taskId);
   try {
-    runNode([
-      taskCardOpenerCli,
+    await runTaskCardOpenerArgs([
       '--id',
       taskId,
       '--title',
@@ -198,13 +196,16 @@ function testTaskCardOpenerInProgressPromotion() {
   }
 }
 
-function main() {
+async function main() {
   testGuardReservationAndPromotion();
   testReserveNextAndRelease();
-  testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks();
-  testTaskCardOpenerInProgressPromotion();
+  await testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks();
+  await testTaskCardOpenerInProgressPromotion();
   resetTempRoot();
   console.log('task-id guard flow tests passed');
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

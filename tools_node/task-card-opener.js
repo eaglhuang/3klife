@@ -564,8 +564,8 @@ function upsertTaskInUiShard(existing, task) {
   return shard;
 }
 
-function printHelp() {
-  console.log([
+function printHelp(log = console.log) {
+  log([
     '用法：',
     '  node tools_node/task-card-opener.js --id <TaskId> --title <Title> [options]',
     '  node tools_node/task-card-opener.js --recipe <file> [既有 recipe compiler 參數]',
@@ -627,14 +627,13 @@ function printHelp() {
   ].join('\n'));
 }
 
-function printDryRunArtifact(label, content) {
-  console.log(`--- ${label} ---`);
-  console.log(content);
+function printDryRunArtifact(label, content, log = console.log) {
+  log(`--- ${label} ---`);
+  log(content);
 }
 
-function runRecipeMode() {
-  const args = process.argv.slice(2);
-  cp.execFileSync(process.execPath, [path.join(PROJECT_ROOT, 'tools_node', 'compile-recipe-to-task-card.js'), ...args], {
+function runRecipeMode(args = [], execFileSyncImpl = cp.execFileSync) {
+  execFileSyncImpl(process.execPath, [path.join(PROJECT_ROOT, 'tools_node', 'compile-recipe-to-task-card.js'), ...args], {
     cwd: PROJECT_ROOT,
     stdio: 'inherit',
   });
@@ -713,11 +712,11 @@ async function main() {
   const assignDocId = hasFlag(process.argv, 'assign-doc-id');
   if ((explicitId && nextIdPrefix) || (!explicitId && !nextIdPrefix)) {
     printHelp();
-    process.exit(1);
+    throw new Error('exactly one of --id / --next-id-prefix is required');
   }
   if (!title) {
     printHelp();
-    process.exit(1);
+    throw new Error('title is required');
   }
   if (docId && assignDocId) {
     throw new Error('--doc-id 與 --assign-doc-id 不能同時使用');
@@ -878,10 +877,36 @@ async function main() {
   };
 
   console.log(JSON.stringify(outputSummary, null, 2));
+  return outputSummary;
 }
 
-main().catch((error) => {
-  cleanupPendingTaskIdReservation();
-  console.error(`[task-card-opener] ${error.message}`);
-  process.exit(1);
-});
+async function runTaskCardOpener(argv = process.argv) {
+  const originalArgv = process.argv;
+  try {
+    process.argv = Array.isArray(argv) ? [...argv] : originalArgv;
+    return await main();
+  } catch (error) {
+    cleanupPendingTaskIdReservation();
+    throw error;
+  } finally {
+    process.argv = originalArgv;
+  }
+}
+
+async function runCli(argv = process.argv) {
+  try {
+    await runTaskCardOpener(argv);
+  } catch (error) {
+    console.error(`[task-card-opener] ${error.message}`);
+    process.exit(1);
+  }
+}
+
+if (require.main === module) {
+  runCli();
+}
+
+module.exports = {
+  runCli,
+  runTaskCardOpener,
+};
