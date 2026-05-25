@@ -639,6 +639,13 @@ function runRecipeMode(args = [], execFileSyncImpl = cp.execFileSync) {
   });
 }
 
+function createTaskCardOpenerIo(io = {}) {
+  return {
+    log: typeof io.log === 'function' ? io.log : console.log,
+    error: typeof io.error === 'function' ? io.error : console.error,
+  };
+}
+
 let pendingTaskIdReservation = null;
 
 function rememberTaskIdReservation(reservation) {
@@ -751,14 +758,18 @@ function parseTaskCardOpenerOptions(argv = process.argv) {
   };
 }
 
-async function main(options = {}) {
+async function main(options = {}, runtime = {}) {
+  const io = createTaskCardOpenerIo(runtime.io);
+  const execFileSyncImpl = typeof runtime.execFileSync === 'function'
+    ? runtime.execFileSync
+    : cp.execFileSync;
   if (options.showHelp) {
-    printHelp();
+    printHelp(io.log);
     return;
   }
 
   if (options.recipePath) {
-    runRecipeMode(options.recipeArgs);
+    runRecipeMode(options.recipeArgs, execFileSyncImpl);
     return;
   }
 
@@ -770,11 +781,11 @@ async function main(options = {}) {
   const docId = options.docId;
   const assignDocId = options.assignDocId;
   if ((explicitId && nextIdPrefix) || (!explicitId && !nextIdPrefix)) {
-    printHelp();
+    printHelp(io.log);
     throw new Error('exactly one of --id / --next-id-prefix is required');
   }
   if (!title) {
-    printHelp();
+    printHelp(io.log);
     throw new Error('title is required');
   }
   if (docId && assignDocId) {
@@ -869,7 +880,7 @@ async function main(options = {}) {
       await taskAdapter.assignDocId(resolvedMdPath);
     }
   } else if (dryRun) {
-    printDryRunArtifact('markdown', mdContent);
+    printDryRunArtifact('markdown', mdContent, io.log);
   } else {
     throw new Error('未指定 --md-out，無法在 write 模式輸出 Markdown');
   }
@@ -896,7 +907,7 @@ async function main(options = {}) {
           : []),
       ].filter(Boolean);
       if (dryRun) {
-        printDryRunArtifact('json', `${JSON.stringify(outputJson, null, 2)}\n`);
+        printDryRunArtifact('json', `${JSON.stringify(outputJson, null, 2)}\n`, io.log);
       }
     } else if (jsonKind === 'ui-quality-task-shard') {
       const existing = loadJsonFileIfExists(jsonPath);
@@ -911,7 +922,7 @@ async function main(options = {}) {
       writeJson(jsonPath, outputJson, dryRun);
     }
   } else if (dryRun) {
-    printDryRunArtifact('json', `${JSON.stringify(task, null, 2)}\n`);
+    printDryRunArtifact('json', `${JSON.stringify(task, null, 2)}\n`, io.log);
   }
 
   if (pendingTaskIdReservation && !dryRun) {
@@ -935,23 +946,24 @@ async function main(options = {}) {
     dryRun,
   };
 
-  console.log(JSON.stringify(outputSummary, null, 2));
+  io.log(JSON.stringify(outputSummary, null, 2));
   return outputSummary;
 }
 
-async function runTaskCardOpenerWithOptions(options = {}) {
-  return main(options);
+async function runTaskCardOpenerWithOptions(options = {}, runtime = {}) {
+  return main(options, runtime);
 }
 
-async function runTaskCardOpener(argv = process.argv) {
-  return runTaskCardOpenerWithOptions(parseTaskCardOpenerOptions(argv));
+async function runTaskCardOpener(argv = process.argv, runtime = {}) {
+  return runTaskCardOpenerWithOptions(parseTaskCardOpenerOptions(argv), runtime);
 }
 
-async function runCli(argv = process.argv) {
+async function runCli(argv = process.argv, runtime = {}) {
+  const io = createTaskCardOpenerIo(runtime.io);
   try {
-    await runTaskCardOpener(argv);
+    await runTaskCardOpener(argv, runtime);
   } catch (error) {
-    console.error(`[task-card-opener] ${error.message}`);
+    io.error(`[task-card-opener] ${error.message}`);
     process.exit(1);
   }
 }
@@ -961,6 +973,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  createTaskCardOpenerIo,
   parseTaskCardOpenerOptions,
   runCli,
   runTaskCardOpener,

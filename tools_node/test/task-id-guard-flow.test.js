@@ -54,6 +54,11 @@ async function runTaskCardOpenerOptions(overrides = {}) {
       owner: 'task-id-flow-agent',
       createdByAgent: 'task-id-flow-agent',
       ...overrides,
+    }, {
+      io: {
+        log() {},
+        error() {},
+      },
     });
   } finally {
     if (typeof originalAgentIdentity === 'string') {
@@ -62,6 +67,22 @@ async function runTaskCardOpenerOptions(overrides = {}) {
       delete process.env.AGENT_IDENTITY;
     }
   }
+}
+
+async function testTaskCardOpenerHelpUsesInjectedIo() {
+  const output = [];
+  await runTaskCardOpenerWithOptions({
+    showHelp: true,
+  }, {
+    io: {
+      log(message) {
+        output.push(String(message));
+      },
+      error() {},
+    },
+  });
+  assert(output.length > 0, 'showHelp should emit help text via injected io.log');
+  assert(output.some((message) => message.includes('task-card-opener.js')), 'help output should mention task-card-opener.js');
 }
 
 function cleanupRealProjectArtifacts(taskId) {
@@ -186,6 +207,7 @@ async function testTaskCardOpenerInProgressPromotion() {
 async function main() {
   testGuardReservationAndPromotion();
   testReserveNextAndRelease();
+  await testTaskCardOpenerHelpUsesInjectedIo();
   await testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks();
   await testTaskCardOpenerInProgressPromotion();
   resetTempRoot();
