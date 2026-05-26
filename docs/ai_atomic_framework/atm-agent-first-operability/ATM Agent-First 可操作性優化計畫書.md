@@ -238,3 +238,16 @@ The grouped acceptance test plan above is the release-level acceptance surface f
 - Do not change ATM source as part of this planning rewrite.
 - Do not commit unrelated 3KLife dirty files.
 - Do not use planning mirror paths as target work unless a task explicitly allows it.
+
+## M13 Checkpoint / Import / Audit / Environment Repair Line
+
+This follow-up line was opened after the AAO practical feedback run exposed four workflow blockers that are still too easy for agents to trip over.
+
+| Task | Theme | Why it exists |
+|---|---|---|
+| `TASK-AAO-0037` | Batch checkpoint commit window | Checkpoint can advance the queue before the previous task has been committed, causing the next lock to misjudge the previous task commit. |
+| `TASK-AAO-0038` | Task import contract fidelity | Markdown task cards contain the real `scopePaths`, `target_repo`, and closure authority, but import can reduce that contract too much. |
+| `TASK-AAO-0039` | Planning-only ledger audit boundary | Planning tasks owned by 3KLife should not become target-repo audit blockers in AI-Atomic-Framework. |
+| `TASK-AAO-0040` | Sandbox git process diagnostics | Codex-style sandbox `git` EPERM failures must be reported as environment issues with retry guidance, not confused with ATM gate failures. |
+
+M13 is intentionally narrow. It does not redesign ATM; it patches the handoff points that made real agents slow or confused: checkpoint-to-commit, task import fidelity, planning/target authority, and sandbox diagnostics.

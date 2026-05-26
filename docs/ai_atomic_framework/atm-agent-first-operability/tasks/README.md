@@ -74,3 +74,12 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 - `TASK-AAO-0000` 保持 `done`，只重寫格式，不重新執行。
 - `TASK-AAO-0001` 已標記為 `done`；`TASK-AAO-0002` 到 `TASK-AAO-0036` 全部是 `planned`，等待後續 ATM batch/normal flow 實作。
 - AAO planning truth 留在 3KLife；target implementation 回到 AI-Atomic-Framework。
+
+## M13 Follow-up Task Roster
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0037](./TASK-AAO-0037-batch-checkpoint-commit-window.task.md) | Batch checkpoint commit window | planned | `TASK-AAO-0013`, `TASK-AAO-0014`, `TASK-AAO-0024`, `TASK-AAO-0032` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |
+| [TASK-AAO-0038](./TASK-AAO-0038-task-import-contract-fidelity.task.md) | Task import contract fidelity | planned | `TASK-AAO-0012`, `TASK-AAO-0025`, `TASK-AAO-0034`, `TASK-AAO-0036` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`npm run validate:prompt-scoped-next` |
+| [TASK-AAO-0039](./TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md) | Planning-only ledger audit boundary | planned | `TASK-AAO-0025`, `TASK-AAO-0038` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate` |
+| [TASK-AAO-0040](./TASK-AAO-0040-sandbox-git-process-diagnostic.task.md) | Sandbox git process diagnostics | planned | `TASK-AAO-0004`, `TASK-AAO-0026` | `packages/cli/src/commands/hook.ts`<br>`scripts/validate-cli.ts` | `npm run typecheck`<br>`npm run validate:cli` |
