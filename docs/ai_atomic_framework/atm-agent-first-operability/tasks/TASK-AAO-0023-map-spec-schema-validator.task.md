@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0023
 task_id: TASK-AAO-0023
 title: "Map spec schema validator"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8

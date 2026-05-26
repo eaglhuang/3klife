@@ -54,7 +54,7 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 | [TASK-AAO-0020](./TASK-AAO-0020-public-command-coverage-score.task.md) | Public command coverage scorer 修正 | planned | `TASK-AAO-0002` | `scripts/src/atomize-score.js`<br>`packages/cli/src/commands/command-specs/**` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0021](./TASK-AAO-0021-readable-ref-score-integration.task.md) | Readable ref scorer 整合 | planned | `TASK-AAO-0020` | `scripts/src/atomize-score.js`<br>`scripts/validate-atom-callsite-readability.ts` | `npm run typecheck`<br>`npm run validate:atom-callsite-readability` |
 | [TASK-AAO-0022](./TASK-AAO-0022-rollback-proof-evidence.task.md) | Rollback-proof evidence | planned | `TASK-AAO-0016` | `schemas/**`<br>`packages/cli/src/commands/evidence.ts` | `npm run typecheck`<br>`node --strip-types scripts/validate-rollback-proof.ts` |
-| [TASK-AAO-0023](./TASK-AAO-0023-map-spec-schema-validator.task.md) | Map spec schema validator | planned | `TASK-AAO-0006` | `atomic_workbench/maps/**`<br>`schemas/**` | `npm run typecheck`<br>`node --strip-types scripts/validate-map-spec-schema.ts` |
+| [TASK-AAO-0023](./TASK-AAO-0023-map-spec-schema-validator.task.md) | Map spec schema validator | done | `TASK-AAO-0006` | `schemas/atom-map.schema.json`<br>`scripts/validate-map-spec-schema.ts`<br>`package.json`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`node --strip-types scripts/validate-map-spec-schema.ts`<br>`npm run validate:cli` |
 | [TASK-AAO-0024](./TASK-AAO-0024-batch-status-progress.task.md) | batch status 增強 | planned | `TASK-AAO-0014` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0025](./TASK-AAO-0025-tasks-show-planning-doc.task.md) | tasks show --planning-doc | planned | `TASK-AAO-0010` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0026](./TASK-AAO-0026-atm-status-overview.task.md) | atm status 綜覽 | planned | `TASK-AAO-0024`, `TASK-AAO-0025` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/index.ts` | `npm run typecheck`<br>`npm run validate:cli` |
@@ -72,7 +72,7 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 ## Notes
 
 - `TASK-AAO-0000` 保持 `done`，只重寫格式，不重新執行。
-- `TASK-AAO-0001`、`TASK-AAO-0028`、`TASK-AAO-0036` 已標記為 `done`；其餘 `TASK-AAO-0002` 到 `TASK-AAO-0035`（扣除 0028）仍為 `planned`，等待後續 ATM batch/normal flow 實作。`TASK-AAO-0036` 是 planning-only doc 任務（closure_authority: planning_repo）。`TASK-AAO-0028` 是 docs-only 任務但 closure 在 AI-Atomic-Framework，因為 deliverables 是 `docs/governance/` 與 `templates/agent-pack/` 而非 planning prose。
+- `TASK-AAO-0001`、`TASK-AAO-0023`、`TASK-AAO-0028`、`TASK-AAO-0036` 已標記為 `done`；其餘 `TASK-AAO-0002` 到 `TASK-AAO-0035`（扣除 0023、0028）仍為 `planned`，等待後續 ATM batch/normal flow 實作。`TASK-AAO-0036` 是 planning-only doc 任務（closure_authority: planning_repo）。`TASK-AAO-0028` 與 `TASK-AAO-0023` 都是 closure 在 AI-Atomic-Framework 的獨立卡：0028 落地 docs/governance + templates，0023 新增 schemas/atom-map.schema.json 與 scripts/validate-map-spec-schema.ts，兩張卡都不動 packages/cli/src/**。
 - AAO planning truth 留在 3KLife；target implementation 回到 AI-Atomic-Framework。
 
 ## M13 Follow-up Task Roster
