@@ -79,6 +79,15 @@ nonGoals:
 - 舊 lock migration/repair 不破壞已存在 runtime。
 - hook 與 checkpoint 使用同一 helper。
 
+
+<!-- AAO-feedback-0012-lock-mtime -->
+## Feedback Reinforcement Acceptance
+
+- Lock integrity must include runtime mtime checking: if `.atm/runtime/locks/**/*.lock.json` changes after the last recorded ATM CLI lock/scope event, ATM reports `ATM_RUNTIME_LOCK_MANUAL_EDIT` and blocks the next governed mutation.
+- The enforced `allowedFiles` source must be one canonical field; top-level lock file lists and embedded direction-lock lists must not diverge.
+- Repair/migration may normalize old locks, but must write an auditable event or report so manual lock edits cannot hide in ignored runtime files.
+<!-- /AAO-feedback-0012-lock-mtime -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

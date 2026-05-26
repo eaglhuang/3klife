@@ -155,6 +155,8 @@ AAO is accepted by running scenario tests, not by checking that task cards were 
 | M10 | Final dogfood and sync | AAO 0033 |
 | M11 | Selector-first routing and command-surface consolidation | AAO 0034-0035 |
 | M12 | Acceptance test plan and premises closure | AAO 0036 |
+| M13 | Checkpoint / import / audit / sandbox repair | AAO 0037-0040 |
+| M14 | Batch interruption and planning-root controls | AAO 0041-0044 |
 
 ## Task Roster
 
@@ -251,3 +253,35 @@ This follow-up line was opened after the AAO practical feedback run exposed four
 | `TASK-AAO-0040` | Sandbox git process diagnostics | Codex-style sandbox `git` EPERM failures must be reported as environment issues with retry guidance, not confused with ATM gate failures. |
 
 M13 is intentionally narrow. It does not redesign ATM; it patches the handoff points that made real agents slow or confused: checkpoint-to-commit, task import fidelity, planning/target authority, and sandbox diagnostics.
+
+## M14 Batch Interruption / Planning Root / Resume Controls
+
+This line folds the latest practical feedback into the AAO plan without redesigning ATM. The rule is simple: if the problem is a missing acceptance criterion, strengthen the existing task; if the problem is a new user-visible command or state, open a small focused task.
+
+### Existing Task Reinforcements
+
+| Feedback | Task | Reinforcement |
+|---|---|---|
+| next is not smart enough / routing must be user-overridable | `TASK-AAO-0034` | Selector-first routing, plan-name/range/family matching, routing memory, and no unrelated fallback. |
+| Scope amendment discovered too late | `TASK-AAO-0010` | Pre-write `ATM_SCOPE_AMENDMENT_SUGGESTED` plus atomic multi-path `tasks scope --add`. |
+| Initial lock misses declared deliverables | `TASK-AAO-0038` | Initial `allowedFiles` must include task-card deliverables plus governance paths. |
+| Low-level lifecycle can create bad locks | `TASK-AAO-0029` | AI-facing low-level lifecycle is blocked or requires explicit maintainer override; no incomplete locks by default. |
+| Expected failing gates need evidence | `TASK-AAO-0016` | Diagnostic / expected-failure evidence is separate from validation passes. |
+| Playbook only handles batch | `TASK-AAO-0014` | Playbook covers batch, single-task, and explicit task-list modes. |
+| Completion attestation is not closed-loop | `TASK-AAO-0019` | Scanner validates attestation schema and closure-packet hashes. |
+| Background pause is only prose | `TASK-AAO-0031` | Add active-session state and `atm status --background-safe`. |
+| Artifact policy is abstract | `TASK-AAO-0032` | Add a decision table and hook diagnostics tied to table rows. |
+| Dev runner warning is too weak | `TASK-AAO-0027` | Add runtime warning when frozen runner is older than source. |
+| Lock edits can hide in ignored runtime files | `TASK-AAO-0012` | Detect lock mtime changes without matching ATM CLI events. |
+| Evidence gaps are discovered too late | `TASK-AAO-0017` | Add pre-close `evidence missing --task` diagnostics. |
+
+### New Focused Tasks
+
+| Task | Theme | Why it exists |
+|---|---|---|
+| `TASK-AAO-0041` | `batch checkpoint --hold` | Close the current task without immediately claiming the next one, preserving a clean commit window. |
+| `TASK-AAO-0042` | `batch repair / continue` | Recover interrupted batches with one diagnostic command instead of manual runtime edits. |
+| `TASK-AAO-0043` | Planning repo root resolver | Stop baking fragile `../3KLife/...` paths into locks and routing records. |
+| `TASK-AAO-0044` | `batch skip / resume` | Temporarily skip externally blocked tasks without pretending they are done. |
+
+M14 keeps the AAO bias toward small patches. It does not introduce a second task model and does not weaken gates; it makes the legal path easier to find.

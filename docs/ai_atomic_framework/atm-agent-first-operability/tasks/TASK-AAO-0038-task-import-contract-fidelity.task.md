@@ -98,6 +98,15 @@ nonGoals:
 - Planning path 只出現在 planning/read-only 欄位，不進 target allowed files。
 - Regression test 覆蓋 legacy `allowed_files` alias。
 
+
+<!-- AAO-feedback-0038-initial-allowedfiles -->
+## Feedback Reinforcement Acceptance
+
+- Initial `taskDirectionLock.allowedFiles` must include all target-repo `deliverables` from the task card plus standard governance paths for that task.
+- Deliverables already declared in task frontmatter must not require a second scope amendment during `next --claim`.
+- Import must preserve enough machine fields for `next --claim` to construct this lock without reading planning prose as writable target scope.
+<!-- /AAO-feedback-0038-initial-allowedfiles -->
+
 ## Rollback
 
 Revert this task commit. Existing imported tasks may need re-import if they were produced by the new fidelity projection.

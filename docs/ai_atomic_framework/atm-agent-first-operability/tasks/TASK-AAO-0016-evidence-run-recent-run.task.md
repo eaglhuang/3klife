@@ -77,6 +77,15 @@ nonGoals:
 - `evidence add --recent-run` 可引用未過期 run。
 - exitCode 非 0 不可被當 pass。
 
+
+<!-- AAO-feedback-0016-diagnostic-evidence -->
+## Feedback Reinforcement Acceptance
+
+- `exitCode != 0` command runs must never be counted as validation passes.
+- Add diagnostic / expected-failure evidence support for intentional blocked gates: the command may exit non-zero only when the evidence records `expectedOutcome: blocked|warn|fail` and a remediation plan.
+- Closure packets must separate `validationPasses` from `diagnosticEvidence`, so a legitimate failing graduation gate can be recorded without pretending it passed.
+<!-- /AAO-feedback-0016-diagnostic-evidence -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

@@ -79,6 +79,15 @@ nonGoals:
 - checkpointed artifact commit 可通過。
 - draft static evidence 與 command-backed evidence 分層。
 
+
+<!-- AAO-feedback-0032-decision-table -->
+## Feedback Reinforcement Acceptance
+
+- `docs/governance/artifact-commit-policy.md` must include a decision table for artifact-only commits.
+- Required cases: trailer plus active checkpoint window is allowed; trailer plus ready-to-close task is allowed with warning; trailer without claim is blocked; no trailer under `atomic_workbench/reports/**` or `atomic_workbench/maps/**` is blocked unless covered by a governed amendment.
+- Hook diagnostics must name the matching table row so agents stop guessing policy intent.
+<!-- /AAO-feedback-0032-decision-table -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

@@ -90,6 +90,16 @@ next 的推薦很好用，但不該成為性能瓶頸，也不該把 unrelated �
 - 新增可追蹤 routing feedback memory，例如 accepted/rejected family 或 prompt alias，不用黑盒模型學習。
 - next 使用 task index/cache，避免每次大範圍掃 repo 成為性能瓶頸。
 
+
+<!-- AAO-feedback-0034-routing-learning -->
+## Feedback Reinforcement Acceptance
+
+- This card owns the “next is not smart enough yet” issue. It must add selector-first routing that respects explicit task, task list, plan path, plan name, family/root, and batch id.
+- If the user prompt names a plan but no matching plan/task can be found, `next` must return scope-not-found or selection-required; it must not fall back to unrelated open tasks.
+- Routing memory/cache may learn accepted aliases and rejected false matches, but it must remain inspectable and resettable.
+- Routing must be performance-conscious: prefer indexed task metadata and explicit selectors over broad repo scans on every `next` call.
+<!-- /AAO-feedback-0034-routing-learning -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

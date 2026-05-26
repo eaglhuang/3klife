@@ -79,6 +79,15 @@ TASK-ASA-0005 實戰中 AI 想直接編輯 lock allowedFiles。這不是 AI 壞�
 - scope amendment 寫 transition/report，不手改 runtime。
 - pre-tool 看到手改 lock 會給 requiredCommand。
 
+
+<!-- AAO-feedback-0010-prewrite -->
+## Feedback Reinforcement Acceptance
+
+- Pre-write detection is required: when a write/edit/pre-tool request targets a path outside `taskDirectionLock.allowedFiles`, ATM must return `ATM_SCOPE_AMENDMENT_SUGGESTED` before the write occurs, including the exact `node atm.mjs tasks scope --add ... --json` command.
+- Scope amendment must support multiple paths in one command, for example `tasks scope --add path1,path2,path3`, and record them as one atomic amendment event.
+- Agents must never be told to edit `.atm/runtime/locks/**` directly; all scope widening goes through this CLI.
+<!-- /AAO-feedback-0010-prewrite -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

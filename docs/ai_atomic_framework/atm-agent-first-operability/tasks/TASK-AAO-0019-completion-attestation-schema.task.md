@@ -79,6 +79,15 @@ ASA decision record 被擋是合理的，但訊息要指向 schema，而不是�
 - 未驗證報告只能使用 structural/pass-pending 語氣。
 - hook 輸出修正文案建議。
 
+
+<!-- AAO-feedback-0019-attestation-closed-loop -->
+## Feedback Reinforcement Acceptance
+
+- The scanner must actively verify completion attestations, not merely accept their presence.
+- When a report declares `completion_claim_verified_by: <attestation-path>`, the scanner reads the attestation, validates `schemaId: atm.completionAttestation.v1`, and checks every referenced closure-packet sha256.
+- Any missing or mismatched closure packet is an ERROR; a fully verified attestation becomes INFO with trace details.
+<!-- /AAO-feedback-0019-attestation-closed-loop -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

@@ -79,6 +79,15 @@ nonGoals:
 - README/integrations 不再推薦手動 loop。
 - maintainer escape hatch 保留。
 
+
+<!-- AAO-feedback-0029-lowlevel-safe-mode -->
+## Feedback Reinforcement Acceptance
+
+- AI-facing low-level lifecycle commands must not silently create incomplete locks. Either reject without a maintainer override and print the `next --claim` command, or create a complete `taskDirectionLock` compatible with checkpoint.
+- If a maintainer override exists, it must be explicit, auditable, and documented in help output.
+- Legacy lifecycle output must include `ATM_LIFECYCLE_LEGACY_LOCK` only as a warning path; it cannot be the default path for AI agents.
+<!-- /AAO-feedback-0029-lowlevel-safe-mode -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

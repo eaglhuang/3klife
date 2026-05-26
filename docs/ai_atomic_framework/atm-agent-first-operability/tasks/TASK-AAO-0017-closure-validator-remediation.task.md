@@ -79,6 +79,15 @@ AI 在 ASA-0016 卡住時看不到真正 blocking gate。缺 validator 要變成
 - 每個 missing pass 有 suggested evidence command。
 - blockingFindings[] 包含所有 gate，而非只列 audit。
 
+
+<!-- AAO-feedback-0017-evidence-missing -->
+## Feedback Reinforcement Acceptance
+
+- Add a pre-close query path such as `node atm.mjs evidence missing --task <id> --json` so agents can see required validators/evidence before attempting close or checkpoint.
+- Closure errors must include the same missing evidence list plus one concrete `requiredCommand` per missing category.
+- The command must distinguish absent evidence, failed command runs, stale evidence, and diagnostic-only evidence.
+<!-- /AAO-feedback-0017-evidence-missing -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

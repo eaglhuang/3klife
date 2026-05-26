@@ -83,3 +83,14 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 | [TASK-AAO-0038](./TASK-AAO-0038-task-import-contract-fidelity.task.md) | Task import contract fidelity | planned | `TASK-AAO-0012`, `TASK-AAO-0025`, `TASK-AAO-0034`, `TASK-AAO-0036` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`npm run validate:prompt-scoped-next` |
 | [TASK-AAO-0039](./TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md) | Planning-only ledger audit boundary | planned | `TASK-AAO-0025`, `TASK-AAO-0038` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate` |
 | [TASK-AAO-0040](./TASK-AAO-0040-sandbox-git-process-diagnostic.task.md) | Sandbox git process diagnostics | planned | `TASK-AAO-0004`, `TASK-AAO-0026` | `packages/cli/src/commands/hook.ts`<br>`scripts/validate-cli.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+
+## M14 Batch Interruption / Planning Root / Resume Task Roster
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0041](./TASK-AAO-0041-batch-checkpoint-hold.task.md) | batch checkpoint --hold | planned | `TASK-AAO-0037`, `TASK-AAO-0024` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/task-direction.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |
+| [TASK-AAO-0042](./TASK-AAO-0042-batch-repair-continue.task.md) | batch repair / continue | planned | `TASK-AAO-0024`, `TASK-AAO-0037`, `TASK-AAO-0041` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/status.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |
+| [TASK-AAO-0043](./TASK-AAO-0043-planning-repo-root-resolver.task.md) | planning repo root resolver | planned | `TASK-AAO-0038`, `TASK-AAO-0039` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/tasks.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-prompt-scoped-next.ts` |
+| [TASK-AAO-0044](./TASK-AAO-0044-batch-skip-resume.task.md) | batch skip / resume | planned | `TASK-AAO-0042` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/tasks.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate` |
+
+M14 cards are opened because they introduce new user-visible commands or runtime state. The other feedback items were folded into existing AAO cards as stronger acceptance criteria.

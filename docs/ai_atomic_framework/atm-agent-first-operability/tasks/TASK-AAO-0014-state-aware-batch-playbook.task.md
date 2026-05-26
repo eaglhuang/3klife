@@ -79,6 +79,15 @@ AI 不是不想照做，而是中斷續跑時不知道自己在 claim、deliver�
 - 已 checkpoint 未 commit 時提示先 commit。
 - running 但缺 evidence 時提示 evidence 指令。
 
+
+<!-- AAO-feedback-0014-single-task-playbook -->
+## Feedback Reinforcement Acceptance
+
+- State-aware playbooks must cover three modes: active batch queue head, single-task `next --claim --task X`, and explicit list mode such as `next --claim --tasks X,Y,Z`.
+- Each playbook must print the next concrete command and must explain whether the agent should implement, add evidence, checkpoint, commit, repair, or resume.
+- A batch playbook must keep saying that batch owns close/advance; a single-task playbook must not require batch-only commands.
+<!-- /AAO-feedback-0014-single-task-playbook -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

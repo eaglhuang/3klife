@@ -77,6 +77,15 @@ nonGoals:
 - batch status 給 pause/checkpoint/handoff 建議。
 - 不自動殺程序，只提供治理訊號。
 
+
+<!-- AAO-feedback-0031-active-session -->
+## Feedback Reinforcement Acceptance
+
+- Advisory text must be paired with machine-readable state: `.atm/runtime/active-session.json` records active batch/task, claimed tasks, actor, lastHeartbeatAt, and expiresAt.
+- Add `atm status --background-safe` semantics: exit 0 means background sync/restore may proceed; exit 1 means an active claim or checkpoint debt should pause automation.
+- The active-session contract must be documented so external sync/restore tools can check ATM state without parsing human prose.
+<!-- /AAO-feedback-0031-active-session -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

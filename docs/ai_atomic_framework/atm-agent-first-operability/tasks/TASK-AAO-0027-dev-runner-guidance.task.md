@@ -83,6 +83,15 @@ Claude Code 在 framework repo 跑到未 build source，導致吃到半成品。
 - dev runner 只在 explicit source validation 時建議。
 - agent integration docs 同步。
 
+
+<!-- AAO-feedback-0027-runtime-warning -->
+## Feedback Reinforcement Acceptance
+
+- Runtime-level warning is required: when `node atm.mjs` is older than files under `packages/cli/src/**`, print a clear warning that the frozen runner may not include source changes.
+- The warning must suggest either `npm run build` for release-runner validation or `node atm.dev.mjs` for explicit source-first framework validation.
+- Documentation-only reminders are not sufficient acceptance for this task.
+<!-- /AAO-feedback-0027-runtime-warning -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.
