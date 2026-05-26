@@ -2,7 +2,7 @@
 doc_id: doc_other_1320
 task_id: TASK-AAO-0002
 title: "CLI command spec / runner SSOT drift guard"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M1

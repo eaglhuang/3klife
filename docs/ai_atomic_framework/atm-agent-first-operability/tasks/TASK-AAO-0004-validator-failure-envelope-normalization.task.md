@@ -2,7 +2,7 @@
 doc_id: doc_other_1322
 task_id: TASK-AAO-0004
 title: "Validator failure envelope 標準化"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M2

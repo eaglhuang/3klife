@@ -2,7 +2,7 @@
 doc_id: doc_other_1321
 task_id: TASK-AAO-0003
 title: "next decisionTrail JSON contract"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M1
