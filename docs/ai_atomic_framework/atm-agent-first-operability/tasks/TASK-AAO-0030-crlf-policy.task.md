@@ -81,6 +81,8 @@ nonGoals:
 - policy 說明哪些檔案固定 LF。
 - validator 可檢測 touched files。
 - .gitattributes 不破壞既有 binary/artifact。
+- CRLF / encoding findings 不可蓋掉 commit-message、protected-state、scope-drift 等更直接的 blocking finding；hook output 必須保留清楚的主因摘要與原始 finding 分類。
+- 若 commit summary line 過長或格式不合規，診斷必須獨立列出，不可被 line-ending 報告包成同一個 confusing failure。
 
 ## Rollback
 

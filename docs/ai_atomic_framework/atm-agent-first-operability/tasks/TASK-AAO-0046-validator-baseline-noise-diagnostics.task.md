@@ -83,6 +83,8 @@ TASK-AAO-0004 standardized validator failure envelopes, but follow-up dogfood sh
 ## Acceptance Criteria
 
 - Validator envelopes expose baselineFailures[], currentTaskFailures[], and blockingFindings[] or equivalent stable fields.
+- Hook / validator envelopes sort `blockingFindings[]` by actionable severity so the first visible blocker is the thing the agent can fix now; advisory CRLF / encoding noise must not hide commit-message, protected-state, checkpoint, or scope errors.
+- When multiple gates fail, output includes a compact `primaryBlocker` (or equivalent) plus full categorized findings, so agents do not parse an empty taskAudit section and miss the real hook failure.
 - If an unrelated validator already fails before the task changes, ATM reports it as baseline noise and gives a focused validator command for the current card.
 - Single-task evidence and batch checkpoint are not forced to debug unrelated baseline failures unless the task touched that surface.
 - Release-level validation still reports baseline failures and remains allowed to block release decisions.

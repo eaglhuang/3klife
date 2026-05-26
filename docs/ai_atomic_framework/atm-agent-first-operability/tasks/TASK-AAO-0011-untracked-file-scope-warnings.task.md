@@ -76,6 +76,9 @@ nonGoals:
 ## Acceptance Criteria
 
 - claim/checkpoint 報告 unrelated dirty，但不阻止 unrelated untracked。
+- `next --claim` 不可因 unrelated untracked assets（例如 Codex 產生的 `.svg`、截圖、暫存 patch、未納入本 task scope 的一般 artifact）而 hard-block；這類檔案必須降級為 warning，並在輸出中列為 `ignoredUntrackedFiles` 或等價欄位。
+- 只有以下情境可以繼續 hard-block：檔案位於 `.atm/**` protected state、命中 framework protected source、落在目前 task/batch owned path、或會造成跨 active scope 的 file conflict。
+- 若 `next --claim` 因 untracked 檔案回報 warning，仍必須建立合法 direction lock / batch runtime，避免 agent 因 claim 被擋而跳過 ATM 流程直接做工。
 - scope 內 dirty 仍被嚴格檢查。
 - pre-commit 仍只允許當前 task/batch 檔案。
 

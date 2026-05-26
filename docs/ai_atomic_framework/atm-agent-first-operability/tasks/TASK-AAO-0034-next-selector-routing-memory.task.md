@@ -98,6 +98,9 @@ next 的推薦很好用，但不該成為性能瓶頸，也不該把 unrelated �
 
 - This card owns the “next is not smart enough yet” issue. It must add selector-first routing that respects explicit task, task list, plan path, plan name, family/root, and batch id.
 - If the user prompt names a plan but no matching plan/task can be found, `next` must return scope-not-found or selection-required; it must not fall back to unrelated open tasks.
+- Task shorthand in prompts must normalize before lookup: `AAO-0011`, `AAO-0030`, `ASA-0005`, and similar family-number forms must resolve to their canonical `TASK-*` task ids when matching cards exist.
+- If a prompt mentions multiple valid shorthand task ids, `next` must return a multi-task/selection route instead of `ATM_NEXT_TASK_SCOPE_NOT_FOUND`; scope-not-found is only valid when the normalized ids truly do not exist.
+- Regression evidence must include the observed failure mode: prompt text containing `AAO-0011` and `AAO-0030/0046` must discover the matching AAO cards or ask for selection, never report no scope while those cards exist.
 - Routing memory/cache may learn accepted aliases and rejected false matches, but it must remain inspectable and resettable.
 - Routing must be performance-conscious: prefer indexed task metadata and explicit selectors over broad repo scans on every `next` call.
 <!-- /AAO-feedback-0034-routing-learning -->
