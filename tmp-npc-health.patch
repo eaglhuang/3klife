@@ -1,0 +1,36 @@
+diff --git a/app/npc_dialogue_service.py b/app/npc_dialogue_service.py
+index d53e5e0..b79b8ad 100644
+--- a/app/npc_dialogue_service.py
++++ b/app/npc_dialogue_service.py
+@@ -689,6 +713,9 @@ class NpcDialogueService:
+         provider_order = self.provider_router.provider_order
+         vector_config = load_vector_runtime_config()
+         memory_config = get_memory_runtime_config(self.repo_root)
++        runtime_general_ids = self.store.list_runtime_general_ids()
++        sample_general_id = "liu-bei"
++        sample_runtime_persona_ready = sample_general_id in runtime_general_ids
+         vector_health = vector_config.as_health()
+         vector_health["runtimeMode"] = "artifact-first-vector-second"
+         vector_health["offlineDegradeReady"] = False
+@@ -731,7 +758,8 @@ class NpcDialogueService:
+                     "numCtx": int(os.environ.get("NPC_LLM_LOCAL_LLAMA_NUM_CTX") or DEFAULT_LOCAL_LLAMA_NUM_CTX),
+                     "repairRetryCount": int(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPAIR_RETRY_COUNT") or DEFAULT_LOCAL_LLAMA_REPAIR_RETRY_COUNT),
+                 },
+-                "historyCacheEnabled": "history_cache" in provider_order,
++                "sceneCacheEnabled": self.scene_cache_enabled,
++                "historyCacheEnabled": self.scene_cache_enabled,
+                 "historyCachePath": str(self.history_cache_path),
+                 "supportedLocales": sorted(SUPPORTED_LOCALES),
+                 "supportedSpeechContextModes": sorted(SUPPORTED_SPEECH_CONTEXT_MODES),
+@@ -748,6 +776,11 @@ class NpcDialogueService:
+             },
+             "vector": vector_health,
+             "memory": memory_config,
++            "runtimeArtifacts": {
++                "runtimeGeneralIdsCount": len(runtime_general_ids),
++                "sampleGeneralId": sample_general_id,
++                "sampleRuntimePersonaReady": sample_runtime_persona_ready,
++            },
+         }
+ 
+     def record_interaction_event(self, request: InteractionEventCreateRequest) -> InteractionEventWriteResponse:

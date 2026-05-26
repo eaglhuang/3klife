@@ -1,0 +1,24 @@
+diff --git a/app/npc_dialogue_service.py b/app/npc_dialogue_service.py
+--- a/app/npc_dialogue_service.py
++++ b/app/npc_dialogue_service.py
+@@ -689,6 +689,9 @@
+         provider_order = self.provider_router.provider_order
+         vector_config = load_vector_runtime_config()
+         memory_config = get_memory_runtime_config(self.repo_root)
++        runtime_general_ids = self.store.list_runtime_general_ids()
++        sample_general_id = "liu-bei"
++        sample_runtime_persona_ready = sample_general_id in runtime_general_ids
+         vector_health = vector_config.as_health()
+         vector_health["runtimeMode"] = "artifact-first-vector-second"
+         vector_health["offlineDegradeReady"] = False
+@@ -747,5 +750,10 @@
+                 ],
+             },
+             "vector": vector_health,
+             "memory": memory_config,
++            "runtimeArtifacts": {
++                "runtimeGeneralIdsCount": len(runtime_general_ids),
++                "sampleGeneralId": sample_general_id,
++                "sampleRuntimePersonaReady": sample_runtime_persona_ready,
++            },
+         }

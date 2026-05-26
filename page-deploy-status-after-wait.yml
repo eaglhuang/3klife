@@ -1,0 +1,22 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - alert [ref=e5]:
+        - generic [ref=e7]
+        - button "Close notification" [ref=e18] [cursor=pointer]
+      - banner [ref=e21]:
+        - generic [ref=e22]
+        - generic [ref=e37]
+        - generic [ref=e63]
+      - generic [ref=e86]:
+        - navigation [ref=e87]
+        - generic [ref=e238]
+    - generic:
+      - generic:
+        - generic: "0 services selected:"
+        - generic
+      - generic:
+        - separator
+        - generic
+  - iframe [ref=e567]:
+    

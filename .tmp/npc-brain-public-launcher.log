@@ -1,0 +1,12 @@
+[2026-05-25T09:30:25.100Z] launcher starting
+[2026-05-25T09:30:25.105Z] backend spawn requested on http://127.0.0.1:8765
+[2026-05-25T09:30:25.127Z] proxy listening on http://127.0.0.1:8790
+[2026-05-25T09:30:27.739Z] [tunnel:out] your url is: https://forty-maps-visit.loca.lt
+[2026-05-25T09:30:27.741Z] tunnel url https://forty-maps-visit.loca.lt
+[2026-05-25T09:30:42.985Z] proxy request GET /healthz
+[2026-05-25T09:30:42.994Z] proxy upstream GET /healthz -> 200
+[2026-05-25T09:30:43.034Z] proxy request HEAD /assets/resources/sprites/generals/liu_bei_portrait.png
+[2026-05-25T09:30:43.674Z] proxy request HEAD /demo/liu-bei-memory-intent-game/index.html
+[2026-05-25T09:30:55.766Z] proxy request GET /demo/liu-bei-memory-intent-game/index.html
+[2026-05-25T09:31:20.408Z] proxy request HEAD /demo/liu-bei-memory-intent-game/index.html?apiBase=http%3A%2F%2Fforty-maps-visit.loca.lt
+[2026-05-25T10:34:09.437Z] tunnel exit 0

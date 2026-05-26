@@ -1,0 +1,428 @@
+diff --git a/app/npc_dialogue_service.py b/app/npc_dialogue_service.py
+index d53e5e0..b79b8ad 100644
+--- a/app/npc_dialogue_service.py
++++ b/app/npc_dialogue_service.py
+@@ -1,4 +1,4 @@
+-from __future__ import annotations
++?from __future__ import annotations
+ 
+ import json
+ import os
+@@ -598,6 +598,7 @@ class SceneDirectorDebugMetadata(BaseModel):
+     hasSceneData: bool = False
+     selectedEvidenceRefs: list[str] = Field(default_factory=list)
+     rejectedReasons: list[str] = Field(default_factory=list)
++    diagnosticIssues: list[str] = Field(default_factory=list)
+     seedQuality: SceneSeedQuality = Field(default_factory=SceneSeedQuality)
+     sourceCoverage: SceneSourceCoverage = Field(default_factory=SceneSourceCoverage)
+     selection: SceneSelectionDebug = Field(default_factory=SceneSelectionDebug)
+@@ -633,6 +634,13 @@ class SceneDirectorResponse(BaseModel):
+     debug: SceneDirectorDebugMetadata = Field(default_factory=SceneDirectorDebugMetadata)
+ 
+ 
++def _env_flag(name: str, default: bool = False) -> bool:
++    raw = os.environ.get(name)
++    if raw is None:
++        return default
++    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
++
++
+ class NpcDialogueService:
+     def __init__(
+         self,
+@@ -668,12 +676,28 @@ class NpcDialogueService:
+         self.provider_router = provider_router or DialogueProviderRouter()
+         self.evidence_resolver = EvidenceResolver(self.store)
+         self.scene_image_renderer = GeminiSceneImageRenderer(cache_root=self.repo_root / "local/npc-scene-image-cache")
++        self.scene_cache_enabled = _env_flag("NPC_SCENE_CACHE_ENABLED", default=False)
+         self._roster_index_cache: dict[str, dict[str, Any]] | None = None
+         self._chapter_paragraph_cache: dict[str, list[str]] = {}
+         self._source_event_packet_cache: dict[str, dict[str, Any]] | None = None
+         self._baihua_passage_cache: dict[tuple[str, int], str] | None = None
+         self._scene_chorus_cache: dict[str, SceneChorusLine] = {}
+         self._scene_chorus_cache_lock = Lock()
++        if not self.scene_cache_enabled:
++            self._clear_scene_cache(reason="scene-cache-disabled")
++
++    def _clear_scene_cache(self, reason: str = "manual") -> None:
++        try:
++            self._scene_chorus_cache.clear()
++            if self.history_cache_path.exists():
++                self.history_cache_path.unlink()
++            log_debug_event(
++                "scene_cache.cleared",
++                reason=reason,
++                path=str(self.history_cache_path),
++            )
++        except OSError as exc:
++            log_debug_event("scene_cache.clear-failed", path=str(self.history_cache_path), error=str(exc))
+ 
+     def _load_relationship_runtime_canon_policy(self) -> dict[str, Any]:
+         candidates = [self.repo_root / DEFAULT_RELATIONSHIP_RUNTIME_CANON_POLICY_LOCAL_PATH]
+@@ -689,6 +713,9 @@ class NpcDialogueService:
+         provider_order = self.provider_router.provider_order
+         vector_config = load_vector_runtime_config()
+         memory_config = get_memory_runtime_config(self.repo_root)
++        runtime_general_ids = self.store.list_runtime_general_ids()
++        sample_general_id = "liu-bei"
++        sample_runtime_persona_ready = sample_general_id in runtime_general_ids
+         vector_health = vector_config.as_health()
+         vector_health["runtimeMode"] = "artifact-first-vector-second"
+         vector_health["offlineDegradeReady"] = False
+@@ -731,7 +758,8 @@ class NpcDialogueService:
+                     "numCtx": int(os.environ.get("NPC_LLM_LOCAL_LLAMA_NUM_CTX") or DEFAULT_LOCAL_LLAMA_NUM_CTX),
+                     "repairRetryCount": int(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPAIR_RETRY_COUNT") or DEFAULT_LOCAL_LLAMA_REPAIR_RETRY_COUNT),
+                 },
+-                "historyCacheEnabled": "history_cache" in provider_order,
++                "sceneCacheEnabled": self.scene_cache_enabled,
++                "historyCacheEnabled": self.scene_cache_enabled,
+                 "historyCachePath": str(self.history_cache_path),
+                 "supportedLocales": sorted(SUPPORTED_LOCALES),
+                 "supportedSpeechContextModes": sorted(SUPPORTED_SPEECH_CONTEXT_MODES),
+@@ -748,6 +776,11 @@ class NpcDialogueService:
+             },
+             "vector": vector_health,
+             "memory": memory_config,
++            "runtimeArtifacts": {
++                "runtimeGeneralIdsCount": len(runtime_general_ids),
++                "sampleGeneralId": sample_general_id,
++                "sampleRuntimePersonaReady": sample_runtime_persona_ready,
++            },
+         }
+ 
+     def record_interaction_event(self, request: InteractionEventCreateRequest) -> InteractionEventWriteResponse:
+@@ -1068,7 +1101,17 @@ class NpcDialogueService:
+         )
+         evidence_invalid = bool(request.evidenceId and not any(card_item.evidenceId == request.evidenceId for card_item in profile.evidenceCards))
+         semantic_empty_reason = self._scene_pair_empty_reason(request.angle, card, target)
+-        has_scene_data = card is not None and not target_invalid and not evidence_invalid and not semantic_empty_reason
++        requested_evidence_refs = self._scene_requested_evidence_refs(request, card, target)
++        evidence_pack = self._resolve_evidence(request.generalId, None, [], requested_evidence_refs)
++        resolved_evidence_refs = [item.evidenceRef for item in evidence_pack.resolvedEvidence]
++        unresolved_evidence_refs = [ref for ref in evidence_pack.unresolvedEvidenceRefs if ref]
++        has_scene_data = (
++            card is not None
++            and not target_invalid
++            and not evidence_invalid
++            and not semantic_empty_reason
++            and not unresolved_evidence_refs
++        )
+         data_status, fallback_reason = self._scene_data_status(
+             requested_angle=request.angle,
+             requested_target_id=request.targetId,
+@@ -1079,15 +1122,22 @@ class NpcDialogueService:
+             card=card,
+             target=target,
+         )
++        if unresolved_evidence_refs and data_status in {"direct", "angle_empty_filled", "target_empty_filled"}:
++            data_status = "empty"
++            fallback_reason = f"unresolvedEvidenceRefs={','.join(unresolved_evidence_refs[:3])}"
+         beats = self._build_scene_director_beats(profile, card, target, request.angle) if has_scene_data else self._build_empty_scene_director_beats()
+-        evidence_refs = sorted(set(beats.sourceRefs))
++        evidence_refs = requested_evidence_refs or sorted(set(beats.sourceRefs))
+         evidence_resolution = SceneEvidenceResolution(
+-            usedEvidenceRefs=evidence_refs[:12],
+-            unresolvedEvidenceRefs=[],
++            usedEvidenceRefs=resolved_evidence_refs[:12],
++            unresolvedEvidenceRefs=unresolved_evidence_refs[:12],
+             resolutionTrace=[
+                 "scene-director:data-first",
+                 f"renderMode:{request.renderMode}",
+                 f"dataStatus:{data_status}",
++                *evidence_pack.resolutionTrace,
++                f"requestedRefs:{len(requested_evidence_refs)}",
++                f"resolvedRefs:{len(resolved_evidence_refs)}",
++                f"unresolvedRefs:{len(unresolved_evidence_refs)}",
+             ],
+         )
+         story_context_key: str | None = None
+@@ -1165,7 +1215,7 @@ class NpcDialogueService:
+                 timeout_seconds=self._scene_director_remaining_seconds(started_at),
+             )
+         else:
+-            empty_reason = "invalid_request" if data_status == "invalid_request" else "目前沒有可用資料"
++            empty_reason = "invalid_request" if data_status == "invalid_request" else "data_missing"
+             story_generation = DialogueGenerationResult(
+                 text="",
+                 provider="data_first",
+@@ -1189,6 +1239,7 @@ class NpcDialogueService:
+         )
+         debug_metadata = self._build_scene_director_debug_metadata(
+             request=request,
++            data_status=data_status,
+             target=target,
+             card=card,
+             beats=beats,
+@@ -1212,7 +1263,7 @@ class NpcDialogueService:
+             dataStatus=data_status,
+             isEmpty=is_empty,
+             fallbackReason=fallback_reason,
+-            emptyReason=("invalid_request" if data_status == "invalid_request" else "目前沒有可用資料") if is_empty else None,
++            emptyReason=(fallback_reason or "data_missing") if is_empty else None,
+             evidenceResolution=evidence_resolution,
+             beats=beats,
+             storyText=story_generation.text,
+@@ -1292,10 +1343,40 @@ class NpcDialogueService:
+                     reasons.append(str(warning))
+         return reasons
+ 
++    def _scene_diagnostic_issues(
++        self,
++        *,
++        data_status: str,
++        source_coverage: SceneSourceCoverage,
++        story_generation: DialogueGenerationResult,
++        chorus_target_count: int,
++        chorus_lines: list[SceneChorusLine],
++    ) -> list[str]:
++        issues: list[str] = []
++        if data_status == "empty" or source_coverage.unresolvedEvidenceRefCount > 0:
++            issues.append("data_missing")
++        story_provider = str(story_generation.provider or "").strip()
++        if self.scene_cache_enabled and (
++            story_provider == "history_cache"
++            or source_coverage.unresolvedEvidenceRefCount > 0
++            or (source_coverage.usedEvidenceRefCount > 0 and source_coverage.storyUsedEvidenceRefCount == 0)
++        ):
++            issues.append("cache_pollution_risk")
++        chorus_total = len(chorus_lines)
++        chorus_fallback_count = sum(1 for line in chorus_lines if bool(line.fallbackUsed))
++        if chorus_target_count > 0 and chorus_total == 0:
++            issues.append("chorus_fallback")
++        elif chorus_total > 0 and chorus_fallback_count >= chorus_total:
++            issues.append("chorus_fallback")
++        elif chorus_fallback_count > 0:
++            issues.append("chorus_partial_fallback")
++        return issues
++
+     def _build_scene_director_debug_metadata(
+         self,
+         *,
+         request: SceneDirectorRequest,
++        data_status: str,
+         target: NarrativeInteractionTarget | None,
+         card: NarrativeEvidenceCard | None,
+         beats: SceneDirectorBeats,
+@@ -1307,12 +1388,20 @@ class NpcDialogueService:
+         chorus_targets: list[NarrativeInteractionTarget],
+         chorus_lines: list[SceneChorusLine],
+     ) -> SceneDirectorDebugMetadata:
++        source_coverage = self._scene_source_coverage(evidence_resolution, beats, story_generation, chorus_lines)
+         return SceneDirectorDebugMetadata(
+             hasSceneData=has_scene_data,
+             selectedEvidenceRefs=list(evidence_resolution.usedEvidenceRefs),
+             rejectedReasons=self._scene_rejected_reasons(story_generation, chorus_lines),
++            diagnosticIssues=self._scene_diagnostic_issues(
++                data_status=data_status,
++                source_coverage=source_coverage,
++                story_generation=story_generation,
++                chorus_target_count=len(chorus_targets),
++                chorus_lines=chorus_lines,
++            ),
+             seedQuality=self._scene_seed_quality(beats),
+-            sourceCoverage=self._scene_source_coverage(evidence_resolution, beats, story_generation, chorus_lines),
++            sourceCoverage=source_coverage,
+             selection=SceneSelectionDebug(
+                 requestedTargetId=request.targetId,
+                 selectedTargetId=target.targetId if target else request.targetId,
+@@ -1371,12 +1460,12 @@ class NpcDialogueService:
+         target: NarrativeInteractionTarget | None,
+     ) -> tuple[str, str | None]:
+         if target_invalid or evidence_invalid:
+-            reason = "targetId 不存在" if target_invalid else "evidenceId 不存在"
++            reason = "targetId_invalid" if target_invalid else "evidenceId_invalid"
+             return "invalid_request", reason
+         if semantic_empty_reason:
+-            return "empty", semantic_empty_reason
++            return "empty", "semantic_empty"
+         if card is None:
+-            return "empty", "目前沒有可用資料"
++            return "empty", "data_missing"
+         angle_matches = not requested_angle or card.angle == requested_angle
+         target_matches = target is None or target.targetId in set(card.relatedTargetIds or [])
+         evidence_matches = not requested_evidence_id or card.evidenceId == requested_evidence_id
+@@ -1612,6 +1701,24 @@ class NpcDialogueService:
+             return None
+         return targets[0] if targets else None
+ 
++    def _scene_requested_evidence_refs(
++        self,
++        request: SceneDirectorRequest,
++        card: NarrativeEvidenceCard | None,
++        target: NarrativeInteractionTarget | None,
++    ) -> list[str]:
++        refs: list[str] = []
++        for raw_ref in [
++            request.evidenceId,
++            card.evidenceId if card else None,
++            *(card.sourceRefs if card else []),
++            *(target.evidenceRefs if target else []),
++        ]:
++            ref = str(raw_ref or "").strip()
++            if ref and ref not in refs:
++                refs.append(ref)
++        return refs[:12]
++
+     def _select_chorus_targets(
+         self,
+         targets: list[NarrativeInteractionTarget],
+@@ -3245,7 +3352,7 @@ class NpcDialogueService:
+     def _scene_story_provider_config(self, llm_model_preset: str, render_mode: str) -> dict[str, Any]:
+         preset_config = LLM_MODEL_PRESETS.get(llm_model_preset, LLM_MODEL_PRESETS[DEFAULT_LLM_MODEL_PRESET])
+         base_order = list(preset_config.get("providerOrder") or self.provider_router.provider_order or [])
+-        provider_order = ["history_cache"]
++        provider_order = ["history_cache"] if self.scene_cache_enabled else []
+         preferred = ["gemini_flash", "gemini_flash_lite", "gemini"] if render_mode == "data_first" else ["gemini_flash", "gemini", "gemini_flash_lite"]
+         for provider_name in [*preferred, *base_order]:
+             if provider_name in {"history_cache", "deterministic"}:
+@@ -3658,7 +3765,7 @@ class NpcDialogueService:
+     def _scene_chorus_provider_config(self, llm_model_preset: str) -> dict[str, Any]:
+         preset_config = LLM_MODEL_PRESETS.get(llm_model_preset, LLM_MODEL_PRESETS[DEFAULT_LLM_MODEL_PRESET])
+         base_order = list(preset_config.get("providerOrder") or self.provider_router.provider_order or [])
+-        provider_order = ["history_cache"]
++        provider_order = ["history_cache"] if self.scene_cache_enabled else []
+         preferred = ["gemini_flash", "gemini_flash_lite", "gemini"]
+         for provider_name in preferred:
+             if provider_name not in provider_order:
+@@ -4298,70 +4405,6 @@ class NpcDialogueService:
+             or re.search(r"\b(?:personaSource|relationshipType|contextKey|sceneSeeds)\b", cleaned)
+         )
+ 
+-    def _compose_scene_grounded_chorus_fallback(
+-        self,
+-        target: NarrativeInteractionTarget,
+-        main_target: NarrativeInteractionTarget | None,
+-        beats: SceneDirectorBeats,
+-        story_text: str,
+-        speaker_context: dict[str, Any],
+-    ) -> str:
+-        lead = self._scene_chorus_lead_clause(main_target, beats, story_text)
+-        focus_terms = self._scene_chorus_focus_terms(speaker_context, target)
+-        judgment = self._scene_chorus_judgment_clause(
+-            target=target,
+-            main_target=main_target,
+-            beats=beats,
+-            story_text=story_text,
+-            speaker_context=speaker_context,
+-            focus_terms=focus_terms,
+-        )
+-        if lead and judgment:
+-            return self._ensure_sentence(f"{lead}，{judgment}")
+-        if judgment:
+-            return self._ensure_sentence(judgment)
+-        if lead:
+-            return self._ensure_sentence(lead)
+-        return self._ensure_sentence("眼前這一幕，不能只當作一時熱血。")
+-
+-    def _compose_scene_grounded_chorus_fallback_v2(
+-        self,
+-        target: NarrativeInteractionTarget,
+-        main_target: NarrativeInteractionTarget | None,
+-        beats: SceneDirectorBeats,
+-        story_text: str,
+-        speaker_context: dict[str, Any],
+-    ) -> str:
+-        del story_text
+-        scene_seeds = beats.sceneSeeds or {}
+-        focus_terms = self._scene_chorus_focus_terms(speaker_context, target)
+-        focus = focus_terms[0] if focus_terms else "心事"
+-        archetype = str(speaker_context.get("archetype") or "")
+-        target_name = str(main_target.label if main_target else "此人").strip() or "此人"
+-        place = (
+-            str(scene_seeds.get("place") or "").strip()
+-            or str(scene_seeds.get("time") or "").strip()
+-            or "亂軍裡"
+-        )
+-        object_values = [
+-            str(item or "").strip()
+-            for item in (scene_seeds.get("objects") or [])
+-            if str(item or "").strip()
+-        ]
+-        object_values = [item for item in object_values if item not in {"喊聲", "後軍", "車駕"}]
+-        stake = "、".join(object_values[:2]) or target_name
+-        if archetype == "oath_guardian":
+-            return self._ensure_sentence(f"{target_name}若還在{place}死戰，多半正為{stake}撐著；這等{focus}，不是說放就放。")
+-        if archetype == "martial_direct":
+-            return self._ensure_sentence(f"{target_name}若還在{place}廝殺，先得把{stake}帶出來，後話才談得上。")
+-        if archetype in {"marriage_mediator", "family_witness"}:
+-            return self._ensure_sentence(f"{target_name}若還陷在{place}，多半正為{stake}撐著；這口{focus}放不下，旁人也看得出來。")
+-        if archetype in {"family_line", "family_sacrifice"}:
+-            return self._ensure_sentence(f"{target_name}若還在{place}，多半正把{stake}護在心上；只要人還未歸，這份牽掛就落不下。")
+-        if archetype == "rival_observer":
+-            return self._ensure_sentence(f"{target_name}若還困在{place}，局勢就還沒穩；{stake}一日未定，誰都不能鬆手。")
+-        return self._ensure_sentence(f"{target_name}若還困在{place}，眼前最要緊的還是{stake}；這一步不能只憑一時情緒。")
+-
+     def _compose_scene_grounded_chorus_fallback_v3(
+         self,
+         target: NarrativeInteractionTarget,
+@@ -4370,40 +4413,37 @@ class NpcDialogueService:
+         story_text: str,
+         speaker_context: dict[str, Any],
+     ) -> str:
+-        del story_text
+         scene_seeds = beats.sceneSeeds or {}
+-        focus_terms = self._scene_chorus_focus_terms(speaker_context, target)
+-        focus = focus_terms[0] if focus_terms else "心事"
+-        secondary_focus = focus_terms[1] if len(focus_terms) > 1 else focus
+-        archetype = str(speaker_context.get("archetype") or "")
+-        target_name = str(main_target.label if main_target else "此人").strip() or "此人"
+-        place = (
+-            str(scene_seeds.get("place") or "").strip()
+-            or str(scene_seeds.get("time") or "").strip()
+-            or "亂軍裡"
+-        )
+-        object_values = [
+-            str(item or "").strip()
+-            for item in (scene_seeds.get("objects") or [])
+-            if str(item or "").strip()
+-        ]
+-        object_values = [item for item in object_values if item not in {"喊聲", "後軍", "車駕"}]
+-        stake = "、".join(object_values[:2]) or target_name
+-        if {"豪烈", "直率", "勇猛"}.intersection(focus_terms):
+-            return self._ensure_sentence(f"{target_name}若還在{place}廝殺，多半正為{stake}硬頂著；這種仗，再晚一步都不行。")
+-        if {"沉穩", "少言", "威嚴"}.intersection(focus_terms):
+-            return self._ensure_sentence(f"{target_name}若還困在{place}，多半正把{stake}護在前頭；眼下先把人接回來，才談得上後話。")
+-        if {"家室", "去留", "情分", "身邊的人"}.intersection(focus_terms):
+-            return self._ensure_sentence(f"{target_name}若還陷在{place}，多半正為{stake}撐著；這口{secondary_focus}放不下，旁人也看得出來。")
+-        if archetype in {"family_line", "family_sacrifice"}:
+-            return self._ensure_sentence(f"{target_name}若還在{place}，多半正把{stake}護在心上；只要人還未歸，這份牽掛就落不下。")
+-        if archetype == "rival_observer":
+-            return self._ensure_sentence(f"{target_name}若還困在{place}，局勢就還沒穩；{stake}一日未定，誰都不能鬆手。")
+-        if archetype == "oath_guardian":
+-            return self._ensure_sentence(f"{target_name}若還在{place}死戰，多半正為{stake}撐著；這等{focus}，不是說放就放。")
+-        if archetype == "martial_direct":
+-            return self._ensure_sentence(f"{target_name}若還在{place}廝殺，先得把{stake}帶出來，後話才談得上。")
+-        return self._ensure_sentence(f"{target_name}若還困在{place}，眼前最要緊的還是{stake}；這一步不能只憑一時情緒。")
++        fragments: list[str] = []
++        for raw_value in [
++            story_text,
++            scene_seeds.get("event"),
++            scene_seeds.get("place"),
++            scene_seeds.get("time"),
++            scene_seeds.get("emotion"),
++            beats.sceneText,
++            beats.memoryText,
++        ]:
++            fragment = self._clean_seed_text(str(raw_value or ""), max_chars=64).strip()
++            if not fragment or self._contains_internal_symbolic_token(fragment):
++                continue
++            if fragment not in fragments:
++                fragments.append(fragment)
++        focus_terms = [term for term in self._scene_chorus_focus_terms(speaker_context, target) if term]
++        if focus_terms:
++            focus = self._clean_seed_text(focus_terms[0], max_chars=24).strip()
++            if focus and focus not in fragments:
++                fragments.append(focus)
++        if main_target:
++            role_text = self._clean_seed_text(
++                self._humanize_tag_list([main_target.role, main_target.relationshipType], fallback=""),
++                max_chars=24,
++            ).strip()
++            if role_text and role_text not in fragments:
++                fragments.append(role_text)
++        if len(fragments) < 2:
++            return ""
++        return self._ensure_sentence("，".join(fragments[:2]))
+ 
+     def _scene_chorus_lead_clause(
+         self,
