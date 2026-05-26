@@ -285,3 +285,13 @@ This line folds the latest practical feedback into the AAO plan without redesign
 | `TASK-AAO-0044` | `batch skip / resume` | Temporarily skip externally blocked tasks without pretending they are done. |
 
 M14 keeps the AAO bias toward small patches. It does not introduce a second task model and does not weaken gates; it makes the legal path easier to find.
+<!-- AAO-feedback-latest-abandon-eperm -->
+### Latest Practical Feedback: Abandon/Queue Reuse and Sandbox Validator Diagnostics
+
+Two additional findings are folded into existing cards instead of opening new cards:
+
+- `TASK-AAO-0042` now explicitly owns the stale queue problem: after `batch abandon`, `next --claim` must not revive the abandoned batch/queue. Repair should replace the current manual cleanup chain.
+- `TASK-AAO-0040` now explicitly owns `validate:cli` sandbox git temp-workspace EPERM diagnostics. The fix is better classification and a concrete rerun path, not treating the task as failed.
+
+This avoids another re-batch caused by adding more task ids while still preserving the feedback in the AAO source of truth.
+<!-- /AAO-feedback-latest-abandon-eperm -->

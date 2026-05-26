@@ -90,6 +90,16 @@ nonGoals:
 - Error envelope 包含可操作下一步，例如設定 `ATM_TEMP_ROOT=C:\tmp` 或用外層權限重跑原 validator。
 - 真正的 git command 失敗仍回原本 gate failure，不被誤判為 sandbox。
 
+
+<!-- AAO-feedback-0040-validate-cli-temp-git-eperm -->
+## Practical Feedback Reinforcement
+
+- `npm run validate:cli` failures caused by sandboxed `spawnSync git` or temp-workspace `git init` EPERM must be classified as environment diagnostics, not task/evidence failure.
+- The diagnostic must include `ATM_ENV_SANDBOX_GIT_EPERM` or an equivalent stable code, the failing command, the temp root involved, and a required next action such as rerun with elevated permission or set `ATM_TEMP_ROOT=C:\tmp`.
+- Evidence collection should record the sandbox failure as diagnostic evidence and accept the elevated rerun only when the validator subsequently exits 0.
+- Regression evidence must simulate or capture the validate:cli temp git workspace EPERM path without weakening real validator failures.
+<!-- /AAO-feedback-0040-validate-cli-temp-git-eperm -->
+
 ## Rollback
 
 Revert this task commit. Validators and hooks return to raw git process errors.

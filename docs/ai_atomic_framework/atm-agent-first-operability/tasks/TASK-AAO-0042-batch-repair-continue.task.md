@@ -89,6 +89,16 @@ Long batch runs can stop after evidence, after checkpoint, before commit, or wit
 - Active unrelated batches are not modified by repair.
 - No repair path instructs agents to hand-edit runtime locks or task events.
 
+
+<!-- AAO-feedback-0042-abandon-stale-queue -->
+## Practical Feedback Reinforcement
+
+- `batch abandon --batch <id>` must invalidate or detach its task queue in the same operation; a later `next --claim` must not reuse an abandoned batch id or its old queue id.
+- If a legacy queue still points at an abandoned batch, `next --claim` must return a repair diagnostic or create a fresh batch/queue, never silently revive the stale queue.
+- `batch repair --batch <id>` must detect abandoned-batch-with-active-queue and offer one concrete cleanup command that replaces today's manual sequence of `tasks queue abandon`, lock release, and task reset.
+- Regression evidence must cover the exact case: abandon old AAO batch ending at `TASK-AAO-0040`, re-import cards through `TASK-AAO-0044`, then claim a new batch whose taskIds include `0041-0044`.
+<!-- /AAO-feedback-0042-abandon-stale-queue -->
+
 ## Rollback
 
 Revert the task commit and re-run the listed validators.
