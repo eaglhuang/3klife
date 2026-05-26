@@ -16,10 +16,12 @@ scopePaths:
   - "scripts/src/atomize-score.js"
   - "packages/cli/src/commands/command-specs/**"
   - "atomic_workbench/atomization-coverage/dogfood-score.json"
+  - "atomic_workbench/atomization-coverage/dogfood-score.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "scripts/src/atomize-score.js"
   - "atomic_workbench/atomization-coverage/dogfood-score.json"
+  - "atomic_workbench/atomization-coverage/dogfood-score.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
@@ -65,6 +67,7 @@ ASA 結案報告指出 public_command_coverage=0 是 instrumentation gap。這�
 
 - `scripts/src/atomize-score.js`
 - `atomic_workbench/atomization-coverage/dogfood-score.json`
+- `atomic_workbench/atomization-coverage/dogfood-score.md`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
