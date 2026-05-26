@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0028
 task_id: TASK-AAO-0028
 title: "batch playbook 文件化"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M9

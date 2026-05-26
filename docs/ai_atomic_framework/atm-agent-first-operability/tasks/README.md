@@ -59,7 +59,7 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 | [TASK-AAO-0025](./TASK-AAO-0025-tasks-show-planning-doc.task.md) | tasks show --planning-doc | planned | `TASK-AAO-0010` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0026](./TASK-AAO-0026-atm-status-overview.task.md) | atm status 綜覽 | planned | `TASK-AAO-0024`, `TASK-AAO-0025` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/index.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0027](./TASK-AAO-0027-dev-runner-guidance.task.md) | dev runner 提示 | planned | `TASK-AAO-0026` | `atm.mjs`<br>`atm.dev.mjs` | `npm run typecheck`<br>`npm run validate:cli` |
-| [TASK-AAO-0028](./TASK-AAO-0028-batch-playbook-docs.task.md) | batch playbook 文件化 | planned | `TASK-AAO-0014` | `docs/governance/batch-playbook.md`<br>`templates/**` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0028](./TASK-AAO-0028-batch-playbook-docs.task.md) | batch playbook 文件化 | done | `TASK-AAO-0014` | `docs/governance/batch-playbook.md`<br>`templates/agent-pack/**`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`node atm.mjs integration verify codex --json` |
 | [TASK-AAO-0029](./TASK-AAO-0029-task-lifecycle-deprecation.task.md) | Low-level task lifecycle deprecation | planned | `TASK-AAO-0014`, `TASK-AAO-0028` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0030](./TASK-AAO-0030-crlf-policy.task.md) | CRLF policy | planned | `TASK-AAO-0009` | `.gitattributes`<br>`docs/governance/line-ending-policy.md` | `git diff --check`<br>`node --strip-types scripts/validate-line-endings.ts` |
 | [TASK-AAO-0031](./TASK-AAO-0031-background-work-pause-advisory.task.md) | Background work pause advisory | planned | `TASK-AAO-0024` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/handoff.ts` | `npm run typecheck`<br>`npm run validate:cli` |
@@ -72,7 +72,7 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 ## Notes
 
 - `TASK-AAO-0000` 保持 `done`，只重寫格式，不重新執行。
-- `TASK-AAO-0001` 與 `TASK-AAO-0036` 已標記為 `done`；`TASK-AAO-0002` 到 `TASK-AAO-0035` 仍為 `planned`，等待後續 ATM batch/normal flow 實作。`TASK-AAO-0036` 是 planning-only doc 任務（closure_authority: planning_repo），不需要 framework source 改動就能完成。
+- `TASK-AAO-0001`、`TASK-AAO-0028`、`TASK-AAO-0036` 已標記為 `done`；其餘 `TASK-AAO-0002` 到 `TASK-AAO-0035`（扣除 0028）仍為 `planned`，等待後續 ATM batch/normal flow 實作。`TASK-AAO-0036` 是 planning-only doc 任務（closure_authority: planning_repo）。`TASK-AAO-0028` 是 docs-only 任務但 closure 在 AI-Atomic-Framework，因為 deliverables 是 `docs/governance/` 與 `templates/agent-pack/` 而非 planning prose。
 - AAO planning truth 留在 3KLife；target implementation 回到 AI-Atomic-Framework。
 
 ## M13 Follow-up Task Roster
