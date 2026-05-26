@@ -77,6 +77,16 @@ nonGoals:
 - 輸出含 validator name、expected command、current evidence state。
 - help spec 與 atom map 同卡更新。
 
+
+<!-- AAO-feedback-0015-validator-tiering -->
+## Throughput Reinforcement Acceptance
+
+- Validator catalog entries must include a tier: `focused`, `batch`, `milestone`, or `release`.
+- `next` / `batch current --compact` must recommend focused validators for the current task and list heavier batch/milestone gates separately.
+- Batch-level validators may be reused across tasks only when their cache key proves the relevant state did not change.
+- Release-blocking validators remain enforceable, but agents should not be asked to rerun them for every small task unless the task requires that gate.
+<!-- /AAO-feedback-0015-validator-tiering -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

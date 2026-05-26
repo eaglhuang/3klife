@@ -86,6 +86,16 @@ nonGoals:
 - Closure packets must separate `validationPasses` from `diagnosticEvidence`, so a legitimate failing graduation gate can be recorded without pretending it passed.
 <!-- /AAO-feedback-0016-diagnostic-evidence -->
 
+
+<!-- AAO-feedback-0016-validator-cache-autocapture -->
+## Throughput Reinforcement Acceptance
+
+- Add validator commandRun cache keyed by command, cwd, relevant env, git head, staged tree hash, and working tree dirty hash.
+- `evidence run` must auto-capture command, exitCode, startedAt/endedAt, stdout/stderr sha256, and short output preview.
+- `evidence add --recent-run` should reuse the cached commandRun without forcing agents to manually paste hashes.
+- Cache hits must be explicit in evidence and invalidated when source files, staged files, or validator command inputs change.
+<!-- /AAO-feedback-0016-validator-cache-autocapture -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

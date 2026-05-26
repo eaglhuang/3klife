@@ -94,3 +94,10 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 | [TASK-AAO-0044](./TASK-AAO-0044-batch-skip-resume.task.md) | batch skip / resume | planned | `TASK-AAO-0042` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/tasks.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate` |
 
 M14 cards are opened because they introduce new user-visible commands or runtime state. The other feedback items were folded into existing AAO cards as stronger acceptance criteria.
+## M15 Throughput Acceleration / Safe Parallelism Task Roster
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0045](./TASK-AAO-0045-nonoverlap-subagent-execution-policy.task.md) | non-overlap subagent execution policy | planned | `TASK-AAO-0024`, `TASK-AAO-0034`, `TASK-AAO-0041`, `TASK-AAO-0042` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-direction.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |
+
+M15 is intentionally after compact output, claim idempotency, validator cache, and repair diagnostics. Subagents are useful only when ATM can prove non-overlap.

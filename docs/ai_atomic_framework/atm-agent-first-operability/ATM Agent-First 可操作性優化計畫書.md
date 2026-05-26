@@ -157,6 +157,7 @@ AAO is accepted by running scenario tests, not by checking that task cards were 
 | M12 | Acceptance test plan and premises closure | AAO 0036 |
 | M13 | Checkpoint / import / audit / sandbox repair | AAO 0037-0040 |
 | M14 | Batch interruption and planning-root controls | AAO 0041-0044 |
+| M15 | Throughput acceleration and safe parallelism | AAO 0045 |
 
 ## Task Roster
 
@@ -295,3 +296,20 @@ Two additional findings are folded into existing cards instead of opening new ca
 
 This avoids another re-batch caused by adding more task ids while still preserving the feedback in the AAO source of truth.
 <!-- /AAO-feedback-latest-abandon-eperm -->
+
+<!-- AAO-feedback-throughput-acceleration -->
+## M15 Throughput Acceleration / Safe Parallelism
+
+The latest AAO run confirmed that batch mode currently saves lifecycle bookkeeping, not the whole cost of understanding, validating, evidence capture, checkpoint, and commit. This line makes both Normal and Batch faster first, then adds optional subagent planning only where it is safe.
+
+| Priority | Owner task | Improvement |
+|---|---|---|
+| 1 | `TASK-AAO-0024` | `batch current --compact` and `batch status --compact` return only the queue head, allowed files, validators, checkpoint debt, and next command. |
+| 2 | `TASK-AAO-0034` | `next --claim` is idempotent for an active batch head and cannot claim the next task before checkpoint. |
+| 3 | `TASK-AAO-0016` | Validator cache and evidence auto-capture remove repeated hash/manual evidence work. |
+| 4 | `TASK-AAO-0015` | Validators are tiered as focused, batch, milestone, or release gates. |
+| 5 | `TASK-AAO-0040` | Sandbox EPERM diagnostics provide the repair command on first failure. |
+| 6 | `TASK-AAO-0045` | Optional subagent/parallel execution is allowed only for non-overlap tasks after the earlier speed fixes land. |
+
+This sequence keeps ATM safe: the fast path is better state and evidence automation, not weaker gates.
+<!-- /AAO-feedback-throughput-acceleration -->

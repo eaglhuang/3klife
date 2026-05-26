@@ -100,6 +100,16 @@ next 的推薦很好用，但不該成為性能瓶頸，也不該把 unrelated �
 - Routing must be performance-conscious: prefer indexed task metadata and explicit selectors over broad repo scans on every `next` call.
 <!-- /AAO-feedback-0034-routing-learning -->
 
+
+<!-- AAO-feedback-0034-active-batch-claim-idempotency -->
+## Throughput Reinforcement Acceptance
+
+- `next --claim` must be idempotent while an active batch has an uncheckpointed queue head: repeated claim calls return the current head and current lock state.
+- `next --claim` must not advance to or claim the next task until `batch checkpoint` succeeds or the batch is explicitly held/skipped/repaired.
+- If request prompt names a later task while the batch head has checkpoint debt, ATM must return `ATM_BATCH_QUEUE_HEAD_REQUIRED` with the current head and checkpoint command.
+- Regression evidence must cover the observed failure mode: active batch head is `TASK-AAO-0004`, but repeated `next --claim` must not create a `TASK-AAO-0005` claim.
+<!-- /AAO-feedback-0034-active-batch-claim-idempotency -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

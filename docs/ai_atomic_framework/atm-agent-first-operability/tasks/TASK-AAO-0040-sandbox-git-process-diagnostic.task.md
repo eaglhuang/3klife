@@ -100,6 +100,15 @@ nonGoals:
 - Regression evidence must simulate or capture the validate:cli temp git workspace EPERM path without weakening real validator failures.
 <!-- /AAO-feedback-0040-validate-cli-temp-git-eperm -->
 
+
+<!-- AAO-feedback-0040-first-failure-repair-command -->
+## Throughput Reinforcement Acceptance
+
+- Sandbox git/temp-workspace failures should produce the repair command on the first failure, not after a second diagnostic pass.
+- The error envelope must distinguish environment retry from validator failure and include whether elevated rerun, `ATM_TEMP_ROOT`, or both are recommended.
+- The elevated rerun can be attached as command-backed evidence only if the validator exits 0.
+<!-- /AAO-feedback-0040-first-failure-repair-command -->
+
 ## Rollback
 
 Revert this task commit. Validators and hooks return to raw git process errors.

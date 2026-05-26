@@ -76,6 +76,16 @@ nonGoals:
 - status 顯示 current task 與 phase。
 - 輸出 requiredCommand。
 
+
+<!-- AAO-feedback-0024-compact-current-status -->
+## Throughput Reinforcement Acceptance
+
+- Add compact output modes: `node atm.mjs batch current --compact --json` and `node atm.mjs batch status --compact --json`.
+- Compact output must include only the active batch id, queue head task id/title/status, allowedFiles, focused validators, checkpoint debt, and the next required command.
+- Compact output must not dump the whole batch queue unless explicitly requested with a verbose/detail flag.
+- Regression evidence must prove a large AAO batch returns a bounded compact payload that an agent can read quickly.
+<!-- /AAO-feedback-0024-compact-current-status -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.
