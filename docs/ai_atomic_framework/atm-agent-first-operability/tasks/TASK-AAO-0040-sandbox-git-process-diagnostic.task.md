@@ -111,6 +111,15 @@ nonGoals:
 - The elevated rerun can be attached as command-backed evidence only if the validator exits 0.
 <!-- /AAO-feedback-0040-first-failure-repair-command -->
 
+<!-- AAO-feedback-0040-surface-warning-actionability -->
+## Throughput Reinforcement Acceptance: Surface Validator Sandbox Warning
+
+- `validate:cli:surface` may emit optional child-process smoke warnings, but the warning must be clearly classified as environment/actionability, not as a surface contract failure.
+- The warning must include a stable code, the skipped or degraded child-process check, and one executable repair action such as enabling elevated sandbox mode or setting `ATM_TEMP_ROOT=C:\tmp`.
+- If surface mode passes with a sandbox warning, evidence must record both facts: surface contract passed, child-process smoke was degraded by environment.
+- Regression evidence must prove AI agents can distinguish this warning from a real CLI surface failure.
+<!-- /AAO-feedback-0040-surface-warning-actionability -->
+
 ## Rollback
 
 Revert this task commit. Validators and hooks return to raw git process errors.

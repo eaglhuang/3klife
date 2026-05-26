@@ -112,6 +112,15 @@ next 的推薦很好用，但不該成為性能瓶頸，也不該把 unrelated �
 - Regression evidence must cover the observed failure mode: active batch head is `TASK-AAO-0004`, but repeated `next --claim` must not create a `TASK-AAO-0005` claim.
 <!-- /AAO-feedback-0034-active-batch-claim-idempotency -->
 
+<!-- AAO-feedback-0034-next-claim-compact-json -->
+## Throughput Reinforcement Acceptance: Compact Next Claim
+
+- `next --claim --compact --json` must return an agent-facing summary instead of the full queue/debug payload.
+- Compact claim output must include only the selected task, channel, playbook summary, `targetWork.allowedFiles`, validators, direction lock id/path, and the next required command.
+- Full queue records, integration bootstrap details, runtime adapter details, and unrelated open tasks must move behind an explicit verbose/debug flag.
+- If the route is ambiguous, compact output must still include enough selection diagnostics to let the user choose a task or task range manually.
+<!-- /AAO-feedback-0034-next-claim-compact-json -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

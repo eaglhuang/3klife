@@ -86,6 +86,15 @@ nonGoals:
 - Regression evidence must prove a large AAO batch returns a bounded compact payload that an agent can read quickly.
 <!-- /AAO-feedback-0024-compact-current-status -->
 
+<!-- AAO-feedback-0024-no-huge-status-json -->
+## Throughput Reinforcement Acceptance: Compact Batch Status
+
+- `batch current --compact --json` and `batch status --compact --json` must be the recommended agent-facing status commands for active batch work.
+- Compact mode must return a bounded payload: `batchId`, `currentTaskId`, `currentTaskTitle`, `phase`, `allowedFiles`, `focusedValidators`, `checkpointDebt`, and `requiredCommand`.
+- Compact mode must not include the full task queue, full integration bootstrap report, or all task records unless the caller passes an explicit verbose/debug flag.
+- Regression evidence must show a large AAO batch produces a small compact response suitable for AI parsing.
+<!-- /AAO-feedback-0024-no-huge-status-json -->
+
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

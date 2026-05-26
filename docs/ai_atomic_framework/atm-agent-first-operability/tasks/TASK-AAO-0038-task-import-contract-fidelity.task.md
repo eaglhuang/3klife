@@ -107,6 +107,15 @@ nonGoals:
 - Import must preserve enough machine fields for `next --claim` to construct this lock without reading planning prose as writable target scope.
 <!-- /AAO-feedback-0038-initial-allowedfiles -->
 
+<!-- AAO-feedback-0038-utf8-planpath-fidelity -->
+## Bug Reinforcement Acceptance: UTF-8 Plan Path Fidelity
+
+- `tasks import`, `next --prompt`, and `next --claim` must preserve UTF-8 task-card and plan paths, including Traditional Chinese filenames and spaces.
+- Required commands must never contain mojibake or replacement placeholders such as `????????` when the source path is a valid UTF-8 path.
+- Regression evidence must cover a cross-repo planning path with Chinese characters, spaces, and a target-repo ledger import.
+- If a path cannot be resolved, ATM must return a path-resolution diagnostic with the original raw path and normalized candidate paths, not a corrupted command.
+<!-- /AAO-feedback-0038-utf8-planpath-fidelity -->
+
 ## Rollback
 
 Revert this task commit. Existing imported tasks may need re-import if they were produced by the new fidelity projection.
