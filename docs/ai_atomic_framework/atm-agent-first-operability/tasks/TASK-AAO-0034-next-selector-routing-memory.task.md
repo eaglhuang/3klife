@@ -5,6 +5,8 @@ title: "next explicit selector 與 routing memory"
 status: planned
 owner: atm-core
 priority: P0
+earlyUnblocker: true
+unblockerReason: "Keeps next/intent routing scoped and prevents unrelated task selection or premature batch advance."
 milestone: M11
 depends_on:
   - "TASK-AAO-0001"

@@ -4,7 +4,9 @@ task_id: TASK-AAO-0040
 title: "Sandbox git process diagnostics"
 status: planned
 owner: atm-core
-priority: P1
+priority: P0
+earlyUnblocker: true
+unblockerReason: "Turns sandbox git EPERM into actionable environment diagnostics instead of false task failure."
 milestone: M13
 depends_on:
   - "TASK-AAO-0004"

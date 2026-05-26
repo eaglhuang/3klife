@@ -313,3 +313,24 @@ The latest AAO run confirmed that batch mode currently saves lifecycle bookkeepi
 
 This sequence keeps ATM safe: the fast path is better state and evidence automation, not weaker gates.
 <!-- /AAO-feedback-throughput-acceleration -->
+
+## P0 Early Unblockers For AAO Batch Throughput
+
+These tasks are promoted ahead of their original milestones because they directly unblock current AAO batch execution:
+
+| Task | Why it is early P0 |
+|---|---|
+| `TASK-AAO-0037` | Prevents `batch checkpoint` from advancing the queue and then letting the next direction lock block the previous task commit. |
+| `TASK-AAO-0027` | Prevents `atm.dev.mjs` source validation and frozen `atm.mjs` hook behavior from disagreeing silently; stale runner must become `ATM_RUNNER_SYNC_REQUIRED`, not a `--no-verify` path. |
+| `TASK-AAO-0034` | Keeps `next --intent` and explicit selectors scoped to the requested AAO family/batch instead of falling back to unrelated tasks or prematurely claiming the next task. |
+| `TASK-AAO-0040` | Turns sandbox/git EPERM into actionable environment diagnostics so agents do not waste a full validator cycle before rerunning elevated. |
+| `TASK-AAO-0046` | Carries the post-0004 follow-up for separating baseline validator noise from current-task failures. |
+
+Implementation guidance: complete these before continuing deeper AAO feature work unless the current batch has already safely passed the corresponding friction point.
+
+
+## M16 Validator Baseline Noise Follow-up
+
+| Task | Title | Milestone | Status | Depends | Target surface |
+|---|---|---|---|---|---|
+| `TASK-AAO-0046` | Validator baseline noise diagnostics | M16 | planned | `TASK-AAO-0004`, `TASK-AAO-0015`, `TASK-AAO-0017` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` |

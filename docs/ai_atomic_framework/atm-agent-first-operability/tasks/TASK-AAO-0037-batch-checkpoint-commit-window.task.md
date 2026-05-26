@@ -5,6 +5,8 @@ title: "Batch checkpoint commit window"
 status: planned
 owner: atm-core
 priority: P0
+earlyUnblocker: true
+unblockerReason: "Keeps batch checkpoint and pre-commit scopes aligned after queue advance."
 milestone: M13
 depends_on:
   - "TASK-AAO-0013"

@@ -4,7 +4,9 @@ task_id: TASK-AAO-0027
 title: "dev runner 提示"
 status: planned
 owner: atm-core
-priority: P1
+priority: P0
+earlyUnblocker: true
+unblockerReason: "Prevents source/frozen runner mismatch from forcing --no-verify commits during ATM self-development."
 milestone: M8
 depends_on:
   - "TASK-AAO-0026"
@@ -91,6 +93,17 @@ Claude Code 在 framework repo 跑到未 build source，導致吃到半成品。
 - The warning must suggest either `npm run build` for release-runner validation or `node atm.dev.mjs` for explicit source-first framework validation.
 - Documentation-only reminders are not sufficient acceptance for this task.
 <!-- /AAO-feedback-0027-runtime-warning -->
+
+
+<!-- AAO-early-unblocker-0027-source-frozen-consistency -->
+## Early Unblocker Reinforcement
+
+- Source-first validation and frozen-runner validation must produce compatible hook/gate decisions for the same staged files, or ATM must return a stable `ATM_RUNNER_SYNC_REQUIRED` diagnostic.
+- If `atm.dev.mjs` or source hook passes but `node atm.mjs` frozen hook fails, ATM must not push the agent toward `--no-verify`; it must provide the required build/sync command and the files that prove the runner is stale.
+- Runtime detection must compare source mtimes or source hash against `release/atm-onefile/atm.mjs` / pinned runner metadata and explain whether `npm run build`, `node atm.dev.mjs`, or internal release sync is the correct next action.
+- Acceptance requires a regression where a source hook fix passes under `atm.dev.mjs`, frozen `atm.mjs` is stale, and the hook reports `ATM_RUNNER_SYNC_REQUIRED` instead of a generic pre-commit failure.
+- After `npm run build`, `node atm.mjs` must use the refreshed onefile path and no longer disagree with source-first validation for the covered hook case.
+<!-- /AAO-early-unblocker-0027-source-frozen-consistency -->
 
 ## Rollback
 

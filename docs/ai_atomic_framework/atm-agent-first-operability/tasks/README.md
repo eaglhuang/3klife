@@ -101,3 +101,21 @@ M14 cards are opened because they introduce new user-visible commands or runtime
 | [TASK-AAO-0045](./TASK-AAO-0045-nonoverlap-subagent-execution-policy.task.md) | non-overlap subagent execution policy | planned | `TASK-AAO-0024`, `TASK-AAO-0034`, `TASK-AAO-0041`, `TASK-AAO-0042` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-direction.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |
 
 M15 is intentionally after compact output, claim idempotency, validator cache, and repair diagnostics. Subagents are useful only when ATM can prove non-overlap.
+
+## P0 Early Unblockers
+
+Run or prioritize these cards before lower-risk AAO throughput work:
+
+| Task ID | Reason |
+|---|---|
+| `TASK-AAO-0037` | Batch checkpoint commit window; prevents next queue-head lock from blocking the previous task commit. |
+| `TASK-AAO-0027` | Source/frozen runner consistency; prevents stale frozen hooks from forcing `--no-verify`. |
+| `TASK-AAO-0034` | Explicit selector and intent routing; prevents unrelated task fallback and premature next-task claim. |
+| `TASK-AAO-0040` | Sandbox git process diagnostics; turns EPERM into a repair command. |
+| `TASK-AAO-0046` | Validator baseline noise diagnostics; separates unrelated baseline failures from current-task failures. |
+
+## M16 Validator Baseline Noise Follow-up
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0046](./TASK-AAO-0046-validator-baseline-noise-diagnostics.task.md) | Validator baseline noise diagnostics | planned | `TASK-AAO-0004`, `TASK-AAO-0015`, `TASK-AAO-0017` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`npm run validate:standard` |
