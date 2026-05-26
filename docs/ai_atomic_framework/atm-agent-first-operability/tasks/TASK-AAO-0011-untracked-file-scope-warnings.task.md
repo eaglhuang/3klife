@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0011
 task_id: TASK-AAO-0011
 title: "Claim/checkpoint 忽略 unrelated untracked"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M5
