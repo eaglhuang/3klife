@@ -32,7 +32,7 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 | Task ID | Title | Status | Depends | Target surface | Primary validators |
 |---|---|---|---|---|---|
 | [TASK-AAO-0000](./TASK-AAO-0000-doc-finalize-bridge-index.task.md) | AAO 文件區初始化與 ASA bridge index | done | none | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
-| [TASK-AAO-0001](./TASK-AAO-0001-report-overlap-matrix-routing.task.md) | Overlap matrix 與路由裁決 | planned | `TASK-AAO-0000` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
+| [TASK-AAO-0001](./TASK-AAO-0001-report-overlap-matrix-routing.task.md) | Overlap matrix 與路由裁決 | done | `TASK-AAO-0000` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
 | [TASK-AAO-0002](./TASK-AAO-0002-cli-spec-runner-ssot-drift-guard.task.md) | CLI command spec / runner SSOT drift guard | planned | `TASK-AAO-0001` | `packages/cli/src/commands/command-specs.ts`<br>`packages/cli/src/commands/command-specs/**` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0003](./TASK-AAO-0003-next-decisiontrail-json-contract.task.md) | next decisionTrail JSON contract | planned | `TASK-AAO-0001`, `TASK-AAO-0002` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-intent.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0004](./TASK-AAO-0004-validator-failure-envelope-normalization.task.md) | Validator failure envelope 標準化 | planned | `TASK-AAO-0001` | `scripts/run-validators.ts`<br>`scripts/lib/**` | `npm run typecheck`<br>`npm run validate:cli` |
@@ -72,5 +72,5 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 ## Notes
 
 - `TASK-AAO-0000` 保持 `done`，只重寫格式，不重新執行。
-- `TASK-AAO-0001` 到 `TASK-AAO-0036` 全部是 `planned`，等待後續 ATM batch/normal flow 實作。
+- `TASK-AAO-0001` 已標記為 `done`；`TASK-AAO-0002` 到 `TASK-AAO-0036` 全部是 `planned`，等待後續 ATM batch/normal flow 實作。
 - AAO planning truth 留在 3KLife；target implementation 回到 AI-Atomic-Framework。

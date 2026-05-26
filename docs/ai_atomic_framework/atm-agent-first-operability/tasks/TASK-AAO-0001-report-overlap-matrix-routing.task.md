@@ -2,7 +2,7 @@
 doc_id: doc_other_1319
 task_id: TASK-AAO-0001
 title: "Overlap matrix 與路由裁決"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M1
@@ -89,3 +89,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 ## Notes
 
 This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+- Closure sync: ATM framework ledger already closed this task in commit `ce1e9cd` with closure packet `.atm/history/evidence/TASK-AAO-0001.closure-packet.json`; this card records the planning-side status alignment only.

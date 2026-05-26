@@ -28,7 +28,7 @@ AAO 0000-0008 are the original AAO baseline:
 - M3: docs/schema/command drift and onefile budget.
 - M4: roadmap backwrite and bridge closure.
 
-These cards are preserved, but rewritten into the new contract format. AAO-0000 remains `done`; AAO-0001 through AAO-0008 are reopened as `planned` so they can be re-run consistently.
+These cards are preserved, but rewritten into the new contract format. AAO-0000 remains `done`. AAO-0001 has already been closed in the ATM framework ledger and is marked `done` here; AAO-0002 through AAO-0008 remain `planned` so they can be re-run consistently.
 
 ## Opus 4.7 實戰反饋承接
 
@@ -161,7 +161,7 @@ AAO is accepted by running scenario tests, not by checking that task cards were 
 | Task | Title | Milestone | Status | Dependencies | Deliverables |
 |---|---|---|---|---|---|
 | `TASK-AAO-0000` | AAO 文件區初始化與 ASA bridge index | M0 | done | none | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` |
-| `TASK-AAO-0001` | Overlap matrix 與路由裁決 | M1 | planned | `TASK-AAO-0000` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` |
+| `TASK-AAO-0001` | Overlap matrix 與路由裁決 | M1 | done | `TASK-AAO-0000` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` |
 | `TASK-AAO-0002` | CLI command spec / runner SSOT drift guard | M1 | planned | `TASK-AAO-0001` | `packages/cli/src/commands/command-specs.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0003` | next decisionTrail JSON contract | M1 | planned | `TASK-AAO-0001`, `TASK-AAO-0002` | `packages/cli/src/commands/next.ts`<br>`scripts/validate-prompt-scoped-next.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0004` | Validator failure envelope 標準化 | M2 | planned | `TASK-AAO-0001` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` |
