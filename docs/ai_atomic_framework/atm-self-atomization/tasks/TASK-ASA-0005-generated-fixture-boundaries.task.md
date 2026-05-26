@@ -12,6 +12,14 @@ upstream_repo: AI-Atomic-Framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 public_tracking: false
+scope:
+  - atomic_workbench/atomization-coverage/exclusion-inventory.json
+  - atomic_workbench/atomization-coverage/generated-fixture-boundaries.json
+  - atomic_workbench/reports/atomization-exclusions.json
+deliverables:
+  - atomic_workbench/atomization-coverage/exclusion-inventory.json
+  - atomic_workbench/atomization-coverage/generated-fixture-boundaries.json
+  - atomic_workbench/reports/atomization-exclusions.json
 started_at: null
 started_by_agent: null
 completed_at: null
