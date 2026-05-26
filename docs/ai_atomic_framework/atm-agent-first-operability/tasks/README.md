@@ -67,12 +67,12 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 | [TASK-AAO-0033](./TASK-AAO-0033-aao-final-dogfood-sync.task.md) | Final dogfood rerun 與雙 repo sync | planned | `TASK-AAO-0020`, `TASK-AAO-0021`, `TASK-AAO-0022`, `TASK-AAO-0023`, `TASK-AAO-0028`, `TASK-AAO-0032` | `scripts/validate-atm-self-atomization.ts`<br>`atomic_workbench/reports/**` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0034](./TASK-AAO-0034-next-selector-routing-memory.task.md) | next explicit selector 與 routing memory | planned | `TASK-AAO-0001`, `TASK-AAO-0003`, `TASK-AAO-0024`, `TASK-AAO-0026` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-intent.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 | [TASK-AAO-0035](./TASK-AAO-0035-command-surface-consolidation-help-examples.task.md) | Command surface consolidation 與 help examples | planned | `TASK-AAO-0002`, `TASK-AAO-0014`, `TASK-AAO-0029`, `TASK-AAO-0034` | `packages/cli/src/commands/command-specs/**`<br>`packages/cli/src/commands/command-specs.ts` | `npm run typecheck`<br>`npm run validate:cli` |
-| [TASK-AAO-0036](./TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md) | AAO acceptance test plan 與前提固化 | planned | `TASK-AAO-0033`, `TASK-AAO-0034`, `TASK-AAO-0035` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
+| [TASK-AAO-0036](./TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md) | AAO acceptance test plan 與前提固化 | done | `TASK-AAO-0033`, `TASK-AAO-0034`, `TASK-AAO-0035` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
 
 ## Notes
 
 - `TASK-AAO-0000` 保持 `done`，只重寫格式，不重新執行。
-- `TASK-AAO-0001` 已標記為 `done`；`TASK-AAO-0002` 到 `TASK-AAO-0036` 全部是 `planned`，等待後續 ATM batch/normal flow 實作。
+- `TASK-AAO-0001` 與 `TASK-AAO-0036` 已標記為 `done`；`TASK-AAO-0002` 到 `TASK-AAO-0035` 仍為 `planned`，等待後續 ATM batch/normal flow 實作。`TASK-AAO-0036` 是 planning-only doc 任務（closure_authority: planning_repo），不需要 framework source 改動就能完成。
 - AAO planning truth 留在 3KLife；target implementation 回到 AI-Atomic-Framework。
 
 ## M13 Follow-up Task Roster

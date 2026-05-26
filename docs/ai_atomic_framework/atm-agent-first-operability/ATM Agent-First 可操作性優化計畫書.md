@@ -125,6 +125,37 @@ AAO is accepted by running scenario tests, not by checking that task cards were 
    - `tasks show --planning-doc` links a task back to its plan and feedback source.
    - Help output includes usage, examples, common mistakes, and related commands for primary public commands.
 
+### End-to-End Agent Journey Scenario
+
+AAO acceptance test plan must include one complete governed agent journey scenario that verifies the cross-task workflow across scope amendment, evidence, checkpoint, commit window, and next claim. Passing the eight grouped checks above is necessary but not sufficient; the AAO lane is only accepted when this single end-to-end scenario also passes, because the most common production failures live in the seams between these checks.
+
+Scenario steps and expected behavior:
+
+1. `next --claim --task X`
+   - Expected: claim succeeds, `taskDirectionLock.allowedFiles` already contains every path declared in the task card `deliverables` (AAO-0012 / AAO-0038 frontloaded).
+2. Agent attempts to write outside declared deliverables.
+   - Expected: pre-write detection (AAO-0010) blocks the write with `ATM_SCOPE_AMENDMENT_SUGGESTED` and prints the exact `node atm.mjs tasks scope --add ... --json` command.
+3. `tasks scope --add file1,file2,file3`
+   - Expected: creates exactly one `scope-amendment-event` (atomic, multi-path), updates the single SSOT `allowedFiles`, and is auditable via task-events.
+4. Agent writes the now-allowed files.
+   - Expected: writes succeed and are within the amended scope.
+5. Validator runs and evidence is captured through cached command runs.
+   - Expected: `evidence run` / `--recent-run` (AAO-0016) records command, exit code, stdout/stderr sha256, and reuses cached command runs when inputs are unchanged. Failed command runs cannot be marked as validation passes; diagnostic / expected-failure evidence is recorded separately.
+6. `evidence missing --task X`
+   - Expected: lists remaining validator/evidence gaps with one concrete `requiredCommand` per gap (AAO-0017), distinguishing absent, failed, stale, and diagnostic-only evidence.
+7. Agent completes missing evidence.
+   - Expected: re-run validators or attach diagnostic evidence; closure packet `validationPasses` is filled.
+8. `batch checkpoint --hold`
+   - Expected: closes current task but does not auto-claim the next task; `batch status` reports held state and resume command (AAO-0041).
+9. Commit close artifacts (deliverables + `.atm/history/tasks/<X>.json` + evidence + task-events).
+   - Expected: checkpoint commit window (AAO-0037) lets the just-closed task's artifacts pass pre-commit even after the queue has advanced; artifact commit policy (AAO-0032) classifies the commit by trailer + checkpoint window.
+10. `next --claim` for the next task.
+    - Expected: must not auto-advance while previous-task checkpoint debt or pending commit window exists (AAO-0047); only claims after debt is cleared, and the new lock again contains task-card deliverables verbatim.
+
+This scenario must explicitly cover the integration boundaries for `TASK-AAO-0010`, `TASK-AAO-0012`, `TASK-AAO-0014`, `TASK-AAO-0016`, `TASK-AAO-0017`, `TASK-AAO-0037`, `TASK-AAO-0038`, `TASK-AAO-0041`, and `TASK-AAO-0047`. A regression in any one of those tasks must surface as a failure in this scenario, not only as a unit-level acceptance miss.
+
+Implementation of an executable validator that replays this scenario (for example `scripts/validate-aao-agent-journey.ts`) is out of scope for `TASK-AAO-0036` and must be opened as a separate framework source task with atomization ownership updates (candidate: extend `TASK-AAO-0047`, or open `TASK-AAO-0048` if scope review requires a dedicated card).
+
 ## Rollout And Regression Plan
 
 - Implement AAO in dependency order unless the user explicitly selects a narrower task or task range.

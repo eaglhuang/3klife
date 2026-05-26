@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0036
 task_id: TASK-AAO-0036
 title: "AAO acceptance test plan 與前提固化"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M12
@@ -79,6 +79,34 @@ Opus 4.7 反饋與後續討論已經轉成多張任務卡，但「整體怎麼�
 - 主計畫包含 rollout/regression 與 execution priority，讓後續 AI 知道先修什麼、最後怎麼驗收。
 - `tasks/README.md` 列出 `TASK-AAO-0036`。
 - Import dry-run 能找到 0036，且不 fallback 到 unrelated task。
+
+### End-to-End Agent Journey Scenario
+
+AAO acceptance test plan must include one complete governed agent journey scenario that verifies the cross-task workflow across scope amendment, evidence, checkpoint, commit window, and next claim.
+
+Scenario:
+
+1. `next --claim --task X`
+2. Agent attempts to write outside declared deliverables.
+   - Expected: pre-write detection blocks with scope amendment guidance.
+3. `tasks scope --add file1,file2,file3`
+   - Expected: creates exactly one `scope-amendment-event`.
+4. Agent writes allowed files.
+5. Validator runs and evidence is captured through cached command runs.
+6. `evidence missing --task X`
+   - Expected: reports remaining evidence gaps before close.
+7. Agent completes missing evidence.
+8. `batch checkpoint --hold`
+   - Expected: closes current task without claiming next task.
+9. Commit close artifacts.
+   - Expected: checkpoint commit window allows previous task artifacts.
+10. `next --claim` for the next task.
+    - Expected: does not auto-advance while previous checkpoint debt exists, and claims only after debt is cleared.
+
+This scenario must explicitly cover the integration boundaries for:
+`AAO-0010`, `AAO-0012`, `AAO-0014`, `AAO-0016`, `AAO-0017`, `AAO-0037`, `AAO-0038`, `AAO-0041`, and `AAO-0047`.
+
+Implementation note: writing the scenario into the acceptance plan is in scope for this card. Building an executable validator that replays the scenario (e.g. `scripts/validate-aao-agent-journey.ts`) is out of scope for `TASK-AAO-0036`; that work must be opened as a separate framework source task (candidate: extend `TASK-AAO-0047`, or open `TASK-AAO-0048` if a dedicated card is needed) and must include atomization ownership updates in the same card.
 
 ## Rollback
 
