@@ -88,6 +88,15 @@ nonGoals:
 - Repair/migration may normalize old locks, but must write an auditable event or report so manual lock edits cannot hide in ignored runtime files.
 <!-- /AAO-feedback-0012-lock-mtime -->
 
+
+<!-- AAO-feedback-0012-frontload-deliverables -->
+## Frontloaded Acceptance
+
+- This task must implement the early fix for `initial allowedFiles from task deliverables`; AAO-0038 remains responsible for full import fidelity, but the speed-critical lock behavior lands here.
+- `next --claim` / direction-lock creation must include every target-repo path from the task card `deliverables` array plus standard governance paths for that task.
+- A declared deliverable must not require a later `tasks scope --add` before the agent can write it.
+- Regression evidence must cover a task card with artifact/report deliverables and prove those deliverables appear in `taskDirectionLock.allowedFiles` immediately after claim.
+<!-- /AAO-feedback-0012-frontload-deliverables -->
 ## Rollback
 
 Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.

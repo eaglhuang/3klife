@@ -264,7 +264,7 @@ This line folds the latest practical feedback into the AAO plan without redesign
 |---|---|---|
 | next is not smart enough / routing must be user-overridable | `TASK-AAO-0034` | Selector-first routing, plan-name/range/family matching, routing memory, and no unrelated fallback. |
 | Scope amendment discovered too late | `TASK-AAO-0010` | Pre-write `ATM_SCOPE_AMENDMENT_SUGGESTED` plus atomic multi-path `tasks scope --add`. |
-| Initial lock misses declared deliverables | `TASK-AAO-0038` | Initial `allowedFiles` must include task-card deliverables plus governance paths. |
+| Initial lock misses declared deliverables | `TASK-AAO-0012` early fix, `TASK-AAO-0038` fidelity finish | `TASK-AAO-0012` makes claim-time allowedFiles include task-card deliverables; `0038` later preserves the full import contract. |
 | Low-level lifecycle can create bad locks | `TASK-AAO-0029` | AI-facing low-level lifecycle is blocked or requires explicit maintainer override; no incomplete locks by default. |
 | Expected failing gates need evidence | `TASK-AAO-0016` | Diagnostic / expected-failure evidence is separate from validation passes. |
 | Playbook only handles batch | `TASK-AAO-0014` | Playbook covers batch, single-task, and explicit task-list modes. |
