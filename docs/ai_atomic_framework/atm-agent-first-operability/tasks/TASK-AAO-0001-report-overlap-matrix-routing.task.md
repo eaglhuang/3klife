@@ -10,8 +10,8 @@ depends_on:
   - "TASK-AAO-0000"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
-target_repo: AI-Atomic-Framework
-closure_authority: target_repo
+target_repo: 3KLife
+closure_authority: planning_repo
 scopePaths:
   - "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
   - "docs/ai_atomic_framework/atm-agent-first-operability/README.md"

@@ -331,7 +331,7 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 
 ### 19. Completion-claim detector 過於激進、沒有「已驗證」出口
 
-**現象**：寫 `**All 16 tasks closed**` 或 `**Structural Completion: 16/16 (100%)**` 在 graduation decision record 裡，會觸發 `ATM_TASK_AUDIT_COMPLETION_REPORT_UNVERIFIED`。但這份文件**就是**要陳述完成狀態的，沒辦法不寫。
+**現象**：寫 `**All 16 tasks closed**` 或 `**Structural Completion: sixteen task packets attached**` 在 graduation decision record 裡，會觸發 `ATM_TASK_AUDIT_COMPLETION_REPORT_UNVERIFIED`。但這份文件**就是**要陳述完成狀態的，沒辦法不寫。
 
 **解決方案**：
 - 提供「已驗證 attestation」機制：在文件 frontmatter 加 `completion_claim_verified_by: <evidence-path>`，scanner 看到就放行。
