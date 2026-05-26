@@ -922,6 +922,7 @@
     const searchParams = new URLSearchParams(window.location.search);
     const REQUESTED_GENERAL_ID = searchParams.get("generalId") || "liu-bei";
     const API_BASE = searchParams.get("apiBase") || "http://127.0.0.1:8765";
+    const API_KEY = searchParams.get("apiKey") || window.localStorage.getItem("npcBrainApiKey") || "";
     const DEFAULT_AUTO_DELAY = 12000;
     const DEFAULT_DIALOGUE_TIMEOUT_MS = 12000;
     const DEFAULT_SCENE_DIRECTOR_TIMEOUT_MS = 18000;
@@ -1111,6 +1112,17 @@
           window.clearTimeout(timeoutId);
         },
       };
+    }
+
+    function createApiHeaders({ withJson = false } = {}) {
+      const headers = {};
+      if (withJson) {
+        headers["Content-Type"] = "application/json";
+      }
+      if (API_KEY) {
+        headers["X-API-Key"] = API_KEY;
+      }
+      return headers;
     }
 
     function abortIfAlive(controller) {
@@ -1419,7 +1431,7 @@
       try {
         const response = await fetch(`${API_BASE}/v1/npc/scene-director`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: createApiHeaders({ withJson: true }),
           body: JSON.stringify(body),
           signal: timeout.signal,
         });
@@ -1699,7 +1711,7 @@
       try {
         const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: createApiHeaders({ withJson: true }),
           body: JSON.stringify(body),
           signal: timeout.signal,
         });
@@ -1866,7 +1878,7 @@
       try {
         const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: createApiHeaders({ withJson: true }),
           body: JSON.stringify(body),
           signal: timeout.signal,
         });
@@ -1913,7 +1925,7 @@
       try {
         const response = await fetch(`${API_BASE}/v1/npc/scene-illustration`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: createApiHeaders({ withJson: true }),
           body: JSON.stringify({
             generalId: currentGeneralId(),
             prompt,
@@ -2359,6 +2371,7 @@
       const timeout = createTimeoutController(DEFAULT_PROFILE_TIMEOUT_MS);
       try {
         const response = await fetch(`${API_BASE}/v1/npc/narrative-profile?generalId=${encodeURIComponent(generalId)}`, {
+          headers: createApiHeaders(),
           signal: timeout.signal,
         });
         if (!response.ok) {
@@ -2666,16 +2679,38 @@
       const match = firstRef ? firstRef.match(/^(\d{3})#/) : null;
       return match ? `第 ${Number(match[1])} 回` : "runtime 線索";
     }
-
     function buildDirectorMetaChips(bundle, directorPayload) {
       const beats = directorPayload?.beats || {};
+      const diagnostics = directorPayload?.debug?.diagnostics || {};
+      const issues = Array.isArray(diagnostics.issues) ? diagnostics.issues : [];
+      const issueLabelMap = {
+        data_fallback_used: "data fallback",
+        invalid_request: "invalid request",
+        data_missing: "資料不足",
+        seed_insufficient: "種子不足",
+        story_unavailable: "主敘事缺漏",
+        story_fallback: "主敘事 fallback",
+        cache_pollution_risk: "cache 汙染疑慮",
+        chorus_fallback: "路人全 fallback",
+        chorus_partial_fallback: "路人部分 fallback",
+      };
+      const diagItems = [
+        diagnostics.dataLayer ? `data:${diagnostics.dataLayer}` : "",
+        diagnostics.seedLayer ? `seed:${diagnostics.seedLayer}` : "",
+        diagnostics.storyLayer ? `story:${diagnostics.storyLayer}` : "",
+        diagnostics.cacheLayer ? `cache:${diagnostics.cacheLayer}` : "",
+        diagnostics.chorusLayer ? `chorus:${diagnostics.chorusLayer}` : "",
+      ].filter(Boolean);
+      const issueItem = issues.length ? `issues:${issues.map((item) => issueLabelMap[item] || item).join("|")}` : "";
       const sourceRefs = Array.isArray(beats.sourceRefs) ? beats.sourceRefs.filter(Boolean) : [];
       return [
-        `第 ${state.turn} 幕`,
+        `章節：${state.turn}`,
         angleDefinitions[bundle.card?.angle]?.label || "",
         bundle.target?.label || "",
         chapterTagFromSourceRefs(sourceRefs),
-        `可信度 ${((Number(bundle.card?.confidence || 0) || 0) * 100).toFixed(0)}%`,
+        `信心值：${((Number(bundle.card?.confidence || 0) || 0) * 100).toFixed(0)}%`,
+        ...diagItems,
+        issueItem,
       ].filter(Boolean);
     }
 
