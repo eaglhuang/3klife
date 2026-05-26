@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TEAM-0003
 title: permission lease validator
-status: done
+status: planned
 owner: atm-core
 priority: P0
 milestone: M2

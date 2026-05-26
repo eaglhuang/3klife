@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TEAM-0002
 title: team start/status runtime
-status: done
+status: planned
 owner: atm-core
 priority: P0
 milestone: M2

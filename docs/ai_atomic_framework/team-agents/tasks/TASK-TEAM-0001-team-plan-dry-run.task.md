@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TEAM-0001
 title: team plan dry-run resolver spike
-status: done
+status: planned
 owner: atm-core
 priority: P0
 milestone: M2
