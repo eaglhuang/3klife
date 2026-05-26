@@ -46,3 +46,13 @@ AAO 專注的主題包括：
 - validator failure 的可修輸出
 - docs / schema / command drift guard
 - onefile size / startup budget
+
+## Score-Based Graduation Follow-up
+
+| Task ID | Title | Milestone | Status | Depends |
+|---|---|---|---|---|
+| [TASK-ASA-0017](./TASK-ASA-0017-score-command-coverage-instrumentation.task.md) | 修正 public command coverage 計分來源 | M17 | planned | TASK-ASA-0016 |
+| [TASK-ASA-0018](./TASK-ASA-0018-readable-ref-score-integration.task.md) | 修正 readable ref scoring 整合 | M18 | planned | TASK-ASA-0013, TASK-ASA-0016 |
+| [TASK-ASA-0019](./TASK-ASA-0019-source-ownership-score-closure.task.md) | 收斂 source ownership coverage 缺口 | M19 | planned | TASK-ASA-0007, TASK-ASA-0016, TASK-ASA-0017 |
+| [TASK-ASA-0020](./TASK-ASA-0020-rollback-evidence-graduation-policy.task.md) | 定義 rollback evidence graduation policy | M20 | planned | TASK-ASA-0015, TASK-ASA-0016 |
+| [TASK-ASA-0021](./TASK-ASA-0021-score-based-graduation-rerun.task.md) | 重跑 score-based graduation gate 並更新決策紀錄 | M21 | planned | TASK-ASA-0017, TASK-ASA-0018, TASK-ASA-0019, TASK-ASA-0020 |
