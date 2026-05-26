@@ -77,11 +77,23 @@ Unity 對照:
 13. **轉蛋池正式共識**：轉蛋系統只保留兩種不同目的的池子：`三國名將池（含女性）` 與 `支援卡（教官）池`；`英靈卡 / 虎符卡` 不入池，統一由名將死亡結算產出。名將生前退役只進教官 / 傳承路徑，不直接產卡。
 14. **名將生命週期與中樞治理正式共識**：英靈卡門檻鎖定為「史實名將 + 女性名將（具正式名將模板）必出，其餘不出」；若名將曾先退役，死亡時仍依正式規則補發 `英靈卡 + 虎符卡`；世家積分採完全個人存檔制；英靈卡與虎符卡允許同角色同時裝備；死亡後英靈卡必須保留完整英勇事蹟、最終屬性與技能快照供家族展示列回看；大廳中的女性角色一律歸於名將池，以 `Female_Role_Type` 區分戰鬥型 / 輔助型；官職正式升格為獨立系統；反霸權聯盟對非霸主為強制捲入；天下大亂重組時保留世界沙盤已解鎖進度；大廳「自告奮勇」屬彩蛋事件，不建立固定成功率公式；`武將日誌與離線互動` 正式升格為獨立母規格，晨報 / 派遣 / 離線互動先掛在大廳與人物頁入口，未定 UI 形態先保留 pending contract；戰場部署正式加入 `Elite_Deploy_Cap + AI_Reserve_Policy`；場景戰法情報門檻改為固定 `Required_Intel_Value`；戰鬥公式採「兵種剋制先乘，其餘環境修正改走百分點加總」；虎符品質統一由 `TigerTallyScore` 映射；名將挑戰賽採賽季鏡像快照與 soft reset；經濟系統補入地窖保護與每日補貼；世界沙盤 `S3 全球遠征` 以 `Expedition_Dossier / External_Power` 承接異域壓力與終局目標，不要求所有外敵都套本土治理全迴圈；`Peace_Lineage` 只是結緣模式標記，仍受 `Vigor / Pregnancy_Lock / Breeding_Cap` 約束；退役活體武將可先保種，轉成教官卡後失去親傳資格；36 回合培育正式拆成三階段學年；關卡正式加入 `Strategist_HUD + Stage_Salvage` 摘要層；轉蛋雙池敘事固定為「名將池 = 血統種子、支援卡池 = 培育深度」；舊版遊戲大綱中的虎符轉蛋提案不採納，仍維持死亡結算產卡。
 15. **Inventory Service 正式共識**：道具 / 一般裝備 / 虎符資料層正式收斂成單一 `Inventory Service`；`PlayerInventory`、`GeneralEquipment`、`Talisman_Inventory` 視為同一服務下的分類投影。前端展示不得混成單一大背包，人物頁正式分流為 `命` 承接英靈卡、`寶 / GEAR` 承接一般裝備 / 傳家寶 / 道具、`兵 / Aptitude` 承接虎符與戰場適性。欄位與槽位規則異動時先回寫 `武將裝備道具系統.md` 與 `Data Schema文件（本機端與Server端）.md`。
-16. **資料與條件不得為單一案例寫死**：人物、關係、角度、證據、條件、主角、對象、scene seed 等正式判斷，必須來自上游資料、正式 pipeline 或可重用的通用規則；不得因為 demo 畫面、單一人物或單一 bug case，就在 service / HTML / script 內硬寫條件分支、特殊字串或人名白名單。
-17. **台詞與用字不得硬寫成模板真相**：NPC 對白、小劇場、旁人感想、情緒文字不得以固定例句、固定修辭、單一人物專用說法或萬用句充當正式內容；應以 `persona + relationship + evidence + scene seeds + story context` 生成。若資料不足，允許回空字串、`無資料` 或 unavailable 狀態，不可拿模板句硬補。
-18. **fallback 只代表 unavailable，不得充當敘事腦**：fallback 可以用來顯示缺資料、停止流程或回空狀態，但不得私自補故事、補關係、補性格、補台詞。凡已退役的 stock fallback、死碼、舊模板、舊套句，應主動刪除，不得留在正式路徑待命。
-19. **單一真相來源**：資料正確性、人物性格、角度/對象關聯、證據解析與敘事 grounding，應由對應的 service / data pipeline 維護；HTML / UI 只負責顯示、互動、loading、empty-state 與選項聯動，不作主敘事判斷，也不在前端修資料真相。
-20. **短證據先補上下文，再抽結構化種子**：當單段原文不足以支撐人物、事件、時間、地點、物件、情感時，必須先擴上下文、翻成可理解語意，再抽 `人 / 事 / 時 / 地 / 物 / 情感` 等結構化種子交給導演或 LLM；不得直接拿殘句瞎補劇情。
+16. **Scene 責任區分（A/B/C）**：目前 Scene 流程至少有 3 個角色：
+    - (A) `NPC Brain service`
+    - (B) 上游 `pipeline / artifact`
+    - (C) `HTML / 前端畫面`
+17. **(A) `NPC Brain service`**：
+    - 負責：依據既有 artifact 做通用選卡、資料檢核、`dataStatus` / `fallbackReason` / `evidenceResolution` / debug metadata 回傳、fail-fast、timeout 保護、完整 payload shape 輸出。
+    - 禁止：不得為單一人物、單一關係、單一角度或 demo case 寫死規則、台詞、用字；不得用模板句或特判去掩蓋上游資料錯誤。
+18. **(B) 上游 `pipeline / artifact`**：
+    - 負責：產出 canonical 的 `runtime profile`、`relationship edge`、`runtime-story-beat`、`pair linking`、`angle/classification`、`evidenceRefs`、`source packet / context`。
+    - 禁止：不得把 synthetic / internal ids 混進 `evidenceRefs`；不得把錯的 pair linking、錯的 angle、錯的 evidence export 留給 service 或前端補救。
+19. **(C) `HTML / 前端畫面`**：
+    - 負責：通用顯示、互動、loading 狀態、timeout / abort、欄位空狀態、選項聯動、診斷資訊呈現。
+    - 禁止：不得自行判斷人物性格、關係正確性、角度正確性、證據真偽；不得在前端生成旁人感想、小劇場或補寫故事。
+20. **Scene 排查順序固定**：先查 (B) 上游資料，再查 (A) service 的通用選卡與檢核，最後才查 (C) 畫面顯示；禁止顛倒順序，用下游硬補去掩蓋上游錯誤。
+21. **台詞與用字不得硬寫成模板真相**：NPC 對白、小劇場、旁人感想、情緒文字不得以固定例句、固定修辭、單一人物專用說法或萬用句充當正式內容；應以 `persona + relationship + evidence + scene seeds + story context` 生成。若資料不足，允許回空字串、`無資料` 或 unavailable 狀態，不可拿模板句硬補。
+22. **fallback 只代表 unavailable，不得充當敘事腦**：fallback 可以用來顯示缺資料、停止流程或回空狀態，但不得私自補故事、補關係、補性格、補台詞。凡已退役的 stock fallback、死碼、舊模板、舊套句，應主動刪除，不得留在正式路徑待命。
+23. **短證據先補上下文，再抽結構化種子**：當單段原文不足以支撐人物、事件、時間、地點、物件、情感時，必須先擴上下文、翻成可理解語意，再抽 `人 / 事 / 時 / 地 / 物 / 情感` 等結構化種子交給導演或 LLM；不得直接拿殘句瞎補劇情。
 
 ---
 

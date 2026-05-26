@@ -28,12 +28,8 @@
 - 原文太短時，先補上下文並抽 `人 / 事 / 時 / 地 / 物 / 情感` 種子，再交給 renderer / LLM。
 - 遊戲平衡靠公式層實現，不直接扭曲基礎史實屬性。
 
-## §4. Scene 責任區分（摘要）
-- 角色分三層：(A) `NPC Brain service`、(B) 上游 `pipeline / artifact`、(C) `HTML / 前端畫面`。
-- (A) service：負責通用選卡、資料檢核、完整 payload、debug metadata；禁止為特定人物 / 關係 / demo case 寫死規則遮錯。
-- (B) pipeline：負責 canonical 的 profile、relationship、story beat、pair linking、evidenceRefs、source context；禁止把錯資料或 synthetic ids 丟給下游補。
-- (C) HTML：負責顯示、互動、loading、timeout / abort、空狀態、選項聯動；禁止自行補劇情、補人格、補關係。
-- 排查順序固定：先查上游資料，再查 service，最後查 HTML。
+## §4. Scene 責任區分
+- 正式規範位於 `docs/keep-shards/keep-core.md` 的 `§2 Pre-flight`：請依 A/B/C 角色分工與禁止事項執行，不在 `keep.summary` 重複維護全文。
 
 ## §5. 工具與安全
 - `get_changed_files` 禁用；改用 `git status --short`。
