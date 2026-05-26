@@ -70,6 +70,74 @@ ATM commands must be concentrated around a small agent-facing path:
 
 Low-level lifecycle commands can remain for maintainers, but help and integration files must not teach them as the normal AI path. Every public command help page must include usage, required flags, examples, common mistakes, and related commands.
 
+## Operating Premises
+
+AAO changes are built on these premises:
+
+- `next` is a selector-first navigation aid, not the owner of user work priority. Explicit user selectors such as `--task`, `--tasks`, `--plan`, `--family`, and `--batch` override heuristic queue picking.
+- ATM may hard-block only for real governance risks: an active claim in the same scope, active batch checkpoint debt, staged files owned by another active scope, unmet dependency, protected `.atm/**` state mutation, or missing command-backed evidence.
+- Planning repo paths are read-only context unless the task is explicitly a planning task. Target work must be listed in `scopePaths` and `deliverables`.
+- Batch work is scoped by `batchId` and a fixed task set. Multiple batches may be active if target files do not overlap.
+- Task cards are delivery contracts, not the objective. Work must produce non-`.atm/**` deliverables before closure.
+- Public AI-facing commands should stay concentrated around `next`, `batch`, `evidence`, `status`, and focused `tasks show/scope` operations. Low-level lifecycle commands remain maintainer tools.
+- Every new script, CLI, validator, report, artifact, or generated output must update atomization ownership in the same task.
+- Framework source validation should use the frozen runner by default; source-first `atm.dev.mjs` is only for explicit ATM source validation.
+
+## Acceptance Test Plan
+
+AAO is accepted by running scenario tests, not by checking that task cards were closed. Each implementation task keeps its own validators, and the full AAO lane must also satisfy these grouped checks:
+
+1. Planning import and card contract
+   - `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json` discovers all AAO cards.
+   - All `TASK-AAO-*.task.md` files include `scopePaths`, `deliverables`, `validators`, `evidence.required`, `rollback`, and `atomizationImpact`.
+   - `git diff --check` passes for the AAO planning files.
+2. Selector-first routing
+   - `next --task <id>` resolves that exact task or returns not-found.
+   - `next --tasks <id,id>` preserves user order and does not sort or widen the scope.
+   - `next --plan <path>` and `next --family <family>` resolve only matching cards.
+   - Low-confidence prompts return selection-required or scope-not-found; they must not fallback to unrelated open tasks.
+3. Batch and checkpoint flow
+   - `next --claim --tasks ...` creates a `batchId` and freezes taskIds.
+   - `batch status --batch <id>` shows queue head, checkpoint debt, changed files, and next command.
+   - `batch checkpoint --batch <id>` closes only the queue head, advances the queue, and writes command-backed closure evidence.
+   - Stale locks from the previous queue head are cleaned or explained with a required command.
+4. Scope and lock amendments
+   - A missing artifact path returns a scope-expansion-required diagnostic, not an invitation to edit lock JSON.
+   - `tasks scope --add` records an auditable amendment and updates the lock allowedFiles single source of truth.
+   - Direct edits to `.atm/runtime/locks/**` remain blocked by tool and commit gates.
+5. Evidence and closure usability
+   - `evidence validators --list` explains valid validator names for the current task.
+   - `evidence run` / `--recent-run` can attach command-backed evidence without rerunning expensive validators unnecessarily.
+   - Failed command runs cannot be counted as validation passes.
+   - Missing validator closure errors include a concrete requiredCommand.
+6. Hook and commit gates
+   - Neutrality scanning is staged-only where appropriate.
+   - Artifact commit policy blocks standalone static artifacts but allows proper task/evidence context.
+   - CRLF policy is deterministic and fixable.
+   - Protected ATM runtime/history edits are blocked unless produced by official CLI commands.
+7. Score and atomization gates
+   - Public command coverage reads command specs.
+   - Readable reference scoring counts semantic refs from the validator output.
+   - Rollback-proof evidence is schema-validated.
+   - Atom map/spec schema validation passes for new ownership updates.
+8. Human-facing UX
+   - `atm status` summarizes current repo/channel/batch/task blockers.
+   - `tasks show --planning-doc` links a task back to its plan and feedback source.
+   - Help output includes usage, examples, common mistakes, and related commands for primary public commands.
+
+## Rollout And Regression Plan
+
+- Implement AAO in dependency order unless the user explicitly selects a narrower task or task range.
+- Each task must keep its commit small and include its atomization map update when it touches framework scripts, validators, reports, artifacts, or CLI commands.
+- After M5-M12 land, rerun the grouped acceptance tests before `TASK-AAO-0033` final dogfood and sync.
+- `TASK-AAO-0036` owns this cross-cutting acceptance plan and must be updated whenever a later task changes the expected acceptance surface.
+
+## Execution Priority
+
+- P0: prevent AI from editing locks/runtime manually, committing before checkpoint, or being routed to unrelated tasks.
+- P1: reduce speed pain by improving evidence reuse, status visibility, and state-aware playbooks.
+- P2: improve scorer instrumentation and final dogfood reports.
+- P3: polish documentation, examples, and long-term command-surface ergonomics.
 ## Milestones
 
 | Milestone | Theme | Tasks |
@@ -86,6 +154,7 @@ Low-level lifecycle commands can remain for maintainers, but help and integratio
 | M9 | Integration docs, deprecation, hygiene, artifact policy | AAO 0028-0032 |
 | M10 | Final dogfood and sync | AAO 0033 |
 | M11 | Selector-first routing and command-surface consolidation | AAO 0034-0035 |
+| M12 | Acceptance test plan and premises closure | AAO 0036 |
 
 ## Task Roster
 
@@ -127,6 +196,7 @@ Low-level lifecycle commands can remain for maintainers, but help and integratio
 | `TASK-AAO-0033` | Final dogfood rerun 與雙 repo sync | M10 | planned | `TASK-AAO-0020`, `TASK-AAO-0021`, `TASK-AAO-0022`, `TASK-AAO-0023`, `TASK-AAO-0028`, `TASK-AAO-0032` | `atomic_workbench/reports/aao-final-dogfood-report.json`<br>`docs/ai_atomic_framework/atm-agent-first-operability/AAO_FINAL_REPORT.md`<br>`release/**` |
 | `TASK-AAO-0034` | next explicit selector 與 routing memory | M11 | planned | `TASK-AAO-0001`, `TASK-AAO-0003`, `TASK-AAO-0024`, `TASK-AAO-0026` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-intent.ts`<br>`packages/cli/src/commands/command-specs/next.spec.ts` |
 | `TASK-AAO-0035` | Command surface consolidation 與 help examples | M11 | planned | `TASK-AAO-0002`, `TASK-AAO-0014`, `TASK-AAO-0029`, `TASK-AAO-0034` | `packages/cli/src/commands/command-specs/**`<br>`packages/cli/src/commands/help.ts`<br>`README.md` |
+| `TASK-AAO-0036` | AAO acceptance test plan 與前提固化 | M12 | planned | `TASK-AAO-0033`, `TASK-AAO-0034`, `TASK-AAO-0035` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md` |
 
 ## New Task Card Contract
 
@@ -159,6 +229,8 @@ git diff --check
 ```
 
 Implementation validation is task-specific and listed in each task card.
+
+The grouped acceptance test plan above is the release-level acceptance surface for AAO. TASK-AAO-0036 owns keeping that surface explicit as the plan evolves.
 
 ## Non-Goals
 
