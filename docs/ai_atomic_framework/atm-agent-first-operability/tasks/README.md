@@ -119,3 +119,9 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | Task ID | Title | Status | Depends | Target surface | Primary validators |
 |---|---|---|---|---|---|
 | [TASK-AAO-0046](./TASK-AAO-0046-validator-baseline-noise-diagnostics.task.md) | Validator baseline noise diagnostics | planned | `TASK-AAO-0004`, `TASK-AAO-0015`, `TASK-AAO-0017` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`npm run validate:standard` |
+
+## M16 P0 Throughput Acceleration Bundle
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0047](./TASK-AAO-0047-p0-throughput-acceleration-bundle.task.md) | P0 throughput acceleration bundle | planned | `TASK-AAO-0024`, `TASK-AAO-0027`, `TASK-AAO-0034`, `TASK-AAO-0037`, `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/hook.ts`<br>`scripts/run-validators.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |

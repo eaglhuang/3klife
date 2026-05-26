@@ -334,3 +334,10 @@ Implementation guidance: complete these before continuing deeper AAO feature wor
 | Task | Title | Milestone | Status | Depends | Target surface |
 |---|---|---|---|---|---|
 | `TASK-AAO-0046` | Validator baseline noise diagnostics | M16 | planned | `TASK-AAO-0004`, `TASK-AAO-0015`, `TASK-AAO-0017` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` |
+
+
+## M16 P0 Throughput Acceleration Bundle
+
+| Task | Title | Milestone | Status | Depends | Target surface |
+|---|---|---|---|---|---|
+| `TASK-AAO-0047` | P0 throughput acceleration bundle | M16 | planned | `TASK-AAO-0024`, `TASK-AAO-0027`, `TASK-AAO-0034`, `TASK-AAO-0037`, `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/hook.ts`<br>`scripts/run-validators.ts` |
