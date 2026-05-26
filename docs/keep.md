@@ -23,7 +23,3 @@
   ```
   node tools_node/shard-manager.js rebuild-index docs/keep-shards
   ```
-
-## Scene 責任區分位置
-
-- `Scene` 的正式責任區分規範已放在分片 `docs/keep-shards/keep-core.md` 的 `§2 Pre-flight` 區段（責任邊界與禁止事項）。

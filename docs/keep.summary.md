@@ -29,7 +29,7 @@
 - 遊戲平衡靠公式層實現，不直接扭曲基礎史實屬性。
 
 ## §4. Scene 責任區分
-- 正式規範位於 `docs/keep-shards/keep-core.md` 的 `§2 Pre-flight`：請依 A/B/C 角色分工與禁止事項執行，不在 `keep.summary` 重複維護全文。
+- Scene 的正式責任區分與 A/B/C 角色分工，收在 `docs/keep-shards/keep-core.md` 的 `§2 Pre-flight`；本摘要只保留索引提醒，不重複維護全文。
 
 ## §5. 工具與安全
 - `get_changed_files` 禁用；改用 `git status --short`。
