@@ -1,138 +1,168 @@
 <!-- doc_id: doc_other_1318 -->
 # ATM Agent-First 可操作性優化計畫書
 
-## 摘要
+## Summary
 
-本計畫書建立一條新的 `AAO` 主題線，專門處理 ATM 在 Agent 實際操作時的可讀性、可追溯性、上下文負擔與 surface drift 問題。  
-`TASK-ASA-*` 保留給「ATM 框架 100% 自我原子化」主線，不重排、不改號、不把 Agent UX 類問題混進 ASA 驗收口徑。
+AAO（Agent-First Operability）是 ATM 自我治理後的第二條主線。ASA 解決「框架本身是否被原子化、能否被量測」；AAO 解決「AI 真的照 ATM 做事時，入口、訊息、證據、batch、commit gate 是否好用」。
 
-AAO 的定位不是另起一套 ATM runtime task model，而是 3KLife 端的規劃與開發索引。  
-真正的 upstream 實作仍然發生在 `AI-Atomic-Framework`，AAO 只負責把這批優化拆成可逐張執行的任務卡。
+大白話說：ASA 是把 ATM 的骨架補齊；AAO 是讓 AI 用起來不要一直被絆倒，也不要因為流程太難而開始繞路。
 
-## 背景與目的
+本文件是 AAO 的唯一規劃真相來源。任務卡放在 `tasks/`，所有任務都使用新的 `atm-task-card-authoring` 合約格式。
 
-先前的架構分析報告抓到幾個真問題，但也有一些判斷已經被 repo 現況推翻，或其實已由既有計畫承接：
+## Scope Boundary
 
-- `packages/cli/src/commands/tasks.ts` 與 `next.ts` 仍然過大，Agent 閱讀成本偏高。
-- `commandSpecs` 已存在，CLI 不是純 if-else；但 runner 與 spec 確實有 drift。
-- `next --json` 已輸出 `reason`、`allowedCommands`、`blockedCommands`、`missingEvidence`，不是完全黑箱；但仍缺少更穩定的決策摘要欄位。
-- `any` debt 有既有 budget 與 lint 警示政策，不能再把它當作「完全未治理」。
-- validator / `node:test` / release-smoke 已存在，不能把 repo 描述成「零標準測試框架」；但 validator failure 對 Agent 仍不夠可修。
-- onefile 發行物偏大是事實，但它是 intentional artifact；第一步不應直接預設「換 bundler」。
+- Planning repo: `3KLife`
+- Target repo: `AI-Atomic-Framework`
+- Closure authority: target repo
+- Planning paths are read-only context unless a task explicitly says it is a planning/doc task.
+- Target work must be listed in `scopePaths` and `deliverables`.
+- Any new script, CLI, validator, report, or artifact must update atomization ownership in the same task.
 
-AAO 的目標就是把這些「仍值得改善，但不適合塞進 ASA 主線」的問題收斂成另一套可執行計畫。
+## Original AAO Baseline
 
-## 為何不併入 ASA
+AAO 0000-0008 are the original AAO baseline:
 
-ASA 解決的是治理覆蓋率：
+- M0: AAO docs initialization and ASA bridge index.
+- M1: overlap matrix, CLI command surface, and `next` decision trail.
+- M2: validator failure envelope and context slimming.
+- M3: docs/schema/command drift and onefile budget.
+- M4: roadmap backwrite and bridge closure.
 
-- 哪些 production source 已有 atom / map owner
-- 哪些 command / validator / release artifact 已被正式納管
-- 哪些證據、rollback、provenance 與 readable callsite 已經齊備
+These cards are preserved, but rewritten into the new contract format. AAO-0000 remains `done`; AAO-0001 through AAO-0008 are reopened as `planned` so they can be re-run consistently.
 
-AAO 解決的是 Agent 操作體感：
+## Opus 4.7 實戰反饋承接
 
-- CLI surface 是否單一真相來源
-- `next` 的決策摘要是否夠清楚
-- validator 失敗是否能直接指向下一步
-- 巨型 command 檔案是否造成上下文爆炸
-- docs / schema / command list 是否持續漂移
+The first long-form dogfood run exposed several agent-facing pain points:
 
-兩者互相依賴，但不是同一種完成標準。  
-因此 AAO 採「新系列 + 完整橋接」而不是 `TASK-ASA-0017+`。
+- Agents still guess lifecycle steps when the playbook is not state-aware.
+- Scope amendment lacks a safe official CLI, so agents try to edit lock JSON.
+- Evidence is too slow and too repetitive when validators are re-run per card.
+- Pre-commit and checkpoint gates often block correctly, but error envelopes are not actionable enough.
+- Planning docs and target repo paths can blur together in cross-repo flows.
+- Batch state must be resumable, inspectable, and identified by batchId, not treated as a single repo-global blob.
+- ASA score gaps now need follow-up tasks for scorer instrumentation, rollback proof, and map schema validation.
+- `next` should be a selector-first navigation aid, not a global scheduler that hard-selects unrelated work.
+- ATM command surface must stay concentrated and example-rich; too many scattered commands become an AI usability bug.
 
-## 現況稽核與問題路由
+AAO M5-M11 turns that feedback into implementable tasks.
 
-| 報告問題 | Repo 現況裁決 | 承接路由 | 說明 |
-|---|---|---|---|
-| 1. 巨型 command 檔案 | 採納 | `TASK-ASA-0009` + `TASK-AAO-0005` | ASA 先建立 ownership，再由 AAO 做 context slimming。 |
-| 2. `any` 過多 | 部分採納 | `TASK-ATD-0023` | 已有 budget 與 lint warn，AAO 不重開同類卡。 |
-| 3. CLI 規格分散 | 採納 | `TASK-AAO-0002` | 現有 `commandSpecs` 可升級成真正 SSOT。 |
-| 4. 流程黑箱 | 部分採納 | `TASK-AAO-0003` | 不推翻 `next` 單一路由，只增加穩定決策摘要。 |
-| 5. 命令 discoverability 弱 | 採納 | `TASK-AAO-0002` + `TASK-AAO-0006` | 以 spec/help/docs drift guard 收斂。 |
-| 6. 缺少決策路徑輸出 | 採納 | `TASK-AAO-0003` | 規劃 `decisionTrail`，但不暴露 private chain-of-thought。 |
-| 7. validator debug 成本高 | 採納 | `TASK-AAO-0004` | 保留 validator-first，標準化 failure envelope。 |
-| 8. 缺 E2E / release smoke | 部分採納 | `TASK-ATD-0032` | 已有 root-drop sandbox E2E 路線，AAO 不重開。 |
-| 9. docs 與真實行為漂移 | 採納 | `TASK-AAO-0006` | 建立 docs / schema / command drift guard。 |
-| 10. onefile 過胖 | 部分採納 | `TASK-AAO-0007` + `TASK-ASA-0014` | 先建立 budget 與報表，不直接跳到 bundler replacement。 |
+## Selector-First Next Principle
 
-## 與 ASA / ATD 的橋接原則
+ATM can recommend work order, but it must not own the work order. User intent and explicit selectors come first:
 
-- `TASK-ASA-*` 仍是 ATM 自我原子化主線。
-- `TASK-ATD-0023` 已承接 `any` debt budget，AAO 只引用，不重開。
-- `TASK-ATD-0025` 已承接 release parity gate，AAO 的 onefile 預算需承接這個 gate。
-- `TASK-ATD-0032` 已承接 root-drop sandbox E2E，AAO 不重開第二套 release E2E。
-- AAO 卡若依賴 ASA / ATD，需在 `blocked_by` 與正文內明寫，不可隱性重複。
+- `next --task TASK-AAO-0010`
+- `next --tasks TASK-AAO-0010,TASK-AAO-0011`
+- `next --plan "<plan path>"`
+- `next --family TASK-AAO`
+- `next --batch <batchId>`
 
-## AAO 任務路線
+If no selector is provided, `next` may infer from prompt. If confidence is low, it must ask for selection instead of falling back to an unrelated task. Hard blocking is reserved for real governance risks: active claim in the same scope, active batch checkpoint debt, staged files owned by another active scope, dependency failure, protected state changes, or missing evidence.
 
-### M0 文件初始化
+## Command Surface Principle
 
-- `TASK-AAO-0000`：建立 AAO 目錄、主計畫、README、tasks README、任務卡全集與 ASA 橋接索引
+ATM commands must be concentrated around a small agent-facing path:
 
-### M1 路由與決策介面
+- `next --prompt` / `next --claim`
+- `batch status` / `batch checkpoint`
+- `evidence validators --list` / `evidence run`
+- `status`
+- `tasks show --planning-doc` / `tasks scope --add`
 
-- `TASK-AAO-0001`：報告問題 overlap matrix 與任務路由裁決
-- `TASK-AAO-0002`：CLI command spec / runner SSOT drift guard
-- `TASK-AAO-0003`：`next` decisionTrail JSON contract
+Low-level lifecycle commands can remain for maintainers, but help and integration files must not teach them as the normal AI path. Every public command help page must include usage, required flags, examples, common mistakes, and related commands.
 
-### M2 Agent 可修性
+## Milestones
 
-- `TASK-AAO-0004`：validator failure envelope 標準化
-- `TASK-AAO-0005`：CLI 巨型檔案 context slimming wave 1
-
-### M3 Drift 與 Release 體感
-
-- `TASK-AAO-0006`：docs / schema / command drift guard
-- `TASK-AAO-0007`：onefile size / startup budget
-
-### M4 回寫與關閉橋接
-
-- `TASK-AAO-0008`：AAO roadmap backwrite 與 ASA bridge closure
-
-## 里程碑與依賴
-
-| Milestone | 內容 | 依賴 |
+| Milestone | Theme | Tasks |
 |---|---|---|
-| M0 | AAO 文件區初始化 | 無 |
-| M1 | 路由裁決、CLI SSOT、`decisionTrail` 契約 | `TASK-ASA-0009` |
-| M2 | validator failure envelope、巨型檔案 context slimming | `TASK-ASA-0009`、`TASK-ASA-0010` |
-| M3 | docs drift、onefile budget | `TASK-ASA-0010`、`TASK-ASA-0014`、`TASK-ATD-0025`、`TASK-ATD-0032` |
-| M4 | 回寫與 bridge closure | `TASK-AAO-0005`、`TASK-AAO-0006`、`TASK-AAO-0007` |
+| M0 | AAO planning baseline | AAO 0000 |
+| M1 | Route clarity and command surface SSOT | AAO 0001-0003 |
+| M2 | Agent-readable errors and context slimming | AAO 0004-0005 |
+| M3 | Drift guards and runner budget | AAO 0006-0007 |
+| M4 | Baseline roadmap closure | AAO 0008 |
+| M5 | Real feedback repair line | AAO 0009-0013 |
+| M6 | State-aware playbook and evidence speed | AAO 0014-0017 |
+| M7 | Score instrumentation and attestation | AAO 0018-0022 |
+| M8 | Inspectability commands and map schema | AAO 0023-0027 |
+| M9 | Integration docs, deprecation, hygiene, artifact policy | AAO 0028-0032 |
+| M10 | Final dogfood and sync | AAO 0033 |
+| M11 | Selector-first routing and command-surface consolidation | AAO 0034-0035 |
 
-## 驗證命令
+## Task Roster
 
-文件與規劃層：
+| Task | Title | Milestone | Status | Dependencies | Deliverables |
+|---|---|---|---|---|---|
+| `TASK-AAO-0000` | AAO 文件區初始化與 ASA bridge index | M0 | done | none | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` |
+| `TASK-AAO-0001` | Overlap matrix 與路由裁決 | M1 | planned | `TASK-AAO-0000` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` |
+| `TASK-AAO-0002` | CLI command spec / runner SSOT drift guard | M1 | planned | `TASK-AAO-0001` | `packages/cli/src/commands/command-specs.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0003` | next decisionTrail JSON contract | M1 | planned | `TASK-AAO-0001`, `TASK-AAO-0002` | `packages/cli/src/commands/next.ts`<br>`scripts/validate-prompt-scoped-next.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0004` | Validator failure envelope 標準化 | M2 | planned | `TASK-AAO-0001` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` |
+| `TASK-AAO-0005` | CLI context slimming wave 1 | M2 | planned | `TASK-AAO-0002`, `TASK-AAO-0003` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0006` | Docs / schema / command drift guard | M3 | planned | `TASK-AAO-0002`, `TASK-AAO-0004` | `scripts/validate-docs-command-drift.ts`<br>`docs/governance/command-surface.md`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0007` | Onefile size / startup budget | M3 | planned | `TASK-AAO-0001` | `scripts/validate-onefile-budget.ts`<br>`package.json`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0008` | AAO roadmap backwrite 與 ASA bridge closure | M4 | planned | `TASK-AAO-0005`, `TASK-AAO-0006`, `TASK-AAO-0007` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` |
+| `TASK-AAO-0009` | 匯入 Opus 4.7 feedback 與任務橋接 | M5 | planned | `TASK-AAO-0008` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md` |
+| `TASK-AAO-0010` | 正式 tasks scope --add scope amendment CLI | M5 | planned | `TASK-AAO-0009` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0011` | Claim/checkpoint 忽略 unrelated untracked | M5 | planned | `TASK-AAO-0009` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/batch.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0012` | Direction lock allowedFiles 單一真相來源 | M5 | planned | `TASK-AAO-0010` | `packages/cli/src/commands/task-direction.ts`<br>`packages/cli/src/commands/hook.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0013` | Checkpoint partial-ok 訊息分層 | M5 | planned | `TASK-AAO-0011`, `TASK-AAO-0012` | `packages/cli/src/commands/batch.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0014` | State-aware batch playbook | M6 | planned | `TASK-AAO-0013` | `packages/cli/src/commands/next.ts`<br>`docs/governance/batch-playbook.md`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0015` | evidence validators --list | M6 | planned | `TASK-AAO-0014` | `packages/cli/src/commands/evidence.ts`<br>`packages/cli/src/commands/command-specs/evidence.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0016` | evidence run / --recent-run 快速入口 | M6 | planned | `TASK-AAO-0015` | `packages/cli/src/commands/evidence.ts`<br>`packages/cli/src/commands/command-specs/evidence.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0017` | Closure packet 缺 validator 的可操作修正 | M6 | planned | `TASK-AAO-0015` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/batch.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0018` | Neutrality scanner staged-only mode | M7 | planned | `TASK-AAO-0009` | `scripts/validate-neutrality-staged.ts`<br>`package.json`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0019` | Completion attestation schema | M7 | planned | `TASK-AAO-0017` | `schemas/completion-attestation.schema.json`<br>`scripts/validate-task-ledger-governance.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0020` | Public command coverage scorer 修正 | M7 | planned | `TASK-AAO-0002` | `scripts/src/atomize-score.js`<br>`atomic_workbench/atomization-coverage/dogfood-score.json`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0021` | Readable ref scorer 整合 | M7 | planned | `TASK-AAO-0020` | `scripts/src/atomize-score.js`<br>`atomic_workbench/atomization-coverage/dogfood-score.json`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0022` | Rollback-proof evidence | M7 | planned | `TASK-AAO-0016` | `schemas/rollback-proof.schema.json`<br>`scripts/validate-rollback-proof.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0023` | Map spec schema validator | M8 | planned | `TASK-AAO-0006` | `schemas/atom-map.schema.json`<br>`scripts/validate-map-spec-schema.ts`<br>`package.json` |
+| `TASK-AAO-0024` | batch status 增強 | M8 | planned | `TASK-AAO-0014` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0025` | tasks show --planning-doc | M8 | planned | `TASK-AAO-0010` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0026` | atm status 綜覽 | M8 | planned | `TASK-AAO-0024`, `TASK-AAO-0025` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/command-specs/status.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0027` | dev runner 提示 | M8 | planned | `TASK-AAO-0026` | `README.md`<br>`AGENTS.md`<br>`packages/cli/src/commands/next.ts` |
+| `TASK-AAO-0028` | batch playbook 文件化 | M9 | planned | `TASK-AAO-0014` | `docs/governance/batch-playbook.md`<br>`templates/agent-pack/**`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0029` | Low-level task lifecycle deprecation | M9 | planned | `TASK-AAO-0014`, `TASK-AAO-0028` | `docs/DEPRECATIONS.md`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0030` | CRLF policy | M9 | planned | `TASK-AAO-0009` | `.gitattributes`<br>`docs/governance/line-ending-policy.md`<br>`scripts/validate-line-endings.ts` |
+| `TASK-AAO-0031` | Background work pause advisory | M9 | planned | `TASK-AAO-0024` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/handoff.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0032` | Artifact commit policy 收斂 | M9 | planned | `TASK-AAO-0019` | `docs/governance/artifact-commit-policy.md`<br>`packages/cli/src/commands/hook.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0033` | Final dogfood rerun 與雙 repo sync | M10 | planned | `TASK-AAO-0020`, `TASK-AAO-0021`, `TASK-AAO-0022`, `TASK-AAO-0023`, `TASK-AAO-0028`, `TASK-AAO-0032` | `atomic_workbench/reports/aao-final-dogfood-report.json`<br>`docs/ai_atomic_framework/atm-agent-first-operability/AAO_FINAL_REPORT.md`<br>`release/**` |
+| `TASK-AAO-0034` | next explicit selector 與 routing memory | M11 | planned | `TASK-AAO-0001`, `TASK-AAO-0003`, `TASK-AAO-0024`, `TASK-AAO-0026` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-intent.ts`<br>`packages/cli/src/commands/command-specs/next.spec.ts` |
+| `TASK-AAO-0035` | Command surface consolidation 與 help examples | M11 | planned | `TASK-AAO-0002`, `TASK-AAO-0014`, `TASK-AAO-0029`, `TASK-AAO-0034` | `packages/cli/src/commands/command-specs/**`<br>`packages/cli/src/commands/help.ts`<br>`README.md` |
 
-- `node tools_node/doc-id-registry.js --assign <path>`
-- `node tools_node/doc-id-registry.js --verify`
-- `npm run check:encoding:touched -- --files <files...>`
-- `git diff --check`
+## New Task Card Contract
 
-後續 upstream implementation 預期驗證：
+Every AAO card must include:
 
-- `npm run typecheck`
-- `npm run validate:cli`
-- `npm run validate:standard`
-- `node atm.mjs validate atom-callsite-readability --repo . --json`
-- `node atm.mjs doctor --json`
+- `scopePaths`: files the agent may change.
+- `deliverables`: real non-`.atm/**` outputs.
+- `validators`: commands that prove the work.
+- `evidence.required: command-backed`.
+- `rollback`: how to undo the work.
+- `atomizationImpact`: owner atom/map and map updates.
 
-## 非目標
+Old fields have been retired:
 
-- 不重排 `TASK-ASA-0001` 到 `TASK-ASA-0016`
-- 不新增第二套 ATM runtime task queue
-- 不在這一步同步寫入 `AI-Atomic-Framework/.atm/history/tasks`
-- 不重開 `any` debt 或 release sandbox E2E 的平行任務卡
-- 不預設以更換 bundler 作為 onefile 問題的第一解
+| Old field | New field |
+|---|---|
+| `allowed_files` | `scopePaths` |
+| `blocked_by` | `depends_on` |
+| `upstream_repo` | `target_repo` |
+| `forbidden_files` | `outOfScope` |
+| `non_goals` | `nonGoals` |
 
-## 交付邊界
+## Validation
 
-- 規劃真相來源：`C:\Users\User\3KLife\docs\ai_atomic_framework\atm-agent-first-operability\`
-- upstream 實作目標 repo：`C:\Users\User\AI-Atomic-Framework`
-- AAO 系列只管理規劃、依賴、驗收與橋接，不直接替代 ATM 的 `next --json` 路由
+Planning validation:
 
-## 任務入口
+```shell
+node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json
+git diff --check
+```
 
-- 任務索引：[`tasks/README.md`](./tasks/README.md)
-- 系列說明：[`README.md`](./README.md)
+Implementation validation is task-specific and listed in each task card.
 
+## Non-Goals
+
+- Do not move AAO planning truth into `AI-Atomic-Framework/.atm/**`.
+- Do not change ATM source as part of this planning rewrite.
+- Do not commit unrelated 3KLife dirty files.
+- Do not use planning mirror paths as target work unless a task explicitly allows it.

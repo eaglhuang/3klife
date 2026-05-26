@@ -1,37 +1,37 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0019
+task_id: TASK-AAO-0019
+title: "Completion attestation schema"
 status: planned
 owner: atm-core
-priority: P0
-milestone: M1
+priority: P1
+milestone: M7
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0017"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
-  - "package.json"
+  - "schemas/**"
+  - "packages/cli/src/commands/hook.ts"
+  - "scripts/validate-task-ledger-governance.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "schemas/completion-attestation.schema.json"
+  - "scripts/validate-task-ledger-governance.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
+  - "node --strip-types scripts/validate-task-ledger-governance.ts --mode validate"
 evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
 atomizationImpact:
-  ownerAtomOrMap: "atm.cli-command-spec-map"
+  ownerAtomOrMap: "atm.task-audit-map"
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
@@ -44,15 +44,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0019 — Completion attestation schema
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+建立 completion/report 類文件的 attestation schema，避免報告過度宣稱全部完成。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+ASA decision record 被擋是合理的，但訊息要指向 schema，而不是只說 completion report suspicious。
 
 ## Implementation Contract
 
@@ -63,20 +63,21 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `schemas/completion-attestation.schema.json`
+- `scripts/validate-task-ledger-governance.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
 
 - `npm run typecheck`
 - `npm run validate:cli`
+- `node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- completion report 若宣稱 all complete 必須引用 task states/evidence。
+- 未驗證報告只能使用 structural/pass-pending 語氣。
+- hook 輸出修正文案建議。
 
 ## Rollback
 
@@ -84,7 +85,7 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Atomization Impact
 
-- Owner atom/map: `atm.cli-command-spec-map`
+- Owner atom/map: `atm.task-audit-map`
 - Map updates:
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 - Any new script/CLI/validator introduced by this card must be mapped before the card can close.

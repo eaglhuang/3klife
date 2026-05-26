@@ -1,26 +1,35 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0035
+task_id: TASK-AAO-0035
+title: "Command surface consolidation 與 help examples"
 status: planned
 owner: atm-core
 priority: P0
-milestone: M1
+milestone: M11
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0002"
+  - "TASK-AAO-0014"
+  - "TASK-AAO-0029"
+  - "TASK-AAO-0034"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
   - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
-  - "package.json"
+  - "packages/cli/src/commands/command-specs.ts"
+  - "packages/cli/src/commands/help.ts"
+  - "packages/cli/src/commands/next.ts"
+  - "README.md"
+  - "docs/DEPRECATIONS.md"
+  - "docs/governance/command-surface.md"
+  - "templates/**"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "packages/cli/src/commands/command-specs/**"
+  - "packages/cli/src/commands/help.ts"
+  - "README.md"
+  - "docs/governance/command-surface.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
@@ -44,15 +53,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0035 — Command surface consolidation 與 help examples
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+收斂 ATM 指令入口，讓 AI 優先看到少量主入口與完整 help/examples，降低指令發散造成的操作漂移。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+ATM 指令太多會讓 AI 亂掉。命令可以保留給 maintainer，但 agent-facing 入口要集中：next、batch checkpoint、evidence、status、tasks show/scope 等少數主線。
 
 ## Implementation Contract
 
@@ -63,8 +72,10 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `packages/cli/src/commands/command-specs/**`
+- `packages/cli/src/commands/help.ts`
+- `README.md`
+- `docs/governance/command-surface.md`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
@@ -74,9 +85,11 @@ nonGoals:
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- help spec 必須完整列 usage、required flags、examples、common mistakes、related command。
+- agent-facing help 要優先展示短路徑 playbook，不把 low-level lifecycle 當主流程。
+- 低階命令標為 maintainer/internal/deprecated guidance，但不破壞既有相容性。
+- `node atm.mjs <command> --help` 對主要命令都能回可操作範例。
+- command surface 文件與 command-specs 由 validator 防 drift。
 
 ## Rollback
 
@@ -91,4 +104,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Notes
 
-This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+這張卡處理的是易用性與認知負擔，不是放寬治理。硬 gate 留著，但入口要少、help 要清楚。

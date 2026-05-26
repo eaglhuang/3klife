@@ -1,26 +1,25 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0031
+task_id: TASK-AAO-0031
+title: "Background work pause advisory"
 status: planned
 owner: atm-core
-priority: P0
-milestone: M1
+priority: P2
+milestone: M9
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0024"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
-  - "package.json"
+  - "packages/cli/src/commands/status.ts"
+  - "packages/cli/src/commands/handoff.ts"
+  - "packages/cli/src/commands/batch.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "packages/cli/src/commands/status.ts"
+  - "packages/cli/src/commands/handoff.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
@@ -31,7 +30,7 @@ rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
 atomizationImpact:
-  ownerAtomOrMap: "atm.cli-command-spec-map"
+  ownerAtomOrMap: "atm.agent-handoff-map"
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
@@ -44,15 +43,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0031 — Background work pause advisory
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+讓 ATM 在偵測長時間或背景工作未收尾時，提醒 agent 暫停、checkpoint 或 handoff。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+長流程中 AI 容易忘記背景命令或半完成狀態。ATM 應該給 pause/handoff advisory。
 
 ## Implementation Contract
 
@@ -63,8 +62,8 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `packages/cli/src/commands/status.ts`
+- `packages/cli/src/commands/handoff.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
@@ -74,9 +73,9 @@ nonGoals:
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- status 顯示 stale running command/lock。
+- batch status 給 pause/checkpoint/handoff 建議。
+- 不自動殺程序，只提供治理訊號。
 
 ## Rollback
 
@@ -84,7 +83,7 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Atomization Impact
 
-- Owner atom/map: `atm.cli-command-spec-map`
+- Owner atom/map: `atm.agent-handoff-map`
 - Map updates:
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 - Any new script/CLI/validator introduced by this card must be mapped before the card can close.

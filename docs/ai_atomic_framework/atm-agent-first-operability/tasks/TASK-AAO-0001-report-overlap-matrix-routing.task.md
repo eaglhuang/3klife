@@ -1,109 +1,91 @@
 ---
 doc_id: doc_other_1319
 task_id: TASK-AAO-0001
-title: 報告問題 overlap matrix 與任務路由裁決
-milestone: M1
-status: open
-blocked_by:
-  - TASK-AAO-0000
+title: "Overlap matrix 與路由裁決"
+status: planned
 owner: atm-core
 priority: P0
-related_plan: docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md
-upstream_repo: AI-Atomic-Framework
-targetRepo: AI-Atomic-Framework
-hostKind: upstream-framework
-public_tracking: false
-executionMode: planned-upstream-change
-allowed_files:
-  - docs/ai_atomic_framework/atm-agent-first-operability/**
-  - docs/ai_atomic_framework/atm-self-atomization/**
-  - docs/any-debt-budget.md
-  - docs/testing-strategy.md
-  - tests/e2e/**
-  - release/atm-onefile/**
-  - packages/cli/src/commands/**
-forbidden_files:
-  - .atm/**
-  - upstream production mutation in this card
-  - duplicate AAO/ASA/ATD task creation for the same problem
-non_goals:
-  - 不重開 `any` debt 任務卡
-  - 不重開 root-drop sandbox E2E 任務卡
-  - 不直接修改 upstream runtime 行為
-doc_refs:
-  - doc_other_0028
-  - doc_other_0230
-  - doc_other_0037
-  - doc_other_1001
-created_at: 2026-05-25T09:00:00+08:00
-created_by_agent: codex
+milestone: M1
+depends_on:
+  - "TASK-AAO-0000"
+related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
+scopePaths:
+  - "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/README.md"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-*.task.md"
+deliverables:
+  - "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md"
+validators:
+  - "node atm.mjs tasks import --from \"C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md\" --dry-run --json"
+  - "git diff --check"
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+  notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
+atomizationImpact:
+  ownerAtomOrMap: "atm.planning-bridge-map"
+  mapUpdates:
+  - "docs/ai_atomic_framework/atm-agent-first-operability/**"
+  notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
+outOfScope:
+  - "手改 .atm/runtime/**"
+  - "把 .atm/history/** 當作功能交付物"
+  - "修改 unrelated 3KLife dirty files"
+nonGoals:
+  - "不在本卡完成整個 AAO 計畫"
+  - "不建立第二套 task lifecycle"
+  - "不繞過 ATM evidence gate"
 ---
+# TASK-AAO-0001 — Overlap matrix 與路由裁決
 
-# TASK-AAO-0001 — 報告問題 overlap matrix 與任務路由裁決
+## Goal
 
-## 目標
+重建 AAO 與 ASA/ATD/既有缺口的重疊矩陣，避免 agent 被 unrelated task route 誤導。
 
-把架構分析報告中的問題逐條裁決為：
+## Why
 
-- 採納
-- 部分採納
-- 已過時
-- 委派既有系列
+AAO 的第一個痛點是任務範圍不清，導致 next fallback 到 unrelated queue。這張卡要把裁決表寫清楚。
 
-並產出一張正式路由矩陣，作為後續 AAO 卡的入口。
+## Implementation Contract
 
-## 背景
+- Planning context lives in `3KLife`; read it, but do not treat planning paths as target work unless this card explicitly lists them in `deliverables`.
+- Target implementation repo is `AI-Atomic-Framework`.
+- Work only inside `scopePaths`; if implementation needs another file, use an official scope amendment instead of editing locks by hand.
+- New script, CLI, validator, report, or artifact work must include atomization ownership updates in the same task.
 
-報告提供了壓力測試視角，但 repo 現況已與其中數項描述不一致。  
-如果不先裁決哪些問題已被 ASA / ATD 承接，後續開發很容易重複施工。
-
-## 阻塞
-
-- `TASK-AAO-0000`
-
-## 參考
+## Deliverables
 
 - `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`
-- `docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md`
-- `docs/any-debt-budget.md`
-- `docs/testing-strategy.md`
+- `docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md`
 
-## 交付物
+## Validators
 
-- 10 條報告問題的裁決表
-- AAO / ASA / ATD 路由表
-- 明確列出不重複開單的外部承接項
+- `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`
+- `git diff --check`
 
-## 驗收條件
+## Acceptance Criteria
 
-- [ ] 每條問題都被標記為採納、部分採納、過時或委派既有系列
-- [ ] 問題 2 明確路由到 `TASK-ATD-0023`
-- [ ] 問題 8 明確路由到 `TASK-ATD-0032`
-- [ ] 問題 10 明確同時連到 `TASK-ASA-0014` 與 `TASK-AAO-0007`
-- [ ] 結果可直接被 `TASK-AAO-0002` 到 `TASK-AAO-0007` 引用
+- 計畫書含 AAO/ASA/ATD overlap matrix。
+- 每條路由都有保留、拆分或轉交判定。
+- import dry-run 仍能找到 AAO 任務。
 
-## 作用範圍
+## Rollback
 
+Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.
+
+## Atomization Impact
+
+- Owner atom/map: `atm.planning-bridge-map`
+- Map updates:
 - `docs/ai_atomic_framework/atm-agent-first-operability/**`
-- `docs/ai_atomic_framework/atm-self-atomization/**`
-- `docs/any-debt-budget.md`
-- `docs/testing-strategy.md`
-- `tests/e2e/**`
-
-## 驗證命令
-
-```bash
-node atm.mjs next --json
-node atm.mjs atomize score --repo . --json
-node atm.mjs atomize inventory --repo . --json
-node atm.mjs doctor --json
-```
-
-## 回滾方式
-
-若裁決錯誤，只回滾 AAO 文件與路由表，不影響 upstream 程式碼。
+- Any new script/CLI/validator introduced by this card must be mapped before the card can close.
 
 ## Notes
 
-2026-05-25 | 狀態: open | 驗證: pending | 變更: 待產出正式 overlap matrix 與路由裁決 | 阻塞: TASK-AAO-0000
-
+This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.

@@ -3,33 +3,73 @@ doc_id: doc_index_1005
 owner: atm-core
 status: active
 related_plan: docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md
-upstream_repo: AI-Atomic-Framework
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-25
-created_by_agent: codex
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 ---
 
-# ATM Agent-First 可操作性任務索引
+# AAO Task Index
 
-Related plan: ../ATM Agent-First 可操作性優化計畫書.md
+Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-First 可操作性優化計畫書.md)
 
-| Task ID | Title | Milestone | Status | Depends | Surface | Routed Existing Work |
-|---|---|---|---|---|---|---|
-| [TASK-AAO-0000](./TASK-AAO-0000-doc-finalize-bridge-index.task.md) | AAO 文件區初始化與 ASA 橋接索引 | M0 | done | none | 3KLife docs | — |
-| [TASK-AAO-0001](./TASK-AAO-0001-report-overlap-matrix-routing.task.md) | 報告問題 overlap matrix 與任務路由裁決 | M1 | open | TASK-AAO-0000 | docs / analysis | TASK-ATD-0023, TASK-ATD-0032 |
-| [TASK-AAO-0002](./TASK-AAO-0002-cli-spec-runner-ssot-drift-guard.task.md) | CLI command spec / runner SSOT drift guard | M1 | open | TASK-AAO-0001, TASK-ASA-0009 | CLI surface | — |
-| [TASK-AAO-0003](./TASK-AAO-0003-next-decisiontrail-json-contract.task.md) | `next` decisionTrail JSON contract | M1 | open | TASK-AAO-0001, TASK-ASA-0009 | CLI JSON | — |
-| [TASK-AAO-0004](./TASK-AAO-0004-validator-failure-envelope-normalization.task.md) | validator failure envelope 標準化 | M2 | open | TASK-AAO-0001, TASK-ASA-0010 | validators | — |
-| [TASK-AAO-0005](./TASK-AAO-0005-cli-context-slimming-wave1.task.md) | CLI 巨型檔案 context slimming wave 1 | M2 | open | TASK-AAO-0002, TASK-AAO-0003, TASK-ASA-0009 | `tasks.ts`, `next.ts` | — |
-| [TASK-AAO-0006](./TASK-AAO-0006-docs-schema-command-drift-guard.task.md) | docs / schema / command drift guard | M3 | open | TASK-AAO-0002, TASK-AAO-0004, TASK-ASA-0010, TASK-ASA-0014 | docs / schema | — |
-| [TASK-AAO-0007](./TASK-AAO-0007-onefile-size-startup-budget.task.md) | onefile size / startup budget | M3 | open | TASK-AAO-0001, TASK-ASA-0014, TASK-ATD-0025, TASK-ATD-0032 | release / onefile | TASK-ATD-0025, TASK-ATD-0032 |
-| [TASK-AAO-0008](./TASK-AAO-0008-roadmap-backwrite-bridge-closure.task.md) | AAO roadmap backwrite 與 ASA bridge closure | M4 | open | TASK-AAO-0005, TASK-AAO-0006, TASK-AAO-0007 | docs / bridge | TASK-ASA-0001~0016 |
+## 新格式任務卡規範
 
-## Bridge Notes
+每張任務卡都要符合 `atm-task-card-authoring` 合約：
 
-- `TASK-ATD-0023` 已承接 `any` debt budget；AAO 只在路由矩陣引用，不重複開卡。
-- `TASK-ATD-0025` 已承接 release parity gate；AAO 的 onefile 預算需建立在 parity gate 之上。
-- `TASK-ATD-0032` 已承接 root-drop sandbox E2E；AAO 不再建立第二套 release sandbox 任務。
-- `TASK-ASA-*` 仍然是自我原子化主線；AAO 只處理 Agent-First operability follow-up。
+- `scopePaths`: AI 可以修改的 target repo 檔案或 glob。
+- `deliverables`: 實際交付物，不能只寫 `.atm/history/**`。
+- `validators`: 可重現驗證命令。
+- `evidence.required: command-backed`: 完成時必須有 command-backed evidence。
+- `rollback`: 回滾方式。
+- `atomizationImpact`: owner atom/map 與 map 更新。
 
+新增 script / CLI / validator / report / artifact 的任務，必須在同一張卡要求更新 atomization ownership map。
+
+## Task Roster
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0000](./TASK-AAO-0000-doc-finalize-bridge-index.task.md) | AAO 文件區初始化與 ASA bridge index | done | none | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
+| [TASK-AAO-0001](./TASK-AAO-0001-report-overlap-matrix-routing.task.md) | Overlap matrix 與路由裁決 | planned | `TASK-AAO-0000` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
+| [TASK-AAO-0002](./TASK-AAO-0002-cli-spec-runner-ssot-drift-guard.task.md) | CLI command spec / runner SSOT drift guard | planned | `TASK-AAO-0001` | `packages/cli/src/commands/command-specs.ts`<br>`packages/cli/src/commands/command-specs/**` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0003](./TASK-AAO-0003-next-decisiontrail-json-contract.task.md) | next decisionTrail JSON contract | planned | `TASK-AAO-0001`, `TASK-AAO-0002` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-intent.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0004](./TASK-AAO-0004-validator-failure-envelope-normalization.task.md) | Validator failure envelope 標準化 | planned | `TASK-AAO-0001` | `scripts/run-validators.ts`<br>`scripts/lib/**` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0005](./TASK-AAO-0005-cli-context-slimming-wave1.task.md) | CLI context slimming wave 1 | planned | `TASK-AAO-0002`, `TASK-AAO-0003` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0006](./TASK-AAO-0006-docs-schema-command-drift-guard.task.md) | Docs / schema / command drift guard | planned | `TASK-AAO-0002`, `TASK-AAO-0004` | `docs/**`<br>`schemas/**` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0007](./TASK-AAO-0007-onefile-size-startup-budget.task.md) | Onefile size / startup budget | planned | `TASK-AAO-0001` | `scripts/build-onefile-release.ts`<br>`scripts/validate-onefile-budget.ts` | `npm run build`<br>`node --strip-types scripts/validate-onefile-budget.ts` |
+| [TASK-AAO-0008](./TASK-AAO-0008-roadmap-backwrite-bridge-closure.task.md) | AAO roadmap backwrite 與 ASA bridge closure | planned | `TASK-AAO-0005`, `TASK-AAO-0006`, `TASK-AAO-0007` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
+| [TASK-AAO-0009](./TASK-AAO-0009-opus47-feedback-bridge.task.md) | 匯入 Opus 4.7 feedback 與任務橋接 | planned | `TASK-AAO-0008` | `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`<br>`docs/ai_atomic_framework/atm-agent-first-operability/README.md` | `node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md" --dry-run --json`<br>`git diff --check` |
+| [TASK-AAO-0010](./TASK-AAO-0010-scope-amendment-cli.task.md) | 正式 tasks scope --add scope amendment CLI | planned | `TASK-AAO-0009` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/task-direction.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0011](./TASK-AAO-0011-untracked-file-scope-warnings.task.md) | Claim/checkpoint 忽略 unrelated untracked | planned | `TASK-AAO-0009` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/batch.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0012](./TASK-AAO-0012-direction-lock-allowedfiles-ssot.task.md) | Direction lock allowedFiles 單一真相來源 | planned | `TASK-AAO-0010` | `packages/cli/src/commands/task-direction.ts`<br>`packages/cli/src/commands/work-channels.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0013](./TASK-AAO-0013-batch-checkpoint-partial-ok.task.md) | Checkpoint partial-ok 訊息分層 | planned | `TASK-AAO-0011`, `TASK-AAO-0012` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/tasks.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0014](./TASK-AAO-0014-state-aware-batch-playbook.task.md) | State-aware batch playbook | planned | `TASK-AAO-0013` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/batch.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0015](./TASK-AAO-0015-evidence-validator-catalog.task.md) | evidence validators --list | planned | `TASK-AAO-0014` | `packages/cli/src/commands/evidence.ts`<br>`packages/cli/src/commands/command-specs/evidence.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0016](./TASK-AAO-0016-evidence-run-recent-run.task.md) | evidence run / --recent-run 快速入口 | planned | `TASK-AAO-0015` | `packages/cli/src/commands/evidence.ts`<br>`packages/cli/src/commands/work-channels.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0017](./TASK-AAO-0017-closure-validator-remediation.task.md) | Closure packet 缺 validator 的可操作修正 | planned | `TASK-AAO-0015` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/batch.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0018](./TASK-AAO-0018-neutrality-staged-only.task.md) | Neutrality scanner staged-only mode | planned | `TASK-AAO-0009` | `scripts/validate-neutrality*.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:neutrality` |
+| [TASK-AAO-0019](./TASK-AAO-0019-completion-attestation-schema.task.md) | Completion attestation schema | planned | `TASK-AAO-0017` | `schemas/**`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0020](./TASK-AAO-0020-public-command-coverage-score.task.md) | Public command coverage scorer 修正 | planned | `TASK-AAO-0002` | `scripts/src/atomize-score.js`<br>`packages/cli/src/commands/command-specs/**` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0021](./TASK-AAO-0021-readable-ref-score-integration.task.md) | Readable ref scorer 整合 | planned | `TASK-AAO-0020` | `scripts/src/atomize-score.js`<br>`scripts/validate-atom-callsite-readability.ts` | `npm run typecheck`<br>`npm run validate:atom-callsite-readability` |
+| [TASK-AAO-0022](./TASK-AAO-0022-rollback-proof-evidence.task.md) | Rollback-proof evidence | planned | `TASK-AAO-0016` | `schemas/**`<br>`packages/cli/src/commands/evidence.ts` | `npm run typecheck`<br>`node --strip-types scripts/validate-rollback-proof.ts` |
+| [TASK-AAO-0023](./TASK-AAO-0023-map-spec-schema-validator.task.md) | Map spec schema validator | planned | `TASK-AAO-0006` | `atomic_workbench/maps/**`<br>`schemas/**` | `npm run typecheck`<br>`node --strip-types scripts/validate-map-spec-schema.ts` |
+| [TASK-AAO-0024](./TASK-AAO-0024-batch-status-progress.task.md) | batch status 增強 | planned | `TASK-AAO-0014` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0025](./TASK-AAO-0025-tasks-show-planning-doc.task.md) | tasks show --planning-doc | planned | `TASK-AAO-0010` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0026](./TASK-AAO-0026-atm-status-overview.task.md) | atm status 綜覽 | planned | `TASK-AAO-0024`, `TASK-AAO-0025` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/index.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0027](./TASK-AAO-0027-dev-runner-guidance.task.md) | dev runner 提示 | planned | `TASK-AAO-0026` | `atm.mjs`<br>`atm.dev.mjs` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0028](./TASK-AAO-0028-batch-playbook-docs.task.md) | batch playbook 文件化 | planned | `TASK-AAO-0014` | `docs/governance/batch-playbook.md`<br>`templates/**` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0029](./TASK-AAO-0029-task-lifecycle-deprecation.task.md) | Low-level task lifecycle deprecation | planned | `TASK-AAO-0014`, `TASK-AAO-0028` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0030](./TASK-AAO-0030-crlf-policy.task.md) | CRLF policy | planned | `TASK-AAO-0009` | `.gitattributes`<br>`docs/governance/line-ending-policy.md` | `git diff --check`<br>`node --strip-types scripts/validate-line-endings.ts` |
+| [TASK-AAO-0031](./TASK-AAO-0031-background-work-pause-advisory.task.md) | Background work pause advisory | planned | `TASK-AAO-0024` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/handoff.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0032](./TASK-AAO-0032-artifact-commit-policy.task.md) | Artifact commit policy 收斂 | planned | `TASK-AAO-0019` | `packages/cli/src/commands/hook.ts`<br>`scripts/validate-task-ledger-governance.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0033](./TASK-AAO-0033-aao-final-dogfood-sync.task.md) | Final dogfood rerun 與雙 repo sync | planned | `TASK-AAO-0020`, `TASK-AAO-0021`, `TASK-AAO-0022`, `TASK-AAO-0023`, `TASK-AAO-0028`, `TASK-AAO-0032` | `scripts/validate-atm-self-atomization.ts`<br>`atomic_workbench/reports/**` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0034](./TASK-AAO-0034-next-selector-routing-memory.task.md) | next explicit selector 與 routing memory | planned | `TASK-AAO-0001`, `TASK-AAO-0003`, `TASK-AAO-0024`, `TASK-AAO-0026` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-intent.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+| [TASK-AAO-0035](./TASK-AAO-0035-command-surface-consolidation-help-examples.task.md) | Command surface consolidation 與 help examples | planned | `TASK-AAO-0002`, `TASK-AAO-0014`, `TASK-AAO-0029`, `TASK-AAO-0034` | `packages/cli/src/commands/command-specs/**`<br>`packages/cli/src/commands/command-specs.ts` | `npm run typecheck`<br>`npm run validate:cli` |
+
+## Notes
+
+- `TASK-AAO-0000` 保持 `done`，只重寫格式，不重新執行。
+- `TASK-AAO-0001` 到 `TASK-AAO-0035` 全部是 `planned`，等待後續 ATM batch/normal flow 實作。
+- AAO planning truth 留在 3KLife；target implementation 回到 AI-Atomic-Framework。

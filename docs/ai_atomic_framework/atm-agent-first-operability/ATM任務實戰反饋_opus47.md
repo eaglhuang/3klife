@@ -15,6 +15,11 @@
 - **方案 B**：claim 時就允許 `--add-scope "path1,path2"` 參數，把當下知道的交付物一次納入。
 - **方案 C**：lock 檔對 `atomic_workbench/reports/**` 跟 `atomic_workbench/maps/**` 預設放寬（這兩個目錄本來就是治理 artifact），不要列為 strict。
 
+**執行方式**：
+- **採用方案**：採用方案 A 作為主線，新增正式 `tasks scope --add` scope amendment CLI；不採用方案 C 的目錄級放寬，避免把治理 artifact 目錄變成過寬白名單。方案 B 的 claim-time `--add-scope` 保留為後續延伸，不當作第一版主解。
+- **修正任務卡**：`TASK-AAO-0010` 主修正式 scope amendment CLI；`TASK-AAO-0012` 收斂 direction lock allowedFiles 單一真相來源。
+- **落地重點**：scope 擴展必須寫 transition / report / evidence，禁止 AI 手改 `.atm/runtime/locks/**`。
+
 ---
 
 ### 2. 「checkpoint 前 commit」vs「checkpoint 後 commit」流程矛盾
@@ -30,6 +35,11 @@ ASA-0004、0006、0016 三個任務都因此卡住，每次都要分兩段提交
 **解決方案**：
 - **正規 batch 流程文件化**：用一張流程圖明示「framework code 改動 → 先提交 → checkpoint → 提交 close packet」vs「只有 artifact 改動 → 直接 stage → checkpoint → 一起提交」。
 - **playbook 應該偵測狀態自動分流**：在 `next --claim` 輸出時就根據任務類型印對應的命令序列。
+
+**執行方式**：
+- **採用方案**：兩個建議都採用，但分層處理：先做 state-aware playbook 自動分流，再把正規 batch 流程文件化。
+- **修正任務卡**：`TASK-AAO-0014` 負責狀態感知 batch playbook；`TASK-AAO-0028` 負責文件化；`TASK-AAO-0032` 收斂 artifact commit policy。
+- **落地重點**：不要再讓 agent 猜「先 commit 還是先 checkpoint」；playbook 要根據目前 staged / modified / checkpoint 狀態直接給下一條命令。
 
 ---
 
@@ -54,6 +64,11 @@ Task TASK-ASA-0008 has pending deliverable-like files outside targetWork.allowed
 
 讓 agent 一眼就看出「上一個成功了，只是下一個還沒準備好」。
 
+**執行方式**：
+- **採用方案**：採用 partial-ok 訊息分層，明確分出「上一張已成功 close」與「下一張無法 auto-advance」。
+- **修正任務卡**：`TASK-AAO-0013` 主修 checkpoint partial-ok；`TASK-AAO-0024` 在 batch status 補可查詢狀態。
+- **落地重點**：checkpoint 只要已 close 當前任務，就不能用下一張任務的 scope error 包裝成整體失敗。
+
 ---
 
 ### 4. 未追蹤檔案（untracked）擋住新任務的 claim
@@ -67,6 +82,11 @@ Task TASK-ASA-0008 has pending deliverable-like files outside targetWork.allowed
 - checkpoint 階段也應該只阻擋 staged 內容超出 scope，不應因為其他 untracked 檔案而失敗。
 - 若需要警告 untracked 檔案，用 `warning` level 而非 `error`。
 
+**執行方式**：
+- **採用方案**：採用「claim/checkpoint 忽略 unrelated untracked，最多 warning」。
+- **修正任務卡**：`TASK-AAO-0011`。
+- **落地重點**：只檢查 staged 與 tracked modified 是否與當前 task/batch scope 衝突；untracked 不得阻止 claim，除非它已被明確納入本任務交付。
+
 ---
 
 ### 5. 中立性掃描檢查的範圍太廣（包括 untracked）
@@ -76,6 +96,11 @@ Task TASK-ASA-0008 has pending deliverable-like files outside targetWork.allowed
 **解決方案**：
 - 中立性 scanner 預設只看 `git diff --cached` 範圍（本次 commit 會包含的內容）。
 - 若要全 repo 掃描，必須在獨立的 `validate:neutrality --full-repo` 命令下執行，不要默默掛在 `validate:cli` 裡。
+
+**執行方式**：
+- **採用方案**：採用 staged-only neutrality scanner 作為預設；full-repo 掃描改成顯式 release/maintenance 命令。
+- **修正任務卡**：`TASK-AAO-0018`。
+- **落地重點**：pre-commit 只審本次 commit 會帶入的內容，不能因 unrelated untracked template 擋住當前任務。
 
 ---
 
@@ -102,6 +127,11 @@ node atm.mjs evidence add --task X --actor Y --kind test \
 - **`evidence add --auto`**：偵測上一個 shell 跑過的命令、自動算 sha256、自動把 validators 拆出來。這樣 agent 只要 `npm run typecheck && node atm.mjs evidence add --auto --task X --kind test`。
 - **`evidence add --help`**：要在命令列直接列出所有必填組合（不是說「需要 --command 也需要 --exit-code」這種片段訊息）。
 
+**執行方式**：
+- **採用方案**：採用「降低 evidence add 複雜度」的方向，但第一版落成 `evidence run` / `--recent-run` 與更完整 help，而不是黑盒式 `--auto`。這樣 commandRun 來源更可追蹤。
+- **修正任務卡**：`TASK-AAO-0016` 主修 `evidence run` / `--recent-run`；`TASK-AAO-0015` 補 validator catalog；`TASK-AAO-0017` 補 close 時缺 evidence 的修正指令。
+- **落地重點**：exitCode 非 0 的 commandRun 不能被標成 pass，避免「自動補 evidence」變成假證據入口。
+
 ---
 
 ### 7. `--validators` 的合法值沒有清單
@@ -111,6 +141,11 @@ node atm.mjs evidence add --task X --actor Y --kind test \
 **解決方案**：
 - 從 `package.json scripts` 自動掃出所有 `validate:*` 與 `typecheck`，輸出 `node atm.mjs evidence validators --list`。
 - 在 closure packet 缺欄位時，回應應該說「**你還沒提供以下 validator 之一的 evidence**：[validate:cli, validate:registry-core, ...]」而不只是 `missing: ['validationPasses/typecheck']`。
+
+**執行方式**：
+- **採用方案**：採用 `evidence validators --list`，並讓 closure packet 缺 validator 時列出具體缺哪幾個。
+- **修正任務卡**：`TASK-AAO-0015` 建 validator catalog；`TASK-AAO-0017` 在 close/checkpoint 錯誤中輸出 missing validators 與 requiredCommand。
+- **落地重點**：AI 不應靠猜 validator 名稱；ATM 要直接告訴它可以跑哪些、目前缺哪些。
 
 ---
 
@@ -122,6 +157,11 @@ node atm.mjs evidence add --task X --actor Y --kind test \
 - **棄用三步操作**或將其重命名為 `tasks:internal:*`，明示它是內部 API。
 - 文件只推 `next --claim`。
 - 三步操作執行時印警告：「⚠ 你可能想用 `next --claim` 一行完成；這條路徑會缺 taskDirectionLock」。
+
+**執行方式**：
+- **採用方案**：採用「文件只推 `next --claim`，低階 lifecycle 轉為維護命令」；不立刻刪除 reserve/promote/claim，以免破壞 maintainer/debug 流程。
+- **修正任務卡**：`TASK-AAO-0029`。
+- **落地重點**：低階命令保留，但 help / integration / playbook 不再教一般 AI 用它們當主流程。
 
 ---
 
@@ -140,6 +180,11 @@ Run these and attach evidence:
   node atm.mjs evidence add --task X --kind test --validators validate:git-head-evidence --command "npm run validate:git-head-evidence" ...
 ```
 
+**執行方式**：
+- **採用方案**：採用「逐項列 missing validators + 給 evidence add 範本」。
+- **修正任務卡**：`TASK-AAO-0017`，依賴 `TASK-AAO-0015` 的 validator catalog。
+- **落地重點**：錯誤訊息要輸出可直接執行的補救命令，不只丟 JSON path。
+
 ---
 
 ### 10. Stash 被反覆套回（user 端 hook 干擾）
@@ -149,6 +194,11 @@ Run these and attach evidence:
 **解決方案**：
 - 框架文件應明示「**多人/雙工協作下不要對 ATM 倉跑後台同步**」。
 - 或提供 `atm.mjs work --pause` 命令，明示告訴所有 background job「現在 agent 在跑流程，暫停同步」。
+
+**執行方式**：
+- **採用方案**：不做自動 stash 介入；採用 `atm work/status/pause advisory` 方向，讓背景同步與 agent 工作可被看見、可暫停、可 handoff。
+- **修正任務卡**：`TASK-AAO-0031`。
+- **落地重點**：ATM 不應默默改 user stash；它應提示背景工作狀態與建議暫停方式。
 
 ---
 
@@ -160,6 +210,11 @@ Run these and attach evidence:
 
 **解決方案**：scorer 應該 enumerate command-specs 目錄統計覆蓋率，這個一行 fix 就能讓 graduation gate 從 5 個 blocked 降到 4 個。
 
+**執行方式**：
+- **採用方案**：採用 scorer enumerate `packages/cli/src/commands/command-specs/**`。
+- **修正任務卡**：`TASK-AAO-0020`。
+- **落地重點**：public command coverage 要以 command spec 為 SSOT，不再靠錯誤 heuristic。
+
 ---
 
 ### 12. `runAtm_with_readable_ref` 永遠是 0
@@ -168,6 +223,11 @@ Run these and attach evidence:
 
 **解決方案**：scorer 應該 import 該 validator 的結果或解析其輸出 JSON，把通過率納入。
 
+**執行方式**：
+- **採用方案**：採用 scorer 讀取 / 整合 `validate:atom-callsite-readability` 的結果。
+- **修正任務卡**：`TASK-AAO-0021`。
+- **落地重點**：readable ref 分數不能只看 scanner 自己猜，應吃 validator/report 的可驗證輸出。
+
 ---
 
 ### 13. `atom_with_rollback_evidence` 永遠是 0
@@ -175,6 +235,11 @@ Run these and attach evidence:
 **現象**：rollback 計畫寫在每個 task 的 closure-packet 跟 report，但 scorer 看不到。
 
 **解決方案**：定義 evidence kind `rollback-proof`，並讓 `validate:rollback-proof` 寫入計分器讀得到的位置。
+
+**執行方式**：
+- **採用方案**：採用 `rollback-proof` evidence kind 與 `validate:rollback-proof`。
+- **修正任務卡**：`TASK-AAO-0022`。
+- **落地重點**：rollback 不能只存在文字段落，必須變成 scorer / validator 可讀的證據格式。
 
 ---
 
@@ -196,6 +261,11 @@ Run these and attach evidence:
 }
 ```
 
+**執行方式**：
+- **採用方案**：採用增強版 `batch status --json`。
+- **修正任務卡**：`TASK-AAO-0024`。
+- **落地重點**：status 要列 batchId、total/completed/current/remaining/phase/next command，方便中斷續跑。
+
 ---
 
 ### 15. Task 規格定位很麻煩
@@ -203,6 +273,11 @@ Run these and attach evidence:
 **現象**：task md 在 `../3KLife/docs/...`，每次都要 `ls | grep`、`cat`。
 
 **解決方案**：`node atm.mjs tasks show <task-id> --planning-doc` 直接抓並印 task 卡內容。
+
+**執行方式**：
+- **採用方案**：採用 `tasks show --planning-doc`。
+- **修正任務卡**：`TASK-AAO-0025`。
+- **落地重點**：輸出要區分 planning read-only context 與 target work allowedFiles，避免跨 repo 目錄混淆。
 
 ---
 
@@ -214,6 +289,11 @@ Run these and attach evidence:
 - pre-commit hook 偵測到 `packages/cli/src/` 有改動，就自動印「⚠ 你改了 CLI 來源；驗證請用 `node atm.dev.mjs` 或先 `npm run build`」。
 - 或 `atm.mjs` 在 dev mode 下自動 fallback 到 `atm.dev.mjs`（透過環境變數）。
 
+**執行方式**：
+- **採用方案**：採用「偵測 source 改動時提示 dev runner 或 build」；不採用 `atm.mjs` 自動 fallback 到 `atm.dev.mjs` 作為預設，以免穩定 runner 邊界變模糊。
+- **修正任務卡**：`TASK-AAO-0027`。
+- **落地重點**：framework repo 要清楚顯示目前 runner mode；source-first 驗證走 `atm.dev.mjs`，正式/下游測試走 frozen `atm.mjs`。
+
 ---
 
 ### 17. 每個任務都要重新算同樣 validator 的 sha
@@ -223,6 +303,11 @@ Run these and attach evidence:
 **解決方案**：
 - `evidence add --recent-run typecheck` 從 commandRunCache 撈最近的成功紀錄。
 - 或 `evidence add --reuse-from-task TASK-ASA-NNNN` 直接複製其他任務的 evidence record。
+
+**執行方式**：
+- **採用方案**：採用 `commandRunCache` + `evidence add --recent-run`；不把 `--reuse-from-task` 當第一版主流程，避免跨任務 evidence impersonation 風險。
+- **修正任務卡**：`TASK-AAO-0016`。
+- **落地重點**：可重用的是「最近成功 commandRun」，不是隨便複製另一張任務的 evidence。
 
 ---
 
@@ -234,6 +319,11 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 ```
 
 **解決方案**：repo 加上 `.gitattributes` 明確標 line ending policy；或在 setup 期建議 `git config core.autocrlf input`。
+
+**執行方式**：
+- **採用方案**：採用 `.gitattributes` + line ending policy + validator。
+- **修正任務卡**：`TASK-AAO-0030`。
+- **落地重點**：CRLF policy 要降低雜訊，但不能把所有歷史檔一次大改造成巨大 diff。
 
 ---
 
@@ -247,6 +337,11 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 - 提供「已驗證 attestation」機制：在文件 frontmatter 加 `completion_claim_verified_by: <evidence-path>`，scanner 看到就放行。
 - 或定義 schema `atm.completionAttestation.v1`，要求列出每個任務的 closure-packet 路徑與 sha；scanner 自動驗證。
 
+**執行方式**：
+- **採用方案**：採用 `atm.completionAttestation.v1` schema，並支援文件 frontmatter 指向 verified evidence。
+- **修正任務卡**：`TASK-AAO-0019`。
+- **落地重點**：completion claim 可以寫，但必須附可驗證 closure packet / evidence path / sha；未驗證報告只能用 pending/structural 語氣。
+
 ---
 
 ### 20. 鎖檔的 `files` 跟 `taskDirectionLock.allowedFiles` 兩份清單
@@ -254,6 +349,11 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 **現象**：lock JSON 同時有頂層 `files` 陣列跟巢狀 `taskDirectionLock.allowedFiles`。我手動編輯時兩個都要改，搞不清楚誰實際生效。
 
 **解決方案**：merge 成單一 `allowedFiles`；或讓其中一個成為 derived（顯示時組合而成，不存實體）。
+
+**執行方式**：
+- **採用方案**：採用單一 enforced allowedFiles；另一份若需要顯示，只能 derived，不存第二份可手改真相。
+- **修正任務卡**：`TASK-AAO-0012`。
+- **落地重點**：hook、checkpoint、pre-tool 都要呼叫同一個 helper 取 allowedFiles。
 
 ---
 
@@ -263,6 +363,11 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 
 **解決方案**：擴展 `validate:registry-catalog` 或新增 `validate:map-spec-schema`，掃 `atomic_workbench/maps/*/map.spec.json` 對 `atm.atomicMap` schema 驗證。
 
+**執行方式**：
+- **採用方案**：採用新增 `validate:map-spec-schema`，掃描 `atomic_workbench/maps/*/map.spec.json`。
+- **修正任務卡**：`TASK-AAO-0023`。
+- **落地重點**：mapName、mapHash、members、edges、qualityTargets 等欄位要有 schema gate。
+
 ---
 
 ### 22. Batch playbook 寫在 tool 輸出而不是文件
@@ -270,6 +375,11 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 **現象**：每次 `next --claim` 都印一大段 playbook 步驟。但這資訊沒有對應的 `docs/` 檔案。新開發者學不到。
 
 **解決方案**：把 playbook 寫成 `docs/governance/batch-playbook.md`，tool 輸出只給「請看 docs/governance/batch-playbook.md」加上當下步驟即可。
+
+**執行方式**：
+- **採用方案**：採用文件化 playbook，tool output 只輸出當下狀態 + docs 連結 + 下一步命令。
+- **修正任務卡**：`TASK-AAO-0028`，並與 `TASK-AAO-0014` 的 state-aware playbook 串接。
+- **落地重點**：五種 editor integration 要能吃同一份 playbook 文案，避免各講各的。
 
 ---
 
@@ -279,6 +389,11 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 
 **解決方案**：允許 artifact-only commit 帶 trailer `Atom-Task-Id: TASK-ASA-NNNN` 證明歸屬，hook 就只警告不阻擋。
 
+**執行方式**：
+- **採用方案**：採納 trailer 的歸屬概念，但不直接把 artifact-only commit 全面放行；先在 artifact commit policy 裡定義何時警告、何時阻擋、何時可用 trailer 降級。
+- **修正任務卡**：`TASK-AAO-0032`。
+- **落地重點**：不能讓 trailer 成為繞過 checkpoint/evidence 的捷徑；它只能輔助判斷 artifact 歸屬。
+
 ---
 
 ### 24. Lock 編輯沒留 audit trail
@@ -286,6 +401,11 @@ warning: in the working copy of 'X', CRLF will be replaced by LF the next time G
 **現象**：我改了 16 次 lock 加入 allowedFiles，git 沒記錄（lock 在 .gitignore），且沒有 evidence 證明我擴展過 scope。等於我違反規則但沒人查得到。
 
 **解決方案**：lock 編輯應該寫 task-event log（如 `2026-05-26T...-scope-expanded-XXX.json`），有 audit trail，且 CI 可以審。
+
+**執行方式**：
+- **採用方案**：採用 scope amendment event/audit trail；所有 lock/scope 變更都經 CLI 寫入 task-event。
+- **修正任務卡**：`TASK-AAO-0010` 主修 scope amendment CLI；`TASK-AAO-0012` 保證 lock allowedFiles SSOT。
+- **落地重點**：CI 可審 scope-expanded event，agent 不再需要也不被允許手改 runtime lock。
 
 ---
 
@@ -304,6 +424,11 @@ Modified:     0 staged, 2 unstaged, 3 untracked
 Pending evidence: typecheck (pass), validate:cli (missing for TASK-ASA-0009)
 Recommended next: node atm.mjs evidence add --task TASK-ASA-0009 ...
 ```
+
+**執行方式**：
+- **採用方案**：採用 `node atm.mjs status --json` / human-readable status 綜覽。
+- **修正任務卡**：`TASK-AAO-0026`。
+- **落地重點**：status 要整合 git、claim、batch、direction lock、pending evidence、recommended next command，作為 context 切換後的第一眼狀態。
 
 ---
 

@@ -1,95 +1,96 @@
 ---
 doc_id: doc_other_1321
 task_id: TASK-AAO-0003
-title: "`next` decisionTrail JSON contract"
-milestone: M1
-status: open
-blocked_by:
-  - TASK-AAO-0001
-  - TASK-ASA-0009
+title: "next decisionTrail JSON contract"
+status: planned
 owner: atm-core
 priority: P0
-related_plan: docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md
-upstream_repo: AI-Atomic-Framework
-targetRepo: AI-Atomic-Framework
-hostKind: upstream-framework
-public_tracking: false
-executionMode: planned-upstream-change
-allowed_files:
-  - packages/cli/src/commands/next.ts
-  - scripts/validate-guidance.ts
-  - tests/cli/**
-  - docs/**
-forbidden_files:
-  - private chain-of-thought exposure
-  - removal of existing `reason`
-  - unrelated `next` route redesign
-non_goals:
-  - 不暴露模型私有思維鏈
-  - 不取消 `reason`、`allowedCommands`、`blockedCommands`、`missingEvidence`
-  - 不推翻 `next --json` 作為單一路由
-doc_refs:
-  - doc_other_0028
-  - doc_other_0035
-  - doc_other_0037
-  - doc_other_1001
-created_at: 2026-05-25T09:00:00+08:00
-created_by_agent: codex
+milestone: M1
+depends_on:
+  - "TASK-AAO-0001"
+  - "TASK-AAO-0002"
+related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
+scopePaths:
+  - "packages/cli/src/commands/next.ts"
+  - "packages/cli/src/commands/task-intent.ts"
+  - "scripts/validate-prompt-scoped-next.ts"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+deliverables:
+  - "packages/cli/src/commands/next.ts"
+  - "scripts/validate-prompt-scoped-next.ts"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "node --strip-types scripts/validate-prompt-scoped-next.ts"
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+  notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
+atomizationImpact:
+  ownerAtomOrMap: "atm.next-router-map"
+  mapUpdates:
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+  notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
+outOfScope:
+  - "手改 .atm/runtime/**"
+  - "把 .atm/history/** 當作功能交付物"
+  - "修改 unrelated 3KLife dirty files"
+nonGoals:
+  - "不在本卡完成整個 AAO 計畫"
+  - "不建立第二套 task lifecycle"
+  - "不繞過 ATM evidence gate"
 ---
+# TASK-AAO-0003 — next decisionTrail JSON contract
 
-# TASK-AAO-0003 — `next` decisionTrail JSON contract
+## Goal
 
-## 目標
+讓 next 輸出可機器讀取的 routing decisionTrail，而不是只給人看 summary。
 
-為 `node atm.mjs next --json` 規劃一個穩定的 `decisionTrail` 欄位，讓 Agent 看得懂高層決策依據，同時維持既有相容性。
+## Why
 
-## 背景
+如果 AI 看不懂 next 為什麼選這張卡，它就會自己猜流程。decisionTrail 要把選擇、拒絕、fallback 都說清楚。
 
-`next` 已經有 `reason` 等欄位，但還缺少一個結構化、可驗證、可逐步追蹤的決策摘要。  
-AAO 不會要求輸出模型思維鏈，而是建立可公開的檢查結果序列。
+## Implementation Contract
 
-## 阻塞
+- Planning context lives in `3KLife`; read it, but do not treat planning paths as target work unless this card explicitly lists them in `deliverables`.
+- Target implementation repo is `AI-Atomic-Framework`.
+- Work only inside `scopePaths`; if implementation needs another file, use an official scope amendment instead of editing locks by hand.
+- New script, CLI, validator, report, or artifact work must include atomization ownership updates in the same task.
 
-- `TASK-AAO-0001`
-- `TASK-ASA-0009`
-
-## 參考
-
-- `packages/cli/src/commands/next.ts`
-- `scripts/validate-guidance.ts`
-
-## 交付物
-
-- `decisionTrail` JSON contract
-- backward compatibility 說明
-- sample payload 與 validator 需求
-
-## 驗收條件
-
-- [ ] `decisionTrail` 每筆至少包含 `check`、`result`、`reason`
-- [ ] 可選欄位能表達 `evidencePath` 與 `nextCommand`
-- [ ] 舊 consumer 仍可只讀 `reason`
-- [ ] guidance session、blocked、ready、task-scoped prompt 路徑都有測試案例
-
-## 作用範圍
+## Deliverables
 
 - `packages/cli/src/commands/next.ts`
-- `scripts/validate-guidance.ts`
-- `tests/cli/**`
+- `scripts/validate-prompt-scoped-next.ts`
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
-## 驗證命令
+## Validators
 
-```bash
-npm run validate:cli
-npm run typecheck
-node atm.mjs next --json
-```
+- `npm run typecheck`
+- `npm run validate:cli`
+- `node --strip-types scripts/validate-prompt-scoped-next.ts`
 
-## 回滾方式
+## Acceptance Criteria
 
-若 `decisionTrail` 造成 consumer 破壞，先回退新增欄位與 validator，再保留既有 `reason` surface。
+- nextAction 內含 deterministic decisionTrail。
+- scope-not-found 與 selection-required 不再 fallback unrelated task。
+- 測試覆蓋 explicit plan name、task family、低分 task-card-surface。
+
+## Rollback
+
+Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.
+
+## Atomization Impact
+
+- Owner atom/map: `atm.next-router-map`
+- Map updates:
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json`
+- Any new script/CLI/validator introduced by this card must be mapped before the card can close.
 
 ## Notes
 
-2026-05-25 | 狀態: open | 驗證: pending | 變更: 待規劃 `decisionTrail` 與 backward compatibility | 阻塞: TASK-AAO-0001, TASK-ASA-0009
-
+This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.

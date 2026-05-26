@@ -1,37 +1,37 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0012
+task_id: TASK-AAO-0012
+title: "Direction lock allowedFiles 單一真相來源"
 status: planned
 owner: atm-core
 priority: P0
-milestone: M1
+milestone: M5
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0010"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
-  - "package.json"
+  - "packages/cli/src/commands/task-direction.ts"
+  - "packages/cli/src/commands/work-channels.ts"
+  - "packages/cli/src/commands/hook.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "packages/cli/src/commands/task-direction.ts"
+  - "packages/cli/src/commands/hook.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
+  - "node --strip-types scripts/validate-task-direction-governance.ts --mode validate"
 evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
 atomizationImpact:
-  ownerAtomOrMap: "atm.cli-command-spec-map"
+  ownerAtomOrMap: "atm.task-direction-map"
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
@@ -44,15 +44,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0012 — Direction lock allowedFiles 單一真相來源
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+移除 lock top-level files 與 embedded allowedFiles 的雙重真相，統一 scope 判定來源。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+實戰中 top-level files 有檔案，但 taskDirectionLock.allowedFiles 沒有，AI 就猜要手改 JSON。
 
 ## Implementation Contract
 
@@ -63,20 +63,21 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `packages/cli/src/commands/task-direction.ts`
+- `packages/cli/src/commands/hook.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
 
 - `npm run typecheck`
 - `npm run validate:cli`
+- `node --strip-types scripts/validate-task-direction-governance.ts --mode validate`
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- lock schema 明確只有一個 enforced allowedFiles。
+- 舊 lock migration/repair 不破壞已存在 runtime。
+- hook 與 checkpoint 使用同一 helper。
 
 ## Rollback
 
@@ -84,7 +85,7 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Atomization Impact
 
-- Owner atom/map: `atm.cli-command-spec-map`
+- Owner atom/map: `atm.task-direction-map`
 - Map updates:
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 - Any new script/CLI/validator introduced by this card must be mapped before the card can close.

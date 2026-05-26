@@ -1,29 +1,29 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0018
+task_id: TASK-AAO-0018
+title: "Neutrality scanner staged-only mode"
 status: planned
 owner: atm-core
-priority: P0
-milestone: M1
+priority: P1
+milestone: M7
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0009"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
+  - "scripts/validate-neutrality*.ts"
+  - "packages/cli/src/commands/hook.ts"
   - "package.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "scripts/validate-neutrality-staged.ts"
+  - "package.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
+  - "npm run validate:neutrality"
   - "npm run validate:cli"
 evidence:
   required: command-backed
@@ -31,7 +31,7 @@ rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
 atomizationImpact:
-  ownerAtomOrMap: "atm.cli-command-spec-map"
+  ownerAtomOrMap: "atm.docs-neutrality-map"
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
@@ -44,15 +44,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0018 — Neutrality scanner staged-only mode
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+讓 neutrality scanner 可以只看 staged/touched files，避免 unrelated old docs 汙染當前 task。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+框架 repo 需要中性語言，但不能讓歷史文件每次都阻塞 unrelated 小改。
 
 ## Implementation Contract
 
@@ -63,20 +63,21 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `scripts/validate-neutrality-staged.ts`
+- `package.json`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
 
 - `npm run typecheck`
+- `npm run validate:neutrality`
 - `npm run validate:cli`
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- staged-only mode 可用於 pre-commit。
+- full mode 仍保留給 release。
+- 輸出區分 current diff 與 historical debt。
 
 ## Rollback
 
@@ -84,7 +85,7 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Atomization Impact
 
-- Owner atom/map: `atm.cli-command-spec-map`
+- Owner atom/map: `atm.docs-neutrality-map`
 - Map updates:
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 - Any new script/CLI/validator introduced by this card must be mapped before the card can close.

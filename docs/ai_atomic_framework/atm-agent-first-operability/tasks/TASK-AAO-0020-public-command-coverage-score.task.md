@@ -1,37 +1,37 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0020
+task_id: TASK-AAO-0020
+title: "Public command coverage scorer 修正"
 status: planned
 owner: atm-core
 priority: P0
-milestone: M1
+milestone: M7
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0002"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
+  - "scripts/src/atomize-score.js"
   - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
-  - "package.json"
+  - "atomic_workbench/atomization-coverage/dogfood-score.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "scripts/src/atomize-score.js"
+  - "atomic_workbench/atomization-coverage/dogfood-score.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
+  - "npm run validate:atomization-coverage"
 evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
 atomizationImpact:
-  ownerAtomOrMap: "atm.cli-command-spec-map"
+  ownerAtomOrMap: "atm.atomization-score-map"
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
@@ -44,15 +44,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0020 — Public command coverage scorer 修正
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+修正 dogfood scorer 的 public_command_coverage，讓它讀 command-specs 而不是錯誤 heuristic。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+ASA 結案報告指出 public_command_coverage=0 是 instrumentation gap。這張卡把分數器修準。
 
 ## Implementation Contract
 
@@ -63,20 +63,21 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `scripts/src/atomize-score.js`
+- `atomic_workbench/atomization-coverage/dogfood-score.json`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
 
 - `npm run typecheck`
 - `npm run validate:cli`
+- `npm run validate:atomization-coverage`
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- scorer 從 command-specs 取得 public command list。
+- missing help spec 會被列為 gap。
+- dogfood score report 反映新算法。
 
 ## Rollback
 
@@ -84,7 +85,7 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Atomization Impact
 
-- Owner atom/map: `atm.cli-command-spec-map`
+- Owner atom/map: `atm.atomization-score-map`
 - Map updates:
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 - Any new script/CLI/validator introduced by this card must be mapped before the card can close.

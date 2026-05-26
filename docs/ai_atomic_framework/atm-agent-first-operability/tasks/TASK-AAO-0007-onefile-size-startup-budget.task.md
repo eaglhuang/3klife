@@ -1,105 +1,96 @@
 ---
 doc_id: doc_other_1325
 task_id: TASK-AAO-0007
-title: onefile size / startup budget
-milestone: M3
-status: open
-blocked_by:
-  - TASK-AAO-0001
-  - TASK-ASA-0014
-  - TASK-ATD-0025
-  - TASK-ATD-0032
+title: "Onefile size / startup budget"
+status: planned
 owner: atm-core
 priority: P1
-related_plan: docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md
-upstream_repo: AI-Atomic-Framework
-targetRepo: AI-Atomic-Framework
-hostKind: upstream-framework
-public_tracking: false
-executionMode: planned-upstream-change
-allowed_files:
-  - scripts/build-onefile-release.ts
-  - scripts/validate-onefile-release.ts
-  - scripts/validate-cli.ts
-  - release/**
-  - docs/release-*.md
-  - docs/SELF_HOSTING_ALPHA.md
-forbidden_files:
-  - default bundler swap
-  - root-drop contract rewrite
-  - unrelated npm packaging redesign
-non_goals:
-  - 不預設更換 bundler
-  - 不改寫 root-drop distribution contract
-  - 不重開 root-drop sandbox E2E
-doc_refs:
-  - doc_other_0028
-  - doc_other_0035
-  - doc_other_0037
-  - doc_other_1001
-created_at: 2026-05-25T09:00:00+08:00
-created_by_agent: codex
+milestone: M3
+depends_on:
+  - "TASK-AAO-0001"
+related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
+scopePaths:
+  - "scripts/build-onefile-release.ts"
+  - "scripts/validate-onefile-budget.ts"
+  - "release/atm-onefile/**"
+  - "package.json"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+deliverables:
+  - "scripts/validate-onefile-budget.ts"
+  - "package.json"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+validators:
+  - "npm run build"
+  - "node --strip-types scripts/validate-onefile-budget.ts"
+  - "npm run validate:cli"
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+  notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
+atomizationImpact:
+  ownerAtomOrMap: "atm.release-runner-map"
+  mapUpdates:
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+  notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
+outOfScope:
+  - "手改 .atm/runtime/**"
+  - "把 .atm/history/** 當作功能交付物"
+  - "修改 unrelated 3KLife dirty files"
+nonGoals:
+  - "不在本卡完成整個 AAO 計畫"
+  - "不建立第二套 task lifecycle"
+  - "不繞過 ATM evidence gate"
 ---
+# TASK-AAO-0007 — Onefile size / startup budget
 
-# TASK-AAO-0007 — onefile size / startup budget
+## Goal
 
-## 目標
+替 release onefile 建立大小與啟動時間 budget，避免穩定 runner 越來越慢。
 
-為 onefile 發行物建立大小、啟動時間與 cache extraction 成本的 budget 與報表。
+## Why
 
-## 背景
+AI 實作慢的一部分來自每次冷啟都跑重 runner。這張卡先把 onefile 的大小和啟動成本量化。
 
-`release/atm-onefile/atm.mjs` 的體積偏大是事實，但它同時是正式 distribution artifact。  
-AAO 的第一步不是推倒重來，而是先把成本量化並接上 release parity 與 sandbox E2E。
+## Implementation Contract
 
-## 阻塞
+- Planning context lives in `3KLife`; read it, but do not treat planning paths as target work unless this card explicitly lists them in `deliverables`.
+- Target implementation repo is `AI-Atomic-Framework`.
+- Work only inside `scopePaths`; if implementation needs another file, use an official scope amendment instead of editing locks by hand.
+- New script, CLI, validator, report, or artifact work must include atomization ownership updates in the same task.
 
-- `TASK-AAO-0001`
-- `TASK-ASA-0014`
-- `TASK-ATD-0025`
-- `TASK-ATD-0032`
+## Deliverables
 
-## 參考
+- `scripts/validate-onefile-budget.ts`
+- `package.json`
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
-- `release/atm-onefile/atm.mjs`
-- `scripts/build-onefile-release.ts`
-- `scripts/validate-onefile-release.ts`
+## Validators
 
-## 交付物
+- `npm run build`
+- `node --strip-types scripts/validate-onefile-budget.ts`
+- `npm run validate:cli`
 
-- size / startup / extraction budget 定義
-- release validator 輸出欄位
-- 超標處理與報警策略
+## Acceptance Criteria
 
-## 驗收條件
+- validator 會輸出 size/startup budget。
+- 超過 budget 時提供明確 remediation。
+- release runner 與 dev runner 用途界線仍清楚。
 
-- [ ] onefile 報表至少輸出大小、hash、startup time
-- [ ] 超過 baseline 時能提供原因與建議下一步
-- [ ] 設計與 `TASK-ATD-0025` release parity gate 相容
-- [ ] 不以 bundler replacement 作為預設方案
+## Rollback
 
-## 作用範圍
+Revert the task commit. If generated artifacts were created, remove them in the same revert and re-run the listed validators.
 
-- `scripts/build-onefile-release.ts`
-- `scripts/validate-onefile-release.ts`
-- `scripts/validate-cli.ts`
-- `release/**`
-- `docs/release-*.md`
-- `docs/SELF_HOSTING_ALPHA.md`
+## Atomization Impact
 
-## 驗證命令
-
-```bash
-npm run validate:onefile-release
-npm run validate:root-drop-release
-node atm.mjs doctor --json
-```
-
-## 回滾方式
-
-若 budget 過早卡住 release，先回退 hard gate，只保留報表與告警。
+- Owner atom/map: `atm.release-runner-map`
+- Map updates:
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json`
+- Any new script/CLI/validator introduced by this card must be mapped before the card can close.
 
 ## Notes
 
-2026-05-25 | 狀態: open | 驗證: pending | 變更: 待建立 onefile size / startup budget | 阻塞: TASK-AAO-0001, TASK-ASA-0014, TASK-ATD-0025, TASK-ATD-0032
-
+This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.

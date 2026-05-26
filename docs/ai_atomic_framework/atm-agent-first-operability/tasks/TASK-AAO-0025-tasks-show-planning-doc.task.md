@@ -1,26 +1,24 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0025
+task_id: TASK-AAO-0025
+title: "tasks show --planning-doc"
 status: planned
 owner: atm-core
-priority: P0
-milestone: M1
+priority: P1
+milestone: M8
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0010"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
-  - "package.json"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
@@ -31,7 +29,7 @@ rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
 atomizationImpact:
-  ownerAtomOrMap: "atm.cli-command-spec-map"
+  ownerAtomOrMap: "atm.task-ledger-governance-map"
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
@@ -44,15 +42,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0025 — tasks show --planning-doc
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+提供快速查任務原始計畫段落與 task card frontmatter 的 CLI。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+AI 常常不知道任務卡到底要求什麼，只好讀一堆檔。這個命令把 planning doc 和 task contract 一次列出。
 
 ## Implementation Contract
 
@@ -63,8 +61,8 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `packages/cli/src/commands/tasks.ts`
+- `packages/cli/src/commands/command-specs/tasks.spec.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
@@ -74,9 +72,9 @@ nonGoals:
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- `tasks show --task <id> --planning-doc` 可輸出 source plan/path/section。
+- 輸出區分 read-only planning 與 target work。
+- 已 import task 與 markdown task 都支援。
 
 ## Rollback
 
@@ -84,7 +82,7 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Atomization Impact
 
-- Owner atom/map: `atm.cli-command-spec-map`
+- Owner atom/map: `atm.task-ledger-governance-map`
 - Map updates:
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 - Any new script/CLI/validator introduced by this card must be mapped before the card can close.

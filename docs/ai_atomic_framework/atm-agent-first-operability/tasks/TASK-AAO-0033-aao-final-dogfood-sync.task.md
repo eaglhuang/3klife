@@ -1,37 +1,45 @@
 ---
-doc_id: doc_other_1320
-task_id: TASK-AAO-0002
-title: "CLI command spec / runner SSOT drift guard"
+doc_id: doc_other_aao_0033
+task_id: TASK-AAO-0033
+title: "Final dogfood rerun 與雙 repo sync"
 status: planned
 owner: atm-core
 priority: P0
-milestone: M1
+milestone: M10
 depends_on:
-  - "TASK-AAO-0001"
+  - "TASK-AAO-0020"
+  - "TASK-AAO-0021"
+  - "TASK-AAO-0022"
+  - "TASK-AAO-0023"
+  - "TASK-AAO-0028"
+  - "TASK-AAO-0032"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "packages/cli/src/commands/command-specs/**"
-  - "scripts/validate-cli.ts"
-  - "package.json"
+  - "scripts/validate-atm-self-atomization.ts"
+  - "atomic_workbench/reports/**"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/**"
+  - "release/**"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/cli/src/commands/command-specs.ts"
-  - "scripts/validate-cli.ts"
+  - "atomic_workbench/reports/aao-final-dogfood-report.json"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/AAO_FINAL_REPORT.md"
+  - "release/**"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
+  - "npm run validate:atm-self-atomization"
+  - "node atm.mjs doctor --json"
 evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
 atomizationImpact:
-  ownerAtomOrMap: "atm.cli-command-spec-map"
+  ownerAtomOrMap: "atm.release-readiness-map"
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   notes: "新增 script / CLI / validator 時，同卡必須更新 atomization ownership map，不把 ownership 留給後續卡。"
@@ -44,15 +52,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0002 — CLI command spec / runner SSOT drift guard
+# TASK-AAO-0033 — Final dogfood rerun 與雙 repo sync
 
 ## Goal
 
-讓 CLI command spec、help surface、runner registry 有單一真相來源與 drift guard。
+收尾重跑 dogfood gates，建立 AAO final report，並同步 ATM 新版到 3KLife 與 3klife-npc-brain。
 
 ## Why
 
-實戰中 agent 會被 missing help spec 或 runner-only command 牽走。這張卡把 command surface 的漂移變成可驗證錯誤。
+AAO 的目的不是多開卡，而是讓下一次 AI 使用 ATM 更順。最後要用雙 repo 同步與 dogfood rerun 驗證。
 
 ## Implementation Contract
 
@@ -63,20 +71,23 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/command-specs.ts`
-- `scripts/validate-cli.ts`
+- `atomic_workbench/reports/aao-final-dogfood-report.json`
+- `docs/ai_atomic_framework/atm-agent-first-operability/AAO_FINAL_REPORT.md`
+- `release/**`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
 
 - `npm run typecheck`
 - `npm run validate:cli`
+- `npm run validate:atm-self-atomization`
+- `node atm.mjs doctor --json`
 
 ## Acceptance Criteria
 
-- 公開命令、hidden/internal 命令、runner registry 的差異有明確斷言。
-- `atomize --help` 類命令不再缺 spec。
-- 新增或調整的 command spec 同卡更新 atomization ownership。
+- AAO final report 記錄分數與剩餘 gaps。
+- ATM frozen runner build 完成並同步雙 repo。
+- 3KLife 與 3klife-npc-brain 的 integration verify 通過。
 
 ## Rollback
 
@@ -84,7 +95,7 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 
 ## Atomization Impact
 
-- Owner atom/map: `atm.cli-command-spec-map`
+- Owner atom/map: `atm.release-readiness-map`
 - Map updates:
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 - Any new script/CLI/validator introduced by this card must be mapped before the card can close.

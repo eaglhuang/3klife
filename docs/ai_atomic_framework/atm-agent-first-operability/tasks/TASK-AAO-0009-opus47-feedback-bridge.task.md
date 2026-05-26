@@ -1,12 +1,13 @@
 ---
-doc_id: doc_other_1327
-task_id: TASK-AAO-0000
-title: "AAO 文件區初始化與 ASA bridge index"
-status: done
+doc_id: doc_other_aao_0009
+task_id: TASK-AAO-0009
+title: "匯入 Opus 4.7 feedback 與任務橋接"
+status: planned
 owner: atm-core
 priority: P0
-milestone: M0
-depends_on:[]
+milestone: M5
+depends_on:
+  - "TASK-AAO-0008"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
@@ -16,11 +17,10 @@ scopePaths:
   - "docs/ai_atomic_framework/atm-agent-first-operability/README.md"
   - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md"
   - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-*.task.md"
+  - "docs/ai_atomic_framework/ATM任務實戰反饋_opus47.md"
 deliverables:
   - "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
-  - "docs/ai_atomic_framework/atm-agent-first-operability/README.md"
   - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md"
-  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-*.task.md"
 validators:
   - "node atm.mjs tasks import --from \"C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md\" --dry-run --json"
   - "git diff --check"
@@ -43,15 +43,15 @@ nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
 ---
-# TASK-AAO-0000 — AAO 文件區初始化與 ASA bridge index
+# TASK-AAO-0009 — 匯入 Opus 4.7 feedback 與任務橋接
 
 ## Goal
 
-保留 AAO 文件區初始化成果，改用新格式描述，不重新執行既有 done 工作。
+把第一輪真實 AI 使用回饋納入 AAO 主計畫，轉成可治理 follow-up 任務。
 
 ## Why
 
-這張卡是 AAO 的歷史入口。它要保持 done，避免重跑舊初始化，但格式必須跟後續卡一致。
+這份回饋是 ATM 第一次被大型模型長流程使用後的真實摩擦清單。它應該進原計畫後半部，不要散落成孤立報告。
 
 ## Implementation Contract
 
@@ -63,9 +63,7 @@ nonGoals:
 ## Deliverables
 
 - `docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md`
-- `docs/ai_atomic_framework/atm-agent-first-operability/README.md`
 - `docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md`
-- `docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-*.task.md`
 
 ## Validators
 
@@ -74,9 +72,9 @@ nonGoals:
 
 ## Acceptance Criteria
 
-- TASK-AAO-0000 frontmatter 使用新欄位。
-- status 保持 done。
-- 不要求重新產生 upstream source diff。
+- 主計畫包含 Opus 4.7 實戰反饋承接段落。
+- 0010-0033 都能追溯到具體痛點。
+- 不新增平行計畫真相來源。
 
 ## Rollback
 
