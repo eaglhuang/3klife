@@ -189,7 +189,7 @@ Implementation of an executable validator that replays this scenario (for exampl
 | M13 | Checkpoint / import / audit / sandbox repair | AAO 0037-0040 |
 | M14 | Batch interruption and planning-root controls | AAO 0041-0044 |
 | M15 | Throughput acceleration and safe parallelism | AAO 0045 |
-| M16 | Validator noise and throughput unblockers | AAO 0046-0047, 0050-0053 |
+| M16 | Validator noise and throughput unblockers | AAO 0046-0047, 0050-0054 |
 | M17 | Atom health test extensibility | AAO 0048-0049 |
 
 ## Task Roster
@@ -362,6 +362,7 @@ These tasks are promoted ahead of their original milestones because they directl
 | `TASK-AAO-0051` | Gives mirror-sync-only ledger imports a formal ATM commit wrapper path so agents do not need `git commit --no-verify` after a valid mirror sync. |
 | `TASK-AAO-0052` | Makes validator fixture task ids obviously TEST-TASK-* so they do not read like real task cards. |
 | `TASK-AAO-0053` | 讓 `batch checkpoint` 支援 framework critical delivery window 流程，避免 batch queue-head 的 framework-critical 任務因互相矛盾的規則而卡住。 |
+| `TASK-AAO-0054` | 優化非任務協作流與 pre-push 的平行協作隔離，防止 feature 分支推送被 hooks 誤攔截，並避免自然語言誤判路徑提示。 |
 
 Implementation guidance: complete these before continuing deeper AAO feature work unless the current batch has already safely passed the corresponding friction point.
 
@@ -375,6 +376,7 @@ Implementation guidance: complete these before continuing deeper AAO feature wor
 | `TASK-AAO-0051` | Mirror-sync commit wrapper support | M16 | done | `TASK-AAO-0038` | `packages/cli/src/commands/git-governance.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/git.spec.ts` |
 | `TASK-AAO-0052` | Validator fixture task id clarity | M16 | planned | `TASK-AAO-0046` | `scripts/validate-task-ledger-governance.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0053` | batch checkpoint 支援 framework critical delivery window | M16 | planned | `TASK-AAO-0037`, `TASK-AAO-0038`, `TASK-AAO-0047` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` |
+| `TASK-AAO-0054` | 非任務協作流與 git hook pre-push 隔離優化 | M16 | done | `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/next.ts`<br>`scripts/validate-git-hooks-enforcement.ts`<br>`scripts/validate-prompt-scoped-next.ts` |
 
 
 ## M16 P0 Throughput Acceleration Bundle

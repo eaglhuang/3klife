@@ -80,7 +80,7 @@ Related plan: [../ATM Agent-First 可操作性優化計畫書.md](../ATM Agent-F
 | Task ID | Title | Status | Depends | Target surface | Primary validators |
 |---|---|---|---|---|---|
 | [TASK-AAO-0037](./TASK-AAO-0037-batch-checkpoint-commit-window.task.md) | Batch checkpoint commit window | done | `TASK-AAO-0013`, `TASK-AAO-0014`, `TASK-AAO-0024`, `TASK-AAO-0032` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |
-| [TASK-AAO-0038](./TASK-AAO-0038-task-import-contract-fidelity.task.md) | Task import contract fidelity | done | `TASK-AAO-0012`, `TASK-AAO-0025`, `TASK-AAO-0034`, `TASK-AAO-0036` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`npm run validate:prompt-scoped-next` |
+| [TASK-AAO-0038](./TASK-AAO-0038-task-import-contract-fidelity.task.md) | Task import contract fidelity | planned | `TASK-AAO-0012`, `TASK-AAO-0025`, `TASK-AAO-0034`, `TASK-AAO-0036` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`npm run validate:prompt-scoped-next` |
 | [TASK-AAO-0039](./TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md) | Planning-only ledger audit boundary | planned | `TASK-AAO-0025`, `TASK-AAO-0038` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate` |
 | [TASK-AAO-0040](./TASK-AAO-0040-sandbox-git-process-diagnostic.task.md) | Sandbox git process diagnostics | done | `TASK-AAO-0004`, `TASK-AAO-0026` | `packages/cli/src/commands/hook.ts`<br>`scripts/validate-cli.ts` | `npm run typecheck`<br>`npm run validate:cli` |
 
@@ -117,6 +117,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | `TASK-AAO-0051` | Mirror-sync commit wrapper support; lets valid mirror-sync-only ledger imports use the formal ATM commit wrapper without claim/session or `--no-verify`. |
 | `TASK-AAO-0052` | Validator fixture task id clarity; makes validator fixture ids obviously TEST-TASK-* so they do not read like real task cards. |
 | `TASK-AAO-0053` | batch checkpoint 支援 framework critical delivery window，避免 batch queue-head 的 framework-critical 任務卡在互相矛盾的規則中。 |
+| `TASK-AAO-0054` | 非任務協作流與 git hook pre-push 隔離優化，防止 feature 分支被 pre-push 誤殺與自然語言 path hints 誤判。 |
 
 ## M16 Validator Baseline Noise Follow-up
 
@@ -127,6 +128,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | [TASK-AAO-0051](./TASK-AAO-0051-mirror-sync-commit-wrapper-support.task.md) | Mirror-sync commit wrapper support | done | `TASK-AAO-0038` | `packages/cli/src/commands/git-governance.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/git.spec.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-governance-commands.ts` |
 | [TASK-AAO-0052](./TASK-AAO-0052-validator-fixture-task-id-clarity.task.md) | Validator fixture task id clarity | planned | `TASK-AAO-0046` | `scripts/validate-task-ledger-governance.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
 | [TASK-AAO-0053](./TASK-AAO-0053-batch-checkpoint-framework-critical-delivery-window.task.md) | batch checkpoint 支援 framework critical delivery window | planned | `TASK-AAO-0037`, `TASK-AAO-0038`, `TASK-AAO-0047` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
+| [TASK-AAO-0054](./TASK-AAO-0054-git-hook-pre-push-refs-isolation.task.md) | 非任務協作流與 git hook pre-push 隔離優化 | done | `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/next.ts`<br>`scripts/validate-git-hooks-enforcement.ts`<br>`scripts/validate-prompt-scoped-next.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-git-hooks-enforcement.ts`<br>`node --strip-types scripts/validate-prompt-scoped-next.ts`<br>`git diff --check` |
 
 ## M16 P0 Throughput Acceleration Bundle
 
