@@ -23,10 +23,12 @@ scopePaths:
 deliverables:
   - "packages/cli/src/commands/hook.ts"
   - "packages/cli/src/commands/next.ts"
+  - "scripts/validate-git-hooks-enforcement.ts"
+  - "scripts/validate-prompt-scoped-next.ts"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
-  - "node --strip-types scripts/validate-git-hooks-enforcement.ts"
+  - "node --strip-types scripts/validate-git-hooks-enforcement.ts --mode validate"
   - "node --strip-types scripts/validate-prompt-scoped-next.ts"
   - "git diff --check"
 evidence:
@@ -65,17 +67,16 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/hook.ts` (優化 pre-push 目標分支解析，從 push refs 判定 remote branch targets，非 protected 降級為 warn-only)
-- `packages/cli/src/commands/next.ts` (修正 `isLikelyPromptPathHint`，避免將無意義的關鍵字或非標準路徑誤判為 path hints)
-- 測試覆蓋：
-  - `scripts/validate-git-hooks-enforcement.ts` (新增 `protected-local-to-feature-remote` 的 pre-push hook 測試)
-  - `scripts/validate-prompt-scoped-next.ts` (新增 `collaborationIsolationPrompt` 的意圖排除測試)
+- `packages/cli/src/commands/hook.ts`
+- `packages/cli/src/commands/next.ts`
+- `scripts/validate-git-hooks-enforcement.ts`
+- `scripts/validate-prompt-scoped-next.ts`
 
 ## Validators
 
 - `npm run typecheck`
 - `npm run validate:cli`
-- `node --strip-types scripts/validate-git-hooks-enforcement.ts`
+- `node --strip-types scripts/validate-git-hooks-enforcement.ts --mode validate`
 - `node --strip-types scripts/validate-prompt-scoped-next.ts`
 - `git diff --check`
 
@@ -98,3 +99,8 @@ Revert commit `a343188a033b12dcf474bf7f5254ae69798029e4`.
 - **Owner atom/map**: `atm.git-governance-map`
 - **Map updates**:
   - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
+
+## Notes
+
+本任務係優化非任務協作流之 pre-push 隔離與 next prompt 自然語言誤判防禦，已由 Codex commit a343188 完整實作。
+注意：`atomic_workbench/atomization-coverage/path-to-atom-map.json` 雖與原子化影響有關，但在 a343188 中未作任何修改，故此處不將其列為交付物，其已存在之 ownership 關係保留於 validation rationale 參考。
