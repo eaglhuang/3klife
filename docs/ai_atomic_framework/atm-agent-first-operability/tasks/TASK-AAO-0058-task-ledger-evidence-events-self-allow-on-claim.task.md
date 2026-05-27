@@ -17,9 +17,18 @@ scopePaths:
   - "packages/cli/src/commands/tasks.ts"
   - "packages/cli/src/commands/task-direction.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+  - ".atm/history/tasks/TASK-AAO-0058.json"
+  - ".atm/history/evidence/TASK-AAO-0058.json"
+  - ".atm/history/evidence/TASK-AAO-0058.closure-packet.json"
+  - ".atm/history/task-events/TASK-AAO-0058/**"
 deliverables:
+  - "packages/cli/src/commands/tasks.ts"
   - "packages/cli/src/commands/task-direction.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+  - ".atm/history/tasks/TASK-AAO-0058.json"
+  - ".atm/history/evidence/TASK-AAO-0058.json"
+  - ".atm/history/evidence/TASK-AAO-0058.closure-packet.json"
+  - ".atm/history/task-events/TASK-AAO-0058/**"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
@@ -59,8 +68,13 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/task-direction.ts` (強化 allowedFiles 初始化機制，納入 self-allow 自動規則)
+- `packages/cli/src/commands/tasks.ts`
+- `packages/cli/src/commands/task-direction.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
+- `.atm/history/tasks/TASK-AAO-0058.json`
+- `.atm/history/evidence/TASK-AAO-0058.json`
+- `.atm/history/evidence/TASK-AAO-0058.closure-packet.json`
+- `.atm/history/task-events/TASK-AAO-0058/**`
 
 ## Validators
 

@@ -78,16 +78,10 @@ AI 在 ASA-0016 卡住時看不到真正 blocking gate。缺 validator 要變成
 - close/checkpoint fail 含 missingValidationPasses。
 - 每個 missing pass 有 suggested evidence command。
 - blockingFindings[] 包含所有 gate，而非只列 audit。
-
-
-<!-- AAO-feedback-0017-evidence-missing -->
-## Feedback Reinforcement Acceptance
-
-- Add a pre-close query path such as `node atm.mjs evidence missing --task <id> --json` so agents can see required validators/evidence before attempting close or checkpoint.
-- Closure errors must include the same missing evidence list plus one concrete `requiredCommand` per missing category.
-- The command must distinguish absent evidence, failed command runs, stale evidence, and diagnostic-only evidence.
-- Closure Error TL;DR: 當關閉任務或 checkpoint 遭遇門檻攔截失敗時，ATM CLI 必須輸出簡短且易讀的 TL;DR 錯誤摘要，指出確切的阻擋原因（如缺少哪些 evidence 或有哪些 critical diff），而不是僅輸出大量冗長的 JSON 或堆疊軌跡。
-<!-- /AAO-feedback-0017-evidence-missing -->
+- [Feedback] Add a pre-close query path such as `node atm.mjs evidence missing --task <id> --json` so agents can see required validators/evidence before attempting close or checkpoint.
+- [Feedback] Closure errors must include the same missing evidence list plus one concrete `requiredCommand` per missing category.
+- [Feedback] The command must distinguish absent evidence, failed command runs, stale evidence, and diagnostic-only evidence.
+- [Feedback] Closure Error TL;DR: 當關閉任務或 checkpoint 遭遇門檻攔截失敗時，ATM CLI 必須輸出簡短且易讀的 TL;DR 錯誤摘要，指出確切的阻擋原因（如缺少哪些 evidence 或有哪些 critical diff），而不是僅輸出大量冗長的 JSON 或堆疊軌跡。
 
 ## Rollback
 
