@@ -68,8 +68,8 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/tasks.ts` (支援 `tasks reconcile`、`tasks reopen` 或 `tasks historical-close` 等官方 reconcile 入口，提供免 claim 即可關閉並連結 historical commit 的路徑)
-- `packages/cli/src/commands/next.ts` (使 `next --prompt` / `next --claim` 得以偵測 `status=done` 但 `closurePacket` 缺失之半同步狀態，並主動於 guidance 中引導至 reconcile route)
+- `packages/cli/src/commands/tasks.ts`
+- `packages/cli/src/commands/next.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators

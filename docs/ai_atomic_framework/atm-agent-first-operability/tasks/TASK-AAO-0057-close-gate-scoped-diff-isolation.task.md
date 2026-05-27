@@ -61,8 +61,8 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/tasks.ts` (強化 tasks close 核心邏輯，引入 scoped diff 檢驗)
-- `scripts/validate-task-ledger-governance.ts` (強化對任務 ledger 變更稽核的隔離判定)
+- `packages/cli/src/commands/tasks.ts`
+- `scripts/validate-task-ledger-governance.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators

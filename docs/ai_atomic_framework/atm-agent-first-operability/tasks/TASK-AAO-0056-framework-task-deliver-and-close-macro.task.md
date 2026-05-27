@@ -7,9 +7,12 @@ owner: atm-core
 priority: P0
 milestone: M16
 depends_on:
+  - "TASK-AAO-0017"
   - "TASK-AAO-0051"
   - "TASK-AAO-0053"
   - "TASK-AAO-0055"
+  - "TASK-AAO-0057"
+  - "TASK-AAO-0058"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
@@ -60,8 +63,8 @@ nonGoals:
 
 ## Deliverables
 
-- `packages/cli/src/commands/tasks.ts` (新增或強化 deliver-and-close macro 入口)
-- `packages/cli/src/commands/batch.ts` (使 macro 機制與 batch checkpoint/commit 良好整合)
+- `packages/cli/src/commands/tasks.ts`
+- `packages/cli/src/commands/batch.ts`
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Validators
