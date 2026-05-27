@@ -64,3 +64,6 @@
 - 人物頁仍維持 `將 / 屬 / 命 / 技 / 寶 / 兵` 六頁結構。
 - `StoryDock` 正式落在 `命 / Bloodline` 頁，不再固定掛在 `將` 頁。
 - Battle 與 UI 維持 Interface-first Bridge：`battle/` 不直接引用 `ui/` 具體元件。
+
+## Subagent Token Rule
+- Codex subagents are not automatically cheaper. Full-history forks inherit the parent model and large thread context. For simple planning, read-only checks, docs, and checklists, prefer a clean narrow task brief without full conversation forking and use a mini/cost-efficient model when suitable. Use full-context fork only when the subagent truly needs the whole thread history.

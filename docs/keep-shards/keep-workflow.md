@@ -195,3 +195,7 @@ node tools_node/run-acceptance.js
 
 ---
 - **2026-04-13 討論來源全量整併里程碑**：歷史 112 份討論文件已全數完成深度拆解與共識回寫（Strategy A）。發現 17 項機制 Gap 與 9 個新 MCQ 已全數結案並同步至各規格書。後續新增討論文件必須立即執行 `consolidation-doubt-mcq.js` 流程。
+
+### 13.1 Codex subagent token rule
+
+- 2026-05-27 | subagent token rule | Codex subagents are not automatically cheaper. Full-history forked subagents inherit the parent model and large thread context, so they can cost more. For bounded planning, read-only checks, simple docs, and checklist work, prefer a clean narrow task brief without full conversation forking, and use a mini/cost-efficient model with explicit paths, scope, validators, and final-report expectations. Use full-context fork only when the subagent truly needs the whole thread history.
