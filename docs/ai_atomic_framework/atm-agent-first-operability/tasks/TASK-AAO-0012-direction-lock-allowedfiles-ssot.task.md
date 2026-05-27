@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0012
 task_id: TASK-AAO-0012
 title: "Direction lock allowedFiles 單一真相來源"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M5
@@ -27,6 +27,12 @@ validators:
   - "node --strip-types scripts/validate-task-direction-governance.ts --mode validate"
 evidence:
   required: command-backed
+  closedAt: "2026-05-27T10:41:10.763Z"
+  closedByActor: "Augment"
+  closureCommit: "f107b22a014902b4d7ef5d3b67e8173ee74a88f7"
+  relatedCommits:
+    - "ade527ba9e68c9ebf07da8761cf75836d6ea23fb"
+    - "f107b22a014902b4d7ef5d3b67e8173ee74a88f7"
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
@@ -111,3 +117,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 ## Notes
 
 This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+本任務已由 Augment 於 commit ade527b 與 f107b22 中完全實作並安全關閉。

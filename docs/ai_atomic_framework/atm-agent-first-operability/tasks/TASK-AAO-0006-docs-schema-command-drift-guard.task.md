@@ -2,7 +2,7 @@
 doc_id: doc_other_1324
 task_id: TASK-AAO-0006
 title: "Docs / schema / command drift guard"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M3
@@ -29,6 +29,12 @@ validators:
   - "node --strip-types scripts/validate-docs-command-drift.ts"
 evidence:
   required: command-backed
+  closedAt: "2026-05-27T11:31:47.076Z"
+  closedByActor: "copilot"
+  closureCommit: "42f7c496c14112e476fe3cd43ec04928236d6ea1"
+  relatedCommits:
+    - "ec9129471d87e07a3890f5b1114cd6e7d6928e46"
+    - "42f7c496c14112e476fe3cd43ec04928236d6ea1"
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
@@ -95,3 +101,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 ## Notes
 
 This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+本任務已由 copilot 於 commit ec91294 與 42f7c49 中完全實作並安全關閉。

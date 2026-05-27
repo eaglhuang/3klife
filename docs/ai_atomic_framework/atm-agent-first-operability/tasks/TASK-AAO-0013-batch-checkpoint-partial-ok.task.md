@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0013
 task_id: TASK-AAO-0013
 title: "Checkpoint partial-ok 訊息分層"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M5
@@ -27,6 +27,12 @@ validators:
   - "node --strip-types scripts/validate-task-ledger-governance.ts --mode validate"
 evidence:
   required: command-backed
+  closedAt: "2026-05-27T11:05:31.574Z"
+  closedByActor: "Augment"
+  closureCommit: "893e764a0248c8b4d7ef5b8c9e78173ee74a88f7"
+  relatedCommits:
+    - "185a7e3a9a7a92fb07da5a7c2b6f75836d6ea1c9"
+    - "893e764a0248c8b4d7ef5b8c9e78173ee74a88f7"
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
@@ -92,3 +98,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 ## Notes
 
 This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+本任務已由 Augment 於 commit 185a7e3 與 893e764 中完全實作並安全關閉。
