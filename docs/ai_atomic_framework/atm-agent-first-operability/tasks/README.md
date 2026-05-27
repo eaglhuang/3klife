@@ -118,6 +118,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | `TASK-AAO-0052` | Validator fixture task id clarity; makes validator fixture ids obviously TEST-TASK-* so they do not read like real task cards. |
 | `TASK-AAO-0053` | batch checkpoint 支援 framework critical delivery window，避免 batch queue-head 的 framework-critical 任務卡在互相矛盾的規則中。 |
 | `TASK-AAO-0054` | 非任務協作流與 git hook pre-push 隔離優化，防止 feature 分支被 pre-push 誤殺與自然語言 path hints 誤判。 |
+| `TASK-AAO-0055` | 解決 done task 缺失實質憑證時的 claim/close 互鎖死路，提供直覺的 tasks reconcile / reopen 官方協調入口。 |
 
 ## M16 Validator Baseline Noise Follow-up
 
@@ -129,6 +130,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | [TASK-AAO-0052](./TASK-AAO-0052-validator-fixture-task-id-clarity.task.md) | Validator fixture task id clarity | planned | `TASK-AAO-0046` | `scripts/validate-task-ledger-governance.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
 | [TASK-AAO-0053](./TASK-AAO-0053-batch-checkpoint-framework-critical-delivery-window.task.md) | batch checkpoint 支援 framework critical delivery window | planned | `TASK-AAO-0037`, `TASK-AAO-0038`, `TASK-AAO-0047` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
 | [TASK-AAO-0054](./TASK-AAO-0054-git-hook-pre-push-refs-isolation.task.md) | 非任務協作流與 git hook pre-push 隔離優化 | done | `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/next.ts`<br>`scripts/validate-git-hooks-enforcement.ts`<br>`scripts/validate-prompt-scoped-next.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-git-hooks-enforcement.ts`<br>`node --strip-types scripts/validate-prompt-scoped-next.ts`<br>`git diff --check` |
+| [TASK-AAO-0055](./TASK-AAO-0055-historical-done-task-reconcile-reopen.task.md) | Historical done task reconcile / reopen closure sync | planned | `TASK-AAO-0038`, `TASK-AAO-0051`, `TASK-AAO-0054` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
 
 ## M16 P0 Throughput Acceleration Bundle
 
