@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0021
 task_id: TASK-AAO-0021
 title: "Readable ref scorer 整合"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M7
@@ -27,6 +27,13 @@ validators:
   - "npm run validate:atomization-coverage"
 evidence:
   required: command-backed
+  closedAt: "2026-05-27T13:22:52.000Z"
+  closedByActor: "copilot"
+  closureCommit: "58283394de1d1cff3a69a752fb1f970b9a73b6aa"
+  closurePacket: ".atm/history/evidence/TASK-AAO-0021.closure-packet.json"
+  relatedCommits:
+    - "168e8379b0ba126dfd1a406cbc78346b3b8d7880"
+    - "58283394de1d1cff3a69a752fb1f970b9a73b6aa"
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
@@ -93,3 +100,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 ## Notes
 
 This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+本任務已由 copilot 於 commit 168e8379b0ba126dfd1a406cbc78346b3b8d7880 與 58283394de1d1cff3a69a752fb1f970b9a73b6aa 中完全實作並安全關閉。
