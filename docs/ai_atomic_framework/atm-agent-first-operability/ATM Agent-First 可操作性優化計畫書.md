@@ -189,7 +189,7 @@ Implementation of an executable validator that replays this scenario (for exampl
 | M13 | Checkpoint / import / audit / sandbox repair | AAO 0037-0040 |
 | M14 | Batch interruption and planning-root controls | AAO 0041-0044 |
 | M15 | Throughput acceleration and safe parallelism | AAO 0045 |
-| M16 | Validator noise and throughput unblockers | AAO 0046-0047, 0050-0052 |
+| M16 | Validator noise and throughput unblockers | AAO 0046-0047, 0050-0053 |
 | M17 | Atom health test extensibility | AAO 0048-0049 |
 
 ## Task Roster
@@ -361,6 +361,7 @@ These tasks are promoted ahead of their original milestones because they directl
 | `TASK-AAO-0050` | Classifies stale framework-mode locks from completed tasks and returns the safe release-then-fresh-claim command instead of asking agents to guess. |
 | `TASK-AAO-0051` | Gives mirror-sync-only ledger imports a formal ATM commit wrapper path so agents do not need `git commit --no-verify` after a valid mirror sync. |
 | `TASK-AAO-0052` | Makes validator fixture task ids obviously TEST-TASK-* so they do not read like real task cards. |
+| `TASK-AAO-0053` | 讓 `batch checkpoint` 支援 framework critical delivery window 流程，避免 batch queue-head 的 framework-critical 任務因互相矛盾的規則而卡住。 |
 
 Implementation guidance: complete these before continuing deeper AAO feature work unless the current batch has already safely passed the corresponding friction point.
 
@@ -373,6 +374,7 @@ Implementation guidance: complete these before continuing deeper AAO feature wor
 | `TASK-AAO-0050` | Framework stale lock cleanup guidance | M16 | done | `TASK-AAO-0040` | `packages/cli/src/commands/framework-development.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/guard.ts` |
 | `TASK-AAO-0051` | Mirror-sync commit wrapper support | M16 | done | `TASK-AAO-0038` | `packages/cli/src/commands/git-governance.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/git.spec.ts` |
 | `TASK-AAO-0052` | Validator fixture task id clarity | M16 | planned | `TASK-AAO-0046` | `scripts/validate-task-ledger-governance.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0053` | batch checkpoint 支援 framework critical delivery window | M16 | planned | `TASK-AAO-0037`, `TASK-AAO-0038`, `TASK-AAO-0047` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` |
 
 
 ## M16 P0 Throughput Acceleration Bundle

@@ -116,6 +116,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | `TASK-AAO-0050` | Framework stale lock cleanup guidance; turns completed-task lock leftovers into release-then-fresh-claim guidance. |
 | `TASK-AAO-0051` | Mirror-sync commit wrapper support; lets valid mirror-sync-only ledger imports use the formal ATM commit wrapper without claim/session or `--no-verify`. |
 | `TASK-AAO-0052` | Validator fixture task id clarity; makes validator fixture ids obviously TEST-TASK-* so they do not read like real task cards. |
+| `TASK-AAO-0053` | batch checkpoint 支援 framework critical delivery window，避免 batch queue-head 的 framework-critical 任務卡在互相矛盾的規則中。 |
 
 ## M16 Validator Baseline Noise Follow-up
 
@@ -125,6 +126,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | [TASK-AAO-0050](./TASK-AAO-0050-framework-stale-lock-cleanup-guidance.task.md) | Framework stale lock cleanup guidance | done | `TASK-AAO-0040` | `packages/cli/src/commands/framework-development.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/guard.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate` |
 | [TASK-AAO-0051](./TASK-AAO-0051-mirror-sync-commit-wrapper-support.task.md) | Mirror-sync commit wrapper support | done | `TASK-AAO-0038` | `packages/cli/src/commands/git-governance.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/git.spec.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-governance-commands.ts` |
 | [TASK-AAO-0052](./TASK-AAO-0052-validator-fixture-task-id-clarity.task.md) | Validator fixture task id clarity | planned | `TASK-AAO-0046` | `scripts/validate-task-ledger-governance.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
+| [TASK-AAO-0053](./TASK-AAO-0053-batch-checkpoint-framework-critical-delivery-window.task.md) | batch checkpoint 支援 framework critical delivery window | planned | `TASK-AAO-0037`, `TASK-AAO-0038`, `TASK-AAO-0047` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
 
 ## M16 P0 Throughput Acceleration Bundle
 
