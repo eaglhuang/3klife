@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0014
 task_id: TASK-AAO-0014
 title: "State-aware batch playbook"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M6
@@ -27,6 +27,9 @@ validators:
   - "node --strip-types scripts/validate-prompt-scoped-next.ts"
 evidence:
   required: command-backed
+  closedAt: "2026-05-27T12:20:59.872Z"
+  closedByActor: "Augment"
+  closurePacket: ".atm/history/evidence/TASK-AAO-0014.closure-packet.json"
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
@@ -102,3 +105,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 ## Notes
 
 This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+本任務已由 Augment 於 2026-05-27 (憑證: .atm/history/evidence/TASK-AAO-0014.closure-packet.json) 中完全實作並安全關閉。

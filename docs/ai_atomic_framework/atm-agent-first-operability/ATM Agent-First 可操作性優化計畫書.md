@@ -210,7 +210,7 @@ Implementation of an executable validator that replays this scenario (for exampl
 | `TASK-AAO-0011` | Claim/checkpoint 忽略 unrelated untracked | M5 | planned | `TASK-AAO-0009` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/batch.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0012` | Direction lock allowedFiles 單一真相來源 | M5 | done | `TASK-AAO-0010` | `packages/cli/src/commands/task-direction.ts`<br>`packages/cli/src/commands/hook.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0013` | Checkpoint partial-ok 訊息分層 | M5 | done | `TASK-AAO-0011`, `TASK-AAO-0012` | `packages/cli/src/commands/batch.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
-| `TASK-AAO-0014` | State-aware batch playbook | M6 | planned | `TASK-AAO-0013` | `packages/cli/src/commands/next.ts`<br>`docs/governance/batch-playbook.md`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0014` | State-aware batch playbook | M6 | done | `TASK-AAO-0013` | `packages/cli/src/commands/next.ts`<br>`docs/governance/batch-playbook.md`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0015` | evidence validators --list | M6 | planned | `TASK-AAO-0014` | `packages/cli/src/commands/evidence.ts`<br>`packages/cli/src/commands/command-specs/evidence.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0016` | evidence run / --recent-run 快速入口 | M6 | planned | `TASK-AAO-0015` | `packages/cli/src/commands/evidence.ts`<br>`packages/cli/src/commands/command-specs/evidence.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0017` | Closure packet 缺 validator 的可操作修正 | M6 | planned | `TASK-AAO-0015` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/batch.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
@@ -364,6 +364,9 @@ These tasks are promoted ahead of their original milestones because they directl
 | `TASK-AAO-0053` | 讓 `batch checkpoint` 支援 framework critical delivery window 流程，避免 batch queue-head 的 framework-critical 任務因互相矛盾的規則而卡住。 |
 | `TASK-AAO-0054` | 優化非任務協作流與 pre-push 的平行協作隔離，防止 feature 分支推送被 hooks 誤攔截，並避免自然語言誤判路徑提示。 |
 | `TASK-AAO-0055` | 解決 done task 缺失實質憑證時的 claim/close 互鎖死路，提供直覺的 tasks reconcile / reopen 官方協調入口。 |
+| `TASK-AAO-0056` | 一鍵式 deliver-and-close macro 機制，整合交付、憑證生成、歷史關閉與 commit 歷源。 |
+| `TASK-AAO-0057` | close/checkpoint 實施 scoped diff 隔離，避免無關髒變更或 untracked 臨時檔阻擋任務收尾。 |
+| `TASK-AAO-0058` | 任務 claim 時自動將自身的 .atm/history/tasks/<id>.json、evidence 與 task-events 納入 allowedFiles。 |
 
 Implementation guidance: complete these before continuing deeper AAO feature work unless the current batch has already safely passed the corresponding friction point.
 
@@ -379,6 +382,9 @@ Implementation guidance: complete these before continuing deeper AAO feature wor
 | `TASK-AAO-0053` | batch checkpoint 支援 framework critical delivery window | M16 | planned | `TASK-AAO-0037`, `TASK-AAO-0038`, `TASK-AAO-0047` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts` |
 | `TASK-AAO-0054` | 非任務協作流與 git hook pre-push 隔離優化 | M16 | done | `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/next.ts`<br>`scripts/validate-git-hooks-enforcement.ts`<br>`scripts/validate-prompt-scoped-next.ts` |
 | `TASK-AAO-0055` | Historical done task reconcile / reopen closure sync | M16 | planned | `TASK-AAO-0038`, `TASK-AAO-0051`, `TASK-AAO-0054` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`scripts/validate-task-ledger-governance.ts` |
+| `TASK-AAO-0056` | Framework task deliver-and-close macro | M16 | planned | `TASK-AAO-0051`, `TASK-AAO-0053`, `TASK-AAO-0055` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/batch.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0057` | Close gate scoped diff isolation | M16 | planned | `TASK-AAO-0006`, `TASK-AAO-0051` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/batch.ts`<br>`scripts/validate-task-ledger-governance.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0058` | Task ledger/evidence/events self-allow on claim | M16 | planned | `TASK-AAO-0012`, `TASK-AAO-0051` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/task-direction.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 
 
 ## M16 P0 Throughput Acceleration Bundle
