@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0034
 task_id: TASK-AAO-0034
 title: "next explicit selector 與 routing memory"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 earlyUnblocker: true

@@ -2,7 +2,7 @@
 doc_id: doc_task_aao_0051
 task_id: TASK-AAO-0051
 title: "Mirror-sync commit wrapper support"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 earlyUnblocker: true

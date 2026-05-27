@@ -2,7 +2,7 @@
 doc_id: doc_task_aao_0047
 task_id: TASK-AAO-0047
 title: "P0 throughput acceleration bundle"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 earlyUnblocker: true

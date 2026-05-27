@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0020
 task_id: TASK-AAO-0020
 title: "Public command coverage scorer 修正"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M7

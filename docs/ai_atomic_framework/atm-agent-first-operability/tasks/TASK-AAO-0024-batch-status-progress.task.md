@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0024
 task_id: TASK-AAO-0024
 title: "batch status 增強"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8

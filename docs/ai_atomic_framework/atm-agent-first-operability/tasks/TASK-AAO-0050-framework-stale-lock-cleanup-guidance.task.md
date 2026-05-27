@@ -2,7 +2,7 @@
 doc_id: doc_task_aao_0050
 task_id: TASK-AAO-0050
 title: "Framework stale lock cleanup guidance"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 earlyUnblocker: true

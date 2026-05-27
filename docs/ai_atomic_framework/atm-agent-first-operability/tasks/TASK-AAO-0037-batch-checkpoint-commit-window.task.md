@@ -2,7 +2,7 @@
 doc_id: doc_task_aao_0037
 task_id: TASK-AAO-0037
 title: "Batch checkpoint commit window"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 earlyUnblocker: true

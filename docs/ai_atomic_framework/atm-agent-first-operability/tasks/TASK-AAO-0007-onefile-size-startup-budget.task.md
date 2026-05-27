@@ -2,7 +2,7 @@
 doc_id: doc_other_1325
 task_id: TASK-AAO-0007
 title: "Onefile size / startup budget"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M3
