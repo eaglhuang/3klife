@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0010
 task_id: TASK-AAO-0010
 title: "正式 tasks scope --add scope amendment CLI"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M5
@@ -27,6 +27,12 @@ validators:
   - "node --strip-types scripts/validate-task-direction-governance.ts --mode validate"
 evidence:
   required: command-backed
+  closedAt: "2026-05-27T10:20:34.992Z"
+  closedByActor: "Augment"
+  closureCommit: "7d0eaa1ca77f2c6ebf0dd87374e8173ee743f758"
+  relatedCommits:
+    - "2e375d61475e6df90651c328c7cf7f72d2750efe"
+    - "7d0eaa1ca77f2c6ebf0dd87374e8173ee743f758"
 rollback:
   strategy: revert-commit
   notes: "回滾該任務 commit；若有新增產物或 validator，連同 atomization map 更新一起 revert。"
@@ -102,3 +108,4 @@ Revert the task commit. If generated artifacts were created, remove them in the 
 ## Notes
 
 This card uses the AAO task-card contract: explicit scope, explicit deliverables, command-backed evidence, rollback, and atomization impact.
+本任務已由 Augment 於 commit 2e375d6 與 7d0eaa1 中完全實作並安全關閉。
