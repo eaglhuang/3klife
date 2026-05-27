@@ -114,6 +114,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | `TASK-AAO-0040` | Sandbox git process diagnostics; turns EPERM into a repair command. |
 | `TASK-AAO-0046` | Validator baseline noise diagnostics; separates unrelated baseline failures from current-task failures. |
 | `TASK-AAO-0050` | Framework stale lock cleanup guidance; turns completed-task lock leftovers into release-then-fresh-claim guidance. |
+| `TASK-AAO-0051` | Mirror-sync commit wrapper support; lets valid mirror-sync-only ledger imports use the formal ATM commit wrapper without claim/session or `--no-verify`. |
 
 ## M16 Validator Baseline Noise Follow-up
 
@@ -121,6 +122,7 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 |---|---|---|---|---|---|
 | [TASK-AAO-0046](./TASK-AAO-0046-validator-baseline-noise-diagnostics.task.md) | Validator baseline noise diagnostics | planned | `TASK-AAO-0004`, `TASK-AAO-0015`, `TASK-AAO-0017` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`npm run validate:standard` |
 | [TASK-AAO-0050](./TASK-AAO-0050-framework-stale-lock-cleanup-guidance.task.md) | Framework stale lock cleanup guidance | planned | `TASK-AAO-0040` | `packages/cli/src/commands/framework-development.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/guard.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate` |
+| [TASK-AAO-0051](./TASK-AAO-0051-mirror-sync-commit-wrapper-support.task.md) | Mirror-sync commit wrapper support | planned | `TASK-AAO-0038` | `packages/cli/src/commands/git-governance.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/git.spec.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-governance-commands.ts` |
 
 ## M16 P0 Throughput Acceleration Bundle
 

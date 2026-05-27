@@ -189,7 +189,7 @@ Implementation of an executable validator that replays this scenario (for exampl
 | M13 | Checkpoint / import / audit / sandbox repair | AAO 0037-0040 |
 | M14 | Batch interruption and planning-root controls | AAO 0041-0044 |
 | M15 | Throughput acceleration and safe parallelism | AAO 0045 |
-| M16 | Validator noise and throughput unblockers | AAO 0046-0047, 0050 |
+| M16 | Validator noise and throughput unblockers | AAO 0046-0047, 0050-0051 |
 | M17 | Atom health test extensibility | AAO 0048-0049 |
 
 ## Task Roster
@@ -359,6 +359,7 @@ These tasks are promoted ahead of their original milestones because they directl
 | `TASK-AAO-0040` | Turns sandbox/git EPERM into actionable environment diagnostics so agents do not waste a full validator cycle before rerunning elevated. |
 | `TASK-AAO-0046` | Carries the post-0004 follow-up for separating baseline validator noise from current-task failures. |
 | `TASK-AAO-0050` | Classifies stale framework-mode locks from completed tasks and returns the safe release-then-fresh-claim command instead of asking agents to guess. |
+| `TASK-AAO-0051` | Gives mirror-sync-only ledger imports a formal ATM commit wrapper path so agents do not need `git commit --no-verify` after a valid mirror sync. |
 
 Implementation guidance: complete these before continuing deeper AAO feature work unless the current batch has already safely passed the corresponding friction point.
 
@@ -369,6 +370,7 @@ Implementation guidance: complete these before continuing deeper AAO feature wor
 |---|---|---|---|---|---|
 | `TASK-AAO-0046` | Validator baseline noise diagnostics | M16 | planned | `TASK-AAO-0004`, `TASK-AAO-0015`, `TASK-AAO-0017` | `scripts/run-validators.ts`<br>`scripts/lib/validator-envelope.ts`<br>`packages/cli/src/commands/hook.ts` |
 | `TASK-AAO-0050` | Framework stale lock cleanup guidance | M16 | planned | `TASK-AAO-0040` | `packages/cli/src/commands/framework-development.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/guard.ts` |
+| `TASK-AAO-0051` | Mirror-sync commit wrapper support | M16 | planned | `TASK-AAO-0038` | `packages/cli/src/commands/git-governance.ts`<br>`packages/cli/src/commands/hook.ts`<br>`packages/cli/src/commands/command-specs/git.spec.ts` |
 
 
 ## M16 P0 Throughput Acceleration Bundle
