@@ -125,3 +125,10 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | Task ID | Title | Status | Depends | Target surface | Primary validators |
 |---|---|---|---|---|---|
 | [TASK-AAO-0047](./TASK-AAO-0047-p0-throughput-acceleration-bundle.task.md) | P0 throughput acceleration bundle | planned | `TASK-AAO-0024`, `TASK-AAO-0027`, `TASK-AAO-0034`, `TASK-AAO-0037`, `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/hook.ts`<br>`scripts/run-validators.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-direction-governance.ts --mode validate` |
+
+## M17 Atom Health Test Extensibility
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0048](./TASK-AAO-0048-test-runner-plugin-interface.task.md) | TestRunnerPlugin interface for atom health | planned | `TASK-AAO-0015`, `TASK-AAO-0016`, `TASK-AAO-0023`, `TASK-AAO-0035`, `TASK-AAO-0047` | `packages/plugin-sdk/src/index.ts`<br>`packages/plugin-sdk/src/test-runner.ts`<br>`packages/core/src/manager/test-runner.ts`<br>`packages/cli/src/commands/test.ts` | `npm run typecheck`<br>`npm run validate:plugin-sdk`<br>`npm run validate:test-runner`<br>`npm run validate:cli` |
+| [TASK-AAO-0049](./TASK-AAO-0049-default-atom-health-test-gates.task.md) | Default atom health test gates | planned | `TASK-AAO-0048`, `TASK-AAO-0015`, `TASK-AAO-0016`, `TASK-AAO-0023` | `packages/core/src/manager/test-runner.ts`<br>`packages/core/src/test-runner/**`<br>`schemas/test-report.schema.json`<br>`docs/ADAPTER_GUIDE.md` | `npm run typecheck`<br>`npm run validate:test-runner`<br>`npm run validate:schemas`<br>`npm run validate:cli` |

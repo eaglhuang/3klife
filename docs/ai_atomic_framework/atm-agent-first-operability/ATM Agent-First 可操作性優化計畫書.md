@@ -189,6 +189,8 @@ Implementation of an executable validator that replays this scenario (for exampl
 | M13 | Checkpoint / import / audit / sandbox repair | AAO 0037-0040 |
 | M14 | Batch interruption and planning-root controls | AAO 0041-0044 |
 | M15 | Throughput acceleration and safe parallelism | AAO 0045 |
+| M16 | Validator noise and throughput unblockers | AAO 0046-0047 |
+| M17 | Atom health test extensibility | AAO 0048-0049 |
 
 ## Task Roster
 
@@ -372,3 +374,17 @@ Implementation guidance: complete these before continuing deeper AAO feature wor
 | Task | Title | Milestone | Status | Depends | Target surface |
 |---|---|---|---|---|---|
 | `TASK-AAO-0047` | P0 throughput acceleration bundle | M16 | planned | `TASK-AAO-0024`, `TASK-AAO-0027`, `TASK-AAO-0034`, `TASK-AAO-0037`, `TASK-AAO-0040`, `TASK-AAO-0046` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/hook.ts`<br>`scripts/run-validators.ts` |
+
+
+## M17 Atom Health Test Extensibility
+
+M17 turns atom health testing into a first-class ATM extension point.
+
+ATM already has important validation pieces: schema checks, delegated validation commands, map equivalence, edge contract entry points, evidence reports, and CI-friendly validators. The missing product layer is a clean way for adopter repositories to plug in their own atom tests and a default vocabulary for the most common health checks.
+
+| Task | Title | Milestone | Status | Depends | Target surface |
+|---|---|---|---|---|---|
+| `TASK-AAO-0048` | TestRunnerPlugin interface for atom health | M17 | planned | `TASK-AAO-0015`, `TASK-AAO-0016`, `TASK-AAO-0023`, `TASK-AAO-0035`, `TASK-AAO-0047` | `packages/plugin-sdk/src/index.ts`<br>`packages/plugin-sdk/src/test-runner.ts`<br>`packages/core/src/manager/test-runner.ts`<br>`packages/cli/src/commands/test.ts` |
+| `TASK-AAO-0049` | Default atom health test gates | M17 | planned | `TASK-AAO-0048`, `TASK-AAO-0015`, `TASK-AAO-0016`, `TASK-AAO-0023` | `packages/core/src/manager/test-runner.ts`<br>`packages/core/src/test-runner/**`<br>`schemas/test-report.schema.json`<br>`docs/ADAPTER_GUIDE.md` |
+
+The key product promise is precise: ATM does not magically prove all business logic correct. It makes atom health checks explicit, repeatable, extensible, and hard to skip when AI edits code.

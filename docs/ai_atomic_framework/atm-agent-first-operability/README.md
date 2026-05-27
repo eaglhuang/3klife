@@ -34,6 +34,8 @@ AAO 的目標很直接：讓 AI 在使用 ATM 時少猜、少繞路、少被錯�
 
 新增 script / CLI / validator / report / artifact 的卡，必須同卡更新 atomization ownership map。
 
+ATM 不能保證所有整合測試或業務邏輯都百分之百正確，但它會把原子切得更小，讓輸入、輸出、邊界與副作用更容易被驗證，整體覆蓋率也會跟著提高。
+
 ## Import check
 
 ```shell
