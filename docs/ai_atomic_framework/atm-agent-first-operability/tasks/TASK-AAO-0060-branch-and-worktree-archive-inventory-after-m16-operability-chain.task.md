@@ -49,11 +49,16 @@ tags:
 - **可刪除候選** (Deletion candidates)
 
 ## 排除項目 (Out of Scope)
-- **不主動刪除**任何實體 worktree / clone 目錄。
-- **不主動進行** branch merge。
+- **不刪除**任何實體 worktree / clone 目錄。
+- **不進行** branch merge。
 - **不進行** git revert。
 - **不碰觸** `.atm/history` 中已產生之 evidence/ledger 殘餘紀錄。
 - **不清理** `.playwright-mcp` 目錄。
 
+## 驗收標準 (Acceptance Criteria)
+- 提供一份完整的 local branches, worktrees 盤點清單與歸類建議。
+- 所有盤點分支與目錄依 Merged/Obsolete/High-risk/Review/Delete 進行分類。
+
 ## 交付物 (Deliverables)
-- 本任務卡中或獨立之 human-readable inventory report 盤點報告，包含各分支的歸類判定與後續處置建議。
+- docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0060-branch-and-worktree-archive-inventory-after-m16-operability-chain.task.md
+- docs/ai_atomic_framework/atm-agent-first-operability/reports/TASK-AAO-0060-branch-worktree-archive-inventory.md
