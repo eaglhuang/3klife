@@ -13,6 +13,7 @@ last_updated: 2026-05-28
 # Team Agents Task Index
 
 Related plan: [../團隊自動化代理分工計畫.md](../團隊自動化代理分工計畫.md)
+Templates: [../templates/README.md](../templates/README.md)
 
 ## Task Card Contract
 
