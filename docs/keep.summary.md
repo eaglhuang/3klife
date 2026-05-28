@@ -3,12 +3,13 @@
 # Keep Consensus 摘要
 
 > 本檔是 `docs/keep.md (doc_index_0011)` 的精簡入口。每次開始工作先讀這份；若涉及規則、架構、資料流、fallback、人物敘事或跨 repo 邊界，再回讀 `docs/keep.md` 與對應分片。
-> 更新日期：2026-05-26
+> 更新日期：2026-05-28
 
 ## P0. Context Budget
 - 預設先讀本摘要，不整份灌入 `docs/keep.md`、大型 notes、compare board、批次圖片。
 - 大檔一律優先讀 shard：`docs/keep-shards/keep-core.md`、`keep-workflow.md`、`keep-ui-arch.md`、`keep-status.md`。
 - 修改分片後重建索引：`node tools_node/shard-manager.js rebuild-index docs/keep-shards`
+- 本摘要只做導流與高風險提醒；正文規則放 `docs/keep-shards/*.md`，不要把 shard 內容複製成第三份主文。
 
 ## §1. Repo 邊界
 - `3KLife`：Cocos 主遊戲 repo，負責前端、互動、UI、規格、資料工具鏈。
@@ -65,5 +66,14 @@
 - `StoryDock` 正式落在 `命 / Bloodline` 頁，不再固定掛在 `將` 頁。
 - Battle 與 UI 維持 Interface-first Bridge：`battle/` 不直接引用 `ui/` 具體元件。
 
-## Subagent Token Rule
-- Codex subagents are not automatically cheaper. Full-history forks inherit the parent model and large thread context. For simple planning, read-only checks, docs, and checklists, prefer a clean narrow task brief without full conversation forking and use a mini/cost-efficient model when suitable. Use full-context fork only when the subagent truly needs the whole thread history.
+## §11. UI Skeleton 量產入口
+- 詳細規則見 `docs/keep-shards/keep-ui-arch.md` §11；本摘要只保留入口，不複製 scaffold 流程。
+
+## §12. Proof Mapping Contract
+- 詳細規則見 `docs/keep-shards/keep-ui-arch.md` §12；本摘要只保留入口，不複製 proof / mapping contract。
+
+## §13. AI 角色與工作模式索引
+- §13.1 Subagent Token Rule → `docs/keep-shards/keep-workflow.md` §13.1
+- §13.2 Project Captain Mode → `docs/keep-shards/keep-workflow.md` §13.2；觸發：隊長 / 領導者 / 指揮AI / Captain / 派工
+- §13.3 Publishing Director Mode → `docs/keep-shards/keep-workflow.md` §13.3；觸發：寫文章 / 技術文章 / 部落格 / 英文版 / 預覽 / 出版
+- §13.4 Role Skill Model → `docs/keep-shards/keep-workflow.md` §13.4；本機人類召喚入口：`C:\Users\User\.codex\skills\ai-role-router\SKILL.md`
