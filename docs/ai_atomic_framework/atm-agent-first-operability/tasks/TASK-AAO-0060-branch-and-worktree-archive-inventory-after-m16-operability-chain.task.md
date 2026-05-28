@@ -13,8 +13,12 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: planning_repo
 scopePaths: []
+acceptance:
+  - "提供一份完整的 local branches, worktrees 盤點清單與歸類建議"
+  - "所有盤點分支與目錄依 Merged/Obsolete/High-risk/Review/Delete 進行分類"
 deliverables:
   - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0060-branch-and-worktree-archive-inventory-after-m16-operability-chain.task.md"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/reports/TASK-AAO-0060-branch-worktree-archive-inventory.md"
 validators:
   - "git diff --check"
 evidence:
