@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0060
 task_id: TASK-AAO-0060
 title: "Branch and worktree archive inventory after M16 operability chain"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M16
