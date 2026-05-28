@@ -171,3 +171,13 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 | [TASK-AAO-0067](./TASK-AAO-0067-cli-usage-diagnostics-envelope.task.md) | CLI usage diagnostics | planned | `TASK-AAO-0002` | `packages/cli/src/commands/shared.ts`<br>`scripts/validate-cli.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`git diff --check` |
 | [TASK-AAO-0068](./TASK-AAO-0068-next-route-summary-field-projection.task.md) | next route summary and field projection | planned | `TASK-AAO-0061`, `TASK-AAO-0065` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/next.spec.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`git diff --check` |
 | [TASK-AAO-0069](./TASK-AAO-0069-tasks-roster-sync-helper.task.md) | tasks roster sync helper | planned | `TASK-AAO-0025`, `TASK-AAO-0061`, `TASK-AAO-0067` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`scripts/validate-task-ledger-governance.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
+
+## M17 Framework Contract Slices
+
+Governance-correction and framework-maintenance cards. Distinct from the agent-operability stream above.
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0070](./TASK-AAO-0070-atm-version-metadata-contract-primitives.task.md) | ATM version metadata contract primitives (Slice 1 identity correction) | planned | none | `packages/core/src/index.ts`<br>`packages/plugin-governance-local/src/versioning.ts`<br>`packages/plugin-governance-local/src/index.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`git diff --check` |
+
+TASK-AAO-0070 retroactively assigns task identity to commit `7d6b04c` ("feat(atm): add version metadata contract primitives"), which was externally misattributed to the unrelated closed card TASK-AAO-0065. This card is docs-only; it does not modify the closed TASK-AAO-0065 ledger record and does not amend commit 7d6b04c. Slice 2 has separate preconditions documented in the card body.
