@@ -8,7 +8,6 @@ priority: P1
 milestone: M17
 depends_on:
   - "TASK-AAO-0002"
-  - "TASK-AAO-0035"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
