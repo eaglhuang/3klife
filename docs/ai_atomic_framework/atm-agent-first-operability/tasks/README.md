@@ -152,3 +152,9 @@ Run or prioritize these cards before lower-risk AAO throughput work:
 |---|---|---|---|---|---|
 | [TASK-AAO-0048](./TASK-AAO-0048-test-runner-plugin-interface.task.md) | TestRunnerPlugin interface for atom health | planned | `TASK-AAO-0015`, `TASK-AAO-0016`, `TASK-AAO-0023`, `TASK-AAO-0035`, `TASK-AAO-0047` | `packages/plugin-sdk/src/index.ts`<br>`packages/plugin-sdk/src/test-runner.ts`<br>`packages/core/src/manager/test-runner.ts`<br>`packages/cli/src/commands/test.ts` | `npm run typecheck`<br>`npm run validate:plugin-sdk`<br>`npm run validate:test-runner`<br>`npm run validate:cli` |
 | [TASK-AAO-0049](./TASK-AAO-0049-default-atom-health-test-gates.task.md) | Default atom health test gates | planned | `TASK-AAO-0048`, `TASK-AAO-0015`, `TASK-AAO-0016`, `TASK-AAO-0023` | `packages/core/src/manager/test-runner.ts`<br>`packages/core/src/test-runner/**`<br>`schemas/test-report.schema.json`<br>`docs/ADAPTER_GUIDE.md` | `npm run typecheck`<br>`npm run validate:test-runner`<br>`npm run validate:schemas`<br>`npm run validate:cli` |
+
+## M17 Big Script Atomization
+
+| Task ID | Title | Status | Depends | Target surface | Primary validators |
+|---|---|---|---|---|---|
+| [TASK-AAO-0061](./TASK-AAO-0061-big-script-atomization-wave1-tasks-shared-helpers.task.md) | Big script atomization wave 1: tasks command shared helpers | planned | `TASK-AAO-0059` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/tasks/task-ledger-readers.ts`<br>`packages/cli/src/commands/tasks/task-planning-doc.ts`<br>`packages/cli/src/commands/tasks/task-git-helpers.ts`<br>`packages/cli/src/commands/tasks/task-output-formatters.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`<br>`git diff --check` |
