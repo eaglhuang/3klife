@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0075
 title: "next --claim --prompt ledger embed allowedFiles sync"
-status: planned
+status: done
 priority: P0
 milestone: M5
 planning_repo: 3KLife
