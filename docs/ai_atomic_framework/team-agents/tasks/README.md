@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-28
-last_updated: 2026-05-28
+last_updated: 2026-05-29
 ---
 
 # Team Agents Task Index
@@ -32,7 +32,7 @@ Planning-only cards must set `target_repo: 3KLife` and `closure_authority: plann
 
 | Task ID | Milestone | Title | Status | Depends | Target surface |
 |---|---|---|---|---|---|
-| [TASK-TEAM-0001](./TASK-TEAM-0001-team-agents-planning-roster-reset.task.md) | M0 | Team agents planning roster reset | planned | none | planning docs |
+| [TASK-TEAM-0001](./TASK-TEAM-0001-team-agents-planning-roster-reset.task.md) | M0 | Team agents planning roster reset | done | none | planning docs |
 | [TASK-TEAM-0002](./TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md) | M1 | Minimal task crew briefing contract | planned | `TASK-TEAM-0001` | team docs / CLI contract |
 | [TASK-TEAM-0003](./TASK-TEAM-0003-atomization-planner-required-role.task.md) | M1 | Atomization planner required role | planned | `TASK-TEAM-0002` | team docs / CLI contract |
 | [TASK-TEAM-0004](./TASK-TEAM-0004-team-brief-report-templates.task.md) | M2 | Team brief/report templates | planned | `TASK-TEAM-0003` | templates / validator |

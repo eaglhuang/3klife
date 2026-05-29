@@ -2,7 +2,7 @@
 doc_id: doc_team_0001
 task_id: TASK-TEAM-0001
 title: "Team agents planning roster reset"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M0
@@ -11,6 +11,10 @@ related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工�
 planning_repo: 3KLife
 target_repo: 3KLife
 closure_authority: planning_repo
+started_at: 2026-05-29T11:42:00+08:00
+started_by_agent: augment-claude-opus-4.7
+completed_at: 2026-05-29T11:42:11+08:00
+completed_by_agent: augment-claude-opus-4.7
 scopePaths:
   - "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
   - "docs/ai_atomic_framework/team-agents/tasks/README.md"
