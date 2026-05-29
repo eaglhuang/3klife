@@ -179,5 +179,8 @@ Governance-correction and framework-maintenance cards. Distinct from the agent-o
 | Task ID | Title | Status | Depends | Target surface | Primary validators |
 |---|---|---|---|---|---|
 | [TASK-AAO-0070](./TASK-AAO-0070-atm-version-metadata-contract-primitives.task.md) | ATM version metadata contract primitives (Slice 1 identity correction) | planned | none | `packages/core/src/index.ts`<br>`packages/plugin-governance-local/src/versioning.ts`<br>`packages/plugin-governance-local/src/index.ts` | `npm run typecheck`<br>`npm run validate:cli`<br>`git diff --check` |
+| [TASK-AAO-0071](./TASK-AAO-0071-atm-versioning-semver-helper-rename-hygiene.task.md) | ATM versioning semver helper rename hygiene patch | planned | `TASK-AAO-0070` | `packages/plugin-governance-local/src/versioning.ts`<br>`packages/plugin-governance-local/src/index.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` | `npm run typecheck`<br>`npm run validate:cli`<br>`git diff --check` |
 
 TASK-AAO-0070 retroactively assigns task identity to commit `7d6b04c` ("feat(atm): add version metadata contract primitives"), which was externally misattributed to the unrelated closed card TASK-AAO-0065. This card is docs-only; it does not modify the closed TASK-AAO-0065 ledger record and does not amend commit 7d6b04c. Slice 2 has separate preconditions documented in the card body.
+
+TASK-AAO-0071 is a hygiene patch card that renames semver-only helpers in `versioning.ts` to prevent silent corruption when processing git SHA or hash version strings. It is a precursor hygiene patch before Slice 2.
