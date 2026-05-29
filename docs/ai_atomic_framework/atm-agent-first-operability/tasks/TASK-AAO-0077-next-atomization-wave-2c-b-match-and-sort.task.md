@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0077
 title: "next.ts atomization wave 2C-B: match and sort helpers"
-status: planned
+status: done
 priority: P1
 milestone: M5
 planning_repo: 3KLife
