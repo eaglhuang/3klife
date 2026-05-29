@@ -36,7 +36,7 @@ atomizationImpact:
   notes: "在此 hygiene patch 中，正式將 packages/plugin-governance-local/src/versioning.ts 歸屬 ownership 對應加回 path-to-atom-map.json 中。"
 outOfScope:
   - "實作 artifactVersionKind 或是任何 polymorphic 多型解析"
-  - "將 dataVersion / artifactVersion 串接寫入 stores.ts 或 bootstrap 流程 (Slice 2 範疇)"
+  - "將 dataVersion / artifactVersion 串接寫入 stores.ts 或 bootstrap 流程 (Slice 2 範圍)"
   - "修改已關閉的 TASK-AAO-0065 治理帳本歷史"
   - "amend 或修改已提交的歷史 commit 7d6b04c"
 nonGoals:
@@ -70,7 +70,7 @@ tags:
 為了防範未來的隱形資料損毀，必須在此前置卡中完成精確的命名校正：
 - 明確宣告 `dataVersion` 將固定採用 `semver` 規格。
 - 確保輔助函式名稱帶有 `Semver` 字眼，以與未來 Slice 2 可能引入的多型 `artifactVersion` 區隔。
-- `artifactVersion` 的多型機制與 `artifactVersionKind` 並不屬於本卡的處理範疇，將全數留待 Slice 2。
+- `artifactVersion` 的多型機制與 `artifactVersionKind` 並不屬於本卡的處理範圍，將全數留待 Slice 2。
 
 ## 驗收標準 (Acceptance Criteria)
 
@@ -81,6 +81,6 @@ tags:
 
 ## 停止條件 (Stop Conditions)
 
-- **停止條件 1**：若發現實作時需要將 `artifactVersionKind` 或是任何多型辨識器 (discriminator) 一併實作進來，立刻停止並回報，不可在此擴展範疇。
+- **停止條件 1**：若發現實作時需要將 `artifactVersionKind` 或是任何多型辨識器 (discriminator) 一併實作進來，立刻停止並回報，不可在此擴展範圍。
 - **停止條件 2**：若發現修改範圍需要跨出允許檔案（例如修改 `stores.ts`、`core`、`cli/src/commands` 等），立刻停止並回報。
 - **停止條件 3**：若發現需要去修訂已關閉的歷史 `TASK-AAO-0065` 或是嘗試 amend Commit `7d6b04c`，立刻停止並回報。
