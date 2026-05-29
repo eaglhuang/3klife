@@ -19,15 +19,18 @@ scopePaths:
   - "packages/cli/src/commands/tasks/task-import-validators.ts"
   - "packages/cli/src/commands/command-specs/tasks.spec.ts"
   - "scripts/validate-task-ledger-governance.ts"
+  - "scripts/validate-task-import.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "packages/cli/src/commands/tasks.ts"
   - "packages/cli/src/commands/command-specs/tasks.spec.ts"
   - "scripts/validate-task-ledger-governance.ts"
+  - "scripts/validate-task-import.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
+  - "npm run validate:task-import"
   - "node --strip-types scripts/validate-task-ledger-governance.ts --mode validate"
   - "git diff --check"
 evidence:
@@ -78,3 +81,7 @@ Operators routinely see `deliverables` arrays polluted with prose fragments like
 ## Stop Conditions
 
 - If the strict-path heuristic produces false positives on legitimate non-ASCII paths (CJK directories, accented characters), keep the heuristic conservative and document the boundary in the card; do not block CJK path imports.
+
+## Notes & Amendments
+
+- **Amended 2026-05-29**: `validate-task-import.ts` added as actual delivery target; original `validate-task-ledger-governance.ts` deferred.
