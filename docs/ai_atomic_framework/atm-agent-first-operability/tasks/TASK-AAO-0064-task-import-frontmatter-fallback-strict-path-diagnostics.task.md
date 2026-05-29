@@ -16,6 +16,7 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
   - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/tasks/task-import-validators.ts"
   - "packages/cli/src/commands/command-specs/tasks.spec.ts"
   - "scripts/validate-task-ledger-governance.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
@@ -38,7 +39,12 @@ atomizationImpact:
   ownerAtomOrMap: "atm.task-ledger-governance-map"
   mapUpdates:
     - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
-  notes: "Refresh entries for tasks.ts and validate-task-ledger-governance.ts to cover the new diagnostic surface."
+  mapUpdates:
+    - path_pattern: "packages/cli/src/commands/tasks/task-import-validators.ts"
+      atom_id: "atm.cli-task-import-validator"
+      capability: "Pure YAML/frontmatter/path parsing validators for task import pipeline"
+      coverage_status: "active"
+  notes: "Refresh entries for tasks.ts and validate-task-ledger-governance.ts to cover the new diagnostic surface. New atom atm.cli-task-import-validator tracks the extracted pure-function validator module."
 outOfScope:
   - "Redesign of the markdown body parser"
   - "Retroactive sanitization of existing task cards already on disk"
