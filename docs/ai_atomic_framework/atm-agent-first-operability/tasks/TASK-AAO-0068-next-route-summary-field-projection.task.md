@@ -16,12 +16,16 @@ closure_authority: target_repo
 scopePaths:
   - "packages/cli/src/commands/next.ts"
   - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/shared.ts"
+  - "packages/cli/src/commands/output-projection.ts"
   - "packages/cli/src/commands/command-specs/next.spec.ts"
   - "packages/cli/src/commands/command-specs/tasks.spec.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "packages/cli/src/commands/next.ts"
   - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/shared.ts"
+  - "packages/cli/src/commands/output-projection.ts"
   - "packages/cli/src/commands/command-specs/next.spec.ts"
   - "packages/cli/src/commands/command-specs/tasks.spec.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
