@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "runtime-projection-upstream-refill-manifest.v1",
+  "generatedAt": "2026-05-29T16:43:27+00:00",
+  "mode": "runtime-projection-upstream-refill-manifest-builder",
+  "canonicalWrites": false,
+  "inputs": {
+    "queuePath": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\queue-base-events\\runtime-projection-upstream-feedback-queue.jsonl",
+    "queueSummaryPath": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\queue-base-events\\runtime-projection-upstream-feedback-summary.json",
+    "batchReportPath": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\rebuild-base-events\\export-report.json",
+    "batchInputFiles": {
+      "stableKnowledge": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\stable-knowledge-bootstrap\\stable-knowledge-bootstrap.json",
+      "sourceEventPackets": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\p1-source-ref-refill-2026-05-29-staged-source-event-packets.jsonl",
+      "events": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\core-person-progress\\full-roster-highway-r1-continue-r5-r1-precision-a3-rerun1-merged-staged-ready-events.jsonl",
+      "relationshipEvidence": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\p1-source-ref-refill-2026-05-29-staged-relationship-evidence.jsonl",
+      "coreReport": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\core-person-progress\\top50-runtime-fill-r1.json",
+      "outputRoot": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\rebuild-base-events\\profiles",
+      "primaryCanonDefaults": "{'enabled': True, 'runRoot': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined', 'paths': {'eventQuestionSeeds': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined\\\\event-question-seeds\\\\event-question-seeds.jsonl', 'relationshipEvidence': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined\\\\merged-primary-text-top20-relationship-evidence.jsonl', 'sourceEventPackets': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined\\\\source-event-packets\\\\source-event-packets.jsonl'}}"
+    }
+  },
+  "queueProposalCount": 9264,
+  "workItemCount": 4180,
+  "blockingWorkItemCount": 1480,
+  "priorityCounts": {
+    "P1": 2700,
+    "P2": 1259,
+    "P3": 221
+  },
+  "workTypeCounts": {
+    "participant-plus-relationship-backfill": 1259,
+    "relationship-authority-backfill": 2700,
+    "source-grounding-required": 221
+  },
+  "topUpstreamOwners": {
+    "source-event-packets refinement": 4180,
+    "relationship-evidence refinement": 3959,
+    "ready-event promotion bridge": 1480
+  },
+  "topGeneralWorkItems": {
+    "cao-cao": 124,
+    "cao-ren": 123,
+    "cao-hong": 120,
+    "xiahou-dun": 118,
+    "yuan-shao": 116,
+    "yuan-shu": 107,
+    "zhao-yun": 105,
+    "li-dian": 104,
+    "yu-jin": 103,
+    "liu-bei": 103,
+    "xiahou-yuan": 102,
+    "zhang-fei": 101
+  },
+  "topTargetWorkItems": {
+    "liu-bei": 84,
+    "zhuge-liang": 77,
+    "cao-cao": 70,
+    "zhang-fei": 64,
+    "guan-yu": 63,
+    "sun-quan": 60,
+    "zhao-yun": 59,
+    "lu-bu": 52,
+    "cao-ren": 50,
+    "wei-yan": 45,
+    "liu-biao": 43,
+    "yu-jin": 40
+  },
+  "topSourceRefs": {
+    "014#p10": 404,
+    "011#p14": 218,
+    "042#p1": 212,
+    "065#p10": 175,
+    "005#p16": 153,
+    "065#p3": 140,
+    "060#p11": 130,
+    "025#p2": 124,
+    "087#p3": 114,
+    "016#p18": 108,
+    "012#p4": 98,
+    "073#p9": 96,
+    "011#p11": 96,
+    "038#p12": 96,
+    "031#p8": 95
+  },
+  "topBlockerSourceRefs": {
+    "011#p14": 19,
+    "055#p6": 18,
+    "012#p10": 16,
+    "061#p11": 15,
+    "062#p3": 15,
+    "055#p9": 15,
+    "012#p4": 12,
+    "082#p2": 12,
+    "014#p10": 10,
+    "059#p7": 9,
+    "006#p7": 9,
+    "005#p17": 9,
+    "035#p6": 8,
+    "090#p15": 8,
+    "040#p10": 6
+  },
+  "nextActionOrder": [
+    "source-event-packets refinement",
+    "relationship-evidence refinement",
+    "ready-event promotion bridge",
+    "rerun runtime profile export + projection queue"
+  ]
+}

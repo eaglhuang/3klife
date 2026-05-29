@@ -1,0 +1,306 @@
+{
+  "version": "1.0.0",
+  "roundId": "p1-source-ref-refill-2026-05-29",
+  "generatedFor": "runtime projection P1 refill on sourceRef hotspots 011#p14, 014#p10, 042#p1",
+  "canonicalWrites": false,
+  "packetPatches": [
+    {
+      "sourceRef": "011#p14",
+      "patchReason": "將 le-jin -> cao-cao 的 declared participant bridge 顯式落到 packet-level relationship edge。",
+      "relationshipEdges": [
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.011-p14.le-jin.battlefield-contact.cao-cao",
+          "fromId": "le-jin",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "011#p14"
+          ],
+          "sourceQuote": "，雙槍齊舉。戰到三十餘合，勝負不分。夏侯惇拍馬便出助戰，呂佈陣上張遼截住廝殺。",
+          "edgeConfidence": 0.69,
+          "edgeStrength": 0.57,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-participant-bridge",
+            "sourceRef:011#p14"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        }
+      ]
+    },
+    {
+      "sourceRef": "014#p10",
+      "patchReason": "把 014#p10 的 roster / command context 顯式補成 le-jin、xu-zhu 指向 cao-cao 的 packet relationship edges。",
+      "relationshipEdges": [
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.014-p10.le-jin.commands.cao-cao",
+          "fromId": "le-jin",
+          "toId": "cao-cao",
+          "type": "commands",
+          "originalType": "commands",
+          "evidenceRefs": [
+            "014#p10"
+          ],
+          "sourceQuote": "；范成、董昭爲洛陽令；滿寵爲許都令；夏侯惇、夏侯淵、曹仁、曹洪皆爲將軍；呂虔、",
+          "edgeConfidence": 0.73,
+          "edgeStrength": 0.62,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "appointment-roster-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "appointment-roster-participant-bridge",
+            "sourceRef:014#p10"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        },
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.014-p10.xu-zhu.commands.cao-cao",
+          "fromId": "xu-zhu",
+          "toId": "cao-cao",
+          "type": "commands",
+          "originalType": "commands",
+          "evidenceRefs": [
+            "014#p10"
+          ],
+          "sourceQuote": "；范成、董昭爲洛陽令；滿寵爲許都令；夏侯惇、夏侯淵、曹仁、曹洪皆爲將軍；呂虔、",
+          "edgeConfidence": 0.73,
+          "edgeStrength": 0.62,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "appointment-roster-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "appointment-roster-participant-bridge",
+            "sourceRef:014#p10"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        }
+      ]
+    },
+    {
+      "sourceRef": "042#p1",
+      "patchReason": "把 042#p1 已經在 ready-event 出現的 zhang-fei -> cao-cao intimidation edge 回補到 packet layer。",
+      "relationshipEdges": [
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.042-p1.zhang-fei.intimidates.cao-cao",
+          "fromId": "zhang-fei",
+          "toId": "cao-cao",
+          "type": "intimidates",
+          "originalType": "intimidates",
+          "evidenceRefs": [
+            "042#p1"
+          ],
+          "sourceQuote": "至，見飛怒目橫矛，立馬於橋上，又恐是諸葛孔明之計，都不敢近前。紮住陣腳，一字兒擺",
+          "edgeConfidence": 0.9,
+          "edgeStrength": 0.78,
+          "directPairSignal": true,
+          "pairRelationSignal": true,
+          "pattern": "ready-event-aligned-packet-edge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "ready-event-aligned-packet-edge",
+            "sourceRef:042#p1"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        }
+      ]
+    }
+  ],
+  "relationshipEvidenceAdds": [
+    {
+      "chapterNo": 11,
+      "edgeId": "rel.runtime-projection-p1.011-p14.le-jin.battlefield-contact.cao-cao",
+      "fromId": "le-jin",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "011#p14"
+      ],
+      "evidenceText": "，雙槍齊舉。戰到三十餘合，勝負不分。夏侯惇拍馬便出助戰，呂佈陣上張遼截住廝殺。",
+      "sourceQuote": "，雙槍齊舉。戰到三十餘合，勝負不分。夏侯惇拍馬便出助戰，呂佈陣上張遼截住廝殺。",
+      "summary": "西寨交戰 participant bridge，將 011#p14 的 le-jin / cao-cao scene linkage 升到 relationship ref。",
+      "edgeConfidence": 0.69,
+      "edgeStrength": 0.57,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-participant-bridge",
+        "sourceRef:011#p14"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 14,
+      "edgeId": "rel.runtime-projection-p1.014-p10.le-jin.commands.cao-cao",
+      "fromId": "le-jin",
+      "toId": "cao-cao",
+      "type": "commands",
+      "originalType": "commands",
+      "evidenceRefs": [
+        "014#p10"
+      ],
+      "evidenceText": "；范成、董昭爲洛陽令；滿寵爲許都令；夏侯惇、夏侯淵、曹仁、曹洪皆爲將軍；呂虔、",
+      "sourceQuote": "；范成、董昭爲洛陽令；滿寵爲許都令；夏侯惇、夏侯淵、曹仁、曹洪皆爲將軍；呂虔、",
+      "summary": "洛陽 roster bridge，將 014#p10 的 le-jin / cao-cao command linkage 升到 relationship ref。",
+      "edgeConfidence": 0.73,
+      "edgeStrength": 0.62,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "appointment-roster-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "appointment-roster-participant-bridge",
+        "sourceRef:014#p10"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 14,
+      "edgeId": "rel.runtime-projection-p1.014-p10.xu-zhu.commands.cao-cao",
+      "fromId": "xu-zhu",
+      "toId": "cao-cao",
+      "type": "commands",
+      "originalType": "commands",
+      "evidenceRefs": [
+        "014#p10"
+      ],
+      "evidenceText": "；范成、董昭爲洛陽令；滿寵爲許都令；夏侯惇、夏侯淵、曹仁、曹洪皆爲將軍；呂虔、",
+      "sourceQuote": "；范成、董昭爲洛陽令；滿寵爲許都令；夏侯惇、夏侯淵、曹仁、曹洪皆爲將軍；呂虔、",
+      "summary": "洛陽 roster bridge，將 014#p10 的 xu-zhu / cao-cao command linkage 升到 relationship ref。",
+      "edgeConfidence": 0.73,
+      "edgeStrength": 0.62,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "appointment-roster-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "appointment-roster-participant-bridge",
+        "sourceRef:014#p10"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 42,
+      "edgeId": "rel.runtime-projection-p1.042-p1.guan-yu.battlefield-contact.cao-cao",
+      "fromId": "guan-yu",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "042#p1"
+      ],
+      "evidenceText": "至，見飛怒目橫矛，立馬於橋上，又恐是諸葛孔明之計，都不敢近前。紮住陣腳，一字兒擺",
+      "sourceQuote": "至，見飛怒目橫矛，立馬於橋上，又恐是諸葛孔明之計，都不敢近前。紮住陣腳，一字兒擺",
+      "summary": "長坂橋 scene participant bridge，將 042#p1 的 guan-yu / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.64,
+      "edgeStrength": 0.5,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:042#p1"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 42,
+      "edgeId": "rel.runtime-projection-p1.042-p1.le-jin.battlefield-contact.cao-cao",
+      "fromId": "le-jin",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "042#p1"
+      ],
+      "evidenceText": "至，見飛怒目橫矛，立馬於橋上，又恐是諸葛孔明之計，都不敢近前。紮住陣腳，一字兒擺",
+      "sourceQuote": "至，見飛怒目橫矛，立馬於橋上，又恐是諸葛孔明之計，都不敢近前。紮住陣腳，一字兒擺",
+      "summary": "長坂橋 scene participant bridge，將 042#p1 的 le-jin / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.64,
+      "edgeStrength": 0.5,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:042#p1"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 42,
+      "edgeId": "rel.runtime-projection-p1.042-p1.xu-zhu.battlefield-contact.cao-cao",
+      "fromId": "xu-zhu",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "042#p1"
+      ],
+      "evidenceText": "至，見飛怒目橫矛，立馬於橋上，又恐是諸葛孔明之計，都不敢近前。紮住陣腳，一字兒擺",
+      "sourceQuote": "至，見飛怒目橫矛，立馬於橋上，又恐是諸葛孔明之計，都不敢近前。紮住陣腳，一字兒擺",
+      "summary": "長坂橋 scene participant bridge，將 042#p1 的 xu-zhu / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.64,
+      "edgeStrength": 0.5,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:042#p1"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    }
+  ]
+}
