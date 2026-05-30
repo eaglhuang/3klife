@@ -238,5 +238,17 @@
     "path": ".github/instructions/atm-upgrade-scan.instructions.md",
     "title": "ATM Upgrade Scan",
     "category": "ai"
+  },
+  {
+    "id": "doc_ai_0045",
+    "path": ".github/instructions/atm-task-intent-resolver.instructions.md",
+    "title": "ATM Task Intent Resolver",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0046",
+    "path": "docs/agent-briefs/npc-brain-handoff-2026-05-29.md",
+    "title": "`npc-brain` 資料演進與交接摘要",
+    "category": "ai"
   }
 ]

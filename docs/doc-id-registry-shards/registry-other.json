@@ -2760,12 +2760,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_1002",
-    "path": "docs/ai_atomic_framework/atm-self-atomization/ATM_COMPLETION_REPORT.md",
-    "title": "ATM 100% 自我原子化計畫完成報告",
-    "category": "other"
-  },
-  {
     "id": "doc_other_1003",
     "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0001-coverage-taxonomy-exclusion-policy.task.md",
     "title": "TASK-ASA-0001 定義 ATM 100% 原子化覆蓋口徑與排除政策",
@@ -2785,8 +2779,8 @@
   },
   {
     "id": "doc_other_1006",
-    "path": "docs/ai_atomic_framework/atm-self-atomization/ATM_COMPLETION_REPORT_AUDIT_2026-05-21.md",
-    "title": "ATM Self-Atomization Completion Claim Audit",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0004-atomization-coverage-guard-validate.task.md",
+    "title": "TASK-ASA-0004 新增 atomization-coverage guard 與 validate",
     "category": "other"
   },
   {
@@ -2859,6 +2853,36 @@
     "id": "doc_other_1018",
     "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0016-self-atomization-graduation-gate.task.md",
     "title": "TASK-ASA-0016 建立 100% 自我原子化 graduation gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1024",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0017-score-command-coverage-instrumentation.task.md",
+    "title": "TASK-ASA-0017 修正 public command coverage 計分來源",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1025",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0018-readable-ref-score-integration.task.md",
+    "title": "TASK-ASA-0018 修正 readable ref scoring 整合",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1026",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0019-source-ownership-score-closure.task.md",
+    "title": "TASK-ASA-0019 收斂 source ownership coverage 缺口",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1027",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0020-rollback-evidence-graduation-policy.task.md",
+    "title": "TASK-ASA-0020 定義 rollback evidence graduation policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1028",
+    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0021-score-based-graduation-rerun.task.md",
+    "title": "TASK-ASA-0021 重跑 score-based graduation gate 並更新決策紀錄",
     "category": "other"
   },
   {
@@ -3051,12 +3075,6 @@
     "id": "doc_other_1236",
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0028-first-use-user-notice.task.md",
     "title": "TASK-APO-0028 First-Use User Notice and Suggested Actions",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_1237",
-    "path": "docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0004-atomization-coverage-guard-validate.task.md",
-    "title": "TASK-ASA-0004 新增 atomization-coverage guard 與 validate",
     "category": "other"
   },
   {
@@ -3548,7 +3566,7 @@
   {
     "id": "doc_other_1319",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0001-report-overlap-matrix-routing.task.md",
-    "title": "TASK-AAO-0001 — 報告問題 overlap matrix 與任務路由裁決",
+    "title": "TASK-AAO-0001 — Overlap matrix 與路由裁決",
     "category": "other"
   },
   {
@@ -3560,31 +3578,31 @@
   {
     "id": "doc_other_1321",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0003-next-decisiontrail-json-contract.task.md",
-    "title": "TASK-AAO-0003 — `next` decisionTrail JSON contract",
+    "title": "TASK-AAO-0003 — next decisionTrail JSON contract",
     "category": "other"
   },
   {
     "id": "doc_other_1322",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0004-validator-failure-envelope-normalization.task.md",
-    "title": "TASK-AAO-0004 — validator failure envelope 標準化",
+    "title": "TASK-AAO-0004 — Validator failure envelope 標準化",
     "category": "other"
   },
   {
     "id": "doc_other_1323",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0005-cli-context-slimming-wave1.task.md",
-    "title": "TASK-AAO-0005 — CLI 巨型檔案 context slimming wave 1",
+    "title": "TASK-AAO-0005 — CLI context slimming wave 1",
     "category": "other"
   },
   {
     "id": "doc_other_1324",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0006-docs-schema-command-drift-guard.task.md",
-    "title": "TASK-AAO-0006 — docs / schema / command drift guard",
+    "title": "TASK-AAO-0006 — Docs / schema / command drift guard",
     "category": "other"
   },
   {
     "id": "doc_other_1325",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0007-onefile-size-startup-budget.task.md",
-    "title": "TASK-AAO-0007 — onefile size / startup budget",
+    "title": "TASK-AAO-0007 — Onefile size / startup budget",
     "category": "other"
   },
   {
@@ -3596,7 +3614,751 @@
   {
     "id": "doc_other_1327",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0000-doc-finalize-bridge-index.task.md",
-    "title": "TASK-AAO-0000 — AAO 文件區初始化與 ASA 橋接索引",
+    "title": "TASK-AAO-0000 — AAO 文件區初始化與 ASA bridge index",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1328",
+    "path": "docs/agent-briefs/reports/PROG-2-0017-top50-readiness-r1.md",
+    "title": "PROG-2-0017 Top50 Readiness Audit R1",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1329",
+    "path": ".github/prompts/atm-task-intent-resolver.prompt.md",
+    "title": "ATM Task Intent Resolver",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1330",
+    "path": "docs/ai_atomic_framework/ATM 測試缺口矩陣與未來優化計畫書.md",
+    "title": "ATM 測試缺口矩陣與未來優化計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1331",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/ATM任務實戰反饋_opus47.md",
+    "title": "2. 「checkpoint 前 commit」vs「checkpoint 後 commit」流程矛盾",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1333",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/reports/TASK-AAO-0060-branch-worktree-archive-inventory.md",
+    "title": "TASK-AAO-0060 Branch & Worktree Archive Inventory",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1334",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0009-opus47-feedback-bridge.task.md",
+    "title": "TASK-AAO-0009 — 匯入 Opus 4.7 feedback 與任務橋接",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1335",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0010-scope-amendment-cli.task.md",
+    "title": "TASK-AAO-0010 — 正式 tasks scope --add scope amendment CLI",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1336",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0011-untracked-file-scope-warnings.task.md",
+    "title": "TASK-AAO-0011 — Claim/checkpoint 忽略 unrelated untracked",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1337",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0012-direction-lock-allowedfiles-ssot.task.md",
+    "title": "TASK-AAO-0012 — Direction lock allowedFiles 單一真相來源",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1338",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0013-batch-checkpoint-partial-ok.task.md",
+    "title": "TASK-AAO-0013 — Checkpoint partial-ok 訊息分層",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1339",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0014-state-aware-batch-playbook.task.md",
+    "title": "TASK-AAO-0014 — State-aware batch playbook",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1340",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0015-evidence-validator-catalog.task.md",
+    "title": "TASK-AAO-0015 — evidence validators --list",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1341",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0016-evidence-run-recent-run.task.md",
+    "title": "TASK-AAO-0016 — evidence run / --recent-run 快速入口",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1342",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0017-closure-validator-remediation.task.md",
+    "title": "TASK-AAO-0017 — Closure packet 缺 validator 的可操作修正",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1343",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0018-neutrality-staged-only.task.md",
+    "title": "TASK-AAO-0018 — Neutrality scanner staged-only mode",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1344",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0019-completion-attestation-schema.task.md",
+    "title": "TASK-AAO-0019 — Completion attestation schema",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1345",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0020-public-command-coverage-score.task.md",
+    "title": "TASK-AAO-0020 — Public command coverage scorer 修正",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1346",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0021-readable-ref-score-integration.task.md",
+    "title": "TASK-AAO-0021 — Readable ref scorer 整合",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1347",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0022-rollback-proof-evidence.task.md",
+    "title": "TASK-AAO-0022 — Rollback-proof evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1348",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0023-map-spec-schema-validator.task.md",
+    "title": "TASK-AAO-0023 — Map spec schema validator",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1349",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0024-batch-status-progress.task.md",
+    "title": "TASK-AAO-0024 — batch status 增強",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1350",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0025-tasks-show-planning-doc.task.md",
+    "title": "TASK-AAO-0025 — tasks show --planning-doc",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1351",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0026-atm-status-overview.task.md",
+    "title": "TASK-AAO-0026 — atm status 綜覽",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1352",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0027-dev-runner-guidance.task.md",
+    "title": "TASK-AAO-0027 — dev runner 提示",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1353",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0028-batch-playbook-docs.task.md",
+    "title": "TASK-AAO-0028 — batch playbook 文件化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1354",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0029-task-lifecycle-deprecation.task.md",
+    "title": "TASK-AAO-0029 — Low-level task lifecycle deprecation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1355",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0030-crlf-policy.task.md",
+    "title": "TASK-AAO-0030 — CRLF policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1356",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0031-background-work-pause-advisory.task.md",
+    "title": "TASK-AAO-0031 — Background work pause advisory",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1357",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0032-artifact-commit-policy.task.md",
+    "title": "TASK-AAO-0032 — Artifact commit policy 收斂",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1358",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0033-aao-final-dogfood-sync.task.md",
+    "title": "TASK-AAO-0033 — Final dogfood rerun 與雙 repo sync",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1359",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0034-next-selector-routing-memory.task.md",
+    "title": "TASK-AAO-0034 — next explicit selector 與 routing memory",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1360",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0035-command-surface-consolidation-help-examples.task.md",
+    "title": "TASK-AAO-0035 — Command surface consolidation 與 help examples",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1361",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md",
+    "title": "TASK-AAO-0036 — AAO acceptance test plan 與前提固化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1362",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0037-batch-checkpoint-commit-window.task.md",
+    "title": "TASK-AAO-0037 — Batch checkpoint commit window",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1363",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0038-task-import-contract-fidelity.task.md",
+    "title": "TASK-AAO-0038 — Task import contract fidelity",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1364",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md",
+    "title": "TASK-AAO-0039 — Planning-only ledger audit boundary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1365",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0040-sandbox-git-process-diagnostic.task.md",
+    "title": "TASK-AAO-0040 — Sandbox git process diagnostics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1366",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0041-batch-checkpoint-hold.task.md",
+    "title": "TASK-AAO-0041 — batch checkpoint --hold",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1367",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0042-batch-repair-continue.task.md",
+    "title": "TASK-AAO-0042 — batch repair / continue",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1368",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0043-planning-repo-root-resolver.task.md",
+    "title": "TASK-AAO-0043 — planning repo root resolver",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1369",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0044-batch-skip-resume.task.md",
+    "title": "TASK-AAO-0044 — batch skip / resume",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1370",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0045-nonoverlap-subagent-execution-policy.task.md",
+    "title": "TASK-AAO-0045 — non-overlap subagent execution policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1371",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0046-validator-baseline-noise-diagnostics.task.md",
+    "title": "TASK-AAO-0046 ? Validator baseline noise diagnostics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1372",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0047-p0-throughput-acceleration-bundle.task.md",
+    "title": "TASK-AAO-0047 — P0 throughput acceleration bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1373",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0048-test-runner-plugin-interface.task.md",
+    "title": "TASK-AAO-0048 — TestRunnerPlugin interface for atom health",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1374",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0049-default-atom-health-test-gates.task.md",
+    "title": "TASK-AAO-0049 — Default atom health test gates",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1375",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0050-framework-stale-lock-cleanup-guidance.task.md",
+    "title": "TASK-AAO-0050 - Framework stale lock cleanup guidance",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1376",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0051-mirror-sync-commit-wrapper-support.task.md",
+    "title": "TASK-AAO-0051 - Mirror-sync commit wrapper support",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1377",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0052-validator-fixture-task-id-clarity.task.md",
+    "title": "TASK-AAO-0052 - Validator fixture task id clarity",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1378",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0053-batch-checkpoint-framework-critical-delivery-window.task.md",
+    "title": "TASK-AAO-0053 — batch checkpoint 支援 framework critical delivery window",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1379",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0054-git-hook-pre-push-refs-isolation.task.md",
+    "title": "TASK-AAO-0054 — 非任務協作流與 git hook pre-push 隔離優化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1380",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0055-historical-done-task-reconcile-reopen.task.md",
+    "title": "TASK-AAO-0055 — Historical done task reconcile / reopen closure sync",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1381",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0056-framework-task-deliver-and-close-macro.task.md",
+    "title": "TASK-AAO-0056 — Framework task deliver-and-close macro",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1382",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0057-close-gate-scoped-diff-isolation.task.md",
+    "title": "TASK-AAO-0057 — Close gate scoped diff isolation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1383",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0058-task-ledger-evidence-events-self-allow-on-claim.task.md",
+    "title": "TASK-AAO-0058 — Task ledger/evidence/events self-allow on claim",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1384",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0059-reconcile-closure-packet-attestation-contract-alignment.task.md",
+    "title": "TASK-AAO-0059 - Reconcile closure-packet attestation contract alignment",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1385",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0060-branch-and-worktree-archive-inventory-after-m16-operability-chain.task.md",
+    "title": "TASK-AAO-0060: Branch and worktree archive inventory after M16 operability chain",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1386",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0061-big-script-atomization-wave1-tasks-shared-helpers.task.md",
+    "title": "TASK-AAO-0061 - Big script atomization wave 1: tasks command shared helpers",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1387",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0062-claim-direction-lock-consistency.task.md",
+    "title": "TASK-AAO-0062 - Claim direction lock consistency",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1388",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0063-evidence-required-command-quoting-validator-auto-link.task.md",
+    "title": "TASK-AAO-0063 - Evidence requiredCommand quoting and validator auto-link",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1389",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0064-task-import-frontmatter-fallback-strict-path-diagnostics.task.md",
+    "title": "TASK-AAO-0064 - Task import frontmatter fallback and strict path diagnostics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1390",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0065-cli-output-json-file-writer-flag.task.md",
+    "title": "TASK-AAO-0065 - CLI output-json file writer flag",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1391",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0066-read-only-preflight-task-materialization-status.task.md",
+    "title": "TASK-AAO-0066 - Read-only preflight and task materialization status",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1392",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0067-cli-usage-diagnostics-envelope.task.md",
+    "title": "TASK-AAO-0067 - CLI usage diagnostics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1393",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0068-next-route-summary-field-projection.task.md",
+    "title": "TASK-AAO-0068 - next route summary and field projection",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1394",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0069-tasks-roster-sync-helper.task.md",
+    "title": "TASK-AAO-0069 - tasks roster sync helper",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1395",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0070-atm-version-metadata-contract-primitives.task.md",
+    "title": "TASK-AAO-0070 - ATM version metadata contract primitives (Slice 1 identity correction)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1396",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0071-atm-versioning-semver-helper-rename-hygiene.task.md",
+    "title": "TASK-AAO-0071 - ATM versioning semver helper rename hygiene patch",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1397",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0072-atm-version-metadata-artifact-kind-and-evidence-write-path.task.md",
+    "title": "TASK-AAO-0072 - ATM version metadata Slice 2 artifactVersionKind and evidence write-path",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1398",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0073-next-atomization-wave-2a-intent-normalizers.task.md",
+    "title": "TASK-AAO-0073: next.ts atomization wave 2A: intent normalizers",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1399",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0074-next-atomization-wave-2b-view-projections.task.md",
+    "title": "TASK-AAO-0074: next.ts atomization wave 2B: view projections",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1400",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0075-next-claim-prompt-ledger-allowedfiles-sync.task.md",
+    "title": "TASK-AAO-0075: next --claim --prompt ledger embed allowedFiles sync",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1401",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0076-next-atomization-wave-2c-a-route-predicates.task.md",
+    "title": "TASK-AAO-0076: next.ts atomization wave 2C-A route predicates",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1402",
+    "path": "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md",
+    "title": "團隊自動化代理分工計畫",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1403",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0001-team-agents-planning-roster-reset.task.md",
+    "title": "TASK-TEAM-0001 — Team agents planning roster reset",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1404",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md",
+    "title": "TASK-TEAM-0002 — Minimal task crew briefing contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1405",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0003-atomization-planner-required-role.task.md",
+    "title": "TASK-TEAM-0003 — Atomization planner required role",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1406",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0004-team-brief-report-templates.task.md",
+    "title": "TASK-TEAM-0004 — Team brief/report templates",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1407",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0005-team-memory-captain-decision-templates.task.md",
+    "title": "TASK-TEAM-0005 — Team memory and captain decision templates",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1408",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0006-patrol-report-template.task.md",
+    "title": "TASK-TEAM-0006 — Patrol report template",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1409",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0007-captain-decision-team-sizing-dry-run.task.md",
+    "title": "TASK-TEAM-0007 — Captain decision and team sizing dry-run",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1410",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0008-task-lieutenant-escalation-rules.task.md",
+    "title": "TASK-TEAM-0008 — Task lieutenant escalation rules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1411",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0009-team-plan-dry-run-resolver.task.md",
+    "title": "TASK-TEAM-0009 — Team plan dry-run resolver",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1412",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0010-role-implementer-selector.task.md",
+    "title": "TASK-TEAM-0010 — Role and implementer selector",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1413",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0011-team-start-status-runtime.task.md",
+    "title": "TASK-TEAM-0011 — Team start/status runtime",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1414",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0012-permission-lease-validator.task.md",
+    "title": "TASK-TEAM-0012 — Permission lease validator",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1415",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0013-file-write-scope-validator.task.md",
+    "title": "TASK-TEAM-0013 — file.write scope validator",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1416",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0014-atomic-police-patrol-reports.task.md",
+    "title": "TASK-TEAM-0014 — Atomic police patrol reports",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1417",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0015-next-playbook-team-recommendation.task.md",
+    "title": "TASK-TEAM-0015 — Next/playbook team recommendation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1418",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0016-closure-packet-team-summary-integration.task.md",
+    "title": "TASK-TEAM-0016 — Closure packet team summary integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1419",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0017-team-template-schema-validator-contract.task.md",
+    "title": "TASK-TEAM-0017 — Team template schema and validator contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1420",
+    "path": "docs/ai_atomic_framework/team-agents/templates/agent-report.md",
+    "title": "Agent Report（隊員工作回報模板）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1421",
+    "path": "docs/ai_atomic_framework/team-agents/templates/captain-decision.md",
+    "title": "Captain Decision（隊長決策模板）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1422",
+    "path": "docs/ai_atomic_framework/team-agents/templates/patrol-report.md",
+    "title": "Patrol Report（巡邏報告模板）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1423",
+    "path": "docs/ai_atomic_framework/team-agents/templates/team-brief.md",
+    "title": "Team Brief（任務開工簡報模板）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1424",
+    "path": "docs/ai_atomic_framework/team-agents/templates/team-memory-shard.md",
+    "title": "Team Memory Shard（任務知識碎片模板）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1425",
+    "path": "docs/ai_atomic_framework/team-agents/templates/team-summary.md",
+    "title": "Team Summary（隊長彙整模板）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1426",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-other-part-01.md",
+    "title": "Doc ID Registry Markdown Index — 其它類",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1427",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-other-part-02.md",
+    "title": "Doc ID Registry Markdown Index — 其它類",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1428",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-other-part-03.md",
+    "title": "Doc ID Registry Markdown Index — 其它類",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1429",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0096-legacy-route-plan-tasks-ts.task.md",
+    "title": "TASK-AAO-0096 LegacyRoutePlan for tasks.ts — 工具實戰 + 校驗",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1430",
+    "path": "docs/agent-briefs/reports/PROG-2-0018-front6-readiness-audit.md",
+    "title": "PROG-2-0018 Front6 Mainline Injection Readiness Audit",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1431",
+    "path": "docs/agent-briefs/reports/PROG-2-0018-needs-fill-readiness-audit.md",
+    "title": "PROG-2-0018 Needs-Fill Mainline Injection Readiness Audit",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1432",
+    "path": "docs/agent-briefs/reports/PROG-2-0019-front6-readiness-audit.md",
+    "title": "PROG-2-0019 Front6 Ready Event Promotion Audit",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1433",
+    "path": "docs/agent-briefs/reports/PROG-2-0019-needs-fill-readiness-audit.md",
+    "title": "PROG-2-0019 Needs-Fill Ready Event Promotion Audit",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1434",
+    "path": "docs/agent-briefs/reports/PROG-2-0019-ready-event-promotion.md",
+    "title": "PROG-2-0019 Ready Event Promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1435",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/d2/adapter-spec.md",
+    "title": "D2 Adapter Spec — atm-markdown-task-source Plugin 接入評估報告",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1436",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0077-next-atomization-wave-2c-b-match-and-sort.task.md",
+    "title": "Goal: Extract 13 pure comparators/matchers/weights from next.ts into next/match-and-sort.ts as final Wave 2C-B of TASK-AAO-0061 deferred scope.",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1437",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0078-git-head-evidence-jsonl-migration.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1438",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0079-framework-commit-range-baseline-forward-roll.task.md",
+    "title": "TASK-AAO-0079: framework-commit-range baseline forward roll",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1439",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0080-pre-push-hook-baseline-filter.task.md",
+    "title": "TASK-AAO-0080: pre-push hook closure-packet baseline filter + evidence-missing diagnostic",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1440",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0081-bootstrap-behavior-pack-ownership-backfill.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1441",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0082-cid-backfill-atom-id-to-cid-sidecar.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1442",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0083-external-task-source-plugin-interface.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1443",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0084-atm-markdown-task-source-reference-plugin.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1444",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0085-context-map-schema-extension.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1445",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0086-plugin-hooks-tasks-new-cli.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1446",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0087-advisory-commit-hook-contextmap.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1447",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0088-rollback-evidence-backfill.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1448",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0089-rollback-evidence-backfill-completion.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1449",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0092-d2-adapter-spec.task.md",
+    "title": "TASK-AAO-0092 D2 adapter spec — atm-markdown-task-source plugin 接入評估",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1450",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0093-d2-plugin-shadow-integration.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1451",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0095-tasks-wave3a-option-parsers-split.task.md",
+    "title": "TASK-AAO-0095 tasks.ts wave 3-A parse-options cluster split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1452",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0097-tasks-wave3b-file-io-helpers-split.task.md",
+    "title": "TASK-AAO-0097 tasks.ts wave 3-B file-I/O helpers split",
     "category": "other"
   }
 ]

@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-05-25
+> 生成日期: 2026-05-30
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 3/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -105,3 +105,5 @@
 | `doc_task_0390` | docs/agent-briefs/tasks/PROG/PROG-2-0016.md | [PROG-2-0016] 短證據上下文擴張與六種子抽取 |
 | `doc_task_0391` | docs/agent-briefs/tasks/PROG/PROG-2-0017.md | [PROG-2-0017] 關係邊 / 互動對象 / readiness 稽核 |
 | `doc_task_0392` | docs/agent-briefs/tasks/WEB/TASK-WEB-0001.md | [TASK-WEB-0001] ATM Petri 培養皿互動 web demo |
+| `doc_task_0393` | docs/agent-briefs/tasks/PROG/PROG-2-0018.md | [PROG-2-0018] Top50 needs-etl-fill 主幹資料注入：primary-canon / 白名單硬關係 → runtime ready events / relationship edges |
+| `doc_task_0394` | docs/agent-briefs/tasks/PROG/PROG-2-0019.md | [PROG-2-0019] Top50 needs-etl-fill ready-event promotion：primary-canon source-event-packets → staged-ready-events |

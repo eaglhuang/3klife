@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — AI / AgentSkill / Server
 
-> 生成日期: 2026-05-25
+> 生成日期: 2026-05-30
 > 這是 `doc-id-registry.md` 的「AI / AgentSkill / Server」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -48,6 +48,8 @@
 | `doc_ai_0042` | .github/instructions/atm-next.instructions.md | ATM Next |
 | `doc_ai_0043` | .github/instructions/atm-orient.instructions.md | ATM Orient |
 | `doc_ai_0044` | .github/instructions/atm-upgrade-scan.instructions.md | ATM Upgrade Scan |
+| `doc_ai_0045` | .github/instructions/atm-task-intent-resolver.instructions.md | ATM Task Intent Resolver |
+| `doc_ai_0046` | docs/agent-briefs/npc-brain-handoff-2026-05-29.md | `npc-brain` 資料演進與交接摘要 |
 
 ## Agent Skill 專用 (`doc_agentskill`)
 
@@ -134,6 +136,19 @@
 | `doc_agentskill_0101` | .agents/skills/3kweb-check/SKILL.md | 3kweb-check |
 | `doc_agentskill_0102` | .agents/skills/atm-version-upgrade/SKILL.md | ATM Version Upgrade Skill |
 | `doc_agentskill_0103` | .github/skills/3kweb-check/SKILL.md | 3kweb-check |
+| `doc_agentskill_0104` | .agents/skills/ai-role-router/SKILL.md | AI Role Router |
+| `doc_agentskill_0105` | .agents/skills/atm-create/SKILL.md | ATM Create |
+| `doc_agentskill_0106` | .agents/skills/atm-evidence/SKILL.md | ATM Evidence |
+| `doc_agentskill_0107` | .agents/skills/atm-governance-router/SKILL.md | ATM Governance Router |
+| `doc_agentskill_0108` | .agents/skills/atm-handoff/SKILL.md | ATM Handoff |
+| `doc_agentskill_0109` | .agents/skills/atm-internal-build-sync/SKILL.md | ATM Internal Build Sync |
+| `doc_agentskill_0110` | .agents/skills/atm-lock/SKILL.md | ATM Lock |
+| `doc_agentskill_0111` | .agents/skills/atm-next/SKILL.md | ATM Next |
+| `doc_agentskill_0112` | .agents/skills/atm-orient/SKILL.md | ATM Orient |
+| `doc_agentskill_0113` | .agents/skills/atm-task-intent-resolver/SKILL.md | ATM Task Intent Resolver |
+| `doc_agentskill_0114` | .agents/skills/atm-upgrade-scan/SKILL.md | ATM Upgrade Scan |
+| `doc_agentskill_0115` | .agents/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
+| `doc_agentskill_0116` | .github/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
 
 ## Server 文件類 (`doc_server_<subtype>`)
 

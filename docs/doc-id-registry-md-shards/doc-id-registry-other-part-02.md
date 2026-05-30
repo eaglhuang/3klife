@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-05-25
+> 生成日期: 2026-05-30
 > 這是 `doc-id-registry.md` 的「其它類」分片，第 2/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -181,11 +181,10 @@
 | `doc_other_0985` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0603.task.md | ATM-LANG-CSHARP-0603 C# runtime and diagnostics policy matrix integration |
 | `doc_other_0986` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0604.task.md | ATM-LANG-CSHARP-0604 C# promotion gate for advisory to pilot readiness |
 | `doc_other_1001` | docs/ai_atomic_framework/atm-self-atomization/ATM框架100%自我原子化計畫書.md | ATM 框架 100% 自我原子化計畫書 |
-| `doc_other_1002` | docs/ai_atomic_framework/atm-self-atomization/ATM_COMPLETION_REPORT.md | ATM 100% 自我原子化計畫完成報告 |
 | `doc_other_1003` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0001-coverage-taxonomy-exclusion-policy.task.md | TASK-ASA-0001 定義 ATM 100% 原子化覆蓋口徑與排除政策 |
 | `doc_other_1004` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0002-atomize-inventory-cli.task.md | TASK-ASA-0002 新增 atomize inventory 覆蓋盤點 CLI |
 | `doc_other_1005` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0003-atm-dogfood-score.task.md | TASK-ASA-0003 新增 ATM dogfood score 報告 |
-| `doc_other_1006` | docs/ai_atomic_framework/atm-self-atomization/ATM_COMPLETION_REPORT_AUDIT_2026-05-21.md | ATM Self-Atomization Completion Claim Audit |
+| `doc_other_1006` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0004-atomization-coverage-guard-validate.task.md | TASK-ASA-0004 新增 atomization-coverage guard 與 validate |
 | `doc_other_1007` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0005-generated-fixture-boundaries.task.md | TASK-ASA-0005 建立 generated 與 fixture 邊界清單 |
 | `doc_other_1008` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0006-bulk-atom-spec-backfill.task.md | TASK-ASA-0006 實作 bulk atom spec backfill |
 | `doc_other_1009` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0007-top-level-maps-composition.task.md | TASK-ASA-0007 建立 top-level ATM maps composition |
@@ -198,6 +197,11 @@
 | `doc_other_1016` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0014-release-build-distribution-atomization.task.md | TASK-ASA-0014 完成 release build 與 distribution 原子化 |
 | `doc_other_1017` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0015-doctor-git-head-evidence-gap.task.md | TASK-ASA-0015 關閉 doctor Git HEAD evidence gap |
 | `doc_other_1018` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0016-self-atomization-graduation-gate.task.md | TASK-ASA-0016 建立 100% 自我原子化 graduation gate |
+| `doc_other_1024` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0017-score-command-coverage-instrumentation.task.md | TASK-ASA-0017 修正 public command coverage 計分來源 |
+| `doc_other_1025` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0018-readable-ref-score-integration.task.md | TASK-ASA-0018 修正 readable ref scoring 整合 |
+| `doc_other_1026` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0019-source-ownership-score-closure.task.md | TASK-ASA-0019 收斂 source ownership coverage 缺口 |
+| `doc_other_1027` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0020-rollback-evidence-graduation-policy.task.md | TASK-ASA-0020 定義 rollback evidence graduation policy |
+| `doc_other_1028` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0021-score-based-graduation-rerun.task.md | TASK-ASA-0021 重跑 score-based graduation gate 並更新決策紀錄 |
 | `doc_other_1200` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0700.task.md | ATM-LANG-CSHARP-0700 C# global.json and NuGet.Config profile detection |
 | `doc_other_1201` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0701.task.md | ATM-LANG-CSHARP-0701 C# reproducible-restore risk findings from project evidence |
 | `doc_other_1202` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-CSHARP-0702.task.md | ATM-LANG-CSHARP-0702 C# runtime policy matrix governance tags expansion |
@@ -230,7 +234,6 @@
 | `doc_other_1234` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0009-upstream-blocker-repair-batch-2026-05-20.md | TASK-ATS-0009 Evidence: Upstream Blocker Repair Batch |
 | `doc_other_1235` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/evidence/TASK-ATS-0010-graduation-release-gate-2026-05-20.md | TASK-ATS-0010 Evidence: Graduation and Release Gate |
 | `doc_other_1236` | docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0028-first-use-user-notice.task.md | TASK-APO-0028 First-Use User Notice and Suggested Actions |
-| `doc_other_1237` | docs/ai_atomic_framework/atm-self-atomization/tasks/TASK-ASA-0004-atomization-coverage-guard-validate.task.md | TASK-ASA-0004 新增 atomization-coverage guard 與 validate |
 | `doc_other_1238` | docs/ai_atomic_framework/atm-self-refactor/ATM自我治理拆分計畫書.md | ATM 自我治理拆分計畫書（ATM Self-Refactor） |
 | `doc_other_1239` | docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-1-summary.md | Evidence — Layer 1（Pure helpers）完成總結 |
 | `doc_other_1240` | docs/ai_atomic_framework/atm-self-refactor/evidence/LAYER-2-summary.md | Evidence — Layer 2（Module-level splits）完成總結 |
@@ -292,6 +295,3 @@
 | `doc_other_1296` | docs/ai_atomic_framework/framework-drafts/release-trust-ops.md | Release Trust Continuous Verification |
 | `doc_other_1297` | docs/ai_atomic_framework/governance-overview/governance-overview.md | ATM 框架治理機制全景 (zh-TW) |
 | `doc_other_1298` | docs/ai_atomic_framework/governance-overview/PLAN.md | Plan: ATM 框架治理機制完整解釋文件 (zh-TW) |
-| `doc_other_1299` | docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md | 拆解大型功能優化原子 Map 計畫書 v2-r2 |
-| `doc_other_1300` | docs/ai_atomic_framework/map-replacement-protocol/IMPLEMENTATION-HANDOFF.md | Map Replacement Protocol v2 — Implementation Handoff |
-| `doc_other_1301` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0011-semantic-fingerprint-monitor.task.md | TASK-MRP-0011 — Atom Semantic Fingerprint 持續監控 |

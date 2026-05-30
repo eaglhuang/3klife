@@ -484,5 +484,83 @@
     "path": ".github/skills/3kweb-check/SKILL.md",
     "title": "3kweb-check",
     "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0104",
+    "path": ".agents/skills/ai-role-router/SKILL.md",
+    "title": "AI Role Router",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0105",
+    "path": ".agents/skills/atm-create/SKILL.md",
+    "title": "ATM Create",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0106",
+    "path": ".agents/skills/atm-evidence/SKILL.md",
+    "title": "ATM Evidence",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0107",
+    "path": ".agents/skills/atm-governance-router/SKILL.md",
+    "title": "ATM Governance Router",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0108",
+    "path": ".agents/skills/atm-handoff/SKILL.md",
+    "title": "ATM Handoff",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0109",
+    "path": ".agents/skills/atm-internal-build-sync/SKILL.md",
+    "title": "ATM Internal Build Sync",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0110",
+    "path": ".agents/skills/atm-lock/SKILL.md",
+    "title": "ATM Lock",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0111",
+    "path": ".agents/skills/atm-next/SKILL.md",
+    "title": "ATM Next",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0112",
+    "path": ".agents/skills/atm-orient/SKILL.md",
+    "title": "ATM Orient",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0113",
+    "path": ".agents/skills/atm-task-intent-resolver/SKILL.md",
+    "title": "ATM Task Intent Resolver",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0114",
+    "path": ".agents/skills/atm-upgrade-scan/SKILL.md",
+    "title": "ATM Upgrade Scan",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0115",
+    "path": ".agents/skills/atm-dispatch/SKILL.md",
+    "title": "ATM Dispatch Skill — Project Captain 模式",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0116",
+    "path": ".github/skills/atm-dispatch/SKILL.md",
+    "title": "ATM Dispatch Skill — Project Captain 模式",
+    "category": "agentskill"
   }
 ]

@@ -170,13 +170,25 @@
   {
     "id": "doc_index_1004",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/README.md",
-    "title": "ATM Agent-First 可操作性系列",
+    "title": "ATM Agent-First 可操作性優化（AAO）",
     "category": "index"
   },
   {
     "id": "doc_index_1005",
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
-    "title": "ATM Agent-First 可操作性任務索引",
+    "title": "AAO Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1006",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/README.md",
+    "title": "Team Agents Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1007",
+    "path": "docs/ai_atomic_framework/team-agents/templates/README.md",
+    "title": "Team Agents Templates",
     "category": "index"
   }
 ]

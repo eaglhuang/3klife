@@ -2302,5 +2302,17 @@
     "path": "docs/agent-briefs/tasks/WEB/TASK-WEB-0001.md",
     "title": "[TASK-WEB-0001] ATM Petri 培養皿互動 web demo",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0393",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0018.md",
+    "title": "[PROG-2-0018] Top50 needs-etl-fill 主幹資料注入：primary-canon / 白名單硬關係 → runtime ready events / relationship edges",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0394",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0019.md",
+    "title": "[PROG-2-0019] Top50 needs-etl-fill ready-event promotion：primary-canon source-event-packets → staged-ready-events",
+    "category": "task"
   }
 ]

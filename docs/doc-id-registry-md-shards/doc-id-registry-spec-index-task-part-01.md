@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-05-25
+> 生成日期: 2026-05-30
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 1/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -219,3 +219,7 @@
 | `doc_index_1001` | docs/ai_atomic_framework/atm-self-atomization/README.md | ATM 框架 100% 自我原子化協調區 |
 | `doc_index_1002` | docs/ai_atomic_framework/atm-self-atomization/tasks/README.md | ATM 100% 自我原子化任務卡索引 |
 | `doc_index_1003` | docs/ai_atomic_framework/atm-self-refactor/tasks/README.md | ATM 自我治理拆分 Task Cards |
+| `doc_index_1004` | docs/ai_atomic_framework/atm-agent-first-operability/README.md | ATM Agent-First 可操作性優化（AAO） |
+| `doc_index_1005` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md | AAO Task Index |
+| `doc_index_1006` | docs/ai_atomic_framework/team-agents/tasks/README.md | Team Agents Task Index |
+| `doc_index_1007` | docs/ai_atomic_framework/team-agents/templates/README.md | Team Agents Templates |

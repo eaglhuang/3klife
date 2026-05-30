@@ -4,8 +4,8 @@
   "summary": {
     "done": 0,
     "in_progress": 2,
-    "open": 2,
-    "total": 4
+    "open": 3,
+    "total": 5
   },
   "tasks": [
     {
@@ -169,6 +169,64 @@
         ".atm/history/guidance/TASK-AAO-0096-cross-check.md"
       ],
       "notes": "2026-05-30 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_other_1452",
+      "id": "TASK-AAO-0097",
+      "title": "tasks.ts wave 3-B file-I/O helpers split",
+      "owner": "GitHubCopilot",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "refactor",
+      "phase": "M2",
+      "created": "2026-05-30",
+      "created_by_agent": "GitHubCopilot",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "延續 wave 3 切片飛輪。0096 LegacyRoutePlan 標記 37 個 safeFirstAtoms。本卡（3-B）切出 file-I/O cluster 7 個函數至新檔 packages/cli/src/commands/tasks/task-file-io-helpers.ts，原 tasks.ts re-export 維持向後相容。",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0096"
+      ],
+      "acceptance": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "npm run validate:git-head-evidence",
+        "node atm.mjs hook pre-commit --json → ok:true",
+        "node atm.mjs atomize score → score ≥ 95",
+        "新 test 全綠"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/tasks.ts",
+        "packages/cli/src/commands/tasks/task-file-io-helpers.ts",
+        "tests/unit/task-file-io-helpers.unit.test.ts",
+        "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+      ],
+      "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 開卡完成，準備 Phase 1 移出實作 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
