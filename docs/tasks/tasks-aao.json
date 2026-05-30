@@ -4,38 +4,53 @@
   "summary": {
     "done": 0,
     "in_progress": 2,
-    "open": 0,
-    "total": 2
+    "open": 1,
+    "total": 3
   },
   "tasks": [
     {
+      "doc_id": "",
       "id": "TASK-AAO-0092",
-      "priority": "P1",
-      "phase": "D2",
-      "owner": "antigravity-gemini-3.5-flash",
-      "status": "in-progress",
-      "created": "2026-05-30",
-      "created_by_agent": "antigravity-gemini-3.5-flash",
-      "started_at": "2026-05-30T17:54:05+08:00",
-      "started_by_agent": "antigravity-gemini-3.5-flash",
-      "type": "design",
       "title": "D2 adapter spec — atm-markdown-task-source plugin 接入評估",
-      "description": "D2 系列首卡（純評估、無代碼變更）。產出設計文件，回答「3KLife 如何接入上游 atm-markdown-task-source plugin 取代既有 tools_node/task-card-opener.js」。為 0093（plugin 接入）+ 0094（拿掉 status 欄）鋪路。",
+      "owner": "GitHubCopilot",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-30",
+      "created_by_agent": "GitHubCopilot",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
       "related": [],
-      "depends": [
-        "TASK-AAO-0089"
-      ],
-      "acceptance": [
-        "adapter-spec.md 6 段都填了",
-        "切換策略選擇與理由明確",
-        "0093/0094 拆分提案明確",
-        "3KLife 專案庫中僅有 1 個 commit"
-      ],
-      "deliverables": [
-        "docs/ai_atomic_framework/atm-agent-first-operability/d2/adapter-spec.md",
-        "docs/tasks/tasks-aao.json"
-      ],
-      "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 接入評估進行中；產出 adapter-spec.md 設計文件 | 阻塞: 無"
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-05-30 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "id": "TASK-AAO-0093",
@@ -65,6 +80,61 @@
         "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0093-d2-plugin-shadow-integration.task.md"
       ],
       "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 開卡完成，準備 Phase 1 接入實作 | 阻塞: 無"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0095",
+      "title": "tasks.ts wave 3-A parse-options cluster split",
+      "owner": "antigravity-gemini-3.5-flash",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "refactor",
+      "phase": "M2",
+      "created": "2026-05-30",
+      "created_by_agent": "GitHubCopilot",
+      "started_at": "2026-05-30T20:08:58+08:00",
+      "started_by_agent": "GitHubCopilot",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "tasks.ts 已達 5305 行，wave 3 啟動。本卡（3-A）切出 parse-options cluster (~600 行純解析函數)。",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0077"
+      ],
+      "acceptance": [
+        "parse-options cluster successfully extracted to task-option-parsers.ts",
+        "tasks.ts backward compatibility maintained",
+        "atom map updated"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/tasks.ts",
+        "packages/cli/src/commands/tasks/task-option-parsers.ts",
+        "packages/cli/src/commands/tasks/task-option-parsers.test.ts",
+        "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+      ],
+      "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
