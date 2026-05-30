@@ -3,9 +3,9 @@
   "generated": "2026-05-30",
   "summary": {
     "done": 0,
-    "in_progress": 4,
+    "in_progress": 5,
     "open": 2,
-    "total": 6
+    "total": 7
   },
   "tasks": [
     {
@@ -309,6 +309,43 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "TASK-AAO-0099",
+      "priority": "high",
+      "phase": "M2",
+      "owner": "antigravity-gemini-3.5-flash",
+      "status": "in-progress",
+      "created": "2026-05-30",
+      "created_by_agent": "antigravity-gemini-3.5-flash",
+      "started_at": "2026-05-30T22:30:47+08:00",
+      "started_by_agent": "antigravity-gemini-3.5-flash",
+      "type": "refactor",
+      "title": "MRP batch-3 leaf extraction（3× throughput pilot）",
+      "description": "MRP batch-3 leaf extraction on top candidates, improving throughput with 3 concurrent leaf extractions.",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0098"
+      ],
+      "acceptance": [
+        "node atm.mjs hook pre-commit --json → ok:true",
+        "node atm.mjs atomize score → ≥95/A 不退步",
+        "npm run typecheck → exit 0",
+        "3 leaf helper 模組抽取且 re-export 無破壞",
+        "3 leaf 單元測試全數通過",
+        "batch-level envelope JSON 與 3 組 evidence 完整備齊"
+      ],
+      "deliverables": [
+        "candidates rank 4 報告（ranking + source-inventory + police-family + guidance-drift-police）",
+        "3 個 leaf 函數從 top candidate 抽取至 helper module(s)",
+        "per-leaf smoke evidence 各 2 份（共 6 份 logs）",
+        "per-leaf rollback-ready patch 各 1 份（共 3 份）",
+        "per-leaf rollback-proof JSON 各 1 份（共 3 份）",
+        "per-leaf actual-patch-evidence JSON 各 1 份（共 3 份）",
+        "batch-level envelope JSON（含 3 leaf 彙整 + batch rollback proof）",
+        "3 個 leaf 各自單元測試"
+      ],
+      "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 開卡完成 (Phase 0) | 阻塞: 無"
     }
   ]
 }
