@@ -3,9 +3,9 @@
   "generated": "2026-05-30",
   "summary": {
     "done": 0,
-    "in_progress": 1,
+    "in_progress": 2,
     "open": 0,
-    "total": 1
+    "total": 2
   },
   "tasks": [
     {
@@ -36,6 +36,35 @@
         "docs/tasks/tasks-aao.json"
       ],
       "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 接入評估進行中；產出 adapter-spec.md 設計文件 | 阻塞: 無"
+    },
+    {
+      "id": "TASK-AAO-0093",
+      "priority": "P1",
+      "phase": "D2",
+      "owner": "antigravity-gemini-3.5-flash",
+      "status": "in-progress",
+      "created": "2026-05-30",
+      "created_by_agent": "antigravity-gemini-3.5-flash",
+      "started_at": "2026-05-30T17:58:57+08:00",
+      "started_by_agent": "antigravity-gemini-3.5-flash",
+      "type": "implementation",
+      "title": "D2 plugin 接入 + shadow 雙跑",
+      "description": "依 TASK-AAO-0092 adapter-spec.md 第 6 段定義範圍，落地 D2 系列第 2 卡：接入 plugin 為 shadow runner，輸出 advisory diff 至 stderr。",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0092"
+      ],
+      "acceptance": [
+        "Upstream plugin successfully consumed in 3KLife CWD without crash",
+        "d2-shadow-advisor.js integrated into task-card-opener.js end section",
+        "Validator commands exit 0"
+      ],
+      "deliverables": [
+        "tools_node/task-card-opener.js",
+        "tools_node/d2-shadow-advisor.js",
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0093-d2-plugin-shadow-integration.task.md"
+      ],
+      "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 開卡完成，準備 Phase 1 接入實作 | 阻塞: 無"
     }
   ]
 }
