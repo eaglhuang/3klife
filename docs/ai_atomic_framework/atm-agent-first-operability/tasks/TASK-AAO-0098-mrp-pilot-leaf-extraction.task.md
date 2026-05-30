@@ -1,5 +1,5 @@
 ---
-task_id: TASK-AAO-0097
+task_id: TASK-AAO-0098
 title: "MRP pilot — leaf-by-leaf governed extraction（target by atm candidates rank）"
 status: in_progress
 priority: high
@@ -42,7 +42,7 @@ nonGoals:
 notes: "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 開卡完成 (Phase 0) | 阻塞: 無"
 ---
 
-# TASK-AAO-0097 MRP pilot — leaf-by-leaf governed extraction（target by atm candidates rank）
+# TASK-AAO-0098 MRP pilot — leaf-by-leaf governed extraction（target by atm candidates rank）
 
 ## 摘要
 Captain 校正：放棄手切 wave 3-B，改用「sanguo-rag 實證的 leaf-by-leaf governed extraction」workflow，由 ATM 自己的 `atm candidates rank` 排序選 target。本卡是 pilot 試水溫，不直接套 v2-r2 全套 map workflow。
