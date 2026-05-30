@@ -1,12 +1,13 @@
 ---
 task_id: TASK-AAO-0088
 title: "rollback evidence backfill (lift dogfood 89→91)"
-status: in_progress
+status: done
 priority: P1
 closure_authority: target_repo
 depends_on: []
 started_at: "2026-05-30T13:39:06+08:00"
 started_by_agent: "antigravity-gemini-3.5-flash"
+closed_at: "2026-05-30T14:06:30+08:00"
 scopePaths:
   - "atomic-registry.json"
   - "atomic_workbench/atomization-coverage/"
