@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 29,
-    "in_progress": 0,
-    "open": 29,
-    "total": 58
+    "done": 31,
+    "in_progress": 1,
+    "open": 28,
+    "total": 60
   },
   "tasks": [
     {
@@ -299,7 +299,7 @@
       "notes": "2026-04-06 | 狀態: open | 來源: 程式規格書.md §2.3 §5.4 | 阻塞: PROG-1-0006 需先完成"
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0393",
       "id": "PROG-1-0010",
       "title": "BloodlineTreePanel 元件實作（祖先樹 + 因子繼承 + 子嗣預測）",
       "owner": "Agent1",
@@ -1072,7 +1072,7 @@
       "notes": "2026-05-04 | 狀態: done | 驗證: active-contract/fidelity-contract/rule-guard strict/compute-gate standard 全數通過 | 變更: GitHubCopilot 完成 HTML-to-UCUF 規則治理重構，落地 rule-registry.json + rule-checkers.js + registry-driven rule-guard | 阻塞: none"
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0393",
       "id": "PROG-2-0009",
       "title": "HTML-to-UCUF final diff owner mapper and residual taxonomy hardening",
       "owner": "codex-worker-b",
@@ -1425,7 +1425,7 @@
       "notes": "2026-05-13 | 狀態: done | 變更: 已新增 css-coverage-trace 並串接 compare/zone-ownership，補上 H2U-P5-011 checker；gacha top20 traced=true、pending=0，rule-guard pass | 阻塞: compute-gate standard 受既有大型 docs/html_skill_rule-evolution2.md（非本卡變更）阻擋 doc-shard-health"
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0393",
       "id": "TASK-DGB-0000",
       "title": "Default Governance Profile 計畫定稿與中立性掃描",
       "owner": "ClaudeCode_Haiku",
@@ -1489,7 +1489,7 @@
       }
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0394",
       "id": "TASK-DGB-0001",
       "title": "Profile schema 與 compatibility matrix 接線",
       "owner": "ClaudeCode_Haiku",
@@ -1563,7 +1563,7 @@
       }
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0394",
       "id": "TASK-DGB-0002",
       "title": "Encoding Guard profile 升級",
       "owner": "ClaudeCode_Haiku",
@@ -1633,7 +1633,7 @@
       }
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0394",
       "id": "TASK-DGB-0003",
       "title": "Context Budget policy 配置化",
       "owner": "ClaudeCode_Haiku",
@@ -1915,7 +1915,7 @@
       "title": "Scope Guard / dirty tree validator",
       "owner": "ClaudeCode_Haiku",
       "priority": "P1",
-      "status": "open",
+      "status": "in-progress",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
@@ -1965,7 +1965,7 @@
       "title": "Handoff / turn artifact schema",
       "owner": "ClaudeCode_Haiku",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
@@ -2015,7 +2015,7 @@
       "title": "Project Memory optional capability 與 conflict finder",
       "owner": "ClaudeCode_Haiku",
       "priority": "P2",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
@@ -2113,15 +2113,15 @@
       "doc_id": "",
       "id": "PROG-2-0012",
       "title": "Scene Quality Pipeline 收斂總卡",
-      "owner": "codex-desktop",
+      "owner": "vs-insiders-copilot-agent",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "planning",
       "phase": "SceneQuality",
       "created": "2026-05-25",
       "created_by_agent": "codex-desktop",
-      "started_at": "",
-      "started_by_agent": "codex-desktop",
+      "started_at": "2026-05-29T17:34:33.0387555+08:00",
+      "started_by_agent": "vs-insiders-copilot-agent",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -2172,7 +2172,7 @@
       "title": "scene-director 可觀測性與 quality metadata 補強",
       "owner": "codex-gpt-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "SceneQuality",
       "created": "2026-05-25",
@@ -2430,9 +2430,11 @@
       "deliverables": [
         "docs/agent-briefs/tasks/PROG/PROG-2-0017.md",
         "docs/tasks/tasks-prog.json",
-        "core50 或 top50 readiness 報告"
+        "tools_node/audit-sanguo-top50-readiness.js",
+        "docs/agent-briefs/reports/PROG-2-0017-top50-readiness-r1.md",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0017-top50-readiness-audit-r1.json"
       ],
-      "notes": "2026-05-25 | 狀態: open | 驗證: pending | 變更: 建立關係邊與 readiness 稽核卡 | 阻塞: 無",
+      "notes": "2026-05-29 | 狀態: in-progress | 驗證: npm run audit:sanguo-top50-readiness pass；compute-gate ts/encoding/eslint/import/dead-code pass | 變更: R1 Markdown 報告壓縮為決策摘要，完整 50 人矩陣保留於 JSON | 阻塞: standard gate 的 task-scope/doc-shard-health 受既有 dirty tree 與 doc registry shard 影響未全綠；尚未修正 ETL export/server 去重\n2026-05-29 | 狀態: in-progress | 驗證: npm run audit:sanguo-top50-readiness pass | 變更: 新增 Top50 readiness 稽核工具與 R1 報告，確認 50/50 profile 存在、29 playable-with-audit-risks、21 needs-etl-fill | 阻塞: 尚未修正 ETL export/server 去重，只完成首輪盤點\n2026-05-29 | 狀態: in-progress | 驗證: pending | 變更: vs-insiders-copilot-agent 開始處理 Top50 readiness 稽核與報告 | 阻塞: ATM next --intent 未回傳，改依 repo task-lock 流程接手\n2026-05-25 | 狀態: open | 驗證: pending | 變更: 建立關係邊與 readiness 稽核卡 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -2441,18 +2443,233 @@
         "prereq": ""
       },
       "contracts": {
-        "input": [],
-        "output": [],
-        "validation_cmd": "",
-        "rollback_hint": "",
-        "execution_steps": []
+        "input": [
+          "artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles/top50-runtime-fill-r1-export-report.json",
+          "artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles/<generalId>/*.json"
+        ],
+        "output": [
+          "docs/agent-briefs/reports/PROG-2-0017-top50-readiness-r1.md",
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0017-top50-readiness-audit-r1.json"
+        ],
+        "validation_cmd": "npm run audit:sanguo-top50-readiness",
+        "rollback_hint": "Remove tools_node/audit-sanguo-top50-readiness.js and the generated PROG-2-0017 readiness report artifacts if the audit contract changes.",
+        "execution_steps": [
+          "npm run audit:sanguo-top50-readiness",
+          "Review needs-etl-fill rows before the next ETL promotion batch",
+          "Use candidateOnlyTargets / aliasOnlyTraces / duplicateGroups as scene-director regression gates"
+        ]
       },
       "harness_evidence": {
-        "artifact_paths": [],
-        "validation_evidence": [],
+        "artifact_paths": [
+          "docs/agent-briefs/reports/PROG-2-0017-top50-readiness-r1.md",
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0017-top50-readiness-audit-r1.json"
+        ],
+        "validation_evidence": [
+          "npm run audit:sanguo-top50-readiness",
+          "node tools_node/compute-gate.js --gates ts-syntax encoding eslint-rules import-boundary dead-code --agent-feedback"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [
+          "docs/agent-briefs/reports/PROG-2-0017-top50-readiness-r1.md"
+        ],
+        "metrics_summary": [
+          "Top50 audited: 50",
+          "Missing runtime artifacts: 0",
+          "Band counts: playable-with-audit-risks=29, needs-etl-fill=21",
+          "Average readyEventCount=11.7, average relationshipCount=6.36"
+        ]
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0018",
+      "title": "Top50 needs-etl-fill 主幹資料注入：primary-canon / 白名單硬關係 → runtime ready events / relationship edges",
+      "owner": "vs-insiders-copilot-agent",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "SceneQuality",
+      "created": "2026-05-29",
+      "created_by_agent": "vs-insiders-copilot-agent",
+      "started_at": "2026-05-29T22:21:10+08:00",
+      "started_by_agent": "vs-insiders-copilot-agent",
+      "completed_at": "2026-05-29T22:29:25+08:00",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把既有 primary-canon、Top20/Top50 白名單硬關係與 relationship overlay 接進 Top50 runtime export，讓 needs-etl-fill 人物產生更多可玩 ready events、relationship edges 與 relationship-backed interaction targets。",
+      "related": [
+        "PROG-2-0017"
+      ],
+      "depends": [],
+      "acceptance": [
+        "21 個 needs-etl-fill 人物可用同一條主幹輸入重跑 runtime export",
+        "21 個 needs-etl-fill 人物不得由 core_report fallback 補位；缺 stable 時必須輸出 upstream gap queue",
+        "至少前六名 cao-zhen, deng-ai, fa-zheng, lu-bu, lu-xun, ma-chao 有 before/after readiness report",
+        "primary-canon / relationship overlay 輸入路徑寫入 export report",
+        "interaction targets 仍以 relationship-backed 為優先，alias-only 不得新增 Top12 互動對象"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0018.md",
+        "docs/tasks/tasks-prog.json",
+        "local/3klife-npc-brain/pipelines/sanguo-rag/export_runtime_profiles_batch.py",
+        "local/3klife-npc-brain/pipelines/sanguo-rag/export_general_runtime_profile.py",
+        "C:\\Users\\User\\3klife-npc-brain\\pipelines\\sanguo-rag\\export_runtime_profiles_batch.py",
+        "C:\\Users\\User\\3klife-npc-brain\\pipelines\\sanguo-rag\\export_general_runtime_profile.py",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0018-top50-mainline-injection-report.json",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0018-needs-fill-export-report.json",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0018-needs-fill-readiness-audit.json",
+        "docs/agent-briefs/reports/PROG-2-0018-needs-fill-readiness-audit.md"
+      ],
+      "notes": "2026-05-29 | 狀態: done | 驗證: py_compile pass；fallback removed；21/21 needs-etl-fill sidecar export ok；missingStableInputCount=0；readiness audit bandCounts=needs-etl-fill 16 / playable-with-audit-risks 5，averageReadyEventCount=9.86，averageRelationshipCount=7.05 | 變更: batch exporter 預設接 primary-canon relationship evidence/source-event-packets，並新增 stable preflight / upstreamGaps.missingStableInputs；single exporter 維持 stable-only，不用 core_report 補位 | 阻塞: 下一步需開 ready-event promotion / upstream source fill 卡，把仍為 zero/low ready-event 的人物推進 staged ready events\n2026-05-29 | 狀態: in-progress | 驗證: pending | 變更: export_runtime_profiles_batch 將新增 primary-canon defaults，自動吃 latest primary-canon relationship evidence / source-event-packets | 阻塞: 無\n2026-05-29 | 狀態: in-progress | 驗證: pending | 變更: 開始處理 Top50 needs-etl-fill 主幹資料注入，目標把 primary-canon / 白名單硬關係正式接進 runtime export | 阻塞: tasks-prog.json 既有 dirty state，需最小追加本卡並避免覆蓋既有變更",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [
+          "latest primary-canon relationship evidence",
+          "latest primary-canon source-event-packets",
+          "Top50 needs-etl-fill general id set"
+        ],
+        "output": [
+          "runtime batch export report includes primaryCanonDefaults metadata",
+          "PROG-2-0018 dry-run report records selected mainline inputs",
+          "21 needs-etl-fill sidecar runtime profiles export successfully",
+          "batch export report records missing stable identity/profile as upstreamGaps instead of fallback runtime profiles",
+          "readiness audit records relationship/ready-event deltas for the batch"
+        ],
+        "validation_cmd": "py_compile export_runtime_profiles_batch.py export_general_runtime_profile.py; dry-run runtime export; 21 needs-etl-fill sidecar runtime export; node tools_node/audit-sanguo-top50-readiness.js",
+        "rollback_hint": "Restore explicit DEFAULT_SOURCE_EVENT_PACKETS_PATH / DEFAULT_RELATIONSHIP_EVIDENCE_PATH defaults and remove primaryCanonDefaults report metadata.",
+        "execution_steps": [
+          "Add primary-canon default input resolver to batch exporter",
+          "Mirror exporter change to external npc-brain repo",
+          "Keep single runtime exporter stable-only and remove core report identity/profile fallback",
+          "Add stable identity/profile preflight gap reporting to batch exporter",
+          "Generate dry-run mainline injection report",
+          "Generate 21-person sidecar runtime export and readiness audit",
+          "Run py_compile and encoding checks"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0018-top50-mainline-injection-report.json",
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0018-needs-fill-export-report.json",
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0018-needs-fill-readiness-audit.json"
+        ],
+        "validation_evidence": [
+          "py_compile pass for local/external batch and single exporters",
+          "core_report identity/profile fallback removed from single exporter",
+          "prog-2-0018-needs-fill-export-report.json summary statusCounts.ok=21",
+          "prog-2-0018-needs-fill-export-report.json summary missingStableInputCount=0 and upstreamGaps.missingStableInputs=[]",
+          "prog-2-0018-needs-fill-readiness-audit.json summary bandCounts needs-etl-fill=16 playable-with-audit-risks=5"
+        ],
         "handoff_diff_status": "",
         "trace_artifacts": [],
-        "metrics_summary": []
+        "metrics_summary": [
+          "21/21 needs-etl-fill sidecar export ok",
+          "averageReadyEventCount=9.86",
+          "averageRelationshipCount=7.05"
+        ]
+      }
+    },
+    {
+      "doc_id": "doc_task_0394",
+      "id": "PROG-2-0019",
+      "title": "Top50 needs-etl-fill ready-event promotion：primary-canon source-event-packets → staged-ready-events",
+      "owner": "vs-insiders-copilot-agent",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "SceneQuality",
+      "created": "2026-05-29",
+      "created_by_agent": "vs-insiders-copilot-agent",
+      "started_at": "2026-05-29T23:05:48+08:00",
+      "started_by_agent": "vs-insiders-copilot-agent",
+      "completed_at": "2026-05-29T23:12:00+08:00",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 PROG-2-0018 已接入主幹的 primary-canon source-event-packets / relationship evidence，保守升級成上游 staged-ready-events promotion queue，讓 zero/low readyEventCount 人物有可追溯事件候選。",
+      "related": [
+        "PROG-2-0018"
+      ],
+      "depends": [
+        "PROG-2-0018"
+      ],
+      "acceptance": [
+        "產出 source-event-packet promotion queue",
+        "產出 canonicalWrites=false 的 staged-ready-events candidate 檔",
+        "每筆保留 sourceRef/sourceLayer/sourceFamily/trustTier/claimGrade/directPairSignal/pairRelationSignal/promotionTrace/textHash",
+        "alias-only 與 relationship_external 不得直接升 primary ready event",
+        "至少前六名 needs-fill 產生可審核 promotion delta",
+        "重跑 readiness audit 並輸出報告"
+      ],
+      "deliverables": [
+        "local/3klife-npc-brain/pipelines/sanguo-rag/promote_source_packets_to_ready_events.py",
+        "C:\\Users\\User\\3klife-npc-brain\\pipelines\\sanguo-rag\\promote_source_packets_to_ready_events.py",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-ready-event-promotion-report.json",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-promoted-ready-events.jsonl",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-needs-fill-readiness-audit.json",
+        "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-front6-readiness-audit.json",
+        "docs/agent-briefs/reports/PROG-2-0019-ready-event-promotion.md"
+      ],
+      "notes": "2026-05-29 | 狀態: done | 驗證: py_compile pass；front6 promoted=18，bandCounts needs-etl-fill 4 / playable-with-audit-risks 2；needs-fill promoted=63，21/21 export ok，bandCounts playable-with-audit-risks 11 / needs-etl-fill 10；totalReadyDelta=131 | 變更: 新增 source-event-packet → staged ready-event promotion bridge，輸出 promoted/merged ready-events 與 promotion queue，全部維持 canonicalWrites=false，不碰下游 scene projection | 阻塞: 剩餘 10 名 needs-etl-fill 仍需下一張卡補 location / relationship-backed event refinement 與 candidate pool 收斂\n2026-05-29 | 狀態: in-progress | 驗證: pending | 變更: vs-insiders-copilot-agent 開始實作 source-event-packet promotion bridge，上游只產 promotion/staged artifacts，不碰下游 scene projection | 阻塞: 無\n2026-05-29 | 狀態: open | 驗證: pending | 變更: 開單準備推進 Top50 needs-etl-fill ready-event promotion，上游只產 promotion/staged artifacts，不碰下游 scene projection | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [
+          "primary-canon source-event-packets",
+          "primary-canon relationship evidence",
+          "Top50 needs-etl-fill target ids"
+        ],
+        "output": [
+          "source-event-packet promotion queue",
+          "canonicalWrites=false staged ready-events candidate JSONL",
+          "merged ready-events JSONL for sidecar runtime export validation",
+          "promotion report with per-general delta and rejection reasons"
+        ],
+        "validation_cmd": "py_compile promote_source_packets_to_ready_events.py; run promotion bridge for needs-fill front batch; export runtime profiles with promoted ready-events; run Top50 readiness audit",
+        "rollback_hint": "Remove promote_source_packets_to_ready_events.py and generated PROG-2-0019 artifacts; keep PROG-2-0018 batch exporter unchanged.",
+        "execution_steps": [
+          "Build conservative source-event-packet promotion bridge",
+          "Mirror script to external npc-brain repo",
+          "Run front-batch promotion and inspect promoted/rejected counts",
+          "Emit merged ready-events sidecar file from base + promoted events",
+          "Run sidecar runtime export against promoted ready-events",
+          "Run readiness audit and record delta"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-ready-event-promotion-report.json",
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-promoted-ready-events.jsonl",
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-needs-fill-readiness-audit.json",
+          "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0019-front6-readiness-audit.json"
+        ],
+        "validation_evidence": [
+          "py_compile pass for local/external promote_source_packets_to_ready_events.py",
+          "prog-2-0019-front6-ready-event-promotion-report.json summary promotedReadyEventCount=18",
+          "prog-2-0019-needs-fill-ready-event-promotion-report.json summary promotedReadyEventCount=63",
+          "prog-2-0019-needs-fill-export-report.json summary statusCounts.ok=21",
+          "prog-2-0019-needs-fill-readiness-audit.json summary bandCounts playable-with-audit-risks=11 needs-etl-fill=10"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "front6 promoted ready-event candidates=18",
+          "needs-fill promoted ready-event candidates=63",
+          "21-person totalReadyDelta=131",
+          "needs-etl-fill count reduced from 16 to 10"
+        ]
       }
     }
   ]

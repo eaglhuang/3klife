@@ -1,6 +1,6 @@
 {
   "schemaVersion": "runtime-projection-upstream-feedback-queue.v1",
-  "generatedAt": "2026-05-29T16:43:08+00:00",
+  "generatedAt": "2026-05-29T17:30:24+00:00",
   "mode": "runtime-projection-upstream-feedback-queue-builder",
   "canonicalWrites": false,
   "inputs": {
@@ -65,23 +65,23 @@
     "summaryPath": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\queue-base-events\\runtime-projection-upstream-feedback-summary.json",
     "markdownPath": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\queue-base-events\\runtime-projection-upstream-feedback-summary.md"
   },
-  "proposalCount": 9264,
+  "proposalCount": 9251,
   "proposalTypeCounts": {
-    "projection-source-gap": 9264
+    "projection-source-gap": 9251
   },
   "topGeneralProposalCounts": {
     "li-dian": 269,
-    "le-jin": 266,
     "xiahou-dun": 263,
-    "yu-jin": 262,
+    "le-jin": 260,
     "cao-ren": 258,
+    "yu-jin": 258,
     "cao-hong": 250,
     "cao-cao": 241,
     "xun-yu": 228,
     "zhang-fei": 228,
     "zhang-liao": 228,
-    "xu-zhu": 227,
     "xiahou-yuan": 225,
+    "xu-zhu": 224,
     "sun-qian": 221,
     "yuan-shu": 218,
     "sun-quan": 216,

@@ -41,6 +41,7 @@
     "build:generals-runtime": "node tools_node/build-generals-runtime.js",
     "report:dc-gap": "node tools_node/report-datacenter-gap.js",
     "audit:core50": "node tools_node/audit-core-generals-quality.js",
+    "audit:sanguo-top50-readiness": "node tools_node/audit-sanguo-top50-readiness.js",
     "audit:resource-history": "node tools_node/archive-unused-history-assets.js",
     "move:resource-history": "node tools_node/archive-unused-history-assets.js --move",
     "check:encoding": "node tools_node/check-encoding-integrity.js",

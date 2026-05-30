@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "roundId": "p1-source-ref-refill-2026-05-29",
-  "generatedFor": "runtime projection P1 refill on sourceRef hotspots 011#p14, 014#p10, 042#p1",
+  "generatedFor": "runtime projection P1 refill on sourceRef hotspots 011#p14, 014#p10, 042#p1, 011#p15, 014#p6, 016#p17, 031#p8",
   "canonicalWrites": false,
   "packetPatches": [
     {
@@ -117,6 +117,264 @@
             "runtime-projection-p1-refill",
             "ready-event-aligned-packet-edge",
             "sourceRef:042#p1"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        }
+      ]
+    },
+    {
+      "sourceRef": "011#p15",
+      "patchReason": "把 011#p15 的 retreat / rearguard battle context 顯式補成 le-jin、yu-jin 指向 cao-cao 的 packet relationship edges。",
+      "relationshipEdges": [
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.011-p15.le-jin.battlefield-contact.cao-cao",
+          "fromId": "le-jin",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "011#p15"
+          ],
+          "sourceQuote": "續、侯成趕來，當頭呂布親自引軍來到。于禁、樂進雙戰呂布不住。操望北而行，山後",
+          "edgeConfidence": 0.68,
+          "edgeStrength": 0.56,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-participant-bridge",
+            "sourceRef:011#p15"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        },
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.011-p15.yu-jin.battlefield-contact.cao-cao",
+          "fromId": "yu-jin",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "011#p15"
+          ],
+          "sourceQuote": "續、侯成趕來，當頭呂布親自引軍來到。于禁、樂進雙戰呂布不住。操望北而行，山後",
+          "edgeConfidence": 0.68,
+          "edgeStrength": 0.56,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-participant-bridge",
+            "sourceRef:011#p15"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        }
+      ]
+    },
+    {
+      "sourceRef": "014#p6",
+      "patchReason": "把 014#p6 的援駕 / vanguard roster context 顯式補成 le-jin、xu-zhu 指向 cao-cao 的 packet relationship edges。",
+      "relationshipEdges": [
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.014-p6.le-jin.commands.cao-cao",
+          "fromId": "le-jin",
+          "toId": "cao-cao",
+          "type": "commands",
+          "originalType": "commands",
+          "evidenceRefs": [
+            "014#p6"
+          ],
+          "sourceQuote": "，應詔前來。聞李傕、郭汜犯洛陽，先差夏侯惇爲先鋒，引上將十員，精兵五萬，前來保",
+          "edgeConfidence": 0.72,
+          "edgeStrength": 0.61,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "vanguard-roster-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "vanguard-roster-participant-bridge",
+            "sourceRef:014#p6"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        },
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.014-p6.xu-zhu.commands.cao-cao",
+          "fromId": "xu-zhu",
+          "toId": "cao-cao",
+          "type": "commands",
+          "originalType": "commands",
+          "evidenceRefs": [
+            "014#p6"
+          ],
+          "sourceQuote": "，應詔前來。聞李傕、郭汜犯洛陽，先差夏侯惇爲先鋒，引上將十員，精兵五萬，前來保",
+          "edgeConfidence": 0.72,
+          "edgeStrength": 0.61,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "vanguard-roster-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "vanguard-roster-participant-bridge",
+            "sourceRef:014#p6"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        }
+      ]
+    },
+    {
+      "sourceRef": "016#p17",
+      "patchReason": "把 016#p17 的青州軍紀 / aftermath scene context 顯式補成 le-jin、xu-zhu、yu-jin 指向 cao-cao 的 packet relationship edges。",
+      "relationshipEdges": [
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.016-p17.le-jin.battlefield-contact.cao-cao",
+          "fromId": "le-jin",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "016#p17"
+          ],
+          "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+          "edgeConfidence": 0.66,
+          "edgeStrength": 0.53,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-scene-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-scene-participant-bridge",
+            "sourceRef:016#p17"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        },
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.016-p17.xu-zhu.battlefield-contact.cao-cao",
+          "fromId": "xu-zhu",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "016#p17"
+          ],
+          "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+          "edgeConfidence": 0.66,
+          "edgeStrength": 0.53,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-scene-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-scene-participant-bridge",
+            "sourceRef:016#p17"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        },
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.016-p17.yu-jin.battlefield-contact.cao-cao",
+          "fromId": "yu-jin",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "016#p17"
+          ],
+          "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+          "edgeConfidence": 0.66,
+          "edgeStrength": 0.53,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-scene-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-scene-participant-bridge",
+            "sourceRef:016#p17"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        }
+      ]
+    },
+    {
+      "sourceRef": "031#p8",
+      "patchReason": "把 031#p8 的官渡追擊 / battle formation context 顯式補成 xu-zhu、yu-jin 指向 cao-cao 的 packet relationship edges。",
+      "relationshipEdges": [
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.031-p8.xu-zhu.battlefield-contact.cao-cao",
+          "fromId": "xu-zhu",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "031#p8"
+          ],
+          "sourceQuote": "一隊曹洪，二隊張郃，三隊徐晃，四隊于禁，五隊高覽。中軍許褚爲先鋒。次日，十",
+          "edgeConfidence": 0.64,
+          "edgeStrength": 0.5,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-scene-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-scene-participant-bridge",
+            "sourceRef:031#p8"
+          ],
+          "sourceLayer": "runtime-projection-upstream-refill-staged",
+          "trustTier": "primary-text-transcription",
+          "claimGrade": "source-packet-candidate",
+          "reviewStatus": "source-grounded-review",
+          "canonicalWrites": false
+        },
+        {
+          "edgeId": "packet-rel.runtime-projection-p1.031-p8.yu-jin.battlefield-contact.cao-cao",
+          "fromId": "yu-jin",
+          "toId": "cao-cao",
+          "type": "battlefield_contact",
+          "originalType": "battlefield_contact",
+          "evidenceRefs": [
+            "031#p8"
+          ],
+          "sourceQuote": "一隊曹洪，二隊張郃，三隊徐晃，四隊于禁，五隊高覽。中軍許褚爲先鋒。次日，十",
+          "edgeConfidence": 0.64,
+          "edgeStrength": 0.5,
+          "directPairSignal": true,
+          "pairRelationSignal": false,
+          "pattern": "declared-general-scene-participant-bridge",
+          "promotionTrace": [
+            "runtime-projection-p1-refill",
+            "declared-general-scene-participant-bridge",
+            "sourceRef:031#p8"
           ],
           "sourceLayer": "runtime-projection-upstream-refill-staged",
           "trustTier": "primary-text-transcription",
@@ -295,6 +553,267 @@
         "runtime-projection-p1-refill",
         "declared-general-scene-participant-bridge",
         "sourceRef:042#p1"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 11,
+      "edgeId": "rel.runtime-projection-p1.011-p15.le-jin.battlefield-contact.cao-cao",
+      "fromId": "le-jin",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "011#p15"
+      ],
+      "evidenceText": "續、侯成趕來，當頭呂布親自引軍來到。于禁、樂進雙戰呂布不住。操望北而行，山後",
+      "sourceQuote": "續、侯成趕來，當頭呂布親自引軍來到。于禁、樂進雙戰呂布不住。操望北而行，山後",
+      "summary": "西寨 retreat scene participant bridge，將 011#p15 的 le-jin / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.68,
+      "edgeStrength": 0.56,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-participant-bridge",
+        "sourceRef:011#p15"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 11,
+      "edgeId": "rel.runtime-projection-p1.011-p15.yu-jin.battlefield-contact.cao-cao",
+      "fromId": "yu-jin",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "011#p15"
+      ],
+      "evidenceText": "續、侯成趕來，當頭呂布親自引軍來到。于禁、樂進雙戰呂布不住。操望北而行，山後",
+      "sourceQuote": "續、侯成趕來，當頭呂布親自引軍來到。于禁、樂進雙戰呂布不住。操望北而行，山後",
+      "summary": "西寨 retreat scene participant bridge，將 011#p15 的 yu-jin / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.68,
+      "edgeStrength": 0.56,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-participant-bridge",
+        "sourceRef:011#p15"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 14,
+      "edgeId": "rel.runtime-projection-p1.014-p6.le-jin.commands.cao-cao",
+      "fromId": "le-jin",
+      "toId": "cao-cao",
+      "type": "commands",
+      "originalType": "commands",
+      "evidenceRefs": [
+        "014#p6"
+      ],
+      "evidenceText": "，應詔前來。聞李傕、郭汜犯洛陽，先差夏侯惇爲先鋒，引上將十員，精兵五萬，前來保",
+      "sourceQuote": "，應詔前來。聞李傕、郭汜犯洛陽，先差夏侯惇爲先鋒，引上將十員，精兵五萬，前來保",
+      "summary": "洛陽援駕 vanguard roster bridge，將 014#p6 的 le-jin / cao-cao command linkage 升到 relationship ref。",
+      "edgeConfidence": 0.72,
+      "edgeStrength": 0.61,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "vanguard-roster-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "vanguard-roster-participant-bridge",
+        "sourceRef:014#p6"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 14,
+      "edgeId": "rel.runtime-projection-p1.014-p6.xu-zhu.commands.cao-cao",
+      "fromId": "xu-zhu",
+      "toId": "cao-cao",
+      "type": "commands",
+      "originalType": "commands",
+      "evidenceRefs": [
+        "014#p6"
+      ],
+      "evidenceText": "，應詔前來。聞李傕、郭汜犯洛陽，先差夏侯惇爲先鋒，引上將十員，精兵五萬，前來保",
+      "sourceQuote": "，應詔前來。聞李傕、郭汜犯洛陽，先差夏侯惇爲先鋒，引上將十員，精兵五萬，前來保",
+      "summary": "洛陽援駕 vanguard roster bridge，將 014#p6 的 xu-zhu / cao-cao command linkage 升到 relationship ref。",
+      "edgeConfidence": 0.72,
+      "edgeStrength": 0.61,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "vanguard-roster-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "vanguard-roster-participant-bridge",
+        "sourceRef:014#p6"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 16,
+      "edgeId": "rel.runtime-projection-p1.016-p17.le-jin.battlefield-contact.cao-cao",
+      "fromId": "le-jin",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "016#p17"
+      ],
+      "evidenceText": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "summary": "青州軍紀 aftermath scene participant bridge，將 016#p17 的 le-jin / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.66,
+      "edgeStrength": 0.53,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:016#p17"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 16,
+      "edgeId": "rel.runtime-projection-p1.016-p17.xu-zhu.battlefield-contact.cao-cao",
+      "fromId": "xu-zhu",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "016#p17"
+      ],
+      "evidenceText": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "summary": "青州軍紀 aftermath scene participant bridge，將 016#p17 的 xu-zhu / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.66,
+      "edgeStrength": 0.53,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:016#p17"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 16,
+      "edgeId": "rel.runtime-projection-p1.016-p17.yu-jin.battlefield-contact.cao-cao",
+      "fromId": "yu-jin",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "016#p17"
+      ],
+      "evidenceText": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "summary": "青州軍紀 aftermath scene participant bridge，將 016#p17 的 yu-jin / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.66,
+      "edgeStrength": 0.53,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:016#p17"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 31,
+      "edgeId": "rel.runtime-projection-p1.031-p8.xu-zhu.battlefield-contact.cao-cao",
+      "fromId": "xu-zhu",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "031#p8"
+      ],
+      "evidenceText": "一隊曹洪，二隊張郃，三隊徐晃，四隊于禁，五隊高覽。中軍許褚爲先鋒。次日，十",
+      "sourceQuote": "一隊曹洪，二隊張郃，三隊徐晃，四隊于禁，五隊高覽。中軍許褚爲先鋒。次日，十",
+      "summary": "官渡追擊 scene participant bridge，將 031#p8 的 xu-zhu / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.64,
+      "edgeStrength": 0.5,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:031#p8"
+      ],
+      "sourceLayer": "runtime-projection-upstream-refill-staged",
+      "trustTier": "primary-text-transcription",
+      "claimGrade": "source-packet-candidate",
+      "reviewStatus": "source-grounded-review",
+      "canonicalWrites": false
+    },
+    {
+      "chapterNo": 31,
+      "edgeId": "rel.runtime-projection-p1.031-p8.yu-jin.battlefield-contact.cao-cao",
+      "fromId": "yu-jin",
+      "toId": "cao-cao",
+      "type": "battlefield_contact",
+      "originalType": "battlefield_contact",
+      "evidenceRefs": [
+        "031#p8"
+      ],
+      "evidenceText": "一隊曹洪，二隊張郃，三隊徐晃，四隊于禁，五隊高覽。中軍許褚爲先鋒。次日，十",
+      "sourceQuote": "一隊曹洪，二隊張郃，三隊徐晃，四隊于禁，五隊高覽。中軍許褚爲先鋒。次日，十",
+      "summary": "官渡追擊 scene participant bridge，將 031#p8 的 yu-jin / cao-cao 同場 linkage 升到 relationship ref。",
+      "edgeConfidence": 0.64,
+      "edgeStrength": 0.5,
+      "directPairSignal": true,
+      "pairRelationSignal": false,
+      "pattern": "declared-general-scene-participant-bridge",
+      "promotionTrace": [
+        "runtime-projection-p1-refill",
+        "declared-general-scene-participant-bridge",
+        "sourceRef:031#p8"
       ],
       "sourceLayer": "runtime-projection-upstream-refill-staged",
       "trustTier": "primary-text-transcription",

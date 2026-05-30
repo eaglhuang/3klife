@@ -1,0 +1,75 @@
+# PROG-2-0018 Needs-Fill Mainline Injection Readiness Audit
+
+Generated at: 2026-05-29T14:34:32.427Z
+
+## Scope
+
+- Task: PROG-2-0018 primary-canon / whitelist hard-relationship mainline injection.
+- Input: 21 needs-etl-fill sidecar runtime profiles exported from primary-canon relationship evidence and source-event-packets.
+- Goal: verify whether existing primary-canon good data produces grounded runtime relationships and ready-event coverage for the needs-etl-fill batch.
+
+## Summary
+
+- Total audited generals: 21
+- Missing runtime artifacts: 0
+- Band counts: needs-etl-fill=16, playable-with-audit-risks=5
+- Average readyEventCount: 9.86
+- Average relationshipCount: 7.05
+
+## Main Findings
+
+- The needs-etl-fill sidecar export is complete: all 21 requested runtime profile folders are present when using the PROG-2-0018 sidecar artifact set.
+- Readiness is uneven: profiles with zero or very low readyEventCount are the next ETL fill targets before they can support richer web play.
+- Interaction candidates need a separate gate from relationship edges: angleTargetLinks can surface candidate-only targets that are not anchored relationships.
+- The Liu Bei / Sun Shang Xiang duplication pattern is systemic enough to audit: duplicate target/source angle groups and storyBeat/sourceHighlight overlap are measurable across profiles.
+
+## R2 Implementation Note
+
+- Export layer: `angleTargetLinks` now dedupes by `targetId + sourceRef + sourceType`; multiple angles are retained in `angleFamilies`.
+- Server layer: scene-director runtime source collection lets `storyBeats` cover same-ref `sourceHighlights`, and alias-only mentions no longer create fresh Top12 interaction targets by themselves.
+- Regression: Liu Bei / Sun Shang Xiang sourceHighlight expansion now reports `duplicate_groups=0`, with two source refs (`055#p6`, `055#p9`) preserving 9 angle families each.
+
+## Needs ETL Fill First
+
+| generalId | name | band | readyEvents | relationships | actions |
+| --- | --- | --- | --- | --- | --- |
+| cao-zhen | 曹真 | needs-etl-fill | 0 | 5 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool |
+| deng-ai | 鄧艾 | needs-etl-fill | 0 | 2 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool |
+| fa-zheng | 法正 | needs-etl-fill | 0 | 2 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool |
+| lu-xun | 陸遜 | needs-etl-fill | 0 | 0 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool |
+| ma-chao | 馬超 | needs-etl-fill | 0 | 6 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool |
+| pang-de | 龐德 | needs-etl-fill | 0 | 4 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool |
+
+## Candidate Pool Risks
+
+| generalId | name | candidateOnlyTargets | aliasOnlyTraces | actions |
+| --- | --- | --- | --- | --- |
+| lu-meng | 呂蒙 | 30 | 44 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool |
+| yuan-shao | 袁紹 | 30 | 38 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| xu-zhu | 許褚 | 28 | 37 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| cao-pi | 曹丕 | 30 | 34 | promote_more_ready_events, review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| guan-xing | 關興 | 26 | 38 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| ma-dai | 馬岱 | 26 | 38 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+
+## Duplicate Amplification Risks
+
+| generalId | name | duplicateGroups | crossLayerOverlap | actions |
+| --- | --- | --- | --- | --- |
+| sun-qian | 孫乾 | 0 | 6 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| lu-bu | 呂布 | 0 | 4 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| xu-zhu | 許褚 | 0 | 4 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| yuan-shao | 袁紹 | 0 | 3 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| zhang-yi-shu | 張翼（蜀） | 0 | 3 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+| zhang-zhao | 張昭 | 0 | 3 | review_relationship_edges, audit_interaction_candidate_pool, dedupe_angle_sources_before_scene_director |
+
+## Full Matrix Location
+
+- Machine-readable full matrix: `artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/prog-2-0018-needs-fill-readiness-audit.json`.
+- Keep the Markdown report as a decision summary; use the JSON for exact per-general metrics and regression diffs.
+
+## Next Work Order
+
+1. Promote ready events for zero-event or one-event profiles before polishing web display.
+2. Split scene-director candidate selection into relationship-backed targets and mention-only targets.
+3. Add export/server dedupe keyed by targetId + sourceRef + sourceType before prompt/evidence assembly.
+4. Use this audit output as the first PROG-2-0018 regression report after each Top50 ETL refresh.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "runtime-projection-upstream-refill-manifest.v1",
-  "generatedAt": "2026-05-29T16:43:27+00:00",
+  "generatedAt": "2026-05-29T17:30:36+00:00",
   "mode": "runtime-projection-upstream-refill-manifest-builder",
   "canonicalWrites": false,
   "inputs": {
@@ -8,16 +8,16 @@
     "queueSummaryPath": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\queue-base-events\\runtime-projection-upstream-feedback-summary.json",
     "batchReportPath": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\rebuild-base-events\\export-report.json",
     "batchInputFiles": {
-      "stableKnowledge": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\stable-knowledge-bootstrap\\stable-knowledge-bootstrap.json",
+      "stableKnowledge": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\stable-knowledge-bootstrap\\stable-knowledge-bootstrap.json",
       "sourceEventPackets": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\p1-source-ref-refill-2026-05-29-staged-source-event-packets.jsonl",
       "events": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\core-person-progress\\full-roster-highway-r1-continue-r5-r1-precision-a3-rerun1-merged-staged-ready-events.jsonl",
       "relationshipEvidence": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\p1-source-ref-refill-2026-05-29-staged-relationship-evidence.jsonl",
-      "coreReport": "C:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\core-person-progress\\top50-runtime-fill-r1.json",
+      "coreReport": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\core-person-progress\\top50-runtime-fill-r1.json",
       "outputRoot": "c:\\Users\\User\\3KLife\\artifacts\\data-pipeline\\sanguo-rag\\extracted\\runtime-projection-upstream-feedback\\p1-source-ref-refill\\rebuild-base-events\\profiles",
       "primaryCanonDefaults": "{'enabled': True, 'runRoot': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined', 'paths': {'eventQuestionSeeds': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined\\\\event-question-seeds\\\\event-question-seeds.jsonl', 'relationshipEvidence': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined\\\\merged-primary-text-top20-relationship-evidence.jsonl', 'sourceEventPackets': 'artifacts\\\\data-pipeline\\\\sanguo-rag\\\\extracted\\\\primary-canon-relationship-backbone\\\\primary-text-top20-r2-refined\\\\source-event-packets\\\\source-event-packets.jsonl'}}"
     }
   },
-  "queueProposalCount": 9264,
+  "queueProposalCount": 9251,
   "workItemCount": 4180,
   "blockingWorkItemCount": 1480,
   "priorityCounts": {
@@ -44,8 +44,8 @@
     "yuan-shu": 107,
     "zhao-yun": 105,
     "li-dian": 104,
-    "yu-jin": 103,
     "liu-bei": 103,
+    "yu-jin": 103,
     "xiahou-yuan": 102,
     "zhang-fei": 101
   },
@@ -78,7 +78,7 @@
     "073#p9": 96,
     "011#p11": 96,
     "038#p12": 96,
-    "031#p8": 95
+    "031#p8": 93
   },
   "topBlockerSourceRefs": {
     "011#p14": 19,
