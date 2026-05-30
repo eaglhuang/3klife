@@ -930,6 +930,7 @@
     const DEFAULT_PROFILE_TIMEOUT_MS = 10000;
     const DEFAULT_NARRATIVE_TIMEOUT_MS = 16000;
     const DEFAULT_STORY_FUSION_TIMEOUT_MS = 22000;
+    const PUBLISHED_RUNTIME_PROFILE_BASE_URL = "https://raw.githubusercontent.com/eaglhuang/3klife-npc-brain/main/artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles";
     const LOADING_MESSAGE = "飛鴿傳信中 ....";
 
     const GENERAL_OPTIONS = [
@@ -2289,6 +2290,143 @@
       return buildKeywordAngleNarrative(angle, label).summary;
     }
 
+    function buildPublishedRuntimeAngleFromStoryBeat(beat) {
+      const families = Array.isArray(beat?.angleFamilies) ? beat.angleFamilies.map((family) => String(family || "").trim()).filter(Boolean) : [];
+      const familyToAngle = {
+        activity_seed: "activity",
+        affect_story: "emotion",
+        battle: "battlefield",
+        battlefield: "battlefield",
+        bond_story: "bond",
+        decision_story: "decision",
+        female_interaction: "emotion",
+        identity_story: "identity",
+        item_equipment: "resource",
+        location_context: "location",
+        personality_story: "personality",
+        relationship: "relationship",
+        role_story: "role",
+        work_role: "role",
+      };
+      for (const family of families) {
+        if (familyToAngle[family]) {
+          return familyToAngle[family];
+        }
+      }
+      return guessAngleFromText([beat?.summary, beat?.sourceQuote, beat?.eventKey, beat?.location].join(" "));
+    }
+
+    function buildPublishedRuntimeRelationshipTarget(anchor) {
+      const relationshipType = String(anchor?.type || anchor?.originalTypes?.[0] || "").trim();
+      const typeLabel = String(anchor?.typeLabel || relationshipType || "人物線索").trim();
+      return {
+        targetId: String(anchor?.targetId || "").trim(),
+        label: String(anchor?.targetName || anchor?.label || anchor?.targetId || "關係對象").trim(),
+        role: typeLabel,
+        thoughtTone: "",
+        dialogueTone: "",
+        actionBias: "",
+        meterDelta: { bond: 1, prudence: 1 },
+        femaleFocus: false,
+        confidence: Number(anchor?.edgeConfidence || 0.68),
+        sourceType: String(anchor?.sourceLayer || "runtime-general-profiles"),
+        relationshipType: relationshipType || null,
+        evidenceRefs: Array.isArray(anchor?.evidenceRefs) ? anchor.evidenceRefs.filter(Boolean).map(String) : [],
+      };
+    }
+
+    function buildPublishedRuntimeEvidenceCard(displayName, beat, index) {
+      const relatedTargetIds = Array.isArray(beat?.relatedGeneralIds) ? uniqueList(beat.relatedGeneralIds.map(String), 8) : [];
+      const summary = String(beat?.summary || beat?.sourceQuote || "").trim();
+      const title = String(beat?.eventKey || beat?.location || beat?.chapterNo || `${displayName}故事片段`).trim();
+      return {
+        evidenceId: String(beat?.eventId || beat?.eventKey || `published-story-beat-${index}`),
+        contextKey: String(beat?.eventKey || "") || null,
+        angle: buildPublishedRuntimeAngleFromStoryBeat(beat),
+        title,
+        summary: summary || `來自 ${displayName} 的公開 runtime profile 故事片段。`,
+        quote: String(beat?.sourceQuote || ""),
+        location: String(beat?.location || ""),
+        chapterNo: Number.isInteger(beat?.chapterNo) ? beat.chapterNo : null,
+        sourceType: "runtime-story-beat",
+        sourceRefs: Array.isArray(beat?.sourceRefs) ? beat.sourceRefs.filter(Boolean).map(String) : [],
+        relatedTargetIds,
+        confidence: Number(beat?.confidence || 0.72),
+      };
+    }
+
+    function buildPublishedRuntimeNarrativePayload(personaPayload, keywordPayload, relationshipPayload) {
+      const persona = personaPayload && typeof personaPayload === "object" ? personaPayload : {};
+      const keywords = keywordPayload && typeof keywordPayload === "object" ? keywordPayload : {};
+      const anchors = Array.isArray(relationshipPayload?.anchors) ? relationshipPayload.anchors : [];
+      const displayName = String(persona.displayName || relationshipPayload?.displayName || persona.generalId || "人物").trim();
+      const relationshipTargets = anchors
+        .map((anchor) => buildPublishedRuntimeRelationshipTarget(anchor))
+        .filter((target) => target.targetId);
+      const relationshipCards = relationshipTargets.map((target, index) => ({
+        evidenceId: `published-relationship:${target.targetId || index}`,
+        contextKey: null,
+        angle: "relationship",
+        title: `${displayName}與${target.label || target.targetId}的關係`,
+        summary: `${displayName}與${target.label || target.targetId}的關係類型為${target.role || "人物線索"}。`,
+        quote: "",
+        location: "",
+        chapterNo: null,
+        sourceType: "runtime-relationship-angle",
+        sourceRefs: target.evidenceRefs || [],
+        relatedTargetIds: target.targetId ? [target.targetId] : [],
+        confidence: Number(target.confidence || 0.68),
+      }));
+      const storyBeatCards = Array.isArray(persona.storyBeats)
+        ? persona.storyBeats.map((beat, index) => buildPublishedRuntimeEvidenceCard(displayName, beat, index))
+        : [];
+      const keywordCards = buildKeywordAngleCards(keywords.categories || {}, persona.profile || {});
+      const activitySeedHints = Array.isArray(persona.profile?.activitySeedHints) ? persona.profile.activitySeedHints : [];
+      const activitySeeds = uniqueList(activitySeedHints.map((hint) => String(hint || "").trim()).filter(Boolean), 8).map((hint) => ({
+        keywordKey: `activity.${hint}`,
+        label: humanizeSymbolicText(hint),
+        rawTag: hint,
+      }));
+
+      return {
+        displayName,
+        sourceMode: "runtime-general-profiles",
+        canonicalWrites: Boolean(persona.runtimeReadiness?.canonicalWrites),
+        persona,
+        keywords: keywords.categories || {},
+        relationshipEdges: anchors,
+        evidenceCards: mergeEvidenceCards(mergeEvidenceCards(storyBeatCards, relationshipCards), keywordCards),
+        itemRelations: Array.isArray(persona.itemRelations) ? persona.itemRelations : [],
+        activitySeeds,
+        interactionTargets: relationshipTargets,
+        illustrationPromptBase: `以清爽、輕鬆、易讀的劇情角色插畫描繪${displayName}，乾淨線條、柔和色彩、自然表情、溫暖電影光感，不要水墨山水、卷軸感或厚重筆刷；保留角色氣質；畫面中不要出現任何文字、中文字、字幕或招牌字。`,
+      };
+    }
+
+    async function loadPublishedRuntimeNarrativeData(generalId = currentGeneralId()) {
+      const baseUrl = PUBLISHED_RUNTIME_PROFILE_BASE_URL.replace(/\/$/, "");
+      const [personaResponse, keywordsResponse, relationshipsResponse] = await Promise.all([
+        fetch(`${baseUrl}/${encodeURIComponent(generalId)}/${encodeURIComponent(generalId)}.persona.json`, { cache: "no-store" }),
+        fetch(`${baseUrl}/${encodeURIComponent(generalId)}/${encodeURIComponent(generalId)}.keywords.json`, { cache: "no-store" }),
+        fetch(`${baseUrl}/${encodeURIComponent(generalId)}/${encodeURIComponent(generalId)}.relationships.json`, { cache: "no-store" }),
+      ]);
+      if (!personaResponse.ok || !keywordsResponse.ok || !relationshipsResponse.ok) {
+        throw new Error(`Published runtime profile fetch failed for ${generalId}.`);
+      }
+      const [personaPayload, keywordPayload, relationshipPayload] = await Promise.all([
+        personaResponse.json(),
+        keywordsResponse.json(),
+        relationshipsResponse.json(),
+      ]);
+      const payload = buildPublishedRuntimeNarrativePayload(personaPayload, keywordPayload, relationshipPayload);
+      const hasUsableNarrativeData = Array.isArray(payload.evidenceCards) && payload.evidenceCards.length > 0
+        && Array.isArray(payload.interactionTargets) && payload.interactionTargets.length > 0;
+      if (!hasUsableNarrativeData) {
+        throw new Error(`Published runtime profile payload is empty for ${generalId}.`);
+      }
+      return normalizeNarrativePayload(payload);
+    }
+
     function mergeEvidenceCards(baseCards, extraCards) {
       const byId = new Map();
       for (const card of baseCards || []) {
@@ -2416,7 +2554,12 @@
         return normalizeNarrativePayload(payload);
       } catch (error) {
         console.warn("narrative-profile fallback:", error);
-        return { ...EMPTY_NARRATIVE_DATA };
+        try {
+          return await loadPublishedRuntimeNarrativeData(generalId);
+        } catch (publishedError) {
+          console.warn("published runtime-profile fallback failed:", publishedError);
+          return { ...EMPTY_NARRATIVE_DATA };
+        }
       } finally {
         timeout.clear();
       }
