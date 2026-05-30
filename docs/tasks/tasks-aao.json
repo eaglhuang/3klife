@@ -4,8 +4,8 @@
   "summary": {
     "done": 0,
     "in_progress": 2,
-    "open": 1,
-    "total": 3
+    "open": 2,
+    "total": 4
   },
   "tasks": [
     {
@@ -114,6 +114,61 @@
         "atomic_workbench/atomization-coverage/path-to-atom-map.json"
       ],
       "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0096",
+      "title": "LegacyRoutePlan for tasks.ts — 工具實戰 + 校驗",
+      "owner": "GitHubCopilot",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-30",
+      "created_by_agent": "GitHubCopilot",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "跑 atm start --legacy-flow 對 tasks.ts (5305 行) 產出 LegacyRoutePlan JSON，作為後續 wave 3-B/C/D 的共用 plan。同時拿 0095 已切的 parse-options 對照 plan 建議，驗證工具判斷準確性。",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0095"
+      ],
+      "acceptance": [
+        "node atm.mjs hook pre-commit --json → ok:true",
+        "npm run typecheck",
+        "node atm.mjs atomize score → score ≥ 95",
+        "plan JSON 檔 valid + 非空",
+        "cross-check.md 6 段齊備"
+      ],
+      "deliverables": [
+        ".atm/history/guidance/TASK-AAO-0096-legacy-route-plan.json",
+        ".atm/history/guidance/TASK-AAO-0096-cross-check.md"
+      ],
+      "notes": "2026-05-30 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
