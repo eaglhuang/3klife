@@ -1,0 +1,41 @@
+{
+  "shard": "AAO",
+  "generated": "2026-05-30",
+  "summary": {
+    "done": 0,
+    "in_progress": 1,
+    "open": 0,
+    "total": 1
+  },
+  "tasks": [
+    {
+      "id": "TASK-AAO-0092",
+      "priority": "P1",
+      "phase": "D2",
+      "owner": "antigravity-gemini-3.5-flash",
+      "status": "in-progress",
+      "created": "2026-05-30",
+      "created_by_agent": "antigravity-gemini-3.5-flash",
+      "started_at": "2026-05-30T17:54:05+08:00",
+      "started_by_agent": "antigravity-gemini-3.5-flash",
+      "type": "design",
+      "title": "D2 adapter spec — atm-markdown-task-source plugin 接入評估",
+      "description": "D2 系列首卡（純評估、無代碼變更）。產出設計文件，回答「3KLife 如何接入上游 atm-markdown-task-source plugin 取代既有 tools_node/task-card-opener.js」。為 0093（plugin 接入）+ 0094（拿掉 status 欄）鋪路。",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0089"
+      ],
+      "acceptance": [
+        "adapter-spec.md 6 段都填了",
+        "切換策略選擇與理由明確",
+        "0093/0094 拆分提案明確",
+        "3KLife 專案庫中僅有 1 個 commit"
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/d2/adapter-spec.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-05-30 | 狀態: in-progress | 驗證: pending | 變更: 接入評估進行中；產出 adapter-spec.md 設計文件 | 阻塞: 無"
+    }
+  ]
+}
