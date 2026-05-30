@@ -1372,6 +1372,36 @@
       return output;
     }
 
+    function normalizeNarrativeSignature(text) {
+      return String(text || "")
+        .replace(/[。！？；，、,\.'"\u3000「」]/g, "")
+        .replace(/\s+/g, "")
+        .trim()
+        .toLowerCase();
+    }
+
+    function dedupeNarrativeFragments(values) {
+      const signatures = [];
+      return values.map((value) => {
+        if (!value) {
+          return "";
+        }
+        const signature = normalizeNarrativeSignature(value);
+        if (!signature) {
+          return "";
+        }
+        const isDup = signatures.some((existing) =>
+          existing === signature ||
+          existing.length > 6 && (existing.includes(signature) || signature.includes(existing))
+        );
+        if (isDup) {
+          return "";
+        }
+        signatures.push(signature);
+        return value;
+      });
+    }
+
     function cleanNarrativeFragment(value) {
       const raw = normalizeNarrativeText(value, "").trim();
       if (!raw) {
@@ -2826,7 +2856,32 @@ ${evidenceLine}
           </article>
         `;
       }).filter(Boolean);
-      elements.chorusGrid.innerHTML = cards.join("");
+      const dedupedCards = [];
+      const usedTargetIds = new Set();
+      const usedTexts = new Set();
+      for (const card of cards) {
+        const textMatch = card.match(/<p>(.*?)<\/p>/s);
+        const text = textMatch ? textMatch[1] : "";
+        const targetId = (() => {
+          const match = card.match(/data-target-id="([^"]+)"/);
+          return match ? match[1] : "";
+        })();
+        const textSignature = normalizeNarrativeSignature(text);
+        if (targetId && usedTargetIds.has(targetId)) {
+          continue;
+        }
+        if (textSignature && usedTexts.has(textSignature)) {
+          continue;
+        }
+        if (targetId) {
+          usedTargetIds.add(targetId);
+        }
+        if (textSignature) {
+          usedTexts.add(textSignature);
+        }
+        dedupedCards.push(card);
+      }
+      elements.chorusGrid.innerHTML = dedupedCards.join("");
     }
 
     async function playBundle(bundle) {
@@ -2881,15 +2936,36 @@ ${evidenceLine}
         const dialogueText = sanitizeDisplayText(beats.dialogueText || "", { removeActor: true });
         const intentText = sanitizeDisplayText(beats.intentText || "", { removeActor: true });
         const storyText = sanitizeDisplayText(directorPayload?.storyText || "", { removeActor: false });
+        const [
+          dedupSceneText,
+          dedupMemoryText,
+          dedupEmotionText,
+          dedupDialogueText,
+          dedupIntentText,
+          dedupStoryText,
+        ] = dedupeNarrativeFragments([
+          sceneText,
+          memoryText,
+          emotionText,
+          dialogueText,
+          intentText,
+          storyText,
+        ]);
+        const safeSceneText = dedupSceneText;
+        const safeMemoryText = dedupMemoryText;
+        const safeEmotionText = dedupEmotionText;
+        const safeDialogueText = dedupDialogueText;
+        const safeIntentText = dedupIntentText;
+        const safeStoryText = dedupStoryText;
         const isEmpty = Boolean(directorPayload?.isEmpty) || (
-          !sceneText
-          && !memoryText
-          && !emotionText
-          && !dialogueText
-          && !intentText
-          && !storyText
+          !safeSceneText
+          && !safeMemoryText
+          && !safeEmotionText
+          && !safeDialogueText
+          && !safeIntentText
+          && !safeStoryText
         );
-        const storyMissing = !isEmpty && !storyText;
+        const storyMissing = !isEmpty && !safeStoryText;
         const sourceLabel = dataStatus
           ? `scene-director/${dataStatus}`
           : (directorPayload ? "scene-director" : "scene-director unavailable");
@@ -2900,29 +2976,29 @@ ${evidenceLine}
         if (isStaleRun()) {
           return;
         }
-        elements.sceneText.textContent = sceneText;
-        await revealText(elements.memoryText, memoryText, 320);
+        elements.sceneText.textContent = safeSceneText;
+        await revealText(elements.memoryText, safeMemoryText, 320);
         if (isStaleRun()) {
           return;
         }
-        await revealText(elements.emotionText, emotionText, 320);
+        await revealText(elements.emotionText, safeEmotionText, 320);
         if (isStaleRun()) {
           return;
         }
-        await revealText(elements.dialogueText, dialogueText, 300);
+        await revealText(elements.dialogueText, safeDialogueText, 300);
         if (isStaleRun()) {
           return;
         }
-        await revealText(elements.intentText, intentText, 320);
+        await revealText(elements.intentText, safeIntentText, 320);
         if (isStaleRun()) {
           return;
         }
-        await revealText(elements.storyText, storyText, 260);
+        await revealText(elements.storyText, safeStoryText, 260);
         if (isStaleRun()) {
           return;
         }
         renderDirectorChorusLines(Array.isArray(directorPayload?.chorusLines) ? directorPayload.chorusLines : []);
-        bundle.runtimeIntentText = intentText;
+        bundle.runtimeIntentText = safeIntentText;
       } catch (error) {
         if (isStaleRun()) {
           return;
