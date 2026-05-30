@@ -946,6 +946,16 @@ async function main(options = {}, runtime = {}) {
     dryRun,
   };
 
+  // D2 Shadow Advisor integration:
+  if (mdOutArg && !dryRun) {
+    try {
+      const { runShadowAdvisor } = require('./d2-shadow-advisor');
+      await runShadowAdvisor(resolvePath(mdOutArg), fs.readFileSync(resolvePath(mdOutArg), 'utf8'));
+    } catch (e) {
+      // Ignore
+    }
+  }
+
   io.log(JSON.stringify(outputSummary, null, 2));
   return outputSummary;
 }
