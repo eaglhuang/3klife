@@ -14,7 +14,7 @@
       "title": "D2 adapter spec — atm-markdown-task-source plugin 接入評估",
       "owner": "GitHubCopilot",
       "priority": "P1",
-      "status": "open",
+      "status": "blocked",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-30",
@@ -394,7 +394,7 @@
       "priority": "high",
       "phase": "M2",
       "owner": "codex-gpt-5",
-      "status": "open",
+      "status": "blocked",
       "created": "2026-05-31",
       "created_by_agent": "codex-gpt-5",
       "started_at": "",
@@ -421,7 +421,7 @@
         "batch envelope JSON (TASK-AAO-0100 backfill + TASK-AAO-0101 formation record)",
         "ROI report"
       ],
-      "notes": "2026-05-31 | ??: open | ??: pending | ??: 3KLife ??????? map ????? Captain ?? Phase 1?"
+      "notes": "2026-05-31 | ??: blocked | ??: discovery stop | ??: 0101 ? slug mapId ? integration test ??????? 0102 / MRP-0028 ?? | ??: framework gaps"
     }
   ]
 }

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0101
 title: "Map formation from TASK-AAO-0100 10 atoms"
-status: open
+status: blocked
 priority: high
 created_at: 2026-05-31T11:28:00+08:00
 created_by_agent: codex-gpt-5
@@ -35,8 +35,16 @@ outOfScope:
 nonGoals:
   - "形成多 map"
   - "達 dogfood 96+"
-notes: "2026-05-31 | 狀態: open | 驗證: pending | 備註: 3KLife 開卡代理補形成 map 任務，等待 Captain 指派 Phase 1。"
+notes: "2026-05-31 | 狀態: blocked | 驗證: discovery stop | 變更: Phase 1 撞 framework 兩個硬點，待 0102 / MRP-0028 接手 | 阻塞: slug mapId + missing integration test file"
 ---
+
+## Discovery findings (Phase 1 撞牆 evidence)
+- 硬點 1: `proposedMapId` 只能是 `ATM-MAP-{NNNN}`，slug `ATM-MAP-TASKS-HELPERS-BATCH10-0001` 會被 `ATM_DECOMP_PLAN_INVALID` 擋下。
+- 硬點 2: `node atm.mjs test --map` 需要 `map.integration.test.ts`，原 allowedFiles 沒包這個檔，canonical map integration 不能在本卡白名單內閉環。
+- 10 個 atoms 已完整找齊：`atm.assert-local-task-ledger-enabled`, `atm.build-task-transition-command`, `atm.create-closure-transition-metadata`, `atm.normalize-work-item-status`, `atm.inspect-task-verify-status`, `atm.collect-key-value`, `atm.collect-key-value-from-lines`, `atm.create-task-from-table-metadata`, `atm.list-committed-files-since-claim`, `atm.read-git-scalar`.
+- 對應 helper 群已確認為 `task-transition-helpers.ts`, `task-markdown-helpers.ts`, `task-git-helpers.ts`。
+- plan 草稿曾落在 `C:\Users\User\AI-Atomic-Framework\plans\TASK-AAO-0101-tasks-helpers-batch10.plan.json`，可作為 0102 改 mapId 後重用的起點。
+- 本卡結論：discovery 收口，交給 `0102` / `MRP-0028` 續接 framework gap repair。
 
 # TASK-AAO-0101 Map formation from TASK-AAO-0100 10 atoms
 
