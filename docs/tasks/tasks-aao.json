@@ -422,6 +422,42 @@
         "ROI report"
       ],
       "notes": "2026-05-31 | ??: blocked | ??: discovery stop | ??: 0101 ? slug mapId ? integration test ??????? 0102 / MRP-0028 ?? | ??: framework gaps"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0102",
+      "priority": "high",
+      "phase": "M2",
+      "owner": "codex-gpt-5",
+      "status": "open",
+      "created": "2026-05-31",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "implementation",
+      "title": "Map formation retry — ATM-MAP-0003 + integration test stub",
+      "description": "Retry the map formation from TASK-AAO-0101 with sequential mapId ATM-MAP-0003 and a handwritten integration test stub so atm test --map can close in 3KLife scope.",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0100",
+        "TASK-AAO-0101"
+      ],
+      "acceptance": [
+        "node atm.mjs spec --validate -> PASS",
+        "node atm.mjs create-map --from-plan -> 產 map.spec.json",
+        "node atm.mjs test --map ATM-MAP-0003 -> PASS",
+        "node atm.mjs atomize score -> >=95/A",
+        "node atm.mjs hook pre-commit --json -> ok:true"
+      ],
+      "deliverables": [
+        "plans/TASK-AAO-0102-tasks-helpers-batch10.plan.json（mapId 改 ATM-MAP-0003）",
+        "atomic_workbench/maps/ATM-MAP-0003/map.spec.json（atm create-map 產出）",
+        "atomic_workbench/maps/ATM-MAP-0003/map.integration.test.ts（手寫 stub，imports + assert 10 members 存在）",
+        "atomic_workbench/maps/ATM-MAP-0003/map.test.report.json（atm test --map 產出）",
+        "batch envelope + ROI report",
+        "framework UX gap 紀錄（為 MRP-0028 鋪路）"
+      ],
+      "notes": "2026-05-31 | 狀態: open | 驗證: pending | 變更: Phase 0 開卡重試；mapId 改 ATM-MAP-0003；手寫 integration test stub；ledger 排在 0101 之後 | 阻塞: 無"
     }
   ]
 }
