@@ -43,6 +43,7 @@ public_tracking: false
 | [TASK-MRP-0025](./TASK-MRP-0025-diff-as-evidence.task.md) | Diff-as-evidence | M25 | planned | 0010 |
 | [TASK-MRP-0026](./TASK-MRP-0026-rescue-police-family.task.md) | Rescue Police Family | M26 | in-progress | 0018, 0021 |
 | [TASK-MRP-0027](./TASK-MRP-0027-disaster-recovery-cli.task.md) | Disaster Recovery & Atom Reload CLI | M27 | planned | 0018, 0021, 0026 |
+| [TASK-MRP-0028](./TASK-MRP-0028-closure-packet-repair-ux.task.md) | Closure Packet Repair UX and Parent Tree Semantics | M28 | open | 0026, 0027 |
 
 ## v2-r2 共通驗收
 
