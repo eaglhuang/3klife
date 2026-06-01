@@ -5,9 +5,9 @@
     "done": 0,
     "blocked": 2,
     "in_progress": 6,
-    "open": 7,
+    "open": 9,
     "planned": 1,
-    "total": 16
+    "total": 18
   },
   "tasks": [
     {
@@ -66,7 +66,7 @@
       "started_by_agent": "antigravity-gemini-3.5-flash",
       "type": "implementation",
       "title": "D2 plugin 接入 + shadow 雙跑",
-      "description": "依 TASK-AAO-0092 adapter-spec.md 第 6 段定義範圍，落地 D2 系列第 2 卡：接入 plugin 為 shadow runner，輸出 advisory diff 至 stderr。",
+      "description": "依 TASK-AAO-0092 adapter-spec.md 第 6 段定義範圍，落地 D2系列第 2 卡：接入 plugin 為 shadow runner，輸出 advisory diff 至 stderr。",
       "related": [],
       "depends": [
         "TASK-AAO-0092"
@@ -667,6 +667,66 @@
         "plans/TASK-AAO-0102-tasks-helpers-batch10.plan.json"
       ],
       "notes": "2026-06-01 | 狀態: open | 驗證: pending | 變更: Phase 0 開卡；從 preserved tag 救援 ATM-MAP-0003 | 阻塞: 無"
+    },
+    {
+      "id": "TASK-AAO-0109",
+      "priority": "P0",
+      "phase": "M2",
+      "owner": "atm-core",
+      "status": "open",
+      "created": "2026-06-01",
+      "created_by_agent": "antigravity-gemini-3.5-flash",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "implementation",
+      "title": "Restore clean-checkout stable runner and CI workflow contract",
+      "description": "Evaluate pre-compiled runner artifact tracking vs build order pipeline setups to fix fresh clone runtimes and address atm-map-ci syntax issues.",
+      "related": [],
+      "depends": [
+        "TASK-MRP-0028",
+        "TASK-AAO-0108"
+      ],
+      "acceptance": [
+        "Clean clones can execute node atm.mjs doctor without missing module failures",
+        "Workflow files for adopter-sentinel, neutrality, and ci.yml run successfully",
+        "Syntax error bugs in atm-map-ci.yml are resolved"
+      ],
+      "deliverables": [
+        ".gitignore",
+        "atm.mjs",
+        ".github/workflows/ci.yml",
+        ".github/workflows/adopter-sentinel.yml",
+        ".github/workflows/neutrality.yml",
+        ".github/workflows/atm-map-ci.yml"
+      ],
+      "notes": "2026-06-01 | 狀態: open | 驗證: pending | 變更: Phase 0 開卡；修復 clean checkout 下的 stable runner 與 CI 語法錯誤 | 阻塞: 無"
+    },
+    {
+      "id": "TASK-AAO-0110",
+      "priority": "P1",
+      "phase": "M16",
+      "owner": "atm-core",
+      "status": "open",
+      "created": "2026-06-02",
+      "created_by_agent": "copilot-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "implementation",
+      "title": "Goal-aligned legacy route selection for guided atomize",
+      "description": "Close the ATM next routing gap so explicit symbol guidance prefers goal-aligned / touched semantic leaves over generic helper leaves during guided atomize.",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "ATM next can distinguish safest leaf, goal-aligned leaf, and touched semantic leaf.",
+        "If a guidance goal explicitly mentions a symbol, that symbol's leaf proposal ranks ahead of a generic helper.",
+        "Review / proposal evidence exposes goalAlignment or overrideReason.",
+        "Blocked trunks such as kinship_pair_binding_supported are not atomized by mistake."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0110-goal-aligned-legacy-route-selection-for-guided-atomize.task.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 create card for AAF routing gap in ATM next leaf selection | blocker: none | risk: helper-leaf preference hides goal-aligned proposal"
     }
   ]
 }
