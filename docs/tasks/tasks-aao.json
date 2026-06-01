@@ -1,11 +1,13 @@
 {
   "shard": "AAO",
-  "generated": "2026-05-31",
+  "generated": "2026-06-01",
   "summary": {
     "done": 0,
+    "blocked": 2,
     "in_progress": 6,
-    "open": 3,
-    "total": 9
+    "open": 7,
+    "planned": 1,
+    "total": 16
   },
   "tasks": [
     {
@@ -458,6 +460,213 @@
         "framework UX gap 紀錄（為 MRP-0028 鋪路）"
       ],
       "notes": "2026-05-31 | 狀態: open | 驗證: pending | 變更: Phase 0 開卡重試；mapId 改 ATM-MAP-0003；手寫 integration test stub；ledger 排在 0101 之後 | 阻塞: 無"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0103",
+      "priority": "high",
+      "phase": "M0",
+      "owner": "codex-gpt-5.4-mini",
+      "status": "open",
+      "created": "2026-06-01",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "implementation",
+      "title": "Environment and workspace hygiene preflight",
+      "description": "Formalize a preflight hygiene workflow that checks node_modules integrity, tsc/ajv availability, package-lock drift policy, runner sync handling, and worktree diagnostics before starting ATM work.",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0027",
+        "TASK-AAO-0047",
+        "TASK-AAO-0060"
+      ],
+      "acceptance": [
+        "node_modules/.bin/tsc.cmd is checked before work begins",
+        "ajv presence is checked before work begins",
+        "ATM_RUNNER_SYNC_REQUIRED triggers build-and-rerun guidance",
+        "package-lock drift is explicitly adjudicated instead of silently absorbed",
+        "git status modified-with-empty-diff cases are diagnosed",
+        "untracked files are classified and not blanket-cleaned"
+      ],
+      "deliverables": [
+        "Environment preflight report",
+        "Workspace hygiene decision log",
+        "Package-lock drift ruling",
+        "Runner sync diagnosis",
+        "False-M diagnostic rule"
+      ],
+      "notes": "2026-06-01 | status: open | validation: pending | change: formalized environment/workspace hygiene preflight | blocker: none | risk: node_modules/tsc/ajv drift, package-lock drift, runner sync, false-M diagnostics"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0104",
+      "priority": "high",
+      "phase": "M0",
+      "owner": "github-copilot",
+      "status": "planned",
+      "created": "2026-06-01",
+      "created_by_agent": "github-copilot",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "refactor",
+      "title": "Function-bag atom capsule extraction wave 1",
+      "description": "Extract the first wave of helper and function-bag code into small atom capsules while keeping trunk lifecycle, routing, ledger, hook, police, and rescue flows untouched.",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0102"
+      ],
+      "acceptance": [
+        "Only leaf or helper functions from the ten listed candidate groups are extracted or repackaged.",
+        "Per-capsule atom ownership registration is created for each new or split helper capsule.",
+        "Focused unit coverage is added for the ten helper groups.",
+        "ROI report shows helper boundaries and non-interference with trunk flows.",
+        "Closure evidence proves validators passed and forbidden trunk files were untouched."
+      ],
+      "deliverables": [
+        "Batch-10 helper and capsule extraction plan for the ten existing task helper modules.",
+        "Per-capsule atom ownership registration for each new or split helper capsule.",
+        "Focused unit coverage for the ten helper groups, using fixtures or golden inputs where useful.",
+        "ROI report showing helper or capsule boundary, touched files, and trunk-flow non-interference.",
+        "Closure evidence proving validators passed and forbidden trunk files were untouched."
+      ],
+      "notes": "2026-06-01 | status: planned | validation: pending | change: phase 0 function-bag capsule extraction draft | blocker: none | risk: helper capsule scope drift"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0105",
+      "priority": "high",
+      "phase": "M0",
+      "owner": "codex-gpt-5",
+      "status": "open",
+      "created": "2026-06-01",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "implementation",
+      "title": "Atom registry external-parts sharding",
+      "description": "Shard atomic-registry.json into external-parts mode so reader, writer, and merge can operate without hand-built single-document regeneration.",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0102"
+      ],
+      "acceptance": [
+        "atomic-registry.json can declare and validate external-parts layout and reader outputs an equivalent registry view.",
+        "Writer and merge flow in external-parts mode without requiring manual single-document rebuild.",
+        "Merged registry remains compatible with existing validators and CLI consumers.",
+        "Projection can regenerate atomic_workbench/registry-catalog.md but that file is not a manual source of truth.",
+        "Missing, duplicate, order-mismatch, or merge-failure cases emit actionable errors."
+      ],
+      "deliverables": [
+        "atomic-registry.json external-parts layout and reader or writer or merge strategy.",
+        "Registry parts layout and merge rules.",
+        "CLI and validator compatibility for external-parts registry mode.",
+        "Generated registry-catalog projection for compatibility."
+      ],
+      "notes": "2026-06-01 | status: open | validation: pending | change: external-parts registry sharding opened | blocker: none | risk: registry projection drift or silent override"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0106",
+      "priority": "high",
+      "phase": "M0",
+      "owner": "codex-gpt-5",
+      "status": "open",
+      "created": "2026-06-01",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "implementation",
+      "title": "Path-to-atom-map owner shards",
+      "description": "Split path-to-atom-map ownership into deterministic shards so CLI and validators can merge ownership without silent override.",
+      "related": [],
+      "depends": [
+        "TASK-AAO-0102"
+      ],
+      "acceptance": [
+        "Owner shards merge deterministically into a single projection equivalent to the current path-to-atom-map.json.",
+        "CLI, validator, score, and inventory tools can read shards or merged output without manual hand-merge.",
+        "Duplicate path or glob declarations must fail explicitly rather than silently overriding ownership.",
+        "Merged projection remains compatible with validate-atomization-coverage and validate-atom-id-to-cid.",
+        "Single-file projection remains a generated compatibility surface only."
+      ],
+      "deliverables": [
+        "Path-to-atom-map owner shards layout and merge rules.",
+        "Ownership collision detection and diagnostic validator behavior.",
+        "Path or glob ownership documentation for shard routing.",
+        "CLI and script compatibility for owner shards."
+      ],
+      "notes": "2026-06-01 | status: open | validation: pending | change: path-to-atom-map owner shards opened | blocker: none | risk: ownership collision and silent override"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0107",
+      "priority": "P0",
+      "phase": "M0",
+      "owner": "codex-gpt-5",
+      "status": "open",
+      "created": "2026-06-01",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "maintenance",
+      "title": "Dependency security CI triage",
+      "description": "Restore clean npm ci install health and classify the open Dependabot security PRs for ESLint, @eslint/js, TypeScript, @types/node, and typescript-eslint.",
+      "related": [
+        "PR#5",
+        "PR#7",
+        "PR#9",
+        "PR#12",
+        "PR#14"
+      ],
+      "depends": [
+        "TASK-AAO-0103"
+      ],
+      "acceptance": [
+        "npm ci passes on a clean checkout",
+        "adopter-sentinel validate passes after install",
+        "PR #5, #7, #9, #12, and #14 each have merge/defer/supersede decisions",
+        "package-lock changes are intentional and documented",
+        "Node.js 20 Actions deprecation warning is not mistaken for the current root cause"
+      ],
+      "deliverables": [
+        "package-lock sync or documented lockfile decision",
+        "Dependabot PR triage report",
+        "validator evidence for dependency compatibility",
+        "CI root-cause note separating npm ci failure from GitHub visibility"
+      ],
+      "notes": "2026-06-01 | status: open | validation: pending | change: dependency security CI triage opened | blocker: package-lock missing @ai-atomic-framework/atm-markdown-task-source | risk: external adopters and AI tools may treat clean install failure as repo unusable"
+    },
+    {
+      "id": "TASK-AAO-0108",
+      "priority": "high",
+      "phase": "M2",
+      "owner": "atm-core",
+      "status": "open",
+      "created": "2026-06-01",
+      "created_by_agent": "antigravity-gemini-3.5-flash",
+      "started_at": "",
+      "started_by_agent": "",
+      "type": "implementation",
+      "title": "Recover ATM-MAP-0003 from preserved 0102 tag",
+      "description": "Recover the successful ATM-MAP-0003 map formation assets from local preserved tag broken-closure-packet-self-ref-2026-05-31 and close properly using MRP-0028 fixed engine.",
+      "related": [],
+      "depends": [
+        "TASK-MRP-0028",
+        "TASK-AAO-0102"
+      ],
+      "acceptance": [
+        "ATM-MAP-0003 assets correctly restored to AAF",
+        "atm test --map ATM-MAP-0003 passes",
+        "Closure packet generated cleanly without self-ref errors"
+      ],
+      "deliverables": [
+        "atomic_workbench/maps/ATM-MAP-0003/map.spec.json",
+        "atomic_workbench/maps/ATM-MAP-0003/map.integration.test.ts",
+        "atomic_workbench/maps/ATM-MAP-0003/map.test.report.json",
+        "plans/TASK-AAO-0102-tasks-helpers-batch10.plan.json"
+      ],
+      "notes": "2026-06-01 | 狀態: open | 驗證: pending | 變更: Phase 0 開卡；從 preserved tag 救援 ATM-MAP-0003 | 阻塞: 無"
     }
   ]
 }
