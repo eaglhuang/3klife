@@ -62,6 +62,10 @@ APF-0003～0007 是 design spec；APF-0021～0025 是對應 runtime scanner。AP
 | [TASK-APF-0051](./TASK-APF-0051.task.md) | APF roadmap/task metadata consistency repair | M14 | done | done | n/a | TASK-APF-0050 |
 | [TASK-APF-0052](./TASK-APF-0052.task.md) | Adopter-neutrality scanner and negative fixtures | M14 | done | done | registry-consistency-extension-active | TASK-APF-0051 |
 | [TASK-APF-0053](./TASK-APF-0053.task.md) | Validator profile naming and advisory-only hardening | M14 | done | done | done | TASK-APF-0051 |
+| [TASK-APF-0054](./TASK-APF-0054-finding-to-janitor-apply-plan-contract.task.md) | Finding-to-janitor apply plan contract | M15 | open | draft | n/a | TASK-APF-0002 |
+| [TASK-APF-0055](./TASK-APF-0055-structural-apply-scheduler-contract.task.md) | Structural apply scheduler contract | M15 | open | draft | n/a | TASK-APF-0054 |
+| [TASK-APF-0056](./TASK-APF-0056-janitor-apply-plan-schema-and-validator.task.md) | Janitor apply plan schema and validator | M15 | open | draft | n/a | TASK-APF-0054 |
+| [TASK-APF-0057](./TASK-APF-0057-structural-apply-conflict-model.task.md) | Structural apply conflict model | M15 | open | draft | n/a | TASK-APF-0055 |
 
 ## 補充規則
 
