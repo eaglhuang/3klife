@@ -142,6 +142,7 @@ allowedFiles 嚴格白名單：
 
 4. **草擬派工單**含全部段：必讀 / Phase 0 / Phase 1 / Context Map / 禁止清單 / Validators / scope drift 應對 / 7-8 段回報
    - **Phase 0 段必加**：「開卡前查 task_id 是否已存在 ledger；若已存在停手回報 Captain」
+   - 當輸出可轉貼派工單時，引用 `atm-captain-dispatch-standard` 的欄位與 token 規範。
 
 5. **輸出可轉貼 code block**
 

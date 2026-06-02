@@ -4,8 +4,8 @@
     "description": "Central Skills Manifest — 所有 Agent Skill 的唯一索引",
     "version": 1,
     "generated": "2026-05-04",
-    "totalSkills": 29,
-    "portableCount": 14,
+    "totalSkills": 30,
+    "portableCount": 15,
     "categories": ["debug", "ui-production", "asset-gen", "image-gen", "data-pipeline", "agent-workflow", "doc-management", "harness"]
   },
   "skills": [
@@ -364,6 +364,18 @@
       "depends": [],
       "applyTo": "**",
       "tags": ["harness", "gate", "validation", "computational", "sensor"]
+    },
+    {
+      "id": "atm-captain-dispatch-standard",
+      "version": "1.0.0",
+      "category": "agent-workflow",
+      "portable": true,
+      "description": "Captain 派工規範與決策手冊，提供高度結構化、動態 roster 適配與 token 節省的派工單標準與範例模版。",
+      "locations": [".github/skills/atm-captain-dispatch-standard", ".agents/skills/atm-captain-dispatch-standard"],
+      "primaryLocation": ".github/skills/atm-captain-dispatch-standard",
+      "depends": [],
+      "applyTo": "**",
+      "tags": ["workflow", "dispatch", "captain", "template"]
     }
   ],
   "mirrors": [
@@ -374,7 +386,8 @@
     { "skillId": "cocos-screenshot", "primary": ".github/skills/cocos-screenshot", "mirror": ".agents/skills/cocos-screenshot" },
     { "skillId": "encoding-touched-guard", "primary": ".github/skills/encoding-touched-guard", "mirror": ".agents/skills/encoding-touched-guard" },
     { "skillId": "task-card-opener", "primary": ".github/skills/task-card-opener", "mirror": ".agents/skills/task-card-opener" },
-    { "skillId": "ui-vibe-pipeline", "primary": ".github/skills/ui-vibe-pipeline", "mirror": ".agents/skills/ui-vibe-pipeline" }
+    { "skillId": "ui-vibe-pipeline", "primary": ".github/skills/ui-vibe-pipeline", "mirror": ".agents/skills/ui-vibe-pipeline" },
+    { "skillId": "atm-captain-dispatch-standard", "primary": ".github/skills/atm-captain-dispatch-standard", "mirror": ".agents/skills/atm-captain-dispatch-standard" }
   ],
   "dependencyGraph": {
     "debug": ["cocos-bug-triage -> cocos-screenshot", "cocos-bug-triage -> cocos-log-reader"],
