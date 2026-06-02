@@ -82,5 +82,62 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0112",
+    "title": "AAF taskflow dry-run skeleton",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-02",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 open card for the AAF taskflow dry-run skeleton. Adopt C plan: AAF taskflow macro + 3KLife profile adapter. Phase 1 is dry-run skeleton only; the macro must not become a second writer, and writes must stay delegated to the repo-profile specified opener.",
+    "related": [
+      "TASK-AAO-0111"
+    ],
+    "depends": [],
+    "acceptance": [
+      "node atm.mjs taskflow open --dry-run --json can emit a dry-run report.",
+      "--write must explicitly refuse.",
+      "Dry-run mode must not write the task card, ledger, or shard files.",
+      "Dry-run mode must not touch claim or close lifecycle.",
+      "Macro must not become a second writer; write must remain delegated to the repo-profile specified opener."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0112-atm-taskflow-dry-run-skeleton.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for AAF taskflow dry-run skeleton route (C plan) | blocker: none | risk: macro second-writer drift",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
