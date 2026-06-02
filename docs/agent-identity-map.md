@@ -6,10 +6,15 @@
 ## 必經流程
 
 1. 先讀本文件。
-2. 選定自己的 slug。
-3. 由目前使用的模型名稱動態組出 slug，再設定 `AGENT_IDENTITY=<slug>`。
-4. 以 repo-local `git config` 設定 `user.name` 與 `user.email`。
-5. 再進入 lock、task card、commit 流程。
+2. 選定自己的 `<editor>` 與 `<model>`（例如 `claude-code` + `opus-4-7`）。
+3. 執行 `node atm.mjs actor adopt --editor <editor> --model <model> --kind ai-agent --json`，由 CLI 原子化完成：
+   - 組 slug = `<editor>-<model>`
+   - 寫入 `.atm/catalog/registry/actors.json`（actor record）
+   - 寫入 `.atm/runtime/identity/default.json`（runtime default）
+   - 設 repo-local `git config user.name` / `user.email`
+4. 再進入 lock、task card、commit 流程。
+
+> 舊流程（手動 `git config` + `export AGENT_IDENTITY`）仍可用於回溯相容，但新工作一律使用 `actor adopt`，避免「git config / runtime default / actor registry」三份快取不同步導致繼承前一輪 Agent 身分。
 
 ## 身份規則
 
@@ -36,6 +41,14 @@
 - 如果你已經有舊的 `GitHubCopilot` 記錄，新的工作仍應切換成動態 slug，不要延用舊身份。
 
 ## 範例
+
+新流程（推薦）：
+
+```bash
+node atm.mjs actor adopt --editor vs-code --model gpt-5.4-mini --kind ai-agent --json
+```
+
+舊流程（回溯相容）：
 
 ```bash
 export AGENT_IDENTITY=vs-code-gpt-5.4-mini

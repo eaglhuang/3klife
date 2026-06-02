@@ -136,69 +136,62 @@
   },
   {
     "doc_id": "",
-    "id": "TASK-AAO-0115",
-    "title": "taskflow.profile.v1 contract completion / de-hardcode dry-run",
+    "id": "TASK-AAO-0116",
+    "title": "atm actor adopt — atomic identity switch subcommand",
     "owner": "atm-core",
-    "priority": "P0",
+    "priority": "P1",
     "status": "in-progress",
     "type": "implementation",
     "phase": "M16",
     "created": "2026-06-02",
-    "created_by_agent": "codex-gpt-5.4-mini",
-    "started_at": "2026-06-02T16:09:16+08:00",
-    "started_by_agent": "codex-gpt-5.4-mini",
+    "created_by_agent": "claude-code-builder",
+    "started_at": "2026-06-02T17:00:00+08:00",
+    "started_by_agent": "claude-code-builder",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "Phase 0 planning card for taskflow.profile.v1 contract completion. Remove TASK-AAO-0113 and AI-Atomic-Framework hard-codes from dry-run output; keep supportsWrite false and no write mode.",
+    "description": "Add `node atm.mjs actor adopt` subcommand collapsing register actor + write runtime default + git local config + bind session into one atomic transaction. Eliminates inherited-identity staleness loop surfaced by TASK-AAO-0115 retrospective.",
     "related": [],
-    "depends": [
-      "TASK-AAO-0113"
-    ],
+    "depends": [],
     "acceptance": [
-      "taskflow open --dry-run --json derives its report from profile data.",
-      "The report no longer hard-codes TASK-AAO-0113 or AI-Atomic-Framework.",
-      "The profile exposes taskIdPrefix, template, repoLabel, delegationDisplayHint, and delegation.writerInvocation.",
-      "supportsWrite stays false in v1",
-      "The dry-run report does not write task card, ledger, or shard files."
+      "`actor adopt` writes actor record + git config + runtime default in a single transaction.",
+      "Any step failure rolls back git config to snapshot; no half-written runtime default.",
+      "Subsequent `actor verify-git --id <slug>` passes without manual git config.",
+      "Subcommand surfaces via command-specs and tests are green.",
+      "No change to actors.json schema or other actor sub-actions."
     ],
     "deliverables": [
-      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-taskflow-profile-v1-contract-completion.task.md",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md"
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/actor.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/actor-registry.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/actor.spec.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/__tests__/actor-adopt.spec.ts",
+      "C:/Users/User/AI-Atomic-Framework/docs/governance/actor-identity-model.md",
+      "C:/Users/User/3KLife/docs/agent-identity-map.md"
     ],
-    "notes": "2026-06-02 | status: in-progress | phase0 contract-completion planning card; phase1 de-hardcodes profile dry-run; supportsWrite=false",
+    "notes": "2026-06-02 | status: in-progress | phase0 planning + identity map flow rewrite; phase1 adds atomic adopt subcommand with rollback.",
     "brief": {
       "style": "classic",
       "label": "",
-      "summary": "Phase 0 planning card for taskflow.profile.v1 contract completion.",
+      "summary": "Atomic identity switch subcommand to eliminate three-cache staleness loop.",
       "position": "M16",
-      "prereq": "TASK-AAO-0113"
+      "prereq": ""
     },
     "contracts": {
       "input": [
-        "TASK-AAO-0113 is the prerequisite baseline for loader and guard work.",
-        "targetRepo must be AI-Atomic-Framework and closure_authority must be target_repo.",
-        "The dry-run report must be driven by profile fields, not baked-in constants.",
-        "The profile must surface taskIdPrefix, template, repoLabel, delegationDisplayHint, and delegation.writerInvocation."
+        "Caller provides --editor and --model; slug composed as <editor>-<model>.",
+        "Existing actor-registry.ts helpers (upsertActorRecord, writeRuntimeIdentityDefault) are reused.",
+        "Repo-local git config is mutated only via `git config --local`."
       ],
       "output": [
-        "node atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --dry-run --json emits a profile-driven report.",
-        "The report no longer hard-codes TASK-AAO-0113 or AI-Atomic-Framework.",
-        "--write explicitly refuses on this route.",
-        "No task card, ledger, or shard writes.",
-        "No claim or close lifecycle wiring.",
-        "No second writer or second lifecycle.",
-        "supportsWrite remains false."
+        "Single transaction writes actor record + git config + runtime default.",
+        "Evidence object includes previousActorId and gitConfigChanged flag.",
+        "Rollback path restores git config snapshot on failure."
       ],
-      "validation_cmd": "npm run typecheck\\nnpm run validate:cli\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --dry-run --json\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --write --json\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/invalid-missing-schema-id.profile.json --dry-run --json\\ngit diff --check",
-      "rollback_hint": "Remove the Phase 1 allowlist and validators from this card only. Keep TASK-AAO-0113 as the prerequisite reference. Do not touch AAF source.",
+      "validation_cmd": "npm run typecheck\nnpm run validate:cli\nnode atm.mjs actor adopt --editor codex --model adopt-test-bot --kind ai-agent --json\nnode atm.mjs actor verify-git --id codex-adopt-test-bot --json\ngit diff --check",
+      "rollback_hint": "Revert AAF feat + closure commits; revert 3KLife open commit. Additive subcommand only — no downstream consumers.",
       "execution_steps": [
-        "Update the card and the tasks-atm shard.",
-        "Rebuild the thin index if summary numbers change.",
-        "Run encoding and diff checks.",
-        "Commit the 3KLife amendment only."
+        "Phase 0: write card + ledger + agent-identity-map.md, 1 commit in 3KLife.",
+        "Phase 1: implement adopt action + helpers + tests + docs, 2 commits in AAF."
       ]
     },
     "harness_evidence": {
