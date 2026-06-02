@@ -89,5 +89,63 @@
     "started_by_agent": "codex-gpt-5",
     "completed_at": "2026-05-09T01:21:00+08:00",
     "completed_by_agent": "codex-gpt-5"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0113",
+    "title": "taskflow.profile.v1 contract",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-02",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 open card for the taskflow.profile.v1 contract. This card defines the profile contract so taskflow open --dry-run can read repo profile capabilities and delegation entry metadata without creating a second lifecycle or writing task card, ledger, or shard files.",
+    "related": [],
+    "depends": [
+      "TASK-AAO-0112"
+    ],
+    "acceptance": [
+      "node atm.mjs taskflow open --dry-run --json can resolve repo profile and emit a dry-run report.",
+      "taskflow.profile.v1 exposes capability and delegation-entry metadata without writing task card, ledger, or shard files.",
+      "--write must explicitly refuse on this route.",
+      "The profile layer must not create a second lifecycle or second writer.",
+      "Dry-run mode must not touch claim or close lifecycle."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0113-taskflow-profile-v1-contract.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md"
+    ],
+    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for taskflow.profile.v1 contract route | blocker: none | risk: profile contract drift",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
