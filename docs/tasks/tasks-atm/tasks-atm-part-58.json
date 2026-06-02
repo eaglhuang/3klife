@@ -107,5 +107,64 @@
       "prereq": "ATM-2-0014"
     },
     "completed_at": "2026-05-07T23:37:41+08:00"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0119",
+    "title": "frozen runner alignment for ATM_RUNNER_SYNC_REQUIRED",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-02",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for frozen runner alignment. AAF currently reports ATM_RUNNER_SYNC_REQUIRED, which means the frozen runner and source are out of sync. This card is the prerequisite alignment work before TASK-AAO-0118 implementation can begin, but it does not implement commit guard source logic.",
+    "related": [
+      "TASK-AAO-0118"
+    ],
+    "depends": [],
+    "acceptance": [
+      "The frozen runner alignment addresses ATM_RUNNER_SYNC_REQUIRED before TASK-AAO-0118 implementation begins.",
+      "This card stays in 3KLife Phase 0 and only updates the task card",
+      "tasks-atm ledger",
+      "and shard.",
+      "Do not implement commit guard source logic in this card.",
+      "Do not touch AAF source files in this turn.",
+      "TASK-AAO-0118 remains a downstream follow-up and is not part of this card."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0119-frozen-runner-alignment-for-atm-runner-sync-required.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for frozen runner alignment for ATM_RUNNER_SYNC_REQUIRED | blocker: ATM_RUNNER_SYNC_REQUIRED | risk: runner/source drift",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
