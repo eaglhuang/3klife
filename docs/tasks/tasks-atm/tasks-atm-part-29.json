@@ -70,5 +70,63 @@
       "position": "ATM-2（map provisioning / naming convergence / birth facade）",
       "prereq": "ATM-2-0023 / ATM-2-0038"
     }
+  },
+  {
+    "id": "TASK-AAO-0117",
+    "title": "taskflow.profile release tracked pollution cleanup",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "implementation",
+    "phase": "M16",
+    "created": "2026-06-02",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for cleanup of TASK-AAO-0115 closure pollution. Remove tracked release/atm-onefile/** pollution from the closure range while preserving local release artifacts and leaving TASK-AAO-0115 taskflow functionality untouched.",
+    "related": [
+      "TASK-AAO-0115"
+    ],
+    "depends": [
+      "TASK-AAO-0115"
+    ],
+    "acceptance": [
+      "The cleanup removes tracked release/atm-onefile/** pollution from the TASK-AAO-0115 closure range.",
+      "Local release artifacts remain on disk and are not deleted.",
+      "If git diff --check origin/main..HEAD still reports EOF blank-line issues, only the two test files are in scope for EOF-only fixes.",
+      "TASK-AAO-0115 taskflow functionality itself is not changed.",
+      "The card does not touch the claude-code-builder claimed/staged actor-adopt work."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0117-taskflow-profile-release-pollution-cleanup.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for TASK-AAO-0115 release tracked pollution cleanup | blocker: none | risk: release-tracked cleanup drift / claimed-work interference",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
