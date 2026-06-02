@@ -1,6 +1,6 @@
 <!-- doc_id: doc_other_0093 -->
 # ATM 框架穩定化里程碑
-> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=128 / in_progress=0 / open=3 / total=131`.
+> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=128 / in_progress=1 / open=3 / total=132`.
 ## 1. 當前狀態
 - `ATM-2-0027`、`ATM-2-0050`、`ATM-2-0051`、`ATM-2-0054` 都已是 `done`，不再當作主缺口。
 - M1 的三個收尾面向都已收斂，不再保留未完成主缺口。

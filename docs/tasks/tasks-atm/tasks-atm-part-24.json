@@ -96,13 +96,13 @@
     "title": "taskflow.profile.v1 contract",
     "owner": "atm-core",
     "priority": "P0",
-    "status": "open",
+    "status": "in-progress",
     "type": "governance",
     "phase": "M16",
     "created": "2026-06-02",
     "created_by_agent": "codex-gpt-5.4-mini",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-06-02T15:20:40.2434051+08:00",
+    "started_by_agent": "codex-gpt-5.4-mini",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -115,8 +115,10 @@
       "node atm.mjs taskflow open --dry-run --json can resolve repo profile and emit a dry-run report.",
       "taskflow.profile.v1 exposes capability and delegation-entry metadata without writing task card, ledger, or shard files.",
       "--write must explicitly refuse on this route.",
+      "taskflow.profile.v1.supportsWrite stays false.",
       "The profile layer must not create a second lifecycle or second writer.",
-      "Dry-run mode must not touch claim or close lifecycle."
+      "Dry-run mode must not touch claim or close lifecycle.",
+      "The profile layer must not import, require, or spawn the 3KLife opener."
     ],
     "deliverables": [
       "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0113-taskflow-profile-v1-contract.task.md",
@@ -125,7 +127,7 @@
       "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json",
       "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md"
     ],
-    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for taskflow.profile.v1 contract route | blocker: none | risk: profile contract drift",
+    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 scope amendment for taskflow.profile.v1 contract route | amendment: Phase 1 candidate scope now includes schema, profile-loader, fixtures, and focused tests; supportsWrite stays false | blocker: none | risk: profile contract drift",
     "brief": {
       "style": "classic",
       "label": "",
@@ -134,11 +136,30 @@
       "prereq": ""
     },
     "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
+      "input": [
+        "TASK-AAO-0112 remains the prerequisite skeleton route.",
+        "The AAF implementation card must point at the target repo, not at the planning repo.",
+        "The contract must describe how the opener is selected and how capabilities are surfaced.",
+        "004裁決 requires schema, profile-loader, fixtures, and focused tests to be in scope before Phase 1 can proceed."
+      ],
+      "output": [
+        "node atm.mjs taskflow open --dry-run --json can resolve repo profile and emit a dry-run report.",
+        "The report can surface taskflow.profile.v1 capability and delegation-entry metadata.",
+        "The profile layer does not write task card, ledger, or shard files.",
+        "--write must explicitly refuse on this route.",
+        "taskflow.profile.v1.supportsWrite is fixed false.",
+        "The profile layer does not create a second lifecycle or second writer.",
+        "Dry-run mode does not touch claim or close lifecycle.",
+        "The profile layer does not import, require, or spawn the 3KLife opener."
+      ],
+      "validation_cmd": "npm run typecheck\\nnpm run validate:cli\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --dry-run --json\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --write --json\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/invalid-missing-schema-id.profile.json --dry-run --json\\ngit diff --check",
+      "rollback_hint": "Remove the Phase 1 candidate allowlist and validators from this card. Keep the TASK-AAO-0112 prerequisite and the 3KLife planning card intact. Do not touch AAF source files when rolling back the amendment.",
+      "execution_steps": [
+        "Update the task card frontmatter and formal sections.",
+        "Mirror the scope amendment into the tasks-atm shard.",
+        "Run encoding and diff checks.",
+        "Commit the 3KLife amendment only."
+      ]
     },
     "harness_evidence": {
       "artifact_paths": [],
