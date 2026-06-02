@@ -106,5 +106,65 @@
       ]
     },
     "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: wrapper [DEPRECATED] warning ✅ / run-rule-guard findings JSON ✅ / compute-gate ts-syntax+eslint ✅ | 變更: 新增 rule-pack.json + rule-guard-adapter.js + run-rule-guard.js，check-task-scope/check-import-boundaries 標 deprecated，compute-gate atm profile 改走 rule-guard-atm | 阻塞: atm profile 仍受既有 dirty scope 影響\n2026-05-08 | 狀態: done | 驗證: BattleController fs/path 違規移除後 run-rule-guard 不再出現 cocos-no-fs finding；framework-function-atomization-manifest 對應列已改 covered-existing | 變更: 補修 BattleController fallback 與 manifest 狀態對齊 | 阻塞: task-scope uncovered files 為 repo 既有狀態"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0118",
+    "title": "opener-first active-claim commit guard MVP",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-02",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for opener-first active-claim commit guard MVP. The universal card-opening flow is the first defense; AI must not guess the next task id. Phase 1A only covers commit wrapper / active-claim / trailer guard MVP. Phase 1B later covers close target attestation. Phase 1C later covers hook template / commit-msg strengthening. Runner sync stays on a separate side-path card.",
+    "related": [],
+    "depends": [
+      "TASK-AAO-0117"
+    ],
+    "acceptance": [
+      "The universal opener flow is the first defense",
+      "and AI must not guess the next task id.",
+      "Phase 1A only covers commit wrapper",
+      "active-claim",
+      "and trailer guard MVP.",
+      "Phase 1B later covers close target attestation.",
+      "Phase 1C later covers hook template and commit-msg strengthening.",
+      "Runner sync is tracked on a separate side-path card and is not merged into 0118."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0118-opener-first-active-claim-commit-guard-mvp.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for opener-first active-claim commit guard MVP | blocker: none | risk: next-id guessing / trailer-guard drift",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
