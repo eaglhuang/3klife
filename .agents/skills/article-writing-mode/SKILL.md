@@ -5,7 +5,7 @@ description: Write or revise AI-learning-notes article pages in "寫文章模式
 
 # Article Writing Mode
 
-Use this skill to produce site-ready articles for the AI-learning-notes site. Optimize for consistency, readability, and maintainability across the whole article family.
+Use this skill to produce site-ready articles for the AI-learning-notes site. Optimize for consistency, readability, maintainability, and a Taiwan-friendly technical voice across the whole article family.
 
 ## Source of truth
 
@@ -81,6 +81,17 @@ Rules:
 - Translate content, not the layout system.
 - Use the same article structure and shared shell rules in both languages.
 - Keep article slugs, cross-links, and index entries paired when both languages exist.
+
+## Voice and diction
+
+- Write in Traditional Chinese with Taiwan usage and phrasing.
+- Use topic-specific terms directly when they belong to the subject; keep the prose professional.
+- Use modern AI and tooling terms freely when they help readers anchor the idea, including `MCP`, `skill`, `Codex`, `Claude Code`, `Agent`, `Copilot`, `Gemini`, `token`, `prompt`, `context`, and `Nvidia`.
+- Use vivid or memorable analogy words, such as `龍蝦`, only when the context makes them helpful and the density stays low.
+- Avoid template-like transition filler unless it genuinely improves clarity.
+- Keep the tone natural, slightly relaxed, and still technically solid.
+- Prefer clarity and recall over jargon for its own sake.
+- If a user gives a house style or wording contract, treat it as binding for the article.
 
 ## Site architecture
 
