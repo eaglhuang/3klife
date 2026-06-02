@@ -1,22 +1,25 @@
 ---
-id: "TASK-AAO-0115"
+doc_id: ""
+task_id: TASK-AAO-0115
 title: "taskflow.profile.v1 contract completion / de-hardcode dry-run"
-owner: "atm-core"
-priority: "P0"
-status: "in-progress"
-type: "implementation"
-phase: "M16"
-created: "2026-06-02"
-created_by_agent: "codex-gpt-5.4-mini"
+milestone: M16
+status: in-progress
+artifact_status: draft
+runtime_status: n/a
+upstream_mutation_status: not-applied
 started_at: "2026-06-02T16:09:16+08:00"
 started_by_agent: "codex-gpt-5.4-mini"
-targetRepo: "AI-Atomic-Framework"
-closure_authority: "target_repo"
-planning_repo: "3KLife"
-upstream_repo: "AI-Atomic-Framework"
-executionMode: "phase0-taskflow-profile-v1-contract-completion"
-depends:
-  - TASK-AAO-0113
+blocked_by: []
+owner: atm-core
+priority: P0
+upstream_repo: AI-Atomic-Framework
+targetRepo: AI-Atomic-Framework
+hostKind: upstream-roadmap
+alphaGate: validate:task-ledger-governance
+public_tracking: false
+executionMode: phase0-taskflow-profile-v1-contract-completion
+planning_repo: 3KLife
+closure_authority: target_repo
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-taskflow-profile-v1-contract-completion.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
