@@ -133,5 +133,80 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0115",
+    "title": "taskflow.profile.v1 contract completion / de-hardcode dry-run",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "in-progress",
+    "type": "implementation",
+    "phase": "M16",
+    "created": "2026-06-02",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "2026-06-02T16:09:16+08:00",
+    "started_by_agent": "codex-gpt-5.4-mini",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for taskflow.profile.v1 contract completion. Remove TASK-AAO-0113 and AI-Atomic-Framework hard-codes from dry-run output; keep supportsWrite false and no write mode.",
+    "related": [],
+    "depends": [
+      "TASK-AAO-0113"
+    ],
+    "acceptance": [
+      "taskflow open --dry-run --json derives its report from profile data.",
+      "The report no longer hard-codes TASK-AAO-0113 or AI-Atomic-Framework.",
+      "The profile exposes taskIdPrefix, template, repoLabel, delegationDisplayHint, and delegation.writerInvocation.",
+      "supportsWrite stays false in v1",
+      "The dry-run report does not write task card, ledger, or shard files."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-taskflow-profile-v1-contract-completion.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md"
+    ],
+    "notes": "2026-06-02 | status: in-progress | phase0 contract-completion planning card; phase1 de-hardcodes profile dry-run; supportsWrite=false",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "Phase 0 planning card for taskflow.profile.v1 contract completion.",
+      "position": "M16",
+      "prereq": "TASK-AAO-0113"
+    },
+    "contracts": {
+      "input": [
+        "TASK-AAO-0113 is the prerequisite baseline for loader and guard work.",
+        "targetRepo must be AI-Atomic-Framework and closure_authority must be target_repo.",
+        "The dry-run report must be driven by profile fields, not baked-in constants.",
+        "The profile must surface taskIdPrefix, template, repoLabel, delegationDisplayHint, and delegation.writerInvocation."
+      ],
+      "output": [
+        "node atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --dry-run --json emits a profile-driven report.",
+        "The report no longer hard-codes TASK-AAO-0113 or AI-Atomic-Framework.",
+        "--write explicitly refuses on this route.",
+        "No task card, ledger, or shard writes.",
+        "No claim or close lifecycle wiring.",
+        "No second writer or second lifecycle.",
+        "supportsWrite remains false."
+      ],
+      "validation_cmd": "npm run typecheck\\nnpm run validate:cli\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --dry-run --json\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/valid.profile.json --write --json\\nnode atm.mjs taskflow open --profile fixtures/taskflow-profile/invalid-missing-schema-id.profile.json --dry-run --json\\ngit diff --check",
+      "rollback_hint": "Remove the Phase 1 allowlist and validators from this card only. Keep TASK-AAO-0113 as the prerequisite reference. Do not touch AAF source.",
+      "execution_steps": [
+        "Update the card and the tasks-atm shard.",
+        "Rebuild the thin index if summary numbers change.",
+        "Run encoding and diff checks.",
+        "Commit the 3KLife amendment only."
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
