@@ -98,5 +98,64 @@
       "ATM-2.5-0002",
       "ATM-3-0001"
     ]
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0120",
+    "title": "section-aware task-card scope extraction and outOfScope subtraction",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-03",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for the AAF importer scope pollution guard. The importer currently allows path-like strings from task card prose to leak into targetAllowedFiles. This card defines the route guard that only trusts canonical scope sections and subtracts outOfScope / forbidden surfaces before importer routing. It stays in 3KLife Phase 0 and does not implement importer source changes yet.",
+    "related": [
+      "TASK-AAO-0118",
+      "TASK-AAO-0119"
+    ],
+    "depends": [],
+    "acceptance": [
+      "Only canonical scope sections are used for route-visible extraction.",
+      "outOfScope and forbidden surfaces are subtracted before importer routing.",
+      "No raw forbidden path list appears in the task card body.",
+      "Phase 1 scope only names the importer files that actually need code changes.",
+      "0118 and 0119 remain context only",
+      "runner sync and commit guard implementation are not folded into 0120."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0120-section-aware-task-card-scope-extraction-and-outOfScope-subtraction.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-03 | status: open | validation: pending | change: Phase 0 open card for importer scope pollution guard | blocker: route-visible scope pollution | risk: path-like prose leaking into targetAllowedFiles",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
