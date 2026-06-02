@@ -8,7 +8,6 @@
 * **適用情境**：針對已完成的任務進行程式碼抽查、日誌排查、語意/邏輯覆核、編碼災情盤點。不涉及任何代碼修改。
 
 ```markdown
-```markdown
 代號：[指派代理代號，如 006 或 Haiku]；模型：[建議執行模型]
 
 ### 任務
@@ -39,14 +38,12 @@ C:\Users\User\3KLife
 ### 大白話補一句
 眼睛張大只准看、不准動手，把有鬼的地方跟行號揪出來回報就對了！
 ```
-```
 
 ---
 
 ## 模版 2：執行落地單 (Execution / Coding / Delivering)
 * **適用情境**：已有明確規格與 allowedFiles 限制，指派代理進行功能開發、bug 修復、或單元測試代碼實作。
 
-```markdown
 ```markdown
 代號：[指派代理代號，如 007]；模型：[建議執行模型，如 Gemini 3.5 Flash]
 
@@ -63,16 +60,12 @@ C:\Users\User\3KLife
 請在嚴格的 `allowedFiles` 限制下進行代碼修改：
 1. `[修改路徑 1]` — 實作 [某 class / function]
 2. `[修改路徑 2]` — 新增/修改對應的 validator/test 檔案
+3. 若本任務已有 `atm-dispatch` 產出的 Context Map 4 層、validator、rollback 或 dual-agent 規則，請**直接引用既有內容**，不要在派工單裡重寫第二份治理說明。
 
-## Context Map 4 層
-### Primary (直接改)
-- `[修改路徑 1]` — 實作主要業務邏輯。
-### Secondary (受波及預警)
-- `[相關參考路徑]` — 受 [修改路徑 1] 修改引用的關聯型別。
-### Test Coverage
-- `[測試路徑]` — 負責驗證本次實作。
-### Patterns to Follow
-- 參考 `[已存在的成熟檔案路徑]` 的寫法與代碼風格。
+### 補充引用（若已存在）
+- Context Map：`沿用 atm-dispatch 既有 Context Map`
+- Validators：`沿用 atm-dispatch 既有 validator 清單`
+- Rollback：`沿用 atm-dispatch 既有 rollback 指示`
 
 ### 請回報
 請以 7-8 段格式回報：
@@ -92,14 +85,12 @@ C:\Users\User\3KLife
 ### 大白話補一句
 照著既有範本的風格，把這兩個檔的邏輯寫得乾乾淨淨，跑完測試全綠就收工！
 ```
-```
 
 ---
 
 ## 模版 3：Scope Audit 與分袋單 (Scope-locking / Task Slicing)
 * **適用情境**：新任務進場，需要先鎖定受影響的檔案範疇、釐清相依性、拆解 dual-agent (雙代理) 工作流並規劃 AllowedFiles 嚴格白名單。
 
-```markdown
 ```markdown
 代號：[指派代理代號，如 005]；模型：[建議執行模型]
 
@@ -116,12 +107,12 @@ C:\Users\User\3KLife
 1. 靜態分析與盤點 [任務名稱] 實作時「真正需要修改」的最小檔案集合。
 2. 設計並產出 Phase 0 代理的 allowedFiles（嚴格限於 task.md 與 ledger shard JSON）。
 3. 設計並產出 Phase 1 代理的 allowedFiles（限於 AAF 或 target_repo 真實要改的 source 與 evidence 檔案）。
-4. 規劃專屬的 `Validator` 命令與 `Rollback` 復原方案。
+4. 若本任務已透過 `atm-dispatch` 形成既有的雙代理框架、validator 或 rollback 架構，請直接引用，不要在此模板再重述第二份版本。
 
 ### 請回報
 1. 本次任務的最小 AllowedFiles 檔案白名單。
 2. 建議的雙代理拆分方案（Phase 0 與 Phase 1 的 allowedFiles 規劃）。
-3. 預計使用的 validator 測試指令與 rollback 說明。
+3. 若 `atm-dispatch` 已存在對應欄位，請回報引用位置，而不是重寫一份新的 validator / rollback 規格。
 
 ### 禁止
 - 絕對禁止修改任何業務程式碼 (本任務為純規劃與 audit)。
@@ -130,14 +121,12 @@ C:\Users\User\3KLife
 ### 大白話補一句
 在大家動手寫程式之前，先把界線畫得清清楚楚，不要讓不該被改的檔案沾到髒污！
 ```
-```
 
 ---
 
 ## 模版 4：文件與 Checklist 單 (Documentation / Shard Registry)
 * **適用情境**：針對大型規格書、 keep 記憶文檔、Ledger shard 進行內容整併、索引重建、或任務卡 required-adjustment 補正。
 
-```markdown
 ```markdown
 代號：[指派代理代號，如 001]；模型：[建議執行模型]
 
@@ -169,5 +158,4 @@ C:\Users\User\3KLife
 
 ### 大白話補一句
 把我們新講好的共識跟規則，整整齊齊地寫進手冊裡，別讓下一棒被舊規格坑了！
-```
 ```
