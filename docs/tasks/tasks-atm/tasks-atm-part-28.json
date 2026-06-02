@@ -75,5 +75,61 @@
       "ATM-3-0006"
     ],
     "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 ShardAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: shard-manager validate docs/tasks ✅ / scan docs --threshold 6 ✅ / compute-gate(ts-syntax+eslint-rules) ✅ | 變更: shard-manager 改由 ShardAdapter + shard-profile 驅動；600 行門檻與 part 命名改由 profile 設定 | 阻塞: 無"
+  },
+  {
+    "id": "TASK-AAO-0114",
+    "title": "closure packet dirty/untracked evidence hygiene guard",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-02",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 open card for closure packet dirty/untracked evidence hygiene guard. Close / closure packet generation must inspect dirty tracked and untracked noise, keep unrelated untracked files out of changedFiles, and allow noise to be reported without treating it as deliverable.",
+    "related": [
+      "TASK-AAO-0112"
+    ],
+    "depends": [
+      "TASK-AAO-0113"
+    ],
+    "acceptance": [
+      "close / closure packet generation checks dirty tracked and untracked noise before producing evidence.",
+      "closure packet changedFiles is not polluted by unrelated untracked files.",
+      "noise may be reported, but it is not treated as a task deliverable."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0114-closure-packet-dirty-tree-hygiene-guard.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for closure packet dirty/untracked evidence hygiene guard | blocker: none | risk: evidence hygiene / dirty-tree drift",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
