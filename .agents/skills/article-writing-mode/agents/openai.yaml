@@ -1,0 +1,4 @@
+interface:
+  display_name: "Article Writing Mode"
+  short_description: "Write AI-learning-notes articles with shared base and tokens."
+  default_prompt: "Use $article-writing-mode to draft or revise AI-learning-notes article pages so they match the shared article base, homepage tokens, responsive layout, TOC rules, and publishing flow."
