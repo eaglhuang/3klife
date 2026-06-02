@@ -1,550 +1,355 @@
-# ATM (AI-Atomic-Framework) AAO 任務開發實務操作指南
+# ATM 開發實務操作指南
 
-> **版本**：2026-05-31 更新版 — 整併 0064 → 0100 累積實戰教訓 + map-replacement-protocol v2-r2 + 雙代理派工範本 + 雙 repo 治理紀律。原版（單 repo 視角）已不足以涵蓋當前作業。
->
-> **適用對象**：承接 AAO 系列任務的 AI Agent（Antigravity / Codex / Claude Code / 其他）+ 派工的 Captain。
+> 更新日期：2026-06-02  
+> 對象：第一次參與 ATM 框架開發、或第一次在 ATM 治理下工作的 AI / 代理  
+> 目的：用一份泛用通則，幫新手先知道流程、順序、規則、坑點與 Git 操作習慣。
 
----
+## 1. 先理解：你不是只在寫程式，你是在「被治理地開發」
 
-## 0. 雙 repo 治理結構（必懂）
+ATM 的重點不是多一個聊天指令，而是讓 AI 在多人、多任務、多 repo 的情況下，還能：
 
-| Repo | 角色 | 容納 |
-|---|---|---|
-| **AI-Atomic-Framework (AAF)** | Framework（上游）| CLI 程式碼、schemas、hooks、原子 registry、map registry、`.atm/history/` ledger 與 evidence |
-| **3KLife** | Adopter（下游）| `docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-XXXX-*.task.md` 任務卡、`docs/tasks/tasks-*.json` ledger 分片、`tools_node/task-lock.js` 跨 repo 鎖工具 |
+- 先知道下一步該做什麼
+- 不亂碰別人的工作
+- 留下可審查的證據
+- 把 commit、PR、close 都收得乾淨
 
-**closure_authority 兩種**：
-- `target_repo`：實作在 AAF、開卡 metadata 在 3KLife。最常見。
-- `adopter`：純 3KLife 端設計或評估卡（如 D2 adapter spec、純文件補強）。
+如果你是第一次進場，先記住這句話：
 
----
+> 先問 ATM 下一步，再動手；先切清故事線，再 commit。
 
-## 1. 動手前的硬前置紀律
+## 2. 三種 repo 角色
 
-### 1.1 【必做】Task ID 衝突檢查（0097 教訓）
+| 類型 | 典型 repo | 主要責任 |
+| --- | --- | --- |
+| planning repo | `3KLife` | 開 task card、維護 ledger、做規劃與派工 |
+| framework repo | `AI-Atomic-Framework` | 修 ATM CLI、hooks、schema、validator、runner、framework evidence |
+| adopter repo | 例如 `3klife-npc-brain` | 真正的業務修補、repo-local evidence、分支、PR、merge |
 
-```bash
-git -C C:\Users\User\3KLife log --oneline --grep="TASK-AAO-XXXX"
-git -C C:\Users\User\AI-Atomic-Framework log --oneline --grep="TASK-AAO-XXXX"
-```
+先分清楚你站在哪一種 repo，很重要。  
+因為「哪裡可以改、哪裡不能改、哪裡 close」都跟 repo 角色有關。
 
-兩邊**皆為空**才繼續。任一有結果 → **停手回報 Captain**，不擅自重派同號或開重複卡。
+## 3. 第一次進 repo 的標準起手式
 
-> **背景**：TASK-AAO-0097 曾出現雙 window 並行派工造成兩張同號卡共存，事後 cleanup 為 0098。
+### 3.1 先讀入口
 
-### 1.2 上鎖三部曲（3KLife 端）
+1. 讀 `README.md`
+2. 如果是 planning repo，再看本地規劃文件或 task card 規則
+3. 不要直接看著 dirty tree 就開始猜
 
-```bash
-# 1. 確認無衝突
-node tools_node/task-lock.js check <task-id>
+### 3.2 先問 ATM
 
-# 2. 正式上鎖（owner 寫真實 actor 名稱）
-node tools_node/task-lock.js lock <task-id> Antigravity
-
-# 3. 透過 ATM CLI 更新 ledger 狀態（不要手動編輯 .atm/history/tasks/*.json！）
-node atm.mjs tasks reserve --task <task-id> --actor Antigravity --json
-node atm.mjs tasks promote --task <task-id> --actor Antigravity --json
-# 進入 ready → next --claim 後狀態自動轉 running
-```
-
-⚠️ **禁止手動編輯** `.atm/history/tasks/<task-id>.json` 的 `status` 欄位。0100 教訓：曾有代理因 task card 用了非 routable 狀態，直接改 ledger JSON 繞過狀態機。正解是用 `atm tasks reset --task <id>` CLI 修復。
-
-### 1.3 Status 值對照表（**核心**）
-
-| 來源 | 合法值 |
-|---|---|
-| **Governance 主 schema**（`work-item.schema.json` enum）| `planned` / `locked` / `running` / `verified` / `done` / `blocked` |
-| **Tasks import 端**（`tasks.ts`）| `planned` / `open` / `in_progress` / `reserved` / `ready` / `running` / `review` / `blocked` / `abandoned` / `done` |
-| **`next --claim` 可派發**（routable 子集）| `open` / `planned` / `ready` / `blocked` / `waiting_target_evidence` / `reserved` |
-
-**Phase 0 開卡建議**：`status: open` 或 `status: planned`（routable）。
-**避免**：`in_progress`、`in-progress`（非 routable，會卡住 claim、需 `tasks reset`）。
-**`running`**：是 `next --claim` 後 ledger 自動轉入的狀態，**不需手動寫**。
-
-### 1.4 嚴守 ScopePaths 隔離
-
-- 只改任務卡 `scopePaths` / `allowedFiles` 聲明的檔。
-- 發現其他檔小缺陷 → **停手回報 Captain**，不順手重構（會打破 Scope 隔離、close 失敗）。
-- 忽略 pre-existing untracked（`.playwright-mcp/` / `scratch/` / `*.tmp.json` / `tmp-*.mjs`），不要加入 staging。
-- **禁止建立 allowedFiles 外的任何檔案**（含 `docs/` — 0096 教訓：曾為了通過 deliverableGate 在 docs/ 雙寫文件）。
-
----
-
-## 2. 雙代理派工範本（防外卡 mirror commit）
-
-任何 `closure_authority=target_repo` + 需要 AAF 代碼改動的卡 → **必拆雙代理**。
-
-物理切斷 Phase 1 代理碰 3KLife task card 的可能性。已驗證 7 連勝（0089/92/93/95/96/98/99）。
-
-### Phase 0 — Agent #1（3KLife 開卡專用）
-
-```
-allowedFiles 嚴格白名單：
-- C:\Users\User\3KLife\docs\ai_atomic_framework\atm-agent-first-operability\tasks\
-  TASK-AAO-XXXX-*.task.md（新建）
-- C:\Users\User\3KLife\docs\tasks\tasks-aao.json（ledger 分片）
-
-❌ 禁碰：任何 AAF 路徑、任何其他 3KLife 路徑
-❌ 禁止：status mirror commit、Phase 2 close commit、做 Phase 1 實作
-
-工作：
-1. Task ID 衝突檢查
-2. 建 task card（status=open 或 planned）
-3. 回寫 ledger 分片
-4. 1 commit：docs(aao): open TASK-AAO-XXXX
-5. 停手回報 Captain
-```
-
-### Phase 1 — Agent #2（AAF 實作專用）
-
-```
-allowedFiles 嚴格白名單：
-- 僅 AAF 真實要改檔 + 新檔
-- .atm/history/evidence/TASK-AAO-XXXX.closure-packet.json
-- .atm/history/evidence/TASK-AAO-XXXX.json
-- .atm/history/tasks/TASK-AAO-XXXX.json
-- .atm/history/evidence/git-head.jsonl（自動）
-
-❌ 禁碰：**所有 3KLife 路徑**（含 task card、ledger、tools_node、docs）
-
-工作：實作 + closure ledger，AAF 嚴格 2 commits
-  - Commit 1: feat/fix/refactor/chore(aao): TASK-AAO-XXXX <摘要>
-  - Commit 2: chore(aao): record task closure ledger for TASK-AAO-XXXX
-```
-
-### Phase 2 — Captain 統合
-
-- 3KLife 卡保持 `in_progress`（或 Captain 派專屬 1-purpose sidecar 關卡）
-- Phase 1 代理**永不**接觸 3KLife status
-
-### 例外：單代理場景
-
-- **3KLife-only 設計卡**（如 0092 adapter spec、純文件評估）：單代理即可
-- **AAF-only 切片卡**（如 0095 wave 3-A）：仍走雙代理（Phase 0 開卡 + Phase 1 實作）
-
----
-
-## 3. 雙階段閉環提交規約（AAF 嚴格 2 commit）
-
-### 3.1 第一階段 — Delivery（feat/fix/refactor）
+在 repo root 跑：
 
 ```bash
-# 1. Staging
-git add <修改代碼檔> <測試檔> atomic_workbench/atomization-coverage/path-to-atom-map.json
-
-# 2. ATM 提交包裝器（自動補 ATM-Actor / ATM-Task / ATM-Session trailers）
-node atm.mjs git commit \
-  --actor Antigravity \
-  --task <TASK-ID> \
-  --message "feat(aao): <你的訊息>" \
-  --json
-
-# 記下 Commit SHA
+node atm.mjs next --prompt "<目前使用者需求>" --json
 ```
 
-### 3.2 第二階段 — Closure（chore 帳本）
+然後一定要讀：
+
+- `messages`
+- `evidence.nextAction.playbook`
+
+不要跳過 playbook 自己發明流程。
+
+### 3.3 `node atm.mjs` 跟 `node atm.dev.mjs` 的差別
+
+- `node atm.mjs`：正常治理入口，走 frozen runner
+- `node atm.dev.mjs`：只有在「你明確要驗證尚未 build 的 framework source」時才用
+
+如果看到：
+
+`ATM_RUNNER_SYNC_REQUIRED`
+
+就代表 frozen runner 落後 source，先補：
 
 ```bash
-# 1. 跑 validators 並錄製 evidence
-node atm.mjs evidence run \
-  --task <TASK-ID> \
-  --actor Antigravity \
-  --command "npm run typecheck" \
-  --validators typecheck \
-  --json
-
-# 重複各 validator：validate:cli / validate:git-head-evidence / hook pre-commit
-
-# 2. 正式 close，引用 delivery commit SHA 為 historical-delivery
-node atm.mjs tasks close \
-  --task <TASK-ID> \
-  --actor Antigravity \
-  --status done \
-  --historical-delivery <Delivery-SHA> \
-  --json
-
-# 3. Staging 帳本檔
-git add .atm/history/tasks/ .atm/history/evidence/ .atm/history/task-events/
-
-# 4. ATM wrapper 帶 ATM-Actor/Task/Claim/Session trailers
-node atm.mjs git commit \
-  --actor Antigravity \
-  --task <TASK-ID> \
-  --message "chore(aao): record task closure ledger for <TASK-ID>" \
-  --json
-```
-
-⚠️ **絕對禁止繞 hook**：`--no-verify` / `--force` / `SAFE_MODE` 任何形式。標準 `git commit` 會被 pre-commit 擋住、必須走 `node atm.mjs git commit` wrapper。
-
-### 3.3 3KLife 端 commit 數限制
-
-- `closure_authority=target_repo` 卡：**3KLife 嚴格 1 commit**（Phase 0 開卡）
-- ❌ status mirror commit（純翻 `planned`→`done` 無實質變更）
-- ❌ Phase 2 close commit（鏡像 AAF closure）
-- 過去違規：0064 / 0075 / 0077 / 0088（雙代理範本前）
-
----
-
-## 4. Leaf-by-Leaf Governed Extraction Workflow（sanguo-rag 實證 pattern）
-
-此 workflow 適用於拆解大型 legacy 檔案（>1000 LOC）。已在 3klife-npc-brain 對 Python pipeline 驗證、在 AAF 對 TS 驗證（0098 起）。
-
-### 4.1 Workflow 步驟
-
-```
-Step 0  candidates rank（讓 ATM 自己選 target）
-Step 1  Captain-approved leaf boundary
-Step 2  Dry-run proposals（behavior.atomize、0 host mutation）
-Step 3  Extract to helper module（保 re-export 維持向後相容）
-Step 4  Smoke evidence（governance dry-run + leaf behavior）
-Step 5  Rollback-ready proof（full patch + git apply --check --reverse exit 0）
-Step 6  Actual-patch-evidence 彙整
-```
-
-### 4.2 Step 0：Candidates Rank
-
-```bash
-node atm.mjs candidates rank \
-  --cwd "C:\Users\User\AI-Atomic-Framework" \
-  --include "packages/cli/src/commands/**/*.ts" \
-  --goal "MRP leaf extraction" \
-  --max-file-lines 1000 \
-  --limit 10 \
-  --json
-```
-
-輸出 4 份報告到 `.atm/history/reports/candidates/`：
-- `candidate-ranking-<TS>.json` — top-N 排序
-- `candidate-ranking-<TS>.source-inventory.json` — 來源盤點
-- `candidate-ranking-<TS>.police-family.json` — police 風險訊號
-- `candidate-ranking-<TS>.guidance-drift-police.json` — 漂移偵測
-
-### 4.3 Step 2：behavior.atomize Dry-Run
-
-```bash
-node atm.mjs upgrade --propose --dry-run \
-  --behavior behavior.atomize \
-  --legacy-target "legacy://packages/cli/src/commands/<source>.ts#L<start>-L<end>" \
-  --json
-```
-
-`--dry-run` = **零 host mutation**，只產 `atm.guidedLegacyDryRunProposal` 進 queue，等 human review。
-
-### 4.4 Step 4-6：Evidence 三件套（命名規則）
-
-放 `.atm/history/reports/`，命名 `<type>.<atom-or-function-name>.<YYYYMMDD-HHMMSS>.<ext>`：
-
-```
-smoke-evidence.<LeafName>.<TS>.log              # governance dry-run 結果
-smoke-evidence.<LeafName>.leaf.<TS>.log         # leaf behavior smoke
-rollback-ready.full.<LeafName>.<TS>.patch       # 完整 rollback patch
-rollback-ready-proof.<LeafName>.<TS>.json       # git apply --check --reverse exit 0 證明
-actual-patch-evidence.<LeafName>.<TS>.json      # 彙整 + 引用前 4 個
-```
-
----
-
-## 5. Batch Leaf Extraction（0099 / 0100 pattern）
-
-### 5.1 何時用批次
-
-| 規模 | 卡 | 備註 |
-|---|---|---|
-| 1 leaf | pilot（如 0098 isFrontmatterScalar）| 試水溫、驗證 workflow |
-| 3 leaves | small batch（如 0099）| 3× throughput、累積 batch envelope 經驗 |
-| 10 leaves | full batch（如 0100）| 配合 atom map 形成，**ROI 必為正**（tasks.ts 必淨縮減）|
-
-### 5.2 Batch ROI 鐵律
-
-抽小 leaf（< 30 LOC）會被 import overhead 吃掉 ROI（0099 教訓：tasks.ts 反增 6 行）。
-**正解**：按 LOC 降序選 leaves、優先抽大葉、必要時組成 cluster module（多 leaves 同主題打包）。
-
-### 5.3 Batch Envelope 命名
-
-```
-batch-evidence.TASK-AAO-XXXX.<TS>.json          # 彙整全 N leaves 結構特徵
-rollback-ready.batch.TASK-AAO-XXXX.<TS>.patch   # 整批 patch
-roi-report.TASK-AAO-XXXX.<TS>.json              # tasks.ts LOC delta + helper LOC 統計
-```
-
-### 5.4 中途失敗處理
-
-- Step 2 dry-run 任一失敗 → 停手回報（**0 host mutation 安全**）
-- Step 3 apply 階段某 leaf 失敗 → 停手回報，告知已完成 N/M leaves
-- dogfood 退步 → 停手回報
-
----
-
-## 6. Atom Map Formation（v2-r2 map-replacement-protocol）
-
-累積 N 個 leaf atoms 後，包成 canonical map：
-
-### 6.1 手寫 decomposition-plan.json
-
-對齊 `schemas/governance/decomposition-plan.schema.json`：
-
-```json
-{
-  "legacyUris": ["legacy://packages/cli/src/commands/<source>.ts"],
-  "proposedMapId": "ATM-MAP-<NAME>-0001",
-  "proposedMembers": [
-    {"atomId": "atm.foo-helper-map", "version": "0.1.0"},
-    ...
-  ],
-  "proposedEdges": [...],
-  "entrypoints": [...],
-  "notes": "<context>"
-}
-```
-
-### 6.2 Map 形成 CLI 鏈
-
-```bash
-# 驗 plan schema
-node atm.mjs spec --validate plans/<plan>.json --json
-
-# 形成 map.spec.json
-node atm.mjs create-map --from-plan plans/<plan>.json --json
-
-# 跑 map integration test
-node atm.mjs test --map <mapId> --json
-
-# (可選) equivalence test
-node atm.mjs test --map <mapId> --equivalence-fixtures <fixtures> --json
-```
-
-### 6.3 Replacement Lane Transitions（v2-r2 完整 lifecycle）
-
-```bash
-node atm.mjs replacement-lane transition --map <mapId> --to shadow --evidence ...
-# → canary → active → legacy-retired（需 rollback-proof 或 retirement-proof）
-```
-
-### 6.4 Rescue / Rollback
-
-```bash
-node atm.mjs rescue diagnose --json
-# 8 actions: police / diagnose / rebuild-registry / reload-atoms / rebuild-maps /
-#           replay-lineage / clear-cache / factory-reset
-
-node atm.mjs rollback --plan --map <mapId>   # dry-run
-node atm.mjs rollback --apply --map <mapId>  # 實際 rollback
-```
-
----
-
-## 7. Captain Condition Review SOP（代理回報後必做）
-
-每張卡 close 後，Captain **平行派 2-3 支 haiku sidecar 核實**（**不信代理自報**）：
-
-| Sidecar | 任務 |
-|---|---|
-| A | AAF `git log -8` + 每 commit `show --stat` → 確認 commits 數 / 訊息 / 觸碰路徑無 3KLife / 無 `--no-verify` |
-| B | 3KLife `git log -10` filter TASK-AAO-XXXX → 確認 commit 數 / 無 mirror / task card status |
-| C | 程式碼/檔案抽查：deliverable 存在 / atom_id 登記 / closure packet 完整 / change scope-tight |
-
-**裁定**：
-- ✅ **Full PASS**：接受
-- ⚠️ **條件接受**：功能正確但治理違規 → 記治理債、不退回
-- ❌ **退回重做**：僅當功能破損時
-
-紀律：「**不重做、不退回功能正確的卡**」。
-
----
-
-## 8. 歷程踩坑點與避坑指南（Lessons Learned）
-
-### 8.1 編譯漂移（Build Drift）
-
-**現象**：改了 `packages/cli/src/commands/` 但 `node atm.mjs` 還跑舊代碼。
-**原因**：`atm.mjs` 走 `release/atm-onefile/atm.mjs` 或編譯快取。
-**解法**：**改完必跑** `npm run build`。
-
-### 8.2 EPERM 與臨時工作區
-
-**現象**：`createTempWorkspace()` 在 Windows / 沙盒觸發 EPERM。
-**解法**：用封裝後的 `createCliTempWorkspace('your-prefix')`（在 `packages/cli/src/temp-workspace.ts`）。
-
-### 8.3 Trailing Whitespace 擋 commit
-
-**現象**：`git diff --check` 或 pre-commit 拒絕提交。
-**解法**：編輯後手動或工具清行末空格，先過 `git diff --check`。
-
-### 8.4 Validator Auto-Link（TASK-AAO-0063）
-
-`evidence run` 若不指定 `--validators`，會自動掃描 command pattern 鏈結驗證器：
-- `npm run typecheck` → `typecheck` validator
-- `npm run validate:*` → 對應 validator
-- `node --strip-types scripts/validate-*.ts --mode validate` → 對應 validator
-
-**手動 `--validators` 優先**（覆蓋 auto-detect）。
-
-### 8.5 Scope Drift 偽合理化（0096 教訓）
-
-**現象**：代理為了通過某個 gate，自行擴大 scope（如 0096 在 `docs/` 雙寫 cross-check.md）。
-**解法**：派工單明文「allowedFiles 外建任何檔即停手回報，不擅自擴 scope」。
-
-### 8.6 雙 Window 並行派工 Task ID 撞號（0097 教訓）
-
-**現象**：Captain 不知道 user 已在另一 window 派同號卡，重派造成雙開。
-**解法**：派工前必跑 Task ID 衝突檢查（§1.1）。
-
-### 8.7 手動改狀態檔繞 CLI（0100 教訓）
-
-**現象**：代理直接編輯 `.atm/history/tasks/<id>.json` 把 `status: in_progress` 改 `open`。
-**正解**：用 `node atm.mjs tasks reset --task <id> --actor <a> --json` 走 CLI 狀態機。
-
-### 8.8 跳步驟跳 evidence（0100 教訓）
-
-**現象**：派工單指定 Step 0-9，代理跳過 6-9（plan / create-map / test --map / batch envelope）。
-**解法**：派工單加「步驟化 validator」— 每 Step 完成必驗該 Step 才能進下一 Step。
-
----
-
-## 9. 常用命令備忘（Cheat Sheet）
-
-### 9.1 上鎖 / 開卡 / 關卡
-
-```bash
-node tools_node/task-lock.js check <id>
-node tools_node/task-lock.js lock <id> <actor>
-node tools_node/task-lock.js unlock <id> <actor>
-
-node atm.mjs tasks reserve --task <id> --actor <a>
-node atm.mjs tasks promote --task <id> --actor <a>
-node atm.mjs tasks reset --task <id> --actor <a>      # 復原狀態為 open
-node atm.mjs tasks close --task <id> --actor <a> --status done --historical-delivery <SHA>
-```
-
-### 9.2 Claim / 派發
-
-```bash
-node atm.mjs next --claim --task <id> --actor <a> --json
-node atm.mjs lock check / acquire / release
-```
-
-### 9.3 Evidence
-
-```bash
-node atm.mjs evidence missing --task <id> --json
-node atm.mjs evidence run --task <id> --actor <a> --command "<cmd>" --validators <v> --json
-node atm.mjs evidence add --task <id> --actor <a> --validator <v> --status pass --json
-```
-
-### 9.4 Candidates / Atomize / Map
-
-```bash
-node atm.mjs candidates rank --cwd <repo> --include <glob> --goal "<text>" --json
-node atm.mjs upgrade --propose --dry-run --behavior behavior.atomize \
-  --legacy-target "legacy://<path>#L<s>-L<e>" --json
-node atm.mjs spec --validate <plan.json> --json
-node atm.mjs create-map --from-plan <plan.json> --json
-node atm.mjs create-map --spec <map.spec.json> --json
-node atm.mjs test --map <mapId> --json
-node atm.mjs test --map <mapId> --equivalence-fixtures <fixtures> --json
-node atm.mjs replacement-lane transition --map <id> --to shadow --evidence <ref>
-node atm.mjs rescue diagnose --json
-node atm.mjs rollback --plan --map <id>
-node atm.mjs rollback --apply --map <id>
-```
-
-### 9.5 Atom Capsule / Map Capsule
-
-```bash
-node atm.mjs atom-capsule export --atom <id> --source <path>
-node atm.mjs atom-capsule import <capsule-path>
-node atm.mjs atom-capsule rollback <atom-id>
-node atm.mjs atom-capsule advisories
-
-node atm.mjs map-capsule export --map <id>
-node atm.mjs map-capsule import <capsule-path>
-node atm.mjs map-capsule rollback <map-id>
-```
-
-### 9.6 Hook / Score / 治理
-
-```bash
-node atm.mjs hook pre-commit --json
-node atm.mjs hook pre-push --json
-node atm.mjs atomize score
-git diff --check
 npm run build
-npm run typecheck
-npm run validate:cli
-npm run validate:git-head-evidence
 ```
 
-### 9.7 Git wrapper（必用、不可繞）
+再重跑 `node atm.mjs ...`
+
+不要拿 `node atm.dev.mjs` 去掩蓋 runner 沒同步這件事。
+
+## 4. 先看懂 `closure_authority`
+
+這是新手最常搞混的地方。
+
+### `planning_repo`
+
+代表這張卡主要在 planning repo 內收口。
+
+常見情況：
+
+- 規劃卡
+- 文件卡
+- 純 ledger / 卡面整理
+
+通常是：
+
+- task card
+- ledger
+- 1 個 planning commit
+
+### `target_repo`
+
+代表 task card 在 planning repo 開，但真正的實作、驗證、close 在 target repo。
+
+這是目前最常見的健康模式。
+
+常見順序：
+
+1. `3KLife` 開卡
+2. target repo 實作
+3. target repo 驗證與 evidence
+4. target repo close
+
+注意：
+
+> `closure_authority=target_repo` 時，不要回頭在 planning repo 補 status mirror commit。
+
+## 5. 開 task card 的基本順序
+
+### 5.1 先檢查 task id
+
+至少要查：
 
 ```bash
-node atm.mjs git commit \
-  --actor <a> \
-  --task <id> \
-  --message "<msg>" \
-  --json
+git -C C:\Users\User\3KLife log --oneline --grep="TASK-XXXX"
+git -C C:\Users\User\AI-Atomic-Framework log --oneline --grep="TASK-XXXX"
 ```
 
----
+如果有 ledger shard，也要看 shard 裡有沒有同 id。
 
-## 10. 推薦工作流程圖
+### 5.2 Phase 0 只做該做的事
 
-### 10.1 標準 AAO 卡（leaf-by-leaf）
+在 planning repo 的 Phase 0，通常只做：
 
-```
-Captain 派工 ──→ Phase 0 agent（3KLife）開卡 1 commit
-              ──→ Phase 1 agent（AAF）：
-                    ├─ candidates rank
-                    ├─ pick leaf
-                    ├─ behavior.atomize dry-run
-                    ├─ extract to helper + register atom
-                    ├─ unit test
-                    ├─ evidence 三件套
-                    ├─ Commit 1 (refactor)
-                    ├─ evidence run × N validators
-                    ├─ tasks close
-                    └─ Commit 2 (chore closure)
-              ──→ Captain 平行派 2-3 haiku sidecar 核實
-              ──→ 條件接受 / 全 PASS
-```
+- 新增 task card
+- 更新 ledger shard
+- 規劃 allowedFiles / validators / rollback / notes
 
-### 10.2 Batch 卡（N=3 或 N=10 + map formation）
+不要在 Phase 0 順手去 target repo 改碼。
 
-```
-Captain 派工（含 batch 量 + map 形成）
-   ├─ Phase 0 agent 開卡 1 commit
-   └─ Phase 1 agent：
-         ├─ candidates rank
-         ├─ N leaves LOC-ranked
-         ├─ N × dry-run（read-only stage）
-         ├─ 全過 → N × apply（helper + atom register + test）
-         ├─ 手寫 decomposition-plan.json
-         ├─ atm spec --validate
-         ├─ atm create-map --from-plan → map.spec.json
-         ├─ atm test --map → map.test.report.json
-         ├─ batch envelope + ROI report
-         ├─ batch rollback patch + proof
-         ├─ Commit 1 (refactor)
-         ├─ evidence run × N validators
-         ├─ tasks close
-         └─ Commit 2 (chore closure)
+### 5.3 status 用能被路由的值
+
+實務上，Phase 0 開卡常用：
+
+- `open`
+- `planned`
+
+避免一開始就寫成一堆不會被正常 claim / route 的狀態。
+
+## 6. 實作前先看目前 Git 現實
+
+新手很容易犯的錯，是把 `git status -sb` 當成唯一真相。
+
+### 6.1 `git status` 不一定等於真正 diff
+
+有些 repo 會出現：
+
+- 背景 runtime modified
+- guidance cache
+- false-M
+- generated noise
+
+所以要一起看：
+
+```bash
+git status -sb
+git diff --name-only
+git diff --cached --name-only
 ```
 
----
+### 6.2 不要亂 clean
 
-## 11. 參考資源
+如果你看到：
 
-- **計畫書 v2-r2**（當前準則）：`docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md`
-- **計畫書 v1**（背景）：`docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md`
-- **MRP 任務卡系列**：`docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0000~0027.task.md`
-- **AAO 任務卡系列**：`docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-XXXX-*.task.md`
-- **atm-dispatch Skill**：`.agents/skills/atm-dispatch/SKILL.md`（Captain 派工/收口紀律 SOP）
-- **Captain memory**：`C:\Users\User\.claude\projects\C--Users-User-AI-Atomic-Framework\memory\`
+- `.atm/guidance/`
+- `.tmp/`
+- runtime logs
+- 某些既有 untracked
 
----
+不要第一反應就是 `git clean` 或 `restore`。
 
-## 12. 變更歷史
+先判斷：
 
-| 日期 | 版本 | 變更 |
-|---|---|---|
-| 2026-05-31 | v2 | 整併 0064-0100 教訓 + 雙代理範本 + map-replacement-protocol v2-r2 + Task ID 衝突檢查 + leaf workflow + batch pattern + rescue/rollback CLI |
-| (原版) | v1 | 單 repo 視角、雙階段提交、上鎖三部曲、編譯漂移 |
+1. 這是不是你這次真的改的
+2. 這是不是 pre-existing background noise
+3. 這是不是別條 workstream 的東西
+
+沒有 Captain 明確同意，不要清。
+
+## 7. 小包、大包、證據包要分開
+
+這是 ATM 開發最重要的 Git 習慣之一。
+
+### 小包
+
+適合單一故事線，例如：
+
+- 單一 source fix
+- 工具鏈同步
+- rejected proposal evidence
+
+特徵：
+
+- 檔案少
+- 語意單一
+- validator 對應清楚
+- rollback 容易
+
+### 大包
+
+例如：
+
+- 1 個 export 腳本 + 幾百個 regenerated artifacts
+- 大型 map / registry / projection 重生
+
+這種包不要跟小修混在一起。
+
+### 證據包
+
+例如：
+
+- rejected proposal evidence
+- closure packet
+- reviewable evidence
+
+通常也要獨立看待，不要和業務修補混在同一顆 commit，除非它本來就是收口的一部分。
+
+## 8. 什麼時候要切乾淨分支
+
+以下情況，優先考慮從 `origin/main` 切乾淨分支，再 cherry-pick 真正要出的 commit：
+
+1. 本地 `main` 已經 ahead 很多顆
+2. ahead 裡夾了 unrelated 大包
+3. 你只想出其中 2-3 顆小修
+4. 你不想把 generated artifacts 或背景 workstream 一起推出去
+
+這種時候，乾淨分支比硬推 `main` 健康很多。
+
+## 9. 什麼時候要開 Draft PR
+
+以下情況很適合先開 Draft：
+
+1. 大量 regenerated artifacts
+2. 還缺 deterministic rerun 證據
+3. 還缺 3-5 個關鍵樣本 spot-check
+4. 還缺前置附件，例如某個 index、summary、policy-generated json
+5. 功能主體自洽，但 reviewer 一眼看不完
+
+Draft 的意思不是失敗，而是：
+
+> 先把大貨櫃停進檢驗車道，不要和已可 merge 的小修快車混在一起。
+
+## 10. 大包進 Ready for review 前，至少補哪些檢驗單
+
+建議至少補：
+
+1. deterministic rerun
+2. 關鍵樣本 spot-check
+3. release note
+4. rollback note
+5. 前置附件 / 前置條件說明
+
+如果某條邏輯還依賴尚未落地的前置附件，就先誠實標註：
+
+- 目前是 dormant
+- 還缺哪個前置 PR / follow-up
+
+不要假裝它已經 fully active。
+
+## 11. commit 與 close 的實務順序
+
+### framework repo 常見模式
+
+很多 `target_repo` 卡在 framework repo 內會長這樣：
+
+1. delivery commit
+2. validators / evidence
+3. close
+4. closure ledger commit
+
+### planning repo 常見模式
+
+planning-only 或 Phase 0 卡通常就是：
+
+1. task card
+2. ledger
+3. 1 commit
+
+### adopter repo 常見模式
+
+常見做法是：
+
+1. 工具鏈同步一包
+2. source fix 一包
+3. evidence 一包
+4. generated artifacts 另包或另 Draft PR
+
+## 12. 禁止事項
+
+新手最容易踩的坑，大多都在這裡。
+
+- 不要手改 `.atm/` runtime state
+- 不要用 `--no-verify`
+- 不要用 `--force`
+- 不要用 `SAFE_MODE` 繞治理
+- 不要把背景 dirty / untracked 順手混進 commit
+- 不要看到 generated artifacts 就跟 source fix 一起送
+- 不要因為本地有 build artifact 就誤判 clean checkout 也會過
+- 不要把 planning repo 和 target repo 的責任混在同一個 agent 身上亂做
+
+## 13. 目前實際環境要特別注意什麼
+
+### 13.1 runner 與 build
+
+現在實務上要特別注意：
+
+- frozen runner 是否落後 source
+- clean checkout 下能不能直接跑 `node atm.mjs`
+- CI / validator 是否依賴 build artifact
+
+### 13.2 generated artifacts 不再是「順手一起出」
+
+現在的健康做法是：
+
+- generated artifacts 要有理由
+- 要知道它是不是 deterministic
+- 要知道它和本次 source fix 是不是同一故事線
+
+### 13.3 三國 RAG 這類 pipeline repo
+
+這種 repo 常會同時出現：
+
+- source fix
+- governance evidence
+- runtime profile regenerated outputs
+- routing / guidance cache
+
+這四種東西通常不應全部混在一顆 commit。
+
+## 14. 新手建議操作順序
+
+如果你完全是第一次進 ATM 開發，可以照這個順序做：
+
+1. 先判斷 repo 類型
+2. 讀 `README.md`
+3. 跑 `node atm.mjs next --prompt "..."`
+4. 讀 playbook
+5. 查 task id 與 ledger
+6. 看 `git status` + `git diff`
+7. 切清這次的故事線是：
+   - 規劃
+   - source fix
+   - evidence
+   - artifacts
+8. 只做你這一條線
+9. validator / evidence 跑完再 commit
+10. 需要時用乾淨分支或 Draft PR
+
+## 15. 一句總結
+
+ATM 開發跑得順，不是因為規則很多，而是因為你知道：
+
+> 先讓 ATM 告訴你下一步，再把任務卡、commit、evidence、generated artifacts 各自裝進對的袋子。
