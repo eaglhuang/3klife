@@ -17,8 +17,8 @@
   },
   "summary": {
     "done": 128,
-    "in_progress": 3,
-    "open": 8,
+    "in_progress": 4,
+    "open": 7,
     "total": 139
   },
   "shards": [
@@ -270,8 +270,8 @@
       "title": "Part 28 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-28.json",
       "count": 3,
-      "bytes": 7403,
-      "lines": 135,
+      "bytes": 7600,
+      "lines": 136,
       "layout": "sticky-least-pool"
     },
     {
