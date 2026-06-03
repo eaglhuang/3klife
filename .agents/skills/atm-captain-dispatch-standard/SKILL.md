@@ -51,12 +51,41 @@ Project Captain 應具備宏觀的資源排程與風險控制能力。在指派�
 
 ---
 
+### 2.4 隊長派工前 Pre-flight：小型 Read-only 先內派
+
+Captain 每次派工前必須先做一次分流判斷，避免把很小的查詢任務外派成大工單。
+
+**預設規則**：
+
+1. **隊長可直接回答的小問題**：主代理直接回答，不派工。
+2. **小型 read-only 查詢**：例如 route check、scope check、`git log` / `git show --stat`、`rg`、單卡 collision 查詢、單一 closure packet 快速定位，預設派 **2 個內建 `gpt-5.4-mini` 子代理**平行查；不要優先外派到 001-007。
+3. **中大型 read-only 盤點**：跨多 repo、大量檔案、需要長時間 inventory，才考慮 `006` 或外部 read-only 工單。
+4. **複雜審核 / scope audit / 架構裁決**：交給 `004` / `005` 或外部 AI，因為這類任務需要獨立判斷與可追溯審核。
+5. **實作 / claim / commit / close**：交給最適合的外部執行代理，例如 `007`，或依 roster 現況分配。
+
+**內建子代理命名**：
+
+* 對內可稱 `子代理-01`、`子代理-02`。
+* 若只是 Captain 自己用來查證，不輸出成可轉貼派工單；回報時只簡短寫「已由 2 個 `gpt-5.4-mini` 子代理完成 read-only 查證」。
+* 若使用者要求可轉貼內容，才輸出子代理派工單，且第一行使用 `代號：子代理-01` 這種人類可讀代號。
+
+**外部 AI 的保留用途**：
+
+* 需要複雜審核驗證。
+* 需要與 Captain 子代理平行進行其他工作。
+* Captain 內建子代理已用光或不適合。
+* 需要實作面工單、claim、commit、close、PR 或跨工具執行。
+
+大白話：小查詢先用隊長自己的兩個便宜小兵，外部 AI 留給重審、實作、或真的需要多線並行的戰場。
+
+---
+
 ## 3. Token 經濟與節省規範 (Context & Token Economics)
 
 為了避免 context 爆炸與重複資訊造成的 token 浪費，Project Captain 必須遵循以下「唯讀與單一故事線」原則：
 
 * **一事一單**：一張派工單只做一件核心的主事。嚴禁混單（例如將「分析現況」、「代碼落地」與「事後複審」塞進同一張單）。
-* **唯讀優先**：在尚未完全摸清 code diff 或 scope 之前，預設指派廉價代理進行唯讀盤點（grep/行號/Preflight），取得確定性結果後再進行實作派工。
+* **唯讀優先，但小事不外派**：在尚未完全摸清 code diff 或 scope 之前，預設指派廉價代理進行唯讀盤點（grep/行號/Preflight）；若範圍很小，優先使用 2 個內建 `gpt-5.4-mini` 子代理，不要消耗外部 roster。
 * **可直接轉貼**：派工單必須獨立在專屬的 Markdown Code Block 中，不含多餘的開場白與寒暄，方便使用者「一鍵複製」轉貼。
 * **減少散文與冗詞**：使用條列式、表格與指令結構。避免長篇大論的文字描述。
 * **固定欄位結構**：依循標準派工單欄位，排除與該次任務無關的資訊。
@@ -85,7 +114,24 @@ Project Captain 輸出的每一份派工單，**必須**精確包含以下 8 個
 4. **背景白話 (Context Summary)**：
    * **說明**：用 2-3 句最精簡、非技術性的白話文解釋「為什麼要做這個」。
 5. **請做 (Scope of Work / AllowedFiles)**：
-   * **格式**：以 Context Map 4 層或嚴格的 `allowedFiles` 表格/清單限制修改範疇。寫明要做的事與檔案路徑。
+   * **硬規則**：Context Map 是**風險型必填欄位**，不是所有派工單都無腦必填。若本單具有 scope drift 風險，`### 請做` 欄位**必須先包含 Context Map 4 層**，不得只用一般 `allowedFiles` 清單替代。
+   * **必填情境**：跨 repo；Phase 1 實作；source / evidence / ledger / release / artifact 任兩類同時出現；claim / close / commit / PR；cleanup / reconciliation；scope audit / 分袋；或 Captain 判斷存在 scope drift 風險。
+   * **可省略情境**：純問答、單一 task id collision check、單一 route check、1-2 個明確檔案的小型 read-only 查詢、或純 Phase 0 例行開卡且只限 task card + ledger/shard。
+   * **固定格式**：
+     ```text
+     ── Context Map ──
+     Primary（直接改 / 直接查）：
+       - <檔路徑> — <為何改或為何查>
+     Secondary（可能波及，預警 scope drift）：
+       - <相關檔> — <關係：型別引用 / hook 驗證 / CI 鏈接 / 污染風險>
+     Test Coverage：
+       - <test 或 validator 檔> — <測什麼>；若無 → 標「新建 validator 即代測試」或「只讀查證，無測試」
+     Patterns to Follow（精確 reference 路徑）：
+       - 沿用 <具體檔路徑> (TASK-AAO-XXXX) 的 <什麼風格>
+     ```
+   * **檔案數提示**：`allowedFiles` 或檢查目標超過 2 個時，通常應使用 Context Map；但最終判準是風險面向，不是單純檔案數。
+   * **禁止**：不得把 Context Map 放到「背景白話」或「補充引用」裡假裝完成；不得只寫「沿用既有 Context Map」而沒有列出本輪 Primary / Secondary / Test Coverage / Patterns。
+   * **目的**：讓派工單的 scope 邊界直接長在欄位格式裡，而不是靠隊長臨場記得。
 6. **請回報 (Deliverables & Return Format)**：
    * **格式**：必須使用固定編號條列回報，先結論、再變更、再驗證、再狀態、再風險、再下一步、最後補一句大白話；不得寫成散文，也不得跳項。若是只讀任務，也要照這個順序回報，只是把變更欄位縮成觀察摘要。
 7. **禁止 (Invariants / Constraints)**：

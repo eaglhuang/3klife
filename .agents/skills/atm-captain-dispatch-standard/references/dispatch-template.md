@@ -20,6 +20,18 @@ C:\Users\User\3KLife
 目前 [某功能] 出現了 [異常/完成交付]，我們需要一個只讀的代理來做深入的 [抽查/日誌排查/代碼複審]，找出是否有潛在的 [錯誤/BOM編碼損壞/邏輯漏洞]，並把結果整理回報給 Captain。
 
 ### 請做
+若本單有 scope drift 風險，請先按以下 Context Map 執行；若只是單一 route / collision / 1-2 個明確檔案的小型 read-only 查詢，可保留精簡版。
+
+── Context Map ──
+Primary（直接查）：
+  - `[檔案路徑 1]` — 盤點其 [變數/介面定義]
+Secondary（可能波及，預警 scope drift）：
+  - `[檔案路徑 2]` — 與 [檔案 1] 的關聯
+Test Coverage：
+  - 只讀查證，無測試；若發現需要 validator，請回報建議但不要新增
+Patterns to Follow（精確 reference 路徑）：
+  - 沿用 `[既有任務或參考檔路徑]` 的只讀回報風格
+
 只讀分析以下檔案，嚴禁做任何修改與寫入：
 1. `[檔案路徑 1]` (行號 [X-Y]) — 盤點其 [變數/介面定義]
 2. `[檔案路徑 2]` — 盤點與 [檔案 1] 的關聯
@@ -58,7 +70,19 @@ C:\Users\User\3KLife
 前置的規劃與 allowedFiles 已經確認。現在需要你動手把 [功能名稱] 的核心邏輯與對應的 validator 寫出來，並確保能通過所有本機自動化驗證。
 
 ### 請做
-請在嚴格的 `allowedFiles` 限制下進行代碼修改：
+請在嚴格的 Context Map 與 `allowedFiles` 限制下進行代碼修改；Phase 1 實作、claim / close / commit、或 source/evidence/release/artifact 任兩類同時出現時，以下 Context Map 不得省略。
+
+── Context Map ──
+Primary（直接改）：
+  - `[修改路徑 1]` — 實作 [某 class / function]
+  - `[修改路徑 2]` — 新增/修改對應的 validator/test 檔案
+Secondary（可能波及，預警 scope drift）：
+  - `[相關檔案或命令 surface]` — [型別引用 / hook 驗證 / CI 鏈接 / 污染風險]
+Test Coverage：
+  - `[test 或 validator 路徑]` — 驗證 [核心行為]
+Patterns to Follow（精確 reference 路徑）：
+  - 沿用 `[具體參考檔路徑]` (TASK-AAO-XXXX) 的 [命令 / schema / evidence] 風格
+
 1. `[修改路徑 1]` — 實作 [某 class / function]
 2. `[修改路徑 2]` — 新增/修改對應的 validator/test 檔案
 3. 若本任務已有 `atm-dispatch` 產出的 Context Map 4 層、validator、rollback 或 dual-agent 規則，請**直接引用既有內容**，不要在派工單裡重寫第二份治理說明。
@@ -106,6 +130,18 @@ C:\Users\User\3KLife
 我們收到了一個新任務 [任務名稱]，但直接動手開發容易引發 scope drift 與檔案污染。我們需要你先進行 scope 盤點與分析，並把任務拆解成安全的 Phase 0 (開卡) 與 Phase 1 (實作) 雙代理流程。
 
 ### 請做
+Scope audit / 分袋任務預設必須產出 Context Map 4 層；這張單的產物不是改 code，而是把下一張實作單的 scope 畫乾淨。
+
+── Context Map ──
+Primary（直接查）：
+  - `[候選主要檔案或任務卡]` — 判斷是否應列入 Phase 1 allowedFiles
+Secondary（可能波及，預警 scope drift）：
+  - `[相關檔案或命令 surface]` — [dependency / hook / evidence / release artifact 關係]
+Test Coverage：
+  - `[既有 validator 或預計 validator]` — 判斷下一張實作單應跑什麼
+Patterns to Follow（精確 reference 路徑）：
+  - 沿用 `[具體任務卡或派工參考]` (TASK-AAO-XXXX) 的分袋風格
+
 1. 靜態分析與盤點 [任務名稱] 實作時「真正需要修改」的最小檔案集合。
 2. 設計並產出 Phase 0 代理的 allowedFiles（嚴格限於 task.md 與 ledger shard JSON）。
 3. 設計並產出 Phase 1 代理的 allowedFiles（限於 AAF 或 target_repo 真實要改的 source 與 evidence 檔案）。
@@ -143,6 +179,18 @@ C:\Users\User\3KLife
 隨著開發決策的演進，我們的 [某文件/Keep分片/Ledger] 需要同步更新，以確保團隊記憶與最新的實務共識一致，避免後續代理讀到過期資訊。
 
 ### 請做
+若本文件任務會同時碰 shard / ledger / registry / source / evidence 任兩類，請先列 Context Map；1-2 檔小修可省略。
+
+── Context Map ──
+Primary（直接改）：
+  - `[目標更新路徑]` — 更新 [文件/分片/ledger] 內容
+Secondary（可能波及，預警 scope drift）：
+  - `[索引或 registry 路徑]` — [索引重建 / shard registry / doc-id 關係]
+Test Coverage：
+  - `[編碼或 shard validator]` — 驗證 [UTF-8 / shard integrity / JSON parse]
+Patterns to Follow（精確 reference 路徑）：
+  - 沿用 `[既有文件或分片路徑]` 的 [語氣 / shard / registry] 風格
+
 1. 讀取並分析最新共識來源：`[共識檔案路徑]`。
 2. 更新目標文件分片：`[目標更新路徑]`，確保其採用台灣開發術語與繁體中文。
 3. 若修改了 Keep 分片，請執行索引重建命令：
