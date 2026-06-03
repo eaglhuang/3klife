@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-28
-last_updated: 2026-05-29
+last_updated: 2026-06-03
 ---
 
 # Team Agents Task Index
@@ -49,6 +49,8 @@ Planning-only cards must set `target_repo: 3KLife` and `closure_authority: plann
 | [TASK-TEAM-0015](./TASK-TEAM-0015-next-playbook-team-recommendation.task.md) | M6 | Next/playbook team recommendation | planned | `TASK-TEAM-0011`, `TASK-TEAM-0012` | `next` / playbook |
 | [TASK-TEAM-0016](./TASK-TEAM-0016-closure-packet-team-summary-integration.task.md) | M6 | Closure packet team summary integration | planned | `TASK-TEAM-0013`, `TASK-TEAM-0014`, `TASK-TEAM-0015` | closure / evidence |
 | [TASK-TEAM-0017](./TASK-TEAM-0017-team-template-schema-validator-contract.task.md) | M2 | Team template schema and validator contract | draft | `TASK-TEAM-0004`, `TASK-TEAM-0005`, `TASK-TEAM-0006` | schemas / validator |
+| [TASK-TEAM-0018](./TASK-TEAM-0018-team-lease-fencing-deadlock-contract.task.md) | M5H | Team lease fencing and deadlock contract | draft | `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0013` | lease / scheduler hardening |
+| [TASK-TEAM-0019](./TASK-TEAM-0019-team-sandbox-attestation-closure-contract.task.md) | M6H | Team sandbox attestation and closure contract | draft | `TASK-TEAM-0016`, `TASK-TEAM-0018` | sandbox / closure hardening |
 
 ## Sequencing Note
 
@@ -98,3 +100,12 @@ This pattern translates the captain dispatch lessons from memory (mirror-commit 
 | 80-90 | `atm tasks close` -> closure packet + first patrol-report.md (from 0006) |
 
 The promise is verifiable after all three M2 cards close: an `examples/team-agents-minimal/` directory exists in the framework repo, and a wall-clock dry run of the steps above completes in under 90 minutes for at least one observer.
+
+## CID Hardening Synchronization
+
+The 2026-06-03 CID Hardening v2 review added two Team Agents follow-up cards:
+
+- `TASK-TEAM-0018` maps CID Hardening E2 into Team Agents. It treats `leaseEpoch`, fencing tokens, wait-for graph deadlock detection, and stronger released-tombstone coverage as new hardening work, not current behavior.
+- `TASK-TEAM-0019` maps CID Hardening E3 into Team Agents. It treats sandbox attestation fields (`runnerKind`, `runtimeVersion`, `sandboxPolicyHash`, `attestationSigner`) as new closure-supporting metadata, not existing command-backed evidence.
+
+These cards preserve the existing Team Agents rule: Team Agents accelerate scoped work, but they do not relax ATM gates, task evidence, closure packets, or coordinator-only lifecycle ownership.
