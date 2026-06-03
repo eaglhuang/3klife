@@ -26,8 +26,8 @@ allowed_files:
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
 forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/**
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0112-*.task.md
+  - AI-Atomic-Framework source tree
+  - TASK-AAO-0112 closure packet task card
 non_goals:
   - "Do not mutate AAF source files."
   - "Do not touch the TASK-AAO-0112 closure packet."
@@ -74,24 +74,19 @@ It does not clean the tree, delete noise, repair an existing closure packet, or 
 - Phase 0 does not touch AAF source files.
 
 ## Phase 1 Candidate Allowed Files
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts`
-- `C:/Users/User/AI-Atomic-Framework/scripts/validate-task-ledger-governance.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/tasks.spec.ts` only if command-level regression is needed.
+- Close-time dirty-tree / changedFiles assembly surface in the framework-development path.
+- Task lifecycle / close entry surface in the tasks command path.
+- Ledger governance regression validator surface.
+- Command-level regression surface only if route-visible regression coverage is needed.
 
 ## Phase 1 Forbidden Files
-- `C:/Users/User/AI-Atomic-Framework/release/atm-onefile/**`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/evidence/TASK-AAO-0120.*`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/evidence/TASK-AAO-0121.*`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-AAO-0120.json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-AAO-0121.json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-AAO-0120/**`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-AAO-0121/**`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/task-direction.ts`
-- `C:/Users/User/AI-Atomic-Framework/scripts/validate-git-head-evidence.ts`
-- `C:/Users/User/AI-Atomic-Framework/scratch/**`
-- `C:/Users/User/AI-Atomic-Framework/.playwright-mcp/**`
+- Release onefile surfaces.
+- TASK-AAO-0120 and TASK-AAO-0121 evidence / history / task-event surfaces.
+- Prompt-scoped next route surface.
+- Task-direction route surface.
+- Git-head evidence validator surface.
+- Scratch or runtime noise surfaces.
+- Playwright MCP runtime noise surfaces.
 
 ## Allowed Files
 - `C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0114-closure-packet-dirty-tree-hygiene-guard.task.md`
@@ -100,8 +95,8 @@ It does not clean the tree, delete noise, repair an existing closure packet, or 
 - `C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json`
 
 ## Forbidden Files
-- `C:/Users/User/AI-Atomic-Framework/**`
-- `C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0112-*.task.md`
+- `AI-Atomic-Framework source tree`
+- `TASK-AAO-0112 closure packet task card`
 
 ## Validators
 - `node atm.mjs next --prompt "TASK-AAO-0114" --json`

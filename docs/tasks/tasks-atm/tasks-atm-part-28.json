@@ -91,7 +91,7 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "Phase 0 scope amendment for a pre-close dirty-tree / untracked evidence hygiene guard. Close / closure packet generation must inspect dirty tracked and untracked noise, keep unrelated untracked files out of changedFiles, and allow noise to be reported without treating it as deliverable. Existing closure packet repair stays on a separate card.",
+    "description": "Phase 0 scope amendment for a pre-close dirty-tree / untracked evidence hygiene guard. Close / closure packet generation must inspect dirty tracked and untracked noise, keep unrelated untracked files out of changedFiles, and allow noise to be reported without treating it as deliverable. Phase 1 route-visible surfaces must stay classification-based, and existing closure packet repair stays on a separate card.",
     "related": [
       "TASK-AAO-0112"
     ],
@@ -102,6 +102,7 @@
       "close / closure packet generation checks dirty tracked and untracked noise before producing evidence.",
       "closure packet changedFiles is not polluted by unrelated untracked files.",
       "noise may be reported, but it is not treated as a task deliverable.",
+      "Phase 1 route-visible surfaces stay classification-based instead of raw path lists.",
       "existing closure packet repair is kept on a separate card."
     ],
     "deliverables": [
@@ -110,7 +111,7 @@
       "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
       "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
     ],
-    "notes": "2026-06-03 | status: in-progress | validation: pending | change: scope amended to pre-close dirty-tree / untracked evidence hygiene guard | blocker: none | risk: evidence hygiene / dirty-tree drift",
+    "notes": "2026-06-03 | status: in-progress | validation: pending | change: scope amended to pre-close dirty-tree / untracked evidence hygiene guard; route-visible surfaces reduced to classification language | blocker: none | risk: evidence hygiene / dirty-tree drift",
     "brief": {
       "style": "classic",
       "label": "",
