@@ -145,5 +145,62 @@
         "upstream registry and catalog synchronized"
       ]
     }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0121",
+    "title": "reconcile TASK-AAO-0120 closure target and release pollution",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-03",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for reconciling TASK-AAO-0120 closure target and release pollution. The 0120 source functionality is already landed; this card does not rewrite 0120 source and does not touch 0120 importer implementation files. It only cleans release onefile pollution and the closure/evidence pollution around 0120. If scratch or .playwright-mcp noise needs a broader sweep, that belongs in a separate evidence-hygiene card.",
+    "related": [],
+    "depends": [
+      "TASK-AAO-0120"
+    ],
+    "acceptance": [
+      "Do not rewrite TASK-AAO-0120 source.",
+      "Do not touch TASK-AAO-0120 importer implementation files.",
+      "Only clean release onefile pollution and TASK-AAO-0120 closure/evidence pollution.",
+      "If scratch or .playwright-mcp noise needs a wider sweep",
+      "open a separate evidence-hygiene card."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0121-reconcile-task-aao-0120-closure-target-and-release-pollution.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-03 | status: open | validation: pending | change: Phase 0 open card for 0120 cleanup and reconciliation | blocker: release pollution / closure pollution | risk: closure packet and onefile artifacts drift",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
