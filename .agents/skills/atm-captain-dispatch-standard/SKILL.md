@@ -9,6 +9,17 @@ description: Captain 派工規範與決策手冊。當 AI 進入隊長模式或�
 
 ---
 
+## 0. 打包隨行文件 (Bundled References)
+
+本 skill 目錄必須可整包跨 repo 搬運。隊長模式需要的通用 keep 規則，已抽到 skill 內部 reference，不再依賴硬編碼的 3KLife keep 路徑。
+
+* `references/project-captain-mode.md`：從 keep workflow §13.1 / §13.2 / §13.4 抽出的 Project Captain 行為、token / sidecar、角色與 skill 分工規則。
+* `references/dispatch-template.md`：可直接轉貼派工單模板與範例。
+
+觸發隊長模式或撰寫派工單前，若需要確認角色邊界、sidecar 規則或「哪些單要內包、哪些單要外派」，先讀 `references/project-captain-mode.md`。
+
+---
+
 ## 1. 派工單的核心目標 (Dispatch Core Goal)
 
 * **無損轉交**：派工單的唯一目標是將任務無損地交給下一棒代理（Subagent）或外部執行代理，讓其能**直接、無歧義地執行**。

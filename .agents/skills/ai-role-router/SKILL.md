@@ -17,10 +17,17 @@ This is not the internal team-subagent router. If AI subteams later need their o
 
 ## Load Keep
 
-When available, read the smallest relevant keep section before acting:
+When available, read the smallest relevant role memory before acting.
 
-- `C:\Users\User\3KLife\docs\keep.summary.md`
-- If more detail is needed: `C:\Users\User\3KLife\docs\keep-shards\keep-workflow.md`
+Portable bundled reference:
+
+- For Project Captain triggers, read `references/project-captain-mode.md`.
+
+Repo-local keep:
+
+- Prefer the current repository's `docs/keep.summary.md`.
+- If more detail is needed, read the current repository's workflow shard, commonly `docs/keep-shards/keep-workflow.md`.
+- In the source 3KLife repo, this still resolves to the local `docs/keep.summary.md` and `docs/keep-shards/keep-workflow.md`.
 
 Relevant keep headings:
 
@@ -29,7 +36,9 @@ Relevant keep headings:
 - `Role Skill Model`
 - `Subagent Token Rule`
 
-If keep is unavailable, continue with this skill's defaults and say keep could not be read.
+If repo-local keep is unavailable, continue with the bundled reference and this skill's defaults, and say repo-local keep could not be read.
+
+When this skill is copied to another repo, do not hardcode 3KLife keep as that repo's only memory source.
 
 ## Role Router
 
