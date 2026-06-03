@@ -171,14 +171,13 @@
       "Do not rewrite TASK-AAO-0120 source.",
       "Do not touch TASK-AAO-0120 importer implementation files.",
       "Only clean release onefile pollution and TASK-AAO-0120 closure/evidence pollution.",
-      "If scratch or .playwright-mcp noise needs a wider sweep",
-      "open a separate evidence-hygiene card."
+      "Broader scratch or browser runtime noise belongs in a separate evidence-hygiene card."
     ],
     "deliverables": [
-      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0121-reconcile-task-aao-0120-closure-target-and-release-pollution.task.md",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0121-reconcile-task-aao-0120-closure-target-and-release-pollution.task.md",
+      "docs/tasks/tasks-atm.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "docs/tasks/tasks-atm/.shardrc.json"
     ],
     "notes": "2026-06-03 | status: open | validation: pending | change: Phase 0 open card for 0120 cleanup and reconciliation | blocker: release pollution / closure pollution | risk: closure packet and onefile artifacts drift",
     "brief": {

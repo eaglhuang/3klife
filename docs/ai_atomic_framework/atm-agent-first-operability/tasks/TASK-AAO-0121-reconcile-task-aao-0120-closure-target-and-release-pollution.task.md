@@ -59,21 +59,19 @@ If scratch or `.playwright-mcp` noise needs a broader sweep, open a separate evi
 - This card stays in 3KLife Phase 0 and only updates the task card, tasks-atm ledger, and shard.
 
 ## Phase 1 Candidate Allowed Files
-- `C:/Users/User/AI-Atomic-Framework/release/atm-onefile/README.onefile.md`
-- `C:/Users/User/AI-Atomic-Framework/release/atm-onefile/atm.mjs`
-- `C:/Users/User/AI-Atomic-Framework/release/atm-onefile/release-manifest.json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/evidence/TASK-AAO-0120.closure-packet.json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/evidence/TASK-AAO-0120.json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-AAO-0120/**`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-AAO-0120.json`
+- `release/atm-onefile/README.onefile.md`
+- `release/atm-onefile/atm.mjs`
+- `release/atm-onefile/release-manifest.json`
+- `.atm/history/evidence/TASK-AAO-0120.closure-packet.json`
+- `.atm/history/evidence/TASK-AAO-0120.json`
+- `.atm/history/task-events/TASK-AAO-0120/**`
+- `.atm/history/tasks/TASK-AAO-0120.json`
 
-## Phase 1 Forbidden Files
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/task-direction.ts`
-- `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts`
-- `C:/Users/User/AI-Atomic-Framework/scripts/validate-task-direction-governance.ts`
-- `C:/Users/User/AI-Atomic-Framework/scratch/**`
-- `C:/Users/User/AI-Atomic-Framework/.playwright-mcp/**`
+## Phase 1 Forbidden Surfaces
+- Do not touch TASK-AAO-0120 source implementation surfaces.
+- Do not touch TASK-AAO-0120 importer implementation files.
+- Do not touch route-scope regression validator source.
+- Do not touch scratch or browser runtime noise.
 
 ## Allowed Files
 - `C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0121-reconcile-task-aao-0120-closure-target-and-release-pollution.task.md`

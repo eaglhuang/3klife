@@ -522,8 +522,8 @@
       "title": "Part 56 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-56.json",
       "count": 3,
-      "bytes": 8037,
-      "lines": 206,
+      "bytes": 7935,
+      "lines": 205,
       "layout": "sticky-least-pool"
     },
     {
