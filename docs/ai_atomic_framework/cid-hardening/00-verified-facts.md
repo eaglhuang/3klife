@@ -30,9 +30,9 @@
 | B2 | `CID.Effects`：**復用並擴充既有 `dependencyPolicy`**（OQ#2 已裁決）；scanner 輸出衍生 `observedEffects` / capability findings | E1 |
 | B3 | effects-aware 替換相容性閘（純函數 vs IO 不可替換） | E1 |
 | B4 | `leaseEpoch`（fencing token）+ wait-for graph 死鎖偵測 + symbol-scope lease | E2 |
-| B5 | closure attestation 欄位 `runnerKind / runtimeVersion / sandboxPolicyHash / attestationSigner` | E3 |
+| B5 | closure attestation 欄位 `runnerKind / runtimeVersion / sandboxPolicyHash / attestationSigner`；本機 / Deno sandbox 證據僅限 Tier 2（防混亂），Tier 3 防竄改升級必須要求外部 AttestationProvider 簽章（以 GitHub Actions 為首個 reference adapter 但不與其硬綁定），簽章與可驗證 provenance 才是信任根。 | E3 |
 | B6 | capability sandbox（候選 = Deno 權限模型）+ quarantine | E3 |
-| B7 | 突變測試 / 對抗 QA 閘；`CID.Behavior`（harness id + pass-set hash） | E3 |
+| B7 | 突變測試 / 對抗 QA 閘；`CID.Behavior`（harness id + pass-set hash）。突變與對抗測試不得置於同步 close 阻擋路徑，僅作為 async Police / Behavior Police / Tier 3 promotion gate。同步 close 僅標記 pending/candidate，背景 CI 通過後才掛載 CID.Behavior/Tier 3 標章；必須設計 budget/cap/sampling 等資源防護政策以避免算力災難。 | E3 |
 | B8 | `CID.Semantic` embedding 去重（鎖模型版本，非身分 metadata） | E4 |
 | B9 | janitor：sweep / expire 的 finding → **host apply** 路徑 | E4 |
 | B10 | Trust Tier 1 / 2 / 3（≠ 既有 `RegistryGovernanceTier`） | E5 |

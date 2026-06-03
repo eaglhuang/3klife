@@ -130,6 +130,13 @@ Source: `C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`
 
 - 現況：closure commandRuns / stdoutSha256 / exitCode；`runnerVersion` ≈ framework。
 - 新增：result-envelope（消 CRLF / 版本飄移）+ attestation 欄位 + capability sandbox（候選 Deno；**`node:vm` / `isolated-vm` 不採用為安全沙盒**）+ mutation / 對抗閘 + `CID.Behavior`。
+- E3 信任錨點與沙盒約束：
+  - **真實信任根**：Local agent / local Deno sandbox / local daemon 不是信任根；簽章來源與可驗證 provenance 才是信任根。
+  - **防混亂 vs 防竄改**：本機 sandbox 證據僅限 Tier 2（或 candidate 狀態），用於「防混亂」；Tier 3 / marketplace-grade 防竄改升級必須要求外部 `AttestationProvider` 簽章（以 GitHub Actions 作為第一個 reference adapter，但核心維持抽象不硬綁定）。
+- E3 突變測試與對抗 QA 約束：
+  - **非同步執行**：突變測試與對抗 QA 屬慢速與高耗能路徑，不得放在一般 `atm close` 的同步阻擋路徑。
+  - **異步標記**：同步 close 時僅標記為 `pending` 或 `candidate`；作為 async Police / Behavior Police / Tier 3 promotion gate 在背景執行，通過後才掛載 `CID.Behavior` 或升級 Tier 3 badge。
+  - **算力保護政策**：為防算力災難，必須寫入 budget / cap / sampling / sharding / timeout 等資源管控政策。
 - 威脅：半信任 / 外來原子（本機 = 防混亂；CI signed = 防竄改）。
 - 驗證：`validate:sandbox`、`validate:mutation-gate`。
 
@@ -144,6 +151,9 @@ Source: `C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`
 
 - 現況：既有 `RegistryGovernanceTier`。
 - 新增：Trust Tier 1 / 2 / 3 狀態機（與 `RegistryGovernanceTier` 區分）+ promotion gate（人審）。
+- E5 治理升級與 Trust Tier 約束：
+  - **Tier 3 晉升條件**：晉升 Tier 3 / marketplace-grade 的防竄改狀態，必須通過非同步對抗 QA 與突變測試，並且具備外部 `AttestationProvider` 簽章與可驗證的 provenance。
+  - **人審收口**：不允許自動晉升，必須經由人類 Closure Steward 的 promotion gate 進行裁決。
 - E5.2 市場 = **延後、gated、Tier 3 本地實證後解鎖**；與 `ECOSYSTEM_POSITIONING.md`（不取代 package manager）一致。
 - 驗證：`validate:trust-tier`。
 
@@ -196,7 +206,26 @@ E0（唯一第一階段，0001 → 0002 → 0003）
 
 **仍待裁決**：無（v3.1 起所有 OQ 已關閉）。
 
-## 8. Cross-References
+## 8. 設計與實作守則 (Implementation Guardrails)
+
+本章定義後續 CID 硬化在實作階段必須遵守的硬性設計約束，以防範信任鏈缺陷與資源算力失控：
+
+### 8.1 證據與 Trust Anchor 約束
+- **分層證據力**：本機 agent、本機 Deno 沙盒或本機守護行程（daemon）所提供的證據，最高僅能評為 Tier 2 或 candidate 狀態。此類證據定位為「防混亂」（防止本機開發期的版本與環境混淆）。
+- **外部簽章**：若要升級至 Tier 3、發布至公開市場（marketplace-grade）或進行具備防竄改特性的升級，必須要求外部 `AttestationProvider` 提供數位簽章。
+- **適配器抽象**：可以使用 GitHub Actions 作為第一個參考適配器（reference adapter）實作，但 ATM 核心程式碼必須維持抽象層，嚴禁硬綁定（hardcode）任何特定的 CI/CD 平台（如 GitHub Actions）。
+- **真實信任源**：信任根絕非「誰啟動了 sandbox」，而是「簽章的來源 (Attestation Signer)」與「可驗證的溯源證明 (provenance)」。
+
+### 8.2 突變測試與對抗 QA 資源防護
+- **非同步阻擋**：突變測試（Mutation testing）與對抗 QA 不得併入一般 `atm close` 的同步阻擋路徑，避免阻礙開發工作流。
+- **行為警察審計**：此類耗時測試應做為 async Police、Behavior Police 或 Tier 3 promotion gate。
+- **異步標記**：當一般開發任務進行 close 時，先標記為 `pending` 或 `candidate`；待背景 CI 流程完成上述測試後，才正式掛載 `CID.Behavior` 屬性或 Tier 3 badge。
+- **算力約束政策**：必須為這類高耗能測試制定完整的資源防護政策，包含：
+  - **算力預算 (Budget/Cap)**：每日或單次任務的最高 CPU/記憶體執行時間限制。
+  - **抽樣與分片 (Sampling/Sharding)**：僅對變更影響範圍內的關鍵 atom/map 進行突變測試，不作全量盲測。
+  - **逾時與降級 (Timeout/Degradation)**：設定嚴格的逾時時限，逾時則降級報告，不得無限期卡住背景管線。
+
+## 9. Cross-References
 
 - 上游核准 roadmap：`C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`（v3.1）
 - 事實基線：[00-verified-facts.md](./00-verified-facts.md)
