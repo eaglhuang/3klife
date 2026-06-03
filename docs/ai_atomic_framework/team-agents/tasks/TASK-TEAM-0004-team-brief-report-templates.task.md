@@ -47,6 +47,40 @@ outOfScope:
 nonGoals:
   - "Do not create a second task registry"
   - "Do not make templates authoritative over ATM task cards"
+dispatch_pattern:
+  shape: "dual-agent (Phase 0 planner + Phase 1 builder)"
+  fan_in_from:
+    - "TASK-TEAM-0002"
+    - "TASK-TEAM-0003"
+  rationale: "0004 is the synchronization point where the crew contract (0002) and required atomization role (0003) become the canonical brief / report / summary templates."
+  phase_0:
+    lane: "helper (read-only sidecar)"
+    allowed_files:
+      - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0004-*.task.md"
+    commit_budget: 0
+    output: |
+      Phase 1 brief listing 3 templates' required sections (must mirror the existing
+      3KLife drafts at docs/ai_atomic_framework/team-agents/templates/{team-brief,
+      agent-report,team-summary}.md) plus validator dispatch contract.
+  phase_1:
+    lane: "external builder 001-006"
+    allowed_files_strict: true
+    forbidden_files:
+      - "C:/Users/User/3KLife/**"
+      - ".atm/runtime/**"
+      - ".atm/history/**"
+    commit_budget: 2
+    commit_layout:
+      - "commit_1: 3 templates + validator script + npm script wire-in"
+      - "commit_2: path-to-atom-map.json + close evidence"
+  condition_review:
+    - "Phase 1 must not touch any 3KLife path"
+    - "validator dispatches by --task <id>; subsequent 0005/0006 extend the same script, do not fork"
+    - "templates contain all required sections (see acceptance criteria)"
+    - "atom map row exists under owner atm.team-agents-template-map"
+ninety_minute_promise:
+  contributes_to: "first-card-in-90-min (M2)"
+  role: "provides the team-brief.md skeleton that the new adopter copies into their first task"
 ---
 # TASK-TEAM-0004 — Team brief/report templates
 

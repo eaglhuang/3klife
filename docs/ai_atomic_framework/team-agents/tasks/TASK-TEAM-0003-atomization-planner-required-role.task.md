@@ -6,7 +6,8 @@ status: planned
 owner: atm-core
 priority: P0
 milestone: M1
-depends_on:
+depends_on: []
+runs_parallel_with:
   - "TASK-TEAM-0002"
 related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
 planning_repo: 3KLife
@@ -44,6 +45,32 @@ outOfScope:
 nonGoals:
   - "Do not replace human task-card authoring"
   - "Do not allow planner output to bypass scope locks"
+dispatch_pattern:
+  shape: "dual-agent (Phase 0 planner + Phase 1 builder)"
+  parallel_with: "TASK-TEAM-0002"
+  rationale: "0002 defines the crew shell; 0003 declares one mandatory role inside it. Their file footprints do not overlap (different doc paths), so they may be built in parallel and merged in either order."
+  phase_0:
+    lane: "helper (read-only sidecar)"
+    allowed_files:
+      - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0003-*.task.md"
+    commit_budget: 0
+    output: "Phase 1 brief + atomization planner JSON shape spec"
+  phase_1:
+    lane: "external builder 001-006"
+    allowed_files_strict: true
+    forbidden_files:
+      - "C:/Users/User/3KLife/**"
+      - ".atm/runtime/**"
+      - ".atm/history/**"
+    commit_budget: 2
+    commit_layout:
+      - "commit_1: docs + cli planner JSON fields + spec"
+      - "commit_2: path-to-atom-map.json + close evidence"
+  condition_review:
+    - "Phase 1 must not touch any 3KLife path"
+    - "team plan output includes primary atom / related atoms / command surface / large-script risk / map update need / split recommendation"
+    - "known hot files (tasks.ts, next.ts, evidence.ts, hook.ts) trigger high-risk note"
+    - "planner has no write / lifecycle permission anywhere"
 ---
 # TASK-TEAM-0003 — Atomization planner required role
 

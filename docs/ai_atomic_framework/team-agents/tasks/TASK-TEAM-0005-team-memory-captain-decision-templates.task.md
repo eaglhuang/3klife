@@ -42,6 +42,36 @@ outOfScope:
 nonGoals:
   - "Do not make memory shards a second source of task truth"
   - "Do not replace closure evidence"
+dispatch_pattern:
+  shape: "dual-agent (Phase 0 planner + Phase 1 builder)"
+  parallel_with: "TASK-TEAM-0006"
+  rationale: "0005 (decision/memory templates) and 0006 (patrol template) touch disjoint template files but share the same validator script. They can be built in parallel, then merged sequentially so the second card extends the first card's validator additions."
+  phase_0:
+    lane: "helper (read-only sidecar)"
+    allowed_files:
+      - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0005-*.task.md"
+    commit_budget: 0
+    output: "Phase 1 brief listing the 2 templates' required sections + the validator section-key it should add"
+  phase_1:
+    lane: "external builder 001-006"
+    allowed_files_strict: true
+    forbidden_files:
+      - "C:/Users/User/3KLife/**"
+      - ".atm/runtime/**"
+      - ".atm/history/**"
+    commit_budget: 2
+    commit_layout:
+      - "commit_1: 2 templates + validator section extension"
+      - "commit_2: path-to-atom-map.json + close evidence"
+  condition_review:
+    - "Phase 1 must not touch any 3KLife path"
+    - "validator extends 0004's script; no new script file"
+    - "captain-decision contains decision/options/chosen/reason/risk/needLieutenant/nextTeamShape"
+    - "team-memory-shard contains taskType/symptom/lesson/reuseWhen/avoidWhen/relatedCommands/relatedFiles"
+    - "templates declare advisory-only (no ATM gate authority)"
+ninety_minute_promise:
+  contributes_to: "first-card-in-90-min (M2)"
+  role: "captain-decision.md is the artifact the new adopter writes at minute 80; team-memory-shard.md is the lesson capture after close"
 ---
 # TASK-TEAM-0005 — Team memory and captain decision templates
 

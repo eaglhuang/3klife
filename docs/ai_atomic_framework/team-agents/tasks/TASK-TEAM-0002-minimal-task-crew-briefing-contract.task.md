@@ -44,6 +44,31 @@ outOfScope:
 nonGoals:
   - "Do not implement permission lease enforcement"
   - "Do not add Atomic Police patrol automation"
+dispatch_pattern:
+  shape: "dual-agent (Phase 0 planner + Phase 1 builder)"
+  parallel_with: "TASK-TEAM-0003"
+  phase_0:
+    lane: "helper (read-only sidecar)"
+    allowed_files:
+      - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0002-*.task.md"
+    commit_budget: 0
+    output: "Phase 1 brief + atom map row draft"
+  phase_1:
+    lane: "external builder 001-006"
+    allowed_files_strict: true
+    forbidden_files:
+      - "C:/Users/User/3KLife/**"
+      - ".atm/runtime/**"
+      - ".atm/history/**"
+    commit_budget: 2
+    commit_layout:
+      - "commit_1: docs + cli command + spec"
+      - "commit_2: path-to-atom-map.json + close evidence"
+  condition_review:
+    - "Phase 1 must not touch any 3KLife path"
+    - "team plan --json output identifies the 4 minimum crew roles"
+    - "atom map row exists under owner atm.team-agents-map"
+    - "no lease / runtime semantics introduced"
 ---
 # TASK-TEAM-0002 — Minimal task crew briefing contract
 

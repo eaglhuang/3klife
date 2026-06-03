@@ -33,11 +33,11 @@ Planning-only cards must set `target_repo: 3KLife` and `closure_authority: plann
 | Task ID | Milestone | Title | Status | Depends | Target surface |
 |---|---|---|---|---|---|
 | [TASK-TEAM-0001](./TASK-TEAM-0001-team-agents-planning-roster-reset.task.md) | M0 | Team agents planning roster reset | done | none | planning docs |
-| [TASK-TEAM-0002](./TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md) | M1 | Minimal task crew briefing contract | planned | `TASK-TEAM-0001` | team docs / CLI contract |
-| [TASK-TEAM-0003](./TASK-TEAM-0003-atomization-planner-required-role.task.md) | M1 | Atomization planner required role | planned | `TASK-TEAM-0002` | team docs / CLI contract |
-| [TASK-TEAM-0004](./TASK-TEAM-0004-team-brief-report-templates.task.md) | M2 | Team brief/report templates | planned | `TASK-TEAM-0003` | templates / validator |
-| [TASK-TEAM-0005](./TASK-TEAM-0005-team-memory-captain-decision-templates.task.md) | M2 | Team memory and captain decision templates | planned | `TASK-TEAM-0004` | templates / validator |
-| [TASK-TEAM-0006](./TASK-TEAM-0006-patrol-report-template.task.md) | M2 | Patrol report template | planned | `TASK-TEAM-0005` | templates / validator |
+| [TASK-TEAM-0002](./TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md) | M1 | Minimal task crew briefing contract | planned | `TASK-TEAM-0001` (parallel with 0003) | team docs / CLI contract |
+| [TASK-TEAM-0003](./TASK-TEAM-0003-atomization-planner-required-role.task.md) | M1 | Atomization planner required role | planned | `TASK-TEAM-0001` (parallel with 0002) | team docs / CLI contract |
+| [TASK-TEAM-0004](./TASK-TEAM-0004-team-brief-report-templates.task.md) | M2 | Team brief/report templates | planned | `TASK-TEAM-0002`, `TASK-TEAM-0003` | templates / validator |
+| [TASK-TEAM-0005](./TASK-TEAM-0005-team-memory-captain-decision-templates.task.md) | M2 | Team memory and captain decision templates | planned | `TASK-TEAM-0004` (parallel with 0006) | templates / validator |
+| [TASK-TEAM-0006](./TASK-TEAM-0006-patrol-report-template.task.md) | M2 | Patrol report template | planned | `TASK-TEAM-0004` (parallel with 0005) | templates / validator |
 | [TASK-TEAM-0007](./TASK-TEAM-0007-captain-decision-team-sizing-dry-run.task.md) | M3 | Captain decision and team sizing dry-run | planned | `TASK-TEAM-0003` | `team` CLI |
 | [TASK-TEAM-0008](./TASK-TEAM-0008-task-lieutenant-escalation-rules.task.md) | M3 | Task lieutenant escalation rules | planned | `TASK-TEAM-0007` | `team` CLI |
 | [TASK-TEAM-0009](./TASK-TEAM-0009-team-plan-dry-run-resolver.task.md) | M4 | Team plan dry-run resolver | planned | `TASK-TEAM-0007`, `TASK-TEAM-0008` | `team` CLI |
@@ -53,3 +53,48 @@ Planning-only cards must set `target_repo: 3KLife` and `closure_authority: plann
 ## Sequencing Note
 
 Open and import these cards by milestone order. Do not reuse the previous `TASK-TEAM-0001` to `TASK-TEAM-0004` draft semantics; those early drafts were superseded by the M0-M6 rollout.
+
+## Parallelization Plan for M1-M2
+
+The line-graph dependency above (`0002 -> 0003 -> 0004 -> 0005 -> 0006`) was tightened during the 2026-06-03 dispatch review. The actual file footprints permit the following collapse:
+
+```
+M0: 0001 (done)
+        |
+M1:     +--> 0002 (crew contract)   ----+
+        +--> 0003 (atomization role) ---+   (run in parallel)
+                                        |
+M2:                                     +--> 0004 (brief/report/summary)
+                                                       |
+                                                       +--> 0005 (decision/memory)  ----+
+                                                       +--> 0006 (patrol)               +   (run in parallel)
+```
+
+- `0002` and `0003` write to disjoint doc paths (`minimal-task-crew.md` vs `atomization-planner.md`) and may merge in either order.
+- `0005` and `0006` write to disjoint template files but share the same validator script. They may build in parallel; merge sequentially so the second-merged card extends the first card's validator section additions.
+- `0004` is the single synchronization point between M1 and M2: it lands the first version of the shared validator script (`scripts/validate-team-agents-templates.ts`) that `0005` and `0006` extend.
+
+## Dispatch Contract for M1-M2
+
+Every card from `TASK-TEAM-0002` through `TASK-TEAM-0006` carries a `dispatch_pattern` block in its frontmatter declaring:
+
+- `phase_0` (read-only planner) + `phase_1` (external builder) split — the dual-agent pattern that physically prevents Phase 1 from touching `C:/Users/User/3KLife/**`.
+- `commit_budget`: 0 for Phase 0 (planning only), 2 for Phase 1 (AAF strict 2-commit rule).
+- `forbidden_files`: at minimum `C:/Users/User/3KLife/**`, `.atm/runtime/**`, `.atm/history/**`.
+- `condition_review`: per-card checklist for close.
+
+This pattern translates the captain dispatch lessons from memory (mirror-commit incidents 0064 / 0075 / 0077 / 0088) into per-card enforceable allowed-files whitelists.
+
+## 90-Minute First-Card Promise
+
+`TASK-TEAM-0004`, `TASK-TEAM-0005`, and `TASK-TEAM-0006` each carry a `ninety_minute_promise` block. Together they ship the artifact chain that lets a new adopter run their first governed task card in under 90 minutes:
+
+| Minute | Adopter sees |
+|---|---|
+| 0-15 | `npx create-atm` succeeds, `atm doctor` green |
+| 15-30 | Copy `examples/team-agents-minimal/team-brief.md` (from 0004), edit 4 fields |
+| 30-60 | `atm next` -> agent claim -> small edit -> `npm run typecheck` |
+| 60-80 | `validate-team-agents-templates.ts` (from 0004+0005+0006) green; agent-report.md ready |
+| 80-90 | `atm tasks close` -> closure packet + first patrol-report.md (from 0006) |
+
+The promise is verifiable after all three M2 cards close: an `examples/team-agents-minimal/` directory exists in the framework repo, and a wall-clock dry run of the steps above completes in under 90 minutes for at least one observer.

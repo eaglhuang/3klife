@@ -7,6 +7,8 @@ owner: atm-core
 priority: P1
 milestone: M2
 depends_on:
+  - "TASK-TEAM-0004"
+runs_parallel_with:
   - "TASK-TEAM-0005"
 related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
 planning_repo: 3KLife
@@ -40,6 +42,37 @@ outOfScope:
 nonGoals:
   - "Do not implement police agents in this card"
   - "Do not create a second evidence format"
+dispatch_pattern:
+  shape: "dual-agent (Phase 0 planner + Phase 1 builder)"
+  parallel_with: "TASK-TEAM-0005"
+  rationale: "0006 ships only the patrol-report template + validator section. The patrol logic itself already exists upstream as runPoliceFamilyGate + 9 police families (gate-active). This card is the human-readable output format, not new detection logic."
+  phase_0:
+    lane: "helper (read-only sidecar)"
+    allowed_files:
+      - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0006-*.task.md"
+    commit_budget: 0
+    output: |
+      Phase 1 brief listing patrol-report required sections (runId/team/severity/
+      findings/safeToProceed/suggestedCommand/followUp) and the validator extension.
+  phase_1:
+    lane: "external builder 001-006"
+    allowed_files_strict: true
+    forbidden_files:
+      - "C:/Users/User/3KLife/**"
+      - ".atm/runtime/**"
+      - ".atm/history/**"
+    commit_budget: 2
+    commit_layout:
+      - "commit_1: patrol-report template + validator section extension"
+      - "commit_2: path-to-atom-map.json + close evidence"
+  condition_review:
+    - "Phase 1 must not touch any 3KLife path"
+    - "template usable for daily / claim-preflight / close-preflight / big-script patrol"
+    - "validator extends 0004's script (and any 0005 section it landed first)"
+    - "template explicitly states patrols are read-only unless a separate card grants write"
+ninety_minute_promise:
+  contributes_to: "first-card-in-90-min (M2)"
+  role: "patrol-report.md is what the new adopter sees at minute 90 as the closure-time artifact"
 ---
 # TASK-TEAM-0006 — Patrol report template
 
