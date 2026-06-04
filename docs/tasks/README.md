@@ -12,6 +12,7 @@
 | tasks-dc.json | DC-* | Data Center Phase 任務（~35 件）|
 | tasks-data.json | DATA-* | 資料契約任務（~1 件）|
 | tasks-atm.json | ATM-* | ATM 任務 thin index 入口；完整內容落在 docs/tasks/tasks-atm/ |
+| tasks-team.json | TEAM-* | TEAM safe mirror/import planning ledger | docs/tasks/tasks-team/ |
 
 所有新任務一律先走 `task-card-opener` skill，先判斷對應分片、是否需要 Markdown 任務卡，以及是否要同步 UI shard / 協作卡；任務卡 ID 命名仍以名詞定義文件為準，不得直接手工開平行格式。
 

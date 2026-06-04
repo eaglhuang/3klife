@@ -1,0 +1,40 @@
+[
+  {
+    "doc_id": "doc_team_0026",
+    "id": "TASK-TEAM-0026",
+    "title": "TEAM safe mirror/import ledger reconciliation lane",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "planned",
+    "type": "planning",
+    "phase": "M4R",
+    "created": "2026-06-04",
+    "created_by_agent": "TEAM-CAPTAIN",
+    "description": "Planning-only lane that packages the safe TEAM mirror/import subset into a legal reconciliation route without touching AAF source.",
+    "related": [
+      "TASK-TEAM-0001",
+      "TASK-TEAM-0020",
+      "TASK-TEAM-0025"
+    ],
+    "depends": [
+      "TASK-TEAM-0025",
+      "TASK-TEAM-0020"
+    ],
+    "acceptance": [
+      "The plan names TASK-TEAM-0001..0019 / 0025 as the only safe subset.",
+      "The plan forbids TASK-TEAM-0020..0024, TASK-AAO-*, and AAF source/runtime noise.",
+      "The TEAM ledger remains thin and fast to read.",
+      "The route can be handed to Captain after route check."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md",
+      "docs/ai_atomic_framework/team-agents/tasks/README.md",
+      "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md",
+      "docs/tasks/README.md",
+      "docs/tasks/tasks-team.json",
+      "docs/tasks/tasks-team/.shardrc.json",
+      "docs/tasks/tasks-team/tasks-team-part-1.json"
+    ],
+    "notes": "2026-06-04 | planned | Planning-only lane for safe TEAM mirror/import reconciliation; no AAF source changes."
+  }
+]
