@@ -111,5 +111,61 @@
     },
     "completed_at": "2026-05-09",
     "completed_by_agent": "GitHubCopilot"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0122",
+    "title": "repair-closure protected-state commit context alignment",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "implementation",
+    "phase": "M16",
+    "created": "2026-06-04",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Repair the closure tooling bug where tasks repair-closure on the current HEAD misidentifies targetCommit and the protected-state pre-commit rejects staged evidence when same-task task JSON or task-event context is missing. This card plans the ATM toolchain fix only; it does not touch AAF source in Phase 0.",
+    "related": [
+      "TASK-AAO-0113",
+      "TASK-AAO-0114"
+    ],
+    "depends": [],
+    "acceptance": [
+      "tasks repair-closure staged output either includes legal same-task context or emits an explicit valid next action",
+      "protected-state pre-commit does not misidentify targetCommit when same-task context is missing",
+      "the toolchain bug is isolated from TASK-AAO-0113 source repair and from push/LICENSE/remote-behind handling"
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0122-repair-closure-protected-state-commit-context-alignment.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for repair-closure protected-state commit context alignment | blocker: none | risk: toolchain context misalignment / protected-state pre-commit false negatives",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

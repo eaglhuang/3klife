@@ -18,8 +18,8 @@
   "summary": {
     "done": 128,
     "in_progress": 4,
-    "open": 7,
-    "total": 139
+    "open": 8,
+    "total": 140
   },
   "shards": [
     {
@@ -72,7 +72,7 @@
       "title": "Part 6 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-6.json",
       "count": 2,
-      "bytes": 8200,
+      "bytes": 8383,
       "lines": 163,
       "layout": "sticky-least-pool"
     },
@@ -171,8 +171,8 @@
       "title": "Part 17 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-17.json",
       "count": 3,
-      "bytes": 7495,
-      "lines": 161,
+      "bytes": 7554,
+      "lines": 162,
       "layout": "sticky-least-pool"
     },
     {
@@ -522,8 +522,8 @@
       "title": "Part 56 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-56.json",
       "count": 3,
-      "bytes": 7935,
-      "lines": 205,
+      "bytes": 7969,
+      "lines": 206,
       "layout": "sticky-least-pool"
     },
     {
@@ -582,11 +582,11 @@
     },
     {
       "name": "tasks-atm-part-63",
-      "title": "Part 63 (sticky-least-pool, 2 items)",
+      "title": "Part 63 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-63.json",
-      "count": 2,
-      "bytes": 5578,
-      "lines": 115,
+      "count": 3,
+      "bytes": 7910,
+      "lines": 171,
       "layout": "sticky-least-pool"
     },
     {
