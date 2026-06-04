@@ -42,6 +42,7 @@ Source: `C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`
 | `fingerprintProfile` schema 與命名 `CID.Strict / Interface / Effects / Semantic / Behavior` | E0 / E1+ |
 | `CID.Effects`：**復用並擴充既有 `dependencyPolicy`**（OQ#2 已裁決）；scanner 輸出衍生 `observedEffects` / capability findings | E1 |
 | effects-aware 替換相容性閘（純函數 vs IO 不可替換） | E1 |
+| `Active Resource Index` / `Scope Lease Registry`（既有 scope-lock 的可觀測索引與規則層，非第二個 Git / 非新權威 task store） | E2 |
 | `leaseEpoch`（fencing token）+ wait-for graph 死鎖偵測 + symbol-scope lease | E2 |
 | closure attestation 欄位 `runnerKind / runtimeVersion / sandboxPolicyHash / attestationSigner` | E3 |
 | capability sandbox（候選 = Deno 權限模型）+ quarantine | E3 |
@@ -123,6 +124,20 @@ Source: `C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`
 
 - 現況：`leaseId + heartbeatAt + ttlSeconds`。
 - 新增：`leaseEpoch` fencing、wait-for graph 死鎖偵測、symbol-scope lease、glob 過寬規則、released-tombstone 誤判測試。
+- E2 primitive 定義：
+  - `Active Resource Index`：目前所有活躍 lease / holder / resource scope / heartbeat / TTL / epoch 的可觀測索引，用於衝突 preflight、stale holder 判定與 deadlock diagnostics。
+  - `Scope Lease Registry`：scope-lock / taskDirectionLock / governance-local store 的權威登錄視圖；記錄誰持有何種 resource、何時取得、何時釋放、對應 `leaseEpoch`。它不得成為第二套 task ledger、第二套 Git，或內容版本真相來源。
+  - `leaseEpoch`：monotonic fencing token。任何 acquire / transfer / release 後，舊 holder 不得再成功釋放、轉交或以舊 epoch 完成 close。
+  - `wait-for graph`：deterministic deadlock diagnostic。只判斷 lease dependency 是否成環；成環 fail，不做模糊推論、不自動調度。
+- 與 Team Agents 分工：CID E2 defines the concurrency primitive；Team Agents adopts the concurrency contract。Team Agents 可把 Index/Registry 接到 `team status`、`team lease/release` 與 validator，但不可用它建立新 scheduler。
+- deployment 適配度（現況評分，非已實作承諾）：
+
+| 情境 | 目前適配度 | E2 補強後目標 | 不適合 / 需補強處 |
+|---|---:|---:|---|
+| A. 單一人類本機使用多個 AI 工具 | 8.5 / 10 | 9 / 10 | 主要缺口是未整合工具可能繞過 CLI；E2 可提高 stale holder 與 scope overlap 可見度。 |
+| B. 多個人類各自電腦開發同一 repo | 6 / 10 | 7 / 10 | 本機 `.atm/runtime` 不天然跨機同步；仍需 Git/PR/CI、遠端 issue tracker 或 central lease adapter。 |
+| C. 多 Agent 在同一 server / agent framework 跑同一 repo | 5 / 10 | 8 / 10 | 現況共用 working tree 多寫入風險高；需 tool proxy、per-agent worktree/branch/patch queue、fencing 與 wait-for diagnostics。 |
+
 - 威脅：並發非惡意。
 - 驗證：`validate:scheduler`。
 
@@ -190,7 +205,7 @@ E0（唯一第一階段，0001 → 0002 → 0003）
 | `TASK-CID-0002` | E0 | CID semantics + fingerprintProfile schema | AI-Atomic-Framework |
 | `TASK-CID-0003` | E0 | 擴充 validate:semantic-fingerprint 確定性測試 | AI-Atomic-Framework |
 | `TASK-CID-0004` | E1 | dependencyPolicy 擴充 / CID.Effects 設計草案 | 3KLife |
-| `TASK-CID-0005` | E2 | Team lease TTL / heartbeat / fencing 對齊 TASK-TEAM-0018 | 3KLife |
+| `TASK-CID-0005` | E2 | Active Resource Index / Scope Lease Registry / Team lease TTL / heartbeat / fencing 對齊 TASK-TEAM-0018 | 3KLife |
 | `TASK-CID-0006` | E3 | closure attestation / sandbox wording 對齊 TASK-TEAM-0019 | 3KLife |
 | `TASK-CID-0007` | E5 | Trust Tier 責任矩陣與 promotion gate | 3KLife |
 
@@ -203,6 +218,7 @@ E0（唯一第一階段，0001 → 0002 → 0003）
 - **目錄與卡前綴**：`docs/ai_atomic_framework/cid-hardening/` + `TASK-CID-*`，獨立 lane（與 APF / TEAM 並列）。
 - **CID.Effects 與既有 dependencyPolicy**：採用**復用並擴充既有 `dependencyPolicy`**。E1 階段不新增 top-level `effectTags` 欄位。scanner 可以輸出衍生的 `observedEffects` / capability findings，但宣告式合約仍以 `dependencyPolicy` 為主。
 - **fingerprintProfile 遷移**：允許以 additive / optional / 向後相容方式進行 spec schema 版本 bump。`fingerprintProfile` 必須是選填欄位，不得設為 required。既有 fixtures / registry entries 不需要回填也必須維持有效。`additionalProperties:false` 繼續保留，新欄位必須正式寫入 schema。
+- **E2 併發責任切分**：CID E2 定義 `Active Resource Index` / `Scope Lease Registry` / `leaseEpoch` / wait-for graph 等 primitive；Team Agents 只採用此 contract 做 runtime 顯示、lease validator 與 diagnostics，不建立第二個 task scheduler 或 Git 替代層。
 
 **仍待裁決**：無（v3.1 起所有 OQ 已關閉）。
 

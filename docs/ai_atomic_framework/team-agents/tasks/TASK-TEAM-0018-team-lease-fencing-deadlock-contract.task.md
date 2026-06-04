@@ -34,6 +34,7 @@ validators:
   - "npm run typecheck"
   - "npm run validate:cli"
   - "node --strip-types scripts/validate-team-agents.ts --case fencing-deadlock"
+  - "node --strip-types scripts/validate-team-agents.ts --case active-resource-index-readonly"
   - "node --strip-types scripts/validate-governance-local.ts"
   - "git diff --check"
 evidence:
@@ -50,6 +51,8 @@ outOfScope:
   - "Subagent spawning"
   - "Pre-tool or pre-commit enforcement"
   - "Symbol-scope lease enforcement before Atomization Planner provides symbol inventory"
+  - "Task dispatch, queue management, claim/reserve/promote/close decisions, or any second scheduler behavior"
+  - "Mutating Active Resource Index / Scope Lease Registry outside the owning scope-lock or governance-local store commands"
   - "Manual edits under .atm/runtime/** or .atm/history/**"
 nonGoals:
   - "Do not make Team Agents a second task scheduler"
@@ -73,6 +76,9 @@ nonGoals:
 3. 新增 wait-for graph diagnostic：同一 team run 內若 lease dependency 出現直接 cycle，validator 回報 fail。
 4. 擴充 released tombstone 測試：release 後重新 acquire 必須覆寫舊 active owner，且舊 holder 不可再成功釋放或轉交。
 5. `file.write` lease 仍必須是 task allowedFiles 子集；fencing token 不能放寬 allowedFiles。
+6. Team Agents 只讀消費 CID E2 定義的 `Active Resource Index` / `Scope Lease Registry`，用於呈現 active holder、resource key、lease epoch、heartbeat、TTL 與 wait-for dependency。
+7. `Active Resource Index` 是既有 scope-lock / taskDirectionLock / governance-local store 的可觀測索引與規則層，不是新的權威資料庫，也不是第二個 Git。
+8. 0018 不產生 task dispatch、queue promotion、claim、close、commit 或下一張卡排序；它只產出 deterministic diagnostics / validator result。
 
 ## Acceptance Criteria
 
@@ -81,6 +87,8 @@ nonGoals:
 - Wait-for graph direct cycle fail；acyclic dependency pass。
 - Released tombstone re-acquire path 有明確測試，不只測 `released: true`。
 - No source path outside task allowedFiles can be authorized through Team lease.
+- Active Resource Index / Scope Lease Registry consumer is read-only: it may report conflicts and stale holders, but it must not mutate task ledger, promote queues, claim work, close tasks, or rewrite registry ownership.
+- Symbol-scope lease is diagnostic/advisory only until Atomization Planner provides reliable symbol inventory.
 
 ## Validators
 
@@ -88,6 +96,7 @@ nonGoals:
 npm run typecheck
 npm run validate:cli
 node --strip-types scripts/validate-team-agents.ts --case fencing-deadlock
+node --strip-types scripts/validate-team-agents.ts --case active-resource-index-readonly
 node --strip-types scripts/validate-governance-local.ts
 git diff --check
 ```
@@ -96,3 +105,4 @@ git diff --check
 
 - 若實作需要新增 long-lived scheduler service，先停下來回 Captain decision；本卡只允許 CLI/runtime helper 級別的 deterministic validator。
 - 若 symbol-scope lease 需要 AST/symbol inventory，先只輸出 advisory finding，正式 enforcement 留給後續 Atomization Planner 任務。
+- 若需要把 Active Resource Index / Scope Lease Registry 變成跨機共享服務、檔案監控資料庫或 Git 替代層，先停下來拆成 CID E2 架構卡；0018 只能接既有 scope-lock / governance-local store 的觀測面。
