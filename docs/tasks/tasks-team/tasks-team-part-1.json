@@ -30,14 +30,13 @@
       "The route can be handed to Captain after route check."
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md",
-      "docs/ai_atomic_framework/team-agents/tasks/README.md",
-      "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md",
-      "docs/tasks/README.md",
-      "docs/tasks/tasks-team.json",
-      "docs/tasks/tasks-team/.shardrc.json",
-      "docs/tasks/tasks-team/tasks-team-part-1.json"
+      "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json",
+      "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json",
+      "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json",
+      "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**",
+      "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**",
+      "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
     ],
-    "notes": "2026-06-04 | planned | Planning bridge for safe TEAM mirror/import reconciliation; Phase 1 target_repo=AI-Atomic-Framework; no AAF source changes."
+    "notes": "2026-06-04 | planned | Route-visible machine fields expose the safe TEAM mirror/import subset for AAF handoff; no AAF source changes."
   }
 ]

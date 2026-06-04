@@ -10,7 +10,7 @@
   "shards": [
     {
       "name": "tasks-team-part-1",
-      "title": "Part 1 (TEAM safe mirror/import lane, AAF handoff, 1 items)",
+      "title": "Part 1 (TEAM safe mirror/import lane, AAF route-visible safe subset, 1 items)",
       "pattern": "^TASK-TEAM-0026$"
     }
   ]

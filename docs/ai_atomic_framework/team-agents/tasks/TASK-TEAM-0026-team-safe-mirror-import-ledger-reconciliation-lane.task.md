@@ -14,21 +14,19 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
-  - "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
-  - "docs/ai_atomic_framework/team-agents/tasks/README.md"
-  - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md"
-  - "docs/tasks/README.md"
-  - "docs/tasks/tasks-team.json"
-  - "docs/tasks/tasks-team/.shardrc.json"
-  - "docs/tasks/tasks-team/tasks-team-part-1.json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
 deliverables:
-  - "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
-  - "docs/ai_atomic_framework/team-agents/tasks/README.md"
-  - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md"
-  - "docs/tasks/README.md"
-  - "docs/tasks/tasks-team.json"
-  - "docs/tasks/tasks-team/.shardrc.json"
-  - "docs/tasks/tasks-team/tasks-team-part-1.json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
 validators:
   - "npm.cmd run check:encoding:touched -- --files docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md docs/ai_atomic_framework/team-agents/tasks/README.md docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md docs/tasks/README.md docs/tasks/tasks-team.json docs/tasks/tasks-team/.shardrc.json docs/tasks/tasks-team/tasks-team-part-1.json"
   - "node tools_node/shard-manager.js validate docs/tasks/tasks-team"
@@ -43,11 +41,11 @@ atomizationImpact:
   mapUpdates: []
   notes: "Planning-only lane; downstream AAF implementation remains a separate target-repo card."
 outOfScope:
-  - "C:/Users/User/AI-Atomic-Framework/**"
+  - "C:/Users/User/AI-Atomic-Framework/packages/**"
   - "C:/Users/User/AI-Atomic-Framework/.atm/history/evidence/**"
-  - "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/**"
   - "C:/Users/User/AI-Atomic-Framework/scripts/**"
   - "C:/Users/User/AI-Atomic-Framework/release/**"
+  - "C:/Users/User/AI-Atomic-Framework/.atm/runtime/**"
   - "C:/Users/User/AI-Atomic-Framework/.playwright-mcp/**"
   - "C:/Users/User/AI-Atomic-Framework/scratch/**"
   - "C:/Users/User/AI-Atomic-Framework/claim_out.json"
@@ -129,6 +127,7 @@ This card does not perform the reconciliation itself. It opens the planning cont
 - Do not touch `TASK-TEAM-0020..0024`.
 - Do not touch AAO tasks.
 - Keep the ledger compact so route checks stay fast and disk pressure stays low.
+- The top-level `scopePaths` / `deliverables` mirror the route-visible AAF safe subset so the importer does not need to infer it from `dispatch_pattern`.
 
 ## Phase 1 Candidate Scope
 
@@ -147,13 +146,12 @@ This card does not perform the reconciliation itself. It opens the planning cont
 
 ## Deliverables
 
-- `docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md`
-- `docs/ai_atomic_framework/team-agents/tasks/README.md`
-- `docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md`
-- `docs/tasks/README.md`
-- `docs/tasks/tasks-team.json`
-- `docs/tasks/tasks-team/.shardrc.json`
-- `docs/tasks/tasks-team/tasks-team-part-1.json`
+- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json`
+- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json`
+- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json`
+- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**`
+- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**`
+- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**`
 
 ## Validators
 
