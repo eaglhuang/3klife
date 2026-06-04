@@ -127,8 +127,7 @@
     "deliverables": [
       "packages/cli/dist/**",
       "release/atm-onefile/**",
-      "release/atm-root-drop/**",
-      "TASK-AAO-0125 target repo closure records"
+      "release/atm-root-drop/**"
     ],
     "notes": "2026-06-04 | open | scope: runner sync only after TASK-AAO-0124 | no source changes",
     "brief": {

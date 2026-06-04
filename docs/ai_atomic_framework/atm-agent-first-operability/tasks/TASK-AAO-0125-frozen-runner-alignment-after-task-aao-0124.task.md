@@ -56,7 +56,6 @@ The build outputs must be synchronized in a separate card so TASK-AAO-0124 stays
 - packages/cli/dist/**
 - release/atm-onefile/**
 - release/atm-root-drop/**
-- TASK-AAO-0125 target repo closure records.
 
 ## Context Map
 
