@@ -128,12 +128,13 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "Phase 0 planning card for task import refresh active-claim protection. The import write path must not overwrite active claim, running status, owner, startedAt, or taskDirectionLock. Route check remains read-only and must surface unsafe warning or blocked guidance when it points toward a write path.",
+    "description": "Phase 0 planning card for task import refresh active-claim protection. Phase 0 planning surfaces stay narrative-only, while route-visible scope stays on the AAF candidate surfaces that actually need toolchain work. The import write path must not overwrite active claim, running status, owner, startedAt, or taskDirectionLock.",
     "related": [],
     "depends": [],
     "acceptance": [
       "tasks import --write and --force do not overwrite active claim, running status, owner, startedAt, or taskDirectionLock.",
       "node atm.mjs next remains read-only and any write suggestion surfaces unsafe warning or blocked guidance.",
+      "Phase 0 planning files remain narrative-only and do not become route-visible AAF source scope.",
       "TEAM import runtime commits stay blocked until the guard is fixed.",
       "Phase 0 stays in 3KLife only and does not mutate AAF source."
     ],
@@ -143,7 +144,7 @@
       "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
       "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
     ],
-    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for active-claim import refresh guard | blocker: active claim overwrite risk | risk: task import refresh can clear claim/owner/taskDirectionLock",
+    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for active-claim import refresh guard | blocker: active claim overwrite risk | risk: task import refresh can clear claim/owner/taskDirectionLock; route-visible scope must stay on the AAF candidate surfaces",
     "brief": {
       "style": "classic",
       "label": "",

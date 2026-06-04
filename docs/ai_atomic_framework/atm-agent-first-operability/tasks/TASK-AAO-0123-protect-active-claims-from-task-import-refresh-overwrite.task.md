@@ -23,15 +23,18 @@ closure_authority: target_repo
 related: []
 depends: []
 allowed_files:
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0123-protect-active-claims-from-task-import-refresh-overwrite.task.md
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/task-direction.ts
+  - C:/Users/User/AI-Atomic-Framework/scripts/validate-task-import.ts
+  - C:/Users/User/AI-Atomic-Framework/scripts/validate-task-ledger-governance.ts
 forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/**
-  - C:/Users/User/3KLife/.atm/**
-  - C:/Users/User/3KLife/.tmp/**
-  - C:/Users/User/3KLife/examples/**
+  - AAF history and runtime mutation surfaces.
+  - AAF release, dist, and build outputs.
+  - scratch and browser runtime noise.
+  - TEAM import runtime commits or manual cleanup.
+  - TASK-AAO-0113 evidence repair.
+  - TASK-AAO-0122 repair-closure implementation.
 non_goals:
   - "Do not mutate AAF source in Phase 0."
   - "Do not continue TEAM import commit while active claims remain vulnerable."
@@ -53,13 +56,14 @@ This is a toolchain gap, not a one-off operator mistake.
 Phase 0 only opens the planning card and keeps AAF source untouched.
 
 ## Phase 0 Scope
-- Keep this card in 3KLife only.
+- Keep this card in 3KLife planning only.
 - Update only the 3KLife planning ledger and shard.
+- The planning card, tasks-atm index, shard, and shardrc stay narrative-only and do not become route-visible AAF source scope.
 - Do not touch AAF source in this turn.
 - Do not continue TEAM import commit while active claims are still vulnerable.
 - Keep this issue separate from TASK-AAO-0113 evidence repair and TASK-AAO-0122 protected-state commit context alignment.
 
-## Phase 1 Candidate Allowed Files
+## Route-Visible Phase 1 Candidate Allowed Files
 - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts`
 - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts`
 - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/task-direction.ts` only if claim-lock interpretation is needed
@@ -67,24 +71,27 @@ Phase 0 only opens the planning card and keeps AAF source untouched.
 - `C:/Users/User/AI-Atomic-Framework/scripts/validate-task-ledger-governance.ts`
 - focused tests / fixtures only if needed
 
-## Phase 1 Forbidden Files
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/**`
-- `C:/Users/User/AI-Atomic-Framework/release/**`
-- `C:/Users/User/AI-Atomic-Framework/scratch/**`
-- `C:/Users/User/AI-Atomic-Framework/.playwright-mcp/**`
-- TASK-AAO-0113 evidence repair
-- TASK-AAO-0122 repair-closure implementation
-- TEAM import runtime commits / manual cleanup
+## Route-Visible Phase 1 Forbidden Surfaces
+- AAF history and runtime mutation surfaces.
+- AAF release, dist, and build outputs.
+- scratch and browser runtime noise.
+- TEAM import runtime commits or manual cleanup.
+- TASK-AAO-0113 evidence repair.
+- TASK-AAO-0122 repair-closure implementation.
 
 ## Validators
-- `node tools_node/check-encoding-touched.js --files <touched>`
-- `git diff --check`
-- `node tools_node/check-doc-shard-health.js`
-- `node atm.mjs next --prompt "TASK-AAO-0123" --json`
-- `npm run validate:cli`
-- `npm run typecheck`
-- `node --strip-types scripts/validate-task-import.ts --mode validate`
-- `node --strip-types scripts/validate-task-ledger-governance.ts --mode validate`
+
+### Phase 0 Planning Validators
+- Local encoding check on touched planning files.
+- Clean diff check before commit.
+- doc shard health check; if repo-wide unmanaged docs noise fails it, report the noise rather than widening scope.
+
+### Phase 1 AAF Validators
+- CLI import contract validation evidence.
+- task import guard validation evidence.
+- task-ledger governance validation evidence.
+- typecheck evidence.
+- Route check must stay read-only and must surface unsafe guidance if an import write path would overwrite an active claim or lock state.
 
 ## Rollback Hint
 If the import refresh guard proves broader than the Phase 1 candidate files, keep the 0123 planning card open and split the unsafe warning / blocked-guidance work into a follow-up card.
