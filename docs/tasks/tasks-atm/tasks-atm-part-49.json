@@ -126,5 +126,62 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0126",
+    "title": "allow release runner outputs as task deliverables",
+    "owner": "codex-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "open",
+    "type": "implementation",
+    "phase": "M16",
+    "created": "2026-06-04",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Fix ATM deliverable gate so runner-sync tasks can close done when scoped runner outputs are the real delivery.",
+    "related": [
+      "TASK-AAO-0125",
+      "TASK-AAO-0124"
+    ],
+    "depends": [
+      "TASK-AAO-0125"
+    ],
+    "acceptance": [
+      "TASK-AAO-0125-style historical delivery commit with scoped onefile runner outputs is recognized as a real deliverable",
+      "Non-runner tasks still exclude generic build/runtime noise from deliverable gate",
+      "Regression covers the two onefile runner outputs that changed in TASK-AAO-0125",
+      "No runner build outputs, release artifacts, dist artifacts, runtime locks, or TEAM mirror/import residue are generated or committed by this source card"
+    ],
+    "deliverables": [
+      "packages/cli/src/commands/tasks.ts",
+      "scripts/validate-task-ledger-governance.ts"
+    ],
+    "notes": "2026-06-04 | open | follow-up from TASK-AAO-0125: deliverable gate excludes runner release outputs, blocking runner-sync done closure despite real delivery commit",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
