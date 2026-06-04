@@ -133,5 +133,83 @@
     },
     "completed_at": "2026-05-09",
     "completed_by_agent": "vs-insiders-gpt-5.3-codex"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0127",
+    "task_id": "TASK-AAO-0127",
+    "title": "frozen runner alignment after TASK-AAO-0126",
+    "owner": "codex-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "open",
+    "type": "implementation",
+    "phase": "M16",
+    "created": "2026-06-04",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "target_repo": "AI-Atomic-Framework",
+    "planning_repo": "3KLife",
+    "closure_authority": "target_repo",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Synchronize frozen ATM onefile runner outputs after TASK-AAO-0126 changed framework source and made the stable runner report stale output.",
+    "related": [
+      "TASK-AAO-0126",
+      "TASK-AAO-0125"
+    ],
+    "depends": [
+      "TASK-AAO-0126"
+    ],
+    "allowed_files": [
+      "release/atm-onefile/atm.mjs",
+      "release/atm-onefile/release-manifest.json"
+    ],
+    "forbidden_files": [
+      "framework source surfaces",
+      "task lifecycle source surfaces",
+      "task runtime state",
+      "unrelated TEAM mirror/import residue",
+      "push or remote synchronization"
+    ],
+    "acceptance": [
+      "The framework build completes successfully in AI-Atomic-Framework.",
+      "The stable runner route for TASK-AAO-0127 no longer reports a stale runner notice.",
+      "Target-repo diff contains only declared onefile runner outputs.",
+      "No source command surfaces, task lifecycle source surfaces, runtime noise, or TEAM mirror/import residue are staged or committed."
+    ],
+    "deliverables": [
+      "release/atm-onefile/atm.mjs",
+      "release/atm-onefile/release-manifest.json"
+    ],
+    "validators": [
+      "Framework build command",
+      "Stable runner route check for TASK-AAO-0127",
+      "Diff name-status check",
+      "Diff whitespace check"
+    ],
+    "notes": "2026-06-04 | open | runner sync only after TASK-AAO-0126; no source changes",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
