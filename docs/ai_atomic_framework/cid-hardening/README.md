@@ -23,7 +23,7 @@
 ## 開卡順序
 
 1. **E0 最小閉環（先收口）**：`TASK-CID-0001` → `0002` → `0003`
-2. **E2 設計優先**（對齊已 draft 的 `TASK-TEAM-0018`）：`TASK-CID-0005`
+2. **P0 核心能力**（CID-first parallel conflict advisor）：`TASK-CID-0005`
 3. **E1 / E3 / E5 設計**（可平行排）：`TASK-CID-0004`、`0006`、`0007`
 
 詳見 [tasks/README.md](./tasks/README.md)。

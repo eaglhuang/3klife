@@ -28,6 +28,7 @@ Source: `C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`
 | 現況 CID 是**三條獨立線**：capsule `atom:cid`/`map:cid`、`hashLock`、`semanticFingerprint`。 | capsule / hash-lock.ts / semantic-fingerprint.ts |
 | atom spec 與 registry schema 為 `additionalProperties:false`（加新欄位需 schema 遷移）。 | `schemas/atomic-spec.schema.json:6` |
 | 語言轉接器目前**只做 import / entrypoint / dry-run planning，無 effect scanner**。 | `language-js-adapter.ts:35`、`language-python-adapter.ts:81` |
+| `TASK-CID-0005` P0：CID-first parallel conflict advisor CLI contract（先用 `atom_id` / `atom_cid` 判斷語意衝突，再看 file overlap、lease 狀態與 registry / graph；`CID conflict = semantic conflict`；`CID disjoint + file overlap = needs-physical-split`） | P0 |
 | scope-lock 現況 = `leaseId + heartbeatAt + ttlSeconds`；`taskDirectionLock.allowedFiles`；team permission validation。**無 leaseEpoch / wait-for graph / symbol-scope lease。** | scope-lock / stores（LockStore） |
 | closure-packet 有 `commandRuns / stdoutSha256 / exitCode`；但 `runnerVersion` **≈ framework version，非 sandbox / OS / runtime attestation**。 | closure-packet schema / 生成器 |
 | Police = advisory、`DEFAULT_POLICE_DAILY_CAP`、`suppressionKey`、`directApplyAllowed:false`、`ReviewAdvisory / HumanReviewDecision` 皆已存在。 | `packages/core/src/police/family.ts` |
@@ -177,7 +178,7 @@ Source: `C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`
 ```
 E0（唯一第一階段，0001 → 0002 → 0003）
         ↓
-        ├─→ E2 planning（0005，對齊 TASK-TEAM-0018 已 draft）優先
+        ├─→ P0 formal card（0005，CID-first parallel conflict advisor）優先
         ├─→ E1 planning（0004，可平行設計，不搶先實作）
         ├─→ E3 planning（0006，對齊 TASK-TEAM-0019）
         └─→ E5 治理 planning（0007）
@@ -205,7 +206,7 @@ E0（唯一第一階段，0001 → 0002 → 0003）
 | `TASK-CID-0002` | E0 | CID semantics + fingerprintProfile schema | AI-Atomic-Framework |
 | `TASK-CID-0003` | E0 | 擴充 validate:semantic-fingerprint 確定性測試 | AI-Atomic-Framework |
 | `TASK-CID-0004` | E1 | dependencyPolicy 擴充 / CID.Effects 設計草案 | 3KLife |
-| `TASK-CID-0005` | E2 | Active Resource Index / Scope Lease Registry / Team lease TTL / heartbeat / fencing 對齊 TASK-TEAM-0018 | 3KLife |
+| `TASK-CID-0005` | P0 | CID-first parallel conflict advisor CLI contract | 3KLife |
 | `TASK-CID-0006` | E3 | closure attestation / sandbox wording 對齊 TASK-TEAM-0019 | 3KLife |
 | `TASK-CID-0007` | E5 | Trust Tier 責任矩陣與 promotion gate | 3KLife |
 
@@ -213,7 +214,7 @@ E0（唯一第一階段，0001 → 0002 → 0003）
 
 **已裁決（v3.1）**：
 
-- E0 為唯一第一階段最小閉環；E0 後**先排 E2 planning**（`TASK-TEAM-0018` 已 draft），E1 Effects 可設計但不搶先實作。
+- E0 為唯一第一階段最小閉環；E0 後**先開 P0 formal card**（`TASK-CID-0005`，CID-first parallel conflict advisor），E1 Effects 可設計但不搶先實作。
 - `TASK-CID-0004 ~ 0007` 均維持 planning_repo，定稿後再拆 AAF 實作卡。
 - **目錄與卡前綴**：`docs/ai_atomic_framework/cid-hardening/` + `TASK-CID-*`，獨立 lane（與 APF / TEAM 並列）。
 - **CID.Effects 與既有 dependencyPolicy**：採用**復用並擴充既有 `dependencyPolicy`**。E1 階段不新增 top-level `effectTags` 欄位。scanner 可以輸出衍生的 `observedEffects` / capability findings，但宣告式合約仍以 `dependencyPolicy` 為主。
