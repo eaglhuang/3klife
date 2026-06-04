@@ -131,24 +131,26 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "Phase 0 planning card for the ATM framework bug. Absolute and relative paths must be normalized onto the same base before taskDirectionLock, pre-commit, close, and hook scope checks compare scope surfaces. This card stays in 3KLife planning only and does not touch AAF source.",
+    "description": "Phase 1 scope amendment for the ATM framework bug. Absolute and relative paths must be normalized onto the same base before taskDirectionLock, pre-commit, close, and hook scope checks compare scope surfaces. Frontmatter allowed_files is now the target-repo import scope for AAF claim.",
     "related": [
       "TASK-AAO-0120",
       "TASK-AAO-0123"
     ],
     "depends": [],
     "acceptance": [
-      "Phase 0 only updates 3KLife planning card, tasks-atm ledger, and shard",
+      "AAF tasks import can claim TASK-AAO-0124 with target-repo Phase 1 source scope",
       "Absolute and relative paths normalize to the same base before taskDirectionLock / pre-commit / close / hook scope comparison",
       "This card does not handle 007 runtime lock hand edits, TEAM import dirty, or TASK-AAO-0113 closure packet repair"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0124-normalize-absolute-and-relative-paths-in-task-direction-and-hook-scope-checks.task.md",
-      "docs/tasks/tasks-atm.json",
-      "docs/tasks/tasks-atm/tasks-atm-part-54.json",
-      "docs/tasks/tasks-atm/.shardrc.json"
+      "packages/cli/src/commands/hook.ts",
+      "packages/cli/src/commands/tasks.ts",
+      "packages/cli/src/commands/task-direction.ts",
+      "packages/cli/src/commands/framework-development.ts",
+      "scripts/validate-git-hooks-enforcement.ts",
+      "scripts/validate-task-ledger-governance.ts"
     ],
-    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for absolute/relative path scope normalization guard | blocker: none",
+    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 1 import scope amendment for absolute/relative path normalization guard | blocker: none",
     "brief": {
       "style": "classic",
       "label": "",

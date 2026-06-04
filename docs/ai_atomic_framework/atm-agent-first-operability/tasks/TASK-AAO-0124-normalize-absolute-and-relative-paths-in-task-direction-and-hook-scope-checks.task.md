@@ -25,15 +25,17 @@ related:
   - TASK-AAO-0123
 depends: []
 allowed_files:
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0124-normalize-absolute-and-relative-paths-in-task-direction-and-hook-scope-checks.task.md
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-54.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
+  - packages/cli/src/commands/hook.ts
+  - packages/cli/src/commands/tasks.ts
+  - packages/cli/src/commands/task-direction.ts
+  - packages/cli/src/commands/framework-development.ts
+  - scripts/validate-git-hooks-enforcement.ts
+  - scripts/validate-task-ledger-governance.ts
 forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/**
   - C:/Users/User/3KLife/.atm/**
   - C:/Users/User/3KLife/.tmp/**
   - C:/Users/User/3KLife/release/**
+  - release/**
   - scratch / .playwright-mcp / claim_out.json
   - any direct runtime lock edits
 non_goals:
@@ -67,6 +69,12 @@ It also does not touch TASK-AAO-0113 closure packet repair.
 - Do not turn `007` runtime lock hand edits into this card's remediation.
 - Do not fold TEAM import dirty repair into this card.
 - Do not fold TASK-AAO-0113 closure packet repair into this card.
+
+## Phase 1 Scope Amendment
+- Frontmatter `allowed_files` is now the target-repo Phase 1 import scope, not the historical Phase 0 planning write scope.
+- This is required because AAF `tasks import` imports frontmatter as executable target scope before `next --claim`.
+- 3KLife planning files remain historical Phase 0 deliverables only and must not be mutated by AAF Phase 1.
+- Broad `C:/Users/User/AI-Atomic-Framework/**` is intentionally removed from `forbidden_files`; otherwise it subtracts the target implementation scope during import.
 
 ## Phase 1 Candidate Allowed Files
 - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/hook.ts`
