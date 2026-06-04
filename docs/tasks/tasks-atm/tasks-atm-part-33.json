@@ -131,5 +131,64 @@
       "position": "ATM-2",
       "prereq": "ATM-2-0003 / ATM-2-0023"
     }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0128",
+    "title": "task-card route scope pollution guard for clean single-card import",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-04",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for the ATM route/import pollution bug. When TASK-TEAM-0026 machine fields are clean, next/import route checks must not absorb nearby plan prose or permission sample paths into targetAllowedFiles. This card stays in 3KLife planning only and does not touch AAF source.",
+    "related": [
+      "TASK-TEAM-0026",
+      "TASK-AAO-0120",
+      "TASK-AAO-0124"
+    ],
+    "depends": [],
+    "acceptance": [
+      "Importing a single TASK-TEAM-0026 card returns only the safe subset",
+      "next --prompt TASK-TEAM-0026 targetAllowedFiles must not include packages/cli/src/commands",
+      "next --prompt TASK-TEAM-0026 targetAllowedFiles must not include docs/tasks/*",
+      "Nearby plan prose and permission examples must not become route-visible scope",
+      "Existing planned tasks still route normally"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0128-task-card-route-scope-pollution-guard-for-clean-single-card-import.task.md",
+      "docs/tasks/tasks-atm.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-33.json",
+      "docs/tasks/tasks-atm/.shardrc.json"
+    ],
+    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for clean single-card route scope guard | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
