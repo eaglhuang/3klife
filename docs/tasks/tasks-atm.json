@@ -18,8 +18,8 @@
   "summary": {
     "done": 130,
     "in_progress": 4,
-    "open": 8,
-    "total": 142
+    "open": 9,
+    "total": 143
   },
   "shards": [
     {
@@ -150,11 +150,11 @@
     },
     {
       "name": "tasks-atm-part-15",
-      "title": "Part 15 (sticky-least-pool, 1 items)",
+      "title": "Part 15 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-15.json",
-      "count": 1,
-      "bytes": 4550,
-      "lines": 98,
+      "count": 2,
+      "bytes": 6184,
+      "lines": 154,
       "layout": "sticky-least-pool"
     },
     {
@@ -504,8 +504,8 @@
       "title": "Part 54 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-54.json",
       "count": 3,
-      "bytes": 7788,
-      "lines": 174,
+      "bytes": 7814,
+      "lines": 176,
       "layout": "sticky-least-pool"
     },
     {
