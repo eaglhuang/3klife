@@ -139,5 +139,58 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0129",
+    "title": "taskflow open task-plan generation and opener delegation dry-run",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-04",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Open the Phase 0 planning card for taskflow open task-plan generation and opener delegation dry-run. This card is planning-only in 3KLife, targets AI-Atomic-Framework for Phase 1, and keeps the ledger/shard sync limited to the card itself.",
+    "related": [],
+    "depends": [],
+    "acceptance": [
+      "The Phase 0 planning card opens cleanly and only updates the planning ledger/shard for 0129.",
+      "The follow-up Phase 1 scope stays limited to taskflow open planning and opener delegation dry-run surfaces.",
+      "next, tasks, and task-direction remain outside this card's Phase 1 write scope.",
+      "AAF source remains untouched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0129-taskflow-open-task-plan-generation-and-opener-delegation-dry-run.task.md",
+      "docs/tasks/tasks-atm.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-41.json"
+    ],
+    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for taskflow open task-plan generation and opener delegation dry-run | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
