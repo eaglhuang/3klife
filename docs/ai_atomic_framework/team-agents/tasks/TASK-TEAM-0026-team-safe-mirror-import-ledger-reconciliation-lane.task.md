@@ -11,8 +11,8 @@ depends_on:
   - "TASK-TEAM-0020"
 related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
 planning_repo: 3KLife
-target_repo: 3KLife
-closure_authority: planning_repo
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 scopePaths:
   - "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
   - "docs/ai_atomic_framework/team-agents/tasks/README.md"
@@ -61,7 +61,7 @@ nonGoals:
   - "Do not require every agent to read the full corpus before work can start"
 dispatch_pattern:
   shape: "dual-agent (Phase 0 planning lane + Phase 1 future safe-lane builder)"
-  rationale: "Phase 0 carves the legal TEAM reconciliation lane in planning docs only; Phase 1 will later use the frozen safe subset and the forbidden fence to keep AAF source clean."
+  rationale: "Phase 0 carves the legal TEAM reconciliation lane in planning docs only; Phase 1 is handed to AI-Atomic-Framework and uses the frozen safe subset and the forbidden fence to keep AAF source clean."
   phase_0:
     lane: "helper (read-only sidecar)"
     allowed_files:
@@ -75,7 +75,7 @@ dispatch_pattern:
     commit_budget: 0
     output: "Phase 1 brief that freezes the safe TEAM mirror/import subset, names the forbidden residue, and defines the future commit lane."
   phase_1:
-    lane: "future batch lane"
+    lane: "AI-Atomic-Framework target_repo batch lane"
     allowed_files:
       - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json"
       - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json"
@@ -132,6 +132,8 @@ This card does not perform the reconciliation itself. It opens the planning cont
 
 ## Phase 1 Candidate Scope
 
+- target_repo: `AI-Atomic-Framework`
+- closure_authority: `target_repo`
 - Safe subset:
   - `.atm/history/tasks/TASK-TEAM-0001.json` through `TASK-TEAM-0019.json`
   - `.atm/history/tasks/TASK-TEAM-0025.json`
@@ -174,5 +176,5 @@ Revert the TEAM planning docs, ledger file, shard config, and shard part togethe
 
 ## Notes
 
-This card is planning-only. A later governed route check must still happen before any actual TEAM subset commit is attempted.
+This card is planning-only in Phase 0. Phase 1 is a target_repo handoff to AI-Atomic-Framework, and a later governed route check must still happen before any actual TEAM subset commit is attempted.
 Repository-wide doc shard health is advisory only here; it currently reports unrelated large-doc noise outside the TEAM lane.

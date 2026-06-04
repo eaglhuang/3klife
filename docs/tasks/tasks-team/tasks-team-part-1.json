@@ -10,6 +10,9 @@
     "phase": "M4R",
     "created": "2026-06-04",
     "created_by_agent": "TEAM-CAPTAIN",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
     "description": "Planning-only lane that packages the safe TEAM mirror/import subset into a legal reconciliation route without touching AAF source.",
     "related": [
       "TASK-TEAM-0001",
@@ -35,6 +38,6 @@
       "docs/tasks/tasks-team/.shardrc.json",
       "docs/tasks/tasks-team/tasks-team-part-1.json"
     ],
-    "notes": "2026-06-04 | planned | Planning-only lane for safe TEAM mirror/import reconciliation; no AAF source changes."
+    "notes": "2026-06-04 | planned | Planning bridge for safe TEAM mirror/import reconciliation; Phase 1 target_repo=AI-Atomic-Framework; no AAF source changes."
   }
 ]

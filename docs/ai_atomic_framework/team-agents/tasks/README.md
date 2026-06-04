@@ -26,7 +26,7 @@ Every `TASK-TEAM-*` card follows the ATM task-card authoring contract:
 - `rollback`: revertable rollback guidance.
 - `atomizationImpact`: owner atom/map and required map updates.
 
-Planning-only cards must set `target_repo: 3KLife` and `closure_authority: planning_repo`. Framework implementation cards must set `target_repo: AI-Atomic-Framework` and `closure_authority: target_repo`.
+Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: planning_repo`. Framework implementation cards set `target_repo: AI-Atomic-Framework` and `closure_authority: target_repo`. Cross-repo reconciliation bridge cards may keep `planning_repo: 3KLife` while pointing `target_repo` at `AI-Atomic-Framework` when Phase 0 only opens the lane and Phase 1 is owned by the target repo.
 
 ## Task Roster
 
@@ -53,7 +53,7 @@ Planning-only cards must set `target_repo: 3KLife` and `closure_authority: plann
 | [TASK-TEAM-0019](./TASK-TEAM-0019-team-sandbox-attestation-closure-contract.task.md) | M6H | Team sandbox attestation and closure contract | draft | `TASK-TEAM-0016`, `TASK-TEAM-0018` | sandbox / closure hardening |
 | [TASK-TEAM-0020](./TASK-TEAM-0020-team-knowledge-storage-boundary-index-contract.task.md) | M2K | Team knowledge storage boundary and index contract | planned | `TASK-TEAM-0005`, `TASK-TEAM-0017` | knowledge contract / storage boundary |
 | [TASK-TEAM-0025](./TASK-TEAM-0025-task-import-dispatch-metadata-preservation.task.md) | M4K | Task import dispatch metadata preservation | planned | `TASK-TEAM-0017`, `TASK-TEAM-0020` | task import / canonical ledger / sidecar dispatch |
-| [TASK-TEAM-0026](./TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md) | M4R | TEAM safe mirror/import ledger reconciliation lane | planned | `TASK-TEAM-0025`, `TASK-TEAM-0020` | TEAM planning / reconciliation lane |
+| [TASK-TEAM-0026](./TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md) | M4R | TEAM safe mirror/import ledger reconciliation lane | planned | `TASK-TEAM-0025`, `TASK-TEAM-0020` | 3KLife planning -> AI-Atomic-Framework Phase 1 handoff |
 | [TASK-TEAM-0021](./TASK-TEAM-0021-team-knowledge-build-query-dry-run.task.md) | M4K | Team knowledge build and query dry-run | planned | `TASK-TEAM-0020` | knowledge build / query |
 | [TASK-TEAM-0023](./TASK-TEAM-0023-team-knowledge-retention-disk-budget-guard.task.md) | M5K | Team knowledge retention and disk budget guard | planned | `TASK-TEAM-0021` | compact / stats / budget guard |
 | [TASK-TEAM-0022](./TASK-TEAM-0022-captain-knowledge-preflight-brief-integration.task.md) | M6K | Captain knowledge preflight brief integration | planned | `TASK-TEAM-0015`, `TASK-TEAM-0021` | `next` / `team plan` guidance |
@@ -157,10 +157,10 @@ All `TASK-TEAM-0020+` cards must keep the knowledge layer advisory-only:
 
 ## Safe Mirror / Import Reconciliation Lane
 
-`TASK-TEAM-0026` is the planning-only lane for the safe TEAM mirror/import subset. It stays separate from the knowledge loop and stays thin by design.
+`TASK-TEAM-0026` is the 3KLife planning bridge for the safe TEAM mirror/import subset. Phase 0 stays in 3KLife; Phase 1 is handed to AI-Atomic-Framework via `target_repo` / `closure_authority`.
 
 - Phase 0 writes only the 3KLife planning docs, the task card, and the TEAM ledger/shard.
-- Phase 1 candidate scope is the safe AAF subset: `TASK-TEAM-0001..0019 / 0025`.
+- Phase 1 target repo is `AI-Atomic-Framework`, and the safe subset remains `TASK-TEAM-0001..0019 / 0025`.
 - The forbidden residue is `TASK-TEAM-0020..0024`, `TASK-AAO-*`, and AAF source/runtime noise.
 - The ledger stays compact so route checks stay fast and disk pressure stays low.
 
