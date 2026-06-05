@@ -96,5 +96,79 @@
         "AI-Atomic-Framework commit: e4c2f88"
       ]
     }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0131",
+    "title": "route hygiene follow-up for planning artifacts and synthetic alias scope guard",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "governance",
+    "phase": "M16",
+    "created": "2026-06-05",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Phase 0 planning card for the route hygiene follow-up that keeps planning artifacts and synthetic aliases out of route-visible scope. It stays in 3KLife planning only, uses TEAM-0026 and CID-0005 as regressions, and does not touch AI-Atomic-Framework source in Phase 0.",
+    "related": [
+      "TASK-AAO-0128",
+      "TASK-TEAM-0026",
+      "TASK-CID-0005"
+    ],
+    "depends": [],
+    "acceptance": [
+      "TEAM-0026 route must not put docs/tasks/* into targetAllowedFiles.",
+      "TEAM-0026 route must not put packages/cli/src/commands into targetAllowedFiles.",
+      "CID-0005 route must not produce a docs/.../CID synthetic alias, or any alias artifact must be explicitly marked planning read-only and must not enter target work.",
+      "A planning_repo-only task must not be mistaken for an AI-Atomic-Framework delivery route.",
+      "Phase 0 stays in 3KLife planning only and does not touch AAF source."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0131-route-hygiene-follow-up-planning-artifact-synthetic-alias-scope-guard.task.md",
+      "docs/tasks/tasks-atm.json"
+    ],
+    "notes": "2026-06-05 | status: open | validation: pending | change: Phase 0 open card for route hygiene follow-up | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [
+        "TEAM-0026 route regression evidence",
+        "CID-0005 route regression evidence",
+        "planning repo route-visible scope rules"
+      ],
+      "output": [
+        "Planning artifacts remain route-read-only for Phase 0",
+        "TEAM-0026 and CID-0005 regressions stay outside target work",
+        "Phase 1 handoff stays on the intended AAF route hygiene surfaces"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0131-route-hygiene-follow-up-planning-artifact-synthetic-alias-scope-guard.task.md docs/tasks/tasks-atm.json\ngit diff --check\nnode tools_node/check-doc-shard-health.js",
+      "rollback_hint": "Revert only the 0131 planning card plus docs/tasks/tasks-atm.json and the resolved tasks-atm shard; do not touch AI-Atomic-Framework source.",
+      "execution_steps": [
+        "Open the Phase 0 planning card in 3KLife only",
+        "Sync tasks-atm ledger and shard for 0131",
+        "Keep TEAM-0026 and CID-0005 as regressions only"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node atm.mjs next --prompt \"TASK-TEAM-0026\" --json",
+        "node atm.mjs next --prompt \"TASK-CID-0005 P0 CID-first parallel conflict advisor CLI contract\" --json",
+        "node --strip-types scripts/validate-task-import.ts --mode validate",
+        "git diff --check"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
