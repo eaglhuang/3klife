@@ -209,6 +209,9 @@ E0（唯一第一階段，0001 → 0002 → 0003）
 | `TASK-CID-0005` | P0 | CID-first parallel conflict advisor CLI contract | 3KLife |
 | `TASK-CID-0006` | E3 | closure attestation / sandbox wording 對齊 TASK-TEAM-0019 | 3KLife |
 | `TASK-CID-0007` | E5 | Trust Tier 責任矩陣與 promotion gate | 3KLife |
+| `TASK-CID-0009` | P0 | Patch Proposal Capsule contract | 3KLife |
+| `TASK-CID-0010` | P0 | Write Broker lane router contract | 3KLife |
+| `TASK-CID-0011` | P0 | Neutral Write Steward + Lead Writer Break-glass handoff contract | 3KLife |
 
 ## 7. 裁決狀態
 
@@ -242,7 +245,200 @@ E0（唯一第一階段，0001 → 0002 → 0003）
   - **抽樣與分片 (Sampling/Sharding)**：僅對變更影響範圍內的關鍵 atom/map 進行突變測試，不作全量盲測。
   - **逾時與降級 (Timeout/Degradation)**：設定嚴格的逾時時限，逾時則降級報告，不得無限期卡住背景管線。
 
-## 9. Cross-References
+## 9. P0 平行寫入治理：Write Broker / Write Agent / Git 分層
+
+### 9.1 是否過度設計
+
+這不是要把每一次寫檔都變成大型流程；如果這套機制被設計成「所有 Agent 永遠交給 Write Agent 代寫」，那就是過度設計。
+
+本計畫採用的判斷是：
+
+- **Broker always**：ATM 永遠知道誰準備改哪個 task / file / atom / CID。
+- **Writer dynamic**：只有同檔、同 projection、同 generator、同 validator、同 artifact、或 active lease 交疊時，才動態叫出 Write Agent / Steward。
+- **Isolation tiered**：平常使用輕量 patch overlay 或可回收 worktree，不要求每張小卡都開完整 sandbox。
+- **Git remains the physical history layer**：Git 不取代 ATM 語意判斷；Git 負責 base、diff、merge fallback、rollback、commit history。
+
+大白話：ATM 不要把所有車都拖進大修廠。ATM 要先裝調度雷達；只有看到兩台車要搶同一條施工道時，才派合併工。
+
+### 9.2 分層定義
+
+| 名稱 | 定義 | 不做的事 |
+|---|---|---|
+| Write Broker | ATM 的薄型寫入協調器，記錄 task、actor、target files、atom_id、atom_cid、base commit、file hash、lease epoch 與 lane decision。 | 不替 Agent 寫程式、不當第二套 scheduler、不直接改檔。 |
+| Patch Proposal Capsule | Agent 產出的可審查改動提案，包含 base、hash、anchor、range/AST hint、intent、atom/CID、validators、rollback hint。 | 不是立即寫入正式工作樹的 dirty diff。 |
+| Neutral Write Agent / Steward | 中立合併者，接收多份 proposal，產生 final patch / merge plan / evidence。 | 不擁有 A/B 任務的產品判斷，不擴大任務 scope。 |
+| Apply Engine | 實際落地 final patch 的引擎，可使用 deterministic patch apply、AST rewrite、或 Git three-way merge fallback。 | 不自行判斷任務能不能平行。 |
+| Git Layer | 保存 base、branch/worktree、diff、merge fallback、commit、rollback。 | 不知道 CID、task card、closure authority、evidence 是否乾淨。 |
+| Lead Writer Break-glass | 緊急逃生口；Write Agent 不可用且條件吻合時，才允許已施工 Agent A 暫時承接 B 的小型 patch。 | 不作為常規路線，不默默擴張 A 的任務。 |
+
+### 9.3 Lane 決策
+
+| 狀態 | Lane | 說明 |
+|---|---|---|
+| 不同 file、不同 atom/CID、無共享 generator/projection/validator/artifact | Direct Brokered Lane | Agent 自己寫，但要登記 intent 與 base hash。 |
+| 同 file、CID 不同、range/anchor 清楚 | Deterministic Composer Lane | 由 apply engine 合併 proposal；不需要 LLM Steward。 |
+| 同 file、CID 不同、雙方 patch 都有語意判斷 | Neutral Steward Lane | 中立 Write Agent 合併，不讓 A 或 B 吞掉對方任務。 |
+| 同 CID 或同 semantic atom | Mediation / Serial Lane | 不平行，需 Captain 或 ATM 判定序列化。 |
+| 共享 generator、projection、registry、index、validator、artifact | Shared Surface Guard Lane | 即使 CID 不同，也必須升級協調或拆原子。 |
+| Write Agent 不可用、A 已在同檔施工、B patch 小且明確、CID 不衝突 | Lead Writer Break-glass Lane | 必須先有 hand-off 文件與 Captain approval。 |
+
+### 9.4 多 Agent 與 ATM 溝通規範
+
+多 Agent 不直接互相搶正式工作樹。每個 Agent 先與 ATM 溝通，再進入寫入 lane。
+
+#### 9.4.1 WriteIntent.v1
+
+```json
+{
+  "schemaId": "atm.writeIntent.v1",
+  "taskId": "TASK-...",
+  "actorId": "007",
+  "baseCommit": "<sha>",
+  "targetFiles": ["<file>"],
+  "atomRefs": [
+    { "atomId": "<atom_id>", "atomCid": "<atom_cid>", "operation": "modify" }
+  ],
+  "sharedSurfaces": {
+    "generators": [],
+    "projections": [],
+    "registries": [],
+    "validators": [],
+    "artifacts": []
+  },
+  "requestedLane": "auto"
+}
+```
+
+#### 9.4.2 PatchProposal.v1
+
+```json
+{
+  "schemaId": "atm.patchProposal.v1",
+  "proposalId": "proposal-...",
+  "taskId": "TASK-...",
+  "actorId": "007",
+  "baseCommit": "<sha>",
+  "fileBeforeHash": "<sha256>",
+  "targetFile": "<file>",
+  "atomRefs": [
+    { "atomId": "<atom_id>", "atomCid": "<atom_cid>" }
+  ],
+  "anchors": [
+    { "kind": "line-range-or-ast-node", "hint": "<stable anchor>" }
+  ],
+  "intent": "What this patch is trying to change.",
+  "patch": "<unified diff or structured edit>",
+  "validators": ["<focused validator>"],
+  "rollback": "How to remove this proposal without touching other proposals."
+}
+```
+
+#### 9.4.3 MergePlan.v1
+
+```json
+{
+  "schemaId": "atm.mergePlan.v1",
+  "mergePlanId": "merge-...",
+  "inputProposals": ["proposal-a", "proposal-b"],
+  "verdict": "parallel-safe | needs-steward | blocked-cid-conflict | blocked-shared-surface",
+  "conflicts": [
+    {
+      "kind": "cid | file-range | generator | projection | validator | artifact | lease",
+      "detail": "<why it matters>"
+    }
+  ],
+  "applyMethod": "patch-apply | ast-rewrite | git-three-way-fallback | steward-authored-final-patch",
+  "requiredEvidence": ["validators", "diff-check", "merge-report"]
+}
+```
+
+#### 9.4.4 BreakGlassHandoff.v1
+
+Lead Writer Break-glass 必須先產生 hand-off，不得口頭交接。
+
+```json
+{
+  "schemaId": "atm.breakGlassHandoff.v1",
+  "reason": "write-agent-unavailable | steward-pool-exhausted | emergency-unblock",
+  "captainApproval": true,
+  "leadActorId": "A",
+  "donorActorId": "B",
+  "leadTaskId": "TASK-A",
+  "donorTaskId": "TASK-B",
+  "cidCheck": {
+    "verdict": "disjoint",
+    "leadAtomCid": "<cid-a>",
+    "donorAtomCid": "<cid-b>"
+  },
+  "transferredIntent": "Exact B requirement A is allowed to apply.",
+  "expandedScope": ["<specific file/range/atom>"],
+  "forbiddenExpansion": ["<what A must not reinterpret or add>"],
+  "acceptanceSplit": {
+    "leadTaskAcceptance": ["<A acceptance remains>"],
+    "donorTaskAcceptance": ["<B acceptance A must preserve>"]
+  },
+  "rollback": "How to remove donor patch without rolling back A."
+}
+```
+
+### 9.5 正常流程
+
+1. Agent 呼叫 `tasks parallel` 或後續 Write Broker command，提交 `WriteIntent.v1`。
+2. ATM 以 CID-first 計算語意衝突，再看 file overlap、shared surfaces、active lease。
+3. 無衝突時，Agent 走 Direct Brokered Lane，在可回收隔離層內寫。
+4. 有同檔但 CID 不衝突時，Agent 提交 `PatchProposal.v1`。
+5. Broker 決定 deterministic composer、Neutral Steward、或 mediation。
+6. Apply Engine 寫入 final patch，Git 記錄 commit 與 rollback point。
+7. Validators 與 evidence 確認合併結果沒有 scope drift。
+
+### 9.6 Lead Writer Break-glass 政策
+
+Lead Writer 不是常規 lane。P0 階段預設禁止把正在做自己任務的 Agent A 升級成 B 的寫入者。
+
+只有以下條件全部成立，才能開逃生口：
+
+- Neutral Write Agent / Steward 不可用、失敗、或 pool 已滿。
+- A 已在同一 physical file 施工。
+- B 的 patch 很小、邊界清楚、可封裝成 proposal。
+- A/B 的 atom CID 不衝突。
+- B 的 acceptance 不改變 A 的核心 goal。
+- Captain 明確批准。
+- `BreakGlassHandoff.v1` 已落地並可被 evidence 引用。
+
+規則句：
+
+```text
+Active task workers MUST NOT be promoted into Lead Writer for another task during normal operation.
+Lead Writer Escalation is a break-glass fallback only, allowed when neutral Write Agent capacity is unavailable or failed, CID conflict checks pass, and a Captain-approved hand-off document records the exact transferred patch intent, expanded scope, evidence requirements, and rollback boundary.
+```
+
+### 9.7 與 Git 的關係
+
+Git 是必要底層，但不是治理主控。
+
+- ATM 判斷「能不能平行」。
+- Write Broker 判斷「走哪條 lane」。
+- Write Agent / Steward 判斷「多份 proposal 如何合併」。
+- Git 負責「保存歷史、分支/worktree、merge fallback、commit、rollback」。
+
+因此這不是 `Write Agent` vs `Git merge` 二選一；而是 ATM 在語意層調度，Git 在物理層保存與救援。
+
+### 9.8 P0 任務拆分
+
+既有：
+
+- `TASK-CID-0005`：CID-first parallel conflict advisor CLI contract。
+- `TASK-AAO-0130`：AI-Atomic-Framework target-repo implementation card for the read-only parallel advisor MVP。
+
+新增 planning cards：
+
+- `TASK-CID-0009`：Patch Proposal Capsule contract。
+- `TASK-CID-0010`：Write Broker lane router contract。
+- `TASK-CID-0011`：Neutral Write Agent / Steward protocol + Lead Writer Break-glass handoff policy。
+
+這三張卡先定義契約，不直接改 ATM framework source；後續才拆 target_repo AAO implementation cards。
+
+## 10. Cross-References
 
 - 上游核准 roadmap：`C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`（v3.1）
 - 事實基線：[00-verified-facts.md](./00-verified-facts.md)
