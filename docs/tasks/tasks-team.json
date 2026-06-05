@@ -13,7 +13,7 @@
     "planning_repo": "3KLife",
     "target_repo": "AI-Atomic-Framework",
     "closure_authority": "target_repo",
-    "description": "Planning bridge whose top-level machine fields expose the safe TEAM mirror/import subset for AAF Phase 1 without touching AAF source.",
+    "description": "Planning bridge whose top-level machine fields expose the safe TEAM mirror/import subset for AAF Phase 1 without route-visible raw path pollution.",
     "related": [
       "TASK-TEAM-0001",
       "TASK-TEAM-0020",
@@ -37,6 +37,6 @@
       "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**",
       "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
     ],
-    "notes": "2026-06-04 | planned | Top-level machine fields expose the safe TEAM mirror/import subset for AAF route-visible handoff; no AAF source changes."
+    "notes": "2026-06-05 | planned | Route-visible clean handoff for safe TEAM mirror/import subset; helper fields use category labels, top-level safe subset stays explicit, no AAF source changes."
   }
 ]

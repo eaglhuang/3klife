@@ -28,8 +28,8 @@ deliverables:
   - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**"
   - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
 validators:
-  - "npm.cmd run check:encoding:touched -- --files docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md docs/ai_atomic_framework/team-agents/tasks/README.md docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md docs/tasks/README.md docs/tasks/tasks-team.json docs/tasks/tasks-team/.shardrc.json docs/tasks/tasks-team/tasks-team-part-1.json"
-  - "node tools_node/shard-manager.js validate docs/tasks/tasks-team"
+  - "npm.cmd run check:encoding:touched -- --files <TEAM-0026 touched files only>"
+  - "node tools_node/shard-manager.js validate <TEAM tasks shard>"
   - "git diff --check"
 evidence:
   required: command-backed
@@ -41,16 +41,16 @@ atomizationImpact:
   mapUpdates: []
   notes: "Planning-only lane; downstream AAF implementation remains a separate target-repo card."
 outOfScope:
-  - "C:/Users/User/AI-Atomic-Framework/packages/**"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/evidence/**"
-  - "C:/Users/User/AI-Atomic-Framework/scripts/**"
-  - "C:/Users/User/AI-Atomic-Framework/release/**"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/runtime/**"
-  - "C:/Users/User/AI-Atomic-Framework/.playwright-mcp/**"
-  - "C:/Users/User/AI-Atomic-Framework/scratch/**"
-  - "C:/Users/User/AI-Atomic-Framework/claim_out.json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-002[0-4].json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-002[0-4]/**"
+  - "AAF source tree"
+  - "Framework evidence history"
+  - "Framework runtime surfaces"
+  - "Framework command surfaces"
+  - "Framework script surfaces"
+  - "Framework release surfaces"
+  - "Playwright MCP runtime"
+  - "scratch"
+  - "claim_out.json"
+  - "TASK-TEAM-002[0-4] history/tasks and task-events"
   - "TASK-AAO-*"
 nonGoals:
   - "Do not touch AAF source"
@@ -63,13 +63,9 @@ dispatch_pattern:
   phase_0:
     lane: "helper (read-only sidecar)"
     allowed_files:
-      - "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
-      - "docs/ai_atomic_framework/team-agents/tasks/README.md"
-      - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-*.task.md"
-      - "docs/tasks/README.md"
-      - "docs/tasks/tasks-team.json"
-      - "docs/tasks/tasks-team/.shardrc.json"
-      - "docs/tasks/tasks-team/tasks-team-part-1.json"
+      - "3KLife TEAM planning docs"
+      - "TASK-TEAM-0026 planning card"
+      - "TEAM ledger and shard files"
     commit_budget: 0
     output: "Phase 1 brief that freezes the safe TEAM mirror/import subset, names the forbidden residue, and defines the future commit lane."
   phase_1:
@@ -83,16 +79,16 @@ dispatch_pattern:
       - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
     allowed_files_strict: true
     forbidden_files:
-      - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-002[0-4].json"
-      - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-002[0-4]/**"
-      - "C:/Users/User/AI-Atomic-Framework/.atm/history/evidence/**"
-      - "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/**"
-      - "C:/Users/User/AI-Atomic-Framework/scripts/**"
-      - "C:/Users/User/AI-Atomic-Framework/release/**"
-      - "C:/Users/User/AI-Atomic-Framework/.playwright-mcp/**"
-      - "C:/Users/User/AI-Atomic-Framework/scratch/**"
-      - "C:/Users/User/AI-Atomic-Framework/claim_out.json"
+      - "TASK-TEAM-002[0-4] residue"
       - "TASK-AAO-*"
+      - "AAF source tree"
+      - "Framework evidence history"
+      - "Framework command surfaces"
+      - "Framework script surfaces"
+      - "Framework release surfaces"
+      - "Playwright MCP runtime"
+      - "scratch"
+      - "claim_out.json"
     commit_budget: 1
     commit_layout:
       - "commit_1: TEAM safe subset reconciliation only"
@@ -123,7 +119,7 @@ This card does not perform the reconciliation itself. It opens the planning cont
 ## Phase 0 Contract
 
 - Phase 0 only changes 3KLife planning docs, the TEAM task card, and the TEAM ledger/shard.
-- Do not mutate `C:/Users/User/AI-Atomic-Framework/**`.
+- Do not mutate the AAF source tree.
 - Do not touch `TASK-TEAM-0020..0024`.
 - Do not touch AAO tasks.
 - Keep the ledger compact so route checks stay fast and disk pressure stays low.
