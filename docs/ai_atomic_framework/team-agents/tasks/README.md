@@ -145,6 +145,14 @@ Captain ruling for concurrency: Team Agents adopts the concurrency contract; CID
 
 These cards preserve the existing Team Agents rule: Team Agents accelerate scoped work, but they do not relax ATM gates, task evidence, closure packets, or coordinator-only lifecycle ownership.
 
+The 2026-06-05 brokered write review adds one CID-side integration card:
+
+- `TASK-CID-0012` maps brokered write governance into Team Agents. CID still owns `tasks parallel`, write intent, patch proposal, merge plan, and break-glass contracts. Team Agents consumes those contracts through existing roles and permissions: Coordinator, Scope Guardian, Atomization Planner, Implementer, Neutral Write Steward, Validator, Review Agent, and Evidence Collector.
+
+Captain ruling for brokered writes: Team Agents is the execution surface, not a replacement scheduler. `team plan` / `team start` may show or consume the broker lane recommendation, but Coordinator remains the only lifecycle / commit owner, and Neutral Write Steward must not hold `git.write` or `task.lifecycle`.
+
+Important architecture note: Write Broker is global per repo/workspace. Each task can have its own Team Agents, but all active teamRuns must register write intents against the same broker registry; otherwise Team Agents would only see intra-task collisions and miss cross-task conflicts.
+
 ## Knowledge Layer Guardrail
 
 All `TASK-TEAM-0020+` cards must keep the knowledge layer advisory-only:

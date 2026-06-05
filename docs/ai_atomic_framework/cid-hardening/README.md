@@ -23,7 +23,7 @@
 ## 開卡順序
 
 1. **E0 最小閉環（先收口）**：`TASK-CID-0001` → `0002` → `0003`
-2. **P0 核心能力**（CID-first parallel conflict advisor + brokered write governance）：`TASK-CID-0005`、`0009`、`0010`、`0011`
+2. **P0 核心能力**（CID-first parallel conflict advisor + brokered write governance + Team Agents integration）：`TASK-CID-0005`、`0009`、`0010`、`0011`、`0012`
 3. **E1 / E3 / E5 設計**（可平行排）：`TASK-CID-0004`、`0006`、`0007`
 
 詳見 [tasks/README.md](./tasks/README.md)。

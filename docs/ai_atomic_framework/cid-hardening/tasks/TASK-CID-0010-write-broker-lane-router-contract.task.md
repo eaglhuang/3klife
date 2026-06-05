@@ -46,11 +46,13 @@ outOfScope:
 
 ## Goal
 
-Define the always-on Write Broker as a thin ATM coordination layer that records write intent and chooses a write lane.
+Define the always-on Write Broker as a thin ATM coordination layer that records write intent and chooses a write lane across all active tasks / teamRuns in the same repo or workspace.
 
 ## Background
 
 The goal is not to make every edit slow. The broker must be cheap enough that normal single-Agent work still feels direct, while still giving ATM enough information to escalate same-file / same-CID / shared-surface collisions.
+
+The broker is global per repo/workspace, not per task. Each task's Team Agents submit intents to the same registry so cross-task conflicts are visible before writes collide.
 
 ## Lane Contract
 
@@ -66,6 +68,7 @@ The broker must classify work into:
 The broker decision must consider:
 
 - task id
+- team run id
 - actor id
 - base commit
 - target files
@@ -76,10 +79,24 @@ The broker decision must consider:
 - shared output artifact
 - active lease / direction lock
 
+## Registry Contract
+
+The broker registry must track active write intents across tasks:
+
+- repo / workspace identity
+- task id
+- team run id
+- actor id
+- base commit
+- resource keys: files, atom ids, atom CIDs, generators, projections, validators, artifacts
+- lease epoch
+- lane decision
+
 ## Acceptance Criteria
 
 - CID plan states `Broker always, Writer dynamic, isolation tiered`.
 - The broker is explicitly not a second scheduler and not a direct writer.
+- The broker is global per repo/workspace and can see multiple active teamRuns.
 - The lane table is documented with escalation conditions.
 - No framework source, runtime, or history files are touched.
 

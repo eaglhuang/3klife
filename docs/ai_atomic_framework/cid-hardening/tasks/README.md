@@ -42,7 +42,7 @@ Framework implementation cards: `target_repo: AI-Atomic-Framework`、`closure_au
 
 ## P0 Formal Cards
 
-> 隊長指令：`TASK-CID-0005` 是 CID-first advisor 契約；`TASK-CID-0009` ~ `0011` 是 brokered write governance 契約。這些都是 P0 planning cards，不建立 tasks-cid ledger / shard。
+> 隊長指令：`TASK-CID-0005` 是 CID-first advisor 契約；`TASK-CID-0009` ~ `0012` 是 brokered write governance + Team Agents integration 契約。這些都是 P0 planning cards，不建立 tasks-cid ledger / shard。
 
 | Task ID | Stage | Planned Title | Notes |
 |---|---|---|---|
@@ -50,6 +50,7 @@ Framework implementation cards: `target_repo: AI-Atomic-Framework`、`closure_au
 | [TASK-CID-0009](./TASK-CID-0009-patch-proposal-capsule-contract.task.md) | P0 | Patch Proposal Capsule contract | Agent 改動先封裝成 proposal capsule，不直接把半成品 dirty diff 當正式寫入。 |
 | [TASK-CID-0010](./TASK-CID-0010-write-broker-lane-router-contract.task.md) | P0 | Write Broker lane router contract | Broker always、Writer dynamic、isolation tiered；Broker 只做 intent/lane coordination，不當第二套 scheduler。 |
 | [TASK-CID-0011](./TASK-CID-0011-neutral-write-steward-and-break-glass-handoff-contract.task.md) | P0 | Neutral Write Steward + Lead Writer Break-glass handoff contract | 常規同檔合併走中立 Steward；Lead Writer 只作 emergency break-glass，必須有 hand-off 文件。 |
+| [TASK-CID-0012](./TASK-CID-0012-team-agents-brokered-write-integration-contract.task.md) | P0 | Team Agents brokered write integration contract | CID 定義 primitive；Team Agents 消費 primitive，映射到 Coordinator / Scope Guardian / Atomization Planner / Implementer / Neutral Write Steward / Validator / Review Agent。 |
 
 ## Future Queue（僅保留 0004 / 0006 / 0007）
 
@@ -64,9 +65,9 @@ Framework implementation cards: `target_repo: AI-Atomic-Framework`、`closure_au
 ## Sequencing Note
 
 E0 最小閉環收口順序：`0001 → 0002 → 0003`。
-E0 收口後，先開 P0 正式卡 `TASK-CID-0005`（CID-first parallel conflict advisor CLI contract），再接 `TASK-CID-0009` / `0010` / `0011` 定義 brokered write governance；`0004 / 0006 / 0007` 接續排程。
+E0 收口後，先開 P0 正式卡 `TASK-CID-0005`（CID-first parallel conflict advisor CLI contract），再接 `TASK-CID-0009` / `0010` / `0011` / `0012` 定義 brokered write governance 與 Team Agents integration；`0004 / 0006 / 0007` 接續排程。
 `TASK-CID-0005` 正式卡仍必須把三種 deployment 情境評分納入設計證據：A. 單一人類本機多 AI 工具（目前最適合）；B. 多人各自電腦同 repo（需 Git/PR/CI/遠端 lease 補強）；C. 多 Agent 同 server 同 repo（需 E2 fencing、wait-for graph、worktree/patch isolation 後才可安全擴大）。
-`TASK-CID-0009` / `0010` / `0011` 進一步把「可平行」落到寫入治理：Agent 先交 intent / proposal，ATM Broker 決定 lane，必要時才叫 Neutral Write Agent / Steward；Git 保留為物理歷史與 merge fallback，不取代 ATM 語意判斷。
+`TASK-CID-0009` / `0010` / `0011` / `0012` 進一步把「可平行」落到 Team Agents 寫入治理：Agent 先交 intent / proposal，ATM Broker 決定 lane，Team plan/start 將 lane 映射成 Coordinator、Scope Guardian、Atomization Planner、Implementer、Neutral Write Steward、Validator、Review Agent 的分工；Git 保留為物理歷史與 merge fallback，不取代 ATM 語意判斷。
 
 ## Future Extension Proposal
 - **TASK-CID-0008 (已提案，本輪暫不開卡)**：規劃與設計非同步對抗 QA 與突變測試的資源調度與降級政策（budget/cap/sampling/sharding/timeout policy），確保背景管線具備算力自我保護機制。本輪僅作規劃性記錄，除非隊長另行裁決，否則不得正式開立此任務卡。

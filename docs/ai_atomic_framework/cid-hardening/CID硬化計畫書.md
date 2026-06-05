@@ -212,6 +212,7 @@ E0（唯一第一階段，0001 → 0002 → 0003）
 | `TASK-CID-0009` | P0 | Patch Proposal Capsule contract | 3KLife |
 | `TASK-CID-0010` | P0 | Write Broker lane router contract | 3KLife |
 | `TASK-CID-0011` | P0 | Neutral Write Steward + Lead Writer Break-glass handoff contract | 3KLife |
+| `TASK-CID-0012` | P0 | Team Agents brokered write integration contract | 3KLife |
 
 ## 7. 裁決狀態
 
@@ -423,7 +424,110 @@ Git 是必要底層，但不是治理主控。
 
 因此這不是 `Write Agent` vs `Git merge` 二選一；而是 ATM 在語意層調度，Git 在物理層保存與救援。
 
-### 9.8 P0 任務拆分
+### 9.8 與 Team Agents 的整合
+
+Write Broker 不能獨立於 Team Agents 存在，否則 ATM 會同時有「team run 權限模型」與「brokered write 權限模型」兩套協調語言。
+
+但 Write Broker 也**不能**是每張任務自己的 team-local helper。它必須是 repo / workspace 層級的跨任務協調器，因為真正會互撞的是「不同 task card 的不同 Team Agents 同時碰到同一個 file / atom / generator / projection / validator」。每張 task 的 Team Agents 都只是 Broker client。
+
+正確整合方式是：
+
+- **CID 定義 primitive**：CID-first conflict advisor、Patch Proposal、WriteIntent、MergePlan、BreakGlassHandoff。
+- **Team Agents 消費 primitive**：把 primitive 映射成 Coordinator / Scope Guardian / Atomization Planner / Implementer / Neutral Write Steward / Validator / Review Agent 的 team run 行為。
+- **Write Broker 是 global singleton by repo/workspace**：同一個 repo/workspace 內所有 active tasks / teamRuns 都向同一個 Broker registry 登記 write intent。
+- **Coordinator 保持 lifecycle owner**：`task.lifecycle`、`git.write`、`evidence.write` 仍由 Coordinator 持有；Write Broker 不取得 commit 或 close 權限。
+- **Implementer 不再裸寫高風險同檔衝突**：一般工作仍可持有 `file.write`，但同檔 CID disjoint 衝突升級後，Implementer 交 `PatchProposal.v1`，由 Neutral Write Steward 或 deterministic composer 寫 final patch。
+- **Scope Guardian + Atomization Planner 是 Broker 的前置感測器**：Scope Guardian 檢查 allowedFiles / dirty tree / lease overlap；Atomization Planner 提供 atom_id / atom_cid / shared surface。
+- **Review Agent 不變成 Write Agent**：Review Agent 只做 review signature draft；Neutral Write Steward 是獨立角色，不能和 Implementer / Review Agent 混用。
+
+#### 9.8.1 Global Broker 與 per-task Team Run
+
+| 層級 | 責任 | 範圍 |
+|---|---|---|
+| Global Write Broker | 維護 active write intent / resource key / lane decision / lease epoch / conflict graph。 | repo/workspace 層級，跨所有 tasks 和 teamRuns。 |
+| Team Run Coordinator | 對單一 task/teamRun 負責，向 Broker 註冊 intent，接收 lane decision，保留 lifecycle/commit/evidence ownership。 | 單一 task/teamRun。 |
+| Implementer / Steward | 依 Broker lane 寫 proposal 或 final patch。 | 只在被授權的 file/atom/range 內。 |
+
+Broker 不是 AI Agent，也不是新的排程器；它應該是 deterministic registry + conflict calculator。它可以同時服務所有人，因為它做的是小資料量的資源鍵比對，而不是撰寫程式。
+
+Broker registry 最少要記：
+
+```json
+{
+  "schemaId": "atm.writeBrokerRegistry.v1",
+  "repoId": "<repo>",
+  "workspaceId": "<workspace-or-branch>",
+  "activeIntents": [
+    {
+      "intentId": "intent-...",
+      "taskId": "TASK-...",
+      "teamRunId": "team-...",
+      "actorId": "007",
+      "baseCommit": "<sha>",
+      "resourceKeys": {
+        "files": ["<file>"],
+        "atomIds": ["<atom_id>"],
+        "atomCids": ["<atom_cid>"],
+        "generators": [],
+        "projections": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 12,
+      "lane": "direct-brokered | deterministic-composer | neutral-steward | serial | blocked"
+    }
+  ]
+}
+```
+
+擴展模型：
+
+- 單人本機多 AI：Broker registry 可存在本地 `.atm/runtime/**`，用 CLI CAS / lockfile / leaseEpoch 防 race。
+- 多人多電腦：Broker registry 需要 Git/PR/CI/issue tracker 或遠端 lease adapter 支援；本地 registry 只能做 advisory。
+- 多 Agent 同 server：Broker registry 可變成 server-local daemon / shared runtime store，但仍不能取代 ATM task lifecycle。
+
+#### 9.8.2 Team role 對應
+
+| Brokered write function | Team Agents role | 權限 |
+|---|---|---|
+| write intent registration | Coordinator + Scope Guardian | `task.lifecycle` read / `file.read` |
+| atom/CID conflict surface | Atomization Planner | `file.read` |
+| patch proposal authoring | Implementer | `file.write` only inside brokered lane |
+| proposal merge / final patch | Neutral Write Steward | scoped `file.write` lease, no `git.write` |
+| merge validation | Validator / Check Runner | `exec.validator` |
+| independent review | Review Agent | `review.signature.write` draft |
+| commit / evidence / close | Coordinator | `git.write`, `evidence.write`, `task.lifecycle` |
+
+#### 9.8.3 Team recipe 行為
+
+Team plan / start 不應另做 scheduler；它應該呼叫或消費 `tasks parallel` / Write Broker report，然後調整 team shape：
+
+- `parallel-safe`：照原 recipe，Implementer 自己寫。
+- `needs-physical-split`：同檔但 CID 不衝突；加入 Neutral Write Steward 或 deterministic composer。
+- `blocked-cid-conflict`：不啟動第二個 Implementer，交 Captain 序列化或 mediation。
+- `blocked-shared-generator` / `blocked-shared-projection` / `blocked-shared-validator` / `blocked-shared-artifact`：Team plan 必須標記 shared surface guard，不可只看 file path。
+- `blocked-active-lease`：交 TEAM lease fencing / deadlock contract 處理，對應 `TASK-TEAM-0018`。
+
+#### 9.8.4 與既有 TEAM 任務卡對齊
+
+- `TASK-TEAM-0011`：team start/status runtime 是 brokered write lane 的 runtime 掛載點。
+- `TASK-TEAM-0012`：permission lease validator 必須理解 broker lane 與 steward lease。
+- `TASK-TEAM-0013`：file.write scope validator 必須驗證 final patch 不超出 broker-approved scope。
+- `TASK-TEAM-0015`：next/playbook team recommendation 應顯示 `tasks parallel` / broker lane 建議。
+- `TASK-TEAM-0016`：closure packet team summary 應收錄 merge plan、input proposals、steward identity、review signatures。
+- `TASK-TEAM-0018`：lease fencing / wait-for graph 是 broker shared-resource collision 的 hardening track。
+- `TASK-TEAM-0019`：sandbox attestation 與 closure evidence 是 Write Steward / apply engine 的證據硬化 track。
+
+#### 9.8.5 不可做
+
+- 不把 Write Broker 做成第二套 scheduler。
+- 不讓 Team Agents 繞過 ATM `next` / claim / close。
+- 不讓 Neutral Write Steward 持有 `git.write` 或 `task.lifecycle`。
+- 不讓 Lead Writer Break-glass 成為正常 team recipe。
+- 不因 Team Agents 可 spawn 多人，就放寬 `file.write` exclusive lease。
+- 不讓每個 teamRun 自己維護一份私有 Broker state；那會重新製造跨任務盲點。
+
+### 9.9 P0 任務拆分
 
 既有：
 
@@ -435,8 +539,9 @@ Git 是必要底層，但不是治理主控。
 - `TASK-CID-0009`：Patch Proposal Capsule contract。
 - `TASK-CID-0010`：Write Broker lane router contract。
 - `TASK-CID-0011`：Neutral Write Agent / Steward protocol + Lead Writer Break-glass handoff policy。
+- `TASK-CID-0012`：Team Agents brokered write integration contract。
 
-這三張卡先定義契約，不直接改 ATM framework source；後續才拆 target_repo AAO implementation cards。
+這四張卡先定義契約，不直接改 ATM framework source；後續才拆 target_repo AAO / TEAM implementation cards。
 
 ## 10. Cross-References
 
