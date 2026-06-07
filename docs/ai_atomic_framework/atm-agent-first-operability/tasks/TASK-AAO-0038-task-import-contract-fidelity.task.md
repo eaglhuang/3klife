@@ -2,7 +2,7 @@
 doc_id: doc_task_aao_0038
 task_id: TASK-AAO-0038
 title: "Task import contract fidelity"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M13
@@ -53,6 +53,9 @@ outOfScope:
 nonGoals:
   - "Building a second task registry"
   - "Replacing Markdown task cards with a new storage model"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 # TASK-AAO-0038 — Task import contract fidelity
 

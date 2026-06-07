@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0084
 title: "atm-markdown-task-source reference plugin (Layer 2)"
-status: planned
+status: done
 priority: P1
 closure_authority: target_repo
 depends_on:
@@ -40,6 +40,9 @@ outOfScope:
 nonGoals:
   - "Do not assume any specific frontmatter format"
   - "Do not bundle reference implementation in this card"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 ## Goal

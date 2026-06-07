@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0089
 title: "rollback evidence backfill 補滿 4/7→7/7"
-status: in_progress
+status: done
 priority: P1
 closure_authority: target_repo
 depends_on:
@@ -30,6 +30,9 @@ nonGoals:
   - "Do not use --no-verify or --force to bypass hooks"
   - "Do not perform ownership backfill or other backfill types"
   - "Do not change schemaVersion or .gitignore or baseline"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from in_progress."
 ---
 
 ## Goal

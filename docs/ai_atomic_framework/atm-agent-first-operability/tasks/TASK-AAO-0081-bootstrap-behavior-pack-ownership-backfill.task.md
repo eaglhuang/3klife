@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0081
 title: "register bootstrap-runtime-map + behavior-pack-map path patterns"
-status: planned
+status: done
 priority: P0
 closure_authority: target_repo
 depends_on: []
@@ -20,6 +20,9 @@ atomizationImpact:
 outOfScope:
   - "CID 欄位 backfill — TASK-AAO-0082"
   - "language-adapter-map (4) / atom-birth-map (2) / guard-validation-map (1)"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 ## Goal

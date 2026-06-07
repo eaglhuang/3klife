@@ -4,7 +4,7 @@ id: TASK-AAO-0125
 title: frozen runner alignment after TASK-AAO-0124
 owner: codex-gpt-5.4-mini
 priority: P1
-status: open
+status: done
 type: implementation
 phase: M16
 created: 2026-06-04
@@ -27,6 +27,9 @@ depends:
 related_cards:
   - TASK-AAO-0124
 notes: "2026-06-04 | open | scope: runner sync only after TASK-AAO-0124 | no source changes"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0125 frozen runner alignment after TASK-AAO-0124

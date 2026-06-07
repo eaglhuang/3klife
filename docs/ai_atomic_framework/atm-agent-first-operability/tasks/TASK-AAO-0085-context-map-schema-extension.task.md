@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0085
 title: "Context Map schema dual card extension (Layer 3)"
-status: planned
+status: done
 priority: P1
 closure_authority: target_repo
 depends_on:
@@ -39,6 +39,9 @@ nonGoals:
   - "Do not upgrade schemaVersion to v0.3 (must stay at v0.2 as a purely additive change)"
   - "Do not migrate existing 84 task ledger records"
   - "Do not add advisory check in hook.ts (leave that for TASK-AAO-0086)"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 ## Goal

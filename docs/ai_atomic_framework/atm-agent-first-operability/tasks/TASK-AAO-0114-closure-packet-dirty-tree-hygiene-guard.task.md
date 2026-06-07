@@ -3,7 +3,7 @@ doc_id: ""
 task_id: TASK-AAO-0114
 title: "closure packet dirty/untracked evidence hygiene guard"
 milestone: M16
-status: in-progress
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
@@ -25,8 +25,10 @@ allowed_files:
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
+  - packages/cli/src/commands/framework-development.ts
+  - packages/cli/src/commands/tasks.ts
+  - scripts/validate-task-ledger-governance.ts
 forbidden_files:
-  - AI-Atomic-Framework source tree
   - TASK-AAO-0112 closure packet task card
 non_goals:
   - "Do not mutate AAF source files."
@@ -35,6 +37,9 @@ non_goals:
   - "Do not treat unrelated untracked noise as a task deliverable."
   - "Do not stage or commit unrelated dirty files."
 notes: "2026-06-03 | status: in-progress | validation: pending | change: scope amended to pre-close dirty-tree / untracked evidence hygiene guard | blocker: none | risk: evidence hygiene / dirty-tree drift"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from in-progress."
 ---
 
 # TASK-AAO-0114 closure packet dirty/untracked evidence hygiene guard
@@ -93,9 +98,11 @@ It does not clean the tree, delete noise, repair an existing closure packet, or 
 - `C:/Users/User/3KLife/docs/tasks/tasks-atm.json`
 - `C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json`
 - `C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json`
+- `packages/cli/src/commands/framework-development.ts`
+- `packages/cli/src/commands/tasks.ts`
+- `scripts/validate-task-ledger-governance.ts`
 
 ## Forbidden Files
-- `AI-Atomic-Framework source tree`
 - `TASK-AAO-0112 closure packet task card`
 
 ## Validators

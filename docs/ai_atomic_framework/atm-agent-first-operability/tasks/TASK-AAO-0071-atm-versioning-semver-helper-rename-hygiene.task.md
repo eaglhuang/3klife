@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0071
 task_id: TASK-AAO-0071
 title: "ATM versioning semver helper rename hygiene patch"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M17
@@ -47,6 +47,9 @@ tags:
   - "hygiene-rename"
   - "framework-maintenance"
   - "refactor"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 # TASK-AAO-0071 - ATM versioning semver helper rename hygiene patch

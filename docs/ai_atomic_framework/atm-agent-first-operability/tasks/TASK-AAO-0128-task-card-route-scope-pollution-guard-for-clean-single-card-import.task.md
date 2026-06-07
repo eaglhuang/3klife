@@ -3,7 +3,7 @@ doc_id: ""
 task_id: TASK-AAO-0128
 title: "task-card route scope pollution guard for clean single-card import"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
@@ -44,6 +44,9 @@ non_goals:
   - "Do not fold release runner sync into this card."
   - "Do not let nearby plan prose or permission examples become route-visible scope."
 notes: "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for clean single-card route scope guard | blocker: none"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0128 task-card route scope pollution guard for clean single-card import

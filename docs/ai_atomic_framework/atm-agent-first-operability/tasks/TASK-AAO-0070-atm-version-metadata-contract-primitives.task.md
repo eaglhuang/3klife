@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0070
 task_id: TASK-AAO-0070
 title: "ATM version metadata contract primitives (Slice 1 identity correction)"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M17
@@ -51,6 +51,9 @@ tags:
   - "governance-correction"
   - "framework-maintenance"
   - "agent-operability"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 # TASK-AAO-0070 - ATM version metadata contract primitives (Slice 1 identity correction)

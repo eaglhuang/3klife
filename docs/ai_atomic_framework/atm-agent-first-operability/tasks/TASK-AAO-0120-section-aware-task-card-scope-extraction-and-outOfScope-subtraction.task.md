@@ -3,7 +3,7 @@ doc_id: ""
 task_id: TASK-AAO-0120
 title: "section-aware task-card scope extraction and outOfScope subtraction"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
@@ -35,6 +35,9 @@ non_goals:
   - "Do not fold runner sync or commit guard implementation into this card."
   - "Do not stage or commit unrelated dirty or untracked files."
 notes: "2026-06-03 | status: open | validation: pending | change: Phase 0 open card for importer scope pollution guard | blocker: route-visible scope pollution | risk: path-like prose leaking into targetAllowedFiles"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0120 section-aware task-card scope extraction and outOfScope subtraction

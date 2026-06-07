@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0086
 title: "plugin hooks + tasks new CLI (4 卡系列收尾)"
-status: planned
+status: done
 priority: P1
 closure_authority: target_repo
 depends_on:
@@ -46,6 +46,9 @@ nonGoals:
   - "Do not modify target close or import workflows"
   - "Do not add advisory check in hook.ts"
   - "Do not upgrade schemaVersion (keep v0.2)"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 ## Goal

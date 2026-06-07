@@ -3,7 +3,7 @@ doc_id: ""
 task_id: TASK-AAO-0108
 title: "Recover ATM-MAP-0003 from preserved 0102 tag"
 milestone: M15
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
@@ -31,6 +31,9 @@ non_goals:
   - "Do not manually edit the AAF ledger JSON files."
   - "Do not restore old 0102 ledger or closure packets directly."
 notes: "2026-06-01 | status: open | validation: pending | change: Phase 0 create card for ATM-MAP-0003 recovery from preserved tag | blocker: TASK-MRP-0028 | risk: broken closure packet reuse"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0108 Recover ATM-MAP-0003 from preserved 0102 tag

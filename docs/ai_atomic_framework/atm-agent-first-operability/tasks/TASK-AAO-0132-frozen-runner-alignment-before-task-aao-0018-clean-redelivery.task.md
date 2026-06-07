@@ -3,7 +3,7 @@ doc_id: ""
 task_id: TASK-AAO-0132
 title: "frozen runner alignment before TASK-AAO-0018 clean redelivery"
 milestone: M17
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
@@ -41,6 +41,9 @@ non_goals:
   - "Do not use atm.dev.mjs to bypass frozen runner lag."
   - "Do not mix npm run build into TASK-AAO-0018 redelivery."
 notes: "2026-06-05 | status: open | validation: pending | change: Phase 0 open card for frozen runner alignment before TASK-AAO-0018 clean redelivery | blocker: none"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0132 frozen runner alignment before TASK-AAO-0018 clean redelivery

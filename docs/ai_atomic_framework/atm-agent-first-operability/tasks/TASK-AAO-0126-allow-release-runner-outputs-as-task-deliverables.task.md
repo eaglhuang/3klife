@@ -4,7 +4,7 @@ task_id: TASK-AAO-0126
 title: allow release runner outputs as task deliverables
 owner: codex-gpt-5.4-mini
 priority: P1
-status: open
+status: done
 type: implementation
 phase: M16
 created: 2026-06-04
@@ -26,6 +26,9 @@ forbidden_files:
   - unrelated TEAM mirror/import residue
   - push or remote synchronization
 notes: 2026-06-04 | open | follow-up from TASK-AAO-0125; close gate currently excludes runner release outputs from real deliverables
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0126 allow release runner outputs as task deliverables

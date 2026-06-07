@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0101
 title: "Map formation from TASK-AAO-0100 10 atoms"
-status: blocked
+status: done
 priority: high
 created_at: 2026-05-31T11:28:00+08:00
 created_by_agent: codex-gpt-5
@@ -36,6 +36,9 @@ nonGoals:
   - "形成多 map"
   - "達 dogfood 96+"
 notes: "2026-05-31 | 狀態: blocked | 驗證: discovery stop | 變更: Phase 1 撞 framework 兩個硬點，待 0102 / MRP-0028 接手 | 阻塞: slug mapId + missing integration test file"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from blocked."
 ---
 
 ## Discovery findings (Phase 1 撞牆 evidence)

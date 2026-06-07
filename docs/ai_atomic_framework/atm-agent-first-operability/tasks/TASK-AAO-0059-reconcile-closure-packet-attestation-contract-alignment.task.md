@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0059
 task_id: TASK-AAO-0059
 title: "Reconcile closure-packet attestation contract alignment"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M16
@@ -42,6 +42,9 @@ outOfScope:
 nonGoals:
   - "重新實作 TASK-AAO-0055 的 reconcile 路由"
   - "變更 TASK-AAO-0057 的 scoped diff isolation 定義"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 # TASK-AAO-0059 - Reconcile closure-packet attestation contract alignment

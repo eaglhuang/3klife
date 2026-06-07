@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0055
 task_id: TASK-AAO-0055
 title: "Historical done task reconcile / reopen closure sync"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 earlyUnblocker: true
@@ -48,6 +48,9 @@ outOfScope:
 nonGoals:
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 # TASK-AAO-0055 — Historical done task reconcile / reopen closure sync
 

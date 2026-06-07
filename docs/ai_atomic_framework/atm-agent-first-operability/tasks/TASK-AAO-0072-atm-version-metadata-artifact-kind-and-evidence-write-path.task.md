@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0072
 task_id: TASK-AAO-0072
 title: "ATM version metadata Slice 2 artifactVersionKind and evidence write-path"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M17
@@ -57,6 +57,9 @@ tags:
   - "framework-contract-slice"
   - "version-metadata"
   - "write-path"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 # TASK-AAO-0072 - ATM version metadata Slice 2 artifactVersionKind and evidence write-path

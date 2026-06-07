@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0058
 task_id: TASK-AAO-0058
 title: "Task ledger/evidence/events self-allow on claim"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M16
@@ -51,6 +51,9 @@ outOfScope:
 nonGoals:
   - "不建立 second registry"
   - "不允許無限制擴展 allowedFiles"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 # TASK-AAO-0058 — Task ledger/evidence/events self-allow on claim
 

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0074
 title: "next.ts atomization wave 2B: view projections"
-status: planned
+status: done
 priority: P1
 milestone: M5
 planning_repo: 3KLife
@@ -35,6 +35,9 @@ outOfScope:
   - "normalizeOptionalString cross-module dedup — separate housekeeping card"
 nonGoals:
   - "Do not change any function signature or runtime behavior"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 # TASK-AAO-0074: next.ts atomization wave 2B: view projections

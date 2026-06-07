@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0080
 title: "pre-push hook closure-packet baseline filter + evidence-missing diagnostic"
-status: planned
+status: done
 priority: P0
 closure_authority: target_repo
 depends_on: [TASK-AAO-0079]
@@ -19,6 +19,9 @@ outOfScope:
   - "Force push"
   - "Use ATM_FRAMEWORK_PUSH_GUARD_SAFE_MODE"
   - "Change framework-commit-range baseline JSON"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from planned."
 ---
 
 # TASK-AAO-0080: pre-push hook closure-packet baseline filter + evidence-missing diagnostic

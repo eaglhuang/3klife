@@ -3,7 +3,7 @@ doc_id: ""
 task_id: TASK-AAO-0123
 title: "protect active claims from task import refresh overwrite"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
@@ -42,6 +42,9 @@ non_goals:
   - "Do not reuse TASK-AAO-0122 repair-closure implementation surfaces here."
   - "Do not stage or commit unrelated dirty files."
 notes: "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for active-claim import refresh guard | blocker: import write path can overwrite running/owner/startedAt/taskDirectionLock | risk: task import refresh regression"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0123 protect active claims from task import refresh overwrite

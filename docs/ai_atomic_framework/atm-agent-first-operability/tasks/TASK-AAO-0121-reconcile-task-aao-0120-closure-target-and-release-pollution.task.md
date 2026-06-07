@@ -3,7 +3,7 @@ doc_id: ""
 task_id: TASK-AAO-0121
 title: "reconcile TASK-AAO-0120 closure target and release pollution"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
@@ -25,8 +25,14 @@ allowed_files:
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
+  - C:/Users/User/AI-Atomic-Framework/release/atm-onefile/README.onefile.md
+  - C:/Users/User/AI-Atomic-Framework/release/atm-onefile/atm.mjs
+  - C:/Users/User/AI-Atomic-Framework/release/atm-onefile/release-manifest.json
 forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/**
+  - C:/Users/User/AI-Atomic-Framework/packages/**
+  - C:/Users/User/AI-Atomic-Framework/scripts/**
+  - C:/Users/User/AI-Atomic-Framework/tests/**
+  - C:/Users/User/AI-Atomic-Framework/.atm/**
   - C:/Users/User/3KLife/.atm/**
   - C:/Users/User/3KLife/.tmp/**
   - C:/Users/User/3KLife/examples/**
@@ -36,6 +42,9 @@ non_goals:
   - "Do not touch TASK-AAO-0120 importer implementation files."
   - "Do not stage or commit unrelated dirty or untracked files."
 notes: "2026-06-03 | status: open | validation: pending | change: Phase 0 open card for 0120 cleanup and reconciliation | blocker: release pollution / closure pollution | risk: closure packet and onefile artifacts drift"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0121 reconcile TASK-AAO-0120 closure target and release pollution
@@ -78,9 +87,15 @@ If scratch or `.playwright-mcp` noise needs a broader sweep, open a separate evi
 - `C:/Users/User/3KLife/docs/tasks/tasks-atm.json`
 - `C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json`
 - `C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json`
+- `C:/Users/User/AI-Atomic-Framework/release/atm-onefile/README.onefile.md`
+- `C:/Users/User/AI-Atomic-Framework/release/atm-onefile/atm.mjs`
+- `C:/Users/User/AI-Atomic-Framework/release/atm-onefile/release-manifest.json`
 
 ## Forbidden Files
-- `C:/Users/User/AI-Atomic-Framework/**`
+- `C:/Users/User/AI-Atomic-Framework/packages/**`
+- `C:/Users/User/AI-Atomic-Framework/scripts/**`
+- `C:/Users/User/AI-Atomic-Framework/tests/**`
+- `C:/Users/User/AI-Atomic-Framework/.atm/**`
 - `C:/Users/User/3KLife/.atm/**`
 - `C:/Users/User/3KLife/.tmp/**`
 - `C:/Users/User/3KLife/examples/**`

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0107
 title: "Dependency security CI triage"
-status: open
+status: done
 priority: P0
 created_at: 2026-06-01T16:10:00+08:00
 created_by_agent: codex-gpt-5
@@ -49,6 +49,9 @@ nonGoals:
   - "Fix every future Dependabot alert in this single task."
   - "Treat Node.js 20 action deprecation warnings as the current adopter-sentinel failure root cause."
 notes: "2026-06-01 | status: open | validation: pending | change: classify GitHub Actions npm ci failure and Dependabot security PR failures | blocker: package-lock missing @ai-atomic-framework/atm-markdown-task-source | risk: public adopters and AI tools may judge the repo unhealthy when clean install fails"
+closed_at: "2026-06-07T12:50:00+08:00"
+closed_by_agent: "captain-bulk-reconcile-2026-06-07"
+reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
 ---
 
 # TASK-AAO-0107 Dependency security CI triage
