@@ -2,7 +2,11 @@
 doc_id: doc_cid_0017
 task_id: TASK-CID-0017
 title: "CID advisor uses broker decision model"
-status: planned
+status: done
+started_at: "2026-06-07T05:33:05Z"
+started_by_agent: "007"
+completed_at: "2026-06-07T06:31:39Z"
+completed_by_agent: "007"
 owner: atm-core
 priority: P0
 milestone: P0
