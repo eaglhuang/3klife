@@ -2,7 +2,7 @@
 doc_id: doc_cid_0012
 task_id: TASK-CID-0012
 title: "Team Agents brokered write integration contract"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: P0
@@ -11,6 +11,10 @@ depends_on:
   - "TASK-CID-0009"
   - "TASK-CID-0010"
   - "TASK-CID-0011"
+started_at: 2026-06-07T09:39:40+08:00
+started_by_agent: codex-gpt-5.4-mini
+completed_at: 2026-06-07T09:39:40+08:00
+completed_by_agent: codex-gpt-5.4-mini
 related:
   - "TASK-TEAM-0011"
   - "TASK-TEAM-0012"

@@ -2,13 +2,17 @@
 doc_id: doc_cid_0010
 task_id: TASK-CID-0010
 title: "Write Broker lane router contract"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: P0
 depends_on:
   - "TASK-CID-0005"
   - "TASK-CID-0009"
+started_at: 2026-06-07T09:39:40+08:00
+started_by_agent: codex-gpt-5.4-mini
+completed_at: 2026-06-07T09:39:40+08:00
+completed_by_agent: codex-gpt-5.4-mini
 related_plan: docs/ai_atomic_framework/cid-hardening/CID硬化計畫書.md
 planning_repo: 3KLife
 target_repo: 3KLife
