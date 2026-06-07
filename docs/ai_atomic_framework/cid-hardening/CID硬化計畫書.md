@@ -543,6 +543,70 @@ Team plan / start 不應另做 scheduler；它應該呼叫或消費 `tasks paral
 
 這四張卡先定義契約，不直接改 ATM framework source；後續才拆 target_repo AAO / TEAM implementation cards。
 
+### 9.10 100% completion definition (local repo/workspace)
+
+For this CID hardening lane, "100% complete" means the local ATM CLI can do all of the following inside one repo/workspace without introducing a second scheduler:
+
+- decide whether two tasks are parallel-safe by CID / atom / shared surface, not only by physical file overlap;
+- register write intent in one repo/workspace-level broker registry shared by all active tasks and team runs;
+- move same-file but CID-disjoint work into a brokered lane instead of forcing immediate manual serialization;
+- capture proposal-backed writes as `WriteIntent.v1`, `PatchProposal.v1`, `MergePlan.v1`, and `BreakGlassHandoff.v1`;
+- let a Neutral Write Steward or deterministic composer produce the final scoped patch when a same-file CID-disjoint case is accepted;
+- surface the same broker decision through `tasks parallel`, `next --claim`, and `team plan/start`;
+- clean broker runtime state on release / handoff / close so stale intent does not block later work.
+
+This completion definition is intentionally local-first:
+
+- included: local repo/workspace runtime, filesystem-backed registry, single-host Team Agents consumption, command-backed validators;
+- excluded from this round: remote shared broker service, cross-machine shared adapter, real spawned worker runtime outside the current ATM CLI model.
+
+### 9.11 Captain dispatch cadence for the completion pack
+
+The completion pack should be executed with a compact captain cadence:
+
+- aim to close each implementation card in at most two captain rounds;
+- official external workers for this pack are limited to `005`, `006`, and `007`;
+- do not reactivate `001`, `002`, or `003` unless a later human decision explicitly widens the roster;
+- internal sidecars are allowed and encouraged for cheap read-only convergence, but they are captain-owned helpers and not formal worker identities.
+
+These roster and cadence rules are dispatch-governance constraints for captain operation in this pack. They are intentionally declarative here; later execution cards may add runtime gates, but this planning section does not claim such gates already exist.
+
+Recommended internal sidecars for each implementation card:
+
+- preflight: `sidecar-schema`, `sidecar-cli`, `sidecar-flow`;
+- postflight: `sidecar-acceptance`, `sidecar-regression`.
+
+Each sidecar packet should stay short and decision-oriented:
+
+- `Scope`
+- `Findings`
+- `Go/No-Go`
+- `Missing Evidence`
+- `Suggested Patch Boundary`
+
+### 9.12 Completion task pack (`TASK-CID-0014` ~ `TASK-CID-0023`)
+
+| Task ID | Kind | Goal | Target repo | Depends |
+|---|---|---|---|---|
+| `TASK-CID-0014` | planning card | Write the 100% completion definition back into this plan and open the full execution pack. | 3KLife | `TASK-CID-0009` ~ `0013` closed |
+| `TASK-CID-0015` | execution card | Add broker contract schemas and TypeScript types for `WriteIntent`, `PatchProposal`, `BrokerDecision`, `MergePlan`, and `BreakGlassHandoff`. | AI-Atomic-Framework | `TASK-CID-0014` |
+| `TASK-CID-0016` | execution card | Add local write-broker registry runtime and `broker` CLI surface for register / decision / status / release / cleanup. | AI-Atomic-Framework | `TASK-CID-0014`, `TASK-CID-0015` |
+| `TASK-CID-0017` | execution card | Refactor `tasks parallel` to use the broker decision model and correct verdict precedence. | AI-Atomic-Framework | `TASK-CID-0015`, `TASK-CID-0016` |
+| `TASK-CID-0018` | execution card | Implement `PatchProposal` create / list / show / validate runtime. | AI-Atomic-Framework | `TASK-CID-0015` |
+| `TASK-CID-0019` | execution card | Implement deterministic composer and `MergePlan` generation for same-file CID-disjoint proposals. | AI-Atomic-Framework | `TASK-CID-0015`, `TASK-CID-0018` |
+| `TASK-CID-0020` | execution card | Implement Neutral Write Steward plan / apply flow with scoped write authority only. | AI-Atomic-Framework | `TASK-CID-0016`, `TASK-CID-0018`, `TASK-CID-0019` |
+| `TASK-CID-0021` | execution card | Integrate brokered write lanes into `team plan/start` and Team permission checks. | AI-Atomic-Framework | `TASK-CID-0016`, `TASK-CID-0017`, `TASK-CID-0020` |
+| `TASK-CID-0022` | execution card | Integrate broker intent checks into `next --claim` and broker cleanup into close/release/handoff flows. | AI-Atomic-Framework | `TASK-CID-0016`, `TASK-CID-0017`, `TASK-CID-0021` |
+| `TASK-CID-0023` | execution card | Add end-to-end acceptance harness and final validator for brokered write. | AI-Atomic-Framework | `TASK-CID-0017`, `TASK-CID-0020`, `TASK-CID-0021`, `TASK-CID-0022` |
+
+Completion gate for the pack:
+
+- `tasks parallel` must distinguish `parallel-safe`, `needs-physical-split`, `blocked-cid-conflict`, and shared-surface blockers using one broker decision model;
+- `next --claim` and `team plan/start` must fail closed on blocked CID lanes;
+- same-file CID-disjoint work must be able to go through proposal -> merge plan -> steward final patch;
+- broker runtime state must be cleaned on release / handoff / close;
+- `validate:brokered-write` must prove the end-to-end lane.
+
 ## 10. Cross-References
 
 - 上游核准 roadmap：`C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`（v3.1）
