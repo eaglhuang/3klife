@@ -2,7 +2,9 @@
 doc_id: doc_cid_0018
 task_id: TASK-CID-0018
 title: "PatchProposal capsule runtime"
-status: planned
+status: in-progress
+started_at: "2026-06-07T06:47:58Z"
+started_by_agent: "007"
 owner: atm-core
 priority: P0
 milestone: P0
