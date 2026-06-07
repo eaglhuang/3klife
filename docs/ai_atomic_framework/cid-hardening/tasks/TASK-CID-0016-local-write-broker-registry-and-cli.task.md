@@ -2,7 +2,11 @@
 doc_id: doc_cid_0016
 task_id: TASK-CID-0016
 title: "Local write-broker registry and CLI"
-status: planned
+status: done
+started_at: "2026-06-07T11:53:00+08:00"
+started_by_agent: "007"
+completed_at: "2026-06-07T12:00:00+08:00"
+completed_by_agent: "007"
 owner: atm-core
 priority: P0
 milestone: P0
