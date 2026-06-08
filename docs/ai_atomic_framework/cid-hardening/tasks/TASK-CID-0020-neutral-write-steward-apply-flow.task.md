@@ -2,7 +2,9 @@
 doc_id: doc_cid_0020
 task_id: TASK-CID-0020
 title: "Neutral Write Steward apply flow"
-status: planned
+status: done
+completed_at: "2026-06-08T16:20:00.468Z"
+completed_by_agent: "008"
 owner: atm-core
 priority: P0
 milestone: P0

@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-06-03
-last_updated: 2026-06-07T10:32+08:00
+last_updated: 2026-06-09T00:25+08:00
 ---
 
 # CID Hardening Task Index
@@ -64,18 +64,18 @@ Every `TASK-CID-*` card follows the ATM task-card authoring contract:
 >
 > These roster and cadence rules are captain-governance constraints for dispatch. They are intentionally documented here before any later runtime roster gate exists.
 
-| Task ID | Stage | Planned Title | Notes |
-|---|---|---|---|
-| [TASK-CID-0014](./TASK-CID-0014-brokered-write-completion-plan-and-task-pack.task.md) | P0 | Brokered write completion plan and task pack | Planning-only opener for the completion pack. Writes the 100% definition back into the CID plan, opens `TASK-CID-0015` ~ `TASK-CID-0023`, and encodes the compact captain cadence. |
-| [TASK-CID-0015](./TASK-CID-0015-broker-contract-schemas-and-types.task.md) | P0 | Broker contract schemas and types | Adds `WriteIntent.v1`, `PatchProposal.v1`, `BrokerDecision.v1`, `MergePlan.v1`, and `BreakGlassHandoff.v1` schemas plus TS types. |
-| [TASK-CID-0016](./TASK-CID-0016-local-write-broker-registry-and-cli.task.md) | P0 | Local write-broker registry and CLI | Adds the local runtime registry and `broker` CLI surface for register / decision / status / release / cleanup. |
-| [TASK-CID-0017](./TASK-CID-0017-cid-advisor-broker-decision-model.task.md) | P0 | CID advisor uses broker decision model | Replaces file-first precedence with the shared broker decision model and fixes verdict precedence for `tasks parallel`. |
-| [TASK-CID-0018](./TASK-CID-0018-patch-proposal-capsule-runtime.task.md) | P0 | PatchProposal capsule runtime | Implements proposal create / list / show / validate runtime with fail-closed hash, anchor, and scope checks. |
-| [TASK-CID-0019](./TASK-CID-0019-deterministic-composer-and-merge-plan.task.md) | P0 | Deterministic composer and MergePlan | Generates deterministic merge plans for same-file CID-disjoint proposals and rejects overlapping anchors. |
-| [TASK-CID-0020](./TASK-CID-0020-neutral-write-steward-apply-flow.task.md) | P0 | Neutral Write Steward apply flow | Adds steward plan / apply so final scoped patches can be produced without giving the steward git/task lifecycle ownership. |
-| [TASK-CID-0021](./TASK-CID-0021-team-agents-brokered-write-runtime-integration.task.md) | P0 | Team Agents brokered write runtime integration | Wires broker lanes into `team plan/start` and keeps Coordinator as lifecycle owner. |
-| [TASK-CID-0022](./TASK-CID-0022-next-claim-and-closeout-broker-integration.task.md) | P0 | Next claim and closeout broker integration | Registers broker intent before claim and guarantees cleanup on release / handoff / close. |
-| [TASK-CID-0023](./TASK-CID-0023-end-to-end-brokered-write-acceptance-harness.task.md) | P0 | End-to-end brokered write acceptance harness | Adds the final validator that proves same-file CID-disjoint writes can complete end-to-end and blocked lanes fail closed. |
+| Task ID | Stage | Planned Title | Status | Notes |
+|---|---|---|---|---|
+| [TASK-CID-0014](./TASK-CID-0014-brokered-write-completion-plan-and-task-pack.task.md) | P0 | Brokered write completion plan and task pack | **done** | Planning-only opener for the completion pack. Writes the 100% definition back into the CID plan, opens `TASK-CID-0015` ~ `TASK-CID-0023`, and encodes the compact captain cadence. |
+| [TASK-CID-0015](./TASK-CID-0015-broker-contract-schemas-and-types.task.md) | P0 | Broker contract schemas and types | **done** | Adds `WriteIntent.v1`, `PatchProposal.v1`, `BrokerDecision.v1`, `MergePlan.v1`, and `BreakGlassHandoff.v1` schemas plus TS types. |
+| [TASK-CID-0016](./TASK-CID-0016-local-write-broker-registry-and-cli.task.md) | P0 | Local write-broker registry and CLI | **done** | Adds the local runtime registry and `broker` CLI surface for register / decision / status / release / cleanup. |
+| [TASK-CID-0017](./TASK-CID-0017-cid-advisor-broker-decision-model.task.md) | P0 | CID advisor uses broker decision model | **done** | Replaces file-first precedence with the shared broker decision model and fixes verdict precedence for `tasks parallel`. |
+| [TASK-CID-0018](./TASK-CID-0018-patch-proposal-capsule-runtime.task.md) | P0 | PatchProposal capsule runtime | **done** | Implements proposal create / list / show / validate runtime with fail-closed hash, anchor, and scope checks. |
+| [TASK-CID-0019](./TASK-CID-0019-deterministic-composer-and-merge-plan.task.md) | P0 | Deterministic composer and MergePlan | planned | Generates deterministic merge plans for same-file CID-disjoint proposals and rejects overlapping anchors. |
+| [TASK-CID-0020](./TASK-CID-0020-neutral-write-steward-apply-flow.task.md) | P0 | Neutral Write Steward apply flow | **done** | Adds steward plan / apply so final scoped patches can be produced without giving the steward git/task lifecycle ownership. |
+| [TASK-CID-0021](./TASK-CID-0021-team-agents-brokered-write-runtime-integration.task.md) | P0 | Team Agents brokered write runtime integration | **done** | Wires broker lanes into `team plan/start` and keeps Coordinator as lifecycle owner. |
+| [TASK-CID-0022](./TASK-CID-0022-next-claim-and-closeout-broker-integration.task.md) | P0 | Next claim and closeout broker integration | **done** | Registers broker intent before claim and guarantees cleanup on release / handoff / close. |
+| [TASK-CID-0023](./TASK-CID-0023-end-to-end-brokered-write-acceptance-harness.task.md) | P0 | End-to-end brokered write acceptance harness | planned | Adds the final validator that proves same-file CID-disjoint writes can complete end-to-end and blocked lanes fail closed. |
 
 ## Sequencing Note
 

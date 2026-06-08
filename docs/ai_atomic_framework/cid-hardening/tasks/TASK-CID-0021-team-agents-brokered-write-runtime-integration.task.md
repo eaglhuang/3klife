@@ -2,7 +2,9 @@
 doc_id: doc_cid_0021
 task_id: TASK-CID-0021
 title: "Team Agents brokered write runtime integration"
-status: planned
+status: done
+completed_at: "2026-06-08T16:23:25.595Z"
+completed_by_agent: "008"
 owner: atm-core
 priority: P0
 milestone: P0
