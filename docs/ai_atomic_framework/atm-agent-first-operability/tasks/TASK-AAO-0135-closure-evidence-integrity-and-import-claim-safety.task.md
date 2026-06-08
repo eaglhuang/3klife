@@ -22,17 +22,48 @@ public_tracking: false
 executionMode: phase0-closure-evidence-integrity-and-import-claim-safety
 planning_repo: 3KLife
 closure_authority: target_repo
+related_plan: docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md
 related:
   - TASK-CID-0018
   - TASK-AAO-0123
+depends_on:
+  - TASK-AAO-0123
 depends: []
+scopePaths:
+  - packages/cli/src/commands/framework-development.ts
+  - packages/cli/src/commands/tasks.ts
+  - packages/cli/src/commands/command-specs/tasks.spec.ts
+  - tests/**
+deliverables:
+  - packages/cli/src/commands/framework-development.ts
+  - packages/cli/src/commands/tasks.ts
+  - packages/cli/src/commands/command-specs/tasks.spec.ts
+  - tests/**
+validators:
+  - npm run typecheck
+  - npm run validate:cli
+  - npm test -- --grep "validateClosurePacket|repair-closure|import.*active.*claim"
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+atomizationImpact:
+  ownerAtomOrMap: atm.task-closure-map
+  mapUpdates:
+    - atomic_workbench/atomization-coverage/path-to-atom-map.json
+  newScriptsAllowed: false
 allowed_files:
+  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md
+  - C:/Users/User/3KLife/docs/tasks/tasks-aao.json
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/tasks.spec.ts
   - C:/Users/User/AI-Atomic-Framework/tests/**
+  - C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json
 forbidden_files:
-  - .atm runtime / history manual edits
+  - C:/Users/User/AI-Atomic-Framework/.atm/history/**
+  - C:/Users/User/AI-Atomic-Framework/.atm/runtime/**
+  - C:/Users/User/AI-Atomic-Framework/release/**
   - unrelated source surfaces
   - scratch / unrelated dirty
 non_goals:
@@ -40,6 +71,7 @@ non_goals:
   - "Do not introduce a second import path."
   - "Do not weaken dirty-tree fail-closed posture for unrelated changes."
   - "Do not retroactively rewrite historical evidence files."
+  - "Do not mutate AAF source in Phase 0."
 notes: "2026-06-08 | status: open | validation: pending | change: Phase 0 open card bundling sha256 lowercase normalization + validator error format clarity + repair-closure upstream-evidence-fix + tasks import preserve-active-claim default | blocker: none"
 ---
 
@@ -71,6 +103,35 @@ TASK-CID-0018 被卡 3+ 小時的根因鏈：
 - 只更新這張 3KLife planning card 與 `docs/tasks/tasks-aao.json`。
 - 不碰 `C:/Users/User/AI-Atomic-Framework/**`。
 
+## Phase 1 Scope Amendment
+
+- Frontmatter `allowed_files` 中的 AAF 路徑是 Phase 1 import scope，不是 Phase 0 write scope。
+- `framework-development.ts` 負責 closure packet 驗證、evidence writer、repair-closure 上游修補。
+- `tasks.ts` 負責 import write 邏輯與 `--force-overwrite-claims` 旗標。
+- `path-to-atom-map.json` 僅在 capability 描述變更時更新，不拆新 atom。
+
+## Context Map
+
+### Primary（直接改）
+
+- `packages/cli/src/commands/framework-development.ts` — sha256 normalize、validateClosurePacket error taxonomy、repair-closure upstream fix
+- `packages/cli/src/commands/tasks.ts` — import active-claim guard、`--force-overwrite-claims`、`--scope` repair filter
+- `packages/cli/src/commands/command-specs/tasks.spec.ts` — 新旗標 CLI spec
+
+### Secondary（可能波及、預警 scope drift）
+
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json` — capability 描述更新
+- `packages/cli/src/commands/command-specs.ts` — 若 tasks spec 註冊點需同步
+
+### Test Coverage
+
+- `tests/**` 中新增 validateClosurePacket / repair-closure / import active-claim 測試；若無現成 fixture 則新建 focused test file
+
+### Patterns to Follow
+
+- 沿用 `TASK-AAO-0123` 的 active-claim import guard 語意，但本卡把預設行為升級為 skip + 明確 warning code
+- 沿用 `TASK-AAO-0017` closure validator error envelope 風格（`invalidFormat` vs `missing` 分類）
+
 ## Phase 1 Candidate Allowed Files
 
 - `packages/cli/src/commands/framework-development.ts`
@@ -81,11 +142,13 @@ TASK-CID-0018 被卡 3+ 小時的根因鏈：
   - repair-closure dispatcher、`--scope` filter
   - `runTasksImport` write 邏輯與旗標解析
 - `packages/cli/src/commands/command-specs/tasks.spec.ts`（新旗標 spec）
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json`（capability 描述更新）
 - 對應 tests
 
 ## Phase 1 Forbidden Surfaces
 
-- `.atm` runtime / history manual edits
+- `.atm/history/**` 與 `.atm/runtime/**` 手動編輯
+- `release/**`、dist、build outputs
 - unrelated source
 - scratch / unrelated dirty
 
@@ -121,7 +184,7 @@ TASK-CID-0018 被卡 3+ 小時的根因鏈：
 
 ### Phase 0 Planning Validators
 
-- `node tools_node/check-encoding-touched.js --files <touched>`
+- `node tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md docs/tasks/tasks-aao.json`
 - `git diff --check`
 
 ### Phase 1 AAF Validators
@@ -130,6 +193,19 @@ TASK-CID-0018 被卡 3+ 小時的根因鏈：
 - `npm run validate:cli`
 - `npm test -- --grep "validateClosurePacket|repair-closure|import.*active.*claim"`
 - `git diff --check`
+
+## Rollback Hint
+
+若 import claim guard 或 repair-closure `--scope` 行為超出 Phase 1 candidate files，保持本卡 open 並拆 follow-up 卡。
+Phase 0 回滾只需 revert 本卡與 `tasks-aao.json` 條目，不碰 AAF source。
+Phase 1 回滾用 `git revert` 還原 delivery commit + closure ledger commit。
+
+## Atomization Impact
+
+- Owner: `atm.task-closure-map`（closure packet / repair-closure / close gate）
+- Secondary owner: `atm.task-ledger-governance-map`（import write path）
+- Map update: `atomic_workbench/atomization-coverage/path-to-atom-map.json` capability 描述
+- 不新增 script；不拆新 atom
 
 ## Plain-language Anchor
 

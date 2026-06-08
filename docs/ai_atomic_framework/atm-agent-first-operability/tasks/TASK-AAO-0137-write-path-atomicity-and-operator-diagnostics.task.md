@@ -11,7 +11,8 @@ created: "2026-06-09"
 created_by_agent: captain-incident-review-2026-06-08
 started_at: ""
 started_by_agent: ""
-blocked_by: []
+blocked_by:
+  - TASK-AAO-0135
 owner: atm-core
 priority: P2
 upstream_repo: AI-Atomic-Framework
@@ -22,20 +23,56 @@ public_tracking: false
 executionMode: phase0-write-path-atomicity-and-operator-diagnostics
 planning_repo: 3KLife
 closure_authority: target_repo
+related_plan: docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md
 related:
   - TASK-CID-0018
   - TASK-AAO-0135
   - TASK-AAO-0136
-depends: []
+depends_on:
+  - TASK-AAO-0135
+depends:
+  - TASK-AAO-0135
+scopePaths:
+  - packages/cli/src/commands/tasks.ts
+  - packages/cli/src/commands/framework-development.ts
+  - packages/cli/src/commands/next.ts
+  - packages/cli/src/commands/command-specs/tasks.spec.ts
+  - .gitignore
+  - tests/**
+deliverables:
+  - packages/cli/src/commands/tasks.ts
+  - packages/cli/src/commands/framework-development.ts
+  - packages/cli/src/commands/next.ts
+  - packages/cli/src/commands/command-specs/tasks.spec.ts
+  - .gitignore
+  - tests/**
+validators:
+  - npm run typecheck
+  - npm run validate:cli
+  - npm test -- --grep "tasks.*close.*transaction|runner.*stale|tasks status|gitignore"
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+atomizationImpact:
+  ownerAtomOrMap: atm.task-closure-map
+  mapUpdates:
+    - atomic_workbench/atomization-coverage/path-to-atom-map.json
+  newScriptsAllowed: false
 allowed_files:
+  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md
+  - C:/Users/User/3KLife/docs/tasks/tasks-aao.json
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/tasks.spec.ts
   - C:/Users/User/AI-Atomic-Framework/.gitignore
   - C:/Users/User/AI-Atomic-Framework/tests/**
+  - C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json
 forbidden_files:
-  - .atm runtime / history manual edits
+  - C:/Users/User/AI-Atomic-Framework/.atm/history/**
+  - C:/Users/User/AI-Atomic-Framework/.atm/runtime/**
+  - C:/Users/User/AI-Atomic-Framework/release/**
   - unrelated source surfaces
   - scratch / unrelated dirty
 non_goals:
@@ -43,6 +80,8 @@ non_goals:
   - "Do not block read-only ATM commands when runner is stale."
   - "Do not change the live-ledger SSOT designation."
   - "Do not silently auto-rollback on close failure (must surface diagnostic first)."
+  - "Do not mutate AAF source in Phase 0."
+  - "Do not start before TASK-AAO-0135 lands; transaction wrapper sits on top of 0135's normalize util."
 notes: "2026-06-09 | status: open | validation: pending | change: Phase 0 open card bundling close-transaction atomicity + runner stale write-fail-closed + tasks status triangulation + scratch output gitignore | blocker: none"
 ---
 
@@ -70,6 +109,42 @@ TASK-CID-0018 unstick 過程暴露的次層問題（P0/P1 解掉但仍有半完�
 
 - 只更新這張 3KLife planning card 與 `docs/tasks/tasks-aao.json`。
 - 不碰 `C:/Users/User/AI-Atomic-Framework/**`。
+
+## Phase 1 Scope Amendment
+
+- Frontmatter `allowed_files` 中的 AAF 路徑是 Phase 1 import scope，不是 Phase 0 write scope。
+- `tasks.ts` 負責 close/reconcile transaction wrapper、runner-stale write gate、新 `tasks status` subcommand。
+- `framework-development.ts` 負責 transaction journal helper、runner stale 寫類動作分類。
+- `next.ts` 負責 `--output` 預設路徑改 `.atm-temp/`。
+- `command-specs/tasks.spec.ts` 負責新 `status` subcommand spec 註冊。
+- `.gitignore` 補登 `next-output.json`、`.atm-temp/`、`*.atm-scratch.*`。
+- 與 TASK-AAO-0135 的 close/reconcile 改動有重疊區域；本卡必須在 0135 落地、normalize util 與 validator error taxonomy 穩定後才啟動。
+- `path-to-atom-map.json` 僅在 capability 描述變更時更新，不拆新 atom。
+
+## Context Map
+
+### Primary（直接改）
+
+- `packages/cli/src/commands/tasks.ts` — `runTasksClose` / `runTasksReconcile` transaction wrapper、新 `runTasksStatus` subcommand、runner-stale write gate
+- `packages/cli/src/commands/framework-development.ts` — transaction journal helper（write-then-verify-then-commit）、runner stale write-action 分類
+- `packages/cli/src/commands/next.ts` — 預設 `--output` 路徑改 `.atm-temp/`
+- `packages/cli/src/commands/command-specs/tasks.spec.ts` — 新 `tasks status` subcommand spec
+- `.gitignore` — 暫存物 entries
+
+### Secondary（可能波及、預警 scope drift）
+
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json` — capability 描述更新
+- `packages/cli/src/commands/command-specs.ts` — 若 tasks spec 註冊點需同步
+
+### Test Coverage
+
+- `tests/**` 中新增 close transaction rollback、runner-stale write-refused、tasks status triangulation、gitignore relocation 整合測試
+
+### Patterns to Follow
+
+- 沿用 TASK-AAO-0135 的 normalize util 作為 transaction wrapper 內部驗證的標準入口
+- 沿用 TASK-AAO-0136 的 close-commit-window TTL pattern（transaction commit 後在 window 內 commit artifacts）
+- 沿用 TASK-AAO-0017 的 closure validator error envelope 風格（runner stale 拒絕時回報相同形狀）
 
 ## Phase 1 Candidate Allowed Files
 
