@@ -113,6 +113,15 @@
       "color": "gdv3TabBadgeFill",
       "alpha": 242
     },
+    "detail.tabbar.bg": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_families/common/parchment/bg",
+      "spriteType": "sliced",
+      "border": [16, 16, 16, 16],
+      "bleed": 2,
+      "allowAutoAtlas": true,
+      "opacity": 0.86
+    },
     "detail.tab.icon.overview.active": {
       "kind": "sprite-frame",
       "path": "sprites/ui_families/general_detail/icons/tab_overview_active",

@@ -5,13 +5,17 @@
   "layoutRef": "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.json",
   "skinRef": "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.skin.json",
   "tabRouting": {
-    "PoolPrev": {
+    "General": {
       "slotId": "RightPanel",
-      "fragment": "fragments/layouts/gacha-ds3-pool-prev-content"
+      "fragment": "fragments/layouts/gacha-ds3-general-content"
     },
-    "PoolNext": {
+    "Legendary": {
       "slotId": "RightPanel",
-      "fragment": "fragments/layouts/gacha-ds3-pool-next-content"
+      "fragment": "fragments/layouts/gacha-ds3-legendary-content"
+    },
+    "Support": {
+      "slotId": "RightPanel",
+      "fragment": "fragments/layouts/gacha-ds3-support-content"
     }
   },
   "meta": {

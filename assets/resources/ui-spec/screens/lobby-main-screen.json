@@ -2,8 +2,8 @@
   "id": "lobby-main-screen",
   "version": 2,
   "uiId": "lobby-main-screen",
-  "layout": "lobby-main-main",
-  "skin": "lobby-main-default",
+  "layout": "lobby-main-screen",
+  "skin": "lobby-main-screen.skin",
   "bundle": "lobby_ui",
   "meta": {
     "htmlToUcufPlan4": true,
