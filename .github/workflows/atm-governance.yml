@@ -95,7 +95,8 @@ jobs:
             "files": [
               ".claude/worktrees/upbeat-spence",
               ".github/workflows/atm-governance.yml",
-              "tools_node/adapters/atm-3klife/governance-profile.json"
+              "tools_node/adapters/atm-3klife/governance-profile.json",
+              "tools_node/atomic-framework/governance/renderers.js"
             ],
             "scopeFingerprint": "",
             "scopeFingerprintVersion": ""
