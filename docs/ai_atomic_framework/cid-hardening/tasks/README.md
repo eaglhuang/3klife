@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-06-03
-last_updated: 2026-06-09T00:25+08:00
+last_updated: 2026-06-09T09:15+08:00
 ---
 
 # CID Hardening Task Index
@@ -75,7 +75,7 @@ Every `TASK-CID-*` card follows the ATM task-card authoring contract:
 | [TASK-CID-0020](./TASK-CID-0020-neutral-write-steward-apply-flow.task.md) | P0 | Neutral Write Steward apply flow | **done** | Adds steward plan / apply so final scoped patches can be produced without giving the steward git/task lifecycle ownership. |
 | [TASK-CID-0021](./TASK-CID-0021-team-agents-brokered-write-runtime-integration.task.md) | P0 | Team Agents brokered write runtime integration | **done** | Wires broker lanes into `team plan/start` and keeps Coordinator as lifecycle owner. |
 | [TASK-CID-0022](./TASK-CID-0022-next-claim-and-closeout-broker-integration.task.md) | P0 | Next claim and closeout broker integration | **done** | Registers broker intent before claim and guarantees cleanup on release / handoff / close. |
-| [TASK-CID-0023](./TASK-CID-0023-end-to-end-brokered-write-acceptance-harness.task.md) | P0 | End-to-end brokered write acceptance harness | planned | Adds the final validator that proves same-file CID-disjoint writes can complete end-to-end and blocked lanes fail closed. |
+| [TASK-CID-0023](./TASK-CID-0023-end-to-end-brokered-write-acceptance-harness.task.md) | P0 | End-to-end brokered write acceptance harness | **done** | Adds the final validator that proves same-file CID-disjoint writes can complete end-to-end and blocked lanes fail closed. |
 
 ## Sequencing Note
 

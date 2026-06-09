@@ -2,7 +2,9 @@
 doc_id: doc_cid_0023
 task_id: TASK-CID-0023
 title: "End-to-end brokered write acceptance harness"
-status: planned
+status: done
+completed_at: "2026-06-09T01:13:14.274Z"
+completed_by_agent: "008"
 owner: atm-core
 priority: P0
 milestone: P0
