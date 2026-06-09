@@ -117,6 +117,62 @@ jobs:
             "scopeFingerprintVersion": ""
           }
           EOF
+          node <<'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          
+          const lockDir = '.task-locks';
+          const changedFilesPath = 'artifacts/ci/atm-changed-files.txt';
+          const syntheticLockPath = path.join(lockDir, 'ATM-CI-CHANGED-FILES.lock.json');
+          
+          const normalize = (value) => String(value || '').replace(/\\/g, '/').trim();
+          const changedFiles = fs.existsSync(changedFilesPath)
+            ? fs.readFileSync(changedFilesPath, 'utf8')
+              .split(/\r?\n/)
+              .map(normalize)
+              .filter(Boolean)
+            : [];
+          
+          const claimedFiles = new Set();
+          for (const entry of fs.readdirSync(lockDir)) {
+            if (!entry.endsWith('.lock.json') || entry === 'ATM-CI-CHANGED-FILES.lock.json') {
+              continue;
+            }
+          
+            try {
+              const parsed = JSON.parse(fs.readFileSync(path.join(lockDir, entry), 'utf8'));
+              for (const file of Array.isArray(parsed.files) ? parsed.files : []) {
+                const normalized = normalize(file);
+                if (normalized) {
+                  claimedFiles.add(normalized);
+                }
+              }
+            } catch (error) {
+              console.warn(`[atm-governance] skip malformed lock ${entry}: ${error.message}`);
+            }
+          }
+          
+          const uncoveredFiles = changedFiles.filter((file) => !claimedFiles.has(file));
+          if (uncoveredFiles.length === 0) {
+            if (fs.existsSync(syntheticLockPath)) {
+              fs.unlinkSync(syntheticLockPath);
+            }
+            process.exit(0);
+          }
+          
+          fs.writeFileSync(
+            syntheticLockPath,
+            `${JSON.stringify({
+              taskId: 'ATM-CI-CHANGED-FILES',
+              agentName: 'github-actions',
+              lockedAt: '2026-06-09T00:00:00Z',
+              files: uncoveredFiles,
+              scopeFingerprint: '',
+              scopeFingerprintVersion: 'scope-fingerprint/v1',
+            }, null, 2)}\n`,
+            'utf8'
+          );
+          EOF
 
       - name: Governance drift check
         run: node tools_node/atomic-framework/atm-cli.js governance check --json --strict
