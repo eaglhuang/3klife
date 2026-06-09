@@ -37,5 +37,45 @@
       "C:/Users/User/3KLife/docs/tasks/tasks-team/tasks-team-part-1.json"
     ],
     "notes": "2026-06-09 | planned | Re-scoped as executable Phase 0 planning opener; later AAF Phase 1 handoff still waits for TASK-TEAM-0020 and TASK-TEAM-0025."
+  },
+  {
+    "doc_id": "doc_team_0027",
+    "id": "TASK-TEAM-0027",
+    "title": "Team command atom boundary preflight",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M1P",
+    "created": "2026-06-09",
+    "created_by_agent": "TEAM-CAPTAIN",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Raise Team Agents atom boundaries for team.ts and team.spec.ts before the first same-file parallel proof.",
+    "related": [
+      "TASK-TEAM-0002",
+      "TASK-TEAM-0003",
+      "TASK-AAO-0106",
+      "TASK-CID-0023"
+    ],
+    "depends": [
+      "TASK-TEAM-0001",
+      "TASK-AAO-0106"
+    ],
+    "acceptance": [
+      "team.ts Team command behavior is mapped into distinct owner atoms for CLI entry, recipe/permission model, crew briefing, atomization planner, broker lane, start runtime, and status read surfaces.",
+      "team.spec.ts assertions are mapped into distinct test atoms that mirror those behavior surfaces.",
+      "TASK-TEAM-0002 and TASK-TEAM-0003 no longer rely on one coarse atm.team-agents-map owner atom for their shared command/spec changes.",
+      "path-to-atom-map ownership changes are routed through TASK-AAO-0106 owner shards or a documented single-owner steward lane.",
+      "The first Team Agents parallel proof can distinguish same-file different-atom pass from same-atom conflict."
+    ],
+    "deliverables": [
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/team.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/team.spec.ts",
+      "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json",
+      "C:/Users/User/AI-Atomic-Framework/docs/governance/team-agents/team-atom-boundaries.md"
+    ],
+    "notes": "2026-06-09 | planned | Opened as pre-parallel atom-boundary card; tightened with planning allowedFiles whitelist, atom-boundary evidence requirements, real collision precheck, and sidecar-first dispatch split. path-to-atom-map owner sharding is already tracked by TASK-AAO-0106."
   }
 ]

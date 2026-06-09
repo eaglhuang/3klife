@@ -54,6 +54,7 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | [TASK-TEAM-0020](./TASK-TEAM-0020-team-knowledge-storage-boundary-index-contract.task.md) | M2K | Team knowledge storage boundary and index contract | planned | `TASK-TEAM-0005`, `TASK-TEAM-0017` | knowledge contract / storage boundary |
 | [TASK-TEAM-0025](./TASK-TEAM-0025-task-import-dispatch-metadata-preservation.task.md) | M4K | Task import dispatch metadata preservation | planned | `TASK-TEAM-0017`, `TASK-TEAM-0020` | task import / canonical ledger / sidecar dispatch |
 | [TASK-TEAM-0026](./TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md) | M4R | TEAM safe mirror/import ledger reconciliation lane | planned | `TASK-TEAM-0001` (Phase 0 opener) | 3KLife planning opener -> later AI-Atomic-Framework Phase 1 handoff |
+| [TASK-TEAM-0027](./TASK-TEAM-0027-team-command-atom-boundary-preflight.task.md) | M1P | Team command atom boundary preflight | planned | `TASK-TEAM-0001`, `TASK-AAO-0106` | team CLI/spec atom boundaries |
 | [TASK-TEAM-0021](./TASK-TEAM-0021-team-knowledge-build-query-dry-run.task.md) | M4K | Team knowledge build and query dry-run | planned | `TASK-TEAM-0020` | knowledge build / query |
 | [TASK-TEAM-0023](./TASK-TEAM-0023-team-knowledge-retention-disk-budget-guard.task.md) | M5K | Team knowledge retention and disk budget guard | planned | `TASK-TEAM-0021` | compact / stats / budget guard |
 | [TASK-TEAM-0022](./TASK-TEAM-0022-captain-knowledge-preflight-brief-integration.task.md) | M6K | Captain knowledge preflight brief integration | planned | `TASK-TEAM-0015`, `TASK-TEAM-0021` | `next` / `team plan` guidance |
@@ -68,15 +69,16 @@ Open and import these cards by milestone order. Do not reuse the previous `TASK-
 Use this order when the goal is "ship Team Agents in a way humans can actually adopt", not "open every future card as early as possible":
 
 1. `TASK-TEAM-0001` to freeze the lane and clean the roster truth.
-2. `TASK-TEAM-0002`, `TASK-TEAM-0003` to make planning/atomization roles visible from the start.
-3. `TASK-TEAM-0004`, `TASK-TEAM-0005`, `TASK-TEAM-0006`, then `TASK-TEAM-0017` so the first-card template stack and its schema/validator become stable.
-4. `TASK-TEAM-0007`, `TASK-TEAM-0008`, `TASK-TEAM-0009`, `TASK-TEAM-0010` to turn docs-only roles into a real team planning/runtime surface.
-5. `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0013` to make runtime state, permission lease, and file-write boundaries trustworthy.
-6. `TASK-TEAM-0014` and `TASK-TEAM-0015` in parallel where possible, then `TASK-TEAM-0016` to close the first full plan -> run -> report -> close loop.
-7. `TASK-TEAM-0018`, `TASK-TEAM-0019` only after the core runtime loop is stable, because they harden concurrency and attestation rather than bootstrap the lane.
-8. `TASK-TEAM-0026` Phase 0 opener can run early in parallel with the above as a planning bridge, but its Phase 1 AAF reconciliation must wait for the knowledge-track prerequisites below.
-9. `TASK-TEAM-0020` -> `TASK-TEAM-0025` -> `TASK-TEAM-0021` -> `TASK-TEAM-0023` -> `TASK-TEAM-0022` -> `TASK-TEAM-0024` as the advisory knowledge track.
-10. `TASK-TEAM-0026` Phase 1 handoff only after `TASK-TEAM-0020` and `TASK-TEAM-0025` are closed and the safe subset still holds.
+2. `TASK-AAO-0106` to shard `path-to-atom-map.json` ownership, then `TASK-TEAM-0027` to raise Team command/spec atom boundaries before the first live parallel proof.
+3. `TASK-TEAM-0002`, `TASK-TEAM-0003` to make planning/atomization roles visible from the start; run them in parallel only after `TASK-TEAM-0027` proves they no longer share one coarse Team atom.
+4. `TASK-TEAM-0004`, `TASK-TEAM-0005`, `TASK-TEAM-0006`, then `TASK-TEAM-0017` so the first-card template stack and its schema/validator become stable.
+5. `TASK-TEAM-0007`, `TASK-TEAM-0008`, `TASK-TEAM-0009`, `TASK-TEAM-0010` to turn docs-only roles into a real team planning/runtime surface.
+6. `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0013` to make runtime state, permission lease, and file-write boundaries trustworthy.
+7. `TASK-TEAM-0014` and `TASK-TEAM-0015` in parallel where possible, then `TASK-TEAM-0016` to close the first full plan -> run -> report -> close loop.
+8. `TASK-TEAM-0018`, `TASK-TEAM-0019` only after the core runtime loop is stable, because they harden concurrency and attestation rather than bootstrap the lane.
+9. `TASK-TEAM-0026` Phase 0 opener can run early in parallel with the above as a planning bridge, but its Phase 1 AAF reconciliation must wait for the knowledge-track prerequisites below.
+10. `TASK-TEAM-0020` -> `TASK-TEAM-0025` -> `TASK-TEAM-0021` -> `TASK-TEAM-0023` -> `TASK-TEAM-0022` -> `TASK-TEAM-0024` as the advisory knowledge track.
+11. `TASK-TEAM-0026` Phase 1 handoff only after `TASK-TEAM-0020` and `TASK-TEAM-0025` are closed and the safe subset still holds.
 
 ## Parallelization Plan for M1-M2
 
@@ -85,8 +87,11 @@ The line-graph dependency above (`0002 -> 0003 -> 0004 -> 0005 -> 0006`) was tig
 ```
 M0: 0001 (done)
         |
+M1P:    +--> AAO-0106 (path map owner shards)
+        +--> 0027 (Team atom boundary preflight)
+        |
 M1:     +--> 0002 (crew contract)   ----+
-        +--> 0003 (atomization role) ---+   (run in parallel)
+        +--> 0003 (atomization role) ---+   (run in parallel only after 0027)
                                         |
 M2:                                     +--> 0004 (brief/report/summary)
                                                        |
@@ -94,7 +99,9 @@ M2:                                     +--> 0004 (brief/report/summary)
                                                        +--> 0006 (patrol)               +   (run in parallel)
 ```
 
-- `0002` and `0003` write to disjoint doc paths (`minimal-task-crew.md` vs `atomization-planner.md`) and may merge in either order.
+- `0002` and `0003` write to disjoint doc paths (`minimal-task-crew.md` vs `atomization-planner.md`) and may merge in either order for docs-only work.
+- For the first live same-file Team command/spec proof, `0002` and `0003` must wait for `0027`. Without `0027`, a collision in `team.ts`, `team.spec.ts`, or `path-to-atom-map.json` is only evidence that the atoms are too coarse, not evidence that CID parallel development failed.
+- `path-to-atom-map.json` sharding is already tracked by `TASK-AAO-0106`; do not open a duplicate sharding card.
 - `0005` and `0006` write to disjoint template files but share the same validator script. They may build in parallel; merge sequentially so the second-merged card extends the first card's validator section additions.
 - `0004` is the single synchronization point between M1 and M2: it lands the first version of the shared validator script (`scripts/validate-team-agents-templates.ts`) that `0005` and `0006` extend.
 
