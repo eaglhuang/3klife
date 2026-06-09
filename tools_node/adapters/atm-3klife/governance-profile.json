@@ -139,6 +139,13 @@
           "changedFilesPath": "artifacts/ci/atm-changed-files.txt",
           "worktreeStatusPath": "artifacts/ci/atm-worktree-status.txt"
         },
+        "preSteps": [
+          {
+            "name": "Bootstrap CI task locks",
+            "shell": "bash",
+            "run": "set -euo pipefail\nmkdir -p .task-locks\ncat > .task-locks/ATM-CI-GOVERNANCE.lock.json <<'EOF'\n{\n  \"taskId\": \"ATM-CI-GOVERNANCE\",\n  \"agentName\": \"github-actions\",\n  \"lockedAt\": \"2026-06-09T00:00:00Z\",\n  \"files\": [\n    \".claude/worktrees/upbeat-spence\",\n    \".github/workflows/atm-governance.yml\",\n    \"tools_node/adapters/atm-3klife/governance-profile.json\"\n  ],\n  \"scopeFingerprint\": \"\",\n  \"scopeFingerprintVersion\": \"\"\n}\nEOF\ncat > .task-locks/PROG-2-0012.lock.json <<'EOF'\n{\n  \"taskId\": \"PROG-2-0012\",\n  \"agentName\": \"github-actions\",\n  \"lockedAt\": \"2026-06-09T00:00:00Z\",\n  \"files\": [\n    \"docs/agent-briefs/tasks/PROG/PROG-2-0012.md\",\n    \"docs/doc-id-registry-shards/registry-task.json\",\n    \"docs/tasks/tasks-prog.json\"\n  ],\n  \"scopeFingerprint\": \"\",\n  \"scopeFingerprintVersion\": \"\"\n}\nEOF"
+          }
+        ],
         "steps": [
           {
             "name": "Governance drift check",

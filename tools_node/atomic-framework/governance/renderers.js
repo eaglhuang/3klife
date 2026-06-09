@@ -157,6 +157,32 @@ function renderWorkflowChangedFilesScript(changedFiles) {
   ];
 }
 
+function renderWorkflowCustomSteps(steps) {
+  const rendered = [];
+  for (const step of steps || []) {
+    if (!step || typeof step !== 'object' || !step.name || !step.run) {
+      throw new Error('workflow preStep requires name and run');
+    }
+    rendered.push('');
+    rendered.push(`      - name: ${step.name}`);
+    if (step.if) {
+      rendered.push(`        if: \${{ ${step.if} }}`);
+    }
+    if (step.shell) {
+      rendered.push(`        shell: ${step.shell}`);
+    }
+    if (String(step.run).includes('\n')) {
+      rendered.push('        run: |');
+      for (const line of String(step.run).split('\n')) {
+        rendered.push(`          ${line}`);
+      }
+    } else {
+      rendered.push(`        run: ${step.run}`);
+    }
+  }
+  return rendered;
+}
+
 function renderWorkflow(workflow, gateEntrypoints) {
   const upstreamCheckout = workflow.upstreamCheckout && typeof workflow.upstreamCheckout === 'object'
     ? workflow.upstreamCheckout
@@ -210,6 +236,7 @@ function renderWorkflow(workflow, gateEntrypoints) {
     '        shell: bash',
     '        run: |',
     ...renderWorkflowChangedFilesScript(workflow.changedFiles),
+    ...renderWorkflowCustomSteps(workflow.preSteps),
   ];
 
   for (const step of workflow.steps || []) {
