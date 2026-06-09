@@ -86,6 +86,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo "ATM_WORKTREE_STATUS_FILE=artifacts/ci/atm-worktree-status.txt" >> "$GITHUB_ENV"
           mkdir -p .task-locks
           cat > .task-locks/ATM-CI-GOVERNANCE.lock.json <<'EOF'
           {
