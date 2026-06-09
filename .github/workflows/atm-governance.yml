@@ -41,7 +41,7 @@ jobs:
         with:
           repository: eaglhuang/AI-Atomic-Framework
           path: upstream-atm-repo
-          ref: master
+          ref: main
 
       - name: Install dependencies
         run: npm ci

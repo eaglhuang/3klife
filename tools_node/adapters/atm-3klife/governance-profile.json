@@ -121,7 +121,7 @@
         "upstreamCheckout": {
           "repository": "eaglhuang/AI-Atomic-Framework",
           "path": "upstream-atm-repo",
-          "ref": "master"
+          "ref": "main"
         },
         "branches": {
           "pullRequest": [
