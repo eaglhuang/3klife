@@ -115,5 +115,44 @@
       "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json"
     ],
     "notes": "2026-06-09 | done | AAF delivery 2c421179 + ledger 1ba09878; post-close refinement 81262a21 (buildAtomizationChecklist + atomization-planner.md only; no shard/projection touch; atom-disjoint from TASK-TEAM-0002)."
+  },
+  {
+    "doc_id": "doc_team_0028",
+    "id": "TASK-TEAM-0028",
+    "title": "Team same-atom CID negative control",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "planned",
+    "type": "proof",
+    "phase": "M1N",
+    "created": "2026-06-10",
+    "created_by_agent": "TEAM-CAPTAIN",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Canonical negative-control CID proof: synthetic pair A/B intentionally claim team.plan-crew-briefing-contract and must block with kind: cid.",
+    "related": [
+      "TASK-TEAM-0002",
+      "TASK-TEAM-0003",
+      "TASK-TEAM-0027",
+      "TASK-CID-0023"
+    ],
+    "depends": [
+      "TASK-TEAM-0027",
+      "TASK-TEAM-0002",
+      "TASK-TEAM-0003"
+    ],
+    "acceptance": [
+      "Second canonical CID proof after 0002 vs 0003 positive-control PASS.",
+      "Synthetic A/B lanes claim the same atom team.plan-crew-briefing-contract at packages/cli/src/commands/team.ts#buildMinimalTaskCrewBriefingContract.",
+      "Proof success is blocked-cid-conflict with mergePlan.conflicts kind cid and atom-level same-owner evidence.",
+      "Coarse file-range overlap alone is an invalid success criterion."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0028-team-same-atom-cid-negative-control.task.md",
+      "Synthetic negative-control fixture pair (Phase 1)",
+      "Command-backed broker compose evidence (Phase 1)"
+    ],
+    "notes": "2026-06-10 | planned | Phase 0 planning opener only; AAF proof implementation deferred to Phase 1 dispatch."
   }
 ]

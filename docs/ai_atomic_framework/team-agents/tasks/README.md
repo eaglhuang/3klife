@@ -55,6 +55,7 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | [TASK-TEAM-0025](./TASK-TEAM-0025-task-import-dispatch-metadata-preservation.task.md) | M4K | Task import dispatch metadata preservation | planned | `TASK-TEAM-0017`, `TASK-TEAM-0020` | task import / canonical ledger / sidecar dispatch |
 | [TASK-TEAM-0026](./TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md) | M4R | TEAM safe mirror/import ledger reconciliation lane | planned | `TASK-TEAM-0001` (Phase 0 opener) | 3KLife planning opener -> later AI-Atomic-Framework Phase 1 handoff |
 | [TASK-TEAM-0027](./TASK-TEAM-0027-team-command-atom-boundary-preflight.task.md) | M1P | Team command atom boundary preflight | done | `TASK-TEAM-0001`, `TASK-AAO-0106` | team CLI/spec atom boundaries |
+| [TASK-TEAM-0028](./TASK-TEAM-0028-team-same-atom-cid-negative-control.task.md) | M1N | Team same-atom CID negative control | planned | `TASK-TEAM-0027`, `0002/0003` positive PASS | synthetic same-atom CID block proof |
 | [TASK-TEAM-0021](./TASK-TEAM-0021-team-knowledge-build-query-dry-run.task.md) | M4K | Team knowledge build and query dry-run | planned | `TASK-TEAM-0020` | knowledge build / query |
 | [TASK-TEAM-0023](./TASK-TEAM-0023-team-knowledge-retention-disk-budget-guard.task.md) | M5K | Team knowledge retention and disk budget guard | planned | `TASK-TEAM-0021` | compact / stats / budget guard |
 | [TASK-TEAM-0022](./TASK-TEAM-0022-captain-knowledge-preflight-brief-integration.task.md) | M6K | Captain knowledge preflight brief integration | planned | `TASK-TEAM-0015`, `TASK-TEAM-0021` | `next` / `team plan` guidance |
@@ -70,7 +71,7 @@ Use this order when the goal is "ship Team Agents in a way humans can actually a
 
 1. `TASK-TEAM-0001` to freeze the lane and clean the roster truth.
 2. `TASK-AAO-0106` (done) and `TASK-TEAM-0027` (done) landed the path-map owner shards and Team command/spec atom boundaries in AAF.
-3. `TASK-TEAM-0003` is done in AAF (post-close refinement `81262a21` recorded on the planning card); `TASK-TEAM-0002` remains the paired M1 lane for the live same-file different-atom parallel proof.
+3. `TASK-TEAM-0003` is done in AAF (post-close refinement `81262a21` recorded on the planning card); the `0002 vs 0003` positive-control PASS is closed. `TASK-TEAM-0028` opens the matching same-atom CID negative-control proof (`team.plan-crew-briefing-contract`).
 4. `TASK-TEAM-0004`, `TASK-TEAM-0005`, `TASK-TEAM-0006`, then `TASK-TEAM-0017` so the first-card template stack and its schema/validator become stable.
 5. `TASK-TEAM-0007`, `TASK-TEAM-0008`, `TASK-TEAM-0009`, `TASK-TEAM-0010` to turn docs-only roles into a real team planning/runtime surface.
 6. `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0013` to make runtime state, permission lease, and file-write boundaries trustworthy.
@@ -89,9 +90,10 @@ M0: 0001 (done)
         |
 M1P:    +--> AAO-0106 (done, path map owner shards)
         +--> 0027 (done, Team atom boundary preflight)
+        +--> 0028 (planned, same-atom CID negative control)
         |
 M1:     +--> 0002 (crew contract)   ----+
-        +--> 0003 (done, atomization role) ---+   (0002 may still run in parallel after 0027)
+        +--> 0003 (done, atomization role) ---+   (positive-control PASS closed)
                                         |
 M2:                                     +--> 0004 (brief/report/summary)
                                                        |
