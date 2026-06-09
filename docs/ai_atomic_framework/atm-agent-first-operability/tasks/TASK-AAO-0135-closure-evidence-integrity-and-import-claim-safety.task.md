@@ -32,13 +32,21 @@ depends: []
 scopePaths:
   - packages/cli/src/commands/framework-development.ts
   - packages/cli/src/commands/tasks.ts
+  - packages/cli/src/commands/hook.ts
   - packages/cli/src/commands/command-specs/tasks.spec.ts
-  - tests/**
+  - scripts/validate-task-import.ts
+  - scripts/validate-task-ledger-governance.ts
+  - release/atm-onefile/**
+  - release/atm-root-drop/**
 deliverables:
   - packages/cli/src/commands/framework-development.ts
   - packages/cli/src/commands/tasks.ts
+  - packages/cli/src/commands/hook.ts
   - packages/cli/src/commands/command-specs/tasks.spec.ts
-  - tests/**
+  - scripts/validate-task-import.ts
+  - scripts/validate-task-ledger-governance.ts
+  - release/atm-onefile/**
+  - release/atm-root-drop/**
 validators:
   - npm run typecheck
   - npm run validate:cli
@@ -58,7 +66,11 @@ allowed_files:
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/tasks.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/tests/**
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/hook.ts
+  - C:/Users/User/AI-Atomic-Framework/scripts/validate-task-import.ts
+  - C:/Users/User/AI-Atomic-Framework/scripts/validate-task-ledger-governance.ts
+  - C:/Users/User/AI-Atomic-Framework/release/atm-onefile/**
+  - C:/Users/User/AI-Atomic-Framework/release/atm-root-drop/**
   - C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json
 forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/.atm/history/**

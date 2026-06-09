@@ -191,6 +191,7 @@ Implementation of an executable validator that replays this scenario (for exampl
 | M15 | Throughput acceleration and safe parallelism | AAO 0045 |
 | M16 | Validator noise and throughput unblockers | AAO 0046-0047, 0050-0055 |
 | M17 | Atom health test extensibility | AAO 0048-0049 |
+| M18 | Eval loop evidence and atom quality intelligence | Future AAO after 0048-0049 |
 
 ## Task Roster
 
@@ -406,3 +407,51 @@ ATM already has important validation pieces: schema checks, delegated validation
 | `TASK-AAO-0049` | Default atom health test gates | M17 | planned | `TASK-AAO-0048`, `TASK-AAO-0015`, `TASK-AAO-0016`, `TASK-AAO-0023` | `packages/core/src/manager/test-runner.ts`<br>`packages/core/src/test-runner/**`<br>`schemas/test-report.schema.json`<br>`docs/ADAPTER_GUIDE.md` |
 
 The key product promise is precise: ATM does not magically prove all business logic correct. It makes atom health checks explicit, repeatable, extensible, and hard to skip when AI edits code.
+
+
+## M18 Eval Loop Evidence and Atom Quality Intelligence
+
+M18 extends the M17 test runner work into an evidence-backed evaluation loop. The goal is not to turn ATM into a full LLMOps or prompt-optimization platform. The goal is to let adopter repositories attach evaluation, observability, human feedback, cost, and quality metrics to the same governed evidence model that already protects route, scope, lock, validation, closure, and handoff.
+
+This direction is useful because atom quality can regress even when typecheck and static validators pass. Future ATM evidence should be able to answer:
+
+- Did this atom still satisfy correctness and consumer expectations?
+- Did the change improve or degrade quality scores on replayable fixtures?
+- Did token cost, latency, or external call count exceed the repository policy?
+- Which dataset, evaluator, rubric, model, prompt version, or human review supported the score?
+- Was the evaluation advisory, blocking, skipped, or not applicable?
+- Which independent AI Agent reviewed the atom, what model/source produced the review, and what diff hash did the signature cover?
+- Did multiple reviewer signatures agree, disagree, or require Captain/human tie-break?
+
+The first M18 slice should be cross-agent review signatures. If a repository has two or more identifiable AI Agent or model sources, ATM can treat an independent reviewer as a structured peer-review gate:
+
+- The author agent creates or modifies the atom.
+- A reviewer agent receives only the allowed review context: atom spec, scoped diff, validator evidence, consumer contract, rollback notes, and task boundary.
+- The reviewer leaves a signed verdict: pass, advisory concern, blocking concern, or needs human/Captain review.
+- The signature records reviewer identity, model/source, reviewed diff hash, rubric version, evidence inputs, and timestamp.
+- High-risk atoms may require dual signatures or quorum signatures such as `2-of-3`.
+- Early review can run before final closure so a reviewer can warn about scope drift, missing tests, or semantic risk while the author can still fix the patch cheaply.
+
+M18 must keep the framework boundary tight:
+
+- ATM core defines neutral report contracts and governance gates; it does not hard-code Braintrust, Ragas, LangSmith, Phoenix, OpenAI Evals, or any single vendor.
+- LLM-as-judge output is never treated as unconditional truth. Judge model, prompt/rubric version, sample human labels, and criteria drift risk must be preserved in evidence.
+- Cross-agent signatures do not replace deterministic validators. They add independent semantic review, scope review, missing-test detection, and disagreement evidence.
+- A reviewer signature must be read-only by default. If the reviewer wants changes, it reports findings; the author, Captain, or human decides the next action.
+- Production traces or user feedback can only become fixtures through an explicit redaction and permission path.
+- Cost/quality gates should start advisory unless a repository policy explicitly marks them blocking.
+
+Candidate task seeds below are intentionally not assigned task ids yet. Open concrete task cards only after `TASK-AAO-0048` and `TASK-AAO-0049` define the plugin and default gate surfaces.
+
+| Candidate task seed | Depends | Target surface | Primary validators |
+|---|---|---|---|
+| Cross-agent review signature contract | `TASK-AAO-0048`, `TASK-AAO-0049` | `schemas/test-report.schema.json`<br>`schemas/governance/closure-packet.schema.json`<br>`packages/cli/src/commands/test.ts`<br>`packages/cli/src/commands/evidence.ts` | `npm run validate:test-runner`<br>`npm run validate:schemas`<br>`npm run validate:cli` |
+| Multi-signature quorum policy | Cross-agent review signature contract | `schemas/governance/closure-packet.schema.json`<br>`packages/cli/src/commands/evidence.ts`<br>`docs/ADAPTER_GUIDE.md` | `npm run validate:schemas`<br>`npm run validate:cli`<br>`git diff --check` |
+| Early cross-agent review channel | Cross-agent review signature contract | `packages/cli/src/commands/test.ts`<br>`packages/cli/src/commands/evidence.ts`<br>`scripts/validate-test-runner.ts` | `npm run validate:test-runner`<br>`npm run validate:cli` |
+| Eval loop report evidence contract | `TASK-AAO-0048`, `TASK-AAO-0049` | `schemas/test-report.schema.json`<br>`schemas/governance/closure-packet.schema.json`<br>`packages/core/src/manager/test-runner.ts` | `npm run validate:test-runner`<br>`npm run validate:schemas`<br>`npm run validate:cli` |
+| Trace feedback to fixture promotion | Eval loop report evidence contract | `packages/cli/src/commands/evidence.ts`<br>`packages/cli/src/commands/test.ts`<br>`docs/ADAPTER_GUIDE.md` | `npm run validate:test-runner`<br>`npm run validate:cli`<br>`git diff --check` |
+| LLM judge calibration governance | Eval loop report evidence contract | `schemas/test-report.schema.json`<br>`docs/ADAPTER_GUIDE.md`<br>`scripts/validate-test-runner.ts` | `npm run validate:test-runner`<br>`npm run validate:schemas` |
+| Cost-quality regression budget | Eval loop report evidence contract | `packages/core/src/test-runner/**`<br>`packages/cli/src/commands/test.ts`<br>`scripts/validate-test-runner.ts` | `npm run validate:test-runner`<br>`npm run validate:cli` |
+| Optional observability adapter bridge | Eval loop report evidence contract | `packages/plugin-sdk/src/test-runner.ts`<br>`docs/ADAPTER_GUIDE.md` | `npm run validate:plugin-sdk`<br>`npm run validate:test-runner` |
+
+Implementation guidance: keep M18 downstream of M17. Start with cross-agent review signatures because that is the supervision model closest to ATM: one AI produces the atom, another independent AI signs or challenges it, and higher-risk atoms can require multiple signatures. After that, add generic eval report evidence, trace import, judge calibration, cost-quality budgets, and optional vendor-neutral observability bridges.

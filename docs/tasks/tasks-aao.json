@@ -4,8 +4,8 @@
   "summary": {
     "done": 0,
     "in_progress": 6,
-    "open": 14,
-    "total": 20
+    "open": 16,
+    "total": 22
   },
   "tasks": [
     {
@@ -829,6 +829,125 @@
         "docs/tasks/tasks-aao.json"
       ],
       "notes": "2026-06-05 | status: open | validation: pending | change: Phase 0 open card for frozen runner alignment before TASK-AAO-0018 clean redelivery | blocker: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0135",
+      "title": "closure/evidence data integrity hardening and import active-claim safety",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-08",
+      "created_by_agent": "captain-incident-review-2026-06-08",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Open the Phase 0 planning card for closure/evidence data integrity hardening and import active-claim safety. Bundles sha256 lowercase normalization, validator error format clarity, repair-closure upstream-evidence-fix, and tasks import preserve-active-claim default.",
+      "related": [
+        "TASK-CID-0018",
+        "TASK-AAO-0123"
+      ],
+      "depends": [
+        "TASK-AAO-0123"
+      ],
+      "acceptance": [
+        "Phase 0 planning card opens cleanly in 3KLife only.",
+        "Evidence and closure-packet writers normalize sha256 hex to lowercase on write.",
+        "validateClosurePacket distinguishes invalidFormat from missing.",
+        "repair-closure fixes upstream evidence before rebuilding closure packet.",
+        "tasks import --write skips active claims by default; --force-overwrite-claims is explicit opt-in.",
+        "No AI-Atomic-Framework source is touched in Phase 0."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-08 | status: open | validation: pending | change: Phase 0 open card for closure/evidence integrity + import active-claim safety | blocker: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0137",
+      "title": "write-path atomicity and operator diagnostics",
+      "owner": "atm-core",
+      "priority": "P2",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-09",
+      "created_by_agent": "captain-incident-review-2026-06-08",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Open the Phase 0 planning card for close transaction atomicity, runner stale write fail-closed, tasks status triangulation, and scratch output gitignore.",
+      "related": [
+        "TASK-CID-0018",
+        "TASK-AAO-0135",
+        "TASK-AAO-0136"
+      ],
+      "depends": [
+        "TASK-AAO-0135"
+      ],
+      "acceptance": [
+        "Phase 0 planning card opens cleanly in 3KLife only.",
+        "tasks close/reconcile use close-journal transaction with rollback on failure.",
+        "Runner stale blocks write actions; read-only commands pass with warning.",
+        "tasks status triangulates live ledger, transition event, and planning frontmatter.",
+        "next --output defaults to .atm-temp/ and scratch outputs are gitignored.",
+        "No AI-Atomic-Framework source is touched in Phase 0."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-09 | status: open | validation: pending | change: Phase 0 open card for write-path atomicity + operator diagnostics | blocker: none",
       "brief": {
         "style": "classic",
         "label": "",

@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0129
 title: "taskflow open task-plan generation and opener delegation dry-run"
 milestone: M16
-status: open
+status: in_progress
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
+started_at: "2026-06-07T09:31:52.6890614+08:00"
+started_by_agent: "007"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -44,7 +44,7 @@ non_goals:
   - "Do not touch TASK-AAO-0128."
   - "Do not fold opener implementation work into this card."
   - "Do not widen the Phase 1 scope beyond taskflow open planning and opener delegation dry-run."
-notes: "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for taskflow open task-plan generation and opener delegation dry-run | blocker: none"
+notes: "2026-06-07 | status: in_progress | validation: pending | change: Phase 0 open card received by 007 for taskflow open task-plan generation and opener delegation dry-run | blocker: none"
 ---
 
 # TASK-AAO-0129 taskflow open task-plan generation and opener delegation dry-run
