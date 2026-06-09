@@ -2,7 +2,9 @@
 doc_id: doc_cid_0019
 task_id: TASK-CID-0019
 title: "Deterministic composer and MergePlan"
-status: planned
+status: done
+completed_at: "2026-06-08T15:57:19.559Z"
+completed_by_agent: "008"
 owner: atm-core
 priority: P0
 milestone: P0
