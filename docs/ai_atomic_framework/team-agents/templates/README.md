@@ -10,7 +10,7 @@ target_repo: AI-Atomic-Framework
 milestone: M0/M1 docs-only
 public_tracking: false
 created_at: 2026-05-28
-last_updated: 2026-05-28
+last_updated: 2026-06-04
 ---
 
 # Team Agents Templates
@@ -18,7 +18,7 @@ last_updated: 2026-05-28
 這個目錄存放 ATM Team Agents 的最小模板套件。
 M0（先前的 commit）固化了 6 份 Markdown 模板，本份 README 屬於 **M1 docs-only**，定義它們的用途、選用時機、最小工作流。
 
-> **這是 docs-only 規劃層**：模板尚未綁定 JSON schema、尚未綁定 CLI runtime、不寫 `.atm/runtime/**`，也不取代任何 ATM gate。實作層（schema / validator / CLI）將在後續任務卡 `TASK-TEAM-0004 ~ TASK-TEAM-0006`（target repo：AI-Atomic-Framework）中落地。
+> **這是 docs-only 規劃層**：模板尚未綁定完整 CLI runtime、不寫 `.atm/runtime/**`，也不取代任何 ATM gate。實作層（schema / validator / knowledge index / CLI）將在後續任務卡 `TASK-TEAM-0004 ~ TASK-TEAM-0006` 與 `TASK-TEAM-0020+`（target repo：AI-Atomic-Framework）中落地。
 
 ## 範圍
 
@@ -34,7 +34,7 @@ M0（先前的 commit）固化了 6 份 Markdown 模板，本份 README 屬於 *
 | [`agent-report.md`](./agent-report.md) | 隊員工作回報 | **worker done**：每位 agent 完成一輪後交回 |
 | [`team-summary.md`](./team-summary.md) | 隊長彙整 | **captain wrap-up**：close / checkpoint 前必寫 |
 | [`captain-decision.md`](./captain-decision.md) | 隊長決策記錄 | **major decision**：遇到分歧、拆卡、升級 channel 等需拍板情境 |
-| [`team-memory-shard.md`](./team-memory-shard.md) | 任務知識碎片 | **lesson learned**：任務後若有可重用經驗才寫 |
+| [`team-memory-shard.md`](./team-memory-shard.md) | 任務知識碎片 | **lesson learned**：任務後若有可重用經驗才寫；M2K+ 可作為 knowledge index 的 canonical shard source |
 | [`patrol-report.md`](./patrol-report.md) | 巡邏報告 | **patrol**：Atomic Police / Patrol Agent 巡查時使用 |
 
 ## 最小工作流
@@ -52,7 +52,7 @@ M0（先前的 commit）固化了 6 份 Markdown 模板，本份 README 屬於 *
 [4] 若中途遇到重大分歧 → captain-decision.md（每筆獨立一份，逐筆追溯）
      │
      ▼
-[5] 任務結束後若有可重用經驗 → team-memory-shard.md（諮詢性，不是 task ledger）
+[5] 任務結束後若有可重用經驗 → team-memory-shard.md（諮詢性，不是 task ledger；M2K+ 可被索引）
      │
      ▼
 [6] 巡邏（daily / claim-preflight / close-preflight / big-script）→ patrol-report.md
@@ -73,11 +73,17 @@ M0（先前的 commit）固化了 6 份 Markdown 模板，本份 README 屬於 *
 3. **這些模板不取代 ATM evidence。**
    `team-summary.md` 與 `team-memory-shard.md` 是諮詢層文件；正式 evidence 仍由 Coordinator 寫入 `.atm/history/evidence/<TASK-ID>.json`。
 
-4. **這些模板不取代 task card。**
+4. **知識查詢預設由 Captain / Planner / Knowledge Scout 先做。**
+   不預設每位 agent 開工都自行掃描 shard corpus。正常流程應先 query、再濃縮 top hits 進 brief，避免 token 與延遲失控。
+
+5. **這些模板不取代 task card。**
    ATM `TASK-*.task.md` 仍是任務真相來源；本目錄模板是工作面溝通格式，不能用來覆寫任務狀態。
 
-5. **Exclusive permission 唯一性。**
+6. **Exclusive permission 唯一性。**
    `team-brief.md` 內若分派寫入型權限（`task.lifecycle` / `git.write` / `file.write` / `database.write` / `pipeline.write` / `ci.write` / `evidence.write` / `sandbox.write`），同一 team run 內每個 exclusive 權限只能有一個 owner。
+
+7. **canonical shard 與 generated cache 分層。**
+   `team-memory-shard.md` 這類可 review 的 lesson source 與 `.atm/runtime/knowledge/**` 這類可重建 cache / index 不可混放。runtime cache 永遠不該成為新真相來源。
 
 ## 命名與檔案存放建議
 
@@ -85,8 +91,11 @@ M0（先前的 commit）固化了 6 份 Markdown 模板，本份 README 屬於 *
 - 實際填寫的副本：建議放在所屬任務的 evidence 目錄或專案 working notes 中，例如：
   - `3KLife/local/team-runs/<TASK-ID>/team-brief.md`
   - `AI-Atomic-Framework/.atm/history/team-runs/<TASK-ID>/team-summary.md`（待 runtime 落地後才使用）
+  - `AI-Atomic-Framework/.atm/knowledge/framework/shards/<SHARD-ID>.md`（framework 專屬 lesson）
+  - `<adopter-repo>/.atm/knowledge/project/shards/<SHARD-ID>.md`（project / adopter 專屬 lesson）
+  - `<repo>/.atm/runtime/knowledge/**`（manifest / inverted-index / stats / embedding cache；generated only）
 
-> 本份 README 僅描述 docs-only 規範，存放路徑屬於建議；正式存放規範將在 `TASK-TEAM-0011 ~ TASK-TEAM-0016` 落地 runtime 時定義。
+> 本份 README 僅描述 docs-only 規範，存放路徑屬於建議；正式存放與 query / compact 規範將在 `TASK-TEAM-0011 ~ TASK-TEAM-0016` 與 `TASK-TEAM-0020+` 落地時定義。
 
 ## 相關文件
 

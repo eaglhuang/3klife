@@ -36,8 +36,8 @@ atomizationImpact:
   mapUpdates:
     - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 outOfScope:
-  - "Persistent knowledge-base search"
-  - "Team runtime storage"
+  - "Knowledge query engine / vector retrieval implementation"
+  - "Team runtime storage / index rebuild logic"
   - "Automated subagent orchestration"
 nonGoals:
   - "Do not make memory shards a second source of task truth"
@@ -67,7 +67,7 @@ dispatch_pattern:
     - "Phase 1 must not touch any 3KLife path"
     - "validator extends 0004's script; no new script file"
     - "captain-decision contains decision/options/chosen/reason/risk/needLieutenant/nextTeamShape"
-    - "team-memory-shard contains taskType/symptom/lesson/reuseWhen/avoidWhen/relatedCommands/relatedFiles"
+    - "team-memory-shard contains knowledgeScope/repoId/pathHints/relatedAtoms/relatedValidators/taskType/symptom/lesson/reuseWhen/avoidWhen/freshness/retentionClass/relatedCommands/relatedFiles"
     - "templates declare advisory-only (no ATM gate authority)"
 ninety_minute_promise:
   contributes_to: "first-card-in-90-min (M2)"
@@ -88,6 +88,7 @@ Team captains need a lightweight way to record decisions, tradeoffs, task lesson
 - Extend the template validator from `TASK-TEAM-0004`.
 - Keep the templates Markdown-first and human-readable.
 - Treat memory shards as advisory knowledge, not a task ledger.
+- Make the memory shard retrieval-ready: it should expose metadata future query tooling can filter on without turning the shard into a registry.
 
 ## Deliverables
 
@@ -105,7 +106,7 @@ Team captains need a lightweight way to record decisions, tradeoffs, task lesson
 ## Acceptance Criteria
 
 - `captain-decision` records decision, options considered, chosen option, reason, risk, lieutenant need, and next team shape.
-- `team-memory-shard` records task type, symptom, lesson, reuse conditions, avoid conditions, related commands, and related files.
+- `team-memory-shard` records knowledge scope, repo id, retrieval hints, task type, symptom, lesson, reuse conditions, avoid conditions, freshness / retention hints, related commands, and related files.
 - The validator covers both new templates.
 - The templates do not claim authority over ATM gates, evidence, or task status.
 
@@ -121,4 +122,4 @@ Revert the template and validator changes.
 
 ## Notes
 
-This card turns Team Agents into a learning system without introducing a separate registry.
+This card prepares Team Agents for indexed lesson reuse without introducing a second registry or a new task truth source.

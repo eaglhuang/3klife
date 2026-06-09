@@ -67,7 +67,7 @@ nonGoals:
 ## Why
 
 M0/M1 只有人類可讀的 Markdown 模板；M2 需要讓工具能解析和驗證模板的必填欄位。
-這張卡是 TASK-TEAM-0004/0005/0006 的「schema 封裝層」，讓 validator 從純字串 match 升級為 schema-driven 驗證。
+這張卡是 TASK-TEAM-0004/0005/0006 的「schema 封裝層」，讓 validator 從純字串 match 升級為 schema-driven 驗證，並為後續 knowledge index 準備 retrieval-ready metadata。
 
 ## Atomization Plan
 
@@ -90,7 +90,7 @@ Split:               若 validator 腳本超過 400 行，拆成 schema-loader.t
    - `agent-report.schema.json`：必填 Role/Status/Files/Findings/Recommendation
    - `team-summary.schema.json`：必填 Decision/Validators/Evidence/Close-Ready
    - `captain-decision.schema.json`：必填 Options/Chosen/Reason/Risk
-   - `team-memory-shard.schema.json`：必填 Symptom/Lesson/Reuse/Avoid
+   - `team-memory-shard.schema.json`：必填 KnowledgeScope/RepoId/PathHints/RelatedAtoms/RelatedValidators/Symptom/Lesson/Reuse/Avoid/Freshness/RetentionClass
    - `patrol-report.schema.json`：必填含 `readonly: true` 欄位且不允許 `file.write` 權限
 2. 擴充 `scripts/validate-team-agents-templates.ts`（或新建，若 TASK-TEAM-0004 尚未建立）：
    - 接受 `--fixtures <dir>` 參數，掃描 fixture `.md` 檔逐一 validate
@@ -113,6 +113,7 @@ Split:               若 validator 腳本超過 400 行，拆成 schema-loader.t
 
 - 6 份 Markdown 模板 fixture 可被 validator 解析，全部 PASS
 - Atomization Plan 9 欄（Primary atom / Related atoms / Capability touched / Command surface / Large-script risk / Map update needed / Recommended implementation slice / Do-not-cross boundary / Split recommendation）缺任一欄時 FAIL
+- `team-memory-shard.schema.json` 必須驗證 retrieval metadata 與 advisory-only 欄位，不可把 shard 提升成 task truth / evidence authority
 - `patrol-report.schema.json` 必須標示 `readOnly: true` 且含「未授權不得寫入 source」語義欄位
 - `node --strip-types scripts/validate-team-agents-templates.ts --fixtures` 在空 fixture 目錄 exit 0，在含缺欄 fixture 時 exit 1
 - `npm run typecheck` 通過（no new type errors）

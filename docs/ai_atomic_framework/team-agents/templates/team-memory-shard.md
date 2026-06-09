@@ -2,7 +2,7 @@
 # Team Memory Shard（任務知識碎片模板）
 
 > 用途：把單次 team run 學到的、值得下次重用的具體經驗寫成一份小文件。**不是任務日誌、不是 task ledger、不是 evidence**，純諮詢性知識。
-> 規範：一個 shard 對應一個可重用的 lesson，避免大雜燴；未來可序列化為 `atm.teamMemoryShard.v1` JSON schema。
+> 規範：一個 shard 對應一個可重用的 lesson，避免大雜燴；未來可序列化為 `atm.teamMemoryShard.v1` JSON schema，並作為 knowledge index 的 canonical shard source。
 
 ---
 
@@ -13,6 +13,20 @@
 - Created by：（Captain identity）
 - Source task：（哪張任務卡催生這個 shard；例：`TASK-TEAM-0004`）
 - Confidence：（low | medium | high；蒐證越紮實越高）
+- Knowledge scope：（framework | project）
+- Repo ID：（例：`AI-Atomic-Framework` / `<adopter-repo>`）
+- Freshness：（fresh | review | stale）
+- Retention class：（hot | warm | archive-candidate）
+
+## Retrieval Hints
+
+> 這些欄位是給後續 index / query 用的提示，不是新的權威資料。
+
+- Path hints：（例：`packages/cli/src/commands/team.ts`、`docs/governance/team-agents/**`）
+- Related atoms：
+- Related validators：
+- Command surface：
+- Tags：
 
 ## Task Type
 
@@ -53,11 +67,24 @@
 
 - `<command>`
 
+## Related Validators（可選）
+
+> 與此 lesson 最有關的 validator / guard。
+
+- `<validator>`
+
 ## Related Files
 
 > 與此 lesson 相關、值得保留指向的檔案。
 
 - `path/...`
+
+## Supersession（可選）
+
+> 若這份 lesson 已被更新版取代，或它本身正在取代舊版，記在這裡。
+
+- Supersedes：
+- Superseded by：
 
 ## Anti-Pattern（可選）
 
@@ -76,6 +103,17 @@
 - Created by: codex-gpt-5.5
 - Source task: TASK-TEAM-0004
 - Confidence: high
+- Knowledge scope: framework
+- Repo ID: AI-Atomic-Framework
+- Freshness: fresh
+- Retention class: hot
+
+## Retrieval Hints
+- Path hints: packages/cli/src/commands/team.ts; scripts/validate-team-agents-templates.ts
+- Related atoms: atm.team-agents-template-map
+- Related validators: node --strip-types scripts/validate-team-agents-templates.ts --task <ID>
+- Command surface: node atm.mjs team knowledge query --task <ID> --json
+- Tags: template, validator, lexical-first
 
 ## Task Type
 - Channel: normal
@@ -99,9 +137,17 @@
 - `node --strip-types scripts/validate-team-agents-templates.ts --task <ID>`
 - `git diff --check`
 
+## Related Validators
+- `npm run typecheck`
+- `node --strip-types scripts/validate-team-agents-templates.ts --task <ID>`
+
 ## Related Files
 - docs/governance/team-agents/templates/*.md
 - scripts/validate-team-agents-templates.ts
+
+## Supersession
+- Supersedes:
+- Superseded by:
 
 ## Anti-Pattern
 - 不要用 regex 比對整份 Markdown 內容，只比對 section heading 即可，否則維護成本爆炸。
