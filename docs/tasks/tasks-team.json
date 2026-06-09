@@ -44,11 +44,13 @@
     "title": "Team command atom boundary preflight",
     "owner": "atm-core",
     "priority": "P0",
-    "status": "planned",
+    "status": "done",
     "type": "implementation",
     "phase": "M1P",
     "created": "2026-06-09",
     "created_by_agent": "TEAM-CAPTAIN",
+    "started_at": "2026-06-09",
+    "started_by_agent": "008",
     "planning_repo": "3KLife",
     "target_repo": "AI-Atomic-Framework",
     "closure_authority": "target_repo",
@@ -76,6 +78,6 @@
       "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json",
       "C:/Users/User/AI-Atomic-Framework/docs/governance/team-agents/team-atom-boundaries.md"
     ],
-    "notes": "2026-06-09 | planned | Opened as pre-parallel atom-boundary card; tightened with planning allowedFiles whitelist, atom-boundary evidence requirements, real collision precheck, and sidecar-first dispatch split. path-to-atom-map owner sharding is already tracked by TASK-AAO-0106."
+    "notes": "2026-06-09 | done | AAF delivery c8981a93 + ledger 88f70de6 + closure 16a0cffb; split team.ts/team.spec.ts into 13 function-anchored atoms via owner-shard-cli.json."
   }
 ]

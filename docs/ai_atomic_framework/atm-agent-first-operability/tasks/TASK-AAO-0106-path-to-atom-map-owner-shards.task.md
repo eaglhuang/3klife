@@ -1,7 +1,9 @@
 ---
 task_id: TASK-AAO-0106
 title: "Path-to-atom-map owner shards"
-status: open
+status: done
+completed_at: "2026-06-09T12:00:00+08:00"
+completed_by_agent: "008"
 priority: high
 created_at: 2026-06-01T23:59:00+08:00
 created_by_agent: codex-gpt-5
@@ -54,7 +56,7 @@ validators:
   - "node scripts/validate-atomization-coverage.ts"
   - "node scripts/validate-atom-id-to-cid.ts"
 rollback_hint: "先回退 owner shards 與 merge projection touched files；單檔 projection 若需回退，應由 shard merge 流程重建或回退來源 shard，不直接手編。"
-notes: "2026-06-01 | 狀態: open | 驗證: pending | 變更: 建立 path-to-atom-map owner shards 草案卡；與 registry external-parts 分卡 | 阻塞: 無"
+notes: "2026-06-09 | 狀態: done | 驗證: pass | 變更: AAF delivery 8aa82b20 + ledger 69f64731 (owner shards + merge projection) | 阻塞: 無"
 ---
 
 # TASK-AAO-0106 Path-to-atom-map owner shards

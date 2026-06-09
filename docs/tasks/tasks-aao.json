@@ -2,9 +2,9 @@
   "shard": "AAO",
   "generated": "2026-06-01",
   "summary": {
-    "done": 0,
+    "done": 1,
     "in_progress": 6,
-    "open": 16,
+    "open": 15,
     "total": 22
   },
   "tasks": [
@@ -583,11 +583,11 @@
       "priority": "high",
       "phase": "M0",
       "owner": "codex-gpt-5",
-      "status": "open",
+      "status": "done",
       "created": "2026-06-01",
       "created_by_agent": "codex-gpt-5",
-      "started_at": "",
-      "started_by_agent": "",
+      "started_at": "2026-06-09",
+      "started_by_agent": "008",
       "type": "implementation",
       "title": "Path-to-atom-map owner shards",
       "description": "Split path-to-atom-map ownership into deterministic shards so CLI and validators can merge ownership without silent override.",
@@ -608,7 +608,7 @@
         "Path or glob ownership documentation for shard routing.",
         "CLI and script compatibility for owner shards."
       ],
-      "notes": "2026-06-01 | status: open | validation: pending | change: path-to-atom-map owner shards opened | blocker: none | risk: ownership collision and silent override"
+      "notes": "2026-06-09 | status: done | validation: pass | change: AAF delivery 8aa82b20 + ledger 69f64731 | blocker: none | risk: ownership collision and silent override"
     },
     {
       "doc_id": "",
