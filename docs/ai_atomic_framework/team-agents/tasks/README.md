@@ -26,7 +26,7 @@ Every `TASK-TEAM-*` card follows the ATM task-card authoring contract:
 - `rollback`: revertable rollback guidance.
 - `atomizationImpact`: owner atom/map and required map updates.
 
-Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: planning_repo`. Framework implementation cards set `target_repo: AI-Atomic-Framework` and `closure_authority: target_repo`. Cross-repo reconciliation bridge cards may keep `planning_repo: 3KLife` while pointing `target_repo` at `AI-Atomic-Framework` when Phase 0 only opens the lane and Phase 1 is owned by the target repo.
+Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: planning_repo`. Framework implementation cards set `target_repo: AI-Atomic-Framework` and `closure_authority: target_repo`. Cross-repo reconciliation bridge cards may keep `planning_repo: 3KLife` while pointing `target_repo` at `AI-Atomic-Framework` when Phase 0 only opens the lane and Phase 1 is owned by the target repo; in that shape, `closure_authority` may still stay `planning_repo` if the card closes after delivering only the Phase 0 opener.
 
 ## Task Roster
 
@@ -53,7 +53,7 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | [TASK-TEAM-0019](./TASK-TEAM-0019-team-sandbox-attestation-closure-contract.task.md) | M6H | Team sandbox attestation and closure contract | draft | `TASK-TEAM-0016`, `TASK-TEAM-0018` | sandbox / closure hardening |
 | [TASK-TEAM-0020](./TASK-TEAM-0020-team-knowledge-storage-boundary-index-contract.task.md) | M2K | Team knowledge storage boundary and index contract | planned | `TASK-TEAM-0005`, `TASK-TEAM-0017` | knowledge contract / storage boundary |
 | [TASK-TEAM-0025](./TASK-TEAM-0025-task-import-dispatch-metadata-preservation.task.md) | M4K | Task import dispatch metadata preservation | planned | `TASK-TEAM-0017`, `TASK-TEAM-0020` | task import / canonical ledger / sidecar dispatch |
-| [TASK-TEAM-0026](./TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md) | M4R | TEAM safe mirror/import ledger reconciliation lane | planned | `TASK-TEAM-0025`, `TASK-TEAM-0020` | 3KLife planning -> AI-Atomic-Framework Phase 1 handoff |
+| [TASK-TEAM-0026](./TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md) | M4R | TEAM safe mirror/import ledger reconciliation lane | planned | `TASK-TEAM-0001` (Phase 0 opener) | 3KLife planning opener -> later AI-Atomic-Framework Phase 1 handoff |
 | [TASK-TEAM-0021](./TASK-TEAM-0021-team-knowledge-build-query-dry-run.task.md) | M4K | Team knowledge build and query dry-run | planned | `TASK-TEAM-0020` | knowledge build / query |
 | [TASK-TEAM-0023](./TASK-TEAM-0023-team-knowledge-retention-disk-budget-guard.task.md) | M5K | Team knowledge retention and disk budget guard | planned | `TASK-TEAM-0021` | compact / stats / budget guard |
 | [TASK-TEAM-0022](./TASK-TEAM-0022-captain-knowledge-preflight-brief-integration.task.md) | M6K | Captain knowledge preflight brief integration | planned | `TASK-TEAM-0015`, `TASK-TEAM-0021` | `next` / `team plan` guidance |
@@ -62,6 +62,21 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 ## Sequencing Note
 
 Open and import these cards by milestone order. Do not reuse the previous `TASK-TEAM-0001` to `TASK-TEAM-0004` draft semantics; those early drafts were superseded by the M0-M6 rollout.
+
+## Practical Rollout Order
+
+Use this order when the goal is "ship Team Agents in a way humans can actually adopt", not "open every future card as early as possible":
+
+1. `TASK-TEAM-0001` to freeze the lane and clean the roster truth.
+2. `TASK-TEAM-0002`, `TASK-TEAM-0003` to make planning/atomization roles visible from the start.
+3. `TASK-TEAM-0004`, `TASK-TEAM-0005`, `TASK-TEAM-0006`, then `TASK-TEAM-0017` so the first-card template stack and its schema/validator become stable.
+4. `TASK-TEAM-0007`, `TASK-TEAM-0008`, `TASK-TEAM-0009`, `TASK-TEAM-0010` to turn docs-only roles into a real team planning/runtime surface.
+5. `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0013` to make runtime state, permission lease, and file-write boundaries trustworthy.
+6. `TASK-TEAM-0014` and `TASK-TEAM-0015` in parallel where possible, then `TASK-TEAM-0016` to close the first full plan -> run -> report -> close loop.
+7. `TASK-TEAM-0018`, `TASK-TEAM-0019` only after the core runtime loop is stable, because they harden concurrency and attestation rather than bootstrap the lane.
+8. `TASK-TEAM-0026` Phase 0 opener can run early in parallel with the above as a planning bridge, but its Phase 1 AAF reconciliation must wait for the knowledge-track prerequisites below.
+9. `TASK-TEAM-0020` -> `TASK-TEAM-0025` -> `TASK-TEAM-0021` -> `TASK-TEAM-0023` -> `TASK-TEAM-0022` -> `TASK-TEAM-0024` as the advisory knowledge track.
+10. `TASK-TEAM-0026` Phase 1 handoff only after `TASK-TEAM-0020` and `TASK-TEAM-0025` are closed and the safe subset still holds.
 
 ## Parallelization Plan for M1-M2
 
@@ -165,10 +180,12 @@ All `TASK-TEAM-0020+` cards must keep the knowledge layer advisory-only:
 
 ## Safe Mirror / Import Reconciliation Lane
 
-`TASK-TEAM-0026` is the 3KLife planning bridge for the safe TEAM mirror/import subset. Phase 0 stays in 3KLife; Phase 1 is handed to AI-Atomic-Framework via `target_repo` / `closure_authority`.
+`TASK-TEAM-0026` is the 3KLife planning bridge for the safe TEAM mirror/import subset. It is now intentionally shaped as an executable Phase 0 opener in 3KLife, while the actual AAF reconciliation remains a later Phase 1 handoff.
 
-- Phase 0 writes only the 3KLife planning docs, the task card, and the TEAM ledger/shard.
+- Phase 0 writes only the 3KLife planning docs, the task card, and the TEAM ledger/shard, and may close in `planning_repo`.
+- Phase 0 may start before `TASK-TEAM-0020` and `TASK-TEAM-0025`, because its job is to freeze the route rather than execute the route.
 - Phase 1 target repo is `AI-Atomic-Framework`, and the safe subset remains `TASK-TEAM-0001..0019 / 0025`.
+- Phase 1 must still wait for `TASK-TEAM-0020` and `TASK-TEAM-0025`, because those cards stabilize the knowledge boundary and canonical dispatch metadata.
 - The forbidden residue is `TASK-TEAM-0020..0024`, `TASK-AAO-*`, and AAF source/runtime noise.
 - The ledger stays compact so route checks stay fast and disk pressure stays low.
 
@@ -176,12 +193,14 @@ All `TASK-TEAM-0020+` cards must keep the knowledge layer advisory-only:
 
 The current kickoff order for a sidecar-assisted knowledge track is:
 
-1. `TASK-TEAM-0020`
-2. `TASK-TEAM-0025`
-3. `TASK-TEAM-0021`
-4. `TASK-TEAM-0023`
-5. `TASK-TEAM-0022`
-6. `TASK-TEAM-0024` only if lexical-first evidence proves it is needed
+1. `TASK-TEAM-0026` Phase 0 opener
+2. `TASK-TEAM-0020`
+3. `TASK-TEAM-0025`
+4. `TASK-TEAM-0021`
+5. `TASK-TEAM-0023`
+6. `TASK-TEAM-0022`
+7. `TASK-TEAM-0024` only if lexical-first evidence proves it is needed
+8. `TASK-TEAM-0026` Phase 1 handoff only after `TASK-TEAM-0020` and `TASK-TEAM-0025`
 
 Execution source split:
 

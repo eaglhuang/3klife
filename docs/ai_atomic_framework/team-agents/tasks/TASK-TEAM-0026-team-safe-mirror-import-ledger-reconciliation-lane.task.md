@@ -7,41 +7,39 @@ owner: atm-core
 priority: P1
 milestone: M4R
 depends_on:
-  - "TASK-TEAM-0025"
-  - "TASK-TEAM-0020"
+  - "TASK-TEAM-0001"
 related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
-closure_authority: target_repo
+closure_authority: planning_repo
 scopePaths:
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
+  - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
+  - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/README.md"
+  - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md"
+  - "C:/Users/User/3KLife/docs/tasks/tasks-team.json"
+  - "C:/Users/User/3KLife/docs/tasks/tasks-team/tasks-team-part-1.json"
 deliverables:
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**"
-  - "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
+  - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
+  - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/README.md"
+  - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md"
+  - "C:/Users/User/3KLife/docs/tasks/tasks-team.json"
+  - "C:/Users/User/3KLife/docs/tasks/tasks-team/tasks-team-part-1.json"
 validators:
-  - "npm.cmd run check:encoding:touched -- --files <TEAM-0026 touched files only>"
-  - "node tools_node/shard-manager.js validate <TEAM tasks shard>"
+  - "npm.cmd run check:encoding:touched -- --files docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md docs/ai_atomic_framework/team-agents/tasks/README.md docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md docs/tasks/tasks-team.json docs/tasks/tasks-team/tasks-team-part-1.json"
+  - "node tools_node/shard-manager.js validate docs/tasks/tasks-team"
   - "git diff --check"
 evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
-  notes: "Revert the TEAM planning docs, ledger file, shard config, and shard part together."
+  notes: "Revert the TEAM Phase 0 planning opener docs and shard updates together."
 atomizationImpact:
   ownerAtomOrMap: "atm.planning-bridge-map"
   mapUpdates: []
-  notes: "Planning-only lane; downstream AAF implementation remains a separate target-repo card."
+  notes: "Phase 0 opener only; the later AAF reconciliation lane stays a separate target-repo follow-up."
 outOfScope:
   - "AAF source tree"
+  - "AAF .atm/history/tasks/TASK-TEAM-0001..0019 / 0025 Phase 1 delivery"
   - "Framework evidence history"
   - "Framework runtime surfaces"
   - "Framework command surfaces"
@@ -58,18 +56,24 @@ nonGoals:
   - "Do not reintroduce the dangerous TASK-TEAM-0020..0024 residue"
   - "Do not require every agent to read the full corpus before work can start"
 dispatch_pattern:
-  shape: "dual-agent (Phase 0 planning lane + Phase 1 future safe-lane builder)"
-  rationale: "Phase 0 carves the legal TEAM reconciliation lane in planning docs only; Phase 1 is handed to AI-Atomic-Framework and uses the frozen safe subset and the forbidden fence to keep AAF source clean."
+  shape: "Phase 0 planning opener + later Phase 1 target-repo handoff"
+  rationale: "Phase 0 is executable now inside 3KLife so the safe TEAM subset, forbidden residue, and future AAF handoff can be frozen before knowledge/runtime cards land. Phase 1 remains a later target-repo move."
   phase_0:
-    lane: "helper (read-only sidecar)"
+    lane: "planning opener"
     allowed_files:
-      - "3KLife TEAM planning docs"
-      - "TASK-TEAM-0026 planning card"
-      - "TEAM ledger and shard files"
-    commit_budget: 0
-    output: "Phase 1 brief that freezes the safe TEAM mirror/import subset, names the forbidden residue, and defines the future commit lane."
+      - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
+      - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/README.md"
+      - "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md"
+      - "C:/Users/User/3KLife/docs/tasks/tasks-team.json"
+      - "C:/Users/User/3KLife/docs/tasks/tasks-team/tasks-team-part-1.json"
+    allowed_files_strict: true
+    commit_budget: 1
+    output: "A route-visible Phase 0 packet that freezes the safe TEAM mirror/import subset, forbidden residue, and later AAF Phase 1 activation rule."
   phase_1:
-    lane: "AI-Atomic-Framework target_repo batch lane"
+    lane: "future AI-Atomic-Framework target_repo reconciliation lane"
+    activation_requires:
+      - "TASK-TEAM-0020"
+      - "TASK-TEAM-0025"
     allowed_files:
       - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json"
       - "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json"
@@ -93,6 +97,7 @@ dispatch_pattern:
     commit_layout:
       - "commit_1: TEAM safe subset reconciliation only"
 condition_review:
+  - "Phase 0 closes in 3KLife without mutating the AAF ledger"
   - "TASK-TEAM-0001..0019 / 0025 stay in the safe subset"
   - "No running TEAM task is reset back to planned"
   - "No claim, owner, startedAt, startedByActor, or taskDirectionLock is removed"
@@ -104,7 +109,7 @@ condition_review:
 
 ## Goal
 
-Create a legal TEAM-only reconciliation lane for the already-safe mirror/import subset so later agents can route it without mixing in dangerous residue or AAF source fixes.
+Turn `TASK-TEAM-0026` into an executable Phase 0 planning opener that freezes the safe TEAM mirror/import subset now, while leaving the actual AAF reconciliation as a later Phase 1 handoff.
 
 ## Why
 
@@ -114,21 +119,23 @@ Create a legal TEAM-only reconciliation lane for the already-safe mirror/import 
 - all `TASK-AAO-*` work,
 - and any AAF source, release, or runtime noise.
 
-This card does not perform the reconciliation itself. It opens the planning contract, ledger, and shard that make the future route explicit.
+This card does not perform the AAF reconciliation itself. It opens and closes the planning contract in 3KLife first, so later agents can activate the AAF lane without guessing which subset is safe.
 
 ## Phase 0 Contract
 
 - Phase 0 only changes 3KLife planning docs, the TEAM task card, and the TEAM ledger/shard.
+- Phase 0 may start before `TASK-TEAM-0020` and `TASK-TEAM-0025` are implemented, because its job is to freeze the route rather than deliver the AAF import.
 - Do not mutate the AAF source tree.
 - Do not touch `TASK-TEAM-0020..0024`.
 - Do not touch AAO tasks.
 - Keep the ledger compact so route checks stay fast and disk pressure stays low.
-- The top-level `scopePaths` / `deliverables` mirror the route-visible AAF safe subset so the importer does not need to infer it from `dispatch_pattern`.
+- The top-level `scopePaths` / `deliverables` describe the Phase 0 planning opener outputs, not the later AAF Phase 1 file set.
 
 ## Phase 1 Candidate Scope
 
 - target_repo: `AI-Atomic-Framework`
-- closure_authority: `target_repo`
+- closure_authority for this card stays `planning_repo`; the AAF route is a later follow-up handoff, not this card's close event.
+- Phase 1 must wait until `TASK-TEAM-0020` and `TASK-TEAM-0025` are closed, because it relies on the knowledge boundary contract plus canonical dispatch metadata preservation.
 - Safe subset:
   - `.atm/history/tasks/TASK-TEAM-0001.json` through `TASK-TEAM-0019.json`
   - `.atm/history/tasks/TASK-TEAM-0025.json`
@@ -142,33 +149,31 @@ This card does not perform the reconciliation itself. It opens the planning cont
 
 ## Deliverables
 
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**`
-- `C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**`
+- `C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md`
+- `C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/README.md`
+- `C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md`
+- `C:/Users/User/3KLife/docs/tasks/tasks-team.json`
+- `C:/Users/User/3KLife/docs/tasks/tasks-team/tasks-team-part-1.json`
 
 ## Validators
 
-- `npm.cmd run check:encoding:touched -- --files docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md docs/ai_atomic_framework/team-agents/tasks/README.md docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md docs/tasks/README.md docs/tasks/tasks-team.json docs/tasks/tasks-team/.shardrc.json docs/tasks/tasks-team/tasks-team-part-1.json`
+- `npm.cmd run check:encoding:touched -- --files docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md docs/ai_atomic_framework/team-agents/tasks/README.md docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md docs/tasks/tasks-team.json docs/tasks/tasks-team/tasks-team-part-1.json`
 - `node tools_node/shard-manager.js validate docs/tasks/tasks-team`
-- `node tools_node/check-doc-shard-health.js`
 - `git diff --check`
 
 ## Acceptance Criteria
 
 - The TEAM planning docs name a separate safe mirror/import reconciliation lane.
+- Phase 0 can be implemented and closed in 3KLife before `TASK-TEAM-0020` and `TASK-TEAM-0025` land.
 - The TEAM ledger stays small and readable instead of becoming a second registry.
 - The shard path is explicit and stays advisory-only.
-- Phase 1 is limited to the safe subset `0001..0019 / 0025`.
+- Phase 1 is limited to the safe subset `0001..0019 / 0025` and still waits for `TASK-TEAM-0020` plus `TASK-TEAM-0025`.
 - `TASK-TEAM-0020..0024`, `TASK-AAO-*`, and AAF source/runtime noise remain excluded.
 
 ## Rollback
 
-Revert the TEAM planning docs, ledger file, shard config, and shard part together.
+Revert the TEAM planning docs and shard entries together.
 
 ## Notes
 
-This card is planning-only in Phase 0. Phase 1 is a target_repo handoff to AI-Atomic-Framework, and a later governed route check must still happen before any actual TEAM subset commit is attempted.
-Repository-wide doc shard health is advisory only here; it currently reports unrelated large-doc noise outside the TEAM lane.
+This card is now a planning-only Phase 0 opener. Closing it means the planning bridge is frozen in 3KLife; it does not mean the AAF reconciliation has already happened.

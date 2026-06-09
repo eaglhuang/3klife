@@ -12,31 +12,30 @@
     "created_by_agent": "TEAM-CAPTAIN",
     "planning_repo": "3KLife",
     "target_repo": "AI-Atomic-Framework",
-    "closure_authority": "target_repo",
-    "description": "Planning bridge that exposes the safe TEAM mirror/import subset cleanly for AAF Phase 1 without route-visible raw path pollution.",
+    "closure_authority": "planning_repo",
+    "description": "Executable Phase 0 planning opener that freezes the safe TEAM mirror/import subset and later AAF Phase 1 activation rule without touching AAF source.",
     "related": [
       "TASK-TEAM-0001",
       "TASK-TEAM-0020",
       "TASK-TEAM-0025"
     ],
     "depends": [
-      "TASK-TEAM-0025",
-      "TASK-TEAM-0020"
+      "TASK-TEAM-0001"
     ],
     "acceptance": [
+      "Phase 0 can be implemented and closed in 3KLife before TASK-TEAM-0020 and TASK-TEAM-0025 land.",
       "The plan names TASK-TEAM-0001..0019 / 0025 as the only safe subset.",
       "The plan forbids TASK-TEAM-0020..0024, TASK-AAO-*, and AAF source/runtime noise.",
       "The TEAM ledger remains thin and fast to read.",
-      "The route can be handed to Captain after route check."
+      "Phase 1 handoff stays blocked until TASK-TEAM-0020 and TASK-TEAM-0025 are closed."
     ],
     "deliverables": [
-      "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-000[1-9].json",
-      "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-001[0-9].json",
-      "C:/Users/User/AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0025.json",
-      "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-000[1-9]/**",
-      "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-001[0-9]/**",
-      "C:/Users/User/AI-Atomic-Framework/.atm/history/task-events/TASK-TEAM-0025/**"
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/README.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md",
+      "C:/Users/User/3KLife/docs/tasks/tasks-team.json",
+      "C:/Users/User/3KLife/docs/tasks/tasks-team/tasks-team-part-1.json"
     ],
-    "notes": "2026-06-05 | planned | Route-visible clean handoff for safe TEAM mirror/import subset; no AAF source changes."
+    "notes": "2026-06-09 | planned | Re-scoped as executable Phase 0 planning opener; later AAF Phase 1 handoff still waits for TASK-TEAM-0020 and TASK-TEAM-0025."
   }
 ]
