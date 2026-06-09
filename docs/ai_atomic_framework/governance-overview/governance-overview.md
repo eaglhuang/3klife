@@ -479,23 +479,8 @@ Closure packet 詳細結構見 §10。
 | — | — | draft | standard | — | — |
 | — | — | draft | standard | — | — |
 | ATM-CORE-0005 | atom.core-atomic-spec-semantic-fingerprint | active | standard | atomic_workbench/atoms/ATM-CORE-0005/atom.spec.json | sha256:d7a08f9ad6e0 |
-| ATM-CLI-0001 | atom.cli-command-router | active | governed | — | — |
-| ATM-CLI-0002 | atom.cli-next-router | active | governed | — | — |
-| ATM-CLI-0003 | atom.cli-orient | active | governed | — | — |
-| ATM-CLI-0004 | atom.cli-guide-goal | active | governed | — | — |
-| ATM-CLI-0005 | atom.cli-tasks-subcommands | active | governed | — | — |
-| ATM-LOCK-0001 | atom.scope-lock-acquire | active | governed | — | — |
-| ATM-LOCK-0002 | atom.scope-lock-guard-mutation | active | governed | — | — |
-| ATM-EVD-0001 | atom.evidence-git-head-backfill | active | governed | — | — |
-| ATM-EVD-0002 | atom.evidence-verify-gate | active | governed | — | — |
-| ATM-TASK-0001 | atom.tasks-ledger-core | active | governed | — | — |
-| ATM-TASK-0002 | atom.tasks-import-from-plan | active | governed | — | — |
-| ATM-BUILD-0001 | atom.release-build-pipeline | active | governed | — | — |
-| ATM-INTEG-0001 | atom.integration-copilot-adapter | active | governed | — | — |
-| ATM-INTEG-0002 | atom.integration-codex-adapter | active | governed | — | — |
-| ATM-DOGFOOD-0001 | atom.atomize-score-dogfood | active | governed | — | — |
 
-來源：`atomic-registry.json` (generatedAt: 2026-05-25T00:07:08.115Z)
+來源：`atomic-registry.json` (generatedAt: 2026-05-20T15:08:15.683Z)
 <!-- atm:gen:registry:end -->
 
 **說明欄位**：
@@ -1662,21 +1647,21 @@ Invariant 修改或移除（breaking change）：
 
 | Commit | 日期 | 訊息 |
 |--------|------|------|
-| 4d29d7d | 2026-05-25 | fix(governance): allow adopter runner sync under task lock |
-| 48ca5d4 | 2026-05-25 | fix(release): harden root-drop and onefile validation |
-| 1922824 | 2026-05-25 | fix(governance): reuse active claims for prompt-scoped tasks |
-| 5a45ee9 | 2026-05-25 | feat(governance): add git-head evidence backfill command |
-| 9df4673 | 2026-05-25 | fix(governance): unblock legacy task claim flow |
-| 4f61acf | 2026-05-24 | fix(governance): allow adopter runner sync evidence commits |
-| d0b630a | 2026-05-24 | fix(governance): advance push-guard legacy baseline cut |
-| 10b915d | 2026-05-24 | fix(governance): align framework legacy baseline cut |
-| f92013f | 2026-05-24 | feat(governance): add push guard safety controls |
-| af03789 | 2026-05-24 | feat(governance): add legacy commit-range baseline cut |
-| b1e64dd | 2026-05-24 | feat(governance): harden queue scope and static evidence gates |
-| ae326ce | 2026-05-24 | feat(governance): snapshot framework gate provenance in closure events |
-| 5885aa3 | 2026-05-24 | feat(governance): cross-check closure packets with git-head evidence |
-| 4c503b8 | 2026-05-24 | feat(governance): formalize framework closure contract |
-| 85b92ce | 2026-05-24 | feat(governance): require fresh closure evidence for reopened work |
+| 9b16b78 | 2026-06-03 | chore(TASK-AAO-0114): close task and record closure packet |
+| 68cddc0 | 2026-06-03 | feat(TASK-AAO-0114): pre-close dirty/untracked evidence hygiene guard Phase 1 implementation |
+| 4501c20 | 2026-06-03 | atm: sync TASK-TEAM-0019 ledger mirror from planning source |
+| fbaaf86 | 2026-06-03 | atm: sync TASK-TEAM-0018 ledger mirror from planning source |
+| 908456f | 2026-06-03 | atm: sync TASK-TEAM-0017 ledger mirror from planning source |
+| f084c0d | 2026-06-03 | atm: sync TASK-TEAM-0016 ledger mirror from planning source |
+| f3b6d6f | 2026-06-03 | atm: sync TASK-TEAM-0015 ledger mirror from planning source |
+| 4660280 | 2026-06-03 | atm: sync TASK-TEAM-0014 ledger mirror from planning source |
+| 59c8fe1 | 2026-06-03 | atm: sync TASK-TEAM-0013 ledger mirror from planning source |
+| 102241d | 2026-06-03 | atm: sync TASK-TEAM-0012 ledger mirror from planning source |
+| 2bb6a85 | 2026-06-03 | atm: sync TASK-TEAM-0011 ledger mirror from planning source |
+| 7177db7 | 2026-06-03 | atm: sync TASK-TEAM-0010 ledger mirror from planning source |
+| 1f0130b | 2026-06-03 | atm: sync TASK-TEAM-0009 ledger mirror from planning source |
+| 27d86df | 2026-06-03 | atm: sync TASK-TEAM-0008 ledger mirror from planning source |
+| d87abc6 | 2026-06-03 | atm: sync TASK-TEAM-0007 ledger mirror from planning source |
 
 來源：`git log --format="%h|%ad|%s" --date=short -15`（執行於 framework-root）
 <!-- atm:gen:recent-commits:end -->

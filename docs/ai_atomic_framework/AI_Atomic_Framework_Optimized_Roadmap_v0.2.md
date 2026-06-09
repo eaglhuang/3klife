@@ -337,7 +337,7 @@ AI-Atomic-Framework/
 1. **立即開始**：執行 Week 1（Freeze + Baseline + Spec Schema）。
 2. **第一個原子**：選擇 `normalizeCssColor` 或 `parseCssLength`（低風險、易測試）。
 3. **文件強化**：新增 `HARNESS_ENGINEERING_ALIGNMENT.md`，引用 Martin Fowler 文章。
-4. **開源準備**：撰寫 CONTRIBUTING.md、設定 GitHub Actions（自動 regression）、選擇 MIT License。
+4. **開源準備**：撰寫 CONTRIBUTING.md、設定 GitHub Actions（自動 regression）、採用 Apache 2.0 License（已決定）。
 5. **社群策略**：先在 X / Reddit / Hacker News 分享「AI Vibe Coding 治理框架」概念，吸引早期 adopter。
 
 ---

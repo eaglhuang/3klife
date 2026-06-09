@@ -21,6 +21,27 @@ ATM 目前已經覆蓋一批重要基礎：
 
 但這些還不是完整測試系統。它們能降低 AI 修改風險，尤其適合小而明確的 atom；可是對副作用、consumer 語意、狀態競態、外部依賴、效能退化等問題，仍需要專門 test runner 或 host project 自己提供 fixture。
 
+## Eval Loop Direction
+
+Evaluation and Optimization Loops 對 ATM 有明確幫助，但正確定位不是把 ATM 變成完整的 LLMOps、prompt optimizer 或模型評估平台。
+
+ATM 應該吸收的是「可重放、可比較、可留下 evidence 的評估迴圈」：讓每次 AI 修改原子代碼後，不只留下傳統 validator 結果，也能留下語意品質、成本、延遲、資料集版本、評分器版本與人類回饋的結構化證據。這會讓 ATM 從「只證明流程沒有繞過」前進到「可追蹤 atom 產出品質是否變好或退步」。
+
+這個方向應維持三個邊界：
+
+- ATM core 定義 evidence contract、plugin hook、report schema 與 governance gates，不內建單一 vendor 的 observability 平台。
+- LLM-as-judge 可作為 advisory 或 gated evaluator，但必須記錄 judge prompt/model/version、rubric、dataset version 與 human calibration evidence，不能直接當成無條件真相。
+- 任何 production trace 或使用者回饋進入測試資料集前，必須有隱私、授權、去識別化與取樣規則；ATM 只記錄可審計 evidence，不鼓勵把原始敏感資料塞進 closure packet。
+
+最適合 ATM 的第一個 Eval Loop 不是泛用 dashboard，而是 cross-agent review signature：當第一個 AI Agent 產生或修改 atom 後，由第二個、第三個不同來源的 AI Agent 以只讀 reviewer 身分檢查 atom spec、diff、測試 evidence、scope、consumer contract 與 rollback 風險，並留下可審計簽章。這等同於把 pair programming / peer review 放進 ATM evidence chain。
+
+若 repo 同時具備多種可識別 AI Agent 或模型來源，ATM 可以支援 progressive signatures：
+
+- single signature：一位獨立 reviewer 對 atom closure 做 advisory 或 blocking review。
+- dual signature：兩位不同來源 reviewer 交叉檢查，適合高風險 atom 或 shared surface。
+- quorum signature：三位以上 reviewer 依 policy 要求 `2-of-3` 或 Captain/human tie-break，適合核心治理、release、security 或 sandbox 相關 atom。
+- early review：author agent 開始產生 patch 後，reviewer 可在 diff 草稿、測試結果或 closure 前先提出 warning，讓 author 在收尾前修正，而不是等到最後才退回。
+
 ## Testing Gap Matrix
 
 | 測試面向 | ATM 已覆蓋 | 還沒覆蓋 / 盲區 | 建議補的 validator or test | 對應任務 |
@@ -38,6 +59,11 @@ ATM 目前已經覆蓋一批重要基礎：
 | Time / random / external state | 可由 host validator 自行控制 | 不固定時間、亂數、外部服務狀態會造成測試不穩 | deterministic harness adapters | Future AAO |
 | Known divergences | equivalence 可接受已知差異 | waiver 或 known divergence 若不老化，可能變成永久漏洞 | divergence aging / review gate | Future AAO |
 | Observability contract | evidence 有基本 command/report | log、metric、trace 是否符合運維需求不一定被驗證 | observability contract fixtures | Future AAO |
+| Cross-agent review signature | task/evidence 可記錄人類或代理回報 | 不同 AI Agent 對同一 atom 的獨立 review、簽章、反對理由與 quorum policy 尚未是一等 evidence | cross-agent review signature schema + reviewer independence policy | Future AAO after `TASK-AAO-0048`/`TASK-AAO-0049` |
+| Early review feedback | AI 目前多在完成後才跑 validator / closure | 第二 reviewer 無法在 author 還在寫時提早對 diff、scope drift、missing tests 發出 warning | draft diff review channel + advisory warning report | Future AAO |
+| Eval loop evidence | evidence 可記錄 validator 與 command 結果 | AI 產出品質、token 成本、latency、dataset version、evaluator version 尚未是一等 evidence | eval loop report schema + experiment/evaluator evidence adapter | Future AAO after `TASK-AAO-0048`/`TASK-AAO-0049` |
+| Feedback-to-fixture loop | task / evidence / handoff 可保存人類回報 | 失敗案例、使用者回饋、review annotation 尚未自動沉澱成 replayable fixtures | trace feedback import + redaction + fixture promotion workflow | Future AAO |
+| Evaluator governance | 可透過 host validator 委派外部評估 | LLM-as-judge 會有 criteria drift、judge drift 與人類偏好不一致問題 | judge calibration gate + rubric versioning + human label alignment report | Future AAO |
 
 ## Recommended Roadmap
 
@@ -66,6 +92,25 @@ ATM 目前已經覆蓋一批重要基礎：
 - concurrency / idempotency scenario runner
 - known divergence aging gate
 
+### Phase 4 — Add Eval Loop Evidence
+
+在 `TASK-AAO-0048` 與 `TASK-AAO-0049` 之後，再把 LLM Evaluation / Observability 的成熟做法接成 ATM 的 evidence 擴充層。
+
+這一階段不應該要求 ATM core 內建所有評估工具，而是讓 adopter repository 可以把 Braintrust、Ragas、LangSmith、Phoenix、OpenAI Evals、custom judge 或本地 deterministic scorer 的結果轉成一致的 ATM report。
+
+優先順序建議如下：
+
+| Candidate task seed | Depends | Goal | Target surface |
+|---|---|---|---|
+| Cross-agent review signature contract | `TASK-AAO-0048`, `TASK-AAO-0049` | 定義 author/reviewer agent identity、model/source、reviewed diff hash、rubric、verdict、blocking/advisory outcome 與 signedAt | `schemas/test-report.schema.json`、`schemas/governance/closure-packet.schema.json`、`packages/cli/src/commands/test.ts` |
+| Multi-signature quorum policy | Cross-agent review signature contract | 讓 repo policy 可要求 single/dual/quorum signatures，並支援 reviewer disagreement 交由 Captain 或 human review 裁決 | `schemas/governance/closure-packet.schema.json`、`packages/cli/src/commands/evidence.ts`、`docs/ADAPTER_GUIDE.md` |
+| Early cross-agent review channel | Cross-agent review signature contract | 讓 reviewer 在 author patch 完成前以只讀方式檢查 draft diff、scope drift、missing tests 與 rollback 風險並留下 warning evidence | `packages/cli/src/commands/test.ts`、`packages/cli/src/commands/evidence.ts`、`scripts/validate-test-runner.ts` |
+| Eval loop report evidence contract | `TASK-AAO-0048`, `TASK-AAO-0049` | 定義 eval score、cost、latency、dataset version、evaluator version、judge metadata 與 advisory/blocking outcome 的 report schema | `schemas/test-report.schema.json`、`schemas/governance/closure-packet.schema.json`、`packages/core/src/manager/test-runner.ts` |
+| Trace feedback to fixture promotion | Eval loop report evidence contract | 將 failure trace、human review、production feedback 經 redaction 後轉成 replayable fixture seed | `packages/cli/src/commands/evidence.ts`、`packages/cli/src/commands/test.ts`、`docs/ADAPTER_GUIDE.md` |
+| LLM judge calibration governance | Eval loop report evidence contract | 要求 LLM-as-judge 記錄 rubric、judge model、prompt version、sample human labels 與 criteria drift 風險 | `schemas/test-report.schema.json`、`docs/ADAPTER_GUIDE.md`、`scripts/validate-test-runner.ts` |
+| Cost-quality regression budget | Eval loop report evidence contract | 讓 token、latency、cost 與 quality score 可設定 threshold，避免品質提升以不可接受成本換來 | `packages/core/src/test-runner/**`、`packages/cli/src/commands/test.ts`、`scripts/validate-test-runner.ts` |
+| Optional observability adapter bridge | Eval loop report evidence contract | 提供 OpenTelemetry/OpenInference-style trace metadata 匯入/匯出，但保持 vendor-neutral | `packages/plugin-sdk/src/test-runner.ts`、`docs/ADAPTER_GUIDE.md` |
+
 ## Default Basic Test Recommendation
 
 副作用檢查、input 不可變檢查、consumer contract fixtures 都值得進入 ATM 的基本測試能力，但不應該一開始就全域強制。
@@ -85,3 +130,7 @@ ATM 目前已經覆蓋一批重要基礎：
 ATM 的真正價值不是「它不用測試就能保證一切正確」。
 
 ATM 的價值是：它把 AI 修改後最容易漏掉的驗證點拆成小而明確的 gates，讓每個 atom 都能留下可檢查、可重跑、可外掛的健康證據。
+
+延伸到 Eval Loop 後，ATM 的價值也不是「自動判斷所有 AI 產出都高品質」。更精準的說法是：ATM 讓品質評估本身變成治理證據，讓團隊能看見某次 atom 修改在 correctness、consumer contract、side effect、latency、token cost 與 human feedback 上是改善、退步，還是尚無足夠證據。
+
+Cross-agent review signature 是這個方向中最貼近 ATM 的監督者模型：一個 AI 產生 atom，另一個 AI 簽認或提出異議；高風險 atom 可以要求第二、第三簽章。簽章不是取代測試，而是把獨立審查、盲點突破與 disagreement resolution 變成 closure 前可重放的治理證據。

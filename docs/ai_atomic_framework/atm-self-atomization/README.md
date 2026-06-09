@@ -35,11 +35,12 @@
 以下內容不在這條重測線內，除非使用者明確要求，否則不要碰：
 
 - `C:\Users\User\3klife-npc-brain`
-- `C:\Users\User\3KLife\examples\liu-bei-memory-intent-game\`
+- `C:\Users\User\3KLife\examples\liu-bei-memory-intent-game\`（舊工作區，已於 2026-06-03 移除）
 
 特別注意：
 
-`examples/liu-bei-memory-intent-game/` 是三國人物管線的小遊戲工作區，和 ATM 自我原子化驗收無關。  
+`examples/liu-bei-memory-intent-game/` 是三國人物管線曾使用過的小遊戲工作區，現已移除；正式發佈來源請以 `C:\Users\User\3KLife\temp_workspace\AI-learning-notes\demo\liu-bei-memory-intent-game\index.html` 為準。
+
 就算它在工作樹裡是 modified，也不能被當成 ATM 測試殘留直接回退。
 
 ## 重測前同步 SOP
