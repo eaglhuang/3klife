@@ -21,6 +21,9 @@ jobs:
   atm-governance:
     runs-on: ubuntu-latest
 
+    env:
+      ATM_UPSTREAM_REPO_ROOT: ${{ github.workspace }}/upstream-atm-repo
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -32,6 +35,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      - name: Checkout ATM upstream
+        uses: actions/checkout@v6
+        with:
+          repository: eaglhuang/AI-Atomic-Framework
+          path: upstream-atm-repo
+          ref: master
 
       - name: Install dependencies
         run: npm ci

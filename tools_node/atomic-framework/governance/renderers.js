@@ -88,6 +88,39 @@ function renderBranchLines(branches) {
   return branches.map((branch) => `      - ${branch}`);
 }
 
+function renderWorkflowJobEnv(envMap) {
+  const entries = Object.entries(envMap || {}).filter(([, value]) => typeof value === 'string' && value.trim() !== '');
+  if (entries.length === 0) {
+    return [];
+  }
+
+  return [
+    '    env:',
+    ...entries.map(([key, value]) => `      ${key}: ${value}`),
+    '',
+  ];
+}
+
+function renderUpstreamCheckoutStep(upstreamCheckout) {
+  if (!upstreamCheckout || typeof upstreamCheckout !== 'object') {
+    return [];
+  }
+
+  const lines = [
+    '      - name: Checkout ATM upstream',
+    '        uses: actions/checkout@v6',
+    '        with:',
+    `          repository: ${upstreamCheckout.repository}`,
+    `          path: ${upstreamCheckout.path}`,
+  ];
+
+  if (typeof upstreamCheckout.ref === 'string' && upstreamCheckout.ref.trim() !== '') {
+    lines.push(`          ref: ${upstreamCheckout.ref}`);
+  }
+
+  return [...lines, ''];
+}
+
 function renderWorkflowChangedFilesScript(changedFiles) {
   return [
     '          set -euo pipefail',
@@ -125,6 +158,14 @@ function renderWorkflowChangedFilesScript(changedFiles) {
 }
 
 function renderWorkflow(workflow, gateEntrypoints) {
+  const upstreamCheckout = workflow.upstreamCheckout && typeof workflow.upstreamCheckout === 'object'
+    ? workflow.upstreamCheckout
+    : null;
+  const jobEnv = upstreamCheckout
+    ? {
+      ATM_UPSTREAM_REPO_ROOT: '${{ github.workspace }}/' + upstreamCheckout.path,
+    }
+    : null;
   const lines = [
     `name: ${workflow.name}`,
     '',
@@ -147,6 +188,7 @@ function renderWorkflow(workflow, gateEntrypoints) {
     '  atm-governance:',
     '    runs-on: ubuntu-latest',
     '',
+    ...renderWorkflowJobEnv(jobEnv),
     '    steps:',
     '      - name: Checkout',
     '        uses: actions/checkout@v6',
@@ -159,6 +201,7 @@ function renderWorkflow(workflow, gateEntrypoints) {
     `          node-version: ${workflow.nodeVersion}`,
     '          cache: npm',
     '',
+    ...renderUpstreamCheckoutStep(upstreamCheckout),
     '      - name: Install dependencies',
     '        run: npm ci',
     '',

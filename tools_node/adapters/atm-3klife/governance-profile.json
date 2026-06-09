@@ -118,6 +118,11 @@
         "id": "atm-governance",
         "targetPath": ".github/workflows/atm-governance.yml",
         "name": "ATM Governance",
+        "upstreamCheckout": {
+          "repository": "eaglhuang/AI-Atomic-Framework",
+          "path": "upstream-atm-repo",
+          "ref": "master"
+        },
         "branches": {
           "pullRequest": [
             "main",
