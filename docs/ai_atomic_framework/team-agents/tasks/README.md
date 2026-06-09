@@ -34,7 +34,7 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 |---|---|---|---|---|---|
 | [TASK-TEAM-0001](./TASK-TEAM-0001-team-agents-planning-roster-reset.task.md) | M0 | Team agents planning roster reset | done | none | planning docs |
 | [TASK-TEAM-0002](./TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md) | M1 | Minimal task crew briefing contract | planned | `TASK-TEAM-0001` (parallel with 0003) | team docs / CLI contract |
-| [TASK-TEAM-0003](./TASK-TEAM-0003-atomization-planner-required-role.task.md) | M1 | Atomization planner required role | planned | `TASK-TEAM-0001` (parallel with 0002) | team docs / CLI contract |
+| [TASK-TEAM-0003](./TASK-TEAM-0003-atomization-planner-required-role.task.md) | M1 | Atomization planner required role | done | `TASK-TEAM-0001` (parallel with 0002) | team docs / CLI contract |
 | [TASK-TEAM-0004](./TASK-TEAM-0004-team-brief-report-templates.task.md) | M2 | Team brief/report templates | planned | `TASK-TEAM-0002`, `TASK-TEAM-0003` | templates / validator |
 | [TASK-TEAM-0005](./TASK-TEAM-0005-team-memory-captain-decision-templates.task.md) | M2 | Team memory and captain decision templates | planned | `TASK-TEAM-0004` (parallel with 0006) | templates / validator |
 | [TASK-TEAM-0006](./TASK-TEAM-0006-patrol-report-template.task.md) | M2 | Patrol report template | planned | `TASK-TEAM-0004` (parallel with 0005) | templates / validator |
@@ -70,7 +70,7 @@ Use this order when the goal is "ship Team Agents in a way humans can actually a
 
 1. `TASK-TEAM-0001` to freeze the lane and clean the roster truth.
 2. `TASK-AAO-0106` (done) and `TASK-TEAM-0027` (done) landed the path-map owner shards and Team command/spec atom boundaries in AAF.
-3. `TASK-TEAM-0002`, `TASK-TEAM-0003` to make planning/atomization roles visible from the start; they may now proceed toward the first live same-file different-atom parallel proof.
+3. `TASK-TEAM-0003` is done in AAF (post-close refinement `81262a21` recorded on the planning card); `TASK-TEAM-0002` remains the paired M1 lane for the live same-file different-atom parallel proof.
 4. `TASK-TEAM-0004`, `TASK-TEAM-0005`, `TASK-TEAM-0006`, then `TASK-TEAM-0017` so the first-card template stack and its schema/validator become stable.
 5. `TASK-TEAM-0007`, `TASK-TEAM-0008`, `TASK-TEAM-0009`, `TASK-TEAM-0010` to turn docs-only roles into a real team planning/runtime surface.
 6. `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0013` to make runtime state, permission lease, and file-write boundaries trustworthy.
@@ -91,7 +91,7 @@ M1P:    +--> AAO-0106 (done, path map owner shards)
         +--> 0027 (done, Team atom boundary preflight)
         |
 M1:     +--> 0002 (crew contract)   ----+
-        +--> 0003 (atomization role) ---+   (run in parallel only after 0027)
+        +--> 0003 (done, atomization role) ---+   (0002 may still run in parallel after 0027)
                                         |
 M2:                                     +--> 0004 (brief/report/summary)
                                                        |

@@ -2,7 +2,9 @@
 doc_id: doc_team_0003
 task_id: TASK-TEAM-0003
 title: "Atomization planner required role"
-status: planned
+status: done
+completed_at: "2026-06-09T23:07:56+08:00"
+completed_by_agent: "007"
 owner: atm-core
 priority: P0
 milestone: M1
@@ -34,10 +36,10 @@ rollback:
   strategy: revert-commit
   notes: "Revert the Atomization Planner role requirement and map updates."
 atomizationImpact:
-  ownerAtomOrMap: "atm.team-agents-map"
+  ownerAtomOrMap: "team.plan-atomization-planner"
   mapUpdates:
     - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
-  notes: "Makes atomization planning a first-class Team Agents capability."
+  notes: "2026-06-09 | done | AAF delivery 2c421179 + ledger 1ba09878; post-close refinement 81262a21 during live-pass pilot (buildAtomizationChecklist + atomization-planner.md only; no owner-shard or path-to-atom-map projection touch; atom-disjoint from TASK-TEAM-0002)."
 outOfScope:
   - "Refactoring existing atom maps beyond required ownership entries"
   - "Creating automatic task splitting"
@@ -124,3 +126,5 @@ Revert the role requirement and remove associated docs and map entries.
 ## Notes
 
 This role is mandatory because it protects ATM's atomization model before implementation begins.
+
+Planning truth (2026-06-09): status remains `done` after the original AAF close (`2c421179`, ledger `1ba09878`). A bounded post-close refinement landed as `81262a21` during the live-pass pilot, tightening `buildAtomizationChecklist` output and `atomization-planner.md` without touching owner shards or the path-to-atom-map projection. Ownership stays on `team.plan-atomization-planner` / `team.spec.atomization-planner`, disjoint from `TASK-TEAM-0002`.

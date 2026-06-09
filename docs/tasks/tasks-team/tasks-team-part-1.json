@@ -79,5 +79,41 @@
       "C:/Users/User/AI-Atomic-Framework/docs/governance/team-agents/team-atom-boundaries.md"
     ],
     "notes": "2026-06-09 | done | AAF delivery c8981a93 + ledger 88f70de6 + closure 16a0cffb; split team.ts/team.spec.ts into 13 function-anchored atoms via owner-shard-cli.json."
+  },
+  {
+    "doc_id": "doc_team_0003",
+    "id": "TASK-TEAM-0003",
+    "title": "Atomization planner required role",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M1",
+    "created": "2026-06-03",
+    "created_by_agent": "TEAM-CAPTAIN",
+    "started_at": "2026-06-09",
+    "started_by_agent": "007",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Atomization Planner required role and checklist in team plan output.",
+    "related": [
+      "TASK-TEAM-0002"
+    ],
+    "depends": [
+      "TASK-TEAM-0001"
+    ],
+    "acceptance": [
+      "Every default team plan includes an Atomization Planner role.",
+      "team plan JSON includes atomization checklist fields.",
+      "Planner role has no write or lifecycle permissions."
+    ],
+    "deliverables": [
+      "C:/Users/User/AI-Atomic-Framework/docs/governance/team-agents/atomization-planner.md",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/team.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/team.spec.ts",
+      "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-09 | done | AAF delivery 2c421179 + ledger 1ba09878; post-close refinement 81262a21 (buildAtomizationChecklist + atomization-planner.md only; no shard/projection touch; atom-disjoint from TASK-TEAM-0002)."
   }
 ]
