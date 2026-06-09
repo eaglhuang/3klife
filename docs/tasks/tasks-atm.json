@@ -387,7 +387,7 @@
       "title": "Part 41 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-41.json",
       "count": 3,
-      "bytes": 7979,
+      "bytes": 8045,
       "lines": 196,
       "layout": "sticky-least-pool"
     },
