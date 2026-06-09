@@ -2,7 +2,9 @@
 doc_id: doc_cid_0022
 task_id: TASK-CID-0022
 title: "Next claim and closeout broker integration"
-status: planned
+status: done
+completed_at: "2026-06-08T12:54:48.162Z"
+completed_by_agent: "001"
 owner: atm-core
 priority: P0
 milestone: P0

@@ -2,9 +2,11 @@
 doc_id: doc_cid_0018
 task_id: TASK-CID-0018
 title: "PatchProposal capsule runtime"
-status: in-progress
+status: done
 started_at: "2026-06-07T06:47:58Z"
 started_by_agent: "007"
+completed_at: "2026-06-08T09:50:11.471Z"
+completed_by_agent: "008"
 owner: atm-core
 priority: P0
 milestone: P0
@@ -24,6 +26,10 @@ scopePaths:
   - "scripts/validators.config.json"
   - "scripts/validate-broker-proposal.ts"
   - "tests/cli-fixtures/help-snapshots/broker.json"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "scripts/validate-framework-development-governance.ts"
+  - "scripts/validate-task-ledger-governance.ts"
 deliverables:
   - "packages/core/src/broker/proposal.ts"
   - "packages/core/src/broker/index.ts"
@@ -34,10 +40,16 @@ deliverables:
   - "scripts/validators.config.json"
   - "scripts/validate-broker-proposal.ts"
   - "tests/cli-fixtures/help-snapshots/broker.json"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "scripts/validate-framework-development-governance.ts"
+  - "scripts/validate-task-ledger-governance.ts"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
   - "node --strip-types scripts/validate-broker-proposal.ts"
+  - "node --strip-types scripts/validate-framework-development-governance.ts"
+  - "node --strip-types scripts/validate-task-ledger-governance.ts"
   - "git diff --check"
 evidence:
   required: command-backed
@@ -80,3 +92,5 @@ The whole brokered-write lane depends on separating "I want to change this" from
 Captain cadence remains compact. Internal sidecars may be used for scope guard, fixture coverage review, and validator matrix checking only.
 
 This card depends on the broker subtree and CLI surface that `TASK-CID-0016` births. It should not invent a second command aggregator or bypass the shared broker namespace.
+
+The lane absorbed a close-path repair lesson during implementation: once the proposal runtime worked, the remaining blocker was the ATM close / reconcile gate, so the task scope now includes that repair surface as part of the same bounded completion card instead of leaving it as an unowned tail.

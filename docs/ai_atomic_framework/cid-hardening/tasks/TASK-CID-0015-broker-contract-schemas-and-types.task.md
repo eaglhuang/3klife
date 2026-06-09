@@ -2,7 +2,11 @@
 doc_id: doc_cid_0015
 task_id: TASK-CID-0015
 title: "Broker contract schemas and types"
-status: planned
+status: done
+started_at: "2026-06-07T11:23:00+08:00"
+started_by_agent: "007"
+completed_at: "2026-06-07T11:27:00+08:00"
+completed_by_agent: "007"
 owner: atm-core
 priority: P0
 milestone: P0
