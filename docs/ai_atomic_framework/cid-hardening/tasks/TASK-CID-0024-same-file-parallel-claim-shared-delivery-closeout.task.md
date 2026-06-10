@@ -73,18 +73,22 @@ Finish the missing lifecycle follow-up after the brokered-write completion pack 
 
 Without this follow-up, same-file parallel development remains technically possible in the broker lane but operationally confusing at claim and closeout time.
 
+This also covers the "delivery already landed, no more source mutation" case: a worker who only needs governed closeout, evidence alignment, or claim continuity should not be forced back into a write-conflicting claim path when the real deliverable is already complete.
+
 ## Acceptance Criteria
 
 - `next --claim` (and any shared claim gate it uses) can admit same-file parallel work when the CID/broker verdict is non-conflicting, instead of forcing file-level serialization by default.
+- Claim flow exposes a no-more-mutation / closeout-only intent for tasks whose scoped deliverable already landed, so claim can proceed without reopening unnecessary CID write conflicts.
 - `tasks close --status done --historical-delivery <shared-steward-commit>` is documented and validated as a first-class closeout path for later workers whose deliverable already landed through an earlier steward-owned delivery commit.
 - `hook pre-commit` no longer fails purely because the staged set touches a file with multiple active same-file claims; it blocks only when steward/broker evidence is missing or staged ownership remains ambiguous.
 - Historical-delivery close gates remain scope-tight: a shared steward commit must still prove scoped non-.atm deliverables for the closing task.
 - Validators cover both positive and negative cases:
   - same-file CID-disjoint claim admitted;
+  - closeout-only / no-more-mutation claim admitted when source mutation is no longer requested and governed delivery evidence already exists;
   - same-file overlapping/unsafe claim still blocked;
   - shared steward historical-delivery close passes when evidence is valid;
   - pre-commit still rejects ambiguous mixed staged content without steward/broker evidence.
 
 ## Notes
 
-This is a lifecycle follow-up card, not a second broker-runtime rewrite. Prefer the smallest change set that upgrades claim, closeout, and pre-commit semantics to match the already-shipped steward/composer model.
+This is a lifecycle follow-up card, not a second broker-runtime rewrite. Prefer the smallest change set that upgrades claim, closeout, and pre-commit semantics to match the already-shipped steward/composer model. The new closeout-only claim intent must remain non-mutating by contract; it is not a backdoor to bypass normal CID write checks for real source edits.

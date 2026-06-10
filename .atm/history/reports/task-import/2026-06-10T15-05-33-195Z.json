@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-10T15:05:33.195Z",
+  "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0024-same-file-parallel-claim-shared-delivery-closeout.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-CID-0024.json"
+  ],
+  "taskIds": [
+    "TASK-CID-0024"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-CID-0024",
+      "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0024-same-file-parallel-claim-shared-delivery-closeout.task.md",
+      "sectionTitle": "TASK-CID-0024",
+      "headingLine": 60,
+      "hash": "51c344836d1dc8c8"
+    }
+  ]
+}

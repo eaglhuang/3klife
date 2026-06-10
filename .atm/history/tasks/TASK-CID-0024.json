@@ -10,11 +10,13 @@
   ],
   "acceptance": [
     "`next --claim` (and any shared claim gate it uses) can admit same-file parallel work when the CID/broker verdict is non-conflicting, instead of forcing file-level serialization by default.",
+    "Claim flow exposes a no-more-mutation / closeout-only intent for tasks whose scoped deliverable already landed, so claim can proceed without reopening unnecessary CID write conflicts.",
     "`tasks close --status done --historical-delivery <shared-steward-commit>` is documented and validated as a first-class closeout path for later workers whose deliverable already landed through an earlier steward-owned delivery commit.",
     "`hook pre-commit` no longer fails purely because the staged set touches a file with multiple active same-file claims; it blocks only when steward/broker evidence is missing or staged ownership remains ambiguous.",
     "Historical-delivery close gates remain scope-tight: a shared steward commit must still prove scoped non-.atm deliverables for the closing task.",
     "Validators cover both positive and negative cases:",
     "same-file CID-disjoint claim admitted;",
+    "closeout-only / no-more-mutation claim admitted when source mutation is no longer requested and governed delivery evidence already exists;",
     "same-file overlapping/unsafe claim still blocked;",
     "shared steward historical-delivery close passes when evidence is valid;",
     "pre-commit still rejects ambiguous mixed staged content without steward/broker evidence."
@@ -73,15 +75,15 @@
   "legacyImportAliases": {},
   "importDiagnostics": [],
   "tags": [],
-  "notes": "This is a lifecycle follow-up card, not a second broker-runtime rewrite. Prefer the smallest change set that upgrades claim, closeout, and pre-commit semantics to match the already-shipped steward/composer model.",
+  "notes": "This is a lifecycle follow-up card, not a second broker-runtime rewrite. Prefer the smallest change set that upgrades claim, closeout, and pre-commit semantics to match the already-shipped steward/composer model. The new closeout-only claim intent must remain non-mutating by contract; it is not a backdoor to bypass normal CID write checks for real source edits.",
   "source": {
     "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0024-same-file-parallel-claim-shared-delivery-closeout.task.md",
     "sectionTitle": "TASK-CID-0024",
     "headingLine": 60,
-    "hash": "270ab594610734ff"
+    "hash": "51c344836d1dc8c8"
   },
-  "importedAt": "2026-06-10T15:03:37.064Z",
-  "lastTransitionId": "2026-06-10T15-03-37-069Z-import-d6ceb53c1aab",
-  "lastTransitionAt": "2026-06-10T15:03:37.069Z",
+  "importedAt": "2026-06-10T15:05:33.195Z",
+  "lastTransitionId": "2026-06-10T15-05-33-200Z-import-b2dd385bfdbc",
+  "lastTransitionAt": "2026-06-10T15:05:33.200Z",
   "ledgerContractVersion": "task-ledger/v1"
 }
