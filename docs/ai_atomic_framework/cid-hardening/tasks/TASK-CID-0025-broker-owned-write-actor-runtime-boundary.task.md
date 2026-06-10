@@ -178,6 +178,10 @@ git diff --check
 
 - Update note (2026-06-10): clarified that broker-owned write actor may be independently materialized for scoped file-write execution, but authority remains layered rather than parallel.
 - Update note (2026-06-10): clarified authority chain so `Broker` overrides `Coordinator` only inside broker-governed conflict domains.
+- Dispatch note (2026-06-11): opened three inbox packets for this card under `docs/ai_atomic_framework/cid-hardening/inbox/`:
+  - `P1-TASK-CID-0025-001-broker-runtime-activation-handshake--captain-to-001--20260611TPE.dispatch.md`
+  - `P1-TASK-CID-0025-002-authority-chain-and-conflict-rules--captain-to-002--20260611TPE.dispatch.md`
+  - `P1-TASK-CID-0025-003-evidence-and-closeout-validation--captain-to-003--20260611TPE.dispatch.md`
 - This card is intentionally about **runtime ownership and activation**, not about changing CID verdict logic.
 - The design target is "broker-controlled write execution, coordinator-controlled lifecycle closeout".
 - If the implementation would require broker-owned actor to self-commit or self-close, that should be treated as a contract violation, not an acceptable shortcut.
