@@ -2,7 +2,7 @@
 doc_id: doc_cid_0002
 task_id: TASK-CID-0002
 title: "CID semantics doc + fingerprintProfile optional additive schema"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: E0
@@ -105,3 +105,5 @@ Revert the commit. Because `fingerprintProfile` is optional and additive, removi
 ## Notes
 
 Successor: `TASK-CID-0003` extends `validate:semantic-fingerprint` with deterministic identity-hash regression fixtures.
+
+Closeout note: R49 implementation and validator evidence are complete in `AI-Atomic-Framework`; this planning card is reconciled to `done`.

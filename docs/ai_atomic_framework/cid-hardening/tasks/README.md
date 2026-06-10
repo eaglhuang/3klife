@@ -30,7 +30,7 @@ Every `TASK-CID-*` card follows the ATM task-card authoring contract:
 | Task ID | Stage | Planned Title | Status | Depends | Target |
 |---|---|---|---|---|---|
 | [TASK-CID-0001](./TASK-CID-0001-cid-hardening-control-plane-bootstrap.task.md) | E0 | CID hardening control-plane bootstrap | **done** | none | planning docs / 3KLife |
-| [TASK-CID-0002](./TASK-CID-0002-cid-semantics-and-fingerprint-profile-schema.task.md) | E0 | CID semantics and fingerprintProfile schema | planned | `TASK-CID-0001` | ATM docs / schema |
+| [TASK-CID-0002](./TASK-CID-0002-cid-semantics-and-fingerprint-profile-schema.task.md) | E0 | CID semantics and fingerprintProfile schema | **done** | `TASK-CID-0001` | ATM docs / schema |
 | [TASK-CID-0003](./TASK-CID-0003-validate-semantic-fingerprint-determinism.task.md) | E0 | Deterministic semantic fingerprint validator | planned | `TASK-CID-0002` | ATM scripts / tests |
 
 ## P0 Formal Cards
@@ -41,7 +41,7 @@ Every `TASK-CID-*` card follows the ATM task-card authoring contract:
 
 | Task ID | Stage | Planned Title | Notes |
 |---|---|---|---|
-| [TASK-CID-0005](./TASK-CID-0005-cid-first-parallel-conflict-advisor-cli-contract.task.md) | P0 | CID-first parallel conflict advisor CLI contract | Defines CID-first, not file-first, conflict semantics for the advisor lane. |
+| [TASK-CID-0005](./TASK-CID-0005-cid-first-parallel-conflict-advisor-cli-contract.task.md) | P0 | CID-first parallel conflict advisor CLI contract | Defines CID-first, not file-first, conflict semantics for the advisor lane; R49 wording keeps `CID disjoint + file overlap = needs-physical-split`, not blocked. |
 | [TASK-CID-0009](./TASK-CID-0009-patch-proposal-capsule-contract.task.md) | P0 | Patch Proposal Capsule contract | Defines the planning contract for proposal-backed writes before canonical worktree mutation. |
 | [TASK-CID-0010](./TASK-CID-0010-write-broker-lane-router-contract.task.md) | P0 | Write Broker lane router contract | Defines broker lane ownership, conflict routing, and isolation tiers. |
 | [TASK-CID-0011](./TASK-CID-0011-neutral-write-steward-and-break-glass-handoff-contract.task.md) | P0 | Neutral Write Steward and Break-glass handoff contract | Defines neutral steward ownership and the emergency handoff fallback. |

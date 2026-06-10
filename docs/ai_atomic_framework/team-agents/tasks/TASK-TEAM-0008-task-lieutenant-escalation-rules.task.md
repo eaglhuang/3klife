@@ -2,7 +2,9 @@
 doc_id: doc_team_0008
 task_id: TASK-TEAM-0008
 title: "Task lieutenant escalation rules"
-status: planned
+status: done
+started_at: "2026-06-10T20:16:55.4589269+08:00"
+started_by_agent: codex-gpt-5.4-mini
 owner: atm-core
 priority: P1
 milestone: M3
@@ -96,3 +98,18 @@ Revert the escalation rules, tests, and atom map updates.
 ## Notes
 
 This card makes complicated work easier to coordinate while keeping the captain as the single decision owner.
+
+## Worker Report
+
+- worker: 002
+- dispatch: R52-TEAM-M3-20260610T2005+08:00
+- status: closeout-ready
+- captain-corrective-thread-dispatch-used: yes
+- summary: Added deterministic lieutenant escalation output to `packages/cli/src/commands/team.ts`, exposed it in `packages/cli/src/commands/command-specs/team.spec.ts`, added `scripts/validate-team-agents.ts`, and updated `atomic_workbench/atomization-coverage/path-to-atom-map.json`.
+- validation:
+  - `npm run typecheck` ✅
+  - `npm run validate:cli` ✅
+  - `npm run validate:team-agents` ✅
+  - `node atm.dev.mjs team plan --task TASK-TEAM-0008 --json` ✅
+  - `git diff --check` ✅
+- notes: `TASK-TEAM-0008` was materialized into `.atm/history/tasks/TASK-TEAM-0008.json` so the dry-run plan validator could be exercised source-first; target-ledger claim/close gates remain separate from this source-card closeout.

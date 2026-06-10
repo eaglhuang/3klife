@@ -2,10 +2,14 @@
 doc_id: doc_cid_0005
 task_id: TASK-CID-0005
 title: "P0 parallel conflict advisor CLI contract"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: P0
+started_at: 2026-06-10T16:02:00+08:00
+started_by_agent: "003"
+completed_at: 2026-06-10T16:02:00+08:00
+completed_by_agent: "003"
 depends_on:
   - "TASK-CID-0003"
 related_plan: docs/ai_atomic_framework/cid-hardening/CID硬化計畫書.md
@@ -102,6 +106,27 @@ CID-first means:
 - The plan book states CID disjoint + file overlap = needs-physical-split, not blocked.
 - The task card lists the CLI contract, verdicts, and report fields verbatim enough for future implementation cards to follow without reinterpretation.
 - Existing planned tasks continue to route normally.
+
+## R49 Referee Synthesis
+
+The R49 referee wording for this card is:
+
+1. CID-first is the primary arbitration rule.
+2. Semantic CID conflict outranks file overlap.
+3. CID disjoint + file overlap is `needs-physical-split`, not `blocked`.
+4. Shared generator / projection / validator / artifact / active-lease collisions remain hard blockers.
+5. The card is a planning contract only; it does not authorize AAF source writes.
+
+This wording is the acceptance-facing contract future implementation cards must preserve without reinterpretation.
+
+## Worker Report
+
+- worker: 003
+- task: TASK-CID-0005
+- status: done
+- result: The CID-first conflict advisor contract is now explicitly anchored in the planning source of truth, with acceptance wording that keeps semantic CID conflict ahead of file overlap and treats CID-disjoint + file overlap as `needs-physical-split`, not `blocked`.
+- sync: `tasks/README.md` and `CID硬化計畫書.md` were aligned to the same wording so future execution cards can inherit the contract without reinterpretation.
+- dispatch-note: No formal R49 dispatch file was present in `inbox`; this work was completed directly in the planning scope and therefore does not require a mailbox move.
 
 ## Rollback
 
