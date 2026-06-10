@@ -969,6 +969,254 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0138",
+      "title": "formal task opener and residue finalization UX",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-10",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Open the Phase 0 planning card for official task opener auto-id/path allocation and residue/finalization UX so operators no longer need manual tail scans or ad-hoc historical cleanup reasoning.",
+      "related": [
+        "TASK-AAO-0135",
+        "TASK-AAO-0137",
+        "TASK-AAO-0055",
+        "TASK-AAO-0056"
+      ],
+      "depends": [
+        "TASK-AAO-0135",
+        "TASK-AAO-0137"
+      ],
+      "acceptance": [
+        "ATM provides a governed task opener that does not require manual task id and output path selection in the common case.",
+        "Residual task states are classified into clear buckets with one recommended governed next step each.",
+        "Close/finalization UX explains truth vs residue without encouraging manual .atm/history edits.",
+        "Fail-closed task-ledger governance remains intact.",
+        "No AI-Atomic-Framework source is touched in Phase 0."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138-formal-task-opener-and-residue-finalization-ux.task.md",
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-10 | status: done | validation: passed | change: parent convergence for formal opener + residue/finalization UX via child cards 0138A/B/C | blocker: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0138A",
+      "title": "taskflow open delegated opener orchestration contract",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-10",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Implement the taskflow open orchestration contract so ATM has one official formal opener entry, with explicit delegated-governed vs template-only-fallback mode reporting and reuse of tasks new generation.",
+      "related": [
+        "TASK-AAO-0138",
+        "TASK-AAO-0086",
+        "TASK-AAO-0112"
+      ],
+      "depends": [
+        "TASK-AAO-0135",
+        "TASK-AAO-0137"
+      ],
+      "acceptance": [
+        "taskflow open becomes the official operator-facing opener entry.",
+        "ATM explicitly reports delegated-governed vs template-only-fallback mode.",
+        "taskflow open reuses tasks new generation instead of creating a second generator path.",
+        "No host-specific numbering rules are implemented in this slice.",
+        "No AI-Atomic-Framework source is touched in Phase 0."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138A-taskflow-open-delegated-opener-orchestration-contract.task.md",
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-10 | status: done | validation: passed | change: child card for taskflow open orchestration and entry-mode reporting | blocker: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0138B",
+      "title": "host opener fallback mode and numbering-path policy surface",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-10",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Define the host-neutral opener policy contract for id allocation, canonical output path resolution, and roster sync mode, while reusing tasks new generation and TASK-AAO-0069 as the only roster sync path.",
+      "related": [
+        "TASK-AAO-0138",
+        "TASK-AAO-0069",
+        "TASK-AAO-0086"
+      ],
+      "depends": [
+        "TASK-AAO-0138A",
+        "TASK-AAO-0069"
+      ],
+      "acceptance": [
+        "ATM core exposes a host-neutral opener policy contract.",
+        "Host opener can provide numbering, path, and roster sync policy decisions.",
+        "Fallback mode is explicit when no host opener is available.",
+        "Roster sync reuses TASK-AAO-0069 direction as the single official write path.",
+        "No AI-Atomic-Framework source is touched in Phase 0."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138B-host-opener-fallback-mode-and-numbering-path-policy-surface.task.md",
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-10 | status: done | validation: passed | change: host-neutral opener policy + tasks roster update wiring | blocker: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0138C",
+      "title": "residue classification and finalization operator flow",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-10",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Add an operator-facing residue classification and finalization diagnosis flow that explains truth vs residue and routes each bucket to one governed next command without silent deletion.",
+      "related": [
+        "TASK-AAO-0138",
+        "TASK-AAO-0135",
+        "TASK-AAO-0137",
+        "TASK-AAO-0055",
+        "TASK-AAO-0056"
+      ],
+      "depends": [
+        "TASK-AAO-0135",
+        "TASK-AAO-0137",
+        "TASK-AAO-0138A"
+      ],
+      "acceptance": [
+        "ATM classifies residue into clear operator-facing buckets.",
+        "Each bucket maps to one governed next step.",
+        "Output distinguishes truth, residue, and next command.",
+        "No silent deletion path exists for ambiguous states.",
+        "No AI-Atomic-Framework source is touched in Phase 0."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138C-residue-classification-and-finalization-operator-flow.task.md",
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-10 | status: done | validation: passed | change: child card for residue buckets and operator-facing finalization diagnosis flow | residue buckets now route to one governed next command",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
