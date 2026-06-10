@@ -29,6 +29,7 @@ Source: `C:/Users/User/.claude/plans/ticklish-bouncing-lagoon.md`
 | atom spec 與 registry schema 為 `additionalProperties:false`（加新欄位需 schema 遷移）。 | `schemas/atomic-spec.schema.json:6` |
 | 語言轉接器目前**只做 import / entrypoint / dry-run planning，無 effect scanner**。 | `language-js-adapter.ts:35`、`language-python-adapter.ts:81` |
 | `TASK-CID-0005` P0：CID-first parallel conflict advisor CLI contract（先用 `atom_id` / `atom_cid` 判斷語意衝突，再看 file overlap、lease 狀態與 registry / graph；`CID conflict = semantic conflict`；`CID disjoint + file overlap = needs-physical-split`） | P0 |
+| `TASK-CID-0005` R49 acceptance wording：CID-first、semantic-conflict-first、file-overlap-last；shared generator / projection / validator / artifact / active-lease 仍是硬阻斷。 | P0 |
 | scope-lock 現況 = `leaseId + heartbeatAt + ttlSeconds`；`taskDirectionLock.allowedFiles`；team permission validation。**無 leaseEpoch / wait-for graph / symbol-scope lease。** | scope-lock / stores（LockStore） |
 | closure-packet 有 `commandRuns / stdoutSha256 / exitCode`；但 `runnerVersion` **≈ framework version，非 sandbox / OS / runtime attestation**。 | closure-packet schema / 生成器 |
 | Police = advisory、`DEFAULT_POLICE_DAILY_CAP`、`suppressionKey`、`directApplyAllowed:false`、`ReviewAdvisory / HumanReviewDecision` 皆已存在。 | `packages/core/src/police/family.ts` |
@@ -436,6 +437,7 @@ Write Broker 不能獨立於 Team Agents 存在，否則 ATM 會同時有「team
 - **Team Agents 消費 primitive**：把 primitive 映射成 Coordinator / Scope Guardian / Atomization Planner / Implementer / Neutral Write Steward / Validator / Review Agent 的 team run 行為。
 - **Write Broker 是 global singleton by repo/workspace**：同一個 repo/workspace 內所有 active tasks / teamRuns 都向同一個 Broker registry 登記 write intent。
 - **Coordinator 保持 lifecycle owner**：`task.lifecycle`、`git.write`、`evidence.write` 仍由 Coordinator 持有；Write Broker 不取得 commit 或 close 權限。
+- **Broker 在衝突域高於 Coordinator**：當問題屬於跨 team 的 CID / same-file / shared-surface / steward merge 決策時，Broker verdict 高於單一 team 的 Coordinator 決策；Coordinator 不可覆寫 broker verdict。
 - **Implementer 不再裸寫高風險同檔衝突**：一般工作仍可持有 `file.write`，但同檔 CID disjoint 衝突升級後，Implementer 交 `PatchProposal.v1`，由 Neutral Write Steward 或 deterministic composer 寫 final patch。
 - **Scope Guardian + Atomization Planner 是 Broker 的前置感測器**：Scope Guardian 檢查 allowedFiles / dirty tree / lease overlap；Atomization Planner 提供 atom_id / atom_cid / shared surface。
 - **Review Agent 不變成 Write Agent**：Review Agent 只做 review signature draft；Neutral Write Steward 是獨立角色，不能和 Implementer / Review Agent 混用。
@@ -449,6 +451,22 @@ Write Broker 不能獨立於 Team Agents 存在，否則 ATM 會同時有「team
 | Implementer / Steward | 依 Broker lane 寫 proposal 或 final patch。 | 只在被授權的 file/atom/range 內。 |
 
 Broker 不是 AI Agent，也不是新的排程器；它應該是 deterministic registry + conflict calculator。它可以同時服務所有人，因為它做的是小資料量的資源鍵比對，而不是撰寫程式。
+
+#### 9.8.1.1 Authority Chain
+
+- `Coordinator` 是單一 team 的 local lifecycle owner。
+- `Broker` 是跨 team / 跨 claim / 跨衝突域的上位協調者。
+- 兩者不是平行雙頭；當問題進入 broker 管轄的衝突域時，`Coordinator` 必須服從 `Broker` verdict。
+- broker 管轄域至少包含：CID 衝突、same-file lane routing、shared-surface blocker、steward merge 路徑、historical-delivery 佐證要求。
+- broker 未介入時，`Coordinator` 仍保有 team-local 的 checkpoint、commit timing、close timing 與 evidence routing 自主權。
+
+#### 9.8.1.2 Conflict Resolution Rule
+
+- 如果 `Coordinator` 想推進 claim / commit / close，但 `Broker` verdict 判定目前屬於 `blocked-cid-conflict`、`blocked-shared-surface`、`needs-steward` 或 `historical-delivery-required`，則 `Coordinator` 必須停下並遵從 broker 指定路徑。
+- 如果 `Broker` 提出的 merge / steward 路徑超出 task scope、closure authority 或 task card acceptance，則 `Coordinator` 不可自行忽略，而是必須升級到 `Captain / human` 做 scope 裁決。
+- 正式契約應為：
+  - `Broker verdict overrides Coordinator decisions within broker-governed conflict domains.`
+  - `Outside broker-governed conflict domains, Coordinator retains team-local lifecycle authority.`
 
 Broker registry 最少要記：
 
@@ -497,6 +515,14 @@ Broker registry 最少要記：
 | merge validation | Validator / Check Runner | `exec.validator` |
 | independent review | Review Agent | `review.signature.write` draft |
 | commit / evidence / close | Coordinator | `git.write`, `evidence.write`, `task.lifecycle` |
+
+#### 9.8.2.1 Broker-owned Write Actor 邊界
+
+- 如果後續把 `Neutral Write Steward` 或 `Write Actor` 物化成獨立 runtime actor，該 actor 可以只聽 `Broker / Steward` 的已核准輸入。
+- 這個 actor 的責任是執行 scoped file write，不是接手 team lifecycle。
+- 它可以獨立於 `Coordinator` 的命令表面執行，但不能獨立於整體治理 authority chain。
+- 也就是說，它在 write execution 上直接受 broker domain 指揮；但它的結果仍必須回流給 `Coordinator` 進行 commit / close / release / handoff。
+- 這樣可避免多頭馬車：runtime execution 可以 broker-owned，lifecycle authority 仍維持 single-head。
 
 #### 9.8.3 Team recipe 行為
 
