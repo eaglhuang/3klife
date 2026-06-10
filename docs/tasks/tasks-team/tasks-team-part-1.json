@@ -122,7 +122,7 @@
     "title": "Team same-atom CID negative control",
     "owner": "atm-core",
     "priority": "P1",
-    "status": "planned",
+    "status": "done",
     "type": "proof",
     "phase": "M1N",
     "created": "2026-06-10",
@@ -153,6 +153,6 @@
       "Synthetic negative-control fixture pair (Phase 1)",
       "Command-backed broker compose evidence (Phase 1)"
     ],
-    "notes": "2026-06-10 | planned | Phase 0 planning opener only; AAF proof implementation deferred to Phase 1 dispatch."
+    "notes": "2026-06-10 | done | broker compose negative-control PASS: blocked-cid-conflict, kind:cid, atomId team.plan-crew-briefing-contract; fixtures team-0028-same-atom-proposal-{a,b}.json."
   }
 ]

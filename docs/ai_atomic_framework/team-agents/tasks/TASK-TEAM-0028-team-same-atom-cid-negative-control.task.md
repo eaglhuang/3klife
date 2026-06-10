@@ -2,7 +2,9 @@
 doc_id: doc_team_0028
 task_id: TASK-TEAM-0028
 title: "Team same-atom CID negative control"
-status: planned
+status: done
+completed_at: "2026-06-10T09:47:50+08:00"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P1
 milestone: M1N
@@ -37,7 +39,7 @@ rollback:
 atomizationImpact:
   ownerAtomOrMap: "team.plan-crew-briefing-contract"
   mapUpdates: []
-  notes: "Negative-control proof intentionally reuses one atom across synthetic A/B lanes; must not mutate owner-shard hot spots."
+  notes: "2026-06-10 | done | broker compose PASS: blocked-cid-conflict with kind:cid on atomId team.plan-crew-briefing-contract and atomCid atom:cid:team-0028-crew-briefing-negative-control; fixtures tests/schema-fixtures/positive/team-0028-same-atom-proposal-{a,b}.json."
 outOfScope:
   - "Re-opening TASK-TEAM-0027 atom-boundary uplift"
   - "Positive-control re-proof for TASK-TEAM-0002 vs TASK-TEAM-0003"
@@ -159,3 +161,19 @@ Revert the synthetic fixture tasks, helper routing, and negative-control evidenc
 - Positive-control reference: same file, different atoms, PASS (post `TASK-TEAM-0027`).
 - Negative-control reference: same atom, must block with `kind: cid`.
 - Do not open `TASK-TEAM-0029+` from this opener unless Captain explicitly expands the proof matrix.
+
+## Proof Result (2026-06-10)
+
+Command:
+
+```powershell
+node atm.mjs broker compose --proposal-file tests/schema-fixtures/positive/team-0028-same-atom-proposal-a.json --proposal-file tests/schema-fixtures/positive/team-0028-same-atom-proposal-b.json --json
+```
+
+Observed:
+
+- verdict: `blocked-cid-conflict`
+- `mergePlan.conflicts[*].kind == "cid"`
+- conflict detail cites shared `atomCid` (`atom:cid:team-0028-crew-briefing-negative-control`) and `atomId` (`team.plan-crew-briefing-contract`)
+
+Referee convergence: evidence pack complete (001), regression-home recommendation complete (002), `closeout-ready-now` (003).
