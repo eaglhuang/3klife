@@ -2,7 +2,7 @@
 dispatch_id: P1-TASK-CID-0025-002
 parent_task_id: TASK-CID-0025
 assignee: "002"
-status: pending
+status: done
 priority: P1
 milestone: P1
 planning_repo: 3KLife
@@ -56,3 +56,26 @@ The open question is not whether broker and coordinator both exist. They do. The
 
 Write the hierarchy plainly enough that nobody can read it backwards later.
 
+## Worker Report
+
+- worker: 002
+- dispatch: P1-TASK-CID-0025-002
+- status: done
+- files_changed:
+  - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/team.ts`
+  - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/broker.ts`
+  - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/team.spec.ts`
+  - `C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/CID硬化計畫書.md`
+  - `C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0025-broker-owned-write-actor-runtime-boundary.task.md`
+- wording_added:
+  - Broker verdicts override Coordinator decisions inside broker-governed conflict domains.
+  - Coordinator remains team-local lifecycle owner outside broker-governed conflict domains.
+  - Coordinator must yield and escalate when broker verdicts are `needs-steward`, `blocked-cid-conflict`, `blocked-shared-surface`, or `historical-delivery-required`.
+  - Broker-surface messages now explicitly say broker verdicts outrank Coordinator decisions inside broker territory.
+- cross_team_or_lifecycle_permissions:
+  - none; no new cross-team lifecycle permissions were granted or adjusted.
+- validation:
+  - `npm run typecheck`
+  - `npm run validate:cli`
+  - `node --strip-types scripts/validate-team-agents.ts --case lieutenant-escalation`
+  - `git diff --check`

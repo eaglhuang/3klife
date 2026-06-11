@@ -133,12 +133,13 @@ This card should preserve the following planning stance unless later evidence di
 
 - `Coordinator` is the local lifecycle owner for one team run.
 - `Broker` is the cross-team conflict governor.
-- Inside broker-governed conflict domains, broker verdicts override coordinator decisions.
+- Inside broker-governed conflict domains, broker verdicts override coordinator decisions, and coordinator must yield instead of racing a local close.
 - Outside broker-governed conflict domains, coordinator retains team-local lifecycle authority.
 
 ## Conflict Rule To Encode
 
 - If broker verdict says `needs-steward`, `blocked-cid-conflict`, `blocked-shared-surface`, or `historical-delivery-required`, the coordinator may not bypass that verdict with direct commit / close progression.
+- If broker-prescribed routing exceeds task scope, closure authority, or acceptance wording, the path must escalate to Captain / human rather than silently proceeding.
 - If broker-prescribed routing would exceed task scope, closure authority, or acceptance wording, the path must escalate to Captain / human rather than silently proceeding.
 
 ## Standalone Feasibility Question

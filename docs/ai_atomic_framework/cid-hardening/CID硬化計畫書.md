@@ -437,7 +437,7 @@ Write Broker 不能獨立於 Team Agents 存在，否則 ATM 會同時有「team
 - **Team Agents 消費 primitive**：把 primitive 映射成 Coordinator / Scope Guardian / Atomization Planner / Implementer / Neutral Write Steward / Validator / Review Agent 的 team run 行為。
 - **Write Broker 是 global singleton by repo/workspace**：同一個 repo/workspace 內所有 active tasks / teamRuns 都向同一個 Broker registry 登記 write intent。
 - **Coordinator 保持 lifecycle owner**：`task.lifecycle`、`git.write`、`evidence.write` 仍由 Coordinator 持有；Write Broker 不取得 commit 或 close 權限。
-- **Broker 在衝突域高於 Coordinator**：當問題屬於跨 team 的 CID / same-file / shared-surface / steward merge 決策時，Broker verdict 高於單一 team 的 Coordinator 決策；Coordinator 不可覆寫 broker verdict。
+- **Broker 在衝突域高於 Coordinator**：當問題屬於跨 team 的 CID / same-file / shared-surface / steward merge 決策時，Broker verdict 高於單一 team 的 Coordinator 決策；Coordinator 必須服從 broker verdict，不能用本地 lifecycle 決策覆寫它。
 - **Implementer 不再裸寫高風險同檔衝突**：一般工作仍可持有 `file.write`，但同檔 CID disjoint 衝突升級後，Implementer 交 `PatchProposal.v1`，由 Neutral Write Steward 或 deterministic composer 寫 final patch。
 - **Scope Guardian + Atomization Planner 是 Broker 的前置感測器**：Scope Guardian 檢查 allowedFiles / dirty tree / lease overlap；Atomization Planner 提供 atom_id / atom_cid / shared surface。
 - **Review Agent 不變成 Write Agent**：Review Agent 只做 review signature draft；Neutral Write Steward 是獨立角色，不能和 Implementer / Review Agent 混用。
@@ -456,17 +456,18 @@ Broker 不是 AI Agent，也不是新的排程器；它應該是 deterministic r
 
 - `Coordinator` 是單一 team 的 local lifecycle owner。
 - `Broker` 是跨 team / 跨 claim / 跨衝突域的上位協調者。
-- 兩者不是平行雙頭；當問題進入 broker 管轄的衝突域時，`Coordinator` 必須服從 `Broker` verdict。
+- 兩者不是平行雙頭；當問題進入 broker 管轄的衝突域時，`Coordinator` 必須服從 `Broker` verdict，且不得自行改寫、跳過或降級 broker verdict。
 - broker 管轄域至少包含：CID 衝突、same-file lane routing、shared-surface blocker、steward merge 路徑、historical-delivery 佐證要求。
 - broker 未介入時，`Coordinator` 仍保有 team-local 的 checkpoint、commit timing、close timing 與 evidence routing 自主權。
 
 #### 9.8.1.2 Conflict Resolution Rule
 
-- 如果 `Coordinator` 想推進 claim / commit / close，但 `Broker` verdict 判定目前屬於 `blocked-cid-conflict`、`blocked-shared-surface`、`needs-steward` 或 `historical-delivery-required`，則 `Coordinator` 必須停下並遵從 broker 指定路徑。
+- 如果 `Coordinator` 想推進 claim / commit / close，但 `Broker` verdict 判定目前屬於 `blocked-cid-conflict`、`blocked-shared-surface`、`needs-steward` 或 `historical-delivery-required`，則 `Coordinator` 必須停下並遵從 broker 指定路徑，不能以本地完成感取代衝突域判定。
 - 如果 `Broker` 提出的 merge / steward 路徑超出 task scope、closure authority 或 task card acceptance，則 `Coordinator` 不可自行忽略，而是必須升級到 `Captain / human` 做 scope 裁決。
 - 正式契約應為：
   - `Broker verdict overrides Coordinator decisions within broker-governed conflict domains.`
   - `Outside broker-governed conflict domains, Coordinator retains team-local lifecycle authority.`
+  - `Coordinator may not silently bypass broker verdicts; any bypass attempt must escalate to Captain / human.`
 
 Broker registry 最少要記：
 

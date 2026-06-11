@@ -2,7 +2,7 @@
 dispatch_id: P1-TASK-CID-0025-001
 parent_task_id: TASK-CID-0025
 assignee: "001"
-status: pending
+status: done
 priority: P1
 milestone: P1
 planning_repo: 3KLife
@@ -55,3 +55,29 @@ C:\Users\User\AI-Atomic-Framework
 
 Build the runtime hook, not the close authority.
 
+## Worker Report
+
+- worker: 001
+- dispatch: P1-TASK-CID-0025-001
+- status: done
+- files_changed:
+  - `C:/Users/User/AI-Atomic-Framework/packages/core/src/broker/team-lane.ts`
+  - `C:/Users/User/AI-Atomic-Framework/packages/core/src/broker/steward.ts`
+  - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/broker.ts`
+  - `C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/broker.spec.ts`
+  - `C:/Users/User/AI-Atomic-Framework/tests/cli-fixtures/help-snapshots/broker.json`
+  - `C:/Users/User/AI-Atomic-Framework/scripts/validate-team-brokered-write.ts`
+  - `C:/Users/User/AI-Atomic-Framework/scripts/validate-broker-steward.ts`
+- verification:
+  - `npm run typecheck`
+  - `npm run validate:cli`
+  - `node --strip-types scripts/validate-team-brokered-write.ts --mode validate`
+  - `node --strip-types scripts/validate-broker-steward.ts --mode validate`
+  - `git diff --check`
+- boundary:
+  - `git.write` retained as false in broker runtime handshake and steward evidence
+  - `task.lifecycle` retained as false in broker runtime handshake and steward evidence
+  - `self-close` retained as false in broker runtime handshake
+- notes:
+  - Added broker runtime activation handshake evidence and runtime activate CLI entry.
+  - Scoped write execution stays broker-approved and returns evidence upward only.
