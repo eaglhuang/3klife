@@ -3,8 +3,8 @@ doc_id: doc_other_asp_0004
 task_id: TASK-ASP-0004
 title: Broker Candidate-to-WriteIntent Bridge
 milestone: ASP-M1
-status: open
-blocked_by: [TASK-ASP-0001]
+status: done
+blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/atomic-cost-reduction-plan.md
 upstream_repo: AI-Atomic-Framework
@@ -88,13 +88,13 @@ export function candidatesToWriteIntent(
 
 ## Acceptance Criteria
 
-- [ ] `candidate-bridge.ts` is exported from `packages/core/src/broker/index.ts`
-- [ ] `candidatesToWriteIntent()` generates valid `WriteIntent` per schema
-- [ ] Deterministic atomCid: same candidate produces same atomCid across runs
-- [ ] Tests verify intersection with existing `calculateBrokerDecision()`: e.g., two candidates with same filePath produce `needs-physical-split` verdict
-- [ ] Bridge does not modify candidate input (read-only)
-- [ ] At least 3 test scenarios: parallel-safe, CID conflict, file overlap
-- [ ] No new external dependencies
+- [x] `candidate-bridge.ts` is exported from `packages/core/src/broker/index.ts`
+- [x] `candidatesToWriteIntent()` generates valid `WriteIntent` per schema
+- [x] Deterministic atomCid: same candidate produces same atomCid across runs
+- [x] Tests verify intersection with existing `calculateBrokerDecision()`: e.g., two candidates with same filePath produce `needs-physical-split` verdict
+- [x] Bridge does not modify candidate input (read-only)
+- [x] At least 3 test scenarios: parallel-safe, CID conflict, file overlap
+- [x] No new external dependencies
 
 ## Validation
 
@@ -114,6 +114,6 @@ node atm.mjs broker simulate --candidates-from packages/language-js/test/fixture
 
 ## Notes / Decision Log
 
-- 變更: 待開工
-- 驗證: 待補
-- 阻塞: TASK-ASP-0001 未完成
+- 變更: AAF 交付 `14359be3`（candidate-bridge + BROKER_GUIDE）；治理收口 `ddb63675`
+- 驗證: candidate-bridge 單元測試、typecheck 通過（AAF ledger `TASK-ASP-0004` done）
+- 阻塞: 無

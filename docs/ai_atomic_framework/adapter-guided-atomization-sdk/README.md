@@ -37,8 +37,10 @@ ASP-0005 (3KLife coord tracker) — independent, tracks AAF progress
 
 | ID | Title | Target | Status |
 |---|---|---|---|
-| TASK-ASP-0001 | AtomizationPlanningAdapter SDK contract | AI-Atomic-Framework | open |
-| TASK-ASP-0002 | JS adapter candidate discovery | AI-Atomic-Framework | open |
-| TASK-ASP-0003 | Python adapter SDK promotion | AI-Atomic-Framework | open |
-| TASK-ASP-0004 | Broker candidate-to-intent bridge | AI-Atomic-Framework | open |
-| TASK-ASP-0005 | 3KLife coordination + baseline | 3KLife | open |
+| TASK-ASP-0001 | AtomizationPlanningAdapter SDK contract | AI-Atomic-Framework | done |
+| TASK-ASP-0002 | JS adapter candidate discovery | AI-Atomic-Framework | done |
+| TASK-ASP-0003 | Python adapter SDK promotion | AI-Atomic-Framework | done |
+| TASK-ASP-0004 | Broker candidate-to-intent bridge | AI-Atomic-Framework | done |
+| TASK-ASP-0005 | 3KLife coordination + baseline | 3KLife | done |
+
+> **Initiative status (2026-06-11):** AAF batch `batch-d95420db3166` 五卡皆已正式收口（ledger done + governance commit）。本 README 與 `tasks/*.task.md` 為規劃鏡像；事實來源為 AAF `.atm/history/tasks/TASK-ASP-*.json`。

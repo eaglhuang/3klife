@@ -3,7 +3,7 @@ doc_id: doc_other_asp_0001
 task_id: TASK-ASP-0001
 title: AtomizationPlanningAdapter SDK Contract
 milestone: ASP-M1
-status: open
+status: done
 blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/atomic-cost-reduction-plan.md
@@ -90,13 +90,13 @@ export interface AtomizationPlanningAdapter {
 
 ## Acceptance Criteria
 
-- [ ] `packages/plugin-sdk/src/atomization-planning.ts` exists and is exported from `index.ts`
-- [ ] All five schemas are exported as types
-- [ ] `AtomizationPlanningAdapter` is exported as optional interface
-- [ ] Existing `LanguageAdapter` consumers are NOT broken (compile + tests pass)
-- [ ] At least one unit test validates the schema shape
-- [ ] `docs/ADAPTER_GUIDE.md` has a new section explaining when to implement this contract
-- [ ] Document explicitly states: detection method may be regex / scanner / compiler-api / ast / lsp — none is mandatory
+- [x] `packages/plugin-sdk/src/atomization-planning.ts` exists and is exported from `index.ts`
+- [x] All five schemas are exported as types
+- [x] `AtomizationPlanningAdapter` is exported as optional interface
+- [x] Existing `LanguageAdapter` consumers are NOT broken (compile + tests pass)
+- [x] At least one unit test validates the schema shape
+- [x] `docs/ADAPTER_GUIDE.md` has a new section explaining when to implement this contract
+- [x] Document explicitly states: detection method may be regex / scanner / compiler-api / ast / lsp — none is mandatory
 
 ## Validation
 
@@ -116,6 +116,6 @@ node atm.mjs validate-sdk --json
 
 ## Notes / Decision Log
 
-- 變更: 待開工
-- 驗證: 待補
+- 變更: AAF 交付 `e08bbb2a`（SDK 測試 + ADAPTER_GUIDE）；治理收口 `bfa57b0b`；contract 本體隨 ASP-0003 先行落地
+- 驗證: `validate:plugin-sdk`、atomization-planning 單元測試通過（AAF ledger `TASK-ASP-0001` done）
 - 阻塞: 無

@@ -3,8 +3,8 @@ doc_id: doc_other_asp_0002
 task_id: TASK-ASP-0002
 title: JS Adapter Candidate Discovery (Function + Class + Module)
 milestone: ASP-M1
-status: open
-blocked_by: [TASK-ASP-0001]
+status: done
+blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/atomic-cost-reduction-plan.md
 upstream_repo: AI-Atomic-Framework
@@ -66,12 +66,12 @@ This task uses **only lightweight regex / line scanning**. AST or LSP integratio
 
 ## Acceptance Criteria
 
-- [ ] `language-js-adapter.ts` exports an `AtomizationPlanningAdapter` implementation
-- [ ] `discoverAtomCandidates()` returns candidates for: exported functions, exported classes, arrow function consts, CommonJS exports
-- [ ] Confidence levels respect detection certainty (regex match → medium/high; deep heuristic → low)
-- [ ] No new external dependencies added to `package.json`
-- [ ] At least 5 fixture files tested with expected candidate counts
-- [ ] Existing `validateComputeAtom()` test suite still passes
+- [x] `language-js-adapter.ts` exports an `AtomizationPlanningAdapter` implementation
+- [x] `discoverAtomCandidates()` returns candidates for: exported functions, exported classes, arrow function consts, CommonJS exports
+- [x] Confidence levels respect detection certainty (regex match → medium/high; deep heuristic → low)
+- [x] No new external dependencies added to `package.json`
+- [x] At least 5 fixture files tested with expected candidate counts
+- [x] Existing `validateComputeAtom()` test suite still passes
 
 ## Validation
 
@@ -90,6 +90,6 @@ node atm.mjs candidates discover --include "packages/language-js/test/fixtures/*
 
 ## Notes / Decision Log
 
-- 變更: 待開工
-- 驗證: 待補
-- 阻塞: TASK-ASP-0001 未完成
+- 變更: AAF 交付 `8a58d1d9`（scanner-based discoverAtomCandidates + 6 fixtures）；治理收口 `dc34dd4d`
+- 驗證: `validate:language-js`、atomization-planning 單元測試通過（AAF ledger `TASK-ASP-0002` done）
+- 阻塞: 無

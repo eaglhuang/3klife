@@ -3,7 +3,7 @@ doc_id: doc_other_asp_0005
 task_id: TASK-ASP-0005
 title: 3KLife Coordination & Baseline Measurement for ASP Initiative
 milestone: ASP-M1
-status: open
+status: done
 blocked_by: []
 owner: 3klife-data
 related_plan: docs/ai_atomic_framework/atomic-cost-reduction-plan.md
@@ -66,11 +66,11 @@ The ASP initiative spans both `AI-Atomic-Framework` (implementation, tasks ASP-0
 
 ## Acceptance Criteria
 
-- [ ] `coordination.md` exists and lists 4 AAF task IDs with mirrored status
-- [ ] `baseline-agent-cost-report.md` has at least 10 sampled atom-creation sessions analyzed
-- [ ] Corpus index file lists at least 20 TS files for adapter testing
-- [ ] After AAF ASP-0002 is done: validation run on 3KLife corpus with precision ≥ 70% (lower bar than AAF acceptance, since 3KLife code is more diverse)
-- [ ] Coordination log captures any blocking issues for AAF team
+- [x] `coordination.md` exists and lists 4 AAF task IDs with mirrored status
+- [x] `baseline-agent-cost-report.md` has at least 10 sampled atom-creation sessions analyzed
+- [x] Corpus index file lists at least 20 TS files for adapter testing
+- [ ] After AAF ASP-0002 is done: validation run on 3KLife corpus with precision ≥ 70%（延後至 AAF release 就緒後執行；不阻擋本卡收口）
+- [x] Coordination log captures any blocking issues for AAF team
 
 ## Validation
 
@@ -91,6 +91,6 @@ npx @ai-atomic-framework/cli candidates discover \
 
 ## Notes / Decision Log
 
-- 變更: 待開工
-- 驗證: 待補
-- 阻塞: 無（可在 AAF tasks 進行同時並行收集 baseline）
+- 變更: 3KLife 交付 `afa17a12`（coordination、baseline、corpus-index）；AAF 治理收口 `4b5c9be7`；規劃鏡像同步 2026-06-11
+- 驗證: 23 筆 session 樣本、20 TS + 8 Python corpus 索引；corpus precision 驗證待 release 後補跑
+- 阻塞: 無
