@@ -4,8 +4,8 @@
   "summary": {
     "done": 1,
     "in_progress": 6,
-    "open": 15,
-    "total": 22
+    "open": 16,
+    "total": 23
   },
   "tasks": [
     {
@@ -1196,6 +1196,65 @@
         "docs/tasks/tasks-aao.json"
       ],
       "notes": "2026-06-10 | status: done | validation: passed | change: child card for residue buckets and operator-facing finalization diagnosis flow | residue buckets now route to one governed next command",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0139",
+      "title": "preserve task-id casing across import, close verification, and pre-commit transition checks",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-10",
+      "created_by_agent": "cursor-asp-runner",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Preserve authored task-id casing end-to-end so mixed-case planning cards can be imported, closed, and committed without rewriting ledger filenames or task-events directories.",
+      "related": [
+        "TASK-AAO-0135",
+        "TASK-AAO-0137",
+        "TASK-APO-0030"
+      ],
+      "depends": [
+        "TASK-AAO-0135"
+      ],
+      "acceptance": [
+        "Import keeps authored task-id casing in the persisted ledger record.",
+        "Close verification accepts case-only differences without rolling back a valid close.",
+        "Pre-commit transition pairing accepts staged event paths using case-insensitive matching.",
+        "Legacy uppercase ids remain valid without migration."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0139-task-id-casing-governance.task.md",
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-10 | status: open | validation: pending | change: batch-d95420db3166 exposed case-only close rollback + hook transition pairing block | blocker: none",
       "brief": {
         "style": "classic",
         "label": "",
