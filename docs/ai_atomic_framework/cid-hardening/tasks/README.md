@@ -94,6 +94,38 @@ The 100% completion pack starts after those predecessors are closed:
 
 Future Queue items `TASK-CID-0004`, `TASK-CID-0006`, and `TASK-CID-0007` remain outside this completion pack. They stay deferred until the brokered-write runtime is fully proven.
 
+## AGR Expansion Pack
+
+> `CID硬化計畫書2.md` opens the AGR follow-up pack. This pack does not replace the brokered-write runtime; it extends CID/broker governance so same-file conflicts can be refined through virtual atoms, bounded decomposition policy, read-set-aware admission, and benchmark-backed validation.
+
+| Task ID | Stage | Planned Title | Status | Notes |
+|---|---|---|---|---|
+| [TASK-CID-0026](./TASK-CID-0026-agr-baseline-survey-and-cid-broker-gap-map.task.md) | M0 | AGR baseline survey and CID/broker gap map | planned | Planning-only survey that maps AGR proposal claims onto the current broker/CID reality. |
+| [TASK-CID-0027](./TASK-CID-0027-agr-implementation-pack-and-acceptance-matrix.task.md) | M0 | AGR implementation pack and acceptance matrix | **done** | Planning-only lock-in point for milestone definitions, dependency DAG, and execution acceptance gates. |
+| [TASK-CID-0028](./TASK-CID-0028-enclosing-unit-and-virtual-atom-sdk-contract.task.md) | M1 | EnclosingUnit and VirtualAtom SDK contract | planned | Formal Layer 1 SDK surface. |
+| [TASK-CID-0029](./TASK-CID-0029-layer1-syntactic-enclosure-broker-refinement.task.md) | M1 | Layer 1 syntactic enclosure broker refinement | planned | Broker-side virtual atom refinement and CID derivation. |
+| [TASK-CID-0030](./TASK-CID-0030-adapter-enclose-capability-preflight-and-fallback-guard.task.md) | M1 | Adapter enclose capability preflight and fallback guard | planned | Keeps unsupported adapters fail-closed. |
+| [TASK-CID-0031](./TASK-CID-0031-layer2-decomposition-trigger-and-threshold-policy.task.md) | M2 | Layer 2 decomposition trigger and threshold policy | planned | Bounded decomposition request policy only. |
+| [TASK-CID-0032](./TASK-CID-0032-broker-augmented-decision-rule-and-read-set-contract.task.md) | M2 | Broker Augmented Decision Rule and read-set contract | planned | Read-set-aware broker admission without weakening blockers. |
+| [TASK-CID-0033](./TASK-CID-0033-adapter-manifest-symbol-canonicalization-contract.task.md) | M2 | Adapter manifest symbol canonicalization contract | planned | Makes canonicalization limits explicit. |
+| [TASK-CID-0034](./TASK-CID-0034-mid-execution-registration-and-virtual-atom-in-use-registry.task.md) | M3 | Mid-execution registration and virtual atom in-use registry | planned | Runtime state layer for AGR-backed execution. |
+| [TASK-CID-0035](./TASK-CID-0035-agr-aware-neutral-writer-and-steward-orchestration.task.md) | M3 | AGR-aware neutral writer and steward orchestration | planned | Wires AGR into scoped write execution. |
+| [TASK-CID-0036](./TASK-CID-0036-agr-integration-for-tasks-parallel-next-claim-and-closeout.task.md) | M3 | AGR integration for tasks parallel, next claim, and closeout | planned | Brings AGR to the main governance entry surfaces. |
+| [TASK-CID-0037](./TASK-CID-0037-validator-benchmark-scenarios-and-catch-rate-harness.task.md) | M4 | Validator benchmark scenarios and catch-rate harness | planned | Benchmark gate for routing precision vs validator safety. |
+| [TASK-CID-0038](./TASK-CID-0038-agr-ship-review-risk-ledger-and-adoption-recommendation.task.md) | M4 | AGR ship review, risk ledger, and adoption recommendation | planned | Planning-only ship/no-ship review. |
+| [TASK-CID-0039](./TASK-CID-0039-next-agr-implementation-dispatch-pack.task.md) | M4 | Next AGR implementation dispatch pack | planned | Planning-only captain dispatch pack for the next wave. |
+
+## AGR Sequencing Note
+
+The AGR pack should be executed in four waves:
+
+1. M0 planning convergence: `TASK-CID-0026` and `TASK-CID-0027` (both done).
+2. M1 Layer 1 contract/runtime entry: `TASK-CID-0028` through `TASK-CID-0030`.
+3. M2/M3 policy and runtime integration: `TASK-CID-0031` through `TASK-CID-0036`.
+4. M4 evidence gate and dispatch readiness: `TASK-CID-0037` through `TASK-CID-0039`.
+
+Planning-only cards in this pack do not authorize framework source edits by themselves. Execution cards remain target-repo bounded and must still follow ATM routing, claim, validator, and closeout rules.
+
 ## Future Extension Proposal
 
 - **TASK-CID-0008 (not opened in this round)** may later formalize budget, cap, sampling, sharding, and timeout policy once the broker runtime and acceptance harness are stable enough to support higher-order governance controls.
