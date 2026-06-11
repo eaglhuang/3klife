@@ -3,10 +3,10 @@ doc_id: ""
 task_id: TASK-AAO-0139
 title: "Preserve task-id casing across import, close verification, and pre-commit transition checks"
 milestone: M17
-status: open
-artifact_status: draft
-runtime_status: n/a
-upstream_mutation_status: not-applied
+status: done
+artifact_status: done
+runtime_status: validated
+upstream_mutation_status: applied
 created: "2026-06-10"
 created_by_agent: cursor-asp-runner
 started_at: ""
@@ -71,7 +71,7 @@ non_goals:
   - "Do not relax the pre-commit transition-pairing requirement itself; only fix its path comparison."
   - "Do not hand-edit .atm/history or .atm/runtime state as part of the fix."
   - "Do not require ledger migration for existing uppercase-id tasks."
-notes: "2026-06-10 | status: open | validation: pending | change: exposed by batch-d95420db3166 TASK-APO-0030 closure (case-only close rollback + hook transition pairing block) | blocker: none"
+notes: "2026-06-11 | status: done | validation: passed | change: AAF 交付 c8ad9d5b + 治理 c655983b；政策 option (a) preserve authored casing | blocker: none"
 outOfScope:
   - broker decision logic
   - taskflow opener numbering policy (separate from this casing fix)
