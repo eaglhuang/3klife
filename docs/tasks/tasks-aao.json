@@ -4,8 +4,8 @@
   "summary": {
     "done": 1,
     "in_progress": 6,
-    "open": 16,
-    "total": 23
+    "open": 17,
+    "total": 24
   },
   "tasks": [
     {
@@ -1255,6 +1255,70 @@
         "docs/tasks/tasks-aao.json"
       ],
       "notes": "2026-06-11 | status: done | validation: passed | change: AAF c8ad9d5b delivery + c655983b governance; preserve authored casing policy | blocker: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0140",
+      "title": "taskflow close planning mirror closeback orchestration",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M17",
+      "created": "2026-06-11",
+      "created_by_agent": "codex-gpt-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Make taskflow close the single operator-facing closeback orchestration story so planning-mirror closeback, historical-delivery close, and residue repair are explained through one governed flow instead of split contract and writer cards.",
+      "related": [
+        "TASK-AAO-0138",
+        "TASK-AAO-0138A",
+        "TASK-AAO-0138B",
+        "TASK-AAO-0138C",
+        "TASK-AAO-0069"
+      ],
+      "depends": [
+        "TASK-AAO-0138B",
+        "TASK-AAO-0138C",
+        "TASK-AAO-0069"
+      ],
+      "acceptance": [
+        "taskflow close exists as the official operator-facing closeback orchestration surface.",
+        "The close plan can distinguish normal close, historical-delivery close, planning-mirror repair, and ambiguous/manual-review residue.",
+        "tasks close, tasks reconcile, and residue diagnostics remain the authoritative backends.",
+        "The planning-mirror writer story stays adopter-aware and does not become a second writer.",
+        "This follow-up remains a single card and is not split into separate contract/writer cards."
+      ],
+      "deliverables": [
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0140-taskflow-close-planning-mirror-closeback-orchestration.task.md",
+        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+        "docs/tasks/tasks-aao.json"
+      ],
+      "notes": "2026-06-11 | status: done | validation: passed | change: taskflow close closeback orchestration with planning-mirror writer boundary | blocker: none",
       "brief": {
         "style": "classic",
         "label": "",
