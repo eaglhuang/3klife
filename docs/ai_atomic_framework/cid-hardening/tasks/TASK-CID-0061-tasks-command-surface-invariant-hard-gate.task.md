@@ -2,8 +2,9 @@
 doc_id: doc_cid_0061
 task_id: TASK-CID-0061
 title: "Tasks command surface invariant hard gate"
-status: in-progress
+status: done
 started_at: "2026-06-12T22:25:00+08:00"
+closed_at: "2026-06-12T22:33:00+08:00"
 started_by_agent: "007"
 owner: atm-core
 priority: P0
