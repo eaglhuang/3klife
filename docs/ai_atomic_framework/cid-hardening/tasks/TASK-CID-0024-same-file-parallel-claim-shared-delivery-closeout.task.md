@@ -2,7 +2,7 @@
 doc_id: doc_cid_0024
 task_id: TASK-CID-0024
 title: "Same-file parallel claim and shared delivery closeout follow-up"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: P1
