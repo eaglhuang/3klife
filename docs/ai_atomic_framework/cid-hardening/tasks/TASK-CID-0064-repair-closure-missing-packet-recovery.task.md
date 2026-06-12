@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0064
 title: "Repair-closure missing packet recovery and deterministic closeout reconstruction"
-status: in-progress
+status: ready
 started_at: "2026-06-12T23:29:00+08:00"
 started_by_agent: "007"
 priority: P0
