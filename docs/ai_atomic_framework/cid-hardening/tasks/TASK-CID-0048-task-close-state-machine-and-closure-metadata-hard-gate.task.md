@@ -2,9 +2,10 @@
 doc_id: doc_cid_0048
 task_id: TASK-CID-0048
 title: "Task close state machine and closure metadata hard gate"
-status: in-progress
+status: done
 started_at: "2026-06-12T18:18:00+08:00"
 started_by_agent: "007"
+completed_at: "2026-06-12T18:25:00+08:00"
 owner: atm-core
 priority: P0
 milestone: M6
