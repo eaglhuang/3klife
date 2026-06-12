@@ -1,0 +1,217 @@
+{
+  "shard": "MAO",
+  "generated": "2026-06-11",
+  "summary": {
+    "planned": 10,
+    "in_progress": 0,
+    "done": 0,
+    "blocked": 0,
+    "total": 10
+  },
+  "tasks": [
+    {
+      "id": "TASK-MAO-0001",
+      "title": "logical parallel routing architecture contract",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "planning",
+      "phase": "M0",
+      "depends": [],
+      "deliverables": [
+        "docs/specs/mao-logical-routing-v1.md"
+      ],
+      "validators": [
+        "git diff --check"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0002",
+      "title": "route context state schema",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M0",
+      "depends": [
+        "TASK-MAO-0001"
+      ],
+      "deliverables": [
+        "schemas/route-context.schema.json",
+        "packages/core/src/routing/route-context.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:schemas",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0003",
+      "title": "route lifecycle CLI",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M1",
+      "depends": [
+        "TASK-MAO-0002"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/route.ts",
+        "packages/cli/src/commands/index.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0004",
+      "title": "next route and task selector",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M1",
+      "depends": [
+        "TASK-MAO-0002",
+        "TASK-MAO-0003"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/next.ts",
+        "packages/cli/src/commands/task-intent.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0005",
+      "title": "broker intent registry",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M2",
+      "depends": [
+        "TASK-MAO-0002"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/intent-registry.ts",
+        "packages/core/src/broker/types.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0006",
+      "title": "logical conflict matrix",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M2",
+      "depends": [
+        "TASK-MAO-0005"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/conflict-matrix.ts",
+        "packages/core/src/broker/__tests__/conflict-matrix.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0007",
+      "title": "freeze resume protocol",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M3",
+      "depends": [
+        "TASK-MAO-0005",
+        "TASK-MAO-0006"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/freeze.ts",
+        "packages/cli/src/commands/route.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0008",
+      "title": "patch envelope contract",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M3",
+      "depends": [
+        "TASK-MAO-0007"
+      ],
+      "deliverables": [
+        "schemas/patch-envelope.schema.json",
+        "packages/core/src/broker/patch-envelope.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:schemas",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0009",
+      "title": "steward arbitration flow",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M3",
+      "depends": [
+        "TASK-MAO-0006",
+        "TASK-MAO-0008"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/steward.ts",
+        "packages/cli/src/commands/route.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0010",
+      "title": "multi-agent simulator benchmark",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "validation",
+      "phase": "M4",
+      "depends": [
+        "TASK-MAO-0003",
+        "TASK-MAO-0006",
+        "TASK-MAO-0009"
+      ],
+      "deliverables": [
+        "scripts/validate-mao-parallel-routing.ts",
+        "scripts/fixtures/mao-parallel-routing/"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-mao-parallel-routing.ts"
+      ]
+    }
+  ]
+}
+
