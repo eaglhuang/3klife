@@ -1,0 +1,71 @@
+---
+doc_id: doc_cid_0058
+task_id: TASK-CID-0058
+title: "Tasks CLI thin wrapper consolidation"
+status: planned
+owner: atm-core
+priority: P1
+milestone: M10
+depends_on:
+  - "TASK-CID-0052"
+  - "TASK-CID-0053"
+  - "TASK-CID-0054"
+  - "TASK-CID-0055"
+  - "TASK-CID-0056"
+  - "TASK-CID-0057"
+related_plan: docs/ai_atomic_framework/cid-hardening/atm-tasks-command-atomic-map-refactor-plan.md
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
+scopePaths:
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/tasks/"
+  - "docs/reports/tasks-command-atomic-map.md"
+  - "scripts/validate-tasks-atomic-map.ts"
+deliverables:
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/tasks/"
+  - "docs/reports/tasks-command-atomic-map.md"
+  - "scripts/validate-tasks-atomic-map.ts"
+validators:
+  - "npm run typecheck"
+  - "node --strip-types scripts/validate-tasks-atomic-map.ts"
+  - "npm run validate:cli"
+  - "git diff --check"
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+atomizationImpact:
+  ownerAtomOrMap: "atm.tasks-thin-cli-wrapper"
+  mapUpdates:
+    - "docs/reports/tasks-command-atomic-map.md"
+outOfScope:
+  - "Changing CLI command names"
+  - "Changing public JSON schemas"
+nonGoals:
+  - "Do not perform cosmetic-only rewrites."
+---
+
+# TASK-CID-0058 - Tasks CLI thin wrapper consolidation
+
+## Goal
+
+Reduce `tasks.ts` into a thinner CLI orchestration layer after the invariant atoms exist.
+
+## Required Behavior
+
+- `tasks.ts` should primarily parse CLI input, call invariant modules, and format output.
+- No duplicated closeout, dependency, lifecycle, historical-delivery, scope-lock, or residue trust logic should remain in `tasks.ts`.
+- The atomic map report must record before/after line counts and responsibility movement.
+- Public CLI behavior must remain compatible except for intentional hardening errors from previous tasks.
+
+## Validation
+
+```powershell
+npm run typecheck
+node --strip-types scripts/validate-tasks-atomic-map.ts
+npm run validate:cli
+git diff --check
+```
+
