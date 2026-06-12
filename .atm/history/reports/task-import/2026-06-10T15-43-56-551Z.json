@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-10T15:43:56.551Z",
+  "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0025-broker-owned-write-actor-runtime-boundary.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-CID-0025.json"
+  ],
+  "taskIds": [
+    "TASK-CID-0025"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-CID-0025",
+      "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0025-broker-owned-write-actor-runtime-boundary.task.md",
+      "sectionTitle": "TASK-CID-0025",
+      "headingLine": 56,
+      "hash": "71d9970cc787619e"
+    }
+  ]
+}
