@@ -100,20 +100,20 @@ Future Queue items `TASK-CID-0004`, `TASK-CID-0006`, and `TASK-CID-0007` remain 
 
 | Task ID | Stage | Planned Title | Status | Notes |
 |---|---|---|---|---|
-| [TASK-CID-0026](./TASK-CID-0026-agr-baseline-survey-and-cid-broker-gap-map.task.md) | M0 | AGR baseline survey and CID/broker gap map | planned | Planning-only survey that maps AGR proposal claims onto the current broker/CID reality. |
+| [TASK-CID-0026](./TASK-CID-0026-agr-baseline-survey-and-cid-broker-gap-map.task.md) | M0 | AGR baseline survey and CID/broker gap map | **done** | Planning-only survey that maps AGR proposal claims onto the current broker/CID reality. |
 | [TASK-CID-0027](./TASK-CID-0027-agr-implementation-pack-and-acceptance-matrix.task.md) | M0 | AGR implementation pack and acceptance matrix | **done** | Planning-only lock-in point for milestone definitions, dependency DAG, and execution acceptance gates. |
-| [TASK-CID-0028](./TASK-CID-0028-enclosing-unit-and-virtual-atom-sdk-contract.task.md) | M1 | EnclosingUnit and VirtualAtom SDK contract | planned | Formal Layer 1 SDK surface. |
-| [TASK-CID-0029](./TASK-CID-0029-layer1-syntactic-enclosure-broker-refinement.task.md) | M1 | Layer 1 syntactic enclosure broker refinement | planned | Broker-side virtual atom refinement and CID derivation. |
+| [TASK-CID-0028](./TASK-CID-0028-enclosing-unit-and-virtual-atom-sdk-contract.task.md) | M1 | EnclosingUnit and VirtualAtom SDK contract | **done** | Formal Layer 1 SDK surface. |
+| [TASK-CID-0029](./TASK-CID-0029-layer1-syntactic-enclosure-broker-refinement.task.md) | M1 | Layer 1 syntactic enclosure broker refinement | **done** | Broker-side virtual atom refinement and CID derivation. |
 | [TASK-CID-0030](./TASK-CID-0030-adapter-enclose-capability-preflight-and-fallback-guard.task.md) | M1 | Adapter enclose capability preflight and fallback guard | **done** | Keeps unsupported adapters fail-closed; BROKER_GUIDE now documents the enclose preflight matrix and fallback guard. |
-| [TASK-CID-0031](./TASK-CID-0031-layer2-decomposition-trigger-and-threshold-policy.task.md) | M2 | Layer 2 decomposition trigger and threshold policy | planned | Bounded decomposition request policy only. |
-| [TASK-CID-0032](./TASK-CID-0032-broker-augmented-decision-rule-and-read-set-contract.task.md) | M2 | Broker Augmented Decision Rule and read-set contract | planned | Read-set-aware broker admission without weakening blockers. |
-| [TASK-CID-0033](./TASK-CID-0033-adapter-manifest-symbol-canonicalization-contract.task.md) | M2 | Adapter manifest symbol canonicalization contract | planned | Makes canonicalization limits explicit. |
+| [TASK-CID-0031](./TASK-CID-0031-layer2-decomposition-trigger-and-threshold-policy.task.md) | M2 | Layer 2 decomposition trigger and threshold policy | **done** | Bounded decomposition request policy only. |
+| [TASK-CID-0032](./TASK-CID-0032-broker-augmented-decision-rule-and-read-set-contract.task.md) | M2 | Broker Augmented Decision Rule and read-set contract | **done** | Read-set-aware broker admission without weakening blockers. |
+| [TASK-CID-0033](./TASK-CID-0033-adapter-manifest-symbol-canonicalization-contract.task.md) | M2 | Adapter manifest symbol canonicalization contract | **done** | Makes canonicalization limits explicit. |
 | [TASK-CID-0034](./TASK-CID-0034-mid-execution-registration-and-virtual-atom-in-use-registry.task.md) | M3 | Mid-execution registration and virtual atom in-use registry | **done** | Runtime state layer for AGR-backed execution is now closed after restoring the bounded 0034 payload, validating the AGR runtime registry scope, and recording the target-repo closure packet. |
-| [TASK-CID-0035](./TASK-CID-0035-agr-aware-neutral-writer-and-steward-orchestration.task.md) | M3 | AGR-aware neutral writer and steward orchestration | planned | Wires AGR into scoped write execution. |
-| [TASK-CID-0036](./TASK-CID-0036-agr-integration-for-tasks-parallel-next-claim-and-closeout.task.md) | M3 | AGR integration for tasks parallel, next claim, and closeout | planned | Brings AGR to the main governance entry surfaces. |
-| [TASK-CID-0037](./TASK-CID-0037-validator-benchmark-scenarios-and-catch-rate-harness.task.md) | M4 | Validator benchmark scenarios and catch-rate harness | planned | Benchmark gate for routing precision vs validator safety. |
-| [TASK-CID-0038](./TASK-CID-0038-agr-ship-review-risk-ledger-and-adoption-recommendation.task.md) | M4 | AGR ship review, risk ledger, and adoption recommendation | planned | Planning-only ship/no-ship review. |
-| [TASK-CID-0039](./TASK-CID-0039-next-agr-implementation-dispatch-pack.task.md) | M4 | Next AGR implementation dispatch pack | planned | Planning-only captain dispatch pack for the next wave. |
+| [TASK-CID-0035](./TASK-CID-0035-agr-aware-neutral-writer-and-steward-orchestration.task.md) | M3 | AGR-aware neutral writer and steward orchestration | **done** | Wires AGR into scoped write execution. |
+| [TASK-CID-0036](./TASK-CID-0036-agr-integration-for-tasks-parallel-next-claim-and-closeout.task.md) | M3 | AGR integration for tasks parallel, next claim, and closeout | **done** | Brings AGR to the main governance entry surfaces. |
+| [TASK-CID-0037](./TASK-CID-0037-validator-benchmark-scenarios-and-catch-rate-harness.task.md) | M4 | Validator benchmark scenarios and catch-rate harness | **done** | Benchmark gate for routing precision vs validator safety. |
+| [TASK-CID-0038](./TASK-CID-0038-agr-ship-review-risk-ledger-and-adoption-recommendation.task.md) | M4 | AGR ship review, risk ledger, and adoption recommendation | **done** | Planning-only ship/no-ship review. |
+| [TASK-CID-0039](./TASK-CID-0039-next-agr-implementation-dispatch-pack.task.md) | M4 | Next AGR implementation dispatch pack | **done** | Planning-only captain dispatch pack for the next wave. |
 
 ## AGR Sequencing Note
 
@@ -129,6 +129,19 @@ Planning-only cards in this pack do not authorize framework source edits by them
 ## Future Extension Proposal
 
 - **TASK-CID-0008 (not opened in this round)** may later formalize budget, cap, sampling, sharding, and timeout policy once the broker runtime and acceptance harness are stable enough to support higher-order governance controls.
+
+## AGR Conflict Arbitration Extension Pack
+
+> `agr-conflict-arbitration-plan.md` extends the AGR line with broker intent admission, conflict arbitration, freeze / snapshot handling, steward takeover, recovery, and benchmark proof. `TASK-CID-0040` ~ `TASK-CID-0045` are the engineering milestones for that extension pack.
+
+| Task ID | Stage | Planned Title | Status | Notes |
+|---|---|---|---|---|
+| [TASK-CID-0040](./TASK-CID-0040-intent-registration-lease-heartbeat-and-lease-bounds.task.md) | M5 | Intent registration, lease, heartbeat, and lease bounds | planned | Broker admission guardrail and lease-bound contract. |
+| [TASK-CID-0041](./TASK-CID-0041-conflict-set-model-and-arbitration-verdicts.task.md) | M5 | Conflict-set model and arbitration verdicts | planned | Control/data-plane verdict contract. |
+| [TASK-CID-0042](./TASK-CID-0042-freeze-patch-envelope-checkpoint-and-filesystem-wip-snapshot.task.md) | M5 | Freeze, patch envelope, checkpoint, and filesystem WIP snapshot | planned | Freeze and resumable WIP capture. |
+| [TASK-CID-0043](./TASK-CID-0043-neutral-writer-steward-takeover-isolated-merge-and-validator-gated-apply.task.md) | M5 | Neutral writer, steward takeover, isolated merge, and validator-gated apply | planned | Neutral writer execution and safe apply. |
+| [TASK-CID-0044](./TASK-CID-0044-recovery-orphan-cleanup-manual-override-audit-and-snapshot-recovery.task.md) | M5 | Recovery, orphan cleanup, manual override audit, and snapshot recovery | planned | Recovery and audit trail follow-up. |
+| [TASK-CID-0045](./TASK-CID-0045-conflict-benchmark-validator-catch-rate-and-latency-reporting.task.md) | M5 | Conflict benchmark, validator catch-rate, and latency reporting | planned | Benchmark and proof pack for the extension. |
 
 ## Cross-Lane References
 
