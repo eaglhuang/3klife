@@ -3,17 +3,8 @@ doc_id: doc_cid_0060
 task_id: TASK-CID-0060
 title: "Source done vs governed done guidance and hard gate"
 status: done
-finished_at: "2026-06-12T19:05:00+08:00"
-finished_by_agent: "003"
-evidence:
-  type: command
-  commands:
-    - "npm run typecheck"
-    - "npm run validate:cli"
-    - "git diff --check"
-  target_repo_delivery_commit: "1057a126"
-  target_repo_closeout_ledger_commit: "145360d2"
-  note: "Governed closeout is trusted in target repo; planning mirror now aligned"
+completed_at: "2026-06-12T20:05:00+08:00"
+completed_by_agent: "008"
 owner: atm-core
 priority: P0
 milestone: M11
