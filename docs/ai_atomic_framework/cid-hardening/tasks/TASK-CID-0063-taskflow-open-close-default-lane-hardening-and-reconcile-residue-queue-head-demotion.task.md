@@ -2,7 +2,10 @@
 task_id: TASK-CID-0063
 doc_id: doc_cid_0063
 title: "Taskflow open-close default lane hardening and reconcile residue queue-head demotion"
-status: planned
+status: done
+started_at: "2026-06-13T00:07:49+08:00"
+closed_at: "2026-06-13T00:28:13+08:00"
+started_by_agent: "captain"
 owner: atm-core
 priority: P0
 milestone: M13
