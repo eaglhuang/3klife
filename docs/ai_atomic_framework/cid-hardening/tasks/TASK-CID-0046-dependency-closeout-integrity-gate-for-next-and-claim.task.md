@@ -4,7 +4,7 @@ task_id: TASK-CID-0046
 title: "Dependency closeout integrity gate for next/claim and manual-done residue"
 status: done
 started_at: "2026-06-12T17:50:44+08:00"
-completed_at: "2026-06-12T17:58:00+08:00"
+completed_at: "2026-06-12T18:08:00+08:00"
 started_by_agent: "007"
 owner: atm-core
 priority: P0
