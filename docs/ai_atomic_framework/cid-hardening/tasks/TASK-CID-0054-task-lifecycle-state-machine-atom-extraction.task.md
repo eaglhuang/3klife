@@ -2,7 +2,7 @@
 doc_id: doc_cid_0054
 task_id: TASK-CID-0054
 title: "Task lifecycle state machine atom extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8
@@ -40,6 +40,9 @@ outOfScope:
   - "Historical delivery commit proof"
 nonGoals:
   - "Do not add alternate task statuses outside the existing schema without a separate design card."
+completed_at: "2026-06-13T15:04:37.483Z"
+completed_by_agent: "captain"
+delivery_commit: "ec9d8be8"
 ---
 
 # TASK-CID-0054 - Task lifecycle state machine atom extraction
