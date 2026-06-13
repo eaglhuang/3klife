@@ -88,6 +88,15 @@ That concentration makes parallel work and targeted fixes more fragile than they
 - Update the atomic map report so the new ownership boundaries are documented, not just implied by code layout.
 - Preserve the `TASK-CID-0061` hard gate as a permanent guard during and after the extraction.
 
+## Atom/Map Extraction Pattern
+
+- Primary patterns: **Facade** plus **Policy Object** plus **Strategy Map**.
+- Treat 0062 as cleanup after earlier atoms, not as a license to move unrelated logic. Every moved function must map to a named owner atom.
+- Do not create a second public contract. Keep `public-surface.ts` as the facade boundary for callers and move implementation behind it.
+- Prefer strategy maps for close modes, residue buckets, and backend lane selection; prefer policy objects for admission, waiver, and permission decisions.
+- Any new module must have either a focused test or be covered by an existing validator named in the atomic map report.
+- If a module cannot be assigned to an atom/map owner, leave it in place and document it as residual work.
+
 ## Acceptance Signals
 
 - `tasks.ts` becomes thinner in responsibility, not merely shorter in line count.

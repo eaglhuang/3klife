@@ -55,6 +55,14 @@ Extract allowed-file, dirty-file, direction-lock, and claim-lock diagnostics int
 - Error responses must include actionable `requiredCommand` when safe and must fail closed when ambiguous.
 - Existing TASK-AAO-0141 behavior for scoped staging guidance must remain intact.
 
+## Atom/Map Extraction Pattern
+
+- Primary patterns: **Strategy Map** plus **Result Contract Object**.
+- Model dirty-file diagnostics as named buckets with stable semantics: in-scope blocking, closure-governance blocking, advisory unrelated, generated artifact, ignored untracked.
+- Each bucket should have a deterministic remediation contract, not free-form prose assembled in multiple callers.
+- The atom should be usable by close gates, pre-commit audit, and taskflow bundle preview without duplicating file classification.
+- Keep auto-stage decisions out of this atom; it diagnoses and recommends, while taskflow close owns governed staging.
+
 ## Validation
 
 ```powershell
@@ -63,4 +71,3 @@ node --strip-types packages/cli/src/commands/tasks/__tests__/scope-lock-diagnost
 npm run validate:cli
 git diff --check
 ```
-

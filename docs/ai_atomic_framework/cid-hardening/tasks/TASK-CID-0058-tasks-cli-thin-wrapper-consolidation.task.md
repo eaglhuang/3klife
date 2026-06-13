@@ -60,6 +60,14 @@ Reduce `tasks.ts` into a thinner CLI orchestration layer after the invariant ato
 - The atomic map report must record before/after line counts and responsibility movement.
 - Public CLI behavior must remain compatible except for intentional hardening errors from previous tasks.
 
+## Atom/Map Extraction Pattern
+
+- Primary pattern: **Facade**.
+- `tasks.ts` should become a thin command facade over named atoms; it should not become a new orchestration mega-module under another name.
+- The facade may route actions, parse flags, and format CLI results, but governance decisions must live in owner atoms.
+- Use the atomic map report to prove each major rule has one owner module and one focused test file.
+- Preserve the public surface contract established by TASK-CID-0061; if a caller-facing symbol moves, re-export it from the stable surface rather than changing callers ad hoc.
+
 ## Validation
 
 ```powershell
@@ -68,4 +76,3 @@ node --strip-types scripts/validate-tasks-atomic-map.ts
 npm run validate:cli
 git diff --check
 ```
-

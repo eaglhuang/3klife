@@ -54,6 +54,14 @@ Validate that the `tasks.ts` atomization refactor preserved safety and improved 
 - Confirm dependency, closeout, historical-delivery, lifecycle, scope-lock, and residue checks have a single owner module.
 - Record validator results and any residual risk.
 
+## Atom/Map Validation Pattern
+
+- Primary pattern: **Result Contract Object**.
+- The final report must verify the atom map as data, not only as prose: atom id, owner module, callers, focused test, CLI regression, and residual duplication.
+- Validate that each extracted atom is either a Policy Object, Strategy Map, Result Contract Object, Facade, or Adapter/Port.
+- Flag any anonymous inline pipeline or duplicated trust check as residual risk.
+- Include the source/test delivery commit and any runner-sync commit separately when reporting dogfood evidence.
+
 ## Validation
 
 ```powershell
@@ -62,4 +70,3 @@ node --strip-types scripts/validate-tasks-atomic-map.ts
 npm run validate:cli
 git diff --check
 ```
-

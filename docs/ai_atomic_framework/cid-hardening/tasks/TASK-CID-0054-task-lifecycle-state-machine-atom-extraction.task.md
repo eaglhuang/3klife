@@ -55,6 +55,14 @@ Extract valid task lifecycle transition rules out of `tasks.ts`.
 - The lifecycle atom must return actionable error codes and required commands.
 - Existing legitimate governed close paths must continue to work.
 
+## Atom/Map Extraction Pattern
+
+- Primary pattern: **Policy Object**.
+- Represent lifecycle rules as a named transition policy map, not as scattered `if` blocks inside `tasks.ts`.
+- The atom should expose stable result contracts for allowed, blocked, and recovery-required transitions.
+- Keep `tasks.ts` as the CLI facade: parse flags, call the lifecycle policy, format the result.
+- Focused tests must assert at least one allowed transition, one fail-closed transition, and one required-command recovery path.
+
 ## Validation
 
 ```powershell
@@ -63,4 +71,3 @@ node --strip-types packages/cli/src/commands/tasks/__tests__/lifecycle-state.tes
 npm run validate:cli
 git diff --check
 ```
-

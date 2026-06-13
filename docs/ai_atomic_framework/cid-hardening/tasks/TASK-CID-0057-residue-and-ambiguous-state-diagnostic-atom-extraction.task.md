@@ -55,6 +55,14 @@ Extract task status, residue, and ambiguous manual review explanations into one 
 - Ambiguous manual review must include missing evidence type, expected provenance path, and recommended next command.
 - Diagnostics must reuse the dependency and closeout provenance atoms rather than reimplementing trust checks.
 
+## Atom/Map Extraction Pattern
+
+- Primary pattern: **Strategy Map**.
+- Represent residue buckets as an explicit bucket-to-strategy map: no-residue, stale-import, planning-mirror-only, source-done-governance-incomplete, interrupted-close, ambiguous-manual-review.
+- Each strategy must return the same `atm.taskResidueDiagnosis.v1` result contract shape.
+- Bucket strategies may call closeout provenance, dependency gate, and lifecycle atoms, but must not reimplement their trust rules.
+- False-positive ambiguous cases must be covered by focused fixtures, especially status=done with no divergence.
+
 ## Validation
 
 ```powershell
@@ -63,4 +71,3 @@ node --strip-types packages/cli/src/commands/tasks/__tests__/residue-diagnostics
 npm run validate:cli
 git diff --check
 ```
-

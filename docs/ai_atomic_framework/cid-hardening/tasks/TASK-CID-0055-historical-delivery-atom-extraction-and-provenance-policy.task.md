@@ -56,6 +56,14 @@ Extract historical-delivery and reconcile commit proof into one shared module.
 - Mixed-task or stale commits must fail closed unless an explicit governed waiver is present.
 - The closure packet must record the commit proof classification.
 
+## Atom/Map Extraction Pattern
+
+- Primary patterns: **Policy Object** plus **Result Contract Object**.
+- Treat commit proof classification as a map from changed file bucket to trust decision: task-matched, governance, runner output, out-of-scope, waived, ignored.
+- `tasks close`, `tasks reconcile`, and `taskflow close` must consume the same verifier result rather than recomputing historical-delivery semantics.
+- The result contract should be serializable into closure packet evidence without losing file-bucket detail.
+- Do not use waiver handling as a generic escape hatch; model it as a named policy result with required reason and audit fields.
+
 ## Validation
 
 ```powershell
@@ -64,4 +72,3 @@ node --strip-types packages/cli/src/commands/tasks/__tests__/historical-delivery
 npm run validate:cli
 git diff --check
 ```
-

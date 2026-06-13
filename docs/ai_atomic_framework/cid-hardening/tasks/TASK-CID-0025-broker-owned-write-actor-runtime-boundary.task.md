@@ -94,6 +94,13 @@ This card should preserve the following planning stance unless later evidence di
 - It should **not** own `git.write`, `task.lifecycle`, or final close/evidence authority.
 - Coordinator / Captain remains the only lifecycle owner and the only authority that accepts the actor result into commit / close / reconcile.
 
+## Atom/Map Guidance
+
+- Primary patterns: **Adapter/Port** plus **Policy Object**.
+- Treat broker-owned write actor activation as a port boundary: broker/team/steward may hand off scoped file-write intent, but lifecycle and git authority stay behind the coordinator facade.
+- Capability rules should be expressed as a named policy object with explicit allowed and forbidden permissions.
+- Do not use this card to refactor generic broker conflict logic; only extract ownership boundaries that preserve the existing `atm.team-agents-map` semantics.
+
 ## Acceptance Criteria
 
 - The contract explicitly states whether broker-owned write actor runtime is allowed.

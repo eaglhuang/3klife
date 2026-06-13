@@ -68,6 +68,12 @@ Pin the deterministic-firewall axiom (A1) into a machine-checked regression: ide
 - The validator must be runnable both via `npm run validate:semantic-fingerprint` and via direct `node --strip-types`.
 - No change to `semantic-fingerprint.ts` compute logic.
 
+## Atom/Map Guidance
+
+- Primary pattern: **Result Contract Object** for deterministic fingerprint fixtures and validator output.
+- Do not introduce a new atom extraction here; preserve the existing `atm.cid-map` owner and update `path-to-atom-map.json` only with validator/fixture ownership.
+- The fixture set should make determinism observable as map evidence: input contract, normalized identity surface, expected stable fingerprint, and negative nondeterministic signal.
+
 ## Deliverables
 
 - `scripts/validate-semantic-fingerprint.ts` (extended)

@@ -53,6 +53,20 @@ Each extracted atom must have:
 - at least one CLI-level regression proving the command surface still behaves correctly;
 - a rollback path by reverting the task commit.
 
+## Atom/Map Design Pattern Guidance
+
+Each remaining extraction task should preserve atom/map semantics by choosing the smallest pattern that matches the invariant being touched:
+
+- Use a **Policy Object** when the atom answers whether an operation is allowed, blocked, waived, or recoverable. Examples: lifecycle transition policy, dependency admission policy, emergency backend permission policy.
+- Use a **Strategy Map** when a surface dispatches by mode or bucket. Examples: close mode, residue bucket, historical-delivery classification, taskflow closeback route.
+- Use a **Result Contract Object** when the atom emits evidence, diagnostics, bundles, or provenance. Examples: `atm.taskResidueDiagnosis.v1`, `atm.taskflowGovernedCommitBundle.v1`, closure packet delivery proof.
+- Use a **Facade** only for operator-facing lanes. `taskflow open` and `taskflow close` should select atoms and strategies; they should not reimplement backend rules.
+- Use an **Adapter/Port** only at host boundaries such as planning repo profiles, 3KLife closeback/open hooks, or future adopter integrations.
+
+Pipeline-style validation is allowed only when each stage is a named atom with a stable result contract. Do not replace one giant `tasks.ts` flow with a long anonymous inline pipeline.
+
+During each task, extract only the atom already in scope for that card. If a useful adjacent extraction appears, record it in the report or atomic map rather than expanding the task.
+
 ## Atomic Map
 
 | Atom | Owns | First task |
