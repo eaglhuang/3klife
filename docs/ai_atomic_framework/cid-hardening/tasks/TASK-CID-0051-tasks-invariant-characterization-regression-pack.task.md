@@ -2,7 +2,13 @@
 doc_id: doc_cid_0051
 task_id: TASK-CID-0051
 title: "Tasks invariant characterization regression pack"
-status: planned
+status: done
+started_at: "2026-06-12T21:15:09+08:00"
+completed_at: "2026-06-12T21:17:28+08:00"
+started_by_agent: "codex-captain-0051"
+completed_by_agent: "codex-captain-0051"
+target_delivery_commit: "d0f811da"
+target_close_commit: "55dc787a"
 owner: atm-core
 priority: P1
 milestone: M7
@@ -58,4 +64,3 @@ npm run typecheck
 npm run validate:cli
 git diff --check
 ```
-
