@@ -2,7 +2,13 @@
 doc_id: doc_cid_0052
 task_id: TASK-CID-0052
 title: "Closeout provenance atom extraction"
-status: planned
+status: done
+started_at: "2026-06-13T17:18:45+08:00"
+completed_at: "2026-06-13T17:23:32+08:00"
+started_by_agent: "captain"
+completed_by_agent: "captain"
+target_delivery_commit: "d779a820d15b15e0d57135b82c7fa483956fb04f"
+target_close_commit: "8188e9fe17e7ed8d327b45c6176927a4d70f7e67"
 owner: atm-core
 priority: P0
 milestone: M8
@@ -65,4 +71,3 @@ node --strip-types packages/cli/src/commands/tasks/__tests__/closeout-provenance
 npm run validate:cli
 git diff --check
 ```
-
