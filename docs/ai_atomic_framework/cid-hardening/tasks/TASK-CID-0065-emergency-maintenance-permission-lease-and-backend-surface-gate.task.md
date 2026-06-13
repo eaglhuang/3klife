@@ -2,10 +2,12 @@
 task_id: TASK-CID-0065
 doc_id: doc_cid_0065
 title: "Emergency maintenance permission lease and backend surface gate"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M14
+started_by_agent: captain
+completed_at: 2026-06-13T13:33:30+08:00
 related_plan: docs/ai_atomic_framework/cid-hardening/atm-tasks-command-atomic-map-refactor-plan.md
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
