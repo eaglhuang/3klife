@@ -2,7 +2,7 @@
 doc_id: doc_cid_0047
 task_id: TASK-CID-0047
 title: "ATM parallel dispatch closeout forensics and abnormal-release root cause report"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M5
@@ -38,6 +38,9 @@ outOfScope:
   - "Moving mailbox files"
 nonGoals:
   - "Do not duplicate TASK-CID-0046 implementation work; this task is forensic and read-only except for the report."
+completed_at: "2026-06-13T14:56:14.470Z"
+completed_by_agent: "captain"
+delivery_commit: "0ead5b53"
 ---
 
 # TASK-CID-0047 - ATM parallel dispatch closeout forensics and abnormal-release root cause report
