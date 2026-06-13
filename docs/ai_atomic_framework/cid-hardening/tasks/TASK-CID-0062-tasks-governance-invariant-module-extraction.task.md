@@ -2,7 +2,7 @@
 doc_id: doc_cid_0062
 task_id: TASK-CID-0062
 title: "Tasks governance invariant module extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M12
@@ -60,6 +60,9 @@ outOfScope:
 nonGoals:
   - "Do not perform a formatting-only breakup of tasks.ts."
   - "Do not remove the hard gate introduced by TASK-CID-0061."
+completed_at: "2026-06-13T16:16:12.089Z"
+completed_by_agent: "captain"
+delivery_commit: "9f22c9fe"
 ---
 
 # TASK-CID-0062 - Tasks governance invariant module extraction
