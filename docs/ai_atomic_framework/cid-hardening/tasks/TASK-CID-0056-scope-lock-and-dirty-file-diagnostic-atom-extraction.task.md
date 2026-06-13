@@ -2,7 +2,7 @@
 doc_id: doc_cid_0056
 task_id: TASK-CID-0056
 title: "Scope lock and dirty file diagnostic atom extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M9
@@ -41,6 +41,9 @@ outOfScope:
   - "Auto-staging files"
 nonGoals:
   - "Do not hide out-of-scope dirty files."
+completed_at: "2026-06-13T15:22:00.953Z"
+completed_by_agent: "captain"
+delivery_commit: "e66a033541e2fae110eeb706704e6736d48aafa0"
 ---
 
 # TASK-CID-0056 - Scope lock and dirty file diagnostic atom extraction
