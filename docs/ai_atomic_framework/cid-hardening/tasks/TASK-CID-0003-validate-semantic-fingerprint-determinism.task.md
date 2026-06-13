@@ -2,7 +2,7 @@
 doc_id: doc_cid_0003
 task_id: TASK-CID-0003
 title: "Extend existing validate:semantic-fingerprint with deterministic identity-hash regression fixtures"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: E0
@@ -107,5 +107,7 @@ Revert the validator extension and fixtures. Because no new script file is intro
 - `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
 ## Notes
+
+Closeback (2026-06-14): target repo governed close completed. Historical delivery `d73372c8` carried the deterministic semantic-fingerprint fixtures/test/validator changes; target close commit `ac92ab4` recorded command-backed evidence and closure packet.
 
 Closes the E0 minimal loop. Successor (after E0 closes): the **future queue** opens with `TASK-CID-0005` (E2 lease fencing, aligning with `TASK-TEAM-0018`) as Captain's priority.

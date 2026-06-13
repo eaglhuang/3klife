@@ -31,7 +31,7 @@ Every `TASK-CID-*` card follows the ATM task-card authoring contract:
 |---|---|---|---|---|---|
 | [TASK-CID-0001](./TASK-CID-0001-cid-hardening-control-plane-bootstrap.task.md) | E0 | CID hardening control-plane bootstrap | **done** | none | planning docs / 3KLife |
 | [TASK-CID-0002](./TASK-CID-0002-cid-semantics-and-fingerprint-profile-schema.task.md) | E0 | CID semantics and fingerprintProfile schema | **done** | `TASK-CID-0001` | ATM docs / schema |
-| [TASK-CID-0003](./TASK-CID-0003-validate-semantic-fingerprint-determinism.task.md) | E0 | Deterministic semantic fingerprint validator | planned | `TASK-CID-0002` | ATM scripts / tests |
+| [TASK-CID-0003](./TASK-CID-0003-validate-semantic-fingerprint-determinism.task.md) | E0 | Deterministic semantic fingerprint validator | done | `TASK-CID-0002` | ATM scripts / tests |
 
 ## P0 Formal Cards
 

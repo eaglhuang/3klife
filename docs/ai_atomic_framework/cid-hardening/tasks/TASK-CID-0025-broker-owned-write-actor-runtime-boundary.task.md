@@ -2,7 +2,7 @@
 doc_id: doc_cid_0025
 task_id: TASK-CID-0025
 title: "Broker-owned write actor runtime boundary and activation contract"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: P1
@@ -184,6 +184,7 @@ git diff --check
 
 ## Notes
 
+- Closeback (2026-06-14): target repo governed close completed. Historical delivery `d32a097d` carried the scoped broker-owned write actor boundary deliverables; pre-close evidence commit `e32723b` and close commit `fdae6fd` recorded command-backed evidence, closure packet, and the scoped historical-delivery waiver for adjacent out-of-scope files in that old delivery commit.
 - Update note (2026-06-10): clarified that broker-owned write actor may be independently materialized for scoped file-write execution, but authority remains layered rather than parallel.
 - Update note (2026-06-10): clarified authority chain so `Broker` overrides `Coordinator` only inside broker-governed conflict domains.
 - Dispatch note (2026-06-11): opened three inbox packets for this card under `docs/ai_atomic_framework/cid-hardening/inbox/`:
