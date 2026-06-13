@@ -26,8 +26,8 @@
         "format": "TASK-CID-NNNN"
       },
       "resolveCanonicalOutputPath": {
-        "mode": "fallback",
-        "pattern": "docs/ai_atomic_framework/cid-hardening/tasks/${taskId}.task.md",
+        "mode": "host-opener",
+        "pattern": "docs/ai_atomic_framework/cid-hardening/tasks/${taskId}-${slug}.task.md",
         "directory": "docs/ai_atomic_framework/cid-hardening/tasks"
       },
       "rosterSyncPolicy": "none",
@@ -36,10 +36,8 @@
       },
       "fallbackBehavior": {
         "mode": "template-only-fallback",
-        "reason": "CID lane requires explicit output-path selection until slug policy is encoded in the host opener contract.",
-        "missingPrerequisites": [
-          "explicit output path required"
-        ]
+        "reason": "CID lane falls back only when the governed profile or invocable opener contract is unavailable.",
+        "missingPrerequisites": []
       }
     },
     "writerInvocation": {

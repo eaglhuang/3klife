@@ -21,6 +21,7 @@ task_family:
   - TASK-CID-0061
   - TASK-CID-0062
   - TASK-CID-0063
+  - TASK-CID-0065
 ---
 
 # ATM tasks command atomic map refactor plan
@@ -182,4 +183,101 @@ TASK-CID-0059
   -> TASK-CID-0061
     -> TASK-CID-0062
       -> TASK-CID-0063
+        -> TASK-CID-0065
 ```
+
+## Follow-up - emergency maintenance permission lane
+
+TASK-CID-0063 makes `taskflow open` and `taskflow close` the normal operator lane, but it does not by itself prevent an agent from directly invoking powerful backend repair surfaces. Historical CID residue showed that backend commands are sometimes necessary, but they must feel like emergency maintenance, not like ordinary task work.
+
+TASK-CID-0065 adds a short-lived, machine-checkable emergency permission lease system. The goal is to let humans approve exceptional recovery without creating a permanent bypass path for future agents.
+
+### Permission model
+
+ATM must define emergency permissions as named capabilities, not as free-form prose. Each capability is scoped narrowly enough to prevent accidental broad authority, but simple enough to extend through a policy table.
+
+| Permission | Covers | Default lane | Emergency requirement |
+| --- | --- | --- | --- |
+| `backend.tasks.close` | direct `tasks close`, including historical delivery close | `taskflow close` | lease required when invoked directly |
+| `backend.tasks.reconcile` | direct `tasks reconcile` for historical delivery / stale-import repair | `taskflow close` | lease required when invoked directly |
+| `backend.tasks.import.write` | direct `tasks import --write`, `--force`, `--force-overwrite-claims`, `--reset-open` | `taskflow open` or governed profile import | lease required for write or force forms |
+| `backend.tasks.repairClosure` | direct `tasks repair-closure`, especially `--amend` | `taskflow close` closeback plan | lease required for direct use; `--amend` is high-risk |
+| `backend.tasks.reset` | lifecycle reset / reopen / rollback state mutation | explicit recovery flow | lease required |
+| `backend.tasks.lockCleanupGlobal` | `tasks lock cleanup --all-stale` and other global lock cleanup | scoped taskflow close cleanup | lease required for global cleanup |
+| `backend.tasks.scopeAmend` | `tasks scope add` outside an active taskflow-guided claim | normal claim scope extension | lease required when no active guided claim exists |
+| `backend.waiver.historicalDeliveryOutOfScope` | `--waiver-out-of-scope-delivery` | narrow historical delivery verification | lease required when the delivery contains out-of-scope files |
+| `backend.runnerRecovery` | `--allow-stale-runner` and runner drift bypass | build/sync runner first | lease required |
+| `backend.gitHookBypass` | any ATM wrapper path that would suggest `--no-verify` or equivalent hook bypass | governed commit wrapper | lease required and normally disallowed in CI |
+
+This list is intentionally policy-driven. New capabilities can be added by extending an emergency permission registry with: `permissionId`, matched command/action, risk tier, normal lane, allowed flags, required scope fields, default TTL, maximum uses, and validator/audit requirements.
+
+### Lease contract
+
+Emergency authorization must be represented by an ATM-generated lease, not by an agent-authored sentence. A human approval sentence is still recorded, but the backend command only trusts the lease id.
+
+Lease schema: `atm.emergencyMaintenanceLease.v1`.
+
+Minimum fields:
+
+- `leaseId`
+- `taskId`
+- `actor`
+- `permissionId`
+- `surface`
+- `approvedBy`
+- `approvalText`
+- `reason`
+- `createdAt`
+- `expiresAt`
+- `maxUses`
+- `usedCount`
+- `scope`
+- `matchedCommand`
+- `status`
+
+The expected approval flow is:
+
+```powershell
+node atm.mjs emergency approve --task TASK-CID-0043 --actor 004 --permission backend.tasks.reconcile --reason "Legacy CID stale-import closeback approved by human" --ttl-minutes 30 --json
+
+node atm.mjs tasks reconcile --task TASK-CID-0043 --actor 004 --delivery-commit 00be417f --emergency-approval EMG-... --json
+```
+
+The CLI must validate that the lease matches the task, actor, permission, command surface, allowed flags, TTL, and use count before mutation. If validation fails, the command must fail closed with `ATM_EMERGENCY_LANE_APPROVAL_REQUIRED` or a more precise lease error.
+
+### Normal versus emergency boundary
+
+The boundary must not be too strict:
+
+- `taskflow open --write` and `taskflow close --write` are normal operator work and do not require emergency permission.
+- scoped cleanup that `taskflow close` computes as part of the same closeback bundle can stay normal.
+- read-only diagnosis, `tasks status`, `tasks audit`, `taskflow close --dry-run`, and `tasks import --dry-run` stay normal.
+
+The boundary must not be too loose:
+
+- direct backend lifecycle mutation requires a lease;
+- broad force flags require a lease;
+- out-of-scope historical-delivery waiver requires a lease;
+- global lock cleanup requires a lease;
+- hook bypass and stale-runner bypass require a lease.
+
+### Enforcement points
+
+TASK-CID-0065 must enforce the lane at more than one layer:
+
+- CLI parser / command dispatcher rejects protected backend surfaces without a matching lease.
+- `next` recommends `taskflow close` as the ordinary path and emits a human-facing approval notice before any emergency backend command.
+- Help text marks protected backend commands as emergency backend surfaces, not operator defaults.
+- Emergency command execution writes an audit event using `atm.emergencyMaintenanceUse.v1`.
+- `tasks audit --staged` and pre-commit validation reject emergency artifacts that lack a matching lease/use event pair.
+- The taskflow governed bundle must not claim success if it detects unapproved emergency backend artifacts.
+
+### Acceptance
+
+- A direct `tasks close`, `tasks reconcile`, `tasks import --write`, or `tasks repair-closure` mutation without a lease fails before mutating files.
+- The same recovery through `taskflow close --write` remains allowed when taskflow can compute a safe closeback story.
+- A valid one-task, one-permission lease allows only the matching backend command and cannot be reused outside its TTL/use count.
+- A fake or free-form human approval sentence without a valid lease id is rejected.
+- `--waiver-out-of-scope-delivery`, `--allow-stale-runner`, `--force-overwrite-claims`, `--amend`, and `lock cleanup --all-stale` are covered by explicit emergency permissions.
+- Audit evidence records the lease, use event, command, actor, affected task, and before/after status.
+- Regression tests prove that an agent cannot bypass TASK-CID-0063 by calling backend close/reconcile/import/repair-closure directly.
