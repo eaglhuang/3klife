@@ -2,7 +2,7 @@
 doc_id: doc_cid_0057
 task_id: TASK-CID-0057
 title: "Residue and ambiguous state diagnostic atom extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M9
@@ -41,6 +41,9 @@ outOfScope:
   - "Planning mirror writer behavior"
 nonGoals:
   - "Do not convert ambiguous-manual-review into a pass state."
+completed_at: "2026-06-13T15:36:17.587Z"
+completed_by_agent: "captain"
+delivery_commit: "a699c87ed89743055759c0e59ec8975ac10871b9"
 ---
 
 # TASK-CID-0057 - Residue and ambiguous state diagnostic atom extraction
