@@ -2,7 +2,7 @@
 doc_id: doc_cid_0059
 task_id: TASK-CID-0059
 title: "Tasks atomic map final validation and dogfood report"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M10
@@ -39,6 +39,9 @@ outOfScope:
   - "Closing unrelated historical tasks"
 nonGoals:
   - "Do not declare success without command-backed validation."
+completed_at: "2026-06-13T16:00:30.925Z"
+completed_by_agent: "captain"
+delivery_commit: "f741908f"
 ---
 
 # TASK-CID-0059 - Tasks atomic map final validation and dogfood report
