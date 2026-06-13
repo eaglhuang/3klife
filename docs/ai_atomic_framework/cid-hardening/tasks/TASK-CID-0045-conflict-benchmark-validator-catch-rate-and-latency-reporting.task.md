@@ -2,7 +2,9 @@
 doc_id: doc_cid_0045
 task_id: TASK-CID-0045
 title: "Conflict benchmark, validator catch-rate, and latency reporting"
-status: planned
+status: done
+completed_at: "2026-06-13T01:46:08.398Z"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P1
 milestone: M5
@@ -56,4 +58,3 @@ Measure whether the conflict arbitration rules catch unsafe cases without regres
 - The fixture matrix includes capsule CID drift as a dedicated scenario.
 - Validator catch-rate and latency reporting are both deterministic.
 - The benchmark fails hard on false-safe regressions.
-

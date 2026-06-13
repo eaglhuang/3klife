@@ -2,7 +2,10 @@
 doc_id: doc_cid_0040
 task_id: TASK-CID-0040
 title: "Intent registration, lease, heartbeat, and lease bounds"
-status: planned
+status: done
+completed_at: "2026-06-12T13:51:44.605Z"
+completed_by_agent: "001"
+delivery_commit: "daf47aa840c45cf00bb1564cfbecfaa4fd02774d"
 owner: atm-core
 priority: P1
 milestone: M5

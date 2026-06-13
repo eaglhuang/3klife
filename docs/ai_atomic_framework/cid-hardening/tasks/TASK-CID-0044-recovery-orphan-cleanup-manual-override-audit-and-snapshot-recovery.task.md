@@ -2,7 +2,9 @@
 doc_id: doc_cid_0044
 task_id: TASK-CID-0044
 title: "Recovery, orphan cleanup, manual override audit, and snapshot recovery"
-status: planned
+status: done
+completed_at: "2026-06-13T01:41:55.688Z"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P1
 milestone: M5
@@ -56,4 +58,3 @@ Recover safely from stale leases or interrupted routes while keeping auditabilit
 - Orphan cleanup and snapshot recovery are explicit and testable.
 - Manual override leaves a clear audit trail.
 - Recovery never pretends an old lease is still valid without revalidation.
-
