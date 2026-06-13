@@ -2,7 +2,7 @@
 doc_id: doc_cid_0058
 task_id: TASK-CID-0058
 title: "Tasks CLI thin wrapper consolidation"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M10
@@ -24,7 +24,8 @@ scopePaths:
   - "scripts/validate-tasks-atomic-map.ts"
 deliverables:
   - "packages/cli/src/commands/tasks.ts"
-  - "packages/cli/src/commands/tasks/"
+  - "packages/cli/src/commands/tasks/command-dispatch.ts"
+  - "packages/cli/src/commands/tasks/__tests__/command-dispatch.test.ts"
   - "docs/reports/tasks-command-atomic-map.md"
   - "scripts/validate-tasks-atomic-map.ts"
 validators:
@@ -45,6 +46,9 @@ outOfScope:
   - "Changing public JSON schemas"
 nonGoals:
   - "Do not perform cosmetic-only rewrites."
+completed_at: "2026-06-13T15:49:14.928Z"
+completed_by_agent: "captain"
+delivery_commit: "d9b5d46b3dd13554e16da79fccfd29fe72699841"
 ---
 
 # TASK-CID-0058 - Tasks CLI thin wrapper consolidation
