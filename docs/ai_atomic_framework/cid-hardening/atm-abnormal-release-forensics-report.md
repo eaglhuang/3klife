@@ -1,9 +1,9 @@
 ---
 doc_id: doc_cid_forensics_0047
-report_id: ATM-ABNORMAL-RELEASE-FORENSICS-20260612
+report_id: ATM-ABNORMAL-RELEASE-FORENSICS-20260613
 task_id: TASK-CID-0047
-generated_at: "2026-06-12T19:30:00+08:00"
-generated_by: "008"
+generated_at: "2026-06-13T14:35:00+08:00"
+generated_by: "captain"
 repos_inspected:
   - AI-Atomic-Framework
   - 3KLife
@@ -15,248 +15,156 @@ scope_tasks:
   - TASK-CID-0044
   - TASK-CID-0045
   - TASK-CID-0046
-status: draft-for-captain-review
+status: captain-ready
 ---
 
-# ATM 平行派工鏈異常放行鑑識報告
+# ATM Abnormal Release Forensics Report
 
-## 1. 執行摘要
+## Executive Summary
 
-**事實：** CID AGR 硬化波次（TASK-CID-0040～0046）在 2026-06-12 以多代理平行派工方式推進。至鑑識時點，**原始碼交付**與 **ATM 目標 repo ledger 關閉狀態**、**3KLife 規劃卡狀態**、**mailbox 完成回報** 四者嚴重不一致。
+The CID parallel dispatch failure was not caused by one worker mistake. The primary root cause was that ATM treated visible completion signals as stronger than governed closeout provenance. Before the later hardening work, `planning done`, `mailbox done`, source commits, and imported ledger status could look final even when the target ledger had no valid close transition, closure packet, scoped delivery proof, or dependency-enforced admission gate.
 
-**推論（主要根因）：** ATM 在 0046 修正前，**依賴任務是否可 claim / 是否可往下游推進，主要只看 `status=done|verified`，未強制驗證 governed closeout provenance**；同時 **mailbox 依賴順序僅存在於派工單 prose / YAML，未接入 `tasks claim` 或 `next --claim` 的機械式准入**。Captain 與多條工作線各自推進，造成「看起來完成」與「治理上可證明完成」脫鉤。
+Facts found in this review:
 
-**推論（次要根因）：**
+- Source delivery commits existed for TASK-CID-0041, TASK-CID-0042, TASK-CID-0043, TASK-CID-0044, and TASK-CID-0045.
+- TASK-CID-0040, TASK-CID-0041, TASK-CID-0042, TASK-CID-0043, TASK-CID-0044, and TASK-CID-0045 now have governed target closeout artifacts, but several were repaired after the abnormal run.
+- TASK-CID-0043, TASK-CID-0044, and TASK-CID-0045 were still missing governed closeout when TASK-CID-0047 was first blocked and investigated; they were later backfilled by captain governance commits on 2026-06-13.
+- The 3KLife planning mirror is still not a reliable source of final truth by itself: current planning cards for TASK-CID-0040, TASK-CID-0044, TASK-CID-0045, and TASK-CID-0047 still show `status: planned` even when the target ledger has moved.
+- Mailbox dispatch order existed as human-readable instructions and file placement, but it was not originally enforced as a mechanical prerequisite by `next --claim`, `tasks claim`, or closeout validation.
 
-1. 規劃 repo（3KLife）task card `status: done` 被當成進度真相，但 **未與 target repo ledger 的 CLI close 事件雙向鎖定**。
-2. 部分代理以 **一般 `git commit` + mailbox report=done** 收尾，**未執行 `tasks close`**，pre-commit 仍可能全綠。
-3. `tasks close` 在 0046 前可從 `planned` 直接關到 `done`，且 close event **可不帶** `closure.schemaId=atm.taskClosureTransition.v1`。
-4. `tasks import` 可把已 `done` 的 ledger **重開為 open/running**，與規劃鏡像、mailbox 狀態無自動對帳。
-5. 平行派工中 **實際執行者與 mailbox assignee 不一致**（例：0042 由 `codex-gpt-5.4-mini` 交付，002 的 inbox 仍留卡）。
+The strongest conclusion is: source done, planning done, mailbox done, and target ledger done are different states. ATM must make `taskflow open/close` the normal operator lane and reserve direct backend commands for an explicit emergency lane.
 
-**0046 的意義（事實）：** `b1107ee7` 已落地 `verifyCloseoutProvenance` 強化與 `next`/`claim` 的 `incomplete-closeout` 阻擋，屬事後補強，**不 retroactively 修復** 0040～0045 的歷史 ledger 殘留。
+## Evidence Table
 
----
+| Task | Source delivery fact | Current target ledger fact | Planning/mailbox fact | Forensic finding |
+| --- | --- | --- | --- | --- |
+| TASK-CID-0040 | Commit `daf47aa8` (`feat(broker): update broker registry, decision logic, and tests`) and commit `b373d1ee` (`feat(broker): complete TASK-CID-0040`) recorded delivery/history. Later repair commit `a6f01658` reconciled the closure ledger. | Current `.atm/history/tasks/TASK-CID-0040.json` is `done`, closed by `001`, closure packet `.atm/history/evidence/TASK-CID-0040.closure-packet.json` (`sha256:4f803d9de2b3334ade9baae4a395ba7faf25ff7b37068329406a1d80acba1963`); close event `2026-06-12T13-51-44-606Z-close-786551898dd8.json`; earlier anomaly event `2026-06-12T09-31-46-141Z-claim-displaced-by-import-da3cbcddcfba.json`. | Planning card `TASK-CID-0040-...task.md` still shows `status: planned`. Mailbox has `agents/001/done/P1-CIDHARD-001-S2-TASK-CID-0040--...dispatch.md` plus later cleanup inbox residue. | Fact: target is now governed done. Inference: during the abnormal run, planning mirror and target ledger were already split, proving planning frontmatter cannot be used as closure truth. |
+| TASK-CID-0041 | Delivery commit `70594a03` (`feat(broker): add conflict-set matrix... (TASK-CID-0041)`) included broker code and `packages/core/src/broker/decision.ts` drift. | Current target ledger is `done`, closed by `002`; closure packet exists. Repair commit `da4ded32` recorded governed provenance after a waiver for out-of-scope delivery. Events include `2026-06-12T15-47-58-014Z-close-f03a3c3b4060.json` and `2026-06-12T16-07-38-000Z-close-7f4f5a6f8d9b.json`. | Planning card status is `done`; mailbox has `agents/003/done/P1-CIDHARD-003-S1-TASK-CID-0041--...dispatch.md` and later repair dispatch residue under `agents/002/inbox`. | Fact: governed provenance was repaired later. Inference: a broad delivery commit required waiver; without hard closeout validation, a done state could hide scope ambiguity. |
+| TASK-CID-0042 | Delivery commit `803ffc33` (`fix: add freeze and patch envelope snapshot protocol`) added freeze/patch envelope code and ATM history. | Current target ledger is `done`, closed by `codex-gpt-5.4-mini`; closure packet exists after repair commit `3668e506`. Close event `2026-06-12T08-30-18-487Z-close-a7eae4c781d1.json`. | Planning card status is `done`; mailbox still has an inbox dispatch under `agents/002/inbox/P1-CIDHARD-002-S2-TASK-CID-0042--...dispatch.md`. | Fact: mailbox state can remain stale even after target close. Inference: mailbox completion and target governance were independent surfaces, so mailbox order was advisory unless checked by ATM. |
+| TASK-CID-0043 | Candidate delivery commit `00be417f` (`feat(broker): implement route command for steward takeover and validator-gated apply`) touched `packages/cli/src/commands/route.ts`, route command specs, and steward arbitration tests. | Current target ledger is `done`, closed by `captain` on `2026-06-13T01:40:05.196Z`; closure packet exists. Repair commit `d666126b` added `.atm/history/evidence/TASK-CID-0043.closure-packet.json` and close event `2026-06-13T01-40-05-198Z-close-c70df85aefef.json`. | Planning card is `done`, started/completed by 007 on 2026-06-12. 3KLife commit `c3c8be0a` says `chore(cid): close TASK-CID-0043`. Mailbox has `agents/007/done/P1-CIDHARD-007-S1-TASK-CID-0043--...dispatch.md`. | Fact: planning was done before target governance was backfilled. Inference: this is the clearest stale-import pattern: planning done plus source delivery did not equal governed target closeout. |
+| TASK-CID-0044 | Delivery commit `d5c3dea8` (`feat(broker): add recovery and orphan cleanup with validation harness (TASK-CID-0044).`) added recovery/orphan cleanup code and validator. | Current target ledger is `done`, closed by `captain` on `2026-06-13T01:41:55.688Z`; closure packet exists after commit `5f675a76`. Events include reserve/promote/claim and close under `.atm/history/task-events/TASK-CID-0044/`. | Planning card still shows `status: planned`. Mailbox has `agents/008/done/P1-CIDHARD-008-S1-TASK-CID-0044--...dispatch.md` and report `agents/008/reports/P1-CIDHARD-008-S1-TASK-CID-0044--...report.md`. | Fact: source and mailbox delivery existed while planning remained planned and target governance had to be backfilled. Inference: direct git commit plus worker report could bypass task lifecycle if no close gate forced a target close. |
+| TASK-CID-0045 | Delivery commit `0285e399` (`feat(broker): add AGR conflict benchmark harness... (TASK-CID-0045).`) added benchmark fixtures, report, package scripts, and validator config. Later commit `8be7a447` restored validator wiring. | Current target ledger is `done`, closed by `captain` on `2026-06-13T01:46:08.398Z`; closure packet exists after commit `60c01d3c`. Events include scope amendment `2026-06-13T01-43-33-990Z-scope-amendment-366843a9f3f1.json`. | Planning card still shows `status: planned`. Mailbox has `agents/008/done/P1-CIDHARD-008-S2-TASK-CID-0045--...dispatch.md` and report `agents/008/reports/P1-CIDHARD-008-S2-TASK-CID-0045--...report.md`. | Fact: the task's source delivery and validation wiring were not enough to keep planning and target governance synchronized. Inference: validator surface drift was a separate risk from closeout bundle drift. |
+| TASK-CID-0046 | Implementation commit `b1107ee7` is referenced by prior captain notes as dependency closeout gate hardening. | Current inspection found no `.atm/history/tasks/TASK-CID-0046.json`, no `.atm/history/evidence/TASK-CID-0046.json`, and no `.atm/history/task-events/TASK-CID-0046/` in the target repo. | Planning card `TASK-CID-0046-...task.md` is `done`, with 3KLife commits `428875b8` and `d115159c` both closing or updating the card. | Fact: planning says done, but this target inspection did not find a target ledger entry for 0046. Inference: 0046's fix changed future behavior but does not retroactively prove prior tasks were governed. |
 
-## 2. 鑑識方法
+## Evidence Inputs
 
-| 類別 | 路徑 / 命令 |
-|------|-------------|
-| 規劃卡 | `3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-004*.task.md` |
-| Target ledger | `AI-Atomic-Framework/.atm/history/tasks/TASK-CID-004*.json` |
-| Events | `AI-Atomic-Framework/.atm/history/task-events/TASK-CID-004*/` |
-| Evidence | `AI-Atomic-Framework/.atm/history/evidence/TASK-CID-004*.json` |
-| Closure packets | `AI-Atomic-Framework/.atm/history/evidence/*.closure-packet.json` |
-| Commits | `git log --oneline 00be417f^..b1107ee7`（AAF） |
-| Mailbox | `.atm-temp/captain-dispatch-mailbox/agents/*/inbox|done|reports/` |
-| 決策面原始碼 | `packages/cli/src/commands/tasks.ts`（`verifyCloseoutProvenance`、`collectDependencyBlockers`） |
-
-本報告 **未修改** ATM 原始碼、ledger、mailbox 檔案。
-
----
-
-## 3. 任務交付矩陣（事實表）
-
-| 任務 | 交付 commit（AAF） | Target ledger | Close event / packet | 3KLife 規劃卡 | Mailbox | 治理 closeout 是否完整 |
-|------|-------------------|---------------|----------------------|---------------|---------|------------------------|
-| **0040** | `daf47aa8`（registry/lifecycle）、`b373d1ee`（ledger+evidence） | `running` + active claim/lock | 無 close；曾被 import `done→open` 後重 claim | `done` | 001 done | **否** — 有交付 commit，未 close；且被 import 重開 |
-| **0041** | `70594a03` | `done` | `close` from `planned`，**無** `closure` 物件 | `done` | 003 done | **弱** — audit 會判 `ATM_TASK_AUDIT_MANUAL_DONE` |
-| **0042** | `803ffc33` | `done` | `historical-delivery 803ffc33` + closure packet | `done` | **002 inbox 仍留卡**（orphan dispatch） | **是** — 本鏈最佳實踐樣本 |
-| **0043** | `00be417f`（早於 0042） | `planned`（僅 import） | 無 | `done` | 007 done | **否** — 有程式、無 ledger 推進 |
-| **0044** | `d5c3dea8` | `planned` | 無 | `done` | 008 done + report | **否** — mailbox/report 充當完成 |
-| **0045** | `0285e399` | `planned` | 無 | `done` | 008 done + report | **否** — 依賴 0044 未 close 仍交付 |
-| **0046** | `b1107ee7` | **無 ledger 檔** | 無 | `done` | 未在本次 mailbox 掃到 | **否** — 修正已合入，自身未走完整 ledger |
-
-### 3.1 Commit 時序（事實）
-
-```
-00be417f 16:22  0043 route/steward（commit 訊息未標 TASK-CID-0043）
-803ffc33 16:29  0042 freeze
-daf47aa8 16:48  0040 registry（訊息未標 0040）
-70594a03 16:54  0041 conflict-matrix
-d5c3dea8 16:55  0044 recovery
-0285e399 16:56  0045 benchmark
-b373d1ee 17:24  0040 ledger completion commit
-b1107ee7 18:07  0046 dependency closeout gate
-```
-
-**推論：** Git 歷史亦呈現依賴逆序（0043 早於 0042），與任務卡 `depends_on` 不一致，顯示 **claim/close 門禁未阻止「先有程式、後補治理」**。
-
----
-
-## 4. 各任務細部發現
-
-### 4.1 TASK-CID-0040
-
-**事實：**
-
-- `daf47aa8` 修改 `registry.ts`、`lifecycle.ts`、`types.ts`、`intent-registry.test.ts` 等，訊息為泛化 broker 更新。
-- `b373d1ee` 訊息為 `feat(broker): complete TASK-CID-0040`，含 ATM trailers；主要新增 `.atm/history/tasks/TASK-CID-0040.json`、evidence、task-events。
-- Event `2026-06-12T09-38-58-718Z-import`：`fromStatus: done` → `toStatus: open`（`tasks import`）。
-- 鑑識時 ledger：`status: running`，`taskDirectionLock.status: active`，actor `codex-gpt-5.4-mini`。
-- 3KLife 規劃卡：`status: done`。
-
-**推論：** 0040 曾進入過「看起來 done」狀態，import 重開後又進入 running；**規劃卡 done 與 target ledger 分叉**。Captain 若以規劃卡判斷「0040 已完成」，會過早放行 0041。
-
-### 4.2 TASK-CID-0041
-
-**事實：**
-
-- Close event：`fromStatus: planned` → `toStatus: done`，command 為 `tasks close --status done`（actor 003），**未出現 `--historical-delivery`**，event **無** `closure` 區塊。
-- `verifyCloseoutProvenance()` 要求 close event 內含 `closure.schemaId=atm.taskClosureTransition.v1` 或有效 closure packet；0041 **不滿足**。
-- Pre-commit hook 曾 advisory：`ATM_TASK_AUDIT_MANUAL_DONE`（0041 marked done without ATM CLI closure metadata — 語意上指完整 closure metadata）。
-
-**推論：** 0041 是「**status 已 done，但 closeout provenance 不完整**」的典型案例；0046 前下游任務仍可能只檢查 `status=done`。
-
-### 4.3 TASK-CID-0042
-
-**事實：**
-
-- 由 `codex-gpt-5.4-mini` 執行 reserve → promote → claim → scope-amendment → close。
-- Close 使用 `--historical-delivery 803ffc33`，closure packet 存在。
-- Closure packet `changedFiles` 含大量 release/、next.ts、semantic-fingerprint 等 **超出 0042 deliverables 清單**的檔案（事實來自 packet JSON）。
-- Mailbox：`agents/002/inbox/` **仍保留** 0042 dispatch；`agents/002` 未 claim。
-
-**推論：** 0042 治理 closeout **形式完整**，但 historical-delivery 範圍可能 **過寬**；mailbox 與實際執行者脫鉤，Captain 難以從 mailbox 機械判斷真實執行線。
-
-### 4.4 TASK-CID-0043
-
-**事實：**
-
-- `00be417f` 新增 `route.ts`、`steward-arbitration.test.ts`；同 commit 亦帶入 `TASK-CID-0025` ledger 片段（混 commit）。
-- Target ledger 停留 `planned`，last event 僅 `import`。
-- 3KLife 規劃卡：`done`；mailbox agent 007：`done`。
-
-**推論：** **程式已存在、規劃與 mailbox 宣稱完成，但 target ledger 未 claim/close** — 三源真相分裂。
-
-### 4.5 TASK-CID-0044 / 0045
-
-**事實：**
-
-- Agent 008 報告 `status: done`，validators 全綠；commit `d5c3dea8`、`0285e399` 已入 main。
-- Target ledger 兩者皆 `planned`；無 reserve/claim/close events。
-- 0045 宣告依賴 0041～0044；0044 ledger 未 done 時仍完成 benchmark 交付。
-- 分開 commit 工作使用一般 `git commit`；多次被 direction lock（殘留 0040/0025 等）阻擋後以 `tasks lock cleanup` 解除。
-
-**推論：** **Validator 綠燈 ≠ task close**；平行波次中代理以 commit + mailbox 作為「完成」訊號，ATM task ledger 未同步。
-
-### 4.6 TASK-CID-0046
-
-**事實：**
-
-- `b1107ee7` 強化 `collectDependencyBlockers` / `verifyCloseoutProvenance` 在 claim 與 next 路由的使用。
-- 3KLife 規劃卡 `done`；AAF **無** `TASK-CID-0046.json` ledger。
-- 屬對 0040～0045 異常的 **補強**，非當時阻止放行。
-
----
-
-## 5. Mailbox 依賴是否被機械執行？
-
-**事實：**
-
-- 派工單含 `depends_on_tasks` / `depends_on_dispatch`（例：0041 依賴 0040；0042 依賴 0040+0041）。
-- `captain-dispatch-mailbox` 腳本負責投遞 Markdown 至 `agents/<id>/inbox`；**未發現**其將 `depends_on_tasks` 寫入 ATM `tasks claim` 或 `next` 路由。
-- 實際投遞為平行多 agent（001/002/003/007/008），時間戳集中在 15:27～16:14 TPE。
-
-**推論：** Mailbox 依賴順序 **僅為 prose 約束**；ATM 在 0046 前 **未** 以 closeout provenance 阻擋下游 claim，導致依賴鏈可被並行穿透。
-
----
-
-## 6. `tasks close --historical-delivery` 行為
-
-**事實（0042 樣本）：**
-
-- 允許在 deliverable 已於先前 commit 落地後，以 `--historical-delivery <sha>` 關閉。
-- 0042 closure packet 的 `changedFiles` 列舉範圍大於 task `scopePaths` / `deliverables`。
-
-**推論（待 Captain 確認）：** Historical-delivery 驗證若以 commit 樹差分為準，可能接受 **同時間窗內其他任務或 release 同步** 的檔案變更，造成「關閉證明覆蓋過廣」。此點需對照 `tasks close` 實作中 historical diff 篩選邏輯進一步審計（本次僅記錄 packet 表面證據）。
-
-**事實（0041 對照）：** 未使用 historical-delivery，從 `planned` 直接 close，門檻更低。
-
----
-
-## 7. Frozen runner drift
-
-**事實：**
-
-- 鑑識期間 `node atm.mjs next` 曾回 `ATM_RUNNER_SYNC_REQUIRED`（frozen `atm.mjs` 舊於 source）。
-- 多筆 commit 含 `release/atm-onefile/atm.mjs`、`release/atm-root-drop/**` 同步。
-- 0046 修正存在於 source 與較新 release，但 **歷史平行派工當下** 各代理可能混用 frozen / 直接 source / `git commit` 繞過 `atm git commit`。
-
-**推論：** Runner drift **加劇** 「hook 行為與 `next` 建議不一致」的觀感；但本次異常放行的主因仍是 **ledger/status 語意過弱**，非單純 artifact 過期。
-
----
-
-## 8. 根因分級
-
-### 8.1 主要根因（Primary）
-
-**ATM 任務依賴准入在 0046 前將 `status=done` 視為充分條件，未強制 governed closeout provenance（closure transition + packet 或等價物）。**
-
-支撐事實：
-
-- 0041：`done` 但 provenance 不完整。
-- 0043～0045：有交付、規劃卡/mailbox 宣稱完成，ledger 仍 `planned`。
-- 0045 依賴 0044 未 close 仍可交付。
-
-### 8.2 次要根因（Secondary）
-
-1. **雙 repo + 三源狀態（規劃卡 / target ledger / mailbox）無單一真相仲裁。**
-2. **Mailbox 非 ATM 治理子系統** — done 資料夾與 report 不觸發 `tasks close`。
-3. **`tasks import` 可重開 done 任務**，與平行派工計畫不同步。
-4. **平行派工實際執行者與 mailbox assignee 不一致**（0042）。
-5. **Pre-commit hook 對無 `.atm` staged 的 delivery commit 不強制 task close**（0044/0045 分 commit 時僅 advisory scope drift）。
-6. **Historical-delivery close 可能綁定過寬 commit 差分**（0042 packet 表面證據）。
-
----
-
-## 9. 最高風險未解歧義
-
-1. **3KLife 規劃卡 `status: done` 由誰、以何依據更新？** 是否來自 Captain 手動、腳本鏡像、或代理回報 — 本次未找到與 target `tasks close` 的自動連結證據。
-2. **0042 historical-delivery 的範圍驗證是否刻意允許同批硬化波次的交叉檔案？** 需對照 `tasks.ts` close 實作與 Captain 意圖。
-3. **0040 的 `done→import→open→running` 是否為計畫內重開？** 若為計畫內，規劃卡仍標 done 即為明確鏡像錯誤。
-
----
-
-## 10. 建議（供 Captain；本任務不執行修復）
-
-1. **以 target repo ledger + closeout provenance 為唯一放行依據**；規劃卡 done 降級為「人類可讀摘要」，不可驅動 claim。
-2. **對 0040～0045 啟動受控 ledger 修復波次**（獨立任務，非本報告範圍）：reconcile delivery commit ↔ ledger ↔ closure packet。
-3. **Mailbox 完成回報與 `tasks close` 脫鉤問題**：考慮派工單硬性要求「mailbox report 必附 `tasks close` JSON exit 0 證據」。
-4. **0046 已落地後**，用 `tasks claim` / `next --claim` 回歸測試依賴鏈，確認 `incomplete-closeout` 能阻擋重現。
-5. **清查 agent 002 inbox 殘留 0042** 等 orphan dispatch，避免下一輪誤判「未派工」。
-
----
-
-## 11. 鑑識命令紀錄
+Commands and files used for this report:
 
 ```powershell
-# AAF
-git log --oneline --grep="TASK-CID-004" -20
-git log --format="%h %ci %s" 00be417f^..b1107ee7
-git show --stat daf47aa8 b373d1ee 70594a03 803ffc33 00be417f d5c3dea8 0285e399 b1107ee7
-
-# Ledger / events（檔案系統檢視）
-# .atm/history/tasks/TASK-CID-0040.json … 0045.json
-# .atm/history/task-events/TASK-CID-004*/**
-
-# Mailbox
-# .atm-temp/captain-dispatch-mailbox/agents/*/inbox|done|reports/
-
-# 3KLife 規劃卡 frontmatter status
-# docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-004*.task.md
+node atm.mjs tasks status --task TASK-CID-0047 --json
+git log --format='%h %ci %s' --grep='TASK-CID-004' --all -60
+git -C C:\Users\User\3KLife log --format='%h %ci %s' --grep='TASK-CID-004' --all -60
+git show --stat --oneline --decorate --no-renames 803ffc33 70594a03 00be417f d5c3dea8 0285e399 b373d1ee a6f01658 3668e506 da4ded32 d666126b 5f675a76 60c01d3c e608f0ac
 ```
 
----
+Target repo evidence paths:
 
-## 12. 驗證
+- `C:\Users\User\AI-Atomic-Framework\.atm\history\tasks\TASK-CID-0040.json` through `TASK-CID-0045.json`
+- `C:\Users\User\AI-Atomic-Framework\.atm\history\evidence\TASK-CID-0040.closure-packet.json` through `TASK-CID-0045.closure-packet.json`
+- `C:\Users\User\AI-Atomic-Framework\.atm\history\task-events\TASK-CID-0040\` through `TASK-CID-0045\`
 
-報告完成後應執行：
+Planning and mailbox evidence paths:
+
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0040-intent-registration-lease-heartbeat-and-lease-bounds.task.md`
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0041-conflict-set-model-and-arbitration-verdicts.task.md`
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0042-freeze-patch-envelope-checkpoint-and-filesystem-wip-snapshot.task.md`
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0043-neutral-writer-steward-takeover-isolated-merge-and-validator-gated-apply.task.md`
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0044-recovery-orphan-cleanup-manual-override-audit-and-snapshot-recovery.task.md`
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0045-conflict-benchmark-validator-catch-rate-and-latency-reporting.task.md`
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0046-dependency-closeout-integrity-gate-for-next-and-claim.task.md`
+- `C:\Users\User\3KLife\docs\ai_atomic_framework\cid-hardening\tasks\TASK-CID-0047-atm-parallel-dispatch-closeout-forensics-and-root-cause-report.task.md`
+- `C:\Users\User\AI-Atomic-Framework\.atm-temp\captain-dispatch-mailbox\agents\001\done\P1-CIDHARD-001-S2-TASK-CID-0040--captain-to-001--20260612-152700TPE.dispatch.md`
+- `C:\Users\User\AI-Atomic-Framework\.atm-temp\captain-dispatch-mailbox\agents\002\inbox\P1-CIDHARD-002-S2-TASK-CID-0042--captain-to-002--20260612-152900TPE.dispatch.md`
+- `C:\Users\User\AI-Atomic-Framework\.atm-temp\captain-dispatch-mailbox\agents\007\done\P1-CIDHARD-007-S1-TASK-CID-0043--captain-to-007--20260612-161451TPE.dispatch.md`
+- `C:\Users\User\AI-Atomic-Framework\.atm-temp\captain-dispatch-mailbox\agents\008\reports\P1-CIDHARD-008-S1-TASK-CID-0044--008-to-captain--20260612-155300TPE.report.md`
+- `C:\Users\User\AI-Atomic-Framework\.atm-temp\captain-dispatch-mailbox\agents\008\reports\P1-CIDHARD-008-S2-TASK-CID-0045--008-to-captain--20260612-155400TPE.report.md`
+
+## Timeline
+
+- 2026-06-12 16:22 +08:00: `00be417f` lands route/steward delivery work later associated with TASK-CID-0043.
+- 2026-06-12 16:29 +08:00: `803ffc33` lands freeze/patch envelope work later associated with TASK-CID-0042.
+- 2026-06-12 16:54 +08:00: `70594a03` lands conflict-set matrix work for TASK-CID-0041.
+- 2026-06-12 16:55 +08:00: `d5c3dea8` lands recovery/orphan cleanup work for TASK-CID-0044.
+- 2026-06-12 16:56 +08:00: `0285e399` lands AGR benchmark work for TASK-CID-0045.
+- 2026-06-12 17:24 +08:00: `b373d1ee` records TASK-CID-0040 history/evidence but still needed later reconciliation.
+- 2026-06-12 18:07 +08:00: TASK-CID-0046 planning card is closed in 3KLife, representing the first hardening response to dependency closeout gaps.
+- 2026-06-12 22:58 to 23:48 +08:00: TASK-CID-0040, 0042, and 0041 receive target governance repair commits `a6f01658`, `3668e506`, and `da4ded32`.
+- 2026-06-13 09:46 to 09:47 +08:00: TASK-CID-0043, 0044, and 0045 receive target governance closeout commits `d666126b`, `5f675a76`, and `60c01d3c`.
+- 2026-06-13 09:48 +08:00: `e608f0ac` records a TASK-CID-0047 unblock check.
+- 2026-06-13 14:16 +08:00: TASK-CID-0047 is claimed by captain; current live ledger is `running`, while planning frontmatter remains `planned`.
+
+## Root Cause Tree
+
+Primary root cause:
+
+- ATM did not require a mechanically valid governed closeout packet before downstream work could be treated as unblocked.
+
+Secondary causes:
+
+- Multiple completion surfaces existed: source commit, mailbox report, 3KLife planning card, target task ledger, task events, evidence JSON, and closure packet.
+- Some surfaces were human-readable or advisory. Mailbox `depends_on` prose was not equivalent to a claim-time dependency gate.
+- `tasks import` could produce ledger state from planning data without proving runtime closeout.
+- Historical delivery closeback could be broad and required later waiver/reconcile judgment.
+- Direct backend surfaces (`tasks close`, `tasks reconcile`, `tasks import`, `tasks repair-closure`) were powerful enough for repair but also easy for ordinary agents to use as if they were normal operator lanes.
+- Planning-repo authority tasks such as TASK-CID-0047 are easy to misunderstand because the deliverable lives in 3KLife while target ledger evidence still exists in AI-Atomic-Framework.
+- Validator surface drift is independent from closeout drift. A task can close a bundle while accidentally removing or weakening a prior validator entry unless that surface is itself protected.
+
+## Minimal Reproduction Path
+
+This is the smallest abnormal path inferred from the evidence:
+
+1. Create a task A and a task B where B depends on A.
+2. Land A's source delivery commit and mark either the planning card or mailbox dispatch as done.
+3. Do not create a valid target close transition with `closure.schemaId=atm.taskClosureTransition.v1`, command-backed evidence, and closure packet.
+4. Let B's worker read the planning/mailbox done signal or broad ledger status as enough to proceed.
+5. B can now proceed or appear complete while A is only source-done or planning-done, not governed-done.
+
+This path explains the observed failures around TASK-CID-0043 through TASK-CID-0045 before their later governance backfill.
+
+## Answers to Required Findings
+
+- Actually delivered by source commit: TASK-CID-0041 (`70594a03`), TASK-CID-0042 (`803ffc33`), TASK-CID-0043 (`00be417f`), TASK-CID-0044 (`d5c3dea8`), TASK-CID-0045 (`0285e399`). TASK-CID-0040 had delivery/history commit `b373d1ee` plus later governance repair `a6f01658`.
+- Only reflected in planning or mailbox at the abnormal point: TASK-CID-0043 was planning-done before target closeout; TASK-CID-0044 and TASK-CID-0045 had source/mailbox delivery while planning cards still currently show planned.
+- Valid governed closeout now exists for TASK-CID-0040 through TASK-CID-0045 in target history. Several were not originally governed and were repaired later.
+- The exact admission weakness was allowing downstream reasoning to treat `status=done`, planning card `done`, or mailbox `done` as enough, rather than requiring closure transition plus packet.
+- `tasks close --historical-delivery` and reconcile flows needed stronger scoped provenance. TASK-CID-0041 required waiver because delivery commit `70594a03` included unrelated `decision.ts` drift; TASK-CID-0040 and TASK-CID-0042 closure packets show broad changed-file sets.
+- Frozen runner drift contributed operational confusion in this CID period, but it was not the primary root cause. The primary root cause was missing mechanical closeout provenance enforcement.
+- Mailbox dispatch order was prose plus file placement, not a hard task-claim gate at the time.
+
+## Recommendations
+
+Already assigned or completed by TASK-CID-0046:
+
+- Dependency closeout gates must check governed closeout provenance, not just done status.
+- `next --claim` and `tasks claim` must fail closed when prerequisites are source-done, planning-done, mailbox-done, or imported-done without valid closeout artifacts.
+
+Already assigned or completed by later CID hardening:
+
+- TASK-CID-0060 clarified source done versus governed done and added the `source-done-governance-incomplete` bucket.
+- TASK-CID-0061 fixed the public `tasks.ts` caller-facing surface contract.
+- TASK-CID-0063 should make `taskflow open/close` the default dual-repo operator lane with deterministic stage/commit bundle.
+- TASK-CID-0065 should protect direct backend close/import/reconcile/repair commands behind explicit emergency approval leases.
+
+New follow-up card candidates:
+
+- Add a planning mirror sync validator that detects `target done` plus `planning planned` for target-repo authority tasks, with deterministic closeback guidance.
+- Add a mailbox residue validator that distinguishes archived worker reports from still-actionable inbox dispatches.
+- Add a validator/package-script surface invariant so later tasks cannot silently remove prior validators or package script entries.
+- Fix residue classification false positives where target and planning are both done with empty divergence but the classifier returns `ambiguous-manual-review`.
+- Add explicit documentation for planning-repo authority tasks: where the deliverable lives, what target evidence is still required, and what close command should do.
+
+Immediate captain operating rules:
+
+- Do not accept source commit, planning frontmatter, or mailbox report as done.
+- Before assigning a dependent task, run `node atm.mjs tasks status --task <id> --json` and inspect closeout provenance.
+- Use `taskflow open` and `taskflow close` for normal work once available; use backend commands only through the emergency lane.
+- For historical delivery, require scoped delivery proof and name any waiver explicitly.
+- Keep dirty residue cleanup separate from feature closeout; do not let residue repair become a hidden source-change task.
+
+## Validation Command
+
+Run from the planning repo:
 
 ```powershell
 git -C "C:\Users\User\3KLife" diff --check -- "docs/ai_atomic_framework/cid-hardening/atm-abnormal-release-forensics-report.md"
 ```
-
----
-
-*本報告由 TASK-CID-0047 鑑識產出；事實與推論已於各節標註。未修改 ATM 原始碼、ledger 或 mailbox。*
