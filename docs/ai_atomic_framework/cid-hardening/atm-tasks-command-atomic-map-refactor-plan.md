@@ -22,6 +22,17 @@ task_family:
   - TASK-CID-0062
   - TASK-CID-0063
   - TASK-CID-0065
+  - TASK-CID-0066
+  - TASK-CID-0067
+  - TASK-CID-0068
+  - TASK-CID-0069
+  - TASK-CID-0070
+  - TASK-CID-0071
+  - TASK-CID-0072
+  - TASK-CID-0073
+  - TASK-CID-0074
+  - TASK-CID-0075
+  - TASK-CID-0076
 ---
 
 # ATM tasks command atomic map refactor plan
@@ -295,3 +306,88 @@ TASK-CID-0065 must enforce the lane at more than one layer:
 - `--waiver-out-of-scope-delivery`, `--allow-stale-runner`, `--force-overwrite-claims`, `--amend`, and `lock cleanup --all-stale` are covered by explicit emergency permissions.
 - Audit evidence records the lease, use event, command, actor, affected task, and before/after status.
 - Regression tests prove that an agent cannot bypass TASK-CID-0063 by calling backend close/reconcile/import/repair-closure directly.
+
+## Reassessment - document versus code gap report
+
+A later document-versus-code gap report identified three kinds of remaining incompleteness:
+
+- `[D]` documentation or workflow examples that describe the operator lane incorrectly or too optimistically;
+- `[C]` implemented CLI behavior that works but still leaks hidden cost or ambiguity to the operator;
+- `[X]` design gaps where the product still lacks a first-class fallback or boundary contract.
+
+Some reported items are already covered by landed work:
+
+- TASK-CID-0068 covers the `ambiguous-manual-review` false-positive residue bug for fully closed done/done tasks.
+- TASK-CID-0072 covers the deterministic target-deliverable bundle problem exposed by TASK-CID-0071, including fail-closed behavior and dry-run review structure for `taskflow close`.
+
+The remaining uncovered gaps are real and should be added to the CID plan rather than left as informal notes.
+
+### New follow-up gaps
+
+#### TASK-CID-0073 - operator guidance and backend wording normalization
+
+This card should absorb the operator-facing inconsistencies from the gap report:
+
+- `taskflow open --dry-run` should emit an unmistakable write-readiness hint when the profile is in fallback mode instead of forcing operators to infer that `--write` will fail.
+- workflow docs and examples should stop implying framework-repo local `docs/taskflow.profile.json` and instead point to adopter/profile-owned paths.
+- `next --claim` guidance should prefer an explicit task-scoped form when ATM already knows the selected task, rather than forcing a second natural-language `--prompt` hop.
+- low-level surfaces such as `tasks new` should be labeled as backend/template-generator surfaces in help and guidance, not as co-equal operator lanes.
+
+This is partly docs and partly CLI wording; the goal is to reduce avoidable operator confusion without changing closeout authority.
+
+#### TASK-CID-0074 - profile-root closeback fallback when `source.planPath` is absent
+
+The report exposed a real design hole: `taskflow close` still depends too strongly on `taskDocument.source.planPath`. Tasks created or claimed through alternative governed paths can lack that pointer even when the active profile knows the planning root and canonical path policy.
+
+This card should teach `taskflow close` to recover the planning-side closeback path from governed profile/adaptor metadata when `source.planPath` is missing, instead of failing forever with planning-frontmatter-missing even though the operator is still inside a valid dual-repo contract.
+
+This is a first-class product gap, not only a docs issue.
+
+#### TASK-CID-0075 - evidence operator lane simplification and raw-surface demotion
+
+The report also showed a governance UX mismatch around evidence capture:
+
+- the product increasingly expects `evidence run` as the ordinary operator path;
+- `evidence add` remains available, but its raw command/sha contract is too easy to misread as the default lane;
+- workflow docs and command guidance should make it clear when `evidence run` is preferred and when `evidence add` is an admin/raw surface.
+
+This card should align docs, CLI wording, and validation expectations so agents do not produce a false-pass mental model where "I ran a validator in the terminal" is treated as equivalent to governed evidence.
+
+### Deferred but acknowledged
+
+The gap report also identified a useful but non-blocking follow-up around profile-overridable target/planning commit-message templates for taskflow close. Keep this as backlog unless adopter pressure makes it urgent; it is lower priority than deterministic bundle correctness, closeback fallback, and evidence/operator-lane clarity.
+
+## Follow-up - review-state closeout reclaim lifecycle repair
+
+The 0047 closeback recovery wave exposed one more genuine product gap after TASK-CID-0063 and TASK-CID-0065:
+
+- a task can reach `review`;
+- source delivery can already be real and historically provable;
+- the operator may need only a governed closeout-only reclaim to finish `done`;
+- but the CLI currently leaves that state mechanically stranded unless an emergency-style reset/open overwrite is used.
+
+That is not just old residue. It is a lifecycle dead-end inside the normal state machine.
+
+### TASK-CID-0076 - repair the `review -> done` closeout-only reclaim path
+
+- TASK-CID-0076 hardens the lifecycle so a released review-state task can be reclaimed through a governed closeout-only route when valid current or historical deliverable proof exists.
+- The fix must work for normal target-repo closeout and for planning-authority tasks such as TASK-CID-0047, where the real deliverable may already live in the planning repo.
+- The fix must not broaden ordinary write claims, weaken done proof requirements, or reintroduce direct backend reset/import as the preferred operator path.
+- `next --claim` and taskflow closeback guidance should point to the repaired reclaim route instead of leaving operators in an invalid reset/open loop.
+
+This follow-up is deliberately after TASK-CID-0063 and TASK-CID-0065 because the normal operator lane and emergency backend boundary must already exist before we make review-state reclaim smoother.
+
+### Extended sequencing
+
+```text
+TASK-CID-0063
+  -> TASK-CID-0065
+    -> TASK-CID-0068
+      -> TASK-CID-0069
+        -> TASK-CID-0070
+          -> TASK-CID-0072
+            -> TASK-CID-0073
+            -> TASK-CID-0074
+            -> TASK-CID-0075
+              -> TASK-CID-0076
+```

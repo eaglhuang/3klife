@@ -8,10 +8,10 @@ started_by_agent: cursor-composer-2.5
 completed_at: 2026-06-13T20:16:00+08:00
 completed_by_agent: 008
 notes: |
-  狀態: AI-Atomic-Framework 已交付 profile-root closeback fallback（commit 37a148e7）。
-  驗證: typecheck / validate:cli / validate-task-ledger-governance / taskflow-dryrun 全 PASS。
+  狀態: AI-Atomic-Framework 已交付並完成 governed closeout（delivery 37a148e7、close bundle 6c709a7b）。
+  驗證: evidence missing 7/7 PASS；typecheck / validate:cli / validate-task-ledger-governance / taskflow-dryrun 全 PASS。
   變更: close-orchestration 新增 resolveClosebackPlanningPath Result Contract；taskflow close 暴露 closebackPathResolution。
-  阻塞: runtime taskflow close --write 仍待 evidence bundle 附加後方可 done。
+  阻塞: 無；live ledger 與 planning mirror 皆 done，residue no-residue。
 owner: atm-core
 priority: P0
 milestone: M15
