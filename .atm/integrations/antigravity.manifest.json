@@ -9,27 +9,27 @@
   },
   "adapterId": "antigravity",
   "adapterVersion": "0.0.0",
-  "installedAt": "2026-05-25T07:57:46.718Z",
+  "installedAt": "2026-06-13T12:10:28.999Z",
   "targetDir": ".",
   "files": [
     {
       "path": "GEMINI.md",
-      "sha256": "sha256:8d6a3379440e72ea223056b4d213622ce9522a85764ae887e37d5b6b87cc2750",
-      "sizeBytes": 3783,
+      "sha256": "sha256:3ad93947c0a7acc2edbef2a6e7d5effddde2d23773c80bb52d46529fc2f9fa5e",
+      "sizeBytes": 3833,
       "source": "generated",
       "fileFormat": "markdown"
     },
     {
       "path": ".agents/skills/atm-next/SKILL.md",
-      "sha256": "sha256:88e9f68f2307299f65087f99b88e4d11f6f63cf5abde87d727b25a74a7d8828d",
-      "sizeBytes": 5332,
+      "sha256": "sha256:d7131b574f6d1f3849543e0abb5237c7a50e5faddd3e22716eab45d1c83477f3",
+      "sizeBytes": 6607,
       "source": "template",
       "fileFormat": "skill"
     },
     {
       "path": ".agents/skills/atm-task-intent-resolver/SKILL.md",
-      "sha256": "sha256:c621bbc4265c28afcafdcfdf8c2bbd63dff4e9383d524bcc11e11d56d25c1f59",
-      "sizeBytes": 5322,
+      "sha256": "sha256:20a1fa17b674bd40655784e2894dda829f53254ad056e9d72a121e56258fc331",
+      "sizeBytes": 5866,
       "source": "template",
       "fileFormat": "skill"
     },
@@ -42,8 +42,8 @@
     },
     {
       "path": ".agents/skills/atm-governance-router/SKILL.md",
-      "sha256": "sha256:7a70f78a736a52d227a6cb3630327a50933e9f6d5f2b4a7095527769419f987d",
-      "sizeBytes": 10629,
+      "sha256": "sha256:ad45de793cbb1fef0972f918a9ce334e01335f74bf41464ade55d8d4740a994a",
+      "sizeBytes": 12046,
       "source": "template",
       "fileFormat": "skill"
     },
@@ -88,9 +88,16 @@
       "sizeBytes": 4048,
       "source": "template",
       "fileFormat": "skill"
+    },
+    {
+      "path": ".agents/skills/atm-atom-map-refactor/SKILL.md",
+      "sha256": "sha256:354fb376dd23df9f761bce91e32aef54a649197ec1462b7b2160526bf5539b4b",
+      "sizeBytes": 5218,
+      "source": "template",
+      "fileFormat": "skill"
     }
   ],
   "metadata": {
-    "sourceFileCount": 11
+    "sourceFileCount": 12
   }
 }
