@@ -2,7 +2,7 @@
 doc_id: doc_cid_0053
 task_id: TASK-CID-0053
 title: "Dependency gate atom extraction for next and claim"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8
@@ -45,6 +45,9 @@ outOfScope:
   - "Planning repo status mirror"
 nonGoals:
   - "Do not treat prose dependencies in dispatch files as sufficient machine gates."
+completed_at: "2026-06-13T09:47:41.896Z"
+completed_by_agent: "captain"
+delivery_commit: "7f72057e3791b6e6e0ad5c8d0e1eae78aaa36083"
 ---
 
 # TASK-CID-0053 - Dependency gate atom extraction for next and claim
