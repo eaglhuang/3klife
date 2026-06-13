@@ -2,7 +2,7 @@
 doc_id: doc_cid_0055
 task_id: TASK-CID-0055
 title: "Historical delivery atom extraction and provenance policy"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8
@@ -41,6 +41,9 @@ outOfScope:
   - "Broad retroactive cleanup of old task ledgers"
 nonGoals:
   - "Do not let a broad mixed commit silently become trusted task delivery."
+completed_at: "2026-06-13T15:13:28.148Z"
+completed_by_agent: "captain"
+delivery_commit: "01d524029e94169dfcce1fbec4e4f07e44145805"
 ---
 
 # TASK-CID-0055 - Historical delivery atom extraction and provenance policy
