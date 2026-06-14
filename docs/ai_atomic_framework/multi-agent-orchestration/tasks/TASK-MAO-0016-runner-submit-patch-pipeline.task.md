@@ -3,7 +3,7 @@ task_id: TASK-MAO-0016
 title: "runner submit-patch pipeline"
 status: planned
 owner: atm-core
-priority: P0
+priority: P2
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -50,7 +50,7 @@ outOfScope:
 
 ## Goal
 
-Serialize ATM core patch submissions through the Broker, build the runner, verify reproducibility, and publish a new in-dev runner ref.
+Serialize ATM core patch submissions through the Broker, build the runner, verify reproducibility, and publish a new in-dev runner ref. This is the step after v1 single-writer stewardship, not the initial operator workflow.
 
 ## Implementation Contract
 
@@ -60,6 +60,7 @@ Serialize ATM core patch submissions through the Broker, build the runner, verif
 - Run the reproducible runner build gate from `TASK-MAO-0011`.
 - Publish a new `refs/atm-runner/in-dev/v<N+1>-dev.<k>` ref and advance `in-dev/HEAD`.
 - Return source commit SHA, runner version, runner artifact sha256, and reproducibility evidence.
+- Do not make this task a prerequisite for the lighter model where source tasks hand off runner publication to a steward lane.
 
 ## Acceptance Criteria
 
@@ -67,4 +68,4 @@ Serialize ATM core patch submissions through the Broker, build the runner, verif
 - The pipeline does not write `release/**` from non-Broker actor identity.
 - Patch application is idempotent or protected by a submission idempotency key.
 - Existing non-core route behavior remains unchanged.
-
+- The task remains explicitly deferred until the steward-only path demonstrates real coordination pain.

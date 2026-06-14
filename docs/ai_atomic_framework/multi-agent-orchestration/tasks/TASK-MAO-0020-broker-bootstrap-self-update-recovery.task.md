@@ -3,7 +3,7 @@ task_id: TASK-MAO-0020
 title: "broker bootstrap self-update recovery"
 status: planned
 owner: atm-core
-priority: P1
+priority: P3
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -49,7 +49,7 @@ outOfScope:
 
 ## Goal
 
-Define and test how the runner Broker starts from a known built runner, self-updates safely, and recovers from crash or stale route state.
+Define and test how the full runner Broker starts from a known built runner, self-updates safely, and recovers from crash or stale route state. This is long-horizon self-hosting work, not part of the first steward rollout.
 
 ## Implementation Contract
 
@@ -58,6 +58,7 @@ Define and test how the runner Broker starts from a known built runner, self-upd
 - Drain submissions before self-restart after built promotion.
 - Reconstruct route and submission state from durable refs, route records, and audit logs.
 - Document manual recovery limits for destroyed hosts and ambiguous in-flight submissions.
+- Keep the first rollout free of these concerns by using a simpler steward lane until restart complexity becomes worth paying for.
 
 ## Acceptance Criteria
 
@@ -65,4 +66,4 @@ Define and test how the runner Broker starts from a known built runner, self-upd
 - Recovery never mutates immutable published version refs.
 - The report states which state is durable and which state is intentionally recoverable from heritage docs.
 - Existing broker recovery validators still pass.
-
+- The task can remain deferred without reducing the usefulness of `TASK-MAO-0011` to `TASK-MAO-0013`.

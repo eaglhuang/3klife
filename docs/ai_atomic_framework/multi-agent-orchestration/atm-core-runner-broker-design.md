@@ -4,7 +4,7 @@ A specialization of MAO for ATM core derived-artifact production under multi-age
 
 ## 0. Status
 
-- **Status**: design reviewed against current ATM runner implementation; implementation task cards opened as `TASK-MAO-0011` through `TASK-MAO-0022`
+- **Status**: north-star design reviewed against current ATM runner implementation; recommended first rollout is `Runner Sync Steward v1` through `TASK-MAO-0011` to `TASK-MAO-0013`
 - **Series**: MAO (Multi-Agent Orchestration) — extension chapter
 - **Parent document**: [MAO 多 AI 並行治理計畫書.md](./MAO多AI並行治理計畫書.md)
 - **Reference skill**: `.agents/skills/atm-atom-map-refactor`
@@ -32,6 +32,17 @@ Corrections applied to this plan:
 4. Version refs may be immutable for published versions, but moving pointers such as `in-dev/HEAD` are mutable control refs and must be treated separately.
 5. Runner artifact binding should be a canonical sha256 over a generated artifact manifest and critical artifact bytes, not an ambiguous tree hash.
 6. M5 cannot be claimed as governed work until cards `TASK-MAO-0011` through `TASK-MAO-0022` exist in the MAO shard and task index.
+7. The first implementation slice should be a lighter `Runner Sync Steward v1`, not a full Broker mental model for every AI agent.
+
+## 0.2 Recommended rollout stance
+
+This design remains the long-term target, but the recommended operational rollout is staged:
+
+1. **Immediate guardrails**: widen `ATM_RUNNER_SYNC_REQUIRED`, treat `release/**` as generated-artifact single-writer output, and stop ordinary source tasks from writing frozen runner artifacts directly.
+2. **Runner Sync Steward v1**: source-writing AI agents deliver source + tests only; a single steward lane rebuilds, validates, and commits runner outputs in a clean target repo. This is the recommended first implementation slice for `TASK-MAO-0011` through `TASK-MAO-0013`.
+3. **Full Runner Broker**: only after v1 proves insufficient should ATM introduce leased in-dev refs, patch-envelope submission, closure runner binding, and external-core PR ingestion.
+
+This means the full Broker is a justified escalation path, not the default operator burden for every ATM core contributor.
 
 ## 1. Why this exists
 
@@ -39,7 +50,7 @@ The MAO plan establishes a logical parallel routing layer for multi-agent ATM de
 
 When multiple AI agents simultaneously edit ATM core source (`packages/cli/**`, `packages/core/**`, etc.), the same MAO primitives must extend to govern the **derived artifact** that those source edits produce: the runner bundle under `release/**`. That bundle is what every consumer of ATM actually executes. Without a dedicated treatment, parallel core editors race on `release/**` writes, contaminate each other's `git blame`, and break closure packet reproducibility.
 
-This document specializes the existing MAO Broker / Steward roles for ATM core, defines the runner version lifecycle, and binds runner version proof into task closure packets. It does not invent a new Broker — it gives the existing one a clear contract for one specific derived artifact class.
+This document specializes the existing MAO Broker / Steward roles for ATM core, defines the runner version lifecycle, and binds runner version proof into task closure packets. It does not invent a new Broker — it gives the existing MAO control plane a clear contract for one specific derived artifact class, with a steward-first rollout recommended before full Broker mechanics are activated.
 
 ## 2. Relation to MAO
 
@@ -53,12 +64,12 @@ This design **reuses** every MAO primitive. It does not introduce parallel mecha
 | Conflict Matrix | Same rules (CID-disjoint allow, atom-write overlap freeze, etc.) — the ATM core lane is one more CID arbitration scope |
 | Freeze / Resume Protocol | Used when a Broker patch submit cannot rebase cleanly on Broker HEAD |
 | Patch Envelope | **Specialized** with an ATM core target — see §5 |
-| Steward | The Broker for ATM core IS the Steward for ATM core scope; one role, two names |
+| Steward | The single-writer control lane for runner outputs. In v1 this can be a light steward lane; in the full model it is embodied by the Broker actor. |
 
 **What this adds beyond MAO**:
 
 1. ATM core scope is explicitly declared (§4) so the Intent Registry can classify routes deterministically.
-2. The Steward for ATM core scope is also the **single writer** of `release/**` and the **publisher** of runner version refs (§6).
+2. The Steward for ATM core scope is the **single writer** of `release/**`; runner version ref publication becomes part of that same lane once the full Broker model is activated (§6).
 3. Two runner version streams exist (`in-dev`, `built`) with explicit promotion rules (§6).
 4. Task closure packets include a cryptographic binding to the runner version that was used to validate them (§9).
 5. Reproducible-build verification is a Broker-enforced gate (§10).
@@ -75,11 +86,19 @@ M5 depends on M0-M4 but must not force a rewrite of them. The M0-M4 cards stay g
 
 ## 3. Core principle
 
-> The runner is a CID-managed derived artifact. It has exactly one writer (the Broker). All consumers pull versioned refs. The version they consume is recorded in their closure packet.
+> The runner is a CID-managed derived artifact. It has exactly one stewarded writer lane: the steward lane in v1, and the Broker actor in the full model. Once versioned refs exist, consumers pull those refs and record the consumed version in closure.
+
+### 3.1 v1 operational principle
+
+Before full Broker rollout, use the simpler rule:
+
+> Source-writing AI agents do not edit `release/**`. They finish source + tests, then hand off runner publication to a single steward lane.
+
+This keeps the derived artifact governed without forcing every AI agent to understand ref streams, patch-envelope submission, or closure-binding internals on day one.
 
 Three invariants follow:
 
-- **INV-RUNNER-001**: `release/**` is writable only by the ATM-Core-Runner-Broker actor identity.
+- **INV-RUNNER-001**: `release/**` is writable only by the steward-controlled single-writer identity. In v1 this is the Runner Sync Steward lane; in the full model this is the `atm-core-runner-broker` actor identity.
 - **INV-RUNNER-002**: Every published runner version corresponds to a single source commit SHA and is byte-identical for that SHA across rebuilds.
 - **INV-RUNNER-003**: Published runner refs are immutable. Subsequent edits produce new refs; existing refs never mutate.
 
@@ -94,7 +113,7 @@ atmCoreScope:
   - packages/plugin-governance-local/**
   - packages/adapter-local-git/**  # included when CLI behavior depends on adapter runtime behavior
   - schemas/**
-  - release/**                 # Broker-only; AI write here is rejected
+  - release/**                 # single-writer generated output; ordinary source-writing AI edits here are rejected
   - .atm/charter/**            # Charter is treated as ATM core; humans approve waivers
   - atm.mjs
   - atm.dev.mjs
@@ -407,7 +426,7 @@ If the Broker host is destroyed:
 | Broker host destroyed | Manual escalation | Spawn new Broker agent; restore from heritage docs (audit log of all published refs is sufficient state) |
 | Network partition between AI and Broker | Submit RPC timeout | AI retries; idempotency key prevents double-submit |
 | Two simultaneous patches with CID overlap | Conflict matrix detects | Second patch frozen; standard MAO arbitration |
-| `release/**` written by non-Broker actor | Pre-commit hook + branch protection | Commit rejected; actor education |
+| `release/**` written outside the steward single-writer lane | Pre-commit hook + branch protection | Commit rejected; actor education |
 
 The user's framing for risk C is the system-level reliability principle:
 
@@ -417,7 +436,7 @@ Every Broker action emits a published ref and an audit log entry. A new Broker c
 
 ## 13. Open-source contributor pipeline (per user's補充 3)
 
-External contributors must use the same Broker.
+External contributors must use the same Broker once external core contribution is opened. This is explicitly a post-v1 concern, not a prerequisite for the first internal steward rollout.
 
 ### 13.1 Initial state
 
@@ -468,20 +487,29 @@ Task cards are opened as MAO series extensions, not new RFT cards. Numbering pic
 
 | Task ID | Purpose | Depends on |
 |---|---|---|
-| TASK-MAO-0011 | Reproducible-build audit and remediation for current `npm run build` | — |
-| TASK-MAO-0012 | `scripts/AtmCore/` directory convention; migrate existing build/validation scripts | MAO-0011 |
-| TASK-MAO-0013 | ATM core scope declaration; Broker Intent Registry classifier extension | MAO-0005 (existing), MAO-0012 |
-| TASK-MAO-0014 | Runner ref storage (refs/atm-runner/built, refs/atm-runner/in-dev); ref publish primitive | MAO-0011, MAO-0012 |
-| TASK-MAO-0015 | Patch envelope ATM core specialization fields (targetArtifact, atmCoreClassification) | MAO-0008 (existing) |
-| TASK-MAO-0016 | Submit pipeline: route submit-patch → CID arbitrate → build → double-build verify → publish | MAO-0008, MAO-0014, MAO-0015 |
-| TASK-MAO-0017 | Version stream state machine: in-dev / built / quiescing transitions; lease distribution rule | MAO-0014, MAO-0016 |
-| TASK-MAO-0018 | Closure packet `atmCoreRunnerBinding` field; cryptographic binding verification | MAO-0017 |
-| TASK-MAO-0019 | Cross-repo task closure: dual binding (ATM core + adopter); mixed task ordering rules | MAO-0018 |
-| TASK-MAO-0020 | Broker bootstrap, self-update path, restart-from-heritage-docs flow | MAO-0017 |
-| TASK-MAO-0021 | Failure-mode coverage tests (crash, partition, reproducibility violation, scope drift, undeclared core write) | MAO-0017, MAO-0020 |
-| TASK-MAO-0022 | Open-source contributor pipeline: GitHub Action → patch envelope → Broker submit | MAO-0017, MAO-0018 |
+| TASK-MAO-0011 | Reproducible-build audit and remediation for current `npm run build` (`Runner Sync Steward v1` gate) | — |
+| TASK-MAO-0012 | Runner sync scope manifest and steward-only generated-artifact contract | MAO-0011 |
+| TASK-MAO-0013 | ATM core scope declaration, stale-runner widening, and steward classifier extension | MAO-0005 (existing), MAO-0012 |
+| TASK-MAO-0014 | Deferred full-Broker runner ref storage (refs/atm-runner/built, refs/atm-runner/in-dev) | MAO-0011, MAO-0012 |
+| TASK-MAO-0015 | Deferred full-Broker patch-envelope specialization fields (targetArtifact, atmCoreClassification) | MAO-0008 (existing) |
+| TASK-MAO-0016 | Deferred full-Broker submit pipeline: route submit-patch → CID arbitrate → build → double-build verify → publish | MAO-0008, MAO-0014, MAO-0015 |
+| TASK-MAO-0017 | Deferred full-Broker version stream state machine: in-dev / built / quiescing transitions | MAO-0014, MAO-0016 |
+| TASK-MAO-0018 | Deferred full-Broker closure packet `atmCoreRunnerBinding` field and cryptographic verification | MAO-0017 |
+| TASK-MAO-0019 | Deferred full-Broker cross-repo task closure: dual binding (ATM core + adopter) | MAO-0018 |
+| TASK-MAO-0020 | Long-term Broker bootstrap, self-update path, restart-from-heritage-docs flow | MAO-0017 |
+| TASK-MAO-0021 | Long-term full-Broker failure-mode coverage tests | MAO-0017, MAO-0020 |
+| TASK-MAO-0022 | Long-term open-source contributor pipeline: GitHub Action → patch envelope → Broker submit | MAO-0017, MAO-0018 |
 
-12 cards. Suggested execution order roughly matches the dependency chain. MAO-0011 is the gate — until reproducible build is proven, the rest cannot land.
+12 cards. Suggested execution order is intentionally phased:
+
+- **Phase A / v1 now**: `TASK-MAO-0011` through `TASK-MAO-0013`
+  These establish reproducibility, scope classification, stale-runner widening, and the single-writer steward lane.
+- **Phase B / escalate only if needed**: `TASK-MAO-0014` through `TASK-MAO-0019`
+  These add ref streams, patch-envelope specialization, submit-patch, and closure binding only if v1 stewardship proves too coarse.
+- **Phase C / long-term self-hosting and OSS**: `TASK-MAO-0020` through `TASK-MAO-0022`
+  These cover Broker restart lineage, broader failure coverage, and future external core contribution ingestion.
+
+`TASK-MAO-0011` remains the gate: until reproducible build is proven, neither the light steward lane nor the full Broker path is trustworthy.
 
 ## 16. Open questions
 

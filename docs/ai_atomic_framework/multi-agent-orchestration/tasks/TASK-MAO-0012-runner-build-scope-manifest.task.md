@@ -1,6 +1,6 @@
 ---
 task_id: TASK-MAO-0012
-title: "runner build scope manifest"
+title: "runner sync scope manifest"
 status: planned
 owner: atm-core
 priority: P0
@@ -44,11 +44,11 @@ outOfScope:
   - "Publishing runner refs"
 ---
 
-# TASK-MAO-0012 - runner build scope manifest
+# TASK-MAO-0012 - runner sync scope manifest
 
 ## Goal
 
-Create a machine-readable bridge between today's scattered runner-affecting scripts and the future `scripts/AtmCore/` convention.
+Create a machine-readable bridge between today's scattered runner-affecting scripts and a lightweight `Runner Sync Steward v1` single-writer policy.
 
 ## Implementation Contract
 
@@ -56,6 +56,7 @@ Create a machine-readable bridge between today's scattered runner-affecting scri
 - Document that new runner-affecting scripts must live under `scripts/AtmCore/` or be declared in the manifest.
 - Add validation that the manifest covers the current `npm run build` chain and does not silently omit `packages/core/src`, `packages/cli/src`, `packages/plugin-governance-local/src`, schemas, root launchers, or release outputs.
 - Avoid a high-churn script move until release parity and reproducibility are proven.
+- Mark `release/**` as steward-only generated output in the documented contract used by source-delivery tasks.
 
 ## Acceptance Criteria
 
@@ -63,4 +64,4 @@ Create a machine-readable bridge between today's scattered runner-affecting scri
 - The validator distinguishes runner-affecting scripts from non-core planning utilities.
 - Existing `npm run build` still works through the current package script.
 - The manifest is suitable for `TASK-MAO-0013` classifier consumption.
-
+- The manifest supports a source-agent workflow where ordinary tasks stop before runner publication.

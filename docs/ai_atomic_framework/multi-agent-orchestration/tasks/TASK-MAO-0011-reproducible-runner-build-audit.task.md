@@ -48,7 +48,7 @@ outOfScope:
 
 ## Goal
 
-Prove and repair the current `npm run build` runner output so the same source SHA can produce byte-identical root-drop and onefile runner artifacts.
+Prove and repair the current `npm run build` runner output so the same source SHA can produce byte-identical root-drop and onefile runner artifacts. This is the gate for `Runner Sync Steward v1`.
 
 ## Implementation Contract
 
@@ -57,6 +57,7 @@ Prove and repair the current `npm run build` runner output so the same source SH
 - Normalize or isolate volatile provenance so byte-compared artifacts are stable.
 - Produce a human-readable audit report listing every nondeterministic source and its remediation.
 - Preserve `node atm.mjs` as the normal frozen runner entrypoint.
+- Establish the evidence required before any steward-only runner publication lane can be trusted.
 
 ## Acceptance Criteria
 
@@ -64,4 +65,3 @@ Prove and repair the current `npm run build` runner output so the same source SH
 - Critical artifact comparison covers `release/atm-onefile/atm.mjs`, `release/atm-onefile/release-manifest.json`, `release/atm-root-drop/release-manifest.json`, and any manifest that feeds the onefile payload hash.
 - The report explicitly states whether wall-clock timestamps remain inside byte-compared artifacts.
 - Existing release validators still pass.
-

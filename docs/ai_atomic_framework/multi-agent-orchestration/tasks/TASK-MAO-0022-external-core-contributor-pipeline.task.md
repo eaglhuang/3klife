@@ -3,7 +3,7 @@ task_id: TASK-MAO-0022
 title: "external core contributor pipeline"
 status: planned
 owner: atm-core
-priority: P2
+priority: P3
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -49,7 +49,7 @@ outOfScope:
 
 ## Goal
 
-Define the future open-source path that converts external ATM core PRs into Broker patch envelopes.
+Define the future open-source path that converts external ATM core PRs into Broker patch envelopes. This is intentionally outside the first internal steward rollout.
 
 ## Implementation Contract
 
@@ -58,6 +58,7 @@ Define the future open-source path that converts external ATM core PRs into Brok
 - Add a validator or fixture that proves a PR-like patch can be converted into a MAO patch envelope without granting direct write authority.
 - Ensure accepted external patches go through the same Broker submit pipeline and runner binding as internal ATM core work.
 - Keep framework public docs English-only and repository-neutral.
+- Treat this task as contingent on full-Broker adoption, not as a prerequisite for internal multi-agent source governance.
 
 ## Acceptance Criteria
 
@@ -65,4 +66,4 @@ Define the future open-source path that converts external ATM core PRs into Brok
 - The fixture proves external patch extraction produces the same envelope shape accepted by the Broker.
 - Direct external edits to `release/**` are rejected.
 - Neutrality validation passes for new public docs.
-
+- The task stays deferred until internal workflows have already validated the heavier Broker path.

@@ -3,7 +3,7 @@ task_id: TASK-MAO-0018
 title: "closure packet runner binding"
 status: planned
 owner: atm-core
-priority: P0
+priority: P2
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -48,7 +48,7 @@ outOfScope:
 
 ## Goal
 
-Add a formal `atmCoreRunnerBinding` to closure packets for tasks that touched ATM core.
+Add a formal `atmCoreRunnerBinding` to closure packets for tasks that touched ATM core, but only after the team decides the lighter source-commit plus runner-sync-commit evidence is no longer enough.
 
 ## Implementation Contract
 
@@ -57,6 +57,7 @@ Add a formal `atmCoreRunnerBinding` to closure packets for tasks that touched AT
 - Require the binding only when the closed task touched ATM core scope.
 - Verify the runner artifact hash from the published runner artifact manifest.
 - Preserve existing closure packets and non-core closure behavior.
+- Keep v1 closure usable with simpler source-delivery plus steward-sync evidence while this richer binding remains deferred.
 
 ## Acceptance Criteria
 
@@ -64,4 +65,4 @@ Add a formal `atmCoreRunnerBinding` to closure packets for tasks that touched AT
 - ATM-core closure without a binding fails with a clear diagnostic.
 - Non-core closure does not require the field.
 - Tests prove digest mismatch rejection and successful binding verification.
-
+- The task text makes clear it is a later precision upgrade, not a blocker for v1 stewardship.

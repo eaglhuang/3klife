@@ -3,7 +3,7 @@ task_id: TASK-MAO-0014
 title: "runner ref publish primitive"
 status: planned
 owner: atm-core
-priority: P0
+priority: P2
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -49,7 +49,7 @@ outOfScope:
 
 ## Goal
 
-Add the low-level primitive for immutable runner version refs and the moving `in-dev/HEAD` control ref.
+Add the low-level primitive for immutable runner version refs and the moving `in-dev/HEAD` control ref, but only after `Runner Sync Steward v1` proves too coarse for active ATM core parallelism.
 
 ## Implementation Contract
 
@@ -57,6 +57,7 @@ Add the low-level primitive for immutable runner version refs and the moving `in
 - Treat `refs/atm-runner/built/v<N>` and `refs/atm-runner/in-dev/v<N>-dev.<k>` as immutable version refs.
 - Treat `refs/atm-runner/in-dev/HEAD` as a moving control ref, not a published immutable version.
 - Add validation that publish attempts cannot overwrite existing version refs.
+- Keep this task explicitly deferred from the first steward rollout; it is an escalation path, not a prerequisite for v1.
 
 ## Acceptance Criteria
 
@@ -64,4 +65,4 @@ Add the low-level primitive for immutable runner version refs and the moving `in
 - Artifact digest records include source commit SHA, artifact manifest hash, publisher actor, and reproducibility flag.
 - Ref storage can run in a local git fixture without network access.
 - No task closure behavior changes in this card.
-
+- The task docs make clear that v1 may continue using a simpler runner-sync commit path without leased refs.

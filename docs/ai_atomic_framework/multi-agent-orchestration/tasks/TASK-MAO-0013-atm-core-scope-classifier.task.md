@@ -1,6 +1,6 @@
 ---
 task_id: TASK-MAO-0013
-title: "ATM core scope classifier"
+title: "runner sync steward classifier and stale gate"
 status: planned
 owner: atm-core
 priority: P0
@@ -46,11 +46,11 @@ outOfScope:
   - "Changing non-core route behavior"
 ---
 
-# TASK-MAO-0013 - ATM core scope classifier
+# TASK-MAO-0013 - runner sync steward classifier and stale gate
 
 ## Goal
 
-Classify ATM core routes deterministically and close the current stale-runner detection gap.
+Classify ATM core routes deterministically, close the current stale-runner detection gap, and provide the enforcement surface for `Runner Sync Steward v1`.
 
 ## Implementation Contract
 
@@ -58,6 +58,7 @@ Classify ATM core routes deterministically and close the current stale-runner de
 - Include current runner-affecting roots: `packages/core/src`, `packages/cli/src`, `packages/plugin-governance-local/src`, relevant adapters, schemas, root launchers, package build config, release outputs, and declared `scripts/AtmCore` paths.
 - Update stale-runner diagnostics so source changes outside `packages/cli/src` and `scripts` are not missed.
 - Return structured diagnostics for undeclared core writes and scope drift without mutating route state.
+- Make it explicit that ordinary source-writing tasks may mark `runner-sync-needed` but must not publish `release/**` themselves.
 
 ## Acceptance Criteria
 
@@ -65,4 +66,4 @@ Classify ATM core routes deterministically and close the current stale-runner de
 - `ATM_RUNNER_SYNC_REQUIRED` coverage includes `packages/core/src` and `packages/plugin-governance-local/src`.
 - Undeclared core writes can be rejected by later Broker steps with stable error codes.
 - Existing `next` runner mode diagnostics remain intact.
-
+- The classifier is sufficient to support a single-writer steward lane before any ref-stream implementation exists.

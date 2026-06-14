@@ -3,7 +3,7 @@ task_id: TASK-MAO-0019
 title: "cross-repo dual binding closure"
 status: planned
 owner: atm-core
-priority: P1
+priority: P2
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -45,7 +45,7 @@ outOfScope:
 
 ## Goal
 
-Formalize closure ordering and evidence for tasks that touch both ATM core and an adopter or planning repository.
+Formalize closure ordering and evidence for tasks that touch both ATM core and an adopter or planning repository once richer runner binding is actually in use.
 
 ## Implementation Contract
 
@@ -54,6 +54,7 @@ Formalize closure ordering and evidence for tasks that touch both ATM core and a
 - Keep framework ledger authority target-local and planning mirror updates in the planning repo.
 - Fail closed when target and planning bindings disagree or one side is missing.
 - Reuse `taskflow close` orchestration instead of adding a second close path.
+- Preserve a lighter v1 path where target delivery and runner sync can still be correlated without full dual-binding schema work.
 
 ## Acceptance Criteria
 
@@ -61,4 +62,4 @@ Formalize closure ordering and evidence for tasks that touch both ATM core and a
 - Mixed task closure records both bindings and their ordering.
 - Missing runner binding blocks mixed closure when ATM core scope was touched.
 - Existing planning profile fallback behavior still passes.
-
+- The task is explicitly downstream of the decision to adopt richer runner binding.

@@ -3,7 +3,7 @@ task_id: TASK-MAO-0017
 title: "runner version stream state machine"
 status: planned
 owner: atm-core
-priority: P0
+priority: P2
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -48,7 +48,7 @@ outOfScope:
 
 ## Goal
 
-Implement the `idle`, `core-editing-active`, and `core-editing-quiescing` runner stream transitions and lease distribution rules.
+Implement the `idle`, `core-editing-active`, and `core-editing-quiescing` runner stream transitions and lease distribution rules only after v1 stewardship proves insufficient.
 
 ## Implementation Contract
 
@@ -57,6 +57,7 @@ Implement the `idle`, `core-editing-active`, and `core-editing-quiescing` runner
 - Treat first core route bootstrap from `built/v<N>` as a special case until the first in-dev publish succeeds.
 - Reject core route close when its leased in-dev SHA is older than current `in-dev/HEAD`.
 - Clear only the moving `in-dev/HEAD` control ref after successful built promotion; preserve immutable version refs for audit.
+- Keep the v1 steward path free of mandatory lease mechanics until this escalation is truly needed.
 
 ## Acceptance Criteria
 
@@ -64,4 +65,4 @@ Implement the `idle`, `core-editing-active`, and `core-editing-quiescing` runner
 - Non-core routes do not get forced to upgrade mid-session.
 - Lease diagnostics name the required refresh command.
 - No distributed consensus or external service is introduced.
-
+- The task is explicitly optional for the first practical rollout.

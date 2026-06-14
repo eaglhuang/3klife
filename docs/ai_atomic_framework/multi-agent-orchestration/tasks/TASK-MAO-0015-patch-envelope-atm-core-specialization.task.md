@@ -3,7 +3,7 @@ task_id: TASK-MAO-0015
 title: "patch envelope ATM core specialization"
 status: planned
 owner: atm-core
-priority: P0
+priority: P2
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -48,7 +48,7 @@ outOfScope:
 
 ## Goal
 
-Extend the existing MAO patch envelope with ATM core runner fields without creating a second envelope format.
+Extend the existing MAO patch envelope with ATM core runner fields without creating a second envelope format. This is part of the deferred full-Broker escalation path, not the v1 steward baseline.
 
 ## Implementation Contract
 
@@ -56,6 +56,7 @@ Extend the existing MAO patch envelope with ATM core runner fields without creat
 - Validate matched scope paths, declared atom IDs, declared CID IDs, baseline commit SHA, and patch digest.
 - Preserve compatibility for non-core envelopes where the new fields are absent.
 - Document and test standard git diff capture for uncommitted worktree changes.
+- Keep the v1 steward lane independent from this task; ordinary source tasks should not need patch-envelope literacy to cooperate with runner publication.
 
 ## Acceptance Criteria
 
@@ -63,4 +64,4 @@ Extend the existing MAO patch envelope with ATM core runner fields without creat
 - ATM core envelopes require valid classification metadata.
 - Invalid core envelopes with missing baseline, missing patch digest, or undeclared core writes fail closed.
 - Tests cover untracked-file capture expectations or explicit rejection.
-
+- The task can remain unimplemented while `TASK-MAO-0011` to `TASK-MAO-0013` still deliver useful governance value.

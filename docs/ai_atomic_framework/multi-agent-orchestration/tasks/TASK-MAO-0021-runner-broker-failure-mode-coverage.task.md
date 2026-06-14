@@ -3,7 +3,7 @@ task_id: TASK-MAO-0021
 title: "runner broker failure-mode coverage"
 status: planned
 owner: atm-core
-priority: P1
+priority: P3
 milestone: M5
 closure_authority: target_repo
 depends_on:
@@ -48,7 +48,7 @@ outOfScope:
 
 ## Goal
 
-Prove the runner Broker handles the failure modes named in the design document with deterministic local fixtures.
+Prove the full runner Broker handles the failure modes named in the design document with deterministic local fixtures, after the project has chosen to absorb full-Broker complexity.
 
 ## Implementation Contract
 
@@ -56,6 +56,7 @@ Prove the runner Broker handles the failure modes named in the design document w
 - Add a validator that fails if a known unsafe case is allowed.
 - Produce a report mapping each failure mode to its detection signal and recovery command.
 - Keep the coverage local and deterministic.
+- Keep v1 focused on steward-lane failure visibility first; this broader matrix is a later hardening pass.
 
 ## Acceptance Criteria
 
@@ -63,4 +64,4 @@ Prove the runner Broker handles the failure modes named in the design document w
 - The validator distinguishes rejected, frozen, steward-required, and human-required outcomes.
 - Non-Broker `release/**` write attempts are detected.
 - The report identifies any remaining unautomated manual recovery boundary.
-
+- The task remains explicitly non-blocking for the initial steward rollout.

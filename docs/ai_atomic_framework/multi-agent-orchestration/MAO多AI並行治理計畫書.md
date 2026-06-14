@@ -55,7 +55,7 @@ Patch Envelope / Steward
 | M2 Admission | Add pre-write intent registration and conflict matrix. | `TASK-MAO-0005`, `TASK-MAO-0006` |
 | M3 Arbitration | Add freeze/resume and patch envelope handoff. | `TASK-MAO-0007`, `TASK-MAO-0008`, `TASK-MAO-0009` |
 | M4 Proof | Add simulator benchmark and migration guidance from AAO/CID lessons. | `TASK-MAO-0010` |
-| M5 ATM Core Runner Broker | Specialize MAO primitives for ATM core derived-artifact production; reproducible build; dual version streams; cryptographic closure binding. See [atm-core-runner-broker-design.md](./atm-core-runner-broker-design.md). | `TASK-MAO-0011` through `TASK-MAO-0022` |
+| M5 ATM Core Runner Broker | Specialize MAO primitives for ATM core derived-artifact production in phased rollout form: `Runner Sync Steward v1` first, full Runner Broker later if needed. See [atm-core-runner-broker-design.md](./atm-core-runner-broker-design.md). | `TASK-MAO-0011` through `TASK-MAO-0022` |
 
 ## 2026-06-14 Captain Review Notes
 
@@ -66,6 +66,7 @@ The M5 runner broker extension is reasonable, but it depends on current ATM runn
 - Patch capture must handle uncommitted agent work; a plain `git diff baseline..HEAD` is not sufficient for normal route WIP.
 - M5 must use additive extensions to MAO-0005, MAO-0006, MAO-0008, and MAO-0009 instead of introducing a second broker, second envelope, or second task lifecycle.
 - `TASK-MAO-0011` is the hard gate for M5. Runner refs, closure binding, mixed-repo closure, and external contributor routing are not valid until reproducible build evidence exists.
+- Recommended rollout is staged: `TASK-MAO-0011` to `TASK-MAO-0013` are the v1 lightweight steward lane; `TASK-MAO-0014+` are justified escalation work, not day-one operator burden.
 
 ## Command Shape
 
@@ -128,9 +129,9 @@ Machine-readable shard: [../../tasks/tasks-mao.json](../../tasks/tasks-mao.json)
 | TASK-MAO-0009 | [TASK-MAO-0009-steward-arbitration-flow.task.md](tasks/TASK-MAO-0009-steward-arbitration-flow.task.md) | Define neutral writer/steward arbitration path. |
 | TASK-MAO-0010 | [TASK-MAO-0010-multi-agent-simulator-benchmark.task.md](tasks/TASK-MAO-0010-multi-agent-simulator-benchmark.task.md) | Add simulator benchmark for multi-agent routing and conflict gates. |
 | TASK-MAO-0011 | [TASK-MAO-0011-reproducible-runner-build-audit.task.md](tasks/TASK-MAO-0011-reproducible-runner-build-audit.task.md) | Audit and repair runner build reproducibility. |
-| TASK-MAO-0012 | [TASK-MAO-0012-runner-build-scope-manifest.task.md](tasks/TASK-MAO-0012-runner-build-scope-manifest.task.md) | Declare runner-affecting build scope and AtmCore convention. |
-| TASK-MAO-0013 | [TASK-MAO-0013-atm-core-scope-classifier.task.md](tasks/TASK-MAO-0013-atm-core-scope-classifier.task.md) | Classify ATM core routes and close stale-runner detection gaps. |
-| TASK-MAO-0014 | [TASK-MAO-0014-runner-ref-publish-primitive.task.md](tasks/TASK-MAO-0014-runner-ref-publish-primitive.task.md) | Add immutable runner refs and moving in-dev HEAD primitive. |
+| TASK-MAO-0012 | [TASK-MAO-0012-runner-build-scope-manifest.task.md](tasks/TASK-MAO-0012-runner-build-scope-manifest.task.md) | Declare runner sync scope and steward-only generated-artifact contract. |
+| TASK-MAO-0013 | [TASK-MAO-0013-atm-core-scope-classifier.task.md](tasks/TASK-MAO-0013-atm-core-scope-classifier.task.md) | Classify ATM core routes, widen stale-runner detection, and support the steward lane. |
+| TASK-MAO-0014 | [TASK-MAO-0014-runner-ref-publish-primitive.task.md](tasks/TASK-MAO-0014-runner-ref-publish-primitive.task.md) | Add immutable runner refs and moving in-dev HEAD primitive when the lighter steward path is no longer enough. |
 | TASK-MAO-0015 | [TASK-MAO-0015-patch-envelope-atm-core-specialization.task.md](tasks/TASK-MAO-0015-patch-envelope-atm-core-specialization.task.md) | Add ATM core fields to the existing patch envelope. |
 | TASK-MAO-0016 | [TASK-MAO-0016-runner-submit-patch-pipeline.task.md](tasks/TASK-MAO-0016-runner-submit-patch-pipeline.task.md) | Submit core patches through Broker, build, verify, and publish in-dev. |
 | TASK-MAO-0017 | [TASK-MAO-0017-runner-version-stream-state-machine.task.md](tasks/TASK-MAO-0017-runner-version-stream-state-machine.task.md) | Implement built/in-dev stream state and runner leases. |
