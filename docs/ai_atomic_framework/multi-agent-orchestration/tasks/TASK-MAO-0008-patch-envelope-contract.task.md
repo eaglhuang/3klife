@@ -50,6 +50,7 @@ Represent agent WIP as a structured logical transaction instead of relying on di
 ## Implementation Contract
 
 - Define a schema for patch envelopes with route, task, actor, base commit, declared touched files, atom CIDs, diff payload reference, validator evidence, and conflict metadata.
+- Allow additive specialization fields for derived artifacts such as `targetArtifact` and classification metadata, while keeping one base patch envelope schema.
 - Add pure helpers to validate, summarize, and compare envelopes.
 - Include support for partial WIP envelopes that are not yet eligible for apply.
 - Do not apply patches in this card.
@@ -60,4 +61,4 @@ Represent agent WIP as a structured logical transaction instead of relying on di
 - Invalid missing route/task/base fields fail.
 - Helper tests prove summary and comparison behavior.
 - Envelope contract can be consumed by steward arbitration.
-
+- The schema does not force M5 to create a second ATM-core-only envelope format.

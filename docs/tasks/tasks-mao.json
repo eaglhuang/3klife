@@ -2,11 +2,11 @@
   "shard": "MAO",
   "generated": "2026-06-11",
   "summary": {
-    "planned": 10,
+    "planned": 22,
     "in_progress": 0,
     "done": 0,
     "blocked": 0,
-    "total": 10
+    "total": 22
   },
   "tasks": [
     {
@@ -211,7 +211,264 @@
         "npm run typecheck",
         "node --strip-types scripts/validate-mao-parallel-routing.ts"
       ]
+    },
+    {
+      "id": "TASK-MAO-0011",
+      "title": "reproducible runner build audit",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "validation",
+      "phase": "M5",
+      "depends": [],
+      "deliverables": [
+        "scripts/validate-runner-reproducibility.ts",
+        "docs/reports/runner-reproducibility-audit.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-runner-reproducibility.ts --mode validate",
+        "npm run validate:root-drop-release",
+        "npm run validate:onefile-release"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0012",
+      "title": "runner build scope manifest",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0011"
+      ],
+      "deliverables": [
+        "scripts/AtmCore/runner-build-scope.json",
+        "scripts/validate-runner-build-scope.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-runner-build-scope.ts --mode validate",
+        "npm run validate:script-parity"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0013",
+      "title": "ATM core scope classifier",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0005",
+        "TASK-MAO-0012"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/atm-core-scope.ts",
+        "packages/core/src/broker/__tests__/atm-core-scope.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types packages/core/src/broker/__tests__/atm-core-scope.test.ts",
+        "npm run validate:runner-entrypoints"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0014",
+      "title": "runner ref publish primitive",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0011",
+        "TASK-MAO-0012"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/runner-ref-store.ts",
+        "scripts/validate-runner-refs.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-runner-refs.ts --mode validate",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0015",
+      "title": "patch envelope ATM core specialization",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0008",
+        "TASK-MAO-0013"
+      ],
+      "deliverables": [
+        "schemas/patch-envelope.schema.json",
+        "packages/core/src/broker/patch-envelope.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:schemas",
+        "node --strip-types packages/core/src/broker/__tests__/patch-envelope.test.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0016",
+      "title": "runner submit-patch pipeline",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0008",
+        "TASK-MAO-0014",
+        "TASK-MAO-0015"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/runner-submit-pipeline.ts",
+        "scripts/validate-runner-submit-pipeline.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-runner-submit-pipeline.ts --mode validate",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0017",
+      "title": "runner version stream state machine",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0014",
+        "TASK-MAO-0016"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/runner-version-state.ts",
+        "tests/cli/runner-version-lease.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types tests/cli/runner-version-lease.test.ts",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0018",
+      "title": "closure packet runner binding",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0017"
+      ],
+      "deliverables": [
+        "schemas/governance/closure-packet.schema.json",
+        "tests/cli/closure-runner-binding.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:schemas",
+        "node --strip-types tests/cli/closure-runner-binding.test.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0019",
+      "title": "cross-repo dual binding closure",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0018"
+      ],
+      "deliverables": [
+        "tests/cli/cross-repo-dual-binding-close.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types tests/cli/cross-repo-dual-binding-close.test.ts",
+        "npm run validate:task-ledger-governance"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0020",
+      "title": "broker bootstrap self-update recovery",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0017"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/runner-bootstrap.ts",
+        "docs/reports/runner-broker-recovery.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types packages/core/src/broker/__tests__/runner-bootstrap.test.ts",
+        "npm run validate:broker-recovery"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0021",
+      "title": "runner broker failure-mode coverage",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "validation",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0017",
+        "TASK-MAO-0020"
+      ],
+      "deliverables": [
+        "scripts/validate-runner-broker-failures.ts",
+        "docs/reports/runner-broker-failure-coverage.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-runner-broker-failures.ts --mode validate",
+        "npm run validate:standard"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0022",
+      "title": "external core contributor pipeline",
+      "owner": "atm-core",
+      "priority": "P2",
+      "status": "planned",
+      "type": "planning",
+      "phase": "M5",
+      "depends": [
+        "TASK-MAO-0017",
+        "TASK-MAO-0018"
+      ],
+      "deliverables": [
+        "docs/CONTRIBUTING_CORE.md",
+        "scripts/validate-external-core-pipeline.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-external-core-pipeline.ts --mode validate",
+        "npm run validate:neutrality"
+      ]
     }
   ]
 }
-

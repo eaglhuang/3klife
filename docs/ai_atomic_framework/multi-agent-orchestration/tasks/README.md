@@ -28,6 +28,18 @@ Related plan: [MAO plan](../MAO多AI並行治理計畫書.md)
 | TASK-MAO-0008 | patch envelope contract | M3 | planned | `TASK-MAO-0007` | `schemas/patch-envelope.schema.json`; `packages/core/src/broker/patch-envelope.ts` | [card](./TASK-MAO-0008-patch-envelope-contract.task.md) |
 | TASK-MAO-0009 | steward arbitration flow | M3 | planned | `TASK-MAO-0006`, `TASK-MAO-0008` | `packages/core/src/broker/steward.ts`; `packages/cli/src/commands/route.ts` | [card](./TASK-MAO-0009-steward-arbitration-flow.task.md) |
 | TASK-MAO-0010 | multi-agent simulator benchmark | M4 | planned | `TASK-MAO-0003`, `TASK-MAO-0006`, `TASK-MAO-0009` | `scripts/validate-mao-parallel-routing.ts`; `scripts/fixtures/mao-parallel-routing/` | [card](./TASK-MAO-0010-multi-agent-simulator-benchmark.task.md) |
+| TASK-MAO-0011 | reproducible runner build audit | M5 | planned | none | `scripts/validate-runner-reproducibility.ts`; `docs/reports/runner-reproducibility-audit.md` | [card](./TASK-MAO-0011-reproducible-runner-build-audit.task.md) |
+| TASK-MAO-0012 | runner build scope manifest | M5 | planned | `TASK-MAO-0011` | `scripts/AtmCore/runner-build-scope.json`; `scripts/validate-runner-build-scope.ts` | [card](./TASK-MAO-0012-runner-build-scope-manifest.task.md) |
+| TASK-MAO-0013 | ATM core scope classifier | M5 | planned | `TASK-MAO-0005`, `TASK-MAO-0012` | `packages/core/src/broker/atm-core-scope.ts`; `packages/core/src/broker/__tests__/atm-core-scope.test.ts` | [card](./TASK-MAO-0013-atm-core-scope-classifier.task.md) |
+| TASK-MAO-0014 | runner ref publish primitive | M5 | planned | `TASK-MAO-0011`, `TASK-MAO-0012` | `packages/core/src/broker/runner-ref-store.ts`; `scripts/validate-runner-refs.ts` | [card](./TASK-MAO-0014-runner-ref-publish-primitive.task.md) |
+| TASK-MAO-0015 | patch envelope ATM core specialization | M5 | planned | `TASK-MAO-0008`, `TASK-MAO-0013` | `schemas/patch-envelope.schema.json`; `packages/core/src/broker/patch-envelope.ts` | [card](./TASK-MAO-0015-patch-envelope-atm-core-specialization.task.md) |
+| TASK-MAO-0016 | runner submit-patch pipeline | M5 | planned | `TASK-MAO-0008`, `TASK-MAO-0014`, `TASK-MAO-0015` | `packages/core/src/broker/runner-submit-pipeline.ts`; `scripts/validate-runner-submit-pipeline.ts` | [card](./TASK-MAO-0016-runner-submit-patch-pipeline.task.md) |
+| TASK-MAO-0017 | runner version stream state machine | M5 | planned | `TASK-MAO-0014`, `TASK-MAO-0016` | `packages/core/src/broker/runner-version-state.ts`; `tests/cli/runner-version-lease.test.ts` | [card](./TASK-MAO-0017-runner-version-stream-state-machine.task.md) |
+| TASK-MAO-0018 | closure packet runner binding | M5 | planned | `TASK-MAO-0017` | `schemas/governance/closure-packet.schema.json`; `tests/cli/closure-runner-binding.test.ts` | [card](./TASK-MAO-0018-closure-runner-binding.task.md) |
+| TASK-MAO-0019 | cross-repo dual binding closure | M5 | planned | `TASK-MAO-0018` | `tests/cli/cross-repo-dual-binding-close.test.ts`; `packages/cli/src/commands/taskflow/close-orchestration.ts` | [card](./TASK-MAO-0019-cross-repo-dual-binding-closure.task.md) |
+| TASK-MAO-0020 | broker bootstrap self-update recovery | M5 | planned | `TASK-MAO-0017` | `packages/core/src/broker/runner-bootstrap.ts`; `docs/reports/runner-broker-recovery.md` | [card](./TASK-MAO-0020-broker-bootstrap-self-update-recovery.task.md) |
+| TASK-MAO-0021 | runner broker failure-mode coverage | M5 | planned | `TASK-MAO-0017`, `TASK-MAO-0020` | `scripts/validate-runner-broker-failures.ts`; `docs/reports/runner-broker-failure-coverage.md` | [card](./TASK-MAO-0021-runner-broker-failure-mode-coverage.task.md) |
+| TASK-MAO-0022 | external core contributor pipeline | M5 | planned | `TASK-MAO-0017`, `TASK-MAO-0018` | `docs/CONTRIBUTING_CORE.md`; `scripts/validate-external-core-pipeline.ts` | [card](./TASK-MAO-0022-external-core-contributor-pipeline.task.md) |
 
 ## Notes
 
@@ -35,3 +47,4 @@ Related plan: [MAO plan](../MAO多AI並行治理計畫書.md)
 - `TASK-MAO-0002` through `TASK-MAO-0004` create the route context and CLI control surface.
 - `TASK-MAO-0005` through `TASK-MAO-0009` add logical admission and arbitration.
 - `TASK-MAO-0010` proves the route model with deterministic multi-agent scenarios.
+- `TASK-MAO-0011` through `TASK-MAO-0022` extend MAO to ATM core runner derived-artifact governance. `TASK-MAO-0011` is the M5 gate because runner refs and closure binding depend on reproducible build evidence.

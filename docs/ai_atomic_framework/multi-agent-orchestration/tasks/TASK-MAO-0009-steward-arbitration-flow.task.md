@@ -53,6 +53,7 @@ Add a neutral steward path for applying or rejecting conflicting patch envelopes
 - Route conflicts can request `steward-required`.
 - Steward input is one or more patch envelopes plus current route conflict evidence.
 - Steward can produce `apply`, `merge-required`, `blocked`, or `human-required`.
+- Steward identity and permission checks must allow a specialized derived-artifact writer, such as the ATM core Runner Broker, without weakening the generic steward path.
 - Applying through steward must record route/task/evidence links.
 - Ambiguous or unsafe patch combinations fail closed.
 
@@ -61,5 +62,5 @@ Add a neutral steward path for applying or rejecting conflicting patch envelopes
 - Tests prove steward applies non-conflicting envelopes and blocks same-atom unsafe envelopes.
 - CLI output identifies which route/task owns the steward decision.
 - No broad `git add .` or hidden worktree sweep is introduced.
+- Derived-artifact single-writer behavior can be layered on top of steward decisions by M5.
 - Human-required verdict is available for unresolved ambiguity.
-

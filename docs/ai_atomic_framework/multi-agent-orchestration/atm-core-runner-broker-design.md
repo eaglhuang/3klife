@@ -4,12 +4,34 @@ A specialization of MAO for ATM core derived-artifact production under multi-age
 
 ## 0. Status
 
-- **Status**: design draft, awaiting implementation task cards
+- **Status**: design reviewed against current ATM runner implementation; implementation task cards opened as `TASK-MAO-0011` through `TASK-MAO-0022`
 - **Series**: MAO (Multi-Agent Orchestration) — extension chapter
 - **Parent document**: [MAO 多 AI 並行治理計畫書.md](./MAO多AI並行治理計畫書.md)
 - **Reference skill**: `.agents/skills/atm-atom-map-refactor`
 - **Planning repo**: 3KLife
 - **Target repo**: AI-Atomic-Framework
+
+## 0.1 Current implementation reality check (2026-06-14)
+
+The design direction is sound for ATM core development, but the current runner implementation is not yet able to satisfy this design without prerequisite work.
+
+Current target repo facts:
+
+- `node atm.mjs` is a stable launcher. It prefers `release/atm-onefile/atm.mjs`, then falls back to `packages/cli/dist/atm.js`.
+- `node atm.dev.mjs` is the source-first development runner and must not be used to hide stale frozen artifacts.
+- `npm run build` currently runs `tsc`, package dist build, root-drop release build, and onefile release build.
+- The current stale-runner warning in root `atm.mjs` is mtime-based and only watches `packages/cli/src` and `scripts`, so changes under `packages/core/src`, `packages/plugin-governance-local/src`, schemas, and other runner-affecting surfaces can escape that heuristic.
+- Current release manifests and onefile payload generation include wall-clock `generatedAt` values, and file traversal must be proven stable. Therefore current `npm run build` is not yet a reproducible byte-identical build in the sense required by `INV-RUNNER-002`.
+- Current closure packets can include runner release deliverables and runner version evidence in existing validators, but they do not yet include a formal `atmCoreRunnerBinding` with source commit, artifact digest, publisher, and reproducibility proof.
+
+Corrections applied to this plan:
+
+1. `TASK-MAO-0011` must land before any ref-publish or closure-binding work. It audits and removes build nondeterminism instead of assuming double-build already works.
+2. ATM core classification must include the real current runner-affecting surfaces, not only the future `scripts/AtmCore/` convention.
+3. Patch capture must handle uncommitted worktree changes; `git diff baseline..HEAD` is insufficient for normal agent WIP.
+4. Version refs may be immutable for published versions, but moving pointers such as `in-dev/HEAD` are mutable control refs and must be treated separately.
+5. Runner artifact binding should be a canonical sha256 over a generated artifact manifest and critical artifact bytes, not an ambiguous tree hash.
+6. M5 cannot be claimed as governed work until cards `TASK-MAO-0011` through `TASK-MAO-0022` exist in the MAO shard and task index.
 
 ## 1. Why this exists
 
@@ -41,6 +63,16 @@ This design **reuses** every MAO primitive. It does not introduce parallel mecha
 4. Task closure packets include a cryptographic binding to the runner version that was used to validate them (§9).
 5. Reproducible-build verification is a Broker-enforced gate (§10).
 
+### 2.1 Compatibility boundary with existing MAO cards
+
+M5 depends on M0-M4 but must not force a rewrite of them. The M0-M4 cards stay generic MAO work; M5 adds specialization through extensions:
+
+- MAO-0005 must allow extensible scope labels such as `atm-core`.
+- MAO-0006 must treat generated-artifact drift as a first-class conflict signal.
+- MAO-0008 must allow additive specialization fields without creating a second patch envelope schema.
+- MAO-0009 must allow a steward identity that is also the single writer for a derived artifact class.
+- MAO-0010 must include runner-derived-artifact scenarios in the simulator once M5 fixtures exist.
+
 ## 3. Core principle
 
 > The runner is a CID-managed derived artifact. It has exactly one writer (the Broker). All consumers pull versioned refs. The version they consume is recorded in their closure packet.
@@ -60,8 +92,14 @@ atmCoreScope:
   - packages/core/**
   - packages/cli/**
   - packages/plugin-governance-local/**
+  - packages/adapter-local-git/**  # included when CLI behavior depends on adapter runtime behavior
+  - schemas/**
   - release/**                 # Broker-only; AI write here is rejected
   - .atm/charter/**            # Charter is treated as ATM core; humans approve waivers
+  - atm.mjs
+  - atm.dev.mjs
+  - package.json
+  - tsconfig.build.json
   - scripts/AtmCore/**         # Canonical directory for any script that affects runner build
 ```
 
@@ -69,7 +107,16 @@ atmCoreScope:
 
 Today's framework repository has build- and runner-affecting scripts scattered under `scripts/` (e.g. `build-onefile-release.ts`, `build-root-drop-release.ts`, `build-package-dist.ts`, `validate-cli.ts`). Their effect on the runner is implicit, which forces the Broker to maintain a conservative override list.
 
-**Rule going forward**: any script whose edit can affect the produced runner bundle must live under `scripts/AtmCore/`. A separate migration card moves the existing build/validation scripts under this directory and updates references. After migration, the Broker classifier rule becomes simply "is this path under `scripts/AtmCore/`?" — no override list needed.
+**Rule going forward**: any new script whose edit can affect the produced runner bundle must live under `scripts/AtmCore/` or be listed in the runner-build scope manifest introduced by `TASK-MAO-0012`. Existing build/validation scripts are not moved in one broad sweep until reproducibility is proven, because `package.json`, root-drop payload generation, and onefile embedding currently depend on their paths.
+
+`TASK-MAO-0012` therefore creates the compatibility bridge:
+
+- introduce a machine-readable runner-build scope manifest;
+- classify current build-affecting scripts through that manifest;
+- add a thin `scripts/AtmCore/` entrypoint or wrapper only where it reduces ambiguity;
+- migrate existing scripts incrementally after tests prove release parity.
+
+After migration, the Broker classifier rule can become "is this path under `scripts/AtmCore/` or the manifest?" instead of maintaining a hidden override list.
 
 Non-core scripts (one-off utilities, planning helpers, schema generators that do not feed the runner build) remain at `scripts/` top level and never trigger core route classification.
 
@@ -106,7 +153,13 @@ The base envelope handles arbitrary source patches (existing MAO behavior). The 
 
 ### 5.1 Patch format: standard `git diff`
 
-Decision ④ a. AIs run `git diff baselineCommitSha..HEAD` against their worktree and submit the resulting patch. The Broker applies via `git apply --3way`. The same mechanism applies to general MAO patches and to ATM core patches — operators learn one workflow.
+Decision ④ a. AIs submit standard git diff format. For normal uncommitted agent WIP, `git diff baselineCommitSha..HEAD` is not sufficient because it ignores uncommitted worktree changes. The route command must provide or document a capture command equivalent to:
+
+```bash
+git diff --binary <baselineCommitSha> --
+```
+
+If untracked files are part of the route, the route command must either stage them with intent-to-add before diff capture or include an explicit untracked-file payload in the envelope. The Broker still applies via `git apply --3way`. The same mechanism applies to general MAO patches and to ATM core patches — operators learn one workflow.
 
 Rationale: standard git-diff format is universal, tooling is complete, no custom parser needed, and the patch artifact is human-reviewable.
 
@@ -115,9 +168,9 @@ Rationale: standard git-diff format is universal, tooling is complete, no custom
 Two version streams exist concurrently. Both live under detached git refs in the target repository.
 
 ```
-refs/atm-runner/built/v<N>             # canonical stable versions, monotonic N
-refs/atm-runner/in-dev/v<N+1>-dev.<k>  # work-in-progress versions atop the last built
-refs/atm-runner/in-dev/HEAD            # symbolic ref pointing at the latest in-dev
+refs/atm-runner/built/v<N>             # canonical stable versions, monotonic N, immutable
+refs/atm-runner/in-dev/v<N+1>-dev.<k>  # work-in-progress versions atop the last built, immutable
+refs/atm-runner/in-dev/HEAD            # moving control ref pointing at the latest in-dev
 ```
 
 ### 6.1 States
@@ -148,7 +201,7 @@ refs/atm-runner/in-dev/HEAD            # symbolic ref pointing at the latest in-
   ├─ double-build verification (§10)
   ├─ if pass → publish refs/atm-runner/built/v<N+1>
   ├─ if fail → emit ATM_RUNNER_BUILD_NOT_REPRODUCIBLE; route to steward
-  └─ in-dev stream is retained for audit (immutable refs); HEAD pointer cleared
+  └─ in-dev stream is retained for audit (immutable version refs); moving HEAD pointer cleared
 
       │
       │ publish successful
@@ -160,7 +213,7 @@ refs/atm-runner/in-dev/HEAD            # symbolic ref pointing at the latest in-
 
 ### 6.2 Distribution rules
 
-- **AI editing ATM core** (route declared `--scope atm-core`): pulls `refs/atm-runner/in-dev/HEAD`. **Hard gate at close**: leased version SHA must equal current `in-dev/HEAD` SHA. If a newer in-dev published while the AI was working, the close is rejected and the AI must refresh their lease and re-validate.
+- **AI editing ATM core** (route declared `--scope atm-core`): pulls `refs/atm-runner/in-dev/HEAD` when it exists; the first core route starts from the latest `built/v<N>` and receives an in-dev lease after its first Broker publish. **Hard gate at close**: leased version SHA must equal current `in-dev/HEAD` SHA for core-editing routes. If a newer in-dev published while the AI was working, the close is rejected and the AI must refresh their lease and re-validate.
 - **AI not editing ATM core**: pulls `refs/atm-runner/built/v<latest>`. Lease holds this ref for the session duration; no upgrade pressure mid-session.
 - **External consumer / CI**: pulls `refs/atm-runner/built/v<latest>` exclusively.
 
@@ -188,7 +241,8 @@ AI workflow for an ATM core edit:
    they will run post-merge against the new in-dev version.
 
 4. Generate patch:
-     git diff <baselineCommitSha>..HEAD > .atm/routes/<routeId>/patch.diff
+     git diff --binary <baselineCommitSha> -- > .atm/routes/<routeId>/patch.diff
+   If new files are included, capture must include them via route tooling or `git add -N` before diff generation.
 
 5. Submit:
      node atm.mjs route submit-patch --route <routeId> --patch .atm/routes/<routeId>/patch.diff --json
@@ -257,7 +311,7 @@ A single task card may declare scope in both repositories. The closure packet re
     "version": "built/v1.4.5",                      // or "in-dev/v1.4.6-dev.7"
     "stream": "built",                              // or "in-dev"
     "sourceCommitSha": "abc123def456...",
-    "runnerArtifactSha256": "sha256:9e6c8...d4f12", // hash of refs/atm-runner/built/v1.4.5 tree
+    "runnerArtifactSha256": "sha256:9e6c8...d4f12", // canonical hash over runner artifact manifest + critical artifact bytes
     "publishedAt": "2026-06-14T...",
     "publishedBy": "atm-core-runner-broker",
     "reproducibilityVerified": true,
@@ -272,7 +326,7 @@ A single task card may declare scope in both repositories. The closure packet re
 }
 ```
 
-The `runnerArtifactSha256` is the cryptographic anchor the user requested. Anyone auditing this closure packet later can verify "this task was validated against exactly this runner artifact" by fetching `refs/atm-runner/built/v1.4.5` and computing its tree-sha256.
+The `runnerArtifactSha256` is the cryptographic anchor the user requested. Anyone auditing this closure packet later can verify "this task was validated against exactly this runner artifact" by fetching `refs/atm-runner/built/v1.4.5`, reading the runner artifact manifest, and recomputing the canonical sha256 over the listed critical artifacts. Do not call this a Git tree hash unless the repository has explicitly standardized on Git SHA-256 object format.
 
 ### 9.2 Submit ordering for mixed tasks
 
@@ -291,7 +345,7 @@ INV-RUNNER-002 requires that the same source SHA produces a byte-identical runne
 ```
 1. Broker applies patch, commits source.
 2. Broker runs `npm run build` in workspace A → produces artifact_A
-3. Broker runs `npm run build` in workspace B (clean clone) → produces artifact_B
+3. Broker runs `npm run build` in workspace B (clean clone at the same source SHA, same lockfile, same Node major) → produces artifact_B
 4. Byte-compare critical artifacts:
    - release/atm-onefile/atm.mjs
    - release/atm-onefile/release-manifest.json
@@ -301,6 +355,8 @@ INV-RUNNER-002 requires that the same source SHA produces a byte-identical runne
 ```
 
 This is the gate that makes version pinning meaningful. Without it, two readers of the same ref could observe different bytes, breaking the cryptographic binding in §9.
+
+Current blocker: the present build scripts write wall-clock `generatedAt` fields into release manifests and the onefile payload. `TASK-MAO-0011` must normalize those fields or move volatile provenance outside the byte-compared artifact set before this gate can pass.
 
 ### 10.1 Reproducible-build prerequisites (pre-work card)
 
@@ -408,7 +464,7 @@ To keep this design small, the following remain exactly as MAO and ATM already s
 
 ## 15. Implementation roadmap
 
-Proposed task cards (to be opened as MAO series extensions, not new RFT cards). Numbering picks up after the existing MAO-0010.
+Task cards are opened as MAO series extensions, not new RFT cards. Numbering picks up after the existing MAO-0010.
 
 | Task ID | Purpose | Depends on |
 |---|---|---|
@@ -431,12 +487,12 @@ Proposed task cards (to be opened as MAO series extensions, not new RFT cards). 
 
 Items still ambiguous; should be resolved before or during implementation:
 
-1. **Patch envelope storage location**: under `.atm/routes/<routeId>/patch.diff` (per MAO command shape) or under a Broker-managed `.atm/runtime/broker/submissions/` namespace? Affects access control.
-2. **In-dev ref retention**: keep all `in-dev/v<N>-dev.<k>` forever, or GC after promotion to `built/v<N+1>`? Recommend keep at least one full cycle for audit; full GC policy needs cost analysis.
-3. **Steward role for ATM core vs general MAO**: same human/agent or different? Suggest same actor with a sub-permission flag, to avoid bootstrap complexity.
-4. **Broker identity provisioning**: who issues the `atm-core-runner-broker` actor credential initially? Manual seed by framework maintainer is fine for v1.
-5. **Adopter SDK consumption pattern**: external projects depending on ATM as a library — do they pin `built/v<N>` directly in their lockfile, or follow latest via a release channel? Suggest both, with explicit channel names.
-6. **Build artifact storage size projection**: at expected commit cadence, project storage growth and validate git ref space stays manageable for the project lifetime. May require migrating refs to a separate object store eventually.
+1. **Patch envelope storage location**: under `.atm/routes/<routeId>/patch.diff` (per MAO command shape) or under a Broker-managed `.atm/runtime/broker/submissions/` namespace? Affects access control. Covered by `TASK-MAO-0015` and `TASK-MAO-0016`.
+2. **In-dev ref retention**: keep all `in-dev/v<N>-dev.<k>` forever, or GC after promotion to `built/v<N+1>`? Recommend keep at least one full cycle for audit; full GC policy needs cost analysis. Covered by `TASK-MAO-0017` and `TASK-MAO-0021`.
+3. **Steward role for ATM core vs general MAO**: same human/agent or different? Suggest same actor with a sub-permission flag, to avoid bootstrap complexity. Covered by `TASK-MAO-0009` compatibility notes and `TASK-MAO-0020`.
+4. **Broker identity provisioning**: who issues the `atm-core-runner-broker` actor credential initially? Manual seed by framework maintainer is fine for v1. Covered by `TASK-MAO-0020`.
+5. **Adopter SDK consumption pattern**: external projects depending on ATM as a library — do they pin `built/v<N>` directly in their lockfile, or follow latest via a release channel? Suggest both, with explicit channel names. Covered by `TASK-MAO-0018`, `TASK-MAO-0019`, and `TASK-MAO-0022`.
+6. **Build artifact storage size projection**: at expected commit cadence, project storage growth and validate git ref space stays manageable for the project lifetime. May require migrating refs to a separate object store eventually. Covered by `TASK-MAO-0014` and `TASK-MAO-0021`.
 
 ## 17. Cross-references
 

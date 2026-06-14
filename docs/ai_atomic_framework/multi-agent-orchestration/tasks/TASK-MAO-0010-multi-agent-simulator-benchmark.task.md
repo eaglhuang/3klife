@@ -51,6 +51,7 @@ Prove MAO v1 behavior with deterministic multi-agent scenarios before relying on
 ## Implementation Contract
 
 - Add fixtures for same-file different atom, same atom write/write, write/read overlap, unknown scope, generated artifact drift, freeze/resume, steward apply, and blocked cases.
+- Include at least one generated-artifact fixture that can later be extended by M5 runner Broker tests.
 - Add a validator script that runs all scenarios and emits a concise report.
 - Add a human-readable benchmark report summarizing pass/fail and remaining risks.
 - Include lessons learned from the CID/AGR parallel development incident.
@@ -60,5 +61,5 @@ Prove MAO v1 behavior with deterministic multi-agent scenarios before relying on
 - At least ten scenarios are covered.
 - The simulator fails hard when a known unsafe case is allowed.
 - The report identifies which MAO task introduced each capability.
+- The report names which scenarios are generic MAO coverage and which are expected to be extended by M5 runner Broker cards.
 - The benchmark can run without network access or external services.
-

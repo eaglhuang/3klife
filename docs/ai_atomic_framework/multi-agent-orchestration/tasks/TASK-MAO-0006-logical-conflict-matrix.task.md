@@ -49,6 +49,7 @@ Evaluate route intent records before writing and return deterministic admission 
 ## Implementation Contract
 
 - Implement conflict verdicts for different files, same file different atom, same atom write/write, write/read overlap, unknown scope, generated artifact drift, and Layer 2 split candidate.
+- Keep generated artifact drift generic enough that M5 can specialize `release/**` as Broker-only runner output without adding a second conflict matrix.
 - Return structured diagnostics with `conflictKind`, `blockedBy`, `requiredCommand`, and `evidence`.
 - Default unknown write scope to conservative block.
 - Preserve logical atom conflict as more important than physical file non-overlap when atom data is confident.
@@ -58,5 +59,5 @@ Evaluate route intent records before writing and return deterministic admission 
 - Tests cover at least ten conflict scenarios.
 - Same-file non-overlap with different atom CIDs can pass with range guard.
 - Same-atom write/write returns freeze/steward-required.
+- Generated artifact drift returns a structured conflict that can name the derived artifact owner.
 - Unknown read/write set does not silently pass.
-

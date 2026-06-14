@@ -50,6 +50,7 @@ Add a broker-level registry for route intent before source mutation.
 ## Implementation Contract
 
 - Define intent records for actor, task, route, claim intent, declared read set, declared write set, atom CIDs, virtual atom CIDs, outputs, lease, and confidence.
+- Support extensible scope labels such as `atm-core` without hard-coding the runner Broker into the generic registry.
 - Provide pure functions to register, renew, release, and query intents.
 - Unknown read/write sets must be represented explicitly, not as empty arrays.
 - The registry must be deterministic and testable without filesystem mutation.
@@ -57,6 +58,6 @@ Add a broker-level registry for route intent before source mutation.
 ## Acceptance Criteria
 
 - Tests prove register, renew, release, duplicate route handling, and unknown-scope representation.
+- Tests prove unknown future scope labels are preserved for downstream classifiers instead of being dropped.
 - Registry APIs do not directly edit task ledger or worktree state.
 - Intent records can be consumed by `TASK-MAO-0006`.
-
