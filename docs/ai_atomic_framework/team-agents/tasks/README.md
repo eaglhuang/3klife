@@ -14,6 +14,7 @@ last_updated: 2026-06-14
 
 Related plan: [../團隊自動化代理分工計畫.md](../團隊自動化代理分工計畫.md)
 Templates: [../templates/README.md](../templates/README.md)
+Immediate-use SOP: [../TEAM_AGENTS_CAPTAIN_LED_SOP.md](../TEAM_AGENTS_CAPTAIN_LED_SOP.md)
 
 ## Task Card Contract
 

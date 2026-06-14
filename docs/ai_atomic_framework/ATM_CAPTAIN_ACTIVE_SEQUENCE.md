@@ -8,6 +8,8 @@ Status: active
 
 The Team Agents lane remains the product priority. RFT is interleaved only as a risk-reduction lane and must not eclipse Team Agents.
 
+Immediate-use ruling: Team Agents is now usable in Captain-led semi-automated mode. Use `team-agents/TEAM_AGENTS_CAPTAIN_LED_SOP.md` for real dispatch until full `team start` / runtime orchestration is implemented.
+
 Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framework ATM ledger:
 
 - Closed at: 2026-06-05T15:38:04.542Z
@@ -28,7 +30,7 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
    - Open anomaly: `TASK-TEAM-0028` says done in Markdown but target ledger closure evidence is missing.
 
 1. `TASK-TEAM-0004` - Team brief/report templates
-   - Status: next active implementation target.
+   - Status: done in target repo.
    - Reason: M2 synchronization point after the minimal crew contract and atomization role.
    - ATM route: ready.
    - Claim command:
@@ -37,7 +39,7 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
      ```
 
 2. `TASK-TEAM-0005` and `TASK-TEAM-0006`
-   - Status: run after `TASK-TEAM-0004`.
+   - Status: done in target repo.
    - Reason: they extend the shared template validator and complete the 90-minute first-card promise artifacts.
    - Coordination: may be prepared in parallel, but merge sequentially because both extend `scripts/validate-team-agents-templates.ts`.
 
@@ -61,10 +63,11 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 ## Dispatch Modes
 
 - Internal sidecar: read-only verification, scope checks, card readiness, condition review, and post-report review.
-- External dispatch: allowed for `TASK-TEAM-0004` and `TASK-RFT-0008` only with strict allowed files and forbidden files.
+- External dispatch: allowed for one explicit task card at a time when Captain has run exact route/import/claim setup and pushed the setup commit.
 - External write remains forbidden outside the explicit task allowed files.
 - No external agent may edit `C:/Users/User/3KLife/**` during target-repo implementation.
 - No agent may manually edit `.atm/runtime/**` or `.atm/history/**`; ATM CLI owns lifecycle state.
+- Normal external workers must not modify `release/**`; if `ATM_RUNNER_SYNC_REQUIRED` appears, they HOLD and Captain/Runner Sync Steward handles build and runner output commit separately.
 
 ## Model Budget Policy
 
@@ -77,12 +80,13 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 
 | Slot | Task | Mode | Action | Gate |
 |---|---|---|---|---|
-| 1 | `TASK-TEAM-0004` | External builder allowed | Implement templates + validator | `next --claim` succeeds and repo dirty tree is scoped |
-| 2 | `TASK-TEAM-0005` | External builder allowed after 0004 | Add decision/memory templates | 0004 closed |
-| 3 | `TASK-TEAM-0006` | External builder allowed after 0004 | Add patrol template | 0004 closed; merge sequentially with 0005 |
-| 4 | `TASK-RFT-0008` | External builder allowed after 0004 base | Add taskflow commit-message Strategy Map + size tripwire | 0004 closed or Captain explicitly opens RFT interleave window |
-| 5 | `TASK-RFT-0003` | Captain-reviewed implementation | Simplify framework-development lifecycle surface | Before Team runtime |
-| 6 | `TASK-RFT-0001` | Defer | next.ts extraction | Only when `TASK-TEAM-0015` starts |
+| 1 | `TASK-TEAM-0004` | Done | Implement templates + validator | Closed in target repo |
+| 2 | `TASK-TEAM-0005` | Done | Add decision/memory templates | Closed in target repo |
+| 3 | `TASK-TEAM-0006` | Done | Add patrol template | Closed in target repo; runner sync separated |
+| 4 | `TASK-RFT-0008` | Next recommended | Add taskflow commit-message Strategy Map + size tripwire | Use Captain-led SOP with preflight sidecar |
+| 5 | `TASK-TEAM-0017` | Next Team return point | Formalize template schema / validator contract | After RFT-0008 risk reduction |
+| 6 | `TASK-RFT-0003` | Before Team runtime | Simplify framework-development lifecycle surface | Before Team runtime |
+| 7 | `TASK-RFT-0001` | Defer | next.ts extraction | Only when `TASK-TEAM-0015` starts |
 
 ## Condition Review Checklist
 
@@ -94,5 +98,6 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 - Validators are command-backed and recorded as evidence.
 - `tasks close` succeeds before the delivery commit.
 - If `ATM_RUNNER_SYNC_REQUIRED` appears, run `npm run build` and rerun frozen `node atm.mjs`; do not switch to `atm.dev.mjs` to bypass.
+- If a normal worker sees `ATM_RUNNER_SYNC_REQUIRED`, the worker must HOLD and report. Captain/Runner Sync Steward performs the build and commits `release/**` separately.
 - `TASK-TEAM-0004` Phase 1 must mirror the existing 3KLife template drafts under `C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/templates/`; builders may read them but must not edit 3KLife.
 - `TASK-RFT-0008` external work may begin as preflight immediately, but write/claim should wait until `TASK-TEAM-0004` closes unless Captain explicitly opens the RFT interleave window.
