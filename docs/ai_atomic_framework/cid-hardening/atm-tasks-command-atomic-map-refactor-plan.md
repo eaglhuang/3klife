@@ -414,7 +414,18 @@ captain closeback run exposed one more class of ATM/UX residue:
 - emergency leases burn uses too eagerly when a command fails before any
   protected mutation succeeds;
 - release/root-drop sync still depends on hidden staging knowledge for newly
-  generated ignored artifacts.
+  generated ignored artifacts;
+- `evidence validators --list`, `taskflow close --dry-run`, and the eventual
+  `tasks close` failure surface can disagree about which validators are truly
+  closure-required for the same task, so the operator sees multiple conflicting
+  "required" sets before the close actually succeeds;
+- unrelated integration-adapter drift can fail `doctor` even when the governed
+  close path for a task remains valid, which makes environment-wide editor
+  packaging drift feel like a task-scoped close blocker;
+- `taskflow close --write` can advance the task into a committed source-delivery
+  state and only then reveal that the operator must switch to a second
+  `--historical-delivery <sha>` close pass, so the lane transition is truthful
+  in hindsight but not obvious enough up front.
 
 These are not the same problem. They are a post-closeout cleanup pack around
 operator truthfulness, evidence determinism, and release ergonomics.
