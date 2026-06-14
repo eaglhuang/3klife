@@ -480,6 +480,60 @@ Use this file when:
   - Possible optimization: Add a onefile cache integrity check that clears/recreates the cache when expected extracted files are absent, and include command-module import coverage in onefile release validation.
   - Related tasks / commits: `TASK-TEAM-0010`; `BUG-ATM-0006`.
 
+- [ ] BUG-ATM-0051: Team start/status validator was absent while the task card required it
+  - Status: open
+  - Severity: P1 validator coverage
+  - Encountered: During `TASK-TEAM-0011`, `node --strip-types scripts/validate-team-agents.ts --case start-status` initially failed with "unsupported or missing --case value" even though the task card listed that validator.
+  - Reproduce / detect: Add a task-card validator case but do not wire it into `scripts/validate-team-agents.ts`, then run the exact validator from the task card.
+  - Impact: A task can appear fully specified but remain uncloseable or weakly verified until the missing validator surface is discovered manually.
+  - Possible optimization: Add a task-card validator preflight that checks every `--case <name>` command is supported before claim, or make validator scripts expose a machine-readable case list.
+  - Related tasks / commits: `TASK-TEAM-0011`; source delivery commit `af86ae2c`.
+
+- [ ] BUG-ATM-0052: Team status should define active-run semantics and stable ordering
+  - Status: open
+  - Severity: P2 runtime UX
+  - Encountered: Sidecar review during `TASK-TEAM-0011` found `team status --compact` listed all runtime files without an explicit `status === active` filter and `listTeamRuns()` did not sort files.
+  - Reproduce / detect: Create multiple `.atm/runtime/team-runs/*.json` records with mixed statuses or filesystem order, then run `node atm.mjs team status --compact --json`.
+  - Impact: Status output can become noisy or nondeterministic once paused, closed, or failed team-run states exist.
+  - Possible optimization: Keep default compact status focused on active runs, add an explicit future `--all` flag for historical states, and sort by file name or timestamp.
+  - Related tasks / commits: `TASK-TEAM-0011`; source delivery commit `af86ae2c`.
+
+- [ ] BUG-ATM-0053: Normal close playbook conflicts with dirty-worktree close gate
+  - Status: open
+  - Severity: P0 lifecycle instruction mismatch
+  - Encountered: During `TASK-TEAM-0011`, the normal playbook said to close before committing, but `tasks close --status done` failed with `ATM_TASK_CLOSE_DIRTY_WORKTREE` and required a scoped delivery commit first.
+  - Reproduce / detect: Follow the normal playbook on a source-changing task: implement, add evidence, then close before committing the in-scope deliverables.
+  - Impact: Agents following the official playbook hit a blocker and must infer the real three-phase flow: delivery commit, close governance commit, runner sync commit.
+  - Possible optimization: Update the normal playbook to explicitly branch when the close gate requires a committed delivery parent, and name the runner-sync follow-up separately.
+  - Related tasks / commits: `TASK-TEAM-0011`; `BUG-ATM-0042`.
+
+- [ ] BUG-ATM-0054: Closure commit wrapper requirement appears only after a failed normal git commit
+  - Status: open
+  - Severity: P1 closeback usability
+  - Encountered: During `TASK-TEAM-0011`, staging `.atm/history/**` closure files and running `git commit` was blocked by `ATM_GIT_COMMIT_WRAPPER_REQUIRED`; the correct command was `node atm.mjs git commit --actor ... --task ...`.
+  - Reproduce / detect: Close a task, stage current-task evidence/task-events/task JSON, then run plain `git commit`.
+  - Impact: The failure is correct but late; agents waste a commit attempt and may not know closure commits need the ATM wrapper.
+  - Possible optimization: Have `tasks close` print the exact wrapper commit command, or stage and commit the closure bundle through a first-class `taskflow close --commit` route.
+  - Related tasks / commits: `TASK-TEAM-0011`; closure commit `ab6723ba`; `BUG-ATM-0037`.
+
+- [ ] BUG-ATM-0055: Direction lock claim.files omits current-task evidence and task-events
+  - Status: open
+  - Severity: P2 warning clarity
+  - Encountered: During the `TASK-TEAM-0011` delivery commit, pre-commit warned `ATM_DIRECTION_LOCK_ALLOWED_FILES_MISMATCH` because canonical allowed files included `.atm/history/evidence/TASK-TEAM-0011.*` and `.atm/history/task-events/TASK-TEAM-0011/**`, while `claim.files` omitted them.
+  - Reproduce / detect: Claim a task, generate evidence/task events through ATM commands, then commit a delivery or closure bundle and inspect pre-commit warnings.
+  - Impact: Non-blocking warning reads like scope drift even when ATM-generated governance files are expected.
+  - Possible optimization: Treat current-task evidence/events as implicit claim coverage, or sync `claim.files` with canonical direction lock allowed files when claim is created.
+  - Related tasks / commits: `TASK-TEAM-0011`; `BUG-ATM-0043`.
+
+- [ ] BUG-ATM-0056: `validate:team-agents` default does not cover newly added task-specific cases
+  - Status: open
+  - Severity: P1 validator coverage
+  - Encountered: During `TASK-TEAM-0011`, `npm run validate:team-agents` passed but only executed the default `lieutenant-escalation` case, not the newly added `start-status` case.
+  - Reproduce / detect: Add a new `scripts/validate-team-agents.ts --case <name>` branch, then run `npm run validate:team-agents` and inspect stdout.
+  - Impact: Broad validators can go green while the newest task-specific Team Agents contract is only covered by direct command evidence.
+  - Possible optimization: Make the default Team Agents validator run all supported cases, or require each new case to be registered in a visible case matrix.
+  - Related tasks / commits: `TASK-TEAM-0011`; source delivery commit `af86ae2c`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
