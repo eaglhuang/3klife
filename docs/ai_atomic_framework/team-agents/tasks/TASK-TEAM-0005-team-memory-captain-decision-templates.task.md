@@ -2,7 +2,7 @@
 doc_id: doc_team_0005
 task_id: TASK-TEAM-0005
 title: "Team memory and captain decision templates"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M2
@@ -123,3 +123,11 @@ Revert the template and validator changes.
 ## Notes
 
 This card prepares Team Agents for indexed lesson reuse without introducing a second registry or a new task truth source.
+
+Target repo closure:
+
+- Closed in `AI-Atomic-Framework` by `external-005`.
+- Setup commit: `20215eb0ae4877a432d469c1772cb877b9f08c3c`
+- Implementation commit: `b551993890c79414e6d58df6b1ab877609857514`
+- Closure commit: `98d5cbeea78ce5b17dfcd1efa87c458bf8e1d4ac`
+- Closure packet: `AI-Atomic-Framework/.atm/history/evidence/TASK-TEAM-0005.closure-packet.json`

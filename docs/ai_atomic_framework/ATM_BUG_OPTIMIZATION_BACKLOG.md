@@ -255,6 +255,42 @@ Use this file when:
   - Possible optimization: Add a metadata validator that checks task-id mentions in atom map descriptions against actual script task dispatch branches, or require shared-validator tasks to update atom map descriptions as acceptance criteria.
   - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar.
 
+- [ ] BUG-ATM-0026: Routine source workers can accidentally become runner sync stewards
+  - Status: open
+  - Severity: P0 generated-artifact governance
+  - Encountered: During `TASK-TEAM-0005`, `external-005` ran `node atm.mjs evidence add --help` and hit `ATM_RUNNER_SYNC_REQUIRED`, then ran `npm run build` inside a normal template task.
+  - Reproduce / detect: After changing ATM source files, run frozen runner evidence/help commands from a normal source task and observe whether runner sync is required before evidence can continue.
+  - Impact: This violates the intended lightweight policy where general workers should avoid owning `release/**` and a Runner Sync Steward should handle generated artifacts.
+  - Possible optimization: Add a runner-sync-needed handoff mode for normal tasks, or make help/evidence commands avoid forcing worker-owned release sync when the task is not the steward lane.
+  - Related tasks / commits: `TASK-TEAM-0005`; worker reported build was needed before evidence.
+
+- [ ] BUG-ATM-0027: Template deliverables are ignored by default and require `git add -f`
+  - Status: open
+  - Severity: P1 delivery friction
+  - Encountered: `external-005` reported `git add` was initially blocked by ignore rules for `docs/governance/team-agents/templates`, so the worker had to use `git add -f`.
+  - Reproduce / detect: Add a new template under `docs/governance/team-agents/templates/` and try normal `git add`.
+  - Impact: Agents may think new deliverables are not tracked, or may forget to force-add required files.
+  - Possible optimization: Adjust `.gitignore`/include rules for governed template directories, or have task cards explicitly mention `git add -f` when deliverables live under ignored paths.
+  - Related tasks / commits: `TASK-TEAM-0005`; implementation commit `b5519938`.
+
+- [ ] BUG-ATM-0028: Evidence/close/commit sequencing is hard for external workers to infer
+  - Status: open
+  - Severity: P1 lifecycle usability
+  - Encountered: `external-005` reported the first ATM-wrapped commit was blocked because `.atm/history/evidence/TASK-TEAM-0005.json` needed to travel with task ledger / transition files; the worker had to discover a two-commit flow by trial.
+  - Reproduce / detect: Complete a normal task, add evidence before close, then attempt `atm git commit` before the close transition has generated all expected history/evidence artifacts.
+  - Impact: External workers can lose time or produce confusing partial staged states even while following broad playbook instructions.
+  - Possible optimization: Provide an explicit `task deliverable commit` vs `task close commit` recipe in the playbook, or add a command that stages the required current-task evidence/task/event files together.
+  - Related tasks / commits: `TASK-TEAM-0005`; commits `b5519938`, `98d5cbee`.
+
+- [ ] BUG-ATM-0029: Close-required evidence gate is correct but needs a concise missing-evidence checklist
+  - Status: open
+  - Severity: P2 closeout clarity
+  - Encountered: `external-005` reported `tasks close` was blocked until four evidence runs were added for `validate:cli`, `validate:git-head-evidence`, `validate:team-agents-templates`, and `git diff --check`.
+  - Reproduce / detect: Run `tasks close` for a framework task after focused validators but before all required closure gates have command-backed evidence.
+  - Impact: The gate is useful, but external workers need a clear next-command checklist instead of learning the missing set by failure.
+  - Possible optimization: When close is blocked, print grouped missing evidence with exact suggested `evidence run` commands for the current task and actor.
+  - Related tasks / commits: `TASK-TEAM-0005`; close commit `98d5cbee`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
