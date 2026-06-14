@@ -2,7 +2,7 @@
 task_id: TASK-CID-0084
 doc_id: doc_cid_0084
 title: "Planning mirror claim/import parity and false ambiguous residue hardening"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M17
@@ -21,6 +21,7 @@ deliverables:
   - "packages/cli/src/commands/tasks.ts"
   - "packages/cli/src/commands/taskflow.ts"
   - "packages/cli/src/commands/taskflow/close-orchestration.ts"
+  - "scripts/validate-task-ledger-governance.ts"
 validators:
   - "npm run typecheck"
   - "npm run build"
@@ -42,6 +43,9 @@ outOfScope:
 nonGoals:
   - "Do not mask real close blockers by suppressing residue blindly."
   - "Do not require operators to re-import already claimed tasks just to clear false ambiguity."
+completed_at: "2026-06-14T05:34:41.791Z"
+completed_by_agent: "captain"
+delivery_commit: "113006fb"
 ---
 
 # TASK-CID-0084 - Planning mirror claim/import parity and false ambiguous residue hardening
