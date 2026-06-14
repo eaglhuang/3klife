@@ -228,6 +228,33 @@ Use this file when:
   - Possible optimization: Omit stale `activeSessionId` from identity-set output, or only include it when the active session belongs to the same actor.
   - Related tasks / commits: observed during `TASK-TEAM-0005` setup after `TASK-TEAM-0004`.
 
+- [ ] BUG-ATM-0023: Read-only preflight routes sound like they must claim and mutate
+  - Status: open
+  - Severity: P2 delegation clarity
+  - Encountered: A read-only sidecar asked for `TASK-TEAM-0006` preflight received the normal playbook emphasizing `next --claim`, even though the Captain explicitly wanted no claim, no write, and no close.
+  - Reproduce / detect: Ask `node atm.mjs next --prompt "<task> preflight"` or a sidecar to inspect a task without write authority; inspect whether the playbook distinguishes read-only preflight from implementation.
+  - Impact: Helper agents may overstep into claim/mutation when the intended role is just route verification or implementation briefing.
+  - Possible optimization: Add a `preflight` / `review-only` channel or detect explicit read-only intent and return a non-claim playbook with allowed read commands.
+  - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar.
+
+- [ ] BUG-ATM-0024: Discovered planning paths can point at stale or alternate 3KLife worktree aliases
+  - Status: open
+  - Severity: P1 path reliability
+  - Encountered: `node atm.mjs next --prompt "TASK-TEAM-0006 Patrol report template" --json` returned task paths under `../3KLife-captain-dispatch-push/...`, while the active planning repo path is `C:/Users/User/3KLife/...`.
+  - Reproduce / detect: Route a Markdown-discovered task after using multiple local 3KLife worktrees or aliases, then compare `taskPath`, `sourcePlanPath`, and the currently maintained planning repo.
+  - Impact: Workers can read or import from an unintended stale planning worktree, causing status drift or wrong task-card content.
+  - Possible optimization: Canonicalize planning repo roots, prefer the configured active planning repo, and include a warning when a discovered task path is outside the expected planning root.
+  - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar.
+
+- [ ] BUG-ATM-0025: Atom map descriptions can drift from validator support
+  - Status: open
+  - Severity: P2 metadata accuracy
+  - Encountered: `path-to-atom-map.json` already maps `scripts/validate-team-agents-templates.ts`, but its description still says `TASK-TEAM-0004 or TASK-TEAM-0005` while the script also supports `TASK-TEAM-0006`.
+  - Reproduce / detect: Extend a shared validator for a new task and inspect the atom map row for stale task coverage text.
+  - Impact: Agent preflight can incorrectly infer which task ids are supported by a shared validator.
+  - Possible optimization: Add a metadata validator that checks task-id mentions in atom map descriptions against actual script task dispatch branches, or require shared-validator tasks to update atom map descriptions as acceptance criteria.
+  - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
