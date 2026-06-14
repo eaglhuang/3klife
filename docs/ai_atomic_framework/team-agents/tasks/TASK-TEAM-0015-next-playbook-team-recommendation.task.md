@@ -2,7 +2,9 @@
 doc_id: doc_team_0015
 task_id: TASK-TEAM-0015
 title: "Next/playbook team recommendation"
-status: planned
+status: done
+completed_at: "2026-06-14T13:54:00+08:00"
+completed_by_agent: "008"
 owner: atm-core
 priority: P1
 milestone: M6
@@ -98,3 +100,9 @@ Revert next/playbook changes and map updates.
 ## Notes
 
 This card makes Team Agents discoverable from the normal ATM entrypoint.
+
+## Completion Notes
+
+- 完成版本由外部 worker 008 實作，完成並在 `path_to-atom-map`、`next`、`team` 及驗證腳本同步更新。
+- 2026-06-14 已完成以下驗證：`npm run typecheck`、`npm run validate:cli`、`node --strip-types scripts/validate-prompt-scoped-next.ts`、`git diff --check`、`npm run build` + `node atm.mjs next --json`。
+- 依規範本次不提交 `release/**`。

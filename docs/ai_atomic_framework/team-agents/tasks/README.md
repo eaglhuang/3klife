@@ -47,7 +47,7 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | [TASK-TEAM-0012](./TASK-TEAM-0012-permission-lease-validator.task.md) | M5 | Permission lease validator | planned | `TASK-TEAM-0011` | lease validator |
 | [TASK-TEAM-0013](./TASK-TEAM-0013-file-write-scope-validator.task.md) | M5 | file.write scope validator | planned | `TASK-TEAM-0012` | scope validator |
 | [TASK-TEAM-0014](./TASK-TEAM-0014-atomic-police-patrol-reports.task.md) | M6 | Atomic police patrol reports | planned | `TASK-TEAM-0013` | patrol CLI/report |
-| [TASK-TEAM-0015](./TASK-TEAM-0015-next-playbook-team-recommendation.task.md) | M6 | Next/playbook team recommendation | planned | `TASK-TEAM-0011`, `TASK-TEAM-0012` | `next` / playbook |
+| [TASK-TEAM-0015](./TASK-TEAM-0015-next-playbook-team-recommendation.task.md) | M6 | Next/playbook team recommendation | done | `TASK-TEAM-0011`, `TASK-TEAM-0012` | `next` / playbook |
 | [TASK-TEAM-0016](./TASK-TEAM-0016-closure-packet-team-summary-integration.task.md) | M6 | Closure packet team summary integration | planned | `TASK-TEAM-0013`, `TASK-TEAM-0014`, `TASK-TEAM-0015` | closure / evidence |
 | [TASK-TEAM-0017](./TASK-TEAM-0017-team-template-schema-validator-contract.task.md) | M2 | Team template schema and validator contract | done | `TASK-TEAM-0004`, `TASK-TEAM-0005`, `TASK-TEAM-0006` | target closure: `AI-Atomic-Framework` `1b95f9e9`; runner sync: `19e03e1c`; schemas / validator |
 | [TASK-TEAM-0018](./TASK-TEAM-0018-team-lease-fencing-deadlock-contract.task.md) | M5H | Team lease fencing and deadlock contract | draft | `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0013` | lease / concurrency hardening |
