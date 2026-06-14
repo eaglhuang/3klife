@@ -309,6 +309,42 @@ Use this file when:
   - Possible optimization: Split closure packet changed files into `deliveryChangedFiles`, `advisoryDirtyFiles`, and `postCloseRunnerSyncFiles`, or omit advisory dirty files from `targetCommitDelta`.
   - Related tasks / commits: `TASK-TEAM-0006`; closure commit `7ee56378`, runner sync commit `06bfc744`.
 
+- [ ] BUG-ATM-0032: Guide/start misroutes existing task-card goals to create-atom
+  - Status: open
+  - Severity: P1 routing usability
+  - Encountered: For the concrete goal `TASK-RFT-0008 taskflow size tripwire and commit message Strategy Map`, `node atm.mjs guide` returned `unknown`, then `node atm.mjs start` recommended `create-atom` even though a valid RFT task card already existed.
+  - Reproduce / detect: Run `node atm.mjs next --prompt "<existing task family goal>" --json`, follow the suggested `guide`, then `start`; compare the route against existing Markdown task cards.
+  - Impact: Captains can be pulled away from the task-card lifecycle into a new atom discovery flow, increasing confusion before implementation starts.
+  - Possible optimization: Teach `guide/start` to detect explicit task ids and known planning task-card roots, and prefer task-card import/claim guidance over create-atom when a matching card exists.
+  - Related tasks / commits: `TASK-RFT-0008`; Team Agents dogfood run `team-71c0d5c2fd25`.
+
+- [ ] BUG-ATM-0033: Team start is useful but may overstate "agents" before spawning exists
+  - Status: open
+  - Severity: P2 product clarity
+  - Encountered: `node atm.mjs team start --task "TASK-RFT-0008" ...` created a runtime team run and permission leases, but explicitly reported `agentsSpawned: false`.
+  - Reproduce / detect: Run `team plan`, `team validate`, then `team start` for a normal TypeScript task and inspect `executionMode` / `agentsSpawned`.
+  - Impact: Humans may think Team Agents are doing autonomous subagent work when the current product surface is still a manual-team coordination record.
+  - Possible optimization: Rename or label the current stage as "manual team run record" in user-facing prompts, and add a clear next command or future card for real subagent spawn integration.
+  - Related tasks / commits: `TASK-RFT-0008`, `TASK-TEAM-0011+`.
+
+- [ ] BUG-ATM-0034: Frozen evidence/help commands force runner sync during normal source task evidence
+  - Status: open
+  - Severity: P0 runner governance friction
+  - Encountered: During `TASK-RFT-0008`, after source edits but before closure, `node atm.mjs evidence --help` emitted `ATM_RUNNER_SYNC_REQUIRED`, forcing Captain to run `npm run build` before evidence capture could continue.
+  - Reproduce / detect: Modify ATM CLI source, then run a frozen `node atm.mjs evidence ...` helper command before runner artifacts have been rebuilt.
+  - Impact: Correctly protects the frozen runner, but it interrupts normal source-task evidence and can push ordinary workers into steward-owned `release/**` changes.
+  - Possible optimization: Add a source-task handoff mode that records `runner-sync-needed` while allowing narrowly safe help/evidence capture, or make Runner Sync Steward a first-class follow-up lane in the playbook.
+  - Related tasks / commits: `TASK-RFT-0008`, `TASK-TEAM-0005`, `BUG-ATM-0026`.
+
+- [ ] BUG-ATM-0035: Planning card status lags after target claim/team run starts
+  - Status: open
+  - Severity: P1 dual-repo status clarity
+  - Encountered: `TASK-RFT-0008` target ledger was imported and claimed as running, and Team run `team-71c0d5c2fd25` started, while the 3KLife Markdown card still showed `status: planned`.
+  - Reproduce / detect: Import and claim a 3KLife planning card in the target repo, then compare `.atm/history/tasks/<task-id>.json` with the Markdown frontmatter status.
+  - Impact: Sidecars and humans reading only 3KLife can believe a task has not started, while target ATM state is already active.
+  - Possible optimization: Add a lightweight planning mirror update after successful claim/team start, or have `taskflow open/claim` return a planning sync reminder when `closure_authority=target_repo`.
+  - Related tasks / commits: `TASK-RFT-0008`, `BUG-ATM-0012`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:

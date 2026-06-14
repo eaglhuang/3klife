@@ -36,4 +36,4 @@ Every `TASK-RFT-*` card follows the ATM task-card authoring contract:
 | [TASK-RFT-0005](./TASK-RFT-0005-captain-dispatch-mailbox-lane-split.task.md) | `scripts/captain-dispatch-mailbox.ts` | Strategy Map + Facade | planned |
 | [TASK-RFT-0006](./TASK-RFT-0006-police-family-role-split.task.md) | `packages/core/src/police/family.ts` | Strategy Map + shared Result Contract | planned |
 | [TASK-RFT-0007](./TASK-RFT-0007-evidence-verb-split.task.md) | `packages/cli/src/commands/evidence.ts` | Strategy Map + Facade | planned |
-| [TASK-RFT-0008](./TASK-RFT-0008-taskflow-size-tripwire-and-commit-message-strategy.task.md) | `packages/cli/src/commands/taskflow.ts` | Light Strategy Map + tripwire | planned |
+| [TASK-RFT-0008](./TASK-RFT-0008-taskflow-size-tripwire-and-commit-message-strategy.task.md) | `packages/cli/src/commands/taskflow.ts` | Light Strategy Map + tripwire | done |

@@ -2,7 +2,7 @@
 doc_id: doc_rft_0008
 task_id: TASK-RFT-0008
 title: "taskflow.ts size tripwire and commit-message Strategy Map"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: RFT-M1
@@ -12,6 +12,12 @@ related_skill: .agents/skills/atm-atom-map-refactor
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+completed_at: "2026-06-14T13:30:33Z"
+completed_by_agent: "captain-teamagents"
+delivery_commit: "56413eea628c5078675aa877e052f474143d5729"
+closure_commit: "16feaf01552ab171f555f96451a8c0e6ede3c638"
+runner_sync_commit: "637cfcb87d57c1290e7cafaf1993fbe9f98d54e3"
+closure_packet: ".atm/history/evidence/TASK-RFT-0008.closure-packet.json"
 scopePaths:
   - "packages/cli/src/commands/taskflow.ts"
   - "packages/cli/src/commands/taskflow/commit-messages.ts"
@@ -107,3 +113,12 @@ git diff --check
 ## Closing
 
 Use `taskflow open --write` / `taskflow close --write`. This card explicitly exercises the closing path it documents.
+
+## Completion Notes
+
+- Target repo delivery commit: `56413eea628c5078675aa877e052f474143d5729`
+- Target repo closure commit: `16feaf01552ab171f555f96451a8c0e6ede3c638`
+- Runner sync steward commit: `637cfcb87d57c1290e7cafaf1993fbe9f98d54e3`
+- Closure packet: `.atm/history/evidence/TASK-RFT-0008.closure-packet.json`
+- Team Agents dogfood: `team plan`, `team validate`, and `team start` were used; team run id `team-71c0d5c2fd25`.
+- Bug backlog entries added: `BUG-ATM-0032` through `BUG-ATM-0035`.

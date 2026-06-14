@@ -44,13 +44,12 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
    - Coordination: may be prepared in parallel, but merge sequentially because both extend `scripts/validate-team-agents-templates.ts`.
 
 3. `TASK-RFT-0008`
-   - Status: first RFT insertion after Team template base is stable; RFT task card is Markdown-only planned until import/claim time.
+   - Status: done in target repo.
    - Reason: smallest RFT card; locks taskflow commit-message behavior and adds a size tripwire before heavier lifecycle work.
-   - ATM route: ready.
-   - Claim command:
-     ```powershell
-     node atm.mjs next --claim --actor <id> --prompt "TASK-RFT-0008 taskflow size tripwire and commit message Strategy Map" --json
-     ```
+   - Delivery commit: `56413eea628c5078675aa877e052f474143d5729`
+   - Closure commit: `16feaf01552ab171f555f96451a8c0e6ede3c638`
+   - Runner sync commit: `637cfcb87d57c1290e7cafaf1993fbe9f98d54e3`
+   - Team Agents dogfood: `team-71c0d5c2fd25`
 
 4. `TASK-RFT-0003`
    - Status: run before Team runtime cards.
@@ -83,8 +82,8 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 | 1 | `TASK-TEAM-0004` | Done | Implement templates + validator | Closed in target repo |
 | 2 | `TASK-TEAM-0005` | Done | Add decision/memory templates | Closed in target repo |
 | 3 | `TASK-TEAM-0006` | Done | Add patrol template | Closed in target repo; runner sync separated |
-| 4 | `TASK-RFT-0008` | Next recommended | Add taskflow commit-message Strategy Map + size tripwire | Use Captain-led SOP with preflight sidecar |
-| 5 | `TASK-TEAM-0017` | Next Team return point | Formalize template schema / validator contract | After RFT-0008 risk reduction |
+| 4 | `TASK-RFT-0008` | Done | Add taskflow commit-message Strategy Map + size tripwire | Closed in target repo; runner sync separated |
+| 5 | `TASK-TEAM-0017` | Next recommended | Formalize template schema / validator contract | After RFT-0008 risk reduction |
 | 6 | `TASK-RFT-0003` | Before Team runtime | Simplify framework-development lifecycle surface | Before Team runtime |
 | 7 | `TASK-RFT-0001` | Defer | next.ts extraction | Only when `TASK-TEAM-0015` starts |
 
