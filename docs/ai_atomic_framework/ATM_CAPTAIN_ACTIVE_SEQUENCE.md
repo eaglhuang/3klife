@@ -66,6 +66,13 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 - No external agent may edit `C:/Users/User/3KLife/**` during target-repo implementation.
 - No agent may manually edit `.atm/runtime/**` or `.atm/history/**`; ATM CLI owns lifecycle state.
 
+## Model Budget Policy
+
+- Internal sidecars and read-only preflight agents should use the cheapest capable lane, normally `GPT-5.4-mini`.
+- External worker agents should default to `GPT-5.4-mini` for bounded implementation tasks with strict allowed files.
+- Upgrade an external worker to `GPT-5.4` only when the task has higher reasoning risk: core lifecycle changes, shared-file refactors, cross-module behavior preservation, failing validator diagnosis, or complex merge/closeout integration.
+- Do not use a frontier/expensive model for routine template, documentation, status sync, grep, or preflight work.
+
 ## Active Dispatch Queue
 
 | Slot | Task | Mode | Action | Gate |
