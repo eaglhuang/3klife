@@ -2,7 +2,7 @@
 task_id: TASK-CID-0079
 doc_id: doc_cid_0079
 title: "Same-task evidence write serialization"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M16
@@ -42,6 +42,9 @@ outOfScope:
 nonGoals:
   - "Do not allow parallel evidence writes to win by last write."
   - "Do not serialize unrelated tasks together when the race only concerns the same task bundle."
+completed_at: "2026-06-14T04:02:26.568Z"
+completed_by_agent: "captain"
+delivery_commit: "240927fcfd58924d84a5d26891b8f130365b043f"
 ---
 
 # TASK-CID-0079 - Same-task evidence write serialization
