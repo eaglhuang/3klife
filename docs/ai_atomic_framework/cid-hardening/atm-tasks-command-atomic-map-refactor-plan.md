@@ -637,3 +637,11 @@ TASK-CID-0073
   ATM-FRAMEWORK-TEMP-captain` failed because the git wrapper only accepts task
   files, forcing a plain `git commit` even though the framework-temp lock had
   been acquired and the pre-commit hook accepted the scope.
+- The final CID verification found stale runtime lock files for already terminal
+  tasks such as `TASK-CID-0082`, `TASK-CID-0084`, `TASK-CID-0085`, and
+  `TASK-CID-0086`. These did not dirty git state, but they confuse operator
+  audits because the live ledger is done/abandoned while `.atm/runtime/locks`
+  still looks occupied. A prompt asking ATM to clean multiple stale CID locks
+  routed to ambiguous task selection instead of a lock-maintenance lane, so ATM
+  needs a clearer terminal-task lock sweep command or terminal close should
+  retire those locks automatically.
