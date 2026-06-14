@@ -2,7 +2,7 @@
 task_id: TASK-CID-0082
 doc_id: doc_cid_0082
 title: "Release root-drop generated-artifact staging contract"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M17
@@ -21,6 +21,7 @@ deliverables:
   - "scripts/build-root-drop-release.ts"
   - "scripts/build-onefile-release.ts"
   - ".gitignore"
+  - "release/atm-root-drop/release-manifest.json"
 validators:
   - "npm run typecheck"
   - "npm run build"
@@ -42,6 +43,9 @@ outOfScope:
 nonGoals:
   - "Do not require hidden `git add -f` knowledge for governed release artifacts that ATM itself generates."
   - "Do not unignore broad release directories just to make staging easier."
+completed_at: "2026-06-14T05:40:31.137Z"
+completed_by_agent: "captain"
+delivery_commit: "c1a67ecdbc1f460a13e17fd1f9be85d6a8f438c3"
 ---
 
 # TASK-CID-0082 - Release root-drop generated-artifact staging contract
