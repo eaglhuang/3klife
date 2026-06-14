@@ -55,6 +55,7 @@ Patch Envelope / Steward
 | M2 Admission | Add pre-write intent registration and conflict matrix. | `TASK-MAO-0005`, `TASK-MAO-0006` |
 | M3 Arbitration | Add freeze/resume and patch envelope handoff. | `TASK-MAO-0007`, `TASK-MAO-0008`, `TASK-MAO-0009` |
 | M4 Proof | Add simulator benchmark and migration guidance from AAO/CID lessons. | `TASK-MAO-0010` |
+| M5 ATM Core Runner Broker | Specialize MAO primitives for ATM core derived-artifact production; reproducible build; dual version streams; cryptographic closure binding. See [atm-core-runner-broker-design.md](./atm-core-runner-broker-design.md). | `TASK-MAO-0011` through `TASK-MAO-0022` (12 cards, to be opened) |
 
 ## Command Shape
 
@@ -90,6 +91,8 @@ node atm.mjs route resume --route ROUTE-0034 --json
 - Replacing Git history or normal commits.
 - Forcing every agent into a separate worktree.
 - Humanless resolution of ambiguous source ownership.
+
+> The ATM Core Runner Broker (M5, TASK-MAO-0011+) extends these primitives to derived-artifact production. It is documented separately in [atm-core-runner-broker-design.md](./atm-core-runner-broker-design.md) to keep MAO v1 (M0–M4) scope tight. M5 cards may be opened in parallel with M0–M4 implementation, but MAO-0011 (reproducible build) is the gating prerequisite for the rest of M5.
 
 ## Open Questions
 
