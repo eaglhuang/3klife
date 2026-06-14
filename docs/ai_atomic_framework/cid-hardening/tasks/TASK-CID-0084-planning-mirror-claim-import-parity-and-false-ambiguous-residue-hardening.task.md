@@ -65,6 +65,13 @@ claim lane.
 That drift causes status tooling to recommend redundant import repair and makes
 dry-run diagnostics noisier than the real close blocker.
 
+The later `TASK-CID-0085` successor flow exposed the same product smell in a
+second shape: after an intentional release in favor of `TASK-CID-0086`, the
+status surface still reported `ambiguous-manual-review` and suggested
+`tasks import --write` even though the truthful operator story was "this task
+was superseded; do not send the operator back through import repair by
+default."
+
 ## Required Behavior
 
 - Before source edits, run the repo-local `atm-atom-map-refactor` skill in
@@ -76,6 +83,8 @@ dry-run diagnostics noisier than the real close blocker.
 - `taskflow close --dry-run` must not advertise a ready close story while its
   residue diagnosis simultaneously claims the operator path is ambiguous solely
   because the planning mirror still says `planned`.
+- Release/supersede states must not fall back to import-repair guidance when
+  the ledger already contains a newer unique operator story.
 
 ## Acceptance Criteria
 
@@ -85,6 +94,9 @@ dry-run diagnostics noisier than the real close blocker.
   parity case.
 - Regression coverage proves the planning-mirror divergence is either repaired
   or downgraded to truthful non-blocking diagnostics.
+- Regression coverage also proves that a superseded or intentionally released
+  predecessor task does not surface a false import-repair recommendation just
+  because the planning mirror and live ledger differ.
 
 ## Validation
 

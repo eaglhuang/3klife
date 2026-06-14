@@ -592,3 +592,23 @@ TASK-CID-0073
   governed source bundle still required manual `git add -f` for
   `release/atm-root-drop/release-manifest.json`, so the hidden ignored-artifact
   staging knowledge remains a real ATM UX gap even after the first pass.
+- The `TASK-CID-0083` follow-up exposed a self-repair gap in task import
+  governance. A runtime import that carried the wrong dependency metadata could
+  not be corrected through the normal operator lane: `tasks import --write
+  --force` is correctly treated as protected emergency maintenance, so a
+  sleeping or unavailable approver leaves the operator with no guided repair
+  path except creating a successor task id. That is a real ATM product gap, not
+  merely bad luck in one run.
+- The `TASK-CID-0085` to `TASK-CID-0086` handoff exposed a second parity gap:
+  `tasks scope add` can widen `allowedFiles` for the active claim, but
+  historical-delivery close still judges the delivery against the imported task
+  card deliverables and scope contract. In practice that means an operator can
+  add a focused regression file to finish the work and still be forced into an
+  out-of-scope historical-delivery story unless a successor card rewrites the
+  deliverables explicitly.
+- The same sequence also confirmed a truthfulness bug in status guidance:
+  `tasks status` on `TASK-CID-0085` surfaced `ambiguous-manual-review` with a
+  recommendation to re-run `tasks import --write` even though the task had
+  already been intentionally released in favor of `TASK-CID-0086`. The residue
+  story remained technically divergent, but the surfaced next step was not the
+  unique or most truthful operator lane.
