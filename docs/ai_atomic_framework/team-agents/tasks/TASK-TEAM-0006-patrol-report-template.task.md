@@ -51,9 +51,7 @@ dispatch_pattern:
     allowed_files:
       - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0006-*.task.md"
     commit_budget: 0
-    output: |
-      Phase 1 brief listing patrol-report required sections (runId/team/severity/
-      findings/safeToProceed/suggestedCommand/followUp) and the validator extension.
+    output: "Phase 1 brief listing patrol-report required sections (runId/team/severity/findings/safeToProceed/suggestedCommand/followUp) and the validator extension."
   phase_1:
     lane: "external builder 001-006"
     allowed_files_strict: true
