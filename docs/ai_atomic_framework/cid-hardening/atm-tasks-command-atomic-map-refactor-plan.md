@@ -39,6 +39,8 @@ task_family:
   - TASK-CID-0080
   - TASK-CID-0081
   - TASK-CID-0082
+  - TASK-CID-0083
+  - TASK-CID-0084
 ---
 
 # ATM tasks command atomic map refactor plan
@@ -487,6 +489,33 @@ operator truthfulness, evidence determinism, and release ergonomics.
 - The goal is to make release sync reproducible and visible, not to weaken the
   ignored-artifact boundary for unrelated files.
 
+### TASK-CID-0083 - historical-delivery close evidence-context deadlock hardening
+
+- Historical-delivery close currently has a deadlock when the operator records
+  fresh same-task evidence after the source delivery commit but before final
+  close.
+- `taskflow close --dry-run` can preview the task evidence file as an expected
+  governed bundle member, yet `taskflow close --write` and backend
+  `tasks close --historical-delivery` still reject that same evidence file as
+  `ATM_TASK_CLOSE_DIRTY_WORKTREE` before the close transition exists.
+- An evidence-only commit is then blocked by
+  `ATM_PROTECTED_STATE_EVIDENCE_FILE_MISSING_TASK_CONTEXT`, because the staged
+  task/event context the hook requires is exactly what the close lane refused to
+  generate.
+- This card must remove that operator deadlock without weakening evidence or
+  protected-state governance.
+
+### TASK-CID-0084 - planning mirror claim/import parity and false ambiguous residue hardening
+
+- Imported CID tasks can reach a live-ledger `running` + active-claim state
+  while the planning frontmatter remains `planned`.
+- `tasks status` and `taskflow close --dry-run` then surface an
+  `ambiguous-manual-review` style residue story even though the operator is
+  already inside a valid claimed task lane.
+- This card must align claim/import/planning-mirror state reflection so status
+  guidance does not recommend redundant import repair or hide the actual close
+  blocker behind a false planning-status ambiguity.
+
 ### Extended sequencing
 
 ```text
@@ -500,6 +529,8 @@ TASK-CID-0073
       -> TASK-CID-0080
         -> TASK-CID-0081
         -> TASK-CID-0082
+          -> TASK-CID-0083
+          -> TASK-CID-0084
 ```
 
 ### 2026-06-14 operator friction notes
@@ -519,3 +550,17 @@ TASK-CID-0073
 - Evidence writes were kept intentionally serial because multiple `evidence run`
   operations target the same task evidence file. The fact that the safe path is
   mostly tacit is one of the motivations behind `TASK-CID-0079`.
+- `TASK-CID-0082` exposed a real close-lane deadlock after adding fresh
+  `validate:git-head-evidence` proof: `taskflow close --dry-run` previews
+  `.atm/history/evidence/<task>.json` as an expected governed bundle file, but
+  `taskflow close --write` and backend `tasks close --historical-delivery`
+  reject the same file as `ATM_TASK_CLOSE_DIRTY_WORKTREE` before the close
+  transition exists. An evidence-only commit is then blocked by
+  `ATM_PROTECTED_STATE_EVIDENCE_FILE_MISSING_TASK_CONTEXT`, because the hook
+  requires the matching staged task ledger change or close event that the close
+  lane has not been allowed to generate yet.
+- The same `TASK-CID-0082` run also confirmed that surfacing generated release
+  files in a manifest is not by itself enough to satisfy the card goal: the
+  governed source bundle still required manual `git add -f` for
+  `release/atm-root-drop/release-manifest.json`, so the hidden ignored-artifact
+  staging knowledge remains a real ATM UX gap even after the first pass.
