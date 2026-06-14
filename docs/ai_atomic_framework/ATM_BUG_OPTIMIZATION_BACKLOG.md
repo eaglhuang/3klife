@@ -156,6 +156,60 @@ Use this file when:
   - Possible optimization: Import only the selected RFT card immediately before execution; avoid bulk-importing all RFT cards unless the batch route explicitly requires it.
   - Related tasks / commits: `TASK-RFT-0008`.
 
+- [ ] BUG-ATM-0015: Markdown claim remediation can point to the wrong or over-quoted import path
+  - Status: open
+  - Severity: P0 external-agent usability
+  - Encountered: `external-004` hit `ATM_NEXT_CLAIM_TASK_IMPORT_REQUIRED` for `TASK-TEAM-0004`; the remediation pointed at a quoted planning document path instead of the exact task-card Markdown file.
+  - Reproduce / detect: Ask an external worker to claim a Markdown-discovered task that has not been imported, then inspect `error.requiredCommand` and compare it with `evidence.nextAction.taskPath`.
+  - Impact: A worker can follow ATM's own remediation and import the wrong source document, especially when the task family has both a plan document and per-task cards.
+  - Possible optimization: Return the exact discovered task card path in the required command, avoid nested shell quotes, and add an import-and-claim retry token bound to the selected task id.
+  - Related tasks / commits: `TASK-TEAM-0004`; framework import/claim commit `f9cb2fa6`.
+
+- [ ] BUG-ATM-0016: Import/setup commits require a work session even before real implementation starts
+  - Status: open
+  - Severity: P1 lifecycle friction
+  - Encountered: After `tasks import --write` for `TASK-TEAM-0004`, a normal `git commit` was blocked by `ATM_GIT_COMMIT_WRAPPER_REQUIRED`, but `atm git commit` then required an active or recent task session.
+  - Reproduce / detect: Import a Markdown task card into `.atm/history/tasks`, stage only import artifacts, then try to commit through the required wrapper before claiming the task.
+  - Impact: Captain had to claim the task as `external-004` just to make a setup/import commit, which blurs the boundary between Captain setup and worker implementation.
+  - Possible optimization: Add a governed import/setup commit mode, or provide a single `tasks import-and-claim` command that writes task history, creates the actor session, and emits the correct commit instructions.
+  - Related tasks / commits: `TASK-TEAM-0004`; framework import/claim commit `f9cb2fa6`.
+
+- [ ] BUG-ATM-0017: External actor identity setup is not part of dispatch preflight
+  - Status: open
+  - Severity: P1 delegation friction
+  - Encountered: `atm git commit --actor external-004` refused to commit until `node atm.mjs identity set --actor "external-004" --git-name "004" --git-email "004@3klife.local" --json` was run manually.
+  - Reproduce / detect: Create a new external actor, claim a task, then attempt an ATM-wrapped commit without pre-registering identity.
+  - Impact: External agents can finish work but fail at the commit step unless the Captain remembered an identity command not present in the dispatch brief.
+  - Possible optimization: Add identity provisioning to Captain dispatch setup, or allow `atm git commit` to accept one-shot `--git-name` / `--git-email` values and persist them explicitly.
+  - Related tasks / commits: `external-004`, `TASK-TEAM-0004`.
+
+- [ ] BUG-ATM-0018: Commit wrapper baseline warnings are noisy during narrow import/setup commits
+  - Status: open
+  - Severity: P2 operator clarity
+  - Encountered: The pre-commit task audit emitted many tree-wide warnings during the narrow `TASK-TEAM-0004` import/claim commit even though they were non-blocking.
+  - Reproduce / detect: Run an ATM-wrapped commit for a small task-history import and inspect warnings unrelated to the current task id.
+  - Impact: Agents may spend time triaging historical baseline warnings or mistake them for blockers.
+  - Possible optimization: Split current-task blockers from baseline warnings, collapse unchanged baseline warnings by default, and print a short command to expand the full list only when needed.
+  - Related tasks / commits: `TASK-TEAM-0004`; framework import/claim commit `f9cb2fa6`.
+
+- [ ] BUG-ATM-0019: Task import can lose multiline YAML block scalar content
+  - Status: open
+  - Severity: P1 task-card fidelity
+  - Encountered: The imported `TASK-TEAM-0004` task JSON showed a dispatch pattern output field as `"output": "|"`, suggesting the YAML block scalar marker was preserved but the multiline content was not normalized as intended.
+  - Reproduce / detect: Import a Markdown task card whose frontmatter or structured body contains block scalar fields, then inspect `.atm/history/tasks/<task-id>.json` for literal `"|"` values without the expected text.
+  - Impact: Imported task metadata can become less useful for downstream automation, evidence review, and worker briefing generation.
+  - Possible optimization: Update the task importer to parse YAML block scalars with a structured YAML parser or explicitly reject unsupported block fields with a clear validation error.
+  - Related tasks / commits: `TASK-TEAM-0004`.
+
+- [ ] BUG-ATM-0020: Worker resume SOP must sync after Captain-side import/claim commits
+  - Status: open
+  - Severity: P1 multi-agent coordination
+  - Encountered: `external-004` was resumed only after Captain imported, claimed, committed, and pushed `TASK-TEAM-0004` setup artifacts in the same target repo.
+  - Reproduce / detect: Let a worker HOLD on missing import, have Captain perform the import/claim commit, then resume the worker without requiring a fresh `git status` and pull/sync check.
+  - Impact: The worker can continue from stale workspace assumptions and collide with Captain-authored task-history commits.
+  - Possible optimization: Add a dispatch SOP line: after Captain resolves a HOLD by committing setup artifacts, the worker must sync latest main and rerun `node atm.mjs next --prompt "<task>" --json` before editing.
+  - Related tasks / commits: `external-004`, `TASK-TEAM-0004`, framework import/claim commit `f9cb2fa6`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
