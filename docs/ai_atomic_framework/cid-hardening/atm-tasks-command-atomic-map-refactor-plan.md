@@ -629,3 +629,11 @@ TASK-CID-0073
   after the source delivery commit already exists. The dry-run lane should
   surface the same mandatory evidence checklist before it permits the write
   attempt.
+- The same closeback path exposed two follow-up operator frictions. A later
+  close write reported `validate:onefile-release` and `validate:root-drop-release`
+  as missing while also saying there were no blocking findings, making the
+  required next action ambiguous. The release-sync cleanup also required a
+  framework-temp claim, but `node atm.mjs git commit --task
+  ATM-FRAMEWORK-TEMP-captain` failed because the git wrapper only accepts task
+  files, forcing a plain `git commit` even though the framework-temp lock had
+  been acquired and the pre-commit hook accepted the scope.
