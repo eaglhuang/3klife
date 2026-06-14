@@ -1,11 +1,18 @@
 ---
 task_id: TASK-MAO-0001
 title: "logical parallel routing architecture contract"
-status: planned
+status: done
+completed_at: "2026-06-14T11:22:06.854Z"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P0
 milestone: M0
 closure_authority: target_repo
+ledger_closure:
+  source: "AI-Atomic-Framework/.atm/history/tasks/TASK-MAO-0001.json"
+  closed_at: "2026-06-14T11:22:06.854Z"
+  closed_by_actor: "captain"
+  closure_packet: ".atm/history/evidence/TASK-MAO-0001.closure-packet.json"
 depends_on: []
 related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行治理計畫書.md"
 planning_repo: 3KLife
@@ -54,4 +61,3 @@ Create the neutral framework specification for MAO v1: root router, route contex
 - The spec explicitly preserves ATM as the single global authority.
 - The spec does not introduce a second task registry.
 - The atomization map is updated for the new spec surface.
-

@@ -1,11 +1,18 @@
 ---
 task_id: TASK-MAO-0012
 title: "runner sync scope manifest"
-status: planned
+status: done
+completed_at: "2026-06-14T10:48:16.048Z"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P0
 milestone: M5
 closure_authority: target_repo
+ledger_closure:
+  source: "AI-Atomic-Framework/.atm/history/tasks/TASK-MAO-0012.json"
+  closed_at: "2026-06-14T10:48:16.048Z"
+  closed_by_actor: "captain"
+  closure_packet: ".atm/history/evidence/TASK-MAO-0012.closure-packet.json"
 depends_on:
   - "TASK-MAO-0011"
 related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/atm-core-runner-broker-design.md"

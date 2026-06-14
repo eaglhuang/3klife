@@ -1,11 +1,18 @@
 ---
 task_id: TASK-MAO-0003
 title: "route lifecycle CLI"
-status: planned
+status: done
+completed_at: "2026-06-14T11:39:13.318Z"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P0
 milestone: M1
 closure_authority: target_repo
+ledger_closure:
+  source: "AI-Atomic-Framework/.atm/history/tasks/TASK-MAO-0003.json"
+  closed_at: "2026-06-14T11:39:13.318Z"
+  closed_by_actor: "captain"
+  closure_packet: ".atm/history/evidence/TASK-MAO-0003.closure-packet.json"
 depends_on:
   - "TASK-MAO-0002"
 related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行治理計畫書.md"
@@ -65,4 +72,3 @@ Add a first CLI surface for route lifecycle management: `route open`, `route sta
 - Commands return JSON envelopes consistent with existing CLI commands.
 - Route commands do not mutate `.atm/history/tasks/**` directly.
 - Command spec validation recognizes the new surface.
-

@@ -1,11 +1,18 @@
 ---
 task_id: TASK-MAO-0011
 title: "reproducible runner build audit"
-status: planned
+status: done
+completed_at: "2026-06-14T10:43:36.575Z"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P0
 milestone: M5
 closure_authority: target_repo
+ledger_closure:
+  source: "AI-Atomic-Framework/.atm/history/tasks/TASK-MAO-0011.json"
+  closed_at: "2026-06-14T10:43:36.575Z"
+  closed_by_actor: "captain"
+  closure_packet: ".atm/history/evidence/TASK-MAO-0011.closure-packet.json"
 depends_on: []
 related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/atm-core-runner-broker-design.md"
 planning_repo: 3KLife

@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-28
-last_updated: 2026-06-04
+last_updated: 2026-06-14
 ---
 
 # Team Agents Task Index
@@ -33,12 +33,12 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | Task ID | Milestone | Title | Status | Depends | Target surface |
 |---|---|---|---|---|---|
 | [TASK-TEAM-0001](./TASK-TEAM-0001-team-agents-planning-roster-reset.task.md) | M0 | Team agents planning roster reset | done | none | planning docs |
-| [TASK-TEAM-0002](./TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md) | M1 | Minimal task crew briefing contract | planned | `TASK-TEAM-0001` (parallel with 0003) | team docs / CLI contract |
+| [TASK-TEAM-0002](./TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md) | M1 | Minimal task crew briefing contract | done | `TASK-TEAM-0001` (parallel with 0003) | team docs / CLI contract |
 | [TASK-TEAM-0003](./TASK-TEAM-0003-atomization-planner-required-role.task.md) | M1 | Atomization planner required role | done | `TASK-TEAM-0001` (parallel with 0002) | team docs / CLI contract |
 | [TASK-TEAM-0004](./TASK-TEAM-0004-team-brief-report-templates.task.md) | M2 | Team brief/report templates | planned | `TASK-TEAM-0002`, `TASK-TEAM-0003` | templates / validator |
 | [TASK-TEAM-0005](./TASK-TEAM-0005-team-memory-captain-decision-templates.task.md) | M2 | Team memory and captain decision templates | planned | `TASK-TEAM-0004` (parallel with 0006) | templates / validator |
 | [TASK-TEAM-0006](./TASK-TEAM-0006-patrol-report-template.task.md) | M2 | Patrol report template | planned | `TASK-TEAM-0004` (parallel with 0005) | templates / validator |
-| [TASK-TEAM-0007](./TASK-TEAM-0007-captain-decision-team-sizing-dry-run.task.md) | M3 | Captain decision and team sizing dry-run | planned | `TASK-TEAM-0003` | `team` CLI |
+| [TASK-TEAM-0007](./TASK-TEAM-0007-captain-decision-team-sizing-dry-run.task.md) | M3 | Captain decision and team sizing dry-run | done | `TASK-TEAM-0003` | `team` CLI |
 | [TASK-TEAM-0008](./TASK-TEAM-0008-task-lieutenant-escalation-rules.task.md) | M3 | Task lieutenant escalation rules | planned | `TASK-TEAM-0007` | `team` CLI |
 | [TASK-TEAM-0009](./TASK-TEAM-0009-team-plan-dry-run-resolver.task.md) | M4 | Team plan dry-run resolver | planned | `TASK-TEAM-0007`, `TASK-TEAM-0008` | `team` CLI |
 | [TASK-TEAM-0010](./TASK-TEAM-0010-role-implementer-selector.task.md) | M4 | Role and implementer selector | planned | `TASK-TEAM-0009` | `team` CLI |

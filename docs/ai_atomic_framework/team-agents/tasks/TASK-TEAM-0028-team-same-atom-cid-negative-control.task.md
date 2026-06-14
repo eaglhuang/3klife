@@ -5,6 +5,10 @@ title: "Team same-atom CID negative control"
 status: done
 completed_at: "2026-06-10T09:47:50+08:00"
 completed_by_agent: "captain"
+ledger_sync:
+  status: "missing_target_closure"
+  checked_at: "2026-06-14"
+  note: "3KLife Markdown says done, but AI-Atomic-Framework .atm/history/tasks/TASK-TEAM-0028.json and closure packet were not found during Captain status sync audit. Do not use this as target-repo closure evidence until reconciled."
 owner: atm-core
 priority: P1
 milestone: M1N

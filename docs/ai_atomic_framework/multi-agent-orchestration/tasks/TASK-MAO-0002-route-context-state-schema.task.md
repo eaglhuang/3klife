@@ -1,11 +1,18 @@
 ---
 task_id: TASK-MAO-0002
 title: "route context state schema"
-status: planned
+status: done
+completed_at: "2026-06-14T11:28:41.469Z"
+completed_by_agent: "captain"
 owner: atm-core
 priority: P0
 milestone: M0
 closure_authority: target_repo
+ledger_closure:
+  source: "AI-Atomic-Framework/.atm/history/tasks/TASK-MAO-0002.json"
+  closed_at: "2026-06-14T11:28:41.469Z"
+  closed_by_actor: "captain"
+  closure_packet: ".atm/history/evidence/TASK-MAO-0002.closure-packet.json"
 depends_on:
   - "TASK-MAO-0001"
 related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行治理計畫書.md"
@@ -63,4 +70,3 @@ Define the machine-readable route context state used by MAO route lifecycle and 
 - TypeScript types match the schema fields.
 - Tests cover minimal valid state, blocked state, and frozen state.
 - No task lifecycle behavior changes in this card.
-

@@ -1,3 +1,9 @@
+# P0 ATM Bug / Optimization Backlog
+
+- Every ATM Captain / framework agent must check and update `C:/Users/User/3KLife/docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md` when encountering ATM bugs, confusing workflow, governance drift, validator gaps, runner-sync friction, or process optimizations.
+- Record each issue with: encountered problem, reproduce / detect, impact, possible optimization, and related task / commit.
+- Do not rely on chat memory for ATM workflow defects. If it can affect future agents, put it in the backlog.
+
 # Keep Consensus
 
 > **⚠️ 已拆分為 4 個分片，本檔為索引入口。**

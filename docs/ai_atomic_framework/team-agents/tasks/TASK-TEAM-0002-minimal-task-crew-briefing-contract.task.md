@@ -2,7 +2,9 @@
 doc_id: doc_team_0002
 task_id: TASK-TEAM-0002
 title: "Minimal task crew briefing contract"
-status: planned
+status: done
+completed_at: "2026-06-05T15:38:04.542Z"
+completed_by_agent: "codex-gpt-5.4-mini"
 owner: atm-core
 priority: P0
 milestone: M1
@@ -12,6 +14,11 @@ related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工�
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+ledger_closure:
+  source: "AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0002.json"
+  closed_at: "2026-06-05T15:38:04.542Z"
+  closed_by_actor: "codex-gpt-5.4-mini"
+  closure_packet: ".atm/history/evidence/TASK-TEAM-0002.closure-packet.json"
 scopePaths:
   - "docs/governance/team-agents/minimal-task-crew.md"
   - "packages/cli/src/commands/team.ts"

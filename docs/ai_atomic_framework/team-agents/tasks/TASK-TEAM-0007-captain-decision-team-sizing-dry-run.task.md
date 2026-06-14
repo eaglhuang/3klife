@@ -2,7 +2,9 @@
 doc_id: doc_team_0007
 task_id: TASK-TEAM-0007
 title: "Captain decision and team sizing dry-run"
-status: planned
+status: done
+completed_at: "2026-06-10T12:28:06.128Z"
+completed_by_agent: "codex-gpt-5.4-mini"
 owner: atm-core
 priority: P0
 milestone: M3
@@ -12,6 +14,11 @@ related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工�
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+ledger_closure:
+  source: "AI-Atomic-Framework/.atm/history/tasks/TASK-TEAM-0007.json"
+  closed_at: "2026-06-10T12:28:06.128Z"
+  closed_by_actor: "codex-gpt-5.4-mini"
+  closure_packet: ".atm/history/evidence/TASK-TEAM-0007.closure-packet.json"
 scopePaths:
   - "packages/cli/src/commands/team.ts"
   - "packages/cli/src/commands/command-specs/team.spec.ts"
