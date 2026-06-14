@@ -2,7 +2,7 @@
 doc_id: doc_rft_0003
 task_id: TASK-RFT-0003
 title: "framework-development.ts temp-claim lifecycle extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M2
@@ -148,3 +148,11 @@ git diff --check
 ## Closing
 
 Use `taskflow open --write` / `taskflow close --write`.
+
+## Completion Evidence
+
+- Completed in target repo `AI-Atomic-Framework` on 2026-06-14.
+- Delivery commit: `b76c494346bbe72dc4e005fa552e61a28d240248`
+- Closure commit: `55c435baf45dd12240329fb516dd24173980ea12`
+- Runner sync commit: `4a07560619b9cfe78e8051ca785829694bc50159`
+- Closure packet: `.atm/history/evidence/TASK-RFT-0003.closure-packet.json`

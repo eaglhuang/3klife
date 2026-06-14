@@ -390,6 +390,42 @@ Use this file when:
   - Possible optimization: Add auto-discovery for all `schemas/**/*.schema.json`, or require every new schema family to register in the global schema validator and validators config in the same task card.
   - Related tasks / commits: `TASK-TEAM-0017`; `BUG-ATM-0008`.
 
+- [ ] BUG-ATM-0041: Task import path heuristic flags valid hyphenated filenames as strict path violations
+  - Status: open
+  - Severity: P2 import noise
+  - Encountered: Importing `TASK-RFT-0003` reported `STRICT_PATH_VIOLATION` for valid files such as `closure-packet-schema.ts` because the heuristic appeared to classify hyphenated filename segments as `english-sentence-word`.
+  - Reproduce / detect: Run `node atm.mjs tasks import --from <TASK-RFT-0003 markdown> --write --json` and inspect warnings for `closure-packet-schema.ts` or matching spec paths.
+  - Impact: Agents may distrust import warnings or waste time checking valid scoped files.
+  - Possible optimization: Restrict strict sentence-word detection to prose fields, or whitelist common code filename patterns such as `kebab-case.ts` and `kebab-case.spec.ts`.
+  - Related tasks / commits: `TASK-RFT-0003`; delivery commit `b76c494346bbe72dc4e005fa552e61a28d240248`.
+
+- [ ] BUG-ATM-0042: Normal playbook says close before commit, but close requires in-scope dirty files to be committed first
+  - Status: open
+  - Severity: P0 lifecycle instruction mismatch
+  - Encountered: `TASK-RFT-0003` normal playbook said to close before committing deliverables, but `tasks close --status done` failed with `ATM_TASK_CLOSE_DIRTY_WORKTREE` and remediation said to commit scoped delivery changes first.
+  - Reproduce / detect: Implement a normal framework task with dirty in-scope source files, add evidence, then run `node atm.mjs tasks close --task <id> --status done --json` before a delivery commit.
+  - Impact: Agents following the playbook literally hit a blocker and must infer a two-commit flow from remediation.
+  - Possible optimization: Update the normal playbook to distinguish delivery commit, close/ledger commit, and runner sync commit when close requires a committed delivery parent.
+  - Related tasks / commits: `TASK-RFT-0003`; delivery commit `b76c494346bbe72dc4e005fa552e61a28d240248`, closure commit `55c435baf45dd12240329fb516dd24173980ea12`.
+
+- [ ] BUG-ATM-0043: Direction-lock mismatch warning repeats for evidence/task-events omitted from claim.files
+  - Status: open
+  - Severity: P2 warning clarity
+  - Encountered: During `TASK-RFT-0003` commit, pre-commit warned `ATM_DIRECTION_LOCK_ALLOWED_FILES_MISMATCH` because canonical allowed files included `.atm/history/evidence/TASK-RFT-0003.*` and `.atm/history/task-events/TASK-RFT-0003/**`, while claim.files omitted those generated governance paths.
+  - Reproduce / detect: Claim a task, add evidence/events through ATM commands, stage them with deliverables, and run the ATM pre-commit hook or commit wrapper.
+  - Impact: The warning is non-blocking but looks like scope drift, making closeout noisier for agents.
+  - Possible optimization: Treat ATM-generated current-task evidence and task-events as implicit claim coverage, or sync claim.files after evidence/close writes.
+  - Related tasks / commits: `TASK-RFT-0003`; delivery commit `b76c494346bbe72dc4e005fa552e61a28d240248`.
+
+- [ ] BUG-ATM-0044: Runner sync commit records git-head evidence in a generated-artifact commit
+  - Status: open
+  - Severity: P1 runner sync clarity
+  - Encountered: The `TASK-RFT-0003` runner sync stage had six tracked `release/**` files, but pre-commit staged `.atm/history/evidence/git-head.jsonl`, so the commit reported seven changed files.
+  - Reproduce / detect: Run `npm run build`, stage tracked `release/**` changes with `git add -u release`, and commit while the pre-commit hook writes git-head evidence.
+  - Impact: A clean derived-artifact commit gains governance evidence state, making runner sync less isolated than intended.
+  - Possible optimization: Either exclude git-head evidence writes from pure runner sync commits, or route runner sync through a first-class steward command that owns release artifacts plus generated evidence explicitly.
+  - Related tasks / commits: `TASK-RFT-0003`; runner sync commit `4a07560619b9cfe78e8051ca785829694bc50159`; `BUG-ATM-0005`, `BUG-ATM-0031`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
