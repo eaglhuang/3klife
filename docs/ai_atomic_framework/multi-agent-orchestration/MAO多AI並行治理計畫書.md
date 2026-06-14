@@ -67,6 +67,7 @@ The M5 runner broker extension is reasonable, but it depends on current ATM runn
 - M5 must use additive extensions to MAO-0005, MAO-0006, MAO-0008, and MAO-0009 instead of introducing a second broker, second envelope, or second task lifecycle.
 - `TASK-MAO-0011` is the hard gate for M5. Runner refs, closure binding, mixed-repo closure, and external contributor routing are not valid until reproducible build evidence exists.
 - Recommended rollout is staged: `TASK-MAO-0011` to `TASK-MAO-0013` are the v1 lightweight steward lane; `TASK-MAO-0014+` are justified escalation work, not day-one operator burden.
+- **Reconciliation pass (2026-06-14)**: Captain has begun parallel implementation. Many cards (`shipped`) already have deliverables on disk; some (`partial`) need only tests/fixtures; the Phase B/C cards (`stub`) remain genuinely unstarted. See [tasks/README.md `## Reconciliation pass`](./tasks/README.md) for the per-card audit, and [atm-core-runner-broker-design.md §0.3](./atm-core-runner-broker-design.md) for the implication summary. Any AI that picks up a `shipped` or `partial` card must read its existing deliverables before writing — do not re-create what exists.
 
 ## Command Shape
 

@@ -44,6 +44,19 @@ This design remains the long-term target, but the recommended operational rollou
 
 This means the full Broker is a justified escalation path, not the default operator burden for every ATM core contributor.
 
+## 0.3 Reality reconciliation note (2026-06-14)
+
+Captain has already begun parallel implementation while this design was being finalized. The 22 MAO cards' frontmatter `status` remains `planned` because none have yet gone through `taskflow close --write`, but a substantial portion of declared deliverables already exists on disk in `AI-Atomic-Framework`. See [tasks/README.md](./tasks/README.md) `## Reconciliation pass — 2026-06-14` for the per-card `Audit` column (values: `shipped` / `partial` / `stub`).
+
+Implications for any AI executing these cards:
+
+- **Do not re-create existing files**. Read the card's Audit value first; for `shipped` and `partial` cards, the residual scope is "fill the listed gaps", not "build from scratch".
+- **`shipped` cards need retroactive governed-close** via `tasks reconcile --historical-delivery <sha>` before `status: done` is legitimate.
+- **Test path convention**: where tests already exist under `packages/core/src/broker/__tests__/`, prefer that location even if a card's deliverables list mentions `tests/cli/<name>.test.ts`.
+- **Phase B/C (MAO-0014~0022) dependency chain pinned on optional MAO-0017**: an explicit decision is needed before Phase B starts about whether to (a) execute MAO-0017 unconditionally as the gating ref-stream primitive, or (b) re-scope MAO-0018+ to be runnable on the v1 steward lane without ref streams. This design currently assumes (a); the README notes the alternative.
+
+The implementation found on 2026-06-14 is generally consistent with this design's direction; the gaps identified are mostly tests, fixtures, and the Phase B/C ref-stream primitives that were always slated for later.
+
 ## 1. Why this exists
 
 The MAO plan establishes a logical parallel routing layer for multi-agent ATM development. It defines Root Router, Broker Intent Registry, Conflict Matrix, Patch Envelope, and Steward arbitration for general parallel source writes.
@@ -271,11 +284,11 @@ AI workflow for an ATM core edit:
      a. apply patch on current Broker HEAD
      b. if rebase needed, attempt 3-way; if conflict → freeze + steward path (MAO-0009)
      c. commit source as Broker identity
-     d. build runner from source HEAD
-     e. double-build verification (§10)
+     d. build runner from source HEAD (single build, not double; double-build verification is deferred to quiescing per §6.1 / §10 to avoid 2× build cost per patch)
+     e. compute runnerArtifactSha256 over the canonical artifact manifest
      f. publish refs/atm-runner/in-dev/v<N+1>-dev.<k+1>
      g. advance in-dev/HEAD
-     h. return { sourceCommitSha, runnerVersion, runnerArtifactSha256 }
+     h. return { sourceCommitSha, runnerVersion, runnerArtifactSha256, reproducibilityVerified: false (in-dev refs are single-build; reproducibility is enforced at promotion) }
 
 7. AI integration verification (post-merge):
      refresh lease (now pinned to latest in-dev/HEAD)
@@ -489,10 +502,10 @@ Task cards are opened as MAO series extensions, not new RFT cards. Numbering pic
 |---|---|---|
 | TASK-MAO-0011 | Reproducible-build audit and remediation for current `npm run build` (`Runner Sync Steward v1` gate) | — |
 | TASK-MAO-0012 | Runner sync scope manifest and steward-only generated-artifact contract | MAO-0011 |
-| TASK-MAO-0013 | ATM core scope declaration, stale-runner widening, and steward classifier extension | MAO-0005 (existing), MAO-0012 |
+| TASK-MAO-0013 | ATM core scope declaration, stale-runner widening, and steward classifier extension | MAO-0012 (intentionally NOT depending on MAO-0005; classifier exposes pure functions a future Broker intent layer can adapt to) |
 | TASK-MAO-0014 | Deferred full-Broker runner ref storage (refs/atm-runner/built, refs/atm-runner/in-dev) | MAO-0011, MAO-0012 |
 | TASK-MAO-0015 | Deferred full-Broker patch-envelope specialization fields (targetArtifact, atmCoreClassification) | MAO-0008 (existing) |
-| TASK-MAO-0016 | Deferred full-Broker submit pipeline: route submit-patch → CID arbitrate → build → double-build verify → publish | MAO-0008, MAO-0014, MAO-0015 |
+| TASK-MAO-0016 | Deferred full-Broker submit pipeline: route submit-patch → CID arbitrate → single build per patch → publish in-dev (double-build verification deferred to quiescing per §10) | MAO-0008, MAO-0011, MAO-0014, MAO-0015 |
 | TASK-MAO-0017 | Deferred full-Broker version stream state machine: in-dev / built / quiescing transitions | MAO-0014, MAO-0016 |
 | TASK-MAO-0018 | Deferred full-Broker closure packet `atmCoreRunnerBinding` field and cryptographic verification | MAO-0017 |
 | TASK-MAO-0019 | Deferred full-Broker cross-repo task closure: dual binding (ATM core + adopter) | MAO-0018 |

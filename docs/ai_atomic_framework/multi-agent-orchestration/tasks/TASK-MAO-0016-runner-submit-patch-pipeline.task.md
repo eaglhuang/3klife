@@ -8,6 +8,7 @@ milestone: M5
 closure_authority: target_repo
 depends_on:
   - "TASK-MAO-0008"
+  - "TASK-MAO-0011"
   - "TASK-MAO-0014"
   - "TASK-MAO-0015"
 related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/atm-core-runner-broker-design.md"

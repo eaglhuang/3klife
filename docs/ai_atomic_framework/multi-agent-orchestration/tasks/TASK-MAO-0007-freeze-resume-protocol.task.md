@@ -16,17 +16,17 @@ scopePaths:
   - "packages/core/src/broker/freeze.ts"
   - "packages/core/src/broker/types.ts"
   - "packages/cli/src/commands/route.ts"
-  - "tests/cli/route-freeze-resume.test.ts"
+  - "packages/core/src/broker/__tests__/freeze-protocol.test.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "packages/core/src/broker/freeze.ts"
   - "packages/cli/src/commands/route.ts"
-  - "tests/cli/route-freeze-resume.test.ts"
+  - "packages/core/src/broker/__tests__/freeze-protocol.test.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
-  - "node --strip-types tests/cli/route-freeze-resume.test.ts"
+  - "node --strip-types packages/core/src/broker/__tests__/freeze-protocol.test.ts"
   - "git diff --check"
 evidence:
   required: command-backed

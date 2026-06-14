@@ -16,17 +16,17 @@ scopePaths:
   - "packages/core/src/broker/steward.ts"
   - "packages/core/src/broker/types.ts"
   - "packages/cli/src/commands/route.ts"
-  - "tests/cli/steward-arbitration.test.ts"
+  - "packages/core/src/broker/__tests__/steward-arbitration.test.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "packages/core/src/broker/steward.ts"
   - "packages/cli/src/commands/route.ts"
-  - "tests/cli/steward-arbitration.test.ts"
+  - "packages/core/src/broker/__tests__/steward-arbitration.test.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
-  - "node --strip-types tests/cli/steward-arbitration.test.ts"
+  - "node --strip-types packages/core/src/broker/__tests__/steward-arbitration.test.ts"
   - "git diff --check"
 evidence:
   required: command-backed
