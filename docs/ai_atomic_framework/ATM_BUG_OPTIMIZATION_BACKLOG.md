@@ -345,6 +345,51 @@ Use this file when:
   - Possible optimization: Add a lightweight planning mirror update after successful claim/team start, or have `taskflow open/claim` return a planning sync reminder when `closure_authority=target_repo`.
   - Related tasks / commits: `TASK-RFT-0008`, `BUG-ATM-0012`.
 
+- [ ] BUG-ATM-0036: Task scope amendment can update runtime direction lock without syncing embedded task ledger lock
+  - Status: open
+  - Severity: P0 closeback correctness
+  - Encountered: During `TASK-TEAM-0017`, `node atm.mjs tasks scope add ... --add atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-platform.json --json` reported success and the active direction lock included the new shard path, but `.atm/history/tasks/TASK-TEAM-0017.json` still had the older embedded `taskDirectionLock.allowedFiles` and `claim.files`.
+  - Reproduce / detect: Import and claim a task, run `tasks scope add` for an extra allowed file, then inspect `.atm/history/tasks/<task-id>.json`, the runtime lock, and pre-commit `ATM_DIRECTION_LOCK_ALLOWED_FILES_MISMATCH` diagnostics.
+  - Impact: The task can correctly mutate the newly added file, but close/commit later sees direction-lock drift and may classify the delivery commit as out-of-scope or ambiguous.
+  - Possible optimization: Make `tasks scope add` atomically sync the task ledger embedded direction lock and claim files, or intentionally separate runtime-only amendments with an explicit closeback-compatible event model.
+  - Related tasks / commits: `TASK-TEAM-0017`; delivery commit `4497fb169b9d5d5de66bdf48e50afa7ec1d11c44`.
+
+- [ ] BUG-ATM-0037: Closure-required git-head evidence creates an evidence/transition event commit cycle
+  - Status: open
+  - Severity: P0 closeback usability
+  - Encountered: `TASK-TEAM-0017` close required `validate:git-head-evidence`; after adding that evidence, pre-commit blocked committing `.atm/history/evidence/TASK-TEAM-0017.json` alone because evidence must travel with a task ledger change or transition event, but the needed close transition event is only created by the close step that is currently blocked.
+  - Reproduce / detect: Commit a task delivery, run `tasks close`, satisfy a newly reported close-required evidence validator, then attempt to commit the evidence before close creates the transition event.
+  - Impact: Agents can get trapped between required evidence and protected-state commit rules, needing emergency backend close even though the implementation and validators passed.
+  - Possible optimization: Teach `taskflow close` to own this sequence atomically: run missing close-required evidence, close, stage evidence/task/events/closure packet together, and commit the governed bundle.
+  - Related tasks / commits: `TASK-TEAM-0017`; validator `validate:git-head-evidence`.
+
+- [ ] BUG-ATM-0038: `evidence run --command` is fragile for complex quoted PowerShell or Node one-liners
+  - Status: open
+  - Severity: P1 evidence capture friction
+  - Encountered: While trying to record `TASK-TEAM-0017` fixture acceptance, complex commands containing `$tmp` PowerShell variables or `node -e "..."` were mangled into partial commands such as `node -e const`, causing `ATM_EVIDENCE_VALIDATION_PASS_FAILED_COMMAND` even though the acceptance check passed when run directly.
+  - Reproduce / detect: Run `node atm.mjs evidence run --command "<complex quoted command>" --validators <name> --json` on Windows PowerShell and compare the captured command string with the command actually intended.
+  - Impact: Agents may lose command-backed evidence for legitimate checks or spend time fighting shell quoting instead of validating the task.
+  - Possible optimization: Add `--command-file`, `--argv-json`, or `--stdin-command` support for evidence run; alternatively document a Windows-safe quoting recipe and include it in close blocker remediation.
+  - Related tasks / commits: `TASK-TEAM-0017`; fixture acceptance for empty fixture dir exit 0 and invalid fixture exit 1.
+
+- [ ] BUG-ATM-0039: Taskflow close reports the backend waiver command but cannot execute it without emergency approval
+  - Status: open
+  - Severity: P1 operator lane clarity
+  - Encountered: `taskflow close --dry-run` for `TASK-TEAM-0017` recommended a `tasks close --historical-delivery --waiver-out-of-scope-delivery` command, but running that command failed with `ATM_EMERGENCY_LANE_APPROVAL_REQUIRED`.
+  - Reproduce / detect: Produce a delivery commit that includes a scope-amended source-of-truth file, run `taskflow close --dry-run`, then run the returned backend command without an emergency approval lease.
+  - Impact: The dry-run recommendation looks like the next operator command, but it is incomplete because it omits the required emergency approval flow.
+  - Possible optimization: Have `taskflow close` either execute the waiver path internally when safe, or include the exact `emergency approve` prerequisite and approval text in the readiness hint.
+  - Related tasks / commits: `TASK-TEAM-0017`; delivery commit `4497fb169b9d5d5de66bdf48e50afa7ec1d11c44`.
+
+- [ ] BUG-ATM-0040: Team Agents schema files are not obviously swept by the global schema validator
+  - Status: open
+  - Severity: P1 validation coverage
+  - Encountered: `TASK-TEAM-0017` added six `schemas/team-agents/*.schema.json` files and validated them through `scripts/validate-team-agents-templates.ts`, but sidecar review noted that `scripts/validate-schemas.ts` and `scripts/validators.config.json` may not automatically include the new schema family.
+  - Reproduce / detect: Add a bad schema under `schemas/team-agents/`, run `npm run validate:schemas` / configured schema validators, and verify whether the failure is detected without the dedicated Team Agents validator.
+  - Impact: A schema family can be locally covered by one task validator but remain invisible to broad release validation.
+  - Possible optimization: Add auto-discovery for all `schemas/**/*.schema.json`, or require every new schema family to register in the global schema validator and validators config in the same task card.
+  - Related tasks / commits: `TASK-TEAM-0017`; `BUG-ATM-0008`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
