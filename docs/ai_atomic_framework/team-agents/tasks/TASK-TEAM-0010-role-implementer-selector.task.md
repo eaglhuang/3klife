@@ -2,7 +2,7 @@
 doc_id: doc_team_0010
 task_id: TASK-TEAM-0010
 title: "Role and implementer selector"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M4
@@ -44,6 +44,9 @@ outOfScope:
 nonGoals:
   - "Do not create editor-specific agent files"
   - "Do not auto-install external plugins"
+completed_at: "2026-06-14T14:38:45.471Z"
+completed_by_agent: "captain-teamagents"
+delivery_commit: "6f893e5a366e5e0a2c928edc5e158d06bf2039a0"
 ---
 # TASK-TEAM-0010 — Role and implementer selector
 
