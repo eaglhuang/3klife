@@ -603,6 +603,42 @@ is committed or explicitly handed back to Captain.
   - Possible optimization: Make the default Team Agents validator run all supported cases, or require each new case to be registered in a visible case matrix.
   - Related tasks / commits: `TASK-TEAM-0011`; source delivery commit `af86ae2c`.
 
+- [ ] BUG-ATM-0057: Evidence run output count is confusing under same-task parallel writes
+  - Status: open
+  - Severity: P1 evidence reliability / operator clarity
+  - Encountered: During `TASK-TEAM-0013`, parallel `node atm.mjs evidence run ...` commands for the same task returned non-monotonic `evidenceCount` values such as 6, 8, 7 even though `evidence missing` later showed all closure-required validators passed.
+  - Reproduce / detect: Run multiple `evidence run` commands concurrently against one task evidence file, then compare each command's `evidenceCount` with the final evidence JSON and `evidence missing`.
+  - Impact: Agents may suspect evidence loss or may rerun validators unnecessarily. In a worse implementation, concurrent writes could actually lose records.
+  - Possible optimization: Add same-task evidence file locking / atomic append semantics, or make `evidenceCount` explicitly "post-write observed count" with a warning that concurrent writes should be serialized.
+  - Related tasks / commits: `TASK-TEAM-0013`; delivery commit `3acba6bd`; `BUG-ATM-0009`.
+
+- [ ] BUG-ATM-0058: Evidence-only update cannot be committed, but close gate may require it committed before close
+  - Status: open
+  - Severity: P0 lifecycle deadlock
+  - Encountered: During `TASK-TEAM-0013`, after the delivery commit, close required updated `.atm/history/evidence/TASK-TEAM-0013.json` to be committed first. The ATM git commit wrapper then blocked an evidence-only commit with `ATM_PROTECTED_STATE_EVIDENCE_FILE_MISSING_TASK_CONTEXT`.
+  - Reproduce / detect: Commit source delivery, add additional required validator evidence, try `tasks close --status done`, then attempt to commit only the updated evidence file.
+  - Impact: Normal close can deadlock unless the operator discovers `taskflow close --historical-delivery ...`, making the official close path hard for agents to follow.
+  - Possible optimization: Let `taskflow close` be the default remediation when delivery is already committed, or let evidence-only current-task updates commit when a live claim/session exists and close is the next operation.
+  - Related tasks / commits: `TASK-TEAM-0013`; delivery commit `3acba6bd`; closure commit `30b3ac78`; `BUG-ATM-0053`, `BUG-ATM-0042`.
+
+- [ ] BUG-ATM-0059: Close missing-evidence remediation can produce doubled `node atm.mjs` command
+  - Status: open
+  - Severity: P1 closeback usability
+  - Encountered: During `TASK-TEAM-0013`, close missing-evidence guidance for validator `node atm.mjs team validate --task TASK-TEAM-0013 --json` suggested `node atm.mjs node atm.mjs team validate --task TASK-TEAM-0013 --json --json`.
+  - Reproduce / detect: Use a task-card validator whose validator name is the full `node atm.mjs ... --json` command string, then close before that exact validator id has evidence.
+  - Impact: Agents following the remediation literally run an invalid command.
+  - Possible optimization: Detect validator ids that are already full commands and use them as the evidence command directly, without prepending a runner.
+  - Related tasks / commits: `TASK-TEAM-0013`; `BUG-ATM-0046`.
+
+- [ ] BUG-ATM-0060: BUG-ATM-0045 repro exists but is not yet governed as a fix card
+  - Status: open
+  - Severity: P0 dispatch correctness
+  - Encountered: External worker 004 produced `scripts/repro/bug-atm-0045-planning-root-preference.mjs`, a failing repro showing that sibling planning roots like `3KLife-captain-dispatch-push` can rank equal to canonical `3KLife`.
+  - Reproduce / detect: Run `node scripts/repro/bug-atm-0045-planning-root-preference.mjs`; current expected output is failure until `next.ts` planning-root preference is fixed.
+  - Impact: The repro is useful but uncommitted and outside the current `TASK-TEAM-0013` scope, so it must not be silently bundled into Team runtime work.
+  - Possible optimization: Open a dedicated fix card, move the repro into a governed validator such as `scripts/validate-planning-root-canonical-preference.ts`, and implement canonical planning-root preference or duplicate-root warnings.
+  - Related tasks / commits: `BUG-ATM-0045`; external worker 004 report on 2026-06-14.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
