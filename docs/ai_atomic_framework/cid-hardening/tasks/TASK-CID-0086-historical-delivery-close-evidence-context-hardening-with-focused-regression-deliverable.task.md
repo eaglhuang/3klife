@@ -2,7 +2,7 @@
 task_id: TASK-CID-0086
 doc_id: doc_cid_0086
 title: "Historical-delivery close evidence-context hardening with focused regression deliverable"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M17
@@ -43,6 +43,9 @@ nonGoals:
   - "Do not introduce a lane where evidence files can commit without matching staged task or transition context."
 supersedes:
   - "TASK-CID-0085"
+completed_at: "2026-06-14T05:10:02.914Z"
+completed_by_agent: "captain"
+delivery_commit: "5cbcb4c188ce83abf75cef9a67e90ced34deb4bd"
 ---
 
 # TASK-CID-0086 - Historical-delivery close evidence-context hardening with focused regression deliverable
