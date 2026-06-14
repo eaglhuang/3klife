@@ -2,7 +2,7 @@
 doc_id: doc_team_0017
 task_id: TASK-TEAM-0017
 title: "Team template schema and validator contract"
-status: draft
+status: done
 owner: atm-core
 priority: P1
 milestone: M2
@@ -14,6 +14,15 @@ related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工�
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+completed_at: 2026-06-14T13:54:10.546Z
+completed_by: captain-teamagents
+delivery_commit: "4497fb169b9d5d5de66bdf48e50afa7ec1d11c44"
+closure_commit: "1b95f9e90cd8936bd506cd34d874d1e8d1ce3ca1"
+runner_sync_commit: "19e03e1c114ee3ebafd19c46e0492e5021a93250"
+closure_packet: ".atm/history/evidence/TASK-TEAM-0017.closure-packet.json"
+emergency_close:
+  lease_id: "EMG-TASK-TEAM-0017-50d955a217"
+  reason: "Human-approved backend close was required because closeback evidence and transition event sequencing formed a closure cycle after delivery commit 4497fb169b9d5d5de66bdf48e50afa7ec1d11c44."
 scopePaths:
   - "schemas/team-agents/team-brief.schema.json"
   - "schemas/team-agents/agent-report.schema.json"
@@ -23,6 +32,7 @@ scopePaths:
   - "schemas/team-agents/patrol-report.schema.json"
   - "scripts/validate-team-agents-templates.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-platform.json"
 deliverables:
   - "schemas/team-agents/team-brief.schema.json"
   - "schemas/team-agents/agent-report.schema.json"
@@ -127,6 +137,15 @@ npm run validate:cli
 node --strip-types scripts/validate-team-agents-templates.ts --fixtures test/fixtures/team-agents/
 git diff --check
 ```
+
+## Closure Notes
+
+- Delivery commit: `4497fb169b9d5d5de66bdf48e50afa7ec1d11c44`
+- Closure commit: `1b95f9e90cd8936bd506cd34d874d1e8d1ce3ca1`
+- Runner sync commit: `19e03e1c114ee3ebafd19c46e0492e5021a93250`
+- Closure packet: `.atm/history/evidence/TASK-TEAM-0017.closure-packet.json`
+- Emergency close lease: `EMG-TASK-TEAM-0017-50d955a217`
+- Extra scoped source-of-truth map shard: `atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-platform.json`
 
 ## Stop Conditions
 

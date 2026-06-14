@@ -51,11 +51,20 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
    - Runner sync commit: `637cfcb87d57c1290e7cafaf1993fbe9f98d54e3`
    - Team Agents dogfood: `team-71c0d5c2fd25`
 
-4. `TASK-RFT-0003`
+4. `TASK-TEAM-0017`
+   - Status: done in target repo.
+   - Reason: formalizes the Team template schema and validator contract after M2 templates and RFT-0008 risk reduction.
+   - Delivery commit: `4497fb169b9d5d5de66bdf48e50afa7ec1d11c44`
+   - Closure commit: `1b95f9e90cd8936bd506cd34d874d1e8d1ce3ca1`
+   - Runner sync commit: `19e03e1c114ee3ebafd19c46e0492e5021a93250`
+   - Closure packet: `.atm/history/evidence/TASK-TEAM-0017.closure-packet.json`
+   - Note: closed through human-approved emergency backend close because closeback evidence / transition event sequencing formed a closure cycle.
+
+5. `TASK-RFT-0003`
    - Status: run before Team runtime cards.
    - Reason: framework-development temp-claim lifecycle is high-risk and should be simplified before `TASK-TEAM-0011+` runtime work.
 
-5. `TASK-RFT-0001`
+6. `TASK-RFT-0001`
    - Status: defer until `TASK-TEAM-0015`.
    - Reason: it touches `next.ts`; do it when Team recommendation integration actually needs that surface.
 
@@ -83,8 +92,8 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 | 2 | `TASK-TEAM-0005` | Done | Add decision/memory templates | Closed in target repo |
 | 3 | `TASK-TEAM-0006` | Done | Add patrol template | Closed in target repo; runner sync separated |
 | 4 | `TASK-RFT-0008` | Done | Add taskflow commit-message Strategy Map + size tripwire | Closed in target repo; runner sync separated |
-| 5 | `TASK-TEAM-0017` | Next recommended | Formalize template schema / validator contract | After RFT-0008 risk reduction |
-| 6 | `TASK-RFT-0003` | Before Team runtime | Simplify framework-development lifecycle surface | Before Team runtime |
+| 5 | `TASK-TEAM-0017` | Done | Formalize template schema / validator contract | Closed in target repo; runner sync separated |
+| 6 | `TASK-RFT-0003` | Next recommended | Simplify framework-development lifecycle surface | Before Team runtime |
 | 7 | `TASK-RFT-0001` | Defer | next.ts extraction | Only when `TASK-TEAM-0015` starts |
 
 ## Condition Review Checklist
