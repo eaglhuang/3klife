@@ -2,7 +2,7 @@
 doc_id: doc_team_0004
 task_id: TASK-TEAM-0004
 title: "Team brief/report templates"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M2
@@ -135,3 +135,10 @@ Revert the template and validator commit.
 ## Notes
 
 This card is deliberately template-first; later cards can consume these files from CLI output.
+
+Target repo closure:
+
+- Closed in `AI-Atomic-Framework` by `external-004`.
+- Implementation commit: `4aef5440afaec260a8dc2d596e00d0735a61dfdb`
+- Closure commit: `5fe00bdc3c81a9d9b3637a13504f7f726a46130b`
+- Closure packet: `AI-Atomic-Framework/.atm/history/evidence/TASK-TEAM-0004.closure-packet.json`
