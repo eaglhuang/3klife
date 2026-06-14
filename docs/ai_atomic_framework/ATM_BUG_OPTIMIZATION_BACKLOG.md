@@ -426,6 +426,42 @@ Use this file when:
   - Possible optimization: Either exclude git-head evidence writes from pure runner sync commits, or route runner sync through a first-class steward command that owns release artifacts plus generated evidence explicitly.
   - Related tasks / commits: `TASK-RFT-0003`; runner sync commit `4a07560619b9cfe78e8051ca785829694bc50159`; `BUG-ATM-0005`, `BUG-ATM-0031`.
 
+- [ ] BUG-ATM-0045: Task discovery can prefer a stale sibling planning worktree over the active planning repo
+  - Status: open
+  - Severity: P0 dispatch correctness
+  - Encountered: During `TASK-TEAM-0009`, the normal route found a matching task card under `../3KLife-captain-dispatch-push` even though the active planning repo is `C:\Users\User\3KLife`.
+  - Reproduce / detect: Keep an older sibling planning worktree with matching `docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0009-*.task.md`, then run `node atm.mjs next --prompt "TASK-TEAM-0009 Team plan dry-run resolver" --json`.
+  - Impact: Agents can import or close back against stale task text, which weakens the trust boundary between active planning authority and historical worktrees.
+  - Possible optimization: Add a canonical planning-root preference, reject sibling worktrees unless explicitly selected, or emit a high-severity warning when the chosen task card is outside the configured active planning repo.
+  - Related tasks / commits: `TASK-TEAM-0009`; target delivery commit `b3f4c80064a148152f850f4939732c3c4b7e5190`.
+
+- [ ] BUG-ATM-0046: Close missing-evidence remediation can generate an invalid doubled runner command
+  - Status: open
+  - Severity: P1 closeback usability
+  - Encountered: `TASK-TEAM-0009` close initially reported a missing command validator, but the remediation command duplicated the runner prefix as `node atm.mjs node atm.mjs team plan ...`.
+  - Reproduce / detect: Attempt to close a task that requires exact command evidence where the validator string itself starts with `node atm.mjs`.
+  - Impact: The missing-evidence guidance is close to useful, but agents following it literally will run an invalid command.
+  - Possible optimization: Treat command-shaped validator names as exact validator ids and quote them without prepending a runner command.
+  - Related tasks / commits: `TASK-TEAM-0009`; `BUG-ATM-0029`.
+
+- [ ] BUG-ATM-0047: Broker registry can surface completed task intents as active Team plan conflicts
+  - Status: open
+  - Severity: P1 coordination noise
+  - Encountered: `node atm.mjs team plan --task TASK-TEAM-0009 --json` surfaced an active write-broker intent for already completed `TASK-RFT-0003`.
+  - Reproduce / detect: Complete and close an RFT task, then run Team Agents planning shortly afterward and inspect `virtualAtomInUseRegistry.activeIntents`.
+  - Impact: False conflict noise can make Team Agents planning look riskier than it is and may slow Captain decisions.
+  - Possible optimization: Release or terminally mark write-broker intents when task close succeeds, or filter terminal task intents from Team plan risk summaries.
+  - Related tasks / commits: `TASK-RFT-0003`, `TASK-TEAM-0009`.
+
+- [ ] BUG-ATM-0048: Close gate requires validator aliases that duplicate more specific evidence
+  - Status: open
+  - Severity: P1 evidence friction
+  - Encountered: `TASK-TEAM-0009` already had specific evidence for `validate-team-agents:plan-resolver` and `team-plan:TASK-TEAM-0009`, but close also required `validate:team-agents` and the exact command string `node atm.mjs team plan --task TASK-TEAM-0009 --json`.
+  - Reproduce / detect: Record task-specific Team Agents validator evidence, then close a task card whose required validators use package-script aliases or command-string validators.
+  - Impact: Agents must add duplicate evidence after delivery, which can trigger the evidence/transition commit cycle and make closeback feel more complicated than the work itself.
+  - Possible optimization: Add validator alias normalization or let task cards declare accepted validator aliases so specific evidence can satisfy broader close requirements.
+  - Related tasks / commits: `TASK-TEAM-0009`; `BUG-ATM-0037`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
