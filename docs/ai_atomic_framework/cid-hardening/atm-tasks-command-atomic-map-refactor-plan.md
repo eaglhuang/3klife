@@ -42,6 +42,7 @@ task_family:
   - TASK-CID-0083
   - TASK-CID-0084
   - TASK-CID-0085
+  - TASK-CID-0086
 ---
 
 # ATM tasks command atomic map refactor plan
@@ -529,6 +530,18 @@ operator truthfulness, evidence determinism, and release ergonomics.
   exists so the governance lane can continue the same fix under a claimable CID
   id while `TASK-CID-0083` remains recorded as the original issue statement.
 
+### TASK-CID-0086 - historical-delivery close evidence-context hardening with focused regression deliverable
+
+- `TASK-CID-0085` proved the implementation path, but the final source bundle
+  also contained a new focused regression file under
+  `packages/cli/src/commands/tasks/__tests__/scope-lock-diagnostics.test.ts`.
+- ATM's current `tasks scope add` lane updates `allowedFiles`, but it does not
+  promote that file into the imported task's declared deliverable set for
+  historical-delivery close validation.
+- This successor card exists so the same landed source commit can be closed
+  through a truthful CID contract where the focused regression file is a
+  first-class deliverable instead of an out-of-scope historical source file.
+
 ### Extended sequencing
 
 ```text
@@ -544,6 +557,7 @@ TASK-CID-0073
         -> TASK-CID-0082
         -> TASK-CID-0083
         -> TASK-CID-0085
+        -> TASK-CID-0086
           -> TASK-CID-0084
 ```
 
