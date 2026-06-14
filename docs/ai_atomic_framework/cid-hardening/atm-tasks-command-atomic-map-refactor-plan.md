@@ -620,3 +620,12 @@ TASK-CID-0073
   the live ledger and then fail during automatic `git add` because it stages a
   nonexistent `.atm/history/evidence/<task>.json`; abandoned close should stage
   only files it actually produced.
+- The 0082/0084 closeback cleanup also exposed two ATM UX gaps. First,
+  `emergency approve` can mint a lease for the exact human-approved repair
+  intent but omit required protected flags such as `--force`, producing an
+  unusable lease instead of previewing the command/flag tuple that will pass.
+  Second, `taskflow close --dry-run` can report a close bundle as ready and
+  only reveal missing `validate:git-head-evidence` proof during `--write`,
+  after the source delivery commit already exists. The dry-run lane should
+  surface the same mandatory evidence checklist before it permits the write
+  attempt.
