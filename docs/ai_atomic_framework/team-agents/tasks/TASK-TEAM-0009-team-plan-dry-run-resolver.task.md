@@ -2,7 +2,7 @@
 doc_id: doc_team_0009
 task_id: TASK-TEAM-0009
 title: "Team plan dry-run resolver"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M4
@@ -45,6 +45,9 @@ outOfScope:
 nonGoals:
   - "Do not write .atm/runtime/**"
   - "Do not implement patrol automation"
+completed_at: "2026-06-14T14:21:29.393Z"
+completed_by_agent: "captain-teamagents"
+delivery_commit: "b3f4c80064a148152f850f4939732c3c4b7e5190"
 ---
 # TASK-TEAM-0009 — Team plan dry-run resolver
 
