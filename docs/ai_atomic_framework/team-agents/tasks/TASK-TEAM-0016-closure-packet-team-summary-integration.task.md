@@ -2,7 +2,7 @@
 doc_id: doc_team_0016
 task_id: TASK-TEAM-0016
 title: "Closure packet team summary integration"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M6
@@ -49,6 +49,9 @@ outOfScope:
 nonGoals:
   - "Do not create a second closure packet format"
   - "Do not weaken close/checkpoint gates"
+completed_at: "2026-06-14T17:12:16.898Z"
+completed_by_agent: "captain-teamagents"
+delivery_commit: "4c2676b43fb3be12beb79f175a2b103817e15212"
 ---
 # TASK-TEAM-0016 — Closure packet team summary integration
 
