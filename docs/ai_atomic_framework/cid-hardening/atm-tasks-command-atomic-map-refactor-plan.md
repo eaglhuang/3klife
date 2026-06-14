@@ -41,6 +41,7 @@ task_family:
   - TASK-CID-0082
   - TASK-CID-0083
   - TASK-CID-0084
+  - TASK-CID-0085
 ---
 
 # ATM tasks command atomic map refactor plan
@@ -516,6 +517,18 @@ operator truthfulness, evidence determinism, and release ergonomics.
   guidance does not recommend redundant import repair or hide the actual close
   blocker behind a false planning-status ambiguity.
 
+### TASK-CID-0085 - historical-delivery close evidence-context deadlock hardening successor lane
+
+- `TASK-CID-0083` captured the right product bug, but its first imported runtime
+  copy accidentally depended on `TASK-CID-0082`, which makes the card
+  unclaimable without a protected `tasks import --write --force` repair.
+- Until ATM offers a non-emergency metadata correction lane for this case, the
+  captain continuation needs a clean successor card that carries the same
+  implementation scope without the impossible dependency edge.
+- This card is intentionally a delivery successor, not a second product bug: it
+  exists so the governance lane can continue the same fix under a claimable CID
+  id while `TASK-CID-0083` remains recorded as the original issue statement.
+
 ### Extended sequencing
 
 ```text
@@ -529,7 +542,8 @@ TASK-CID-0073
       -> TASK-CID-0080
         -> TASK-CID-0081
         -> TASK-CID-0082
-          -> TASK-CID-0083
+        -> TASK-CID-0083
+        -> TASK-CID-0085
           -> TASK-CID-0084
 ```
 

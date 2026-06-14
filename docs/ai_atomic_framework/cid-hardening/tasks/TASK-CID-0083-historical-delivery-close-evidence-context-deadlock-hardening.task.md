@@ -10,8 +10,6 @@ related_plan: docs/ai_atomic_framework/cid-hardening/atm-tasks-command-atomic-ma
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
-depends_on:
-  - "TASK-CID-0082"
 scopePaths:
   - "packages/cli/src/commands/tasks.ts"
   - "packages/cli/src/commands/taskflow.ts"
