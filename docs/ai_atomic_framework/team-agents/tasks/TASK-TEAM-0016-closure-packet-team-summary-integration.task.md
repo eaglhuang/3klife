@@ -8,7 +8,6 @@ priority: P1
 milestone: M6
 depends_on:
   - "TASK-TEAM-0013"
-  - "TASK-TEAM-0014"
   - "TASK-TEAM-0015"
 related_plan: "docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md"
 planning_repo: 3KLife
