@@ -2,7 +2,7 @@
 doc_id: doc_team_0013
 task_id: TASK-TEAM-0013
 title: "file.write scope validator"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M5
@@ -44,6 +44,9 @@ outOfScope:
 nonGoals:
   - "Do not widen allowedFiles"
   - "Do not allow `.atm/runtime/**` hand edits"
+completed_at: "2026-06-14T15:17:40.575Z"
+completed_by_agent: "codex-captain"
+delivery_commit: "3acba6bda4a846a019127d8f62a613771a512622"
 ---
 # TASK-TEAM-0013 — file.write scope validator
 
