@@ -2,7 +2,7 @@
 task_id: TASK-CID-0085
 doc_id: doc_cid_0085
 title: "Historical-delivery close evidence-context deadlock hardening successor lane"
-status: planned
+status: abandoned
 owner: atm-core
 priority: P1
 milestone: M17
@@ -45,6 +45,9 @@ nonGoals:
   - "Do not introduce a lane where evidence files can commit without matching staged task or transition context."
 supersedes:
   - "TASK-CID-0083"
+superseded_by:
+  - "TASK-CID-0086"
+closed_reason: "Superseded by TASK-CID-0086 after the focused regression file became first-class delivery scope."
 ---
 
 # TASK-CID-0085 - Historical-delivery close evidence-context deadlock hardening successor lane

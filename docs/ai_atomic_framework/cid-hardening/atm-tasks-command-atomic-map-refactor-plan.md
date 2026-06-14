@@ -612,3 +612,11 @@ TASK-CID-0073
   already been intentionally released in favor of `TASK-CID-0086`. The residue
   story remained technically divergent, but the surfaced next step was not the
   unique or most truthful operator lane.
+- The 0083/0085/0086 cleanup confirmed two more ATM operator-lane bugs. First,
+  running two frozen `node atm.mjs tasks close` commands in parallel can race
+  the onefile cache and fail with a missing `packages/cli/dist/commands/atm-chart.js`
+  import from `doctor.js`; close mutations should not depend on a partially
+  materialized shared cache. Second, `tasks close --status abandoned` can update
+  the live ledger and then fail during automatic `git add` because it stages a
+  nonexistent `.atm/history/evidence/<task>.json`; abandoned close should stage
+  only files it actually produced.

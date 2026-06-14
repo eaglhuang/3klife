@@ -2,7 +2,7 @@
 task_id: TASK-CID-0083
 doc_id: doc_cid_0083
 title: "Historical-delivery close evidence-context deadlock hardening"
-status: planned
+status: abandoned
 owner: atm-core
 priority: P1
 milestone: M17
@@ -43,6 +43,9 @@ outOfScope:
 nonGoals:
   - "Do not solve this by telling operators to use raw git bypasses or hook bypasses."
   - "Do not introduce a lane where evidence files can commit without matching staged task or transition context."
+superseded_by:
+  - "TASK-CID-0086"
+closed_reason: "Superseded by TASK-CID-0086; this card remains as the original issue statement only."
 ---
 
 # TASK-CID-0083 - Historical-delivery close evidence-context deadlock hardening
