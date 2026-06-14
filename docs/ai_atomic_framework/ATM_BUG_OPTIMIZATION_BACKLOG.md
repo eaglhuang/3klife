@@ -462,6 +462,24 @@ Use this file when:
   - Possible optimization: Add validator alias normalization or let task cards declare accepted validator aliases so specific evidence can satisfy broader close requirements.
   - Related tasks / commits: `TASK-TEAM-0009`; `BUG-ATM-0037`.
 
+- [ ] BUG-ATM-0049: Stale broker intents can block current Team plan until manual `broker cleanup`
+  - Status: open
+  - Severity: P0 Team Agents operability
+  - Encountered: During `TASK-TEAM-0010`, `node atm.mjs team plan --task TASK-TEAM-0010 --json` failed with `blocked-broker-cid-conflict` because an expired `TASK-RFT-0003` active intent remained in `.atm/runtime/write-broker.registry.json`.
+  - Reproduce / detect: Complete and close a task that registered a broker write intent, wait until the lease expires, then run `team plan` for another task touching nearby files.
+  - Impact: A completed task can make an unrelated current Team plan look blocked, forcing Captain to know and run `node atm.mjs broker cleanup --json`.
+  - Possible optimization: Run broker orphan cleanup automatically on task close and before Team plan broker evaluation, or downgrade expired terminal-task intents to advisory cleanup notices with a safe auto-clean path.
+  - Related tasks / commits: `TASK-RFT-0003`, `TASK-TEAM-0010`; `BUG-ATM-0047`.
+
+- [ ] BUG-ATM-0050: Onefile cache can lose internal command modules after rebuild
+  - Status: open
+  - Severity: P0 frozen runner reliability
+  - Encountered: During `TASK-TEAM-0010`, `node atm.mjs broker --help` failed from the onefile cache with missing `packages/cli/dist/commands/actor-registry.js`; another attempt failed with missing cached `atm.mjs`.
+  - Reproduce / detect: After source edits and `npm run build`, run `node atm.mjs broker --help` or other frozen runner commands that import newer command modules.
+  - Impact: Agents following the frozen-runner rule can hit module-not-found errors while trying to inspect official commands.
+  - Possible optimization: Add a onefile cache integrity check that clears/recreates the cache when expected extracted files are absent, and include command-module import coverage in onefile release validation.
+  - Related tasks / commits: `TASK-TEAM-0010`; `BUG-ATM-0006`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
