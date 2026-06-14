@@ -219,6 +219,15 @@ Use this file when:
   - Possible optimization: Add closure packet fields such as `preExistingDeliverables`, `changedDeliverables`, and `validatedDeliverables`, and teach close review to state which acceptance items were already satisfied before the task commit.
   - Related tasks / commits: `TASK-TEAM-0004`; framework implementation commit `4aef5440`, close commit `5fe00bdc`.
 
+- [ ] BUG-ATM-0022: `identity set` response can show a previous actor's active session
+  - Status: open
+  - Severity: P2 operator clarity
+  - Encountered: While preparing `external-005`, `node atm.mjs identity set --actor "external-005" ... --json` returned `actorId: external-005` but also showed `activeSessionId` from the prior `external-004` session.
+  - Reproduce / detect: Run `identity set` for a new actor immediately after another actor closed or claimed a task, then inspect `evidence.identity.activeSessionId`.
+  - Impact: Captain or worker may incorrectly infer that the new identity is attached to the prior actor's session.
+  - Possible optimization: Omit stale `activeSessionId` from identity-set output, or only include it when the active session belongs to the same actor.
+  - Related tasks / commits: observed during `TASK-TEAM-0005` setup after `TASK-TEAM-0004`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
