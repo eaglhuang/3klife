@@ -33,6 +33,12 @@ task_family:
   - TASK-CID-0074
   - TASK-CID-0075
   - TASK-CID-0076
+  - TASK-CID-0077
+  - TASK-CID-0078
+  - TASK-CID-0079
+  - TASK-CID-0080
+  - TASK-CID-0081
+  - TASK-CID-0082
 ---
 
 # ATM tasks command atomic map refactor plan
@@ -391,3 +397,114 @@ TASK-CID-0063
             -> TASK-CID-0075
               -> TASK-CID-0076
 ```
+
+## Follow-up - operator residue cleanup after the 0073-0076 wave
+
+The 0073-0076 closeout wave fixed the biggest operator-lane holes, but the
+captain closeback run exposed one more class of ATM/UX residue:
+
+- ATM can distinguish "prompt mentions a task family" from "no open work
+  remains", but `next` still reports the empty-scope case as
+  `TASK_SCOPE_NOT_FOUND`, which feels like a lookup bug instead of a clean
+  "nothing left to do" result;
+- command-backed evidence remains too brittle around validator-command string
+  matching and same-task concurrent writes;
+- `taskflow close --dry-run` still hides some blockers that the real close path
+  later rejects, which leaks hidden operator cost;
+- emergency leases burn uses too eagerly when a command fails before any
+  protected mutation succeeds;
+- release/root-drop sync still depends on hidden staging knowledge for newly
+  generated ignored artifacts.
+
+These are not the same problem. They are a post-closeout cleanup pack around
+operator truthfulness, evidence determinism, and release ergonomics.
+
+### TASK-CID-0077 - prompt-scoped empty-queue no-work normalization
+
+- Distinguish "the requested task scope does not exist" from "the requested
+  task scope exists conceptually but no open imported work remains".
+- `next --prompt` should expose a stable no-open-work status and message for the
+  empty queue case instead of reusing `ATM_NEXT_TASK_SCOPE_NOT_FOUND`.
+- Validation must cover both outcomes so explicit unknown scope still fails
+  closed.
+
+### TASK-CID-0078 - validator remediation command canonicalization
+
+- ATM currently over-trusts exact command spelling in some validator/evidence
+  remediation paths (`git diff --check` vs alias-like validator keys, `npm test`
+  vs normalized names).
+- Normalize command-backed validator matching onto a canonical representation so
+  equivalent governed commands are recognized without weakening evidence
+  requirements.
+- This card is about command identity and remediation truthfulness, not about
+  changing which validators are required.
+
+### TASK-CID-0079 - same-task evidence write serialization
+
+- Parallel `evidence run` against the same task can race on bundle updates and
+  silently lose command-backed proof.
+- Add an explicit same-task serialization or lock discipline for evidence writes
+  so parallel runs fail closed or queue safely instead of winning by last write.
+- Validation must prove that command-backed evidence for one validator cannot
+  erase another validator recorded in the same session.
+
+### TASK-CID-0080 - taskflow close dry-run parity and hidden-blocker disclosure
+
+- `taskflow close --dry-run` must disclose the same high-value blockers that the
+  real close lane will reject later, including active-claim requirements,
+  historical-delivery repo constraints, and out-of-scope waiver needs.
+- The goal is not to make dry-run mutate more; the goal is to stop promising a
+  path that the real close command cannot take.
+- The closeback story should stay fail-closed, but its diagnostics must become
+  truthier earlier.
+
+### TASK-CID-0081 - emergency lease use-count semantics hardening
+
+- One-use emergency leases should not be consumed merely because a protected
+  command reached a validation failure before mutation.
+- Lease use accounting should advance only after the protected surface confirms
+  the approved mutation path actually executed.
+- Audit evidence must still record failed attempts, but failed attempts must not
+  silently burn the only remaining governed recovery use.
+
+### TASK-CID-0082 - release root-drop generated-artifact staging contract
+
+- Release/root-drop sync currently relies on operator memory for ignored
+  generated artifacts that still belong in a governed release bundle.
+- Add an explicit release staging contract so newly generated root-drop
+  artifacts do not require hidden `git add -f` knowledge.
+- The goal is to make release sync reproducible and visible, not to weaken the
+  ignored-artifact boundary for unrelated files.
+
+### Extended sequencing
+
+```text
+TASK-CID-0073
+  -> TASK-CID-0074
+  -> TASK-CID-0075
+    -> TASK-CID-0076
+      -> TASK-CID-0077
+      -> TASK-CID-0078
+      -> TASK-CID-0079
+      -> TASK-CID-0080
+        -> TASK-CID-0081
+        -> TASK-CID-0082
+```
+
+### 2026-06-14 operator friction notes
+
+- `TASK-CID-0077` confirmed that `ATM_RUNNER_SYNC_REQUIRED` plus mandatory
+  `npm run build` can regenerate tracked `release/` outputs that are still
+  outside the active direction lock allowed files. This is now explicitly
+  tracked by `TASK-CID-0082`.
+- `TASK-CID-0077` also confirmed that `tasks close` can report all
+  closure-required validators passed and still force a separate governed commit
+  cycle before the actual close transition when scoped files remain dirty. This
+  is now explicitly tracked by `TASK-CID-0080`.
+- During the same run, a plain `git commit` still discovers the wrapper-only
+  commit rule only after the pre-commit hook fires. That extra operator retry is
+  folded into the `TASK-CID-0080` follow-up rather than left as tribal
+  knowledge.
+- Evidence writes were kept intentionally serial because multiple `evidence run`
+  operations target the same task evidence file. The fact that the safe path is
+  mostly tacit is one of the motivations behind `TASK-CID-0079`.

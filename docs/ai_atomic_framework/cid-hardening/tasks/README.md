@@ -145,5 +145,23 @@ Planning-only cards in this pack do not authorize framework source edits by them
 
 ## Cross-Lane References
 
+## Post-M16 Operator Cleanup Pack
+
+> This pack captures the remaining ATM/UX residue discovered while closing the
+> 0073-0076 wave in a real captain dual-repo run. The goals are: make prompt-
+> scoped `next` truthier when queues are empty, remove false missing-validator
+> residue caused by command spelling, harden same-task evidence writes, surface
+> `taskflow close` blockers earlier, repair emergency lease use-count semantics,
+> and make release/root-drop staging reproducible.
+
+| Task ID | Stage | Planned Title | Status | Notes |
+|---|---|---|---|---|
+| [TASK-CID-0077](./TASK-CID-0077-prompt-scoped-empty-queue-no-work-normalization.task.md) | M16 | Prompt-scoped empty-queue no-work normalization | planned | Distinguishes empty scoped queues from true task-scope lookup failure. |
+| [TASK-CID-0078](./TASK-CID-0078-validator-remediation-command-canonicalization.task.md) | M16 | Validator remediation command canonicalization | planned | Normalizes equivalent governed validator commands without weakening evidence gates. |
+| [TASK-CID-0079](./TASK-CID-0079-same-task-evidence-write-serialization.task.md) | M16 | Same-task evidence write serialization | planned | Prevents command-backed evidence loss under same-task concurrent writes. |
+| [TASK-CID-0080](./TASK-CID-0080-taskflow-close-dry-run-parity-and-hidden-blocker-disclosure.task.md) | M17 | Taskflow close dry-run parity and hidden-blocker disclosure | planned | Promotes predictable close blockers into dry-run diagnostics. |
+| [TASK-CID-0081](./TASK-CID-0081-emergency-lease-use-count-semantics-hardening.task.md) | M17 | Emergency lease use-count semantics hardening | planned | Burns emergency lease uses only on real protected mutation success. |
+| [TASK-CID-0082](./TASK-CID-0082-release-root-drop-generated-artifact-staging-contract.task.md) | M17 | Release root-drop generated-artifact staging contract | planned | Removes hidden `git add -f` knowledge from governed release sync. |
+
 - TEAM lane: [../../team-agents/tasks/README.md](../../team-agents/tasks/README.md)
 - APF lane: [../../atomic-police-family/tasks/README.md](../../atomic-police-family/tasks/README.md)
