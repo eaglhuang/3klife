@@ -2,7 +2,7 @@
 task_id: TASK-CID-0080
 doc_id: doc_cid_0080
 title: "Taskflow close dry-run parity and hidden-blocker disclosure"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M17
@@ -46,6 +46,9 @@ outOfScope:
 nonGoals:
   - "Do not keep dry-run optimistic when write mode will later fail for predictable reasons."
   - "Do not hide historical-delivery repo or waiver constraints behind backend-only errors."
+completed_at: "2026-06-14T04:14:48.221Z"
+completed_by_agent: "captain"
+delivery_commit: "b6f2d0e9846f544466690fa5cb79f98263f02592"
 ---
 
 # TASK-CID-0080 - Taskflow close dry-run parity and hidden-blocker disclosure
