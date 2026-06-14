@@ -2,7 +2,7 @@
 task_id: TASK-CID-0081
 doc_id: doc_cid_0081
 title: "Emergency lease use-count semantics hardening"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M17
@@ -42,6 +42,9 @@ outOfScope:
 nonGoals:
   - "Do not burn a one-use lease merely because validation failed before protected mutation."
   - "Do not make successful protected mutations free."
+completed_at: "2026-06-14T04:34:43.227Z"
+completed_by_agent: "captain"
+delivery_commit: "8ccb97fb"
 ---
 
 # TASK-CID-0081 - Emergency lease use-count semantics hardening
