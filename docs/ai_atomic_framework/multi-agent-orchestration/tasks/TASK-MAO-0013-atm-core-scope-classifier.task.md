@@ -7,22 +7,21 @@ priority: P0
 milestone: M5
 closure_authority: target_repo
 depends_on:
-  - "TASK-MAO-0005"
   - "TASK-MAO-0012"
 related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/atm-core-runner-broker-design.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 scopePaths:
   - "atm.mjs"
-  - "packages/core/src/broker/intent-registry.ts"
-  - "packages/core/src/broker/types.ts"
   - "packages/core/src/broker/atm-core-scope.ts"
   - "packages/core/src/broker/__tests__/atm-core-scope.test.ts"
+  - "packages/cli/src/commands/framework-development.ts"
   - "scripts/validate-runner-entrypoints.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "packages/core/src/broker/atm-core-scope.ts"
   - "packages/core/src/broker/__tests__/atm-core-scope.test.ts"
+  - "packages/cli/src/commands/framework-development.ts"
   - "scripts/validate-runner-entrypoints.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
@@ -59,6 +58,7 @@ Classify ATM core routes deterministically, close the current stale-runner detec
 - Update stale-runner diagnostics so source changes outside `packages/cli/src` and `scripts` are not missed.
 - Return structured diagnostics for undeclared core writes and scope drift without mutating route state.
 - Make it explicit that ordinary source-writing tasks may mark `runner-sync-needed` but must not publish `release/**` themselves.
+- Keep this v1 independent from the full Broker intent registry. The classifier should expose stable pure functions now; later Broker cards may adapt route intents into these functions without making `TASK-MAO-0013` depend on `TASK-MAO-0005`.
 
 ## Acceptance Criteria
 

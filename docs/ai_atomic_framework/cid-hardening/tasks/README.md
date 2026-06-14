@@ -145,6 +145,22 @@ Planning-only cards in this pack do not authorize framework source edits by them
 
 ## Cross-Lane References
 
+## M18 Trust Loop And Runner Steward Follow-Up
+
+> This pack captures the P0 trust-loop issues found after the 2026-06-14
+> captain analysis: prompt intent could misclassify planning analysis as
+> implementation, git-head evidence repair could pass one governance surface
+> while failing another, integration drift remediation needed sharper operator
+> guidance, and Runner Sync Steward v1 needed a CID bridge before full Broker
+> escalation.
+
+| Task ID | Stage | Planned Title | Status | Notes |
+|---|---|---|---|---|
+| [TASK-CID-0087](./TASK-CID-0087-next-intent-analysis-classifier-hardening.task.md) | M18 | Next intent analysis classifier hardening | planned | Makes analysis/planning prompts win over broad implementation words such as "development" or "開發計畫". |
+| [TASK-CID-0088](./TASK-CID-0088-git-head-evidence-doctor-prepush-contract-alignment.task.md) | M18 | Git-head evidence doctor/pre-push contract alignment | planned | Aligns evidence backfill, doctor, and protected pre-push semantics. |
+| [TASK-CID-0089](./TASK-CID-0089-integration-drift-remediation-ux.task.md) | M18 | Integration drift remediation UX | planned | Makes drift diagnostics actionable without weakening manifest hash checks. |
+| [TASK-CID-0090](./TASK-CID-0090-runner-sync-steward-v1-cid-bridge.task.md) | M18 | Runner Sync Steward v1 CID bridge | planned | Implements the CID bridge to MAO `TASK-MAO-0011` through `TASK-MAO-0013`; full Broker remains deferred. |
+
 ## Post-M16 Operator Cleanup Pack
 
 > This pack captures the remaining ATM/UX residue discovered while closing the
