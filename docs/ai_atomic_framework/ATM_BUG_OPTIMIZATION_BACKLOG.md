@@ -291,6 +291,24 @@ Use this file when:
   - Possible optimization: When close is blocked, print grouped missing evidence with exact suggested `evidence run` commands for the current task and actor.
   - Related tasks / commits: `TASK-TEAM-0005`; close commit `98d5cbee`.
 
+- [ ] BUG-ATM-0030: Worker-created Markdown templates can include UTF-8 BOM and fail pre-commit
+  - Status: open
+  - Severity: P1 delivery friction
+  - Encountered: `TASK-TEAM-0006` pre-commit blocked because `docs/governance/team-agents/templates/patrol-report-template.md` contained a UTF-8 BOM.
+  - Reproduce / detect: Let an external worker create a new Markdown template file, force-add it from an ignored template directory, then run the ATM commit wrapper.
+  - Impact: The task content may be correct and validators may pass, but commit fails late on encoding.
+  - Possible optimization: Add an encoding preflight command to dispatch briefs for new text files, or have the template validator check BOM for its managed template paths before commit.
+  - Related tasks / commits: `TASK-TEAM-0006`; implementation commit `08eca824`.
+
+- [ ] BUG-ATM-0031: Closure packet can include advisory runner sync diffs in targetCommitDelta
+  - Status: open
+  - Severity: P1 closure clarity
+  - Encountered: `TASK-TEAM-0006` closure isolated `release/**` as advisory generated artifacts, but the closure packet `targetCommitDelta.changedFiles` still listed `release/atm-onefile/atm.mjs` and `release/atm-onefile/release-manifest.json`.
+  - Reproduce / detect: Build frozen runner during a task, leave `release/**` dirty as advisory, then close the source task before committing runner sync.
+  - Impact: Reviewers can misread generated runner sync as part of the task's delivery commit, even when it was intentionally separated into a steward commit.
+  - Possible optimization: Split closure packet changed files into `deliveryChangedFiles`, `advisoryDirtyFiles`, and `postCloseRunnerSyncFiles`, or omit advisory dirty files from `targetCommitDelta`.
+  - Related tasks / commits: `TASK-TEAM-0006`; closure commit `7ee56378`, runner sync commit `06bfc744`.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:

@@ -37,7 +37,7 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | [TASK-TEAM-0003](./TASK-TEAM-0003-atomization-planner-required-role.task.md) | M1 | Atomization planner required role | done | `TASK-TEAM-0001` (parallel with 0002) | team docs / CLI contract |
 | [TASK-TEAM-0004](./TASK-TEAM-0004-team-brief-report-templates.task.md) | M2 | Team brief/report templates | done | `TASK-TEAM-0002`, `TASK-TEAM-0003` | target closure: `AI-Atomic-Framework` `5fe00bdc`; templates / validator |
 | [TASK-TEAM-0005](./TASK-TEAM-0005-team-memory-captain-decision-templates.task.md) | M2 | Team memory and captain decision templates | done | `TASK-TEAM-0004` (parallel with 0006) | target closure: `AI-Atomic-Framework` `98d5cbee`; templates / validator |
-| [TASK-TEAM-0006](./TASK-TEAM-0006-patrol-report-template.task.md) | M2 | Patrol report template | planned | `TASK-TEAM-0004` (parallel with 0005) | templates / validator |
+| [TASK-TEAM-0006](./TASK-TEAM-0006-patrol-report-template.task.md) | M2 | Patrol report template | done | `TASK-TEAM-0004` (parallel with 0005) | target closure: `AI-Atomic-Framework` `7ee56378`; runner sync: `06bfc744`; templates / validator |
 | [TASK-TEAM-0007](./TASK-TEAM-0007-captain-decision-team-sizing-dry-run.task.md) | M3 | Captain decision and team sizing dry-run | done | `TASK-TEAM-0003` | `team` CLI |
 | [TASK-TEAM-0008](./TASK-TEAM-0008-task-lieutenant-escalation-rules.task.md) | M3 | Task lieutenant escalation rules | planned | `TASK-TEAM-0007` | `team` CLI |
 | [TASK-TEAM-0009](./TASK-TEAM-0009-team-plan-dry-run-resolver.task.md) | M4 | Team plan dry-run resolver | planned | `TASK-TEAM-0007`, `TASK-TEAM-0008` | `team` CLI |

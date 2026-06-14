@@ -2,7 +2,7 @@
 doc_id: doc_team_0006
 task_id: TASK-TEAM-0006
 title: "Patrol report template"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M2
@@ -120,3 +120,12 @@ Revert the template and validator changes.
 ## Notes
 
 This is the output contract for later Atomic Police automation.
+
+Target repo closure:
+
+- Closed in `AI-Atomic-Framework` by `external-006`.
+- Setup commit: `5e66b33dcd6839776e4b69423ef3f030432450fd`
+- Implementation commit: `08eca8249b23fae6015a303d57dfa40249af09f4`
+- Closure commit: `7ee56378e4fd4d516b72b6dee2b03f50090fc051`
+- Runner sync commit: `06bfc7443e7319aaaccf4319f106fbc226a7dad8`
+- Closure packet: `AI-Atomic-Framework/.atm/history/evidence/TASK-TEAM-0006.closure-packet.json`
