@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0005
 title: "broker intent registry"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M2
@@ -12,12 +12,12 @@ related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 scopePaths:
-  - "packages/core/src/broker/intent-registry.ts"
+  - "packages/core/src/broker/registry.ts"
   - "packages/core/src/broker/types.ts"
   - "packages/core/src/broker/__tests__/intent-registry.test.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
-  - "packages/core/src/broker/intent-registry.ts"
+  - "packages/core/src/broker/registry.ts"
   - "packages/core/src/broker/types.ts"
   - "packages/core/src/broker/__tests__/intent-registry.test.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
@@ -39,6 +39,9 @@ outOfScope:
   - "Full conflict arbitration"
   - "Freeze protocol"
   - "Route CLI commands beyond the data contract needed for registry tests"
+completed_at: "2026-06-15T12:40:04.447Z"
+completed_by_agent: "codex-captain-continuation"
+delivery_commit: "962aa300"
 ---
 
 # TASK-MAO-0005 - broker intent registry
