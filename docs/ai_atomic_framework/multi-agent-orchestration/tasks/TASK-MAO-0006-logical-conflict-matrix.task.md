@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0006
 title: "logical conflict matrix"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M2
@@ -38,6 +38,9 @@ atomizationImpact:
 outOfScope:
   - "Applying patches"
   - "Steward merge execution"
+completed_at: "2026-06-15T12:44:07.542Z"
+completed_by_agent: "codex-captain-continuation"
+delivery_commit: "e41539cdd4cd7e957b0102602f25808ee2740f7b"
 ---
 
 # TASK-MAO-0006 - logical conflict matrix
