@@ -99,6 +99,19 @@ Do not patch Team runtime source while `TASK-TEAM-0012` is running under
 review preparation. The next code fix should be selected after `TASK-TEAM-0012`
 is committed or explicitly handed back to Captain.
 
+## AAO 未開工對照（截至 2026-06-15）
+
+- `BUG-ATM-0023` -> `TASK-AAO-0066`（read-only preflight）
+- `BUG-ATM-0024` -> `TASK-AAO-0043`（規劃庫根目錄偏好）
+- `BUG-ATM-0032` -> `TASK-AAO-0110`（guide/start 路由對齊）
+- `BUG-ATM-0034` -> `TASK-AAO-0119`（frozen-runner 對齊）
+- `BUG-ATM-0042` / `BUG-ATM-0053` -> `TASK-AAO-0136`（close-commit-window / commit ergonomics）
+- `BUG-ATM-0050` -> `TASK-AAO-0109`（runner/staged 缺失重建對齊）
+- `BUG-ATM-0054` -> `TASK-AAO-0135`、`TASK-AAO-0136`、`TASK-AAO-0137`
+- `BUG-ATM-0055` -> `TASK-AAO-0135`（evidence/task-events scope）
+- `BUG-ATM-0058` -> `TASK-AAO-0135`、`TASK-AAO-0136`、`TASK-AAO-0137`
+- `BUG-ATM-0060` -> `TASK-AAO-0043`（sibling 規劃庫偏好）
+
 - [ ] BUG-ATM-0001: Captain priority drift between Team Agents and MAO
   - Status: open
   - Severity: P0 governance friction
@@ -304,7 +317,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Ask `node atm.mjs next --prompt "<task> preflight"` or a sidecar to inspect a task without write authority; inspect whether the playbook distinguishes read-only preflight from implementation.
   - Impact: Helper agents may overstep into claim/mutation when the intended role is just route verification or implementation briefing.
   - Possible optimization: Add a `preflight` / `review-only` channel or detect explicit read-only intent and return a non-claim playbook with allowed read commands.
-  - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar.
+  - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar; `TASK-AAO-0066`.
 
 - [ ] BUG-ATM-0024: Discovered planning paths can point at stale or alternate 3KLife worktree aliases
   - Status: open
@@ -313,7 +326,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Route a Markdown-discovered task after using multiple local 3KLife worktrees or aliases, then compare `taskPath`, `sourcePlanPath`, and the currently maintained planning repo.
   - Impact: Workers can read or import from an unintended stale planning worktree, causing status drift or wrong task-card content.
   - Possible optimization: Canonicalize planning repo roots, prefer the configured active planning repo, and include a warning when a discovered task path is outside the expected planning root.
-  - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar.
+  - Related tasks / commits: observed during `TASK-TEAM-0006` read-only sidecar; `TASK-AAO-0043`.
 
 - [ ] BUG-ATM-0025: Atom map descriptions can drift from validator support
   - Status: open
@@ -385,7 +398,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Run `node atm.mjs next --prompt "<existing task family goal>" --json`, follow the suggested `guide`, then `start`; compare the route against existing Markdown task cards.
   - Impact: Captains can be pulled away from the task-card lifecycle into a new atom discovery flow, increasing confusion before implementation starts.
   - Possible optimization: Teach `guide/start` to detect explicit task ids and known planning task-card roots, and prefer task-card import/claim guidance over create-atom when a matching card exists.
-  - Related tasks / commits: `TASK-RFT-0008`; Team Agents dogfood run `team-71c0d5c2fd25`.
+  - Related tasks / commits: `TASK-RFT-0008`; Team Agents dogfood run `team-71c0d5c2fd25`; `TASK-AAO-0110`.
 
 - [ ] BUG-ATM-0033: Team start is useful but may overstate "agents" before spawning exists
   - Status: open
@@ -403,7 +416,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Modify ATM CLI source, then run a frozen `node atm.mjs evidence ...` helper command before runner artifacts have been rebuilt.
   - Impact: Correctly protects the frozen runner, but it interrupts normal source-task evidence and can push ordinary workers into steward-owned `release/**` changes.
   - Possible optimization: Add a source-task handoff mode that records `runner-sync-needed` while allowing narrowly safe help/evidence capture, or make Runner Sync Steward a first-class follow-up lane in the playbook.
-  - Related tasks / commits: `TASK-RFT-0008`, `TASK-TEAM-0005`, `BUG-ATM-0026`.
+  - Related tasks / commits: `TASK-RFT-0008`, `TASK-TEAM-0005`, `BUG-ATM-0026`; `TASK-AAO-0119`.
 
 - [ ] BUG-ATM-0035: Planning card status lags after target claim/team run starts
   - Status: open
@@ -475,7 +488,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Implement a normal framework task with dirty in-scope source files, add evidence, then run `node atm.mjs tasks close --task <id> --status done --json` before a delivery commit.
   - Impact: Agents following the playbook literally hit a blocker and must infer a two-commit flow from remediation.
   - Possible optimization: Update the normal playbook to distinguish delivery commit, close/ledger commit, and runner sync commit when close requires a committed delivery parent.
-  - Related tasks / commits: `TASK-RFT-0003`; delivery commit `b76c494346bbe72dc4e005fa552e61a28d240248`, closure commit `55c435baf45dd12240329fb516dd24173980ea12`.
+  - Related tasks / commits: `TASK-RFT-0003`; delivery commit `b76c494346bbe72dc4e005fa552e61a28d240248`, closure commit `55c435baf45dd12240329fb516dd24173980ea12`; `TASK-AAO-0136`.
 
 - [ ] BUG-ATM-0043: Direction-lock mismatch warning repeats for evidence/task-events omitted from claim.files
   - Status: open
@@ -502,7 +515,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Keep an older sibling planning worktree with matching `docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0009-*.task.md`, then run `node atm.mjs next --prompt "TASK-TEAM-0009 Team plan dry-run resolver" --json`.
   - Impact: Agents can import or close back against stale task text, which weakens the trust boundary between active planning authority and historical worktrees.
   - Possible optimization: Add a canonical planning-root preference, reject sibling worktrees unless explicitly selected, or emit a high-severity warning when the chosen task card is outside the configured active planning repo.
-  - Related tasks / commits: `TASK-TEAM-0009`; target delivery commit `b3f4c80064a148152f850f4939732c3c4b7e5190`.
+  - Related tasks / commits: `TASK-TEAM-0009`; target delivery commit `b3f4c80064a148152f850f4939732c3c4b7e5190`; `TASK-AAO-0043`.
 
 - [ ] BUG-ATM-0046: Close missing-evidence remediation can generate an invalid doubled runner command
   - Status: open
@@ -547,7 +560,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: After source edits and `npm run build`, run `node atm.mjs broker --help` or other frozen runner commands that import newer command modules.
   - Impact: Agents following the frozen-runner rule can hit module-not-found errors while trying to inspect official commands.
   - Possible optimization: Add a onefile cache integrity check that clears/recreates the cache when expected extracted files are absent, and include command-module import coverage in onefile release validation.
-  - Related tasks / commits: `TASK-TEAM-0010`; `BUG-ATM-0006`.
+  - Related tasks / commits: `TASK-TEAM-0010`; `BUG-ATM-0006`; `TASK-AAO-0109`.
 
 - [ ] BUG-ATM-0051: Team start/status validator was absent while the task card required it
   - Status: open
@@ -574,7 +587,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Follow the normal playbook on a source-changing task: implement, add evidence, then close before committing the in-scope deliverables.
   - Impact: Agents following the official playbook hit a blocker and must infer the real three-phase flow: delivery commit, close governance commit, runner sync commit.
   - Possible optimization: Update the normal playbook to explicitly branch when the close gate requires a committed delivery parent, and name the runner-sync follow-up separately.
-  - Related tasks / commits: `TASK-TEAM-0011`; `BUG-ATM-0042`.
+  - Related tasks / commits: `TASK-TEAM-0011`; `BUG-ATM-0042`; `TASK-AAO-0136`.
 
 - [ ] BUG-ATM-0054: Closure commit wrapper requirement appears only after a failed normal git commit
   - Status: open
@@ -583,7 +596,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Close a task, stage current-task evidence/task-events/task JSON, then run plain `git commit`.
   - Impact: The failure is correct but late; agents waste a commit attempt and may not know closure commits need the ATM wrapper.
   - Possible optimization: Have `tasks close` print the exact wrapper commit command, or stage and commit the closure bundle through a first-class `taskflow close --commit` route.
-  - Related tasks / commits: `TASK-TEAM-0011`; closure commit `ab6723ba`; `BUG-ATM-0037`.
+  - Related tasks / commits: `TASK-TEAM-0011`; closure commit `ab6723ba`; `BUG-ATM-0037`; `TASK-AAO-0135`; `TASK-AAO-0137`; `TASK-AAO-0136`.
 
 - [ ] BUG-ATM-0055: Direction lock claim.files omits current-task evidence and task-events
   - Status: open
@@ -592,7 +605,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Claim a task, generate evidence/task events through ATM commands, then commit a delivery or closure bundle and inspect pre-commit warnings.
   - Impact: Non-blocking warning reads like scope drift even when ATM-generated governance files are expected.
   - Possible optimization: Treat current-task evidence/events as implicit claim coverage, or sync `claim.files` with canonical direction lock allowed files when claim is created.
-  - Related tasks / commits: `TASK-TEAM-0011`; `BUG-ATM-0043`.
+  - Related tasks / commits: `TASK-TEAM-0011`; `BUG-ATM-0043`; `TASK-AAO-0135`.
 
 - [ ] BUG-ATM-0056: `validate:team-agents` default does not cover newly added task-specific cases
   - Status: open
@@ -619,7 +632,7 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Commit source delivery, add additional required validator evidence, try `tasks close --status done`, then attempt to commit only the updated evidence file.
   - Impact: Normal close can deadlock unless the operator discovers `taskflow close --historical-delivery ...`, making the official close path hard for agents to follow.
   - Possible optimization: Let `taskflow close` be the default remediation when delivery is already committed, or let evidence-only current-task updates commit when a live claim/session exists and close is the next operation.
-  - Related tasks / commits: `TASK-TEAM-0013`; delivery commit `3acba6bd`; closure commit `30b3ac78`; `BUG-ATM-0053`, `BUG-ATM-0042`.
+  - Related tasks / commits: `TASK-TEAM-0013`; delivery commit `3acba6bd`; closure commit `30b3ac78`; `BUG-ATM-0053`, `BUG-ATM-0042`; `TASK-AAO-0135`; `TASK-AAO-0136`; `TASK-AAO-0137`.
 
 - [ ] BUG-ATM-0059: Close missing-evidence remediation can produce doubled `node atm.mjs` command
   - Status: open
@@ -637,7 +650,25 @@ is committed or explicitly handed back to Captain.
   - Reproduce / detect: Run `node scripts/repro/bug-atm-0045-planning-root-preference.mjs`; current expected output is failure until `next.ts` planning-root preference is fixed.
   - Impact: The repro is useful but uncommitted and outside the current `TASK-TEAM-0013` scope, so it must not be silently bundled into Team runtime work.
   - Possible optimization: Open a dedicated fix card, move the repro into a governed validator such as `scripts/validate-planning-root-canonical-preference.ts`, and implement canonical planning-root preference or duplicate-root warnings.
-  - Related tasks / commits: `BUG-ATM-0045`; external worker 004 report on 2026-06-14.
+  - Related tasks / commits: `BUG-ATM-0045`; external worker 004 report on 2026-06-14; `TASK-AAO-0043`.
+
+- [ ] BUG-ATM-0061: `tasks claim` dependency gate resolves prerequisite tasks via local-repo absolute path only, breaking cross-repo dispatch
+  - Status: open
+  - Severity: P0 dispatch correctness (blocks legitimate planning_repo authority closeback flows)
+  - Encountered: 2026-06-15 during `TASK-CID-0091` Phase A close attempt. The card declares `closure_authority: planning_repo` and `depends_on: [TASK-CID-0090]`. `TASK-CID-0090` was already closed (status `done`) in the AAF target_repo ledger. When running `node atm.mjs tasks claim --cwd C:/Users/User/3KLife --task TASK-CID-0091`, the gate looked exclusively at `C:\Users\User\3KLife\.atm\history\tasks\TASK-CID-0090.json` and reported `status: missing`. Mirror-importing the 0090 plan md into 3KLife made the file exist but status stayed `planned`, so claim still failed.
+  - Reproduce / detect: Create task A in planning_repo with `closure_authority: planning_repo` and a dep on task B whose `closure_authority: target_repo` and whose ledger entry exists only in the target repo. Try `tasks claim` for A from the planning_repo cwd — fails closed even though B is genuinely done.
+  - Impact: Any planning_repo authority card that depends on a previously closed target_repo card cannot complete the official `tasks reserve → promote → claim → close` lifecycle without an emergency lane. Drives operators to bypass the official close path entirely.
+  - Possible optimization: When a dependency is declared and its target_repo / closure_authority metadata is known, the gate should also probe the target_repo ledger for that dependency's done state, OR follow a `historicalDelivery` reconcile path automatically, OR document an explicit cross-repo dep-mirroring command (`tasks mirror-done --task TASK-CID-0090 --from <target-repo>` style) that records the closed state in the planning_repo ledger without faking a full closure transition.
+  - Related tasks / commits: `TASK-CID-0091`; `TASK-CID-0090`; this commit (Phase A guarded-B closeback).
+
+- [ ] BUG-ATM-0062: `next --claim` framework-mode router blocks planning_repo authority closeback because it only inspects `target_repo`, ignoring `closure_authority`
+  - Status: open
+  - Severity: P0 dispatch correctness (compounds with BUG-ATM-0061 to make planning_repo authority cards effectively unclosable via official lane when target_repo points to a different framework repo)
+  - Encountered: 2026-06-15 during `TASK-CID-0091` Phase A close attempt. The card frontmatter has `closure_authority: planning_repo` (3KLife) and `target_repo: AI-Atomic-Framework`. Running `node atm.mjs next --claim --cwd C:/Users/User/3KLife --actor codex-gpt-5.4-mini --prompt "TASK-CID-0091"` returned `ATM_NEXT_FRAMEWORK_TARGET_REPO_REQUIRED` with `frameworkMode: cross-repo-target-required`, forcing the operator to `cd C:/Users/User/AI-Atomic-Framework` before claim — but the card's closure authority is the planning repo, so being in AAF is wrong for closeback. The two surfaces disagree.
+  - Reproduce / detect: Create a planning_repo authority card whose `target_repo` is a different framework repo (a legitimate pattern for RFC / planning cards that describe work landing elsewhere). Run `next --claim --cwd <planning-repo>` for it. The framework-mode router will fail closed and demand cwd be the target_repo, even though closure must happen in the planning_repo.
+  - Impact: Combined with BUG-ATM-0061, the entire official claim/close lane is closed for planning_repo authority RFC/planning cards that describe work in another framework repo. Operators either route around via emergency lanes or commit deliverables without governed ledger closure, which is exactly what `BUG-ATM-0053` warned against.
+  - Possible optimization: The framework-mode router (`route-status` check) should give precedence to `closure_authority`: when `closure_authority: planning_repo`, the planning_repo cwd is correct and the router must not redirect to target_repo. The target_repo redirect should fire only when the next mutation is a target_repo closeback (`closure_authority: target_repo` with planning_repo cwd) or when editing files inside target_repo from the planning_repo cwd.
+  - Related tasks / commits: `TASK-CID-0091`; this commit (Phase A guarded-B closeback); related upstream pattern `BUG-ATM-0045` (planning-root preference family).
 
 ## Current Captain Sequencing Ruling
 
