@@ -3,12 +3,12 @@ doc_id: doc_team_0030
 task_id: TASK-TEAM-0030
 title: "Team Agents planning-repo path lease normalization"
 milestone: M5P
-status: planned
-artifact_status: draft
-runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
+status: done
+artifact_status: finalized
+runtime_status: closed-in-target-repo
+upstream_mutation_status: applied
+started_at: "2026-06-15T06:26:14.972Z"
+started_by_agent: "codex-captain-continuation"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -35,7 +35,13 @@ forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/.atm/runtime/**
   - C:/Users/User/AI-Atomic-Framework/release/**
   - any direct runtime lock edits
-notes: "2026-06-15 | planned | Team Agents can still treat planning-repo absolute task paths as unsafe write leases during plan/validate/start. This is a Team Agents lease classification bug, separate from TASK-AAO-0124 path comparison normalization."
+completed_at: "2026-06-15T06:34:32.645Z"
+closed_by_agent: "codex-captain-continuation"
+team_run_id: "team-48495f14cfa8"
+delivery_commit: "898d97515"
+evidence_commit: "e49365ef5"
+closure_commit: "46264c4cc"
+notes: "2026-06-15 | done | validation: validate-team-agents planning-path-lease-normalization; typecheck; validate:cli; validate:git-head-evidence | change: delivered in AI-Atomic-Framework commits 898d97515 + e49365ef5 and closed by 46264c4cc | blocker: frozen runner sync remains separate from this card"
 ---
 
 # TASK-TEAM-0030 Team Agents planning-repo path lease normalization
@@ -68,3 +74,13 @@ That is a Team Agents planning-path classification bug, not a reason to reopen `
 
 ## Rollback Hint
 Revert only the Team Agents lease-classification implementation and its matching test/map updates. Do not reopen or rewrite `TASK-AAO-0124` closure records.
+
+## Planning Closeback
+Closed in the target repo.
+
+- Team run: `team-48495f14cfa8`
+- Delivery: `898d97515`
+- Evidence adjunct: `e49365ef5`
+- Closure: `46264c4cc`
+- Source-first evidence passed: planning path lease normalization regression, typecheck, validate:cli, validate:git-head-evidence
+- Runner sync: frozen `atm.mjs` still reports `ATM_RUNNER_SYNC_REQUIRED`; handle runner-output synchronization in a separate governed card because this card forbids `release/**`.

@@ -5,7 +5,7 @@
     "title": "TEAM safe mirror/import ledger reconciliation lane",
     "owner": "atm-core",
     "priority": "P1",
-    "status": "planned",
+    "status": "done",
     "type": "planning",
     "phase": "M4R",
     "created": "2026-06-04",
@@ -191,6 +191,10 @@
       "C:/Users/User/AI-Atomic-Framework/scripts/validate-team-agents.ts",
       "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json"
     ],
-    "notes": "2026-06-15 | planned | Tracks Team Agents planning-path lease classification bug separately from closed TASK-AAO-0124 path normalization delivery."
+    "started_at": "2026-06-15T06:26:14.972Z",
+    "started_by_agent": "codex-captain-continuation",
+    "completed_at": "2026-06-15T06:34:32.645Z",
+    "closed_by_agent": "codex-captain-continuation",
+    "notes": "2026-06-15 | done | delivery: AI-Atomic-Framework 898d97515 + evidence e49365ef5 + closure 46264c4cc | validation: planning-path-lease-normalization, typecheck, validate:cli, validate:git-head-evidence | runner sync remains separate"
   }
 ]
