@@ -15,11 +15,13 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 scopePaths:
   - "scripts/validate-mao-parallel-routing.ts"
+  - "scripts/lib/mao-parallel-routing-benchmark-runner.ts"
   - "scripts/fixtures/mao-parallel-routing/"
   - "docs/reports/mao-parallel-routing-benchmark.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "scripts/validate-mao-parallel-routing.ts"
+  - "scripts/lib/mao-parallel-routing-benchmark-runner.ts"
   - "scripts/fixtures/mao-parallel-routing/"
   - "docs/reports/mao-parallel-routing-benchmark.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"

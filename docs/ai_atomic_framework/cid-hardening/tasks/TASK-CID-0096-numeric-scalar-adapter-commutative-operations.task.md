@@ -13,12 +13,13 @@ closure_authority: target_repo
 depends_on:
   - "TASK-CID-0092"
 scopePaths:
-  - "packages/core/src/broker/"
-  - "packages/core/src/broker/__tests__/"
+  - "packages/core/src/broker/adapters/index.ts"
+  - "packages/core/src/broker/adapters/numeric-scalar.ts"
+  - "packages/core/src/broker/__tests__/numeric-scalar-adapter.test.ts"
 deliverables:
-  - "Numeric scalar mutation adapter"
-  - "increment / decrement / max / min / set-if-current fixtures"
-  - "commutative merge decision tests"
+  - "packages/core/src/broker/adapters/index.ts"
+  - "packages/core/src/broker/adapters/numeric-scalar.ts"
+  - "packages/core/src/broker/__tests__/numeric-scalar-adapter.test.ts"
 validators:
   - "npm run typecheck"
   - "npm test"

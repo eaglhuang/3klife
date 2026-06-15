@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-15T15:20:46.506Z",
+  "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0090-runner-sync-steward-v1-cid-bridge.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-CID-0090.json"
+  ],
+  "taskIds": [
+    "TASK-CID-0090"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-CID-0090",
+      "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0090-runner-sync-steward-v1-cid-bridge.task.md",
+      "sectionTitle": "TASK-CID-0090",
+      "headingLine": 68,
+      "hash": "85d4d78f66d1efbb"
+    }
+  ]
+}

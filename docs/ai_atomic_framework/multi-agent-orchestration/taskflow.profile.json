@@ -1,0 +1,50 @@
+{
+  "schemaId": "taskflow.profile.v1",
+  "id": "mao-multi-agent-wave-taskflow-profile-v1",
+  "name": "MAO Multi-Agent Wave Taskflow Profile",
+  "repoLabel": "MAO Multi-Agent Wave Planning Lane",
+  "ownerRepo": "3KLife",
+  "taskIdPrefix": "TASK-MAO",
+  "taskId": {
+    "format": "TASK-MAO-NNNN"
+  },
+  "template": {
+    "defaultMarkdown": "# ${taskId} ${title}\n\n## Goal\n${description}"
+  },
+  "capabilities": {
+    "supportsDryRun": true,
+    "supportsWrite": false
+  },
+  "delegationDisplayHint": "MAO host opener may execute governed writes through taskflow open.",
+  "delegation": {
+    "hint": "Host opener supplies numbering and output policy through an invocable writer contract.",
+    "openerPath": "tools_node/task-card-opener.js",
+    "policy": {
+      "allocateTaskId": {
+        "mode": "host-opener",
+        "prefix": "TASK-MAO",
+        "format": "TASK-MAO-NNNN"
+      },
+      "resolveCanonicalOutputPath": {
+        "mode": "host-opener",
+        "pattern": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/${taskId}-${slug}.task.md",
+        "directory": "docs/ai_atomic_framework/multi-agent-orchestration/tasks"
+      },
+      "rosterSyncPolicy": "follow-up-command",
+      "rosterSync": {
+        "indexPath": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/README.md"
+      },
+      "fallbackBehavior": {
+        "mode": "template-only-fallback",
+        "reason": "MAO opener remains responsible for fallback when host policy is not invocable.",
+        "missingPrerequisites": [
+          "host opener not invoked"
+        ]
+      }
+    },
+    "writerInvocation": {
+      "describeOnly": false,
+      "displayHint": "node tools_node/task-card-opener.js --write --task ${taskId}"
+    }
+  }
+}

@@ -20,16 +20,28 @@ public_tracking: false
 executionMode: phase0-opener-first-active-claim-commit-guard-mvp
 planning_repo: 3KLife
 closure_authority: target_repo
-allowed_files:
+scopePaths:
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/git-governance.ts
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/git.spec.ts
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/hook.ts
+planning_read_only_paths:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0118-opener-first-active-claim-commit-guard-mvp.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
 forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/**
   - C:/Users/User/3KLife/.atm/**
   - C:/Users/User/3KLife/.tmp/**
   - C:/Users/User/3KLife/examples/**
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/git-head-evidence.ts
+  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/evidence.ts
+  - C:/Users/User/AI-Atomic-Framework/scripts/validate-cli.ts
+  - C:/Users/User/AI-Atomic-Framework/package.json
+  - C:/Users/User/AI-Atomic-Framework/release/**
+  - C:/Users/User/AI-Atomic-Framework/scratch/**
+  - C:/Users/User/AI-Atomic-Framework/.atm/history/**
 non_goals:
   - "Do not mutate AAF source files."
   - "Do not guess the next task id outside the opener-first flow."
@@ -48,6 +60,12 @@ This card closes that gap by making the generic opener flow the first gate befor
 
 Depends on TASK-AAO-0117 for sequencing.
 This is still Phase 0 planning work in 3KLife, and it does not touch AAF source in this turn.
+
+## Phase 1 Scope Amendment
+- Frontmatter now uses `scopePaths` for the AAF target-repo implementation surface and `planning_read_only_paths` for the 3KLife planning context.
+- The 3KLife planning files above remain Phase 0 planning context; they must not become target-repo write leases.
+- The AAF implementation scope for this card stays limited to the Phase 1A files listed below.
+- Broad `C:/Users/User/AI-Atomic-Framework/**` is intentionally removed from `forbidden_files`; otherwise it subtracts the executable Phase 1 scope during import.
 
 ## Phase 1A Scope
 - Add a commit wrapper MVP.

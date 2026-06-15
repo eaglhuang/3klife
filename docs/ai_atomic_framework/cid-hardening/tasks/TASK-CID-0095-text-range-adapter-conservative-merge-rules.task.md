@@ -13,12 +13,13 @@ closure_authority: target_repo
 depends_on:
   - "TASK-CID-0092"
 scopePaths:
-  - "packages/core/src/broker/"
-  - "packages/core/src/broker/__tests__/"
+  - "packages/core/src/broker/adapters/index.ts"
+  - "packages/core/src/broker/adapters/text-range.ts"
+  - "packages/core/src/broker/__tests__/text-range-adapter.test.ts"
 deliverables:
-  - "Text mutation adapter"
-  - "append / insertAfterHeading / replaceRange fixtures"
-  - "overlapping range conflict tests"
+  - "packages/core/src/broker/adapters/index.ts"
+  - "packages/core/src/broker/adapters/text-range.ts"
+  - "packages/core/src/broker/__tests__/text-range-adapter.test.ts"
 validators:
   - "npm run typecheck"
   - "npm test"

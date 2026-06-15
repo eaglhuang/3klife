@@ -14,14 +14,15 @@ depends_on:
   - "TASK-CID-0094"
   - "TASK-CID-0097"
 scopePaths:
-  - "packages/core/src/broker/__tests__/"
-  - "scripts/"
-  - "docs/reports/"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+  - "docs/reports/broker-format-adapter-dogfood-report.md"
+  - "packages/core/src/broker/__tests__/"
+  - "packages/core/src/broker/__tests__/dogfood-adapter-benchmark.test.ts"
+  - "scripts/validate-schemas.ts"
 deliverables:
-  - "Dogfood benchmark scenarios"
-  - "Adapter adoption report"
-  - "Ship/no-ship recommendation"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+  - "docs/reports/broker-format-adapter-dogfood-report.md"
+  - "packages/core/src/broker/__tests__/dogfood-adapter-benchmark.test.ts"
 validators:
   - "npm run typecheck"
   - "npm test"

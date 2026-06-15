@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-CID-0091",
+  "title": "Broker format adapter architecture RFC",
+  "status": "running",
+  "milestone": "M19",
+  "dependencies": [
+    "TASK-CID-0090"
+  ],
+  "acceptance": [
+    "`CID硬化計畫書2.md` contains the architecture, adapter contract sketch, conflict key model, and task order.",
+    "The RFC explicitly separates format adapters from domain adapters.",
+    "The RFC does not describe proposed features as already implemented."
+  ],
+  "deliverables": [
+    "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書2.md",
+    "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md"
+  ],
+  "scopePaths": [
+    "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書2.md",
+    "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md"
+  ],
+  "validators": [
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "planning_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Implementing broker runtime code",
+    "Changing path-to-atom-map.json"
+  ],
+  "nonGoals": [
+    "Do not claim format adapters already exist."
+  ],
+  "evidenceRequired": "planning-attestation",
+  "rollbackStrategy": "revert-planning-doc",
+  "rollbackNotes": "Revert the RFC section and this planning task card.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.broker-format-adapter-rfc",
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md",
+    "sectionTitle": "TASK-CID-0091",
+    "headingLine": 37,
+    "hash": "58aca1075e062601"
+  },
+  "importedAt": "2026-06-15T15:19:22.150Z",
+  "lastTransitionId": "2026-06-15T16-58-15-013Z-claim-2d652d58ff2e",
+  "lastTransitionAt": "2026-06-15T16:58:15.013Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "captain",
+  "reservedAt": "2026-06-15T16:55:34.223Z",
+  "promotedAt": "2026-06-15T16:55:53.614Z",
+  "claim": {
+    "actorId": "captain",
+    "leaseId": "lease-bb5029ed1277",
+    "claimedAt": "2026-06-15T16:58:15.009Z",
+    "heartbeatAt": "2026-06-15T16:58:15.009Z",
+    "ttlSeconds": 1800,
+    "files": [
+      "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書2.md",
+      "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md"
+    ],
+    "state": "active"
+  },
+  "startedAt": "2026-06-15T16:58:15.009Z",
+  "startedByActor": "captain"
+}

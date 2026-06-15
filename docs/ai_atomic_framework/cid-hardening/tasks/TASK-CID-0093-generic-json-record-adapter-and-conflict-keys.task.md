@@ -13,12 +13,15 @@ closure_authority: target_repo
 depends_on:
   - "TASK-CID-0092"
 scopePaths:
-  - "packages/core/src/broker/"
-  - "packages/core/src/broker/__tests__/"
+  - "packages/core/src/broker/types.ts"
+  - "packages/core/src/broker/adapters/index.ts"
+  - "packages/core/src/broker/adapters/json-record.ts"
+  - "packages/core/src/broker/__tests__/json-record-adapter.test.ts"
 deliverables:
-  - "Generic JSON mutation adapter"
-  - "JSON pointer conflict key fixtures"
-  - "Object upsert / add-if-absent / replace tests"
+  - "packages/core/src/broker/types.ts"
+  - "packages/core/src/broker/adapters/index.ts"
+  - "packages/core/src/broker/adapters/json-record.ts"
+  - "packages/core/src/broker/__tests__/json-record-adapter.test.ts"
 validators:
   - "npm run typecheck"
   - "npm test"

@@ -68,6 +68,7 @@ LLM 驅動的多代理系統正成為大規模程式碼合成的核心架構。�
 3. **CID Disjoint 路由機制**：當兩個代理修改同一檔案的不同函式（CID disjoint）時，broker 路由到 deterministic composer 進行合成，這是 STORM 風格 OCC 所欠缺的關鍵能力。
 4. **開源實作**：完整實作於 `AI-Atomic-Framework`（broker 1932 LOC，scope-lock 145 LOC，hash-lock 104 LOC，已於 Apache 2.0 釋出）。
 5. **AI-Native 設計原則**：本框架不假設人類撰寫每個原子的契約；而是為 AI Agent 提供一套**確定性工具鏈**，降低代理為了猜測代碼結構所付出的 LLM 推理成本。
+6. **超越程式碼的通用化（design）**：我們概述 broker 的衝突偵測核心如何從程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、YAML/TOML），透過 `FileMutationAdapter` 介面與 `ConflictKey` 分類（§3.10），並陳述 Theorem 3（ConflictKey Disjointness）作為 Theorem 1 的推廣。此項仍處於設計階段（TASK-CID-0091~0098，尚未實作），作為 roadmap 貢獻而非已驗證結果列出。
 
 ### 1.4 Paper Organization
 
@@ -127,6 +128,10 @@ STORM 的核心問題在於**檔案是其最小協調單位**。若兩個代理�
 
 Tier 2 的空缺正是本論文要填的位置。我們的核心主張是：**不需要建立通用 AST 引擎，也能在 tier 2 達成有效的並發治理**。Adapter 採用自己最便宜的偵測方式回報候選；broker 以多維度確定性檢查做准入決策；governance 流程以 dry-run / evidence 補足靜態分析的不確定性。
 
+### 2.8 Concurrency Control Beyond Code: OT, CRDTs, and Databases
+
+The `ConflictKey`-based generalization proposed in §3.10 draws on a much older lineage of concurrency control for shared structured data. **Operational Transformation (OT)** [Ellis & Gibbs, 1989] and **CRDTs** [Shapiro et al., 2011] address convergence for collaborative editing of documents and structured data more broadly than source code; database **two-phase locking** and **optimistic concurrency control** [Kung & Robinson, 1981] address conflict detection for record-level updates via read/write-set disjointness — structurally analogous to our $\mathsf{record}$-scope `ConflictKey`. ATM's Definition 5 (§3.10) can be read as restating this OCC tradition's read/write-set disjointness check in a format-agnostic vocabulary that spans code atoms, JSON records, and scalar fields under one broker; we do not claim novelty over OCC itself, only over its uniform application across heterogeneous artifact types within a single multi-agent admission point.
+
 ---
 
 ## 3. The Framework: Adapter-Guided Atomization + CID Broker（架構與形式化）
@@ -140,6 +145,7 @@ Tier 2 的空缺正是本論文要填的位置。我們的核心主張是：**�
 | ✅ **Implemented** | 已合入 main 分支、有單元測試、包含於 §4 的 12-scenario benchmark harness |
 | 🔶 **Prototype** | 已實作但仍限於部分情境（例如僅 JS / Python 兩種 adapter；其他語言尚未提供） |
 | 🔷 **Open Problem** | §3.9 列出的兩個尚未解決的議題（cross-language atom identity、CID schema migration） |
+| 🔹 **Proposed (Design)** | 為完整性陳述的 roadmap 項目（如 §3.10），尚無實作或 benchmark 覆蓋 |
 
 **As of 2026-06-12**：§3 中所有 ✅ 標記均對應 AAF commit `f841a27c` (CID-0033 SDK + canon_sym)、`aa907d04` (CID-0035 AGR Layer 2 + steward)、`16533023` (CID-0032 Augmented Decision Rule)、`9d214ad9` (CID-0034 registry integration)、`e62eee72` (CID-0037 benchmark harness)。
 
@@ -332,6 +338,8 @@ A natural objection is that the registry itself — the structure the broker rea
 
 This extends to **mid-execution registration** ✅: if Agent A registers and begins executing an intent on atom $a$, and Agent B subsequently registers an intent that also targets $a$, the broker detects $a$ as "in use" at registration time (not only at write time), and routes the pair through the same conflict-resolution paths as §3.4 (merge via deterministic-composer if CID-disjoint, or serialize). The actual filesystem write is performed by a single **neutral Writer Agent** (the "neutral write steward", `packages/core/src/broker/steward.ts`) that both agents' admitted plans are handed off to — eliminating any scenario where two agents perform concurrent filesystem writes to the same target. The CLI surface is exposed via `packages/cli/src/commands/broker.ts` (+67 LOC in CID-0035).
 
+**Operational layer note (2026-06-13~06-15).** The broker's sole-serialization-point property is preserved under the Multi-Agent Orchestration (MAO) operational layer built on top of it: MAO's Route Context state machine (`open → admitted → frozen → waiting → blocked → ready-to-apply → closed/abandoned`, specified in `docs/specs/mao-logical-routing-v1.md`) and its `freeze.ts` / `patch-envelope.ts` / `conflict-matrix.ts` components (TASK-MAO-0006~0009, shipped 2026-06-14) route all admission decisions and registry writes through the same broker described above — concurrency at the orchestration layer is additive scheduling on top of, not a bypass of, §3.4's admission algorithm. This is further extended by the proposed Team Agents Wave Mode (TASK-MAO-0023~0034, design only as of 2026-06-16), which batches admission for groups of related task cards while keeping broker admission and coordinator-only commit as the sole serialization and lifecycle authorities (see §3.8 and §6.4).
+
 ---
 
 ### 3.8 Limitation: Write-Conflict Prevention ≠ Semantic Correctness
@@ -344,6 +352,8 @@ We state this limitation prominently because it bounds every claim in §3.4–3.
 
 This is structurally the same boundary Git itself operates under: a clean three-way merge (no textual conflict) does not imply the merged program is correct. ATM's answer to this gap is the same as Git's — **post-write validators** (typecheck, lint, test, project-specific checks) are the layer responsible for catching semantic incompatibilities that survive write-conflict admission. We report validator pass/fail rates as part of the evaluation plan (§5) but do not claim the broker itself detects these cases — doing so would require full program analysis, which is explicitly outside this framework's scope (§3.5, A2).
 
+**Batch admission and evidence attribution (design).** A related, still-open engineering problem arises when $N$ agents operate within a single governed batch ("wave") admitted as a group: the broker's admission algorithm (§3.4) still evaluates each `WriteIntent` individually, but the resulting unified diff must be attributable back to individual task units for evidence and rollback. ATM's proposed Team Agents Wave Mode (TASK-MAO-0023~0034, §3.7) addresses this via declared `allowedFiles`/`scopePaths` per task and a wave-checkpoint step that rejects waves whose combined output cannot be cleanly sliced into per-task evidence. This does not change the admission soundness argument (Theorem 2) — each constituent intent is still individually admitted — but it is a distinct attribution problem that the formal model in §3.4–3.5 does not address. We flag it here as a known limitation of applying ATM at batch scale, deferred to the operational MAO specification.
+
 ---
 
 ### 3.9 Known Open Problems in This Formalization
@@ -352,6 +362,22 @@ We list two issues that this formalization does not resolve, to avoid overclaimi
 
 - **Cross-language atom identity.** If two atoms in different language regimes are claimed to represent "the same logical unit" (e.g., a TS API client and its Python backend handler), Definition 3's per-adapter `canon_sym` gives them unrelated CIDs — Theorem 1 guarantees they don't *collide*, but does not let the broker recognize they are *related*. This paper does not claim cross-language logical-atom tracking; all admission claims (Theorem 1, 2) are scoped to within-regime or cross-regime-disjoint reasoning.
 - **CID schema-version migration.** The `schema_version` mechanism (§3.3) prevents *future* formula changes from silently colliding with the current one, but does not by itself resolve the transition period: an active `WriteIntent` holding a $v_1$-computed CID and a newly-submitted intent holding a $v_2$-computed CID for the *same* underlying atom would not be recognized as referring to the same atom by either formula alone. We do not propose a resolution here; candidates include broker-side dual computation during a migration window, or a flag-day requiring all active intents to drain before a schema version bump. This is an implementation-planning question, tracked separately.
+
+---
+
+### 3.10 Generalizing Beyond Code: Format Adapters and ConflictKey 🔹 (Design, Not Yet Implemented)
+
+The broker's admission algorithm (§3.4) is stated in terms of code atoms (Definition 1) and their CIDs (Definitions 3–4). A natural question is whether the same admission core generalizes to *non-code structured artifacts* that multi-agent systems also write concurrently — JSON registries, path-to-atom maps, YAML/TOML configuration, numeric scalar files, and similarly. ATM's planning documents (`cid-hardening/CID硬化計畫書2.md`, 2026-06-15) propose, but do not yet implement, a three-layer extension:
+
+- **Broker Core** (unchanged): the admission algorithm of §3.4, parameterized over an abstract conflict key rather than a code-atom CID.
+- **Format Adapter Plugin**: a `FileMutationAdapter` interface — `supports / parse / normalize / getConflictKeys / canMerge / merge / serialize / validate` — implemented per file format (JSON, plain text ranges, numeric scalars, YAML/TOML).
+- **Domain Adapter**: format-adapter consumers specialized to a domain artifact (e.g., an `AtomMapAdapter` for `path-to-atom-map.json`), mapping domain-specific structures onto the `ConflictKey` taxonomy below.
+
+**Definition 5 (ConflictKey).** A conflict key is a pair $(\mathit{scope}, \mathit{locator})$ where $\mathit{scope} \in \{\mathsf{file}, \mathsf{record}, \mathsf{range}, \mathsf{line}, \mathsf{scalar}, \mathsf{semantic}\}$ and $\mathit{locator}$ identifies the conflicting unit within that scope (e.g., a JSON record's primary key for $\mathsf{record}$, a line range for $\mathsf{range}$, a field path for $\mathsf{scalar}$).
+
+**Theorem 3 (ConflictKey Disjointness, proposed — not yet validated).** *If two `MutationRequest`s $m, m'$ against the same file produce conflict-key sets $K(m)$ and $K(m')$ with $K(m) \cap K(m') = \emptyset$, and the format adapter's `canMerge` predicate holds for $(m, m')$, then the broker may admit both as `parallel-safe` (routed through `merge`), generalizing Theorem 1's file-overlap argument from code atoms to arbitrary structured artifacts.*
+
+This theorem is stated in the same conditional style as Theorem 2 (§3.5): it depends on the adapter-supplied `canMerge`/`merge` pair being correct for the format in question, just as Theorem 2 depends on (A1′)/(A2). We list it here as a roadmap contribution (tracked as TASK-CID-0091~0098, 8 task cards, none yet implemented) rather than a validated result — no benchmark scenario in §4.2 currently exercises Definition 5 or Theorem 3. We include it because it clarifies the *shape* of the generalization: the broker's role (admission via disjointness-or-mergeability checks) is format-agnostic; only the conflict-key extraction and merge logic are format-specific, mirroring the adapter-guided philosophy of §1.2 for code.
 
 ---
 
@@ -468,7 +494,7 @@ This vision paper establishes the formal mechanisms (Definitions 1–4, Theorems
 
 **Evaluation roadmap:**
 - ✅ **Vision paper (current, June 2026):** mechanism design + benchmark-validated implementation correctness
-- 🔜 **Full paper (December 2026, ICSE/FSE submission):** comparative evaluation against STORM / CodeCRDT / SCF; multi-adopter scale-out study; MAO multi-agent orchestration layer evaluation (see [`multi-agent-orchestration/MAO多AI並行治理計畫書.md`](https://github.com/eaglhuang/3KLife/blob/main/docs/ai_atomic_framework/multi-agent-orchestration/MAO%E5%A4%9AAI%E4%B8%A6%E8%A1%8C%E6%B2%BB%E7%90%86%E8%A8%88%E7%95%AB%E6%9B%B8.md))
+- 🔜 **Full paper (December 2026, ICSE/FSE submission):** comparative evaluation against STORM / CodeCRDT / SCF; multi-adopter scale-out study; MAO multi-agent orchestration layer evaluation. As of 2026-06-15, MAO is partially shipped (`freeze.ts`, `patch-envelope.ts`, `conflict-matrix.ts`, route-context lifecycle — TASK-MAO-0006~0009) with a simulator benchmark (TASK-MAO-0010) and Team Agents Wave Mode (TASK-MAO-0023~0034, §3.7/§6.4) pending. See [`multi-agent-orchestration/MAO多AI並行治理計畫書.md`](https://github.com/eaglhuang/3KLife/blob/main/docs/ai_atomic_framework/multi-agent-orchestration/MAO%E5%A4%9AAI%E4%B8%A6%E8%A1%8C%E6%B2%BB%E7%90%86%E8%A8%88%E7%95%AB%E6%9B%B8.md) and its sequel `MAO多AI並行治理計畫書2.md` (Team Agents Wave Mode).
 
 ---
 
@@ -508,6 +534,10 @@ Adapter-guided atomization degrades when:
 
 - **Cross-model validation:** In a multi-vendor LLM setting, independent verification by a second-model agent (e.g., Claude for primary, GPT-4 for secondary review) could catch primary-model hallucinations. Requires careful calibration of AGREE/DISAGREE/ABSTAIN verdict weighting — deferred to empirical evaluation.
 
+### 6.4 Self-Referential Validation: ATM Governing Its Own Development
+
+A noteworthy property of ATM's development process is that it is itself an instance of the multi-agent admission-controlled pattern this paper describes. The implementation of ATM's own next layer — the Format Adapter Plugin family for the CID Broker (TASK-CID-0091~0098, §3.10) — is planned to be coordinated via ATM's Team Agents Wave Mode (TASK-MAO-0033, "team wave dogfood benchmark with CID Phase B shape"), in which multiple agents concurrently implement an adapter registry plus JSON, text-range, and numeric-scalar adapters under broker admission, with per-task evidence sliced from a single wave diff (§3.8). While this is not a controlled experiment and does not substitute for the comparative benchmarks of §5, it provides an in-vivo stress test of the admission model on the same kind of multi-agent, multi-file, shared-surface workload the paper targets — applied to the framework's own codebase. We plan to report on this dogfood run as additional §4 evidence in the December 2026 full paper.
+
 ---
 
 ## 7. Conclusion
@@ -546,12 +576,25 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 > 8. Anonymous (2026). AWCP: A Workspace Delegation Protocol. arXiv:2602.20493.
 > 9. Anonymous (2026). Coordination as an Architectural Layer for LLM-Based Multi-Agent Systems. arXiv:2605.03310.
 > 10. Sartori, C.C. (2026). The Specification Gap: Coordination Failure Under Partial Knowledge in Code Agents. arXiv:2603.24284.
+> 11. Ellis, C.A. & Gibbs, S.J. (1989). Concurrency control in groupware systems. SIGMOD '89.
+> 12. Shapiro, M., Preguiça, N., Baquero, C., & Zawirski, M. (2011). Conflict-free Replicated Data Types. SSS 2011.
+> 13. Kung, H.T. & Robinson, J.T. (1981). On optimistic methods for concurrency control. ACM TODS 6(2).
 
 ---
 
 ---
 
 ## Revision History
+
+**2026-06-16 (Current Draft):**
+- **§3.0**: added 🔹 "Proposed (Design)" status tier for roadmap items with no implementation or benchmark coverage
+- **§3.7**: added operational-layer note on MAO Route Context state machine (`open→admitted→frozen→waiting→blocked→ready-to-apply→closed/abandoned`) and `freeze.ts`/`patch-envelope.ts`/`conflict-matrix.ts` (TASK-MAO-0006~0009, shipped 2026-06-14); referenced proposed Team Agents Wave Mode (TASK-MAO-0023~0034)
+- **§3.8**: added "Batch admission and evidence attribution (design)" paragraph on per-task evidence slicing under Wave Mode
+- **New §3.10**: Format Adapters and `ConflictKey` (Definition 5, Theorem 3 — proposed generalization of Theorem 1 to non-code structured artifacts, TASK-CID-0091~0098, design only)
+- **New §2.8**: Related Work — OT / CRDTs / database concurrency control, positioning Definition 5 relative to classical OCC
+- **New §6.4**: self-referential dogfood note — ATM's own Format Adapter implementation planned via Team Agents Wave Mode (TASK-MAO-0033)
+- **§1.3**: added contribution #6 (generalization beyond code, design-stage)
+- **References**: added Ellis & Gibbs (1989), Shapiro et al. (2011), Kung & Robinson (1981)
 
 **2026-06-12 (Current Draft):**
 - **Upgrade §3 status markers**: AGR Layer 1/2, Augmented Decision Rule, `canon_sym` policy, mid-execution registration all moved from 🔷 Proposed → ✅ Implemented after AAF delivered TASK-CID-0028~0037 (commits `f841a27c`, `aa907d04`, `16533023`, `9d214ad9`, `5bea4e31`, `e62eee72`)

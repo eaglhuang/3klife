@@ -123,7 +123,7 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "Phase 0 planning card for opener-first active-claim commit guard MVP. The universal card-opening flow is the first defense; AI must not guess the next task id. Phase 1A only covers commit wrapper / active-claim / trailer guard MVP. Phase 1B later covers close target attestation. Phase 1C later covers hook template / commit-msg strengthening. Runner sync stays on a separate side-path card.",
+    "description": "Phase 0 planning card for opener-first active-claim commit guard MVP. The universal card-opening flow is the first defense; AI must not guess the next task id. Frontmatter now keeps AAF Phase 1 target scope in scopePaths while 3KLife planning files move to planning_read_only_paths so Team Agents and claim routing preserve the target-repo write surface without planning-path lease pollution. Phase 1A only covers commit wrapper / active-claim / trailer guard MVP. Phase 1B later covers close target attestation. Phase 1C later covers hook template / commit-msg strengthening. Runner sync stays on a separate side-path card.",
     "related": [],
     "depends": [
       "TASK-AAO-0117"
@@ -139,10 +139,9 @@
       "Runner sync is tracked on a separate side-path card and is not merged into 0118."
     ],
     "deliverables": [
-      "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0118-opener-first-active-claim-commit-guard-mvp.task.md",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm.json",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json"
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/git-governance.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/git.spec.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/hook.ts"
     ],
     "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for opener-first active-claim commit guard MVP | blocker: none | risk: next-id guessing / trailer-guard drift",
     "brief": {

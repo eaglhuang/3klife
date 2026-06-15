@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-15T15:19:22.150Z",
+  "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-CID-0091.json"
+  ],
+  "taskIds": [
+    "TASK-CID-0091"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-CID-0091",
+      "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md",
+      "sectionTitle": "TASK-CID-0091",
+      "headingLine": 37,
+      "hash": "58aca1075e062601"
+    }
+  ]
+}
