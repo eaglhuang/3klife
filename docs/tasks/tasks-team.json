@@ -154,5 +154,43 @@
       "Command-backed broker compose evidence (Phase 1)"
     ],
     "notes": "2026-06-10 | done | broker compose negative-control PASS: blocked-cid-conflict, kind:cid, atomId team.plan-crew-briefing-contract; fixtures team-0028-same-atom-proposal-{a,b}.json."
+  },
+  {
+    "doc_id": "doc_team_0030",
+    "id": "TASK-TEAM-0030",
+    "title": "Team Agents planning-repo path lease normalization",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M5P",
+    "created": "2026-06-15",
+    "created_by_agent": "codex-captain-continuation",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Fix Team Agents permission lease derivation so planning-repo absolute paths are classified as planning-read-only context instead of unsafe target write leases.",
+    "related": [
+      "ATM-BUG-2026-06-15-008",
+      "TASK-AAO-0124",
+      "TASK-AAO-0118",
+      "TASK-TEAM-0029"
+    ],
+    "depends": [
+      "TASK-TEAM-0029"
+    ],
+    "acceptance": [
+      "A Team Agents regression covers a planning-repo task with absolute 3KLife paths and target-repo allowed files.",
+      "team validate does not request a write lease for planning-only files when the task targets AI-Atomic-Framework.",
+      "team start still fails closed for true unsafe target-repo writes.",
+      "The Captain report can distinguish planning-read-only context from target write scope."
+    ],
+    "deliverables": [
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/team.ts",
+      "C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/team.spec.ts",
+      "C:/Users/User/AI-Atomic-Framework/scripts/validate-team-agents.ts",
+      "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-15 | planned | Tracks Team Agents planning-path lease classification bug separately from closed TASK-AAO-0124 path normalization delivery."
   }
 ]

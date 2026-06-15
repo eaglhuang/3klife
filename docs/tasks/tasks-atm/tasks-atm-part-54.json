@@ -121,13 +121,13 @@
     "title": "normalize absolute and relative paths in task direction and hook scope checks",
     "owner": "atm-core",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "governance",
     "phase": "M16",
     "created": "2026-06-04",
     "created_by_agent": "codex-gpt-5.4-mini",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-06-04T11:17:36Z",
+    "started_by_agent": "codex-gpt-5.4-mini",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -150,7 +150,9 @@
       "scripts/validate-git-hooks-enforcement.ts",
       "scripts/validate-task-ledger-governance.ts"
     ],
-    "notes": "2026-06-04 | status: open | validation: pending | change: Phase 1 import scope amendment for absolute/relative path normalization guard | blocker: none",
+    "completed_at": "2026-06-04T11:27:45.974Z",
+    "closed_by_agent": "codex-gpt-5.4-mini",
+    "notes": "2026-06-04 | status: done | validation: npm run typecheck; validate-task-ledger-governance; validate-git-hooks-enforcement; validate:cli; validate:git-head-evidence | change: delivered in AI-Atomic-Framework delivery commit f97449a5c and target-repo closure commit 55f3938f | blocker: none",
     "brief": {
       "style": "classic",
       "label": "",
@@ -166,11 +168,26 @@
       "execution_steps": []
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts",
+        "AI-Atomic-Framework/packages/cli/src/commands/tasks.ts",
+        "AI-Atomic-Framework/scripts/validate-task-ledger-governance.ts"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework delivery commit f97449a5c",
+        "AI-Atomic-Framework closure commit 55f3938f",
+        "npm run typecheck",
+        "node --strip-types scripts/validate-task-ledger-governance.ts --mode validate",
+        "node --strip-types scripts/validate-git-hooks-enforcement.ts",
+        "npm run validate:cli",
+        "npm run validate:git-head-evidence"
+      ],
+      "handoff_diff_status": "target repo closed; 3KLife planning closeback synced",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "TASK-AAO-0124 is closed in the target repo and should not be reopened for the Team Agents planning-path lease issue.",
+        "Follow-up Team Agents issue is tracked separately as TASK-TEAM-0030."
+      ]
     }
   }
 ]

@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0124
 title: "normalize absolute and relative paths in task direction and hook scope checks"
 milestone: M16
-status: open
-artifact_status: draft
-runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
+status: done
+artifact_status: finalized
+runtime_status: closed-in-target-repo
+upstream_mutation_status: applied
+started_at: "2026-06-04T11:17:36Z"
+started_by_agent: "codex-gpt-5.4-mini"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -44,7 +44,11 @@ non_goals:
   - "Do not repair TEAM import dirty."
   - "Do not repair TASK-AAO-0113 closure packet."
   - "Do not fold the 007 hook.ts drift remediation into this card."
-notes: "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for absolute/relative path scope normalization guard | blocker: none"
+completed_at: "2026-06-04T11:27:45.974Z"
+closed_by_agent: "codex-gpt-5.4-mini"
+delivery_commit: "f97449a5c"
+closure_commit: "55f3938f"
+notes: "2026-06-04 | status: done | validation: npm run typecheck; validate-task-ledger-governance; validate-git-hooks-enforcement; validate:cli; validate:git-head-evidence | change: delivered in AI-Atomic-Framework delivery commit f97449a5c and target-repo closure commit 55f3938f | blocker: none"
 ---
 
 # TASK-AAO-0124 normalize absolute and relative paths in task direction and hook scope checks
@@ -112,3 +116,11 @@ Do not touch AAF source while rolling back the planning-card layer.
 ## Plain-language Anchor
 This card fixes ATM's ruler.
 The same path must not become two different routes just because one side writes it as an absolute address and the other side writes it as a relative one.
+
+## Planning Closeback
+Closed in the target repo; do not reopen for the later Team Agents lease issue.
+
+- Delivery: `f97449a5c`
+- Closure: `55f3938f`
+- Evidence: typecheck, task-ledger governance, git-hook enforcement, validate:cli, validate:git-head-evidence
+- Follow-up: `TASK-TEAM-0030`
