@@ -2,13 +2,15 @@
 task_id: TASK-CID-0091
 doc_id: doc_cid_0091
 title: "Broker format adapter architecture RFC"
-status: planned
+status: in-progress
+started_at: "2026-06-16T17:38:00+08:00"
+started_by_agent: "antigravity-gemini-3.5-flash"
 owner: atm-core
 priority: P0
 milestone: M19
-related_plan: docs/ai_atomic_framework/cid-hardening/CID硬化計畫書2.md
-planning_repo: 3KLife
+related_plan: "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書2.md"
 target_repo: AI-Atomic-Framework
+planning_repo: 3KLife
 closure_authority: planning_repo
 depends_on:
   - "TASK-CID-0090"
@@ -49,9 +51,12 @@ Write the architecture RFC for Broker Core + Format Adapter Plugin + Domain Adap
 
 ## Acceptance Criteria
 
-- `CID硬化計畫書2.md` contains the architecture, adapter contract sketch, conflict key model, and task order.
+- `CID蝖砍?閮??.md` contains the architecture, adapter contract sketch, conflict key model, and task order.
 - The RFC explicitly separates format adapters from domain adapters.
 - The RFC does not describe proposed features as already implemented.
+- `path-to-atom-map.json` is modeled under a Domain Adapter layer, with explicit record-level conflict keying.
+- Unknown-format behavior is explicitly fail-closed and block-by-default.
+- The RFC keeps mutation request flow as broker-first and does not propose direct writes to shared mutable files.
 
 ## Validation
 

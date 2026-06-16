@@ -235,3 +235,29 @@ type ConflictKey = {
 可以把 broker 想成 Unity Editor 的 AssetDatabase 寫入協調層，adapter 像不同 importer / serializer：JSON、文字、數字檔各有自己的解析與保存規則，但都經過同一個 editor transaction 管線。Cocos Creator 裡也類似資產資料庫刷新：不能讓多個 writer 任意改同一份 meta / asset 資料，而是要透過統一入口維持一致性。
 
 這個設計把「寫入治理」留在 broker，把「格式知識」留在 adapter，把「業務語意」留在 domain plugin，避免未來每新增一種資料檔就污染 broker core。
+
+## 10. TASK-CID-0091 架構 RFC 收斂結論
+
+本章節作為 `TASK-CID-0091` 的架構 RFC 最終收斂結論，確認以下技術設計規範正式定案，並作為後續執行卡（`TASK-CID-0092` 至 `TASK-CID-0098`）之實作準則：
+
+### 10.1 核心架構邊界與責任劃分
+*   **Mutation Broker Core (主幹引擎)**：
+    *   **唯一職責**：調度並排程寫入批次、管理寫入隊列、判斷 CAS（Compare-And-Swap）base hash 一致性、呼叫對應 Adapter 取得 Conflict Keys，並執行原子化寫入（Atomic Write）與 evidence 存證。
+    *   **禁忌規則**：Broker Core 不得寫死（Hard-code）任何關於 JSON、文字格式、數字格式或任何業務欄位特有的一致性與合併邏輯。
+*   **Format Adapter (格式適配器)**：
+    *   **唯一職責**：專注於該特定物理格式的解構與重組，包括 Parse（反序列化）、Normalize（標準化異動請求）、CanMerge（判斷同格式異動是否可交換或合併）、Merge（執行格式內部的合併運算）與 Serialize（序列化為 Buffer/字串）。
+*   **Domain Adapter (業務語意適配器)**：
+    *   **唯一職責**：覆蓋並延伸 Format Adapter 的行為，理解特定資料庫/設定檔的業務規則（Domain Invariants）與資料列。例如在 `JSON` 格式之上，`AtomMapAdapter` 知道特定 Row 結構與 Shard 驗證規則，負責執行語意校驗（Validate）。
+
+### 10.2 path-to-atom-map.json 的 Row-Level 衝突規劃
+*   `atomic_workbench/atomization-coverage/path-to-atom-map.json` 作為多代理共享（Shared）的 JSON 對照表，不再使用低效的整檔排除鎖。
+*   由業務適配器 `AtomMapAdapter`（基於通用 JSON 格式適配器）負責將變更請求解析為 **Record-Level Conflict Keys**。
+*   每個異動的 conflict key 將以 `filePath: {實體檔案路徑}` 搭配 `scope: "record"` 及 `key: {對應的 source_file 映射鍵值}` 組成。只要不同 Agent 異動的是不同的 source_file 映射鍵值（Record），Broker 便可併批安全合併，避免鎖衝突。
+
+### 10.3 Unknown Format 的 Fail-Closed（安全封閉）機制
+*   當 Broker 接收到未知格式、未配置格式提示（formatHint），或在 `Format Adapter Registry` 中找不到支援該檔案之適配器時，將觸發最高安全等級的 **Fail-Closed** 機制。
+*   未知格式之預設防護行為為 **Block-by-Default**：一律退回最保守的「整檔排他鎖（File-level exclusive lock）」，將其與所有其他針對該檔案的異動序列化排隊，不進行任何自動合併；若設定檔中宣告不允許 fallback，則直接拒絕該次變更請求。
+
+### 10.4 Broker-First 唯一寫入入口規則
+*   任何代理（Agent）皆**禁止**直接寫入或繞過 Broker 修改任何屬於共享狀態（Shared Mutable）之資料與程式碼檔案。
+*   所有變更必須統一包裝為標準的 `MutationRequest`，透過 `node atm.mjs broker submit` 提交給 Broker 統一執行。任何違反此規則之直接寫入檔案行為，均視為治理無效與損壞 worktree，自動觸發 Rollback 機制。
