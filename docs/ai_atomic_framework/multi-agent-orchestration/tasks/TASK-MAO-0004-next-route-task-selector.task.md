@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0004
 title: "next route and task selector"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M1
@@ -43,6 +43,9 @@ atomizationImpact:
 outOfScope:
   - "Admission conflict matrix"
   - "Automatic patch envelope generation"
+completed_at: "2026-06-16T15:34:14.127Z"
+completed_by_agent: "augment-code"
+delivery_commit: "7e866ec41"
 ---
 
 # TASK-MAO-0004 - next route and task selector
