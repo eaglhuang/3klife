@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0008
 title: "patch envelope contract"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M3
@@ -39,6 +39,9 @@ atomizationImpact:
 outOfScope:
   - "Applying patch envelopes to the worktree"
   - "Steward arbitration"
+completed_at: "2026-06-16T12:00:47.085Z"
+completed_by_agent: "codex-captain-continuation"
+delivery_commit: "803ffc335"
 ---
 
 # TASK-MAO-0008 - patch envelope contract
