@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0106
 title: Task-level atomization delta ledger
-status: planned
+status: done
 milestone: M19
 depends_on:
   - TASK-CID-0104
@@ -26,6 +26,9 @@ atomization_impact:
   owner_atom_or_map: atm.task-closure-map
   map_updates:
     - atm.evidence-command-map
+completed_at: "2026-06-16T03:34:40.420Z"
+completed_by_agent: "codex-main"
+delivery_commit: "117017f66986be628ecdc5d07084992c724eebb1"
 ---
 
 # TASK-CID-0106
