@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0103
 title: Historical batch close integration
-status: planned
+status: done
 milestone: M19
 depends_on:
   - TASK-CID-0102
@@ -29,6 +29,9 @@ rollback:
 atomization_impact:
   owner_atom_or_map: atm.historical-batch-evidence
   map_updates: []
+completed_at: "2026-06-16T02:56:04.592Z"
+completed_by_agent: "codex-main"
+delivery_commit: "917e54c3e23f9929652c636435642f59d974a8bd"
 ---
 
 # TASK-CID-0103
