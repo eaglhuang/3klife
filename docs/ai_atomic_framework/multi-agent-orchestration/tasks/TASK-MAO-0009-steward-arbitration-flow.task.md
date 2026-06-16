@@ -4,7 +4,7 @@ title: "steward arbitration flow"
 status: done
 started_at: "2026-06-16T20:21:00+08:00"
 started_by_agent: agent-007
-completed_at: "2026-06-16T20:28:00+08:00"
+completed_at: "2026-06-16T15:52:04.013Z"
 owner: atm-core
 priority: P1
 milestone: M3
@@ -43,6 +43,8 @@ atomizationImpact:
 outOfScope:
   - "General-purpose semantic merge"
   - "Humanless resolution of ambiguous conflicts"
+completed_by_agent: "cursor-composer-2.5"
+delivery_commit: "240b6b436752876acd58a2fff99940b9aef47c6c"
 ---
 
 # TASK-MAO-0009 - steward arbitration flow
