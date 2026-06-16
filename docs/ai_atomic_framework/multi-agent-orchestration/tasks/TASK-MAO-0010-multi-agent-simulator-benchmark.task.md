@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0010
 title: "multi-agent simulator benchmark"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M4
@@ -16,13 +16,37 @@ target_repo: AI-Atomic-Framework
 scopePaths:
   - "scripts/validate-mao-parallel-routing.ts"
   - "scripts/lib/mao-parallel-routing-benchmark-runner.ts"
-  - "scripts/fixtures/mao-parallel-routing/"
+  - "scripts/fixtures/mao-parallel-routing/manifest.json"
+  - "scripts/fixtures/mao-parallel-routing/01-parallel-safe-disjoint.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/02-same-file-different-atom-disjoint.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/03-same-atom-write-write.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/04-read-write-overlap-watch.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/05-unknown-scope-malformed.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/06-generated-artifact-drift.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/07-route-freeze-on-pause.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/08-route-resume-after-freeze.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/09-steward-apply-safe.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/10-steward-blocked-out-of-scope.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/11-shared-surface-blocked.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/12-runner-derived-artifact-collision.scenario.json"
   - "docs/reports/mao-parallel-routing-benchmark.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "scripts/validate-mao-parallel-routing.ts"
   - "scripts/lib/mao-parallel-routing-benchmark-runner.ts"
-  - "scripts/fixtures/mao-parallel-routing/"
+  - "scripts/fixtures/mao-parallel-routing/manifest.json"
+  - "scripts/fixtures/mao-parallel-routing/01-parallel-safe-disjoint.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/02-same-file-different-atom-disjoint.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/03-same-atom-write-write.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/04-read-write-overlap-watch.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/05-unknown-scope-malformed.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/06-generated-artifact-drift.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/07-route-freeze-on-pause.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/08-route-resume-after-freeze.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/09-steward-apply-safe.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/10-steward-blocked-out-of-scope.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/11-shared-surface-blocked.scenario.json"
+  - "scripts/fixtures/mao-parallel-routing/12-runner-derived-artifact-collision.scenario.json"
   - "docs/reports/mao-parallel-routing-benchmark.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
@@ -42,6 +66,9 @@ atomizationImpact:
 outOfScope:
   - "Real multi-process load testing"
   - "Distributed broker consensus"
+completed_at: "2026-06-16T16:08:51.426Z"
+completed_by_agent: "cursor-composer-2.5"
+delivery_commit: "8fe0d140f"
 ---
 
 # TASK-MAO-0010 - multi-agent simulator benchmark
