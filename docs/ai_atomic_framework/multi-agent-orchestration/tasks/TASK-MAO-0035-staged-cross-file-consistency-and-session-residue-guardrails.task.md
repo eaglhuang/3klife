@@ -2,7 +2,7 @@
 task_id: TASK-MAO-0035
 doc_id: doc_mao_0035
 title: "Staged cross-file consistency and session residue guardrails"
-status: in-progress
+status: done
 started_at: "2026-06-16T17:02:16+08:00"
 started_by_agent: "antigravity-gemini-3.5-flash"
 milestone: M3
@@ -49,6 +49,9 @@ nonGoals:
   - "Do not create a second task lifecycle."
   - "Do not auto-commit user work."
   - "Do not solve the entire broker/team-lane integration backlog in this card."
+completed_at: "2026-06-16T09:23:16.490Z"
+completed_by_agent: "antigravity-gemini-3.5-flash"
+delivery_commit: "e05afdd223c9b687e939c82512c6feaf991a9537"
 ---
 
 # TASK-MAO-0035 - Staged cross-file consistency and session residue guardrails
