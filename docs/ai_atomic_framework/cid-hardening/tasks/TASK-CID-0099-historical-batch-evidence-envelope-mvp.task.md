@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0099
 title: Historical batch evidence envelope MVP
-status: in_progress
+status: done
 milestone: M19
 depends_on:
   - TASK-CID-0098
@@ -32,6 +32,9 @@ rollback:
 atomization_impact:
   owner_atom_or_map: atm.historical-batch-evidence
   map_updates: []
+completed_at: "2026-06-16T02:34:37.449Z"
+completed_by_agent: "codex-main"
+delivery_commit: "d8d27781e12e1f7a83398686dd8a6f4ca9c952b7"
 ---
 
 # TASK-CID-0099
