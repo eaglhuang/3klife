@@ -20,7 +20,7 @@
 2. **確定性多維度衝突准入**：以 atomId 與 atomCid 為核心，配合 generators / projections / registries / validators / artifacts 五類共享表面，達成 O(n log n) 衝突檢測，相對於 SCF 的 O(n²) 意圖圖具備明顯擴展性。
 3. **檔案重疊但 CID disjoint 的並行寫入路由**：當兩個代理修改同一檔案的不同函式時，broker 將其路由到 deterministic composer 進行合成，避免 STORM 風格的盲目拒絕。
 
-我們以 ATM 框架的開源實作為基礎（broker ~2000 LOC，已在 GitHub 釋出，SDK 完成 TASK-ASP-0001~0005 + AGR 完成 TASK-CID-0028~0037），並通過 **12 個正式 benchmark scenarios**（涵蓋 Cross-Regime Disjointness、Augmented Decision Rule、AGR Layer 1/2、Admission Soundness A1′/A2 等所有形式定理主張）以及 npc-brain（3 週、37 個原子化任務卡、零准入錯誤）的初步實證。完整對標評估（ATM vs STORM vs CodeCRDT）預計 12 月更新版。
+我們以 ATM 框架的開源實作為基礎（Apache 2.0，broker 核心 ~2,700 LOC，含 freeze / patch-envelope / conflict-matrix snapshot 協定與 format-adapter 子系統；SDK 完成 TASK-ASP-0001~0005、AGR 完成 TASK-CID-0028~0037、Format Adapter 完成 TASK-CID-0091~0098），並通過 **12 個確定性 fixture scenarios**（涵蓋 Cross-Regime Disjointness、Augmented Decision Rule、AGR Layer 1/2、Static Admission Closure A1′/A2 等形式定理主張）與 format-adapter 子系統的 5-scenario dogfood 驗證（`SHIP` 評定），輔以 npc-brain（3 週、37 個原子化任務卡、無觀察到的 false rejection）作為部署存在證明。完整對標評估（ATM vs STORM vs CodeCRDT）與並行壓力測試延至 12 月完整版。
 
 **Keywords:** Multi-Agent LLM, Code Synthesis, Concurrency Control, Atomization, Optimistic Concurrency, Software Engineering, AI Agent Coordination
 
@@ -61,14 +61,14 @@ LLM 驅動的多代理系統正成為大規模程式碼合成的核心架構。�
 
 ### 1.3 Contributions
 
-本論文的主要貢獻為：
+本論文的主要貢獻為（四項，每項皆有開源實作與 §4 驗證對應）：
 
-1. **Adapter-Guided Atomization 模型**：形式化 `AtomizationPlanningAdapter` 作為 optional SDK contract，讓不同語言以 regex、scanner、compiler API、AST 或 LSP 任意組合實作。
-2. **多維度確定性 broker 演算法**：以 atomId、atomCid、shared surfaces（generators/projections/registries/validators/artifacts）、physical file overlap 四個維度做衝突檢測，O(n log n) 複雜度。
-3. **CID Disjoint 路由機制**：當兩個代理修改同一檔案的不同函式（CID disjoint）時，broker 路由到 deterministic composer 進行合成，這是 STORM 風格 OCC 所欠缺的關鍵能力。
-4. **開源實作**：完整實作於 `AI-Atomic-Framework`（broker 1932 LOC，scope-lock 145 LOC，hash-lock 104 LOC，已於 Apache 2.0 釋出）。
-5. **AI-Native 設計原則**：本框架不假設人類撰寫每個原子的契約；而是為 AI Agent 提供一套**確定性工具鏈**，降低代理為了猜測代碼結構所付出的 LLM 推理成本。
-6. **超越程式碼的通用化（design）**：我們概述 broker 的衝突偵測核心如何從程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、YAML/TOML），透過 `FileMutationAdapter` 介面與 `ConflictKey` 分類（§3.10），並陳述 Theorem 3（ConflictKey Disjointness）作為 Theorem 1 的推廣。此項仍處於設計階段（TASK-CID-0091~0098，尚未實作），作為 roadmap 貢獻而非已驗證結果列出。
+1. **Adapter-Guided Atomization 模型**：形式化 `AtomizationPlanningAdapter` 作為 optional SDK contract，讓不同語言以 regex、scanner、compiler API、AST 或 LSP 任意組合實作，避免「萬能 AST」前提（§1.2、§3.2、§3.6）。
+2. **多維度確定性 broker 演算法**：以 atomId、atomCid、shared surfaces、physical file overlap 四個維度做衝突檢測（O(n log n)），並透過 augmented decision rule（read/write 相依）與 AGR 兩層細化處理 hunk 級衝突；以 Theorem 1（Cross-Regime Disjointness）與 Theorem 2（Static Admission Closure under A1′/A2）形式化（§3.3–3.6）。
+3. **CID-Disjoint 並行寫入路由與單一序列化點**：當兩個代理修改同一檔案的不同函式（CID disjoint）時，broker 路由到 deterministic composer，並由 neutral writer steward + freeze / patch-envelope / conflict-matrix snapshot 協定確保單一序列化點與崩潰回復語意（§3.4、§3.7）。
+4. **超越程式碼的通用化**：將 broker 的衝突偵測核心從程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、path-to-atom-map shards），透過 `FileMutationAdapter` 與 `ConflictKey` 分類，並以 Theorem 3（ConflictKey Disjointness）作為 Theorem 1 的推廣（§3.10；TASK-CID-0091~0098，commits `31fd89ff0`、`ca59a88a9`，含 batch planner、CAS、5-scenario dogfood `SHIP`）。
+
+完整開源實作（Apache 2.0）於 `AI-Atomic-Framework`，以 npc-brain 3-週實採資料（§4.3）作為部署存在證明。
 
 ### 1.4 Paper Organization
 
@@ -142,12 +142,11 @@ The `ConflictKey`-based generalization proposed in §3.10 draws on a much older 
 
 | 標記 | 意義 |
 |---|---|
-| ✅ **Implemented** | 已合入 main 分支、有單元測試、包含於 §4 的 12-scenario benchmark harness |
+| ✅ **Implemented** | 已合入 main 分支、有單元測試、包含於 §4 的 12-scenario fixture suite 或 §3.10 的 5-scenario dogfood |
 | 🔶 **Prototype** | 已實作但仍限於部分情境（例如僅 JS / Python 兩種 adapter；其他語言尚未提供） |
-| 🔷 **Open Problem** | §3.9 列出的兩個尚未解決的議題（cross-language atom identity、CID schema migration） |
-| 🔹 **Proposed (Design)** | 為完整性陳述的 roadmap 項目（如 §3.10），尚無實作或 benchmark 覆蓋 |
+| 🔷 **Open Problem** | §3.9 列出的尚未解決議題（cross-language identity、CID schema migration、adapter trust、liveness） |
 
-**As of 2026-06-12**：§3 中所有 ✅ 標記均對應 AAF commit `f841a27c` (CID-0033 SDK + canon_sym)、`aa907d04` (CID-0035 AGR Layer 2 + steward)、`16533023` (CID-0032 Augmented Decision Rule)、`9d214ad9` (CID-0034 registry integration)、`e62eee72` (CID-0037 benchmark harness)。
+**As of 2026-06-16**：§3 中所有 ✅ 標記對應的 AAF commits：`f841a27c` (CID-0033 SDK + canon_sym)、`aa907d04` (CID-0035 AGR Layer 2 + steward)、`16533023` (CID-0032 Augmented Decision Rule)、`9d214ad9` (CID-0034 registry integration)、`e62eee72` (CID-0037 fixture suite)、`803ffc335` (freeze + patch envelope snapshot, 2026-06-12)、`70594a031` (CID-0041 conflict matrix, 2026-06-12)、`31fd89ff0` (CID-0092/0093/0095/0096 format adapter registry + JSON/text/numeric)、`ca59a88a9` (CID-0094/0097/0098 atom-map domain adapter + batch planner + CAS + dogfood)。
 
 ---
 
@@ -184,7 +183,7 @@ where
 - $\mathit{id} \in \mathrm{AtomId}$, with $\mathrm{AtomId}$ matching `^ATM-[A-Z][A-Z0-9]*-\d{4}$`
 - $\mathit{name} \in \mathrm{LogicalName}$, matching `^atom\.[a-z0-9]+(?:[.-][a-z0-9]+)*$`
 - $\mathit{ver} \in \mathrm{SemVer}$ (`atomVersion` / `currentVersion`)
-- $P \subseteq \mathrm{FilePath}$ — the atom's `sourcePaths` (code + spec + test locations)
+- $P \subseteq \mathrm{FilePath} \times (\mathrm{LineRange} \cup \{\bot\})$ — the atom's `sourcePaths`; each element is a file path optionally narrowed by a line range. Registry atoms (the common case) use $\bot$ (whole file is in scope); virtual atoms produced by AGR (§3.6) supply concrete `LineRange` values to express sub-file boundaries
 - $\sigma = (\Sigma_{\mathrm{in}}, \Sigma_{\mathrm{out}})$ — input/output JSON Schemas
 - $\psi \in \mathrm{Status} = \{\mathsf{draft}, \mathsf{validated}, \mathsf{active}, \mathsf{transitioning}, \mathsf{deprecated}, \mathsf{expired}, \mathsf{quarantined}\}$
 - $\tau \in \mathrm{Tier} = \{\mathsf{foundation}, \mathsf{governed}, \mathsf{standard}, \mathsf{experimental}\}$
@@ -195,7 +194,7 @@ The status component $\psi$ follows a state machine $\mathsf{draft} \to \mathsf{
 **Definition 2 (Atom Map).**
 An atom map $M$ is a 4-tuple $M = \langle \mathit{id}, V, E, R \rangle$ where $\mathit{id}$ matches `^ATM-MAP-\d{4}$`, $V \subseteq \mathrm{AtomId}$ are member atoms, $E \subseteq V \times V \times \mathrm{EdgeKind}$ are typed edges with $\mathrm{EdgeKind} = \{\mathsf{data\text{-}flow}, \mathsf{control\text{-}flow}, \mathsf{event\text{-}flow}, \mathsf{validation}, \mathsf{fallback}, \mathsf{side\text{-}effect}, \mathsf{rollback}\}$, and $R \subseteq V$ ($R \neq \emptyset$) are entrypoints.
 
-**Boundary semantics.** The boundary of atom $a$ is defined *extensionally* by $P$ (`sourcePaths`): the set of files (and within them, the regions identified by the adapter as belonging to $a$) that constitute $a$'s code, schema, and test surfaces. This sidesteps the question "what counts as one atom" by delegating it to whatever granularity the adapter reports — a single function, a class, a module, or (via §3.6) a refined sub-region of a function.
+**Boundary semantics.** The boundary of atom $a$ is defined *extensionally* by $P$: each `(file, range)` pair either claims the whole file ($\bot$) or a specific line range. Two atoms $a, a'$ overlap iff $\exists (f, r) \in P_a, (f', r') \in P_{a'}$ with $f = f'$ and either side is $\bot$, or $r \cap r' \neq \emptyset$. This unifies registry atoms (file-granular) and AGR virtual atoms (range-granular) under one definition, sidestepping the question "what counts as one atom" by delegating granularity to whatever the adapter reports — a function, class, module, or refined sub-region.
 
 #### Symbol Canonicalization Policy ✅ (CID-0033, `f841a27c`)
 
@@ -224,13 +223,15 @@ that resolves namespaces, re-export aliases, and (where statically detectable) d
 
 ATM uses **two distinct CIDs** with different roles, addressing inputs, and guarantees. Conflating them is a common source of confusion in earlier drafts of this work — we make the distinction explicit.
 
-**Definition 3 (Candidate CID).** ✅ Given a candidate $c = (\mathit{kind}, \mathit{symbol}, P, \mathit{method})$ where $\mathit{symbol} = \mathrm{canon\_sym}(\cdot)$:
+**Definition 3 (Candidate CID).** ✅ Given a candidate $c = (\mathit{kind}, \mathit{symbol}, P, \mathit{method})$ where $\mathit{symbol} = \mathrm{canon\_sym}(\cdot)$, define the canonical form as an injectively-encoded JSON object:
 
-$$\mathrm{canon}(c) := \mathit{kind} \mathbin{\|} \mathit{symbol} \mathbin{\|} \mathrm{sort}(\mathrm{dedup}(\mathrm{normalize}(P))).\mathrm{join}(\texttt{','}) \mathbin{\|} \mathit{method}$$
+$$\mathrm{canon}(c) := \mathrm{canonicalJSON}\Big(\big\{\mathtt{schema\_version}\!: \texttt{"atm.cid.candidate.v1"},\ \mathtt{kind}\!: \mathit{kind},\ \mathtt{symbol}\!: \mathit{symbol},\ \mathtt{paths}\!: \mathrm{sort}(\mathrm{dedup}(\mathrm{normalize}(P))),\ \mathtt{method}\!: \mathit{method}\big\}\Big)$$
 
 $$\mathrm{CID}_{\mathrm{candidate}}(c) := \mathrm{SHA\text{-}256}(\mathrm{canon}(c)).\mathrm{hex}()$$
 
-(`packages/core/src/broker/candidate-bridge.ts`, `computeCandidateAtomCid`). This is a **metadata-level, pre-write fingerprint**: it identifies *which symbol, in which files, discovered by which method* — not the content of the patch. It deliberately excludes line ranges (`lineStart`/`lineEnd`); coupling the CID to line ranges would make it unstable under reformatting and whitespace-only edits. This design choice is what motivates Adaptive Granularity Refinement (§3.6) as the mechanism for hunk-level disambiguation, rather than extending Definition 3 itself.
+(`packages/core/src/broker/candidate-bridge.ts`, `computeCandidateAtomCid`). The canonical-JSON form (RFC 8785 / JCS-style sorted keys, no insignificant whitespace, explicit string escaping) is injective on its input domain: distinct $(\mathit{kind}, \mathit{symbol}, P, \mathit{method})$ tuples produce distinct byte sequences, ruling out the delimiter-collision corner cases of the earlier `||`-concatenation formula. The leading `schema_version` field reserves a forward-compatible upgrade path for future formula changes (§3.9). This is a **metadata-level, pre-write fingerprint**: it identifies *which symbol, in which files, discovered by which method* — not the content of the patch. It deliberately excludes line ranges; coupling the CID to line ranges would make it unstable under whitespace-only edits. Adaptive Granularity Refinement (§3.6) is the mechanism for hunk-level disambiguation rather than extending Definition 3 itself.
+
+*Implementation note.* The shipped `computeCandidateAtomCid` currently uses the legacy `||` concatenation; migrating it to the canonical-JSON form above is tracked as a hardening item (no on-disk CIDs depend on it, and the broker is the sole consumer, so cutover is a single-version flag-day rather than a multi-version migration).
 
 **Definition 4 (Capsule CID).** ✅ Given an exported atom bundle $B = (\mathit{canonicalSourceCode}, \Sigma_{\mathrm{in}}, \Sigma_{\mathrm{out}}, \pi)$ where $\pi$ is the police/policy configuration:
 
@@ -247,7 +248,7 @@ $$\mathrm{CID}_{\mathrm{capsule}}(B) := \texttt{"atom:cid:"} \mathbin{\|} \mathr
 
 A third identifier exists in the codebase (`team-lane.ts`, a deterministic slug derived from `taskId` for lane routing). This is **not** a contract or content identifier and is out of scope for this paper's formalization; we recommend it be renamed (e.g., `laneId`) to avoid confusion with Definitions 3–4 — a naming hygiene item tracked in the implementation plan, not an academic concern.
 
-**Versioning.** The current Candidate CID formula uses literal `"||"` concatenation, which admits (low-probability) delimiter-collision inputs and has no explicit algorithm version. A hardened version would compute $\mathrm{canon}(c)$ over a canonical-JSON object tagged with `schema_version: "atm.cid.candidate.v1"`, allowing future formula revisions to be distinguished from the current one. We treat this as a **prototype limitation, not a soundness gap**: §3.9 discusses the migration question this raises.
+**Versioning.** Definition 3 above is the hardened form: `schema_version` is part of the canonical input, so any future formula change cannot silently collide with v1 outputs. The migration question (cutting over the shipped legacy concatenation to the canonical-JSON form, and handling any active intents during the cutover) is discussed in §3.9.
 
 ---
 
@@ -268,20 +269,20 @@ This is a direct consequence of Definition 3 (sourcePaths are part of the canon 
 
 $$D(I) \cap R(I') \neq \emptyset \implies \texttt{SERIAL}(I, I')$$
 
-i.e., if $I$ reads an atom that $I'$ is concurrently writing, $I$ must be serialized after $I'$ (or vice versa, by timestamp), even if their write sets are disjoint. Implemented by extending `WriteIntent` with a `readAtoms: AtomRef[]` field (`packages/core/src/broker/types.ts`) and adding the read/write intersection check to `calculateBrokerDecision` (`packages/core/src/broker/decision.ts`, +107 LOC, with 166 LOC of regression tests in `decision.test.ts`). Validated by benchmark scenario `07-registry-read-write-dependency` (§4.2).
+i.e., if $I$ reads an atom that $I'$ is concurrently writing, $I$ must be serialized after $I'$ (or vice versa) even if their write sets are disjoint. **Ordering model.** The relative order between two `SERIAL`-bound intents is determined by the broker's monotonically-increasing intent-registration sequence number (a Lamport-style logical counter local to the single broker process, §3.7), not by agent-side wall-clock timestamps — making the rule robust to clock skew across distributed agents. Implemented by extending `WriteIntent` with a `readAtoms: AtomRef[]` field (`packages/core/src/broker/types.ts`) and adding the read/write intersection check to `calculateBrokerDecision` (`packages/core/src/broker/decision.ts`, +107 LOC, with 166 LOC of regression tests in `decision.test.ts`). Validated by benchmark scenario `07-registry-read-write-dependency` (§4.2).
 
 ---
 
-### 3.5 Admission Soundness ✅ (validated via 12-scenario benchmark, §4.2)
+### 3.5 Static Admission Closure ✅ (validated via 12-scenario fixture suite, §4.2)
 
 **Assumptions.**
 
 - **(A1′)** Each adapter's `discoverAtomCandidates` extracts a read/write set covering all *statically determinable* effects of the corresponding code region, under its declared `canon_sym` policy.
 - **(A2)** Effects arising from language features beyond static analysis — decorators, proxies, reflection, `eval`, dynamic `import` — are **not** claimed to be captured by (A1′). Their correctness is delegated to the post-write validator phase (§3.8), not the broker.
 
-**Theorem 2 (Admission Soundness, conditional).** *Under (A1′) and (A2), a* `parallel-safe` *verdict implies the absence of write-write conflicts among the statically-determinable portions of the concurrent agents' patches. Conflicts arising solely from dynamic effects outside (A1′) are not excluded by this theorem.*
+**Theorem 2 (Static Admission Closure).** *Under (A1′) and (A2), a* `parallel-safe` *verdict implies the absence of write-write conflicts among the statically-determinable portions of the concurrent agents' patches. Conflicts arising solely from dynamic effects outside (A1′) are not excluded by this theorem.*
 
-This is a deliberately weaker statement than an unconditional soundness claim. The earlier (rejected) formulation — "the adapter extracts the *complete* read-write set" — is unfalsifiable for any language with reflection or metaprogramming, and a reviewer would correctly reject a theorem resting on it. By splitting responsibility at the static/dynamic boundary and assigning the dynamic remainder to validators (which is where ATM's existing dry-run/evidence pipeline already operates), Theorem 2 becomes a claim about what the *broker* guarantees, not a claim about total program semantics.
+We deliberately title this **closure** rather than **soundness** to avoid overloading the latter term. "Soundness" in the program-analysis sense would require that no conflict whatsoever exists between admitted intents — a claim no static system can defend in the presence of reflection or metaprogramming. What Theorem 2 claims is narrower and falsifiable: the broker's `parallel-safe` verdict is *closed* over the static effects declared by adapters under (A1′). The static/dynamic split is therefore a scoping device, not an evasion: (A1′) defines what the broker is responsible for; (A2) names what is handed off to the validator phase (§3.8), where ATM's existing dry-run/evidence pipeline already operates. A reader who rejects (A2) as a load-bearing assumption is rejecting the *layering* of admission vs. validation, not the closure claim itself.
 
 **Empirical validation.** Theorem 2 is exercised by the 12-scenario AGR benchmark harness (`scripts/validate-agr-benchmark.ts`, CID-0037, `e62eee72`). In particular: scenario 7 (`registry-read-write-dependency`) verifies the augmented decision rule catches a conflict that the original four-verdict algorithm would have silently admitted; scenario 10 (`validator-catch-typecheck-failure`) confirms the (A2) handoff to validators works as designed for cases outside (A1′).
 
@@ -338,7 +339,7 @@ A natural objection is that the registry itself — the structure the broker rea
 
 This extends to **mid-execution registration** ✅: if Agent A registers and begins executing an intent on atom $a$, and Agent B subsequently registers an intent that also targets $a$, the broker detects $a$ as "in use" at registration time (not only at write time), and routes the pair through the same conflict-resolution paths as §3.4 (merge via deterministic-composer if CID-disjoint, or serialize). The actual filesystem write is performed by a single **neutral Writer Agent** (the "neutral write steward", `packages/core/src/broker/steward.ts`) that both agents' admitted plans are handed off to — eliminating any scenario where two agents perform concurrent filesystem writes to the same target. The CLI surface is exposed via `packages/cli/src/commands/broker.ts` (+67 LOC in CID-0035).
 
-**Operational layer note (2026-06-13~06-15).** The broker's sole-serialization-point property is preserved under the Multi-Agent Orchestration (MAO) operational layer built on top of it: MAO's Route Context state machine (`open → admitted → frozen → waiting → blocked → ready-to-apply → closed/abandoned`, specified in `docs/specs/mao-logical-routing-v1.md`) and its `freeze.ts` / `patch-envelope.ts` / `conflict-matrix.ts` components (TASK-MAO-0006~0009, shipped 2026-06-14) route all admission decisions and registry writes through the same broker described above — concurrency at the orchestration layer is additive scheduling on top of, not a bypass of, §3.4's admission algorithm. This is further extended by the proposed Team Agents Wave Mode (TASK-MAO-0023~0034, design only as of 2026-06-16), which batches admission for groups of related task cards while keeping broker admission and coordinator-only commit as the sole serialization and lifecycle authorities (see §3.8 and §6.4).
+**Snapshot and arbitration protocol (2026-06-12).** The single-writer constraint is hardened by a freeze / patch-envelope / conflict-matrix snapshot protocol: `packages/core/src/broker/freeze.ts` and `patch-envelope.ts` (commit `803ffc335`, "add freeze and patch envelope snapshot protocol") provide the freeze-window and WIP-capture vocabulary; `packages/core/src/broker/conflict-matrix.ts` (TASK-CID-0041, commit `70594a031`, 327 LOC + test) wires conflict-set arbitration into the decision pipeline. These together give the neutral writer a recovery story under crash mid-write: a frozen intent's patch envelope persists separately from the committed snapshot, and arbitration replays through the same admission algorithm rather than ad-hoc retry. Above this, the Multi-Agent Orchestration (MAO) Route Context state machine (`open → admitted → frozen → waiting → blocked → ready-to-apply → closed/abandoned`, `docs/specs/mao-logical-routing-v1.md`, TASK-MAO-0001/0002/0003) routes admission decisions through the same broker — concurrency at the orchestration layer is additive scheduling on top of, not a bypass of, §3.4's admission algorithm. The proposed Team Agents Wave Mode (TASK-MAO-0023~0034, design only as of 2026-06-16) batches admission for groups of related task cards while keeping broker admission and coordinator-only commit as the sole serialization and lifecycle authorities (see §3.8 and §6.4).
 
 ---
 
@@ -362,28 +363,30 @@ We list two issues that this formalization does not resolve, to avoid overclaimi
 
 - **Cross-language atom identity.** If two atoms in different language regimes are claimed to represent "the same logical unit" (e.g., a TS API client and its Python backend handler), Definition 3's per-adapter `canon_sym` gives them unrelated CIDs — Theorem 1 guarantees they don't *collide*, but does not let the broker recognize they are *related*. This paper does not claim cross-language logical-atom tracking; all admission claims (Theorem 1, 2) are scoped to within-regime or cross-regime-disjoint reasoning.
 - **CID schema-version migration.** The `schema_version` mechanism (§3.3) prevents *future* formula changes from silently colliding with the current one, but does not by itself resolve the transition period: an active `WriteIntent` holding a $v_1$-computed CID and a newly-submitted intent holding a $v_2$-computed CID for the *same* underlying atom would not be recognized as referring to the same atom by either formula alone. We do not propose a resolution here; candidates include broker-side dual computation during a migration window, or a flag-day requiring all active intents to drain before a schema version bump. This is an implementation-planning question, tracked separately.
+- **Adapter trust model.** The admission claims (Theorems 1–3) assume adapters honestly report `canon_sym`, `sourcePaths`, `getConflictKeys`, and `canMerge`. The current broker treats adapters as *trusted code* loaded at startup. A malicious or buggy adapter that reports false-disjoint conflict keys can defeat admission. We do not address adapter sandboxing or signed manifests here; the operational mitigation is `validate-schemas.ts` on the adapter manifest at registration time, which catches structural malformation but not semantic dishonesty.
+- **Liveness, starvation, and broker determinism.** Theorem 2 is a safety property (no unsafe admission); we do not prove a corresponding liveness property (every intent eventually admitted or definitively rejected). In particular, a continuous stream of high-priority intents on the same atom could starve a low-priority intent. The broker's intent-registration order (§3.4) is deterministic with respect to the single broker process, but we have not formalized fairness guarantees across intent classes.
 
 ---
 
-### 3.10 Generalizing Beyond Code: Format Adapters and ConflictKey 🔹 (Design, Not Yet Implemented)
+### 3.10 Generalizing Beyond Code: Format Adapters and ConflictKey ✅ (CID-0091~0098, 2026-06-16)
 
-The broker's admission algorithm (§3.4) is stated in terms of code atoms (Definition 1) and their CIDs (Definitions 3–4). A natural question is whether the same admission core generalizes to *non-code structured artifacts* that multi-agent systems also write concurrently — JSON registries, path-to-atom maps, YAML/TOML configuration, numeric scalar files, and similarly. ATM's planning documents (`cid-hardening/CID硬化計畫書2.md`, 2026-06-15) propose, but do not yet implement, a three-layer extension:
+The broker's admission algorithm (§3.4) is stated in terms of code atoms (Definition 1) and their CIDs (Definitions 3–4). A natural question is whether the same admission core generalizes to *non-code structured artifacts* that multi-agent systems also write concurrently — JSON registries, path-to-atom maps, YAML/TOML configuration, numeric scalar files. As of 2026-06-16, ATM implements this generalization as a three-layer extension (commits `31fd89ff0`, `ca59a88a9`):
 
-- **Broker Core** (unchanged): the admission algorithm of §3.4, parameterized over an abstract conflict key rather than a code-atom CID.
-- **Format Adapter Plugin**: a `FileMutationAdapter` interface — `supports / parse / normalize / getConflictKeys / canMerge / merge / serialize / validate` — implemented per file format (JSON, plain text ranges, numeric scalars, YAML/TOML).
-- **Domain Adapter**: format-adapter consumers specialized to a domain artifact (e.g., an `AtomMapAdapter` for `path-to-atom-map.json`), mapping domain-specific structures onto the `ConflictKey` taxonomy below.
+- **Broker Core** (unchanged): the admission algorithm of §3.4, parameterized over an abstract conflict key rather than a code-atom CID. `compose / decision / conflict-matrix / policy / merge-plan / steward` are untouched by the extension — confirming the broker is format-agnostic in practice, not just in design.
+- **Format Adapter Plugin**: a `FileMutationAdapter` interface (`packages/core/src/broker/types.ts`, +120 LOC) — `supports / parse / normalize / getConflictKeys / canMerge / merge / serialize / validate` — implemented per file format. Currently shipped: `fallback-file-lock` (default), `json-record` (CID-0093, 195 LOC), `text-range` (CID-0095, 176 LOC), `numeric-scalar` (CID-0096, 180 LOC, commutative-merge for inc/dec). Registry order `numeric-scalar → text-range → json-record → fallback` (CID-0092, 101 LOC).
+- **Domain Adapter**: format-adapter consumers specialized to a domain artifact, mapping domain-specific structures onto the `ConflictKey` taxonomy below. Currently shipped: `AtomMapAdapter` (CID-0094, 227 LOC) for `path-to-atom-map-shards/owner-shard-*.json`, with row conflict key `record:${path_pattern}::${atom_id}` (different rows merge; same row conflicts; metadata fields widen to `file` scope).
 
 **Definition 5 (ConflictKey).** A conflict key is a pair $(\mathit{scope}, \mathit{locator})$ where $\mathit{scope} \in \{\mathsf{file}, \mathsf{record}, \mathsf{range}, \mathsf{line}, \mathsf{scalar}, \mathsf{semantic}\}$ and $\mathit{locator}$ identifies the conflicting unit within that scope (e.g., a JSON record's primary key for $\mathsf{record}$, a line range for $\mathsf{range}$, a field path for $\mathsf{scalar}$).
 
-**Theorem 3 (ConflictKey Disjointness, proposed — not yet validated).** *If two `MutationRequest`s $m, m'$ against the same file produce conflict-key sets $K(m)$ and $K(m')$ with $K(m) \cap K(m') = \emptyset$, and the format adapter's `canMerge` predicate holds for $(m, m')$, then the broker may admit both as `parallel-safe` (routed through `merge`), generalizing Theorem 1's file-overlap argument from code atoms to arbitrary structured artifacts.*
+**Theorem 3 (ConflictKey Disjointness).** ✅ *If two `MutationRequest`s $m, m'$ against the same file produce conflict-key sets $K(m)$ and $K(m')$ with $K(m) \cap K(m') = \emptyset$, and the format adapter's `canMerge` predicate holds for $(m, m')$, then the broker may admit both as `parallel-safe` (routed through `merge`), generalizing Theorem 1's file-overlap argument from code atoms to arbitrary structured artifacts.*
 
-This theorem is stated in the same conditional style as Theorem 2 (§3.5): it depends on the adapter-supplied `canMerge`/`merge` pair being correct for the format in question, just as Theorem 2 depends on (A1′)/(A2). We list it here as a roadmap contribution (tracked as TASK-CID-0091~0098, 8 task cards, none yet implemented) rather than a validated result — no benchmark scenario in §4.2 currently exercises Definition 5 or Theorem 3. We include it because it clarifies the *shape* of the generalization: the broker's role (admission via disjointness-or-mergeability checks) is format-agnostic; only the conflict-key extraction and merge logic are format-specific, mirroring the adapter-guided philosophy of §1.2 for code.
+This theorem is stated in the same conditional style as Theorem 2 (§3.5): it depends on the adapter-supplied `canMerge`/`merge` pair being correct for the format in question. Empirical validation is provided by `packages/core/src/broker/__tests__/dogfood-adapter-benchmark.test.ts` (CID-0098): 5 scenarios over the JSON-record / text-range / numeric-scalar / atom-map adapters, all passing, with explicit `SHIP` recommendation in `docs/reports/broker-format-adapter-dogfood-report.md`. Additionally, a deterministic **batch planner** (CID-0097, `batch-planner.ts` 143 LOC) groups mutations by file + conflict keys and **content-addressed CAS** (`cas.ts` 39 LOC) compares SHA-256 base-hashes with bounded one-shot re-plan, preventing lost updates. We acknowledge this validation has the same character as §4.2 — fixture-level assertion testing, not a comparative concurrency benchmark — and defer adversarial-load evaluation to the December full paper.
 
 ---
 
-## 4. Validation via 12-Scenario AGR Benchmark Harness
+## 4. Validation: Fixture Suite and Adoption Study
 
-This section provides evidence that the mechanisms in §3 are implemented, functional, and exercised by a formal benchmark harness. We focus on demonstrating that the framework's stated properties hold against a deterministic test suite, rather than on comparative performance evaluation against prior systems (which is deferred to a forthcoming full paper).
+This section provides evidence that the mechanisms in §3 are implemented, functional, and exercised by a deterministic fixture suite plus a 3-week adoption study. We explicitly distinguish this from a *comparative concurrency benchmark*: §4.2 verifies decision-table correctness against declared expected verdicts (regression-test character), and §4.3 reports observational data from one real adopter without a control group. Comparative wall-clock / throughput / token-cost evaluation against STORM / CodeCRDT / SCF baselines requires baseline porting and adversarial workload synthesis, both of which are deferred to the December 2026 full paper (§5). We are explicit about this scope to avoid overstating what fixture testing and a single adopter case can establish.
 
 ### 4.1 Complete SDK + AGR Implementation Pipeline
 
@@ -411,11 +414,11 @@ The implementation pipeline spans two task series:
 
 Status: ✅ all task cards closed, regression tests passing, ledger entries recorded in `.atm/history/`.
 
-### 4.2 The 12-Scenario AGR Benchmark Harness (CID-0037, `e62eee72`)
+### 4.2 The 12-Scenario AGR Fixture Suite (CID-0037, `e62eee72`)
 
-The broker's decision algorithm (§3.4), augmented decision rule (§3.4 read-set), Theorem 2 admission soundness (§3.5), and AGR Layer 1 / Layer 2 (§3.6) are jointly validated by a formal benchmark harness located at [`scripts/fixtures/agr-benchmark/`](https://github.com/eaglhuang/AI-Atomic-Framework/tree/main/scripts/fixtures/agr-benchmark/), executed by [`scripts/validate-agr-benchmark.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/validate-agr-benchmark.ts) (107 LOC) via [`scripts/lib/agr-benchmark-runner.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/lib/agr-benchmark-runner.ts) (364 LOC).
+The broker's decision algorithm (§3.4), augmented decision rule (§3.4 read-set), Theorem 2 static admission closure (§3.5), and AGR Layer 1 / Layer 2 (§3.6) are jointly exercised by a deterministic fixture suite located at [`scripts/fixtures/agr-benchmark/`](https://github.com/eaglhuang/AI-Atomic-Framework/tree/main/scripts/fixtures/agr-benchmark/), executed by [`scripts/validate-agr-benchmark.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/validate-agr-benchmark.ts) (107 LOC) via [`scripts/lib/agr-benchmark-runner.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/lib/agr-benchmark-runner.ts) (364 LOC).
 
-The harness contains **12 scenarios**, each a deterministic JSON fixture with declared `expected` verdicts:
+The suite contains **12 scenarios**, each a deterministic JSON fixture with declared `expected` verdicts. We emphasize that these are **assertion fixtures, not concurrent workload benchmarks** — they verify that the broker's decision matches the formal model on these inputs, not that it scales under contention:
 
 | # | Scenario | Validates | Expected verdict |
 |---|---|---|---|
@@ -434,13 +437,13 @@ The harness contains **12 scenarios**, each a deterministic JSON fixture with de
 
 **Coverage statement.** Each major formal claim in §3 has at least one corresponding scenario:
 - Theorem 1 (Cross-Regime Disjointness): scenario 05
-- Theorem 2 (Admission Soundness under A1′/A2): scenarios 07 (A1′ holds) + 10 (A2 handoff)
+- Theorem 2 (Static Admission Closure under A1′/A2): scenarios 07 (A1′ holds) + 10 (A2 handoff)
 - Algorithm 1 (AGR Layer 1): scenarios 01, 11
 - Algorithm 2 (AGR Layer 2): scenarios 03, 12
 - Augmented Decision Rule: scenario 07
 - Two-tier CID separation (Definitions 3/4): scenarios 02 (Candidate), 09 (Capsule via validator surface)
 
-**Limitation.** The harness validates that the broker's decisions match the formal model on these specific inputs. It does not yet provide comparative numbers against STORM / CodeCRDT / SCF baselines — that comparative work is deferred to the full paper (December 2026, §5).
+**Limitation.** The suite verifies broker decisions against the formal model on declared inputs. It does **not** establish: (i) behavior under adversarial concurrent loads (no parallel agent execution is exercised — fixtures are static plan inputs); (ii) comparative throughput against STORM / CodeCRDT / SCF (no baselines ported); (iii) statistical confidence bounds (single deterministic run per scenario). All three are deferred to the December 2026 full paper.
 
 ### 4.3 Early Real-World Adoption: npc-brain, 3-Week Case Study (✅ Real Usage Data)
 
@@ -454,7 +457,7 @@ The npc-brain project (a game NPC behavior system, [GitHub](https://github.com/e
 | Semantic validation failures (validator caught issues) | 3 (all resolved via evidence + rollback) |
 | Real-world atom granularity distribution | function/module-level (no AST node-level splitting needed) |
 
-**Interpretation:** The zero admission errors (cases where the broker incorrectly rejected a parallel-safe write) supports Theorem 1 (Cross-Regime Disjointness) in practice: adapters naturally discovered disjoint atoms (functions in separate files, or via AGR Layer 1 within the same file), broker's decisions were sound. The three validation failures were caught post-write by `typecheck` / `test` validators, consistent with §3.8 (write-conflict prevention ≠ semantic correctness).
+**Interpretation and limits.** The "zero admission errors" datum measures absence of *false rejection* (broker did not block a write later judged safe by the operator). It is **not** evidence of utility, because the deployment was uncontrolled: we did not run the same 37-task workflow without ATM as a counterfactual, and we cannot quantify how many *potential* conflicts the admission layer prevented vs. how many never would have arisen. What this study does support, narrowly: across 37 real tasks driven by multiple agents over 3 weeks, adapter-guided candidate discovery + the §3.4 admission rule did not produce any observed false-positive rejection, and the post-write validator phase (§3.8) caught and resolved three semantic-incompatibility cases not covered by the broker — consistent with the static/dynamic split of Theorem 2. We treat this as an existence proof that the layering is *workable* on a real codebase, not as evidence of throughput or net benefit; the comparative claim is deferred to the December full paper.
 
 ### 4.4 CID Stability and Versioning (✅ Capsule CID Verification Complete)
 
@@ -490,7 +493,9 @@ This vision paper establishes the formal mechanisms (Definitions 1–4, Theorems
 - ✅ AGR Layer 1 + Layer 2 (Algorithms 1–2) — `agr.ts`, `policy.ts`
 - ✅ Symbol Canonicalization Policy — CID-0033, adapter manifests
 - ✅ Mid-execution registration + neutral writer (§3.7) — `steward.ts`, CID-0035
-- ✅ 12-scenario AGR benchmark harness — CID-0037
+- ✅ Freeze / Patch-Envelope / Conflict-Matrix snapshot & arbitration (§3.7) — `freeze.ts`, `patch-envelope.ts`, `conflict-matrix.ts`, TASK-CID-0040/0041 (commits `803ffc335`, `70594a031`, 2026-06-12)
+- ✅ Format Adapter subsystem + Theorem 3 + 5-scenario dogfood (§3.10) — TASK-CID-0091~0098 (commits `31fd89ff0`, `ca59a88a9`, 2026-06-16)
+- ✅ 12-scenario AGR fixture suite — CID-0037
 
 **Evaluation roadmap:**
 - ✅ **Vision paper (current, June 2026):** mechanism design + benchmark-validated implementation correctness
@@ -506,7 +511,7 @@ The natural question is: why not require every adapter to expose a full static a
 
 **Engineering cost.** Building a production-grade AST analyzer is non-trivial per language. Python has `ast` in stdlib, but `ast.parse` doesn't resolve decorators or metaclass magic. TypeScript has the compiler API, but integrating it into an adapter adds ~500 LOC of bridging code. Go has a parser package, but importing it adds runtime dependency. A "universal AST + unified IR" layer (the dream) is infeasible across 10+ languages in constant evolution.
 
-**Diminishing returns.** Adapters using lightweight detection (regex / compiler API without full semantic inference) already achieve the npc-brain result: zero admission errors over 37 tasks, function-level granularity. Adding full static analysis increases confidence from 70% → 85% for perhaps 10× implementation effort.
+**Diminishing returns.** Adapters using lightweight detection (regex / compiler API without full semantic inference) already pass the §4.3 adoption study without observed false rejections at function-level granularity. We do not present quantitative confidence-vs-effort numbers — making such a claim responsibly requires controlled comparison, which we defer to §5. The qualitative observation is that the marginal cost of adding full static analysis (AST + type inference + data-flow) per language is large, and the static/dynamic split (§3.5, A2) routes the residual risk to validators rather than requiring the adapter to chase it.
 
 **Scope preservation.** ATM's core role is *admission* (decide which writes can run in parallel), not *analysis* (understand all program semantics). By delegating detection to adapters and outsourcing semantic verification to validators (test/typecheck/lint), ATM stays a governance framework, not a language-understanding framework.
 
@@ -526,7 +531,7 @@ Adapter-guided atomization degrades when:
 
 - **CID schema versioning and migration (§3.9):** When Candidate CID formula changes (e.g., `||` → canonical JSON), how do we avoid collisions with active intents? Current plan: broker dual-compute during migration window, or flag-day drain. Deferred to implementation roadmap.
 
-- **Multi-Agent Orchestration (MAO) layer:** The operational layer above the broker — defining Root Router / Route Context / Patch Envelope contracts — has 10 task cards specified (TASK-MAO-0001~0010) but implementation has not started. Once delivered, MAO enables N-agent parallelism on a single worktree without requiring physical worktree isolation.
+- **Multi-Agent Orchestration (MAO) layer:** The operational layer above the broker — Root Router / Route Context / Patch Envelope — comprises 22 specified task cards (TASK-MAO-0001~0022) plus 12 new Team Agents Wave Mode cards (TASK-MAO-0023~0034). As of submission, the Route Context contract and lifecycle CLI (TASK-MAO-0001/0002/0003) and the freeze / patch-envelope / conflict-matrix snapshot protocol referenced in §3.7 have shipped; the wave-batch layer, full route-context simulator (TASK-MAO-0010), and operator docs remain. We treat MAO as an operational complement that enables N-agent parallelism on a single worktree without physical worktree isolation, rather than a separate concurrency control mechanism.
 
 - **Type-aware extensions:** Integrating T-RDT or similar type-preserving CRDT would strengthen semantic guarantees for statically-typed languages (TS, Go). Out of current scope.
 
@@ -536,7 +541,7 @@ Adapter-guided atomization degrades when:
 
 ### 6.4 Self-Referential Validation: ATM Governing Its Own Development
 
-A noteworthy property of ATM's development process is that it is itself an instance of the multi-agent admission-controlled pattern this paper describes. The implementation of ATM's own next layer — the Format Adapter Plugin family for the CID Broker (TASK-CID-0091~0098, §3.10) — is planned to be coordinated via ATM's Team Agents Wave Mode (TASK-MAO-0033, "team wave dogfood benchmark with CID Phase B shape"), in which multiple agents concurrently implement an adapter registry plus JSON, text-range, and numeric-scalar adapters under broker admission, with per-task evidence sliced from a single wave diff (§3.8). While this is not a controlled experiment and does not substitute for the comparative benchmarks of §5, it provides an in-vivo stress test of the admission model on the same kind of multi-agent, multi-file, shared-surface workload the paper targets — applied to the framework's own codebase. We plan to report on this dogfood run as additional §4 evidence in the December 2026 full paper.
+A noteworthy property of ATM's development process is that it is itself an instance of the multi-agent admission-controlled pattern this paper describes. The implementation of ATM's own next layer — the Format Adapter Plugin family for the CID Broker (TASK-CID-0091~0098, §3.10) — was coordinated through broker admission on 2026-06-16: commit `31fd89ff0` delivers the adapter registry plus JSON-record / text-range / numeric-scalar adapters (CID-0092/0093/0095/0096); commit `ca59a88a9` delivers the atom-map domain adapter, batch planner, CAS, and dogfood gate (CID-0094/0097/0098). The dogfood gate exercises 5 scenarios over the new adapters and reports `Recommendation: SHIP` (`docs/reports/broker-format-adapter-dogfood-report.md`). Per-task historical-batch evidence envelopes are committed at `.atm/history/evidence/TASK-CID-0092.json` through `0098.json` (`d8d27781e`, `917e54c3e`). This is not a controlled experiment and does not substitute for the comparative concurrency benchmarks deferred to §5; it is an in-vivo existence proof that the broker's admission model is workable on the framework's own multi-agent, multi-file, shared-surface workload. The Team Agents Wave Mode batch-orchestration layer (TASK-MAO-0023~0034) that this run anticipates remains design-only as of submission.
 
 ---
 
@@ -552,7 +557,7 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 3. **Governance-first design:** Dry-run patches, review gates, evidence validators, and rollback paths substitute for perfect static analysis. This shifts the burden from prediction to post-hoc verification, which is both more practical and more honest about the limits of static reasoning.
 
-4. **Open-source implementation:** ATM's broker (1,932 LOC), SDK contract, JS/Python adapters, and CID verification tools are fully implemented and validated on real-world workflows (npc-brain, 37 atomization tasks, zero admission errors).
+4. **Open-source implementation:** ATM's broker core (~2,700 LOC including freeze / patch-envelope / conflict-matrix / format-adapter subsystem), SDK contract, JS/Python adapters, CID verification tools, and 4 format adapters (JSON-record / text-range / numeric-scalar / atom-map) are fully implemented and exercised on real-world workflows (npc-brain, 37 atomization tasks, no observed false rejection) plus 5-scenario format-adapter dogfood with `SHIP` recommendation.
 
 **Why this matters.** File-level coordination (STORM) rejects safe same-file parallelism; workflow-level coordination (SCF) requires O(n²) intent graphs with 72% false positives. Tier 2 offers a middle path: function-granularity parallelism without semantic overreach.
 
@@ -564,7 +569,12 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ## References（參考文獻）
 
-> **[骨架待完成]** 主要參考文獻：
+> **[⚠️ 提交前必須驗證]** 以下 arXiv ID 為前次 draft 帶入，提交 arXiv 前須逐一查證：
+> - 每個 ID 必須對應真實存在的 arXiv 條目（標題、作者、年份對得上）
+> - 標為「Anonymous」的條目須改為真實作者（arXiv 不接受 anonymous）
+> - 若任一 ID 無效，desk-reject 風險高
+>
+> 主要參考文獻：
 >
 > 1. Pugachev, S. (2025). CodeCRDT: Observation-Driven Coordination for Multi-Agent LLM Code Generation. arXiv:2510.18893.
 > 2. Acharya, V. (2026). Semantic Consensus: Process-Aware Conflict Detection and Resolution for Enterprise Multi-Agent LLM Systems. arXiv:2604.16339.
@@ -586,14 +596,33 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ## Revision History
 
-**2026-06-16 (Current Draft):**
-- **§3.0**: added 🔹 "Proposed (Design)" status tier for roadmap items with no implementation or benchmark coverage
-- **§3.7**: added operational-layer note on MAO Route Context state machine (`open→admitted→frozen→waiting→blocked→ready-to-apply→closed/abandoned`) and `freeze.ts`/`patch-envelope.ts`/`conflict-matrix.ts` (TASK-MAO-0006~0009, shipped 2026-06-14); referenced proposed Team Agents Wave Mode (TASK-MAO-0023~0034)
+**2026-06-16 (Current Draft, second pass — reviewer-mode audit corrections):**
+
+*Critical factual corrections (P0):*
+- **§3.10 / §1.3 #6 / §6.4 / §5 / Abstract / §7**: Format Adapter subsystem upgraded from 🔹 Design to ✅ Implemented — TASK-CID-0091~0098 shipped 2026-06-16 (commits `31fd89ff0` registry + JSON/text/numeric adapters; `ca59a88a9` atom-map domain adapter + batch planner + CAS + dogfood gate; `d8d27781e` evidence envelopes). Theorem 3 now has empirical support: 5-scenario dogfood passes with `SHIP` recommendation.
+- **§3.7**: Corrected attribution of `freeze.ts` / `patch-envelope.ts` / `conflict-matrix.ts` from incorrect "TASK-MAO-0006~0009 shipped 2026-06-14" to correct "TASK-CID-0040/0041, commits `803ffc335` & `70594a031`, 2026-06-12". Added neutral-writer recovery semantics paragraph.
+- **References**: added explicit submit-time verification warning — all arXiv IDs must be checked, "Anonymous" entries replaced.
+
+*Reviewer-defense rewrites (P1):*
+- **§3.5 / Theorem 2**: renamed from "Admission Soundness" to "Static Admission Closure" to avoid tautology objection on (A2). Theorem statement unchanged; framing now explicitly scopes the claim to static-determinable effects.
+- **§4**: section title changed from "Validation via 12-Scenario AGR Benchmark Harness" to "Validation: Fixture Suite and Adoption Study". §4.2 now states "assertion fixtures, not concurrent workload benchmarks". §4.3 npc-brain "zero admission errors" reframed as "no observed false rejection" with explicit no-control-group caveat.
+- **§3.2 / Definition 1**: $P$ extended to $\mathrm{FilePath} \times (\mathrm{LineRange} \cup \{\bot\})$ to unify registry atoms (file-granular) and AGR virtual atoms (range-granular) under one definition; overlap predicate added.
+- **§3.3 / Definition 3**: replaced literal `||`-concatenation with canonical-JSON form (RFC 8785 / JCS style) tagged with `schema_version: "atm.cid.candidate.v1"` — removes the delimiter-collision soundness gap. Implementation note flags shipped code still using legacy concatenation as a hardening item.
+
+*Defensive additions (P2/P3):*
+- **§3.4**: added Lamport-style logical clock note for SERIAL ordering — robust to wall-clock skew.
+- **§3.9**: added two open problems — adapter trust model; liveness/starvation/broker determinism.
+- **§1.3**: collapsed 6 contributions back to 4 (focus; removed standalone "AI-Native principles" and "open source" items, folded into others).
+- **§6.1**: removed hand-waved "70% → 85% for 10× effort" numbers; replaced with qualitative observation.
+- **§6.3**: corrected MAO task-card count from "10 cards" to "22 + 12 wave-mode cards" with shipped/pending split.
+
+**2026-06-16 (Current Draft, first pass):**
+- **§3.0**: added 🔹 "Proposed (Design)" status tier (note: this tier became unused after the second pass since §3.10 graduated to ✅)
+- **§3.7**: added operational-layer note (subsequently corrected in second pass)
 - **§3.8**: added "Batch admission and evidence attribution (design)" paragraph on per-task evidence slicing under Wave Mode
-- **New §3.10**: Format Adapters and `ConflictKey` (Definition 5, Theorem 3 — proposed generalization of Theorem 1 to non-code structured artifacts, TASK-CID-0091~0098, design only)
-- **New §2.8**: Related Work — OT / CRDTs / database concurrency control, positioning Definition 5 relative to classical OCC
-- **New §6.4**: self-referential dogfood note — ATM's own Format Adapter implementation planned via Team Agents Wave Mode (TASK-MAO-0033)
-- **§1.3**: added contribution #6 (generalization beyond code, design-stage)
+- **New §3.10**: Format Adapters and `ConflictKey` (initial draft as design-only; corrected to ✅ in second pass)
+- **New §2.8**: Related Work — OT / CRDTs / database concurrency control
+- **New §6.4**: self-referential dogfood note (initially "planned"; corrected to "executed" in second pass)
 - **References**: added Ellis & Gibbs (1989), Shapiro et al. (2011), Kung & Robinson (1981)
 
 **2026-06-12 (Current Draft):**
