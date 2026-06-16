@@ -1,7 +1,10 @@
 ---
 task_id: TASK-MAO-0009
 title: "steward arbitration flow"
-status: planned
+status: done
+started_at: "2026-06-16T20:21:00+08:00"
+started_by_agent: agent-007
+completed_at: "2026-06-16T20:28:00+08:00"
 owner: atm-core
 priority: P1
 milestone: M3
