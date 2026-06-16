@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0108
 title: Atomization governance dogfood and adoption gate
-status: planned
+status: done
 milestone: M19
 depends_on:
   - TASK-CID-0105
@@ -26,6 +26,9 @@ atomization_impact:
   owner_atom_or_map: atm.historical-batch-evidence
   map_updates:
     - atm.task-closure-map
+completed_at: "2026-06-16T03:53:52.438Z"
+completed_by_agent: "antigravity-gemini-3.5-flash"
+delivery_commit: "446c2a171463af03e2a43e5d8e4759cfdaa6b91a"
 ---
 
 # TASK-CID-0108
@@ -43,4 +46,9 @@ Dogfood the official atom / atom-map registration path, delta ledger, and snapsh
 ## Non-Goals
 
 - Do not widen scope into unrelated registry refactors.
+
+## Notes
+
+- 2026-06-16 | 狀態: in-progress | 驗證: pending | 變更: antigravity-gemini-3.5-flash 開始處理 TASK-CID-0108 收尾，補充 docs/reports/** | 阻塞: none
+
 
