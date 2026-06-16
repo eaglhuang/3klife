@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0107
 title: Atomization snapshot count and digest guard
-status: planned
+status: done
 milestone: M19
 depends_on:
   - TASK-CID-0106
@@ -25,6 +25,9 @@ atomization_impact:
   owner_atom_or_map: atm.task-closure-map
   map_updates:
     - atm.evidence-command-map
+completed_at: "2026-06-16T03:34:58.668Z"
+completed_by_agent: "codex-main"
+delivery_commit: "917e54c3e23f9929652c636435642f59d974a8bd"
 ---
 
 # TASK-CID-0107
