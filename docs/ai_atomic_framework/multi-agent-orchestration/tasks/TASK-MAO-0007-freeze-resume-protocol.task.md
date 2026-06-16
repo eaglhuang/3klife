@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0007
 title: "freeze resume protocol"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M3
@@ -40,6 +40,9 @@ atomizationImpact:
 outOfScope:
   - "Patch envelope schema implementation"
   - "Automatic agent interruption during LLM inference"
+completed_at: "2026-06-16T06:42:26.776Z"
+completed_by_agent: "captain"
+delivery_commit: "803ffc335"
 ---
 
 # TASK-MAO-0007 - freeze resume protocol
