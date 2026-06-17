@@ -2,7 +2,7 @@
 doc_id: doc_team_0025
 task_id: TASK-TEAM-0025
 title: "Task import dispatch metadata preservation"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M4K
@@ -78,6 +78,9 @@ condition_review:
   - "write mode persists the same compact metadata to canonical task JSON"
   - "cards without dispatch metadata remain backward compatible"
   - "payload stays compact and does not duplicate freeform Markdown body content"
+completed_at: "2026-06-17T17:36:45.231Z"
+completed_by_agent: "captain"
+delivery_commit: "dd67b530d422f1ec0b52f301d9e27ff65a88ac8e"
 ---
 # TASK-TEAM-0025 - Task import dispatch metadata preservation
 
