@@ -2,7 +2,9 @@
 task_id: TASK-MAO-0041
 doc_id: doc_mao_0041
 title: "Evidence bundle manifest and directory deliverables"
-status: planned
+status: done
+started_at: 2026-06-17T09:40:00Z
+started_by_agent: cursor-composer-2.5
 owner: atm-core
 priority: P1
 milestone: M7
@@ -56,6 +58,9 @@ outOfScope:
   - "Changing historical batch slice semantics without tests"
 nonGoals:
   - "Do not make evidence run stage files globally."
+completed_at: "2026-06-17T12:31:20.562Z"
+completed_by_agent: "cursor-composer-2.5"
+delivery_commit: "72f80446fd290d6aac39570edee27fcafca39e49"
 ---
 
 # TASK-MAO-0041 - Evidence bundle manifest and directory deliverables
