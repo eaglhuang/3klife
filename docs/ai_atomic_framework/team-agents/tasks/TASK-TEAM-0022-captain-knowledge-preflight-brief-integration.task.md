@@ -2,7 +2,7 @@
 doc_id: doc_team_0022
 task_id: TASK-TEAM-0022
 title: "Captain knowledge preflight brief integration"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M6K
@@ -79,6 +79,9 @@ dispatch_pattern:
     - "Output remains compact and does not bury required commands"
     - "Knowledge is clearly labeled advisory-only"
     - "Implementer-facing output receives summary, not corpus dump"
+completed_at: "2026-06-17T18:02:29.582Z"
+completed_by_agent: "captain"
+delivery_commit: "4233812e207ba197408e34052c11c5028110eca7"
 ---
 # TASK-TEAM-0022 — Captain knowledge preflight brief integration
 
