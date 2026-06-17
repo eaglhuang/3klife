@@ -2,7 +2,8 @@
 task_id: TASK-MAO-0030
 doc_id: doc_mao_0030
 title: "Wave checkpoint partial-completion semantics"
-status: planned
+status: done
+closeback_note: "Delivered + governed-closed in AI-Atomic-Framework on 2026-06-17 (actor claude-code-opus-4-7); planning mirror synced to done."
 owner: atm-core
 priority: P0
 milestone: M6

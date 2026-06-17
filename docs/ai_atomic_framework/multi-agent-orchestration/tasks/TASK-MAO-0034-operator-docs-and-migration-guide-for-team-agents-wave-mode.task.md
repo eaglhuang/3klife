@@ -2,7 +2,8 @@
 task_id: TASK-MAO-0034
 doc_id: doc_mao_0034
 title: "Operator docs and migration guide for Team Agents Wave Mode"
-status: planned
+status: done
+closeback_note: "Delivered + governed-closed in AI-Atomic-Framework on 2026-06-17 (actor claude-code-opus-4-7); planning mirror synced to done."
 owner: atm-core
 priority: P1
 milestone: M6
