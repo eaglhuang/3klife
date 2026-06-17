@@ -1,0 +1,339 @@
+{
+  "experimentId": "parallel-0041-0042-2026-06-17",
+  "scannedAt": "2026-06-17T10:37:32.501Z",
+  "ok": true,
+  "runId": "67b193f9-1244-4e41-9f64-1ebbdbeaa9e5",
+  "runEvidencePath": ".atm/history/evidence/broker-runs/67b193f9-1244-4e41-9f64-1ebbdbeaa9e5.json",
+  "copiedEvidencePath": null,
+  "plan": {
+    "schemaId": "atm.mutationBatchPlan.v1",
+    "specVersion": "0.1.0",
+    "migration": {
+      "strategy": "none",
+      "fromVersion": null,
+      "notes": "broker format adapter subsystem baseline"
+    },
+    "planId": "batch-5c1fd53c988116ce",
+    "batches": [
+      {
+        "filePath": "tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json",
+        "adapterId": "json-record",
+        "verdict": "mergeable",
+        "requestIds": [
+          "REQ-0041-ATOMMAP-0",
+          "REQ-0041-ATOMMAP-1",
+          "REQ-0042-ATOMMAP-0"
+        ],
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "record",
+            "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/220"
+          },
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "record",
+            "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/221"
+          },
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "record",
+            "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/219"
+          }
+        ]
+      },
+      {
+        "filePath": "tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md",
+        "adapterId": "text-range",
+        "verdict": "mergeable",
+        "requestIds": [
+          "REQ-0041-EVIDENCE-GATES"
+        ],
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "line",
+            "key": "range:tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md::29-29"
+          }
+        ]
+      },
+      {
+        "filePath": "tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "adapterId": "fallback-file-lock",
+        "verdict": "mergeable",
+        "requestIds": [
+          "REQ-0041-CLOSE-ORCH"
+        ],
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "file",
+            "key": "tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts"
+          }
+        ]
+      }
+    ],
+    "queued": [
+      "REQ-0042-CLOSE-ORCH",
+      "REQ-0042-EVIDENCE-GATES"
+    ],
+    "blocked": [],
+    "requestConflictKeys": [
+      {
+        "requestId": "REQ-0041-ATOMMAP-0",
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "record",
+            "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/220"
+          }
+        ]
+      },
+      {
+        "requestId": "REQ-0041-ATOMMAP-1",
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "record",
+            "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/221"
+          }
+        ]
+      },
+      {
+        "requestId": "REQ-0041-CLOSE-ORCH",
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "file",
+            "key": "tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts"
+          }
+        ]
+      },
+      {
+        "requestId": "REQ-0041-EVIDENCE-GATES",
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "line",
+            "key": "range:tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md::29-29"
+          }
+        ]
+      },
+      {
+        "requestId": "REQ-0042-ATOMMAP-0",
+        "conflictKeys": [
+          {
+            "schemaId": "atm.conflictKey.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "broker format adapter subsystem baseline"
+            },
+            "scope": "record",
+            "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/219"
+          }
+        ]
+      }
+    ]
+  },
+  "mutationEvidence": [
+    {
+      "requestId": "REQ-0041-ATOMMAP-0",
+      "actorId": "cursor-composer-2.5",
+      "adapterId": "json-record",
+      "filePath": "tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json",
+      "baseHash": "sha256:e6daf1222e958f60d524fca6ebcbf1d9a18c26f84fe729c947c2dd0ae7a073e5",
+      "resultHash": "sha256:f5eb28e3b8335d60034d0b52ccf2c4aae3798d0ac80fda4dd0654ef1e3de2563",
+      "conflictKeys": [
+        {
+          "schemaId": "atm.conflictKey.v1",
+          "specVersion": "0.1.0",
+          "migration": {
+            "strategy": "none",
+            "fromVersion": null,
+            "notes": "broker format adapter subsystem baseline"
+          },
+          "scope": "record",
+          "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/220"
+        }
+      ],
+      "mergeDecision": "mergeable",
+      "verdict": "applied"
+    },
+    {
+      "requestId": "REQ-0041-ATOMMAP-1",
+      "actorId": "cursor-composer-2.5",
+      "adapterId": "json-record",
+      "filePath": "tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json",
+      "baseHash": "sha256:e6daf1222e958f60d524fca6ebcbf1d9a18c26f84fe729c947c2dd0ae7a073e5",
+      "resultHash": "sha256:f5eb28e3b8335d60034d0b52ccf2c4aae3798d0ac80fda4dd0654ef1e3de2563",
+      "conflictKeys": [
+        {
+          "schemaId": "atm.conflictKey.v1",
+          "specVersion": "0.1.0",
+          "migration": {
+            "strategy": "none",
+            "fromVersion": null,
+            "notes": "broker format adapter subsystem baseline"
+          },
+          "scope": "record",
+          "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/221"
+        }
+      ],
+      "mergeDecision": "mergeable",
+      "verdict": "applied"
+    },
+    {
+      "requestId": "REQ-0042-ATOMMAP-0",
+      "actorId": "antigravity-gemini-3.5-flash",
+      "adapterId": "json-record",
+      "filePath": "tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json",
+      "baseHash": "sha256:e6daf1222e958f60d524fca6ebcbf1d9a18c26f84fe729c947c2dd0ae7a073e5",
+      "resultHash": "sha256:f5eb28e3b8335d60034d0b52ccf2c4aae3798d0ac80fda4dd0654ef1e3de2563",
+      "conflictKeys": [
+        {
+          "schemaId": "atm.conflictKey.v1",
+          "specVersion": "0.1.0",
+          "migration": {
+            "strategy": "none",
+            "fromVersion": null,
+            "notes": "broker format adapter subsystem baseline"
+          },
+          "scope": "record",
+          "key": "record:tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json::/mappings/219"
+        }
+      ],
+      "mergeDecision": "mergeable",
+      "verdict": "applied"
+    },
+    {
+      "requestId": "REQ-0041-EVIDENCE-GATES",
+      "actorId": "cursor-composer-2.5",
+      "adapterId": "text-range",
+      "filePath": "tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md",
+      "baseHash": "sha256:63e14bc3b6de3b41585e836b18cd11e49d92ea3f8fa69010072a52ba9478d341",
+      "resultHash": "sha256:fe789ce0f3117a247fc8b138f0a3bcb40c9f1ec5392305ccf5c72480f99e4438",
+      "conflictKeys": [
+        {
+          "schemaId": "atm.conflictKey.v1",
+          "specVersion": "0.1.0",
+          "migration": {
+            "strategy": "none",
+            "fromVersion": null,
+            "notes": "broker format adapter subsystem baseline"
+          },
+          "scope": "line",
+          "key": "range:tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md::29-29"
+        }
+      ],
+      "mergeDecision": "mergeable",
+      "verdict": "applied"
+    },
+    {
+      "requestId": "REQ-0041-CLOSE-ORCH",
+      "actorId": "cursor-composer-2.5",
+      "adapterId": "fallback-file-lock",
+      "filePath": "tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts",
+      "baseHash": "sha256:b21e2bf498409a9ab2787196aafa02c3604a0d7266f2e29517c323e23ed3e73f",
+      "resultHash": "sha256:b21e2bf498409a9ab2787196aafa02c3604a0d7266f2e29517c323e23ed3e73f",
+      "conflictKeys": [
+        {
+          "schemaId": "atm.conflictKey.v1",
+          "specVersion": "0.1.0",
+          "migration": {
+            "strategy": "none",
+            "fromVersion": null,
+            "notes": "broker format adapter subsystem baseline"
+          },
+          "scope": "file",
+          "key": "tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts"
+        }
+      ],
+      "mergeDecision": "mergeable",
+      "verdict": "blocked"
+    },
+    {
+      "requestId": "REQ-0042-CLOSE-ORCH",
+      "actorId": "antigravity-gemini-3.5-flash",
+      "adapterId": "n/a",
+      "filePath": "tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts",
+      "baseHash": "sha256:b21e2bf498409a9ab2787196aafa02c3604a0d7266f2e29517c323e23ed3e73f",
+      "resultHash": "sha256:b21e2bf498409a9ab2787196aafa02c3604a0d7266f2e29517c323e23ed3e73f",
+      "conflictKeys": [],
+      "mergeDecision": "conflict",
+      "verdict": "queued"
+    },
+    {
+      "requestId": "REQ-0042-EVIDENCE-GATES",
+      "actorId": "antigravity-gemini-3.5-flash",
+      "adapterId": "n/a",
+      "filePath": "tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md",
+      "baseHash": "sha256:63e14bc3b6de3b41585e836b18cd11e49d92ea3f8fa69010072a52ba9478d341",
+      "resultHash": "sha256:63e14bc3b6de3b41585e836b18cd11e49d92ea3f8fa69010072a52ba9478d341",
+      "conflictKeys": [],
+      "mergeDecision": "conflict",
+      "verdict": "queued"
+    }
+  ],
+  "casMismatches": [],
+  "interpretation": {
+    "atomMapJsonRecord": "distinct /mappings/N pointers should batch as mergeable",
+    "evidenceGatesTextRange": "same insertAfterHeading anchor should queue the second writer",
+    "closeOrchestrationFallback": ".ts uses fallback-file-lock; concurrent appends should not both apply"
+  }
+}
