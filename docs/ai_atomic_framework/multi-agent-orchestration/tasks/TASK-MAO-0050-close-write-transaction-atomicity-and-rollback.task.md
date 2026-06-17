@@ -2,7 +2,9 @@
 task_id: TASK-MAO-0050
 doc_id: doc_mao_0050
 title: "Close write transaction atomicity and rollback"
-status: planned
+status: done
+started_at: 2026-06-17T06:30:00Z
+started_by_agent: cursor-composer-2.5
 owner: atm-core
 priority: P0
 milestone: M7
@@ -49,6 +51,10 @@ outOfScope:
 nonGoals:
   - "Do not introduce a second close lifecycle."
   - "Do not make write close best-effort."
+completed_at: "2026-06-17T06:48:45.928Z"
+completed_by_agent: "cursor-composer-2.5"
+delivery_commit: "971ae3374ae4bd9393827e1632d4bda4eac0f5fb"
+---
 
 # TASK-MAO-0050 - Close write transaction atomicity and rollback
 
