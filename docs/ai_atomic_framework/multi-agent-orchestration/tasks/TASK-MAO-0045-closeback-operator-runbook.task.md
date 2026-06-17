@@ -2,8 +2,10 @@
 task_id: TASK-MAO-0045
 doc_id: doc_mao_0045
 title: "Closeback operator runbook and banned-pattern guide"
-status: planned
-owner: atm-core
+status: done
+owner: cursor-gpt-5.2
+started_at: 2026-06-18T01:15:00+08:00
+started_by_agent: cursor-gpt-5.2
 priority: P2
 milestone: M7
 closure_authority: target_repo
@@ -47,6 +49,9 @@ outOfScope:
   - "Claiming unimplemented CLI features are available"
 nonGoals:
   - "Do not change source behavior in this documentation-only task."
+completed_at: "2026-06-17T17:35:35.296Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "bba1bf74d"
 ---
 
 # TASK-MAO-0045 - Closeback operator runbook, restore protocol, and banned-pattern guide
