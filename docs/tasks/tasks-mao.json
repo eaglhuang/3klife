@@ -2,11 +2,11 @@
   "shard": "MAO",
   "generated": "2026-06-11",
   "summary": {
-    "planned": 22,
+    "planned": 38,
     "in_progress": 0,
     "done": 0,
     "blocked": 0,
-    "total": 22
+    "total": 38
   },
   "tasks": [
     {
@@ -468,6 +468,409 @@
         "npm run typecheck",
         "node --strip-types scripts/validate-external-core-pipeline.ts --mode validate",
         "npm run validate:neutrality"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0036",
+      "title": "CLI result contract and exit code policy",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [],
+      "deliverables": [
+        "packages/cli/src/commands/shared.ts",
+        "packages/cli/src/commands/command-specs/_common.ts",
+        "docs/cli-error-policy.md",
+        "tests/cli/cli-result-contract.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/cli-result-contract.test.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0037",
+      "title": "Protected override audit ledger",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0036"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/emergency.ts",
+        "packages/cli/src/commands/hook.ts",
+        "packages/cli/src/commands/git-governance.ts",
+        "docs/HOST_GOVERNANCE_INTEGRATION.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types scripts/validate-git-hooks-enforcement.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0038",
+      "title": "Closeback orchestration route correctness",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0036"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "packages/cli/src/commands/tasks/residue-diagnostics.ts",
+        "packages/cli/src/commands/tasks/surface-invariants.ts",
+        "tests/cli/taskflow-close-orchestration.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/taskflow-close-orchestration.test.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0039",
+      "title": "Historical close dry-run remediation",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0036",
+        "TASK-MAO-0038"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts",
+        "docs/ATM_NEW_USER_WORKFLOW.md",
+        "docs/governance/historical-batch-evidence.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "npm run validate:neutrality"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0040",
+      "title": "Task-scoped commit bundle resolver and auto-stage",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0036",
+        "TASK-MAO-0039"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/git-governance.ts",
+        "packages/cli/src/commands/command-specs/git.spec.ts",
+        "tests/cli/git-commit-task-scoped-staging.test.ts",
+        "docs/governance/git-governance-contract.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/git-commit-task-scoped-staging.test.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0041",
+      "title": "Evidence bundle manifest and directory deliverables",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0036",
+        "TASK-MAO-0040"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/evidence.ts",
+        "packages/cli/src/commands/tasks/historical-delivery.ts",
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "docs/governance/evidence-gates.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:schemas",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0042",
+      "title": "Validator scope taxonomy and close gating",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0036"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/validate.ts",
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "docs/governance/evidence-gates.md",
+        "docs/testing-strategy.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "npm run validate:neutrality"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0043",
+      "title": "Claim repair diagnose/write and lifecycle owner rule",
+      "owner": "atm-core",
+      "priority": "P2",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0039"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/tasks.ts",
+        "packages/cli/src/commands/tasks/task-transition-helpers.ts",
+        "docs/ATM_NEW_USER_WORKFLOW.md",
+        "tests/cli/tasks-repair-claim.test.ts"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/tasks-repair-claim.test.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0044",
+      "title": "Task-view dashboard over preflight summary",
+      "owner": "atm-core",
+      "priority": "P2",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0039",
+        "TASK-MAO-0043"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/task-view.ts",
+        "packages/cli/src/commands/command-specs.ts",
+        "docs/ATM_NEW_USER_WORKFLOW.md",
+        "packages/cli/README.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/task-view-dashboard.test.ts"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0045",
+      "title": "Closeback operator runbook and banned-pattern guide",
+      "owner": "atm-core",
+      "priority": "P2",
+      "status": "planned",
+      "type": "documentation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0038",
+        "TASK-MAO-0039",
+        "TASK-MAO-0040"
+      ],
+      "deliverables": [
+        "docs/ATM_NEW_USER_WORKFLOW.md",
+        "docs/governance/historical-batch-evidence.md",
+        "docs/governance/git-governance-contract.md",
+        "packages/cli/README.md"
+      ],
+      "validators": [
+        "npm run validate:neutrality",
+        "npm run validate:docs-command-drift",
+        "git diff --check"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0049",
+      "title": "Task scope add audit lane",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [],
+      "deliverables": [
+        "packages/cli/src/commands/tasks.ts",
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "packages/cli/src/commands/tasks/task-transition-helpers.ts",
+        "packages/cli/src/commands/command-specs/tasks.spec.ts",
+        "packages/cli/src/commands/command-specs/taskflow.spec.ts",
+        "docs/ATM_NEW_USER_WORKFLOW.md",
+        "docs/governance/historical-batch-evidence.md",
+        "tests/cli-fixtures/help-snapshots/command-list.json",
+        "tests/cli/task-scope-amendment.test.ts",
+        "atomic_workbench/atomization-coverage/path-to-atom-map.json",
+        "docs/governance/git-governance-contract.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/task-scope-amendment.test.ts",
+        "npm run validate:neutrality"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0046",
+      "title": "Route freeze protocol runtime integration",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M8",
+      "depends": [
+        "TASK-MAO-0007",
+        "TASK-MAO-0036"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/route.ts",
+        "packages/cli/src/commands/command-specs/route.spec.ts",
+        "packages/core/src/broker/freeze.ts",
+        "packages/core/src/broker/__tests__/freeze-protocol.test.ts",
+        "tests/cli/route-freeze-runtime.test.ts",
+        "docs/specs/mao-logical-routing-v1.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/route-freeze-runtime.test.ts",
+        "npm run validate:neutrality"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0047",
+      "title": "Patch envelope broker export and handoff integration",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M8",
+      "depends": [
+        "TASK-MAO-0008",
+        "TASK-MAO-0009",
+        "TASK-MAO-0046"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/index.ts",
+        "packages/core/src/broker/patch-envelope.ts",
+        "packages/core/src/broker/steward.ts",
+        "packages/cli/src/commands/route.ts",
+        "tests/cli/route-patch-envelope-handoff.test.ts",
+        "docs/specs/mao-logical-routing-v1.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:schemas",
+        "npm run validate:cli",
+        "node --strip-types tests/cli/route-patch-envelope-handoff.test.ts",
+        "npm run validate:neutrality"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0048",
+      "title": "MAO event replay benchmark from task history",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "validation",
+      "phase": "M8",
+      "depends": [
+        "TASK-MAO-0010",
+        "TASK-MAO-0046",
+        "TASK-MAO-0047"
+      ],
+      "deliverables": [
+        "scripts/validate-mao-parallel-routing.ts",
+        "scripts/lib/mao-parallel-routing-benchmark-runner.ts",
+        "scripts/fixtures/mao-parallel-routing/event-replay.manifest.json",
+        "docs/reports/mao-parallel-routing-benchmark.md"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "node --strip-types scripts/validate-mao-parallel-routing.ts",
+        "npm run validate:cli"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0050",
+      "title": "Close write transaction atomicity and rollback",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0036",
+        "TASK-MAO-0039",
+        "TASK-MAO-0040"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "packages/cli/src/commands/taskflow/__tests__/taskflow-close-atomicity.test.ts",
+        "packages/cli/src/commands/command-specs/taskflow.spec.ts",
+        "docs/ATM_NEW_USER_WORKFLOW.md",
+        "docs/governance/historical-batch-evidence.md",
+        "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types packages/cli/src/commands/taskflow/__tests__/taskflow-close-atomicity.test.ts",
+        "git diff --check"
+      ]
+    },
+    {
+      "id": "TASK-MAO-0051",
+      "title": "Close window exclusive staged index lock",
+      "owner": "atm-core",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "M7",
+      "depends": [
+        "TASK-MAO-0039",
+        "TASK-MAO-0040",
+        "TASK-MAO-0050"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "packages/cli/src/commands/tasks/close-window-lock.ts",
+        "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts",
+        "packages/cli/src/commands/command-specs/taskflow.spec.ts",
+        "packages/cli/src/commands/command-specs/tasks.spec.ts",
+        "packages/cli/src/commands/taskflow/__tests__/taskflow-close-window-lock.test.ts",
+        "docs/ATM_NEW_USER_WORKFLOW.md",
+        "docs/governance/git-governance-contract.md",
+        "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+      ],
+      "validators": [
+        "npm run typecheck",
+        "npm run validate:cli",
+        "node --strip-types packages/cli/src/commands/taskflow/__tests__/taskflow-close-window-lock.test.ts",
+        "git diff --check"
       ]
     }
   ]

@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-06-11
-last_updated: 2026-06-14
+last_updated: 2026-06-17
 ---
 
 # MAO Task Index
@@ -55,6 +55,58 @@ Ledger sync note (2026-06-14): `TASK-MAO-0001`, `TASK-MAO-0002`, `TASK-MAO-0003`
 | TASK-MAO-0021 | runner broker failure-mode coverage | M5 | planned | stub | `TASK-MAO-0017`, `TASK-MAO-0020` | `scripts/validate-runner-broker-failures.ts` (✗); `docs/reports/runner-broker-failure-coverage.md` (✗) | [card](./TASK-MAO-0021-runner-broker-failure-mode-coverage.task.md) |
 | TASK-MAO-0022 | external core contributor pipeline | M5 | planned | stub | `TASK-MAO-0017`, `TASK-MAO-0018` | `docs/CONTRIBUTING_CORE.md` (✗); `scripts/validate-external-core-pipeline.ts` (✗) | [card](./TASK-MAO-0022-external-core-contributor-pipeline.task.md) |
 
+## M7 Closeback and Operator Recovery Wave
+
+Opened on 2026-06-17 from `TASK-MAO-0009` / `TASK-MAO-0010` closeback dogfood
+pain points and the ATM Bug and Optimization Backlog. This wave hardens the
+operator path before continuing broad multi-agent closure work.
+
+Recommended execution order:
+
+| Task | Title | Priority | Depends on | Card |
+|---|---|---|---|---|
+| TASK-MAO-0049 | Task scope add audit lane | P0 | none | [card](./TASK-MAO-0049-task-scope-amendment-audit-lane.task.md) |
+| TASK-MAO-0036 | CLI result contract and exit code policy | P0 | none | [card](./TASK-MAO-0036-cli-result-contract-and-exit-code-policy.task.md) |
+| TASK-MAO-0037 | Protected override audit ledger | P0 | `TASK-MAO-0036` | [card](./TASK-MAO-0037-protected-override-audit-ledger.task.md) |
+| TASK-MAO-0038 | Closeback orchestration route correctness | P0 | `TASK-MAO-0036` | [card](./TASK-MAO-0038-closeback-orchestration-route-correctness.task.md) |
+| TASK-MAO-0039 | Historical close dry-run remediation | P0 | `TASK-MAO-0036`, `TASK-MAO-0038` | [card](./TASK-MAO-0039-historical-close-dry-run-remediation.task.md) |
+| TASK-MAO-0050 | Close write transaction atomicity and rollback | P0 | `TASK-MAO-0036`, `TASK-MAO-0039`, `TASK-MAO-0040` | [card](./TASK-MAO-0050-close-write-transaction-atomicity-and-rollback.task.md) |
+| TASK-MAO-0040 | Task-scoped commit bundle resolver and auto-stage | P1 | `TASK-MAO-0036`, `TASK-MAO-0039` | [card](./TASK-MAO-0040-task-scoped-commit-bundle-resolver.task.md) |
+| TASK-MAO-0051 | Close window exclusive staged index lock | P1 | `TASK-MAO-0039`, `TASK-MAO-0040`, `TASK-MAO-0050` | [card](./TASK-MAO-0051-close-window-exclusive-staged-index-lock.task.md) |
+| TASK-MAO-0041 | Evidence bundle manifest and directory deliverables | P1 | `TASK-MAO-0036`, `TASK-MAO-0040` | [card](./TASK-MAO-0041-evidence-bundle-and-directory-deliverables.task.md) |
+| TASK-MAO-0042 | Validator scope taxonomy and close gating | P1 | `TASK-MAO-0036` | [card](./TASK-MAO-0042-validator-scope-taxonomy.task.md) |
+| TASK-MAO-0043 | Claim repair diagnose/write and lifecycle owner rule | P2 | `TASK-MAO-0039` | [card](./TASK-MAO-0043-claim-repair-and-lifecycle-owner.task.md) |
+| TASK-MAO-0044 | Task-view dashboard over preflight summary | P2 | `TASK-MAO-0039`, `TASK-MAO-0043` | [card](./TASK-MAO-0044-task-view-dashboard.task.md) |
+| TASK-MAO-0045 | Closeback operator runbook and banned-pattern guide | P2 | `TASK-MAO-0038`, `TASK-MAO-0039`, `TASK-MAO-0040` | [card](./TASK-MAO-0045-closeback-operator-runbook.task.md) |
+
+Execution note: `TASK-MAO-0049` should land first or in parallel with
+`TASK-MAO-0036` so routine linked-surface scope fixes no longer need emergency
+approval. `TASK-MAO-0036`, `TASK-MAO-0037`, and `TASK-MAO-0038` remain the
+stop-the-bleeding path after that governance lane exists. `TASK-MAO-0039`,
+`TASK-MAO-0050`, `TASK-MAO-0040`, and `TASK-MAO-0051` form the closeback
+stabilization chain; `TASK-MAO-0045` is documentation-only and should reflect
+the implemented behavior of the earlier M7 cards rather than describe features
+that have not landed yet.
+
+## M8 Runtime Integration and Replay Validation Wave
+
+Opened on 2026-06-17 from the MAO 0001-0010 substantive completion review.
+This wave converts two contract-only MAO primitives into runtime paths and
+extends the MAO benchmark from static scenarios to event replay.
+
+Recommended execution order:
+
+| Task | Title | Priority | Depends on | Card |
+|---|---|---|---|---|
+| TASK-MAO-0046 | Route freeze protocol runtime integration | P0 | `TASK-MAO-0007`, `TASK-MAO-0036` | [card](./TASK-MAO-0046-route-freeze-protocol-runtime-integration.task.md) |
+| TASK-MAO-0047 | Patch envelope broker export and handoff integration | P1 | `TASK-MAO-0008`, `TASK-MAO-0009`, `TASK-MAO-0046` | [card](./TASK-MAO-0047-patch-envelope-broker-handoff-integration.task.md) |
+| TASK-MAO-0048 | MAO event replay benchmark from task history | P1 | `TASK-MAO-0010`, `TASK-MAO-0046`, `TASK-MAO-0047` | [card](./TASK-MAO-0048-mao-event-replay-benchmark-from-task-history.task.md) |
+
+Execution note: `TASK-MAO-0046` is the critical path. `TASK-MAO-0047` should not
+implement worktree patch apply; it only exports and consumes patch envelopes in
+a runtime handoff path. `TASK-MAO-0048` should preserve the static benchmark and
+add event replay as a separate evidence layer.
+
 ## Reconciliation actions still needed
 
 These items follow from the audit and are not card content:
@@ -73,3 +125,6 @@ These items follow from the audit and are not card content:
 - `TASK-MAO-0011` through `TASK-MAO-0013` are the recommended `Runner Sync Steward v1` rollout.
 - `TASK-MAO-0014` through `TASK-MAO-0019` are the heavier full-Broker escalation path and should stay deferred unless v1 proves too coarse.
 - `TASK-MAO-0020` through `TASK-MAO-0022` are long-horizon self-hosting and external-contribution hardening work.
+- `TASK-MAO-0036` through `TASK-MAO-0051` are the M7 closeback and operator-recovery hardening wave. Keep these ahead of further broad closeout automation because they fix result contracts, emergency auditability, pre-close remediation, atomic close rollback, closeback routing, close-window locking, dry-run remediation, and scoped commit bundling.
+- `TASK-MAO-0049` is the M7 governance companion that normalizes audited scope growth via `tasks scope add` so routine linked-surface additions stop looking like emergency exceptions.
+- `TASK-MAO-0046` through `TASK-MAO-0048` are the M8 runtime integration and replay-validation wave. They should run after the M7 result-contract foundation is available, with `0046` as the first runtime integration card.
