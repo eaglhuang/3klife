@@ -2,7 +2,7 @@
 doc_id: doc_team_0014
 task_id: TASK-TEAM-0014
 title: "Atomic police patrol reports"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M6
@@ -44,21 +44,25 @@ outOfScope:
 nonGoals:
   - "Do not create a second evidence system"
   - "Do not replace validators with patrol text"
+completed_at: "2026-06-17T18:37:46.821Z"
+completed_by_agent: "captain"
+delivery_commit: "e09dad80fd3e378dd3cefbeb9d342b068dc53232"
 ---
 # TASK-TEAM-0014 — Atomic police patrol reports
 
 ## Goal
 
-Add a read-only Atomic Police patrol command/report path.
+Add a read-only Atomic Police patrol command/report path that can inspect runtime mode, rework-route readiness, missing artifacts, and retry-budget risk without mutating source or task lifecycle.
 
 ## Why
 
-Atomic Police Agents should proactively inspect scope, evidence, ledger, atom map, encoding, and runner sync risks without becoming source-writing agents.
+Atomic Police Agents should proactively inspect scope, evidence, ledger, atom map, encoding, runner sync risks, and rework-loop contract drift without becoming source-writing agents.
 
 ## Implementation Contract
 
 - Add a read-only `team patrol` command or equivalent subcommand.
 - Return human-readable and JSON report fields aligned with `patrol-report.md`.
+- Patrol output should be able to surface runtime-mode mismatch, artifact gaps, retry-budget exhaustion risk, and stale rework state as findings.
 - Do not schedule recurring jobs in this card.
 - Do not modify source or task state from patrol execution.
 
@@ -83,6 +87,7 @@ Atomic Police Agents should proactively inspect scope, evidence, ledger, atom ma
 - Patrols are explicitly read-only and report `mutations: []`.
 - The command can run for claim-preflight, close-preflight, big-script, and daily-noon patrol modes.
 - Findings distinguish warnings from blockers.
+- Patrol can report missing required artifacts and retry-budget exhaustion risk without closing or reopening any route itself.
 - Patrol reports do not alter `.atm/runtime/**` or `.atm/history/**`.
 
 ## Rollback
@@ -97,4 +102,4 @@ Revert patrol command/report implementation and map updates.
 
 ## Notes
 
-This card gives the police team a voice, not a baton.
+This card gives the police team a voice, not a baton, and prepares the later rework-loop cards to rely on patrol as a diagnostic surface rather than a second scheduler.
