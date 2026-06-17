@@ -2,7 +2,9 @@
 task_id: TASK-MAO-0039
 doc_id: doc_mao_0039
 title: "Historical close pre-close remediation and write rollback summary"
-status: planned
+status: done
+started_at: 2026-06-17T05:15:00Z
+started_by_agent: cursor-composer-2.5
 owner: atm-core
 priority: P0
 milestone: M7
@@ -15,6 +17,8 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 scopePaths:
   - "packages/cli/src/commands/taskflow/close-orchestration.ts"
+  - "packages/cli/src/commands/taskflow/historical-close-preflight.ts"
+  - "packages/cli/src/commands/taskflow.ts"
   - "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts"
   - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
   - "tests/cli-fixtures/help-snapshots/command-list.json"
@@ -24,6 +28,8 @@ scopePaths:
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
   - "packages/cli/src/commands/taskflow/close-orchestration.ts"
+  - "packages/cli/src/commands/taskflow/historical-close-preflight.ts"
+  - "packages/cli/src/commands/taskflow.ts"
   - "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts"
   - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
   - "tests/cli-fixtures/help-snapshots/command-list.json"
@@ -52,6 +58,9 @@ outOfScope:
   - "Changing historical batch envelope semantics"
 nonGoals:
   - "Do not make dry-run mutate the worktree."
+completed_at: "2026-06-17T06:02:48.123Z"
+completed_by_agent: "cursor-composer-2.5"
+delivery_commit: "cf1259d0d5ad3c910aefb97b1ba8900c2b61167b"
 ---
 
 # TASK-MAO-0039 - Historical close pre-close remediation and write rollback summary
