@@ -2,8 +2,10 @@
 task_id: TASK-MAO-0043
 doc_id: doc_mao_0043
 title: "Claim repair diagnose/write and lifecycle owner rule"
-status: planned
-owner: atm-core
+status: done
+owner: cursor-gpt-5.2
+started_at: 2026-06-17T16:22:00+08:00
+started_by_agent: cursor-gpt-5.2
 priority: P2
 milestone: M7
 closure_authority: target_repo
@@ -53,6 +55,9 @@ outOfScope:
   - "Letting multiple actors own closeout writes"
 nonGoals:
   - "Do not replace taskflow close."
+completed_at: "2026-06-17T16:45:20.095Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "46dd432d5dca2d55964f197358ac6b5c22465426"
 ---
 
 # TASK-MAO-0043 - Claim repair diagnose/write and lifecycle owner rule
