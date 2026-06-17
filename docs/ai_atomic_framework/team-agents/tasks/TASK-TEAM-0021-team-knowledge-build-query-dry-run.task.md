@@ -2,7 +2,7 @@
 doc_id: doc_team_0021
 task_id: TASK-TEAM-0021
 title: "Team knowledge build and query dry-run"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M4K
@@ -80,6 +80,9 @@ dispatch_pattern:
     - "Build/query works without vector dependencies"
     - "Query returns compact top hits, not full-corpus dumps"
     - "No generated cache file is added as a deliverable"
+completed_at: "2026-06-17T17:49:28.845Z"
+completed_by_agent: "captain"
+delivery_commit: "aae5c5b68d744bee900947d97e443243231344b8"
 ---
 # TASK-TEAM-0021 — Team knowledge build and query dry-run
 
