@@ -2,7 +2,7 @@
 doc_id: doc_team_0020
 task_id: TASK-TEAM-0020
 title: "Team knowledge storage boundary and index contract"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M2K
@@ -78,6 +78,9 @@ dispatch_pattern:
     - "Framework lesson and project lesson roots are both explicit"
     - "No file under .atm/history/** becomes part of the contract"
     - "No line describes knowledge as a new registry or authority source"
+completed_at: "2026-06-17T17:12:14.543Z"
+completed_by_agent: "captain"
+delivery_commit: "e7f214a3b458531cf8d88cf3abbed4fd3780b284"
 ---
 # TASK-TEAM-0020 — Team knowledge storage boundary and index contract
 
