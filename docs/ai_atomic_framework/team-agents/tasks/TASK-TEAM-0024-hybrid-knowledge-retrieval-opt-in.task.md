@@ -2,7 +2,7 @@
 doc_id: doc_team_0024
 task_id: TASK-TEAM-0024
 title: "Hybrid knowledge retrieval opt-in"
-status: draft
+status: done
 owner: atm-core
 priority: P2
 milestone: M7K
@@ -77,6 +77,9 @@ dispatch_pattern:
     - "Feature is off by default"
     - "If embeddings are unavailable, query degrades to lexical-only without error"
     - "No embedding artifact is committed as canonical knowledge"
+completed_at: "2026-06-17T18:26:42.259Z"
+completed_by_agent: "captain"
+delivery_commit: "85a24878b6a170faef950a96775fcc93122325d0"
 ---
 # TASK-TEAM-0024 — Hybrid knowledge retrieval opt-in
 
