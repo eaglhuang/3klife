@@ -2,7 +2,9 @@
 task_id: TASK-MAO-0042
 doc_id: doc_mao_0042
 title: "Validator scope taxonomy and close gating"
-status: planned
+status: done
+started_at: 2026-06-17T09:50:50Z
+started_by_agent: antigravity-Gemini-Flash3.5
 owner: atm-core
 priority: P1
 milestone: M7
@@ -52,6 +54,9 @@ outOfScope:
   - "Suppressing protected-surface neutrality checks for touched files"
 nonGoals:
   - "Do not make global repo health invisible."
+completed_at: "2026-06-17T13:32:59.351Z"
+completed_by_agent: "antigravity-gemini-3.5-flash"
+delivery_commit: "72f80446fd290d6aac39570edee27fcafca39e49"
 ---
 
 # TASK-MAO-0042 - Validator scope taxonomy and close gating
