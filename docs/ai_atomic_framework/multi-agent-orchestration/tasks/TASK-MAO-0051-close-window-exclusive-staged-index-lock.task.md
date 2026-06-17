@@ -2,7 +2,9 @@
 task_id: TASK-MAO-0051
 doc_id: doc_mao_0051
 title: "Close window exclusive staged index lock"
-status: planned
+status: done
+started_at: 2026-06-17T08:50:00Z
+started_by_agent: cursor-composer-2.5
 owner: atm-core
 priority: P1
 milestone: M7
@@ -15,6 +17,7 @@ related_plan: "docs/ai_atomic_framework/multi-agent-orchestration/README.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 scopePaths:
+  - "packages/cli/src/commands/taskflow.ts"
   - "packages/cli/src/commands/taskflow/close-orchestration.ts"
   - "packages/cli/src/commands/tasks/close-window-lock.ts"
   - "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts"
@@ -25,6 +28,7 @@ scopePaths:
   - "docs/governance/git-governance-contract.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
+  - "packages/cli/src/commands/taskflow.ts"
   - "packages/cli/src/commands/taskflow/close-orchestration.ts"
   - "packages/cli/src/commands/tasks/close-window-lock.ts"
   - "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts"
@@ -55,6 +59,10 @@ outOfScope:
 nonGoals:
   - "Do not create a second task lifecycle."
   - "Do not let close open a wider staging race."
+completed_at: "2026-06-17T09:07:18.078Z"
+completed_by_agent: "cursor-composer-2.5"
+delivery_commit: "6595618a6"
+---
 
 # TASK-MAO-0051 - Close window exclusive staged index lock
 
