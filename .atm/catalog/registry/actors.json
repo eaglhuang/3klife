@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-06-11T09:26:32.086Z",
+  "generatedAt": "2026-06-17T16:09:05.116Z",
   "actors": [
     {
       "actorId": "codex-gpt-5.4-mini",
@@ -13,6 +13,17 @@
       "gitEmail": "codex-gpt-5.4-mini@3klife.local",
       "createdAt": "2026-06-11T03:22:21.756Z",
       "updatedAt": "2026-06-11T09:26:32.085Z"
+    },
+    {
+      "actorId": "cursor-gpt-5.2",
+      "actorKind": "ai-agent",
+      "displayName": "Cursor GPT-5.2",
+      "provider": "OpenAI",
+      "editor": "cursor",
+      "gitName": "cursor-gpt-5.2",
+      "gitEmail": "cursor-gpt-5.2@3klife.local",
+      "createdAt": "2026-06-17T16:09:05.116Z",
+      "updatedAt": "2026-06-17T16:09:05.116Z"
     }
   ]
 }
