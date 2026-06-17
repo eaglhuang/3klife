@@ -2,7 +2,7 @@
 doc_id: doc_team_0023
 task_id: TASK-TEAM-0023
 title: "Team knowledge retention and disk budget guard"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M5K
@@ -75,6 +75,9 @@ dispatch_pattern:
     - "Compact is safe by default and supports dry-run"
     - "Budget breach produces explicit diagnostics"
     - "Generated cache remains disposable and rebuildable"
+completed_at: "2026-06-17T18:15:37.860Z"
+completed_by_agent: "captain"
+delivery_commit: "4a4e6f861012f0950a6a3863aa23475e9e2d4b0d"
 ---
 # TASK-TEAM-0023 — Team knowledge retention and disk budget guard
 
