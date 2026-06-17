@@ -2,8 +2,10 @@
 task_id: TASK-MAO-0044
 doc_id: doc_mao_0044
 title: "Task-view dashboard over preflight summary"
-status: planned
-owner: atm-core
+status: done
+owner: cursor-gpt-5.2
+started_at: 2026-06-18T00:50:00+08:00
+started_by_agent: cursor-gpt-5.2
 priority: P2
 milestone: M7
 closure_authority: target_repo
@@ -58,6 +60,9 @@ outOfScope:
   - "Replacing next as the deterministic router"
 nonGoals:
   - "Do not make task-view a second task lifecycle."
+completed_at: "2026-06-17T17:11:03.458Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "c111872f3"
 ---
 
 # TASK-MAO-0044 - Task-view dashboard over preflight and completion summary
