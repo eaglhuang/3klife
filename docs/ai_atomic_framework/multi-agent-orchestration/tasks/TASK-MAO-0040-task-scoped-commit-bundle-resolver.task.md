@@ -2,7 +2,9 @@
 task_id: TASK-MAO-0040
 doc_id: doc_mao_0040
 title: "Task-scoped commit bundle resolver, foreign-staged restore, and host git compatibility"
-status: planned
+status: done
+started_at: 2026-06-17T06:15:00Z
+started_by_agent: cursor-composer-2.5
 owner: atm-core
 priority: P1
 milestone: M7
@@ -48,6 +50,9 @@ outOfScope:
   - "Auto-committing user work"
 nonGoals:
   - "Do not bypass task allowedFiles with convenience staging."
+completed_at: "2026-06-17T06:21:05.824Z"
+completed_by_agent: "cursor-composer-2.5"
+delivery_commit: "65940b1f3"
 ---
 
 # TASK-MAO-0040 - Task-scoped commit bundle resolver, foreign-staged restore, and host git compatibility
