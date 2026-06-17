@@ -2,9 +2,9 @@
   "shard": "MAO",
   "generated": "2026-06-11",
   "summary": {
-    "planned": 38,
+    "planned": 15,
     "in_progress": 0,
-    "done": 0,
+    "done": 23,
     "blocked": 0,
     "total": 38
   },
@@ -14,7 +14,7 @@
       "title": "logical parallel routing architecture contract",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "planning",
       "phase": "M0",
       "depends": [],
@@ -30,7 +30,7 @@
       "title": "route context state schema",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "depends": [
@@ -51,7 +51,7 @@
       "title": "route lifecycle CLI",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M1",
       "depends": [
@@ -71,7 +71,7 @@
       "title": "next route and task selector",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M1",
       "depends": [
@@ -92,7 +92,7 @@
       "title": "broker intent registry",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M2",
       "depends": [
@@ -112,7 +112,7 @@
       "title": "logical conflict matrix",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M2",
       "depends": [
@@ -132,7 +132,7 @@
       "title": "freeze resume protocol",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M3",
       "depends": [
@@ -153,7 +153,7 @@
       "title": "patch envelope contract",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M3",
       "depends": [
@@ -174,7 +174,7 @@
       "title": "steward arbitration flow",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M3",
       "depends": [
@@ -195,7 +195,7 @@
       "title": "multi-agent simulator benchmark",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "validation",
       "phase": "M4",
       "depends": [
@@ -217,7 +217,7 @@
       "title": "reproducible runner build audit",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "validation",
       "phase": "M5",
       "depends": [],
@@ -237,7 +237,7 @@
       "title": "runner sync scope manifest",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M5",
       "depends": [
@@ -258,7 +258,7 @@
       "title": "runner sync steward classifier and stale gate",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M5",
       "depends": [
@@ -475,7 +475,7 @@
       "title": "CLI result contract and exit code policy",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [],
@@ -496,7 +496,7 @@
       "title": "Protected override audit ledger",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [
@@ -519,7 +519,7 @@
       "title": "Closeback orchestration route correctness",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [
@@ -542,7 +542,7 @@
       "title": "Historical close dry-run remediation",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [
@@ -566,7 +566,7 @@
       "title": "Task-scoped commit bundle resolver and auto-stage",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [
@@ -590,7 +590,7 @@
       "title": "Evidence bundle manifest and directory deliverables",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [
@@ -614,7 +614,7 @@
       "title": "Validator scope taxonomy and close gating",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [
@@ -709,7 +709,7 @@
       "title": "Task scope add audit lane",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [],
@@ -819,7 +819,7 @@
       "title": "Close write transaction atomicity and rollback",
       "owner": "atm-core",
       "priority": "P0",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [
@@ -847,7 +847,7 @@
       "title": "Close window exclusive staged index lock",
       "owner": "atm-core",
       "priority": "P1",
-      "status": "planned",
+      "status": "done",
       "type": "implementation",
       "phase": "M7",
       "depends": [

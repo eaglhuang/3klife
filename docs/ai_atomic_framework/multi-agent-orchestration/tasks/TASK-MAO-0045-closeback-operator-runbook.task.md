@@ -53,14 +53,14 @@ nonGoals:
 
 ## Goal
 
-Write the operator runbook for historical closeback, waiver use, scoped dirty
-remediation, and forbidden closeout patterns after the CLI fixes land.
+Write the operator runbook for the closeback path that is already landing:
+adoption, pre-close, scoped remediation, claim, close, verification, and the
+forbidden patterns that must stay blocked.
 
 ## Implementation Contract
 
 - Document the normal closeback sequence from actor adoption through pre-close,
-  dry-run, scoped remediation, claim, close, verification, and post-close
-  attribution review.
+  dry-run, scoped remediation, claim, close, and verification.
 - Explain when a single closeback bundle approval is appropriate and when
   separate approvals remain required.
 - Include banned patterns:
@@ -68,11 +68,10 @@ remediation, and forbidden closeout patterns after the CLI fixes land.
   - do not hand-edit ledger files to force done;
   - do not claim then close while leaving governance dirty uncommitted;
   - do not use bare git commit for ATM ledger mutations.
-- Explain the restore protocol for foreign staged files, including when
-  `--defer-foreign-staged` is appropriate and how to re-home staged work back
-  to the correct task.
-- Document the expected close completion checklist so operators can tell when
-  target, planning mirror, evidence, and ledger state are all aligned.
+- Explain the restore protocol for foreign staged files and when
+  `--defer-foreign-staged` is appropriate.
+- Document the close completion checklist so operators can tell when target,
+  planning mirror, evidence, and ledger state are aligned.
 - Keep docs English-only and repository-neutral.
 
 ## Acceptance Criteria

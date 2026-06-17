@@ -24,8 +24,7 @@ Task roster:
 
 Current closeback hardening wave:
 
-- [TASK-MAO-0036 through TASK-MAO-0051](./tasks/README.md#m7-closeback-and-operator-recovery-wave)
-- [TASK-MAO-0049 task scope add audit lane](./tasks/TASK-MAO-0049-task-scope-amendment-audit-lane.task.md)
+- [TASK-MAO-0043 through TASK-MAO-0045](./tasks/README.md#m7-closeback-and-operator-recovery-wave)
 
 Current runtime integration wave:
 

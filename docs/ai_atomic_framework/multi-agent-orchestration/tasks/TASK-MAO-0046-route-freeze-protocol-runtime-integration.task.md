@@ -80,10 +80,10 @@ protocol module.
   route freeze state.
 - Route resume must consume the freeze decision or resume helper rather than
   treating freeze as a plain string flag.
-- WIP snapshot, ack timeout, blocked fallback, and resume behavior must be
-  exposed in structured JSON output where applicable.
-- Update route help/spec and MAO routing spec so operators can distinguish
-  runtime freeze from a reserved protocol interface.
+- Keep JSON output enough for operators to see the freeze state, the result of
+  the freeze decision, and the resume path.
+- Update route help/spec so operators can distinguish runtime freeze from the
+  reserved protocol interface.
 
 ## Acceptance Criteria
 

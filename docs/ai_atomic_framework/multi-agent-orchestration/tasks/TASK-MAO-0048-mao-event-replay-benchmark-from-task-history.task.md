@@ -86,13 +86,14 @@ same protection behavior.
 
 ## Implementation Contract
 
-- Add an event-replay fixture layer sourced from `.atm/history/task-events/` or
-  broker-run evidence, with sanitized and deterministic fixture material.
+- Add an event-replay fixture layer sourced from `.atm/history/task-events/`
+  or broker evidence, with sanitized and deterministic fixture material.
 - Keep the existing static scenario set intact.
 - Report static catch rate and event-replay catch rate separately.
 - Include freeze and patch-envelope signals when available from the M8 runtime
   integration tasks.
-- Update the benchmark report with limitations and interpretation guidance.
+- Update the benchmark report with a short note on limitations and how to read
+  the results.
 
 ## Acceptance Criteria
 

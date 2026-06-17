@@ -690,7 +690,6 @@ Captain note: several items below were hit during `TASK-MAO-0041` / `TASK-MAO-00
 | Bug | Why not pure hotfix |
 |-----|---------------------|
 | `BUG-ATM-0066` | Policy: when post-open card edits should re-import without `--force` + emergency lease |
-| `BUG-ATM-0068` | Overlaps `BUG-ATM-0053` / `TASK-AAO-0136`; needs unified close preview messaging |
 | `BUG-ATM-0070` | Broker batch planner behavior; needs test fixture + adapter rule |
 
 - [x] BUG-ATM-0063: Pre-commit cross-file import scanner treats string/template import lookalikes as real imports
@@ -742,14 +741,15 @@ Captain note: several items below were hit during `TASK-MAO-0041` / `TASK-MAO-00
   - Fix: template lists `npm run validate:git-head-evidence`; `preflightBlockersToWriteReadinessBlockers()` maps all preflight blockers (including stale evidence) into `writeReadinessHint`.
   - Related tasks / commits: `TASK-MAO-0052`, `TASK-MAO-0041`.
 
-- [ ] BUG-ATM-0068: After delivery commit lands, `taskflow close --write` requires `--historical-delivery` without promoting dry-run `nextCommand`
-  - Status: open
+- [x] BUG-ATM-0068: After delivery commit lands, `taskflow close --write` requires `--historical-delivery` without promoting dry-run `nextCommand`
+  - Status: fixed (2026-06-17, TASK-AAO-0136 lane slice)
   - Severity: P1 close ergonomics (extends `BUG-ATM-0053` / `BUG-ATM-0058`)
   - Encountered: `TASK-MAO-0052` first `--write` partially committed delivery; second close returned `framework delivery already landed; supply --historical-delivery` instead of a copy-paste dry-run command with the delivery SHA.
-  - Reproduce / detect: Commit delivery via `taskflow close --write` or governed git commit, then rerun `taskflow close --write` without `--historical-delivery`.
+  - Reproduce / detect: Commit delivery via `taskflow close --write` or governed git commit, then rerun `taskflow close --dry-run` without `--historical-delivery`; `writeReadinessHint.blockers[0].requiredCommand` must include detected SHA.
   - Impact: Two-step close is correct but easy to miss; agents treat it as failure rather than expected phase-2 close.
-  - Possible optimization: When `historicalDeliveryGate.required`, dry-run / `writeReadinessHint.nextCommand` should include `--historical-delivery <detected-sha>`. Prefer extending `TASK-AAO-0136` lane over ad hoc docs.
-  - Related tasks / commits: `TASK-MAO-0052` (`ba96fe2ef` → `9ffd1761d` with `--historical-delivery`); `BUG-ATM-0053`, `BUG-ATM-0058`, `TASK-AAO-0136`.
+  - Fix: `detectHistoricalDeliveryCommit()` in `historical-delivery.ts` resolves delivery SHA from planning-card `delivery_commit`, `ATM-Task` trailer git log, or scoped recent commits; `buildTaskflowCloseWriteReadinessHint()` promotes it into `requiredCommand` / `nextCommand`.
+  - Regression: `taskflow-dryrun.spec.ts` post-delivery second-close fixture; `historical-delivery.test.ts` detection unit tests.
+  - Related tasks / commits: `TASK-MAO-0052` (`ba96fe2ef` → `9ffd1761d` with `--historical-delivery`); `BUG-ATM-0053`, `BUG-ATM-0058`, `TASK-AAO-0136`; AAF `00519573b`.
 
 - [x] BUG-ATM-0069: Manual `git add` of out-of-bundle file blocks `taskflow close` with `INDEX_NOT_ISOLATED`
   - Status: fixed (2026-06-17, quick repair)

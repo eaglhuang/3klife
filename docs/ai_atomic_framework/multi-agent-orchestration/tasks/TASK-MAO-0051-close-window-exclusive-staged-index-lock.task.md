@@ -62,6 +62,8 @@ nonGoals:
 completed_at: "2026-06-17T09:07:18.078Z"
 completed_by_agent: "cursor-composer-2.5"
 delivery_commit: "6595618a6"
+close_commit: "82fb0f399"
+notes: "Delivery 6595618a6 + close governance 82fb0f399. closeWindowLock releaseOutcome committed."
 ---
 
 # TASK-MAO-0051 - Close window exclusive staged index lock

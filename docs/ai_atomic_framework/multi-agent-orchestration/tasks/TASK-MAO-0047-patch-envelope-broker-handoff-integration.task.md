@@ -83,11 +83,11 @@ it is not exported from the broker index and has no non-test runtime consumer.
 ## Implementation Contract
 
 - Export the patch envelope API from the broker public surface.
-- Wire route submit-patch or steward handoff to create, validate, or compare a
-  patch envelope during the runtime path.
+- Wire one runtime handoff path to create, validate, or compare a patch
+  envelope.
 - Preserve `TASK-MAO-0008`'s original boundary: this card integrates handoff, not
   worktree apply.
-- Update route help/spec and MAO routing spec with the implemented handoff path.
+- Update route help/spec with the implemented handoff path.
 
 ## Acceptance Criteria
 
