@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0122
 title: "repair-closure protected-state commit context alignment"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
+upstream_mutation_status: applied
+started_at: "2026-06-18T16:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -17,28 +17,53 @@ targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
-executionMode: phase0-repair-closure-protected-state-commit-context-alignment
+executionMode: phase1-repair-closure-protected-state-commit-context-alignment
 planning_repo: 3KLife
 closure_authority: target_repo
-related:
-  - TASK-AAO-0113
-  - TASK-AAO-0114
+depends_on: []
+scopePaths:
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "scripts/validate-git-hooks-enforcement.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+deliverables:
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "scripts/validate-git-hooks-enforcement.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "scripts/validate-git-hooks-enforcement.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+forbidden_files:
+  - "packages/cli/src/commands/rescue.ts"
+  - "packages/cli/src/commands/git-governance.ts"
+  - "release/**"
+  - "packages/cli/dist/**"
+  - "scratch/**"
+  - ".playwright-mcp/**"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0122-repair-closure-protected-state-commit-context-alignment.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
-forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/**
-  - C:/Users/User/3KLife/.atm/**
-  - C:/Users/User/3KLife/.tmp/**
-  - C:/Users/User/3KLife/examples/**
 non_goals:
   - "Do not mutate AAF source files in Phase 0."
   - "Do not treat TASK-AAO-0113 evidence repair as this card's implementation target."
   - "Do not handle push, license merge, or remote-behind-1 recovery in this card."
   - "Do not stage or commit unrelated dirty files."
 notes: "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for repair-closure protected-state commit context alignment | blocker: none | risk: toolchain context misalignment / protected-state pre-commit false negatives"
+completed_at: "2026-06-18T16:01:23.056Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "437b05f9a"
 ---
 
 # TASK-AAO-0122 repair-closure protected-state commit context alignment
