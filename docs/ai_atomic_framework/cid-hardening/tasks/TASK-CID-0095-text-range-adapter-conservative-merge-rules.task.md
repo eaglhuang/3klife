@@ -2,7 +2,7 @@
 task_id: TASK-CID-0095
 doc_id: doc_cid_0095
 title: "Text range adapter with conservative merge rules"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M19
@@ -36,6 +36,9 @@ outOfScope:
   - "Rich document formats such as DOCX"
 nonGoals:
   - "Do not auto-merge overlapping text ranges."
+completed_at: "2026-06-18T06:09:29.354Z"
+completed_by_agent: "captain"
+delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 
 # TASK-CID-0095 - Text range adapter with conservative merge rules
