@@ -2,7 +2,7 @@
 task_id: TASK-CID-0092
 doc_id: doc_cid_0092
 title: "Mutation broker adapter registry contract"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M19
@@ -48,6 +48,9 @@ outOfScope:
   - "Text or numeric adapters"
 nonGoals:
   - "Do not hard-code format-specific merge logic in broker core."
+completed_at: "2026-06-18T05:59:10.390Z"
+completed_by_agent: "captain"
+delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 
 # TASK-CID-0092 - Mutation broker adapter registry contract
