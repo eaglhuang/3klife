@@ -2,7 +2,7 @@
 task_id: TASK-CID-0091
 doc_id: doc_cid_0091
 title: "Broker format adapter architecture RFC"
-status: in-progress
+status: done
 started_at: "2026-06-16T17:38:00+08:00"
 started_by_agent: "antigravity-gemini-3.5-flash"
 owner: atm-core
@@ -34,6 +34,9 @@ outOfScope:
   - "Changing path-to-atom-map.json"
 nonGoals:
   - "Do not claim format adapters already exist."
+completed_at: "2026-06-18T05:45:25.711Z"
+completed_by_agent: "captain"
+delivery_commit: "68ba34ea"
 ---
 
 # TASK-CID-0091 - Broker format adapter architecture RFC
