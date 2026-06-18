@@ -43,6 +43,9 @@ outOfScope:
   - "Task closure"
 nonGoals:
   - "Do not parse arbitrary chat logs as authoritative evidence."
+completed_at: "2026-06-18T11:40:12.649Z"
+completed_by_agent: "captain"
+delivery_commit: "5784785e13a5b48ac06f4c07a817e6d04d94be7e"
 ---
 
 # TASK-MAO-0028 - Worker report ingestion contract
