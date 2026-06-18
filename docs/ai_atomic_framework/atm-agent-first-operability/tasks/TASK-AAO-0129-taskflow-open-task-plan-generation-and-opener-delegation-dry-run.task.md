@@ -48,7 +48,7 @@ non_goals:
   - "Do not touch TASK-AAO-0128."
   - "Do not fold opener implementation work into this card."
   - "Do not widen the Phase 1 scope beyond taskflow open planning and opener delegation dry-run."
-notes: "2026-06-18 | status: in_progress | validation: pending | change: Phase 1 governance close with historical delivery 3eb9a20e7 | blocker: none"
+notes: "2026-06-18 | status: done | validation: passed | change: Phase 1 governance close historical delivery 3eb9a20e7 | blocker: none"
 completed_at: "2026-06-18T16:46:06.461Z"
 completed_by_agent: "cursor-gpt-5.2"
 delivery_commit: "3eb9a20e7"
