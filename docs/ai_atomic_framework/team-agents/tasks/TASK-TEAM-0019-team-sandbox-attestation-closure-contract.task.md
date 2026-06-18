@@ -2,7 +2,7 @@
 doc_id: doc_team_0019
 task_id: TASK-TEAM-0019
 title: "Team sandbox attestation and closure contract"
-status: draft
+status: done
 owner: atm-core
 priority: P0
 milestone: M6H
@@ -55,50 +55,63 @@ nonGoals:
   - "Do not create a second closure packet format"
   - "Do not make sandbox attestation mandatory for local draft Team runs"
   - "Do not change task close semantics"
+completed_at: "2026-06-18T18:28:15.595Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+delivery_commit: "01740270fdb0def5bdb9bb06cf1059f59d733eaf"
 ---
-# TASK-TEAM-0019 — Team sandbox attestation and closure contract
+# TASK-TEAM-0019 Team sandbox attestation and closure contract
 
 ## Goal
 
-把 CID Hardening v2 的 E3 sandbox/attestation guidance 接進 Team Agents closure：team run 可以保存 runtime/sandbox attestation，但它只能支援 closure review，不能取代 ATM 原本的 command-backed evidence。
+Extend Team Agents closure data so runtime mode, adapter, provider, SDK, model, and reviewer-independence attestations can be attached to closure review without weakening command-backed evidence.
 
 ## Why
 
-現況 closure packet 已有 `commandRuns`、exit code、stdout/stderr hash 與 framework `runnerVersion`，但 `runnerVersion` 不是 sandbox/OS/runtime attestation。CID Hardening v2 建議新增 `runnerKind`、`runtimeVersion`、`sandboxPolicyHash`、`attestationSigner`；Team Agents 需要先把這些欄位放進 team summary / closure packet 的相容模型，避免後續多代理 runtime 直接把「誰回報了什麼」誤當成「證據已通過」。
+Once Team Agents can run through multiple execution surfaces, closure review needs enough metadata to answer what runtime actually performed the work. That metadata should help humans review trust boundaries, but it must not replace validators, command hashes, or existing evidence rules.
 
 ## Implementation Contract
 
-1. 在 closure packet 或 team summary 中新增 optional `teamAttestation` 區塊。
-2. `teamAttestation` 可包含：
+1. Add optional Team attestation fields to the closure packet or attached Team summary.
+2. The attestation shape must be able to record:
    - `teamRunId`
+   - `runtimeMode`
+   - `runtimeLanguage`
+   - `runtimeAdapterId`
+   - `providerId`
+   - `sdkId`
+   - `modelId`
    - `runnerKind`
    - `runtimeVersion`
    - `sandboxPolicyHash`
    - `attestationSigner`
+   - `reviewerIndependence`
    - `attestedAt`
-3. `teamAttestation` 不可讓 failed validator 變成 pass，不可滿足 missing command-backed evidence。
-4. 保留 legacy commandRuns hash 欄位；若要改成 result-envelope hash，另開 migration card。
-5. Validator 必須覆蓋有/無 attestation 兩種 closure packet，以及 attestation 存在但 validator fail 的負例。
+3. A valid Team attestation may enrich closure review, but it must not turn failed validators into pass.
+4. Missing command-backed evidence must still fail even if Team attestation is present.
+5. Reviewer independence attestation must be able to say whether the reviewer used a distinct provider/model/adapter when policy requires that separation.
 
 ## Acceptance Criteria
 
-- Closure packet with valid teamAttestation passes governance validation.
-- Closure packet without teamAttestation still passes when existing evidence is valid.
-- Failed validator + valid teamAttestation still fails close/evidence validation.
-- Missing command-backed evidence + valid teamAttestation still fails.
-- Schema/docs explicitly state `node:vm` / `isolated-vm` are not secure sandbox boundaries for untrusted code.
+- Closure packet with valid Team attestation passes governance validation.
+- Closure packet without Team attestation still passes when existing evidence is valid.
+- Failed validator plus valid Team attestation still fails close or evidence validation.
+- Missing command-backed evidence plus valid Team attestation still fails.
+- Reviewer independence metadata can represent both satisfied and unsatisfied policy outcomes.
+- Schema and docs explicitly state that local runtime wrappers are not secure sandbox proof by themselves.
 
 ## Validators
 
-```
-npm run typecheck
-npm run validate:cli
-node --strip-types scripts/validate-team-agents.ts --case sandbox-attestation
-node --strip-types scripts/validate-task-ledger-governance.ts
-git diff --check
-```
+- `npm run typecheck`
+- `npm run validate:cli`
+- `node --strip-types scripts/validate-team-agents.ts --case sandbox-attestation`
+- `node --strip-types scripts/validate-task-ledger-governance.ts`
+- `git diff --check`
 
 ## Stop Conditions
 
-- 若實作需要採用 Deno、Docker、microVM、CI-signed attestation 或 git-server signer，先開獨立 runtime/security decision card。
-- 若 closure-packet schema 與 current validator drift 過大，先補 schema/validator alignment，不要在本卡同時遷移 result-envelope。
+- If the design starts introducing a second closure packet format, stop and split a migration card instead.
+- If runtime security claims expand into new sandbox products or infrastructure, stop and route a separate runtime decision card first.
+
+## Notes
+
+This card strengthens closure review metadata. It does not change ATM closure authority or evidence rules.
