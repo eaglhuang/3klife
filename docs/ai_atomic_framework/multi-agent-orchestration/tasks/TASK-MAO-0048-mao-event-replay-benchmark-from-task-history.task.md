@@ -2,8 +2,10 @@
 task_id: TASK-MAO-0048
 doc_id: doc_mao_0048
 title: "MAO event replay benchmark from task history"
-status: planned
-owner: atm-core
+status: done
+owner: cursor-gpt-5.2
+started_at: 2026-06-18T12:30:00+08:00
+started_by_agent: cursor-gpt-5.2
 priority: P1
 milestone: M8
 closure_authority: target_repo
@@ -31,6 +33,11 @@ scopePaths:
   - "scripts/fixtures/mao-parallel-routing/12-runner-derived-artifact-collision.scenario.json"
   - "scripts/fixtures/mao-parallel-routing/manifest.json"
   - "scripts/fixtures/mao-parallel-routing/event-replay.manifest.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/01-broker-shared-file-conflict.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/02-broker-disjoint-parallel-safe.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/03-task-claim-file-overlap.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/04-freeze-protocol-route-history.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/05-patch-envelope-handoff-metadata.replay.json"
   - "docs/reports/mao-parallel-routing-benchmark.md"
   - "packages/core/src/broker/conflict-matrix.ts"
   - "packages/core/src/broker/steward.ts"
@@ -42,6 +49,11 @@ deliverables:
   - "scripts/lib/mao-parallel-routing-benchmark-runner.ts"
   - "scripts/fixtures/mao-parallel-routing/manifest.json"
   - "scripts/fixtures/mao-parallel-routing/event-replay.manifest.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/01-broker-shared-file-conflict.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/02-broker-disjoint-parallel-safe.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/03-task-claim-file-overlap.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/04-freeze-protocol-route-history.replay.json"
+  - "scripts/fixtures/mao-parallel-routing/event-replay/05-patch-envelope-handoff-metadata.replay.json"
   - "docs/reports/mao-parallel-routing-benchmark.md"
   - "packages/core/src/broker/conflict-matrix.ts"
   - "packages/core/src/broker/steward.ts"
@@ -68,6 +80,9 @@ outOfScope:
   - "Importing private chat transcripts as fixtures"
 nonGoals:
   - "Do not treat replay coverage as proof of all live concurrency cases."
+completed_at: "2026-06-18T04:59:58.312Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "875d5e2d93fa005c47a9286db46a71dee0e89389"
 ---
 
 # TASK-MAO-0048 - MAO event replay benchmark from task history
