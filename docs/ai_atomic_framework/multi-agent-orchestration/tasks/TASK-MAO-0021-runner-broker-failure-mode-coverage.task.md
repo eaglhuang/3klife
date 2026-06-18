@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0021
 title: "runner broker failure-mode coverage"
-status: planned
+status: done
 owner: atm-core
 priority: P3
 milestone: M5

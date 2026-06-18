@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0015
 title: "patch envelope ATM core specialization"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M5

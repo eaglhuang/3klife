@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0018
 title: "closure packet runner binding"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M5
