@@ -2,8 +2,10 @@
 task_id: TASK-MAO-0047
 doc_id: doc_mao_0047
 title: "Patch envelope broker export and handoff integration"
-status: planned
-owner: atm-core
+status: done
+owner: cursor-gpt-5.2
+started_at: 2026-06-18T05:00:00+08:00
+started_by_agent: cursor-gpt-5.2
 priority: P1
 milestone: M8
 closure_authority: target_repo
@@ -66,6 +68,9 @@ outOfScope:
 nonGoals:
   - "Do not implement a full patch-apply engine."
   - "Do not create a second broker submission store."
+completed_at: "2026-06-18T04:43:20.080Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "a4975ae04"
 ---
 
 # TASK-MAO-0047 - Patch envelope broker export and handoff integration
