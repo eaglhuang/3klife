@@ -2,7 +2,7 @@
 task_id: TASK-CID-0094
 doc_id: doc_cid_0094
 title: "path-to-atom-map domain adapter"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M19
@@ -46,6 +46,9 @@ outOfScope:
   - "Bulk atom map refactor unrelated to adapter mechanics"
 nonGoals:
   - "Do not make path-to-atom-map.json the only supported domain adapter."
+completed_at: "2026-06-18T06:20:35.912Z"
+completed_by_agent: "captain"
+delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 
 # TASK-CID-0094 - path-to-atom-map domain adapter
