@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0022
 title: "external core contributor pipeline"
-status: planned
+status: done
 owner: atm-core
 priority: P3
 milestone: M5
@@ -43,6 +43,9 @@ outOfScope:
   - "Opening external core writes before Broker hardening is proven"
   - "Bypassing branch protection"
   - "Accepting direct `release/**` edits from external contributors"
+completed_at: "2026-06-18T05:42:28.164Z"
+completed_by_agent: "claude-code-opus-4-7"
+delivery_commit: "f8ec923b86c62f040dfcdfd52bedacaf08c4651f"
 ---
 
 # TASK-MAO-0022 - external core contributor pipeline
