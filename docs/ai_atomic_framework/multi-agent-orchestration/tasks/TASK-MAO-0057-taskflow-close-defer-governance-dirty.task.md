@@ -2,7 +2,7 @@
 task_id: TASK-MAO-0057
 doc_id: doc_mao_0057
 title: "taskflow close --defer-governance-dirty and operator lane discoverability"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8
@@ -50,6 +50,9 @@ outOfScope:
   - "Modifying tasks close (backend lane) beyond emitting the recommendation warning."
 nonGoals:
   - "Do not silently bypass governance — defer always snapshots."
+completed_at: "2026-06-18T09:14:21.287Z"
+completed_by_agent: "captain"
+delivery_commit: "5fb80222398c2175a4de64a3639ff969ebb6d34d"
 ---
 
 # TASK-MAO-0057 - taskflow close --defer-governance-dirty and operator lane discoverability
