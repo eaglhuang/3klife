@@ -1,32 +1,59 @@
 ---
-id: TASK-AAO-0127
+doc_id: ""
 task_id: TASK-AAO-0127
-title: frozen runner alignment after TASK-AAO-0126
-owner: codex-gpt-5.4-mini
+title: "frozen runner alignment after TASK-AAO-0126"
+milestone: M16
+status: done
+artifact_status: draft
+runtime_status: n/a
+upstream_mutation_status: applied
+started_at: "2026-06-18T16:05:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
+blocked_by: []
+owner: atm-core
 priority: P1
-status: open
-type: implementation
-phase: M16
-created: 2026-06-04
-created_by_agent: codex-gpt-5.4-mini
-target_repo: AI-Atomic-Framework
+upstream_repo: AI-Atomic-Framework
+targetRepo: AI-Atomic-Framework
+hostKind: upstream-roadmap
+alphaGate: validate:task-ledger-governance
+public_tracking: false
+executionMode: phase1-frozen-runner-alignment-after-task-aao-0126
 planning_repo: 3KLife
 closure_authority: target_repo
-related_cards:
+depends_on:
   - TASK-AAO-0126
-  - TASK-AAO-0125
-depends:
-  - TASK-AAO-0126
-allowed_files:
-  - release/atm-onefile/atm.mjs
-  - release/atm-onefile/release-manifest.json
+scopePaths:
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/release-manifest.json"
+deliverables:
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/release-manifest.json"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/release-manifest.json"
 forbidden_files:
-  - framework source surfaces
-  - task lifecycle source surfaces
-  - task runtime state
-  - unrelated TEAM mirror/import residue
-  - push or remote synchronization
-notes: 2026-06-04 | open | runner sync only after TASK-AAO-0126; no source changes
+  - "packages/cli/src/**"
+  - "packages/core/src/**"
+  - "scripts/**"
+  - "scratch/**"
+  - ".playwright-mcp/**"
+allowed_files:
+  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0127-frozen-runner-alignment-after-task-aao-0126.task.md
+  - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
+  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
+  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
+non_goals:
+  - "Do not modify framework source in this card."
+  - "Do not repair or rewrite old closure packets."
+  - "Do not include TEAM mirror/import residue."
+notes: "2026-06-04 | open | runner sync only after TASK-AAO-0126; no source changes"
+completed_at: "2026-06-18T16:17:57.421Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "005f799b8"
 ---
 
 # TASK-AAO-0127 frozen runner alignment after TASK-AAO-0126
