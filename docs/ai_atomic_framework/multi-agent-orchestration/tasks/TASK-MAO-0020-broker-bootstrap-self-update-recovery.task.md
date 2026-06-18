@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0020
 title: "broker bootstrap self-update recovery"
-status: planned
+status: done
 owner: atm-core
 priority: P3
 milestone: M5
@@ -43,6 +43,9 @@ outOfScope:
   - "Production hot-standby infrastructure"
   - "Distributed broker consensus"
   - "Automatic humanless disaster recovery for ambiguous state"
+completed_at: "2026-06-18T05:20:46.731Z"
+completed_by_agent: "claude-code-opus-4-7"
+delivery_commit: "40aeed4a5bd4531463e49b625ea261da432220ed"
 ---
 
 # TASK-MAO-0020 - broker bootstrap self-update recovery
