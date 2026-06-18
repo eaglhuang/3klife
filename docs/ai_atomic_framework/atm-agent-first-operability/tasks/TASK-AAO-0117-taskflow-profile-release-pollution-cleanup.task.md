@@ -3,33 +3,51 @@ doc_id: ""
 task_id: TASK-AAO-0117
 title: "taskflow.profile release tracked pollution cleanup"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
-blocked_by: []
-owner: atm-core
-priority: P0
-upstream_repo: AI-Atomic-Framework
-targetRepo: AI-Atomic-Framework
-hostKind: upstream-roadmap
-alphaGate: validate:task-ledger-governance
-public_tracking: false
-executionMode: phase0-taskflow-profile-release-pollution-cleanup
-planning_repo: 3KLife
-closure_authority: target_repo
+upstream_mutation_status: applied
+started_at: "2026-06-18T15:30:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 depends:
   - TASK-AAO-0115
-allowed_files:
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0117-taskflow-profile-release-pollution-cleanup.task.md
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
+targetRepo: AI-Atomic-Framework
+planning_repo: 3KLife
+closure_authority: target_repo
+owner: atm-core
+priority: P0
+scopePaths:
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/README.onefile.md"
+  - "release/atm-onefile/release-manifest.json"
+deliverables:
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/README.onefile.md"
+  - "release/atm-onefile/release-manifest.json"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/README.onefile.md"
+  - "release/atm-onefile/release-manifest.json"
 forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/**
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-*.task.md
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/taskflow/profile-loader.ts"
+  - "schemas/taskflow-profile.v1.json"
+  - "fixtures/taskflow-profile/"
+  - "docs/specs/taskflow-profile-v1.md"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/batch.ts"
+  - "packages/cli/src/commands/evidence.ts"
+  - "packages/cli/src/commands/git-head-evidence.ts"
 non_goals:
   - "Do not mutate AAF source files."
   - "Do not delete local release artifacts."
@@ -37,6 +55,9 @@ non_goals:
   - "Do not interfere with claude-code-builder claimed or staged actor-adopt work."
   - "Do not stage or commit unrelated dirty files."
 notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for TASK-AAO-0115 release tracked pollution cleanup | blocker: none | risk: release-tracked cleanup drift / claimed-work interference"
+completed_at: "2026-06-18T15:29:48.812Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "d8e46172a"
 ---
 
 # TASK-AAO-0117 taskflow.profile release tracked pollution cleanup
