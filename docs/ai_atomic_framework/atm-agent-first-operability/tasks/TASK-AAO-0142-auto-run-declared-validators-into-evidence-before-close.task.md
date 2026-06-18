@@ -1,7 +1,10 @@
 ---
 task_id: TASK-AAO-0142
 title: "Auto-run declared validators into evidence before close"
-status: planned
+status: done
+started_at: 2026-06-18T06:00:00Z
+started_by_agent: cursor-gpt-5.2
+owner: atm-core
 priority: P0
 closure_authority: target_repo
 depends_on:
@@ -12,16 +15,16 @@ depends_on:
 scopePaths:
   - "packages/cli/src/commands/evidence.ts"
   - "packages/cli/src/commands/taskflow.ts"
-  - "packages/cli/src/commands/taskflow/**"
-  - "packages/cli/src/commands/command-specs/evidence.spec.ts"
   - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "tests/cli/taskflow-auto-evidence.test.ts"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
   - "scripts/validate-cli.ts"
-  - "tests/**"
 deliverables:
-  - "A governed close/pre-close auto-evidence mode that discovers task-card declared validators and runs the missing required ones without requiring the operator to pass --validators by hand."
-  - "A dry-run plan that lists validators to run, already-satisfied validators, skipped out-of-scope validators, and commands that require explicit operator approval."
-  - "Command-backed evidence records for successful auto-runs, using the same validator identity normalization as evidence validators --list and evidence missing."
-  - "CLI help/spec updates showing that --validators is an override, not the normal happy path."
+  - "packages/cli/src/commands/evidence.ts"
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "tests/cli/taskflow-auto-evidence.test.ts"
+  - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
@@ -53,6 +56,9 @@ contextMap:
   tests:
     - path: "scripts/validate-cli.ts"
       reason: "CLI regression coverage"
+completed_at: "2026-06-18T06:27:44.808Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "e6e13bec473f342677d995327a4d40a33d17cc8c"
 ---
 
 ## Goal
