@@ -2,7 +2,7 @@
 task_id: TASK-CID-0096
 doc_id: doc_cid_0096
 title: "Numeric scalar adapter for commutative operations"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M19
@@ -36,6 +36,9 @@ outOfScope:
   - "Floating-point financial precision policy"
 nonGoals:
   - "Do not treat all numeric writes as commutative."
+completed_at: "2026-06-18T06:15:11.206Z"
+completed_by_agent: "captain"
+delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 
 # TASK-CID-0096 - Numeric scalar adapter for commutative operations
