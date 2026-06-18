@@ -89,6 +89,27 @@ Execution note: `TASK-MAO-0046` is the critical path. `TASK-MAO-0047` stays
 limited to broker handoff and does not implement worktree apply. `TASK-MAO-0048`
 adds sanitized event replay on top of the existing static benchmark.
 
+## M8 — Parallel-agent ergonomics hardening (added 2026-06-18)
+
+Opened from field evidence during the TASK-MAO-0014..0022 closeback wave
+(claude-code-opus-4-7 vs. cursor-gpt-5.2 parallel run on 2026-06-18). The five
+cards below close the remaining gaps that turn ATM's mostly-per-actor design
+into a fully parallel-safe operator experience.
+
+| Task | Title | Priority | Depends on | Card |
+|---|---|---|---|---|
+| TASK-MAO-0053 | Per-actor identity slot routing for parallel-agent commits | P0 | `TASK-MAO-0049` | [card](./TASK-MAO-0053-per-actor-identity-slot-routing.task.md) |
+| TASK-MAO-0054 | tasks reserve planning-card precheck and auto-import | P1 | `TASK-MAO-0049` | [card](./TASK-MAO-0054-tasks-reserve-planning-card-precheck.task.md) |
+| TASK-MAO-0055 | tasks claim auto-intent and closeout-only mutation safety | P1 | `TASK-MAO-0049` | [card](./TASK-MAO-0055-tasks-claim-auto-intent-and-closeout-safety.task.md) |
+| TASK-MAO-0056 | Scope amendment error clarity and --claim-first convenience | P2 | `TASK-MAO-0049` | [card](./TASK-MAO-0056-scope-amendment-error-clarity-and-claim-first.task.md) |
+| TASK-MAO-0057 | taskflow close --defer-governance-dirty and operator lane discoverability | P0 | `TASK-MAO-0040`, `TASK-MAO-0050`, `TASK-MAO-0052` | [card](./TASK-MAO-0057-taskflow-close-defer-governance-dirty.task.md) |
+
+Execution note: `TASK-MAO-0053` is the critical path (eliminates the only
+remaining cross-actor write race). `TASK-MAO-0057` is the second critical
+path — `taskflow close --write` becomes the unambiguous close lane for AI
+operators. `0054 / 0055 / 0056` are smaller UX cleanups that compound the
+discoverability story but do not block the parallel-safety guarantee.
+
 ## Reconciliation actions still needed
 
 These items follow from the audit and are not card content:
