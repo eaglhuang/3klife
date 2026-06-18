@@ -6,6 +6,8 @@ status: done
 owner: cursor-gpt-5.2
 started_at: 2026-06-18T02:00:00+08:00
 started_by_agent: cursor-gpt-5.2
+completed_at: 2026-06-18T04:30:00+08:00
+notes: "Route pause/resume wired to broker freeze.ts with sidecar persistence and freezeProtocol JSON evidence; delivery 36d05bf81; close d95d55eb2."
 priority: P0
 milestone: M8
 closure_authority: target_repo

@@ -6,6 +6,8 @@ status: done
 owner: cursor-gpt-5.2
 started_at: 2026-06-18T01:15:00+08:00
 started_by_agent: cursor-gpt-5.2
+completed_at: 2026-06-18T01:35:00+08:00
+notes: "Closeback operator runbook in ATM_NEW_USER_WORKFLOW + governance cross-refs; taskflow promoted to public help for docs-command-drift; delivery bba1bf74d; governed close with historical-delivery waiver."
 priority: P2
 milestone: M7
 closure_authority: target_repo

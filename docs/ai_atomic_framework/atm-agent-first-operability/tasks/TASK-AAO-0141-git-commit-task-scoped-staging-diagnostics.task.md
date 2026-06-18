@@ -1,7 +1,10 @@
 ---
 task_id: TASK-AAO-0141
 title: "git commit task-scoped staging required-command diagnostics"
-status: planned
+status: done
+completed_at: "2026-06-11T14:46:09.837Z"
+completed_by_agent: cursor-agent
+delivery_commit: "0af42bd14"
 owner: atm-core
 priority: P1
 milestone: M17
@@ -108,4 +111,4 @@ Revert this task commit. The wrapper returns to the previous generic failure beh
 
 ## Notes
 
-2026-06-11 | status: planned | validation: pending | change: open a focused AAO follow-up for `atm git commit --task` empty-index diagnostics when task-scoped dirty files already exist | blocker: none
+2026-06-11 | status: done | validation: passed in AAF | delivery: 0af42bd14 | closed by cursor-agent | change: task-scoped staging diagnostics for empty-index git commit (`ATM_GIT_COMMIT_TASK_SCOPED_STAGING_REQUIRED`)

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0014
 title: "runner ref publish primitive"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M5
@@ -43,6 +43,9 @@ outOfScope:
   - "Processing submitted patches"
   - "Closure packet binding"
   - "External contributor workflow"
+completed_at: "2026-06-17T16:28:59.259Z"
+completed_by_agent: "claude-code-opus-4-7"
+delivery_commit: "8511fda90a0416dae7cfbc3a4256acc4a049de19"
 ---
 
 # TASK-MAO-0014 - runner ref publish primitive
