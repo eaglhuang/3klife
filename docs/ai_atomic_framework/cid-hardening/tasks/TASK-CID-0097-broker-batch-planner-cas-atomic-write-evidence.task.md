@@ -2,7 +2,7 @@
 task_id: TASK-CID-0097
 doc_id: doc_cid_0097
 title: "Broker batch planner, CAS, and atomic write evidence"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M19
@@ -52,6 +52,9 @@ outOfScope:
   - "Bypassing git or existing ATM evidence flow"
 nonGoals:
   - "Do not add a second task store."
+completed_at: "2026-06-18T06:23:36.152Z"
+completed_by_agent: "captain"
+delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 
 # TASK-CID-0097 - Broker batch planner, CAS, and atomic write evidence
