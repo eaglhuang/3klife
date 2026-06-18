@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0016
 title: "runner submit-patch pipeline"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M5
@@ -45,6 +45,9 @@ outOfScope:
   - "External contributor PR ingestion"
   - "Full multi-process distributed broker consensus"
   - "Humanless semantic merge"
+completed_at: "2026-06-18T03:59:56.843Z"
+completed_by_agent: "claude-code-opus-4-7"
+delivery_commit: "54d26e5b82e684b0c5e24071ddd4f7aa17553e36"
 ---
 
 # TASK-MAO-0016 - runner submit-patch pipeline
