@@ -3,50 +3,53 @@ doc_id: ""
 task_id: TASK-AAO-0118
 title: "opener-first active-claim commit guard MVP"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
-blocked_by: []
-owner: atm-core
-priority: P0
-upstream_repo: AI-Atomic-Framework
+upstream_mutation_status: applied
+started_at: "2026-06-18T15:33:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
+depends_on:
+  - TASK-AAO-0117
 targetRepo: AI-Atomic-Framework
-hostKind: upstream-roadmap
-alphaGate: validate:task-ledger-governance
-public_tracking: false
-executionMode: phase0-opener-first-active-claim-commit-guard-mvp
 planning_repo: 3KLife
 closure_authority: target_repo
+owner: atm-core
+priority: P0
 scopePaths:
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/git-governance.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/git.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/hook.ts
-planning_read_only_paths:
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0118-opener-first-active-claim-commit-guard-mvp.task.md
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
+  - "packages/cli/src/commands/git-governance.ts"
+  - "packages/cli/src/commands/command-specs/git.spec.ts"
+  - "packages/cli/src/commands/hook.ts"
+deliverables:
+  - "packages/cli/src/commands/git-governance.ts"
+  - "packages/cli/src/commands/command-specs/git.spec.ts"
+  - "packages/cli/src/commands/hook.ts"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/git-governance.ts"
+  - "packages/cli/src/commands/command-specs/git.spec.ts"
+  - "packages/cli/src/commands/hook.ts"
 forbidden_files:
-  - C:/Users/User/3KLife/.atm/**
-  - C:/Users/User/3KLife/.tmp/**
-  - C:/Users/User/3KLife/examples/**
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/git-head-evidence.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/evidence.ts
-  - C:/Users/User/AI-Atomic-Framework/scripts/validate-cli.ts
-  - C:/Users/User/AI-Atomic-Framework/package.json
-  - C:/Users/User/AI-Atomic-Framework/release/**
-  - C:/Users/User/AI-Atomic-Framework/scratch/**
-  - C:/Users/User/AI-Atomic-Framework/.atm/history/**
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/git-head-evidence.ts"
+  - "packages/cli/src/commands/evidence.ts"
+  - "scripts/validate-cli.ts"
+  - "package.json"
+  - "release/"
+  - "scratch/"
+  - ".atm/history/"
 non_goals:
   - "Do not mutate AAF source files."
   - "Do not guess the next task id outside the opener-first flow."
   - "Do not stage or commit unrelated dirty or untracked files."
 notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for opener-first active-claim commit guard MVP | blocker: none | risk: next-id guessing / trailer-guard drift"
+completed_at: "2026-06-18T15:40:38.706Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "2c6f90664"
 ---
 
 # TASK-AAO-0118 opener-first active-claim commit guard MVP
