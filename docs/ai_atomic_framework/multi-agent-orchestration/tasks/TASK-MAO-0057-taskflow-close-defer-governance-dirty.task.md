@@ -80,6 +80,23 @@ user prompt switched from the manual two-step to `taskflow close --write`.
 (a) Add a deferral lane for governance-dirty (unstaged) files; (b) make
 `taskflow close --write` the obviously-recommended operator path.
 
+## Captain Adjustment - 2026-06-18
+
+This card is the owner for the closeback ergonomics bundle surfaced during CID
+0092..0097 cleanup:
+
+- `--waive-out-of-scope` should remain a documented alias for
+  `--waiver-out-of-scope-delivery`.
+- Same-task evidence bundle manifests such as
+  `.atm/history/evidence/<task>.bundle-manifest.json` are governance artifacts,
+  not foreign dirty noise.
+- Foreign staged snapshots and deferred governance-dirty snapshots must be
+  reported in JSON and must not silently become close blockers for the task
+  that requested the deferral.
+- Historical closeback should expose one operator lane that combines detected
+  delivery, waiver reason, auto evidence, and foreign-state deferral instead of
+  requiring manual command assembly.
+
 ## Implementation Contract
 
 ### Part A — `--defer-governance-dirty` flag
@@ -123,6 +140,10 @@ user prompt switched from the manual two-step to `taskflow close --write`.
 - `taskflow close --task X --defer-governance-dirty --write` against a tree
   with dirty `git-head.jsonl` succeeds without manual scope-add /
   intermediate commit choreography.
+- `taskflow close` accepts both `--waiver-out-of-scope-delivery` and
+  `--waive-out-of-scope` with the same semantics.
+- Same-task `.bundle-manifest.json` files are accepted in governed close/commit
+  bundles.
 - After close, the previously-dirty governance files are restored to their
   pre-close working-tree state.
 - A regression test simulates a dirty `git-head.jsonl` + close cycle and

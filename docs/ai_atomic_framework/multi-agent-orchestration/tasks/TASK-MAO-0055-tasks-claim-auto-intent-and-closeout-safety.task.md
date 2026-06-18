@@ -69,6 +69,15 @@ mismatch. Had to release + re-claim with normal intent.
 Make claim-intent resolution context-aware so wrong intent is caught at claim
 time, not commit time.
 
+## Captain Adjustment - 2026-06-18
+
+This card also owns the closeback-only claim friction found during CID
+historical cleanup. Verified historical closeback is not new source mutation,
+so it should not require a live write claim merely to record a done transition.
+Normal live close still requires claim/session ownership; only verified
+historical-delivery or historical-batch cleanup may bypass the live-claim
+requirement.
+
 ## Implementation Contract
 
 - **`--auto-intent` flag (new) on `tasks claim` and `next --claim`**:
@@ -101,6 +110,9 @@ time, not commit time.
 - An explicit `--claim-intent closeout-only` with dirty in-scope source
   refuses immediately with `ATM_CLAIM_INTENT_CONFLICT`, naming the offending
   files.
+- A verified historical closeback from `planned/open/running/review/blocked`
+  may close without a live claim when historical delivery evidence is supplied;
+  ordinary non-historical close remains claim/session gated.
 - A regression test exercises the three scenarios above with deterministic
   fixtures.
 - TASK-MAO-0014..0022 re-run under this lane produces zero

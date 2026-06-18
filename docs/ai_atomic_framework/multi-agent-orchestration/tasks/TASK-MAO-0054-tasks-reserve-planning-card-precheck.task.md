@@ -65,6 +65,15 @@ planning) after the audit fired at first commit attempt.
 Move the AI-manual check from commit-time to reserve-time so failures happen
 before any code is written.
 
+## Captain Adjustment - 2026-06-18
+
+This card also owns the task-open / import commit lane discovered during CID
+historical closeback. When `tasks import --write` creates a planned task ledger
+and an import event, the ATM git wrapper must allow that governance bundle to
+commit without claiming the new task first. Import reports are useful evidence,
+but they must not be mandatory when the canonical ledger + import event already
+prove the task-open transition.
+
 ## Implementation Contract
 
 - **Precheck on `tasks reserve`**: if `--actor` is an AI actor (per actor
@@ -95,6 +104,9 @@ before any code is written.
   naming the expected card path and the `--no-planning-mirror` opt-out.
 - Re-running TASK-MAO-0014..0022 batch closeback under this lane does not
   produce any `ATM_TASK_AUDIT_AI_MANUAL_TASK_IN_LEDGER` blockers.
+- `atm git commit --task <new-task>` can commit a task-open import bundle made
+  of `.atm/history/tasks/<task>.json` plus `.atm/history/task-events/<task>/*import*.json`
+  without requiring an active claim for that planned task.
 - A test fixture simulates AI-actor reserve against (a) existing planning
   card, (b) missing planning card, (c) `--no-planning-mirror` opt-out, and
   asserts the documented behavior for each.
