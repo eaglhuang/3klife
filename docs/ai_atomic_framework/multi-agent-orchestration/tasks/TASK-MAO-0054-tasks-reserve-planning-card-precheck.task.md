@@ -2,7 +2,7 @@
 task_id: TASK-MAO-0054
 doc_id: doc_mao_0054
 title: "tasks reserve planning-card precheck and auto-import"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M8
@@ -43,6 +43,9 @@ outOfScope:
   - "Replacing tasks import; reserve only delegates to it when applicable."
 nonGoals:
   - "Do not change AI-manual-task audit semantics — they remain the safety net."
+completed_at: "2026-06-18T10:33:57.231Z"
+completed_by_agent: "captain"
+delivery_commit: "718f2f4913d15d7bab67b4bb54343faff6d0a148"
 ---
 
 # TASK-MAO-0054 - tasks reserve planning-card precheck and auto-import
