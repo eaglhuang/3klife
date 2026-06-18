@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0116
 title: "atm actor adopt — atomic identity switch subcommand"
 milestone: M16
-status: in-progress
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: "2026-06-02T17:00:00+08:00"
-started_by_agent: "claude-code-builder"
+upstream_mutation_status: applied
+started_at: "2026-06-18T15:16:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P1
@@ -20,29 +20,46 @@ public_tracking: false
 executionMode: phase0-actor-adopt-subcommand
 planning_repo: 3KLife
 closure_authority: target_repo
-allowed_files:
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0116-actor-adopt.task.md
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
-  - C:/Users/User/3KLife/docs/agent-identity-map.md
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/actor.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/actor-registry.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/actor.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/__tests__/actor-adopt.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/docs/governance/actor-identity-model.md
+scopePaths:
+  - "packages/cli/src/commands/actor.ts"
+  - "packages/cli/src/commands/actor-registry.ts"
+  - "packages/cli/src/commands/command-specs/actor.spec.ts"
+  - "packages/cli/src/commands/__tests__/actor-adopt.spec.ts"
+  - "docs/governance/actor-identity-model.md"
+deliverables:
+  - "packages/cli/src/commands/actor.ts"
+  - "packages/cli/src/commands/actor-registry.ts"
+  - "packages/cli/src/commands/command-specs/actor.spec.ts"
+  - "packages/cli/src/commands/__tests__/actor-adopt.spec.ts"
+  - "docs/governance/actor-identity-model.md"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/actor.ts"
+  - "packages/cli/src/commands/actor-registry.ts"
+  - "packages/cli/src/commands/command-specs/actor.spec.ts"
+  - "packages/cli/src/commands/__tests__/actor-adopt.spec.ts"
+  - "docs/governance/actor-identity-model.md"
+planningMirrorPaths:
+  - "docs/agent-identity-map.md"
 forbidden_files:
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/batch.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/git-head-evidence.ts
-  - C:/Users/User/AI-Atomic-Framework/release/**
-  - C:/Users/User/AI-Atomic-Framework/.atm/git-hooks/**
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/batch.ts"
+  - "packages/cli/src/commands/git-head-evidence.ts"
+  - "release/"
+  - ".atm/git-hooks/"
 non_goals:
   - "Do not implement staleness detection on runtime/identity/default.json (separate card)."
   - "Do not wire actor verify-git into pre-commit gate (separate card)."
   - "Do not change actors.json schema or schemaVersion."
   - "Do not modify other actor sub-actions (register / list / resolve / verify-git)."
 notes: "2026-06-02 | status: in-progress | phase0 planning card; phase1 adds adopt subcommand that atomically writes actor record + runtime default + git local config in one transaction."
+completed_at: "2026-06-18T15:22:17.488Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "3ad6d63ed"
 ---
 
 # TASK-AAO-0116 atm actor adopt — atomic identity switch subcommand
