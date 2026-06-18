@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0129
 title: "taskflow open task-plan generation and opener delegation dry-run"
 milestone: M16
-status: in_progress
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: "2026-06-07T09:31:52.6890614+08:00"
-started_by_agent: "007"
+upstream_mutation_status: applied
+started_at: "2026-06-18T17:30:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -17,20 +17,24 @@ targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
-executionMode: phase0-taskflow-open-task-plan-generation-and-opener-delegation-dry-run
+executionMode: phase1-taskflow-open-task-plan-generation-and-opener-delegation-dry-run
 planning_repo: 3KLife
 closure_authority: target_repo
+scopePaths:
+  - "packages/cli/src/commands/taskflow.ts"
+deliverables:
+  - "packages/cli/src/commands/taskflow.ts"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/taskflow.ts"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0129-taskflow-open-task-plan-generation-and-opener-delegation-dry-run.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
   - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-41.json
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/taskflow.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow/profile-loader.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow/__tests__/**
-  - C:/Users/User/AI-Atomic-Framework/schemas/taskflow-profile.v1.json
-  - C:/Users/User/AI-Atomic-Framework/fixtures/taskflow-profile/**
-  - C:/Users/User/AI-Atomic-Framework/docs/specs/taskflow-profile-v1.md
+  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
 forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
@@ -44,7 +48,10 @@ non_goals:
   - "Do not touch TASK-AAO-0128."
   - "Do not fold opener implementation work into this card."
   - "Do not widen the Phase 1 scope beyond taskflow open planning and opener delegation dry-run."
-notes: "2026-06-07 | status: in_progress | validation: pending | change: Phase 0 open card received by 007 for taskflow open task-plan generation and opener delegation dry-run | blocker: none"
+notes: "2026-06-18 | status: in_progress | validation: pending | change: Phase 1 governance close with historical delivery 3eb9a20e7 | blocker: none"
+completed_at: "2026-06-18T16:46:06.461Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "3eb9a20e7"
 ---
 
 # TASK-AAO-0129 taskflow open task-plan generation and opener delegation dry-run
