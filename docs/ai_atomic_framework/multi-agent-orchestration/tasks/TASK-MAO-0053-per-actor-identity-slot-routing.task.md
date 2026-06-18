@@ -2,7 +2,7 @@
 task_id: TASK-MAO-0053
 doc_id: doc_mao_0053
 title: "Per-actor identity slot routing for parallel-agent commits"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8
@@ -46,6 +46,9 @@ outOfScope:
   - "Replacing the actor registry; per-actor identity files live alongside it."
 nonGoals:
   - "Do not change task ledger / claim / session per-actor semantics — those are already actor-isolated."
+completed_at: "2026-06-18T11:16:43.491Z"
+completed_by_agent: "captain"
+delivery_commit: "fbf020be1486c424aa7a9c5ffaafb5e3c645372d"
 ---
 
 # TASK-MAO-0053 - Per-actor identity slot routing for parallel-agent commits
