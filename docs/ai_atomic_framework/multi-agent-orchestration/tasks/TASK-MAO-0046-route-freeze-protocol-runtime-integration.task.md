@@ -2,8 +2,10 @@
 task_id: TASK-MAO-0046
 doc_id: doc_mao_0046
 title: "Route freeze protocol runtime integration"
-status: planned
-owner: atm-core
+status: done
+owner: cursor-gpt-5.2
+started_at: 2026-06-18T02:00:00+08:00
+started_by_agent: cursor-gpt-5.2
 priority: P0
 milestone: M8
 closure_authority: target_repo
@@ -58,6 +60,9 @@ outOfScope:
 nonGoals:
   - "Do not replace the route context state schema."
   - "Do not implement distributed process coordination."
+completed_at: "2026-06-18T04:29:40.837Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "36d05bf81"
 ---
 
 # TASK-MAO-0046 - Route freeze protocol runtime integration
