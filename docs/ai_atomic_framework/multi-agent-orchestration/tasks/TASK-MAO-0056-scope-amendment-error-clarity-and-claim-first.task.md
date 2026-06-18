@@ -2,7 +2,7 @@
 task_id: TASK-MAO-0056
 doc_id: doc_mao_0056
 title: "Scope amendment error clarity and --claim-first convenience"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M8
@@ -41,6 +41,9 @@ outOfScope:
   - "Loosening when scope amendment is permitted; preconditions stay as-is."
 nonGoals:
   - "Do not let --claim-first auto-claim across dependency blockers."
+completed_at: "2026-06-18T11:34:31.266Z"
+completed_by_agent: "captain"
+delivery_commit: "1f07c32b1c5c271dc9e27d42985a654bd22efc40"
 ---
 
 # TASK-MAO-0056 - Scope amendment error clarity and --claim-first convenience
