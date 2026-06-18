@@ -1,27 +1,50 @@
 ---
 task_id: TASK-AAO-0144
 title: "Governed git entrypoint and build output hygiene"
-status: planned
+status: done
+started_at: 2026-06-18T11:00:00Z
+started_by_agent: cursor-gpt-5.2
 priority: P1
 closure_authority: target_repo
 depends_on:
-  - TASK-AAO-0051
   - TASK-AAO-0141
 scopePaths:
   - "packages/cli/src/commands/git-governance.ts"
   - "packages/cli/src/commands/hook.ts"
   - "packages/cli/src/commands/next.ts"
   - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/framework-development/build-release-hygiene-hints.ts"
   - "packages/cli/src/commands/command-specs/git.spec.ts"
   - "scripts/build-onefile-release.ts"
-  - "scripts/**"
+  - "scripts/build-release-hygiene.ts"
+  - "scripts/validate-governance-commands.ts"
+  - "tests/cli/build-release-hygiene.test.ts"
   - "package.json"
-  - "docs/**"
+  - "docs/governance/build-release-hygiene.md"
+targetAllowedFiles:
+  - "packages/cli/src/commands/git-governance.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/next.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/framework-development/build-release-hygiene-hints.ts"
+  - "scripts/build-onefile-release.ts"
+  - "scripts/build-release-hygiene.ts"
+  - "scripts/validate-governance-commands.ts"
+  - "package.json"
+  - "docs/governance/build-release-hygiene.md"
+  - "tests/cli/build-release-hygiene.test.ts"
 deliverables:
-  - "A clear governed git commit entrypoint story: next/playbooks prefer atm git commit, direct git commit remains possible but diagnostics explain when the wrapper is required."
-  - "ATM git commit emits copyable fallback commands, stable trailers, and host-git compatibility guidance when the wrapper cannot complete."
-  - "Build workflow documents and/or implements a no-release-dirty default or explicit retain-artifacts mode so ordinary validation does not leave confusing release mirror dirt."
-  - "Hook or guidance diagnostics identify direct git commit attempts that should use the ATM wrapper without hard-banning legitimate low-level git use."
+  - "packages/cli/src/commands/git-governance.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/next.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/framework-development/build-release-hygiene-hints.ts"
+  - "scripts/build-onefile-release.ts"
+  - "scripts/build-release-hygiene.ts"
+  - "scripts/validate-governance-commands.ts"
+  - "package.json"
+  - "docs/governance/build-release-hygiene.md"
+  - "tests/cli/build-release-hygiene.test.ts"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
@@ -56,6 +79,9 @@ contextMap:
   tests:
     - path: "scripts/validate-governance-commands.ts"
       reason: "governance command regression coverage"
+completed_at: "2026-06-18T13:27:53.455Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "2c6f90664"
 ---
 
 ## Goal
