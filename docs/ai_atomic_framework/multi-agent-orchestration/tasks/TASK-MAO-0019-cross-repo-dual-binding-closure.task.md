@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0019
 title: "cross-repo dual binding closure"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M5
@@ -39,6 +39,9 @@ atomizationImpact:
 outOfScope:
   - "Opening new adopter planning queues in the framework repo"
   - "Humanless resolution of target/planning divergence"
+completed_at: "2026-06-18T05:27:27.672Z"
+completed_by_agent: "claude-code-opus-4-7"
+delivery_commit: "d44a74ce056eb6bd59a889799991d2b4d764353d"
 ---
 
 # TASK-MAO-0019 - cross-repo dual binding closure
