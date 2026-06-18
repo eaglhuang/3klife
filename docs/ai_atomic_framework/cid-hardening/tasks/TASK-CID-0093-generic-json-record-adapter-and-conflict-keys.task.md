@@ -2,7 +2,7 @@
 task_id: TASK-CID-0093
 doc_id: doc_cid_0093
 title: "Generic JSON record adapter and conflict keys"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M19
@@ -38,6 +38,9 @@ outOfScope:
   - "Array semantic merge beyond conservative replace"
 nonGoals:
   - "Do not allow concurrent direct writes to JSON files."
+completed_at: "2026-06-18T06:03:04.110Z"
+completed_by_agent: "captain"
+delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 
 # TASK-CID-0093 - Generic JSON record adapter and conflict keys
