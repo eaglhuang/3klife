@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0113
 title: Taskflow close confirmed broker conflict gate
-status: planned
+status: done
 milestone: M20
 depends_on:
   - TASK-CID-0112
@@ -33,6 +33,9 @@ nonGoals:
 atomizationImpact:
   ownerAtomOrMap: "atm.taskflow-confirmed-conflict-gate"
   mapUpdates: []
+completed_at: "2026-06-18T16:37:11.878Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+delivery_commit: "1f07c32b1c5c271dc9e27d42985a654bd22efc40"
 ---
 
 # TASK-CID-0113
