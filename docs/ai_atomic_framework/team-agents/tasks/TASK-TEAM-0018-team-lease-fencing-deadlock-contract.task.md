@@ -2,7 +2,7 @@
 doc_id: doc_team_0018
 task_id: TASK-TEAM-0018
 title: "Team lease fencing and deadlock contract"
-status: draft
+status: done
 owner: atm-core
 priority: P0
 milestone: M5H
@@ -58,51 +58,55 @@ nonGoals:
   - "Do not make Team Agents a second task scheduler"
   - "Do not let leases override task allowedFiles"
   - "Do not replace ATM scope locks or taskDirectionLock"
+completed_at: "2026-06-18T16:50:16.865Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+delivery_commit: "bff419f43e6a8d620a7d0b6e4022d010e1b64257"
 ---
-# TASK-TEAM-0018 — Team lease fencing and deadlock contract
+# TASK-TEAM-0018 Team lease fencing and deadlock contract
 
 ## Goal
 
-把 CID Hardening v2 的 E2 concurrency hardening 接進 Team Agents：team lease 必須能抵抗 stale holder、transfer race、簡單 deadlock，並且把這些能力明確標成新實作。
+Bring CID-style concurrency hardening into Team Agents so lease handoff, stale holder detection, and deadlock diagnosis work across real-agent runs, editor-subagent runs, and broker-only runs.
 
 ## Why
 
-目前 Team Agents 已規劃 permission lease、runtime state、`file.write` scope validator；ATM framework 也已有 lock record、heartbeat、TTL、taskDirectionLock 與 released tombstone 基礎。但現況尚未實作 `leaseEpoch`、fencing token、wait-for graph、cycle detection 或 symbol-scope lease。若 Team Agents 要真的支援多代理並行，M5 必須補上這層硬化，否則 `file.write` 唯一 owner 仍可能被 stale run 誤用。
+Once Team Agents can declare runtime mode and eventually spawn worker surfaces, the framework needs stronger protection against stale holders, transfer races, and hidden cross-run contention. This card hardens lease safety without turning Team Agents into a second scheduler.
 
 ## Implementation Contract
 
-1. 在 team runtime permission lease 中加入 monotonic fencing token，例如 `leaseEpoch`。
-2. `team lease` / `team release` / `team status` 必須顯示目前 epoch，並拒絕 stale epoch 的 release 或 transfer。
-3. 新增 wait-for graph diagnostic：同一 team run 內若 lease dependency 出現直接 cycle，validator 回報 fail。
-4. 擴充 released tombstone 測試：release 後重新 acquire 必須覆寫舊 active owner，且舊 holder 不可再成功釋放或轉交。
-5. `file.write` lease 仍必須是 task allowedFiles 子集；fencing token 不能放寬 allowedFiles。
-6. Team Agents 只讀消費 CID E2 定義的 `Active Resource Index` / `Scope Lease Registry`，用於呈現 active holder、resource key、lease epoch、heartbeat、TTL 與 wait-for dependency。
-7. `Active Resource Index` 是既有 scope-lock / taskDirectionLock / governance-local store 的可觀測索引與規則層，不是新的權威資料庫，也不是第二個 Git。
-8. 0018 不產生 task dispatch、queue promotion、claim、close、commit 或下一張卡排序；它只產出 deterministic diagnostics / validator result。
+1. Introduce monotonic fencing metadata such as `leaseEpoch` for Team runtime lease ownership.
+2. Make `team lease`, `team release`, and `team status` capable of surfacing stale epoch and stale holder findings.
+3. Add wait-for graph diagnostics so lease dependency cycles fail validation.
+4. Preserve released tombstone semantics so a stale actor cannot reclaim ownership by replaying an old runtime record.
+5. Apply the same fencing rules regardless of whether the run is `real-agent`, `editor-subagent`, or `broker-only`.
+6. `file.write` lease authorization must still remain a subset of task `allowedFiles`; fencing metadata must not widen scope.
+7. Team Agents may consume `Active Resource Index` / `Scope Lease Registry` as read-only diagnostic input only.
 
 ## Acceptance Criteria
 
-- Duplicate exclusive owner 仍 fail。
-- Stale epoch release / transfer fail，並回傳 agentId、permission、expectedEpoch、actualEpoch。
-- Wait-for graph direct cycle fail；acyclic dependency pass。
-- Released tombstone re-acquire path 有明確測試，不只測 `released: true`。
-- No source path outside task allowedFiles can be authorized through Team lease.
-- Active Resource Index / Scope Lease Registry consumer is read-only: it may report conflicts and stale holders, but it must not mutate task ledger, promote queues, claim work, close tasks, or rewrite registry ownership.
-- Symbol-scope lease is diagnostic/advisory only until Atomization Planner provides reliable symbol inventory.
+- Duplicate exclusive owner findings fail validation.
+- Stale epoch release or transfer attempts fail validation with expected and actual epoch details.
+- Wait-for graph cycle detection fails validation for cyclic dependency and passes for acyclic dependency.
+- Released tombstone coverage proves stale runs cannot reacquire ownership silently.
+- No source path outside task `allowedFiles` can be authorized through Team lease fencing.
+- The same diagnostics work for `real-agent`, `editor-subagent`, and `broker-only` runs.
+- Active Resource Index / Scope Lease Registry consumption stays read-only and does not promote, claim, close, or rewrite ledger state.
 
 ## Validators
 
-```
-npm run typecheck
-npm run validate:cli
-node --strip-types scripts/validate-team-agents.ts --case fencing-deadlock
-node --strip-types scripts/validate-team-agents.ts --case active-resource-index-readonly
-node --strip-types scripts/validate-governance-local.ts
-git diff --check
-```
+- `npm run typecheck`
+- `npm run validate:cli`
+- `node --strip-types scripts/validate-team-agents.ts --case fencing-deadlock`
+- `node --strip-types scripts/validate-team-agents.ts --case active-resource-index-readonly`
+- `node --strip-types scripts/validate-governance-local.ts`
+- `git diff --check`
 
 ## Stop Conditions
 
-- 若實作需要新增 long-lived scheduler service，先停下來回 Captain decision；本卡只允許 CLI/runtime helper 級別的 deterministic validator。
-- 若 symbol-scope lease 需要 AST/symbol inventory，先只輸出 advisory finding，正式 enforcement 留給後續 Atomization Planner 任務。
-- 若需要把 Active Resource Index / Scope Lease Registry 變成跨機共享服務、檔案監控資料庫或 Git 替代層，先停下來拆成 CID E2 架構卡；0018 只能接既有 scope-lock / governance-local store 的觀測面。
+- If the implementation starts to require a long-lived scheduler service, pause and split a separate runtime card instead of expanding this one.
+- If symbol-scope enforcement needs AST or symbol inventory, stop at advisory findings until Atomization Planner supplies that inventory.
+- If the design begins mutating Active Resource Index or Scope Lease Registry outside their owner stores, stop and reroute the work.
+
+## Notes
+
+This card is about concurrency hardening for Team runtime contracts. It does not grant Team Agents authority over task lifecycle.
