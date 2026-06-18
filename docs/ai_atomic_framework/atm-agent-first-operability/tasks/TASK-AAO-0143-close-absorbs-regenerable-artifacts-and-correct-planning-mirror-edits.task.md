@@ -1,28 +1,31 @@
 ---
 task_id: TASK-AAO-0143
 title: "Close absorbs regenerable artifacts and correct planning mirror edits"
-status: planned
+status: done
+started_at: 2026-06-18T06:35:00Z
+started_by_agent: cursor-gpt-5.2
 priority: P0
 closure_authority: target_repo
 depends_on:
-  - TASK-AAO-0138C
-  - TASK-AAO-0140
   - TASK-AAO-0141
 scopePaths:
   - "packages/cli/src/commands/taskflow.ts"
-  - "packages/cli/src/commands/taskflow/**"
+  - "packages/cli/src/commands/taskflow/historical-close-preflight.ts"
   - "packages/cli/src/commands/tasks.ts"
-  - "packages/cli/src/commands/tasks/**"
+  - "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts"
+  - "packages/cli/src/commands/tasks/planning-mirror-close-diagnostics.ts"
+  - "packages/cli/src/commands/tasks/lifecycle-state.ts"
   - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
-  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
-  - "scripts/validate-task-ledger-governance.ts"
-  - "scripts/validate-governance-commands.ts"
-  - "tests/**"
+  - "packages/cli/src/commands/tasks/__tests__/scope-lock-diagnostics.test.ts"
+  - "packages/cli/src/commands/tasks/__tests__/planning-mirror-close-diagnostics.test.ts"
 deliverables:
-  - "Close/pre-close classifies same-task regenerable artifacts, such as evidence bundle manifests and closure bundle manifests, as close-owned transient state instead of ordinary dirty blockers."
-  - "Planning mirror edits that already match the closeback result are accepted and absorbed into the final close bundle rather than forcing manual rollback."
-  - "Dirty-state diagnostics distinguish protected governance ledgers, same-task regenerable artifacts, correct planning mirror pre-edits, and foreign staged files."
-  - "Rollback behavior remains fail-closed for task ledgers, unrelated planning edits, stale evidence, and foreign staged bundles."
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/taskflow/historical-close-preflight.ts"
+  - "packages/cli/src/commands/tasks/scope-lock-diagnostics.ts"
+  - "packages/cli/src/commands/tasks/planning-mirror-close-diagnostics.ts"
+  - "packages/cli/src/commands/tasks/lifecycle-state.ts"
+  - "packages/cli/src/commands/tasks/__tests__/scope-lock-diagnostics.test.ts"
+  - "packages/cli/src/commands/tasks/__tests__/planning-mirror-close-diagnostics.test.ts"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
@@ -52,6 +55,9 @@ contextMap:
       reason: "ledger and closeback regression coverage"
     - path: "scripts/validate-governance-commands.ts"
       reason: "governance command coverage"
+completed_at: "2026-06-18T10:24:41.371Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "c13a564cd"
 ---
 
 ## Goal
