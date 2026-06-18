@@ -2,7 +2,7 @@
 task_id: TASK-MAO-0055
 doc_id: doc_mao_0055
 title: "tasks claim auto-intent and closeout-only mutation safety"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M8
@@ -43,6 +43,9 @@ outOfScope:
   - "Changing the semantics of normal / closeout-only at commit-time enforcement."
 nonGoals:
   - "Do not remove explicit --claim-intent; it remains the override."
+completed_at: "2026-06-18T10:56:52.675Z"
+completed_by_agent: "captain"
+delivery_commit: "8bffe6b81"
 ---
 
 # TASK-MAO-0055 - tasks claim auto-intent and closeout-only mutation safety
