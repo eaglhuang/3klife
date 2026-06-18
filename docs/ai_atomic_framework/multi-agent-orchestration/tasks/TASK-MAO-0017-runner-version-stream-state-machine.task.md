@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MAO-0017
 title: "runner version stream state machine"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: M5
@@ -42,6 +42,9 @@ atomizationImpact:
 outOfScope:
   - "Closure packet runner binding"
   - "External contributor pipeline"
+completed_at: "2026-06-18T04:07:48.924Z"
+completed_by_agent: "claude-code-opus-4-7"
+delivery_commit: "b63fac565d75a90421182044707b6147e119bccf"
 ---
 
 # TASK-MAO-0017 - runner version stream state machine
