@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0111
 title: "ATM taskflow dry-run orchestrator"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
+upstream_mutation_status: applied
+started_at: "2026-06-19T16:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -19,7 +19,17 @@ alphaGate: validate:task-ledger-governance
 public_tracking: false
 executionMode: phase0-taskflow-dry-run-orchestrator
 planning_repo: 3KLife
-closure_authority: target_repo
+closure_authority: planning_repo
+scopePaths:
+  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0111-atm-taskflow-dry-run-orchestrator.task.md"
+  - "docs/tasks/tasks-atm.json"
+  - "docs/tasks/tasks-atm/tasks-atm-part-27.json"
+deliverables:
+  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0111-atm-taskflow-dry-run-orchestrator.task.md"
+  - "docs/tasks/tasks-atm.json"
+  - "docs/tasks/tasks-atm/tasks-atm-part-27.json"
+validators:
+  - "git diff --check"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0111-atm-taskflow-dry-run-orchestrator.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
@@ -34,7 +44,9 @@ non_goals:
   - "Do not make the macro a second writer."
   - "Do not touch unrelated shard files."
   - "Do not stage or commit unrelated dirty files."
-notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for ATM taskflow dry-run orchestrator route (C plan) | blocker: none | risk: macro second-writer drift"
+notes: "2026-06-19 | status: done | validation: passed | change: Phase 0 planning anchor closed; C-plan route locked | blocker: none"
+completed_at: "2026-06-19T08:00:00+08:00"
+completed_by_agent: "cursor-gpt-5.2"
 ---
 
 # TASK-AAO-0111 ATM taskflow dry-run orchestrator
