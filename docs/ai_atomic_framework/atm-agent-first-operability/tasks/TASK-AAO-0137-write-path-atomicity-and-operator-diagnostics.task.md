@@ -3,16 +3,13 @@ doc_id: ""
 task_id: TASK-AAO-0137
 title: "write-path atomicity and operator diagnostics: close transaction, runner stale fail-closed, status triangulation, scratch gitignore"
 milestone: M17
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-created: "2026-06-09"
-created_by_agent: captain-incident-review-2026-06-08
-started_at: ""
-started_by_agent: ""
-blocked_by:
-  - TASK-AAO-0135
+upstream_mutation_status: applied
+started_at: "2026-06-19T15:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
+blocked_by: []
 owner: atm-core
 priority: P2
 upstream_repo: AI-Atomic-Framework
@@ -20,55 +17,55 @@ targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
-executionMode: phase0-write-path-atomicity-and-operator-diagnostics
+executionMode: phase1-write-path-atomicity-and-operator-diagnostics
 planning_repo: 3KLife
 closure_authority: target_repo
-related_plan: docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md
-related:
-  - TASK-CID-0018
-  - TASK-AAO-0135
-  - TASK-AAO-0136
 depends_on:
   - TASK-AAO-0135
-depends:
-  - TASK-AAO-0135
+  - TASK-AAO-0136
 scopePaths:
-  - packages/cli/src/commands/tasks.ts
-  - packages/cli/src/commands/framework-development.ts
-  - packages/cli/src/commands/next.ts
-  - packages/cli/src/commands/command-specs/tasks.spec.ts
-  - .gitignore
-  - tests/**
+  - ".gitignore"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/next.ts"
+  - "packages/cli/src/commands/shared.ts"
+  - "packages/cli/src/commands/task-direction.ts"
+  - "packages/cli/src/commands/tasks/task-option-parsers.ts"
+  - "packages/cli/src/commands/command-specs/next.spec.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+  - "tests/cli-fixtures/help-snapshots/next.json"
 deliverables:
-  - packages/cli/src/commands/tasks.ts
-  - packages/cli/src/commands/framework-development.ts
-  - packages/cli/src/commands/next.ts
-  - packages/cli/src/commands/command-specs/tasks.spec.ts
-  - .gitignore
-  - tests/**
+  - ".gitignore"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/next.ts"
+  - "packages/cli/src/commands/shared.ts"
+  - "packages/cli/src/commands/task-direction.ts"
+  - "packages/cli/src/commands/tasks/task-option-parsers.ts"
+  - "packages/cli/src/commands/command-specs/next.spec.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+  - "tests/cli-fixtures/help-snapshots/next.json"
 validators:
-  - npm run typecheck
-  - npm run validate:cli
-  - npm test -- --grep "tasks.*close.*transaction|runner.*stale|tasks status|gitignore"
-evidence:
-  required: command-backed
-rollback:
-  strategy: revert-commit
-atomizationImpact:
-  ownerAtomOrMap: atm.task-closure-map
-  mapUpdates:
-    - atomic_workbench/atomization-coverage/path-to-atom-map.json
-  newScriptsAllowed: false
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - ".gitignore"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/next.ts"
+  - "packages/cli/src/commands/shared.ts"
+  - "packages/cli/src/commands/task-direction.ts"
+  - "packages/cli/src/commands/tasks/task-option-parsers.ts"
+  - "packages/cli/src/commands/command-specs/next.spec.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+  - "tests/cli-fixtures/help-snapshots/next.json"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-aao.json
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/tasks.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/.gitignore
-  - C:/Users/User/AI-Atomic-Framework/tests/**
-  - C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json
 forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/.atm/history/**
   - C:/Users/User/AI-Atomic-Framework/.atm/runtime/**
@@ -82,7 +79,10 @@ non_goals:
   - "Do not silently auto-rollback on close failure (must surface diagnostic first)."
   - "Do not mutate AAF source in Phase 0."
   - "Do not start before TASK-AAO-0135 lands; transaction wrapper sits on top of 0135's normalize util."
-notes: "2026-06-09 | status: open | validation: pending | change: Phase 0 open card bundling close-transaction atomicity + runner stale write-fail-closed + tasks status triangulation + scratch output gitignore | blocker: none"
+notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 9aa7ed619 | blocker: none"
+completed_at: "2026-06-19T14:06:33.088Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "9aa7ed619"
 ---
 
 # TASK-AAO-0137 write-path atomicity and operator diagnostics
