@@ -37,7 +37,7 @@ validators:
   - "npm run validate:cli"
   - "node --strip-types scripts/validate-taskflow-size-tripwire.ts"
   - "node --strip-types packages/cli/src/commands/taskflow/__tests__/commit-messages.spec.ts"
-  - "node --strip-types packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "node --strip-types packages/cli/src/commands/taskflow/__tests__/close-gates-focused.spec.ts"
   - "npm run validate:git-head-evidence"
   - "git diff --check"
 evidence:
@@ -92,6 +92,10 @@ Use the `atm-atom-map-refactor` skill (`Strategy Map` lightweight). Per casebook
   - one variable-substitution case asserting `${taskId}` literal interpolation is NOT supported (templates are functions, not strings, to prevent format-string injection).
 - `taskflow-dryrun.spec.ts` extension (additive to the file TASK-CID-0073 wrote):
   - one case asserting that the auto-commit fixture's commit messages match the Strategy Map default exactly.
+- Fast regression note (2026-06-19):
+  - `packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts` remains the broad integration surface, but it is too heavy for quick close-gate repair loops.
+  - Focused close-path regressions should live in `packages/cli/src/commands/taskflow/__tests__/close-gates-focused.spec.ts`.
+  - The focused spec is now the preferred quick validator for `leaseEpoch < currentEpoch` and branch commit queue busy close-gate regressions.
 
 Add `scripts/validate-taskflow-size-tripwire.ts` with the following behavior:
 - count `taskflow.ts` lines;
@@ -105,7 +109,7 @@ npm run typecheck
 npm run validate:cli
 node --strip-types scripts/validate-taskflow-size-tripwire.ts
 node --strip-types packages/cli/src/commands/taskflow/__tests__/commit-messages.spec.ts
-node --strip-types packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts
+node --strip-types packages/cli/src/commands/taskflow/__tests__/close-gates-focused.spec.ts
 npm run validate:git-head-evidence
 git diff --check
 ```
@@ -119,6 +123,7 @@ Use `taskflow open --write` / `taskflow close --write`. This card explicitly exe
 - Target repo delivery commit: `56413eea628c5078675aa877e052f474143d5729`
 - Target repo closure commit: `16feaf01552ab171f555f96451a8c0e6ede3c638`
 - Runner sync steward commit: `637cfcb87d57c1290e7cafaf1993fbe9f98d54e3`
+- Focused regression follow-up commit: `81a1fbf3ea7c604300e95318945089317373347e`
 - Closure packet: `.atm/history/evidence/TASK-RFT-0008.closure-packet.json`
 - Team Agents dogfood: `team plan`, `team validate`, and `team start` were used; team run id `team-71c0d5c2fd25`.
 - Bug backlog entries added: `BUG-ATM-0032` through `BUG-ATM-0035`.
