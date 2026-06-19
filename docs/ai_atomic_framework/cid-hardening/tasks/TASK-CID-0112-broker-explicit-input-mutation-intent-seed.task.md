@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0112
 title: Broker explicit-input mutation-intent seed
-status: planned
+status: done
 milestone: M20
 depends_on:
   - TASK-CID-0097
@@ -64,4 +64,3 @@ npm run typecheck
 npm test
 git diff --check
 ```
-
