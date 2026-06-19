@@ -732,13 +732,15 @@
         "ATM next can distinguish safest leaf, goal-aligned leaf, and touched semantic leaf.",
         "If a guidance goal explicitly mentions a symbol, that symbol's leaf proposal ranks ahead of a generic helper.",
         "Review / proposal evidence exposes goalAlignment or overrideReason.",
-        "Blocked trunks such as kinship_pair_binding_supported are not atomized by mistake."
+        "Blocked trunks such as kinship_pair_binding_supported are not atomized by mistake.",
+        "Focused guidance validation covers helper fallback, explicit-symbol preference, touched-symbol preference, and blocked-trunk protection."
       ],
       "deliverables": [
-        "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0110-goal-aligned-legacy-route-selection-for-guided-atomize.task.md",
-        "docs/tasks/tasks-aao.json"
+        "packages/core/src/guidance/route-engine.ts",
+        "packages/core/src/guidance/guidance-packet.ts",
+        "scripts/validate-guidance.ts"
       ],
-      "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 create card for AAF routing gap in ATM next leaf selection | blocker: none | risk: helper-leaf preference hides goal-aligned proposal"
+      "notes": "2026-06-02 | status: open | validation: pending | change: Phase 0 create card for ATM routing gap in ATM next leaf selection | blocker: none | risk: helper-leaf preference hides goal-aligned proposal. 2026-06-19 | required-adjustment: source scope repaired to packages/core/src/guidance/** plus validate-guidance; CLI, release, runtime, and active TASK-AAO-0135 broker lane remain out of scope. 2026-06-19 | metadata repair: deliverables are target-repo only so taskflow close can compute the historical delivery bundle; 3KLife card and ledger remain planning mirror metadata."
     },
     {
       "doc_id": "",
