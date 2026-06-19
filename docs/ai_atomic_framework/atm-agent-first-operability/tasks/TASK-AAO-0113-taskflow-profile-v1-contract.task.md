@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0113
 title: "taskflow.profile.v1 contract"
 milestone: M16
-status: in-progress
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: "2026-06-02T15:20:40.2434051+08:00"
-started_by_agent: "codex-gpt-5.4-mini"
+upstream_mutation_status: applied
+started_at: "2026-06-19T16:10:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -17,26 +17,49 @@ targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
-executionMode: phase0-taskflow-profile-v1-contract
+executionMode: phase1-taskflow-profile-v1-contract
 planning_repo: 3KLife
 closure_authority: target_repo
+depends_on:
+  - TASK-AAO-0112
+scopePaths:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "packages/cli/src/commands/taskflow/profile-loader.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "schemas/taskflow-profile.v1.json"
+  - "fixtures/taskflow-profile/valid.profile.json"
+  - "fixtures/taskflow-profile/invalid-missing-schema-id.profile.json"
+  - "docs/specs/taskflow-profile-v1.md"
+deliverables:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "packages/cli/src/commands/taskflow/profile-loader.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "schemas/taskflow-profile.v1.json"
+  - "fixtures/taskflow-profile/valid.profile.json"
+  - "fixtures/taskflow-profile/invalid-missing-schema-id.profile.json"
+  - "docs/specs/taskflow-profile-v1.md"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "packages/cli/src/commands/taskflow/profile-loader.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "schemas/taskflow-profile.v1.json"
+  - "fixtures/taskflow-profile/valid.profile.json"
+  - "fixtures/taskflow-profile/invalid-missing-schema-id.profile.json"
+  - "docs/specs/taskflow-profile-v1.md"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0113-taskflow-profile-v1-contract.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
-  - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/taskflow.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/atm.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow/profile-loader.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/schemas/taskflow-profile.v1.json
-  - C:/Users/User/AI-Atomic-Framework/fixtures/taskflow-profile/valid.profile.json
-  - C:/Users/User/AI-Atomic-Framework/fixtures/taskflow-profile/invalid-missing-schema-id.profile.json
-  - C:/Users/User/AI-Atomic-Framework/docs/specs/taskflow-profile-v1.md
+  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-24.json
 forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts
@@ -58,7 +81,10 @@ non_goals:
   - "Do not import, require, or spawn the 3KLife opener."
   - "Do not touch TASK-AAO-0112."
   - "Do not stage or commit unrelated dirty files."
-notes: "2026-06-02 | status: in-progress | phase0 scope amendment; Phase 1 adds schema/loader/tests; supportsWrite=false"
+notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 318d40b62 | blocker: none"
+completed_at: "2026-06-19T14:35:51.689Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "318d40b62"
 ---
 
 # TASK-AAO-0113 taskflow.profile.v1 contract
