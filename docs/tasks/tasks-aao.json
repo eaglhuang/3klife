@@ -891,7 +891,7 @@
         "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md",
         "docs/tasks/tasks-aao.json"
       ],
-      "notes": "2026-06-08 | status: open | validation: pending | change: Phase 0 open card for closure/evidence integrity + import active-claim safety | blocker: none",
+      "notes": "2026-06-19 | status: done | validation: passed | change: governance close historical delivery f0d0e18c3 | blocker: none",
       "brief": {
         "style": "classic",
         "label": "",

@@ -59,7 +59,7 @@ non_goals:
   - "Do not bypass INV-ATM-002 lock requirements."
   - "Do not mutate AAF source in Phase 0."
   - "Do not start before TASK-AAO-0135 lands; this card relies on its sha256 normalize util and validator error taxonomy."
-notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 6d5049ac5 | blocker: none"
+notes: "2026-06-19 | status: done | validation: passed | change: governance close historical delivery 6d5049ac5 | blocker: none"
 completed_at: "2026-06-19T13:55:26.043Z"
 completed_by_agent: "cursor-gpt-5.2"
 delivery_commit: "6d5049ac5"
