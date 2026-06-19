@@ -79,7 +79,7 @@ non_goals:
   - "Do not silently auto-rollback on close failure (must surface diagnostic first)."
   - "Do not mutate AAF source in Phase 0."
   - "Do not start before TASK-AAO-0135 lands; transaction wrapper sits on top of 0135's normalize util."
-notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 9aa7ed619 | blocker: none"
+notes: "2026-06-19 | status: done | validation: passed | change: governance close historical delivery 9aa7ed619 | blocker: none"
 completed_at: "2026-06-19T14:06:33.088Z"
 completed_by_agent: "cursor-gpt-5.2"
 delivery_commit: "9aa7ed619"
