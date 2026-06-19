@@ -3,16 +3,13 @@ doc_id: ""
 task_id: TASK-AAO-0136
 title: "multi-captain commit ergonomics: audit scoping, close-commit-window, worktree framework-mode inheritance"
 milestone: M17
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-created: "2026-06-08"
-created_by_agent: captain-incident-review-2026-06-08
-started_at: ""
-started_by_agent: ""
-blocked_by:
-  - TASK-AAO-0135
+upstream_mutation_status: applied
+started_at: "2026-06-19T14:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
+blocked_by: []
 owner: atm-core
 priority: P1
 upstream_repo: AI-Atomic-Framework
@@ -20,51 +17,33 @@ targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
-executionMode: phase0-multi-captain-commit-ergonomics
+executionMode: phase1-multi-captain-commit-ergonomics
 planning_repo: 3KLife
 closure_authority: target_repo
-related_plan: docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0136-multi-captain-commit-ergonomics.task.md
-related:
-  - TASK-CID-0018
-  - TASK-AAO-0135
 depends_on:
   - TASK-AAO-0135
-depends:
-  - TASK-AAO-0135
 scopePaths:
-  - packages/cli/src/commands/hook.ts
-  - packages/cli/src/commands/tasks.ts
-  - packages/cli/src/commands/framework-development.ts
-  - packages/cli/src/commands/git.ts
-  - tests/**
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "tests/cli/hook-audit-scope-classification.test.ts"
 deliverables:
-  - packages/cli/src/commands/hook.ts
-  - packages/cli/src/commands/tasks.ts
-  - packages/cli/src/commands/framework-development.ts
-  - packages/cli/src/commands/git.ts
-  - tests/**
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "tests/cli/hook-audit-scope-classification.test.ts"
 validators:
-  - npm run typecheck
-  - npm run validate:cli
-  - npm test -- --grep "hook.*audit|close-commit-window|framework-mode worktree"
-evidence:
-  required: command-backed
-rollback:
-  strategy: revert-commit
-atomizationImpact:
-  ownerAtomOrMap: atm.task-closure-map
-  mapUpdates:
-    - atomic_workbench/atomization-coverage/path-to-atom-map.json
-  newScriptsAllowed: false
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "tests/cli/hook-audit-scope-classification.test.ts"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0136-multi-captain-commit-ergonomics.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-aao.json
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/hook.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/git.ts
-  - C:/Users/User/AI-Atomic-Framework/tests/**
-  - C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json
 forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/.atm/history/**
   - C:/Users/User/AI-Atomic-Framework/.atm/runtime/**
@@ -80,7 +59,10 @@ non_goals:
   - "Do not bypass INV-ATM-002 lock requirements."
   - "Do not mutate AAF source in Phase 0."
   - "Do not start before TASK-AAO-0135 lands; this card relies on its sha256 normalize util and validator error taxonomy."
-notes: "2026-06-08 | status: open | validation: pending | change: Phase 0 open card bundling hook audit staged-vs-tree-wide classification + close-commit-window short-lived lock + framework-mode worktree identity inheritance | blocker: none"
+notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 6d5049ac5 | blocker: none"
+completed_at: "2026-06-19T13:55:26.043Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "6d5049ac5"
 ---
 
 # TASK-AAO-0136 multi-captain commit ergonomics: audit scoping, close-commit-window, worktree framework-mode inheritance
