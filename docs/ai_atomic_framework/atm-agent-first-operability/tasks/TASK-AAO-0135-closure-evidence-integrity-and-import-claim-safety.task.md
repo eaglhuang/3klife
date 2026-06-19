@@ -66,7 +66,7 @@ non_goals:
   - "Do not weaken dirty-tree fail-closed posture for unrelated changes."
   - "Do not retroactively rewrite historical evidence files."
   - "Do not mutate AAF source in Phase 0."
-notes: "2026-06-18 | status: in_progress | validation: pending | change: planning-mirror sync repair close historical delivery f0d0e18c3 | blocker: none"
+notes: "2026-06-19 | status: done | validation: passed | change: governance close historical delivery f0d0e18c3 | blocker: none"
 completed_at: "2026-06-19T13:43:20.032Z"
 completed_by_agent: "cursor-gpt-5.2"
 delivery_commit: "f0d0e18c3"
