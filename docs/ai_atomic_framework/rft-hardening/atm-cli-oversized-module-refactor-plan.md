@@ -16,6 +16,7 @@ task_family:
   - TASK-RFT-0006
   - TASK-RFT-0007
   - TASK-RFT-0008
+  - TASK-RFT-0009
 ---
 
 # ATM CLI oversized module refactor plan (RFT series)
@@ -53,7 +54,8 @@ The cure is not a single mega-rewrite. The cure is a per-file atomic map: each f
 | TASK-RFT-0005 | `scripts/captain-dispatch-mailbox.ts` | 2,192 | 50+ | Strategy Map (per lane) + Facade |
 | TASK-RFT-0006 | `packages/core/src/police/family.ts` | 1,958 | 30+ interfaces | Strategy Map (per police role) + shared Result Contract Object |
 | TASK-RFT-0007 | `packages/cli/src/commands/evidence.ts` | 1,782 | 68 | Strategy Map (per verb) + Facade |
-| TASK-RFT-0008 | `packages/cli/src/commands/taskflow.ts` | 1,642 | 111 | Light extraction (Strategy Map for commit-message templates) + size tripwire |
+| TASK-RFT-0008 | `packages/cli/src/commands/taskflow.ts` / `taskflow-dryrun.spec.ts` | 2,726 / large integration spec | 111+ | Close validation acceleration + test atoms + commit-message Strategy Map |
+| TASK-RFT-0009 | `packages/cli/src/commands/taskflow.ts` | 2,726 | 111+ | Production close Facade + Policy Objects + Result Contract Objects |
 
 ## Per-file atomic map plan
 
@@ -164,10 +166,34 @@ Each card's `## Atom/Map Extraction Pattern` section uses the `atm-atom-map-refa
 **Light-touch** because the file is still under the cliff. Goals:
 
 - Extract commit-message templates (`chore(taskflow): close ... target governance bundle` and `docs(taskflow): close ... planning bundle`) into a Strategy Map (`taskflow/commit-messages.ts`) so future host-customization (TASK-CID-0073 follow-up gap C3) has a single seam.
-- Add `scripts/validate-taskflow-size-tripwire.ts` that fails when `taskflow.ts` exceeds 2,200 lines, naming RFT-0008 as the next-step card.
+- Keep `scripts/validate-taskflow-size-tripwire.ts` as a diagnostic pressure signal when `taskflow.ts` exceeds 2,200 lines, naming RFT-0009 as the production-size follow-up.
 - Add focused test for the commit-message strategy to lock in current behavior.
 
 **No major split**. This card is the lighthouse that keeps the next refactor honest.
+
+**2026-06-19 planning override**: TASK-RFT-0008 is now the close validation acceleration card. Its primary deliverable is the layered `taskflow close` test surface: `close-gates-focused.spec.ts`, reusable close fixtures, reusable broker/commit-queue injection helpers, and reusable write-readiness / close-result assertions. The size tripwire remains a diagnostic signal, but TASK-RFT-0008 no longer owns shrinking the production `taskflow.ts` main body below the threshold.
+
+### TASK-RFT-0009 -- `taskflow.ts`
+
+**Primary purpose**: shrink the production `taskflow.ts` close path after TASK-RFT-0008 has made close validation fast enough.
+
+Atoms:
+
+- `taskflow/close-preflight.ts` -- Policy Object for close eligibility checks.
+- `taskflow/write-readiness.ts` -- Policy Object for blocker aggregation and `writeReadinessHint`.
+- `taskflow/broker-gate.ts` -- broker conflict and lease epoch interpretation.
+- `taskflow/branch-commit-queue-gate.ts` -- branch queue lock diagnostics.
+- `taskflow/closeback-orchestration.ts` -- target/planning closeback coordination.
+- `taskflow/commit-bundle-assembly.ts` -- governed stage/commit bundle construction.
+- `taskflow.ts` -- Facade that keeps CLI behavior and public JSON contracts stable.
+
+Tests:
+
+- focused specs for close preflight, write readiness, closeback orchestration, and commit bundle assembly;
+- reuse TASK-RFT-0008 test atoms instead of re-embedding dual-repo fixture setup;
+- keep `close-gates-focused.spec.ts` and `taskflow-dryrun.spec.ts` as regression gates.
+
+TASK-RFT-0009 owns making `scripts/validate-taskflow-size-tripwire.ts` pass again.
 
 ## Test discipline (applies to every RFT card)
 
@@ -195,7 +221,7 @@ Every card MUST go through `taskflow open --write` (open) and `taskflow close --
 
 The cards are independent at the file level and may run in parallel, with one exception: TASK-RFT-0001 (next.ts) and TASK-RFT-0007 (evidence.ts) share the `next --claim`/`evidence run` integration boundary at the `framework-development claim-required` validator, so they should not close on the same day to avoid concurrent runner-sync conflicts.
 
-Recommended order if running serially: RFT-0008 → RFT-0003 → RFT-0007 → RFT-0002 → RFT-0006 → RFT-0001 → RFT-0005 → RFT-0004 (smallest to largest, except RFT-0008 first as the size tripwire that gates the rest).
+Recommended order if running serially: RFT-0008 → RFT-0009 → RFT-0003 → RFT-0007 → RFT-0002 → RFT-0006 → RFT-0001 → RFT-0005 → RFT-0004. RFT-0008 comes first because close validation speed is the safety net; RFT-0009 follows because it uses that safety net to shrink `taskflow.ts`.
 
 ## Skill casebook integration
 
