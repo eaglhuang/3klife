@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0112
 title: "AAF taskflow dry-run skeleton"
 milestone: M16
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
+upstream_mutation_status: applied
+started_at: "2026-06-19T16:05:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -20,15 +20,31 @@ public_tracking: false
 executionMode: phase1-taskflow-dry-run-skeleton
 planning_repo: 3KLife
 closure_authority: target_repo
+depends_on:
+  - TASK-AAO-0111
+scopePaths:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "packages/cli/src/commands/command-specs.ts"
+  - "packages/cli/src/atm.ts"
+deliverables:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "packages/cli/src/commands/command-specs.ts"
+  - "packages/cli/src/atm.ts"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/command-specs/taskflow.spec.ts"
+  - "packages/cli/src/commands/command-specs.ts"
+  - "packages/cli/src/atm.ts"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0112-atm-taskflow-dry-run-skeleton.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-*.json
-  - C:/Users/User/3KLife/docs/tasks/tasks-atm/.shardrc.json
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/taskflow.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/taskflow.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/atm.ts
+  - C:/Users/User/3KLife/docs/tasks/tasks-atm/tasks-atm-part-12.json
 forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
   - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/next.ts
@@ -48,7 +64,10 @@ non_goals:
   - "Do not write the task card, ledger, or shard from dry-run mode."
   - "Do not touch unrelated shard files."
   - "Do not stage or commit unrelated dirty files."
-notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for AAF taskflow dry-run skeleton route (C plan) | blocker: none | risk: macro second-writer drift"
+notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 04d67737f | blocker: none"
+completed_at: "2026-06-19T14:27:30.415Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "04d67737f"
 ---
 
 # TASK-AAO-0112 AAF taskflow dry-run skeleton
