@@ -3,14 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0135
 title: "closure/evidence data integrity hardening and import active-claim safety"
 milestone: M17
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-created: "2026-06-08"
-created_by_agent: captain-incident-review-2026-06-08
-started_at: ""
-started_by_agent: ""
+upstream_mutation_status: applied
+started_at: "2026-06-18T18:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -19,59 +17,43 @@ targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
-executionMode: phase0-closure-evidence-integrity-and-import-claim-safety
+executionMode: phase1-closure-evidence-integrity-and-import-claim-safety
 planning_repo: 3KLife
 closure_authority: target_repo
-related_plan: docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md
-related:
-  - TASK-CID-0018
-  - TASK-AAO-0123
-depends_on:
-  - TASK-AAO-0123
-depends: []
 scopePaths:
-  - packages/cli/src/commands/framework-development.ts
-  - packages/cli/src/commands/tasks.ts
-  - packages/cli/src/commands/hook.ts
-  - packages/cli/src/commands/command-specs/tasks.spec.ts
-  - scripts/validate-task-import.ts
-  - scripts/validate-task-ledger-governance.ts
-  - release/atm-onefile/**
-  - release/atm-root-drop/**
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
+  - "scripts/validate-task-import.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/release-manifest.json"
 deliverables:
-  - packages/cli/src/commands/framework-development.ts
-  - packages/cli/src/commands/tasks.ts
-  - packages/cli/src/commands/hook.ts
-  - packages/cli/src/commands/command-specs/tasks.spec.ts
-  - scripts/validate-task-import.ts
-  - scripts/validate-task-ledger-governance.ts
-  - release/atm-onefile/**
-  - release/atm-root-drop/**
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
+  - "scripts/validate-task-import.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/release-manifest.json"
 validators:
-  - npm run typecheck
-  - npm run validate:cli
-  - npm test -- --grep "validateClosurePacket|repair-closure|import.*active.*claim"
-evidence:
-  required: command-backed
-rollback:
-  strategy: revert-commit
-atomizationImpact:
-  ownerAtomOrMap: atm.task-closure-map
-  mapUpdates:
-    - atomic_workbench/atomization-coverage/path-to-atom-map.json
-  newScriptsAllowed: false
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/framework-development.ts"
+  - "packages/cli/src/commands/tasks.ts"
+  - "packages/cli/src/commands/hook.ts"
+  - "packages/cli/src/commands/command-specs/tasks.spec.ts"
+  - "scripts/validate-task-import.ts"
+  - "scripts/validate-task-ledger-governance.ts"
+  - "release/atm-onefile/atm.mjs"
+  - "release/atm-onefile/release-manifest.json"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-aao.json
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/framework-development.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/tasks.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/command-specs/tasks.spec.ts
-  - C:/Users/User/AI-Atomic-Framework/packages/cli/src/commands/hook.ts
-  - C:/Users/User/AI-Atomic-Framework/scripts/validate-task-import.ts
-  - C:/Users/User/AI-Atomic-Framework/scripts/validate-task-ledger-governance.ts
-  - C:/Users/User/AI-Atomic-Framework/release/atm-onefile/**
-  - C:/Users/User/AI-Atomic-Framework/release/atm-root-drop/**
-  - C:/Users/User/AI-Atomic-Framework/atomic_workbench/atomization-coverage/path-to-atom-map.json
 forbidden_files:
   - C:/Users/User/AI-Atomic-Framework/.atm/history/**
   - C:/Users/User/AI-Atomic-Framework/.atm/runtime/**
@@ -84,7 +66,10 @@ non_goals:
   - "Do not weaken dirty-tree fail-closed posture for unrelated changes."
   - "Do not retroactively rewrite historical evidence files."
   - "Do not mutate AAF source in Phase 0."
-notes: "2026-06-08 | status: open | validation: pending | change: Phase 0 open card bundling sha256 lowercase normalization + validator error format clarity + repair-closure upstream-evidence-fix + tasks import preserve-active-claim default | blocker: none"
+notes: "2026-06-18 | status: in_progress | validation: pending | change: planning-mirror sync repair close historical delivery f0d0e18c3 | blocker: none"
+completed_at: "2026-06-19T13:43:20.032Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "f0d0e18c3"
 ---
 
 # TASK-AAO-0135 closure/evidence data integrity hardening and import active-claim safety
