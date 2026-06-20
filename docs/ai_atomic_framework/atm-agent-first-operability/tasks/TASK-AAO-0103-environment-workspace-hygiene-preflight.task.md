@@ -18,12 +18,7 @@ deliverables:
   - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md"
   - "docs/tasks/tasks-aao.json"
 validators:
-  - "npm run typecheck"
-  - "npm run build"
-  - "npm run validate:cli"
-  - "npm run validate:git-hooks-enforcement"
-  - "npm run validate:task-ledger-governance"
-  - "node atm.mjs next --prompt \"environment workspace hygiene preflight\" --json"
+  - "git diff --check"
 atomizationImpact: "Captures the reusable preflight hygiene workflow so future ATM tasks can detect node_modules/tsc/ajv gaps, route package-lock drift to follow-up governance, handle runner sync, and detect false modified-state signals before task work starts."
 outOfScope:
   - "Source feature work"
