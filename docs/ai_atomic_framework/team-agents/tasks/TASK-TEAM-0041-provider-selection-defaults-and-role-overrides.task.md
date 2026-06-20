@@ -2,7 +2,7 @@
 doc_id: doc_team_0041
 task_id: TASK-TEAM-0041
 title: "Provider selection defaults and role overrides"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8I
@@ -46,6 +46,9 @@ outOfScope:
 nonGoals:
   - "Do not force all Team roles onto the same provider"
   - "Do not remove a simple repo default path"
+completed_at: "2026-06-20T15:57:01.776Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+delivery_commit: "86b51db32d9078b3d941d450d617096b2d088961"
 ---
 # TASK-TEAM-0041 Provider selection defaults and role overrides
 
