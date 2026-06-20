@@ -2,7 +2,7 @@
 doc_id: doc_rft_0008
 task_id: TASK-RFT-0008
 title: "taskflow close fast validation surface and test atom decomposition"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: RFT-M1
