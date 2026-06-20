@@ -2,14 +2,13 @@
 doc_id: doc_task_aao_0042
 task_id: TASK-AAO-0042
 title: "batch repair / continue"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M14
-depends_on:
-  - "TASK-AAO-0024"
-  - "TASK-AAO-0037"
-  - "TASK-AAO-0041"
+started_at: "2026-06-20T12:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
+depends_on: []
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
@@ -48,6 +47,9 @@ outOfScope:
 nonGoals:
   - "Solving Git merge conflicts"
   - "Inventing a second batch store"
+completed_at: "2026-06-20T03:06:28.469Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "926f7211b"
 ---
 # TASK-AAO-0042 — batch repair / continue
 
