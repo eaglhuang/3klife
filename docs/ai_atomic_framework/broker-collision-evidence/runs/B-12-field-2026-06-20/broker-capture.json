@@ -1,0 +1,203 @@
+{
+  "schemaId": "atm.brokerCaptureBundle.v1",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-20T16:25:26.587Z",
+  "sourceRunDirs": [
+    "C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs"
+  ],
+  "sourceTeamRunDirs": [
+    "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs"
+  ],
+  "sourceAtmRoot": "C:/Users/User/AI-Atomic-Framework",
+  "commandLog": [],
+  "capturedFor": {
+    "awaitRuns": 0,
+    "timeoutMs": 600000,
+    "pollMs": 2000,
+    "settleMs": 1500,
+    "runFilters": [],
+    "taskFilters": [],
+    "teamRunDirs": [
+      "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs"
+    ]
+  },
+  "runs": [
+    {
+      "runId": "67b193f9-1244-4e41-9f64-1ebbdbeaa9e5",
+      "planId": "batch-5c1fd53c988116ce",
+      "scenario": "field",
+      "tasks": "n/a",
+      "actors": "antigravity-gemini-3.5-flash,cursor-composer-2.5",
+      "files": "tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json,tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md,tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts",
+      "vendor": "fallback-file-lock,json-record,n/a,text-range",
+      "lane": "applied,blocked,queued",
+      "verdict": "conflict,mergeable",
+      "commits": "n/a",
+      "transactions": "n/a",
+      "identities": "REQ-0041-ATOMMAP-0,REQ-0041-ATOMMAP-1,REQ-0041-CLOSE-ORCH,REQ-0041-EVIDENCE-GATES,REQ-0042-ATOMMAP-0,REQ-0042-CLOSE-ORCH,REQ-0042-EVIDENCE-GATES",
+      "evidence": ".atm/history/evidence/broker-runs/67b193f9-1244-4e41-9f64-1ebbdbeaa9e5.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "748512aa-83dd-49a1-8aa5-cf87b188f6f9",
+      "planId": "batch-55dfb3bdf8f9c383",
+      "scenario": "field",
+      "tasks": "n/a",
+      "actors": "agent-a,agent-b",
+      "files": "tmp/broker-target.json",
+      "vendor": "json-record",
+      "lane": "applied",
+      "verdict": "mergeable",
+      "commits": "n/a",
+      "transactions": "n/a",
+      "identities": "REQ-001,REQ-002",
+      "evidence": "C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/748512aa-83dd-49a1-8aa5-cf87b188f6f9.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "c393df1d-f9ab-4331-ac3e-3182df57ac45",
+      "planId": "batch-bb9c405c993af122",
+      "scenario": "field",
+      "tasks": "n/a",
+      "actors": "antigravity-gemini-3.5-flash,cursor-composer-2.5",
+      "files": "atomic_workbench/atomization-coverage/path-to-atom-map.json,docs/governance/evidence-gates.md",
+      "vendor": "json-record,n/a,text-range",
+      "lane": "applied,blocked",
+      "verdict": "conflict,mergeable",
+      "commits": "n/a",
+      "transactions": "n/a",
+      "identities": "REQ-0041-ATOMMAP-DOCS,REQ-0041-ATOMMAP-EVIDENCE,REQ-0041-ATOMMAP-HISTORICAL,REQ-0041-ATOMMAP-SUMMARY-MAPPED,REQ-0041-ATOMMAP-SUMMARY-TOTAL,REQ-0041-ATOMMAP-TEST,REQ-0041-EVIDENCE-GATES,REQ-0042-ATOMMAP-0,REQ-0042-EVIDENCE-GATES",
+      "evidence": ".atm/history/evidence/broker-runs/c393df1d-f9ab-4331-ac3e-3182df57ac45.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "team-02af6aa8867f",
+      "planId": "TASK-AAO-0043",
+      "scenario": "field",
+      "tasks": "TASK-AAO-0043",
+      "actors": "cursor-gpt-5.2",
+      "files": "atomic_workbench/atomization-coverage/path-to-atom-map.json,packages/cli/src/commands/__tests__/planning-repo-root.test.ts,packages/cli/src/commands/command-specs/next.spec.ts,packages/cli/src/commands/command-specs/tasks.spec.ts,packages/cli/src/commands/next.ts,packages/cli/src/commands/next/route-predicates.ts,packages/cli/src/commands/planning-repo-root.ts,packages/cli/src/commands/task-direction.ts,packages/cli/src/commands/tasks.ts,packages/cli/src/commands/tasks/lifecycle-state.ts,packages/cli/src/commands/work-channels.ts,scripts/validate-prompt-scoped-next.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "75bf2eab088172d22a7e133de89c0ec1a258f18a",
+      "transactions": "txn-ff3b040d7fe99906",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-02af6aa8867f.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "team-4a7221ebbb23",
+      "planId": "TASK-TEAM-0042",
+      "scenario": "field",
+      "tasks": "TASK-TEAM-0042",
+      "actors": "bench:B-12:TASK-TEAM-0042:codex-gpt54mini",
+      "files": "n/a",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "6ee99143931b5a9c8fe0953f14903498ff4c62b0",
+      "transactions": "n/a",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-4a7221ebbb23.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "team-9af56d4aaf36",
+      "planId": "TASK-AAO-0043",
+      "scenario": "field",
+      "tasks": "TASK-AAO-0043",
+      "actors": "cursor-gpt-5.2",
+      "files": "atomic_workbench/atomization-coverage/path-to-atom-map.json,packages/cli/src/commands/__tests__/planning-repo-root.test.ts,packages/cli/src/commands/command-specs/next.spec.ts,packages/cli/src/commands/command-specs/tasks.spec.ts,packages/cli/src/commands/next.ts,packages/cli/src/commands/next/route-predicates.ts,packages/cli/src/commands/planning-repo-root.ts,packages/cli/src/commands/task-direction.ts,packages/cli/src/commands/tasks.ts,packages/cli/src/commands/tasks/lifecycle-state.ts,packages/cli/src/commands/work-channels.ts,scripts/validate-prompt-scoped-next.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "75bf2eab088172d22a7e133de89c0ec1a258f18a",
+      "transactions": "txn-6d7f8862969cb85f",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-9af56d4aaf36.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "team-a571d116a595",
+      "planId": "TASK-AAO-0043",
+      "scenario": "field",
+      "tasks": "TASK-AAO-0043",
+      "actors": "cursor-gpt-5.2",
+      "files": "atomic_workbench/atomization-coverage/path-to-atom-map.json,packages/cli/src/commands/__tests__/planning-repo-root.test.ts,packages/cli/src/commands/command-specs/next.spec.ts,packages/cli/src/commands/command-specs/tasks.spec.ts,packages/cli/src/commands/next.ts,packages/cli/src/commands/next/route-predicates.ts,packages/cli/src/commands/planning-repo-root.ts,packages/cli/src/commands/task-direction.ts,packages/cli/src/commands/tasks.ts,packages/cli/src/commands/tasks/lifecycle-state.ts,packages/cli/src/commands/work-channels.ts,scripts/validate-prompt-scoped-next.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "962103440297aaf1ae2512fa32e2b17defced464",
+      "transactions": "txn-7e46757c5d736462",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-a571d116a595.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "team-b12e846436bd",
+      "planId": "TASK-AAO-0043",
+      "scenario": "field",
+      "tasks": "TASK-AAO-0043",
+      "actors": "cursor-gpt-5.2",
+      "files": "atomic_workbench/atomization-coverage/path-to-atom-map.json,packages/cli/src/commands/__tests__/planning-repo-root.test.ts,packages/cli/src/commands/command-specs/next.spec.ts,packages/cli/src/commands/command-specs/tasks.spec.ts,packages/cli/src/commands/next.ts,packages/cli/src/commands/next/route-predicates.ts,packages/cli/src/commands/planning-repo-root.ts,packages/cli/src/commands/task-direction.ts,packages/cli/src/commands/tasks.ts,packages/cli/src/commands/tasks/lifecycle-state.ts,packages/cli/src/commands/work-channels.ts,scripts/validate-prompt-scoped-next.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "75bf2eab088172d22a7e133de89c0ec1a258f18a",
+      "transactions": "txn-ab003086be9cca82",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-b12e846436bd.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "team-c584b6b8e273",
+      "planId": "TASK-AAO-0043",
+      "scenario": "field",
+      "tasks": "TASK-AAO-0043",
+      "actors": "cursor-gpt-5.2",
+      "files": "atomic_workbench/atomization-coverage/path-to-atom-map.json,packages/cli/src/commands/__tests__/planning-repo-root.test.ts,packages/cli/src/commands/command-specs/next.spec.ts,packages/cli/src/commands/command-specs/tasks.spec.ts,packages/cli/src/commands/next.ts,packages/cli/src/commands/next/route-predicates.ts,packages/cli/src/commands/planning-repo-root.ts,packages/cli/src/commands/task-direction.ts,packages/cli/src/commands/tasks.ts,packages/cli/src/commands/tasks/lifecycle-state.ts,packages/cli/src/commands/work-channels.ts,scripts/validate-prompt-scoped-next.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "75bf2eab088172d22a7e133de89c0ec1a258f18a",
+      "transactions": "txn-2b02c713cde62c73",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-c584b6b8e273.json",
+      "requiredFields": []
+    },
+    {
+      "runId": "team-cd46fbcc7ad3",
+      "planId": "TASK-TEAM-0043",
+      "scenario": "field",
+      "tasks": "TASK-TEAM-0043",
+      "actors": "bench:B-12:TASK-TEAM-0043:claude-opus47",
+      "files": "n/a",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "6ee99143931b5a9c8fe0953f14903498ff4c62b0",
+      "transactions": "n/a",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-cd46fbcc7ad3.json",
+      "requiredFields": []
+    }
+  ],
+  "taskArtifacts": [
+    {
+      "taskId": "TASK-AAO-0043",
+      "closurePacket": ".atm/history/evidence/TASK-AAO-0043.closure-packet.json",
+      "teamRuns": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-02af6aa8867f.json;C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-9af56d4aaf36.json;C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-a571d116a595.json;C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-b12e846436bd.json;C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-c584b6b8e273.json"
+    },
+    {
+      "taskId": "TASK-TEAM-0042",
+      "closurePacket": "n/a",
+      "teamRuns": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-4a7221ebbb23.json"
+    },
+    {
+      "taskId": "TASK-TEAM-0043",
+      "closurePacket": "n/a",
+      "teamRuns": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-cd46fbcc7ad3.json"
+    }
+  ]
+}

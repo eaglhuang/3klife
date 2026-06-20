@@ -1,0 +1,41 @@
+{
+  "schemaId": "atm.writeBrokerRegistry.v1",
+  "specVersion": "0.1.0",
+  "repoId": "local-repo",
+  "workspaceId": "main",
+  "activeIntents": [
+    {
+      "intentId": "intent-1781972533428",
+      "taskId": "TASK-TEAM-0043",
+      "teamRunId": null,
+      "actorId": "bench:B-12:TASK-TEAM-0043:claude-opus47",
+      "baseCommit": "6ee99143931b5a9c8fe0953f14903498ff4c62b0",
+      "resourceKeys": {
+        "files": [
+          "packages/cli/src/commands/team.ts",
+          "docs/governance/team-agents/team-vendor-runtime.md",
+          "scripts/validate-team-agents.ts",
+          "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+        ],
+        "atomIds": [
+          "atm.team-agents-runtime"
+        ],
+        "atomCids": [
+          "task-team-0043"
+        ],
+        "atomRanges": [],
+        "generators": [],
+        "projections": [],
+        "registries": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 1781972533428,
+      "leaseSeconds": 3600,
+      "leaseMaxSeconds": 3600,
+      "heartbeatAt": "2026-06-20T16:22:13.428Z",
+      "lane": "direct-brokered",
+      "expiresAt": "2026-06-20T17:22:13.428Z"
+    }
+  ]
+}

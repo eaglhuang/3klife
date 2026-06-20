@@ -1,0 +1,36 @@
+{
+  "schemaId": "atm.patchProposal.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "B-12 controlled collision apply for TASK-TEAM-0042"
+  },
+  "proposalId": "bench-b12-0042-team-vendor-runtime-doc",
+  "taskId": "TASK-TEAM-0042",
+  "actorId": "bench:B-12:TASK-TEAM-0042:codex-gpt54mini",
+  "transactionId": "txn-b12-0042-doc-apply",
+  "baseCommit": "6ee99143931b5a9c8fe0953f14903498ff4c62b0",
+  "fileBeforeHash": "sha256:58433a5d8190a2b6d1b2a36a2514d91835f45f1b70ee9373c901ba504752f396",
+  "targetFile": "docs/governance/team-agents/team-vendor-runtime.md",
+  "atomRefs": [
+    {
+      "atomId": "atm.team-agents-runtime",
+      "atomCid": "task-team-0042"
+    }
+  ],
+  "anchors": [
+    {
+      "kind": "line",
+      "hint": "- Selection decisions must remain observable through runtime metadata and operator-facing summaries."
+    }
+  ],
+  "intent": "Add a provider-bridge parity note for the shared vendor runtime contract during B-12 field collision run.",
+  "patch": "@@ -22,4 +22,5 @@\n ## Provider Selection\n \n - Repo defaults provide the baseline provider, SDK, model, and runtime mode.\n - Role overrides may replace those values for implementer, reviewer, validator, planner, or other roles.\n - Selection decisions must remain observable through runtime metadata and operator-facing summaries.\n+- OpenAI and Azure OpenAI bridges must preserve the same operator-facing runtime summary fields as every other Team provider bridge.",
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "node --strip-types scripts/validate-team-agents.ts --case openai-azure-openai-bridges"
+  ],
+  "rollback": "Remove the added provider-bridge parity bullet from docs/governance/team-agents/team-vendor-runtime.md."
+}

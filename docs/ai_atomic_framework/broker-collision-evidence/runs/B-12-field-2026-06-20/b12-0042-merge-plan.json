@@ -1,0 +1,23 @@
+{
+    "schemaId":  "atm.mergePlan.v1",
+    "specVersion":  "0.1.0",
+    "migration":  {
+                      "strategy":  "none",
+                      "fromVersion":  null,
+                      "notes":  "deterministic compose"
+                  },
+    "mergePlanId":  "merge-c8c4e4c5a2ca8886",
+    "inputProposals":  [
+                           "bench-b12-0042-team-vendor-runtime-doc"
+                       ],
+    "verdict":  "parallel-safe",
+    "conflicts":  [
+
+                  ],
+    "applyMethod":  "patch-apply",
+    "requiredEvidence":  [
+                             "node --strip-types scripts/validate-team-agents.ts --case openai-azure-openai-bridges",
+                             "npm run typecheck",
+                             "npm run validate:cli"
+                         ]
+}
