@@ -107,11 +107,18 @@ evidence schema 完全不改；只是 envelope 多帶一個 optional `scenario_i
 | B-09 | CAS stale → re-plan → still stale → block | synthetic | 6 CAS Def 6 | replan=1, blocked | |
 | B-10 | Unknown format → fallback file lock | synthetic | 7 | queued×1 | |
 | B-11 | 3+ agents fan-in different functions → all admit | synthetic | 4 | applied×3 | |
-| B-12 | 4-vendor concurrent on `path-to-atom-map.json` | **vendor** | 5 | applied×4, mergeable | |
+| B-12 | Multi-vendor concurrent on shared team-runtime atom (`atm.team-agents-runtime`) → apply-phase fail-closed | **vendor (field-captured 2026-06-20)** | 1 (apply-phase intent-occupancy variant) | TEAM-0042 admit→apply blocked; TEAM-0043 active intent holder; clean fail-closed | ✅ done |
 | **B-13** | **Broker admit + validator catches semantic break (honest negative)** | **synthetic + validator** | **§3.8** | **applied + validator-reject** | ⭐ |
 | B-14 | Throughput micro-bench: 8 disjoint atoms, serial vs parallel | synthetic | — | parallel ≥ 1.5× serial | |
 
 **MVP 3 個 ⭐**（B-02 / B-08 / B-13）對 v1 vision paper 是必要的；其他 11 個延 full paper（12 月）。
+
+**B-12 已於 2026-06-20 完成 field capture**（OpenAI 體系 vs Anthropic 體系，TASK-TEAM-0042 vs TASK-TEAM-0043 對 `atm.team-agents-runtime` 的 apply-phase 阻擋）— 詳見 paper.md §4.5 "B-12 Controlled Field Collision" 子節。Evidence artifacts：
+- `AAF/.atm/runtime/team-runs/team-4a7221ebbb23.json`
+- `AAF/.atm/runtime/team-runs/team-cd46fbcc7ad3.json`
+- `AAF/.atm/runtime/write-broker.registry.json`
+- `AAF/.atm-temp/b12-capture/broker-capture.md`
+- `AAF/.atm-temp/b12-bundle/broker-evidence-bundle.md`
 
 ---
 
