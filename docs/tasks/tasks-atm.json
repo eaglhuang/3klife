@@ -16,8 +16,8 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 136,
-    "in_progress": 3,
+    "done": 137,
+    "in_progress": 2,
     "open": 9,
     "total": 148
   },
@@ -162,7 +162,7 @@
       "title": "Part 16 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-16.json",
       "count": 2,
-      "bytes": 8424,
+      "bytes": 8451,
       "lines": 163,
       "layout": "sticky-least-pool"
     },
