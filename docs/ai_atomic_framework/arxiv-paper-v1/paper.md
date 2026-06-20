@@ -89,9 +89,11 @@ LLM 驅動的多代理系統正成為大規模程式碼合成的核心架構。�
 
 ### 2.2 檔案級協調（Tier 3）
 
-**STORM** [Geng & Neubig, 2026] 提出狀態導向管理（STate-ORiented Management），以寫入時樂觀並發控制（write-time OCC）阻擋陳舊寫入。當代理 $a_i$ 嘗試對檔案 $f_t$ 寫入時，STORM 驗證其在推理期間觀察到的所有依賴檔案 $f \in F_{observed}$ 滿足 $v_f^{obs} \geq v_f^{cur}$。若不滿足，STORM 拒絕寫入並回傳最新檔案 + diff 列表，迫使代理重新規劃。
+**STORM** [Liu et al., 2026] 提出狀態導向管理（STate-ORiented Management），以寫入時衝突偵測介於樂觀並發控制（OCC）阻擋陳舊寫入。當代理 $a_i$ 嘗試對檔案 $f_t$ 寫入時，STORM 驗證其在推理期間觀察到的所有依賴檔案 $f \in F_{observed}$ 滿足 $v_f^{obs} \geq v_f^{cur}$。若不滿足，STORM 拒絕寫入並回傳最新檔案 + diff 列表，迫使代理重新規劃。
 
 STORM 的核心問題在於**檔案是其最小協調單位**。若兩個代理修改同一檔案中的兩個獨立函式（例如 `helper_math()` 與 `helper_string()`），雖然兩者的 read-set / write-set 完全不相交，STORM 仍會因為檔案版本變動而拒絕其中一方的寫入。這在多函式大型檔案場景中造成嚴重的吞吐量損失。
+
+**CAID** [Geng & Neubig, 2026] 採用與 STORM 互補的另一種 Tier 3 路徑：**Centralized Asynchronous Isolated Delegation**，以 `git worktree` 為 substrate 為每個代理建立隔離工作空間，再透過中央 delegator 收口 `git merge`。CAID 在長期任務（paper reproduction、library development）回報 26.7% 與 14.3% 的準確率改善，並明確將「concurrent edits by multiple agents interfere with each other」列為核心挑戰。**CAID 解決衝突的方式仍是事後 merge**：代理在自己的 worktree 內安全寫入、最後由 git merge 仲裁，與 STORM 的 write-time 拒絕、本框架的 admission-time 預先裁決形成三種不同切點。在多函式大型檔案場景下，CAID 同樣受限於 git 的檔案級 merge 粒度。
 
 ### 2.3 工作流級協調（Tier 4）
 
@@ -105,9 +107,11 @@ STORM 的核心問題在於**檔案是其最小協調單位**。若兩個代理�
 
 **AWCP** [Anonymous, 2026] 是去中心化工作空間委派協定，以「files-as-interface」為核心，建立 Delegator-Executor 模型。AWCP 明確將「語義衝突偵測」列為未來工作，本身只提供傳輸層生命週期管理。**SEMAP** [Liu et al., 2026] 在 A2A 通信標準上添加生命週期導向的行為契約，將協調失敗降低 69.6%。這些協定屬於傳輸層而非語義層，與本框架是互補關係。
 
-### 2.5 失敗分類與協調架構規格
+### 2.5 失敗分類、協調架構規格與形式化驗證
 
-**MAST** [Pan et al., ICLR 2025 Workshop] 分析 18 種多代理 LLM 失敗模式並歸納為三類（系統設計、跨代理對齊、驗證薄弱）。**Coordination as Architectural Layer** [Anonymous, 2026] 形式化協調層為七個架構元素（endpoints、topology、authority、synchronization、aggregation、termination、failure handling）。這些工作提供了診斷視角，但未提出具體的並發准入機制。本框架可視為「在程式碼粒度上實現 MAST/Coordination-Spec 主張的具體 admission control」。
+**MAST** [Pan et al., ICLR 2025 Workshop] 分析 18 種多代理 LLM 失敗模式並歸納為三類（系統設計、跨代理對齊、驗證薄弱）。**Coordination as Architectural Layer** [Nechepurenko & Shuvalov, 2026] 形式化協調層為七個架構元素（endpoints、topology、authority、synchronization、aggregation、termination、failure handling）。這些工作提供了診斷視角，但未提出具體的並發准入機制。本框架可視為「在程式碼粒度上實現 MAST/Coordination-Spec 主張的具體 admission control」。
+
+**TraceFix** [Xia et al., 2026] 採用形式化驗證進路：以代理合成 protocol topology IR、生成 PlusCal coordination logic，再迭代用 TLA+ model checker（TLC）的 counterexample 修補 protocol，最後用 runtime monitor 在執行時強制 topology compliance。TraceFix 在 48 個任務上將 deadlock / livelock 從 31.1% 降至 14.1%。TraceFix 與本框架在角色上正交：**TraceFix 驗證一個 protocol、本框架本身即是 protocol**；ATM 的 broker admission rule (§3.4)、Static Admission Closure (Theorem 2)、CAS Def 6 在本論文以手寫定理形式呈現，未來可以用 TraceFix 風格的 TLA+/PlusCal 工具鏈做機械化驗證，這是補強路徑而非競爭關係。
 
 ### 2.6 規格優先與類型感知方法
 
@@ -115,20 +119,56 @@ STORM 的核心問題在於**檔案是其最小協調單位**。若兩個代理�
 
 **T-RDT**（Type-Aware Replicated Data Types）作為 CodeCRDT 的潛在改進方向，將編譯器語義嵌入 CRDT 合併運算元，理論上可消除 5–10% 語義衝突率。然而 T-RDT 需要為每個語言重新形式化合併代數，工程成本巨大。本框架不與 T-RDT 競爭：T-RDT 改進物理層，本框架增加上層語義准入。
 
-### 2.7 本框架的定位
+**Rover** [Zhang et al., 2026] 在事後（post-hoc）merge conflict 解決上，提出 Multi-layer Code Property Graph（MtCPG）擷取跨檔依賴並以圖演算法分群，再交由 LLM 做 context-aware 合併。Rover 處理的是 **git 已產出物理衝突之後**的解決問題，與本框架在 admission 時點預先阻擋並切片的設計屬於正交：在多代理共寫一棵 tree 的場景，理想上是「以 ATM 在准入時把絕大多數衝突降為 disjoint 並行，剩下無法避免的物理衝突再交給 Rover 這類 post-hoc 解決器」。我們未做兩者整合實驗，僅指出這個 pipeline 配對方向。
 
-下表總結各層級協調機制：
+### 2.7 Direct Tier 2 Comparison: CoAgent and the Recent 2026 Wave
 
-| Tier | 粒度 | 偵測方式 | 複雜度 | 治理 |
-|---|---|---|---|---|
-| 1 | 字元 | CRDT 代數 | 無鎖 | 無 |
-| **2** | **函式/模組** | **Adapter-guided** | **O(n log n)** | **Dry-run + Review + Evidence + Rollback** |
-| 3 | 檔案 | mtime / version | O(n) | 隱式 |
-| 4 | 工作流 | Intent Graph + LLM | O(n²) | LLM 仲裁 |
+**CoAgent** [Lyu et al., 2026, arXiv:2606.15376] 在本論文成稿前一週（2026-06-13）發表，與本框架在 Tier 2 LLM 代理並發控制議題上產生**直接對撞**，必須明確差異化。
 
-Tier 2 的空缺正是本論文要填的位置。我們的核心主張是：**不需要建立通用 AST 引擎，也能在 tier 2 達成有效的並發治理**。Adapter 採用自己最便宜的偵測方式回報候選；broker 以多維度確定性檢查做准入決策；governance 流程以 dry-run / evidence 補足靜態分析的不確定性。
+CoAgent 來自 SJTU IPADS（Haibo Chen 組），其核心機制 **MTPO**（Monotonic Trajectory Pre-Order）的設計可以概括為：
+- **原子粒度**：tool / action 級別，每個註冊工具須提供 advance undo（saga-style inverse）能力。
+- **協調策略**：在批次啟動時固定一個 serialization order，每次 read 只回傳「在該 order 中早於自己的代理已寫入」的順序過濾值，write 則 speculatively in place。
+- **衝突處理**：advisory 而非 restrictive — broker 不阻擋，只 one-way notification 通知受影響的 reader 重新判斷，由 LLM agent 自行 re-judge & patch plan。
+- **回滾**：用 saga-style 逆操作回退被覆寫的 trajectory；以 ~1.4× speedup、near-serial token cost 為主要指標。
 
-### 2.8 Concurrency Control Beyond Code: OT, CRDTs, and Databases
+本框架（ATM）的核心機制可以對照敘述如下：
+- **原子粒度**：函式 / module 級別（CID-bound code region），可由 AGR 細化至 sub-file 範圍（§3.6），並由 Format Adapter + ConflictKey（§3.10）延伸到 JSON record、文字段落、純量欄位等非程式碼格式。
+- **協調策略**：admission-time 七層 hard gate（§3.4 表）做 *確定性* 預先裁決；輸出 verdict ∈ {parallel-safe, needs-physical-split, blocked-cid-conflict, blocked-shared-surface} ∪ {SERIAL}。
+- **衝突處理**：preventive — 凡未通過 admission 的 write 不會被執行；通過者並行。LLM 在裁決階段沒有發言權。
+- **回滾**：admission 通過後不依賴 saga 回滾；唯一 re-plan 路徑是 §3.10 Def 6 的 CAS base-hash 失配（bounded one-shot），失敗即 block。
+
+**誠實的差異與限制如下**：
+
+| 維度 | CoAgent | ATM | 誰較佔優 |
+|---|---|---|---|
+| 原子粒度 | tool / action | function / CID region（+ AGR 細化、+ format adapter 擴充至 JSON/text/numeric） | ATM 在程式合成情境較細；CoAgent 在純 tool-calling 情境更直接 |
+| 裁決時點 | post-launch advisory + agent re-judge | admission-time deterministic | ATM 不依賴 LLM 重推理 |
+| 不透明 read set | MTPO order-filtered serving（讀 = 看到順序內已 commit 的寫） | 由 adapter 在 dry-run 階段顯式宣告 R/W set；§3.9 仍是 open problem | CoAgent 對「無法事前宣告 read set」的 tool 較友善 |
+| 副作用 / 不可回滾操作 | saga undo（每工具必須註冊 inverse） | layer 7 fallback file lock（整檔互斥） | CoAgent 對 side-effectful 工具更細緻；ATM 對純檔案寫入較簡潔 |
+| 跨格式通用化 | 程式碼 / tool 領域內 | Def 5 ConflictKey 擴及 JSON record / numeric / text；§3.10 dogfood 5/5 | ATM 明確延伸 |
+| 端到端 throughput 實證 | ~1.4× speedup vs 序列基線（內部評估） | 跨 vendor 真實任務 collision dogfood（parallel-0041-0042: Cursor Composer 2.5 + Gemini Flash 3.5），Wave Mode dogfood 5/5；**未做與 CoAgent 的 head-to-head 加速比比較** | 互有所長；同台比較列為 §5 roadmap |
+| 開源實作 | 摘要未明示倉庫；以論文評估呈現 | AI-Atomic-Framework repo 公開；12-scenario fixture suite + dogfood report 可重現 | ATM 可重現性較高 |
+
+**我們不主張 ATM 在所有面向勝過 CoAgent**。CoAgent 的 MTPO advisory 模型在「無法為每個 action 事前宣告 read/write set」的場景（典型如多輪 browser 操作、shell exec 等 side-effectful tool chain）有結構性優勢；ATM 的硬閘門模型在「可由 adapter 靜態還原候選 atom 與 surface」的程式碼合成與結構化格式編輯場景有結構性優勢。**兩者實際上指向不同的子空間**：CoAgent 是「tool-call 級 reactive concurrency control」，ATM 是「code-region 級 preventive concurrency control + 格式無關通用化」。Reviewers 將二者視為同質競品會誤判場景定位。
+
+直接 head-to-head 吞吐量 / token cost 對照是 ATM 公開的最大未完工項，列入 §5 評估路線圖。
+
+### 2.8 本框架的定位
+
+下表總結各層級協調機制（加入 2026-06 新興的 Tier 2 系統 CoAgent 作為平行對照）：
+
+| Tier | 代表系統 | 粒度 | 裁決方式 | 對 LLM 重推理依賴 | 治理 |
+|---|---|---|---|---|---|
+| 1 | CodeCRDT | 字元 | CRDT 代數 | 無 | 無 |
+| **2 (preventive)** | **ATM (本文)** | **函式 / CID region（可細化至 sub-file、可擴及非程式碼格式）** | **Adapter-guided + 7-layer hard gate（admission-time deterministic）** | **低（admission 後不依賴）** | **Dry-run + Review + Evidence + Rollback** |
+| 2 (advisory) | CoAgent [Lyu et al., 2026] | tool / action | MTPO + 順序過濾讀取 + speculative write + saga undo | 高（agent re-judge after notification） | LLM-mediated repair |
+| 3 (write-time) | STORM [Liu et al., 2026] | 檔案 | mtime / version OCC at write-time | 中（reject → re-plan） | 隱式 |
+| 3 (workspace) | CAID [Geng & Neubig, 2026] | 工作空間 / 檔案 | git worktree 隔離 + 事後 git merge | 中（merge 後修） | 隱式 |
+| 4 | SCF [Acharya, 2026] / MPAC [Qian et al., 2026] | 工作流 | Intent Graph + LLM | 高 | LLM 仲裁 |
+
+Tier 2 在 2026-06 才開始有 ATM 與 CoAgent 兩個獨立提案；二者分別代表 **preventive / advisory** 兩種裁決取向，並在原子粒度（code-region vs tool）與通用化範圍（格式無關 vs 程式碼/工具）上分屬不同子空間。本論文的核心主張是：**對於程式碼合成與結構化文件編輯，preventive admission with adapter-guided atomization 比 advisory + LLM repair 在預測性與可審計性上有明確優勢**；但對於 side-effect-heavy 的純 tool-calling 場景，advisory 取向（CoAgent）有結構性合理性。Tier 2 並非單一答案。
+
+### 2.9 Concurrency Control Beyond Code: OT, CRDTs, and Databases
 
 The `ConflictKey`-based generalization proposed in §3.10 draws on a much older lineage of concurrency control for shared structured data. **Operational Transformation (OT)** [Ellis & Gibbs, 1989] and **CRDTs** [Shapiro et al., 2011] address convergence for collaborative editing of documents and structured data more broadly than source code; database **two-phase locking** and **optimistic concurrency control** [Kung & Robinson, 1981] address conflict detection for record-level updates via read/write-set disjointness — structurally analogous to our $\mathsf{record}$-scope `ConflictKey`. ATM's Definition 5 (§3.10) can be read as restating this OCC tradition's read/write-set disjointness check in a format-agnostic vocabulary that spans code atoms, JSON records, and scalar fields under one broker; we do not claim novelty over OCC itself, only over its uniform application across heterogeneous artifact types within a single multi-agent admission point.
 
@@ -670,26 +710,27 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ## References（參考文獻）
 
-> **[⚠️ 提交前必須驗證]** 以下 arXiv ID 為前次 draft 帶入，提交 arXiv 前須逐一查證：
-> - 每個 ID 必須對應真實存在的 arXiv 條目（標題、作者、年份對得上）
-> - 標為「Anonymous」的條目須改為真實作者（arXiv 不接受 anonymous）
-> - 若任一 ID 無效，desk-reject 風險高
+> **References — 2026-06-19 verification pass**：所有 arXiv ID 已逐條 fetch arxiv.org 對齊標題與作者；Anonymous 條目已去匿名化（#8、#9）；#3 作者修正（先前誤標 Geng & Neubig）。
 >
 > 主要參考文獻：
 >
 > 1. Pugachev, S. (2025). CodeCRDT: Observation-Driven Coordination for Multi-Agent LLM Code Generation. arXiv:2510.18893.
 > 2. Acharya, V. (2026). Semantic Consensus: Process-Aware Conflict Detection and Resolution for Enterprise Multi-Agent LLM Systems. arXiv:2604.16339.
-> 3. Geng, X. & Neubig, G. (2026). Multi-agent Collaboration with State Management. arXiv:2605.20563.
+> 3. Liu, M., Chen, T., Xu, Z., Jiang, X., & Dong, Y. (2026). Multi-agent Collaboration with State Management. arXiv:2605.20563.
 > 4. Qian, K., Fang, X., & Li, Z. (2026). MPAC: A Multi-Principal Agent Coordination Protocol for Interoperable Multi-Agent Collaboration. arXiv:2604.09744.
 > 5. Costa, I. (2026). AgentSpawn: Adaptive Multi-Agent Collaboration Through Dynamic Spawning for Long-Horizon Code Generation. arXiv:2602.07072.
-> 6. Zhou, W. et al. (2026). ATCC: Adaptive Concurrency Control for Unforeseen Agentic Transactions. arXiv:2603.13906.
-> 7. Pan, M. Z. et al. (2025). Why do multiagent systems fail? ICLR 2025 Workshop.
-> 8. Anonymous (2026). AWCP: A Workspace Delegation Protocol. arXiv:2602.20493.
-> 9. Anonymous (2026). Coordination as an Architectural Layer for LLM-Based Multi-Agent Systems. arXiv:2605.03310.
-> 10. Sartori, C.C. (2026). The Specification Gap: Coordination Failure Under Partial Knowledge in Code Agents. arXiv:2603.24284.
-> 11. Ellis, C.A. & Gibbs, S.J. (1989). Concurrency control in groupware systems. SIGMOD '89.
+> 6. Zhou, W., Wang, Z., Peng, Z., Chen, H., Zhang, Y., & Yu, G. (2026). ATCC: Adaptive Concurrency Control for Unforeseen Agentic Transactions. arXiv:2603.13906.
+> 7. Pan, M., Cemri, M., Agrawal, L. A., Yang, S., Chopra, B., Tiwari, R., Keutzer, K., Parameswaran, A., Ramchandran, K., Klein, D., Gonzalez, J. E., Zaharia, M., & Stoica, I. (2025). Why Do Multiagent Systems Fail? ICLR 2025 Workshop on Building Trust in Language Models and Applications. OpenReview: wM521FqPvI.
+> 8. Nie, X., Guo, Z., Chen, Y., Zhou, Y., & Zhang, W. (2026). AWCP: A Workspace Delegation Protocol for Deep-Engagement Collaboration across Remote Agents. arXiv:2602.20493.
+> 9. Nechepurenko, M. & Shuvalov, P. (2026). Coordination as an Architectural Layer for LLM-Based Multi-Agent Systems. arXiv:2605.03310.
+> 10. Sartori, C. C. (2026). The Specification Gap: Coordination Failure Under Partial Knowledge in Code Agents. arXiv:2603.24284.
+> 11. Ellis, C. A. & Gibbs, S. J. (1989). Concurrency control in groupware systems. SIGMOD '89.
 > 12. Shapiro, M., Preguiça, N., Baquero, C., & Zawirski, M. (2011). Conflict-free Replicated Data Types. SSS 2011.
-> 13. Kung, H.T. & Robinson, J.T. (1981). On optimistic methods for concurrency control. ACM TODS 6(2).
+> 13. Kung, H. T. & Robinson, J. T. (1981). On optimistic methods for concurrency control. ACM TODS 6(2).
+> 14. Lyu, H., Zhang, D., Wu, M., Wei, X., & Chen, H. (2026). CoAgent: Concurrency Control for Multi-Agent Systems. arXiv:2606.15376.
+> 15. Geng, J. & Neubig, G. (2026). Effective Strategies for Asynchronous Software Engineering Agents (CAID). arXiv:2603.21489.
+> 16. Zhang, Q., Li, J., Lin, J., Luo, C., & Qian, C. (2026). Rover: Context-aware Conflict Resolution with LLM. arXiv:2605.17279.
+> 17. Xia, S., Li, Q., Ehsan, T., & Ortiz, J. (2026). TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples. arXiv:2605.07935.
 
 ---
 
@@ -697,7 +738,30 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ## Revision History
 
-**2026-06-17 (Current Draft, fifth pass — Wave Mode shipped + multi-vendor real-task collision dogfood):**
+**2026-06-19 (Current Draft, ninth pass — References verified + 2026-Q2 related work absorbed):**
+
+*References §7 全條目驗證（消除 desk-reject 風險）*：
+- 10 條 arXiv ID 逐條 fetch arxiv.org 驗證；標題、作者、年份對齊。
+- **#3 作者修正**：先前誤標 "Geng, X. & Neubig, G."，實際作者為 Liu, M., Chen, T., Xu, Z., Jiang, X., & Dong, Y.（arXiv:2605.20563）；同時 §2.2 STORM 引用同步從 [Geng & Neubig, 2026] 改為 [Liu et al., 2026]。
+- **#8 / #9 去匿名化**（arXiv 不接受 anonymous）：#8 AWCP → Nie, Guo, Chen, Zhou, & Zhang；#9 Coordination as Architectural Layer → Nechepurenko & Shuvalov。
+- **#6 / #7 補完整作者列表**：原為 "et al." 縮寫，依 arXiv / OpenReview 條目補齊。
+
+*2026-Q2 related work 補入（共四篇）*：
+- **#14 CoAgent (Lyu et al., arXiv:2606.15376, 2026-06-13)**：SJTU IPADS 在本論文成稿前一週發表的 Tier 2 LLM 代理並發控制方案。新增 **§2.7 Direct Tier 2 Comparison**，以九列維度對照表誠實差異化（粒度、裁決時點、不透明 read set 處理、副作用回滾、跨格式通用化、throughput 實證、開源可重現性）；明確主張 CoAgent (advisory) 與 ATM (preventive) 處於不同子空間，**不主張 ATM 全面勝出**；head-to-head throughput / token-cost 對照列為 §5 roadmap。
+- **#15 CAID (Geng & Neubig, arXiv:2603.21489)**：補入 §2.2 作為 Tier 3 workspace-isolation 路徑代表，與 STORM 的 write-time mediation 對照。
+- **#16 Rover (Zhang et al., arXiv:2605.17279)**：補入 §2.6 末段，定位為 post-hoc merge resolution，與 ATM 的 admission-time 預防互為 pipeline 配對。
+- **#17 TraceFix (Xia et al., arXiv:2605.07935)**：補入 §2.5（章名加入「形式化驗證」），定位為「TraceFix 驗證 protocol，本框架 *是* protocol」之補強路徑而非競爭。
+
+*§2 結構調整*：
+- §2.2 章節擴充，加入 CAID 段；STORM 作者修正。
+- §2.5 章名 → 「失敗分類、協調架構規格與形式化驗證」（加入 TraceFix）。
+- §2.6 末段加入 Rover 對照。
+- **新增 §2.7 Direct Tier 2 Comparison: CoAgent**（核心對照章節）。
+- 原 §2.7 「本框架的定位」 → §2.8；定位表升級為含代表系統的 5×6 對照（CodeCRDT / ATM / CoAgent / STORM / CAID / SCF + MPAC）。
+- 原 §2.8 OT/CRDT/DB → §2.9。
+
+
+
 
 *重大事實升級（git history 2026-06-16 ~ 06-17）:*
 - **Team Agents Wave Mode 全數交付**：MAO-0030（wave checkpoint）、MAO-0031（coordinator-only closeout guard, `ed7f0f9a0`）、MAO-0032（validator/reviewer Team Agents 角色, `fbfe8565e`）、**MAO-0033 dogfood benchmark `194f44cbd` 5/5 全通過**、MAO-0034 operator guide `4e6e32639`。論文 §3.7 / §3.8 / §6.4 從「design」改寫為「shipped」。
