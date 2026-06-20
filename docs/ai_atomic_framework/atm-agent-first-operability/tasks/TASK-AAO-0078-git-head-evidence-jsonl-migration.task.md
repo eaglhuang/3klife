@@ -1,12 +1,14 @@
 ---
 task_id: TASK-AAO-0078
 title: "git-head evidence JSONL migration (push merge conflict fix)"
-status: planned
+status: done
 priority: P0
 milestone: M5
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+started_at: "2026-06-20T10:30:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 depends_on: []
 related_plan: "ATM dogfood Grade B (89/100) + push merge conflict痛點"
 scopePaths:
@@ -56,6 +58,9 @@ outOfScope:
 nonGoals:
   - "Do not change evidence record schema (each line keeps {schemaVersion, evidence:[record]})"
   - "Do not break existing closure packet cross-check"
+completed_at: "2026-06-20T02:24:10.269Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "138adbef8"
 ---
 
 ## Goal
