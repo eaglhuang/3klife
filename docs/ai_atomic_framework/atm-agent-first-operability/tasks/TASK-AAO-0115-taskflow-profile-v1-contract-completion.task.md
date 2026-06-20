@@ -3,12 +3,12 @@ doc_id: ""
 task_id: TASK-AAO-0115
 title: "taskflow.profile.v1 contract completion / de-hardcode dry-run"
 milestone: M16
-status: in-progress
+status: done
 artifact_status: draft
 runtime_status: n/a
-upstream_mutation_status: not-applied
-started_at: "2026-06-02T16:09:16+08:00"
-started_by_agent: "codex-gpt-5.4-mini"
+upstream_mutation_status: applied
+started_at: "2026-06-19T23:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 blocked_by: []
 owner: atm-core
 priority: P0
@@ -17,9 +17,39 @@ targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
-executionMode: phase0-taskflow-profile-v1-contract-completion
+executionMode: phase1-taskflow-profile-v1-contract-completion
 planning_repo: 3KLife
 closure_authority: target_repo
+depends_on:
+  - TASK-AAO-0113
+scopePaths:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/taskflow/profile-loader.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "schemas/taskflow-profile.v1.json"
+  - "fixtures/taskflow-profile/valid.profile.json"
+  - "fixtures/taskflow-profile/invalid-missing-schema-id.profile.json"
+deliverables:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/taskflow/profile-loader.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "schemas/taskflow-profile.v1.json"
+  - "fixtures/taskflow-profile/valid.profile.json"
+  - "fixtures/taskflow-profile/invalid-missing-schema-id.profile.json"
+validators:
+  - "npm run typecheck"
+  - "npm run validate:cli"
+  - "git diff --check"
+targetAllowedFiles:
+  - "packages/cli/src/commands/taskflow.ts"
+  - "packages/cli/src/commands/taskflow/profile-loader.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts"
+  - "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
+  - "schemas/taskflow-profile.v1.json"
+  - "fixtures/taskflow-profile/valid.profile.json"
+  - "fixtures/taskflow-profile/invalid-missing-schema-id.profile.json"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-taskflow-profile-v1-contract-completion.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-atm.json
@@ -46,7 +76,10 @@ non_goals:
   - "Do not implement write mode in taskflow.profile.v1."
   - "Do not reopen or rewrite TASK-AAO-0113."
   - "Do not touch TASK-AAO-0114."
-notes: "2026-06-02 | status: in-progress | phase0 contract-completion planning card; phase1 de-hardcodes profile dry-run; supportsWrite=false"
+notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 318d40b62 | blocker: none"
+completed_at: "2026-06-20T02:11:34.622Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "318d40b62"
 ---
 
 # TASK-AAO-0115 taskflow.profile.v1 contract completion / de-hardcode dry-run
