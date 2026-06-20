@@ -64,7 +64,7 @@ non_goals:
   - "Do not write the task card, ledger, or shard from dry-run mode."
   - "Do not touch unrelated shard files."
   - "Do not stage or commit unrelated dirty files."
-notes: "2026-06-19 | status: in_progress | validation: pending | change: governance close historical delivery 04d67737f | blocker: none"
+notes: "2026-06-19 | status: done | validation: pass | change: governance close historical delivery 04d67737f target b0174a95f | blocker: none"
 completed_at: "2026-06-19T14:27:30.415Z"
 completed_by_agent: "cursor-gpt-5.2"
 delivery_commit: "04d67737f"

@@ -1,10 +1,10 @@
 # CID Conflict Run Log
 
 ## Scan Result
-- Scan time: 2026-06-16T14:55:20.905Z
-| runId | planId | requestCount | actorCount | files | adapter | lane | verdict | evidence |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 748512aa-83dd-49a1-8aa5-cf87b188f6f9 | batch-55dfb3bdf8f9c383 | 2 | 2 | tmp/broker-target.json | json-record | applied | mergeable | C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/748512aa-83dd-49a1-8aa5-cf87b188f6f9.json |
-| 67b193f9-1244-4e41-9f64-1ebbdbeaa9e5 | batch-5c1fd53c988116ce | 7 | 2 | parallel-0041-0042 shared fixtures | json-record / text-range / fallback | mixed | partial | C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/67b193f9-1244-4e41-9f64-1ebbdbeaa9e5.json |
-| c393df1d-f9ab-4331-ac3e-3182df57ac45 | batch-bb9c405c993af122 | 9 | 2 | parallel-0041-0042 real repo (atom-map, evidence-gates) | json-record / text-range / manual .ts | mixed | partial+steward | C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/c393df1d-f9ab-4331-ac3e-3182df57ac45.json |
+- Scan time: 2026-06-20T08:54:11.846Z
+| runId | planId | requestCount | actorCount | scenarioTags | requestIdentities | actors | taskHints | files | tasks | commits | transactions | adapter | lane | verdict | evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 67b193f9-1244-4e41-9f64-1ebbdbeaa9e5 | batch-5c1fd53c988116ce | 7 | 2 | n/a | REQ-0041-ATOMMAP-0,REQ-0041-ATOMMAP-1,REQ-0042-ATOMMAP-0,REQ-0041-EVIDENCE-GATES,REQ-0041-CLOSE-ORCH,REQ-0042-CLOSE-ORCH,REQ-0042-EVIDENCE-GATES | cursor-composer-2.5,antigravity-gemini-3.5-flash | n/a | tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json,tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md,tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts | n/a | n/a | n/a | json-record,text-range,fallback-file-lock,n/a | applied,blocked,queued | mergeable,conflict | .atm/history/evidence/broker-runs/67b193f9-1244-4e41-9f64-1ebbdbeaa9e5.json |
+| 748512aa-83dd-49a1-8aa5-cf87b188f6f9 | batch-55dfb3bdf8f9c383 | 2 | 2 | n/a | REQ-001,REQ-002 | agent-a,agent-b | n/a | tmp/broker-target.json | n/a | n/a | n/a | json-record | applied | mergeable | C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/748512aa-83dd-49a1-8aa5-cf87b188f6f9.json |
+| c393df1d-f9ab-4331-ac3e-3182df57ac45 | batch-bb9c405c993af122 | 9 | 2 | n/a | REQ-0041-ATOMMAP-DOCS,REQ-0041-ATOMMAP-EVIDENCE,REQ-0041-ATOMMAP-HISTORICAL,REQ-0041-ATOMMAP-SUMMARY-MAPPED,REQ-0041-ATOMMAP-SUMMARY-TOTAL,REQ-0041-ATOMMAP-TEST,REQ-0042-ATOMMAP-0,REQ-0041-EVIDENCE-GATES,REQ-0042-EVIDENCE-GATES | cursor-composer-2.5,antigravity-gemini-3.5-flash | n/a | atomic_workbench/atomization-coverage/path-to-atom-map.json,docs/governance/evidence-gates.md | n/a | n/a | n/a | json-record,text-range,n/a | applied,blocked | mergeable,conflict | .atm/history/evidence/broker-runs/c393df1d-f9ab-4331-ac3e-3182df57ac45.json |
 
