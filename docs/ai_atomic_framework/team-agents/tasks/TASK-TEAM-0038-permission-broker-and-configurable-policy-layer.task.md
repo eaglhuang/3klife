@@ -2,7 +2,7 @@
 doc_id: doc_team_0038
 task_id: TASK-TEAM-0038
 title: "Permission broker and configurable policy layer"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8I
@@ -44,6 +44,9 @@ outOfScope:
 nonGoals:
   - "Do not couple policy decisions to one SDK implementation"
   - "Do not let provider bridges self-authorize writes"
+completed_at: "2026-06-20T15:53:21.520Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+delivery_commit: "86b51db32d9078b3d941d450d617096b2d088961"
 ---
 # TASK-TEAM-0038 Permission broker and configurable policy layer
 
