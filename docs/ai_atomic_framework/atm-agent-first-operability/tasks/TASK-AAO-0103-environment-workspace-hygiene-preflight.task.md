@@ -13,8 +13,10 @@ created_by_agent: codex-gpt-5.4-mini
 depends_on: []
 scopePaths:
   - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md"
+  - "docs/tasks/tasks-aao.json"
 deliverables:
   - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md"
+  - "docs/tasks/tasks-aao.json"
 validators:
   - "npm run typecheck"
   - "npm run build"
