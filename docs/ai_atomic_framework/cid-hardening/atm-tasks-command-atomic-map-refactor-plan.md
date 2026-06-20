@@ -74,6 +74,93 @@ Each extracted atom must have:
 - at least one CLI-level regression proving the command surface still behaves correctly;
 - a rollback path by reverting the task commit.
 
+## Reassessment - Pattern Fit (2026-06-20)
+
+The current `packages/cli/src/commands/tasks.ts` should not be treated as a pure Strategy Map candidate.
+
+It now behaves as a mixed governance surface with four distinct responsibilities:
+
+1. operator-facing command dispatch and CLI entry;
+2. admission / permission / lifecycle policy;
+3. mode and bucket routing for residue, close, reconcile, and historical-delivery paths;
+4. evidence and diagnostics result contracts.
+
+Because of that shape, the best refactor pattern is:
+
+- **Primary outer pattern: Facade**
+- **Primary inner pattern: Policy Object**
+- **Secondary inner pattern: Result Contract Object**
+- **Selective routing pattern: Strategy Map**
+
+The anti-pattern to avoid is "split everything as route tables." That would turn lifecycle and close governance decisions into anonymous strategy plumbing and make the command harder to reason about than it is today.
+
+The intended end state is:
+
+- `tasks.ts` stays as the operator-facing Facade;
+- governance invariants move into named Policy owners;
+- bucket / mode selection stays in Strategy owners where routing is the real concern;
+- every stable evidence/report payload moves behind a Result Contract owner module.
+
+## Four-Layer Refactor Model
+
+### Layer A - Facade
+
+Owner role: keep `tasks.ts` small enough to read as orchestration, not as governance implementation.
+
+Responsibilities:
+
+- parse argv;
+- normalize command/action selection;
+- delegate to atom owners;
+- assemble final CLI result.
+
+Current atom already aligned:
+
+- `tasks.command.dispatch`
+
+### Layer B - Policy Objects
+
+Owner role: answer "allowed / blocked / waived / recoverable" with stable inputs and outputs.
+
+Primary candidates:
+
+- `tasks.close.governance`
+- `tasks.claim.lifecycle`
+- `tasks.scope.locking`
+- `tasks.surface.invariants`
+- `tasks.dependency.admission`
+- `tasks.repair.closure`
+
+Rule of thumb: if the code emits blocker codes, admission verdicts, state-machine checks, lease requirements, or close authority decisions, it belongs in a Policy Object.
+
+### Layer C - Strategy Maps
+
+Owner role: pick one route or bucket from several valid runtime branches.
+
+Primary candidates:
+
+- `tasks.residue.diagnostics`
+- `tasks.reconcile.delivery`
+- historical-delivery classification
+- close / reconcile route selection
+- planning-mirror versus live-ledger triangulation recovery path
+
+Rule of thumb: if the code chooses between residue buckets, close modes, historical-delivery interpretations, or remediation commands, it belongs in a Strategy Map.
+
+### Layer D - Result Contract Objects
+
+Owner role: own machine-readable evidence, diagnostics, bundle previews, and verification reports.
+
+Primary candidates:
+
+- `atm.taskDeliverableGate.v1`
+- `atm.taskVerifyReport`
+- `atm.taskResidueDiagnosis.v1`
+- `atm.taskLegacyLedgerMigrationReport`
+- close / reconcile evidence envelopes
+
+Rule of thumb: if a block emits a schema-like report consumed by other flows or validators, it should be extracted as a Result Contract owner instead of staying inline in `tasks.ts`.
+
 ## Atom/Map Design Pattern Guidance
 
 Each remaining extraction task should preserve atom/map semantics by choosing the smallest pattern that matches the invariant being touched:
@@ -102,6 +189,43 @@ During each task, extract only the atom already in scope for that card. If a use
 | `ResidueDiagnosticAtom` | status/residue/ambiguous-manual-review explanation | TASK-CID-0057 |
 | `TasksThinCliWrapper` | command orchestration after invariant extraction | TASK-CID-0058 |
 | `AtomicMapValidationPack` | final dogfood benchmark and evidence table | TASK-CID-0059 |
+
+## Expanded Atom Blueprint
+
+This blueprint keeps the existing CID atom ids, but re-groups them into the four-layer model so future follow-up tasks can be opened against one clear architecture rather than one giant residual file.
+
+| Layer | Atom | Preferred Pattern | Owner Direction |
+| --- | --- | --- | --- |
+| Facade | `tasks.command.dispatch` | Facade | `packages/cli/src/commands/tasks/command-dispatch.ts` plus a thinner `tasks.ts` shell |
+| Policy | `tasks.close.governance` | Policy Object | close admission, closure packet trust, backend close authority |
+| Policy | `tasks.claim.lifecycle` | Policy Object | lifecycle transition and claim intent admission |
+| Policy | `tasks.scope.locking` | Policy Object | direction lock, allowed-files gate, dirty-guard ownership |
+| Policy | `tasks.surface.invariants` | Policy Object | close mode/backend/validator policy shared with taskflow |
+| Policy | `tasks.repair.closure` | Policy Object | closure repair authority and normalization rules |
+| Strategy | `tasks.reconcile.delivery` | Strategy Map + Result Contract Object | historical-delivery / reconcile route interpretation |
+| Strategy | `tasks.residue.diagnostics` | Strategy Map | residue bucket classification and next-command routing |
+| Strategy | `tasks.status.triangulation` | Strategy Map | live-ledger / planning / transition truth comparison |
+| Result | `tasks.ledger.import.verify` | Result Contract Object | import / verify / migration report envelopes |
+| Result | `tasks.close.result-contracts` | Result Contract Object | deliverable gate, verify report, close evidence summaries |
+
+## Progress Snapshot
+
+Measured against the CID source-first extraction goal:
+
+- `tasks.command.dispatch` -> extracted
+- `tasks.claim.lifecycle` -> extracted
+- `tasks.reconcile.delivery` -> partially extracted
+- `tasks.scope.locking` -> extracted
+- `tasks.residue.diagnostics` -> extracted
+- `tasks.close.governance` -> still mostly in `tasks.ts`
+- `tasks.status.triangulation` -> still mostly in `tasks.ts`
+- `tasks.ledger.import.verify` -> still mostly in `tasks.ts`
+- result contract ownership for task reports -> still mostly in `tasks.ts`
+
+Measured against file size:
+
+- `TASK-CID-0058` dogfood baseline recorded `tasks.ts` at 5829 lines after the first dispatch extraction.
+- The current source is materially larger again, so the governance hardening wave improved ownership but did **not** complete the thin-facade end state.
 
 ## Milestones
 
@@ -132,6 +256,45 @@ M3 should improve human and agent guidance without changing safety semantics.
 
 - TASK-CID-0058 turns `tasks.ts` into a thinner CLI orchestration layer.
 - TASK-CID-0059 validates the final map, records before/after size and responsibility changes, and adds evidence that no known abnormal-release path reopened.
+
+## Recommended Next Wave
+
+The original CID sequence successfully proved the first extraction wave, but the current source shape shows that a second explicit shrink wave is still needed.
+
+### M5 - Re-establish thin-facade ownership
+
+1. Extract `tasks.close.governance` as its own Policy Object with focused close admission and closure packet trust tests.
+2. Extract `tasks.status.triangulation` as a Strategy Map / Result Contract pair so residue and status routes stop rebuilding truth inline.
+3. Extract `tasks.ledger.import.verify` as a Result Contract owner for import/verify/migration surfaces.
+4. Move task report schemas out of `tasks.ts` so the facade stops carrying large evidence object definitions.
+5. Re-measure `tasks.ts` only after ownership movement is complete; do not treat a no-op line shuffle as progress.
+
+### M5 Plan Table
+
+| Phase | Goal | Pattern | Candidate owner module | Why first |
+| --- | --- | --- | --- | --- |
+| M5-A | pull close governance out of `tasks.ts` | Policy Object | `packages/cli/src/commands/tasks/close-governance.ts` | highest blast radius; most blocker-code and close authority logic still inline |
+| M5-B | pull status truth and residue route selection apart | Strategy Map + Result Contract Object | `packages/cli/src/commands/tasks/status-triangulation.ts` | currently shared by `status`, `finalize`, `close`, and residue diagnosis |
+| M5-C | pull import / verify / migration reports out of facade | Result Contract Object | `packages/cli/src/commands/tasks/import-verify.ts` | large schema-heavy section with lower mutation risk than close governance |
+| M5-D | shrink report and evidence type bulk | Result Contract Object | `packages/cli/src/commands/tasks/result-contracts.ts` | reduces facade mass without changing operator lane semantics |
+| M5-E | re-thin `tasks.ts` after owner moves | Facade | `packages/cli/src/commands/tasks.ts` | only after A-D land should facade reduction be judged |
+
+## Planning Guidance For Follow-up Cards
+
+When opening the next CID or RFT follow-up cards for `tasks.ts`, each card should declare:
+
+- one primary pattern only;
+- one owner module only;
+- one focused test surface only;
+- one CLI regression surface proving callers still behave the same.
+
+Recommended card split:
+
+1. one card for `tasks.close.governance`
+2. one card for `tasks.status.triangulation`
+3. one card for `tasks.ledger.import.verify`
+4. one card for result-contract extraction
+5. one final card for facade re-thinning and before/after measurement
 
 ## Dependency Order
 
