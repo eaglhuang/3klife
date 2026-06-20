@@ -1,5 +1,68 @@
 [
   {
+    "doc_id": "doc_team_0018",
+    "id": "TASK-TEAM-0018",
+    "title": "Team lease fencing and deadlock contract",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M5H",
+    "created": "2026-06-03",
+    "created_by_agent": "TEAM-CAPTAIN",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Bring CID-style concurrency hardening into Team Agents so lease handoff, stale holder detection, and deadlock diagnosis work across real-agent, editor-subagent, and broker-only runs.",
+    "related": [],
+    "depends": [
+      "TASK-TEAM-0011",
+      "TASK-TEAM-0012",
+      "TASK-TEAM-0013"
+    ],
+    "deliverables": [
+      "packages/cli/src/commands/team.ts",
+      "packages/cli/src/commands/command-specs/team.spec.ts",
+      "packages/core/src/governance/scope-lock.ts",
+      "packages/plugin-governance-local/src/stores.ts",
+      "scripts/validate-team-agents.ts",
+      "scripts/validate-governance-local.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-18 | done | Team lease fencing hardening closed in AI-Atomic-Framework; duplicate exclusive owners, stale lease epochs, wait-for cycles, released tombstones, and allowedFiles boundaries now validate across real-agent/editor-subagent/broker-only runs."
+  },
+  {
+    "doc_id": "doc_team_0019",
+    "id": "TASK-TEAM-0019",
+    "title": "Team sandbox attestation and closure contract",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M6H",
+    "created": "2026-06-03",
+    "created_by_agent": "TEAM-CAPTAIN",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Extend Team Agents closure data so runtime mode, adapter, provider, SDK, model, and reviewer-independence attestations can be attached to closure review without weakening command-backed evidence.",
+    "related": [],
+    "depends": [
+      "TASK-TEAM-0016",
+      "TASK-TEAM-0018"
+    ],
+    "deliverables": [
+      "schemas/governance/closure-packet.schema.json",
+      "packages/cli/src/commands/team.ts",
+      "packages/cli/src/commands/evidence.ts",
+      "packages/cli/src/commands/tasks.ts",
+      "scripts/validate-team-agents.ts",
+      "scripts/validate-task-ledger-governance.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-18 | done | Team attestation and closure metadata closed in AI-Atomic-Framework; optional runtime/provider/sandbox attestation now enriches closure review without replacing command-backed evidence."
+  },
+  {
     "doc_id": "doc_team_0026",
     "id": "TASK-TEAM-0026",
     "title": "TEAM safe mirror/import ledger reconciliation lane",
@@ -36,7 +99,7 @@
       "C:/Users/User/3KLife/docs/tasks/tasks-team.json",
       "C:/Users/User/3KLife/docs/tasks/tasks-team/tasks-team-part-1.json"
     ],
-    "notes": "2026-06-09 | planned | Re-scoped as executable Phase 0 planning opener; later AAF Phase 1 handoff still waits for TASK-TEAM-0020 and TASK-TEAM-0025."
+    "notes": "2026-06-19 | done | Phase 0 planning opener frozen in 3KLife; safe TEAM mirror/import subset and later AAF Phase 1 activation rule are now route-visible without mutating AAF source."
   },
   {
     "doc_id": "doc_team_0027",
@@ -161,7 +224,7 @@
     "title": "Team Agents planning-repo path lease normalization",
     "owner": "atm-core",
     "priority": "P0",
-    "status": "planned",
+    "status": "done",
     "type": "implementation",
     "phase": "M5P",
     "created": "2026-06-15",
@@ -196,5 +259,572 @@
     "completed_at": "2026-06-15T06:34:32.645Z",
     "closed_by_agent": "codex-captain-continuation",
     "notes": "2026-06-15 | done | delivery: AI-Atomic-Framework 898d97515 + evidence e49365ef5 + closure 46264c4cc | validation: planning-path-lease-normalization, typecheck, validate:cli, validate:git-head-evidence | runner sync remains separate"
+  },
+  {
+    "doc_id": "doc_team_0031",
+    "id": "TASK-TEAM-0031",
+    "title": "Team runtime mode and adapter contract",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M5R",
+    "created": "2026-06-17",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Define Team runtime mode selection and the neutral adapter contract for real-agent, editor-subagent, and broker-only execution.",
+    "related": [
+      "TASK-TEAM-0011",
+      "TASK-TEAM-0012",
+      "TASK-TEAM-0030"
+    ],
+    "depends": [
+      "TASK-TEAM-0011",
+      "TASK-TEAM-0012",
+      "TASK-TEAM-0030"
+    ],
+    "acceptance": [
+      "Team runtime supports real-agent, editor-subagent, and broker-only modes.",
+      "Node.js remains the default runtime when no override is provided.",
+      "Adapter metadata is recorded even when broker-only mode disables actual spawn."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/ATM多語言WorkerAdaptor方案.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0031-team-runtime-mode-and-adapter-contract.task.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/README.md"
+    ],
+    "notes": "2026-06-18 | done | runtime mode and adapter contract closed in AI-Atomic-Framework; broker-only, real-agent, and editor-subagent mode contract landed as the runtime baseline."
+  },
+  {
+    "doc_id": "doc_team_0032",
+    "id": "TASK-TEAM-0032",
+    "title": "Editor subagent bridge contract",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M5R",
+    "created": "2026-06-17",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Define the neutral bridge contract that lets editor-native subagents execute Team roles without becoming the governance authority.",
+    "related": [
+      "TASK-TEAM-0031"
+    ],
+    "depends": [
+      "TASK-TEAM-0031"
+    ],
+    "acceptance": [
+      "Editor-subagent execution preserves role, lease, artifact, and retry metadata.",
+      "Editor execution remains bounded by ATM allowedFiles and evidence rules."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0032-editor-subagent-bridge-contract.task.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/README.md"
+    ],
+    "notes": "2026-06-18 | done | editor subagent bridge contract closed in AI-Atomic-Framework; execution remains subordinate to ATM governance and preserves role-envelope metadata."
+  },
+  {
+    "doc_id": "doc_team_0033",
+    "id": "TASK-TEAM-0033",
+    "title": "Team reviewer-validator rework route state machine",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M6R",
+    "created": "2026-06-17",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Turn reviewer and validator findings into explicit Team runtime route transitions such as needs-rework and revalidate-pending.",
+    "related": [
+      "TASK-TEAM-0014",
+      "TASK-TEAM-0016",
+      "TASK-TEAM-0031"
+    ],
+    "depends": [
+      "TASK-TEAM-0014",
+      "TASK-TEAM-0016",
+      "TASK-TEAM-0031"
+    ],
+    "acceptance": [
+      "Blocking reviewer or validator findings can formally move a Team run into needs-rework.",
+      "Route transitions are recorded as runtime state rather than advisory text only."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0033-team-reviewer-validator-rework-route-state-machine.task.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/ATM多語言WorkerAdaptor方案.md"
+    ],
+    "notes": "2026-06-18 | done | reviewer and validator rework routing closed in AI-Atomic-Framework; runtime transitions now capture needs-rework and revalidate-pending states."
+  },
+  {
+    "doc_id": "doc_team_0034",
+    "id": "TASK-TEAM-0034",
+    "title": "Role artifact handoff and bounded retry contract",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M6R",
+    "created": "2026-06-17",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Define role-to-role artifact contracts and the bounded retry / escalation runtime budget for Team rework loops.",
+    "related": [
+      "TASK-TEAM-0033"
+    ],
+    "depends": [
+      "TASK-TEAM-0033"
+    ],
+    "acceptance": [
+      "Implementer, reviewer, validator, and evidence collector each declare required artifact surfaces.",
+      "Retry exhaustion escalates instead of looping forever."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0034-role-artifact-handoff-and-bounded-retry-contract.task.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/ATM多語言WorkerAdaptor方案.md"
+    ],
+    "notes": "2026-06-18 | done | artifact handoff and bounded retry contract closed in AI-Atomic-Framework; retry exhaustion now escalates instead of looping forever."
+  },
+  {
+    "doc_id": "doc_team_0035",
+    "id": "TASK-TEAM-0035",
+    "title": "Node.js reference worker adapter and broker-only fallback",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M6R",
+    "created": "2026-06-17",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Ship the default Node.js Team worker adapter and the broker-only fallback path so ATM can run with or without spawned agents.",
+    "related": [
+      "TASK-TEAM-0031",
+      "TASK-TEAM-0032",
+      "TASK-TEAM-0034"
+    ],
+    "depends": [
+      "TASK-TEAM-0031",
+      "TASK-TEAM-0032",
+      "TASK-TEAM-0034"
+    ],
+    "acceptance": [
+      "Node.js worker runtime can execute without editor dependency.",
+      "Broker-only mode preserves governance checks without spawning agents."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0035-nodejs-reference-worker-adapter-and-broker-only-fallback.task.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/ATM多語言WorkerAdaptor方案.md"
+    ],
+    "notes": "2026-06-18 | done | Node.js worker adapter and broker-only fallback closed in AI-Atomic-Framework; Node.js remains the default Team runtime."
+  },
+  {
+    "doc_id": "doc_team_0036",
+    "id": "TASK-TEAM-0036",
+    "title": "Python and C# reference worker adapter examples",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M7R",
+    "created": "2026-06-17",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Provide Python and C# reference worker adapter examples that follow the same neutral Team runtime contract as the default Node.js adapter.",
+    "related": [
+      "TASK-TEAM-0035",
+      "TASK-TEAM-0019"
+    ],
+    "depends": [
+      "TASK-TEAM-0035",
+      "TASK-TEAM-0019"
+    ],
+    "acceptance": [
+      "Python and C# examples express the same runtime metadata contract as Node.js.",
+      "The examples keep Node.js as the default runtime rather than replacing it."
+    ],
+    "deliverables": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0036-python-and-csharp-reference-worker-adapter-examples.task.md",
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/ATM多語言WorkerAdaptor方案.md"
+    ],
+    "notes": "2026-06-18 | done | Python and C# adapter examples closed in AI-Atomic-Framework; examples prove neutral runtime contract without replacing the Node.js default."
+  },
+  {
+    "doc_id": "doc_team_0037",
+    "id": "TASK-TEAM-0037",
+    "title": "Vendor-neutral Team agent provider contract and orchestration kernel",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M8I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Create the vendor-neutral Team runtime provider contract, registry, and orchestration kernel that all future SDK and editor bridges must use.",
+    "related": [
+      "TASK-TEAM-0031",
+      "TASK-TEAM-0032",
+      "TASK-TEAM-0033",
+      "TASK-TEAM-0034",
+      "TASK-TEAM-0035",
+      "TASK-TEAM-0036"
+    ],
+    "depends": [
+      "TASK-TEAM-0031",
+      "TASK-TEAM-0032",
+      "TASK-TEAM-0033",
+      "TASK-TEAM-0034",
+      "TASK-TEAM-0035",
+      "TASK-TEAM-0036"
+    ],
+    "acceptance": [
+      "Provider and orchestration contracts stay vendor-neutral.",
+      "Runtime core can register multiple providers without leaking vendor-specific branching into Team role orchestration.",
+      "Worker authority boundaries remain coordinator-owned."
+    ],
+    "deliverables": [
+      "packages/core/src/team-runtime/provider-contract.ts",
+      "packages/core/src/team-runtime/provider-registry.ts",
+      "packages/core/src/team-runtime/execution-orchestrator.ts",
+      "packages/cli/src/commands/team.ts",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | foundation card for the multi-vendor Team runtime lane opened from the integration blueprint."
+  },
+  {
+    "doc_id": "doc_team_0038",
+    "id": "TASK-TEAM-0038",
+    "title": "Permission broker and configurable policy layer",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M8I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Introduce a vendor-neutral permission broker so Team workers always run under ATM-managed policy and lease boundaries.",
+    "related": [
+      "TASK-TEAM-0037"
+    ],
+    "depends": [
+      "TASK-TEAM-0037"
+    ],
+    "acceptance": [
+      "File, tool, network, and vendor permissions are checked through one broker contract.",
+      "Policy can be configured per adopter repo without changing framework runtime code.",
+      "Provider bridges cannot grant themselves elevated rights."
+    ],
+    "deliverables": [
+      "packages/core/src/team-runtime/permission-broker.ts",
+      "schemas/governance/team-agent-permission-policy.schema.json",
+      "packages/cli/src/commands/team.ts",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | policy lane opened alongside the vendor-neutral runtime kernel."
+  },
+  {
+    "doc_id": "doc_team_0039",
+    "id": "TASK-TEAM-0039",
+    "title": "Governed-repo vendor integration config surface",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M8I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Define how adopter repositories provide vendor-specific Team runtime settings without putting those values inside the ATM framework repository.",
+    "related": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038"
+    ],
+    "depends": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038"
+    ],
+    "acceptance": [
+      "Adopter repos can place vendor config under a governed local directory.",
+      "ATM can discover, validate, and explain missing or malformed config.",
+      "Framework templates and docs show the expected config layout without embedding real secrets."
+    ],
+    "deliverables": [
+      "packages/cli/src/commands/integration.ts",
+      "packages/cli/src/commands/team.ts",
+      "release/atm-root-drop/templates/root-drop/agent-integrations/vendors/README.md",
+      "docs/SELF_HOSTING_ALPHA.md",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | governed-repo config lane opened to keep provider settings out of the ATM framework repo."
+  },
+  {
+    "doc_id": "doc_team_0040",
+    "id": "TASK-TEAM-0040",
+    "title": "Cross-vendor observability and query log",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M8I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Create one shared observability event model and query surface for Team workers across every vendor and execution mode.",
+    "related": [
+      "TASK-TEAM-0037"
+    ],
+    "depends": [
+      "TASK-TEAM-0037"
+    ],
+    "acceptance": [
+      "Team runtime emits one event schema for session start, step execution, tool invocation, artifact output, and completion or failure.",
+      "Operators can query by task, team run, provider, role, and artifact.",
+      "Event logging preserves governance evidence boundaries and redaction policy."
+    ],
+    "deliverables": [
+      "packages/core/src/team-runtime/observability.ts",
+      "schemas/governance/team-agent-observability-event.schema.json",
+      "packages/cli/src/commands/team.ts",
+      "docs/governance/team-agents/team-vendor-runtime.md",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | observability lane opened as a first-class runtime contract, not a provider-specific afterthought."
+  },
+  {
+    "doc_id": "doc_team_0041",
+    "id": "TASK-TEAM-0041",
+    "title": "Provider selection defaults and role overrides",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M8I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Let Team runs choose a repo default provider while still allowing role-level overrides for implementer, reviewer, validator, planner, or other roles.",
+    "related": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0039"
+    ],
+    "depends": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0039"
+    ],
+    "acceptance": [
+      "Repo-level defaults can be declared once.",
+      "Individual roles can override provider, SDK, model, and runtime mode.",
+      "Selection decisions are recorded in the runtime contract and observability output."
+    ],
+    "deliverables": [
+      "packages/core/src/team-runtime/provider-selection.ts",
+      "packages/cli/src/commands/team.ts",
+      "packages/cli/src/commands/command-specs/team.spec.ts",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | provider-selection lane opened to support mixed-vendor role assignments with deterministic fallback."
+  },
+  {
+    "doc_id": "doc_team_0042",
+    "id": "TASK-TEAM-0042",
+    "title": "OpenAI and Azure OpenAI runtime bridges",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M9I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Implement the first direct provider bridges for OpenAI and Azure OpenAI under the shared Team runtime contract.",
+    "related": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0041"
+    ],
+    "depends": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0041"
+    ],
+    "acceptance": [
+      "Team runtime can launch OpenAI-backed and Azure OpenAI-backed real-agent runs through one shared provider interface.",
+      "Azure-specific endpoint, deployment, and auth fields are validated separately from plain OpenAI config.",
+      "Both bridges emit the same artifact and observability envelope shape."
+    ],
+    "deliverables": [
+      "packages/core/src/team-runtime/providers/openai.ts",
+      "packages/core/src/team-runtime/providers/azure-openai.ts",
+      "packages/cli/src/commands/team.ts",
+      "docs/governance/team-agents/team-vendor-runtime.md",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | first direct-provider implementation lane opened for OpenAI-family runtimes."
+  },
+  {
+    "doc_id": "doc_team_0043",
+    "id": "TASK-TEAM-0043",
+    "title": "Claude Code and Gemini execution bridges",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M9I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Add Team runtime bridges for Claude Code and Gemini while preserving the same permission, artifact, retry, and observability contracts as other providers.",
+    "related": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0039",
+      "TASK-TEAM-0041"
+    ],
+    "depends": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0039",
+      "TASK-TEAM-0041"
+    ],
+    "acceptance": [
+      "Team runtime can map Claude Code and Gemini runs into the shared provider contract.",
+      "Editor-subagent or CLI-style execution envelopes still preserve ATM governance metadata.",
+      "Cross-vendor observability and artifact normalization stay unchanged."
+    ],
+    "deliverables": [
+      "packages/core/src/team-runtime/providers/claude-code.ts",
+      "packages/core/src/team-runtime/providers/gemini.ts",
+      "packages/cli/src/commands/team.ts",
+      "docs/governance/team-agents/team-vendor-runtime.md",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | execution-bridge lane opened for Claude Code and Gemini."
+  },
+  {
+    "doc_id": "doc_team_0044",
+    "id": "TASK-TEAM-0044",
+    "title": "Microsoft Foundry provider family bridge",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M9I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Add Microsoft Foundry as a first-class Team runtime provider family, covering both project-endpoint chat or inference and service-managed agent references where appropriate.",
+    "related": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0039",
+      "TASK-TEAM-0041"
+    ],
+    "depends": [
+      "TASK-TEAM-0037",
+      "TASK-TEAM-0038",
+      "TASK-TEAM-0039",
+      "TASK-TEAM-0041"
+    ],
+    "acceptance": [
+      "Team runtime can represent Foundry chat or inference and Foundry agent-service references distinctly.",
+      "Foundry-specific project endpoint and agent reference config are validated through the governed-repo config surface.",
+      "Artifact, retry, and observability contracts remain shared with other providers."
+    ],
+    "deliverables": [
+      "packages/core/src/team-runtime/providers/microsoft-foundry.ts",
+      "packages/cli/src/commands/team.ts",
+      "docs/governance/team-agents/team-vendor-runtime.md",
+      "scripts/validate-team-agents.ts",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | Microsoft Foundry provider-family lane opened as a distinct bridge from plain direct providers."
+  },
+  {
+    "doc_id": "doc_team_0045",
+    "id": "TASK-TEAM-0045",
+    "title": "Integration capability manifest and verification wiring",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "M9I",
+    "created": "2026-06-19",
+    "created_by_agent": "codex-captain",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo",
+    "description": "Extend ATM integration manifests and verification flows so installed integrations can declare Team runtime capabilities and health.",
+    "related": [
+      "TASK-TEAM-0039",
+      "TASK-TEAM-0040",
+      "TASK-TEAM-0041",
+      "TASK-TEAM-0042",
+      "TASK-TEAM-0043",
+      "TASK-TEAM-0044"
+    ],
+    "depends": [
+      "TASK-TEAM-0039",
+      "TASK-TEAM-0040",
+      "TASK-TEAM-0041",
+      "TASK-TEAM-0042",
+      "TASK-TEAM-0043",
+      "TASK-TEAM-0044"
+    ],
+    "acceptance": [
+      "Integration manifests can declare Team runtime capability metadata.",
+      "ATM integration verify, ATM doctor, and Team runtime startup can surface missing backend capability clearly.",
+      "Installed editor integrations do not automatically become runtime backends unless the manifest says they support it."
+    ],
+    "deliverables": [
+      "packages/cli/src/commands/integration.ts",
+      "packages/cli/src/commands/team.ts",
+      "packages/cli/src/commands/doctor.ts",
+      "schemas/integrations/install-manifest.schema.json",
+      "scripts/validate-integration-adapter.ts",
+      "scripts/validate-team-agents.ts",
+      "docs/AGENT_PACK_ONBOARDING.md",
+      "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+    ],
+    "notes": "2026-06-19 | planned | integration-capability wiring lane opened to connect provider bridges back into ATM integration health and runtime discovery."
   }
 ]

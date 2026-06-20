@@ -48,6 +48,7 @@ nonGoals:
   - "Do not bind Team Agents to a single editor"
 completed_at: "2026-06-18T17:03:33.224Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+closed_by_agent: "codex-gpt-5.4-mini"
 delivery_commit: "08f0ea8e56643b99ee0caafeeda52c288e030e75"
 ---
 # TASK-TEAM-0031 Team runtime mode and adapter contract

@@ -2,7 +2,9 @@
 doc_id: doc_team_0026
 task_id: TASK-TEAM-0026
 title: "TEAM safe mirror/import ledger reconciliation lane"
-status: planned
+status: done
+completed_at: "2026-06-19T09:21:46.620Z"
+closed_by_agent: "codex-captain"
 owner: atm-core
 priority: P1
 milestone: M4R
@@ -176,4 +178,4 @@ Revert the TEAM planning docs and shard entries together.
 
 ## Notes
 
-This card is now a planning-only Phase 0 opener. Closing it means the planning bridge is frozen in 3KLife; it does not mean the AAF reconciliation has already happened.
+2026-06-19 | done | Phase 0 planning opener frozen in 3KLife. Safe TEAM mirror/import subset and later AAF Phase 1 activation rule are now route-visible without mutating AAF source.

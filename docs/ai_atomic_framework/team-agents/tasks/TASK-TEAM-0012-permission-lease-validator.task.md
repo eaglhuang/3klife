@@ -47,53 +47,6 @@ nonGoals:
 ---
 # TASK-TEAM-0012 — Permission lease validator
 
-## Goal
-
-Validate Team Agents permission leases before runtime state is considered usable.
-
-## Why
-
-Team Agents rely on explicit, bounded permissions. The validator must catch duplicate exclusive owners, missing scope, expired leases, and invalid role-permission combinations.
-
-## Implementation Contract
-
-- Add deterministic validation for `task.lifecycle`, `git.write`, `file.write`, `evidence.write`, and shareable read/validator permissions.
-- Return structured findings with actionable messages.
-- Keep enforcement advisory in this card; hooks come later.
-
-## Deliverables
-
-- `packages/cli/src/commands/team.ts`
-- `packages/cli/src/commands/command-specs/team.spec.ts`
-- `scripts/validate-team-agents.ts`
-- `atomic_workbench/atomization-coverage/path-to-atom-map.json`
-
-## Validators
-
-- `npm run typecheck`
-- `npm run validate:cli`
-- `node --strip-types scripts/validate-team-agents.ts --case permission-lease`
-- `node atm.mjs team validate --task TASK-TEAM-0012 --json`
-- `git diff --check`
-
-## Acceptance Criteria
-
-- Duplicate exclusive permission owners produce validation findings.
-- Missing scope on scoped permissions produces validation findings.
-- Coordinator remains the only default owner of `task.lifecycle`, `git.write`, and `evidence.write`.
-- Read-only roles do not receive write permissions by default.
-- Findings include code, summary, role, permission, and suggested fix.
-
-## Rollback
-
-Revert validator logic, command spec changes, fixtures, and map updates.
-
-## Atomization Impact
-
-- Owner atom/map: `atm.team-agents-map`
-- Map updates:
-- `atomic_workbench/atomization-coverage/path-to-atom-map.json`
-
 ## Notes
 
-This card makes team permissions inspectable before they become enforceable.
+This card is already closed in the ATM ledger. Keep it as historical evidence for lease validation baseline; do not repurpose it for the new runtime-mode contract.

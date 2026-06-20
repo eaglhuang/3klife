@@ -5,6 +5,7 @@ title: "Team command atom boundary preflight"
 status: done
 completed_at: "2026-06-09T20:44:00+08:00"
 completed_by_agent: "008"
+closed_by_agent: "008"
 owner: atm-core
 priority: P0
 milestone: M1P

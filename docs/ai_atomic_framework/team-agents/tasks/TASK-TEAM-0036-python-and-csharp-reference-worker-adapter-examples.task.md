@@ -45,6 +45,7 @@ nonGoals:
   - "Do not change closure authority rules"
 completed_at: "2026-06-18T18:37:12.866Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+closed_by_agent: "codex-gpt-5.4-mini"
 delivery_commit: "efd75aa8c646783b71c0ce5dab2fdc90953f0dcf"
 ---
 # TASK-TEAM-0036 Python and C# reference worker adapter examples

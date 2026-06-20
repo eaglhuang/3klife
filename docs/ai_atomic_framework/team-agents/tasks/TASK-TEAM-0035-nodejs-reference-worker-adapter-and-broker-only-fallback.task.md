@@ -47,6 +47,7 @@ nonGoals:
   - "Do not make vendor SDK choice part of core contracts"
 completed_at: "2026-06-18T17:53:15.802Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+closed_by_agent: "codex-gpt-5.4-mini"
 delivery_commit: "94613136044b8dd851ecb74169c3a0df8f048c4e"
 ---
 # TASK-TEAM-0035 Node.js reference worker adapter and broker-only fallback
