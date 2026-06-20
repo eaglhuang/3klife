@@ -1,33 +1,20 @@
 ---
 task_id: TASK-AAO-0103
 title: "Environment and workspace hygiene preflight"
-status: open
+status: in-progress
 priority: high
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
+closure_authority: planning_repo
+started_at: "2026-06-20T12:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 created_at: 2026-06-01T15:38:52+08:00
 created_by_agent: codex-gpt-5.4-mini
-closure_authority: target_repo
-depends_on:
-  - TASK-AAO-0027
-  - TASK-AAO-0047
-  - TASK-AAO-0060
+depends_on: []
 scopePaths:
-  - atm.mjs
-  - package.json
-  - packages/cli/dist/atm.js
-  - packages/cli/src/commands/command-specs/tasks.spec.ts
-  - packages/cli/src/commands/framework-development.ts
-  - packages/cli/src/commands/hook.ts
-  - packages/cli/src/commands/tasks.ts
-  - packages/cli/src/commands/tasks/task-option-parsers.ts
-  - release/atm-onefile/atm.mjs
-  - scripts/validate-cli.ts
-  - scripts/validate-git-hooks-enforcement.ts
-  - scripts/validate-task-ledger-governance.ts
-  - atomic_workbench/atomization-coverage/path-to-atom-map.json
+  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md"
 deliverables:
-  - "Environment preflight report for node_modules, tsc, ajv, and runner sync"
-  - "Workspace hygiene decision log for package-lock drift routing and false-M diagnostics"
-  - "Evidence-backed preflight checklist for future task starts"
+  - "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md"
 validators:
   - "npm run typecheck"
   - "npm run build"
