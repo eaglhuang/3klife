@@ -2,7 +2,7 @@
 doc_id: doc_rft_0009
 task_id: TASK-RFT-0009
 title: "taskflow.ts production close atom split and size tripwire recovery"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: RFT-M1
@@ -76,6 +76,9 @@ nonGoals:
   - "Do not combine this with new closeback product behavior."
   - "Do not use this card to redesign task lifecycle authority."
   - "Do not replace taskflow close with backend tasks close or tasks reconcile."
+completed_at: "2026-06-20T03:43:30.261Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+delivery_commit: "d1a8212bd"
 ---
 
 # TASK-RFT-0009 - taskflow.ts production close atom split and size tripwire recovery
