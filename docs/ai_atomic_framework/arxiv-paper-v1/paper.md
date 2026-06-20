@@ -523,9 +523,23 @@ Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six t
 - Scenarios 涵蓋 parallel-safe-disjoint、`same-file-different-atom-disjoint` → `allow-with-watch`（**§3.4 STORM 差異化能力的模擬器級驗證**）、same-atom-write-write → `freeze`、read-write-overlap-watch、unknown-scope-malformed → `steward-required`、generated-artifact-drift → `freeze`、route-freeze-on-pause、route-resume-after-freeze、steward-apply-safe、steward-blocked-out-of-scope、shared-surface-blocked、runner-derived-artifact-collision
 - 誠實侷限（報告自陳）：live `route` CLI 整合、真實 broker admission、distributed consensus 不在 MAO-0010 範圍內，延至 MAO-0011+ runner Broker cards 與 12 月完整版。本 suite 為 offline 確定性模擬，而非並行 load test
 
-### 4.5 真實 collision runs：含 multi-vendor LLM 並行衝突的 end-to-end 實證 ✅
+### 4.5 Field collision evidence：layered atomization claim + cross-vendor real-task runs ✅
 
-§3.4 相對於 STORM 的核心差異化貢獻——**同檔並行寫入經由 broker 路由、雙寫合併成功落地**——已由實際錄製的 broker-operation runs 端到端驗證。截至 2026-06-17，AAF runtime 紀錄 6 筆 broker run（schema `atm.brokerOperationRunRecordEnvelope.v1`／record schema `atm.brokerOperationRunRecord.v1`），其中 4 筆由 3KLife 的 `docs/ai_atomic_framework/broker-collision-evidence/runs/` 持久存檔（AAF 因屬開源框架不追蹤 runtime artifact，由 3KLife planning repo 承接論文證據之 archival）：
+§3.4 / §3.6 / §3.10 的核心主張——**broker 在「已存在正式 atomization 的檔案」之上，仍能用第二層虛擬原子做同檔並行寫入的細粒度仲裁**——已由四類互補的 field evidence 共同支撐。本節依下列順序展開（每一類都對應 main 分支可驗證的 artifact 路徑）：
+
+| # | Evidence 類 | 角色 | 主檔位 |
+|---|---|---|---|
+| (a) | 6 筆 brokered collision runs + parallel-0041-0042 跨 vendor admission-phase 阻擋 | Foundation — broker apply 端到端可用 | `broker-collision-evidence/runs/` (4) + `parallel-0041-0042-coordination.md` |
+| (b) | **B-12 controlled field collision (2026-06-20)** | Honest field — apply-phase 阻擋誠實案例 | `broker-collision-evidence/runs/B-12-field-2026-06-20/` |
+| (c) | **`close-orchestration.ts` 雙層 same-file merge (primary positive layered case)** | Primary keystone — formal atomization + broker 第二層虛擬切分皆有價值 | `broker-collision-evidence/close-orchestration-layered-merge-evidence.md` |
+| (d) | **`integration.ts` 補強後的雙層 case (secondary reinforcement)** | Secondary — 補上 formal atomization 後第二層仍保留價值 | `broker-collision-evidence/integration-layered-merge-evidence.md` |
+| (e) | Synthetic MVP（B-02 / B-08 / B-13） | Deterministic mechanism backstop | `tools/multi-vendor-broker-bench/`（規劃中）|
+
+各類的詳細紀錄如下。
+
+#### 4.5(a) Foundation runs and parallel-0041-0042
+
+截至 2026-06-17，AAF runtime 紀錄 6 筆 broker run（schema `atm.brokerOperationRunRecordEnvelope.v1`／record schema `atm.brokerOperationRunRecord.v1`），其中 4 筆由 3KLife 的 `docs/ai_atomic_framework/broker-collision-evidence/runs/` 持久存檔（AAF 因屬開源框架不追蹤 runtime artifact，由 3KLife planning repo 承接論文證據之 archival）：
 
 | Run ID | Actors | Target file | Adapter | Lane | Verdict | Task |
 |---|---|---|---|---|---|---|
@@ -560,48 +574,102 @@ Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six t
 - (iv) Row-level merge（format adapter §3.10）在 production 治理元資料 `path-to-atom-map.json` 上能 brokered apply；
 - (v) §3.4 main contribution（CID-disjoint 同檔並行）以 **multi-vendor LLM 真實任務**完成 end-to-end 實證。
 
-**仍未建立的**：(i) 大規模 in-the-wild 並行 edits 的吞吐量數據；(ii) `compose.ts` 程式碼原子路徑（JS/Python）的對應 multi-vendor 真實 collision 紀錄（目前只有 fixture + 8-scenario AGR conflict arbitration 7/7 catch、0 false-safe）；(iii) vs. STORM／CodeCRDT 的對照吞吐量 benchmark。三者延至 12 月完整版。
+**Foundation evidence 的限制**：上述 6 筆 runs + parallel-0041-0042 共同證明 broker apply / wave planner / territory split 在 production 路徑上可用，但它們**沒有**直接回答以下 reviewer 必問的兩個問題：(A) 當檔案已被正式 atomization 覆蓋後，broker 第二層虛擬細化是否還有額外價值？(B) admission 階段是否真的能阻擋同 atom 寫入？接下來 (b)~(d) 三類證據針對這兩問題提供誠實答覆。
 
-**B-12 Controlled Field Collision — Apply-Phase Collision Evidence (2026-06-20).** 我們以 framework repo 內兩張正式 ATM 任務卡（TASK-TEAM-0042 vs TASK-TEAM-0043）製作第二筆跨 vendor real-task collision evidence。Actor、vendor、baseCommit、共享治理表面如下：
+#### 4.5(b) B-12 controlled field collision — apply-phase honest case (2026-06-20)
 
-- **Agent A**：`bench:B-12:TASK-TEAM-0042:codex-gpt54mini`（Codex / OpenAI 體系）
-- **Agent B**：`bench:B-12:TASK-TEAM-0043:claude-opus47`（Claude / Anthropic 體系）
+我們以 framework repo 內兩張正式 ATM 任務卡（TASK-TEAM-0042 vs TASK-TEAM-0043）製作第二筆跨 vendor real-task collision evidence。Actor、vendor、baseCommit、共享治理表面如下：
+
+- **Agent A**：`bench:B-12:TASK-TEAM-0042:codex-gpt54mini`（OpenAI family）
+- **Agent B**：`bench:B-12:TASK-TEAM-0043:claude-opus47`（Anthropic family）
 - 同 baseCommit `6ee99143931b5a9c8fe0953f14903498ff4c62b0`
 - 同 4 個共享治理表面：`packages/cli/src/commands/team.ts`、`docs/governance/team-agents/team-vendor-runtime.md`、`scripts/validate-team-agents.ts`、`atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
-論文採用以下正式說法，定調為「apply-phase collision evidence」，**不**主張 admission-time CID freeze：
+論文採用以下正式說法，定調為 **apply-phase collision evidence**，**不**主張 admission-time CID freeze、**不**主張 admission 端已偵測同 CID claim：
 
-> In the controlled field collision run on June 20, 2026, both team starts were admitted with `parallel-safe` broker-lane decisions and `safeToStart: true`. The collision was not rejected at admission time. Instead, contention emerged at the apply-phase after `TASK-TEAM-0043` had already acquired the active write intent in the broker registry. When the competing side (`TASK-TEAM-0042`) later advanced, it was blocked by the existing active intent. This result is important because it shows that the current ATM pipeline still relies on registry-mediated apply-phase arbitration to enforce atom-level exclusivity in this case, even when admission-time checks remain permissive.
->
-> This field run therefore provides evidence for two claims at once: first, the broker does correctly prevent unsafe concurrent advancement across vendors in a live repository; second, admission-time atom-level claim enforcement remains incomplete, which matches the open problem discussed in §3.9. We treat this as honest negative-positive hybrid evidence: the system succeeds at safety, but the enforcement boundary is later than the ideal design target.
+> On June 20, 2026, the controlled B-12 field collision produced a real multi-vendor contention case between `TASK-TEAM-0042` and `TASK-TEAM-0043`. Both sides were admitted at team-start time with `parallel-safe` broker-lane decisions and `safeToStart: true`. The decisive contention did not occur at admission. Instead, after `TASK-TEAM-0043` acquired the active broker intent in the registry, the competing side (`TASK-TEAM-0042`) was blocked while advancing toward apply-phase. This makes B-12 an honest apply-phase collision case: the system successfully serialized unsafe concurrent advancement in a live repository, but the effective enforcement boundary in this case remained apply-phase rather than admission-phase.
 
-**已驗證 evidence facts**（每一條皆可由附錄路徑追；所有檔案於 AAF runtime，3KLife archival snapshot 將於下一步補入 `broker-collision-evidence/runs/B-12-field-2026-06-20/`）：
+這個 case 提供雙重支撐：(i) 在真實 repo + 跨 vendor 設定下，broker 確實序列化了不安全的並行推進；(ii) 但目前 atom-level exclusivity 在此 case 主要由 *apply-phase registry arbitration* 落實，而非 *admission-phase atom-claim*——這直接支撐 §3.9 open problem。
 
-- `team-4a7221ebbb23.json` — TEAM-0042 admission verdict = `parallel-safe`
-- `team-cd46fbcc7ad3.json` — TEAM-0043 admission verdict = `parallel-safe`
-- block 並非 admission verdict，發生於 apply-phase / active intent competition
-- `.atm/runtime/write-broker.registry.json` 顯示 TASK-TEAM-0043 持有 active intent
-- active intent 包含 atom id `atm.team-agents-runtime` 與 4 個 shared files
-- TASK-TEAM-0042 後續前進時被既存 active intent 擋下
-- block 為 runtime 真實 broker emission，**不是人工推論捏造**；block reason 字串源頭：`packages/core/src/broker/decision.ts`
-- vendors 不同供應體系：Codex / OpenAI vs Claude / Anthropic
-- baseCommit 一致：`6ee99143...`
+**已封存 evidence artifacts**（3KLife archival，commit `ee37239e`；不再依賴 AAF runtime 現場檔案）：
 
-**論文層次的承認與後續工作**：
+- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md`
+- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/team-4a7221ebbb23.json`
+- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/team-cd46fbcc7ad3.json`
+- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/write-broker.registry.snapshot.json`
+- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-capture.md`
+- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-evidence-bundle.md`
 
-- 此 case 支撐 §3.9 open problem「自動 atom-level claim 推導仍非閉環」——admission 端尚未把 active intent registry 的 atom-level 占用前推到 admission rule。
-- 目前 blocked verdict 沒有完整持久化成專用 schema；team-run JSON 在 admission 結束點寫入時 verdict 仍是 `parallel-safe`。論文承諾後續補 `apply-phase-block.v1` 類 evidence schema 將此 emission 留痕，使「admission `parallel-safe` + apply-phase intent-block」兩相段差能機械化追蹤。
-- 與 parallel-0041-0042（Cursor vs Google，admission-phase block）合計，4 個主流 vendor 體系（Anthropic / Cursor / Google / OpenAI）皆有實證的真實任務 cross-vendor 阻擋——只是阻擋點落在 pipeline 不同位置（admission 或 apply）。
+#### 4.5(c) `close-orchestration.ts` — primary positive layered case
 
-**Evidence artifacts**：
+**這是論文目前最強的同檔正向 layered evidence**。`packages/cli/src/commands/taskflow/close-orchestration.ts` 已經被 `atomization-coverage/path-to-atom-map.json` 用 6 個正式 atom map 覆蓋：
 
-- `AAF/.atm/runtime/team-runs/team-4a7221ebbb23.json`（TEAM-0042 admission record，verdict `parallel-safe`）
-- `AAF/.atm/runtime/team-runs/team-cd46fbcc7ad3.json`（TEAM-0043 admission record，verdict `parallel-safe`）
-- `AAF/.atm/runtime/write-broker.registry.json`（active intent occupancy ground truth；TEAM-0043 持有 `atm.team-agents-runtime`）
-- `AAF/.atm-temp/b12-capture/broker-capture.md`、`AAF/.atm-temp/b12-bundle/broker-evidence-bundle.md`（broker capture / evidence bundle）
-- `AAF/packages/core/src/broker/decision.ts`（block reason 字串源頭）
+| 已存在正式 atom / map | 能力 |
+|---|---|
+| `atm.task-closure-map` | taskflow close backend argv／受保護 close surface 之指令建構 |
+| `atm.closeback-route-correctness-map` | closeback route 正確性 + out-of-scope waiver 傳遞 |
+| `atm.close-write-atomicity-map` | fail-closed close `--write` 事務 + rollback snapshot + commit phase |
+| `atm.close-window-lock-map` | close-window staged-index lock 在 rollback 期的釋放 |
+| `atm.evidence-bundle-manifest-map` | evidence bundle manifest 與 directory deliverable 展開 hook |
+| `atm.task-view-dashboard-map` | close completion checklist 對 ledger／planning／delivery／waiver 狀態的構建 |
 
-**持續紀錄路徑**：之後新增 collision runs 將寫入 `docs/ai_atomic_framework/broker-collision-evidence/runs/`，並在同目錄 `INDEX.md` 維護表格（取代早期的 `CID衝突解決紀錄log.md` 排程掃描檔）。
+在這個 *已被正式 atomization 覆蓋的檔案* 上，broker-aware pre-patch scanner（AAF commit `18aa08f54`）仍能挑出檔內第二層的虛擬原子切分：
+
+| 虛擬原子候選 | 行範圍 | 角色 |
+|---|---|---|
+| `buildClosebackPlan` | 186–327 | Patch A |
+| `resolveClosebackPlanningPath` | 472–618 | Patch B |
+
+模擬結果：
+
+- 兩寫分別落在 *不同* function-scoped 虛擬原子 → broker verdict = **`parallel-safe`**
+- 兩寫同時落在 *同一* function-scoped 虛擬原子 → broker verdict = **`blocked-cid-conflict`**
+
+> `close-orchestration.ts` shows that ATM does not stop at coarse file-level or file-family atomization. Even after the file is formally covered by multiple atom maps, the broker can still segment same-file work into finer virtual atoms, admitting disjoint function-scoped writes while rejecting same-atom contention.
+
+這直接回答了 §4.5 開頭的 reviewer 問題 (A)：**formal atomization 不是假的，且 broker 的 second-layer segmentation 在 formal atomization 之上仍有額外價值**。
+
+**對應說明檔**：`docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md`。
+
+#### 4.5(d) `integration.ts` — secondary reinforcement case
+
+`packages/cli/src/commands/integration.ts` 起初只有第二層虛擬原子示範、缺第一層正式 atomization，作為 layered claim 的 evidence 偏弱。我們補上了下列正式 atom maps：
+
+| 補上的正式 atom / map | 能力 |
+|---|---|
+| `atm.integration-bootstrap-map` | governed editor entry 檔案的 bootstrap + onboarding discovery |
+| `atm.integration-dispatch-map` | CLI integration action dispatch + result shaping |
+| `atm.integration-install-map` | adapter install／uninstall／verify orchestration + factory lane |
+| `atm.integration-manifest-map` | manifest resolution／drift verification／health reporting |
+
+補上之後重跑 broker-aware pre-patch 掃描，第二層虛擬原子仍保留同樣價值：
+
+| 虛擬原子候選 | 行範圍 | 角色 |
+|---|---|---|
+| `runIntegration` | 188–313 | Patch A |
+| `verifyManifestFile` | 455–504 | Patch B |
+
+模擬結果：
+
+- 不同 function → **`parallel-safe`**
+- 同 function（兩寫同打 `runIntegration`）→ **`blocked-cid-conflict`**
+
+這個 case 的價值在於它**反向證明** layered claim 不是 close-orchestration.ts 的偶發特例：當一個原本沒有正式 atomization 的檔案被補上 atom map 後，broker 第二層虛擬細化的價值不會被「吸收掉」，仍能在同檔內做 function-scoped 仲裁。
+
+**對應說明檔**：`docs/ai_atomic_framework/broker-collision-evidence/integration-layered-merge-evidence.md`。
+
+#### 4.5(e) Synthetic MVP — deterministic mechanism backstop (planned)
+
+`tools/multi-vendor-broker-bench/`（規劃中，bench-design.md）的 B-02（AGR Layer 2 refine → admit）、B-08（CAS bounded re-plan → apply）、B-13（broker admit + validator semantic-reject）三個合成 scenario 將為 §3.4 各 layer 提供 deterministic mechanism evidence，與 (a)~(d) 的 field evidence 互補。寫入時點將與 §4.2 12-scenario fixture suite 共用 `atm.brokerOperationRunRecordEnvelope.v1` schema。
+
+#### 4.5(f) What this section still does not show
+
+- **大規模 in-the-wild 並行 edits 吞吐量數據**：parallel-0041-0042 + B-12 為控制式 dogfood，非長時段 production 統計；對 STORM / CodeCRDT / CoAgent 的吞吐量 / token cost head-to-head 對照延 12 月 full paper。
+- **JS / Python `compose.ts` 程式碼原子路徑的 multi-vendor 真實 collision**：(c) (d) 兩個 layered case 都是 TypeScript CLI 檔；其他語言 adapter 的 layered evidence 仍為 §4.2 fixture + 8-scenario AGR arbitration 7/7 catch，未升 field。
+- **apply-phase block 的專用持久化 schema**：B-12 揭示 blocked verdict 為 runtime emission，未寫進 team-run JSON；論文承諾後續補 `apply-phase-block.v1` schema 讓「admission `parallel-safe` + apply-phase intent-block」兩相段差能機械化追蹤。
+- **layered admission：把 (c) (d) 的 admission-time 第二層切分推到 B-12 的 apply-phase atom-claim 之前**：理想終局是 admission rule 直接讀 active intent registry，但實作分派中；§3.9 列為 open problem。
+
+**持續紀錄路徑**：之後新增 collision runs 將寫入 `docs/ai_atomic_framework/broker-collision-evidence/runs/`；layered merge cases 寫入同目錄根層的 `*-layered-merge-evidence.md`；`INDEX.md` 維護表格（取代早期 `CID衝突解決紀錄log.md` 排程掃描檔）。
 
 ### 4.6 Wave Mode Dogfood Suite ✅（TASK-MAO-0033，2026-06-17）
 
@@ -777,7 +845,18 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ## Revision History
 
-**2026-06-20 (Current Draft, eleventh pass — B-12 field collision rewritten as apply-phase evidence; bench-design.md 5-step plan adopted):**
+**2026-06-21 (Current Draft, twelfth pass — §4.5 restructured around layered-atomization claim; close-orchestration / integration.ts become primary/secondary keystones):**
+
+- **§4.5 整段重構**：從「parallel-0041-0042 as soul」單一 keystone 模式升級為 5 類互補 evidence stack。新開頭表把 §3.4 / §3.6 / §3.10 的核心 reviewer 必問問題提出來：(A) formal atomization 之上 broker 第二層虛擬細化是否還有額外價值？(B) admission 階段是否真能阻同 atom 寫入？接下來各子節分頭誠實回答。
+- **4.5(a) Foundation runs + parallel-0041-0042**：保留 6-run 表 + cross-vendor admission-phase block；定位為「broker apply 端到端可用」的基礎證據，但**明示不回答上述 (A)(B)**。
+- **4.5(b) B-12 controlled field collision**：以 user 提供的英文 narrative skeleton 為正式說法；evidence artifacts 全部指向 3KLife archival (commit `ee37239e`)，不再依賴 AAF runtime 現場。
+- **4.5(c) `close-orchestration.ts` — primary positive layered case (NEW)**：論文目前最強的同檔正向 layered evidence。檔案已有 6 個正式 atom map（`atm.task-closure-map` 等）；broker-aware pre-patch (AAF `18aa08f54`) 仍能在 `buildClosebackPlan` (186-327) 與 `resolveClosebackPlanningPath` (472-618) 之間做第二層虛擬切分；不同 function = `parallel-safe`、同 function = `blocked-cid-conflict`。直接回答 (A)。
+- **4.5(d) `integration.ts` — secondary reinforcement case (NEW)**：補上 4 個正式 atom map (`atm.integration-bootstrap-map` 等) 後，broker 第二層虛擬切分（`runIntegration` 188-313 vs `verifyManifestFile` 455-504）價值仍保留；反向證明 layered claim 不是 close-orchestration.ts 偶發特例。
+- **4.5(e) Synthetic MVP backstop (planned)**：B-02/B-08/B-13 placeholder，明示與 field evidence 共用 envelope schema。
+- **4.5(f) Honest coda 升級**：四項 open issues — throughput、`compose.ts` JS/Python layered case、apply-phase block schema、admission-phase atom-claim 推前（即把 B-12 的 apply-phase 與 (c)(d) 的 admission-phase 收攏）。
+- **舊敘述退場**：移除 "B-12 was blocked at admission-time due to CID freeze"、"integration.ts already proved layered atomization before formal atom-map coverage existed"、"B-12 demonstrates same-CID freeze during team-start admission" 等不精確說法。
+
+**2026-06-20 (eleventh pass — B-12 field collision rewritten as apply-phase evidence; bench-design.md 5-step plan adopted):**
 
 - **§4.5 "B-12 Controlled Field Collision" 子節改寫為 Captain-aligned 正式說法**：定調為「apply-phase collision evidence」，不再寫成「admission-time freeze」或「Layered Hard Gate layer 1 intent-occupancy variant」；採用英文 narrative skeleton 兩段直接嵌入，明示
   - both admissions = `parallel-safe`, `safeToStart: true`

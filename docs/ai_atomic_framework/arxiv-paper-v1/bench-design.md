@@ -195,37 +195,41 @@ case；架構同 (a)，accumulated 於同一個目錄。
 
 ATM Captain 已用 TASK-TEAM-0042 / TASK-TEAM-0043 完成 B-12 field capture（apply-phase collision evidence，OpenAI vs Anthropic）；後續證據工作改為以下 **5 步順序** 推進，不再用 A / B / C 三選一：
 
-### Step 1：B-12 field evidence 歸檔到 3KLife（防 runtime 覆蓋）
+### Step 1：B-12 field evidence 歸檔到 3KLife — ✅ DONE (2026-06-20)
 
-把 AAF runtime 兩個 team-run JSON + write-broker.registry snapshot 複製到 `3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/`，附 README 點明 runtime 來源、apply-phase block 性質，並在 `INDEX.md` 登錄。**動機**：runtime JSON 隨後續 team run 會被改寫，論文舉證需要 immutable archival snapshot。
+已封存至 `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/`（3KLife commit `ee37239e`），10 個 artifact 含 README、兩個 team-run JSON、write-broker.registry snapshot、broker capture / evidence bundle、merge plan / proposal JSON。論文 §4.5(b) 已切到此 archival 路徑，不再依賴 AAF runtime。
 
-### Step 2：close-orchestration.ts 雙層 atom merge 正向案例
+### Step 2：`close-orchestration.ts` 雙層 atom merge 正向案例 — ✅ DONE (2026-06-21)
 
-以已正式 atomized 的 `close-orchestration.ts` 製作第一個「正式 atom map + 第二層虛擬原子細化 → 同檔 admission-time merge 成功」的證據——對應 §3.6 AGR Layer 2 success path（bench namespace 中對應 B-02）。**動機**：B-12 是負面（admission 漏接 → apply 才擋）；close-orchestration.ts 雙層 merge 提供對稱的正面（admission 直接判 merge 並 apply 成功）。兩者合起來 §3.4 / §3.6 才有閉環的「pass + block」field 對。
+已落地，記錄於 `docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md`。檔案 6 個正式 atom map（`atm.task-closure-map` 等）+ broker-aware pre-patch (AAF `18aa08f54`) 對 `buildClosebackPlan` (186-327) vs `resolveClosebackPlanningPath` (472-618) 的第二層切分：不同 function → `parallel-safe`、同 function → `blocked-cid-conflict`。論文 §4.5(c) 已升為 **primary positive layered keystone**。
 
-### Step 3：integration.ts 正式 atom map 建檔
+### Step 3：`integration.ts` 正式 atom map 建檔 — ✅ DONE (2026-06-21)
 
-為 `integration.ts` 補建正式的 registry atom map，避免它停留在 pre-patch 虛擬原子示範。**動機**：Step 4 要做的是「正式 atomization 之上仍可做 finer-grained virtual segmentation」，前置必須是正式 atom map 已落地。
+已落地。`atom.integration-bootstrap-map` / `-dispatch-map` / `-install-map` / `-manifest-map` 四個正式 atom map 進入 `atomization-coverage/path-to-atom-map.json`。
 
-### Step 4：integration.ts broker-aware pre-patch
+### Step 4：`integration.ts` broker-aware pre-patch — ✅ DONE (2026-06-21)
 
-在 Step 3 落地的正式 atom map 之上跑 broker-aware pre-patch，證明「正式 atomization 之上仍可做 finer-grained virtual segmentation」。**動機**：直接補 §3.6 AGR Layer 2 一個獨立於 close-orchestration.ts 的真實案例；同時為論文「正式 atomization 與虛擬細化可疊加」的主張提供雙樣本。
+已落地，記錄於 `integration-layered-merge-evidence.md`。在 Step 3 補上的正式 atom map 之上，broker-aware pre-patch 仍能切分 `runIntegration` (188-313) 與 `verifyManifestFile` (455-504)：不同 function → `parallel-safe`、同 function → `blocked-cid-conflict`。論文 §4.5(d) 升為 **secondary reinforcement case**。
 
-### Step 5：Synthetic MVP（B-02 / B-08 / B-13）作 deterministic mechanism evidence
+### Step 5：Synthetic MVP（B-02 / B-08 / B-13）作 deterministic mechanism evidence — 🔷 待開卡
 
-開卡建 `tools/multi-vendor-broker-bench/` runner + B-02 / B-08 / B-13 三個 synthetic scenarios，作為 deterministic 機制覆蓋；§5 §6 §7 §8 各節仍依本文件描述。**動機**：Step 2~4 提供真實案例的 in-vivo evidence；Step 5 補機制可重現性的 assertion-level evidence。兩類共用 envelope schema、寫入同 evidence corpus。
-
----
-
-### 順序說明
-
-- Step 1 是 **immutability 防腐**，必須最先
-- Step 2~4 是 **field evidence 主軸**，給論文最強的 reviewer 信賴度，順序依「先正向 close-orch → 再補 integration.ts atom map → 再做 integration.ts virtual segmentation」推進
-- Step 5 是 **mechanism evidence 補位**，跟 Step 2~4 並行可，但不可早於 Step 1
-
-論文準備群會在每完成一步後對應更新 paper.md §4.5；§4.5 章節結構維持「parallel-0041-0042（admission-phase）+ B-12-field（apply-phase）+ close-orchestration（雙層 merge 正向）+ integration.ts（virtual segmentation 補位）+ bench synthetic（mechanism coverage）」的 5 層 evidence stack。
+開卡建 `tools/multi-vendor-broker-bench/` runner + B-02 / B-08 / B-13 三個 synthetic scenarios，作為 deterministic 機制覆蓋。**動機**：Step 1~4 已提供真實案例的 in-vivo evidence；Step 5 補機制可重現性的 assertion-level evidence。兩類共用 envelope schema、寫入同 evidence corpus。論文 §4.5(e) 已寫為 planned placeholder，落地後直接升為實證。
 
 ---
 
-*Drafted by: 論文準備群 (Claude Opus 4.7), 2026-06-19; revised 2026-06-20 with Captain-aligned 5-step evidence plan.*
+### 進度全貌
+
+| Step | 狀態 | 對應 §4.5 子節 | Commit |
+|---|---|---|---|
+| 1. B-12 archival | ✅ DONE | 4.5(b) | 3KLife `ee37239e` |
+| 2. close-orch layered | ✅ DONE | 4.5(c) | AAF `18aa08f54` |
+| 3. integration.ts atom map | ✅ DONE | 4.5(d) | 3KLife `ee37239e` |
+| 4. integration.ts pre-patch | ✅ DONE | 4.5(d) | AAF `18aa08f54` |
+| 5. Synthetic MVP B-02/08/13 | 🔷 待開卡 | 4.5(e) | — |
+
+Step 1~4 在 2026-06-20 / 06-21 兩天內全數落地，§4.5 evidence stack 完成 4/5 層；剩 Step 5 synthetic backstop。論文準備群將在 Step 5 開卡後同步更新 §4.5(e) 為 ✅。
+
+---
+
+*Drafted by: 論文準備群 (Claude Opus 4.7), 2026-06-19; revised 2026-06-20 with Captain-aligned 5-step evidence plan; updated 2026-06-21 with Steps 1-4 marked DONE and §4.5 layered-keystone restructure landed.*
 *Lives at: `docs/ai_atomic_framework/arxiv-paper-v1/bench-design.md`*
