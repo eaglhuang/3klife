@@ -3,21 +3,34 @@ doc_id: ""
 task_id: TASK-AAO-0109
 title: "Restore clean-checkout stable runner and CI workflow contract"
 milestone: M15
-status: open
+status: done
 artifact_status: draft
 runtime_status: n/a
 upstream_mutation_status: not-applied
-started_at: ""
-started_by_agent: ""
-blocked_by: [TASK-MRP-0028, TASK-AAO-0108]
+started_at: "2026-06-20T12:00:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
+blocked_by: []
 owner: atm-core
 priority: P0
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-roadmap
 alphaGate: validate:task-ledger-governance
 public_tracking: false
 executionMode: phase1-restore-ci-contract
+scopePaths:
+  - ".gitignore"
+  - ".github/workflows/atm-map-ci.yml"
+  - "packages/cli/src/commands/doctor.ts"
+  - "release/atm-onefile/atm.mjs"
+deliverables:
+  - ".gitignore"
+  - ".github/workflows/atm-map-ci.yml"
+  - "packages/cli/src/commands/doctor.ts"
+  - "release/atm-onefile/atm.mjs"
 allowed_files:
   - C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0109-restore-clean-checkout-stable-runner-and-ci-workflow-contract.task.md
   - C:/Users/User/3KLife/docs/tasks/tasks-aao.json
@@ -35,6 +48,9 @@ non_goals:
   - "Do not clean unrelated dirty / untracked files."
   - "Do not mutate other 3KLife task cards."
 notes: "2026-06-01 | status: open | validation: pending | change: Phase 0 create card for clean checkout stable runner and CI contract | blocker: TASK-AAO-0108 | risk: artifact tracking vs build order conflicts"
+completed_at: "2026-06-20T03:07:08.938Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "c1cc87996"
 ---
 
 # TASK-AAO-0109 Restore clean-checkout stable runner and CI workflow contract
