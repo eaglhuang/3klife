@@ -2,10 +2,12 @@
 doc_id: doc_task_aao_0044
 task_id: TASK-AAO-0044
 title: "batch skip / resume"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M14
+started_at: "2026-06-20T12:30:00+08:00"
+started_by_agent: "cursor-gpt-5.2"
 depends_on:
   - "TASK-AAO-0042"
 related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
@@ -44,6 +46,9 @@ outOfScope:
   - "Using skip as done"
 nonGoals:
   - "Weakening dependency gates"
+completed_at: "2026-06-20T05:55:07.631Z"
+completed_by_agent: "cursor-gpt-5.2"
+delivery_commit: "8c2fa16d3fc655c31d1974112edd767685415eaa"
 ---
 # TASK-AAO-0044 — batch skip / resume
 
@@ -96,3 +101,5 @@ Revert the task commit and re-run the listed validators.
 ## Notes
 
 Skip is not success. It is a traceable pause with a reason.
+
+Closure sync: delivery `8c2fa16d3fc655c31d1974112edd767685415eaa`; close governance `f1a08aee4ae7534d0ee9b72f47c508282fb4fa49`; Team L2 `team-99172e69ab4a` (editor-subagent bridge). Pre-commit hook fix: strip `GIT_INDEX_FILE` from validator subprocess env + direction-lock covers framework critical files (`packages/cli/src/commands/hook.ts`).
