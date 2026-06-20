@@ -9,7 +9,7 @@ priority: P1
 milestone: P1
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
-source_plan: "docs/ai_atomic_framework/cid-hardening/CID蝖砍?閮??md"
+source_plan: "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書.md"
 source_task: "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0024-same-file-parallel-claim-shared-delivery-closeout.task.md"
 ---
 

@@ -54,7 +54,7 @@ Write the architecture RFC for Broker Core + Format Adapter Plugin + Domain Adap
 
 ## Acceptance Criteria
 
-- `CID蝖砍?閮??.md` contains the architecture, adapter contract sketch, conflict key model, and task order.
+- `CID硬化計畫書.md` contains the architecture, adapter contract sketch, conflict key model, and task order.
 - The RFC explicitly separates format adapters from domain adapters.
 - The RFC does not describe proposed features as already implemented.
 - `path-to-atom-map.json` is modeled under a Domain Adapter layer, with explicit record-level conflict keying.

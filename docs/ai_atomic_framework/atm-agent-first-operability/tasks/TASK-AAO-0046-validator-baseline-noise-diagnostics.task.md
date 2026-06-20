@@ -12,7 +12,7 @@ depends_on:
   - "TASK-AAO-0004"
   - "TASK-AAO-0015"
   - "TASK-AAO-0017"
-related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First ?????????.md"
+related_plan: "docs/ai_atomic_framework/atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
