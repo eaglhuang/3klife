@@ -1,0 +1,85 @@
+---
+description: 雙 repo ATM 任務執行時的 Git / close 硬禁令（源自 RFT-0009 WIP 遺失事件，不可省略）
+alwaysApply: true
+---
+
+# 雙 Repo Git 與 ATM 硬禁令
+
+本規則來自 TASK-AAO close 批次中誤用 git 導致 **TASK-RFT-0009** staged WIP 從工作區消失的事件。**任何 Agent 在 3KLife（planning）與 AI-Atomic-Framework（target）執行 ATM 任務時必須遵守。**
+
+## Repo 與 Actor 前提
+
+- **Planning repo**：`C:\Users\User\3KLife`
+- **Target repo**：`C:\Users\User\AI-Atomic-Framework`
+- **開發 CLI**：`node atm.dev.mjs`；正式收工需 build 後用 `node atm.mjs`
+- **task-lock**：只在 3KLife 執行 `node tools_node/task-lock.js`；不在 target repo 執行
+
+---
+
+## Git 硬禁令（他人 WIP / 平行任務）
+
+當 index 或 worktree 含 **非本任務** 的 staged / unstaged 變更（例如 RFT-0009、0145、0146、CID 等 parallel WIP）：
+
+1. **禁止** `git restore --staged <path>`、`git restore .`、`git checkout -- <path>` 作用於非本任務檔案。
+2. **禁止** `git stash push --staged`（或任何 stash）當 index 含他人任務 staged 檔——即使訊息寫 "preserve"；stash 會移出工作區且 pop/checkout 時易丟失 staged 狀態。
+3. **禁止** `git checkout 'stash@{N}' -- <subset>` 只取自己檔案而**把他人 WIP 留在 stash** 未還原。
+4. **禁止**在 `git stash pop` / `stash pop --index` **失敗後**繼續動 index；**立即停止、唯讀稽核、報告、等 owner**。
+5. **禁止** `git stash pop --index` 作為 close 預設路徑；交接手冊要求優先 ATM `--defer-foreign-staged` / `--defer-foreign-state`。
+6. **禁止** `git add .` 或大範圍 stage 污染 index。
+7. **禁止** `git reset HEAD`（無 path）清整個 index。
+8. **禁止**對 target repo 跑 `npm run build` 除非本任務明確需要且已知會影響 `release/**` mirror。
+
+### 出問題時的唯讀稽核（先跑再報告）
+
+```bash
+git stash list
+git status
+git diff --cached --name-only
+git diff --name-only
+```
+
+**禁止**連續 retry 破坏性 git。若 foreign staged 阻擋 close：**停止、報告、等 owner 或 ATM defer flags**，不要 stash / unstage 他人檔。
+
+### 從 stash 還原他人 WIP（僅 owner 或使用者明確批准後）
+
+- **禁止**整包 `stash pop`（易混多任務內容）。
+- **允許**：`git checkout 'stash@{N}' -- <明確列出的他人路徑>`，再驗證 `git diff --cached --name-only`。
+
+---
+
+## ATM Close / Commit 規範
+
+1. Close 優先 **`node atm.dev.mjs taskflow close --write`**（雙 repo closeback）。
+2. 平行 dirty 用 **`--defer-foreign-state --defer-foreign-staged`**；不要手動清 index。
+3. **禁止** raw `git commit` 提交 governance bundle；用 **`node atm.dev.mjs git commit --task ... --actor ...`**。
+4. **`tasks repair-closure` 無 `--write`**；需 emergency lease + `atm.dev.mjs git commit`。
+5. **禁止**手改 ledger `status: done`；close 只能走 `taskflow close --write`。
+6. **`team start` 必須帶與 `team plan` 相同的 L2 runtime flags**（`--runtime-mode editor-subagent --runtime-adapter atm.editor.subagent-bridge --recipe atm.default.normal.typescript`），否則 broker-only fallback。
+7. **未使用者明確要求不得 commit / push**。
+8. **禁止**使用 `tools_node/_run-aao-close-batch.ps1`（PowerShell `--write` 參數 bug）。
+
+### Close 常用 defer flags
+
+```bash
+--defer-foreign-state --defer-foreign-staged --waiver-out-of-scope-delivery --reason "..."
+```
+
+---
+
+## 接任務卡硬前置（3KLife）
+
+```bash
+node tools_node/task-lock.js check <task-id>
+node tools_node/task-lock.js lock <task-id> <agent-name>
+# 更新任務卡 frontmatter: status in-progress, started_at, started_by_agent
+```
+
+收工：**unlock** + `status: done` + notes。
+
+---
+
+## 事件教訓摘要（RFT-0009）
+
+曾發生的錯誤鏈：`stash push --staged`（含 RFT WIP）→ `checkout stash -- 僅本任務檔` → `stash pop` 失敗 → `restore --staged` → RFT 14 檔 staged 狀態遺失，殘留於 `stash@{0}`。
+
+**結論**：平行 WIP 一律走 ATM defer，絕不以 stash / restore 當 workaround。
