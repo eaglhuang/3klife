@@ -2,7 +2,9 @@
 doc_id: doc_task_aao_0043
 task_id: TASK-AAO-0043
 title: "planning repo root resolver"
-status: planned
+status: done
+started_at: 2026-06-20T11:05:00.000Z
+started_by_agent: cursor-gpt-5.2
 owner: atm-core
 priority: P1
 milestone: M14
@@ -14,6 +16,10 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
+  - "packages/cli/src/commands/tasks/lifecycle-state.ts"
+  - "packages/cli/src/commands/planning-repo-root.ts"
+  - "packages/cli/src/commands/__tests__/planning-repo-root.test.ts"
+  - "packages/cli/src/commands/next/route-predicates.ts"
   - "packages/cli/src/commands/next.ts"
   - "packages/cli/src/commands/tasks.ts"
   - "packages/cli/src/commands/task-direction.ts"
@@ -23,6 +29,10 @@ scopePaths:
   - "scripts/validate-prompt-scoped-next.ts"
   - "atomic_workbench/atomization-coverage/path-to-atom-map.json"
 deliverables:
+  - "packages/cli/src/commands/tasks/lifecycle-state.ts"
+  - "packages/cli/src/commands/planning-repo-root.ts"
+  - "packages/cli/src/commands/__tests__/planning-repo-root.test.ts"
+  - "packages/cli/src/commands/next/route-predicates.ts"
   - "packages/cli/src/commands/next.ts"
   - "packages/cli/src/commands/tasks.ts"
   - "packages/cli/src/commands/task-direction.ts"
@@ -49,6 +59,9 @@ outOfScope:
   - "Making planning files writable target deliverables"
 nonGoals:
   - "A cross-repo package manager"
+completed_at: "2026-06-20T13:41:08.671Z"
+completed_by_agent: "antigravity-gemini-3.5-flash"
+delivery_commit: "0feeb741c1f0689db03dea1b3d1c09397ab2a632"
 ---
 # TASK-AAO-0043 — planning repo root resolver
 
