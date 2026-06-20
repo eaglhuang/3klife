@@ -61,7 +61,7 @@ outOfScope:
   - "Changing the next CLI public command name or option set"
   - "Changing atm.taskIntent.v1 schema"
   - "Changing the claim lease lifecycle in tasks.ts"
-  - "Touching packages/cli/src/commands/tasks.ts (owned by CID series)"
+  - "Touching packages/cli/src/commands/tasks.ts (owned by TASK-RFT-0010)"
 nonGoals:
   - "Do not rename the next subcommand."
   - "Do not change the next --help summary text beyond what TASK-CID-0073 already settled."
@@ -72,7 +72,7 @@ nonGoals:
 
 ## Goal
 
-Reduce `packages/cli/src/commands/next.ts` (3,898 lines, 93 top-level functions) into a thin Facade by extracting four governance atoms (channel selection, claim admission, task-scoped claim command, runner mode) into their own modules with focused tests.
+Reduce `packages/cli/src/commands/next.ts` (3,936 lines as of 2026-06-20, still the largest open RFT source surface) into a thin Facade by extracting four governance atoms (channel selection, claim admission, task-scoped claim command, runner mode) into their own modules with focused tests.
 
 ## Atom/Map Extraction Pattern
 

@@ -96,7 +96,7 @@ nonGoals:
 
 ## Goal
 
-Reduce `packages/core/src/police/family.ts` (1,958 lines, 30+ exported interfaces, 13 police roles inline) into a per-role split behind a registry Facade.
+Reduce `packages/core/src/police/family.ts` (1,803 lines as of 2026-06-20, still oversized even after adjacent broker/police work shifted around it) into a per-role split behind a registry Facade.
 
 ## Atom/Map Extraction Pattern
 

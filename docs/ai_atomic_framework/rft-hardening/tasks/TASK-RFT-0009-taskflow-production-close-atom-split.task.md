@@ -79,6 +79,7 @@ nonGoals:
 completed_at: "2026-06-20T03:43:30.261Z"
 completed_by_agent: "codex-gpt-5.4-mini"
 delivery_commit: "d1a8212bd"
+closure_commit: "1c6e75e08"
 ---
 
 # TASK-RFT-0009 - taskflow.ts production close atom split and size tripwire recovery
@@ -88,6 +89,8 @@ delivery_commit: "d1a8212bd"
 Shrink the production `taskflow.ts` close path into named atoms after `TASK-RFT-0008` has made close validation fast enough to support the split.
 
 This card exists because `TASK-RFT-0008` should stay focused on validation speed. `TASK-RFT-0009` owns the production main-body reduction needed to make the size tripwire pass again.
+
+Result: `packages/cli/src/commands/taskflow.ts` was reduced from 2,574 lines to 1,295 lines, a net shrink of 1,279 lines while preserving the governed close lane.
 
 ## Governance Invariant
 

@@ -275,3 +275,4 @@ Use `taskflow open --write` / `taskflow close --write`. This card explicitly exe
 - Previous focused regression follow-up commit: `81a1fbf3ea7c604300e95318945089317373347e`
 - Previous closure packet: `.atm/history/evidence/TASK-RFT-0008.closure-packet.json`
 - 2026-06-19 captain refresh: close validation speed is now the primary objective. Production `taskflow.ts` main-body size reduction moved to `TASK-RFT-0009`.
+- 2026-06-20 size snapshot after `TASK-RFT-0009`: production `packages/cli/src/commands/taskflow.ts` is now 1,295 lines, while the representative broad integration surface `packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts` remains 1,798 lines and still justifies this card's layered-test design.

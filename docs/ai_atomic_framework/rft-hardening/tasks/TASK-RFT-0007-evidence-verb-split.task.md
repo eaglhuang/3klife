@@ -4,7 +4,7 @@ task_id: TASK-RFT-0007
 title: "evidence.ts verb split"
 status: planned
 owner: atm-core
-priority: P1
+priority: P0
 milestone: RFT-M2
 depends_on: []
 related_plan: docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-refactor-plan.md
@@ -86,7 +86,7 @@ outOfScope:
   - "Changing evidence verb names or argument flags"
   - "Changing atm.evidenceRecord or atm.taskEvidence schema"
   - "Modifying taskflow.ts close-time evidence consumption"
-  - "Touching packages/cli/src/commands/tasks.ts"
+  - "Touching packages/cli/src/commands/tasks.ts (owned by TASK-RFT-0010)"
 nonGoals:
   - "Do not change evidence freshness defaults."
   - "Do not merge evidence run and evidence add."
@@ -96,7 +96,7 @@ nonGoals:
 
 ## Goal
 
-Reduce `packages/cli/src/commands/evidence.ts` (1,782 lines, 7 verbs in one file) into a thin Facade by extracting each verb plus three shared concerns (validator classification, command-runs normalization, missing-report computation).
+Reduce `packages/cli/src/commands/evidence.ts` (2,822 lines as of 2026-06-20, now the third-largest open RFT surface) into a thin Facade by extracting each verb plus three shared concerns (validator classification, command-runs normalization, missing-report computation).
 
 ## Atom/Map Extraction Pattern
 

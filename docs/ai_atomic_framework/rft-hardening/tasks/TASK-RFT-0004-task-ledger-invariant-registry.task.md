@@ -4,7 +4,7 @@ task_id: TASK-RFT-0004
 title: "validate-task-ledger-governance.ts invariant registry split"
 status: planned
 owner: atm-core
-priority: P1
+priority: P0
 milestone: RFT-M2
 depends_on: []
 related_plan: docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-refactor-plan.md
@@ -88,7 +88,7 @@ nonGoals:
 
 ## Goal
 
-Reduce `scripts/validate-task-ledger-governance.ts` (2,258 lines, 13 async invariant validators inline) into a registry-driven dispatcher.
+Reduce `scripts/validate-task-ledger-governance.ts` (2,714 lines as of 2026-06-20, now larger than the original planning baseline and fourth on the open RFT board) into a registry-driven dispatcher.
 
 ## Atom/Map Extraction Pattern
 

@@ -74,7 +74,7 @@ nonGoals:
 
 ## Goal
 
-Reduce `packages/cli/src/commands/hook.ts` (3,023 lines, 45 top-level functions) into a thin Facade by extracting one module per hook phase plus dedicated modules for git-hook installation and git-index diagnostics.
+Reduce `packages/cli/src/commands/hook.ts` (3,429 lines as of 2026-06-20, second-largest open RFT surface) into a thin Facade by extracting one module per hook phase plus dedicated modules for git-hook installation and git-index diagnostics.
 
 ## Atom/Map Extraction Pattern
 

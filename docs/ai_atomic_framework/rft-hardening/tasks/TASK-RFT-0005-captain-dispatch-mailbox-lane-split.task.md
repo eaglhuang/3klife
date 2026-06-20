@@ -81,7 +81,7 @@ nonGoals:
 
 ## Goal
 
-Reduce `scripts/captain-dispatch-mailbox.ts` (2,192 lines) into a thin Facade by splitting layout, ledger, CLI, stop-loss, frontmatter, and three lane modules (inbox/outbox/reports) into separate files.
+Reduce `scripts/captain-dispatch-mailbox.ts` (2,009 lines as of 2026-06-20) into a thin Facade by splitting layout, ledger, CLI, stop-loss, frontmatter, and three lane modules (inbox/outbox/reports) into separate files.
 
 ## Atom/Map Extraction Pattern
 
