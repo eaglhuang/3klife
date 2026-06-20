@@ -191,17 +191,41 @@ case；架構同 (a)，accumulated 於同一個目錄。
 
 ---
 
-## 10. 派工 Captain 決策點
+## 10. 證據主軸與後續執行順序（2026-06-20 校正版）
 
-請 Captain 在以下三點之間擇一決議：
+ATM Captain 已用 TASK-TEAM-0042 / TASK-TEAM-0043 完成 B-12 field capture（apply-phase collision evidence，OpenAI vs Anthropic）；後續證據工作改為以下 **5 步順序** 推進，不再用 A / B / C 三選一：
 
-- **A. 全部 synth**：3d 開一卡，純 synthetic provider；不等真實任務碰撞 — 最快路徑
-- **B. Hybrid**：MVP 3 個 scenario 用 synthetic 確保通過、同時開放 B-07 / B-11 / B-12 等 slot 標記給真實 wave 任務「順手記錄」 — 中等成本、evidence corpus 較豐
-- **C. 全部等真實任務**：不建工具，等 production 自然產生 — 風險最高、可能燒一週都湊不到 B-02 / B-08 / B-13
+### Step 1：B-12 field evidence 歸檔到 3KLife（防 runtime 覆蓋）
 
-論文準備群建議 **B**。
+把 AAF runtime 兩個 team-run JSON + write-broker.registry snapshot 複製到 `3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/`，附 README 點明 runtime 來源、apply-phase block 性質，並在 `INDEX.md` 登錄。**動機**：runtime JSON 隨後續 team run 會被改寫，論文舉證需要 immutable archival snapshot。
+
+### Step 2：close-orchestration.ts 雙層 atom merge 正向案例
+
+以已正式 atomized 的 `close-orchestration.ts` 製作第一個「正式 atom map + 第二層虛擬原子細化 → 同檔 admission-time merge 成功」的證據——對應 §3.6 AGR Layer 2 success path（bench namespace 中對應 B-02）。**動機**：B-12 是負面（admission 漏接 → apply 才擋）；close-orchestration.ts 雙層 merge 提供對稱的正面（admission 直接判 merge 並 apply 成功）。兩者合起來 §3.4 / §3.6 才有閉環的「pass + block」field 對。
+
+### Step 3：integration.ts 正式 atom map 建檔
+
+為 `integration.ts` 補建正式的 registry atom map，避免它停留在 pre-patch 虛擬原子示範。**動機**：Step 4 要做的是「正式 atomization 之上仍可做 finer-grained virtual segmentation」，前置必須是正式 atom map 已落地。
+
+### Step 4：integration.ts broker-aware pre-patch
+
+在 Step 3 落地的正式 atom map 之上跑 broker-aware pre-patch，證明「正式 atomization 之上仍可做 finer-grained virtual segmentation」。**動機**：直接補 §3.6 AGR Layer 2 一個獨立於 close-orchestration.ts 的真實案例；同時為論文「正式 atomization 與虛擬細化可疊加」的主張提供雙樣本。
+
+### Step 5：Synthetic MVP（B-02 / B-08 / B-13）作 deterministic mechanism evidence
+
+開卡建 `tools/multi-vendor-broker-bench/` runner + B-02 / B-08 / B-13 三個 synthetic scenarios，作為 deterministic 機制覆蓋；§5 §6 §7 §8 各節仍依本文件描述。**動機**：Step 2~4 提供真實案例的 in-vivo evidence；Step 5 補機制可重現性的 assertion-level evidence。兩類共用 envelope schema、寫入同 evidence corpus。
 
 ---
 
-*Drafted by: 論文準備群 (Claude Opus 4.7), 2026-06-19.*
+### 順序說明
+
+- Step 1 是 **immutability 防腐**，必須最先
+- Step 2~4 是 **field evidence 主軸**，給論文最強的 reviewer 信賴度，順序依「先正向 close-orch → 再補 integration.ts atom map → 再做 integration.ts virtual segmentation」推進
+- Step 5 是 **mechanism evidence 補位**，跟 Step 2~4 並行可，但不可早於 Step 1
+
+論文準備群會在每完成一步後對應更新 paper.md §4.5；§4.5 章節結構維持「parallel-0041-0042（admission-phase）+ B-12-field（apply-phase）+ close-orchestration（雙層 merge 正向）+ integration.ts（virtual segmentation 補位）+ bench synthetic（mechanism coverage）」的 5 層 evidence stack。
+
+---
+
+*Drafted by: 論文準備群 (Claude Opus 4.7), 2026-06-19; revised 2026-06-20 with Captain-aligned 5-step evidence plan.*
 *Lives at: `docs/ai_atomic_framework/arxiv-paper-v1/bench-design.md`*
