@@ -221,11 +221,11 @@ $$a = \langle \mathit{id},\ \mathit{name},\ \mathit{ver},\ P,\ \sigma,\ \psi,\ \
 
 where
 
-- $\mathit{id} \in \mathrm{AtomId}$, with $\mathrm{AtomId}$ matching `^ATM-[A-Z][A-Z0-9]*-\d{4}$`
-- $\mathit{name} \in \mathrm{LogicalName}$, matching `^atom\.[a-z0-9]+(?:[.-][a-z0-9]+)*$`
-- $\mathit{ver} \in \mathrm{SemVer}$ (`atomVersion` / `currentVersion`)
-- $P \subseteq \mathrm{FilePath} \times (\mathrm{LineRange} \cup \{\bot\})$ — the atom's `sourcePaths`; each element is a file path optionally narrowed by a line range. Registry atoms (the common case) use $\bot$ (whole file is in scope); virtual atoms produced by AGR (§3.6) supply concrete `LineRange` values to express sub-file boundaries
-- $\sigma = (\Sigma_{\mathrm{in}}, \Sigma_{\mathrm{out}})$ — input/output JSON Schemas
+- $\mathit{id} \in \mathrm{AtomId}$，其中 $\mathrm{AtomId}$ 須匹配 `^ATM-[A-Z][A-Z0-9]*-\d{4}$`
+- $\mathit{name} \in \mathrm{LogicalName}$，須匹配 `^atom\.[a-z0-9]+(?:[.-][a-z0-9]+)*$`
+- $\mathit{ver} \in \mathrm{SemVer}$（`atomVersion` / `currentVersion`）
+- $P \subseteq \mathrm{FilePath} \times (\mathrm{LineRange} \cup \{\bot\})$——原子之 `sourcePaths`；每一元素為一檔案路徑，可選擇性地以一段行範圍加以縮窄。Registry 原子（常見情形）採用 $\bot$（整個檔案皆在範圍內）；由 AGR（§3.6）產出之虛擬原子則提供具體之 `LineRange` 值以表達 sub-file 邊界
+- $\sigma = (\Sigma_{\mathrm{in}}, \Sigma_{\mathrm{out}})$——輸入 / 輸出之 JSON Schema
 - $\psi \in \mathrm{Status} = \{\mathsf{draft}, \mathsf{validated}, \mathsf{active}, \mathsf{transitioning}, \mathsf{deprecated}, \mathsf{expired}, \mathsf{quarantined}\}$
 - $\tau \in \mathrm{Tier} = \{\mathsf{foundation}, \mathsf{governed}, \mathsf{standard}, \mathsf{experimental}\}$
 - $H = (h_{\mathrm{spec}}, h_{\mathrm{code}}, h_{\mathrm{test}}) \in \mathrm{Hash}^3$ — `hashLock`
@@ -235,11 +235,11 @@ where
 **Definition 2 (Atom Map).**
 An atom map $M$ is a 4-tuple $M = \langle \mathit{id}, V, E, R \rangle$ where $\mathit{id}$ matches `^ATM-MAP-\d{4}$`, $V \subseteq \mathrm{AtomId}$ are member atoms, $E \subseteq V \times V \times \mathrm{EdgeKind}$ are typed edges with $\mathrm{EdgeKind} = \{\mathsf{data\text{-}flow}, \mathsf{control\text{-}flow}, \mathsf{event\text{-}flow}, \mathsf{validation}, \mathsf{fallback}, \mathsf{side\text{-}effect}, \mathsf{rollback}\}$, and $R \subseteq V$ ($R \neq \emptyset$) are entrypoints.
 
-**Boundary semantics.** The boundary of atom $a$ is defined *extensionally* by $P$: each `(file, range)` pair either claims the whole file ($\bot$) or a specific line range. Two atoms $a, a'$ overlap iff $\exists (f, r) \in P_a, (f', r') \in P_{a'}$ with $f = f'$ and either side is $\bot$, or $r \cap r' \neq \emptyset$. This unifies registry atoms (file-granular) and AGR virtual atoms (range-granular) under one definition, sidestepping the question "what counts as one atom" by delegating granularity to whatever the adapter reports — a function, class, module, or refined sub-region.
+**邊界語意.** 原子 $a$ 之邊界以 $P$ 之 *外延* 方式定義：每一筆 `(file, range)` 對宣告整個檔案（$\bot$）或一段特定之行範圍。兩個原子 $a, a'$ 重疊之充要條件為 $\exists (f, r) \in P_a, (f', r') \in P_{a'}$ 滿足 $f = f'$ 且 $\bot$ 出現於任一側、或 $r \cap r' \neq \emptyset$。此一定義將 registry 原子（檔案粒度）與 AGR 虛擬原子（範圍粒度）統一於同一框架之下，迴避「何者構成一個原子」之爭——將粒度交由 adapter 所回報之內容決定：可為函式、類別、模組，或經細化之子區段。
 
 #### Symbol Canonicalization Policy ✅ (CID-0033, `f841a27c`)
 
-Definition 1 implicitly assumes that an adapter can name an atom with a stable `symbol`. In practice the same code admits multiple surface names:
+Definition 1 隱含假設 adapter 能以一個穩定之 `symbol` 為原子命名。實務上同一段程式碼可承載多重表面名稱：
 
 ```typescript
 namespace Foo { export function bar() {} }     // "bar" or "Foo.bar"?
@@ -256,13 +256,13 @@ def baz(): ...   # symbol "baz" in source, but the runtime callable is cache(baz
 
 $$\mathrm{canon\_sym}: \mathrm{RawSymbol} \to \mathrm{CanonicalSymbol}$$
 
-that resolves namespaces, re-export aliases, and (where statically detectable) decorator wrappers to a single stable form, declared in the adapter's manifest. The broker only ever consumes `canon_sym(symbol)`. Implemented in `packages/plugin-sdk/src/language-adapter.ts` (manifest schema, +20 LOC) and `packages/plugin-sdk/src/atomization-planning.ts` (+98 LOC); JS and Python adapters both wire `canon_sym` policy declarations (`packages/language-js/src/language-js-adapter.ts`, `packages/language-python/src/language-python-adapter.ts`). This does **not** solve cross-language symbol identity (an open problem, §3.9) — it only guarantees *within one adapter's regime*, the same logical unit always maps to the same symbol string, which is a precondition for CID stability (Definition 3).
+該函式將 namespace、re-export alias，以及（凡可靜態偵測者）decorator wrapper 歸約至單一穩定形式，並於 adapter manifest 中宣告。Broker 僅消費 `canon_sym(symbol)`。實作於 `packages/plugin-sdk/src/language-adapter.ts`（manifest schema, +20 LOC）與 `packages/plugin-sdk/src/atomization-planning.ts`（+98 LOC）；JS 與 Python adapter 皆已接入 `canon_sym` policy 宣告（`packages/language-js/src/language-js-adapter.ts`、`packages/language-python/src/language-python-adapter.ts`）。此機制**並未**解決跨語言符號身份（一個 open problem，§3.9）——其僅保證 *於同一 adapter 之體系內*，同一邏輯單元始終映射至同一符號字串，此為 CID 穩定性之先決條件（Definition 3）。
 
 ---
 
 ### 3.3 Two-Tier Contract Identifiers (CID) ✅
 
-ATM uses **two distinct CIDs** with different roles, addressing inputs, and guarantees. Conflating them is a common source of confusion in earlier drafts of this work — we make the distinction explicit.
+ATM 採用**兩種不同之 CID**，其角色、定址輸入與保證皆不相同。將二者混為一談為本工作早期草稿中常見之困惑來源——我們予以明示區分。
 
 **Definition 3 (Candidate CID).** ✅ Given a candidate $c = (\mathit{kind}, \mathit{symbol}, P, \mathit{method})$ where $\mathit{symbol} = \mathrm{canon\_sym}(\cdot)$, define the canonical form as an injectively-encoded JSON object:
 
@@ -270,9 +270,9 @@ $$\mathrm{canon}(c) := \mathrm{canonicalJSON}\Big(\big\{\mathtt{schema\_version}
 
 $$\mathrm{CID}_{\mathrm{candidate}}(c) := \mathrm{SHA\text{-}256}(\mathrm{canon}(c)).\mathrm{hex}()$$
 
-(`packages/core/src/broker/candidate-bridge.ts`, `computeCandidateAtomCid`). The canonical-JSON form (RFC 8785 / JCS-style sorted keys, no insignificant whitespace, explicit string escaping) is injective on its input domain: distinct $(\mathit{kind}, \mathit{symbol}, P, \mathit{method})$ tuples produce distinct byte sequences, ruling out the delimiter-collision corner cases of the earlier `||`-concatenation formula. The leading `schema_version` field reserves a forward-compatible upgrade path for future formula changes (§3.9). This is a **metadata-level, pre-write fingerprint**: it identifies *which symbol, in which files, discovered by which method* — not the content of the patch. It deliberately excludes line ranges; coupling the CID to line ranges would make it unstable under whitespace-only edits. Adaptive Granularity Refinement (§3.6) is the mechanism for hunk-level disambiguation rather than extending Definition 3 itself.
+（`packages/core/src/broker/candidate-bridge.ts`, `computeCandidateAtomCid`）。canonical-JSON 形式（依 RFC 8785 / JCS 風格之鍵序、無 insignificant whitespace、明示 string escaping）於其輸入定義域上為 injective：相異之 $(\mathit{kind}, \mathit{symbol}, P, \mathit{method})$ tuple 產出相異之 byte sequence，排除早期 `||`-concatenation 公式之 delimiter-collision 邊界情況。開頭之 `schema_version` 欄位為未來公式變動保留 forward-compatible 之升級路徑（§3.9）。此為**metadata 層、寫前之 fingerprint**：其識別 *何符號、於何檔案、由何方法所發現*——而非 patch 內容。其刻意排除行範圍；若將 CID 與行範圍耦合，將使其於僅含 whitespace 之編輯下變得不穩定。Adaptive Granularity Refinement（§3.6）為處理 hunk 級歧義之機制，而非對 Definition 3 本身之擴展。
 
-*Implementation note.* The shipped `computeCandidateAtomCid` currently uses the legacy `||` concatenation; migrating it to the canonical-JSON form above is tracked as a hardening item (no on-disk CIDs depend on it, and the broker is the sole consumer, so cutover is a single-version flag-day rather than a multi-version migration).
+*實作註記.* 目前已交付之 `computeCandidateAtomCid` 仍使用 legacy `||` concatenation；遷移至上述 canonical-JSON 形式列為加固事項（無任何 on-disk CID 依賴於此公式，且 broker 為唯一消費者，故 cutover 屬單一版本之 flag-day 而非多版本遷移）。
 
 **Definition 4 (Capsule CID).** ✅ Given an exported atom bundle $B = (\mathit{canonicalSourceCode}, \Sigma_{\mathrm{in}}, \Sigma_{\mathrm{out}}, \pi)$ where $\pi$ is the police/policy configuration:
 
@@ -280,7 +280,7 @@ $$\mathrm{canon}(B) := \mathrm{JSON}(\{\mathit{canonicalSourceCode}, \Sigma_{\ma
 
 $$\mathrm{CID}_{\mathrm{capsule}}(B) := \texttt{"atom:cid:"} \mathbin{\|} \mathrm{base64url}(\mathrm{SHA\text{-}256}(\mathrm{brotli}(\mathrm{canon}(B))))$$
 
-(`packages/core/src/registry/atom-capsule.ts`, `computeAtomCid`). Unlike the Candidate CID, this **is** a content-addressed identifier: it covers the full source body, both schemas, and the policy configuration, brotli-compressed and base64url-encoded with an `atom:cid:` prefix.
+（`packages/core/src/registry/atom-capsule.ts`, `computeAtomCid`）。相對於 Candidate CID，此 **為** 一個 content-addressed 識別子：其涵蓋完整之 source body、兩個 schema 與 policy 配置；經 brotli 壓縮、base64url 編碼，並冠以 `atom:cid:` 前綴。
 
 | Stage | CID | Granularity | Addressing |
 |---|---|---|---|
@@ -289,7 +289,7 @@ $$\mathrm{CID}_{\mathrm{capsule}}(B) := \texttt{"atom:cid:"} \mathbin{\|} \mathr
 
 codebase 中尚存在第三類識別子（`team-lane.ts`，一個由 `taskId` 派生之確定性 slug，用於 lane routing）。此並 **非** contract 或 content 識別子，且落於本論文之形式化範圍外；建議將其重新命名（例如 `laneId`）以避免與 Definitions 3–4 混淆——此屬命名衛生事項，於實作計畫中追蹤，並非學術層面之關切。
 
-**Versioning.** Definition 3 above is the hardened form: `schema_version` is part of the canonical input, so any future formula change cannot silently collide with v1 outputs. The migration question (cutting over the shipped legacy concatenation to the canonical-JSON form, and handling any active intents during the cutover) is discussed in §3.9.
+**版本控制.** 上述 Definition 3 為加固版本：`schema_version` 為 canonical 輸入之一部分，故未來之公式變動不可能與 v1 輸出沉默碰撞。關於遷移之議題（將已交付之 legacy concatenation 切換至上述 canonical-JSON 形式、並於 cutover 期間處理 active intent）將於 §3.9 討論。
 
 ---
 
@@ -297,35 +297,35 @@ codebase 中尚存在第三類識別子（`team-lane.ts`，一個由 `taskId` �
 
 Broker（`packages/core/src/broker/`, ~1,932 LOC）對每個 agent 消費一個 `WriteIntent`——一組 `atomRefs`（其每一筆攜帶 $\mathrm{CID}_{\mathrm{candidate}}$）、`targetFiles`、以及宣告之 `sharedSurfaces`（generator / projection / registry / validator / artifact）——並回傳下列四種 verdict 之一（`packages/core/src/broker/decision.ts`, `calculateBrokerDecision`）：
 
-1. **`blocked-cid-conflict`** — two intents reference the same atom with conflicting writes
-2. **`blocked-shared-surface`** — two intents declare overlapping shared surfaces
-3. **`needs-physical-split`** — intents touch the same file but with CID-disjoint atom sets; routed to the deterministic-composer lane for synthesis (§3.7)
-4. **`parallel-safe`** — no overlap on any of the above dimensions
+1. **`blocked-cid-conflict`** — 兩個 intent 引用同一原子且存在衝突寫入
+2. **`blocked-shared-surface`** — 兩個 intent 宣告之 shared surface 相互重疊
+3. **`needs-physical-split`** — intent 觸及同一檔案但原子集為 CID-disjoint；路由至 deterministic-composer lane 進行合成（§3.7）
+4. **`parallel-safe`** — 於上述任一維度皆無重疊
 
 **Theorem 1 (Cross-Regime Disjointness).** ✅/🔷 *If two candidates $c$ (from adapter $\mathcal{A}$) and $c'$ (from adapter $\mathcal{A}'$, $\mathcal{A} \neq \mathcal{A}'$) belong to disjoint language regimes — i.e., the project's directory layout convention assigns each adapter a disjoint root directory $D_{\mathcal{A}} \cap D_{\mathcal{A}'} = \emptyset$ — then $\mathrm{sourcePaths}(c) \cap \mathrm{sourcePaths}(c') = \emptyset$, and the broker's file-overlap check trivially yields `parallel-safe`.*
 
 此結果為 Definition 3（sourcePaths 屬 canon 輸入之一部分）加上目錄分離慣例之直接後果；我們予以明示陳述，蓋其為以下主張之形式基礎：ATM 之 admission 決策能於異質之多語言 agent 群間安全組合，且 *無須* 任何跨語言符號映射（參 §3.9, A3）。本定理**不**適用於 polyglot 單檔（例如於單一原始檔內嵌入 SQL / JS）；此類情境回退至檔內 CID disjointness 檢查，若仍失敗則交由 AGR 處理（§3.6）。
 
-**Augmented Decision Rule (Dependency-Aware) ✅ (CID-0032, `16533023`).** The four-verdict algorithm above is augmented with a read-dependency check: let $D(I)$ be the set of atoms intent $I$ declares as *read* dependencies, and $R(I')$ the set of atoms a concurrent intent $I'$ *writes*. Then
+**Augmented Decision Rule (Dependency-Aware) ✅ (CID-0032, `16533023`).** 上述之四 verdict 演算法另以一項 read-dependency 檢查予以擴增：令 $D(I)$ 為 intent $I$ 所宣告之 *read* dependency 原子集，$R(I')$ 為並行之 intent $I'$ 所 *寫入* 之原子集。則
 
 $$D(I) \cap R(I') \neq \emptyset \implies \texttt{SERIAL}(I, I')$$
 
-i.e., if $I$ reads an atom that $I'$ is concurrently writing, $I$ must be serialized after $I'$ (or vice versa) even if their write sets are disjoint. **Ordering model.** The relative order between two `SERIAL`-bound intents is determined by the broker's monotonically-increasing intent-registration sequence number (a Lamport-style logical counter local to the single broker process, §3.7), not by agent-side wall-clock timestamps — making the rule robust to clock skew across distributed agents. Implemented by extending `WriteIntent` with a `readAtoms: AtomRef[]` field (`packages/core/src/broker/types.ts`) and adding the read/write intersection check to `calculateBrokerDecision` (`packages/core/src/broker/decision.ts`, +107 LOC, with 166 LOC of regression tests in `decision.test.ts`). Validated by benchmark scenario `07-registry-read-write-dependency` (§4.2).
+即：若 $I$ 讀取了 $I'$ 正在並行寫入之原子，則 $I$ 必須序列化於 $I'$ 之後（或反之），即便其 write set 互為 disjoint 亦然。**排序模型.** 兩個被 `SERIAL` 約束之 intent 之間的相對順序，由 broker 之 monotonically increasing intent 註冊序號（一個 Lamport 風格、局限於單一 broker process 之邏輯計數器，§3.7）決定，而非由 agent 端之 wall-clock timestamp 決定——此使該規則對於分散式 agent 之 clock skew 具備穩健性。實作方式：將 `WriteIntent` 擴充一個 `readAtoms: AtomRef[]` 欄位（`packages/core/src/broker/types.ts`），並於 `calculateBrokerDecision` 中加入 read / write intersection 檢查（`packages/core/src/broker/decision.ts`, +107 LOC，配 166 LOC regression test 於 `decision.test.ts`）。由 benchmark scenario `07-registry-read-write-dependency`（§4.2）驗證。
 
 ---
 
 ### 3.5 Static Admission Closure ✅ (validated via 12-scenario fixture suite, §4.2)
 
-**Assumptions.**
+**假設.**
 
-- **(A1′)** Each adapter's `discoverAtomCandidates` extracts a read/write set covering all *statically determinable* effects of the corresponding code region, under its declared `canon_sym` policy.
-- **(A2)** Effects arising from language features beyond static analysis — decorators, proxies, reflection, `eval`, dynamic `import` — are **not** claimed to be captured by (A1′). Their correctness is delegated to the post-write validator phase (§3.8), not the broker.
+- **(A1′)** 每一 adapter 之 `discoverAtomCandidates` 於其所宣告之 `canon_sym` 策略下，抽取一個 read / write set，涵蓋對應程式碼區段之所有 *可靜態判定* 之 effect。
+- **(A2)** 源自語言特性中超出靜態分析範圍者——decorator、proxy、reflection、`eval`、dynamic `import`——**不**宣稱被 (A1′) 所捕捉；其正確性委由 post-write validator 階段（§3.8）承擔，而非 broker。
 
 **Theorem 2 (Static Admission Closure).** *Under (A1′) and (A2), a* `parallel-safe` *verdict implies the absence of write-write conflicts among the statically-determinable portions of the concurrent agents' patches. Conflicts arising solely from dynamic effects outside (A1′) are not excluded by this theorem.*
 
 我們刻意將本定理命名為 **closure** 而非 **soundness**，以避免後者之過度負載。Program-analysis 意義下之「soundness」要求 admitted intent 之間絕無任何衝突——此一主張於存在 reflection 或 metaprogramming 之情境下，任何靜態系統皆無法承擔。Theorem 2 之主張較為狹隘且具可證偽性：broker 之 `parallel-safe` verdict 於 adapter 在 (A1′) 之下所宣告之 static effect 上為 *closed*。由此，static / dynamic 之切分為一範圍劃定之裝置，並非規避：(A1′) 定義 broker 之責任；(A2) 指明被交付至 validator 階段（§3.8）之部分，而 ATM 既有之 dry-run / evidence pipeline 已於該階段運作。若讀者拒絕 (A2) 為 load-bearing assumption，所拒絕者為 admission 與 validation 之 *分層*，而非 closure 主張本身。
 
-**Empirical validation.** Theorem 2 is exercised by the 12-scenario AGR benchmark harness (`scripts/validate-agr-benchmark.ts`, CID-0037, `e62eee72`). In particular: scenario 7 (`registry-read-write-dependency`) verifies the augmented decision rule catches a conflict that the original four-verdict algorithm would have silently admitted; scenario 10 (`validator-catch-typecheck-failure`) confirms the (A2) handoff to validators works as designed for cases outside (A1′).
+**實證驗證.** Theorem 2 由 12-scenario AGR benchmark harness（`scripts/validate-agr-benchmark.ts`, CID-0037, `e62eee72`）加以演練。具言之：scenario 7（`registry-read-write-dependency`）驗證 augmented decision rule 能捕捉原四 verdict 演算法將靜默接受之衝突；scenario 10（`validator-catch-typecheck-failure`）確認 (A2) 至 validator 之 handoff 對於落於 (A1′) 之外之情境，能依預期運作。
 
 ---
 
@@ -333,7 +333,7 @@ i.e., if $I$ reads an atom that $I'$ is concurrently writing, $I$ must be serial
 
 當 `needs-physical-split` 或 `blocked-cid-conflict` 因兩個 agent 之 patch 落於同一個 symbol-level 原子而起時（Definition 3 為 symbol 粒度，而非 line-range 粒度），AGR 以兩層方式細化原子邊界。
 
-**Algorithm 1 (Layer 1 — Syntactic Enclosure Atomization).** ✅ Implemented in `packages/core/src/broker/agr.ts` (+57 LOC); SDK contract for `EnclosingUnit` and `VirtualAtom` in `packages/plugin-sdk/src/atomization-planning.ts`. Purely structural; requires no test execution.
+**Algorithm 1 (Layer 1 — Syntactic Enclosure Atomization).** ✅ 實作於 `packages/core/src/broker/agr.ts`（+57 LOC）；`EnclosingUnit` 與 `VirtualAtom` 之 SDK contract 定義於 `packages/plugin-sdk/src/atomization-planning.ts`。純粹之結構性處理，不需執行測試。
 
 ```
 Input:  patch P (set of (file, lineStart, lineEnd) hunks),
@@ -354,7 +354,7 @@ Output: virtual atom set V₁
 
 每一 $v \in V_1$ 依 Definition 3 取得其自身之 $\mathrm{CID}_{\mathrm{candidate}}(v)$（`symbol` / `sourcePaths` 與外層原子相異），故 broker 以更細粒度之 CID 重新評估 admission。若此一評估得出 `parallel-safe`，AGR 即於此停止——**不進行 refactoring、不呼叫 LLM**。
 
-**Algorithm 2 (Layer 2 — Signature-Preserving Decomposition).** ✅ Implemented in `packages/core/src/broker/policy.ts` (+131 LOC, including the `shouldTriggerLayer2()` threshold check) with 210 LOC of dedicated tests in `agr-layer2.test.ts`. Triggered only when Layer 1 still leaves conflicts, *and* those conflicts are concentrated:
+**Algorithm 2 (Layer 2 — Signature-Preserving Decomposition).** ✅ 實作於 `packages/core/src/broker/policy.ts`（+131 LOC，含 `shouldTriggerLayer2()` threshold 檢查），並於 `agr-layer2.test.ts` 中配備 210 LOC 之專屬測試。其觸發條件為：Layer 1 之後衝突仍存在，*且* 衝突集中：
 
 ```
 Trigger:  |Conflicts(V₁)| ≤ θ_count
@@ -370,7 +370,7 @@ Effect:   decompose f into f_pre · f_extracted · f_post
 
 signature 保留之約束使 Layer 2 對 LLM 而言友善：「將函式 $f$ 之 $X$–$Y$ 行抽出為一新函式，保留 $f$ 之 signature 並將原行替換為對該新函式之呼叫」屬一個狹窄、低歧義之重寫任務。Broker 以 $V_2$ 重新評估；若 Layer 2 之後衝突仍存在，則視為真正之物理衝突並將 intent 序列化——AGR 不再遞迴，將最壞情況之 refinement 限定於兩輪。
 
-**Tooling note.** The *decision* of whether to trigger Layer 2 (the threshold check above) requires only line-range arithmetic over already-known regions — no AST. The *execution* of the decomposition (the actual rewrite of $f$) is adapter/agent-chosen and may use AST-based refactoring tools or a constrained LLM rewrite; because the signature is held fixed, this is a narrow enough task that either approach has low error rates in practice. Validated by benchmark scenarios `11-layer1-no-refinement-available` and `12-layer2-threshold-not-met` (§4.2).
+**工具註記.** 「是否觸發 Layer 2」之 *判斷*（即上述 threshold 檢查）僅需對已知區段執行 line-range 之算術運算——不需 AST。Decomposition 之 *執行*（即對 $f$ 之實際重寫）由 adapter / agent 選擇，可採 AST-based 重構工具，亦可採受約束之 LLM 重寫；由於 signature 維持不變，本任務之範圍狹窄，二者於實務上皆有偏低之錯誤率。此項由 benchmark scenario `11-layer1-no-refinement-available` 與 `12-layer2-threshold-not-met`（§4.2）驗證。
 
 ---
 
@@ -930,7 +930,26 @@ working-tree 上之修改刻意限縮於不同函式：
 
 ## Revision History
 
-**2026-06-21 (Current Draft, nineteenth pass — 移除 paper body 中自我吹捧式之 superlative framing):**
+**2026-06-21 (Current Draft, twentieth pass — §3.2–§3.6 殘留英文 narrative 之深度清掃):**
+
+User 再次校正：先前 eighteenth pass 自陳「全文剩餘英文 narrative 段落悉數譯為論文口吻繁中」過於樂觀，§3.2–§3.6 之 Definition 與 Theorem 周邊 narrative 仍有大量英文未譯。本 pass 進行深度清掃：
+
+- §3.2 Definition 1 bullets 五條（id、name、ver、P、σ）譯繁中；Boundary semantics 段譯繁中；Symbol canonicalization intro 「Definition 1 implicitly assumes...」段譯繁中；canon_sym 公式後之 "that resolves namespaces..." 接續段譯繁中。
+- §3.3 章節 intro「ATM uses two distinct CIDs...」段譯繁中；Definition 3 後之語意說明段（canonical-JSON injective、schema_version forward-compatibility、metadata-level fingerprint、line-range coupling 排除）譯繁中；*Implementation note.* 譯為 *實作註記.*；Definition 4 後之說明（content-addressed identifier）譯繁中；Versioning 段譯繁中。
+- §3.4 四 verdict bullet 譯繁中；Augmented Decision Rule 全段（公式、Ordering model、實作 LOC、validation scenario）譯繁中。
+- §3.5 Assumptions (A1′)(A2) 兩條譯繁中；Empirical validation 段譯繁中。
+- §3.6 Algorithm 1 / Algorithm 2 之實作描述句譯繁中（保留虛擬碼區塊）；Tooling note 段譯繁中。
+
+不譯處（按既定政策）：
+
+- Definition 1 / 2 / 3 / 4 / 5 / 6 之 formal 公式區塊（含開頭 "An atom $a$ in ATM is an 8-tuple"、"An atom map $M$ is a 4-tuple..." 等正式定義引導句）
+- Theorem 1 / 2 / 3 之 formal statement
+- Algorithm 1 / 2 之虛擬碼 code block
+- §3.8 ATM guarantees / does not guarantee block quote（formal claim block）
+- §3.1 architecture overview 之 pipeline 圖（code-block 樣式）
+- References 章節
+
+**2026-06-21 (nineteenth pass — 移除 paper body 中自我吹捧式之 superlative framing):**
 
 User 校正：學術論文 body 中以「論文目前最強」「論文涉及之最強」「最關鍵」「最有力」等 superlative 對自身證據作評等，屬與 §0 「不要寫得像在求 reviewer 喜歡」相同類別之業餘記號。本 pass 將 paper body 中三處此類措辭改寫為中性描述：
 
