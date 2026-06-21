@@ -532,7 +532,7 @@ npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/e
 |---|---|---|---|
 | (a) | 6 筆 brokered collision runs + parallel-0041-0042 跨 vendor admission-phase 阻擋 | Foundation — broker apply 端到端可用 | `broker-collision-evidence/runs/` (4) + `parallel-0041-0042-coordination.md` |
 | (b) | **B-12 controlled field collision (2026-06-20)** | Honest field — apply-phase 阻擋誠實案例 | `broker-collision-evidence/runs/B-12-field-2026-06-20/` |
-| (c) | **`close-orchestration.ts` 雙層 same-file merge (primary positive layered case)** | Primary keystone — formal atomization + broker 第二層虛擬切分皆有價值 | `broker-collision-evidence/close-orchestration-layered-merge-evidence.md` |
+| (c) | **`close-orchestration.ts` 雙層 same-file merge (primary positive layered case)** | 同檔正向 layered evidence 主案例 — 演練 formal atomization 之上 broker 第二層虛擬切分之獨立價值 | `broker-collision-evidence/close-orchestration-layered-merge-evidence.md` |
 | (d) | **`integration.ts` 補強後的雙層 case (secondary reinforcement)** | Secondary — 補上 formal atomization 後第二層仍保留價值 | `broker-collision-evidence/integration-layered-merge-evidence.md` |
 | (e) | Synthetic MVP（B-02 / B-08 / B-13） | Deterministic mechanism backstop | `tools/multi-vendor-broker-bench/`（規劃中）|
 
@@ -553,7 +553,7 @@ npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/e
 
 前 2 筆為早期受控合成測試；中間 2 筆驗證 broker run 與真實任務 `task_ids` 欄位的綁定；**最後 2 筆是 production agent（Cursor Composer 2.5）對真實 atomization 覆蓋率對應表 `path-to-atom-map.json` 的並行寫入，broker 判 `mergeable` 並 `applied`**——不是 `scan-target.json` 之類的合成目標，而是 ATM 自身治理元資料的真實寫入。
 
-**Multi-vendor real-task collision dogfood（parallel-0041-0042-2026-06-17）.** 最關鍵的新證據是 2026-06-17 的跨 vendor 真實任務碰撞實驗：
+**Multi-vendor real-task collision dogfood（parallel-0041-0042-2026-06-17）.** 2026-06-17 之跨 vendor 真實任務碰撞實驗為 (a) 類證據中規模較大者：
 
 - **Agent A**：`cursor-composer-2.5`（Cursor + Anthropic 體系）執行 TASK-MAO-0041
 - **Agent B**：`antigravity-Gemini-Flash3.5`（Google Gemini 體系）執行 TASK-MAO-0042
@@ -603,7 +603,7 @@ npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/e
 
 #### 4.5(c) `close-orchestration.ts` — primary positive layered case
 
-**這是論文目前最強的同檔正向 layered evidence**。`packages/cli/src/commands/taskflow/close-orchestration.ts` 已經被 `atomization-coverage/path-to-atom-map.json` 用 6 個正式 atom map 覆蓋：
+`packages/cli/src/commands/taskflow/close-orchestration.ts` 為本節之同檔正向 layered evidence 主案例。該檔案已被 `atomization-coverage/path-to-atom-map.json` 用 6 個正式 atom map 覆蓋：
 
 | 已存在正式 atom / map | 能力 |
 |---|---|
@@ -794,7 +794,7 @@ ATM 自身的開發過程即為本論文所述 multi-agent admission-controlled 
 
 **(a) Format Adapter 子系統由 broker admission 協調交付（2026-06-16）.** Commit `31fd89ff0` 交付 adapter registry 加 JSON-record / text-range / numeric-scalar adapters（CID-0092/0093/0095/0096）；commit `ca59a88a9` 交付 atom-map domain adapter、batch planner、CAS、dogfood gate（CID-0094/0097/0098）。Dogfood gate 對新 adapters 跑 5 個 scenario 並回報 `Recommendation: SHIP`（`docs/reports/broker-format-adapter-dogfood-report.md`）。
 
-**(b) Team Agents Wave Mode 已實際運作於 ATM 開發本身（2026-06-17）.** 上一草稿提及的 Wave Mode 已於 MAO-0030~0034 完整交付（§3.7、§4.6）。其首次真實 dogfood 即為 §4.5 的 `parallel-0041-0042` 實驗：Cursor 的 Composer 2.5 與 Google 的 Gemini Flash 3.5 分別執行 TASK-MAO-0041 與 TASK-MAO-0042，在五個共同檔上故意並行交付；broker 首回應為 `blocked-cid-conflict`，wave planner 自動序列化為兩個 wave，採用 territory split 協定（per-region marker + atom-map row-level merge）後雙卡皆順利 close。這同時是論文涉及之最強 in-vivo 驗證：**broker admission、wave planner、format adapter row-level merge、coordinator-only closeout 四個機制同時在跨 vendor 真實任務上端到端通過**。
+**(b) Team Agents Wave Mode 已實際運作於 ATM 開發本身（2026-06-17）.** 上一草稿提及的 Wave Mode 已於 MAO-0030~0034 完整交付（§3.7、§4.6）。其首次真實 dogfood 即為 §4.5 的 `parallel-0041-0042` 實驗：Cursor 的 Composer 2.5 與 Google 的 Gemini Flash 3.5 分別執行 TASK-MAO-0041 與 TASK-MAO-0042，在五個共同檔上故意並行交付；broker 首回應為 `blocked-cid-conflict`，wave planner 自動序列化為兩個 wave，採用 territory split 協定（per-region marker + atom-map row-level merge）後雙卡皆順利 close。該實驗於同一條跨 vendor 真實任務上端到端演練了下列四項機制：**broker admission、wave planner、format adapter row-level merge、coordinator-only closeout**。
 
 **(c) 多 vendor production 共同開發.** 同一 reporting window 內，四個不同 vendor 的 LLM（Anthropic / Cursor / Google / OpenAI 體系，§6.3）在 ATM admission control 下共同寫入框架源碼，包含 TASK-CID-0108/0109（antigravity-gemini）、TASK-MAO-0033/0034（claude-code-opus）、TASK-MAO-0010（雙 vendor）等。
 
@@ -930,7 +930,27 @@ working-tree 上之修改刻意限縮於不同函式：
 
 ## Revision History
 
-**2026-06-21 (Current Draft, eighteenth pass — 全文剩餘英文 narrative 段落悉數譯為論文口吻繁中):**
+**2026-06-21 (Current Draft, nineteenth pass — 移除 paper body 中自我吹捧式之 superlative framing):**
+
+User 校正：學術論文 body 中以「論文目前最強」「論文涉及之最強」「最關鍵」「最有力」等 superlative 對自身證據作評等，屬與 §0 「不要寫得像在求 reviewer 喜歡」相同類別之業餘記號。本 pass 將 paper body 中三處此類措辭改寫為中性描述：
+
+- §4.5(a) parallel-0041-0042 段：「最關鍵的新證據是」→「(a) 類證據中規模較大者」。
+- §4.5(c) close-orchestration.ts 開頭句：「**這是論文目前最強的同檔正向 layered evidence**」→ 退場；改為「`packages/cli/src/commands/taskflow/close-orchestration.ts` 為本節之同檔正向 layered evidence 主案例」。
+- §6.4(b) Wave Mode dogfood 結語：「這同時是論文涉及之最強 in-vivo 驗證」→ 退場；改為「該實驗於同一條跨 vendor 真實任務上端到端演練了下列四項機制」。
+- §4.5 開頭 evidence stack 表 (c) 欄之 "Primary keystone — formal atomization + broker 第二層虛擬切分皆有價值" 改為「同檔正向 layered evidence 主案例 — 演練 formal atomization 之上 broker 第二層虛擬切分之獨立價值」，避免「keystone」一字承載過多評等意味。
+
+保留之語例（屬正當描述、非自我吹捧）：
+
+- §1.2「全 AST 級分析：理論上『中間粒度』的最佳解，但⋯」——此處「最佳解」修飾的是 *他人 / 替代方案*，作為退讓鋪陳，非自誇。
+- §4.5(b) B-12 narrative 中「決定性的競爭」——直譯 "decisive contention"，指 intent 間之競爭時點，非評等。
+
+規則歸納（未來新增段落自查）：
+
+- ❌ 「論文最強」「論文目前最具殺傷力」「本論文最關鍵之證據」等對自身內容之 superlative 自評
+- ❌ 「keystone」「centerpiece」等強隱喻評等用語
+- ✅ 改用「本節之主案例」「(a) 類證據中規模較大者」「演練之機制涵蓋」等中性描述
+
+**2026-06-21 (eighteenth pass — 全文剩餘英文 narrative 段落悉數譯為論文口吻繁中):**
 
 User 校正：除 §4.5(b)(c) 與 Appendix A.1（已於 fifteenth pass 翻譯）外，全文尚有大量英文 narrative 段落散落於 §2.8、§3.2、§3.4、§3.5、§3.6、§3.7、§3.8、§3.9、§3.10、§4 開頭與 §4.1–§4.4、§4.7、§5、§6.1–§6.3、§7。本 pass 分三批校正：
 
