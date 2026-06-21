@@ -287,7 +287,7 @@ $$\mathrm{CID}_{\mathrm{capsule}}(B) := \texttt{"atom:cid:"} \mathbin{\|} \mathr
 | Broker admission (pre-write) | $\mathrm{CID}_{\mathrm{candidate}}$ | symbol-level | metadata (kind, symbol, paths, method) |
 | Atom export / version anchor (post-validation) | $\mathrm{CID}_{\mathrm{capsule}}$ | full bundle | content (source + schemas + policy) |
 
-A third identifier exists in the codebase (`team-lane.ts`, a deterministic slug derived from `taskId` for lane routing). This is **not** a contract or content identifier and is out of scope for this paper's formalization; we recommend it be renamed (e.g., `laneId`) to avoid confusion with Definitions 3–4 — a naming hygiene item tracked in the implementation plan, not an academic concern.
+codebase 中尚存在第三類識別子（`team-lane.ts`，一個由 `taskId` 派生之確定性 slug，用於 lane routing）。此並 **非** contract 或 content 識別子，且落於本論文之形式化範圍外；建議將其重新命名（例如 `laneId`）以避免與 Definitions 3–4 混淆——此屬命名衛生事項，於實作計畫中追蹤，並非學術層面之關切。
 
 **Versioning.** Definition 3 above is the hardened form: `schema_version` is part of the canonical input, so any future formula change cannot silently collide with v1 outputs. The migration question (cutting over the shipped legacy concatenation to the canonical-JSON form, and handling any active intents during the cutover) is discussed in §3.9.
 
@@ -331,7 +331,7 @@ i.e., if $I$ reads an atom that $I'$ is concurrently writing, $I$ must be serial
 
 ### 3.6 Adaptive Granularity Refinement (AGR) ✅ (CID-0028/0029/0031/0035)
 
-When `needs-physical-split` or `blocked-cid-conflict` arises because two agents' patches land in the same symbol-level atom (Definition 3 is symbol-granular, not line-range-granular), AGR refines the atom boundary in two layers.
+當 `needs-physical-split` 或 `blocked-cid-conflict` 因兩個 agent 之 patch 落於同一個 symbol-level 原子而起時（Definition 3 為 symbol 粒度，而非 line-range 粒度），AGR 以兩層方式細化原子邊界。
 
 **Algorithm 1 (Layer 1 — Syntactic Enclosure Atomization).** ✅ Implemented in `packages/core/src/broker/agr.ts` (+57 LOC); SDK contract for `EnclosingUnit` and `VirtualAtom` in `packages/plugin-sdk/src/atomization-planning.ts`. Purely structural; requires no test execution.
 
@@ -352,7 +352,7 @@ Output: virtual atom set V₁
 3. return V₁
 ```
 
-Each $v \in V_1$ gets its own $\mathrm{CID}_{\mathrm{candidate}}(v)$ via Definition 3 (distinct `symbol`/`sourcePaths` from the enclosing atom), so the broker re-evaluates admission with finer-grained CIDs. If this yields `parallel-safe`, AGR stops here — **no refactoring, no LLM call**.
+每一 $v \in V_1$ 依 Definition 3 取得其自身之 $\mathrm{CID}_{\mathrm{candidate}}(v)$（`symbol` / `sourcePaths` 與外層原子相異），故 broker 以更細粒度之 CID 重新評估 admission。若此一評估得出 `parallel-safe`，AGR 即於此停止——**不進行 refactoring、不呼叫 LLM**。
 
 **Algorithm 2 (Layer 2 — Signature-Preserving Decomposition).** ✅ Implemented in `packages/core/src/broker/policy.ts` (+131 LOC, including the `shouldTriggerLayer2()` threshold check) with 210 LOC of dedicated tests in `agr-layer2.test.ts`. Triggered only when Layer 1 still leaves conflicts, *and* those conflicts are concentrated:
 
