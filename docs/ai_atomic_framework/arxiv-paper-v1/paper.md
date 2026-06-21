@@ -937,25 +937,6 @@ User 校正：先前數版將 close-orchestration.ts 之 evidence 以多個零�
 - 正文只保留：同檔、不同函式、field admission success、replay/apply success
 - run id、artifact path、retired duplicate 之說明僅置於 appendix / artifact note
 
-**2026-06-21 (twentieth pass — §3.2–§3.6 殘留英文 narrative 之深度清掃):**
-
-User 再次校正：先前 eighteenth pass 自陳「全文剩餘英文 narrative 段落悉數譯為論文口吻繁中」過於樂觀，§3.2–§3.6 之 Definition 與 Theorem 周邊 narrative 仍有大量英文未譯。本 pass 進行深度清掃：
-
-- §3.2 Definition 1 bullets 五條（id、name、ver、P、σ）譯繁中；Boundary semantics 段譯繁中；Symbol canonicalization intro 「Definition 1 implicitly assumes...」段譯繁中；canon_sym 公式後之 "that resolves namespaces..." 接續段譯繁中。
-- §3.3 章節 intro「ATM uses two distinct CIDs...」段譯繁中；Definition 3 後之語意說明段（canonical-JSON injective、schema_version forward-compatibility、metadata-level fingerprint、line-range coupling 排除）譯繁中；*Implementation note.* 譯為 *實作註記.*；Definition 4 後之說明（content-addressed identifier）譯繁中；Versioning 段譯繁中。
-- §3.4 四 verdict bullet 譯繁中；Augmented Decision Rule 全段（公式、Ordering model、實作 LOC、validation scenario）譯繁中。
-- §3.5 Assumptions (A1′)(A2) 兩條譯繁中；Empirical validation 段譯繁中。
-- §3.6 Algorithm 1 / Algorithm 2 之實作描述句譯繁中（保留虛擬碼區塊）；Tooling note 段譯繁中。
-
-不譯處（按既定政策）：
-
-- Definition 1 / 2 / 3 / 4 / 5 / 6 之 formal 公式區塊（含開頭 "An atom $a$ in ATM is an 8-tuple"、"An atom map $M$ is a 4-tuple..." 等正式定義引導句）
-- Theorem 1 / 2 / 3 之 formal statement
-- Algorithm 1 / 2 之虛擬碼 code block
-- §3.8 ATM guarantees / does not guarantee block quote（formal claim block）
-- §3.1 architecture overview 之 pipeline 圖（code-block 樣式）
-- References 章節
-
 **2026-06-21 (nineteenth pass — 移除 paper body 中自我吹捧式之 superlative framing):**
 
 User 校正：學術論文 body 中以「論文目前最強」「論文涉及之最強」「最關鍵」「最有力」等 superlative 對自身證據作評等，屬與 §0 「不要寫得像在求 reviewer 喜歡」相同類別之業餘記號。本 pass 將 paper body 中三處此類措辭改寫為中性描述：
@@ -975,17 +956,6 @@ User 校正：學術論文 body 中以「論文目前最強」「論文涉及之
 - ❌ 「論文最強」「論文目前最具殺傷力」「本論文最關鍵之證據」等對自身內容之 superlative 自評
 - ❌ 「keystone」「centerpiece」等強隱喻評等用語
 - ✅ 改用「本節之主案例」「(a) 類證據中規模較大者」「演練之機制涵蓋」等中性描述
-
-**2026-06-21 (eighteenth pass — 全文剩餘英文 narrative 段落悉數譯為論文口吻繁中):**
-
-User 校正：除 §4.5(b)(c) 與 Appendix A.1（已於 fifteenth pass 翻譯）外，全文尚有大量英文 narrative 段落散落於 §2.8、§3.2、§3.4、§3.5、§3.6、§3.7、§3.8、§3.9、§3.10、§4 開頭與 §4.1–§4.4、§4.7、§5、§6.1–§6.3、§7。本 pass 分三批校正：
-
-- **Part 1（§3 narrative）**：§3.7 broker as sole serialization point 之三段 prose（registry race objection、mid-execution registration、snapshot and arbitration protocol）；§3.8 limitation intro 與 Git-boundary 段；§3.9 四條 open problem 全列（cross-language atom identity、CID schema-version migration、adapter trust、liveness / starvation）；§3.10 intro、三層擴展 bullets、Theorem 3 conditional discussion。Definition 5 / Theorem 3 formal block 維持英文。
-- **Part 2（§4 narrative）**：§4 intro（validation vs comparative benchmark 分野）；§4.1 SDK + AGR pipeline 介紹；§4.2 12-scenario suite 介紹、coverage statement、limitation 三條；§4.3 npc-brain intro 與 honest interpretation paragraph；§4.4 forensics report intro 與 evidence supports / does-not-support 兩段。
-- **Part 3（§5 / §6 / §7 narrative）**：§4.7 CID stability user-reported notes；§5 limitations 五條未涵蓋、roadmap；§6.1 AST-first 三段（engineering cost、diminishing returns、scope preservation）；§6.2 三個失敗模式；§6.3 五項 open questions；§7 Conclusion 三項 key contributions 與 Why this matters / Invitation / Limitations 三段收尾。
-- **Part 4（§2.8 + §3.2-3.6 殘留 prose）**：§2.8 OT / CRDT / DB lineage 段；§3.2 status machine 句、canonicalization 函式引導句；§3.4 broker WriteIntent consumption 段；Theorem 1 corollary 段；§3.5 closure-vs-soundness 命名澄清段；§3.6 Layer 2 signature-preservation rationale 段。
-
-翻譯規則：code / path / commit hash / function name / atom id / mathematical notation 悉數保留原文；Definition / Theorem / Algorithm 之 formal block 保留英文；narrative prose 譯為論文口吻（之 over 的、蓋 / 俟 / 惟 / 俾 / 此 之正式連接句、被動語態以「由…執行」「為…所…」呈現）。References 章節維持英文（學術引用慣例）。Abstract 與 §1 已先前完成。
 
 **2026-06-21 (seventeenth pass — 移除 paper body 中直接稱呼 reviewer 之 meta-voice):**
 
@@ -1007,14 +977,6 @@ User 校正：學術論文 body 直接寫「Reviewers / reviewer」會降低 cre
 - 本 pass 將 Abstract 改為「四個核心貢獻」，並於壓縮 abstract 行格內補入第 4 條：「**超越程式碼之通用化**：以 `FileMutationAdapter` 與 `ConflictKey` 將 broker 衝突偵測核心由程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、atom-map shards），並以 Theorem 3（ConflictKey Disjointness，作為 Theorem 1 之推廣）形式化。」
 - 不變動 §1.3 本體（已為正確版本）；不重排既有三條順序。
 - 此修正對應 handoff §0.4 第 6 條紀律——「不要寫超出實作」之鏡像：實作已在 main、論文 §1.3 已對齊，但 Abstract 落後即等同於對外輸出不一致，必須補上。
-
-**2026-06-21 (fifteenth pass — §4.5(b)(c) 與 Appendix A.1 英文段落悉數譯為論文口吻繁中):**
-
-- 重申此版論文為**繁體中文版本**，英譯版留待繁中定稿後另開階段；此前數版我曾將 user 提供之英文 narrative skeleton 直接嵌入正文，違反此原則，本 pass 全數校正。
-- **§4.5(b) B-12** 英文 block quote 譯為繁中正式論文口吻：保留 `parallel-safe`、`safeToStart: true`、`TASK-TEAM-0042` 等技術 token；prose 改寫為「俟…後…」「惟…」「然而」等正式連接句法。
-- **§4.5(c) close-orchestration.ts** 兩段英文 block quote 譯為繁中：(i) layered atomization 主張之 quote；(ii) positive same-file field evidence 段（含 paper artifact bundle 補述句）。
-- **Appendix A.1** 整節由英文改寫為繁中：標題、八個子節（authoritative runtime 紀錄、經過濾之 evidence bundle、編輯範圍之函式邊界、已退役之重複 setup trace、收集器之行為與 artifact 衛生、詮釋範圍）全數重譯。
-- 翻譯原則：code/path/run id/atom id/function 名稱悉數保留原文；prose 採論文口吻——「之」代「的」於書面壓縮處、「俾」「俟」「蓋」於正式連接、「該」「其」「此」於指示。
 
 **2026-06-21 (fourteenth pass — Appendix A introduced; A.1 close-orchestration positive same-file artifact note formalized):**
 
