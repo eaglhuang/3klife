@@ -532,7 +532,7 @@ npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/e
 |---|---|---|---|
 | (a) | 6 筆 brokered collision runs + parallel-0041-0042 跨 vendor admission-phase 阻擋 | Foundation — broker apply 端到端可用 | `broker-collision-evidence/runs/` (4) + `parallel-0041-0042-coordination.md` |
 | (b) | **B-12 controlled field collision (2026-06-20)** | Honest field — apply-phase 阻擋誠實案例 | `broker-collision-evidence/runs/B-12-field-2026-06-20/` |
-| (c) | **`close-orchestration.ts` 雙層 same-file merge (primary positive layered case)** | 同檔正向 layered evidence 主案例 — 演練 formal atomization 之上 broker 第二層虛擬切分之獨立價值 | `broker-collision-evidence/close-orchestration-layered-merge-evidence.md` |
+| (c) | **`close-orchestration.ts` 同檔多 agent 並行案例：兩層證據鏈** | 同一案例之兩層證據——live field admission + replay/apply outcome | Appendix A.1（同檔不同函式之 live admission + broker compose / steward apply 重放成功）|
 | (d) | **`integration.ts` 補強後的雙層 case (secondary reinforcement)** | Secondary — 補上 formal atomization 後第二層仍保留價值 | `broker-collision-evidence/integration-layered-merge-evidence.md` |
 | (e) | Synthetic MVP（B-02 / B-08 / B-13） | Deterministic mechanism backstop | `tools/multi-vendor-broker-bench/`（規劃中）|
 
@@ -601,44 +601,13 @@ npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/e
 - `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-capture.md`
 - `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-evidence-bundle.md`
 
-#### 4.5(c) `close-orchestration.ts` — primary positive layered case
+#### 4.5(c) `close-orchestration.ts` — 同檔多 agent 並行案例：兩層證據鏈
 
-`packages/cli/src/commands/taskflow/close-orchestration.ts` 為本節之同檔正向 layered evidence 主案例。該檔案已被 `atomization-coverage/path-to-atom-map.json` 用 6 個正式 atom map 覆蓋：
+我們在 `packages/cli/src/commands/taskflow/close-orchestration.ts` 上收集到一個正向的同檔並行案例。兩個來自不同 vendor family 的 live agent，同時在同一個 `main` 工作樹上操作同一個 TypeScript 檔案；其中一個 lane 修改 `buildClosebackPlan`，另一個 lane 修改 `resolveClosebackPlanningPath`。在標準 ATM claim 與 team-start 流程下，兩個 lane 都被 broker 以 `direct-brokered` / `parallel-safe` 放行。這說明 ATM 並不會僅因為「同一檔案」就把所有工作一律序列化；當修改落在不同的檔內區域時，系統可以保留安全並行。
 
-| 已存在正式 atom / map | 能力 |
-|---|---|
-| `atm.task-closure-map` | taskflow close backend argv／受保護 close surface 之指令建構 |
-| `atm.closeback-route-correctness-map` | closeback route 正確性 + out-of-scope waiver 傳遞 |
-| `atm.close-write-atomicity-map` | fail-closed close `--write` 事務 + rollback snapshot + commit phase |
-| `atm.close-window-lock-map` | close-window staged-index lock 在 rollback 期的釋放 |
-| `atm.evidence-bundle-manifest-map` | evidence bundle manifest 與 directory deliverable 展開 hook |
-| `atm.task-view-dashboard-map` | close completion checklist 對 ledger／planning／delivery／waiver 狀態的構建 |
+接著，我們再把同一對正向 patch 經過 ATM 原生的 broker compose 與 steward apply 流程重放。重放結果維持一致：該對 patch 在 compose 階段判定為 `parallel-safe`，steward plan 通過，最終 steward apply 也成功完成，結果為 `applied`。因此，這個案例形成了一條完整的證據鏈：live field run 證明 ATM 在真實多 agent 場景下會放行這組同檔雙 patch，而 replay/apply artifact 則進一步證明這組 patch 不只在 admission 時可被接受，也確實可以被組合並成功套用。
 
-在這個 *已被正式 atomization 覆蓋的檔案* 上，broker-aware pre-patch scanner（AAF commit `18aa08f54`）仍能挑出檔內第二層的虛擬原子切分：
-
-| 虛擬原子候選 | 行範圍 | 角色 |
-|---|---|---|
-| `buildClosebackPlan` | 186–327 | Patch A |
-| `resolveClosebackPlanningPath` | 472–618 | Patch B |
-
-模擬結果：
-
-- 兩寫分別落在 *不同* function-scoped 虛擬原子 → broker verdict = **`parallel-safe`**
-- 兩寫同時落在 *同一* function-scoped 虛擬原子 → broker verdict = **`blocked-cid-conflict`**
-
-> `close-orchestration.ts` 之案例顯示，ATM 之原子化並不止於檔案層級或檔案家族層級之粗粒度。即便該檔案已為多個正式 atom map 所覆蓋，broker 仍能於同檔範圍內進一步切分為更細之虛擬原子——對於落於不相交 function-scoped 虛擬原子之寫入予以 admit，對於落於同一虛擬原子之寫入則予以 reject。
-
-此一結果直接回應 §4.5 開頭所提出之關鍵問題 (A)：**formal atomization 並非空有其名，且 broker 之 second-layer segmentation 在 formal atomization 之上仍能提供額外價值**。
-
-**Positive same-file field evidence**（與上述 pre-patch scanner 之 simulated 結果分立）：
-
-> 我們另收集了一筆於 `packages/cli/src/commands/taskflow/close-orchestration.ts` 之上的同檔正向 field 案例。兩個分屬不同 vendor family 之 live agent 並行運作於同一份 `main` working tree，但分別針對同檔內之不同函式：其中一條 lane 修改 `buildClosebackPlan`，另一條 lane 修改 `resolveClosebackPlanningPath`。兩條 lane 皆經由標準之 ATM 任務認領與 team-start 流程進入 broker 仲裁，並於 `direct-brokered` lane 上獲判 `parallel-safe`。此結果之意義在於：成功並非源自檔案層級之分離——兩個 agent 所瞄準者乃是同一份 TypeScript 原始檔；ATM 之所以能保全安全並行，係透過辨識同檔內不相交之區段而達成。本案因此支撐論文之核心主張：明確 atomization 結合第二層之檔內分段檢查，可允許同檔多 agent 並行之安全執行，而非將所有同檔編輯一律收斂為單一序列化 lane。
->
-> 隨論文交付之 artifact bundle 包含本案之兩筆 authoritative team-run 紀錄，以及一份經過濾之 broker evidence 報告——該報告自先前已退役之重複 run 中分離出最終之正向配對。
-
-論文範圍說明：本段 evidence 為 *admission / team-run positive evidence*；是否進一步在 apply-phase 完成 brokered commit 屬於另一條獨立敘述，不在本段範圍。Run id、bundle 路徑、retired-run 清理細節皆置於對應說明檔，不入正文。
-
-**對應說明檔與 paper-citable artifact**：runtime 細節（authoritative run ids、filtered evidence bundle、retired duplicate trace 清理、collector hygiene）見 **Appendix A.1**；補充技術說明見 `docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md`。
+完整 artifact 細節（authoritative team-run 紀錄、經過濾 evidence bundle、replay/apply outcome artifact、詮釋邊界）見 **Appendix A.1**。
 
 #### 4.5(d) `integration.ts` — secondary reinforcement case
 
@@ -826,48 +795,52 @@ ATM 自身的開發過程即為本論文所述 multi-agent admission-controlled 
 
 ## Appendix A. Artifact Notes
 
-### A.1 `close-orchestration.ts` 之同檔多 agent 並行正向案例
+### A.1 `close-orchestration.ts` 同檔多 agent 並行案例：兩層證據
 
-本附錄記錄論文用以支撐其並行性主張之主要同檔正向 field artifact。目標檔案為 `packages/cli/src/commands/taskflow/close-orchestration.ts`；兩個 agent 並行運作於同一份 `main` working tree 之上，遵循標準之 ATM 任務認領與 team-start 工作流。
+本案例的目標檔案為：
 
-兩條 authoritative lane 之設定如下：
+- `packages/cli/src/commands/taskflow/close-orchestration.ts`
 
-- `TASK-COLLIDE-CLOSE-ORCH-A`：修改範圍限定於 `buildClosebackPlan`
-- `TASK-COLLIDE-CLOSE-ORCH-B`：修改範圍限定於 `resolveClosebackPlanningPath`
+兩個功能 lane 分別為：
 
-由此可見，兩個 agent 雖瞄準同一份 TypeScript 原始檔，所實際著手者為該檔案內不同之 function-level 區域。於最終之 authoritative team-run 紀錄中，兩條 lane 皆於 `direct-brokered` lane 上獲 broker 判為 `parallel-safe`。
+- `TASK-COLLIDE-CLOSE-ORCH-A`：修改範圍限定在 `buildClosebackPlan`
+- `TASK-COLLIDE-CLOSE-ORCH-B`：修改範圍限定在 `resolveClosebackPlanningPath`
 
-#### Authoritative runtime 紀錄
+這兩個 lane 應被視為**同一個正向同檔案例**，而不是兩個彼此無關的例子。
 
-本案之 authoritative runtime 紀錄為：
+#### Field admission layer
+
+在 live controlled field run 中，兩個 agent 同時操作同一個 `main` 工作樹，且目標都是同一個 TypeScript 檔案，但修改位置位於不同的函式層級區域。兩個 lane 都經過正常的 ATM claim 與 team-start 流程，並被 broker 以 `direct-brokered` / `parallel-safe` 放行。
+
+具權威性的 team-run 記錄如下：
 
 - Lane A：`team-53e5bae34958`
 - Lane B：`team-0c9db84467a6`
 
-該等紀錄持久化於：
-
-- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-53e5bae34958.json`
-- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-0c9db84467a6.json`
-
-兩筆紀錄回報相同之質性結果：broker 於 `direct-brokered` lane 上判 `parallel-safe`。
-
-#### 經過濾之 evidence bundle
-
-為使 artifact 集合具備獨立可審計與可重現之性質，並避免被已退役之 setup trace 所汙染，本研究另行產生一份僅包含最終正向配對之 broker evidence bundle：
+過濾後的 field evidence bundle 如下：
 
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.md`
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.json`
 
-該經過濾之 bundle 中，run 索引恰含兩筆 authoritative 條目，對應上述兩條 lane。此經過濾之表徵即為本案於論文中所引用之 artifact。
+#### Replay/apply outcome layer
 
-#### 編輯範圍之函式邊界
+之後，我們再把同一對正向 patch 經過 ATM 原生的 broker compose 與 steward apply 流程重放。在這次重放中：
 
-working-tree 上之修改刻意限縮於不同函式：
+- compose verdict：`parallel-safe`
+- apply method：`patch-apply`
+- steward plan：`ok`
+- steward apply verdict：`applied`
 
-- Lane A 全程位於 `buildClosebackPlan` 內
-- Lane B 全程位於 `resolveClosebackPlanningPath` 內
+這一層 outcome-level evidence 說明：這組同檔雙 patch 不只在 admission 階段被允許，而且在保持函式級別分離的前提下，也可以被實際 compose 並成功 apply。
 
-此邊界之設定對於詮釋至關重要：本案之正向結果無法以粗粒度之檔案層級分離解釋，蓋兩個 agent 之目標乃同一份檔案。該 artifact 反而與論文之主張相一致——明確 atomization 結合第二層之檔內分段機制，即便於同檔多 agent 編輯之情境下亦能保留安全並行。
+Replay/apply evidence 檔案如下：
+
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/merge-evidence-report.md`
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/merge-evidence-report.json`
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/steward-apply-evidence.json`
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/merge-plan.json`
+
+此外，這次 replay/apply artifact 也包含 broker operation envelope（`atm.brokerOperationRunRecordEnvelope.v1`）。
 
 #### 已退役之重複 setup trace
 
@@ -894,9 +867,20 @@ working-tree 上之修改刻意限縮於不同函式：
 
 該變更屬於 artifact 衛生措施，並未涉及 broker 行為之語意變更。
 
-#### 詮釋範圍
+#### 詮釋邊界
 
-本 artifact 應被詮釋為同檔之 admission / team-run 正向證據——其顯示兩個分屬不同 vendor family 之 live agent 可在同檔內不同 function-level 區域上並行，並仍能於 broker 治理之 routing 下獲判 `parallel-safe`。任何後續之 apply-phase、merge-phase 或 commit-phase 結果，皆應另行敘述，不可逕由本 artifact 推論而得。
+請把這個 case 明確寫成「**一個案例、兩層證據**」：
+
+1. live field admission / team-run evidence
+2. replay / apply outcome evidence
+
+不要把它拆成兩個互不相干的小故事。
+
+同時請保留以下誠實邊界：
+
+- field layer 來自同一主工作樹上的 live same-file 多 agent 執行
+- replay/apply layer 來自 ATM 對同一對正向 patch 的 controlled broker / steward replay pipeline
+- 除非另有後續 artifact 明確證明，否則不可把這個案例寫成「兩個 live agent 已經直接在 `main` 上完成 merge commit」
 
 ---
 
@@ -930,7 +914,30 @@ working-tree 上之修改刻意限縮於不同函式：
 
 ## Revision History
 
-**2026-06-21 (Current Draft, twentieth pass — §3.2–§3.6 殘留英文 narrative 之深度清掃):**
+**2026-06-21 (Current Draft, twenty-first pass — close-orchestration.ts 收斂為「一個案例、兩層證據鏈」之完整包):**
+
+User 校正：先前數版將 close-orchestration.ts 之 evidence 以多個零碎段落形式呈現（6 atom maps 表 + pre-patch scanner simulated table + simulated 結果 bullets + layered claim block quote + 「Positive same-file field evidence」block quote + 對應說明檔 pointer），且舊版「formal atomization + broker virtual segmentation」之 simulated 雙層框架已不再為 case 之主軸。本 pass 以 user 提供之完整包做直接覆蓋：
+
+- **§4.5(c) 整段重寫**：退場舊敘述（atom maps 表、虛擬原子掃描表、simulated 結果 bullets、layered claim 引語、Positive same-file field evidence 引語、論文範圍說明、雙重對應說明檔 pointer）；改採 user 提供之 *正文版* 兩段——(i) field layer：兩個不同 vendor family 之 live agent 於 `main` 同檔不同函式 (`buildClosebackPlan` / `resolveClosebackPlanningPath`) 並行，broker 以 `direct-brokered` / `parallel-safe` 放行；(ii) replay/apply layer：同對 patch 經由原生 broker compose 與 steward apply 流程重放，compose verdict 為 `parallel-safe`、steward plan 為 `ok`、最終 apply verdict 為 `applied`；末段 pointer 指 Appendix A.1。
+- **§4.5 evidence stack 表 row (c) 同步更新**：從 "雙層 same-file merge / 同檔正向 layered evidence 主案例 — 演練 formal atomization 之上 broker 第二層虛擬切分之獨立價值" 改為 "同檔多 agent 並行案例：兩層證據鏈 / 同一案例之兩層證據——live field admission + replay/apply outcome"。
+- **Appendix A.1 整段重寫**：採 user 提供之完整 Artifact Note：Field admission layer（team-run records `team-53e5bae34958` / `team-0c9db84467a6` + filtered evidence bundle）；Replay/apply outcome layer（compose verdict / apply method / steward plan / steward apply verdict + 4 個 replay/apply evidence 路徑 + broker operation envelope schema）；已退役重複 trace 與 collector 衛生段落保留作為 artifact hygiene；詮釋邊界節明寫「一個案例、兩層證據」並列出三條誠實邊界（field layer 源自 live `main` worktree；replay/apply layer 源自 controlled broker / steward replay pipeline；不得擴張為「兩個 live agent 已直接於 `main` 完成 merge commit」）。
+
+退場之舊敘述模式（未來不得再拼接使用）：
+
+- 只寫 admission success 之單獨短段
+- 只寫 replay/apply success 之單獨短段
+- 將 close-orchestration 描述為「file-level disjointness」之版本
+- 將 replay/apply artifact 描述為「purely synthetic」之版本
+- 將 live field run 描述為「已直接於 `main` 完成 merged commit」之版本
+
+寫作規則歸納（並入後續自查清單）：
+
+- 不把同一案例拆成兩個不同 subsection
+- 不把 run id / json path / retired duplicate / collector hygiene 細節塞入正文
+- 正文只保留：同檔、不同函式、field admission success、replay/apply success
+- run id、artifact path、retired duplicate 之說明僅置於 appendix / artifact note
+
+**2026-06-21 (twentieth pass — §3.2–§3.6 殘留英文 narrative 之深度清掃):**
 
 User 再次校正：先前 eighteenth pass 自陳「全文剩餘英文 narrative 段落悉數譯為論文口吻繁中」過於樂觀，§3.2–§3.6 之 Definition 與 Theorem 周邊 narrative 仍有大量英文未譯。本 pass 進行深度清掃：
 
