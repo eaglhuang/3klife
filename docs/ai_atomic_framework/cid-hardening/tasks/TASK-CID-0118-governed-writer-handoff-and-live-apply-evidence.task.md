@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0118
 title: Governed writer handoff and live apply evidence
-status: planned
+status: done
 milestone: M21
 depends_on:
   - TASK-CID-0117
@@ -34,6 +34,9 @@ nonGoals:
 atomizationImpact:
   ownerAtomOrMap: "atm.governed-writer-handoff"
   mapUpdates: []
+completed_at: "2026-06-21T16:05:16.909Z"
+completed_by_agent: "captain"
+delivery_commit: "fa4fa6f4bb9f41399f1d547c1f3ed48b0a55c55e"
 ---
 
 # TASK-CID-0118
