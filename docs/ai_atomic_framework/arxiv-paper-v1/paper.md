@@ -15,10 +15,11 @@
 
 我們提出 **Adapter-Guided Atomization with CID Broker**，一個介於檔案級與字元級之間的並發治理框架。本框架不依賴重量級的全語言通用 AST 引擎，而是將代碼單元的發現責任委派給各語言的 adapter；ATM 核心則以原子 ID（atomId）、契約指紋（atomCid）、共享表面（shared surfaces）、檔案範圍等多維度，做出確定性的並發准入決策。我們的 broker 已實作四種裁決：`parallel-safe`、`needs-physical-split`（CID disjoint 路由到 deterministic composer）、`blocked-cid-conflict`、`blocked-shared-surface`。
 
-本論文的三個核心貢獻：
+本論文的四個核心貢獻：
 1. **跨語言中立的原子化抽象**：透過 optional `AtomizationPlanningAdapter` SDK，讓每個語言以最便宜的偵測策略（regex、scanner、compiler API、AST、LSP）回報函式 / 類別 / 模組級原子候選，無需強制 AST。
 2. **確定性多維度衝突准入**：以 atomId 與 atomCid 為核心，配合 generators / projections / registries / validators / artifacts 五類共享表面，達成 O(n log n) 衝突檢測，相對於 SCF 的 O(n²) 意圖圖具備明顯擴展性。
 3. **檔案重疊但 CID disjoint 的並行寫入路由**：當兩個代理修改同一檔案的不同函式時，broker 將其路由到 deterministic composer 進行合成，避免 STORM 風格的盲目拒絕。
+4. **超越程式碼之通用化**：以 `FileMutationAdapter` 與 `ConflictKey` 將 broker 衝突偵測核心由程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、atom-map shards），並以 Theorem 3（ConflictKey Disjointness，作為 Theorem 1 之推廣）形式化。
 
 我們以 ATM 框架的開源實作為基礎（Apache 2.0，broker 核心 ~2,700 LOC，含 freeze / patch-envelope / conflict-matrix snapshot 協定與 format-adapter 子系統；SDK 完成 TASK-ASP-0001~0005、AGR 完成 TASK-CID-0028~0037、Format Adapter 完成 TASK-CID-0091~0098），並以三類證據驗證：(i) **12 個確定性 fixture scenarios**（涵蓋 Cross-Regime Disjointness、Augmented Decision Rule、AGR Layer 1/2、Static Admission Closure A1′/A2）；(ii) **8-scenario AGR conflict arbitration suite**（7/7 unsafe 場景被偵測、0 false-safe regression）加 **5-scenario format-adapter dogfood**（`SHIP` 評定，含 2 個成功合併、3 個正確拒絕）；(iii) **真實 incident、受控碰撞與 multi-vendor 並行寫入證據** — `atm-abnormal-release-forensics-report.md` 記錄 TASK-CID-0040~0045 期間 5 個治理事件，含首次真實觸發 freeze 協定的 cid-shared collision；6 筆 broker collision runs（`docs/ai_atomic_framework/broker-collision-evidence/`）涵蓋早期受控雙 agent 同檔碰撞、Cursor Composer 真實寫入 `path-to-atom-map.json`，並包含關鍵的 **`parallel-0041-0042` 跨 vendor 真實任務碰撞 dogfood**（Cursor Composer 2.5 + Google Gemini Flash 3.5 在五個共同檔故意並行；broker 偵測 `blocked-cid-conflict`，wave planner 自動序列化為兩 wave，territory split 後雙卡皆 close）；MAO-0010 parallel routing benchmark 12 個 scenario 100% catch；**Team Agents Wave Mode dogfood 5/5（§4.6）**；以及 npc-brain（3 週、37 任務卡、含 10-card scope-lock contention burst 恢復、2 out-of-scope 拒絕、3 validator 捕獲、0 unrecovered admission error）。同 reporting window 內 4 個不同 vendor LLM（Anthropic / Cursor / Google / OpenAI 體系）在 ATM admission control 下共同寫入產出 ATM 自身。對照 STORM / CodeCRDT / SCF 之吞吐量 benchmark 延至 12 月完整版。
 
@@ -929,7 +930,14 @@ working-tree 上之修改刻意限縮於不同函式：
 
 ## Revision History
 
-**2026-06-21 (Current Draft, fifteenth pass — §4.5(b)(c) 與 Appendix A.1 英文段落悉數譯為論文口吻繁中):**
+**2026-06-21 (Current Draft, sixteenth pass — Abstract 貢獻計數與 §1.3 對齊修正):**
+
+- User 校正：Abstract（line 18）寫「三個核心貢獻」並列出 3 條，但 §1.3 自 sixth pass（2026-06-16, commits `31fd89ff0` / `ca59a88a9`，TASK-CID-0091~0098 Format Adapter 系列落地後）已升為 4 條，含「超越程式碼之通用化（Format Adapter + ConflictKey + Theorem 3）」。Abstract 漏更新導致兩處不一致。
+- 本 pass 將 Abstract 改為「四個核心貢獻」，並於壓縮 abstract 行格內補入第 4 條：「**超越程式碼之通用化**：以 `FileMutationAdapter` 與 `ConflictKey` 將 broker 衝突偵測核心由程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、atom-map shards），並以 Theorem 3（ConflictKey Disjointness，作為 Theorem 1 之推廣）形式化。」
+- 不變動 §1.3 本體（已為正確版本）；不重排既有三條順序。
+- 此修正對應 handoff §0.4 第 6 條紀律——「不要寫超出實作」之鏡像：實作已在 main、論文 §1.3 已對齊，但 Abstract 落後即等同於對外輸出不一致，必須補上。
+
+**2026-06-21 (fifteenth pass — §4.5(b)(c) 與 Appendix A.1 英文段落悉數譯為論文口吻繁中):**
 
 - 重申此版論文為**繁體中文版本**，英譯版留待繁中定稿後另開階段；此前數版我曾將 user 提供之英文 narrative skeleton 直接嵌入正文，違反此原則，本 pass 全數校正。
 - **§4.5(b) B-12** 英文 block quote 譯為繁中正式論文口吻：保留 `parallel-safe`、`safeToStart: true`、`TASK-TEAM-0042` 等技術 token；prose 改寫為「俟…後…」「惟…」「然而」等正式連接句法。
