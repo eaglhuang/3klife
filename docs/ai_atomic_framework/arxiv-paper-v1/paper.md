@@ -705,29 +705,29 @@ planWaves (0024) → admitWave (0026) → createTeamWaveEnvelope (0025)
 
 ### 4.7 CID Stability and Versioning (✅ Capsule CID Verification Complete)
 
-User-reported implementation (2026-06-11) of CID hardening (§3.3, Definition 4):
-- Capsule CID formula: fixed-field JSON + brotli + SHA-256 + base64url encoding
-- Verification harness: `scripts/validate-atom-id-to-cid.ts` 
-- Registry: 104 atom → CID mappings verified, 33 placeholder entries flagged (expected for atoms extracted from legacy code without full source)
-- Test coverage: `packages/core/src/registry/__tests__/atom-capsule.test.ts` validates:
-  - CID stability (same bundle → same CID)
-  - CID mismatch on content change (source/schema/policy modification → new CID)
-  - Tamper detection (modified payload → hash mismatch)
-- Status: ✅ Passes `node --strip-types scripts/validate-atom-id-to-cid.ts`, `node --strip-types scripts/atom-id-to-cid-backfill.ts --write`, `git diff --check` clean.
+使用者回報之 CID hardening 實作（2026-06-11，§3.3、Definition 4）：
+- Capsule CID 公式：fixed-field JSON + brotli + SHA-256 + base64url 編碼
+- 驗證工具：`scripts/validate-atom-id-to-cid.ts`
+- Registry：104 筆 atom → CID 映射通過驗證，33 筆 placeholder 條目被標記（預期情形——係自無完整原始碼之 legacy code 中抽取之原子）
+- 測試覆蓋：`packages/core/src/registry/__tests__/atom-capsule.test.ts` 驗證
+  - CID 穩定性（同一 bundle → 同一 CID）
+  - 內容變動之 CID 失配（source / schema / policy 變更 → 新 CID）
+  - 篡改偵測（payload 經修改 → hash 失配）
+- 狀態：✅ 通過 `node --strip-types scripts/validate-atom-id-to-cid.ts`、`node --strip-types scripts/atom-id-to-cid-backfill.ts --write`、`git diff --check` 乾淨。
 
 ---
 
 ## 5. Limitations and Roadmap
 
-This vision paper establishes the formal mechanisms (Definitions 1–4, Theorems 1–2, Algorithms 1–2, Augmented Decision Rule) and validates them through the 12-scenario benchmark harness (§4.2) plus the npc-brain 3-week adoption study (§4.3). **What this paper does not include:**
+本 vision paper 建立形式機制（Definitions 1–4、Theorems 1–2、Algorithms 1–2、Augmented Decision Rule），並透過 12-scenario benchmark harness（§4.2）及 npc-brain 三週採用研究（§4.3）加以驗證。**本論文未涵蓋之內容：**
 
-- **Comparative performance benchmarks** against STORM / CodeCRDT / Semantic Consensus / MPAC on shared task corpora — these require porting baselines and collecting wall-clock + token-cost data; deferred to the December 2026 full paper.
-- **對 STORM 之吞吐量對照** — end-to-end 同檔並行寫入碰撞已 field-recorded（§4.5 共 6 筆 runs，含 multi-vendor `parallel-0041-0042` real-task dogfood），但相對 STORM 風格 file-level OCC 的吞吐量 / overhead 在 load 下的對比仍延至上述對照工作負載。`json-record` adapter 路徑已有跨 vendor 真實 collision 紀錄；`compose.ts` 程式碼原子路徑（JS / Python）仍為 mechanism-only（TASK-CID-0019 + AGR 7/7 catch），待後續累積對應 multi-vendor 真實 runs。
-- **Statistical evaluation on large-scale multi-language corpora** — npc-brain (3 weeks, single language family) demonstrates correctness; we need 10× scale to make confidence-bounded throughput claims.
-- **Cross-language atom identity** — §3.9 open problem A3; not resolved here.
-- **CID schema-version migration during active intents** — §3.9 open problem; current `schema_version` field prevents future collisions but does not address mid-migration transitions.
+- **與 STORM / CodeCRDT / Semantic Consensus / MPAC 之比較性效能 benchmark**——須移植 baseline 並蒐集 wall-clock 與 token-cost 資料；延至 2026 年 12 月之 full paper。
+- **對 STORM 之吞吐量對照**——end-to-end 同檔並行寫入碰撞已 field-recorded（§4.5 共 6 筆 runs，含 multi-vendor `parallel-0041-0042` real-task dogfood），惟相對於 STORM 風格 file-level OCC 之吞吐量 / overhead 在 load 下之對比，仍待上述對照工作負載建立後完成。`json-record` adapter 路徑已有跨 vendor 真實 collision 紀錄；`compose.ts` 程式碼原子路徑（JS / Python）仍屬 mechanism-only（TASK-CID-0019 + AGR 7/7 catch），待後續累積對應之 multi-vendor 真實 runs。
+- **於大規模多語料庫之統計評估**——npc-brain（三週、單一語言家族）已示範正確性；建立具信賴區間之 throughput 主張需擴大至 10 倍規模。
+- **跨語言原子身份**——§3.9 open problem A3，於本文未解決。
+- **CID schema-version 遷移於 active intent 期間之處理**——§3.9 open problem；當前之 `schema_version` 欄位可防範未來碰撞，惟並未處理遷移過程中之 transition。
 
-**What is already implemented and validated (no longer in the roadmap):**
+**已實作且通過驗證者（不再列於 roadmap）：**
 
 - ✅ Atom + Atom Map formalization (Definitions 1–2) — `packages/core/src/registry/`
 - ✅ Two-tier CID (Definitions 3–4) — `candidate-bridge.ts`, `atom-capsule.ts`, hardened in commit `13b17ffc`
@@ -746,9 +746,9 @@ This vision paper establishes the formal mechanisms (Definitions 1–4, Theorems
 - ✅ 12-scenario AGR fixture suite — CID-0037
 - ✅ broker collision evidence persistence — `3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/`，含 `parallel-0041-0042` 跨 vendor 真實任務 dogfood
 
-**Evaluation roadmap:**
-- ✅ **Vision paper (current, June 2026):** mechanism design + benchmark-validated implementation correctness
-- 🔜 **Full paper (December 2026, ICSE/FSE submission):** comparative evaluation against STORM / CodeCRDT / SCF; multi-adopter scale-out study; MAO multi-agent orchestration layer evaluation. As of 2026-06-15, MAO is partially shipped (`freeze.ts`, `patch-envelope.ts`, `conflict-matrix.ts`, route-context lifecycle — TASK-MAO-0006~0009) with a simulator benchmark (TASK-MAO-0010) and Team Agents Wave Mode (TASK-MAO-0023~0034, §3.7/§6.4) pending. See [`multi-agent-orchestration/MAO多AI並行治理計畫書.md`](https://github.com/eaglhuang/3KLife/blob/main/docs/ai_atomic_framework/multi-agent-orchestration/MAO%E5%A4%9AAI%E4%B8%A6%E8%A1%8C%E6%B2%BB%E7%90%86%E8%A8%88%E7%95%AB%E6%9B%B8.md) and its sequel `MAO多AI並行治理計畫書2.md` (Team Agents Wave Mode).
+**評估路線圖：**
+- ✅ **Vision paper（當前，2026 年 6 月）：** 機制設計 + benchmark-validated 之實作正確性
+- 🔜 **Full paper（2026 年 12 月，投稿 ICSE / FSE）：** 對 STORM / CodeCRDT / SCF 之比較性評估；多採用者之擴大研究；MAO 多代理 orchestration 層之評估。截至 2026-06-15，MAO 部分已交付（`freeze.ts`、`patch-envelope.ts`、`conflict-matrix.ts`、route-context lifecycle——TASK-MAO-0006~0009），simulator benchmark（TASK-MAO-0010）與 Team Agents Wave Mode（TASK-MAO-0023~0034, §3.7 / §6.4）待續。詳見 [`multi-agent-orchestration/MAO多AI並行治理計畫書.md`](https://github.com/eaglhuang/3KLife/blob/main/docs/ai_atomic_framework/multi-agent-orchestration/MAO%E5%A4%9AAI%E4%B8%A6%E8%A1%8C%E6%B2%BB%E7%90%86%E8%A8%88%E7%95%AB%E6%9B%B8.md) 與其續篇 `MAO多AI並行治理計畫書2.md`（Team Agents Wave Mode）。
 
 ---
 
@@ -756,35 +756,35 @@ This vision paper establishes the formal mechanisms (Definitions 1–4, Theorems
 
 ### 6.1 Why Adapter-Guided, Not AST-First?
 
-The natural question is: why not require every adapter to expose a full static analysis engine (AST, type inference, data-flow graph)?
+一個自然之問題為：何以不要求每個 adapter 提供完整之靜態分析引擎（AST、type inference、data-flow graph）？
 
-**Engineering cost.** Building a production-grade AST analyzer is non-trivial per language. Python has `ast` in stdlib, but `ast.parse` doesn't resolve decorators or metaclass magic. TypeScript has the compiler API, but integrating it into an adapter adds ~500 LOC of bridging code. Go has a parser package, but importing it adds runtime dependency. A "universal AST + unified IR" layer (the dream) is infeasible across 10+ languages in constant evolution.
+**工程成本.** 建構 production 級之 AST analyzer 於每一語言皆非微不足道之工作。Python 雖於標準函式庫提供 `ast`，但 `ast.parse` 無法解析 decorator 或 metaclass magic；TypeScript 雖有 compiler API，惟將其整合入 adapter 須新增約 500 LOC 之 bridging code；Go 雖有 parser package，惟引入後即增加 runtime 相依性。所謂「universal AST + unified IR」層之夢想，對於十餘種持續演化中之語言並不可行。
 
-**Diminishing returns.** Adapters using lightweight detection (regex / compiler API without full semantic inference) already pass the §4.3 adoption study without observed false rejections at function-level granularity. We do not present quantitative confidence-vs-effort numbers — making such a claim responsibly requires controlled comparison, which we defer to §5. The qualitative observation is that the marginal cost of adding full static analysis (AST + type inference + data-flow) per language is large, and the static/dynamic split (§3.5, A2) routes the residual risk to validators rather than requiring the adapter to chase it.
+**邊際遞減.** 採輕量偵測（regex / 無完整語意推論之 compiler API）之 adapter 已可於 §4.3 採用研究中通過，於 function 粒度上未觀察到 false rejection。我們不於本文呈現量化之 confidence-vs-effort 數字——若要負責任地提出此類主張，須輔以受控比較，此項延至 §5。質性之觀察為：於每一語言補上完整靜態分析（AST + type inference + data-flow）之邊際成本甚高，而 static / dynamic 之切分（§3.5, A2）將剩餘風險路由予 validator，無須強求 adapter 一併承擔。
 
-**Scope preservation.** ATM's core role is *admission* (decide which writes can run in parallel), not *analysis* (understand all program semantics). By delegating detection to adapters and outsourcing semantic verification to validators (test/typecheck/lint), ATM stays a governance framework, not a language-understanding framework.
+**範圍保留.** ATM 之核心角色為 *admission*（決定何者可並行執行），而非 *analysis*（理解一切程式語意）。藉由將偵測委派予 adapter、將語意驗證外包予 validator（test / typecheck / lint），ATM 始終保持為一治理框架，而非一語言理解框架。
 
 ### 6.2 When Does Adapter-Guided Fail?
 
-Adapter-guided atomization degrades when:
+Adapter-guided atomization 於下列情境會退化：
 
-1. **Metaprogramming-heavy code** (Python metaclass, Ruby `method_missing`, JavaScript Proxy). Adapters can emit candidate symbols, but the actual executed code may differ. Remedy: evidence validators catch the discrepancy.
+1. **Metaprogramming 密集之程式碼**（Python metaclass、Ruby `method_missing`、JavaScript Proxy）。Adapter 可發出候選符號，惟實際執行之程式碼可能與之有別。緩解策略：evidence validator 捕捉差異。
 
-2. **Cyclic module dependencies or self-referential atoms.** Broker's scope-lock prevents concurrent writes to the same atom, but doesn't prevent A writes X (which imports B), B writes Y (which imports X), if both are `parallel-safe`. Remedy: dependency-graph validator catches import cycles.
+2. **循環模組相依或自指原子.** Broker 之 scope-lock 可阻擋對同一原子之並行寫入，惟若 A 寫入 X（其 import B），B 寫入 Y（其 import X），且二者皆為 `parallel-safe`，則無法阻擋。緩解策略：相依圖 validator 捕捉 import cycle。
 
-3. **Adapter version mismatch.** If the Python adapter is upgraded between submissions from two agents, `canon_sym` policy might change → same symbol produces different CIDs → false negatives (undetected conflicts). Remedy: broker enforces a single adapter version per admission cycle (§3.9, open problem).
+3. **Adapter 版本失配.** 若 Python adapter 於兩個 agent 之提交之間被升級，`canon_sym` 策略可能變動 → 同一符號產生不同 CID → false negative（未偵測之衝突）。緩解策略：broker 於單一 admission cycle 內強制使用單一 adapter 版本（§3.9, open problem）。
 
 ### 6.3 Open Questions and Future Work
 
-- **Cross-language atom identity (A3, §3.9):** If a TS API handler and Python backend handler are claimed to implement the same logical contract, how should the broker track that relationship? Current answer: out of scope (Theorem 1 only covers disjoint regimes). Future: extend manifest to support cross-regime aliases.
+- **跨語言原子身份（A3，§3.9）：** 若一個 TS API handler 與一個 Python backend handler 宣稱實作同一邏輯契約，broker 該如何追蹤此關係？目前之答覆：範圍外（Theorem 1 僅涵蓋 disjoint regime）。未來：擴充 manifest 以支援 cross-regime alias。
 
-- **CID schema versioning and migration (§3.9):** When Candidate CID formula changes (e.g., `||` → canonical JSON), how do we avoid collisions with active intents? Current plan: broker dual-compute during migration window, or flag-day drain. Deferred to implementation roadmap.
+- **CID schema 版本控制與遷移（§3.9）：** 當 Candidate CID 公式變動時（例如自 `||` 改為 canonical JSON），如何避免與 active intent 之碰撞？當前計畫：於遷移窗口內 broker 雙重計算，或設置 flag-day 排空。延至實作 roadmap。
 
 - **Multi-Agent Orchestration (MAO) layer：** broker 之上的操作層（Root Router / Route Context / Patch Envelope）目前已大幅交付：MAO-0001/0002/0003（Route Context contract + lifecycle CLI）、MAO-0007/0008/0009（steward arbitration flow，含 4-verdict 與 human-required fail-closed gate）、MAO-0010（12-scenario parallel routing benchmark，100% catch、0 false-safe、0 expectation failures；`docs/reports/mao-parallel-routing-benchmark.md`）、**MAO-0030~0034 Team Agents Wave Mode 全數交付，含 5/5 dogfood §4.7**、以及陸續延伸的 MAO-0039~0042、0050~0052 等卡。剩餘工作集中於 runner Broker 系列（MAO-0011~0016）與 distributed consensus 模擬。MAO 為使單一 worktree 上多 agent 並行成為可能的操作層補完，並非另一套並發控制機制。
 
-- **Type-aware extensions:** Integrating T-RDT or similar type-preserving CRDT would strengthen semantic guarantees for statically-typed languages (TS, Go). Out of current scope.
+- **Type-aware 擴展：** 整合 T-RDT 或類似之 type-preserving CRDT，可為靜態型別語言（TS、Go）強化語意保證。範圍外。
 
-- **Cross-file slicing (LSP integration):** Tracking read/write sets across file boundaries requires language-server integration. Candidate for future phase.
+- **跨檔案 slicing（LSP 整合）：** 追蹤跨檔案邊界之 read / write set 須整合 language server，列為未來階段之候選工作。
 
 - **Cross-model multi-vendor co-development（早期實證）：** ATM 治理在 reporting window 內已有四個不同 vendor 的 LLM 在 production 共同產出 ATM 自身代碼：`claude-code-opus-4-7`（Anthropic）、`cursor-composer-2.5`（Cursor）、`antigravity-gemini-3.5-flash`（Google）、`codex-captain-continuation`（OpenAI 體系）。`parallel-0041-0042` dogfood（§4.5）是 Cursor Composer 與 Google Gemini Flash 在共享 worktree 上的真實任務 collision 紀錄。獨立第二模型 verifier（如 AGREE / DISAGREE / ABSTAIN 加權）作為刻意冗餘的審查機制仍延至受控評估；目前已建立的是「多 vendor 在同一 admission control 下共同寫入 production」這個更基本的事實。
 
@@ -804,23 +804,23 @@ ATM 自身的開發過程即為本論文所述 multi-agent admission-controlled 
 
 ## 7. Conclusion
 
-Multi-agent LLM systems demand a concurrency control layer tuned to the granularity at which AI Agents naturally generate code — **function and module level**. This paper argues for Tier 2 (the function/module tier), absent from the current coordination landscape, and shows how to implement it without requiring a heavyweight universal AST engine.
+多代理 LLM 系統需要一個契合 AI Agent 自然產生程式碼之粒度——**函式與模組層級**——之並發控制層。本論文主張 Tier 2（函式 / 模組層級）為當前協調 landscape 所缺，並示範如何於不依賴一個沉重之 universal AST 引擎之前提下實作之。
 
-**Key contributions:**
+**主要貢獻：**
 
-1. **Formalization:** Atoms (Definition 1), two-tier CIDs (Definitions 3–4), deterministic admission logic (§3.4), soundness theorems under realistic assumptions (Theorem 2, A1′/A2).
+1. **形式化：** Atoms（Definition 1）、two-tier CID（Definitions 3–4）、確定性之 admission 邏輯（§3.4）、於實際假設下之 soundness theorem（Theorem 2, A1′/A2）。
 
-2. **Adapter-guided architecture:** Language adapters provide candidates at their native granularity (regex for Python, compiler API for TS, LSP for others) — no universal requirement for AST. The broker consumes these candidates and makes admission decisions based on scope, not syntax.
+2. **Adapter-guided 架構：** 各語言 adapter 以其原生粒度提供候選（Python 採 regex、TS 採 compiler API、其餘可採 LSP），不對 AST 設一致要求。Broker 消費此等候選並依範圍（而非語法）做出 admission 決策。
 
-3. **Governance-first design:** Dry-run patches, review gates, evidence validators, and rollback paths substitute for perfect static analysis. This shifts the burden from prediction to post-hoc verification, which is both more practical and more honest about the limits of static reasoning.
+3. **Governance-first 設計：** Dry-run patch、review gate、evidence validator 與 rollback path 取代完美靜態分析。此一設計將負擔自「預測」轉移至「事後驗證」，較為實用，且對靜態推理之邊界亦較為誠實。
 
 4. **開源實作，在自身開發中接受治理:** ATM 的 broker core（~2,700 LOC，含 freeze / patch-envelope / conflict-matrix / format-adapter 子系統 + Wave Mode batch admission）、SDK contract、JS / Python adapter、CID 驗證工具、4 個 format adapter（JSON-record / text-range / numeric-scalar / atom-map）皆已完整實作。驗證採多層交叉：12-scenario 確定性 fixture（§4.2）；8-scenario AGR conflict arbitration 100% catch、0 false-safe（§4.4）；5-scenario format-adapter dogfood `SHIP` 評定（§3.10）；MAO-0010 12-scenario parallel routing benchmark 100% catch、0 false-safe（§4.4）；**Team Agents Wave Mode dogfood 5/5 全通過（§4.6）**；6 筆 broker collision runs，其中含 **`parallel-0041-0042` 跨 vendor 真實任務並行碰撞 dogfood**（Cursor + Google Gemini）端到端通過 STORM 差異化貢獻（§4.5）；npc-brain 3-週採用、0 unrecovered admission error，並有真實 incident forensics 紀錄（TASK-CID-0040~0045）記錄 freeze 協定首次真實 end-to-end 觸發（§4.4）。同 reporting window 4 個不同 vendor LLM 在 ATM admission control 下共同寫入產出 ATM 自身。
 
-**Why this matters.** File-level coordination (STORM) rejects safe same-file parallelism; workflow-level coordination (SCF) requires O(n²) intent graphs with 72% false positives. Tier 2 offers a middle path: function-granularity parallelism without semantic overreach.
+**此一設計之意義.** 檔案層級協調（STORM）會拒絕安全之同檔並行；工作流層級協調（SCF）須建構 O(n²) 之 intent graph，並承擔 72% 之 false positive。Tier 2 提供一條中間路徑：函式粒度之並行，無須越界至語意層面。
 
-**Invitation to the community.** The SDK is open-source and extensible. Language communities are invited to implement their own `AtomizationPlanningAdapter` — whether via regex, LSP, compiler APIs, or custom heuristics. The framework imposes no polling consensus; each adapter can improve independently.
+**對社群之邀請.** 本 SDK 為開源且可擴展。我們邀請各語言社群實作自己之 `AtomizationPlanningAdapter`——無論採 regex、LSP、compiler API 或自訂 heuristics。本框架不要求 polling consensus；各 adapter 可獨立演進。
 
-**Limitations and next steps.** This paper validates the *mechanism* (definitions, algorithms, SDK contracts) and provides preliminary evidence of correctness. Full comparative evaluation (ATM vs STORM vs CodeCRDT on large-scale corpus) and Adaptive Granularity Refinement implementation details are deferred to a forthcoming full paper (December 2026).
+**限制與後續工作.** 本論文驗證了 *機制*（定義、演算法、SDK contract），並提供其正確性之初步證據。完整之比較性評估（ATM 對 STORM、CodeCRDT 於大規模語料庫上）與 Adaptive Granularity Refinement 之實作細節，留待即將推出之 full paper（2026 年 12 月）。
 
 ---
 
