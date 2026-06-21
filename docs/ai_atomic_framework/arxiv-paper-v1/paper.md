@@ -150,7 +150,7 @@ CoAgent 來自 SJTU IPADS（Haibo Chen 組），其核心機制 **MTPO**（Monot
 | 端到端 throughput 實證 | ~1.4× speedup vs 序列基線（內部評估） | 跨 vendor 真實任務 collision dogfood（parallel-0041-0042: Cursor Composer 2.5 + Gemini Flash 3.5），Wave Mode dogfood 5/5；**未做與 CoAgent 的 head-to-head 加速比比較** | 互有所長；同台比較列為 §5 roadmap |
 | 開源實作 | 摘要未明示倉庫；以論文評估呈現 | AI-Atomic-Framework repo 公開；12-scenario fixture suite + dogfood report 可重現 | ATM 可重現性較高 |
 
-**我們不主張 ATM 在所有面向勝過 CoAgent**。CoAgent 的 MTPO advisory 模型在「無法為每個 action 事前宣告 read/write set」的場景（典型如多輪 browser 操作、shell exec 等 side-effectful tool chain）有結構性優勢；ATM 的硬閘門模型在「可由 adapter 靜態還原候選 atom 與 surface」的程式碼合成與結構化格式編輯場景有結構性優勢。**兩者實際上指向不同的子空間**：CoAgent 是「tool-call 級 reactive concurrency control」，ATM 是「code-region 級 preventive concurrency control + 格式無關通用化」。Reviewers 將二者視為同質競品會誤判場景定位。
+**我們不主張 ATM 在所有面向勝過 CoAgent**。CoAgent 的 MTPO advisory 模型在「無法為每個 action 事前宣告 read/write set」的場景（典型如多輪 browser 操作、shell exec 等 side-effectful tool chain）有結構性優勢；ATM 的硬閘門模型在「可由 adapter 靜態還原候選 atom 與 surface」的程式碼合成與結構化格式編輯場景有結構性優勢。**兩者實際上指向不同的子空間**：CoAgent 屬「tool-call 級 reactive concurrency control」，ATM 則為「code-region 級 preventive concurrency control + 格式無關通用化」。若將二者等同視之而做同質競品比較，將誤判其各自適用之場景邊界。
 
 直接 head-to-head 吞吐量 / token cost 對照是 ATM 公開的最大未完工項，列入 §5 評估路線圖。
 
@@ -575,7 +575,7 @@ Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six t
 - (iv) Row-level merge（format adapter §3.10）在 production 治理元資料 `path-to-atom-map.json` 上能 brokered apply；
 - (v) §3.4 main contribution（CID-disjoint 同檔並行）以 **multi-vendor LLM 真實任務**完成 end-to-end 實證。
 
-**Foundation evidence 的限制**：上述 6 筆 runs + parallel-0041-0042 共同證明 broker apply / wave planner / territory split 在 production 路徑上可用，但它們**沒有**直接回答以下 reviewer 必問的兩個問題：(A) 當檔案已被正式 atomization 覆蓋後，broker 第二層虛擬細化是否還有額外價值？(B) admission 階段是否真的能阻擋同 atom 寫入？接下來 (b)~(d) 三類證據針對這兩問題提供誠實答覆。
+**Foundation evidence 之適用範圍**：上述 6 筆 runs 與 parallel-0041-0042 共同證明 broker apply、wave planner 與 territory split 在 production 路徑上之可用性，然其**並未**直接回答以下兩個關鍵問題：(A) 當檔案已被正式 atomization 覆蓋後，broker 之第二層虛擬細化是否仍提供額外價值？(B) admission 階段是否確能阻擋同 atom 之寫入？以下 (b)~(d) 三類證據針對此二問題提供誠實之回應。
 
 #### 4.5(b) B-12 controlled field collision — apply-phase honest case (2026-06-20)
 
@@ -628,7 +628,7 @@ Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six t
 
 > `close-orchestration.ts` 之案例顯示，ATM 之原子化並不止於檔案層級或檔案家族層級之粗粒度。即便該檔案已為多個正式 atom map 所覆蓋，broker 仍能於同檔範圍內進一步切分為更細之虛擬原子——對於落於不相交 function-scoped 虛擬原子之寫入予以 admit，對於落於同一虛擬原子之寫入則予以 reject。
 
-這直接回答了 §4.5 開頭的 reviewer 問題 (A)：**formal atomization 不是假的，且 broker 的 second-layer segmentation 在 formal atomization 之上仍有額外價值**。
+此一結果直接回應 §4.5 開頭所提出之關鍵問題 (A)：**formal atomization 並非空有其名，且 broker 之 second-layer segmentation 在 formal atomization 之上仍能提供額外價值**。
 
 **Positive same-file field evidence**（與上述 pre-patch scanner 之 simulated 結果分立）：
 
@@ -853,7 +853,7 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 #### 經過濾之 evidence bundle
 
-為使 artifact 集合具備 reviewer 可審計之性質，並避免被已退役之 setup trace 所汙染，本研究另行產生一份僅包含最終正向配對之 broker evidence bundle：
+為使 artifact 集合具備獨立可審計與可重現之性質，並避免被已退役之 setup trace 所汙染，本研究另行產生一份僅包含最終正向配對之 broker evidence bundle：
 
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.md`
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.json`
@@ -930,7 +930,21 @@ working-tree 上之修改刻意限縮於不同函式：
 
 ## Revision History
 
-**2026-06-21 (Current Draft, sixteenth pass — Abstract 貢獻計數與 §1.3 對齊修正):**
+**2026-06-21 (Current Draft, seventeenth pass — 移除 paper body 中直接稱呼 reviewer 之 meta-voice):**
+
+User 校正：學術論文 body 直接寫「Reviewers / reviewer」會降低 credibility，屬業餘記號。本 pass 將 4 處 paper body 中直接稱呼讀者 / reviewer 之 meta-voice 改寫為正式學術中性 register：
+
+- **§2.7 結語**（CoAgent 對照段末句）：「Reviewers 將二者視為同質競品會誤判場景定位」→「若將二者等同視之而做同質競品比較，將誤判其各自適用之場景邊界。」
+- **§4.5 Foundation evidence 段**：「沒有直接回答以下 reviewer 必問的兩個問題」→「並未直接回答以下兩個關鍵問題」；段落小標「Foundation evidence 的限制」→「Foundation evidence 之適用範圍」。
+- **§4.5(c) 結語**：「這直接回答了 §4.5 開頭的 reviewer 問題 (A)」→「此一結果直接回應 §4.5 開頭所提出之關鍵問題 (A)」。
+- **Appendix A.1 經過濾之 evidence bundle 段**：「為使 artifact 集合具備 reviewer 可審計之性質」→「為使 artifact 集合具備獨立可審計與可重現之性質」。
+
+未動處（皆為合理技術或審計脈絡）：
+
+- §3.7「validator/reviewer Team Agents 角色」屬 ATM 架構中的 code role 名稱，非對讀者說話。
+- Revision History 內部對「reviewer-defense rewrites」「reviewer-mode audit」等紀錄屬 audit trail，非論文 body。
+
+**2026-06-21 (sixteenth pass — Abstract 貢獻計數與 §1.3 對齊修正):**
 
 - User 校正：Abstract（line 18）寫「三個核心貢獻」並列出 3 條，但 §1.3 自 sixth pass（2026-06-16, commits `31fd89ff0` / `ca59a88a9`，TASK-CID-0091~0098 Format Adapter 系列落地後）已升為 4 條，含「超越程式碼之通用化（Format Adapter + ConflictKey + Theorem 3）」。Abstract 漏更新導致兩處不一致。
 - 本 pass 將 Abstract 改為「四個核心貢獻」，並於壓縮 abstract 行格內補入第 4 條：「**超越程式碼之通用化**：以 `FileMutationAdapter` 與 `ConflictKey` 將 broker 衝突偵測核心由程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、atom-map shards），並以 Theorem 3（ConflictKey Disjointness，作為 Theorem 1 之推廣）形式化。」
