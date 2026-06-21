@@ -637,7 +637,7 @@ Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six t
 
 論文範圍說明：本段 evidence 為 *admission / team-run positive evidence*；是否進一步在 apply-phase 完成 brokered commit 屬於另一條獨立敘述，不在本段範圍。Run id、bundle 路徑、retired-run 清理細節皆置於對應說明檔，不入正文。
 
-**對應說明檔**：`docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md`（含 authoritative run ids 與 filtered evidence bundle pointer）。
+**對應說明檔與 paper-citable artifact**：runtime 細節（authoritative run ids、filtered evidence bundle、retired duplicate trace 清理、collector hygiene）見 **Appendix A.1**；補充技術說明見 `docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md`。
 
 #### 4.5(d) `integration.ts` — secondary reinforcement case
 
@@ -823,6 +823,82 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ---
 
+## Appendix A. Artifact Notes
+
+### A.1 Positive Same-File Multi-Agent Concurrency on `close-orchestration.ts`
+
+This note records the primary positive same-file field artifact used to support the paper's concurrency claim. The target file was `packages/cli/src/commands/taskflow/close-orchestration.ts`, and both agents operated concurrently on the same `main` working tree under the standard ATM task-claim and team-start workflow.
+
+The two authoritative lanes were defined as follows:
+
+- `TASK-COLLIDE-CLOSE-ORCH-A`: modification constrained to `buildClosebackPlan`
+- `TASK-COLLIDE-CLOSE-ORCH-B`: modification constrained to `resolveClosebackPlanningPath`
+
+Thus, both agents targeted the same TypeScript source file, but distinct function-level regions within that file. In the final authoritative team-run records, both lanes were admitted by the broker as `parallel-safe` on the `direct-brokered` lane.
+
+#### Authoritative runtime records
+
+The authoritative runtime records for this case are:
+
+- Lane A: `team-53e5bae34958`
+- Lane B: `team-0c9db84467a6`
+
+These records are stored at:
+
+- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-53e5bae34958.json`
+- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-0c9db84467a6.json`
+
+Both records report the same qualitative outcome: broker admission on the `direct-brokered` lane with verdict `parallel-safe`.
+
+#### Filtered evidence bundle
+
+To make the artifact set reviewer-auditable while avoiding contamination from superseded setup traces, we generated a filtered broker evidence bundle containing only the final positive pair:
+
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.md`
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.json`
+
+In that filtered bundle, the run index contains exactly two authoritative entries corresponding to the two lanes above. This filtered representation is the intended paper-citable artifact for the positive same-file case.
+
+#### Functional boundary of the edits
+
+The working-tree modifications were intentionally constrained to distinct functions:
+
+- Lane A remained within `buildClosebackPlan`
+- Lane B remained within `resolveClosebackPlanningPath`
+
+This boundary matters for interpretation. The positive outcome cannot be explained by coarse file-level separation, since both agents targeted the same file. Rather, the artifact is consistent with the paper's claim that explicit atomization, combined with a second-layer in-file segmentation mechanism, can preserve safe concurrency even under same-file multi-agent editing.
+
+#### Retired duplicate setup trace
+
+During setup, an earlier duplicate B-lane runtime record was produced:
+
+- `team-999a0524a589`
+
+This record was not used as part of the authoritative positive pair. To prevent ambiguity in downstream evidence collection, it was retired to:
+
+- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/_retired/team-999a0524a589.json`
+
+with explanatory documentation at:
+
+- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/_retired/README.md`
+
+This retirement step did not alter the broker registry, did not modify source patches, and did not affect the two authoritative runtime records. Its role was purely evidentiary: to distinguish the final paper-cited positive pair from an earlier superseded duplicate trace.
+
+#### Collector behavior and artifact hygiene
+
+Because retired traces may otherwise reappear in aggregate task-artifact summaries, the local evidence collectors were adjusted so that active evidence scans treat only the top-level JSON files in `team-runs/` as active runtime records, excluding quarantined traces under `_retired/`. The relevant tooling is:
+
+- `C:/Users/User/AI-Atomic-Framework/scripts/collect-broker-evidence.ts`
+- `C:/Users/User/AI-Atomic-Framework/scripts/capture-broker-evidence.ts`
+
+This change is an artifact-hygiene measure rather than a semantic change to broker behavior.
+
+#### Interpretation scope
+
+This artifact should be interpreted as positive same-file admission / team-run evidence. It demonstrates that two live agents from different vendor families can concurrently target different function-level regions of the same source file and still be admitted as `parallel-safe` under broker-governed routing. Any later apply-phase, merge-phase, or commit-phase outcome should be described separately rather than inferred from this artifact alone.
+
+---
+
 ## References（參考文獻）
 
 > **References — 2026-06-19 verification pass**：所有 arXiv ID 已逐條 fetch arxiv.org 對齊標題與作者；Anonymous 條目已去匿名化（#8、#9）；#3 作者修正（先前誤標 Geng & Neubig）。
@@ -853,7 +929,20 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ## Revision History
 
-**2026-06-21 (Current Draft, thirteenth pass — close-orchestration.ts positive same-file field evidence added; framing rules captured):**
+**2026-06-21 (Current Draft, fourteenth pass — Appendix A introduced; A.1 close-orchestration positive same-file artifact note formalized):**
+
+- **新增 Appendix A. Artifact Notes**（位於 §7 Conclusion 與 References 之間）：論文首個 appendix 章節，承載 paper-citable 但不適合 §4 正文的 runtime 細節。
+- **A.1 Positive Same-File Multi-Agent Concurrency on `close-orchestration.ts`** 完整寫入：
+  - 兩條 authoritative lane (`TASK-COLLIDE-CLOSE-ORCH-A` / `-B`) 與 lane→function 對應
+  - Authoritative runtime records `team-53e5bae34958` / `team-0c9db84467a6` 與絕對路徑
+  - Filtered evidence bundle（避免 superseded setup trace 污染 reviewer audit）
+  - 函數邊界詮釋：positive outcome 不可由 coarse file-level 解釋，因兩 lane 同檔
+  - Retired duplicate setup trace `team-999a0524a589` 處理紀錄（明示「不改 broker registry、不改 source patches」）
+  - Collector behavior 變動為 artifact-hygiene 而非 semantic 變動
+  - Interpretation scope: admission / team-run positive evidence 限定；apply / merge / commit phase 須另述
+- **§4.5(c) 對應說明檔短引升級**：原本只指向 `close-orchestration-layered-merge-evidence.md`，現在主指 Appendix A.1 為 paper-citable artifact，補充技術說明保留指向 evidence doc。
+
+**2026-06-21 (thirteenth pass — close-orchestration.ts positive same-file field evidence added; framing rules captured):**
 
 - **§4.5(c) 加入 Positive same-file field evidence 段**：在原本的 broker-aware pre-patch scanner *simulated* 結果之外，新增一個 *live* 同檔多 agent 跨 vendor family 並行 admission 案例的正文段。兩個 lane 分別寫 `buildClosebackPlan` 與 `resolveClosebackPlanningPath`，皆於 `direct-brokered` lane 取得 `parallel-safe` admission verdict。正文範圍明示限定 admission / team-run positive evidence，不主張 apply-phase brokered commit 已完成。
 - **正文寫法刻意克制**：run id、bundle 路徑、retired-run 清理細節皆下沉到 `broker-collision-evidence/close-orchestration-layered-merge-evidence.md` 新增的「Field evidence artifact note」區段，避免主文被 runtime 細節稀釋。
