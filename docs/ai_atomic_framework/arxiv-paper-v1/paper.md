@@ -171,7 +171,7 @@ Tier 2 在 2026-06 才開始有 ATM 與 CoAgent 兩個獨立提案；二者分�
 
 ### 2.9 Concurrency Control Beyond Code: OT, CRDTs, and Databases
 
-The `ConflictKey`-based generalization proposed in §3.10 draws on a much older lineage of concurrency control for shared structured data. **Operational Transformation (OT)** [Ellis & Gibbs, 1989] and **CRDTs** [Shapiro et al., 2011] address convergence for collaborative editing of documents and structured data more broadly than source code; database **two-phase locking** and **optimistic concurrency control** [Kung & Robinson, 1981] address conflict detection for record-level updates via read/write-set disjointness — structurally analogous to our $\mathsf{record}$-scope `ConflictKey`. ATM's Definition 5 (§3.10) can be read as restating this OCC tradition's read/write-set disjointness check in a format-agnostic vocabulary that spans code atoms, JSON records, and scalar fields under one broker; we do not claim novelty over OCC itself, only over its uniform application across heterogeneous artifact types within a single multi-agent admission point.
+§3.10 所提出之 `ConflictKey` 通用化奠基於一條歷史更為悠久的「共享結構化資料並發控制」研究脈絡。**Operational Transformation (OT)**[Ellis & Gibbs, 1989] 與 **CRDT**[Shapiro et al., 2011] 處理文件與結構化資料協作編輯之 convergence，其涵蓋範圍較程式碼源碼為廣；資料庫之 **two-phase locking** 與 **optimistic concurrency control**[Kung & Robinson, 1981] 則處理 record-level update 之衝突偵測，其手段為 read / write set 之 disjointness——此與本文 $\mathsf{record}$-scope `ConflictKey` 在結構上相互類比。ATM 之 Definition 5（§3.10）可視為將該 OCC 傳統之 read / write set disjointness 檢查，重述為一個 format-agnostic 之詞彙系統，於單一 broker 之下涵蓋 code atom、JSON record 與 scalar field；我們不主張對 OCC 本身有任何新穎性，僅主張其於單一多代理 admission point 下對異質產物類型之統一應用。
 
 ---
 
@@ -230,7 +230,7 @@ where
 - $\tau \in \mathrm{Tier} = \{\mathsf{foundation}, \mathsf{governed}, \mathsf{standard}, \mathsf{experimental}\}$
 - $H = (h_{\mathrm{spec}}, h_{\mathrm{code}}, h_{\mathrm{test}}) \in \mathrm{Hash}^3$ — `hashLock`
 
-The status component $\psi$ follows a state machine $\mathsf{draft} \to \mathsf{validated} \to \mathsf{active} \rightleftarrows \mathsf{transitioning} \to \mathsf{deprecated} \to \mathsf{expired}$, with $\mathsf{quarantined}$ reachable from any state (`status-machine.ts`).
+狀態分量 $\psi$ 依循下列狀態機運作：$\mathsf{draft} \to \mathsf{validated} \to \mathsf{active} \rightleftarrows \mathsf{transitioning} \to \mathsf{deprecated} \to \mathsf{expired}$；任一狀態皆可進入 $\mathsf{quarantined}$（`status-machine.ts`）。
 
 **Definition 2 (Atom Map).**
 An atom map $M$ is a 4-tuple $M = \langle \mathit{id}, V, E, R \rangle$ where $\mathit{id}$ matches `^ATM-MAP-\d{4}$`, $V \subseteq \mathrm{AtomId}$ are member atoms, $E \subseteq V \times V \times \mathrm{EdgeKind}$ are typed edges with $\mathrm{EdgeKind} = \{\mathsf{data\text{-}flow}, \mathsf{control\text{-}flow}, \mathsf{event\text{-}flow}, \mathsf{validation}, \mathsf{fallback}, \mathsf{side\text{-}effect}, \mathsf{rollback}\}$, and $R \subseteq V$ ($R \neq \emptyset$) are entrypoints.
@@ -252,7 +252,7 @@ class Baz { method() {} }                       // "method" or "Baz.method" or "
 def baz(): ...   # symbol "baz" in source, but the runtime callable is cache(baz)
 ```
 
-We require each adapter to expose a deterministic, idempotent canonicalization function
+我們要求每一 adapter 提供一個確定性、idempotent 之 canonicalization 函式
 
 $$\mathrm{canon\_sym}: \mathrm{RawSymbol} \to \mathrm{CanonicalSymbol}$$
 
@@ -295,7 +295,7 @@ A third identifier exists in the codebase (`team-lane.ts`, a deterministic slug 
 
 ### 3.4 The CID Broker: Admission Algorithm ✅
 
-The broker (`packages/core/src/broker/`, ~1,932 LOC) consumes a `WriteIntent` per agent — a set of `atomRefs` (each carrying $\mathrm{CID}_{\mathrm{candidate}}$), `targetFiles`, and declared `sharedSurfaces` (generators / projections / registries / validators / artifacts) — and returns one of four verdicts (`packages/core/src/broker/decision.ts`, `calculateBrokerDecision`):
+Broker（`packages/core/src/broker/`, ~1,932 LOC）對每個 agent 消費一個 `WriteIntent`——一組 `atomRefs`（其每一筆攜帶 $\mathrm{CID}_{\mathrm{candidate}}$）、`targetFiles`、以及宣告之 `sharedSurfaces`（generator / projection / registry / validator / artifact）——並回傳下列四種 verdict 之一（`packages/core/src/broker/decision.ts`, `calculateBrokerDecision`）：
 
 1. **`blocked-cid-conflict`** — two intents reference the same atom with conflicting writes
 2. **`blocked-shared-surface`** — two intents declare overlapping shared surfaces
@@ -304,7 +304,7 @@ The broker (`packages/core/src/broker/`, ~1,932 LOC) consumes a `WriteIntent` pe
 
 **Theorem 1 (Cross-Regime Disjointness).** ✅/🔷 *If two candidates $c$ (from adapter $\mathcal{A}$) and $c'$ (from adapter $\mathcal{A}'$, $\mathcal{A} \neq \mathcal{A}'$) belong to disjoint language regimes — i.e., the project's directory layout convention assigns each adapter a disjoint root directory $D_{\mathcal{A}} \cap D_{\mathcal{A}'} = \emptyset$ — then $\mathrm{sourcePaths}(c) \cap \mathrm{sourcePaths}(c') = \emptyset$, and the broker's file-overlap check trivially yields `parallel-safe`.*
 
-This is a direct consequence of Definition 3 (sourcePaths are part of the canon input) plus the directory-separation convention; we state it explicitly because it is the formal basis for claiming that ATM's admission decision composes safely across heterogeneous multi-language agent fleets *without* requiring any cross-language symbol mapping (cf. §3.9, A3). The theorem does **not** hold for polyglot single files (e.g., embedded SQL/JS in a single source file); such cases fall back to within-file CID-disjointness checks and, if those fail, to AGR (§3.6).
+此結果為 Definition 3（sourcePaths 屬 canon 輸入之一部分）加上目錄分離慣例之直接後果；我們予以明示陳述，蓋其為以下主張之形式基礎：ATM 之 admission 決策能於異質之多語言 agent 群間安全組合，且 *無須* 任何跨語言符號映射（參 §3.9, A3）。本定理**不**適用於 polyglot 單檔（例如於單一原始檔內嵌入 SQL / JS）；此類情境回退至檔內 CID disjointness 檢查，若仍失敗則交由 AGR 處理（§3.6）。
 
 **Augmented Decision Rule (Dependency-Aware) ✅ (CID-0032, `16533023`).** The four-verdict algorithm above is augmented with a read-dependency check: let $D(I)$ be the set of atoms intent $I$ declares as *read* dependencies, and $R(I')$ the set of atoms a concurrent intent $I'$ *writes*. Then
 
@@ -323,7 +323,7 @@ i.e., if $I$ reads an atom that $I'$ is concurrently writing, $I$ must be serial
 
 **Theorem 2 (Static Admission Closure).** *Under (A1′) and (A2), a* `parallel-safe` *verdict implies the absence of write-write conflicts among the statically-determinable portions of the concurrent agents' patches. Conflicts arising solely from dynamic effects outside (A1′) are not excluded by this theorem.*
 
-We deliberately title this **closure** rather than **soundness** to avoid overloading the latter term. "Soundness" in the program-analysis sense would require that no conflict whatsoever exists between admitted intents — a claim no static system can defend in the presence of reflection or metaprogramming. What Theorem 2 claims is narrower and falsifiable: the broker's `parallel-safe` verdict is *closed* over the static effects declared by adapters under (A1′). The static/dynamic split is therefore a scoping device, not an evasion: (A1′) defines what the broker is responsible for; (A2) names what is handed off to the validator phase (§3.8), where ATM's existing dry-run/evidence pipeline already operates. A reader who rejects (A2) as a load-bearing assumption is rejecting the *layering* of admission vs. validation, not the closure claim itself.
+我們刻意將本定理命名為 **closure** 而非 **soundness**，以避免後者之過度負載。Program-analysis 意義下之「soundness」要求 admitted intent 之間絕無任何衝突——此一主張於存在 reflection 或 metaprogramming 之情境下，任何靜態系統皆無法承擔。Theorem 2 之主張較為狹隘且具可證偽性：broker 之 `parallel-safe` verdict 於 adapter 在 (A1′) 之下所宣告之 static effect 上為 *closed*。由此，static / dynamic 之切分為一範圍劃定之裝置，並非規避：(A1′) 定義 broker 之責任；(A2) 指明被交付至 validator 階段（§3.8）之部分，而 ATM 既有之 dry-run / evidence pipeline 已於該階段運作。若讀者拒絕 (A2) 為 load-bearing assumption，所拒絕者為 admission 與 validation 之 *分層*，而非 closure 主張本身。
 
 **Empirical validation.** Theorem 2 is exercised by the 12-scenario AGR benchmark harness (`scripts/validate-agr-benchmark.ts`, CID-0037, `e62eee72`). In particular: scenario 7 (`registry-read-write-dependency`) verifies the augmented decision rule catches a conflict that the original four-verdict algorithm would have silently admitted; scenario 10 (`validator-catch-typecheck-failure`) confirms the (A2) handoff to validators works as designed for cases outside (A1′).
 
@@ -368,7 +368,7 @@ Effect:   decompose f into f_pre · f_extracted · f_post
             v_pre, v_zone, v_post — each with a fresh CID_candidate
 ```
 
-The signature-preservation constraint is what makes Layer 2 LLM-friendly: "extract lines $X$–$Y$ of function $f$ into a new function, preserving $f$'s signature and replacing the extracted lines with a call" is a narrow, low-ambiguity rewrite task. The broker re-evaluates with $V_2$; if conflicts persist after Layer 2, the conflict is treated as genuinely physical and the intents are serialized — AGR does not recurse further, bounding worst-case refinement to two rounds.
+signature 保留之約束使 Layer 2 對 LLM 而言友善：「將函式 $f$ 之 $X$–$Y$ 行抽出為一新函式，保留 $f$ 之 signature 並將原行替換為對該新函式之呼叫」屬一個狹窄、低歧義之重寫任務。Broker 以 $V_2$ 重新評估；若 Layer 2 之後衝突仍存在，則視為真正之物理衝突並將 intent 序列化——AGR 不再遞迴，將最壞情況之 refinement 限定於兩輪。
 
 **Tooling note.** The *decision* of whether to trigger Layer 2 (the threshold check above) requires only line-range arithmetic over already-known regions — no AST. The *execution* of the decomposition (the actual rewrite of $f$) is adapter/agent-chosen and may use AST-based refactoring tools or a constrained LLM rewrite; because the signature is held fixed, this is a narrow enough task that either approach has low error rates in practice. Validated by benchmark scenarios `11-layer1-no-refinement-available` and `12-layer2-threshold-not-met` (§4.2).
 
@@ -930,7 +930,18 @@ working-tree 上之修改刻意限縮於不同函式：
 
 ## Revision History
 
-**2026-06-21 (Current Draft, seventeenth pass — 移除 paper body 中直接稱呼 reviewer 之 meta-voice):**
+**2026-06-21 (Current Draft, eighteenth pass — 全文剩餘英文 narrative 段落悉數譯為論文口吻繁中):**
+
+User 校正：除 §4.5(b)(c) 與 Appendix A.1（已於 fifteenth pass 翻譯）外，全文尚有大量英文 narrative 段落散落於 §2.8、§3.2、§3.4、§3.5、§3.6、§3.7、§3.8、§3.9、§3.10、§4 開頭與 §4.1–§4.4、§4.7、§5、§6.1–§6.3、§7。本 pass 分三批校正：
+
+- **Part 1（§3 narrative）**：§3.7 broker as sole serialization point 之三段 prose（registry race objection、mid-execution registration、snapshot and arbitration protocol）；§3.8 limitation intro 與 Git-boundary 段；§3.9 四條 open problem 全列（cross-language atom identity、CID schema-version migration、adapter trust、liveness / starvation）；§3.10 intro、三層擴展 bullets、Theorem 3 conditional discussion。Definition 5 / Theorem 3 formal block 維持英文。
+- **Part 2（§4 narrative）**：§4 intro（validation vs comparative benchmark 分野）；§4.1 SDK + AGR pipeline 介紹；§4.2 12-scenario suite 介紹、coverage statement、limitation 三條；§4.3 npc-brain intro 與 honest interpretation paragraph；§4.4 forensics report intro 與 evidence supports / does-not-support 兩段。
+- **Part 3（§5 / §6 / §7 narrative）**：§4.7 CID stability user-reported notes；§5 limitations 五條未涵蓋、roadmap；§6.1 AST-first 三段（engineering cost、diminishing returns、scope preservation）；§6.2 三個失敗模式；§6.3 五項 open questions；§7 Conclusion 三項 key contributions 與 Why this matters / Invitation / Limitations 三段收尾。
+- **Part 4（§2.8 + §3.2-3.6 殘留 prose）**：§2.8 OT / CRDT / DB lineage 段；§3.2 status machine 句、canonicalization 函式引導句；§3.4 broker WriteIntent consumption 段；Theorem 1 corollary 段；§3.5 closure-vs-soundness 命名澄清段；§3.6 Layer 2 signature-preservation rationale 段。
+
+翻譯規則：code / path / commit hash / function name / atom id / mathematical notation 悉數保留原文；Definition / Theorem / Algorithm 之 formal block 保留英文；narrative prose 譯為論文口吻（之 over 的、蓋 / 俟 / 惟 / 俾 / 此 之正式連接句、被動語態以「由…執行」「為…所…」呈現）。References 章節維持英文（學術引用慣例）。Abstract 與 §1 已先前完成。
+
+**2026-06-21 (seventeenth pass — 移除 paper body 中直接稱呼 reviewer 之 meta-voice):**
 
 User 校正：學術論文 body 直接寫「Reviewers / reviewer」會降低 credibility，屬業餘記號。本 pass 將 4 處 paper body 中直接稱呼讀者 / reviewer 之 meta-voice 改寫為正式學術中性 register：
 
