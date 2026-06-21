@@ -114,3 +114,43 @@ Use `close-orchestration.ts` as the primary positive layered case in the paper,
 and treat `integration.ts` as the follow-up case after its formal atom-map
 coverage is added. That ordering is more honest and gives the reviewer a
 stronger bridge from formal atomization to broker-level arbitration.
+
+## Field evidence artifact note (admission / team-run positive)
+
+Beyond the broker-aware pre-patch scanner *simulated* outcome above, a live
+same-file concurrent-agent run was also collected. This note records the
+authoritative pointers for that field case so the paper main text can stay
+restrained and the run-level details remain verifiable.
+
+**Scope**: admission / team-run positive evidence. Whether the run later
+proceeded to an apply-phase brokered commit is a separate question and is
+not covered by this note.
+
+**Run facts**:
+
+- File: `packages/cli/src/commands/taskflow/close-orchestration.ts`
+- Lane A function: `buildClosebackPlan`
+- Lane B function: `resolveClosebackPlanningPath`
+- Authoritative run A: `team-53e5bae34958`
+- Authoritative run B: `team-0c9db84467a6`
+- Both verdicts: `parallel-safe`
+- Both lanes: `direct-brokered`
+- Vendor families: distinct (one OpenAI-family lane, one Anthropic-family lane;
+  exact actor strings recorded in the team-run records)
+
+**Filtered evidence bundle** (isolates the final positive pair from an earlier
+retired duplicate run; do not cite the unfiltered bundle in the paper):
+
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.md`
+- `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.json`
+
+**Framing rules** (carry into any future edit):
+
+- Do **not** write this case as "file-level disjointness" success — both lanes
+  hit the *same* TypeScript source file.
+- Do **not** write this case as "final merged apply already completed" — the
+  evidence body here is the admission / team-run positive record; an
+  apply-phase brokered commit, if any, must be described separately.
+- Do write this case as: positive field-or-near-field same-file concurrency
+  evidence, with same-file but different-function lanes both admitted as
+  `parallel-safe` by the broker on the `direct-brokered` lane.

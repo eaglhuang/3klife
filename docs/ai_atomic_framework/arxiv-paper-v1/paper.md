@@ -629,7 +629,15 @@ Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six t
 
 這直接回答了 §4.5 開頭的 reviewer 問題 (A)：**formal atomization 不是假的，且 broker 的 second-layer segmentation 在 formal atomization 之上仍有額外價值**。
 
-**對應說明檔**：`docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md`。
+**Positive same-file field evidence**（與上述 pre-patch scanner 之 simulated 結果分立）：
+
+> We also collected a positive same-file field case on `packages/cli/src/commands/taskflow/close-orchestration.ts`. Two live agents from different vendor families operated concurrently on the same `main` working tree, but on different functions within the same file: one lane modified `buildClosebackPlan`, while the other modified `resolveClosebackPlanningPath`. Both lanes entered the normal ATM claim and team-start flow and were admitted as `parallel-safe` on the `direct-brokered` lane. This matters because the success is not explained by file-level separation: both agents targeted the same TypeScript source file, yet ATM preserved safe concurrency by recognizing disjoint in-file regions. The case therefore supports the claim that explicit atomization plus a second-layer in-file segmentation check can permit safe same-file multi-agent concurrency, rather than collapsing all same-file edits into a single serialized lane.
+>
+> The paper artifact bundle includes the two authoritative team-run records for this case and a filtered broker evidence report that isolates the final positive pair from an earlier retired duplicate run.
+
+論文範圍說明：本段 evidence 為 *admission / team-run positive evidence*；是否進一步在 apply-phase 完成 brokered commit 屬於另一條獨立敘述，不在本段範圍。Run id、bundle 路徑、retired-run 清理細節皆置於對應說明檔，不入正文。
+
+**對應說明檔**：`docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md`（含 authoritative run ids 與 filtered evidence bundle pointer）。
 
 #### 4.5(d) `integration.ts` — secondary reinforcement case
 
@@ -845,7 +853,17 @@ Multi-agent LLM systems demand a concurrency control layer tuned to the granular
 
 ## Revision History
 
-**2026-06-21 (Current Draft, twelfth pass — §4.5 restructured around layered-atomization claim; close-orchestration / integration.ts become primary/secondary keystones):**
+**2026-06-21 (Current Draft, thirteenth pass — close-orchestration.ts positive same-file field evidence added; framing rules captured):**
+
+- **§4.5(c) 加入 Positive same-file field evidence 段**：在原本的 broker-aware pre-patch scanner *simulated* 結果之外，新增一個 *live* 同檔多 agent 跨 vendor family 並行 admission 案例的正文段。兩個 lane 分別寫 `buildClosebackPlan` 與 `resolveClosebackPlanningPath`，皆於 `direct-brokered` lane 取得 `parallel-safe` admission verdict。正文範圍明示限定 admission / team-run positive evidence，不主張 apply-phase brokered commit 已完成。
+- **正文寫法刻意克制**：run id、bundle 路徑、retired-run 清理細節皆下沉到 `broker-collision-evidence/close-orchestration-layered-merge-evidence.md` 新增的「Field evidence artifact note」區段，避免主文被 runtime 細節稀釋。
+- **明確避免兩種錯誤敘述**：
+  - 不寫成「file-level disjointness 成功」——兩邊是同檔
+  - 不寫成「final merged apply already completed」——目前 evidence body 是 admission / team-run positive，apply-phase 是另一條敘述
+- **正向 framing rules 寫入說明檔**：未來任何接手者編輯本 case 時可直接 cross-reference 說明檔的 "Framing rules" 段確認措辭。
+- **與 §4.5(b) B-12 的角色分工更清晰**：(c) admission 端 positive same-file evidence；(b) apply-phase honest hybrid 補上 enforcement boundary 仍在後端的誠實重量。
+
+**2026-06-21 (twelfth pass — §4.5 restructured around layered-atomization claim; close-orchestration / integration.ts become primary/secondary keystones):**
 
 - **§4.5 整段重構**：從「parallel-0041-0042 as soul」單一 keystone 模式升級為 5 類互補 evidence stack。新開頭表把 §3.4 / §3.6 / §3.10 的核心 reviewer 必問問題提出來：(A) formal atomization 之上 broker 第二層虛擬細化是否還有額外價值？(B) admission 階段是否真能阻同 atom 寫入？接下來各子節分頭誠實回答。
 - **4.5(a) Foundation runs + parallel-0041-0042**：保留 6-run 表 + cross-vendor admission-phase block；定位為「broker apply 端到端可用」的基礎證據，但**明示不回答上述 (A)(B)**。
