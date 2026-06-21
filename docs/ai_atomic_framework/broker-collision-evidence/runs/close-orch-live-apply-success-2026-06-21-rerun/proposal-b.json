@@ -1,0 +1,33 @@
+{
+    "schemaId":  "atm.patchProposal.v1",
+    "specVersion":  "0.1.0",
+    "migration":  {
+                      "notes":  "close-orchestration live rerun",
+                      "fromVersion":  null,
+                      "strategy":  "none"
+                  },
+    "proposalId":  "proposal.close-orch.live.b",
+    "taskId":  "TASK-COLLIDE-CLOSE-ORCH-B",
+    "actorId":  "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-B:claude-opus47",
+    "baseCommit":  "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+    "fileBeforeHash":  "sha256:8e749f7620213b110d19dff25a82f8ce2e4a011b8d6fef64b3eb710829293ba1",
+    "targetFile":  "packages/cli/src/commands/taskflow/close-orchestration.ts",
+    "atomRefs":  [
+                     {
+                         "atomId":  "atm.closeback-route-correctness-map",
+                         "atomCid":  "resolveClosebackPlanningPath"
+                     }
+                 ],
+    "anchors":  [
+                    {
+                        "kind":  "line",
+                        "hint":  "ATM_TASKFLOW_CLOSE_PLANNING_PATH_UNAVAILABLE"
+                    }
+                ],
+    "intent":  "Clarify missing planning-path diagnostics with task-local identifier.",
+    "patch":  "--- a/packages/cli/src/commands/taskflow/close-orchestration.ts\n+++ b/packages/cli/src/commands/taskflow/close-orchestration.ts\n@@ -530,7 +530,9 @@ export function resolveClosebackPlanningPath(input: {\n      planningStatus: null,\n      diagnostics: {\n        codes: [\u0027ATM_TASKFLOW_CLOSE_PLANNING_PATH_UNAVAILABLE\u0027],\n-        messages: [\u0027source.planPath is absent and no taskflow profile was supplied for governed fallback recovery.\u0027]\n+        messages: [\n+          `source.planPath is absent and no taskflow profile was supplied for governed fallback recovery (task ${normalizedTaskId}).`\n+        ]\n      }\n    };\n",
+    "validators":  [
+                       "npm run validate:cli"
+                   ],
+    "rollback":  "Revert resolveClosebackPlanningPath diagnostic wording."
+}

@@ -1,0 +1,68 @@
+{
+  "schemaId": "atm.writeBrokerRegistry.v1",
+  "specVersion": "0.1.0",
+  "repoId": "local-repo",
+  "workspaceId": "main",
+  "activeIntents": [
+    {
+      "intentId": "intent-1782047380777",
+      "taskId": "TASK-COLLIDE-CLOSE-ORCH-B",
+      "teamRunId": null,
+      "actorId": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-B:claude-opus47",
+      "baseCommit": "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+      "resourceKeys": {
+        "files": [
+          "packages/cli/src/commands/taskflow/close-orchestration.ts"
+        ],
+        "atomIds": [
+          "atm.closeback-route-correctness-map"
+        ],
+        "atomCids": [
+          "resolveClosebackPlanningPath"
+        ],
+        "atomRanges": [],
+        "generators": [],
+        "projections": [],
+        "registries": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 1782047380777,
+      "leaseSeconds": 3600,
+      "leaseMaxSeconds": 3600,
+      "heartbeatAt": "2026-06-21T13:09:40.777Z",
+      "lane": "direct-brokered",
+      "expiresAt": "2026-06-21T14:09:40.777Z"
+    },
+    {
+      "intentId": "intent-1782047780953",
+      "taskId": "TASK-COLLIDE-CLOSE-ORCH-A",
+      "teamRunId": null,
+      "actorId": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-A:codex-gpt54mini",
+      "baseCommit": "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+      "resourceKeys": {
+        "files": [
+          "packages/cli/src/commands/taskflow/close-orchestration.ts"
+        ],
+        "atomIds": [
+          "atm.task-closure-map"
+        ],
+        "atomCids": [
+          "buildClosebackPlan"
+        ],
+        "atomRanges": [],
+        "generators": [],
+        "projections": [],
+        "registries": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 1782047780953,
+      "leaseSeconds": 1800,
+      "leaseMaxSeconds": 1800,
+      "heartbeatAt": "2026-06-21T13:16:20.952Z",
+      "lane": "deterministic-composer",
+      "expiresAt": "2026-06-21T13:46:20.953Z"
+    }
+  ]
+}

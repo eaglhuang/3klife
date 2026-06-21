@@ -1,0 +1,36 @@
+{
+  "schemaId": "atm.stewardApplyEvidence.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "neutral write steward apply"
+  },
+  "stewardId": "neutral-write-steward",
+  "mergePlanId": "merge-d250d385e00e0d5a",
+  "proposalIds": [
+    "proposal.close-orch.live.a",
+    "proposal.close-orch.live.b"
+  ],
+  "targetFiles": [
+    "packages/cli/src/commands/taskflow/close-orchestration.ts"
+  ],
+  "appliedFiles": [
+    "packages/cli/src/commands/taskflow/close-orchestration.ts"
+  ],
+  "fileBeforeHashes": {
+    "packages/cli/src/commands/taskflow/close-orchestration.ts": "fb24ee070b3e39957cd500d0c59922056e40e629f55f47ee088e2e9e76e55b01"
+  },
+  "fileAfterHashes": {
+    "packages/cli/src/commands/taskflow/close-orchestration.ts": "7d7b0c5fe6b649cc3ee75c95e7e42c815f677c924666bbf883d14666d35f038f"
+  },
+  "permissions": {
+    "fileWrite": [
+      "packages/cli/src/commands/taskflow/close-orchestration.ts"
+    ],
+    "gitWrite": false,
+    "taskLifecycle": false
+  },
+  "applyMethod": "patch-apply",
+  "verdict": "applied"
+}

@@ -1,0 +1,40 @@
+{
+    "schemaId":  "atm.writeIntent.v1",
+    "specVersion":  "0.1.0",
+    "migration":  {
+                      "strategy":  "none",
+                      "fromVersion":  null,
+                      "notes":  "team plan/start broker lane"
+                  },
+    "taskId":  "TASK-COLLIDE-CLOSE-ORCH-A",
+    "actorId":  "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-A:codex-gpt54mini",
+    "baseCommit":  "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+    "targetFiles":  [
+                        "packages/cli/src/commands/taskflow/close-orchestration.ts"
+                    ],
+    "atomRefs":  [
+                     {
+                         "atomId":  "atm.task-closure-map",
+                         "atomCid":  "buildClosebackPlan",
+                         "operation":  "modify"
+                     }
+                 ],
+    "sharedSurfaces":  {
+                           "generators":  [
+
+                                          ],
+                           "projections":  [
+
+                                           ],
+                           "registries":  [
+
+                                          ],
+                           "validators":  [
+
+                                          ],
+                           "artifacts":  [
+
+                                         ]
+                       },
+    "requestedLane":  "auto"
+}

@@ -1,0 +1,33 @@
+{
+  "schemaId": "atm.patchProposal.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "close-orchestration merge evidence"
+  },
+  "proposalId": "proposal.close-orch.b",
+  "taskId": "TASK-COLLIDE-CLOSE-ORCH-B",
+  "actorId": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-B:claude-opus47",
+  "baseCommit": "2e3a1a2a55f506c29048359e01d8ef91ecea3450",
+  "fileBeforeHash": "sha256:1cbb6da71eaec2ec0fca275d825e2f35179d68a7668a6804f3afb1a86f3fab50",
+  "targetFile": "packages/cli/src/commands/taskflow/close-orchestration.ts",
+  "atomRefs": [
+    {
+      "atomId": "atm.closeback-route-correctness-map",
+      "atomCid": "task-collide-close-orch-b"
+    }
+  ],
+  "anchors": [
+    {
+      "kind": "line",
+      "hint": "ATM_TASKFLOW_CLOSE_PLANNING_PATH_UNAVAILABLE"
+    }
+  ],
+  "intent": "Clarify missing planning-path diagnostics with task-local identifier.",
+  "patch": "--- a/packages/cli/src/commands/taskflow/close-orchestration.ts\n+++ b/packages/cli/src/commands/taskflow/close-orchestration.ts\n@@ -530,7 +530,9 @@ export function resolveClosebackPlanningPath(input: {\n       planningStatus: null,\n       diagnostics: {\n         codes: ['ATM_TASKFLOW_CLOSE_PLANNING_PATH_UNAVAILABLE'],\n-        messages: ['source.planPath is absent and no taskflow profile was supplied for governed fallback recovery.']\n+        messages: [\n+          `source.planPath is absent and no taskflow profile was supplied for governed fallback recovery (task ${normalizedTaskId}).`\n+        ]\n       }\n     };\n",
+  "validators": [
+    "npm run validate:cli"
+  ],
+  "rollback": "Revert resolveClosebackPlanningPath diagnostic wording."
+}

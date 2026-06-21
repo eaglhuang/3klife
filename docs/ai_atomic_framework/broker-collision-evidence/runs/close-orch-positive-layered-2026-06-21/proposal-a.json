@@ -1,0 +1,33 @@
+{
+  "schemaId": "atm.patchProposal.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "close-orchestration merge evidence"
+  },
+  "proposalId": "proposal.close-orch.a",
+  "taskId": "TASK-COLLIDE-CLOSE-ORCH-A",
+  "actorId": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-A:codex-gpt54mini",
+  "baseCommit": "2e3a1a2a55f506c29048359e01d8ef91ecea3450",
+  "fileBeforeHash": "sha256:1cbb6da71eaec2ec0fca275d825e2f35179d68a7668a6804f3afb1a86f3fab50",
+  "targetFile": "packages/cli/src/commands/taskflow/close-orchestration.ts",
+  "atomRefs": [
+    {
+      "atomId": "atm.task-closure-map",
+      "atomCid": "task-collide-close-orch-a"
+    }
+  ],
+  "anchors": [
+    {
+      "kind": "line",
+      "hint": "closebackNote"
+    }
+  ],
+  "intent": "Clarify closeback note with task-local metadata.",
+  "patch": "--- a/packages/cli/src/commands/taskflow/close-orchestration.ts\n+++ b/packages/cli/src/commands/taskflow/close-orchestration.ts\n@@ -294,7 +294,7 @@ export function buildClosebackPlan(input: {\n       rosterSyncPolicy: input.delegationContract.policy.rosterSyncPolicy,\n       rosterIndexPath,\n       rosterClosebackCommand,\n-      closebackNote: 'Planning-mirror closeback reuses tasks import and tasks roster update inside the same adopter-aware flow; ATM does not add a second closeback writer.'\n+      closebackNote: `Planning-mirror closeback for ${input.taskId} reuses tasks import and tasks roster update inside the same adopter-aware flow; ATM does not add a second closeback writer.`\n     },\n",
+  "validators": [
+    "npm run typecheck"
+  ],
+  "rollback": "Revert buildClosebackPlan closebackNote wording."
+}

@@ -1,0 +1,52 @@
+{
+  "schemaId": "atm.brokerEvidenceBundle.v1",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-21T05:16:21.685Z",
+  "sourceRunDir": "C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs",
+  "sourceTeamRunDir": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs",
+  "sourceAtmRoot": "C:/Users/User/AI-Atomic-Framework",
+  "runs": [
+    {
+      "runId": "team-0c9db84467a6",
+      "planId": "TASK-COLLIDE-CLOSE-ORCH-B",
+      "scenario": "field",
+      "tasks": "TASK-COLLIDE-CLOSE-ORCH-B",
+      "actors": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-B:claude-opus47",
+      "files": "packages/cli/src/commands/taskflow/close-orchestration.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+      "transactions": "decision-1782012186105",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-0c9db84467a6.json"
+    },
+    {
+      "runId": "team-53e5bae34958",
+      "planId": "TASK-COLLIDE-CLOSE-ORCH-A",
+      "scenario": "field",
+      "tasks": "TASK-COLLIDE-CLOSE-ORCH-A",
+      "actors": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-A:codex-gpt54mini",
+      "files": "packages/cli/src/commands/taskflow/close-orchestration.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+      "transactions": "decision-1781975987871",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-53e5bae34958.json"
+    }
+  ],
+  "taskArtifacts": [
+    {
+      "taskId": "TASK-COLLIDE-CLOSE-ORCH-A",
+      "closurePacket": "n/a",
+      "teamRuns": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-53e5bae34958.json"
+    },
+    {
+      "taskId": "TASK-COLLIDE-CLOSE-ORCH-B",
+      "closurePacket": "n/a",
+      "teamRuns": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-0c9db84467a6.json"
+    }
+  ]
+}

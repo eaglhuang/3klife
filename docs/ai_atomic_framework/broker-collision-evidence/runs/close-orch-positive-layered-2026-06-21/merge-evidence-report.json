@@ -1,0 +1,65 @@
+{
+  "schemaId": "atm.closeOrchMergeEvidence.v1",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-21T05:16:22.686Z",
+  "sourceRepo": "C:/Users/User/AI-Atomic-Framework",
+  "targetFile": "packages/cli/src/commands/taskflow/close-orchestration.ts",
+  "baseCommit": "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+  "fileBeforeHash": "sha256:1cbb6da71eaec2ec0fca275d825e2f35179d68a7668a6804f3afb1a86f3fab50",
+  "proposals": [
+    {
+      "proposalId": "proposal.close-orch.a",
+      "taskId": "TASK-COLLIDE-CLOSE-ORCH-A",
+      "actorId": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-A:codex-gpt54mini",
+      "atomId": "atm.task-closure-map",
+      "atomCid": "task-collide-close-orch-a",
+      "intent": "Clarify closeback note with task-local metadata.",
+      "validators": [
+        "npm run typecheck"
+      ]
+    },
+    {
+      "proposalId": "proposal.close-orch.b",
+      "taskId": "TASK-COLLIDE-CLOSE-ORCH-B",
+      "actorId": "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-B:claude-opus47",
+      "atomId": "atm.closeback-route-correctness-map",
+      "atomCid": "task-collide-close-orch-b",
+      "intent": "Clarify missing planning-path diagnostics with task-local identifier.",
+      "validators": [
+        "npm run validate:cli"
+      ]
+    }
+  ],
+  "compose": {
+    "ok": true,
+    "verdict": "parallel-safe",
+    "applyMethod": "patch-apply",
+    "conflictCount": 0,
+    "conflicts": [],
+    "requiredEvidence": [
+      "npm run typecheck",
+      "npm run validate:cli"
+    ]
+  },
+  "stewardPlan": {
+    "ok": true,
+    "issueCodes": []
+  },
+  "stewardApply": {
+    "ok": true,
+    "verdict": "applied",
+    "evidencePath": "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/steward-apply-evidence.json",
+    "operationRunPath": "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/steward-operation-run-envelope.json"
+  },
+  "output": {
+    "tempRoot": "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/temp-repo",
+    "proposalFiles": [
+      "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/proposal-a.json",
+      "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/proposal-b.json"
+    ],
+    "mergePlanFile": "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/merge-plan.json",
+    "stewardEvidenceFile": "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/steward-apply-evidence.json",
+    "operationRunFile": "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/steward-operation-run-envelope.json",
+    "finalFilePath": "C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/temp-repo/packages/cli/src/commands/taskflow/close-orchestration.ts"
+  }
+}

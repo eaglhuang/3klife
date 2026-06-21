@@ -1,0 +1,47 @@
+{
+  "schemaId": "atm.brokerOperationRunRecordEnvelope.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "deterministic compose"
+  },
+  "runId": "steward-merge-06bdeeb06b6a183a",
+  "planId": "merge-06bdeeb06b6a183a",
+  "records": [
+    {
+      "schemaId": "atm.brokerOperationRunRecord.v1",
+      "specVersion": "0.1.0",
+      "migration": {
+        "strategy": "none",
+        "fromVersion": null,
+        "notes": "deterministic compose"
+      },
+      "runId": "steward-merge-06bdeeb06b6a183a",
+      "planId": "merge-06bdeeb06b6a183a",
+      "request_identity": [
+        "proposal.close-orch.a",
+        "proposal.close-orch.b"
+      ],
+      "actor_ids": [
+        "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-A:codex-gpt54mini",
+        "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-B:claude-opus47"
+      ],
+      "request_files": [
+        "packages/cli/src/commands/taskflow/close-orchestration.ts"
+      ],
+      "adapter_choice": "steward.patch-apply",
+      "applied_files": [
+        "packages/cli/src/commands/taskflow/close-orchestration.ts"
+      ],
+      "lane_decision": "neutral-steward",
+      "merge_verdict": "mergeable",
+      "evidence_path": "C:\\Users\\User\\AI-Atomic-Framework\\.atm-temp\\close-orch-merge-evidence\\steward-apply-evidence.json",
+      "task_ids": [
+        "TASK-COLLIDE-CLOSE-ORCH-A",
+        "TASK-COLLIDE-CLOSE-ORCH-B"
+      ],
+      "commit_sha": "2e3a1a2a55f506c29048359e01d8ef91ecea3450"
+    }
+  ]
+}

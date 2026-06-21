@@ -1,0 +1,33 @@
+{
+    "schemaId":  "atm.patchProposal.v1",
+    "specVersion":  "0.1.0",
+    "migration":  {
+                      "notes":  "close-orchestration live rerun",
+                      "fromVersion":  null,
+                      "strategy":  "none"
+                  },
+    "proposalId":  "proposal.close-orch.live.a",
+    "taskId":  "TASK-COLLIDE-CLOSE-ORCH-A",
+    "actorId":  "bench:CLOSE-ORCH-POS:TASK-COLLIDE-CLOSE-ORCH-A:codex-gpt54mini",
+    "baseCommit":  "18aa08f54b126d0c9833ac82add03ca27a6bdc10",
+    "fileBeforeHash":  "sha256:8e749f7620213b110d19dff25a82f8ce2e4a011b8d6fef64b3eb710829293ba1",
+    "targetFile":  "packages/cli/src/commands/taskflow/close-orchestration.ts",
+    "atomRefs":  [
+                     {
+                         "atomId":  "atm.task-closure-map",
+                         "atomCid":  "buildClosebackPlan"
+                     }
+                 ],
+    "anchors":  [
+                    {
+                        "kind":  "line",
+                        "hint":  "closebackNote"
+                    }
+                ],
+    "intent":  "Clarify closeback note with task-local metadata.",
+    "patch":  "--- a/packages/cli/src/commands/taskflow/close-orchestration.ts\n+++ b/packages/cli/src/commands/taskflow/close-orchestration.ts\n@@ -294,7 +294,7 @@ export function buildClosebackPlan(input: {\n      rosterSyncPolicy: input.delegationContract.policy.rosterSyncPolicy,\n      rosterIndexPath,\n      rosterClosebackCommand,\n-      closebackNote: \u0027Planning-mirror closeback reuses tasks import and tasks roster update inside the same adopter-aware flow; ATM does not add a second closeback writer.\u0027\n+      closebackNote: `Planning-mirror closeback for ${input.taskId} reuses tasks import and tasks roster update inside the same adopter-aware flow; ATM does not add a second closeback writer.`\n     },\n",
+    "validators":  [
+                       "npm run typecheck"
+                   ],
+    "rollback":  "Revert buildClosebackPlan closebackNote wording."
+}

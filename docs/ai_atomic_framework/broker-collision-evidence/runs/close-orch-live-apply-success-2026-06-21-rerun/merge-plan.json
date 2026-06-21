@@ -1,0 +1,23 @@
+{
+    "schemaId":  "atm.mergePlan.v1",
+    "specVersion":  "0.1.0",
+    "migration":  {
+                      "strategy":  "none",
+                      "fromVersion":  null,
+                      "notes":  "deterministic compose"
+                  },
+    "mergePlanId":  "merge-d250d385e00e0d5a",
+    "inputProposals":  [
+                           "proposal.close-orch.live.b",
+                           "proposal.close-orch.live.a"
+                       ],
+    "verdict":  "parallel-safe",
+    "conflicts":  [
+
+                  ],
+    "applyMethod":  "patch-apply",
+    "requiredEvidence":  [
+                             "npm run typecheck",
+                             "npm run validate:cli"
+                         ]
+}

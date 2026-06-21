@@ -1,0 +1,57 @@
+{
+  "ok": true,
+  "command": "broker",
+  "mode": "standalone",
+  "cwd": "C:\\Users\\User\\AI-Atomic-Framework",
+  "messages": [
+    {
+      "level": "info",
+      "code": "ATM_BROKER_COMPOSE_PLANNED",
+      "text": "Broker compose produced merge plan 'merge-d250d385e00e0d5a' with verdict 'parallel-safe'.",
+      "data": {
+        "mergePlanId": "merge-d250d385e00e0d5a",
+        "verdict": "parallel-safe",
+        "proposalCount": 2
+      }
+    }
+  ],
+  "evidence": {
+    "action": "compose",
+    "mergePlan": {
+      "schemaId": "atm.mergePlan.v1",
+      "specVersion": "0.1.0",
+      "migration": {
+        "strategy": "none",
+        "fromVersion": null,
+        "notes": "deterministic compose"
+      },
+      "mergePlanId": "merge-d250d385e00e0d5a",
+      "inputProposals": [
+        "proposal.close-orch.live.b",
+        "proposal.close-orch.live.a"
+      ],
+      "verdict": "parallel-safe",
+      "conflicts": [],
+      "applyMethod": "patch-apply",
+      "requiredEvidence": [
+        "npm run typecheck",
+        "npm run validate:cli"
+      ]
+    },
+    "proposalCount": 2,
+    "proposalIds": [
+      "proposal.close-orch.live.b",
+      "proposal.close-orch.live.a"
+    ]
+  },
+  "severity": "success",
+  "exitCode": 0,
+  "blocking": false,
+  "diagnostics": {
+    "errorCodes": [],
+    "warningCodes": [],
+    "infoCodes": [
+      "ATM_BROKER_COMPOSE_PLANNED"
+    ]
+  }
+}
