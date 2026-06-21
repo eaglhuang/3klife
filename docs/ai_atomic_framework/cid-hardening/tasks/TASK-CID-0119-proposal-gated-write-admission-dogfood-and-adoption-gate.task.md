@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0119
 title: Proposal-gated write admission dogfood and adoption gate
-status: planned
+status: done
 milestone: M21
 depends_on:
   - TASK-CID-0118
@@ -32,6 +32,9 @@ nonGoals:
 atomizationImpact:
   ownerAtomOrMap: "atm.proposal-gated-write-admission-adoption-gate"
   mapUpdates: []
+completed_at: "2026-06-21T16:07:33.973Z"
+completed_by_agent: "captain"
+delivery_commit: "26a5ba4467d73059416adda6a2eade5e9a586e6f"
 ---
 
 # TASK-CID-0119
