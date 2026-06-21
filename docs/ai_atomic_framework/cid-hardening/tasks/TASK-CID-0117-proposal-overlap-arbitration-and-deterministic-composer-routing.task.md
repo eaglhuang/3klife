@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0117
 title: Proposal overlap arbitration and deterministic-composer routing
-status: planned
+status: done
 milestone: M21
 depends_on:
   - TASK-CID-0116
@@ -34,6 +34,9 @@ nonGoals:
 atomizationImpact:
   ownerAtomOrMap: "atm.proposal-overlap-arbitration"
   mapUpdates: []
+completed_at: "2026-06-21T16:02:16.855Z"
+completed_by_agent: "captain"
+delivery_commit: "79315fe16dc95ab1e49d5e2320c7bcdb6ae67b25"
 ---
 
 # TASK-CID-0117
