@@ -427,13 +427,13 @@ Broker 之 admission 演算法（§3.4）係以程式碼原子（Definition 1）
 
 ## 4. Validation: Fixture Suite and Adoption Study
 
-This section provides evidence that the mechanisms in §3 are implemented, functional, and exercised by a deterministic fixture suite plus a 3-week adoption study. We explicitly distinguish this from a *comparative concurrency benchmark*: §4.2 verifies decision-table correctness against declared expected verdicts (regression-test character), and §4.3 reports observational data from one real adopter without a control group. Comparative wall-clock / throughput / token-cost evaluation against STORM / CodeCRDT / SCF baselines requires baseline porting and adversarial workload synthesis, both of which are deferred to the December 2026 full paper (§5). We are explicit about this scope to avoid overstating what fixture testing and a single adopter case can establish.
+本節提供證據顯示 §3 之機制已實作、可運行，並由一個確定性 fixture suite 與一份為期三週之採用研究加以演練。我們明示將之區分於 *comparative concurrency benchmark*：§4.2 驗證 decision table 對於宣告之 expected verdict 之正確性（具 regression test 之性質），§4.3 則回報來自一個真實採用者之觀察資料，且無對照組。相對於 STORM / CodeCRDT / SCF baseline 之 wall-clock / throughput / token-cost 比較性評估，須投入 baseline 移植與 adversarial workload 合成，二者均延至 2026 年 12 月之 full paper（§5）。我們明示此範圍以避免高估 fixture 測試與單一採用者案例所能建立之結論。
 
 ### 4.1 Complete SDK + AGR Implementation Pipeline
 
-The implementation pipeline spans two task series:
+實作管線橫跨兩個 task 系列：
 
-**TASK-ASP-0001~0005 (2026-06-10): SDK + adapter foundation.**
+**TASK-ASP-0001~0005（2026-06-10）：SDK + adapter 基礎.**
 
 - ASP-0001: [`atomization-planning.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/packages/plugin-sdk/src/atomization-planning.ts) SDK contract — commit `e08bbb2a`
 - ASP-0002: JS adapter candidate discovery (scanner-based) — commit `8a58d1d9`
@@ -441,7 +441,7 @@ The implementation pipeline spans two task series:
 - ASP-0004: Broker candidate-to-intent bridge with `computeCandidateAtomCid()` (Definition 3) — commit `14359be3`
 - ASP-0005: 3KLife coordination + corpus baseline — commit `afa17a12`
 
-**TASK-CID-0028~0037 (2026-06-11/12): AGR + augmented decision rule.**
+**TASK-CID-0028~0037（2026-06-11/12）：AGR + augmented decision rule.**
 
 - CID-0028: [EnclosingUnit + VirtualAtom SDK](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/packages/plugin-sdk/src/atomization-planning.ts) (+98 LOC) — bundled in commit `f841a27c`
 - CID-0029: [Layer 1 syntactic enclosure refinement](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/packages/core/src/broker/agr.ts) (+57 LOC) — bundled in commit `aa907d04`
@@ -453,13 +453,13 @@ The implementation pipeline spans two task series:
 - CID-0036: AGR closeout validator integration — commit `5bea4e31`
 - CID-0037: [12-scenario AGR benchmark harness](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/validate-agr-benchmark.ts) (364 LOC runner + 107 LOC validator) — commit `e62eee72`
 
-Status: ✅ all task cards closed, regression tests passing, ledger entries recorded in `.atm/history/`.
+狀態：✅ 全數任務卡 close、regression test 通過、ledger 條目記錄於 `.atm/history/`。
 
 ### 4.2 The 12-Scenario AGR Fixture Suite (CID-0037, `e62eee72`)
 
-The broker's decision algorithm (§3.4), augmented decision rule (§3.4 read-set), Theorem 2 static admission closure (§3.5), and AGR Layer 1 / Layer 2 (§3.6) are jointly exercised by a deterministic fixture suite located at [`scripts/fixtures/agr-benchmark/`](https://github.com/eaglhuang/AI-Atomic-Framework/tree/main/scripts/fixtures/agr-benchmark/), executed by [`scripts/validate-agr-benchmark.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/validate-agr-benchmark.ts) (107 LOC) via [`scripts/lib/agr-benchmark-runner.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/lib/agr-benchmark-runner.ts) (364 LOC).
+Broker 之 decision 演算法（§3.4）、augmented decision rule（§3.4 read-set）、Theorem 2 static admission closure（§3.5），與 AGR Layer 1 / Layer 2（§3.6）由一個確定性 fixture suite 共同演練，位於 [`scripts/fixtures/agr-benchmark/`](https://github.com/eaglhuang/AI-Atomic-Framework/tree/main/scripts/fixtures/agr-benchmark/)，並由 [`scripts/validate-agr-benchmark.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/validate-agr-benchmark.ts)（107 LOC）透過 [`scripts/lib/agr-benchmark-runner.ts`](https://github.com/eaglhuang/AI-Atomic-Framework/blob/main/scripts/lib/agr-benchmark-runner.ts)（364 LOC）執行。
 
-The suite contains **12 scenarios**, each a deterministic JSON fixture with declared `expected` verdicts. We emphasize that these are **assertion fixtures, not concurrent workload benchmarks** — they verify that the broker's decision matches the formal model on these inputs, not that it scales under contention:
+本 suite 含 **12 個 scenario**，每一為帶有宣告 `expected` verdict 之確定性 JSON fixture。我們強調此為 **assertion fixture，而非 concurrent workload benchmark**——其驗證 broker 之決策於此等輸入上與形式模型相符，但並未驗證其於 contention 下之可擴展性：
 
 | # | Scenario | Validates | Expected verdict |
 |---|---|---|---|
@@ -476,19 +476,19 @@ The suite contains **12 scenarios**, each a deterministic JSON fixture with decl
 | 11 | `layer1-no-refinement-available` | AGR Layer 1: adapter has no `enclose()` available | fall back to original verdict |
 | 12 | `layer2-threshold-not-met` | AGR Layer 2: thresholds $\theta_{\mathrm{count}}, \theta_{\mathrm{density}}$ not satisfied | escalate to `steward-takeover` |
 
-**Coverage statement.** Each major formal claim in §3 has at least one corresponding scenario:
-- Theorem 1 (Cross-Regime Disjointness): scenario 05
-- Theorem 2 (Static Admission Closure under A1′/A2): scenarios 07 (A1′ holds) + 10 (A2 handoff)
-- Algorithm 1 (AGR Layer 1): scenarios 01, 11
-- Algorithm 2 (AGR Layer 2): scenarios 03, 12
-- Augmented Decision Rule: scenario 07
-- Two-tier CID separation (Definitions 3/4): scenarios 02 (Candidate), 09 (Capsule via validator surface)
+**Coverage 陳述.** §3 之每一主要形式主張皆至少對應一個 scenario：
+- Theorem 1（Cross-Regime Disjointness）：scenario 05
+- Theorem 2（Static Admission Closure under A1′/A2）：scenarios 07（A1′ holds）+ 10（A2 handoff）
+- Algorithm 1（AGR Layer 1）：scenarios 01, 11
+- Algorithm 2（AGR Layer 2）：scenarios 03, 12
+- Augmented Decision Rule：scenario 07
+- Two-tier CID 分離（Definitions 3/4）：scenarios 02（Candidate）、09（Capsule via validator surface）
 
-**Limitation.** The suite verifies broker decisions against the formal model on declared inputs. It does **not** establish: (i) behavior under adversarial concurrent loads (no parallel agent execution is exercised — fixtures are static plan inputs); (ii) comparative throughput against STORM / CodeCRDT / SCF (no baselines ported); (iii) statistical confidence bounds (single deterministic run per scenario). All three are deferred to the December 2026 full paper.
+**限制.** 本 suite 驗證 broker 決策於宣告輸入上與形式模型之相符性；其**並未**建立：(i) 於 adversarial concurrent load 之下之行為（fixture 為靜態 plan 輸入，未演練並行 agent 執行）；(ii) 相對於 STORM / CodeCRDT / SCF 之 throughput 比較（未移植 baseline）；(iii) 統計信賴區間（每個 scenario 僅一次確定性運行）。三者皆延至 2026 年 12 月之 full paper。
 
 ### 4.3 Early Real-World Adoption: npc-brain, 3-Week Case Study (✅ Real Usage Data)
 
-The npc-brain project (a game NPC behavior system, [GitHub](https://github.com/eaglhuang/3klife-npc-brain)) adopted ATM for multi-agent code atomization over a 3-week period (2026-05-19 to 2026-06-07). We report observed events honestly — including the ones that required recovery — rather than only reporting a clean headline number:
+npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/eaglhuang/3klife-npc-brain)）於 2026-05-19 至 2026-06-07 之三週期間採用 ATM 進行 multi-agent 程式碼原子化。我們以誠實方式回報所觀察到之事件——包含需要恢復處理者——而非僅回報乾淨之摘要數字：
 
 | Metric | Value |
 |---|---|
@@ -500,11 +500,11 @@ The npc-brain project (a game NPC behavior system, [GitHub](https://github.com/e
 | **Post-write validator catches** (§3.8 path) | 3 — bootstrap conflict checker found duplicate candidate IDs (`check_baihua_bootstrap_conflicts.py`, commit `c6b2ed4`); validator baseline diagnostics resync (commit `d0b2c33`); registry diff blocked event (`ATM-NPCBRAIN-0002.evolve-blocked.json`) |
 | **Unrecovered admission errors** (broker silently admitted a conflicting write) | 0 |
 
-**Interpretation and limits.** The honest narrative is *not* "zero conflicts": it is "every conflict and every governance break was caught and recovered, in some cases noisily." The 10-card revert burst is the most informative event — it exposed a scope-lock contention path the original ledger model did not idempotently handle; the recovery worked, and the runner-loop idempotency gap was subsequently hardened. The 2 rejected proposals confirm `scope-lock` (§3.6's predecessor) correctly refuses out-of-scope atomization candidates without human override. The 3 validator catches confirm the (A2) handoff (§3.5) routes dynamic / semantic incompatibilities to the post-write phase where they belong, instead of leaving them to corrupt main. This is uncontrolled deployment data (no counterfactual run without ATM, no baseline-comparator), so we make no throughput or utility claim — only an *existence-proof* claim that the layering of §3 admits real multi-agent workflows, surfaces real conflicts, and recovers from them.
+**詮釋與限制.** 誠實的敘事**並非**「零衝突」，而是「每一次衝突與每一次治理破口皆被捕捉並完成恢復，部分恢復過程伴隨可見之噪訊」。10 張卡之 revert burst 為資訊量最大之事件——其暴露出原 ledger 模型未能 idempotent 處理之 scope-lock contention path；恢復程序生效，且 runner-loop 之 idempotency 缺口隨後被加固。2 件被拒之提案確認 `scope-lock`（§3.6 之前身）能正確拒絕超出範圍之原子化候選，而毋須人工介入。3 件 validator 捕捉確認 (A2) handoff（§3.5）將動態 / 語意之不相容路由至其應屬之 post-write 階段，而非任其汙染 main。本資料屬非受控之部署資料（無「未採用 ATM 之反事實 run」、無 baseline 對照組），故我們不主張 throughput 或效益——僅主張一個 *existence-proof*：§3 之層次能容納真實之多代理工作流、能浮現真實之衝突、並能從衝突中恢復。
 
 ### 4.4 Real-World Incident Evidence on the Framework Itself (✅ Forensics Report)
 
-Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six task cards (TASK-CID-0040~0045) that exercised the broker and arbitration mechanisms while themselves *being* the work being governed. Five of those produced governance anomalies serious enough to require a formal forensics writeup: `docs/ai_atomic_framework/cid-hardening/atm-abnormal-release-forensics-report.md`. We use that report — produced contemporaneously, not constructed for this paper — as evidence that the mechanisms of §3 are exercised on real, conflict-prone workflows.
+在 2026-06-11 至 2026-06-13 期間，AAF repository 自身之治理執行了六張任務卡（TASK-CID-0040~0045），其在演練 broker 與 arbitration 機制的同時，本身亦 *作為* 被治理之工作。其中五張產生了嚴重程度足以觸發正式 forensics 紀錄之治理異常，相關報告為 `docs/ai_atomic_framework/cid-hardening/atm-abnormal-release-forensics-report.md`。我們以該份報告——係於事件當下產出，非為本論文事後建構——作為 §3 機制於真實、易生衝突之工作流上實際被演練之證據。
 
 | Incident | Date | Mechanism exercised | Outcome |
 |---|---|---|---|
@@ -514,9 +514,9 @@ Between 2026-06-11 and 2026-06-13, the AAF repository's own governance ran six t
 | **TASK-CID-0043 / 0044 / 0045 plan-mirror sync failures** | 2026-06-12 → 06-13 01:46 | "Source committed" + "planning card `status: done`" ≠ "governed close": frontmatter showed planned/done while target ledger had no governed closeout | Repair commits `d666126b` / `5f675a76` / `60c01d3c` backfilled closure packets; led to TASK-CID-0061 (freeze `tasks.ts` caller contract) and TASK-CID-0063 (mechanized path) |
 | **CID-0041 cid-shared collision** (first real broker freeze trigger) | 2026-06-12 (commit `70594a031`) | Two intents claimed the same atom CID `cid-shared` concurrently; conflict-matrix evaluated and emitted `verdict: freeze` | Freeze protocol routed the loser to wait; arbitration resumed cleanly — first end-to-end real exercise of the §3.7 freeze / patch-envelope / conflict-matrix stack |
 
-**What this evidence supports.** The broker's freeze / patch-envelope / conflict-matrix protocol described in §3.7 was not designed in the abstract: TASK-CID-0040~0042 are the *motivating incidents* that drove the hardening shipped on 2026-06-12. The cid-shared collision is the first end-to-end real trigger of the protocol. The plan-mirror sync failures (TASK-CID-0043/44/45) motivate the §3.7 "broker is the sole serialization point" requirement — they are precisely the failure mode that arises when the sole-serialization invariant is violated by allowing planning-side and target-side closeouts to drift.
+**本證據所支撐者.** §3.7 所述之 broker freeze / patch-envelope / conflict-matrix protocol 並非於抽象中設計而出：TASK-CID-0040~0042 即為驅動 2026-06-12 加固交付之 *motivating incident*。cid-shared collision 為該 protocol 首次端到端之真實觸發。Plan-mirror sync 失敗（TASK-CID-0043/44/45）則驅動 §3.7「broker 為唯一序列化點」之需求——其正為 sole-serialization 不變式被破壞、planning 側與 target 側 closeout 相互漂移時所產生之失敗模式。
 
-**What this evidence does not support.** It does not show the broker preventing all classes of multi-agent conflict in production; TASK-CID-0041's out-of-scope delivery succeeded with a waiver, indicating the admission rule did *not* catch the scope violation at write time. We list this as a limitation (§5) and a motivating case for the Team Agents Wave Mode wave-level `allowedFiles` check (now shipped, §3.8 / §4.6).
+**本證據所未能支撐者.** 其並未顯示 broker 能於 production 阻擋一切類別之 multi-agent 衝突；TASK-CID-0041 之 out-of-scope delivery 即以 waiver 通行，顯示 admission rule 於寫入時 *未* 捕捉到 scope violation。我們將此列為一個限制（§5），並作為 Team Agents Wave Mode wave-level `allowedFiles` 檢查之 motivating case（現已交付，§3.8 / §4.6）。
 
 **MAO Parallel Routing Benchmark ✅（TASK-MAO-0010，commit `90053ac6d`，2026-06-16）.** 補上一份獨立的 multi-agent admission 模擬器級驗證：`scripts/validate-mao-parallel-routing.ts` 對 12 個 scenario 跑 deterministic offline 模擬，報告 `docs/reports/mao-parallel-routing-benchmark.md`：
 
