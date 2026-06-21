@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0116
 title: Team start and broker register proposal-first gate
-status: planned
+status: done
 milestone: M21
 depends_on:
   - TASK-CID-0115
@@ -35,6 +35,9 @@ nonGoals:
 atomizationImpact:
   ownerAtomOrMap: "atm.proposal-first-team-gate"
   mapUpdates: []
+completed_at: "2026-06-21T15:59:28.668Z"
+completed_by_agent: "captain"
+delivery_commit: "79315fe16dc95ab1e49d5e2320c7bcdb6ae67b25"
 ---
 
 # TASK-CID-0116
