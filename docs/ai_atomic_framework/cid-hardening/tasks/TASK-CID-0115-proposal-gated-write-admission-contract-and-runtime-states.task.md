@@ -1,7 +1,7 @@
 ---
 task_id: TASK-CID-0115
 title: Proposal-gated write admission contract and runtime states
-status: planned
+status: done
 milestone: M21
 depends_on:
   - TASK-CID-0114
@@ -36,6 +36,9 @@ nonGoals:
 atomizationImpact:
   ownerAtomOrMap: "atm.proposal-gated-write-admission-contract"
   mapUpdates: []
+completed_at: "2026-06-21T15:54:21.859Z"
+completed_by_agent: "captain"
+delivery_commit: "79315fe16dc95ab1e49d5e2320c7bcdb6ae67b25"
 ---
 
 # TASK-CID-0115
