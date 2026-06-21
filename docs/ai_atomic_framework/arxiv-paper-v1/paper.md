@@ -524,130 +524,40 @@ npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/e
 - Scenarios 涵蓋 parallel-safe-disjoint、`same-file-different-atom-disjoint` → `allow-with-watch`（**§3.4 STORM 差異化能力的模擬器級驗證**）、same-atom-write-write → `freeze`、read-write-overlap-watch、unknown-scope-malformed → `steward-required`、generated-artifact-drift → `freeze`、route-freeze-on-pause、route-resume-after-freeze、steward-apply-safe、steward-blocked-out-of-scope、shared-surface-blocked、runner-derived-artifact-collision
 - 誠實侷限（報告自陳）：live `route` CLI 整合、真實 broker admission、distributed consensus 不在 MAO-0010 範圍內，延至 MAO-0011+ runner Broker cards 與 12 月完整版。本 suite 為 offline 確定性模擬，而非並行 load test
 
-### 4.5 Field collision evidence：layered atomization claim + cross-vendor real-task runs ✅
+### 4.5 真實同檔並行與後段仲裁證據
 
-§3.4 / §3.6 / §3.10 的核心主張——**broker 在「已存在正式 atomization 的檔案」之上，仍能用第二層虛擬原子做同檔並行寫入的細粒度仲裁**——已由四類互補的 field evidence 共同支撐。本節依下列順序展開（每一類都對應 main 分支可驗證的 artifact 路徑）：
+本節目的有二：第一，補足同檔多 agent 並行在真實工作流中的正向證據；第二，誠實呈現 broker 並不保證所有衝突都在 admission 階段完成判定，而可能在更後段的 runtime 仲裁中才真正落地。因此，本節以一個正向案例與一個負向案例，構成互補的 field evidence。
 
-| # | Evidence 類 | 角色 | 主檔位 |
-|---|---|---|---|
-| (a) | 6 筆 brokered collision runs + parallel-0041-0042 跨 vendor admission-phase 阻擋 | Foundation — broker apply 端到端可用 | `broker-collision-evidence/runs/` (4) + `parallel-0041-0042-coordination.md` |
-| (b) | **B-12 controlled field collision (2026-06-20)** | Honest field — apply-phase 阻擋誠實案例 | `broker-collision-evidence/runs/B-12-field-2026-06-20/` |
-| (c) | **`close-orchestration.ts` 同檔多 agent 並行案例：兩層證據鏈** | 同一案例之兩層證據——live field admission + replay/apply outcome | Appendix A.1（同檔不同函式之 live admission + broker compose / steward apply 重放成功）|
-| (d) | **`integration.ts` 補強後的雙層 case (secondary reinforcement)** | Secondary — 補上 formal atomization 後第二層仍保留價值 | `broker-collision-evidence/integration-layered-merge-evidence.md` |
-| (e) | Synthetic MVP（B-02 / B-08 / B-13） | Deterministic mechanism backstop | `tools/multi-vendor-broker-bench/`（規劃中）|
-
-各類的詳細紀錄如下。
-
-#### 4.5(a) Foundation runs and parallel-0041-0042
-
-截至 2026-06-17，AAF runtime 紀錄 6 筆 broker run（schema `atm.brokerOperationRunRecordEnvelope.v1`／record schema `atm.brokerOperationRunRecord.v1`），其中 4 筆由 3KLife 的 `docs/ai_atomic_framework/broker-collision-evidence/runs/` 持久存檔（AAF 因屬開源框架不追蹤 runtime artifact，由 3KLife planning repo 承接論文證據之 archival）：
-
-| Run ID | Actors | Target file | Adapter | Lane | Verdict | Task |
-|---|---|---|---|---|---|---|
-| `8bc281b6-…` | `agent-a` / `agent-b` | `scan-target.json` | `json-record` | `direct-brokered` | **`mergeable`** ✅ | — |
-| `b9b785bd-…` | `agent-a` / `agent-b` | `scan-target.json` | `json-record` | `direct-brokered` | **`mergeable`** ✅ | — |
-| `bd9d06ed-…` | `agent-a` | `tmp/broker-smoke/target.json` | `json-record` | `applied` | **`mergeable`** ✅ | `TASK-CID-0111` |
-| `b813db86-…` | `agent-c` | `tmp/broker-smoke/target.json` | `json-record` | `applied` | **`mergeable`** ✅ | `TASK-CID-0111` |
-| **`67b193f9-…`** | **`cursor-composer-2.5`** | **`atomization-coverage/path-to-atom-map.json`** | `json-record` | `applied` | **`mergeable`** ✅ | — |
-| **`c393df1d-…`** | **`cursor-composer-2.5`** | **`atomization-coverage/path-to-atom-map.json`** | `json-record` | `applied` | **`mergeable`** ✅ | — |
-
-前 2 筆為早期受控合成測試；中間 2 筆驗證 broker run 與真實任務 `task_ids` 欄位的綁定；**最後 2 筆是 production agent（Cursor Composer 2.5）對真實 atomization 覆蓋率對應表 `path-to-atom-map.json` 的並行寫入，broker 判 `mergeable` 並 `applied`**——不是 `scan-target.json` 之類的合成目標，而是 ATM 自身治理元資料的真實寫入。
-
-**Multi-vendor real-task collision dogfood（parallel-0041-0042-2026-06-17）.** 2026-06-17 之跨 vendor 真實任務碰撞實驗為 (a) 類證據中規模較大者：
-
-- **Agent A**：`cursor-composer-2.5`（Cursor + Anthropic 體系）執行 TASK-MAO-0041
-- **Agent B**：`antigravity-Gemini-Flash3.5`（Google Gemini 體系）執行 TASK-MAO-0042
-- 兩張卡的交付**同時觸及 5 個共同檔**：`close-orchestration.ts`、`taskflow.spec.ts`、`command-list.json`、`evidence-gates.md`、`path-to-atom-map.json`
-
-實驗序列：
-1. `tasks parallel --task 0041 --with 0042` → broker 回 **`blocked-cid-conflict`**（broker 確實擋下，不是寬鬆放行）
-2. `team wave plan` → planner 自動序列化為 **2 個 wave**（0041 wave 0，0042 wave 1）
-3. `team wave dispatch` → wave 0 僅 admit 0041
-4. 採用 territory split 協定（每個 agent 寫專屬 region：`// === TASK-MAO-0041 ... START ===` … `END ===`），broker 對 atom-map JSON 採用 row-level merge
-5. 兩張卡最終皆順利 close
-
-實驗紀錄：`docs/ai_atomic_framework/broker-collision-evidence/parallel-0041-0042-coordination.md`；wave envelope：`.atm/runtime/team-waves/team-wave-0-1781689097525.json`；對應 broker run：`parallel-0041-0042-broker-dogfood-2026-06-17T10-37-32-502Z.json`。
-
-**這個案例支持什麼**：
-- (i) Broker 真實偵測 cross-vendor 衝突（不是同一 LLM 自我撞測）；
-- (ii) 真實任務交付（不是 `scan-target.json` 合成）；
-- (iii) Wave Mode planner 默認序列化行為符合 §3.7 規格；
-- (iv) Row-level merge（format adapter §3.10）在 production 治理元資料 `path-to-atom-map.json` 上能 brokered apply；
-- (v) §3.4 main contribution（CID-disjoint 同檔並行）以 **multi-vendor LLM 真實任務**完成 end-to-end 實證。
-
-**Foundation evidence 之適用範圍**：上述 6 筆 runs 與 parallel-0041-0042 共同證明 broker apply、wave planner 與 territory split 在 production 路徑上之可用性，然其**並未**直接回答以下兩個關鍵問題：(A) 當檔案已被正式 atomization 覆蓋後，broker 之第二層虛擬細化是否仍提供額外價值？(B) admission 階段是否確能阻擋同 atom 之寫入？以下 (b)~(d) 三類證據針對此二問題提供誠實之回應。
-
-#### 4.5(b) B-12 controlled field collision — apply-phase honest case (2026-06-20)
-
-我們以 framework repo 內兩張正式 ATM 任務卡（TASK-TEAM-0042 vs TASK-TEAM-0043）製作第二筆跨 vendor real-task collision evidence。Actor、vendor、baseCommit、共享治理表面如下：
-
-- **Agent A**：`bench:B-12:TASK-TEAM-0042:codex-gpt54mini`（OpenAI family）
-- **Agent B**：`bench:B-12:TASK-TEAM-0043:claude-opus47`（Anthropic family）
-- 同 baseCommit `6ee99143931b5a9c8fe0953f14903498ff4c62b0`
-- 同 4 個共享治理表面：`packages/cli/src/commands/team.ts`、`docs/governance/team-agents/team-vendor-runtime.md`、`scripts/validate-team-agents.ts`、`atomic_workbench/atomization-coverage/path-to-atom-map.json`
-
-論文採用以下正式說法，定調為 **apply-phase collision evidence**，**不**主張 admission-time CID freeze、**不**主張 admission 端已偵測同 CID claim：
-
-> 2026 年 6 月 20 日所執行之 B-12 控制式 field collision，在 `TASK-TEAM-0042` 與 `TASK-TEAM-0043` 之間生出一筆真實的跨 vendor 並行競爭案例。兩側於 team-start 階段皆獲 broker 仲裁判 `parallel-safe`、`safeToStart: true`，並進入 `direct-brokered` lane。然而，決定性的競爭並未發生於 admission 階段：俟 `TASK-TEAM-0043` 取得 broker registry 中之 active intent 後，對手側 `TASK-TEAM-0042` 在推進至 apply-phase 時為既存之 active intent 所阻擋。本案因此構成一筆誠實的 apply-phase collision evidence——系統確實於真實 repository 中將原不安全之並行推進序列化，惟本案中實際生效之 enforcement boundary 仍停於 apply-phase，而非理想之 admission-phase。
-
-這個 case 提供雙重支撐：(i) 在真實 repo + 跨 vendor 設定下，broker 確實序列化了不安全的並行推進；(ii) 但目前 atom-level exclusivity 在此 case 主要由 *apply-phase registry arbitration* 落實，而非 *admission-phase atom-claim*——這直接支撐 §3.9 open problem。
-
-**已封存 evidence artifacts**（3KLife archival，commit `ee37239e`；不再依賴 AAF runtime 現場檔案）：
-
-- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md`
-- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/team-4a7221ebbb23.json`
-- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/team-cd46fbcc7ad3.json`
-- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/write-broker.registry.snapshot.json`
-- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-capture.md`
-- `docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-evidence-bundle.md`
-
-#### 4.5(c) `close-orchestration.ts` — 同檔多 agent 並行案例：兩層證據鏈
+#### 4.5.1 正向案例：同檔、不同函式的可安全並行
 
 我們在 `packages/cli/src/commands/taskflow/close-orchestration.ts` 上收集到一個正向的同檔並行案例。兩個來自不同 vendor family 的 live agent，同時在同一個 `main` 工作樹上操作同一個 TypeScript 檔案；其中一個 lane 修改 `buildClosebackPlan`，另一個 lane 修改 `resolveClosebackPlanningPath`。在標準 ATM claim 與 team-start 流程下，兩個 lane 都被 broker 以 `direct-brokered` / `parallel-safe` 放行。這說明 ATM 並不會僅因為「同一檔案」就把所有工作一律序列化；當修改落在不同的檔內區域時，系統可以保留安全並行。
 
-接著，我們再把同一對正向 patch 經過 ATM 原生的 broker compose 與 steward apply 流程重放。重放結果維持一致：該對 patch 在 compose 階段判定為 `parallel-safe`，steward plan 通過，最終 steward apply 也成功完成，結果為 `applied`。因此，這個案例形成了一條完整的證據鏈：live field run 證明 ATM 在真實多 agent 場景下會放行這組同檔雙 patch，而 replay/apply artifact 則進一步證明這組 patch 不只在 admission 時可被接受，也確實可以被組合並成功套用。
+這個案例的重要性在於，它不是單純的「不同檔案成功並行」，而是更嚴格的「同一檔案、不同函式層級區域」的成功案例。因此，它更直接支持本文的核心主張：顯式 atomization 搭配第二層檔內 segmentation，不只能在靜態分析上區分工作面，也能在真實多 agent 協作時避免過度保守的 file-level serialization。
 
-完整 artifact 細節（authoritative team-run 紀錄、經過濾 evidence bundle、replay/apply outcome artifact、詮釋邊界）見 **Appendix A.1**。
+為了補強這個 live field evidence，我們再把同一對正向 patch 經過 ATM 原生的 broker compose 與 steward apply 流程重放。重放結果維持一致：該對 patch 在 compose 階段判定為 `parallel-safe`，steward plan 通過，最終 steward apply 也成功完成，結果為 `applied`。因此，這個正向案例形成一條完整證據鏈：field run 證明 ATM 會在真實多 agent 場景下放行這組同檔雙 patch，而 replay/apply artifact 則進一步證明這組 patch 不只在 admission 時可被接受，也確實可以被組合並成功套用。
 
-#### 4.5(d) `integration.ts` — secondary reinforcement case
+#### 4.5.2 負向案例：B-12 的後段執行仲裁
 
-`packages/cli/src/commands/integration.ts` 起初只有第二層虛擬原子示範、缺第一層正式 atomization，作為 layered claim 的 evidence 偏弱。我們補上了下列正式 atom maps：
+與上述正向案例互補的是 B-12。B-12 是一個真實多 vendor 的 field collision 案例，用來說明 broker 的保護不一定全部發生在 admission 階段。此案例中，兩個 live lane 對應 `TASK-TEAM-0042` 與 `TASK-TEAM-0043`，共享多個 target file，並在同一個主工作樹中進入 broker / team-governed 流程。
 
-| 補上的正式 atom / map | 能力 |
-|---|---|
-| `atm.integration-bootstrap-map` | governed editor entry 檔案的 bootstrap + onboarding discovery |
-| `atm.integration-dispatch-map` | CLI integration action dispatch + result shaping |
-| `atm.integration-install-map` | adapter install／uninstall／verify orchestration + factory lane |
-| `atm.integration-manifest-map` | manifest resolution／drift verification／health reporting |
+值得注意的是，B-12 並不是「admission 當場 freeze」的案例。相反地，兩邊在 team-start / admission 階段都被判定為可啟動，亦即 `parallel-safe`。真正的阻擋發生在更後段的 apply-phase / active-intent runtime 階段：當其中一側已經持有 active intent 並進入 broker registry 後，另一側在嘗試推進時被 fail-closed 擋下。換言之，B-12 的重點不在於 admission 是否立即識別衝突，而在於系統是否能在更接近實際寫入的執行期階段，透過 broker registry 與 active intent 機制補上安全仲裁。
 
-補上之後重跑 broker-aware pre-patch 掃描，第二層虛擬原子仍保留同樣價值：
+這一點對本文很重要，因為它提供了一個誠實的反例：ATM 的安全性並不建立在「所有衝突都必須在 admission 當下被辨識」這個過度強化的前提上。相反地，B-12 顯示 broker 可以採用較寬鬆的 admission policy，同時把真正的執行衝突仲裁留給 runtime active-intent 機制處理。對多 agent 系統而言，這比一律入口即拒更接近真實協作環境，也更符合高併發工作流的設計目標。
 
-| 虛擬原子候選 | 行範圍 | 角色 |
-|---|---|---|
-| `runIntegration` | 188–313 | Patch A |
-| `verifyManifestFile` | 455–504 | Patch B |
+#### 4.5.3 綜合意義：不是只會擋，也不是只會放
 
-模擬結果：
+若只看正向案例，讀者可能誤以為 ATM 的主要價值只是「讓更多同檔修改通過」；若只看負向案例，則又可能誤以為 ATM 的價值只是「在衝突時擋下寫入」。這兩種理解都過於片面。`close-orchestration` 與 B-12 放在一起時，所展示的是同一個 broker 設計的雙重能力：
 
-- 不同 function → **`parallel-safe`**
-- 同 function（兩寫同打 `runIntegration`）→ **`blocked-cid-conflict`**
+1. 當修改雖然落在同一檔案，但實際上位於不同函式或不同 atomized / virtually segmented 區域時，系統可以保留安全並行，而不必粗暴地退回 file-level serialization。
+2. 當共享工作面在 runtime 中真的形成執行期佔用或 active intent 競爭時，系統又能在更後段的 apply-phase 做出 fail-closed 仲裁，而不是放任衝突寫入發生。
 
-這個 case 的價值在於它**反向證明** layered claim 不是 close-orchestration.ts 的偶發特例：當一個原本沒有正式 atomization 的檔案被補上 atom map 後，broker 第二層虛擬細化的價值不會被「吸收掉」，仍能在同檔內做 function-scoped 仲裁。
+因此，本節的證據不是「成功案例加上一個失敗案例」這麼簡單，而是共同說明 ATM 的 broker 並不是單向保守或單向寬鬆，而是根據衝突訊號出現的層級與時機，動態切換允許並行與執行期阻擋。
 
-**對應說明檔**：`docs/ai_atomic_framework/broker-collision-evidence/integration-layered-merge-evidence.md`。
+#### 4.5.4 本節證據邊界
 
-#### 4.5(e) Synthetic MVP — deterministic mechanism backstop (planned)
+本節也需要明確說明其證據邊界。`close-orchestration` 的 field layer 來自真實同檔多 agent 執行；其 outcome layer 則來自 ATM 對同一對正向 patch 的 broker compose / steward apply replay artifact。B-12 則是一個真實多 vendor 的 field collision evidence，其 admission 階段仍為 `parallel-safe`，真正阻擋發生在 apply-phase / active-intent runtime 階段。因此，本節不應被寫成「所有衝突都在 admission 立刻被阻擋」，也不應被寫成「所有正向案例都已直接在 main 上完成最終 merge commit」。較精確的說法是：ATM 已展示出對同檔多 agent 協作的雙面能力，一方面可在真實場景中放行可分離的同檔修改，另一方面也可在 runtime 執行階段對真正的共享寫入競爭做出可追溯的 fail-closed 仲裁。
 
-`tools/multi-vendor-broker-bench/`（規劃中，bench-design.md）的 B-02（AGR Layer 2 refine → admit）、B-08（CAS bounded re-plan → apply）、B-13（broker admit + validator semantic-reject）三個合成 scenario 將為 §3.4 各 layer 提供 deterministic mechanism evidence，與 (a)~(d) 的 field evidence 互補。寫入時點將與 §4.2 12-scenario fixture suite 共用 `atm.brokerOperationRunRecordEnvelope.v1` schema。
-
-#### 4.5(f) What this section still does not show
-
-- **大規模 in-the-wild 並行 edits 吞吐量數據**：parallel-0041-0042 + B-12 為控制式 dogfood，非長時段 production 統計；對 STORM / CodeCRDT / CoAgent 的吞吐量 / token cost head-to-head 對照延 12 月 full paper。
-- **JS / Python `compose.ts` 程式碼原子路徑的 multi-vendor 真實 collision**：(c) (d) 兩個 layered case 都是 TypeScript CLI 檔；其他語言 adapter 的 layered evidence 仍為 §4.2 fixture + 8-scenario AGR arbitration 7/7 catch，未升 field。
-- **apply-phase block 的專用持久化 schema**：B-12 揭示 blocked verdict 為 runtime emission，未寫進 team-run JSON；論文承諾後續補 `apply-phase-block.v1` schema 讓「admission `parallel-safe` + apply-phase intent-block」兩相段差能機械化追蹤。
-- **layered admission：把 (c) (d) 的 admission-time 第二層切分推到 B-12 的 apply-phase atom-claim 之前**：理想終局是 admission rule 直接讀 active intent registry，但實作分派中；§3.9 列為 open problem。
-
-**持續紀錄路徑**：之後新增 collision runs 將寫入 `docs/ai_atomic_framework/broker-collision-evidence/runs/`；layered merge cases 寫入同目錄根層的 `*-layered-merge-evidence.md`；`INDEX.md` 維護表格（取代早期 `CID衝突解決紀錄log.md` 排程掃描檔）。
+兩案例之 paper-citable artifact（authoritative run id、registry snapshot、replay/apply outcome、過濾後 bundle 路徑、retired duplicate 與 collector 衛生紀錄）一律置於 **Appendix A.1**。
 
 ### 4.6 Wave Mode Dogfood Suite ✅（TASK-MAO-0033，2026-06-17）
 
@@ -795,92 +705,111 @@ ATM 自身的開發過程即為本論文所述 multi-agent admission-controlled 
 
 ## Appendix A. Artifact Notes
 
-### A.1 `close-orchestration.ts` 同檔多 agent 並行案例：兩層證據
+### A.1 §4.5 真實同檔並行與後段仲裁證據之 artifact 細節
 
-本案例的目標檔案為：
+本附錄補充 §4.5 兩案例之 paper-citable artifact。正文已就案例本身完整敘述；此處僅承載 run id、registry snapshot、bundle 路徑等可追查之 runtime 細節。
 
-- `packages/cli/src/commands/taskflow/close-orchestration.ts`
+#### A.1.1 `close-orchestration.ts` 正向案例（對應 §4.5.1）
 
-兩個功能 lane 分別為：
+**目標檔案**：`packages/cli/src/commands/taskflow/close-orchestration.ts`
+
+**兩條 lane**：
 
 - `TASK-COLLIDE-CLOSE-ORCH-A`：修改範圍限定在 `buildClosebackPlan`
 - `TASK-COLLIDE-CLOSE-ORCH-B`：修改範圍限定在 `resolveClosebackPlanningPath`
 
-這兩個 lane 應被視為**同一個正向同檔案例**，而不是兩個彼此無關的例子。
+該兩條 lane 應被視為**同一個正向同檔案例**之兩個 actor，而非兩個彼此無關之例子。
 
-#### Field admission layer
+##### Field admission layer
 
-在 live controlled field run 中，兩個 agent 同時操作同一個 `main` 工作樹，且目標都是同一個 TypeScript 檔案，但修改位置位於不同的函式層級區域。兩個 lane 都經過正常的 ATM claim 與 team-start 流程，並被 broker 以 `direct-brokered` / `parallel-safe` 放行。
+兩個 agent 分屬不同 vendor family，同時操作同一個 `main` 工作樹，目標皆為同一 TypeScript 檔案，惟修改位置位於不同之 function-level 區域。兩個 lane 皆經由標準之 ATM claim 與 team-start 流程，並於 `direct-brokered` lane 上獲 broker 判為 `parallel-safe`。
 
-具權威性的 team-run 記錄如下：
+具權威性之 team-run 紀錄：
 
 - Lane A：`team-53e5bae34958`
 - Lane B：`team-0c9db84467a6`
 
-過濾後的 field evidence bundle 如下：
+過濾後之 field evidence bundle：
 
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.md`
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-positive-bundle-filtered/broker-evidence-bundle.json`
 
-#### Replay/apply outcome layer
+##### Replay/apply outcome layer
 
-之後，我們再把同一對正向 patch 經過 ATM 原生的 broker compose 與 steward apply 流程重放。在這次重放中：
+同一對正向 patch 經 ATM 原生之 broker compose 與 steward apply 流程重放。重放紀錄如下：
 
 - compose verdict：`parallel-safe`
 - apply method：`patch-apply`
 - steward plan：`ok`
 - steward apply verdict：`applied`
 
-這一層 outcome-level evidence 說明：這組同檔雙 patch 不只在 admission 階段被允許，而且在保持函式級別分離的前提下，也可以被實際 compose 並成功 apply。
-
-Replay/apply evidence 檔案如下：
+Replay/apply evidence 檔案：
 
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/merge-evidence-report.md`
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/merge-evidence-report.json`
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/steward-apply-evidence.json`
 - `C:/Users/User/AI-Atomic-Framework/.atm-temp/close-orch-merge-evidence/merge-plan.json`
 
-此外，這次 replay/apply artifact 也包含 broker operation envelope（`atm.brokerOperationRunRecordEnvelope.v1`）。
+此 replay/apply artifact 亦含 broker operation envelope（`atm.brokerOperationRunRecordEnvelope.v1`）。
 
-#### 已退役之重複 setup trace
+##### Artifact hygiene 註記
 
-於 setup 階段曾產生一筆重複的 Lane B runtime 紀錄：
+於 setup 階段曾產生一筆重複之 Lane B runtime 紀錄 `team-999a0524a589`。該紀錄未被採用為本案 authoritative 正向配對之一部分，已遷移至 `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/_retired/team-999a0524a589.json`，並於該目錄補入說明文件 `_retired/README.md`。此退役步驟未變更 broker registry、未修改任何 source patch、亦未影響該兩筆 authoritative runtime 紀錄；其角色純為證據紀錄之區分。配合此一退役步驟，本地端之 evidence collector（`C:/Users/User/AI-Atomic-Framework/scripts/collect-broker-evidence.ts`、`C:/Users/User/AI-Atomic-Framework/scripts/capture-broker-evidence.ts`）已調整為僅將 `team-runs/` 目錄頂層 JSON 視為 active runtime 紀錄，排除 `_retired/` 之 quarantined trace。該變更屬於 artifact 衛生措施，未涉及 broker 行為之語意變更。
 
-- `team-999a0524a589`
+#### A.1.2 B-12 負向案例（對應 §4.5.2）
 
-該紀錄未被採用為本案 authoritative 正向配對之一部分。為免下游 evidence 收集產生判讀歧義，本研究將其遷移至：
+**Case 定義**：兩張真實任務卡共享多個檔案工作面。
 
-- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/_retired/team-999a0524a589.json`
+- `TASK-TEAM-0042`
+- `TASK-TEAM-0043`
 
-並於該目錄補入說明文件：
+**共享 target file**：
 
-- `C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/_retired/README.md`
+- `packages/cli/src/commands/team.ts`
+- `docs/governance/team-agents/team-vendor-runtime.md`
+- `scripts/validate-team-agents.ts`
+- `atomic_workbench/atomization-coverage/path-to-atom-map.json`
 
-值得強調者，此退役步驟未變更 broker registry、未修改任何 source patch、亦未影響該兩筆 authoritative runtime 紀錄；其角色純為證據紀錄之區分——將最終引用之正向配對與先前已被取代之重複 trace 加以分離。
+**Runtime actor**：兩個主要 actor 分屬不同 vendor family。
 
-#### 收集器之行為與 artifact 衛生
+- `bench:B-12:TASK-TEAM-0042:codex-gpt54mini`
+- `bench:B-12:TASK-TEAM-0043:claude-opus47`
 
-由於已退役之 trace 在原本之 aggregate task-artifact 摘要中可能再度浮現，本研究將本地端之 evidence collector 調整為：active evidence 掃描僅將 `team-runs/` 目錄頂層之 JSON 檔視為 active runtime 紀錄，並排除位於 `_retired/` 之 quarantined trace。所涉之工具為：
+**Team-run 紀錄**：
 
-- `C:/Users/User/AI-Atomic-Framework/scripts/collect-broker-evidence.ts`
-- `C:/Users/User/AI-Atomic-Framework/scripts/capture-broker-evidence.ts`
+- `team-4a7221ebbb23`（`TASK-TEAM-0042`）
+- `team-cd46fbcc7ad3`（`TASK-TEAM-0043`）
 
-該變更屬於 artifact 衛生措施，並未涉及 broker 行為之語意變更。
+於 team-run JSON 所記錄之 admission 階段，兩邊皆呈現可啟動狀態：
 
-#### 詮釋邊界
+- `safeToStart: true`
+- admission verdict：`parallel-safe`
 
-請把這個 case 明確寫成「**一個案例、兩層證據**」：
+B-12 之實質阻擋發生於 apply-phase / active-intent runtime 階段，而非 admission 階段。具體序列為：`TASK-TEAM-0043` 先完成 broker register 並於 broker registry 中持有 active intent；後續 `TASK-TEAM-0042` 嘗試前進時被 broker fail-closed 擋下；阻擋原因為共享工作面已被既存之 active intent 佔用，並非 admission 當下直接辨識出之靜態衝突。因此本案應被描述為 apply-phase collision、late enforcement、runtime active-intent arbitration，而非 admission-time freeze。
 
-1. live field admission / team-run evidence
-2. replay / apply outcome evidence
+**Paper-citable 歸檔包**：
 
-不要把它拆成兩個互不相干的小故事。
+- `C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/`
 
-同時請保留以下誠實邊界：
+該歸檔包包含：
 
-- field layer 來自同一主工作樹上的 live same-file 多 agent 執行
-- replay/apply layer 來自 ATM 對同一對正向 patch 的 controlled broker / steward replay pipeline
-- 除非另有後續 artifact 明確證明，否則不可把這個案例寫成「兩個 live agent 已經直接在 `main` 上完成 merge commit」
+- `team-4a7221ebbb23.json`
+- `team-cd46fbcc7ad3.json`
+- `write-broker.registry.snapshot.json`
+- `broker-capture.json`
+- `broker-capture.md`
+- `broker-evidence-bundle.json`
+- `broker-evidence-bundle.md`
+- `b12-0042-proposal.json`
+- `b12-0042-merge-plan.json`
+
+#### A.1.3 兩案例之共同詮釋邊界
+
+於此再次重申 §4.5.4 所述之邊界，俾供 artifact 引用時逐條對齊：
+
+1. `close-orchestration` 之 field layer 來自同一主工作樹上之 live same-file 多 agent 執行；其 replay/apply layer 來自 ATM 對同一對正向 patch 之 controlled broker / steward replay pipeline。除非另有後續 artifact 明確證明，否則不得將本案描述為「兩個 live agent 已直接於 `main` 上完成 merge commit」。
+2. B-12 之兩邊 admission 皆為 `parallel-safe`；阻擋發生於 apply-phase / active-intent runtime 階段；其為真實 field collision evidence，並非 synthetic fixture。被 blocked 或 queued 之 lane 同屬有效 field evidence——本論文所欲證明者為 broker 是否正確仲裁，並非「兩造是否皆寫入成功」。
+3. 兩案例合併之意義為 ATM 對同檔多 agent 協作呈現雙面能力：對可分離之同檔修改放行安全並行；對 runtime 共享寫入競爭提供 fail-closed 仲裁。本附錄不應被用以擴張 §4.5 正文所未主張之結論。
 
 ---
 
@@ -914,7 +843,22 @@ Replay/apply evidence 檔案如下：
 
 ## Revision History
 
-**2026-06-21 (Current Draft, twenty-first pass — close-orchestration.ts 收斂為「一個案例、兩層證據鏈」之完整包):**
+**2026-06-21 (Current Draft, twenty-second pass — §4.5 整段重構為「正向 + 負向」雙案例 evidence section；close-orchestration 與 B-12 整合):**
+
+User 指示：將 close-orchestration 與 B-12 整合為同一個 §4.5 evidence section，停用先前 (a)~(f) 5 層 evidence stack 框架。本 pass 採 user 提供之完整骨架直接覆蓋：
+
+- **§4.5 標題改為「真實同檔並行與後段仲裁證據」**。
+- **§4.5 整段重寫為四個 subsection**：
+  - **4.5.1 正向案例**：close-orchestration.ts 之 field admission（兩 vendor family 之 live agent 並行於同檔不同函式）+ replay/apply outcome（compose `parallel-safe` / steward plan `ok` / apply `applied`）合併呈現。
+  - **4.5.2 負向案例**：B-12 之 apply-phase late enforcement——admission 階段兩邊 `parallel-safe`，runtime active-intent 機制於後段補上 fail-closed 仲裁。框架由「honest hybrid evidence」升級為「ATM 設計哲學的反例」：broker 採較寬鬆 admission policy，將真正執行衝突仲裁留給 runtime active-intent，比一律入口即拒更接近真實協作環境。
+  - **4.5.3 綜合意義**：明寫「不是只會擋，也不是只會放」之雙重能力。
+  - **4.5.4 本節證據邊界**：明確劃定不主張之內容。
+- **退場章節**：舊 §4.5(a) Foundation runs 表 + parallel-0041-0042 narrative、舊 (b) B-12、舊 (c) close-orchestration、舊 (d) integration.ts、舊 (e) Synthetic MVP placeholder、舊 (f) honest coda、舊開頭 5 層 evidence stack overview 表。
+- **Appendix A.1 整段重寫為合併 A.1.1（close-orchestration artifact）+ A.1.2（B-12 artifact）+ A.1.3（共同詮釋邊界）**；所有 run id、registry snapshot、replay/apply path、retired duplicate、collector hygiene 細節下沉於此。
+- **退場敘述模式（不得再拼接）**：admission-stage freeze 之 B-12、admission 入口即拒之 B-12、synthetic case 之 B-12、「雙方已於 main 完成 merged apply」之 close-orchestration、file-level disjointness 之 close-orchestration、purely synthetic 之 replay/apply artifact。
+- **跨章節 follow-up（未處理，待後續）**：§1.3 contribution #3 仍引用 parallel-0041-0042 + 6 broker collision runs 作為 field-validated 例證；§6.4 (b) 仍引用 parallel-0041-0042 作為 in-vivo dogfood。新 §4.5 已不含 parallel-0041-0042 詳述，此二處外部引用為孤兒，須於下一 pass 對齊。
+
+**2026-06-21 (twenty-first pass — close-orchestration.ts 收斂為「一個案例、兩層證據鏈」之完整包):**
 
 User 校正：先前數版將 close-orchestration.ts 之 evidence 以多個零碎段落形式呈現（6 atom maps 表 + pre-patch scanner simulated table + simulated 結果 bullets + layered claim block quote + 「Positive same-file field evidence」block quote + 對應說明檔 pointer），且舊版「formal atomization + broker virtual segmentation」之 simulated 雙層框架已不再為 case 之主軸。本 pass 以 user 提供之完整包做直接覆蓋：
 
