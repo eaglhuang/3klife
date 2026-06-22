@@ -1,0 +1,183 @@
+  "ok": false,
+  "command": "broker",
+  "mode": "standalone",
+  "cwd": "C:\\Users\\User\\AI-Atomic-Framework",
+  "messages": [
+    {
+      "level": "error",
+      "code": "ATM_BROKER_REGISTERED",
+      "text": "Write intent registered with verdict 'blocked-active-lease', lane 'blocked', and admission 'blocked-befo
+re-write'. Arbitration matrix verdict: 'takeover'. Broker verdicts override Coordinator decisions inside broker-governe
+d conflict domains; Coordinator remains local outside them.",
+      "data": {
+        "decision": {
+          "schemaId": "atm.brokerDecision.v1",
+          "specVersion": "0.1.0",
+          "migration": {
+            "strategy": "none",
+            "fromVersion": null,
+            "notes": "generated"
+          },
+          "intentId": "decision-1782121319524",
+          "taskId": "TASK-PAPER-HOTFILE-BLOCK-B",
+          "verdict": "blocked-active-lease",
+          "lane": "blocked",
+          "conflicts": [
+            {
+              "kind": "lease",
+              "detail": "Malformed intent shape or active lease mismatch requires takeover. Abort write path and reques
+t explicit clearance."
+            }
+          ],
+          "applyMethod": "none",
+          "reason": "Takeover required before conflict arbitration",
+          "conflictMatrix": {
+            "schemaId": "atm.brokerConflictMatrix.v1",
+            "specVersion": "0.1.0",
+            "migration": {
+              "strategy": "none",
+              "fromVersion": null,
+              "notes": "generated"
+            },
+            "taskId": "TASK-PAPER-HOTFILE-BLOCK-B",
+            "arbitrationVerdict": "takeover",
+            "conflicts": [
+              {
+                "kind": "cid",
+                "detail": "Write set overlap: atomCid 'atm-broker-classify-explicit-mutation-request-broker-841-878' is
+ held by 'TASK-PAPER-HOTFILE-BLOCK-A'.",
+                "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+              },
+              {
+                "kind": "cid",
+                "detail": "Write set overlap: atomId 'atm.broker.classify-explicit-mutation-request' is held by 'TASK-P
+APER-HOTFILE-BLOCK-A'.",
+                "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+              },
+              {
+                "kind": "file-range",
+                "detail": "File overlap on 'packages/cli/src/commands/broker.ts' between 'atm-broker-classify-explicit-
+mutation-request-broker-841-878' and 'atm-broker-classify-explicit-mutation-request-broker-841-878'.",
+                "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+              },
+              {
+                "kind": "lease",
+                "detail": "Active lease epoch stale for 'TASK-PAPER-HOTFILE-BLOCK-A'; leaseEpoch 1782121051602 is behin
+d registry currentEpoch 1782121088902.",
+                "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+              }
+            ]
+          },
+          "admission": {
+            "trigger": "same-file-overlap-risk",
+            "state": "blocked-before-write",
+            "requiresProposal": true,
+            "summarySubmitted": true,
+            "hotFiles": [
+              "packages/cli/src/commands/broker.ts"
+            ],
+            "boundedRegions": [
+              {
+                "filePath": "packages/cli/src/commands/broker.ts",
+                "lineStart": 841,
+                "lineEnd": 878
+              }
+            ],
+            "rearbitrationRequired": true,
+            "reason": "Takeover required before conflict arbitration."
+          }
+        }
+      }
+    }
+  ],
+  "evidence": {
+    "decision": {
+      "schemaId": "atm.brokerDecision.v1",
+      "specVersion": "0.1.0",
+      "migration": {
+        "strategy": "none",
+        "fromVersion": null,
+        "notes": "generated"
+      },
+      "intentId": "decision-1782121319524",
+      "taskId": "TASK-PAPER-HOTFILE-BLOCK-B",
+      "verdict": "blocked-active-lease",
+      "lane": "blocked",
+      "conflicts": [
+        {
+          "kind": "lease",
+          "detail": "Malformed intent shape or active lease mismatch requires takeover. Abort write path and request ex
+plicit clearance."
+        }
+      ],
+      "applyMethod": "none",
+      "reason": "Takeover required before conflict arbitration",
+      "conflictMatrix": {
+        "schemaId": "atm.brokerConflictMatrix.v1",
+        "specVersion": "0.1.0",
+        "migration": {
+          "strategy": "none",
+          "fromVersion": null,
+          "notes": "generated"
+        },
+        "taskId": "TASK-PAPER-HOTFILE-BLOCK-B",
+        "arbitrationVerdict": "takeover",
+        "conflicts": [
+          {
+            "kind": "cid",
+            "detail": "Write set overlap: atomCid 'atm-broker-classify-explicit-mutation-request-broker-841-878' is hel
+d by 'TASK-PAPER-HOTFILE-BLOCK-A'.",
+            "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+          },
+          {
+            "kind": "cid",
+            "detail": "Write set overlap: atomId 'atm.broker.classify-explicit-mutation-request' is held by 'TASK-PAPER
+-HOTFILE-BLOCK-A'.",
+            "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+          },
+          {
+            "kind": "file-range",
+            "detail": "File overlap on 'packages/cli/src/commands/broker.ts' between 'atm-broker-classify-explicit-muta
+tion-request-broker-841-878' and 'atm-broker-classify-explicit-mutation-request-broker-841-878'.",
+            "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+          },
+          {
+            "kind": "lease",
+            "detail": "Active lease epoch stale for 'TASK-PAPER-HOTFILE-BLOCK-A'; leaseEpoch 1782121051602 is behind re
+gistry currentEpoch 1782121088902.",
+            "blockingTask": "TASK-PAPER-HOTFILE-BLOCK-A"
+          }
+        ]
+      },
+      "admission": {
+        "trigger": "same-file-overlap-risk",
+        "state": "blocked-before-write",
+        "requiresProposal": true,
+        "summarySubmitted": true,
+        "hotFiles": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "boundedRegions": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878
+          }
+        ],
+        "rearbitrationRequired": true,
+        "reason": "Takeover required before conflict arbitration."
+      }
+    },
+    "registryPath": ".atm/runtime/write-broker.registry.json"
+  },
+  "severity": "failure",
+  "exitCode": 1,
+  "blocking": true,
+  "diagnostics": {
+    "errorCodes": [
+      "ATM_BROKER_REGISTERED"
+    ],
+    "warningCodes": [],
+    "infoCodes": []
+  }
+}

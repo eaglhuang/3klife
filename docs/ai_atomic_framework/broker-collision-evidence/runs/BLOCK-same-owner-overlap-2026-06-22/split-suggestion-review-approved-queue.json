@@ -1,0 +1,144 @@
+{
+  "schemaId": "atm.humanReviewQueue",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "Approved curator review queue for BLOCK same-owner overlap split suggestion."
+  },
+  "generatedAt": "2026-06-22T09:43:00.000Z",
+  "entries": [
+    {
+      "proposalId": "proposal.map-curator.patch.block-same-owner-overlap-2026-06-22",
+      "atomId": "ATM-MAP-0002",
+      "fromVersion": "0.1.0",
+      "toVersion": "0.1.1",
+      "decompositionDecision": "split",
+      "automatedGates": {
+        "allPassed": true,
+        "blockedGateNames": []
+      },
+      "status": "approved",
+      "proposalSnapshotHash": "sha256:6d96968fdee71d636ae4b4300a0b7237f7b643fee1e36276f5a2a81525a06be8",
+      "proposal": {
+        "schemaId": "atm.upgradeProposal",
+        "specVersion": "0.1.0",
+        "migration": {
+          "strategy": "none",
+          "fromVersion": null,
+          "notes": "Broker split suggestion promoted into a human-reviewable atom-map split plan."
+        },
+        "proposalId": "proposal.map-curator.patch.block-same-owner-overlap-2026-06-22",
+        "atomId": "ATM-MAP-0002",
+        "fromVersion": "0.1.0",
+        "toVersion": "0.1.1",
+        "lifecycleMode": "evolution",
+        "behaviorId": "behavior.split",
+        "target": {
+          "kind": "map",
+          "mapId": "ATM-MAP-0002"
+        },
+        "decompositionDecision": "split",
+        "proposalSource": "broker-split-suggestion",
+        "targetSurface": "atom-map",
+        "reviewTemplate": "review.template.split",
+        "automatedGates": {
+          "allPassed": true,
+          "blockedGateNames": []
+        },
+        "humanReview": "pending",
+        "status": "pending",
+        "patchDraft": {
+          "candidateId": "block-same-owner-overlap-2026-06-22",
+          "draftKind": "atom-map-patch",
+          "signalKind": "broker-split-suggestion",
+          "targetMapId": "ATM-MAP-0002",
+          "sourceEvidenceIds": [
+            "evidence.block-same-owner-overlap.blocked-register-b-decision",
+            "evidence.block-same-owner-overlap.broker-status-snapshot"
+          ],
+          "patchFiles": [
+            "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json",
+            "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+          ],
+          "ownerAtomId": "atm.broker.classify-explicit-mutation-request",
+          "conflictRegion": {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878
+          },
+          "suggestedAtoms": [
+            {
+              "atomId": "atm.broker.classify-explicit-mutation-request.focus.841-878",
+              "atomCid": "atm-broker-classify-explicit-mutation-request-focus-841-878",
+              "role": "focus",
+              "summary": "Focused child atom covering the conflict region 841-878.",
+              "sourceRange": {
+                "filePath": "packages/cli/src/commands/broker.ts",
+                "lineStart": 841,
+                "lineEnd": 878
+              }
+            }
+          ],
+          "summary": "Broker split suggestion for 'atm.broker.classify-explicit-mutation-request' on packages/cli/src/commands/broker.ts is ready as a review-only atom-map patch draft.",
+          "rationale": "Because the live blocked overlap covered the full current bounded atom, this prototype draft promotes the broker focus suggestion into a curator-reviewable child atom plan rather than claiming an automatic before/focus/after tri-split.",
+          "requiresHumanReview": true,
+          "operations": [
+            {
+              "op": "replace-owner-range",
+              "target": "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json",
+              "summary": "Replace coarse owner atom 'atm.broker.classify-explicit-mutation-request' coverage on packages/cli/src/commands/broker.ts with a focused child atom row.",
+              "payload": {
+                "pathPattern": "packages/cli/src/commands/broker.ts",
+                "ownerAtomId": "atm.broker.classify-explicit-mutation-request",
+                "conflictRegion": {
+                  "filePath": "packages/cli/src/commands/broker.ts",
+                  "lineStart": 841,
+                  "lineEnd": 878
+                }
+              }
+            },
+            {
+              "op": "add-child-atom-row",
+              "target": "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json",
+              "summary": "Add focus child atom row 'atm.broker.classify-explicit-mutation-request.focus.841-878' covering 841-878.",
+              "payload": {
+                "pathPattern": "packages/cli/src/commands/broker.ts#L841-L878",
+                "atomId": "atm.broker.classify-explicit-mutation-request.focus.841-878",
+                "atomCid": "atm-broker-classify-explicit-mutation-request-focus-841-878",
+                "role": "focus",
+                "capability": "Focused child atom covering the conflict region 841-878.",
+                "coverageStatus": "active"
+              }
+            },
+            {
+              "op": "rebuild-projection",
+              "target": "atomic_workbench/atomization-coverage/path-to-atom-map.json",
+              "summary": "Rebuild the path-to-atom-map projection after curator review accepts the focused child atom draft."
+            }
+          ]
+        },
+        "inputs": [
+          {
+            "kind": "evolution-evidence",
+            "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/split-suggestion-curator-report.json",
+            "schemaId": "atm.atomMapCuratorReport",
+            "reportId": "map-curator-review.block-same-owner-overlap-2026-06-22",
+            "summary": "Curator patch draft derived from broker split suggestion block-same-owner-overlap-2026-06-22."
+          }
+        ],
+        "proposedBy": "ATM Atom Map Curator",
+        "proposedAt": "2026-06-22T09:42:10.000Z"
+      },
+      "queuedAt": "2026-06-22T09:42:10.000Z",
+      "review": {
+        "decision": "approve",
+        "reason": "The blocked overlap identifies a coarse owner atom that should be refined into a focused child atom before future concurrent writes revisit the same hot region.",
+        "decidedBy": "ATM Curator Reviewer",
+        "decidedAt": "2026-06-22T09:43:00.000Z",
+        "decisionSnapshotHash": "sha256:6d96968fdee71d636ae4b4300a0b7237f7b643fee1e36276f5a2a81525a06be8",
+        "evidenceId": "human-review.proposal.map-curator.patch.block-same-owner-overlap-2026-06-22.approve"
+      }
+    }
+  ]
+}

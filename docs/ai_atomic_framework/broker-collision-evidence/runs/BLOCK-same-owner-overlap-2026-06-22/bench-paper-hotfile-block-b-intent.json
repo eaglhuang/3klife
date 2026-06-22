@@ -1,0 +1,50 @@
+{
+  "schemaId": "atm.writeIntent.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "paper hotfile BLOCK-B live evidence"
+  },
+  "taskId": "TASK-PAPER-HOTFILE-BLOCK-B",
+  "actorId": "bench:PAPER-HOTFILE-BLOCK:TASK-PAPER-HOTFILE-BLOCK-B:claude-opus47",
+  "baseCommit": "de071477132f9ca20f8d079248b6056b473d9f99",
+  "targetFiles": [
+    "packages/cli/src/commands/broker.ts"
+  ],
+  "atomRefs": [
+    {
+      "atomId": "atm.broker.classify-explicit-mutation-request",
+      "atomCid": "atm-broker-classify-explicit-mutation-request-broker-841-878",
+      "operation": "modify",
+      "sourceRange": {
+        "filePath": "packages/cli/src/commands/broker.ts",
+        "lineStart": 841,
+        "lineEnd": 878
+      }
+    }
+  ],
+  "sharedSurfaces": {
+    "generators": [],
+    "projections": [],
+    "registries": [],
+    "validators": [],
+    "artifacts": []
+  },
+  "requestedLane": "auto",
+  "proposalAdmission": {
+    "trigger": "same-file-overlap-risk",
+    "summarySubmitted": true,
+    "hotFiles": [
+      "packages/cli/src/commands/broker.ts"
+    ],
+    "boundedRegions": [
+      {
+        "filePath": "packages/cli/src/commands/broker.ts",
+        "lineStart": 841,
+        "lineEnd": 878
+      }
+    ],
+    "notes": "BLOCK-B same-owner overlapping bounded region for blocked-before-write evidence."
+  }
+}

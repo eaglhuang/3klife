@@ -1,0 +1,119 @@
+{
+  "schemaId": "atm.writeBrokerRegistry.v1",
+  "specVersion": "0.1.0",
+  "repoId": "local-repo",
+  "workspaceId": "main",
+  "activeIntents": [
+    {
+      "intentId": "intent-1782121051602",
+      "taskId": "TASK-PAPER-HOTFILE-BLOCK-A",
+      "teamRunId": null,
+      "actorId": "bench:PAPER-HOTFILE-BLOCK:TASK-PAPER-HOTFILE-BLOCK-A:codex-gpt5",
+      "baseCommit": "de071477132f9ca20f8d079248b6056b473d9f99",
+      "resourceKeys": {
+        "files": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "atomIds": [
+          "atm.broker.classify-explicit-mutation-request"
+        ],
+        "atomCids": [
+          "atm-broker-classify-explicit-mutation-request-broker-841-878"
+        ],
+        "atomRanges": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878,
+            "atomCid": "atm-broker-classify-explicit-mutation-request-broker-841-878"
+          }
+        ],
+        "generators": [],
+        "projections": [],
+        "registries": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 1782121051602,
+      "leaseSeconds": 1800,
+      "leaseMaxSeconds": 1800,
+      "heartbeatAt": "2026-06-22T09:37:31.602Z",
+      "lane": "direct-brokered",
+      "expiresAt": "2026-06-22T10:07:31.602Z",
+      "admission": {
+        "trigger": "same-file-overlap-risk",
+        "state": "provisional-write-lease",
+        "requiresProposal": true,
+        "summarySubmitted": true,
+        "hotFiles": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "boundedRegions": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878
+          }
+        ],
+        "rearbitrationRequired": false,
+        "reason": "Proposal-first lane is active; broker recorded a provisional write lease before final admission."
+      }
+    },
+    {
+      "intentId": "intent-1782121319524",
+      "taskId": "TASK-PAPER-HOTFILE-BLOCK-B",
+      "teamRunId": null,
+      "actorId": "bench:PAPER-HOTFILE-BLOCK:TASK-PAPER-HOTFILE-BLOCK-B:claude-opus47",
+      "baseCommit": "de071477132f9ca20f8d079248b6056b473d9f99",
+      "resourceKeys": {
+        "files": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "atomIds": [
+          "atm.broker.classify-explicit-mutation-request"
+        ],
+        "atomCids": [
+          "atm-broker-classify-explicit-mutation-request-broker-841-878"
+        ],
+        "atomRanges": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878,
+            "atomCid": "atm-broker-classify-explicit-mutation-request-broker-841-878"
+          }
+        ],
+        "generators": [],
+        "projections": [],
+        "registries": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 1782121319524,
+      "leaseSeconds": 1800,
+      "leaseMaxSeconds": 1800,
+      "heartbeatAt": "2026-06-22T09:41:59.524Z",
+      "lane": "blocked",
+      "expiresAt": "2026-06-22T10:11:59.524Z",
+      "admission": {
+        "trigger": "same-file-overlap-risk",
+        "state": "blocked-before-write",
+        "requiresProposal": true,
+        "summarySubmitted": true,
+        "hotFiles": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "boundedRegions": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878
+          }
+        ],
+        "rearbitrationRequired": true,
+        "reason": "Takeover required before conflict arbitration."
+      }
+    }
+  ],
+  "currentEpoch": 1782121319524
+}

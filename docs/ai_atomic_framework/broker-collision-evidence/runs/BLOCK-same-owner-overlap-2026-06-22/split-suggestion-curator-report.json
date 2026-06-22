@@ -1,0 +1,115 @@
+{
+  "schemaId": "atm.atomMapCuratorReport",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "Manual curator patch draft derived from BLOCK same-owner overlap live evidence."
+  },
+  "reportId": "map-curator.block-same-owner-overlap-2026-06-22",
+  "generatedAt": "2026-06-22T09:42:10.000Z",
+  "curatorName": "ATM Atom Map Curator",
+  "thresholds": {
+    "nonRegressionFloor": 0.75,
+    "qualityComparisonMargin": 0.05,
+    "recurringFailureMin": 2,
+    "splitSuggestionMinConfidence": 0.75
+  },
+  "summary": {
+    "callerGraphSignals": 0,
+    "inputOutputOverlapSignals": 0,
+    "recurringFailureClusterSignals": 0,
+    "brokerSplitSuggestionSignals": 1,
+    "proposalDrafts": 0,
+    "blockedProposalDrafts": 0,
+    "patchDrafts": 1,
+    "observationOnly": 0
+  },
+  "observations": [
+    {
+      "candidateId": "block-same-owner-overlap-2026-06-22",
+      "signalKind": "broker-split-suggestion",
+      "decision": "patch-draft",
+      "confidence": 0.95,
+      "summary": "Live blocked overlap produced a focused child atom suggestion that is ready for curator review.",
+      "evidenceIds": [
+        "evidence.block-same-owner-overlap.blocked-register-b-decision",
+        "evidence.block-same-owner-overlap.broker-status-snapshot"
+      ]
+    }
+  ],
+  "proposalDrafts": [],
+  "patchDrafts": [
+    {
+      "candidateId": "block-same-owner-overlap-2026-06-22",
+      "draftKind": "atom-map-patch",
+      "signalKind": "broker-split-suggestion",
+      "targetMapId": "ATM-MAP-0002",
+      "sourceEvidenceIds": [
+        "evidence.block-same-owner-overlap.blocked-register-b-decision",
+        "evidence.block-same-owner-overlap.broker-status-snapshot"
+      ],
+      "patchFiles": [
+        "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json",
+        "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+      ],
+      "ownerAtomId": "atm.broker.classify-explicit-mutation-request",
+      "conflictRegion": {
+        "filePath": "packages/cli/src/commands/broker.ts",
+        "lineStart": 841,
+        "lineEnd": 878
+      },
+      "suggestedAtoms": [
+        {
+          "atomId": "atm.broker.classify-explicit-mutation-request.focus.841-878",
+          "atomCid": "atm-broker-classify-explicit-mutation-request-focus-841-878",
+          "role": "focus",
+          "summary": "Focused child atom covering the conflict region 841-878.",
+          "sourceRange": {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878
+          }
+        }
+      ],
+      "summary": "Broker split suggestion for 'atm.broker.classify-explicit-mutation-request' on packages/cli/src/commands/broker.ts is ready as a review-only atom-map patch draft.",
+      "rationale": "Because the live blocked overlap covered the full current bounded atom, this prototype draft promotes the broker focus suggestion into a curator-reviewable child atom plan rather than claiming an automatic before/focus/after tri-split.",
+      "requiresHumanReview": true,
+      "operations": [
+        {
+          "op": "replace-owner-range",
+          "target": "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json",
+          "summary": "Replace coarse owner atom 'atm.broker.classify-explicit-mutation-request' coverage on packages/cli/src/commands/broker.ts with a focused child atom row.",
+          "payload": {
+            "pathPattern": "packages/cli/src/commands/broker.ts",
+            "ownerAtomId": "atm.broker.classify-explicit-mutation-request",
+            "conflictRegion": {
+              "filePath": "packages/cli/src/commands/broker.ts",
+              "lineStart": 841,
+              "lineEnd": 878
+            }
+          }
+        },
+        {
+          "op": "add-child-atom-row",
+          "target": "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json",
+          "summary": "Add focus child atom row 'atm.broker.classify-explicit-mutation-request.focus.841-878' covering 841-878.",
+          "payload": {
+            "pathPattern": "packages/cli/src/commands/broker.ts#L841-L878",
+            "atomId": "atm.broker.classify-explicit-mutation-request.focus.841-878",
+            "atomCid": "atm-broker-classify-explicit-mutation-request-focus-841-878",
+            "role": "focus",
+            "capability": "Focused child atom covering the conflict region 841-878.",
+            "coverageStatus": "active"
+          }
+        },
+        {
+          "op": "rebuild-projection",
+          "target": "atomic_workbench/atomization-coverage/path-to-atom-map.json",
+          "summary": "Rebuild the path-to-atom-map projection after curator review accepts the focused child atom draft."
+        }
+      ]
+    }
+  ],
+  "empty": false
+}
