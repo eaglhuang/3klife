@@ -22,12 +22,20 @@ rollback:
   strategy: revert-commit
   notes: "Revert the paper hotfile BLOCK-B patch only."
 atomizationImpact:
-  ownerAtomOrMap: "atm.proposal-overlap-arbitration"
+  ownerAtomOrMap: "atm.broker.classify-explicit-mutation-request"
+proposalAdmission:
+  trigger: same-file-overlap-risk
+  summarySubmitted: true
+  boundedRegions:
+    - filePath: "packages/cli/src/commands/broker.ts"
+      lineStart: 841
+      lineEnd: 878
+  notes: "BLOCK-B intentionally collides with BLOCK-A on the same owner atom and the same bounded region so the broker must stop the second writer before any live mutation."
 outOfScope:
-  - "packages/cli/src/commands/broker.ts outside the shared blocked region"
+  - "packages/cli/src/commands/broker.ts outside lines 841-878"
   - "release/atm-root-drop/**"
 nonGoals:
-  - "Do not move to a disjoint region."
+  - "Do not move to a disjoint region or a different owner atom."
 ---
 # TASK-PAPER-HOTFILE-BLOCK-B
 
@@ -40,6 +48,7 @@ Create the overlap block lane B patch for
 
 - shared blocked bounded region only
 - same bounded region as BLOCK-A
+- exactly lines 841-878 inside `classifyExplicitMutationRequest`
 
 ## Why this exists
 
@@ -50,3 +59,4 @@ This task exists to produce the paper hot-file negative trace:
 
 - patch remains inside the blocked bounded region
 - broker should classify the pair as blocked-before-write
+- same-owner overlap should be eligible for a split suggestion instead of composer routing
