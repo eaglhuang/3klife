@@ -13,7 +13,7 @@
 
 多代理大型語言模型（multi-agent LLM）程式碼合成系統面臨一個固有矛盾：要在去中心化的並行代理中維持代碼的語義完整性。現有方法形成了一個按粒度劃分的協調機制階層 —— 字元級（CodeCRDT）保證物理收斂卻允許 5–10% 的語義衝突；檔案級（STORM）以寫入時樂觀並發控制（OCC）阻擋陳舊寫入卻在同一檔案內不同函式間造成不必要的拒絕；工作流級（Semantic Consensus Framework, SCF）以意圖圖達到 100% 完成率卻只有 27.9% 精度。
 
-我們提出 **Adapter-Guided Atomization with CID Broker**，一個介於檔案級與字元級之間的並發治理框架。本框架不依賴重量級的全語言通用 AST 引擎，而是將代碼單元的發現責任委派給各語言的 adapter；ATM 核心則以原子 ID（atomId）、契約指紋（atomCid）、共享表面（shared surfaces）、檔案範圍等多維度，做出確定性的並發准入決策。我們的 broker 已實作四種裁決：`parallel-safe`、`needs-physical-split`（CID disjoint 路由到 deterministic composer）、`blocked-cid-conflict`、`blocked-shared-surface`。
+我們提出 **Adapter-Guided Atomization with CID Broker**，一個介於檔案級與字元級之間的並發治理框架。本框架不依賴重量級的全語言通用 AST 引擎，而是將代碼單元的發現責任委派給各語言的 adapter；ATM 核心則以原子 ID（atomId）、契約指紋（atomCid）、共享表面（shared surfaces）、檔案範圍等多維度，做出確定性的並發准入決策。我們的 broker 已實作四種裁決：`parallel-safe`、`needs-physical-split`（CID disjoint 路由到 deterministic composer）、`blocked-cid-conflict`、`blocked-shared-surface`。當寫入被阻擋時，broker 亦能產生 structured atom-map refinement suggestion 並進入可審查的 governance queue（目前為 prototype 形式）。
 
 本論文的四個核心貢獻：
 1. **跨語言中立的原子化抽象**：透過 optional `AtomizationPlanningAdapter` SDK，讓每個語言以最便宜的偵測策略（regex、scanner、compiler API、AST、LSP）回報函式 / 類別 / 模組級原子候選，無需強制 AST。
@@ -66,7 +66,7 @@ LLM 驅動的多代理系統正成為大規模程式碼合成的核心架構。�
 
 1. **Adapter-Guided Atomization 模型**：形式化 `AtomizationPlanningAdapter` 作為 optional SDK contract，讓不同語言以 regex、scanner、compiler API、AST 或 LSP 任意組合實作，避免「萬能 AST」前提（§1.2、§3.2、§3.6）。
 2. **多維度確定性 broker 演算法**：以 atomId、atomCid、shared surfaces、physical file overlap 四個維度做衝突檢測（O(n log n)），並透過 augmented decision rule（read/write 相依）與 AGR 兩層細化處理 hunk 級衝突；以 Theorem 1（Cross-Regime Disjointness）與 Theorem 2（Static Admission Closure under A1′/A2）形式化（§3.3–3.6）。
-3. **CID-Disjoint 並行寫入路由與單一序列化點**：當兩個代理修改同一檔案的不同函式（CID disjoint）時，broker 路由到 deterministic composer / format adapter merge，並由 neutral writer steward + freeze / patch-envelope / conflict-matrix snapshot 協定確保單一序列化點與崩潰回復語意（§3.4、§3.7）。**Field-validated**（跨 vendor real-task）：以 `close-orchestration.ts` 之同檔不同函式 live admission（兩個分屬不同 vendor family 之 agent 於同一份 `main` 工作樹上之 same-file / different-function 並行，broker 判 `parallel-safe`；同對 patch 經 broker compose + steward apply 重放亦得 `applied`）與 **B-12 apply-phase honest field collision**（`TASK-TEAM-0042` / `TASK-TEAM-0043`，跨 OpenAI 與 Anthropic vendor family，兩邊 admission 皆 `parallel-safe`，後段 runtime active-intent 機制補上 fail-closed 仲裁）兩案例共同支撐（§4.5 之 §4.5.1 / §4.5.2）。freeze 協定的首次真實觸發為 2026-06-12 的 cid-shared collision（§4.4）。
+3. **CID-Disjoint 並行寫入路由與單一序列化點**：當兩個代理修改同一檔案的不同函式（CID disjoint）時，broker 路由到 deterministic composer / format adapter merge，並由 neutral writer steward + freeze / patch-envelope / conflict-matrix snapshot 協定確保單一序列化點與崩潰回復語意（§3.4、§3.7）。**Field-validated** 透過三類證據家族：(a) live admission cross-vendor case——`close-orchestration.ts` 同檔不同函式之 live admission，broker 判 `parallel-safe`，同對 patch 經 broker compose + steward apply 重放亦得 `applied`（§4.5.1）；(b) apply-phase enforcement cross-vendor case——B-12 之 `TASK-TEAM-0042` / `TASK-TEAM-0043`（跨 OpenAI 與 Anthropic vendor family），兩邊 admission 皆 `parallel-safe`，後段 runtime active-intent 機制補上 fail-closed 仲裁（§4.5.2）；(c) refinement-loop prototype evidence——same-owner bounded atom 之 dogfood-backed bounded-atom-aware merge 與 blocked → split-suggestion → human-reviewable approval chain（🔶 prototype，§4.5.3）。freeze 協定的首次真實觸發為 2026-06-12 的 cid-shared collision（§4.4）。
 4. **超越程式碼的通用化**：將 broker 的衝突偵測核心從程式碼原子推廣至任意結構化產物（JSON 記錄、文字範圍、數值欄位、path-to-atom-map shards），透過 `FileMutationAdapter` 與 `ConflictKey` 分類，並以 Theorem 3（ConflictKey Disjointness）作為 Theorem 1 的推廣（§3.10；TASK-CID-0091~0098，commits `31fd89ff0`、`ca59a88a9`，含 batch planner、CAS、5-scenario dogfood `SHIP`）。
 
 完整開源實作（Apache 2.0）於 `AI-Atomic-Framework`，以 npc-brain 3-週實採資料（§4.3）作為部署存在證明。
@@ -406,6 +406,7 @@ signature 保留之約束使 Layer 2 對 LLM 而言友善：「將函式 $f$ 之
 - **CID schema-version 遷移.** §3.3 之 `schema_version` 機制可防範 *未來* 公式變動與當前公式之沉默碰撞，惟其本身並未解決過渡期之問題：一個正在活躍之 `WriteIntent` 持有 $v_1$ 計算之 CID，而新提交之 intent 持有 $v_2$ 計算之 CID，即便二者指向 *同一* 底層原子，任一公式單獨皆無法識別其為同一原子。本論文不於此提出解法；候選方案包括遷移窗口內由 broker 雙重計算，或設置 flag-day 要求所有活躍 intent 排空後再升級 schema version。此屬實作規劃之議題，另案追蹤。
 - **Adapter 信任模型.** Admission 主張（Theorem 1–3）假設 adapter 誠實回報 `canon_sym`、`sourcePaths`、`getConflictKeys` 與 `canMerge`。目前之 broker 將 adapter 視為啟動時載入之 *受信任程式碼*。惡意或有缺陷之 adapter 若回報虛假之 disjoint conflict key，可規避 admission。我們於本文不處理 adapter sandboxing 或 signed manifest 之議題；操作層之緩解為註冊時對 adapter manifest 執行 `validate-schemas.ts`，其可捕捉結構性錯誤但無法檢出語意層之不誠實。
 - **Liveness、starvation 與 broker 之確定性.** Theorem 2 為一安全性性質（無不安全之 admission）；我們未證明對應之 liveness 性質（每個 intent 最終皆被 admit 或被明確 reject）。具言之，若同一原子上有持續且高優先序之 intent 串流，可能餓死低優先序之 intent。Broker 之 intent 註冊順序（§3.4）相對於單一 broker process 而言為確定性的，惟我們尚未形式化跨 intent 類別之公平性保證。
+- **Admission 粒度不足（partially addressed）.** Admission 階段對 proposal 細節之掌握能力，於 active-intent 級 atom claim 之推導上仍未閉環——此一不足已由 §4.5.2 之 field evidence 明確暴露：B-12 兩邊於 admission 皆判 `parallel-safe`，真正之 atom claim 衝突須俟 apply-phase / active-intent runtime arbitration 始得仲裁。針對此一缺口，§4.5.3 之 same-owner bounded atom refinement-loop（🔶 prototype）已開始提供回應：於同 owner map 之內，broker 已能依 bounded atom 邊界於更細粒度進行並行 / 阻擋判斷，並於阻擋時生成 split suggestion 進入 human approval queue。完整解決——即跨所有 vendor pipeline 之 admission-time atom-level claim 推導——仍為 future work（參 §6.3）。
 
 ---
 
@@ -538,26 +539,55 @@ npc-brain 專案（一個遊戲 NPC 行為系統，[GitHub](https://github.com/e
 
 #### 4.5.2 負向案例：B-12 的後段執行仲裁
 
-與上述正向案例互補的是 B-12。B-12 是一個真實多 vendor 的 field collision 案例，用來說明 broker 的保護不一定全部發生在 admission 階段。此案例中，兩個 live lane 對應 `TASK-TEAM-0042` 與 `TASK-TEAM-0043`，共享多個 target file，並在同一個主工作樹中進入 broker / team-governed 流程。
+與上述正向案例互補的是 B-12。B-12 是一個真實多 vendor 的 field collision 案例，由兩個 live lane 對應 `TASK-TEAM-0042` 與 `TASK-TEAM-0043`，共享多個 target file，並在同一個主工作樹中進入 broker / team-governed 流程。本案例的意義可由以下三點 load-bearing 主張表述。
 
-值得注意的是，B-12 並不是「admission 當場 freeze」的案例。相反地，兩邊在 team-start / admission 階段都被判定為可啟動，亦即 `parallel-safe`。真正的阻擋發生在更後段的 apply-phase / active-intent runtime 階段：當其中一側已經持有 active intent 並進入 broker registry 後，另一側在嘗試推進時被 fail-closed 擋下。換言之，B-12 的重點不在於 admission 是否立即識別衝突，而在於系統是否能在更接近實際寫入的執行期階段，透過 broker registry 與 active intent 機制補上安全仲裁。
+第一，B-12 證明 ATM 已能在真實多代理協作場景中正確攔截共享寫入衝突。本案並非合成 fixture 之回放，亦非單一 vendor 之自我撞測；其為跨 vendor family 之真實任務流程下、broker 對共享工作面所形成執行期競爭之實際攔截紀錄。據此，ATM 之安全性主張具備 field credibility，而非僅在受控合成測試中成立。
 
-這一點對本文很重要，因為它提供了一個誠實的反例：ATM 的安全性並不建立在「所有衝突都必須在 admission 當下被辨識」這個過度強化的前提上。相反地，B-12 顯示 broker 可以採用較寬鬆的 admission policy，同時把真正的執行衝突仲裁留給 runtime active-intent 機制處理。對多 agent 系統而言，這比一律入口即拒更接近真實協作環境，也更符合高併發工作流的設計目標。
+第二，雖然 admission 階段兩邊皆判 `parallel-safe`，但 broker 仍在真正危險寫入發生之前，於 apply-phase / active-intent arbitration 階段達成 fail-closed。具體序列為：`TASK-TEAM-0043` 先取得 broker registry 中之 active intent；隨後 `TASK-TEAM-0042` 在嘗試推進時被 fail-closed 擋下，無共享檔之 mutation 落於工作樹。Late enforcement 在此並非次佳兜底——它本身即為一個有效機制，與 admission-time freeze 同屬 broker 之安全保證之一環。
 
-#### 4.5.3 綜合意義：不是只會擋，也不是只會放
+第三，若要進一步實現「在寫入前即精確分流」之主張——即將 active-intent 級之 atom claim 推至 admission 階段——則必須提升 admission 階段對 proposal 細節之掌握能力，使 broker 得以在更早階段識別此類共享 atom 之佔用關係。本案因而既支撐既有安全保證之 field 成立，亦明確指出 admission 粒度上仍待加強之具體缺口。
 
-若只看正向案例，讀者可能誤以為 ATM 的主要價值只是「讓更多同檔修改通過」；若只看負向案例，則又可能誤以為 ATM 的價值只是「在衝突時擋下寫入」。這兩種理解都過於片面。`close-orchestration` 與 B-12 放在一起時，所展示的是同一個 broker 設計的雙重能力：
+（對應 §3.9 admission 粒度議題與 §4.5.3 prototype 回應）
 
-1. 當修改雖然落在同一檔案，但實際上位於不同函式或不同 atomized / virtually segmented 區域時，系統可以保留安全並行，而不必粗暴地退回 file-level serialization。
-2. 當共享工作面在 runtime 中真的形成執行期佔用或 active intent 競爭時，系統又能在更後段的 apply-phase 做出 fail-closed 仲裁，而不是放任衝突寫入發生。
+#### 4.5.3 Refinement-Loop Evidence：Same-Owner Bounded Atom（🔶 Prototype / Dogfood-Backed）
 
-因此，本節的證據不是「成功案例加上一個失敗案例」這麼簡單，而是共同說明 ATM 的 broker 並不是單向保守或單向寬鬆，而是根據衝突訊號出現的層級與時機，動態切換允許並行與執行期阻擋。
+與 §4.5.1（live admission）及 §4.5.2（apply-phase enforcement）所引用的真實 multi-vendor field collision 不同，§4.5.3 為 retained dogfood / validator-backed evidence，呈現的是一項「能力」而非真實 field case，故以 🔶 Prototype 標示，不列為 ✅ shipped field workflow。
 
-#### 4.5.4 本節證據邊界
+本節以下列正向 merge dogfood case 作為證據基礎：
 
-本節也需要明確說明其證據邊界。`close-orchestration` 的 field layer 來自真實同檔多 agent 執行；其 outcome layer 則來自 ATM 對同一對正向 patch 的 broker compose / steward apply replay artifact。B-12 則是一個真實多 vendor 的 field collision evidence，其 admission 階段仍為 `parallel-safe`，真正阻擋發生在 apply-phase / active-intent runtime 階段。因此，本節不應被寫成「所有衝突都在 admission 立刻被阻擋」，也不應被寫成「所有正向案例都已直接在 main 上完成最終 merge commit」。較精確的說法是：ATM 已展示出對同檔多 agent 協作的雙面能力，一方面可在真實場景中放行可分離的同檔修改，另一方面也可在 runtime 執行階段對真正的共享寫入競爭做出可追溯的 fail-closed 仲裁。
+- 任務卡：`TASK-TEAM-BROKER-HOT-FIRST` 與 `TASK-TEAM-BROKER-HOT-DISJOINT`
+- Actors：`coordinator-1` 與 `coordinator-2`（**同 owner，並非 cross-vendor**——此點明示，以免被誤讀為第三筆 field case）
+- Target file：`packages/cli/src/commands/broker.ts`
+- Bundle commit：`23743c61c5e497a03ddee5a1d4196069c1730340`
 
-兩案例之 paper-citable artifact（authoritative run id、registry snapshot、replay/apply outcome、過濾後 bundle 路徑、retired duplicate 與 collector 衛生紀錄）一律置於 **Appendix A.1**。
+本案例支撐兩條主張，**均以 prototype 限定語呈現**：
+
+**(i) Bounded-atom-aware merge.** 當兩個 patch 同樣寫入由同一 owner map 所覆蓋之檔案，但各自所動之 bounded atom 區段為 disjoint 時，broker 並不將之一律視為衝突而拒絕；其反而將此情境路由至 deterministic-composer 並完成 patch-apply。換言之，於原型階段，「同檔同 owner map」並不必然等價於「不可並行」——broker 在 owner map 之內仍能依 bounded atom 之邊界做更細粒度之並行判斷。
+
+**(ii) Blocked → structured refinement chain.** 當兩個 patch 之 bounded atom 區段重疊時，broker 標 `blocked-cid-conflict`，惟其行為並不終止於拒絕。系統進一步分析該 owner map 之粗粒度結構，生成一份 split suggestion，將其提升為 curator patch draft，進入可由人類審查之 approval queue，並於 approval decision 留下可追溯紀錄。此一鏈條為本論文之新主張：**broker 不僅為衝突閘門，已開始扮演 atom-map 結構演進之治理核心**——其輸出由「准入決策」延伸至「結構建議」。
+
+此能力目前為 prototype / dogfood-backed，未在 cross-vendor field workflow 中常態觸發；promoting 為 generally-live workflow 與 cross-vendor shipped capability 列為 §6.3 future work。
+
+#### 4.5.4 綜合意義：不是只會擋、不是只會放，亦能就 atom map 結構提出可審查之演進建議
+
+若只看 §4.5.1，讀者可能誤以為 ATM 之主要價值僅是「讓更多同檔修改通過」；若只看 §4.5.2，又可能誤以為 ATM 之價值僅是「在衝突時擋下寫入」；若止步於此二者，則仍會錯失 §4.5.3 所揭示之第三層能力。三類證據合論時，所展示的是同一個 broker 設計之多重能力：
+
+1. **正向 live admission**（§4.5.1）：當修改雖然落在同一檔案，但實際上位於不同函式或不同 atomized / virtually segmented 區域時，系統可以保留安全並行，而不必粗暴地退回 file-level serialization。
+2. **負向 apply-phase enforcement**（§4.5.2）：當共享工作面在 runtime 中真的形成執行期佔用或 active intent 競爭時，系統能於更後段的 apply-phase 做出 fail-closed 仲裁，而非放任衝突寫入發生。
+3. **Prototype refinement loop**（§4.5.3）：在 prototype 階段，當衝突無法以更細粒度分流時，broker 已能就 atom map 結構提出可審查之 split suggestion，並將其導入人類 approval queue。
+
+由此可以得出本節之新主張：**broker 不只擋、不只放，還能在 prototype 階段對 atom map 結構提出可審查的演進建議**。其角色由單純之並發閘門擴展為「並發治理 + 結構演進建議」之雙重核心。
+
+#### 4.5.5 本節證據邊界
+
+本節需要明確說明其證據邊界，以下四條同時適用於三類證據：
+
+1. `close-orchestration` 的 field layer 來自真實同檔多 agent 執行；其 outcome layer 則來自 ATM 對同一對正向 patch 的 broker compose / steward apply replay artifact。本節不主張「兩個 live agent 已直接於 `main` 上完成最終 merge commit」。
+2. B-12 為真實多 vendor 之 field collision evidence；其 admission 階段仍為 `parallel-safe`，真正阻擋發生於 apply-phase / active-intent runtime 階段。本節不主張「所有衝突都會在 admission 立刻被阻擋」。
+3. §4.5.3 為 retained dogfood / validator-backed evidence，actor 為同 owner coordinator-1 / coordinator-2，並非跨 vendor field case。本節不主張此 refinement chain 已於 cross-vendor field workflow 中常態觸發。
+4. §4.5.3 之 refinement suggestion 進入 human approval queue，本節並**不主張其被自動採用**；採用與否仍由人類 reviewer 決定，且本能力仍為 prototype，未於 cross-vendor field workflow 中常態觸發。
+
+三類證據之 paper-citable artifact（authoritative run id、registry snapshot、replay/apply outcome、過濾後 bundle 路徑、refinement-loop dogfood bundle、retired duplicate 與 collector 衛生紀錄）一律置於 **Appendix A.1**。
 
 ### 4.6 Wave Mode Dogfood Suite ✅（TASK-MAO-0033，2026-06-17）
 
@@ -665,7 +695,11 @@ Adapter-guided atomization 於下列情境會退化：
 
 - **跨檔案 slicing（LSP 整合）：** 追蹤跨檔案邊界之 read / write set 須整合 language server，列為未來階段之候選工作。
 
-- **Cross-model multi-vendor co-development（早期實證）：** ATM 治理在 reporting window 內已有四個不同 vendor 的 LLM 在 production 共同產出 ATM 自身代碼：`claude-code-opus-4-7`（Anthropic）、`cursor-composer-2.5`（Cursor）、`antigravity-gemini-3.5-flash`（Google）、`codex-captain-continuation`（OpenAI 體系）。`parallel-0041-0042` dogfood（§4.5）是 Cursor Composer 與 Google Gemini Flash 在共享 worktree 上的真實任務 collision 紀錄。獨立第二模型 verifier（如 AGREE / DISAGREE / ABSTAIN 加權）作為刻意冗餘的審查機制仍延至受控評估；目前已建立的是「多 vendor 在同一 admission control 下共同寫入 production」這個更基本的事實。
+- **Broker 作為治理核心：present capability.** 於 prototype 階段，broker 已具備 `blocked → split suggestion → human-reviewable refinement` 之鏈條（§4.5.3）。當衝突無法以更細粒度分流時，broker 不僅標 `blocked-cid-conflict`，並進一步生成 owner map 之 split suggestion，提升為 curator patch draft，進入 human approval queue。此能力以 retained dogfood / validator-backed evidence 支撐，並有 approval decision 留痕。
+
+- **Broker 作為治理核心：future work.** 將 §4.5.3 之 refinement chain 由 prototype / dogfood-backed 提升為 generally-live workflow，並於 cross-vendor pipeline 中常態觸發、shipped capability 級可用，列為 future work。同時包括將此 chain 與 §3.9 之「admission 粒度不足」議題整合：即於 admission-time 即可推導 active-intent 級 atom claim、進而於更早階段識別共享 atom 之佔用關係。
+
+- **Cross-model multi-vendor co-development（早期實證）：** ATM 治理在 reporting window 內已有四個不同 vendor 的 LLM 在 production 共同產出 ATM 自身代碼：`claude-code-opus-4-7`（Anthropic）、`cursor-composer-2.5`（Cursor）、`antigravity-gemini-3.5-flash`（Google）、`codex-captain-continuation`（OpenAI 體系）。§4.5.1 close-orchestration.ts 同檔不同函式 live admission 與 §4.5.2 B-12 apply-phase enforcement 為此一事實之具體紀錄。獨立第二模型 verifier（如 AGREE / DISAGREE / ABSTAIN 加權）作為刻意冗餘的審查機制仍延至受控評估；目前已建立的是「多 vendor 在同一 admission control 下共同寫入 production」這個更基本的事實。
 
 ### 6.4 自指實證：ATM 治理 ATM 自身開發
 
@@ -803,13 +837,29 @@ B-12 之實質阻擋發生於 apply-phase / active-intent runtime 階段，而�
 - `b12-0042-proposal.json`
 - `b12-0042-merge-plan.json`
 
-#### A.1.3 兩案例之共同詮釋邊界
+#### A.1.3 Same-Owner Bounded Atom Refinement-Loop（對應 §4.5.3，🔶 Prototype）
 
-於此再次重申 §4.5.4 所述之邊界，俾供 artifact 引用時逐條對齊：
+對應 §4.5.3 之 retained dogfood / validator-backed evidence。任務卡 `TASK-TEAM-BROKER-HOT-FIRST` 與 `TASK-TEAM-BROKER-HOT-DISJOINT`，actor 為 `coordinator-1` 與 `coordinator-2`（同 owner，並非 cross-vendor），target file `packages/cli/src/commands/broker.ts`，bundle commit `23743c61c5e497a03ddee5a1d4196069c1730340`。
+
+Artifact 路徑如下：
+
+- `docs/reports/paper-evidence/same-owner-bounded-atom-unique-package.json`
+- `docs/reports/same-owner-bounded-atom-dogfood/proposal-gated-summary.json`
+- `docs/reports/same-owner-bounded-atom-dogfood/proposal-gated-hot-apply.json`
+- `docs/reports/same-owner-bounded-atom-dogfood/broker-evidence-bundle/broker-evidence-bundle.json`
+- `docs/reports/split-suggestion-evidence/split-suggestion-review-approved-queue.json`
+- `docs/reports/split-suggestion-evidence/map-curator.patch.same-owner-blocked-suggestion.approve.json`
+
+上述 artifact 支撐 §4.5.3 的 prototype 級能力主張。將此 chain 由 dogfood 提升為 generally-live 且 cross-vendor shipped 之 workflow 列為 §6.3 future work。
+
+#### A.1.4 三類證據之共同詮釋邊界
+
+於此再次重申 §4.5.5 所述之邊界，俾供 artifact 引用時逐條對齊：
 
 1. `close-orchestration` 之 field layer 來自同一主工作樹上之 live same-file 多 agent 執行；其 replay/apply layer 來自 ATM 對同一對正向 patch 之 controlled broker / steward replay pipeline。除非另有後續 artifact 明確證明，否則不得將本案描述為「兩個 live agent 已直接於 `main` 上完成 merge commit」。
 2. B-12 之兩邊 admission 皆為 `parallel-safe`；阻擋發生於 apply-phase / active-intent runtime 階段；其為真實 field collision evidence，並非 synthetic fixture。被 blocked 或 queued 之 lane 同屬有效 field evidence——本論文所欲證明者為 broker 是否正確仲裁，並非「兩造是否皆寫入成功」。
-3. 兩案例合併之意義為 ATM 對同檔多 agent 協作呈現雙面能力：對可分離之同檔修改放行安全並行；對 runtime 共享寫入競爭提供 fail-closed 仲裁。本附錄不應被用以擴張 §4.5 正文所未主張之結論。
+3. §4.5.3 為 retained dogfood / validator-backed evidence，actor 為同 owner coordinator-1 / coordinator-2，並非 cross-vendor field case；其 refinement suggestion 進入 human approval queue 但本論文並不主張其被自動採用；採用與否仍由人類 reviewer 決定，且本能力仍為 prototype，未於 cross-vendor field workflow 中常態觸發。
+4. 三類證據合併之意義為 ATM 對同檔多 agent 協作呈現多重能力：對可分離之同檔修改放行安全並行；對 runtime 共享寫入競爭提供 fail-closed 仲裁；於 prototype 階段對 atom map 結構提出可審查之 split suggestion。本附錄不應被用以擴張 §4.5 正文所未主張之結論。
 
 ---
 
@@ -843,7 +893,20 @@ B-12 之實質阻擋發生於 apply-phase / active-intent runtime 階段，而�
 
 ## Revision History
 
-**2026-06-21 (Current Draft, twenty-second pass — §4.5 整段重構為「正向 + 負向」雙案例 evidence section；close-orchestration 與 B-12 整合):**
+**2026-06-21 (Current Draft, twenty-third pass — §4.5.3 refinement-loop + 跨章節對齊):**
+
+- **§4.5.2 narrative 重寫**：採平衡敘事（field credibility + late enforcement effective + admission granularity 邊界），結尾連結 §3.9 / §4.5.3。
+- **新增 §4.5.3 Refinement-Loop Evidence**（🔶 Prototype，retained dogfood / validator-backed，非 field case）；正向案例 `TASK-TEAM-BROKER-HOT-FIRST` + `TASK-TEAM-BROKER-HOT-DISJOINT`，actor `coordinator-1` / `coordinator-2`，target `packages/cli/src/commands/broker.ts`，bundle commit `23743c61c5...`；artifact 6 條歸入 Appendix A.1.3。
+- §4.5.3 / §4.5.4 / §4.5.5 重編號（原 .3 → .4 三類證據；原 .4 → .5 邊界補 prototype 限定條）。
+- §3.9 新增第五條「Admission 粒度不足（partially addressed）」：明示由 §4.5.2 暴露、由 §4.5.3 prototype 開始回應、完整解決列 future work。
+- §6.3 新增 broker-as-governance-core 分拆兩段（present capability / future work）；§6.3 cross-model 段例證自 `parallel-0041-0042` 改為 §4.5.1 / §4.5.2。
+- §1.3 #3 採「three evidence families」措辭（禁用「three field cases」）；列出 (a) live admission cross-vendor / (b) apply-phase enforcement cross-vendor / (c) refinement-loop prototype 三類家族。
+- Abstract 加保守版「broker 在阻擋後可產生 structured atom-map refinement suggestion 進入可審查 governance queue（prototype 形式）」。
+- Appendix A.1.3 新增為 §4.5.3 對齊條目（artifact 6 條 + future work 結尾）；原 A.1.3 重編號為 A.1.4 並擴為三類證據之共同詮釋邊界。
+
+**硬戒律**：§4.5.3 必標 🔶 Prototype；三類證據措辭必用「three evidence families」；Abstract 採保守版含「prototype 形式」字樣。
+
+**2026-06-21 (twenty-second pass — §4.5 整段重構為「正向 + 負向」雙案例 evidence section；close-orchestration 與 B-12 整合):**
 
 User 指示：將 close-orchestration 與 B-12 整合為同一個 §4.5 evidence section，停用先前 (a)~(f) 5 層 evidence stack 框架。本 pass 採 user 提供之完整骨架直接覆蓋：
 
