@@ -35,6 +35,8 @@ LLM 驅動的多代理系統正成為大規模程式碼合成的核心架構。�
 
 然而，多代理並行代碼合成存在一個無法迴避的核心矛盾：**並發越多，語義衝突風險越大；但若以保守策略阻擋衝突，又會喪失並行帶來的吞吐量優勢**。
 
+近期實證證據支持此一缺口之急迫性：**AgenticFlict** [Ogenrwot & Businge, 2026] 對 GitHub 上 142K+ 來自 AI agent 之 pull request（涵蓋 59K+ repo）進行大規模盤點，其中 107K+ 進入 deterministic merge simulation，29K+ 出現 merge conflict——**整體 conflict rate 為 27.67%，並產生 336K+ 細粒度 conflict region**。因此，多代理代碼合成之並發治理代價並非僅止於理論推演或邊緣情境，而是已由文獻量化證實之具規模問題。本論文之目標正是為此一 27.67% 之缺口，於 *寫入前* 提供結構化之治理機制。
+
 現有方法形成了一個按粒度劃分的協調機制階層：
 
 | Tier | 粒度 | 代表系統 | 主要弱點 |
@@ -152,6 +154,8 @@ CoAgent 來自 SJTU IPADS（Haibo Chen 組），其核心機制 **MTPO**（Monot
 
 **我們不主張 ATM 在所有面向勝過 CoAgent**。CoAgent 的 MTPO advisory 模型在「無法為每個 action 事前宣告 read/write set」的場景（典型如多輪 browser 操作、shell exec 等 side-effectful tool chain）有結構性優勢；ATM 的硬閘門模型在「可由 adapter 靜態還原候選 atom 與 surface」的程式碼合成與結構化格式編輯場景有結構性優勢。**兩者實際上指向不同的子空間**：CoAgent 屬「tool-call 級 reactive concurrency control」，ATM 則為「code-region 級 preventive concurrency control + 格式無關通用化」。若將二者等同視之而做同質競品比較，將誤判其各自適用之場景邊界。
 
+**層次化互補（layered complementarity）**：除了「指向不同子空間」之並排互補外，二者於同一 pipeline 內亦可形成層次化互補——ATM 之 `SERIAL` 序列化決策（§3.4），其後續執行可採 MTPO 風格之 speculative apply + LLM repair，於 admission 階段完成後仍保留針對不可事前推導之 read set 之 reactive recovery 路徑。本論文未實作此延伸，列為 future direction：**ATM 站在 admission，CoAgent 站在 repair**，兩者可作為同一治理鏈條之相鄰兩層而非競爭品。
+
 直接 head-to-head 吞吐量 / token cost 對照是 ATM 公開的最大未完工項，列入 §5 評估路線圖。
 
 ### 2.8 本框架的定位
@@ -172,6 +176,8 @@ Tier 2 在 2026-06 才開始有 ATM 與 CoAgent 兩個獨立提案；二者分�
 ### 2.9 Concurrency Control Beyond Code: OT, CRDTs, and Databases
 
 §3.10 所提出之 `ConflictKey` 通用化奠基於一條歷史更為悠久的「共享結構化資料並發控制」研究脈絡。**Operational Transformation (OT)**[Ellis & Gibbs, 1989] 與 **CRDT**[Shapiro et al., 2011] 處理文件與結構化資料協作編輯之 convergence，其涵蓋範圍較程式碼源碼為廣；資料庫之 **two-phase locking** 與 **optimistic concurrency control**[Kung & Robinson, 1981] 則處理 record-level update 之衝突偵測，其手段為 read / write set 之 disjointness——此與本文 $\mathsf{record}$-scope `ConflictKey` 在結構上相互類比。ATM 之 Definition 5（§3.10）可視為將該 OCC 傳統之 read / write set disjointness 檢查，重述為一個 format-agnostic 之詞彙系統，於單一 broker 之下涵蓋 code atom、JSON record 與 scalar field；我們不主張對 OCC 本身有任何新穎性，僅主張其於單一多代理 admission point 下對異質產物類型之統一應用。
+
+**Adjacent work**：**Parallel-Synthesis** [Liu et al., 2026] 於 latent-space（KV-cache）層級處理 parallel-branch merging，與 ATM 之 admission control 機制屬不同層次，二者正交（orthogonal）；原則上可疊加於 ATM 之 deterministic-composer 路由之上，作為更下游之 latent-level 整合。本論文不對此延伸做進一步主張。
 
 ---
 
@@ -686,7 +692,7 @@ planWaves (0024) → admitWave (0026) → createTeamWaveEnvelope (0025)
 
 **評估路線圖：**
 - ✅ **Vision paper（當前，2026 年 6 月）：** 機制設計 + benchmark-validated 之實作正確性
-- 🔜 **Full paper（2026 年 12 月，投稿 ICSE / FSE）：** 對 STORM / CodeCRDT / SCF 之比較性評估；多採用者之擴大研究；MAO 多代理 orchestration 層之評估。截至 2026-06-15，MAO 部分已交付（`freeze.ts`、`patch-envelope.ts`、`conflict-matrix.ts`、route-context lifecycle——TASK-MAO-0006~0009），simulator benchmark（TASK-MAO-0010）與 Team Agents Wave Mode（TASK-MAO-0023~0034, §3.7 / §6.4）待續。詳見 [`multi-agent-orchestration/MAO多AI並行治理計畫書.md`](https://github.com/eaglhuang/3KLife/blob/main/docs/ai_atomic_framework/multi-agent-orchestration/MAO%E5%A4%9AAI%E4%B8%A6%E8%A1%8C%E6%B2%BB%E7%90%86%E8%A8%88%E7%95%AB%E6%9B%B8.md) 與其續篇 `MAO多AI並行治理計畫書2.md`（Team Agents Wave Mode）。
+- 🔜 **Full paper（2026 年 12 月，投稿 ICSE / FSE）：** 對 STORM / CodeCRDT / SCF / **CoAgent** 之比較性評估；多採用者之擴大研究；MAO 多代理 orchestration 層之評估。**對照 dataset 已明確**：規劃於 **AgenticFlict**（142K agent PR、27.67% conflict rate、336K+ fine-grained conflict region）[Ogenrwot & Businge, 2026] 之上重放 ATM broker，量化其於上述 conflict 上之 catch rate，並與 STORM / CodeCRDT / CoAgent baseline 直接對照。截至 2026-06-15，MAO 部分已交付（`freeze.ts`、`patch-envelope.ts`、`conflict-matrix.ts`、route-context lifecycle——TASK-MAO-0006~0009），simulator benchmark（TASK-MAO-0010）與 Team Agents Wave Mode（TASK-MAO-0023~0034, §3.7 / §6.4）待續。詳見 [`multi-agent-orchestration/MAO多AI並行治理計畫書.md`](https://github.com/eaglhuang/3KLife/blob/main/docs/ai_atomic_framework/multi-agent-orchestration/MAO%E5%A4%9AAI%E4%B8%A6%E8%A1%8C%E6%B2%BB%E7%90%86%E8%A8%88%E7%95%AB%E6%9B%B8.md) 與其續篇 `MAO多AI並行治理計畫書2.md`（Team Agents Wave Mode）。
 
 ---
 
@@ -933,6 +939,8 @@ Artifact 完整歸檔於 `docs/ai_atomic_framework/broker-collision-evidence/run
 > 15. Geng, J. & Neubig, G. (2026). Effective Strategies for Asynchronous Software Engineering Agents (CAID). arXiv:2603.21489.
 > 16. Zhang, Q., Li, J., Lin, J., Luo, C., & Qian, C. (2026). Rover: Context-aware Conflict Resolution with LLM. arXiv:2605.17279.
 > 17. Xia, S., Li, Q., Ehsan, T., & Ortiz, J. (2026). TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples. arXiv:2605.07935.
+> 18. Ogenrwot, D. & Businge, J. (2026). AgenticFlict: A Large-Scale Dataset of Merge Conflicts in AI Coding Agent Pull Requests on GitHub. arXiv:2604.03551.
+> 19. Liu, S. et al. (2026). Towards Direct Latent-Space Synthesis for Parallel Branches in LLM-Agent Workflows. arXiv:2606.14672.
 
 ---
 
@@ -940,7 +948,15 @@ Artifact 完整歸檔於 `docs/ai_atomic_framework/broker-collision-evidence/run
 
 ## Revision History
 
-**2026-06-22 (Current Draft, twenty-fourth pass — POS2 keystone field evidence + §4.5 重排 + §4.5.4 (i) 升級 + §3.9 實質性降級):**
+**2026-06-22 (Current Draft, twenty-fifth pass — AgenticFlict 升級 motivation；CoAgent 加 layered complementarity；Parallel-Synthesis adjacent work):**
+
+- **§1.1 Motivation 升級**：原 hand-waving 之「並發越多衝突越大」追加一段 AgenticFlict 實證引用——142K+ AI agent PR（59K+ repo），27.67% merge conflict rate，336K+ fine-grained conflict region。將 motivation 由 anecdotal 升級為文獻量化證據；明確指出本論文目標即為此 27.67% 缺口提供 *寫入前* 治理機制。
+- **§2.7 CoAgent 對照段末新增「層次化互補」段**：除原有「指向不同子空間」之並排互補外，新增 layered complementarity 框架——ATM 之 `SERIAL` 序列化決策（§3.4）其後續執行可採 MTPO 風格之 speculative apply + LLM repair，作為 admission 完成後針對不可事前推導 read set 之 reactive recovery 路徑。將 CoAgent 由「直接對手」位置轉為「相鄰兩層治理鏈條」之友軍位置：ATM 站 admission，CoAgent 站 repair。未實作此延伸，列為 future direction。
+- **§2.9 OT/CRDT/DB 末段新增 Parallel-Synthesis adjacent work**：[Liu et al., 2026, arXiv:2606.14672] 於 latent-space（KV-cache）層級處理 parallel-branch merging，與 ATM admission control 屬不同層次，正交；原則上可疊加於 ATM deterministic-composer 路由之上。
+- **§5 Future eval 補對照 dataset**：明確列出 December full paper 規劃於 AgenticFlict（142K agent PR、27.67% conflict rate、336K+ conflict region）之上重放 ATM broker，量化 catch rate，並與 STORM / CodeCRDT / **CoAgent** baseline 直接對照。將 December full paper 之對照工作由 vapor 升級為具明確 dataset。
+- **References §7 新增兩條**：#18 AgenticFlict (Ogenrwot & Businge, 2026, arXiv:2604.03551)；#19 Parallel-Synthesis (Liu et al., 2026, arXiv:2606.14672)。
+
+**2026-06-22 (twenty-fourth pass — POS2 keystone field evidence + §4.5 重排 + §4.5.4 (i) 升級 + §3.9 實質性降級):**
 
 - **新增 §4.5.1 POS2 keystone**：跨 vendor 同 owner map 同檔 bounded-region 端到端正向合併（codex-gpt54mini vs claude-opus47，target `packages/cli/src/commands/broker.ts`，baseCommit `51dd72a7...`，POS2-A region 841-878、POS2-B region 989-1142，merge plan `merge-255c73707a528edc`，steward apply verdict `applied`，validator 全 pass）；artifact 8 條歸入 Appendix A.1.4。
 - §4.5 重排：原 §4.5.1 close-orch → §4.5.2；原 §4.5.2 B-12 → §4.5.3；原 §4.5.3 refinement-loop → §4.5.4；原 §4.5.4 綜合 → §4.5.5；原 §4.5.5 邊界 → §4.5.6。Appendix 同步：A.1.1 / A.1.2 / A.1.3 對應 section 編號更新；新增 A.1.4 POS2 artifact；原 A.1.4 邊界 → A.1.5（擴為四類證據邊界，加入第 0 條 POS2 邊界）。
