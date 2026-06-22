@@ -1,0 +1,112 @@
+{
+  "schemaId": "atm.brokerEvidenceBundle.v1",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-22T07:25:19.324Z",
+  "sourceRunDir": "C:/Users/User/3KLife/docs/ai_atomic_framework/broker-collision-evidence/runs",
+  "sourceTeamRunDir": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs",
+  "sourceAtmRoot": "C:/Users/User/AI-Atomic-Framework",
+  "runs": [
+    {
+      "runId": "registry-TASK-PAPER-HOTFILE-POS2-A",
+      "planId": "TASK-PAPER-HOTFILE-POS2-A",
+      "scenario": "field",
+      "tasks": "TASK-PAPER-HOTFILE-POS2-A",
+      "actors": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-A:codex-gpt54mini",
+      "files": "packages/cli/src/commands/broker.ts",
+      "vendor": "broker-registry",
+      "lane": "direct-brokered:provisional-write-lease",
+      "verdict": "recorded:provisional-write-lease",
+      "commits": "51dd72a70c835cad57786607fe7ad733655286d0",
+      "transactions": "intent-1782112503025",
+      "identities": "intent-1782112503025",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/write-broker.registry.json"
+    },
+    {
+      "runId": "registry-TASK-PAPER-HOTFILE-POS2-B",
+      "planId": "TASK-PAPER-HOTFILE-POS2-B",
+      "scenario": "field",
+      "tasks": "TASK-PAPER-HOTFILE-POS2-B",
+      "actors": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-B:claude-opus47",
+      "files": "packages/cli/src/commands/broker.ts",
+      "vendor": "broker-registry",
+      "lane": "direct-brokered:composer-routed",
+      "verdict": "recorded:composer-routed",
+      "commits": "51dd72a70c835cad57786607fe7ad733655286d0",
+      "transactions": "intent-1782112902039",
+      "identities": "intent-1782112902039",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/write-broker.registry.json"
+    },
+    {
+      "runId": "team-179057e64770",
+      "planId": "TASK-PAPER-HOTFILE-POS2-B",
+      "scenario": "field",
+      "tasks": "TASK-PAPER-HOTFILE-POS2-B",
+      "actors": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-B:claude-opus47",
+      "files": "packages/cli/src/commands/broker.ts",
+      "vendor": "team-broker-lane",
+      "lane": "deterministic-composer:composer-routed",
+      "verdict": "blocked-active-lease:composer-routed",
+      "commits": "51dd72a70c835cad57786607fe7ad733655286d0",
+      "transactions": "decision-1782110775031,decision-1782112902044,txn-ebdd0d9bf39b3af9",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-179057e64770.json"
+    },
+    {
+      "runId": "team-57c001e46b4d",
+      "planId": "TASK-PAPER-HOTFILE-POS2-B",
+      "scenario": "field",
+      "tasks": "TASK-PAPER-HOTFILE-POS2-B",
+      "actors": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-B:claude-opus47",
+      "files": "packages/cli/src/commands/broker.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered",
+      "verdict": "parallel-safe",
+      "commits": "604bb28e6c44cc0520a32ed9f06ca7c301ac915a",
+      "transactions": "decision-1782106881632",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-57c001e46b4d.json"
+    },
+    {
+      "runId": "team-68e022e8dc82",
+      "planId": "TASK-PAPER-HOTFILE-POS2-A",
+      "scenario": "field",
+      "tasks": "TASK-PAPER-HOTFILE-POS2-A",
+      "actors": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-A:codex-gpt54mini",
+      "files": "packages/cli/src/commands/broker.ts",
+      "vendor": "team-broker-lane",
+      "lane": "direct-brokered:provisional-write-lease",
+      "verdict": "needs-physical-split:provisional-write-lease",
+      "commits": "51dd72a70c835cad57786607fe7ad733655286d0",
+      "transactions": "decision-1782110584126,decision-1782112902044,txn-72379f90f4d18809",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-68e022e8dc82.json"
+    },
+    {
+      "runId": "team-f45c51bc3f92",
+      "planId": "TASK-PAPER-HOTFILE-POS2-A",
+      "scenario": "field",
+      "tasks": "TASK-PAPER-HOTFILE-POS2-A",
+      "actors": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-A:codex-gpt54mini",
+      "files": "packages/cli/src/commands/broker.ts",
+      "vendor": "team-broker-lane",
+      "lane": "deterministic-composer",
+      "verdict": "needs-physical-split",
+      "commits": "604bb28e6c44cc0520a32ed9f06ca7c301ac915a",
+      "transactions": "decision-1782106918142",
+      "identities": "n/a",
+      "evidence": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-f45c51bc3f92.json"
+    }
+  ],
+  "taskArtifacts": [
+    {
+      "taskId": "TASK-PAPER-HOTFILE-POS2-A",
+      "closurePacket": "n/a",
+      "teamRuns": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-68e022e8dc82.json;C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-f45c51bc3f92.json"
+    },
+    {
+      "taskId": "TASK-PAPER-HOTFILE-POS2-B",
+      "closurePacket": "n/a",
+      "teamRuns": "C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-179057e64770.json;C:/Users/User/AI-Atomic-Framework/.atm/runtime/team-runs/team-57c001e46b4d.json"
+    }
+  ]
+}

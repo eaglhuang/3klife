@@ -1,0 +1,119 @@
+{
+  "schemaId": "atm.writeBrokerRegistry.v1",
+  "specVersion": "0.1.0",
+  "repoId": "local-repo",
+  "workspaceId": "main",
+  "activeIntents": [
+    {
+      "intentId": "intent-1782112503025",
+      "taskId": "TASK-PAPER-HOTFILE-POS2-A",
+      "teamRunId": null,
+      "actorId": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-A:codex-gpt54mini",
+      "baseCommit": "51dd72a70c835cad57786607fe7ad733655286d0",
+      "resourceKeys": {
+        "files": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "atomIds": [
+          "atm.broker.classify-explicit-mutation-request"
+        ],
+        "atomCids": [
+          "atm-broker-classify-explicit-mutation-request-broker-841-878"
+        ],
+        "atomRanges": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878,
+            "atomCid": "atm-broker-classify-explicit-mutation-request-broker-841-878"
+          }
+        ],
+        "generators": [],
+        "projections": [],
+        "registries": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 1782112503025,
+      "leaseSeconds": 1800,
+      "leaseMaxSeconds": 1800,
+      "heartbeatAt": "2026-06-22T07:15:03.025Z",
+      "lane": "direct-brokered",
+      "expiresAt": "2026-06-22T07:45:03.025Z",
+      "admission": {
+        "trigger": "same-file-overlap-risk",
+        "state": "provisional-write-lease",
+        "requiresProposal": true,
+        "summarySubmitted": true,
+        "hotFiles": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "boundedRegions": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 841,
+            "lineEnd": 878
+          }
+        ],
+        "rearbitrationRequired": false,
+        "reason": "Proposal-first lane is active; broker recorded a provisional write lease before final admission."
+      }
+    },
+    {
+      "intentId": "intent-1782112902039",
+      "taskId": "TASK-PAPER-HOTFILE-POS2-B",
+      "teamRunId": null,
+      "actorId": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-B:claude-opus47",
+      "baseCommit": "51dd72a70c835cad57786607fe7ad733655286d0",
+      "resourceKeys": {
+        "files": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "atomIds": [
+          "atm.broker.parse-broker-args"
+        ],
+        "atomCids": [
+          "atm-broker-parse-broker-args-broker-989-1142"
+        ],
+        "atomRanges": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 989,
+            "lineEnd": 1142,
+            "atomCid": "atm-broker-parse-broker-args-broker-989-1142"
+          }
+        ],
+        "generators": [],
+        "projections": [],
+        "registries": [],
+        "validators": [],
+        "artifacts": []
+      },
+      "leaseEpoch": 1782112902039,
+      "leaseSeconds": 1800,
+      "leaseMaxSeconds": 1800,
+      "heartbeatAt": "2026-06-22T07:21:42.039Z",
+      "lane": "deterministic-composer",
+      "expiresAt": "2026-06-22T07:51:42.039Z",
+      "admission": {
+        "trigger": "same-file-overlap-risk",
+        "state": "composer-routed",
+        "requiresProposal": true,
+        "summarySubmitted": true,
+        "hotFiles": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "boundedRegions": [
+          {
+            "filePath": "packages/cli/src/commands/broker.ts",
+            "lineStart": 989,
+            "lineEnd": 1142
+          }
+        ],
+        "rearbitrationRequired": true,
+        "reason": "Disjoint bounded proposal regions on 'packages/cli/src/commands/broker.ts' require deterministic-composer routing before write."
+      }
+    }
+  ],
+  "currentEpoch": 1782112902039
+}

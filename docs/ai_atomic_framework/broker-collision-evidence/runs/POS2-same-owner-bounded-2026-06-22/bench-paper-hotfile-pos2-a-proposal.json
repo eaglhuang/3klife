@@ -1,0 +1,35 @@
+{
+  "schemaId": "atm.patchProposal.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "POS2-A live apply proposal"
+  },
+  "proposalId": "proposal.paper-hotfile.pos2.a",
+  "taskId": "TASK-PAPER-HOTFILE-POS2-A",
+  "actorId": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-A:codex-gpt54mini",
+  "baseCommit": "51dd72a70c835cad57786607fe7ad733655286d0",
+  "fileBeforeHash": "sha256:eb4b0d1888e120ebb9996fe534b1c9f1241b0e50786ecdde82ae3d815d626bb7",
+  "targetFile": "packages/cli/src/commands/broker.ts",
+  "atomRefs": [
+    {
+      "atomId": "atm.broker.classify-explicit-mutation-request",
+      "atomCid": "atm-broker-classify-explicit-mutation-request-broker-841-878"
+    }
+  ],
+  "anchors": [
+    {
+      "kind": "line",
+      "hint": "const requestId = request.requestId || 'unknown-request';"
+    }
+  ],
+  "intent": "Use a deterministic fallback requestId derived from filePath, op, and target when request.requestId is absent.",
+  "patch": "--- a/packages/cli/src/commands/broker.ts\n+++ b/packages/cli/src/commands/broker.ts\n@@ -921 +920,0 @@ function classifyExplicitMutationRequest(request: MutationRequest): {\n-  const requestId = request.requestId || 'unknown-request';\n@@ -925,0 +925,8 @@ function classifyExplicitMutationRequest(request: MutationRequest): {\n+  const requestId =\n+    typeof request.requestId === 'string' && request.requestId.trim()\n+      ? request.requestId.trim()\n+      : [\n+          normalizedFilePath || 'unknown-file',\n+          op || 'unknown-op',\n+          target || 'unknown-target'\n+        ].join(':');\n",
+  "validators": [
+    "git diff --check",
+    "npm run typecheck",
+    "npm run validate:cli"
+  ],
+  "rollback": "Restore the original requestId fallback line in classifyExplicitMutationRequest."
+}

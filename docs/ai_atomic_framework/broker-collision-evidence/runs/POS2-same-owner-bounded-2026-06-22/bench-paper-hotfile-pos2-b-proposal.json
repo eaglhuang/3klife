@@ -1,0 +1,35 @@
+{
+  "schemaId": "atm.patchProposal.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "POS2-B live apply proposal"
+  },
+  "proposalId": "proposal.paper-hotfile.pos2.b",
+  "taskId": "TASK-PAPER-HOTFILE-POS2-B",
+  "actorId": "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-B:claude-opus47",
+  "baseCommit": "51dd72a70c835cad57786607fe7ad733655286d0",
+  "fileBeforeHash": "sha256:eb4b0d1888e120ebb9996fe534b1c9f1241b0e50786ecdde82ae3d815d626bb7",
+  "targetFile": "packages/cli/src/commands/broker.ts",
+  "atomRefs": [
+    {
+      "atomId": "atm.broker.parse-broker-args",
+      "atomCid": "atm-broker-parse-broker-args-broker-989-1142"
+    }
+  ],
+  "anchors": [
+    {
+      "kind": "line",
+      "hint": "state.ttlSeconds = parseInt(val, 10);"
+    }
+  ],
+  "intent": "Clamp invalid --ttl-seconds input to the default broker lease duration without changing the CLI contract.",
+  "patch": "--- a/packages/cli/src/commands/broker.ts\n+++ b/packages/cli/src/commands/broker.ts\n@@ -1112,7 +1112,8 @@\n     if (arg === '--ttl-seconds') {\n       const val = requireValue(argv, index, '--ttl-seconds');\n-      state.ttlSeconds = parseInt(val, 10);\n+      const parsed = parseInt(val, 10);\n+      state.ttlSeconds = !Number.isFinite(parsed) || parsed <= 0 ? 1800 : parsed;\n       index += 1;\n       continue;\n     }\n",
+  "validators": [
+    "git diff --check",
+    "npm run typecheck",
+    "npm run validate:cli"
+  ],
+  "rollback": "Restore direct parseInt assignment for --ttl-seconds in parseBrokerArgs."
+}

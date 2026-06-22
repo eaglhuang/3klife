@@ -1,0 +1,84 @@
+{
+  "schemaId": "atm.stewardApplyEvidence.v1",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "neutral write steward apply"
+  },
+  "stewardId": "neutral-write-steward",
+  "mergePlanId": "merge-255c73707a528edc",
+  "proposalIds": [
+    "proposal.paper-hotfile.pos2.a",
+    "proposal.paper-hotfile.pos2.b"
+  ],
+  "targetFiles": [
+    "packages/cli/src/commands/broker.ts"
+  ],
+  "appliedFiles": [
+    "packages/cli/src/commands/broker.ts"
+  ],
+  "fileBeforeHashes": {
+    "packages/cli/src/commands/broker.ts": "2b43b410b86789fa11d644d36b7d6b5473ce0e4084ddae19170c6e07f43191b5"
+  },
+  "fileAfterHashes": {
+    "packages/cli/src/commands/broker.ts": "5a6514c918f969950cfb6d80c02d74e58d0a09a1802c9098b64e3432cced4ad2"
+  },
+  "permissions": {
+    "fileWrite": [
+      "packages/cli/src/commands/broker.ts"
+    ],
+    "gitWrite": false,
+    "taskLifecycle": false,
+    "selfClose": false
+  },
+  "applyMethod": "patch-apply",
+  "verdict": "applied",
+  "brokerOperationRun": {
+    "schemaId": "atm.brokerOperationRunRecordEnvelope.v1",
+    "specVersion": "0.1.0",
+    "migration": {
+      "strategy": "none",
+      "fromVersion": null,
+      "notes": "deterministic compose"
+    },
+    "runId": "steward-merge-255c73707a528edc",
+    "planId": "merge-255c73707a528edc",
+    "records": [
+      {
+        "schemaId": "atm.brokerOperationRunRecord.v1",
+        "specVersion": "0.1.0",
+        "migration": {
+          "strategy": "none",
+          "fromVersion": null,
+          "notes": "deterministic compose"
+        },
+        "runId": "steward-merge-255c73707a528edc",
+        "planId": "merge-255c73707a528edc",
+        "request_identity": [
+          "proposal.paper-hotfile.pos2.a",
+          "proposal.paper-hotfile.pos2.b"
+        ],
+        "actor_ids": [
+          "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-A:codex-gpt54mini",
+          "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-B:claude-opus47"
+        ],
+        "request_files": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "adapter_choice": "steward.patch-apply",
+        "applied_files": [
+          "packages/cli/src/commands/broker.ts"
+        ],
+        "lane_decision": "neutral-steward",
+        "merge_verdict": "mergeable",
+        "evidence_path": "C:\\Users\\User\\AI-Atomic-Framework\\.atm\\runtime\\bench-paper-hotfile-pos2-steward-evidence.json",
+        "task_ids": [
+          "TASK-PAPER-HOTFILE-POS2-A",
+          "TASK-PAPER-HOTFILE-POS2-B"
+        ],
+        "commit_sha": "51dd72a70c835cad57786607fe7ad733655286d0"
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+    "schemaId":  "atm.writeIntent.v1",
+    "specVersion":  "0.1.0",
+    "migration":  {
+                      "strategy":  "none",
+                      "fromVersion":  null,
+                      "notes":  "team plan/start broker lane"
+                  },
+    "taskId":  "TASK-PAPER-HOTFILE-POS2-A",
+    "actorId":  "bench:PAPER-HOTFILE-POS:TASK-PAPER-HOTFILE-POS2-A:codex-gpt54mini",
+    "baseCommit":  "51dd72a70c835cad57786607fe7ad733655286d0",
+    "targetFiles":  [
+                        "packages/cli/src/commands/broker.ts"
+                    ],
+    "atomRefs":  [
+                     {
+                         "atomId":  "atm.broker.classify-explicit-mutation-request",
+                         "atomCid":  "atm-broker-classify-explicit-mutation-request-broker-841-878",
+                         "operation":  "modify",
+                         "sourceRange":  {
+                                             "filePath":  "packages/cli/src/commands/broker.ts",
+                                             "lineStart":  841,
+                                             "lineEnd":  878
+                                         }
+                     }
+                 ],
+    "sharedSurfaces":  {
+                           "generators":  [
+
+                                          ],
+                           "projections":  [
+
+                                           ],
+                           "registries":  [
+
+                                          ],
+                           "validators":  [
+
+                                          ],
+                           "artifacts":  [
+
+                                         ]
+                       },
+    "requestedLane":  "auto",
+    "proposalAdmission":  {
+                              "trigger":  "same-file-overlap-risk",
+                              "summarySubmitted":  true,
+                              "hotFiles":  [
+                                               "packages/cli/src/commands/broker.ts"
+                                           ],
+                              "boundedRegions":  [
+                                                     {
+                                                         "filePath":  "packages/cli/src/commands/broker.ts",
+                                                         "lineStart":  841,
+                                                         "lineEnd":  878
+                                                     }
+                                                 ],
+                              "notes":  "POS2-A claims the classifyExplicitMutationRequest bounded region so the broker can rearbitrate at proposal scope instead of failing closed on a shared owner atom."
+                          }
+}
