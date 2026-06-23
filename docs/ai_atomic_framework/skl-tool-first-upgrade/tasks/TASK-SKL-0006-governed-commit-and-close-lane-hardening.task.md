@@ -7,6 +7,7 @@ depends_on:
   - TASK-SKL-0003
   - TASK-SKL-0004
   - TASK-SKL-0005
+  - TASK-SKL-0007
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
@@ -52,6 +53,7 @@ nonGoals:
 - Foreign active-claim and staged foreign governance artifacts are disclosed with machine-readable blockers or advisories as appropriate.
 - Planning repo vs framework repo boundaries remain explicit in tool results for close/commit flows.
 - `taskflow pre-close` and `taskflow close` share a consistent blocker surface for residue-related failures.
+- Recurrent tooling mismatches or close/commit wall-hits can be captured through the shared skill-growth contract instead of being rediscovered ad hoc.
 
 ## Non-Goals
 
@@ -69,3 +71,4 @@ git diff --check
 ## Notes
 
 - This card is the dogfood-safety closer for the SKL lane. It should make tool-first governance survivable in messy real repos, not only in clean fixtures.
+- It should also prove that the shared growth contract produces actionable close/commit lessons instead of dead notes.

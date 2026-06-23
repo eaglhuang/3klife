@@ -50,6 +50,7 @@ nonGoals:
 - Top-level tool result shape covers `ok`, `command`, `cwd`, `messages`, `evidence`, `nextAction`, `userNotice`, `runnerMode`, and follow-up fields.
 - Existing ATM message codes can be preserved as machine-readable `code` values in tool results.
 - Bridge transport and parameter validation are separated from governance semantics.
+- The bridge contract leaves room for shared skill-growth payloads such as learning categories, durable rules, or tooling-mismatch diagnostics without forcing each skill to invent its own envelope.
 - Focused tests prove tool output remains stable across representative success, blocked, and notice-bearing cases.
 
 ## Non-Goals

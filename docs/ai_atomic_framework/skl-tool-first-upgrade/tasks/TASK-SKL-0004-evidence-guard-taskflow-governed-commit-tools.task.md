@@ -50,6 +50,7 @@ nonGoals:
 - `atm_guard_run` exposes pass/fail findings in a stable shape.
 - `atm_taskflow_open`, `atm_taskflow_pre_close`, and `atm_taskflow_close` surface readiness hints, blockers, and evidence plans without text scraping.
 - `atm_git_commit` exposes commit result, lane diagnostics, and evidence binding metadata.
+- Operator-tool output can carry reusable diagnostics that later feed shared skill-growth capture, especially for blocked evidence, guard, close, and commit flows.
 
 ## Non-Goals
 

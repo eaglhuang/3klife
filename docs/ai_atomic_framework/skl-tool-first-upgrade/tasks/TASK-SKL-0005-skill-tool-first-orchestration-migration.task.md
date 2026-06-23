@@ -45,7 +45,7 @@ nonGoals:
 
 ## Goal
 
-把 ATM 主要 skill 改寫成 tool-first orchestration，並明確保留 CLI fallback policy，避免 tool-capable editor 仍走舊式 shell-first flow。
+把 ATM 主要 skill 改寫成 tool-first orchestration，並明確保留 CLI fallback policy，避免 tool-capable editor 仍走舊式 shell-first flow；同時把 `atm-governance-router` 固定為薄入口，讓 `playbook` 與 specialist skills 承接後續治理目的。
 
 ## Acceptance
 
@@ -53,11 +53,15 @@ nonGoals:
 - Skills preserve route truth by surfacing blocked tool results instead of silently bypassing them.
 - CLI fallback remains available for read-only inspection, legacy editors, or explicit fallback paths.
 - Updated docs and integration entry files explain the tool-first preference and fallback rules.
+- `atm-governance-router` no longer needs to be the fat all-in-one skill; it delegates through playbook and specialist skills.
+- The router/playbook/specialist split reduces context load and keeps each skill scoped to one ATM governance purpose.
+- The migration leaves a clean seam for Team role skill packs so later Team Agents can compose role-specific skill bundles without re-expanding the router.
 
 ## Non-Goals
 
 - No removal of existing CLI entrypoints.
 - No forcing all integrations to adopt a new plugin or connector in this card.
+- No stuffing every specialist workflow back into the router skill body.
 
 ## Verification
 
@@ -70,3 +74,4 @@ git diff --check
 ## Notes
 
 - The migration must optimize for determinism and operator clarity, not for theatrical abstraction. Skills should get shorter, not more magical.
+- This card prepares the ground for a shared growth contract, but the reusable learning-loop structure itself belongs to `TASK-SKL-0007`.

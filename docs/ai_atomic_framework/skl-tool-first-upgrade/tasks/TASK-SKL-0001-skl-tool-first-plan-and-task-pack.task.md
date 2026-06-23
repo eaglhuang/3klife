@@ -23,6 +23,12 @@ scopePaths:
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md"
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md"
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0009-team-role-routing-matrix-and-playbook-slices.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0011-agent-plus-skill-runtime-pilot.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0012-team-role-growth-and-observability-integration.task.md"
 deliverables:
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/README.md"
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/00-verified-facts.md"
@@ -35,6 +41,12 @@ deliverables:
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md"
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md"
   - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0009-team-role-routing-matrix-and-playbook-slices.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0011-agent-plus-skill-runtime-pilot.task.md"
+  - "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0012-team-role-growth-and-observability-integration.task.md"
 validators:
   - "encoding-touched guard on touched planning files"
   - "git diff --check"
@@ -61,7 +73,7 @@ nonGoals:
 
 ## Goal
 
-建立 `skl-tool-first-upgrade` planning lane，回寫計畫書、索引與 profile，並完整開出 `TASK-SKL-0002` ~ `TASK-SKL-0006` execution pack。
+建立 `skl-tool-first-upgrade` planning lane，回寫計畫書、索引與 profile，並完整開出 `TASK-SKL-0002` ~ `TASK-SKL-0012` execution pack。
 
 ## Background
 
@@ -71,13 +83,17 @@ nonGoals:
 
 1. 新建一個與 `cid-hardening` 同層級的 planning lane。
 2. 在 lane root 寫入 `README.md`、`00-verified-facts.md`、`SKL-tool-first-upgrade-plan.md`、`taskflow.profile.json`。
-3. 在 `tasks/` 下建立任務索引與五張 execution cards，加上本張 planning-only opener card。
-4. 讓 `TASK-SKL-0002` ~ `TASK-SKL-0006` 的依賴、scope、deliverables、validators 與 rollback 邊界可直接被後續治理流程消費。
+3. 在 `tasks/` 下建立任務索引與十一張 execution/planning bridge cards，加上本張 planning-only opener card。
+4. 把 `router / playbook / specialist skill` 三層模型與共用 skill growth contract 正式寫進計畫。
+5. 把 Team Agent = `Role + Skill Pack + Permission Lease + Playbook Slice + Growth Contract` 的整合模型正式寫進計畫與任務包。
+6. 讓 `TASK-SKL-0002` ~ `TASK-SKL-0012` 的依賴、scope、deliverables、validators 與 rollback 邊界可直接被後續治理流程消費。
 
 ## Acceptance Criteria
 
 - lane root 與 `tasks/` 結構完整，命名與 `TASK-SKL-*` 編號一致。
 - 計畫書清楚描述目標 result shape、tool surface、skill migration 與 hardening 主題。
+- 計畫書清楚描述 `router / playbook / specialist skill` 分層與 shared growth contract。
+- 計畫書清楚描述 Team Agents 與 `Agent + Skill` 治理單元的整合模型。
 - 任務索引可作為 captain dispatch 與後續 import 的入口。
 - 每張 task card 都含有 machine-readable frontmatter 與完整內容段落。
 - planning lane 只寫 `3KLife` 規劃文件，不直接授權 framework source mutation。

@@ -42,7 +42,7 @@ nonGoals:
 
 ## Goal
 
-將 `next / claim / framework-mode` 提升成結構化 tool surface，讓 editor 與 skill 可直接消費 route、claim、runner mode 與 boundary diagnostics。
+將 `next / claim / framework-mode` 提升成結構化 tool surface，讓 editor 與 skill 可直接消費 route、claim、runner mode 與 boundary diagnostics，並讓 playbook 穩定扮演 router 與 specialist skill 之間的中介層。
 
 ## Acceptance
 
@@ -50,6 +50,7 @@ nonGoals:
 - `atm_next_claim` can expose active guidance, allowed scope, and claim diagnostics without lossy text parsing.
 - `atm_framework_mode_status` and `atm_framework_mode_claim` can disclose framework-temp boundaries and claim scope in machine-readable form.
 - Representative blocked and no-work routes remain fail-closed and clearly surfaced.
+- Playbook-bearing routes clearly expose which later specialist skill or lane action should take over, so `atm-governance-router` can stay thin.
 
 ## Non-Goals
 
