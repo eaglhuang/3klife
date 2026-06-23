@@ -355,3 +355,19 @@ playbook 是本次工作的動態 orchestration contract，負責：
 - Team Agents planning source: `C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/團隊自動化代理分工計畫.md`
 - 任務索引: [./tasks/README.md](./tasks/README.md)
 - 已驗證事實: [./00-verified-facts.md](./00-verified-facts.md)
+
+## 13. Runner Dogfood Addendum
+
+This addendum is part of the active SKL execution contract.
+
+### 13.1 Frozen runner proof rule
+
+- When a fix changes `CLI / close / taskflow / hook / evidence` behavior and the verification target is the frozen runner (`node atm.mjs`), use: `ATM_RETAIN_RELEASE_ARTIFACTS=1 npm run build`
+- A successful `node atm.dev.mjs` run proves source-first behavior only. It does not prove the frozen runner has been refreshed.
+- Do not claim frozen-runner validation unless the retained build artifacts were produced and the frozen entrypoint was rerun afterward.
+
+### 13.2 Growth and history routing
+
+- Record this kind of wall-hit in shared growth while the bug or operator trap is still active.
+- Keep the product side in backlog until the underlying runner/build behavior is fixed.
+- Once the fix is stable and the workaround no longer needs to load by default, move the narrative case into a historical section to keep skill context lean.
