@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0009
 title: Post-push-fail fallback
-status: planned
+status: done
 milestone: G3
 depends_on:
   - TASK-GIT-0004
@@ -9,6 +9,7 @@ depends_on:
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T06:29:19.687Z
 scopePaths:
   - "packages/cli/src/commands/git.ts"
   - "packages/core/src/git/**"
@@ -45,4 +46,3 @@ Provide a safe recovery lane when a push fails because the remote branch moved a
 - Command fetches and reruns the same admission comparison.
 - Output explains whether the operator should rebase, steward-apply, or retry after no-op.
 - Evidence records that this was post-push-fail recovery, not the primary pre-push hook.
-

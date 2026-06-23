@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0007
 title: Neutral steward Git apply dry-run
-status: planned
+status: done
 milestone: G2
 depends_on:
   - TASK-GIT-0004
@@ -9,6 +9,7 @@ depends_on:
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T06:05:59.895Z
 scopePaths:
   - "packages/core/src/broker/**"
   - "packages/core/src/steward/**"
@@ -47,4 +48,3 @@ Let ATM produce a neutral steward plan for mergeable local-vs-remote changes and
 - Explicit apply mode writes only scoped files and records evidence.
 - Apply mode leaves commit creation to the operator.
 - Failed apply leaves a recoverable diagnostic and does not continue to push.
-

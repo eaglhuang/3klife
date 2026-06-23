@@ -1,13 +1,14 @@
 ---
 task_id: TASK-GIT-0006
 title: Git boundary evidence envelope
-status: planned
+status: done
 milestone: G2
 depends_on:
   - TASK-GIT-0004
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T05:33:49.486Z
 scopePaths:
   - "packages/core/src/evidence/**"
   - "packages/core/src/git/**"
@@ -44,4 +45,3 @@ Persist Git-boundary admission decisions as replayable evidence.
 - Evidence can be indexed together with existing broker evidence reports.
 - Composer-routed and blocked outcomes both keep enough detail for later review.
 - Evidence does not require changing `atm.brokerOperationRunRecordEnvelope.v1` in MVP.
-

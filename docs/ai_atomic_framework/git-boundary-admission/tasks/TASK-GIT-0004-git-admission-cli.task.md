@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0004
 title: Git admission CLI surface
-status: planned
+status: done
 milestone: G1
 depends_on:
   - TASK-GIT-0002
@@ -9,6 +9,7 @@ depends_on:
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T05:06:09.030Z
 scopePaths:
   - "packages/cli/src/commands/**"
   - "packages/core/src/git/**"
@@ -45,4 +46,3 @@ Expose Git-boundary admission through a stable CLI entry point.
 - Command returns distinct outcomes for allow, block, composer-routed, no-op, and internal-error.
 - `--json` is stable enough for hooks and evidence collection.
 - Operator output names the remote branch, base commit, local commit, remote commit, conflicting files, and recommended next step.
-

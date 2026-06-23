@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0012
 title: End-to-end dogfood and paper evidence
-status: planned
+status: done
 milestone: G4
 depends_on:
   - TASK-GIT-0008
@@ -9,6 +9,7 @@ depends_on:
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T07:26:40.163Z
 scopePaths:
   - "docs/governance/**"
   - "scripts/**"
@@ -46,4 +47,3 @@ Produce the final dogfood and paper evidence for the GIT series.
 - Each run lists base commit, local actor, remote virtual actor, target files, lane, verdict, and artifact paths.
 - Report clearly distinguishes deterministic fixtures from live Git-boundary dogfood.
 - Final write-up states limitations: local hook bypass, no server-side enforcement in MVP, and conservative fallback for unsupported file types.
-

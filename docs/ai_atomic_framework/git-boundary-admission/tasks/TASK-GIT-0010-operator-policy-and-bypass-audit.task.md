@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0010
 title: Operator policy and bypass audit
-status: planned
+status: done
 milestone: G3
 depends_on:
   - TASK-GIT-0005
@@ -9,6 +9,7 @@ depends_on:
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T06:46:31.991Z
 scopePaths:
   - "docs/governance/**"
   - "packages/cli/src/commands/git.ts"
@@ -45,4 +46,3 @@ Define realistic operator policy for bypass and emergency paths.
 - CLI can report hook missing/disabled state when asked to verify.
 - Emergency push policy preserves manual authority while recording risk.
 - Protected-branch/server-side enforcement is named as future deployment policy, not MVP behavior.
-

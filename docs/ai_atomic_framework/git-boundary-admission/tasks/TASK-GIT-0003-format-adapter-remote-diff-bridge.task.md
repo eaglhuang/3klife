@@ -1,13 +1,14 @@
 ---
 task_id: TASK-GIT-0003
 title: Format adapter remote diff bridge
-status: planned
+status: done
 milestone: G1
 depends_on:
   - TASK-GIT-0002
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T04:54:49.594Z
 scopePaths:
   - "packages/core/src/broker/**"
   - "packages/core/src/adapters/**"
@@ -45,4 +46,3 @@ Route Git-derived file deltas through existing ATM format adapters where possibl
 - `path-to-atom-map.json` and atom-map-style files can produce atom-aware conflict keys.
 - Unknown file types fall back to conservative text ranges.
 - Adapter failures fail closed with actionable diagnostics.
-

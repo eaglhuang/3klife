@@ -1,13 +1,14 @@
 ---
 task_id: TASK-GIT-0008
 title: Structured file fixture suite
-status: planned
+status: done
 milestone: G3
 depends_on:
   - TASK-GIT-0007
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T06:18:50.053Z
 scopePaths:
   - "tests/**"
   - "scripts/**"
@@ -45,4 +46,3 @@ Prove the Git-boundary admission path with deterministic fixtures before relying
 - At least one same-file overlapping case blocked before push.
 - At least one unknown-file fallback case using conservative text ranges.
 - Fixture output writes evidence records that the report generator can index.
-

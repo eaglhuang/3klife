@@ -1,13 +1,14 @@
 ---
 task_id: TASK-GIT-0005
 title: Pre-push hook installer
-status: planned
+status: done
 milestone: G2
 depends_on:
   - TASK-GIT-0004
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T05:20:33.732Z
 scopePaths:
   - "packages/cli/src/commands/integration.ts"
   - "packages/cli/src/commands/git.ts"
@@ -44,4 +45,3 @@ Make the pre-push admission command easy to install and verify without hiding th
 - Hook verifier confirms the hook points at the current ATM entry point.
 - Uninstall restores the previous hook or reports that no ATM hook was installed.
 - Hook output stays short and points to the full evidence report on failure.
-

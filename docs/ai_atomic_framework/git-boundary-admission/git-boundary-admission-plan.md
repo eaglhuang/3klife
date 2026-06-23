@@ -1,10 +1,11 @@
 ---
 doc_id: doc_git_boundary_admission_plan_0001
 owner: atm-core
-status: active
+status: completed
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 created_at: 2026-06-23
+completed_at: 2026-06-23T07:26:40.163Z
 related_tasks:
   - TASK-GIT-0001
   - TASK-GIT-0002
@@ -23,6 +24,8 @@ related_tasks:
 # ATM Git Boundary Admission Plan
 
 ## Summary
+
+Execution status: all `TASK-GIT-0001` through `TASK-GIT-0012` were completed in the target repository on 2026-06-23. This planning mirror remains as the design/archive record for the delivered series.
 
 ATM should extend broker admission to the Git boundary by adding a pre-push admission bridge. The bridge fetches the remote branch, computes the merge base, converts both local and remote branch deltas into mutation requests, and asks the broker whether the push is safe, blocked, or composer-routed.
 
@@ -78,4 +81,3 @@ The remote side becomes a virtual writer with actor id `virtual:git-remote@<sha>
 - True overlap blocks before push and produces reviewable evidence.
 - Post-push-fail fallback can explain and rerun the same admission path.
 - Evidence can be archived for paper claims without inventing a new envelope schema.
-

@@ -1,11 +1,12 @@
 ---
 task_id: TASK-GIT-0001
 title: Pre-push admission architecture contract
-status: planned
+status: done
 milestone: G0
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
+completed_at: 2026-06-23T04:34:20.932Z
 scopePaths:
   - "docs/governance/**"
   - "packages/core/src/broker/**"
@@ -44,4 +45,3 @@ The design must define `base`, `local`, and `remote` deltas, the virtual remote 
 - Contract defines the virtual actor format `virtual:git-remote@<sha>`.
 - Contract defines exit codes and JSON fields for allow, block, composer-routed, and internal-error outcomes.
 - Contract names the evidence path and confirms no broker envelope schema change is required for MVP.
-

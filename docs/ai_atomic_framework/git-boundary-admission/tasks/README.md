@@ -1,11 +1,12 @@
 ---
 doc_id: doc_git_boundary_admission_tasks_0001
 owner: atm-core
-status: active
+status: completed
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 created_at: 2026-06-23
 related_plan: docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md
+completed_at: 2026-06-23T07:26:40.163Z
 ---
 
 # GIT Boundary Admission Task Index
@@ -20,20 +21,19 @@ Every `TASK-GIT-*` card is a planning card for the ATM framework repository unle
 
 | Task ID | Stage | Planned Title | Status | Depends | Target |
 |---|---|---|---|---|---|
-| [TASK-GIT-0001](./TASK-GIT-0001-pre-push-admission-architecture-contract.task.md) | G0 | Pre-push admission architecture contract | planned | none | docs / contracts |
-| [TASK-GIT-0002](./TASK-GIT-0002-git-diff-to-mutation-request-converter.task.md) | G1 | Git diff to mutation request converter | planned | TASK-GIT-0001 | CLI / core |
-| [TASK-GIT-0003](./TASK-GIT-0003-format-adapter-remote-diff-bridge.task.md) | G1 | Format adapter remote diff bridge | planned | TASK-GIT-0002 | core / adapters |
-| [TASK-GIT-0004](./TASK-GIT-0004-git-admission-cli.task.md) | G1 | Git admission CLI surface | planned | TASK-GIT-0002, TASK-GIT-0003 | CLI |
-| [TASK-GIT-0005](./TASK-GIT-0005-pre-push-hook-installer.task.md) | G2 | Pre-push hook installer | planned | TASK-GIT-0004 | integration |
-| [TASK-GIT-0006](./TASK-GIT-0006-git-boundary-evidence-envelope.task.md) | G2 | Git boundary evidence envelope | planned | TASK-GIT-0004 | evidence |
-| [TASK-GIT-0007](./TASK-GIT-0007-neutral-steward-git-apply-dry-run.task.md) | G2 | Neutral steward Git apply dry-run | planned | TASK-GIT-0004, TASK-GIT-0006 | broker / steward |
-| [TASK-GIT-0008](./TASK-GIT-0008-structured-file-fixture-suite.task.md) | G3 | Structured file fixture suite | planned | TASK-GIT-0007 | tests |
-| [TASK-GIT-0009](./TASK-GIT-0009-post-push-fail-fallback.task.md) | G3 | Post-push-fail fallback | planned | TASK-GIT-0004, TASK-GIT-0006 | CLI |
-| [TASK-GIT-0010](./TASK-GIT-0010-operator-policy-and-bypass-audit.task.md) | G3 | Operator policy and bypass audit | planned | TASK-GIT-0005, TASK-GIT-0009 | policy / docs |
-| [TASK-GIT-0011](./TASK-GIT-0011-adopter-docs-and-runbook.task.md) | G4 | Adopter docs and runbook | planned | TASK-GIT-0010 | docs |
-| [TASK-GIT-0012](./TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md) | G4 | End-to-end dogfood and paper evidence | planned | TASK-GIT-0008, TASK-GIT-0011 | evidence |
+| [TASK-GIT-0001](./TASK-GIT-0001-pre-push-admission-architecture-contract.task.md) | G0 | Pre-push admission architecture contract | done | none | docs / contracts |
+| [TASK-GIT-0002](./TASK-GIT-0002-git-diff-to-mutation-request-converter.task.md) | G1 | Git diff to mutation request converter | done | TASK-GIT-0001 | CLI / core |
+| [TASK-GIT-0003](./TASK-GIT-0003-format-adapter-remote-diff-bridge.task.md) | G1 | Format adapter remote diff bridge | done | TASK-GIT-0002 | core / adapters |
+| [TASK-GIT-0004](./TASK-GIT-0004-git-admission-cli.task.md) | G1 | Git admission CLI surface | done | TASK-GIT-0002, TASK-GIT-0003 | CLI |
+| [TASK-GIT-0005](./TASK-GIT-0005-pre-push-hook-installer.task.md) | G2 | Pre-push hook installer | done | TASK-GIT-0004 | integration |
+| [TASK-GIT-0006](./TASK-GIT-0006-git-boundary-evidence-envelope.task.md) | G2 | Git boundary evidence envelope | done | TASK-GIT-0004 | evidence |
+| [TASK-GIT-0007](./TASK-GIT-0007-neutral-steward-git-apply-dry-run.task.md) | G2 | Neutral steward Git apply dry-run | done | TASK-GIT-0004, TASK-GIT-0006 | broker / steward |
+| [TASK-GIT-0008](./TASK-GIT-0008-structured-file-fixture-suite.task.md) | G3 | Structured file fixture suite | done | TASK-GIT-0007 | tests |
+| [TASK-GIT-0009](./TASK-GIT-0009-post-push-fail-fallback.task.md) | G3 | Post-push-fail fallback | done | TASK-GIT-0004, TASK-GIT-0006 | CLI |
+| [TASK-GIT-0010](./TASK-GIT-0010-operator-policy-and-bypass-audit.task.md) | G3 | Operator policy and bypass audit | done | TASK-GIT-0005, TASK-GIT-0009 | policy / docs |
+| [TASK-GIT-0011](./TASK-GIT-0011-adopter-docs-and-runbook.task.md) | G4 | Adopter docs and runbook | done | TASK-GIT-0010 | docs |
+| [TASK-GIT-0012](./TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md) | G4 | End-to-end dogfood and paper evidence | done | TASK-GIT-0008, TASK-GIT-0011 | evidence |
 
 ## Sequencing Note
 
 The first production-worthy milestone is `TASK-GIT-0001` through `TASK-GIT-0008`. `TASK-GIT-0009` and `TASK-GIT-0010` make the operator experience safe under real Git failures and bypasses. `TASK-GIT-0011` and `TASK-GIT-0012` convert the implementation into adopter-ready documentation and paper-ready evidence.
-
