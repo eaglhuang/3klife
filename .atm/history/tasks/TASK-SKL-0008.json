@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-SKL-0008",
+  "title": "Team role skill-pack and capability boundary contract",
+  "status": "planned",
+  "milestone": "P3",
+  "dependencies": [
+    "TASK-SKL-0005",
+    "TASK-SKL-0007"
+  ],
+  "acceptance": [
+    "The contract defines how each Team role maps to one skill pack or a bounded set of specialist skills.",
+    "The contract preserves existing Coordinator-only lifecycle authority.",
+    "Each role documents:",
+    "allowed permissions,",
+    "forbidden permissions,",
+    "expected playbook slice,",
+    "growth-contract attachment point.",
+    "The role/skill-pack model stays provider-neutral."
+  ],
+  "deliverables": [
+    "docs/**",
+    "integrations/**",
+    "packages/cli/src/commands/team.ts"
+  ],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md",
+    "sectionTitle": "TASK-SKL-0008",
+    "headingLine": 41,
+    "hash": "119434499bf94fae"
+  },
+  "importedAt": "2026-06-23T14:23:40.415Z",
+  "scopePaths": [
+    "docs/**",
+    "integrations/**",
+    "packages/cli/src/commands/team.ts",
+    "packages/core/src/**"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Do not let Team roles become a second scheduler.",
+    "Do not grant lifecycle authority to non-Coordinator roles."
+  ],
+  "nonGoals": [
+    "No provider-specific runtime bridge in this card.",
+    "No role-specific bespoke learning taxonomy."
+  ],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.team-role-skill-pack-contract",
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "lastTransitionId": "2026-06-23T14-23-40-440Z-import-fed13d3c9beb",
+  "lastTransitionAt": "2026-06-23T14:23:40.440Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

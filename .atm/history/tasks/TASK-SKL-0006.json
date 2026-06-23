@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-SKL-0006",
+  "title": "Governed commit and close lane hardening",
+  "status": "planned",
+  "milestone": "P3",
+  "dependencies": [
+    "TASK-SKL-0003",
+    "TASK-SKL-0004",
+    "TASK-SKL-0005",
+    "TASK-SKL-0007"
+  ],
+  "acceptance": [
+    "Known runtime residue is classified and surfaced without forcing operators to infer meaning from raw filesystem noise.",
+    "Foreign active-claim and staged foreign governance artifacts are disclosed with machine-readable blockers or advisories as appropriate.",
+    "Planning repo vs framework repo boundaries remain explicit in tool results for close/commit flows.",
+    "`taskflow pre-close` and `taskflow close` share a consistent blocker surface for residue-related failures.",
+    "Recurrent tooling mismatches or close/commit wall-hits can be captured through the shared skill-growth contract instead of being rediscovered ad hoc."
+  ],
+  "deliverables": [
+    "packages/cli/src/commands/**",
+    "packages/core/src/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "tags": [],
+  "notes": "- This card is the dogfood-safety closer for the SKL lane. It should make tool-first governance survivable in messy real repos, not only in clean fixtures.\n- It should also prove that the shared growth contract produces actionable close/commit lessons instead of dead notes.",
+  "source": {
+    "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md",
+    "sectionTitle": "TASK-SKL-0006",
+    "headingLine": 44,
+    "hash": "8a02b7ff7cebbd8b"
+  },
+  "importedAt": "2026-06-23T14:23:40.415Z",
+  "scopePaths": [
+    "packages/cli/src/commands/**",
+    "packages/core/src/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Do not normalize residue by mutating .atm runtime state directly.",
+    "Do not turn emergency or foreign governance conditions into silent success."
+  ],
+  "nonGoals": [
+    "No new alternate close lane.",
+    "No broad rewrite of unrelated runtime hygiene rules."
+  ],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.close-commit-lane-hardening",
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "lastTransitionId": "2026-06-23T14-23-40-436Z-import-e72c8cd81230",
+  "lastTransitionAt": "2026-06-23T14:23:40.436Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

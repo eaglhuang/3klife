@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-06-23T14-33-36-058Z-reserve-bb14dd5374a1",
+  "taskId": "TASK-SKL-0001",
+  "action": "reserve",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "reserved",
+  "taskPath": ".atm/history/tasks/TASK-SKL-0001.json",
+  "taskSha256": "sha256:11c88de8841dbfa0f27644b3f42bdb63f35898801939a865dc29dee11042727f",
+  "createdAt": "2026-06-23T14:33:36.058Z",
+  "command": "node atm.mjs tasks reserve"
+}

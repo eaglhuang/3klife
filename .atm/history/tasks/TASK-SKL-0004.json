@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-SKL-0004",
+  "title": "Evidence, guard, taskflow, and governed commit tools",
+  "status": "planned",
+  "milestone": "P1",
+  "dependencies": [
+    "TASK-SKL-0001",
+    "TASK-SKL-0002"
+  ],
+  "acceptance": [
+    "`atm_evidence_run` returns validator summaries, artifact paths, and command-backed evidence metadata.",
+    "`atm_guard_run` exposes pass/fail findings in a stable shape.",
+    "`atm_taskflow_open`, `atm_taskflow_pre_close`, and `atm_taskflow_close` surface readiness hints, blockers, and evidence plans without text scraping.",
+    "`atm_git_commit` exposes commit result, lane diagnostics, and evidence binding metadata.",
+    "Operator-tool output can carry reusable diagnostics that later feed shared skill-growth capture, especially for blocked evidence, guard, close, and commit flows."
+  ],
+  "deliverables": [
+    "packages/cli/src/commands/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "tags": [],
+  "notes": "- This card should keep `taskflow` on the official operator lane instead of reusing older ad-hoc `tasks close` style entrypoints.",
+  "source": {
+    "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md",
+    "sectionTitle": "TASK-SKL-0004",
+    "headingLine": 41,
+    "hash": "262abd289006d8e5"
+  },
+  "importedAt": "2026-06-23T14:23:40.415Z",
+  "scopePaths": [
+    "packages/cli/src/commands/**",
+    "packages/core/src/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Do not bypass existing taskflow close gates.",
+    "Do not weaken commit trailer or governance evidence binding."
+  ],
+  "nonGoals": [
+    "No full skill migration in this card.",
+    "No remote execution broker."
+  ],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.tool-first-operator-surface",
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "lastTransitionId": "2026-06-23T14-23-40-432Z-import-4e4ff49ed610",
+  "lastTransitionAt": "2026-06-23T14:23:40.432Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

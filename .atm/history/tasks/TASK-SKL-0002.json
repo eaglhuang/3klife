@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-SKL-0002",
+  "title": "Tool Bridge v1 schema and result adapter",
+  "status": "planned",
+  "milestone": "P1",
+  "dependencies": [
+    "TASK-SKL-0001"
+  ],
+  "acceptance": [
+    "Top-level tool result shape covers `ok`, `command`, `cwd`, `messages`, `evidence`, `nextAction`, `userNotice`, `runnerMode`, and follow-up fields.",
+    "Existing ATM message codes can be preserved as machine-readable `code` values in tool results.",
+    "Bridge transport and parameter validation are separated from governance semantics.",
+    "The bridge contract leaves room for shared skill-growth payloads such as learning categories, durable rules, or tooling-mismatch diagnostics without forcing each skill to invent its own envelope.",
+    "Focused tests prove tool output remains stable across representative success, blocked, and notice-bearing cases."
+  ],
+  "deliverables": [
+    "packages/cli/src/**",
+    "schemas/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "tags": [],
+  "notes": "- This card is the contract foundation for the whole SKL lane. Successor cards should consume the shared bridge rather than invent local response wrappers.",
+  "source": {
+    "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0002-tool-bridge-v1-schema-and-result-adapter.task.md",
+    "sectionTitle": "TASK-SKL-0002",
+    "headingLine": 42,
+    "hash": "e61921fe2f0be575"
+  },
+  "importedAt": "2026-06-23T14:23:40.415Z",
+  "scopePaths": [
+    "packages/cli/src/**",
+    "packages/core/src/**",
+    "schemas/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Do not introduce a second governance engine beside ATM CLI/runtime.",
+    "Do not require a remote service for v1."
+  ],
+  "nonGoals": [
+    "No full editor plugin rewrite in this card.",
+    "No direct skill migration before the bridge contract is stable."
+  ],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.tool-bridge-v1-contract",
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "lastTransitionId": "2026-06-23T14-23-40-428Z-import-918f268a7d6d",
+  "lastTransitionAt": "2026-06-23T14:23:40.428Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

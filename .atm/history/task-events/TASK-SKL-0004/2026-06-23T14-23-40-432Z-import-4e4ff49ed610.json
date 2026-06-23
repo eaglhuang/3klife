@@ -1,0 +1,14 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-06-23T14-23-40-432Z-import-4e4ff49ed610",
+  "taskId": "TASK-SKL-0004",
+  "action": "import",
+  "actorId": null,
+  "fromStatus": null,
+  "toStatus": "planned",
+  "taskPath": ".atm/history/tasks/TASK-SKL-0004.json",
+  "taskSha256": "sha256:666bbe72fe6331a0a4326996eb57d3fd2b964e9af5e49b8c25e46320a537d642",
+  "createdAt": "2026-06-23T14:23:40.432Z",
+  "command": "node atm.mjs tasks import"
+}

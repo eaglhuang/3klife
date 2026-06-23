@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-SKL-0007",
+  "title": "Shared skill growth contract and learning loop",
+  "status": "planned",
+  "milestone": "P2",
+  "dependencies": [
+    "TASK-SKL-0002",
+    "TASK-SKL-0005"
+  ],
+  "acceptance": [
+    "ATM skills share one growth contract instead of each skill inventing its own learning structure.",
+    "The contract defines:",
+    "a shared taxonomy,",
+    "a shared capture template,",
+    "promotion rules for moving durable rules into `SKILL.md`,",
+    "reference-only handling for raw cases and examples.",
+    "The router/playbook/specialist model clearly states where learning events originate and where they should be promoted.",
+    "At least one ATM entry skill and one specialist skill demonstrate how the shared learning loop is consumed.",
+    "The same growth contract is usable by future Team role skill packs without redefining taxonomy or promotion semantics per role."
+  ],
+  "deliverables": [
+    "integrations/**",
+    "docs/**",
+    ".github/**"
+  ],
+  "tags": [],
+  "notes": "- This card exists so all ATM skills can grow through the same architecture.\n- The desired rule is simple: case first in reference, stable pattern later in `SKILL.md`.\n- Team role skill packs should consume this contract instead of inventing separate role-memory systems.",
+  "source": {
+    "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md",
+    "sectionTitle": "TASK-SKL-0007",
+    "headingLine": 41,
+    "hash": "9547ca2926ecdbb6"
+  },
+  "importedAt": "2026-06-23T14:23:40.415Z",
+  "scopePaths": [
+    "integrations/**",
+    "docs/**",
+    "packages/**",
+    ".github/**"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Do not build a separate knowledge system outside the existing skill/reference structure.",
+    "Do not force every individual learning note directly into SKILL.md."
+  ],
+  "nonGoals": [
+    "No chat-history-only memory scheme.",
+    "No per-skill bespoke taxonomy that breaks cross-skill reuse."
+  ],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.shared-skill-growth-contract",
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "lastTransitionId": "2026-06-23T14-23-40-438Z-import-f4822165321a",
+  "lastTransitionAt": "2026-06-23T14:23:40.438Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

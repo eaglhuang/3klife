@@ -1,0 +1,121 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-23T14:23:40.415Z",
+  "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md",
+  "taskCount": 12,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-SKL-0001.json",
+    ".atm/history/tasks/TASK-SKL-0002.json",
+    ".atm/history/tasks/TASK-SKL-0003.json",
+    ".atm/history/tasks/TASK-SKL-0004.json",
+    ".atm/history/tasks/TASK-SKL-0005.json",
+    ".atm/history/tasks/TASK-SKL-0006.json",
+    ".atm/history/tasks/TASK-SKL-0007.json",
+    ".atm/history/tasks/TASK-SKL-0008.json",
+    ".atm/history/tasks/TASK-SKL-0009.json",
+    ".atm/history/tasks/TASK-SKL-0010.json",
+    ".atm/history/tasks/TASK-SKL-0011.json",
+    ".atm/history/tasks/TASK-SKL-0012.json"
+  ],
+  "taskIds": [
+    "TASK-SKL-0001",
+    "TASK-SKL-0002",
+    "TASK-SKL-0003",
+    "TASK-SKL-0004",
+    "TASK-SKL-0005",
+    "TASK-SKL-0006",
+    "TASK-SKL-0007",
+    "TASK-SKL-0008",
+    "TASK-SKL-0009",
+    "TASK-SKL-0010",
+    "TASK-SKL-0011",
+    "TASK-SKL-0012"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-SKL-0001",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md",
+      "sectionTitle": "TASK-SKL-0001",
+      "headingLine": 72,
+      "hash": "a9db408457817f6a"
+    },
+    {
+      "workItemId": "TASK-SKL-0002",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0002-tool-bridge-v1-schema-and-result-adapter.task.md",
+      "sectionTitle": "TASK-SKL-0002",
+      "headingLine": 42,
+      "hash": "e61921fe2f0be575"
+    },
+    {
+      "workItemId": "TASK-SKL-0003",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0003-next-claim-framework-mode-tools.task.md",
+      "sectionTitle": "TASK-SKL-0003",
+      "headingLine": 41,
+      "hash": "61bea3277f34bb6b"
+    },
+    {
+      "workItemId": "TASK-SKL-0004",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md",
+      "sectionTitle": "TASK-SKL-0004",
+      "headingLine": 41,
+      "hash": "262abd289006d8e5"
+    },
+    {
+      "workItemId": "TASK-SKL-0005",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md",
+      "sectionTitle": "TASK-SKL-0005",
+      "headingLine": 44,
+      "hash": "c308feebcd4b3766"
+    },
+    {
+      "workItemId": "TASK-SKL-0006",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md",
+      "sectionTitle": "TASK-SKL-0006",
+      "headingLine": 44,
+      "hash": "8a02b7ff7cebbd8b"
+    },
+    {
+      "workItemId": "TASK-SKL-0007",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md",
+      "sectionTitle": "TASK-SKL-0007",
+      "headingLine": 41,
+      "hash": "9547ca2926ecdbb6"
+    },
+    {
+      "workItemId": "TASK-SKL-0008",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md",
+      "sectionTitle": "TASK-SKL-0008",
+      "headingLine": 41,
+      "hash": "119434499bf94fae"
+    },
+    {
+      "workItemId": "TASK-SKL-0009",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0009-team-role-routing-matrix-and-playbook-slices.task.md",
+      "sectionTitle": "TASK-SKL-0009",
+      "headingLine": 42,
+      "hash": "55abbdf7fdab4b39"
+    },
+    {
+      "workItemId": "TASK-SKL-0010",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md",
+      "sectionTitle": "TASK-SKL-0010",
+      "headingLine": 41,
+      "hash": "5f990a466cf90595"
+    },
+    {
+      "workItemId": "TASK-SKL-0011",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0011-agent-plus-skill-runtime-pilot.task.md",
+      "sectionTitle": "TASK-SKL-0011",
+      "headingLine": 42,
+      "hash": "6a805b192d55f4e7"
+    },
+    {
+      "workItemId": "TASK-SKL-0012",
+      "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0012-team-role-growth-and-observability-integration.task.md",
+      "sectionTitle": "TASK-SKL-0012",
+      "headingLine": 42,
+      "hash": "d3efe218f7835771"
+    }
+  ]
+}

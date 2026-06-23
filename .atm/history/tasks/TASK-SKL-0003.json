@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-SKL-0003",
+  "title": "Next, claim, and framework-mode tools",
+  "status": "planned",
+  "milestone": "P1",
+  "dependencies": [
+    "TASK-SKL-0001",
+    "TASK-SKL-0002"
+  ],
+  "acceptance": [
+    "`atm_next` can expose `nextAction`, `taskIntent`, `allowedCommands`, and `blockedCommands` through the bridge contract.",
+    "`atm_next_claim` can expose active guidance, allowed scope, and claim diagnostics without lossy text parsing.",
+    "`atm_framework_mode_status` and `atm_framework_mode_claim` can disclose framework-temp boundaries and claim scope in machine-readable form.",
+    "Representative blocked and no-work routes remain fail-closed and clearly surfaced.",
+    "Playbook-bearing routes clearly expose which later specialist skill or lane action should take over, so `atm-governance-router` can stay thin."
+  ],
+  "deliverables": [
+    "packages/cli/src/commands/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "tags": [],
+  "notes": "- The main design constraint is truthfulness of route status. Tool output must preserve the same safety semantics currently held by `node atm.mjs`.",
+  "source": {
+    "planPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0003-next-claim-framework-mode-tools.task.md",
+    "sectionTitle": "TASK-SKL-0003",
+    "headingLine": 41,
+    "hash": "61bea3277f34bb6b"
+  },
+  "importedAt": "2026-06-23T14:23:40.415Z",
+  "scopePaths": [
+    "packages/cli/src/commands/**",
+    "packages/core/src/**",
+    "tests/cli/**",
+    "docs/**"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Do not weaken existing blocked commands or route safeguards.",
+    "Do not hide framework-temp vs task-boundary distinctions."
+  ],
+  "nonGoals": [
+    "No taskflow close tooling in this card.",
+    "No skill migration yet."
+  ],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.tool-first-routing-surface",
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "lastTransitionId": "2026-06-23T14-23-40-430Z-import-e8944f1eada4",
+  "lastTransitionAt": "2026-06-23T14:23:40.430Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

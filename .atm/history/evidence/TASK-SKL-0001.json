@@ -1,0 +1,67 @@
+{
+  "taskId": "TASK-SKL-0001",
+  "updatedAt": "2026-06-23T14:50:36.633Z",
+  "evidence": [
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "SKL planning lane validators passed",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-main",
+      "createdAt": "2026-06-23T14:50:36.633Z",
+      "details": {
+        "actorId": "codex-main",
+        "kind": "test",
+        "freshness": "fresh",
+        "validationPasses": [
+          "git-diff-check",
+          "tasks-import-dry-run",
+          "tasks-verify"
+        ],
+        "commandRuns": [
+          {
+            "command": "git diff --check HEAD~1 HEAD",
+            "cwd": "C:/Users/User/3KLife",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "cached": false,
+            "cacheKey": "sha256:f6224f644e067de2b5b7654f7e034b8bb7e71cffda5e330cefa3a9ef9b31ae4b",
+            "runnerKind": "external",
+            "generatedAt": "2026-06-23T14:50:36.667Z"
+          },
+          {
+            "command": "node atm.mjs tasks import --from \"docs/ai_atomic_framework/skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md\" --dry-run --json",
+            "cwd": "C:/Users/User/3KLife",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:ce28b1fd4fcc00662a70297bcbfff4653d80e2a97d25686b483325716ee93813",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "cached": false,
+            "cacheKey": "sha256:f463a2dd52072b26eca40bb02430520ba61e04f095930db2ef45ee174a3e2f1e",
+            "runnerKind": "external",
+            "generatedAt": "2026-06-23T14:50:36.667Z"
+          },
+          {
+            "command": "node atm.mjs tasks verify --json",
+            "cwd": "C:/Users/User/3KLife",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:ed319aba989b12735c72c630c3f236e7b0f438107916efb80946f487696774eb",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "cached": false,
+            "cacheKey": "sha256:34258f25d7030cc7b49acbbaf06609180a2fd592d0119d05221e743036f69a12",
+            "runnerKind": "external",
+            "generatedAt": "2026-06-23T14:50:36.667Z"
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:bcd8fb98fc13e257d6f4e66c6ce77992cf09b254e9852c8034809e2c7bbe7b38",
+          "reusedRunCount": 0,
+          "runCount": 3,
+          "sourcePath": ".atm/runtime/command-runs/TASK-SKL-0001-validation.json"
+        }
+      }
+    }
+  ]
+}
