@@ -1,0 +1,48 @@
+{
+  "schemaId": "taskflow.profile.v1",
+  "id": "skl-tool-first-upgrade-taskflow-profile-v1",
+  "name": "SKL Tool-First Governed Opener",
+  "repoLabel": "SKL Tool-First Planning Lane",
+  "ownerRepo": "3KLife",
+  "taskIdPrefix": "TASK-SKL",
+  "taskId": {
+    "format": "TASK-SKL-NNNN"
+  },
+  "template": {
+    "defaultMarkdown": "# ${taskId} ${title}\n\n## Goal\n${description}"
+  },
+  "capabilities": {
+    "supportsDryRun": true,
+    "supportsWrite": false
+  },
+  "delegationDisplayHint": "SKL lane opener may execute governed writes through downstream execution cards.",
+  "delegation": {
+    "hint": "Host opener supplies SKL lane numbering and task-card output policy through a governed opener contract.",
+    "openerPath": "tools_node/task-card-opener.js",
+    "policy": {
+      "allocateTaskId": {
+        "mode": "host-opener",
+        "prefix": "TASK-SKL",
+        "format": "TASK-SKL-NNNN"
+      },
+      "resolveCanonicalOutputPath": {
+        "mode": "host-opener",
+        "pattern": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/${taskId}-${slug}.task.md",
+        "directory": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks"
+      },
+      "rosterSyncPolicy": "none",
+      "rosterSync": {
+        "indexPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/README.md"
+      },
+      "fallbackBehavior": {
+        "mode": "template-only-fallback",
+        "reason": "SKL lane falls back only when the governed profile or invocable opener contract is unavailable.",
+        "missingPrerequisites": []
+      }
+    },
+    "writerInvocation": {
+      "describeOnly": false,
+      "displayHint": "node tools_node/task-card-opener.js --write --task ${taskId}"
+    }
+  }
+}
