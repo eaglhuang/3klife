@@ -2,7 +2,7 @@
 doc_id: doc_skl_0001
 task_id: TASK-SKL-0001
 title: "SKL tool-first plan and task pack"
-status: planned
+status: done
 owner: captain
 priority: P0
 milestone: P0

@@ -2,11 +2,10 @@
 task_id: TASK-SKL-0005
 title: Skill tool-first orchestration migration
 status: planned
-milestone: P2
+milestone: P1
 depends_on:
   - TASK-SKL-0002
-  - TASK-SKL-0003
-  - TASK-SKL-0004
+  - TASK-SKL-0007
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
@@ -74,4 +73,5 @@ git diff --check
 ## Notes
 
 - The migration must optimize for determinism and operator clarity, not for theatrical abstraction. Skills should get shorter, not more magical.
-- This card prepares the ground for a shared growth contract, but the reusable learning-loop structure itself belongs to `TASK-SKL-0007`.
+- This card intentionally moves earlier so the first usable skill skeleton can start dogfooding and collecting reusable learning items during implementation.
+- The shared growth contract from `TASK-SKL-0007` must already exist before this migration expands router/playbook/specialist seams.

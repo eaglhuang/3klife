@@ -1,0 +1,10 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-SKL-0001",
+  "updatedAt": "2026-06-23T15:08:01.622Z",
+  "updatedBy": "codex-main",
+  "freshValidationPasses": [],
+  "staleValidationPasses": [],
+  "commandRuns": [],
+  "artifactPaths": []
+}

@@ -1,6 +1,6 @@
 {
   "taskId": "TASK-SKL-0001",
-  "updatedAt": "2026-06-23T14:50:36.633Z",
+  "updatedAt": "2026-06-23T15:08:01.622Z",
   "evidence": [
     {
       "evidenceKind": "validation",
@@ -60,6 +60,50 @@
           "reusedRunCount": 0,
           "runCount": 3,
           "sourcePath": ".atm/runtime/command-runs/TASK-SKL-0001-validation.json"
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node atm.mjs encoding-touched guard on touched planning files --json",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "codex-main",
+      "sessionId": "session-20260623143347-codex-main-TASK-SKL-0001-02f6a19b83",
+      "createdAt": "2026-06-23T15:08:01.622Z",
+      "details": {
+        "actorId": "codex-main",
+        "sessionId": "session-20260623143347-codex-main-TASK-SKL-0001-02f6a19b83",
+        "kind": "test",
+        "freshness": "fresh",
+        "atomHealthClaims": [
+          {
+            "atomOrMapId": "atm.skl-tool-first-planning-map",
+            "kind": "owner",
+            "generatedByTask": true,
+            "validatorHealthy": false
+          }
+        ],
+        "commandRuns": [
+          {
+            "command": "node atm.mjs encoding-touched guard on touched planning files --json",
+            "exitCode": 1,
+            "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "sha256:154bd4261e5b5fdc82c491b007256d63f7b66e4bd21f27bdcb5543d6ca284549",
+            "cwd": ".",
+            "runnerKind": "unknown",
+            "cacheKey": "sha256:bd81c7b327f5749b913ee47513bc94cebfe5b48f528788e1af80b18b02d86b41",
+            "cached": false,
+            "generatedAt": "2026-06-23T15:08:01.656Z"
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:1cbd8a0c379bf84a860d5a3d0fd2e1daf7fbd490e295b8304294a3a6ec8727b3",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
         }
       }
     }

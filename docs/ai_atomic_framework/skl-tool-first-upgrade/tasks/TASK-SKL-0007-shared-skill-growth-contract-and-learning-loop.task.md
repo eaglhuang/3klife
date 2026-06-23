@@ -2,10 +2,9 @@
 task_id: TASK-SKL-0007
 title: Shared skill growth contract and learning loop
 status: planned
-milestone: P2
+milestone: P1
 depends_on:
   - TASK-SKL-0002
-  - TASK-SKL-0005
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
@@ -55,6 +54,9 @@ nonGoals:
 - The router/playbook/specialist model clearly states where learning events originate and where they should be promoted.
 - At least one ATM entry skill and one specialist skill demonstrate how the shared learning loop is consumed.
 - The same growth contract is usable by future Team role skill packs without redefining taxonomy or promotion semantics per role.
+- The contract explicitly defines how backlog items are split into product bugs, shared skill lessons, or both.
+- The first reusable lesson set includes claim-latency, stale imported dependency truth, and runner capability skew cases from ATM dogfood backlog.
+- The contract defines an active-to-historical demotion path so fixed wall-hit lessons do not keep bloating default skill context forever.
 
 ## Non-Goals
 
@@ -74,3 +76,4 @@ git diff --check
 - This card exists so all ATM skills can grow through the same architecture.
 - The desired rule is simple: case first in reference, stable pattern later in `SKILL.md`.
 - Team role skill packs should consume this contract instead of inventing separate role-memory systems.
+- Fixed bug lessons should be moved to a historical section or archive once the live route no longer depends on them.

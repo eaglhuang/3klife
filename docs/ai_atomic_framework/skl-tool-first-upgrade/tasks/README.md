@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-06-23
-last_updated: 2026-06-23T22:15+08:00
+last_updated: 2026-06-23T22:55+08:00
 ---
 
 # SKL Tool-First Task Index
@@ -17,25 +17,24 @@ Verified facts: [../00-verified-facts.md](../00-verified-facts.md)
 
 ## Task Card Contract
 
-每張 `TASK-SKL-*` 卡都遵守 ATM task-card authoring contract：
+All `TASK-SKL-*` cards follow the ATM task-card contract.
 
-- 必須有 machine-readable frontmatter；
-- `planning_repo` 持有意圖與規劃權；
-- `target_repo` 持有 execution source-write 權；
-- `scopePaths`、`deliverables`、`validators`、`rollback`、`atomizationImpact` 在實作前就要明列；
-- planning-only 卡不得直接視為 `AI-Atomic-Framework` source delivery 授權。
+- Use machine-readable frontmatter.
+- Keep `planning_repo` and `target_repo` explicit.
+- Define `scopePaths`, `deliverables`, `validators`, `rollback`, and `atomizationImpact`.
+- Planning-only work stays in `3KLife`; source delivery lands in `AI-Atomic-Framework`.
 
 ## Task Pack
 
 | Task ID | Stage | Planned Title | Status | Depends | Target |
 |---|---|---|---|---|---|
-| [TASK-SKL-0001](./TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md) | P0 | SKL tool-first plan and task pack | planned | none | planning docs / 3KLife |
+| [TASK-SKL-0001](./TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md) | P0 | SKL tool-first plan and task pack | done | none | planning docs / 3KLife |
 | [TASK-SKL-0002](./TASK-SKL-0002-tool-bridge-v1-schema-and-result-adapter.task.md) | P1 | Tool Bridge v1 schema and result adapter | planned | `TASK-SKL-0001` | ATM tool bridge |
-| [TASK-SKL-0003](./TASK-SKL-0003-next-claim-framework-mode-tools.task.md) | P1 | Next, claim, and framework-mode tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002` | ATM CLI / governance entry |
-| [TASK-SKL-0004](./TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md) | P1 | Evidence, guard, taskflow, and governed commit tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002` | ATM operators |
-| [TASK-SKL-0005](./TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md) | P2 | Skill tool-first orchestration migration | planned | `TASK-SKL-0002`, `TASK-SKL-0003`, `TASK-SKL-0004` | ATM skills / integrations |
-| [TASK-SKL-0006](./TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md) | P3 | Governed commit and close lane hardening | planned | `TASK-SKL-0003`, `TASK-SKL-0004`, `TASK-SKL-0005` | ATM close/commit safety |
-| [TASK-SKL-0007](./TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md) | P2 | Shared skill growth contract and learning loop | planned | `TASK-SKL-0002`, `TASK-SKL-0005` | ATM skill growth |
+| [TASK-SKL-0007](./TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md) | P1 | Shared skill growth contract and learning loop | planned | `TASK-SKL-0002` | ATM skill growth |
+| [TASK-SKL-0005](./TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md) | P1 | Skill tool-first orchestration migration | planned | `TASK-SKL-0002`, `TASK-SKL-0007` | ATM skills / integrations |
+| [TASK-SKL-0003](./TASK-SKL-0003-next-claim-framework-mode-tools.task.md) | P2 | Next, claim, and framework-mode tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002`, `TASK-SKL-0005` | ATM CLI / governance entry |
+| [TASK-SKL-0004](./TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md) | P2 | Evidence, guard, taskflow, and governed commit tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002`, `TASK-SKL-0005` | ATM operators |
+| [TASK-SKL-0006](./TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md) | P3 | Governed commit and close lane hardening | planned | `TASK-SKL-0003`, `TASK-SKL-0004`, `TASK-SKL-0005`, `TASK-SKL-0007` | ATM close/commit safety |
 | [TASK-SKL-0008](./TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md) | P3 | Team role skill-pack and capability boundary contract | planned | `TASK-SKL-0005`, `TASK-SKL-0007` | Team role contract |
 | [TASK-SKL-0009](./TASK-SKL-0009-team-role-routing-matrix-and-playbook-slices.task.md) | P3 | Team role-routing matrix and playbook slices | planned | `TASK-SKL-0003`, `TASK-SKL-0005`, `TASK-SKL-0008` | Team playbook routing |
 | [TASK-SKL-0010](./TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md) | P4 | Provider-neutral role skill-pack manifest | planned | `TASK-SKL-0007`, `TASK-SKL-0008`, `TASK-SKL-0009` | Team runtime manifest |
@@ -44,19 +43,29 @@ Verified facts: [../00-verified-facts.md](../00-verified-facts.md)
 
 ## Sequencing Note
 
-1. `TASK-SKL-0001` 是 planning-only opener，負責建立 plan、index 與 execution pack。
-2. `TASK-SKL-0002` 先定義共同 tool result contract，避免各 tool 自行發明 shape。
-3. `TASK-SKL-0003` 與 `TASK-SKL-0004` 分別實作 routing/claim lane 與 operator lane。
-4. `TASK-SKL-0005` 把現有 skill 遷移到 tool-first orchestration，並確立 `router / playbook / specialist skill` 三層模型。
-5. `TASK-SKL-0007` 為大小 skill 建立共用 learning loop、taxonomy 與 promotion policy。
-6. `TASK-SKL-0008` 到 `TASK-SKL-0012` 把這套架構正式接到 Team Agents，讓 `Agent + Skill` 成為可獨立治理的角色單元。
-7. `TASK-SKL-0006` 最後用真實 residue / active-claim / cross-repo 邊界收尾 hardening，並吸收由 growth contract 捕獲的 tooling friction。
+1. `TASK-SKL-0001` remains the planning opener and source of truth for the lane.
+2. `TASK-SKL-0002` establishes the shared tool result contract first.
+3. `TASK-SKL-0007` is intentionally pulled forward so the growth contract exists before the first orchestration skill grows large.
+4. `TASK-SKL-0005` also moves into early P1 so we can stand up the first usable `router / playbook / specialist skill` seam quickly and let it learn while being used.
+5. `TASK-SKL-0003` and `TASK-SKL-0004` attach more governance surfaces onto that growth-enabled skill skeleton instead of fattening one entry skill first.
+6. `TASK-SKL-0008` to `TASK-SKL-0012` extend the same architecture into Team Agents, where `Agent + Skill` is the reusable unit.
+7. `TASK-SKL-0006` stays as later hardening and should absorb real dogfood friction such as residue, active-claim noise, runner skew, and cross-repo sync problems.
+
+## Backlog To Skill Feed
+
+- Backlog is not only a repair queue; it is also a feeder for reusable skill knowledge.
+- Product defects stay in backlog until fixed, but the reusable symptom, safer route, and durable rule should be promoted into shared skill references as early as possible.
+- Shared growth files should preload the first wall-hit cases so a fresh skill already knows common ATM dogfood traps.
+- Current seed cases:
+  - `ATM-BUG-2026-06-23-019`: imported planning-repo batch already exists, but claim path keeps rediscovering instead of trusting ledger truth.
+  - `ATM-BUG-2026-06-23-020`: planning repo says done, target repo still blocks on stale imported dependency truth.
+  - `ATM-BUG-2026-06-23-021`: host repo runner and framework repo runner expose different operator surfaces during closeback and evidence work.
 
 ## Completion Gate
 
-- tool result shape 在主要治理 surface 上一致；
-- `nextAction / userNotice / runnerMode / messages` 可被 skill 直接消費；
-- `taskflow`、`close`、`commit` lane 的 blocker 有 machine-readable 診斷；
-- ATM skills 共用同一套 growth contract，而不是每顆 skill 自己發明 learning loop；
-- Team role 能被映射到 skill packs 與 capability manifests，而不是只靠 prompt 人設；
-- tool-first path 與 CLI fallback 共存，但不形成第二套治理模型。
+- Tool result shape must stay stable across ATM tool surfaces.
+- `nextAction`, `userNotice`, `runnerMode`, and `messages` must stay consumable by skills.
+- `taskflow`, `close`, and `commit` lanes must expose blockers in machine-readable form.
+- ATM skills must share one growth contract and one learning-loop structure.
+- Team role skill packs must reuse the same contract instead of inventing a separate memory scheme.
+- Tool-first paths must still fail closed and preserve a clear CLI fallback policy.
