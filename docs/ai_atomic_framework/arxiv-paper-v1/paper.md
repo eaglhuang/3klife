@@ -748,6 +748,20 @@ ATM 自身的開發過程即為本論文所述 multi-agent admission-controlled 
 
 本節並非 controlled experiment、亦不取代延至 §5 的對照 concurrency benchmark；而是「broker admission 模型在框架自身 multi-agent / multi-vendor / multi-file / shared-surface workload 上可行」的 in-vivo 存在證明。
 
+### 6.5 ATM 於 2025–2026 multi-agent SE landscape 中的 admission-layer 定位
+
+2025 下半至 2026 上半年之 multi-agent software-engineering 研究呈現分層分工之趨勢；本節將 ATM 與此一 landscape 中四個代表性方向並置，闡明本框架補足之層次空缺。
+
+**Architecture layer（任務分解）.** ProjectGen + SSAT [Author et al., 2025, arXiv:2511.03404] 以 Self-Specifying Architecture Tree 將專案逐層拆為 module / file / function 樹，使多個 agent 可於 *結構決定後* 各自負責不同節點；其關注於 *尚未存在之專案如何被建構*，並未提供同一 repository 內既有檔案上多 agent 並發寫入之治理機制。
+
+**Orchestration layer（角色編排）.** MACOG [Lyu et al., 2025, arXiv:2510.03902] 以 state-machine 依序驅動 Architect → Engineer → Reviewer 三角色完成 IaC pipeline；其關注於 *角色之間之 hand-off 與 post-generation review*，admission 之決策權由 state-machine 之 transition 而非 region-level 共享資源仲裁所決定。
+
+**Verification layer（產後驗證）.** DebateCoder [arXiv:2601.21469] 與 Multi-Agent Code Verification [arXiv:2511.16708] 以多 agent 辯論 / 投票 / counter-example 驅動之方式對 *已生成* 之程式碼進行正確性檢查；其屬產後迴路，與 ATM 之寫入前 admission 並不重疊。
+
+**Optimization layer（部署效能）.** Singh, R. (2026) [arXiv:2601.11687] 提出 intent-driven prompt assembly + semantic caching，於 production deployment 降低 token 成本與延遲；其屬效能優化層，與並發治理正交。
+
+**Admission layer（寫入前仲裁）—— ATM 之定位.** 上述四層皆未處理「同一 repository、同一檔案、同一函式族於同一時間窗口由多個 agent 共同寫入」此一 shared-write 場景下之 *寫入前* 仲裁問題。ATM 補上的正是此一缺口：以 adapter 提供之 atomization 候選為基礎，由 broker 於 admission 階段執行 pre-write arbitration、bounded-region 重疊偵測、active-intent fail-closed gate，並交由 neutral steward 完成單次中立寫入；當衝突無法以更細粒度分流時，broker 進一步生成 owner-map split suggestion 進入 human-reviewable refinement loop（§4.5.4）。此一機制與 architecture / orchestration / verification / optimization 各層彼此正交：ProjectGen 決定 *寫到哪個檔案*，MACOG 決定 *由哪個角色寫*，DebateCoder / Multi-Agent Code Verification 於 *寫完之後* 驗證，Singh 決定 *如何更便宜地寫*；ATM 決定 *此刻是否可以寫、以何種 region 切片寫、由誰中立寫入*。換言之，**現有工作大多處理 task decomposition、role orchestration、post-gen verification 或 production optimization，而本論文補上的是 repository shared-write setting 下之 pre-write arbitration / bounded-region admission / active-intent fail-closed / neutral steward / split-suggestion governance loop**。此一定位使 ATM 並非與上述方向競爭，而是與其形成可疊加之 SE multi-agent 全鏈條：ProjectGen 規劃 → MACOG 編排 → **ATM 守門** → DebateCoder / MA Code Verify 事後驗證 → Singh 部署優化。
+
 ---
 
 ## 7. Conclusion
@@ -941,6 +955,11 @@ Artifact 完整歸檔於 `docs/ai_atomic_framework/broker-collision-evidence/run
 > 17. Xia, S., Li, Q., Ehsan, T., & Ortiz, J. (2026). TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples. arXiv:2605.07935.
 > 18. Ogenrwot, D. & Businge, J. (2026). AgenticFlict: A Large-Scale Dataset of Merge Conflicts in AI Coding Agent Pull Requests on GitHub. arXiv:2604.03551.
 > 19. Liu, S. et al. (2026). Towards Direct Latent-Space Synthesis for Parallel Branches in LLM-Agent Workflows. arXiv:2606.14672.
+> 20. Lyu, H. et al. (2025). MACOG: Multi-Agent Collaboration for Infrastructure-as-Code Generation via State-Machine Orchestration. arXiv:2510.03902.
+> 21. Author et al. (2025). ProjectGen with Self-Specifying Architecture Tree (SSAT) for Repository-Level Project Synthesis. arXiv:2511.03404.
+> 22. DebateCoder Authors (2026). DebateCoder: Multi-Agent Debate for Code Generation and Verification. arXiv:2601.21469.
+> 23. Multi-Agent Code Verification Authors (2026). Multi-Agent Code Verification with Counter-Example Driven Refinement. arXiv:2511.16708.
+> 24. Singh, R. (2026). Intent-Driven Prompt Assembly and Semantic Caching for Production LLM Deployment. arXiv:2601.11687.
 
 ---
 
@@ -948,7 +967,12 @@ Artifact 完整歸檔於 `docs/ai_atomic_framework/broker-collision-evidence/run
 
 ## Revision History
 
-**2026-06-22 (Current Draft, twenty-fifth pass — AgenticFlict 升級 motivation；CoAgent 加 layered complementarity；Parallel-Synthesis adjacent work):**
+**2026-06-22 (Current Draft, twenty-sixth pass — §6.5 admission-layer positioning 段新增；Plan B：不拆 §2、集中於單一 layered positioning 段):**
+
+- **新增 §6.5「ATM 於 2025–2026 multi-agent SE landscape 中的 admission-layer 定位」**：將 ProjectGen + SSAT（architecture layer，arXiv:2511.03404）、MACOG（orchestration layer，arXiv:2510.03902）、DebateCoder（verification layer，arXiv:2601.21469）、Multi-Agent Code Verification（verification layer，arXiv:2511.16708）、Singh intent-driven（optimization layer，arXiv:2601.11687）並置於同一 landscape，明示其屬不同層次而非 ATM 競品；本論文之核心 admission-layer claim 集中於此段闡述。刻意不採用 "Debate-Verify-Debug" 此一非單一論文之集合名詞，verification 層改以 DebateCoder 與 Multi-Agent Code Verification 兩篇具名 paper 引用。**§2 結構不動**以避免 related work 膨脹。
+- **References 新增五條**：#20 MACOG、#21 ProjectGen + SSAT、#22 DebateCoder、#23 Multi-Agent Code Verification、#24 Singh Intent-Driven。
+
+**2026-06-22 (twenty-fifth pass — AgenticFlict 升級 motivation；CoAgent 加 layered complementarity；Parallel-Synthesis adjacent work):**
 
 - **§1.1 Motivation 升級**：原 hand-waving 之「並發越多衝突越大」追加一段 AgenticFlict 實證引用——142K+ AI agent PR（59K+ repo），27.67% merge conflict rate，336K+ fine-grained conflict region。將 motivation 由 anecdotal 升級為文獻量化證據；明確指出本論文目標即為此 27.67% 缺口提供 *寫入前* 治理機制。
 - **§2.7 CoAgent 對照段末新增「層次化互補」段**：除原有「指向不同子空間」之並排互補外，新增 layered complementarity 框架——ATM 之 `SERIAL` 序列化決策（§3.4）其後續執行可採 MTPO 風格之 speculative apply + LLM repair，作為 admission 完成後針對不可事前推導 read set 之 reactive recovery 路徑。將 CoAgent 由「直接對手」位置轉為「相鄰兩層治理鏈條」之友軍位置：ATM 站 admission，CoAgent 站 repair。未實作此延伸，列為 future direction。
