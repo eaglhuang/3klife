@@ -261,64 +261,6 @@ Adapter-guided 會在四種情境失效或降級。第一，adapter capability i
 此外，ATM 與 CoAgent 可形成互補 pipeline。ATM 可先在 code-region / artifact-region 層做 preventive admission；若 intent 被序列化但後續 tool chain 仍有不可事前宣告的 side effects，CoAgent 類 MTPO repair path 可承接 reactive recovery。這表示 future system 不必在 preventive 與 advisory 之間二選一，而可依 layer 分工。
 
 ---
-
-### 6.4 Deployment Topologies and Vision
-
-本論文之 admission 機制適用範疇為單一 workspace / filesystem domain（§5）。此限制並非架構性瓶頸，而是 broker 進程之 visibility 邊界決定。我們在此勾勒三種具體部署拓樸，由現行已實證者至自然延伸者排列；三者共享同一核心假設——存在一個 broker 進程與一份 registry，於某一 filesystem domain 上 own 全部並行 intent 之 visibility——但所覆蓋之開發協作場景由小至大。第四種更遙遠之分散式延伸則簡要提及而不於此展開。
-
-#### 6.4.1 Topology A — 單一 workstation 多 vendor 共寫（current，已 field-validated）
-
-§4 所有 field evidence 皆屬此拓樸：單一開發者 workstation 上，多個 vendor 之 LLM brain 對同一 worktree 並行寫入，broker 為單一 in-process arbiter，registry 為單一 `.atm/runtime/write-broker.registry.json`。POS2、close-orchestration、B-12 皆於此拓樸完成 cross-vendor end-to-end 驗證。
-
-#### 6.4.2 Topology B — 共享地端伺服器多 vendor AI 共寫，遠端 human prompt 輸入（future deployment, near-trivial extension）
-
-延伸 A 之自然方式：多個 vendor LLM agent 共同跑於企業地端共享伺服器，所有 AI 推論與寫入皆於該伺服器之單一 filesystem 進行；人類由遠端送 prompt、任務單或修改建議至伺服器之 AI agent。**broker 與 agent 之相對位置與 Topology A 完全相同**——broker 為本地 in-process arbiter，所有 agent 為本地進程；唯一差別為此「本地」之物理位置由開發者 workstation 遷移至共享伺服器。
-
-ATM 之 admission 軟體於此拓樸**無需任何架構變更**；所需新工程皆不在 ATM 範疇——on-prem LLM inference（如 Anthropic enterprise、vLLM 或 Ollama 自架）、遠端 prompt 提交介面（SSH / web UI / IDE remote / chat API）、多 tenant 隔離等。此拓樸對應「強大算力地端 AI 中心」之企業部署趨勢；ATM 在此扮演多 vendor agent 並行寫入之 admission 治理層。
-
-#### 6.4.3 Topology C — 本地 pre-push admission bridge，git 上游同步檢查（near-term high-priority future work）
-
-**動機**：AI 自動 commit 工作流已成主流（Cursor Background Agents、Claude Code auto-commit、Codex autonomous mode、Aider auto-commit、CI 上之 AI auto-fix bot 等）。在此趨勢下，AI agent 完成 task 即直接 commit、不暫停核對 base 是否最新；當同 repo 上有第二位（人類或 AI）並行寫入時，標準失敗模式為 (i) push 被 git 阻擋而 AI 對 conflict marker 處理不可靠、(ii) AI 機械式 take-ours / take-theirs 生出語意錯誤合併、(iii) 工作完成後才發現衝突而整段重做。AgenticFlict 之 27.67% AI agent PR 衝突率為當前快照；隨 auto-commit 工作流普及，此數字之趨勢方向唯有升高。
-
-**核心原理（admission 算法零變更）**：利用 broker 之 `MutationRequest` 與 proposal 來源解耦此一性質，於 `git push` 之前，由本地 broker 將 `git fetch` 取得之 remote 增量構造為**虛擬 MutationRequest**（actor 標 `virtual:git-remote@<sha>`），與本地 working tree 之累積變更一起送入既有 broker pipeline：admission → format adapter merge → composer → steward apply → refinement-loop。Common ancestor 為本地與 remote 之 `git merge-base`，扮演與 Topology A 中 agent claim base commit 完全相同之角色。
-
-| Topology A 既有元件 | Topology C 對應 |
-|---|---|
-| Common ancestor = agent claim 時之 base | Common ancestor = `git merge-base HEAD origin/<branch>` |
-| Proposal A = Agent A 之 WriteIntent | Proposal A = 本地 working tree 之累積變更 |
-| Proposal B = Agent B 之 WriteIntent | Proposal B = `git fetch` 取得之 remote 增量（虛擬 patch） |
-| Admission / merge / steward | **相同 pipeline，無算法變更** |
-
-**獨立貢獻範疇之誠實界定**：標準 git workflow（`git fetch && git rebase`）已能處理多數純程式碼之三方合併與 pre-push 衝突偵測；熟練人類開發者今日已能於 push 前於本地解決衝突，shift-left 並非 ATM 之獨特貢獻。Topology C 之獨立價值集中於兩個 git rebase 流程目前無法良好處理之維度：
-
-- **(a) 結構化資料之格式感知合併**：git 三方合併對 JSON registry、atom-map shard、generated config、計數型欄位等檔案給的仍是行級 conflict marker；ATM format adapter（§3.5）按 record / field / commutative 進行結構感知合併。
-- **(b) AI agent 之自動化衝突解決能力缺口**：`git pull --rebase` 在遇到 conflict 時要求 conflict marker 之語意判讀，此能力對熟練人類開發者為標準操作，但對 AI agent 為已知失敗模式。ATM 之 format adapter + bounded-region compare + refinement-loop 提供確定性、機械可重現之衝突分流原語，**設計意圖**為使 AI agent 在原本需人類介入之衝突場景下，有可能取得結構化、可機械讀取之解決管道。此能力主張之完整成立尚需後述 bridge 層之交付與經驗驗證。
-
-**新工作集中於 bridge 層**（估計 ~1000–2000 LOC，純整合工程）：
-
-- **元件 1**：git diff → MutationRequest converter。對純文字檔可直接消化 git hunk；對結構化檔（JSON / atom-map）需 adapter-aware 重建——讀 ancestor 與 remote 版本之檔案內容，由既有 adapter `parse` / `getConflictKeys` 計算 record-level 差異。所需 adapter 邏輯今日皆已存在於 §3.5 之 format adapter 子系統。
-- **元件 2**：pre-push git hook，攔截 `git push`、呼叫元件 1、依 broker verdict 放行 / 阻擋 / 觸發合併寫回。
-- **元件 3**：merge 結果寫回 working tree 之 orchestration，視配置 auto-commit 合併結果或留待開發者 review。
-
-**觸發時機之設計選擇**：本拓樸採 pre-push hook（每次 `git push` 嘗試前觸發一次 `git fetch` 與 broker check），而非每個 `git commit` 觸發。理由為 (a) AI agent 常頻繁 commit，per-commit 觸發將顯著拖慢 local iteration；(b) 多數中間 commit 不會成為最終 push 之 base，per-commit check 多半浪費；(c) `git push` 為對外協調動作之自然邊界，於協調發生前阻擋既節省網路 round-trip 亦對應 git hook 之既有整合點。push-failure 反應式檢查可作為 pre-push hook 被 bypass 時之 safety net。
-
-**邊界（必須誠實標明）**：
-
-- Topology C **不涉及** broker 算法、format adapter 設計或 admission 形式模型之任何改動；新工作為純粹 git ↔ broker 整合 bridge。
-- Topology C **不解決**兩個遠端開發者同時送 PR 之 race——此仍由 git non-fast-forward 與 fetch / re-check / re-push 標準流程治理。
-- 對純程式碼之合併能力，標準 git `pull --rebase` 已足夠；本拓樸之獨立價值集中於結構化檔與 AI agent 之自動化衝突分流。
-- bridge 層（元件 1–3）目前**尚未交付**；「AI agent 能於 pre-push 階段可靠完成衝突解決」為設計意圖而非當前能力主張，其完整成立尚需 bridge 交付與 AI agent 在 pre-push 衝突上之解決率 field measurement。
-
-**優先順序**：本拓樸列為近期高優先 future work——AI auto-commit 趨勢已使其成為 multi-agent 工作流之具體現有需求；工程規模有界、admission 核心 100% 復用，無架構風險。
-
-#### 6.4.4 三 topology 之共同假設與分工
-
-三種拓樸共享同一核心假設：**存在一個 broker 進程與一份 registry，於某一 filesystem domain 上 own 全部並行 intent 之 visibility**。差異僅在此 domain 之物理位置（個人 workstation / 共享伺服器 / 開發者本機 git hook）與 admission 觸發時點（live write / live write / pre-push）。三者不互斥，可組合使用：開發者於 Topology A 本機共寫 → Topology C 本地 pre-push check → push 至 Topology B 共享地端伺服器之主環境。Topology A 已 field-validated；Topology B 為 deployment-only 延伸（ATM 軟體零變更）；Topology C 為近期高優先 bridge 工作。
-
-#### 6.4.5 更遙遠之延伸：Topology D 跨機器 patch 同步（out of scope）
-
-若進一步繞過 git PR 機制，由多個遠端開發者之 patch 直接同步至中央 broker，則進入分散式 broker 設計範疇，需處理跨機器一致性、CAP 取捨與 distributed consensus 等議題；屬本論文 single-domain core 之根本性擴展。此延伸方向技術上可行但工程規模顯著大於 A / B / C，**超出本論文範疇**，僅於此提及作為更遙遠之願景錨點。
-
 ---
 
 ## 7. Conclusion（結論）
@@ -399,4 +341,3 @@ CID schema migration 可採三條路徑。第一，flag-day migration：在 repo
 
 此版本依附件建議重排全文，將主論點集中為「ATM 補上 multi-agent software engineering pipeline 中缺失的 admission layer」。相較 `paper.md`，本版刪減 implementation chronology、task ID 流水帳與過細 artifact 細節，並將 POS2、B-12、BLOCK、close-orchestration 與 refinement-loop 重新定位為 field evidence stack。本次引用補完以 arXiv、OpenReview、ACM Digital Library、Springer/HAL 等主來源 metadata 對齊。
 
-**v3.1 patch (本次更新)**：新增 §6.4 Deployment Topologies and Vision，列出三 topology + 一遠景：(A) 單一 workstation 多 vendor 共寫（current, field-validated），(B) 共享地端伺服器（deployment-only 延伸，ATM 軟體零變更），(C) 本地 pre-push admission bridge（近期高優先 future work，git ↔ broker 整合 bridge，~1000-2000 LOC，admission 核心無變更），(D) 跨機器分散式 patch 同步（out of scope，僅作願景錨點）。Topology C 明示獨立貢獻範疇集中於結構化檔 format-adapter merge 與 AI agent 自動化衝突分流缺口，不主張取代 git 純程式碼合併能力；bridge 層尚未交付，AI agent pre-push 衝突解決為設計意圖待經驗驗證。
