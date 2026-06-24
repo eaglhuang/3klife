@@ -1,0 +1,23 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-32be513785c7",
+  "recordedAt": "2026-06-24T12:38:33.177Z",
+  "actorId": "codex",
+  "taskId": "TASK-AAO-0148",
+  "surface": "tasks repair-closure",
+  "command": "node atm.mjs tasks repair-closure --task TASK-AAO-0148 --json",
+  "flags": [],
+  "permission": "backend.tasks.repairClosure",
+  "leaseId": "EMG-TASK-AAO-0148-b62582a173",
+  "reason": "Direct closure packet repair backend mutation.",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.repairClosure"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-06-24T12-38-33-175Z-EMG-TASK-AAO-0148-b62582a173.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}

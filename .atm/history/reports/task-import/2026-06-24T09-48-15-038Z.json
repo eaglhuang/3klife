@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-06-24T09:48:15.038Z",
+  "planPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-harden-same-repo-close-bundle-and-scope-filtering.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-AAO-0148.json"
+  ],
+  "taskIds": [
+    "TASK-AAO-0148"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-AAO-0148",
+      "planPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-harden-same-repo-close-bundle-and-scope-filtering.task.md",
+      "sectionTitle": "TASK-AAO-0148",
+      "headingLine": 97,
+      "hash": "745b779dffd152b4"
+    }
+  ]
+}

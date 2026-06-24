@@ -135,3 +135,14 @@ git diff --check
 1. List the generic bug classes fixed by the patch and map them to the regression tests added or updated.
 2. Confirm which dirty files were intentionally excluded from the governed commit bundle.
 3. Note whether a follow-up release rebuild card is still required after source acceptance.
+
+## Import Residue Triage
+- Keep:
+  - `C:/Users/User/3KLife/.atm/history/reports/task-import/2026-06-24T09-48-15-038Z.json`
+  - `C:/Users/User/3KLife/.atm/history/reports/task-import/2026-06-24T09-33-25-839Z.json`
+  - `C:/Users/User/3KLife/.atm/history/task-events/TASK-AAO-0148/2026-06-24T09-48-15-041Z-import-ccb44ab38dc1.json`
+  - `C:/Users/User/3KLife/.atm/history/task-events/TASK-AAO-0148/2026-06-24T09-33-25-842Z-import-7f872b64c102.json`
+- Discard:
+  - `C:/Users/User/3KLife/.atm/history/reports/task-import/2026-06-24T09-43-10-406Z.json`
+  - `C:/Users/User/3KLife/.atm/history/task-events/TASK-AAO-0148/2026-06-24T09-43-10-409Z-import-fbb39d3f4b76.json`
+  - `C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md`

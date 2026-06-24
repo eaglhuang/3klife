@@ -1,0 +1,23 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-780ed7df4684",
+  "recordedAt": "2026-06-24T12:35:18.493Z",
+  "actorId": "codex",
+  "taskId": "TASK-AAO-0148",
+  "surface": "tasks reconcile",
+  "command": "node atm.mjs tasks reconcile --task TASK-AAO-0148 --actor codex --delivery-commit 28f0b1f719a6830df174bbf2f511c4e0925c0268 --json",
+  "flags": [],
+  "permission": "backend.tasks.reconcile",
+  "leaseId": "EMG-TASK-AAO-0148-21e6bb68ca",
+  "reason": "Direct reconcile backend closeback.",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.reconcile"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-06-24T12-35-18-492Z-EMG-TASK-AAO-0148-21e6bb68ca.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}
