@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-06-17T16:09:05.116Z",
+  "generatedAt": "2026-06-24T14:42:39.467Z",
   "actors": [
     {
       "actorId": "codex-gpt-5.4-mini",
@@ -12,7 +12,7 @@
       "gitName": "codex-gpt-5.4-mini",
       "gitEmail": "codex-gpt-5.4-mini@3klife.local",
       "createdAt": "2026-06-11T03:22:21.756Z",
-      "updatedAt": "2026-06-11T09:26:32.085Z"
+      "updatedAt": "2026-06-24T14:42:39.466Z"
     },
     {
       "actorId": "cursor-gpt-5.2",

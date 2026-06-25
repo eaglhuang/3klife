@@ -1,0 +1,22 @@
+{
+  "schemaId": "taskflow.profile.v1",
+  "id": "atm-agent-first-operability-taskflow-profile-v1",
+  "name": "ATM Agent-First Operability Planning Lane",
+  "repoLabel": "ATM Agent-First Operability Planning Lane",
+  "ownerRepo": "3KLife",
+  "taskIdPrefix": "TASK-AAO",
+  "taskId": {
+    "format": "TASK-AAO-NNNN"
+  },
+  "template": {
+    "defaultMarkdown": "# ${taskId} ${title}\n\n## Goal\n${description}"
+  },
+  "capabilities": {
+    "supportsDryRun": true,
+    "supportsWrite": false
+  },
+  "delegationDisplayHint": "Use governed dual-repo closeback flow with profile-root planning path recovery.",
+  "delegation": {
+    "hint": "Profile recovers planning card root and canonical output policy in closeback."
+  }
+}

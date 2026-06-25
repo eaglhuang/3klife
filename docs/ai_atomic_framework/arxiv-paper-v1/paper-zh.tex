@@ -102,7 +102,7 @@
 
 本文以「五條 evidence strands」支持上述主張： （i）12-scenario deterministic fixture 與三個 archived runner cases（decision surface）； （ii）三週外部採用者治理觀察（adopter-side recoverability）； （iii）一條完整歸檔的 POS2 正向、兩類負向案例（admission-time 漏抓、apply-time fail-closed、admission-time 直接阻擋）； （iv）批次排程與 CID identity 穩定性延伸觀察； （v）由 \textbf{v0.1 baseline} 與 \textbf{v0.2 paper profile} 共同組成的 ATM-AdmissionBench：v0.1 提供凍結 benchmark/substrate 與盲審邊界，v0.2 提供論文結果層（20-scenario / 42-comparison、0 expectation failures、0 unresolved rows、ATM-full route F1 = 1.000，並有 252 policy rows、294 ablation rows、210 adversarial rows、4 enforcement rows）。 這五條證據支持「單一治理域內的可行性」與「有界 recoverability」，但不構成對其他併發控制系統的全面比較性優劣結論。ATM 不取代 Git merge，也不涵蓋跨 clone 或跨 PR 的分散式治理。核心主張限定於：在單一受控治理域內，ATM 提供可實作、可審計且可逐步擴充的入場前準入層（可由 \texttt{\seqsplit{generator-manifest.json}}、\texttt{\seqsplit{summary.json}} 與 \texttt{\seqsplit{paper-tables.md}} 交叉查核）。
 
-\section{1. Introduction（緒論）}
+\section{Introduction（緒論）}
 
 \subsection{Motivation}
 
@@ -144,7 +144,7 @@ ATM 採取的是這條光譜中的中間治理層：adapter-guided atomization �
 
 \medskip
 
-\section{2. Related Work（相關研究）}
+\section{Related Work（相關研究）}
 
 本文以「協調粒度」與「是否具備寫入前的預防式准入閘門」來比較相關研究。這種分層並非要將所有系統放入單一優劣序，而是說明 ATM 的貢獻位置：它不是取代 CRDT（Ref. 12）、Git、工作流編排（Refs. 2, 4, 9）或生成後驗證，而是在同一受控 worktree 或服務域的寫入前增加一層可治理的准入仲裁。換言之，本文第 2 節要回答的不是「誰比較強」，而是三個更窄的問題：哪些工作提供 repository-level 壓力背景，哪些工作提供 boundary-enforcement precedent，哪些工作又提供更底層的合併或並行控制直覺。
 
@@ -292,7 +292,7 @@ ATM 並非取代 Tier 1/3/4，也不取代跨機器 Git PR 合併；它是在 si
 
 \medskip
 
-\section{3. Framework（方法）}
+\section{Framework（方法）}
 
 本章將三個容易被混淆的敘述層次分開：\textbf{規格錨定治理基底} 界定 agent 被授權之工作與有效 closure 之邊界；\textbf{形式准入模型} 定義 atoms、shared surfaces 與 active state；\textbf{brokered 實作路徑} 則將寫入意圖轉換為具體 verdict。\textbf{CID broker 因此不是整個系統，而是更廣的規格錨定治理路徑內之共享變更准入子系統}。ATM 不生成程式碼，也不替代測試或 code review；它要求所有寫入先被表述為結構化寫入意圖，再由 broker 在治理基底所界定之邊界內決定該意圖是否能進入寫入路徑。
 
@@ -781,7 +781,7 @@ ATM 目前不保證五件事。第一，ATM 不是跨機器分散式協調協定
 
 \medskip
 
-\section{4. Validation, Evidence, and Benchmark Alignment（驗證、證據與基準對齊）}
+\section{Validation, Evidence, and Benchmark Alignment（驗證、證據與基準對齊）}
 
 本文的評估採取「deterministic fixture -> 內部真實證據 -> 外部採用 -> 定點現場結果 -> benchmark 收斂 -> 編排延伸」的順序。這樣的安排有一個明確目的：避免把不同性質、不同強度的材料混寫成單一類型的實證主張。具體而言，fixture 用於驗證 decision surface，採用研究用於觀察可恢復性，現場證據用於展示具代表性的端到端路徑，而 AdmissionBench 則將 admission-related evidence 進一步收斂為可重放、可審核、可逐項查核的 benchmark chain。就 \texttt{\seqsplit{§1.3 Contributions}} 的對位而言，§4.1 與 §4.4 主要支撐方法層的 admission claim，§4.2 與 §4.3 主要支撐系統層的 governance substrate 與 adoption claim，§4.5 補充 batch / stability 類延伸證據，而 §5 則將前述 validation evidence 中與 benchmark 直接相關的部分正式整理為 v0.1 baseline 與 v0.2 paper-facing result。換言之，AdmissionBench 並不是獨立於 validation 之外的新材料，而是 validation evidence stack 的 benchmark-facing 展開。它們共同支持本文的核心主張，但尚不等同於與 STORM（Ref. 3）、CodeCRDT（Ref. 1）、SCF（Ref. 2）或 CoAgent（Ref. 14）的完整對照式基準實驗。
 
@@ -896,7 +896,7 @@ ATM 自身開發過程提供了一組內部真實證據。這些事件不是事�
 
 正文保留三類代表性 self-hosting incidents：\texttt{\seqsplit{cid-shared collision}}（兩個 intent 同時 claim 相同 atom CID，觸發 freeze / patch-envelope / conflict-matrix path）、\texttt{\seqsplit{out-of-scope delivery}}（delivery touch 超出宣告 scope，促成 closure packet waiver 與 scope gate 強化），以及 \texttt{\seqsplit{plan-mirror sync failure}}（planning side 與 target ledger closeout 不一致，促成 mechanized open/close 與 ledger consistency check）。這三類型的詳細 outcome / interpretation 留待 Appendix A.5 的濃縮事件表承接，正文只保留它們作為 governance evidence 的功能定位。
 
-為了避免讀者誤以為這三類事件就是 ATM 自宿觀察的全部 collision，本文補上 self-hosting window 的工作量基線。AAF 框架本體自 2026-05-01 起的觀察窗口內累積約 1,372 個 governed commits；同期 3KLife 在 2026-05-19 至 2026-06-07 三週 npc-brain 對齊窗口中累積 320 個 governed commits，並由 15 個不同 vendor / editor channel 的 AI agent（含 \texttt{\seqsplit{claude-code-*}}、\texttt{\seqsplit{codex-gpt-5.*}}、\texttt{\seqsplit{antigravity-gemini-3.5-flash}}、\texttt{\seqsplit{vs-code-copilot-agent}}、\texttt{\seqsplit{vs-insiders-gpt-5.4}} 等變體）共同寫入。也就是說，這些 incident 並非脫離真實 workload 的 anecdote，而是在約 1,700 commits 等級的多供應商同域工作負載下，被治理層反覆吸收與回饋的 operational evidence；其證據強度高於示範案例，但仍不等同於對照基準實驗。
+為了避免讀者誤以為這三類事件就是 ATM 自宿觀察的全部 collision，本文補上 self-hosting window 的工作量基線。ATM 框架本體自 2026-05-01 起的觀察窗口內累積約 1,372 個 governed commits；同期 3KLife 在 2026-05-19 至 2026-06-07 三週 npc-brain 對齊窗口中累積 320 個 governed commits，並由 15 個不同 vendor / editor channel 的 AI agent（含 \texttt{\seqsplit{claude-code-*}}、\texttt{\seqsplit{codex-gpt-5.*}}、\texttt{\seqsplit{antigravity-gemini-3.5-flash}}、\texttt{\seqsplit{vs-code-copilot-agent}}、\texttt{\seqsplit{vs-insiders-gpt-5.4}} 等變體）共同寫入。也就是說，這些 incident 並非脫離真實 workload 的 anecdote，而是在約 1,700 commits 等級的多供應商同域工作負載下，被治理層反覆吸收與回饋的 operational evidence；其證據強度高於示範案例，但仍不等同於對照基準實驗。
 
 這些 forensics 的角色，是說明 ATM 的 governance layer 不是事後美化的規格，而是在自身開發中反覆暴露缺口並回饋機制。它不是受控對照實驗，也不是產品展示，而是一組可追溯的 self-hosting field evidence；其證據強度低於受控基準實驗，但高於單純設計論述。
 
@@ -1026,7 +1026,7 @@ Plane（§3.1） & 主要治理機制 & 本文現有證據 & 證據類型 & 來�
 
 \medskip
 
-\section{5. AdmissionBench Results and Limitations（AdmissionBench 結果與限制）}
+\section{AdmissionBench Results and Limitations（AdmissionBench 結果與限制）}
 
 本節不是脫離 \texttt{\seqsplit{§4 Validation, Evidence, and Benchmark Alignment}} 的額外補充，而是把其中與 benchmark 直接相關的 admission evidence 正式整理為可引用的結果鏈。換言之，§4 負責建立證據面、證據邊界與 benchmark 對齊位置，§5 則負責把 AdmissionBench 這條證據鏈整理成 paper-facing result、ablation 與 limitation 敘事。這樣的章節分工有助於把「證據是否成立」與「結果如何解讀」清楚分開，讓 baseline、主結果與未完成延伸不會被壓縮成同一層論述。本文尚未完成完整跨系統比較性評估；ATM 與 STORM（Ref. 3）、CodeCRDT（Ref. 1）、SCF（Ref. 2）、CoAgent（Ref. 14）的對照式基準實驗，仍需在相同 workload 上量測 conflict catch rate、false positive、wall-clock、token cost 與 repair cost。後續若使用 AgenticFlict（Ref. 18）類大規模 conflict corpus，必須先將其跨 PR / Git merge samples 轉換為單一治理域的寫入前意圖重放工作負載；否則不可直接宣稱 ATM 能解決該 corpus 中的分散式 PR 衝突。
 
@@ -1034,7 +1034,7 @@ Plane（§3.1） & 主要治理機制 & 本文現有證據 & 證據類型 & 來�
 
 本版論文不再把 AdmissionBench 寫成單一版本的一次性結果，而是明確區分兩個角色。\textbf{v0.1 smoke} 是凍結的 baseline substrate：它證明 benchmark contract、fixture、runner、blind-audit 流程與 machine-generated artifact 已經成立，因此可作為後續比較的審核起點。\textbf{v0.2 paper profile} 則是本文正文採信的正式結果層：它沿用同一 benchmark family，但補齊 paper-facing summary、ablation rows、adversarial rows、enforcement rows 與 provenance alignment，讓結果從「可重跑 smoke」推進到「可供論文主結果引用」。
 
-v0.1 的 frozen Generator commit 為 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}，對應 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}} 與 \texttt{\seqsplit{artifacts/blind-bench/20260625/}}。v0.2 paper profile 則使用 \texttt{\seqsplit{--profile paper --seed 20260625}} 重新產生 paper-facing artifact bundle；其 \texttt{\seqsplit{generator-manifest.json}} 所記錄之 \texttt{\seqsplit{baseCommit}} 與 \texttt{\seqsplit{generatorCommit}} 同樣為 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}，而本稿引用之公開發表錨點則為 AAF \texttt{\seqsplit{main}} 上納入這批 evidence bundle 的 commit \texttt{\seqsplit{ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}}。對應 artifact 路徑為 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}。
+v0.1 的 frozen Generator commit 為 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}，對應 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}} 與 \texttt{\seqsplit{artifacts/blind-bench/20260625/}}。v0.2 paper profile 則使用 \texttt{\seqsplit{--profile paper --seed 20260625}} 重新產生 paper-facing artifact bundle；其 \texttt{\seqsplit{generator-manifest.json}} 所記錄之 \texttt{\seqsplit{baseCommit}} 與 \texttt{\seqsplit{generatorCommit}} 同樣為 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}，而本稿引用之公開發表錨點則為 ATM public repository \texttt{\seqsplit{main}} 上納入這批 evidence bundle 的 commit \texttt{\seqsplit{ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}}。對應 artifact 路徑為 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}。
 
 Benchmark contract：本文所稱 20-scenario family 指 \texttt{\seqsplit{scripts/fixtures/atm-admission-bench/manifest.json}} 中凍結的 20 個單一治理域 admission scenarios；42 comparisons 指在這些 scenarios 上以固定 seed \texttt{\seqsplit{20260625}} 執行之 mode-level expected-vs-actual comparisons。Policy row 是單一 scenario $\times$ policy mode $\times$ route expectation 的報告列；ablation row 是在移除一個 ATM layer 或 feature 後重新計算的同型報告列；adversarial row 是同一 fixture family 上加入 perturbation / stress condition 後的報告列；enforcement row 則只統計 admission / apply / validator / human escalation timing 的 enforcement-projection rows。Route labels 固定為 \texttt{\seqsplit{parallel-safe}}、\texttt{\seqsplit{compose}}、\texttt{\seqsplit{serial}}、\texttt{\seqsplit{block}} 與 \texttt{\seqsplit{fail-closed/refine}}；所有 v0.2 數字均由同一 seed 與同一 artifact bundle 產生，不混入跨 clone / PR merge workload。
 
@@ -1163,7 +1163,7 @@ Forbidden rules 與 task contract 之 machine-checkable 形式化。本版 ATM �
 
 \medskip
 
-\section{6. Discussion（討論）}
+\section{Discussion（討論）}
 
 \subsection{Why Adapter-Guided, Not AST-First}
 
@@ -1199,27 +1199,27 @@ SyncMind / SyncBench 可作為此方向的未來外部 replay source（Ref. 60�
 
 本論文之 admission 機制適用範疇為單一 workspace / filesystem domain（§5）。此限制並非架構性瓶頸，而是 broker 進程之 visibility 邊界決定。我們在此勾勒三種具體部署拓樸，由現行已實證者至自然延伸者排列；三者共享同一核心假設------存在一個 broker 進程與一份 registry，於某一 filesystem domain 上 own 全部並行 intent 之 visibility------但所覆蓋之開發協作場景由小至大。第四種更遙遠之分散式延伸則簡要提及而不於此展開。
 
-\subsubsection*{6.4.1 Topology A --- 單一 workstation 多 vendor 共寫（本文 field evidence 的核心部署拓樸）}
+\subsubsection*{Topology A --- 單一 workstation 多 vendor 共寫（本文 field evidence 的核心部署拓樸）}
 
 §4 所有 field evidence 皆屬此拓樸：單一開發者 workstation 上，多個 vendor 之 LLM brain 對同一 worktree 並行寫入，broker 為單一 in-process arbiter，registry 為單一 \texttt{\seqsplit{.atm/runtime/write-broker.registry.json}}。POS2、close-orchestration、B-12 等 cross-vendor end-to-end 證據皆於此拓樸完成。
 
-\subsubsection*{6.4.2 Topology B --- 共享地端伺服器多 vendor AI 共寫，遠端 human prompt 輸入（deployment-only extension；ATM 軟體本身無需改動）}
+\subsubsection*{Topology B --- 共享地端伺服器多 vendor AI 共寫，遠端 human prompt 輸入（deployment-only extension；ATM 軟體本身無需改動）}
 
 延伸 A 之自然方式：多個 vendor LLM agent 共同跑於企業地端共享伺服器，所有 AI 推論與寫入皆於該伺服器之單一 filesystem 進行；人類由遠端送 prompt、任務單或修改建議至伺服器之 AI agent。\textbf{broker 與 agent 之相對位置與 Topology A 完全相同}------broker 為本地 in-process arbiter，所有 agent 為本地進程；唯一差別為此「本地」之物理位置由開發者 workstation 遷移至共享伺服器。
 
 ATM 之 admission 軟體於此拓樸\textbf{無需任何架構變更}；所需新工程皆不在 ATM 範疇------on-prem LLM inference（如 Anthropic enterprise、vLLM 或 Ollama 自架）、遠端 prompt 提交介面（SSH / web UI / IDE remote / chat API）、多 tenant 隔離等。此拓樸對應「強大算力地端 AI 中心」之企業部署趨勢；ATM 在此扮演多 vendor agent 並行寫入之 admission 治理層。
 
-\subsubsection*{6.4.3 Topology C --- 本地 pre-push admission bridge（已完成內部驗證）}
+\subsubsection*{Topology C --- 本地 pre-push admission bridge（已完成內部驗證）}
 
 第三種拓樸將 broker admission 從 in-workspace 寫入時點延伸至 \texttt{\seqsplit{git push}} 之前。利用 broker \texttt{\seqsplit{MutationRequest}} 與 proposal 來源解耦此一性質，pre-push 階段以 \texttt{\seqsplit{git fetch}} 取得之 remote 增量構造為虛擬 MutationRequest（actor \texttt{\seqsplit{virtual:git-remote@<sha>}}），與本地 branch 自 \texttt{\seqsplit{merge-base}} 起之增量一同送入既有 admission pipeline。Common ancestor、format adapter、composer、steward apply 與 refinement-loop 皆與 Topology A 完全相同------admission 算法、形式模型、§3.6 format adapter 設計均無變更，新工作為純粹 git $\leftrightarrow$ broker 整合 bridge。
 
 觸發時點選擇於 \texttt{\seqsplit{git push}} 而非 \texttt{\seqsplit{git commit}}：前者為「local work 即將成為 shared work」之自然治理邊界；後者為私有本地操作，per-commit 觸發將拖慢 edit/test loop 並對 WIP commit 產生雜訊。本拓樸之獨立貢獻範疇限於 (a) 結構化資料之 format-adapter 合併與 (b) AI agent 在 conflict-marker 場景之自動化分流缺口；對純程式碼合併，標準 git \texttt{\seqsplit{pull --rebase}} 已足夠，本拓樸不主張取代。對應 bridge 已完成內部驗證與工件歸檔，包含 \texttt{\seqsplit{atm git admit}} CLI、pre-push hook、steward dry-run / apply、push-fail fallback 與 fixture coverage；MVP mechanics、分階段實作摘要、Non-Goals 邊界與 acceptance criteria 詳見 Appendix A.4 與計畫書 \texttt{\seqsplit{docs/ai\_atomic\_framework/git-boundary-admission/git-boundary-admission-plan.md}}。
 
-\subsubsection*{6.4.4 三 topology 之共同假設與分工}
+\subsubsection*{三 topology 之共同假設與分工}
 
 三種拓樸共享同一核心假設：\textbf{存在一個 broker 進程與一份 registry，於某一 filesystem domain 上 own 全部並行 intent 之 visibility}。差異僅在此 domain 之物理位置（個人 workstation / 共享伺服器 / 開發者本機 git hook）與 admission 觸發時點（live write / live write / pre-push）。三者不互斥，可組合使用：開發者於 Topology A 本機共寫 $\rightarrow$ Topology C pre-push admission bridge 檢查 $\rightarrow$ push 至 Topology B 共享地端伺服器之主環境。就目前證據而言，Topology A 具有 field evidence，Topology C 具有內部 validation，Topology B 則屬 deployment-only 延伸。
 
-\subsubsection*{6.4.5 更遙遠之延伸：Topology D 跨機器 patch 同步（out-of-scope distributed extension）}
+\subsubsection*{更遙遠之延伸：Topology D 跨機器 patch 同步（out-of-scope distributed extension）}
 
 若進一步繞過 git PR 機制，由多個遠端開發者之 patch 直接同步至中央 broker，則進入分散式 broker 設計範疇。此處需具體說明「out of scope」的根據，而非僅以 CAP 一語帶過。
 
@@ -1229,7 +1229,7 @@ ATM 之 admission 軟體於此拓樸\textbf{無需任何架構變更}；所需�
 
 \medskip
 
-\section{7. Conclusion（結論）}
+\section{Conclusion（結論）}
 
 本文主張，多代理軟體工程真正缺少的，不只是更強的生成器或更晚的修復器，而是一個位於共享寫入之前、能把 task intent、repository scope、admission verdict、validator 與 evidence obligation 綁在同一治理路徑上的准入層。AI-Atomic-Framework（ATM）對這個問題的回答，是以 adapter-guided semantic atoms、atom map、virtual atom 與 CID broker，把原本模糊的共享寫入風險轉譯為可定位、可裁決、可重放的治理單位；當條件足夠清楚時允許 bounded-region admission，當條件不足或衝突不可安全裁決時則保守 fail closed，必要時再導向 composer-routed merge 或 refinement path。
 
@@ -1248,16 +1248,16 @@ The author used large language model assistants during manuscript preparation fo
 \appendix
 \section*{Appendix（附錄）}
 
-\section*{A.1 Evidence Artifact Map}
+\section*{Evidence Artifact Map}
 
 本附錄列出 paper-citable evidence 的建議入口。具體 artifact 名稱與 commit 應以 repository 內實際檔案為準。為避免附錄本身再出現索引表重疊，Appendix A 只保留三種功能：A.1 提供 evidence artifact 入口索引，A.3 對應 paper claim 至 source path 與驗證命令，A.4 專門補充 Topology C 的橋接細節與驗證範圍。原本較摘要式的 implementation-status 說明，改併入這段導讀文字，不再另立一張表。
 
 \textbf{證據可取得性與 release 對應（reproducibility statement）：}
 
-本節先固定一個最重要的引用規則：\textbf{對本文正文數字與 paper-facing benchmark claims 的 canonical public anchor，預設以 AAF \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} 下的 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} 為主}。\texttt{\seqsplit{v0.9.0-alpha.1}} source snapshot 與 \texttt{\seqsplit{generator-manifest.json}} 內記錄的 machine-generated source anchor 仍然重要，但角色分別是 source-reference snapshot 與 generator provenance anchor，不應與 paper-facing artifact anchor 混讀為同一層引用點。
+本節先固定一個最重要的引用規則：\textbf{對本文正文數字與 paper-facing benchmark claims 的 canonical public anchor，預設以 ATM public repository \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} 下的 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} 為主}。\texttt{\seqsplit{v0.9.0-alpha.1}} source snapshot 與 \texttt{\seqsplit{generator-manifest.json}} 內記錄的 machine-generated source anchor 仍然重要，但角色分別是 source-reference snapshot 與 generator provenance anchor，不應與 paper-facing artifact anchor 混讀為同一層引用點。
 
 \begin{itemize}
-\item \textbf{公開部分（public）：} ATM 框架本體之 source、deterministic runner MVP、12-scenario fixture design、ATM-AdmissionBench v0.1 baseline artifacts、ATM-AdmissionBench v0.2 paper-profile artifacts、broker decision implementation、CID validation scripts、Topology C bridge 與多數 self-hosting governance reports，存放於 GitHub 公開 repository \texttt{\seqsplit{eaglhuang/AI-Atomic-Framework}}。本論文之 source reference snapshot 為 release tag \texttt{\seqsplit{v0.9.0-alpha.1}} 對應 commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}}；AdmissionBench v0.1 baseline 與 v0.2 paper profile 的 machine-generated source anchor 均為 \texttt{\seqsplit{generator-manifest.json}} 所記錄之 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}。若審稿者需要逐項核對本文數字，應以 AAF \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} 下的 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} 作為第一入口，再用其中的 \texttt{\seqsplit{generator-manifest.json}}、\texttt{\seqsplit{summary.json}}、\texttt{\seqsplit{paper-tables.md}}、\texttt{\seqsplit{artifact-hash-manifest.sha256}} 與對應的 \texttt{\seqsplit{20260625/}} baseline 目錄交叉查對。
+\item \textbf{公開部分（public）：} ATM 框架本體之 source、deterministic runner MVP、12-scenario fixture design、ATM-AdmissionBench v0.1 baseline artifacts、ATM-AdmissionBench v0.2 paper-profile artifacts、broker decision implementation、CID validation scripts、Topology C bridge 與多數 self-hosting governance reports，存放於 GitHub 公開 repository \texttt{\seqsplit{eaglhuang/AI-Atomic-Framework}}。本論文之 source reference snapshot 為 release tag \texttt{\seqsplit{v0.9.0-alpha.1}} 對應 commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}}；AdmissionBench v0.1 baseline 與 v0.2 paper profile 的 machine-generated source anchor 均為 \texttt{\seqsplit{generator-manifest.json}} 所記錄之 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}。若審稿者需要逐項核對本文數字，應以 ATM public repository \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} 下的 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} 作為第一入口，再用其中的 \texttt{\seqsplit{generator-manifest.json}}、\texttt{\seqsplit{summary.json}}、\texttt{\seqsplit{paper-tables.md}}、\texttt{\seqsplit{artifact-hash-manifest.sha256}} 與對應的 \texttt{\seqsplit{20260625/}} baseline 目錄交叉查對。
 \item \textbf{私有部分（access on request）：} 部分 same-file collision evidence（POS2 / B-12 / BLOCK / close-orchestration 的完整 patch envelope 與 governance ledger）、3KLife self-hosting incident packets、以及 npc-brain adopter-side records，因內含採用者專案內部 artifact 而暫存於 \texttt{\seqsplit{eaglhuang/3KLife}} 私有 repository 之 \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/}}。本文承諾於同步釋出之 supplementary data release（DOI 預留）中以去識別化形式提供 evidence chain、verdict log 與 validator trace，讀者亦可透過聯絡作者請求 review access；惟內部 task ledger、人名與專案商業資訊不會包含於 supplementary data。
 \item \textbf{私有 artifact 之證據強度說明：} 本文 §4.4 之主結論不依賴尚未公開之私有檔案------POS2 evidence chain 之 broker verdict、composer plan id（如 \texttt{\seqsplit{merge-255c73707a528edc}}）、validator 命令（\texttt{\seqsplit{git diff --check}} / \texttt{\seqsplit{npm run typecheck}} / \texttt{\seqsplit{npm run validate:cli}}）與 commit hash 皆於本論文正文與 A.4 內公開可驗證；私有 envelope 主要支援 closure packet replay 與 step-by-step audit，而非作為 claim 本身的唯一證據來源。
 \end{itemize}
@@ -1270,31 +1270,31 @@ The author used large language model assistants during manuscript preparation fo
 \toprule
 Evidence family & Role in paper & Primary entry & 取得管道 \\
 \midrule
-12-scenario suite design & controlled decision-surface coverage blueprint & \texttt{\seqsplit{docs/ai\_atomic\_framework/arxiv-paper-v1/bench-design.md}} & public（AAF repo） \\
-deterministic runner MVP & archived synthetic mechanism evidence & \texttt{\seqsplit{tools/multi-vendor-broker-bench/README.md}} & public（AAF repo） \\
-ATM-AdmissionBench v0.1 baseline + v0.2 paper profile & machine-generated baseline summary, label-retained blind package, paper-facing summary tables, provenance manifest, audit findings & canonical public anchor: \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} $\rightarrow$ \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}; secondary anchors: \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}}, \texttt{\seqsplit{artifacts/blind-bench/20260625/}}, \texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}} & public（AAF repo / supplementary release）；v0.1 作為 baseline anchor，v0.2 作為 paper-facing reporting anchor \\
+12-scenario suite design & controlled decision-surface coverage blueprint & \texttt{\seqsplit{docs/ai\_atomic\_framework/arxiv-paper-v1/bench-design.md}} & public（ATM repository） \\
+deterministic runner MVP & archived synthetic mechanism evidence & \texttt{\seqsplit{tools/multi-vendor-broker-bench/README.md}} & public（ATM repository） \\
+ATM-AdmissionBench v0.1 baseline + v0.2 paper profile & machine-generated baseline summary, label-retained blind package, paper-facing summary tables, provenance manifest, audit findings & canonical public anchor: \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} $\rightarrow$ \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}; secondary anchors: \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}}, \texttt{\seqsplit{artifacts/blind-bench/20260625/}}, \texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}} & public（ATM repository / supplementary release）；v0.1 作為 baseline anchor，v0.2 作為 paper-facing reporting anchor \\
 same-file collision evidence（POS2 / B-12 / BLOCK / close-orchestration） & positive / negative field evidence for same-file admission boundary & \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/}} & private（3KLife）；去識別化版本於 supplementary data release \\
-role-separated methodology replay & governance / audit methodology evidence for scope-lock failure classification and independent-role replay & methodology replay manifest, coordinator classification memo, wrong-scope vs. correct-scope replay packet & mixed：canonical SHA anchors public（AAF repo），replay bundle 以 supplementary data 去識別化釋出 \\
+role-separated methodology replay & governance / audit methodology evidence for scope-lock failure classification and independent-role replay & methodology replay manifest, coordinator classification memo, wrong-scope vs. correct-scope replay packet & mixed：canonical SHA anchors public（ATM repository），replay bundle 以 supplementary data 去識別化釋出 \\
 npc-brain adoption & external governance adoption / recoverability evidence & \texttt{\seqsplit{paper.md}} §4.3 採用研究整理與 adoption notes & private（adopter project）；摘要統計於本文 Table 15 \\
-self-hosting forensics & 內部真實證據與 incident archive & ATM incident reports and closure packets & mixed：framework-side incident reports public（AAF repo），3KLife-side ledger private \\
-Wave Mode / CID stability & orchestration extension and identity substrate evidence & \texttt{\seqsplit{docs/reports/team-wave-mode-validation.md}} 與相關 CID validation scripts & public（AAF repo） \\
+self-hosting forensics & 內部真實證據與 incident archive & ATM incident reports and closure packets & mixed：framework-side incident reports public（ATM repository），3KLife-side ledger private \\
+Wave Mode / CID stability & orchestration extension and identity substrate evidence & \texttt{\seqsplit{docs/reports/team-wave-mode-validation.md}} 與相關 CID validation scripts & public（ATM repository） \\
 \bottomrule
 \end{longtable}
 \endgroup
 
-\section*{A.2 Implementation / Commit Provenance}
+\section*{Implementation / Commit Provenance}
 
 ATM 的主要實作家族包含 broker decision、virtual-atom refinement（legacy implementation name: AGR）、neutral steward、freeze / patch-envelope / conflict-matrix、format adapter、Wave Mode 與 CID verification。正文刻意避免列出大量 task IDs；附錄則把較可驗證的 claim $\rightarrow$ source path $\rightarrow$ verification route 直接集中到 A.4.1，而不再先經過一張較摘要式的 implementation-status 表，以免和 A.1 artifact index、A.4.1 verification map 形成三層索引重疊。
 
-\section*{A.3 CID Schema Migration Candidate Paths}
+\section*{CID Schema Migration Candidate Paths}
 
 CID schema migration 可採三條路徑。第一，flag-day migration：在 repository 層鎖定 migration window，將所有 active intents 清空後重算 CID。第二，dual-read / single-write：broker 同時辨識 v1 與 v2 CID，但新 intent 僅寫入 v2。第三，compatibility map：以 signed migration table 宣告舊 CID 與新 CID 的等價關係。三者取捨分別是簡單但中斷、平滑但實作複雜、可追溯但需信任 migration table。本文尚未選定最終方案。
 
-\section*{A.4 Implementation Verification Map and Topology C Bridge Detail}
+\section*{Implementation Verification Map and Topology C Bridge Detail}
 
 本附錄將論文中所有主張為「已實作且可重現」之 capability，逐條對應至 open-source repository（\texttt{\seqsplit{https://github.com/eaglhuang/AI-Atomic-Framework}}）之 source code 與可重現驗證命令。本文交叉檢查所對應的 framework snapshot 為 release tag \texttt{\seqsplit{v0.9.0-alpha.1}}（commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}}），讀者應以此 tag 作為主要引用點，避免 main 分支演進造成行號漂移。
 
-\subsection*{A.4.1 Verification Map}
+\subsection*{Verification Map}
 
 \noindent\textbf{Table A.3 --- Verification Map.}
 
@@ -1302,7 +1302,7 @@ CID schema migration 可採三條路徑。第一，flag-day migration：在 repo
 \footnotesize
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
-Paper claim & Source location (AAF repo) & Verification \\
+Paper claim & Source location (ATM repository) & Verification \\
 \midrule
 §3.3 Atoms / CID two-tier & \texttt{\seqsplit{packages/core/src/registry/atom-runtime.ts}}、\texttt{\seqsplit{registry.ts}}、\texttt{\seqsplit{status-machine.ts}}、\texttt{\seqsplit{atom-capsule.ts}}、\texttt{\seqsplit{packages/core/src/broker/candidate-bridge.ts}} & \texttt{\seqsplit{node --strip-types scripts/validate-atom-id-to-cid.ts}} \\
 §3.4 Admission pipeline / §3.5 七層 hard gate & \texttt{\seqsplit{packages/core/src/broker/decision.ts}}、\texttt{\seqsplit{conflict-matrix.ts}}、\texttt{\seqsplit{policy.ts}}、\texttt{\seqsplit{steward.ts}} & \texttt{\seqsplit{npm test -- broker/decision}} \\
@@ -1323,7 +1323,7 @@ Paper claim & Source location (AAF repo) & Verification \\
 \end{longtable}
 \endgroup
 
-\subsection*{A.4.2 Topology C MVP Mechanics（internal validation evidence）}
+\subsection*{Topology C MVP Mechanics（internal validation evidence）}
 
 \texttt{\seqsplit{atm git admit}} 於 \texttt{\seqsplit{git push}} 之前執行以下序列，所有步驟對應 §3.4-§3.6 既有 admission pipeline 元件，無新算法：
 
@@ -1337,7 +1337,7 @@ Paper claim & Source location (AAF repo) & Verification \\
 \item 若 composer-routed，產出 deterministic merge plan 並可選擇 steward-apply 至 working tree（預設不 auto-commit）
 \end{enumerate}
 
-\subsection*{A.4.3 Topology C Implementation Stages（2026-06-26 完成）}
+\subsection*{Topology C Implementation Stages（2026-06-26 完成）}
 
 \noindent\textbf{Table A.4 --- Topology C Implementation Stages.}
 
@@ -1356,7 +1356,7 @@ S4 & docs + self-hosting evidence & Docs、self-hosting evidence、paper-ready e
 \end{longtable}
 \endgroup
 
-\subsection*{A.4.4 Artifact Manifest Snapshot}
+\subsection*{Artifact Manifest Snapshot}
 
 Table A.4a --- Public Artifact Manifest Snapshot.
 
@@ -1368,7 +1368,7 @@ Artifact & Commit / hash anchor & Role & Access status \\
 \midrule
 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}} & generator commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}} & v0.1 baseline smoke artifacts & public release bundle \\
 \texttt{\seqsplit{artifacts/blind-bench/20260625/}} & generator commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}} & label-retained blind audit intake & public release bundle \\
-\texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} & AAF evidence commit \texttt{\seqsplit{ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} & v0.2 paper-profile result bundle & public release bundle \\
+\texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} & ATM evidence commit \texttt{\seqsplit{ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} & v0.2 paper-profile result bundle & public release bundle \\
 \texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}} / \texttt{\seqsplit{artifacts/audit/audit-findings.json}} & frozen audit input commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}} & role-separated audit evidence & public release bundle \\
 \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/}} & 3KLife planning repo evidence paths & POS2 / B-12 / BLOCK field evidence & de-identified or path-level summary in supplementary release \\
 npc-brain adoption notes / ledgers & retained by adopter-side planning records & cohort recovery and validator-catch reconstruction & summary-only in paper; raw event ledger not redistributed by default \\
@@ -1376,7 +1376,7 @@ npc-brain adoption notes / ledgers & retained by adopter-side planning records &
 \end{longtable}
 \endgroup
 
-\subsection*{A.4.5 Topology C Non-Goals (MVP)}
+\subsection*{Topology C Non-Goals (MVP)}
 
 \begin{itemize}
 \item 無 per-commit 強制 gate（per-commit overhead 不必要；\texttt{\seqsplit{git push}} 為治理邊界）
@@ -1388,41 +1388,21 @@ npc-brain adoption notes / ledgers & retained by adopter-side planning records &
 \item 不解決兩位遠端開發者同時送 PR 之 race：此仍由 git non-fast-forward 治理
 \end{itemize}
 
-\subsection*{A.4.6 Topology C Acceptance Conditions}
+\subsection*{Topology C Acceptance Conditions}
 
 \texttt{\seqsplit{atm git admit}} CLI 可於 push 前評估 local-vs-remote delta；pre-push hook 可呼叫該命令並產出明確 operator output；同檔 disjoint 結構化編輯可路由至既有 broker / composer 語意；真實重疊於 push 前 fail-closed 並產出可審查 evidence；post-push-fail fallback 可解釋並重跑相同 admission path；evidence 可歸檔以支撐論文主張，無需新 envelope schema。完整契約與設計記錄見 \texttt{\seqsplit{docs/ai\_atomic\_framework/git-boundary-admission/git-boundary-admission-plan.md}}。
 
 \medskip
 
 
-\section*{A.5 Condensed Incident Table}
-
-下表將 TASK-CID-0040\textasciitilde{}0045 的 incident evidence 濃縮為三類治理失敗模式；詳細 closure packet、repair commit 與 forensic report 路徑仍以 A.1 與原始 incident archive 為準。
-
-\noindent\textbf{Table A.5 --- Condensed Incident Evidence.}
-
-\begingroup
-\footnotesize
-\begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
-\toprule
-Incident cluster & Mechanism exercised & Outcome / interpretation \\
-\midrule
-\texttt{\seqsplit{TASK-CID-0040}} claim-displaced-by-import & claim ledger consistency、in-progress claim collision detection & 匯入流程一度覆寫進行中的 claim，後續由 event-ledger mismatch 偵測並修復；此案說明 governance state 必須有可重放的 claim/repair 軌跡。 \\
-\texttt{\seqsplit{TASK-CID-0041}} out-of-scope delivery requiring waiver & scope gate、closure packet waiver、late enforcement traceability & admission 未在寫入當下完整攔住 scope drift，而是由後續 closure packet 以明示 waiver 補登；此案支撐本文對 enforcement boundary 的誠實揭露，而非將所有案例包裝成正向成功。 \\
-\texttt{\seqsplit{TASK-CID-0043}} / \texttt{\seqsplit{0044}} / \texttt{\seqsplit{0045}} plan-mirror sync failures & sole-serialization invariant、planning mirror / target ledger closeout consistency & planning 端與 target ledger 曾出現 closeout 漂移，需以 repair commits 回補 closure packets；此案說明 broker / steward 必須成為唯一正式 closeout authority。 \\
-\bottomrule
-\end{longtable}
-\endgroup
-
-\medskip
 
 \section*{Appendix B. Authoring Transparency Statement}
 
-\subsection*{B.1 Use of AI-Assisted Writing Tools}
+\subsection*{Use of AI-Assisted Writing Tools}
 
 This manuscript was prepared as an instance of the multi-vendor LLM co-synthesis workflow described in this paper. Manuscript-side commits (draft sections, table edits, reference reconciliation, structural revisions, evidence cross-checking) were produced by AI agents across multiple vendor channels (including \texttt{\seqsplit{claude-code-*}}, \texttt{\seqsplit{codex-gpt-5.*}}, \texttt{\seqsplit{antigravity-gemini-3.5-flash}}, \texttt{\seqsplit{vs-code-copilot-*}}, \texttt{\seqsplit{vs-insiders-gpt-5.4}}, and additional editor / channel variants) and admitted through the ATM broker / steward path described in Section 3. Evidence of these manuscript-side admissions is captured within the self-hosting forensics window reported in Section 4.2 and the multi-vendor self-hosting window discussed in Section 4.5; the manuscript-preparation workload is not separated into a distinct experimental cohort.
 
-\subsection*{B.2 Division of Responsibility}
+\subsection*{Division of Responsibility}
 
 \begin{itemize}
 \item \textbf{AI assistants (multiple vendors):} drafting, prose refinement, reorganization, citation formatting, candidate literature discovery, structural critique, table layout, and consistency checks across sections.
@@ -1431,13 +1411,13 @@ This manuscript was prepared as an instance of the multi-vendor LLM co-synthesis
 
 Every paragraph, table, definition, and conclusion in this manuscript was reviewed and accepted by the human author. AI-assistant outputs that conflicted with the author's technical judgement were revised or discarded prior to inclusion.
 
-\subsection*{B.3 Non-claims}
+\subsection*{Non-claims}
 
 The use of AI assistants in manuscript preparation is disclosed for transparency and is \textbf{not counted as additional experimental evidence for the framework's effectiveness}. ATM's evaluation (Section 4) stands on its archived fixture runs, field collision artifacts, external adopter records, and self-hosting governance metrics, independent of the authoring process. In particular: (i) the 12-scenario fixture design and the 3 archived deterministic MVP runs (B-02, B-08, B-13) are not influenced by manuscript-side admissions; (ii) the POS2 / B-12 / BLOCK same-file collision evidence in Section 4.4 originates from framework- and adopter-side workloads, not from manuscript drafting; (iii) the npc-brain adoption cohort (N = 37) reported in Section 4.3 is an external adopter sample and is not co-mingled with manuscript-preparation activity.
 
-\subsection*{B.4 Reproducibility Note}
+\subsection*{Reproducibility Note}
 
-Readers wishing to inspect the manuscript-side admission evidence are referred to the public AAF repository at commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}} (release tag \texttt{\seqsplit{v0.9.0-alpha.1}}) and to the supplementary data release described in Appendix A.1. Internal task ledgers, vendor account identifiers, and adopter-side records are not redistributed verbatim; de-identified evidence chains, verdict logs, and validator traces are made available on request, subject to the access conditions stated in Appendix A.1.
+Readers wishing to inspect the manuscript-side admission evidence are referred to the public ATM repository at commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}} (release tag \texttt{\seqsplit{v0.9.0-alpha.1}}) and to the supplementary data release described in Appendix A.1. Internal task ledgers, vendor account identifiers, and adopter-side records are not redistributed verbatim; de-identified evidence chains, verdict logs, and validator traces are made available on request, subject to the access conditions stated in Appendix A.1.
 
 \medskip
 
@@ -1447,11 +1427,11 @@ Readers wishing to inspect the manuscript-side admission evidence are referred t
 \textbf{⚠ Pre-submission notice on placeholder identifiers.} This appendix contains explicitly-marked placeholder identifiers for the Zenodo DOI (\texttt{\seqsplit{10.5281/zenodo.XXXXXXX}}) and arXiv id. These placeholders are not yet citable and will be replaced with the issued identifiers before submission. The release tag \texttt{\seqsplit{v0.9.0-alpha.1}} and commit hash \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}} are the only fully frozen citation anchors in this version of the paper. Readers downloading this manuscript before placeholder reconciliation should rely on the release tag + commit hash as the sole reproducibility anchor.
 \end{quote}
 
-\subsection*{C.1 Purpose}
+\subsection*{Purpose}
 
 本附錄獨立於 Appendix A（evidence artifact map）與 Appendix B（authoring transparency）之外，集中說明本論文之 supplementary data release plan、DOI 預留狀態、版本對應與引用慣例。其目的是讓 reviewer 與後續引用者能以單一錨點理解：在 paper artifact、source repository、release tag、supplementary archive 與 DOI 之間，何者已 frozen、何者於 release 後生效、何者屬未來補登。
 
-\subsection*{C.2 Release Anchor Summary}
+\subsection*{Release Anchor Summary}
 
 本論文採用單一 release anchor 對齊所有可重現引用點。
 
@@ -1461,7 +1441,7 @@ Readers wishing to inspect the manuscript-side admission evidence are referred t
 \toprule
 Anchor 類別 & 識別 & 狀態 & 用途 \\
 \midrule
-Source release tag（AAF） & \texttt{\seqsplit{v0.9.0-alpha.1}} & \textbf{published} & 本論文所引 source path 與行號之 frozen reference；對應 commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}} \\
+Source release tag（ATM repository） & \texttt{\seqsplit{v0.9.0-alpha.1}} & \textbf{published} & 本論文所引 source path 與行號之 frozen reference；對應 commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}} \\
 Source release commit hash & \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}} & \textbf{published} & tag 直接指向之 immutable commit，作為 archive integrity 之基底 \\
 Supplementary data archive & Zenodo deposit（preparing） & \textbf{pending DOI}；於 arXiv submission 同步釋出 & 去識別化 evidence chains / verdict logs / validator traces / AdmissionBench baseline artifacts / AdmissionBench paper-profile artifacts / 12-scenario fixture replay bundle \\
 Supplementary data DOI & reserved（pending Zenodo issuance） & \textbf{placeholder}：\texttt{\seqsplit{10.5281/zenodo.XXXXXXX}} & 引用時請替換為實際 DOI；本附錄將於 arXiv v1 釋出時同步更新 \\
@@ -1472,7 +1452,7 @@ Manuscript itself & arXiv submission（pending） & \textbf{pending arXiv id} & 
 
 \textbf{版本對應約定：} 本論文 v3.1 對應 source release \texttt{\seqsplit{v0.9.0-alpha.1}}；若後續 source repository 因主分支演進需發行新 release（例如 \texttt{\seqsplit{v0.9.0-alpha.2}}），本論文不會自動跟隨升版------任何更動需以 paper revision（v3.2 / v4 等）形式同步釋出，並在 Appendix C.2 補上新行；舊行不刪除，以維持引用鏈完整。
 
-\subsection*{C.3 Supplementary Data Release Contents}
+\subsection*{Supplementary Data Release Contents}
 
 \texttt{\seqsplit{v0.9.0-alpha.1}} 之 supplementary data archive 包含下列八類材料；其中(i)-(iv)為公開可重現之 mechanism / benchmark evidence，(v)-(viii)為經去識別化處理之 field / methodology evidence。
 
@@ -1480,23 +1460,23 @@ Manuscript itself & arXiv submission（pending） & \textbf{pending arXiv id} & 
 
 (ii) \textbf{deterministic runner replay bundle}：可在 \texttt{\seqsplit{v0.9.0-alpha.1}} snapshot 上以 \texttt{\seqsplit{npm run bench:multi-vendor-broker}} 或等價命令重放 B-02 / B-08 / B-13；含 expected vs. actual verdict diff。
 
-(iii) \textbf{ATM-AdmissionBench baseline + paper-profile artifacts}：同時收錄兩層可追溯材料。第一層為 \textbf{v0.1 baseline smoke artifacts}：frozen generator commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}、\texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}}、\texttt{\seqsplit{artifacts/blind-bench/20260625/}}、\texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}} 與 \texttt{\seqsplit{artifacts/audit/audit-findings.json}}；包含 20 scenarios、42 comparisons、0 expectation failures、0 false-safe regressions、92.31\% unsafe-caught rate，以及 pass-with-caveats audit conclusion。第二層為 \textbf{v0.2 paper-profile artifacts}：AAF \texttt{\seqsplit{main}} commit \texttt{\seqsplit{ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} 下的 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}，其中包含 \texttt{\seqsplit{summary.json}}、\texttt{\seqsplit{paper-tables.md}}、\texttt{\seqsplit{main-results.md}}、\texttt{\seqsplit{results.jsonl}}、\texttt{\seqsplit{generator-manifest.json}} 與 \texttt{\seqsplit{artifact-hash-manifest.sha256}}；其中 manifest 所記錄之 \texttt{\seqsplit{baseCommit}} / \texttt{\seqsplit{generatorCommit}} 皆為 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}，供審稿者逐項查核 scenario count、mode comparisons、policy/ablation/enforcement row counts、route F1、intent preservation，以及 paper tables 中引用的彙整數字。
+(iii) \textbf{ATM-AdmissionBench baseline + paper-profile artifacts}：同時收錄兩層可追溯材料。第一層為 \textbf{v0.1 baseline smoke artifacts}：frozen generator commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}、\texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}}、\texttt{\seqsplit{artifacts/blind-bench/20260625/}}、\texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}} 與 \texttt{\seqsplit{artifacts/audit/audit-findings.json}}；包含 20 scenarios、42 comparisons、0 expectation failures、0 false-safe regressions、92.31\% unsafe-caught rate，以及 pass-with-caveats audit conclusion。第二層為 \textbf{v0.2 paper-profile artifacts}：ATM public repository \texttt{\seqsplit{main}} commit \texttt{\seqsplit{ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} 下的 \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}，其中包含 \texttt{\seqsplit{summary.json}}、\texttt{\seqsplit{paper-tables.md}}、\texttt{\seqsplit{main-results.md}}、\texttt{\seqsplit{results.jsonl}}、\texttt{\seqsplit{generator-manifest.json}} 與 \texttt{\seqsplit{artifact-hash-manifest.sha256}}；其中 manifest 所記錄之 \texttt{\seqsplit{baseCommit}} / \texttt{\seqsplit{generatorCommit}} 皆為 \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}，供審稿者逐項查核 scenario count、mode comparisons、policy/ablation/enforcement row counts、route F1、intent preservation，以及 paper tables 中引用的彙整數字。
 
 (iv) \textbf{POS2 evidence chain replay}：\texttt{\seqsplit{bench-paper-hotfile-pos2-\{a,b\}-intent.json}} 之公開版本 + composer plan id \texttt{\seqsplit{merge-255c73707a528edc}} 對應之 admission verdict log + validator command transcript（\texttt{\seqsplit{git diff --check}} / \texttt{\seqsplit{npm run typecheck}} / \texttt{\seqsplit{npm run validate:cli}}）。
 
 (v) \textbf{self-hosting incident summary（去識別化）}：對應 §4.2 Table 13 / 14 之三類事件（cid-shared / out-of-scope / plan-mirror-sync）之 incident envelope，移除內部 task IDs 與人名後保留 verdict、mechanism、closure path。
 
-(vi) \textbf{multi-vendor self-hosting window summary}：§4.5 提及之同窗口跨 vendor agent 寫入統計（AAF 1,372 commits、3KLife 320 commits / 15 channels）之 commit-author histogram 與時間序列摘要，不含 commit message 內容。
+(vi) \textbf{multi-vendor self-hosting window summary}：§4.5 提及之同窗口跨 vendor agent 寫入統計（ATM 1,372 commits、3KLife 320 commits / 15 channels）之 commit-author histogram 與時間序列摘要，不含 commit message 內容。
 
 (vii) \textbf{adopter cohort summary（npc-brain）}：§4.3 Table 15 之 37-card cohort 之 aggregated counts，不含 task card 內容、不含 adopter 內部專案資訊；僅保留可重新計算之 scope-lock interaction count、validator catch count 與時間軸。
 
 (viii) \textbf{role-separated methodology replay package}：以 wrong-scope stripped commit \texttt{\seqsplit{2088a791c45da8fda37d4258adfe393a21e689e9}} 與 correct-scope payload-bearing commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}} 為 canonical anchors，附 replay manifest、coordinator classification memo 與 wrong-scope / correct-scope 對照摘要；其用途是支持方法學上的治理分類與雙角色獨立性敘述，而非作為 ATM benchmark 主結果的一部分。
 
-\subsection*{C.4 Access Conditions}
+\subsection*{Access Conditions}
 
-(a) (i)-(iv) 為 \textbf{fully public}，於 Zenodo deposit 與 AAF release tag 雙軌釋出；任何讀者皆可下載並重放。 (b) (v)-(viii) 為 \textbf{de-identified public}，於同一 Zenodo deposit 釋出；本文承諾不於 supplementary archive 中包含人名、commit message 內容、adopter 內部專案路徑或 vendor account identifier。 (c) \textbf{原始 task ledger 與 closure packets} 保留於 \texttt{\seqsplit{eaglhuang/3KLife}} 私有 repository；review access 採 named-individual approval 方式，請以 issue 或 email 聯絡作者，並說明用途；本文不承諾自動授權，亦不承諾無限期保留。
+(a) (i)-(iv) 為 \textbf{fully public}，於 Zenodo deposit 與 ATM release tag 雙軌釋出；任何讀者皆可下載並重放。 (b) (v)-(viii) 為 \textbf{de-identified public}，於同一 Zenodo deposit 釋出；本文承諾不於 supplementary archive 中包含人名、commit message 內容、adopter 內部專案路徑或 vendor account identifier。 (c) \textbf{原始 task ledger 與 closure packets} 保留於 \texttt{\seqsplit{eaglhuang/3KLife}} 私有 repository；review access 採 named-individual approval 方式，請以 issue 或 email 聯絡作者，並說明用途；本文不承諾自動授權，亦不承諾無限期保留。
 
-\subsection*{C.5 Citation Convention}
+\subsection*{Citation Convention}
 
 引用本論文之證據時，建議只使用已凍結之錨點：
 
@@ -1506,7 +1486,7 @@ Manuscript itself & arXiv submission（pending） & \textbf{pending arXiv id} & 
 
 補充資料的 DOI 與 manuscript arXiv id 目前仍屬 placeholder，應僅參考上方 pre-submission notice，不列入正式 citation examples。
 
-\subsection*{C.6 DOI Placeholder Reconciliation}
+\subsection*{DOI Placeholder Reconciliation}
 
 本附錄之 \texttt{\seqsplit{10.5281/zenodo.XXXXXXX}} 與 arXiv id 為\textbf{已預留之 placeholder}。於 arXiv v1 submission 與 Zenodo deposit 同步釋出之 commit 中，本附錄將同步更新為實際 DOI 與 arXiv id；該更新本身不視為論文內容修訂，僅為引用錨點落地。讀者若於更新前下載本論文，可以 release tag \texttt{\seqsplit{v0.9.0-alpha.1}} + commit hash 作為唯一已 frozen 之引用錨點。
 

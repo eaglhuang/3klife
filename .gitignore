@@ -87,6 +87,28 @@ Design System*.zip
 .atm/runtime/version-cache.json
 .atm/runtime/welcome.lineage.json
 .atm/runtime/guidance/
+.atm/runtime/emergency/
 .atm/history/reports/context-budget/
 .atm/history/reports/continuation/
 .atm/history/reports/internal-release-sync/*/atm.mjs.previous
+
+#//////////////////////////
+# ATM paper build artifacts
+#//////////////////////////
+docs/ai_atomic_framework/arxiv-paper-v1/*.aux
+docs/ai_atomic_framework/arxiv-paper-v1/*.bbl
+docs/ai_atomic_framework/arxiv-paper-v1/*.blg
+docs/ai_atomic_framework/arxiv-paper-v1/*.log
+docs/ai_atomic_framework/arxiv-paper-v1/*.out
+docs/ai_atomic_framework/arxiv-paper-v1/compile*.out
+docs/ai_atomic_framework/arxiv-paper-v1/compile-node-*.out
+docs/ai_atomic_framework/arxiv-paper-v1/bibtest.*
+docs/ai_atomic_framework/arxiv-paper-v1/paper-zh.pdf
+docs/ai_atomic_framework/arxiv-paper-v1/paper-zh.sync-preview.*
+docs/ai_atomic_framework/arxiv-paper-v1/*.corrupted-backup-*.md
+docs/ai_atomic_framework/arxiv-paper-v1/*.before-sync-*.bak
+docs/ai_atomic_framework/arxiv-paper-v1/*.before-merge.bak
+docs/ai_atomic_framework/arxiv-paper-v1/*.before-20260625-*.bak
+
+# Temporary rescue / inspection outputs
+tmp/
