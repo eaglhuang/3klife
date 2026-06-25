@@ -209,6 +209,10 @@ SCF、MPAC 與相關工作流治理系統處理的是角色、意圖、流程與
 
 第二組是生成後的衝突修復路線，代表工作包括 AgentSpawn（Ref. 5）與 Rover（Ref. 16）。AgentSpawn 以動態生成子代理、記憶切片與多階段衝突合併，強化長週期程式碼生成中的後段協作彈性；Rover 則以 LLM 進行 context-aware conflict resolution，從合併衝突 hunk 中提取上下文並以模型推理建議解法。這一組工作的共同點，是把主要計算與治理成本放在「生成後的合併與修復」。相較之下，ATM 的關心點更早，也更窄：在多個代理尚未真正落筆前，哪些寫入應被允許、序列化、導向 composer，或直接 fail closed。Sartori（Ref. 10）對 specification gap 的分析也與此相關：當代理對共享 surface 的認知不一致時，無論 admission 路徑或 post-hoc 路徑都會受影響，差別主要在失敗何時被偵測。
 
+結構化與半結構化合併系統提供了一個重要的相鄰設計點。SafeMerge 在產生不同程式版本後驗證 semantic conflict-freedom（Ref. 56）；半結構化合併系統則利用部分或可設定的程式結構，減少純 line-based merging 的限制（Ref. 57）。ATM 則在更早的邊界進行干預：它在共享 worktree 發生變更之前，推導出保守的 atom-level、region-level 與 shared-surface conflict abstraction。因此，ATM 並未繼承這些系統的 semantic conflict-freedom guarantee；相反，這些系統說明了為何 ATM 同時拒絕純文本合併與強制性的 universal AST-first 設計。
+
+近期 transactional-agent runtime 則著重於工具效果何時可以安全地永久生效。Atomix 使用 epochs、resource scopes、frontiers 與 compensation 將 execution 與 settlement 分離（Ref. 58）；Cordon 則引入 task-scoped transaction boundary，在 commit 之前對 effects 進行 staging、validation 與 audit metadata 綁定（Ref. 59）。ATM 將這個設計空間專門化到 repository mutation：adapter-guided atoms 與 ConflictKeys 決定哪些共享寫入可被允許，而 neutral steward 則執行 governed apply。這些系統是互補的，而非可以互換的。
+
 第三組則是更上游的協作編排與效能最佳化工作，例如 MACOG、ProjectGen + SSAT、DebateCoder、Multi-Agent Code Verification 與 Singh intent-driven optimization（Refs. 20-24）。它們回答的是「如何分解任務」、「如何安排角色」、「如何驗證產物」或「如何降低 token 與延遲成本」。ATM 回答的則是較窄但關鍵的寫入前准入問題：當多個 agent 已經形成寫入意圖時，是否准入、如何准入，以及如何讓寫入成為中立且可審計的事件。
 
 下表進一步將上述差異整理為能力邊界矩陣。需要強調的是，本表比較的是各方法在共享 repository 單一治理域內，對寫入前准入與同檔案共享寫入的治理能力；並非主張所有系統的研究目標完全相同。
@@ -807,7 +811,7 @@ flowchart LR
     style L fill:#f1f3f5,stroke:#495057,color:#111
 \end{Verbatim}
 
-本節的證據由多種來源構成，包括 deterministic fixture、self-hosting forensics、外部採用研究與現場 collision records。為避免將不同來源誤讀為同一強度的單一實驗結論，以下三張表先建立 evidence boundary：Table 9 對齊 evidence bucket、觀測量與可支撐主張；Table 10 將 verdict / lane / state 對應到 admission-time、apply-phase 與 post-apply 等不同相位；Table 11 則區分已歸檔、可重現、延後與明確 out-of-scope 的實驗範圍。讀者可把這三張表視為後續 §§4.1-4.5 與 §5 的導覽索引，而不只是摘要式清單。
+本節的證據由多種來源構成，包括 deterministic fixture、self-hosting forensics、外部採用研究與現場 collision records。為避免將不同來源誤讀為同一強度的單一實驗結論，正文只保留兩張導覽表：Table 9 對齊 evidence bucket、觀測量與可支撐主張；Table 10 將 verdict / lane / state 對應到 admission-time、apply-phase 與 post-apply 等不同相位。更細的「哪些實驗已歸檔、可重放、僅摘要或明確不在本文範圍內」改由各節段落與附錄 artifact map 承接，避免 metadata 型表格彼此重疊。
 
 \noindent\textbf{Table 9 --- Evidence Boundary Overview. 此表彙整 §4.1--§4.5 使用的主要證據來源、觀測量與支撐主張；最後兩欄明示其證據邊界與 artifact 來源，避免將 adoption、self-hosting 或 extension evidence 外推為 same-file admission 的直接證據。}
 
@@ -858,31 +862,6 @@ freeze / patch-envelope（snapshot protocol） & admission re-arbitration & TASK
 \end{longtable}
 \endgroup
 
-\noindent\textbf{Table 11 --- Experiment Status Map. 本表整理本文所使用或明確排除的 deterministic、field replay、adoption summary 與 comparative experiments。狀態欄區分 archived、replayable、summary-only、deferred 與 out-of-scope，以維持 evidence claim 與可重現程度之間的一致性。}
-
-\begingroup
-\footnotesize
-\begin{longtable}{L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}}
-\toprule
-Experiment & Type & Scope & Status & Claim role \\
-\midrule
-MAO-0010 parallel routing benchmark replay & deterministic simulator & 12 scenarios，offline 確定性 & archived + replayable（\texttt{\seqsplit{docs/reports/mao-parallel-routing-benchmark.md}}） & broker admission vocabulary 對齊 \\
-ATM-AdmissionBench v0.1 baseline + v0.2 paper profile & deterministic benchmark substrate + paper-facing result & 20 scenarios / 42 comparisons；v0.1 提供 virtual-atom admission pack + conflict-arbitration pack；v0.2 補上 policy / ablation / adversarial / enforcement summary & v0.1 frozen generator commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}; v0.2 aligned generator/base commit \texttt{\seqsplit{9a0c03e59d789c76e65f2b1186acb66979cc4e89}} & baseline audit anchor + paper-facing reporting anchor \\
-B-02 / B-08 / B-13 deterministic runner MVP replay & deterministic fixture & 3 scenarios（physical-overlap virtual-atom decomposition / CAS base-hash stale re-plan / validator catches semantic break） & archived runner evidence；其餘 9 個 scenario 為 design matrix & mechanism validation evidence \\
-POS2 same-owner bounded admission replay & controlled field & 同檔 disjoint bounded region；雙 vendor 重放模板 \texttt{\seqsplit{bench-paper-hotfile-pos2-\{a,b\}-intent.json}} & archived + template-replayable & same-file admission positive boundary \\
-B-12 apply-phase arbitration replay & controlled field & 雙 intent admission + apply-phase active-intent enforcement & archived registry snapshot + team-run snapshots & admission-time forwarding open problem 之具體實例 \\
-BLOCK same-owner overlap + split-suggestion replay & controlled field & 同 owner 同 bounded region；focused-child prototype 路徑 & archived; split-suggestion curator / review queue artifacts available & admission fail-closed + refinement loop prototype \\
-Wave Mode 5-scenario replay & replay suite & safe-wave / unsafe-same-deliverable / mixed-dependency / per-task slicing / needs-review gating & archived（MAO-0033） & batch admission extension \\
-\texttt{\seqsplit{parallel-0041-0042}} 跨 vendor real-task collision replay & field & 5 共同檔；Cursor Composer 2.5 + Google Gemini Flash 3.5；broker$\rightarrow$wave 序列化路徑 & archived（\texttt{\seqsplit{CID-Conflict-Run-Log.md}}：\texttt{\seqsplit{67b193f9}} / \texttt{\seqsplit{c393df1d}}） & multi-vendor field collision governance path \\
-npc-brain adoption summary reconstruction & adoption metrics & 37 任務卡 / 44 scope-lock 互動 / 3 validator catches / 0 unrecovered admission error & descriptive cohort summary only; event-level ledger retained in adoption notes and not independently reproduced from a public export in this paper & adoption / recoverability evidence \\
-Self-hosting governance coverage recomputation & self-host metrics & 95 / 100；84\%（514 / 609）；100\% command（55 / 55） & recomputable from governance coverage report & self-hosting governance substrate \\
-STORM / CodeCRDT / SCF / CoAgent 對照式 throughput benchmark & comparative & end-to-end conflict catch rate / wall-clock / token cost & \textbf{deferred to future work}；本版不承諾 & §5 limitations \\
-AgenticFlict 重放 ATM broker（142K agent PR / 27.67\% conflict / 336K+ region） & comparative replay & 跨 PR / Git merge sample $\rightarrow$ 單一治理域寫入前 intent 重放工作負載 & \textbf{deferred}，需先建立轉換層；本版不執行 & §5 limitations / motivation only \\
-跨 clone 分散式 admission 模擬 & distributed & 多 worktree / 多 clone 場景 & \textbf{out of scope}（§3.7, §5）；非本文 deliverable & §3.7 explicit non-goal \\
-\bottomrule
-\end{longtable}
-\endgroup
-
 \subsection{Deterministic Fixture Design（12 scenarios）與已歸檔 MVP 證據（3 archived）}
 
 \textbf{重要前置說明：} 本節的 evidence 強度分兩層 ------「12-scenario」指的是 \textbf{設計矩陣（design matrix）}，「3 archived」指的是 \textbf{已完成 deterministic runner 並歸檔證據} 的核心情境（B-02、B-08、B-13）。其餘 9 個情境屬於本版尚未完跑的設計覆蓋藍圖，列入 §5 limitations 與 future work，而非已驗證 deliverable。
@@ -911,43 +890,13 @@ validator fallback & A2 boundary & 靜態模型外動態錯誤由 validator 補�
 
 \subsection{Self-Hosting Forensics}
 
-本節提供的是 \textbf{self-hosting governance evidence}：它不主張外部效度，而是用來說明 ATM 在治理自身 framework 與論文工件時，是否已具備可追溯的治理基礎與可回饋的缺口揭露能力。Table 13 先給出最小但可追溯的 self-hosting 覆蓋概況，避免將 ATM 自我治理誤解為少數示範案例。這些指標不等同於宣稱所有治理 surface 均已完成細粒度原子化；它們要表達的是，ATM 對自身的 atomization governance 已具備可量化的系統性基礎。
-
-\noindent\textbf{Table 13 --- Self-Hosting Atomization Governance Coverage.}
-
-\begingroup
-\footnotesize
-\begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
-\toprule
-指標 & 數值 & 解讀 \\
-\midrule
-overall self-hosting atomization score & 95 / 100（Grade A） & 顯示 ATM 對自身治理已達高成熟度，但仍非全域完備 \\
-production source ownership coverage & 84\%（514 / 609） & 多數 production source 已被 atom / atom map 治理，另有 95 個 production paths 尚未納入 ownership coverage \\
-public command coverage & 100\%（55 / 55） & 對公開 CLI command surface 已建立完整治理規格對應 \\
-atom evidence completeness & 100\%（7 / 7 with test, rollback, provenance, report） & 目前納入 self-hosting 核心 evidence 的 atom 皆具備完整佐證鏈 \\
-next high-ROI gap & source ownership coverage：84\% -> 95\% & 主要缺口不是 command surface，而是 production source ownership 的持續補齊 \\
-\bottomrule
-\end{longtable}
-\endgroup
+本節提供的是 \textbf{self-hosting governance evidence}：它不主張外部效度，而是用來說明 ATM 在治理自身 framework 與論文工件時，是否已具備可追溯的治理基礎與可回饋的缺口揭露能力。為避免正文再出現兩張彼此緊鄰、且一張只給 coverage 一張只給 incident type 的 metadata 表，本文改把最重要的 coverage 指標直接收進段落：overall self-hosting atomization score 為 \textbf{95 / 100（Grade A）}；production source ownership coverage 為 \textbf{84\%（514 / 609）}；public command coverage 為 \textbf{100\%（55 / 55）}；目前納入 self-hosting 核心 evidence 的 atom，其 evidence completeness 為 \textbf{100\%（7 / 7 with test, rollback, provenance, report）}。這些數值的作用，是說明 ATM 對自身治理已具備可量化基礎，但仍有明確可數的高 ROI 缺口，尤其是尚未納入 ownership coverage 的 95 個 production paths。
 
 ATM 自身開發過程提供了一組內部真實證據。這些事件不是事後整理的展示案例，而是 framework 在治理自身時實際遇到的 collision、freeze、scope 與 sync 問題。特別地，ATM 的 reporting window 包含多個不同 vendor / editor channel 的 LLM 代理，在同一受控 worktree 或同一服務域中共同修改 ATM framework 與 paper artifacts；本文將此視為自指式 self-hosting 證據，而非受控基準實驗。其意義在於，ATM 並非僅被設計為多代理治理框架，而是在自身演進中直接承受多代理、多供應商與同一治理域的寫入壓力。本文保留三類代表性事件。
 
-\noindent\textbf{Table 14 --- Self-Hosting Incident Types.}
+正文保留三類代表性 self-hosting incidents：\texttt{\seqsplit{cid-shared collision}}（兩個 intent 同時 claim 相同 atom CID，觸發 freeze / patch-envelope / conflict-matrix path）、\texttt{\seqsplit{out-of-scope delivery}}（delivery touch 超出宣告 scope，促成 closure packet waiver 與 scope gate 強化），以及 \texttt{\seqsplit{plan-mirror sync failure}}（planning side 與 target ledger closeout 不一致，促成 mechanized open/close 與 ledger consistency check）。這三類型的詳細 outcome / interpretation 留待 Appendix A.5 的濃縮事件表承接，正文只保留它們作為 governance evidence 的功能定位。
 
-\begingroup
-\footnotesize
-\begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
-\toprule
-事件類型 & 觀察到的問題 & 對 ATM 的意義 \\
-\midrule
-cid-shared collision & 兩個 intent 同時 claim 相同 atom CID & 觸發 freeze / patch-envelope / conflict-matrix path \\
-out-of-scope delivery & delivery touch 超出宣告 scope & 促成 closure packet waiver 與 scope gate 強化 \\
-plan-mirror sync failure & planning side 與 target ledger closeout 不一致 & 促成 mechanized open/close 與 ledger consistency check \\
-\bottomrule
-\end{longtable}
-\endgroup
-
-為了避免讀者誤以為這三類事件就是 ATM 自宿觀察的全部 collision，本文補上 self-hosting window 的工作量基線。AAF 框架本體自 2026-05-01 起的觀察窗口內累積約 1,372 個 governed commits；同期 3KLife 在 2026-05-19 至 2026-06-07 三週 npc-brain 對齊窗口中累積 320 個 governed commits，並由 15 個不同 vendor / editor channel 的 AI agent（含 \texttt{\seqsplit{claude-code-*}}、\texttt{\seqsplit{codex-gpt-5.*}}、\texttt{\seqsplit{antigravity-gemini-3.5-flash}}、\texttt{\seqsplit{vs-code-copilot-agent}}、\texttt{\seqsplit{vs-insiders-gpt-5.4}} 等變體）共同寫入。這是一個高頻、多供應商、同治理域的 workload；Table 14 三類事件即在此 workload 下被反覆觸發、被機制吸收、被導向 freeze / patch-envelope / waiver / mechanized closeout。本文無法宣稱所有 collision 都已被計入 incident ledger，但可說明：在此 \textasciitilde{}1,700 commits 等級的自宿樣本中，「無法被治理層吸收」的事件不是少數展示案例，而是已被機制化處理的常態；其證據強度因此高於 anecdote，但不等同於對照基準。
+為了避免讀者誤以為這三類事件就是 ATM 自宿觀察的全部 collision，本文補上 self-hosting window 的工作量基線。AAF 框架本體自 2026-05-01 起的觀察窗口內累積約 1,372 個 governed commits；同期 3KLife 在 2026-05-19 至 2026-06-07 三週 npc-brain 對齊窗口中累積 320 個 governed commits，並由 15 個不同 vendor / editor channel 的 AI agent（含 \texttt{\seqsplit{claude-code-*}}、\texttt{\seqsplit{codex-gpt-5.*}}、\texttt{\seqsplit{antigravity-gemini-3.5-flash}}、\texttt{\seqsplit{vs-code-copilot-agent}}、\texttt{\seqsplit{vs-insiders-gpt-5.4}} 等變體）共同寫入。也就是說，這些 incident 並非脫離真實 workload 的 anecdote，而是在約 1,700 commits 等級的多供應商同域工作負載下，被治理層反覆吸收與回饋的 operational evidence；其證據強度高於示範案例，但仍不等同於對照基準實驗。
 
 這些 forensics 的角色，是說明 ATM 的 governance layer 不是事後美化的規格，而是在自身開發中反覆暴露缺口並回饋機制。它不是受控對照實驗，也不是產品展示，而是一組可追溯的 self-hosting field evidence；其證據強度低於受控基準實驗，但高於單純設計論述。
 
@@ -1066,7 +1015,7 @@ CID stability 的延伸價值則在於把「候選治理單位」與「驗證後
 \toprule
 Plane（§3.1） & 主要治理機制 & 本文現有證據 & 證據類型 & 來源章節 \\
 \midrule
-\textbf{Task-contract plane} & task intent、allowed files、forbidden rules、scope paths、direction lock & 三週 npc-brain adoption window 內 \textbf{44 次 scope-lock interactions} 與 \textbf{2 次 out-of-scope proposal 之正確拒絕}；3KLife 自託管之 out-of-scope delivery requiring waiver incident（Table 14, \texttt{\seqsplit{TASK-CID-0041}}）展示 scope drift 於 closure-time 被攔下並補登 waiver & adopter-side field evidence + self-hosting forensics（descriptive cohort / operational evidence；不含 public independently reproduced statistic 或 population-level error rate） & §4.3 Table 15；§4.2 Table 14；§A.5 \\
+\textbf{Task-contract plane} & task intent、allowed files、forbidden rules、scope paths、direction lock & 三週 npc-brain adoption window 內 \textbf{44 次 scope-lock interactions} 與 \textbf{2 次 out-of-scope proposal 之正確拒絕}；3KLife 自託管之 out-of-scope delivery requiring waiver incident（\texttt{\seqsplit{TASK-CID-0041}}）展示 scope drift 於 closure-time 被攔下並補登 waiver & adopter-side field evidence + self-hosting forensics（descriptive cohort / operational evidence；不含 public independently reproduced statistic 或 population-level error rate） & §4.3 Table 15；§4.2 incidents；§A.5 \\
 \textbf{Mutation-admission plane}（CID broker subsystem） & atoms、CID、ConflictKey、read/write set、active registry、broker、neutral steward & \textbf{AdmissionBench v0.1 + v0.2}：v0.1 提供 20 scenarios / 42 mode comparisons / 42 matched expectations / \textbf{0 expectation failures} / \textbf{0 false-safe regressions} / 92.31\% unsafe-caught 的 frozen baseline；v0.2 在同一 benchmark family 上補上 route F1 = 1.000、intent preservation = 97.62\%、252 policy rows、294 ablation rows、4 enforcement rows；另有 POS2 同檔 bounded-region admission existence proof、B-12 late enforcement、BLOCK split suggestion 與 3 archived deterministic runner cases（B-02 / B-08 / B-13） & baseline benchmark substrate + paper-facing benchmark result + field existence proof + dual failure-mode field cases & §5.1 Tables 18--19；§4.4；§4.1 \\
 \textbf{Evidence-closure plane} & validation commands、validator envelope、evidence blocker、review advisory、closure packet & npc-brain cohort 之 \textbf{3 次 post-write validator catches} 與 \textbf{1 次 scope-lock contention burst} 經 ledger-replay 完成 recovery；npc-brain 同窗 \textbf{0 unrecovered admission errors}；3KLife plan-mirror sync failures（\texttt{\seqsplit{TASK-CID-0043/0044/0045}}）以 repair commits 補回 closure packets，顯示 closeout 漂移可被 ledger consistency check 攔下 & descriptive cohort / operational evidence + self-hosting forensics（含正向 catch 與漂移 recovery，但不含 public independently reproduced statistic 或 catch-rate denominator） & §4.3 Table 15；§A.5 \\
 \bottomrule
@@ -1133,6 +1082,8 @@ Ship-safe & yes & yes \\
 \endgroup
 
 在此基礎上，Table 19 進一步把正文真正引用的 v0.2 主結果濃縮成單張摘要表，方便對應 Results、Ablation 與 enforcement-timing 敘事。這張表其實混合呈現三個不同 row universe：\texttt{\seqsplit{252 policy rows}}、\texttt{\seqsplit{294 ablation rows / 210 adversarial rows}}，以及 \texttt{\seqsplit{51-row enforcement-timing projection}}。其中 forwarding rows 使用 51-row enforcement-timing projection 作為分母，該 projection 由 v0.2 policy-view route outcomes 彙整而來；因此 9 + 6 + 3 + 0 + 33 = 51 並不應與 42 mode comparisons、252 policy rows 或 4 enforcement rows 直接相加或互作分母。
+
+也因此，本文不將 AdmissionBench 的 20 scenarios、42 mode comparisons 或各類 policy / ablation rows，與 SyncMind / SyncBench 的 24,332 out-of-sync instances 視為同一種樣本數主張（Ref. 60）。SyncBench 衡量的是 agent belief state 與 evolving repository state 脫節後的 recovery；AdmissionBench 衡量的是單一治理域內、共享寫入發生前的 admission verdict、layer ablation 與 enforcement timing。兩者可互補，但不應以 raw instance count 直接比較 benchmark 規模或證據強度。
 
 \noindent\textbf{Table 19 --- ATM-AdmissionBench v0.2 Paper-Facing Summary.}
 
@@ -1240,6 +1191,8 @@ Adapter-guided 會在七種情境失效或降級。第一，adapter capability i
 
 此外，ATM 與 CoAgent（Ref. 14）可形成互補 pipeline。ATM 可先在 code-region / artifact-region 層做 preventive admission；若 intent 被序列化但後續 tool chain 仍有不可事前宣告的 side effects，CoAgent 類 MTPO repair path 可承接 reactive recovery。類似地，若未來系統需要更早抑制代理間的語境漂移，則可在 broker 前方再疊加 context-drift synchronization 類同步層（屬尚未完整文獻化之研究方向，相關失敗模式分析見 Pan et al., Ref. 7），以降低被 admission 擋下前就已消耗掉的無效推理成本。這表示 future system 不必在 preventive、advisory 與 synchronization 之間二選一，而可依 layer 分工。
 
+SyncMind / SyncBench 可作為此方向的未來外部 replay source（Ref. 60），但需先將 out-of-sync recovery instances 轉換為單一治理域內的 pre-write intent workload。換言之，SyncBench 適合檢驗 ATM 前方或旁路的 state-synchronization / recovery layer，並可補強外部效度；它不是本版 AdmissionBench 的直接對照組，也不是本文當前主結果的分母來源。
+
 \medskip
 
 \subsection{Deployment Topologies and Future Work}
@@ -1297,7 +1250,7 @@ The author used large language model assistants during manuscript preparation fo
 
 \section*{A.1 Evidence Artifact Map}
 
-本附錄列出 paper-citable evidence 的建議入口。具體 artifact 名稱與 commit 應以 repository 內實際檔案為準。各表分工如下：A.1 提供 evidence artifact 入口索引，A.2 摘要主要機制的 implementation status 與證據角色，A.3 對應 paper claim 至 source path 與驗證命令，A.4 則專門補充 Topology C 的橋接細節與驗證範圍。
+本附錄列出 paper-citable evidence 的建議入口。具體 artifact 名稱與 commit 應以 repository 內實際檔案為準。為避免附錄本身再出現索引表重疊，Appendix A 只保留三種功能：A.1 提供 evidence artifact 入口索引，A.3 對應 paper claim 至 source path 與驗證命令，A.4 專門補充 Topology C 的橋接細節與驗證範圍。原本較摘要式的 implementation-status 說明，改併入這段導讀文字，不再另立一張表。
 
 \textbf{證據可取得性與 release 對應（reproducibility statement）：}
 
@@ -1331,25 +1284,7 @@ Wave Mode / CID stability & orchestration extension and identity substrate evide
 
 \section*{A.2 Implementation / Commit Provenance}
 
-ATM 的主要實作家族包含 broker decision、virtual-atom refinement（legacy implementation name: AGR）、neutral steward、freeze / patch-envelope / conflict-matrix、format adapter、Wave Mode 與 CID verification。正文刻意避免列出大量 task IDs；此表僅保留機制層的 implementation status 與證據角色摘要，較細的 source path 與驗證命令則留待 A.4.1。
-
-\noindent\textbf{Table A.2 --- Implementation Status and Evidence Role.}
-
-\begingroup
-\footnotesize
-\begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
-\toprule
-Mechanism & Implementation status & Evidence role \\
-\midrule
-CID broker & implemented & admission core \\
-virtual-atom refinement (legacy AGR implementation) & implemented / partially policy-bound & refinement path \\
-Neutral steward & implemented & sole write path \\
-Format adapters & implemented for selected formats & format-agnostic generalization \\
-Wave Mode & validated & batch orchestration extension \\
-CID migration & open & future engineering note \\
-\bottomrule
-\end{longtable}
-\endgroup
+ATM 的主要實作家族包含 broker decision、virtual-atom refinement（legacy implementation name: AGR）、neutral steward、freeze / patch-envelope / conflict-matrix、format adapter、Wave Mode 與 CID verification。正文刻意避免列出大量 task IDs；附錄則把較可驗證的 claim $\rightarrow$ source path $\rightarrow$ verification route 直接集中到 A.4.1，而不再先經過一張較摘要式的 implementation-status 表，以免和 A.1 artifact index、A.4.1 verification map 形成三層索引重疊。
 
 \section*{A.3 CID Schema Migration Candidate Paths}
 
