@@ -6,7 +6,7 @@
 
 作者: Eaglhuang
 Email: eaglhuang@gmail.com
-日期: 2026-06-23
+日期: 2026-06-26
 狀態: Draft v3.1 expanded baseline（arXiv full-paper track；single-domain boundary / progressive atomization / POS2 / B-12 evidence / expanded related work）
 Repository: https://github.com/eaglhuang/AI-Atomic-Framework
 
@@ -14,21 +14,25 @@ Repository: https://github.com/eaglhuang/AI-Atomic-Framework
 
 ## Abstract（摘要）
 
-多代理 LLM 系統已能將軟體工程任務分解為規劃、生成、驗證與修復等協作流程，但在多個代理即將寫入同一共享程式庫之前，現有系統仍缺少一個位於寫入前、可審計且可重放的准入層。本文聚焦於一個刻意收斂的單一治理域問題：在同一受控檔案系統、worktree 或服務域內，當多個 agent 已形成寫入意圖但尚未實際落筆時，系統如何判斷哪些意圖可並行、哪些需要合成或序列化，以及哪些必須保守阻擋。
+多代理 LLM 已能將軟體工程任務切分為規劃、生成、驗證與修復，但在多個代理於同一受控檔案系統、worktree 或服務域內「尚未落筆前」形成寫入意圖時，現有框架仍缺少一個可審計、可重放的入場前治理層。ATM 聚焦於這個單一缺口：系統如何在共享治理域中判斷哪些寫入可並行、哪些需合成、哪些需序列化，及哪些應保守封鎖。
 
-**ATM 並非僅是一個 concurrency broker。** 它是一個更廣的 **specification-to-evidence governance substrate**，將 task intent、repository scope、write admission、validators 與 evidence obligations 綁定於同一條治理路徑；其中 CID-brokered pre-write admission 作為 **共享變更准入子系統（shared-mutation admission subsystem）** 治理共享 repository mutations。
+本文將 ATM 定位為 **specification-to-evidence governance substrate**，而非單純 concurrency broker：它把 task intent、repository scope、write admission、validator 與 evidence obligation 結合為一條單域治理鏈；CID broker 僅是其中的共享變更准入子系統，用於治理 shared repository mutation 的進入權。核心流程為 adapter-guided atomization 將 intent 映射成 semantic atoms，經 CID-brokered admission 做並行／序列化／阻擋判斷；當 atom map 覆蓋不足時，virtual atom 作為過渡治理單位保留 bounded-region 比較能力；實際寫入則由同一治理域內的 neutral steward 執行，避免多個代理直接在共享檔案直接落筆。
 
-本文提出 AI-Atomic-Framework（ATM），一個以 specification-grounded governance substrate 為框架、以 adapter-guided atomization、atom map、virtual atom 與 CID broker 為共享變更准入子系統的多廠商 LLM 程式碼共合成框架。ATM 將模糊的寫入意圖轉換為可治理的 semantic atoms，並以 atom map 對齊 owner、dependency、validator、CID、hash lock 與 shared surface；當正式 atom map 覆蓋不足時，系統以 virtual atom 暫時治理未原子化區段，使 broker 仍能進行 bounded-region comparison。基於上述結構，ATM 以 seven-layer pre-write admission gate 檢查 CID identity、shared surface、read/write dependency、file range、ConflictKey、CAS base-hash 與 fallback file lock，並將結果導向 parallel-safe、composer-routed admission、SERIAL 或 fail-closed refinement path。實際寫入則由同一治理域內的 neutral steward 執行，以避免多個 agent 各自直接修改共享檔案。
-
-本文以分層且可追溯的證據鏈支持此設計：（i）一個 12-scenario deterministic fixture 設計矩陣與其中三個已歸檔的 deterministic runner 案例，用於驗證 broker 之 decision surface；（ii）一份歷時三週的外部採用者治理觀察，提供 adopter-side recoverability evidence；（iii）一個完整歸檔的同檔案 bounded-region admission 正向案例，連同 admission-time 漏抓但 apply-time fail-closed 的負向案例，以及 admission-time 直接阻擋的負向案例，共同構成「正向 existence proof + 雙向 failure mode」之證據三角；（iv）批次排程與 CID identity 穩定性之延伸觀察，作為治理延伸能力之佐證；（v）一條由 **v0.1 baseline** 與 **v0.2 paper profile** 組成的 AdmissionBench 證據鏈，其中 v0.1 凍結 benchmark substrate 與 blind-audit 邊界，v0.2 則提供 paper-facing result：在同一 20-scenario / 42-comparison benchmark family 上維持 0 expectation failures、0 unresolved rows、ATM-full route F1 = 1.000，並以 252 policy rows、294 ablation rows、210 adversarial rows 與 4 enforcement rows 支撐正文中的 Results 與 Ablation 敘事。本文不主張取代 Git merge，也不宣稱解決跨 clone 或跨 PR 的分散式衝突；本文的核心主張是，在單一受控治理域內，ATM 提供了一個可實作、可審計、可由 `generator-manifest.json`、`summary.json` 與 `paper-tables.md` 交叉查核、且可逐步擴充的寫入前准入層。
+本文以「五條 evidence strands」支持上述主張：  
+（i）12-scenario deterministic fixture 與三個 archived runner cases（decision surface）；  
+（ii）三週外部採用者治理觀察（adopter-side recoverability）；  
+（iii）一條完整歸檔的 POS2 正向、兩類負向案例（admission-time 漏抓、apply-time fail-closed、admission-time 直接阻擋）；  
+（iv）批次排程與 CID identity 穩定性延伸觀察；  
+（v）由 **v0.1 baseline** 與 **v0.2 paper profile** 共同組成的 ATM-AdmissionBench：v0.1 提供凍結 benchmark/substrate 與盲審邊界，v0.2 提供論文結果層（20-scenario / 42-comparison、0 expectation failures、0 unresolved rows、ATM-full route F1 = 1.000，並有 252 policy rows、294 ablation rows、210 adversarial rows、4 enforcement rows）。  
+這五條證據支持「單一治理域內的可行性」與「有界 recoverability」，但不構成對其他併發控制系統的全面比較性優劣結論。ATM 不取代 Git merge，也不涵蓋跨 clone 或跨 PR 的分散式治理。核心主張限定於：在單一受控治理域內，ATM 提供可實作、可審計且可逐步擴充的入場前準入層（可由 `generator-manifest.json`、`summary.json` 與 `paper-tables.md` 交叉查核）。
 
 ## 1. Introduction（緒論）
 
 ### 1.1 Motivation
 
-本文的核心問題不是代理能否各自生成可用程式碼，而是當多個代理同時碰觸同一檔案、同一登錄表、同一設定表、同一生成產物或同一任務狀態機時，系統能否在寫入前判斷哪些意圖可並行、哪些必須序列化、哪些應立即阻擋。ATM 將此問題界定為同一治理域內的 pre-write admission problem；其處理範圍不涵蓋跨機器 clone、remote branch 或 PR merge 的分散式協調，而是專注於實際寫入發生前的可審計准入決策。此問題位於更廣的 LLM-for-SE landscape 中：近期 systematic literature review（Hou et al., 2024, Ref. 42）已將 LLM 在軟體工程之應用劃分為 code generation、testing、maintenance 與 coordination 等多個 sub-area，並指出 multi-agent coordination 是 emerging 而尚未成熟之主題；本文之 pre-write admission layer 即落在此 coordination 子主題之新缺口上。
+本文的核心問題不是代理能否各自生成可用程式碼，而是當多個代理在同一 **single controlled filesystem / worktree / service domain** 內形成共享寫入意圖時，系統能否在真正落筆前判斷哪些意圖可並行、哪些必須序列化、哪些應立即阻擋。ATM 將此問題界定為同一治理域內的 pre-write admission problem；same-file、shared registry、generated artifact 與 task-state machine 只是這個統一邊界下的不同表現型，而非彼此獨立的 claim scope。本文不處理跨機器 clone、remote branch 或 PR merge 的分散式協調，而是專注於實際寫入發生前的可審計准入決策。此問題位於更廣的 LLM-for-SE landscape 中：近期 systematic literature review（Hou et al., 2024, Ref. 42）已將 LLM 在軟體工程之應用劃分為 code generation、testing、maintenance 與 coordination 等多個 sub-area，並指出 multi-agent coordination 是 emerging 而尚未成熟之主題；本文之 pre-write admission layer 即落在此 coordination 子主題之新缺口上。
 
-近年的 repository-level code generation benchmarks 已清楚顯示，現代 AI coding 不再只是單檔或單函式生成。RepoBench（Liu et al., 2024）與 CrossCodeEval（Ding et al., 2023）將評估推向既有 codebase 中的 repository-level completion 與 cross-file context retrieval（Refs. 33, 34）；FEA-Bench（Li et al., 2025）進一步要求模型在既有 repository 中實作新功能，並同時新增與修改多個相關檔案（Ref. 35）；CodeS（Zan et al., 2025）與 NL2Repo-Bench（Ding et al., 2025）則把問題推到 from-scratch repository generation，使模型必須從自然語言需求生成完整 repository、維持 API 與 package layout 一致，並通過 execution-based tests（Refs. 36, 37）。2024–2026 進一步出現多條補強路線：Commit0（Ref. 43）以 library-from-scratch 生成評估長程規劃；PaperBench（Ref. 44）評估從研究論文重建可執行 codebase 的能力；FeatureBench（Ref. 45）將測試聚焦於 end-to-end agentic feature development；RACE-bench（Ref. 46）加入中間推理品質評估而不僅看終測 pass；SWE-PolyBench（Ref. 47）擴展為跨語言 repository-level benchmark；GitTaskBench（Ref. 48）則覆蓋更廣的 realistic repository-leveraging workflows。這些 benchmark 共同說明：repository-level 任務的困難，來自跨檔案依賴、長程規劃、局部修改與全域一致性之間的張力。
+近年的 repository-level code generation benchmarks 已清楚顯示，現代 AI coding 不再只是單檔或單函式生成。從 RepoBench、CrossCodeEval、FEA-Bench、CodeS 與 NL2Repo-Bench（Refs. 33-37），到較新的 Commit0、PaperBench、FeatureBench、RACE-bench、SWE-PolyBench 與 GitTaskBench（Refs. 43-48），研究共同把評估往跨檔案依賴、長程規劃、局部修改與全域一致性推進。這些 benchmark 的共同訊息不是「模型能改更多檔案」而已，而是 repository-level 任務天然會把多處共享 surface 拉進同一條交付路徑；一旦多個 agent 同時參與同一工作流，寫入前治理就不再是可省略的 implementation detail。
 
 同時，多代理與並行控制研究也開始直接面對「共享狀態」問題。CodeTeam（Wang et al., 2026）透過 machine-checkable contract、file ownership 與 dependency-aware scheduling 來降低 repository construction 中的跨檔案漂移（Ref. 25）；CoAgent（Lyu et al., 2026）則從 tool/action 級別處理多代理共享狀態的 concurrency control，主張以 MTPO、filtered reads 與 saga-style compensation 支援長時間 agent 任務（Ref. 14）；S-Bus（Khan, 2026）以 HTTP middleware 與 DeliveryLog 在 commit time 重建 read set，提供 Observable-Read Isolation 以避免 shared-shard structural races（Ref. 26）。另一方面，AgenticFlict（Ogenrwot and Businge, 2026）在大規模 AI coding agent pull requests 中觀察到 substantial merge-conflict pressure，說明 AI-generated changes 在下游 Git / PR 階段已經累積可觀衝突負擔（Ref. 18）。
 
@@ -40,19 +44,19 @@ Repository: https://github.com/eaglhuang/AI-Atomic-Framework
 
 ### 1.2 錯誤的二分法
 
-本文拒絕一個常見但不必要的二分法：要嘛採用字元級 CRDT（Ref. 12），接受其語義盲點；要嘛採用完整 AST 或全域語意圖，承擔高昂的工程成本與 false-positive 風險。對多代理共享程式庫寫入而言，最小可行的治理單位通常不是字元，也不必然是完整 AST，而是由 domain adapter 提供的 atom、bounded region、CID 與 shared surface。
+本文拒絕一個常見但不必要的二分法：彷彿多代理共寫只剩兩個極端選項，一端是字元級 CRDT（Ref. 12）及其文字收斂邏輯，另一端是要求所有語言與格式都先落入完整 AST 或全域語意圖，再談共享寫入治理。實際上，現有方法分佈在一條更寬的治理粒度光譜上，從文字收斂、區域比對、檔案級 ownership，到工作流與驗證邊界，各自回答不同層級的協調問題。對多代理共享程式庫寫入而言，最小可行的治理單位通常不是字元，也不必然是完整 AST，而是由 domain adapter 提供的 atom、bounded region、CID 與 shared surface。
 
-ATM 因此採取第三條路：adapter-guided atomization 加上 broker 准入。Adapter 不被要求理解所有語言語意，而是負責以足夠保守的方式宣告 candidate atom、source path、range、read/write dependency、ConflictKey 或 shared surface；broker 則不相信 LLM 的自由判斷，而是根據上述結構化資料做 deterministic admission decision。換言之，ATM 的設計不是將所有推理交給 LLM，也不是將所有語言強制塞進單一 AST，而是在工程上可落地的 adapter contract 與內建治理骨架上建立寫入前治理。
+ATM 採取的是這條光譜中的中間治理層：adapter-guided atomization 加上 broker 准入。Adapter 不被要求理解所有語言語意，而是負責以足夠保守的方式宣告 candidate atom、source path、range、read/write dependency、ConflictKey 或 shared surface；broker 則不相信 LLM 的自由判斷，而是根據上述結構化資料做 deterministic admission decision。換言之，ATM 的設計不是將所有推理交給 LLM，也不是將所有語言強制塞進單一 AST，而是在工程上可落地的 adapter contract 與內建治理骨架上建立寫入前治理。
 
-更精確地說，ATM 的發明直覺是逐層剝離衝突粒度。第一層先確認是否只是不同檔案或不同 artifact；第二層以 adapter 找出既有 semantic atoms；第三層以 atom map 連接測試、驗證、owner、dependency 與 shared surface；第四層在既有 atom 不足時建立 virtual atoms，讓未原子化段落也能被定位、比較與重算 CID。只有當這些層次都無法證明 disjoint 時，ATM 才將 intent 視為真正衝突並 fail closed。這使 ATM 的核心不只是「更細的 diff」，而是將模糊寫入意圖轉換為可審計准入證據的過程；後文的貢獻與實證，也都圍繞這條主線展開。
+更精確地說，ATM 的發明直覺是逐層剝離衝突粒度。第一層先確認是否只是不同檔案或不同 artifact；第二層以 adapter 找出既有 semantic atoms；第三層以 atom map 連接測試、驗證、owner、dependency 與 shared surface；第四層在既有 atom 不足時建立 virtual atoms，讓未原子化段落也能被定位、比較與重算 CID。只有當這些層次都無法證明 disjoint 時，ATM 才將 intent 視為真正衝突並 fail closed。這使 ATM 的核心不只是「更細的 diff」，而是把模糊寫入意圖轉換為可審計准入證據的過程；後文的貢獻與實證，也都圍繞這條主線展開。
 
 ### 1.3 Contributions
 
 本文的貢獻不在於再提出一個新的多代理編排器，而在於把單一治理域中的共享寫入，重述為一個可形式化、可計算、可審計的寫入前准入問題。本文將核心貢獻歸納為三點；證據、adopter study、self-hosting evidence 與 limitations 則放入 §4-§6 支撐，而不在本段混成額外貢獻。
 
 1. Seven-layer pre-write admission with virtual-atom fallback. 我們提出一個七層寫入前硬性准入閘門，將多代理寫入意圖依序通過 CID identity、shared surface、read/write dependency、file range / virtual-atom refinement、ConflictKey + canMerge、CAS base-hash 與 fallback file lock 等檢查。此閘門的目的不是在事後修補 merge conflict，而是在寫入發生前判斷 intent 是否可並行、是否需 deterministic composer / neutral steward 代為合成、是否必須序列化，或是否應 fail closed。更重要的是，ATM 不假設 atom map 一開始就完整：當既有原子化覆蓋率仍不足、adapter 尚無法把所有區段歸入穩定 semantic atoms，或同檔案區域仍無法被可靠比較時，系統以 virtual atom 作為暫時治理單位。Virtual atom 讓未原子化段落仍可被定位、建立 provisional ConflictKey、重算候選 CID、進行 bounded-region disjointness 檢查，並在無法證明安全時保守拒絕。這使 ATM 的核心貢獻不是「允許更多並行」，而是提供一個從粗粒度檔案競爭逐層收斂到可審計准入判斷的 deterministic gate。
-2. **A specification-to-evidence governance substrate.** ATM 將 agent 任務表述為一個結構化執行契約（structured execution contract），內含 approved task intent、allowed / forbidden scope、deliverables、validation commands 與 evidence obligations。**Task-direction lock** 與 **pre-tool scope gate** 約束未授權之行動於變更發生前；**validator envelope**、**evidence blocker**、**review advisory** 與 **closure packet** 約束無證據支撐之完成宣稱於執行之後。此 substrate **不**同步代理之 latent belief，也**不**保證 semantic correctness；它限制的是「specification drift / scope drift / unsupported reasoning」轉化為「未經治理之 repository mutation」或「不可審計之 task closure」的程度。框架由三個 plane 構成：**Task-contract plane**（任務契約：agent 被授權做什麼）、**Mutation-admission plane**（共享變更准入：此刻的共享寫入能否發生）、**Evidence-closure plane**（證據封閉：能否合理宣稱任務完成）。**CID broker 於此 substrate 中作為 Mutation-admission plane 之子系統運作**；本貢獻中所提之 candidate atom bridging、atom-map projection、CID / hash-lock 計算、virtual atom fallback、ConflictKey 比對、adapter-declared read/write dependency、deterministic composer 與 neutral steward apply path 等內建能力，共同實作該子系統並計算 Contribution 1 所需之准入決策資料。
-3. Format-extensible atomization abstraction with explicit adapter contracts. 我們提出在明確 adapter 契約下的原子化抽象：atom 不是語法上最小的 token 或 AST node，而是寫入前仲裁所需的最小可治理語意單位；atom map 則將 bounded surface、owner、validator、dependency、CID、hash lock 與 shared surface 對齊成可查詢的治理索引。ATM 因此不強制所有語言服從單一 universal AST，也不把語意判斷完全交給 LLM，而是透過 `AtomizationPlanningAdapter` / `FileMutationAdapter` 介面，讓不同語言與格式以自己的方式回報 candidate atoms、ranges、read/write dependencies、ConflictKeys、virtual atom boundaries 與 validation hooks。這個設計讓 TypeScript、Python、JSON、Markdown 或其他結構化 artifact 都能在同一 broker model 下被治理，同時保留各語言 adapter 對語法、格式與專案慣例的局部知識。本文的第三項貢獻因此是把「原子化」從單一語言技巧提升為可擴充、但仍受 adapter contract 約束的 repository governance interface；跨語言 identity 與更強的語義對齊仍屬後續工作。
+2. **規格到證據治理基底（specification-to-evidence governance substrate）。** ATM 的第二項貢獻，是把共享寫入治理放回同一條結構化執行契約中，使 task intent、scope boundary、validator 與 evidence obligation 不再分散在工具提示、人工慣例與收尾流程之間。task-direction lock、pre-tool scope gate、validator envelope、evidence blocker、review advisory 與 closure packet 共同構成這個 substrate；CID broker 則在其中扮演共享變更准入子系統。此 substrate 不同步代理的 latent belief，也不保證 semantic correctness；它限制的是 specification drift / scope drift / unsupported reasoning / state drift 如何轉化為未經治理的 repository mutation 或不可審計的 task closure。更完整的形式模型與子系統角色收斂於 §3.1。
+3. **具明確 adapter contract 的可擴充原子化抽象。** 本文的第三項貢獻，不是宣稱所有語言已被同等程度支援，而是把「原子化」提升為一個可擴充但受 contract 約束的 repository-governance interface。Atom 是寫入前仲裁所需的最小可治理語意單位；atom map 則將 bounded surface、owner、validator、dependency、CID、hash lock 與 shared surface 對齊成可查詢索引。透過 `AtomizationPlanningAdapter` / `FileMutationAdapter` 介面，不同語言與格式可以各自回報 candidate atoms、ranges、read/write dependencies、ConflictKeys、virtual atom boundaries 與 validation hooks，而不必先被壓成單一 universal AST。就目前實作覆蓋範圍而言，TypeScript 與 Python 已可視為 reference language paths；跨語言 identity 與更強的語義對齊仍屬後續工作。
 
 ### 1.4 Organization
 
@@ -64,9 +68,9 @@ ATM 因此採取第三條路：adapter-guided atomization 加上 broker 准入�
 
 ## 2. Related Work（相關研究）
 
-本文以「協調粒度」與「是否具備寫入前的預防式准入閘門」來比較相關研究。這種分層並非要將所有系統放入單一優劣序，而是說明 ATM 的貢獻位置：它不是取代 CRDT（Ref. 12）、Git、工作流編排（Refs. 2, 4, 9）或生成後驗證，而是在同一受控 worktree 或服務域的寫入前增加一層可治理的准入仲裁。換言之，本文第 2 節要回答的不是「誰比較強」，而是「哪些系統處理哪一層協調問題，而 ATM 補上的究竟是哪一層缺口」。
+本文以「協調粒度」與「是否具備寫入前的預防式准入閘門」來比較相關研究。這種分層並非要將所有系統放入單一優劣序，而是說明 ATM 的貢獻位置：它不是取代 CRDT（Ref. 12）、Git、工作流編排（Refs. 2, 4, 9）或生成後驗證，而是在同一受控 worktree 或服務域的寫入前增加一層可治理的准入仲裁。換言之，本文第 2 節要回答的不是「誰比較強」，而是三個更窄的問題：哪些工作提供 repository-level 壓力背景，哪些工作提供 boundary-enforcement precedent，哪些工作又提供更底層的合併或並行控制直覺。
 
-本文的 related work 採 citation-to-claim map，而非僅列舉相近系統：SWE-bench（Ref. 29）類研究支撐「真實 repository issue 需要跨函式、跨檔案推理」的背景；AutoGen 等多代理框架（Ref. 30）支撐「多代理編排已成熟但通常不提供程式庫寫入所有權語意」的缺口；Adya、OCC、COPS 與 CRDT 文獻（Refs. 12, 13, 31, 32）支撐「read/write dependency、isolation、causal dependency 與合併收斂」的系統基礎；CoAgent、S-Bus、CodeTeam、ATCC、STORM、CodeCRDT 與 AgenticFlict（Refs. 14, 26, 25, 6, 3, 1, 18）則構成 2025-2026 最直接的鄰近比較。這種安排使每一篇文獻都能對應到本文的 scope、mechanism 或 limitation，並降低將不同層級工作混為同一比較基準的風險。
+本文的 related work 採 citation-to-claim map，而非 citation inventory。SWE-bench（Ref. 29）類研究支撐「真實 repository issue 需要跨函式、跨檔案推理」的背景；AutoGen 等多代理框架（Ref. 30）支撐「多代理編排已成熟但通常不提供程式庫寫入所有權語意」的缺口；Adya、OCC、COPS 與 CRDT 文獻（Refs. 12, 13, 31, 32）支撐「read/write dependency、isolation、causal dependency 與合併收斂」的系統基礎；CoAgent、S-Bus、CodeTeam、ATCC、STORM、CodeCRDT 與 AgenticFlict（Refs. 14, 26, 25, 6, 3, 1, 18）則構成 2025-2026 最直接的鄰近比較。這種安排使每一篇文獻都能對應到本文的 scope、mechanism 或 limitation，並降低將不同層級工作混為同一比較基準的風險；本節後續也將沿著這三條線收斂，而不是把相鄰工作壓平成單一系統排行榜。
 
 近期 repository-level benchmark 已顯示，多檔案任務本身並非單一問題。RepoBench（Liu et al., 2024）與 CrossCodeEval（Ding et al., 2023）聚焦於既有 codebase 中的 repository-level completion 與 cross-file context retrieval（Refs. 33, 34）；FEA-Bench（Li et al., 2025）則轉向 incremental feature implementation，要求模型在既有 repository 中新增功能並同時修改相關檔案（Ref. 35）。再往前一步，CodeS（Zan et al., 2025）與 NL2Repo-Bench（Ding et al., 2025）將問題推到 from-scratch repository generation：模型從自然語言需求與空白 workspace 出發，必須生成完整 repository、維持跨檔案 API 一致性、處理 dependency layout，並通過 execution-based tests（Refs. 36, 37）。這條光譜說明，repository-level code generation 的挑戰會隨「既有結構可用程度」不同而改變；ATM 關心的則是另一個正交軸：無論任務是 completion、feature implementation 或 NL2Repo，當多個 agent 在同一治理域內形成共享寫入意圖時，是否存在一個寫入前、區域層級、可審計的 admission gate。
 
@@ -114,11 +118,13 @@ SCF、MPAC 與相關工作流治理系統處理的是角色、意圖、流程與
 
 ### 2.4 Tier 2：相近系統與 2025-2026 鄰近工作
 
-CoAgent 是 ATM 最接近的 Tier 2 系統之一（Ref. 14）。CoAgent 的出發點是多個 sub-agents 並行操作共享狀態時，傳統 2PL / OCC 會遇到兩個 agent-specific gap：一是外部世界副作用不容易被 staging 或 rollback，二是長時間任務一旦 abort 會浪費大量推理與執行成本。其 MTPO 因此偏向 tool/action 級的 advisory-reactive concurrency control：系統透過固定序與 filtered read 讓 agent 看到某個單調軌跡，對衝突採通知與局部重判斷，必要時再依 saga-style inverse action 補償已執行副作用。ATM 則偏向 code-region 級的 preventive concurrency control：它在寫入前要求 adapter 宣告 atom、range、shared surface 與靜態 dependency，由 broker 先行裁決。兩者並非同質替代品；CoAgent 較適合 read set 難以事前宣告、且 tool side effect 必須由代理自行消化的 middleware 情境，ATM 則較適合可由 adapter 還原結構化寫入範圍的程式碼與格式化產物。更重要的是，兩者可形成層次化互補：ATM 在 admission 階段先做 deterministic arbitration，將大多數可預測衝突在寫入前收斂；CoAgent 類 MTPO 則於 SERIAL 路由後承接不可事前宣告 side effect 的 reactive repair。換言之，二者並非替代關係，而是寫入前准入層與後續修復層的接續。另需指出的安全角度差異：CoAgent 的 notification → LLM self-repair 路徑本質上仰賴 LLM 對受污染區段重新推理，當該推理過程本身產生 hallucination 時，conflict 可能由 broker 層下移到 validator 或 runtime 層才被察覺；ATM 之 fail-closed 路徑則在 admission 階段以結構化判據直接拒絕，不引入第二次 LLM 推理。這不是普遍意義上的優劣，而是在 mission-critical module 中「不希望以 LLM 推理作為衝突修復主迴路」的部署偏好下，兩者出現可衡量的安全側差異。
+這一層最容易混在一起的，其實是三類問題：共享狀態的執行期衝突控制、生成後的合併修復，以及更上游的協作編排。ATM 只處理其中第一類裡面最窄的一段：**repository 內的 pre-write admission，不負責 post-hoc merge repair、一般任務編排，也不負責跨機器 PR 合併。**
 
-AgentSpawn 則代表另一種相鄰但干預時機不同的路線（Ref. 5）。它以動態生成子代理、記憶切片與多階段衝突合併，強化長週期程式碼生成中的後段協作彈性；其衝突處理重心仍偏向 post-hoc merge，包括行級自動合併、語意合併與升級處理。相較之下，ATM 的關心點更早，也更窄：在多個代理尚未真正落筆前，哪些寫入應被允許、序列化、導向 composer，或直接 fail closed。這使兩者最核心的差異不在於是否使用多代理，而在於將計算與治理成本放在「生成前的准入」或「生成後的合併」。同屬 post-hoc 路線的另一條代表性工作是 Rover（Zhang et al., 2026, Ref. 16）：它以 LLM 進行 context-aware conflict resolution，從合併衝突 hunk 中提取上下文並以模型推理建議解法。Rover 與 AgentSpawn 共同強化「合併後處理」流派的能力；ATM 則互補地將治理時點推到合併之前，使部分原本要在 Rover-style post-hoc layer 重新推理的衝突，於 admission 階段就被結構化地拒絕或序列化，降低 LLM-based 修復回合的觸發頻率。此外，Sartori（Ref. 10）將代理協作失敗中的一部分歸因於「規格落差（specification gap）」與部分知識下的協調失誤，呼應本文 §6.2 所述 adversarial / dishonest agent 與 adapter trust 風險之根源：當代理對共享 surface 的認知不一致時，無論 admission 路徑或 post-hoc 路徑都會受影響，差別僅在於失敗的偵測時點。
+第一組代表例子是 CoAgent（Ref. 14），它也是 ATM 最接近的 Tier 2 系統之一。CoAgent 的出發點是多個 sub-agents 並行操作共享狀態時，傳統 2PL / OCC 會遇到兩個 agent-specific gap：一是外部世界副作用不容易被 staging 或 rollback，二是長時間任務一旦 abort 會浪費大量推理與執行成本。其 MTPO 因此偏向 tool/action 級的 advisory-reactive concurrency control：系統透過固定序與 filtered read 讓 agent 看到某個單調軌跡，對衝突採通知與局部重判斷，必要時再依 saga-style inverse action 補償已執行副作用。ATM 則偏向 code-region 級的 preventive concurrency control：它在寫入前要求 adapter 宣告 atom、range、shared surface 與靜態 dependency，由 broker 先行裁決。兩者並非同質替代品；CoAgent 較適合 read set 難以事前宣告、且 tool side effect 必須由代理自行消化的 middleware 情境，ATM 則較適合可由 adapter 還原結構化寫入範圍的程式碼與格式化產物。更重要的是，兩者可形成層次化互補：ATM 在 admission 階段先做 deterministic arbitration，將大多數可預測衝突在寫入前收斂；CoAgent 類 MTPO 則於 SERIAL 路由後承接不可事前宣告 side effect 的 reactive repair。
 
-MACOG、ProjectGen + SSAT、DebateCoder、Multi-Agent Code Verification 與 Singh intent-driven optimization 則分別落在協作編排、架構分解、結果驗證與生產效能最佳化層（Refs. 20-24）。它們回答的是「如何分解任務」、「如何安排角色」、「如何驗證產物」或「如何降低 token 與延遲成本」。ATM 回答的則是較窄但關鍵的寫入前准入問題：當多個 agent 已經形成寫入意圖時，是否准入、如何准入，以及如何讓寫入成為中立且可審計的事件。
+第二組是生成後的衝突修復路線，代表工作包括 AgentSpawn（Ref. 5）與 Rover（Ref. 16）。AgentSpawn 以動態生成子代理、記憶切片與多階段衝突合併，強化長週期程式碼生成中的後段協作彈性；Rover 則以 LLM 進行 context-aware conflict resolution，從合併衝突 hunk 中提取上下文並以模型推理建議解法。這一組工作的共同點，是把主要計算與治理成本放在「生成後的合併與修復」。相較之下，ATM 的關心點更早，也更窄：在多個代理尚未真正落筆前，哪些寫入應被允許、序列化、導向 composer，或直接 fail closed。Sartori（Ref. 10）對 specification gap 的分析也與此相關：當代理對共享 surface 的認知不一致時，無論 admission 路徑或 post-hoc 路徑都會受影響，差別主要在失敗何時被偵測。
+
+第三組則是更上游的協作編排與效能最佳化工作，例如 MACOG、ProjectGen + SSAT、DebateCoder、Multi-Agent Code Verification 與 Singh intent-driven optimization（Refs. 20-24）。它們回答的是「如何分解任務」、「如何安排角色」、「如何驗證產物」或「如何降低 token 與延遲成本」。ATM 回答的則是較窄但關鍵的寫入前准入問題：當多個 agent 已經形成寫入意圖時，是否准入、如何准入，以及如何讓寫入成為中立且可審計的事件。
 
 下表進一步將上述差異整理為能力邊界矩陣。需要強調的是，本表比較的是各方法在共享 repository 單一治理域內，對寫入前准入與同檔案共享寫入的治理能力；並非主張所有系統的研究目標完全相同。
 
@@ -134,7 +140,7 @@ Table 2 — System Boundary Matrix.
 | CoAgent (Ref. 14) | tool/action concurrency | advisory / reactive | no hard code-region gate | no | depends on tool chain |
 | ATM | repository admission layer | preventive | yes | yes | neutral steward |
 
-Table 3 — Capability Matrix for Pre-Write Admission.
+Table 3 — ATM-Distinct Capabilities for Pre-Write Admission.
 
 | Capability | CodeCRDT (Ref. 1) | STORM (Ref. 3) | CAID (Ref. 15) | CoAgent (Ref. 14) | CodeTeam (Ref. 25) | ATM |
 |---|---|---|---|---|---|---|
@@ -144,25 +150,23 @@ Table 3 — Capability Matrix for Pre-Write Admission.
 | coverage 不足時的虛擬原子細化 | no | no | no | no | no | yes |
 | 中立寫入者／唯一正式 apply authority | no | no | partial | no | no | yes |
 
-上表顯示，ATM 的差異不在於「再次提出一個多代理框架」，而在於它同時結合了寫入前准入、same-file bounded-region admission、virtual atom refinement 與 neutral steward apply，因而補上既有方法之間長期缺少的 Tier 2 admission layer。
+Table 2 負責交代相鄰系統各自處理哪一層協調問題；Table 3 則只濃縮 ATM 在 pre-write admission 上最有辨識度的能力，而不再重複列舉整個相鄰系統版圖。兩表合起來要說明的不是「ATM 取代誰」，而是 ATM 在既有工作之間補上的那條狹窄但重要的 Tier 2 admission layer。
 
 ### 2.5 鄰近基礎
 
-OT、CRDT、two-phase locking 與 optimistic concurrency control 提供了 ATM 的基礎思想（Refs. 11-13）。Operational Transformation 譜系（Sun et al., 1998, Ref. 38；Sun and Ellis, 1998, Ref. 39）以 transform 函數於 post-hoc 階段保證 convergence、causality 與 intention preservation；其與 ATM 之分工為：OT 解決事後文字級收斂，ATM 處理事前 admission，二者層次互補而非競爭。並行控制之經典 OCC 框架（Bernstein, Hadzilacos, and Goodman, 1987, Ref. 41）則為 §3.5 Definition 7 之 CAS base-hash guarded apply 提供教科書級之 OCC 對應 — broker 之 admission verdict 對齊 OCC 之 validate 階段，steward 之 base-hash recheck 對齊 OCC 之 write 階段。ATCC 雖不是軟體工程工作流治理系統，而是資料庫 transaction engine 對 unforeseen agentic transactions 的自適應並行控制（Ref. 6），但它提醒了另一件重要的事：一旦 transaction 由長時推理、動態讀寫與高 abort cost 所主導，傳統 OCC / PCC 的成本模型便會失真。ATM 與其之關係不是同層競品，而是跨領域借鏡：它將這種「經典並行控制假設失效」的問題，帶到共享程式庫寫入之前的 admission 階段。
+OT、CRDT、two-phase locking 與 optimistic concurrency control 提供了 ATM 的基礎思想（Refs. 11-13）。Operational Transformation 譜系（Sun et al., 1998, Ref. 38；Sun and Ellis, 1998, Ref. 39）以 transform 函數於 post-hoc 階段保證 convergence、causality 與 intention preservation；其與 ATM 之分工為：OT 解決事後文字級收斂，ATM 處理事前 admission，二者層次互補而非競爭。並行控制之經典 OCC 框架（Bernstein, Hadzilacos, and Goodman, 1987, Ref. 41）則為 §3.5 Definition 3.5 之 CAS base-hash guarded apply 提供教科書級之 OCC 對應 — broker 之 admission verdict 對齊 OCC 之 validate 階段，steward 之 base-hash recheck 對齊 OCC 之 write 階段。ATCC 雖不是軟體工程工作流治理系統，而是資料庫 transaction engine 對 unforeseen agentic transactions 的自適應並行控制（Ref. 6），但它提醒了另一件重要的事：一旦 transaction 由長時推理、動態讀寫與高 abort cost 所主導，傳統 OCC / PCC 的成本模型便會失真。ATM 與其之關係不是同層競品，而是跨領域借鏡：它將這種「經典並行控制假設失效」的問題，帶到共享程式庫寫入之前的 admission 階段。
 
 S-Bus 則代表依賴捕捉的另一條路線（Ref. 26）。它以 HTTP middleware 與 server-side DeliveryLog 自動記錄每個 agent 的 GET 操作，並在 commit time 重建 read set，形成 Observable-Read Isolation。其論文將目標收斂到 dedicated-shard topology：每個 agent 擁有不同 write key，並讀取共享 reference shards；在此範圍內，S-Bus 以大量 HTTP-409 contention sweeps、TLAPS / TLC / Dafny 證據與 empirical parity 對照 PostgreSQL SERIALIZABLE / Redis WATCH/MULTI，主張能防止 HTTP-observable read projection 上的 structural conflicts。相較之下，ATM 目前採取的是 adapter / atom map / `readAtoms` 的顯式宣告路線，而不主張完整的動態 read tracing；ATM 的 shared surface 也不是 HTTP shard，而是 source code region、format adapter record、atom-map member、validator 或 artifact。這個對比有助於說明：ATM 的 novelty 不在於提出所有可能的 dependency capture 方法，而在於把顯式宣告、progressive atomization 與 broker admission 組合成可治理的 single-domain pre-write gate。
 
-需要清楚標示的是兩者之間的設計取捨而非能力高低。S-Bus 採動態 read tracing，優點是自動發現代理未明示之 read dependency，缺點是須假設讀取行為可被 HTTP middleware 完整觀測，且其 shared shard 模型限定於 dedicated-write topology；ATM 採顯式 `readAtoms` 宣告，優點是 admission verdict 可在 broker-local active registry 上以靜態圖直接判定（Definition 6）、可重放、可審計，並可推廣到 code region、JSON record、numeric scalar 與 atom-map shard 等非 HTTP 治理面，缺點則是若 adapter 或 agent 漏報 `readAtoms`，broker 無法以動態觀察補位，需仰賴 validator、CAS base-hash 或 fail-closed 收口。本文不主張任一路線在 false-negative coverage 上絕對占優——該量化對比屬 §5 deferred comparative benchmark 範圍；本文主張的是兩者構成不同 admission philosophy 下的 design point，未來可由 S-Bus 之 DeliveryLog 思路作為動態 read-dependency 補強，疊加於 ATM 之 atom map 與 active registry 之上，而非彼此替代。
+需要清楚標示的是兩者之間的設計取捨而非能力高低。S-Bus 採動態 read tracing，優點是自動發現代理未明示之 read dependency，缺點是須假設讀取行為可被 HTTP middleware 完整觀測，且其 shared shard 模型限定於 dedicated-write topology；ATM 採顯式 `readAtoms` 宣告，優點是 admission verdict 可在 broker-local active registry 上以靜態圖直接判定（Definition 3.3）、可重放、可審計，並可推廣到 code region、JSON record、numeric scalar 與 atom-map shard 等非 HTTP 治理面，缺點則是若 adapter 或 agent 漏報 `readAtoms`，broker 無法以動態觀察補位，需仰賴 validator、CAS base-hash 或 fail-closed 收口。本文不主張任一路線在 false-negative coverage 上絕對占優——該量化對比屬 §5 deferred comparative benchmark 範圍；本文主張的是兩者構成不同 admission philosophy 下的 design point，未來可由 S-Bus 之 DeliveryLog 思路作為動態 read-dependency 補強，疊加於 ATM 之 atom map 與 active registry 之上，而非彼此替代。
 
-最後，本文亦留意到一條尚未在本研究中正式比較的方向：將多代理失誤的一部分重新詮釋為**代理間語境漂移（context drift）**，並以輕量同步協定在共同推理前提早對齊狀態。這類方法與 ATM 並不衝突，但層次更前：它關心的是代理在形成寫入意圖之前，是否已處於互相發散的知識狀態。ATM 不主張已完成獨立的 context-drift benchmark；本文亦不將下列鄰近文獻視為單一同質類別，而是依研究問題拆為兩個 cluster，並明示各 cluster 與 ATM 之關係邊界。
+最後，本文亦留意到一條尚未在本研究中正式比較的方向：將多代理失誤的一部分重新詮釋為**代理間語境漂移（context drift）**，並以輕量同步協定在共同推理前提早對齊狀態。這類方法與 ATM 並不衝突，但層次更前：它關心的是代理在形成寫入意圖之前，是否已處於互相發散的知識狀態。ATM 不主張已完成獨立的 context-drift benchmark；下列文獻也不是同一 taxonomy 下的並列 cluster，而是兩個不同觀察面：一個面向內容層的 evidence-closure 動機，另一個面向行動邊界層的 runtime enforcement precedent。
 
 **Cluster A — Content grounding and verification.** Retrieval-augmented generation 將輸出條件化於可檢索之外部證據以提升知識密集任務之 factuality（Lewis et al., 2020, Ref. 49）；RARR 以 evidence attribution 與 post-hoc revision 修正既有生成內容之 unsupported claims（Gao et al., 2022, Ref. 50）；Chain-of-Verification 透過顯式 verification planning 與 self-verification 降低 hallucination（Dhuliawala et al., 2023, Ref. 51）。此 cluster 提供的是 **content-level precedents only**：證明在 generation 過程中加入 retrieval、attribution、revision 或 self-verification 可改善生成內容之真實性。**它們並不提供 software-agent scope、tool use、repository mutation 或 task closure 之 runtime enforcement**，因此本文不主張其等同於 ATM 之 scope gate、validator envelope 或 closure packet；它們僅為 ATM 之 evidence-closure 設計提供文獻方向之背景動機。
 
 **Cluster B — Runtime policy enforcement at agent action boundaries.** SWE-agent 顯示 agent-computer interface 與工具回饋設計會顯著影響 coding agent 在 repository 中導覽、修改檔案與執行測試之表現（Yang et al., 2024, Ref. 52）；AgentSpec 提供一套 DSL，允許 trigger、predicate 與 enforcement mechanism 之宣告，於 runtime 約束 LLM agent 之 tool calls（含 code execution）（Ref. 53）；ClawGuard 在每一個 tool-call boundary 執行 user-confirmed rule set，於 indirect prompt-injection 威脅模型下提供 task-specific 之 deterministic access enforcement（Ref. 54）。此 cluster 是 ATM 之 task contract、pre-tool scope gate 與 deterministic enforcement 設計的 **closest adjacent work**：它證明在 agent 行為邊界以結構化規則約束 tool calls 是可行且有效的研究方向。ATM 與此 cluster 之差異在於問題範圍與威脅模型：AgentSpec 提供一般化 runtime-policy 語言但不專屬軟體工程生命週期；ClawGuard 之 threat model 主要為 adversarial prompt injection，而非 multi-agent repository governance。**ATM 並未繼承 ClawGuard 之安全保證**；ATM 將相關 enforcement 思路專門化到 repository 治理：將 task intent、repository scope、write admission、validators 與 evidence obligations 綁定為一條治理路徑，並以 CID broker 子系統處理共享變更准入。
 
-綜合而言，ATM 對 context drift 之定位為：它不直接同步代理內部信念，而是在任務規格、寫入 scope、證據契約與 validator feedback 層面，降低漂移轉化為未治理寫入或不可審計 closure 的機率。相關多代理失敗模式之系統性分析仍可參考 Pan et al.（Ref. 7）與 Nechepurenko & Shuvalov（Ref. 9）；更完整的 drift-synchronization 對照實驗則屬後續工作。
-
-Workspace protocol、TraceFix 與 latent-space parallel-branch synthesis 類工作（Refs. 8, 17, 19）則提醒我們，多代理系統本身也需要被視為 protocol，而不只是 prompting pattern；其中 latent-space synthesis 於 KV-cache 層處理 parallel branch merging，與本文的寫入前准入層次正交，可疊加於 ATM 的 deterministic-composer 路由之上。ATM 將這些基礎概念收斂到共享程式庫寫入：以 atom、CID 與 ConflictKey 定義衝突單位，以 broker 作為唯一序列化節點，並以 evidence substrate 使每次准入與阻擋可被審計。
+綜合而言，ATM **不主張跨代理之 belief synchronization**，亦未提供專屬之 context-drift benchmark。本文之主張範圍較為狹義：RAG、RARR 與 CoVe（Refs. 49–51）應被視為 ATM evidence-closure layer 的內容層級動機，因為它們顯示 retrieval、attribution、revision 與 explicit verification 可降低 unsupported generated content；但它們並不 enforcement repository scope、tool-use policy、shared-mutation admission 或 task closure。SWE-agent、AgentSpec 與 ClawGuard（Refs. 52–54）則是 task-contract 與 boundary-enforcement 設計的最接近先例：它們顯示 agent-computer interface 與結構化 runtime rules 可實質約束 tool calls；ATM 將此思路專門化到單一治理域內的 repository scope、shared-mutation admission 與 evidence-backed closure，但不繼承其 task-specific guarantee。換言之，ATM 應被讀作一個 governance substrate：它限制 specification drift、scope drift、state drift 與 evidence drift 如何傳導為共享 mutation 或 unsupported closure，而非通用 hallucination 解法或 inter-agent belief-synchronization protocol。相關多代理失敗模式之系統性分析仍可參考 Pan et al.（Ref. 7）與 Nechepurenko & Shuvalov（Ref. 9）；workspace protocol、TraceFix 與 latent-space parallel-branch synthesis（Refs. 8, 17, 19）則與 ATM 寫入前准入層正交，可疊加於 deterministic-composer 路由之上。更完整的 drift-synchronization 對照實驗屬後續工作。另一路未來方向，是參考 solver-aided policy checking（Ref. 55），將 ATM forbidden-rule channel 的一部分形式化為 solver-checked preconditions；這不是本版系統的一部分。
 
 Table 4 — Tier Granularity Ladder. 本文於協調粒度階梯中的位置：
 
@@ -180,15 +184,15 @@ ATM 並非取代 Tier 1/3/4，也不取代跨機器 Git PR 合併；它是在 si
 
 ## 3. Framework（方法）
 
-ATM 的設計目標，是在 agent generation 與 filesystem mutation 之間建立一個治理層。它不生成程式碼，也不替代測試或 code review；它要求所有寫入先被表述為結構化寫入意圖，再由 broker 決定該意圖是否能進入寫入路徑。
+本章將三個容易被混淆的敘述層次分開：**規格錨定治理基底** 界定 agent 被授權之工作與有效 closure 之邊界；**形式准入模型** 定義 atoms、shared surfaces 與 active state；**brokered 實作路徑** 則將寫入意圖轉換為具體 verdict。**CID broker 因此不是整個系統，而是更廣的規格錨定治理路徑內之共享變更准入子系統**。ATM 不生成程式碼，也不替代測試或 code review；它要求所有寫入先被表述為結構化寫入意圖，再由 broker 在治理基底所界定之邊界內決定該意圖是否能進入寫入路徑。
 
-**本章內部結構說明（reader navigation）。** 為協助讀者區辨「規格錨定治理基底」、「形式模型 + 假設」與「實作框架 + admission pipeline」三層概念，本章分為兩個概念群組：
+**本章內部結構說明（reader navigation）。** 為協助讀者區辨上述三層概念，本章分為兩個概念群組：
 
-> **Part A — Model and Assumptions（§3.1–§3.3）**：§3.1 引入 specification-grounded governance substrate 之三層平面與三個 governance invariants；§3.2 給出 broker / agent / steward 之架構總覽與單一治理域假設；§3.3 提供 atom / atom map / virtual atom / two-tier CID 之形式定義（Definitions 5–6）。
+> **Part A — Model and Assumptions（§3.1–§3.3）**：§3.1 引入 specification-grounded governance substrate 之三層平面與三個 governance invariants；§3.2 給出 broker / agent / steward 之架構總覽與單一治理域假設；§3.3 提供 atom / atom map / virtual atom / two-tier CID 與 broker-facing auxiliary structures 之形式定義（Definitions 3.2–3.4）。
 >
-> **Part B — Framework and Implementation（§3.4–§3.7）**：§3.4 之 admission pipeline（Algorithm 1）與 Propositions 1–2；§3.5 之七層硬性閘門與 Definition 7 之 CAS-based runtime closure；§3.6 之跨格式推廣；§3.7 之已知 scope 限制。
+> **Part B — Framework and Implementation（§3.4–§3.7）**：§3.4 之 admission pipeline（Algorithm 1）與 Propositions 1–2；§3.5 之七層硬性閘門與 Definition 3.5 之 CAS-based runtime closure；§3.6 之跨格式推廣；§3.7 之已知 scope 限制。
 
-三個概念群組共享同一治理 domain 假設：Part A §3.1 之 substrate 模型為 §3.2–§3.7 所有 plane-specific 機制提供共同骨架；CID broker（Part B §3.4–§3.5）作為 §3.1 Mutation-admission plane 之子系統實作。若讀者僅關心 ATM 之 governance 模型可閱讀 §3.1；若關心形式定義繼續讀 §3.2–§3.3；若關心 admission verdict 如何具體產生請讀 §3.4–§3.7。
+兩個概念群組共享同一治理 domain 假設：Part A §3.1 之 substrate 模型為 §3.2–§3.7 所有 plane-specific 機制提供共同骨架；CID broker（Part B §3.4–§3.5）作為 §3.1 Mutation-admission plane 之子系統實作。若讀者僅關心 ATM 之 governance 模型可閱讀 §3.1；若關心形式定義與 broker-facing structures 繼續讀 §3.2–§3.3；若關心 admission verdict 如何具體產生請讀 §3.4–§3.7。
 
 ---
 
@@ -198,7 +202,7 @@ ATM 的設計目標，是在 agent generation 與 filesystem mutation 之間建�
 
 ATM 之核心定位為一個 **specification-grounded execution-governance substrate**：它將 agent 之任務、行為邊界與完成宣稱綁定到一個結構化執行契約（**Task Contract**），並以三個 plane 分別治理 agent 被授權之範圍、共享變更之准入時點、以及任務完成之證據封閉。CID broker 不是此 substrate 之同義詞，而是其 Mutation-admission plane 之子系統。
 
-**Definition 8（Task Contract）.** 對任一被授權之 agent 任務 $\mathcal{T}$，其 Task Contract 為八元組
+**Definition 3.1（Task Contract）.** 對任一被授權之 agent 任務 $\mathcal{T}$，其 Task Contract 為八元組
 $$\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$$
 其中 $g$ 為 approved task intent（任務目標）、$A$ 為 allowed resources / files、$F$ 為 forbidden predicates / rules、$S$ 為 governed scope paths、$D$ 為 required deliverables、$V$ 為 validation commands、$E$ 為 evidence obligations、$\epsilon$ 為 task-direction epoch。實作中，**task card** 為此 contract 之具體序列化形式；scope-lock、direction-lock、validator envelope、evidence blocker 與 closure packet 等 framework 機制皆參照同一個 $\mathcal{T}$。
 
@@ -206,7 +210,7 @@ $$\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$$
 
 | Plane | ATM 機制 | 回答的問題 |
 |---|---|---|
-| **Task-contract plane** | task intent, allowed files, forbidden rules, scope paths, deliverables, direction lock | agent 被授權做什麼？ |
+| **Task-contract plane** | task intent, allowed files, forbidden rules, scope paths, deliverables, direction lock, validator envelope, evidence obligations, task epoch / scope envelope | agent 被授權做什麼，且完成判準被綁在哪一組治理約束上？ |
 | **Mutation-admission plane** | atoms, CID, ConflictKey, read/write set, active registry, broker, neutral steward | 這個共享寫入此刻能不能發生？ |
 | **Evidence-closure plane** | validation commands, validator envelope, evidence blockers, review advisory, closure packet | 可以合理宣稱任務已完成嗎？ |
 
@@ -214,11 +218,11 @@ $$\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$$
 
 **三個 Governance Invariants.** ATM 之治理保證以下列三個 invariant 表述；本文稱其為 Invariant G1 / G2 / G3，**不**主張其等同於可機械證明之 theorem，而是 substrate 之 design contract：
 
-- **G1（Scope containment）.** 對任一受治理寫入意圖 $I$ 與其關聯之 task contract $\mathcal{T}$，必有 $W(I) \subseteq A(\mathcal{T})$，即實際寫入範圍不超出 allowed scope。
+- **G1（Scope containment）.** 對任一受治理寫入意圖 $I$ 與其關聯之 task contract $\mathcal{T}$，必須同時滿足 $Res(W(I)) \subseteq A(\mathcal{T})$ 與 $Path(W(I)) \subseteq S(\mathcal{T})$。亦即，一個 write 只有在同時指向授權 resource 與授權 scope path 時，才屬於 in-bounds。
 - **G2（Direction stability）.** 若 task goal $g$ 或 scope $A, S$ 改變，必須產生新之 direction epoch $\epsilon' \neq \epsilon$；agent 不得在不更新 epoch 之情形下靜默改變任務方向。
-- **G3（Evidence-backed closure）.** 任務之 closure 為合法當且僅當
-  $$\text{Close}(\mathcal{T}) \Rightarrow V(\mathcal{T}) = \text{pass} \;\land\; E(\mathcal{T}) = \text{satisfied} \;\land\; \text{Writes}(\mathcal{T}) = \text{governed}.$$
-  亦即 validator 全數通過、evidence obligations 已滿足、且所有共享寫入皆經 broker / steward 治理路徑。
+- **G3（Evidence-backed closure）.** 任務之 closure 被允許當且僅當
+  $\text{ClosePermitted}(\mathcal{T}) \iff V(\mathcal{T}) = \text{pass} \;\land\; D(\mathcal{T}) = \text{satisfied} \;\land\; E(\mathcal{T}) = \text{satisfied} \;\land\; \text{Writes}(\mathcal{T}) = \text{governed}.$
+  亦即 validator 全數通過、deliverables 已完成、evidence obligations 已滿足、且所有共享寫入皆經 broker / steward 治理路徑。
 
 **Drift 分類學。** 為避免「context drift」之廣泛使用造成混淆，本文將可觀測之 drift 細分為五類，並明示 ATM 之處理邊界。ATM 之承諾為「外顯後果之治理」，而非「內部信念之同步」：
 
@@ -234,13 +238,15 @@ $$\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$$
 
 **子系統角色釐清。** 後續 §3.2–§3.3（架構總覽、atom / CID 形式定義）與 §3.4–§3.7（admission pipeline、七層閘門、跨格式推廣、scope 限制）所描述之 broker、atom map、ConflictKey、neutral steward 與 validator 機制，皆為本節三個 plane 在實作層之具體展開。其中 **CID broker 對應 Mutation-admission plane 之核心子系統**：它不單獨構成 governance substrate，而是 substrate 之 admission subsystem。Task-contract plane 與 Evidence-closure plane 之主要 enforcement 元件——direction lock、pre-tool scope gate、validator envelope、evidence blocker、closure packet——則由 ATM framework 之外圍治理層實作，並與 broker 共享同一份 active registry 與 active-intent visibility。
 
+**假設（Assumptions）.** 本文所有主張皆建立於以下四項假設之上：(i) 存在 **單一權威治理域**，broker 對受治理之共享寫入、active intents 與可變共享 surface 具有及時可見性；(ii) Adapter 對 write surface、ConflictKey 與 declared read set 之宣告為 **保守近似**（conservative declaration），不刻意低估衝突；(iii) 受治理之共享寫入皆透過 **neutral steward** 落地，而非繞過 brokered path 直接寫入；(iv) Validator 對相關 domain 為可用且具語意意義。在上述假設下，ATM 主張 static admission closure（Proposition 2）與可審計之 runtime enforcement；ATM **不**主張分散式共識、完整動態依賴捕捉、或端對端語義正確性。Adversarial 或不完整 adapter、跨治理域協調、validator 缺位等情境之邊界，集中於 §5–§6 與 §6.2「When Adapter-Guided Fails」討論。
+
 ---
 
 ### 3.2 架構總覽
 
 ATM 可分為五個責任邊界，並共享一個逐步細化的語意索引。本文假設這些邊界位於同一個治理域：同一台電腦、同一個受控 server、同一個 worktree service，或其他能提供單一 broker / steward authority 的環境。Adapter 負責從語言或格式中擷取 candidate atoms、bounded ranges、read/write dependencies 與 conflict keys；Atom Map 將這些資訊整理為可測試、可驗證、可審計的邏輯地圖。若 map 尚未覆蓋某段變更，broker 會建立 virtual atoms 作為暫時治理單位。Agent 負責提出 patch 或寫入意圖；Broker 負責做出准入決策，輸出 allow、compose、block 或 re-arbitrate 類 verdict；Neutral Steward 則負責將 broker 已准入的 plan 實際套用至同一受控 worktree。它不是內容提案者，也不是裁決者，而是 broker 裁決的執行器、同一治理域內的唯一寫入權威，以及 evidence record、validator trigger、後續 commit / pre-push 治理鏈的落地節點。Substrate 包含 Git、檔案系統、registry、validator 與 evidence artifacts；其中 Git 是版本控制與跨 clone 合併 substrate，而非 ATM 在本文中要取代的分散式鎖。
 
-Figure 1 — ATM Governance Substrate Architecture（specification-grounded, three-plane）。圖中以三組 subgraph 分別對應 §3.1 之 Task-contract plane、Mutation-admission plane 與 Evidence-closure plane；CID broker 與 neutral steward 位於 Mutation-admission plane 內，作為 governance substrate 之共享變更准入子系統：
+Figure 1 — ATM 作為三平面治理基底（specification-grounded, three-plane）。**任務契約平面**約束 agent 被授權之行為，**CID broker 與 neutral steward**（位於共享變更准入平面內）約束共享變更何時可發生，**證據封閉平面**則約束任務何時可被宣稱完成。圖中三組 subgraph 對應 §3.1 之三個 plane；CID broker 與 neutral steward 作為治理基底之共享變更准入子系統：
 
 ```mermaid
 flowchart TB
@@ -270,6 +276,8 @@ flowchart TB
 
     HU --> T
     T --> DL
+    T -. "taskId / epoch / scope envelope" .-> B
+    T -. "D, V, E obligations" .-> VE
     DL --> AG
     ADAP -- "atoms, ranges, ConflictKeys" --> AM
     AM -- "coverage gaps / coarse regions" --> VA
@@ -293,7 +301,7 @@ flowchart TB
 - **Mutation-admission plane**（CID broker subsystem）：agent 之 WriteIntent 經 adapter / atom map / virtual atom 結構化後進入 broker；broker 為**唯一序列化節點**並產出 verdict；neutral steward 於 admission 通過後執行單一實際寫入並做 CAS base-hash recheck。此 plane 即為本文 §3.4–§3.5 之 admission pipeline 與七層閘門。
 - **Evidence-closure plane**：steward 寫入後觸發 validator envelope（typecheck / lint / CLI validators）；evidence blockers 與 review advisory 檢查 deliverables 是否具備可追溯 evidence；closure packet 為任務合法 close 之證據封閉物，對應 G3（evidence-backed closure）。
 
-圖中實線箭頭為主治理路徑；三條虛線箭頭為非阻塞回饋通道，**並非 admission decision 路徑**：(a)「evidence feedback」自 substrate 回 broker，承載 verdict log、CAS base-hash 結果與 closure packet，使後續 admission 能讀到最新 active registry 狀態（Definition 6）；(b)「post-write validators」自 validator envelope 回 agent，承載 typecheck / lint 結果使 agent 能於下一輪 intent 之前感知 validator catch（如 §4.3 之 3 次 validator catches）；(c)「epoch / direction update」自 closure packet 回 Task Contract，於 scope 或 goal 變更時觸發 epoch $\epsilon \to \epsilon'$（G2）。三條虛線回饋皆**不**改變 broker 對當前已 admitted plan 的單次 apply 決定，僅作為下一輪治理之輸入。
+圖中實線箭頭為主治理路徑；三條虛線箭頭為非阻塞回饋通道，**並非 admission decision 路徑**：(a)「evidence feedback」自 substrate 回 broker，承載 verdict log、CAS base-hash 結果與 closure packet，使後續 admission 能讀到最新 active registry 狀態（Definition 3.3）；(b)「post-write validators」自 validator envelope 回 agent，承載 typecheck / lint 結果使 agent 能於下一輪 intent 之前感知 validator catch（如 §4.3 之 3 次 validator catches）；(c)「epoch / direction update」自 closure packet 回 Task Contract，於 scope 或 goal 變更時觸發 epoch $\epsilon \to \epsilon'$（G2）。三條虛線回饋皆**不**改變 broker 對當前已 admitted plan 的單次 apply 決定，僅作為下一輪治理之輸入。
 
 此架構的關鍵在於，agent 不直接取得對共享檔案系統的最終寫入權。Agent 可以產生 proposal，但 proposal 必須經過 broker；若 broker 判定可合併，仍由 neutral steward 完成實際寫入。這使「誰提出變更」與「誰執行寫入」分離，降低多代理互相覆寫、競逐或跳過治理流程的風險。
 
@@ -301,29 +309,42 @@ flowchart TB
 
 ### 3.3 Atom、Atom Map、Virtual Atom 與 CID
 
-ATM 中的 atom 是可治理的最小邏輯單位。實作上，atom 可表示 function、class method、registry entry、JSON record、numeric scalar、text range，或其他由 adapter 定義的結構化片段。這意味著 ATM 治理 AI 寫碼的方式，不是直接對整個檔案下命令，而是先把寫入意圖對映到 atom，再依 atom 之間的 shared surface、dependency 與 bounded region 判斷此刻是否可以寫、要不要分流，以及最後由誰實際寫入。Atom 的用途不只是命名程式碼區段，而是讓 broker、validator 與 auditor 能把一次寫入對齊到可追蹤的語意位置。為了支援 broker decision，本文保留下列必要欄位：atom identity、logical name、version、source path/range、input/output schema、status、atom grade 與 hash lock。完整 8-tuple 可寫為：
+ATM 對 §3.3 採用「治理物件／身份／封裝」三層語義，先把最容易混的概念切開：
+
+- **治理物件（Atom / Virtual Atom）**：可被提取到、可比較的寫入邊界單位；
+- **治理身份（Candidate CID / ConflictKey）**：admission 前比較衝突所用的 identity；
+- **封裝證據（Capsule CID）**：事後可重放、可 rollback / rescue 的版本化證據。
+
+ATM 中的 atom（含 virtual atom 作為暫時替代）是可治理的最小邏輯單位。實作上，atom 可表示 function、class method、registry entry、JSON record、numeric scalar、text range，或其他由 adapter 定義的結構化片段。這意味著 ATM 的 admission 不會先以整檔啟發式作決策，而是先把寫入意圖對映到治理物件，再於 shared surface、dependency 與 bounded region 上決定是否可合流、需分流、或直接 fail-closed。為了支援 broker decision，本文把 atom 本體收斂成可審計欄位：atom identity、logical name、version、source path/range、input/output schema、status、atom grade 與 hash lock。完整 8-tuple 可寫為：
 
 $$a = \langle id, name, ver, P, \sigma, \psi, \gamma, H \rangle$$
 
-其中 $P$ 是 atom 對應之 file path 與 line range 集合；$\sigma$ 是 schema；$\psi$ 是狀態；$\gamma$ 是 atom grade（標示該 atom 之治理成熟度，例如 candidate / virtual / formal / capsule-bound，與 §2 之 Tier 1-4 coordination granularity ladder 為不同概念，不可互換）；$H$ 是規格、程式與測試的 hash lock。**符號命名說明：** §2 使用 "Tier 1-4" 描述跨系統的 coordination granularity 層級（字元 / 區域 / 檔案 / 工作流）；§3 此處的 atom-level $\gamma$ 描述單一 atom 在治理生命週期中的成熟度等級；兩者不共享語意空間，本文以 Tier（總是大寫且帶數字）vs. atom grade $\gamma$（總是搭配 atom 上下文）區分。對 broker 而言，最重要的是讀者能在此節後理解三件事：何謂 same owner、same CID、以及 disjoint bounded region。
+其中 $P$ 是 atom 對應之 file path 與 line range 集合；$\sigma$ 是 schema；$\psi$ 是狀態；$\gamma$ 是 atom grade（標示該 atom 之治理成熟度，例如 candidate / virtual / formal，與 §2 之 Tier 1-4 coordination granularity ladder 為不同概念，不可互換）；$H$ 是規格、程式與測試的 hash lock。**符號命名說明：** §2 使用 "Tier 1-4" 描述跨系統的 coordination granularity 層級（字元 / 區域 / 檔案 / 工作流）；§3 此處的 atom-level $\gamma$ 描述單一 atom 在治理生命週期中的成熟度等級；兩者不共享語意空間，本文以 Tier（總是大寫且帶數字）vs. atom grade $\gamma$（總是搭配 atom 上下文）區分。
 
-Atom map 是由這些 atoms 形成的語意索引，也是 ATM 真正的治理基底。它將 source range、owner、測試入口、validator、read/write dependency、shared surface、Candidate CID、Capsule CID 與 hash lock 對齊到同一個可審計的圖狀結構。若借用最精簡的層次語言來說，atoms 提供的是 conflict identity，atom map 提供的則是 governance context：前者回答「這次寫入碰到哪個治理單位」，後者回答「這個治理單位連到哪些 owner、validator、dependency 與 shared surface」。換言之，atom map 不是文件目錄，而是寫入前准入層的語意感測器：broker 透過它知道某個寫入意圖觸碰的是哪個邏輯單位、應由哪些 validator 驗證、是否與其他 active intent 共享 surface，以及是否需要被序列化。需要更精確地說，僅有 atoms 與其 `atomId / atomCid` 時，broker 仍可先做第一層 CID 衝突判決；但若缺少 atom map，系統較難把 owner、validator、dependency、shared surface 與 coverage gap 一起納入同一個可審計索引，於是同檔案爭用往往只能停留在較粗的 atom-set 或 file-overlap 判斷。正因如此，atom map 的關鍵價值不在於「讓 CID 判決首次成為可能」，而在於把同檔案寫入還原成「哪些已知治理單位、哪些共享 surface、哪些驗證責任實際被觸碰」這個更細且可追溯的問題。
+CID 在本文分為兩個使用目的：
+
+- **Candidate CID（admission identity）**：供 admission 在寫入前比對 governance object 的 identity / overlap；
+- **Capsule CID（post-validation identity）**：供驗證後的封裝與版本化流程（export/import、rollback、rescue、drift detection）使用。
+
+因此，CID 不是第三種治理物件：它永遠附著於 governance object（atom / virtual atom），分別服務 pre-write admission 或 evidence-closure，不能互換。
+
+Atom map 是由這些 atoms 形成的語意索引，也是 ATM 真正的治理基底。它將 source range、owner、測試入口、validator、read/write dependency、shared surface 與 coverage gap 對齊到同一個可審計的圖狀結構。若借用最精簡的層次語言來說，atoms 與其 CID 提供的是 conflict identity，atom map 提供的則是 governance context：前者回答「這次寫入碰到哪個治理單位」，後者回答「這個治理單位連到哪些 owner、validator、dependency 與 shared surface」。換言之，atom map 不是文件目錄，也不是另一種身份表；它是寫入前准入層的語意感測器。僅有 atoms 與其 `atomId / atomCid` 時，broker 仍可先做第一層 CID 衝突判決；但若缺少 atom map，系統較難把 owner、validator、dependency、shared surface 與 coverage gap 一起納入同一個可審計索引，於是同檔案爭用往往只能停留在較粗的 atom-set 或 file-overlap 判斷。正因如此，atom map 的關鍵價值不在於「讓 CID 判決首次成為可能」，而在於把同檔案寫入還原成「哪些已知治理單位、哪些共享 surface、哪些驗證責任實際被觸碰」這個更細且可追溯的問題。
 
 Adapter-guided atomization 則回答「應該如何原子化」。ATM 不要求所有語言先具備同一套 universal AST，也不要求 atom map 在第一天就完整；相反地，我們把 candidate discovery 下放給 adapter，允許 TypeScript、Python、JSON 或其他格式各自以 regex、scanner、compiler API、AST、LSP 或 format-specific locator，回報對本語言最便宜且穩定的 atom 候選、canonical symbol、bounded region 與 shared surface。這使 ATM 的原子化不是一次完成的靜態前處理，而是可漸進擴充的治理能力：先有 candidate atoms，再形成 atom map，再逐步補齊 coverage、validator 與 dependency。更重要的是，ATM 並不是只提出一個抽象介面，再把實作成本全部外包給 adopter；框架本身已內建 candidate atom bridging、CID 計算、atom-map projection、virtual atom fallback、task-card / skill routing、editor integration adapter、validator / evidence substrate 與 neutral steward 等預設治理骨架。換言之，採用者通常不需要先重做整套 broker 與治理流程，而是可在既有骨架上，依目標語言或格式補上對應 adapter。就目前實作而言，正式原子化與 atom map 生成已至少在 TypeScript 與 Python 兩種語言上落地；其中 TypeScript 可視為目前最成熟的 reference language path，而 Python 並非僅有抽象介面，而是已有獨立 `@ai-atomic-framework/language-python` package、candidate discovery、atomization dry-run、驗證腳本與 fixture tests；其他語言與格式則依 `AtomizationPlanningAdapter`、`FileMutationAdapter` 與 locator contract 逐步接入，這一部分屬於框架既有核心之上的 ecosystem expansion，而非 ATM 核心治理能力尚未存在。
 
-Virtual atom 則是 atom map 不完整時的暫時治理單位。當 adapter 尚未把某段程式正式原子化，或正式 atom map 對該區段的覆蓋仍不足以支撐可靠判斷時，broker 可依 syntactic enclosure、line range、signature boundary 或 format-specific locator 建立 virtual atom。Virtual atom 具有臨時 identity、bounded region、candidate CID 與 conflict keys，但不宣稱已是永久 API 單位；它的目的，是讓 broker 在未完成正式原子化之前，仍可把「同檔案疑似衝突」轉換為可比較、可驗證、可 fail-closed 的 admission 單位。也因此，ATM 的核心不是先假設 repository 已被完全原子化，而是在 atom map 覆蓋有限時仍能沿著 atom map -> virtual atom 的路徑把衝突逐層剝開。
+Virtual atom 則是 atom map 不完整時的暫時治理單位。當 adapter 尚未把某段程式正式原子化，或正式 atom map 對該區段的覆蓋仍不足以支撐可靠判斷時，broker 可依 syntactic enclosure、line range、signature boundary 或 format-specific locator 建立 virtual atom。Virtual atom 具有臨時 identity、bounded region、candidate CID 與 conflict keys，但不宣稱已是永久 API 單位；它的定位不是 atom 的正式子類別，而是「未完成原子化時的暫時替身」。它的目的，是讓 broker 在未完成正式原子化之前，仍可把「同檔案疑似衝突」轉換為可比較、可驗證、可 fail-closed 的 admission 單位。也因此，ATM 的核心不是先假設 repository 已被完全原子化，而是在 atom map 覆蓋有限時仍能沿著 atom map -> virtual atom 的路徑把衝突逐層剝開。
 
 相對地，atom capsule 並不是比 atom 更細的 runtime 判斷單位，也不是 virtual atom 的另一種名稱。依目前實作，capsule 是 atom 的內容封裝與版本錨點：它以 `canonicalSourceCode`、`inputSchema`、`outputSchema` 與 `policeConfig` 組成 atom bundle，並計算出 content-addressed 的 `Capsule CID`，主要用於 export/import、rollback、rescue 與 drift detection 等治理證據流程，而不是直接取代 broker admission 的第一線判斷。若用最不容易混淆的層次語言來說：atom 是治理單位，virtual atom 是暫時判斷單位，atom capsule 則是封裝與版本證據單位。
 
-為了讓 broker 第一線判斷有形式錨點，本文補上兩個結構性定義。
+為了銜接 atom-level identity 與後續 admission gate，本文在本節最後補上三個 broker-facing auxiliary definitions。這三者是 3.2–3.4，並非新增治理物件，而是讓 ConflictKey、Active Registry 與 Shared Surface Set 能被 §3.4–§3.5 的 broker decision 直接引用。
 
-**Definition 5（ConflictKey）。** 對 atom 或 virtual atom $a$，其 ConflictKey 定義為一對 $(S_a, L_a)$，其中 $S_a$ 為治理範圍類別（function、class method、JSON record/key path、numeric scalar、text range 或 atom-map shard 等 adapter 所宣告之 scope 種類），$L_a$ 為該 scope 種類下唯一定位 $a$ 的 locator（如 canonical symbol、JSON pointer、line span、registry id 等 format-specific 表達）。兩單位衝突當且僅當 $\text{ConflictKey}(a_i) = \text{ConflictKey}(a_j)$ 在同一治理 domain 下相等。Broker 因此可在 cross-format 場景中以同一 abstraction 比較 TypeScript function、Python decorator、JSON record 與 atom-map shard 是否觸及同一治理 surface。
+**Definition 3.2（ConflictKey）。** 對 atom 或 virtual atom $a$，其 ConflictKey 定義為一對 $(S_a, L_a)$，其中 $S_a$ 為治理範圍類別（function、class method、JSON record/key path、numeric scalar、text range 或 atom-map shard 等 adapter 所宣告之 scope 種類），$L_a$ 為該 scope 種類下唯一定位 $a$ 的 locator（如 canonical symbol、JSON pointer、line span、registry id 等 format-specific 表達）。兩單位衝突當且僅當 $\text{ConflictKey}(a_i) = \text{ConflictKey}(a_j)$ 在同一治理 domain 下相等。Broker 因此可在 cross-format 場景中以同一 abstraction 比較 TypeScript function、Python decorator、JSON record 與 atom-map shard 是否觸及同一治理 surface。
 
-**Definition 6（Active Registry）。** Active Registry 是 broker-local 的有限映射 $R : \text{TxnId} \to (\text{Intent}, A, D, W, F)$，其中 $A$ 為此 transaction 宣告之 atom set（含 virtual atoms），$D$ 與 $W$ 分別為其 declared read set 與 write set，$F$ 為對 target files 的 hash snapshot。$R$ 隨 admission verdict 而更新：`parallel-safe` 與 `needs-physical-split` 之 transaction 被加入；steward 完成 apply 後移除；`blocked-*` verdict 不進入 $R$。每個新進 intent 的 admission 比較皆以 $R$ 為當前 active 工作集，搭配 Proposition 2 提供之 static admission closure 條件。
+**Definition 3.3（Active Registry）。** Active Registry 是 broker-local 的有限映射 $R : \text{TxnId} \to (\text{Intent}, A, D, W, F)$，其中 $A$ 為此 transaction 宣告之 atom set（含 virtual atoms），$D$ 與 $W$ 分別為其 declared read set 與 write set，$F$ 為對 target files 的 hash snapshot。$R$ 隨 admission verdict 而更新：`parallel-safe` 與 `needs-physical-split` 之 transaction 被加入；steward 完成 apply 後移除；`blocked-*` verdict 不進入 $R$。每個新進 intent 的 admission 比較皆以 $R$ 為當前 active 工作集，搭配 Proposition 2 提供之 static admission closure 條件。
 
-這也說明了本文為何需要區分 two-tier CID。`Candidate CID` 服務的是 pre-write admission：broker 以它辨識候選治理單位是否與其他 active intent 衝突；`Capsule CID` 服務的則是 post-validation 與 capsule lifecycle：它錨定某個 atom bundle 的內容版本，並可進一步成為 map capsule 的 member 依據。換言之，candidate 與 capsule 不是兩種 competing atoms，而是同一 atom 在不同治理階段中的兩種識別面向。
+**Definition 3.4（Shared Surface Set）。** 對任一受治理意圖 $I$，令 $\Sigma(I)$ 表示 $I$ 所參照之 **受治理非檔案 surface 集合**，包括 registry entries、generated artifacts、validator surfaces、atom-map members 或其他 adapter 宣告之共享資源。Admission 不得將兩個意圖 $I$ 與 $I'$ 歸類為 `parallel-safe`，若 $\Sigma(I) \cap \Sigma(I') \neq \emptyset$，**即便其物理寫入區域（$P_a$ projection）為 disjoint**。此定義將 §3.5 七層閘門中之 shared-surface gate 由 operational check 升級為形式化前置條件：當共享 surface 重疊時，無論檔案區段是否相交，皆須走 composer-routed admission、SERIAL 或 fail-closed path。
 
-ATM 使用兩種 CID。Candidate CID 用於 pre-write admission，由 adapter 對 kind、canonical symbol、source path、lineStart / lineEnd 所形成的 range signature，以及 detection method 進行 canonicalization 後雜湊而得。換言之，在目前 broker candidate bridge 的實作中，Candidate CID 並非只看 symbol 或 filePath，而是明確把候選區段的 line signature 納入 identity。Capsule CID 用於 post-validation artifact，以完整 source bundle、schema 與 policy 計算 content address。前者服務於寫入前仲裁，後者服務於封裝後版本錨定。此二層 CID 避免將「尚未寫入的候選區域」與「已驗證的封裝產物」混為一談。更重要的是，CID 並不是脫離 atom 而獨立存在的 fingerprint；它總是附著在 atom 或 virtual atom 這類治理單位之上，供 broker 判斷 identity、overlap 與 route。
+為避免概念重疊，本文不再將 CID 視為獨立治理物件，而是視其為「依附於治理物件」的身份訊號；Candidate CID 負責 admission identity、Capsule CID 負責 evidence-closure。
 
 為了讓後續的 bounded-region compare 具有明確的數學錨點，本文將 atom 或 virtual atom 的物理足跡直接視為其 source path/range 投影 $P_a$。給定兩個並行意圖所觸及的治理單位 $a_1, a_2$，所謂 physical disjointness 並不是模糊的「看起來行號沒撞到」，而是指其治理足跡滿足
 
@@ -419,7 +440,7 @@ Input: write intents I, I' over the same governance domain
 Notation: P(·) = physical write surface, Surface(·) = declared shared
           surface set (registry / generator / artifact / active intent
           surface), D(·) = declared read atom set, W(·) = declared write
-          atom set (see Definitions 5–6).
+          atom set (see Definitions 3.2–3.4).
 
 1: map I, I' to known atoms via adapter + atom map; resolve candidate CIDs
 2: if same atom or same candidate CID, return blocked-cid-conflict
@@ -557,7 +578,7 @@ Table 7 — Seven-Layer Admission Gate（含成熟度標記）。**成熟度欄�
 
 就目前實證成熟度而言，late joiner 的 park / rearbitration、same-file CID-disjoint 的 composer routing，以及 shared-surface 與 read/write dependency 所需的 SERIAL path，已具備對應的實作與 validation、fixture 或 validator 證據；相較之下，bounded re-plan 目前較準確的定位仍是受控的 split-suggestion / decomposition fallback，而非已完整驗證的自治式多輪重規劃器。本文因此刻意將兩者分開陳述，以避免將已驗證的 admission capability 與仍在演進中的 refinement workflow 混為一談。
 
-Definition 7（CAS base-hash guarded apply）. 對任一 admitted plan $p$，broker 記錄其 admission-time base hash $h_0$。Neutral steward 在 apply 前重新讀取目標 surface 的 base hash $h_1$；若 $h_1 = h_0$，則允許 one-shot apply；若 $h_1 \neq h_0$，則該 plan 不可直接套用，必須退回受控的後續路徑：對已具備證據的情形可改走 SERIAL 或 fail-closed，而在較細粒度資訊不足但仍有 refinement 空間時，則僅允許進入 bounded split-suggestion / decomposition fallback。此定義將 runtime closure 對齊到 optimistic concurrency control（OCC）之 compare-and-swap 精神（Bernstein, Hadzilacos, and Goodman, 1987, Ref. 41；Kung and Robinson, 1981, Ref. 13），但保留 ATM 的 atom / ConflictKey admission 語意。
+Definition 3.5（CAS base-hash guarded apply）. 對任一 admitted plan $p$，broker 記錄其 admission-time base hash $h_0$。Neutral steward 在 apply 前重新讀取目標 surface 的 base hash $h_1$；若 $h_1 = h_0$，則允許 one-shot apply；若 $h_1 \neq h_0$，則該 plan 不可直接套用，必須退回受控的後續路徑：對已具備證據的情形可改走 SERIAL 或 fail-closed，而在較細粒度資訊不足但仍有 refinement 空間時，則僅允許進入 bounded split-suggestion / decomposition fallback。此定義將 runtime closure 對齊到 optimistic concurrency control（OCC）之 compare-and-swap 精神（Bernstein, Hadzilacos, and Goodman, 1987, Ref. 41；Kung and Robinson, 1981, Ref. 13），但保留 ATM 的 atom / ConflictKey admission 語意。
 
 這裡也要明確區分 admission-time 的 region 判定與 apply-time 的實際位移。Bounded-region disjointness 保證的是「語意與編輯意圖的空間不重疊」，而不是宣稱兩份 patch 在實際套用時永遠不會出現 line-shift。若前段 patch 插入新行、後段 patch 修改既有區塊，兩者在 admission 階段仍可滿足 $P_{a_1} \cap P_{a_2} = \emptyset$，但 apply 時的行號偏移必須由 deterministic composer、neutral steward 與 CAS base-hash recheck 共同吸收，而不是讓各 agent 自行直接 IO。也正因如此，POS2 支持的不是單純 line-disjoint merge，而是 admission、composer、steward 與 CAS 所共同構成的受控同檔寫入鏈。
 
@@ -567,7 +588,7 @@ Neutral steward 負責將 broker 已准入的 plan 實際套用至同一受控 w
 
 更具體地說，neutral steward 的生命週期可寫成一條受控鏈：`re-read base hash -> apply admitted plan -> emit evidence -> trigger validators -> serialize / fail closed / controlled refinement fallback on drift`。它先以 base-hash recheck 確認 admission-time 前提仍成立，再執行單次套用、記錄 evidence、觸發 typecheck / CLI validate / domain validators；若 apply 過程中出現 drift、validator failure 或共享 surface 狀態改變，則不得自行發明新內容，而必須退回 SERIAL、fail-closed，或受控的 split-suggestion / decomposition fallback path。換言之，steward 不是另一個自由寫作者，而是 broker verdict 的 runtime enforcement 節點。
 
-這裡也需區分治理模式與一般本地開發模式：Definition 7 約束的是已進入 broker-governed path 的共享寫入，而不是禁止單一 agent 在私有局部修改中直接寫檔或自行 commit。是否要求所有寫入都進入 steward path，屬於部署政策選擇；本文主張的是，一旦某次寫入被宣告為共享 surface 上的 governed write，就不應再讓各 agent 繞過 steward 自行套用。
+這裡也需區分治理模式與一般本地開發模式：Definition 3.5 約束的是已進入 broker-governed path 的共享寫入，而不是禁止單一 agent 在私有局部修改中直接寫檔或自行 commit。是否要求所有寫入都進入 steward path，屬於部署政策選擇；本文主張的是，一旦某次寫入被宣告為共享 surface 上的 governed write，就不應再讓各 agent 繞過 steward 自行套用。
 
 Batch attribution 與 Wave Mode 是此路徑的延伸。當多個任務以 wave 形式同時提交時，broker 仍逐 intent 評估，並透過 checkpoint 與 per-task evidence slicing 維持每個任務的可追溯性。Wave Mode 不改變 admission 的核心 claim，只是把同一套 broker/steward 邏輯擴展到批次執行。
 
@@ -675,7 +696,7 @@ Table 11 — Experiment Status Map. 本表整理本文所使用或明確排除�
 | BLOCK same-owner overlap + split-suggestion replay | controlled field | 同 owner 同 bounded region；focused-child prototype 路徑 | archived; split-suggestion curator / review queue artifacts available | admission fail-closed + refinement loop prototype |
 | Wave Mode 5-scenario replay | replay suite | safe-wave / unsafe-same-deliverable / mixed-dependency / per-task slicing / needs-review gating | archived（MAO-0033） | batch admission extension |
 | `parallel-0041-0042` 跨 vendor real-task collision replay | field | 5 共同檔；Cursor Composer 2.5 + Google Gemini Flash 3.5；broker→wave 序列化路徑 | archived（`CID-Conflict-Run-Log.md`：`67b193f9` / `c393df1d`） | multi-vendor field collision governance path |
-| npc-brain adoption summary reconstruction | adoption metrics | 37 任務卡 / 44 scope-lock 互動 / 3 validator catches / 0 unrecovered admission error | summary-only; event-level ledger retained in adoption notes | adoption / recoverability evidence |
+| npc-brain adoption summary reconstruction | adoption metrics | 37 任務卡 / 44 scope-lock 互動 / 3 validator catches / 0 unrecovered admission error | descriptive cohort summary only; event-level ledger retained in adoption notes and not independently reproduced from a public export in this paper | adoption / recoverability evidence |
 | Self-hosting governance coverage recomputation | self-host metrics | 95 / 100；84%（514 / 609）；100% command（55 / 55） | recomputable from governance coverage report | self-hosting governance substrate |
 | STORM / CodeCRDT / SCF / CoAgent 對照式 throughput benchmark | comparative | end-to-end conflict catch rate / wall-clock / token cost | **deferred to future work**；本版不承諾 | §5 limitations |
 | AgenticFlict 重放 ATM broker（142K agent PR / 27.67% conflict / 336K+ region） | comparative replay | 跨 PR / Git merge sample → 單一治理域寫入前 intent 重放工作負載 | **deferred**，需先建立轉換層；本版不執行 | §5 limitations / motivation only |
@@ -832,9 +853,9 @@ Table 16 — Governance-Containment Mapping: existing evidence × three planes.
 
 | Plane（§3.1） | 主要治理機制 | 本文現有證據 | 證據類型 | 來源章節 |
 |---|---|---|---|---|
-| **Task-contract plane** | task intent、allowed files、forbidden rules、scope paths、direction lock | 三週 npc-brain adoption window 內 **44 次 scope-lock interactions** 與 **2 次 out-of-scope proposal 之正確拒絕**；3KLife 自託管之 out-of-scope delivery requiring waiver incident（Table 14, `TASK-CID-0041`）展示 scope drift 於 closure-time 被攔下並補登 waiver | adopter-side field evidence + self-hosting forensics（descriptive operational evidence；不含 population-level error rate） | §4.3 Table 15；§4.2 Table 14；§A.5 |
+| **Task-contract plane** | task intent、allowed files、forbidden rules、scope paths、direction lock | 三週 npc-brain adoption window 內 **44 次 scope-lock interactions** 與 **2 次 out-of-scope proposal 之正確拒絕**；3KLife 自託管之 out-of-scope delivery requiring waiver incident（Table 14, `TASK-CID-0041`）展示 scope drift 於 closure-time 被攔下並補登 waiver | adopter-side field evidence + self-hosting forensics（descriptive cohort / operational evidence；不含 public independently reproduced statistic 或 population-level error rate） | §4.3 Table 15；§4.2 Table 14；§A.5 |
 | **Mutation-admission plane**（CID broker subsystem） | atoms、CID、ConflictKey、read/write set、active registry、broker、neutral steward | **AdmissionBench v0.1 + v0.2**：v0.1 提供 20 scenarios / 42 mode comparisons / 42 matched expectations / **0 expectation failures** / **0 false-safe regressions** / 92.31% unsafe-caught 的 frozen baseline；v0.2 在同一 benchmark family 上補上 route F1 = 1.000、intent preservation = 97.62%、252 policy rows、294 ablation rows、4 enforcement rows；另有 POS2 同檔 bounded-region admission existence proof、B-12 late enforcement、BLOCK split suggestion 與 3 archived deterministic runner cases（B-02 / B-08 / B-13） | baseline benchmark substrate + paper-facing benchmark result + field existence proof + dual failure-mode field cases | §5.1 Tables 18–19；§4.4；§4.1 |
-| **Evidence-closure plane** | validation commands、validator envelope、evidence blocker、review advisory、closure packet | npc-brain cohort 之 **3 次 post-write validator catches** 與 **1 次 scope-lock contention burst** 經 ledger-replay 完成 recovery；npc-brain 同窗 **0 unrecovered admission errors**；3KLife plan-mirror sync failures（`TASK-CID-0043/0044/0045`）以 repair commits 補回 closure packets，顯示 closeout 漂移可被 ledger consistency check 攔下 | descriptive operational evidence + self-hosting forensics（含正向 catch 與漂移 recovery，但不含 catch-rate denominator） | §4.3 Table 15；§A.5 |
+| **Evidence-closure plane** | validation commands、validator envelope、evidence blocker、review advisory、closure packet | npc-brain cohort 之 **3 次 post-write validator catches** 與 **1 次 scope-lock contention burst** 經 ledger-replay 完成 recovery；npc-brain 同窗 **0 unrecovered admission errors**；3KLife plan-mirror sync failures（`TASK-CID-0043/0044/0045`）以 repair commits 補回 closure packets，顯示 closeout 漂移可被 ledger consistency check 攔下 | descriptive cohort / operational evidence + self-hosting forensics（含正向 catch 與漂移 recovery，但不含 public independently reproduced statistic 或 catch-rate denominator） | §4.3 Table 15；§A.5 |
 
 此 mapping 為 evidence-coverage 之 alignment view，非 benchmark：Task-contract plane 與 Evidence-closure plane 目前以 adopter-side 與 self-hosting forensics 為主，其證據強度足以支持 mechanism 可運作與漂移可導向 recovery，但不主張 population-level catch-rate 或 false-positive 量化。Mutation-admission plane 的定量主張則不再只由 v0.1 單獨承擔，而是以 v0.1 作為 baseline、v0.2 作為主結果共同支撐；其層級分離下的逐層必要性對應 §5.3 Table 20 之 **RQ4（layer necessity）**，其中 v0.2 已開始用 ablation rows 回答 layer necessity，但更廣泛的 cross-policy 與 cross-repo 比較仍屬後續擴充。
 
@@ -850,7 +871,21 @@ Table 16 — Governance-Containment Mapping: existing evidence × three planes.
 
 v0.1 的 frozen Generator commit 為 `3eec69a73a04112e2af8d3630c32138c37143eab`，對應 `artifacts/generated/atm-admission-bench/20260625/` 與 `artifacts/blind-bench/20260625/`。v0.2 paper profile 則使用 `--profile paper --seed 20260625` 重新產生 paper-facing artifact bundle；其 `generator-manifest.json` 所記錄之 `baseCommit` 與 `generatorCommit` 同樣為 `3eec69a73a04112e2af8d3630c32138c37143eab`，而本稿引用之公開發表錨點則為 AAF `main` 上納入這批 evidence bundle 的 commit `ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd`。對應 artifact 路徑為 `artifacts/generated/atm-admission-bench/20260625-paper/`。
 
-為了讓 baseline 與主結果的角色分工一目了然，Table 18 先對照 v0.1 與 v0.2 在相同 benchmark family 上各自承擔的報告功能。
+Benchmark contract：本文所稱 20-scenario family 指 `scripts/fixtures/atm-admission-bench/manifest.json` 中凍結的 20 個單一治理域 admission scenarios；42 comparisons 指在這些 scenarios 上以固定 seed `20260625` 執行之 mode-level expected-vs-actual comparisons。Policy row 是單一 scenario × policy mode × route expectation 的報告列；ablation row 是在移除一個 ATM layer 或 feature 後重新計算的同型報告列；adversarial row 是同一 fixture family 上加入 perturbation / stress condition 後的報告列；enforcement row 則只統計 admission / apply / validator / human escalation timing 的 enforcement-projection rows。Route labels 固定為 `parallel-safe`、`compose`、`serial`、`block` 與 `fail-closed/refine`；所有 v0.2 數字均由同一 seed 與同一 artifact bundle 產生，不混入跨 clone / PR merge workload。
+
+Ground truth and metrics：oracle / answer side 在不讀取 ATM output 的條件下由 frozen benchmark contract 產生，並先於正式 audit 對照完成；若 ATM output 與 oracle 不一致，差異記為 benchmark failure，而不是回填 expected answer。`route F1` 以 route-label classification 為評估對象，採 macro average over observed route classes；`intent preservation = 97.62%` 表示在 v0.2 paper-profile policy view 中，ATM-full 維持原 task intent 並避免 false-safe / unresolved outcome 的比例。這些 metrics 衡量的是單一治理域 admission behavior，而非 downstream Git merge quality 或端到端語義正確性。
+
+Table 18a — Baseline Policy Definitions.
+
+| Baseline / policy | Operational definition |
+|---|---|
+| ATM-full | 使用完整 atom / virtual atom / CID / shared surface / ConflictKey / CAS / fallback lock pipeline，並輸出 parallel / compose / serial / block / fail-closed route。 |
+| file-serial | 任何同檔或同 shared artifact overlap 皆序列化，不嘗試 bounded-region disjointness。 |
+| text-range | 僅以文字 range overlap 判定衝突，不使用 atom map、CID 或 semantic ConflictKey。 |
+| file-OCC / OCC-style | 以 base hash / file-level optimistic validation 判定 stale write，不提供 atom-level route selection。 |
+| no-governance | 不執行 broker admission；衝突僅可能由 apply / validator / human review 在後續階段發現。 |
+
+為了讓 baseline 與主結果的角色分工一目了然，Table 18 先對照 v0.1 與 v0.2 在相同 benchmark family 上各自承擔的報告功能。這張表的分母是 **42 mode comparisons**；它回答的是「兩個版本各自如何呈現同一 benchmark family 的總覽」，而不是 policy-row、ablation-row 或 enforcement-projection 的細部統計。
 
 Table 18 — ATM-AdmissionBench v0.1 Baseline vs. v0.2 Paper Profile.
 
@@ -867,7 +902,7 @@ Table 18 — ATM-AdmissionBench v0.1 Baseline vs. v0.2 Paper Profile.
 | Unresolved benchmark rows | 0 | 0 |
 | Ship-safe | yes | yes |
 
-在此基礎上，Table 19 進一步把正文真正引用的 v0.2 主結果濃縮成單張摘要表，方便對應 Results、Ablation 與 enforcement-timing 敘事。
+在此基礎上，Table 19 進一步把正文真正引用的 v0.2 主結果濃縮成單張摘要表，方便對應 Results、Ablation 與 enforcement-timing 敘事。這張表其實混合呈現三個不同 row universe：`252 policy rows`、`294 ablation rows / 210 adversarial rows`，以及 `51-row enforcement-timing projection`。其中 forwarding rows 使用 51-row enforcement-timing projection 作為分母，該 projection 由 v0.2 policy-view route outcomes 彙整而來；因此 9 + 6 + 3 + 0 + 33 = 51 並不應與 42 mode comparisons、252 policy rows 或 4 enforcement rows 直接相加或互作分母。
 
 Table 19 — ATM-AdmissionBench v0.2 Paper-Facing Summary.
 
@@ -884,7 +919,9 @@ Table 19 — ATM-AdmissionBench v0.2 Paper-Facing Summary.
 | Human-forwarded rows | 0 |
 | Not-forwarded rows | 33 |
 
-因此，v0.1 支撐的是「benchmark substrate 已凍結且可審核」這個 baseline claim；v0.2 支撐的則是本文在正文中真正要主張的 paper-facing result：ATM-full 在本次 20-scenario / 42-comparison benchmark family 上維持 0 expectation failures、0 unresolved rows、route F1 = 1.000，並將主要失效型態壓縮到少量 false-safe 與 over-serialization rows，而不是落回大量 silent mismatch。換言之，v0.1 負責回答「這個 benchmark 是否存在且可凍結」，v0.2 才負責回答「在凍結 benchmark 上，本文最終採信的結果是什麼」。
+因此，v0.1 支撐的是「benchmark substrate 已凍結且可審核」這個 baseline claim；v0.2 支撐的則是本文在正文中真正要主張的 paper-facing result：ATM-full 在本次 20-scenario / 42-comparison benchmark family 上維持 0 expectation failures、0 unresolved rows、route F1 = 1.000，並將主要失效型態壓縮到少量 false-safe 與 over-serialization rows，而不是落回大量 silent mismatch。換言之，v0.1 負責回答「這個 benchmark 是否存在且可凍結」，v0.2 才負責回答「在凍結 benchmark 上，本文最終採信的結果是什麼」；Table 19 也因此只應被讀作 **paper profile summary table**，而不是一張能同時取代所有細部附表的單一總表。
+
+若讀者想從 benchmark summary 轉向更細的機制必要性，下一步應讀 Table 20，而不是把 Table 19 中不同 row universe 的數字彼此直接比較。換言之，Table 18 建立版本分工，Table 19 報告 paper-facing summary，Table 20 才回答 layer necessity 與失效退化模式。
 
 v0.2 也讓我們第一次能在同一組 paper artifact 中把 Results、Ablation 與 enforcement timing 放到同一條可追溯敘事鏈上。以 ATM-full 為 anchor，去除 virtual atom 會新增 8 個 false-safe rows 並減少 9 個 end-to-end success rows；去除 conflict key 會新增 4 個 false-safe rows 並減少 5 個 success rows；去除 CID、shared surface、CAS 也各自造成 3 至 5 個 success-row 級別的退化；相對地，移除 fallback lock 雖未新增 false-safe，但會額外損失 2 個 success rows。這些 ablation 結果表示 ATM 的效果不是單一 heuristic，而是由 virtual atom、conflict identity、shared-surface 判定與 fail-closed recovery 路徑共同堆疊而成。
 
@@ -925,7 +962,9 @@ CID schema migration 需要正式機制。Candidate CID 的 canonical form 可�
 
 Liveness 與 starvation 尚待證明。ATM 的主要設計取向是 safety-first：不確定時阻擋或序列化。此策略合理但可能降低吞吐量；後續需建立 priority、retry、fairness 與 bounded waiting 的形式化模型。
 
-Forbidden rules 與 task contract 之 machine-checkable 形式化。本版 ATM 將 forbidden rules、allowed scope 與 task intent 表示為框架層 governance metadata；未來工作可將其中一子集合編譯為 solver-checkable constraints，於 broker / pre-tool gate 呼叫 solver 進行 policy compliance 檢查。相關方向可參考 solver-aided tool-policy enforcement（Ref. 55），該工作將自然語言 policy 編譯為 SMT constraints 並於工具呼叫前以 Z3 檢查不合規即阻擋。此延伸不主張取代既有 deterministic gate；它的作用是在 forbidden rules 與 scope predicates 之子集合上提供 machine-verifiable compliance proof，補強 §3.5 七層閘門之確定性論證。
+**Governance-Containment Track（後續 benchmark 擴充）.** 目前 AdmissionBench v0.2 已涵蓋 Mutation-admission plane 之 admission decision、ablation 與 adversarial scenarios，但 Task-contract plane 與 Evidence-closure plane 之 deterministic 量化覆蓋仍屬空白。為補上此缺口，下一版 AdmissionBench release 將加入一條獨立的 **Governance-Containment Track**，至少涵蓋以下 12 類確定性案例：out-of-scope file write、forbidden-rule violation、direction-epoch mismatch、unsupported closure attempt、validator-fail close attempt、missing-evidence close attempt、missing-deliverable close attempt、closure-packet mismatch、stale-base / base-hash drift、active-intent forwarding miss、shared-artifact mutation without declaration 與 validator-salvage path。對應之主要指標包括 `scope_violation_catch_rate`、`forbidden_rule_block_rate`、`unsupported_closure_catch_rate`、`phase_attribution`（pre_tool / admission / apply / validator / closure）、`false_block_rate` 與 `recovery_success_rate`。此 track 並 **不** 取代既有 mutation-admission benchmark，而是為 Task-contract plane 與 Evidence-closure plane 提供首份具分母之 benchmark 表面，使 §3.1 三平面架構之非 broker 平面同樣具備可重現之量化證據。本文不於本版交付此 track，亦不於本文宣稱其結果；其交付規格、fixture manifest 與 runner 路徑將隨後續 AdmissionBench release 公開於同一 reproducibility substrate。
+
+Forbidden rules 與 task contract 之 machine-checkable 形式化。本版 ATM 將 forbidden rules、allowed scope 與 task intent 表示為框架層 governance metadata；未來工作可將其中一子集合編譯為 solver-checkable constraints，於 broker / pre-tool gate 呼叫 solver 進行 policy compliance 檢查。相關方向可參考 solver-aided tool-policy enforcement（Winston et al., Ref. 55），該工作將自然語言 policy 編譯為 SMT constraints 並於工具呼叫執行前以 Z3 檢查不合規即阻擋。**ATM 可選擇性採納此方向作為 §3.5 七層閘門之延伸，而非取代既有 deterministic gate**；其作用是在 forbidden rules 與 scope predicates 之子集合上提供 machine-verifiable compliance proof，補強七層閘門之確定性論證，並與上述 Governance-Containment Track 之 `forbidden_rule_block_rate` 指標相互佐證。
 
 ---
 
@@ -949,7 +988,7 @@ Adapter-guided 會在七種情境失效或降級。第一，adapter capability i
 
 ### 6.3 Open Questions and Future Work
 
-後續研究應從五個方向推進。第一，cross-language atom identity 需要跨 adapter 的 semantic bridge，例如 API route、schema contract 或 generated client/server pair 的共同 CID。第二，active-intent forwarding 應從 apply-phase 補位推進到 admission-time default path，使 late enforcement 逐步變少。第三，liveness proof 需要與 scheduling policy 結合，避免 fail-closed 策略在高 contention repository 中造成 starvation。第四，CID migration 需要可機械驗證的 version negotiation 與 backfill path。第五，federated / cross-machine broker 是目前尚未處理的延伸方向：若多個 agent 位於不同 clone、不同主機或不同 PR branch，ATM 需要 federated registry、distributed active-intent visibility 與 consensus / lease protocol，才可能把 single-domain admission 推廣到 Git PR-based collaboration；在本文範圍內，這一層仍由 Git merge 與 human review 承擔。
+後續研究可收斂為四個主軸。第一，cross-language atom identity 仍需跨 adapter 的 semantic bridge，例如 API route、schema contract 或 generated client/server pair 的共同 CID。第二，active-intent forwarding 目前多半仍是 apply-phase 補位，後續應推進到 admission-time default path，使 late enforcement 逐步減少。第三，liveness proof 需要與 scheduling policy 一起形式化，避免 safety-first 的 fail-closed 策略在高 contention repository 中造成 starvation。第四，CID migration 仍需可機械驗證的 version negotiation 與 backfill path。至於跨 clone、跨主機與跨 PR branch 的 federated broker，本文將其明確留給 §6.4.5 Topology D，避免把 single-domain 核心主張與分散式延伸混寫。
 
 就方法學擴充而言，本文刻意不把所有工程配套都上升為主貢獻，但它們確實構成 ATM 完整度的一部分。其一是 atom police 一類的治理輔助機制，用於提醒原子覆蓋不足、owner map 漂移或 validator 缺口；其二是 Team Agents 與角色分流，用較便宜模型承擔局部編修與檢查，以降低 token 成本與單一代理幻覺風險；其三是 provider-specific Agent SDK 與 skill / CLI 包裝，將多廠商代理接入、知識累積與 tool-calling 錯誤抑制逐步制度化。這些方向較適合作為 future work 與 implementation implications，而非本論文當前的核心新穎性主張。
 
@@ -987,7 +1026,7 @@ ATM 之 admission 軟體於此拓樸**無需任何架構變更**；所需新工�
 
 若進一步繞過 git PR 機制，由多個遠端開發者之 patch 直接同步至中央 broker，則進入分散式 broker 設計範疇。此處需具體說明「out of scope」的根據，而非僅以 CAP 一語帶過。
 
-**為何不直接以 Raft / Paxos 擴展 broker。** 經典 leader-based consensus 演算法（Raft、Paxos 變體、Multi-Paxos）原則上可解決「多個 broker replica 對 admission 順序達成共識」的問題，技術上可行；但對 ATM 而言，引入 distributed consensus 不只是替換 broker process 的 backing store，而是要同時引入下列七項新工程負擔：(i) **federated active registry replication**——目前 Definition 6 的 active registry 是 broker-local 內存結構，分散式版本需設計 replication protocol、stale read 容忍策略與 read-your-writes 語意；(ii) **跨機器 ConflictKey 等價性**——若兩台機器持有不同 schema_version 之 adapter，admission 比較需先解決 schema reconciliation（§5 已標示 CID schema migration 為 open problem）；(iii) **lease / fencing token 機制**——避免 split-brain 場景下兩個 leader 同時 admit 重疊 intent；(iv) **steward 端的 distributed apply ordering**——neutral steward 不能僅在單一 worktree 套用，需處理 partial apply、cross-node rollback、bounded staleness；(v) **liveness / starvation 在 partition 下的形式化**——目前 §5 已標示 safety-first 策略在單 broker 下的 liveness 尚待證明，partition 場景使此問題更難；(vi) **evidence chain 的 distributed audit**——跨節點 verdict log 需有 causal ordering 與可重放能力；(vii) **operational complexity**——quorum loss、network partition、stale replica recovery 等 failure mode 需有對應 runbook 與 fail-closed 行為定義。
+**為何不直接以 Raft / Paxos 擴展 broker。** 經典 leader-based consensus 演算法（Raft、Paxos 變體、Multi-Paxos）原則上可解決「多個 broker replica 對 admission 順序達成共識」的問題，技術上可行；但對 ATM 而言，引入 distributed consensus 不只是替換 broker process 的 backing store，而是要同時引入下列七項新工程負擔：(i) **federated active registry replication**——目前 Definition 3.3 的 active registry 是 broker-local 內存結構，分散式版本需設計 replication protocol、stale read 容忍策略與 read-your-writes 語意；(ii) **跨機器 ConflictKey 等價性**——若兩台機器持有不同 schema_version 之 adapter，admission 比較需先解決 schema reconciliation（§5 已標示 CID schema migration 為 open problem）；(iii) **lease / fencing token 機制**——避免 split-brain 場景下兩個 leader 同時 admit 重疊 intent；(iv) **steward 端的 distributed apply ordering**——neutral steward 不能僅在單一 worktree 套用，需處理 partial apply、cross-node rollback、bounded staleness；(v) **liveness / starvation 在 partition 下的形式化**——目前 §5 已標示 safety-first 策略在單 broker 下的 liveness 尚待證明，partition 場景使此問題更難；(vi) **evidence chain 的 distributed audit**——跨節點 verdict log 需有 causal ordering 與可重放能力；(vii) **operational complexity**——quorum loss、network partition、stale replica recovery 等 failure mode 需有對應 runbook 與 fail-closed 行為定義。
 
 **本文採取的折衷：** 上列七項任何一項皆為獨立研究子題；本文之 single-domain core 主張刻意不主張其已解決。在實務部署上，**Topology C（pre-push admission bridge）已能涵蓋多數跨機器協作需求**——遠端開發者於本機 worktree 內完成 Topology A 之共寫，再以 Topology C 在 push 前完成 admission，最後以 git PR / merge substrate（Refs. 12, 32, 40）承擔 cross-clone 收斂。Topology D 因此被定位為「當 Topology A+C+git PR 組合對某類高頻跨機器 patch sync workload 仍不足時」之 future-work direction，而非已被本文 deferred 的 deliverable。技術上可行但工程規模顯著大於 A / B / C，本論文範疇內僅作為研究延伸方向，留待後續工作以 federated broker、bounded staleness 與 admission-time consensus protocol 為主題另行展開。
 
@@ -995,21 +1034,17 @@ ATM 之 admission 軟體於此拓樸**無需任何架構變更**；所需新工�
 
 ## 7. Conclusion（結論）
 
-本文提出 AI-Atomic-Framework（ATM）作為多代理軟體工程流程中、同一治理域內的寫入前准入層。它以 progressive atomization 將程式庫寫入意圖由粗到細轉換為可治理單位：先以 adapter 產生 semantic atoms，再以 atom map 連接 owner、tests、dependencies、shared surfaces 與 CID；當既有原子化不足時，ATM 以 virtual atoms 暫時治理未原子化段落，使 broker 能在寫入前定位真正的衝突點。當寫入意圖可安全並行時，ATM 允許 bounded-region admission；當寫入意圖觸碰相同 CID、shared surface 或 read/write dependency 時，ATM fail closed 或序列化；當同檔案變更可合成時，ATM 在同一受控 worktree 中交由 deterministic composer 與 neutral steward 完成單次中立寫入；當粒度不足時，ATM 則將 blocked overlap 導向 split-suggestion refinement loop。換言之，ATM 的核心不是單純讓更多寫入並行，而是把模糊的共享寫入風險轉換為可定位、可裁決、可驗證的治理單位。
+本文主張，多代理軟體工程真正缺少的，不只是更強的生成器或更晚的修復器，而是一個位於共享寫入之前、能把 task intent、repository scope、admission verdict、validator 與 evidence obligation 綁在同一治理路徑上的准入層。AI-Atomic-Framework（ATM）對這個問題的回答，是以 adapter-guided semantic atoms、atom map、virtual atom 與 CID broker，把原本模糊的共享寫入風險轉譯為可定位、可裁決、可重放的治理單位；當條件足夠清楚時允許 bounded-region admission，當條件不足或衝突不可安全裁決時則保守 fail closed，必要時再導向 composer-routed merge 或 refinement path。
 
-本文的貢獻不只在設計層，也在證據層。`§4.1` 的 deterministic fixture 與 runner MVP 給出 decision surface；`§4.2` 與 `§4.5` 的 self-hosting evidence 顯示治理機制可在框架自身演化過程中承受壓力並暴露缺口；`§4.3` 的 adopter-side evidence 說明治理落地並非只能在作者自己的 repository 內運作；`§4.4` 的 POS2 / B-12 / BLOCK 提供 same-file admission 的正反邊界；`§5` 則進一步將 AdmissionBench 拆成 **v0.1 baseline** 與 **v0.2 paper profile** 兩層。前者凍結 benchmark substrate 與 audit 邊界，後者提供本文真正採信的主結果：在 20 scenarios / 42 comparisons 的 benchmark family 上，ATM-full 維持 0 expectation failures、0 unresolved rows、route F1 = 1.000，並透過 ablation rows 顯示 virtual atom、conflict identity、shared surface 與 fail-closed recovery 路徑具有實質必要性。
+本文提出的證據鏈，目的不是宣稱 ATM 已完成大規模 comparative victory，而是證明這條治理路徑在單一受控檔案系統、worktree 或服務域內是可落地且可審計的。Deterministic fixtures、self-hosting records、adopter-side observations、same-file boundary cases，以及以 20 scenarios / 42 comparisons 凍結的 AdmissionBench paper profile，合在一起支撐的，是 single-domain pre-write admission 的可行性與 bounded recoverability，而不是跨組織、跨拓樸的全面優勢主張。這也是本文刻意保留邊界的原因：跨 clone / 跨 PR 的 distributed governance、惡意 adapter 條件下的完全語義保證、以及更大規模 comparative evaluation，仍屬後續工作。
 
-這組證據仍不足以構成跨 repository、跨組織、跨拓樸的大規模 comparative benchmark，但已足以支持本文的核心命題：在同一受控檔案系統、worktree 或服務域中，多代理軟體工程流程需要一個位於寫入前、可審計、可 fail closed 的共享變更准入層，而 ATM 提供了一條具體、可實作且具可追溯性的路徑。這條可追溯性不僅來自 source release tag，也來自 v0.2 paper profile 所附的 `generator-manifest.json`、`summary.json`、`paper-tables.md` 與 artifact hash manifest，讓審稿者能逐項核對本文引用的數字，而不必依賴持續演進的主分支。
-
-本文同時刻意界定邊界。ATM 不處理跨 clone / 跨 PR 的 distributed merge governance；它不保證惡意 adapter 或不完整 atom map 下的完全語義正確；它也尚未完成 cross-repo throughput、false-positive rate、token efficiency 或 large-scale comparative evaluation。這些都不是本文要掩蓋的缺口，而是下一階段工作的一部分：cross-language atom identity、active-intent forwarding、CID migration、federated broker、solver-checkable forbidden rules，以及更系統性的 comparative benchmark。
-
-若將多代理程式碼協作的問題只留給下游 Git merge 或人工 code review，系統往往得到的是過晚、過粗、過難追溯的衝突訊號。本文最終主張的是：共享 repository mutation 應在真正寫入前就被治理，而且治理單位不必停留在整檔或字元，而可以上升到 adapter-guided semantic atoms、atom map 與 virtual atom 所定義的可驗證衝突面。ATM 的價值，就在於把這條 admission path 從概念推進到可運作的治理基底，並以一條由 baseline、paper-facing result、field evidence 與可查核 artifact 組成的證據鏈支持它。
+如果共享 repository mutation 只能在寫入之後才由 Git merge、測試失敗或人工 code review 被動揭露，系統得到的往往是過晚、過粗且不易重放的衝突訊號。本文的核心結論因此很直接：對多代理共寫而言，pre-write admission 應被視為一個獨立的一級治理問題，而不是下游版本控制流程的副產品；ATM 的貢獻，在於把這個問題收斂成一套可實作、可追溯、也可誠實標示邊界的 specification-to-evidence governance substrate。
 
 ---
 
 ## Acknowledgements
 
-The author used large language model assistants during manuscript preparation for language editing, structural feedback, and literature discovery. All technical claims, framework design decisions, implementation choices, experiments, analyses, and conclusions were reviewed and accepted by the author, who assumes full responsibility for the manuscript. A detailed transparency statement — including vendor channels, division of responsibility, and explicit non-claims regarding evidence — is provided in Appendix B.
+The author used large language model assistants during manuscript preparation for language editing, structural feedback, and literature discovery. The assistants did not determine evidence inclusion/exclusion, benchmark acceptance, or final claim decisions. All technical claims, framework design decisions, implementation choices, experiments, analyses, and conclusions were reviewed and accepted by the author, who assumes full responsibility for the manuscript. A detailed transparency statement — including vendor channels, division of responsibility, and explicit non-claims regarding evidence — is provided in Appendix B.
 
 ---
 
@@ -1021,7 +1056,9 @@ The author used large language model assistants during manuscript preparation fo
 
 **證據可取得性與 release 對應（reproducibility statement）：**
 
-- **公開部分（public）：** ATM 框架本體之 source、deterministic runner MVP、12-scenario fixture design、ATM-AdmissionBench v0.1 baseline artifacts、ATM-AdmissionBench v0.2 paper-profile artifacts、broker decision implementation、CID validation scripts、Topology C bridge 與多數 self-hosting governance reports，存放於 GitHub 公開 repository `eaglhuang/AI-Atomic-Framework`。本論文之 source reference snapshot 為 release tag `v0.9.0-alpha.1` 對應 commit `0b31aa8683b44b3a78206132a0bf90a0fde73d1c`；AdmissionBench v0.1 baseline 與 v0.2 paper profile 的 machine-generated source anchor 均為 `generator-manifest.json` 所記錄之 `3eec69a73a04112e2af8d3630c32138c37143eab`；而公開 repo 內可直接查詢之 v0.2 paper-profile artifact publication anchor 為 AAF `main` commit `ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd`。若審稿者需要逐項核對數字，應以 `main` 上的 `artifacts/generated/atm-admission-bench/20260625-paper/`、其中的 `generator-manifest.json`、`summary.json`、`paper-tables.md`、`artifact-hash-manifest.sha256`，以及對應的 `20260625/` baseline 目錄交叉查對。
+本節先固定一個最重要的引用規則：**對本文正文數字與 paper-facing benchmark claims 的 canonical public anchor，預設以 AAF `main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` 下的 `artifacts/generated/atm-admission-bench/20260625-paper/` 為主**。`v0.9.0-alpha.1` source snapshot 與 `generator-manifest.json` 內記錄的 machine-generated source anchor 仍然重要，但角色分別是 source-reference snapshot 與 generator provenance anchor，不應與 paper-facing artifact anchor 混讀為同一層引用點。
+
+- **公開部分（public）：** ATM 框架本體之 source、deterministic runner MVP、12-scenario fixture design、ATM-AdmissionBench v0.1 baseline artifacts、ATM-AdmissionBench v0.2 paper-profile artifacts、broker decision implementation、CID validation scripts、Topology C bridge 與多數 self-hosting governance reports，存放於 GitHub 公開 repository `eaglhuang/AI-Atomic-Framework`。本論文之 source reference snapshot 為 release tag `v0.9.0-alpha.1` 對應 commit `0b31aa8683b44b3a78206132a0bf90a0fde73d1c`；AdmissionBench v0.1 baseline 與 v0.2 paper profile 的 machine-generated source anchor 均為 `generator-manifest.json` 所記錄之 `3eec69a73a04112e2af8d3630c32138c37143eab`。若審稿者需要逐項核對本文數字，應以 AAF `main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` 下的 `artifacts/generated/atm-admission-bench/20260625-paper/` 作為第一入口，再用其中的 `generator-manifest.json`、`summary.json`、`paper-tables.md`、`artifact-hash-manifest.sha256` 與對應的 `20260625/` baseline 目錄交叉查對。
 - **私有部分（access on request）：** 部分 same-file collision evidence（POS2 / B-12 / BLOCK / close-orchestration 的完整 patch envelope 與 governance ledger）、3KLife self-hosting incident packets、以及 npc-brain adopter-side records，因內含採用者專案內部 artifact 而暫存於 `eaglhuang/3KLife` 私有 repository 之 `docs/ai_atomic_framework/broker-collision-evidence/`。本文承諾於同步釋出之 supplementary data release（DOI 預留）中以去識別化形式提供 evidence chain、verdict log 與 validator trace，讀者亦可透過聯絡作者請求 review access；惟內部 task ledger、人名與專案商業資訊不會包含於 supplementary data。
 - **私有 artifact 之證據強度說明：** 本文 §4.4 之主結論不依賴尚未公開之私有檔案——POS2 evidence chain 之 broker verdict、composer plan id（如 `merge-255c73707a528edc`）、validator 命令（`git diff --check` / `npm run typecheck` / `npm run validate:cli`）與 commit hash 皆於本論文正文與 A.4 內公開可驗證；私有 envelope 主要支援 closure packet replay 與 step-by-step audit，而非作為 claim 本身的唯一證據來源。
 
@@ -1031,7 +1068,7 @@ Table A.1 — Evidence Artifact Index.
 |---|---|---|---|
 | 12-scenario suite design | controlled decision-surface coverage blueprint | `docs/ai_atomic_framework/arxiv-paper-v1/bench-design.md` | public（AAF repo） |
 | deterministic runner MVP | archived synthetic mechanism evidence | `tools/multi-vendor-broker-bench/README.md` | public（AAF repo） |
-| ATM-AdmissionBench v0.1 baseline + v0.2 paper profile | machine-generated baseline summary, label-retained blind package, paper-facing summary tables, provenance manifest, audit findings | `main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd`: `artifacts/generated/atm-admission-bench/20260625/`, `artifacts/generated/atm-admission-bench/20260625-paper/`, `artifacts/blind-bench/20260625/`, `docs/reviews/ATM-AdmissionBench-audit.md` | public（AAF repo / supplementary release）；v0.1 作為 baseline anchor，v0.2 作為 paper-facing reporting anchor |
+| ATM-AdmissionBench v0.1 baseline + v0.2 paper profile | machine-generated baseline summary, label-retained blind package, paper-facing summary tables, provenance manifest, audit findings | canonical public anchor: `main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` → `artifacts/generated/atm-admission-bench/20260625-paper/`; secondary anchors: `artifacts/generated/atm-admission-bench/20260625/`, `artifacts/blind-bench/20260625/`, `docs/reviews/ATM-AdmissionBench-audit.md` | public（AAF repo / supplementary release）；v0.1 作為 baseline anchor，v0.2 作為 paper-facing reporting anchor |
 | same-file collision evidence（POS2 / B-12 / BLOCK / close-orchestration） | positive / negative field evidence for same-file admission boundary | `docs/ai_atomic_framework/broker-collision-evidence/` | private（3KLife）；去識別化版本於 supplementary data release |
 | role-separated methodology replay | governance / audit methodology evidence for scope-lock failure classification and independent-role replay | methodology replay manifest, coordinator classification memo, wrong-scope vs. correct-scope replay packet | mixed：canonical SHA anchors public（AAF repo），replay bundle 以 supplementary data 去識別化釋出 |
 | npc-brain adoption | external governance adoption / recoverability evidence | `paper.md` §4.3 採用研究整理與 adoption notes | private（adopter project）；摘要統計於本文 Table 15 |
@@ -1071,7 +1108,7 @@ Table A.3 — Verification Map.
 | §3.4 Admission pipeline / §3.5 七層 hard gate | `packages/core/src/broker/decision.ts`、`conflict-matrix.ts`、`policy.ts`、`steward.ts` | `npm test -- broker/decision` |
 | §3.5 virtual-atom refinement | `packages/core/src/broker/agr.ts`（legacy implementation file name）、`packages/plugin-sdk/src/atomization-planning.ts` | `node --strip-types scripts/validate-agr-benchmark.ts`（legacy script name for virtual-atom admission pack; 12-scenario） |
 | §3.5 Augmented Decision Rule (read/write set) | `packages/core/src/broker/decision.ts`（`calculateBrokerDecision`） | benchmark scenario `07-registry-read-write-dependency` |
-| §3.5 Def 7 CAS base-hash guarded apply | `packages/core/src/broker/cas.ts` | `npm test -- broker/cas` |
+| §3.5 Def 3.5 CAS base-hash guarded apply | `packages/core/src/broker/cas.ts` | `npm test -- broker/cas` |
 | §3.6 Format adapters + Proposition 3 | `packages/core/src/broker/adapters/`（`json-record.ts`、`text-range.ts`、`numeric-scalar.ts`、`atom-map.ts`、`fallback-file-lock.ts`、`registry.ts`、`batch-planner.ts`） | `npm test -- broker/adapters/__tests__/self-hosting-adapter-benchmark` |
 | §3.7 Steward arbitration（4-verdict, fail-closed） | `packages/core/src/broker/steward.ts` | `npm test -- broker/steward` |
 | §4.1 12-scenario fixture suite | `scripts/fixtures/agr-benchmark/`、`scripts/validate-agr-benchmark.ts`、`scripts/lib/agr-benchmark-runner.ts`（legacy `agr-*` names） | `node --strip-types scripts/validate-agr-benchmark.ts` |
@@ -1095,19 +1132,32 @@ Table A.3 — Verification Map.
 6. 若 safe，放行 push；若 blocked，回報衝突並建議 rebase / merge / steward 路徑
 7. 若 composer-routed，產出 deterministic merge plan 並可選擇 steward-apply 至 working tree（預設不 auto-commit）
 
-### A.4.3 Topology C Implementation Stages（2026-06-23 完成）
+### A.4.3 Topology C Implementation Stages（2026-06-26 完成）
 
 Table A.4 — Topology C Implementation Stages.
 
 | Stage | Internal work package | Purpose |
 |---|---|---|
-| G0 | architecture lock-in | Contract 與架構鎖定 |
-| G1 | ingestion + adapter bridge | Git diff ingestion、adapter bridge、CLI admission |
-| G2 | hook + steward path | Hook install、evidence、steward dry-run / apply |
-| G3 | coverage + fallback | Fixture coverage、push-fail fallback、policy / audit |
-| G4 | docs + self-hosting evidence | Docs、self-hosting evidence、paper-ready evidence |
+| S0 | architecture lock-in | Contract 與架構鎖定 |
+| S1 | ingestion + adapter bridge | Git diff ingestion、adapter bridge、CLI admission |
+| S2 | hook + steward path | Hook install、evidence、steward dry-run / apply |
+| S3 | coverage + fallback | Fixture coverage、push-fail fallback、policy / audit |
+| S4 | docs + self-hosting evidence | Docs、self-hosting evidence、paper-ready evidence |
 
-### A.4.4 Topology C Non-Goals (MVP)
+### A.4.4 Artifact Manifest Snapshot
+
+Table A.4a — Public Artifact Manifest Snapshot.
+
+| Artifact | Commit / hash anchor | Role | Access status |
+|---|---|---|---|
+| `artifacts/generated/atm-admission-bench/20260625/` | generator commit `3eec69a73a04112e2af8d3630c32138c37143eab` | v0.1 baseline smoke artifacts | public release bundle |
+| `artifacts/blind-bench/20260625/` | generator commit `3eec69a73a04112e2af8d3630c32138c37143eab` | label-retained blind audit intake | public release bundle |
+| `artifacts/generated/atm-admission-bench/20260625-paper/` | AAF evidence commit `ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` | v0.2 paper-profile result bundle | public release bundle |
+| `docs/reviews/ATM-AdmissionBench-audit.md` / `artifacts/audit/audit-findings.json` | frozen audit input commit `3eec69a73a04112e2af8d3630c32138c37143eab` | role-separated audit evidence | public release bundle |
+| `docs/ai_atomic_framework/broker-collision-evidence/` | 3KLife planning repo evidence paths | POS2 / B-12 / BLOCK field evidence | de-identified or path-level summary in supplementary release |
+| npc-brain adoption notes / ledgers | retained by adopter-side planning records | cohort recovery and validator-catch reconstruction | summary-only in paper; raw event ledger not redistributed by default |
+
+### A.4.5 Topology C Non-Goals (MVP)
 
 - 無 per-commit 強制 gate（per-commit overhead 不必要；`git push` 為治理邊界）
 - 無背景 daemon / cache（首版以同步 hook 為主，cache 列為後續最佳化）
@@ -1117,7 +1167,7 @@ Table A.4 — Topology C Implementation Stages.
 - 不主張解決所有 git 衝突之語意層問題：對純程式碼合併，標準 git `pull --rebase` 已足夠
 - 不解決兩位遠端開發者同時送 PR 之 race：此仍由 git non-fast-forward 治理
 
-### A.4.5 Topology C Acceptance Conditions
+### A.4.6 Topology C Acceptance Conditions
 
 `atm git admit` CLI 可於 push 前評估 local-vs-remote delta；pre-push hook 可呼叫該命令並產出明確 operator output；同檔 disjoint 結構化編輯可路由至既有 broker / composer 語意；真實重疊於 push 前 fail-closed 並產出可審查 evidence；post-push-fail fallback 可解釋並重跑相同 admission path；evidence 可歸檔以支撐論文主張，無需新 envelope schema。完整契約與設計記錄見 `docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md`。
 
@@ -1165,21 +1215,21 @@ Table A.4 — Topology C Implementation Stages.
 38. Sun, Chengzheng, Xiaohua Jia, Yanchun Zhang, Yun Yang, and David Chen. 1998. "Achieving Convergence, Causality Preservation, and Intention Preservation in Real-Time Cooperative Editing Systems." *ACM Transactions on Computer-Human Interaction* 5 (1): 63-108. https://doi.org/10.1145/274444.274447. （經典 Operational Transformation 文獻；用以對照 ATM 之 admission-time 路徑 vs. OT 之 post-hoc reconciliation。）
 39. Sun, Chengzheng, and Clarence A. Ellis. 1998. "Operational Transformation in Real-Time Group Editors: Issues, Algorithms, and Achievements." In *Proceedings of the 1998 ACM Conference on Computer Supported Cooperative Work*, 59-68. https://doi.org/10.1145/289444.289469. （OT 演算法系列工作的綜述基礎，用以說明為何 ATM 採 pre-write admission 而非 post-hoc transform。）
 40. Chacon, Scott, and Ben Straub. 2014. *Pro Git*, 2nd ed. Apress / Open Source. https://git-scm.com/book. （Git branching / merging / rebase 之 canonical 文獻；用以對齊 ATM broker 與 Git native merge substrate 之邊界。）
-41. Bernstein, Philip A., Vassos Hadzilacos, and Nathan Goodman. 1987. *Concurrency Control and Recovery in Database Systems*. Reading, MA: Addison-Wesley. https://www.microsoft.com/en-us/research/people/philbe/book/. （並行控制與 OCC 教科書級基礎；用以對齊 Definition 7 之 CAS base-hash 與 §3 admission closure 之 OCC 精神。）
+41. Bernstein, Philip A., Vassos Hadzilacos, and Nathan Goodman. 1987. *Concurrency Control and Recovery in Database Systems*. Reading, MA: Addison-Wesley. https://www.microsoft.com/en-us/research/people/philbe/book/. （並行控制與 OCC 教科書級基礎；用以對齊 Definition 3.5 之 CAS base-hash 與 §3 admission closure 之 OCC 精神。）
 42. Hou, Xinyi, Yanjie Zhao, Yue Liu, Zhou Yang, Kailong Wang, Li Li, Xiapu Luo, David Lo, John Grundy, and Haoyu Wang. 2024. "Large Language Models for Software Engineering: A Systematic Literature Review." *ACM Transactions on Software Engineering and Methodology* 33 (8): 1-79. https://doi.org/10.1145/3695988. （LLM-SE systematic review；用以將本文置於 LLM-for-SE 整體 landscape 並對齊 multi-agent coordination 為何重要之動機。）
 43. Zhao, Wenting, et al. 2024. "Commit0: Library Generation from Scratch." arXiv:2412.01769 [cs.SE]. https://arxiv.org/abs/2412.01769. （長程 library-from-scratch 生成 benchmark，補強 §1.1 之 repository-level 任務難度光譜。）
 44. Starace, Giulio, et al. 2025. "PaperBench: Evaluating AI's Ability to Replicate AI Research." arXiv:2504.01848 [cs.AI]. https://arxiv.org/abs/2504.01848. （從研究論文重建可執行 codebase 之 benchmark；用以對齊 repository-level evaluation substrate。）
-45. Zhou, et al. 2026. "FeatureBench: Benchmarking Agentic Coding for Complex Feature Development." arXiv:2602.06814 [cs.SE]. https://arxiv.org/abs/2602.06814. （end-to-end agentic feature development benchmark；與 FEA-Bench 互補。）
-46. Liu, et al. 2026. "RACE-bench: Reasoning-Aware Code Evaluation for Repository-Level Feature Addition." arXiv:2603.10052 [cs.SE]. https://arxiv.org/abs/2603.10052. （加入中間推理品質評估，揭示推理失敗而非僅看終測 pass。）
-47. Rashid, Muhammad, et al. 2025. "SWE-PolyBench: A Multi-Language Repository-Level Benchmark for AI Coding Agents." arXiv:2504.08703 [cs.SE]. https://arxiv.org/abs/2504.08703. （跨語言 repository-level benchmark；對齊 ATM 之 adapter-mediated governance 主張的外部 validity 評估需求。）
-48. Ni, Pengfei, et al. 2025. "GitTaskBench: A Benchmark for Realistic Repository-Leveraging Workflows." arXiv:2508.18993 [cs.SE]. https://arxiv.org/abs/2508.18993. （covers realistic repository-leveraging workflows，作為 future comparative replay corpora 候選。）
-49. Lewis, Patrick, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Kuettler, Mike Lewis, Wen-tau Yih, Tim Rocktaeschel, Sebastian Riedel, and Douwe Kiela. 2020. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." In *Advances in Neural Information Processing Systems 33*. arXiv:2005.11401. https://arxiv.org/abs/2005.11401. （RAG grounding 基礎；支撐外部證據可改善 factuality / specificity。）
+45. Zhou, Qixing, et al. 2026. "FeatureBench: Benchmarking Agentic Coding for Complex Feature Development." arXiv:2602.10975 [cs.SE]. https://arxiv.org/abs/2602.10975. （end-to-end agentic feature development benchmark；與 FEA-Bench 互補。）
+46. Liu, Shuhan, et al. 2026. "A Benchmark for Evaluating Repository-Level Code Agents with Intermediate Reasoning on Feature Addition Task." arXiv:2603.26337 [cs.SE]. https://arxiv.org/abs/2603.26337. （加入中間推理品質評估，揭示推理失敗而非僅看終測 pass。）
+47. Rashid, Muhammad Shihab, et al. 2025. "SWE-PolyBench: A multi-language benchmark for repository level evaluation of coding agents." arXiv:2504.08703 [cs.SE]. https://arxiv.org/abs/2504.08703. （跨語言 repository-level benchmark；對齊 ATM 之 adapter-mediated governance 主張的外部 validity 評估需求。）
+48. Ni, Ziyi, et al. 2025. "GitTaskBench: A Benchmark for Code Agents Solving Real-World Tasks Through Code Repository Leveraging." arXiv:2508.18993 [cs.SE]. https://arxiv.org/abs/2508.18993. （covers realistic repository-leveraging workflows，作為 future comparative replay corpora 候選。）
+49. Lewis, Patrick, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen-tau Yih, Tim Rocktäschel, Sebastian Riedel, and Douwe Kiela. 2020. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." In *Advances in Neural Information Processing Systems 33*. arXiv:2005.11401. https://arxiv.org/abs/2005.11401. （RAG grounding 基礎；支撐外部證據可改善 factuality / specificity。）
 50. Gao, Luyu, Zhuyun Dai, Panupong Pasupat, Anthony Chen, Arun Tejasvi Chaganty, Yicheng Fan, Vincent Y. Zhao, Ni Lao, Hongrae Lee, Da-Cheng Juan, and Kelvin Guu. 2022. "RARR: Researching and Revising What Language Models Say, Using Language Models." arXiv:2210.08726 [cs.CL]. https://arxiv.org/abs/2210.08726. （evidence attribution / revision；支撐 evidence-guided correction 方向。）
 51. Dhuliawala, Shehzaad, Mojtaba Komeili, Jing Xu, Roberta Raileanu, Xian Li, Asli Celikyilmaz, and Jason Weston. 2023. "Chain-of-Verification Reduces Hallucination in Large Language Models." arXiv:2309.11495 [cs.CL]. https://arxiv.org/abs/2309.11495. （verification planning 降低 hallucination；支撐 validator / evidence contract 之相關文獻脈絡。）
 52. Yang, John, Carlos E. Jimenez, Alexander Wettig, Kilian Lieret, Shunyu Yao, Karthik Narasimhan, and Ofir Press. 2024. "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering." In *Advances in Neural Information Processing Systems 37*. arXiv:2405.15793. https://arxiv.org/abs/2405.15793. （agent-computer interface 與工具回饋設計會影響 coding-agent 表現；Cluster B closest adjacent work 之 anchor。）
-53. Wang, Haoyu, et al. 2025. "AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents." To appear in *Proceedings of the 48th International Conference on Software Engineering (ICSE 2026)*. arXiv:2503.18666. https://arxiv.org/abs/2503.18666. （Cluster B；提供 trigger / predicate / enforcement DSL，runtime 約束 LLM agent tool calls 含 code execution，為 ATM pre-tool scope gate 與 forbidden rules 之最接近 adjacent work。）
-54. ClawGuard authors. 2026. "ClawGuard: A Runtime Security Framework for Tool-Augmented LLM Agents Against Indirect Prompt Injection." arXiv:2604.11790. https://arxiv.org/abs/2604.11790. （Cluster B；於 tool-call boundary 執行 user-confirmed rule set 之 deterministic access enforcement；ATM 借鏡其 boundary-enforcement 思路但不繼承其 prompt-injection 安全保證。）
-55. Solver-Aided Policy authors. 2026. "Solver-Aided Verification of Policy Compliance in Tool-Augmented LLM Agents." arXiv:2603.20449. https://arxiv.org/abs/2603.20449. （Future work reference；將自然語言 policy 編譯為 SMT constraints 並以 solver 於工具呼叫前檢查，作為 ATM forbidden rules 與 task contract 之未來 solver-checkable formalization 方向。）
+53. Wang, Haoyu, Christopher M. Poskitt, and Jun Sun. 2025. "AgentSpec: Customizable Runtime Enforcement for Safe and Reliable LLM Agents." arXiv:2503.18666 [cs.SE]. https://arxiv.org/abs/2503.18666. （Cluster B；提供 trigger / predicate / enforcement DSL，runtime 約束 LLM agent tool calls 含 code execution，為 ATM pre-tool scope gate 與 forbidden rules 之最接近 adjacent work。）
+54. Zhao, Wei, Zhe Li, Peixin Zhang, and Jun Sun. 2026. "ClawGuard: A Runtime Security Framework for Tool-Augmented LLM Agents Against Indirect Prompt Injection." arXiv:2604.11790 [cs.CR]. https://arxiv.org/abs/2604.11790. （Cluster B；於 tool-call boundary 執行 user-confirmed rule set 之 deterministic access enforcement；ATM 借鏡其 boundary-enforcement 思路但不繼承其 prompt-injection 安全保證。）
+55. Winston, Cailin, Claris Winston, and René Just. 2026. "Solver-Aided Verification of Policy Compliance in Tool-Augmented LLM Agents." arXiv:2603.20449 [cs.SE]. https://arxiv.org/abs/2603.20449. （Future work reference；將自然語言 policy 編譯為 SMT constraints 並以 solver 於工具呼叫前檢查，作為 ATM forbidden rules 與 task contract 之未來 solver-checkable formalization 方向。）
 
 ---
 
