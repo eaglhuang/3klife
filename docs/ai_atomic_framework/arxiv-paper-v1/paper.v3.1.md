@@ -14,17 +14,11 @@ Repository: https://github.com/eaglhuang/AI-Atomic-Framework
 
 ## Abstract（摘要）
 
-多代理 LLM 已能將軟體工程任務切分為規劃、生成、驗證與修復，但在多個代理於同一受控檔案系統、worktree 或服務域內「尚未落筆前」形成寫入意圖時，現有框架仍缺少一個可審計、可重放的入場前治理層。ATM 聚焦於這個單一缺口：系統如何在共享治理域中判斷哪些寫入可並行、哪些需合成、哪些需序列化，及哪些應保守封鎖。
+多代理 LLM 已能將軟體工程任務切分為規劃、生成、驗證與修復；但當多個代理在同一受控檔案系統、worktree 或服務域內形成寫入意圖時，現有框架仍缺少一個可審計、可重放的入場前治理層。ATM 聚焦於這個單一缺口：在共享治理域中，系統如何於任何共享寫入發生前判斷哪些意圖可並行、哪些需合成、哪些需序列化，以及哪些應保守封鎖。
 
-本文將 ATM 定位為 **specification-to-evidence governance substrate**，而非單純 concurrency broker：它把 task intent、repository scope、write admission、validator 與 evidence obligation 結合為一條單域治理鏈；CID broker 僅是其中的共享變更准入子系統，用於治理 shared repository mutation 的進入權。核心流程為 adapter-guided atomization 將 intent 映射成 semantic atoms，經 CID-brokered admission 做並行／序列化／阻擋判斷；當 atom map 覆蓋不足時，virtual atom 作為過渡治理單位保留 bounded-region 比較能力；實際寫入則由同一治理域內的 neutral steward 執行，避免多個代理直接在共享檔案直接落筆。
+本文將 ATM 定位為 **specification-to-evidence governance substrate**，而非單純 concurrency broker。ATM 把 task intent、repository scope、write admission、validator 與 evidence obligation 結合為一條單域治理鏈；CID broker 僅是其中的共享變更准入子系統。核心流程為 adapter-guided atomization 將 intent 映射成 semantic atoms，再由 CID-brokered admission 發出 parallel、compose、serial 或 block verdict；當 atom map 覆蓋不足時，virtual atom 作為過渡治理單位保留 bounded-region 比較能力；實際寫入則由同一治理域內的 neutral steward 執行。
 
-本文以「五條 evidence strands」支持上述主張：  
-（i）12-scenario deterministic fixture 與三個 archived runner cases（decision surface）；  
-（ii）三週外部採用者治理觀察（adopter-side recoverability）；  
-（iii）一條完整歸檔的 POS2 正向、兩類負向案例（admission-time 漏抓、apply-time fail-closed、admission-time 直接阻擋）；  
-（iv）批次排程與 CID identity 穩定性延伸觀察；  
-（v）由 **v0.1 baseline** 與 **v0.2 paper profile** 共同組成的 ATM-AdmissionBench：v0.1 提供凍結 benchmark/substrate 與盲審邊界，v0.2 提供論文結果層（20-scenario / 42-comparison、0 expectation failures、0 unresolved rows、ATM-full route F1 = 1.000，並有 252 policy rows、294 ablation rows、210 adversarial rows、4 enforcement rows）。  
-這五條證據支持「單一治理域內的可行性」與「有界 recoverability」，但不構成對其他併發控制系統的全面比較性優劣結論。ATM 不取代 Git merge，也不涵蓋跨 clone 或跨 PR 的分散式治理。核心主張限定於：在單一受控治理域內，ATM 提供可實作、可審計且可逐步擴充的入場前準入層（可由 `generator-manifest.json`、`summary.json` 與 `paper-tables.md` 交叉查核）。
+本文的證據由 deterministic fixture、三個 archived runner cases、三週外部採用觀察、POS2 正向 same-file admission case、B-12 / BLOCK 負向案例、批次排程與 CID identity 穩定性觀察，以及 ATM-AdmissionBench v0.1 baseline / v0.2 paper profile 共同構成。ATM-AdmissionBench 應讀作 deterministic conformance suite：20 個 unique scenarios 產生 42 個 mode-level comparisons，並衍生 policy、ablation、adversarial 與 enforcement observations；這些 derived rows 不是獨立 population samples。整體證據支持「單一治理域內的可行性」與「有界 recoverability」，但不構成對其他併發控制系統的全面比較性優劣結論。ATM 不取代 Git merge，也不涵蓋跨 clone 或跨 PR 的分散式治理；其核心主張限定於：在單一受控治理域內，ATM 提供可實作、可審計且可逐步擴充的入場前準入層。
 
 ## Introduction（緒論）
 
@@ -96,7 +90,7 @@ Table 1 — Related-Work Citation-to-Claim Map.
 
 ### Tier 1：字元層並行控制
 
-CodeCRDT、EvoGit 與 AgentGit 可視為低層次的合併基底（Refs. 1, 28, 29）。此類方法關心多代理文字變更如何收斂、如何回復，以及如何以版本控制作為同步媒介。其優點是普遍、語言無關、且易於嵌入既有編輯流程；其限制則是無法提供 atom、bounded region 或語意層級的寫入前准入。CodeCRDT 即使達到字元級收斂，仍需承認 5-10% 的語義衝突，而這類衝突通常要等到 typecheck、lint 或 test 才會浮現（Ref. 1）。
+CodeCRDT、EvoGit 與 AgentGit 可視為低層次的合併基底（Refs. 1, 27, 28）。此類方法關心多代理文字變更如何收斂、如何回復，以及如何以版本控制作為同步媒介。其優點是普遍、語言無關、且易於嵌入既有編輯流程；其限制則是無法提供 atom、bounded region 或語意層級的寫入前准入。CodeCRDT 即使達到字元級收斂，仍需承認 5-10% 的語義衝突，而這類衝突通常要等到 typecheck、lint 或 test 才會浮現（Ref. 1）。
 
 需要明確切開的是 ATM 與 CodeCRDT 在 semantic soundness 上的對應關係：ATM 並非宣稱能將語義衝突率壓至 0。如 §4.6 與 §6.2 所述，ATM 的 `parallel-safe` verdict 只保證 static admission closure（Proposition 2）—— 即「在既有 adapter、atom map 與宣告式依賴模型下，未觀測到足以阻擋的衝突訊號」——而不主張最終程式行為必然語義正確。其差異在於 **時機**：CodeCRDT 於字元收斂後讓 typecheck / lint / test 作為下游語義 catch；ATM 則於寫入前 fail closed 那些「無法靜態證明安全」的意圖，但對已 admitted 的寫入仍仰賴 validator、CAS base-hash 與 fail-closed fallback 作為後續語義 catch。因此 ATM 與 CodeCRDT 在 5-10% 語義衝突這條 baseline 上不是 0% vs. 10% 的直接競爭，而是「將部分衝突前移至 admission 時被攔截或序列化，將其餘衝突繼續交由 validator / runtime check 處理」的時序重分配。對應的 admission-time false-negative 量化比較仍屬 §5 deferred comparative benchmark。
 
@@ -124,9 +118,13 @@ SCF、MPAC 與相關工作流治理系統處理的是角色、意圖、流程與
 
 第二組是生成後的衝突修復路線，代表工作包括 AgentSpawn（Ref. 5）與 Rover（Ref. 16）。AgentSpawn 以動態生成子代理、記憶切片與多階段衝突合併，強化長週期程式碼生成中的後段協作彈性；Rover 則以 LLM 進行 context-aware conflict resolution，從合併衝突 hunk 中提取上下文並以模型推理建議解法。這一組工作的共同點，是把主要計算與治理成本放在「生成後的合併與修復」。相較之下，ATM 的關心點更早，也更窄：在多個代理尚未真正落筆前，哪些寫入應被允許、序列化、導向 composer，或直接 fail closed。Sartori（Ref. 10）對 specification gap 的分析也與此相關：當代理對共享 surface 的認知不一致時，無論 admission 路徑或 post-hoc 路徑都會受影響，差別主要在失敗何時被偵測。
 
+ColaUntangle（Ref. 62）則提供另一個相鄰但不同的設計點：它使用 LLM 輔助 explicit / implicit dependency reasoning，將已經 tangled 的 commits 進行 post-hoc partitioning。ATM 不處理 commit untangling，也不把 LLM inferred dependency 視為 admission verdict 的可信來源；ATM 目前依賴 adapter 宣告、static read/write sets、shared surfaces、ConflictKeys、CAS revalidation 與 validators 做 deterministic fail-closed arbitration。ColaUntangle 因此較適合作為未來 semantic-dependency provider 的參考方向，而不是本版 ATM 的直接 baseline。
+
 結構化與半結構化合併系統提供了一個重要的相鄰設計點。SafeMerge 在產生不同程式版本後驗證 semantic conflict-freedom（Ref. 56）；半結構化合併系統則利用部分或可設定的程式結構，減少純 line-based merging 的限制（Ref. 57）。ATM 則在更早的邊界進行干預：它在共享 worktree 發生變更之前，推導出保守的 atom-level、region-level 與 shared-surface conflict abstraction。因此，ATM 並未繼承這些系統的 semantic conflict-freedom guarantee；相反，這些系統說明了為何 ATM 同時拒絕純文本合併與強制性的 universal AST-first 設計。
 
 近期 transactional-agent runtime 則著重於工具效果何時可以安全地永久生效。Atomix 使用 epochs、resource scopes、frontiers 與 compensation 將 execution 與 settlement 分離（Ref. 58）；Cordon 則引入 task-scoped transaction boundary，在 commit 之前對 effects 進行 staging、validation 與 audit metadata 綁定（Ref. 59）。ATM 將這個設計空間專門化到 repository mutation：adapter-guided atoms 與 ConflictKeys 決定哪些共享寫入可被允許，而 neutral steward 則執行 governed apply。這些系統是互補的，而非可以互換的。
+
+SEMAP（Ref. 61）與 ATM 都採用 contract-based governance，但 enforcement object 不同。SEMAP 以 agent role 為中心，透過 required input artifacts、expected output artifacts、structured messaging 與 lifecycle verification 來降低 under-specification、coordination misalignment 與 verification failure。ATM 則將 task-scoped execution contract 綁定到 allowed resources、forbidden predicates、repository scope、validators、evidence obligations 與 direction epoch，並進一步連到 atom / CID / ConflictKey、active registry、CAS revalidation 與 neutral steward。ATM 因此不主張 behavioral contract 本身的新穎性；其新穎點在於單一 authority domain 內的 repository-specific pre-write admission 與 evidence-backed closure。
 
 第三組則是更上游的協作編排與效能最佳化工作，例如 MACOG、ProjectGen + SSAT、DebateCoder、Multi-Agent Code Verification 與 Singh intent-driven optimization（Refs. 20-24）。它們回答的是「如何分解任務」、「如何安排角色」、「如何驗證產物」或「如何降低 token 與延遲成本」。ATM 回答的則是較窄但關鍵的寫入前准入問題：當多個 agent 已經形成寫入意圖時，是否准入、如何准入，以及如何讓寫入成為中立且可審計的事件。
 
@@ -658,7 +656,7 @@ Table 9 — Evidence Boundary Overview. 此表彙整 §4.1–§4.5 使用的主�
 | Evidence bucket | Observed measure | Value / record | Supported claim | Boundary / non-claim | Evidence source |
 |---|---|---|---|---|---|
 | Deterministic fixture design | 設計矩陣涵蓋之 scenario 類別數 | 12（cross-regime disjointness / same-file different atom / same shared surface / read-write dependency / virtual-atom refinement / validator fallback / static admission closure 等） | §3.5 七層 gate 與 §3.4 准入流程之 decision surface 覆蓋藍圖 | 並非 12 情境全數已完成 deterministic runner 重放；已歸檔 runner evidence 集中於 B-02 / B-08 / B-13 | §4.1, `arxiv-paper-v1/bench-design.md` |
-| ATM-AdmissionBench v0.1 baseline + v0.2 paper profile | scenario / comparison / expectation failure / false-safe / routing / ablation / enforcement | v0.1：20 scenarios / 42 comparisons / 0 expectation failures / 0 false-safe regressions；unsafe-caught rate 92.31%。v0.2：20 scenarios / 42 comparisons / 0 expectation failures / route F1 = 1.000 / intent preservation = 97.62% / 252 policy rows / 294 ablation rows / 4 enforcement rows | v0.1 提供 frozen benchmark substrate；v0.2 提供本文正文採信的 paper-facing result，將 admission evaluation 從 smoke baseline 推進到可寫入 Results / Ablation 的正式結果 | 單一 governance-domain benchmark；v0.1 blind package 仍是 label-retained audit intake，v0.2 亦不直接外推到跨 clone PR merge | §5.1–§5.3, `artifacts/generated/atm-admission-bench/20260625/`, `artifacts/generated/atm-admission-bench/20260625-paper/`, `docs/reviews/ATM-AdmissionBench-audit.md` |
+| ATM-AdmissionBench v0.1 baseline + v0.2 paper profile | scenario / comparison / expectation failure / false-safe / routing / ablation / enforcement | v0.1：20 scenarios / 42 comparisons / 0 expectation failures / 0 false-safe regressions；unsafe-caught rate 92.31%。v0.2：20 scenarios / 42 comparisons / 0 expectation failures / route-label F1 = 1.000 / intent preservation = 97.62% / 252 policy rows / 294 ablation rows / 4 enforcement rows | v0.1 提供 frozen benchmark substrate；v0.2 提供本文正文採信的 paper-facing result，將 admission evaluation 從 smoke baseline 推進到可寫入 Results / Ablation 的正式結果 | 單一 governance-domain benchmark；derived policy / ablation / adversarial / enforcement rows 皆由 20 個 unique scenarios 展開，並非獨立 population samples；v0.1 blind package 仍是 label-retained audit intake，v0.2 亦不直接外推到跨 clone PR merge | §5.1–§5.3, `artifacts/generated/atm-admission-bench/20260625/`, `artifacts/generated/atm-admission-bench/20260625-paper/`, `docs/reviews/ATM-AdmissionBench-audit.md` |
 | MAO parallel routing benchmark | scenario 數 / catch rate / false-safe | 12 / 100% / 0 | broker admission 模擬器級可重現性，支撐 §3.5 admission 演算法之 vocabulary 對齊 | offline 確定性模擬，非 live broker / live distributed load test | TASK-MAO-0010, `docs/reports/mao-parallel-routing-benchmark.md` |
 | POS2 same-file admission | 同檔 disjoint bounded region 成功 admit + apply 案例 | 1（POS2-A / POS2-B 雙 vendor，bounded `broker.ts:841-878` vs `989-1142`） | §3.4 progressive atomization + §3.5 layer 4 之 `needs-physical-split` 路由可導入 deterministic composer / neutral steward 並通過 validators | 單一受控現場樣本，支持同 owner map、同治理域內的 bounded admission；不主張跨 PR / 跨 clone 之分散式合併 | §4.4, `broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/` |
 | B-12 apply-phase arbitration | 雙 vendor admission 皆 `parallel-safe`、實際 fail-closed 發生於 apply-phase active-intent | 雙 intent / 1 active holder（`TASK-TEAM-0043`） | admission-time 未抓到的 active-intent 衝突仍會於 apply-phase fail closed，對應 §3.7 admission-time forwarding open problem | 不主張 admission-time 已完整前移；屬 late enforcement | §4.4, `broker-collision-evidence/runs/B-12-field-2026-06-20/` |
@@ -813,18 +811,18 @@ CID stability 的延伸價值則在於把「候選治理單位」與「驗證後
 
 第三是 **construct validity**。本文以 atom、candidate CID、ConflictKey、shared surface 與 declared `readAtoms` 作為衝突代理變數；這些結構是 semantic interference 的**代理（proxy）而非等價證明**。ATM 的 `parallel-safe`、`compose`、`serial` 與 `block` verdict，意指「在既有 adapter、atom map 與宣告式依賴模型下，觀測到何種治理訊號」，而**非**直接保證最終程式行為必然語義正確；這也是為何本文始終保留 validator handoff、CAS base-hash recheck、active-intent enforcement 與 fail-closed fallback 作為運行時補位。
 
-第四是 **conclusion validity**。本文提供的是帶有結果層級區分的 benchmark chain，而**非**完整大規模對照式 benchmark：v0.1 承擔 baseline 與 audit anchor，v0.2 承擔 paper-facing result；兩者合起來已足以支持 route F1、layer ablation 與 enforcement timing 的正文敘事，但本文仍未報告 controlled comparative benchmark、confidence intervals 或 power analyses。因此，本文較適合支持「ATM 在其宣稱邊界內具可行性、可審核性與方法新穎性」之結論，而**不足以**對 throughput、false-positive rate、token efficiency 或跨系統優劣做統計性定論；後者屬 §5.3 與 §6.3 所列之後續 comparative evaluation 範圍。
+第四是 **conclusion validity**。本文提供的是帶有結果層級區分的 benchmark chain，而**非**完整大規模對照式 benchmark：v0.1 承擔 baseline 與 audit anchor，v0.2 承擔 paper-facing result；兩者合起來已足以支持 route-label F1、layer ablation 與 enforcement timing 的正文敘事，但本文仍未報告 controlled comparative benchmark、confidence intervals 或 power analyses。因此，本文較適合支持「ATM 在其宣稱邊界內具可行性、可審核性與方法新穎性」之結論，而**不足以**對 throughput、false-positive rate、token efficiency 或跨系統優劣做統計性定論；後者屬 §5.3 與 §6.3 所列之後續 comparative evaluation 範圍。
 
 ### Governance-Containment Mapping across the Three Planes
 
-本節將 §4.1–§4.5 已具備之 evidence 沿 §3.1 之三個 governance plane 對位，並非新增 benchmark；其目的是讓讀者在進入 §5 AdmissionBench results 之前，能直接看到「目前已支撐到哪一個 plane、以何種證據強度支撐」。Mutation-admission plane 的 baseline 定量主張由 §5.1 的 v0.1 smoke 承擔，但本文正文採信的 paper-facing quantitative result 已進一步由 v0.2 paper profile 補強，包括 route F1、intent preservation、ablation rows 與 enforcement rows；Task-contract plane 與 Evidence-closure plane 的證據強度則目前仍主要來自 field-level 與 self-hosting forensics。
+本節將 §4.1–§4.5 已具備之 evidence 沿 §3.1 之三個 governance plane 對位，並非新增 benchmark；其目的是讓讀者在進入 §5 AdmissionBench results 之前，能直接看到「目前已支撐到哪一個 plane、以何種證據強度支撐」。Mutation-admission plane 的 baseline 定量主張由 §5.1 的 v0.1 smoke 承擔，但本文正文採信的 paper-facing quantitative result 已進一步由 v0.2 paper profile 補強，包括 route-label F1、intent preservation、ablation rows 與 enforcement rows；Task-contract plane 與 Evidence-closure plane 的證據強度則目前仍主要來自 field-level 與 self-hosting forensics。
 
 Table 16 — Governance-Containment Mapping: existing evidence × three planes.
 
 | Plane（§3.1） | 主要治理機制 | 本文現有證據 | 證據類型 | 來源章節 |
 |---|---|---|---|---|
 | **Task-contract plane** | task intent、allowed files、forbidden rules、scope paths、direction lock | 三週 npc-brain adoption window 內 **44 次 scope-lock interactions** 與 **2 次 out-of-scope proposal 之正確拒絕**；3KLife 自託管之 out-of-scope delivery requiring waiver incident（`TASK-CID-0041`）展示 scope drift 於 closure-time 被攔下並補登 waiver | adopter-side field evidence + self-hosting forensics（descriptive cohort / operational evidence；不含 public independently reproduced statistic 或 population-level error rate） | §4.3 Table 15；§4.2 incidents；§A.5 |
-| **Mutation-admission plane**（CID broker subsystem） | atoms、CID、ConflictKey、read/write set、active registry、broker、neutral steward | **AdmissionBench v0.1 + v0.2**：v0.1 提供 20 scenarios / 42 mode comparisons / 42 matched expectations / **0 expectation failures** / **0 false-safe regressions** / 92.31% unsafe-caught 的 frozen baseline；v0.2 在同一 benchmark family 上補上 route F1 = 1.000、intent preservation = 97.62%、252 policy rows、294 ablation rows、4 enforcement rows；另有 POS2 同檔 bounded-region admission existence proof、B-12 late enforcement、BLOCK split suggestion 與 3 archived deterministic runner cases（B-02 / B-08 / B-13） | baseline benchmark substrate + paper-facing benchmark result + field existence proof + dual failure-mode field cases | §5.1 Tables 18–19；§4.4；§4.1 |
+| **Mutation-admission plane**（CID broker subsystem） | atoms、CID、ConflictKey、read/write set、active registry、broker、neutral steward | **AdmissionBench v0.1 + v0.2**：v0.1 提供 20 scenarios / 42 mode comparisons / 42 matched expectations / **0 expectation failures** / **0 false-safe regressions** / 92.31% unsafe-caught 的 frozen baseline；v0.2 在同一 benchmark family 上補上 route-label F1 = 1.000（42 mode-level comparisons）、intent preservation = 97.62%、252 policy rows、294 ablation rows、4 enforcement rows；另有 POS2 同檔 bounded-region admission existence proof、B-12 late enforcement、BLOCK split suggestion 與 3 archived deterministic runner cases（B-02 / B-08 / B-13） | baseline benchmark substrate + paper-facing benchmark result + field existence proof + dual failure-mode field cases | §5.1 Tables 18–19；§4.4；§4.1 |
 | **Evidence-closure plane** | validation commands、validator envelope、evidence blocker、review advisory、closure packet | npc-brain cohort 之 **3 次 post-write validator catches** 與 **1 次 scope-lock contention burst** 經 ledger-replay 完成 recovery；npc-brain 同窗 **0 unrecovered admission errors**；3KLife plan-mirror sync failures（`TASK-CID-0043/0044/0045`）以 repair commits 補回 closure packets，顯示 closeout 漂移可被 ledger consistency check 攔下 | descriptive cohort / operational evidence + self-hosting forensics（含正向 catch 與漂移 recovery，但不含 public independently reproduced statistic 或 catch-rate denominator） | §4.3 Table 15；§A.5 |
 
 此 mapping 為 evidence-coverage 之 alignment view，非 benchmark：Task-contract plane 與 Evidence-closure plane 目前以 adopter-side 與 self-hosting forensics 為主，其證據強度足以支持 mechanism 可運作與漂移可導向 recovery，但不主張 population-level catch-rate 或 false-positive 量化。Mutation-admission plane 的定量主張則不再只由 v0.1 單獨承擔，而是以 v0.1 作為 baseline、v0.2 作為主結果共同支撐；其層級分離下的逐層必要性對應 §5.3 Table 20 之 **RQ4（layer necessity）**，其中 v0.2 已開始用 ablation rows 回答 layer necessity，但更廣泛的 cross-policy 與 cross-repo 比較仍屬後續擴充。
@@ -841,9 +839,9 @@ Table 16 — Governance-Containment Mapping: existing evidence × three planes.
 
 v0.1 的 frozen Generator commit 為 `3eec69a73a04112e2af8d3630c32138c37143eab`，對應 `artifacts/generated/atm-admission-bench/20260625/` 與 `artifacts/blind-bench/20260625/`。v0.2 paper profile 則使用 `--profile paper --seed 20260625` 重新產生 paper-facing artifact bundle；其 `generator-manifest.json` 所記錄之 `baseCommit` 與 `generatorCommit` 同樣為 `3eec69a73a04112e2af8d3630c32138c37143eab`，而本稿引用之公開發表錨點則為 ATM public repository `main` 上納入這批 evidence bundle 的 commit `ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd`。對應 artifact 路徑為 `artifacts/generated/atm-admission-bench/20260625-paper/`。
 
-Benchmark contract：本文所稱 20-scenario family 指 `scripts/fixtures/atm-admission-bench/manifest.json` 中凍結的 20 個單一治理域 admission scenarios；42 comparisons 指在這些 scenarios 上以固定 seed `20260625` 執行之 mode-level expected-vs-actual comparisons。Policy row 是單一 scenario × policy mode × route expectation 的報告列；ablation row 是在移除一個 ATM layer 或 feature 後重新計算的同型報告列；adversarial row 是同一 fixture family 上加入 perturbation / stress condition 後的報告列；enforcement row 則只統計 admission / apply / validator / human escalation timing 的 enforcement-projection rows。Route labels 固定為 `parallel-safe`、`compose`、`serial`、`block` 與 `fail-closed/refine`；所有 v0.2 數字均由同一 seed 與同一 artifact bundle 產生，不混入跨 clone / PR merge workload。
+Benchmark contract：本文所稱 20-scenario family 指 `scripts/fixtures/atm-admission-bench/manifest.json` 中凍結的 20 個單一治理域 admission scenarios；42 comparisons 指在這些 scenarios 上以固定 seed `20260625` 執行之 mode-level expected-vs-actual comparisons。Policy row、ablation row、adversarial row 與 enforcement row 均為由這 20 個 unique scenarios 衍生出的 condition-level observations，而非新的獨立樣本：policy row 是單一 scenario × policy mode × route expectation 的報告列；ablation row 是在移除一個 ATM layer 或 feature 後重新計算的同型報告列；adversarial row 是同一 fixture family 上加入 perturbation / stress condition 後的報告列；enforcement row 則只統計 admission / apply / validator / human escalation timing 的 enforcement-projection rows。Route labels 固定為 `parallel-safe`、`compose`、`serial`、`block` 與 `fail-closed/refine`；所有 v0.2 數字均由同一 seed 與同一 artifact bundle 產生，不混入跨 clone / PR merge workload。
 
-Ground truth and metrics：oracle / answer side 在不讀取 ATM output 的條件下由 frozen benchmark contract 產生，並先於正式 audit 對照完成；若 ATM output 與 oracle 不一致，差異記為 benchmark failure，而不是回填 expected answer。`route F1` 以 route-label classification 為評估對象，採 macro average over observed route classes；`intent preservation = 97.62%` 表示在 v0.2 paper-profile policy view 中，ATM-full 維持原 task intent 並避免 false-safe / unresolved outcome 的比例。這些 metrics 衡量的是單一治理域 admission behavior，而非 downstream Git merge quality 或端到端語義正確性。
+Ground truth and metrics：oracle / answer side 在不讀取 ATM output 的條件下由 frozen benchmark contract 產生，並先於正式 audit 對照完成；若 ATM output 與 oracle 不一致，差異記為 benchmark failure，而不是回填 expected answer。`route-label F1` 以 42 個 mode-level comparisons 的 route-label classification 為評估對象，採 macro average over observed route classes；`false-safe rows` 則屬於 policy comparison surface，不屬於該 route-label F1 分母。`intent preservation = 97.62%` 表示在 v0.2 paper-profile policy view 中，ATM-full 維持原 task intent 並避免 false-safe / unresolved outcome 的比例。這些 metrics 衡量的是單一治理域 admission behavior，而非 downstream Git merge quality 或端到端語義正確性。
 
 Table 18a — Baseline Policy Definitions.
 
@@ -866,13 +864,12 @@ Table 18 — ATM-AdmissionBench v0.1 Baseline vs. v0.2 Paper Profile.
 | Mode comparisons | 42 | 42 |
 | Matched expectations | 42 / 42 | 42 / 42 |
 | Expectation failures | 0 | 0 |
-| False-safe regressions | 0 | 2 false-safe rows in policy comparison surface |
+| False-safe regressions | 0 | 2 false-safe rows in policy comparison surface（not in the 42-comparison route-F1 denominator） |
 | Unsafe-caught / intent-preservation view | 92.31% unsafe-caught | 97.62% intent preservation |
 | Over-serialization view | baseline not separately reported | 4 over-serialization rows in ATM-full policy view |
 | Unresolved benchmark rows | 0 | 0 |
-| Ship-safe | yes | yes |
 
-在此基礎上，Table 19 進一步把正文真正引用的 v0.2 主結果濃縮成單張摘要表，方便對應 Results、Ablation 與 enforcement-timing 敘事。這張表其實混合呈現三個不同 row universe：`252 policy rows`、`294 ablation rows / 210 adversarial rows`，以及 `51-row enforcement-timing projection`。其中 forwarding rows 使用 51-row enforcement-timing projection 作為分母，該 projection 由 v0.2 policy-view route outcomes 彙整而來；因此 9 + 6 + 3 + 0 + 33 = 51 並不應與 42 mode comparisons、252 policy rows 或 4 enforcement rows 直接相加或互作分母。
+在此基礎上，Table 19 進一步把正文真正引用的 v0.2 主結果濃縮成單張摘要表，方便對應 Results、Ablation 與 enforcement-timing 敘事。這張表其實混合呈現三個不同 row universe：由 20 個 unique scenarios 衍生出的 `252 policy rows`、`294 ablation rows / 210 adversarial rows`，以及 `51-row enforcement-timing projection`。其中 forwarding rows 使用 51-row enforcement-timing projection 作為分母，該 projection 由 v0.2 policy-view route outcomes 彙整而來；因此 9 + 6 + 3 + 0 + 33 = 51 並不應與 42 mode comparisons、252 policy rows 或 4 enforcement rows 直接相加或互作分母。
 
 也因此，本文不將 AdmissionBench 的 20 scenarios、42 mode comparisons 或各類 policy / ablation rows，與 SyncMind / SyncBench 的 24,332 out-of-sync instances 視為同一種樣本數主張（Ref. 60）。SyncBench 衡量的是 agent belief state 與 evolving repository state 脫節後的 recovery；AdmissionBench 衡量的是單一治理域內、共享寫入發生前的 admission verdict、layer ablation 與 enforcement timing。兩者可互補，但不應以 raw instance count 直接比較 benchmark 規模或證據強度。
 
@@ -880,18 +877,18 @@ Table 19 — ATM-AdmissionBench v0.2 Paper-Facing Summary.
 
 | Category | Result |
 |---|---:|
-| Policy rows | 252 |
-| Ablation rows | 294 |
-| Adversarial rows | 210 |
+| Derived policy rows（from 20 unique scenarios） | 252 |
+| Derived ablation rows（from 20 unique scenarios） | 294 |
+| Derived adversarial rows（from 20 unique scenarios） | 210 |
 | Enforcement rows | 4 |
-| ATM-full route F1 | 1.000 |
+| ATM-full route-label F1（42 mode comparisons） | 1.000 |
 | Admission-forwarded rows | 9 |
 | Apply-phase forwarded rows | 6 |
 | Validator-forwarded rows | 3 |
 | Human-forwarded rows | 0 |
 | Not-forwarded rows | 33 |
 
-因此，v0.1 支撐的是「benchmark substrate 已凍結且可審核」這個 baseline claim；v0.2 支撐的則是本文在正文中真正要主張的 paper-facing result：ATM-full 在本次 20-scenario / 42-comparison benchmark family 上維持 0 expectation failures、0 unresolved rows、route F1 = 1.000，並將主要失效型態壓縮到少量 false-safe 與 over-serialization rows，而不是落回大量 silent mismatch。換言之，v0.1 負責回答「這個 benchmark 是否存在且可凍結」，v0.2 才負責回答「在凍結 benchmark 上，本文最終採信的結果是什麼」；Table 19 也因此只應被讀作 **paper profile summary table**，而不是一張能同時取代所有細部附表的單一總表。
+因此，v0.1 支撐的是「benchmark substrate 已凍結且可審核」這個 baseline claim；v0.2 支撐的則是本文在正文中真正要主張的 paper-facing result：ATM-full 在本次 20-scenario / 42-comparison benchmark family 上維持 0 expectation failures、0 unresolved rows、route-label F1 = 1.000，並將 policy comparison surface 中的主要失效型態壓縮到少量 false-safe 與 over-serialization rows，而不是落回大量 silent mismatch。換言之，v0.1 負責回答「這個 benchmark 是否存在且可凍結」，v0.2 才負責回答「在凍結 benchmark 上，本文最終採信的結果是什麼」；Table 19 也因此只應被讀作 **paper profile summary table**，而不是一張能同時取代所有細部附表的單一總表。
 
 若讀者想從 benchmark summary 轉向更細的機制必要性，下一步應讀 Table 20，而不是把 Table 19 中不同 row universe 的數字彼此直接比較。換言之，Table 18 建立版本分工，Table 19 報告 paper-facing summary，Table 20 才回答 layer necessity 與失效退化模式。
 
@@ -919,7 +916,7 @@ Table 20 — AdmissionBench Research Questions and Current Evidence.
 |---|---|---|---|
 | RQ1: Admission safety | ATM 是否會放過危險寫入？ | v0.1 baseline 對 42 comparisons 報告 0 false-safe regressions 與 0 expectation failures；v0.2 進一步把安全性結果放進 policy surface，顯示 ATM-full 僅剩少量 false-safe rows，且無 unresolved rows；POS2 / B-12 / BLOCK 補足正反邊界。 | 對 no-governance、text-range、file-level、OCC-style policies 做更大規模對照。 |
 | RQ2: Concurrency preservation | ATM 是否保留安全並行機會，而非一律整檔序列化？ | POS2 顯示 same-file bounded-region case 可走 composer / steward 而非整檔序列化；v0.2 以 over-serialization rows 將這件事量化到 paper-facing result。 | 擴大 safe-admission recall 與 over-serialization rate 的跨 policy 比較。 |
-| RQ3: Routing correctness | ATM 是否能選擇 `parallel`、`compose`、`serial`、`block` 或 `re-arbitrate` 類路由？ | v0.1 baseline 已在 42 / 42 expected verdict comparisons 上全數吻合；v0.2 進一步報告 ATM-full route F1 = 1.000。 | 擴展到更大 scenario family 與更多 adapter 組合。 |
+| RQ3: Routing correctness | ATM 是否能選擇 `parallel`、`compose`、`serial`、`block` 或 `re-arbitrate` 類路由？ | v0.1 baseline 已在 42 / 42 expected verdict comparisons 上全數吻合；v0.2 進一步報告 ATM-full route-label F1 = 1.000（42 mode-level comparisons）。 | 擴展到更大 scenario family 與更多 adapter 組合。 |
 | RQ4: Layer necessity | 七層 gate 各自避免哪些 failure modes？ | v0.1 baseline exercise 了 virtual atom、read/write dependency、shared surface、conflict arbitration 與 validator catch；v0.2 已開始用 ablation rows 回答逐層必要性，顯示移除 virtual atom、conflict key、CID、shared surface、CAS、fallback lock 都會帶來可觀退化。 | 補齊更廣的 cross-repo ablation 與長期觀測。 |
 | RQ5: Enforcement timing | 危險 intent 是在 admission、apply、validator 哪一層被抓到？ | BLOCK、B-12 與 v0.2 enforcement rows 已說明 admission-time block、apply-phase fail-closed、validator catch 的相位分工；npc-brain adoption 補充 0 unrecovered admission errors。 | 在更大 benchmark 上建立 admission / apply / validator / silent-miss 的完整分母。 |
 | RQ6: Adapter trust boundary | adapter 漏報或惡意宣告時，其他層能補救多少？ | 現有 field evidence 與 v0.2 adversarial rows 顯示 validator、CAS、active-intent 與 fail-closed path 能提供補救，但完整 adversarial trust-boundary 量化尚未完成。 | 擴增 adversarial injection family，量測 silent corruption、validator salvage、CAS salvage 與 denial-of-service。 |
@@ -933,6 +930,8 @@ Adapter trust 是主要形式化缺口。ATM 的 admission soundness 依賴 adap
 CID schema migration 需要正式機制。Candidate CID 的 canonical form 可能隨 schema_version 演進；若不同 agent 使用不同版本，broker 必須能判斷其是否等價、需轉換或應 fail closed。本文僅指出此問題，尚未提供完整 migration proof。
 
 Liveness 與 starvation 尚待證明。ATM 的主要設計取向是 safety-first：不確定時阻擋或序列化。此策略合理但可能降低吞吐量；後續需建立 priority、retry、fairness 與 bounded waiting 的形式化模型。
+
+Operational overhead 亦尚未被本文量化。ATM 的 deterministic gates 本身不必然引入 LLM token cost，但 intent serialization、adapter discovery、atom-map lookup、virtual-atom refinement、composer path、neutral steward apply、CAS recheck 與 downstream validators 都可能增加 latency 或 runtime cost。本文不主張 latency、throughput、token efficiency 或 memory-footprint 優勢；這些屬於後續 microbenchmark 與 deployment study 的範圍。
 
 **Governance-Containment Track（後續 benchmark 擴充）.** 目前 AdmissionBench v0.2 已涵蓋 Mutation-admission plane 之 admission decision、ablation 與 adversarial scenarios，但 Task-contract plane 與 Evidence-closure plane 之 deterministic 量化覆蓋仍屬空白。為補上此缺口，下一版 AdmissionBench release 將加入一條獨立的 **Governance-Containment Track**，至少涵蓋以下 12 類確定性案例：out-of-scope file write、forbidden-rule violation、direction-epoch mismatch、unsupported closure attempt、validator-fail close attempt、missing-evidence close attempt、missing-deliverable close attempt、closure-packet mismatch、stale-base / base-hash drift、active-intent forwarding miss、shared-artifact mutation without declaration 與 validator-salvage path。對應之主要指標包括 `scope_violation_catch_rate`、`forbidden_rule_block_rate`、`unsupported_closure_catch_rate`、`phase_attribution`（pre_tool / admission / apply / validator / closure）、`false_block_rate` 與 `recovery_success_rate`。此 track 並 **不** 取代既有 mutation-admission benchmark，而是為 Task-contract plane 與 Evidence-closure plane 提供首份具分母之 benchmark 表面，使 §3.1 三平面架構之非 broker 平面同樣具備可重現之量化證據。本文不於本版交付此 track，亦不於本文宣稱其結果；其交付規格、fixture manifest 與 runner 路徑將隨後續 AdmissionBench release 公開於同一 reproducibility substrate。
 
@@ -1198,6 +1197,8 @@ Table A.4a — Public Artifact Manifest Snapshot.
 58. Mohammadi, Bardia, Nearchos Potamitis, Lars Klein, Akhil Arora, and Laurent Bindschaedler. 2026. "Atomix: Timely, Transactional Tool Use for Reliable Agentic Workflows." arXiv:2602.14849 [cs.LG]. https://arxiv.org/abs/2602.14849. （Transactional tool-use runtime；以 epochs、resource scopes、frontiers、settlement 與 compensation 管理 agentic tool effects，作為 ATM repository-mutation settlement 之相鄰文獻。）
 59. Chen, Zheng, Hanqing Liu, Duling Xu, Dong Dong, Jialin Li, Bangzheng Pu, and Jidong Zhai. 2026. "Cordon: Semantic Transactions for Tool-Using LLM Agents." arXiv:2606.17573 [cs.OS]. https://arxiv.org/abs/2606.17573. （Contemporaneous transactional-agent runtime；以 task-scoped transaction boundary、shadow state、effect staging、validation 與 audit metadata 對照 ATM 之 repository-specific admission / steward path。）
 60. Guo, Xuehang, Xingyao Wang, Yangyi Chen, Sha Li, Chi Han, Manling Li, and Heng Ji. 2025. "SyncMind: Measuring Agent Out-of-Sync Recovery in Collaborative Software Engineering." arXiv:2502.06994 [cs.SE]. https://arxiv.org/abs/2502.06994. （SyncBench；提供 agent out-of-sync recovery benchmark，適合作為未來外部 replay source，但不與 AdmissionBench 之 pre-write admission row universe 直接比較樣本數。）
+61. Mao, Zhenyu, Jacky Keung, Fengji Zhang, Shuo Liu, Yifei Wang, and Jialong Li. 2025. "Towards Engineering Multi-Agent LLMs: A Protocol-Driven Approach." arXiv:2510.12120 [cs.SE]. https://arxiv.org/abs/2510.12120. （SEMAP；以 behavioral contracts、structured messaging 與 lifecycle verification 治理 multi-agent LLM workflows，作為 ATM task-scoped repository-governance contract 的相鄰設計點。）
+62. Hou, Bo, Xin Tan, Kai Zheng, Fang Liu, Yinghao Zhu, and Li Zhang. 2025. "LLM-Driven Collaborative Model for Untangling Commits via Explicit and Implicit Dependency Reasoning." arXiv:2507.16395 [cs.AI]. https://arxiv.org/abs/2507.16395. （ColaUntangle；以 explicit / implicit dependency reasoning 做 post-hoc commit untangling，作為 ATM 未來 semantic-dependency provider 的相鄰方向而非直接 baseline。）
 
 ---
 
@@ -1268,7 +1269,7 @@ Readers wishing to inspect the manuscript-side admission evidence are referred t
 
 (ii) **deterministic runner replay bundle**：可在 `v0.9.0-alpha.1` snapshot 上以 `npm run bench:multi-vendor-broker` 或等價命令重放 B-02 / B-08 / B-13；含 expected vs. actual verdict diff。
 
-(iii) **ATM-AdmissionBench baseline + paper-profile artifacts**：同時收錄兩層可追溯材料。第一層為 **v0.1 baseline smoke artifacts**：frozen generator commit `3eec69a73a04112e2af8d3630c32138c37143eab`、`artifacts/generated/atm-admission-bench/20260625/`、`artifacts/blind-bench/20260625/`、`docs/reviews/ATM-AdmissionBench-audit.md` 與 `artifacts/audit/audit-findings.json`；包含 20 scenarios、42 comparisons、0 expectation failures、0 false-safe regressions、92.31% unsafe-caught rate，以及 pass-with-caveats audit conclusion。第二層為 **v0.2 paper-profile artifacts**：ATM public repository `main` commit `ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` 下的 `artifacts/generated/atm-admission-bench/20260625-paper/`，其中包含 `summary.json`、`paper-tables.md`、`main-results.md`、`results.jsonl`、`generator-manifest.json` 與 `artifact-hash-manifest.sha256`；其中 manifest 所記錄之 `baseCommit` / `generatorCommit` 皆為 `3eec69a73a04112e2af8d3630c32138c37143eab`，供審稿者逐項查核 scenario count、mode comparisons、policy/ablation/enforcement row counts、route F1、intent preservation，以及 paper tables 中引用的彙整數字。
+(iii) **ATM-AdmissionBench baseline + paper-profile artifacts**：同時收錄兩層可追溯材料。第一層為 **v0.1 baseline smoke artifacts**：frozen generator commit `3eec69a73a04112e2af8d3630c32138c37143eab`、`artifacts/generated/atm-admission-bench/20260625/`、`artifacts/blind-bench/20260625/`、`docs/reviews/ATM-AdmissionBench-audit.md` 與 `artifacts/audit/audit-findings.json`；包含 20 scenarios、42 comparisons、0 expectation failures、0 false-safe regressions、92.31% unsafe-caught rate，以及 pass-with-caveats audit conclusion。第二層為 **v0.2 paper-profile artifacts**：ATM public repository `main` commit `ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` 下的 `artifacts/generated/atm-admission-bench/20260625-paper/`，其中包含 `summary.json`、`paper-tables.md`、`main-results.md`、`results.jsonl`、`generator-manifest.json` 與 `artifact-hash-manifest.sha256`；其中 manifest 所記錄之 `baseCommit` / `generatorCommit` 皆為 `3eec69a73a04112e2af8d3630c32138c37143eab`，供審稿者逐項查核 scenario count、mode comparisons、policy/ablation/enforcement row counts、route-label F1、intent preservation，以及 paper tables 中引用的彙整數字。
 
 (iv) **POS2 evidence chain replay**：`bench-paper-hotfile-pos2-{a,b}-intent.json` 之公開版本 + composer plan id `merge-255c73707a528edc` 對應之 admission verdict log + validator command transcript（`git diff --check` / `npm run typecheck` / `npm run validate:cli`）。
 

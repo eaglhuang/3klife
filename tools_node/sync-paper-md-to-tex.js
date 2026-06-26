@@ -455,12 +455,85 @@ function ensureBibEntries(bib) {
   return `${next}\n`;
 }
 
+// ---------------------------------------------------------------------------
+// CLAUDE-FIG marker preservation
+// ---------------------------------------------------------------------------
+// Hand-authored figure blocks live inside the otherwise md-driven body,
+// wrapped in:
+//     % CLAUDE-FIG-BEGIN: <name>
+//     \begin{figure}[H] ... \end{figure}
+//     % CLAUDE-FIG-END:   <name>
+// Without preservation, convertMarkdown(md) regenerates the whole body and
+// loses these blocks (md only contains the Verbatim Mermaid pseudo-figures).
+// We:
+//   1. Scan the OLD tex for marker blocks and remember each one together
+//      with the figure number from the nearest preceding `Figure N ---` line
+//      (which md sync will regenerate verbatim).
+//   2. In the NEW body, locate that same `Figure N ---` line and replace the
+//      Verbatim block that follows it with the saved marker block.
+// If the anchor cannot be located the marker block is silently dropped (warns
+// to stderr), so old/stale markers never break the build.
+
+function collectPreservedFigureBlocks(oldTex) {
+  const out = [];
+  const blockRe = /% CLAUDE-FIG-BEGIN:\s*([a-z0-9\-_]+)[\s\S]*?% CLAUDE-FIG-END:\s*\1/g;
+  let m;
+  while ((m = blockRe.exec(oldTex)) !== null) {
+    const name = m[1];
+    const block = m[0];
+    const before = oldTex.slice(0, m.index);
+    const lines = before.split('\n');
+    let figureNumber = null;
+    for (let i = lines.length - 1; i >= 0; i -= 1) {
+      const fm = lines[i].trim().match(/^Figure\s+(\d+)\s+---/);
+      if (fm) {
+        figureNumber = fm[1];
+        break;
+      }
+    }
+    if (figureNumber === null) {
+      console.warn(`[sync-paper-md-to-tex] preserved figure '${name}' has no nearby 'Figure N ---' anchor; dropping`);
+      continue;
+    }
+    out.push({ name, figureNumber, block });
+  }
+  return out;
+}
+
+function reinjectPreservedFigures(body, preserved) {
+  let result = body;
+  for (const { name, figureNumber, block } of preserved) {
+    const anchorRe = new RegExp(`^Figure\\s+${figureNumber}\\s+---`, 'm');
+    const am = result.match(anchorRe);
+    if (!am) {
+      console.warn(`[sync-paper-md-to-tex] could not re-inject figure '${name}': 'Figure ${figureNumber} ---' not in new body`);
+      continue;
+    }
+    const afterAnchor = am.index + am[0].length;
+    const verbStart = result.indexOf('\\begin{Verbatim}', afterAnchor);
+    if (verbStart < 0) {
+      console.warn(`[sync-paper-md-to-tex] could not re-inject figure '${name}': no Verbatim after 'Figure ${figureNumber} ---'`);
+      continue;
+    }
+    const verbCloseIdx = result.indexOf('\\end{Verbatim}', verbStart);
+    if (verbCloseIdx < 0) {
+      console.warn(`[sync-paper-md-to-tex] could not re-inject figure '${name}': Verbatim not closed`);
+      continue;
+    }
+    const verbEnd = verbCloseIdx + '\\end{Verbatim}'.length;
+    result = result.slice(0, verbStart) + block + result.slice(verbEnd);
+  }
+  return result;
+}
+
 const md = readText(mdPath);
 const existingTex = readText(texPath);
 const beginDoc = existingTex.indexOf('\\begin{document}');
 if (beginDoc < 0) throw new Error('paper-zh.tex missing \\begin{document}');
 const preamble = existingTex.slice(0, beginDoc + '\\begin{document}'.length);
-const body = convertMarkdown(md);
+const preservedFigures = collectPreservedFigureBlocks(existingTex);
+const bodyRaw = convertMarkdown(md);
+const body = reinjectPreservedFigures(bodyRaw, preservedFigures);
 const tex = `${preamble}\n\n${body}`;
 const normalizedTex = tex.replace(/\r\n|\r|\n/g, '\n');
 
@@ -488,6 +561,10 @@ if (checkOnly) {
   console.log(`[sync-paper-md-to-tex] wrote ${path.relative(ROOT, outputPath)}`);
   if (resolvedBackupPath) {
     console.log(`[sync-paper-md-to-tex] backup ${path.relative(ROOT, resolvedBackupPath)}`);
+  }
+  if (preservedFigures.length) {
+    const names = preservedFigures.map((f) => f.name).join(', ');
+    console.log(`[sync-paper-md-to-tex] preserved ${preservedFigures.length} CLAUDE-FIG block(s): ${names}`);
   }
   console.log(`[sync-paper-md-to-tex] checked ${path.relative(ROOT, bibPath)} for Refs 38-41 entries`);
 }
