@@ -1100,14 +1100,15 @@ OperationalBench separates three evidence layers. The official paper run, `20260
 
 The extended `N=50` run should be read as an operational stress probe rather than as a liveness proof. Under higher contention, the main tail growth appears in steward-mediated recovery paths and in total scenario time, which is expected for a design that preserves intents and routes unsafe direct apply into governed successor paths. The validator timing in OperationalBench reflects a lightweight validator path and should not be extrapolated to projects with expensive build, integration-test, or end-to-end validation pipelines.
 
-**Table 19b — OperationalBench Evidence Summary.**
+**Table 19b — OperationalBench Latency Summary.**
 
-| OperationalBench layer                   | What it checks                                                  | Paper-facing result                                                                                                               | Boundary                                                    |
-| ---------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `20260627` official paper run            | Baseline operational profile for admission and recovery routing | Reports the paper-facing overhead and recovery-routing surface                                                                    | Not a cross-system performance comparison                   |
-| `20260627-extended` (`N=50`)             | Higher-contention tail behavior                                 | Stress concentrates mainly in steward-mediated paths and total scenario time                                                      | Not a liveness proof or enterprise-scale load test          |
-| `multi-seed-stability-20260627-20260629` | Seed sensitivity of benchmark structure                         | `scenarioCount`, `resultRows`, `trackCounts`, `blockedCaseCounts`, `routeCounts`, and recovery metrics remain stable across seeds | Does not establish external-repository generality           |
-| Lightweight validator path               | Validator timing under the current benchmark harness            | Validator overhead remains low in this fixture family                                                                             | Does not represent heavy project-level validation workloads |
+| Run | Setting | Admission decision P50 / P95 / P99 | Steward apply P50 / P95 / P99 | Total scenario P50 / P95 / P99 | Interpretation |
+| --- | --- | --- | --- | --- | --- |
+| `20260627` | official paper run | `0.004 / 0.024 / 0.050 ms` | `33.181 / 302.424 / 541.920 ms` | `0.012 / 310.159 / 1088.094 ms` (`0.310 / 1.088 s` at P95 / P99) | Baseline operational profile |
+| `20260627-extended` | `N=50` contention | `0.003 / 0.025 / 0.031 ms` | `33.072 / 304.193 / 349.348 ms` | `0.010 / 305.309 / 865.522 ms` (`0.305 / 0.866 s` at P95 / P99) | Tail growth remains concentrated in the steward-mediated path and total scenario time |
+| `multi-seed-stability-20260627-20260629` | 3 paper-profile seeds | `0.004-0.005 / 0.024-0.025 / 0.048-0.068 ms` | `33.181-37.998 / 302.274-317.522 / 323.190-541.920 ms` | `0.012-0.014 / 310.159-563.520 / 776.279-1088.094 ms` (`0.310-0.564 / 0.776-1.088 s` at P95 / P99) | Scenario and route distributions remain identical; tail latency varies without changing route or recovery structure |
+
+For completeness, the `N=50` queue-wait path remains very small (`queueWaitMs = 0.001 / 0.002 / 0.004 ms` at P50 / P95 / P99), while the current harness keeps validator timing near the floor (`validatorMs = 0.001 / 0.001 / 0.002 ms` in the official paper run). These figures should be read as properties of the present benchmark harness, not as repository-scale validation costs.
 
 OperationalBench therefore strengthens the paper's operational claim without widening its external-validity claim. It shows that ATM's fail-closed and blocked outcomes are observable recovery-routing events rather than a black-box rejection path: unsafe direct or parallel apply is closed, while intent, evidence, patch envelope, blocking reason, and recovery route remain available when a governed successor path exists.
 
