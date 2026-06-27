@@ -115,13 +115,13 @@ Style rule:
 
 ## P0. Reference And Numbering Guard
 
-Current manuscript references run through Ref. 60.
+Current manuscript references run through Ref. 62.
 
 Before English conversion:
 
 - Keep manual Ref. numbering stable unless the whole manuscript is migrated to BibTeX-style citations.
 - Do not reorder References during translation.
-- Verify Ref. 56-60 remain:
+- Verify Ref. 56-62 remain:
 
 ```text
 56 SafeMerge
@@ -129,6 +129,8 @@ Before English conversion:
 58 Atomix
 59 Cordon
 60 SyncMind / SyncBench
+61 SEMAP
+62 ColaUntangle
 ```
 
 If `paper-en.tex` uses BibTeX keys instead of manual numbering, create a citation map first.
@@ -141,6 +143,8 @@ Ref. 57 -> Cavalcanti2024SemistructuredMerge
 Ref. 58 -> Mohammadi2026Atomix
 Ref. 59 -> Chen2026Cordon
 Ref. 60 -> Guo2025SyncMind
+Ref. 61 -> Mao2025SEMAP
+Ref. 62 -> Hou2025ColaUntangle
 ```
 
 ## P0. Table And Denominator Guard
@@ -152,6 +156,8 @@ Audit these tables before and after translation:
 - Table 20: AdmissionBench research questions and current evidence.
 - Governance-containment mapping table in Section 4.7.
 - Appendix A.1 / A.4 artifact maps.
+
+Whenever a citation-bearing table or claim-map table is revised in the English draft, sync `PAPER-EN-CITATION-MAP.md` in the same turn. Do not leave table-role updates for a later pass.
 
 Required English meaning:
 
@@ -181,6 +187,31 @@ For each section:
 - check local references;
 - check table/caption fit if the section has tables;
 - compile before moving to the next major section.
+
+## P1. Section Review Mandate
+
+Before accepting or replacing any English section, the reviewer must compare it against the matching source span in `paper.v3.1.md` and report whether the rewrite preserved the claim surface.
+
+Required checks:
+
+- **Terminology consistency:** load-bearing terms must match `PAPER-EN-GLOSSARY.md` exactly, especially `atom`, `atom map`, `virtual atom`, `CID`, `ConflictKey`, `CID broker`, `neutral steward`, `pre-write admission`, `single governance domain`, `governed mutation`, `governance substrate`, `row universe`, and `paper profile`.
+- **Source parity:** the English rewrite must not drop source content that carries a claim, scope boundary, evidence role, denominator, citation role, or limitation. Compression is allowed only when the omitted wording is redundant and the claim remains recoverable.
+- **No new conclusions:** the English rewrite must not add a stronger claim, new empirical conclusion, new comparison axis, or new related-work interpretation that is absent from the Chinese source or the accepted guard files.
+- **Citation correctness:** every `Ref. N` must match `PAPER-EN-CITATION-MAP.md`; cited systems must keep their assigned role and must not be turned into baselines, competitors, or evidence sources unless the source text already does so.
+- **Grammar and prose health:** sentences should be grammatical, readable, and consistent with `PAPER-EN-STYLE-SPEC.md`; any local C-snap must serve reviewer comprehension rather than flattening the argument.
+- **Encoding and mojibake:** pasted drafts must be cleaned before landing. Reject replacement characters, mojibake dashes, broken reference ranges, and malformed punctuation before running final encoding checks.
+
+Suggested reviewer output for each accepted section:
+
+```text
+Source parity: preserved / changed with reason / risk
+Terminology: ok / fixes needed
+Citations: ok / fixes needed
+New conclusions: none / risk
+Dropped content: none / risk
+Grammar/encoding: ok / fixes needed
+Style: conforms / needs cadence revision
+```
 
 ## P1. Layout Guard For `paper-en.tex`
 

@@ -1,0 +1,350 @@
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = path.resolve(__dirname, '..');
+const PAPER_DIR = path.join(ROOT, 'docs', 'ai_atomic_framework', 'arxiv-paper-v1');
+const mdPath = path.join(PAPER_DIR, 'paper.v3.1.en.md');
+const texPath = path.join(PAPER_DIR, 'paper-en.tex');
+const argv = process.argv.slice(2);
+
+function takeArg(flag) {
+  const idx = argv.indexOf(flag);
+  return idx >= 0 ? argv[idx + 1] || null : null;
+}
+
+const outputPath = takeArg('--output') ? path.resolve(process.cwd(), takeArg('--output')) : texPath;
+const checkOnly = argv.includes('--check');
+const noBackup = argv.includes('--no-backup');
+
+function makeTimestamp() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+}
+
+function escapeLatexText(text) {
+  return String(text)
+    .replace(/\\/g, '\\textbackslash{}')
+    .replace(/([&%$#_{}])/g, '\\$1')
+    .replace(/~/g, '\\textasciitilde{}')
+    .replace(/\^/g, '\\textasciicircum{}')
+    .replace(/\u2264/g, '$\\leq$')
+    .replace(/\u2265/g, '$\\geq$')
+    .replace(/\u2192/g, '$\\rightarrow$')
+    .replace(/\u2190/g, '$\\leftarrow$')
+    .replace(/\u2194/g, '$\\leftrightarrow$')
+    .replace(/\u00d7/g, '$\\times$')
+    .replace(/\u2013/g, '--')
+    .replace(/\u2014/g, '---')
+    .replace(/\u2026/g, '\\ldots{}')
+    .replace(/\u26a0/g, 'Warning:')
+    .replace(/"/g, '{\\char34}')
+    .replace(/<br\s*\/?>/gi, '\\newline ');
+}
+
+function escapeLatexCode(text) {
+  return String(text)
+    .replace(/\\/g, '\\textbackslash{}')
+    .replace(/([&%$#_{}])/g, '\\$1')
+    .replace(/~/g, '\\textasciitilde{}')
+    .replace(/\^/g, '\\textasciicircum{}');
+}
+
+function latexUrl(url) {
+  return String(url).replace(/([%#{}])/g, '\\$1');
+}
+
+function inline(text) {
+  const src = String(text);
+  let out = '';
+  let i = 0;
+  while (i < src.length) {
+    const codeAt = src.indexOf('`', i);
+    const boldAt = src.indexOf('**', i);
+    const linkAt = src.indexOf('[', i);
+    const mathAt = src.indexOf('$', i);
+    const candidates = [codeAt, boldAt, linkAt, mathAt].filter((n) => n >= 0);
+    const next = candidates.length ? Math.min(...candidates) : -1;
+    if (next < 0) {
+      out += escapeLatexText(src.slice(i));
+      break;
+    }
+    if (next > i) {
+      out += escapeLatexText(src.slice(i, next));
+      i = next;
+      continue;
+    }
+    if (codeAt === i) {
+      const end = src.indexOf('`', i + 1);
+      if (end < 0) {
+        out += escapeLatexText(src[i]);
+        i += 1;
+      } else {
+        out += `\\texttt{\\seqsplit{${escapeLatexCode(src.slice(i + 1, end))}}}`;
+        i = end + 1;
+      }
+      continue;
+    }
+    if (boldAt === i) {
+      const end = src.indexOf('**', i + 2);
+      if (end < 0) {
+        out += escapeLatexText(src.slice(i, i + 2));
+        i += 2;
+      } else {
+        out += `\\textbf{${inline(src.slice(i + 2, end))}}`;
+        i = end + 2;
+      }
+      continue;
+    }
+    if (linkAt === i) {
+      const closeText = src.indexOf(']', i + 1);
+      const openUrl = closeText >= 0 ? src.indexOf('(', closeText + 1) : -1;
+      const closeUrl = openUrl >= 0 ? src.indexOf(')', openUrl + 1) : -1;
+      if (closeText >= 0 && openUrl === closeText + 1 && closeUrl >= 0) {
+        out += `\\href{${latexUrl(src.slice(openUrl + 1, closeUrl))}}{${inline(src.slice(i + 1, closeText))}}`;
+        i = closeUrl + 1;
+      } else {
+        out += escapeLatexText(src[i]);
+        i += 1;
+      }
+      continue;
+    }
+    if (mathAt === i) {
+      const end = src.indexOf('$', i + 1);
+      if (end < 0) {
+        out += escapeLatexText(src[i]);
+        i += 1;
+      } else {
+        out += src.slice(i, end + 1);
+        i = end + 1;
+      }
+    }
+  }
+  return out;
+}
+
+function isTableLine(line) {
+  return /^\s*\|.*\|\s*$/.test(line);
+}
+
+function isTableSeparator(line) {
+  return /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
+}
+
+function splitTableRow(line) {
+  let s = line.trim();
+  if (s.startsWith('|')) s = s.slice(1);
+  if (s.endsWith('|')) s = s.slice(0, -1);
+  const cells = [];
+  let cur = '';
+  let inCode = false;
+  for (let i = 0; i < s.length; i += 1) {
+    const ch = s[i];
+    if (ch === '`') inCode = !inCode;
+    if (ch === '|' && !inCode) {
+      cells.push(cur.trim());
+      cur = '';
+    } else {
+      cur += ch;
+    }
+  }
+  cells.push(cur.trim());
+  return cells;
+}
+
+function renderTable(rows) {
+  const body = rows.filter((row) => !isTableSeparator(row));
+  if (!body.length) return [];
+  const parsed = body.map(splitTableRow);
+  const cols = Math.max(...parsed.map((row) => row.length));
+  const width = Math.max(0.09, Math.min(0.30, 0.94 / cols)).toFixed(2);
+  const spec = Array.from({ length: cols }, () => `L{${width}\\textwidth}`).join('');
+  const out = ['\\begingroup', '\\scriptsize', `\\begin{longtable}{${spec}}`, '\\toprule'];
+  parsed.forEach((row, idx) => {
+    const cells = Array.from({ length: cols }, (_, col) => inline(row[col] || ''));
+    out.push(`${cells.join(' & ')} \\\\`);
+    if (idx === 0) out.push('\\midrule');
+  });
+  out.push('\\bottomrule', '\\end{longtable}', '\\endgroup');
+  return out;
+}
+
+function renderHeading(level, text) {
+  const title = inline(text.trim());
+  if (level === 1) return [`\\section*{${title}}`];
+  if (level === 2) {
+    if (/^(Abstract|References|Acknowledgements|Appendix)/.test(text.trim())) return [`\\section*{${title}}`];
+    return [`\\section{${title}}`];
+  }
+  if (level === 3) return [`\\subsection{${title}}`];
+  return [`\\subsubsection*{${title}}`];
+}
+
+function renderParagraph(lines) {
+  const text = lines.join(' ').trim();
+  return text ? [inline(text)] : [];
+}
+
+function convertMarkdown(md) {
+  const lines = md.split(/\r\n|\n|\r/);
+  const out = ['\\maketitle', ''];
+  const state = { paragraph: [], list: null, code: false };
+
+  function flushParagraph() {
+    if (state.paragraph.length) {
+      out.push(...renderParagraph(state.paragraph), '');
+      state.paragraph = [];
+    }
+  }
+  function closeList() {
+    if (state.list) {
+      out.push(state.list === 'enumerate' ? '\\end{enumerate}' : '\\end{itemize}', '');
+      state.list = null;
+    }
+  }
+  function openList(kind) {
+    if (state.list !== kind) {
+      closeList();
+      out.push(kind === 'enumerate' ? '\\begin{enumerate}' : '\\begin{itemize}');
+      state.list = kind;
+    }
+  }
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (i === 0 || i === 1 || /^>\s+English draft scaffold only/.test(line) || /^>\s+Source of truth/.test(line) || /^>\s+Use the guard files/.test(line)) {
+      i += 1;
+      continue;
+    }
+    if (/^```/.test(line.trim())) {
+      flushParagraph();
+      closeList();
+      if (!state.code) {
+        out.push('\\begin{Verbatim}[breaklines=true,fontsize=\\scriptsize]');
+        state.code = true;
+      } else {
+        out.push('\\end{Verbatim}', '');
+        state.code = false;
+      }
+      i += 1;
+      continue;
+    }
+    if (state.code) {
+      out.push(line);
+      i += 1;
+      continue;
+    }
+    if (/^\s*\$\$\s*$/.test(line)) {
+      flushParagraph();
+      closeList();
+      out.push('\\[');
+      i += 1;
+      while (i < lines.length && !/^\s*\$\$\s*$/.test(lines[i])) {
+        out.push(lines[i]);
+        i += 1;
+      }
+      out.push('\\]', '');
+      if (i < lines.length) i += 1;
+      continue;
+    }
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      closeList();
+      out.push(...renderHeading(heading[1].length, heading[2]), '');
+      i += 1;
+      continue;
+    }
+    if (isTableLine(line) && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+      flushParagraph();
+      closeList();
+      const rows = [line, lines[i + 1]];
+      i += 2;
+      while (i < lines.length && isTableLine(lines[i])) {
+        rows.push(lines[i]);
+        i += 1;
+      }
+      out.push(...renderTable(rows), '');
+      continue;
+    }
+    const ordered = line.match(/^\s*(\d+)\.\s+(.+)$/);
+    const unordered = line.match(/^\s*[-*]\s+(.+)$/);
+    if (ordered) {
+      flushParagraph();
+      openList('enumerate');
+      out.push(`\\item ${inline(ordered[2])}`);
+      i += 1;
+      continue;
+    }
+    if (unordered) {
+      flushParagraph();
+      openList('itemize');
+      out.push(`\\item ${inline(unordered[1])}`);
+      i += 1;
+      continue;
+    }
+    if (/^\s*>\s?/.test(line)) {
+      flushParagraph();
+      closeList();
+      out.push('\\begin{quote}', inline(line.replace(/^\s*>\s?/, '').trim()), '\\end{quote}', '');
+      i += 1;
+      continue;
+    }
+    if (!line.trim()) {
+      flushParagraph();
+      closeList();
+      i += 1;
+      continue;
+    }
+    state.paragraph.push(line.trim());
+    i += 1;
+  }
+  flushParagraph();
+  closeList();
+  if (state.code) out.push('\\end{Verbatim}', '');
+  out.push('\\end{document}', '');
+  return out.join('\n');
+}
+
+const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit prose here.
+\documentclass[9pt,a4paper]{article}
+\usepackage[margin=0.85in,top=0.9in,bottom=0.9in]{geometry}
+\usepackage{fontspec}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{fancyvrb}
+\usepackage{fvextra}
+\usepackage{seqsplit}
+\usepackage[hidelinks,colorlinks=false]{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}[Scale=0.92]
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlength{\emergencystretch}{4em}
+\setlength{\parskip}{0.2em}
+\setlength{\parindent}{1.5em}
+\sloppy
+\setlist{topsep=2pt,itemsep=2pt,parsep=0pt}
+\titlespacing*{\section}{0pt}{1.2ex plus 0.3ex minus 0.2ex}{0.8ex plus 0.2ex}
+\titlespacing*{\subsection}{0pt}{0.9ex plus 0.3ex minus 0.2ex}{0.5ex plus 0.2ex}
+\title{ATM: Adapter-Guided Atomization and CID-Brokered Admission for Single-Domain Multi-Vendor LLM Code Co-Synthesis\\\large A Specification-Grounded Governance Substrate for Software Agents}
+\author{}
+\date{}
+\begin{document}
+`;
+
+const md = fs.readFileSync(mdPath, 'utf8');
+const tex = `${preamble}\n${convertMarkdown(md)}`.replace(/\r\n|\r|\n/g, '\n');
+if (!checkOnly && !noBackup && fs.existsSync(outputPath)) {
+  const backupPath = path.join(path.dirname(outputPath), `${path.basename(outputPath)}.before-sync-${makeTimestamp()}.bak`);
+  fs.copyFileSync(outputPath, backupPath);
+  console.log(`[sync-paper-en-md-to-tex] backup ${path.relative(ROOT, backupPath)}`);
+}
+if (!checkOnly) fs.writeFileSync(outputPath, tex, 'utf8');
+console.log(`[sync-paper-en-md-to-tex] ${checkOnly ? 'check ok' : 'wrote'} ${path.relative(ROOT, outputPath)}`);

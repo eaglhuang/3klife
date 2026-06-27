@@ -5,15 +5,15 @@ Use: keep the manuscript's manual Ref. numbering aligned with BibTeX keys before
 
 ## Verified Scope
 
-- The manual reference surface in [paper.v3.1.md](C:/Users/User/3KLife/docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md) currently contains exactly `60` numbered references.
-- The supporting [references.bib](C:/Users/User/3KLife/docs/ai_atomic_framework/arxiv-paper-v1/references.bib) currently contains `61` BibTeX entries.
-- Therefore, English conversion must follow the manuscript's manual `Ref. 1-60` surface, not the raw BibTeX file order alone.
+- The manual reference surface in [paper.v3.1.md](C:/Users/User/3KLife/docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md) currently contains exactly `62` numbered references.
+- The supporting [references.bib](C:/Users/User/3KLife/docs/ai_atomic_framework/arxiv-paper-v1/references.bib) currently contains `63` BibTeX entries.
+- Therefore, English conversion must follow the manuscript's manual `Ref. 1-62` surface, not the raw BibTeX file order alone.
 
 ## Rule
 
 Do not reorder references during English conversion unless the entire manuscript is intentionally migrated to a different citation system. Until that happens, preserve the current manual numbering surface exactly as it appears in `paper.v3.1.md`.
 
-## Verified Ref. 1-60 Map
+## Verified Ref. 1-62 Map
 
 | Ref. | Bib Key | Short Title |
 |---|---|---|
@@ -76,7 +76,41 @@ Do not reorder references during English conversion unless the entire manuscript
 | 57 | `Cavalcanti2024SemistructuredMerge` | Semistructured Merge with Language-Specific Syntactic Separators |
 | 58 | `Mohammadi2026Atomix` | Atomix |
 | 59 | `Chen2026Cordon` | Cordon |
-| 60 | `Guo2025SyncMind` | SyncMind |
+| 60 | `Guo2025SyncMind` | SyncMind / SyncBench |
+| 61 | `Mao2025SEMAP` | SEMAP |
+| 62 | `Hou2025ColaUntangle` | ColaUntangle |
+
+## Reference Annotation Table
+
+This table carries the annotated-bibliography roles removed from the formal References section of `paper.v3.1.en.md`. The manuscript References should keep only bibliographic metadata; claim roles belong here or in Related Work prose.
+
+| Ref. | Role In Paper | Boundary Note |
+|---|---|---|
+| 38 | Classical Operational Transformation work used as a contrast between ATM's admission-time path and OT's post-hoc reconciliation. | OT solves collaborative-editing convergence after edits exist; ATM governs repository mutation admission before governed shared apply. |
+| 39 | Foundational OT survey used to explain why ATM adopts pre-write admission rather than post-hoc transformation. | Do not treat OT as a direct repository-governance baseline. |
+| 40 | Canonical Git branching, merging, and rebase reference used to align ATM with the boundary of Git's native merge substrate. | Git remains the merge substrate; ATM adds task-scoped admission and steward governance above it. |
+| 41 | Textbook concurrency-control and OCC foundation for the CAS base-hash guarded apply analogy. | Use as systems analogy, not as a claim that ATM implements a database transaction engine. |
+| 42 | LLM-for-SE systematic review used to position this paper within the broader software-engineering literature. | Supports landscape framing and motivation for multi-agent coordination. |
+| 43 | Library-generation-from-scratch benchmark used to broaden the repository-level task-difficulty spectrum. | Repository-level evaluation substrate, not an ATM comparator. |
+| 44 | Research-replication benchmark used to align repository-level evaluation substrates. | Supports task-difficulty framing; does not supply ATM evidence rows. |
+| 45 | End-to-end agentic feature-development benchmark complementary to FEA-Bench. | Use as related benchmark context, not a direct denominator comparator. |
+| 46 | Intermediate-reasoning benchmark that exposes reasoning failures beyond final test pass. | Supports the need to inspect process evidence, not just terminal success. |
+| 47 | Cross-language repository-level benchmark. | Supports external-validity framing for adapter-mediated governance. |
+| 48 | Realistic repository-leveraging benchmark. | Candidate future comparative replay corpus, not current ATM evaluation evidence. |
+| 49 | RAG grounding foundation. | Supports the general claim that external evidence can improve factuality and specificity. |
+| 50 | Evidence attribution and revision reference. | Supports evidence-guided correction and attribution context. |
+| 51 | Verification-planning reference for reducing hallucination. | Supports validator and evidence-contract literature context. |
+| 52 | Agent-computer-interface and tool-feedback reference. | Anchor for adjacent tool-feedback design in Cluster B. |
+| 53 | Runtime enforcement DSL for safe and reliable LLM agents. | Closest adjacent work to ATM's pre-tool scope gate and forbidden rules; do not imply identical repository-mutation semantics. |
+| 54 | Tool-call-boundary security framework against indirect prompt injection. | ATM borrows boundary-enforcement framing but does not inherit ClawGuard's prompt-injection security guarantee. |
+| 55 | Solver-aided policy-compliance verification for tool-augmented LLM agents. | Future solver-checkable formalization direction for ATM forbidden rules and task contracts. |
+| 56 | SafeMerge semantic conflict-freedom reference. | Contrast for ATM's pre-write admission versus post-hoc semantic merge; ATM does not claim SafeMerge guarantees. |
+| 57 | Semistructured merge reference. | Supports ATM's adapter-guided, non-universal-AST-first positioning. |
+| 58 | Transactional tool-use runtime reference. | Neighboring system for execution effects and settlement; ATM specializes repository mutation governance. |
+| 59 | Contemporaneous semantic-transaction runtime. | Contrast for task-scoped transaction boundaries versus ATM's repository-specific admission and steward path. |
+| 60 | Out-of-sync recovery benchmark. | Future external replay source; not directly comparable to AdmissionBench's pre-write admission row universe. |
+| 61 | Protocol-driven multi-agent LLM engineering reference. | Structured-message and lifecycle-governance precedent, not a repository-mutation admission system. |
+| 62 | Tangled-commit dependency partitioning reference. | Future semantic-dependency-provider motivation; not a current ATM comparator. |
 
 ## High-Risk Citation Anchors
 
@@ -89,6 +123,24 @@ These are the newest references and the ones most likely to drift during transla
 | 58 | Atomix | `Mohammadi2026Atomix` | transactional-agent runtime |
 | 59 | Cordon | `Chen2026Cordon` | task-scoped semantic transactions |
 | 60 | SyncMind / SyncBench | `Guo2025SyncMind` | future external replay source; not direct denominator comparator |
+| 61 | SEMAP | `Mao2025SEMAP` | multi-agent protocol and structured-message governance precedent |
+| 62 | ColaUntangle | `Hou2025ColaUntangle` | LLM-assisted tangled-commit dependency partitioning; future semantic-dependency-provider motivation |
+
+## Adjacent-System Layer Guard
+
+Use this guard whenever a Related Work table, comparison sentence, benchmark-scope note, or future-work provider mentions the closest neighboring systems.
+
+| Layer | References | Citation Role |
+|---|---|---|
+| Agentic concurrency-control substrates | CoAgent (Ref. 14), S-Bus (Ref. 26), ATCC (Ref. 6) | Closest concurrency-control neighbors; adjacent design points rather than direct baselines for ATM's repository-scoped pre-write admission claim. |
+| Transactional tool-effect runtimes | Atomix (Ref. 58), Cordon (Ref. 59) | Closest transactional-runtime neighbors; ATM specializes the admission boundary to repository mutation and neutral-steward apply rather than general tool-effect settlement. |
+| Repository-level workflows, protocols, and convergence substrates | CodeTeam (Ref. 25), SEMAP (Ref. 61), MPAC (Ref. 4), CodeCRDT (Ref. 1), AgentGit (Ref. 28), EvoGit (Ref. 27) | Important workflow or protocol neighbors; they organize generation, coordination, convergence, or contracts while ATM adjudicates governed shared mutation before write application. |
+
+Boundary rule:
+
+- Do not describe any of these systems as an ATM direct baseline unless a shared workload and metric suite has been defined.
+- AdmissionBench supports ATM's admission-boundary claim; it is not a replacement for serializability recovery, HTTP-observable read isolation, transactional tool-effect staging, database transaction scheduling, or end-to-end repository generation benchmarks.
+- The hidden semantic read gap belongs in method boundaries, validity, and future read-set-provider discussion; do not imply that ATM v1 dynamically reconstructs every latent read.
 
 ## Verified Manual Reference Surface
 
@@ -100,11 +152,13 @@ Ref. 57 -> semistructured merge / partial configurable structure
 Ref. 58 -> Atomix / execution vs settlement
 Ref. 59 -> Cordon / task-scoped transaction boundary
 Ref. 60 -> SyncMind / SyncBench / out-of-sync recovery
+Ref. 61 -> SEMAP / structured-message and protocol-governance precedent
+Ref. 62 -> ColaUntangle / post-hoc tangled-commit dependency partitioning
 ```
 
 ## Important Note About `references.bib`
 
-- `references.bib` currently has one extra entry beyond the 60-item manual reference surface.
+- `references.bib` may contain extra entries beyond the 62-item manual reference surface.
 - That does not block English conversion, but it means any future `paper-en.tex` migration to BibTeX must map from the manual reference list first, then resolve the extra unused or appendix-only BibTeX entry deliberately.
 - Do not assume `Ref. n == nth entry in references.bib`.
 
@@ -112,10 +166,12 @@ Ref. 60 -> SyncMind / SyncBench / out-of-sync recovery
 
 Before starting `paper-en.tex`, confirm:
 
-- [paper.v3.1.md](C:/Users/User/3KLife/docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md) still contains `60` manual references in the same order.
+- [paper.v3.1.md](C:/Users/User/3KLife/docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md) still contains `62` manual references in the same order.
 - [references.bib](C:/Users/User/3KLife/docs/ai_atomic_framework/arxiv-paper-v1/references.bib) still contains the mapped keys above.
 - no placeholder wording such as `and collaborators` remains in any new citation.
+- `SEMAP` is only cited as a protocol / structured-message governance precedent, not as a repository-mutation admission system.
 - `SyncBench` is only cited as future replay / external replay framing, not as direct benchmark denominator comparison.
+- `ColaUntangle` is only cited as post-hoc tangled-commit dependency partitioning and future semantic-dependency-provider motivation, not as a current ATM comparator.
 
 ## No-Rewrite Zones
 
@@ -129,3 +185,5 @@ Do not let English polishing alter the citation role of these passages:
 ## Go / No-Go
 
 If the English draft changes a citation's role, numbering, or denominator meaning, repair the citation map before continuing.
+
+If a citation-bearing table, caption, or claim-map row is updated in `paper.v3.1.en.md`, sync this file in the same turn rather than treating it as a later cleanup step.

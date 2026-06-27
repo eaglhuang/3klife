@@ -4,133 +4,92 @@
 Repo: `C:\Users\User\3KLife`  
 主文件目錄: `docs/ai_atomic_framework/arxiv-paper-v1`
 
-## 1. 這份交接文件的目的
+## 1. 接手目的
 
-本文件提供下一個對話群一條可直接接手的論文同步路徑，重點不是「如何重寫論文」，而是：
+這份 handoff 給下一位隊長接續中文稿到英文版前的穩定工作。重點不是重新大改論文，而是維持一條可重複的同步鏈：
 
-1. `paper.v3.1.md` 的文字如何安全同步到 `paper-zh.tex`
-2. 哪些步驟可以自動化，哪些步驟目前仍建議人工控管
-3. 最後如何穩定編到 `paper-zh.pdf`
-4. 哪些已知風險不能忽略
+1. 以 `paper.v3.1.md` 作為中文 prose 母本
+2. 用 `tools_node/sync-paper-md-to-tex.js` 同步到 `paper-zh.tex`
+3. 用 `tools_node/compile-paper-zh-texlive.js` 編出 `paper-zh.pdf`
+4. 每次同步後確認 PDF 可編譯，避免 MD / TeX / PDF 漂移
 
----
+## 2. 最新狀態
 
-## 2. 目前檔案角色分工
+最後一次成功同步與編譯結果：
 
-- `paper.v3.1.md`
-  - 中文主稿的工作母本
-  - 章節內容、Abstract、§2/§3/§4/§5/Appendix 的主要 prose 修訂先在這裡做
+```text
+node tools_node/sync-paper-md-to-tex.js
+node tools_node/compile-paper-zh-texlive.js
 
-- `paper-zh.tex`
-  - 中文 LaTeX 成品稿
-  - 已有大量人工調過的版面細節
-  - **表格格式、圖、字型、字級、間距都不能隨便重生**
+Errors: 0
+Unresolved: 0
+Overfull: 13
+Pages: 37
+FINAL: 749 KB
+```
 
-- `references.bib`
-  - BibTeX 來源
-  - 新增或修正 reference metadata 時，這裡與 `paper-zh.tex` 的 `\cite` / `\nocite` 需一致
+最後一次同步備份：
 
-- `paper-zh.pdf`
-  - 最終編譯產物
+```text
+docs/ai_atomic_framework/arxiv-paper-v1/paper-zh.tex.before-sync-20260626-114552.bak
+```
 
----
+重要更新：先前嘗試過 table pagination / 強制換頁修版，但使用者已明確指示暫緩，因為英文版還會再做一次。該方向已撤回；目前不要再為了中文 PDF 的表格截斷去加 `\clearpage`、`Table 9a` 或 Markdown raw-LaTeX 控制。
 
-## 3. 這次交接前的實際狀態
+## 3. 檔案角色
 
-目前已確認：
+- `paper.v3.1.md`: 中文主稿 prose 母本。英文版前的審稿語義修正應先落在這裡。
+- `paper-zh.tex`: 由同步器產生的中文 LaTeX 成品稿。同步後可做必要小修，但不要讓它和 MD 長期漂移。
+- `paper-zh.pdf`: 最新中文 PDF 產物，已能穩定編譯。
+- `references.bib`: BibTeX metadata 來源。新增文獻時要和 MD 中的 manual reference list 同步。
+- `tools_node/sync-paper-md-to-tex.js`: MD -> TeX 同步器，支援備份、`--check`、`--output`、`--no-backup`，並保留 `% CLAUDE-FIG-BEGIN/END` 圖塊。
 
-- `paper.v3.1.md` 已做過一輪 v3.1 prose 修補
-- `paper-zh.tex` 已用同步腳本自 `paper.v3.1.md` 正式重建一次
-- `paper-zh.tex` 可成功編譯
-- 最新驗證編譯結果為：
-  - `Errors: 0`
-  - `Unresolved: 0`
-  - `Overfull: 14`
-  - `Pages: 38`
-  - `FINAL: 752.9 KB`
+## 4. 本輪保留的實質修正
 
-最後一次成功編譯時間點就是本次交接前。
+已保留並同步到 MD / TeX / PDF 的 reviewer-facing 修正：
 
-另外，這次正式同步前已自動備份舊稿：
+- 補入 SEMAP 與 ColaUntangle 作為相鄰但不直接替代 ATM 的 related work。
+- `references.bib` 新增 `Mao2025SEMAP` 與 `Hou2025ColaUntangle`。
+- manual references 新增 Ref. 61 / Ref. 62。
+- 將 `route F1` 口徑統一為 `route-label F1`，並標明其分母是 42 個 mode-level comparisons。
+- 明確說明 `false-safe rows` 屬於 policy comparison surface，不屬於 route-label F1 分母。
+- 明確說明 `252 policy rows`、`294 ablation rows`、`210 adversarial rows` 等 derived rows 由 20 個 unique scenarios 展開，不是獨立 population samples。
+- 修正舊的錯誤引用組 `Refs. 1, 28, 29`，目前 CodeCRDT / EvoGit / AgentGit 對應為 `Refs. 1, 27, 28`。
+- 移除/避免使用 `Ship-safe` 這個缺乏學術定義的說法。
+- 保持 `9a0c03...` 不再出現在正文中；目前 artifact 區分以 `3eec69...` 與 `ab8753...` 為主。
 
-- `paper-zh.tex.before-sync-20260626-011747.bak`
+## 5. 已明確暫緩或撤回的方向
 
----
+不要在下一輪自動恢復以下內容：
 
-## 4. MD -> TeX -> PDF 的完整實際流程
+- 不要新增 `Table 9a`。
+- 不要把 Table 9 拆成兩張表，只為了中文 PDF 換頁。
+- 不要在 Markdown 裡加入 `<!-- LATEX: \clearpage -->` 這類 raw-LaTeX 換頁控制。
+- 不要為了中文 PDF 的表格 pagination 改同步器；等英文版 TeX 版面確定後再一起處理。
+- 不要把 table overfull 當成目前最高優先級；目前 `Errors: 0`、`Unresolved: 0` 比 overfull 數字更重要。
 
-### Step A. 先改 `paper.v3.1.md`
+## 6. 建議接手流程
 
-建議所有章節級 prose 修文先在：
-
-- `docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md`
-
-先完成，原因是：
-
-- 這份檔案比較容易做段落級審稿與邏輯檢查
-- reviewer-facing prose 問題先在 MD 收斂，比直接在 TeX 內改安全
-- TeX 端還背著版面保護，不適合先大改
-
-### Step B. 不要直接整份重生 `paper-zh.tex`
-
-repo 內有一個同步腳本：
-
-- `tools_node/sync-paper-md-to-tex.js`
-
-它現在的定位應該理解成：
-
-- 單向同步器：以 `paper.v3.1.md` 為文字真源，重建 `paper-zh.tex`
-- 但仍需理解它是「文字同步器」，不是「完整版面保真器」
-
-原因有三個：
-
-1. `paper-zh.tex` 已做過大量人工版面調整
-2. 表格、圖、caption、字型、字級、間距都有人工保護
-3. 目前同步腳本雖已補強到可正式重建，但 Markdown -> LaTeX 仍不等於逐像素保真排版系統
-
-因此，**正確做法是以 MD 為 prose 真源，用腳本重建 `paper-zh.tex`，但每次重建前都先備份，重建後一定重新編譯驗證。**
-
-### Step C. 定點同步到 `paper-zh.tex`
-
-目前建議同步順序已更新為：
-
-1. 先修改 `paper.v3.1.md`
-2. 跑同步腳本重建 `paper-zh.tex`
-3. 立刻編譯 `paper-zh.pdf`
-4. 檢查是否有新增的排版破壞或編譯錯誤
-
-腳本已補進幾個關鍵保護：
-
-- 預設寫檔前自動備份
-- `--check` 只檢查、不寫檔
-- `--output <path>` 可先產生 preview
-- 支援 block quote 與 `$$...$$` 數學式的較安全轉換
-
-若重建後發現特定區塊版面不理想，再回到 `paper-zh.tex` 做小範圍人工修整；但母本文字仍應維持以 `paper.v3.1.md` 為準。
-
-這一步的核心原則：
-
-- `paper.v3.1.md` 管邏輯與文字
-- `paper-zh.tex` 管成品與排版
-
-### Step D. 必要時同步 bibliography
-
-若 MD 修文時涉及 citation metadata 更新，需同步檢查：
-
-- `references.bib`
-- `paper-zh.tex` 內是否真的有對應 `\cite{...}`
-- 若要強制把 bib 全印出，確認 `\nocite{*}` 還在
-
-### Step E. 用 Node helper 編譯 PDF
-
-目前最穩的做法不是手打一長串 shell，而是直接跑：
+每輪中文稿或英文版前置修文後，建議照這個順序：
 
 ```bash
 node tools_node/sync-paper-md-to-tex.js
 node tools_node/compile-paper-zh-texlive.js
 ```
 
-這支 helper 會在論文目錄內自動執行：
+若只想預覽同步結果，不覆蓋成品稿：
+
+```bash
+node tools_node/sync-paper-md-to-tex.js --output <preview-path>
+```
+
+若只想檢查同步器輸出是否與目標一致：
+
+```bash
+node tools_node/sync-paper-md-to-tex.js --check
+```
+
+編譯 helper 會執行：
 
 ```text
 xelatex paper-zh.tex
@@ -139,121 +98,128 @@ xelatex paper-zh.tex
 xelatex paper-zh.tex
 ```
 
-它同時會：
+安全基準：
 
-- 自動把 `C:\texlive\2026\bin\windows` 放進 PATH
-- 輸出每一步最後一行訊息
-- 產生 `compile-node-01-xelatex.out` 到 `compile-node-04-xelatex.out`
-- 最後整理 `Errors / Unresolved / Overfull / Pages / PDF size`
+- `Errors: 0` 必須維持
+- `Unresolved: 0` 必須維持
+- `Pages` 目前是 37；若頁數變動，先判斷是否是文字內容造成，不要立刻為表格換頁大改
+- `Overfull` 目前是 13；不暴增即可
 
-### Step F. 看編譯輸出是否仍在安全範圍
+## 7. 下一位隊長優先檢查清單
 
-這輪交接前的安全基準是：
+接手後先跑：
 
-- `Errors: 0`
-- `Unresolved: 0`
-- `Pages: 38`
-
-`Overfull` 目前不是本輪主修目標，只需記錄是否暴增。
-
----
-
-## 5. 等價的底層編譯鏈
-
-如果下一群不用 helper，而要直接理解底層流程，實際編譯鏈就是：
-
-```text
-xelatex -> bibtex -> xelatex -> xelatex
+```bash
+rg -n "Ship-safe|Refs\. 1, 28, 29|9a0c03|ATM-full route F1|route F1|Table 9a|LATEX:" docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md docs/ai_atomic_framework/arxiv-paper-v1/paper-zh.tex
 ```
 
-使用的 TeX Live 路徑是：
+預期結果：
 
-- `C:\texlive\2026\bin\windows`
+- 不應出現 `Ship-safe`
+- 不應出現 `Refs. 1, 28, 29`
+- 不應出現 `9a0c03`
+- 不應出現 `ATM-full route F1`
+- 不應出現 `Table 9a`
+- 不應出現 `LATEX:` raw 換頁註記
+- 若出現一般 prose 裡的 `route F1`，應改成 `route-label F1`，除非是在解釋舊稱呼
 
-這和使用者先前提供的編譯方式是一致的；只是目前 repo 已有 Node helper，直接用 helper 比較不容易漏步驟。
+文獻檢查：
 
----
+```bash
+rg -n "SEMAP|ColaUntangle|^61\.|^62\.|Mao2025SEMAP|Hou2025ColaUntangle" docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md docs/ai_atomic_framework/arxiv-paper-v1/references.bib
+```
 
-## 6. 為什麼不要把同步流程理解成「MD 一鍵轉 PDF」
+預期結果：正文、manual references、BibTeX 三處都能對上。
 
-這點非常重要。
+## 8. 工作樹與提交注意
 
-目前這條鏈不是：
+這份 handoff 更新時，`git status --short` 一度顯示工作樹乾淨；若下一位看到 dirty files，請先確認是否是使用者或其他 agent 在同時作業，不要直接回退。
 
-- `paper.v3.1.md` 全自動、無損、可逆地轉成 `paper-zh.tex`
+先前本線曾出現過與論文同步相關的 touched files：
 
-而是：
+- `docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md`
+- `docs/ai_atomic_framework/arxiv-paper-v1/paper-zh.tex`
+- `docs/ai_atomic_framework/arxiv-paper-v1/references.bib`
+- `docs/ai_atomic_framework/arxiv-paper-v1/paper-zh.pdf`
+- `tools_node/sync-paper-md-to-tex.js`
 
-- `paper.v3.1.md` 提供 prose 真源
-- `paper-zh.tex` 是由同步腳本重建、再經編譯驗證的成品稿
-- `sync-paper-md-to-tex.js` 已可正式使用，但仍需備份與編譯驗證護欄
+若要 commit，先用 `git status --short` 與 `git diff --stat` 確認 scope，避免把其他 agent 的 unrelated work 一起收進來。
 
-也就是說，**最後能穩定出 PDF 的關鍵，不是盲目重建，而是「先備份、再重建、再編譯驗證」的受控同步。**
+## 9. 最核心交接句
 
----
+目前穩定策略是：**英文版前只修審稿語義與 citation consistency，不再追中文 PDF table pagination；每輪以 `paper.v3.1.md` 為 prose 母本，同步到 `paper-zh.tex`，再編譯確認 `paper-zh.pdf` 維持 `Errors: 0` / `Unresolved: 0`。**
 
-## 7. 這輪已知風險與注意事項
+## 10. 2026-06-27 英文版論文交接增補
 
-### 7.1 千萬不要破壞 `paper-zh.tex` 的版面保護
+本增補給下一個對話群直接接續英文版 `paper.v3.1.en.md`。本輪主線已從 Abstract、Introduction、Related Work、Framework、Validation、AdmissionBench、Discussion、Conclusion、Acknowledgements 推進到 Appendix A.4 附近；目前不要再回頭重寫前文，除非是修正 terminology、citation、claim boundary 或明顯語法問題。
 
-不可隨意動：
+### 10.1 本輪已完成的英文稿範圍
 
-- 表格欄寬
-- `longtable` / `tabular` 結構
-- zebra striping
-- 字型設定
-- 字級
-- section spacing
-- 圖與 caption 格式
+- `paper.v3.1.en.md` 已完成大部分正文語氣校準與段落替換，包含 Abstract 三段、Motivation、False Dichotomy、Contributions、Organization、Related Work、§3 Framework、§4 Evidence、§5 AdmissionBench、§6 Discussion、Deployment Topologies、Conclusion、Acknowledgements。
+- Appendix 已更新到 `Evidence Artifact Map`、`Table A.1`、`Implementation and Commit Provenance`、`CID Schema Migration Candidate Paths`、`Table A.3`、Topology C bridge detail、`Table A.4`、`Table A.4a`、Non-Goals、Acceptance Conditions。
+- `en/PAPER-EN-STYLE-SPEC.md` 已同步吸收本輪 durable style rules，尤其是 claim boundary、denominator boundary、Flow/Snap 使用時機、Acknowledgements 透明揭露語氣、benchmark/audit 段落寫法。
+- `en/PAPER-EN-CITATION-MAP.md` 與 `en/PAPER-EN-READINESS-CHECKLIST.md` 在本輪工作樹中也有變更；下一位接手前請先看 `git diff --stat` 與局部 diff，不要假設只有主稿被改。
 
-### 7.2 `sync-paper-md-to-tex.js` 不應直接覆蓋成品稿
+### 10.2 已定案的風格與論證決策
 
-這條規則已更新。
+- 英文版主風格採 `D dominant + tactical C-snap`：論證段落用流動的 D；當 reviewer 需要快速比對多個機制、角色或 evidence bucket 時才局部 snap。
+- 二系統比較可在符合 `binary mechanism-contrast exception` 時使用 snap；例如 STORM/CAID、CodeTeam/ATM、SCF/MPAC 這類介入點或治理機制明顯不同的對比。
+- `before any governed shared mutation is applied` 是目前最穩的 admission boundary 表述；避免泛稱所有 writes，保留 private/local WIP 不必經 broker 的邊界。
+- `baseline` 只用於真正實驗 baseline；CodeTeam 這類尚未跑成 empirical baseline 的文獻應稱為 `comparator`、`design point` 或 `repository-construction comparator`。
+- Evidence rows、policy rows、ablation rows、adversarial rows、enforcement rows 必須明確說明 denominator 與 row universe；不要讓 derived rows 被誤讀成獨立 population samples。
+- Acknowledgements 採精簡兩段版，細節移到 Appendix B；不要列舉 CID、virtual atom、neutral steward 等架構決策清單，避免讀起來像 defensive contribution enumeration。
+- Appendix / transparency bridge 採 Flow，不採 Snap；vendor channels、role separation、human decision points、audit boundaries、explicit non-claims 可在 Appendix B 用較細的結構承擔。
 
-現在可以直接用它重建 `paper-zh.tex`，但前提是：
+### 10.3 最近一次已落檔的關鍵段落
 
-- 每次重建前都要備份
-- 重建後都要重新編譯
-- 若發現特殊版面區塊退化，優先修同步器，不要默默讓 MD / TeX 再次漂移
+Acknowledgements 目前採用以下決策：透明揭露 LLM assistants 的使用範圍、明確 human-in-the-loop、作者保留 design/evidence/benchmark/claims final authority，並把細節指向 Appendix B。這版比完整三段列舉版更短、更負責，也比較不會把 reviewer 注意力導向「AI 是否主導原創性」。
 
-### 7.3 encoding guard 有一個已知假陽性來源
+Conclusion 目前已收斂為三段：第一段重申 pre-write admission layer 與 ATM 的 governance units；第二段界定 evidence chain 支持 feasibility/auditability/bounded recoverability，但不主張 large-scale comparative superiority；第三段以 first-class governance problem 收束。
 
-本輪針對 touched files 跑 encoding 檢查時，失敗不是主稿造成，而是：
+Appendix A 開頭目前已採用 canonical anchor rule：paper-facing numbers and benchmark claims 以 `artifacts/generated/atm-admission-bench/20260625-paper/` under `main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` 為主；`v0.9.0-alpha.1` 是 source-reference snapshot，`3eec69...` 是 generator-provenance anchor，不要混成同一 citation layer。
 
-- `paper.v3.1.corrupted-backup-20260625.md`
+### 10.4 尚未完成、下一輪優先處理
 
-這份 backup 檔有 UTF-8 BOM，因此會讓 touched-scan 報錯。  
-但主工作檔：
+下一輪第一優先是 References cleanup and verification：
 
-- `paper.v3.1.md`
-- `paper-zh.tex`
-- `references.bib`
+- 不要把目前 References 原樣放入正式稿；Refs. 38-62 後面的用途說明屬於 annotated bibliography，不應留在正式 References。
+- References 正文只保留 bibliographic metadata：作者、年份、標題、venue/arXiv、DOI 或 URL。
+- `used as contrast`、`supports claim`、`future-work reference`、`neighboring design point` 等說明移到 Related Work prose、citation-to-claim map，或 Appendix 的 annotation table。
+- arXiv 條目建議統一成 `Author(s). Year. "Title." arXiv:identifier [subject class]. https://doi.org/10.48550/arXiv.identifier.`
+- 書籍、會議、journal、technical report 保留原 venue 或 publisher，不要硬改成 arXiv style。
+- 需要校正新增文獻 metadata，尤其 SafeMerge、Semistructured Merge、Atomix、Cordon、SyncMind/SyncBench、SEMAP、ColaUntangle、Solver-Aided Verification 等條目；請用官方 arXiv、DOI、publisher 或作者頁核對。
 
-本身是可用的。
+第二優先是 Appendix B transparency statement：
 
-### 7.4 `paper-zh.tex` 目前屬於需要保守操作的成品
+- Acknowledgements 已指向 Appendix B，但 Appendix B 的 vendor channels、role separation、human decision points、audit boundaries、explicit non-claims 仍需確認是否完整、是否與正文 claim boundary 一致。
+- §A-3 作為 transparency bridge 採 Flow；若 Appendix B 內有 vendor channels 或 role separation 清單，可以局部用 Snap，但不要讓整段像規格表。
 
-從內容可見它仍混有手工排版與轉寫結果；但在本次交接時點，正式策略已改為：
+第三優先等英文版全部翻譯與校準完成後再做：
 
-- `paper.v3.1.md` 為唯一文字母本
-- `paper-zh.tex` 由同步腳本重建
-- 版面異常優先修同步器或做小範圍 TeX 補丁
+- 全文 Figure / Table / Algorithm caption 大小寫一致性掃描。
+- 全文表格編號連續化；暫時保留 `Table 18a`，等整份英文版完成後再一次處理，不要現在局部重編號。
+- Cross-reference sweep：確認 § 編號、Definition 編號、Proposition 編號、Table/Figure/Algorithm 指稱沒有漂移。
+- Markdown/encoding 檢查與 md-to-pdf 或英文 TeX 同步流程。
 
----
+### 10.5 驗證與工作樹狀態
 
-## 8. 下一群接手的建議順序
+本輪每次文字落檔後已對 touched paper files 跑過 encoding guard；最近一次 `paper.v3.1.en.md` 檢查結果為 `bom=no`、`replacement=0`、`latinMojibake=0`、`weirdCjk=0`、`ok`。本增補落檔後仍需再跑 touched-file encoding check。
 
-1. 先以 `paper.v3.1.md` 為主，完成 reviewer-facing prose 修文
-2. 每輪修文後直接跑：
-   - `node tools_node/sync-paper-md-to-tex.js`
-3. 每輪同步後跑：
-   - `node tools_node/compile-paper-zh-texlive.js`
-4. 先確認自動備份檔已產生
-5. 只要 `Errors: 0`、`Unresolved: 0`，就先不要為了小型 overfull 去重整版
-5. 若 citation 或 appendix anchor 有變，再補 `references.bib`
+目前工作樹在 `docs/ai_atomic_framework/arxiv-paper-v1` 下已知 dirty files 包含：
 
----
+- `docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-26-md-to-pdf-sync.md`
+- `docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-CITATION-MAP.md`
+- `docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-READINESS-CHECKLIST.md`
+- `docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-STYLE-SPEC.md`
+- `docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.en.md`
 
-## 9. 本次交接最核心的一句話
+不要直接回退這些檔案；下一位接手前請先用 Node.js 讀取與 `git diff --stat` 判斷 scope。使用者已明確要求編碼敏感讀取使用 Node.js，不要用 PowerShell 直接抓內容。
 
-**真正穩定的流程現在是：先在 `paper.v3.1.md` 收斂 prose，接著用 `sync-paper-md-to-tex.js` 自動重建 `paper-zh.tex`，而且每次重建前自動備份，最後再用 Node helper 跑 `xelatex -> bibtex -> xelatex -> xelatex` 產出 `paper-zh.pdf`。**
+### 10.6 下一位隊長的建議起手式
+
+```bash
+git status --short -- docs/ai_atomic_framework/arxiv-paper-v1
+npm run check:encoding:touched -- --files docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-26-md-to-pdf-sync.md docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.en.md docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-STYLE-SPEC.md
+```
+
+接著從 References cleanup 開始，不要重開正文語氣大改。若需要查證文獻，使用官方來源；完成後同步 `PAPER-EN-CITATION-MAP.md`，因為使用者已決定「表格與 citation map 以後要直接同步」。
