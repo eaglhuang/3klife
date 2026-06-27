@@ -157,9 +157,9 @@ function renderTable(rows) {
   if (!body.length) return [];
   const parsed = body.map(splitTableRow);
   const cols = Math.max(...parsed.map((row) => row.length));
-  const width = Math.max(0.09, Math.min(0.30, 0.94 / cols)).toFixed(2);
+  const width = Math.max(0.09, Math.min(0.30, 0.86 / cols)).toFixed(2);
   const spec = Array.from({ length: cols }, () => `L{${width}\\textwidth}`).join('');
-  const out = ['\\begingroup', '\\scriptsize', `\\begin{longtable}{${spec}}`, '\\toprule'];
+  const out = ['\\begingroup', '\\scriptsize', '\\setlength{\\tabcolsep}{3pt}', `\\begin{longtable}{@{}${spec}@{}}`, '\\toprule'];
   parsed.forEach((row, idx) => {
     const cells = Array.from({ length: cols }, (_, col) => inline(row[col] || ''));
     out.push(`${cells.join(' & ')} \\\\`);
@@ -183,6 +183,58 @@ function renderHeading(level, text) {
 function renderParagraph(lines) {
   const text = lines.join(' ').trim();
   return text ? [inline(text)] : [];
+}
+
+function collectPreservedFigureBlocks(oldTex) {
+  const out = [];
+  const blockRe = /% CLAUDE-FIG-BEGIN:\s*([a-z0-9\-_]+)[\s\S]*?% CLAUDE-FIG-END:\s*\1/g;
+  let match;
+  while ((match = blockRe.exec(oldTex)) !== null) {
+    const name = match[1];
+    const block = match[0];
+    const before = oldTex.slice(0, match.index);
+    const lines = before.split('\n');
+    let figureNumber = null;
+    for (let i = lines.length - 1; i >= 0; i -= 1) {
+      const figureMatch = lines[i].trim().match(/^(?:\\textbf\{)?Figure\s+(\d+)\s+---/);
+      if (figureMatch) {
+        figureNumber = figureMatch[1];
+        break;
+      }
+    }
+    if (figureNumber === null) {
+      console.warn(`[sync-paper-en-md-to-tex] preserved figure '${name}' has no nearby 'Figure N ---' anchor; dropping`);
+      continue;
+    }
+    out.push({ name, figureNumber, block });
+  }
+  return out;
+}
+
+function reinjectPreservedFigures(body, preserved) {
+  let result = body;
+  for (const { name, figureNumber, block } of preserved) {
+    const anchorRe = new RegExp(`^(?:\\\\textbf\\{)?Figure\\s+${figureNumber}\\s+---`, 'm');
+    const anchor = result.match(anchorRe);
+    if (!anchor) {
+      console.warn(`[sync-paper-en-md-to-tex] could not re-inject figure '${name}': 'Figure ${figureNumber} ---' not in new body`);
+      continue;
+    }
+    const afterAnchor = anchor.index + anchor[0].length;
+    const verbatimStart = result.indexOf('\\begin{Verbatim}', afterAnchor);
+    if (verbatimStart < 0) {
+      console.warn(`[sync-paper-en-md-to-tex] could not re-inject figure '${name}': no Verbatim after 'Figure ${figureNumber} ---'`);
+      continue;
+    }
+    const verbatimClose = result.indexOf('\\end{Verbatim}', verbatimStart);
+    if (verbatimClose < 0) {
+      console.warn(`[sync-paper-en-md-to-tex] could not re-inject figure '${name}': Verbatim not closed`);
+      continue;
+    }
+    const verbatimEnd = verbatimClose + '\\end{Verbatim}'.length;
+    result = result.slice(0, verbatimStart) + block + result.slice(verbatimEnd);
+  }
+  return result;
 }
 
 function convertMarkdown(md) {
@@ -308,24 +360,42 @@ function convertMarkdown(md) {
 }
 
 const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit prose here.
-\documentclass[9pt,a4paper]{article}
-\usepackage[margin=0.85in,top=0.9in,bottom=0.9in]{geometry}
+\documentclass[10pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
 \usepackage{fontspec}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{amsmath,amssymb}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{fancyvrb}
 \usepackage{fvextra}
 \usepackage{seqsplit}
 \usepackage[hidelinks,colorlinks=false]{hyperref}
+\usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{titlesec}
-\setmainfont{TeX Gyre Termes}
-\setsansfont{TeX Gyre Heros}
-\setmonofont{TeX Gyre Cursor}[Scale=0.92]
+\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric}
+\setmainfont{texgyretermes-regular.otf}[
+  BoldFont=texgyretermes-bold.otf,
+  ItalicFont=texgyretermes-italic.otf,
+  BoldItalicFont=texgyretermes-bolditalic.otf
+]
+\setsansfont{texgyreheros-regular.otf}[
+  BoldFont=texgyreheros-bold.otf,
+  ItalicFont=texgyreheros-italic.otf,
+  BoldItalicFont=texgyreheros-bolditalic.otf
+]
+\setmonofont{texgyrecursor-regular.otf}[
+  BoldFont=texgyrecursor-bold.otf,
+  ItalicFont=texgyrecursor-italic.otf,
+  BoldItalicFont=texgyrecursor-bolditalic.otf,
+  Scale=0.92
+]
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
 \setlength{\emergencystretch}{4em}
 \setlength{\parskip}{0.2em}
 \setlength{\parindent}{1.5em}
@@ -340,7 +410,10 @@ const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit 
 `;
 
 const md = fs.readFileSync(mdPath, 'utf8');
-const tex = `${preamble}\n${convertMarkdown(md)}`.replace(/\r\n|\r|\n/g, '\n');
+const existingTex = fs.existsSync(texPath) ? fs.readFileSync(texPath, 'utf8') : '';
+const preservedFigures = existingTex ? collectPreservedFigureBlocks(existingTex) : [];
+const body = reinjectPreservedFigures(convertMarkdown(md), preservedFigures);
+const tex = `${preamble}\n${body}`.replace(/\r\n|\r|\n/g, '\n');
 if (!checkOnly && !noBackup && fs.existsSync(outputPath)) {
   const backupPath = path.join(path.dirname(outputPath), `${path.basename(outputPath)}.before-sync-${makeTimestamp()}.bak`);
   fs.copyFileSync(outputPath, backupPath);
@@ -348,3 +421,7 @@ if (!checkOnly && !noBackup && fs.existsSync(outputPath)) {
 }
 if (!checkOnly) fs.writeFileSync(outputPath, tex, 'utf8');
 console.log(`[sync-paper-en-md-to-tex] ${checkOnly ? 'check ok' : 'wrote'} ${path.relative(ROOT, outputPath)}`);
+if (!checkOnly && preservedFigures.length) {
+  const names = preservedFigures.map((figure) => figure.name).join(', ');
+  console.log(`[sync-paper-en-md-to-tex] preserved ${preservedFigures.length} CLAUDE-FIG block(s): ${names}`);
+}
