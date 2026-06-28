@@ -241,6 +241,34 @@ function convertMarkdown(md) {
   const lines = md.split(/\r\n|\n|\r/);
   const out = ['\\maketitle', ''];
   const state = { paragraph: [], list: null, code: false };
+  const metadataLines = [];
+
+  let contentStart = 2;
+  while (contentStart < lines.length && lines[contentStart].trim() === '') {
+    contentStart += 1;
+  }
+  while (contentStart < lines.length) {
+    const line = lines[contentStart];
+    if (line.trim() === '') {
+      break;
+    }
+    if (/^#{1,6}\s+/.test(line)) {
+      break;
+    }
+    metadataLines.push(line.trim());
+    contentStart += 1;
+  }
+
+  if (metadataLines.length) {
+    out.push('\\begin{center}');
+    out.push('{\\small');
+    metadataLines.forEach((line, index) => {
+      const suffix = index === metadataLines.length - 1 ? '' : ' \\\\';
+      out.push(`${inline(line)}${suffix}`);
+    });
+    out.push('}');
+    out.push('\\end{center}', '');
+  }
 
   function flushParagraph() {
     if (state.paragraph.length) {
@@ -265,7 +293,7 @@ function convertMarkdown(md) {
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
-    if (i === 0 || i === 1 || /^>\s+English draft scaffold only/.test(line) || /^>\s+Source of truth/.test(line) || /^>\s+Use the guard files/.test(line)) {
+    if (i < contentStart || /^>\s+English draft scaffold only/.test(line) || /^>\s+Source of truth/.test(line) || /^>\s+Use the guard files/.test(line)) {
       i += 1;
       continue;
     }
@@ -360,8 +388,8 @@ function convertMarkdown(md) {
 }
 
 const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit prose here.
-\documentclass[10pt,letterpaper]{article}
-\usepackage[margin=1in]{geometry}
+\documentclass[9pt,letterpaper]{article}
+\usepackage[left=0.78in,right=0.78in,top=0.82in,bottom=0.88in]{geometry}
 \usepackage{fontspec}
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -396,13 +424,12 @@ const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit 
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \setlength{\LTleft}{0pt}
 \setlength{\LTright}{0pt}
-\setlength{\emergencystretch}{4em}
-\setlength{\parskip}{0.2em}
-\setlength{\parindent}{1.5em}
-\sloppy
-\setlist{topsep=2pt,itemsep=2pt,parsep=0pt}
-\titlespacing*{\section}{0pt}{1.2ex plus 0.3ex minus 0.2ex}{0.8ex plus 0.2ex}
-\titlespacing*{\subsection}{0pt}{0.9ex plus 0.3ex minus 0.2ex}{0.5ex plus 0.2ex}
+\setlength{\emergencystretch}{2em}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.25em}
+\setlist{topsep=1.5pt,itemsep=1pt,parsep=0pt}
+\titlespacing*{\section}{0pt}{1.0ex plus 0.2ex minus 0.15ex}{0.55ex plus 0.15ex}
+\titlespacing*{\subsection}{0pt}{0.75ex plus 0.2ex minus 0.15ex}{0.35ex plus 0.1ex}
 \title{ATM: Adapter-Guided Atomization and CID-Brokered Admission for Single-Domain Multi-Vendor LLM Code Co-Synthesis\\\large A Specification-Grounded Governance Substrate for Software Agents}
 \author{}
 \date{}
