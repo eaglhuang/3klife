@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-06-28T21-21-25-476Z-close-62c9f610bd35",
+  "taskId": "TASK-SKL-0007",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md",
+  "taskSha256": "sha256:1fc9ed8127afbd117fb3e11ec6c04ef0ac4ce86fc41fe37b87d5bc178ce196d3",
+  "createdAt": "2026-06-28T21:21:25.476Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0007 --actor codex-gpt-5.4-mini"
+}

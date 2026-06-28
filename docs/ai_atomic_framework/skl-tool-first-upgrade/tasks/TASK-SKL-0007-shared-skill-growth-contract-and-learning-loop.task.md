@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0007
 title: Shared skill growth contract and learning loop
-status: planned
+status: done
 milestone: P1
 depends_on:
   - TASK-SKL-0002
@@ -35,6 +35,15 @@ out_of_scope:
 nonGoals:
   - "No chat-history-only memory scheme."
   - "No per-skill bespoke taxonomy that breaks cross-skill reuse."
+completed_at: "2026-06-28T21:21:25.476Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-06-28T21:21:25.476Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-06-28T21-21-25-476Z-close-62c9f610bd35"
+lastTransitionAt: "2026-06-28T21:21:25.476Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d6eeab308db78934f1c48914795defab65efe6cc"
 ---
 
 # TASK-SKL-0007
