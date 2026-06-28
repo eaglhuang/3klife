@@ -67,6 +67,41 @@ function findBareUrl(src, start) {
   return { index: start + match.index, end, url };
 }
 
+function findRefCitation(src, start) {
+  const rest = src.slice(start);
+  const match = rest.match(/\bRefs?\.\s+[0-9][0-9,\-\s]*/);
+  if (!match) return null;
+  let text = match[0].replace(/\s+$/, '');
+  let end = start + match.index + text.length;
+  while (/[,\- ]$/.test(text)) {
+    text = text.slice(0, -1);
+    end -= 1;
+  }
+  return { index: start + match.index, end, text };
+}
+
+function latexRefCitation(text) {
+  const prefix = text.startsWith('Refs.') ? 'Refs.' : 'Ref.';
+  const refs = text.slice(prefix.length).trim();
+  let out = `${prefix}~`;
+  for (let i = 0; i < refs.length;) {
+    const num = refs.slice(i).match(/^\d+/);
+    if (num) {
+      out += `\\hyperref[ref:${num[0]}]{${num[0]}}`;
+      i += num[0].length;
+      continue;
+    }
+    if (refs[i] === '-') {
+      out += '--';
+      i += 1;
+      continue;
+    }
+    out += escapeLatexText(refs[i]);
+    i += 1;
+  }
+  return out;
+}
+
 function inline(text) {
   const src = String(text);
   let out = '';
@@ -77,8 +112,10 @@ function inline(text) {
     const linkAt = src.indexOf('[', i);
     const mathAt = src.indexOf('$', i);
     const bareUrl = findBareUrl(src, i);
+    const refCitation = findRefCitation(src, i);
     const urlAt = bareUrl ? bareUrl.index : -1;
-    const candidates = [codeAt, boldAt, linkAt, mathAt, urlAt].filter((n) => n >= 0);
+    const refAt = refCitation ? refCitation.index : -1;
+    const candidates = [codeAt, boldAt, linkAt, mathAt, urlAt, refAt].filter((n) => n >= 0);
     const next = candidates.length ? Math.min(...candidates) : -1;
     if (next < 0) {
       out += escapeLatexText(src.slice(i));
@@ -127,6 +164,11 @@ function inline(text) {
     if (urlAt === i && bareUrl) {
       out += `\\url{${latexUrl(bareUrl.url)}}`;
       i = bareUrl.end;
+      continue;
+    }
+    if (refAt === i && refCitation) {
+      out += latexRefCitation(refCitation.text);
+      i = refCitation.end;
       continue;
     }
     if (mathAt === i) {
@@ -185,6 +227,7 @@ function renderTable(rows, state = null) {
     6: [0.12, 0.11, 0.16, 0.16, 0.16, 0.19],
   };
   const specialTableSpecs = {
+    'Table 7': [0.20, 0.47, 0.27],
     'Table C.1': [0.18, 0.27, 0.18, 0.31],
   };
   const widths = specialTableSpecs[state?.lastTableTitle] || tableSpecs[cols] || Array.from({ length: cols }, () => Math.max(0.09, Math.min(0.30, 0.94 / cols)));
@@ -247,6 +290,7 @@ function renderParagraph(lines, state = null) {
     if (state) state.lastTableTitle = tableId;
     const specialNeedspace = {
       'Table 3': '24',
+      'Table 7': '25',
       'Table C.1': '30',
     };
     const needspace = specialNeedspace[tableId] || '7';
@@ -325,6 +369,11 @@ function reinjectPreservedFigures(body, preserved) {
       result = result.slice(0, anchor.index) + withFigureCaption(block, titleLine) + result.slice(titleLineEnd);
       continue;
     }
+    const betweenTitleAndVerbatim = result.slice(titleLineEnd, verbatimStart);
+    if (betweenTitleAndVerbatim.trim()) {
+      result = result.slice(0, anchor.index) + withFigureCaption(block, titleLine) + result.slice(titleLineEnd);
+      continue;
+    }
     const verbatimClose = result.indexOf('\\end{Verbatim}', verbatimStart);
     if (verbatimClose < 0) {
       console.warn(`[sync-paper-en-md-to-tex] could not re-inject figure '${name}': Verbatim not closed`);
@@ -339,7 +388,7 @@ function reinjectPreservedFigures(body, preserved) {
 function convertMarkdown(md) {
   const lines = md.split(/\r\n|\n|\r/);
   const out = ['\\paperTitleBlock', ''];
-  const state = { paragraph: [], list: null, code: false, algorithmBox: false, flowBox: false, lastTableTitle: null };
+  const state = { paragraph: [], list: null, code: false, algorithmBox: false, flowBox: false, lastTableTitle: null, inReferences: false };
   const metadataLines = [];
 
   let contentStart = 2;
@@ -445,6 +494,7 @@ function convertMarkdown(md) {
         i += 1;
         continue;
       }
+      state.inReferences = /^References$/.test(heading[2].trim());
       if (/^Appendix\b/.test(heading[2].trim())) inAppendix = true;
       const headingRenderer = inAppendix ? renderAppendixHeading : renderHeading;
       out.push(...headingRenderer(heading[1].length, heading[2]), '');
@@ -468,7 +518,8 @@ function convertMarkdown(md) {
     if (ordered) {
       flushParagraph();
       openList('enumerate');
-      out.push(`\\item ${inline(ordered[2])}`);
+      const label = state.inReferences ? `\\label{ref:${ordered[1]}} ` : '';
+      out.push(`\\item ${label}${inline(ordered[2])}`);
       i += 1;
       continue;
     }
@@ -604,7 +655,6 @@ const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit 
     \vspace{12pt}
     {\fontsize{11}{13}\selectfont Eaglhuang\par}
     {\fontsize{10}{12}\selectfont eaglhuang@gmail.com\par}
-    {\fontsize{10}{12}\selectfont 2026-06-28\par}
   \end{center}
   \vspace{4pt}
 }
