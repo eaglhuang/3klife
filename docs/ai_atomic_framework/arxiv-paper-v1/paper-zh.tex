@@ -158,6 +158,8 @@ ATM 採取的是這條光譜中的中間治理層：adapter-guided atomization �
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Citation cluster & What it establishes & ATM comparison role \\
@@ -225,6 +227,8 @@ SEMAP（Ref. 61）與 ATM 都採用 contract-based governance，但 enforcement 
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}}
 \toprule
 System & Layer & Preventive or Advisory & Admission-time Gate & Shared-file bounded region & Neutral serialization \\
@@ -244,6 +248,8 @@ ATM & repository admission layer & preventive & yes & yes & neutral steward \\
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}}
 \toprule
 Capability & CodeCRDT (Ref. 1) & STORM (Ref. 3) & CAID (Ref. 15) & CoAgent (Ref. 14) & CodeTeam (Ref. 25) & ATM \\
@@ -279,6 +285,8 @@ S-Bus 則代表依賴捕捉的另一條路線（Ref. 26）。它以 HTTP middlew
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}}
 \toprule
 Tier & 粒度 & 代表系統 & 典型 domain & ATM 與之關係 \\
@@ -326,6 +334,8 @@ $$\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$$
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Plane & ATM 機制 & 回答的問題 \\
@@ -353,6 +363,8 @@ $\text{ClosePermitted}(\mathcal{T}) \iff V(\mathcal{T}) = \text{pass} \;\land\; 
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Drift 類型 & 定義 & ATM 處理機制 \\
@@ -496,6 +508,8 @@ $$P_{a_1} \cap P_{a_2} = \emptyset.$$
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}}
 \toprule
 對象 & 角色 & 是否持久 & 是否進 broker 第一線 & 主要用途 \\
@@ -524,6 +538,8 @@ ATM 的准入流程從 write intent 開始，但其核心不是一次性比較�
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Verdict & 意義 & 後續路徑 \\
@@ -718,6 +734,8 @@ ATM 的 broker 不是只靠 CID 做單點判斷，而是以七層 hard gate 逐�
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}}
 \toprule
 Layer & Gate & 判斷問題 & 通過時 & 失敗或不明時 & 成熟度 \\
@@ -761,6 +779,8 @@ ATM 不只治理 code atoms，也治理 structured artifacts。透過 \texttt{\s
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}}
 \toprule
 Domain & Adapter & Scope & Locator & Merge capability \\
@@ -821,6 +841,8 @@ flowchart LR
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}L{0.15\textwidth}}
 \toprule
 Evidence bucket & Observed measure & Value / record & Supported claim & Boundary / non-claim & Evidence source \\
@@ -844,6 +866,8 @@ Self-hosting incident forensics & 代表性 incident 類型 & 3（cid-shared col
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}}
 \toprule
 Term & Phase & Representative evidence & Interpretation \\
@@ -876,6 +900,8 @@ freeze / patch-envelope（snapshot protocol） & admission re-arbitration & TASK
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 類別 & 覆蓋機制 & 評估重點 \\
@@ -916,6 +942,8 @@ ATM 自身開發過程提供了一組內部真實證據。這些事件不是事�
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 指標 & 數值 \\
@@ -1015,6 +1043,8 @@ CID stability 的延伸價值則在於把「候選治理單位」與「驗證後
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}L{0.18\textwidth}}
 \toprule
 Plane（§3.1） & 主要治理機制 & 本文現有證據 & 證據類型 & 來源章節 \\
@@ -1048,6 +1078,8 @@ Table 18a --- Baseline Policy Definitions.
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Baseline / policy & Operational definition \\
@@ -1067,6 +1099,8 @@ no-governance & 不執行 broker admission；衝突僅可能由 apply / validato
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Item & v0.1 baseline & v0.2 paper profile \\
@@ -1092,6 +1126,8 @@ Unresolved benchmark rows & 0 & 0 \\
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Category & Result \\
@@ -1136,6 +1172,8 @@ AdmissionBench 在本稿中的角色已不是單純的 roadmap，而是分成兩
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}}
 \toprule
 RQ & Question & Current paper answer (v0.1 baseline + v0.2 result) & Remaining extension \\
@@ -1271,6 +1309,8 @@ The author used large language model assistants during manuscript preparation fo
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}}
 \toprule
 Evidence family & Role in paper & Primary entry & 取得管道 \\
@@ -1305,6 +1345,8 @@ CID schema migration 可採三條路徑。第一，flag-day migration：在 repo
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Paper claim & Source location (ATM repository) & Verification \\
@@ -1348,6 +1390,8 @@ Paper claim & Source location (ATM repository) & Verification \\
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.28\textwidth}L{0.28\textwidth}L{0.28\textwidth}}
 \toprule
 Stage & Internal work package & Purpose \\
@@ -1367,6 +1411,8 @@ Table A.4a --- Public Artifact Manifest Snapshot.
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}}
 \toprule
 Artifact & Commit / hash anchor & Role & Access status \\
@@ -1442,6 +1488,8 @@ Readers wishing to inspect the manuscript-side admission evidence are referred t
 
 \begingroup
 \footnotesize
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}L{0.23\textwidth}}
 \toprule
 Anchor 類別 & 識別 & 狀態 & 用途 \\

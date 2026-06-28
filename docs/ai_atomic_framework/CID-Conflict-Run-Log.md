@@ -1,7 +1,7 @@
 # CID Conflict Run Log
 
 ## Scan Result
-- Scan time: 2026-06-28T03:31:27.253Z
+- Scan time: 2026-06-28T04:01:27.210Z
 | runId | planId | requestCount | actorCount | scenarioTags | requestIdentities | actors | taskHints | files | tasks | commits | transactions | adapter | lane | verdict | evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 67b193f9-1244-4e41-9f64-1ebbdbeaa9e5 | batch-5c1fd53c988116ce | 7 | 2 | n/a | REQ-0041-ATOMMAP-0,REQ-0041-ATOMMAP-1,REQ-0042-ATOMMAP-0,REQ-0041-EVIDENCE-GATES,REQ-0041-CLOSE-ORCH,REQ-0042-CLOSE-ORCH,REQ-0042-EVIDENCE-GATES | cursor-composer-2.5,antigravity-gemini-3.5-flash | n/a | tmp/broker-parallel-0041-0042/atomic_workbench/atomization-coverage/path-to-atom-map.json,tmp/broker-parallel-0041-0042/docs/governance/evidence-gates.md,tmp/broker-parallel-0041-0042/packages/cli/src/commands/taskflow/close-orchestration.ts | n/a | n/a | n/a | json-record,text-range,fallback-file-lock,n/a | applied,blocked,queued | mergeable,conflict | .atm/history/evidence/broker-runs/67b193f9-1244-4e41-9f64-1ebbdbeaa9e5.json |

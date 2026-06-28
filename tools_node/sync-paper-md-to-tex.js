@@ -227,7 +227,16 @@ function renderTable(rows) {
   const cols = Math.max(...parsed.map((row) => row.length));
   const width = Math.max(0.12, Math.min(0.28, 0.92 / cols)).toFixed(2);
   const spec = Array.from({ length: cols }, () => `L{${width}\\textwidth}`).join('');
-  const out = ['\\begingroup', '\\footnotesize', `\\begin{longtable}{${spec}}`, '\\toprule'];
+  // Zebra striping baked into the sync script so the table format survives every regeneration.
+  // Mirrors sync-paper-en-md-to-tex.js. Requires \usepackage[table]{xcolor} in paper-zh.tex preamble.
+  const out = [
+    '\\begingroup',
+    '\\footnotesize',
+    '\\arrayrulecolor{black!55}',
+    '\\rowcolors{2}{gray!8}{white}',
+    `\\begin{longtable}{${spec}}`,
+    '\\toprule',
+  ];
   parsed.forEach((row, idx) => {
     const cells = Array.from({ length: cols }, (_, col) => inline(row[col] || ''));
     out.push(`${cells.join(' & ')} \\\\`);
