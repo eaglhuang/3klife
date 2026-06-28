@@ -41,17 +41,17 @@ More precisely, ATM narrows conflict granularity through a sequence of represent
 
 This paper does not propose another general-purpose multi-agent orchestrator. It reframes governed shared writes within a single authority domain as a formalizable, computable, and auditable pre-write admission problem. We make three contributions. The evaluation artifacts, adopter study, self-hosting forensics, and limitations are presented in Sections 4-6 as supporting evidence rather than as additional contributions.
 
-1. **Seven-layer pre-write admission with virtual-atom fallback.**
+**Seven-layer pre-write admission with virtual-atom fallback.**
    We propose a seven-layer hard admission gate that evaluates multi-agent write intents through CID identity, shared-surface overlap, read/write dependencies, file-range and virtual-atom refinement, `ConflictKey + canMerge`, CAS base-hash validation, and a fallback file lock. Its purpose is not to repair merge conflicts after changes have already been produced. Instead, before any governed shared mutation is applied, the gate determines whether an intent may proceed in parallel, should be routed to deterministic composition, must be serialized, or must fail closed.
 
    ATM does not assume that the persistent atom map is complete from the outset. When atomization coverage is partial, when an adapter cannot yet associate every affected region with a stable semantic atom, or when same-file regions cannot be compared reliably at the current granularity, the system introduces virtual atoms as transitional governance units. Virtual atoms allow previously unatomized regions to be located, assigned provisional ConflictKeys, re-hashed into candidate CIDs, and evaluated for bounded-region disjointness. If an admissible route cannot be established under the declared model, the corresponding intent is conservatively serialized, refined, or failed closed to direct apply while its intent evidence is preserved when available. The contribution is therefore not simply to permit more parallelism, but to provide a deterministic gate that progressively transforms coarse file-level contention into auditable admission decisions.
 
-2. **A specification-to-evidence governance substrate.**
+**A specification-to-evidence governance substrate.**
    ATM binds shared-write governance to a structured execution contract so that task intent, scope boundaries, validation requirements, and evidence obligations are not dispersed across prompts, human conventions, and ad hoc closure procedures. A task-direction lock, pre-tool scope gate, validator envelope, evidence blocker, review advisory, and closure packet jointly form this substrate. Within it, the CID broker serves as the shared-mutation admission subsystem.
 
    This substrate does not synchronize agents' latent beliefs, nor does it guarantee end-to-end semantic correctness. Its role is to constrain how specification drift, scope drift, unsupported reasoning, and state drift can become an ungoverned repository mutation or an unauditable task closure. The formal Task Contract, the three governance planes, Governance Invariants G1-G3, and the boundaries between the broker, steward, validators, and closure mechanisms are defined in Section 3.1.
 
-3. **An extensible atomization abstraction with explicit adapter contracts.**
+**An extensible atomization abstraction with explicit adapter contracts.**
    Our third contribution is not a claim that all languages and artifact formats receive equivalent implementation support. Rather, it elevates atomization from a language-specific technique into an extensible, contract-bound repository-governance interface. An atom is the smallest governable unit that must be distinguished for pre-write arbitration. The atom map aligns bounded surfaces, owners, validators, dependencies, CIDs, hash locks, and shared surfaces in a queryable governance index.
 
    Through the `AtomizationPlanningAdapter` and `FileMutationAdapter` interfaces, each language or format may independently expose candidate atoms, bounded ranges, read/write dependencies, ConflictKeys, virtual-atom boundaries, merge capabilities, and validation hooks without first being translated into a universal AST. Within the current implementation coverage, TypeScript and Python serve as the reference language paths. Cross-language atom identity and stronger semantic alignment remain open problems.
@@ -728,7 +728,9 @@ flowchart LR
 
 The evidence buckets in Figure 4 support different claims. Deterministic fixtures and AdmissionBench support the mutation-admission result under a fixed single-governance-domain scenario family. POS2, B-12, and BLOCK provide field evidence for one positive same-file route and two failure-mode boundaries. The npc-brain cohort supports operability and recoverability of the governance skeleton, not a population-level same-file admission statistic. Self-hosting forensics is operational dogfooding evidence, not independent external validation. Phase A, Phase B, and Phase C add three separate engineering evidence lines: public-source snapshot governance, structured-artifact admission, and dual-live conflict observability; Table 7 keeps those lines from being collapsed into one claim.
 
-The evidence base of this section draws from deterministic fixtures, self-hosting forensics, the external adoption study, field-collision records, public-source snapshot evidence, structured-artifact evidence, live-conflict evidence, and extension evidence. These materials do not have the same evidentiary strength and should not be read as a single empirical sample. The body therefore states the evidence boundary in prose and retains only the evidence table that is needed to prevent claim mixing: Table 7, which separates framework-mainline support, public-source snapshot governance, structured-artifact admission, and dual-live conflict evidence. The longer evidence-bucket overview and verdict-phase map are moved to the appendix or supplementary index.
+The evidence base of this section combines deterministic fixtures, field records, adopter-side observations, public-source snapshot evidence, structured-artifact evidence, and extension evidence. These materials do not have the same evidentiary strength and should not be read as a single empirical sample.
+
+The body therefore states the evidence boundary in prose and keeps only the table needed to prevent claim mixing. Table 7 separates framework-mainline support, public-source snapshot governance, structured-artifact admission, and dual-live conflict evidence. The longer evidence-bucket overview and verdict-phase map are moved to the appendix or supplementary index.
 
 ### Deterministic Fixture Design (12 Scenarios) and Archived MVP Evidence (3 Archived Runs)
 
@@ -980,6 +982,8 @@ For the same reason, this paper does not treat the 20 scenarios, the 42 mode com
 | Human-forwarded rows                                |      0 |
 | Not-forwarded rows                                  |     33 |
 
+**Figure 6 — Enforcement and Recovery Phase Distribution.** The stacked bar summarizes the 51-row enforcement-timing projection behind Table 10. Unsupported or nontrivial cases are not all handled at a single layer: some are forwarded at admission time, some surface at apply time, and some are caught by validators. The zero human-forwarded row should be read as a property of this benchmark projection, not as a claim that human review is unnecessary in deployment.
+
 Scope note. AdmissionBench evaluates repository-scoped admission decisions over declared, adapter-observed, or conservatively virtualized mutation surfaces. It is not a direct replacement for benchmarks or systems that evaluate serializability recovery, HTTP-observable read isolation, transactional tool-effect staging, database transaction scheduling, or end-to-end repository generation. The benchmark therefore supports ATM's admission-boundary claim, rather than a general superiority claim over adjacent agentic concurrency or repository-workflow substrates.
 
 ### OperationalBench: Recovery Routing and Runtime Overhead
@@ -989,6 +993,8 @@ AdmissionBench evaluates admission correctness, route selection, ablation behavi
 OperationalBench separates three evidence layers. The official paper run from 2026-06-27 (artifact label `20260627`) records the paper-facing operational profile. The extended 2026-06-27 `N=50` contention run (artifact label `20260627-extended`) probes the higher-contention tail. The multi-seed stability note (artifact label `multi-seed-stability-20260627-20260629`) repeats the paper profile under additional seeds and checks whether the structural results change. Across the tested seeds, `scenarioCount`, `resultRows`, `trackCounts`, `blockedCaseCounts`, `routeCounts`, and the recovery metrics remain identical, supporting the conclusion that the benchmark's structural findings are not seed artifacts.
 
 The extended `N=50` run should be read as an operational stress probe rather than as a liveness proof. Under higher contention, the latency tail remains concentrated in steward-mediated recovery paths and total scenario time, which is expected for a design that preserves intents and routes unsafe direct apply into governed successor paths. The run does not show a new route-distribution or recovery-structure change under the tested contention setting. Validator timing in OperationalBench reflects a lightweight validator path and should not be extrapolated to projects with expensive build, integration-test, or end-to-end validation pipelines.
+
+**Figure 7 — OperationalBench Latency Profile.** The two-panel chart compares the official 2026-06-27 paper run with the extended `N=50` contention run. Each panel reports P95 and P99 latency for admission decision, steward apply, and total scenario time on a logarithmic millisecond scale. The intended reading is not cross-system performance superiority, but an internal cost profile: broker admission is sub-millisecond, while tail latency concentrates in steward-mediated apply and recovery paths.
 
 **Table 11 — OperationalBench Latency Summary.**
 
@@ -1013,6 +1019,8 @@ v0.1 therefore supports the baseline claim that the benchmark substrate has been
 A reader who wishes to move from this benchmark summary toward finer mechanism necessity should next read Table 12, rather than directly compare numbers across the distinct row universes inside Table 11. In short, Table 9 establishes the version-level division of roles, Table 10 reports the paper-facing summary, Table 11 adds operational latency, and Table 12 summarizes layer necessity and the remaining boundaries.
 
 v0.2 also lets us, for the first time within a single paper-artifact bundle, place Results, Ablation, and enforcement timing on the same traceable narrative chain. Taking `ATM-full` as the anchor, the six-component ablation produces a layered degradation profile. Removing the virtual atom adds 8 false-safe rows and loses 9 end-to-end success rows. Removing the conflict key adds 4 false-safe rows and loses 5 success rows. Removing CID, shared surface, or CAS each costs three to five additional success rows. Removing the fallback lock adds no false-safe rows but still loses 2 success rows. What these six removals share is a common pattern: every removed layer contributes either a distinct false-safe-suppression role, a distinct success-preservation role, or both. ATM's effect is therefore not produced by a single heuristic, but is built up jointly by the virtual atom, conflict identity, shared-surface judgment, and fail-closed recovery path.
+
+**Figure 8 — AdmissionBench Ablation Degradation.** The grouped bars show how removing individual ATM layers changes the paper-profile benchmark behavior. The false-safe rows indicate safety regressions, while the lost-success rows indicate useful admissions that no longer complete. The figure supports the layer-necessity claim: ATM's behavior is produced by the interaction of virtual atoms, conflict identity, shared-surface judgment, CAS revalidation, and fail-closed recovery rather than by a single heuristic.
 
 Even so, v0.2 is not the final benchmark in which every external-validity question has been resolved. It remains a paper profile under a single governance domain, a fixed seed, and a fixed scenario family. It is not directly equivalent to a large monorepo, a polyglot microservice estate, or a remote multi-clone PR-merge workflow, and it does not claim to cover the full noise of real-world tool latency, model drift, or organizational process. For this reason, the paper deliberately retains v0.1 as the historical and audit starting point while using v0.2 as the main result. This separates "frozen and auditable" from "sufficient to enter the paper's main result" into two distinct layers, rather than replacing the whole evidence-evolution chain through a single version swap.
 
@@ -1048,7 +1056,7 @@ The adapter-guided approach instead lets each domain supply just enough conflict
 
 ### When Adapter-Guided Fails
 
-Adapter-guided coordination can fail or degrade under seven conditions, each of which delimits the admission layer rather than refuting it.
+Adapter-guided coordination can fail or degrade under five conditions, each of which delimits the admission layer rather than refuting it.
 
 1. **Adapter-capability gap.** When an adapter cannot identify the actual write surface, the broker can only fall back to a whole-file lock or a validator-level fallback.
 
