@@ -249,8 +249,15 @@ function renderTable(rows) {
 function renderParagraph(lines) {
   const text = lines.join(' ').trim();
   if (!text) return [];
+  // Table-title paragraphs get a consistent small-bold caption style so the
+  // title font sits closer to the \footnotesize table body underneath. Strips
+  // outer **...** wrappers when present, since we re-emit our own \textbf.
+  const tableTitle = text.match(/^\*\*\s*(Table\s+[A-Z0-9.]+\s*[—\-][\s\S]+?)\s*\*\*\s*$/);
+  if (tableTitle) {
+    return [`\\smallskip\\noindent{\\small\\bfseries ${inline(tableTitle[1])}}\\par\\smallskip`];
+  }
   if (/^Table\s+[A-Z0-9.]+?\s*[—-]/.test(text)) {
-    return [`\\noindent\\textbf{${inline(text)}}`];
+    return [`\\smallskip\\noindent{\\small\\bfseries ${inline(text)}}\\par\\smallskip`];
   }
   return [inline(text)];
 }

@@ -54,6 +54,19 @@ function latexUrl(url) {
   return String(url).replace(/([%#{}])/g, '\\$1');
 }
 
+function findBareUrl(src, start) {
+  const rest = src.slice(start);
+  const match = rest.match(/https?:\/\/[^\s<>{}[\]]+/);
+  if (!match) return null;
+  let url = match[0];
+  let end = start + match.index + url.length;
+  while (/[.,;:]$/.test(url)) {
+    url = url.slice(0, -1);
+    end -= 1;
+  }
+  return { index: start + match.index, end, url };
+}
+
 function inline(text) {
   const src = String(text);
   let out = '';
@@ -63,7 +76,9 @@ function inline(text) {
     const boldAt = src.indexOf('**', i);
     const linkAt = src.indexOf('[', i);
     const mathAt = src.indexOf('$', i);
-    const candidates = [codeAt, boldAt, linkAt, mathAt].filter((n) => n >= 0);
+    const bareUrl = findBareUrl(src, i);
+    const urlAt = bareUrl ? bareUrl.index : -1;
+    const candidates = [codeAt, boldAt, linkAt, mathAt, urlAt].filter((n) => n >= 0);
     const next = candidates.length ? Math.min(...candidates) : -1;
     if (next < 0) {
       out += escapeLatexText(src.slice(i));
@@ -107,6 +122,11 @@ function inline(text) {
         out += escapeLatexText(src[i]);
         i += 1;
       }
+      continue;
+    }
+    if (urlAt === i && bareUrl) {
+      out += `\\url{${latexUrl(bareUrl.url)}}`;
+      i = bareUrl.end;
       continue;
     }
     if (mathAt === i) {
@@ -190,9 +210,33 @@ function renderHeading(level, text) {
   return [`\\subsubsection*{${title}}`];
 }
 
+function renderAppendixHeading(level, text) {
+  const title = inline(text.trim());
+  if (level <= 2) return [`\\section*{${title}}`];
+  if (level === 3) return [`\\subsection*{${title}}`];
+  return [`\\subsubsection*{${title}}`];
+}
+
 function renderParagraph(lines) {
   const text = lines.join(' ').trim();
-  return text ? [inline(text)] : [];
+  if (!text) return [];
+  // Table-title paragraphs (e.g. "**Table 9 --- ATM-AdmissionBench v0.1 ...**")
+  // get a consistent small-bold caption style so their font size sits closer to
+  // the \scriptsize table body underneath, instead of jumping back to 10pt.
+  // Strip outer **...** wrappers since we re-emit our own \textbf.
+  const tableTitle = text.match(/^\*\*\s*(Table\s+[A-Z0-9.]+\s*[—\-][\s\S]+?)\s*\*\*\s*$/);
+  if (tableTitle) {
+    return [`\\Needspace{5\\baselineskip}\\smallskip\\noindent{\\small\\bfseries ${inline(tableTitle[1])}}\\par\\smallskip`];
+  }
+  const figureTitle = text.match(/^\*\*\s*(Figure\s+\d+\s*[—\-].*?)\s*\*\*\s*([\s\S]*)$/);
+  if (figureTitle) {
+    if (/^Figure\s+4\b/.test(figureTitle[1])) {
+      return [`\\newpage\\noindent\\textbf{${inline(figureTitle[1])}}${inline(figureTitle[2])}`];
+    }
+    const needspace = '14';
+    return [`\\Needspace{${needspace}\\baselineskip}\\noindent\\textbf{${inline(figureTitle[1])}}${inline(figureTitle[2])}`];
+  }
+  return [inline(text)];
 }
 
 function collectPreservedFigureBlocks(oldTex) {
@@ -224,7 +268,7 @@ function collectPreservedFigureBlocks(oldTex) {
 function reinjectPreservedFigures(body, preserved) {
   let result = body;
   for (const { name, figureNumber, block } of preserved) {
-    const anchorRe = new RegExp(`^(?:\\\\textbf\\{)?Figure\\s+${figureNumber}\\s+---`, 'm');
+    const anchorRe = new RegExp(`Figure\\s+${figureNumber}\\s+---`, 'm');
     const anchor = result.match(anchorRe);
     if (!anchor) {
       console.warn(`[sync-paper-en-md-to-tex] could not re-inject figure '${name}': 'Figure ${figureNumber} ---' not in new body`);
@@ -301,6 +345,7 @@ function convertMarkdown(md) {
   }
 
   let i = 0;
+  let inAppendix = false;
   while (i < lines.length) {
     const line = lines[i];
     if (i < contentStart || /^>\s+English draft scaffold only/.test(line) || /^>\s+Source of truth/.test(line) || /^>\s+Use the guard files/.test(line)) {
@@ -342,7 +387,14 @@ function convertMarkdown(md) {
     if (heading) {
       flushParagraph();
       closeList();
-      out.push(...renderHeading(heading[1].length, heading[2]), '');
+      if (/^Appendix$/.test(heading[2].trim())) {
+        inAppendix = true;
+        i += 1;
+        continue;
+      }
+      if (/^Appendix\b/.test(heading[2].trim())) inAppendix = true;
+      const headingRenderer = inAppendix ? renderAppendixHeading : renderHeading;
+      out.push(...headingRenderer(heading[1].length, heading[2]), '');
       i += 1;
       continue;
     }
@@ -398,7 +450,7 @@ function convertMarkdown(md) {
 }
 
 const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit prose here.
-\documentclass[9pt,letterpaper]{article}
+\documentclass[9pt,letterpaper]{extarticle}
 \usepackage[left=0.78in,right=0.78in,top=0.82in,bottom=0.88in]{geometry}
 \usepackage{fontspec}
 \usepackage{booktabs}
@@ -410,10 +462,12 @@ const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit 
 \usepackage{fancyvrb}
 \usepackage{fvextra}
 \usepackage{seqsplit}
+\usepackage{xurl}
 \usepackage[hidelinks,colorlinks=false]{hyperref}
 \usepackage{tikz}
 \usepackage[table]{xcolor}
 \usepackage{titlesec}
+\usepackage{needspace}
 \usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric,fit,backgrounds}
 \setmainfont{texgyretermes-regular.otf}[
   BoldFont=texgyretermes-bold.otf,

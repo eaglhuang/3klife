@@ -56,7 +56,7 @@ ATM 採取的是這條光譜中的中間治理層：adapter-guided atomization �
 
 第 2 節定位相關研究與 ATM 所補上的准入層；第 3 節先定義 atom、atom map 與 adapter-guided atomization，再說明 CID、broker 准入流程、seven-layer gate 與 neutral steward；第 4 節報告 fixture、採用研究與現場證據；第 5 節列出限制與後續路線圖；第 6 節討論單一治理域邊界、adapter-guided 設計之取捨、open problems 與部署拓樸；第 7 節總結本文主張。
 
-**Reproducibility**：本論文所有主張為「已實作且可重現」之 capability，均對應 AI-Atomic-Framework 開源 repository（`https://github.com/eaglhuang/AI-Atomic-Framework`）中的既有 source path 與可重現驗證命令。本文交叉檢查所對應的 framework snapshot 為 release tag `v0.9.0-alpha.1`（commit `0b31aa8683b44b3a78206132a0bf90a0fde73d1c`），讀者應以此 tag 作為主要引用點，避免 main 分支演進造成行號漂移。Appendix A.4 提供逐條 capability claim → source path → 可重現驗證命令之對應表，supplementary evidence artifact 集中於 3KLife planning repository 之 `docs/ai_atomic_framework/broker-collision-evidence/`。
+Reproducibility：本論文所有主張為「已實作且可重現」之 capability，均對應 AI-Atomic-Framework 開源 repository（`https://github.com/eaglhuang/AI-Atomic-Framework`）中的既有 source path 與可重現驗證命令。本文交叉檢查所對應的 framework snapshot 為 release tag `v0.9.0-alpha.1`（commit `0b31aa8683b44b3a78206132a0bf90a0fde73d1c`），讀者應以此 tag 作為主要引用點，避免 main 分支演進造成行號漂移。Appendix A.4 提供逐條 capability claim → source path → 可重現驗證命令之對應表，supplementary evidence artifact 集中於 3KLife planning repository 之 `docs/ai_atomic_framework/broker-collision-evidence/`。
 
 ---
 
@@ -188,7 +188,7 @@ ATM 並非取代 Tier 1/3/4，也不取代跨機器 Git PR 合併；它是在 si
 
 本章將三個容易被混淆的敘述層次分開：**規格錨定治理基底** 界定 agent 被授權之工作與有效 closure 之邊界；**形式准入模型** 定義 atoms、shared surfaces 與 active state；**brokered 實作路徑** 則將寫入意圖轉換為具體 verdict。**CID broker 因此不是整個系統，而是更廣的規格錨定治理路徑內之共享變更准入子系統**。ATM 不生成程式碼，也不替代測試或 code review；它要求所有寫入先被表述為結構化寫入意圖，再由 broker 在治理基底所界定之邊界內決定該意圖是否能進入寫入路徑。
 
-**本章內部結構說明（reader navigation）。** 為協助讀者區辨上述三層概念，本章分為兩個概念群組：
+本章內部結構說明（reader navigation）。 為協助讀者區辨上述三層概念，本章分為兩個概念群組：
 
 > **Part A — Model and Assumptions（§3.1–§3.3）**：§3.1 引入 specification-grounded governance substrate 之三層平面與三個 governance invariants；§3.2 給出 broker / agent / steward 之架構總覽與單一治理域假設；§3.3 提供 atom / atom map / virtual atom / two-tier CID 與 broker-facing auxiliary structures 之形式定義（Definitions 3.2–3.4）。
 >
@@ -212,9 +212,9 @@ $$\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$$
 
 | Plane | ATM 機制 | 回答的問題 |
 |---|---|---|
-| **Task-contract plane** | task intent, allowed files, forbidden rules, scope paths, deliverables, direction lock, validator envelope, evidence obligations, task epoch / scope envelope | agent 被授權做什麼，且完成判準被綁在哪一組治理約束上？ |
-| **Mutation-admission plane** | atoms, CID, ConflictKey, read/write set, active registry, broker, neutral steward | 這個共享寫入此刻能不能發生？ |
-| **Evidence-closure plane** | validation commands, validator envelope, evidence blockers, review advisory, closure packet | 可以合理宣稱任務已完成嗎？ |
+| Task-contract plane | task intent, allowed files, forbidden rules, scope paths, deliverables, direction lock, validator envelope, evidence obligations, task epoch / scope envelope | agent 被授權做什麼，且完成判準被綁在哪一組治理約束上？ |
+| Mutation-admission plane | atoms, CID, ConflictKey, read/write set, active registry, broker, neutral steward | 這個共享寫入此刻能不能發生？ |
+| Evidence-closure plane | validation commands, validator envelope, evidence blockers, review advisory, closure packet | 可以合理宣稱任務已完成嗎？ |
 
 三個 plane 共同回答的不是「agent 是否會幻想或誤解需求」，而是「**錯誤想法在轉化為共享 mutation 或 task closure 之前，必須通過哪些可檢查的治理邊界**」。
 
@@ -230,15 +230,15 @@ $$\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$$
 
 | Drift 類型 | 定義 | ATM 處理機制 |
 |---|---|---|
-| **Epistemic drift** | agent 內部知識／信念與真實狀態偏離 | **不直接處理**（屬 agent 內部推理範疇） |
-| **Specification drift** | agent 行為偏離批准之 task intent | direction lock、task contract、epoch versioning |
-| **Scope drift** | 修改未授權 file / surface / tool | allowed files、scope paths、pre-tool scope gate |
-| **Evidence drift** | completion claim 與 validator / evidence 不一致 | validator envelope、evidence blocker、review advisory、closure packet |
-| **State drift** | intent 基於已變動之 base / read dependency | active registry、`readAtoms`、CAS base-hash |
+| Epistemic drift | agent 內部知識／信念與真實狀態偏離 | 不直接處理（屬 agent 內部推理範疇） |
+| Specification drift | agent 行為偏離批准之 task intent | direction lock、task contract、epoch versioning |
+| Scope drift | 修改未授權 file / surface / tool | allowed files、scope paths、pre-tool scope gate |
+| Evidence drift | completion claim 與 validator / evidence 不一致 | validator envelope、evidence blocker、review advisory、closure packet |
+| State drift | intent 基於已變動之 base / read dependency | active registry、`readAtoms`、CAS base-hash |
 
 換言之，ATM 不主張消除幻覺或同步 latent belief，而是限制這四類 observable drift（specification / scope / evidence / state）轉化為「未經治理之 repository mutation」或「不可審計之 task closure」的程度。
 
-**子系統角色釐清。** 後續 §3.2–§3.3（架構總覽、atom / CID 形式定義）與 §3.4–§3.7（admission pipeline、七層閘門、跨格式推廣、scope 限制）所描述之 broker、atom map、ConflictKey、neutral steward 與 validator 機制，皆為本節三個 plane 在實作層之具體展開。其中 **CID broker 對應 Mutation-admission plane 之核心子系統**：它不單獨構成 governance substrate，而是 substrate 之 admission subsystem。Task-contract plane 與 Evidence-closure plane 之主要 enforcement 元件——direction lock、pre-tool scope gate、validator envelope、evidence blocker、closure packet——則由 ATM framework 之外圍治理層實作，並與 broker 共享同一份 active registry 與 active-intent visibility。
+子系統角色釐清。 後續 §3.2–§3.3（架構總覽、atom / CID 形式定義）與 §3.4–§3.7（admission pipeline、七層閘門、跨格式推廣、scope 限制）所描述之 broker、atom map、ConflictKey、neutral steward 與 validator 機制，皆為本節三個 plane 在實作層之具體展開。其中 CID broker 對應 Mutation-admission plane 之核心子系統：它不單獨構成 governance substrate，而是 substrate 之 admission subsystem。Task-contract plane 與 Evidence-closure plane 之主要 enforcement 元件——direction lock、pre-tool scope gate、validator envelope、evidence blocker、closure packet——則由 ATM framework 之外圍治理層實作，並與 broker 共享同一份 active registry 與 active-intent visibility。
 
 **假設（Assumptions）.** 本文所有主張皆建立於以下四項假設之上：(i) 存在 **單一權威治理域**，broker 對受治理之共享寫入、active intents 與可變共享 surface 具有及時可見性；(ii) Adapter 對 write surface、ConflictKey 與 declared read set 之宣告為 **保守近似**（conservative declaration），不刻意低估衝突；(iii) 受治理之共享寫入皆透過 **neutral steward** 落地，而非繞過 brokered path 直接寫入；(iv) Validator 對相關 domain 為可用且具語意意義。在上述假設下，ATM 主張 static admission closure（Proposition 2）與可審計之 runtime enforcement；ATM **不**主張分散式共識、完整動態依賴捕捉、或端對端語義正確性。Adversarial 或不完整 adapter、跨治理域協調、validator 缺位等情境之邊界，集中於 §5–§6 與 §6.2「When Adapter-Guided Fails」討論。
 
@@ -297,7 +297,7 @@ flowchart TB
     CP -. "epoch / direction update on scope change" .-> T
 ```
 
-**Figure 1 圖例說明（three-plane reading）。** 三組 subgraph 分別對應 §3.1 之三個 plane：
+Figure 1 圖例說明（three-plane reading）。 三組 subgraph 分別對應 §3.1 之三個 plane：
 
 - **Task-contract plane**：自 human / coordinator 出發，產出結構化 Task Contract $\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$（具體序列化為 task card），並透過 direction lock + pre-tool scope gate 強制 G1（scope containment）與 G2（direction stability）。
 - **Mutation-admission plane**（CID broker subsystem）：agent 之 WriteIntent 經 adapter / atom map / virtual atom 結構化後進入 broker；broker 為**唯一序列化節點**並產出 verdict；neutral steward 於 admission 通過後執行單一實際寫入並做 CAS base-hash recheck。此 plane 即為本文 §3.4–§3.5 之 admission pipeline 與七層閘門。
@@ -471,7 +471,7 @@ Output: verdict in {parallel-safe, needs-physical-split,
         blocked-cid-conflict, blocked-shared-surface, SERIAL}
 ```
 
-**Algorithm 1 安全敘述（修訂版）。** 早期版本將「physical write surfaces are disjoint」單獨作為 `parallel-safe` 之充分條件；此 admission 在本文 §3.5 七層閘門與 Proposition 2 之語義下不成立——shared surface 重疊、宣告式 read/write hazard 與 artifact-level coupling 均可能於 physical region 不重疊時仍要求 SERIAL、block 或 fail closed。故本版 Algorithm 1 將 physical disjointness 重述為**必要但非充分**：唯有同時通過 shared-surface 與 read/write dependency 檢查後，才允許將 `P(I) ∩ P(I') = ∅` 作為 `parallel-safe` 之最終確認步驟（line 5）。此修訂與 Proposition 2 之 static admission closure 條件一致，並使 Algorithm 1 與七層閘門（Table 7）之 layer 1–3 順序對齊。
+Algorithm 1 安全敘述（修訂版）。 早期版本將「physical write surfaces are disjoint」單獨作為 `parallel-safe` 之充分條件；此 admission 在本文 §3.5 七層閘門與 Proposition 2 之語義下不成立——shared surface 重疊、宣告式 read/write hazard 與 artifact-level coupling 均可能於 physical region 不重疊時仍要求 SERIAL、block 或 fail closed。故本版 Algorithm 1 將 physical disjointness 重述為**必要但非充分**：唯有同時通過 shared-surface 與 read/write dependency 檢查後，才允許將 `P(I) ∩ P(I') = ∅` 作為 `parallel-safe` 之最終確認步驟（line 5）。此修訂與 Proposition 2 之 static admission closure 條件一致，並使 Algorithm 1 與七層閘門（Table 7）之 layer 1–3 順序對齊。
 
 在這個演算法中，virtual atom refinement 不是獨立於 admission 之外的後處理，而是 broker 在已知 atom 與 atom map 無法充分證明安全時，所啟動的細化機制。第一步是 syntactic enclosure atomization：將未被既有 atom map 覆蓋、或覆蓋過粗的 patch span，保守地包進 function、method、statement block 或其他 adapter 可穩定辨識的 enclosure，形成 virtual atoms。第二步是 signature-preserving decomposition：在不改變原 patch coverage 聯集的前提下，把過粗的 virtual atom 或 coarse atom 再拆成更小但仍可比對的 bounded regions，使 broker 得以重算 candidate CID、ConflictKey 與 shared-surface adjacency。若兩步之後仍無法證明 disjoint，系統就不再「繼續猜測」，而是回到 split suggestion、SERIAL 或 fail-closed path。POS2 與 BLOCK 這兩組現場證據，正分別對應到這條路徑的正向與負向邊界：前者說明細化後可安全放行，後者說明細化不足時系統會誠實阻擋。
 
@@ -547,7 +547,7 @@ flowchart LR
 
 這張圖要表達的不是「所有 agent 都失去本地寫檔能力」，而是 ATM 將共享寫入的治理起點前移：當修改仍停留在私有 edit 階段時，部署者可保留輕量工作流；只有當該修改被宣告為會碰觸共享 surface、共享 artifact 或受治理範圍時，系統才要求它以 write intent 的形式進入 broker，並在被接受後升格為 governed transaction。
 
-**Figure 3 升格時機具體範例。** 為避免「shared surface / shared artifact / governed scope」三個 escalation trigger 流於抽象，本文列出三個典型升格情境與一個不需升格的對照：
+Figure 3 升格時機具體範例。 為避免「shared surface / shared artifact / governed scope」三個 escalation trigger 流於抽象，本文列出三個典型升格情境與一個不需升格的對照：
 
 - **情境 1（shared surface）：** Agent 欲修改 `packages/cli/src/commands/broker.ts` 的 `classifyExplicitMutationRequest`，此檔案於 atom-map 中已被宣告為 broker 序列化路徑之共享 surface。即使本次修改僅觸及單一函式內部行，仍須升格為 write intent，因 `broker.ts` 為其他 active intent 之 admission 依據（即 POS2 案例之觸發點）。
 - **情境 2（shared artifact）：** Agent 欲更新 `docs/ai_atomic_framework/atom-maps/*.json` 中之 atom-map shard，此 artifact 為 broker 第一線判斷依據；任何修改須升格為 write intent 並以 `atom-map` adapter 之 ConflictKey 進入 admission。
@@ -688,7 +688,7 @@ Table 10 — Verdict Phase Map. 本表將 ATM 在證據材料中出現的 verdic
 
 ### Deterministic Fixture Design（12 scenarios）與已歸檔 MVP 證據（3 archived）
 
-**重要前置說明：** 本節的 evidence 強度分兩層 ——「12-scenario」指的是 **設計矩陣（design matrix）**，「3 archived」指的是 **已完成 deterministic runner 並歸檔證據** 的核心情境（B-02、B-08、B-13）。其餘 9 個情境屬於本版尚未完跑的設計覆蓋藍圖，列入 §5 limitations 與 future work，而非已驗證 deliverable。
+重要前置說明： 本節的 evidence 強度分兩層 ——「12-scenario」指的是 **設計矩陣（design matrix）**，「3 archived」指的是 **已完成 deterministic runner 並歸檔證據** 的核心情境（B-02、B-08、B-13）。其餘 9 個情境屬於本版尚未完跑的設計覆蓋藍圖，列入 §5 limitations 與 future work，而非已驗證 deliverable。
 
 本節提供的是 **mechanism validation evidence**：以 12-scenario deterministic fixture 設計矩陣描述 broker decision surface 的覆蓋藍圖，並以已歸檔的 deterministic runner MVP（B-02、B-08、B-13）檢查核心准入機制是否與本文定義之 verdict vocabulary 對齊。設計矩陣涵蓋 cross-regime disjointness、same-file different atom、same shared surface、read/write dependency、virtual-atom refinement、validator fallback 與 static admission closure。本研究實際提供的是「12-scenario 設計矩陣 + 3-scenario deterministic MVP + 治理落地／恢復性證據 + 現場 collision 證據」的 hybrid evidence stack，而非 12 個 deterministic scenarios 全數跑完的終局實證版本。
 
@@ -821,9 +821,9 @@ Table 16 — Governance-Containment Mapping: existing evidence × three planes.
 
 | Plane（§3.1） | 主要治理機制 | 本文現有證據 | 證據類型 | 來源章節 |
 |---|---|---|---|---|
-| **Task-contract plane** | task intent、allowed files、forbidden rules、scope paths、direction lock | 三週 npc-brain adoption window 內 **44 次 scope-lock interactions** 與 **2 次 out-of-scope proposal 之正確拒絕**；3KLife 自託管之 out-of-scope delivery requiring waiver incident（`TASK-CID-0041`）展示 scope drift 於 closure-time 被攔下並補登 waiver | adopter-side field evidence + self-hosting forensics（descriptive cohort / operational evidence；不含 public independently reproduced statistic 或 population-level error rate） | §4.3 Table 15；§4.2 incidents；§A.5 |
-| **Mutation-admission plane**（CID broker subsystem） | atoms、CID、ConflictKey、read/write set、active registry、broker、neutral steward | **AdmissionBench v0.1 + v0.2**：v0.1 提供 20 scenarios / 42 mode comparisons / 42 matched expectations / **0 expectation failures** / **0 false-safe regressions** / 92.31% unsafe-caught 的 frozen baseline；v0.2 在同一 benchmark family 上補上 route-label F1 = 1.000（42 mode-level comparisons）、intent preservation = 97.62%、252 policy rows、294 ablation rows、4 enforcement rows；另有 POS2 同檔 bounded-region admission existence proof、B-12 late enforcement、BLOCK split suggestion 與 3 archived deterministic runner cases（B-02 / B-08 / B-13） | baseline benchmark substrate + paper-facing benchmark result + field existence proof + dual failure-mode field cases | §5.1 Tables 18–19；§4.4；§4.1 |
-| **Evidence-closure plane** | validation commands、validator envelope、evidence blocker、review advisory、closure packet | npc-brain cohort 之 **3 次 post-write validator catches** 與 **1 次 scope-lock contention burst** 經 ledger-replay 完成 recovery；npc-brain 同窗 **0 unrecovered admission errors**；3KLife plan-mirror sync failures（`TASK-CID-0043/0044/0045`）以 repair commits 補回 closure packets，顯示 closeout 漂移可被 ledger consistency check 攔下 | descriptive cohort / operational evidence + self-hosting forensics（含正向 catch 與漂移 recovery，但不含 public independently reproduced statistic 或 catch-rate denominator） | §4.3 Table 15；§A.5 |
+| Task-contract plane | task intent、allowed files、forbidden rules、scope paths、direction lock | 三週 npc-brain adoption window 內 **44 次 scope-lock interactions** 與 **2 次 out-of-scope proposal 之正確拒絕**；3KLife 自託管之 out-of-scope delivery requiring waiver incident（`TASK-CID-0041`）展示 scope drift 於 closure-time 被攔下並補登 waiver | adopter-side field evidence + self-hosting forensics（descriptive cohort / operational evidence；不含 public independently reproduced statistic 或 population-level error rate） | §4.3 Table 15；§4.2 incidents；§A.5 |
+| Mutation-admission plane（CID broker subsystem） | atoms、CID、ConflictKey、read/write set、active registry、broker、neutral steward | **AdmissionBench v0.1 + v0.2**：v0.1 提供 20 scenarios / 42 mode comparisons / 42 matched expectations / **0 expectation failures** / **0 false-safe regressions** / 92.31% unsafe-caught 的 frozen baseline；v0.2 在同一 benchmark family 上補上 route-label F1 = 1.000（42 mode-level comparisons）、intent preservation = 97.62%、252 policy rows、294 ablation rows、4 enforcement rows；另有 POS2 同檔 bounded-region admission existence proof、B-12 late enforcement、BLOCK split suggestion 與 3 archived deterministic runner cases（B-02 / B-08 / B-13） | baseline benchmark substrate + paper-facing benchmark result + field existence proof + dual failure-mode field cases | §5.1 Tables 18–19；§4.4；§4.1 |
+| Evidence-closure plane | validation commands、validator envelope、evidence blocker、review advisory、closure packet | npc-brain cohort 之 **3 次 post-write validator catches** 與 **1 次 scope-lock contention burst** 經 ledger-replay 完成 recovery；npc-brain 同窗 **0 unrecovered admission errors**；3KLife plan-mirror sync failures（`TASK-CID-0043/0044/0045`）以 repair commits 補回 closure packets，顯示 closeout 漂移可被 ledger consistency check 攔下 | descriptive cohort / operational evidence + self-hosting forensics（含正向 catch 與漂移 recovery，但不含 public independently reproduced statistic 或 catch-rate denominator） | §4.3 Table 15；§A.5 |
 
 此 mapping 為 evidence-coverage 之 alignment view，非 benchmark：Task-contract plane 與 Evidence-closure plane 目前以 adopter-side 與 self-hosting forensics 為主，其證據強度足以支持 mechanism 可運作與漂移可導向 recovery，但不主張 population-level catch-rate 或 false-positive 量化。Mutation-admission plane 的定量主張則不再只由 v0.1 單獨承擔，而是以 v0.1 作為 baseline、v0.2 作為主結果共同支撐；其層級分離下的逐層必要性對應 §5.3 Table 20 之 **RQ4（layer necessity）**，其中 v0.2 已開始用 ablation rows 回答 layer necessity，但更廣泛的 cross-policy 與 cross-repo 比較仍屬後續擴充。
 
@@ -999,9 +999,9 @@ ATM 之 admission 軟體於此拓樸**無需任何架構變更**；所需新工�
 
 若進一步繞過 git PR 機制，由多個遠端開發者之 patch 直接同步至中央 broker，則進入分散式 broker 設計範疇。此處需具體說明「out of scope」的根據，而非僅以 CAP 一語帶過。
 
-**為何不直接以 Raft / Paxos 擴展 broker。** 經典 leader-based consensus 演算法（Raft、Paxos 變體、Multi-Paxos）原則上可解決「多個 broker replica 對 admission 順序達成共識」的問題，技術上可行；但對 ATM 而言，引入 distributed consensus 不只是替換 broker process 的 backing store，而是要同時引入下列七項新工程負擔：(i) **federated active registry replication**——目前 Definition 3.3 的 active registry 是 broker-local 內存結構，分散式版本需設計 replication protocol、stale read 容忍策略與 read-your-writes 語意；(ii) **跨機器 ConflictKey 等價性**——若兩台機器持有不同 schema_version 之 adapter，admission 比較需先解決 schema reconciliation（§5 已標示 CID schema migration 為 open problem）；(iii) **lease / fencing token 機制**——避免 split-brain 場景下兩個 leader 同時 admit 重疊 intent；(iv) **steward 端的 distributed apply ordering**——neutral steward 不能僅在單一 worktree 套用，需處理 partial apply、cross-node rollback、bounded staleness；(v) **liveness / starvation 在 partition 下的形式化**——目前 §5 已標示 safety-first 策略在單 broker 下的 liveness 尚待證明，partition 場景使此問題更難；(vi) **evidence chain 的 distributed audit**——跨節點 verdict log 需有 causal ordering 與可重放能力；(vii) **operational complexity**——quorum loss、network partition、stale replica recovery 等 failure mode 需有對應 runbook 與 fail-closed 行為定義。
+為何不直接以 Raft / Paxos 擴展 broker。 經典 leader-based consensus 演算法（Raft、Paxos 變體、Multi-Paxos）原則上可解決「多個 broker replica 對 admission 順序達成共識」的問題，技術上可行；但對 ATM 而言，引入 distributed consensus 不只是替換 broker process 的 backing store，而是要同時引入下列七項新工程負擔：(i) **federated active registry replication**——目前 Definition 3.3 的 active registry 是 broker-local 內存結構，分散式版本需設計 replication protocol、stale read 容忍策略與 read-your-writes 語意；(ii) **跨機器 ConflictKey 等價性**——若兩台機器持有不同 schema_version 之 adapter，admission 比較需先解決 schema reconciliation（§5 已標示 CID schema migration 為 open problem）；(iii) **lease / fencing token 機制**——避免 split-brain 場景下兩個 leader 同時 admit 重疊 intent；(iv) **steward 端的 distributed apply ordering**——neutral steward 不能僅在單一 worktree 套用，需處理 partial apply、cross-node rollback、bounded staleness；(v) **liveness / starvation 在 partition 下的形式化**——目前 §5 已標示 safety-first 策略在單 broker 下的 liveness 尚待證明，partition 場景使此問題更難；(vi) **evidence chain 的 distributed audit**——跨節點 verdict log 需有 causal ordering 與可重放能力；(vii) **operational complexity**——quorum loss、network partition、stale replica recovery 等 failure mode 需有對應 runbook 與 fail-closed 行為定義。
 
-**本文採取的折衷：** 上列七項任何一項皆為獨立研究子題；本文之 single-domain core 主張刻意不主張其已解決。在實務部署上，**Topology C（pre-push admission bridge）已能涵蓋多數跨機器協作需求**——遠端開發者於本機 worktree 內完成 Topology A 之共寫，再以 Topology C 在 push 前完成 admission，最後以 git PR / merge substrate（Refs. 12, 32, 40）承擔 cross-clone 收斂。Topology D 因此被定位為「當 Topology A+C+git PR 組合對某類高頻跨機器 patch sync workload 仍不足時」之 future-work direction，而非已被本文 deferred 的 deliverable。技術上可行但工程規模顯著大於 A / B / C，本論文範疇內僅作為研究延伸方向，留待後續工作以 federated broker、bounded staleness 與 admission-time consensus protocol 為主題另行展開。
+本文採取的折衷： 上列七項任何一項皆為獨立研究子題；本文之 single-domain core 主張刻意不主張其已解決。在實務部署上，Topology C（pre-push admission bridge）已能涵蓋多數跨機器協作需求——遠端開發者於本機 worktree 內完成 Topology A 之共寫，再以 Topology C 在 push 前完成 admission，最後以 git PR / merge substrate（Refs. 12, 32, 40）承擔 cross-clone 收斂。Topology D 因此被定位為「當 Topology A+C+git PR 組合對某類高頻跨機器 patch sync workload 仍不足時」之 future-work direction，而非已被本文 deferred 的 deliverable。技術上可行但工程規模顯著大於 A / B / C，本論文範疇內僅作為研究延伸方向，留待後續工作以 federated broker、bounded staleness 與 admission-time consensus protocol 為主題另行展開。
 
 ---
 
@@ -1027,7 +1027,7 @@ The author used large language model assistants during manuscript preparation fo
 
 本附錄列出 paper-citable evidence 的建議入口。具體 artifact 名稱與 commit 應以 repository 內實際檔案為準。為避免附錄本身再出現索引表重疊，Appendix A 只保留三種功能：A.1 提供 evidence artifact 入口索引，A.3 對應 paper claim 至 source path 與驗證命令，A.4 專門補充 Topology C 的橋接細節與驗證範圍。原本較摘要式的 implementation-status 說明，改併入這段導讀文字，不再另立一張表。
 
-**證據可取得性與 release 對應（reproducibility statement）：**
+證據可取得性與 release 對應（reproducibility statement）：
 
 本節先固定一個最重要的引用規則：**對本文正文數字與 paper-facing benchmark claims 的 canonical public anchor，預設以 ATM public repository `main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd` 下的 `artifacts/generated/atm-admission-bench/20260625-paper/` 為主**。`v0.9.0-alpha.1` source snapshot 與 `generator-manifest.json` 內記錄的 machine-generated source anchor 仍然重要，但角色分別是 source-reference snapshot 與 generator provenance anchor，不應與 paper-facing artifact anchor 混讀為同一層引用點。
 
@@ -1259,7 +1259,7 @@ Readers wishing to inspect the manuscript-side admission evidence are referred t
 | Supplementary data DOI | reserved（pending Zenodo issuance） | **placeholder**：`10.5281/zenodo.XXXXXXX` | 引用時請替換為實際 DOI；本附錄將於 arXiv v1 釋出時同步更新 |
 | Manuscript itself | arXiv submission（pending） | **pending arXiv id** | 引用時請使用 arXiv DOI；本論文於 release 後同步補登 |
 
-**版本對應約定：** 本論文 v3.1 對應 source release `v0.9.0-alpha.1`；若後續 source repository 因主分支演進需發行新 release（例如 `v0.9.0-alpha.2`），本論文不會自動跟隨升版——任何更動需以 paper revision（v3.2 / v4 等）形式同步釋出，並在 Appendix C.2 補上新行；舊行不刪除，以維持引用鏈完整。
+版本對應約定： 本論文 v3.1 對應 source release `v0.9.0-alpha.1`；若後續 source repository 因主分支演進需發行新 release（例如 `v0.9.0-alpha.2`），本論文不會自動跟隨升版——任何更動需以 paper revision（v3.2 / v4 等）形式同步釋出，並在 Appendix C.2 補上新行；舊行不刪除，以維持引用鏈完整。
 
 ### Supplementary Data Release Contents
 
