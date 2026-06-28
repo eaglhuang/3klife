@@ -159,7 +159,17 @@ function renderTable(rows) {
   const cols = Math.max(...parsed.map((row) => row.length));
   const width = Math.max(0.09, Math.min(0.30, 0.86 / cols)).toFixed(2);
   const spec = Array.from({ length: cols }, () => `L{${width}\\textwidth}`).join('');
-  const out = ['\\begingroup', '\\scriptsize', '\\setlength{\\tabcolsep}{3pt}', `\\begin{longtable}{@{}${spec}@{}}`, '\\toprule'];
+  // Zebra striping: header row stays white, data rows alternate gray!8 / white.
+  // Baked into the sync script so the table format survives every regeneration.
+  const out = [
+    '\\begingroup',
+    '\\scriptsize',
+    '\\setlength{\\tabcolsep}{3pt}',
+    '\\arrayrulecolor{black!55}',
+    '\\rowcolors{2}{gray!8}{white}',
+    `\\begin{longtable}{@{}${spec}@{}}`,
+    '\\toprule',
+  ];
   parsed.forEach((row, idx) => {
     const cells = Array.from({ length: cols }, (_, col) => inline(row[col] || ''));
     out.push(`${cells.join(' & ')} \\\\`);
@@ -402,9 +412,9 @@ const preamble = String.raw`% Generated from paper.v3.1.en.md. Do not hand-edit 
 \usepackage{seqsplit}
 \usepackage[hidelinks,colorlinks=false]{hyperref}
 \usepackage{tikz}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{titlesec}
-\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric}
+\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric,fit,backgrounds}
 \setmainfont{texgyretermes-regular.otf}[
   BoldFont=texgyretermes-bold.otf,
   ItalicFont=texgyretermes-italic.otf,

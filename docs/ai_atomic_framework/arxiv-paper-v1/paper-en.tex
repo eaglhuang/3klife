@@ -13,9 +13,9 @@
 \usepackage{seqsplit}
 \usepackage[hidelinks,colorlinks=false]{hyperref}
 \usepackage{tikz}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{titlesec}
-\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric}
+\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric,fit,backgrounds}
 \setmainfont{texgyretermes-regular.otf}[
   BoldFont=texgyretermes-bold.otf,
   ItalicFont=texgyretermes-italic.otf,
@@ -130,40 +130,7 @@ The discussion is structured as a citation-to-claim map rather than as an invent
 
 Repository-level benchmarks further show that the multi-file regime does not correspond to a single task family. RepoBench and CrossCodeEval study repository-level completion and cross-file context use within existing codebases (Refs. 33, 34). FEA-Bench shifts the focus to incremental feature implementation, where models must introduce new functionality while coordinating edits across related files in an existing repository (Ref. 35). CodeS and NL2Repo-Bench extend the setting to from-scratch repository generation: starting from natural-language requirements and an empty workspace, a system must construct a complete repository, preserve cross-file APIs and package structure, manage dependencies, and pass execution-based tests (Refs. 36, 37). These benchmarks show that repository-level difficulty changes with the amount and type of existing structure available to the model. ATM studies an orthogonal systems question: regardless of whether the task is completion, feature implementation, or repository generation, when multiple agents form shared write intents within one governance domain, is there an auditable, region-level admission gate before any governed shared mutation is applied?
 
-The table below makes explicit the citation-to-claim map used throughout the remainder of this section. Its purpose is methodological rather than bibliographic: each cited work must support a specific background claim, mechanism comparison, design precedent, or limitation. References are therefore grouped by the role they play in positioning ATM, rather than by topical similarity alone.
-
-\textbf{Table 1 --- Related-Work Citation-to-Claim Map.}
-
-\begingroup
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
-\toprule
-Citation cluster & What it establishes & Role in positioning ATM \\
-\midrule
-RepoBench / CrossCodeEval (Refs. 33, 34) & Existing-repository completion requires cross-file context and repository-state awareness & Establishes multi-file heterogeneity, but not multi-agent mutation admission \\
-FEA-Bench (Ref. 35) & Incremental feature implementation requires coordinated additions and edits across an existing repository & Shows how maintenance-style tasks create pressure for coordinated mutation \\
-CodeS / NL2Repo-Bench (Refs. 36, 37) & From-scratch repository generation requires architecture, package structure, cross-file APIs, dependency management, and executable validation & Establishes the long-horizon repository-construction setting in which multiple agents may produce shared write intents \\
-SWE-bench and recent repository-level benchmarks (Refs. 29, 43-48) & Realistic software-engineering tasks span repository navigation, issue resolution, feature implementation, reconstruction, and multilingual workflows & Provides broader workload and evaluation context; these benchmarks are not themselves concurrency-control mechanisms \\
-CodeCRDT / CRDT / OT (Refs. 1, 11, 12, 38, 39) & Concurrent text edits can be transformed or converged through collaborative-editing substrates & Shows that textual convergence alone does not establish region-level admission or end-to-end semantic correctness \\
-STORM (Ref. 3) & File versions and observed dependencies can support write-time state mediation and stale-view detection & Represents a preventive file-level neighbor; ATM moves the conflict unit below the file \\
-CAID / Git-worktree isolation (Ref. 15) & Agents can be isolated in separate workspaces and integrated afterward & Contrasts post-generation workspace reconciliation with admission before shared-worktree mutation \\
-SCF (Ref. 2) & Process context and semantic-intent representations can detect workflow-level disagreement & Represents a higher semantic-governance layer; ATM does not claim equivalent business-level intent reasoning \\
-Agentic concurrency-control substrates: CoAgent / S-Bus / ATCC (Refs. 14, 26, 6) & Multi-agent systems require explicit mechanisms for shared state, read-set visibility, long-running agentic transactions, and recovery from contention & Closest concurrency-control neighbors; ATM is narrower because it governs repository-scoped pre-write mutation admission rather than general serializability recovery, HTTP-observable read isolation, or database transaction scheduling \\
-Transactional tool-effect runtimes: Cordon / Atomix (Refs. 59, 58) & Tool effects can be staged, validated, settled, compensated, and audited inside task-scoped transactional boundaries & Closest transactional-runtime neighbors; ATM specializes the admission boundary to repository mutation and neutral-steward apply rather than general tool-effect settlement \\
-Repository-level workflows, protocols, and convergence substrates: CodeTeam / SEMAP / MPAC / CodeCRDT / AgentGit / EvoGit (Refs. 25, 61, 4, 1, 28, 27) & Repository-level multi-agent work benefits from design sketches, contracts, structured messages, Git-like coordination, and convergence substrates & Important workflow or protocol neighbors; they organize generation or coordination, while ATM adjudicates governed shared mutation before write application \\
-AgentSpawn / Rover (Refs. 5, 16) & Post-generation conflicts can be addressed through dynamic agent coordination or LLM-based merge-hunk reasoning & Establishes a later intervention point; ATM acts before governed shared mutation rather than repairing already-materialized changes \\
-Sartori / specification-gap analysis (Ref. 10) & Coordination can fail when agents hold incompatible or incomplete assumptions about shared state & Motivates ATM's explicit scope and adapter-trust boundaries, but does not establish admission correctness \\
-ColaUntangle (Ref. 62) & Explicit and implicit dependencies can be inferred to partition already-tangled commits & Motivates a possible future semantic-dependency provider; ATM does not currently treat LLM-inferred dependencies as authoritative admission evidence \\
-SafeMerge / semistructured merge (Refs. 56, 57) & Semantic conflict-freedom can be checked after versions exist, and partial syntax can improve upon line-based merging without requiring a universal semantic representation & Clarifies the adjacent structured-merge design space; ATM intervenes earlier and does not inherit post-hoc semantic-conflict-freedom guarantees \\
-MACOG / ProjectGen / DebateCoder / multi-agent verification and optimization work (Refs. 20-24) & Multi-agent systems can decompose tasks, allocate roles, verify outputs, and optimize generation cost & Represents orchestration, planning, verification, and efficiency work adjacent to, but distinct from, shared-mutation admission \\
-Cluster A -- Content grounding and verification: RAG / RARR / CoVe (Refs. 49-51) & Retrieval, attribution, revision, and explicit self-verification can improve the factuality or traceability of generated content & Content-level precedents for evidence grounding only; they do not enforce agent scope, tool use, repository mutation, or task closure \\
-Cluster B -- Agent interfaces and runtime policy enforcement: SWE-agent / AgentSpec / ClawGuard (Refs. 52-54) & Agent-computer interfaces and rule-based checks at action boundaries can materially constrain tool-using agent behavior & Closest action-boundary precedent for ATM's task contract and pre-tool scope gate; ATM adds repository-specific mutation admission and evidence-backed closure \\
-SyncMind / SyncBench (Ref. 60) & Agents can be evaluated on recovery after their internal state becomes inconsistent with an evolving workspace & Provides an external recoverability workload and motivation; it is not a directly comparable pre-write admission benchmark \\
-AgenticFlict (Ref. 18) & AI-generated pull requests create substantial downstream Git / PR merge-conflict pressure & Quantitative motivation only; not direct evidence that ATM resolves cross-clone or cross-PR conflicts \\
-\bottomrule
-\end{longtable}
-\endgroup
+The related-work discussion below is organized as a citation-to-claim map, but the full map is moved to the supplementary artifact index to avoid turning the body into a bibliography table. The body retains only the comparison layers needed to locate ATM's intervention boundary. Repository-level benchmarks establish the multi-file and long-horizon task pressure; agentic concurrency-control systems such as CoAgent, S-Bus, and ATCC define adjacent shared-state coordination substrates; transactional tool-effect runtimes such as Cordon and Atomix define neighboring settlement layers; and repository-level workflow or protocol systems such as CodeTeam, SEMAP, MPAC, CodeCRDT, AgentGit, and EvoGit define adjacent planning, coordination, or convergence points. These systems are not treated as direct baselines for the present paper. ATM's claim remains narrower: repository-scoped pre-write admission for governed shared mutation inside a single governance domain.
 
 \subsection{Tier 1: Character-Level Concurrency Control}
 
@@ -211,13 +178,15 @@ SEMAP and ATM both adopt contract-based governance, but they bind their contract
 
 A third cluster comprises upstream collaboration-orchestration and performance-optimization work, including MACOG, ProjectGen + SSAT, DebateCoder, Multi-Agent Code Verification, and Singh's intent-driven optimization (Refs. 20--24). These works answer questions that sit above the admission boundary: how to decompose a task into subtasks, how to assign roles among agents, how to verify generated artifacts, and how to reduce token and latency cost. Their common characteristic is that they do not directly target the moment at which a specific governed shared mutation must be admitted, routed to composition, serialized, or blocked. ATM addresses that narrower question: when multiple agents have already formed write intents, which intents may be admitted, how the admission is performed, and how the resulting write becomes a neutral and auditable event.
 
-The following tables summarize selected neighboring systems at the boundary most relevant to ATM. They neither rank overall system quality nor assume that the systems share identical research objectives. Table 2 identifies each system's primary coordination layer, intervention point, and downstream integration or apply path. Table 3 narrows the comparison to selected capabilities central to ATM's single-domain pre-write admission claim. In Table 3, \texttt{\seqsplit{partial}} indicates that an analogous constraint exists at a coarser granularity or at a different execution phase; it does not indicate implementation of ATM-style region-level admission.
+The following table summarizes selected neighboring systems at the boundary most relevant to ATM. It neither ranks overall system quality nor assumes that the systems share identical research objectives. Table 1 identifies each system's primary coordination layer, intervention point, and downstream integration or apply path, which is the comparison surface needed in the body.
 
-\textbf{Table 2 --- Selected System Boundary Matrix.}
+\textbf{Table 1 --- Selected System Boundary Matrix.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}@{}}
 \toprule
 System & Primary coordination layer & Primary intervention mode & Gate relative to repository mutation & Same-file bounded-region admission & Integration or apply path \\
@@ -238,27 +207,7 @@ ATM & repository-region admission & preventive admission before governed mutatio
 \end{longtable}
 \endgroup
 
-\textbf{Table 3 --- Selected Capabilities at the Pre-Write Admission Boundary.}
-
-\begingroup
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.12\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.12\textwidth}@{}}
-\toprule
-Capability & CodeCRDT (Ref. 1) & STORM (Ref. 3) & CAID (Ref. 15) & CoAgent (Ref. 14) & CodeTeam (Ref. 25) & ATM \\
-\midrule
-Explicit gate before a governed shared mutation is applied & no & partial: file-level and write-time & no & no hard repository gate & partial: planning-time allocation & yes \\
-Same-file bounded-region admission & no & no & no & no & no & yes \\
-Static dependency checks used in admission & no & partial: observed file dependencies & no & runtime/advisory rather than admission-time & partial: planning dependencies & yes \\
-Conservative refinement under incomplete structural coverage & no & no & no & no & no & yes \\
-Dedicated apply authority for governed shared writes & no & no & partial: central integration & no & no & yes: neutral steward \\
-\bottomrule
-\end{longtable}
-\endgroup
-
-\textbf{Boundary note.} Table 3 selects representative systems at the pre-write repository-admission boundary. S-Bus, ATCC, Cordon, and Atomix are treated in the surrounding prose and Table 2 because their closest comparison point is read-set reconstruction, transaction scheduling, or tool-effect settlement, rather than same-file bounded-region repository admission.
-
-Table 2 shows where and when each selected system intervenes, whereas Table 3 isolates the capabilities directly relevant to ATM's stated admission claim. The tables are therefore descriptive rather than comprehensive: they do not imply that ATM replaces these systems, nor do they evaluate capabilities outside the pre-write admission boundary. Read together, they locate ATM's narrow but distinct contribution between planning-level allocation, file- or workspace-level mediation, tool-level reactive control, and downstream merge integration.
+Table 1 is the body-level comparison table for related systems. It records where each system intervenes relative to repository mutation and whether it offers same-file bounded-region admission. A more detailed capability grid is provided in the supplementary citation-to-claim map. The body does not repeat that grid because the main comparison point is already captured by Table 1: ATM intervenes at the repository-region pre-write boundary, whereas neighboring systems operate at character-level convergence, file-level state mediation, workspace isolation, protocol-level coordination, transactional tool-effect settlement, or end-to-end repository generation. The table is descriptive rather than competitive; it does not imply that ATM replaces these systems, nor does it evaluate capabilities outside the pre-write admission boundary.
 
 \subsection{Adjacent Foundations}
 
@@ -270,9 +219,7 @@ The distinction between these routes is best read as a design trade-off rather t
 
 Finally, this paper notes a direction that has not been formally compared in this work: reinterpreting part of multi-agent failure as inter-agent context drift, and using lightweight synchronization protocols to align state before joint reasoning begins. Such methods do not conflict with ATM but sit at an earlier layer, because they ask whether agents already hold mutually divergent knowledge states before any write intent is formed. ATM does not claim an independent context-drift benchmark, and the literature surveyed below does not form a single parallel cluster under one taxonomy. It instead spans two distinct observation surfaces: content-layer evidence-closure motivation and action-boundary runtime-enforcement precedent.
 
-Cluster A, content grounding and verification, contains three content-layer precedents. Retrieval-augmented generation conditions outputs on retrievable external evidence to improve factuality in knowledge-intensive tasks (Lewis et al., 2020, Ref. 49). RARR repairs unsupported claims in existing generated content through evidence attribution and post-hoc revision (Gao et al., 2022, Ref. 50). Chain-of-Verification reduces hallucination through explicit verification planning and self-verification (Dhuliawala et al., 2023, Ref. 51). This cluster establishes a content-level precedent only: retrieval, attribution, revision, and self-verification can improve the factuality or traceability of generated content. These methods do not provide runtime enforcement of software-agent scope, tool use, repository mutation, or task closure. This paper therefore does not treat them as equivalents of ATM's scope gate, validator envelope, or closure packet; they serve only as background motivation for ATM's evidence-closure design.
-
-Cluster B, runtime policy enforcement at agent action boundaries, contains the closest adjacent precedents for ATM's task contract, pre-tool scope gate, and deterministic enforcement. SWE-agent shows that the design of the agent-computer interface and its tool feedback materially affects how a coding agent navigates a repository, edits files, and runs tests (Yang et al., 2024, Ref. 52). AgentSpec provides a DSL that allows triggers, predicates, and enforcement mechanisms to be declared, constraining LLM-agent tool calls, including code execution, at runtime (Ref. 53). ClawGuard executes a user-confirmed rule set at every tool-call boundary, providing task-specific deterministic access enforcement under an indirect-prompt-injection threat model (Ref. 54). This cluster demonstrates that constraining tool calls at the agent action boundary through structured rules is a feasible research direction. ATM differs from this cluster in problem scope and threat model: AgentSpec offers a general runtime-policy language but is not specific to the software-engineering lifecycle, and ClawGuard's threat model centers on adversarial prompt injection rather than multi-agent repository governance. ATM does not inherit ClawGuard's security guarantees; instead, it adapts these enforcement ideas to repository governance by binding task intent, repository scope, write admission, validators, and evidence obligations into a single governance path, with the CID broker handling shared-mutation admission as one subsystem within that path.
+Adjacent work on content grounding, action-boundary enforcement, and solver-aided policy checking motivates ATM's evidence-closure and task-contract planes, but these systems do not directly enforce repository-scoped shared-mutation admission. SWE-agent shows that the agent-computer interface materially affects automated software-engineering performance. AgentSpec and ClawGuard show that structured runtime policies can constrain tool-using agents at action boundaries. Solver-aided policy checking points to a future direction in which a subset of ATM's forbidden rules and task-contract predicates could become machine-checkable. ATM adapts these boundary-enforcement ideas to a repository-governance setting by connecting task scope, mutation admission, validators, evidence obligations, and closure packets into one single-domain governance path.
 
 Taken together, ATM does not claim cross-agent belief synchronization and does not provide a dedicated context-drift benchmark. Its claim surface is narrower. RAG, RARR, and CoVe (Refs. 49-51) should be read as content-layer motivation for ATM's evidence-closure plane, because they show that retrieval, attribution, revision, and explicit verification can reduce unsupported generated content; they do not enforce repository scope, tool-use policy, shared-mutation admission, or task closure. SWE-agent, AgentSpec, and ClawGuard (Refs. 52-54) are the closest precedents for the task-contract and boundary-enforcement design, since they show that agent-computer interfaces and structured runtime rules can materially constrain tool calls; ATM adapts this idea to a single governance domain by binding repository scope, shared-mutation admission, and evidence-backed closure together, without inheriting any task-specific security guarantee. ATM should therefore be read as a governance substrate that constrains how specification drift, scope drift, state drift, and evidence drift propagate into governed shared mutation or unsupported closure, rather than as a general hallucination remedy or an inter-agent belief-synchronization protocol.
 
@@ -318,6 +265,8 @@ In implementation, the \textbf{task card} is the concrete serialization of this 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
 Plane & ATM mechanisms & Question answered \\
@@ -365,6 +314,8 @@ That is, all validators pass, all deliverables are completed, all evidence oblig
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
 Drift type & Definition & ATM mechanism \\
@@ -409,7 +360,12 @@ ATM is organized around five responsibility boundaries that share a single, prog
   flow/.style  ={->, line width=0.5pt, draw=black!75},
   dashflow/.style={->, line width=0.5pt, draw=black!55, dash pattern=on 2pt off 1.5pt},
   planelbl/.style={font=\tiny\bfseries, anchor=south west, inner sep=1pt},
-  lbl/.style   ={font=\tiny\itshape, fill=white, inner sep=1.2pt}
+  % Label variants — fill matches the plane backdrop so labels visually
+  % merge with their plane instead of looking like white stickers glued on top.
+  lbl/.style   ={font=\tiny\itshape, fill=white,    inner sep=1pt},   % open / white-page space
+  lblma/.style ={font=\tiny\itshape, fill=green!12, inner sep=1pt},   % over Mutation-admission plane
+  lbltc/.style ={font=\tiny\itshape, fill=blue!10,  inner sep=1pt},   % over Task-contract plane
+  lblec/.style ={font=\tiny\itshape, fill=orange!14,inner sep=1pt}    % over Evidence-closure plane
 ]
 % --- Task-contract plane (top) ---
 \node[ext] (HU) at (-7.5, 3.0) {Human / Coordinator};
@@ -447,15 +403,15 @@ ATM is organized around five responsibility boundaries that share a single, prog
 \draw[flow] (AG.east) .. controls (-2.5, 0.25) and (1.0, 0.0) .. (B.west);
 \draw[flow] (VA.east) .. controls ( 0.2,-1.4) and (1.6,-0.8) .. (B.south west);
 \draw[flow] (AM.east) -- (B.north west);
-\draw[flow] (B)       -- node[lbl, above]{verdict + plan} (ST);
+\draw[flow] (B)       -- node[lblma, above]{verdict + plan} (ST);
 \draw[flow] (ST.south) -- ++(0,-1.4) -| (CP.north);
 \draw[flow] (VE)      -- (EB);
 \draw[flow] (EB)      -- (CP);
 % --- Non-blocking dashed feedback channels (caption (a),(b),(c)) ---
 % (a) evidence feedback: substrate -> broker
-\draw[dashflow] (EB.east) -- ++(0.4,0) |- node[lbl, near end, above]{evidence feedback} (B.south east);
+\draw[dashflow] (EB.east) -- ++(0.4,0) |- node[lblma, near end, above]{evidence feedback} (B.south east);
 % (b) post-write validators: validator envelope -> agent
-\draw[dashflow] (VE.west) -- ++(-0.6,0) |- node[lbl, near end, above]{post-write validators} (ADAP.west);
+\draw[dashflow] (VE.west) -- ++(-0.6,0) |- node[lblma, near end, above]{post-write validators} (ADAP.west);
 % (c) epoch / direction update: closure packet -> task contract.
 % Label placed midway on the long vertical segment so it does not collide
 % with the Human/Coordinator box at the top-left.
@@ -465,7 +421,7 @@ ATM is organized around five responsibility boundaries that share a single, prog
 \end{figure}
 % CLAUDE-FIG-END: fig-three-plane
 
-\textbf{Figure 1 Three-Plane Reading.} The three subgraphs map to the §3.1 planes as follows:
+\textbf{Reading note for Figure 1.} The three subgraphs map to the §3.1 planes as follows:
 
 \begin{itemize}
 \item \textbf{Task-contract plane.} Starting from the human or coordinator, a structured Task Contract $\mathcal{T} = \langle g, A, F, S, D, V, E, \epsilon \rangle$ is produced and concretely serialized as the task card. The direction lock and pre-tool scope gate enforce G1 (scope containment) and G2 (direction stability).
@@ -591,11 +547,13 @@ The disjointness test used in bounded-region admission is therefore grounded in 
 
 The following table summarizes the four governance objects most often conflated.
 
-\textbf{Table 5 --- Governance Object Comparison.}
+\textbf{Table 2 --- Governance Object Comparison.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}@{}}
 \toprule
 Object & Role & Persistent & First-line broker input & Primary use \\
@@ -632,11 +590,13 @@ When the broker receives a write intent, it does not first ask whether two patch
 
 The principal verdicts are summarized below.
 
-\textbf{Table 6 --- Broker Verdicts and Follow-Up Paths.}
+\textbf{Table 3 --- Broker Verdicts and Follow-Up Paths.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
 Verdict & Meaning & Follow-up path \\
@@ -781,7 +741,7 @@ Output: verdict in {parallel-safe, needs-physical-split,
         blocked-cid-conflict, blocked-shared-surface, SERIAL}
 \end{Verbatim}
 
-\textbf{Algorithm 1 safety note.} Physical disjointness remains necessary but not sufficient. It may confirm \texttt{\seqsplit{parallel-safe}} only when the intents are also outside the same physical file or structured artifact, and after shared-surface and read/write-dependency checks have cleared. Same-file bounded-disjoint edits are not treated as direct \texttt{\seqsplit{parallel-safe}} writes; they are routed to \texttt{\seqsplit{needs-physical-split}}, where the deterministic composer and the neutral steward produce a single governed apply path. A blocked or fail-closed branch is therefore a containment verdict over the direct-apply channel, not a default deletion of the proposing agent's work. This aligns Algorithm 1 with Figure 2, Table 6, the seven-layer gate, and the POS2 field case.
+\textbf{Algorithm 1 safety note.} Physical disjointness remains necessary but not sufficient. It may confirm \texttt{\seqsplit{parallel-safe}} only when the intents are also outside the same physical file or structured artifact, and after shared-surface and read/write-dependency checks have cleared. Same-file bounded-disjoint edits are not treated as direct \texttt{\seqsplit{parallel-safe}} writes; they are routed to \texttt{\seqsplit{needs-physical-split}}, where the deterministic composer and the neutral steward produce a single governed apply path. A blocked or fail-closed branch is therefore a containment verdict over the direct-apply channel, not a default deletion of the proposing agent's work. This aligns Algorithm 1 with Figure 2, Table 3, the seven-layer gate, and the POS2 field case.
 
 Virtual-atom refinement is not a post-processing step outside admission. It is the refinement mechanism that the broker activates when the known atoms and atom map cannot establish an admissible route under the declared model. It proceeds in two steps. \textbf{Syntactic-enclosure atomization} wraps patch spans that the existing atom map does not cover, or covers too coarsely, into the smallest function, method, statement block, or other adapter-recognizable enclosure, thereby forming virtual atoms. \textbf{Signature-preserving decomposition} then decomposes an overly coarse virtual atom or coarse atom into smaller comparable bounded regions without changing the union of patch coverage, so that the broker can recompute the candidate CID, ConflictKey, and shared-surface adjacency.
 
@@ -894,7 +854,7 @@ Not every edit is a transaction. Only edits that cross into a shared surface or 
 
 What Figure 3 expresses is not that all agents lose the ability to write locally. Instead, ATM moves the starting point of shared-write governance earlier. While a modification remains in the private edit phase, deployments may retain a lightweight local workflow. Only when the modification is declared to touch a shared surface, a shared artifact, or a governed scope does the system require it to enter the broker as a write intent and, once admitted, to be promoted into a governed transaction.
 
-\textbf{Figure 3 Escalation Examples.} To prevent the three escalation triggers---shared surface, shared artifact, and governed scope---from remaining abstract, the paper gives three typical escalation scenarios and one non-escalation contrast:
+\textbf{Escalation examples for Figure 3.} To prevent the three escalation triggers---shared surface, shared artifact, and governed scope---from remaining abstract, the paper gives three typical escalation scenarios and one non-escalation contrast:
 
 \begin{itemize}
 \item \textbf{Scenario 1 (shared surface).} An agent wants to modify \texttt{\seqsplit{classifyExplicitMutationRequest}} inside \texttt{\seqsplit{packages/cli/src/commands/broker.ts}}, a file that the atom map already declares as a shared surface on the broker serialization path. Even if the modification touches only a few lines inside a single function, it must be escalated into a write intent, because \texttt{\seqsplit{broker.ts}} is part of the admission basis for other active intents. This is the trigger point of the POS2 case.
@@ -913,7 +873,7 @@ The transaction layer therefore exists to answer how the earlier writer is curre
 
 The ATM broker does not adjudicate by CID alone; it uses seven hard gates to progressively narrow the conflict surface of a suspect write. CID identity is the first fast semantic index. When the CID does not conflict, the broker still checks shared surfaces, declared read and write sets, file range and virtual-atom refinement, ConflictKey and \texttt{\seqsplit{canMerge}}, the CAS base-hash, and finally the fallback file lock. This design lets ATM admit parallelism when disjointness can be shown under the declared model, and conservatively fail closed when the evidence is insufficient.
 
-\textbf{Table 7 --- Seven-Layer Admission Gate (with maturity markers).} The maturity column uses three labels:
+\textbf{Table 4 --- Seven-Layer Admission Gate (with maturity markers).} The maturity column uses three labels:
 
 \begin{itemize}
 \item \textbf{Proven.} The layer is supported by archived deterministic-runner evidence or archived field-collision evidence.
@@ -924,6 +884,8 @@ The ATM broker does not adjudicate by CID alone; it uses seven hard gates to pro
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}@{}}
 \toprule
 Layer & Gate & Question & On pass & On fail or unknown & Maturity \\
@@ -975,11 +937,13 @@ Batch attribution and Wave Mode extend this path. When multiple tasks are submit
 
 ATM governs not only code atoms but also structured artifacts. Through \texttt{\seqsplit{FileMutationAdapter}} and \texttt{\seqsplit{ConflictKey}}, the same admission concepts apply across JSON records, text ranges, numeric scalars, and atom-map shards. The conflict unit therefore varies across formats. For code, it may be a function or a method. For JSON, it may be a record key. For a numeric configuration, it may be a scalar field. For an atom map, it may be an edge or a member record.
 
-\textbf{Table 8 --- ConflictKey Generalization Matrix.} Scope $\times$ Locator mapping across formats.
+\textbf{Table 5 --- ConflictKey Generalization Matrix.} Scope $\times$ Locator mapping across formats.
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}@{}}
 \toprule
 Domain & Adapter & Scope & Locator & Merge capability \\
@@ -1030,111 +994,95 @@ AdmissionBench is therefore not a separate material introduced alongside validat
 \begin{tikzpicture}[
   >=Latex,
   font=\scriptsize,
-  box/.style    ={draw, rounded corners=3pt, minimum width=24mm, minimum height=13mm,
+  % Bucket buckets grouped by which claim they back (left = core admission, right = governance).
+  % K-side: warm tones (red / orange / yellow). G-side: cool tones (teal / blue / violet).
+  box/.style    ={draw, rounded corners=3pt, minimum width=26mm, minimum height=14mm,
                   align=center, line width=0.5pt},
-  motive/.style ={box, fill=blue!12,    draw=blue!60!black, minimum width=32mm},
-  scope/.style  ={box, fill=yellow!20,  draw=orange!70!black, minimum width=32mm},
-  mech/.style   ={box, fill=green!18,   draw=green!50!black},
-  self/.style   ={box, fill=teal!16,    draw=teal!70!black},
-  adopt/.style  ={box, fill=violet!16,  draw=violet!70!black},
-  field/.style  ={box, fill=red!14,     draw=red!60!black},
-  bench/.style  ={box, fill=cyan!16,    draw=cyan!60!black},
-  wave/.style   ={box, fill=orange!18,  draw=orange!60!black},
+  motive/.style ={box, fill=blue!8,     draw=blue!60!black,   minimum width=42mm,
+                  minimum height=11mm},
+  scope/.style  ={box, fill=yellow!16,  draw=orange!70!black, minimum width=42mm,
+                  minimum height=11mm},
+  % K-side (admission evidence) -- warm family
+  mech/.style   ={box, fill=red!10,     draw=red!55!black},
+  field/.style  ={box, fill=red!18,     draw=red!65!black},
+  bench/.style  ={box, fill=orange!16,  draw=orange!65!black},
+  % G-side (governance evidence) -- cool family
+  self/.style   ={box, fill=teal!12,    draw=teal!65!black},
+  adopt/.style  ={box, fill=blue!12,    draw=blue!65!black},
+  wave/.style   ={box, fill=violet!14,  draw=violet!65!black},
   core/.style   ={box, fill=white, draw=black, line width=0.9pt,
-                  font=\scriptsize\bfseries, minimum width=34mm, minimum height=11mm},
-  limit/.style  ={box, fill=gray!18, draw=black!60, minimum width=80mm, minimum height=10mm},
-  flow/.style   ={->, line width=0.5pt, draw=black!70}
+                  font=\scriptsize\bfseries, minimum width=42mm, minimum height=12mm},
+  limit/.style  ={box, fill=gray!16, draw=black!55, minimum width=92mm, minimum height=10mm,
+                  font=\scriptsize\itshape},
+  flow/.style   ={->, line width=0.5pt, draw=black!75},
+  trunk/.style  ={->, line width=0.8pt, draw=black!85},
+  grp/.style    ={draw, rounded corners=4pt, line width=0.5pt, fill opacity=0.35,
+                  text opacity=1, inner sep=3pt},
+  grouplbl/.style={font=\tiny\bfseries, anchor=south west, inner sep=1pt}
 ]
-\node[motive] (M) at (0, 0) {Motivation\\\tiny AgenticFlict (Ref.~18)\\\tiny Git / PR conflict};
-\node[scope]  (S) at (0,-1.7) {Scope\\\tiny single authority domain\\\tiny pre-write admission};
-\node[mech]  (B1) at (-7.5,-3.7) {Mechanism\\\tiny §4.1 \,/\, 12-scenario\\\tiny B-02 / B-08 / B-13};
-\node[self]  (B2) at (-4.5,-3.7) {Self-hosting\\\tiny §4.2 \,/\, forensics\\\tiny coverage 95\,/\,100};
-\node[adopt] (B3) at (-1.5,-3.7) {Adoption\\\tiny §4.3 \,/\, npc-brain\\\tiny recoverability};
-\node[field] (B4) at ( 1.5,-3.7) {Field collision\\\tiny §4.4 \,/\, same-file\\\tiny POS2 / B-12 / BLOCK};
-\node[bench] (B5) at ( 4.5,-3.7) {AdmissionBench\\\tiny §5 \,/\, v0.1 baseline\\\tiny + v0.2 paper};
-\node[wave]  (B6) at ( 7.5,-3.7) {Wave / Batch\\\tiny §4.5 \,/\, extension\\\tiny orchestration};
-\node[core]  (K) at (-3.0,-6.0) {Core admission claim\\\tiny progressive atomization + CID broker};
-\node[core]  (G) at ( 3.0,-6.0) {Governance claim\\\tiny operable substrate};
-\node[limit] (L) at (0,-7.7) {Limitations\\\tiny no cross-clone locking\,\textbullet\, no full comparative benchmark yet};
-\draw[flow] (M) -- (S);
-\draw[flow] (S) -- (B1); \draw[flow] (S) -- (B2); \draw[flow] (S) -- (B3);
-\draw[flow] (S) -- (B4); \draw[flow] (S) -- (B5); \draw[flow] (S) -- (B6);
-\draw[flow] (B1) -- (K);
-\draw[flow] (B4) -- (K);
-\draw[flow] (B5) -- (K);
-\draw[flow] (B2) -- (G);
-\draw[flow] (B3) -- (G);
-\draw[flow] (B6) -- (G);
-\draw[flow] (K) -- (L);
-\draw[flow] (G) -- (L);
+% --- Motivation / Scope funnel ---
+\node[motive] (M) at (0,  0.6) {Motivation\\\tiny AgenticFlict \,/\, Git / PR conflict};
+\node[scope]  (S) at (0, -1.2) {Scope\\\tiny single authority domain\,/\,pre-write admission};
+% --- Six evidence buckets, reordered so K-supporters are on the left, G-supporters on the right ---
+% K-side
+\node[mech]  (B1) at (-7.4, -4.0) {Mechanism\\\tiny §4.1 \,/\, 12-scenario\\\tiny B-02 / B-08 / B-13};
+\node[field] (B4) at (-4.4, -4.0) {Field collision\\\tiny §4.4 \,/\, same-file\\\tiny POS2 / B-12 / BLOCK};
+\node[bench] (B5) at (-1.4, -4.0) {AdmissionBench\\\tiny §5 \,/\, v0.1 baseline\\\tiny + v0.2 paper};
+% G-side
+\node[self]  (B2) at ( 1.4, -4.0) {Self-hosting\\\tiny §4.2 \,/\, forensics\\\tiny coverage 95\,/\,100};
+\node[adopt] (B3) at ( 4.4, -4.0) {Adoption\\\tiny §4.3 \,/\, npc-brain\\\tiny recoverability};
+\node[wave]  (B6) at ( 7.4, -4.0) {Wave / Batch\\\tiny §4.5 \,/\, extension\\\tiny orchestration};
+% --- Translucent group backgrounds (drawn behind the buckets) ---
+\begin{scope}[on background layer]
+\node[grp, fill=red!8,  draw=red!40, fit=(B1)(B4)(B5)] (GK) {};
+\node[grp, fill=blue!8, draw=blue!40, fit=(B2)(B3)(B6)] (GG) {};
+\end{scope}
+\node[grouplbl, red!55!black]  at (GK.north west) [yshift=1pt] {admission evidence \,(supports K)};
+\node[grouplbl, blue!55!black] at (GG.north west) [yshift=1pt] {governance evidence \,(supports G)};
+% --- Two claim nodes, centered under their group ---
+\node[core] (K) at (-4.4, -6.6) {Core admission claim\\\tiny progressive atomization + CID broker};
+\node[core] (G) at ( 4.4, -6.6) {Governance claim\\\tiny operable substrate};
+\node[limit] (L) at (0, -8.4) {Limitations \,\textbullet\, no cross-clone locking \,\textbullet\, no full comparative benchmark yet};
+% --- Flow ---
+\draw[trunk] (M) -- (S);
+% S -> all six buckets (short verticals down)
+\draw[flow] (S.south) -- ++(0,-0.4) -| (B1.north);
+\draw[flow] (S.south) -- ++(0,-0.4) -| (B4.north);
+\draw[flow] (S.south) -- ++(0,-0.4) -| (B5.north);
+\draw[flow] (S.south) -- ++(0,-0.4) -| (B2.north);
+\draw[flow] (S.south) -- ++(0,-0.4) -| (B3.north);
+\draw[flow] (S.south) -- ++(0,-0.4) -| (B6.north);
+% Buckets converge on their claim node (now straight, no crossings)
+\draw[flow] (B1.south) -- (K.north);
+\draw[flow] (B4.south) -- (K.north);
+\draw[flow] (B5.south) -- (K.north);
+\draw[flow] (B2.south) -- (G.north);
+\draw[flow] (B3.south) -- (G.north);
+\draw[flow] (B6.south) -- (G.north);
+% Both claim nodes feed the limitations bar
+\draw[trunk] (K.south) -- (L.north -| K.south);
+\draw[trunk] (G.south) -- (L.north -| G.south);
 \end{tikzpicture}
 \end{figure}
 % CLAUDE-FIG-END: fig-evidence-taxonomy
 
-The evidence base of this section draws from multiple sources, including deterministic fixtures, self-hosting forensics, the external adoption study, and field-collision records. To prevent these sources from being read as a single experimental conclusion of uniform strength, the body of the section retains only two navigation tables. Table 9 aligns each evidence bucket with its observed measure and the claim it can support. Table 10 maps each verdict, lane, or state to its admission-time, apply-phase, or post-apply position. Finer metadata---which experiments are archived, replayable, summary-only, or explicitly out of scope---is carried by the section paragraphs and by the appendix artifact map, avoiding overlapping metadata-style tables in the body.
+The evidence buckets in Figure 4 support different claims. Deterministic fixtures and AdmissionBench support the mutation-admission result under a fixed single-governance-domain scenario family. POS2, B-12, and BLOCK provide field evidence for one positive same-file route and two failure-mode boundaries. The npc-brain cohort supports operability and recoverability of the governance skeleton, not a population-level same-file admission statistic. Self-hosting forensics is operational dogfooding evidence, not independent external validation. Phase A, Phase B, and Phase C add three separate engineering evidence lines: public-source snapshot governance, structured-artifact admission, and dual-live conflict observability; Table 8 keeps those lines from being collapsed into one claim.
 
-\textbf{Table 9 --- Evidence Boundary Overview.} This table consolidates the principal evidence sources, observed measures, and supported claims used in §4.1--§4.5. The last two columns make each row's evidence boundary and artifact source explicit, so that adoption, self-hosting, or extension evidence is not extrapolated into direct evidence for same-file admission.
-
-\begingroup
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}@{}}
-\toprule
-Evidence bucket & Observed measure & Value or record & Supported claim & Boundary or non-claim & Evidence source \\
-\midrule
-Deterministic fixture design & Number of scenario categories covered by the design matrix & 12 categories, including cross-regime disjointness, same-file different atom, same shared surface, read--write dependency, virtual-atom refinement, validator fallback, and static admission closure & Decision-surface coverage blueprint for the §3.5 seven-layer gate and the §3.4 admission flow & Not all 12 scenarios have been replayed by deterministic runners; archived runner evidence concentrates on B-02, B-08, and B-13 & §4.1, \texttt{\seqsplit{arxiv-paper-v1/bench-design.md}} \\
-ATM-AdmissionBench v0.1 baseline + v0.2 paper profile & Scenarios, comparisons, expectation failures, false-safe regressions, routing, ablation, and enforcement & v0.1: 20 scenarios, 42 comparisons, 0 expectation failures, 0 false-safe regressions, unsafe-caught rate = 92.31\%. v0.2: 20 scenarios, 42 comparisons, 0 expectation failures, route-label F1 = 1.000, intent preservation = 97.62\%, 252 policy rows, 294 ablation rows, and 4 enforcement rows & v0.1 supplies the frozen benchmark substrate; v0.2 supplies the paper-facing result on which the manuscript relies, advancing the admission evaluation from a smoke baseline to a formal results and ablation surface & Single-governance-domain benchmark; derived policy, ablation, adversarial, and enforcement rows are expansions of the 20 unique scenarios and are not independent population samples; the v0.1 blind package remains a label-retained audit intake, and v0.2 is not extrapolated to cross-clone or cross-PR merge & §5.1--§5.3, \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}}, \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}, \texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}} \\
-MAO parallel routing benchmark & Scenario count, catch rate, false-safe count & 12 scenarios, 100\% catch rate, 0 false-safe & Simulator-level reproducibility of broker admission, aligned with the vocabulary of the §3.5 admission algorithm & Offline deterministic simulation; not a live-broker or live-distributed load test & TASK-MAO-0010, \texttt{\seqsplit{docs/reports/mao-parallel-routing-benchmark.md}} \\
-POS2 same-file admission & Successful admit-and-apply case for a same-file disjoint bounded region & 1 case: POS2-A and POS2-B from two vendors, bounded to \texttt{\seqsplit{broker.ts:841–878}} versus \texttt{\seqsplit{989–1142}} & The §3.4 progressive atomization path and the §3.5 Layer 4 \texttt{\seqsplit{needs-physical-split}} route can drive a deterministic composer and a neutral steward to apply and pass validators & Single controlled field sample; supports same-owner-map, same-governance-domain bounded admission; does not claim distributed cross-PR or cross-clone merge & §4.4, \texttt{\seqsplit{broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/}} \\
-B-12 apply-phase arbitration & Both vendors admitted as \texttt{\seqsplit{parallel-safe}}; the actual fail-closed outcome occurs at apply-phase active intent & 2 intents, 1 active holder (\texttt{\seqsplit{TASK-TEAM-0043}}) & Active-intent conflicts that admission did not catch are still failed closed at apply phase, matching the §3.7 admission-time forwarding open problem & Does not claim that admission-time forwarding has been completed; this is late enforcement & §4.4, \texttt{\seqsplit{broker-collision-evidence/runs/B-12-field-2026-06-20/}} \\
-BLOCK same-owner overlap & Admission-time block and split suggestion on a same-owner atom over the same bounded region & Second-writer verdict \texttt{\seqsplit{blocked-active-lease}}, then \texttt{\seqsplit{blocked-before-write}}; re-arbitrated first-writer effective decision \texttt{\seqsplit{blocked-cid-conflict}}; emitted child atom \texttt{\seqsplit{atm.broker.classify-explicit-mutation-request.focus.841-878}} & The §3.5 admission fail-closed path and the \texttt{\seqsplit{decompositionRequest}} can serve as input to the owner-map refinement loop & The split suggestion is a focused-child prototype, not a fully automatic before-focus-after tri-split & §4.4, \texttt{\seqsplit{broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/}} \\
-npc-brain adoption (2026-05-19 to 2026-06-07) & Task cards, scope-lock interactions, correct out-of-scope refusals, scope-lock contention-burst recovery, idempotency breaks, validator catches, unrecovered admission errors & 37, 44, 2, 1 covering 10 cards on 2026-05-25, 1, 3, 0 & The ATM governance skeleton, scope gate, and validator path maintain recoverability under the real engineering flow of an external project & Adoption evidence supports recoverability and governance durability only; it does not provide independent positive evidence for same-file parallel admission & §4.3, \texttt{\seqsplit{paper.md:24}} \\
-Self-hosting atomization governance & Overall self-hosting score, public command coverage, production-source-ownership coverage, atom-evidence completeness & 95 / 100 (Grade A); 100\% (55 / 55); 84\% (514 / 609, with 95 production paths still outside ownership coverage); 100\% (7 / 7, each with test, rollback, provenance, and report evidence) & ATM has reached a quantifiable, traceable, and feedback-supported maturity baseline in governing itself & Does not claim that every governance surface has been finely atomized; source-ownership coverage still has a clearly counted residual gap & §4.2 \\
-Wave Mode replay (5 scenarios) & Pass rate & 5 / 5: \texttt{\seqsplit{safe-wave}}, \texttt{\seqsplit{unsafe-wave-same-deliverable}}, \texttt{\seqsplit{mixed-wave-dependency}}, \texttt{\seqsplit{per-task slicing}}, \texttt{\seqsplit{needs-review gating}} & Broker admission can extend to batch orchestration while preserving evidence attribution and fail-closed behavior & Orchestration-extension evidence; does not replace the §4.1 admission-core evidence and does not cover cross-machine clones & §4.5, MAO-0030 to MAO-0034 \\
-CID identity stability & Candidate CID versus Capsule CID split validation; atom-to-CID check & \texttt{\seqsplit{scripts/validate-atom-id-to-cid.ts}} and the backfill path landed & The separation between pre-write arbitration identity (Candidate CID) and post-validation capsule identity (Capsule CID) is supported, providing a foundation for later schema migration & Does not provide a separate positive evidence point for same-file admission; this is identity-substrate stability & §4.5, \texttt{\seqsplit{agr-virtual-atomization-implementation-plan.md}} \\
-Self-hosting incident forensics & Representative incident types & 3 incident classes: \texttt{\seqsplit{cid-shared collision}}, \texttt{\seqsplit{out-of-scope delivery}}, and \texttt{\seqsplit{plan-mirror sync failure}}, including the first real end-to-end activation of the freeze protocol & The governance layer exposes its own gaps during self-evolution and feeds them back into the mechanism & Self-hosting field evidence; its evidential strength is lower than that of a controlled comparative experiment & §4.2, \texttt{\seqsplit{atm-abnormal-release-forensics-report.md}} \\
-\bottomrule
-\end{longtable}
-\endgroup
-
-\textbf{Table 10 --- Verdict Phase Map.} This table maps the verdicts, lanes, states, and snapshot protocols that appear in the evidence material to the phases in which they occur. Its purpose is to distinguish admission-time decisions, apply-phase arbitration, and post-apply validation, rather than treating every term as an admission verdict of the same level.
-
-\begingroup
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}@{}}
-\toprule
-Term & Phase & Representative evidence & Interpretation \\
-\midrule
-\texttt{\seqsplit{parallel-safe}} (admission verdict) & Admission-time & B-12 two intents (\texttt{\seqsplit{TASK-TEAM-0042}}, \texttt{\seqsplit{TASK-TEAM-0043}}) & Admitted as parallel; the fail-closed outcome occurs only later at apply phase \\
-\texttt{\seqsplit{needs-physical-split}} (admission verdict) & Admission-time & POS2-B, same file, different bounded regions & Routed to \texttt{\seqsplit{deterministic-composer}}; the neutral steward performs the single neutral write \\
-\texttt{\seqsplit{direct-brokered}} (lane) & Admission-time & POS2-A and BLOCK-A first writer & Acquires a \texttt{\seqsplit{provisional-write-lease}} \\
-\texttt{\seqsplit{deterministic-composer}} (lane) & Admission-time & POS2-B second writer & Enters the composer; the subsequent apply succeeds \\
-\texttt{\seqsplit{blocked-active-lease}} (registry verdict) & Admission-time & BLOCK-B second writer & Blocked because the first writer already holds an active lease \\
-\texttt{\seqsplit{blocked-before-write}} (admission state) & Admission-time & BLOCK-B & Failed closed before any change to the worktree \\
-\texttt{\seqsplit{blocked-cid-conflict}} (effective decision) & Admission re-arbitration & BLOCK-A, re-arbitrated under pressure from B & The first writer's effective decision becomes a conflict after re-arbitration \\
-\texttt{\seqsplit{decompositionRequest}} or split suggestion (broker output) & Admission-time & BLOCK case \texttt{\seqsplit{atm.broker.classify-explicit-mutation-request.focus.841-878}} & The broker emits a sub-atom split suggestion as input to the owner-map refinement loop \\
-\texttt{\seqsplit{applied}} (apply-phase outcome) & Apply-phase & POS2 two writers; CID-Conflict-Run-Log run \texttt{\seqsplit{748512aa}}, \texttt{\seqsplit{agent-a}} and \texttt{\seqsplit{agent-b}} & Apply succeeds; acceptance validators pass \\
-\texttt{\seqsplit{mergeable}} or \texttt{\seqsplit{conflict}} (multi-actor verdict) & Apply-phase & \texttt{\seqsplit{parallel-0041-0042}} (\texttt{\seqsplit{67b193f9}}, \texttt{\seqsplit{c393df1d}}) & A cross-vendor real-task collision produces \texttt{\seqsplit{applied + blocked + queued}}; the broker reports a mixed \texttt{\seqsplit{mergeable + conflict}} result \\
-\texttt{\seqsplit{queued}} (lane state) & Apply-phase & \texttt{\seqsplit{parallel-0041-0042}} (\texttt{\seqsplit{67b193f9}}) & The wave planner serializes the intent to the next wave \\
-Validator catch or \texttt{\seqsplit{validator-reject}} & Post-apply & Bench-design B-13 plus three validator catches in npc-brain & After admission, the §3.7 validator path catches a semantic incompatibility \\
-\texttt{\seqsplit{unrecovered admission error}} & Observation-period summary & 0 during the npc-brain observation period & All observed errors were channeled into recoverable paths \\
-\texttt{\seqsplit{freeze}} or \texttt{\seqsplit{patch-envelope}} (snapshot protocol) & Admission re-arbitration & TASK-CID-0040 to TASK-CID-0045 incident, first real end-to-end activation & The losing-side patch envelope is persisted; arbitration resumes cleanly \\
-\bottomrule
-\end{longtable}
-\endgroup
+The evidence base of this section draws from deterministic fixtures, self-hosting forensics, the external adoption study, field-collision records, public-source snapshot evidence, structured-artifact evidence, live-conflict evidence, and extension evidence. These materials do not have the same evidentiary strength and should not be read as a single empirical sample. The body therefore states the evidence boundary in prose and retains only the evidence table that is needed to prevent claim mixing: Table 8, which separates framework-mainline support, public-source snapshot governance, structured-artifact admission, and dual-live conflict evidence. The longer evidence-bucket overview and verdict-phase map are moved to the appendix or supplementary index.
 
 \subsection{Deterministic Fixture Design (12 Scenarios) and Archived MVP Evidence (3 Archived Runs)}
 
 The evidence in this section is deliberately layered into two tiers. The phrase {\char34}12 scenarios{\char34} refers to the design matrix. The phrase {\char34}3 archived{\char34} refers to the core scenarios---B-02, B-08, and B-13---for which a deterministic runner has been completed and the evidence archived. The remaining nine scenarios belong to the coverage blueprint that has not yet been swept by a runner in this version. They are therefore recorded in §5 as limitations and future work rather than as validated deliverables.
 
-What this section provides is mechanism-validation evidence. The 12-scenario deterministic fixture design matrix describes the intended coverage of the broker decision surface, while the archived deterministic-runner MVPs---B-02, B-08, and B-13---check that the core admission mechanism aligns with the verdict vocabulary defined in this paper. The coverage categories of the design matrix are summarized in Table 12. What the paper delivers at this stage is therefore a hybrid evidence stack---a 12-scenario design matrix, a 3-scenario deterministic MVP, governance-landing and recoverability evidence, and field-collision evidence---rather than a final empirical version in which all 12 deterministic scenarios have already been swept.
+What this section provides is mechanism-validation evidence. The 12-scenario deterministic fixture design matrix describes the intended coverage of the broker decision surface, while the archived deterministic-runner MVPs---B-02, B-08, and B-13---check that the core admission mechanism aligns with the verdict vocabulary defined in this paper. The coverage categories of the design matrix are summarized in Table 6. What the paper delivers at this stage is therefore a hybrid evidence stack---a 12-scenario design matrix, a 3-scenario deterministic MVP, governance-landing and recoverability evidence, and field-collision evidence---rather than a final empirical version in which all 12 deterministic scenarios have already been swept.
 
-\textbf{Table 12 --- Deterministic Fixture Coverage Categories.}
+\textbf{Table 6 --- Deterministic Fixture Coverage Categories.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
 Category & Mechanism covered & Evaluation focus \\
@@ -1174,17 +1122,19 @@ The role of these forensics is to show that the ATM governance layer is not a po
 
 \subsection{npc-brain Adoption Study}
 
-This section provides adoption evidence. The question it answers is not whether same-file parallel admission is established, but whether ATM's governance skeleton, scope gate, and validator path can sustain recoverability under the real engineering flow of an external project. npc-brain is an external adoption case observed over a three-week window, from 2026-05-19 to 2026-06-07. The project used ATM for atomization, scope control, validator integration, and governance-flow management under a real multi-agent engineering workflow. The aggregate outcomes are summarized in Table 15; the load-bearing result is that ATM did not eliminate all process errors, but channeled the observed errors into recoverable paths, with zero unrecovered admission errors across the cohort.
+This section provides adoption evidence. The question it answers is not whether same-file parallel admission is established, but whether ATM's governance skeleton, scope gate, and validator path can sustain recoverability under the real engineering flow of an external project. npc-brain is an external adoption case observed over a three-week window, from 2026-05-19 to 2026-06-07. The project used ATM for atomization, scope control, validator integration, and governance-flow management under a real multi-agent engineering workflow. The aggregate outcomes are summarized in Table 7; the load-bearing result is that ATM did not eliminate all process errors, but channeled the observed errors into recoverable paths, with zero unrecovered admission errors across the cohort.
 
 The traceable evidence comes not only from summary narration but also from adoption notes, the task ledger, validator records, and the corresponding evidence archive. The summary statistics cited in this paper can be traced back to the existing adoption-study writeup and incident table, including the entry for this study's observation window, the 37-card cohort, and the validator-catch classification recorded in \texttt{\seqsplit{paper.md}}. It should also be noted that, within this paper, the 3KLife repository functions primarily as the host of ATM's self-hosting development and evidence archive. It is not counted as a second independent external adoption sample.
 
 This study is not a product showcase, nor a large-scale comparative experiment. Its value is in supplying a traceable body of adopter-side governance evidence that shows ATM's atomization governance, admission governance, and validator-and-evidence substrate operating inside a non-synthetic repository. In particular, the figure of 0 unrecovered admission errors indicates that when an agent encountered contention, an out-of-scope action, or a validator failure, the system retained enough evidence to support repair rather than letting state diverge in an untraceable way. The boundary must be stated explicitly: npc-brain primarily supports the operability and recoverability of governance, not same-file parallel collision itself. The latter is supported principally by the POS2, B-12, BLOCK, and close-orchestration field-collision evidence.
 
-\textbf{Table 15 --- npc-brain Three-Week Adoption Summary.}
+\textbf{Table 7 --- npc-brain Three-Week Adoption Summary.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.30\textwidth}L{0.30\textwidth}@{}}
 \toprule
 Metric & Value \\
@@ -1216,11 +1166,13 @@ Phase B is the Structured Artifact Admission Track. It independently evaluates A
 
 Phase C is the dual-live public-source conflict demonstration. In Team Broker mode, two live actors touched the same FastAPI public-source snapshot path, and the CID broker produced an auditable run artifact that has now been re-verified against the host-side broker-run envelope. The run id is \texttt{\seqsplit{6ea4e411-fa2b-426b-9c71-55bbdbeaa888}}, with plan id \texttt{\seqsplit{batch-5c1fd53c988116ce}}. Actor A was \texttt{\seqsplit{cursor-composer-2.5}}; Actor B was \texttt{\seqsplit{antigravity-gemini-3.5-flash}}. The target file was \texttt{\seqsplit{local/public-source-snapshots/fastapi-0.136.3/fastapi/\_\_init\_\_.py}}. Actor A reached an \texttt{\seqsplit{applied / mergeable}} outcome, while Actor B was routed to \texttt{\seqsplit{queued / conflict}}. This supports the claim that, under Team Broker mode, ATM's CID broker activates on an external public-source snapshot touched path and leaves an auditable applied / queued / conflict run artifact. It does not claim to solve all multi-agent runtime race conditions, and it is not evidence that ATM governs the upstream FastAPI project.
 
-\textbf{Table 11 --- Separated Evidence Lines for Public-Source and Structured-Artifact Governance.}
+\textbf{Table 8 --- Separated Evidence Lines for Public-Source and Structured-Artifact Governance.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}@{}}
 \toprule
 Evidence line & What it supports & Key artifacts or commits & Boundary \\
@@ -1352,29 +1304,9 @@ This section consolidates the validity limitations of the §4.1--§4.5 evidence,
 
 \subsection{Governance-Containment Mapping across the Three Planes}
 
-This section aligns the evidence already gathered in §4.1--§4.5 with the three governance planes of §3.1, rather than introducing a new benchmark. Its purpose is to let the reader see, before entering the §5 AdmissionBench results, which plane has been supported and with what strength of evidence. The baseline quantitative support for the Mutation-admission plane is carried by the v0.1 baseline in §5.1, while the paper-facing quantitative result on which the manuscript relies is further reinforced by the v0.2 paper profile, including route-label F1, intent preservation, ablation rows, and enforcement rows. The evidential strength of the Task-contract plane and the Evidence-closure plane currently comes primarily from field-level evidence and self-hosting forensics.
+The evidence in this paper also maps onto the three planes introduced in Section 3.1. The Task-contract plane is supported primarily by scope-lock interactions, out-of-scope refusals, and closure-packet recovery in the adopter and self-hosting evidence. The Mutation-admission plane is supported by AdmissionBench v0.1 and v0.2, POS2, B-12, BLOCK, and the archived deterministic-runner cases. The Evidence-closure plane is supported by validator catches, ledger-replay recovery, closure-packet repair, cross-agent review-signature prototype evidence, and the adversarial-adapter-containment package.
 
-\textbf{Table 16 --- Governance-Containment Mapping: Existing Evidence across the Three Planes.}
-
-\begingroup
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}L{0.17\textwidth}@{}}
-\toprule
-Plane (§3.1) & Primary mechanisms & Existing evidence in this paper & Evidence type & Source section(s) \\
-\midrule
-\textbf{Task-contract plane} & Task intent, allowed files, forbidden rules, scope paths, direction lock & \textbf{44 scope-lock interactions} and \textbf{2 correctly refused out-of-scope proposals} during the three-week npc-brain adoption window; and the 3KLife self-hosting \texttt{\seqsplit{out-of-scope delivery requiring waiver}} incident (\texttt{\seqsplit{TASK-CID-0041}}), which shows scope drift being caught at close-out and logged with a waiver & Adopter-side field evidence and self-hosting forensics: descriptive cohort and operational evidence; does not include a publicly, independently reproduced statistic or a population-level error rate & §4.3 Table 15; §4.2 incidents; §A.5 \\
-\textbf{Mutation-admission plane} (CID broker subsystem) & Atoms, CID, ConflictKey, read/write set, active registry, broker, neutral steward & \textbf{AdmissionBench v0.1 and v0.2}: v0.1 supplies a frozen baseline of 20 scenarios, 42 mode comparisons, 42 matched expectations, \textbf{0 expectation failures}, \textbf{0 false-safe regressions}, and a 92.31\% unsafe-caught rate. On the same benchmark family, v0.2 adds route-label F1 = 1.000 across 42 mode-level comparisons, intent preservation = 97.62\%, 252 policy rows, 294 ablation rows, and 4 enforcement rows. In addition, POS2 provides the same-file bounded-region admission existence proof; B-12 provides the late-enforcement case; BLOCK provides the split-suggestion case; and \texttt{\seqsplit{B-02}}, \texttt{\seqsplit{B-08}}, and \texttt{\seqsplit{B-13}} provide three archived deterministic-runner cases & Baseline benchmark substrate, paper-facing benchmark result, field existence proof, and dual failure-mode field cases & §5.1 Tables 18--19; §4.4; §4.1 \\
-\textbf{Evidence-closure plane} & Validation commands, validator envelope, evidence blocker, review advisory, closure packet & \textbf{3 post-write validator catches} during the npc-brain cohort, \textbf{1 scope-lock contention burst} recovered through ledger replay, and \textbf{0 unrecovered admission errors} during the same window; and the 3KLife plan-mirror sync failures (\texttt{\seqsplit{TASK-CID-0043}}, \texttt{\seqsplit{TASK-CID-0044}}, \texttt{\seqsplit{TASK-CID-0045}}), in which closure packets are restored through repair commits, showing that close-out drift can be caught by a ledger-consistency check & Descriptive cohort, operational evidence, and self-hosting forensics: includes positive catches and drift recovery, but does not include a publicly, independently reproduced statistic or a catch-rate denominator & §4.3 Table 15; §A.5 \\
-\bottomrule
-\end{longtable}
-\endgroup
-
-This mapping is an evidence-coverage alignment view, not a benchmark.
-
-The Task-contract plane and the Evidence-closure plane currently rely mostly on adopter-side evidence and self-hosting forensics. Their evidential strength is sufficient to support the conclusion that the mechanisms operate and that drift can be channeled into recovery, but it does not support a population-level catch rate or a quantitative false-positive figure. The quantitative claim of the Mutation-admission plane is no longer carried by v0.1 alone; it is jointly supported by v0.1 as the baseline and v0.2 as the principal paper-facing result.
-
-The per-layer necessity exposed by this separation maps to \textbf{RQ4 (layer necessity)} in §5.3 Table 20, where v0.2 has begun to answer layer necessity through ablation rows. Broader cross-policy and cross-repo comparisons remain part of subsequent extension work.
+This mapping is an evidence-coverage view, not a benchmark. The quantitative admission claim is carried by AdmissionBench and OperationalBench. The Task-contract and Evidence-closure planes currently have operational and prototype evidence, but they do not yet have population-level catch rates, broad false-positive estimates, or a complete governance-containment benchmark. The detailed plane-by-plane table is moved to the appendix or supplementary material.
 
 \section{Benchmark Results and Limitations}
 
@@ -1394,11 +1326,13 @@ What these four row universes share is a common lineage from the same 20 scenari
 
 The ground-truth and metric definitions follow the same independence discipline. The oracle side is produced from the frozen benchmark contract without reading ATM output, and is finalized before the formal audit comparison. Whenever ATM output disagrees with the oracle, the divergence is recorded as a benchmark failure rather than back-filled into the expected answer. The metric \texttt{\seqsplit{route-label F1}} evaluates route-label classification across the 42 mode-level comparisons, taking a macro average over the observed route classes, whereas \texttt{\seqsplit{false-safe rows}} belong to the policy comparison surface and therefore sit outside the route-label F1 denominator. The metric \texttt{\seqsplit{intent preservation = 97.62\%}} reports the share of the v0.2 paper-profile policy view in which \texttt{\seqsplit{ATM-full}} preserves the original task intent and avoids a false-safe or unresolved outcome. These metrics measure admission behavior inside a single governance domain, not downstream Git-merge quality or end-to-end semantic correctness.
 
-\textbf{Table 18a --- Baseline Policy Definitions.}
+\textbf{Table 9 --- Baseline Policy Definitions.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.30\textwidth}L{0.30\textwidth}@{}}
 \toprule
 Baseline or policy & Operational definition \\
@@ -1412,13 +1346,15 @@ Baseline or policy & Operational definition \\
 \end{longtable}
 \endgroup
 
-To make the role separation between the baseline and the main result legible at a glance, Table 18 first aligns v0.1 and v0.2 on the same benchmark family by their respective reporting functions. The denominator of this table is \textbf{42 mode comparisons}. The table answers how each version presents an overview of the same benchmark family, rather than the finer policy-row, ablation-row, or enforcement-projection statistics.
+To make the role separation between the baseline and the main result legible at a glance, Table 10 first aligns v0.1 and v0.2 on the same benchmark family by their respective reporting functions. The denominator of this table is \textbf{42 mode comparisons}. The table answers how each version presents an overview of the same benchmark family, rather than the finer policy-row, ablation-row, or enforcement-projection statistics.
 
-\textbf{Table 18 --- ATM-AdmissionBench v0.1 Baseline versus v0.2 Paper Profile.}
+\textbf{Table 10 --- ATM-AdmissionBench v0.1 Baseline versus v0.2 Paper Profile.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
 Item & v0.1 baseline & v0.2 paper profile \\
@@ -1436,15 +1372,17 @@ Unresolved benchmark rows & 0 & 0 \\
 \end{longtable}
 \endgroup
 
-Building on this baseline, Table 19 condenses the v0.2 results cited in the body of the paper into a single summary table aligned with the Results, Ablation, and enforcement-timing narrative. The table intentionally juxtaposes several row universes, but it does not merge their denominators. It includes the \texttt{\seqsplit{252 policy rows}}, the \texttt{\seqsplit{294 ablation rows}}, and the \texttt{\seqsplit{210 adversarial rows}} derived from the 20 unique scenarios, together with the 51-row enforcement-timing projection. The forwarding rows use the 51-row enforcement-timing projection as their denominator, because that projection is aggregated from v0.2 policy-view route outcomes. Consequently, the identity $9 + 6 + 3 + 0 + 33 = 51$ must not be added to, or substituted for, the 42 mode comparisons, the 252 policy rows, or the 4 enforcement rows.
+Building on this baseline, Table 11 condenses the v0.2 results cited in the body of the paper into a single summary table aligned with the Results, Ablation, and enforcement-timing narrative. The table intentionally juxtaposes several row universes, but it does not merge their denominators. It includes the \texttt{\seqsplit{252 policy rows}}, the \texttt{\seqsplit{294 ablation rows}}, and the \texttt{\seqsplit{210 adversarial rows}} derived from the 20 unique scenarios, together with the 51-row enforcement-timing projection. The forwarding rows use the 51-row enforcement-timing projection as their denominator, because that projection is aggregated from v0.2 policy-view route outcomes. Consequently, the identity $9 + 6 + 3 + 0 + 33 = 51$ must not be added to, or substituted for, the 42 mode comparisons, the 252 policy rows, or the 4 enforcement rows.
 
 For the same reason, this paper does not treat the 20 scenarios, the 42 mode comparisons, or the policy and ablation row universes of AdmissionBench as the same sample-count claim as the 24,332 out-of-sync instances reported by SyncMind and SyncBench (Ref. 60). SyncBench measures recovery after an agent's belief state has fallen out of sync with the evolving repository state. AdmissionBench instead measures admission verdicts, layer ablation, and enforcement timing inside a single governance domain before a shared write occurs. The two benchmarks are complementary rather than interchangeable, and their raw instance counts should not be used to compare benchmark scale or evidence strength directly.
 
-\textbf{Table 19 --- ATM-AdmissionBench v0.2 Paper-Facing Summary.}
+\textbf{Table 11 --- ATM-AdmissionBench v0.2 Paper-Facing Summary.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.30\textwidth}L{0.30\textwidth}@{}}
 \toprule
 Category & Result \\
@@ -1473,11 +1411,13 @@ OperationalBench separates three evidence layers. The official paper run from 20
 
 The extended \texttt{\seqsplit{N=50}} run should be read as an operational stress probe rather than as a liveness proof. Under higher contention, the latency tail remains concentrated in steward-mediated recovery paths and total scenario time, which is expected for a design that preserves intents and routes unsafe direct apply into governed successor paths. The run does not show a new route-distribution or recovery-structure change under the tested contention setting. Validator timing in OperationalBench reflects a lightweight validator path and should not be extrapolated to projects with expensive build, integration-test, or end-to-end validation pipelines.
 
-\textbf{Table 19b --- OperationalBench Latency Summary.}
+\textbf{Table 12 --- OperationalBench Latency Summary.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}@{}}
 \toprule
 Run & Setting & Admission decision P50 / P95 / P99 & Steward apply P50 / P95 / P99 & Total scenario P50 / P95 / P99 & Interpretation \\
@@ -1499,9 +1439,9 @@ For completeness, the \texttt{\seqsplit{N=50}} queue-wait path remains near the 
 
 OperationalBench therefore strengthens the paper's operational claim without widening its external-validity claim. It shows that ATM's fail-closed and blocked outcomes are observable recovery-routing events rather than a black-box rejection path: unsafe direct or parallel apply is closed, while intent, evidence, patch envelope, blocking reason, and recovery route remain available when a governed successor path exists.
 
-v0.1 therefore supports the baseline claim that the benchmark substrate has been frozen and is auditable, whereas v0.2 supports the paper-facing result claimed in the body of this paper. On the 20-scenario, 42-comparison benchmark family in this round, \texttt{\seqsplit{ATM-full}} preserves 0 expectation failures and 0 unresolved rows, achieves route-label F1 = 1.000, and compresses the main failure modes within the policy comparison surface into a small number of false-safe and over-serialization rows rather than relapsing into widespread silent mismatch. In other words, v0.1 answers whether this benchmark exists and can be frozen, while v0.2 answers what result the paper stands behind on that frozen benchmark. For the same reason, Table 19 should be read as a paper-profile summary table rather than a single surface that replaces every detailed appendix table.
+v0.1 therefore supports the baseline claim that the benchmark substrate has been frozen and is auditable, whereas v0.2 supports the paper-facing result claimed in the body of this paper. On the 20-scenario, 42-comparison benchmark family in this round, \texttt{\seqsplit{ATM-full}} preserves 0 expectation failures and 0 unresolved rows, achieves route-label F1 = 1.000, and compresses the main failure modes within the policy comparison surface into a small number of false-safe and over-serialization rows rather than relapsing into widespread silent mismatch. In other words, v0.1 answers whether this benchmark exists and can be frozen, while v0.2 answers what result the paper stands behind on that frozen benchmark. For the same reason, Table 11 should be read as a paper-profile summary table rather than a single surface that replaces every detailed appendix table.
 
-A reader who wishes to move from this benchmark summary toward finer mechanism necessity should next read Table 20, rather than directly compare numbers across the distinct row universes inside Table 19. In short, Table 18 establishes the version-level division of roles, Table 19 reports the paper-facing summary, and Table 20 explains layer necessity and the degradation modes associated with each removed mechanism.
+A reader who wishes to move from this benchmark summary toward finer mechanism necessity should next read Table 13, rather than directly compare numbers across the distinct row universes inside Table 11. In short, Table 10 establishes the version-level division of roles, Table 11 reports the paper-facing summary, Table 12 adds operational latency, and Table 13 summarizes layer necessity and the remaining boundaries.
 
 v0.2 also lets us, for the first time within a single paper-artifact bundle, place Results, Ablation, and enforcement timing on the same traceable narrative chain. Taking \texttt{\seqsplit{ATM-full}} as the anchor, the six-component ablation produces a layered degradation profile. Removing the virtual atom adds 8 false-safe rows and loses 9 end-to-end success rows. Removing the conflict key adds 4 false-safe rows and loses 5 success rows. Removing CID, shared surface, or CAS each costs three to five additional success rows. Removing the fallback lock adds no false-safe rows but still loses 2 success rows. What these six removals share is a common pattern: every removed layer contributes either a distinct false-safe-suppression role, a distinct success-preservation role, or both. ATM's effect is therefore not produced by a single heuristic, but is built up jointly by the virtual atom, conflict identity, shared-surface judgment, and fail-closed recovery path.
 
@@ -1517,65 +1457,27 @@ This audit pipeline also contributes one methodology evidence replay. The wrong-
 
 \subsection{Results, Ablation, and Remaining Research Questions}
 
-The role of AdmissionBench in this manuscript is no longer a mere roadmap. It has been split into two layers. The first is the v0.1 baseline, which freezes the benchmark substrate and the blind-audit boundary. The second is the v0.2 paper profile, which supplies the Results, Ablation, and enforcement-timing summary cited in the body of this paper. OperationalBench then adds a narrower runtime-transparency layer over recovery routing and operational overhead. Table 20 is therefore no longer only a future-work list; it is a joint account of which research questions have been answered concretely by v0.2 and OperationalBench, which have been answered only at the baseline or field-evidence layer, and which still require a future benchmark release.
+The role of AdmissionBench in this manuscript is no longer a mere roadmap. It has been split into two layers. The first is the v0.1 baseline, which freezes the benchmark substrate and the blind-audit boundary. The second is the v0.2 paper profile, which supplies the Results, Ablation, and enforcement-timing summary cited in the body of this paper. OperationalBench then adds a narrower runtime-transparency layer over recovery routing and operational overhead. The compact RQ table below records the current status without repeating the full appendix-level research-question grid.
 
-Table 20 re-projects the benchmark results above back onto the research-question layer. It separates questions answered at the paper-facing level from questions for which this paper has reached only the baseline or field-evidence layer.
-
-\textbf{Table 20 --- Benchmark Research Questions and Current Evidence.}
+\textbf{Table 13 --- Compact Research-Question Status Summary.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}@{}}
 \toprule
-RQ & Question & Current paper answer & Remaining extension \\
+Status & Research questions & Current evidence & Remaining boundary \\
 \midrule
-RQ1: Admission safety & Does ATM admit conflicting or unsupported writes? & The v0.1 baseline reports 0 false-safe regressions and 0 expectation failures across the 42 comparisons. v0.2 lifts the safety result into the policy surface, showing that \texttt{\seqsplit{ATM-full}} leaves only a small number of false-safe rows and no unresolved rows, while POS2, B-12, and BLOCK supply the matching positive and negative boundary cases. & A larger comparison against \texttt{\seqsplit{no-governance}}, \texttt{\seqsplit{text-range}}, file-level, and OCC-style policies. \\
-RQ2: Concurrency preservation & Does ATM preserve admissible parallel opportunities rather than unconditionally serializing whole files? & POS2 shows that same-file bounded-region cases can be routed to the composer or steward rather than to whole-file serialization, and v0.2 quantifies this through over-serialization rows in the paper-facing result. & A broader cross-policy comparison of admissible-parallel recall and over-serialization rate. \\
-RQ3: Routing correctness & Can ATM select among \texttt{\seqsplit{parallel-safe}}, \texttt{\seqsplit{compose}}, \texttt{\seqsplit{serial}}, \texttt{\seqsplit{block}}, and \texttt{\seqsplit{fail-closed/refine}} routes? & The v0.1 baseline matched all 42 of 42 expected verdict comparisons; v0.2 further reports \texttt{\seqsplit{ATM-full}} route-label F1 = 1.000 over the 42 mode-level comparisons. & Extension to a larger scenario family and more adapter combinations. \\
-RQ4: Layer necessity & Which failure modes does each of the seven gates avoid? & The v0.1 baseline exercises virtual atom, read/write dependency, shared surface, conflict arbitration, and validator catch; v0.2 has begun to answer layer-by-layer necessity through ablation rows, showing that removing the virtual atom, the conflict key, CID, the shared surface, CAS, or the fallback lock each produces measurable degradation. & Broader cross-repo ablations and longer-horizon observation. \\
-RQ5: Enforcement timing & At which layer---admission, apply, or validator---are unsupported intents caught? & BLOCK, B-12, and the v0.2 enforcement rows characterize the phase division between admission-time block, apply-phase fail-closed, and validator catch, while the npc-brain adoption further supplies 0 unrecovered admission errors. & Establishing a full denominator for admission, apply, validator, and silent miss on a larger benchmark. \\
-RQ6: Adapter trust boundary & When the adapter under-reports or declares maliciously, how much can the other layers recover? & Current field evidence, v0.2 adversarial rows, and a follow-up adversarial-adapter-containment package show that malformed scope declarations, conservative shared-surface blocking, validator-backed dependency detection, and CAS-mismatch recovery remain bounded within fail-closed or replay-oriented recovery paths under deterministic local checks. This evidence supports containment behavior for selected adapter-trust boundary cases; it does not establish adversarial adapter soundness, completeness, or a general guarantee over all malformed declarations. & Expanding the adversarial injection family to measure silent corruption, validator salvage, CAS salvage, and denial of service. \\
-RQ7: Hidden semantic reads & What happens when a dependency is not declared, adapter-observable, or active-registry-visible? & The current paper treats such dependencies as outside the positive admission guarantee. Validators, CAS revalidation, fail-closed routing, and steward review provide downstream containment, but AdmissionBench does not yet quantify dynamic read reconstruction. & A DeliveryLog-style read-set provider and benchmark track for hidden-read recovery. \\
-RQ8: Operational overhead and recovery routing & What runtime cost does ATM introduce, and what happens after blocked or fail-closed admission? & OperationalBench reports the paper-facing operational profile, an \texttt{\seqsplit{N=50}} extended contention run, and multi-seed stability runs. These runs distinguish unsafe direct-apply prevention from loss of agent work by recording recovery-routing behavior, including steward-mediated paths and total scenario time. Multi-seed stability further shows that \texttt{\seqsplit{scenarioCount}}, \texttt{\seqsplit{resultRows}}, \texttt{\seqsplit{trackCounts}}, \texttt{\seqsplit{blockedCaseCounts}}, \texttt{\seqsplit{routeCounts}}, and the recovery metrics remain stable across the tested seeds. & Heavier validator-pressure variants, public-repository operational smoke tests, and larger high-contention runs with queue-wait, token-rework, and bounded-waiting metrics. \\
+Paper-facing result & RQ1 Admission safety, RQ2 Concurrency preservation, RQ3 Routing correctness, RQ4 Layer necessity & AdmissionBench v0.1 and v0.2, POS2/B-12/BLOCK, route-label F1, ablation rows, and over-serialization rows & Larger cross-policy, cross-repository, and adapter-diverse evaluation \\
+Enforcement and recovery timing & RQ5 Enforcement timing, RQ8 Operational overhead and recovery routing & Enforcement rows, field cases, OperationalBench official run, N=50 extended run, and multi-seed stability & Heavy validator-pressure variants, queue-wait studies, token-rework cost, and bounded-waiting analysis \\
+Containment boundary & RQ6 Adapter trust boundary, RQ7 Hidden semantic reads & v0.2 adversarial rows, selected adversarial-adapter-containment cases, validators, CAS revalidation, fail-closed routing, and steward review & No adversarial adapter soundness or completeness claim; dynamic read reconstruction remains future work \\
 \bottomrule
 \end{longtable}
 \endgroup
 
-The main result of this manuscript should therefore be read as a three-table sequence. Table 18 sets out the role division between the v0.1 baseline and the v0.2 paper profile. Table 19 condenses v0.2's Results, Ablation, and enforcement summary. Table 20 then explains which research questions this manuscript has answered at the paper-facing level and which remain reserved for a subsequent benchmark extension. This arrangement prevents the baseline, the main result, and the unfinished extensions from being compressed into a single layer of evidence.
-
-The remaining gap is external validity, not the traceability of the paper-facing result. Four evidence sources stand behind the current claim, each covering a different evidentiary surface. npc-brain supplies external adoption and governance-recoverability evidence. ATM self-hosting supplies collision and forensic evidence. AdmissionBench v0.1 supplies the frozen baseline. AdmissionBench v0.2 supplies the paper-facing result. What these four sources share is a single-governance-domain setting; what they do not yet cover is a large enterprise monorepo, a polyglot microservice estate, a high-frequency generated-artifact workflow, or remote multi-clone collaboration across machines. The next phase should therefore expand to more repositories, more adapters, and longer observation windows, while continuing to distinguish single-domain admission correctness, governance-landing recoverability, and distributed VCS merge responsibility as three separate problems.
-
-Adapter trust is the main formalization gap. ATM's admission soundness depends on conservative adapter declarations of source paths, canonical symbols, \texttt{\seqsplit{ConflictKeys}}, and merge capability. If an adapter under-reports a write surface or adversarially declares disjoint keys, the broker may issue an over-optimistic verdict. Subsequent work should add signed manifests, adapter sandboxing, capability audits, and schema validation.
-
-CID schema migration also requires a formal mechanism. The canonical form of a candidate CID may evolve with \texttt{\seqsplit{schema\_version}}. When different agents run different versions, the broker must determine whether the two forms are equivalent, whether conversion is needed, or whether the correct response is to fail closed. This paper identifies the problem but does not yet provide a full migration proof.
-
-Liveness and starvation remain to be proved. ATM's primary design orientation is conservative admission: when uncertain, block or serialize. This strategy is appropriate for the paper's safety-first boundary, but it may reduce throughput. Future work should therefore formalize priority, retry, fairness, and bounded-waiting models.
-
-Operational overhead is now quantified at the ATM-local harness level through OperationalBench, but only within a deliberately narrow scope. ATM's deterministic gates do not themselves necessarily incur LLM token cost, while recovery routing after conservative admission can add measurable cost through queue wait time, serialization, rebase/replay, steward review, virtual-atom refinement, the composer path, neutral-steward apply, CAS recheck, and downstream validators. This paper therefore does not claim latency, throughput, token-efficiency, memory-footprint, or starvation-freedom superiority. The current benchmark instead exposes the operational profile, the \texttt{\seqsplit{N=50}} contention tail, and seed-stability of the route structure. Future releases should still report heavier validator-pressure variants, larger queue-wait studies, token rework cost when regeneration is actually required, and throughput under increasing numbers of concurrent agents.
-
-These metrics should distinguish three cases that are easy to conflate: blocked intents that are later replayed or rebased, blocked intents that are serialized or routed to steward review, and terminal fail-closed cases where the preserved evidence is insufficient for any governed successor path. The open question is therefore not whether fail-closed discards agent work by default; §3.5 defines fail-closed as closing unsafe direct or parallel apply while preserving intent evidence when available. The open question is how often the preserved work can be salvaged through queue, replay, rebase, steward, or refinement paths, and where liveness, starvation, or bounded-waiting problems still remain under high contention.
-
-\textbf{Governance-Containment Track (subsequent benchmark extension).} AdmissionBench v0.2 already covers admission decisions, ablation, and adversarial scenarios on the Mutation-admission plane, but deterministic quantitative coverage of the Task-contract plane and the Evidence-closure plane remains absent. To close this gap, the next AdmissionBench release will add an independent \textbf{Governance-Containment Track} covering at least the following twelve deterministic case classes:
-
-\begin{itemize}
-\item out-of-scope file write
-\item forbidden-rule violation
-\item direction-epoch mismatch
-\item unsupported closure attempt
-\item validator-fail close attempt
-\item missing-evidence close attempt
-\item missing-deliverable close attempt
-\item closure-packet mismatch
-\item stale-base or base-hash drift
-\item active-intent forwarding miss
-\item shared-artifact mutation without declaration
-\item validator-salvage path
-\end{itemize}
-
-The corresponding principal metrics include \texttt{\seqsplit{scope\_violation\_catch\_rate}}, \texttt{\seqsplit{forbidden\_rule\_block\_rate}}, \texttt{\seqsplit{unsupported\_closure\_catch\_rate}}, \texttt{\seqsplit{phase\_attribution}} (\texttt{\seqsplit{pre\_tool}}, \texttt{\seqsplit{admission}}, \texttt{\seqsplit{apply}}, \texttt{\seqsplit{validator}}, \texttt{\seqsplit{closure}}), \texttt{\seqsplit{false\_block\_rate}}, and \texttt{\seqsplit{recovery\_success\_rate}}. This track does \textbf{not} replace the existing mutation-admission benchmark. Instead, it provides the first benchmark surface with a denominator for the Task-contract plane and the Evidence-closure plane, so that the non-broker planes of the §3.1 three-plane architecture also acquire reproducible quantitative evidence. This paper does not deliver the track in the present version, nor does it claim its results; the delivery specification, fixture manifest, and runner paths will be published in a subsequent AdmissionBench release on the same reproducibility substrate.
-
-\textbf{Machine-checkable formalization of forbidden rules and the task contract.} This version of ATM represents forbidden rules, allowed scope, and task intent as framework-level governance metadata. A future direction is to compile a subset of these rules into solver-checkable constraints, with the broker or pre-tool gate calling a solver to verify policy compliance. A related direction is solver-aided tool-policy enforcement (Winston et al., Ref. 55), which compiles natural-language policy into SMT constraints and uses Z3 to block non-compliant tool calls before execution. ATM may adopt this direction in future work as an extension to the §3.5 seven-layer gate, rather than as a replacement for the existing deterministic gates. Its role would be to provide machine-verifiable compliance proofs for a subset of forbidden rules and scope predicates, strengthening the deterministic argument of the seven-layer gate and aligning with the \texttt{\seqsplit{forbidden\_rule\_block\_rate}} metric in the Governance-Containment Track.
+The full RQ table is provided in the appendix or supplementary material. The compact table is sufficient for the body because the main result should be read through Table 10, Table 11, and Table 12: version-level benchmark roles, paper-facing admission results, and operational recovery-routing overhead.
 
 \section{Discussion}
 
@@ -1665,7 +1567,7 @@ What these three topologies share is a common core assumption: a single broker p
 
 \subsubsection*{Topology A: Multi-Vendor Co-Writing on a Single Workstation}
 
-All field evidence in §4 belongs to this topology. On a single developer workstation, multiple vendors' LLM agents write concurrently into the same worktree, the broker acts as a single in-process arbiter, and the registry is a single \texttt{\seqsplit{.atm/runtime/write-broker.registry.json}} file. POS2, the close-orchestration evidence, and the B-12 cross-vendor end-to-end evidence were all completed under this topology.
+All field evidence in §4 belongs to this topology. On a single developer workstation, multiple vendors' LLM agents write concurrently into the same worktree, the broker acts as a single in-process arbiter, and the registry is a single repo-local write-broker registry file. POS2, the close-orchestration evidence, and the B-12 cross-vendor end-to-end evidence were all completed under this topology.
 
 \subsubsection*{Topology B: Multi-Vendor AI Co-Writing on a Shared On-Prem Server with Remote Human Prompt Input}
 
@@ -1675,9 +1577,9 @@ ATM's admission software requires \textbf{no architectural change} in this topol
 
 \subsubsection*{Topology C: A Local Pre-Push Admission Bridge}
 
-The third topology extends broker admission from the moment of in-workspace write to the moment just before \texttt{\seqsplit{git push}}. Exploiting the decoupling between the broker's \texttt{\seqsplit{MutationRequest}} and the proposal source, the pre-push stage constructs the remote delta obtained through \texttt{\seqsplit{git fetch}} as a virtual \texttt{\seqsplit{MutationRequest}}, with actor \texttt{\seqsplit{virtual:git-remote@<sha>}}, and submits it together with the local branch delta from \texttt{\seqsplit{merge-base}} into the existing admission pipeline. The common ancestor, the format adapter, the composer, the steward apply, and the refinement loop are all identical to those in Topology A. The admission algorithm, the formal model, and the §3.6 format-adapter design require no modification; the new work is purely a Git-to-broker integration bridge.
+The third topology extends broker admission from the moment of in-workspace write to the moment just before push. Exploiting the decoupling between the broker's mutation request and the proposal source, the pre-push stage constructs the remote delta obtained through fetch as a virtual remote-side mutation request and submits it together with the local branch delta from the merge base into the existing admission pipeline. The common ancestor, the format adapter, the composer, the steward apply, and the refinement loop are all identical to those in Topology A. The admission algorithm, the formal model, and the §3.6 format-adapter design require no modification; the new work is purely a Git-to-broker integration bridge.
 
-The trigger point is placed at \texttt{\seqsplit{git push}} rather than at \texttt{\seqsplit{git commit}}. The former is the natural governance boundary at which local work is about to become shared work. The latter is a private local operation, and a per-commit trigger would slow the edit-and-test loop while adding noise on WIP commits. The independent contribution of this topology is therefore restricted to two areas: format-adapter merging of structured data, and the automation gap for AI agents in conflict-marker scenarios. For pure code merges, standard \texttt{\seqsplit{git pull --rebase}} already suffices, and this topology does not claim to replace it.
+The trigger point is placed at push rather than at commit. The former is the natural governance boundary at which local work is about to become shared work. The latter is a private local operation, and a per-commit trigger would slow the edit-and-test loop while adding noise on WIP commits. The independent contribution of this topology is therefore restricted to two areas: format-adapter merging of structured data, and the automation gap for AI agents in conflict-marker scenarios. For pure code merges, standard pull-and-rebase workflows already suffice, and this topology does not claim to replace them.
 
 The corresponding bridge has completed internal validation, with artifacts archived. The validated deliverables are:
 
@@ -1761,56 +1663,30 @@ The author made and reviewed the conceptual and architectural decisions of ATM, 
 
 \subsection{A.1 Evidence Artifact Index and Release Alignment}
 
-This appendix lists the recommended entry points for paper-citable evidence. The specific artifact names and commits should always defer to the actual files in the repository. To avoid duplicating the indices already present in earlier sections, Appendix A retains only three functions:
+This appendix lists the recommended entry points for paper-citable evidence. The specific artifact names and commits should always defer to the actual files in the repository. To avoid duplicating supplementary indices, Appendix A retains only family-level anchors, artifact roots, and access channels.
 
-\begin{itemize}
-\item \textbf{A.1} provides an evidence-artifact entry index.
-\item \textbf{A.3} maps paper claims to source paths and verification commands.
-\item \textbf{A.4} supplements Topology C with bridge details and the scope of its internal validation.
-\end{itemize}
-
-The implementation-status summary that was previously rendered as a separate compact table is now folded into this introductory text, so that the appendix does not present yet another overlapping index.
-
-\textbf{Evidence availability and release alignment (reproducibility statement).}
-
-\begin{quote}
-\textbf{Canonical anchor rule.} The canonical public anchor for the AdmissionBench paper-facing numbers is \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} under ATM public repository \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}}. The canonical public anchor for the OperationalBench paper-facing numbers and supplementary stability evidence is \texttt{\seqsplit{main@c0250009a53b28e887344e71ea675637c97290b0}}, covering the official 2026-06-27 run (\texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627/}}), the extended 2026-06-27 \texttt{\seqsplit{N=50}} run (\texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627-extended/}}), and the multi-seed stability note (\texttt{\seqsplit{artifacts/generated/atm-operational-bench/multi-seed-stability-20260627-20260629.\{md,json\}}}). The \texttt{\seqsplit{v0.9.0-alpha.1}} source snapshot and the generator or evidence commits recorded in the benchmark artifacts remain important, but they serve different roles from the public artifact anchors and should not be conflated with them.
-\end{quote}
-
-\begin{itemize}
-\item \textbf{Public.} The source of the ATM framework itself, the deterministic-runner MVP, the 12-scenario fixture design, the ATM-AdmissionBench v0.1 baseline artifacts, the ATM-AdmissionBench v0.2 paper-profile artifacts, the OperationalBench official and supplementary artifacts, the broker decision implementation, the CID validation scripts, the Topology C bridge, and most self-hosting governance reports are stored in the public GitHub repository \texttt{\seqsplit{eaglhuang/AI-Atomic-Framework}}. The source-reference snapshot of this manuscript is release tag \texttt{\seqsplit{v0.9.0-alpha.1}}, corresponding to commit \texttt{\seqsplit{0b31aa8683b44b3a78206132a0bf90a0fde73d1c}}. The machine-generated source anchor for both the AdmissionBench v0.1 baseline and the v0.2 paper profile is the generator commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}, as recorded in their \texttt{\seqsplit{generator-manifest.json}} files. Reviewers who wish to verify the AdmissionBench numbers in this paper item by item should first open \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} under \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} in the ATM public repository, and then cross-check using its \texttt{\seqsplit{generator-manifest.json}}, \texttt{\seqsplit{summary.json}}, \texttt{\seqsplit{paper-tables.md}}, \texttt{\seqsplit{artifact-hash-manifest.sha256}}, and the matching \texttt{\seqsplit{20260625/}} baseline directory. Reviewers who wish to verify the OperationalBench numbers should instead open the official 2026-06-27 run (\texttt{\seqsplit{20260627}}), the extended 2026-06-27 \texttt{\seqsplit{N=50}} run (\texttt{\seqsplit{20260627-extended}}), and the multi-seed stability artifacts under \texttt{\seqsplit{main@c0250009a53b28e887344e71ea675637c97290b0}}.
-\item \textbf{Private (access on request).} Parts of the same-file collision evidence, including the full patch envelopes and governance ledgers for POS2, B-12, BLOCK, and close-orchestration, the 3KLife self-hosting incident packets, and the npc-brain adopter-side records are stored in the private repository \texttt{\seqsplit{eaglhuang/3KLife}} under \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/}}, because they contain internal artifacts of adopter projects. This paper commits to releasing de-identified versions of the evidence chain, verdict log, and validator trace through the supplementary data release, with a DOI placeholder. Review access may also be requested directly from the author. The internal task ledger, personal names, and project-level commercial information are not included in the supplementary data.
-\item \textbf{Evidentiary strength of private artifacts.} The main conclusions in §4.4 do not depend on artifacts that have not yet been made public. The POS2 evidence chain's broker verdict, composer plan id, for example \texttt{\seqsplit{merge-255c73707a528edc}}, validator commands (\texttt{\seqsplit{git diff --check}}, \texttt{\seqsplit{npm run typecheck}}, \texttt{\seqsplit{npm run validate:cli}}), and commit hashes are all publicly verifiable in the body of this paper and in §A.4. The private envelopes primarily support closure-packet replay and step-by-step audit, rather than serving as the sole source of evidence for any claim.
-\end{itemize}
-
-\textbf{Table A.1 --- Evidence Artifact Index.}
+\textbf{Table A.1 --- Compact Evidence Artifact Index.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}@{}}
 \toprule
-Evidence family & Role in paper & Primary entry & Access channel \\
+Evidence family & Role in paper & Canonical anchor or artifact root & Access channel \\
 \midrule
-12-scenario suite design & Controlled decision-surface coverage blueprint & \texttt{\seqsplit{docs/ai\_atomic\_framework/arxiv-paper-v1/bench-design.md}} & Public (ATM repository) \\
-Deterministic-runner MVP & Archived synthetic mechanism evidence & \texttt{\seqsplit{tools/multi-vendor-broker-bench/README.md}} & Public (ATM repository) \\
-ATM-AdmissionBench v0.1 baseline + v0.2 paper profile & Machine-generated baseline summary, label-retained blind package, paper-facing summary tables, provenance manifest, and audit findings & Canonical public anchor: \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} $\rightarrow$ \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}; secondary anchors: \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}}, \texttt{\seqsplit{artifacts/blind-bench/20260625/}}, \texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}} & Public (ATM repository and supplementary release); v0.1 serves as the baseline anchor, while v0.2 serves as the paper-facing reporting anchor \\
-ATM-OperationalBench v0.1 official run + supplementary evidence & Machine-generated operational-overhead, recovery-routing, higher-contention, and seed-stability evidence & Canonical public anchor: \texttt{\seqsplit{main@c0250009a53b28e887344e71ea675637c97290b0}} $\rightarrow$ \texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627/}}; secondary anchors: \texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627-extended/}}, \texttt{\seqsplit{artifacts/generated/atm-operational-bench/multi-seed-stability-20260627-20260629.md}}, \texttt{\seqsplit{artifacts/generated/atm-operational-bench/multi-seed-stability-20260627-20260629.json}} & Public (ATM repository and supplementary release); operational evidence only, not a cross-system performance benchmark \\
-Framework mainline broker-evidence support & Shows that broker evidence capture and repo-local evidence-path parameterization have landed in the ATM framework mainline & Paper-evidence fast-path bundle \texttt{\seqsplit{191fd310166054d3fa526b6961351716bb2d489e}}; git-head backfill commit for this evidence freeze \texttt{\seqsplit{f57dbfe0bdfdf9f939e35400ec346501f4ccb2f3}} & Public ATM repository \\
-FastAPI public-source snapshot governance case & Public-source snapshot provenance, baseline, readiness, touched-path, command-log, and replay evidence inside the host repository & \texttt{\seqsplit{artifacts/external-public-repo/fastapi/2026-06-27/summary.json}}, \texttt{\seqsplit{paper-safe-summary.md}}, \texttt{\seqsplit{commands.log}}; upstream snapshot head \texttt{\seqsplit{82064857539e6286522c347b4b11331b48dd2378}}; host head \texttt{\seqsplit{738b9883880742cd36b64f1f81ce6a638f073135}} & Host-repository evidence bundle; released as paper-safe summary and supplementary artifact \\
-Structured Artifact Admission Track & Deterministic cross-format admission evidence for structured non-code artifacts & \texttt{\seqsplit{artifacts/generated/structured-artifact-admission/20260627-phase-b/summary.json}}, \texttt{\seqsplit{paper-safe-summary.md}}, \texttt{\seqsplit{results.jsonl}}, \texttt{\seqsplit{docs/reports/structured-artifact-admission-track-2026-06-27.md}} & Public ATM repository and supplementary release \\
-Dual-live external public-source conflict demonstration & Team Broker mode evidence for two live actors touching the same FastAPI public-source snapshot path & Host-side broker-run envelope \texttt{\seqsplit{.atm/history/evidence/broker-runs/6ea4e411-fa2b-426b-9c71-55bbdbeaa888.json}}; plan id \texttt{\seqsplit{batch-5c1fd53c988116ce}} & Re-verified host-repository evidence bundle; paper-safe summary or de-identified supplementary artifact \\
-Cross-agent review signature prototype & Evidence-closure prototype showing that independent AI review can be represented as replayable closure evidence & \texttt{\seqsplit{artifacts/generated/cross-agent-review-signature/20260628/}}; landed at commit \texttt{\seqsplit{c589f125049ad81adc146f1b78e6a5ee36b8f607}} & Public ATM repository \\
-Reviewer-facing last-verified manifest & Framework verification support showing that selected reviewer-facing commands were executed and recorded for the evidence freeze & \texttt{\seqsplit{artifacts/verification/last-verified.json}}; landed on \texttt{\seqsplit{main}} at commit \texttt{\seqsplit{7a88af7d3db0be6d7e1b4c59f46706eabc5808a2}} & Public ATM repository \\
-Adversarial adapter containment package & Deterministic local containment evidence for selected adapter-trust boundary cases, including malformed scope declarations, conservative shared-surface blocking, validator-backed dependency detection, and CAS-mismatch recovery & \texttt{\seqsplit{artifacts/adversarial-adapter-containment/20260628/summary.json}}, \texttt{\seqsplit{results.jsonl}}, \texttt{\seqsplit{paper-safe-summary.md}}, and \texttt{\seqsplit{artifact-hash-manifest.sha256}}; landed on \texttt{\seqsplit{main}} at commit \texttt{\seqsplit{7a88af7d3db0be6d7e1b4c59f46706eabc5808a2}} & Public ATM repository \\
-Same-file collision evidence (\texttt{\seqsplit{POS2}}, \texttt{\seqsplit{B-12}}, \texttt{\seqsplit{BLOCK}}, and close-orchestration) & Positive and negative field evidence for the same-file admission boundary & \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/}} & Private (\texttt{\seqsplit{3KLife}}); de-identified version released through supplementary data \\
-Role-separated methodology replay & Governance and audit methodology evidence for scope-lock failure classification and independent-role replay & Methodology replay manifest, coordinator classification memo, and wrong-scope versus correct-scope replay packet & Mixed: canonical SHA anchors public (ATM repository); replay bundle released de-identified through supplementary data \\
-npc-brain adoption & External governance adoption and recoverability evidence & \texttt{\seqsplit{paper.md}} §4.3 adoption-study writeup and adoption notes & Private (adopter project); summary statistics appear in Table 15 of this paper \\
-Self-hosting forensics & Internal field evidence and incident archive & ATM incident reports and closure packets & Mixed: framework-side incident reports public (ATM repository); 3KLife-side ledger private \\
-Wave Mode and CID stability & Orchestration extension and identity-substrate evidence & \texttt{\seqsplit{docs/reports/team-wave-mode-validation.md}} and related CID validation scripts & Public (ATM repository) \\
+AdmissionBench v0.1 baseline + v0.2 paper profile & Paper-facing admission-result evidence, ablation, policy views, and audit lineage & \texttt{\seqsplit{main@ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}} -> \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}}; baseline under \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}} & Public ATM repository and supplementary release \\
+OperationalBench official + supplementary runs & Runtime transparency for admission overhead, recovery routing, N=50 contention, and multi-seed stability & \texttt{\seqsplit{main@c0250009a53b28e887344e71ea675637c97290b0}} -> \texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627/}}, \texttt{\seqsplit{20260627-extended/}}, and \texttt{\seqsplit{multi-seed-stability-20260627-20260629.\{md,json\}}} & Public ATM repository and supplementary release \\
+Public-source and structured-artifact evidence & Framework-mainline support, FastAPI public-source snapshot governance, structured artifact admission, and dual-live public-source conflict demonstration & Framework evidence freeze \texttt{\seqsplit{main@f57dbfe0bdfdf9f939e35400ec346501f4ccb2f3}}; Phase A/B/C artifact roots listed in supplementary artifact index & Public or paper-safe supplementary artifacts, depending on host-repository content \\
+Field-collision evidence & POS2 same-file admission, B-12 apply-phase enforcement, BLOCK fail-closed split suggestion, and close-orchestration evidence & \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/}} and de-identified supplementary packets & Mixed: public summaries and private source packets on request \\
+Adoption and self-hosting evidence & npc-brain adopter recoverability, self-hosting forensics, Wave Mode replay, CID stability, and governance incident summaries & Sections 4.2-4.6, Appendix A.5, and supplementary de-identified evidence packets & Mixed: public summaries, de-identified supplementary release, private ledgers on request \\
+Evidence-closure and adapter-trust prototypes & Cross-agent review signatures, reviewer-facing verification manifest, and selected adversarial-adapter-containment evidence & \texttt{\seqsplit{artifacts/generated/cross-agent-review-signature/20260628/}}; \texttt{\seqsplit{artifacts/verification/last-verified.json}}; \texttt{\seqsplit{artifacts/adversarial-adapter-containment/20260628/}} & Public ATM repository \\
 \bottomrule
 \end{longtable}
 \endgroup
+
+The full artifact-level index, including individual \texttt{\seqsplit{summary.json}}, \texttt{\seqsplit{results.jsonl}}, command logs, and hash manifests, is provided in the supplementary artifact index. The body and Appendix A retain only the anchors needed to cite the paper's claims.
 
 \subsection{A.2 Implementation and Commit Provenance}
 
@@ -1838,41 +1714,30 @@ This appendix maps every capability that the paper claims to be implemented and 
 
 \subsubsection*{A.4.1 Verification Map}
 
-\textbf{Table A.3 --- Verification Map.}
+\textbf{Table A.2 --- Compact Verification Map.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
-Paper claim & Source location (ATM repository) & Verification \\
+Verification group & What it verifies & Representative command or artifact \\
 \midrule
-§3.3 atoms and the two-tier CID & \texttt{\seqsplit{packages/core/src/registry/atom-runtime.ts}}, \texttt{\seqsplit{registry.ts}}, \texttt{\seqsplit{status-machine.ts}}, \texttt{\seqsplit{atom-capsule.ts}}, \texttt{\seqsplit{packages/core/src/broker/candidate-bridge.ts}} & \texttt{\seqsplit{node --strip-types scripts/validate-atom-id-to-cid.ts}} \\
-§3.4 admission pipeline / §3.5 seven-layer hard gate & \texttt{\seqsplit{packages/core/src/broker/decision.ts}}, \texttt{\seqsplit{conflict-matrix.ts}}, \texttt{\seqsplit{policy.ts}}, \texttt{\seqsplit{steward.ts}} & \texttt{\seqsplit{npm test -- broker/decision}} \\
-§3.5 virtual-atom refinement & \texttt{\seqsplit{packages/core/src/broker/agr.ts}} (legacy implementation file name), \texttt{\seqsplit{packages/plugin-sdk/src/atomization-planning.ts}} & \texttt{\seqsplit{node --strip-types scripts/validate-agr-benchmark.ts}} (legacy script name for the virtual-atom admission pack; 12-scenario suite) \\
-§3.5 Augmented Decision Rule (read / write set) & \texttt{\seqsplit{packages/core/src/broker/decision.ts}} (\texttt{\seqsplit{calculateBrokerDecision}}) & benchmark scenario \texttt{\seqsplit{07-registry-read-write-dependency}} \\
-§3.5 Definition of CAS base-hash guarded apply & \texttt{\seqsplit{packages/core/src/broker/cas.ts}} & \texttt{\seqsplit{npm test -- broker/cas}} \\
-§3.6 format adapters and Proposition 3 & \texttt{\seqsplit{packages/core/src/broker/adapters/}} (\texttt{\seqsplit{json-record.ts}}, \texttt{\seqsplit{text-range.ts}}, \texttt{\seqsplit{numeric-scalar.ts}}, \texttt{\seqsplit{atom-map.ts}}, \texttt{\seqsplit{fallback-file-lock.ts}}, \texttt{\seqsplit{registry.ts}}, \texttt{\seqsplit{batch-planner.ts}}) & \texttt{\seqsplit{npm test -- broker/adapters/\_\_tests\_\_/self-hosting-adapter-benchmark}} \\
-Steward arbitration and fail-closed apply routing & \texttt{\seqsplit{packages/core/src/broker/steward.ts}} & \texttt{\seqsplit{npm test -- broker/steward}} \\
-§4.1 12-scenario fixture suite & \texttt{\seqsplit{scripts/fixtures/agr-benchmark/}}, \texttt{\seqsplit{scripts/validate-agr-benchmark.ts}}, \texttt{\seqsplit{scripts/lib/agr-benchmark-runner.ts}} (legacy \texttt{\seqsplit{agr-*}} names) & \texttt{\seqsplit{node --strip-types scripts/validate-agr-benchmark.ts}} \\
-§5.1 ATM-AdmissionBench v0.1 baseline and v0.2 profile & \texttt{\seqsplit{docs/bench/ATM-AdmissionBench-CONTRACT.md}}, \texttt{\seqsplit{scripts/run-atm-admission-bench.ts}}, \texttt{\seqsplit{scripts/render-atm-admission-report.ts}}, \texttt{\seqsplit{scripts/lib/admission-bench/runner.ts}}, \texttt{\seqsplit{scripts/fixtures/atm-admission-bench/manifest.json}} & \texttt{\seqsplit{npm run bench:admission:smoke -- --seed 20260625}}; \texttt{\seqsplit{npm run bench:admission:export-blind -- --seed 20260625}}; \texttt{\seqsplit{npm run bench:admission:paper -- --seed 20260625}}; \texttt{\seqsplit{npm run bench:admission:report -- --seed 20260625}} \\
-§5.2 AdmissionBench audit & \texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}}, \texttt{\seqsplit{artifacts/audit/audit-findings.json}}, \texttt{\seqsplit{artifacts/blind-bench/20260625/}} & read-only replay hash match; audit status \texttt{\seqsplit{pass-with-caveats}} \\
-§5 OperationalBench runtime overhead and recovery routing & \texttt{\seqsplit{docs/bench/ATM-OperationalBench-CONTRACT.md}}, \texttt{\seqsplit{scripts/run-atm-operational-bench.ts}}, \texttt{\seqsplit{scripts/validate-operational-bench.ts}}, \texttt{\seqsplit{scripts/lib/operational-bench/runner.ts}}, \texttt{\seqsplit{scripts/lib/operational-bench/scenarios.ts}} & \texttt{\seqsplit{npm run bench:operational:paper -- --seed 20260627}}; \texttt{\seqsplit{npm run bench:operational:extended -- --seed 20260627 --out artifacts/generated/atm-operational-bench/20260627-extended}}; \texttt{\seqsplit{npm run bench:operational:paper -- --seed 20260628 --out artifacts/generated/atm-operational-bench/20260628}}; \texttt{\seqsplit{npm run bench:operational:paper -- --seed 20260629 --out artifacts/generated/atm-operational-bench/20260629}}; \texttt{\seqsplit{npm run validate:operational-bench}} \\
-Framework mainline broker evidence capture and repo-local evidence-path parameterization & Paper-evidence fast-path bundle \texttt{\seqsplit{191fd310166054d3fa526b6961351716bb2d489e}}; git-head backfill commit for this evidence freeze \texttt{\seqsplit{f57dbfe0bdfdf9f939e35400ec346501f4ccb2f3}} & Inspect the framework commits and replay broker evidence capture using the repo-local evidence path configured for the current repository \\
-Phase A FastAPI public-source snapshot governance case & \texttt{\seqsplit{artifacts/external-public-repo/fastapi/2026-06-27/summary.json}}, \texttt{\seqsplit{paper-safe-summary.md}}, \texttt{\seqsplit{commands.log}}; touched paths \texttt{\seqsplit{local/public-source-snapshots/fastapi-0.136.3/fastapi/\_\_init\_\_.py}} and \texttt{\seqsplit{app/main.py}} & Read \texttt{\seqsplit{summary.json}} and \texttt{\seqsplit{commands.log}}; verify upstream snapshot head \texttt{\seqsplit{82064857539e6286522c347b4b11331b48dd2378}}, host head \texttt{\seqsplit{738b9883880742cd36b64f1f81ce6a638f073135}}, and replay evidence. Boundary: do not treat this as upstream maintainer workflow governance or clean post-change snapshot-helper execution evidence \\
-Phase B Structured Artifact Admission Track & \texttt{\seqsplit{artifacts/generated/structured-artifact-admission/20260627-phase-b/summary.json}}, \texttt{\seqsplit{paper-safe-summary.md}}, \texttt{\seqsplit{results.jsonl}}, \texttt{\seqsplit{docs/reports/structured-artifact-admission-track-2026-06-27.md}} & Verify \texttt{\seqsplit{matchedCount = 15}}, \texttt{\seqsplit{shipSafe = true}}, and decision distribution of 5 \texttt{\seqsplit{parallel-safe}}, 5 \texttt{\seqsplit{blocked-cid-conflict}}, and 5 \texttt{\seqsplit{serial}} outcomes across JSON, YAML, TOML, OpenAPI, and atom-map shard families \\
-Phase C dual-live external public-source conflict demonstration & Host-side broker-run envelope \texttt{\seqsplit{.atm/history/evidence/broker-runs/6ea4e411-fa2b-426b-9c71-55bbdbeaa888.json}} & Verify run id \texttt{\seqsplit{6ea4e411-fa2b-426b-9c71-55bbdbeaa888}}, plan id \texttt{\seqsplit{batch-5c1fd53c988116ce}}, actors \texttt{\seqsplit{cursor-composer-2.5}} and \texttt{\seqsplit{antigravity-gemini-3.5-flash}}, target \texttt{\seqsplit{local/public-source-snapshots/fastapi-0.136.3/fastapi/\_\_init\_\_.py}}, and outcomes \texttt{\seqsplit{applied / mergeable}} versus \texttt{\seqsplit{queued / conflict}} \\
-Cross-agent review signatures as Evidence-closure prototype evidence & \texttt{\seqsplit{artifacts/generated/cross-agent-review-signature/20260628/}}; commit \texttt{\seqsplit{c589f125049ad81adc146f1b78e6a5ee36b8f607}} & Inspect the generated review-signature artifacts and verify that they record reviewer identity, model/source metadata, reviewed diff hash, rubric or verdict fields, and closure-evidence linkage. Boundary: this is prototype evidence for review-signature capture, not a proof of semantic correctness and not a completed quorum-review evaluation. \\
-Reviewer-facing verification commands were recorded for the evidence freeze & \texttt{\seqsplit{artifacts/verification/last-verified.json}}; commit \texttt{\seqsplit{7a88af7d3db0be6d7e1b4c59f46706eabc5808a2}} & Inspect \texttt{\seqsplit{last-verified.json}} and confirm that the recorded reviewer-facing verification commands completed successfully. Boundary: this is reproducibility support for selected commands, not a comprehensive proof that every repository path or every deployment topology has been verified. \\
-Selected adversarial adapter-boundary cases are contained by fail-closed or replay-oriented recovery paths & \texttt{\seqsplit{artifacts/adversarial-adapter-containment/20260628/summary.json}}, \texttt{\seqsplit{results.jsonl}}, \texttt{\seqsplit{paper-safe-summary.md}}, and \texttt{\seqsplit{artifact-hash-manifest.sha256}}; commit \texttt{\seqsplit{7a88af7d3db0be6d7e1b4c59f46706eabc5808a2}} & Verify the five deterministic local cases and confirm that malformed scope declarations, conservative shared-surface blocking, validator-backed dependency detection, and CAS-mismatch recovery remain within fail-closed or replay-oriented recovery boundaries. Boundary: this is containment evidence for selected cases, not adversarial adapter soundness or completeness. \\
-§4.4 POS2 keystone case & \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/}} (3KLife repo) & read \texttt{\seqsplit{README.md}} and the eight artifacts; baseCommit \texttt{\seqsplit{51dd72a70c835cad57786607fe7ad733655286d0}}, merge plan \texttt{\seqsplit{merge-255c73707a528edc}} \\
-§4.4 close-orchestration field case & \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md}} (3KLife repo) & corresponding lane records \\
-§4.4 B-12 apply-phase enforcement & active-intent registry snapshot plus team-run records & active-intent registry trace \\
-§4.5 Wave Mode replay 5 of 5 & \texttt{\seqsplit{scripts/validate-team-wave-mode.ts}}, \texttt{\seqsplit{docs/reports/team-wave-mode-validation.md}} & \texttt{\seqsplit{node --strip-types scripts/validate-team-wave-mode.ts}} \\
-§6.4.3 Topology C pre-push admission bridge & \texttt{\seqsplit{packages/cli/src/commands/git/}} (including \texttt{\seqsplit{atm git admit}}), pre-push hook installer & \texttt{\seqsplit{atm git admit --dry-run}} (any branch against \texttt{\seqsplit{origin/main}}) \\
+Core broker and admission path & Broker decision logic, seven-layer gate, ConflictKey behavior, CAS base-hash guarded apply, steward routing & \texttt{\seqsplit{npm test -- broker/decision}}; \texttt{\seqsplit{npm test -- broker/cas}}; \texttt{\seqsplit{npm test -- broker/steward}}; adapter benchmark commands listed in the repository \\
+Atom identity and adapter support & Atom-to-CID validation, TypeScript/Python reference paths, format adapters, virtual-atom refinement path & \texttt{\seqsplit{node --strip-types scripts/validate-atom-id-to-cid.ts}}; \texttt{\seqsplit{node --strip-types scripts/validate-agr-benchmark.ts}}; adapter self-hosting benchmark \\
+AdmissionBench result chain & v0.1 baseline, blind export, v0.2 paper profile, report rendering, and audit replay & \texttt{\seqsplit{npm run bench:admission:smoke -- --seed 20260625}}; \texttt{\seqsplit{npm run bench:admission:paper -- --seed 20260625}}; \texttt{\seqsplit{npm run bench:admission:report -- --seed 20260625}} \\
+OperationalBench result chain & Official runtime-overhead run, N=50 extended run, multi-seed stability, and validation of operational artifacts & \texttt{\seqsplit{npm run bench:operational:paper -- --seed 20260627}}; extended and multi-seed commands listed in supplementary verification notes \\
+Public-source and structured-artifact tracks & FastAPI public-source snapshot governance, structured non-code artifact admission, and dual-live public-source conflict evidence & Phase A/B/C artifact roots and paper-safe summaries listed in Table A.1 and the supplementary artifact index \\
+Evidence-closure and adapter-trust prototypes & Cross-agent review-signature evidence, reviewer-facing last-verified manifest, and adversarial adapter containment package & \texttt{\seqsplit{artifacts/generated/cross-agent-review-signature/20260628/}}; \texttt{\seqsplit{artifacts/verification/last-verified.json}}; \texttt{\seqsplit{artifacts/adversarial-adapter-containment/20260628/}} \\
+Field and adoption evidence & POS2, B-12, BLOCK, close-orchestration, npc-brain cohort, self-hosting forensics, Wave Mode, and CID stability & De-identified supplementary packets and paper-safe summaries; raw private ledgers available on request subject to Appendix A access rules \\
+Topology C pre-push bridge & Local pre-push admission bridge, dry-run path, push-fail fallback, and Git-to-broker \texttt{\seqsplit{MutationRequest}} construction & \texttt{\seqsplit{atm git admit --dry-run}}; Topology C plan document and archived bridge artifacts \\
 \bottomrule
 \end{longtable}
 \endgroup
+
+The compact verification map is intended as a navigation layer. Detailed source paths, per-command outputs, artifact hashes, and row-level verification records are maintained in the repository and supplementary verification map rather than repeated in the paper body.
 
 \subsubsection*{A.4.2 Topology C MVP Mechanics and Implementation Stages}
 
@@ -1894,11 +1759,13 @@ This behavior mirrors Git's conservative non-fast-forward boundary while adding 
 
 \subsubsection*{A.4.3 Topology C Implementation Stages (Completed on 2026-06-26)}
 
-\textbf{Table A.4 --- Topology C Implementation Stages.}
+\textbf{Table A.3 --- Topology C Implementation Stages.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
 Stage & Internal work package & Purpose \\
@@ -1914,11 +1781,13 @@ Stage & Internal work package & Purpose \\
 
 \subsubsection*{A.4.4 Artifact Manifest Snapshot}
 
-\textbf{Table A.4a --- Public Artifact Manifest Snapshot.}
+\textbf{Table A.4 --- Public Artifact Manifest Snapshot.}
 
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}@{}}
 \toprule
 Artifact & Commit or hash anchor & Role & Access status \\
@@ -1970,6 +1839,8 @@ The table below condenses the incident evidence of \texttt{\seqsplit{TASK-CID-00
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.29\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \toprule
 Incident cluster & Mechanism exercised & Outcome and interpretation \\
@@ -2025,6 +1896,8 @@ This manuscript separates reproducibility citation points into source, benchmark
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
+\arrayrulecolor{black!55}
+\rowcolors{2}{gray!8}{white}
 \begin{longtable}{@{}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}L{0.21\textwidth}@{}}
 \toprule
 Anchor category & Identifier & Status & Use \\
@@ -2045,18 +1918,25 @@ Manuscript itself & arXiv submission (pending) & \textbf{pending arXiv id} & Cit
 
 \subsection{C.3 Supplementary Data Release Contents}
 
-The supplementary data archive is source-aligned with \texttt{\seqsplit{v0.9.0-alpha.1}} but uses the later AdmissionBench and OperationalBench evidence-landing commits for benchmark artifacts. It contains eight categories of material. Categories 1--4 are publicly reproducible mechanism and benchmark evidence; categories 5--8 are field and methodology evidence released in de-identified form.
+The supplementary archive is organized into four groups.
 
 \begin{enumerate}
-\item \textbf{12-scenario fixture design matrix.} Complete expected verdicts, exercised mechanisms, and input intent shapes for all 12 scenarios, together with the archived deterministic-runner output of B-02, B-08, and B-13.
-\item \textbf{Deterministic runner replay bundle.} Replayable on the \texttt{\seqsplit{v0.9.0-alpha.1}} snapshot through \texttt{\seqsplit{npm run bench:multi-vendor-broker}} or an equivalent command for B-02, B-08, and B-13; includes the expected-versus-actual verdict diff.
-\item \textbf{ATM-AdmissionBench baseline and paper-profile artifacts.} Two traceable layers are released together. The first is the \textbf{v0.1 baseline smoke artifacts}: the frozen generator commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}, \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625/}}, \texttt{\seqsplit{artifacts/blind-bench/20260625/}}, \texttt{\seqsplit{docs/reviews/ATM-AdmissionBench-audit.md}}, and \texttt{\seqsplit{artifacts/audit/audit-findings.json}}; covering 20 scenarios, 42 comparisons, 0 expectation failures, 0 false-safe regressions, a 92.31\% unsafe-caught rate, and the pass-with-caveats audit conclusion. The second is the \textbf{v0.2 paper-profile artifacts}: \texttt{\seqsplit{artifacts/generated/atm-admission-bench/20260625-paper/}} under ATM public repository \texttt{\seqsplit{main}} commit \texttt{\seqsplit{ab8753b7daf0a3c4cd8b4483fe24d519ff2590bd}}, containing \texttt{\seqsplit{summary.json}}, \texttt{\seqsplit{paper-tables.md}}, \texttt{\seqsplit{main-results.md}}, \texttt{\seqsplit{results.jsonl}}, \texttt{\seqsplit{generator-manifest.json}}, and \texttt{\seqsplit{artifact-hash-manifest.sha256}}; both \texttt{\seqsplit{baseCommit}} and \texttt{\seqsplit{generatorCommit}} recorded in the manifest are \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}}, so that reviewers can verify item by item the scenario count, mode comparisons, policy, ablation, and enforcement row counts, route-label F1, intent preservation, and the aggregated numbers cited in the paper tables.
-\item \textbf{ATM-OperationalBench official and supplementary artifacts.} The paper-facing operational profile is the official 2026-06-27 run (\texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627/}}), and the supplementary evidence consists of the extended 2026-06-27 \texttt{\seqsplit{N=50}} run (\texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627-extended/}}) plus \texttt{\seqsplit{artifacts/generated/atm-operational-bench/multi-seed-stability-20260627-20260629.md}} and \texttt{\seqsplit{.json}}, all under ATM public repository \texttt{\seqsplit{main}} commit \texttt{\seqsplit{c0250009a53b28e887344e71ea675637c97290b0}}. Together these artifacts expose ATM-local operational overhead, the \texttt{\seqsplit{N=50}} higher-contention tail, and the multi-seed stability of the route and recovery structure. They are cited only as operational transparency and recovery-routing evidence, not as an external comparative benchmark.
-\item \textbf{POS2 evidence chain replay.} Public versions of \texttt{\seqsplit{bench-paper-hotfile-pos2-\{a,b\}-intent.json}}, together with the admission verdict log corresponding to composer plan id \texttt{\seqsplit{merge-255c73707a528edc}}, and the validator command transcript (\texttt{\seqsplit{git diff --check}}, \texttt{\seqsplit{npm run typecheck}}, \texttt{\seqsplit{npm run validate:cli}}).
-\item \textbf{Self-hosting incident summary (de-identified).} The incident envelopes for the three event categories summarized in §4.2 and Appendix A.5 (\texttt{\seqsplit{cid-shared}}, \texttt{\seqsplit{out-of-scope}}, \texttt{\seqsplit{plan-mirror-sync}}), with internal task IDs and personal names removed; verdict, mechanism, and closure path are retained.
-\item \textbf{Multi-vendor self-hosting window summary and adopter cohort summary.} Commit-author histogram and time-series summary for the same window of cross-vendor agent writes referenced in §4.5 (ATM 1,372 commits; 3KLife 320 commits across 15 channels), together with aggregated counts for the 37-card npc-brain cohort of §4.3 Table 15. Commit-message content, task-card content, and adopter-internal project information are not included.
-\item \textbf{Role-separated methodology replay package.} With the wrong-scope stripped commit \texttt{\seqsplit{2088a791c45da8fda37d4258adfe393a21e689e9}} and the correct-scope payload-bearing commit \texttt{\seqsplit{3eec69a73a04112e2af8d3630c32138c37143eab}} as canonical anchors, together with the replay manifest, the coordinator classification memo, and a wrong-scope versus correct-scope comparison summary. The package supports the methodology-level governance classification and the two-role independence narrative, rather than forming part of the ATM benchmark main result.
+\item \textbf{Benchmark artifacts.} AdmissionBench v0.1/v0.2 and OperationalBench official, extended, and multi-seed artifacts, including summaries, JSONL result files, paper tables, manifests, and hash manifests.
 \end{enumerate}
+
+\begin{enumerate}
+\item \textbf{Mechanism replay artifacts.} Deterministic fixture design, archived runner outputs, broker decision traces, structured-artifact admission results, and selected public-source snapshot governance evidence.
+\end{enumerate}
+
+\begin{enumerate}
+\item \textbf{Field, adoption, and self-hosting evidence.} De-identified POS2/B-12/BLOCK packets, close-orchestration evidence, npc-brain cohort summaries, self-hosting incident summaries, Wave Mode replay, and CID stability evidence.
+\end{enumerate}
+
+\begin{enumerate}
+\item \textbf{Methodology and prototype evidence.} Role-separated audit materials, cross-agent review-signature prototype artifacts, reviewer-facing last-verified manifest, and adversarial-adapter-containment package.
+\end{enumerate}
+
+The supplementary archive does not redistribute private task ledgers, personal names, vendor account identifiers, adopter-internal project details, or raw commercial project material. Where raw evidence cannot be released publicly, the archive provides paper-safe summaries, de-identified traces, or access-on-request instructions.
 
 \subsection{C.4 Access Conditions}
 
