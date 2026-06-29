@@ -21,6 +21,8 @@ ATM 目前已經覆蓋一批重要基礎：
 
 但這些還不是完整測試系統。它們能降低 AI 修改風險，尤其適合小而明確的 atom；可是對副作用、consumer 語意、狀態競態、外部依賴、效能退化等問題，仍需要專門 test runner 或 host project 自己提供 fixture。
 
+2026-06-29 補充：`TASK-AAO-0048` 與 `TASK-AAO-0049` 已把 TestRunnerPlugin 與 default atom health gates 推進到可用基礎，但後續不能讓 `validators`、`atm test`、語言 adapter static checks 各自形成平行路線。下一步應建立統一 `test catalog` 作為測試選擇單一來源，將測試能力分成 `validators` 與 `integration-tests`，兩者都使用 `quick / standard / full` 量級，由任務卡、修改範圍、語言 adapter、project plugin 與 evidence freshness 決定要跑哪一組。
+
 ## Eval Loop Direction
 
 Evaluation and Optimization Loops 對 ATM 有明確幫助，但正確定位不是把 ATM 變成完整的 LLMOps、prompt optimizer 或模型評估平台。
@@ -48,6 +50,8 @@ ATM 應該吸收的是「可重放、可比較、可留下 evidence 的評估迴
 |---|---|---|---|---|
 | Governance route / scope | `atm next`、lock、scope evidence、closure authority | 編輯器或人工繞過 ATM 時仍可能直接改檔 | editor hook、pre-commit、CI required validator | Existing AAO governance tasks |
 | Atomic spec structure | atomic spec schema、task/evidence schema、validator profile | 目前較偏結構欄位，不等於完整 payload 語意 schema | payload schema contract validator | Future AAO |
+| Test selection governance | `validators`、`atm test`、language adapter static checks 都已有局部入口 | 缺少單一 catalog 管理 capability、family、tier、scope、dedupe key，導致 standard/full 容易累積成上百支重覆測試 | unified test catalog + task-scoped selector + dedupe/performance report | New AAO after `TASK-AAO-0048`/`TASK-AAO-0049` |
+| Language static checks | JS/TS、Python、C# adapter 可宣告 fast/default/all static check | 尚未納入統一測試選擇；最後關頭可能被 typecheck/lint 擋下，且容易與前面局部檢查重跑 | map fast/default/all static checks to validator quick/standard/full with evidence freshness | New AAO after test catalog |
 | Delegated validation commands | `execution.validation.commands` 可執行 host validator | 沒有正式 `TestRunnerPlugin` 介面，host test 整合不夠標準化 | `TestRunnerPlugin` SDK + plugin report schema | TASK-AAO-0048 |
 | Map equivalence | legacy/map fixture 可比對輸出等價 | fixture 不完整時仍會漏；副作用不一定被比較 | equivalence coverage scorer + side-effect fixture | TASK-AAO-0049 / Future AAO |
 | Edge contracts | 有 edge contract 入口與 map 測試參數 | 邊界案例需要人工維護，缺少覆蓋率衡量 | edge fixture coverage validator、boundary/property tests | Future AAO |
@@ -81,6 +85,29 @@ ATM 應該吸收的是「可重放、可比較、可留下 evidence 的評估迴
 
 建議作法是「預設可用，但依 atom 類型與 policy 啟用」，不要第一天就強制所有 atom 都跑。
 
+### Phase 2.5 — Unify Test Selection Catalog
+
+在 `TASK-AAO-0048` 與 `TASK-AAO-0049` 之後，先補一個測試治理銜接層，避免 validator catalog、integration test runner、語言 adapter static checks 變成三套路線。
+
+此階段目標不是新增更多 profile，而是建立單一 `test catalog`，讓 ATM 能依任務卡與修改範圍選出必要測試：
+
+- `capability=validator`：schema、contract、governance、language-static、release trust、adapter parity 等檢查。
+- `capability=integration-test`：atom/spec runtime、map integration、propagation、edge contract、frontend/domain、host plugin tests。
+- `tier=quick/standard/full`：ATM 對外唯一量級語言；語言 adapter 內部的 `fast/default/allStaticCheck` 對映到這三個 tier。
+- `scope=task-local/global-advisory/release-blocking/diagnostic`：收編現有 taxonomy，不再在 `validate.ts` 另維護硬編 gate 清單。
+- `dedupeKeys`：避免同一語言 static check、同一 adapter parity、同一 integration fixture 在 closeout 前被重覆執行。
+- `costBudgetMs` 與 performance report：慢項輸出 `optimizationCandidates` 與 backlog hint，預設不阻擋，除非 entry 明確標為 blocking performance gate。
+
+Candidate task seeds:
+
+| Candidate task seed | Depends | Goal | Target surface |
+|---|---|---|---|
+| Unified test catalog and selector | `TASK-AAO-0048`, `TASK-AAO-0049` | 建立 catalog entry schema，統一管理 `key/family/capability/tier/scope/dedupeKeys/costBudgetMs`，讓 validators 與 integration-tests 從同一資料源選取 | `scripts/test-catalog.config.json`、`scripts/lib/test-catalog.ts`、`scripts/run-validators.ts` |
+| Task testPlan contract | Unified test catalog and selector | 在 task card / ledger 中保留 `testPlan.validators` 與 `testPlan.integrationTests`，並向後相容既有 `validators` 欄位 | `packages/cli/src/commands/tasks.ts`、`packages/cli/src/commands/next.ts`、task card templates |
+| Language static catalog bridge | Unified test catalog and selector | 將 JS/TS、Python、C# adapter 的 `fast/default/allStaticCheck` 投影成 `language-static` validator entries，支援缺工具時回報 diagnostic/not_applicable | language adapter packages、`packages/cli/src/commands/validate.ts`、`scripts/validate-language-static-check-contract.ts` |
+| Evidence-driven test execution | Task testPlan contract | 讓 `evidence run --capability validator|integration-test --tier quick|standard|full` 與 `taskflow close --auto-evidence` 使用同一 selector，避免 closeout 階段臨時猜 validator | `packages/cli/src/commands/evidence.ts`、`packages/cli/src/commands/taskflow.ts` |
+| Test performance and duplicate detector | Unified test catalog and selector | 每次 catalog-based run 輸出 slowestEntries、budgetViolations、familyHotspots、duplicateDedupeKeys、optimizationCandidates | `scripts/run-validators.ts`、`packages/core/src/manager/test-runner.ts`、governance backlog |
+
 ### Phase 3 — Improve Coverage Intelligence
 
 後續再補覆蓋率與高階行為測試：
@@ -88,7 +115,7 @@ ATM 應該吸收的是「可重放、可比較、可留下 evidence 的評估迴
 - equivalence fixture coverage scorer
 - edge fixture coverage scorer
 - property-based boundary tests
-- performance budget validator
+- catalog-based performance budget validator
 - concurrency / idempotency scenario runner
 - known divergence aging gate
 
