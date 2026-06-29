@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-06-29T11-10-30-324Z-close-4bfe66636813",
+  "taskId": "TASK-AAO-0035",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0035-command-surface-consolidation-help-examples.task.md",
+  "taskSha256": "sha256:90f460f904b9d087480a7bdd02368e3d149621eebff011c4a5adc569050ee950",
+  "createdAt": "2026-06-29T11:10:30.324Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0035 --actor codex-gpt-5.4-mini"
+}

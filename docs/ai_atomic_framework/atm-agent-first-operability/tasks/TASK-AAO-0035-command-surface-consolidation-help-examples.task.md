@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0035
 task_id: TASK-AAO-0035
 title: "Command surface consolidation 與 help examples"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M11
@@ -52,6 +52,15 @@ nonGoals:
   - "不在本卡完成整個 AAO 計畫"
   - "不建立第二套 task lifecycle"
   - "不繞過 ATM evidence gate"
+completed_at: "2026-06-29T11:10:30.324Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-06-29T11:10:30.324Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-06-29T11-10-30-324Z-close-4bfe66636813"
+lastTransitionAt: "2026-06-29T11:10:30.324Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "1a2d170709a56760bf1b7da6a7e5238ae45d23c7"
 ---
 # TASK-AAO-0035 — Command surface consolidation 與 help examples
 
