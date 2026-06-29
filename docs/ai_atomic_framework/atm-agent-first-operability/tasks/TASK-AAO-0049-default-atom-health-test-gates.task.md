@@ -2,7 +2,7 @@
 doc_id: doc_task_aao_0049
 task_id: TASK-AAO-0049
 title: "Default atom health test gates"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M17
@@ -29,10 +29,15 @@ scopePaths:
   - atomic_workbench/atomization-coverage/path-to-atom-map.json
   - docs/ADAPTER_GUIDE.md
 deliverables:
-  - "A default atom health check catalog covering input immutability, side effects, and consumer contract fixtures."
-  - "Fixture format and runner support for positive and negative examples."
-  - "Report schema fields that identify which health gates ran, skipped, failed, or were not applicable."
-  - "Documentation explaining when each gate should be enabled."
+  - packages/core/src/manager/test-runner.ts
+  - packages/core/src/test-runner/**
+  - packages/cli/src/commands/test.ts
+  - packages/cli/src/commands/command-specs/test.spec.ts
+  - schemas/test-report.schema.json
+  - tests/**
+  - scripts/validate-test-runner.ts
+  - scripts/validate-schemas.ts
+  - docs/ADAPTER_GUIDE.md
 validators:
   - npm run typecheck
   - npm run validate:test-runner
@@ -56,6 +61,15 @@ outOfScope:
 nonGoals:
   - "Treating schema equality as complete proof of semantic correctness."
   - "Blocking adoption in repositories that have not yet authored fixtures."
+completed_at: "2026-06-29T12:05:06.767Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-06-29T12:05:06.767Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-06-29T12-05-06-767Z-close-0e157b2e788d"
+lastTransitionAt: "2026-06-29T12:05:06.767Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3a60f13e5c9d3e906243290033f8fa844fb292ae"
 ---
 
 # TASK-AAO-0049 — Default atom health test gates

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-06-29T12-05-06-767Z-close-0e157b2e788d",
+  "taskId": "TASK-AAO-0049",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0049-default-atom-health-test-gates.task.md",
+  "taskSha256": "sha256:503fc309e5b2e9cf4e0f61fb8e45b92c85933e75097bf450a2858480548a3e84",
+  "createdAt": "2026-06-29T12:05:06.767Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0049 --actor codex-gpt-5.4-mini"
+}
