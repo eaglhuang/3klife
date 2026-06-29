@@ -1,7 +1,7 @@
 # 採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架
 ## Adapter-Guided Atomization: A Concurrency Governance Framework for Multi-Agent LLM Code Synthesis
 
-**作者：** Eaglhuang
+**作者：** Eagl Huang
 **Affiliation:** Independent Research
 **Date:** 2026-06-22
 **Status:** Draft v2 (restructured outline, 12–14 pages target)

@@ -1,7 +1,7 @@
 # ATM: Adapter-Guided Atomization and CID-Brokered Admission for Single-Domain Multi-Vendor LLM Code Co-Synthesis
 ### A Specification-Grounded Governance Substrate for Software Agents
 
-Eaglhuang  
+Eagl Huang  
 eaglhuang@gmail.com  
 
 ## Abstract
@@ -38,7 +38,7 @@ More precisely, ATM narrows conflict granularity through a sequence of represent
 
 ### Contributions
 
-This paper does not propose another general-purpose multi-agent orchestrator. It reframes governed shared writes within a single authority domain as a formalizable, computable, and auditable pre-write admission problem. We make three contributions. The evaluation artifacts, adopter study, self-hosting forensics, and limitations are presented in Sections 4-6 as supporting evidence rather than as additional contributions.
+This paper does not propose another general-purpose multi-agent orchestrator. It reframes governed shared writes within a single authority domain as a formalizable, computable, and auditable pre-write admission problem. We make three contributions. The evaluation artifacts, adopter study, self-hosting forensics, and limitations are presented in Sections 4–6 as supporting evidence rather than as additional contributions.
 
 **Seven-layer pre-write admission with virtual-atom fallback.**
    We propose a seven-layer hard admission gate that evaluates multi-agent write intents through CID identity, shared-surface overlap, read/write dependencies, file-range and virtual-atom refinement, `ConflictKey + canMerge`, CAS base-hash validation, and a fallback file lock. Its purpose is not to repair merge conflicts after changes have already been produced. Instead, before any governed shared mutation is applied, the gate determines whether an intent may proceed in parallel, should be routed to deterministic composition, must be serialized, or must take a fail-closed path.
@@ -1222,7 +1222,7 @@ This appendix lists the recommended entry points for paper-citable evidence. The
 | OperationalBench official + supplementary runs | Runtime transparency for admission overhead, recovery routing, $N = 50$ contention, and multi-seed stability | `main@c0250009a53b28e887344e71ea675637c97290b0` -> `artifacts/generated/atm-operational-bench/20260627/`, `20260627-extended/`, and `multi-seed-stability-20260627-20260629.{md,json}` | Public ATM repository and supplementary release |
 | Public-source and structured-artifact evidence | Framework-mainline support, FastAPI public-source snapshot governance, structured artifact admission, and dual-live public-source conflict demonstration | Framework evidence freeze `main@f57dbfe0bdfdf9f939e35400ec346501f4ccb2f3`; Phase A/B/C artifact roots listed in supplementary artifact index | Public or paper-safe supplementary artifacts, depending on host-repository content |
 | Field-collision evidence | POS2 same-file admission, B-12 apply-phase enforcement, BLOCK fail-closed split suggestion, and close-orchestration evidence | `docs/ai_atomic_framework/broker-collision-evidence/` and de-identified supplementary packets | Mixed: public summaries and private source packets on request |
-| Adoption and self-hosting evidence | npc-brain adopter recoverability, self-hosting forensics, Wave Mode replay, CID stability, and governance incident summaries | Sections 4.2-4.6, Appendix A.5, and supplementary de-identified evidence packets | Mixed: public summaries, de-identified supplementary release, private ledgers on request |
+| Adoption and self-hosting evidence | npc-brain adopter recoverability, self-hosting forensics, Wave Mode replay, CID stability, and governance incident summaries | Sections 4.2–4.6, Appendix A.5, and supplementary de-identified evidence packets | Mixed: public summaries, de-identified supplementary release, private ledgers on request |
 | Evidence-closure and adapter-trust prototypes | Cross-agent review signatures, reviewer-facing verification manifest, and selected adversarial-adapter-containment evidence | `artifacts/generated/cross-agent-review-signature/20260628/`; `artifacts/verification/last-verified.json`; `artifacts/adversarial-adapter-containment/20260628/` | Public ATM repository |
 
 The full artifact-level index, including individual `summary.json`, `results.jsonl`, command logs, and hash manifests, is provided in the supplementary artifact index. The body and Appendix A retain only the anchors needed to cite the paper's claims.

@@ -2,7 +2,7 @@
 
 ## Adapter-Guided Atomization: A Pre-Write Admission Framework for Multi-Agent LLM Code Synthesis
 
-**作者:** Eaglhuang  
+**作者:** Eagl Huang  
 **隸屬:** Independent Research  
 **日期:** 2026-06-22  
 **狀態:** Draft v3（繁體中文重寫版，依最終版 outline 收斂）  
@@ -340,4 +340,3 @@ CID schema migration 可採三條路徑。第一，flag-day migration：在 repo
 ## Revision Notes for v3
 
 此版本依附件建議重排全文，將主論點集中為「ATM 補上 multi-agent software engineering pipeline 中缺失的 admission layer」。相較 `paper.md`，本版刪減 implementation chronology、task ID 流水帳與過細 artifact 細節，並將 POS2、B-12、BLOCK、close-orchestration 與 refinement-loop 重新定位為 field evidence stack。本次引用補完以 arXiv、OpenReview、ACM Digital Library、Springer/HAL 等主來源 metadata 對齊。
-

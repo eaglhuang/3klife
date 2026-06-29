@@ -4,7 +4,7 @@
 ## ATM: Adapter-Guided Atomization and CID-Brokered Admission for Single-Domain Multi-Vendor LLM Code Co-Synthesis
 ### A Specification-Grounded Governance Substrate for Software Agents
 
-作者: Eaglhuang
+作者: Eagl Huang
 Email: eaglhuang@gmail.com
 日期: 2026-06-26
 狀態: Draft v3.1 expanded baseline（arXiv full-paper track；single-domain boundary / progressive atomization / POS2 / B-12 evidence / expanded related work）
