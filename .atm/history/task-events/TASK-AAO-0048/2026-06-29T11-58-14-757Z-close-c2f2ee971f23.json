@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-06-29T11-58-14-757Z-close-c2f2ee971f23",
+  "taskId": "TASK-AAO-0048",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0048-test-runner-plugin-interface.task.md",
+  "taskSha256": "sha256:998fcd1252a29c147d362449484e9c209e3892859f09c1197a4b04e41e223d3b",
+  "createdAt": "2026-06-29T11:58:14.757Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0048 --actor codex-gpt-5.4-mini"
+}

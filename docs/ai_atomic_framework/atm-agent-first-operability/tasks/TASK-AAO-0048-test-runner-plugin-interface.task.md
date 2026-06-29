@@ -2,7 +2,7 @@
 doc_id: doc_task_aao_0048
 task_id: TASK-AAO-0048
 title: "TestRunnerPlugin interface for atom health"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M17
@@ -29,11 +29,15 @@ scopePaths:
   - scripts/validate-plugin-sdk.ts
   - atomic_workbench/atomization-coverage/path-to-atom-map.json
 deliverables:
-  - "A public TestRunnerPlugin interface or equivalent plugin contract in the ATM plugin SDK."
-  - "A backward-compatible bridge from existing validation.commands to the plugin test runner model."
-  - "CLI and report schema support for plugin-produced atom health evidence."
-  - "A minimal example plugin proving host projects can add their own unit, integration, golden, or domain tests."
-  - "Documentation explaining how adopter repositories extend atom health checks without forking ATM core."
+  - packages/plugin-sdk/src/index.ts
+  - packages/plugin-sdk/src/test-runner.ts
+  - packages/core/src/manager/test-runner.ts
+  - packages/cli/src/commands/test.ts
+  - packages/cli/src/commands/command-specs/test.spec.ts
+  - schemas/test-report.schema.json
+  - docs/ADAPTER_GUIDE.md
+  - scripts/validate-test-runner.ts
+  - scripts/validate-plugin-sdk.ts
 validators:
   - npm run typecheck
   - npm run validate:plugin-sdk
@@ -57,6 +61,15 @@ outOfScope:
 nonGoals:
   - "Force every adopter to implement a custom plugin."
   - "Make all atoms run the same test set regardless of atom type."
+completed_at: "2026-06-29T11:58:14.757Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-06-29T11:58:14.757Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-06-29T11-58-14-757Z-close-c2f2ee971f23"
+lastTransitionAt: "2026-06-29T11:58:14.757Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3a60f13e5c9d3e906243290033f8fa844fb292ae"
 ---
 
 # TASK-AAO-0048 — TestRunnerPlugin interface for atom health
