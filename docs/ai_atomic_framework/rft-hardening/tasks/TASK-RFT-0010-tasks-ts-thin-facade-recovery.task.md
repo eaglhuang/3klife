@@ -2,7 +2,9 @@
 doc_id: doc_rft_0010
 task_id: TASK-RFT-0010
 title: "tasks.ts thin-facade recovery"
-status: planned
+status: in-progress
+started_at: "2026-07-01T00:00:00+08:00"
+started_by_agent: ClaudeCode_Opus4.7
 owner: atm-core
 priority: P0
 milestone: RFT-M3
