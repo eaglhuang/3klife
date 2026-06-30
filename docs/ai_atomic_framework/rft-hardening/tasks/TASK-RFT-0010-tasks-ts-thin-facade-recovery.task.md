@@ -2,7 +2,7 @@
 doc_id: doc_rft_0010
 task_id: TASK-RFT-0010
 title: "tasks.ts thin-facade recovery"
-status: in-progress
+status: done
 started_at: "2026-07-01T00:00:00+08:00"
 started_by_agent: ClaudeCode_Opus4.7
 owner: atm-core
@@ -65,6 +65,15 @@ nonGoals:
   - "Do not treat a line shuffle as success; ownership must move into named atom modules."
   - "Do not re-open CID planning as the primary owner of tasks.ts."
   - "Do not collapse close governance, status truth, and import verification into one new mega-helper."
+completed_at: "2026-06-30T18:24:05.265Z"
+completed_by_agent: "claude-code-opus-4-7"
+closedAt: "2026-06-30T18:24:05.265Z"
+closedByActor: "claude-code-opus-4-7"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-06-30T18-24-05-265Z-close-fcc2aa333614"
+lastTransitionAt: "2026-06-30T18:24:05.265Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6965e11ea45be563ac0a09b9fbbffe0b09f7a49c"
 ---
 
 # TASK-RFT-0010 - tasks.ts thin-facade recovery
