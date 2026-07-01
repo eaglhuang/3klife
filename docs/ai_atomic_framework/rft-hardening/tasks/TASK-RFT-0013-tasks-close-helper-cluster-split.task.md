@@ -1,7 +1,7 @@
 ---
 doc_id: doc_rft_0013
 task_id: TASK-RFT-0013
-title: "tasks.ts close helper cluster split (closure-packet + framework-close + broker-lifecycle + plugin-registry)"
+title: "tasks.ts close helper cluster split (close-artifact-staging + task-transition-writer + broker-admission-explanation + close-window-diagnostics)"
 status: in-progress
 started_at: "2026-07-01T05:00:00+08:00"
 started_by_agent: claude-code-opus-4-7
@@ -15,38 +15,38 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
   - "packages/cli/src/commands/tasks.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/closure-packet-writer.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/framework-close-transaction.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/broker-lifecycle.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/plugin-registry.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/close-artifact-staging.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/task-transition-writer.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/broker-admission-explanation.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/close-window-diagnostics.ts"
   - "packages/cli/src/commands/tasks/close-orchestrator.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-closure-packet-writer.spec.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-framework-close-transaction.spec.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-broker-lifecycle.spec.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-plugin-registry.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-close-artifact-staging.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-task-transition-writer.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-broker-admission-explanation.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-close-window-diagnostics.spec.ts"
   - "scripts/validate-tasks-close-helpers-atomic-map.ts"
   - "docs/reports/tasks-command-atomic-map.md"
 deliverables:
   - "packages/cli/src/commands/tasks.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/closure-packet-writer.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/framework-close-transaction.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/broker-lifecycle.ts"
-  - "packages/cli/src/commands/tasks/close-helpers/plugin-registry.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/close-artifact-staging.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/task-transition-writer.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/broker-admission-explanation.ts"
+  - "packages/cli/src/commands/tasks/close-helpers/close-window-diagnostics.ts"
   - "packages/cli/src/commands/tasks/close-orchestrator.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-closure-packet-writer.spec.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-framework-close-transaction.spec.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-broker-lifecycle.spec.ts"
-  - "packages/cli/src/commands/tasks/__tests__/close-helpers-plugin-registry.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-close-artifact-staging.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-task-transition-writer.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-broker-admission-explanation.spec.ts"
+  - "packages/cli/src/commands/tasks/__tests__/close-helpers-close-window-diagnostics.spec.ts"
   - "scripts/validate-tasks-close-helpers-atomic-map.ts"
   - "docs/reports/tasks-command-atomic-map.md"
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
   - "node --strip-types scripts/validate-tasks-close-helpers-atomic-map.ts"
-  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-closure-packet-writer.spec.ts"
-  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-framework-close-transaction.spec.ts"
-  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-broker-lifecycle.spec.ts"
-  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-plugin-registry.spec.ts"
+  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-close-artifact-staging.spec.ts"
+  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-task-transition-writer.spec.ts"
+  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-broker-admission-explanation.spec.ts"
+  - "node --strip-types packages/cli/src/commands/tasks/__tests__/close-helpers-close-window-diagnostics.spec.ts"
   - "git diff --check"
 evidence:
   required: command-backed
@@ -74,10 +74,10 @@ Extract the four helper clusters that `runTasksClose` still depends on inside `t
 
 ## Atom/Map Extraction Pattern
 
-- `tasks/close-helpers/closure-packet-writer.ts` — write / verify / repair closure packets.
-- `tasks/close-helpers/framework-close-transaction.ts` — framework-close transaction lifecycle (open / commit / rollback).
-- `tasks/close-helpers/broker-lifecycle.ts` — broker register / decision / release during close.
-- `tasks/close-helpers/plugin-registry.ts` — plugin registry lookup and dispatch during close.
+- `tasks/close-helpers/close-artifact-staging.ts` — write / verify / repair closure packets.
+- `tasks/close-helpers/task-transition-writer.ts` — framework-close transaction lifecycle (open / commit / rollback).
+- `tasks/close-helpers/broker-admission-explanation.ts` — broker register / decision / release during close.
+- `tasks/close-helpers/close-window-diagnostics.ts` — plugin registry lookup and dispatch during close.
 
 `close-orchestrator.ts` imports each helper. `tasks.ts` retains only argv routing plus the small set of helpers used across multiple orchestrators.
 
