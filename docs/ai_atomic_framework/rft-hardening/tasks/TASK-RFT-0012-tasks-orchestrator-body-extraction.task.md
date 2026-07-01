@@ -2,7 +2,9 @@
 doc_id: doc_rft_0012
 task_id: TASK-RFT-0012
 title: "tasks.ts orchestrator body extraction (close/import/verify)"
-status: planned
+status: in-progress
+started_at: "2026-07-01T04:15:00+08:00"
+started_by_agent: claude-code-opus-4-7
 owner: atm-core
 priority: P0
 milestone: RFT-M4
