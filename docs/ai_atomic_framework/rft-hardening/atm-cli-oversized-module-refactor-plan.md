@@ -218,6 +218,53 @@ Tests:
 - retain `scripts/validate-tasks-atomic-map.ts` as the atomic ownership gate;
 - update `docs/reports/tasks-command-atomic-map.md` with before/after line counts and four-layer ownership map.
 
+### TASK-RFT-0011 -- ATM governance-fix wave
+
+**Primary purpose**: fix the three ATM CLI defects surfaced by TASK-RFT-0010's close path so RFT-0012 and RFT-0013 can close through the normal `taskflow close --write` lane without emergency leases.
+
+**Concerns**: auto-evidence command mapping rewrites `node --strip-types scripts/<name>.ts` to `npm run <name>` unconditionally; `tasks import` treats `--reset-open` as an emergency surface even for the `planning-in-progress-no-runtime` case (the standard Phase 0 → Phase 1 shape); `broker register` and `next --claim` gates disagree on the same scope because they consult different conflict tables.
+
+Atoms:
+
+- `packages/cli/src/commands/taskflow/auto-evidence-mapper.ts` -- Policy Object: given a declared command and the current `package.json`, return the command to actually run. Falls back to declared verbatim when the npm script does not exist.
+- `packages/cli/src/commands/tasks/import-verify.ts` -- extend with a Strategy Map classifier for import inputs (`fresh-open`, `drift-with-active-claim`, `drift-without-claim`, `planning-in-progress-no-runtime`) so reset-open in the last case runs on the normal lane.
+- `packages/cli/src/commands/next/claim-admission.ts` -- claim admission that consults `packages/core/src/broker/conflict-matrix.ts` for the shared verdict, with a divergence diagnostic if broker and CID gates ever disagree.
+
+Tests: one focused spec per atom (`auto-evidence-mapper.spec.ts`, `import-reset-open-ux.spec.ts`, `claim-admission-broker-parity.spec.ts`). Add `scripts/validate-governance-fix-wave.ts` to gate the wave and register `validate:governance-fix-wave` in `package.json` (dogfood the mapper fix).
+
+TASK-RFT-0011 does NOT change public CLI verb names, does NOT change public JSON field names, does NOT remove the emergency lease pathway; it only removes false-positive triggers and unifies the two verdicts.
+
+### TASK-RFT-0012 -- `tasks.ts` orchestrator body extraction
+
+**Primary purpose**: move the three largest orchestrator bodies (`runTasksClose`, `runTasksImport`, `runTasksVerify`) out of `tasks.ts` so the facade drops from ~7,484 to ~6,400 lines and future refactors can target the orchestrators individually.
+
+Atoms:
+
+- `packages/cli/src/commands/tasks/close-orchestrator.ts` -- houses `runTasksClose`; imports existing sibling atoms unchanged.
+- `packages/cli/src/commands/tasks/import-orchestrator.ts` -- houses `runTasksImport`; imports `import-verify.ts` and related helpers.
+- `packages/cli/src/commands/tasks/verify-orchestrator.ts` -- houses `runTasksVerify`; imports `import-verify.ts` and `result-contracts.ts`.
+- `tasks.ts` becomes a true argv-router.
+
+Tests: one spec per orchestrator covering the golden paths (close: normal / historical-delivery / historical-batch / rollback; import: fresh-open / drift / reset-open / emergency-lease; verify: pass / fail / diagnostic-sort). Add `scripts/validate-tasks-orchestrator-atomic-map.ts` to enforce that the three symbols no longer exist in `tasks.ts` and are re-exported from their new homes.
+
+TASK-RFT-0012 depends on RFT-0011 landing first so its own close runs through the normal auto-evidence lane.
+
+### TASK-RFT-0013 -- `tasks.ts` close helper cluster split
+
+**Primary purpose**: extract the four helper clusters that `close-orchestrator.ts` (from RFT-0012) still depends on inside `tasks.ts`, so `tasks.ts` drops below 1,500 lines and the close path becomes a layered atom set.
+
+Atoms:
+
+- `packages/cli/src/commands/tasks/close-helpers/closure-packet-writer.ts` -- closure-packet write / verify / repair.
+- `packages/cli/src/commands/tasks/close-helpers/framework-close-transaction.ts` -- open / commit / rollback lifecycle.
+- `packages/cli/src/commands/tasks/close-helpers/broker-lifecycle.ts` -- broker register / decision / release during close.
+- `packages/cli/src/commands/tasks/close-helpers/plugin-registry.ts` -- plugin registry lookup and dispatch during close.
+- `close-orchestrator.ts` imports each helper; `tasks.ts` retains only argv routing plus helpers shared across orchestrators.
+
+Tests: one spec per helper cluster covering happy path + one failure + one rollback path where applicable. Add `scripts/validate-tasks-close-helpers-atomic-map.ts` to enforce that each helper module exists, `close-orchestrator.ts` imports each, and `tasks.ts` is under 1,500 lines. Update `docs/reports/tasks-command-atomic-map.md` with the six-layer map (Facade / Sub-Orchestrators / Policy Objects / Strategy Maps / Result Contracts / Close Helpers).
+
+TASK-RFT-0013 depends on RFT-0012 landing first.
+
 ## Test discipline (applies to every RFT card)
 
 Every card MUST declare in its frontmatter `deliverables`:
