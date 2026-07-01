@@ -18,6 +18,9 @@ task_family:
   - TASK-RFT-0008
   - TASK-RFT-0009
   - TASK-RFT-0010
+  - TASK-RFT-0011
+  - TASK-RFT-0012
+  - TASK-RFT-0013
 ---
 
 # ATM CLI oversized module refactor plan (RFT series)
