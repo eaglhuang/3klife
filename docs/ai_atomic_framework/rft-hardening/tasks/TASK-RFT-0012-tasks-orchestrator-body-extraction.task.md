@@ -2,7 +2,7 @@
 doc_id: doc_rft_0012
 task_id: TASK-RFT-0012
 title: "tasks.ts orchestrator body extraction (close/import/verify)"
-status: done
+status: in-progress
 started_at: "2026-07-01T04:15:00+08:00"
 started_by_agent: claude-code-opus-4-7
 owner: atm-core
@@ -57,15 +57,6 @@ outOfScope:
 nonGoals:
   - "Do not chase further line-count reduction by inlining helpers into orchestrators; the split is shell-first, helpers stay put for now"
   - "Do not treat this card as a full facade rewrite; orchestrators still contain their existing helper calls"
-completed_at: "2026-07-01T04:56:46.439Z"
-completed_by_agent: "claude-code-opus-4-7"
-closedAt: "2026-07-01T04:56:46.439Z"
-closedByActor: "claude-code-opus-4-7"
-closedByCommand: atm tasks close
-lastTransitionId: "2026-07-01T04-56-46-439Z-close-8e90a646dd27"
-lastTransitionAt: "2026-07-01T04:56:46.439Z"
-ledgerContractVersion: task-ledger/v1
-delivery_commit: "3cb5c64a79348a781a69e7fa5f28f56d287b134b"
 ---
 
 # TASK-RFT-0012 — tasks.ts orchestrator body extraction

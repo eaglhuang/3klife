@@ -2,7 +2,9 @@
 doc_id: doc_rft_0013
 task_id: TASK-RFT-0013
 title: "tasks.ts close helper cluster split (closure-packet + framework-close + broker-lifecycle + plugin-registry)"
-status: planned
+status: in-progress
+started_at: "2026-07-01T05:00:00+08:00"
+started_by_agent: claude-code-opus-4-7
 owner: atm-core
 priority: P0
 milestone: RFT-M4
