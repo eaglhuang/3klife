@@ -1,0 +1,35 @@
+Use case: infographic-diagram
+Asset type: clean business permission management diagram for a project proposal document
+Primary request: Create a clear, simple, easy-to-read permission management diagram in Traditional Chinese for a securities firm internal report media storage system.
+Style/medium: professional flat infographic, crisp vector-like layout, white background, navy and teal palette, subtle gray separators, high readability, presentation-ready.
+Composition/framing: landscape 16:9, centered flow. Use rounded rectangles, simple icons, arrows, and clear grouping. Avoid tiny text.
+
+Main title text exactly:
+權限管理與資料範圍控管示意圖
+
+Subtitle text exactly:
+RBAC 控制可做什麼｜Data Scope 控制可看哪些資料｜所有異動留稽核
+
+Diagram layout:
+1. Left zone title: 身分來源
+   Boxes: AD / SSO, 使用者, AD 群組
+2. Middle top zone title: 角色與權限
+   Boxes: 預設角色, 自訂角色, 功能權限 Permission, 角色核准流程
+3. Middle bottom zone title: 資料範圍 Data Scope
+   Boxes: 部門 / 分公司, 報表代號, 機密等級, 資料日期範圍
+4. Right zone title: 存取決策
+   Boxes: 後端授權檢查, 查詢 / 預覽 / 下載, 高機密二次確認, 拒絕 / 允許
+5. Bottom horizontal layer title: 治理與稽核
+   Boxes: Permission Admin, Security Admin, Audit Admin, 申請 / 核准 / 生效時間, Audit Log + Hash Chain, Break-glass
+
+Core visual logic:
+AD / SSO authenticates user -> role assignment decides actions -> Data Scope limits accessible reports -> backend authorization makes allow or deny decision -> every change and sensitive access writes audit log.
+
+Important note box:
+Admin 可管理權限，但預設不可查看高機密報表內容
+
+Constraints:
+Traditional Chinese only except established technical terms. Keep text large and legible. Do not include brand logos. Do not include people, photos, or decorative clutter. No 3D perspective. No dark mode. No watermark. Make it suitable for business stakeholders, auditors, security, and engineering discussion.
+
+Avoid:
+overly complex IAM diagrams, dense tiny labels, decorative cyberpunk style, purple theme, English-heavy labels.

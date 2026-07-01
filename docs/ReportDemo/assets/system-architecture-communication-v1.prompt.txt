@@ -1,0 +1,29 @@
+Use case: infographic-diagram
+Asset type: clean business system architecture diagram for a project proposal document
+Primary request: Create a clear, simple, easy-to-read 16:9 system architecture diagram in Traditional Chinese for a securities firm internal insider trading report-to-PDF media storage system.
+Style/medium: professional flat infographic, crisp vector-like layout, white background, navy and teal palette, subtle gray separators, high readability, presentation-ready.
+Composition/framing: landscape 16:9, left-to-right data flow, three main vertical zones plus bottom cross-cutting governance layer. Use rounded rectangles, simple icons, arrows, and clear grouping. Avoid tiny text.
+
+Main title text exactly:
+內部人員交易報表轉媒體儲存系統
+
+Subtitle text exactly:
+保守遷移｜權限控管｜稽核追蹤｜PDF 外流追蹤
+
+Diagram layout:
+1. Left zone title: 資料來源 / 舊系統
+   Boxes: 既有 ASP.NET + MSSQL, 交易 / 人事 / 部門資料, AD / SSO, Golden Dataset
+2. Middle zone title: 新系統核心（Modular Monolith）
+   Boxes inside: 資料匯入 Staging, 檢核規則 Validation, Snapshot / 雙製比對, 報表產生 Report, PDF 產生與版本管理
+3. Right zone title: PDF 儲存與使用
+   Boxes: Metadata DB, Object Storage / NAS, Download Gateway, 動態浮水印 / 查核碼, 安全預覽 / 下載
+4. Bottom horizontal layer title: 橫切治理層
+   Boxes: RBAC + Data Scope, Audit Log + Hash Chain, Alert / Email / 內部群組, Break-glass, Backup / DR / Rollback
+5. Migration note: Shadow DB / Follower：PoC 後決定，先比對不取代正式結果
+6. Use arrows: source data -> staging -> validation -> report -> PDF storage -> download gateway -> users. Show audit/log arrows from all major modules down to governance layer.
+
+Constraints:
+Traditional Chinese only except established technical terms. Keep text large and legible. Do not include brand logos. Do not include people, photos, or decorative clutter. No 3D perspective. No dark mode. No watermark. Make it suitable for business stakeholders, auditors, security, and engineering discussion.
+
+Avoid:
+overly complex microservice diagrams, dense tiny labels, decorative cyberpunk style, purple theme, English-heavy labels.

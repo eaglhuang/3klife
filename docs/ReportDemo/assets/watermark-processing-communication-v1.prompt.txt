@@ -1,0 +1,51 @@
+Use case: infographic-diagram
+Asset type: clean business PDF watermark processing diagram for a project proposal document
+Primary request: Create a clear, simple, easy-to-read PDF watermark processing diagram in Traditional Chinese for a securities firm internal report media storage system.
+Style/medium: professional flat infographic, crisp vector-like layout, white background, navy and teal palette, subtle gray separators, high readability, presentation-ready.
+Composition/framing: landscape 16:9, left-to-right workflow. Use rounded rectangles, simple icons, arrows, and clear grouping. Avoid tiny text.
+
+Main title text exactly:
+PDF 浮水印處理與外流追蹤示意圖
+
+Subtitle text exactly:
+主檔不修改｜下載副本加浮水印｜Hash 留證｜稽核可追蹤
+
+Main workflow:
+1. PDF 主檔保存
+   Small note: 唯讀保存 / SHA-256 Hash
+2. 使用者申請下載
+   Small note: 後端權限檢查
+3. Download Gateway
+   Small note: 產生 Download ID
+4. 產生下載副本
+   Small note: 不修改主檔
+5. 套用動態浮水印
+   Small note: 下載人 / 部門 / 時間 / IP / 序號
+6. 加入查核碼 / QR Code
+   Small note: 可反查下載紀錄
+7. 計算副本 Hash
+   Small note: 保存檔案指紋
+8. 輸出給使用者
+   Small note: 預覽 / 下載
+
+Bottom governance layer title:
+稽核與告警
+
+Bottom boxes:
+Audit Log, Hash Chain, Critical Alert, Email / 內部群組, Security Admin 核准
+
+Right-side security note:
+不能保證 100% 防截圖或翻拍
+但可以做到：外流可追蹤、竄改可偵測、責任可歸屬、證據可保存
+
+Confidentiality ladder:
+一般：固定 + 動態浮水印
+機密：查核碼 + PDF Hash
+高機密：數位簽章 + timestamp
+極高機密：原則上不下載，只安全預覽
+
+Constraints:
+Traditional Chinese only except established technical terms. Keep text large and legible. Do not include brand logos. Do not include people, photos, or decorative clutter. No 3D perspective. No dark mode. No watermark. Make it suitable for business stakeholders, auditors, security, and engineering discussion.
+
+Avoid:
+overly complex security diagrams, dense tiny labels, decorative cyberpunk style, purple theme, English-heavy labels, claiming absolute tamper-proof security.
