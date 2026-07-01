@@ -2,7 +2,7 @@
 doc_id: doc_rft_0013
 task_id: TASK-RFT-0013
 title: "tasks.ts close helper cluster split (close-artifact-staging + task-transition-writer + broker-admission-explanation + close-window-diagnostics)"
-status: in-progress
+status: done
 started_at: "2026-07-01T05:00:00+08:00"
 started_by_agent: claude-code-opus-4-7
 owner: atm-core
@@ -64,6 +64,15 @@ outOfScope:
 nonGoals:
   - "Do not merge helpers into a single mega-file; each of the four helper clusters gets its own module"
   - "Do not treat this card as a full architecture change; only helper ownership moves"
+completed_at: "2026-07-01T11:38:30.910Z"
+completed_by_agent: "claude-code-opus-4-7"
+closedAt: "2026-07-01T11:38:30.910Z"
+closedByActor: "claude-code-opus-4-7"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-01T11-38-30-910Z-close-5f9367381136"
+lastTransitionAt: "2026-07-01T11:38:30.910Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "44a9408889a93a00da36de2310643664c1c2d434"
 ---
 
 # TASK-RFT-0013 — tasks.ts close helper cluster split

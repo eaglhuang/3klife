@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-01T11-38-30-910Z-close-5f9367381136",
+  "taskId": "TASK-RFT-0013",
+  "action": "close",
+  "actorId": "claude-code-opus-4-7",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0013-tasks-close-helper-cluster-split.task.md",
+  "taskSha256": "sha256:1f1f13b59a77b7214c923df7f961fceab7d2cedb26206f731f739ef2e9579fd5",
+  "createdAt": "2026-07-01T11:38:30.910Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0013 --actor claude-code-opus-4-7"
+}
