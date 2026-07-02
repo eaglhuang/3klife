@@ -1,8 +1,9 @@
 # 內部人員交易報表轉媒體儲存系統 決策紀錄樣板 ADR
+## 版本 v1.1
 
 ## 1. 文件目的
 
-本文件用於集中管理本計畫需要人類優先決策的 Top 10 關鍵點。這些決策會影響系統架構、資安邊界、權限治理、資料一致性、舊系統遷移、驗收 Gate、預算與時程，不應由工程團隊或 AI 在未授權情況下自行假設。
+本文件用於集中管理本計畫需要人類優先決策的 Top 11 關鍵點。這些決策會影響系統架構、資安邊界、權限治理、資料一致性、舊系統遷移、驗收 Gate、預算與時程，不應由工程團隊或 AI 在未授權情況下自行假設。
 
 本文件不是功能需求清單；功能拆分以「功能里程碑計畫」為準，系統架構與治理原則以「系統架構與治理計畫書」為準。
 
@@ -25,7 +26,7 @@
 | 驗收 Gate | 什麼條件達成才算決策落地。 |
 | 待補問題 | 尚未釐清的問題。 |
 
-## 3. 人類優先決策 Top 10
+## 3. 人類優先決策 Top 11
 
 | 優先 | ADR | 需要人類決策的關鍵點 | 為何優先 |
 | ---: | --- | --- | --- |
@@ -39,6 +40,7 @@
 | 8 | ADR-008 | PDF / Object Storage / WORM 儲存與保存政策 | 影響 M4-02、備份、資料主權、保存年限、下載副本是否保存與儲存成本。 |
 | 9 | ADR-009 | Validation Rule 表達、版本化與維護責任 | 影響 M2-01 是否能拆任務、規則異動是否需發版、業務或稽核能否自助維護。 |
 | 10 | ADR-010 | 第一版預算、人力、時程與 NFR 上限 | 影響哪些 P1/P2 能延後、worker 化時機、UAT 長度、上線日期與 Go / No-Go 門檻。 |
+| 11 | ADR-011 | Agent Team 自動決策、人類簽核與違規阻擋邊界 | 影響任務卡派工、reviewer、validator、human sign-off、ADR gate、違規阻擋與 closure gate。 |
 
 ## 4. ADR-001 資料庫最終選型與遷移路線
 
@@ -170,7 +172,20 @@
 | 影響範圍 | 全部 M0-M10、P0/P1/P2 排程、採購、UAT、訓練、Go / No-Go Gate。 |
 | 驗收 Gate | 核准專案時程、人力與預算；核准 NFR 基準；核准第一版不得做與可延後清單。 |
 
-## 14. 決策狀態追蹤表
+## 14. ADR-011 Agent Team 自動決策、人類簽核與違規阻擋邊界
+
+| 欄位 | 內容 |
+| --- | --- |
+| 決策狀態 | Proposed |
+| 決策 owner | 待指定：專案 sponsor / 資安 owner / 稽核 owner / Tech Lead |
+| 參與角色 | PM、Tech Lead、資安、稽核、QA、DevOps、系統 owner、Agent Team Captain |
+| 候選方案 | 低風險事項由隊長 AI 自動決定、所有事項皆人工簽核、依風險分級自動化、導入 runtime permission broker / sandbox。 |
+| 建議預設方向 | 採風險分級。隊長 AI 可自動處理低風險、可回復、已有規則的執行決策；資安、稽核、資料、正式切換、權限模型、供應商與架構取捨需人類或 ADR 簽核。 |
+| 需回答 | 哪些任務卡必須 human sign-off？哪些工具或網路存取需限制？Permission Broker、lease/fencing、tool sandbox 第一版落地到什麼程度？若 Agent 自動決策與資安/稽核衝突，由誰裁決？ |
+| 影響範圍 | 全部 TASK-RPT 任務卡、M5、M7、M8、M9、closure gate、CI scope check、review 流程與證據保存。 |
+| 驗收 Gate | Agent Team 計畫書 v1.0 已核准；任務卡已標示 agent_team_plan、reviewer、validator、human/ADR gate；違規阻擋機制與人工補位流程已被資安與稽核接受。 |
+
+## 15. 決策狀態追蹤表
 
 | ADR | 決策狀態 | Owner | 目標決策時間 | 目前結論 | 待補問題 |
 | --- | --- | --- | --- | --- | --- |
@@ -184,3 +199,4 @@
 | ADR-008 | Proposed | 待指定 | M4-02 前 | 未決 | NAS/Object Storage、WORM、保存年限。 |
 | ADR-009 | Proposed | 待指定 | M2-01 前 | 未決 | 規則表達、版本化、維護責任。 |
 | ADR-010 | Proposed | 待指定 | 專案啟動前 | 未決 | 上線日期、人力、預算、NFR。 |
+| ADR-011 | Proposed | 待指定 | 任務卡正式派工前 | 未決 | Agent 自動決策範圍、human/ADR gate、違規阻擋與 closure gate。 |

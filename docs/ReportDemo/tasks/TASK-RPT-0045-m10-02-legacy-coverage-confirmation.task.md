@@ -1,0 +1,102 @@
+---
+task_id: TASK-RPT-0045
+source_milestone: M10-02
+title: "舊系統覆蓋確認"
+status: planned
+owner: project-captain-qa
+priority: P0
+milestone: M10
+depends_on:
+  - "TASK-RPT-0001"
+  - "TASK-RPT-0002"
+  - "TASK-RPT-0044"
+related_plan: "docs/ReportDemo/內部人員交易報表轉媒體儲存系統_功能里程碑計畫.md"
+agent_team_plan: "docs/ReportDemo/內部人員交易報表轉媒體儲存系統_Agent Team計畫書.md"
+planning_repo: 3KLife
+target_repo: reportdemo-target-system
+closure_authority: planning_repo
+scopePaths:
+  - "docs/ReportDemo/tasks/TASK-RPT-*-legacy-coverage-confirmation.task.md"
+  - "docs/ReportDemo/evidence/M10-02/**"
+  - "docs/ReportDemo/acceptance/**"
+  - "runbooks/reportdemo/**"
+  - "legacy/舊系統報表模組_功能別1002.xxx"
+  - "legacy/舊系統資料轉換_SP_功能別1002.sql"
+deliverables:
+  - "docs/ReportDemo/evidence/M10-02/implementation-notes.md"
+  - "docs/ReportDemo/evidence/M10-02/validation-result.md"
+  - "目標系統 repo 中對應功能程式碼、DB migration、測試與操作文件"
+validators:
+  - "git diff --check"
+  - "目標系統 repo 建立後補：dotnet test 或等效自動化測試"
+  - "目標系統 repo 建立後補：Golden Dataset / Shadow Validation 比對命令"
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit-or-feature-flag-disable
+  notes: "若已進入正式資料流程，需先依 rollback runbook 停用新功能並回復舊系統路徑。"
+atomizationImpact:
+  ownerAtomOrMap: "reportdemo.m10.legacy-coverage-confirmation"
+  mapUpdates:
+    - "待目標系統 repo 建立後補入 atom/path map"
+  notes: "本卡先定義功能工作包；實作 repo 建立後需補齊實際 atom/map 與檔案邊界。"
+outOfScope:
+  - "使用未脫敏正式資料進行開發或一般測試"
+  - "未完成舊系統覆蓋比對即切換正式流程"
+  - "繞過 Admin、Data Scope、稽核與告警要求"
+nonGoals:
+  - "一次性重寫所有舊系統功能"
+  - "在未完成 PoC / Gate 前承諾最終技術選型"
+---
+# TASK-RPT-0045 - M10-02 舊系統覆蓋確認
+
+## Goal
+
+完成 `M10-02` 對應功能，並能證明新系統涵蓋舊系統必要行為；未知舊系統程式碼先以象徵性代號標記，後續盤點時替換為真實名稱。
+
+## Legacy Coverage
+
+- 需對照：`legacy/舊系統報表模組_功能別1002.xxx`
+- 需對照：`legacy/舊系統資料轉換_SP_功能別1002.sql`
+- 若本卡涉及重寫，必須保留舊系統輸入、輸出、排序、欄位、狀態與例外案例的比對紀錄。
+
+## Functional Scope
+- 依功能里程碑計畫完成本項功能交付。
+
+## Implementation Contract
+
+- 優先採漸進式承接：沿用、封裝、移植、重寫、廢止候選需逐項記錄。
+- 不得用未脫敏正式資料做一般開發或測試；正式資料只可進受控 Shadow Validation。
+- 涉及權限、資料範圍、PDF、稽核、告警或 break-glass 時，安全性與可稽核性優先於便利性。
+- 每個可觀測流程需留下 trace ID / correlation ID，方便新舊系統比對與事故追蹤。
+
+- Agent Team 派工、role、reviewer、validator、human sign-off 與 ADR gate 需依 Agent Team 計畫書 v1.0 執行：`docs/ReportDemo/內部人員交易報表轉媒體儲存系統_Agent Team計畫書.md`。
+
+## Deliverables
+
+- 實作程式碼、DB migration、設定檔或文件，依本卡 `scopePaths` 控制。
+- `docs/ReportDemo/evidence/M10-02/implementation-notes.md`
+- `docs/ReportDemo/evidence/M10-02/validation-result.md`
+
+## Validators
+
+- `git diff --check`
+- 目標系統 repo 建立後補：`dotnet test` 或等效自動化測試。
+- 目標系統 repo 建立後補：Golden Dataset / Shadow Validation 比對命令。
+
+## Acceptance Criteria
+- 每份舊系統正式報表都有新系統對應項。
+- 每個舊系統資料來源都有承接方式。
+- 每個舊系統權限群組都有新角色或 Data Scope 對應。
+- 每個舊系統排程或手動作業都有新流程對應。
+- 被廢止的舊功能需有業務或稽核核准。
+- 舊系統下線條件已達成，或保留並行運轉期間與責任人。
+
+## Rollback
+
+以 feature flag、路由切回舊系統、回復 migration 或 revert commit 為優先；若已接觸正式流程，必須先確認資料一致性與稽核紀錄完整。
+
+## Notes
+
+- 2026-07-02 | planned | 本卡由功能里程碑計畫自動拆分，等待人類確認優先順序、實際 owner 與目標系統 repo 路徑。
+- 2026-07-02 | planned | 已同步 Agent Team 計畫書 v1.0；正式派工前需確認 role、reviewer、validator、human/ADR gate 與違規阻擋機制。
