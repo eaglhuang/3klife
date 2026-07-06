@@ -33,15 +33,6 @@ nonGoals:
 atomizationImpact:
   ownerAtomOrMap: "atm.broker-mutation-intent"
   mapUpdates: []
-completed_at: "2026-07-03T00:39:37.402Z"
-completed_by_agent: "codex"
-closedAt: "2026-07-03T00:39:37.402Z"
-closedByActor: "codex"
-closedByCommand: atm tasks close
-lastTransitionId: "2026-07-03T00-39-37-402Z-close-b04219eeed88"
-lastTransitionAt: "2026-07-03T00:39:37.402Z"
-ledgerContractVersion: task-ledger/v1
-delivery_commit: "0f97299bce835bcbd330a228faf9fe22b714cd5e"
 ---
 
 # TASK-CID-0112
