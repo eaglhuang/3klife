@@ -2,7 +2,7 @@
 doc_id: doc_rft_0014
 task_id: TASK-RFT-0014
 title: "Governance surface deletion pass (delete deprecated reserve/promote, delete disabled git-head evidence path, merge overlapping validators, dedupe skill registration)"
-status: open
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M5
@@ -61,6 +61,15 @@ outOfScope:
 nonGoals:
   - "Do not replace deletion with deprecation flags or config disables; the point of this card is physical removal (Musk step 2)"
   - "Do not add new governance surfaces while deleting old ones"
+completed_at: "2026-07-07T03:29:49.080Z"
+completed_by_agent: "codex"
+closedAt: "2026-07-07T03:29:49.080Z"
+closedByActor: "codex"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-07T03-29-49-080Z-close-cff1c1716449"
+lastTransitionAt: "2026-07-07T03:29:49.080Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "43e444297bf1835896226243364b4fa6a1ecacfd"
 ---
 
 # TASK-RFT-0014 — Governance surface deletion pass
