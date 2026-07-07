@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-07T15-11-09-303Z-close-160fb0a3881f",
+  "taskId": "TASK-AAO-0150",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0150-next-hot-path-latency.task.md",
+  "taskSha256": "sha256:b30dc72687859fefa1f913fb842c3ff495aa0cecda63ca5770a6212d7dfdd028",
+  "createdAt": "2026-07-07T15:11:09.303Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0150 --actor codex-captain"
+}

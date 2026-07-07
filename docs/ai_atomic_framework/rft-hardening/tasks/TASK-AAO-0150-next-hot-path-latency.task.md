@@ -2,7 +2,7 @@
 doc_id: doc_aao_0150
 task_id: TASK-AAO-0150
 title: "Profile and cut next hot-path latency (~20s per invocation) to under 5s"
-status: open
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M5
@@ -38,6 +38,15 @@ outOfScope:
   - "Removing police/source-inventory checks (caching or scoping them is in scope; deleting them is not)"
 nonGoals:
   - "Do not trade correctness for speed; every skipped scan must be cache-invalidation-safe"
+completed_at: "2026-07-07T15:11:09.303Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-07-07T15:11:09.303Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-07T15-11-09-303Z-close-160fb0a3881f"
+lastTransitionAt: "2026-07-07T15:11:09.303Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c63c472b41f97988aeed3edb254574d9532ffbfb"
 ---
 
 # TASK-AAO-0150 — next hot-path latency
