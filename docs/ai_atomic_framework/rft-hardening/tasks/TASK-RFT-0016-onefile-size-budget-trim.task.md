@@ -2,7 +2,7 @@
 doc_id: doc_rft_0016
 task_id: TASK-RFT-0016
 title: "Trim onefile payload back under the 4.5MB size budget (root-drop payload diet)"
-status: open
+status: done
 owner: atm-core
 priority: P2
 milestone: RFT-M5
@@ -39,6 +39,15 @@ outOfScope:
   - "Loosening the 4.5MB budget without a maintainer decision recorded on this card"
 nonGoals:
   - "Do not silence validate:onefile-budget; make it pass by shrinking the payload"
+completed_at: "2026-07-07T05:50:46.260Z"
+completed_by_agent: "codex"
+closedAt: "2026-07-07T05:50:46.260Z"
+closedByActor: "codex"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-07T05-50-46-260Z-close-c1ff6e066745"
+lastTransitionAt: "2026-07-07T05:50:46.260Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "fe0bff300c21c5e36ca07a07917ca86564804ec0"
 ---
 
 # TASK-RFT-0016 — Onefile size budget trim
