@@ -2,7 +2,7 @@
 doc_id: doc_paper_hotfile_pos2_a
 task_id: TASK-PAPER-HOTFILE-POS2-A
 title: "paper hotfile positive lane A v2"
-status: planned
+status: done
 owner: paper-evidence
 priority: P0
 planning_repo: 3KLife
@@ -36,6 +36,15 @@ outOfScope:
   - "release/atm-root-drop/**"
 nonGoals:
   - "Do not touch the POS2-B bounded region."
+completed_at: "2026-07-07T18:28:54.454Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-07-07T18:28:54.454Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-07T18-28-54-454Z-close-1a7677325fbf"
+lastTransitionAt: "2026-07-07T18:28:54.454Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "42365275e8a2d28e09ee52be7f4330f52c755a2a"
 ---
 # TASK-PAPER-HOTFILE-POS2-A
 
