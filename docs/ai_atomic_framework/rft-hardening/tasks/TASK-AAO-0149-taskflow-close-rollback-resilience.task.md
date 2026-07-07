@@ -2,7 +2,7 @@
 doc_id: doc_aao_0149
 task_id: TASK-AAO-0149
 title: "taskflow close resilience: rollback must not contradict a landed close commit, and auto-evidence must bound its waits"
-status: open
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M5
@@ -40,6 +40,15 @@ outOfScope:
   - "Auto-repair of ambiguous residue without human confirmation"
 nonGoals:
   - "Do not remove the rollback path; make it consistent with what actually landed"
+completed_at: "2026-07-07T08:32:03.380Z"
+completed_by_agent: "codex"
+closedAt: "2026-07-07T08:32:03.380Z"
+closedByActor: "codex"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-07T08-32-03-380Z-close-0cc8793ce7b0"
+lastTransitionAt: "2026-07-07T08:32:03.380Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3616cf3299134a8a1c4b2e82d7664ffd769d2b79"
 ---
 
 # TASK-AAO-0149 — taskflow close rollback and auto-evidence resilience

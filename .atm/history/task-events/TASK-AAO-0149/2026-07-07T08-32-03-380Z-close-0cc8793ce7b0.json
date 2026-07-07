@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-07T08-32-03-380Z-close-0cc8793ce7b0",
+  "taskId": "TASK-AAO-0149",
+  "action": "close",
+  "actorId": "codex",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0149-taskflow-close-rollback-resilience.task.md",
+  "taskSha256": "sha256:ab2b26d45cdd6b7b1eaac8e302cb0939985a96ac776b94438565b3821c2cde66",
+  "createdAt": "2026-07-07T08:32:03.380Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0149 --actor codex"
+}
