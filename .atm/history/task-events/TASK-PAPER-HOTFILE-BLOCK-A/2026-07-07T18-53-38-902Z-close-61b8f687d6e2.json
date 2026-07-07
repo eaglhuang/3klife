@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-07T18-53-38-902Z-close-61b8f687d6e2",
+  "taskId": "TASK-PAPER-HOTFILE-BLOCK-A",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-A.task.md",
+  "taskSha256": "sha256:41060187743444245536e542181dea30a265195a46528b8eb5427c8bd485b1bc",
+  "createdAt": "2026-07-07T18:53:38.902Z",
+  "command": "node atm.mjs tasks close --task TASK-PAPER-HOTFILE-BLOCK-A --actor codex-captain"
+}

@@ -2,7 +2,7 @@
 doc_id: doc_paper_hotfile_block_a
 task_id: TASK-PAPER-HOTFILE-BLOCK-A
 title: "paper hotfile overlap block lane A"
-status: planned
+status: done
 owner: paper-evidence
 priority: P0
 planning_repo: 3KLife
@@ -36,6 +36,15 @@ outOfScope:
   - "release/atm-root-drop/**"
 nonGoals:
   - "Do not move to a disjoint region or a different owner atom."
+completed_at: "2026-07-07T18:53:38.902Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-07-07T18:53:38.902Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-07T18-53-38-902Z-close-61b8f687d6e2"
+lastTransitionAt: "2026-07-07T18:53:38.902Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d18a527f8ba99696c61bdb6adb82a2447590a971"
 ---
 # TASK-PAPER-HOTFILE-BLOCK-A
 
