@@ -42,6 +42,15 @@ atomizationImpact:
 outOfScope:
   - "Real multi-process load testing"
   - "Network chaos testing against external services"
+completed_at: "2026-07-07T18:19:42.265Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-07-07T18:19:42.265Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-07T18-19-42-265Z-close-f0c31e8f603b"
+lastTransitionAt: "2026-07-07T18:19:42.265Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4c8c6b9f4ca6c4f7d39ffe15461cc10e2ef1c33a"
 ---
 
 # TASK-MAO-0021 - runner broker failure-mode coverage

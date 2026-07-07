@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-07T18-19-42-265Z-close-f0c31e8f603b",
+  "taskId": "TASK-MAO-0021",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0021-runner-broker-failure-mode-coverage.task.md",
+  "taskSha256": "sha256:85e2e69028534a14855600388aee739062289d1b9d32c5dbac466b5a7a527103",
+  "createdAt": "2026-07-07T18:19:42.265Z",
+  "command": "node atm.mjs tasks close --task TASK-MAO-0021 --actor codex-captain"
+}
