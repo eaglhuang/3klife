@@ -39,6 +39,7 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcommand{\TableFont}{\fontsize{8.2}{9.4}\selectfont}
 \newcommand{\TableLargeFont}{\fontsize{8.8}{10.0}\selectfont}
+\newcommand{\TableXLFont}{\fontsize{9.2}{10.5}\selectfont}
 \newcommand{\TableTightFont}{\fontsize{7.4}{8.5}\selectfont}
 \newcommand{\TableMidFont}{\fontsize{7.0}{8.0}\selectfont}
 \newcommand{\TableLead}[1]{\par\smallskip\noindent{\raggedright\small\bfseries #1\par}\smallskip}
@@ -82,7 +83,7 @@
     {\fontsize{10}{12}\selectfont\bfseries
     A Specification-Grounded Governance Substrate for Software Agents\par}
     \vspace{12pt}
-    {\fontsize{11}{13}\selectfont Eaglhuang\par}
+    {\fontsize{11}{13}\selectfont Eagl Huang\par}
     {\fontsize{10}{12}\selectfont eaglhuang@gmail.com\par}
   \end{center}
   \vspace{4pt}
@@ -125,7 +126,7 @@ More precisely, ATM narrows conflict granularity through a sequence of represent
 
 \subsection{Contributions}
 
-This paper does not propose another general-purpose multi-agent orchestrator. It reframes governed shared writes within a single authority domain as a formalizable, computable, and auditable pre-write admission problem. We make three contributions. The evaluation artifacts, adopter study, self-hosting forensics, and limitations are presented in Sections 4-6 as supporting evidence rather than as additional contributions.
+This paper does not propose another general-purpose multi-agent orchestrator. It reframes governed shared writes within a single authority domain as a formalizable, computable, and auditable pre-write admission problem. We make three contributions. The evaluation artifacts, adopter study, self-hosting forensics, and limitations are presented in Sections 4--6 as supporting evidence rather than as additional contributions.
 
 \textbf{Seven-layer pre-write admission with virtual-atom fallback.} We propose a seven-layer hard admission gate that evaluates multi-agent write intents through CID identity, shared-surface overlap, read/write dependencies, file-range and virtual-atom refinement, \texttt{\seqsplit{ConflictKey + canMerge}}, CAS base-hash validation, and a fallback file lock. Its purpose is not to repair merge conflicts after changes have already been produced. Instead, before any governed shared mutation is applied, the gate determines whether an intent may proceed in parallel, should be routed to deterministic composition, must be serialized, or must take a fail-closed path.
 
@@ -587,8 +588,8 @@ The principal verdicts are summarized below.
 
 \begin{table}[!b]
 \TableLead{Table 4 --- Broker Verdicts and Follow-Up Paths.}
-\centering
-\TableFont
+\raggedright
+\TableLargeFont
 \setlength{\tabcolsep}{3pt}
 \arrayrulecolor{black!55}
 \rowcolors{2}{gray!8}{white}
@@ -985,7 +986,8 @@ The transaction layer therefore exists to answer how the earlier writer is curre
 
 The ATM broker does not adjudicate by CID alone; it uses seven hard gates to progressively narrow the conflict surface of a suspect write. CID identity is the first fast semantic index. When the CID does not conflict, the broker still checks shared surfaces, declared read and write sets, file range and virtual-atom refinement, ConflictKey and \texttt{\seqsplit{canMerge}}, the CAS base-hash, and finally the fallback file lock. This design lets ATM admit parallelism when disjointness can be shown under the declared model, and conservatively take a fail-closed path when the evidence is insufficient.
 
-\Needspace{24\baselineskip}\TableLead{Table 5 --- Seven-Layer Admission Gate (with maturity markers).} The maturity column uses three labels:
+\Needspace{24\baselineskip}
+The maturity column uses three labels:
 
 \begin{itemize}
 \item \textbf{Validated.} The layer is supported by archived deterministic-runner evidence or archived field-collision evidence.
@@ -993,7 +995,7 @@ The ATM broker does not adjudicate by CID alone; it uses seven hard gates to pro
 \item \textbf{Prototype.} The framework reserves a slot for the mechanism and has a minimal landing in place, but the autonomous path---such as virtual-atom refinement or bounded re-planning---is still under construction and is not claimed as part of the admission-core deliverable.
 \end{itemize}
 
-Table 5 should be read as a gate-by-gate evidence-status note, \emph{not as a claim that every sub-path inside a row has identical maturity}.
+\TableLead{Table 5 --- Seven-Layer Admission Gate (with maturity markers).}
 
 \begingroup
 \TableTightFont
@@ -1014,6 +1016,8 @@ Layer & Gate & Question & On pass & On fail or unknown & Maturity status \\
 \bottomrule
 \end{longtable}
 \endgroup
+
+Table 5 should be read as a gate-by-gate evidence-status note, \emph{not as a claim that every sub-path inside a row has identical maturity}.
 
 The point of these seven layers is not to add mechanisms for their own sake, but to make explicit that ATM's target admission model does not rest on CID adjudication alone. Appendix A.4 provides a compact verification map for the principal capability groups, while detailed source paths, per-command outputs, artifact hashes, and row-level verification records are maintained in the repository and supplementary verification material. This section retains this structured model so that CID is not mistakenly read as the sole admission criterion.
 
@@ -1055,8 +1059,8 @@ Batch attribution and Wave Mode extend this path. When multiple tasks are submit
 ATM governs not only code atoms but also structured artifacts. Through \texttt{\seqsplit{FileMutationAdapter}} and \texttt{\seqsplit{ConflictKey}}, the same admission concepts apply across JSON records, text ranges, numeric scalars, and atom-map shards. The conflict unit therefore varies across formats. For code, it may be a function or a method. For JSON, it may be a record key. For a numeric configuration, it may be a scalar field. For an atom map, it may be an edge or a member record.
 
 \begin{table}[H]
-\TableLead{Table 6 --- ConflictKey Generalization Matrix.} Scope $\times$ locator mapping across formats.
-\centering
+\TableLead{Table 6 --- ConflictKey Generalization Matrix. Scope $\times$ locator mapping across formats.}
+\raggedright
 \TableTightFont
 \setlength{\tabcolsep}{2pt}
 \arrayrulecolor{black!55}
@@ -1577,9 +1581,10 @@ To make the role separation between the baseline and the main result legible at 
 
 \begin{table}[H]
 \TableLead{Table 11 --- ATM-AdmissionBench v0.1 Baseline versus v0.2 Paper Profile.}
-\centering
-\TableLargeFont
+\raggedright
+\TableXLFont
 \setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.03}
 \arrayrulecolor{black!55}
 \rowcolors{2}{gray!8}{white}
 \begin{tabular}{@{}L{0.22\textwidth}L{0.25\textwidth}L{0.47\textwidth}@{}}
@@ -1813,7 +1818,7 @@ The extended $N = 50$ run should be read as an operational stress probe rather t
 
 \begin{table}[H]
 \TableLead{Table 13 --- OperationalBench Latency Summary.}
-\centering
+\raggedright
 \TableMidFont
 \setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{1.00}
@@ -1825,7 +1830,7 @@ Run profile & Admission decision\\P50 / P95 / P99 & Steward apply\\P50 / P95 / P
 \midrule
 official paper run\\(\texttt{\seqsplit{20260627}}) & \texttt{\seqsplit{0.004 / 0.024 / 0.050 ms}} & \texttt{\seqsplit{33.181 / 302.424 / 541.920 ms}} & \texttt{\seqsplit{0.012 / 310.159 / 1088.094 ms}}\\(\texttt{\seqsplit{0.310 / 1.088 s}} at P95 / P99) & Baseline operational profile. \\
 $N = 50$ contention run\\(\texttt{\seqsplit{20260627-extended}}) & \texttt{\seqsplit{0.003 / 0.025 / 0.031 ms}} & \texttt{\seqsplit{33.072 / 304.193 / 349.348 ms}} & \texttt{\seqsplit{0.010 / 305.309 / 865.522 ms}}\\(\texttt{\seqsplit{0.305 / 0.866 s}} at P95 / P99) & Higher contention remains concentrated in steward-mediated paths; no route-structure change is observed. \\
-multi-seed stability note\\(3 paper-profile seeds; \texttt{\seqsplit{multi-seed-stability-20260627-20260629}}) & \texttt{\seqsplit{0.004-0.005 / 0.024-0.025 / 0.048-0.068 ms}} & \texttt{\seqsplit{33.181-37.998 / 302.274-317.522 / 323.190-541.920 ms}} & \texttt{\seqsplit{0.012-0.014 / 310.159-563.520 / 776.279-1088.094 ms}}\\(\texttt{\seqsplit{0.310-0.564 / 0.776-1.088 s}} at P95 / P99) & Scenario and route distributions remain identical; only the latency tail varies. \\
+multi-seed stability note\\(3 paper-profile seeds; \texttt{\seqsplit{multi-seed-stability-20260627-20260629}}) & \texttt{\seqsplit{0.004--0.005 / 0.024--0.025 / 0.048--0.068 ms}} & \texttt{\seqsplit{33.181--37.998 / 302.274--317.522 / 323.190--541.920 ms}} & \texttt{\seqsplit{0.012--0.014 / 310.159--563.520 / 776.279--1088.094 ms}}\\(\texttt{\seqsplit{0.310--0.564 / 0.776--1.088 s}} at P95 / P99) & Scenario and route distributions remain identical; only the latency tail varies. \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1890,7 +1895,7 @@ AdmissionBench is used in this manuscript in two layers. The first is the v0.1 b
 
 \begin{table}[H]
 \TableLead{Table 14 --- Compact Research-Question Status Summary.}
-\centering
+\raggedright
 \TableMidFont
 \setlength{\tabcolsep}{1pt}
 \renewcommand{\arraystretch}{1.00}
@@ -2072,7 +2077,7 @@ AdmissionBench v0.1 baseline + v0.2 paper profile & Paper-facing admission-resul
 OperationalBench official + supplementary runs & Runtime transparency for admission overhead, recovery routing, $N = 50$ contention, and multi-seed stability & \texttt{\seqsplit{main@c0250009a53b28e887344e71ea675637c97290b0}} -> \texttt{\seqsplit{artifacts/generated/atm-operational-bench/20260627/}}, \texttt{\seqsplit{20260627-extended/}}, and \texttt{\seqsplit{multi-seed-stability-20260627-20260629.\{md,json\}}} & Public ATM repository and supplementary release \\
 Public-source and structured-artifact evidence & Framework-mainline support, FastAPI public-source snapshot governance, structured artifact admission, and dual-live public-source conflict demonstration & Framework evidence freeze \texttt{\seqsplit{main@f57dbfe0bdfdf9f939e35400ec346501f4ccb2f3}}; Phase A/B/C artifact roots listed in supplementary artifact index & Public or paper-safe supplementary artifacts, depending on host-repository content \\
 Field-collision evidence & POS2 same-file admission, B-12 apply-phase enforcement, BLOCK fail-closed split suggestion, and close-orchestration evidence & \texttt{\seqsplit{docs/ai\_atomic\_framework/broker-collision-evidence/}} and de-identified supplementary packets & Mixed: public summaries and private source packets on request \\
-Adoption and self-hosting evidence & npc-brain adopter recoverability, self-hosting forensics, Wave Mode replay, CID stability, and governance incident summaries & Sections 4.2-4.6, Appendix A.5, and supplementary de-identified evidence packets & Mixed: public summaries, de-identified supplementary release, private ledgers on request \\
+Adoption and self-hosting evidence & npc-brain adopter recoverability, self-hosting forensics, Wave Mode replay, CID stability, and governance incident summaries & Sections 4.2--4.6, Appendix A.5, and supplementary de-identified evidence packets & Mixed: public summaries, de-identified supplementary release, private ledgers on request \\
 Evidence-closure and adapter-trust prototypes & Cross-agent review signatures, reviewer-facing verification manifest, and selected adversarial-adapter-containment evidence & \texttt{\seqsplit{artifacts/generated/cross-agent-review-signature/20260628/}}; \texttt{\seqsplit{artifacts/verification/last-verified.json}}; \texttt{\seqsplit{artifacts/adversarial-adapter-containment/20260628/}} & Public ATM repository \\
 \bottomrule
 \end{longtable}
@@ -2108,7 +2113,7 @@ This appendix summarizes the implemented capability groups, their verification r
 
 \begin{table}[H]
 \TableLead{Table A.2 --- Compact Verification Map.}
-\centering
+\raggedright
 \scriptsize
 \setlength{\tabcolsep}{3pt}
 \arrayrulecolor{black!55}
@@ -2177,7 +2182,7 @@ A compact public artifact snapshot is retained below for citation convenience. T
 
 \begin{table}[H]
 \TableLead{Table A.4 --- Public Artifact Manifest Snapshot.}
-\centering
+\raggedright
 \tiny
 \setlength{\tabcolsep}{2pt}
 \arrayrulecolor{black!55}

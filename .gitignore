@@ -100,6 +100,16 @@ docs/ai_atomic_framework/arxiv-paper-v1/*.bbl
 docs/ai_atomic_framework/arxiv-paper-v1/*.blg
 docs/ai_atomic_framework/arxiv-paper-v1/*.log
 docs/ai_atomic_framework/arxiv-paper-v1/*.out
+docs/ai_atomic_framework/arxiv-paper-v1/**/*.aux
+docs/ai_atomic_framework/arxiv-paper-v1/**/*.bbl
+docs/ai_atomic_framework/arxiv-paper-v1/**/*.blg
+docs/ai_atomic_framework/arxiv-paper-v1/**/*.log
+docs/ai_atomic_framework/arxiv-paper-v1/**/*.out
+docs/ai_atomic_framework/arxiv-paper-v1/arxiv-source-package-alt/
+docs/ai_atomic_framework/arxiv-paper-v1/arxiv-source-test/
+docs/ai_atomic_framework/arxiv-paper-v1/atm-paper-source-arxiv-fallback.*
+docs/ai_atomic_framework/arxiv-paper-v1/atm-paper-source-xelatex.tar.gz
+docs/ai_atomic_framework/arxiv-paper-v1/atm-paper-source-xelatex.zip
 docs/ai_atomic_framework/arxiv-paper-v1/compile*.out
 docs/ai_atomic_framework/arxiv-paper-v1/compile-node-*.out
 docs/ai_atomic_framework/arxiv-paper-v1/bibtest.*

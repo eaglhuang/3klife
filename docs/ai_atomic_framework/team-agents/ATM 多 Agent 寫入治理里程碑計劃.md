@@ -12,6 +12,7 @@
 2. 讓 broker 能在衝突前盡量更早判斷，並把判斷結果接到 close/commit 的硬閘。
 3. 讓 Team Agents、CID hard gate、commit queue 與 evidence flow 形成可批次實作的主線。
 4. 保留彈性，不把所有未知都硬塞成永久阻斷。
+5. 把「何時可自動放行、何時必須停下交給人類或 ADR」做成可執行的治理欄位，而不是只留在文件宣告。
 
 ## 已知現況
 
@@ -41,6 +42,7 @@
 - `sessionId` 只做 lifecycle trace。
 - Level 1 升級條件要明確：同一 branch / worktree domain 中，active transaction 且 `writeSet` 非空的 distinct writer key 達到 2 個以上。
 - Level 1 的 close 權威保持清楚：transaction owner 執行 close，但需 broker 簽發 close ticket。
+- Team runtime 應在這一層就保留 `requiresHumanSignoff` / `requiresAdr` / `violationStatus` 這類治理欄位，避免後續 close gate 才臨時猜測。
 
 ## Milestone 2: CID 0112 與 0113
 
@@ -58,6 +60,7 @@
 - `taskflow close --write` 只有在 broker confirmed conflict 時才 hard block。
 - `taskflow pre-close` 維持 advisory，不把 insufficient mutation intent 直接升成硬阻斷。
 - `0113` 第一版可以先只做 confirmed-conflict gate，不要偷宣稱已完整整合 Team epoch/fencing，除非該路徑真的已經接好並驗證過。
+- 但若已知命中治理紅線，例如 evidence 缺漏、scope 越權、reviewer independence 不成立、或 human / ADR gate 未滿足，close lane 仍應維持 block，不可因為「沒有 confirmed conflict」就放行。
 
 ## Milestone 3: Broker Operation Log
 
@@ -76,6 +79,7 @@
 - `TASK-TEAM-0032 + TASK-TEAM-0035`：editor bridge contract 與 Node.js reference worker adapter 應該聯動處理。
 - `TASK-TEAM-0019`：在 `TASK-TEAM-0018` 之後處理 sandbox attestation / closure contract。
 - `TASK-TEAM-0036`：只當 stretch，先不要讓它壓過主線。
+- Team runtime / adapter contract 應能把下列阻擋原因結構化輸出：`scope-violation`、`evidence-missing`、`validator-failed`、`reviewer-independence-missing`、`human-signoff-required`、`adr-required`、`broker-conflict-blocked`。
 
 ## 批次順序
 
@@ -100,6 +104,7 @@
 - staging 不要和慢驗證綁死在同一個 mutex 裡。
 - worktree 不是一致性權威，真正的權威是在 shared branch publish 的 CAS + epoch。
 - learning schema 採 adopter-local，framework 不負責幫 adopter 透明遷移既有學習資料。
+- 與 close / commit 相關的 Team runtime payload 至少要能帶出：`decisionClass`、`decisionReason`、`requiresHumanSignoff`、`requiresAdr`、`violationStatus`、`reviewerIndependenceResult`、`validatorVerdict`。
 
 ## 驗證計畫
 
@@ -115,6 +120,7 @@
 - 不要把 `TASK-CID-0113` 一開始就宣稱成 epoch 完整版硬閘，除非 Team fencing 真正接上。
 - 不要把 insufficient mutation intent 直接做成全域硬阻斷，否則會把正常 operator 流程卡死。
 - 不要把 reference adapter 放在主線後面才補，契約和實作應該同批對齊。
+- 不要讓多 Agent 寫入治理只管「檔案衝突」而不管「治理越權」；沒有衝檔也可能因為人類簽核、ADR、稽核或證據邊界而必須停下。
 
 ## 結論
 

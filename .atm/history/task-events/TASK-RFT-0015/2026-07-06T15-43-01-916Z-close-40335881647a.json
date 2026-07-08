@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-06T15-43-01-916Z-close-40335881647a",
+  "taskId": "TASK-RFT-0015",
+  "action": "close",
+  "actorId": "codex",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md",
+  "taskSha256": "sha256:1f5a9ede83877541bc683b72651343e689e687d123945bfd9bf223ecd6e4c863",
+  "createdAt": "2026-07-06T15:43:01.916Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0015 --actor codex"
+}

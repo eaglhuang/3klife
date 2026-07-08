@@ -17,6 +17,27 @@ The operating model is Captain-led semi-automation:
 
 Team Agents accelerate governed work. They do not replace ATM `next`, task lifecycle, evidence, closure packets, Git governance, or runner sync stewardship.
 
+## Governance Position
+
+This SOP is an operating guide for Captain-led execution. It is not a replacement truth source for task scope, architecture, or release approval.
+
+Use the following precedence when a decision conflicts:
+
+1. ATM route result, task ledger, and closure authority
+2. task card `scopePaths` / `deliverables` / `validators` / `rollback`
+3. ADR, repo keep, and explicit human sign-off conditions
+4. this SOP and local Team Agents planning docs
+
+Captain may auto-decide only low-risk, reversible, already-documented execution choices that do not expand authority or change governance boundaries.
+
+Captain must stop and route to human sign-off or ADR when work touches:
+
+- security policy or permission model changes;
+- audit integrity, evidence retention, or fail-closed boundaries;
+- production or official dataset access;
+- vendor, architecture, storage, or identity-system selection;
+- irreversible rollout, closeout exception, or policy downgrade.
+
 ## When To Use
 
 Use this SOP for:
@@ -33,6 +54,21 @@ Do not use this SOP as a substitute for:
 - concurrent writes to the same shared source file;
 - generated runner ownership by normal workers;
 - broad refactors without a task card and current ATM route.
+
+## Required Task Contract
+
+Before dispatching a worker, Captain should confirm the active card or brief clearly states:
+
+- `scopePaths`
+- `deliverables`
+- `validators`
+- `outOfScope`
+- `nonGoals`
+- rollback or revert expectation
+- reviewer / validator assignment
+- human sign-off or ADR gate when required
+
+If these fields are missing or contradictory, Captain should repair the planning artifact before implementation dispatch.
 
 ## Roles
 
@@ -113,6 +149,24 @@ Do not use this SOP as a substitute for:
    - Record implementation commit, closure commit, runner sync commit if any.
    - Add any ATM friction to `ATM_BUG_OPTIMIZATION_BACKLOG.md`.
 
+## Violation Blocking Rules
+
+Captain must block progress instead of "soft allowing" when any of the following appears:
+
+- requested edits exceed allowed files or route authority;
+- validator failed, evidence is missing, or command claims cannot be reproduced;
+- reviewer independence is required but cannot be demonstrated;
+- worker tries to treat advisory review as validator pass;
+- a bridge, adapter, or worker attempts to self-grant write, close, or evidence authority;
+- broker / steward / CID route says hold, blocked, or needs conflict handling;
+- task card and ledger disagree on whether work is still open or already closed.
+
+The default blocked outcomes are:
+
+- rework inside the same task when scope and authority are still valid;
+- escalate to Captain review when the issue is coordination or evidence shape;
+- escalate to human / ADR when the issue changes governance, security, audit, data, or release boundary.
+
 ## Dispatch Prompt Template
 
 Use this for external workers:
@@ -189,4 +243,3 @@ After `TASK-TEAM-0004`, `TASK-TEAM-0005`, and `TASK-TEAM-0006`:
 2. Prefer `TASK-RFT-0008` next for risk reduction.
 3. Then return to `TASK-TEAM-0017` to formalize template schema / validator contract.
 4. Do not start full Team runtime cards until `TASK-RFT-0003` reduces lifecycle risk.
-

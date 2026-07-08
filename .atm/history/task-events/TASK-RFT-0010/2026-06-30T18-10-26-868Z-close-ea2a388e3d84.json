@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-06-30T18-10-26-868Z-close-ea2a388e3d84",
+  "taskId": "TASK-RFT-0010",
+  "action": "close",
+  "actorId": "ClaudeCode_Opus4.7",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0010-tasks-ts-thin-facade-recovery.task.md",
+  "taskSha256": "sha256:7387881d58ba373954d572e5afd34b22c922ecbf425b93fdd6fdef363812fceb",
+  "createdAt": "2026-06-30T18:10:26.868Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0010 --actor ClaudeCode_Opus4.7"
+}

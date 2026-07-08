@@ -30,6 +30,15 @@ Use this file when:
 
 ## Open Items
 
+- [ ] BUG-ATM-0072: Planning-repo cleanup is blocked by framework target-repo routing notice
+  - Status: open
+  - Severity: P1 workflow friction
+  - Encountered: 2026-07-08 while cleaning and classifying leftover `C:/Users/User/3KLife` planning/docs changes after framework work had already been delivered in `C:/Users/User/AI-Atomic-Framework`.
+  - Reproduce / detect: In `C:/Users/User/3KLife`, run `node atm.mjs next --prompt "判別目前未提交變更哪些要提交、哪些可以刪掉或處理" --json` while the imported task metadata still points at `AI-Atomic-Framework`. The command returns `ATM_NEXT_FRAMEWORK_TARGET_REPO_REQUIRED`, even though the requested operation is planning-repo hygiene, documentation triage, and generated-artifact cleanup rather than closing or mutating framework target work.
+  - Impact: Agents can misread ordinary planning-repo cleanup as forbidden target-repo framework mutation, leaving stale docs, task events, and generated scratch artifacts unprocessed. It also increases pressure to bypass ATM guidance entirely for repository maintenance tasks.
+  - Possible optimization: Add an explicit planning-repo maintenance route that permits docs/artifact classification, ignore-rule updates, and non-close hygiene while still blocking framework target closeout or source mutation from the planning repo. The route should distinguish `cleanup-only` / `planning-mirror-maintenance` from `target_repo closure`.
+  - Related tasks / commits: 3KLife cleanup after `TASK-RFT-0014` / `TASK-RFT-0016` / `TASK-CID-0112`; observed command above.
+
 - [ ] BUG-ATM-0071: Framework commit/push guard can deadlock validated delivery behind stale governance evidence
   - Status: open
   - Severity: P0 release-lane governance friction

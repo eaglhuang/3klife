@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-01T03-57-51-498Z-close-ea46c65b1474",
+  "taskId": "TASK-RFT-0011",
+  "action": "close",
+  "actorId": "claude-code-opus-4-7",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0011-atm-governance-fix-wave.task.md",
+  "taskSha256": "sha256:e873dd9d77f6d52d4470d125115935041b63088ef9a714a0ac04a8b02f8b3c2a",
+  "createdAt": "2026-07-01T03:57:51.498Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0011 --actor claude-code-opus-4-7"
+}

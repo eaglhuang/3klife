@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-07T14-17-29-152Z-close-7967ba13bf6e",
+  "taskId": "TASK-AAO-0151",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0151-prompt-scoped-next-red-validator.task.md",
+  "taskSha256": "sha256:8e4b2c3bf4bade1f5d58682d16cee5694bd8995ff57ef6cd250f6c6e88cd4ec4",
+  "createdAt": "2026-07-07T14:17:29.152Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0151 --actor codex-captain"
+}

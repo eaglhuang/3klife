@@ -95,6 +95,12 @@ worker / subagent / hosted agent 的 authority boundary 固定如下：
 - vendor permissions
 - closure authority
 
+另外必須顯式承載：
+
+- human sign-off / ADR gate requirement
+- allowed auto-decision boundary
+- violation block reason and escalation target
+
 ### Layer D: Provider Bridges
 
 - OpenAI direct bridge
@@ -250,6 +256,42 @@ scripts/
 - 依 `agentId/role` 查
 - 依 `artifactId` 追上下游
 
+除了執行期事件，runtime 還應保留治理決策欄位，避免事後只看得到「跑了什麼」，看不到「為什麼被放行或擋下」：
+
+- `decisionClass`: `auto-execution` | `human-signoff-required` | `adr-required` | `blocked`
+- `decisionReason`
+- `escalationTarget`
+- `reviewerIndependenceResult`
+- `validatorVerdict`
+- `closureAuthority`
+- `policySource`
+
+## 治理邊界 Contract
+
+不論 provider 是 direct bridge、editor bridge、hosted agent 或 external worker，Team runtime 都要能表達同一套治理邊界：
+
+1. worker 只消費經 ATM 核准的 role envelope，不直接擁有治理主權；
+2. permission broker 必須能拒絕超出 `allowedFiles`、policy scope、lease scope 的請求；
+3. reviewer / validator / evidence 結果必須能正式影響 route state，而不是停留在 advisory 文字；
+4. human sign-off 與 ADR gate 必須是可查詢欄位，不可只寫在文件敘述；
+5. bridge 無法證明權限、身份、結果來源時，預設應退回 `blocked` 或 `manual-review-required`。
+
+建議所有 provider bridge 都回傳一個最小治理封套，至少包含：
+
+- `taskId`
+- `teamRunId`
+- `role`
+- `providerId`
+- `modelId`
+- `requestedPermissions`
+- `grantedPermissions`
+- `allowedFilesDigest`
+- `requiresHumanSignoff`
+- `requiresAdr`
+- `violationStatus`
+- `artifacts`
+- `resultSummary`
+
 ## Provider 選擇策略
 
 支援三層 override：
@@ -272,6 +314,8 @@ scripts/
 - permission broker
 - observability contract
 - provider selection policy
+- governance boundary envelope
+- human / ADR gate fields and blocking semantics
 
 ### Phase 2: Runtime Bridges
 
@@ -292,6 +336,8 @@ scripts/
 - fake provider fixtures
 - provider-by-role matrix
 - close / evidence / artifact / retry / lease regression
+- governance escalation regression
+- reviewer independence and blocked-route regression
 
 ## 對應 Task Card 群
 

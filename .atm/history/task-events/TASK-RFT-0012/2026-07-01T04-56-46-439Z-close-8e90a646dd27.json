@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-01T04-56-46-439Z-close-8e90a646dd27",
+  "taskId": "TASK-RFT-0012",
+  "action": "close",
+  "actorId": "claude-code-opus-4-7",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0012-tasks-orchestrator-body-extraction.task.md",
+  "taskSha256": "sha256:d150a1f8f612736431dfa072ea525b11f6d669d086e58cd18215a86d56e13880",
+  "createdAt": "2026-07-01T04:56:46.439Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0012 --actor claude-code-opus-4-7"
+}

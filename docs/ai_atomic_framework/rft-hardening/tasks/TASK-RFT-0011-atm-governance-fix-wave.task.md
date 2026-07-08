@@ -2,7 +2,7 @@
 doc_id: doc_rft_0011
 task_id: TASK-RFT-0011
 title: "ATM governance-fix wave (auto-evidence mapper + reset-open UX + broker/CID unified matrix)"
-status: in-progress
+status: done
 started_at: "2026-07-01T02:30:00+08:00"
 started_by_agent: claude-code-opus-4-7
 owner: atm-core
@@ -62,6 +62,15 @@ nonGoals:
   - "Do not change the emergency-lease permission catalog"
   - "Do not remove the emergency lease pathway; only remove the false-positive trigger for reset-open"
   - "Do not merge the broker conflict-matrix and the CID gate into one code path; only make next --claim consult the same matrix"
+completed_at: "2026-07-01T04:06:02.970Z"
+completed_by_agent: "claude-code-opus-4-7"
+closedAt: "2026-07-01T04:06:02.970Z"
+closedByActor: "claude-code-opus-4-7"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-01T04-06-02-970Z-close-cb1d3c359df9"
+lastTransitionAt: "2026-07-01T04:06:02.970Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "093d8eb33a5c5b3a8ff813c8b739bf852c18bca3"
 ---
 
 # TASK-RFT-0011 — ATM governance-fix wave
