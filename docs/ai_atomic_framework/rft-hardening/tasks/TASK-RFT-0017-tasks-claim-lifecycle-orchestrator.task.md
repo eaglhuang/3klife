@@ -2,7 +2,7 @@
 doc_id: doc_rft_0017
 task_id: TASK-RFT-0017
 title: "tasks.ts claim lifecycle orchestrator split"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M6
@@ -57,6 +57,15 @@ outOfScope:
 nonGoals:
   - "Do not optimize claim behavior while moving it; this is a verbatim extraction card."
   - "Do not collapse repair-claim diagnostics into a generic lifecycle helper."
+completed_at: "2026-07-09T16:11:54.024Z"
+completed_by_agent: "codex-lane-b"
+closedAt: "2026-07-09T16:11:54.024Z"
+closedByActor: "codex-lane-b"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-09T16-11-54-024Z-close-59fdc091c202"
+lastTransitionAt: "2026-07-09T16:11:54.024Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bb5f914d60e886fbc9b21764c708c9156560106a"
 ---
 
 # TASK-RFT-0017 - tasks.ts claim lifecycle orchestrator split

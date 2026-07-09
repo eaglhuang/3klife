@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-09T16-11-54-024Z-close-59fdc091c202",
+  "taskId": "TASK-RFT-0017",
+  "action": "close",
+  "actorId": "codex-lane-b",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0017-tasks-claim-lifecycle-orchestrator.task.md",
+  "taskSha256": "sha256:8b43d5dcb2ae5b017c1e4635aa26862ded1b0b00ec290dba8ad8e4970114156c",
+  "createdAt": "2026-07-09T16:11:54.024Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0017 --actor codex-lane-b"
+}
