@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-09T17-53-52-718Z-close-f87b83ff4666",
+  "taskId": "TASK-AAO-0155",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0155-next-active-task-divergence-guard.task.md",
+  "taskSha256": "sha256:c0c7d1f7b8fd65ef77ca251ce2a657d030cba269346f2b45657c618596303c96",
+  "createdAt": "2026-07-09T17:53:52.718Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0155 --actor codex-captain"
+}
