@@ -2,7 +2,7 @@
 doc_id: doc_rft_0019
 task_id: TASK-RFT-0019
 title: "tasks.ts card parser + scope/queue final facade split"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M6
@@ -58,6 +58,15 @@ outOfScope:
 nonGoals:
   - "Do not rewrite parser behavior; move it behind a package boundary with parity tests."
   - "Do not chase sub-1,000 lines by deleting useful named exports without compatibility review."
+completed_at: "2026-07-09T17:48:59.552Z"
+completed_by_agent: "codex-lane-b"
+closedAt: "2026-07-09T17:48:59.552Z"
+closedByActor: "codex-lane-b"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-09T17-48-59-552Z-close-dea4673fd03c"
+lastTransitionAt: "2026-07-09T17:48:59.552Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "318dae4fa48418272254c125f3e9a7b7b0a7d153"
 ---
 
 # TASK-RFT-0019 - tasks.ts card parser + scope/queue final facade split

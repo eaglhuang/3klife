@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-09T17-48-59-552Z-close-dea4673fd03c",
+  "taskId": "TASK-RFT-0019",
+  "action": "close",
+  "actorId": "codex-lane-b",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0019-tasks-card-parser-scope-queue-final-facade.task.md",
+  "taskSha256": "sha256:b02d11a0759e4661115f754992fccfebdd0384d1b6d499b83ef1965ef947eeac",
+  "createdAt": "2026-07-09T17:48:59.552Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0019 --actor codex-lane-b"
+}
