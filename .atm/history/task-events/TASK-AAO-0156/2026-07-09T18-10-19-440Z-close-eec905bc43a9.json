@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-09T18-10-19-440Z-close-eec905bc43a9",
+  "taskId": "TASK-AAO-0156",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md",
+  "taskSha256": "sha256:6ba4fe77047bd9dc812e9b9ad831fff790752c454acfacfbd4e1cf1cf1599869",
+  "createdAt": "2026-07-09T18:10:19.440Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0156 --actor codex-captain"
+}
