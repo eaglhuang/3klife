@@ -2,7 +2,7 @@
 doc_id: doc_rft_0018
 task_id: TASK-RFT-0018
 title: "tasks.ts reconcile / repair / deliver-close orchestrator split"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M6
@@ -56,6 +56,15 @@ outOfScope:
 nonGoals:
   - "Do not combine reconcile, repair-closure, and deliver-and-close into one mega-helper."
   - "Do not rewrite historical delivery rules while moving code."
+completed_at: "2026-07-09T17:19:47.703Z"
+completed_by_agent: "codex-lane-b"
+closedAt: "2026-07-09T17:19:47.703Z"
+closedByActor: "codex-lane-b"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-09T17-19-47-703Z-close-1d0d9cb37da3"
+lastTransitionAt: "2026-07-09T17:19:47.703Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "89d542ad352bee3f07a66025f55aa56db1239737"
 ---
 
 # TASK-RFT-0018 - tasks.ts reconcile / repair / deliver-close orchestrator split

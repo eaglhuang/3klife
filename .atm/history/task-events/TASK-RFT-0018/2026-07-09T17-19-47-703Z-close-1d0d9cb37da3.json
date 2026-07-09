@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-09T17-19-47-703Z-close-1d0d9cb37da3",
+  "taskId": "TASK-RFT-0018",
+  "action": "close",
+  "actorId": "codex-lane-b",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0018-tasks-reconcile-repair-deliver-close.task.md",
+  "taskSha256": "sha256:787e30d00b5b87d2ea25c0fbdb77e676c64f47bc3dc8167ccee15aa2fddfa5de",
+  "createdAt": "2026-07-09T17:19:47.703Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0018 --actor codex-lane-b"
+}
