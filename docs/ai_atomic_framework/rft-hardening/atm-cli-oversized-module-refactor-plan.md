@@ -21,6 +21,9 @@ task_family:
   - TASK-RFT-0011
   - TASK-RFT-0012
   - TASK-RFT-0013
+  - TASK-RFT-0017
+  - TASK-RFT-0018
+  - TASK-RFT-0019
 ---
 
 # ATM CLI oversized module refactor plan (RFT series)
@@ -264,6 +267,89 @@ Atoms:
 Tests: one spec per helper cluster covering happy path + one failure + one rollback path where applicable. Add `scripts/validate-tasks-close-helpers-atomic-map.ts` to enforce that each helper module exists, `close-orchestrator.ts` imports each, and `tasks.ts` is under 1,500 lines. Update `docs/reports/tasks-command-atomic-map.md` with the six-layer map (Facade / Sub-Orchestrators / Policy Objects / Strategy Maps / Result Contracts / Close Helpers).
 
 TASK-RFT-0013 depends on RFT-0012 landing first.
+
+### TASK-RFT-0017 -- `tasks.ts` claim lifecycle extraction
+
+**Primary purpose**: extract the remaining claim lifecycle mass from `tasks.ts`
+without touching Lane A `next.ts` work. This is Lane B's first serial card.
+
+Atoms:
+
+- `packages/cli/src/commands/tasks/claim-orchestrator.ts` -- owns
+  `runTasksClaimLifecycle` plus claim/renew/release/handoff/takeover routing.
+- `packages/cli/src/commands/tasks/claim-preparation.ts` -- owns
+  `prepareTaskForClaim`, reservation import orchestration, and the injected
+  parser/writer/evidence-writer boundaries.
+- `packages/cli/src/commands/tasks/claim-intent.ts` -- owns claim-intent
+  resolution.
+- `packages/cli/src/commands/tasks/repair-claim-orchestrator.ts` -- owns the
+  `runTasksRepairClaim` command body and its option parsing if the extraction
+  needs a separate repair lane module.
+- `tasks.ts` -- keeps only command routing and imports the extracted claim
+  owners.
+
+Tests:
+
+- `packages/cli/src/commands/tasks/__tests__/claim-orchestrator.spec.ts`
+- `packages/cli/src/commands/tasks/__tests__/repair-claim-orchestrator.spec.ts`
+- `scripts/validate-tasks-claim-atomic-map.ts`
+
+TASK-RFT-0017 must lower the tasks facade tripwire from 6,000 to 4,800 lines.
+
+### TASK-RFT-0018 -- `tasks.ts` reconcile / repair / deliver-close extraction
+
+**Primary purpose**: extract the remaining reconciliation and repair delivery
+orchestration cluster from `tasks.ts` after TASK-RFT-0017 lands.
+
+Atoms:
+
+- `packages/cli/src/commands/tasks/reconcile-orchestrator.ts` -- owns
+  `runTasksReconcile` and historical delivery reconciliation orchestration.
+- `packages/cli/src/commands/tasks/repairclose-orchestrator.ts` -- owns
+  `runTasksRepairClosure`, repair-closure option parsing, and transition write
+  helpers currently tied to that command.
+- `packages/cli/src/commands/tasks/deliver-close-orchestrator.ts` -- owns
+  `runTasksDeliverAndClose` and its dirty-tree / closeback coordination.
+- `tasks.ts` -- keeps only command routing and imports the extracted owners.
+
+Tests:
+
+- `packages/cli/src/commands/tasks/__tests__/reconcile-orchestrator.spec.ts`
+- `packages/cli/src/commands/tasks/__tests__/repairclose-orchestrator.spec.ts`
+- `packages/cli/src/commands/tasks/__tests__/deliver-close-orchestrator.spec.ts`
+- `scripts/validate-tasks-reconcile-atomic-map.ts`
+
+TASK-RFT-0018 must lower the tasks facade tripwire from 4,800 to 3,900 lines.
+
+### TASK-RFT-0019 -- `tasks.ts` card parsing and scope/queue extraction
+
+**Primary purpose**: finish Lane B by moving the card parsing and
+scope/queue/parallel/lock residual clusters out of `tasks.ts`, then clean the
+facade toward the 1,000-line target.
+
+Atoms:
+
+- `packages/atm-markdown-task-source/src/task-card-parser.ts` -- owns
+  `parsePlanMarkdown`, `parseSingleCard`, section parsing, table metadata, and
+  card enrichment logic that belongs with markdown task-source behavior.
+- `packages/cli/src/commands/tasks/task-card-writer.ts` -- owns
+  `writeTaskFiles` and import evidence writing if those cannot move into the
+  package without broad package-boundary churn.
+- `packages/cli/src/commands/tasks/scope-queue.ts` -- owns scope add /
+  repair, lock cleanup, queue, parallel analysis, roster update glue, and the
+  shared helpers required by those command families.
+- `tasks.ts` -- ends as a thin router/facade with the line-count target
+  recorded in `docs/reports/tasks-command-atomic-map.md`.
+
+Tests:
+
+- `packages/cli/src/commands/tasks/__tests__/task-card-parser.spec.ts`
+- `packages/cli/src/commands/tasks/__tests__/task-card-writer.spec.ts`
+- `packages/cli/src/commands/tasks/__tests__/scope-queue.spec.ts`
+- `scripts/validate-tasks-final-facade-atomic-map.ts`
+
+TASK-RFT-0019 must lower the tasks facade tripwire from 3,900 to 1,000 lines,
+or record the exact remaining exported glue that justifies any residual budget.
 
 ## Test discipline (applies to every RFT card)
 
