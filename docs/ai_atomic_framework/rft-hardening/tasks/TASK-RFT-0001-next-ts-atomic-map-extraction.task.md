@@ -2,7 +2,7 @@
 doc_id: doc_rft_0001
 task_id: TASK-RFT-0001
 title: "next.ts atomic-map extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M1
@@ -66,6 +66,15 @@ nonGoals:
   - "Do not rename the next subcommand."
   - "Do not change the next --help summary text beyond what TASK-CID-0073 already settled."
   - "Do not consolidate next-active-batch.ts or upgrade/next-action-hint.ts in this card."
+completed_at: "2026-07-09T16:11:08.689Z"
+completed_by_agent: "cursor-composer-rft0001"
+closedAt: "2026-07-09T16:11:08.689Z"
+closedByActor: "cursor-composer-rft0001"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-09T16-11-08-689Z-close-d6b0548714ba"
+lastTransitionAt: "2026-07-09T16:11:08.689Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b513405f2ea00640ef7dd140c1714c6bdc561963"
 ---
 
 # TASK-RFT-0001 - next.ts atomic-map extraction

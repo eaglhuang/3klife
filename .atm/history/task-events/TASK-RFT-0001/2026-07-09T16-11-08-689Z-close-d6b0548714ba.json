@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-09T16-11-08-689Z-close-d6b0548714ba",
+  "taskId": "TASK-RFT-0001",
+  "action": "close",
+  "actorId": "cursor-composer-rft0001",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0001-next-ts-atomic-map-extraction.task.md",
+  "taskSha256": "sha256:b7a7674a216bd6922c305ff3805580c8e600d1acda1109d629867a793296244a",
+  "createdAt": "2026-07-09T16:11:08.689Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0001 --actor cursor-composer-rft0001"
+}
