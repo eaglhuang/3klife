@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T04-30-54-393Z-close-7fce0a0dcd70",
+  "taskId": "TASK-TEAM-0047",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0047-broker-override-gate-parity.task.md",
+  "taskSha256": "sha256:b8b1ae828dbaec1408a24f6d7d35f4c4b7470bc0bd5f553e0ec89bd39c1855d1",
+  "createdAt": "2026-07-10T04:30:54.393Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0047 --actor codex-captain-m8e"
+}
