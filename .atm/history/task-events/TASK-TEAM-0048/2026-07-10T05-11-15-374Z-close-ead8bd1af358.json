@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T05-11-15-374Z-close-ead8bd1af358",
+  "taskId": "TASK-TEAM-0048",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0048-conflict-ux-and-captain-playbook.task.md",
+  "taskSha256": "sha256:67eb1ac72a1eedb10b9bc1a75d81fb56cc83878aca9cb8f347b6e1c558884518",
+  "createdAt": "2026-07-10T05:11:15.374Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0048 --actor codex-captain-m8e"
+}
