@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T06-45-08-386Z-close-cf6f65bd5c9a",
+  "taskId": "TASK-SKL-0012",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0012-team-role-growth-and-observability-integration.task.md",
+  "taskSha256": "sha256:ddaf03eca1e95c5b0394a4f3714e748c431cebcff7a2b9883d33b30ca80852d7",
+  "createdAt": "2026-07-10T06:45:08.386Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0012 --actor codex-captain-m8e"
+}

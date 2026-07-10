@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0012
 title: Team role growth and observability integration
-status: planned
+status: done
 milestone: P4
 depends_on:
   - TASK-SKL-0007
@@ -37,6 +37,15 @@ out_of_scope:
 nonGoals:
   - "No role-specific incompatible learning-loop formats."
   - "No mandatory knowledge retrieval gate before every Team action."
+completed_at: "2026-07-10T06:45:08.386Z"
+completed_by_agent: "codex-captain-m8e"
+closedAt: "2026-07-10T06:45:08.386Z"
+closedByActor: "codex-captain-m8e"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T06-45-08-386Z-close-cf6f65bd5c9a"
+lastTransitionAt: "2026-07-10T06:45:08.386Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e3f9f2e66f0421e0b4e5968013235dcfc14a5e1b"
 ---
 
 # TASK-SKL-0012
