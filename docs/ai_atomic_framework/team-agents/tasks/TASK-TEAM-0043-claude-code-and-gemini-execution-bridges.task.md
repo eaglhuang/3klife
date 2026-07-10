@@ -2,7 +2,7 @@
 doc_id: doc_team_0043
 task_id: TASK-TEAM-0043
 title: "Claude Code and Gemini execution bridges"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M9I
@@ -49,6 +49,15 @@ outOfScope:
 nonGoals:
   - "Do not assume Claude Code and Gemini share the same execution surface"
   - "Do not skip role-envelope normalization for editor-subagent mode"
+completed_at: "2026-07-10T07:37:32.854Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-10T07:37:32.854Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T07-37-32-854Z-close-9692cceac961"
+lastTransitionAt: "2026-07-10T07:37:32.854Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a9c60757dc4b996a8820ecd65078683c5bee2d73"
 ---
 # TASK-TEAM-0043 Claude Code and Gemini execution bridges
 

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T07-37-32-854Z-close-9692cceac961",
+  "taskId": "TASK-TEAM-0043",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0043-claude-code-and-gemini-execution-bridges.task.md",
+  "taskSha256": "sha256:1379d6d15d1039e06aa5828b15e7b575356596d7bf3d0e3efb1d7f60f92b4a4e",
+  "createdAt": "2026-07-10T07:37:32.854Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0043 --actor codex-gpt-5.4-mini"
+}
