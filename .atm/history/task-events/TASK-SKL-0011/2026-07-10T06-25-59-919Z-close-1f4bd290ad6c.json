@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T06-25-59-919Z-close-1f4bd290ad6c",
+  "taskId": "TASK-SKL-0011",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0011-agent-plus-skill-runtime-pilot.task.md",
+  "taskSha256": "sha256:a740236ff822e572daade514632919feab0e4cd85280e5659964c85c93a2f58f",
+  "createdAt": "2026-07-10T06:25:59.919Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0011 --actor codex-captain-m8e"
+}
