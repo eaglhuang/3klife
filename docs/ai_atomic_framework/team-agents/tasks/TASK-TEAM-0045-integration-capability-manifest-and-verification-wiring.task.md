@@ -2,7 +2,7 @@
 doc_id: doc_team_0045
 task_id: TASK-TEAM-0045
 title: "Integration capability manifest and verification wiring"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M9I
@@ -56,6 +56,15 @@ outOfScope:
 nonGoals:
   - "Do not create a second integration registry outside the existing ATM manifest path"
   - "Do not treat onboarding adapter install as proof of Team runtime readiness by itself"
+completed_at: "2026-07-10T08:34:33.299Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-10T08:34:33.299Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T08-34-33-299Z-close-760eed37b735"
+lastTransitionAt: "2026-07-10T08:34:33.299Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d45abbfb0b1e94273262a9a40f8a578d36efe46f"
 ---
 # TASK-TEAM-0045 Integration capability manifest and verification wiring
 

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T08-34-33-299Z-close-760eed37b735",
+  "taskId": "TASK-TEAM-0045",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0045-integration-capability-manifest-and-verification-wiring.task.md",
+  "taskSha256": "sha256:7a0e3bb087f2c616ab99a1ae8132e322ff7c73c0fbfe81c21c6117af77fe28a9",
+  "createdAt": "2026-07-10T08:34:33.299Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0045 --actor codex-gpt-5.4-mini"
+}
