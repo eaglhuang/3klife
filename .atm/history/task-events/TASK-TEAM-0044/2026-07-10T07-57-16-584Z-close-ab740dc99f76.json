@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T07-57-16-584Z-close-ab740dc99f76",
+  "taskId": "TASK-TEAM-0044",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0044-microsoft-foundry-provider-family-bridge.task.md",
+  "taskSha256": "sha256:719e1e13b25850a282eb2568e94b285f89209d3eeb4b2c7b64ae04e48f59c3f9",
+  "createdAt": "2026-07-10T07:57:16.584Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0044 --actor codex-gpt-5.4-mini"
+}

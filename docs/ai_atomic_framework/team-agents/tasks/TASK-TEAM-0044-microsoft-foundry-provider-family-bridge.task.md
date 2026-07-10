@@ -2,7 +2,7 @@
 doc_id: doc_team_0044
 task_id: TASK-TEAM-0044
 title: "Microsoft Foundry provider family bridge"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M9I
@@ -47,6 +47,15 @@ outOfScope:
 nonGoals:
   - "Do not collapse service-managed agents and chat inference into one config model"
   - "Do not bypass adopter repo config for project endpoints or agent references"
+completed_at: "2026-07-10T07:57:16.584Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-10T07:57:16.584Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T07-57-16-584Z-close-ab740dc99f76"
+lastTransitionAt: "2026-07-10T07:57:16.584Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d26ba3ba09146d73b8ad61866ea6e60f78377bd9"
 ---
 # TASK-TEAM-0044 Microsoft Foundry provider family bridge
 
