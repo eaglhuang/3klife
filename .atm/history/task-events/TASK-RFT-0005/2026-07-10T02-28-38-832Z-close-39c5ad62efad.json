@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T02-28-38-832Z-close-39c5ad62efad",
+  "taskId": "TASK-RFT-0005",
+  "action": "close",
+  "actorId": "cursor-composer-rft0005",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0005-captain-dispatch-mailbox-lane-split.task.md",
+  "taskSha256": "sha256:0806d1b3d187b9514ec8d2b471a43311effc6c0f323565f353646a43360f9dd7",
+  "createdAt": "2026-07-10T02:28:38.832Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0005 --actor cursor-composer-rft0005"
+}

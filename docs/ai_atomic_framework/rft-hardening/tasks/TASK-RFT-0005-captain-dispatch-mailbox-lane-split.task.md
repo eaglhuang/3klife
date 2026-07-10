@@ -2,7 +2,7 @@
 doc_id: doc_rft_0005
 task_id: TASK-RFT-0005
 title: "captain-dispatch-mailbox.ts lane split"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M2
@@ -75,6 +75,15 @@ outOfScope:
 nonGoals:
   - "Do not merge inbox/outbox lanes — keep them addressable."
   - "Do not silently drop captain-report receivers."
+completed_at: "2026-07-10T02:28:38.832Z"
+completed_by_agent: "cursor-composer-rft0005"
+closedAt: "2026-07-10T02:28:38.832Z"
+closedByActor: "cursor-composer-rft0005"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T02-28-38-832Z-close-39c5ad62efad"
+lastTransitionAt: "2026-07-10T02:28:38.832Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9457a002d6c42a45b1ee05b81a129c1e8e7df0b6"
 ---
 
 # TASK-RFT-0005 - captain-dispatch-mailbox.ts lane split
