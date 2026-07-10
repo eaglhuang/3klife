@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T01-09-00-015Z-close-ea1b0d8c1803",
+  "taskId": "TASK-RFT-0007",
+  "action": "close",
+  "actorId": "cursor-composer-rft0007",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0007-evidence-verb-split.task.md",
+  "taskSha256": "sha256:25afaad178a7551e2116f1d7013f9ca1af901bf0ab348f1def2ad5ee826438a4",
+  "createdAt": "2026-07-10T01:09:00.015Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0007 --actor cursor-composer-rft0007"
+}

@@ -2,7 +2,7 @@
 doc_id: doc_rft_0007
 task_id: TASK-RFT-0007
 title: "evidence.ts verb split"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M2
@@ -90,6 +90,15 @@ outOfScope:
 nonGoals:
   - "Do not change evidence freshness defaults."
   - "Do not merge evidence run and evidence add."
+completed_at: "2026-07-10T01:09:00.015Z"
+completed_by_agent: "cursor-composer-rft0007"
+closedAt: "2026-07-10T01:09:00.015Z"
+closedByActor: "cursor-composer-rft0007"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T01-09-00-015Z-close-ea1b0d8c1803"
+lastTransitionAt: "2026-07-10T01:09:00.015Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4b8362a4385e69d02dabe8e291a2b42451c6f2cd"
 ---
 
 # TASK-RFT-0007 - evidence.ts verb split
