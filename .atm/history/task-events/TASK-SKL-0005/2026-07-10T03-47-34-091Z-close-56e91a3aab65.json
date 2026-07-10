@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T03-47-34-091Z-close-56e91a3aab65",
+  "taskId": "TASK-SKL-0005",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md",
+  "taskSha256": "sha256:aa5ae5deb95b1333493cd5be2e019d2eba942e49107939eb452e6c767db15980",
+  "createdAt": "2026-07-10T03:47:34.091Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0005 --actor codex-captain-m8e"
+}

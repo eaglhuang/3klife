@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0005
 title: Skill tool-first orchestration migration
-status: planned
+status: done
 milestone: P1
 depends_on:
   - TASK-SKL-0002
@@ -38,6 +38,15 @@ out_of_scope:
 nonGoals:
   - "No broad copy rewrite of every planning document."
   - "No hidden shell fallback that masks blocked tools."
+completed_at: "2026-07-10T03:47:34.091Z"
+completed_by_agent: "codex-captain-m8e"
+closedAt: "2026-07-10T03:47:34.091Z"
+closedByActor: "codex-captain-m8e"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T03-47-34-091Z-close-56e91a3aab65"
+lastTransitionAt: "2026-07-10T03:47:34.091Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "132592efdfd7d066b51b3d1ec33e1276189f4f57"
 ---
 
 # TASK-SKL-0005
