@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T03-26-11-442Z-close-e9ed3cf934f4",
+  "taskId": "TASK-TEAM-0046",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0046-broker-conflict-resolution-command.task.md",
+  "taskSha256": "sha256:2679493c1947c6488eed1440aa86eaa7899e89a6ff23d09438b9bd38b59dc6a4",
+  "createdAt": "2026-07-10T03:26:11.442Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0046 --actor codex-captain-m8e"
+}
