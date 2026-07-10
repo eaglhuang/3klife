@@ -2,7 +2,7 @@
 doc_id: doc_rft_0006
 task_id: TASK-RFT-0006
 title: "police/family.ts role split"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M2
@@ -90,6 +90,15 @@ outOfScope:
 nonGoals:
   - "Do not collapse roles that look similar — each role has distinct suppression semantics."
   - "Do not weaken the shared SharedGateReport contract."
+completed_at: "2026-07-10T02:02:22.070Z"
+completed_by_agent: "cursor-composer-rft0006"
+closedAt: "2026-07-10T02:02:22.070Z"
+closedByActor: "cursor-composer-rft0006"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T02-02-22-070Z-close-1c03557557b6"
+lastTransitionAt: "2026-07-10T02:02:22.070Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f1fcd2bba650f7fdc0c3a3a902dd4b0bec2052e3"
 ---
 
 # TASK-RFT-0006 - police/family.ts role split

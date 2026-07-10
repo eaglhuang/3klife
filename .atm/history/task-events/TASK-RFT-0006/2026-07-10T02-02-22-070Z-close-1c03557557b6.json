@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T02-02-22-070Z-close-1c03557557b6",
+  "taskId": "TASK-RFT-0006",
+  "action": "close",
+  "actorId": "cursor-composer-rft0006",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0006-police-family-role-split.task.md",
+  "taskSha256": "sha256:c8677a986bcb1712ba4ce29bf4f0cb2bc039389c0216300c5c409099b3fcefe5",
+  "createdAt": "2026-07-10T02:02:22.070Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0006 --actor cursor-composer-rft0006"
+}
