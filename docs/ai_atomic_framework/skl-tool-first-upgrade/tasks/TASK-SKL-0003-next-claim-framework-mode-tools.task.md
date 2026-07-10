@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0003
 title: Next, claim, and framework-mode tools
-status: planned
+status: done
 milestone: P1
 depends_on:
   - TASK-SKL-0001
@@ -36,6 +36,15 @@ out_of_scope:
 nonGoals:
   - "No taskflow close tooling in this card."
   - "No skill migration yet."
+completed_at: "2026-07-10T04:38:16.118Z"
+completed_by_agent: "codex-captain-m8e"
+closedAt: "2026-07-10T04:38:16.118Z"
+closedByActor: "codex-captain-m8e"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T04-38-16-118Z-close-03a87b7ccc09"
+lastTransitionAt: "2026-07-10T04:38:16.118Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f50f2e1546f91761471eb012feb7817b5d5275e3"
 ---
 
 # TASK-SKL-0003
