@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0009
 title: Team role-routing matrix and playbook slices
-status: planned
+status: done
 milestone: P3
 depends_on:
   - TASK-SKL-0003
@@ -37,6 +37,15 @@ out_of_scope:
 nonGoals:
   - "No provider bridge implementation."
   - "No broad rewrite of task lifecycle."
+completed_at: "2026-07-10T04:51:00.861Z"
+completed_by_agent: "codex-captain-m8e"
+closedAt: "2026-07-10T04:51:00.861Z"
+closedByActor: "codex-captain-m8e"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T04-51-00-861Z-close-dd91b363f3a3"
+lastTransitionAt: "2026-07-10T04:51:00.861Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "41815ca714753f3be97a653e37277cc5e6807b58"
 ---
 
 # TASK-SKL-0009
