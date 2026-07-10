@@ -2,7 +2,7 @@
 doc_id: doc_rft_0004
 task_id: TASK-RFT-0004
 title: "validate-task-ledger-governance.ts invariant registry split"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M2
@@ -82,6 +82,15 @@ outOfScope:
   - "Touching the `taskflow open/close` runtime path"
 nonGoals:
   - "Do not skip an invariant because it is awkward to fixture; build the fixture instead."
+completed_at: "2026-07-10T01:38:39.415Z"
+completed_by_agent: "cursor-composer-rft0004"
+closedAt: "2026-07-10T01:38:39.415Z"
+closedByActor: "cursor-composer-rft0004"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T01-38-39-415Z-close-c1ba5ae10da1"
+lastTransitionAt: "2026-07-10T01:38:39.415Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d16e18b2657a8234a5395f75ee2e19168ecfb0f8"
 ---
 
 # TASK-RFT-0004 - validate-task-ledger-governance.ts invariant registry split

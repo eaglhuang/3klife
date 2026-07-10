@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T01-38-39-415Z-close-c1ba5ae10da1",
+  "taskId": "TASK-RFT-0004",
+  "action": "close",
+  "actorId": "cursor-composer-rft0004",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0004-task-ledger-invariant-registry.task.md",
+  "taskSha256": "sha256:523e99ea48c781d01da7a17c1cacf9d9380dccfede94e2288b6a4cd7f845674e",
+  "createdAt": "2026-07-10T01:38:39.415Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0004 --actor cursor-composer-rft0004"
+}
