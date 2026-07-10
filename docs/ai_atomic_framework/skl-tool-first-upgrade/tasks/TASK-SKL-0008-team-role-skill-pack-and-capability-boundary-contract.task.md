@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0008
 title: Team role skill-pack and capability boundary contract
-status: planned
+status: done
 milestone: P3
 depends_on:
   - TASK-SKL-0005
@@ -36,6 +36,15 @@ out_of_scope:
 nonGoals:
   - "No provider-specific runtime bridge in this card."
   - "No role-specific bespoke learning taxonomy."
+completed_at: "2026-07-10T04:08:13.014Z"
+completed_by_agent: "codex-captain-m8e"
+closedAt: "2026-07-10T04:08:13.014Z"
+closedByActor: "codex-captain-m8e"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T04-08-13-014Z-close-d36335fd5c5a"
+lastTransitionAt: "2026-07-10T04:08:13.014Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b1d5362f5f4181bf357676312b5d41e416c8e081"
 ---
 
 # TASK-SKL-0008

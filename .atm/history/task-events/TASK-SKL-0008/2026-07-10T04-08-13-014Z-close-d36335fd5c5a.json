@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T04-08-13-014Z-close-d36335fd5c5a",
+  "taskId": "TASK-SKL-0008",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md",
+  "taskSha256": "sha256:641780f4f3ed4de39ccad43cfd95f75e403c73f35c1f7384cc1b0b4b736f5fe2",
+  "createdAt": "2026-07-10T04:08:13.014Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0008 --actor codex-captain-m8e"
+}
