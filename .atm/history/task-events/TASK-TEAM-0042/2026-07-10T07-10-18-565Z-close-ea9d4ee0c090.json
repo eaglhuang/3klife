@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T07-10-18-565Z-close-ea9d4ee0c090",
+  "taskId": "TASK-TEAM-0042",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0042-openai-and-azure-openai-runtime-bridges.task.md",
+  "taskSha256": "sha256:edc292ff79fe1181bde1e7fe6ba643f357041a0b8c7f4c3693144a04659c5d8a",
+  "createdAt": "2026-07-10T07:10:18.565Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0042 --actor codex-gpt-5.4-mini"
+}

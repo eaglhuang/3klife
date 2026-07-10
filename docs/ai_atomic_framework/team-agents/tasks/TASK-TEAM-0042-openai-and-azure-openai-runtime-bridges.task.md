@@ -2,7 +2,7 @@
 doc_id: doc_team_0042
 task_id: TASK-TEAM-0042
 title: "OpenAI and Azure OpenAI runtime bridges"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M9I
@@ -49,6 +49,15 @@ outOfScope:
 nonGoals:
   - "Do not assume Azure OpenAI config is identical to OpenAI config"
   - "Do not skip permission or observability enforcement for direct providers"
+completed_at: "2026-07-10T07:10:18.565Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-10T07:10:18.565Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T07-10-18-565Z-close-ea9d4ee0c090"
+lastTransitionAt: "2026-07-10T07:10:18.565Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e540beb98184008657ea9ab6110237dd98080c02"
 ---
 # TASK-TEAM-0042 OpenAI and Azure OpenAI runtime bridges
 
