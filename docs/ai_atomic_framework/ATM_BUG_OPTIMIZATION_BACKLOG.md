@@ -30,6 +30,15 @@ Use this file when:
 
 ## Open Items
 
+- [ ] BUG-ATM-0073: Taskflow close bundle can absorb unrelated `.bak` WIP from broad framework scope
+  - Status: open
+  - Severity: P1 closeout safety / multi-agent workflow friction
+  - Encountered: 2026-07-10 while closing `TASK-SKL-0005` in `C:/Users/User/AI-Atomic-Framework` after a valid delivery commit had already landed.
+  - Reproduce / detect: Use a task whose target scope includes a broad path such as `packages/**`, leave unrelated untracked backup files such as `packages/cli/src/commands/evidence.ts.bak`, `packages/cli/src/commands/hook.ts.bak`, or `packages/core/src/police/family.ts.bak` in the framework repo, then run `node atm.mjs taskflow close --task TASK-SKL-0005 --actor codex-captain-m8e --historical-delivery 132592ef --dry-run --json`. The dry-run can still list those unrelated files as `targetDeliveryFiles`, and `--write --no-commit` can fail with `ATM_TASKFLOW_CLOSE_DELIVERY_COMMIT_REQUIRED`.
+  - Impact: A captain or worker may be pushed toward staging/committing another lane's scratch files just to complete closeout. This is especially risky during Team Broker / RFT parallel work because backup files from another agent can sit under broad source globs while the current task is already historically delivered.
+  - Possible optimization: In historical-delivery close mode, base required delivery files on the historical delivery commit and explicit task-owned close artifacts, not arbitrary untracked files under broad scope. Classify `.bak` / scratch residue as advisory or emit an exact defer/exclude remediation. Add regression coverage for broad `packages/**` scope plus unrelated untracked backup files.
+  - Related tasks / commits: `TASK-SKL-0005`; AI-Atomic-Framework delivery `132592ef`; closure `e8b7d01f`; planning close `971e0dc4`; canonical framework backlog `ATM-BUG-2026-07-10-071`.
+
 - [ ] BUG-ATM-0072: Planning-repo cleanup is blocked by framework target-repo routing notice
   - Status: open
   - Severity: P1 workflow friction
