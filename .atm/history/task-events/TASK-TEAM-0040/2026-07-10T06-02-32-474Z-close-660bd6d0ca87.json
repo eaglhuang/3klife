@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T06-02-32-474Z-close-660bd6d0ca87",
+  "taskId": "TASK-TEAM-0040",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0040-cross-vendor-observability-and-query-log.task.md",
+  "taskSha256": "sha256:0ee719487f557c53c3ab3ace6b27010d38fe30d03fe2728771de3c03cebca2f5",
+  "createdAt": "2026-07-10T06:02:32.474Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0040 --actor codex-captain-m8e"
+}

@@ -2,7 +2,7 @@
 doc_id: doc_team_0040
 task_id: TASK-TEAM-0040
 title: "Cross-vendor observability and query log"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M8I
@@ -46,6 +46,15 @@ outOfScope:
 nonGoals:
   - "Do not let each vendor invent a separate event model"
   - "Do not log raw secrets"
+completed_at: "2026-07-10T06:02:32.474Z"
+completed_by_agent: "codex-captain-m8e"
+closedAt: "2026-07-10T06:02:32.474Z"
+closedByActor: "codex-captain-m8e"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-10T06-02-32-474Z-close-660bd6d0ca87"
+lastTransitionAt: "2026-07-10T06:02:32.474Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6a64b8a928626fbcca19b183cd97229f75901172"
 ---
 # TASK-TEAM-0040 Cross-vendor observability and query log
 
