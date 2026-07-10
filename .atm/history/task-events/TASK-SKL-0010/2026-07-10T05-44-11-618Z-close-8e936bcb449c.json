@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T05-44-11-618Z-close-8e936bcb449c",
+  "taskId": "TASK-SKL-0010",
+  "action": "close",
+  "actorId": "codex-captain-m8e",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md",
+  "taskSha256": "sha256:42349066c39139d0e69d543d50b9f676bcbcd4c061da29fca6d09e244dfb74e4",
+  "createdAt": "2026-07-10T05:44:11.618Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0010 --actor codex-captain-m8e"
+}
