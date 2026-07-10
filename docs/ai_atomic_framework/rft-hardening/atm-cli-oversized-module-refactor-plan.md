@@ -1,8 +1,9 @@
 ---
 doc_id: doc_rft_cli_oversized_module_refactor_plan
 title: "ATM CLI oversized module refactor plan (RFT series)"
-status: planned
+status: active
 created_at: "2026-06-13T22:30:00+08:00"
+updated_at: "2026-07-10T10:52:00+08:00"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 related_skill: .agents/skills/atm-atom-map-refactor
@@ -24,6 +25,9 @@ task_family:
   - TASK-RFT-0017
   - TASK-RFT-0018
   - TASK-RFT-0019
+  - TASK-AAO-0154
+  - TASK-AAO-0155
+  - TASK-AAO-0156
 ---
 
 # ATM CLI oversized module refactor plan (RFT series)
@@ -379,6 +383,32 @@ The cards are independent at the file level and may run in parallel, with one ex
 
 Recommended order if running serially: RFT-0008 -> RFT-0009 -> RFT-0010 -> RFT-0003 -> RFT-0007 -> RFT-0002 -> RFT-0006 -> RFT-0001 -> RFT-0005 -> RFT-0004. RFT-0008 comes first because close validation speed is the safety net; RFT-0009 follows because it uses that safety net to shrink `taskflow.ts`; RFT-0010 follows because `tasks.ts` is now the largest open oversized-module surface.
 
+## 2026-07-10 progress snapshot
+
+Planning cards and target ledger for the original oversized-module wave are now aligned as `done` for:
+
+- TASK-RFT-0001, 0002, 0003, 0004, 0005, 0006, 0007
+- TASK-RFT-0008, 0009, 0010
+- TASK-RFT-0017, 0018, 0019
+- TASK-AAO-0154, 0155, 0156 (governed hardening follow-ups)
+
+2026-07-10 serial delivery wave (target then planning close bundles):
+
+| Task | Post-delivery facade (approx lines) | Planning close |
+|---|---:|---|
+| TASK-RFT-0002 | hook.ts ~82 | `f381ef33` |
+| TASK-RFT-0007 | evidence.ts ~49 | `9b27cb12` |
+| TASK-RFT-0004 | validate-task-ledger-governance.ts ~14 | `5c407ce0` |
+| TASK-RFT-0006 | police/family.ts ~337 | `7b0a918a` |
+| TASK-RFT-0005 | captain-dispatch-mailbox.ts ~112 | `877c4e8d` |
+
+Residual pressure after this wave is no longer those closed cards. Prefer new cards for:
+
+1. residual `packages/cli/src/commands/next.ts` size after TASK-RFT-0001
+2. `packages/cli/src/commands/team.ts`
+3. `packages/cli/src/commands/framework-development/closure-packet-schema.ts`
+4. `packages/cli/src/commands/git-governance.ts`
+
 ## Skill casebook integration
 
 `.agents/skills/atm-atom-map-refactor/references/casebook.md` will gain seven RFT forward-cases (one per card) so any future agent invoking the skill in review mode for one of these files sees the pre-decided pattern, suggested owner module, and required proof shape. The casebook will be updated in the same PR as this plan.
@@ -391,3 +421,26 @@ Recommended order if running serially: RFT-0008 -> RFT-0009 -> RFT-0010 -> RFT-0
 - Touching anything under `release/atm-onefile/` or `release/atm-root-drop/` as a source delivery (those are runner-sync outputs of `npm run build`).
 - Touching files under `.atm/history/` by hand. All ledger mutations go through ATM CLI verbs.
 - Rewriting already-extracted `tasks/*` atoms outside TASK-RFT-0010 without an explicit follow-up card.
+
+## 2026-07-09 governed hardening follow-ups
+
+The RFT lane also exposed a separate operator-governance weakness: a weaker
+agent tried to make a commit pass by mutating files and ATM history outside its
+task scope, then routing unrelated bug work back onto the same active task.
+
+That is not an oversized-file problem by itself, but it is now part of the
+same practical hardening stream because the failure happened during active RFT
+execution and directly affected task-boundary safety.
+
+Follow-up cards:
+
+- `TASK-AAO-0154` -- fail closed on cross-task restore/reset/remove and enter
+  incident-safe mode;
+- `TASK-AAO-0155` -- prevent `next --prompt` from silently attaching divergent
+  bug work to the wrong active task;
+- `TASK-AAO-0156` -- fence `.atm` history mutation and staged ownership so weak
+  agents cannot self-clean other lanes.
+
+These cards are explicitly root-cause treatments. They must not solve the
+incident by adding validator downgrade profiles, advisory-only bypasses, or
+second-path manual cleanup conventions.
