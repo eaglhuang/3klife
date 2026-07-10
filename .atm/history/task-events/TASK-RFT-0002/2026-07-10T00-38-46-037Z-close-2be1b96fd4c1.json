@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-10T00-38-46-037Z-close-2be1b96fd4c1",
+  "taskId": "TASK-RFT-0002",
+  "action": "close",
+  "actorId": "cursor-composer-rft0002",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0002-hook-ts-phase-split.task.md",
+  "taskSha256": "sha256:e4679ea620e8e45aea9b0aa29606874387942fcc15ddc2fbfeb7874b99fb9f70",
+  "createdAt": "2026-07-10T00:38:46.037Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0002 --actor cursor-composer-rft0002"
+}
