@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T16-02-00-816Z-close-3c9ebeb3b573",
+  "taskId": "TASK-TEAM-0073",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0073-cross-vendor-team-markdown-handoff-hard-gates.task.md",
+  "taskSha256": "sha256:da9d523e4b5dde4ff76f0a32229aeddd6f4203a8d295af6a0819053d9e360784",
+  "createdAt": "2026-07-11T16:02:00.816Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0073 --actor Codex-GPT5.6 Terra"
+}
