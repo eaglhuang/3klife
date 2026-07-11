@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T15-53-06-953Z-close-6282b7e5d7cf",
+  "taskId": "TASK-TEAM-0072",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0072-cross-vendor-team-markdown-handoff-runtime-ledger.task.md",
+  "taskSha256": "sha256:98e9ba11f2aff409395ecfa148a0a3a556227d8ddd192290fc750f3cd39c9adc",
+  "createdAt": "2026-07-11T15:53:06.953Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0072 --actor Codex-GPT5.6 Terra"
+}
