@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T13-38-38-586Z-close-f0881a4bd582",
+  "taskId": "TASK-TEAM-0071",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Sol",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0071-three-vendor-artifact-handoff-and-context-benchmark.task.md",
+  "taskSha256": "sha256:0203d7f3cbfa6575103e4db0dffc07b80a0f10d20ea49de135ec90df838dcae7",
+  "createdAt": "2026-07-11T13:38:38.586Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0071 --actor Codex-GPT5.6 Sol"
+}
