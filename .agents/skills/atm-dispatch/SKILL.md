@@ -220,3 +220,25 @@ skill 啟用時不必重讀全部 memory；僅按需查閱對應檔。
 - 短句、不重複已建立模式說明
 - 重大決策才 askUser
 - Captain 一般先決策再給理由（不每次問裁示）
+
+## Encoding-Safe Captain Workflow (Required)
+
+Do not diagnose multilingual Markdown or JSON as corrupt from PowerShell
+rendering alone. Before any repair, inspect the original bytes with Node:
+
+```bash
+node tools_node/validate-skill-encoding.js --files <file>[,<file>...]
+```
+
+Only a failed raw-byte check (invalid UTF-8, BOM, replacement character, or
+mojibake signature) authorizes an encoding repair. For a multilingual rewrite,
+use Node Buffer I/O with explicit UTF-8 and preserve the file's line-ending
+style. Do not use PowerShell text pipelines, Get-Content | Set-Content, or
+shell redirection to rewrite governance Markdown or JSON.
+
+For Team/AAO work whose target repository is AI-Atomic-Framework, Phase 0 is
+owned by 3KLife: create the planning task card, add the corresponding
+docs/tasks/tasks-*.json entry, validate both, and make one scoped planning
+commit. Only after that committed source exists may a target-repository agent
+import, claim, or implement the task. Do not create a planning status mirror
+commit during target-repository implementation or closeout.

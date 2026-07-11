@@ -2,7 +2,7 @@
 doc_id: doc_team_0077
 task_id: TASK-TEAM-0077
 title: "Node UTF-8 verification and Captain encoding guidance"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: "Captain Operability"
@@ -16,11 +16,13 @@ scopePaths:
   - ".agents/skills/task-card-opener/SKILL.md"
   - "tools_node/validate-skill-encoding.js"
   - "docs/tasks/tasks-team.json"
+  - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0077-node-utf8-skill-repair-and-captain-guidance.task.md"
 deliverables:
   - ".agents/skills/atm-dispatch/SKILL.md"
   - ".agents/skills/task-card-opener/SKILL.md"
   - "tools_node/validate-skill-encoding.js"
   - "docs/tasks/tasks-team.json"
+  - "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0077-node-utf8-skill-repair-and-captain-guidance.task.md"
 validators:
   - "node tools_node/validate-skill-encoding.js --files .agents/skills/atm-dispatch/SKILL.md .agents/skills/task-card-opener/SKILL.md docs/keep.summary.md"
   - "npm run check:encoding:touched -- --files .agents/skills/atm-dispatch/SKILL.md .agents/skills/task-card-opener/SKILL.md tools_node/validate-skill-encoding.js"

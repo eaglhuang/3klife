@@ -180,3 +180,21 @@ node tools_node/build-ui-task-manifest.js
 4. 若有 UI shard，已執行 `node tools_node/build-ui-task-manifest.js`
 5. touched 文字檔已跑 encoding guard
 6. 若有新 Markdown 卡且尚未拿到正式 `doc_id`，已用 `--assign-doc-id` 或後續補跑 `node tools_node/doc-id-registry.js --assign <path>`
+## Encoding-Safe Task Authoring (Required)
+
+Treat a garbled PowerShell display as a display symptom, not proof that a task
+card or ledger is corrupt. Verify raw bytes before a repair:
+
+```bash
+node tools_node/validate-skill-encoding.js --files <task-card>,<task-ledger>
+```
+
+When a multilingual task card or JSON ledger must be changed, use Node Buffer
+I/O with explicit UTF-8. Never rewrite these files through PowerShell text
+pipelines or redirection. After writing, rerun the Node validator and the
+touched-file encoding guard.
+
+For a Team/AAO task that targets AI-Atomic-Framework, open Phase 0 from
+3KLife: task card plus matching docs/tasks/tasks-*.json entry plus one scoped
+planning commit. A target-repository import or claim is Phase 1 and must not
+precede that planning commit.
