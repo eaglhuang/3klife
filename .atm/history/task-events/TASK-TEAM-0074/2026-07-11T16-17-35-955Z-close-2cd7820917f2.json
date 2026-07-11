@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T16-17-35-955Z-close-2cd7820917f2",
+  "taskId": "TASK-TEAM-0074",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0074-cross-vendor-team-markdown-handoff-assurance.task.md",
+  "taskSha256": "sha256:6e10a810146f45329ebcc483c42d46564497f1fd0782af7723ebf6b37a46d39e",
+  "createdAt": "2026-07-11T16:17:35.955Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0074 --actor Codex-GPT5.6 Terra"
+}
