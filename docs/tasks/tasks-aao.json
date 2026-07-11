@@ -3,9 +3,9 @@
   "generated": "2026-06-01",
   "summary": {
     "done": 2,
-    "in_progress": 6,
+    "in_progress": 7,
     "open": 16,
-    "total": 24
+    "total": 29
   },
   "tasks": [
     {
@@ -1346,6 +1346,38 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0157",
+      "title": "Framework auto-stage must honor claim globs and include dirty release mirrors",
+      "owner": "cursor-captain-backlog",
+      "priority": "P0",
+      "status": "in_progress",
+      "type": "implementation",
+      "phase": "Backlog-P0",
+      "created": "2026-07-12",
+      "created_by_agent": "cursor-captain-backlog",
+      "started_at": "2026-07-12T00:30:00.000Z",
+      "started_by_agent": "cursor-captain-backlog",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "ATM-BUG-2026-07-11-108",
+      "description": "Fix framework auto-stage so claim globs such as release/** include dirty release mirrors and fail closed when claim-scoped dirty files remain.",
+      "related": [
+        "ATM-BUG-2026-07-11-108"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Claim globs match concrete dirty paths during framework auto-stage.",
+        "Dirty tracked release mirrors are committed with --auto-stage, not only git-head.jsonl.",
+        "Focused regression covers claim release/** with dirty release mirrors.",
+        "Backlog ATM-BUG-2026-07-11-108 marked Fixed in TASK-AAO-0157."
+      ],
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0157-framework-auto-stage-claim-glob-and-release-mirrors.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo"
     }
   ]
 }
