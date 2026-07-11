@@ -2,7 +2,7 @@
 doc_id: doc_team_0050
 task_id: TASK-TEAM-0050
 title: "Team start provider execution wiring (real multi-bot spawn lane)"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M10X
@@ -41,6 +41,15 @@ outOfScope:
 nonGoals:
   - "Do not remove the human gate: execution requires explicit --execute plus coordinator authority"
   - "Do not give spawned workers lifecycle or git.write authority"
+completed_at: "2026-07-11T02:14:46.549Z"
+completed_by_agent: "coordinator"
+closedAt: "2026-07-11T02:14:46.549Z"
+closedByActor: "coordinator"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-11T02-14-46-549Z-close-6ea8cf04d192"
+lastTransitionAt: "2026-07-11T02:14:46.549Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "072cadf4"
 ---
 # TASK-TEAM-0050 Team start provider execution wiring
 
