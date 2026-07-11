@@ -2,7 +2,7 @@
 doc_id: doc_team_0051
 task_id: TASK-TEAM-0051
 title: "Per-role provider selection config surface and sizing-driven roster"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M10X
@@ -41,6 +41,15 @@ outOfScope:
 nonGoals:
   - "Do not make provider selection vendor-first; role-first stays authoritative"
   - "Do not let sizing remove the four required governance roles"
+completed_at: "2026-07-11T02:26:23.947Z"
+completed_by_agent: "coordinator"
+closedAt: "2026-07-11T02:26:23.947Z"
+closedByActor: "coordinator"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-11T02-26-23-947Z-close-7fe8b8d06afb"
+lastTransitionAt: "2026-07-11T02:26:23.947Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "072cadf4"
 ---
 # TASK-TEAM-0051 Per-role provider selection config surface and sizing-driven roster
 

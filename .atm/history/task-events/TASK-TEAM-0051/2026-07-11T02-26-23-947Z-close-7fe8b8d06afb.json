@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T02-26-23-947Z-close-7fe8b8d06afb",
+  "taskId": "TASK-TEAM-0051",
+  "action": "close",
+  "actorId": "coordinator",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0051-per-role-provider-config-and-sizing-roster.task.md",
+  "taskSha256": "sha256:b415c5ad09785775f3032a8491c20a1b56251c42d4399b70087ce88a2f57c298",
+  "createdAt": "2026-07-11T02:26:23.947Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0051 --actor coordinator"
+}
