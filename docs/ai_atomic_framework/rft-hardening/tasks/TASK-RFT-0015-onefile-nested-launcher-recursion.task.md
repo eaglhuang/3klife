@@ -2,7 +2,7 @@
 doc_id: doc_rft_0015
 task_id: TASK-RFT-0015
 title: "Onefile frozen runner executes stale generation via nested launcher recursion (payload embeds previous release/atm-onefile)"
-status: open
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M5
@@ -40,6 +40,15 @@ outOfScope:
   - "Changing the onefile payload format"
 nonGoals:
   - "Do not band-aid by clearing caches; the payload content itself must stop embedding a previous-generation onefile launcher"
+completed_at: "2026-07-06T15:43:01.847Z"
+completed_by_agent: "codex"
+closedAt: "2026-07-06T15:43:01.847Z"
+closedByActor: "codex"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-06T15-43-01-848Z-close-f5d868566140"
+lastTransitionAt: "2026-07-06T15:43:01.848Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b324b8b86b69b46b6f5e3d3547440de5ee9bede8"
 ---
 
 # TASK-RFT-0015 — Onefile nested launcher recursion runs stale runner
