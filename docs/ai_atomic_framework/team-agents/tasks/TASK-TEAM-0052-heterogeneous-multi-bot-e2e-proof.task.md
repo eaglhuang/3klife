@@ -2,7 +2,7 @@
 doc_id: doc_team_0052
 task_id: TASK-TEAM-0052
 title: "Heterogeneous multi-bot team run end-to-end proof"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M10X
@@ -37,6 +37,15 @@ outOfScope:
   - "Live paid API calls in CI (use injected executors; live run is a manual dry-run appendix)"
 nonGoals:
   - "Do not turn the proof fixture into a second scheduler or bypass broker gates"
+completed_at: "2026-07-11T02:31:46.870Z"
+completed_by_agent: "coordinator"
+closedAt: "2026-07-11T02:31:46.870Z"
+closedByActor: "coordinator"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-11T02-31-46-870Z-close-311e4d976921"
+lastTransitionAt: "2026-07-11T02:31:46.870Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "072cadf4"
 ---
 # TASK-TEAM-0052 Heterogeneous multi-bot team run end-to-end proof
 

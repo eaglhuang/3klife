@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T02-31-46-870Z-close-311e4d976921",
+  "taskId": "TASK-TEAM-0052",
+  "action": "close",
+  "actorId": "coordinator",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0052-heterogeneous-multi-bot-e2e-proof.task.md",
+  "taskSha256": "sha256:61e1be3bdfb746a365e7d69ca204ccb7ac253846c223c3e058fce21079b08382",
+  "createdAt": "2026-07-11T02:31:46.870Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0052 --actor coordinator"
+}
