@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-28
-last_updated: 2026-06-19
+last_updated: 2026-07-10
 ---
 
 # Team Agents Task Index
@@ -56,7 +56,7 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | [TASK-TEAM-0025](./TASK-TEAM-0025-task-import-dispatch-metadata-preservation.task.md) | M4K | Task import dispatch metadata preservation | planned | `TASK-TEAM-0017`, `TASK-TEAM-0020` | task import / canonical ledger / sidecar dispatch |
 | [TASK-TEAM-0026](./TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md) | M4R | TEAM safe mirror/import ledger reconciliation lane | done | `TASK-TEAM-0001` (Phase 0 opener) | 3KLife planning opener frozen -> later AI-Atomic-Framework Phase 1 handoff |
 | [TASK-TEAM-0027](./TASK-TEAM-0027-team-command-atom-boundary-preflight.task.md) | M1P | Team command atom boundary preflight | done | `TASK-TEAM-0001`, `TASK-AAO-0106` | team CLI/spec atom boundaries |
-| [TASK-TEAM-0028](./TASK-TEAM-0028-team-same-atom-cid-negative-control.task.md) | M1N | Team same-atom CID negative control | done | `TASK-TEAM-0027`, `0002/0003` positive PASS | synthetic same-atom CID block proof |
+| [TASK-TEAM-0028](./TASK-TEAM-0028-team-same-atom-cid-negative-control.task.md) | M1N | Team same-atom CID negative control | abandoned | `TASK-TEAM-0027`, `0002/0003` positive PASS | ledger id collision / planning residue; do not use as closure evidence |
 | [TASK-TEAM-0030](./TASK-TEAM-0030-team-agents-planning-repo-path-lease-normalization.task.md) | M5P | Team Agents planning-repo path lease normalization | done | `TASK-TEAM-0029` | planning path lease normalization |
 | [TASK-TEAM-0031](./TASK-TEAM-0031-team-runtime-mode-and-adapter-contract.task.md) | M5R | Team runtime mode and adapter contract | done | `TASK-TEAM-0011`, `TASK-TEAM-0012`, `TASK-TEAM-0030` | team runtime mode / adapter selection |
 | [TASK-TEAM-0032](./TASK-TEAM-0032-editor-subagent-bridge-contract.task.md) | M5R | Editor subagent bridge contract | done | `TASK-TEAM-0031` | editor subagent execution surface |
@@ -69,10 +69,17 @@ Planning-only cards normally set `target_repo: 3KLife` and `closure_authority: p
 | [TASK-TEAM-0039](./TASK-TEAM-0039-governed-repo-vendor-integration-config-surface.task.md) | M8I | Governed-repo vendor integration config surface | planned | `TASK-TEAM-0037`, `TASK-TEAM-0038` | adopter repo vendor config |
 | [TASK-TEAM-0040](./TASK-TEAM-0040-cross-vendor-observability-and-query-log.task.md) | M8I | Cross-vendor observability and query log | planned | `TASK-TEAM-0037` | runtime event log / query |
 | [TASK-TEAM-0041](./TASK-TEAM-0041-provider-selection-defaults-and-role-overrides.task.md) | M8I | Provider selection defaults and role overrides | planned | `TASK-TEAM-0037`, `TASK-TEAM-0038`, `TASK-TEAM-0039` | provider policy / role routing |
+| [TASK-TEAM-0046](./TASK-TEAM-0046-broker-conflict-resolution-command.task.md) | M8E | Broker conflict resolution command | planned | `TASK-TEAM-0038`, `TASK-TEAM-0041` | broker conflict artifact / resolve command |
+| [TASK-TEAM-0047](./TASK-TEAM-0047-broker-override-gate-parity.task.md) | M8E | Broker override gate parity | planned | `TASK-TEAM-0046` | four-entry broker conflict gate |
+| [TASK-TEAM-0048](./TASK-TEAM-0048-conflict-ux-and-captain-playbook.task.md) | M8E | Conflict UX and Captain playbook | planned | `TASK-TEAM-0046` | conflict UX / captain playbook |
 | [TASK-TEAM-0042](./TASK-TEAM-0042-openai-and-azure-openai-runtime-bridges.task.md) | M9I | OpenAI and Azure OpenAI runtime bridges | planned | `TASK-TEAM-0037`, `TASK-TEAM-0038`, `TASK-TEAM-0041` | direct provider bridges |
 | [TASK-TEAM-0043](./TASK-TEAM-0043-claude-code-and-gemini-execution-bridges.task.md) | M9I | Claude Code and Gemini execution bridges | planned | `TASK-TEAM-0037`, `TASK-TEAM-0038`, `TASK-TEAM-0039`, `TASK-TEAM-0041` | editor / hybrid bridges |
 | [TASK-TEAM-0044](./TASK-TEAM-0044-microsoft-foundry-provider-family-bridge.task.md) | M9I | Microsoft Foundry provider family bridge | planned | `TASK-TEAM-0037`, `TASK-TEAM-0038`, `TASK-TEAM-0039`, `TASK-TEAM-0041` | Foundry chat / agent-service bridge |
 | [TASK-TEAM-0045](./TASK-TEAM-0045-integration-capability-manifest-and-verification-wiring.task.md) | M9I | Integration capability manifest and verification wiring | planned | `TASK-TEAM-0039`, `TASK-TEAM-0040`, `TASK-TEAM-0041`, `TASK-TEAM-0042`, `TASK-TEAM-0043`, `TASK-TEAM-0044` | integration verify / doctor / runtime discovery |
+| [TASK-TEAM-0050](./TASK-TEAM-0050-team-start-provider-execution-wiring.task.md) | M10X | Team start provider execution wiring | planned | `TASK-TEAM-0045` | real multi-bot spawn lane |
+| [TASK-TEAM-0051](./TASK-TEAM-0051-per-role-provider-config-and-sizing-roster.task.md) | M10X | Per-role provider selection config surface and sizing-driven roster | planned | `TASK-TEAM-0050` | provider config / sizing roster |
+| [TASK-TEAM-0052](./TASK-TEAM-0052-heterogeneous-multi-bot-e2e-proof.task.md) | M10X | Heterogeneous multi-bot team run end-to-end proof | planned | `TASK-TEAM-0050`, `TASK-TEAM-0051` | multi-provider proof |
+| [TASK-TEAM-0053](./TASK-TEAM-0053-gemini-direct-api-bridge.task.md) | M10X | Gemini direct API bridge for Team provider matrix | planned | `TASK-TEAM-0050`, `TASK-TEAM-0051`, `TASK-TEAM-0052` | Gemini direct API bridge |
 | [TASK-TEAM-0021](./TASK-TEAM-0021-team-knowledge-build-query-dry-run.task.md) | M4K | Team knowledge build and query dry-run | planned | `TASK-TEAM-0020` | knowledge build / query |
 | [TASK-TEAM-0023](./TASK-TEAM-0023-team-knowledge-retention-disk-budget-guard.task.md) | M5K | Team knowledge retention and disk budget guard | planned | `TASK-TEAM-0021` | compact / stats / budget guard |
 | [TASK-TEAM-0022](./TASK-TEAM-0022-captain-knowledge-preflight-brief-integration.task.md) | M6K | Captain knowledge preflight brief integration | planned | `TASK-TEAM-0015`, `TASK-TEAM-0021` | `next` / `team plan` guidance |
@@ -89,6 +96,7 @@ Open and import these cards by milestone order. Do not reuse the previous `TASK-
 - Early planning cards may still be valid in `3KLife` even when no imported framework ledger exists for them yet; treat `missing-in-ledger` as a routing fact, not an automatic corruption signal.
 - The runtime extension lane `TASK-TEAM-0031..0036` is no longer planning-only in `3KLife`; use the framework ledger plus closure packets as lifecycle truth for that lane.
 - The multi-vendor runtime and integration lane `TASK-TEAM-0037..0045` is planning-only in `3KLife` until implementation cards are imported and closed in the framework repo.
+- The M8E broker enforcement lane `TASK-TEAM-0046..0048` is inserted between M8I and M9I. It must use the shared vocabulary `decisionClass`, `decisionReason`, `violationStatus`, and `broker-conflict-blocked`, and must not touch `docs/ai_atomic_framework/rft-hardening/**`, `scripts/captain-dispatch-mailbox/**`, `scripts/validators/task-ledger/**`, `packages/core/src/police/**`, or RFT split helper files while Cursor RFT residue or locks exist.
 - When task-card frontmatter and this roster diverge, fix the roster to match the imported ledger for imported cards, or to match the planning card when the card has never been imported.
 
 ## Practical Rollout Order
@@ -107,7 +115,7 @@ Use this order when the goal is "ship Team Agents in a way humans can actually a
 10. `TASK-TEAM-0020` -> `TASK-TEAM-0025` -> `TASK-TEAM-0021` -> `TASK-TEAM-0023` -> `TASK-TEAM-0022` -> `TASK-TEAM-0024` as the advisory knowledge track.
 11. `TASK-TEAM-0026` Phase 1 handoff only after `TASK-TEAM-0020` and `TASK-TEAM-0025` are closed and the safe subset still holds.
 12. `TASK-TEAM-0031` -> `TASK-TEAM-0032` -> `TASK-TEAM-0033` -> `TASK-TEAM-0034` -> `TASK-TEAM-0035` -> `TASK-TEAM-0036` is the runtime adaptor and rework-loop extension lane; treat the imported 0011/0012/0013/0015/0016/0017/0027/0028/0029/0030 set as historical baseline, not as cards to reopen for this lane.
-13. `TASK-TEAM-0037` -> `TASK-TEAM-0038` -> `TASK-TEAM-0040` -> `TASK-TEAM-0039` -> `TASK-TEAM-0041` -> `TASK-TEAM-0042` / `TASK-TEAM-0044` / `TASK-TEAM-0043` -> `TASK-TEAM-0045` is the multi-vendor Team runtime and integration lane; keep vendor bridges behind the shared provider, permission, and observability contracts.
+13. `TASK-TEAM-0037` -> `TASK-TEAM-0038` -> `TASK-TEAM-0039` -> `TASK-TEAM-0041` forms the M8I provider/policy base. Run M8E next as `TASK-TEAM-0046` -> `TASK-TEAM-0047` with `TASK-TEAM-0048` aligned to SKL-0009, then let `TASK-TEAM-0040` absorb broker conflict events before M9I vendor bridges. Only after that run `TASK-TEAM-0042` / `TASK-TEAM-0044` / `TASK-TEAM-0043` -> `TASK-TEAM-0045`.
 
 ## Parallelization Plan for M1-M2
 

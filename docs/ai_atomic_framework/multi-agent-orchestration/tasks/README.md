@@ -7,7 +7,7 @@ planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-06-11
-last_updated: 2026-06-17
+last_updated: 2026-07-10
 ---
 
 # MAO Task Index
@@ -89,6 +89,25 @@ Execution note: `TASK-MAO-0046` is the critical path. `TASK-MAO-0047` stays
 limited to broker handoff and does not implement worktree apply. `TASK-MAO-0048`
 adds sanitized event replay on top of the existing static benchmark.
 
+## M8E Broker Enforcement Replay Wave
+
+Opened on 2026-07-10 from the Team Broker enforcement integration plan. This
+wave proves that the new M8E Team Broker lane is replayable, not only enforced
+at runtime.
+
+Recommended execution order:
+
+| Task | Title | Priority | Depends on | Card |
+|---|---|---|---|---|
+| TASK-MAO-0059 | Broker conflict resolution replay benchmark | P1 | `TASK-TEAM-0046`, `TASK-TEAM-0047` | [card](./TASK-MAO-0059-broker-conflict-resolution-replay-benchmark.task.md) |
+
+Execution note: `TASK-MAO-0059` validates the chain
+two-agent atom collision -> four entries blocked with `broker-conflict-blocked`
+-> `atm.brokerConflictResolution.v1` artifact -> ordered release -> replay
+green. It shares the M8E vocabulary `decisionClass`, `decisionReason`, and
+`violationStatus` with TEAM 0046/0047/0048 and SKL 0008..0012. It must avoid
+RFT-owned planning and target paths while Cursor RFT residue or locks exist.
+
 ## M8 — Parallel-agent ergonomics hardening (added 2026-06-18)
 
 Opened from field evidence during the TASK-MAO-0014..0022 closeback wave
@@ -131,3 +150,4 @@ These items follow from the audit and are not card content:
 - `TASK-MAO-0036` through `TASK-MAO-0051` are the M7 closeback and operator-recovery hardening wave. Keep these ahead of further broad closeout automation because they fix result contracts, emergency auditability, pre-close remediation, atomic close rollback, closeback routing, close-window locking, dry-run remediation, and scoped commit bundling.
 - `TASK-MAO-0049` is the M7 governance companion that normalizes audited scope growth via `tasks scope add` so routine linked-surface additions stop looking like emergency exceptions.
 - `TASK-MAO-0046` through `TASK-MAO-0048` are the M8 runtime integration and replay-validation wave. They should run after the M7 result-contract foundation is available, with `0046` as the first runtime integration card.
+- `TASK-MAO-0059` is the M8E replay benchmark for Team Broker enforcement. It must stay after `TASK-TEAM-0046` and `TASK-TEAM-0047`, must not use `.atm/runtime/**` residue as fixture input, and must not touch RFT-owned planning or target paths while Cursor RFT residue or locks exist.
