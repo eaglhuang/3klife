@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T02-04-44-763Z-close-9da707d873e4",
+  "taskId": "TASK-TEAM-0050",
+  "action": "close",
+  "actorId": "coordinator",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0050-team-start-provider-execution-wiring.task.md",
+  "taskSha256": "sha256:9b438272ce14367a3cb5f5a3432aff5f186b83c66ed25fefd2be552002518c52",
+  "createdAt": "2026-07-11T02:04:44.763Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0050 --actor coordinator"
+}

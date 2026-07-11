@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T12-18-40-651Z-close-6bd72eb94b0b",
+  "taskId": "TASK-TEAM-0068",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Sol",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0068-direct-provider-scoped-path-forwarding.task.md",
+  "taskSha256": "sha256:f61a59eccf06b8834c69d89cb4e98f8ff2cbd8ec29e90702d1b16e8f55203208",
+  "createdAt": "2026-07-11T12:18:40.651Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0068 --actor Codex-GPT5.6 Sol"
+}
