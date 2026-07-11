@@ -19,11 +19,13 @@ through ATM before editing.
 Priority task: `TASK-TEAM-0053 Gemini direct API bridge for Team provider matrix`.
 
 User goal: use `TASK-TEAM-0053` itself as the dogfood proof. The next Captain
-should first open the largest governed Team (`L5`) with independent OpenAI and
-Anthropic direct API bots assigned to different roles, then use that team to
-help implement Gemini Direct API. This proves OpenAI and Anthropic direct bots
-can already cooperate on one task card before Gemini is added to the same clean
-provider matrix.
+should first open the largest governed Team (`L5`) with OpenAI acting as the
+Coordinator/Captain lane, Anthropic acting as the implementation/write bot, and
+OpenAI acting again as the independent reviewer. This proves OpenAI and
+Anthropic direct bots can cooperate on one task card and also proves a second
+provider can produce the write output that a separate OpenAI reviewer then
+checks, signs, or rejects before Gemini is added to the same clean provider
+matrix.
 
 After `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, and `GEMINI_API_KEY` are present
 locally, prove that Team Agents can instantiate independent vendor bots and
@@ -92,13 +94,16 @@ node atm.mjs team plan --task TASK-TEAM-0053 --team-size L5 --json
 
 Then start a maximum team with explicit OpenAI and Anthropic role assignments.
 Use this as a live smoke test that the two already-implemented direct providers
-can spawn independent bots and cooperate on `TASK-TEAM-0053`.
+can spawn independent bots and cooperate on `TASK-TEAM-0053`. The important
+shape is: OpenAI coordinates, Anthropic writes, OpenAI reviews Anthropic's
+output and emits a review verification code/signature artifact.
 
 Recommended role split:
 
-- `implementer` -> OpenAI
-- `validator` -> Anthropic
-- `reviewer` -> Anthropic
+- `coordinator` / Captain lane -> OpenAI
+- `implementer` / write bot -> Anthropic
+- `reviewer` -> OpenAI
+- `validator` -> OpenAI or Anthropic, based on `team plan` output
 - `reader` -> OpenAI
 - `evidence-collector` -> OpenAI
 - `scope-guardian` -> Anthropic
@@ -108,9 +113,10 @@ Suggested command shape:
 
 ```powershell
 node atm.mjs team start --task TASK-TEAM-0053 --actor <your-actor-id> --team-size L5 --execute `
-  --role-provider implementer=openai:gpt-5-mini:responses:real-agent `
-  --role-provider validator=anthropic:claude-3-5-sonnet:anthropic-messages:real-agent `
-  --role-provider reviewer=anthropic:claude-3-5-sonnet:anthropic-messages:real-agent `
+  --provider openai --sdk responses --model gpt-5-mini --runtime-mode real-agent `
+  --role-provider implementer=anthropic:claude-3-5-sonnet:anthropic-messages:real-agent `
+  --role-provider reviewer=openai:gpt-5-mini:responses:real-agent `
+  --role-provider validator=openai:gpt-5-mini:responses:real-agent `
   --role-provider reader=openai:gpt-5-mini:responses:real-agent `
   --role-provider evidence-collector=openai:gpt-5-mini:responses:real-agent `
   --role-provider scope-guardian=anthropic:claude-3-5-sonnet:anthropic-messages:real-agent `
@@ -124,9 +130,12 @@ dogfood run.
 
 This live dogfood is not a replacement for deterministic validators. Treat it
 as evidence that OpenAI and Anthropic direct provider credentials and bot
-session creation work. Keep Coordinator/Captain authority intact: spawned bots
-may assist with implementation and evidence, but they must not self-close,
-self-commit, or bypass broker gates.
+session creation work. It should also prove reviewer independence by having the
+OpenAI reviewer inspect the Anthropic implementer's output and produce a review
+verification code/signature artifact or an advisory rejection. Keep
+Coordinator/Captain authority intact: spawned bots may assist with
+implementation and evidence, but they must not self-close, self-commit, or
+bypass broker gates.
 
 ## Files To Read Before Editing
 
@@ -256,8 +265,11 @@ before implementing Gemini Direct. It should prove two live direct providers can
 create independent bot sessions for the same task. Then add deterministic/fake
 executor coverage for the full provider matrix:
 
-1. Live smoke: OpenAI + Anthropic L5 team cooperates on `TASK-TEAM-0053`, with
-   redacted evidence only.
+1. Live smoke: OpenAI Captain/Coordinator + Anthropic write bot + OpenAI
+   reviewer cooperates on `TASK-TEAM-0053`, with redacted evidence only.
+   Expected proof: Anthropic emits the implementation/write output; OpenAI
+   reviewer emits a review verification code/signature artifact or an advisory
+   rejection tied to the Anthropic output.
 2. `openai` direct API only: multiple roles, distinct session IDs.
 3. `anthropic` direct API only: multiple roles, distinct session IDs.
 4. `gemini-direct` direct API only: multiple roles, distinct session IDs.
@@ -339,9 +351,11 @@ Say this at the start of the next thread:
 ```text
 I am continuing TASK-TEAM-0053. I will first import the 3KLife planning card into
 the AI-Atomic-Framework target ledger, claim it with my own actor id, run an
-OpenAI + Anthropic L5 `--execute` dogfood smoke test with redacted evidence,
-then implement the Gemini direct API bridge as a separate `gemini-direct`
-surface. I will keep all API keys local and untracked, and prove the full
-OpenAI / Anthropic / Gemini provider matrix with fake executors before treating
-the task as complete.
+OpenAI Captain + Anthropic implementer + OpenAI reviewer L5 `--execute` dogfood
+smoke test with redacted evidence, then implement the Gemini direct API bridge
+as a separate `gemini-direct` surface. I will keep all API keys local and
+untracked, require the OpenAI reviewer to produce a review verification
+code/signature or advisory rejection for the Anthropic output, and prove the
+full OpenAI / Anthropic / Gemini provider matrix with fake executors before
+treating the task as complete.
 ```
