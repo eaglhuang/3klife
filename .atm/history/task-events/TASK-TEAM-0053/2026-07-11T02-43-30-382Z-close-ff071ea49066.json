@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T02-43-30-382Z-close-ff071ea49066",
+  "taskId": "TASK-TEAM-0053",
+  "action": "close",
+  "actorId": "coordinator",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0053-gemini-direct-api-bridge.task.md",
+  "taskSha256": "sha256:21c9201e8b347d4e316836191d33bd52948706c80ae6ff7c051e77d2e0afc4a8",
+  "createdAt": "2026-07-11T02:43:30.382Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0053 --actor coordinator"
+}

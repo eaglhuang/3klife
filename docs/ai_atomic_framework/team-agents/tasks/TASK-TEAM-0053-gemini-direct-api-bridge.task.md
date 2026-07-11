@@ -2,7 +2,7 @@
 doc_id: doc_team_0053
 task_id: TASK-TEAM-0053
 title: "Gemini direct API bridge for Team provider matrix"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M10X
@@ -57,6 +57,15 @@ outOfScope:
 nonGoals:
   - "Do not make Gemini direct API the default provider for all roles"
   - "Do not grant spawned Gemini workers git.write, task.lifecycle, final evidence.write, or self-close authority"
+completed_at: "2026-07-11T02:43:30.382Z"
+completed_by_agent: "coordinator"
+closedAt: "2026-07-11T02:43:30.382Z"
+closedByActor: "coordinator"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-11T02-43-30-382Z-close-ff071ea49066"
+lastTransitionAt: "2026-07-11T02:43:30.382Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "38fdb423"
 ---
 # TASK-TEAM-0053 Gemini direct API bridge for Team provider matrix
 
