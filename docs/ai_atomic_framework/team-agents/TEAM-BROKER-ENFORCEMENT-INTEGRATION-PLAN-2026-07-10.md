@@ -112,3 +112,12 @@ Dispatch 紀律沿用既定 contract：Phase 0 read-only planner + Phase 1 exter
 ## 7. 驗收定義（M8E 完成 = 論文宣稱可展示）
 
 M8E 全關後應能演示：兩個代理同時 claim 重疊 atom → 四個入口一致 `broker-conflict-blocked` → 跑 `tasks parallel resolve` 生成 `atm.brokerConflictResolution.v1` → 按 resolution order 放行 → replay benchmark 綠燈。這條鏈就是「原子交集並行調度」論文敘事的可重現證據。
+## Follow-up: paid direct-provider execution repair (2026-07-11)
+
+`TASK-TEAM-0066` live dogfood exposed three linked execution defects after the
+Gemini direct bridge closeback: explicit global `real-agent` selection loses to
+the implicit Coordinator `broker-only` default, built-in direct provider
+contracts are rejected because readiness only recognizes integration manifest
+capabilities, and `team start --execute` returns success when zero provider
+roles execute. `TASK-TEAM-0067` owns the bounded repair and deterministic
+regression before the paid OpenAI and Anthropic dogfood resumes.

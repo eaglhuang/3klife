@@ -30,6 +30,15 @@ Use this file when:
 
 ## Open Items
 
+- [ ] ATM-BUG-2026-07-11-086: Cross-repo `next --prompt` cannot infer canonical planning root from prompt path hints
+  - Status: open; already being handled by another AI, this entry adds TASK-TEAM-0053 dogfood repro evidence.
+  - Severity: P1 Captain workflow friction
+  - Encountered: 2026-07-11 while continuing `TASK-TEAM-0053` from `C:/Users/User/AI-Atomic-Framework` after reading `C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-07-11-TASK-TEAM-0053-GEMINI-DIRECT-CONTINUATION.md`.
+  - Reproduce / detect: From the framework repo, run `node atm.mjs next --prompt "請你切換為隊長模式, 閱讀交接文件 /C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-07-11-TASK-TEAM-0053-GEMINI-DIRECT-CONTINUATION.md 並且可以先 preflight 提出你的問題" --json` without `ATM_PLANNING_REPO_ROOT`. ATM surfaces `ATM_PLANNING_ROOT_MISSING` even though the prompt and handoff path identify the canonical 3KLife planning root. Rerunning with `ATM_PLANNING_REPO_ROOT=C:\Users\User\3KLife\docs\ai_atomic_framework` resolves `TASK-TEAM-0053`.
+  - Impact: New Captain continuation threads can fail before import/claim, forcing manual environment setup and increasing the risk that agents skip governance or use the wrong planning root during cross-repo handoff.
+  - Possible optimization: When prompt path hints include an absolute path under a known planning repository, infer or suggest the canonical planning root directly; alternatively persist `taskLedger.planningRoots` in repo config or return a copy-paste command that sets the env var for the current invocation.
+  - Related tasks / commits: `TASK-TEAM-0053`; Captain handoff `CAPTAIN-HANDOFF-2026-07-11-TASK-TEAM-0053-GEMINI-DIRECT-CONTINUATION.md`; canonical bug id `ATM-BUG-2026-07-11-086`.
+
 - [ ] BUG-ATM-0073: Taskflow close bundle can absorb unrelated `.bak` WIP from broad framework scope
   - Status: open
   - Severity: P1 closeout safety / multi-agent workflow friction
