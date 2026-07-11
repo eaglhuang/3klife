@@ -13,12 +13,13 @@ sources: "6-subagent full-directory audit of team-agents/** (71 files), 2026-07-
 
 # Team Agents 分級詞彙正典與重新規劃(2026-07-10 全目錄稽核版)
 
-## 0. 裁決:L1~L5 不是本計畫的正典詞彙
+## 0. 裁決:L1~L5(2026-07-11 更新:已正式定義,解除廢止)
 
-6 個 subagent 全文讀完 team-agents/ 下全部 71 份文件(3 份主計畫書、4 份 runtime 藍圖、
-5 份交接/派工文件、8 份模板、50 張任務卡)後確認:**沒有任何一份文件定義過 L1~L5 五級制**。
-先前對話中出現的「L1~L5 對應」屬自創詞彙,與計畫書不一致,即日起廢止;一切分級敘述
-改用下表正典詞彙。
+2026-07-10 的 6-subagent 全目錄稽核確認當時沒有任何文件定義過 L1~L5 五級制,故原裁決為廢止。
+2026-07-11 起,因 CLI `--team-size` 已實作 L1~L5 且 L5 已用於付費多廠商 dogfood(TASK-TEAM-0066),
+改為**正式收編**:五級語意的唯一定義來源是《團隊自動化代理分工計畫.md》§14「團隊等級 L1~L5」——
+L1=small、L2=medium、L3=large、L4=large+獨立 Review Agent、L5=large+per-role 多廠商混編全席。
+L4/L5 僅限人工顯式啟用並記錄 `teamLevel` 與 `source: manual`;任何文件不得另行定義五級語意。
 
 ## 1. 分級詞彙正典表(單一真實來源索引)
 
@@ -31,6 +32,7 @@ sources: "6-subagent full-directory audit of team-agents/** (71 files), 2026-07-
 | Blocked/rework reason | `scope-violation`、`evidence-missing`、`validator-failed`、`reviewer-independence-missing`、`human-signoff-required`、`adr-required`、`broker-conflict-blocked`、`policy-downgrade-request` | CAPTAIN-DISPATCH-2026-07-02 §C |
 | Permission decision | `allow` / `deny` / `escalate` | runtime contract draft |
 | Team sizing | `small` / `medium` / `large`(+ Lieutenant 升級規則) | TEAM-0007/0008;sizing→roster 生效於 TEAM-0051(之前僅 advisory) |
+| 團隊等級 | `L1`(=small)/ `L2`(=medium)/ `L3`(=large)/ `L4`(=large+獨立 Review Agent)/ `L5`(=large+per-role 多廠商全席);L4/L5 僅限人工啟用 | 團隊自動化代理分工計畫.md §14「團隊等級 L1~L5」(唯一定義來源) |
 | Patrol severity | `info` / `warning` / `critical`;findings 分 warning/blocker | templates/patrol-report.md;TEAM-0014 |
 | 治理通道 Channel | `fast` / `normal` / `batch` | 計畫書 §2 原則 5(Team 不取代 Channel) |
 | Route state | planned → in-progress → needs-review → needs-rework → rework-in-progress → revalidate-pending → ready-for-close / blocked / escalated(9 態) | WorkerAdaptor 方案;TEAM-0033 |
@@ -67,6 +69,6 @@ sources: "6-subagent full-directory audit of team-agents/** (71 files), 2026-07-
 
 ## 4. 驗收
 
-- 全 repo 搜尋不再有裸用 L1~L5 指涉 Team Agents 分級的文字。
+- 任何使用 L1~L5 的文字都引用《團隊自動化代理分工計畫.md》§14 的正式定義,無平行定義。
 - tasks/README roster 與 AAF ledger 零漂移(0002~0048 done、0028 abandoned、0050~0052 planned)。
 - M10X 三卡關閉後,§1 的 sizing/mode/decisionClass 詞彙在 CLI 輸出中全部可觀測。
