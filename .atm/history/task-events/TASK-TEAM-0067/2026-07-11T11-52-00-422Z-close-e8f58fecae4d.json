@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-11T11-52-00-422Z-close-e8f58fecae4d",
+  "taskId": "TASK-TEAM-0067",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Sol",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0067-direct-provider-execute-admission-repair.task.md",
+  "taskSha256": "sha256:da642fb9700b84cc68d4c085e49a0e3bfb5add94a4c9757c39990bcba0b9776a",
+  "createdAt": "2026-07-11T11:52:00.422Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0067 --actor Codex-GPT5.6 Sol"
+}
