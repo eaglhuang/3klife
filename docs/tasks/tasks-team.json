@@ -864,4 +864,31 @@
   ],
   "notes": "2026-07-12 | planned | Opened from 3KLife planning authority after a live Broker/CID collision blocked TASK-AAO-0157 and TASK-TEAM-0075 on shared backlog and atom-map paths."
 }
+,
+{
+  "doc_id": "doc_team_0077",
+  "id": "TASK-TEAM-0077",
+  "title": "Node UTF-8 verification and Captain encoding guidance",
+  "owner": "atm-core",
+  "priority": "P0",
+  "status": "planned",
+  "type": "planning",
+  "phase": "Captain Operability",
+  "created": "2026-07-12",
+  "created_by_agent": "codex-backlog-captain",
+  "planning_repo": "3KLife",
+  "target_repo": "3KLife",
+  "closure_authority": "planning_repo",
+  "description": "Add raw-byte Node UTF-8 verification and safe multilingual write guidance so Captains distinguish terminal rendering issues from actual file corruption.",
+  "related": [
+    "TASK-TEAM-0076"
+  ],
+  "depends": [],
+  "deliverables": [
+    ".agents/skills/atm-dispatch/SKILL.md",
+    ".agents/skills/task-card-opener/SKILL.md",
+    "tools_node/validate-skill-encoding.js"
+  ],
+  "notes": "2026-07-12 | planned | Opened after PowerShell rendered valid UTF-8 governance skills as mojibake. Raw Node Buffer checks proved the files were valid, so the delivery must add verification guidance rather than rewrite valid content."
+}
 ]
