@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T02-08-10-599Z-close-9052b8249050",
+  "taskId": "TASK-TEAM-0076",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0076-broker-shared-surface-parallel-coordination.task.md",
+  "taskSha256": "sha256:e1870c810cc6f158629e1b38b2a0c3b8b0b81a648ccaa96f4adfa3a7be525839",
+  "createdAt": "2026-07-12T02:08:10.599Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0076 --actor Codex-GPT5.6 Terra"
+}

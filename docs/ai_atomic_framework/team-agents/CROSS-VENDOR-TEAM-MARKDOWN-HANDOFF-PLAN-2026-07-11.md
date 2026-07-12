@@ -102,6 +102,29 @@ independently.
 3. `TASK-TEAM-0074`: contract/docs/patrol integration, deterministic tests,
    three-vendor dogfood, and aborted-run archive evidence.
 
+## Follow-up: Hard-Gate Parity And Integrity Regression
+
+`TASK-TEAM-0075` closes the implementation gaps found during the post-close
+audit of 0072-0074. It is a required completion slice, not optional polish:
+
+1. `handoff.read` and `handoff.materialize` must be real entries in the Team
+   permission catalog and be enforced by `ATM_TEAM_PERMISSION_HARD_GATE`, task
+   scope, run identity, and a coordinator-owned lease. An actor string alone
+   must never grant materialization authority.
+2. Continuation read must be Coordinator-mediated and limited to the same task,
+   a specified terminal prior run, verified manifest/hash chain, secret scan,
+   and an observability event. Cross-task, non-terminal, and direct-provider
+   reads must fail closed.
+3. The validator suite must add `team-handoff-integrity` and cover missing
+   artifact, hash mismatch, chain/sequence gap, frontmatter drift, cross-run
+   rejection, and unauthorised read/materialize attempts.
+4. At the soft threshold, Patrol must report a retention warning. At the hard
+   threshold, materialization must emit a governed
+   `human-signoff-required` escalation rather than only throw an error.
+5. The card closes `ATM-BUG-2026-07-11-111` with the resulting evidence and
+   performs an L5 three-vendor dogfood run that proves hard-gate denial before
+   the authorised coordinator path succeeds.
+
 The required validator cases are `team-handoff-materialize`,
 `team-handoff-integrity`, `team-handoff-context-budget`,
 `team-handoff-aborted-promotion`, and `team-handoff-narrative-whitelist`.

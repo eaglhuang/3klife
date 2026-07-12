@@ -7,7 +7,7 @@ owner: atm-core
 priority: P0
 milestone: "Team Broker Parallel Delivery"
 depends_on:
-  - "TASK-TEAM-0075"
+  - "TASK-TEAM-0074"
 related_plan: "docs/ai_atomic_framework/team-agents/CROSS-VENDOR-TEAM-MARKDOWN-HANDOFF-PLAN-2026-07-11.md"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
@@ -63,6 +63,13 @@ outOfScope:
 ---
 
 # TASK-TEAM-0076 Broker shared-surface parallel coordination and steward queue
+
+## Sequencing Note
+
+This card must precede TASK-TEAM-0075. Its file-scoped Broker admission and
+shared-surface queue remove the false global freeze that otherwise prevents
+0075 from claiming its private implementation files while a backlog/map change
+is queued. TASK-TEAM-0075 remains the hard-gate and integrity follow-up.
 
 ## Goal
 
