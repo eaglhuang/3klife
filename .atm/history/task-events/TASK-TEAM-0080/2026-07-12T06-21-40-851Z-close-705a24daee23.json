@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T06-21-40-851Z-close-705a24daee23",
+  "taskId": "TASK-TEAM-0080",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0080-adopt-closure-lane-residue-and-scope-shrink.task.md",
+  "taskSha256": "sha256:164e8886433afe7eba06a51ab81fde478ffd11efbb5d453b8c58cfa3c07617ba",
+  "createdAt": "2026-07-12T06:21:40.851Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0080 --actor codex-captain"
+}
