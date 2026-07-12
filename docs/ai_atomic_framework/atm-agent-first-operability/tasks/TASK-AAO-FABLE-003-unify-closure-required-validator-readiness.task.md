@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-003
 title: "Unify taskflow closure required-validator readiness"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: Backlog-P1
@@ -31,6 +31,15 @@ rollback:
   notes: "Revert shared readiness wiring; write-path closure packet validation stays authoritative."
 atomizationImpact:
   ownerAtomOrMap: "atm.taskflow-orchestration"
+completed_at: "2026-07-12T16:11:31.194Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-12T16:11:31.194Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T16-11-31-194Z-close-54b5b9ed04e1"
+lastTransitionAt: "2026-07-12T16:11:31.194Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4fbf35c32d958c23fff69af956acebf2e7972005"
 ---
 
 # TASK-AAO-FABLE-003 Unified closure required-validator readiness

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T16-11-31-194Z-close-54b5b9ed04e1",
+  "taskId": "TASK-AAO-FABLE-003",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md",
+  "taskSha256": "sha256:d8c1d2dcd09ca7ed7fa6541864e163a69c62543d4278e3a226567dde6b10efa3",
+  "createdAt": "2026-07-12T16:11:31.194Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-FABLE-003 --actor claude-fable-5"
+}
