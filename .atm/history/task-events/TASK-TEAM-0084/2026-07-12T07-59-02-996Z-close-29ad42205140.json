@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T07-59-02-996Z-close-29ad42205140",
+  "taskId": "TASK-TEAM-0084",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0084-protected-foreign-staged-resolution-authorized-defer.task.md",
+  "taskSha256": "sha256:bf80c634db5fb37b696ec1a824e44f311de8636fce725660323550b20f96b5ca",
+  "createdAt": "2026-07-12T07:59:02.996Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0084 --actor Codex-GPT5.6 Terra"
+}
