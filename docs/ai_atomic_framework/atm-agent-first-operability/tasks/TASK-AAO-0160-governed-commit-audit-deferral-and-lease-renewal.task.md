@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0160
 title: "Governed commit audit deferral and lease renewal"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: Backlog-P0
@@ -30,6 +30,15 @@ atomizationImpact:
 outOfScope:
   - "Deleting foreign protected override audit records"
   - "Writing shared canonical backlog/map paths while another task owns them"
+completed_at: "2026-07-12T10:39:24.679Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-12T10:39:24.679Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T10-39-24-679Z-close-a3fd4ae483a7"
+lastTransitionAt: "2026-07-12T10:39:24.679Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c2835c9ff56028b32c6b16ad93f13f0b0c3f7c3a"
 ---
 
 # TASK-AAO-0160 Governed commit audit deferral and lease renewal
