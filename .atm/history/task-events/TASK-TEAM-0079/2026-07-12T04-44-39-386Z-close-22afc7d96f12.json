@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T04-44-39-386Z-close-22afc7d96f12",
+  "taskId": "TASK-TEAM-0079",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0079-next-claim-shared-surface-queue-admission.task.md",
+  "taskSha256": "sha256:1eb7766e7d2cd85f5b3efe293970f5d3a9dec6fe862d481d830d7fdd2d0a2281",
+  "createdAt": "2026-07-12T04:44:39.386Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0079 --actor Codex-GPT5.6 Terra"
+}
