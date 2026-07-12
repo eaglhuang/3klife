@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0162
 title: "Scope amendment path normalization and backlog ID guard"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: Backlog-P1
@@ -40,6 +40,15 @@ outOfScope:
   - "Repairing historical TASK-TEAM-0075 scope-amendment event display"
   - "Changing Team Agents implementation or role-provider behavior"
   - "Manual edits under .atm/history outside governed import/claim/close artifacts"
+completed_at: "2026-07-12T10:50:47.555Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-12T10:50:47.555Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T10-50-47-555Z-close-010d89697de4"
+lastTransitionAt: "2026-07-12T10:50:47.555Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "708a3e42437f0047388e2654ecf74759a02debca"
 ---
 
 # TASK-AAO-0162 Scope amendment path normalization and backlog ID guard

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T10-50-47-555Z-close-010d89697de4",
+  "taskId": "TASK-AAO-0162",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0162-scope-amendment-path-normalization-and-backlog-id-guard.task.md",
+  "taskSha256": "sha256:48854af4ee07b49d098a86fdc8b9d14f2981c8b44c8ff904a456af2ae957491b",
+  "createdAt": "2026-07-12T10:50:47.555Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0162 --actor codex-backlog-captain"
+}
