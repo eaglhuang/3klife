@@ -1378,6 +1378,36 @@
       "planning_repo": "3KLife",
       "target_repo": "AI-Atomic-Framework",
       "closure_authority": "target_repo"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0158",
+      "title": "Governance validator parallelism, progress, and cancellation",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "Backlog-P0",
+      "created": "2026-07-12",
+      "created_by_agent": "codex-backlog-captain",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "ATM-BUG-2026-07-12-122",
+      "description": "Parallelize independent governance-validator fixture groups, surface phase progress, and provide cancellation with durable failure evidence while preserving the full deterministic lane.",
+      "related": [
+        "ATM-BUG-2026-07-12-122"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Independent fixture groups run through a bounded parallel scheduler while shared-state groups remain serialized.",
+        "Progress, cancellation, and failure summaries identify phase ids and elapsed time.",
+        "The warm default lane completes under 30 seconds or retains measured dominant-phase evidence.",
+        "Backlog ATM-BUG-2026-07-12-122 is updated only after command-backed acceptance evidence passes."
+      ],
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0158-governance-validator-parallel-progress-and-cancellation.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo"
     }
   ]
 }
