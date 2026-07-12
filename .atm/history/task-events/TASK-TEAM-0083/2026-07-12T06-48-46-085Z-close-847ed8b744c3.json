@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T06-48-46-085Z-close-847ed8b744c3",
+  "taskId": "TASK-TEAM-0083",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0083-proposal-first-plan-start-parity-and-l5-dogfood.task.md",
+  "taskSha256": "sha256:69b32be18f4829106a2ec697f3979c2c7ac2a570ba3122eb705ab9fdb5cbf1fc",
+  "createdAt": "2026-07-12T06:48:46.085Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0083 --actor codex-captain"
+}
