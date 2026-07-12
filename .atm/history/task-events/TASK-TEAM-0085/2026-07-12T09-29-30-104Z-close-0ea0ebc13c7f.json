@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T09-29-30-104Z-close-0ea0ebc13c7f",
+  "taskId": "TASK-TEAM-0085",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0085-team-lane-backlog-hygiene-and-operator-friction.task.md",
+  "taskSha256": "sha256:480dbf6d798c1fc949ae02e001823e5ab80b0261eeed902e1499cd34a34eef47",
+  "createdAt": "2026-07-12T09:29:30.104Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0085 --actor Codex-GPT5.6 Terra"
+}
