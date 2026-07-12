@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T16-27-49-165Z-close-6195cfa79e1b",
+  "taskId": "TASK-AAO-FABLE-001",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-001-split-git-hooks-enforcement-validator-lanes.task.md",
+  "taskSha256": "sha256:0e4330a5cc8b97451daaa7731a973f554dc504049c1ee88f6fb9253fcd8e3474",
+  "createdAt": "2026-07-12T16:27:49.165Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-FABLE-001 --actor claude-fable-5"
+}

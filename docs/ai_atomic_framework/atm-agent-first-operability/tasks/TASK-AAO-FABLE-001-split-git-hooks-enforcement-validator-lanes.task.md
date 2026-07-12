@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-001
 title: "Split git-hooks enforcement validator into bounded lanes"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: Backlog-P1
@@ -30,6 +30,15 @@ rollback:
   notes: "Revert lane split; the monolithic full-suite command remains the fallback."
 atomizationImpact:
   ownerAtomOrMap: "atm.validator-framework"
+completed_at: "2026-07-12T16:27:49.165Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-12T16:27:49.165Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T16-27-49-165Z-close-6195cfa79e1b"
+lastTransitionAt: "2026-07-12T16:27:49.165Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4ea520e90d948cf374a1bb7d8e0ff277937f38ab"
 ---
 
 # TASK-AAO-FABLE-001 Split git-hooks enforcement validator lanes
