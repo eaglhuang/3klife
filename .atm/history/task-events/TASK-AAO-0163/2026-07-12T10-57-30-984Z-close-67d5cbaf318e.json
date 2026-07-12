@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T10-57-30-984Z-close-67d5cbaf318e",
+  "taskId": "TASK-AAO-0163",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0163-encoding-temp-artifact-backlog-closeback.task.md",
+  "taskSha256": "sha256:d84a74d3862a9238f6ed30680e7fb38d77bb96f7a0b738345565211cdf50a56f",
+  "createdAt": "2026-07-12T10:57:30.984Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0163 --actor codex-backlog-captain"
+}

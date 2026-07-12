@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0163
 title: "Encoding temp artifact backlog closeback"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: Backlog-P2
@@ -31,6 +31,15 @@ outOfScope:
   - "Changing encoding guard implementation"
   - "Deleting or quarantining another actor's tmp files"
   - "Changing Team Agents files or shared atom maps"
+completed_at: "2026-07-12T10:57:30.984Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-12T10:57:30.984Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T10-57-30-984Z-close-67d5cbaf318e"
+lastTransitionAt: "2026-07-12T10:57:30.984Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "90361542b04b6299bfeb649e027968c08df1e141"
 ---
 
 # TASK-AAO-0163 Encoding temp artifact backlog closeback
