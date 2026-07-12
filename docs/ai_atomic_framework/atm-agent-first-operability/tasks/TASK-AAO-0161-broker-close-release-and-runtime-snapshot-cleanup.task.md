@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0161
 title: "Broker close release and runtime snapshot cleanup"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: Backlog-P0
@@ -42,6 +42,15 @@ outOfScope:
   - "Changing Team Agents role-provider parsing or Team 0075/0076 implementation files"
   - "Manual deletion of another actor's runtime state"
   - "Changing shared canonical backlog/map paths while another active task owns them"
+completed_at: "2026-07-12T10:31:36.076Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-12T10:31:36.076Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T10-31-36-076Z-close-b793c95985d1"
+lastTransitionAt: "2026-07-12T10:31:36.076Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6ac05e8175111a1d80a244f3aec5b62607cae633"
 ---
 
 # TASK-AAO-0161 Broker close release and runtime snapshot cleanup
