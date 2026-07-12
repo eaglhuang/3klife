@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T07-23-22-886Z-close-cfcbe6112b3f",
+  "taskId": "TASK-TEAM-0081",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0081-git-head-evidence-failed-commit-reconciliation.task.md",
+  "taskSha256": "sha256:d9fcadfdde4c6920a89c2a8bb64d89c11312326856554f95dce508090f746095",
+  "createdAt": "2026-07-12T07:23:22.886Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0081 --actor Codex-GPT5.6 Terra"
+}

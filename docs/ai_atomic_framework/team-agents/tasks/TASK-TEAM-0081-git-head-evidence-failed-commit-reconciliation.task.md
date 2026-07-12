@@ -2,7 +2,7 @@
 doc_id: doc_team_0081
 task_id: TASK-TEAM-0081
 title: "Reconcile git-head evidence records left by failed governed commits"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: "Team Broker Maintainability"
@@ -29,6 +29,15 @@ rollback:
   notes: "Revert reconciliation logic; manual git restore of git-head.jsonl remains the fallback."
 atomizationImpact:
   ownerAtomOrMap: "atm.git-governance"
+completed_at: "2026-07-12T07:23:22.886Z"
+completed_by_agent: "Codex-GPT5.6 Terra"
+closedAt: "2026-07-12T07:23:22.886Z"
+closedByActor: "Codex-GPT5.6 Terra"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T07-23-22-886Z-close-cfcbe6112b3f"
+lastTransitionAt: "2026-07-12T07:23:22.886Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "573ac3cf7fb03cef459f37358d46270716c2d2b3"
 ---
 
 # TASK-TEAM-0081 Reconcile git-head evidence from failed commits
