@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0164
 title: "Precommit evidence requiredCommand task id guard"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: Backlog-P1
@@ -39,6 +39,15 @@ outOfScope:
   - "Changing Team Agents runtime or broker scheduling behavior"
   - "Changing bulk closure manifest policy beyond the incorrect requiredCommand"
   - "Editing .atm/history or .atm/runtime by hand"
+completed_at: "2026-07-12T12:00:01.142Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-12T12:00:01.142Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T12-00-01-142Z-close-8b023e3de682"
+lastTransitionAt: "2026-07-12T12:00:01.142Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6372d8fce086a3e9434e404a869a079d02fd9f85"
 ---
 
 # TASK-AAO-0164 Precommit evidence requiredCommand task id guard

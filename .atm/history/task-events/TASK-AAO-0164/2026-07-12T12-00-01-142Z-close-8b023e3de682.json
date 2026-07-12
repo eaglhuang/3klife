@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T12-00-01-142Z-close-8b023e3de682",
+  "taskId": "TASK-AAO-0164",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0164-precommit-evidence-required-command-task-id-guard.task.md",
+  "taskSha256": "sha256:e05107c5c6c985cad105f09db4a3071475bc0c8440e09feb3437beb05f903d2d",
+  "createdAt": "2026-07-12T12:00:01.142Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0164 --actor codex-backlog-captain"
+}
