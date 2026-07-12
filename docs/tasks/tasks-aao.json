@@ -1408,6 +1408,36 @@
       "planning_repo": "3KLife",
       "target_repo": "AI-Atomic-Framework",
       "closure_authority": "target_repo"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0159",
+      "title": "Scope-aware encoding guard and temporary artifact isolation",
+      "owner": "atm-core",
+      "priority": "P0",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "Backlog-P0",
+      "created": "2026-07-12",
+      "created_by_agent": "codex-backlog-captain",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "ATM-BUG-2026-07-12-123",
+      "description": "Make encoding checks task-scope-aware and classify foreign temporary artifacts without deleting or modifying another actor's files.",
+      "related": [
+        "ATM-BUG-2026-07-12-123"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Claimed or staged task files are checked without foreign temporary artifacts becoming task failures.",
+        "Explicit and whole-worktree modes retain fail-closed malformed-file detection.",
+        "Candidate output distinguishes checked, quarantined temporary, and unsupported files.",
+        "Canonical backlog/map closeback is added only through a later ATM scope amendment after shared ownership releases."
+      ],
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0159-scope-aware-encoding-guard-and-temp-artifact-isolation.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo"
     }
   ]
 }
