@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-002
 title: "Surface stale frozen runner before taskflow close write"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: Backlog-P1
@@ -29,6 +29,15 @@ rollback:
   notes: "Revert readiness reporting only; the write-path stale guard stays authoritative."
 atomizationImpact:
   ownerAtomOrMap: "atm.taskflow-orchestration"
+completed_at: "2026-07-12T16:14:27.772Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-12T16:14:27.772Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T16-14-27-772Z-close-8e44d048b67d"
+lastTransitionAt: "2026-07-12T16:14:27.772Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9a0cd02fa921a1777414bbab92c810ea8dad1817"
 ---
 
 # TASK-AAO-FABLE-002 Stale frozen runner pre-close readiness

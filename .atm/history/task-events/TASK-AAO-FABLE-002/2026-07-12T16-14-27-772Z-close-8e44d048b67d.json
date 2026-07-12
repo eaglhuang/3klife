@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T16-14-27-772Z-close-8e44d048b67d",
+  "taskId": "TASK-AAO-FABLE-002",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-002-stale-frozen-runner-preclose-readiness.task.md",
+  "taskSha256": "sha256:e48f976b65d2731631b64065e1a4d5c144c563de2e035621dbf4e277be2c6ef8",
+  "createdAt": "2026-07-12T16:14:27.772Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-FABLE-002 --actor claude-fable-5"
+}
