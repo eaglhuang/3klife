@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T06-12-14-082Z-close-5398ed58d173",
+  "taskId": "TASK-TEAM-0078",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0078-next-claim-admission-atom-map-and-observability.task.md",
+  "taskSha256": "sha256:39af258c944ba81b71de2d2b3ff4d2b5e63f1a605ab2e03767358e07c482c575",
+  "createdAt": "2026-07-12T06:12:14.082Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0078 --actor codex-captain"
+}
