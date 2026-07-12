@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0159
 title: "Scope-aware encoding guard and temporary artifact isolation"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: Backlog-P0
@@ -36,6 +36,15 @@ outOfScope:
   - "Deleting, moving, or rewriting another actor's tmp artifacts"
   - "Changing ATM task lifecycle or Broker admission semantics"
   - "Writing shared canonical backlog/map paths while another active task owns them"
+completed_at: "2026-07-12T10:19:24.722Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-12T10:19:24.722Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T10-19-24-722Z-close-60a97ef85814"
+lastTransitionAt: "2026-07-12T10:19:24.722Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9ef6a9661d7c5a10755656e497d8655963917bc5"
 ---
 
 # TASK-AAO-0159 Scope-aware encoding guard and temporary artifact isolation

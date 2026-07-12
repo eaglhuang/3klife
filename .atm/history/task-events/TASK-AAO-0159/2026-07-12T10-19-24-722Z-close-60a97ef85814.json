@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T10-19-24-722Z-close-60a97ef85814",
+  "taskId": "TASK-AAO-0159",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0159-scope-aware-encoding-guard-and-temp-artifact-isolation.task.md",
+  "taskSha256": "sha256:0065af737f18957d40fae979ced92111c74818543465e14f6954f7a58b242141",
+  "createdAt": "2026-07-12T10:19:24.722Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0159 --actor codex-backlog-captain"
+}
