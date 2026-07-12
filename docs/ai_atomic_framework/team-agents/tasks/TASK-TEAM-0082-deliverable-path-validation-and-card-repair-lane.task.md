@@ -2,7 +2,7 @@
 doc_id: doc_team_0082
 task_id: TASK-TEAM-0082
 title: "Validate deliverable paths at import and add a governed card metadata repair lane"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: "Team Broker Maintainability"
@@ -30,6 +30,15 @@ rollback:
   notes: "Revert validation; emergency-lease force re-import remains the manual fallback."
 atomizationImpact:
   ownerAtomOrMap: "atm.task-ledger"
+completed_at: "2026-07-12T07:49:41.465Z"
+completed_by_agent: "Codex-GPT5.6 Terra"
+closedAt: "2026-07-12T07:49:41.465Z"
+closedByActor: "Codex-GPT5.6 Terra"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T07-49-41-465Z-close-d985cc33f1a0"
+lastTransitionAt: "2026-07-12T07:49:41.465Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b613c4db0c1011844f58d6cdd10415ceb2fa080b"
 ---
 
 # TASK-TEAM-0082 Deliverable path validation and card repair lane

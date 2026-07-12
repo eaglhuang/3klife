@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T07-49-41-465Z-close-d985cc33f1a0",
+  "taskId": "TASK-TEAM-0082",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0082-deliverable-path-validation-and-card-repair-lane.task.md",
+  "taskSha256": "sha256:3614d8e99a7462452b5fe9162e652e69f2a45aea64f51805fc312689767f4bb8",
+  "createdAt": "2026-07-12T07:49:41.465Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0082 --actor Codex-GPT5.6 Terra"
+}
