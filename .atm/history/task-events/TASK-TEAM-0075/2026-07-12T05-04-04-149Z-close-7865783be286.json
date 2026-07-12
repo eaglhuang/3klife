@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T05-04-04-149Z-close-7865783be286",
+  "taskId": "TASK-TEAM-0075",
+  "action": "close",
+  "actorId": "Codex-GPT5.6 Terra",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0075-handoff-hard-gate-parity-and-integrity-regression.task.md",
+  "taskSha256": "sha256:c455facaf8c78ad54d0d5c53bc4f98f64955fb8059c1369d91f19ea32a4f2e4b",
+  "createdAt": "2026-07-12T05:04:04.149Z",
+  "command": "node atm.mjs tasks close --task TASK-TEAM-0075 --actor Codex-GPT5.6 Terra"
+}
