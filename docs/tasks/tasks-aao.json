@@ -1454,11 +1454,7 @@
       "description": "Align commit bundle, protected-audit deferral, hook scope checks, and claim lease renewal for long governed commits.",
       "related": ["ATM-BUG-2026-07-12-124"],
       "depends": [],
-      "acceptance": [
-        "Foreign protected audit is deferred without scope drift.",
-        "Task-owned audit is consistently admitted.",
-        "Long evidence or commit paths retain a valid claim lease or provide retry-safe renewal."
-      ],
+      "acceptance": ["Foreign protected audit is deferred without scope drift.", "Task-owned audit is consistently admitted.", "Long evidence or commit paths retain a valid claim lease or provide retry-safe renewal."],
       "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0160-governed-commit-audit-deferral-and-lease-renewal.task.md",
       "planning_repo": "3KLife",
       "target_repo": "AI-Atomic-Framework",
