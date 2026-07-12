@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-0158
 title: "Governance validator parallelism, progress, and cancellation"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: Backlog-P0
@@ -43,6 +43,15 @@ outOfScope:
   - "Changing task, evidence, or claim lifecycle semantics"
   - "Bypassing validator failures or reducing fixture coverage"
   - "Modifying TASK-TEAM-0075 or TASK-TEAM-0076 implementation files"
+completed_at: "2026-07-12T10:09:11.118Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-12T10:09:11.118Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-12T10-09-11-118Z-close-bb26bf6c2dce"
+lastTransitionAt: "2026-07-12T10:09:11.118Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "831030ff5c1216fc93a2bd613338a879c86ac7a2"
 ---
 
 # TASK-AAO-0158 Governance validator parallelism, progress, and cancellation

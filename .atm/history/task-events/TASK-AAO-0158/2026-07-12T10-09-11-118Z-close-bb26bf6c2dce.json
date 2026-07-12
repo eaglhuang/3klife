@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-12T10-09-11-118Z-close-bb26bf6c2dce",
+  "taskId": "TASK-AAO-0158",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0158-governance-validator-parallel-progress-and-cancellation.task.md",
+  "taskSha256": "sha256:231b0e7ac40ed2283c132d486216712d8c4ed09300d9a2b37c851348b8a23a17",
+  "createdAt": "2026-07-12T10:09:11.118Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0158 --actor codex-backlog-captain"
+}
