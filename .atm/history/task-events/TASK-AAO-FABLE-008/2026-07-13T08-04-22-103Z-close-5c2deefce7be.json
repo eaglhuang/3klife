@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T08-04-22-103Z-close-5c2deefce7be",
+  "taskId": "TASK-AAO-FABLE-008",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-008-frontmatter-object-list-quote-stripping.task.md",
+  "taskSha256": "sha256:7429ef66f65752b7248807778af2f0f866d849acf4244dc61561099c94ebb4b8",
+  "createdAt": "2026-07-13T08:04:22.103Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-FABLE-008 --actor claude-fable-5"
+}

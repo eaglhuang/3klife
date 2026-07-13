@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-008
 title: "Strip quotes from frontmatter nested object-list scalar values"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P3
 milestone: Backlog-P1
@@ -31,6 +31,15 @@ atomizationImpact:
       source: "packages/cli/src/commands/tasks/task-import-validators.ts"
       disposition: "inline"
       inlineReason: "extractFrontMatter is already the single owner module for frontmatter parsing (TASK-AAO-0064 slice); the fix is a one-line application of the existing normalizeYamlScalar helper at the two nested object-list value sites, not a new boundary."
+completed_at: "2026-07-13T08:04:22.103Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-13T08:04:22.103Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-13T08-04-22-103Z-close-5c2deefce7be"
+lastTransitionAt: "2026-07-13T08:04:22.103Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "7196151048d6bd1c459c595d979c75afc578dac6"
 ---
 
 # TASK-AAO-FABLE-008 Frontmatter object-list quote stripping
