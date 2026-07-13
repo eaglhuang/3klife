@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T02-38-29-021Z-close-451daf50fe68",
+  "taskId": "TASK-GIT-0015",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md",
+  "taskSha256": "sha256:6768874ef0188e88edea0c045747cb7936ef3df961447286d3021ad9b00d91d3",
+  "createdAt": "2026-07-13T02:38:29.021Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0015 --actor codex-backlog-captain"
+}
