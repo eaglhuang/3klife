@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-009
 title: "Sync extraction-first contract into source skill templates"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: Backlog-P1
@@ -33,6 +33,15 @@ atomizationImpact:
       source: "templates/skills/atm-task-card-authoring.skill.md"
       disposition: "inline"
       inlineReason: "Documentation-only sync of TASK-AAO-FABLE-006 contract text into the template sources; no code boundary involved."
+completed_at: "2026-07-13T13:04:49.825Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-13T13:04:49.825Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-13T13-04-49-825Z-close-5d246900c543"
+lastTransitionAt: "2026-07-13T13:04:49.825Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "140f05f7031b16038d537ac58e5ca5dbc7b69589"
 ---
 
 # TASK-AAO-FABLE-009 Extraction-first skill template sync

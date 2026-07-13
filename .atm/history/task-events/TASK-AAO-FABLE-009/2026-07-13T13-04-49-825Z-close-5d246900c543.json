@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T13-04-49-825Z-close-5d246900c543",
+  "taskId": "TASK-AAO-FABLE-009",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-009-extraction-first-skill-template-sync.task.md",
+  "taskSha256": "sha256:8c48831114f58794718b49183251c1f3c4c7d15b49675beacf0494ae552c9aa2",
+  "createdAt": "2026-07-13T13:04:49.825Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-FABLE-009 --actor claude-fable-5"
+}
