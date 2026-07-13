@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T01-58-03-021Z-close-079074b7172f",
+  "taskId": "TASK-GIT-0014",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md",
+  "taskSha256": "sha256:410931e661ce4c6ff958485142744c65e3a20b1d8e786798d560d6e921a1dd54",
+  "createdAt": "2026-07-13T01:58:03.021Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0014 --actor codex-backlog-captain"
+}
