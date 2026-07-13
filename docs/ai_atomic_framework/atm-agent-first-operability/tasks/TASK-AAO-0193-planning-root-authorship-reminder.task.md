@@ -3,7 +3,7 @@ task_id: TASK-AAO-0193
 title: "Remind framework imports to author 3KLife planning cards first"
 started_at: "2026-07-13T12:05:00.000Z"
 started_by_agent: "cursor-grok-4.5"
-status: ready
+status: done
 owner: cursor-grok-4.5
 priority: P1
 milestone: Backlog-P1
@@ -47,6 +47,15 @@ outOfScope:
   - "release/**"
   - "Changing non-AAO/TEAM import paths"
   - "Editing .atm/history or .atm/runtime by hand"
+completed_at: "2026-07-13T12:21:40.259Z"
+completed_by_agent: "cursor-grok-4.5"
+closedAt: "2026-07-13T12:21:40.259Z"
+closedByActor: "cursor-grok-4.5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-13T12-21-40-259Z-close-397660a30197"
+lastTransitionAt: "2026-07-13T12:21:40.259Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "5b386dfa8"
 ---
 
 # TASK-AAO-0193 Remind framework imports to author 3KLife planning cards first

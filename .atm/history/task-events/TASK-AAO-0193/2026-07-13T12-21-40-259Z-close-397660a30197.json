@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T12-21-40-259Z-close-397660a30197",
+  "taskId": "TASK-AAO-0193",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0193-planning-root-authorship-reminder.task.md",
+  "taskSha256": "sha256:70fe4513bdb9df9ab0d839126b5e3730845be08488e7dbf0c9069696f3534da3",
+  "createdAt": "2026-07-13T12:21:40.259Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0193 --actor cursor-grok-4.5"
+}
