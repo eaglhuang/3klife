@@ -7,6 +7,7 @@ target_repo: AI-Atomic-Framework
 created_at: 2026-06-23
 related_plan: docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md
 completed_at: 2026-06-23T07:26:40.163Z
+updated_at: 2026-07-12T23:15:00+08:00
 ---
 
 # GIT Boundary Admission Task Index
@@ -33,7 +34,18 @@ Every `TASK-GIT-*` card is a planning card for the ATM framework repository unle
 | [TASK-GIT-0010](./TASK-GIT-0010-operator-policy-and-bypass-audit.task.md) | G3 | Operator policy and bypass audit | done | TASK-GIT-0005, TASK-GIT-0009 | policy / docs |
 | [TASK-GIT-0011](./TASK-GIT-0011-adopter-docs-and-runbook.task.md) | G4 | Adopter docs and runbook | done | TASK-GIT-0010 | docs |
 | [TASK-GIT-0012](./TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md) | G4 | End-to-end dogfood and paper evidence | done | TASK-GIT-0008, TASK-GIT-0011 | evidence |
+| [TASK-GIT-0013](./TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md) | G5 | Agent raw Git deny and ATM Git tool gate | done | TASK-GIT-0010, TASK-GIT-0011 | integrations / command policy |
+| [TASK-GIT-0014](./TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md) | G6 | ATM Git push wrapper and tool-only push lane | done | TASK-GIT-0013 | CLI / integrations / pre-push |
+| [TASK-GIT-0015](./TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md) | G7 | Broker-owned staging index arbitration for parallel agents | planned | TASK-GIT-0013, TASK-GIT-0014 | broker / index / command policy |
 
 ## Sequencing Note
 
 The first production-worthy milestone is `TASK-GIT-0001` through `TASK-GIT-0008`. `TASK-GIT-0009` and `TASK-GIT-0010` make the operator experience safe under real Git failures and bypasses. `TASK-GIT-0011` and `TASK-GIT-0012` convert the implementation into adopter-ready documentation and paper-ready evidence.
+
+## Post-MVP Hard-Gate Extension
+
+`TASK-GIT-0013` was added after Team Agents dogfood exposed a stronger multi-agent safety requirement: local hooks and ATM CLI checks are not enough when an AI agent has unrestricted shell access to raw destructive Git commands. The G5 extension makes raw Git mutation denied by default in supported AI integrations and routes Git mutations through ATM-governed tools, Broker index lanes, and scoped emergency leases.
+
+`TASK-GIT-0014` follows from the `TASK-GIT-0013` closeout: ATM can admit a push, and the pre-push hook can guard a commit range, but the final remote mutation still happens through raw host `git push`. The G6 extension adds a governed `atm git push` wrapper and makes supported integrations route raw push attempts to that wrapper.
+
+`TASK-GIT-0015` formalizes the emergency `TASK-AAO-0189` plan created from `ATM-BUG-2026-07-12-161`: raw Git denial and governed push are not enough while multiple agents share one Git index. The G7 extension makes the staging index a Broker-owned lane, blocks foreign-active unstage/restore/reset/clean operations by default, and introduces explicit stage-only and destructive override leases with audit evidence.
