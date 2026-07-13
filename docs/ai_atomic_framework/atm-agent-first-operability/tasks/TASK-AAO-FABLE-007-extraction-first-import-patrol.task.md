@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-007
 title: "Import patrol: warn when large-module scope lacks extraction candidates"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P2
 milestone: Backlog-P1
@@ -34,6 +34,15 @@ atomizationImpact:
       source: "packages/cli/src/commands/tasks/task-import-validators.ts"
       disposition: "extract"
       inlineReason: null
+completed_at: "2026-07-13T07:44:15.425Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-13T07:44:15.425Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-13T07-44-15-425Z-close-8e48bfbd56dd"
+lastTransitionAt: "2026-07-13T07:44:15.425Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0b65e3370877cf42c7102e2e74a8ec9e2973c721"
 ---
 
 # TASK-AAO-FABLE-007 Extraction-first import patrol
