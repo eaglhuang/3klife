@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T00-40-05-351Z-close-dbbf6e77a2c6",
+  "taskId": "TASK-GIT-0013",
+  "action": "close",
+  "actorId": "codex-backlog-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md",
+  "taskSha256": "sha256:645dab2bc6d1e2535760f776863702da18efe38bc7234c6c2a9f36971a86ffd2",
+  "createdAt": "2026-07-13T00:40:05.351Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0013 --actor codex-backlog-captain"
+}
