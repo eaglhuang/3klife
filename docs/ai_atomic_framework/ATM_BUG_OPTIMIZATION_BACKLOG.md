@@ -30,6 +30,15 @@ Use this file when:
 
 ## Open Items
 
+- [ ] ATM-BUG-2026-07-13-176: Framework-repo task open does not remind agents to author the 3KLife planning card first
+  - Status: open
+  - Severity: P1 Captain / planning-root workflow friction
+  - Encountered: 2026-07-13 while retro-checking `TASK-AAO-0190` after a target-repo-only import/close of `ATM-BUG-2026-07-12-151`.
+  - Reproduce / detect: From `C:/Users/User/AI-Atomic-Framework`, create/import a task only via `.atm/task-plans/TASK-AAO-*.md` and claim/close without writing `C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-*.task.md`. ATM does not emit a planning-root missing reminder; the AAO roster stays incomplete.
+  - Impact: Framework work can land with ledger evidence while the canonical planning repo has no formal task card, breaking Captain roster continuity and later handoff discovery.
+  - Possible optimization: On framework-repo `tasks import` / `taskflow open` / claim guidance, require or loudly recommend a resolvable 3KLife planning card path before write, and name the exact AAO/TEAM directory plus roster update command.
+  - Related tasks / commits: `TASK-AAO-0190` retro card backfill; related rows 159/160; canonical id `ATM-BUG-2026-07-13-176`.
+
 - [ ] ATM-BUG-2026-07-11-086: Cross-repo `next --prompt` cannot infer canonical planning root from prompt path hints
   - Status: open; already being handled by another AI, this entry adds TASK-TEAM-0053 dogfood repro evidence.
   - Severity: P1 Captain workflow friction
