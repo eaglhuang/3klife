@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-006
 title: "Extraction-first atomization contract in card-authoring and refactor skills"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: Backlog-P1
@@ -26,6 +26,15 @@ rollback:
   notes: "Revert skill text; atomizationImpact bookkeeping fields keep working unchanged."
 atomizationImpact:
   ownerAtomOrMap: "atm.agent-skills"
+completed_at: "2026-07-13T06:18:02.573Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-13T06:18:02.573Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-13T06-18-02-573Z-close-66dd5f1670cc"
+lastTransitionAt: "2026-07-13T06:18:02.573Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "429f6c3ecb05481d440b166d224015de4085f580"
 ---
 
 # TASK-AAO-FABLE-006 Extraction-first atomization skill contract
