@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-005
 title: "Resolve residue ownership from the committing task id under multi-claim parallelism"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P0
 milestone: Backlog-P1
@@ -25,6 +25,15 @@ rollback:
   notes: "Revert to lock-count heuristic; single-claim behavior is unchanged either way."
 atomizationImpact:
   ownerAtomOrMap: "atm.git-governance"
+completed_at: "2026-07-13T00:23:36.761Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-13T00:23:36.761Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-13T00-23-36-761Z-close-7e564e8c92e1"
+lastTransitionAt: "2026-07-13T00:23:36.761Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6a5357953cf46a76da27a9c05461e6037048190b"
 ---
 
 # TASK-AAO-FABLE-005 Multi-claim residue task resolution
