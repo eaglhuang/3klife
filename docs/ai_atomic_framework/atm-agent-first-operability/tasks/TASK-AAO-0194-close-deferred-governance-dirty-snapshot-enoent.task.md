@@ -3,7 +3,8 @@ task_id: TASK-AAO-0194
 title: "Make taskflow close tolerate deferred foreign governance-dirty snapshots"
 started_at: "2026-07-13T12:26:00.000Z"
 started_by_agent: "cursor-grok-4.5"
-status: ready
+status: done
+notes: "Fixed ATM-BUG-2026-07-13-180 in aa4744c24; foreign governance-dirty deferral no longer restores other tasks or throws on missing snapshots."
 owner: cursor-grok-4.5
 priority: P1
 milestone: Backlog-P1
