@@ -1,7 +1,7 @@
 ---
 task_id: TASK-AAO-FABLE-004
 title: "Route backlog continuation prompts to backlog/task queue, not create-atom"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: Backlog-P1
@@ -30,6 +30,15 @@ rollback:
   notes: "Revert prompt classification extension; generic guide fallback remains."
 atomizationImpact:
   ownerAtomOrMap: "atm.next-router-map"
+completed_at: "2026-07-13T05:47:24.877Z"
+completed_by_agent: "codex-backlog-captain"
+closedAt: "2026-07-13T05:47:24.877Z"
+closedByActor: "codex-backlog-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-13T05-47-24-877Z-close-dd2c27563485"
+lastTransitionAt: "2026-07-13T05:47:24.877Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "894a106d8c6023da16c8c52b24b229d1af73b7c5"
 ---
 
 # TASK-AAO-FABLE-004 Backlog continuation prompt routing
