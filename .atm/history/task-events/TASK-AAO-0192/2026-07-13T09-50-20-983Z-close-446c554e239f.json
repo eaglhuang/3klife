@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T09-50-20-983Z-close-446c554e239f",
+  "taskId": "TASK-AAO-0192",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0192-abandoned-reopen-without-emergency-force.task.md",
+  "taskSha256": "sha256:7a4997bb91040e45077792a2ba54315e4f824872099ac1e9c2c4c95e2b0003d2",
+  "createdAt": "2026-07-13T09:50:20.983Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0192 --actor cursor-grok-4.5"
+}
