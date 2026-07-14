@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T01-22-07-193Z-close-63c09b0fe2a1",
+  "taskId": "TASK-AAO-0197",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0197-team-execute-defaults-all-roles.task.md",
+  "taskSha256": "sha256:0d08e13de42ffb18a2720569ef1c3866a8d035b1f2ffae9381de6c095c168aa7",
+  "createdAt": "2026-07-14T01:22:07.193Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0197 --actor cursor-grok-4.5"
+}
