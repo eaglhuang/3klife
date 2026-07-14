@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0005
 title: "跨專案 keep registry 與 orient 導流"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: MEM-M3
@@ -26,6 +26,15 @@ rollback:
   notes: "registry 是新增檔；revert 後各 repo keep 各自獨立運作如現狀。"
 atomizationImpact:
   ownerAtomOrMap: "3klife.docs-keep"
+completed_at: "2026-07-14T10:32:19.063Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-14T10:32:19.063Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-14T10-32-19-063Z-close-d90422bf03a2"
+lastTransitionAt: "2026-07-14T10:32:19.063Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "28f323fe82619e7526fe0ad4cbf196cdbe7bc3cc"
 ---
 
 # TASK-MEM-0005 跨專案 keep registry

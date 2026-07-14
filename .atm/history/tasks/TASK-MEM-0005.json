@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-MEM-0005",
+  "title": "跨專案 keep registry 與 orient 導流",
+  "status": "done",
+  "milestone": "MEM-M3",
+  "dependencies": [
+    "TASK-MEM-0001"
+  ],
+  "acceptance": [
+    "registry 檔落地、三個首批 repo 條目正確可達（路徑實測存在）。",
+    "`keep.summary.md` P0 段補一行指向 registry（跨 repo 工作前先查）。",
+    "中文內容過 encoding 檢查。"
+  ],
+  "deliverables": [
+    "docs/keep.registry.md"
+  ],
+  "scopePaths": [
+    "docs/keep.registry.md",
+    "docs/keep.summary.md"
+  ],
+  "validators": [
+    "git diff --check",
+    "node tools_node/check-encoding-integrity.js --staged"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "revert-commit",
+  "rollbackNotes": "registry 是新增檔；revert 後各 repo keep 各自獨立運作如現狀。",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "3klife.docs-keep",
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "atm-memory-governance/tasks/TASK-MEM-0005-cross-project-keep-registry.task.md",
+    "sectionTitle": "TASK-MEM-0005",
+    "headingLine": 31,
+    "hash": "5b2693ae3f0146b8"
+  },
+  "importedAt": "2026-07-14T10:23:12.024Z",
+  "lastTransitionId": "2026-07-14T10-32-18-999Z-close-e400f29df974",
+  "lastTransitionAt": "2026-07-14T10:32:18.999Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "claude-fable-5",
+  "reservedAt": "2026-07-14T10:25:31.249Z",
+  "promotedAt": "2026-07-14T10:25:31.252Z",
+  "claim": {
+    "actorId": "claude-fable-5",
+    "leaseId": "lease-82de995e75a3",
+    "claimedAt": "2026-07-14T10:25:31.256Z",
+    "heartbeatAt": "2026-07-14T10:32:18.998Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/TASK-MEM-0005.json",
+      "docs/keep.registry.md"
+    ],
+    "state": "released",
+    "reason": "closed"
+  },
+  "startedAt": "2026-07-14T10:25:31.256Z",
+  "startedByActor": "claude-fable-5",
+  "startedBySessionId": "session-20260714102531-claude-fable-5-TASK-MEM-0005-4558d88d57",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-MEM-0005",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-MEM-0005.*",
+      ".atm/history/task-events/TASK-MEM-0005/**",
+      ".atm/history/tasks/TASK-MEM-0005.json",
+      "docs/keep.registry.md"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "a0f5d54137c33a0ab51f212ab0bf532f4df89cea0e16c64c6b90115f7656e5ce",
+    "actorId": "claude-fable-5",
+    "createdAt": "2026-07-14T10:25:34.910Z",
+    "status": "active"
+  },
+  "closedAt": "2026-07-14T10:32:18.998Z",
+  "closedByActor": "claude-fable-5",
+  "closedBySessionId": "session-20260714102531-claude-fable-5-TASK-MEM-0005-4558d88d57"
+}

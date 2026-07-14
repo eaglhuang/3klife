@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T10-32-19-063Z-close-d90422bf03a2",
+  "taskId": "TASK-MEM-0005",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0005-cross-project-keep-registry.task.md",
+  "taskSha256": "sha256:55f426be13d3b4d68f54d4fe3c08b072c3dbb35c0ffd58288b8639f2ef6f2fff",
+  "createdAt": "2026-07-14T10:32:19.063Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0005 --actor claude-fable-5"
+}
