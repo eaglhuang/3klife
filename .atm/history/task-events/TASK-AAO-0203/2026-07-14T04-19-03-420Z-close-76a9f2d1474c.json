@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T04-19-03-420Z-close-76a9f2d1474c",
+  "taskId": "TASK-AAO-0203",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0203-residue-validator-contract-drift.task.md",
+  "taskSha256": "sha256:d2cb6f5cb937ba5bc306087b10cb6eefcf1e5b0f8c7aef449148c0d5c772d6ba",
+  "createdAt": "2026-07-14T04:19:03.420Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0203 --actor cursor-grok-4.5"
+}
