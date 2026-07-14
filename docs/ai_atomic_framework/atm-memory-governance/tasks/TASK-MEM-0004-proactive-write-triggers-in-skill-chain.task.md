@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0004
 title: "主動寫入觸發契約寫進 handoff/dispatch/orient skill 源頭模板"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: MEM-M2
@@ -33,6 +33,15 @@ rollback:
   notes: "純模板文字新增段落；revert 不影響 skill 其他契約。"
 atomizationImpact:
   ownerAtomOrMap: "atm.agent-skills"
+completed_at: "2026-07-14T16:32:40.157Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-14T16:32:40.157Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-14T16-32-40-157Z-close-f47a1375f87f"
+lastTransitionAt: "2026-07-14T16:32:40.157Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f45aed3c139228b2fd2c716b83155b997b2b8070"
 ---
 
 # TASK-MEM-0004 主動寫入觸發契約進 skill 鏈

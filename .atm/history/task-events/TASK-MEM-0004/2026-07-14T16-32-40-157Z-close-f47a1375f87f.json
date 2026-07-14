@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T16-32-40-157Z-close-f47a1375f87f",
+  "taskId": "TASK-MEM-0004",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0004-proactive-write-triggers-in-skill-chain.task.md",
+  "taskSha256": "sha256:a4de6e7131c9e639c1d4502797116d1a741e66004388d7e336bda86160de2d9e",
+  "createdAt": "2026-07-14T16:32:40.157Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0004 --actor claude-fable-5"
+}
