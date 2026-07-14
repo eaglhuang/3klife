@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0003
 title: "atm-memory-consolidate skill：源頭模板與安裝副本"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: MEM-M2
@@ -30,6 +30,15 @@ rollback:
   notes: "Revert template + installed copy together; requiredTemplateIds list in the validator must be reverted in the same commit."
 atomizationImpact:
   ownerAtomOrMap: "atm.agent-skills"
+completed_at: "2026-07-14T16:33:40.318Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-14T16:33:40.318Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-14T16-33-40-318Z-close-d8caad05daec"
+lastTransitionAt: "2026-07-14T16:33:40.318Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "47100ce95591fb40aabcb03742b897e3dd704b8e"
 ---
 
 # TASK-MEM-0003 atm-memory-consolidate skill

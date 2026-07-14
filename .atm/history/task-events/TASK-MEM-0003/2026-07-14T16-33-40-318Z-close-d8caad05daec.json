@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T16-33-40-318Z-close-d8caad05daec",
+  "taskId": "TASK-MEM-0003",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0003-atm-memory-consolidate-skill.task.md",
+  "taskSha256": "sha256:9e32b45850992e80d16ad043b535a56a2286cc3076547dd3060e1a2cc4c42899",
+  "createdAt": "2026-07-14T16:33:40.318Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0003 --actor claude-fable-5"
+}
