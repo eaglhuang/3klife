@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — AI / AgentSkill / Server
 
-> 生成日期: 2026-05-30
+> 生成日期: 2026-07-14
 > 這是 `doc-id-registry.md` 的「AI / AgentSkill / Server」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -50,6 +50,7 @@
 | `doc_ai_0044` | .github/instructions/atm-upgrade-scan.instructions.md | ATM Upgrade Scan |
 | `doc_ai_0045` | .github/instructions/atm-task-intent-resolver.instructions.md | ATM Task Intent Resolver |
 | `doc_ai_0046` | docs/agent-briefs/npc-brain-handoff-2026-05-29.md | `npc-brain` 資料演進與交接摘要 |
+| `doc_ai_0047` | .github/instructions/atm-atom-map-refactor.instructions.md | ATM Atom Map Refactor |
 
 ## Agent Skill 專用 (`doc_agentskill`)
 
@@ -149,6 +150,14 @@
 | `doc_agentskill_0114` | .agents/skills/atm-upgrade-scan/SKILL.md | ATM Upgrade Scan |
 | `doc_agentskill_0115` | .agents/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
 | `doc_agentskill_0116` | .github/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
+| `doc_agentskill_0117` | .agents/skills/ai-role-router/references/project-captain-mode.md | Project Captain Mode Reference |
+| `doc_agentskill_0118` | .agents/skills/article-writing-mode/SKILL.md | Article Writing Mode |
+| `doc_agentskill_0119` | .agents/skills/atm-atom-map-refactor/SKILL.md | ATM Atom Map Refactor |
+| `doc_agentskill_0120` | .agents/skills/atm-captain-dispatch-standard/references/dispatch-template.md | ATM Captain Dispatch Templates (派工單範例模板) |
+| `doc_agentskill_0121` | .agents/skills/atm-captain-dispatch-standard/references/project-captain-mode.md | Project Captain Mode Reference |
+| `doc_agentskill_0122` | .agents/skills/atm-captain-dispatch-standard/SKILL.md | ATM Captain Dispatch Standard (派工規範手冊) |
+| `doc_agentskill_0123` | .github/skills/atm-captain-dispatch-standard/references/dispatch-template.md | ATM Captain Dispatch Templates (派工單範例模板) |
+| `doc_agentskill_0124` | .github/skills/atm-captain-dispatch-standard/SKILL.md | ATM Captain Dispatch Standard (派工規範手冊) |
 
 ## Server 文件類 (`doc_server_<subtype>`)
 

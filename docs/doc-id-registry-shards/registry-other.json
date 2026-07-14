@@ -4360,5 +4360,11 @@
     "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0097-tasks-wave3b-file-io-helpers-split.task.md",
     "title": "TASK-AAO-0097 tasks.ts wave 3-B file-I/O helpers split",
     "category": "other"
+  },
+  {
+    "id": "doc_other_1453",
+    "path": "docs/ai_atomic_framework/governance-optimization/ATM治理流程與Team-Agents加速優化計畫書.md",
+    "title": "ATM 治理流程與 Team Agents 加速優化計畫書",
+    "category": "other"
   }
 ]

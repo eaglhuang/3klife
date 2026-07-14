@@ -190,5 +190,11 @@
     "path": "docs/ai_atomic_framework/team-agents/templates/README.md",
     "title": "Team Agents Templates",
     "category": "index"
+  },
+  {
+    "id": "doc_index_1008",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/README.md",
+    "title": "ATM 治理流程與 Team Agents 加速優化 Task Cards",
+    "category": "index"
   }
 ]
