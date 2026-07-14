@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T01-26-45-638Z-close-fd981f2decf9",
+  "taskId": "TASK-AAO-0200",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0200-claim-broker-resolution-consumption.task.md",
+  "taskSha256": "sha256:345a10368e8404981993c32cb8145958e31badc5f8da816be5eb02ed4fdbe18f",
+  "createdAt": "2026-07-14T01:26:45.638Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0200 --actor cursor-grok-4.5"
+}
