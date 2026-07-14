@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T04-14-55-773Z-close-16a157db8f5a",
+  "taskId": "TASK-AAO-0201",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0201-mixed-delivery-close-ux-hint.task.md",
+  "taskSha256": "sha256:68c729506ddffae294a909f7bd10b9fa709af7271c87f66e25b3d024e8fe793e",
+  "createdAt": "2026-07-14T04:14:55.773Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0201 --actor cursor-grok-4.5"
+}
