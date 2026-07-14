@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-RFT-0024",
+  "title": "tasks legacy implementation compatibility facade split",
+  "status": "planned",
+  "milestone": "RFT-M7",
+  "dependencies": [
+    "TASK-RFT-0022"
+  ],
+  "acceptance": [],
+  "deliverables": [
+    "packages/cli/src/commands/tasks/legacy-impl.ts",
+    "packages/cli/src/commands/tasks/legacy/compat-command-map.ts",
+    "packages/cli/src/commands/tasks/legacy/repair-reconcile-lane.ts",
+    "packages/cli/src/commands/tasks/legacy/transition-compat.ts",
+    "packages/cli/src/commands/tasks/__tests__/legacy-compat-command-map.spec.ts",
+    "docs/reports/tasks-legacy-compat-map.md"
+  ],
+  "scopePaths": [
+    "packages/cli/src/commands/tasks/legacy-impl.ts",
+    "packages/cli/src/commands/tasks/legacy/**",
+    "packages/cli/src/commands/tasks/__tests__/**",
+    "scripts/validate-task-import.ts",
+    "scripts/validators/task-ledger/suite-impl.ts",
+    "docs/reports/tasks-legacy-compat-map.md",
+    ".agents/skills/atm-atom-map-refactor/references/casebook.md"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "node --strip-types scripts/validate-task-import.ts",
+    "node --strip-types scripts/validators/task-ledger/suite-impl.ts",
+    "node --strip-types packages/cli/src/commands/tasks/__tests__/legacy-compat-command-map.spec.ts",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Creating a second task lifecycle.",
+    "Changing task store schema.",
+    "Deleting emergency surfaces unless separately authorized."
+  ],
+  "nonGoals": [],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "revert-commit",
+  "rollbackNotes": "Revert if legacy task import, repair, reconcile, or transition compatibility changes without equivalent test proof.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.tasks-legacy-compat-map",
+    "atomCid": null,
+    "mapUpdates": [
+      "docs/reports/tasks-legacy-compat-map.md",
+      ".agents/skills/atm-atom-map-refactor/references/casebook.md"
+    ],
+    "extractionCandidates": [
+      {
+        "atom": "atm.tasks.legacy-compat-facade",
+        "pattern": "Facade",
+        "source": "packages/cli/src/commands/tasks/legacy-impl.ts",
+        "disposition": "extract",
+        "inlineReason": "null"
+      },
+      {
+        "atom": "atm.tasks.legacy-command-map",
+        "pattern": "Strategy Map",
+        "source": "packages/cli/src/commands/tasks/legacy-impl.ts",
+        "disposition": "extract",
+        "inlineReason": "null"
+      }
+    ]
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md",
+    "sectionTitle": "TASK-RFT-0024",
+    "headingLine": 69,
+    "hash": "8b47091d73baa2ef"
+  },
+  "importedAt": "2026-07-13T16:37:03.668Z",
+  "lastTransitionId": "2026-07-13T16-37-03-675Z-import-c0e9a175b899",
+  "lastTransitionAt": "2026-07-13T16:37:03.675Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

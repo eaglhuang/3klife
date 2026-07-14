@@ -3,7 +3,7 @@ doc_id: doc_rft_cli_oversized_module_refactor_plan
 title: "ATM CLI oversized module refactor plan (RFT series)"
 status: active
 created_at: "2026-06-13T22:30:00+08:00"
-updated_at: "2026-07-10T10:52:00+08:00"
+updated_at: "2026-07-14T00:00:00+08:00"
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 related_skill: .agents/skills/atm-atom-map-refactor
@@ -28,6 +28,12 @@ task_family:
   - TASK-AAO-0154
   - TASK-AAO-0155
   - TASK-AAO-0156
+  - TASK-RFT-0020
+  - TASK-RFT-0021
+  - TASK-RFT-0022
+  - TASK-RFT-0023
+  - TASK-RFT-0024
+  - TASK-RFT-0025
 ---
 
 # ATM CLI oversized module refactor plan (RFT series)
@@ -444,3 +450,43 @@ Follow-up cards:
 These cards are explicitly root-cause treatments. They must not solve the
 incident by adding validator downgrade profiles, advisory-only bypasses, or
 second-path manual cleanup conventions.
+
+## 2026-07-14 RFT second-wave oversized-module queue
+
+All original `TASK-RFT-0001..0019` cards are closed in the ATM framework
+ledger. The next wave targets residual oversized modules in
+`AI-Atomic-Framework` and keeps this repository as the planning source only.
+
+Execution rules for this wave:
+
+- Planning repo: `C:/Users/User/3KLife`.
+- Target repo and closure authority: `C:/Users/User/AI-Atomic-Framework`.
+- Each task must route through ATM before claim and must read the returned
+  playbook before editing.
+- Each task touches one primary oversized module and extracts one bounded atom
+  or map; adjacent refactors become follow-up cards.
+- Every newly extracted atom/map/script/report source file must stay at or
+  below 600 lines. If an extraction candidate would exceed 600 lines, split it
+  into smaller atoms in the same task or open a follow-up before implementing.
+- Team Agents may be used for bounded review, grep, fixture scouting, and
+  validator triage. External write remains forbidden unless explicitly granted.
+- Each implementation report must include a short Team Agents efficiency note:
+  roles used, whether parallelism saved wall-clock time, token cost observed,
+  and whether the approach should be reused.
+- Any workflow failure, governance friction, or validator gap encountered while
+  executing this wave must be written to the ATM bug/optimization backlog before
+  moving to the next queue head.
+- Any durable lesson that changes how agents should perform future oversized
+  module extraction must be recorded in the source skill learning reference,
+  preferably `.agents/skills/atm-atom-map-refactor/references/casebook.md`.
+
+Queue order:
+
+| Task | Primary module | Reason | Pattern |
+|---|---|---|---|
+| `TASK-RFT-0020` | `packages/cli/src/commands/git-governance.ts` | Highest active defect pressure: foreign staged files, release mirror residue, and governed commit bundle safety. | Policy Object + Result Contract Object |
+| `TASK-RFT-0021` | `packages/cli/src/commands/team.ts` | Largest CLI command file and central Team Agents execution surface. | Strategy Map |
+| `TASK-RFT-0022` | `packages/cli/src/commands/next.ts` | Still oversized after first RFT extraction; core route assembly remains high-blast-radius. | Strategy Map + Result Contract Object |
+| `TASK-RFT-0023` | `scripts/validate-team-agents.ts` | Validator mega-script makes Team Agents regressions difficult to localize. | Validator Suite Map |
+| `TASK-RFT-0024` | `packages/cli/src/commands/tasks/legacy-impl.ts` | Compatibility lane remains large after `tasks.ts` facade recovery. | Facade + Strategy Map |
+| `TASK-RFT-0025` | `packages/cli/src/commands/framework-development/closure-packet-schema.ts` | Schema/diagnostic contract is large enough to hide unintended public-surface drift. | Result Contract Object |

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-RFT-0025",
+  "title": "closure packet schema fragment and diagnostics map",
+  "status": "planned",
+  "milestone": "RFT-M7",
+  "dependencies": [
+    "TASK-RFT-0024"
+  ],
+  "acceptance": [],
+  "deliverables": [
+    "packages/cli/src/commands/framework-development/closure-packet-schema.ts",
+    "packages/cli/src/commands/framework-development/closure-packet/schema-fragments.ts",
+    "packages/cli/src/commands/framework-development/closure-packet/diagnostics.ts",
+    "packages/cli/src/commands/framework-development/closure-packet/validator-contract.ts",
+    "packages/cli/src/commands/framework-development/__tests__/closure-packet-schema-fragments.spec.ts",
+    "docs/reports/closure-packet-schema-map.md"
+  ],
+  "scopePaths": [
+    "packages/cli/src/commands/framework-development/closure-packet-schema.ts",
+    "packages/cli/src/commands/framework-development/closure-packet/**",
+    "packages/cli/src/commands/framework-development/__tests__/**",
+    "docs/reports/closure-packet-schema-map.md",
+    ".agents/skills/atm-atom-map-refactor/references/casebook.md"
+  ],
+  "validators": [
+    "npm run typecheck",
+    "npm run validate:cli",
+    "node --strip-types packages/cli/src/commands/framework-development/__tests__/closure-packet-schema-fragments.spec.ts",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [
+    "Changing closure authority.",
+    "Relaxing schema validation.",
+    "Renaming public closure packet fields."
+  ],
+  "nonGoals": [],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "revert-commit",
+  "rollbackNotes": "Revert if closure packet schema validation, diagnostics, or framework close evidence contracts drift.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.framework-closure-packet-schema-map",
+    "atomCid": null,
+    "mapUpdates": [
+      "docs/reports/closure-packet-schema-map.md",
+      ".agents/skills/atm-atom-map-refactor/references/casebook.md"
+    ],
+    "extractionCandidates": [
+      {
+        "atom": "atm.framework-closure-packet.schema-fragments",
+        "pattern": "Result Contract Object",
+        "source": "packages/cli/src/commands/framework-development/closure-packet-schema.ts",
+        "disposition": "extract",
+        "inlineReason": "null"
+      }
+    ]
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md",
+    "sectionTitle": "TASK-RFT-0025",
+    "headingLine": 59,
+    "hash": "1d23ba38ccf7bd41"
+  },
+  "importedAt": "2026-07-13T16:37:03.697Z",
+  "lastTransitionId": "2026-07-13T16-37-03-704Z-import-68ecd1f929f4",
+  "lastTransitionAt": "2026-07-13T16:37:03.704Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}
