@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T10-23-14-129Z-promote-6b61ba05884d",
+  "taskId": "TASK-MEM-0002",
+  "action": "promote",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "reserved",
+  "toStatus": "ready",
+  "taskPath": ".atm/history/tasks/TASK-MEM-0002.json",
+  "taskSha256": "sha256:3f171cf5da87cb6eb767391c8f729fe46c286a3bd42a31f10ce74eeed3030603",
+  "createdAt": "2026-07-14T10:23:14.129Z",
+  "command": "node atm.mjs next --claim --task TASK-MEM-0002 --actor claude-fable-5 --auto-intent --json"
+}

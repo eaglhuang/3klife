@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T10-30-30-826Z-close-5d4d41b3c700",
+  "taskId": "TASK-MEM-0002",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": "session-20260714102314-claude-fable-5-TASK-MEM-0002-2c6a4fc3a8",
+  "fromStatus": "running",
+  "toStatus": "done",
+  "taskPath": ".atm/history/tasks/TASK-MEM-0002.json",
+  "taskSha256": "sha256:fd74002265a4a39cbc9685749eed912b330bff79bcf78f1390d37ea87cd55177",
+  "createdAt": "2026-07-14T10:30:30.826Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0002 --actor claude-fable-5 --status done --historical-delivery ddc6e95135a4d6d45a08f4c1e840445ded952bfc",
+  "closure": {
+    "schemaId": "atm.taskClosureTransition.v1",
+    "batchId": null,
+    "sessionId": "session-20260714102314-claude-fable-5-TASK-MEM-0002-2c6a4fc3a8",
+    "closurePacketPath": null,
+    "evidenceFreshness": null,
+    "validationPasses": [],
+    "requiredGates": [],
+    "requiredGatesSnapshot": null
+  }
+}

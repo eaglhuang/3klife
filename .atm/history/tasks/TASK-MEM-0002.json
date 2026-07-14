@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-MEM-0002",
+  "title": "memory-manager 工具：契約驗證、索引重建、過期報告",
+  "status": "done",
+  "milestone": "MEM-M1",
+  "dependencies": [
+    "TASK-MEM-0001"
+  ],
+  "acceptance": [
+    "三個子命令對 `docs/keep-memory/` 實際目錄可用。",
+    "最小回歸測試：壞 frontmatter → validate 紅；合法目錄 → validate 綠； rebuild-index 冪等（跑兩次無 diff）；stale-report 對造假日期檔案正確分類。",
+    "rebuild-index 產物通過 encoding 檢查，summary 段落標記外零 diff。"
+  ],
+  "deliverables": [
+    "tools_node/memory-manager.js",
+    "tools_node/tests/memory-manager.test.js"
+  ],
+  "scopePaths": [
+    "tools_node/memory-manager.js",
+    "tools_node/tests/memory-manager.test.js",
+    "docs/keep.summary.md"
+  ],
+  "validators": [
+    "git diff --check",
+    "node tools_node/tests/memory-manager.test.js",
+    "node tools_node/memory-manager.js validate docs/keep-memory"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "revert-commit",
+  "rollbackNotes": "獨立新工具檔；revert 後 keep-memory 目錄仍可手動維護。",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "3klife.tools-node",
+    "atomCid": null,
+    "mapUpdates": [],
+    "extractionCandidates": [
+      {
+        "atom": "3klife.memory-manager",
+        "pattern": "Facade",
+        "source": "tools_node/memory-manager.js",
+        "disposition": "extract",
+        "inlineReason": "null"
+      }
+    ]
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "ATM_TASK_IMPORT_MECHANICAL_SPLIT_SCOPE_CHECKLIST",
+      "severity": "warning",
+      "field": "scopePaths",
+      "message": "Mechanical split/facade/module task appears to declare a narrow file boundary. Before the first delivery commit, review sibling files such as types.ts, shared.ts, constants.ts, registry files, and lane modules; add all expected paths once with `node atm.mjs tasks scope add --task <id> --paths <paths> --json`.",
+      "candidates": [
+        "tools_node/memory-manager.js",
+        "tools_node/tests/memory-manager.test.js",
+        "docs/keep.summary.md"
+      ]
+    }
+  ],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "atm-memory-governance/tasks/TASK-MEM-0002-memory-manager-tooling.task.md",
+    "sectionTitle": "TASK-MEM-0002",
+    "headingLine": 40,
+    "hash": "394dee0759f75a4e"
+  },
+  "importedAt": "2026-07-14T10:23:10.587Z",
+  "lastTransitionId": "2026-07-14T10-30-30-826Z-close-5d4d41b3c700",
+  "lastTransitionAt": "2026-07-14T10:30:30.826Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "claude-fable-5",
+  "reservedAt": "2026-07-14T10:23:14.127Z",
+  "promotedAt": "2026-07-14T10:23:14.129Z",
+  "claim": {
+    "actorId": "claude-fable-5",
+    "leaseId": "lease-e79a22506059",
+    "claimedAt": "2026-07-14T10:23:14.132Z",
+    "heartbeatAt": "2026-07-14T10:30:30.825Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/TASK-MEM-0002.json",
+      "docs/keep.summary.md",
+      "tools_node/memory-manager.js",
+      "tools_node/tests/memory-manager.test.js"
+    ],
+    "state": "released",
+    "reason": "closed"
+  },
+  "startedAt": "2026-07-14T10:23:14.132Z",
+  "startedByActor": "claude-fable-5",
+  "startedBySessionId": "session-20260714102314-claude-fable-5-TASK-MEM-0002-2c6a4fc3a8",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-MEM-0002",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-MEM-0002.*",
+      ".atm/history/task-events/TASK-MEM-0002/**",
+      ".atm/history/tasks/TASK-MEM-0002.json",
+      "docs/keep.summary.md",
+      "tools_node/memory-manager.js",
+      "tools_node/tests/memory-manager.test.js"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "2d826b99dbf8895ea72ba2641f598dd12d9287c7408f5f1997c3e6a561ab6cba",
+    "actorId": "claude-fable-5",
+    "createdAt": "2026-07-14T10:23:17.854Z",
+    "status": "active"
+  },
+  "closedAt": "2026-07-14T10:30:30.825Z",
+  "closedByActor": "claude-fable-5",
+  "closedBySessionId": "session-20260714102314-claude-fable-5-TASK-MEM-0002-2c6a4fc3a8"
+}

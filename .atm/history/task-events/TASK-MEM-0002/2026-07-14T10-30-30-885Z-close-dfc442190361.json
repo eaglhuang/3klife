@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T10-30-30-885Z-close-dfc442190361",
+  "taskId": "TASK-MEM-0002",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0002-memory-manager-tooling.task.md",
+  "taskSha256": "sha256:9bda6ed70a5cef172ceaf078126d218eb0a9b74c84afc3a888b188da780ba234",
+  "createdAt": "2026-07-14T10:30:30.885Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0002 --actor claude-fable-5"
+}

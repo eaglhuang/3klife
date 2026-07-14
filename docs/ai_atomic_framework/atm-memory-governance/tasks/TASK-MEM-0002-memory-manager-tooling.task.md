@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0002
 title: "memory-manager 工具：契約驗證、索引重建、過期報告"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: MEM-M1
@@ -35,6 +35,15 @@ atomizationImpact:
       source: "tools_node/memory-manager.js"
       disposition: "extract"
       inlineReason: null
+completed_at: "2026-07-14T10:30:30.885Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-14T10:30:30.885Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-14T10-30-30-885Z-close-dfc442190361"
+lastTransitionAt: "2026-07-14T10:30:30.885Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ddc6e95135a4d6d45a08f4c1e840445ded952bfc"
 ---
 
 # TASK-MEM-0002 memory-manager 工具

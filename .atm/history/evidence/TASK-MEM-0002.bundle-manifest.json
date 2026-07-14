@@ -1,0 +1,54 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-MEM-0002",
+  "updatedAt": "2026-07-14T10:30:20.418Z",
+  "updatedBy": "claude-fable-5",
+  "freshValidationPasses": [
+    "git diff --check",
+    "node tools_node/memory-manager.js validate docs/keep-memory",
+    "node tools_node/tests/memory-manager.test.js"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:b2cf215a95e48ff247738b96270ba9ed2457ca3542bcc9b6a9098b5314ce74b0",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-14T10:29:57.367Z",
+      "runnerKind": "unknown",
+      "sourceCommit": null,
+      "cached": false
+    },
+    {
+      "command": "node tools_node/tests/memory-manager.test.js",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:82980968c033dd2c11c050776205cd1c0f9ab7aeb92f914023564dcddbb3f23e",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/tests/memory-manager.test.js"
+      ],
+      "generatedAt": "2026-07-14T10:29:59.487Z",
+      "runnerKind": "unknown",
+      "sourceCommit": null,
+      "cached": false
+    },
+    {
+      "command": "node tools_node/memory-manager.js validate docs/keep-memory",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:d6dc7c68be4ec872bf38ed11c617cb757079098f4bb04572ca8524b9e4b4b842",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/memory-manager.js validate docs/keep-memory"
+      ],
+      "generatedAt": "2026-07-14T10:30:20.489Z",
+      "runnerKind": "unknown",
+      "sourceCommit": null,
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}
