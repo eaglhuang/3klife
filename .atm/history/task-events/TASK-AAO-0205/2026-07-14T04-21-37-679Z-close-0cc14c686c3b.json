@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T04-21-37-679Z-close-0cc14c686c3b",
+  "taskId": "TASK-AAO-0205",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0205-framework-claim-ignore-unstaged-release.task.md",
+  "taskSha256": "sha256:3ee1b9f0948b3b8231df625823d6b06edce0d6553e3e354c735d7bbbf1b25404",
+  "createdAt": "2026-07-14T04:21:37.679Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0205 --actor cursor-grok-4.5"
+}
