@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T01-23-40-587Z-close-4c6a0187697c",
+  "taskId": "TASK-AAO-0198",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0198-team-runtime-mode-precedence.task.md",
+  "taskSha256": "sha256:e44c5ccb605c9439fe369669ed4537c989a2282a9b3d0c619107cdc89278c4f4",
+  "createdAt": "2026-07-14T01:23:40.587Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0198 --actor cursor-grok-4.5"
+}
