@@ -16,6 +16,7 @@
 - 大檔一律優先讀 shard：`docs/keep-shards/keep-core.md`、`keep-workflow.md`、`keep-ui-arch.md`、`keep-status.md`。
 - 修改分片後重建索引：`node tools_node/shard-manager.js rebuild-index docs/keep-shards`
 - 本摘要只做導流與高風險提醒；正文規則放 `docs/keep-shards/*.md`，不要把 shard 內容複製成第三份主文。
+- 跨 repo 工作前先查 `docs/keep.registry.md`（各 repo 的 keep 入口與記憶目錄登錄表）。
 
 ## §1. Repo 邊界
 - `3KLife`：Cocos 主遊戲 repo，負責前端、互動、UI、規格、資料工具鏈。
