@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T04-20-19-916Z-close-8438a8ec0642",
+  "taskId": "TASK-AAO-0204",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0204-direction-lock-generated-protected-audit.task.md",
+  "taskSha256": "sha256:13c3e63956891be8f3f3472d0cadfb1113681124ccb29cca746be2a6d8f6019d",
+  "createdAt": "2026-07-14T04:20:19.916Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0204 --actor cursor-grok-4.5"
+}
