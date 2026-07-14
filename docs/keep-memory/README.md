@@ -49,3 +49,9 @@ status: active                          # active | superseded | retired
 - 索引段落預算 30 行；超標跑 `atm-memory-consolidate` skill（TASK-MEM-0003）整併。
 - 穩定超過半年的 gotcha 可提案升級進 keep-shards 對應章節（**一律人審**，不自動改共識層）。
 - 引用過期記憶時自我警覺：它是 point-in-time observation，斷言前先驗證現況。
+
+## 巡邏節奏（TASK-MEM-0006）
+
+- 建議每週或每次大型收口後跑一次：`node tools_node/memory-manager.js patrol docs/keep-memory`。
+- patrol 聚合三面：stale（過期候選＋verify-before-asserting 提示）、budget（索引超過 30 行）、orphan（檔案與索引雙向缺漏）。
+- 全部 advisory，不擋任何流程；連續兩次超標必跑 `atm-memory-consolidate` skill 整併。

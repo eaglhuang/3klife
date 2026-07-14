@@ -79,4 +79,24 @@ try {
   fs.rmSync(temp, { recursive: true, force: true });
 }
 
-console.log('[memory-manager.test] ok (validate red/green, duplicate, stale classification, rebuild idempotent)');
+// TASK-MEM-0006 — patrol 聚合：stale 分類 + orphan 判紅（budget 對真實目錄應在預算內）
+{
+  const temp2 = fs.mkdtempSync(path.join(os.tmpdir(), 'keep-memory-patrol-'));
+  try {
+    writeMemory(temp2, 'status_old.md', {
+      name: 'status-old', description: 'old', type: 'status',
+      updated: '2026-06-01', repo: '3KLife', status: 'active'
+    });
+    const patrol = run(['patrol', temp2, '--today', '2026-07-15']).stdout;
+    assert(/stale: status-old \(status\) 44d > 30d/.test(patrol), 'patrol must flag stale status memory with age');
+    assert(/point-in-time observation/.test(patrol), 'patrol must carry the verify-before-asserting hint');
+    assert(/orphan: active memory 'status-old' missing from summary index/.test(patrol), 'patrol must flag unindexed active memory');
+    assert(/advisory only, nothing blocked/.test(patrol), 'patrol must state advisory-only');
+  } finally {
+    fs.rmSync(temp2, { recursive: true, force: true });
+  }
+  const real = run(['patrol', 'docs/keep-memory']);
+  assert(real.status === 0, 'patrol on real dir must exit 0 (advisory only)');
+}
+
+console.log('[memory-manager.test] ok (validate red/green, duplicate, stale classification, rebuild idempotent, patrol aggregate)');

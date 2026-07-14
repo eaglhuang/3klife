@@ -125,12 +125,67 @@ function runStaleReport(dir, today) {
   console.log(`[memory-manager:stale-report] ${stale.length} consolidation candidate(s); advisory only`);
 }
 
+// TASK-MEM-0006 — patrol：stale / budget / orphan 三面聚合報告（advisory，不改檔、不擋流程）。
+function collectStale(dir, today) {
+  const now = today ? new Date(today) : new Date();
+  const stale = [];
+  for (const file of listMemoryFiles(dir)) {
+    const front = parseFrontmatter(fs.readFileSync(file, 'utf8')) || {};
+    if (front.status !== 'active' || !front.updated) continue;
+    const ageDays = Math.floor((now - new Date(front.updated)) / 86400000);
+    const threshold = STALE_DAYS[front.type] || 180;
+    if (ageDays > threshold) stale.push({ name: front.name, type: front.type, ageDays, threshold });
+  }
+  return stale;
+}
+
+function readIndexSection() {
+  const summary = fs.readFileSync(SUMMARY_PATH, 'utf8');
+  const start = summary.indexOf(INDEX_START);
+  const end = summary.indexOf(INDEX_END);
+  if (start < 0 || end < 0 || end < start) return null;
+  return summary.slice(start + INDEX_START.length, end).split(/\r?\n/).filter((l) => l.trim().startsWith('- ['));
+}
+
+function runPatrol(dir, today) {
+  let advisories = 0;
+  // 1. stale
+  const stale = collectStale(dir, today);
+  for (const s of stale) {
+    console.log(`[memory-manager:patrol] stale: ${s.name} (${s.type}) ${s.ageDays}d > ${s.threshold}d — point-in-time observation, verify before asserting; consolidation candidate`);
+  }
+  advisories += stale.length;
+  // 2. budget
+  const indexLines = readIndexSection();
+  if (indexLines === null) {
+    console.log('[memory-manager:patrol] budget: summary index markers missing — run rebuild-index setup first');
+    advisories += 1;
+  } else if (indexLines.length > INDEX_BUDGET_LINES) {
+    console.log(`[memory-manager:patrol] budget: index has ${indexLines.length} entries > ${INDEX_BUDGET_LINES} budget — run the atm-memory-consolidate skill`);
+    advisories += 1;
+  }
+  // 3. orphan（雙向：檔案無索引行 / 索引行無檔案）
+  const activeNames = new Set();
+  for (const file of listMemoryFiles(dir)) {
+    const front = parseFrontmatter(fs.readFileSync(file, 'utf8')) || {};
+    if (front.status === 'active' && front.name) activeNames.add(front.name);
+  }
+  const indexedNames = new Set((indexLines || []).map((l) => (/^\s*-\s*\[([^\]]+)\]/.exec(l) || [])[1]).filter(Boolean));
+  for (const name of activeNames) {
+    if (!indexedNames.has(name)) { console.log(`[memory-manager:patrol] orphan: active memory '${name}' missing from summary index — run rebuild-index`); advisories += 1; }
+  }
+  for (const name of indexedNames) {
+    if (!activeNames.has(name)) { console.log(`[memory-manager:patrol] orphan: index entry '${name}' has no active memory file — run rebuild-index`); advisories += 1; }
+  }
+  console.log(`[memory-manager:patrol] done (${advisories} advisory finding(s); advisory only, nothing blocked)`);
+}
+
 function main() {
   const [action, dirArg] = process.argv.slice(2);
   const todayFlag = process.argv.indexOf('--today');
   const today = todayFlag > 0 ? process.argv[todayFlag + 1] : null;
   if (!action || !dirArg) {
-    console.error('Usage: node tools_node/memory-manager.js <validate|rebuild-index|stale-report> <dir> [--today YYYY-MM-DD]');
+    console.error('Usage: node tools_node/memory-manager.js <validate|rebuild-index|stale-report|patrol> <dir> [--today YYYY-MM-DD]');
     process.exitCode = 2;
     return;
   }
@@ -142,6 +197,7 @@ function main() {
   if (action === 'validate') return runValidate(dir);
   if (action === 'rebuild-index') return runRebuildIndex(dir);
   if (action === 'stale-report') return runStaleReport(dir, today);
+  if (action === 'patrol') return runPatrol(dir, today);
   console.error(`[memory-manager] unknown action '${action}'`);
   process.exitCode = 2;
 }
