@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T15-59-22-358Z-close-692b9648d96e",
+  "taskId": "TASK-MEM-0007",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0007-reconcile-cross-repo-historical-delivery.task.md",
+  "taskSha256": "sha256:4e7b8426c5ef83add574e4c4837c5fc6d5c5f84028618ff0d58347dda3f4e8dd",
+  "createdAt": "2026-07-14T15:59:22.358Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0007 --actor claude-fable-5"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0007
 title: "tasks reconcile accepts --historical-delivery-repo for cross-repo deliveries"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: MEM-M2
@@ -33,6 +33,15 @@ atomizationImpact:
       source: "packages/cli/src/commands/tasks/task-option-parsers.ts"
       disposition: "inline"
       inlineReason: "Adding one already-standardized flag to the existing parseReconcileOptions atom (TASK-AAO-0064 slice family); tasks close already owns the identical flag in the same module, so no new boundary is warranted."
+completed_at: "2026-07-14T15:59:22.358Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-14T15:59:22.358Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-14T15-59-22-358Z-close-692b9648d96e"
+lastTransitionAt: "2026-07-14T15:59:22.358Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "cbf8a0aafa14c7e7400fc80c8ef9982853686322"
 ---
 
 # TASK-MEM-0007 reconcile cross-repo historical delivery
