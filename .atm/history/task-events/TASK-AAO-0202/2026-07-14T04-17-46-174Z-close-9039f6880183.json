@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T04-17-46-174Z-close-9039f6880183",
+  "taskId": "TASK-AAO-0202",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0202-claim-release-transition-event.task.md",
+  "taskSha256": "sha256:8a55d3d0c71fc3eb0620f53fb3f42323cb89d609e2a55440f0f460abec040a57",
+  "createdAt": "2026-07-14T04:17:46.174Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0202 --actor cursor-grok-4.5"
+}
