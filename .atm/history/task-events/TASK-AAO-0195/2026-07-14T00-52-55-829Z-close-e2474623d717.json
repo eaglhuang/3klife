@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T00-52-55-829Z-close-e2474623d717",
+  "taskId": "TASK-AAO-0195",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0195-team-plan-readonly-projection.task.md",
+  "taskSha256": "sha256:3629a355922edd0a4bb34934fdbd12ec21e81870f190f3614ccd53cc61151126",
+  "createdAt": "2026-07-14T00:52:55.829Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0195 --actor cursor-grok-4.5"
+}
