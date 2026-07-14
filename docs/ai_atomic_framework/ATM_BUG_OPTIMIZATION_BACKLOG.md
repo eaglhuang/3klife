@@ -815,6 +815,16 @@ Captain note: several items below were hit during `TASK-MAO-0041` / `TASK-MAO-00
   - Possible optimization: Teach batch planner dependency edges for heading creation, or auto-requeue blocked requests after prior batch mutates anchor. Small broker card, not emergency hotfix.
   - Related tasks / commits: `parallel-0041-0042` run `c393df1d-f9ab-4331-ac3e-3182df57ac45`; receipt `docs/ai_atomic_framework/broker-collision-evidence/runs/c393df1d-....json`.
 
+## MEM Lane Cross-Repo Governance Gaps - 2026-07-15 (claude-fable-5)
+
+- [x] BUG-ATM-0071: `tasks reconcile` verified `--delivery-commit` only against the local repo git, so cross-repo deliveries (planning-repo mirror of a target-repo close) could never be attested. Fixed in TASK-MEM-0007 (`--historical-delivery-repo` parity with `tasks close`, AAF commit cbf8a0aa).
+- [ ] BUG-ATM-0072: cross-repo dependency gate — a card whose `depends_on` closed in another repo's ledger imports as `source-done-governance-incomplete`; plain and `--reconcile-mirror` imports cannot satisfy it, and the only repair (`tasks reconcile`) is an emergency surface. Sibling of BUG-ATM-0061. Repro: TASK-MEM-0003/0004 blocked on 3KLife-closed TASK-MEM-0001/0002.
+- [ ] BUG-ATM-0073: `tasks reconcile` writes ledger/evidence/closure-packet records but establishes no commit session and does not commit its own outputs; the records then block every later governed commit as foreign/orphan residue. Workaround: strict per-task staging rides the historical-ledger-restore session bypass; interlocked pairs need swap-parking. Repro: TASK-MEM-0001/0002 mirrors, 2026-07-14.
+- [ ] BUG-ATM-0074: failed `taskflow close --write` rollback deletes the task's own pre-existing evidence bundle (consumed into the pending packet, not restored), so每次失敗歸零重錄; combined with another captain's close cycles sweeping foreign untracked evidence bundles, two-captain contention makes plain `close` unable to converge. `--auto-evidence` (atomic in-process evidence+close) is the reliable pattern. Repro: TASK-MEM-0003/0004/0007 close storm, 2026-07-14/15.
+- [ ] BUG-ATM-0075: `--auto-evidence` mapper only executes npm-script `validate:*` declarations; bare `npm run typecheck` and `git diff --check` card validators are skipped, leaving the packet missing `validationPasses/typecheck`. Repro: TASK-MEM-0003/0004.
+- [ ] BUG-ATM-0076: claim admission `ATM_TASK_SCOPE_EXPANSION_REQUIRED` blocks on ANY ownerless deliverable-like dirty file repo-wide, even fully outside the card's scope; with no live claim covering the dirt the only lane is reversible stash-park. Repro: TASK-MEM-0005 vs orphan doc-id-registry shards; TASK-MEM-0003/0004 vs orphan skill edits.
+- [ ] BUG-ATM-0077: runner-stale gate + a fast-committing peer captain starves the slower captain — build(~2.5min) never beats a 1-3min commit cadence; closes only converge inside quiet windows. Suggest: close-window runner pinning or stale-tolerance for pure-ledger closes.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:

@@ -91,5 +91,6 @@
 - [gotcha-atm-claim-session-traps](docs/keep-memory/gotcha_atm-claim-session-traps.md) — claim/session 三陷阱——auto-intent 誤判、role-provider 空段解析、session 過期要重 claim
 - [gotcha-atm-close-sequence](docs/keep-memory/gotcha_atm-close-sequence.md) — ATM 任務收口標準序——每步的失敗只會在下一步爆，跳步等於延後踩雷
 - [gotcha-atm-skill-template-sync](docs/keep-memory/gotcha_atm-skill-template-sync.md) — 改 .agents/skills/ 安裝副本必查 templates/skills/ 源頭模板，否則重裝洗掉修改
+- [gotcha-atm-two-captain-close-storm](docs/keep-memory/gotcha_atm-two-captain-close-storm.md) — 雙隊長高頻並行下 close 收斂戰術——auto-evidence 原子收口、安靜窗衝刺、失敗回滾會吞證據
 - [gotcha-atm-two-captain-concurrency](docs/keep-memory/gotcha_atm-two-captain-concurrency.md) — 雙隊長同工作樹並行——lease TTL、對方 staged 檔、repair-claim diagnose-first 三守則
 <!-- keep-memory-index:end -->
