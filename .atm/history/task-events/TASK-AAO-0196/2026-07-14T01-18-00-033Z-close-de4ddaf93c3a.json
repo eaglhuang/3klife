@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T01-18-00-033Z-close-de4ddaf93c3a",
+  "taskId": "TASK-AAO-0196",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0196-team-execute-fail-closed-zero-providers.task.md",
+  "taskSha256": "sha256:1316d9ae568619271231ffde9af9ff6758aadc9dd92d1ebc038a281a2a1a6f8d",
+  "createdAt": "2026-07-14T01:18:00.033Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0196 --actor cursor-grok-4.5"
+}
