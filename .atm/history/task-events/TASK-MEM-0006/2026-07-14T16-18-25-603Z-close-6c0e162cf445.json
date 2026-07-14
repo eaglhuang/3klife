@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T16-18-25-603Z-close-6c0e162cf445",
+  "taskId": "TASK-MEM-0006",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0006-staleness-and-budget-patrol.task.md",
+  "taskSha256": "sha256:3c19e0aa7bff9d8a92bfbec138551afea49ded2f4788f34fd216083d5e2a635a",
+  "createdAt": "2026-07-14T16:18:25.603Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0006 --actor claude-fable-5"
+}

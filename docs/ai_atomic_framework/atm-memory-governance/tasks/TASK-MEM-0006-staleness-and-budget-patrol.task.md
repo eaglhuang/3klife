@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0006
 title: "記憶過期與索引預算巡邏（advisory）"
-status: planned
+status: done
 owner: atm-core
 priority: P3
 milestone: MEM-M4
@@ -35,6 +35,15 @@ atomizationImpact:
       source: "tools_node/memory-manager.js"
       disposition: "inline"
       inlineReason: "patrol 是 memory-manager 既有三子命令的聚合報告面，同屬單一工具原子（TASK-MEM-0002 建立），不構成新邊界。"
+completed_at: "2026-07-14T16:18:25.603Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-14T16:18:25.603Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-14T16-18-25-603Z-close-6c0e162cf445"
+lastTransitionAt: "2026-07-14T16:18:25.603Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b6297b4e328efe38ebd0f21da3d0b53b5b0bbeb5"
 ---
 
 # TASK-MEM-0006 過期與預算巡邏

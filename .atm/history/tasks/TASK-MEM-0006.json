@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-MEM-0006",
+  "title": "記憶過期與索引預算巡邏（advisory）",
+  "status": "done",
+  "milestone": "MEM-M4",
+  "dependencies": [
+    "TASK-MEM-0002"
+  ],
+  "acceptance": [
+    "`patrol` 對真實目錄輸出四節報告；orphan 與 budget 對造假夾具正確判紅。",
+    "回歸測試覆蓋 patrol 聚合路徑。",
+    "`docs/keep-memory/README.md` 補「巡邏節奏」一節（建議每週或每次大型收口後 跑一次 patrol；連續兩次超標必跑 consolidate）。"
+  ],
+  "deliverables": [
+    "tools_node/memory-manager.js",
+    "docs/keep-memory/README.md"
+  ],
+  "scopePaths": [
+    "tools_node/memory-manager.js",
+    "tools_node/tests/memory-manager.test.js",
+    "docs/keep-memory/README.md"
+  ],
+  "validators": [
+    "git diff --check",
+    "node tools_node/tests/memory-manager.test.js",
+    "node tools_node/memory-manager.js patrol docs/keep-memory"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "revert-commit",
+  "rollbackNotes": "patrol 子命令為 advisory 新增；revert 後 validate/rebuild-index/stale-report 不受影響。",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "3klife.tools-node",
+    "atomCid": null,
+    "mapUpdates": [],
+    "extractionCandidates": [
+      {
+        "atom": "3klife.memory-manager",
+        "pattern": "inline",
+        "source": "tools_node/memory-manager.js",
+        "disposition": "inline",
+        "inlineReason": "patrol 是 memory-manager 既有三子命令的聚合報告面，同屬單一工具原子（TASK-MEM-0002 建立），不構成新邊界。"
+      }
+    ]
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "atm-memory-governance/tasks/TASK-MEM-0006-staleness-and-budget-patrol.task.md",
+    "sectionTitle": "TASK-MEM-0006",
+    "headingLine": 40,
+    "hash": "478b7c285078a59a"
+  },
+  "importedAt": "2026-07-14T16:13:35.701Z",
+  "lastTransitionId": "2026-07-14T16-18-25-525Z-close-7f7a54205ff6",
+  "lastTransitionAt": "2026-07-14T16:18:25.525Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "claude-fable-5",
+  "reservedAt": "2026-07-14T16:13:38.776Z",
+  "promotedAt": "2026-07-14T16:13:38.779Z",
+  "claim": {
+    "actorId": "claude-fable-5",
+    "leaseId": "lease-f6d73bbd3303",
+    "claimedAt": "2026-07-14T16:13:38.785Z",
+    "heartbeatAt": "2026-07-14T16:18:25.524Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/TASK-MEM-0006.json",
+      "docs/keep-memory/README.md",
+      "tools_node/memory-manager.js",
+      "tools_node/tests/memory-manager.test.js"
+    ],
+    "state": "released",
+    "reason": "closed"
+  },
+  "startedAt": "2026-07-14T16:13:38.785Z",
+  "startedByActor": "claude-fable-5",
+  "startedBySessionId": "session-20260714161338-claude-fable-5-TASK-MEM-0006-2e69fd9502",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-MEM-0006",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-MEM-0006.*",
+      ".atm/history/task-events/TASK-MEM-0006/**",
+      ".atm/history/tasks/TASK-MEM-0006.json",
+      "docs/keep-memory/README.md",
+      "tools_node/memory-manager.js",
+      "tools_node/tests/memory-manager.test.js"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "6e39ea8e0db9f78c09937d5045c7ff0f813995904450999f4c93526da50156a9",
+    "actorId": "claude-fable-5",
+    "createdAt": "2026-07-14T16:13:43.531Z",
+    "status": "active"
+  },
+  "closedAt": "2026-07-14T16:18:25.524Z",
+  "closedByActor": "claude-fable-5",
+  "closedBySessionId": "session-20260714161338-claude-fable-5-TASK-MEM-0006-2e69fd9502"
+}
