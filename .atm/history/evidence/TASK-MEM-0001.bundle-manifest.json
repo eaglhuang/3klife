@@ -1,0 +1,40 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-MEM-0001",
+  "updatedAt": "2026-07-14T10:22:06.232Z",
+  "updatedBy": "claude-fable-5",
+  "freshValidationPasses": [
+    "git diff --check",
+    "node tools_node/check-encoding-integrity.js --staged"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:b2cf215a95e48ff247738b96270ba9ed2457ca3542bcc9b6a9098b5314ce74b0",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-14T10:22:04.225Z",
+      "runnerKind": "unknown",
+      "sourceCommit": null,
+      "cached": false
+    },
+    {
+      "command": "node tools_node/check-encoding-integrity.js --staged",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:c8eaaa7665c704815a688b4c2a8641db873f1f1da52a5b4cbb458a7777bae107",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/check-encoding-integrity.js --staged"
+      ],
+      "generatedAt": "2026-07-14T10:22:06.265Z",
+      "runnerKind": "unknown",
+      "sourceCommit": null,
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

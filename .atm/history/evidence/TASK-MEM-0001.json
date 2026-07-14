@@ -1,0 +1,106 @@
+{
+  "taskId": "TASK-MEM-0001",
+  "updatedAt": "2026-07-14T10:22:06.232Z",
+  "evidence": [
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: git diff --check",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "claude-fable-5",
+      "sessionId": "session-20260714101757-claude-fable-5-TASK-MEM-0001-18a5afff49",
+      "createdAt": "2026-07-14T10:22:04.188Z",
+      "details": {
+        "actorId": "claude-fable-5",
+        "sessionId": "session-20260714101757-claude-fable-5-TASK-MEM-0001-18a5afff49",
+        "kind": "test",
+        "freshness": "fresh",
+        "validationPasses": [
+          "git diff --check"
+        ],
+        "atomHealthClaims": [
+          {
+            "atomOrMapId": "3klife.docs-keep",
+            "kind": "owner",
+            "generatedByTask": true,
+            "validatorHealthy": true
+          }
+        ],
+        "commandRuns": [
+          {
+            "command": "git diff --check",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "sha256:b2cf215a95e48ff247738b96270ba9ed2457ca3542bcc9b6a9098b5314ce74b0",
+            "validators": [
+              "git diff --check"
+            ],
+            "cwd": ".",
+            "runnerKind": "unknown",
+            "cacheKey": "sha256:b490eec3f722e36c05cc6e02bb2a5a47485327cffe3178a6151792bd79b622b9",
+            "cached": false,
+            "generatedAt": "2026-07-14T10:22:04.225Z"
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:b1a65211e988d761a56b57c2aa72d575a441cf2ce8756390f7335e6113f1ee9b",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    },
+    {
+      "evidenceKind": "validation",
+      "evidenceType": "test",
+      "summary": "Auto-run: node tools_node/check-encoding-integrity.js --staged",
+      "artifactPaths": [],
+      "evidenceFreshness": "fresh",
+      "producedBy": "claude-fable-5",
+      "sessionId": "session-20260714101757-claude-fable-5-TASK-MEM-0001-18a5afff49",
+      "createdAt": "2026-07-14T10:22:06.232Z",
+      "details": {
+        "actorId": "claude-fable-5",
+        "sessionId": "session-20260714101757-claude-fable-5-TASK-MEM-0001-18a5afff49",
+        "kind": "test",
+        "freshness": "fresh",
+        "validationPasses": [
+          "node tools_node/check-encoding-integrity.js --staged"
+        ],
+        "atomHealthClaims": [
+          {
+            "atomOrMapId": "3klife.docs-keep",
+            "kind": "owner",
+            "generatedByTask": true,
+            "validatorHealthy": true
+          }
+        ],
+        "commandRuns": [
+          {
+            "command": "node tools_node/check-encoding-integrity.js --staged",
+            "exitCode": 0,
+            "stdoutSha256": "sha256:c8eaaa7665c704815a688b4c2a8641db873f1f1da52a5b4cbb458a7777bae107",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "validators": [
+              "node tools_node/check-encoding-integrity.js --staged"
+            ],
+            "cwd": ".",
+            "runnerKind": "unknown",
+            "cacheKey": "sha256:75a0e933a0512477df76aac2e3d6f30a686c31f27ad6e485c572400ad2553392",
+            "cached": false,
+            "generatedAt": "2026-07-14T10:22:06.265Z"
+          }
+        ],
+        "commandRunCache": {
+          "schemaId": "atm.commandRunCache.v1",
+          "cacheKey": "sha256:2ff172e3bcac0d2a1e07a60cb4056e2f73f45b576a7e425888f06e34936536b4",
+          "reusedRunCount": 0,
+          "runCount": 1,
+          "sourcePath": null
+        }
+      }
+    }
+  ]
+}

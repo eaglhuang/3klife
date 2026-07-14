@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0001
 title: "keep-memory 記憶筆記契約與目錄落地（含首批種子記憶）"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: MEM-M0
@@ -27,6 +27,15 @@ rollback:
   notes: "純新增目錄與 summary 一個段落；revert 即回到現狀，keep-shards 不受影響。"
 atomizationImpact:
   ownerAtomOrMap: "3klife.docs-keep"
+completed_at: "2026-07-14T10:22:16.477Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-14T10:22:16.477Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-14T10-22-16-477Z-close-098b5eb6aeed"
+lastTransitionAt: "2026-07-14T10:22:16.477Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bea3e88510053e4c8658bdcaf20389ffa1467c5d"
 ---
 
 # TASK-MEM-0001 keep-memory 契約與目錄

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-14T10-22-16-477Z-close-098b5eb6aeed",
+  "taskId": "TASK-MEM-0001",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0001-keep-memory-contract-and-directory.task.md",
+  "taskSha256": "sha256:89cc295fa4f64c171f3cfb5386ea6357bb74cf5ce08665b7908bc4ddb3839937",
+  "createdAt": "2026-07-14T10:22:16.477Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0001 --actor claude-fable-5"
+}
