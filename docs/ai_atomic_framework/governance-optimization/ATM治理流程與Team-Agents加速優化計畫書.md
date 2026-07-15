@@ -576,3 +576,19 @@ Release safety 在 Phase 1 已先止血，本階段補齊 publication 產品化�
 - Design pattern: Strangler Facade + Command Handler Registry + Policy/Receipt modules. This keeps the CLI behavior stable while extracting one bounded command or policy atom at a time.
 - Target: reduce `team.ts` and every new Team command support module to 600 lines or fewer, with a dedicated line-budget regression.
 - This is atomization work only; Team production/default promotion still requires real paired cost/time/quality evidence.
+## 2026-07-15 follow-up: >2000-line giant module split wave
+
+After TASK-RFT-0029 established the Team command strangler facade, the next governance wave targets every non-release source file that still exceeds 2,000 lines in `AI-Atomic-Framework`.
+
+Queue order:
+
+1. `TASK-RFT-0030` - extract `packages/cli/src/commands/team-legacy.ts` command paths.
+2. `TASK-RFT-0031` - extract `packages/cli/src/commands/next.ts` route resolution.
+3. `TASK-RFT-0032` - extract `packages/cli/src/commands/git-governance.ts` commit and push guards.
+4. `TASK-RFT-0033` - extract `packages/cli/src/commands/tasks/legacy-impl.ts` command modules.
+5. `TASK-RFT-0034` - split `packages/cli/src/commands/framework-development/closure-packet-schema.ts`.
+6. `TASK-RFT-0035` - split `scripts/validators/task-ledger/suite-impl.ts`.
+7. `TASK-RFT-0036` - split `packages/cli/src/commands/evidence/bundle-io.ts`.
+8. `TASK-RFT-0037` - split `packages/cli/src/commands/hook/pre-commit.ts`.
+
+Each task must be imported, claimed, validated, closed, committed, and pushed independently. During implementation, workflow friction and high-return governance improvements should be routed through the ATM bug and optimization backlog before any opportunistic fix is made.
