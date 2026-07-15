@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T17-27-47-547Z-close-e034f6a9b04e",
+  "taskId": "TASK-RFT-0047",
+  "action": "close",
+  "actorId": "codex-task-rft-0047",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0047-next-route-resolution-strategy-map.task.md",
+  "taskSha256": "sha256:99729d3f646f8e3ffc0790b9c20a82c09886627a93c81065978d83745b2af475",
+  "createdAt": "2026-07-15T17:27:47.547Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0047 --actor codex-task-rft-0047"
+}
