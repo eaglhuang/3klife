@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T13-46-20-620Z-close-15936a2c4f50",
+  "taskId": "TASK-RFT-0037",
+  "action": "close",
+  "actorId": "codex-task-rft-0037",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0037-pre-commit-hook-extraction.task.md",
+  "taskSha256": "sha256:0b233a2cbb1d0816e0523bbaacd8bfe95feb6e8c561cbb9c5312ae2e60b60ac5",
+  "createdAt": "2026-07-15T13:46:20.620Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0037 --actor codex-task-rft-0037"
+}

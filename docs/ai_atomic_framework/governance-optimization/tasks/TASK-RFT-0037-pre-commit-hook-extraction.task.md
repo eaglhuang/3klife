@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0037
 title: Split pre-commit hook guard implementation into bounded modules
-status: planned
+status: done
 owner: atm-core
 priority: P2
 depends_on: [TASK-RFT-0036]
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/cli/src/commands/hook/pre-commit.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T13:46:20.620Z"
+completed_by_agent: "codex-task-rft-0037"
+closedAt: "2026-07-15T13:46:20.620Z"
+closedByActor: "codex-task-rft-0037"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T13-46-20-620Z-close-15936a2c4f50"
+lastTransitionAt: "2026-07-15T13:46:20.620Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "195fb9a75015ff4e4831f3302c777711ff4e1f2e"
 ---
 
 # TASK-RFT-0037 - Split pre-commit hook guard implementation into bounded modules
