@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0147
 title: "Teach residue cleanup expired git-index leases and register Team task-required errors"
-status: planned
+status: done
 owner: atm-release
 priority: P1
 depends_on: [ATM-GOV-0146]
@@ -34,6 +34,15 @@ atomizationImpact:
       source: packages/cli/src/commands/residue.ts
       disposition: inline
       inlineReason: residue.ts is under the atomization limit and this card only adds one bounded classifier branch plus focused tests.
+completed_at: "2026-07-15T16:18:59.949Z"
+completed_by_agent: "codex-gpt-5-5-captain"
+closedAt: "2026-07-15T16:18:59.949Z"
+closedByActor: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T16-18-59-949Z-close-27eb62686a3f"
+lastTransitionAt: "2026-07-15T16:18:59.949Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ee3dde35ab2a9271526549f825d6e8e15b83a4b1"
 ---
 
 # ATM-GOV-0147 - Teach residue cleanup expired git-index leases and register Team task-required errors

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T16-18-59-949Z-close-27eb62686a3f",
+  "taskId": "ATM-GOV-0147",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0147-runtime-residue-error-code-cleanup.task.md",
+  "taskSha256": "sha256:ed0b24fac4fca4070b2569ae2df6d5d1823657e47f11d828da2f1936e350ff11",
+  "createdAt": "2026-07-15T16:18:59.949Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0147 --actor codex-gpt-5-5-captain"
+}
