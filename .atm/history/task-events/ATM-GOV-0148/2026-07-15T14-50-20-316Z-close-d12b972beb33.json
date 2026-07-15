@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T14-50-20-316Z-close-d12b972beb33",
+  "taskId": "ATM-GOV-0148",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0148-unified-global-resource-admission.task.md",
+  "taskSha256": "sha256:3c125ec6e015fefc6161625a8f926155e560068dc736314a02e706f203ae6c50",
+  "createdAt": "2026-07-15T14:50:20.316Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0148 --actor codex-gpt-5-5-captain"
+}
