@@ -24,6 +24,7 @@ deliverables:
   - packages/cli/src/commands/team/status-command.ts
   - packages/cli/src/commands/team/execute-command.ts
   - packages/cli/src/commands/team/admission-command.ts
+  - packages/cli/src/commands/team/cost-command.ts
   - packages/cli/src/commands/team/report-command.ts
   - tests/cli/team-command-facade-atomization.test.ts
 validators:
@@ -77,6 +78,11 @@ atomizationImpact:
       source: packages/cli/src/commands/team.ts
       disposition: extract
       inlineReason: null
+    - atom: atm.team-cost-governance-module
+      pattern: Policy Object
+      source: packages/cli/src/commands/team.ts
+      disposition: extract
+      inlineReason: null
     - atom: atm.team-report-receipt-module
       pattern: Receipt Builder
       source: packages/cli/src/commands/team.ts
@@ -84,7 +90,7 @@ atomizationImpact:
       inlineReason: null
 created_at: 2026-07-15T18:25:00+08:00
 created_by_agent: Codex-GPT-5.5
-last_updated: 2026-07-15T18:25:00+08:00
+last_updated: 2026-07-15T18:40:00+08:00
 ---
 
 # TASK-RFT-0029 - Atomize team.ts with a Strangler Facade command-handler architecture
@@ -99,7 +105,8 @@ Use **Strangler Facade + Command Handler Registry + Policy/Receipt modules**.
 
 - Keep `team.ts` as the compatibility facade and public export surface during migration.
 - Move each subcommand into a focused command handler module under `packages/cli/src/commands/team/`.
-- Move admission, runtime contract, report, and receipt construction into policy/builder modules that can be tested independently.
+- Move admission, runtime contract, cost/promotion gating, report, and receipt construction into policy/builder modules that can be tested independently.
+- Register every extracted bounded context in the ATM atom/map coverage shard; this is not only file splitting.
 - Preserve existing public behavior and exported helper contracts until call sites and tests are migrated.
 - Add a line-budget regression so `team.ts` and every extracted support module stay at or below 600 lines.
 
@@ -113,6 +120,8 @@ This pattern is preferred over a one-shot rewrite because the current file is a 
 - `team.ts` contains only facade wiring, command registration, and backwards-compatible exports.
 - The command registry exposes a deterministic mapping from subcommand name to handler.
 - Policy decisions such as admission, runtime tier, roster/skill pack selection, and cost/promotion gating are in separately testable modules.
+- The plan/start/status/execute/admission/cost/report bounded contexts each have an explicit atom or atom-map entry in `atomizationImpact.extractionCandidates` and in the target atomization coverage shard.
+- The line-budget regression verifies both file size and atom/map coverage, so a plain mechanical split without ATM map registration fails.
 - Receipt/report builders are separated from command routing.
 - `tests/cli/team-command-facade-atomization.test.ts` fails if `team.ts` or extracted modules exceed the configured atomization line bound.
 - No `.atm/history/**` files are edited manually; target ledger updates must come only from ATM import/close flows.
