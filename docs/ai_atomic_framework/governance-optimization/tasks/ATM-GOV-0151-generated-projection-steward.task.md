@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0151
 title: Move generated projection rebuilds to steward lane
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on: [ATM-GOV-0134, ATM-GOV-0148, ATM-GOV-0149]
@@ -41,6 +41,15 @@ outOfScope:
   - "TASK-RFT-0037."
   - "Runner-sync steward queue implementation; owned by ATM-GOV-0150."
   - "Rebuilding or committing docs/governance/atm-bug-and-optimization-backlog.md as this card delivery."
+completed_at: "2026-07-15T16:02:41.513Z"
+completed_by_agent: "codex-gpt-5-5-captain"
+closedAt: "2026-07-15T16:02:41.513Z"
+closedByActor: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T16-02-41-513Z-close-1dccbef18b73"
+lastTransitionAt: "2026-07-15T16:02:41.513Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "08484f35ed2850eca5220c494573eb744cf4bbeb"
 ---
 
 # ATM-GOV-0151 - Move generated projection rebuilds to steward lane
