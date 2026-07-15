@@ -607,3 +607,11 @@ ATM-GOV-0149 closes the next Foundation Gate residual from ATM-BUG-2026-07-15-20
 
 Remaining follow-up after ATM-GOV-0149: runner-sync/build still needs a real coalescing steward queue with sealed source SHA, TTL/heartbeat, stale-owner release, and queue-position diagnostics; generated projection rebuilds still need to move out of the hot journaling path into a steward or commit-time owner lane.
 
+
+## 2026-07-15 follow-up: remaining unified-admission closure cards
+
+- ATM-GOV-0150: implement the real runner-sync/build coalescing steward queue with sealed source SHA, queue position, TTL/heartbeat, stale-owner release, and retry diagnostics.
+- ATM-GOV-0151: move generated projection rebuilds out of the hot journaling path into a steward/commit-time owner lane so backlog item shards stay append-only and parallel-safe.
+- ATM-GOV-0152: alias legacy global runtime locks into the unified Broker keyspace so git index, branch commit queue, close mutex, release mirror, and generated projection admission are decided by one projection instead of multiple independent locks.
+
+These cards intentionally exclude TASK-RFT-0037 and release mirror artifact sync unless a card explicitly owns runner publication.
