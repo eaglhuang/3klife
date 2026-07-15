@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T14-38-54-079Z-close-55ad009feb6c",
+  "taskId": "TASK-RFT-0039",
+  "action": "close",
+  "actorId": "codex-task-rft-0039",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0039-team-legacy-patrol-contract-extraction.task.md",
+  "taskSha256": "sha256:8859140baee10ddb1e4454750a6b2b6db53588bbb223dee3ad461d99221aa22c",
+  "createdAt": "2026-07-15T14:38:54.079Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0039 --actor codex-task-rft-0039"
+}
