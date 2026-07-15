@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T12-59-51-599Z-close-9a83bfb5830f",
+  "taskId": "TASK-RFT-0035",
+  "action": "close",
+  "actorId": "codex-task-rft-0035",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0035-task-ledger-suite-extraction.task.md",
+  "taskSha256": "sha256:02045f096c1440ed5466d88a2ac9ee9f1c8f0a7b5c5182d6f499f79445cd5ea0",
+  "createdAt": "2026-07-15T12:59:51.599Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0035 --actor codex-task-rft-0035"
+}

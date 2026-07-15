@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0035
 title: Split task-ledger validator suite implementation
-status: planned
+status: done
 owner: atm-core
 priority: P2
 depends_on: [TASK-RFT-0034]
@@ -36,6 +36,15 @@ atomizationImpact:
       source: scripts/validators/task-ledger/suite-impl.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T12:59:51.599Z"
+completed_by_agent: "codex-task-rft-0035"
+closedAt: "2026-07-15T12:59:51.599Z"
+closedByActor: "codex-task-rft-0035"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T12-59-51-599Z-close-9a83bfb5830f"
+lastTransitionAt: "2026-07-15T12:59:51.599Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e905934fa988c02309a03fb0c2dd457fcf94cab2"
 ---
 
 # TASK-RFT-0035 - Split task-ledger validator suite implementation
