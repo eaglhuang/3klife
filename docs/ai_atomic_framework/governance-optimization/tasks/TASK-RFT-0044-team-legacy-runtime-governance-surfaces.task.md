@@ -1,7 +1,7 @@
 ---
 id: TASK-RFT-0044
 title: Extract team legacy runtime governance surfaces
-status: planned
+status: done
 priority: high
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
@@ -9,6 +9,15 @@ depends_on:
   - TASK-RFT-0043
 created_at: 2026-07-15T23:44:00+08:00
 owner: codex-captain
+completed_at: "2026-07-15T16:15:52.718Z"
+completed_by_agent: "codex-task-rft-0044"
+closedAt: "2026-07-15T16:15:52.718Z"
+closedByActor: "codex-task-rft-0044"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T16-15-52-718Z-close-30fe11a5247b"
+lastTransitionAt: "2026-07-15T16:15:52.718Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a45cde3a1af80592f39a3e42d10f97e4095e4d23"
 ---
 
 # TASK-RFT-0044 - Extract team legacy runtime governance surfaces

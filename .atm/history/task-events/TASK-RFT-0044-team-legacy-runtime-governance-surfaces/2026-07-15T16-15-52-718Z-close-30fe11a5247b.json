@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T16-15-52-718Z-close-30fe11a5247b",
+  "taskId": "TASK-RFT-0044-team-legacy-runtime-governance-surfaces",
+  "action": "close",
+  "actorId": "codex-task-rft-0044",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0044-team-legacy-runtime-governance-surfaces.task.md",
+  "taskSha256": "sha256:54d8978eb345475d9136f2c89e422c30876cd846b9aa9134d6256a83fc46d00e",
+  "createdAt": "2026-07-15T16:15:52.718Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0044-team-legacy-runtime-governance-surfaces --actor codex-task-rft-0044"
+}
