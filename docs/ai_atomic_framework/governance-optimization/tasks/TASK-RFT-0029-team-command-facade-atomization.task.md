@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0029
 title: Atomize team.ts with a Strangler Facade command-handler architecture
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0027]
@@ -91,6 +91,15 @@ atomizationImpact:
 created_at: 2026-07-15T18:25:00+08:00
 created_by_agent: Codex-GPT-5.5
 last_updated: 2026-07-15T18:40:00+08:00
+completed_at: "2026-07-15T10:56:06.124Z"
+completed_by_agent: "codex-task-rft-0029"
+closedAt: "2026-07-15T10:56:06.124Z"
+closedByActor: "codex-task-rft-0029"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T10-56-06-124Z-close-5de77f61fd77"
+lastTransitionAt: "2026-07-15T10:56:06.124Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "354186d0013e3d3ecd5446d0c33d84bbbd82eb47"
 ---
 
 # TASK-RFT-0029 - Atomize team.ts with a Strangler Facade command-handler architecture
