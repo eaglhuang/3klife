@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T15-41-43-295Z-close-2dcf9a20f0d3",
+  "taskId": "TASK-RFT-0043",
+  "action": "close",
+  "actorId": "codex-task-rft-0043",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0043-team-legacy-plan-orchestration-extraction.task.md",
+  "taskSha256": "sha256:988cc7c424a55c36edb91903c4fd91f3553f8d2e06bd3a6aa749ed07b2a46203",
+  "createdAt": "2026-07-15T15:41:43.295Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0043 --actor codex-task-rft-0043"
+}

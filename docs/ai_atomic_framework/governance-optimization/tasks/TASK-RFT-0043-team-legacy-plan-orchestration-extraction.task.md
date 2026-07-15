@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0043
 title: Extract team legacy plan orchestration map
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0042]
@@ -40,6 +40,15 @@ atomizationImpact:
       source: packages/cli/src/commands/team-legacy.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T15:41:43.295Z"
+completed_by_agent: "codex-task-rft-0043"
+closedAt: "2026-07-15T15:41:43.295Z"
+closedByActor: "codex-task-rft-0043"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T15-41-43-295Z-close-2dcf9a20f0d3"
+lastTransitionAt: "2026-07-15T15:41:43.295Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bfd83deb898114272f7224a355a7b3fddbf98d43"
 ---
 
 # TASK-RFT-0043 - Extract team legacy plan orchestration map
