@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T15-25-10-658Z-close-568301740a58",
+  "taskId": "ATM-GOV-0149",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0149-dual-captain-broker-spawn-e2e.task.md",
+  "taskSha256": "sha256:65eff5b62e562b5c815d0d602458b5292c4269411dc316e6b98ecff8ae220be6",
+  "createdAt": "2026-07-15T15:25:10.658Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0149 --actor codex-gpt-5-5-captain"
+}
