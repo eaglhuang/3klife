@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T08-20-34-817Z-close-b652b09e0d84",
+  "taskId": "TASK-SKL-0013",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0013-error-code-resolver-shared-skill.task.md",
+  "taskSha256": "sha256:256872f33845801d35ac324cdbe9930fe3a2f629bdfce2c79996e28bd865c54b",
+  "createdAt": "2026-07-15T08:20:34.817Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0013 --actor codex-gpt-5-5-captain"
+}

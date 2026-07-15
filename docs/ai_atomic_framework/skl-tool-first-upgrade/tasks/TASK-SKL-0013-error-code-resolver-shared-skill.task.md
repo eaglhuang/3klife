@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0013
 title: Error-code resolver shared skill and registry
-status: planned
+status: done
 milestone: P1
 depends_on:
   - TASK-SKL-0002
@@ -66,6 +66,15 @@ out_of_scope:
 nonGoals:
   - "No requirement to fully rewrite every historical error code in one pass if a staged registry can mark unknown codes as undocumented."
   - "No vendor-specific resolver behavior."
+completed_at: "2026-07-15T08:20:34.817Z"
+completed_by_agent: "codex-gpt-5-5-captain"
+closedAt: "2026-07-15T08:20:34.817Z"
+closedByActor: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T08-20-34-817Z-close-b652b09e0d84"
+lastTransitionAt: "2026-07-15T08:20:34.817Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "722d6f154cc0f335f4f0e78d9d9cca36a8facd58"
 ---
 
 # TASK-SKL-0013
