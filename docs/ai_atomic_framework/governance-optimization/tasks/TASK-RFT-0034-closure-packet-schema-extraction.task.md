@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0034
 title: Split closure-packet schema into bounded schema modules
-status: planned
+status: done
 owner: atm-core
 priority: P2
 depends_on: [TASK-RFT-0033]
@@ -36,6 +36,15 @@ atomizationImpact:
       source: packages/cli/src/commands/framework-development/closure-packet-schema.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T12:43:28.148Z"
+completed_by_agent: "codex-task-rft-0034"
+closedAt: "2026-07-15T12:43:28.148Z"
+closedByActor: "codex-task-rft-0034"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T12-43-28-148Z-close-d5496a06cd54"
+lastTransitionAt: "2026-07-15T12:43:28.148Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "23ecb3658795c6e37aa5be1fc90e01ba57998ebd"
 ---
 
 # TASK-RFT-0034 - Split closure-packet schema into bounded schema modules
