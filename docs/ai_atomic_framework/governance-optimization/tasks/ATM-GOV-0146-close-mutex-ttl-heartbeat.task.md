@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0146
 task_id: ATM-GOV-0146
 title: "Align close transaction mutex TTL with governed commit window"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation-Gate
@@ -35,6 +35,15 @@ outOfScope:
   - "TASK-RFT-* cards and RFT source surfaces."
   - "Team Agents production promotion or paired-run dogfood measurement."
   - "Changing git commit timeout semantics outside close transaction mutex protection."
+completed_at: "2026-07-15T14:17:58.832Z"
+completed_by_agent: "codex-gpt-5-5-captain"
+closedAt: "2026-07-15T14:17:58.832Z"
+closedByActor: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T14-17-58-832Z-close-48a46745e645"
+lastTransitionAt: "2026-07-15T14:17:58.832Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ff23d9086d774bba9b560003302cf58b3d434409"
 ---
 
 # ATM-GOV-0146 - Align close transaction mutex TTL with governed commit window

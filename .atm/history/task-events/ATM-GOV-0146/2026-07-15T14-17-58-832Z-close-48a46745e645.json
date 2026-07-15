@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T14-17-58-832Z-close-48a46745e645",
+  "taskId": "ATM-GOV-0146",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0146-close-mutex-ttl-heartbeat.task.md",
+  "taskSha256": "sha256:75644438bcefd711c763b603c8f62a7f5126c7579ad84bf7951450f12841eecc",
+  "createdAt": "2026-07-15T14:17:58.832Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0146 --actor codex-gpt-5-5-captain"
+}
