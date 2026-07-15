@@ -825,6 +825,10 @@ Captain note: several items below were hit during `TASK-MAO-0041` / `TASK-MAO-00
 - [ ] BUG-ATM-0076: claim admission `ATM_TASK_SCOPE_EXPANSION_REQUIRED` blocks on ANY ownerless deliverable-like dirty file repo-wide, even fully outside the card's scope; with no live claim covering the dirt the only lane is reversible stash-park. Repro: TASK-MEM-0005 vs orphan doc-id-registry shards; TASK-MEM-0003/0004 vs orphan skill edits.
 - [ ] BUG-ATM-0077: runner-stale gate + a fast-committing peer captain starves the slower captain — build(~2.5min) never beats a 1-3min commit cadence; closes only converge inside quiet windows. Suggest: close-window runner pinning or stale-tolerance for pure-ledger closes.
 
+- [ ] BUG-ATM-0078: branch commit queue lock self-heal requires `headMoved`, so an actor whose commit process crashed while holding the lock (e.g. outer 2-minute timeout SIGTERM) deadlocks itself until some OTHER writer moves HEAD; a solo captain would be stuck indefinitely. Self-heal should also accept owner-PID-dead + stale-age without the head-motion condition. Repro: TASK-MEM-0008 delivery commit, 2026-07-15.
+- [x] BUG-ATM-0074 root cause refined: evidence loss chain = close-window `deferGovernanceDirtyFiles` snapshot + hook auto-clean removing FOREIGN unconsumed `close-window-governance-dirty-*` snapshots (`restoredAt: null`) before the owning close restores them. Fixed in TASK-MEM-0009 (`isUnconsumedCloseWindowDeferralSnapshot` guard, AAF commit f3c789b3); taskflow-side try/finally restore was already present.
+- [x] BUG-ATM-0072 operational fix: TASK-MEM-0008 classifies `tasks reconcile` — `clean-mirror-attestation` (imported-done mirror, no local closure artifacts, no live claim) proceeds WITHOUT an emergency lease; `local-closure-rewrite` keeps the emergency gate. Cross-repo dep-gate mirror recognition itself remains open as designed follow-up.
+
 ## Current Captain Sequencing Ruling
 
 As of 2026-06-14, the recommended order is:
