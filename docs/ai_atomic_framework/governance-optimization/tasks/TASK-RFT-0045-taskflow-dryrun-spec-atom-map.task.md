@@ -1,7 +1,7 @@
 ---
 id: TASK-RFT-0045
 title: Split taskflow dry-run regression suite atom map
-status: planned
+status: done
 priority: high
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
@@ -9,6 +9,15 @@ depends_on:
   - TASK-RFT-0044
 created_at: 2026-07-16T00:25:00+08:00
 owner: codex-captain
+completed_at: "2026-07-15T16:58:30.087Z"
+completed_by_agent: "codex-task-rft-0045"
+closedAt: "2026-07-15T16:58:30.087Z"
+closedByActor: "codex-task-rft-0045"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T16-58-30-087Z-close-a4ee4792607e"
+lastTransitionAt: "2026-07-15T16:58:30.087Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "265df48e81ee5476c2688e60169a3b77b114034e"
 ---
 
 # TASK-RFT-0045 - Split taskflow dry-run regression suite atom map

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T16-58-30-087Z-close-a4ee4792607e",
+  "taskId": "TASK-RFT-0045-taskflow-dryrun-spec-atom-map",
+  "action": "close",
+  "actorId": "codex-task-rft-0045",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0045-taskflow-dryrun-spec-atom-map.task.md",
+  "taskSha256": "sha256:afcd65a49a1f094c6b7a4b454298c5d42a4748eaceea43a28fe2a053e98e063c",
+  "createdAt": "2026-07-15T16:58:30.087Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0045-taskflow-dryrun-spec-atom-map --actor codex-task-rft-0045"
+}
