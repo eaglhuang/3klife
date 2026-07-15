@@ -601,3 +601,9 @@ ATM-GOV-0147 owns two cleanup gaps discovered during ATM-GOV-0146 closeout:
 - `ATM_TEAM_TASK_REQUIRED` must be registered in the shared error-code registry so Team/dispatch skills route the operator to the canonical meaning and next safe command.
 
 This card is intentionally non-RFT and must not touch `TASK-RFT-0037`, active `TASK-RFT-0039` Team legacy surfaces, or release mirror artifacts.
+## 2026-07-15 follow-up: unified admission residual closure
+
+ATM-GOV-0149 closes the next Foundation Gate residual from ATM-BUG-2026-07-15-202. It upgrades the dual-Captain check from an in-process index-isolation fixture to a spawned-CLI Broker E2E: actor A holds an RFT-like Team surface while actor B proves backlog item shard admission remains parallel-safe and generated Markdown projection rebuilds freeze on the canonical projection key.
+
+Remaining follow-up after ATM-GOV-0149: runner-sync/build still needs a real coalescing steward queue with sealed source SHA, TTL/heartbeat, stale-owner release, and queue-position diagnostics; generated projection rebuilds still need to move out of the hot journaling path into a steward or commit-time owner lane.
+
