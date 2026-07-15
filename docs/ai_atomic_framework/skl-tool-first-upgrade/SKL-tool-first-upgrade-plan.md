@@ -326,6 +326,7 @@ playbook 是本次工作的動態 orchestration contract，負責：
 | `TASK-SKL-0010` | execution card | 建立 provider-neutral role skill-pack manifest 與 permission lease 對齊 | AI-Atomic-Framework | `TASK-SKL-0007`, `TASK-SKL-0008`, `TASK-SKL-0009` |
 | `TASK-SKL-0011` | execution card | 將至少一組 Team roles 實際接成 Agent+Skill 可獨立治理單元 | AI-Atomic-Framework | `TASK-SKL-0008`, `TASK-SKL-0009`, `TASK-SKL-0010` |
 | `TASK-SKL-0012` | execution card | 將 Team role skill packs 的 growth contract 與 observability 接入 Team runtime | AI-Atomic-Framework | `TASK-SKL-0007`, `TASK-SKL-0010`, `TASK-SKL-0011` |
+| `TASK-SKL-0013` | execution card | 建立 shared `atm-error-code-resolver` skill 與 registry-backed error-code knowledge | AI-Atomic-Framework | `TASK-SKL-0002`, `TASK-SKL-0005`, `TASK-SKL-0007` |
 
 ## 10. 完成定義
 
@@ -371,3 +372,25 @@ This addendum is part of the active SKL execution contract.
 - Record this kind of wall-hit in shared growth while the bug or operator trap is still active.
 - Keep the product side in backlog until the underlying runner/build behavior is fixed.
 - Once the fix is stable and the workaround no longer needs to load by default, move the narrative case into a historical section to keep skill context lean.
+
+## 14. Error-code Management Addendum
+
+This addendum is part of the active SKL execution contract.
+
+Dogfood on 2026-07-15 showed that ATM error-code handling must become a shared
+skill surface, not scattered prose inside each specialist skill.
+`docs/ERROR_CODES.md` is currently a generated source-location index; it does
+not yet provide enough operator knowledge for live recovery.
+
+`TASK-SKL-0013` adds the missing shared resolver lane:
+
+- one canonical structured source or generated projection for user-visible
+  `ATM_*` codes;
+- a shared `atm-error-code-resolver` skill that other ATM skills can invoke or
+  reference;
+- consistent fields for meaning, category, common cause, remediation,
+  retryability, human-approval requirement, and related commands/runbooks;
+- graceful handling for unknown or newly introduced codes.
+
+This keeps router, dispatch, evidence, handoff, Team, and commit skills from
+maintaining private error-code tables that drift apart.

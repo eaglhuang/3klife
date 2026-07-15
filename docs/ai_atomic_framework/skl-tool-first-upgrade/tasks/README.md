@@ -31,6 +31,7 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 | [TASK-SKL-0001](./TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md) | P0 | SKL tool-first plan and task pack | done | none | planning docs / 3KLife |
 | [TASK-SKL-0002](./TASK-SKL-0002-tool-bridge-v1-schema-and-result-adapter.task.md) | P1 | Tool Bridge v1 schema and result adapter | planned | `TASK-SKL-0001` | ATM tool bridge |
 | [TASK-SKL-0007](./TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md) | P1 | Shared skill growth contract and learning loop | planned | `TASK-SKL-0002` | ATM skill growth |
+| [TASK-SKL-0013](./TASK-SKL-0013-error-code-resolver-shared-skill.task.md) | P1 | Error-code resolver shared skill and registry | planned | `TASK-SKL-0002`, `TASK-SKL-0005`, `TASK-SKL-0007` | ATM error-code knowledge |
 | [TASK-SKL-0005](./TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md) | P1 | Skill tool-first orchestration migration | planned | `TASK-SKL-0002`, `TASK-SKL-0007` | ATM skills / integrations |
 | [TASK-SKL-0003](./TASK-SKL-0003-next-claim-framework-mode-tools.task.md) | P2 | Next, claim, and framework-mode tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002`, `TASK-SKL-0005` | ATM CLI / governance entry |
 | [TASK-SKL-0004](./TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md) | P2 | Evidence, guard, taskflow, and governed commit tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002`, `TASK-SKL-0005` | ATM operators |
@@ -46,15 +47,17 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 1. `TASK-SKL-0001` remains the planning opener and source of truth for the lane.
 2. `TASK-SKL-0002` establishes the shared tool result contract first.
 3. `TASK-SKL-0007` is intentionally pulled forward so the growth contract exists before the first orchestration skill grows large.
-4. `TASK-SKL-0005` also moves into early P1 so we can stand up the first usable `router / playbook / specialist skill` seam quickly and let it learn while being used.
-5. `TASK-SKL-0003` and `TASK-SKL-0004` attach more governance surfaces onto that growth-enabled skill skeleton instead of fattening one entry skill first.
-6. `TASK-SKL-0008` to `TASK-SKL-0012` extend the same architecture into Team Agents, where `Agent + Skill` is the reusable unit.
-7. `TASK-SKL-0006` stays as later hardening and should absorb real dogfood friction such as residue, active-claim noise, runner skew, and cross-repo sync problems.
+4. `TASK-SKL-0013` adds shared error-code resolution before more specialist skills duplicate recovery prose.
+5. `TASK-SKL-0005` also moves into early P1 so we can stand up the first usable `router / playbook / specialist skill` seam quickly and let it learn while being used.
+6. `TASK-SKL-0003` and `TASK-SKL-0004` attach more governance surfaces onto that growth-enabled skill skeleton instead of fattening one entry skill first.
+7. `TASK-SKL-0008` to `TASK-SKL-0012` extend the same architecture into Team Agents, where `Agent + Skill` is the reusable unit.
+8. `TASK-SKL-0006` stays as later hardening and should absorb real dogfood friction such as residue, active-claim noise, runner skew, and cross-repo sync problems.
 
 ## Backlog To Skill Feed
 
 - Backlog is not only a repair queue; it is also a feeder for reusable skill knowledge.
 - Product defects stay in backlog until fixed, but the reusable symptom, safer route, and durable rule should be promoted into shared skill references as early as possible.
+- Error-code interpretation is a shared skill concern: skills should route `ATM_*` code explanations through `atm-error-code-resolver` instead of keeping per-skill private recovery tables.
 - Shared growth files should preload the first wall-hit cases so a fresh skill already knows common ATM dogfood traps.
 - Current seed cases:
   - `ATM-BUG-2026-06-23-019`: imported planning-repo batch already exists, but claim path keeps rediscovering instead of trusting ledger truth.
