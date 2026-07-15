@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0042
 title: Extract team legacy crew decision policy map
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0041]
@@ -43,6 +43,15 @@ atomizationImpact:
       source: packages/cli/src/commands/team-legacy.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T15:26:23.540Z"
+completed_by_agent: "codex-task-rft-0042"
+closedAt: "2026-07-15T15:26:23.540Z"
+closedByActor: "codex-task-rft-0042"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T15-26-23-540Z-close-bb8b222916df"
+lastTransitionAt: "2026-07-15T15:26:23.540Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a90e1c1a2984d4327b98fe158a73dff9905b6b3d"
 ---
 
 # TASK-RFT-0042 - Extract team legacy crew decision policy map
