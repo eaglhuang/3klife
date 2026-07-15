@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0033
 title: Extract tasks legacy implementation into command modules
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0032]
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/legacy-impl.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T12:13:41.407Z"
+completed_by_agent: "codex-task-rft-0033"
+closedAt: "2026-07-15T12:13:41.407Z"
+closedByActor: "codex-task-rft-0033"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T12-13-41-407Z-close-dd6a9b930da4"
+lastTransitionAt: "2026-07-15T12:13:41.407Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0fb6c49b84b36a54b61d0227d6e9bb45775f162a"
 ---
 
 # TASK-RFT-0033 - Extract tasks legacy implementation into command modules
