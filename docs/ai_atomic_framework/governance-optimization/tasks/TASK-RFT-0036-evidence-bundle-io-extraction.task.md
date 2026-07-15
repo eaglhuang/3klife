@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0036
 title: Split evidence bundle IO into bounded modules
-status: planned
+status: done
 owner: atm-core
 priority: P2
 depends_on: [TASK-RFT-0035]
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/cli/src/commands/evidence/bundle-io.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T13:11:16.750Z"
+completed_by_agent: "codex-task-rft-0036"
+closedAt: "2026-07-15T13:11:16.750Z"
+closedByActor: "codex-task-rft-0036"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T13-11-16-750Z-close-cc086e37ee59"
+lastTransitionAt: "2026-07-15T13:11:16.750Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "72ec5904e1cd092f3632f3e7be2fdbb5c5f0562f"
 ---
 
 # TASK-RFT-0036 - Split evidence bundle IO into bounded modules

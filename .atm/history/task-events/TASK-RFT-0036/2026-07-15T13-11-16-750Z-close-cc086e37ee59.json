@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T13-11-16-750Z-close-cc086e37ee59",
+  "taskId": "TASK-RFT-0036",
+  "action": "close",
+  "actorId": "codex-task-rft-0036",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0036-evidence-bundle-io-extraction.task.md",
+  "taskSha256": "sha256:5e285760846c97c6ab096f1447fc327d8926e0aff2953b7113b656359904bf4d",
+  "createdAt": "2026-07-15T13:11:16.750Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0036 --actor codex-task-rft-0036"
+}
