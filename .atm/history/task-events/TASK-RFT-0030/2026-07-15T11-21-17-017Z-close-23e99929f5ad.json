@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T11-21-17-017Z-close-23e99929f5ad",
+  "taskId": "TASK-RFT-0030",
+  "action": "close",
+  "actorId": "codex-task-rft-0030",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0030-team-legacy-command-path-extraction.task.md",
+  "taskSha256": "sha256:45781a320275e9ea5ced6bbdfc5d90816621518d644a782fe9887da15f081aeb",
+  "createdAt": "2026-07-15T11:21:17.017Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0030 --actor codex-task-rft-0030"
+}

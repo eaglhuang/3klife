@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0030
 title: Extract team-legacy command paths into bounded modules
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0029]
@@ -49,6 +49,15 @@ atomizationImpact:
       source: packages/cli/src/commands/team-legacy.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T11:21:17.017Z"
+completed_by_agent: "codex-task-rft-0030"
+closedAt: "2026-07-15T11:21:17.017Z"
+closedByActor: "codex-task-rft-0030"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T11-21-17-017Z-close-23e99929f5ad"
+lastTransitionAt: "2026-07-15T11:21:17.017Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ced82953f385a16ed2133fb360c8a9374bda25bf"
 ---
 
 # TASK-RFT-0030 - Extract team-legacy command paths into bounded modules
