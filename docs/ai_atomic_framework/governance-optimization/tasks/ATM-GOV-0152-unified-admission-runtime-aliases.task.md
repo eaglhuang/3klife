@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0152
 title: Alias legacy global locks into unified Broker admission
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on: [ATM-GOV-0128, ATM-GOV-0129, ATM-GOV-0137, ATM-GOV-0148, ATM-GOV-0150, ATM-GOV-0151]
@@ -42,6 +42,15 @@ outOfScope:
   - "TASK-RFT-0037."
   - "New independent lock semantics outside the Broker keyspace."
   - "Release mirror artifact sync."
+completed_at: "2026-07-15T16:06:37.389Z"
+completed_by_agent: "codex-gpt-5-5-captain"
+closedAt: "2026-07-15T16:06:37.389Z"
+closedByActor: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T16-06-37-389Z-close-f9eb6122893f"
+lastTransitionAt: "2026-07-15T16:06:37.389Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f018095c6362e673b287bb31761376052d368274"
 ---
 
 # ATM-GOV-0152 - Alias legacy global locks into unified Broker admission

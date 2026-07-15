@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T16-06-37-389Z-close-f9eb6122893f",
+  "taskId": "ATM-GOV-0152",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0152-unified-admission-runtime-aliases.task.md",
+  "taskSha256": "sha256:2a26a54d89b9e3ab570cf1a845aa3679b704daa22e0b1bb439be688a2d2f59b1",
+  "createdAt": "2026-07-15T16:06:37.389Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0152 --actor codex-gpt-5-5-captain"
+}
