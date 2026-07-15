@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T12-00-15-666Z-close-7d2735a12173",
+  "taskId": "TASK-RFT-0032",
+  "action": "close",
+  "actorId": "codex-task-rft-0032",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0032-git-governance-command-extraction.task.md",
+  "taskSha256": "sha256:095975cfc99185703dfa0a7bc6e21250f9af12e7558f274965f3918211cf02e0",
+  "createdAt": "2026-07-15T12:00:15.666Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0032 --actor codex-task-rft-0032"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0032
 title: Extract git-governance commit and push guards into bounded modules
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0031]
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/cli/src/commands/git-governance.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T12:00:15.666Z"
+completed_by_agent: "codex-task-rft-0032"
+closedAt: "2026-07-15T12:00:15.666Z"
+closedByActor: "codex-task-rft-0032"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T12-00-15-666Z-close-7d2735a12173"
+lastTransitionAt: "2026-07-15T12:00:15.666Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "104b86e1bd5fb5e7ca984f06d04de661af5b2521"
 ---
 
 # TASK-RFT-0032 - Extract git-governance commit and push guards into bounded modules
