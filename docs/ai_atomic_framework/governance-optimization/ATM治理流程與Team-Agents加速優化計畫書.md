@@ -569,3 +569,10 @@ Release safety 在 Phase 1 已先止血，本階段補齊 publication 產品化�
 
 - Framework-side focused recheck passed: pre-team-foundation-gate, commit-bundle-assembly, taskflow-close-crash-matrix, team-shadow-workspace, team-agents-dogfood, governance-cost-bench, broker-registry-transaction, validation-receipt-reuse, and rft-atomization-rollout.
 - Worktree cleanliness plus ATM residue/audit/doctor checks remain required before and after closeout commits. If later real Team promotion samples are incomplete, record the gap in backlog and do not treat measurement-incomplete as production/default success.
+
+### 20.2 2026-07-15 follow-up: team.ts atomization
+
+- New follow-up card: `TASK-RFT-0029` owns the remaining oversized `packages/cli/src/commands/team.ts` surface.
+- Design pattern: Strangler Facade + Command Handler Registry + Policy/Receipt modules. This keeps the CLI behavior stable while extracting one bounded command or policy atom at a time.
+- Target: reduce `team.ts` and every new Team command support module to 600 lines or fewer, with a dedicated line-budget regression.
+- This is atomization work only; Team production/default promotion still requires real paired cost/time/quality evidence.

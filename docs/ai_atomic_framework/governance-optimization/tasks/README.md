@@ -7,7 +7,7 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-07-14T00:00:00+08:00
 created_by_agent: Codex-GPT-5.5
-last_updated: 2026-07-15T18:10:00+08:00
+last_updated: 2026-07-15T18:25:00+08:00
 ---
 
 # ATM 治理流程與 Team Agents 加速優化 Task Cards
