@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0031
 title: Extract next.ts route resolution into bounded modules
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0030]
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/cli/src/commands/next.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T11:42:37.440Z"
+completed_by_agent: "codex-task-rft-0031"
+closedAt: "2026-07-15T11:42:37.440Z"
+closedByActor: "codex-task-rft-0031"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T11-42-37-440Z-close-1d2b8a70b80d"
+lastTransitionAt: "2026-07-15T11:42:37.440Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "84c3573c77de880998a4c39b05d5736f14f66293"
 ---
 
 # TASK-RFT-0031 - Extract next.ts route resolution into bounded modules

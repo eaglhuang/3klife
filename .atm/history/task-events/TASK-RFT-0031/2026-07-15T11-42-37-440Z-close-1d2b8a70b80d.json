@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T11-42-37-440Z-close-1d2b8a70b80d",
+  "taskId": "TASK-RFT-0031",
+  "action": "close",
+  "actorId": "codex-task-rft-0031",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0031-next-command-router-extraction.task.md",
+  "taskSha256": "sha256:e5d9fbfab2a077107f9b053892415203b03e2f20d7c3b5590f1a27ceb90a2b4b",
+  "createdAt": "2026-07-15T11:42:37.440Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0031 --actor codex-task-rft-0031"
+}
