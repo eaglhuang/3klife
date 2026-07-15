@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T02-58-56-085Z-close-7a4dddb3d3d1",
+  "taskId": "TASK-MEM-0008",
+  "action": "close",
+  "actorId": "claude-fable-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0008-mirror-reconcile-emergency-classification.task.md",
+  "taskSha256": "sha256:34b280d2d9244ec788f89314acf9a2c25886b80a2ae82d7a54b0bb1571fe2ef1",
+  "createdAt": "2026-07-15T02:58:56.085Z",
+  "command": "node atm.mjs tasks close --task TASK-MEM-0008 --actor claude-fable-5"
+}

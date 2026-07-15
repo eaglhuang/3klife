@@ -1,7 +1,7 @@
 ---
 task_id: TASK-MEM-0008
 title: "Classify clean-mirror reconcile as non-emergency (BUG-ATM-0072)"
-status: planned
+status: done
 owner: claude-fable-5
 priority: P1
 milestone: MEM-M5
@@ -31,6 +31,15 @@ atomizationImpact:
       source: "packages/cli/src/commands/tasks/reconcile-orchestrator.ts"
       disposition: "extract"
       inlineReason: null
+completed_at: "2026-07-15T02:58:56.085Z"
+completed_by_agent: "claude-fable-5"
+closedAt: "2026-07-15T02:58:56.085Z"
+closedByActor: "claude-fable-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T02-58-56-085Z-close-7a4dddb3d3d1"
+lastTransitionAt: "2026-07-15T02:58:56.085Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b3333f128eb727ab446b38ce6fb30687cc41e86b"
 ---
 
 # TASK-MEM-0008 Clean-mirror reconcile classification
