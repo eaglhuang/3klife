@@ -592,3 +592,12 @@ Queue order:
 8. `TASK-RFT-0037` - split `packages/cli/src/commands/hook/pre-commit.ts`.
 
 Each task must be imported, claimed, validated, closed, committed, and pushed independently. During implementation, workflow friction and high-return governance improvements should be routed through the ATM bug and optimization backlog before any opportunistic fix is made.
+
+## 2026-07-15 follow-up: runtime residue and error-code hygiene
+
+ATM-GOV-0147 owns two cleanup gaps discovered during ATM-GOV-0146 closeout:
+
+- Expired `atm.gitIndexOverrideLease.v1` files under `.atm/runtime/git-index-leases/` must be recognized by `residue status/reconcile` as safe auto-clean only when they are expired and have no active owner. Active or unreadable leases must stay manual-review.
+- `ATM_TEAM_TASK_REQUIRED` must be registered in the shared error-code registry so Team/dispatch skills route the operator to the canonical meaning and next safe command.
+
+This card is intentionally non-RFT and must not touch `TASK-RFT-0037`, active `TASK-RFT-0039` Team legacy surfaces, or release mirror artifacts.
