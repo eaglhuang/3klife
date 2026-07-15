@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T14-14-24-327Z-close-702e2690a6cd",
+  "taskId": "TASK-RFT-0038",
+  "action": "close",
+  "actorId": "codex-task-rft-0038",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0038-team-legacy-runtime-contract-extraction.task.md",
+  "taskSha256": "sha256:90bc214e3018473f64461cd8b9f380642adec4c17aab124bddc8bbe1b488730a",
+  "createdAt": "2026-07-15T14:14:24.327Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0038 --actor codex-task-rft-0038"
+}

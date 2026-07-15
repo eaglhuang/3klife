@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0038
 title: Extract team legacy runtime contract helpers
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0037]
@@ -49,6 +49,15 @@ atomizationImpact:
       source: packages/cli/src/commands/team-legacy.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T14:14:24.327Z"
+completed_by_agent: "codex-task-rft-0038"
+closedAt: "2026-07-15T14:14:24.327Z"
+closedByActor: "codex-task-rft-0038"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T14-14-24-327Z-close-702e2690a6cd"
+lastTransitionAt: "2026-07-15T14:14:24.327Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "cdd8dec962b82251532b7fcbed859ec641b7e7a8"
 ---
 
 # TASK-RFT-0038 - Extract team legacy runtime contract helpers
