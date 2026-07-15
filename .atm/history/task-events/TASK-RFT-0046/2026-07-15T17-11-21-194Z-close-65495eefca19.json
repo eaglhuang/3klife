@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T17-11-21-194Z-close-65495eefca19",
+  "taskId": "TASK-RFT-0046",
+  "action": "close",
+  "actorId": "codex-task-rft-0046",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0046-next-prompt-results-contract-extraction.task.md",
+  "taskSha256": "sha256:e1d7ffeb1017243f3c25e945bc03724f044a69be89ef2601a91648ed908d01d8",
+  "createdAt": "2026-07-15T17:11:21.194Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0046 --actor codex-task-rft-0046"
+}
