@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T13-59-19-808Z-close-8418cda0cc0b",
+  "taskId": "ATM-GOV-0145",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0145-pre-team-foundation-dual-captain-e2e.task.md",
+  "taskSha256": "sha256:3fbd0eb0d17790413b33f54d12da8bc9e06e951c55302133e291b8de2ac8ec14",
+  "createdAt": "2026-07-15T13:59:19.808Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0145 --actor codex-gpt-5-5-captain"
+}

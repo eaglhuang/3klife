@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0145
 task_id: ATM-GOV-0145
 title: "Replace Pre-Team Foundation Gate meta-test with real dual-Captain E2E"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation-Gate
@@ -35,6 +35,15 @@ outOfScope:
   - "TASK-RFT-* cards, large module atomization, and any RFT source edits."
   - "Team production/default promotion."
   - "Provider billing or real dogfood paired-run measurement."
+completed_at: "2026-07-15T13:59:19.808Z"
+completed_by_agent: "codex-gpt-5-5-captain"
+closedAt: "2026-07-15T13:59:19.808Z"
+closedByActor: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T13-59-19-808Z-close-8418cda0cc0b"
+lastTransitionAt: "2026-07-15T13:59:19.808Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "06c484b6ad4054c57765d7cc0f2b4c26aa26b4ab"
 ---
 
 # ATM-GOV-0145 - Replace Pre-Team Foundation Gate meta-test with real dual-Captain E2E
