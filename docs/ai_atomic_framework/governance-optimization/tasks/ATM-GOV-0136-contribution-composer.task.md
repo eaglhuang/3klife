@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0136
 task_id: ATM-GOV-0136
 title: "Compose Team contribution manifests into one final tree"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Team

@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0141
 task_id: ATM-GOV-0141
 title: "Integrate Batch mode with sealed close and Team admission"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: GOVOPT-Operations

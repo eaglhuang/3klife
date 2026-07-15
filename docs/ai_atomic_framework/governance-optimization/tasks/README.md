@@ -7,7 +7,7 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-07-14T00:00:00+08:00
 created_by_agent: Codex-GPT-5.5
-last_updated: 2026-07-14T18:35:00+08:00
+last_updated: 2026-07-15T18:10:00+08:00
 ---
 
 # ATM 治理流程與 Team Agents 加速優化 Task Cards
@@ -18,30 +18,30 @@ last_updated: 2026-07-14T18:35:00+08:00
 
 | Task ID | 任務 | 優先級 | 狀態 | 依賴 |
 |---|---|---:|---|---|
-| [ATM-GOV-0124](./ATM-GOV-0124-charter-authority-bundle.task.md) | Charter 與第一性原理 authority bundle | P0 | planned | 無 |
-| [ATM-GOV-0125](./ATM-GOV-0125-captain-quick-wins.task.md) | Captain quick wins / provider preflight | P1 | planned | 無 |
-| [ATM-GOV-0143](./ATM-GOV-0143-provider-billing-cost-accounting.task.md) | Provider usage、標準定價表與真實成本核算 | P0 | planned | 無 |
-| [ATM-GOV-0144](./ATM-GOV-0144-official-pricing-catalog-refresh.task.md) | 官方定價 refresh crawler | P1 | planned | 0143 |
-| [ATM-GOV-0126](./ATM-GOV-0126-paired-cost-baseline.task.md) | ATM/Team 配對真實成本與時間基線 | P0 | planned | 0143 |
-| [ATM-GOV-0127](./ATM-GOV-0127-release-steward-safety.task.md) | Release steward 安全 lane | P0 | planned | 無 |
-| [ATM-GOV-0128](./ATM-GOV-0128-multi-captain-index-isolation.task.md) | Serialization / index 收斂 | P0 | planned | 無 |
-| [ATM-GOV-0132](./ATM-GOV-0132-framework-taskflow-opener.task.md) | Framework taskflow opener | P0 | planned | 0124 |
-| [ATM-GOV-0133](./ATM-GOV-0133-planning-source-seal.task.md) | Planning-source seal | P0 | planned | 無 |
-| [ATM-GOV-0134](./ATM-GOV-0134-governance-hotfile-sharding.task.md) | Governance hotfile sharding | P0 | planned | 無 |
-| [TASK-RFT-0026](./TASK-RFT-0026-central-atomization-line-bound.task.md) | 中央原子化行數上限 | P1 | planned | 0124 |
-| [ATM-GOV-0129](./ATM-GOV-0129-seal-and-commit.task.md) | Seal-and-commit 交易 | P0 | planned | 0127、0128、0133 |
-| [ATM-GOV-0130](./ATM-GOV-0130-close-crash-residue-recovery.task.md) | Close crash 與 residue 復原 | P0 | planned | 0129 |
-| [ATM-GOV-0131](./ATM-GOV-0131-validation-receipt-reuse.task.md) | Validation receipt 重用 | P1 | planned | 0129 |
-| [ATM-GOV-0135](./ATM-GOV-0135-shadow-first-team-scheduler.task.md) | Shadow-first Team scheduler | P1 | planned | 0126、0129、0130、0131、0134 |
-| [ATM-GOV-0136](./ATM-GOV-0136-contribution-composer.task.md) | Contribution composer | P1 | planned | 0135 |
-| [ATM-GOV-0137](./ATM-GOV-0137-team-admission-projection.task.md) | Team admission projection | P1 | planned | 0126、0135 |
-| [ATM-GOV-0138](./ATM-GOV-0138-broker-registry-transaction.task.md) | Broker registry transaction | P2 | planned | 0137 |
-| [ATM-GOV-0139](./ATM-GOV-0139-obligation-map-canary.task.md) | Obligation map / canary | P1 | planned | 0131 |
-| [ATM-GOV-0140](./ATM-GOV-0140-team-efficiency-controller.task.md) | Team efficiency controller | P1 | planned | 0126、0137 |
-| [ATM-GOV-0141](./ATM-GOV-0141-batch-mode-integration.task.md) | Batch integration | P2 | planned | 0129、0140 |
-| [ATM-GOV-0142](./ATM-GOV-0142-release-publication-steward.task.md) | Release publication steward | P2 | planned | 0127、0129 |
-| [TASK-RFT-0027](./TASK-RFT-0027-atomization-large-module-map-rollout.task.md) | 大型 module 原子化 rollout | P2 | planned | TASK-RFT-0026 |
-| [TASK-RFT-0028](./TASK-RFT-0028-team-agent-governance-dogfood.task.md) | Team governance dogfood | P2 | planned | 0136、0140 |
+| [ATM-GOV-0124](./ATM-GOV-0124-charter-authority-bundle.task.md) | Charter 與第一性原理 authority bundle | P0 | done | 無 |
+| [ATM-GOV-0125](./ATM-GOV-0125-captain-quick-wins.task.md) | Captain quick wins / provider preflight | P1 | done | 無 |
+| [ATM-GOV-0143](./ATM-GOV-0143-provider-billing-cost-accounting.task.md) | Provider usage、標準定價表與真實成本核算 | P0 | done | 無 |
+| [ATM-GOV-0144](./ATM-GOV-0144-official-pricing-catalog-refresh.task.md) | 官方定價 refresh crawler | P1 | done | 0143 |
+| [ATM-GOV-0126](./ATM-GOV-0126-paired-cost-baseline.task.md) | ATM/Team 配對真實成本與時間基線 | P0 | done | 0143 |
+| [ATM-GOV-0127](./ATM-GOV-0127-release-steward-safety.task.md) | Release steward 安全 lane | P0 | done | 無 |
+| [ATM-GOV-0128](./ATM-GOV-0128-multi-captain-index-isolation.task.md) | Serialization / index 收斂 | P0 | done | 無 |
+| [ATM-GOV-0132](./ATM-GOV-0132-framework-taskflow-opener.task.md) | Framework taskflow opener | P0 | done | 0124 |
+| [ATM-GOV-0133](./ATM-GOV-0133-planning-source-seal.task.md) | Planning-source seal | P0 | done | 無 |
+| [ATM-GOV-0134](./ATM-GOV-0134-governance-hotfile-sharding.task.md) | Governance hotfile sharding | P0 | done | 無 |
+| [TASK-RFT-0026](./TASK-RFT-0026-central-atomization-line-bound.task.md) | 中央原子化行數上限 | P1 | done | 0124 |
+| [ATM-GOV-0129](./ATM-GOV-0129-seal-and-commit.task.md) | Seal-and-commit 交易 | P0 | done | 0127、0128、0133 |
+| [ATM-GOV-0130](./ATM-GOV-0130-close-crash-residue-recovery.task.md) | Close crash 與 residue 復原 | P0 | done | 0129 |
+| [ATM-GOV-0131](./ATM-GOV-0131-validation-receipt-reuse.task.md) | Validation receipt 重用 | P1 | done | 0129 |
+| [ATM-GOV-0135](./ATM-GOV-0135-shadow-first-team-scheduler.task.md) | Shadow-first Team scheduler | P1 | done | 0126、0129、0130、0131、0134 |
+| [ATM-GOV-0136](./ATM-GOV-0136-contribution-composer.task.md) | Contribution composer | P1 | done | 0135 |
+| [ATM-GOV-0137](./ATM-GOV-0137-team-admission-projection.task.md) | Team admission projection | P1 | done | 0126、0135 |
+| [ATM-GOV-0138](./ATM-GOV-0138-broker-registry-transaction.task.md) | Broker registry transaction | P2 | done | 0137 |
+| [ATM-GOV-0139](./ATM-GOV-0139-obligation-map-canary.task.md) | Obligation map / canary | P1 | done | 0131 |
+| [ATM-GOV-0140](./ATM-GOV-0140-team-efficiency-controller.task.md) | Team efficiency controller | P1 | done | 0126、0137 |
+| [ATM-GOV-0141](./ATM-GOV-0141-batch-mode-integration.task.md) | Batch integration | P2 | done | 0129、0140 |
+| [ATM-GOV-0142](./ATM-GOV-0142-release-publication-steward.task.md) | Release publication steward | P2 | done | 0127、0129 |
+| [TASK-RFT-0027](./TASK-RFT-0027-atomization-large-module-map-rollout.task.md) | 大型 module 原子化 rollout | P2 | done | TASK-RFT-0026 |
+| [TASK-RFT-0028](./TASK-RFT-0028-team-agent-governance-dogfood.task.md) | Team governance dogfood | P2 | done | 0136、0140 |
 
 ## 維護規則
 

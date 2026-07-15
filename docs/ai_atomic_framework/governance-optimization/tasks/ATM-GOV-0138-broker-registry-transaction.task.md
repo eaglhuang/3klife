@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0138
 task_id: ATM-GOV-0138
 title: "Make Broker registry updates atomic and thin under shadow-first Team"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: GOVOPT-Team

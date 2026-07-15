@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0135
 task_id: ATM-GOV-0135
 title: "Run Team workers in shadow-first contribution workspaces"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Team

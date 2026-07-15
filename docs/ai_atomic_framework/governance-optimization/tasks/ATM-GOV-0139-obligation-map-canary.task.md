@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0139
 task_id: ATM-GOV-0139
 title: "Introduce path-to-validator obligations with sealed-commit canary lane"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Team

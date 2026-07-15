@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0142
 task_id: ATM-GOV-0142
 title: "Productize release publication ownership and sealed source receipts"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: GOVOPT-Operations

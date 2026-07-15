@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0130
 task_id: ATM-GOV-0130
 title: "Recover close, claim release, and residue crash states"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

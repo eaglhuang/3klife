@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0143
 task_id: ATM-GOV-0143
 title: "Capture provider billing usage and compute versioned real monetary cost"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

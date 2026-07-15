@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0140
 task_id: ATM-GOV-0140
 title: "Enforce Team monetary-cost, time and quality efficiency controller"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Operations

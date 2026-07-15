@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0129
 task_id: ATM-GOV-0129
 title: "Make sealed commit the close transaction truth"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

@@ -2,7 +2,7 @@
 doc_id: task_rft_0027
 task_id: TASK-RFT-0027
 title: "apply configurable atomization line bound to existing RFT oversized modules"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: RFT-M8

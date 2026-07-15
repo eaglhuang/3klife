@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0125
 task_id: ATM-GOV-0125
 title: "Land low-risk Captain guidance and recovery quick wins"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Foundation

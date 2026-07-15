@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0134
 task_id: ATM-GOV-0134
 title: "Shard governance hotfiles behind generated compatibility projections"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0144
 task_id: ATM-GOV-0144
 title: "Refresh the standard model-price catalog from official provider sources"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Foundation

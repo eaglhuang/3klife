@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0132
 task_id: ATM-GOV-0132
 title: "Provide a safe framework taskflow opener lane"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

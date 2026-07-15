@@ -485,6 +485,13 @@ Release safety 在 Phase 1 已先止血，本階段補齊 publication 產品化�
 - `ATM-GOV-0134` 必須在 Team write 前完成，否則多 agent 仍會競爭同一個 governance hotfile。
 - RFT 拆檔只在行為 freeze 後推進，且所有新 atom/map/script 受中央 max-lines 參數約束。
 
+### 16.4 2026-07-15 target ledger sync
+
+- AI-Atomic-Framework target ledger now marks ATM-GOV-0124 through ATM-GOV-0144 and TASK-RFT-0026 through TASK-RFT-0028 as done.
+- Recheck confirms the previously reported framework-side gaps are closed: close transaction mutex, kill-after-target crash recovery, payload-digest receipt reuse, Broker registry atomic write, Team shadow workspace provider, Team composer/scheduler wiring, and RFT validator atomization rollout.
+- TASK-RFT-0027 acceptance now verifies that scripts/validate-team-agents.ts is below the 600-line bound and that extracted Team validator atoms also stay below the bound, instead of expecting the old oversized harness to remain oversized.
+- TASK-RFT-0028 / Team promotion still requires real paired cost, time, and quality samples; incomplete provider usage or billing evidence remains measurement-incomplete and promotion-ineligible.
+
 ## 17. Backlog 對照與不重做原則
 
 | 主題 | Backlog rows | 處理方式 |
@@ -557,3 +564,8 @@ Release safety 在 Phase 1 已先止血，本階段補齊 publication 產品化�
 - 所有新 atom、map、script 與支援模組遵守可設定的 600 行上限。
 
 在量測尚未完成前，這些數字必須標示為 `measurement-incomplete`，不得以設計意圖冒充已達成結果。
+
+### 20.1 2026-07-15 acceptance sync
+
+- Framework-side focused recheck passed: pre-team-foundation-gate, commit-bundle-assembly, taskflow-close-crash-matrix, team-shadow-workspace, team-agents-dogfood, governance-cost-bench, broker-registry-transaction, validation-receipt-reuse, and rft-atomization-rollout.
+- Worktree cleanliness plus ATM residue/audit/doctor checks remain required before and after closeout commits. If later real Team promotion samples are incomplete, record the gap in backlog and do not treat measurement-incomplete as production/default success.

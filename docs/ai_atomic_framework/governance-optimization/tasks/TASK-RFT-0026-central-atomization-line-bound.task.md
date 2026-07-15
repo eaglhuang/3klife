@@ -2,7 +2,7 @@
 doc_id: doc_rft_0026
 task_id: TASK-RFT-0026
 title: "central configurable ATM atomic line bound"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M8

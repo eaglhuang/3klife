@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0124
 task_id: ATM-GOV-0124
 title: "Install the content-bound Charter authority bundle"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

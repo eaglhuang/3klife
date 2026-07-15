@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0127
 task_id: ATM-GOV-0127
 title: "Protect foreign WIP with an exclusive release steward lane"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

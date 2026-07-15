@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0137
 task_id: ATM-GOV-0137
 title: "Unify Team admission projection and scale-down decisions"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Team

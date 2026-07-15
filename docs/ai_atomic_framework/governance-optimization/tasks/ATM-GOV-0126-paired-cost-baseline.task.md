@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0126
 task_id: ATM-GOV-0126
 title: "Establish paired monetary-cost and time efficiency baselines"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

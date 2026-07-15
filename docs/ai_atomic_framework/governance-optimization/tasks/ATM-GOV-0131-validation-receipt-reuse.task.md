@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0131
 task_id: ATM-GOV-0131
 title: "Unify wrapper-generated content-addressed validation receipts"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: GOVOPT-Foundation

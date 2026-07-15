@@ -2,7 +2,7 @@
 doc_id: doc_atm_gov_0133
 task_id: ATM-GOV-0133
 title: "Seal external planning-source identity before claim and close"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: GOVOPT-Foundation

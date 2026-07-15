@@ -2,7 +2,7 @@
 doc_id: task_rft_0028
 task_id: TASK-RFT-0028
 title: "dogfood Team Agents after close transaction and shadow-first gates are stable"
-status: planned
+status: done
 owner: atm-core
 priority: P2
 milestone: RFT-M8
