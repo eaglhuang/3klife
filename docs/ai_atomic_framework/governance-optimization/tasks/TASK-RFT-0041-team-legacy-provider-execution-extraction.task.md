@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0041
 title: Extract team legacy provider execution orchestration
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0040]
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/cli/src/commands/team-legacy.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T15:09:35.621Z"
+completed_by_agent: "codex-task-rft-0041"
+closedAt: "2026-07-15T15:09:35.621Z"
+closedByActor: "codex-task-rft-0041"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T15-09-35-621Z-close-dedc2e762c13"
+lastTransitionAt: "2026-07-15T15:09:35.621Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d1eae285dc2cf2f59e4fadc5f0e5127507b3ac87"
 ---
 
 # TASK-RFT-0041 - Extract team legacy provider execution orchestration
