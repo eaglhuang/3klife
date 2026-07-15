@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0040
 title: Extract team legacy permission lease policy
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: [TASK-RFT-0039]
@@ -39,6 +39,15 @@ atomizationImpact:
       source: packages/cli/src/commands/team-legacy.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-15T14:53:04.170Z"
+completed_by_agent: "codex-task-rft-0040"
+closedAt: "2026-07-15T14:53:04.170Z"
+closedByActor: "codex-task-rft-0040"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T14-53-04-170Z-close-0147685394e0"
+lastTransitionAt: "2026-07-15T14:53:04.170Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b835b77633e6b6211b77708166f840fae987e529"
 ---
 
 # TASK-RFT-0040 - Extract team legacy permission lease policy
