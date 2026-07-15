@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0150
 title: Implement runner-sync coalescing steward queue
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on: [ATM-GOV-0127, ATM-GOV-0142, ATM-GOV-0148, ATM-GOV-0149]
@@ -42,6 +42,15 @@ outOfScope:
   - "TASK-RFT-0037 and all pre-commit hook extraction surfaces."
   - "Generated projection steward implementation; owned by ATM-GOV-0151."
   - "Changing release/atm-onefile/** or release/atm-root-drop/** artifacts as the delivery."
+completed_at: "2026-07-15T15:48:17.654Z"
+completed_by_agent: "codex-gpt-5-5-captain"
+closedAt: "2026-07-15T15:48:17.654Z"
+closedByActor: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-15T15-48-17-654Z-close-d508ced01c65"
+lastTransitionAt: "2026-07-15T15:48:17.654Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "216315cf1976d866667c4075bc90653135d2e00f"
 ---
 
 # ATM-GOV-0150 - Implement runner-sync coalescing steward queue
