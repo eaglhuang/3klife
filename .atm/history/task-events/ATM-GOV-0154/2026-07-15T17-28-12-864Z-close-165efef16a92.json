@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-15T17-28-12-864Z-close-165efef16a92",
+  "taskId": "ATM-GOV-0154",
+  "action": "close",
+  "actorId": "codex-gpt-5-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0154-runner-sync-steward-release.task.md",
+  "taskSha256": "sha256:6b67fa4804bea576f0d860b600bdaac0f5ee2679b8771345e923c3448018f308",
+  "createdAt": "2026-07-15T17:28:12.864Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0154 --actor codex-gpt-5-5-captain"
+}
