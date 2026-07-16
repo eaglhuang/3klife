@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T05-26-49-455Z-close-5cd2f1ec74ea",
+  "taskId": "TASK-RFT-0065",
+  "action": "close",
+  "actorId": "codex-task-rft-0065",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0065-team-brokered-write-final-600.task.md",
+  "taskSha256": "sha256:bc391953d364358221b2e09c19e4f7c1130111559f331edb151d88efcacb25d2",
+  "createdAt": "2026-07-16T05:26:49.455Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0065 --actor codex-task-rft-0065"
+}
