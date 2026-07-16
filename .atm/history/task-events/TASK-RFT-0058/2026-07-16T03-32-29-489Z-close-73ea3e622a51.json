@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T03-32-29-489Z-close-73ea3e622a51",
+  "taskId": "TASK-RFT-0058",
+  "action": "close",
+  "actorId": "codex-task-rft-0058",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0058-shared-command-facade-final-600.task.md",
+  "taskSha256": "sha256:2fc9d6a4f983dd83cfb303b74b404fffb00149a0577afc55f94250222b549519",
+  "createdAt": "2026-07-16T03:32:29.489Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0058 --actor codex-task-rft-0058"
+}
