@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T11-02-43-555Z-close-c68961894728",
+  "taskId": "TASK-RFT-0083",
+  "action": "close",
+  "actorId": "codex-task-rft-0083",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0083-mao-parallel-routing-runner-final-600.task.md",
+  "taskSha256": "sha256:4477884153bad691d1ffeb29b9d4918de6cbd7e26e6fff2468c41a71d19d1cfd",
+  "createdAt": "2026-07-16T11:02:43.555Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0083 --actor codex-task-rft-0083"
+}
