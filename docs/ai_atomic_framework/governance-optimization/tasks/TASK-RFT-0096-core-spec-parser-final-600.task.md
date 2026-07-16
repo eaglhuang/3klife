@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0096
 title: Split core spec parser under 600 lines
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on:
@@ -51,6 +51,15 @@ atomizationImpact:
       source: packages/core/src/spec/parse-spec.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-16T16:05:15.830Z"
+completed_by_agent: "codex-task-rft-0096"
+closedAt: "2026-07-16T16:05:15.830Z"
+closedByActor: "codex-task-rft-0096"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T16-05-15-830Z-close-05595bf68189"
+lastTransitionAt: "2026-07-16T16:05:15.830Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bb40c439e1555d342713c775db2183730c6bea81"
 ---
 
 # TASK-RFT-0096 - Split Core Spec Parser Under 600 Lines

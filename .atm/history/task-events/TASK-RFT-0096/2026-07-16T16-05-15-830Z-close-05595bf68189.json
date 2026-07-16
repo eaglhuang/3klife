@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T16-05-15-830Z-close-05595bf68189",
+  "taskId": "TASK-RFT-0096",
+  "action": "close",
+  "actorId": "codex-task-rft-0096",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0096-core-spec-parser-final-600.task.md",
+  "taskSha256": "sha256:8a1fff03948110185abfee6f6404c71c2518ee46b8b755fcea31719c084ba103",
+  "createdAt": "2026-07-16T16:05:15.830Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0096 --actor codex-task-rft-0096"
+}
