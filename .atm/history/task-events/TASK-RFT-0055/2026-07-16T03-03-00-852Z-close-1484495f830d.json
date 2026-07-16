@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T03-03-00-852Z-close-1484495f830d",
+  "taskId": "TASK-RFT-0055",
+  "action": "close",
+  "actorId": "codex-task-rft-0055",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0055-validate-governance-commands-final-600.task.md",
+  "taskSha256": "sha256:46b80ff00b8d1537a6dfdb9593d335ea0a9a04c76f75d863b9292123c03e8eb6",
+  "createdAt": "2026-07-16T03:03:00.852Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0055 --actor codex-task-rft-0055"
+}
