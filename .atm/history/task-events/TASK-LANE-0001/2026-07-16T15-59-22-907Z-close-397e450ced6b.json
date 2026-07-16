@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T15-59-22-907Z-close-397e450ced6b",
+  "taskId": "TASK-LANE-0001",
+  "action": "close",
+  "actorId": "codex-lane-0001",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0001-runner-sync-orphan-cleanup.task.md",
+  "taskSha256": "sha256:fe17b6ccb71cad3d20477b349d7dcdf2d49184c19f9a95afbc971386cf119ab0",
+  "createdAt": "2026-07-16T15:59:22.907Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0001 --actor codex-lane-0001"
+}

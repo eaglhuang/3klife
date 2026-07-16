@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0001
 title: Runner-sync orphan queue-head cleanup
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -38,6 +38,15 @@ outOfScope:
   - manual edits to .atm/runtime or .atm/history
 nonGoals:
   - Do not make packages/core import task-ledger readers from packages/cli
+completed_at: "2026-07-16T15:59:22.907Z"
+completed_by_agent: "codex-lane-0001"
+closedAt: "2026-07-16T15:59:22.907Z"
+closedByActor: "codex-lane-0001"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T15-59-22-907Z-close-397e450ced6b"
+lastTransitionAt: "2026-07-16T15:59:22.907Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9c3d80cecba949c7369d2717028c139643fb08eb"
 ---
 
 # TASK-LANE-0001 - Runner-sync Orphan Queue-head Cleanup
