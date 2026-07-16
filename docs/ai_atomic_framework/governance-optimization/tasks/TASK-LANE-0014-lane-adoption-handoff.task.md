@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0014
 title: Lane adoption and handoff command
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -45,6 +45,15 @@ outOfScope:
   - Broker lifecycle policy
 nonGoals:
   - Do not implicitly adopt a lane without an explicit command.
+completed_at: "2026-07-16T18:15:54.602Z"
+completed_by_agent: "codex-lane-0014"
+closedAt: "2026-07-16T18:15:54.602Z"
+closedByActor: "codex-lane-0014"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T18-15-54-602Z-close-425810a13c94"
+lastTransitionAt: "2026-07-16T18:15:54.602Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "eef10bf7178a8bdd26a688843027de65701b01b9"
 ---
 
 # TASK-LANE-0014 - Lane Adoption and Handoff Command

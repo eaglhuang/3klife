@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T18-15-54-602Z-close-425810a13c94",
+  "taskId": "TASK-LANE-0014",
+  "action": "close",
+  "actorId": "codex-lane-0014",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0014-lane-adoption-handoff.task.md",
+  "taskSha256": "sha256:88c0ceac8eef4263b885cdc3eb17cda7d64f29dd85897e65594781f25a884239",
+  "createdAt": "2026-07-16T18:15:54.602Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0014 --actor codex-lane-0014"
+}
