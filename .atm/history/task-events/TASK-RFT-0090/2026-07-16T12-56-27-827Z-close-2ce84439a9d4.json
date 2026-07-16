@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T12-56-27-827Z-close-2ce84439a9d4",
+  "taskId": "TASK-RFT-0090",
+  "action": "close",
+  "actorId": "codex-task-rft-0090",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0090-map-curator-final-600.task.md",
+  "taskSha256": "sha256:28227d33c0f5a7dd276a3cf581cda3f546c5345f4297d5fdc70abdefd32fc889",
+  "createdAt": "2026-07-16T12:56:27.827Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0090 --actor codex-task-rft-0090"
+}
