@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T09-58-08-464Z-close-47784f66e3cf",
+  "taskId": "TASK-RFT-0079",
+  "action": "close",
+  "actorId": "codex-task-rft-0079",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0079-atom-ref-readability-final-600.task.md",
+  "taskSha256": "sha256:2d964d6405fe9fd60c1161df62f4343e7299885500c1acf6f0ede618f274b0da",
+  "createdAt": "2026-07-16T09:58:08.464Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0079 --actor codex-task-rft-0079"
+}
