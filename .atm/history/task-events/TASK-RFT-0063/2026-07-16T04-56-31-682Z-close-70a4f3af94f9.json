@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T04-56-31-682Z-close-70a4f3af94f9",
+  "taskId": "TASK-RFT-0063",
+  "action": "close",
+  "actorId": "codex-task-rft-0063",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0063-validate-police-family-final-600.task.md",
+  "taskSha256": "sha256:fb9249ab7bc220b0835d5545f07325bd5eb15f93ec5146051858902b418854d8",
+  "createdAt": "2026-07-16T04:56:31.682Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0063 --actor codex-task-rft-0063"
+}
