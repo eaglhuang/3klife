@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T13-14-55-401Z-close-574035ced227",
+  "taskId": "TASK-RFT-0091",
+  "action": "close",
+  "actorId": "codex-task-rft-0091",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0091-python-language-adapter-map.task.md",
+  "taskSha256": "sha256:384fb05fb4b3b6fd6985755570376195fd7744fe7521dd3f57d86dc6eebfef32",
+  "createdAt": "2026-07-16T13:14:55.401Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0091 --actor codex-task-rft-0091"
+}
