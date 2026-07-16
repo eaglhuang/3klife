@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T12-05-40-227Z-close-be34013b2dca",
+  "taskId": "TASK-RFT-0087",
+  "action": "close",
+  "actorId": "codex-task-rft-0087",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0087-test-runner-report-support-final-600.task.md",
+  "taskSha256": "sha256:c32c8f4092c9a26148a7bde8f91510b0697132721eca23ffd4547e215a5f5777",
+  "createdAt": "2026-07-16T12:05:40.227Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0087 --actor codex-task-rft-0087"
+}
