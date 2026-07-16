@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T07-02-04-726Z-close-0d680e49686e",
+  "taskId": "TASK-RFT-0072",
+  "action": "close",
+  "actorId": "codex-task-rft-0072",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0072-broker-decision-final-600.task.md",
+  "taskSha256": "sha256:9f4505f39a5513d31b14d0ecb6b3d201144ba501ade4cd26661c287f82d48c81",
+  "createdAt": "2026-07-16T07:02:04.726Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0072 --actor codex-task-rft-0072"
+}
