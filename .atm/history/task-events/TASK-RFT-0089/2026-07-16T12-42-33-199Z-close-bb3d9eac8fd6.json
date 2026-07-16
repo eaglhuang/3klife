@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T12-42-33-199Z-close-bb3d9eac8fd6",
+  "taskId": "TASK-RFT-0089",
+  "action": "close",
+  "actorId": "codex-task-rft-0089",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0089-git-commit-task-scoped-staging-test-final-600.task.md",
+  "taskSha256": "sha256:4c5ac18ceac776d6ef07fc14325b62948204c6c019b6c919b814cc248ed33099",
+  "createdAt": "2026-07-16T12:42:33.199Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0089 --actor codex-task-rft-0089"
+}
