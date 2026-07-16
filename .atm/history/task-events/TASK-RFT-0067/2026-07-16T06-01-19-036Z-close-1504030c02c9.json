@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T06-01-19-036Z-close-1504030c02c9",
+  "taskId": "TASK-RFT-0067",
+  "action": "close",
+  "actorId": "codex-task-rft-0067",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0067-git-hooks-enforcement-final-600.task.md",
+  "taskSha256": "sha256:d3a3c5e71dec65f2ca329139f8011acaf3bd9b93a6f35137106552903b34b6ad",
+  "createdAt": "2026-07-16T06:01:19.036Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0067 --actor codex-task-rft-0067"
+}
