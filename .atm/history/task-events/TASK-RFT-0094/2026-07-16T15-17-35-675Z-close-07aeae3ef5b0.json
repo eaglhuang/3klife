@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T15-17-35-675Z-close-07aeae3ef5b0",
+  "taskId": "TASK-RFT-0094",
+  "action": "close",
+  "actorId": "codex-task-rft-0094",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0094-commit-range-guard-map.task.md",
+  "taskSha256": "sha256:843417199d92d30e4090306944c1f3d059f8c17e6fb584e269f5e229cc049d65",
+  "createdAt": "2026-07-16T15:17:35.675Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0094 --actor codex-task-rft-0094"
+}

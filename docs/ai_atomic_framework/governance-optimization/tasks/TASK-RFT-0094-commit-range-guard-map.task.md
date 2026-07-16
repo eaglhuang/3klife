@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0094
 title: Split commit range guard under 600 lines
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on:
@@ -56,6 +56,15 @@ atomizationImpact:
       source: packages/cli/src/commands/hook/commit-range-guard.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-16T15:17:35.675Z"
+completed_by_agent: "codex-task-rft-0094"
+closedAt: "2026-07-16T15:17:35.675Z"
+closedByActor: "codex-task-rft-0094"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T15-17-35-675Z-close-07aeae3ef5b0"
+lastTransitionAt: "2026-07-16T15:17:35.675Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "1deaf304f76dd56db1572b4bc8f8fd7d5bc7adf7"
 ---
 
 # TASK-RFT-0094 - Split Commit Range Guard
