@@ -85,7 +85,11 @@ the Captain initially let the target repository current working directory decide
 where source planning cards should be written. The fix must stay repository
 neutral. Skills should resolve an external governance workbench repository when
 ATM framework work must be planned outside the ATM target ledger, without
-hard-coding any specific workbench repo name.
+hard-coding any specific workbench repo name. Skill changes must be made at the
+source-of-truth template first, then synced to installed skill copies. Editing
+only an installed `.agents/skills/**` or `integrations/**/SKILL.md` copy is not
+sufficient because reinstalling or refreshing the skill pack would overwrite the
+fix.
 
 ## Lane Session Integration Follow-up Cards
 
