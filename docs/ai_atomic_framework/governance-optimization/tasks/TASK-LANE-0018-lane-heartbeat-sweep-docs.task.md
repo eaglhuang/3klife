@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0018
 title: Lane heartbeat sweep analyzer and docs
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on:
@@ -48,6 +48,15 @@ outOfScope:
   - Git commit attribution
 nonGoals:
   - Do not make lane sweep destructive without explicit command-backed evidence.
+completed_at: "2026-07-16T19:13:45.629Z"
+completed_by_agent: "codex-lane-0018"
+closedAt: "2026-07-16T19:13:45.629Z"
+closedByActor: "codex-lane-0018"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T19-13-45-629Z-close-bf1e82123ea7"
+lastTransitionAt: "2026-07-16T19:13:45.629Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "7eaeb3d0deb76e2d6e8c7706de26d67a06e33b74"
 ---
 
 # TASK-LANE-0018 - Lane Heartbeat Sweep Analyzer and Docs
