@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T13-42-22-579Z-close-7d6bbb766632",
+  "taskId": "TASK-RFT-0092",
+  "action": "close",
+  "actorId": "codex-task-rft-0092",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0092-replacement-lane-map.task.md",
+  "taskSha256": "sha256:b26bb938aa023d1c38b456c8ac205e88fce5aac5b4b048eeb9ec3e8ccc07b9b6",
+  "createdAt": "2026-07-16T13:42:22.579Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0092 --actor codex-task-rft-0092"
+}
