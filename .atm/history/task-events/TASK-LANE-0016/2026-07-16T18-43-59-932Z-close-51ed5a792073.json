@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T18-43-59-932Z-close-51ed5a792073",
+  "taskId": "TASK-LANE-0016",
+  "action": "close",
+  "actorId": "codex-lane-0016",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0016-fresh-reservation-lane-key.task.md",
+  "taskSha256": "sha256:810eb4bfb7340aec7084a093b3a70d0e5b6477975c496f125a1884a001d60f1b",
+  "createdAt": "2026-07-16T18:43:59.932Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0016 --actor codex-lane-0016"
+}

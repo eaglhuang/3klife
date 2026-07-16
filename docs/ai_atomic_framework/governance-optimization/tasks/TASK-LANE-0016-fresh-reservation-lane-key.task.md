@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0016
 title: Fresh task reservation lane key
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -41,6 +41,15 @@ outOfScope:
   - Commit attribution
 nonGoals:
   - Do not change task ranking order except for lane ownership identity.
+completed_at: "2026-07-16T18:43:59.932Z"
+completed_by_agent: "codex-lane-0016"
+closedAt: "2026-07-16T18:43:59.932Z"
+closedByActor: "codex-lane-0016"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T18-43-59-932Z-close-51ed5a792073"
+lastTransitionAt: "2026-07-16T18:43:59.932Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b6fbaa27d39e44cec3ca23e16213d625e12c4093"
 ---
 
 # TASK-LANE-0016 - Fresh Task Reservation Lane Key
