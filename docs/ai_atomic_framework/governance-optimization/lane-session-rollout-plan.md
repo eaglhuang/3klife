@@ -80,7 +80,7 @@ dependent task is closed.
 
 ## Follow-up: Planning Authority Skill Gate
 
-`TASK-SKL-0001` records a dogfood failure found while authoring this rollout:
+`TASK-SKL-0013` records a dogfood failure found while authoring this rollout:
 the Captain initially let the target repository current working directory decide
 where source planning cards should be written. The fix must stay repository
 neutral. Skills should resolve an external governance workbench repository when

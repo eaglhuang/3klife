@@ -1,5 +1,5 @@
 ---
-task_id: TASK-SKL-0001
+task_id: TASK-SKL-0013
 title: Add planning authority resolution gate to ATM skills
 status: planned
 owner: atm-skill-maintainer
@@ -43,7 +43,7 @@ atomizationImpact:
       inlineReason: Skill text is the governed source artifact for this rule.
 ---
 
-# TASK-SKL-0001 - Planning Authority Resolution Gate
+# TASK-SKL-0013 - Planning Authority Resolution Gate
 
 ## Context
 
