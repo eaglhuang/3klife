@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T10-23-49-662Z-close-20cec71b9671",
+  "taskId": "TASK-RFT-0081",
+  "action": "close",
+  "actorId": "codex-task-rft-0081",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0081-team-lane-final-600.task.md",
+  "taskSha256": "sha256:e8d883a3d7cc1da79ffceaf220e611641a012ad506f5722ab5021535f88d96b3",
+  "createdAt": "2026-07-16T10:23:49.662Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0081 --actor codex-task-rft-0081"
+}
