@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0003
 title: Taskflow runner-sync closeback lane
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -43,6 +43,15 @@ outOfScope:
   - direct runner build execution inside taskflow close
 nonGoals:
   - Do not make taskflow close silently mutate the runner-sync queue
+completed_at: "2026-07-16T16:44:09.795Z"
+completed_by_agent: "codex-lane-0003"
+closedAt: "2026-07-16T16:44:09.795Z"
+closedByActor: "codex-lane-0003"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T16-44-09-795Z-close-0490788770a9"
+lastTransitionAt: "2026-07-16T16:44:09.795Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f5c1865761557a6f977125ee46a822de89379f66"
 ---
 
 # TASK-LANE-0003 - Taskflow Runner-sync Closeback Lane

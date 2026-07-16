@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T16-44-09-795Z-close-0490788770a9",
+  "taskId": "TASK-LANE-0003",
+  "action": "close",
+  "actorId": "codex-lane-0003",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0003-taskflow-runner-sync-closeback-lane.task.md",
+  "taskSha256": "sha256:9b21b2814d92fa04e6c994a9bc83fd561d49f39b099d1ee22a9a10b43722cdc8",
+  "createdAt": "2026-07-16T16:44:09.795Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0003 --actor codex-lane-0003"
+}
