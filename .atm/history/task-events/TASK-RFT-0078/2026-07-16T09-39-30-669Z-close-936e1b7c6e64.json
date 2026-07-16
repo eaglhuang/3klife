@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T09-39-30-669Z-close-936e1b7c6e64",
+  "taskId": "TASK-RFT-0078",
+  "action": "close",
+  "actorId": "codex-task-rft-0078",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0078-atomization-map-physical-cap.task.md",
+  "taskSha256": "sha256:666cee690c46871930add2426751324145ecb25c7f0f06cc8fb724b9bc8bf06b",
+  "createdAt": "2026-07-16T09:39:30.669Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0078 --actor codex-task-rft-0078"
+}
