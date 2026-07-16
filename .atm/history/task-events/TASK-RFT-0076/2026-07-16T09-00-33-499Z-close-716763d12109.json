@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T09-00-33-499Z-close-716763d12109",
+  "taskId": "TASK-RFT-0076",
+  "action": "close",
+  "actorId": "codex-task-rft-0076",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0076-doctor-command-final-600.task.md",
+  "taskSha256": "sha256:32d118d03f4e01aa3f9e21536dda02ac14163bc4ccc58019cc7378ec5697df78",
+  "createdAt": "2026-07-16T09:00:33.499Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0076 --actor codex-task-rft-0076"
+}
