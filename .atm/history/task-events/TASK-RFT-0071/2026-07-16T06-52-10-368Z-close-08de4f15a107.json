@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T06-52-10-368Z-close-08de4f15a107",
+  "taskId": "TASK-RFT-0071",
+  "action": "close",
+  "actorId": "codex-task-rft-0071",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0071-collect-broker-evidence-final-600.task.md",
+  "taskSha256": "sha256:79ec6c8ee8009f58623b42eaed34169bdcf260551d043d917e2a60d6e0d940bc",
+  "createdAt": "2026-07-16T06:52:10.368Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0071 --actor codex-task-rft-0071"
+}
