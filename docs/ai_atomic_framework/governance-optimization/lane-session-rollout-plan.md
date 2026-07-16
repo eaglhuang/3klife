@@ -86,3 +86,20 @@ where source planning cards should be written. The fix must stay repository
 neutral. Skills should resolve an external governance workbench repository when
 ATM framework work must be planned outside the ATM target ledger, without
 hard-coding any specific workbench repo name.
+
+## Lane Session Integration Follow-up Cards
+
+The foundation cards (`TASK-LANE-0010` and `TASK-LANE-0011`) created the lane
+runtime store, event stream, visible `atm lane` command, and optional CLI result
+envelope. The remaining work migrates ownership checks from actor-only behavior
+to lane-aware behavior while preserving legacy actor fallback.
+
+| Task | Purpose | Primary gate |
+| --- | --- | --- |
+| `TASK-LANE-0012` | Stamp claims, work sessions, and task direction metadata with lane ids. | Claim and task-direction regression tests |
+| `TASK-LANE-0013` | Add lane attribution to governed git commits without reusing work-session ids. | Git governance commit attribution tests |
+| `TASK-LANE-0014` | Implement explicit lane adoption and handoff semantics. | Lane command adoption tests |
+| `TASK-LANE-0015` | Key framework temporary locks by lane when available. | Framework temp-claim tests |
+| `TASK-LANE-0016` | Key fresh task reservation by lane when available. | Next fresh reservation tests |
+| `TASK-LANE-0017` | Make claim conflict, broker lifecycle, and stale-owner diagnostics lane-aware. | Claim admission and broker lifecycle tests |
+| `TASK-LANE-0018` | Add lane heartbeat, sweep, analyzer, and error-code documentation. | Lane lifecycle and error-code validation |
