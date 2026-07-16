@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0095
 title: Split upgrade proposal command under 600 lines
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on:
@@ -53,6 +53,15 @@ atomizationImpact:
       source: packages/cli/src/commands/upgrade/proposal.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-16T15:45:59.596Z"
+completed_by_agent: "codex-task-rft-0095"
+closedAt: "2026-07-16T15:45:59.596Z"
+closedByActor: "codex-task-rft-0095"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T15-45-59-596Z-close-75f30cbb1dbc"
+lastTransitionAt: "2026-07-16T15:45:59.596Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "da400e119fab195ce7420c3f039e238dd4cc2186"
 ---
 
 # TASK-RFT-0095 - Split Upgrade Proposal Command

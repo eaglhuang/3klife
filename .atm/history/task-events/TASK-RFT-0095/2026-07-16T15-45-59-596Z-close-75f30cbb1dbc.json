@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T15-45-59-596Z-close-75f30cbb1dbc",
+  "taskId": "TASK-RFT-0095",
+  "action": "close",
+  "actorId": "codex-task-rft-0095",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0095-upgrade-proposal-map.task.md",
+  "taskSha256": "sha256:d816f7c314c22c4a01624b1b6da22a1429030c0746c94d80f1d9c21b474f04c0",
+  "createdAt": "2026-07-16T15:45:59.596Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0095 --actor codex-task-rft-0095"
+}
