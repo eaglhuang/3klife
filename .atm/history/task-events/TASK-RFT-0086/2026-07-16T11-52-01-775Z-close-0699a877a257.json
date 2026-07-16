@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T11-52-01-775Z-close-0699a877a257",
+  "taskId": "TASK-RFT-0086",
+  "action": "close",
+  "actorId": "codex-task-rft-0086",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0086-registry-lineage-normalization-final-600.task.md",
+  "taskSha256": "sha256:0cbc40666b9c57107df0b48e1d5e959662af685a4688000ecc0ae25f63df4d1d",
+  "createdAt": "2026-07-16T11:52:01.775Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0086 --actor codex-task-rft-0086"
+}
