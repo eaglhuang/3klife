@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T18-00-27-267Z-close-27edcd973eda",
+  "taskId": "TASK-LANE-0013",
+  "action": "close",
+  "actorId": "codex-lane-0013",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0013-commit-lane-attribution.task.md",
+  "taskSha256": "sha256:1e66e45daa6f00821e8b56aa45a56605ad981cdce2567c2b122fa4908825620d",
+  "createdAt": "2026-07-16T18:00:27.267Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0013 --actor codex-lane-0013"
+}

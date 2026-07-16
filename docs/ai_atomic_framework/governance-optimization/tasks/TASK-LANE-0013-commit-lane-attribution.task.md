@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0013
 title: Lane commit attribution
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -41,6 +41,15 @@ outOfScope:
   - Changing git author name or email semantics
 nonGoals:
   - Do not require lane attribution for legacy commits.
+completed_at: "2026-07-16T18:00:27.267Z"
+completed_by_agent: "codex-lane-0013"
+closedAt: "2026-07-16T18:00:27.267Z"
+closedByActor: "codex-lane-0013"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T18-00-27-267Z-close-27edcd973eda"
+lastTransitionAt: "2026-07-16T18:00:27.267Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3cd6ccaf7f6058ddd00aa7340366eee2046dce50"
 ---
 
 # TASK-LANE-0013 - Lane Commit Attribution
