@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T16-25-00-080Z-close-4520c166bde1",
+  "taskId": "TASK-LANE-0002",
+  "action": "close",
+  "actorId": "codex-lane-0002",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0002-runner-sync-health-admission.task.md",
+  "taskSha256": "sha256:7e0706e27d81a2be67c7ca6df340577efe33a31440d0c3a0a257a58a4b6e5440",
+  "createdAt": "2026-07-16T16:25:00.080Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0002 --actor codex-lane-0002"
+}

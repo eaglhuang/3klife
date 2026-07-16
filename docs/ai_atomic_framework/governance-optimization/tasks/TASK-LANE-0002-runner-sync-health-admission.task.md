@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0002
 title: Runner-sync queue health admission
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -40,6 +40,15 @@ outOfScope:
   - broad broker registry refactors
 nonGoals:
   - Do not replace the steward queue model
+completed_at: "2026-07-16T16:25:00.080Z"
+completed_by_agent: "codex-lane-0002"
+closedAt: "2026-07-16T16:25:00.080Z"
+closedByActor: "codex-lane-0002"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T16-25-00-080Z-close-4520c166bde1"
+lastTransitionAt: "2026-07-16T16:25:00.080Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "1f7e50fdf29e9db2e72e8b795ea565c400f203dc"
 ---
 
 # TASK-LANE-0002 - Runner-sync Queue Health Admission
