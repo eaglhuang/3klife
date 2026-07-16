@@ -78,3 +78,11 @@ dependent task is closed.
 - Large or minified modules require extraction-first handling instead of broad
   inline edits.
 
+## Follow-up: Planning Authority Skill Gate
+
+`TASK-SKL-0001` records a dogfood failure found while authoring this rollout:
+the Captain initially let the target repository current working directory decide
+where source planning cards should be written. The fix must stay repository
+neutral. Skills should resolve an external governance workbench repository when
+ATM framework work must be planned outside the ATM target ledger, without
+hard-coding any specific workbench repo name.
