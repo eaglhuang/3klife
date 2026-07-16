@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T18-30-36-563Z-close-3c0aa4adcf7a",
+  "taskId": "TASK-LANE-0015",
+  "action": "close",
+  "actorId": "codex-lane-0015",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0015-framework-temp-lock-lane-key.task.md",
+  "taskSha256": "sha256:7eb9811b0107f6a814cd846e13c4c14a5899fcb7ec2bc5f013ced5392711a075",
+  "createdAt": "2026-07-16T18:30:36.563Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0015 --actor codex-lane-0015"
+}
