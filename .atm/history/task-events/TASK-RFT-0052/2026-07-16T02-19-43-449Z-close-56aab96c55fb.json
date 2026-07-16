@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T02-19-43-449Z-close-56aab96c55fb",
+  "taskId": "TASK-RFT-0052",
+  "action": "close",
+  "actorId": "codex-task-rft-0052",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0052-validate-cli-script-map-final-600.task.md",
+  "taskSha256": "sha256:2d45c4f353ceab7e2515b81523f5846fa0b5fb6fb5d1c1b3d269e64d5147b12b",
+  "createdAt": "2026-07-16T02:19:43.449Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0052 --actor codex-task-rft-0052"
+}
