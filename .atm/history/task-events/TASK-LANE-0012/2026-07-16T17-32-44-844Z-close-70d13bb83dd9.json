@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T17-32-44-844Z-close-70d13bb83dd9",
+  "taskId": "TASK-LANE-0012",
+  "action": "close",
+  "actorId": "codex-lane-0012",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0012-claim-stamping-direction-metadata.task.md",
+  "taskSha256": "sha256:b48467a80ef13ad332226c457655e456ef5cef93d1aa3df19ff670feca72a4b1",
+  "createdAt": "2026-07-16T17:32:44.844Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0012 --actor codex-lane-0012"
+}

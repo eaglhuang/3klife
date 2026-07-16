@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0012
 title: Lane claim stamping and direction metadata
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -58,6 +58,15 @@ outOfScope:
 nonGoals:
   - Do not migrate historical legacy task records.
   - Do not remove actor id from claim records.
+completed_at: "2026-07-16T17:32:44.844Z"
+completed_by_agent: "codex-lane-0012"
+closedAt: "2026-07-16T17:32:44.844Z"
+closedByActor: "codex-lane-0012"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T17-32-44-844Z-close-70d13bb83dd9"
+lastTransitionAt: "2026-07-16T17:32:44.844Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "5a4bc4d472bb9d773406e59082740cb884b449ac"
 ---
 
 # TASK-LANE-0012 - Lane Claim Stamping and Direction Metadata
