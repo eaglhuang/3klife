@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T04-44-23-067Z-close-e33e642f0f5f",
+  "taskId": "TASK-RFT-0062",
+  "action": "close",
+  "actorId": "codex-task-rft-0062",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0062-validate-prompt-scoped-next-final-600.task.md",
+  "taskSha256": "sha256:19e2caf17deb41eb0ee4e4faeeaeb495296f7dfb72fa63a33153062f5e9753c6",
+  "createdAt": "2026-07-16T04:44:23.067Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0062 --actor codex-task-rft-0062"
+}
