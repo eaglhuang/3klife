@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0010
 title: Lane session store and event stream
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -39,6 +39,15 @@ outOfScope:
   - commit attribution
 nonGoals:
   - Do not modify actor work session schema for this foundation card
+completed_at: "2026-07-16T16:50:52.812Z"
+completed_by_agent: "codex-lane-0010-takeover"
+closedAt: "2026-07-16T16:50:52.812Z"
+closedByActor: "codex-lane-0010-takeover"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T16-50-52-812Z-close-b644ae17d76a"
+lastTransitionAt: "2026-07-16T16:50:52.812Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "02b3959e4159bc3a32c494233fc452df8918d808"
 ---
 
 # TASK-LANE-0010 - Lane Session Store and Event Stream

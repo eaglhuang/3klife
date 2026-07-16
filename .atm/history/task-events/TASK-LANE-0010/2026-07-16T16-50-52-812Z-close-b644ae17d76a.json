@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T16-50-52-812Z-close-b644ae17d76a",
+  "taskId": "TASK-LANE-0010",
+  "action": "close",
+  "actorId": "codex-lane-0010-takeover",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0010-lane-session-store-events.task.md",
+  "taskSha256": "sha256:c68f24160cb4a2bdab2e13ffe93c29e88515fe3ad6db85f45de5aac0ad533213",
+  "createdAt": "2026-07-16T16:50:52.812Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0010 --actor codex-lane-0010-takeover"
+}
