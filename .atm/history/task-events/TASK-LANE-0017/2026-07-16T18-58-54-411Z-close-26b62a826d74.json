@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T18-58-54-411Z-close-26b62a826d74",
+  "taskId": "TASK-LANE-0017",
+  "action": "close",
+  "actorId": "codex-lane-0017",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0017-lane-aware-conflict-broker-lifecycle.task.md",
+  "taskSha256": "sha256:c36309ade946e620295a02d96fe49f46c46a3ccfeab3b852c75a988a461f99af",
+  "createdAt": "2026-07-16T18:58:54.411Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0017 --actor codex-lane-0017"
+}

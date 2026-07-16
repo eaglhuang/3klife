@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0017
 title: Lane-aware claim conflict and broker lifecycle
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -50,6 +50,15 @@ outOfScope:
   - Framework temp lock keying
 nonGoals:
   - Do not bypass broker conflict blocked decisions.
+completed_at: "2026-07-16T18:58:54.411Z"
+completed_by_agent: "codex-lane-0017"
+closedAt: "2026-07-16T18:58:54.411Z"
+closedByActor: "codex-lane-0017"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-16T18-58-54-411Z-close-26b62a826d74"
+lastTransitionAt: "2026-07-16T18:58:54.411Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "eced74c7530f0be34f7d4772f7b190096c9325c6"
 ---
 
 # TASK-LANE-0017 - Lane-aware Claim Conflict and Broker Lifecycle
