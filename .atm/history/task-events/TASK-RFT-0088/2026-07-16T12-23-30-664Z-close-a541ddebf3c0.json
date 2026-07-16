@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T12-23-30-664Z-close-a541ddebf3c0",
+  "taskId": "TASK-RFT-0088",
+  "action": "close",
+  "actorId": "codex-task-rft-0088",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0088-map-generator-support-final-600.task.md",
+  "taskSha256": "sha256:01935106b7d5c6d88b6bde63a12a6af0dc0e9f3508fd8131f7b7d417cf6b5d7b",
+  "createdAt": "2026-07-16T12:23:30.664Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0088 --actor codex-task-rft-0088"
+}
