@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-16T06-14-10-529Z-close-c4610b3be1cd",
+  "taskId": "TASK-RFT-0068",
+  "action": "close",
+  "actorId": "codex-task-rft-0068",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0068-cli-route-command-final-600.task.md",
+  "taskSha256": "sha256:689d4a2c8902f2befbe5f8d8f7ac83ab8b833bfbb66c33ad4d4827acc1ebab56",
+  "createdAt": "2026-07-16T06:14:10.529Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0068 --actor codex-task-rft-0068"
+}
