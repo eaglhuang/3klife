@@ -1,0 +1,80 @@
+---
+task_id: TASK-RFT-0094
+title: Split commit range guard under 600 lines
+status: planned
+owner: atm-release
+priority: P0
+depends_on:
+  - TASK-RFT-0093
+related_plan: docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0094-commit-range-guard-map.task.md
+planning_repo: 3KLife
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
+scopePaths:
+  - packages/cli/src/commands/hook/commit-range-guard.ts
+  - packages/cli/src/commands/hook/commit-range-guard/**
+  - packages/cli/src/commands/hook/pre-commit/**
+  - scripts/validate-hook-atomic-map.ts
+  - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json
+  - atomic_workbench/atomization-coverage/path-to-atom-map.json
+deliverables:
+  - packages/cli/src/commands/hook/commit-range-guard.ts
+  - packages/cli/src/commands/hook/commit-range-guard/**
+  - scripts/validate-hook-atomic-map.ts
+  - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json
+  - atomic_workbench/atomization-coverage/path-to-atom-map.json
+validators:
+  - node atm.mjs candidates rank --include "pipelines/**/*.py" --goal "Split packages/cli/src/commands/hook/commit-range-guard.ts into a facade plus focused support modules; every physical TypeScript source file must stay below 600 lines; preserve behavior and ATM evidence." --json
+  - node atm.mjs upgrade --propose --behavior behavior.split --atom atom-cli-hook-commit-range-guard --to 0.1.1 --legacy-target "packages/cli/src/commands/hook/commit-range-guard.ts#createCommitRangeGuardReport" --guidance-session guidance-20260716141346-edea9cc65a --dry-run --json
+  - node --strip-types scripts/validate-hook-atomic-map.ts --mode validate
+  - node --strip-types packages/cli/src/commands/hook/__tests__/commit-range-guard.spec.ts
+  - node atomic_workbench/atomization-coverage/path-to-atom-map-shards/merge.js . validate
+  - npm run typecheck
+  - npm run validate:cli
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+atomizationImpact:
+  ownerAtomOrMap: atom-cli-hook-commit-range-guard
+  mapUpdates:
+    - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json
+    - atomic_workbench/atomization-coverage/path-to-atom-map.json
+  extractionCandidates:
+    - atom: atom-cli-hook-commit-range-guard
+      pattern: Facade
+      source: packages/cli/src/commands/hook/commit-range-guard.ts
+      disposition: extract
+      inlineReason: null
+    - atom: atom-cli-hook-commit-range-report-contract
+      pattern: Result Contract Object
+      source: packages/cli/src/commands/hook/commit-range-guard.ts
+      disposition: extract
+      inlineReason: null
+    - atom: atom-cli-hook-commit-evidence-matcher
+      pattern: Policy Object
+      source: packages/cli/src/commands/hook/commit-range-guard.ts
+      disposition: extract
+      inlineReason: null
+---
+
+# TASK-RFT-0094 - Split Commit Range Guard
+
+## Objective
+
+Reduce `packages/cli/src/commands/hook/commit-range-guard.ts` below 600 physical lines by preserving it as the public commit-range guard facade while extracting commit range report contracts, evidence matching, closure packet inspection, baseline handling, and git helper logic into bounded support modules.
+
+## Acceptance
+
+- `packages/cli/src/commands/hook/commit-range-guard.ts` is below 600 physical lines.
+- Every newly created physical TypeScript file is below 600 physical lines.
+- Existing imports remain compatible for `createCommitRangeGuardReport`, `parseCommitRangeArgs`, `readFrameworkCommitRangeBaseline`, `readGitObjectText`, `readStagedTreeWithoutEvidence`, `readCurrentHeadForFutureCommit`, `readJsonText`, and `normalizeOptionalText`.
+- Commit-range behavior remains deterministic for protected push checks, closure packet validation, git-head evidence matching, legacy baseline filtering, and task audit findings.
+- The path-to-atom owner shard maps both the facade and extracted support modules to `atom-cli-hook-commit-range-guard`.
+- Validation evidence is command-backed, including the guided `behavior.split` dry-run proposal.
+
+## Notes
+
+- Do not touch the active TASK-CODEX-0204 backlog/projection scope.
+- Do not widen into pre-push or pre-commit behavior except for import path compatibility required by extracted helper modules.
+- Candidate ranking currently reports zero candidates for the guided `pipelines/**/*.py` include; keep that as ATM route evidence and rely on focused hook validators for TS behavior.
