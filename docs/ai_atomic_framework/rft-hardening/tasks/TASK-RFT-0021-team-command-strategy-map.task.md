@@ -2,7 +2,7 @@
 doc_id: doc_rft_0021
 task_id: TASK-RFT-0021
 title: "team.ts route and execution strategy map extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: RFT-M7
@@ -11,6 +11,10 @@ related_plan: docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-re
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+closed_at: "2026-07-13T17:31:17.248Z"
+closed_by: "Codex-GPT 5.5"
+target_ledger_status: done
+planning_closeback_status: reconciled-from-target-ledger
 scopePaths:
   - "packages/cli/src/commands/team.ts"
   - "packages/cli/src/commands/team/**"
@@ -68,3 +72,9 @@ acceptance:
 Extract a bounded strategy map from the largest current CLI command file,
 preserving the existing Team Agents command behavior while making the route and
 execution lanes separately testable.
+
+## Planning Closeback
+
+2026-07-17 planning-side cleanup: target ledger already records this card as
+`done`, closed at `2026-07-13T17:31:17.248Z` by `Codex-GPT 5.5`. The planning
+source card is reconciled to prevent duplicate implementation dispatch.

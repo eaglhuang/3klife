@@ -2,7 +2,7 @@
 doc_id: doc_rft_0024
 task_id: TASK-RFT-0024
 title: "tasks legacy implementation compatibility facade split"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M7
@@ -11,6 +11,10 @@ related_plan: docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-re
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+closed_at: "2026-07-13T18:11:21.047Z"
+closed_by: "Codex-GPT 5.5"
+target_ledger_status: done
+planning_closeback_status: reconciled-from-target-ledger
 scopePaths:
   - "packages/cli/src/commands/tasks/legacy-impl.ts"
   - "packages/cli/src/commands/tasks/legacy/**"
@@ -73,3 +77,9 @@ acceptance:
 
 Extract compatibility routing from `tasks/legacy-impl.ts` while keeping the
 already-recovered `tasks.ts` facade intact.
+
+## Planning Closeback
+
+2026-07-17 planning-side cleanup: target ledger already records this card as
+`done`, closed at `2026-07-13T18:11:21.047Z` by `Codex-GPT 5.5`. The planning
+source card is reconciled to prevent duplicate implementation dispatch.

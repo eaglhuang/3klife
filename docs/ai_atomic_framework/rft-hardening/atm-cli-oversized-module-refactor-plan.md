@@ -454,8 +454,8 @@ second-path manual cleanup conventions.
 ## 2026-07-14 RFT second-wave oversized-module queue
 
 All original `TASK-RFT-0001..0019` cards are closed in the ATM framework
-ledger. The next wave targets residual oversized modules in
-`AI-Atomic-Framework` and keeps this repository as the planning source only.
+ledger. The second wave targeted residual oversized modules in
+`AI-Atomic-Framework` and kept this repository as the planning source only.
 
 Execution rules for this wave:
 
@@ -480,13 +480,18 @@ Execution rules for this wave:
   module extraction must be recorded in the source skill learning reference,
   preferably `.agents/skills/atm-atom-map-refactor/references/casebook.md`.
 
-Queue order:
+Queue closeback:
 
-| Task | Primary module | Reason | Pattern |
+| Task | Primary module | Pattern | Planning status |
 |---|---|---|---|
-| `TASK-RFT-0020` | `packages/cli/src/commands/git-governance.ts` | Highest active defect pressure: foreign staged files, release mirror residue, and governed commit bundle safety. | Policy Object + Result Contract Object |
-| `TASK-RFT-0021` | `packages/cli/src/commands/team.ts` | Largest CLI command file and central Team Agents execution surface. | Strategy Map |
-| `TASK-RFT-0022` | `packages/cli/src/commands/next.ts` | Still oversized after first RFT extraction; core route assembly remains high-blast-radius. | Strategy Map + Result Contract Object |
-| `TASK-RFT-0023` | `scripts/validate-team-agents.ts` | Validator mega-script makes Team Agents regressions difficult to localize. | Validator Suite Map |
-| `TASK-RFT-0024` | `packages/cli/src/commands/tasks/legacy-impl.ts` | Compatibility lane remains large after `tasks.ts` facade recovery. | Facade + Strategy Map |
-| `TASK-RFT-0025` | `packages/cli/src/commands/framework-development/closure-packet-schema.ts` | Schema/diagnostic contract is large enough to hide unintended public-surface drift. | Result Contract Object |
+| `TASK-RFT-0020` | `packages/cli/src/commands/git-governance.ts` | Policy Object + Result Contract Object | done; target ledger closed 2026-07-13 |
+| `TASK-RFT-0021` | `packages/cli/src/commands/team.ts` | Strategy Map | done; target ledger closed 2026-07-13 |
+| `TASK-RFT-0022` | `packages/cli/src/commands/next.ts` | Strategy Map + Result Contract Object | done; target ledger closed 2026-07-13 |
+| `TASK-RFT-0023` | `scripts/validate-team-agents.ts` | Validator Suite Map | done; target ledger closed 2026-07-13 |
+| `TASK-RFT-0024` | `packages/cli/src/commands/tasks/legacy-impl.ts` | Facade + Strategy Map | done; target ledger closed 2026-07-13 |
+| `TASK-RFT-0025` | `packages/cli/src/commands/framework-development/closure-packet-schema.ts` | Result Contract Object | done; target ledger closed 2026-07-13 |
+
+2026-07-17 planning-side cleanup reconciled the source cards to the target
+ledger so 3KLife no longer presents this wave as unfinished implementation
+work. Future RFT work should start from a new card based on current target file
+measurements.

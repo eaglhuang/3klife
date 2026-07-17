@@ -45,6 +45,12 @@ Post-delivery facade sizes are measured in `AI-Atomic-Framework` on 2026-07-10.
 | [TASK-RFT-0017](./TASK-RFT-0017-tasks-claim-lifecycle-orchestrator.task.md) | `packages/cli/src/commands/tasks.ts` | claim lifecycle atoms delivered | Claim lifecycle + claim preparation atoms + Facade | done |
 | [TASK-RFT-0018](./TASK-RFT-0018-tasks-reconcile-repair-deliver-close.task.md) | `packages/cli/src/commands/tasks.ts` | reconcile / repair / deliver-close atoms delivered | Reconcile / repair / deliver-close orchestrators + Facade | done |
 | [TASK-RFT-0019](./TASK-RFT-0019-tasks-card-parser-scope-queue-final-facade.task.md) | `packages/cli/src/commands/tasks.ts` | card parser + scope/queue + final facade delivered | Card parser + scope/queue atoms + final Facade | done |
+| [TASK-RFT-0020](./TASK-RFT-0020-git-governance-commit-scope-policy-map.task.md) | `packages/cli/src/commands/git-governance.ts` | target ledger closed 2026-07-13 | Policy Object + Result Contract Object | done |
+| [TASK-RFT-0021](./TASK-RFT-0021-team-command-strategy-map.task.md) | `packages/cli/src/commands/team.ts` | target ledger closed 2026-07-13 | Strategy Map | done |
+| [TASK-RFT-0022](./TASK-RFT-0022-next-action-assembly-map.task.md) | `packages/cli/src/commands/next.ts` | target ledger closed 2026-07-13 | Result Contract Object + follow-up Strategy Map | done |
+| [TASK-RFT-0023](./TASK-RFT-0023-team-agents-validator-suite-map.task.md) | `scripts/validate-team-agents.ts` | target ledger closed 2026-07-13 | Validator Suite Map | done |
+| [TASK-RFT-0024](./TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md) | `packages/cli/src/commands/tasks/legacy-impl.ts` | target ledger closed 2026-07-13 | Facade + Strategy Map | done |
+| [TASK-RFT-0025](./TASK-RFT-0025-closure-packet-schema-fragment-map.task.md) | `packages/cli/src/commands/framework-development/closure-packet-schema.ts` | target ledger closed 2026-07-13 | Result Contract Object | done |
 
 ## 2026-07-10 delivery wave (0002 / 0007 / 0004 / 0006 / 0005)
 
@@ -90,13 +96,11 @@ gaps in ATM's operator governance.
 | [TASK-AAO-0155](./TASK-AAO-0155-next-active-task-divergence-guard.task.md) | `next --prompt` active-task divergence guard | Prevent new bug prompts from being silently attached to the wrong active task. | done |
 | [TASK-AAO-0156](./TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md) | `.atm` history + staged-ownership fencing | Block weak-agent self-cleanup of protected ATM history and another lane's staged evidence. | done |
 
-## Uncovered Follow-up Pressure
+## Latest RFT Closeback Snapshot (2026-07-17)
 
-These files are still above several planned RFT targets:
+The second-wave cards `TASK-RFT-0020` through `TASK-RFT-0025` are reconciled
+from the target ATM framework ledger. They should not be redispatched as
+unfinished implementation work from the planning repository.
 
-1. `packages/cli/src/commands/next.ts` -> ~4,958 lines (residual after 0001)
-2. `packages/cli/src/commands/team.ts` -> 2,966 lines
-3. `packages/cli/src/commands/framework-development/closure-packet-schema.ts` -> 2,879 lines
-4. `packages/cli/src/commands/git-governance.ts` -> 1,822 lines
-
-Any next RFT expansion should prefer these uncovered surfaces rather than reopening closed facade cards.
+Any next RFT expansion should open new follow-up cards against current target
+file measurements rather than reopening closed facade cards.

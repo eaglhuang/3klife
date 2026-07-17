@@ -2,7 +2,7 @@
 doc_id: doc_rft_0023
 task_id: TASK-RFT-0023
 title: "validate-team-agents.ts validator suite map extraction"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: RFT-M7
@@ -11,6 +11,10 @@ related_plan: docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-re
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+closed_at: "2026-07-13T17:59:25.822Z"
+closed_by: "Codex-GPT 5.5"
+target_ledger_status: done
+planning_closeback_status: reconciled-from-target-ledger
 scopePaths:
   - "scripts/validate-team-agents.ts"
   - "scripts/validators/team-agents/**"
@@ -63,3 +67,9 @@ acceptance:
 Split the Team Agents mega-validator into scenario, fixture, assertion, and
 reporting atoms so failures are cheaper to localize and future Team Agent
 experiments can measure real validator coverage.
+
+## Planning Closeback
+
+2026-07-17 planning-side cleanup: target ledger already records this card as
+`done`, closed at `2026-07-13T17:59:25.822Z` by `Codex-GPT 5.5`. The planning
+source card is reconciled to prevent duplicate implementation dispatch.
