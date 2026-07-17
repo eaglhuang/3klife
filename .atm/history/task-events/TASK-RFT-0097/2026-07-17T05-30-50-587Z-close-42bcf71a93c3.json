@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-17T05-30-50-587Z-close-42bcf71a93c3",
+  "taskId": "TASK-RFT-0097",
+  "action": "close",
+  "actorId": "codex-task-rft-0097",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0097-global-physical-line-budget-gate.task.md",
+  "taskSha256": "sha256:8f08a768a3659144b2d97d9425a5f7863975c0407ab7d5e50f21059394068044",
+  "createdAt": "2026-07-17T05:30:50.587Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0097 --actor codex-task-rft-0097"
+}
