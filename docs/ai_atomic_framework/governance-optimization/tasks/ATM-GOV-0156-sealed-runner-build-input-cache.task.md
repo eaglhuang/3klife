@@ -122,6 +122,65 @@ npm run typecheck
 node atm.mjs doctor --json
 ```
 
+## Implementation Blueprint
+
+Current target-repo status as of 2026-07-17T13:17:33+08:00:
+
+- `ATM-GOV-0156` has been imported into the target repo, but claim is blocked by
+  dependency `ATM-GOV-0155`.
+- `ATM-GOV-0155` is released/open. Its historical delivery is
+  `1f3ede5115524ed5a27b6f08662ed7f33a1d3ef1`, but closeback still requires
+  command-backed validators.
+- Runner-sync build validation is currently blocked by active foreign WIP from
+  `TASK-RFT-0097`; ATM reports a valid active claim owned by
+  `codex-task-rft-0097`, so agents must not repair, revert, stash, or commit
+  those files from this lane.
+
+Planned target implementation once the target worktree is clear and
+`ATM-GOV-0156` can be claimed:
+
+1. In `scripts/run-sealed-runner-build.ts`, add pure helpers for:
+   - resolving the sealed source SHA;
+   - resolving tracked build-input object IDs from the sealed commit;
+   - hashing a deterministic list of `path<TAB>object-id` entries into
+     `sha256:<digest>`;
+   - reading/writing release manifest metadata;
+   - collecting phase timings with a monotonic clock.
+2. Treat the tracked build-input set as a small policy object in the build
+   script. It must include at least the paths listed in Required Behavior and
+   must exclude `.atm/history/**`, `.atm/runtime/**`, release output, and other
+   ledger-only state.
+3. Before creating the detached worktree, compute `buildInputsTreeHash` from
+   `HEAD:<input-path>` object IDs. Fail closed if a required input cannot be
+   resolved.
+4. Read both release manifests. A cache-hit skip is allowed only when:
+   - both manifests exist and parse;
+   - both record the same `buildInputsTreeHash` as the current sealed commit;
+   - release artifact roots have no tracked or untracked dirty output relative
+     to HEAD;
+   - all generated files listed by both manifests still exist.
+5. On cache hit, do not create a sealed worktree and do not run TypeScript,
+   root-drop, or onefile assembly. Update only manifest metadata that binds the
+   release to the new sealed source SHA, including:
+   - `sealedSourceSha`;
+   - `buildInputsTreeHash`;
+   - `buildDecision: "cache-hit-skip"`;
+   - `buildPhaseTimingsMs`.
+6. On cache miss, preserve the existing sealed worktree path:
+   worktree add -> link node_modules -> inner build -> sync artifacts ->
+   cleanup. After sync, patch both copied manifests with:
+   - `sealedSourceSha`;
+   - `buildInputsTreeHash`;
+   - `buildDecision: "cache-miss-build"` or `"built"`;
+   - `buildPhaseTimingsMs`.
+7. Keep root-drop and onefile manifest producers deterministic. If practical,
+   let the outer sealed build script patch build-run metadata after artifact
+   sync instead of making inner release assembly depend on local runtime state.
+8. Add `tests/cli/sealed-runner-build-input-cache.test.ts` as a pure-helper
+   regression test. Cover unchanged input hash cache hit, source-path hash
+   change cache miss, missing generated file fail-closed, and manifest metadata
+   shape. Avoid requiring a full sealed build inside this focused test.
+
 ## Follow-Up Candidates
 
 - Persistent sealed worktree with verified clean checkout and reusable
@@ -129,4 +188,3 @@ node atm.mjs doctor --json
 - Differential artifact sync for release directories.
 - Batch checkpoint build-window coalescing so one wave can share a smaller
   number of real builds.
-
