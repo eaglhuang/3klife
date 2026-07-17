@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0013
 title: Add planning authority resolution gate to ATM skills
-status: planned
+status: done
 owner: atm-skill-maintainer
 priority: P0
 depends_on: []
@@ -41,6 +41,15 @@ atomizationImpact:
       source: templates/skills/atm-dispatch.skill.md
       disposition: inline
       inlineReason: Skill text is the governed source artifact for this rule.
+completed_at: "2026-07-17T02:02:57.072Z"
+completed_by_agent: "codex-skl-0013"
+closedAt: "2026-07-17T02:02:57.072Z"
+closedByActor: "codex-skl-0013"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-17T02-02-57-072Z-close-923c4afaffbb"
+lastTransitionAt: "2026-07-17T02:02:57.072Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a9a3ca293a001ea63f55e31c9ac132f7a730737f"
 ---
 
 # TASK-SKL-0013 - Planning Authority Resolution Gate

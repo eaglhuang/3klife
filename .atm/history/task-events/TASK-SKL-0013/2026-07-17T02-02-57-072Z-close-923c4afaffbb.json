@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-17T02-02-57-072Z-close-923c4afaffbb",
+  "taskId": "TASK-SKL-0013",
+  "action": "close",
+  "actorId": "codex-skl-0013",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-SKL-0013-planning-authority-resolution-gate.task.md",
+  "taskSha256": "sha256:e6428d2d85ffab8775dbed8f055c66037996f5a29f97e708c45d875d7ea79c70",
+  "createdAt": "2026-07-17T02:02:57.072Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0013 --actor codex-skl-0013"
+}
