@@ -12,6 +12,13 @@ related_skill: .agents/skills/atm-atom-map-refactor
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+closed_at: "2026-06-14T13:30:33.648Z"
+closed_by: "captain-teamagents"
+closedByCommand: atm tasks close
+lastTransitionAt: "2026-06-14T13:30:33.648Z"
+delivery_commit: "56413eea628c5078675aa877e052f474143d5729"
+target_ledger_status: done
+planning_closeback_status: reconciled-from-target-ledger
 planning_refresh_at: "2026-06-19"
 planning_refresh_reason: "Close validation speed is now the primary objective. Production taskflow.ts main-body size reduction moved to TASK-RFT-0009."
 previous_delivery_commit: "56413eea628c5078675aa877e052f474143d5729"

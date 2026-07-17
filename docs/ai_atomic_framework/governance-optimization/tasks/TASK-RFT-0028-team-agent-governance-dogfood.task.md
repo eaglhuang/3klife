@@ -11,6 +11,13 @@ related_plan: docs/ai_atomic_framework/governance-optimization/ATM治理流程�
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+closed_at: "2026-07-14T17:14:36.231Z"
+closed_by: "codex-gpt-5-5-captain"
+closedByCommand: atm tasks close
+lastTransitionAt: "2026-07-14T17:14:36.231Z"
+delivery_commit: "870307c1b9abd6a1064d89e12fc8fc3bd76b5afa"
+target_ledger_status: done
+planning_closeback_status: reconciled-from-target-ledger
 scopePaths:
   - "tests/cli/team-agents-dogfood.test.ts"
   - "docs/governance/atm-bug-and-optimization-backlog.md"

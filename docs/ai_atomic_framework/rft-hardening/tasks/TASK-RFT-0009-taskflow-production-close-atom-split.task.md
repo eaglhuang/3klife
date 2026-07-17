@@ -13,6 +13,13 @@ related_skill: .agents/skills/atm-atom-map-refactor
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+closed_at: "2026-06-20T03:43:30.190Z"
+closed_by: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionAt: "2026-06-20T03:43:30.190Z"
+delivery_commit: "d1a8212bd5d6e987bf4d4614bfe92bd4373a27ed"
+target_ledger_status: done
+planning_closeback_status: reconciled-from-target-ledger
 scopePaths:
   - "packages/cli/src/commands/taskflow.ts"
   - "packages/cli/src/commands/taskflow/close-preflight.ts"

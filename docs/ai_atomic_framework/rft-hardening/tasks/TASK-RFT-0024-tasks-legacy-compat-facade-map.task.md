@@ -13,6 +13,9 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 closed_at: "2026-07-13T18:11:21.047Z"
 closed_by: "Codex-GPT 5.5"
+closedByCommand: atm tasks close
+lastTransitionAt: "2026-07-13T18:11:21.047Z"
+delivery_commit: "648ea16c0773daf995cafd9e28f66ed1d369dc13"
 target_ledger_status: done
 planning_closeback_status: reconciled-from-target-ledger
 scopePaths:
