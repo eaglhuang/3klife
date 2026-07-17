@@ -107,3 +107,23 @@ to lane-aware behavior while preserving legacy actor fallback.
 | `TASK-LANE-0016` | Key fresh task reservation by lane when available. | Next fresh reservation tests |
 | `TASK-LANE-0017` | Make claim conflict, broker lifecycle, and stale-owner diagnostics lane-aware. | Claim admission and broker lifecycle tests |
 | `TASK-LANE-0018` | Add lane heartbeat, sweep, analyzer, and error-code documentation. | Lane lifecycle and error-code validation |
+| `TASK-LANE-0019` | Persist append-only lane session events and connect them to the parallel ledger analyzer. | Analyzer reports `maxConcurrency >= 2` from lane evidence |
+| `TASK-LANE-0020` | Adjudicate the cross-lane `repair-claim` on `TASK-CODEX-0204` and capture guard/backlog follow-up if it was unsafe. | Repair-claim adjudication report |
+
+## Follow-up: First Real Parallel Evidence
+
+The first Lane Session dogfood wave produced hard-overlap evidence that was not
+available in earlier ledger mining. While `TASK-CODEX-0204` was still in an
+active claim window, lane actors completed `TASK-LANE-0001`, `TASK-LANE-0002`,
+`TASK-LANE-0003`, and `TASK-LANE-0010`. The sample proves real task-level
+parallelism with `maxConcurrency = 2`, but the proof currently depends on task
+claim windows plus git attribution rather than an append-only lane event
+history.
+
+Two follow-up cards preserve that evidence path:
+
+- `TASK-LANE-0019` turns lane runtime snapshots into durable event evidence and
+  teaches the analyzer to report the overlap automatically.
+- `TASK-LANE-0020` reviews the `2026-07-16T16:52:32Z` repair claim against
+  `TASK-CODEX-0204` to decide whether it was a valid orphan repair or the first
+  recorded cross-lane interference incident.
