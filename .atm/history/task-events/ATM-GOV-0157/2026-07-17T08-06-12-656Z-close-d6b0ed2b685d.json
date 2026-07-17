@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-17T08-06-12-656Z-close-d6b0ed2b685d",
+  "taskId": "ATM-GOV-0157",
+  "action": "close",
+  "actorId": "codex-gov-0157",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0157-ledger-import-tier1-admission.task.md",
+  "taskSha256": "sha256:797b43bb5984f010489bca2833dd8db7a18627ea95964d4af89d10a64bb4cfcc",
+  "createdAt": "2026-07-17T08:06:12.656Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0157 --actor codex-gov-0157"
+}

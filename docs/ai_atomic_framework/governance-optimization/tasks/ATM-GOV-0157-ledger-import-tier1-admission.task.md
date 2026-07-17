@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0157
 title: Classify task import force writes as Tier 1 ledger ingestion
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on: []
@@ -42,6 +42,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/import-orchestrator.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-17T08:06:12.656Z"
+completed_by_agent: "codex-gov-0157"
+closedAt: "2026-07-17T08:06:12.656Z"
+closedByActor: "codex-gov-0157"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-17T08-06-12-656Z-close-d6b0ed2b685d"
+lastTransitionAt: "2026-07-17T08:06:12.656Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "18eac650ee471810813380429064ba4db83f37c2"
 ---
 
 # ATM-GOV-0157 - Classify task import force writes as Tier 1 ledger ingestion
