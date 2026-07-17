@@ -632,7 +632,7 @@ New card:
 
 - `TASK-RFT-0097` establishes the global physical-line-budget gate and closes the current residual hard violations so the invariant starts from zero.
 
-Candidate follow-ups, not opened task cards until a scoped card is authored/imported:
+Opened follow-up cards:
 
 - `TASK-RFT-0098`: touched-file physical-line admission at claim, pre-close, and commit.
 - `TASK-RFT-0099`: semantic atomization metrics for RFT gate evidence.
