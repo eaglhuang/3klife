@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-17T08-21-45-374Z-close-0196086dfd61",
+  "taskId": "TASK-LANE-0020",
+  "action": "close",
+  "actorId": "codex-lane-0020",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0020-cross-lane-repair-claim-adjudication.task.md",
+  "taskSha256": "sha256:1c9251c466e7e2f2c806463326b64718a24d0815d24953cb919d5ef121aa3cd0",
+  "createdAt": "2026-07-17T08:21:45.374Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0020 --actor codex-lane-0020"
+}

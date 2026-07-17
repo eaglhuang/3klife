@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0020
 title: Adjudicate cross-lane repair-claim on TASK-CODEX-0204
-status: planned
+status: done
 owner: atm-lane-session
 priority: P0
 depends_on:
@@ -49,6 +49,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/claim-orchestrator.ts
       disposition: follow-up-card
       inlineReason: null
+completed_at: "2026-07-17T08:21:45.374Z"
+completed_by_agent: "codex-lane-0020"
+closedAt: "2026-07-17T08:21:45.374Z"
+closedByActor: "codex-lane-0020"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-17T08-21-45-374Z-close-0196086dfd61"
+lastTransitionAt: "2026-07-17T08:21:45.374Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0c9de529bb57d91944b3832d5b55b616acf779d0"
 ---
 
 # TASK-LANE-0020 - Cross-Lane Repair-Claim Adjudication
