@@ -144,7 +144,7 @@ Captain、worker、reviewer、validator 是能力角色，不要求一角一個�
 
 ### 2.5 RFT 現況
 
-`TASK-RFT-0020..0025` 六卡的程式交付已完成，新增的 25 個 TypeScript 檔都低於 600 行，最高 243 行。但六卡全部發生 `repair-closure`，而 `0020`、`0021`、`0024` 的 durable direction lock 仍為 active。因此可宣稱「拆分交付完成」，不可宣稱「closeout 已乾淨且可重播」。
+`TASK-RFT-0020..0025` 六卡的程式交付與 target-ledger closeout 均已完成，新增 TypeScript 檔維持 600 行內。2026-07-17 planning cleanup 已將 planning cards 補齊 closeback metadata 與 delivery commit；後續不得把這六卡重新派工，若仍有 durable-lock 或 replay 類問題，應另開治理修復卡。
 
 ### 2.6 目前優先原子化候選
 

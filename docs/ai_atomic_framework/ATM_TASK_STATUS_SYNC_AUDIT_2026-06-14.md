@@ -76,13 +76,12 @@ Sidecar summary:
 
 Decision:
 
-- Keep `TASK-RFT-0001` through `TASK-RFT-0008` as Markdown-only `planned` until a specific RFT task is selected.
-- Before any RFT implementation, run `node atm.mjs tasks import --from <card> --write --json` if ATM requires import, then route/claim with `node atm.mjs next --claim ...`.
-- For the current Captain sequence, `TASK-RFT-0008` is the first planned RFT insertion, but write/claim should wait until `TASK-TEAM-0004` closes unless Captain explicitly opens the RFT interleave window.
+- Historical note: this 2026-06-14 audit predated the later RFT closeout wave. As of the 2026-07-17 RFT cleanup, `TASK-RFT-0001` through `TASK-RFT-0008` are closed in the target ledger and their planning cards are reconciled.
+- Before any new RFT follow-up implementation, open or import a new scoped task card, then route/claim with `node atm.mjs next --claim ...`.
+- Do not reuse `TASK-RFT-0008` as a queue insertion; it is closed and any new taskflow work needs a new card.
 
 ## Follow-Up Items
 
 - Add or run a planning-status sync checker so stale Markdown mirrors are caught before sequencing decisions.
 - Resolve `TASK-TEAM-0028`: either locate/import the missing target ledger closure evidence, or mark the planning card as requiring reconciliation instead of using it as closed target evidence.
-- When opening `TASK-RFT-0008`, import only the selected RFT card rather than bulk-importing all RFT tasks into the active ledger.
-
+- Preserve the lesson from `TASK-RFT-0008`: import only the selected new card rather than bulk-importing a whole historical task family into the active ledger.

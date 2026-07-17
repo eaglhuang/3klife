@@ -61,12 +61,12 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
    - Note: closed through human-approved emergency backend close because closeback evidence / transition event sequencing formed a closure cycle.
 
 5. `TASK-RFT-0003`
-   - Status: run before Team runtime cards.
-   - Reason: framework-development temp-claim lifecycle is high-risk and should be simplified before `TASK-TEAM-0011+` runtime work.
+   - Status: done in target repo.
+   - Reason: framework-development temp-claim lifecycle risk was retired by the RFT closure; do not re-dispatch this card.
 
 6. `TASK-RFT-0001`
-   - Status: defer until `TASK-TEAM-0015`.
-   - Reason: it touches `next.ts`; do it when Team recommendation integration actually needs that surface.
+   - Status: done in target repo.
+   - Reason: the original `next.ts` extraction card is closed; any new Team recommendation integration work must open a new scoped card.
 
 ## Dispatch Modes
 
@@ -93,8 +93,8 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 | 3 | `TASK-TEAM-0006` | Done | Add patrol template | Closed in target repo; runner sync separated |
 | 4 | `TASK-RFT-0008` | Done | Add taskflow commit-message Strategy Map + size tripwire | Closed in target repo; runner sync separated |
 | 5 | `TASK-TEAM-0017` | Done | Formalize template schema / validator contract | Closed in target repo; runner sync separated |
-| 6 | `TASK-RFT-0003` | Next recommended | Simplify framework-development lifecycle surface | Before Team runtime |
-| 7 | `TASK-RFT-0001` | Defer | next.ts extraction | Only when `TASK-TEAM-0015` starts |
+| 6 | `TASK-RFT-0003` | Done | Simplify framework-development lifecycle surface | Closed in target repo |
+| 7 | `TASK-RFT-0001` | Done | next.ts extraction | Closed in target repo |
 
 ## Condition Review Checklist
 
@@ -108,4 +108,4 @@ Important correction: `TASK-TEAM-0002` is already closed in the AI-Atomic-Framew
 - If `ATM_RUNNER_SYNC_REQUIRED` appears, run `npm run build` and rerun frozen `node atm.mjs`; do not switch to `atm.dev.mjs` to bypass.
 - If a normal worker sees `ATM_RUNNER_SYNC_REQUIRED`, the worker must HOLD and report. Captain/Runner Sync Steward performs the build and commits `release/**` separately.
 - `TASK-TEAM-0004` Phase 1 must mirror the existing 3KLife template drafts under `C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/templates/`; builders may read them but must not edit 3KLife.
-- `TASK-RFT-0008` external work may begin as preflight immediately, but write/claim should wait until `TASK-TEAM-0004` closes unless Captain explicitly opens the RFT interleave window.
+- RFT cards in this sequence are closed in the target ledger. Do not reopen or re-dispatch them; open a new scoped card for any follow-up.

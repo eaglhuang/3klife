@@ -107,7 +107,7 @@ Dispatch 紀律沿用既定 contract：Phase 0 read-only planner + Phase 1 exter
 
 - 清除 stale lock `ATM-FRAMEWORK-TEMP-codex-team-broker`（走正式 lock release，不手改 runtime 檔——0604 事故教訓）。
 - 修 `tasks/README.md` roster：多張已完成卡仍標 planned/draft；`TASK-TEAM-0028` 依 ledger 更正為 abandoned 或補記緣由。
-- `TASK-RFT-0005` mailbox lane split 進行中，M8E 卡的 scopePaths 避開 `scripts/captain-dispatch-mailbox/**` 直到該卡關閉。
+- `TASK-RFT-0005` mailbox lane split 已在 target ledger 關閉；M8E 後續若需碰 `scripts/captain-dispatch-mailbox/**`，應依新的 scope/claim guidance 另開或引用當前有效任務卡。
 
 ## 7. 驗收定義（M8E 完成 = 論文宣稱可展示）
 
