@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0019
 title: Persist lane session event history and wire analyzer evidence
-status: planned
+status: done
 owner: atm-lane-session
 priority: P0
 depends_on:
@@ -52,6 +52,15 @@ atomizationImpact:
       source: scripts/analyze-captain-parallel-ledger.ts
       disposition: inline
       inlineReason: The analyzer already owns parallel ledger evidence projection; this card adds lane evidence as a bounded input.
+completed_at: "2026-07-17T08:51:10.130Z"
+completed_by_agent: "codex-lane-0019"
+closedAt: "2026-07-17T08:51:10.130Z"
+closedByActor: "codex-lane-0019"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-17T08-51-10-130Z-close-6051fb5cd45c"
+lastTransitionAt: "2026-07-17T08:51:10.130Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bb40bea07ede32269989352e19bba65be1507fa1"
 ---
 
 # TASK-LANE-0019 - Lane Session Event History Analyzer Evidence
