@@ -8,6 +8,8 @@ depends_on:
   - ATM-GOV-0150
   - ATM-GOV-0154
   - ATM-GOV-0155
+  - ATM-GOV-0157
+  - ATM-GOV-0158
 related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
@@ -60,6 +62,12 @@ That preserves the sealed trust model, but it is more expensive than necessary
 for ledger-only closeback commits. Many close commits change only `.atm/history/**`
 or governance evidence while the framework build input tree remains unchanged.
 
+This card follows the highest parallel governance principle: Tier 0 reads and
+Tier 1 private ledger/evidence/planning writes should not pay a Tier 2
+build/release serialization cost when the framework build input tree is
+unchanged. The cache is allowed only because the Tier 2 build input surface is
+content-addressed and verified from git tree object identity.
+
 ## Required Behavior
 
 - Add a content-addressed build input hash for sealed runner builds.
@@ -108,6 +116,8 @@ or governance evidence while the framework build input tree remains unchanged.
   build decision, and phase timing metrics.
 - The implementation does not introduce a second build registry or untracked
   cache authority outside the release manifests and git tree hashes.
+- The build-skip decision is framed as a Tier 2 shared-surface proof, not as an
+  emergency override or a way to trust dirty working tree content.
 - Follow-up work for persistent sealed worktrees, `.tsbuildinfo` reuse, and
   differential artifact copy is explicitly left out of scope.
 

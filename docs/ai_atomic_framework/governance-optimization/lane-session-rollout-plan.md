@@ -19,6 +19,23 @@ safely.
 - Branch policy: stay on the current branch; do not create a development branch
   or worktree branch for this rollout.
 
+## Highest Parallel Governance Principle
+
+ATM parallel governance follows a Tier model:
+
+- Tier 0 read work never queues behind write lanes.
+- Tier 1 private writes to the actor's own ledger, evidence, notes, or planning
+  artifacts never queue behind unrelated lanes.
+- Tier 2 shared writes to the git index, release mirrors, build artifacts,
+  protected runtime state, or other shared mutation surfaces must go through the
+  broker or steward lane.
+
+This principle is now the top-level interpretation rule for this rollout:
+before any gate serializes work, it must name the concrete Tier 2 shared surface
+and the intersecting task, actor, or file set. Active foreign work alone is not
+enough to block Tier 0 inspection or Tier 1 private evidence, ledger, or
+planning progress.
+
 ## Design Decisions
 
 - `atm.laneSession.v1` is a new runtime document under
@@ -124,6 +141,39 @@ Two follow-up cards preserve that evidence path:
 
 - `TASK-LANE-0019` turns lane runtime snapshots into durable event evidence and
   teaches the analyzer to report the overlap automatically.
+
+## Follow-up: Runner Gate Precision for Parallel Work
+
+The GOV-0156 sealed-runner build cache work exposed a different bottleneck:
+current runner gates are safe but too broad. They serialize ledger-only or
+docs-only closeback behind unrelated source WIP, and they report
+`ATM_RUNNER_SYNC_FOREIGN_WIP_BLOCKED` without enough precision to tell whether
+the foreign lane actually intersects the sealed build input surface.
+
+The approved direction is not emergency override. The fix is to refine the gate
+taxonomy so Tier 0 read and Tier 1 private ledger/evidence work remain parallel,
+while Tier 2 shared release/build writes continue through the broker/steward
+lane.
+
+Three cards implement that sequence:
+
+| Card | Purpose | Parallelism |
+|---|---|---|
+| `ATM-GOV-0157` | Skip runner staleness close blockers when a task's claimed/scope files do not intersect framework build inputs. | May run in parallel with `ATM-GOV-0158`; touches taskflow close preflight. |
+| `ATM-GOV-0158` | Make runner-sync foreign-WIP admission report and block only precise build-input conflicts. | May run in parallel with `ATM-GOV-0157`; touches runner-sync admission. |
+| `ATM-GOV-0156` | Add content-addressed sealed runner build skip and timing metrics. | Runs after `ATM-GOV-0157`, `ATM-GOV-0158`, and `ATM-GOV-0155` closeback. |
+
+Metrics required by this follow-up:
+
+- `ATM-GOV-0157`: close/pre-close evidence exposes
+  `runnerGateDecision: "skipped-ledger-only" | "required"` so the analyzer can
+  measure build-free closeback rate.
+- `ATM-GOV-0158`: admission refusals expose `blockingTaskId`,
+  `blockingActorId`, `heartbeatAt`, and `intersectingFiles` so the analyzer can
+  measure false-positive or overbroad blocking.
+- `ATM-GOV-0156`: release manifests expose `buildSkipped`,
+  `buildInputsTreeHash`, and phase timings so the analyzer can measure build
+  time per wave before and after the optimization.
 - `TASK-LANE-0020` reviews the `2026-07-16T16:52:32Z` repair claim against
   `TASK-CODEX-0204` to decide whether it was a valid orphan repair or the first
   recorded cross-lane interference incident.
