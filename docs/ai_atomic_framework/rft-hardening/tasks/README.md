@@ -92,9 +92,9 @@ gaps in ATM's operator governance.
 
 | Task ID | Focus | Why it exists | Status |
 |---|---|---|---|
-| [TASK-AAO-0154](./TASK-AAO-0154-cross-task-mutation-incident-safe-mode.task.md) | Cross-task restore/reset/remove incident-safe mode | Stop dangerous cleanup behavior before it damages another active task's evidence or ownership state. | done |
-| [TASK-AAO-0155](./TASK-AAO-0155-next-active-task-divergence-guard.task.md) | `next --prompt` active-task divergence guard | Prevent new bug prompts from being silently attached to the wrong active task. | done |
-| [TASK-AAO-0156](./TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md) | `.atm` history + staged-ownership fencing | Block weak-agent self-cleanup of protected ATM history and another lane's staged evidence. | done |
+| [TASK-AAO-0154](../../atm-agent-first-operability/tasks/TASK-AAO-0154-cross-task-mutation-incident-safe-mode.task.md) | Cross-task restore/reset/remove incident-safe mode | Stop dangerous cleanup behavior before it damages another active task's evidence or ownership state. | done |
+| [TASK-AAO-0155](../../atm-agent-first-operability/tasks/TASK-AAO-0155-next-active-task-divergence-guard.task.md) | `next --prompt` active-task divergence guard | Prevent new bug prompts from being silently attached to the wrong active task. | done |
+| [TASK-AAO-0156](../../atm-agent-first-operability/tasks/TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md) | `.atm` history + staged-ownership fencing | Block weak-agent self-cleanup of protected ATM history and another lane's staged evidence. | done |
 
 ## Latest RFT Closeback Snapshot (2026-07-17)
 

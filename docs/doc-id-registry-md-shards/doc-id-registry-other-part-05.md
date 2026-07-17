@@ -32,7 +32,7 @@
 | `doc_other_1895` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md | TASK-RFT-0023 - validate-team-agents.ts validator suite map extraction |
 | `doc_other_1896` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md | TASK-RFT-0024 - tasks legacy implementation compatibility facade split |
 | `doc_other_1897` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md | TASK-RFT-0025 - closure packet schema fragment and diagnostics map |
-| `doc_other_1898` | docs/ai_atomic_framework/search-threat-keywords.md | ATM CID 論文威脅掃描清單 |
+| `doc_other_1898` | docs/ai_atomic_framework/arxiv-paper-v1/search-threat-keywords.md | ATM CID 論文威脅掃描清單 |
 | `doc_other_1899` | docs/ai_atomic_framework/skl-tool-first-upgrade/00-verified-facts.md | SKL Tool-First 已驗證事實 |
 | `doc_other_1900` | docs/ai_atomic_framework/skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md | SKL Tool-First 升級計畫書 |
 | `doc_other_1901` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md | TASK-SKL-0001 - SKL tool-first plan and task pack |
@@ -114,4 +114,4 @@
 | `doc_other_1977` | docs/ai_atomic_framework/team-agents/TEAM_AGENTS_CAPTAIN_LED_SOP.md | Team Agents Captain-Led SOP |
 | `doc_other_1978` | docs/ai_atomic_framework/team-agents/TEAM-AGENTS-VOCABULARY-CANON-AND-REPLAN-2026-07-10.md | Team Agents 分級詞彙正典與重新規劃(2026-07-10 全目錄稽核版) |
 | `doc_other_1979` | docs/ai_atomic_framework/team-agents/TEAM-BROKER-ENFORCEMENT-INTEGRATION-PLAN-2026-07-10.md | Team Broker 實戰強制性整合計畫（M8E Enforcement Lane） |
-| `doc_other_1980` | docs/ai_atomic_framework/vision-paper-semantic-admission.md | Vision Paper: Atomization-First CID Broker |
+| `doc_other_1980` | docs/ai_atomic_framework/arxiv-paper-v1/vision-paper-semantic-admission.md | Vision Paper: Atomization-First CID Broker |

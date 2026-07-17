@@ -171,7 +171,7 @@
 | `doc_other_1460` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0003-python-adapter-sdk-promotion.task.md | TASK-ASP-0003 Python Adapter SDK Promotion |
 | `doc_other_1461` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0004-broker-candidate-bridge.task.md | TASK-ASP-0004 Broker Candidate-to-WriteIntent Bridge |
 | `doc_other_1462` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0005-3klife-coordination-baseline.task.md | TASK-ASP-0005 3KLife Coordination & Baseline Measurement |
-| `doc_other_1463` | docs/ai_atomic_framework/agr-virtual-atomization-implementation-plan.md | ATM 實作規劃：Adaptive Granularity Refinement (AGR) + Broker 強化 |
+| `doc_other_1463` | docs/ai_atomic_framework/cid-hardening/agr-virtual-atomization-implementation-plan.md | ATM 實作規劃：Adaptive Granularity Refinement (AGR) + Broker 強化 |
 | `doc_other_1464` | docs/ai_atomic_framework/arxiv-paper-v1/bench-design.md | Multi-Vendor Broker Bench — 設計規範（v1 vision paper 補強用） |
 | `doc_other_1465` | docs/ai_atomic_framework/arxiv-paper-v1/close-orchestration-collision-runbook.md | close-orchestration Controlled Collision Runbook |
 | `doc_other_1466` | docs/ai_atomic_framework/arxiv-paper-v1/COMMIT-ARTIFACT-MAP-2026-06-28.md | Commit and Artifact Map (2026-06-28) |

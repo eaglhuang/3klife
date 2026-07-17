@@ -27,7 +27,7 @@
 | `doc_other_1603` | docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0005-cross-project-keep-registry.task.md | TASK-MEM-0005 跨專案 keep registry |
 | `doc_other_1604` | docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0006-staleness-and-budget-patrol.task.md | TASK-MEM-0006 過期與預算巡邏 |
 | `doc_other_1605` | docs/ai_atomic_framework/ATM開發實務操作指南.md | ATM 開發實務操作指南 |
-| `doc_other_1606` | docs/ai_atomic_framework/atomic-cost-reduction-plan.md | ATM 原子化成本降低計劃 |
+| `doc_other_1606` | docs/ai_atomic_framework/cid-hardening/atomic-cost-reduction-plan.md | ATM 原子化成本降低計劃 |
 | `doc_other_1607` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0054-finding-to-janitor-apply-plan-contract.md | APF-0054 Finding-to-janitor apply plan contract |
 | `doc_other_1608` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0055-structural-apply-scheduler-contract.md | APF-0055 Structural apply scheduler contract |
 | `doc_other_1609` | docs/ai_atomic_framework/atomic-police-family/specs/APF-0056-janitor-apply-plan-schema-and-validator.md | APF-0056 Janitor apply plan schema and validator |
@@ -52,7 +52,7 @@
 | `doc_other_1628` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/merge-evidence-report.md | Close-Orchestration Merge Evidence |
 | `doc_other_1629` | docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/broker-capture.md | Broker Capture Evidence Bundle |
 | `doc_other_1630` | docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/broker-evidence-bundle.md | Broker Evidence Bundle |
-| `doc_other_1631` | docs/ai_atomic_framework/CID-Conflict-Run-Log.md | CID Conflict Run Log |
+| `doc_other_1631` | docs/ai_atomic_framework/cid-hardening/CID-Conflict-Run-Log.md | CID Conflict Run Log |
 | `doc_other_1632` | docs/ai_atomic_framework/cid-hardening/00-verified-facts.md | CID Hardening — 三層事實基線（Verified Facts / Proposals / Out-of-Scope） |
 | `doc_other_1633` | docs/ai_atomic_framework/cid-hardening/agr-adoption-review.md | AGR Adoption Review and Risk Ledger |
 | `doc_other_1634` | docs/ai_atomic_framework/cid-hardening/agr-baseline-survey.md | AGR Baseline Survey and CID/Broker Gap Map |
@@ -190,7 +190,7 @@
 | `doc_other_1766` | docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0117-proposal-overlap-arbitration-and-deterministic-composer-routing.task.md | TASK-CID-0117 |
 | `doc_other_1767` | docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0118-governed-writer-handoff-and-live-apply-evidence.task.md | TASK-CID-0118 |
 | `doc_other_1768` | docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0119-proposal-gated-write-admission-dogfood-and-adoption-gate.task.md | TASK-CID-0119 |
-| `doc_other_1769` | docs/ai_atomic_framework/CID衝突解決紀錄log.md | CID Conflict Run Log |
+| `doc_other_1769` | docs/ai_atomic_framework/cid-hardening/CID衝突解決紀錄log.md | CID Conflict Run Log |
 | `doc_other_1770` | docs/ai_atomic_framework/external-public-repo-cases/TASK-EPR-0001-fastapi-public-source-snapshot-case.md | TASK-EPR-0001 FastAPI Public-Source Snapshot Case |
 | `doc_other_1771` | docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md | ATM Git Boundary Admission Plan |
 | `doc_other_1772` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0001-pre-push-admission-architecture-contract.task.md | TASK-GIT-0001 |
@@ -218,7 +218,7 @@
 | `doc_other_1794` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOVOPT-006-close-crash-residue-recovery.task.md | ATM-GOVOPT-006 - Recover close, claim release, and residue crash states |
 | `doc_other_1795` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOVOPT-007-validation-receipt-reuse.task.md | ATM-GOVOPT-007 - Unify wrapper-generated validation receipts |
 | `doc_other_1796` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOVOPT-008-framework-taskflow-opener.task.md | ATM-GOVOPT-008 - Provide a safe framework taskflow opener lane |
-| `doc_other_1797` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-RFT-0026-central-atomization-line-bound.task.md | TASK-RFT-0026 - central configurable ATM atomic line bound |
+| `doc_other_1797` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0026-central-atomization-line-bound.task.md | TASK-RFT-0026 - central configurable ATM atomic line bound |
 | `doc_other_1798` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0028-closure-packet-repair-ux.task.md | TASK-MRP-0028 Closure Packet Repair UX and Parent Tree Semantics |
 | `doc_other_1799` | docs/ai_atomic_framework/multi-agent-orchestration/atm-core-runner-broker-design.md | ATM Core Runner Broker Design |
 | `doc_other_1800` | docs/ai_atomic_framework/multi-agent-orchestration/HANDOFF-2026-06-17-DOGFOOD-BUGFIX-CONTINUATION.md | MAO Dogfood / Bugfix Worker Handoff — 0041–0042 收工後接續 |
@@ -288,10 +288,10 @@
 | `doc_other_1864` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0059-broker-conflict-resolution-replay-benchmark.task.md | TASK-MAO-0059 - broker conflict resolution replay benchmark |
 | `doc_other_1865` | docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-refactor-plan.md | ATM CLI oversized module refactor plan (RFT series) |
 | `doc_other_1866` | docs/ai_atomic_framework/rft-hardening/TASK-RFT-0008-external-dispatch-brief-2026-06-14.md | TASK-RFT-0008 External Dispatch Brief |
-| `doc_other_1867` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0149-taskflow-close-rollback-resilience.task.md | TASK-AAO-0149 — taskflow close rollback and auto-evidence resilience |
-| `doc_other_1868` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0150-next-hot-path-latency.task.md | TASK-AAO-0150 — next hot-path latency |
-| `doc_other_1869` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0151-prompt-scoped-next-red-validator.task.md | TASK-AAO-0151 — prompt-scoped-next persistent red |
-| `doc_other_1870` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0154-cross-task-mutation-incident-safe-mode.task.md | TASK-AAO-0154 Cross-task mutation incident-safe mode |
-| `doc_other_1871` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0155-next-active-task-divergence-guard.task.md | TASK-AAO-0155 Active-task divergence guard |
-| `doc_other_1872` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md | TASK-AAO-0156 Protected ATM history and staged-ownership fencing |
+| `doc_other_1867` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0149-taskflow-close-rollback-resilience.task.md | TASK-AAO-0149 — taskflow close rollback and auto-evidence resilience |
+| `doc_other_1868` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0150-next-hot-path-latency.task.md | TASK-AAO-0150 — next hot-path latency |
+| `doc_other_1869` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0151-prompt-scoped-next-red-validator.task.md | TASK-AAO-0151 — prompt-scoped-next persistent red |
+| `doc_other_1870` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0154-cross-task-mutation-incident-safe-mode.task.md | TASK-AAO-0154 Cross-task mutation incident-safe mode |
+| `doc_other_1871` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0155-next-active-task-divergence-guard.task.md | TASK-AAO-0155 Active-task divergence guard |
+| `doc_other_1872` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md | TASK-AAO-0156 Protected ATM history and staged-ownership fencing |
 | `doc_other_1873` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0001-next-ts-atomic-map-extraction.task.md | TASK-RFT-0001 - next.ts atomic-map extraction |

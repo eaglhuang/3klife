@@ -34,11 +34,11 @@
 | `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap |
 | `doc_other_0030` | docs/ai_atomic_framework/open-source-extraction-plan.md | AI Atomic Framework 開源拆出計畫 |
 | `doc_other_0031` | docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md | AI Atomic Framework 優化藍圖 v0.2 |
-| `doc_other_0032` | docs/ai_atomic_framework/3klife-coexistence-plan.md | 3KLife × ATM 並行開發協議（Coexistence Plan） |
-| `doc_other_0033` | docs/ai_atomic_framework/3klife-consumption-roadmap.md | 3KLife 長期消費 ATM 路線圖（Consumption Roadmap） |
-| `doc_other_0034` | docs/ai_atomic_framework/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |
+| `doc_other_0032` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/3klife-coexistence-plan.md | 3KLife × ATM 並行開發協議（Coexistence Plan） |
+| `doc_other_0033` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/3klife-consumption-roadmap.md | 3KLife 長期消費 ATM 路線圖（Consumption Roadmap） |
+| `doc_other_0034` | docs/ai_atomic_framework/multi-agent-orchestration/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |
 | `doc_other_0035` | docs/ai_atomic_framework/upstream-versioning-policy.md | Upstream Versioning & Lifecycle Policy |
-| `doc_other_0036` | docs/ai_atomic_framework/3klife-tooling-fate.md | 3KLife 既有治理工具命運表（Tooling Fate） |
+| `doc_other_0036` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/3klife-tooling-fate.md | 3KLife 既有治理工具命運表（Tooling Fate） |
 | `doc_other_0037` | docs/ai_atomic_framework/ATM_cross_reference.md | ATM 知識路由索引（ATM Cross-Reference） |
 | `doc_other_0038` | docs/agent-identity-map.md | Agent Identity Map |
 | `doc_other_0039` | docs/ai_atomic_framework/shards/atm-roadmap-foundations.md | AI Atomic Framework Roadmap — 名詞定義・分層・自舉・Genesis（§4–§7） |
@@ -83,8 +83,8 @@
 | `doc_other_0078` | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | Doc ID Registry Markdown Index — Tech / UI / Art / Data |
 | `doc_other_0079` | docs/tech/參考用npc-dialogue-narrative-runtime-plan.md | 3KLife 人物對話與劇情 Runtime 技術規劃 |
 | `doc_other_0080` | docs/windows-wsl-cli-routing.md | Windows / WSL CLI Routing Rules |
-| `doc_other_0081` | docs/ai_atomic_framework/html-to-ucuf-case-study.md | html-to-ucuf Reference Case Study |
-| `doc_other_0082` | docs/ai_atomic_framework/h2u-regression-matrix.md | H2U Regression Matrix |
+| `doc_other_0081` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/html-to-ucuf-case-study.md | html-to-ucuf Reference Case Study |
+| `doc_other_0082` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/h2u-regression-matrix.md | H2U Regression Matrix |
 | `doc_other_0084` | docs/學習文件/The Anatomy of an Agent Harness.md | Key Takeaways |
 | `doc_other_0085` | docs/tech/npc-brain-武將互動記憶系統.md | NPC Brain Memory System |
 | `doc_other_0086` | docs/tech/npc-brain-memory/api-contract.md | NPC Brain Memory System — API & Contract（§6-§8） |
@@ -113,12 +113,12 @@
 | `doc_other_0110` | docs/LIVING_SPEC.md | ATM Living Spec Sync Contract |
 | `doc_other_0111` | docs/PEV_LOOP.md | ATM Plan-Execute-Verify-Converge (PEV) Loop |
 | `doc_other_0112` | docs/templates/pev-upgrade-proposal-template.md | PEV Upgrade Proposal Template |
-| `doc_other_0113` | docs/ai_atomic_framework/cocos-runtime-adapter-policy.md | Cocos Runtime Adapter Policy |
+| `doc_other_0113` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/cocos-runtime-adapter-policy.md | Cocos Runtime Adapter Policy |
 | `doc_other_0114` | docs/ecosystem/performance-budget-police.md | Performance Budget Police — ATM Optional Governance Plugin |
 | `doc_other_0115` | docs/ecosystem/capability-sandbox-audit.md | Capability Sandbox & Security Audit — ATM Optional Governance Plugin |
 | `doc_other_0116` | docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md | Validator Orchestrator 與 AJV Cache 統一入口 |
-| `doc_other_0117` | docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md | 2026-05-11 ATM Ownership Boundary |
-| `doc_other_0120` | docs/ai_atomic_framework/atm-agent-guidance-layer-framework-implementation-plan.md | ATM Agent Guidance Layer（框架本體版）實作計劃書 |
+| `doc_other_0117` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/legacy-h2u-first-battle-launch-checklist.md | 2026-05-11 ATM Ownership Boundary |
+| `doc_other_0120` | docs/ai_atomic_framework/atm-agent-first-operability/atm-agent-guidance-layer-framework-implementation-plan.md | ATM Agent Guidance Layer（框架本體版）實作計劃書 |
 | `doc_other_0121` | .github/ISSUE_TEMPLATE/bug_report.md | 問題描述 |
 | `doc_other_0122` | .github/ISSUE_TEMPLATE/feature_request.md | 功能描述 |
 | `doc_other_0123` | .github/ISSUE_TEMPLATE/rfc.md | RFC 摘要 |
@@ -128,7 +128,7 @@
 | `doc_other_0127` | docs/ecosystem/language-adapter-roadmap.md | 多語言 Adapter 擴張計畫 |
 | `doc_other_0128` | docs/ecosystem/registry-db-vector-decision.md | 跨專案 Registry / DB / Vector — Core vs Plugin 決策文件 |
 | `doc_other_0129` | docs/RFC_PROCESS.md | AI Atomic Framework — RFC 與社群貢獻流程 |
-| `doc_other_0130` | docs/ai_atomic_framework/atm-h2u-three-tier-gates.md | ATM/H2U 三層閘門與單一入口 |
+| `doc_other_0130` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/atm-h2u-three-tier-gates.md | ATM/H2U 三層閘門與單一入口 |
 | `doc_other_0131` | docs/html-to-ucuf/current-roadmap.md | HTML-to-UCUF Current Roadmap (Single Active Entry) |
 | `doc_other_0132` | docs/ai_atomic_framework/atm-follow-up-backlog.md | ATM 後續待辦清單 |
 | `doc_other_0133` | docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md | 拆解大型功能優化原子map計畫書 |
