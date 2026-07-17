@@ -615,3 +615,26 @@ Remaining follow-up after ATM-GOV-0149: runner-sync/build still needs a real coa
 - ATM-GOV-0152: alias legacy global runtime locks into the unified Broker keyspace so git index, branch commit queue, close mutex, release mirror, and generated projection admission are decided by one projection instead of multiple independent locks.
 
 These cards intentionally exclude TASK-RFT-0037 and release mirror artifact sync unless a card explicitly owns runner publication.
+
+## 2026-07-17 follow-up: RFT continuous line-budget governance
+
+The RFT series should move from one-off oversized inventory work into a continuous admission invariant:
+
+- Establish a global physical-line-budget gate over `packages/**`, `scripts/**`, and canonical `tests/**`, covering `.ts`, `.js`, `.mjs`, and `.cjs`.
+- Treat 500 physical lines as a soft split-warning threshold and 600 physical lines as the hard fail-closed threshold.
+- Upgrade RFT validation from "some oversized files remain" to zero hard violations.
+- Move follow-up enforcement into touched-file admission for claim, pre-close, and commit so regressions are caught before another RFT sweep.
+- Add semantic atomization checks beyond line count: dependency fan-out, responsibility count, export surface, cycle risk, and facade delegation quality.
+- For files over 2,000 lines, generate phased continuation cards automatically until every canonical physical source file is below 600 lines.
+- Complete shared-worktree validator blocker diagnostics so failures caused by another task show owner and session identity.
+
+New card:
+
+- `TASK-RFT-0097` establishes the global physical-line-budget gate and closes the current residual hard violations so the invariant starts from zero.
+
+Planned follow-ups:
+
+- `TASK-RFT-0098`: touched-file physical-line admission at claim, pre-close, and commit.
+- `TASK-RFT-0099`: semantic atomization metrics for RFT gate evidence.
+- `TASK-RFT-0100`: automatic continuation-card generation from post-split inventory.
+- `TASK-LANE-0021` or successor governance card: validator blocker owner/session projection for shared-worktree failures.
