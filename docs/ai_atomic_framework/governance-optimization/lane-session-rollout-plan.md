@@ -150,27 +150,45 @@ docs-only closeback behind unrelated source WIP, and they report
 `ATM_RUNNER_SYNC_FOREIGN_WIP_BLOCKED` without enough precision to tell whether
 the foreign lane actually intersects the sealed build input surface.
 
-The approved direction is not emergency override. The fix is to refine the gate
-taxonomy so Tier 0 read and Tier 1 private ledger/evidence work remain parallel,
-while Tier 2 shared release/build writes continue through the broker/steward
-lane.
+The approved direction is not emergency override. The fix is a full parallelism
+governance pass that turns scope classification, dependency gates, close
+preflight, runner-sync admission, broker tickets, and batching into one coherent
+system.
 
-Three cards implement that sequence:
+The constitutional rulings for this pass are fixed:
+
+| Rule | Decision |
+|---|---|
+| R1 same task card | One task card binds to one lane session. A second lane session claiming the same card receives `ATM_LOCK_CONFLICT`; no waitlist and no broker queue. Handoff/adopt/takeover remains the only legal transfer route. |
+| R2 semantic dependencies | Dependency gates block code mutation only. Docs, planning artifacts, card fields, blueprint updates, and ledger/evidence writes may continue before dependency close. |
+| R3 single main branch commit | The single main branch remains the minimum serial core. Broker batching is allowed only for related tasks in the same wave and compatible surface family; unrelated tasks do not share commits. |
+| R4 docs versus code | Document writes are document-management work and do not enter parallel write governance. Code writes always remain governed by claim scope plus broker/steward where needed. |
+
+Six cards implement the sequence:
 
 | Card | Purpose | Parallelism |
 |---|---|---|
-| `ATM-GOV-0157` | Skip runner staleness close blockers when a task's claimed/scope files do not intersect framework build inputs. | May run in parallel with `ATM-GOV-0158`; touches taskflow close preflight. |
-| `ATM-GOV-0158` | Make runner-sync foreign-WIP admission report and block only precise build-input conflicts. | May run in parallel with `ATM-GOV-0157`; touches runner-sync admission. |
-| `ATM-GOV-0156` | Add content-addressed sealed runner build skip and timing metrics. | Runs after `ATM-GOV-0157`, `ATM-GOV-0158`, and `ATM-GOV-0155` closeback. |
+| `ATM-GOV-0159` (F1) | Promote `code` / `docs` / `ledger` scope classification plus lane event append coverage into shared policy. | Foundation; run first. |
+| `ATM-GOV-0160` (F2) | Make dependency gates block code claims only while allowing docs/ledger/planning claims. | May run after F1 and in parallel with F3/F4. |
+| `ATM-GOV-0157` (F3) | Skip runner staleness close blockers when `scopeClass` contains no code. | May run after F1 and in parallel with F2/F4. |
+| `ATM-GOV-0158` (F4) | Make runner-sync foreign-WIP admission block only landed-not-closed build-input conflicts. | May run after F1 and in parallel with F2/F3. |
+| `ATM-GOV-0161` (F5) | Convert code-class Tier 2 shared-surface refusals into broker tickets with queue/session events. | Runs after F1-F4 and lane event history. |
+| `ATM-GOV-0162` (F6) | Add related-task batching for commit/build/projection windows using `waveId` and compatible surface families. | Runs after F5. |
+
+`ATM-GOV-0156` remains on the independent build-cache line and depends on
+`ATM-GOV-0157`, `ATM-GOV-0158`, and `ATM-GOV-0155` closeback.
 
 Metrics required by this follow-up:
 
 - `ATM-GOV-0157`: close/pre-close evidence exposes
-  `runnerGateDecision: "skipped-ledger-only" | "required"` so the analyzer can
+  `runnerGateDecision: "skipped-non-code" | "required"` so the analyzer can
   measure build-free closeback rate.
 - `ATM-GOV-0158`: admission refusals expose `blockingTaskId`,
   `blockingActorId`, `heartbeatAt`, and `intersectingFiles` so the analyzer can
   measure false-positive or overbroad blocking.
+- `ATM-GOV-0161`: broker ticket events expose `ticketId`, `position`,
+  `headOwner`, `headHealth`, `batchEligible`, `enqueuedAt`, and `waitedMs`.
+- `ATM-GOV-0162`: batch evidence exposes `batchRate` and `buildsPerWave`.
 - `ATM-GOV-0156`: release manifests expose `buildSkipped`,
   `buildInputsTreeHash`, and phase timings so the analyzer can measure build
   time per wave before and after the optimization.

@@ -7,6 +7,7 @@ priority: P0
 depends_on:
   - ATM-GOV-0150
   - ATM-GOV-0154
+  - ATM-GOV-0159
 related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
@@ -61,7 +62,7 @@ This card implements the highest parallel governance principle: Tier 0 reads
 and Tier 1 private ledger/evidence/planning writes must not queue behind
 unrelated lanes. Runner-sync admission may serialize only Tier 2 shared
 build/release/git-index risk, and the blocker must name the concrete
-build-input intersection.
+build-input intersection plus the landed-not-closed risk.
 
 ## Required Behavior
 
@@ -74,7 +75,9 @@ build-input intersection.
   - landed-but-not-closed evidence when available from task events or committed
     files since claim.
 - Block runner-sync admission only for foreign work that has a concrete
-  build-input conflict or landed-not-closed build-input delivery risk.
+  build-input intersection and landed-not-closed build-input delivery risk.
+- Do not block merely for dirty foreign uncommitted files that are outside the
+  sealed build input set or have not landed in `HEAD`.
 - Do not block runner-sync admission solely because a foreign active claim
   exists outside the build-input set.
 - Do not treat Tier 0 reads or Tier 1 private ledger/evidence/planning writes
@@ -97,7 +100,7 @@ build-input intersection.
 - A foreign active claim that touches only ledger, docs, evidence, or planning
   paths no longer causes `ATM_RUNNER_SYNC_FOREIGN_WIP_BLOCKED`.
 - A foreign active claim touching `packages/**`, `scripts/**`, `package.json`,
-  or another build-input path still blocks when there is dirty or landed
+  or another build-input path still blocks only when there is landed-not-closed
   build-input risk.
 - Blocked diagnostics identify the specific task, actor, heartbeat, and
   intersecting files.

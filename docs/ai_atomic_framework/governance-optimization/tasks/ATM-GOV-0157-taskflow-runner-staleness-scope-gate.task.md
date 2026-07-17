@@ -1,12 +1,13 @@
 ---
 task_id: ATM-GOV-0157
-title: Scope runner staleness close gate to build-input tasks
+title: Scope runner staleness close gate to non-code tasks
 status: planned
 owner: atm-core
 priority: P0
 depends_on:
   - ATM-GOV-0150
   - ATM-GOV-0154
+  - ATM-GOV-0159
 related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
@@ -39,7 +40,7 @@ atomizationImpact:
       inlineReason: null
 ---
 
-# ATM-GOV-0157 - Scope Runner Staleness Close Gate To Build-Input Tasks
+# ATM-GOV-0157 - Scope Runner Staleness Close Gate To Non-Code Tasks
 
 ## Context
 
@@ -60,7 +61,7 @@ broker/steward serialization, and the gate must name the concrete intersection.
 
 - Add a taskflow close/pre-close scope classifier that compares the task's
   claimed files, direction lock files, scope paths, and deliverables against the
-  framework build input set.
+  shared `scopeClass` classifier from `ATM-GOV-0159`.
 - Treat at least these paths as build inputs:
   - `packages/**`
   - `scripts/**`
@@ -71,11 +72,13 @@ broker/steward serialization, and the gate must name the concrete intersection.
   - `package-lock.json`
   - `tsconfig.json`
   - `tsconfig.build.json`
-- If the intersection is empty, skip runner staleness close blockers and expose
-  `runnerGateDecision: "skipped-ledger-only"` in taskflow evidence.
-- If the intersection is non-empty, preserve the existing runner-sync steward
+- If `scopeClass` contains only `docs` and/or `ledger`, skip runner staleness
+  close blockers and expose `runnerGateDecision: "skipped-non-code"` in
+  taskflow evidence.
+- If `scopeClass` contains `code`, preserve the existing runner-sync steward
   blocker chain and expose `runnerGateDecision: "required"`.
-- Include the intersection list in evidence when the runner gate is required.
+- Include the code/build-input intersection list in evidence when the runner
+  gate is required.
 - Do not block Tier 0 reads or Tier 1 private ledger/evidence/planning closeback
   merely because another lane has active work.
 - Do not skip other close blockers such as stale validators, active claim
