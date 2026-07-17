@@ -2,7 +2,7 @@
 doc_id: doc_index_0031
 owner: atm-core
 status: active
-related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-19T00:00:00+08:00

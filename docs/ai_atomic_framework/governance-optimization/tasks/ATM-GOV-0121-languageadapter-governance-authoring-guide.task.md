@@ -6,7 +6,7 @@ milestone: M4
 status: done
 blocked_by: [ATM-GOV-0112, ATM-GOV-0120]
 owner: atm-core
-related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-framework
@@ -62,5 +62,5 @@ node atm.mjs verify --agents-md --json
 
 ## Notes
 
-2026-05-19 | status: done | validation: `node atm.mjs verify --agents-md --cwd C:\\tmp\\ai-atomic-framework-gov-series-governance --json` + `npm run typecheck` | change: aligned rendered/template AGENTS bootstrap guidance to vendor-neutral adapter ids and confirmed authoring-guide-facing verification now passes in the isolated AI-Atomic-Framework worktree | blocker: none
+2026-05-19 | status: done | validation: `node atm.mjs verify --agents-md --cwd C:\\tmp\\ai-atomic-framework-governance-optimization --json` + `npm run typecheck` | change: aligned rendered/template AGENTS bootstrap guidance to vendor-neutral adapter ids and confirmed authoring-guide-facing verification now passes in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

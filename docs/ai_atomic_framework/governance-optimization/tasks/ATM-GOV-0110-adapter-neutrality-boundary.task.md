@@ -6,7 +6,7 @@ milestone: M2
 status: done
 blocked_by: [ATM-GOV-0107]
 owner: atm-core
-related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-framework
@@ -63,5 +63,5 @@ npm run validate:neutrality
 
 ## Notes
 
-2026-05-19 | status: done | validation: `npm run validate:neutrality` + `atm.mjs verify --neutrality --cwd C:\\tmp\\ai-atomic-framework-gov-series-governance --json` + `npm run typecheck` | change: confirmed protected framework surfaces stay host-neutral and adapter-specific governance remains externalized to policy/docs boundaries in the isolated AI-Atomic-Framework worktree | blocker: none
+2026-05-19 | status: done | validation: `npm run validate:neutrality` + `atm.mjs verify --neutrality --cwd C:\\tmp\\ai-atomic-framework-governance-optimization --json` + `npm run typecheck` | change: confirmed protected framework surfaces stay host-neutral and adapter-specific governance remains externalized to policy/docs boundaries in the isolated AI-Atomic-Framework worktree | blocker: none
 2026-05-19 | status: open | validation: pending | change: formal card opened

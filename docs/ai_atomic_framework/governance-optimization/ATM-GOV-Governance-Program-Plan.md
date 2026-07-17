@@ -2,7 +2,7 @@
 doc_id: doc_other_0801
 owner: atm-core
 status: active
-related_cards_root: docs/ai_atomic_framework/gov-series-governance/tasks
+related_cards_root: docs/ai_atomic_framework/governance-optimization/tasks
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
 created_at: 2026-05-19T00:00:00+08:00

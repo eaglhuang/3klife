@@ -6,7 +6,7 @@ milestone: M2
 status: done
 blocked_by: [ATM-GOV-0109, ATM-GOV-0110]
 owner: atm-core
-related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-framework

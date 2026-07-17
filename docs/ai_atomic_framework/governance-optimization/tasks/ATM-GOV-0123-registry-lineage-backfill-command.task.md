@@ -8,7 +8,7 @@ started_at: 2026-05-20T12:51:46.8283736+08:00
 started_by_agent: codex-gpt-5
 blocked_by: [ATM-GOV-0122]
 owner: atm-core
-related_plan: docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-framework

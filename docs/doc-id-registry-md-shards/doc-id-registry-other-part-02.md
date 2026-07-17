@@ -70,30 +70,30 @@
 | `doc_other_0734` | docs/ai_atomic_framework/release_version_flow/release-note-template.md | ATM Release Note Template |
 | `doc_other_0735` | docs/ai_atomic_framework/release_version_flow/release-run-record-template.md | ATM Release Run Record Template |
 | `doc_other_0736` | docs/ai_atomic_framework/release_version_flow/release-freeze-notice-template.md | ATM Release Freeze Notice Template |
-| `doc_other_0801` | docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md | ATM GOV Governance Program Plan |
-| `doc_other_0802` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0101-actor-identity-registry.task.md | ATM-GOV-0101 Actor Identity Registry and Git Identity Contract |
-| `doc_other_0803` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0102-atomic-task-claim-lease.task.md | ATM-GOV-0102 Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover |
-| `doc_other_0804` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md | ATM-GOV-0103 Task Opening and Reservation Lifecycle |
-| `doc_other_0805` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0104-evidence-bound-gates.task.md | ATM-GOV-0104 Evidence-Bound Close and Commit/PR Gate |
-| `doc_other_0806` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0105-git-governance-contract.task.md | ATM-GOV-0105 Git Governance and Commit Trailer Validation |
-| `doc_other_0807` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0106-thin-guard-engine.task.md | ATM-GOV-0106 Thin Guard Engine for Mutation and Git Checks |
-| `doc_other_0808` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0107-integration-plugins.task.md | ATM-GOV-0107 Integration Plugins for Claude Code, Codex, Gemini, Cursor |
-| `doc_other_0809` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0108-no-hook-human-fallback.task.md | ATM-GOV-0108 No-Hook and Human Collaboration Fallback Profile |
-| `doc_other_0810` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0109-claim-collision-proofing.task.md | ATM-GOV-0109 Claim Collision Proofing and Conflict Evidence Flow |
-| `doc_other_0811` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0110-adapter-neutrality-boundary.task.md | ATM-GOV-0110 Adapter Neutrality Boundary and Governance Externalization |
-| `doc_other_0812` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0111-antigravity-integration-adapter.task.md | ATM-GOV-0111 Antigravity Integration Adapter |
-| `doc_other_0813` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0112-languageadapter-governance-capability-contract.task.md | ATM-GOV-0112 LanguageAdapter Governance Capability Contract |
-| `doc_other_0814` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0113-languageadapter-capability-resolution-fallback.task.md | ATM-GOV-0113 LanguageAdapter Capability Resolution and Fallback Semantics |
-| `doc_other_0815` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0114-legacyrouteplan-via-languageadapter.task.md | ATM-GOV-0114 LegacyRoutePlan via LanguageAdapter |
-| `doc_other_0816` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0115-source-inventory-candidate-ranking-signals.task.md | ATM-GOV-0115 Source Inventory and Candidate Ranking Signals via LanguageAdapter |
-| `doc_other_0817` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0116-atomize-infect-dryrun-planning.task.md | ATM-GOV-0116 Atomize and Infect Dry-Run Planning via LanguageAdapter |
-| `doc_other_0818` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0117-reference-javascript-languageadapter.task.md | ATM-GOV-0117 Reference JavaScript LanguageAdapter Governance Implementation |
-| `doc_other_0819` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0118-reference-python-languageadapter.task.md | ATM-GOV-0118 Reference Python LanguageAdapter Governance Implementation |
-| `doc_other_0820` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0119-unsupported-language-advisory.task.md | ATM-GOV-0119 Unsupported Language Advisory and Deferred Apply Contract |
-| `doc_other_0821` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0120-multilanguage-onefile-validation-matrix.task.md | ATM-GOV-0120 Multi-language Onefile Validation Matrix for Governance Analysis |
-| `doc_other_0822` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0121-languageadapter-governance-authoring-guide.task.md | ATM-GOV-0121 LanguageAdapter Governance Authoring Guide |
-| `doc_other_0823` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0122-adopter-atom-version-lineage.task.md | ATM-GOV-0122 Adopter Atom Version Lineage for Evolve Proof |
-| `doc_other_0824` | docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0123-registry-lineage-backfill-command.task.md | ATM-GOV-0123 Registry Lineage Backfill Command |
+| `doc_other_0801` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md | ATM GOV Governance Program Plan |
+| `doc_other_0802` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0101-actor-identity-registry.task.md | ATM-GOV-0101 Actor Identity Registry and Git Identity Contract |
+| `doc_other_0803` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0102-atomic-task-claim-lease.task.md | ATM-GOV-0102 Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover |
+| `doc_other_0804` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md | ATM-GOV-0103 Task Opening and Reservation Lifecycle |
+| `doc_other_0805` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0104-evidence-bound-gates.task.md | ATM-GOV-0104 Evidence-Bound Close and Commit/PR Gate |
+| `doc_other_0806` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0105-git-governance-contract.task.md | ATM-GOV-0105 Git Governance and Commit Trailer Validation |
+| `doc_other_0807` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0106-thin-guard-engine.task.md | ATM-GOV-0106 Thin Guard Engine for Mutation and Git Checks |
+| `doc_other_0808` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0107-integration-plugins.task.md | ATM-GOV-0107 Integration Plugins for Claude Code, Codex, Gemini, Cursor |
+| `doc_other_0809` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0108-no-hook-human-fallback.task.md | ATM-GOV-0108 No-Hook and Human Collaboration Fallback Profile |
+| `doc_other_0810` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0109-claim-collision-proofing.task.md | ATM-GOV-0109 Claim Collision Proofing and Conflict Evidence Flow |
+| `doc_other_0811` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0110-adapter-neutrality-boundary.task.md | ATM-GOV-0110 Adapter Neutrality Boundary and Governance Externalization |
+| `doc_other_0812` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0111-antigravity-integration-adapter.task.md | ATM-GOV-0111 Antigravity Integration Adapter |
+| `doc_other_0813` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0112-languageadapter-governance-capability-contract.task.md | ATM-GOV-0112 LanguageAdapter Governance Capability Contract |
+| `doc_other_0814` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0113-languageadapter-capability-resolution-fallback.task.md | ATM-GOV-0113 LanguageAdapter Capability Resolution and Fallback Semantics |
+| `doc_other_0815` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0114-legacyrouteplan-via-languageadapter.task.md | ATM-GOV-0114 LegacyRoutePlan via LanguageAdapter |
+| `doc_other_0816` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0115-source-inventory-candidate-ranking-signals.task.md | ATM-GOV-0115 Source Inventory and Candidate Ranking Signals via LanguageAdapter |
+| `doc_other_0817` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0116-atomize-infect-dryrun-planning.task.md | ATM-GOV-0116 Atomize and Infect Dry-Run Planning via LanguageAdapter |
+| `doc_other_0818` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0117-reference-javascript-languageadapter.task.md | ATM-GOV-0117 Reference JavaScript LanguageAdapter Governance Implementation |
+| `doc_other_0819` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0118-reference-python-languageadapter.task.md | ATM-GOV-0118 Reference Python LanguageAdapter Governance Implementation |
+| `doc_other_0820` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0119-unsupported-language-advisory.task.md | ATM-GOV-0119 Unsupported Language Advisory and Deferred Apply Contract |
+| `doc_other_0821` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0120-multilanguage-onefile-validation-matrix.task.md | ATM-GOV-0120 Multi-language Onefile Validation Matrix for Governance Analysis |
+| `doc_other_0822` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0121-languageadapter-governance-authoring-guide.task.md | ATM-GOV-0121 LanguageAdapter Governance Authoring Guide |
+| `doc_other_0823` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0122-adopter-atom-version-lineage.task.md | ATM-GOV-0122 Adopter Atom Version Lineage for Evolve Proof |
+| `doc_other_0824` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0123-registry-lineage-backfill-command.task.md | ATM-GOV-0123 Registry Lineage Backfill Command |
 | `doc_other_0901` | docs/ai_atomic_framework/universal-language-framework/ATM通用語言框架計畫書.md | ATM 通用語言框架計畫書 |
 | `doc_other_0902` | docs/ai_atomic_framework/universal-language-framework/universal-language-framework-plan.md | Universal Language Framework Plan |
 | `doc_other_0903` | docs/ai_atomic_framework/universal-language-framework/tasks/ATM-LANG-0001.task.md | ATM-LANG-0001 繁中主規劃書與 atomic-map roadmap |
