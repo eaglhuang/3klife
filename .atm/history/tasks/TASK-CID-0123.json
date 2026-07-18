@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0123",
   "title": "Transition event missing audit backfill",
-  "status": "running",
+  "status": "done",
   "milestone": "M19",
   "dependencies": [
     "TASK-CID-0122"
@@ -16,11 +16,6 @@
   "deliverables": [
     "docs/reports/3klife-transition-event-missing-backfill.md",
     "scripts/validate-transition-event-missing-zero.cjs",
-    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md",
-    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md",
-    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md",
-    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-005-multi-claim-residue-task-resolution.task.md",
-    "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md",
     ".atm/history/task-events/TASK-AAO-0190/**",
     ".atm/history/task-events/TASK-AAO-FABLE-003/**",
     ".atm/history/task-events/TASK-AAO-FABLE-005/**"
@@ -71,15 +66,15 @@
   "source": {
     "planPath": "cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md",
     "sectionTitle": "TASK-CID-0123",
-    "headingLine": 57,
-    "hash": "73b1a521d2785d1e"
+    "headingLine": 52,
+    "hash": "8a13e365cc56a8c7"
   },
-  "importedAt": "2026-07-18T11:51:31.877Z",
+  "importedAt": "2026-07-18T11:57:40.716Z",
   "claim": {
     "actorId": "codex-main",
     "leaseId": "lease-f78ec4244e98",
     "claimedAt": "2026-07-18T11:46:13.548Z",
-    "heartbeatAt": "2026-07-18T11:46:13.548Z",
+    "heartbeatAt": "2026-07-18T11:58:59.533Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/TASK-CID-0123.*",
@@ -96,8 +91,8 @@
       "docs/reports/3klife-transition-event-missing-backfill.md",
       "scripts/validate-transition-event-missing-zero.cjs"
     ],
-    "state": "active",
-    "intent": "write"
+    "state": "released",
+    "reason": "closed"
   },
   "owner": "codex-main",
   "startedAt": "2026-07-18T11:46:13.548Z",
@@ -140,7 +135,10 @@
     "createdAt": "2026-07-18T11:46:20.494Z",
     "status": "active"
   },
-  "lastTransitionId": "2026-07-18T11-51-31-887Z-import-258911711bd8",
-  "lastTransitionAt": "2026-07-18T11:51:31.887Z",
-  "ledgerContractVersion": "task-ledger/v1"
+  "lastTransitionId": "2026-07-18T11-58-59-534Z-close-52ab9bc6fdd3",
+  "lastTransitionAt": "2026-07-18T11:58:59.534Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "closedAt": "2026-07-18T11:58:59.533Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": "session-20260718114613-codex-main-TASK-CID-0123-7082c2993f"
 }
