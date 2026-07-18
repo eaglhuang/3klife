@@ -53,7 +53,7 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 | ATM-GOV-0174 | 0171 | done | Executor-Neutral Team Wave Runtime |
 | ATM-GOV-0175 | 0172 | done | Durable Broker Scheduler |
 | ATM-GOV-0176 | 0173 | done | Shared Delivery Commit Executor |
-| ATM-GOV-0177 | 0174/0175 | planned | Shared Build/Projection Executor plus Atomic Wave Checkpoint |
+| ATM-GOV-0177 | 0174/0175 | done | Shared Build/Projection Executor plus Atomic Wave Checkpoint |
 | ATM-GOV-0178 | 0176/0177 | planned | Parallel Analyzer v2 plus End-to-End Failure Matrix |
 | ATM-GOV-0179 | 0178/0179 | planned | Strict Paired A/B Dogfood plus Default-On Circuit Breaker |
 | ATM-GOV-0181 | support | done | Abandon residue governed disposition |
@@ -132,6 +132,10 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 - 即使不相關任務正在同一個 branch window 等候，也必須拒絕併入。
 
 ### ATM-GOV-0177 - Shared Build/Projection Executor 與 Atomic Wave Checkpoint
+
+完成狀態：done（2026-07-18）
+
+完成內容：`broker batch execute --surface build|projection`、`atm.waveGeneratedWriteReceipt.v1`、`batch checkpoint-readiness` 與 `atm.atomicWaveCheckpointReadiness.v1`，驗證測試為 `tests/cli/shared-build-projection-checkpoint.test.ts`。
 
 目標：合併 generated writes，並在 delivery 後原子化 close wave members。
 
