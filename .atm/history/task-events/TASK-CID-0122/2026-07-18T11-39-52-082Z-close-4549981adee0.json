@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-39-52-082Z-close-4549981adee0",
+  "taskId": "TASK-CID-0122",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md",
+  "taskSha256": "sha256:f32f9958614c676addee134bd03ff8e14968e1d96378433e38db28a55d543629",
+  "createdAt": "2026-07-18T11:39:52.082Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0122 --actor codex-main"
+}

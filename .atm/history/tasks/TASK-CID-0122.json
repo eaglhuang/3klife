@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0122",
   "title": "Stale runtime lock cleanup closeout",
-  "status": "running",
+  "status": "done",
   "milestone": "M19",
   "dependencies": [
     "TASK-CID-0121"
@@ -73,7 +73,7 @@
     "actorId": "codex-main",
     "leaseId": "lease-c5f08b8c6199",
     "claimedAt": "2026-07-18T11:32:12.277Z",
-    "heartbeatAt": "2026-07-18T11:32:12.277Z",
+    "heartbeatAt": "2026-07-18T11:39:51.992Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/TASK-CID-0122.*",
@@ -91,8 +91,8 @@
       ".atm/history/tasks/TASK-SKL-0001.json",
       "docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md"
     ],
-    "state": "active",
-    "intent": "write"
+    "state": "released",
+    "reason": "closed"
   },
   "owner": "codex-main",
   "startedAt": "2026-07-18T11:32:12.277Z",
@@ -136,7 +136,10 @@
     "createdAt": "2026-07-18T11:32:12.641Z",
     "status": "active"
   },
-  "lastTransitionId": "2026-07-18T11-38-43-446Z-import-88409d15bcbd",
-  "lastTransitionAt": "2026-07-18T11:38:43.446Z",
-  "ledgerContractVersion": "task-ledger/v1"
+  "lastTransitionId": "2026-07-18T11-39-51-994Z-close-766309174adb",
+  "lastTransitionAt": "2026-07-18T11:39:51.994Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "closedAt": "2026-07-18T11:39:51.992Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": "session-20260718113212-codex-main-TASK-CID-0122-8ea8129c2b"
 }
