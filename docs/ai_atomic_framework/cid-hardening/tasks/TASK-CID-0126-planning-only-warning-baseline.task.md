@@ -2,7 +2,7 @@
 task_id: TASK-CID-0126
 doc_id: doc_cid_0126
 title: "Planning-only warning baseline"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M19
@@ -38,6 +38,15 @@ outOfScope:
   - "Do not modify framework target deliverables."
 nonGoals:
   - "Do not close or mutate the affected historical planning-only tasks."
+completed_at: "2026-07-18T12:58:29.300Z"
+completed_by_agent: "codex-main"
+closedAt: "2026-07-18T12:58:29.300Z"
+closedByActor: "codex-main"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T12-58-29-300Z-close-78637627848a"
+lastTransitionAt: "2026-07-18T12:58:29.300Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "77bb463ad510c3eb970f0bf830535a6baf6dd1d2"
 ---
 
 # TASK-CID-0126 - Planning-only warning baseline

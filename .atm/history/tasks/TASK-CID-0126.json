@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0126",
   "title": "Planning-only warning baseline",
-  "status": "running",
+  "status": "done",
   "milestone": "M19",
   "dependencies": [
     "TASK-CID-0125"
@@ -60,8 +60,8 @@
     "hash": "9bfec896e838853c"
   },
   "importedAt": "2026-07-18T12:45:40.064Z",
-  "lastTransitionId": "2026-07-18T12-56-15-422Z-scope-amendment-b49522b564e0",
-  "lastTransitionAt": "2026-07-18T12:56:15.422Z",
+  "lastTransitionId": "2026-07-18T12-58-29-209Z-close-f3748de282c2",
+  "lastTransitionAt": "2026-07-18T12:58:29.209Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-main",
   "reservedAt": "2026-07-18T12:46:04.146Z",
@@ -70,7 +70,7 @@
     "actorId": "codex-main",
     "leaseId": "lease-1fa49f860ffd",
     "claimedAt": "2026-07-18T12:46:04.170Z",
-    "heartbeatAt": "2026-07-18T12:46:04.170Z",
+    "heartbeatAt": "2026-07-18T12:58:29.208Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/TASK-CID-0126.*",
@@ -81,8 +81,8 @@
       "docs/reports/3klife-planning-only-warning-baseline.md",
       "scripts/validate-planning-only-baseline.cjs"
     ],
-    "state": "active",
-    "intent": "write"
+    "state": "released",
+    "reason": "closed"
   },
   "startedAt": "2026-07-18T12:46:04.170Z",
   "startedByActor": "codex-main",
@@ -118,5 +118,8 @@
     "actorId": "codex-main",
     "createdAt": "2026-07-18T12:46:08.484Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-07-18T12:58:29.208Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": "session-20260718124604-codex-main-TASK-CID-0126-4e100a4905"
 }
