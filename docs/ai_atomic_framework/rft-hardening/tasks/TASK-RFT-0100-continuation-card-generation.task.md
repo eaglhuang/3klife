@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0100
 title: Automatic RFT continuation-card generation
-status: planned
+status: done
 owner: atm-release
 priority: P1
 depends_on:
@@ -44,6 +44,15 @@ outOfScope:
   - Automatically importing or claiming generated continuation cards without human review.
   - Closing any generated cards.
   - Changing TASK-RFT-0098 or TASK-RFT-0099 enforcement policy.
+completed_at: "2026-07-18T03:06:25.204Z"
+completed_by_agent: "codex-main"
+closedAt: "2026-07-18T03:06:25.204Z"
+closedByActor: "codex-main"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T03-06-25-204Z-close-d7c086b1dd04"
+lastTransitionAt: "2026-07-18T03:06:25.204Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "beba951a40eaa309772c495029b2a4323996b3c4"
 ---
 
 # TASK-RFT-0100 - Automatic RFT Continuation-Card Generation

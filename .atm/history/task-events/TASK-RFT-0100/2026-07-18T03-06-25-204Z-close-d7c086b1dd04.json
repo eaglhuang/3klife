@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T03-06-25-204Z-close-d7c086b1dd04",
+  "taskId": "TASK-RFT-0100",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0100-continuation-card-generation.task.md",
+  "taskSha256": "sha256:f0f8c5cc813e47b4ee0fa787dd90d2b5cfd78dc3a84042707e152bfba490dd26",
+  "createdAt": "2026-07-18T03:06:25.204Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0100 --actor codex-main"
+}
