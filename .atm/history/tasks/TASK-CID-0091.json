@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0091",
   "title": "Broker format adapter architecture RFC",
-  "status": "ready",
+  "status": "done",
   "milestone": "M19",
   "dependencies": [
     "TASK-CID-0090"
@@ -53,8 +53,8 @@
     "hash": "58aca1075e062601"
   },
   "importedAt": "2026-06-15T15:19:22.150Z",
-  "lastTransitionId": "2026-07-18T11-17-20-462Z-repair-claim-d0de00995fbc",
-  "lastTransitionAt": "2026-07-18T11:17:20.462Z",
+  "lastTransitionId": "2026-07-18T11-26-39-825Z-close-1a8658603de6",
+  "lastTransitionAt": "2026-07-18T11:26:39.825Z",
   "ledgerContractVersion": "task-ledger/v1",
   "reservedAt": "2026-06-15T16:55:34.223Z",
   "promotedAt": "2026-06-15T16:55:53.614Z",
@@ -72,5 +72,10 @@
     "reason": "TASK-CID-0121 clears audit active-state debt: TASK-CID-0091 claim lease expired on 2026-06-15 and no valid active work session remains."
   },
   "startedAt": "2026-06-15T16:58:15.009Z",
-  "startedByActor": "captain"
+  "startedByActor": "captain",
+  "owner": "codex-main",
+  "closedAt": "2026-07-18T11:26:39.823Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": null,
+  "closeReason": "Historical reconcile sync against commit 68ba34eab3d42c3453df1fe1a90d899bb65859eb"
 }

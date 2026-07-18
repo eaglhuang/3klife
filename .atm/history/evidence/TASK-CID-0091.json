@@ -1,0 +1,35 @@
+{
+  "taskId": "TASK-CID-0091",
+  "updatedAt": "2026-07-18T11:26:39.822Z",
+  "evidence": [
+    {
+      "evidenceKind": "validation",
+      "summary": "Historical reconcile sync completed for TASK-CID-0091 against commit 68ba34eab3d42c3453df1fe1a90d899bb65859eb.",
+      "artifactPaths": [
+        "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書2.md",
+        "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md"
+      ],
+      "producedBy": "codex-main",
+      "createdAt": "2026-07-18T11:26:39.822Z",
+      "evidenceFreshness": "fresh",
+      "validationPasses": [
+        "typecheck",
+        "validate:cli",
+        "validate:git-head-evidence"
+      ],
+      "commandRuns": [
+        {
+          "command": "git show 68ba34eab3d42c3453df1fe1a90d899bb65859eb",
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutSha256": "sha256:30da8a7a0fffeebc9ccc3ba415b6ff9d87175a28254916b85e70829a87b08548",
+          "stderrSha256": "sha256:e2c30d59264829011fe7ce30b39db9705fb6ca02924bac9f15cf1ff9626b6c38"
+        }
+      ],
+      "details": {
+        "action": "reconcile",
+        "deliveryCommit": "68ba34eab3d42c3453df1fe1a90d899bb65859eb"
+      }
+    }
+  ]
+}
