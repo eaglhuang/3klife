@@ -5,7 +5,9 @@ status: done
 owner: atm-core
 priority: P0
 depends_on: []
-related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan.md
+related_plans:
+  - docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
@@ -83,9 +85,21 @@ lastTransitionId: "2026-07-18T11-11-55-450Z-close-3f4b142b0cf3"
 lastTransitionAt: "2026-07-18T11:11:55.450Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "4c39901a7"
+plan_alignment:
+  role: prerequisite
+  note: >
+    This closed card is not the Unified Wave Manifest slot from the later
+    end-to-end auto-batch plan. It supplies the R1 lane-safety prerequisite
+    that the plan now treats as already complete.
 ---
 
 # ATM-GOV-0168 - Lane-Aware Same-Task Claim Conflict and Adopt Rebind
+
+## Plan Alignment
+
+This card is a completed prerequisite for the end-to-end auto-batch plan. It
+hardens same-task lane ownership and adopt/takeover behavior; the unified wave
+manifest work is tracked by ATM-GOV-0172.
 
 ## Phase 0 Scope
 

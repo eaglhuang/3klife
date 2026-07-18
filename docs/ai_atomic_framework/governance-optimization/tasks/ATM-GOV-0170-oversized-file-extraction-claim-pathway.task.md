@@ -5,7 +5,9 @@ status: done
 owner: atm-core
 priority: P0
 depends_on: []
-related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan.md
+related_plans:
+  - docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
@@ -55,9 +57,21 @@ lastTransitionId: "2026-07-18T13-14-47-759Z-close-c0de4caed32e"
 lastTransitionAt: "2026-07-18T13:14:47.759Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "a27dccd60679b9ac2d308c9e39001a1cd2450bda"
+plan_alignment:
+  role: prerequisite
+  note: >
+    This closed card resolves a governance self-lock discovered while enabling
+    the auto-batch prerequisite chain. It is not the Batch Wave Selector slot;
+    selector work is remapped to ATM-GOV-0173.
 ---
 
 # ATM-GOV-0170 - Oversized File Extraction Claim Pathway
+
+## Plan Alignment
+
+This card is a completed prerequisite that made large-file extraction claims
+legal and auditable. The Batch Wave Selector from the end-to-end plan is tracked
+separately as ATM-GOV-0173.
 
 ## Context
 

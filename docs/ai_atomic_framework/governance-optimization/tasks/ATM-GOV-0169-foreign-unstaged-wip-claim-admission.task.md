@@ -7,7 +7,9 @@ priority: P0
 depends_on:
   - ATM-GOV-0170
 amendment_epoch: 1
-related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan.md
+related_plans:
+  - docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
@@ -61,9 +63,22 @@ lastTransitionId: "2026-07-18T13-33-18-465Z-close-87cf240898db"
 lastTransitionAt: "2026-07-18T13:33:18.465Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "471b321f763223d9fd5ac97db889530d9e7ebcc5"
+plan_alignment:
+  role: prerequisite
+  note: >
+    This closed card supplies foreign/unowned WIP admission safety for the
+    end-to-end auto-batch plan. It is not the Lane Ownership and Event Wiring
+    slot from the original pasted numbering; later wave/runtime cards build on
+    this prerequisite.
 ---
 
 # ATM-GOV-0169 - Foreign Unstaged WIP Claim Admission
+
+## Plan Alignment
+
+This card is a completed prerequisite for safe parallel waves: claims now see
+foreign or unowned task-scoped WIP before admitting a lane. The durable lane
+event/wave runtime work remains in later remapped cards.
 
 ## Context
 

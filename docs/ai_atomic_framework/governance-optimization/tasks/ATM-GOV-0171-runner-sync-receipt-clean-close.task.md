@@ -6,7 +6,9 @@ owner: atm-core
 priority: P0
 depends_on:
   - ATM-GOV-0169
-related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
+related_plan: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan.md
+related_plans:
+  - docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
@@ -67,9 +69,21 @@ lastTransitionId: "2026-07-18T14-04-44-664Z-close-e0e9491f9bd9"
 lastTransitionAt: "2026-07-18T14:04:44.664Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "b9933040415fabc49eb28bf37d7332aa6c52dcdc"
+plan_alignment:
+  role: prerequisite
+  note: >
+    This closed card provides runner-sync receipt and clean-close safety needed
+    by shared build/projection/checkpoint stages. It is not the executor-neutral
+    Team Wave Runtime slot; runtime work is remapped to ATM-GOV-0174.
 ---
 
 # ATM-GOV-0171 - Governed Runner-Sync Receipt and Clean-Close Pathway
+
+## Plan Alignment
+
+This card is a completed prerequisite for the later shared build/projection and
+checkpoint executor stages. Executor-neutral Team Wave runtime work is tracked
+separately as ATM-GOV-0174.
 
 ## Context
 
