@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-38-07-417Z-scope-amendment-8bae0ea8f5c8",
+  "taskId": "TASK-CID-0122",
+  "action": "scope-amendment",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-CID-0122.json",
+  "taskSha256": "sha256:f5a4b99be66f2ec5366c673aed206a0a75e350cf6e5d97e15059cf7ccaff571e",
+  "createdAt": "2026-07-18T11:38:07.417Z",
+  "command": "node atm.mjs tasks scope add --task TASK-CID-0122 --actor codex-main --add docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

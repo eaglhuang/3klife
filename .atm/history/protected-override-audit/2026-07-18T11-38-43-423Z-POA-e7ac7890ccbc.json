@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-e7ac7890ccbc",
+  "recordedAt": "2026-07-18T11:38:43.423Z",
+  "actorId": null,
+  "taskId": "TASK-CID-0122",
+  "surface": "tasks import --write recovery flags",
+  "command": "node atm.mjs tasks import --from docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md --write --json",
+  "flags": [
+    "--force"
+  ],
+  "permission": "backend.tasks.import.write",
+  "leaseId": "EMG-TASK-CID-0122-e590565a55",
+  "reason": "Direct task runtime import backend write.",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.import.write"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-07-18T11-38-43-421Z-EMG-TASK-CID-0122-e590565a55.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}
