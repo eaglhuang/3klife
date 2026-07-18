@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0173
 title: Batch Wave Selector
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -51,6 +51,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-e2e-2026-07
 surfaceFamily: batch-selector
+completed_at: "2026-07-18T17:15:30.187Z"
+completed_by_agent: "codex-gov-auto-batch"
+closedAt: "2026-07-18T17:15:30.187Z"
+closedByActor: "codex-gov-auto-batch"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T17-15-30-187Z-close-2639c94dc05b"
+lastTransitionAt: "2026-07-18T17:15:30.187Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "14ca49168670824a3814ec16ea6b2e32b73a7975"
 ---
 
 # ATM-GOV-0173 - Batch Wave Selector

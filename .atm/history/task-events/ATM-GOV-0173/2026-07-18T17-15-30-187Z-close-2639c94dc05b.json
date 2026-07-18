@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T17-15-30-187Z-close-2639c94dc05b",
+  "taskId": "ATM-GOV-0173",
+  "action": "close",
+  "actorId": "codex-gov-auto-batch",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0173-batch-wave-selector.task.md",
+  "taskSha256": "sha256:577694947376308461200d308d3205354dafdb24d0bca02a1d70e95dd25da7a6",
+  "createdAt": "2026-07-18T17:15:30.187Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0173 --actor codex-gov-auto-batch"
+}
