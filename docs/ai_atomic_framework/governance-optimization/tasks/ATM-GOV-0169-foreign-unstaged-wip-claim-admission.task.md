@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0169
 title: Block claims on foreign or unowned task-scoped WIP
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -52,6 +52,15 @@ atomizationImpact:
       source: packages/cli/src/commands/next/playbook-projection/active-work-summary.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T13:33:18.465Z"
+completed_by_agent: "codex-gpt-5-captain"
+closedAt: "2026-07-18T13:33:18.465Z"
+closedByActor: "codex-gpt-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T13-33-18-465Z-close-87cf240898db"
+lastTransitionAt: "2026-07-18T13:33:18.465Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "471b321f763223d9fd5ac97db889530d9e7ebcc5"
 ---
 
 # ATM-GOV-0169 - Foreign Unstaged WIP Claim Admission

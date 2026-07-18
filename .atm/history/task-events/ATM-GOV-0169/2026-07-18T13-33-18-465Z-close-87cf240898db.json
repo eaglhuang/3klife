@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T13-33-18-465Z-close-87cf240898db",
+  "taskId": "ATM-GOV-0169",
+  "action": "close",
+  "actorId": "codex-gpt-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0169-foreign-unstaged-wip-claim-admission.task.md",
+  "taskSha256": "sha256:28afd5fac8018741d6ecc7d15bc707987cc6f32f4655b3d1df81c90d31051e62",
+  "createdAt": "2026-07-18T13:33:18.465Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0169 --actor codex-gpt-5-captain"
+}
