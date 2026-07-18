@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T06-04-56-736Z-close-f16568765be3",
+  "taskId": "ATM-GOV-0153",
+  "action": "close",
+  "actorId": "atm-core",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0153-real-team-dogfood-promotion-evidence.task.md",
+  "taskSha256": "sha256:fd45e401f2c566d039ba6f5393acab2091eea4d8c0df37e5745296e2b7c3b95d",
+  "createdAt": "2026-07-18T06:04:56.736Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0153 --actor atm-core"
+}
