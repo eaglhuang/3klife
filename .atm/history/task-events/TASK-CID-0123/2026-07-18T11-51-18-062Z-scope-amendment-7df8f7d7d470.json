@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-51-18-062Z-scope-amendment-7df8f7d7d470",
+  "taskId": "TASK-CID-0123",
+  "action": "scope-amendment",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-CID-0123.json",
+  "taskSha256": "sha256:34adbb2fc68a29bd618e3560447ea75fe15ad15f5719bd69905e0722030031cf",
+  "createdAt": "2026-07-18T11:51:18.062Z",
+  "command": "node atm.mjs tasks scope add --task TASK-CID-0123 --actor codex-main --add scripts/validate-transition-event-missing-zero.cjs --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

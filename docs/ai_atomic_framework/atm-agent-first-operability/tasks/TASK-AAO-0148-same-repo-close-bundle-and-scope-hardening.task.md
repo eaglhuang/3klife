@@ -89,15 +89,15 @@ contextMap:
       reason: "same-repo close bundle assembly regression"
     - path: "packages/cli/src/commands/taskflow/__tests__/taskflow-dryrun.spec.ts"
       reason: "dry-run stage-file contract regression"
-completed_at: "2026-06-24T12:32:21.156Z"
+completed_at: "2026-06-24T12:37:59.430Z"
 completed_by_agent: "codex"
-closedAt: "2026-06-24T12:32:21.156Z"
+closedAt: "2026-06-24T12:37:59.430Z"
 closedByActor: "codex"
-closedByCommand: atm tasks close
-lastTransitionId: "2026-06-24T12-32-21-156Z-close-3a20c7d6439e"
-lastTransitionAt: "2026-06-24T12:32:21.156Z"
+closedByCommand: atm tasks reconcile
+lastTransitionId: "2026-06-24T12-37-59-430Z-close-8ec998991b33"
+lastTransitionAt: "2026-06-24T12:37:59.430Z"
 ledgerContractVersion: task-ledger/v1
-delivery_commit: "28f0b1f719a6830df174bbf2f511c4e0925c0268"
+delivery_commit: "66c6237901815ff1be3124788f4db54a2c595064"
 ---
 
 ## Goal

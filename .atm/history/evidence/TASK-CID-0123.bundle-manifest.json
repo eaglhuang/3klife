@@ -1,0 +1,53 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-CID-0123",
+  "updatedAt": "2026-07-18T11:53:16.676Z",
+  "updatedBy": "codex-main",
+  "freshValidationPasses": [
+    "git diff --check",
+    "node scripts/validate-transition-event-missing-zero.cjs"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-18T11:47:19.253Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "be5387c4717fbea3c4b43c974527f82729b4484d",
+      "cached": false
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-18T11:51:39.741Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "b300fc5590e8ddeabc218bbccaafd354db19544e",
+      "cached": false
+    },
+    {
+      "command": "node scripts/validate-transition-event-missing-zero.cjs",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:fc0a04e645122faa147c8d889ce7d5305283a342abffd2e3c57c9c86e2e20bf9",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node scripts/validate-transition-event-missing-zero.cjs"
+      ],
+      "generatedAt": "2026-07-18T11:53:16.719Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "b300fc5590e8ddeabc218bbccaafd354db19544e",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

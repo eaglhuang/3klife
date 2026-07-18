@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-CID-0123",
+  "title": "Transition event missing audit backfill",
+  "status": "running",
+  "milestone": "M19",
+  "dependencies": [
+    "TASK-CID-0122"
+  ],
+  "acceptance": [
+    "`node scripts/validate-transition-event-missing-zero.cjs` reports zero `ATM_TASK_AUDIT_TRANSITION_EVENT_MISSING` findings while allowing unrelated historical audit buckets to remain.",
+    "Affected planning cards keep `status: done`.",
+    "Backfilled transition events use `atm.taskTransition.v1` and match the planning-card `lastTransitionId`.",
+    "No framework source or target deliverable files are changed."
+  ],
+  "deliverables": [
+    "docs/reports/3klife-transition-event-missing-backfill.md",
+    "scripts/validate-transition-event-missing-zero.cjs",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-005-multi-claim-residue-task-resolution.task.md",
+    "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md",
+    ".atm/history/task-events/TASK-AAO-0190/**",
+    ".atm/history/task-events/TASK-AAO-FABLE-003/**",
+    ".atm/history/task-events/TASK-AAO-FABLE-005/**"
+  ],
+  "scopePaths": [
+    "docs/reports/3klife-transition-event-missing-backfill.md",
+    "scripts/validate-transition-event-missing-zero.cjs",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md",
+    "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-005-multi-claim-residue-task-resolution.task.md",
+    "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md",
+    ".atm/history/task-events/TASK-AAO-0190/**",
+    ".atm/history/task-events/TASK-AAO-FABLE-003/**",
+    ".atm/history/task-events/TASK-AAO-FABLE-005/**"
+  ],
+  "validators": [
+    "git diff --check",
+    "node scripts/validate-transition-event-missing-zero.cjs"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": "planning_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [
+    "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md"
+  ],
+  "outOfScope": [
+    "Do not reopen or re-close the affected AAO/RFT tasks.",
+    "Do not modify target repository deliverables.",
+    "Do not suppress manual-done, planning-only, legacy, or cross-repo audit findings."
+  ],
+  "nonGoals": [
+    "Do not change audit rules."
+  ],
+  "evidenceRequired": "command-output",
+  "rollbackStrategy": "revert-governance-backfill",
+  "rollbackNotes": "Revert the planning metadata alignment and synthetic historical transition events if audit classification changes.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.task-audit-history-backfill",
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md",
+    "sectionTitle": "TASK-CID-0123",
+    "headingLine": 57,
+    "hash": "73b1a521d2785d1e"
+  },
+  "importedAt": "2026-07-18T11:51:31.877Z",
+  "claim": {
+    "actorId": "codex-main",
+    "leaseId": "lease-f78ec4244e98",
+    "claimedAt": "2026-07-18T11:46:13.548Z",
+    "heartbeatAt": "2026-07-18T11:46:13.548Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/evidence/TASK-CID-0123.*",
+      ".atm/history/task-events/TASK-AAO-0190/**",
+      ".atm/history/task-events/TASK-AAO-FABLE-003/**",
+      ".atm/history/task-events/TASK-AAO-FABLE-005/**",
+      ".atm/history/task-events/TASK-CID-0123/**",
+      ".atm/history/tasks/TASK-CID-0123.json",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-005-multi-claim-residue-task-resolution.task.md",
+      "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md",
+      "docs/reports/3klife-transition-event-missing-backfill.md",
+      "scripts/validate-transition-event-missing-zero.cjs"
+    ],
+    "state": "active",
+    "intent": "write"
+  },
+  "owner": "codex-main",
+  "startedAt": "2026-07-18T11:46:13.548Z",
+  "startedBySessionId": "session-20260718114613-codex-main-TASK-CID-0123-7082c2993f",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-CID-0123",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-CID-0123.*",
+      ".atm/history/task-events/TASK-AAO-0190/**",
+      ".atm/history/task-events/TASK-AAO-FABLE-003/**",
+      ".atm/history/task-events/TASK-AAO-FABLE-005/**",
+      ".atm/history/task-events/TASK-CID-0123/**",
+      ".atm/history/tasks/TASK-CID-0123.json",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-005-multi-claim-residue-task-resolution.task.md",
+      "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md",
+      "docs/reports/3klife-transition-event-missing-backfill.md",
+      "scripts/validate-transition-event-missing-zero.cjs"
+    ],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/ai_atomic_framework/",
+      "docs/ai_atomic_framework/cid-hardening/",
+      "docs/ai_atomic_framework/cid-hardening/tasks/",
+      "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md"
+    ],
+    "allowPlanningMirror": false,
+    "promptHash": "293516f381829f9eea71b4b3b1490fde8ea38dfd0626eabb7f42b177557ea2fb",
+    "actorId": "codex-main",
+    "createdAt": "2026-07-18T11:46:20.494Z",
+    "status": "active"
+  },
+  "lastTransitionId": "2026-07-18T11-51-31-887Z-import-258911711bd8",
+  "lastTransitionAt": "2026-07-18T11:51:31.887Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

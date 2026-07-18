@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-46-31-882Z-scope-amendment-aab08ce8c657",
+  "taskId": "TASK-CID-0123",
+  "action": "scope-amendment",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-CID-0123.json",
+  "taskSha256": "sha256:025101a85be571bca171ac8deee8e94dd948ff985ea4b26bec79525fd31fd076",
+  "createdAt": "2026-07-18T11:46:31.882Z",
+  "command": "node atm.mjs tasks scope add --task TASK-CID-0123 --actor codex-main --add \"docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-005-multi-claim-residue-task-resolution.task.md,docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
