@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T18-10-38-909Z-close-0437d2712278",
+  "taskId": "ATM-GOV-0175",
+  "action": "close",
+  "actorId": "codex-gov-auto-batch",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0175-durable-broker-scheduler.task.md",
+  "taskSha256": "sha256:c028b525db730ff927646c8722241c2ada307b6ae7f5f7607cc89db06d653bd0",
+  "createdAt": "2026-07-18T18:10:38.909Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0175 --actor codex-gov-auto-batch"
+}

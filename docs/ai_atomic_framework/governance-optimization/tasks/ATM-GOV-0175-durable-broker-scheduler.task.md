@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0175
 title: Durable Broker Scheduler
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -58,6 +58,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-e2e-2026-07
 surfaceFamily: broker-scheduler
+completed_at: "2026-07-18T18:10:38.909Z"
+completed_by_agent: "codex-gov-auto-batch"
+closedAt: "2026-07-18T18:10:38.909Z"
+closedByActor: "codex-gov-auto-batch"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T18-10-38-909Z-close-0437d2712278"
+lastTransitionAt: "2026-07-18T18:10:38.909Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "23be4213da9e998c45493cbb3c718aaa4545074c"
 ---
 
 # ATM-GOV-0175 - Durable Broker Scheduler
