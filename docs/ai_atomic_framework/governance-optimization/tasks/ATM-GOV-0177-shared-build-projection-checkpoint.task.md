@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0177
 title: Shared Build/Projection Executor and Atomic Wave Checkpoint
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -66,6 +66,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-e2e-2026-07
 surfaceFamily: shared-generated-writes
+completed_at: "2026-07-18T18:49:24.389Z"
+completed_by_agent: "codex-gov-auto-batch"
+closedAt: "2026-07-18T18:49:24.389Z"
+closedByActor: "codex-gov-auto-batch"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T18-49-24-389Z-close-3b61a1e75052"
+lastTransitionAt: "2026-07-18T18:49:24.389Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "99e6822951940990c6b77f7c715aa67cf1870a0f"
 ---
 
 # ATM-GOV-0177 - Shared Build/Projection Executor and Atomic Wave Checkpoint

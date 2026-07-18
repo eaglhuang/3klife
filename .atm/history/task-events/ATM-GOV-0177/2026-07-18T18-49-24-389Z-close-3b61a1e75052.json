@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T18-49-24-389Z-close-3b61a1e75052",
+  "taskId": "ATM-GOV-0177",
+  "action": "close",
+  "actorId": "codex-gov-auto-batch",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0177-shared-build-projection-checkpoint.task.md",
+  "taskSha256": "sha256:a7436c0ef06482713705a6443019d972e61d9bdb11b3b0712efd39d564a90cc0",
+  "createdAt": "2026-07-18T18:49:24.389Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0177 --actor codex-gov-auto-batch"
+}
