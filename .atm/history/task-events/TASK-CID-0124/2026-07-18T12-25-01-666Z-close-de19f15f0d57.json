@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T12-25-01-666Z-close-de19f15f0d57",
+  "taskId": "TASK-CID-0124",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0124-transition-evidence-missing-backfill.task.md",
+  "taskSha256": "sha256:092beea25ff35a3e9e78e71cb2446d1b40f016179393d9e88842e470cf34fec1",
+  "createdAt": "2026-07-18T12:25:01.666Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0124 --actor codex-main"
+}
