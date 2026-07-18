@@ -195,3 +195,16 @@ Metrics required by this follow-up:
 - `TASK-LANE-0020` reviews the `2026-07-16T16:52:32Z` repair claim against
   `TASK-CODEX-0204` to decide whether it was a valid orphan repair or the first
   recorded cross-lane interference incident.
+
+## Follow-up: Foreign Unstaged WIP Claim Admission
+
+The ATM-GOV-0168 dogfood exposed a gap outside R1 itself: a second editor can
+modify a task-scoped file before it has written a ledger claim. The existing
+active-work summary sees claims and dirty files separately, but does not block a
+new claim when an unowned dirty file intersects the candidate card scope.
+
+`ATM-GOV-0169` is inserted before the end-to-end batching sequence. It adds a
+precise foreign/unowned WIP classification, blocks only intersecting candidate
+scope, and preserves unrelated dirty files as non-blocking. Its evidence must
+identify the intersecting files and any attributable owner/session; absent
+attribution is reported as `unowned` rather than guessed.
