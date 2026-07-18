@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T08-55-15-476Z-close-07847bf5662b",
+  "taskId": "ATM-GOV-0162",
+  "action": "close",
+  "actorId": "atm-core",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0162-related-task-batching-wave-surface.task.md",
+  "taskSha256": "sha256:bcc90234c4edcc842e23c1dc6274ba3f023b4d6110259f01a707791699f14eac",
+  "createdAt": "2026-07-18T08:55:15.476Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0162 --actor atm-core"
+}

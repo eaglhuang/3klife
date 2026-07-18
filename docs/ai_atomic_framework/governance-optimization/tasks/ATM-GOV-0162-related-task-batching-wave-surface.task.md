@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0162
 title: Add related-task batching for commit build and projection windows
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on:
@@ -42,6 +42,15 @@ atomizationImpact:
       source: packages/core/src/broker/runner-sync-steward-queue.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T08:55:15.476Z"
+completed_by_agent: "atm-core"
+closedAt: "2026-07-18T08:55:15.476Z"
+closedByActor: "atm-core"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T08-55-15-476Z-close-07847bf5662b"
+lastTransitionAt: "2026-07-18T08:55:15.476Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3d698e9d7357ed04095dc636c0b7811d9ec017c6"
 ---
 
 # ATM-GOV-0162 - Add Related-Task Batching For Commit Build And Projection Windows
