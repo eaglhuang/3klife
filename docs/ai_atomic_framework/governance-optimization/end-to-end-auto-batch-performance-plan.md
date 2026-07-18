@@ -33,6 +33,10 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 - `ATM-GOV-0171` 已完成 runner-sync receipt 與 clean-close pathway。它提供後續 close/build 階段需要的 runner receipt 證據。
 - `ATM-GOV-0180` 是 Cursor 擁有的獨立 bug fix，不屬於本產品計畫。
 - `ATM-GOV-0172` 已完成，並承接原計畫第一個缺口功能：`atm.waveManifest.v1`。
+- `ATM-GOV-0173` 已完成 Batch Wave Selector。
+- `ATM-GOV-0174` 已完成 Executor-Neutral Team Wave Runtime。
+- `ATM-GOV-0175` 已完成 Durable Broker Scheduler。
+- `ATM-GOV-0181` 已完成 abandon residue governed disposition；它是收尾安全修補，不屬於本產品計畫主線功能。
 
 因為 0168-0171 已被前置修補佔用，剩餘計畫從 0172 起算。不要重寫已閉卡的歷史 ID 來讓舊編號看起來整齊；應記錄下方對照表，並以目前 ledger 事實繼續往下推進。
 
@@ -45,13 +49,14 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 | ATM-GOV-0170 | prerequisite | done | Oversized-file extraction claim pathway |
 | ATM-GOV-0171 | prerequisite | done | Runner-sync receipt 與 clean-close pathway |
 | ATM-GOV-0172 | 0168 | done | Unified Wave Manifest and Policy |
-| ATM-GOV-0173 | 0170 | planned | Batch Wave Selector |
-| ATM-GOV-0174 | 0171 | planned | Executor-Neutral Team Wave Runtime |
-| ATM-GOV-0175 | 0172 | planned | Durable Broker Scheduler |
+| ATM-GOV-0173 | 0170 | done | Batch Wave Selector |
+| ATM-GOV-0174 | 0171 | done | Executor-Neutral Team Wave Runtime |
+| ATM-GOV-0175 | 0172 | done | Durable Broker Scheduler |
 | ATM-GOV-0176 | 0173 | planned | Shared Delivery Commit Executor |
 | ATM-GOV-0177 | 0174/0175 | planned | Shared Build/Projection Executor plus Atomic Wave Checkpoint |
 | ATM-GOV-0178 | 0176/0177 | planned | Parallel Analyzer v2 plus End-to-End Failure Matrix |
 | ATM-GOV-0179 | 0178/0179 | planned | Strict Paired A/B Dogfood plus Default-On Circuit Breaker |
+| ATM-GOV-0181 | support | done | Abandon residue governed disposition |
 
 ## 任務計畫
 
@@ -63,7 +68,11 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 
 ### ATM-GOV-0173 - Batch Wave Selector
 
-目標：讓 Batch Mode 能把符合條件的 ready cards 選成同一個 wave manifest。
+狀態：done。
+
+已交付 Batch Wave Selector，讓 Batch Mode 以 `atm.waveManifest.v1` 作為唯一正式 wave contract，並保留 serial fallback。
+
+原始目標：讓 Batch Mode 能把符合條件的 ready cards 選成同一個 wave manifest。
 
 必要行為：
 
@@ -76,7 +85,11 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 
 ### ATM-GOV-0174 - Executor-Neutral Team Wave Runtime
 
-目標：執行 wave 時不把 core protocol 綁死在單一 editor 或 worker 機制。
+狀態：done。
+
+已交付 executor-neutral runtime records 與 Team Wave manifest consumption path，workers 產出 patch/evidence/timing/scope attribution，不負責 commit 或 close。
+
+原始目標：執行 wave 時不把 core protocol 綁死在單一 editor 或 worker 機制。
 
 必要行為：
 
@@ -88,7 +101,11 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 
 ### ATM-GOV-0175 - Durable Broker Scheduler
 
-目標：讓 shared write queues 具備 durable 與 wave-aware 能力。
+狀態：done。
+
+已交付 durable broker scheduler 與 `broker schedule` CLI，支援 ticket idempotency、state transition、same-wave compatible batch planning、cross-wave serial fallback 與 collection timeout fallback。
+
+原始目標：讓 shared write queues 具備 durable 與 wave-aware 能力。
 
 必要行為：
 
