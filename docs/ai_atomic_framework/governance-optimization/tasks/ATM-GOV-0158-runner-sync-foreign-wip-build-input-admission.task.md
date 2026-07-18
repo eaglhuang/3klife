@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0158
 title: Scope runner-sync foreign WIP admission to build-input conflicts
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/cli/src/commands/framework-development/runner-sync-admission.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T05:54:39.962Z"
+completed_by_agent: "atm-core"
+closedAt: "2026-07-18T05:54:39.962Z"
+closedByActor: "atm-core"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T05-54-39-962Z-close-3466417c3e20"
+lastTransitionAt: "2026-07-18T05:54:39.962Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2e476d4c794a342d68d3946a3fd6e957b574fcdb"
 ---
 
 # ATM-GOV-0158 - Scope Runner-Sync Foreign WIP Admission To Build-Input Conflicts
@@ -67,7 +76,7 @@ build-input intersection plus the landed-not-closed risk.
 ## Required Behavior
 
 - Reuse or introduce the same framework build-input path policy as
-  `ATM-GOV-0157`.
+  `ATM-GOV-0165`.
 - When inspecting active foreign claims, compute:
   - `foreignClaimFiles`
   - `buildInputIntersectingFiles`

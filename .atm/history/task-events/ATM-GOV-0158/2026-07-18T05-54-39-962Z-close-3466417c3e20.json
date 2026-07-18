@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T05-54-39-962Z-close-3466417c3e20",
+  "taskId": "ATM-GOV-0158",
+  "action": "close",
+  "actorId": "atm-core",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0158-runner-sync-foreign-wip-build-input-admission.task.md",
+  "taskSha256": "sha256:600b9b29e08b07d0129893230679fe591136778760c90ea1c06a3e32ef9561cc",
+  "createdAt": "2026-07-18T05:54:39.962Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0158 --actor atm-core"
+}
