@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-48-10-268Z-close-566d85bc62e4",
+  "taskId": "ATM-GOV-0167",
+  "action": "close",
+  "actorId": "cursor-gov-0167",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0167-lane-dual-session-e2e.task.md",
+  "taskSha256": "sha256:ddc9fcd18a7c8e89f826ea957a738f45c4866f3d20e1043c16acfce8c9d4cd00",
+  "createdAt": "2026-07-18T11:48:10.268Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0167 --actor cursor-gov-0167"
+}
