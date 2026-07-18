@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-CID-0127",
+  "title": "Legacy baseline warning baseline",
+  "status": "running",
+  "milestone": "M19",
+  "dependencies": [
+    "TASK-CID-0126"
+  ],
+  "acceptance": [
+    "`node scripts/validate-legacy-baseline-zero.cjs` reports zero active `ATM_TASK_AUDIT_LEGACY_BASELINE_DONE` findings.",
+    "`node atm.mjs tasks audit --json` remains `ok=true`.",
+    "The report lists the acknowledged count and remaining active warning buckets."
+  ],
+  "deliverables": [
+    "docs/governance/tasks-audit-warning-baseline.json",
+    "docs/reports/3klife-legacy-baseline-warning-baseline.md",
+    "scripts/validate-legacy-baseline-zero.cjs"
+  ],
+  "scopePaths": [
+    "docs/governance/tasks-audit-warning-baseline.json",
+    "docs/reports/3klife-legacy-baseline-warning-baseline.md",
+    "scripts/validate-legacy-baseline-zero.cjs"
+  ],
+  "validators": [
+    "git diff --check",
+    "node scripts/validate-legacy-baseline-zero.cjs"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": "planning_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [
+    "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md"
+  ],
+  "outOfScope": [
+    "Do not acknowledge cross-repo packet warnings.",
+    "Do not rewrite or re-close the affected historical tasks.",
+    "Do not change ATM audit source code.",
+    "Do not modify framework target deliverables."
+  ],
+  "nonGoals": [
+    "Do not convert legacy baseline transitions into fresh ATM CLI close events."
+  ],
+  "evidenceRequired": "command-output",
+  "rollbackStrategy": "revert-baseline",
+  "rollbackNotes": "Revert the legacy-baseline acknowledgement entries, report, and validator if historical baseline policy changes.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.task-audit-warning-baseline",
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+    "sectionTitle": "TASK-CID-0127",
+    "headingLine": 44,
+    "hash": "ae4739f052d59e8d"
+  },
+  "importedAt": "2026-07-18T13:08:13.957Z",
+  "lastTransitionId": "2026-07-18T13-10-51-801Z-scope-amendment-b72ac7ef0795",
+  "lastTransitionAt": "2026-07-18T13:10:51.801Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "codex-main",
+  "reservedAt": "2026-07-18T13:08:15.939Z",
+  "promotedAt": "2026-07-18T13:08:15.941Z",
+  "claim": {
+    "actorId": "codex-main",
+    "leaseId": "lease-6fd81f9903b6",
+    "claimedAt": "2026-07-18T13:08:15.944Z",
+    "heartbeatAt": "2026-07-18T13:08:15.944Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/evidence/TASK-CID-0127.*",
+      ".atm/history/task-events/TASK-CID-0127/**",
+      ".atm/history/tasks/TASK-CID-0127.json",
+      "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+      "docs/governance/tasks-audit-warning-baseline.json",
+      "docs/reports/3klife-legacy-baseline-warning-baseline.md",
+      "scripts/validate-legacy-baseline-zero.cjs"
+    ],
+    "state": "active",
+    "intent": "write"
+  },
+  "startedAt": "2026-07-18T13:08:15.944Z",
+  "startedByActor": "codex-main",
+  "startedBySessionId": "session-20260718130815-codex-main-TASK-CID-0127-b5f3f83f2b",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-CID-0127",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-CID-0127.*",
+      ".atm/history/task-events/TASK-CID-0127/**",
+      ".atm/history/tasks/TASK-CID-0127.json",
+      "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+      "docs/governance/tasks-audit-warning-baseline.json",
+      "docs/reports/3klife-legacy-baseline-warning-baseline.md",
+      "scripts/validate-legacy-baseline-zero.cjs"
+    ],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/ai_atomic_framework/",
+      "docs/ai_atomic_framework/cid-hardening/",
+      "docs/ai_atomic_framework/cid-hardening/tasks/",
+      "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md"
+    ],
+    "allowPlanningMirror": false,
+    "promptHash": "823dee0fc722d4553a0a0aa8149684c6ec95cc75683091e48b2275ac6e6e3b94",
+    "actorId": "codex-main",
+    "createdAt": "2026-07-18T13:08:19.462Z",
+    "status": "active"
+  }
+}
