@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-17-20-462Z-repair-claim-d0de00995fbc",
+  "taskId": "TASK-CID-0091",
+  "action": "repair-claim",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "ready",
+  "taskPath": ".atm/history/tasks/TASK-CID-0091.json",
+  "taskSha256": "sha256:260ba5067a96c5a7b9746074b04ab63aefc83655ca4778d82d8566a28e67a4f2",
+  "createdAt": "2026-07-18T11:17:20.462Z",
+  "command": "node atm.mjs tasks repair-claim --task TASK-CID-0091 --actor codex-main --write --reason \"TASK-CID-0121 clears audit active-state debt: TASK-CID-0091 claim lease expired on 2026-06-15 and no valid active work session remains.\" --json"
+}

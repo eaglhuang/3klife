@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-17-02-991Z-promote-5b88fd8723f5",
+  "taskId": "TASK-CID-0121",
+  "action": "promote",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "reserved",
+  "toStatus": "ready",
+  "taskPath": ".atm/history/tasks/TASK-CID-0121.json",
+  "taskSha256": "sha256:f3a62c9b09070ca234effac267ed64af167259f910e7364468d23816365b5f8a",
+  "createdAt": "2026-07-18T11:17:02.991Z",
+  "command": "node atm.mjs next --claim --task TASK-CID-0121 --actor codex-main --auto-intent --json"
+}

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-17-11-725Z-claim-f24b28ee2e00",
+  "taskId": "TASK-CID-0121",
+  "action": "claim",
+  "actorId": "codex-main",
+  "sessionId": "session-20260718111702-codex-main-TASK-CID-0121-8fc1c4484c",
+  "fromStatus": "ready",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-CID-0121.json",
+  "taskSha256": "sha256:508cf8ab096bee537d766af17c6aff4e848572c3c6cc66a19246d1e484932eeb",
+  "createdAt": "2026-07-18T11:17:11.725Z",
+  "command": "node atm.mjs tasks claim"
+}
