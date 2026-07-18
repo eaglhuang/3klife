@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T17-33-48-621Z-close-d011d8292419",
+  "taskId": "ATM-GOV-0174",
+  "action": "close",
+  "actorId": "codex-gov-auto-batch",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0174-executor-neutral-team-wave-runtime.task.md",
+  "taskSha256": "sha256:652ea8638395ef92cd47881198c7615fee9f5d5c85faf921f4a8536a2800d5ea",
+  "createdAt": "2026-07-18T17:33:48.621Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0174 --actor codex-gov-auto-batch"
+}

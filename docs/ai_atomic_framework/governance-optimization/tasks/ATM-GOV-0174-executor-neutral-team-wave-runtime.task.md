@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0174
 title: Executor-Neutral Team Wave Runtime
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -58,6 +58,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-e2e-2026-07
 surfaceFamily: team-wave-runtime
+completed_at: "2026-07-18T17:33:48.621Z"
+completed_by_agent: "codex-gov-auto-batch"
+closedAt: "2026-07-18T17:33:48.621Z"
+closedByActor: "codex-gov-auto-batch"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T17-33-48-621Z-close-d011d8292419"
+lastTransitionAt: "2026-07-18T17:33:48.621Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ed3de81e0a01bb72929d5539380fdf53cb3178a9"
 ---
 
 # ATM-GOV-0174 - Executor-Neutral Team Wave Runtime
