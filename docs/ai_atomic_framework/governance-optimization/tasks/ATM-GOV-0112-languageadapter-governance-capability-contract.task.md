@@ -5,14 +5,33 @@ title: LanguageAdapter Governance Capability Contract
 milestone: M3
 status: done
 blocked_by: [ATM-GOV-0110]
+depends_on: [ATM-GOV-0110]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
+planning_repo: governance-workbench
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 hostKind: upstream-framework
 alphaGate: validate:guidance
 public_tracking: false
 executionMode: planned-upstream-change
+scopePaths:
+  - packages/plugin-sdk/src/**
+  - packages/core/src/guidance/**
+  - docs/ADAPTER_GUIDE.md
+deliverables:
+  - packages/plugin-sdk/src/**
+  - packages/core/src/guidance/**
+  - docs/ADAPTER_GUIDE.md
+validators:
+  - node --experimental-strip-types scripts/validate-guidance.ts --mode validate
+  - node atm.mjs next --json
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00

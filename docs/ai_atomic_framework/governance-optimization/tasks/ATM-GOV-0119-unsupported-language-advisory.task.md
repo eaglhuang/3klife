@@ -5,14 +5,31 @@ title: Unsupported Language Advisory and Deferred Apply Contract
 milestone: M4
 status: done
 blocked_by: [ATM-GOV-0113, ATM-GOV-0118]
+depends_on: [ATM-GOV-0113, ATM-GOV-0118]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
+planning_repo: governance-workbench
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 hostKind: upstream-framework
 alphaGate: validate:guidance
 public_tracking: false
 executionMode: planned-upstream-change
+scopePaths:
+  - packages/cli/src/commands/runtime-adapter-readiness.ts
+  - docs/SELF_HOSTING_ALPHA.md
+deliverables:
+  - packages/cli/src/commands/runtime-adapter-readiness.ts
+  - docs/SELF_HOSTING_ALPHA.md
+validators:
+  - node atm.mjs next --json
+  - node atm.mjs explain --why blocked --json
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00

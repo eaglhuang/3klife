@@ -5,14 +5,46 @@ title: Multi-language Onefile Validation Matrix for Governance Analysis
 milestone: M4
 status: done
 blocked_by: [ATM-GOV-0117, ATM-GOV-0118, ATM-GOV-0119]
+depends_on: [ATM-GOV-0117, ATM-GOV-0118, ATM-GOV-0119]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
+planning_repo: governance-workbench
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 hostKind: upstream-framework
 alphaGate: validate:guidance
 public_tracking: false
 executionMode: planned-upstream-change
+scopePaths:
+  - scripts/validate-guidance.ts
+  - fixtures/**
+  - docs/multi-agent-compatibility-matrix.md
+deliverables:
+  - scripts/validate-guidance.ts
+  - fixtures/**
+  - docs/multi-agent-compatibility-matrix.md
+validators:
+  - node --experimental-strip-types scripts/validate-guidance.ts --mode validate
+  - npm run validate:guidance
+  - npm run typecheck
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+atomizationImpact:
+  ownerAtomOrMap: atm.multilanguage-onefile-validation-matrix
+  mapUpdates:
+    - scripts/validate-guidance.ts
+    - fixtures/**
+    - docs/multi-agent-compatibility-matrix.md
+  extractionCandidates:
+    - atom: atm.guidance.multilanguage-matrix
+      pattern: ValidationMatrix
+      source: scripts/validate-guidance.ts
+      disposition: preserve
+      inlineReason: legacy delivery reconcile
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00

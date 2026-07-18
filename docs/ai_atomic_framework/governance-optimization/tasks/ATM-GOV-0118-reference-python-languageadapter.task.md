@@ -5,14 +5,47 @@ title: Reference Python LanguageAdapter Governance Implementation
 milestone: M4
 status: done
 blocked_by: [ATM-GOV-0112, ATM-GOV-0116]
+depends_on: [ATM-GOV-0112, ATM-GOV-0116]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
+planning_repo: governance-workbench
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 hostKind: upstream-framework
 alphaGate: validate:python-adapter
 public_tracking: false
 executionMode: planned-upstream-change
+scopePaths:
+  - packages/language-python/**
+  - scripts/validate-python-adapter.ts
+  - docs/SELF_HOSTING_ALPHA.md
+deliverables:
+  - packages/language-python/**
+  - scripts/validate-python-adapter.ts
+  - docs/SELF_HOSTING_ALPHA.md
+validators:
+  - node --experimental-strip-types scripts/validate-python-adapter.ts --mode validate
+  - node --experimental-strip-types scripts/validate-guidance.ts --mode validate
+  - npm run validate:python-adapter
+  - npm run validate:guidance
+  - npm run typecheck
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+atomizationImpact:
+  ownerAtomOrMap: atm.language-python-reference-adapter
+  mapUpdates:
+    - packages/language-python/**
+    - scripts/validate-python-adapter.ts
+  extractionCandidates:
+    - atom: atm.language-python.adapter
+      pattern: LanguageAdapter
+      source: packages/language-python
+      disposition: extract
+      inlineReason: null
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00

@@ -5,14 +5,44 @@ title: Atomize and Infect Dry-Run Planning via LanguageAdapter
 milestone: M3
 status: done
 blocked_by: [ATM-GOV-0114, ATM-GOV-0115]
+depends_on: [ATM-GOV-0114, ATM-GOV-0115]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
+planning_repo: governance-workbench
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
 hostKind: upstream-framework
 alphaGate: validate:guidance
 public_tracking: false
 executionMode: planned-upstream-change
+scopePaths:
+  - packages/cli/src/commands/upgrade.ts
+  - packages/core/src/guidance/route-engine.ts
+deliverables:
+  - packages/cli/src/commands/upgrade.ts
+  - packages/core/src/guidance/route-engine.ts
+validators:
+  - node atm.mjs upgrade --propose --behavior behavior.atomize --dry-run --json
+  - node atm.mjs upgrade --propose --behavior behavior.infect --dry-run --json
+  - npm run validate:guidance
+  - npm run typecheck
+evidence:
+  required: command-backed
+rollback:
+  strategy: revert-commit
+atomizationImpact:
+  ownerAtomOrMap: atm.language-adapter-dry-run-planning
+  mapUpdates:
+    - packages/cli/src/commands/upgrade.ts
+    - packages/core/src/guidance/route-engine.ts
+  extractionCandidates:
+    - atom: atm.upgrade.atomize-infect-dry-run
+      pattern: LanguageAdapter
+      source: packages/cli/src/commands/upgrade.ts
+      disposition: preserve
+      inlineReason: legacy delivery reconcile
 created_at: 2026-05-19T00:00:00+08:00
 created_by_agent: codex-gpt-5
 started_at: 2026-05-19T23:18:55+08:00
