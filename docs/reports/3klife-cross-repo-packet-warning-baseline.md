@@ -4,11 +4,13 @@ Task: TASK-CID-0128
 
 ## Result
 
-- Acknowledged cross-repo packet warnings: 543
-- Total baseline entries after update: 852
+- Acknowledged cross-repo packet warnings: 544
+- Total baseline entries after update: 855
 - Audit ok before baseline refresh: true
 - Scope: all current ATM_TASK_AUDIT_CROSS_REPO_DONE_WITHOUT_PACKET findings are acknowledged by this card.
+- Post-close refresh also acknowledged ATM-GOV-0171, which appeared as a new cross-repo packet finding while this card was being closed.
 - Legacy-baseline and planning-only warning buckets must remain at zero active findings.
+- Acknowledged planning-only warnings after closeback refresh: 45
 
 ## Warning Buckets Before This Baseline Takes Effect
 

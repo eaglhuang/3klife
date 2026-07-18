@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.tasksAuditWarningBaseline.v1",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-07-18T13:42:00.000Z",
+  "generatedAt": "2026-07-18T14:06:00.000Z",
   "sourceTask": "TASK-CID-0128",
   "scope": "planning-only, legacy-baseline, and cross-repo packet done warnings",
   "acknowledgedFindings": [
@@ -6820,6 +6820,30 @@
       "acknowledgedAt": "2026-07-18T13:42:00.000Z",
       "acknowledgedBy": "TASK-CID-0128",
       "reason": "Verified historical external-planning done record; retained as acknowledged cross-repo packet baseline rather than rewritten as fresh target closure."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0128",
+      "path": ".atm/history/tasks/TASK-CID-0128.json",
+      "acknowledgedAt": "2026-07-18T13:59:00.000Z",
+      "acknowledgedBy": "TASK-CID-0128",
+      "reason": "Same-repo planning-authority closeback is governed done; retained as acknowledged audit baseline noise."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0128",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0128-cross-repo-packet-warning-baseline.task.md",
+      "acknowledgedAt": "2026-07-18T13:59:00.000Z",
+      "acknowledgedBy": "TASK-CID-0128",
+      "reason": "Same-repo planning-authority closeback is governed done; retained as acknowledged audit baseline noise."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_CROSS_REPO_DONE_WITHOUT_PACKET",
+      "taskId": "ATM-GOV-0171",
+      "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0171-runner-sync-receipt-clean-close.task.md",
+      "acknowledgedAt": "2026-07-18T14:06:00.000Z",
+      "acknowledgedBy": "TASK-CID-0128",
+      "reason": "Verified historical external-planning done record observed during TASK-CID-0128 closeback; retained as acknowledged cross-repo packet baseline rather than rewritten as fresh target closure."
     }
   ]
 }
