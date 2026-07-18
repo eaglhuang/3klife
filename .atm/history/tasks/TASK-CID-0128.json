@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0128",
   "title": "Cross-repo packet warning baseline",
-  "status": "running",
+  "status": "done",
   "milestone": "M19",
   "dependencies": [
     "TASK-CID-0127"
@@ -75,8 +75,8 @@
     "hash": "317976fd8502a2d5"
   },
   "importedAt": "2026-07-18T13:40:08.842Z",
-  "lastTransitionId": "2026-07-18T13-40-29-177Z-scope-amendment-c93bb324940c",
-  "lastTransitionAt": "2026-07-18T13:40:29.177Z",
+  "lastTransitionId": "2026-07-18T13-56-11-385Z-close-7d53683cfcc6",
+  "lastTransitionAt": "2026-07-18T13:56:11.385Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-main",
   "reservedAt": "2026-07-18T13:40:16.345Z",
@@ -85,7 +85,7 @@
     "actorId": "codex-main",
     "leaseId": "lease-4d050170573c",
     "claimedAt": "2026-07-18T13:40:16.351Z",
-    "heartbeatAt": "2026-07-18T13:40:16.351Z",
+    "heartbeatAt": "2026-07-18T13:56:11.382Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/TASK-CID-0128.*",
@@ -96,8 +96,8 @@
       "docs/reports/3klife-cross-repo-packet-warning-baseline.md",
       "scripts/validate-cross-repo-packet-baseline.cjs"
     ],
-    "state": "active",
-    "intent": "write"
+    "state": "released",
+    "reason": "Delivery commit includes the TASK-CID-0128 source planning mirror card added by scope amendment; it is required for same-repo planning-authority closeback and contains no unrelated task deliverables."
   },
   "startedAt": "2026-07-18T13:40:16.351Z",
   "startedByActor": "codex-main",
@@ -133,5 +133,9 @@
     "actorId": "codex-main",
     "createdAt": "2026-07-18T13:40:21.350Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-07-18T13:56:11.382Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": "session-20260718134016-codex-main-TASK-CID-0128-da22f46d3a",
+  "closeReason": "Delivery commit includes the TASK-CID-0128 source planning mirror card added by scope amendment; it is required for same-repo planning-authority closeback and contains no unrelated task deliverables."
 }

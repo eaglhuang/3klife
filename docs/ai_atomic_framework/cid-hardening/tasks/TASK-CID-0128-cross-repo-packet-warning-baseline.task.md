@@ -2,7 +2,7 @@
 task_id: TASK-CID-0128
 doc_id: doc_cid_0128
 title: "Cross-repo packet warning baseline"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M19
@@ -41,6 +41,15 @@ outOfScope:
   - "Do not modify framework target deliverables."
 nonGoals:
   - "Do not convert cross-repo historical planning records into fresh target-repo deliveries."
+completed_at: "2026-07-18T13:56:11.796Z"
+completed_by_agent: "codex-main"
+closedAt: "2026-07-18T13:56:11.796Z"
+closedByActor: "codex-main"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T13-56-11-796Z-close-9611da322eba"
+lastTransitionAt: "2026-07-18T13:56:11.796Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3dd8ead980b339427ef02037bcf12a8524a871f5"
 ---
 
 # TASK-CID-0128 - Cross-repo packet warning baseline

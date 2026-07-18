@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T13-56-11-796Z-close-9611da322eba",
+  "taskId": "TASK-CID-0128",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0128-cross-repo-packet-warning-baseline.task.md",
+  "taskSha256": "sha256:bb11572af58ab74a9d009503694dab0fcc6ecadd7a0ebc822299eb2e8a4af8c2",
+  "createdAt": "2026-07-18T13:56:11.796Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0128 --actor codex-main"
+}
