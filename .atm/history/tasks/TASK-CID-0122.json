@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-CID-0122",
+  "title": "Stale runtime lock cleanup closeout",
+  "status": "running",
+  "milestone": "M19",
+  "dependencies": [
+    "TASK-CID-0121"
+  ],
+  "acceptance": [
+    "`TASK-CID-0091` status reports live ledger done, planning mirror done, and no residue.",
+    "The stale lock cleanup protected override audit event is committed.",
+    "Lock cleanup reports are committed for the cleaned stale locks.",
+    "No source deliverables or framework target files are modified by this cleanup card."
+  ],
+  "deliverables": [
+    ".atm/history/reports/lock-cleanup/**"
+  ],
+  "scopePaths": [
+    ".atm/history/tasks/TASK-CID-0091.json",
+    ".atm/history/tasks/TASK-CID-0120.json",
+    ".atm/history/tasks/TASK-CID-0121.json",
+    ".atm/history/tasks/TASK-MEM-0001.json",
+    ".atm/history/tasks/TASK-MEM-0002.json",
+    ".atm/history/tasks/TASK-MEM-0005.json",
+    ".atm/history/tasks/TASK-MEM-0006.json",
+    ".atm/history/tasks/TASK-SKL-0001.json",
+    ".atm/history/reports/lock-cleanup/**",
+    ".atm/history/protected-override-audit/**"
+  ],
+  "validators": [
+    "node atm.mjs tasks status --task TASK-CID-0091 --json",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": "planning_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [
+    "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md"
+  ],
+  "outOfScope": [
+    "Do not change task deliverables.",
+    "Do not close unrelated historical task cards.",
+    "Do not edit framework source or target repo files."
+  ],
+  "nonGoals": [
+    "Do not suppress manual-done or cross-repo audit findings."
+  ],
+  "evidenceRequired": "command-output",
+  "rollbackStrategy": "revert-governance-closeout",
+  "rollbackNotes": "Revert the lock cleanup closeout commit if stale lock cleanup reports or ledger release metadata are incorrect.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.task-audit-runtime-lock-cleanup",
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md",
+    "sectionTitle": "TASK-CID-0122",
+    "headingLine": 48,
+    "hash": "9896cab029fa5f01"
+  },
+  "importedAt": "2026-07-18T11:32:05.894Z",
+  "lastTransitionId": "2026-07-18T11-32-12-639Z-claim-ac36a6266f3a",
+  "lastTransitionAt": "2026-07-18T11:32:12.639Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "codex-main",
+  "reservedAt": "2026-07-18T11:32:12.271Z",
+  "promotedAt": "2026-07-18T11:32:12.274Z",
+  "claim": {
+    "actorId": "codex-main",
+    "leaseId": "lease-c5f08b8c6199",
+    "claimedAt": "2026-07-18T11:32:12.277Z",
+    "heartbeatAt": "2026-07-18T11:32:12.277Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/TASK-CID-0122.json",
+      ".atm/history/protected-override-audit/**",
+      ".atm/history/reports/lock-cleanup/**",
+      ".atm/history/tasks/TASK-CID-0091.json",
+      ".atm/history/tasks/TASK-CID-0120.json",
+      ".atm/history/tasks/TASK-CID-0121.json",
+      ".atm/history/tasks/TASK-MEM-0001.json",
+      ".atm/history/tasks/TASK-MEM-0002.json",
+      ".atm/history/tasks/TASK-MEM-0005.json",
+      ".atm/history/tasks/TASK-MEM-0006.json",
+      ".atm/history/tasks/TASK-SKL-0001.json"
+    ],
+    "state": "active",
+    "intent": "write"
+  },
+  "startedAt": "2026-07-18T11:32:12.277Z",
+  "startedByActor": "codex-main",
+  "startedBySessionId": "session-20260718113212-codex-main-TASK-CID-0122-8ea8129c2b",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-CID-0122",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-CID-0122.*",
+      ".atm/history/protected-override-audit/**",
+      ".atm/history/reports/lock-cleanup/**",
+      ".atm/history/task-events/TASK-CID-0122/**",
+      ".atm/history/tasks/TASK-CID-0091.json",
+      ".atm/history/tasks/TASK-CID-0120.json",
+      ".atm/history/tasks/TASK-CID-0121.json",
+      ".atm/history/tasks/TASK-CID-0122.json",
+      ".atm/history/tasks/TASK-MEM-0001.json",
+      ".atm/history/tasks/TASK-MEM-0002.json",
+      ".atm/history/tasks/TASK-MEM-0005.json",
+      ".atm/history/tasks/TASK-MEM-0006.json",
+      ".atm/history/tasks/TASK-SKL-0001.json"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [
+      "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md"
+    ],
+    "allowPlanningMirror": false,
+    "promptHash": "c541247f350e677aade704dff493a86cfa685ba221bdaf5a0da9c6abc722d19e",
+    "actorId": "codex-main",
+    "createdAt": "2026-07-18T11:32:12.639Z",
+    "status": "active"
+  }
+}

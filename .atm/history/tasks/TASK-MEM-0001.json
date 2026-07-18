@@ -96,7 +96,10 @@
     "promptHash": "8dea377463b0e620546337a69d96c021a3723e9af6ff3fe061a976ee343e4ca9",
     "actorId": "claude-fable-5",
     "createdAt": "2026-07-14T10:18:01.036Z",
-    "status": "active"
+    "status": "released",
+    "released": true,
+    "releasedAt": "2026-07-18T11:31:29.038Z",
+    "releasedBy": "codex-main"
   },
   "closedAt": "2026-07-14T10:22:16.397Z",
   "closedByActor": "claude-fable-5",

@@ -114,7 +114,10 @@
     "promptHash": "841f3bd51181a8f7fc1f441862f5eba3c1578b734bae1d94b4dfb6467a737890",
     "actorId": "codex-main",
     "createdAt": "2026-07-18T11:17:11.724Z",
-    "status": "active"
+    "status": "released",
+    "released": true,
+    "releasedAt": "2026-07-18T11:31:29.035Z",
+    "releasedBy": "codex-main"
   },
   "closedAt": "2026-07-18T11:21:54.041Z",
   "closedByActor": "codex-main",
