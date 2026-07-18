@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T07-37-28-224Z-close-7818a89f0ead",
+  "taskId": "ATM-GOV-0160",
+  "action": "close",
+  "actorId": "atm-core",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0160-dependency-gate-code-only-planning-artifacts.task.md",
+  "taskSha256": "sha256:94eaa7efe0c847a251d05dc492b48ed41ee7740db0f03c5ba082ace608657604",
+  "createdAt": "2026-07-18T07:37:28.224Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0160 --actor atm-core"
+}

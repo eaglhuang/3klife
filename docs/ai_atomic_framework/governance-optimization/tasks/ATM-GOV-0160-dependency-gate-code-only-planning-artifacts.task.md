@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0160
 title: Make dependency gates block code only and allow planning artifacts
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -42,6 +42,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/dependency-gate.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T07:37:28.224Z"
+completed_by_agent: "atm-core"
+closedAt: "2026-07-18T07:37:28.224Z"
+closedByActor: "atm-core"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T07-37-28-224Z-close-7818a89f0ead"
+lastTransitionAt: "2026-07-18T07:37:28.224Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "92934bc1f6a9cbd03a19311d130d5e25be6794f7"
 ---
 
 # ATM-GOV-0160 - Make Dependency Gates Block Code Only And Allow Planning Artifacts
