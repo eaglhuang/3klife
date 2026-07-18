@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0164
 title: Unlink sealed worktree node_modules junction before git worktree remove
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -33,6 +33,15 @@ rollback:
 atomizationImpact:
   ownerAtomOrMap: atm.sealed-runner-build
   mapUpdates: []
+completed_at: "2026-07-18T03:10:56.770Z"
+completed_by_agent: "cursor-gov-0164"
+closedAt: "2026-07-18T03:10:56.770Z"
+closedByActor: "cursor-gov-0164"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T03-10-56-770Z-close-24265656086d"
+lastTransitionAt: "2026-07-18T03:10:56.770Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c6112af1b316a8feaa92e51c8a1032524445ea42"
 ---
 
 # ATM-GOV-0164 - Unlink Junction Before git worktree remove

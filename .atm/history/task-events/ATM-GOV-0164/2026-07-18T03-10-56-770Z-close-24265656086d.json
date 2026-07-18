@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T03-10-56-770Z-close-24265656086d",
+  "taskId": "ATM-GOV-0164",
+  "action": "close",
+  "actorId": "cursor-gov-0164",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0164-unlink-before-worktree-remove.task.md",
+  "taskSha256": "sha256:c2b785f07b3ce2dc624f80197b03535f9259b99dc289a754c5303bae54e21f2c",
+  "createdAt": "2026-07-18T03:10:56.770Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0164 --actor cursor-gov-0164"
+}
