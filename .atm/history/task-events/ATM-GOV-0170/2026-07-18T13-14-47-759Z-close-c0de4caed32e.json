@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T13-14-47-759Z-close-c0de4caed32e",
+  "taskId": "ATM-GOV-0170",
+  "action": "close",
+  "actorId": "codex-gpt-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0170-oversized-file-extraction-claim-pathway.task.md",
+  "taskSha256": "sha256:212584c5cda01080d8adc3fc6861bb025996d0373e2ed6ae2bba7fadb406f44c",
+  "createdAt": "2026-07-18T13:14:47.759Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0170 --actor codex-gpt-5-captain"
+}

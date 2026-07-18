@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0170
 title: Governed extraction claim pathway for oversized touched files
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -46,6 +46,15 @@ atomizationImpact:
       source: scripts/validate-physical-line-budget.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T13:14:47.759Z"
+completed_by_agent: "codex-gpt-5-captain"
+closedAt: "2026-07-18T13:14:47.759Z"
+closedByActor: "codex-gpt-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T13-14-47-759Z-close-c0de4caed32e"
+lastTransitionAt: "2026-07-18T13:14:47.759Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a27dccd60679b9ac2d308c9e39001a1cd2450bda"
 ---
 
 # ATM-GOV-0170 - Oversized File Extraction Claim Pathway
