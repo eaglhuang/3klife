@@ -28,7 +28,7 @@ deliverables:
 validators:
   - node --strip-types tests/cli/lane-dual-session-e2e.test.ts
   - node --strip-types tests/cli/pre-team-dual-captain-e2e.test.ts
-  - node --strip-types packages/core/src/broker/__tests__/broker-registry-transaction.test.ts
+  - node --strip-types tests/cli/broker-registry-transaction.test.ts
   - npm run typecheck
   - npm run validate:cli
 evidence:
