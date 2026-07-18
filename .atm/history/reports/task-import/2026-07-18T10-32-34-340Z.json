@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-07-18T10:32:34.340Z",
+  "planPath": "rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-RFT-0025.json"
+  ],
+  "taskIds": [
+    "TASK-RFT-0025"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-RFT-0025",
+      "planPath": "rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md",
+      "sectionTitle": "TASK-RFT-0025",
+      "headingLine": 69,
+      "hash": "8a2257b15b86813a"
+    }
+  ]
+}

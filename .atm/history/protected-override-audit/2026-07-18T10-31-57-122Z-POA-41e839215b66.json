@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-41e839215b66",
+  "recordedAt": "2026-07-18T10:31:57.122Z",
+  "actorId": null,
+  "taskId": "TASK-RFT-0020",
+  "surface": "tasks import --write recovery flags",
+  "command": "node atm.mjs tasks import --from docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0020-git-governance-commit-scope-policy-map.task.md --write --json",
+  "flags": [
+    "--force"
+  ],
+  "permission": "backend.tasks.import.write",
+  "leaseId": "EMG-TASK-RFT-0020-f816c6b26b",
+  "reason": "Direct task runtime import backend write.",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.import.write"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-07-18T10-31-57-120Z-EMG-TASK-RFT-0020-f816c6b26b.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}

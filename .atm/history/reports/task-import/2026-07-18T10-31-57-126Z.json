@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-07-18T10:31:57.126Z",
+  "planPath": "rft-hardening/tasks/TASK-RFT-0020-git-governance-commit-scope-policy-map.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-RFT-0020.json"
+  ],
+  "taskIds": [
+    "TASK-RFT-0020"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-RFT-0020",
+      "planPath": "rft-hardening/tasks/TASK-RFT-0020-git-governance-commit-scope-policy-map.task.md",
+      "sectionTitle": "TASK-RFT-0020",
+      "headingLine": 80,
+      "hash": "6c9c45d66e62704f"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-07-18T10:32:31.577Z",
+  "planPath": "rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-RFT-0024.json"
+  ],
+  "taskIds": [
+    "TASK-RFT-0024"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-RFT-0024",
+      "planPath": "rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md",
+      "sectionTitle": "TASK-RFT-0024",
+      "headingLine": 79,
+      "hash": "091338ff0034ce9f"
+    }
+  ]
+}

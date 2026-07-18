@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-07-18T10:32:29.421Z",
+  "planPath": "rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-RFT-0023.json"
+  ],
+  "taskIds": [
+    "TASK-RFT-0023"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-RFT-0023",
+      "planPath": "rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md",
+      "sectionTitle": "TASK-RFT-0023",
+      "headingLine": 68,
+      "hash": "c291d05026c23def"
+    }
+  ]
+}

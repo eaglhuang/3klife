@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-RFT-0020",
   "title": "git-governance.ts commit-scope policy map extraction",
-  "status": "planned",
+  "status": "done",
   "milestone": "RFT-M7",
   "dependencies": [],
   "acceptance": [],
@@ -26,6 +26,7 @@
   "validators": [
     "npm run typecheck",
     "npm run validate:cli",
+    "node --strip-types scripts/validate-atom-file-size.ts --max-lines 600 --files packages/cli/src/commands/git-governance/commit-scope-policy.ts packages/cli/src/commands/git-governance/commit-bundle-filter.ts packages/cli/src/commands/git-governance/governance-residue-policy.ts packages/cli/src/commands/git-governance/__tests__/commit-scope-policy.spec.ts docs/reports/git-governance-atomic-map.md",
     "node --strip-types scripts/validate-governance-commands.ts --mode validate",
     "node --strip-types scripts/validate-git-hooks-enforcement.ts",
     "node --strip-types packages/cli/src/commands/git-governance/__tests__/commit-scope-policy.spec.ts",
@@ -76,11 +77,11 @@
   "source": {
     "planPath": "rft-hardening/tasks/TASK-RFT-0020-git-governance-commit-scope-policy-map.task.md",
     "sectionTitle": "TASK-RFT-0020",
-    "headingLine": 69,
-    "hash": "ca2ee54a97cff975"
+    "headingLine": 80,
+    "hash": "6c9c45d66e62704f"
   },
-  "importedAt": "2026-07-13T16:36:56.199Z",
-  "lastTransitionId": "2026-07-13T16-36-56-207Z-import-61e66425f001",
-  "lastTransitionAt": "2026-07-13T16:36:56.207Z",
+  "importedAt": "2026-07-18T10:31:57.126Z",
+  "lastTransitionId": "2026-07-18T10-31-57-132Z-import-ac89ebe8c85b",
+  "lastTransitionAt": "2026-07-18T10:31:57.132Z",
   "ledgerContractVersion": "task-ledger/v1"
 }

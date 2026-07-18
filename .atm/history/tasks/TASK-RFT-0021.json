@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-RFT-0021",
   "title": "team.ts route and execution strategy map extraction",
-  "status": "planned",
+  "status": "done",
   "milestone": "RFT-M7",
   "dependencies": [
     "TASK-RFT-0020"
@@ -27,6 +27,7 @@
   "validators": [
     "npm run typecheck",
     "npm run validate:cli",
+    "node --strip-types scripts/validate-atom-file-size.ts --max-lines 600 --files packages/cli/src/commands/team/team-route-map.ts packages/cli/src/commands/team/team-execution-lane.ts packages/cli/src/commands/team/role-provider-resolution.ts packages/cli/src/commands/team/__tests__/team-route-map.spec.ts docs/reports/team-command-atomic-map.md",
     "node --strip-types scripts/validate-team-agents.ts",
     "node --strip-types packages/cli/src/commands/team/__tests__/team-route-map.spec.ts",
     "git diff --check"
@@ -69,11 +70,11 @@
   "source": {
     "planPath": "rft-hardening/tasks/TASK-RFT-0021-team-command-strategy-map.task.md",
     "sectionTitle": "TASK-RFT-0021",
-    "headingLine": 63,
-    "hash": "5fd7376881c41944"
+    "headingLine": 73,
+    "hash": "bd18c65e49cd456f"
   },
-  "importedAt": "2026-07-13T16:36:56.170Z",
-  "lastTransitionId": "2026-07-13T16-36-56-177Z-import-f23b1cb07712",
-  "lastTransitionAt": "2026-07-13T16:36:56.177Z",
+  "importedAt": "2026-07-18T10:32:23.275Z",
+  "lastTransitionId": "2026-07-18T10-32-23-282Z-import-9525e1710244",
+  "lastTransitionAt": "2026-07-18T10:32:23.282Z",
   "ledgerContractVersion": "task-ledger/v1"
 }

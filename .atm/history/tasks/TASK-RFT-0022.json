@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-RFT-0022",
   "title": "next.ts nextAction assembly second-wave extraction",
-  "status": "planned",
+  "status": "done",
   "milestone": "RFT-M7",
   "dependencies": [
     "TASK-RFT-0020"
@@ -28,6 +28,7 @@
   "validators": [
     "npm run typecheck",
     "npm run validate:cli",
+    "node --strip-types scripts/validate-atom-file-size.ts --max-lines 600 --files packages/cli/src/commands/next/next-action-assembly.ts packages/cli/src/commands/next/prompt-scope-resolution.ts packages/cli/src/commands/next/worktree-hints.ts packages/cli/src/commands/next/__tests__/next-action-assembly.spec.ts docs/reports/next-command-atomic-map.md",
     "node --strip-types scripts/validate-prompt-scoped-next.ts",
     "node --strip-types scripts/validate-guidance.ts",
     "node --strip-types packages/cli/src/commands/next/__tests__/next-action-assembly.spec.ts",
@@ -78,11 +79,11 @@
   "source": {
     "planPath": "rft-hardening/tasks/TASK-RFT-0022-next-action-assembly-map.task.md",
     "sectionTitle": "TASK-RFT-0022",
-    "headingLine": 69,
-    "hash": "38e37b3e40372ac8"
+    "headingLine": 79,
+    "hash": "fd20316a7e1ef621"
   },
-  "importedAt": "2026-07-13T16:36:56.249Z",
-  "lastTransitionId": "2026-07-13T16-36-56-258Z-import-a85d24b481c6",
-  "lastTransitionAt": "2026-07-13T16:36:56.258Z",
+  "importedAt": "2026-07-18T10:32:25.528Z",
+  "lastTransitionId": "2026-07-18T10-32-25-536Z-import-7b950a9278c3",
+  "lastTransitionAt": "2026-07-18T10:32:25.536Z",
   "ledgerContractVersion": "task-ledger/v1"
 }

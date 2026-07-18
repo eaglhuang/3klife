@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-RFT-0023",
   "title": "validate-team-agents.ts validator suite map extraction",
-  "status": "planned",
+  "status": "done",
   "milestone": "RFT-M7",
   "dependencies": [
     "TASK-RFT-0021"
@@ -24,6 +24,7 @@
   ],
   "validators": [
     "npm run typecheck",
+    "node --strip-types scripts/validate-atom-file-size.ts --max-lines 600 --files scripts/validators/team-agents/scenario-matrix.ts scripts/validators/team-agents/assertions.ts scripts/validators/team-agents/artifact-fixtures.ts scripts/validators/team-agents/reporter.ts docs/reports/team-agents-validator-map.md",
     "node --strip-types scripts/validate-team-agents.ts",
     "git diff --check"
   ],
@@ -65,11 +66,11 @@
   "source": {
     "planPath": "rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md",
     "sectionTitle": "TASK-RFT-0023",
-    "headingLine": 58,
-    "hash": "2b1aa4e5937d99c1"
+    "headingLine": 68,
+    "hash": "c291d05026c23def"
   },
-  "importedAt": "2026-07-13T16:36:56.246Z",
-  "lastTransitionId": "2026-07-13T16-36-56-255Z-import-8d11341ab4f9",
-  "lastTransitionAt": "2026-07-13T16:36:56.255Z",
+  "importedAt": "2026-07-18T10:32:29.421Z",
+  "lastTransitionId": "2026-07-18T10-32-29-428Z-import-746f2eedb59f",
+  "lastTransitionAt": "2026-07-18T10:32:29.428Z",
   "ledgerContractVersion": "task-ledger/v1"
 }
