@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T04-55-36-868Z-close-481524eb802e",
+  "taskId": "ATM-GOV-0122",
+  "action": "close",
+  "actorId": "codex-gov-sequence",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0122-adopter-atom-version-lineage.task.md",
+  "taskSha256": "sha256:ae8bc18fb456d369e56a2c7b266c21b89ac1bb066c575845a25353d92440e3fd",
+  "createdAt": "2026-07-18T04:55:36.868Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0122 --actor codex-gov-sequence"
+}
