@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0171
 title: Governed runner-sync receipt and clean-close pathway
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -58,6 +58,15 @@ atomizationImpact:
       source: packages/cli/src/commands/taskflow-close.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T14:04:44.664Z"
+completed_by_agent: "codex-gpt-5-captain"
+closedAt: "2026-07-18T14:04:44.664Z"
+closedByActor: "codex-gpt-5-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T14-04-44-664Z-close-e0e9491f9bd9"
+lastTransitionAt: "2026-07-18T14:04:44.664Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b9933040415fabc49eb28bf37d7332aa6c52dcdc"
 ---
 
 # ATM-GOV-0171 - Governed Runner-Sync Receipt and Clean-Close Pathway
