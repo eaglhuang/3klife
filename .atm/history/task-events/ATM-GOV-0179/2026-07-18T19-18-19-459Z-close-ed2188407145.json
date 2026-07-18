@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T19-18-19-459Z-close-ed2188407145",
+  "taskId": "ATM-GOV-0179",
+  "action": "close",
+  "actorId": "codex-gov-auto-batch",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0179-strict-paired-ab-dogfood-circuit-breaker.task.md",
+  "taskSha256": "sha256:e366dc861b445936beb69756499fee8b221606e9435859326a259633c10a3c20",
+  "createdAt": "2026-07-18T19:18:19.459Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0179 --actor codex-gov-auto-batch"
+}

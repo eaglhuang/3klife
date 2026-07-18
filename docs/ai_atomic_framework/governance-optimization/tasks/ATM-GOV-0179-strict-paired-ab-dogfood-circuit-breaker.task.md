@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0179
 title: Strict Paired A/B Dogfood and Default-On Circuit Breaker
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -47,6 +47,15 @@ atomizationImpact:
     - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json
 waveId: auto-batch-e2e-2026-07
 surfaceFamily: auto-batch-evidence
+completed_at: "2026-07-18T19:18:19.459Z"
+completed_by_agent: "codex-gov-auto-batch"
+closedAt: "2026-07-18T19:18:19.459Z"
+closedByActor: "codex-gov-auto-batch"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T19-18-19-459Z-close-ed2188407145"
+lastTransitionAt: "2026-07-18T19:18:19.459Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d032ab1be70725e3cd90de36d48f1f2832833106"
 ---
 
 # ATM-GOV-0179 - Strict Paired A/B Dogfood and Default-On Circuit Breaker
