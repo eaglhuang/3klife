@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T12-30-06-595Z-scope-amendment-584e02fc102e",
+  "taskId": "TASK-CID-0125",
+  "action": "scope-amendment",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-CID-0125.json",
+  "taskSha256": "sha256:51f1c54e5ec7b4f5782365df8c25403b522fd052ad29b3b685521f5a32a4947d",
+  "createdAt": "2026-07-18T12:30:06.595Z",
+  "command": "node atm.mjs tasks scope add --task TASK-CID-0125 --actor codex-main --add \"docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0001-atomization-planning-sdk-contract.task.md,docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0002-js-adapter-candidate-discovery.task.md,docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0003-python-adapter-sdk-promotion.task.md,docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0004-broker-candidate-bridge.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0108-recover-atm-map-0003-from-preserved-0102-tag.task.md\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

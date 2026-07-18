@@ -34,6 +34,15 @@ notes: "2026-06-01 | status: open | validation: pending | change: Phase 0 create
 closed_at: "2026-06-07T12:50:00+08:00"
 closed_by_agent: "captain-bulk-reconcile-2026-06-07"
 reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
+completed_at: "2026-06-07T23:12:15+08:00"
+completed_by_agent: "historical-backfill"
+closedAt: "2026-06-07T23:12:15+08:00"
+closedByActor: "historical-backfill"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0125"
+lastTransitionId: "2026-06-07T23-12-15+08-00-close-6413f8faad0d"
+lastTransitionAt: "2026-06-07T23:12:15+08:00"
+ledgerContractVersion: "task-ledger/v1"
+delivery_commit: "343ce28f884ce0aa4d7ff45704601c7024f19581"
 ---
 
 # TASK-AAO-0108 Recover ATM-MAP-0003 from preserved 0102 tag
