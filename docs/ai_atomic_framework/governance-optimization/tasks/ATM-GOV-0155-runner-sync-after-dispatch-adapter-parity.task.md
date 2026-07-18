@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0155
 title: Runner sync after dispatch planning gate adapter parity
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -36,6 +36,15 @@ atomizationImpact:
   mapUpdates:
     - release/atm-root-drop/atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json
     - release/atm-root-drop/atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json
+completed_at: "2026-07-18T05:04:56.872Z"
+completed_by_agent: "codex-gov-sequence"
+closedAt: "2026-07-18T05:04:56.872Z"
+closedByActor: "codex-gov-sequence"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T05-04-56-872Z-close-f762333138c4"
+lastTransitionAt: "2026-07-18T05:04:56.872Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "129c23653fd3ad479cdb1471fb24e3829b5c4639"
 ---
 
 # ATM-GOV-0155 - Runner Sync After Dispatch Planning Gate Adapter Parity

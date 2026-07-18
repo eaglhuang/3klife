@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T05-04-56-872Z-close-f762333138c4",
+  "taskId": "ATM-GOV-0155",
+  "action": "close",
+  "actorId": "codex-gov-sequence",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0155-runner-sync-after-dispatch-adapter-parity.task.md",
+  "taskSha256": "sha256:8686aab4328cdb8ab8f8961863158158ec960d4f1422b705e71e131347d25ef7",
+  "createdAt": "2026-07-18T05:04:56.872Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0155 --actor codex-gov-sequence"
+}
