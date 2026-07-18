@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0163
 title: Prevent sealed runner build from wiping host node_modules via junction cleanup
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -48,6 +48,15 @@ atomizationImpact:
       source: scripts/run-sealed-runner-build.ts
       disposition: inline
       inlineReason: Helper stays under 600 lines in the sealed-build script; extract only if a second caller appears.
+completed_at: "2026-07-18T02:54:04.431Z"
+completed_by_agent: "cursor-gov-0163"
+closedAt: "2026-07-18T02:54:04.431Z"
+closedByActor: "cursor-gov-0163"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T02-54-04-431Z-close-ff1b13aca933"
+lastTransitionAt: "2026-07-18T02:54:04.431Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "52d77662ca8cc089149ac71c298410eb2b6f4f25"
 ---
 
 # ATM-GOV-0163 - Sealed Runner Build Must Not Wipe Host node_modules
