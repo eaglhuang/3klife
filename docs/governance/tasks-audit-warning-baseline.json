@@ -1,0 +1,321 @@
+{
+  "schemaId": "atm.tasksAuditWarningBaseline.v1",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-07-18T12:46:00.000Z",
+  "sourceTask": "TASK-CID-0126",
+  "scope": "planning-only done warnings only",
+  "acknowledgedFindings": [
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-AAO-0000",
+      "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0000-doc-finalize-bridge-index.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-AAO-0001",
+      "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0001-report-overlap-matrix-routing.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-AAO-0036",
+      "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-AAO-0060",
+      "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0060-branch-and-worktree-archive-inventory-after-m16-operability-chain.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-AAO-0103",
+      "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-AAO-0111",
+      "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0111-atm-taskflow-dry-run-orchestrator.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0001",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0001-cid-hardening-control-plane-bootstrap.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0005",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0005-p0-cid-first-parallel-conflict-advisor-cli-contract.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0009",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0009-patch-proposal-capsule-contract.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0010",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0010-write-broker-lane-router-contract.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0011",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0011-neutral-write-steward-and-break-glass-handoff-contract.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0012",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0012-team-agents-brokered-write-integration-contract.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0014",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0014-brokered-write-completion-plan-and-task-pack.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0026",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0026-agr-baseline-survey-and-cid-broker-gap-map.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0027",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0027-agr-implementation-pack-and-acceptance-matrix.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0038",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0038-agr-ship-review-risk-ledger-and-adoption-recommendation.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0039",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0039-next-agr-implementation-dispatch-pack.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0047",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0047-atm-parallel-dispatch-closeout-forensics-and-root-cause-report.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0091",
+      "path": ".atm/history/tasks/TASK-CID-0091.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0091",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0120",
+      "path": ".atm/history/tasks/TASK-CID-0120.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0120",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0121",
+      "path": ".atm/history/tasks/TASK-CID-0121.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0121",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0121-stale-claim-and-framework-lock-cleanup.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0122",
+      "path": ".atm/history/tasks/TASK-CID-0122.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0122",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0123",
+      "path": ".atm/history/tasks/TASK-CID-0123.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0123",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0124",
+      "path": ".atm/history/tasks/TASK-CID-0124.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0124",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0124-transition-evidence-missing-backfill.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0125",
+      "path": ".atm/history/tasks/TASK-CID-0125.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0125",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0125-manual-done-closeback-backfill.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-RFT-0044-team-legacy-runtime-governance-surfaces",
+      "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0044-team-legacy-runtime-governance-surfaces.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-RFT-0045-taskflow-dryrun-spec-atom-map",
+      "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0045-taskflow-dryrun-spec-atom-map.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-SKL-0001",
+      "path": ".atm/history/tasks/TASK-SKL-0001.json",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-SKL-0001",
+      "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-TEAM-0001",
+      "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0001-team-agents-planning-roster-reset.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-TEAM-0026",
+      "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-TEAM-0077",
+      "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0077-node-utf8-skill-repair-and-captain-guidance.task.md",
+      "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    }
+  ]
+}

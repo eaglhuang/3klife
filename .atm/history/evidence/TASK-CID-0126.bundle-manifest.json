@@ -1,0 +1,157 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-CID-0126",
+  "updatedAt": "2026-07-18T12:57:43.500Z",
+  "updatedBy": "codex-main",
+  "freshValidationPasses": [
+    "git diff --check",
+    "node scripts/validate-planning-only-baseline.cjs",
+    "typecheck",
+    "validate:atm-stability-closeout",
+    "validate:cli",
+    "validate:git-head-evidence"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-18T12:54:27.850Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "node scripts/validate-planning-only-baseline.cjs",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e422c3b1a821f76580090262fbff53d7eb68317ddabbd19ec4576580666cd9a3",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node scripts/validate-planning-only-baseline.cjs"
+      ],
+      "generatedAt": "2026-07-18T12:56:05.962Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run validate:atm-stability-closeout",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:6d61d78942acdbd65942814c36dc22441301baf3043a05b8bf84df17ecf45de1",
+      "stderrSha256": "sha256:ca7cbf9f673e38e47ea9c6351170ee1aedbdd8c6af1547cbb1a46af49ee197b1",
+      "validators": [
+        "validate:atm-stability-closeout"
+      ],
+      "generatedAt": "2026-07-18T12:56:48.860Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run check:ts-syntax",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:ee64a77404dc5fcd39b32f0e672ad027cbe91cded3737d019b74f38657499a7c",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-07-18T12:56:50.394Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run atm:doctor",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:db47e89553a1edb3786ebbebcf1e0abee731d8cc3d571201e702d3fa41d04f73",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-07-18T12:56:51.699Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run check:ts-syntax",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:ee64a77404dc5fcd39b32f0e672ad027cbe91cded3737d019b74f38657499a7c",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "typecheck"
+      ],
+      "generatedAt": "2026-07-18T12:57:11.183Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run atm:doctor",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:db47e89553a1edb3786ebbebcf1e0abee731d8cc3d571201e702d3fa41d04f73",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "validate:cli"
+      ],
+      "generatedAt": "2026-07-18T12:57:11.339Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run validate:atm-stability-closeout",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:6d61d78942acdbd65942814c36dc22441301baf3043a05b8bf84df17ecf45de1",
+      "stderrSha256": "sha256:ca7cbf9f673e38e47ea9c6351170ee1aedbdd8c6af1547cbb1a46af49ee197b1",
+      "validators": [
+        "validate:git-head-evidence"
+      ],
+      "generatedAt": "2026-07-18T12:57:11.340Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run check:ts-syntax",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:ee64a77404dc5fcd39b32f0e672ad027cbe91cded3737d019b74f38657499a7c",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "typecheck"
+      ],
+      "generatedAt": "2026-07-18T12:57:21.387Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run atm:doctor",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:db47e89553a1edb3786ebbebcf1e0abee731d8cc3d571201e702d3fa41d04f73",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "validate:cli"
+      ],
+      "generatedAt": "2026-07-18T12:57:34.116Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    },
+    {
+      "command": "npm run validate:atm-stability-closeout",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:574b7b814f49262d265470e351fe8adf57575f37e721a9abafbfd561888840ec",
+      "stderrSha256": "sha256:ca7cbf9f673e38e47ea9c6351170ee1aedbdd8c6af1547cbb1a46af49ee197b1",
+      "validators": [
+        "validate:git-head-evidence"
+      ],
+      "generatedAt": "2026-07-18T12:57:43.543Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "c5dc4459dfdab2022ff3ff1c0ab0f356dbfb2cdf",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

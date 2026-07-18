@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T12-56-15-422Z-scope-amendment-b49522b564e0",
+  "taskId": "TASK-CID-0126",
+  "action": "scope-amendment",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-CID-0126.json",
+  "taskSha256": "sha256:188cbc0390c6d541f101a1f9cb1fc5b571736ac69b1f0aba4802c17f7759c9ec",
+  "createdAt": "2026-07-18T12:56:15.422Z",
+  "command": "node atm.mjs tasks scope add --task TASK-CID-0126 --actor codex-main --add docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0126-planning-only-warning-baseline.task.md --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
