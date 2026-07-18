@@ -52,7 +52,7 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 | ATM-GOV-0173 | 0170 | done | Batch Wave Selector |
 | ATM-GOV-0174 | 0171 | done | Executor-Neutral Team Wave Runtime |
 | ATM-GOV-0175 | 0172 | done | Durable Broker Scheduler |
-| ATM-GOV-0176 | 0173 | planned | Shared Delivery Commit Executor |
+| ATM-GOV-0176 | 0173 | done | Shared Delivery Commit Executor |
 | ATM-GOV-0177 | 0174/0175 | planned | Shared Build/Projection Executor plus Atomic Wave Checkpoint |
 | ATM-GOV-0178 | 0176/0177 | planned | Parallel Analyzer v2 plus End-to-End Failure Matrix |
 | ATM-GOV-0179 | 0178/0179 | planned | Strict Paired A/B Dogfood plus Default-On Circuit Breaker |
@@ -117,7 +117,11 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 
 ### ATM-GOV-0176 - Shared Delivery Commit Executor
 
-目標：允許 broker-owned shared delivery commits 處理同 wave 且相容的任務。
+狀態：done。
+
+已交付 `broker batch execute --surface commit` 與 `atm.sharedWriteReceipt.v1`，可驗證 same-wave compatible tickets、claim/validator evidence、stale HEAD、file slices 與 temporary-index isolation。
+
+原始目標：允許 broker-owned shared delivery commits 處理同 wave 且相容的任務。
 
 必要行為：
 
