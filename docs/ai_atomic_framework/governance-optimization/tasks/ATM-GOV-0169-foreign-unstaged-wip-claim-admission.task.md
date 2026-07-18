@@ -4,7 +4,9 @@ title: Block claims on foreign or unowned task-scoped WIP
 status: planned
 owner: atm-core
 priority: P0
-depends_on: []
+depends_on:
+  - ATM-GOV-0170
+amendment_epoch: 1
 related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
@@ -60,6 +62,11 @@ ATM-BUG-2026-07-18-002 reproduced a shared-worktree collision: `next --claim`
 reported no foreign work and admitted a second lane for ATM-GOV-0168 while a
 Cursor agent already had unstaged changes in the card's declared scope. The
 absence of a ledger claim must not make task-scoped WIP invisible.
+
+Claiming this card first exposed ATM-BUG-2026-07-18-003: the line-budget gate
+blocks `claim-orchestration.ts` before an extraction/refactor task can legally
+touch it. ATM-GOV-0170 must close first so this card can proceed without a
+manual bypass.
 
 ## Required Behavior
 
