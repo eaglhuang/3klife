@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0176
 title: Shared Delivery Commit Executor
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -58,6 +58,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-e2e-2026-07
 surfaceFamily: shared-delivery-commit
+completed_at: "2026-07-18T18:30:41.924Z"
+completed_by_agent: "codex-gov-auto-batch"
+closedAt: "2026-07-18T18:30:41.924Z"
+closedByActor: "codex-gov-auto-batch"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T18-30-41-924Z-close-88d823c3dc9f"
+lastTransitionAt: "2026-07-18T18:30:41.924Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2c6943c18d7c0ccb956397218d7714a8918f77a4"
 ---
 
 # ATM-GOV-0176 - Shared Delivery Commit Executor

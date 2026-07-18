@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T18-30-41-924Z-close-88d823c3dc9f",
+  "taskId": "ATM-GOV-0176",
+  "action": "close",
+  "actorId": "codex-gov-auto-batch",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0176-shared-delivery-commit-executor.task.md",
+  "taskSha256": "sha256:875fb71d9bb7d2011680d35dc8cd1354f80dfdbc5c98a853aca2994bb453c337",
+  "createdAt": "2026-07-18T18:30:41.924Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0176 --actor codex-gov-auto-batch"
+}
