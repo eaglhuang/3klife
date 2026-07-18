@@ -1,8 +1,8 @@
 {
   "schemaId": "atm.tasksAuditWarningBaseline.v1",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-07-18T13:09:00.000Z",
-  "sourceTask": "TASK-CID-0126",
+  "generatedAt": "2026-07-18T13:21:00.000Z",
+  "sourceTask": "TASK-CID-0127",
   "scope": "planning-only and legacy-baseline done warnings",
   "acknowledgedFindings": [
     {
@@ -2460,6 +2460,22 @@
       "acknowledgedAt": "2026-07-18T12:46:00.000Z",
       "acknowledgedBy": "TASK-CID-0126",
       "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0127",
+      "path": ".atm/history/tasks/TASK-CID-0127.json",
+      "acknowledgedAt": "2026-07-18T13:21:00.000Z",
+      "acknowledgedBy": "TASK-CID-0127",
+      "reason": "Same-repo planning-authority closeback is governed done; retained as acknowledged audit baseline noise."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0127",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+      "acknowledgedAt": "2026-07-18T13:21:00.000Z",
+      "acknowledgedBy": "TASK-CID-0127",
+      "reason": "Same-repo planning-authority closeback is governed done; retained as acknowledged audit baseline noise."
     }
   ]
 }
