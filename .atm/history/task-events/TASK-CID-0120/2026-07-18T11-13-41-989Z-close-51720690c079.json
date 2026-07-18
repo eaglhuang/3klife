@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-13-41-989Z-close-51720690c079",
+  "taskId": "TASK-CID-0120",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md",
+  "taskSha256": "sha256:ca5b196ece6059fe836a93e7f2a793c0bfb6ecc78b5af1add9b5d5930c2e3346",
+  "createdAt": "2026-07-18T11:13:41.989Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0120 --actor codex-main"
+}
