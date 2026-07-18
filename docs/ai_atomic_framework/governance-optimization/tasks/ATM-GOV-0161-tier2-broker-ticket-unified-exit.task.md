@@ -1,11 +1,11 @@
 ---
 task_id: ATM-GOV-0161
 title: Convert Tier 2 shared-surface refusals into broker tickets
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
-  - ATM-GOV-0157
+  - ATM-GOV-0165
   - ATM-GOV-0158
   - ATM-GOV-0159
   - ATM-GOV-0160
@@ -47,6 +47,15 @@ atomizationImpact:
       source: packages/cli/src/commands/taskflow/broker-gate.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T08:20:20.548Z"
+completed_by_agent: "atm-core"
+closedAt: "2026-07-18T08:20:20.548Z"
+closedByActor: "atm-core"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T08-20-20-548Z-close-b411f159a5d7"
+lastTransitionAt: "2026-07-18T08:20:20.548Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f3310cd32c02fab9f972a7b5ce94d6f07956d653"
 ---
 
 # ATM-GOV-0161 - Convert Tier 2 Shared-Surface Refusals Into Broker Tickets

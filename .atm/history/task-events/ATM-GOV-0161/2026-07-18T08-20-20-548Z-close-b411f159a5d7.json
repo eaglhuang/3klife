@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T08-20-20-548Z-close-b411f159a5d7",
+  "taskId": "ATM-GOV-0161",
+  "action": "close",
+  "actorId": "atm-core",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0161-tier2-broker-ticket-unified-exit.task.md",
+  "taskSha256": "sha256:f89663fafdd121a5796b094afbf470f78a9bace030d8c57d4ffe8604b7784e96",
+  "createdAt": "2026-07-18T08:20:20.548Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0161 --actor atm-core"
+}
