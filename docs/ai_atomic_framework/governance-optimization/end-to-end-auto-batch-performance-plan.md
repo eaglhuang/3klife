@@ -54,7 +54,7 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 | ATM-GOV-0175 | 0172 | done | Durable Broker Scheduler |
 | ATM-GOV-0176 | 0173 | done | Shared Delivery Commit Executor |
 | ATM-GOV-0177 | 0174/0175 | done | Shared Build/Projection Executor plus Atomic Wave Checkpoint |
-| ATM-GOV-0178 | 0176/0177 | planned | Parallel Analyzer v2 plus End-to-End Failure Matrix |
+| ATM-GOV-0178 | 0176/0177 | done | Parallel Analyzer v2 plus End-to-End Failure Matrix；閉卡提交：AI-Atomic-Framework `6e95382` / `c3fda19` / `21679f0`，3KLife `92fe708` |
 | ATM-GOV-0179 | 0178/0179 | planned | Strict Paired A/B Dogfood plus Default-On Circuit Breaker |
 | ATM-GOV-0181 | support | done | Abandon residue governed disposition |
 
@@ -149,6 +149,8 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 - planning closeback 必須 compare-and-swap safe；planning closeback 失敗時必須留下 `reconcile-required` evidence。
 
 ### ATM-GOV-0178 - Parallel Analyzer v2 與端到端失敗矩陣
+
+完成狀態：已完成。Analyzer v2 已輸出 broker ticket waitedMs、atchRate、generated-write counts、lane intervention count、端到端 failure matrix，並在目前真實 ledger 缺 broker ticket 事件時標記 observability-gap。
 
 目標：證明管線可量測且 failure-safe。
 
