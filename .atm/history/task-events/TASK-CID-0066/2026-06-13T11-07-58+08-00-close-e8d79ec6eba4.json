@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "taskId": "TASK-CID-0066",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0066-atm-new-user-workflow-guide-closeout.task.md",
+  "taskSha256": null,
+  "action": "close",
+  "fromStatus": "open",
+  "toStatus": "done",
+  "actorId": "captain",
+  "createdAt": "2026-06-13T11:07:58+08:00",
+  "command": "historical planning closeback backfill for TASK-CID-0124",
+  "reason": "Backfilled missing transition evidence for historical done planning card during TASK-CID-0124.",
+  "sourceTaskId": "TASK-CID-0124"
+}

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "taskId": "TASK-AAO-0145",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0145-auto-generated-residue-guard-and-auto-clean.task.md",
+  "taskSha256": null,
+  "action": "close",
+  "fromStatus": "open",
+  "toStatus": "done",
+  "actorId": "codex-gpt-5.4-mini",
+  "createdAt": "2026-06-19T16:34:37.625Z",
+  "command": "historical planning closeback backfill for TASK-CID-0124",
+  "reason": "Backfilled missing transition evidence for historical done planning card during TASK-CID-0124.",
+  "sourceTaskId": "TASK-CID-0124"
+}
