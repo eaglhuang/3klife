@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0125",
   "title": "Manual done closeback audit backfill",
-  "status": "running",
+  "status": "done",
   "milestone": "M19",
   "dependencies": [
     "TASK-CID-0124"
@@ -73,8 +73,8 @@
     "hash": "ae71d2c8c9d1a38e"
   },
   "importedAt": "2026-07-18T12:29:48.601Z",
-  "lastTransitionId": "2026-07-18T12-30-06-595Z-scope-amendment-584e02fc102e",
-  "lastTransitionAt": "2026-07-18T12:30:06.595Z",
+  "lastTransitionId": "2026-07-18T12-37-12-911Z-close-817d5d801f2c",
+  "lastTransitionAt": "2026-07-18T12:37:12.911Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-main",
   "reservedAt": "2026-07-18T12:29:54.109Z",
@@ -83,7 +83,7 @@
     "actorId": "codex-main",
     "leaseId": "lease-4e1aac87b6ff",
     "claimedAt": "2026-07-18T12:29:54.115Z",
-    "heartbeatAt": "2026-07-18T12:29:54.115Z",
+    "heartbeatAt": "2026-07-18T12:37:12.910Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/TASK-CID-0125.*",
@@ -102,8 +102,8 @@
       "docs/reports/3klife-manual-done-closeback-backfill.md",
       "scripts/validate-manual-done-zero.cjs"
     ],
-    "state": "active",
-    "intent": "write"
+    "state": "released",
+    "reason": "closed"
   },
   "startedAt": "2026-07-18T12:29:54.115Z",
   "startedByActor": "codex-main",
@@ -147,5 +147,8 @@
     "actorId": "codex-main",
     "createdAt": "2026-07-18T12:29:58.583Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-07-18T12:37:12.910Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": "session-20260718122954-codex-main-TASK-CID-0125-fb95562d91"
 }

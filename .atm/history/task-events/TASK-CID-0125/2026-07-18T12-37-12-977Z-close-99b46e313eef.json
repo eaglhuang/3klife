@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T12-37-12-977Z-close-99b46e313eef",
+  "taskId": "TASK-CID-0125",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0125-manual-done-closeback-backfill.task.md",
+  "taskSha256": "sha256:25c14fd783e3112b20a6fc5c1b4907a476c039241e9ab41dea6a2f99fe67735e",
+  "createdAt": "2026-07-18T12:37:12.977Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0125 --actor codex-main"
+}

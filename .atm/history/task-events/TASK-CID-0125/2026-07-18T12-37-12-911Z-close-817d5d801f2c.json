@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T12-37-12-911Z-close-817d5d801f2c",
+  "taskId": "TASK-CID-0125",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": "session-20260718122954-codex-main-TASK-CID-0125-fb95562d91",
+  "fromStatus": "running",
+  "toStatus": "done",
+  "taskPath": ".atm/history/tasks/TASK-CID-0125.json",
+  "taskSha256": "sha256:fc156040af03ee9df401ffff0fa4d60dfc3e981e88ca4ec3548be469c63f52fc",
+  "createdAt": "2026-07-18T12:37:12.911Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0125 --actor codex-main --status done --historical-delivery cb4de0ad4b9e4f6b1e40f2b57cc89ca4b7953ba4",
+  "closure": {
+    "schemaId": "atm.taskClosureTransition.v1",
+    "batchId": null,
+    "sessionId": "session-20260718122954-codex-main-TASK-CID-0125-fb95562d91",
+    "closurePacketPath": null,
+    "evidenceFreshness": null,
+    "validationPasses": [],
+    "requiredGates": [],
+    "requiredGatesSnapshot": null
+  }
+}
