@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T16-04-26-037Z-close-9f119b26cea4",
+  "taskId": "ATM-GOV-0172",
+  "action": "close",
+  "actorId": "codex-gpt-5-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0172-unified-wave-manifest-policy.task.md",
+  "taskSha256": "sha256:42ae002783c803d5ebd46c2e365ca136f558b6b988cfb31690ef2aaf2a42dfa7",
+  "createdAt": "2026-07-18T16:04:26.037Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0172 --actor codex-gpt-5-captain"
+}
