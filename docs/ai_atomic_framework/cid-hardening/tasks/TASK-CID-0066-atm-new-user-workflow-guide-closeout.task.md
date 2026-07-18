@@ -5,8 +5,8 @@ status: done
 priority: P1
 closure_authority: target_repo
 started_by_agent: captain
-completed_by_agent: captain
-completed_at: 2026-06-13T11:07:58+08:00
+completed_by_agent: "captain"
+completed_at: "2026-06-13T11:07:58+08:00"
 depends_on:
   - TASK-CID-0063
 scopePaths:
@@ -48,6 +48,13 @@ contextMap:
     - referencePath: "README.md"
       referenceTaskId: "TASK-CID-0066"
       description: "public docs stay simple, framework-neutral, and route agents back through taskflow/next"
+closedAt: "2026-06-13T11:07:58+08:00"
+closedByActor: "captain"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
+lastTransitionId: "2026-06-13T11-07-58+08-00-close-e8d79ec6eba4"
+lastTransitionAt: "2026-06-13T11:07:58+08:00"
+ledgerContractVersion: "task-ledger/v1"
+delivery_commit: "fc26e6b6e645cb19e0df77c0a2b5782e4455d568"
 ---
 
 ## Goal

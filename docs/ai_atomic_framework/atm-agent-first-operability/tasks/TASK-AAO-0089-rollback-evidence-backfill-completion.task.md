@@ -33,6 +33,15 @@ nonGoals:
 closed_at: "2026-06-07T12:50:00+08:00"
 closed_by_agent: "captain-bulk-reconcile-2026-06-07"
 reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from in_progress."
+completed_at: "2026-06-07T23:12:15+08:00"
+completed_by_agent: "antigravity-gemini-3.5-flash"
+closedAt: "2026-06-07T23:12:15+08:00"
+closedByActor: "antigravity-gemini-3.5-flash"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
+lastTransitionId: "2026-06-07T23-12-15+08-00-close-00324bac87f2"
+lastTransitionAt: "2026-06-07T23:12:15+08:00"
+ledgerContractVersion: "task-ledger/v1"
+delivery_commit: "343ce28f884ce0aa4d7ff45704601c7024f19581"
 ---
 
 ## Goal

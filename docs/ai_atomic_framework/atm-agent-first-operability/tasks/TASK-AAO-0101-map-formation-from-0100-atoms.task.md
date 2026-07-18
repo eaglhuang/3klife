@@ -39,6 +39,15 @@ notes: "2026-05-31 | 狀態: blocked | 驗證: discovery stop | 變更: Phase 1 
 closed_at: "2026-06-07T12:50:00+08:00"
 closed_by_agent: "captain-bulk-reconcile-2026-06-07"
 reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from blocked."
+completed_at: "2026-06-07T23:12:15+08:00"
+completed_by_agent: "historical-backfill"
+closedAt: "2026-06-07T23:12:15+08:00"
+closedByActor: "historical-backfill"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
+lastTransitionId: "2026-06-07T23-12-15+08-00-close-2e5152e4b23a"
+lastTransitionAt: "2026-06-07T23:12:15+08:00"
+ledgerContractVersion: "task-ledger/v1"
+delivery_commit: "343ce28f884ce0aa4d7ff45704601c7024f19581"
 ---
 
 ## Discovery findings (Phase 1 撞牆 evidence)

@@ -40,6 +40,15 @@ notes: "2026-05-31 | 狀態: open | 驗證: pending | 變更: Phase 0 開卡重�
 closed_at: "2026-06-07T12:50:00+08:00"
 closed_by_agent: "captain-bulk-reconcile-2026-06-07"
 reconcile_note: "Bulk reconcile 2026-06-07: deliverables and/or close-commits verified by audit; status backfilled from open."
+completed_at: "2026-06-07T23:12:15+08:00"
+completed_by_agent: "historical-backfill"
+closedAt: "2026-06-07T23:12:15+08:00"
+closedByActor: "historical-backfill"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
+lastTransitionId: "2026-06-07T23-12-15+08-00-close-db0e17bf1f50"
+lastTransitionAt: "2026-06-07T23:12:15+08:00"
+ledgerContractVersion: "task-ledger/v1"
+delivery_commit: "343ce28f884ce0aa4d7ff45704601c7024f19581"
 ---
 
 # TASK-AAO-0102 Map formation retry — ATM-MAP-0003 + integration test stub

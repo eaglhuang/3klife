@@ -28,6 +28,15 @@ non_goals:
   - Do not block paper writing on this task (the survey + 4 cards are enough scaffolding).
 created_at: 2026-06-10T00:00:00+08:00
 created_by_agent: ClaudeCode_haiku-4-5
+completed_at: "2026-06-11T11:02:34+08:00"
+completed_by_agent: "historical-backfill"
+closedAt: "2026-06-11T11:02:34+08:00"
+closedByActor: "historical-backfill"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
+lastTransitionId: "2026-06-11T11-02-34+08-00-close-385706329905"
+lastTransitionAt: "2026-06-11T11:02:34+08:00"
+ledgerContractVersion: "task-ledger/v1"
+delivery_commit: "f40917f9ebe6961f8cb56ed13a0c16d9389e43ff"
 ---
 
 # TASK-ASP-0005 3KLife Coordination & Baseline Measurement

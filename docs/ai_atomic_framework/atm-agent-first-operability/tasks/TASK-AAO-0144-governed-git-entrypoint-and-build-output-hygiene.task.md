@@ -83,6 +83,12 @@ contextMap:
 completed_at: "2026-06-18T13:27:53.455Z"
 completed_by_agent: "cursor-gpt-5.2"
 delivery_commit: "2c6f90664"
+closedAt: "2026-06-18T13:27:53.455Z"
+closedByActor: "cursor-gpt-5.2"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
+lastTransitionId: "2026-06-18T13-27-53-455Z-close-586366f67f27"
+lastTransitionAt: "2026-06-18T13:27:53.455Z"
+ledgerContractVersion: "task-ledger/v1"
 ---
 
 ## Goal

@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T12-19-48-859Z-scope-amendment-8d854fd820d5",
+  "taskId": "TASK-CID-0124",
+  "action": "scope-amendment",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-CID-0124.json",
+  "taskSha256": "sha256:f2a2f05d86fb550c2aab004986e30e0f4bd17c0abfacb2f285dbefdfa34505d0",
+  "createdAt": "2026-07-18T12:19:48.859Z",
+  "command": "node atm.mjs tasks scope add --task TASK-CID-0124 --actor codex-main --add \"docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0005-3klife-coordination-baseline.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0079-framework-commit-range-baseline-forward-roll.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0080-pre-push-hook-baseline-filter.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0081-bootstrap-behavior-pack-ownership-backfill.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0082-cid-backfill-atom-id-to-cid-sidecar.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0083-external-task-source-plugin-interface.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0084-atm-markdown-task-source-reference-plugin.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0085-context-map-schema-extension.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0086-plugin-hooks-tasks-new-cli.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0087-advisory-commit-hook-contextmap.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0088-rollback-evidence-backfill.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0089-rollback-evidence-backfill-completion.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0101-map-formation-from-0100-atoms.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0102-map-formation-retry-with-int-test.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0142-auto-run-declared-validators-into-evidence-before-close.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0143-close-absorbs-regenerable-artifacts-and-correct-planning-mirror-edits.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0144-governed-git-entrypoint-and-build-output-hygiene.task.md,docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0145-auto-generated-residue-guard-and-auto-clean.task.md,docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0066-atm-new-user-workflow-guide-closeout.task.md\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

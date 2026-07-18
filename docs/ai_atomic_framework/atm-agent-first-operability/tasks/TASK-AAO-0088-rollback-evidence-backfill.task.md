@@ -30,6 +30,15 @@ nonGoals:
   - "Do not use --no-verify or --force to bypass hooks"
   - "Do not perform ownership backfill or other backfill types"
   - "Do not change schemaVersion or .gitignore or baseline"
+completed_at: "2026-05-30T14:06:34+08:00"
+completed_by_agent: "antigravity-gemini-3.5-flash"
+closedAt: "2026-05-30T14:06:34+08:00"
+closedByActor: "antigravity-gemini-3.5-flash"
+closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
+lastTransitionId: "2026-05-30T14-06-34+08-00-close-884c3a64cde9"
+lastTransitionAt: "2026-05-30T14:06:34+08:00"
+ledgerContractVersion: "task-ledger/v1"
+delivery_commit: "fe3ce712b2e27893c1ee7751fa1aa96ab77a9f4c"
 ---
 
 ## Goal
