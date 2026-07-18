@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0159
 title: Add shared code docs ledger scope classification and lane event foundation
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -17,7 +17,6 @@ scopePaths:
   - packages/cli/src/commands/lane-session/events.ts
   - packages/cli/src/commands/lane-session/__tests__/events.spec.ts
   - packages/cli/src/commands/tasks/task-option-parsers/scope-options.ts
-  - docs/governance/command-surface.md
 deliverables:
   - packages/core/src/broker/atm-core-scope.ts
   - packages/core/src/broker/__tests__/atm-core-scope.test.ts
@@ -42,6 +41,15 @@ atomizationImpact:
       source: packages/core/src/broker/atm-core-scope.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T05:30:30.923Z"
+completed_by_agent: "codex-gov-sequence"
+closedAt: "2026-07-18T05:30:30.923Z"
+closedByActor: "codex-gov-sequence"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T05-30-30-923Z-close-e8586de98d66"
+lastTransitionAt: "2026-07-18T05:30:30.923Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0b4940f415eaef4a7a73dce422217fa49191702f"
 ---
 
 # ATM-GOV-0159 - Add Shared Code Docs Ledger Scope Classification And Lane Event Foundation

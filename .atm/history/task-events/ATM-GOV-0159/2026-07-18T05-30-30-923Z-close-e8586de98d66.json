@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T05-30-30-923Z-close-e8586de98d66",
+  "taskId": "ATM-GOV-0159",
+  "action": "close",
+  "actorId": "codex-gov-sequence",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0159-scope-classification-lane-events-foundation.task.md",
+  "taskSha256": "sha256:e022a2ec4d330ee3a590107038b4100f6fd2eccb79c8a5fc8a96e26db9ca03b5",
+  "createdAt": "2026-07-18T05:30:30.923Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0159 --actor codex-gov-sequence"
+}
