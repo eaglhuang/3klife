@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T08-00-05-339Z-close-9aa53895699b",
+  "taskId": "ATM-GOV-0165",
+  "action": "close",
+  "actorId": "atm-core",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0165-taskflow-runner-staleness-scope-gate.task.md",
+  "taskSha256": "sha256:178ab165083573dbb2fecf85fc5e820bfdc418dc9bee1e42775b96d5d86e876b",
+  "createdAt": "2026-07-18T08:00:05.339Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0165 --actor atm-core"
+}
