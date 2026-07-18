@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-CID-0120",
+  "title": "3KLife task audit debt triage report",
+  "status": "running",
+  "milestone": "CID-audit-debt",
+  "dependencies": [],
+  "acceptance": [
+    "A machine-readable bucket report records total findings, errors, warnings, and grouped finding codes.",
+    "A human-readable report lists the recommended CID repair sequence.",
+    "The card does not repair or reclassify historical task records directly."
+  ],
+  "deliverables": [
+    "docs/reports/3klife-task-audit-debt-triage.md",
+    "docs/reports/3klife-task-audit-debt-triage.json",
+    "scripts/validate-task-audit-triage.cjs"
+  ],
+  "scopePaths": [
+    "docs/reports/3klife-task-audit-debt-triage.md",
+    "docs/reports/3klife-task-audit-debt-triage.json",
+    "scripts/validate-task-audit-triage.cjs"
+  ],
+  "validators": [
+    "node scripts/validate-task-audit-triage.cjs",
+    "git diff --check"
+  ],
+  "planningRepo": "3KLife",
+  "targetRepo": "3KLife",
+  "closureAuthority": "planning_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [
+    "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md"
+  ],
+  "outOfScope": [
+    "Do not repair individual historical task cards in this triage card.",
+    "Do not mutate framework target repository files.",
+    "Do not create a GOV-series card for 3KLife audit debt."
+  ],
+  "nonGoals": [
+    "No full-repo audit green claim.",
+    "No blanket acknowledgement policy for legacy baseline warnings."
+  ],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "revert-commit",
+  "rollbackNotes": "Revert the triage report and task card if the audit bucket classification is incorrect.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atm.task-audit-debt-triage",
+    "atomCid": null,
+    "mapUpdates": [],
+    "extractionCandidates": [
+      {
+        "atom": "atm.task-audit-debt-triage.report-artifact",
+        "pattern": "Report Artifact",
+        "source": "docs/reports/3klife-task-audit-debt-triage.json",
+        "disposition": "inline",
+        "inlineReason": "The oversized file is a generated machine-readable audit bucket report, not a source module to extract."
+      }
+    ]
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md",
+    "sectionTitle": "TASK-CID-0120",
+    "headingLine": 47,
+    "hash": "898b01fcf03174f5"
+  },
+  "importedAt": "2026-07-18T11:10:52.366Z",
+  "claim": {
+    "actorId": "codex-main",
+    "leaseId": "lease-40ec285b48fe",
+    "claimedAt": "2026-07-18T11:03:06.257Z",
+    "heartbeatAt": "2026-07-18T11:03:06.257Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/TASK-CID-0120.json",
+      "docs/reports/3klife-task-audit-debt-triage.json",
+      "docs/reports/3klife-task-audit-debt-triage.md"
+    ],
+    "state": "active",
+    "intent": "write"
+  },
+  "owner": "codex-main",
+  "startedAt": "2026-07-18T11:03:06.257Z",
+  "startedBySessionId": "session-20260718110306-codex-main-TASK-CID-0120-0e832d72c2",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-CID-0120",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-CID-0120.*",
+      ".atm/history/task-events/TASK-CID-0120/**",
+      ".atm/history/tasks/TASK-CID-0120.json",
+      "docs/reports/3klife-task-audit-debt-triage.json",
+      "docs/reports/3klife-task-audit-debt-triage.md"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "d52927de459cddd9ac80bd374b2e1e5869f2b5457106db9b3ce8156316d26f25",
+    "actorId": "codex-main",
+    "createdAt": "2026-07-18T11:03:10.763Z",
+    "status": "active"
+  },
+  "lastTransitionId": "2026-07-18T11-10-52-376Z-import-34f3c8be1081",
+  "lastTransitionAt": "2026-07-18T11:10:52.376Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

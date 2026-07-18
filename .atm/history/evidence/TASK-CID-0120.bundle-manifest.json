@@ -1,0 +1,121 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-CID-0120",
+  "updatedAt": "2026-07-18T11:12:44.194Z",
+  "updatedBy": "codex-main",
+  "freshValidationPasses": [
+    "git diff --check",
+    "node scripts/validate-task-audit-triage.cjs",
+    "typecheck",
+    "validate:cli",
+    "validate:git-head-evidence"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-18T11:05:24.457Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "8045bc039c5d396dc0b49fe6f5336efdcc1c086a",
+      "cached": false
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-18T11:09:38.391Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "8045bc039c5d396dc0b49fe6f5336efdcc1c086a",
+      "cached": false
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-07-18T11:10:53.082Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "8045bc039c5d396dc0b49fe6f5336efdcc1c086a",
+      "cached": false
+    },
+    {
+      "command": "node scripts/validate-task-audit-triage.cjs",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:66af9943b77dd790aba6d3e640ea46117cfc3d0bc3d4e1481b8909c9aef5f2f1",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node scripts/validate-task-audit-triage.cjs"
+      ],
+      "generatedAt": "2026-07-18T11:10:53.179Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "8045bc039c5d396dc0b49fe6f5336efdcc1c086a",
+      "cached": false
+    },
+    {
+      "command": "node scripts/validate-task-audit-triage.cjs",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:66af9943b77dd790aba6d3e640ea46117cfc3d0bc3d4e1481b8909c9aef5f2f1",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node scripts/validate-task-audit-triage.cjs"
+      ],
+      "generatedAt": "2026-07-18T11:10:59.974Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "8045bc039c5d396dc0b49fe6f5336efdcc1c086a",
+      "cached": false
+    },
+    {
+      "command": "npm run check:ts-syntax",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:ee64a77404dc5fcd39b32f0e672ad027cbe91cded3737d019b74f38657499a7c",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "typecheck"
+      ],
+      "generatedAt": "2026-07-18T11:12:19.115Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "129b3ae2ff81945096c875274389b7dfd2542828",
+      "cached": false
+    },
+    {
+      "command": "npm run atm:doctor",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:f0dd80f253c0ea134666f249ef5693bdcf23740db54ee614b2c4cacb6fefd3c6",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "validate:cli"
+      ],
+      "generatedAt": "2026-07-18T11:12:36.625Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "129b3ae2ff81945096c875274389b7dfd2542828",
+      "cached": false
+    },
+    {
+      "command": "npm run validate:atm-stability-closeout",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:5246efb62397bd3bebdfd4943ebc590bb471479425ff7b139e0faef6dc5fbcbe",
+      "stderrSha256": "sha256:ca7cbf9f673e38e47ea9c6351170ee1aedbdd8c6af1547cbb1a46af49ee197b1",
+      "validators": [
+        "validate:git-head-evidence"
+      ],
+      "generatedAt": "2026-07-18T11:12:44.229Z",
+      "runnerKind": "dev-source",
+      "sourceCommit": "129b3ae2ff81945096c875274389b7dfd2542828",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}
