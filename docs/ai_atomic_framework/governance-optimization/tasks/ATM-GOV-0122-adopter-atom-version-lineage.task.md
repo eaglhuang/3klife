@@ -114,3 +114,4 @@ node --experimental-strip-types scripts/validate-registry-diff.ts
 ## Notes
 
 2026-05-20 | status: open | validation: pending | change: Opened from the real `TASK-ATS-0007` blocker in `3klife-npc-brain`, where `registry-diff ATM-NPCBRAIN-0002 --from 0.1.0 --to 0.1.1` could not resolve a versioned atom lineage for evolve proof. | blocker: implementation not started
+2026-07-18 | status: done | validation: `npm run typecheck`; `npm run build`; `node --experimental-strip-types scripts/validate-registry-diff.ts` | change: Closed in target ledger with historical delivery commit `dea1247be` after prerequisite GOV closeback chain was reconciled for ATM-GOV-0112, ATM-GOV-0114, ATM-GOV-0115, ATM-GOV-0116, ATM-GOV-0117, ATM-GOV-0118, ATM-GOV-0119, and ATM-GOV-0120. | blocker: none

@@ -85,28 +85,28 @@ The core contract covers identity, claim/lease, evidence, git governance, langua
 
 | Task ID | Title | Milestone | Status | Blocked By |
 | --- | --- | --- | --- | --- |
-| ATM-GOV-0101 | Actor Identity Registry and Git Identity Contract | M1 | open | - |
-| ATM-GOV-0102 | Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover | M1 | open | ATM-GOV-0101 |
-| ATM-GOV-0103 | Task Opening and Reservation Lifecycle | M1 | open | ATM-GOV-0101 |
-| ATM-GOV-0104 | Evidence-Bound Close and Commit/PR Gate | M1 | open | ATM-GOV-0102 |
-| ATM-GOV-0105 | Git Governance and Commit Trailer Validation | M1 | open | ATM-GOV-0101, ATM-GOV-0102 |
-| ATM-GOV-0106 | Thin Guard Engine for Mutation and Git Checks | M1 | open | ATM-GOV-0102, ATM-GOV-0105 |
-| ATM-GOV-0107 | Integration Plugins for Claude Code, Codex, Gemini, Cursor | M2 | open | ATM-GOV-0106 |
-| ATM-GOV-0108 | No-Hook and Human Collaboration Fallback Profile | M2 | open | ATM-GOV-0106 |
-| ATM-GOV-0109 | Claim Collision Proofing and Conflict Evidence Flow | M2 | open | ATM-GOV-0102, ATM-GOV-0108 |
-| ATM-GOV-0110 | Adapter Neutrality Boundary and Governance Externalization | M2 | open | ATM-GOV-0107 |
+| ATM-GOV-0101 | Actor Identity Registry and Git Identity Contract | M1 | done | - |
+| ATM-GOV-0102 | Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover | M1 | done | ATM-GOV-0101 |
+| ATM-GOV-0103 | Task Opening and Reservation Lifecycle | M1 | done | ATM-GOV-0101 |
+| ATM-GOV-0104 | Evidence-Bound Close and Commit/PR Gate | M1 | done | ATM-GOV-0102 |
+| ATM-GOV-0105 | Git Governance and Commit Trailer Validation | M1 | done | ATM-GOV-0101, ATM-GOV-0102 |
+| ATM-GOV-0106 | Thin Guard Engine for Mutation and Git Checks | M1 | done | ATM-GOV-0102, ATM-GOV-0105 |
+| ATM-GOV-0107 | Integration Plugins for Claude Code, Codex, Gemini, Cursor | M2 | done | ATM-GOV-0106 |
+| ATM-GOV-0108 | No-Hook and Human Collaboration Fallback Profile | M2 | done | ATM-GOV-0106 |
+| ATM-GOV-0109 | Claim Collision Proofing and Conflict Evidence Flow | M2 | done | ATM-GOV-0102, ATM-GOV-0108 |
+| ATM-GOV-0110 | Adapter Neutrality Boundary and Governance Externalization | M2 | done | ATM-GOV-0107 |
 | ATM-GOV-0111 | Antigravity Integration Adapter | M2 | done | ATM-GOV-0109, ATM-GOV-0110 |
-| ATM-GOV-0112 | LanguageAdapter Governance Capability Contract | M3 | open | ATM-GOV-0110 |
-| ATM-GOV-0113 | LanguageAdapter Capability Resolution and Fallback Semantics | M3 | open | ATM-GOV-0112 |
-| ATM-GOV-0114 | LegacyRoutePlan via LanguageAdapter | M3 | open | ATM-GOV-0113 |
-| ATM-GOV-0115 | Source Inventory and Candidate Ranking Signals via LanguageAdapter | M3 | open | ATM-GOV-0113 |
-| ATM-GOV-0116 | Atomize and Infect Dry-Run Planning via LanguageAdapter | M3 | open | ATM-GOV-0114, ATM-GOV-0115 |
-| ATM-GOV-0117 | Reference JavaScript LanguageAdapter Governance Implementation | M4 | open | ATM-GOV-0112, ATM-GOV-0116 |
-| ATM-GOV-0118 | Reference Python LanguageAdapter Governance Implementation | M4 | open | ATM-GOV-0112, ATM-GOV-0116 |
-| ATM-GOV-0119 | Unsupported Language Advisory and Deferred Apply Contract | M4 | open | ATM-GOV-0113, ATM-GOV-0118 |
-| ATM-GOV-0120 | Multi-language Onefile Validation Matrix for Governance Analysis | M4 | open | ATM-GOV-0117, ATM-GOV-0118, ATM-GOV-0119 |
-| ATM-GOV-0121 | LanguageAdapter Governance Authoring Guide | M4 | open | ATM-GOV-0112, ATM-GOV-0120 |
-| ATM-GOV-0122 | Adopter Atom Version Lineage for Evolve Proof | M5 | open | ATM-GOV-0116, ATM-GOV-0118, ATM-GOV-0120 |
+| ATM-GOV-0112 | LanguageAdapter Governance Capability Contract | M3 | done | ATM-GOV-0110 |
+| ATM-GOV-0113 | LanguageAdapter Capability Resolution and Fallback Semantics | M3 | done | ATM-GOV-0112 |
+| ATM-GOV-0114 | LegacyRoutePlan via LanguageAdapter | M3 | done | ATM-GOV-0113 |
+| ATM-GOV-0115 | Source Inventory and Candidate Ranking Signals via LanguageAdapter | M3 | done | ATM-GOV-0113 |
+| ATM-GOV-0116 | Atomize and Infect Dry-Run Planning via LanguageAdapter | M3 | done | ATM-GOV-0114, ATM-GOV-0115 |
+| ATM-GOV-0117 | Reference JavaScript LanguageAdapter Governance Implementation | M4 | done | ATM-GOV-0112, ATM-GOV-0116 |
+| ATM-GOV-0118 | Reference Python LanguageAdapter Governance Implementation | M4 | done | ATM-GOV-0112, ATM-GOV-0116 |
+| ATM-GOV-0119 | Unsupported Language Advisory and Deferred Apply Contract | M4 | done | ATM-GOV-0113, ATM-GOV-0118 |
+| ATM-GOV-0120 | Multi-language Onefile Validation Matrix for Governance Analysis | M4 | done | ATM-GOV-0117, ATM-GOV-0118, ATM-GOV-0119 |
+| ATM-GOV-0121 | LanguageAdapter Governance Authoring Guide | M4 | done | ATM-GOV-0112, ATM-GOV-0120 |
+| ATM-GOV-0122 | Adopter Atom Version Lineage for Evolve Proof | M5 | done | ATM-GOV-0116, ATM-GOV-0118, ATM-GOV-0120 |
 | ATM-GOV-0123 | Registry Lineage Backfill Command | M5 | open | ATM-GOV-0122 |
 
 ## 6. Validation Baseline
