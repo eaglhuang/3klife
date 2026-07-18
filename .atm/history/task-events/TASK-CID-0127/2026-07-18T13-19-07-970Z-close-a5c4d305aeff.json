@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T13-19-07-970Z-close-a5c4d305aeff",
+  "taskId": "TASK-CID-0127",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+  "taskSha256": "sha256:8416590f987029060009569c3b081db4cb3a349b2e17762e46b85fe5c70ff341",
+  "createdAt": "2026-07-18T13:19:07.970Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0127 --actor codex-main"
+}

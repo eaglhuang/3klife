@@ -2,7 +2,7 @@
 task_id: TASK-CID-0127
 doc_id: doc_cid_0127
 title: "Legacy baseline warning baseline"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: M19
@@ -39,6 +39,15 @@ outOfScope:
   - "Do not modify framework target deliverables."
 nonGoals:
   - "Do not convert legacy baseline transitions into fresh ATM CLI close events."
+completed_at: "2026-07-18T13:19:07.970Z"
+completed_by_agent: "codex-main"
+closedAt: "2026-07-18T13:19:07.970Z"
+closedByActor: "codex-main"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T13-19-07-970Z-close-a5c4d305aeff"
+lastTransitionAt: "2026-07-18T13:19:07.970Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0742786b4f5ac951adb5374e7153bcc4ebb3f5a3"
 ---
 
 # TASK-CID-0127 - Legacy baseline warning baseline

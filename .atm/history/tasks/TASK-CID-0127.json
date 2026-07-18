@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0127",
   "title": "Legacy baseline warning baseline",
-  "status": "running",
+  "status": "done",
   "milestone": "M19",
   "dependencies": [
     "TASK-CID-0126"
@@ -61,8 +61,8 @@
     "hash": "ae4739f052d59e8d"
   },
   "importedAt": "2026-07-18T13:08:13.957Z",
-  "lastTransitionId": "2026-07-18T13-10-51-801Z-scope-amendment-b72ac7ef0795",
-  "lastTransitionAt": "2026-07-18T13:10:51.801Z",
+  "lastTransitionId": "2026-07-18T13-19-07-904Z-close-60500fe83336",
+  "lastTransitionAt": "2026-07-18T13:19:07.904Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-main",
   "reservedAt": "2026-07-18T13:08:15.939Z",
@@ -71,7 +71,7 @@
     "actorId": "codex-main",
     "leaseId": "lease-6fd81f9903b6",
     "claimedAt": "2026-07-18T13:08:15.944Z",
-    "heartbeatAt": "2026-07-18T13:08:15.944Z",
+    "heartbeatAt": "2026-07-18T13:19:07.903Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/TASK-CID-0127.*",
@@ -82,8 +82,8 @@
       "docs/reports/3klife-legacy-baseline-warning-baseline.md",
       "scripts/validate-legacy-baseline-zero.cjs"
     ],
-    "state": "active",
-    "intent": "write"
+    "state": "released",
+    "reason": "closed"
   },
   "startedAt": "2026-07-18T13:08:15.944Z",
   "startedByActor": "codex-main",
@@ -119,5 +119,8 @@
     "actorId": "codex-main",
     "createdAt": "2026-07-18T13:08:19.462Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-07-18T13:19:07.903Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": "session-20260718130815-codex-main-TASK-CID-0127-b5f3f83f2b"
 }
