@@ -55,7 +55,7 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 | ATM-GOV-0176 | 0173 | done | Shared Delivery Commit Executor |
 | ATM-GOV-0177 | 0174/0175 | done | Shared Build/Projection Executor plus Atomic Wave Checkpoint |
 | ATM-GOV-0178 | 0176/0177 | done | Parallel Analyzer v2 plus End-to-End Failure Matrix；閉卡提交：AI-Atomic-Framework `6e95382` / `c3fda19` / `21679f0`，3KLife `92fe708` |
-| ATM-GOV-0179 | 0178/0179 | planned | Strict Paired A/B Dogfood plus Default-On Circuit Breaker |
+| ATM-GOV-0179 | 0178/0179 | done | Strict Paired A/B Dogfood plus Default-On Circuit Breaker；完成結果：rollout verdict = `inconclusive`，原因為真實 ledger 尚缺 broker ticket lane events；default-on 未啟用。提交：AI-Atomic-Framework `d032ab1` / `143766a` / `2020739`，3KLife `807439d` |
 | ATM-GOV-0181 | support | done | Abandon residue governed disposition |
 
 ## 任務計畫
@@ -161,6 +161,8 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 - 新增 fixture repos，涵蓋 happy-path wave、conflict、docs-only runner skip、worker partial failure、HEAD moved、build retry、projection retry、checkpoint retry、lane conflict、kill switch、serial fallback。
 
 ### ATM-GOV-0179 - 嚴格 Paired A/B Dogfood 與 Default-On Circuit Breaker
+
+完成狀態：已完成。已新增 auto-batch CLI/env circuit breaker controls、focused A/B dogfood fixture、analyzer rollout verdict。依目前真實 ledger，verdict 為 inconclusive，原因是 broker ticket lane events 仍不足，因此不啟用 default-on。
 
 目標：在 default-on rollout 前證明或否定效能主張。
 
