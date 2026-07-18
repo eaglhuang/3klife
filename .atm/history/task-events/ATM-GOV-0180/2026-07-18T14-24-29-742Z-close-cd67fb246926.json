@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T14-24-29-742Z-close-cd67fb246926",
+  "taskId": "ATM-GOV-0180",
+  "action": "close",
+  "actorId": "cursor-gov-0180",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0180-taskflow-scope-glob-and-multi-add.task.md",
+  "taskSha256": "sha256:dae29555751ea8dabc02ed11ee7742902fbd8cee52d998fdac98c74592cfa207",
+  "createdAt": "2026-07-18T14:24:29.742Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0180 --actor cursor-gov-0180"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0180
 title: taskflow scope glob recognition for new files + tasks scope add multi-flag fix
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -67,6 +67,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/task-option-parsers/scope-options.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T14:24:29.742Z"
+completed_by_agent: "cursor-gov-0180"
+closedAt: "2026-07-18T14:24:29.742Z"
+closedByActor: "cursor-gov-0180"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T14-24-29-742Z-close-cd67fb246926"
+lastTransitionAt: "2026-07-18T14:24:29.742Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d66c3b2de6758449e353c9489f74ae7f0428e615"
 ---
 
 # ATM-GOV-0180 — taskflow scope glob for new files + scope add multi-flag
