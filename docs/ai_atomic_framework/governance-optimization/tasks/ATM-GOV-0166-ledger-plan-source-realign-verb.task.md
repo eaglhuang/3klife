@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0166
 title: Add closed-ledger planning source realign verb
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -62,6 +62,15 @@ atomizationImpact:
       source: packages/cli/src/commands/git-governance/record-commit.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T05:37:23.624Z"
+completed_by_agent: "cursor-gov-0166"
+closedAt: "2026-07-18T05:37:23.624Z"
+closedByActor: "cursor-gov-0166"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T05-37-23-624Z-close-11eab5444d60"
+lastTransitionAt: "2026-07-18T05:37:23.624Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "dec63bb676427aaa9d203bbda25aebb11a209a32"
 ---
 
 # ATM-GOV-0166 - Closed-Ledger Planning Source Realign Verb

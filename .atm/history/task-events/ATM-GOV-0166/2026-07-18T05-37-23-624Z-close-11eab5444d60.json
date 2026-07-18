@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T05-37-23-624Z-close-11eab5444d60",
+  "taskId": "ATM-GOV-0166",
+  "action": "close",
+  "actorId": "cursor-gov-0166",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0166-ledger-plan-source-realign-verb.task.md",
+  "taskSha256": "sha256:6b777406a63204ee226efccaebac5b62e3f3095c685f26c9216456ea9e01a47e",
+  "createdAt": "2026-07-18T05:37:23.624Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0166 --actor cursor-gov-0166"
+}
