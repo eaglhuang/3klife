@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T07-10-34-815Z-close-978511e33995",
+  "taskId": "ATM-GOV-0156",
+  "action": "close",
+  "actorId": "atm-core",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0156-sealed-runner-build-input-cache.task.md",
+  "taskSha256": "sha256:d7215bcc92286736d5e9e5b30751e3f1244ffafc8fe189075437d71ef2c7f660",
+  "createdAt": "2026-07-18T07:10:34.815Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0156 --actor atm-core"
+}

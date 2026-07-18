@@ -1,14 +1,13 @@
 ---
 task_id: ATM-GOV-0156
 title: Add sealed runner build input cache and timing metrics
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
   - ATM-GOV-0150
   - ATM-GOV-0154
   - ATM-GOV-0155
-  - ATM-GOV-0157
   - ATM-GOV-0158
 related_plan: docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md
 planning_repo: governance-workbench
@@ -46,6 +45,15 @@ atomizationImpact:
       source: scripts/run-sealed-runner-build.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T07:10:34.815Z"
+completed_by_agent: "atm-core"
+closedAt: "2026-07-18T07:10:34.815Z"
+closedByActor: "atm-core"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T07-10-34-815Z-close-978511e33995"
+lastTransitionAt: "2026-07-18T07:10:34.815Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b26ca22eed11d5d9022ca70c5e8f9184caa97eb1"
 ---
 
 # ATM-GOV-0156 - Add Sealed Runner Build Input Cache And Timing Metrics
