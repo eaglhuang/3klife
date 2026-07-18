@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-21-54-106Z-close-a71ce05833cb",
+  "taskId": "TASK-CID-0121",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0121-stale-claim-and-framework-lock-cleanup.task.md",
+  "taskSha256": "sha256:378051519be63e6ed664717259767e9209c7b31fe36f5264d57e7f7a8f43c960",
+  "createdAt": "2026-07-18T11:21:54.106Z",
+  "command": "node atm.mjs tasks close --task TASK-CID-0121 --actor codex-main"
+}

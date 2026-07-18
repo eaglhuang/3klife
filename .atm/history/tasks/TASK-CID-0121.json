@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-CID-0121",
   "title": "3KLife stale claim and framework lock cleanup",
-  "status": "running",
+  "status": "done",
   "milestone": "CID-audit-debt",
   "dependencies": [
     "TASK-CID-0120"
@@ -62,8 +62,8 @@
     "hash": "97c283580d6a79db"
   },
   "importedAt": "2026-07-18T11:16:56.239Z",
-  "lastTransitionId": "2026-07-18T11-17-11-725Z-claim-f24b28ee2e00",
-  "lastTransitionAt": "2026-07-18T11:17:11.725Z",
+  "lastTransitionId": "2026-07-18T11-21-54-042Z-close-cdfc9a7fa3f7",
+  "lastTransitionAt": "2026-07-18T11:21:54.042Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-main",
   "reservedAt": "2026-07-18T11:17:02.987Z",
@@ -72,7 +72,7 @@
     "actorId": "codex-main",
     "leaseId": "lease-cf1552955e54",
     "claimedAt": "2026-07-18T11:17:02.997Z",
-    "heartbeatAt": "2026-07-18T11:17:02.997Z",
+    "heartbeatAt": "2026-07-18T11:21:54.041Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/tasks/TASK-CID-0121.json",
@@ -82,8 +82,8 @@
       "docs/reports/3klife-stale-claim-and-lock-cleanup.md",
       "scripts/validate-stale-claim-lock-cleanup.cjs"
     ],
-    "state": "active",
-    "intent": "write"
+    "state": "released",
+    "reason": "closed"
   },
   "startedAt": "2026-07-18T11:17:02.997Z",
   "startedByActor": "codex-main",
@@ -115,5 +115,8 @@
     "actorId": "codex-main",
     "createdAt": "2026-07-18T11:17:11.724Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-07-18T11:21:54.041Z",
+  "closedByActor": "codex-main",
+  "closedBySessionId": "session-20260718111702-codex-main-TASK-CID-0121-8fc1c4484c"
 }
