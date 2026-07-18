@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T02-29-39-733Z-close-6c3f8c49197f",
+  "taskId": "TASK-RFT-0099",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0099-semantic-atomization-metrics.task.md",
+  "taskSha256": "sha256:d76103def8ccefa693c2490de6bb810b1e73e058512012e4a287bf150242be85",
+  "createdAt": "2026-07-18T02:29:39.733Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0099 --actor codex-main"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0099
 title: Semantic atomization metrics for RFT gate evidence
-status: planned
+status: done
 owner: atm-release
 priority: P1
 depends_on:
@@ -46,6 +46,15 @@ outOfScope:
   - Enforcing touched-file physical admission; owned by TASK-RFT-0098.
   - Automatically opening continuation cards; owned by TASK-RFT-0100.
   - Changing the semantic meaning of existing atom/map ids.
+completed_at: "2026-07-18T02:29:39.733Z"
+completed_by_agent: "codex-main"
+closedAt: "2026-07-18T02:29:39.733Z"
+closedByActor: "codex-main"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T02-29-39-733Z-close-6c3f8c49197f"
+lastTransitionAt: "2026-07-18T02:29:39.733Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f33f37749bac08b0dcf7d00e4c7c8807ad1b8b97"
 ---
 
 # TASK-RFT-0099 - Semantic Atomization Metrics for RFT Gate Evidence
