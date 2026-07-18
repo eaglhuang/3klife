@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0178
 title: Parallel Analyzer v2 and End-to-End Failure Matrix
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -53,6 +53,15 @@ atomizationImpact:
       inlineReason: bounded script already under line budget
 waveId: auto-batch-e2e-2026-07
 surfaceFamily: analyzer-evidence
+completed_at: "2026-07-18T19:03:20.099Z"
+completed_by_agent: "codex-gov-auto-batch"
+closedAt: "2026-07-18T19:03:20.099Z"
+closedByActor: "codex-gov-auto-batch"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T19-03-20-099Z-close-9b14364f4a08"
+lastTransitionAt: "2026-07-18T19:03:20.099Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6e95382ac34060047a0628285c1fb44f8c5bb67e"
 ---
 
 # ATM-GOV-0178 - Parallel Analyzer v2 and End-to-End Failure Matrix

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T19-03-20-099Z-close-9b14364f4a08",
+  "taskId": "ATM-GOV-0178",
+  "action": "close",
+  "actorId": "codex-gov-auto-batch",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0178-parallel-analyzer-v2-failure-matrix.task.md",
+  "taskSha256": "sha256:c24a0d9d511ff5181f1c63f97e75da1bd81012997731c4d985617df2afec0e1a",
+  "createdAt": "2026-07-18T19:03:20.099Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0178 --actor codex-gov-auto-batch"
+}
