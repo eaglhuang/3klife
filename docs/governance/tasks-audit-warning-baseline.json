@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.tasksAuditWarningBaseline.v1",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-07-18T12:46:00.000Z",
+  "generatedAt": "2026-07-18T12:59:00.000Z",
   "sourceTask": "TASK-CID-0126",
   "scope": "planning-only done warnings only",
   "acknowledgedFindings": [
@@ -258,6 +258,22 @@
       "taskId": "TASK-CID-0125",
       "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0125-manual-done-closeback-backfill.task.md",
       "acknowledgedAt": "2026-07-18T12:46:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0126",
+      "path": ".atm/history/tasks/TASK-CID-0126.json",
+      "acknowledgedAt": "2026-07-18T12:59:00.000Z",
+      "acknowledgedBy": "TASK-CID-0126",
+      "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
+    },
+    {
+      "code": "ATM_TASK_AUDIT_PLANNING_ONLY_DONE",
+      "taskId": "TASK-CID-0126",
+      "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0126-planning-only-warning-baseline.task.md",
+      "acknowledgedAt": "2026-07-18T12:59:00.000Z",
       "acknowledgedBy": "TASK-CID-0126",
       "reason": "Verified planning-only done task in 3KLife planning authority; not target-repo closure evidence."
     },

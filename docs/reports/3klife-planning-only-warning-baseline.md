@@ -4,8 +4,9 @@ Task: TASK-CID-0126
 
 ## Result
 
-- Acknowledged planning-only warnings: 39
-- Audit ok before baseline: true
+- Acknowledged planning-only warnings: 41
+- Added after closeback self-check: 2
+- Audit ok before baseline refresh: true
 - Scope: only ATM_TASK_AUDIT_PLANNING_ONLY_DONE findings are acknowledged by this card.
 - Cross-repo packet and legacy-baseline warning buckets remain active for later CID cards.
 
