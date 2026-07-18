@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0098
 title: Touched-file physical-line admission gate
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on:
@@ -55,6 +55,15 @@ outOfScope:
   - Lowering the global 600-line cap.
   - Rewriting unrelated claim, close, or commit lifecycle behavior.
   - Opening continuation cards automatically.
+completed_at: "2026-07-18T02:16:04.121Z"
+completed_by_agent: "codex-main"
+closedAt: "2026-07-18T02:16:04.121Z"
+closedByActor: "codex-main"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T02-16-04-121Z-close-deac479414c2"
+lastTransitionAt: "2026-07-18T02:16:04.121Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "27a3b978dba10346d88fd9a394afc242c27ac78a"
 ---
 
 # TASK-RFT-0098 - Touched-File Physical-Line Admission Gate
