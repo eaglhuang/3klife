@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0181
 title: abandon 殘留 governed disposition — 後續卡不再繼承孤兒 residue blocker
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -49,6 +49,15 @@ atomizationImpact:
       source: packages/cli/src/commands/taskflow/
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T16:36:53.013Z"
+completed_by_agent: "cursor-gov-0181"
+closedAt: "2026-07-18T16:36:53.013Z"
+closedByActor: "cursor-gov-0181"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T16-36-53-013Z-close-93632af56d0e"
+lastTransitionAt: "2026-07-18T16:36:53.013Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2d3eb129bd9e97b5911917f9eda33f3ca1651aae"
 ---
 
 # ATM-GOV-0181 — abandon residue governed disposition

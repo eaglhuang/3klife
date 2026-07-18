@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T16-36-53-013Z-close-93632af56d0e",
+  "taskId": "ATM-GOV-0181",
+  "action": "close",
+  "actorId": "cursor-gov-0181",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0181-abandon-residue-governed-disposition.task.md",
+  "taskSha256": "sha256:8c0f79dfa59ccef26cac822e10a33d3bcb2c0218b550990905e84a231c8ba55f",
+  "createdAt": "2026-07-18T16:36:53.013Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0181 --actor cursor-gov-0181"
+}
