@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-13T09-14-51-015Z-close-196d4154d238",
+  "taskId": "TASK-AAO-0190",
+  "action": "close",
+  "actorId": "cursor-grok-4.5",
+  "sessionId": null,
+  "fromStatus": "open",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md",
+  "taskSha256": null,
+  "createdAt": "2026-07-13T09:14:51.015Z",
+  "command": "historical planning closeback backfill for TASK-CID-0123"
+}
