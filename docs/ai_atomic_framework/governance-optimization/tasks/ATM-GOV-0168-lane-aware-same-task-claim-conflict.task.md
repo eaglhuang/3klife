@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0168
 title: Lane-aware same-task claim conflict and adopt rebind
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -74,6 +74,15 @@ atomizationImpact:
       source: packages/cli/src/commands/lane-session/store.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-18T11:11:55.450Z"
+completed_by_agent: "cursor-gov-0168"
+closedAt: "2026-07-18T11:11:55.450Z"
+closedByActor: "cursor-gov-0168"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-18T11-11-55-450Z-close-3f4b142b0cf3"
+lastTransitionAt: "2026-07-18T11:11:55.450Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4c39901a7"
 ---
 
 # ATM-GOV-0168 - Lane-Aware Same-Task Claim Conflict and Adopt Rebind

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-18T11-11-55-450Z-close-3f4b142b0cf3",
+  "taskId": "ATM-GOV-0168",
+  "action": "close",
+  "actorId": "cursor-gov-0168",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0168-lane-aware-same-task-claim-conflict.task.md",
+  "taskSha256": "sha256:c1ae4b28bdb5127710f15991af9c14d4231a45617dbdf944dd801f0ad1e812b9",
+  "createdAt": "2026-07-18T11:11:55.450Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0168 --actor cursor-gov-0168"
+}
