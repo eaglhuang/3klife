@@ -469,12 +469,33 @@ flowchart LR
   F --> G
   G --> H["0189 Plan-level driver"]
   H --> I["0190 Real A/B proof"]
+  F --> J["0191 Runner cache-miss incremental build"]
+  D -. "validator/build telemetry" .-> J
+  Z -. "sealed build duration evidence" .-> J
   Z -. "sealed M1/M2 evidence" .-> I
 ```
 
 0184 與 0185 可平行；0186 與 0187 使用獨立 executor modules，可平行實作；統一命令註冊由 0189 收斂。
 
-功能卡維持九張（0182-0190），不因 lane stamping、shadow instrumentation 或多隊長測試另開平行**功能**卡。cross-cutting 卡另計：TASK-ERR-0001（ErrorCode 契約落地，見「ErrorCode 治理契約」節）與 0193（遙測基座，依賴圖第 0 步）。例外只有兩類：ATM 原子化義務的 **extraction follow-up 卡**（觸碰 >600 行或半 minified 模組時抽新 module 的純重構卡，0170 pathway），以及 M1 里程碑授權、有數據支持的 **gate-optimization 卡**（「數據里程碑與以戰養戰迴圈」節）——前者是把既有邏輯搬家，後者是計畫設計內建的優化出口，都不是第四套系統。
+功能卡維持九張（0182-0190），不因 lane stamping、shadow instrumentation 或多隊長測試另開平行**功能**卡。cross-cutting 卡另計：TASK-ERR-0001（ErrorCode 契約落地，見「ErrorCode 治理契約」節）與 0193（遙測基座，依賴圖第 0 步）。例外只有兩類：ATM 原子化義務的 **extraction follow-up 卡**（觸碰 >600 行或半 minified 模組時抽新 module 的純重構卡，0170 pathway），以及 M1 里程碑授權、有數據支持的 **gate-optimization 卡**（「數據里程碑與以戰養戰迴圈」節）——前者是把既有邏輯搬家，後者是計畫設計內建的優化出口，都不是第四套系統。ATM-GOV-0191 屬於第二類：0187 runner-sync build executor 的 cache-miss 實測顯示目前只有 full rebuild 與 cache-hit skip，缺少真正 diff-aware incremental build，因此授權作為 runner-build optimization follow-up，而非新增第四套主線系統。
+
+### ATM-GOV-0191 - Runner-sync cache-miss 增量 Build Executor（M1 optimization follow-up）
+
+依賴：ATM-GOV-0187；消費 ATM-GOV-0185 validator/build telemetry 與 ATM-GOV-0193 sealed duration report。
+主要 surface：`scripts/run-sealed-runner-build.ts`、package dist builder、root-drop / onefile release assembly、runner-sync receipt taxonomy。
+
+必要行為：
+
+- cache miss 後以 `git diff --name-only <last-sealed-source>..HEAD` 建立 `atm.runnerIncrementalBuildPlan.v1`，分類 affected packages、scripts、templates、schemas、root config 與 unknown changes。
+- unsafe input（package-lock、tsconfig、build scripts、root config、unknown ownership、payload manifest 不可驗證）必須走 `fullRebuild`，並在 receipt 寫明 `decisionReason`；不得為速度放鬆 reproducibility。
+- TypeScript build 使用 `.tsbuildinfo` 或 persistent sealed build cache，不能只靠一次性 sealed worktree 的短命狀態。
+- `scripts/build-package-dist.ts` 支援 package-level incremental；只重建 affected packages，不再對所有 package 無條件 `rmSync(distRoot)`。
+- root-drop assembly 改成 hash-based copy-if-changed，輸出 copied / unchanged / removed report。
+- onefile assembly 改成 input manifest hash + payload reuse；payload 未變時 reuse，部分變更時可重用未變 encoded entries。
+- runner-sync receipt 必須將 build decision 分成 `cacheHitSkip`、`incrementalBuild`、`fullRebuild`，並保留 phase timings：worktreeSetup、typescriptBuild、rootDropAssembly、onefileAssembly、artifactSync、totalElapsed。
+- 收口驗證至少包含 package-only change 走 `incrementalBuild` 且低於 full baseline，以及 unsafe root-config change 走 `fullRebuild` 並列出 unsafe reason。
+
+驗收：`node --strip-types tests/cli/runner-sync-incremental-build.test.ts`、`npm run typecheck`、`npm run validate:runner-build-scope`、`npm run validate:internal-release-sync`。
 
 ## 執行與失敗語義
 
