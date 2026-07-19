@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T12-01-58-907Z-close-03b93baed580",
+  "taskId": "ATM-GOV-0187",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0187-real-build-projection-runner-sync-executor.task.md",
+  "taskSha256": "sha256:9de91dfdcae0c3b0726e83183b19a51b02e06b9bccfa3ba65fb2da7657cc8d29",
+  "createdAt": "2026-07-19T12:01:58.907Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0187 --actor codex-governance-optimizer"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0187
 title: Real Build、Projection 與 Runner-Sync Executor
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -50,6 +50,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: generated-write
+completed_at: "2026-07-19T12:01:58.907Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T12:01:58.907Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T12-01-58-907Z-close-03b93baed580"
+lastTransitionAt: "2026-07-19T12:01:58.907Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "313a8151abb4b09fe1fc55df53f8973f3899c7c6"
 ---
 
 # ATM-GOV-0187 - Real Build、Projection 與 Runner-Sync Executor
