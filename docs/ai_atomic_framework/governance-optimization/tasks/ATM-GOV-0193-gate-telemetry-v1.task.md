@@ -81,7 +81,8 @@ ATM 現有檢查有執行結果但缺少可比較的 per-check eligible、unique
 
 ## Telemetry Contract
 
-- Produces：全部 ATM 節點的 canonical per-check runtime events、rejection/classification、seal/task summary、registry coverage report、dropped/malformed/meta-health。最小覆蓋節點包含 hook、doctor、guard、next/preflight、tasks import/claim/close/handoff、taskflow、evidence seal/readback、git governance、batch、broker、team、runner-sync、telemetry seal/report 與 plan analyzer；暫不接線者必須在 coverage report 標成 `read-only-summary`、`out-of-scope` 或 `not-yet-covered`，不得沉默缺口。
+- Produces：全部 ATM 節點的 canonical per-check runtime events、rejection/classification、broker decision telemetry、seal/task summary、registry coverage report、dropped/malformed/meta-health。最小覆蓋節點包含 hook、doctor、guard、next/preflight、tasks import/claim/close/handoff、taskflow、evidence seal/readback、git governance、batch、broker、team、runner-sync、telemetry seal/report 與 plan analyzer；暫不接線者必須在 coverage report 標成 `read-only-summary`、`out-of-scope` 或 `not-yet-covered`，不得沉默缺口。
+- Broker events 必須記錄 parallelAdmissionAttempted、conflictDetected/conflictAxis、composeCandidate/composeDecision、finalDisposition、waitedMs、decisionLatencyMs、sideEffectAllowed、safetyFallback 與 correctnessVerdict；缺 broker decision event 不得推論為無衝突或 broker 有效。
 - Consumes：自身 schema/check registry 與 seal parity；角色為 M1 baseline 起點。
 - Missing-data：emit/seal 失敗只 warning 且計數，不能改變原命令 outcome；缺事件不等於 pass/zero。唯讀 lane 留 presence 但不上 write claim。
 - Closure evidence：各 gate fixture、runtime worktree cleanliness、雙 lane collision test、watermark replay、report dedupe、fail-open parity、disable/rollback 可讀性。
@@ -93,7 +94,7 @@ ATM 現有檢查有執行結果但缺少可比較的 per-check eligible、unique
 ## 以戰養戰決策點
 
 - 開工前：確認本卡是依賴圖第 0 步；沒有前序 sealed cohort 可消費時，仍必須產出 self-baseline decision record，列出 coverage registry、meta-health 與 fail-open parity 如何供 0182 起消費。
-- 實作中：若發現某 ATM 節點無法安全接線、會污染 tracked worktree、或 registry coverage gap 會使 0182-0190 的 M1/M2 不可比，停止擴大接線，提出 plan/task card 修訂建議給 owner。
+- 實作中：若發現某 ATM 節點無法安全接線、會污染 tracked worktree、broker 決策缺少可回放 input/config digest、或 registry coverage gap 會使 0182-0190 的 M1/M2 不可比，停止擴大接線，提出 plan/task card 修訂建議給 owner。
 - 收口前：封存 0193 自身 baseline，附 `dataDrivenDecision`、registry coverage report、dropped/malformed counters、sealed digest、config digest 與「0182 開工必讀信號」。
 
 ## VALIDATION_CMD

@@ -116,6 +116,7 @@ Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號
 - **第二層／sealed history**：只在 task close、batch checkpoint 或明示 `atm telemetry seal` 時，以固定 watermark 封存本工作窗到 `.atm/history/telemetry/gate-events-<taskId>-<windowId>.jsonl`，並產生 `.atm/history/evidence/governance-telemetry/<windowId>.json` digest。watermark 後的新事件留給下一個 seal，避免封存過程與寫入競爭。
 - `atm telemetry report --json` 預設只讀 sealed history；`--include-runtime` 僅供診斷，不得作為 M1/M2 因果證據。report 輸出 eligible 啟動數、result 分布、unique block、真陽性裁決狀態、duration p50/p95、證據讀回、遺失/丟棄事件與來源可用性。
 - 事件最小欄位為 `specVersion,eventId,sequence,observedAt,gate,checkId,checkVersion,policyVersion,eligible,result,reasonClass,durationMs,actorId,runId,correlationId,laneSessionId?,taskId?,batchId?,waveId?,command,inputDigest,configDigest,source,redactionClass,failureEnvelopeRef?,evidenceReadRef?`。taxonomy 與 check identity 由 canonical registry 管理，節點不得自行發明近義 `checkId`。
+- Broker 決策是必測治理節點，不得只記 ticket 結果。`atm.brokerDecisionTelemetry.v1` 併入同一 seal/report pipeline，最小欄位包含：`decisionId`、`decisionKind`（admit/queue/batch/compose/serialize/defer/reject-adopt-only）、`requestedFiles`、`parallelAdmissionAttempted`、`parallelAdmissionReason`、`conflictDetected`、`conflictSet`、`conflictAxis`（same-task/semantic-dependency/file-overlap/generated-surface/commit-window/release-runner/planning-closeback）、`resolver`、`composeCandidate`、`composeDecision`（compose/separate/unsafe/inconclusive）、`compositionGroupId`、`finalDisposition`、`waitedMs`、`sideEffectAllowed`、`safetyFallback`、`decisionLatencyMs`、`inputDigest`、`configDigest`、`outcomeRef`、`correctnessVerdict`（pending/correct/false-positive/false-negative/escaped-conflict/manual-overridden）與 `ownerReviewRef`。這些事件回答「是否先允許 AI 平行進入再判斷衝突」、「是否可 compose 一起寫檔」、「衝突解決是否正確」與「broker 是否真的降低等待」。
 - 原始事件不可事後改寫。後續以 classification event 記錄 `resolutionRef`、`downstreamIncidentRef` 與 `adjudication`，據此判定 unique block 與 true positive；同一 correlation/reason 的重複檢查不得重複計功。
 - Fail-open 鐵律：emit、seal 或 schema 驗證失敗只能產生 observability warning 並遞增 dropped/malformed counter，絕不可改變原命令 outcome、exit code、排序或副作用。
 - 唯讀探索不上 write claim，但必須留下 lane presence/status 與 correlation；lane 可見性本身不得觸發 scheduler queue、HEAD、index、task lifecycle 或 registry 寫入。
@@ -197,14 +198,14 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 |---|---|---|
 | 0193 | canonical check registry、runtime events、sealed history、rejection/classification、meta-health | 自我檢查 dropped/malformed 與 seal parity；建立 M1 baseline 起點 |
 | 0182 | next/preflight per-check、WIP provenance 與 read-only lane presence | 0193 schema/health；缺資料不得把 unknown 判成 unowned |
-| 0183 | BatchRun/shadow lifecycle、wait start/end、join 與 token source | 0182 route/preflight seal；缺 wait end 或 usage 時標 incomplete/unavailable |
+| 0183 | BatchRun/shadow lifecycle、wait start/end、broker decision journal、join 與 token source | 0182 route/preflight seal；缺 wait end 或 usage 時標 incomplete/unavailable；broker 缺 decision event 不得推論為無衝突 |
 | 0184 | worker start/heartbeat/sweep/retry/defer 與 report ingestion | 0183 journal與 gate seal；缺 worker report 不得視為成功或零成本 |
 | 0185 | validator queue/execute/cache/fan-out 與 M1 cohort seal | 0193 duration/check reports；資料不足時只用宣告成本，禁止自動優化 |
-| 0186 | shared-write admission、per-check commit、payload assertion treatment | M1 report + optimization/config digest；無 matched baseline 輸出 inconclusive |
+| 0186 | shared-write admission、broker compose/serialize 決策、per-check commit、payload assertion treatment | M1 report + optimization/config digest；無 matched baseline 輸出 inconclusive；compose 決策必須可回放 |
 | 0187 | generated write/build/projection/runner receipt treatment | M1/M2 check identity 與 input/output digest；不可用假 digest 補缺事件 |
 | 0188 | checkpoint/closeback、rejection/classification 與 evidence readback | sealed rejection/history；stdout-only failure 不算 durable evidence |
-| 0189 | collection-window、EMA、push/recovery 與 circuit-breaker treatment | 已封存事件密度與健康度；每次自動決策保存輸入 report digest |
-| 0190 | matched cohorts、replay/shadow/parity/A-B verdict、retirement receipt | 只讀 sealed history；資料不全、去重失敗或 cohort 不可比即 inconclusive |
+| 0189 | collection-window、EMA、broker queue/compose health、push/recovery 與 circuit-breaker treatment | 已封存事件密度與健康度；每次自動決策保存輸入 report digest；broker 缺漏時回退保守 serial floor |
+| 0190 | matched cohorts、broker correctness/compose effectiveness、replay/shadow/parity/A-B verdict、retirement receipt | 只讀 sealed history；資料不全、去重失敗或 cohort 不可比即 inconclusive |
 
 ### 逐卡以戰養戰決策模板
 
@@ -516,6 +517,7 @@ flowchart LR
 - Cost：coordinator/worker/validator tokens（0183 tokenUsage 契約）、cache reads、total tokens/task、provider cost、discarded retries；缺樣本臂明示 `source: unavailable` 占比。
 - Safety/UX：validator/close audit pass rate、false blocks、lane intervention、repair closure、manual lifecycle interventions、out-of-scope/R1/cross-lane violations。
 - Gate effectiveness（0193）：eligible opportunities、unique blocks、true-positive 裁決、warn/error、duration p50/p95、evidence readback、escaped incidents、dropped/malformed 與 seal coverage；M1/M2 matched cohorts、四法驗證與 frequency-aware 裁汰候選。
+- Broker effectiveness：parallel admission rate、conflict detection precision/recall、false-positive/false-negative conflicts、compose acceptance rate、compose rollback/escape count、average waitedMs saved、serialization fallback rate、manual override rate、decision latency p50/p95、side-effect safety violations 與 correctness verdict aging。
 
 ## 實作與收口原則
 

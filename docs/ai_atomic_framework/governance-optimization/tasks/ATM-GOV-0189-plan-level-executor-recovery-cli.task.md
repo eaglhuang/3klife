@@ -73,9 +73,10 @@ surfaceFamily: plan-executor
 
 ## Telemetry Contract
 
-- Produces：EMA inputs/decision、actual wait、early-close、push/recovery/circuit-breaker treatment events。
+- Produces：EMA inputs/decision、broker queue/compose health、actual wait、early-close、push/recovery/circuit-breaker treatment events。
 - Consumes：sealed event density/meta-health 與 prior phase summaries；角色為 M2 treatment。
 - 遙測缺漏時回退 floor policy並標 missing，不能當成事件密度為零；每次自動決策保存 report/config digest。
+- Broker 決策缺漏或 correctnessVerdict 長期 pending 時，dynamic window 不得樂觀縮短；回退保守 serial floor，並把 broker coverage/correctness limitation 傳給 0190。
 - Closure evidence：sealed treatment digest、window decision receipts、recovery refs、missing/dropped 與 own-scope cleanliness。
 
 ## 交付物
@@ -85,7 +86,7 @@ surfaceFamily: plan-executor
 ## 以戰養戰決策點
 
 - 開工前：讀取 0188 durable saga summary、M1 optimization/config digest、sealed event density/meta-health、commit/ticket events 與 recovery state；若 sealed density 缺漏，只能回退 floor policy，不能當成事件密度為零。
-- 實作中：可依 EMA、actual wait、early-close、push/recovery 與 circuit-breaker treatment 信號調整 collection window、pause/resume 與 fallback；若資料顯示自動主迴圈會放大 foreign WIP、push divergence 或不可 resume 狀態，停止並提出改卡/改計畫。
+- 實作中：可依 EMA、actual wait、early-close、broker compose/correctness、push/recovery 與 circuit-breaker treatment 信號調整 collection window、pause/resume 與 fallback；若資料顯示自動主迴圈會放大 foreign WIP、push divergence、錯誤 compose 或不可 resume 狀態，停止並提出改卡/改計畫。
 - 收口前：產出 `dataDrivenDecision`，留下每次自動決策的 report/config digest、fallback 理由、missing/dropped 摘要與 0190 可配對 cohort。
 
 ## VALIDATION_CMD

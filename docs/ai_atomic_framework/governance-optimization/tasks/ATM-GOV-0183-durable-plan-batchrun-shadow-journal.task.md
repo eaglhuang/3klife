@@ -114,8 +114,9 @@ delivery_commit: "09039fe624f2f8844b78a5e4aac61445bb1884fb"
 
 ## Telemetry Contract
 
-- Produces：BatchRun phase、shadow claim/close/runner-sync、wait start/end、journal validity、join keys 與 token source。
+- Produces：BatchRun phase、shadow claim/close/runner-sync、broker decision journal、wait start/end、journal validity、join keys 與 token source。
 - Consumes：0182 sealed summary；角色為 M1 baseline。
+- Broker decision journal 必須保留平行 admission 是否先發生、衝突軸、ticket/queue/batch/compose/serialize 決策與 final disposition；缺 broker event 時，後續 analyzer 必須標 coverage limitation。
 - 缺 wait end 表示 incomplete，不是 `waitedMs: 0`；本機無 provider usage 必須記 `source: unavailable`。
 - Closure evidence：shadow parity、sealed history/config digest、join coverage、dropped/malformed 摘要。
 
@@ -126,7 +127,7 @@ delivery_commit: "09039fe624f2f8844b78a5e4aac61445bb1884fb"
 ## 以戰養戰決策點
 
 - 開工前：讀取 0182 route/preflight sealed summary 與 0193 coverage/meta-health，確認 plan membership、lane presence 與 WIP provenance 足以建立 BatchRun；若前序 summary 不完整，先回報 owner 決定補 0182 或降級為保守 serial path。
-- 實作中：可依 0182/0193 的實測缺口調整 journal join keys、token source fallback 與 shadow sampling；若 shadow 事件會重複記錄 gate telemetry 已有事實，停止並修正分工，避免第二套儀表。
+- 實作中：可依 0182/0193 的實測缺口調整 journal join keys、token source fallback、broker decision journal 與 shadow sampling；若 shadow/broker 事件會重複記錄 gate telemetry 已有事實，停止並修正分工，避免第二套儀表。
 - 收口前：產出 `dataDrivenDecision`，列明 0184/0185 可消費的 BatchRun phase、wait start/end、token source 與 missing-data semantics。
 
 ## VALIDATION_CMD
