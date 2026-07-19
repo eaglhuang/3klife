@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0195
 title: Gate telemetry coverage repair and M2 preflight
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -51,6 +51,15 @@ atomizationImpact:
       disposition: extract
       inlineReason: null
 surfaceFamily: gate-telemetry
+completed_at: "2026-07-19T14:17:32.775Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T14:17:32.775Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T14-17-32-775Z-close-0a939e7a948d"
+lastTransitionAt: "2026-07-19T14:17:32.775Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4a2323a8ed7f8d26af51191b78b7ba1eaa032fc4"
 ---
 
 # ATM-GOV-0195 Gate telemetry coverage repair and M2 preflight
