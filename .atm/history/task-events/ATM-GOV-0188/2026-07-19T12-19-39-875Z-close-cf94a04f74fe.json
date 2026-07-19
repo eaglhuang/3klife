@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T12-19-39-875Z-close-cf94a04f74fe",
+  "taskId": "ATM-GOV-0188",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0188-atomic-wave-checkpoint-closeback-saga.task.md",
+  "taskSha256": "sha256:105cc1565310e3c270a1b7e300142ce99f2078e042558803ec7ed988b70f5bf5",
+  "createdAt": "2026-07-19T12:19:39.875Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0188 --actor codex-governance-optimizer"
+}
