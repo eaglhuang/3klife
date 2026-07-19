@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0186
 title: Real Shared Delivery Commit Executor
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -57,6 +57,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: shared-delivery
+completed_at: "2026-07-19T11:39:13.637Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T11:39:13.637Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T11-39-13-637Z-close-6091df3a0be8"
+lastTransitionAt: "2026-07-19T11:39:13.637Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "111cbdc01a57f3c34b53ddecaf99a92d5654bf0d"
 ---
 
 # ATM-GOV-0186 - Real Shared Delivery Commit Executor
