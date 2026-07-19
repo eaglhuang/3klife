@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0190
 title: Real Paired A/B、Analyzer v3 與 Rollout Verdict
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -42,6 +42,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: performance-evidence
+completed_at: "2026-07-19T14:40:09.624Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T14:40:09.624Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T14-40-09-624Z-close-9152e4bb43b8"
+lastTransitionAt: "2026-07-19T14:40:09.624Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ffdbb13b8daee730095617fe03b75e63d854500a"
 ---
 
 # ATM-GOV-0190 - Real Paired A/B、Analyzer v3 與 Rollout Verdict

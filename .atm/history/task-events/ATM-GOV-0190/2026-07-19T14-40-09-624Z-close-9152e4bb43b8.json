@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T14-40-09-624Z-close-9152e4bb43b8",
+  "taskId": "ATM-GOV-0190",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0190-real-paired-ab-analyzer-v3.task.md",
+  "taskSha256": "sha256:5b365b74c1bd8d32e83c3641b34217096fc56325e1580270189289675467421e",
+  "createdAt": "2026-07-19T14:40:09.624Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0190 --actor codex-governance-optimizer"
+}
