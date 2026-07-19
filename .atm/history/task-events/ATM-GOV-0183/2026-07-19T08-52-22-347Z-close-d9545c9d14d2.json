@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T08-52-22-347Z-close-d9545c9d14d2",
+  "taskId": "ATM-GOV-0183",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0183-durable-plan-batchrun-shadow-journal.task.md",
+  "taskSha256": "sha256:a49710d3fdc053e82fe8cd8396321b55dfc0eb8e03604d65836e1b3d40344880",
+  "createdAt": "2026-07-19T08:52:22.347Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0183 --actor codex-governance-optimizer"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0183
 title: Durable Plan BatchRun、Lane Stamping 與 Shadow Journal
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -86,6 +86,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: plan-runtime
+completed_at: "2026-07-19T08:52:22.347Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T08:52:22.347Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T08-52-22-347Z-close-d9545c9d14d2"
+lastTransitionAt: "2026-07-19T08:52:22.347Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "09039fe624f2f8844b78a5e4aac61445bb1884fb"
 ---
 
 # ATM-GOV-0183 - Durable Plan BatchRun、Lane Stamping 與 Shadow Journal
