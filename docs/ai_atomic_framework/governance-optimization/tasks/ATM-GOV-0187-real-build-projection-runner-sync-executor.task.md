@@ -77,6 +77,12 @@ surfaceFamily: generated-write
 
 - command adapter、content-addressed skip、receipt/release 與 treatment telemetry。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 M1 report/config digest、0184/0185 manifest/validator state、0186 shared-write treatment summary（若已存在）與 runner-sync coverage；若 build/projection/runner receipt identity 不可比較，禁止以假 digest 補樣本。
+- 實作中：可依 duration、skip、receipt validity、input/output digest mismatch 與 residue 信號調整 generated-write ordering、skip policy 或 retry；若 runner-sync 或 projection 數據顯示會污染 release/工作樹，停止並提出計畫修訂。
+- 收口前：產出 `dataDrivenDecision`，留下 generated-write treatment digest、exactly-once/skip 統計、缺樣本原因與 0188/0190 可配對的 input/output digest。
+
 ## VALIDATION_CMD
 
 ```shell

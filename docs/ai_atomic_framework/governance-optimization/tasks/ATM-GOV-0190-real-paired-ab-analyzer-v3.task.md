@@ -69,6 +69,12 @@ surfaceFamily: performance-evidence
 
 - Analyzer/report、matched replay/dogfood harness、retirement proposal 與 telemetry self-review。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 0193+0182-0189 全部 sealed summaries、M1 cohort/optimization receipts、coverage report、historical incidents 與 treatment config digest；任何缺關鍵 join key、coverage gap 或 cohort 不可比，都必須在 verdict 中列 limitation，不能補成零成本/零阻擋。
+- 實作中：依歷史事故 replay、shadow false-positive/latency、canonical evaluator parity 與 matched A/B 實際結果，重新評估 gate 是否保留、降頻、合併、重排或撤回先前優化；若結果足以推翻 2.0 任務假設，停止 rollout，提出 plan/task revision 給 owner。
+- 收口前：產出最終 `dataDrivenDecision`、rollout verdict、frequency-aware retirement proposal、telemetry self-governance receipt 與下一輪 config digest；`inconclusive` 是合法結論，不得包裝成成功。
+
 ## VALIDATION_CMD
 
 ```shell

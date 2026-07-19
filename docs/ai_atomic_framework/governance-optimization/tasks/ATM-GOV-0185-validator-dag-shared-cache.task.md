@@ -70,6 +70,12 @@ surfaceFamily: validator
 
 - DAG/cache/fan-out、telemetry-informed planner 與可重現 M1 report。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 0193 sealed duration/check report、0182-0184 sealed summaries 與 coverage gaps；若 validator duration 或 identity 不可比較，只能用宣告成本，禁止自動 cache/ordering 優化。
+- 實作中：可依實測 p50/p95、cache hit/miss、fan-out coverage 與 dropped/malformed 調整 validator ordering 或 cache bypass；若任何安全 key 不完整、failure 被 cache、或資料顯示 cache 反而增加風險，停止並提出是否拆卡或改 acceptance criteria。
+- 收口前：封存 M1 數據 v1.0，產出 `dataDrivenDecision`、cohort manifest、optimization candidate/rollback/config digest，並明確標示 0186 開工前是否可做 M1-informed treatment。
+
 ## VALIDATION_CMD
 
 ```shell

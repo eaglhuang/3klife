@@ -182,6 +182,8 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - **第 0 步（0193）**：先落地 runtime scratch、seal、report、classification、registry coverage report 與 meta-health。此後每張卡的 claim、gate、validator、checkpoint、close、evidence readback、git/runner-sync、batch/broker/team 與 telemetry 自身操作都自動採樣；但 runtime 活事件不直接成為 tracked 證據。
 - **逐卡義務（0182-0190 全部適用）**：每卡必須在卡內宣告 producer、consumer、工作窗、baseline/treatment 角色與 missing-data semantics；close 前 seal 固定 watermark，收口附 `atm.gateTelemetryTaskSummary.v1`。缺事件只能標成 `observability-missing` 或 `source: unavailable`，不得解讀為零延遲、零攔截或成功。
 - **每卡最小摘要**：`taskId`、`window{start,end,watermark}`、`correlation{runId,laneSessionId,batchId,waveId}`、`gateEvents{byCheckId,resultCounts,durationP50/P95}`、`uniqueBlocks`、`truePositiveStatus`、`evidenceReadbacks`、`warnings`、`droppedEvents`、`missingTelemetry`、`baselineOrTreatmentRole`、`sourceAvailability`、`historyDigest` 與 `configDigest`。
+- **逐卡資料驅動停損 gate**：0182 起每張卡開工前必須讀取前序 sealed task summary、M1/M2 cohort manifest（若已存在）與 `registry coverage report`，寫下「本卡採用哪些既有數據、哪些資料不足、是否改變實作策略」。若數據顯示原任務假設可能錯誤（例如 gate 成本高但無攔截、coverage gap 使後續 A/B 不可比、cache/排序優化已有明顯回歸、某任務目標被前卡證明多餘或危險），隊長必須暫停本卡實作，提出 plan/task card 修訂建議與證據 digest 給 owner 裁決；不得為了完成序列而硬做原卡。
+- **實作中持續應用**：每張卡不是只在 close 時產報表；實作過程中可用已封存資料調整 validator ordering、cache policy、collection window、fallback threshold、gate frequency、worker/defer 策略或任務切分。但任何會改變任務成功條件、移除/降頻安全 gate、改變依賴圖、擴大 scope、或讓 M1/M2 cohort 不可比的調整，都必須先停下來回報 owner。
 - **M1／數據 v1.0**：0185 close 後 seal 0193+0182-0185 的 baseline cohort，另存 workload strata、eligible opportunity、check/policy/config digest 的 cohort manifest。M1 可以提出 fail-fast 重排、靜態 doctor digest cache 或降頻實驗卡；每項優化必須記 `optimizationId`、受影響 check、理由、啟用時間、config digest、rollback 與 owner。M1 本身不是因果證明，無可比較資料不得裁汰 gate。
 - **M2／數據 v2.0**：0186-0190 是 treatment 採樣窗，但不得把不同任務的自然前後期直接當 A/B。0190 依 check family、eligible opportunity、workload/surface strata 與 config digest 配對 cohort；不能配對就輸出 `inconclusive`。
 - **四種有效性驗證**：歷史事故 replay 證明 check 能攔住已知壞變更；shadow mode 量 false positive 與延遲；canonical/重複 evaluator parity 比對是否重複做同一判斷；matched batch A/B 量 speed、cost、safety 與 observability。單純啟動次數或文件產物數不算效果。
@@ -203,6 +205,32 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 | 0188 | checkpoint/closeback、rejection/classification 與 evidence readback | sealed rejection/history；stdout-only failure 不算 durable evidence |
 | 0189 | collection-window、EMA、push/recovery 與 circuit-breaker treatment | 已封存事件密度與健康度；每次自動決策保存輸入 report digest |
 | 0190 | matched cohorts、replay/shadow/parity/A-B verdict、retirement receipt | 只讀 sealed history；資料不全、去重失敗或 cohort 不可比即 inconclusive |
+
+### 逐卡以戰養戰決策模板
+
+每張後續卡在正式實作前、策略調整時與 close 前都要留下同一份短 decision record，讓下一張卡能直接消費，不靠聊天記憶：
+
+```yaml
+dataDrivenDecision:
+  consumedSummaries:
+    - taskId: ATM-GOV-018x
+      historyDigest: sha256:...
+      configDigest: sha256:...
+      role: baseline|treatment|analyzer
+  usableSignals:
+    - checkId: ...
+      signal: duration-p95|unique-block|false-positive|cache-hit|missing-coverage|escaped-incident
+      effectOnThisTask: keep-plan|change-ordering|change-threshold|split-task|pause-for-owner
+  missingOrInconclusive:
+    - reason: observability-missing|source-unavailable|coverage-gap|cohort-not-comparable
+      fallback: declared-cost|serial-safe-path|owner-review
+  decision:
+    action: continue-as-planned|optimize-within-scope|pause-and-propose-plan-change
+    rationale: ...
+    ownerReviewRequired: true|false
+```
+
+`continue-as-planned` 也必須有理由；沒有讀取前序 sealed summary 不得進入 implementation。`optimize-within-scope` 只能調整不改變任務契約的內部策略，並必須保留 rollback/config digest。`pause-and-propose-plan-change` 是正式成功路徑之一，不算任務失敗；它表示數據已足以懷疑原計畫，需要先跟 owner 討論。
 
 ## 任務總表
 
@@ -492,7 +520,8 @@ flowchart LR
 ## 實作與收口原則
 
 - 0193 與 0182-0190 每卡各自 claim、驗證、close、commit、push，且收乾淨自己的 scope；wave 模式收口紀律見「Wave commit 紀律」節。
-- 每卡收口回報必附 sealed task summary 與 producer/consumer 對帳；遙測缺漏視為收口不完整但不得反向讓原命令失敗。M1 報告是 0186 開工前 condition review 必附件；gate-optimization 卡必須引用 cohort/config digest、rollback 與支持數據，無比較證據的裁汰禁止。
+- 每卡開工前必附 data-driven decision record；每卡收口回報必附 sealed task summary、producer/consumer 對帳與「下一卡可消費的信號」。遙測缺漏視為收口不完整但不得反向讓原命令失敗。M1 報告是 0186 開工前 condition review 必附件；gate-optimization 卡必須引用 cohort/config digest、rollback 與支持數據，無比較證據的裁汰禁止。
+- 若 sealed data 指向「原卡應拆分、降階、重排、取消、或修改 acceptance criteria」，隊長必須停止繼續實作並提出修訂案；只有 owner 裁決後才能把修訂寫回 plan/task card 或繼續原路線。
 - 每張卡開工前以 target `node atm.mjs tasks audit --json` 加 planning Node.js ID scan 重驗編號；本文對照表不得當成 ledger。
 - 先抽取新 modules，不繼續膨脹半 minified 的 `batch/implementation.ts`；使用 0170 extraction pathway；原子化提案是每卡回報義務。
 - Windows planning Markdown/JSON/text 一律透過 Node.js UTF-8 helper 讀取與比對；編輯後立即做 UTF-8 without BOM、U+FFFD、mojibake 與 round-trip 檢查。

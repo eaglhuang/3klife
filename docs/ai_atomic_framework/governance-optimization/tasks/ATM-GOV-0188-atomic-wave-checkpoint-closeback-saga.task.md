@@ -81,6 +81,12 @@ surfaceFamily: checkpoint
 
 - checkpoint/closeback saga、receipt、audit rule 與 rejection/evidence telemetry。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 0186/0187 treatment summaries、sealed rejection/history、member evidence summaries 與 planning source seal；若證據讀回或 checkpoint coverage 不足，先停下補 evidence contract，不用 stdout 重建狀態。
+- 實作中：可依 rejection classification、evidence readback、CAS conflict 與 checkpoint duration 調整 closeback retry、adopt/takeover 與 reconcile policy；若資料顯示 cross-repo closeback 無法安全 resume，停止並提出拆分或降級計畫。
+- 收口前：產出 `dataDrivenDecision`，留下 checkpoint watermark、evidenceConsumed/readback、unique block 與 0189 dynamic window 可消費的 sealed density/health。
+
 ## VALIDATION_CMD
 
 ```shell

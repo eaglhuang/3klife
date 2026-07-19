@@ -84,6 +84,12 @@ surfaceFamily: shared-delivery
 
 - 真實 executor、receipt/assertion、lane attribution 與 treatment telemetry。
 
+## 以戰養戰決策點
+
+- 開工前：condition review 必讀 0185 M1 report/cohort manifest、optimization/config digest、0184 worker summary 與 0193 coverage；若 M1 不足或不可比，本卡可施工但效果只能標 `inconclusive`，不得宣稱優化成立。
+- 實作中：可依 M1 的 validator ordering、duration、unique block、false-positive 或 cache 信號調整 shared commit admission、payload assertion 順序與 fallback；若資料顯示 wave shared commit 紀律比 serial 更危險或不可對帳，停止並提出改卡/改計畫。
+- 收口前：產出 `dataDrivenDecision`，列明哪些 M1 信號被採用、哪些 treatment 事件供 0187-0190 配對，並留下 rollback/config digest。
+
 ## VALIDATION_CMD
 
 ```shell

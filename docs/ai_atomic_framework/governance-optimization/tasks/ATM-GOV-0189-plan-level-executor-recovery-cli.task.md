@@ -82,6 +82,12 @@ surfaceFamily: plan-executor
 
 - 一條龍 driver、dynamic window、recovery CLI 與 treatment telemetry。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 0188 durable saga summary、M1 optimization/config digest、sealed event density/meta-health、commit/ticket events 與 recovery state；若 sealed density 缺漏，只能回退 floor policy，不能當成事件密度為零。
+- 實作中：可依 EMA、actual wait、early-close、push/recovery 與 circuit-breaker treatment 信號調整 collection window、pause/resume 與 fallback；若資料顯示自動主迴圈會放大 foreign WIP、push divergence 或不可 resume 狀態，停止並提出改卡/改計畫。
+- 收口前：產出 `dataDrivenDecision`，留下每次自動決策的 report/config digest、fallback 理由、missing/dropped 摘要與 0190 可配對 cohort。
+
 ## VALIDATION_CMD
 
 ```shell

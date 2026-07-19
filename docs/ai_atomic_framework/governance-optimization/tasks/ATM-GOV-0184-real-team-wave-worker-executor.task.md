@@ -90,6 +90,12 @@ delivery_commit: "d5bd615463fd791123ae88eee4da9132fb2bf384"
 
 - provider/editor executor、report ingestion、lane lifecycle、authority guard 與 telemetry adapter。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 0183 BatchRun/journal sealed summary、0182 route summary 與 0193 health，確認 worker lane、wave manifest 與 missing-report 規則足以比較；若前序資料顯示 team wave 只會製造等待或不可審計狀態，停止並提出是否重排/縮小 worker executor 的建議。
+- 實作中：可依已封存的 wait、coverage、missing worker/report 訊號調整 retry/defer、heartbeat sweep 與 serial fallback threshold；不得把 missing report、missing usage 或 out-of-scope report 視為成功或零成本。
+- 收口前：產出 `dataDrivenDecision`，留下 worker lifecycle baseline、report coverage、authority guard 結果與 0185/0186 可消費的 wave/member lane digest。
+
 ## VALIDATION_CMD
 
 ```shell

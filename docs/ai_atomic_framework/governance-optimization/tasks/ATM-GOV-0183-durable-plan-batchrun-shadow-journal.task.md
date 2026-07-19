@@ -123,6 +123,12 @@ delivery_commit: "09039fe624f2f8844b78a5e4aac61445bb1884fb"
 
 - BatchRun store/journal、shadow adapter、lane/token schema、ErrorCode registry 更新與 telemetry join。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 0182 route/preflight sealed summary 與 0193 coverage/meta-health，確認 plan membership、lane presence 與 WIP provenance 足以建立 BatchRun；若前序 summary 不完整，先回報 owner 決定補 0182 或降級為保守 serial path。
+- 實作中：可依 0182/0193 的實測缺口調整 journal join keys、token source fallback 與 shadow sampling；若 shadow 事件會重複記錄 gate telemetry 已有事實，停止並修正分工，避免第二套儀表。
+- 收口前：產出 `dataDrivenDecision`，列明 0184/0185 可消費的 BatchRun phase、wait start/end、token source 與 missing-data semantics。
+
 ## VALIDATION_CMD
 
 ```shell

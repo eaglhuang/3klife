@@ -94,6 +94,12 @@ delivery_commit: "f054b8b49c9013d781e170acca5e7b52dd019221"
 
 - plan resolver、WIP provenance classifier、recovery command、telemetry adapter 與 focused fixtures。
 
+## 以戰養戰決策點
+
+- 開工前：讀取 0193 sealed task summary、registry coverage report 與 meta-health；若 next/preflight、claim 或 read-only lane presence 未被 0193 覆蓋，先提出 coverage 修訂，不把缺事件解讀為 unowned/pass。
+- 實作中：可依 0193 的 dropped/malformed、duration 與 coverage gap 調整 WIP classifier 的診斷順序或 fallback 文案；若資料顯示原本的路由假設會造成錯誤 blocker 或不可比 cohort，停止並提議修改本卡或 2.0 計畫。
+- 收口前：產出 `dataDrivenDecision`，說明本卡採用哪些 0193 信號、哪些缺資料只能標 `observability-missing`，並留下 0183 可直接消費的 route/preflight sealed summary。
+
 ## VALIDATION_CMD
 
 ```shell

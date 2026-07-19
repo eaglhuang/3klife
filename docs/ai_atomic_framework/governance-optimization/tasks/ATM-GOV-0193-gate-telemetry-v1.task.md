@@ -90,6 +90,12 @@ ATM 現有檢查有執行結果但缺少可比較的 per-check eligible、unique
 
 - 單一 emit/seal/report pipeline、canonical taxonomy、runtime/history stores、rejection/classification 與 focused tests。
 
+## 以戰養戰決策點
+
+- 開工前：確認本卡是依賴圖第 0 步；沒有前序 sealed cohort 可消費時，仍必須產出 self-baseline decision record，列出 coverage registry、meta-health 與 fail-open parity 如何供 0182 起消費。
+- 實作中：若發現某 ATM 節點無法安全接線、會污染 tracked worktree、或 registry coverage gap 會使 0182-0190 的 M1/M2 不可比，停止擴大接線，提出 plan/task card 修訂建議給 owner。
+- 收口前：封存 0193 自身 baseline，附 `dataDrivenDecision`、registry coverage report、dropped/malformed counters、sealed digest、config digest 與「0182 開工必讀信號」。
+
 ## VALIDATION_CMD
 
 ```shell
