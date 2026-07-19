@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T08-33-00-114Z-close-ff7b59014015",
+  "taskId": "ATM-GOV-0182",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0182-plan-scoped-routing-wip-preflight.task.md",
+  "taskSha256": "sha256:cd6471f05a36f43275af7af4600daaa3d3a81c030bf544fab6823e62eef5c6e2",
+  "createdAt": "2026-07-19T08:33:00.114Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0182 --actor codex-governance-optimizer"
+}

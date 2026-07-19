@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0182
 title: Plan-Scoped Routing、Identity 與 WIP Provenance Preflight
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -56,6 +56,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: plan-routing
+completed_at: "2026-07-19T08:33:00.114Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T08:33:00.114Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T08-33-00-114Z-close-ff7b59014015"
+lastTransitionAt: "2026-07-19T08:33:00.114Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f054b8b49c9013d781e170acca5e7b52dd019221"
 ---
 
 # ATM-GOV-0182 - Plan-Scoped Routing、Identity 與 WIP Provenance Preflight
