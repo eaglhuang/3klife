@@ -1,0 +1,94 @@
+---
+task_id: ATM-GOV-0183
+title: Durable Plan BatchRun、Lane Stamping 與 Shadow Journal
+status: planned
+owner: atm-core
+priority: P0
+depends_on:
+  - ATM-GOV-0182
+related_plan: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
+planning_repo: governance-workbench
+target_repo: AI-Atomic-Framework
+closure_authority: target_repo
+series_selection_reason: governance-optimization 的 plan-run durability 與觀測地基，沿用 ATM-GOV 家族下一號 0183。
+scopePaths:
+  - packages/core/src/batch/**
+  - packages/core/src/broker/**
+  - packages/cli/src/commands/batch/**
+  - packages/cli/src/commands/tasks/**
+  - packages/cli/src/commands/taskflow/**
+  - docs/governance/error-code-registry.json
+  - docs/ERROR_CODES.md
+  - tests/cli/durable-plan-batchrun-shadow-journal.test.ts
+  - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json
+  - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json
+deliverables:
+  - atm.batchRun.v1 0.2 compatible store 與 append-only plan journal
+  - lane/token stamping 與 serial shadow instrumentation
+  - plan-wide ErrorCode registry entries 與 regenerated docs/ERROR_CODES.md
+validators:
+  - node --strip-types tests/cli/durable-plan-batchrun-shadow-journal.test.ts
+  - npm run generate:error-codes
+  - npm run typecheck
+  - npm run validate:cli
+evidence:
+  required: command-backed
+rollback:
+  strategy: disable shadow instrumentation and revert-commit
+errorCodes:
+  - code: ATM_BATCH_PLAN_DIGEST_MISMATCH
+    disposition: register
+    category: batch
+    trigger: resume plan digest 與 pinned digest 不符
+    retryable: true
+    requiresHumanApproval: true
+    recovery: node atm.mjs batch execute-plan --batch <id> --accept-plan-change --json
+    sourceOwner: packages/cli/src/commands/batch/
+    registryOwnerTask: ATM-GOV-0183
+  - code: ATM_BATCH_RUN_EVENT_JOURNAL_INVALID
+    disposition: register
+    category: batch
+    trigger: event schema、digest 或 idempotency key 矛盾
+    retryable: false
+    requiresHumanApproval: false
+    recovery: node atm.mjs batch status --batch <id> --json
+    sourceOwner: packages/core/src/batch/
+    registryOwnerTask: ATM-GOV-0183
+  - code: ATM_BATCH_PLANNING_CLOSEBACK_CONFLICT
+    disposition: register
+    category: batch
+    trigger: planning closeback compare-and-swap seal 不符
+    retryable: true
+    requiresHumanApproval: false
+    recovery: node atm.mjs batch execute-plan --batch <id> --json
+    sourceOwner: packages/cli/src/commands/batch/
+    registryOwnerTask: ATM-GOV-0183
+  - code: ATM_BATCH_PUSH_DIVERGED
+    disposition: register
+    category: git-governance
+    trigger: remote 與本 run commits 無法安全 fast-forward
+    retryable: false
+    requiresHumanApproval: true
+    recovery: node atm.mjs git admit --actor <actor> --branch main --remote origin --json
+    sourceOwner: packages/cli/src/commands/batch/
+    registryOwnerTask: ATM-GOV-0183
+atomizationImpact:
+  ownerAtomOrMap: atm.plan-run-journal
+  mapUpdates:
+    - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json
+    - atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json
+  extractionCandidates:
+    - atom: atm.plan-run-journal
+      pattern: Event Log
+      source: packages/core/src/batch/
+      disposition: extract
+      inlineReason: null
+waveId: auto-batch-perf-v2
+surfaceFamily: plan-runtime
+---
+
+# ATM-GOV-0183 - Durable Plan BatchRun、Lane Stamping 與 Shadow Journal
+
+建立可 resume 的 plan run、全鏈 lane/token stamps 與不改變 serial 行為的 shadow events。本卡是計畫唯一 ErrorCode registry owner；所有新碼均須用 `atm-error-code-resolver` authoring flow 登錄、重生文件並以 focused tests 證明契約。
+
+驗收包含 crash/restart、duplicate event、digest amendment、legacy reader、malformed shadow warning、wait start/end、token unavailable，以及 0184 起可取得真實 serial baseline。
