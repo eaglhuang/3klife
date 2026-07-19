@@ -87,6 +87,12 @@ Design System*.zip
 .atm/runtime/version-cache.json
 .atm/runtime/welcome.lineage.json
 .atm/runtime/guidance/
+.atm/runtime/*-audit.json
+.atm/runtime/*.raw.txt
+.atm/runtime/git-commit-attempts/
+.atm/runtime/identity/actors/
+.atm/runtime/sessions/
+.atm/runtime/write-broker.registry.json
 .atm/runtime/emergency/
 .atm/history/reports/context-budget/
 .atm/history/reports/continuation/
