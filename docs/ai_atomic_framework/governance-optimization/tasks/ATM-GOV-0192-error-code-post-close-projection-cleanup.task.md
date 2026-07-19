@@ -36,7 +36,12 @@ errorCodes: []
 atomizationImpact:
   ownerAtomOrMap: atm.skill-template-compiler
   mapUpdates: []
-  extractionCandidates: []
+  extractionCandidates:
+    - atom: atm.generated-root-drop-release-manifest
+      pattern: Generated Projection
+      source: release/atm-root-drop/release-manifest.json
+      disposition: inline
+      inlineReason: The manifest is generated output; this card only records the sealed build projection and must not split or hand-edit it.
 waveId: error-code-governance-2026-07
 surfaceFamily: generated-projection
 ---
