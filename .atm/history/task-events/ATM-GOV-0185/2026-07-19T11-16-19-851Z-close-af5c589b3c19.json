@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T11-16-19-851Z-close-af5c589b3c19",
+  "taskId": "ATM-GOV-0185",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0185-validator-dag-shared-cache.task.md",
+  "taskSha256": "sha256:b2c7680fbeb6d6aacd69e4b011ebbbbde71538c0fb4b75aea3cf144b9e438493",
+  "createdAt": "2026-07-19T11:16:19.851Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0185 --actor codex-governance-optimizer"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0185
 title: Validator DAG、共享結果與安全 Cache
-status: in-progress
+status: done
 owner: atm-core
 priority: P0
 started_at: 2026-07-19T10:31:10.780Z
@@ -45,6 +45,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: validator
+completed_at: "2026-07-19T11:16:19.851Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T11:16:19.851Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T11-16-19-851Z-close-af5c589b3c19"
+lastTransitionAt: "2026-07-19T11:16:19.851Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a1d7fb9759aa1d2b684af71e907ef0df23195e3f"
 ---
 
 # ATM-GOV-0185 - Validator DAG、共享結果與安全 Cache
