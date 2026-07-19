@@ -19,9 +19,11 @@ scopePaths:
   - scripts/validators/team-agents/broker-conflict-resolution*.ts
   - tests/cli/broker-decision-outcome-telemetry.test.ts
 deliverables:
-  - atm.brokerDecisionTelemetry.v1 live emission
-  - broker outcome join and immutable correctness classification
-  - pending verdict aging and owner-review queue
+  - packages/core/src/broker/**
+  - packages/cli/src/commands/broker/**
+  - packages/cli/src/commands/broker-conflict-resolution.ts
+  - packages/core/src/telemetry/**
+  - scripts/validators/team-agents/broker-conflict-resolution*.ts
   - tests/cli/broker-decision-outcome-telemetry.test.ts
 validators:
   - node --strip-types tests/cli/broker-decision-outcome-telemetry.test.ts
@@ -34,6 +36,7 @@ evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
+  notes: Disable the outcome classifier and aging worker, restore the previous broker decision path, retain append-only runtime decisions for audit, and verify broker admission/side-effect parity after rollback.
 atomizationImpact:
   ownerAtomOrMap: atm.broker-conflict-resolution
   mapUpdates: []
@@ -63,7 +66,7 @@ surfaceFamily: broker-decision
 
 - Producer：broker admission/conflict resolver/compose/serialize、shared write/commit/close/incident outcome。
 - Consumer：0202 broker correctness 與 paired A/B analyzer。
-- Window：消費 0196 broker observed coverage；decision 發生即寫 runtime，outcome 後追加 immutable classification，close 時 seal summary。
+- Window：開工 `dataDrivenDecision` 消費 0196 broker observed coverage 的 history/config digest並寫 consumed receipt；decision 發生即寫 runtime，outcome 後追加 immutable classification，close 時 seal summary並由同卡 readback validator 驗證。
 - Role：M3 broker treatment producer。
 - Missing-data semantics：無 decision event 是 observability-missing；`pending` 不等於 correct，必須 aging。
 - Raw-data policy：requestedFiles/conflict trace 留 runtime；tracked digest 去識別、聚合並引用 outcome/config digest。
@@ -74,6 +77,7 @@ surfaceFamily: broker-decision
 - 明確區分「先平行後判斷」、「policy 預先序列化」、「surface 不可平行」；分母用 eligible opportunity。
 - decision join commit/file slices、validators、rollback/escape、downstream incident，產生 correct/false-positive/false-negative/escaped/manual-overridden。
 - correctness pending 有 age threshold、ownerReviewRef 與 backlog/escalation 出口。
+- close evidence 保存本卡 sealed broker summary、同卡 readback receipt 與供 0202 依 decisionId/outcomeRef 消費的 history/config digest；0199 不等待 0202 才能 close。
 
 ## Data-Driven Stop Rule
 
@@ -86,5 +90,7 @@ surfaceFamily: broker-decision
 - [ ] pending correctness 會 aging/升級，不被統計成成功。
 - [ ] telemetry fail-open，不改變 broker admission 或 side-effect outcome。
 - [ ] 0202 能直接依 decisionId/outcomeRef join，不靠 actor 名稱猜測。
+- [ ] 開工 `dataDrivenDecision` 已引用 0196 history/config digest並留下 consumed receipt；本卡 sealed summary 可由同卡 validator 讀回並供 0202 後續寫入跨卡 consumed receipt。
+- [ ] rollback 後 broker admission、compose/serialize 與 side-effect outcome parity 通過，既有 append-only decision 不被改寫或刪除。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:05.936Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0199-live-broker-decision-outcome-telemetry-and-correctness-adjudication.task.md","contentDigest":"sha256:737aa16264afd5da24d38f674ba7a56ca4215d1e536fcc0e2e37967d47dfe8a0"} -->

@@ -22,13 +22,17 @@ scopePaths:
   - packages/cli/src/commands/framework-development/**
   - tests/cli/runner-sync-incremental-build-dogfood.test.ts
 deliverables:
-  - real cache-miss incremental dogfood benchmark
-  - dominant-phase optimization with reproducibility proof
-  - compact baseline/treatment runner build receipt
+  - scripts/run-sealed-runner-build.ts
+  - scripts/runner-sync-incremental-build.ts
+  - scripts/build-package-dist.ts
+  - scripts/build-root-drop-release.ts
+  - scripts/build-onefile-release.ts
+  - packages/core/src/broker/runner-sync-steward-queue.ts
+  - packages/cli/src/commands/framework-development/**
   - tests/cli/runner-sync-incremental-build-dogfood.test.ts
 validators:
   - node --strip-types tests/cli/runner-sync-incremental-build.test.ts
-  - node --strip-types tests/cli/runner-sync-incremental-build-dogfood.test.ts
+  - node --strip-types tests/cli/runner-sync-incremental-build-dogfood.test.ts --mode live-isolated --require-real-cache-miss
   - npm run typecheck
   - npm run validate:runner-build-scope
   - npm run validate:internal-release-sync
@@ -38,6 +42,7 @@ evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
+  notes: Disable persistent incremental cache, remove only the optimizationId-scoped runtime cache entry, restore the fullRebuild circuit-breaker path, and emit a compact recovery receipt.
 atomizationImpact:
   ownerAtomOrMap: atm.runner-sync-build-surface-map
   mapUpdates: []
@@ -67,17 +72,19 @@ surfaceFamily: runner-build
 
 - Producer：incremental planner、sealed build、package dist、release assembly、artifact sync、0197 runtime receipt store。
 - Consumer：0202 speed/cost analyzer 與 runner-sync admission policy。
-- Window：先讀 0194 implementation evidence 與 0197 storage summary；AB/BA benchmark close 後 seal compact result。
+- Window：開工先讀 0194 implementation evidence 與 0197 sealed storage summary/config digest，將 consumed receipt 與 `dataDrivenDecision` 寫入 0201 history；AB/BA benchmark close 後 seal compact result，並以同卡 readback 驗證。
 - Role：M4 runner treatment producer。
 - Missing-data semantics：cache hit、unsafe full fallback、incremental attempt/failure 分開計；不存在增量事件不得推論零成本。
 - Raw-data policy：每次 phase timing/manifest 留 runtime；Git 只放 baseline/treatment aggregate 與 reproducibility digest。
 
 ## Required Work
 
-- 真實測試 package-only、script-only、unsafe root-config changes，證明三種 receipt category 互斥且理由正確。
+- dogfood validator 必須在隔離 repository 建立已提交 baseline，再產生真實 package-only source cache miss，直接呼叫 sealed runner entry `scripts/run-sealed-runner-build.ts`；fixture、預注入 `buildDecision`、只測 planner 或無 source 變更的 cache hit 均不得計入證據。
+- 真實測試 package-only、script-only、unsafe root-config changes，證明三種 receipt category 互斥且理由正確，並驗證 receipt、artifact digest 與實際輸出一致。
 - package-only 僅重建 affected package/依賴閉包，persistent `.tsbuildinfo`/sealed cache 可驗證且可失效。
 - root-drop/onefile/artifact sync 採 hash-based copy/reuse，輸出 parity 與 removed/unchanged 摘要。
 - package-only incremental 與 full baseline 各至少五次、AB/BA 交錯；分析 median/p95 與各 phase contribution。
+- rollback 必須可執行：停用 persistent cache、只清除該 optimizationId 的 `.atm/runtime/runner-sync-build-cache/**` runtime entry、切回 `fullRebuild` circuit breaker，並產生 recovery command/receipt；不得刪除其他 session 或 tracked evidence。
 
 ## Data-Driven Stop Rule
 
@@ -86,9 +93,12 @@ surfaceFamily: runner-build
 ## Acceptance
 
 - [ ] package-only cache miss 實際產生 `incrementalBuild`，不是 cache hit。
+- [ ] live-isolated dogfood 由已提交 baseline 加真實 source 變更觸發 sealed runner，且拒絕 fixture／預注入 decision；receipt 與 artifact digest 可重算。
 - [ ] unsafe root/build-config 仍走 `fullRebuild` 並列 decisionReason。
 - [ ] AB/BA 各至少五次，輸出 total 與 phase median/p95。
 - [ ] incremental/full 產物 digest、typecheck、release sync parity 通過。
 - [ ] 至少一個 dominant phase 有改善，否則以有證據的 inconclusive 收口。
+- [ ] 0194/0197 history 與 config digests 已被 opening `dataDrivenDecision` 消費；0201 sealed summary 已完成同卡 readback，供 0202 另寫 cross-card consumed receipt。
+- [ ] cache invalidation、circuit breaker 與 recovery command 在隔離環境實際通過，compact rollback receipt 可驗證。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:08.803Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0201-runner-incremental-dogfood-and-dominant-phase-optimization.task.md","contentDigest":"sha256:dfbaf26b606d918eb274a00f4688ac9404f4fcb80dab760370c3f5d7eea5505f"} -->

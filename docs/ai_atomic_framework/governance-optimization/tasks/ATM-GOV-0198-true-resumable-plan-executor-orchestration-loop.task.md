@@ -20,9 +20,10 @@ scopePaths:
   - tests/cli/plan-level-executor-recovery.test.ts
   - tests/cli/plan-level-executor-live-loop.test.ts
 deliverables:
-  - true execute-plan phase orchestration loop
-  - phase idempotency and durable resume contract
-  - owner-action/recovery command surface
+  - packages/cli/src/commands/batch/**
+  - packages/core/src/batch/**
+  - packages/cli/src/atm.ts
+  - tests/cli/plan-level-executor-recovery.test.ts
   - tests/cli/plan-level-executor-live-loop.test.ts
 validators:
   - node --strip-types tests/cli/plan-level-executor-live-loop.test.ts
@@ -35,6 +36,7 @@ evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
+  notes: Open the execute-plan circuit breaker, restore the prior advisory next-command path, preserve the durable journal for diagnosis, and prove no commit/close/push side effect is replayed during rollback.
 atomizationImpact:
   ownerAtomOrMap: atm.plan-level-executor
   mapUpdates: []
@@ -63,7 +65,7 @@ surfaceFamily: plan-executor
 
 - Producer：plan run journal、phase receipt、worker/validator/generated-write/commit/checkpoint/push/closeback executors。
 - Consumer：0202 matched treatment runner 與 crash recovery operator。
-- Window：開工先讀 0196 taskflow observed summary；每一個真 phase 都產生 runtime event，close 前 seal 本卡 summary。
+- Window：開工 `dataDrivenDecision` 讀取 0196 taskflow observed summary 的 history/config digest 並寫 consumed receipt；每一個真 phase 都產生 runtime event，close 前 seal 本卡 summary並由同卡 readback validator 驗證。
 - Role：M3 plan-executor treatment producer。
 - Missing-data semantics：phase 無 observed/sealed event 時不能標 done；合法 skip 必須有 stable reason/input digest。
 - Raw-data policy：phase trace/timing 留 runtime，history 只存 compact state/side-effect digest。
@@ -74,6 +76,7 @@ surfaceFamily: plan-executor
 - 每 phase 有 idempotency key、attempt、input/output digest、side-effect receipt、terminal/skip state；resume 找第一個未完成 phase。
 - owner/action-required、approval、unsafe divergence 或 circuit-open 才可停，並只輸出一條 recovery command。
 - commit、close、push、planning closeback exactly once；不得因 plan digest amendment 建第二個 run。
+- close evidence 必須包含本卡 sealed summary、同卡 readback receipt 與供 0202 消費的 history/config digest；0202 的跨卡 consumed receipt 由 0202 自己負責。
 
 ## Data-Driven Stop Rule
 
@@ -86,5 +89,7 @@ surfaceFamily: plan-executor
 - [ ] pause/adopt/recovery 僅從 durable journal 恢復，輸出唯一 action。
 - [ ] phase journal 可與 0196 task summary、task/lane/batch/wave stamps join。
 - [ ] mock-only test 不算 live acceptance evidence。
+- [ ] 開工 `dataDrivenDecision` 已引用 0196 history/config digest 並留下 consumed receipt；本卡 close 已 seal 可由同卡 validator 讀回的 summary，供 0202 後續消費。
+- [ ] circuit breaker 可退回原 advisory 路徑，且 rollback/recovery 測試證明已完成副作用不會重放。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:04.113Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0198-true-resumable-plan-executor-orchestration-loop.task.md","contentDigest":"sha256:8dc1750dc5cb71766a975764a529cada19c2c829e884547fda829c35ebdc31ea"} -->

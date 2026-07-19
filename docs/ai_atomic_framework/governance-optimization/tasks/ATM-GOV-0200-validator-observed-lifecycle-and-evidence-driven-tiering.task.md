@@ -19,9 +19,11 @@ scopePaths:
   - scripts/validators.config.json
   - tests/cli/validator-observed-lifecycle.test.ts
 deliverables:
-  - validator observed lifecycle telemetry
-  - fast/default/full/archive-candidate tier report
-  - reversible validator ordering/cache/tier experiment
+  - packages/core/src/evidence/**
+  - packages/cli/src/commands/evidence/**
+  - scripts/run-validators/**
+  - scripts/run-validators.ts
+  - scripts/validators.config.json
   - tests/cli/validator-observed-lifecycle.test.ts
 validators:
   - node --strip-types tests/cli/validator-observed-lifecycle.test.ts
@@ -34,6 +36,7 @@ evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
+  notes: Restore the prior validator ordering/tier configuration, invalidate treatment cache entries, disable the optimizationId, and retain the compact rollback receipt plus runtime traces for audit.
 atomizationImpact:
   ownerAtomOrMap: atm.validator-dag-cache
   mapUpdates: []
@@ -63,7 +66,7 @@ surfaceFamily: validator-runtime
 
 - Producer：validator registry、queue/executor/cache/fan-out、block/classification/readback。
 - Consumer：0202 cost/safety analyzer、doctor/default/full profile 與後續 gate optimization。
-- Window：消費 0196 validator coverage；本卡至少完成一個 baseline→reversible treatment window。
+- Window：開工 `dataDrivenDecision` 消費 0196 validator coverage 的 history/config digest並寫 consumed receipt；本卡至少完成一個 baseline→reversible treatment window，close 時 seal summary並由同卡 readback validator 驗證。
 - Role：M3 validator treatment producer。
 - Missing-data semantics：未達 eligible opportunity 或觀察週期時標 `insufficient-observation`，不列為零使用。
 - Raw-data policy：per-run timing/cache trace 留 runtime；tracked 只存 tier proposal、aggregate digest、optimization/rollback receipt。
@@ -74,6 +77,7 @@ surfaceFamily: validator-runtime
 - 依 workload strata 產生 fast/default/full/archive-candidate 建議；mode-specific/dynamic findings 也有可比 identity。
 - 先做一項 ordering/cache/tier 可回復實驗，保留 config digest、optimizationId、啟用時間與 rollback。
 - frequency-aware：eligible>=500 或完整四週合理機會；低頻/安全關鍵另需 replay+owner，禁止自動刪除。
+- close evidence 保存本卡 sealed lifecycle/tier summary、同卡 readback receipt 與供 0202 消費的 history/config digest；0202 的跨卡 consumed receipt 由 0202 負責。
 
 ## Data-Driven Stop Rule
 
@@ -86,5 +90,7 @@ surfaceFamily: validator-runtime
 - [ ] 至少一個 canonical duplicate evaluator parity case 與一個 shared cache/fan-out case。
 - [ ] tier proposal 使用真 runtime window，資料不足項明示 insufficient-observation。
 - [ ] rollback 可恢復原 ordering/tier 並留下 compact receipt。
+- [ ] 開工 `dataDrivenDecision` 已引用 0196 history/config digest並留下 consumed receipt；本卡 sealed summary 可由同卡 validator 讀回並供 0202 後續消費。
+- [ ] rollback 會失效 treatment cache、恢復原 config digest／ordering／tier，且 parity validator 通過。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:07.299Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0200-validator-observed-lifecycle-and-evidence-driven-tiering.task.md","contentDigest":"sha256:17df20ff2bdee6fb88641a215c8900330618478871b3fd2cc7105ed2f0dd4fee"} -->
