@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T17-56-22-079Z-close-e96f688cac35",
+  "taskId": "TASK-TMP-0003",
+  "action": "close",
+  "actorId": "codex-main",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-TMP-0003-task-import-canonical-id-boundary-temp-carrier.task.md",
+  "taskSha256": "sha256:56f298d532a91708b83d0fafe0d409413a8173627717acfd233352d7cbf95e4d",
+  "createdAt": "2026-07-19T17:56:22.079Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0003 --actor codex-main"
+}
