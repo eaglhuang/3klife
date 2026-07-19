@@ -70,7 +70,7 @@ ATM 現有檢查有執行結果但缺少可比較的 per-check eligible、unique
 
 ## INPUT_CONTRACT
 
-- 現有 hook/doctor/guard/next/claim/close/batch/broker named checks、failure envelopes、actor/lane/task/run correlation 與 canonical redaction policy。
+- 現有 hook/doctor/guard/next/preflight/tasks import/claim/close/handoff/taskflow/evidence/git governance/batch/broker/team/runner-sync/telemetry/analyzer named checks、failure envelopes、actor/lane/task/run correlation 與 canonical redaction policy。
 - 0191 已有歷史事件與 Git 語意，不得覆寫或重用；本卡固定為 0193。
 
 ## OUTPUT_CONTRACT
@@ -81,7 +81,7 @@ ATM 現有檢查有執行結果但缺少可比較的 per-check eligible、unique
 
 ## Telemetry Contract
 
-- Produces：全部 ATM 節點的 canonical per-check runtime events、rejection/classification、seal/task summary、dropped/malformed/meta-health。
+- Produces：全部 ATM 節點的 canonical per-check runtime events、rejection/classification、seal/task summary、registry coverage report、dropped/malformed/meta-health。最小覆蓋節點包含 hook、doctor、guard、next/preflight、tasks import/claim/close/handoff、taskflow、evidence seal/readback、git governance、batch、broker、team、runner-sync、telemetry seal/report 與 plan analyzer；暫不接線者必須在 coverage report 標成 `read-only-summary`、`out-of-scope` 或 `not-yet-covered`，不得沉默缺口。
 - Consumes：自身 schema/check registry 與 seal parity；角色為 M1 baseline 起點。
 - Missing-data：emit/seal 失敗只 warning 且計數，不能改變原命令 outcome；缺事件不等於 pass/zero。唯讀 lane 留 presence 但不上 write claim。
 - Closure evidence：各 gate fixture、runtime worktree cleanliness、雙 lane collision test、watermark replay、report dedupe、fail-open parity、disable/rollback 可讀性。
@@ -105,13 +105,13 @@ npm run validate:cli
 ## 執行步驟
 
 1. 建 canonical registry/schema/redaction、runtime writer 與 meta-health，先證明 fail-open 及不污染 tracked worktree。
-2. 逐一接線 hook、doctor、guard、next、claim/close、batch/broker；每個 gate 使用同一 helper。
+2. 逐一接線 hook、doctor、guard、next/preflight、tasks import/claim/close/handoff、taskflow、evidence seal/readback、git governance、batch、broker、team、runner-sync、telemetry seal/report 與 plan analyzer；每個 gate 使用同一 helper，暫緩接線者寫入 coverage report。
 3. 建 rejection/classification 與 watermark seal，驗證 concurrency、crash/replay、去重與 late-event rollover。
 4. 交付 report/task summary，封存 0193 自身 baseline，供 0182 起逐卡消費。
 
 ## Acceptance
 
-- [ ] 各 ATM 節點至少一筆 canonical per-check fixture，且 check registry 無近義重複。
+- [ ] 各 ATM 節點至少一筆 canonical per-check fixture，或在 registry coverage report 明確標示尚未接線原因；check registry 無近義重複。
 - [ ] runtime 事件不進 tracked history；seal 後 digest 可重現，watermark 前後無漏算/重算。
 - [ ] telemetry store 唯讀、毀損或 schema 違規時，原命令照常並留下 meta-health warning。
 - [ ] report 能輸出 eligible、unique block、true-positive status、duration、evidence readback 與 missing/dropped。

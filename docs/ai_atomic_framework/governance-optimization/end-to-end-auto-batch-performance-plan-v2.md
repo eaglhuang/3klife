@@ -39,7 +39,7 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 
 2.0 同時把效能證明設計成計畫內部自我閉環：0183 落地 shadow instrumentation 之後，0184-0190 每張卡自身的施工過程就是被完整量測的真實 serial baseline 樣本（詳見 0183/0190），不需要額外等待外部流量。
 
-2.0 進一步把量測義務提前到全計畫第 0 步（以戰養戰）：0193 先落地治理閘門遙測基座（gate telemetry v1，涵蓋 hook/doctor/guard/next/claim/close/batch/broker 全部 ATM 節點），使 0182 起每一張卡的施工都累積 per-check 遙測；0185 收口後封存數據 v1.0（M1 baseline cohort）並授權依證據提早優化，0186-0190 的可比施工窗與 treatment runs 形成數據 v2.0（M2 matched cohort，由 0190 analyzer 收斂）。量測不是附屬品，而是每張卡的正式輸入、輸出與收口證據。
+2.0 進一步把量測義務提前到全計畫第 0 步（以戰養戰）：0193 先落地治理閘門遙測基座（gate telemetry v1，涵蓋 hook/doctor/guard/next/preflight/tasks import/claim/close/handoff/taskflow/evidence/git governance/batch/broker/team/runner-sync/telemetry/analyzer 全部 ATM 治理節點），使 0182 起每一張卡的施工都累積 per-check 遙測；0185 收口後封存數據 v1.0（M1 baseline cohort）並授權依證據提早優化，0186-0190 的可比施工窗與 treatment runs 形成數據 v2.0（M2 matched cohort，由 0190 analyzer 收斂）。量測不是附屬品，而是每張卡的正式輸入、輸出與收口證據。
 
 唯一正式入口預計為：
 
@@ -110,7 +110,7 @@ Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號
 
 ### 治理閘門遙測（gate telemetry v1）
 
-0193 交付、全計畫共用的閘門層儀表。與 shadow instrumentation 分工明確：gate telemetry 量「每一項治理檢查」（granularity = check），shadow instrumentation 量「生命週期操作的等待與佇列語義」（granularity = claim/close/runner-sync 操作）；兩者共用 correlation keys，analyzer 可直接 join，不得互相替代或重複記錄同一事實。
+0193 交付、全計畫共用的閘門層儀表。與 shadow instrumentation 分工明確：gate telemetry 量「每一項治理檢查」（granularity = check），shadow instrumentation 量「生命週期操作的等待與佇列語義」（granularity = claim/close/runner-sync 操作）；兩者共用 correlation keys，analyzer 可直接 join，不得互相替代或重複記錄同一事實。節點覆蓋以「所有會做治理判斷、准入、拒絕、封存或自動副作用的 ATM command/path」為準；0193 必須交付 registry coverage report，列明每個節點是 `instrumented`、`read-only-summary`、`out-of-scope` 或 `not-yet-covered`，不得只用「全部節點」概括帶過。
 
 - **第一層／runtime scratch**：各節點經單一 emit helper 把 `atm.gateTelemetry.v1` 事件寫入 `.atm/runtime/telemetry/gate-events/<runId>/<lane-or-process>.jsonl`；failure envelope 寫 `.atm/runtime/telemetry/rejections/` 並互相引用。這一層必須 gitignored、per-lane/process 分片、append-only，絕不可在 hook 或命令執行途中修改 tracked history。
 - **第二層／sealed history**：只在 task close、batch checkpoint 或明示 `atm telemetry seal` 時，以固定 watermark 封存本工作窗到 `.atm/history/telemetry/gate-events-<taskId>-<windowId>.jsonl`，並產生 `.atm/history/evidence/governance-telemetry/<windowId>.json` digest。watermark 後的新事件留給下一個 seal，避免封存過程與寫入競爭。
@@ -179,7 +179,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 
 儀表先行、逐卡累積、期中優化、收官驗證：
 
-- **第 0 步（0193）**：先落地 runtime scratch、seal、report、classification 與 meta-health。此後每張卡的 claim、gate、validator、checkpoint、close 都自動採樣；但 runtime 活事件不直接成為 tracked 證據。
+- **第 0 步（0193）**：先落地 runtime scratch、seal、report、classification、registry coverage report 與 meta-health。此後每張卡的 claim、gate、validator、checkpoint、close、evidence readback、git/runner-sync、batch/broker/team 與 telemetry 自身操作都自動採樣；但 runtime 活事件不直接成為 tracked 證據。
 - **逐卡義務（0182-0190 全部適用）**：每卡必須在卡內宣告 producer、consumer、工作窗、baseline/treatment 角色與 missing-data semantics；close 前 seal 固定 watermark，收口附 `atm.gateTelemetryTaskSummary.v1`。缺事件只能標成 `observability-missing` 或 `source: unavailable`，不得解讀為零延遲、零攔截或成功。
 - **每卡最小摘要**：`taskId`、`window{start,end,watermark}`、`correlation{runId,laneSessionId,batchId,waveId}`、`gateEvents{byCheckId,resultCounts,durationP50/P95}`、`uniqueBlocks`、`truePositiveStatus`、`evidenceReadbacks`、`warnings`、`droppedEvents`、`missingTelemetry`、`baselineOrTreatmentRole`、`sourceAvailability`、`historyDigest` 與 `configDigest`。
 - **M1／數據 v1.0**：0185 close 後 seal 0193+0182-0185 的 baseline cohort，另存 workload strata、eligible opportunity、check/policy/config digest 的 cohort manifest。M1 可以提出 fail-fast 重排、靜態 doctor digest cache 或降頻實驗卡；每項優化必須記 `optimizationId`、受影響 check、理由、啟用時間、config digest、rollback 與 owner。M1 本身不是因果證明，無可比較資料不得裁汰 gate。
@@ -224,7 +224,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 ### ATM-GOV-0193 - 治理閘門遙測基座（Gate Telemetry v1）
 
 依賴：無（依賴圖第 0 步，先於 0182 執行）。
-主要 surface：hook pre-commit/pre-push instrumentation、doctor/guard/next instrumentation、claim/close 准入 instrumentation、telemetry store 與 report。
+主要 surface：hook pre-commit/pre-push instrumentation、doctor/guard/next/preflight instrumentation、tasks import/claim/close/handoff、taskflow/evidence/git governance instrumentation、batch/broker/team/runner-sync instrumentation、telemetry seal/report 自身儀表、telemetry store、registry coverage report 與 report。
 
 必要行為：
 

@@ -60,7 +60,7 @@ surfaceFamily: performance-evidence
 ## Telemetry Contract
 
 - Produces：matched A/B、historical replay、shadow false-positive/latency、canonical evaluator parity、unique block/true-positive/evidence-readback verdict。
-- Consumes：只讀 sealed history；角色為 M2 analyzer，不得用 `--include-runtime` 作正式證據。
+- Consumes：只讀 sealed history 與 0193 registry coverage report；角色為 M2 analyzer，不得用 `--include-runtime` 作正式證據。任何 `not-yet-covered` 節點都必須在 verdict 中列為 coverage limitation，不能把缺事件解讀為零成本、零阻擋或無效。
 - 以 correlation/reason 去重；true positive 必須有 classification/resolution/incident ref。資料缺漏、去重失敗或 cohort 不可比一律 `inconclusive`。
 - Kill criteria：eligible >=500，或完整 >=4 週且覆蓋合理觸發機會，仍零 unique block/true positive/evidence readback/escaped incident，才提降頻/合併/退場；低頻安全 check 另做 replay 與 owner 裁決。
 - 若 telemetry 未驅動任何實際決策，提出縮減 detail/採樣率；保留 meta-health、sealed digest、retirement/rollback receipt。
