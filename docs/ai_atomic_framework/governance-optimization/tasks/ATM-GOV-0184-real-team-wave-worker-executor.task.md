@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0184
 title: Real Team Wave Worker Executor
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -54,6 +54,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: team-wave
+completed_at: "2026-07-19T09:13:36.490Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T09:13:36.490Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T09-13-36-490Z-close-980753ce33e9"
+lastTransitionAt: "2026-07-19T09:13:36.490Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d5bd615463fd791123ae88eee4da9132fb2bf384"
 ---
 
 # ATM-GOV-0184 - Real Team Wave Worker Executor
