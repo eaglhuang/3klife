@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0191
 title: Runner-sync cache-miss 增量 Build Executor
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on:
@@ -54,6 +54,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: runner-sync
+completed_at: "2026-07-19T13:39:13.170Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T13:39:13.170Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T13-39-13-170Z-close-c7e6ba383af5"
+lastTransitionAt: "2026-07-19T13:39:13.170Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "14122b6af9cf4f2fe27cda68e39a454ebb47030e"
 ---
 
 # ATM-GOV-0191 - Runner-sync cache-miss 增量 Build Executor
