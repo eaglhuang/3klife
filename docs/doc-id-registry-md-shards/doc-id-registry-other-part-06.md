@@ -8,8 +8,8 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_2161` | docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md | 3KLife Stale Runtime Lock Cleanup Closeout |
-| `doc_other_2162` | docs/reports/3klife-task-audit-debt-triage.md | 3KLife Task Audit Debt Triage |
 | `doc_other_2163` | docs/reports/3klife-transition-event-missing-backfill.md | 3KLife Transition Event Missing Backfill |
 | `doc_other_2164` | docs/reports/3klife-transition-evidence-missing-backfill.md | 3KLife transition evidence missing backfill |
 | `doc_other_2165` | docs/doc-id-registry-md-shards/doc-id-registry-other-part-06.md | Doc ID Registry Markdown Index — 其它類 |
+| `doc_other_2166` | docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0001-errorcode-skill-authoring-contract-and-adapter-parity.task.md | TASK-ERR-0001 - ErrorCode Skill Authoring Contract 與 Adapter Parity |
+| `doc_other_2167` | docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0001-errorcode-post-close-projection-cleanup-quarantine.task.md | TASK-TMP-0001 - ErrorCode Post-Close Projection Cleanup |

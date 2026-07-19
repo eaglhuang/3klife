@@ -13,8 +13,6 @@
 | `doc_other_1876` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0188-atomic-wave-checkpoint-closeback-saga.task.md | ATM-GOV-0188 - Atomic Wave Checkpoint 與 Cross-Repo Closeback Saga |
 | `doc_other_1877` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0189-plan-level-executor-recovery-cli.task.md | ATM-GOV-0189 - Plan-Level Executor 主迴圈、收單策略與復原 CLI |
 | `doc_other_1878` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0190-real-paired-ab-analyzer-v3.task.md | ATM-GOV-0190 - Real Paired A/B、Analyzer v3 與 Rollout Verdict |
-| `doc_other_1879` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0191-error-code-skill-authoring-contract.task.md | ATM-GOV-0191 - ErrorCode Skill Authoring Contract 與 Adapter Parity |
-| `doc_other_1880` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0192-error-code-post-close-projection-cleanup.task.md | ATM-GOV-0192 - ErrorCode Post-Close Projection Cleanup |
 | `doc_other_1881` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0001-runner-sync-orphan-cleanup.task.md | TASK-LANE-0001 - Runner-sync Orphan Queue-head Cleanup |
 | `doc_other_1882` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0002-runner-sync-health-admission.task.md | TASK-LANE-0002 - Runner-sync Queue Health Admission |
 | `doc_other_1883` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0003-taskflow-runner-sync-closeback-lane.task.md | TASK-LANE-0003 - Taskflow Runner-sync Closeback Lane |
@@ -295,3 +293,5 @@
 | `doc_other_2158` | docs/reports/3klife-manual-done-closeback-backfill.md | 3KLife manual done closeback backfill |
 | `doc_other_2159` | docs/reports/3klife-planning-only-warning-baseline.md | 3KLife Planning-only Warning Baseline |
 | `doc_other_2160` | docs/reports/3klife-stale-claim-and-lock-cleanup.md | 3KLife Stale Claim And Lock Cleanup |
+| `doc_other_2161` | docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md | 3KLife Stale Runtime Lock Cleanup Closeout |
+| `doc_other_2162` | docs/reports/3klife-task-audit-debt-triage.md | 3KLife Task Audit Debt Triage |

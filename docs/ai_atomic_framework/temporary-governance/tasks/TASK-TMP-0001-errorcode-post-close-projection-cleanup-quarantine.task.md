@@ -1,20 +1,20 @@
 ---
-task_id: ATM-GOV-0192
+task_id: TASK-TMP-0001
+migrated_from_task_id: ATM-GOV-0192
 title: ErrorCode Post-Close Projection Cleanup
-status: planned
+status: abandoned
 owner: atm-core
 priority: P0
-depends_on:
-  - ATM-GOV-0191
-related_plan: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
+depends_on: [TASK-ERR-0001]
+related_plan: temporary-governance/temporary-governance-plan.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
-series_selection_reason: 0191 close 後的 adapter/release projection cleanup 仍屬 governance-optimization；0192 經 planning scan 確認未占用。
+series_selection_reason: This was a one-off residue cleanup/quarantine record, not a GOV plan card. It belongs to TMP so temporary repair bookkeeping does not consume GOV sequence numbers.
 scopePaths:
   - .github/prompts/atm-dispatch.prompt.md
   - .github/prompts/atm-error-code-resolver.prompt.md
-  - .atm/history/evidence/ATM-GOV-0191.runner-sync-receipt.json
+  - .atm/history/evidence/TASK-ERR-0001.runner-sync-receipt.json
   - .atm/history/session-events/**
   - release/atm-onefile/atm.mjs
   - release/atm-onefile/release-manifest.json
@@ -44,10 +44,16 @@ atomizationImpact:
       inlineReason: The manifest is generated output; this card only records the sealed build projection and must not split or hand-edit it.
 waveId: error-code-governance-2026-07
 surfaceFamily: generated-projection
+createdByCommand: atm plan card create
 ---
 
-# ATM-GOV-0192 - ErrorCode Post-Close Projection Cleanup
+# TASK-TMP-0001 - ErrorCode Post-Close Projection Cleanup
 
-吸收 ATM-GOV-0191 在 governed close 後由最後一次 sealed build 與 Copilot adapter
+吸收 TASK-ERR-0001 在 governed close 後由最後一次 sealed build 與 Copilot adapter
 rebake 留下的正式 generated projection。不得修改 source templates、功能程式碼或
-ATM-GOV-0191 的 done 歷史；只提交已存在且通過驗證的投影、receipt 與 lane event。
+TASK-ERR-0001 的 done 歷史；只提交已存在且通過驗證的投影、receipt 與 lane event。
+
+
+## Migration Note
+
+- Migrated from the misclassified GOV card on 2026-07-19 as a TMP quarantine/abandonment record. The prior GOV source and target ledger key are retired.

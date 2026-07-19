@@ -6918,18 +6918,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_1879",
-    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0191-error-code-skill-authoring-contract.task.md",
-    "title": "ATM-GOV-0191 - ErrorCode Skill Authoring Contract 與 Adapter Parity",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_1880",
-    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0192-error-code-post-close-projection-cleanup.task.md",
-    "title": "ATM-GOV-0192 - ErrorCode Post-Close Projection Cleanup",
-    "category": "other"
-  },
-  {
     "id": "doc_other_1881",
     "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0001-runner-sync-orphan-cleanup.task.md",
     "title": "TASK-LANE-0001 - Runner-sync Orphan Queue-head Cleanup",
@@ -8637,6 +8625,18 @@
     "id": "doc_other_2165",
     "path": "docs/doc-id-registry-md-shards/doc-id-registry-other-part-06.md",
     "title": "Doc ID Registry Markdown Index — 其它類",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2166",
+    "path": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0001-errorcode-skill-authoring-contract-and-adapter-parity.task.md",
+    "title": "TASK-ERR-0001 - ErrorCode Skill Authoring Contract 與 Adapter Parity",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2167",
+    "path": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0001-errorcode-post-close-projection-cleanup-quarantine.task.md",
+    "title": "TASK-TMP-0001 - ErrorCode Post-Close Projection Cleanup",
     "category": "other"
   }
 ]
