@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T04-04-56-222Z-close-70d7e9237ba3",
+  "taskId": "ATM-GOV-0191",
+  "action": "close",
+  "actorId": "codex-error-code-governance",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0191-error-code-skill-authoring-contract.task.md",
+  "taskSha256": "sha256:820188374a436b92a220de124077313bedd86ff7c7a7cfac2864156b86c0a8c4",
+  "createdAt": "2026-07-19T04:04:56.222Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0191 --actor codex-error-code-governance"
+}

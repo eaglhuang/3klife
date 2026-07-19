@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0191
 title: ErrorCode Skill Authoring Contract 與 Adapter Parity
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -43,6 +43,15 @@ atomizationImpact:
   extractionCandidates: []
 waveId: error-code-governance-2026-07
 surfaceFamily: skill-template
+completed_at: "2026-07-19T04:04:56.222Z"
+completed_by_agent: "codex-error-code-governance"
+closedAt: "2026-07-19T04:04:56.222Z"
+closedByActor: "codex-error-code-governance"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T04-04-56-222Z-close-70d7e9237ba3"
+lastTransitionAt: "2026-07-19T04:04:56.222Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "056292af13ed57dc4d27f3f10263917b88797919"
 ---
 
 # ATM-GOV-0191 - ErrorCode Skill Authoring Contract 與 Adapter Parity
