@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0189
 title: Plan-Level Executor 主迴圈、收單策略與復原 CLI
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on:
@@ -55,6 +55,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2
 surfaceFamily: plan-executor
+completed_at: "2026-07-19T12:40:33.242Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T12:40:33.242Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T12-40-33-242Z-close-5d66c3eceb62"
+lastTransitionAt: "2026-07-19T12:40:33.242Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3e60d035ccb5c8f71c6d6ee1f5c6001db5530405"
 ---
 
 # ATM-GOV-0189 - Plan-Level Executor 主迴圈、收單策略與復原 CLI
