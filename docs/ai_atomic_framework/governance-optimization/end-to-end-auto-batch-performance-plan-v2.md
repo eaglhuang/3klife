@@ -186,7 +186,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - **逐卡資料驅動停損 gate**：0182 起每張卡開工前必須讀取前序 sealed task summary、M1/M2 cohort manifest（若已存在）與 `registry coverage report`，寫下「本卡採用哪些既有數據、哪些資料不足、是否改變實作策略」。若數據顯示原任務假設可能錯誤（例如 gate 成本高但無攔截、coverage gap 使後續 A/B 不可比、cache/排序優化已有明顯回歸、某任務目標被前卡證明多餘或危險），隊長必須暫停本卡實作，提出 plan/task card 修訂建議與證據 digest 給 owner 裁決；不得為了完成序列而硬做原卡。
 - **實作中持續應用**：每張卡不是只在 close 時產報表；實作過程中可用已封存資料調整 validator ordering、cache policy、collection window、fallback threshold、gate frequency、worker/defer 策略或任務切分。但任何會改變任務成功條件、移除/降頻安全 gate、改變依賴圖、擴大 scope、或讓 M1/M2 cohort 不可比的調整，都必須先停下來回報 owner。
 - **M1／數據 v1.0**：0185 close 後 seal 0193+0182-0185 的 baseline cohort，另存 workload strata、eligible opportunity、check/policy/config digest 的 cohort manifest。M1 可以提出 fail-fast 重排、靜態 doctor digest cache 或降頻實驗卡；每項優化必須記 `optimizationId`、受影響 check、理由、啟用時間、config digest、rollback 與 owner。M1 本身不是因果證明，無可比較資料不得裁汰 gate。
-- **M2／數據 v2.0**：0186-0190 是 treatment 採樣窗，但不得把不同任務的自然前後期直接當 A/B。0190 依 check family、eligible opportunity、workload/surface strata 與 config digest 配對 cohort；不能配對就輸出 `inconclusive`。
+- **M2／數據 v2.0**：0186-0190 是 treatment 採樣窗，但不得把不同任務的自然前後期直接當 A/B。0190 依 check family、eligible opportunity、workload/surface strata 與 config digest 配對 cohort；不能配對就輸出 `inconclusive`。若 0193 的全節點 coverage 尚未被機器可讀報告證明，先執行 0195 coverage repair / M2 preflight；0195 不是第四套系統，只是阻止 0190 在缺資料時產生假因果結論的修復閘。
 - **四種有效性驗證**：歷史事故 replay 證明 check 能攔住已知壞變更；shadow mode 量 false positive 與延遲；canonical/重複 evaluator parity 比對是否重複做同一判斷；matched batch A/B 量 speed、cost、safety 與 observability。單純啟動次數或文件產物數不算效果。
 - **frequency-aware kill criteria**：一般 check 只有在 `eligible >= 500`，或完整觀察至少 4 週且覆蓋其合理觸發機會後，仍為零 unique block、零 true positive、零 evidence readback 且無 escaped incident，才可提出降頻、合併或退場。低頻/安全關鍵 check 另須歷史 replay 與 owner 裁決；不得自動刪除。
 - **遙測自我治理**：若 M2 前遙測從未驅動任何重排、cache、降頻、合併或退場決策，0190 必須提出縮減 event detail 或採樣率；meta-health、dropped/malformed counters、sealed digest 與 rollback receipt 不得移除。
@@ -205,6 +205,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 | 0187 | generated write/build/projection/runner receipt treatment | M1/M2 check identity 與 input/output digest；不可用假 digest 補缺事件 |
 | 0188 | checkpoint/closeback、rejection/classification 與 evidence readback | sealed rejection/history；stdout-only failure 不算 durable evidence |
 | 0189 | collection-window、EMA、broker queue/compose health、push/recovery 與 circuit-breaker treatment | 已封存事件密度與健康度；每次自動決策保存輸入 report digest；broker 缺漏時回退保守 serial floor |
+| 0195 | registry coverage validator、M2 preflight verdict、required node family coverage | 0190 必讀；coverage 不足時只能 inconclusive 或 owner 裁決 |
 | 0190 | matched cohorts、broker correctness/compose effectiveness、replay/shadow/parity/A-B verdict、retirement receipt | 正式證據只讀 digest-only sealed history；必要時本機重算 runtime archive，但 raw log 不進 Git；資料不全、去重失敗或 cohort 不可比即 inconclusive |
 
 ### 逐卡以戰養戰決策模板
@@ -246,6 +247,7 @@ dataDrivenDecision:
 | ATM-GOV-0187 | 真正 Build/Projection/Runner-Sync Executor | 每 wave 最多一次 build/projection；真實 receipt；release residue 收乾淨 |
 | ATM-GOV-0188 | Atomic Wave Checkpoint 與跨 repo closeback saga | fan-out 閉卡；CAS planning closeback；audit 認得 wave closure；coordinator adopt 後不重複副作用 |
 | ATM-GOV-0189 | Plan-Level Executor 主迴圈、動態收單窗與復原 CLI | 一個命令跑完整 plan；EMA collection window；分歧復原通路；pause/resume/adopt/circuit breaker |
+| ATM-GOV-0195 | Gate telemetry coverage repair and M2 preflight | 補 0193 coverage 可證明性；0190 前判斷 ready/inconclusive/blocked |
 | ATM-GOV-0190 | 真實 Paired A/B、Analyzer v3 與 rollout verdict | 真實樣本；lane join；sharedSurfaceWaitRatio；四維 verdict 分立；只有 speed/cost/safety 全達標才 default-on |
 
 ## 任務細節

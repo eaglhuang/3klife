@@ -6,6 +6,7 @@ owner: atm-core
 priority: P0
 depends_on:
   - ATM-GOV-0189
+  - ATM-GOV-0195
 related_plan: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
 planning_repo: governance-workbench
 target_repo: AI-Atomic-Framework
@@ -51,7 +52,7 @@ surfaceFamily: performance-evidence
 
 ## INPUT_CONTRACT
 
-- 0193+0182-0189 sealed history、M1 cohort/optimization receipts、historical incidents、shadow/parity samples 與 provider usage。
+- 0193+0182-0189 sealed history、0195 coverage/M2 preflight report、M1 cohort/optimization receipts、historical incidents、shadow/parity samples 與 provider usage。
 
 ## OUTPUT_CONTRACT
 
@@ -60,7 +61,7 @@ surfaceFamily: performance-evidence
 ## Telemetry Contract
 
 - Produces：matched A/B、broker correctness/compose effectiveness、historical replay、shadow false-positive/latency、canonical evaluator parity、unique block/true-positive/evidence-readback verdict。
-- Consumes：正式證據只讀 digest-only sealed history 與 0193 registry coverage report；角色為 M2 analyzer，不得用 `--include-runtime` 作 Git-tracked 正式證據。若需要本機重算，可讀 gitignored runtime archive，但 raw log/counter/event stream 不提交。任何 `not-yet-covered` 節點都必須在 verdict 中列為 coverage limitation，不能把缺事件解讀為零成本、零阻擋或無效。
+- Consumes：正式證據只讀 digest-only sealed history、0193 registry coverage report 與 0195 M2 preflight report；角色為 M2 analyzer，不得用 `--include-runtime` 作 Git-tracked 正式證據。若需要本機重算，可讀 gitignored runtime archive，但 raw log/counter/event stream 不提交。任何 `not-yet-covered` 節點都必須在 verdict 中列為 coverage limitation，不能把缺事件解讀為零成本、零阻擋或無效。
 - Broker analyzer 必須輸出 parallel admission rate、conflict detection precision/recall、compose acceptance/rollback/escape、false-positive/false-negative conflict、manual override、decision latency 與 waitedMs saved；無 correctness verdict 或缺 outcomeRef 時該 broker 結論為 `inconclusive`。
 - 以 correlation/reason 去重；true positive 必須有 classification/resolution/incident ref。資料缺漏、去重失敗或 cohort 不可比一律 `inconclusive`。
 - Kill criteria：eligible >=500，或完整 >=4 週且覆蓋合理觸發機會，仍零 unique block/true positive/evidence readback/escaped incident，才提降頻/合併/退場；低頻安全 check 另做 replay 與 owner 裁決。
@@ -72,7 +73,7 @@ surfaceFamily: performance-evidence
 
 ## 以戰養戰決策點
 
-- 開工前：讀取 0193+0182-0189 全部 sealed summaries、M1 cohort/optimization receipts、coverage report、historical incidents 與 treatment config digest；任何缺關鍵 join key、coverage gap 或 cohort 不可比，都必須在 verdict 中列 limitation，不能補成零成本/零阻擋。
+- 開工前：讀取 0193+0182-0189 全部 sealed summaries、0195 coverage/M2 preflight report、M1 cohort/optimization receipts、coverage report、historical incidents 與 treatment config digest；若 0195 verdict 不是 `ready`，本卡不得宣稱 M2 因果或裁汰成立，只能輸出 `inconclusive` 或停下請 owner 裁決。任何缺關鍵 join key、coverage gap 或 cohort 不可比，都必須在 verdict 中列 limitation，不能補成零成本/零阻擋。
 - 實作中：依 broker correctness/compose effectiveness、歷史事故 replay、shadow false-positive/latency、canonical evaluator parity 與 matched A/B 實際結果，重新評估 gate/broker policy 是否保留、降頻、合併、重排、compose 或撤回先前優化；若結果足以推翻 2.0 任務假設，停止 rollout，提出 plan/task revision 給 owner。
 - 收口前：產出最終 `dataDrivenDecision`、rollout verdict、frequency-aware retirement proposal、telemetry self-governance receipt 與下一輪 config digest；`inconclusive` 是合法結論，不得包裝成成功。
 
