@@ -12,7 +12,7 @@ updated_at: 2026-07-19T14:35:00+08:00
 # ATM 端到端自動併批與效能證明計畫 2.0
 
 狀態更新：2026-07-19（Captain review 修訂：wave commit 紀律、分歧復原通路、plan digest pin、token 量測契約、baseline 自我採樣、lane attribution、原子化出口）
-狀態更新（儀表先行整合版）：2026-07-19（ATM-GOV-0193 為依賴圖第 0 步；採 runtime scratch → closure seal → history digest 二層儀表；0182-0190 各卡明載 producer/consumer 契約、M1/M2 可比 cohort 與遙測自我裁汰，形成「以戰養戰」閉環）
+狀態更新（儀表先行整合版）：2026-07-19（ATM-GOV-0193 為依賴圖第 0 步；採 gitignored runtime scratch/log → closure seal → digest-only history 二層儀表；0182-0190 各卡明載 producer/consumer 契約、M1/M2 可比 cohort 與遙測自我裁汰，形成「以戰養戰」閉環；所有 raw statistics、counter、per-run log、debug log、high-frequency receipt stream 均留硬碟，不進 Git）
 前版計畫：[ATM 端到端自動併批與效能證明計畫](./end-to-end-auto-batch-performance-plan.md)
 Planning 權威來源：`C:/Users/User/3KLife`
 Target 權威來源：`C:/Users/User/AI-Atomic-Framework`
@@ -113,8 +113,8 @@ Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號
 0193 交付、全計畫共用的閘門層儀表。與 shadow instrumentation 分工明確：gate telemetry 量「每一項治理檢查」（granularity = check），shadow instrumentation 量「生命週期操作的等待與佇列語義」（granularity = claim/close/runner-sync 操作）；兩者共用 correlation keys，analyzer 可直接 join，不得互相替代或重複記錄同一事實。節點覆蓋以「所有會做治理判斷、准入、拒絕、封存或自動副作用的 ATM command/path」為準；0193 必須交付 registry coverage report，列明每個節點是 `instrumented`、`read-only-summary`、`out-of-scope` 或 `not-yet-covered`，不得只用「全部節點」概括帶過。
 
 - **第一層／runtime scratch**：各節點經單一 emit helper 把 `atm.gateTelemetry.v1` 事件寫入 `.atm/runtime/telemetry/gate-events/<runId>/<lane-or-process>.jsonl`；failure envelope 寫 `.atm/runtime/telemetry/rejections/` 並互相引用。這一層必須 gitignored、per-lane/process 分片、append-only，絕不可在 hook 或命令執行途中修改 tracked history。
-- **第二層／sealed history**：只在 task close、batch checkpoint 或明示 `atm telemetry seal` 時，以固定 watermark 封存本工作窗到 `.atm/history/telemetry/gate-events-<taskId>-<windowId>.jsonl`，並產生 `.atm/history/evidence/governance-telemetry/<windowId>.json` digest。watermark 後的新事件留給下一個 seal，避免封存過程與寫入競爭。
-- `atm telemetry report --json` 預設只讀 sealed history；`--include-runtime` 僅供診斷，不得作為 M1/M2 因果證據。report 輸出 eligible 啟動數、result 分布、unique block、真陽性裁決狀態、duration p50/p95、證據讀回、遺失/丟棄事件與來源可用性。
+- **第二層／digest-only history**：只在 task close、batch checkpoint 或明示 `atm telemetry seal` 時，以固定 watermark 封存本工作窗，但完整 JSONL/archive 仍保留在 gitignored `.atm/runtime/telemetry/**` 或本機 log store；Git-tracked `.atm/history/evidence/governance-telemetry/<windowId>.json` 只保存 compact digest、watermark、schema/version、source availability、aggregated counters、selected baseline snapshot 與決策引用。watermark 後的新事件留給下一個 seal，避免封存過程與寫入競爭；不得在 hook 或一般命令中把 raw event stream 寫入 tracked history。
+- `atm telemetry report --json` 預設只讀 digest-only history；`--include-runtime` 僅供本機診斷與重算，不得把 raw runtime archive 當成 Git 證據提交。report 輸出 eligible 啟動數、result 分布、unique block、真陽性裁決狀態、duration p50/p95、證據讀回、遺失/丟棄事件與來源可用性；若需要抽樣佐證，僅提交去識別/去重後的小型 baseline snapshot。
 - 事件最小欄位為 `specVersion,eventId,sequence,observedAt,gate,checkId,checkVersion,policyVersion,eligible,result,reasonClass,durationMs,actorId,runId,correlationId,laneSessionId?,taskId?,batchId?,waveId?,command,inputDigest,configDigest,source,redactionClass,failureEnvelopeRef?,evidenceReadRef?`。taxonomy 與 check identity 由 canonical registry 管理，節點不得自行發明近義 `checkId`。
 - Broker 決策是必測治理節點，不得只記 ticket 結果。`atm.brokerDecisionTelemetry.v1` 併入同一 seal/report pipeline，最小欄位包含：`decisionId`、`decisionKind`（admit/queue/batch/compose/serialize/defer/reject-adopt-only）、`requestedFiles`、`parallelAdmissionAttempted`、`parallelAdmissionReason`、`conflictDetected`、`conflictSet`、`conflictAxis`（same-task/semantic-dependency/file-overlap/generated-surface/commit-window/release-runner/planning-closeback）、`resolver`、`composeCandidate`、`composeDecision`（compose/separate/unsafe/inconclusive）、`compositionGroupId`、`finalDisposition`、`waitedMs`、`sideEffectAllowed`、`safetyFallback`、`decisionLatencyMs`、`inputDigest`、`configDigest`、`outcomeRef`、`correctnessVerdict`（pending/correct/false-positive/false-negative/escaped-conflict/manual-overridden）與 `ownerReviewRef`。這些事件回答「是否先允許 AI 平行進入再判斷衝突」、「是否可 compose 一起寫檔」、「衝突解決是否正確」與「broker 是否真的降低等待」。
 - 原始事件不可事後改寫。後續以 classification event 記錄 `resolutionRef`、`downstreamIncidentRef` 與 `adjudication`，據此判定 unique block 與 true positive；同一 correlation/reason 的重複檢查不得重複計功。
@@ -180,7 +180,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 
 儀表先行、逐卡累積、期中優化、收官驗證：
 
-- **第 0 步（0193）**：先落地 runtime scratch、seal、report、classification、registry coverage report 與 meta-health。此後每張卡的 claim、gate、validator、checkpoint、close、evidence readback、git/runner-sync、batch/broker/team 與 telemetry 自身操作都自動採樣；但 runtime 活事件不直接成為 tracked 證據。
+- **第 0 步（0193）**：先落地 runtime scratch/log、digest-only seal、report、classification、registry coverage report 與 meta-health。此後每張卡的 claim、gate、validator、checkpoint、close、evidence readback、git/runner-sync、batch/broker/team 與 telemetry 自身操作都自動採樣；但 runtime 活事件、raw counter、per-run timing、debug log、broker decision trace 與 high-frequency receipt stream 永遠不直接成為 tracked 證據。
 - **逐卡義務（0182-0190 全部適用）**：每卡必須在卡內宣告 producer、consumer、工作窗、baseline/treatment 角色與 missing-data semantics；close 前 seal 固定 watermark，收口附 `atm.gateTelemetryTaskSummary.v1`。缺事件只能標成 `observability-missing` 或 `source: unavailable`，不得解讀為零延遲、零攔截或成功。
 - **每卡最小摘要**：`taskId`、`window{start,end,watermark}`、`correlation{runId,laneSessionId,batchId,waveId}`、`gateEvents{byCheckId,resultCounts,durationP50/P95}`、`uniqueBlocks`、`truePositiveStatus`、`evidenceReadbacks`、`warnings`、`droppedEvents`、`missingTelemetry`、`baselineOrTreatmentRole`、`sourceAvailability`、`historyDigest` 與 `configDigest`。
 - **逐卡資料驅動停損 gate**：0182 起每張卡開工前必須讀取前序 sealed task summary、M1/M2 cohort manifest（若已存在）與 `registry coverage report`，寫下「本卡採用哪些既有數據、哪些資料不足、是否改變實作策略」。若數據顯示原任務假設可能錯誤（例如 gate 成本高但無攔截、coverage gap 使後續 A/B 不可比、cache/排序優化已有明顯回歸、某任務目標被前卡證明多餘或危險），隊長必須暫停本卡實作，提出 plan/task card 修訂建議與證據 digest 給 owner 裁決；不得為了完成序列而硬做原卡。
@@ -205,7 +205,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 | 0187 | generated write/build/projection/runner receipt treatment | M1/M2 check identity 與 input/output digest；不可用假 digest 補缺事件 |
 | 0188 | checkpoint/closeback、rejection/classification 與 evidence readback | sealed rejection/history；stdout-only failure 不算 durable evidence |
 | 0189 | collection-window、EMA、broker queue/compose health、push/recovery 與 circuit-breaker treatment | 已封存事件密度與健康度；每次自動決策保存輸入 report digest；broker 缺漏時回退保守 serial floor |
-| 0190 | matched cohorts、broker correctness/compose effectiveness、replay/shadow/parity/A-B verdict、retirement receipt | 只讀 sealed history；資料不全、去重失敗或 cohort 不可比即 inconclusive |
+| 0190 | matched cohorts、broker correctness/compose effectiveness、replay/shadow/parity/A-B verdict、retirement receipt | 正式證據只讀 digest-only sealed history；必要時本機重算 runtime archive，但 raw log 不進 Git；資料不全、去重失敗或 cohort 不可比即 inconclusive |
 
 ### 逐卡以戰養戰決策模板
 
@@ -438,7 +438,7 @@ dataDrivenDecision:
 - verdict 分開輸出 speed、cost、safety、batching 四維，各維獨立標 `improved`/`inconclusive`/`regressed`；aggregate 只有全部必要 gate 達標才為 `improved`。
 - Cost 維度可判定性規則：token 數據以 0183 tokenUsage 契約為準（serial 錨點含摘要那筆 284 萬實測及其口徑）。當任一臂缺可比 token 樣本時，cost 維度單獨標 `inconclusive` 並在報告載明缺口，不得阻塞 speed/safety 維度的判定與輸出；此時 aggregate 不得為 `improved`（cost gate 未過），但報告必須能清楚指出「只缺 cost 樣本」，讓補樣本成為明確下一步，而不是重演 0179 式的整體不可判。
 - EMA collection window 常數（0189 初始預設）依實測數據評估與調整，調整結果寫入 performance report。
-- 遙測收官（M2）：analyzer v3 只讀 sealed gateTelemetry，以 check family、eligible opportunity、workload/surface 與 config digest 建 matched cohorts；執行歷史事故 replay、shadow false-positive/latency、canonical evaluator parity 與 batch A/B。先用 correlation/reason 去重，再輸出 unique block、true-positive 裁決、evidence readback、frequency-aware 裁汰候選與 telemetry 自身縮減/保留 receipt；不可比或缺關鍵欄位即 `inconclusive`。
+- 遙測收官（M2）：analyzer v3 正式輸入只讀 digest-only sealed gateTelemetry，以 check family、eligible opportunity、workload/surface 與 config digest 建 matched cohorts；若要重算細節，只能從本機 gitignored runtime archive 讀取，不提交 raw log。執行歷史事故 replay、shadow false-positive/latency、canonical evaluator parity 與 batch A/B。先用 correlation/reason 去重，再輸出 unique block、true-positive 裁決、evidence readback、frequency-aware 裁汰候選與 telemetry 自身縮減/保留 receipt；不可比或缺關鍵欄位即 `inconclusive`。
 - ErrorCode：本卡不新增代碼；四維 verdict 與樣本不足維持 report status，禁止把 `inconclusive` 包裝成錯誤。
 
 驗收門檻：

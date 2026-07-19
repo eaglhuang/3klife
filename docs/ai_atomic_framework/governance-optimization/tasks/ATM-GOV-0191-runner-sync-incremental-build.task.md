@@ -77,7 +77,7 @@ surfaceFamily: runner-sync
 - package-level dist incremental build output；未受影響 package 不應被刪除或重寫。
 - root-drop hash-based copy-if-changed report。
 - onefile payload input manifest/hash 與 reuse/new-pack decision。
-- runner-sync receipt 增加 decision taxonomy 與 phase timings：`cacheHitSkip`、`incrementalBuild`、`fullRebuild`，不可再把有變動增量與無變動 cache hit 混為同一類。
+- runner-sync receipt 增加 decision taxonomy 與 phase timings：`cacheHitSkip`、`incrementalBuild`、`fullRebuild`，不可再把有變動增量與無變動 cache hit 混為同一類。raw phase timings、per-run counters、debug logs 與高頻 receipt stream 必須寫入 gitignored runtime/log store；Git 只保留 digest/summary/baseline 與決策引用。
 
 ## Telemetry Contract
 
@@ -116,7 +116,7 @@ surfaceFamily: runner-sync
 - 開工前：讀取 0187 runner-sync receipt 與 0193 sealed duration，建立 cache-miss full rebuild baseline。
 - 實作中：若任何 diff classifier 無法保證 release parity，停止並把該分類標 fullRebuild；不得為了速度放鬆 reproducibility。
 - 收口前：至少用一個 package-only change 與一個 unsafe root-config change 驗證：前者走 incrementalBuild 且總耗時低於 full baseline；後者走 fullRebuild 並明確列出 unsafe reason。
-- 若 incremental treatment 讓 release manifest、onefile payload 或 root-drop parity 失真，立即回退 fullRebuild，並把失真案例寫入 backlog。
+- 若 incremental treatment 讓 release manifest、onefile payload 或 root-drop parity 失真，立即回退 fullRebuild，並把失真案例寫入 backlog；失真原始 log 保留本機 runtime，backlog 只記摘要、digest、重現命令與必要片段。
 
 ## VALIDATION_CMD
 

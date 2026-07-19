@@ -73,11 +73,11 @@ surfaceFamily: plan-executor
 
 ## Telemetry Contract
 
-- Produces：EMA inputs/decision、broker queue/compose health、actual wait、early-close、push/recovery/circuit-breaker treatment events。
+- Produces：EMA inputs/decision、broker queue/compose health、actual wait、early-close、push/recovery/circuit-breaker treatment events；raw event/counter/log/decision trace 寫入 gitignored runtime/log store，close 只提交 digest/summary/config reference。
 - Consumes：sealed event density/meta-health 與 prior phase summaries；角色為 M2 treatment。
 - 遙測缺漏時回退 floor policy並標 missing，不能當成事件密度為零；每次自動決策保存 report/config digest。
 - Broker 決策缺漏或 correctnessVerdict 長期 pending 時，dynamic window 不得樂觀縮短；回退保守 serial floor，並把 broker coverage/correctness limitation 傳給 0190。
-- Closure evidence：sealed treatment digest、window decision receipts、recovery refs、missing/dropped 與 own-scope cleanliness。
+- Closure evidence：sealed treatment digest、window decision receipts、recovery refs、missing/dropped 與 own-scope cleanliness；不得提交高頻 raw telemetry、per-run logs 或 broker trace streams。
 
 ## 交付物
 

@@ -60,7 +60,7 @@ surfaceFamily: performance-evidence
 ## Telemetry Contract
 
 - Produces：matched A/B、broker correctness/compose effectiveness、historical replay、shadow false-positive/latency、canonical evaluator parity、unique block/true-positive/evidence-readback verdict。
-- Consumes：只讀 sealed history 與 0193 registry coverage report；角色為 M2 analyzer，不得用 `--include-runtime` 作正式證據。任何 `not-yet-covered` 節點都必須在 verdict 中列為 coverage limitation，不能把缺事件解讀為零成本、零阻擋或無效。
+- Consumes：正式證據只讀 digest-only sealed history 與 0193 registry coverage report；角色為 M2 analyzer，不得用 `--include-runtime` 作 Git-tracked 正式證據。若需要本機重算，可讀 gitignored runtime archive，但 raw log/counter/event stream 不提交。任何 `not-yet-covered` 節點都必須在 verdict 中列為 coverage limitation，不能把缺事件解讀為零成本、零阻擋或無效。
 - Broker analyzer 必須輸出 parallel admission rate、conflict detection precision/recall、compose acceptance/rollback/escape、false-positive/false-negative conflict、manual override、decision latency 與 waitedMs saved；無 correctness verdict 或缺 outcomeRef 時該 broker 結論為 `inconclusive`。
 - 以 correlation/reason 去重；true positive 必須有 classification/resolution/incident ref。資料缺漏、去重失敗或 cohort 不可比一律 `inconclusive`。
 - Kill criteria：eligible >=500，或完整 >=4 週且覆蓋合理觸發機會，仍零 unique block/true positive/evidence readback/escaped incident，才提降頻/合併/退場；低頻安全 check 另做 replay 與 owner 裁決。
@@ -86,7 +86,7 @@ npm run validate:cli
 
 ## ROLLBACK_HINT
 
-保持 rollout disabled，revert default/analyzer changes；保留 raw sealed cohorts 與 verdict receipts。
+保持 rollout disabled，revert default/analyzer changes；保留 digest-only cohort summary 與 verdict receipts。raw cohort/event/log 僅留本機 gitignored runtime archive，不進 Git。
 
 ## 執行步驟
 
