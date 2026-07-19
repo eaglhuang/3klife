@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T08-08-29-065Z-close-e48e60e3776b",
+  "taskId": "ATM-GOV-0193",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-gate-telemetry-v1.task.md",
+  "taskSha256": "sha256:4bbeb1be40621d54eddc9588f1360234de099a45ececf13d7048c902383c07f6",
+  "createdAt": "2026-07-19T08:08:29.065Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0193 --actor codex-governance-optimizer"
+}
