@@ -62,13 +62,13 @@
   {
     "id": "doc_index_0012",
     "path": "docs/keep.summary.md",
-    "title": "Keep Consensus 摘要",
+    "title": "P0 ATM Bug / Optimization Backlog",
     "category": "index"
   },
   {
     "id": "doc_index_0013",
     "path": "docs/keep.md",
-    "title": "Keep Consensus",
+    "title": "P0 ATM Bug / Optimization Backlog",
     "category": "index"
   },
   {
@@ -145,7 +145,7 @@
   },
   {
     "id": "doc_index_0031",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/README.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/README-gov-0101-0123.md",
     "title": "ATM GOV Task Cards",
     "category": "index"
   },
@@ -195,6 +195,126 @@
     "id": "doc_index_1008",
     "path": "docs/ai_atomic_framework/governance-optimization/tasks/README.md",
     "title": "ATM 治理流程與 Team Agents 加速優化 Task Cards",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1009",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/README.md",
+    "title": "Adapter-Guided Atomization SDK Initiative",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1010",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/README.md",
+    "title": "EN Workspace",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1011",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/README.md",
+    "title": "arXiv Paper v1 — Adapter-Guided Atomization",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1012",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/README.md",
+    "title": "ATM 跨專案記憶治理（MEM）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1013",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md",
+    "title": "B-12 Controlled Field Collision Archive",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1014",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/README.md",
+    "title": "BLOCK Same-Owner Overlap Bounded Evidence",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1015",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-apply-success-2026-06-21-rerun/README.md",
+    "title": "close-orch-live-apply-success-2026-06-21-rerun",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1016",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-lane-escalation-2026-06-21/README.md",
+    "title": "close-orch-live-lane-escalation-2026-06-21",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1017",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/README.md",
+    "title": "close-orch-positive-layered-2026-06-21",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1018",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/README.md",
+    "title": "POS2 Same-Owner Bounded Evidence",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1019",
+    "path": "docs/ai_atomic_framework/cid-hardening/README.md",
+    "title": "CID Hardening Lane",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1020",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/README.md",
+    "title": "CID Hardening Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1021",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/README.md",
+    "title": "GIT Boundary Admission",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1022",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/README.md",
+    "title": "GIT Boundary Admission Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1023",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/README.md",
+    "title": "MAO Multi-Agent Orchestration",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1024",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/README.md",
+    "title": "MAO Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1025",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/README.md",
+    "title": "RFT (Refactor Tracking) Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1026",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/README.md",
+    "title": "SKL Tool-First 升級計畫",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1027",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/README.md",
+    "title": "SKL Tool-First Task Index",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1028",
+    "path": "docs/keep-memory/README.md",
+    "title": "keep-memory/ 記憶筆記層契約",
     "category": "index"
   }
 ]

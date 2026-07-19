@@ -2,3 +2,4 @@
 {"who":"H2U live rollout generator","when":"2026-05-15T15:14:48.869Z","action":"guidance.start","reason":"H2U live rollout leaf rehearsal","result":"split","profile":"dev","sessionId":"guidance-20260515151448-b6eb380442"}
 {"who":"H2U live rollout generator","when":"2026-05-15T15:15:28.230Z","action":"guidance.start","reason":"H2U live rollout leaf rehearsal","result":"split","profile":"dev","sessionId":"guidance-20260515151528-80771964ea"}
 {"who":"H2U live rollout generator","when":"2026-05-15T15:33:42.523Z","action":"guidance.start","reason":"H2U live rollout leaf rehearsal","result":"split","profile":"dev","sessionId":"guidance-20260515153342-416a8fe97e"}
+{"who":"ATM CLI","when":"2026-07-19T05:13:10.476Z","action":"guidance.start","reason":"Create ERR and TMP registered planning families through atm-plan-authoring","result":"create-atom","profile":"dev","sessionId":"guidance-20260719051310-06454abf0f"}

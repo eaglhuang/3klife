@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-07-14
-> 這是 `doc-id-registry.md` 的「其它類」分片，第 3/5 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
+> 生成日期: 2026-07-19
+> 這是 `doc-id-registry.md` 的「其它類」分片，第 3/6 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 其它類 (`doc_other`) — Part 3/5
+## 其它類 (`doc_other`) — Part 3/6
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -161,17 +161,17 @@
 | `doc_other_1450` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0093-d2-plugin-shadow-integration.task.md | Goal |
 | `doc_other_1451` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0095-tasks-wave3a-option-parsers-split.task.md | TASK-AAO-0095 tasks.ts wave 3-A parse-options cluster split |
 | `doc_other_1452` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0097-tasks-wave3b-file-io-helpers-split.task.md | TASK-AAO-0097 tasks.ts wave 3-B file-I/O helpers split |
-| `doc_other_1453` | .github/prompts/atm-atom-map-refactor.prompt.md | ATM Atom Map Refactor |
-| `doc_other_1454` | docs/ai_atomic_framework/ACADEMIC_MINING_REPORT.md | ATM 框架學術創新挖掘報告 |
-| `doc_other_1455` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/baseline-agent-cost-report.md | AI Agent 原子化成本基線報告 |
-| `doc_other_1456` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/coordination.md | ASP Initiative 協調紀錄 |
-| `doc_other_1457` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/corpus-index.md | 3KLife Corpus 索引（adapter candidate-discovery 驗證用） |
-| `doc_other_1458` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0001-atomization-planning-sdk-contract.task.md | TASK-ASP-0001 AtomizationPlanningAdapter SDK Contract |
-| `doc_other_1459` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0002-js-adapter-candidate-discovery.task.md | TASK-ASP-0002 JS Adapter Candidate Discovery |
-| `doc_other_1460` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0003-python-adapter-sdk-promotion.task.md | TASK-ASP-0003 Python Adapter SDK Promotion |
-| `doc_other_1461` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0004-broker-candidate-bridge.task.md | TASK-ASP-0004 Broker Candidate-to-WriteIntent Bridge |
-| `doc_other_1462` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0005-3klife-coordination-baseline.task.md | TASK-ASP-0005 3KLife Coordination & Baseline Measurement |
-| `doc_other_1463` | docs/ai_atomic_framework/cid-hardening/agr-virtual-atomization-implementation-plan.md | ATM 實作規劃：Adaptive Granularity Refinement (AGR) + Broker 強化 |
+| `doc_other_1453` | docs/ai_atomic_framework/governance-optimization/ATM治理流程與Team-Agents加速優化計畫書.md | ATM 治理流程與 Team Agents 加速優化計畫書 |
+| `doc_other_1454` | .github/prompts/atm-atom-map-refactor.prompt.md | ATM Atom Map Refactor |
+| `doc_other_1455` | docs/ai_atomic_framework/ACADEMIC_MINING_REPORT.md | ATM 框架學術創新挖掘報告 |
+| `doc_other_1456` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/baseline-agent-cost-report.md | AI Agent 原子化成本基線報告 |
+| `doc_other_1457` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/coordination.md | ASP Initiative 協調紀錄 |
+| `doc_other_1458` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/corpus-index.md | 3KLife Corpus 索引（adapter candidate-discovery 驗證用） |
+| `doc_other_1459` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0001-atomization-planning-sdk-contract.task.md | TASK-ASP-0001 AtomizationPlanningAdapter SDK Contract |
+| `doc_other_1460` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0002-js-adapter-candidate-discovery.task.md | TASK-ASP-0002 JS Adapter Candidate Discovery |
+| `doc_other_1461` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0003-python-adapter-sdk-promotion.task.md | TASK-ASP-0003 Python Adapter SDK Promotion |
+| `doc_other_1462` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0004-broker-candidate-bridge.task.md | TASK-ASP-0004 Broker Candidate-to-WriteIntent Bridge |
+| `doc_other_1463` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0005-3klife-coordination-baseline.task.md | TASK-ASP-0005 3KLife Coordination & Baseline Measurement |
 | `doc_other_1464` | docs/ai_atomic_framework/arxiv-paper-v1/bench-design.md | Multi-Vendor Broker Bench — 設計規範（v1 vision paper 補強用） |
 | `doc_other_1465` | docs/ai_atomic_framework/arxiv-paper-v1/close-orchestration-collision-runbook.md | close-orchestration Controlled Collision Runbook |
 | `doc_other_1466` | docs/ai_atomic_framework/arxiv-paper-v1/COMMIT-ARTIFACT-MAP-2026-06-28.md | Commit and Artifact Map (2026-06-28) |
@@ -206,92 +206,92 @@
 | `doc_other_1495` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md | ATM：同域多供應商 LLM 程式碼共同合成的採用器導向原子化與 CID Broker |
 | `doc_other_1496` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.md | 採用器導向原子化：多代理 LLM 程式碼合成的寫入前准入治理框架 |
 | `doc_other_1497` | docs/ai_atomic_framework/arxiv-paper-v1/same-owner-block-unique-package-zh.md | Same-Owner BLOCK 論文唯一完整包 |
-| `doc_other_1498` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-A.task.md | TASK-COLLIDE-CLOSE-ORCH-A |
-| `doc_other_1499` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-B.task.md | TASK-COLLIDE-CLOSE-ORCH-B |
-| `doc_other_1500` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-A.task.md | TASK-PAPER-HOTFILE-BLOCK-A |
-| `doc_other_1501` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-B.task.md | TASK-PAPER-HOTFILE-BLOCK-B |
-| `doc_other_1502` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-A.task.md | TASK-PAPER-HOTFILE-PARK-A |
-| `doc_other_1503` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-B.task.md | TASK-PAPER-HOTFILE-PARK-B |
-| `doc_other_1504` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-A.task.md | TASK-PAPER-HOTFILE-POS-A |
-| `doc_other_1505` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-B.task.md | TASK-PAPER-HOTFILE-POS-B |
-| `doc_other_1506` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-A.task.md | TASK-PAPER-HOTFILE-POS2-A |
-| `doc_other_1507` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-B.task.md | TASK-PAPER-HOTFILE-POS2-B |
-| `doc_other_1508` | docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md | ATM Bug and Optimization Backlog |
-| `doc_other_1509` | docs/ai_atomic_framework/ATM_CAPTAIN_ACTIVE_SEQUENCE.md | ATM Captain Active Sequence |
-| `doc_other_1510` | docs/ai_atomic_framework/ATM_TASK_STATUS_SYNC_AUDIT_2026-06-14.md | ATM Task Status Sync Audit - 2026-06-14 |
-| `doc_other_1511` | docs/ai_atomic_framework/atm-agent-first-operability/HANDOFF-2026-06-18-ATM-EXECUTION-OPERATOR-GUIDE.md | ATM 執行操作手冊與交接 — TASK-AAO-0144 收工後 |
-| `doc_other_1512` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0098-mrp-pilot-leaf-extraction.task.md | TASK-AAO-0098 MRP pilot — leaf-by-leaf governed extraction（target by atm candidates rank） |
-| `doc_other_1513` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0099-batch-leaf-extraction.task.md | TASK-AAO-0099 MRP batch-3 leaf extraction（3× throughput pilot） |
-| `doc_other_1514` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0100-batch10-loc-ranked-with-map.task.md | TASK-AAO-0100 Batch-10 LOC-ranked leaf extraction + atom map formation |
-| `doc_other_1515` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0101-map-formation-from-0100-atoms.task.md | Discovery findings (Phase 1 撞牆 evidence) |
-| `doc_other_1516` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0102-map-formation-retry-with-int-test.task.md | TASK-AAO-0102 Map formation retry — ATM-MAP-0003 + integration test stub |
-| `doc_other_1517` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md | TASK-AAO-0103 Environment and workspace hygiene preflight |
-| `doc_other_1518` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0104-function-bag-atom-capsule-wave-1.task.md | TASK-AAO-0104 Function-bag atom capsule extraction wave 1 |
-| `doc_other_1519` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0105-atom-registry-external-parts-sharding.task.md | TASK-AAO-0105 Atom registry external-parts sharding |
-| `doc_other_1520` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0106-path-to-atom-map-owner-shards.task.md | TASK-AAO-0106 Path-to-atom-map owner shards |
-| `doc_other_1521` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0107-dependency-security-ci-triage.task.md | TASK-AAO-0107 Dependency security CI triage |
-| `doc_other_1522` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0108-recover-atm-map-0003-from-preserved-0102-tag.task.md | TASK-AAO-0108 Recover ATM-MAP-0003 from preserved 0102 tag |
-| `doc_other_1523` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0109-restore-clean-checkout-stable-runner-and-ci-workflow-contract.task.md | TASK-AAO-0109 Restore clean-checkout stable runner and CI workflow contract |
-| `doc_other_1524` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0110-goal-aligned-legacy-route-selection-for-guided-atomize.task.md | TASK-AAO-0110 Goal-aligned legacy route selection for guided atomize |
-| `doc_other_1525` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0111-atm-taskflow-dry-run-orchestrator.task.md | TASK-AAO-0111 ATM taskflow dry-run orchestrator |
-| `doc_other_1526` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0112-atm-taskflow-dry-run-skeleton.task.md | TASK-AAO-0112 AAF taskflow dry-run skeleton |
-| `doc_other_1527` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0113-taskflow-profile-v1-contract.task.md | TASK-AAO-0113 taskflow.profile.v1 contract |
-| `doc_other_1528` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0114-closure-packet-dirty-tree-hygiene-guard.task.md | TASK-AAO-0114 closure packet dirty/untracked evidence hygiene guard |
-| `doc_other_1529` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-taskflow-profile-v1-contract-completion.task.md | TASK-AAO-0115 taskflow.profile.v1 contract completion / de-hardcode dry-run |
-| `doc_other_1530` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0116-actor-adopt.task.md | TASK-AAO-0116 atm actor adopt — atomic identity switch subcommand |
-| `doc_other_1531` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0117-taskflow-profile-release-pollution-cleanup.task.md | TASK-AAO-0117 taskflow.profile release tracked pollution cleanup |
-| `doc_other_1532` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0118-opener-first-active-claim-commit-guard-mvp.task.md | TASK-AAO-0118 opener-first active-claim commit guard MVP |
-| `doc_other_1533` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0119-frozen-runner-alignment-for-atm-runner-sync-required.task.md | TASK-AAO-0119 frozen runner alignment for ATM_RUNNER_SYNC_REQUIRED |
-| `doc_other_1534` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0120-section-aware-task-card-scope-extraction-and-outOfScope-subtraction.task.md | TASK-AAO-0120 section-aware task-card scope extraction and outOfScope subtraction |
-| `doc_other_1535` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0121-reconcile-task-aao-0120-closure-target-and-release-pollution.task.md | TASK-AAO-0121 reconcile TASK-AAO-0120 closure target and release pollution |
-| `doc_other_1536` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0122-repair-closure-protected-state-commit-context-alignment.task.md | TASK-AAO-0122 repair-closure protected-state commit context alignment |
-| `doc_other_1537` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0123-protect-active-claims-from-task-import-refresh-overwrite.task.md | TASK-AAO-0123 protect active claims from task import refresh overwrite |
-| `doc_other_1538` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0124-normalize-absolute-and-relative-paths-in-task-direction-and-hook-scope-checks.task.md | TASK-AAO-0124 normalize absolute and relative paths in task direction and hook scope checks |
-| `doc_other_1539` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0125-frozen-runner-alignment-after-task-aao-0124.task.md | TASK-AAO-0125 frozen runner alignment after TASK-AAO-0124 |
-| `doc_other_1540` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0126-allow-release-runner-outputs-as-task-deliverables.task.md | TASK-AAO-0126 allow release runner outputs as task deliverables |
-| `doc_other_1541` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0127-frozen-runner-alignment-after-task-aao-0126.task.md | TASK-AAO-0127 frozen runner alignment after TASK-AAO-0126 |
-| `doc_other_1542` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0128-task-card-route-scope-pollution-guard-for-clean-single-card-import.task.md | TASK-AAO-0128 task-card route scope pollution guard for clean single-card import |
-| `doc_other_1543` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0129-taskflow-open-task-plan-generation-and-opener-delegation-dry-run.task.md | TASK-AAO-0129 taskflow open task-plan generation and opener delegation dry-run |
-| `doc_other_1544` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0130-cid-first-parallel-conflict-advisor-cli-mvp.task.md | TASK-AAO-0130 CID-first parallel conflict advisor CLI MVP |
-| `doc_other_1545` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0131-route-hygiene-follow-up-planning-artifact-synthetic-alias-scope-guard.task.md | TASK-AAO-0131 route hygiene follow-up for planning artifacts and synthetic alias scope guard |
-| `doc_other_1546` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0132-frozen-runner-alignment-before-task-aao-0018-clean-redelivery.task.md | TASK-AAO-0132 frozen runner alignment before TASK-AAO-0018 clean redelivery |
-| `doc_other_1547` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md | TASK-AAO-0135 closure/evidence data integrity hardening and import active-claim safety |
-| `doc_other_1548` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0136-multi-captain-commit-ergonomics.task.md | TASK-AAO-0136 multi-captain commit ergonomics: audit scoping, close-commit-window, worktree framework-mode inheritance |
-| `doc_other_1549` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md | TASK-AAO-0137 write-path atomicity and operator diagnostics |
-| `doc_other_1550` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138-formal-task-opener-and-residue-finalization-ux.task.md | TASK-AAO-0138 formal task opener and residue finalization UX |
-| `doc_other_1551` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138A-taskflow-open-delegated-opener-orchestration-contract.task.md | TASK-AAO-0138A taskflow open delegated opener orchestration contract |
-| `doc_other_1552` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138B-host-opener-fallback-mode-and-numbering-path-policy-surface.task.md | TASK-AAO-0138B host opener fallback mode and numbering-path policy surface |
-| `doc_other_1553` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138C-residue-classification-and-finalization-operator-flow.task.md | TASK-AAO-0138C residue classification and finalization operator flow |
-| `doc_other_1554` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0139-task-id-casing-governance.task.md | TASK-AAO-0139 Preserve task-id casing across import, close verification, and pre-commit transition checks |
-| `doc_other_1555` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0140-taskflow-close-planning-mirror-closeback-orchestration.task.md | TASK-AAO-0140 taskflow close planning mirror closeback orchestration |
-| `doc_other_1556` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0141-git-commit-task-scoped-staging-diagnostics.task.md | TASK-AAO-0141 - git commit task-scoped staging required-command diagnostics |
-| `doc_other_1557` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0142-auto-run-declared-validators-into-evidence-before-close.task.md | Goal |
-| `doc_other_1558` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0143-close-absorbs-regenerable-artifacts-and-correct-planning-mirror-edits.task.md | Goal |
-| `doc_other_1559` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0144-governed-git-entrypoint-and-build-output-hygiene.task.md | Goal |
-| `doc_other_1560` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0145-auto-generated-residue-guard-and-auto-clean.task.md | Goal |
-| `doc_other_1561` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-harden-same-repo-close-bundle-and-scope-filtering.task.md | Goal |
-| `doc_other_1562` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md | Goal |
-| `doc_other_1563` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0157-framework-auto-stage-claim-glob-and-release-mirrors.task.md | TASK-AAO-0157 - Framework auto-stage claim glob and release mirrors |
-| `doc_other_1564` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0158-governance-validator-parallel-progress-and-cancellation.task.md | TASK-AAO-0158 Governance validator parallelism, progress, and cancellation |
-| `doc_other_1565` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0159-scope-aware-encoding-guard-and-temp-artifact-isolation.task.md | TASK-AAO-0159 Scope-aware encoding guard and temporary artifact isolation |
-| `doc_other_1566` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0160-governed-commit-audit-deferral-and-lease-renewal.task.md | TASK-AAO-0160 Governed commit audit deferral and lease renewal |
-| `doc_other_1567` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0161-broker-close-release-and-runtime-snapshot-cleanup.task.md | TASK-AAO-0161 Broker close release and runtime snapshot cleanup |
-| `doc_other_1568` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0162-scope-amendment-path-normalization-and-backlog-id-guard.task.md | TASK-AAO-0162 Scope amendment path normalization and backlog ID guard |
-| `doc_other_1569` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0163-encoding-temp-artifact-backlog-closeback.task.md | TASK-AAO-0163 Encoding temp artifact backlog closeback |
-| `doc_other_1570` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0164-precommit-evidence-required-command-task-id-guard.task.md | TASK-AAO-0164 Precommit evidence requiredCommand task id guard |
-| `doc_other_1571` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md | TASK-AAO-0190 Fix taskflow close UX for auto-stage and --status migration |
-| `doc_other_1572` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0191-defer-foreign-staged-ordinary-unowned.task.md | TASK-AAO-0191 Prevent defer-foreign-staged from absorbing ordinary-unowned staged files |
-| `doc_other_1573` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0192-abandoned-reopen-without-emergency-force.task.md | TASK-AAO-0192 Allow abandoned task reopen without emergency --force |
-| `doc_other_1574` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0193-planning-root-authorship-reminder.task.md | TASK-AAO-0193 Remind framework imports to author 3KLife planning cards first |
-| `doc_other_1575` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0194-close-deferred-governance-dirty-snapshot-enoent.task.md | TASK-AAO-0194 Make taskflow close tolerate deferred foreign governance-dirty snapshots |
-| `doc_other_1576` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0195-team-plan-readonly-projection.task.md | TASK-AAO-0195 Add read-only team plan projection without broker side effects |
-| `doc_other_1577` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0196-team-execute-fail-closed-zero-providers.task.md | TASK-AAO-0196 Fail-closed team start --execute when zero providers run |
-| `doc_other_1578` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0197-team-execute-defaults-all-roles.task.md | TASK-AAO-0197 Apply top-level team execute provider defaults to all roster roles |
-| `doc_other_1579` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0198-team-runtime-mode-precedence.task.md | TASK-AAO-0198 Honor CLI --runtime-mode over repo-default broker-only |
-| `doc_other_1580` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0199-task-ledger-fixture-isolation.task.md | TASK-AAO-0199 Isolate task-ledger governance validator fixtures per case |
-| `doc_other_1581` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0200-claim-broker-resolution-consumption.task.md | TASK-AAO-0200 Consume broker conflict resolution artifacts on next --claim |
-| `doc_other_1582` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0201-mixed-delivery-close-ux-hint.task.md | TASK-AAO-0201 Clarify multi-task shared historical-delivery close UX |
-| `doc_other_1583` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0202-claim-release-transition-event.task.md | TASK-AAO-0202 Emit task-event when claim release mutates ledger |
-| `doc_other_1584` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0203-residue-validator-contract-drift.task.md | TASK-AAO-0203 Align task-ledger residue fixtures with current contract |
-| `doc_other_1585` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0204-direction-lock-generated-protected-audit.task.md | TASK-AAO-0204 Auto-admit task-generated protected-override audit into direction lock |
-| `doc_other_1586` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0205-framework-claim-ignore-unstaged-release.task.md | TASK-AAO-0205 Keep framework-claim isolated index closed over unstaged release dirt |
+| `doc_other_1498` | docs/ai_atomic_framework/arxiv-paper-v1/search-threat-keywords.md | ATM CID 論文威脅掃描清單 |
+| `doc_other_1499` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-A.task.md | TASK-COLLIDE-CLOSE-ORCH-A |
+| `doc_other_1500` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-B.task.md | TASK-COLLIDE-CLOSE-ORCH-B |
+| `doc_other_1501` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-A.task.md | TASK-PAPER-HOTFILE-BLOCK-A |
+| `doc_other_1502` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-B.task.md | TASK-PAPER-HOTFILE-BLOCK-B |
+| `doc_other_1503` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-A.task.md | TASK-PAPER-HOTFILE-PARK-A |
+| `doc_other_1504` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-B.task.md | TASK-PAPER-HOTFILE-PARK-B |
+| `doc_other_1505` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-A.task.md | TASK-PAPER-HOTFILE-POS-A |
+| `doc_other_1506` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-B.task.md | TASK-PAPER-HOTFILE-POS-B |
+| `doc_other_1507` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-A.task.md | TASK-PAPER-HOTFILE-POS2-A |
+| `doc_other_1508` | docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-B.task.md | TASK-PAPER-HOTFILE-POS2-B |
+| `doc_other_1509` | docs/ai_atomic_framework/arxiv-paper-v1/vision-paper-semantic-admission.md | Vision Paper: Atomization-First CID Broker |
+| `doc_other_1510` | docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md | ATM Bug and Optimization Backlog |
+| `doc_other_1511` | docs/ai_atomic_framework/ATM_CAPTAIN_ACTIVE_SEQUENCE.md | ATM Captain Active Sequence |
+| `doc_other_1512` | docs/ai_atomic_framework/ATM_TASK_STATUS_SYNC_AUDIT_2026-06-14.md | ATM Task Status Sync Audit - 2026-06-14 |
+| `doc_other_1513` | docs/ai_atomic_framework/atm-agent-first-operability/HANDOFF-2026-06-18-ATM-EXECUTION-OPERATOR-GUIDE.md | ATM 執行操作手冊與交接 — TASK-AAO-0144 收工後 |
+| `doc_other_1514` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0098-mrp-pilot-leaf-extraction.task.md | TASK-AAO-0098 MRP pilot — leaf-by-leaf governed extraction（target by atm candidates rank） |
+| `doc_other_1515` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0099-batch-leaf-extraction.task.md | TASK-AAO-0099 MRP batch-3 leaf extraction（3× throughput pilot） |
+| `doc_other_1516` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0100-batch10-loc-ranked-with-map.task.md | TASK-AAO-0100 Batch-10 LOC-ranked leaf extraction + atom map formation |
+| `doc_other_1517` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0101-map-formation-from-0100-atoms.task.md | Discovery findings (Phase 1 撞牆 evidence) |
+| `doc_other_1518` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0102-map-formation-retry-with-int-test.task.md | TASK-AAO-0102 Map formation retry — ATM-MAP-0003 + integration test stub |
+| `doc_other_1519` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md | TASK-AAO-0103 Environment and workspace hygiene preflight |
+| `doc_other_1520` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0104-function-bag-atom-capsule-wave-1.task.md | TASK-AAO-0104 Function-bag atom capsule extraction wave 1 |
+| `doc_other_1521` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0105-atom-registry-external-parts-sharding.task.md | TASK-AAO-0105 Atom registry external-parts sharding |
+| `doc_other_1522` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0106-path-to-atom-map-owner-shards.task.md | TASK-AAO-0106 Path-to-atom-map owner shards |
+| `doc_other_1523` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0107-dependency-security-ci-triage.task.md | TASK-AAO-0107 Dependency security CI triage |
+| `doc_other_1524` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0108-recover-atm-map-0003-from-preserved-0102-tag.task.md | TASK-AAO-0108 Recover ATM-MAP-0003 from preserved 0102 tag |
+| `doc_other_1525` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0109-restore-clean-checkout-stable-runner-and-ci-workflow-contract.task.md | TASK-AAO-0109 Restore clean-checkout stable runner and CI workflow contract |
+| `doc_other_1526` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0110-goal-aligned-legacy-route-selection-for-guided-atomize.task.md | TASK-AAO-0110 Goal-aligned legacy route selection for guided atomize |
+| `doc_other_1527` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0111-atm-taskflow-dry-run-orchestrator.task.md | TASK-AAO-0111 ATM taskflow dry-run orchestrator |
+| `doc_other_1528` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0112-atm-taskflow-dry-run-skeleton.task.md | TASK-AAO-0112 AAF taskflow dry-run skeleton |
+| `doc_other_1529` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0113-taskflow-profile-v1-contract.task.md | TASK-AAO-0113 taskflow.profile.v1 contract |
+| `doc_other_1530` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0114-closure-packet-dirty-tree-hygiene-guard.task.md | TASK-AAO-0114 closure packet dirty/untracked evidence hygiene guard |
+| `doc_other_1531` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-taskflow-profile-v1-contract-completion.task.md | TASK-AAO-0115 taskflow.profile.v1 contract completion / de-hardcode dry-run |
+| `doc_other_1532` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0116-actor-adopt.task.md | TASK-AAO-0116 atm actor adopt — atomic identity switch subcommand |
+| `doc_other_1533` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0117-taskflow-profile-release-pollution-cleanup.task.md | TASK-AAO-0117 taskflow.profile release tracked pollution cleanup |
+| `doc_other_1534` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0118-opener-first-active-claim-commit-guard-mvp.task.md | TASK-AAO-0118 opener-first active-claim commit guard MVP |
+| `doc_other_1535` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0119-frozen-runner-alignment-for-atm-runner-sync-required.task.md | TASK-AAO-0119 frozen runner alignment for ATM_RUNNER_SYNC_REQUIRED |
+| `doc_other_1536` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0120-section-aware-task-card-scope-extraction-and-outOfScope-subtraction.task.md | TASK-AAO-0120 section-aware task-card scope extraction and outOfScope subtraction |
+| `doc_other_1537` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0121-reconcile-task-aao-0120-closure-target-and-release-pollution.task.md | TASK-AAO-0121 reconcile TASK-AAO-0120 closure target and release pollution |
+| `doc_other_1538` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0122-repair-closure-protected-state-commit-context-alignment.task.md | TASK-AAO-0122 repair-closure protected-state commit context alignment |
+| `doc_other_1539` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0123-protect-active-claims-from-task-import-refresh-overwrite.task.md | TASK-AAO-0123 protect active claims from task import refresh overwrite |
+| `doc_other_1540` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0124-normalize-absolute-and-relative-paths-in-task-direction-and-hook-scope-checks.task.md | TASK-AAO-0124 normalize absolute and relative paths in task direction and hook scope checks |
+| `doc_other_1541` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0125-frozen-runner-alignment-after-task-aao-0124.task.md | TASK-AAO-0125 frozen runner alignment after TASK-AAO-0124 |
+| `doc_other_1542` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0126-allow-release-runner-outputs-as-task-deliverables.task.md | TASK-AAO-0126 allow release runner outputs as task deliverables |
+| `doc_other_1543` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0127-frozen-runner-alignment-after-task-aao-0126.task.md | TASK-AAO-0127 frozen runner alignment after TASK-AAO-0126 |
+| `doc_other_1544` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0128-task-card-route-scope-pollution-guard-for-clean-single-card-import.task.md | TASK-AAO-0128 task-card route scope pollution guard for clean single-card import |
+| `doc_other_1545` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0129-taskflow-open-task-plan-generation-and-opener-delegation-dry-run.task.md | TASK-AAO-0129 taskflow open task-plan generation and opener delegation dry-run |
+| `doc_other_1546` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0130-cid-first-parallel-conflict-advisor-cli-mvp.task.md | TASK-AAO-0130 CID-first parallel conflict advisor CLI MVP |
+| `doc_other_1547` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0131-route-hygiene-follow-up-planning-artifact-synthetic-alias-scope-guard.task.md | TASK-AAO-0131 route hygiene follow-up for planning artifacts and synthetic alias scope guard |
+| `doc_other_1548` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0132-frozen-runner-alignment-before-task-aao-0018-clean-redelivery.task.md | TASK-AAO-0132 frozen runner alignment before TASK-AAO-0018 clean redelivery |
+| `doc_other_1549` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md | TASK-AAO-0135 closure/evidence data integrity hardening and import active-claim safety |
+| `doc_other_1550` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0136-multi-captain-commit-ergonomics.task.md | TASK-AAO-0136 multi-captain commit ergonomics: audit scoping, close-commit-window, worktree framework-mode inheritance |
+| `doc_other_1551` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md | TASK-AAO-0137 write-path atomicity and operator diagnostics |
+| `doc_other_1552` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138-formal-task-opener-and-residue-finalization-ux.task.md | TASK-AAO-0138 formal task opener and residue finalization UX |
+| `doc_other_1553` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138A-taskflow-open-delegated-opener-orchestration-contract.task.md | TASK-AAO-0138A taskflow open delegated opener orchestration contract |
+| `doc_other_1554` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138B-host-opener-fallback-mode-and-numbering-path-policy-surface.task.md | TASK-AAO-0138B host opener fallback mode and numbering-path policy surface |
+| `doc_other_1555` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138C-residue-classification-and-finalization-operator-flow.task.md | TASK-AAO-0138C residue classification and finalization operator flow |
+| `doc_other_1556` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0139-task-id-casing-governance.task.md | TASK-AAO-0139 Preserve task-id casing across import, close verification, and pre-commit transition checks |
+| `doc_other_1557` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0140-taskflow-close-planning-mirror-closeback-orchestration.task.md | TASK-AAO-0140 taskflow close planning mirror closeback orchestration |
+| `doc_other_1558` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0141-git-commit-task-scoped-staging-diagnostics.task.md | TASK-AAO-0141 - git commit task-scoped staging required-command diagnostics |
+| `doc_other_1559` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0142-auto-run-declared-validators-into-evidence-before-close.task.md | Goal |
+| `doc_other_1560` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0143-close-absorbs-regenerable-artifacts-and-correct-planning-mirror-edits.task.md | Goal |
+| `doc_other_1561` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0144-governed-git-entrypoint-and-build-output-hygiene.task.md | Goal |
+| `doc_other_1562` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0145-auto-generated-residue-guard-and-auto-clean.task.md | Goal |
+| `doc_other_1563` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-harden-same-repo-close-bundle-and-scope-filtering.task.md | Goal |
+| `doc_other_1564` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md | Goal |
+| `doc_other_1565` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0149-taskflow-close-rollback-resilience.task.md | TASK-AAO-0149 — taskflow close rollback and auto-evidence resilience |
+| `doc_other_1566` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0150-next-hot-path-latency.task.md | TASK-AAO-0150 — next hot-path latency |
+| `doc_other_1567` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0151-prompt-scoped-next-red-validator.task.md | TASK-AAO-0151 — prompt-scoped-next persistent red |
+| `doc_other_1568` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0154-cross-task-mutation-incident-safe-mode.task.md | TASK-AAO-0154 Cross-task mutation incident-safe mode |
+| `doc_other_1569` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0155-next-active-task-divergence-guard.task.md | TASK-AAO-0155 Active-task divergence guard |
+| `doc_other_1570` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md | TASK-AAO-0156 Protected ATM history and staged-ownership fencing |
+| `doc_other_1571` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0157-framework-auto-stage-claim-glob-and-release-mirrors.task.md | TASK-AAO-0157 - Framework auto-stage claim glob and release mirrors |
+| `doc_other_1572` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0158-governance-validator-parallel-progress-and-cancellation.task.md | TASK-AAO-0158 Governance validator parallelism, progress, and cancellation |
+| `doc_other_1573` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0159-scope-aware-encoding-guard-and-temp-artifact-isolation.task.md | TASK-AAO-0159 Scope-aware encoding guard and temporary artifact isolation |
+| `doc_other_1574` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0160-governed-commit-audit-deferral-and-lease-renewal.task.md | TASK-AAO-0160 Governed commit audit deferral and lease renewal |
+| `doc_other_1575` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0161-broker-close-release-and-runtime-snapshot-cleanup.task.md | TASK-AAO-0161 Broker close release and runtime snapshot cleanup |
+| `doc_other_1576` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0162-scope-amendment-path-normalization-and-backlog-id-guard.task.md | TASK-AAO-0162 Scope amendment path normalization and backlog ID guard |
+| `doc_other_1577` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0163-encoding-temp-artifact-backlog-closeback.task.md | TASK-AAO-0163 Encoding temp artifact backlog closeback |
+| `doc_other_1578` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0164-precommit-evidence-required-command-task-id-guard.task.md | TASK-AAO-0164 Precommit evidence requiredCommand task id guard |
+| `doc_other_1579` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md | TASK-AAO-0190 Fix taskflow close UX for auto-stage and --status migration |
+| `doc_other_1580` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0191-defer-foreign-staged-ordinary-unowned.task.md | TASK-AAO-0191 Prevent defer-foreign-staged from absorbing ordinary-unowned staged files |
+| `doc_other_1581` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0192-abandoned-reopen-without-emergency-force.task.md | TASK-AAO-0192 Allow abandoned task reopen without emergency --force |
+| `doc_other_1582` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0193-planning-root-authorship-reminder.task.md | TASK-AAO-0193 Remind framework imports to author 3KLife planning cards first |
+| `doc_other_1583` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0194-close-deferred-governance-dirty-snapshot-enoent.task.md | TASK-AAO-0194 Make taskflow close tolerate deferred foreign governance-dirty snapshots |
+| `doc_other_1584` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0195-team-plan-readonly-projection.task.md | TASK-AAO-0195 Add read-only team plan projection without broker side effects |
+| `doc_other_1585` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0196-team-execute-fail-closed-zero-providers.task.md | TASK-AAO-0196 Fail-closed team start --execute when zero providers run |
+| `doc_other_1586` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0197-team-execute-defaults-all-roles.task.md | TASK-AAO-0197 Apply top-level team execute provider defaults to all roster roles |

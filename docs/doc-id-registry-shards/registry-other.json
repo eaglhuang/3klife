@@ -157,19 +157,19 @@
   },
   {
     "id": "doc_other_0032",
-    "path": "docs/ai_atomic_framework/3klife-coexistence-plan.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/3klife-coexistence-plan.md",
     "title": "3KLife × ATM 並行開發協議（Coexistence Plan）",
     "category": "other"
   },
   {
     "id": "doc_other_0033",
-    "path": "docs/ai_atomic_framework/3klife-consumption-roadmap.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/3klife-consumption-roadmap.md",
     "title": "3KLife 長期消費 ATM 路線圖（Consumption Roadmap）",
     "category": "other"
   },
   {
     "id": "doc_other_0034",
-    "path": "docs/ai_atomic_framework/multi-agent-compatibility-matrix.md",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/multi-agent-compatibility-matrix.md",
     "title": "Multi-AI Agent 兼容性測試矩陣",
     "category": "other"
   },
@@ -181,7 +181,7 @@
   },
   {
     "id": "doc_other_0036",
-    "path": "docs/ai_atomic_framework/3klife-tooling-fate.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/3klife-tooling-fate.md",
     "title": "3KLife 既有治理工具命運表（Tooling Fate）",
     "category": "other"
   },
@@ -451,13 +451,13 @@
   },
   {
     "id": "doc_other_0081",
-    "path": "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/html-to-ucuf-case-study.md",
     "title": "html-to-ucuf Reference Case Study",
     "category": "other"
   },
   {
     "id": "doc_other_0082",
-    "path": "docs/ai_atomic_framework/h2u-regression-matrix.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/h2u-regression-matrix.md",
     "title": "H2U Regression Matrix",
     "category": "other"
   },
@@ -631,7 +631,7 @@
   },
   {
     "id": "doc_other_0113",
-    "path": "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/cocos-runtime-adapter-policy.md",
     "title": "Cocos Runtime Adapter Policy",
     "category": "other"
   },
@@ -655,13 +655,13 @@
   },
   {
     "id": "doc_other_0117",
-    "path": "docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/legacy-h2u-first-battle-launch-checklist.md",
     "title": "2026-05-11 ATM Ownership Boundary",
     "category": "other"
   },
   {
     "id": "doc_other_0120",
-    "path": "docs/ai_atomic_framework/atm-agent-guidance-layer-framework-implementation-plan.md",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/atm-agent-guidance-layer-framework-implementation-plan.md",
     "title": "ATM Agent Guidance Layer（框架本體版）實作計劃書",
     "category": "other"
   },
@@ -721,7 +721,7 @@
   },
   {
     "id": "doc_other_0130",
-    "path": "docs/ai_atomic_framework/atm-h2u-three-tier-gates.md",
+    "path": "docs/ai_atomic_framework/3klife-atm-triangle-strategy/atm-h2u-three-tier-gates.md",
     "title": "ATM/H2U 三層閘門與單一入口",
     "category": "other"
   },
@@ -2095,145 +2095,145 @@
   },
   {
     "id": "doc_other_0801",
-    "path": "docs/ai_atomic_framework/gov-series-governance/ATM-GOV-Governance-Program-Plan.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md",
     "title": "ATM GOV Governance Program Plan",
     "category": "other"
   },
   {
     "id": "doc_other_0802",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0101-actor-identity-registry.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0101-actor-identity-registry.task.md",
     "title": "ATM-GOV-0101 Actor Identity Registry and Git Identity Contract",
     "category": "other"
   },
   {
     "id": "doc_other_0803",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0102-atomic-task-claim-lease.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0102-atomic-task-claim-lease.task.md",
     "title": "ATM-GOV-0102 Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover",
     "category": "other"
   },
   {
     "id": "doc_other_0804",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md",
     "title": "ATM-GOV-0103 Task Opening and Reservation Lifecycle",
     "category": "other"
   },
   {
     "id": "doc_other_0805",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0104-evidence-bound-gates.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0104-evidence-bound-gates.task.md",
     "title": "ATM-GOV-0104 Evidence-Bound Close and Commit/PR Gate",
     "category": "other"
   },
   {
     "id": "doc_other_0806",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0105-git-governance-contract.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0105-git-governance-contract.task.md",
     "title": "ATM-GOV-0105 Git Governance and Commit Trailer Validation",
     "category": "other"
   },
   {
     "id": "doc_other_0807",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0106-thin-guard-engine.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0106-thin-guard-engine.task.md",
     "title": "ATM-GOV-0106 Thin Guard Engine for Mutation and Git Checks",
     "category": "other"
   },
   {
     "id": "doc_other_0808",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0107-integration-plugins.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0107-integration-plugins.task.md",
     "title": "ATM-GOV-0107 Integration Plugins for Claude Code, Codex, Gemini, Cursor",
     "category": "other"
   },
   {
     "id": "doc_other_0809",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0108-no-hook-human-fallback.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0108-no-hook-human-fallback.task.md",
     "title": "ATM-GOV-0108 No-Hook and Human Collaboration Fallback Profile",
     "category": "other"
   },
   {
     "id": "doc_other_0810",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0109-claim-collision-proofing.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0109-claim-collision-proofing.task.md",
     "title": "ATM-GOV-0109 Claim Collision Proofing and Conflict Evidence Flow",
     "category": "other"
   },
   {
     "id": "doc_other_0811",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0110-adapter-neutrality-boundary.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0110-adapter-neutrality-boundary.task.md",
     "title": "ATM-GOV-0110 Adapter Neutrality Boundary and Governance Externalization",
     "category": "other"
   },
   {
     "id": "doc_other_0812",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0111-antigravity-integration-adapter.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0111-antigravity-integration-adapter.task.md",
     "title": "ATM-GOV-0111 Antigravity Integration Adapter",
     "category": "other"
   },
   {
     "id": "doc_other_0813",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0112-languageadapter-governance-capability-contract.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0112-languageadapter-governance-capability-contract.task.md",
     "title": "ATM-GOV-0112 LanguageAdapter Governance Capability Contract",
     "category": "other"
   },
   {
     "id": "doc_other_0814",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0113-languageadapter-capability-resolution-fallback.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0113-languageadapter-capability-resolution-fallback.task.md",
     "title": "ATM-GOV-0113 LanguageAdapter Capability Resolution and Fallback Semantics",
     "category": "other"
   },
   {
     "id": "doc_other_0815",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0114-legacyrouteplan-via-languageadapter.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0114-legacyrouteplan-via-languageadapter.task.md",
     "title": "ATM-GOV-0114 LegacyRoutePlan via LanguageAdapter",
     "category": "other"
   },
   {
     "id": "doc_other_0816",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0115-source-inventory-candidate-ranking-signals.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0115-source-inventory-candidate-ranking-signals.task.md",
     "title": "ATM-GOV-0115 Source Inventory and Candidate Ranking Signals via LanguageAdapter",
     "category": "other"
   },
   {
     "id": "doc_other_0817",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0116-atomize-infect-dryrun-planning.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0116-atomize-infect-dryrun-planning.task.md",
     "title": "ATM-GOV-0116 Atomize and Infect Dry-Run Planning via LanguageAdapter",
     "category": "other"
   },
   {
     "id": "doc_other_0818",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0117-reference-javascript-languageadapter.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0117-reference-javascript-languageadapter.task.md",
     "title": "ATM-GOV-0117 Reference JavaScript LanguageAdapter Governance Implementation",
     "category": "other"
   },
   {
     "id": "doc_other_0819",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0118-reference-python-languageadapter.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0118-reference-python-languageadapter.task.md",
     "title": "ATM-GOV-0118 Reference Python LanguageAdapter Governance Implementation",
     "category": "other"
   },
   {
     "id": "doc_other_0820",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0119-unsupported-language-advisory.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0119-unsupported-language-advisory.task.md",
     "title": "ATM-GOV-0119 Unsupported Language Advisory and Deferred Apply Contract",
     "category": "other"
   },
   {
     "id": "doc_other_0821",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0120-multilanguage-onefile-validation-matrix.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0120-multilanguage-onefile-validation-matrix.task.md",
     "title": "ATM-GOV-0120 Multi-language Onefile Validation Matrix for Governance Analysis",
     "category": "other"
   },
   {
     "id": "doc_other_0822",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0121-languageadapter-governance-authoring-guide.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0121-languageadapter-governance-authoring-guide.task.md",
     "title": "ATM-GOV-0121 LanguageAdapter Governance Authoring Guide",
     "category": "other"
   },
   {
     "id": "doc_other_0823",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0122-adopter-atom-version-lineage.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0122-adopter-atom-version-lineage.task.md",
     "title": "ATM-GOV-0122 Adopter Atom Version Lineage for Evolve Proof",
     "category": "other"
   },
   {
     "id": "doc_other_0824",
-    "path": "docs/ai_atomic_framework/gov-series-governance/tasks/ATM-GOV-0123-registry-lineage-backfill-command.task.md",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0123-registry-lineage-backfill-command.task.md",
     "title": "ATM-GOV-0123 Registry Lineage Backfill Command",
     "category": "other"
   },
@@ -4365,6 +4365,4278 @@
     "id": "doc_other_1453",
     "path": "docs/ai_atomic_framework/governance-optimization/ATM治理流程與Team-Agents加速優化計畫書.md",
     "title": "ATM 治理流程與 Team Agents 加速優化計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1454",
+    "path": ".github/prompts/atm-atom-map-refactor.prompt.md",
+    "title": "ATM Atom Map Refactor",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1455",
+    "path": "docs/ai_atomic_framework/ACADEMIC_MINING_REPORT.md",
+    "title": "ATM 框架學術創新挖掘報告",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1456",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/baseline-agent-cost-report.md",
+    "title": "AI Agent 原子化成本基線報告",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1457",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/coordination.md",
+    "title": "ASP Initiative 協調紀錄",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1458",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/corpus-index.md",
+    "title": "3KLife Corpus 索引（adapter candidate-discovery 驗證用）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1459",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0001-atomization-planning-sdk-contract.task.md",
+    "title": "TASK-ASP-0001 AtomizationPlanningAdapter SDK Contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1460",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0002-js-adapter-candidate-discovery.task.md",
+    "title": "TASK-ASP-0002 JS Adapter Candidate Discovery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1461",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0003-python-adapter-sdk-promotion.task.md",
+    "title": "TASK-ASP-0003 Python Adapter SDK Promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1462",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0004-broker-candidate-bridge.task.md",
+    "title": "TASK-ASP-0004 Broker Candidate-to-WriteIntent Bridge",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1463",
+    "path": "docs/ai_atomic_framework/adapter-guided-atomization-sdk/tasks/TASK-ASP-0005-3klife-coordination-baseline.task.md",
+    "title": "TASK-ASP-0005 3KLife Coordination & Baseline Measurement",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1464",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/bench-design.md",
+    "title": "Multi-Vendor Broker Bench — 設計規範（v1 vision paper 補強用）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1465",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/close-orchestration-collision-runbook.md",
+    "title": "close-orchestration Controlled Collision Runbook",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1466",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/COMMIT-ARTIFACT-MAP-2026-06-28.md",
+    "title": "Commit and Artifact Map (2026-06-28)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1467",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/CROSS-AGENT-REVIEW-SIGNATURE-PROPOSAL-2026-06-28.md",
+    "title": "Cross-Agent Review Signature Proposal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1468",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/HANDOFF-2026-06-26-paper-en-start.md",
+    "title": "HANDOFF-2026-06-26 paper-en start",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1469",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-CITATION-MAP.md",
+    "title": "Paper EN Citation Map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1470",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-CLAIM-RISK-SCAN.md",
+    "title": "PAPER-EN Claim Risk Scan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1471",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-GLOSSARY.md",
+    "title": "Paper EN Glossary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1472",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-LAYOUT-PLAN.md",
+    "title": "PAPER-EN Layout Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1473",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-READINESS-CHECKLIST.md",
+    "title": "Paper EN Readiness Checklist",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1474",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-STYLE-SPEC.md",
+    "title": "Paper EN Style Spec",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1475",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/en/PAPER-EN-TABLE-GUARDS.md",
+    "title": "Paper EN Table Guards",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1476",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/FAST-PATH-CLAIM-TABLE-2026-06-28.md",
+    "title": "Fast-Path Claim Table (2026-06-28)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1477",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-18.md",
+    "title": "論文工作交接文件 — 2026-06-18（twelfth pass 校正版，2026-06-21）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1478",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-24-v3.1-expanded-paper.md",
+    "title": "ATM Paper Handoff — v3.1 Expanded arXiv Track",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1479",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-25-paper-v3.1-v02-polish.md",
+    "title": "Handoff — paper.v3.1 v0.2 敘事整併與投稿語氣潤稿",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1480",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-26-md-to-pdf-sync.md",
+    "title": "Handoff — paper.v3.1.md -> paper-zh.tex -> paper-zh.pdf 同步流程",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1481",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-27-new-captain.md",
+    "title": "HANDOFF-2026-06-27 New Captain",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1482",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-28-next-captain.md",
+    "title": "HANDOFF-2026-06-28 Next Captain",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1483",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-28-paper-evidence-fast-path.md",
+    "title": "HANDOFF-2026-06-28 Paper Evidence Fast-Path",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1484",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/HANDOFF-2026-06-30-next-captain.md",
+    "title": "HANDOFF-2026-06-30 Next Captain",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1485",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/LATEX-ZH-README.md",
+    "title": "中文 LaTeX / PDF 工作流",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1486",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/LOGIC-ISSUE-MAP-2026-06-26.md",
+    "title": "ATM Manuscript v3.1 全文邏輯問題地圖",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1487",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-block-claude-ops.md",
+    "title": "Paper Hotfile BLOCK - Claude Ops",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1488",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-block-codex-ops.md",
+    "title": "Paper Hotfile BLOCK - Codex Ops",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1489",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-block-runbook.md",
+    "title": "Paper Hotfile BLOCK Runbook",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1490",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-collision-tasks.md",
+    "title": "TASK-PAPER-HOTFILE-POS-A",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1491",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.md",
+    "title": "採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1492",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.v2.md",
+    "title": "採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1493",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.corrupted-backup-20260625.md",
+    "title": "ATM嚗???靘???LLM 蝔?蝣澆?????∠?典???摮???CID Broker",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1494",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.en.md",
+    "title": "ATM: Adapter-Guided Atomization and CID-Brokered Admission for Single-Domain Multi-Vendor LLM Code Co-Synthesis",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1495",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md",
+    "title": "ATM：同域多供應商 LLM 程式碼共同合成的採用器導向原子化與 CID Broker",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1496",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.md",
+    "title": "採用器導向原子化：多代理 LLM 程式碼合成的寫入前准入治理框架",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1497",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/same-owner-block-unique-package-zh.md",
+    "title": "Same-Owner BLOCK 論文唯一完整包",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1498",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/search-threat-keywords.md",
+    "title": "ATM CID 論文威脅掃描清單",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1499",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-A.task.md",
+    "title": "TASK-COLLIDE-CLOSE-ORCH-A",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1500",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-COLLIDE-CLOSE-ORCH-B.task.md",
+    "title": "TASK-COLLIDE-CLOSE-ORCH-B",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1501",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-A.task.md",
+    "title": "TASK-PAPER-HOTFILE-BLOCK-A",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1502",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-BLOCK-B.task.md",
+    "title": "TASK-PAPER-HOTFILE-BLOCK-B",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1503",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-A.task.md",
+    "title": "TASK-PAPER-HOTFILE-PARK-A",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1504",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-PARK-B.task.md",
+    "title": "TASK-PAPER-HOTFILE-PARK-B",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1505",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-A.task.md",
+    "title": "TASK-PAPER-HOTFILE-POS-A",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1506",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS-B.task.md",
+    "title": "TASK-PAPER-HOTFILE-POS-B",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1507",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-A.task.md",
+    "title": "TASK-PAPER-HOTFILE-POS2-A",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1508",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/TASK-PAPER-HOTFILE-POS2-B.task.md",
+    "title": "TASK-PAPER-HOTFILE-POS2-B",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1509",
+    "path": "docs/ai_atomic_framework/arxiv-paper-v1/vision-paper-semantic-admission.md",
+    "title": "Vision Paper: Atomization-First CID Broker",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1510",
+    "path": "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+    "title": "ATM Bug and Optimization Backlog",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1511",
+    "path": "docs/ai_atomic_framework/ATM_CAPTAIN_ACTIVE_SEQUENCE.md",
+    "title": "ATM Captain Active Sequence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1512",
+    "path": "docs/ai_atomic_framework/ATM_TASK_STATUS_SYNC_AUDIT_2026-06-14.md",
+    "title": "ATM Task Status Sync Audit - 2026-06-14",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1513",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/HANDOFF-2026-06-18-ATM-EXECUTION-OPERATOR-GUIDE.md",
+    "title": "ATM 執行操作手冊與交接 — TASK-AAO-0144 收工後",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1514",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0098-mrp-pilot-leaf-extraction.task.md",
+    "title": "TASK-AAO-0098 MRP pilot — leaf-by-leaf governed extraction（target by atm candidates rank）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1515",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0099-batch-leaf-extraction.task.md",
+    "title": "TASK-AAO-0099 MRP batch-3 leaf extraction（3× throughput pilot）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1516",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0100-batch10-loc-ranked-with-map.task.md",
+    "title": "TASK-AAO-0100 Batch-10 LOC-ranked leaf extraction + atom map formation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1517",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0101-map-formation-from-0100-atoms.task.md",
+    "title": "Discovery findings (Phase 1 撞牆 evidence)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1518",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0102-map-formation-retry-with-int-test.task.md",
+    "title": "TASK-AAO-0102 Map formation retry — ATM-MAP-0003 + integration test stub",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1519",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0103-environment-workspace-hygiene-preflight.task.md",
+    "title": "TASK-AAO-0103 Environment and workspace hygiene preflight",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1520",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0104-function-bag-atom-capsule-wave-1.task.md",
+    "title": "TASK-AAO-0104 Function-bag atom capsule extraction wave 1",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1521",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0105-atom-registry-external-parts-sharding.task.md",
+    "title": "TASK-AAO-0105 Atom registry external-parts sharding",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1522",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0106-path-to-atom-map-owner-shards.task.md",
+    "title": "TASK-AAO-0106 Path-to-atom-map owner shards",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1523",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0107-dependency-security-ci-triage.task.md",
+    "title": "TASK-AAO-0107 Dependency security CI triage",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1524",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0108-recover-atm-map-0003-from-preserved-0102-tag.task.md",
+    "title": "TASK-AAO-0108 Recover ATM-MAP-0003 from preserved 0102 tag",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1525",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0109-restore-clean-checkout-stable-runner-and-ci-workflow-contract.task.md",
+    "title": "TASK-AAO-0109 Restore clean-checkout stable runner and CI workflow contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1526",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0110-goal-aligned-legacy-route-selection-for-guided-atomize.task.md",
+    "title": "TASK-AAO-0110 Goal-aligned legacy route selection for guided atomize",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1527",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0111-atm-taskflow-dry-run-orchestrator.task.md",
+    "title": "TASK-AAO-0111 ATM taskflow dry-run orchestrator",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1528",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0112-atm-taskflow-dry-run-skeleton.task.md",
+    "title": "TASK-AAO-0112 AAF taskflow dry-run skeleton",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1529",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0113-taskflow-profile-v1-contract.task.md",
+    "title": "TASK-AAO-0113 taskflow.profile.v1 contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1530",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0114-closure-packet-dirty-tree-hygiene-guard.task.md",
+    "title": "TASK-AAO-0114 closure packet dirty/untracked evidence hygiene guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1531",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0115-taskflow-profile-v1-contract-completion.task.md",
+    "title": "TASK-AAO-0115 taskflow.profile.v1 contract completion / de-hardcode dry-run",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1532",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0116-actor-adopt.task.md",
+    "title": "TASK-AAO-0116 atm actor adopt — atomic identity switch subcommand",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1533",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0117-taskflow-profile-release-pollution-cleanup.task.md",
+    "title": "TASK-AAO-0117 taskflow.profile release tracked pollution cleanup",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1534",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0118-opener-first-active-claim-commit-guard-mvp.task.md",
+    "title": "TASK-AAO-0118 opener-first active-claim commit guard MVP",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1535",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0119-frozen-runner-alignment-for-atm-runner-sync-required.task.md",
+    "title": "TASK-AAO-0119 frozen runner alignment for ATM_RUNNER_SYNC_REQUIRED",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1536",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0120-section-aware-task-card-scope-extraction-and-outOfScope-subtraction.task.md",
+    "title": "TASK-AAO-0120 section-aware task-card scope extraction and outOfScope subtraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1537",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0121-reconcile-task-aao-0120-closure-target-and-release-pollution.task.md",
+    "title": "TASK-AAO-0121 reconcile TASK-AAO-0120 closure target and release pollution",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1538",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0122-repair-closure-protected-state-commit-context-alignment.task.md",
+    "title": "TASK-AAO-0122 repair-closure protected-state commit context alignment",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1539",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0123-protect-active-claims-from-task-import-refresh-overwrite.task.md",
+    "title": "TASK-AAO-0123 protect active claims from task import refresh overwrite",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1540",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0124-normalize-absolute-and-relative-paths-in-task-direction-and-hook-scope-checks.task.md",
+    "title": "TASK-AAO-0124 normalize absolute and relative paths in task direction and hook scope checks",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1541",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0125-frozen-runner-alignment-after-task-aao-0124.task.md",
+    "title": "TASK-AAO-0125 frozen runner alignment after TASK-AAO-0124",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1542",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0126-allow-release-runner-outputs-as-task-deliverables.task.md",
+    "title": "TASK-AAO-0126 allow release runner outputs as task deliverables",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1543",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0127-frozen-runner-alignment-after-task-aao-0126.task.md",
+    "title": "TASK-AAO-0127 frozen runner alignment after TASK-AAO-0126",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1544",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0128-task-card-route-scope-pollution-guard-for-clean-single-card-import.task.md",
+    "title": "TASK-AAO-0128 task-card route scope pollution guard for clean single-card import",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1545",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0129-taskflow-open-task-plan-generation-and-opener-delegation-dry-run.task.md",
+    "title": "TASK-AAO-0129 taskflow open task-plan generation and opener delegation dry-run",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1546",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0130-cid-first-parallel-conflict-advisor-cli-mvp.task.md",
+    "title": "TASK-AAO-0130 CID-first parallel conflict advisor CLI MVP",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1547",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0131-route-hygiene-follow-up-planning-artifact-synthetic-alias-scope-guard.task.md",
+    "title": "TASK-AAO-0131 route hygiene follow-up for planning artifacts and synthetic alias scope guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1548",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0132-frozen-runner-alignment-before-task-aao-0018-clean-redelivery.task.md",
+    "title": "TASK-AAO-0132 frozen runner alignment before TASK-AAO-0018 clean redelivery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1549",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md",
+    "title": "TASK-AAO-0135 closure/evidence data integrity hardening and import active-claim safety",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1550",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0136-multi-captain-commit-ergonomics.task.md",
+    "title": "TASK-AAO-0136 multi-captain commit ergonomics: audit scoping, close-commit-window, worktree framework-mode inheritance",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1551",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md",
+    "title": "TASK-AAO-0137 write-path atomicity and operator diagnostics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1552",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138-formal-task-opener-and-residue-finalization-ux.task.md",
+    "title": "TASK-AAO-0138 formal task opener and residue finalization UX",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1553",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138A-taskflow-open-delegated-opener-orchestration-contract.task.md",
+    "title": "TASK-AAO-0138A taskflow open delegated opener orchestration contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1554",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138B-host-opener-fallback-mode-and-numbering-path-policy-surface.task.md",
+    "title": "TASK-AAO-0138B host opener fallback mode and numbering-path policy surface",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1555",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138C-residue-classification-and-finalization-operator-flow.task.md",
+    "title": "TASK-AAO-0138C residue classification and finalization operator flow",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1556",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0139-task-id-casing-governance.task.md",
+    "title": "TASK-AAO-0139 Preserve task-id casing across import, close verification, and pre-commit transition checks",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1557",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0140-taskflow-close-planning-mirror-closeback-orchestration.task.md",
+    "title": "TASK-AAO-0140 taskflow close planning mirror closeback orchestration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1558",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0141-git-commit-task-scoped-staging-diagnostics.task.md",
+    "title": "TASK-AAO-0141 - git commit task-scoped staging required-command diagnostics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1559",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0142-auto-run-declared-validators-into-evidence-before-close.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1560",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0143-close-absorbs-regenerable-artifacts-and-correct-planning-mirror-edits.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1561",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0144-governed-git-entrypoint-and-build-output-hygiene.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1562",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0145-auto-generated-residue-guard-and-auto-clean.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1563",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-harden-same-repo-close-bundle-and-scope-filtering.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1564",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0148-same-repo-close-bundle-and-scope-hardening.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1565",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0149-taskflow-close-rollback-resilience.task.md",
+    "title": "TASK-AAO-0149 — taskflow close rollback and auto-evidence resilience",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1566",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0150-next-hot-path-latency.task.md",
+    "title": "TASK-AAO-0150 — next hot-path latency",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1567",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0151-prompt-scoped-next-red-validator.task.md",
+    "title": "TASK-AAO-0151 — prompt-scoped-next persistent red",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1568",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0154-cross-task-mutation-incident-safe-mode.task.md",
+    "title": "TASK-AAO-0154 Cross-task mutation incident-safe mode",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1569",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0155-next-active-task-divergence-guard.task.md",
+    "title": "TASK-AAO-0155 Active-task divergence guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1570",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0156-protected-atm-history-and-staged-ownership-fencing.task.md",
+    "title": "TASK-AAO-0156 Protected ATM history and staged-ownership fencing",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1571",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0157-framework-auto-stage-claim-glob-and-release-mirrors.task.md",
+    "title": "TASK-AAO-0157 - Framework auto-stage claim glob and release mirrors",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1572",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0158-governance-validator-parallel-progress-and-cancellation.task.md",
+    "title": "TASK-AAO-0158 Governance validator parallelism, progress, and cancellation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1573",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0159-scope-aware-encoding-guard-and-temp-artifact-isolation.task.md",
+    "title": "TASK-AAO-0159 Scope-aware encoding guard and temporary artifact isolation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1574",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0160-governed-commit-audit-deferral-and-lease-renewal.task.md",
+    "title": "TASK-AAO-0160 Governed commit audit deferral and lease renewal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1575",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0161-broker-close-release-and-runtime-snapshot-cleanup.task.md",
+    "title": "TASK-AAO-0161 Broker close release and runtime snapshot cleanup",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1576",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0162-scope-amendment-path-normalization-and-backlog-id-guard.task.md",
+    "title": "TASK-AAO-0162 Scope amendment path normalization and backlog ID guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1577",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0163-encoding-temp-artifact-backlog-closeback.task.md",
+    "title": "TASK-AAO-0163 Encoding temp artifact backlog closeback",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1578",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0164-precommit-evidence-required-command-task-id-guard.task.md",
+    "title": "TASK-AAO-0164 Precommit evidence requiredCommand task id guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1579",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0190-taskflow-close-auto-stage-and-status-migration.task.md",
+    "title": "TASK-AAO-0190 Fix taskflow close UX for auto-stage and --status migration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1580",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0191-defer-foreign-staged-ordinary-unowned.task.md",
+    "title": "TASK-AAO-0191 Prevent defer-foreign-staged from absorbing ordinary-unowned staged files",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1581",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0192-abandoned-reopen-without-emergency-force.task.md",
+    "title": "TASK-AAO-0192 Allow abandoned task reopen without emergency --force",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1582",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0193-planning-root-authorship-reminder.task.md",
+    "title": "TASK-AAO-0193 Remind framework imports to author 3KLife planning cards first",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1583",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0194-close-deferred-governance-dirty-snapshot-enoent.task.md",
+    "title": "TASK-AAO-0194 Make taskflow close tolerate deferred foreign governance-dirty snapshots",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1584",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0195-team-plan-readonly-projection.task.md",
+    "title": "TASK-AAO-0195 Add read-only team plan projection without broker side effects",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1585",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0196-team-execute-fail-closed-zero-providers.task.md",
+    "title": "TASK-AAO-0196 Fail-closed team start --execute when zero providers run",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1586",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0197-team-execute-defaults-all-roles.task.md",
+    "title": "TASK-AAO-0197 Apply top-level team execute provider defaults to all roster roles",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1587",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0198-team-runtime-mode-precedence.task.md",
+    "title": "TASK-AAO-0198 Honor CLI --runtime-mode over repo-default broker-only",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1588",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0199-task-ledger-fixture-isolation.task.md",
+    "title": "TASK-AAO-0199 Isolate task-ledger governance validator fixtures per case",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1589",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0200-claim-broker-resolution-consumption.task.md",
+    "title": "TASK-AAO-0200 Consume broker conflict resolution artifacts on next --claim",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1590",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0201-mixed-delivery-close-ux-hint.task.md",
+    "title": "TASK-AAO-0201 Clarify multi-task shared historical-delivery close UX",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1591",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0202-claim-release-transition-event.task.md",
+    "title": "TASK-AAO-0202 Emit task-event when claim release mutates ledger",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1592",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0203-residue-validator-contract-drift.task.md",
+    "title": "TASK-AAO-0203 Align task-ledger residue fixtures with current contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1593",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0204-direction-lock-generated-protected-audit.task.md",
+    "title": "TASK-AAO-0204 Auto-admit task-generated protected-override audit into direction lock",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1594",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0205-framework-claim-ignore-unstaged-release.task.md",
+    "title": "TASK-AAO-0205 Keep framework-claim isolated index closed over unstaged release dirt",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1595",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-001-split-git-hooks-enforcement-validator-lanes.task.md",
+    "title": "TASK-AAO-FABLE-001 Split git-hooks enforcement validator lanes",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1596",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-002-stale-frozen-runner-preclose-readiness.task.md",
+    "title": "TASK-AAO-FABLE-002 Stale frozen runner pre-close readiness",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1597",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-003-unify-closure-required-validator-readiness.task.md",
+    "title": "TASK-AAO-FABLE-003 Unified closure required-validator readiness",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1598",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-004-backlog-continuation-prompt-routing.task.md",
+    "title": "TASK-AAO-FABLE-004 Backlog continuation prompt routing",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1599",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-005-multi-claim-residue-task-resolution.task.md",
+    "title": "TASK-AAO-FABLE-005 Multi-claim residue task resolution",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1600",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-006-extraction-first-atomization-skill-contract.task.md",
+    "title": "TASK-AAO-FABLE-006 Extraction-first atomization skill contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1601",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-007-extraction-first-import-patrol.task.md",
+    "title": "TASK-AAO-FABLE-007 Extraction-first import patrol",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1602",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-008-frontmatter-object-list-quote-stripping.task.md",
+    "title": "TASK-AAO-FABLE-008 Frontmatter object-list quote stripping",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1603",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-009-extraction-first-skill-template-sync.task.md",
+    "title": "TASK-AAO-FABLE-009 Extraction-first skill template sync",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1604",
+    "path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-FABLE-010-skill-template-installed-copy-drift-detection.task.md",
+    "title": "TASK-AAO-FABLE-010 Skill template vs installed-copy drift detection",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1605",
+    "path": "docs/ai_atomic_framework/atm-core-broker-survey.md",
+    "title": "ATM Core Broker / Scope Lock 現況調查",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1606",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/ATM 跨專案記憶治理計畫書.md",
+    "title": "ATM 跨專案記憶治理計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1607",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0001-keep-memory-contract-and-directory.task.md",
+    "title": "TASK-MEM-0001 keep-memory 契約與目錄",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1608",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0002-memory-manager-tooling.task.md",
+    "title": "TASK-MEM-0002 memory-manager 工具",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1609",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0003-atm-memory-consolidate-skill.task.md",
+    "title": "TASK-MEM-0003 atm-memory-consolidate skill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1610",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0004-proactive-write-triggers-in-skill-chain.task.md",
+    "title": "TASK-MEM-0004 主動寫入觸發契約進 skill 鏈",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1611",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0005-cross-project-keep-registry.task.md",
+    "title": "TASK-MEM-0005 跨專案 keep registry",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1612",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0006-staleness-and-budget-patrol.task.md",
+    "title": "TASK-MEM-0006 過期與預算巡邏",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1613",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0007-reconcile-cross-repo-historical-delivery.task.md",
+    "title": "TASK-MEM-0007 reconcile cross-repo historical delivery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1614",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0008-mirror-reconcile-emergency-classification.task.md",
+    "title": "TASK-MEM-0008 Clean-mirror reconcile classification",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1615",
+    "path": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0009-close-window-evidence-preservation.task.md",
+    "title": "TASK-MEM-0009 Evidence preservation across close windows",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1616",
+    "path": "docs/ai_atomic_framework/ATM開發實務操作指南.md",
+    "title": "ATM 開發實務操作指南",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1617",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0054-finding-to-janitor-apply-plan-contract.md",
+    "title": "APF-0054 Finding-to-janitor apply plan contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1618",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0055-structural-apply-scheduler-contract.md",
+    "title": "APF-0055 Structural apply scheduler contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1619",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0056-janitor-apply-plan-schema-and-validator.md",
+    "title": "APF-0056 Janitor apply plan schema and validator",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1620",
+    "path": "docs/ai_atomic_framework/atomic-police-family/specs/APF-0057-structural-apply-conflict-model.md",
+    "title": "APF-0057 Structural apply conflict model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1621",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0054-finding-to-janitor-apply-plan-contract.task.md",
+    "title": "TASK-APF-0054 Finding-to-janitor apply plan contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1622",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0055-structural-apply-scheduler-contract.task.md",
+    "title": "TASK-APF-0055 Structural apply scheduler contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1623",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0056-janitor-apply-plan-schema-and-validator.task.md",
+    "title": "TASK-APF-0056 Janitor apply plan schema and validator",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1624",
+    "path": "docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0057-structural-apply-conflict-model.task.md",
+    "title": "TASK-APF-0057 Structural apply conflict model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1625",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/broker-evidence-bundle/broker-evidence-bundle.md",
+    "title": "Broker Evidence Bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1626",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/broker-run-report.md",
+    "title": "Broker Evidence Report",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1627",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/CID-Conflict-Run-Log.md",
+    "title": "CID Conflict Run Log",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1628",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/close-orchestration-layered-merge-evidence.md",
+    "title": "close-orchestration.ts Layered Merge Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1629",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/INDEX.md",
+    "title": "Broker Collision Evidence Index",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1630",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/integration-layered-merge-evidence.md",
+    "title": "integration.ts Layered Merge Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1631",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/parallel-0041-0042-coordination.md",
+    "title": "Parallel Dogfood: TASK-MAO-0041 + TASK-MAO-0042",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1632",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-capture.md",
+    "title": "Broker Capture Evidence Bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1633",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/broker-evidence-bundle.md",
+    "title": "Broker Evidence Bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1634",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/split-suggestion-review-approved-queue.md",
+    "title": "Upgrade Proposals",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1635",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/split-suggestion-review-chain-zh.md",
+    "title": "Split Suggestion Review Chain",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1636",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/split-suggestion-review-queue.md",
+    "title": "Upgrade Proposals",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1637",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/broker-evidence-bundle.md",
+    "title": "Broker Evidence Bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1638",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/merge-evidence-report.md",
+    "title": "Close-Orchestration Merge Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1639",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/broker-capture.md",
+    "title": "Broker Capture Evidence Bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1640",
+    "path": "docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/broker-evidence-bundle.md",
+    "title": "Broker Evidence Bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1641",
+    "path": "docs/ai_atomic_framework/cid-hardening/00-verified-facts.md",
+    "title": "CID Hardening — 三層事實基線（Verified Facts / Proposals / Out-of-Scope）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1642",
+    "path": "docs/ai_atomic_framework/cid-hardening/agr-adoption-review.md",
+    "title": "AGR Adoption Review and Risk Ledger",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1643",
+    "path": "docs/ai_atomic_framework/cid-hardening/agr-baseline-survey.md",
+    "title": "AGR Baseline Survey and CID/Broker Gap Map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1644",
+    "path": "docs/ai_atomic_framework/cid-hardening/agr-conflict-arbitration-plan.md",
+    "title": "AGR Conflict Arbitration Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1645",
+    "path": "docs/ai_atomic_framework/cid-hardening/agr-dispatch-pack.md",
+    "title": "AGR Next Implementation Dispatch Pack",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1646",
+    "path": "docs/ai_atomic_framework/cid-hardening/agr-virtual-atomization-implementation-plan.md",
+    "title": "ATM 實作規劃：Adaptive Granularity Refinement (AGR) + Broker 強化",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1647",
+    "path": "docs/ai_atomic_framework/cid-hardening/atm-abnormal-release-forensics-report.md",
+    "title": "ATM Abnormal Release Forensics Report",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1648",
+    "path": "docs/ai_atomic_framework/cid-hardening/atm-tasks-command-atomic-map-refactor-plan.md",
+    "title": "ATM tasks command atomic map refactor plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1649",
+    "path": "docs/ai_atomic_framework/cid-hardening/atomic-cost-reduction-plan.md",
+    "title": "ATM 原子化成本降低計劃",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1650",
+    "path": "docs/ai_atomic_framework/cid-hardening/CAPTAIN-HANDOFF-2026-06-13-CID-CONTINUATION.md",
+    "title": "Captain handoff - CID continuation and convergence plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1651",
+    "path": "docs/ai_atomic_framework/cid-hardening/CAPTAIN-HANDOFF-2026-06-14-CID-CLEAN-CONTINUATION.md",
+    "title": "Captain Handoff - 2026-06-14 CID Clean Continuation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1652",
+    "path": "docs/ai_atomic_framework/cid-hardening/CID-Conflict-Run-Log.md",
+    "title": "CID Conflict Run Log",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1653",
+    "path": "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書.md",
+    "title": "CID 硬化計畫書（CID Hardening Roadmap）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1654",
+    "path": "docs/ai_atomic_framework/cid-hardening/CID硬化計畫書2.md",
+    "title": "CID 硬化計畫書 2：AGR 與 Broker Format Adapter 擴充",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1655",
+    "path": "docs/ai_atomic_framework/cid-hardening/CID硬化補充計畫書3-atom-evidence-and-registration.md",
+    "title": "CID 硬化補充計畫書 3",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1656",
+    "path": "docs/ai_atomic_framework/cid-hardening/CID衝突解決紀錄log.md",
+    "title": "CID Conflict Run Log",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1657",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P0-CIDSURFACE-007-S1-TASK-CID-0061--captain-to-007--20260612-222000TPE.dispatch.md",
+    "title": "[P0] TASK-CID-0061 tasks command surface invariant hard gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1658",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P1-TASK-CID-0024-001-closeback-contract-preflight--captain-to-001--20260611TPE.dispatch.md",
+    "title": "P1-TASK-CID-0024-001 - Closeback contract preflight",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1659",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P1-TASK-CID-0024-005-closeout-historical-delivery-closeout--captain-to-005--20260611TPE.dispatch.md",
+    "title": "P1-TASK-CID-0024-005 - Closeout only and historical-delivery close path",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1660",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P1-TASK-CID-0025-001-broker-runtime-activation-handshake--captain-to-001--20260611TPE.dispatch.md",
+    "title": "P1-TASK-CID-0025-001 - Broker runtime activation handshake",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1661",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P1-TASK-CID-0025-002-authority-chain-and-conflict-rules--captain-to-002--20260611TPE.dispatch.md",
+    "title": "P1-TASK-CID-0025-002 - Authority chain and conflict rules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1662",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P1-TASK-CID-0025-003-evidence-and-closeout-validation--captain-to-003--20260611TPE.dispatch.md",
+    "title": "P1-TASK-CID-0025-003 - Evidence and closeout validation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1663",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P2-TASK-CID-0024-003-shared-claim-hook-and-closeback-validation--captain-to-003--20260611TPE.dispatch.md",
+    "title": "P2-TASK-CID-0024-003 - Shared claim, hook, and closeback validation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1664",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P3-TASK-CID-0024-001-closeback-claim-alias-evidence-sync--captain-to-001--20260611TPE.dispatch.md",
+    "title": "P3-TASK-CID-0024-001 - Closeback claim alias evidence sync",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1665",
+    "path": "docs/ai_atomic_framework/cid-hardening/done/P3-TASK-CID-0024-003-shared-claim-closeback-validator-unblock--captain-to-003--20260611TPE.dispatch.md",
+    "title": "P3-TASK-CID-0024-003 - Shared claim closeback validator unblock",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1666",
+    "path": "docs/ai_atomic_framework/cid-hardening/proposal-gated-write-admission-plan.md",
+    "title": "Proposal-Gated Write Admission v1 Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1667",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0001-cid-hardening-control-plane-bootstrap.task.md",
+    "title": "TASK-CID-0001 — CID hardening control plane bootstrap + verified facts baseline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1668",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0002-cid-semantics-and-fingerprint-profile-schema.task.md",
+    "title": "TASK-CID-0002 — CID semantics doc + fingerprintProfile optional additive schema",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1669",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0003-validate-semantic-fingerprint-determinism.task.md",
+    "title": "TASK-CID-0003 — Extend existing validate:semantic-fingerprint with deterministic identity-hash regression fixtures",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1670",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0005-p0-cid-first-parallel-conflict-advisor-cli-contract.task.md",
+    "title": "TASK-CID-0005 — P0 parallel conflict advisor CLI contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1671",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0009-patch-proposal-capsule-contract.task.md",
+    "title": "TASK-CID-0009 — Patch Proposal Capsule contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1672",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0010-write-broker-lane-router-contract.task.md",
+    "title": "TASK-CID-0010 — Write Broker lane router contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1673",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0011-neutral-write-steward-and-break-glass-handoff-contract.task.md",
+    "title": "TASK-CID-0011 — Neutral Write Steward and Lead Writer break-glass handoff contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1674",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0012-team-agents-brokered-write-integration-contract.task.md",
+    "title": "TASK-CID-0012 — Team Agents brokered write integration contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1675",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0013-cid-first-advisor-team-next-preflight-integration.task.md",
+    "title": "TASK-CID-0013 — CID-first advisor team/next preflight integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1676",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0014-brokered-write-completion-plan-and-task-pack.task.md",
+    "title": "TASK-CID-0014 - Brokered write completion plan and task pack",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1677",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0015-broker-contract-schemas-and-types.task.md",
+    "title": "TASK-CID-0015 - Broker contract schemas and types",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1678",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0016-local-write-broker-registry-and-cli.task.md",
+    "title": "TASK-CID-0016 - Local write-broker registry and CLI",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1679",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0017-cid-advisor-broker-decision-model.task.md",
+    "title": "TASK-CID-0017 - CID advisor uses broker decision model",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1680",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0018-patch-proposal-capsule-runtime.task.md",
+    "title": "TASK-CID-0018 - PatchProposal capsule runtime",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1681",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0019-deterministic-composer-and-merge-plan.task.md",
+    "title": "TASK-CID-0019 - Deterministic composer and MergePlan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1682",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0020-neutral-write-steward-apply-flow.task.md",
+    "title": "TASK-CID-0020 - Neutral Write Steward apply flow",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1683",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0021-team-agents-brokered-write-runtime-integration.task.md",
+    "title": "TASK-CID-0021 - Team Agents brokered write runtime integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1684",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0022-next-claim-and-closeout-broker-integration.task.md",
+    "title": "TASK-CID-0022 - Next claim and closeout broker integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1685",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0023-end-to-end-brokered-write-acceptance-harness.task.md",
+    "title": "TASK-CID-0023 - End-to-end brokered write acceptance harness",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1686",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0024-same-file-parallel-claim-shared-delivery-closeout.task.md",
+    "title": "TASK-CID-0024 - Same-file parallel claim and shared delivery closeout follow-up",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1687",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0025-broker-owned-write-actor-runtime-boundary.task.md",
+    "title": "TASK-CID-0025 Broker-owned write actor runtime boundary and activation contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1688",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0026-agr-baseline-survey-and-cid-broker-gap-map.task.md",
+    "title": "TASK-CID-0026 - AGR baseline survey and CID/broker gap map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1689",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0027-agr-implementation-pack-and-acceptance-matrix.task.md",
+    "title": "TASK-CID-0027 - AGR implementation pack and acceptance matrix",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1690",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0028-enclosing-unit-and-virtual-atom-sdk-contract.task.md",
+    "title": "TASK-CID-0028 - EnclosingUnit and VirtualAtom SDK contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1691",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0029-layer1-syntactic-enclosure-broker-refinement.task.md",
+    "title": "TASK-CID-0029 - Layer 1 syntactic enclosure broker refinement",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1692",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0030-adapter-enclose-capability-preflight-and-fallback-guard.task.md",
+    "title": "TASK-CID-0030 - Adapter enclose capability preflight and fallback guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1693",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0031-layer2-decomposition-trigger-and-threshold-policy.task.md",
+    "title": "TASK-CID-0031 - Layer 2 decomposition trigger and threshold policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1694",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0032-broker-augmented-decision-rule-and-read-set-contract.task.md",
+    "title": "TASK-CID-0032 - Broker Augmented Decision Rule and read-set contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1695",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0033-adapter-manifest-symbol-canonicalization-contract.task.md",
+    "title": "TASK-CID-0033 - Adapter manifest symbol canonicalization contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1696",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0034-mid-execution-registration-and-virtual-atom-in-use-registry.task.md",
+    "title": "TASK-CID-0034 - Mid-execution registration and virtual atom in-use registry",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1697",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0035-agr-aware-neutral-writer-and-steward-orchestration.task.md",
+    "title": "TASK-CID-0035 - AGR-aware neutral writer and steward orchestration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1698",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0036-agr-integration-for-tasks-parallel-next-claim-and-closeout.task.md",
+    "title": "TASK-CID-0036 - AGR integration for tasks parallel, next claim, and closeout",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1699",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0037-validator-benchmark-scenarios-and-catch-rate-harness.task.md",
+    "title": "TASK-CID-0037 - Validator benchmark scenarios and catch-rate harness",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1700",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0038-agr-ship-review-risk-ledger-and-adoption-recommendation.task.md",
+    "title": "TASK-CID-0038 - AGR ship review, risk ledger, and adoption recommendation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1701",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0039-next-agr-implementation-dispatch-pack.task.md",
+    "title": "TASK-CID-0039 - Next AGR implementation dispatch pack",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1702",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0040-intent-registration-lease-heartbeat-and-lease-bounds.task.md",
+    "title": "TASK-CID-0040 - Intent registration, lease, heartbeat, and lease bounds",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1703",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0041-conflict-set-model-and-arbitration-verdicts.task.md",
+    "title": "TASK-CID-0041 - Conflict-set model and arbitration verdicts",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1704",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0042-freeze-patch-envelope-checkpoint-and-filesystem-wip-snapshot.task.md",
+    "title": "TASK-CID-0042 - Freeze, patch envelope, checkpoint, and filesystem WIP snapshot",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1705",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0043-neutral-writer-steward-takeover-isolated-merge-and-validator-gated-apply.task.md",
+    "title": "TASK-CID-0043 - Neutral writer, steward takeover, isolated merge, and validator-gated apply",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1706",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0044-recovery-orphan-cleanup-manual-override-audit-and-snapshot-recovery.task.md",
+    "title": "TASK-CID-0044 - Recovery, orphan cleanup, manual override audit, and snapshot recovery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1707",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0045-conflict-benchmark-validator-catch-rate-and-latency-reporting.task.md",
+    "title": "TASK-CID-0045 - Conflict benchmark, validator catch-rate, and latency reporting",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1708",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0046-dependency-closeout-integrity-gate-for-next-and-claim.task.md",
+    "title": "TASK-CID-0046 - Dependency closeout integrity gate for next/claim and manual-done residue",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1709",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0047-atm-parallel-dispatch-closeout-forensics-and-root-cause-report.task.md",
+    "title": "TASK-CID-0047 - ATM parallel dispatch closeout forensics and abnormal-release root cause report",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1710",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0048-task-close-state-machine-and-closure-metadata-hard-gate.task.md",
+    "title": "TASK-CID-0048 - Task close state machine and closure metadata hard gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1711",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0049-historical-delivery-scope-and-commit-provenance-hard-gate.task.md",
+    "title": "TASK-CID-0049 - Historical-delivery scope and commit provenance hard gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1712",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0050-tasks-command-atomic-map-and-invariant-inventory.task.md",
+    "title": "TASK-CID-0050 - Tasks command atomic map and invariant inventory",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1713",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0051-tasks-invariant-characterization-regression-pack.task.md",
+    "title": "TASK-CID-0051 - Tasks invariant characterization regression pack",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1714",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0052-closeout-provenance-atom-extraction.task.md",
+    "title": "TASK-CID-0052 - Closeout provenance atom extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1715",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0053-dependency-gate-atom-extraction-for-next-and-claim.task.md",
+    "title": "TASK-CID-0053 - Dependency gate atom extraction for next and claim",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1716",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0054-task-lifecycle-state-machine-atom-extraction.task.md",
+    "title": "TASK-CID-0054 - Task lifecycle state machine atom extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1717",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0055-historical-delivery-atom-extraction-and-provenance-policy.task.md",
+    "title": "TASK-CID-0055 - Historical delivery atom extraction and provenance policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1718",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0056-scope-lock-and-dirty-file-diagnostic-atom-extraction.task.md",
+    "title": "TASK-CID-0056 - Scope lock and dirty file diagnostic atom extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1719",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0057-residue-and-ambiguous-state-diagnostic-atom-extraction.task.md",
+    "title": "TASK-CID-0057 - Residue and ambiguous state diagnostic atom extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1720",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0058-tasks-cli-thin-wrapper-consolidation.task.md",
+    "title": "TASK-CID-0058 - Tasks CLI thin wrapper consolidation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1721",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0059-tasks-atomic-map-final-validation-and-dogfood-report.task.md",
+    "title": "TASK-CID-0059 - Tasks atomic map final validation and dogfood report",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1722",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0060-source-done-vs-governed-done-guidance-and-hard-gate.task.md",
+    "title": "TASK-CID-0060 - Source done vs governed done guidance and hard gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1723",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0061-tasks-command-surface-invariant-hard-gate.task.md",
+    "title": "TASK-CID-0061 - Tasks command surface invariant hard gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1724",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0062-tasks-governance-invariant-module-extraction.task.md",
+    "title": "TASK-CID-0062 - Tasks governance invariant module extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1725",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0063-taskflow-open-close-default-lane-hardening-and-reconcile-residue-queue-head-demotion.task.md",
+    "title": "TASK-CID-0063 - Taskflow open-close default lane hardening and reconcile residue queue-head demotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1726",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0064-repair-closure-missing-packet-recovery.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1727",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0065-emergency-maintenance-permission-lease-and-backend-surface-gate.task.md",
+    "title": "TASK-CID-0065 - Emergency maintenance permission lease and backend surface gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1728",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0066-atm-new-user-workflow-guide-closeout.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1729",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0067-planning-repo-authority-taskflow-close-cross-repo-deliverable-verification.task.md",
+    "title": "TASK-CID-0067 - Planning repo authority taskflow close cross-repo deliverable verification",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1730",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0068-taskflow-close-auto-commit-index-isolation-hardening.task.md",
+    "title": "TASK-CID-0068 - Taskflow close auto-commit index isolation hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1731",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0069-taskflow-close-normal-lane-end-to-end-dogfood-hardening.task.md",
+    "title": "TASK-CID-0069 - Taskflow close normal lane end-to-end dogfood hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1732",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0070-emergency-backend-lease-audit-and-use-record-hardening.task.md",
+    "title": "TASK-CID-0070 - Emergency backend lease audit and use-record hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1733",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0071-atom-map-refactor-skill-v1.task.md",
+    "title": "TASK-CID-0071 - Atom map refactor skill v1",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1734",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0072-taskflow-close-auto-stage-declared-deliverables.task.md",
+    "title": "TASK-CID-0072 - Taskflow close auto-stage declared deliverables",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1735",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0073-taskflow-operator-guidance-and-backend-wording-normalization.task.md",
+    "title": "TASK-CID-0073 - Taskflow operator guidance and backend wording normalization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1736",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0074-taskflow-close-profile-root-fallback-when-source-plan-path-is-missing.task.md",
+    "title": "TASK-CID-0074 - Taskflow close profile-root fallback when source plan path is missing",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1737",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0075-evidence-operator-lane-simplification-and-raw-surface-demotion.task.md",
+    "title": "TASK-CID-0075 - Evidence operator lane simplification and raw-surface demotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1738",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0076-review-state-closeout-only-done-lifecycle-dead-end-hardening.task.md",
+    "title": "TASK-CID-0076 - Review-state closeout-only done lifecycle dead-end hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1739",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0077-prompt-scoped-empty-queue-no-work-normalization.task.md",
+    "title": "TASK-CID-0077 - Prompt-scoped empty-queue no-work normalization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1740",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0078-validator-remediation-command-canonicalization.task.md",
+    "title": "TASK-CID-0078 - Validator remediation command canonicalization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1741",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0079-same-task-evidence-write-serialization.task.md",
+    "title": "TASK-CID-0079 - Same-task evidence write serialization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1742",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0080-taskflow-close-dry-run-parity-and-hidden-blocker-disclosure.task.md",
+    "title": "TASK-CID-0080 - Taskflow close dry-run parity and hidden-blocker disclosure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1743",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0081-emergency-lease-use-count-semantics-hardening.task.md",
+    "title": "TASK-CID-0081 - Emergency lease use-count semantics hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1744",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0082-release-root-drop-generated-artifact-staging-contract.task.md",
+    "title": "TASK-CID-0082 - Release root-drop generated-artifact staging contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1745",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0083-historical-delivery-close-evidence-context-deadlock-hardening.task.md",
+    "title": "TASK-CID-0083 - Historical-delivery close evidence-context deadlock hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1746",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0084-planning-mirror-claim-import-parity-and-false-ambiguous-residue-hardening.task.md",
+    "title": "TASK-CID-0084 - Planning mirror claim/import parity and false ambiguous residue hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1747",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0085-historical-delivery-close-evidence-context-deadlock-hardening-successor-lane.task.md",
+    "title": "TASK-CID-0085 - Historical-delivery close evidence-context deadlock hardening successor lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1748",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0086-historical-delivery-close-evidence-context-hardening-with-focused-regression-deliverable.task.md",
+    "title": "TASK-CID-0086 - Historical-delivery close evidence-context hardening with focused regression deliverable",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1749",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0087-next-intent-analysis-classifier-hardening.task.md",
+    "title": "TASK-CID-0087 - Next intent analysis classifier hardening",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1750",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0088-git-head-evidence-doctor-prepush-contract-alignment.task.md",
+    "title": "TASK-CID-0088 - Git-head evidence doctor/pre-push contract alignment",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1751",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0089-integration-drift-remediation-ux.task.md",
+    "title": "TASK-CID-0089 - Integration drift remediation UX",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1752",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0090-runner-sync-steward-v1-cid-bridge.task.md",
+    "title": "TASK-CID-0090 - Runner Sync Steward v1 CID bridge",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1753",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0091-broker-format-adapter-architecture-rfc.task.md",
+    "title": "TASK-CID-0091 - Broker format adapter architecture RFC",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1754",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0092-mutation-broker-adapter-registry-contract.task.md",
+    "title": "TASK-CID-0092 - Mutation broker adapter registry contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1755",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0093-generic-json-record-adapter-and-conflict-keys.task.md",
+    "title": "TASK-CID-0093 - Generic JSON record adapter and conflict keys",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1756",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0094-path-to-atom-map-domain-adapter.task.md",
+    "title": "TASK-CID-0094 - path-to-atom-map domain adapter",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1757",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0095-text-range-adapter-conservative-merge-rules.task.md",
+    "title": "TASK-CID-0095 - Text range adapter with conservative merge rules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1758",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0096-numeric-scalar-adapter-commutative-operations.task.md",
+    "title": "TASK-CID-0096 - Numeric scalar adapter for commutative operations",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1759",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0097-broker-batch-planner-cas-atomic-write-evidence.task.md",
+    "title": "TASK-CID-0097 - Broker batch planner, CAS, and atomic write evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1760",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0098-broker-format-adapter-dogfood-benchmark-and-adoption-gate.task.md",
+    "title": "TASK-CID-0098 - Broker format adapter dogfood benchmark and adoption gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1761",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0099-historical-batch-evidence-envelope-mvp.task.md",
+    "title": "TASK-CID-0099",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1762",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0100-historical-batch-coverage-gate.task.md",
+    "title": "TASK-CID-0100",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1763",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0101-task-specific-validator-mapping.task.md",
+    "title": "TASK-CID-0101",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1764",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0102-historical-batch-close-policy.task.md",
+    "title": "TASK-CID-0102",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1765",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0103-historical-batch-close-integration.task.md",
+    "title": "TASK-CID-0103",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1766",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0104-atom-atom-map-registration-tool-and-receipt-contract.task.md",
+    "title": "TASK-CID-0104",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1767",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0105-owner-shard-projection-and-receipt-orchestration.task.md",
+    "title": "TASK-CID-0105",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1768",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0106-task-level-atomization-delta-ledger.task.md",
+    "title": "TASK-CID-0106",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1769",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0107-atomization-snapshot-count-and-digest-guard.task.md",
+    "title": "TASK-CID-0107",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1770",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0108-atomization-governance-dogfood-and-adoption-gate.task.md",
+    "title": "TASK-CID-0108",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1771",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0109-historical-batch-and-cli-operator-documentation-hardening.task.md",
+    "title": "TASK-CID-0109",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1772",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0110-broker-operation-log-and-run-record-for-successful-cid-disjoint-writes.task.md",
+    "title": "TASK-CID-0110",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1773",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0111-broker-operation-run-record-lightweight-receipt.task.md",
+    "title": "Goal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1774",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0112-broker-explicit-input-mutation-intent-seed.task.md",
+    "title": "TASK-CID-0112",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1775",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0113-taskflow-close-confirmed-broker-conflict-gate.task.md",
+    "title": "TASK-CID-0113",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1776",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0114-shared-hot-file-broker-rearbitration-and-auto-stage-boundary-hardening.task.md",
+    "title": "TASK-CID-0114",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1777",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0115-proposal-gated-write-admission-contract-and-runtime-states.task.md",
+    "title": "TASK-CID-0115",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1778",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0116-team-start-and-broker-register-proposal-first-gate.task.md",
+    "title": "TASK-CID-0116",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1779",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0117-proposal-overlap-arbitration-and-deterministic-composer-routing.task.md",
+    "title": "TASK-CID-0117",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1780",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0118-governed-writer-handoff-and-live-apply-evidence.task.md",
+    "title": "TASK-CID-0118",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1781",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0119-proposal-gated-write-admission-dogfood-and-adoption-gate.task.md",
+    "title": "TASK-CID-0119",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1782",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md",
+    "title": "TASK-CID-0120",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1783",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0121-stale-claim-and-framework-lock-cleanup.task.md",
+    "title": "TASK-CID-0121",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1784",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md",
+    "title": "TASK-CID-0122 - Stale runtime lock cleanup closeout",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1785",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md",
+    "title": "TASK-CID-0123 - Transition event missing audit backfill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1786",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0124-transition-evidence-missing-backfill.task.md",
+    "title": "TASK-CID-0124 - Transition evidence missing audit backfill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1787",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0125-manual-done-closeback-backfill.task.md",
+    "title": "TASK-CID-0125 - Manual done closeback audit backfill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1788",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0126-planning-only-warning-baseline.task.md",
+    "title": "TASK-CID-0126 - Planning-only warning baseline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1789",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+    "title": "TASK-CID-0127 - Legacy baseline warning baseline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1790",
+    "path": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0128-cross-repo-packet-warning-baseline.task.md",
+    "title": "TASK-CID-0128 - Cross-repo packet warning baseline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1791",
+    "path": "docs/ai_atomic_framework/error-governance/error-governance-plan.md",
+    "title": "ATM Error Governance System Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1792",
+    "path": "docs/ai_atomic_framework/external-public-repo-cases/TASK-EPR-0001-fastapi-public-source-snapshot-case.md",
+    "title": "TASK-EPR-0001 FastAPI Public-Source Snapshot Case",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1793",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md",
+    "title": "ATM Git Boundary Admission Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1794",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0001-pre-push-admission-architecture-contract.task.md",
+    "title": "TASK-GIT-0001",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1795",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0002-git-diff-to-mutation-request-converter.task.md",
+    "title": "TASK-GIT-0002",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1796",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0003-format-adapter-remote-diff-bridge.task.md",
+    "title": "TASK-GIT-0003",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1797",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0004-git-admission-cli.task.md",
+    "title": "TASK-GIT-0004",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1798",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0005-pre-push-hook-installer.task.md",
+    "title": "TASK-GIT-0005",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1799",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0006-git-boundary-evidence-envelope.task.md",
+    "title": "TASK-GIT-0006",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1800",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0007-neutral-steward-git-apply-dry-run.task.md",
+    "title": "TASK-GIT-0007",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1801",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0008-structured-file-fixture-suite.task.md",
+    "title": "TASK-GIT-0008",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1802",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0009-post-push-fail-fallback.task.md",
+    "title": "TASK-GIT-0009",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1803",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0010-operator-policy-and-bypass-audit.task.md",
+    "title": "TASK-GIT-0010",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1804",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0011-adopter-docs-and-runbook.task.md",
+    "title": "TASK-GIT-0011",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1805",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md",
+    "title": "TASK-GIT-0012",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1806",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md",
+    "title": "TASK-GIT-0013",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1807",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md",
+    "title": "TASK-GIT-0014",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1808",
+    "path": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md",
+    "title": "TASK-GIT-0015",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1809",
+    "path": "docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md",
+    "title": "ATM 端到端自動併批與效能證明計畫 2.0",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1810",
+    "path": "docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan.md",
+    "title": "ATM 端到端自動併批與效能證明計畫",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1811",
+    "path": "docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md",
+    "title": "ATM Lane Session Rollout Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1812",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0124-charter-authority-bundle.task.md",
+    "title": "ATM-GOV-0124 - Install the content-bound Charter authority bundle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1813",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0125-captain-quick-wins.task.md",
+    "title": "ATM-GOV-0125 - Land low-risk Captain guidance and recovery quick wins",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1814",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0126-paired-cost-baseline.task.md",
+    "title": "ATM-GOV-0126 - Establish paired monetary-cost and time efficiency baselines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1815",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0127-release-steward-safety.task.md",
+    "title": "ATM-GOV-0127 - Protect foreign WIP with an exclusive release steward lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1816",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0128-multi-captain-index-isolation.task.md",
+    "title": "ATM-GOV-0128 - Converge multi-Captain serialization and index isolation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1817",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0129-seal-and-commit.task.md",
+    "title": "ATM-GOV-0129 - Make sealed commit the close transaction truth",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1818",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0130-close-crash-residue-recovery.task.md",
+    "title": "ATM-GOV-0130 - Recover close, claim release, and residue crash states",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1819",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0131-validation-receipt-reuse.task.md",
+    "title": "ATM-GOV-0131 - Unify wrapper-generated validation receipts",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1820",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0132-framework-taskflow-opener.task.md",
+    "title": "ATM-GOV-0132 - Provide a safe framework taskflow opener lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1821",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0133-planning-source-seal.task.md",
+    "title": "ATM-GOV-0133 - Seal external planning-source identity before claim and close",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1822",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0134-governance-hotfile-sharding.task.md",
+    "title": "ATM-GOV-0134 - Shard governance hotfiles behind generated compatibility projections",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1823",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0135-shadow-first-team-scheduler.task.md",
+    "title": "ATM-GOV-0135 - Run Team workers in shadow-first contribution workspaces",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1824",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0136-contribution-composer.task.md",
+    "title": "ATM-GOV-0136 - Compose Team contribution manifests into one final tree",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1825",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0137-team-admission-projection.task.md",
+    "title": "ATM-GOV-0137 - Unify Team admission projection and scale-down decisions",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1826",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0138-broker-registry-transaction.task.md",
+    "title": "ATM-GOV-0138 - Make Broker registry updates atomic and thin under shadow-first Team",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1827",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0139-obligation-map-canary.task.md",
+    "title": "ATM-GOV-0139 - Introduce path-to-validator obligations with sealed-commit canary lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1828",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0140-team-efficiency-controller.task.md",
+    "title": "ATM-GOV-0140 - Enforce Team monetary-cost, time and quality efficiency controller",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1829",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0141-batch-mode-integration.task.md",
+    "title": "ATM-GOV-0141 - Integrate Batch mode with sealed close and Team admission",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1830",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0142-release-publication-steward.task.md",
+    "title": "ATM-GOV-0142 - Productize release publication ownership and sealed source receipts",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1831",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0143-provider-billing-cost-accounting.task.md",
+    "title": "ATM-GOV-0143 - Capture provider billing usage and compute versioned real monetary cost",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1832",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0144-official-pricing-catalog-refresh.task.md",
+    "title": "ATM-GOV-0144 - Refresh the standard model-price catalog from official provider sources",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1833",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0145-pre-team-foundation-dual-captain-e2e.task.md",
+    "title": "ATM-GOV-0145 - Replace Pre-Team Foundation Gate meta-test with real dual-Captain E2E",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1834",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0146-close-mutex-ttl-heartbeat.task.md",
+    "title": "ATM-GOV-0146 - Align close transaction mutex TTL with governed commit window",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1835",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0147-runtime-residue-error-code-cleanup.task.md",
+    "title": "ATM-GOV-0147 - Teach residue cleanup expired git-index leases and register Team task-required errors",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1836",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0148-unified-global-resource-admission.task.md",
+    "title": "ATM-GOV-0148 - Project global governance resources into unified Broker admission",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1837",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0149-dual-captain-broker-spawn-e2e.task.md",
+    "title": "ATM-GOV-0149 - Add true dual-Captain Broker spawn E2E",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1838",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0150-runner-sync-coalescing-steward-queue.task.md",
+    "title": "ATM-GOV-0150 - Implement runner-sync coalescing steward queue",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1839",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0151-generated-projection-steward.task.md",
+    "title": "ATM-GOV-0151 - Move generated projection rebuilds to steward lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1840",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0152-unified-admission-runtime-aliases.task.md",
+    "title": "ATM-GOV-0152 - Alias legacy global locks into unified Broker admission",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1841",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0153-real-team-dogfood-promotion-evidence.task.md",
+    "title": "ATM-GOV-0153 - Collect real Team dogfood promotion evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1842",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0154-runner-sync-steward-release.task.md",
+    "title": "ATM-GOV-0154 - Add runner-sync steward release command",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1843",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0155-runner-sync-after-dispatch-adapter-parity.task.md",
+    "title": "ATM-GOV-0155 - Runner Sync After Dispatch Planning Gate Adapter Parity",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1844",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0156-sealed-runner-build-input-cache.task.md",
+    "title": "ATM-GOV-0156 - Add Sealed Runner Build Input Cache And Timing Metrics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1845",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0157-ledger-import-tier1-admission.task.md",
+    "title": "ATM-GOV-0157 - Classify task import force writes as Tier 1 ledger ingestion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1846",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0158-runner-sync-foreign-wip-build-input-admission.task.md",
+    "title": "ATM-GOV-0158 - Scope Runner-Sync Foreign WIP Admission To Build-Input Conflicts",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1847",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0159-scope-classification-lane-events-foundation.task.md",
+    "title": "ATM-GOV-0159 - Add Shared Code Docs Ledger Scope Classification And Lane Event Foundation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1848",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0160-dependency-gate-code-only-planning-artifacts.task.md",
+    "title": "ATM-GOV-0160 - Make Dependency Gates Block Code Only And Allow Planning Artifacts",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1849",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0161-tier2-broker-ticket-unified-exit.task.md",
+    "title": "ATM-GOV-0161 - Convert Tier 2 Shared-Surface Refusals Into Broker Tickets",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1850",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0162-related-task-batching-wave-surface.task.md",
+    "title": "ATM-GOV-0162 - Add Related-Task Batching For Commit Build And Projection Windows",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1851",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0163-sealed-build-node-modules-wipe.task.md",
+    "title": "ATM-GOV-0163 - Sealed Runner Build Must Not Wipe Host node_modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1852",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0164-unlink-before-worktree-remove.task.md",
+    "title": "ATM-GOV-0164 - Unlink Junction Before git worktree remove",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1853",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0165-taskflow-runner-staleness-scope-gate.task.md",
+    "title": "ATM-GOV-0165 - Scope Runner Staleness Close Gate To Non-Code Tasks",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1854",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0166-ledger-plan-source-realign-verb.task.md",
+    "title": "ATM-GOV-0166 - Closed-Ledger Planning Source Realign Verb",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1855",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0167-lane-dual-session-e2e.task.md",
+    "title": "ATM-GOV-0167 - Lane Session Dual-Lane End-to-End Acceptance",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1856",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0168-lane-aware-same-task-claim-conflict.task.md",
+    "title": "ATM-GOV-0168 - Lane-Aware Same-Task Claim Conflict and Adopt Rebind",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1857",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0169-foreign-unstaged-wip-claim-admission.task.md",
+    "title": "ATM-GOV-0169 - Foreign Unstaged WIP Claim Admission",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1858",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0170-oversized-file-extraction-claim-pathway.task.md",
+    "title": "ATM-GOV-0170 - Oversized File Extraction Claim Pathway",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1859",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0171-runner-sync-receipt-clean-close.task.md",
+    "title": "ATM-GOV-0171 - Governed Runner-Sync Receipt and Clean-Close Pathway",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1860",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0172-unified-wave-manifest-policy.task.md",
+    "title": "ATM-GOV-0172 - Unified Wave Manifest and Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1861",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0173-batch-wave-selector.task.md",
+    "title": "ATM-GOV-0173 - Batch Wave Selector",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1862",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0174-executor-neutral-team-wave-runtime.task.md",
+    "title": "ATM-GOV-0174 - Executor-Neutral Team Wave Runtime",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1863",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0175-durable-broker-scheduler.task.md",
+    "title": "ATM-GOV-0175 - Durable Broker Scheduler",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1864",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0176-shared-delivery-commit-executor.task.md",
+    "title": "ATM-GOV-0176 - Shared Delivery Commit Executor",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1865",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0177-shared-build-projection-checkpoint.task.md",
+    "title": "ATM-GOV-0177 - Shared Build/Projection Executor and Atomic Wave Checkpoint",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1866",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0178-parallel-analyzer-v2-failure-matrix.task.md",
+    "title": "ATM-GOV-0178 - Parallel Analyzer v2 and End-to-End Failure Matrix",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1867",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0179-strict-paired-ab-dogfood-circuit-breaker.task.md",
+    "title": "ATM-GOV-0179 - Strict Paired A/B Dogfood and Default-On Circuit Breaker",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1868",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0180-taskflow-scope-glob-and-multi-add.task.md",
+    "title": "ATM-GOV-0180 — taskflow scope glob for new files + scope add multi-flag",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1869",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0181-abandon-residue-governed-disposition.task.md",
+    "title": "ATM-GOV-0181 — abandon residue governed disposition",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1870",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0182-plan-scoped-routing-wip-preflight.task.md",
+    "title": "ATM-GOV-0182 - Plan-Scoped Routing、Identity 與 WIP Provenance Preflight",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1871",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0183-durable-plan-batchrun-shadow-journal.task.md",
+    "title": "ATM-GOV-0183 - Durable Plan BatchRun、Lane Stamping 與 Shadow Journal",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1872",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0184-real-team-wave-worker-executor.task.md",
+    "title": "ATM-GOV-0184 - Real Team Wave Worker Executor",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1873",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0185-validator-dag-shared-cache.task.md",
+    "title": "ATM-GOV-0185 - Validator DAG、共享結果與安全 Cache",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1874",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0186-real-shared-delivery-commit-executor.task.md",
+    "title": "ATM-GOV-0186 - Real Shared Delivery Commit Executor",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1875",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0187-real-build-projection-runner-sync-executor.task.md",
+    "title": "ATM-GOV-0187 - Real Build、Projection 與 Runner-Sync Executor",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1876",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0188-atomic-wave-checkpoint-closeback-saga.task.md",
+    "title": "ATM-GOV-0188 - Atomic Wave Checkpoint 與 Cross-Repo Closeback Saga",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1877",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0189-plan-level-executor-recovery-cli.task.md",
+    "title": "ATM-GOV-0189 - Plan-Level Executor 主迴圈、收單策略與復原 CLI",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1878",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0190-real-paired-ab-analyzer-v3.task.md",
+    "title": "ATM-GOV-0190 - Real Paired A/B、Analyzer v3 與 Rollout Verdict",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1879",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0191-error-code-skill-authoring-contract.task.md",
+    "title": "ATM-GOV-0191 - ErrorCode Skill Authoring Contract 與 Adapter Parity",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1880",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0192-error-code-post-close-projection-cleanup.task.md",
+    "title": "ATM-GOV-0192 - ErrorCode Post-Close Projection Cleanup",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1881",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0001-runner-sync-orphan-cleanup.task.md",
+    "title": "TASK-LANE-0001 - Runner-sync Orphan Queue-head Cleanup",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1882",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0002-runner-sync-health-admission.task.md",
+    "title": "TASK-LANE-0002 - Runner-sync Queue Health Admission",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1883",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0003-taskflow-runner-sync-closeback-lane.task.md",
+    "title": "TASK-LANE-0003 - Taskflow Runner-sync Closeback Lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1884",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0010-lane-session-store-events.task.md",
+    "title": "TASK-LANE-0010 - Lane Session Store and Event Stream",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1885",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0011-lane-command-envelope.task.md",
+    "title": "TASK-LANE-0011 - Lane Command and Envelope Echo",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1886",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0012-claim-stamping-direction-metadata.task.md",
+    "title": "TASK-LANE-0012 - Lane Claim Stamping and Direction Metadata",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1887",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0013-commit-lane-attribution.task.md",
+    "title": "TASK-LANE-0013 - Lane Commit Attribution",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1888",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0014-lane-adoption-handoff.task.md",
+    "title": "TASK-LANE-0014 - Lane Adoption and Handoff Command",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1889",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0015-framework-temp-lock-lane-key.task.md",
+    "title": "TASK-LANE-0015 - Framework Temp Lock Lane Key",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1890",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0016-fresh-reservation-lane-key.task.md",
+    "title": "TASK-LANE-0016 - Fresh Task Reservation Lane Key",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1891",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0017-lane-aware-conflict-broker-lifecycle.task.md",
+    "title": "TASK-LANE-0017 - Lane-aware Claim Conflict and Broker Lifecycle",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1892",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0018-lane-heartbeat-sweep-docs.task.md",
+    "title": "TASK-LANE-0018 - Lane Heartbeat Sweep Analyzer and Docs",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1893",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0019-lane-session-event-history-analyzer.task.md",
+    "title": "TASK-LANE-0019 - Lane Session Event History Analyzer Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1894",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0020-cross-lane-repair-claim-adjudication.task.md",
+    "title": "TASK-LANE-0020 - Cross-Lane Repair-Claim Adjudication",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1895",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0028-closure-packet-repair-ux.task.md",
+    "title": "TASK-MRP-0028 Closure Packet Repair UX and Parent Tree Semantics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1896",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/atm-core-runner-broker-design.md",
+    "title": "ATM Core Runner Broker Design",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1897",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/HANDOFF-2026-06-17-DOGFOOD-BUGFIX-CONTINUATION.md",
+    "title": "MAO Dogfood / Bugfix Worker Handoff — 0041–0042 收工後接續",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1898",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/HANDOFF-2026-06-17-M7-M8-MAO-CONTINUATION.md",
+    "title": "MAO M7/M8 Worker Handoff — Closeback Continuation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1899",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/LESSONS-MAO-WAVE-MODE-BATCH-CLOSEBACK.md",
+    "title": "MAO Wave Mode — 批次收口經驗教訓",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1900",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行治理計畫書.md",
+    "title": "MAO 多 AI 並行治理計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1901",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行治理計畫書2.md",
+    "title": "MAO 多 AI 並行治理計畫書2 — Team Agents Wave Mode",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1902",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/PLAN-MAO-0014-0022-TWO-PHASE-BATCH.md",
+    "title": "規劃書：MAO 0014–0022 兩階段切點批次治理",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1903",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0001-logical-parallel-routing-architecture-contract.task.md",
+    "title": "TASK-MAO-0001 - logical parallel routing architecture contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1904",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0002-route-context-state-schema.task.md",
+    "title": "TASK-MAO-0002 - route context state schema",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1905",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0003-route-lifecycle-cli.task.md",
+    "title": "TASK-MAO-0003 - route lifecycle CLI",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1906",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0004-next-route-task-selector.task.md",
+    "title": "TASK-MAO-0004 - next route and task selector",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1907",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0005-broker-intent-registry.task.md",
+    "title": "TASK-MAO-0005 - broker intent registry",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1908",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0006-logical-conflict-matrix.task.md",
+    "title": "TASK-MAO-0006 - logical conflict matrix",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1909",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0007-freeze-resume-protocol.task.md",
+    "title": "TASK-MAO-0007 - freeze resume protocol",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1910",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0008-patch-envelope-contract.task.md",
+    "title": "TASK-MAO-0008 - patch envelope contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1911",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0009-steward-arbitration-flow.task.md",
+    "title": "TASK-MAO-0009 - steward arbitration flow",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1912",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0010-multi-agent-simulator-benchmark.task.md",
+    "title": "TASK-MAO-0010 - multi-agent simulator benchmark",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1913",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0011-reproducible-runner-build-audit.task.md",
+    "title": "TASK-MAO-0011 - reproducible runner build audit",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1914",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0012-runner-build-scope-manifest.task.md",
+    "title": "TASK-MAO-0012 - runner sync scope manifest",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1915",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0013-atm-core-scope-classifier.task.md",
+    "title": "TASK-MAO-0013 - runner sync steward classifier and stale gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1916",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0014-runner-ref-publish-primitive.task.md",
+    "title": "TASK-MAO-0014 - runner ref publish primitive",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1917",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0015-patch-envelope-atm-core-specialization.task.md",
+    "title": "TASK-MAO-0015 - patch envelope ATM core specialization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1918",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0016-runner-submit-patch-pipeline.task.md",
+    "title": "TASK-MAO-0016 - runner submit-patch pipeline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1919",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0017-runner-version-stream-state-machine.task.md",
+    "title": "TASK-MAO-0017 - runner version stream state machine",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1920",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0018-closure-runner-binding.task.md",
+    "title": "TASK-MAO-0018 - closure packet runner binding",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1921",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0019-cross-repo-dual-binding-closure.task.md",
+    "title": "TASK-MAO-0019 - cross-repo dual binding closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1922",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0020-broker-bootstrap-self-update-recovery.task.md",
+    "title": "TASK-MAO-0020 - broker bootstrap self-update recovery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1923",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0021-runner-broker-failure-mode-coverage.task.md",
+    "title": "TASK-MAO-0021 - runner broker failure-mode coverage",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1924",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0022-external-core-contributor-pipeline.task.md",
+    "title": "TASK-MAO-0022 - external core contributor pipeline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1925",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0023-team-agents-wave-mode-architecture-contract.task.md",
+    "title": "TASK-MAO-0023 - Team Agents wave mode architecture contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1926",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0024-wave-candidate-planner-and-dag-grouping.task.md",
+    "title": "TASK-MAO-0024 - Wave candidate planner and DAG grouping",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1927",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0025-wave-execution-envelope-schema.task.md",
+    "title": "TASK-MAO-0025 - Wave execution envelope schema",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1928",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0026-team-wave-broker-admission-integration.task.md",
+    "title": "TASK-MAO-0026 - Team wave broker admission integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1929",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0027-team-wave-runtime-record-and-dispatch-surface.task.md",
+    "title": "TASK-MAO-0027 - Team wave runtime record and dispatch surface",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1930",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0028-worker-report-ingestion-contract.task.md",
+    "title": "TASK-MAO-0028 - Worker report ingestion contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1931",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0029-per-task-evidence-slicing-from-wave-diff.task.md",
+    "title": "TASK-MAO-0029 - Per-task evidence slicing from wave diff",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1932",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0030-wave-checkpoint-partial-completion-semantics.task.md",
+    "title": "TASK-MAO-0030 - Wave checkpoint partial-completion semantics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1933",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0031-coordinator-only-git-and-closeout-guard-for-waves.task.md",
+    "title": "TASK-MAO-0031 - Coordinator-only git and closeout guard for waves",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1934",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0032-validator-and-reviewer-team-agents-roles-for-waves.task.md",
+    "title": "TASK-MAO-0032 - Validator and reviewer Team Agents roles for waves",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1935",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0033-team-wave-dogfood-benchmark-with-cid-phase-b-shape.task.md",
+    "title": "TASK-MAO-0033 - Team wave dogfood benchmark with CID Phase B shape",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1936",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0034-operator-docs-and-migration-guide-for-team-agents-wave-mode.task.md",
+    "title": "TASK-MAO-0034 - Operator docs and migration guide for Team Agents Wave Mode",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1937",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0035-staged-cross-file-consistency-and-session-residue-guardrails.task.md",
+    "title": "TASK-MAO-0035 - Staged cross-file consistency and session residue guardrails",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1938",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0036-cli-result-contract-and-exit-code-policy.task.md",
+    "title": "TASK-MAO-0036 - CLI result contract and exit code policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1939",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0037-protected-override-audit-ledger.task.md",
+    "title": "TASK-MAO-0037 - Protected override audit ledger",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1940",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0038-closeback-orchestration-route-correctness.task.md",
+    "title": "TASK-MAO-0038 - Closeback orchestration route correctness",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1941",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0039-historical-close-dry-run-remediation.task.md",
+    "title": "TASK-MAO-0039 - Historical close pre-close remediation and write rollback summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1942",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0040-task-scoped-commit-bundle-resolver.task.md",
+    "title": "TASK-MAO-0040 - Task-scoped commit bundle resolver, foreign-staged restore, and host git compatibility",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1943",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0041-evidence-bundle-and-directory-deliverables.task.md",
+    "title": "TASK-MAO-0041 - Evidence bundle manifest and directory deliverables",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1944",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0042-validator-scope-taxonomy.task.md",
+    "title": "TASK-MAO-0042 - Validator scope taxonomy and close gating",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1945",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0043-claim-repair-and-lifecycle-owner.task.md",
+    "title": "TASK-MAO-0043 - Claim repair diagnose/write and lifecycle owner rule",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1946",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0044-task-view-dashboard.task.md",
+    "title": "TASK-MAO-0044 - Task-view dashboard over preflight and completion summary",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1947",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0045-closeback-operator-runbook.task.md",
+    "title": "TASK-MAO-0045 - Closeback operator runbook, restore protocol, and banned-pattern guide",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1948",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0046-route-freeze-protocol-runtime-integration.task.md",
+    "title": "TASK-MAO-0046 - Route freeze protocol runtime integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1949",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0047-patch-envelope-broker-handoff-integration.task.md",
+    "title": "TASK-MAO-0047 - Patch envelope broker export and handoff integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1950",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0048-mao-event-replay-benchmark-from-task-history.task.md",
+    "title": "TASK-MAO-0048 - MAO event replay benchmark from task history",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1951",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0049-task-scope-amendment-audit-lane.task.md",
+    "title": "TASK-MAO-0049 - Task scope add audit lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1952",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0050-close-write-transaction-atomicity-and-rollback.task.md",
+    "title": "TASK-MAO-0050 - Close write transaction atomicity and rollback",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1953",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0051-close-window-exclusive-staged-index-lock.task.md",
+    "title": "TASK-MAO-0051 - Close window exclusive staged index lock",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1954",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0052-close-operator-discoverability-via-next-playbook.task.md",
+    "title": "TASK-MAO-0052 - Close operator discoverability via next playbook",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1955",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0053-per-actor-identity-slot-routing.task.md",
+    "title": "TASK-MAO-0053 - Per-actor identity slot routing for parallel-agent commits",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1956",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0054-tasks-reserve-planning-card-precheck.task.md",
+    "title": "TASK-MAO-0054 - tasks reserve planning-card precheck and auto-import",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1957",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0055-tasks-claim-auto-intent-and-closeout-safety.task.md",
+    "title": "TASK-MAO-0055 - tasks claim auto-intent and closeout-only mutation safety",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1958",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0056-scope-amendment-error-clarity-and-claim-first.task.md",
+    "title": "TASK-MAO-0056 - Scope amendment error clarity and --claim-first convenience",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1959",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0057-taskflow-close-defer-governance-dirty.task.md",
+    "title": "TASK-MAO-0057 - taskflow close --defer-governance-dirty and operator lane discoverability",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1960",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0058-governed-branch-commit-queue-and-head-race-recovery.task.md",
+    "title": "TASK-MAO-0058 - governed branch commit queue and HEAD race recovery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1961",
+    "path": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0059-broker-conflict-resolution-replay-benchmark.task.md",
+    "title": "TASK-MAO-0059 - broker conflict resolution replay benchmark",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1962",
+    "path": "docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-refactor-plan.md",
+    "title": "ATM CLI oversized module refactor plan (RFT series)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1963",
+    "path": "docs/ai_atomic_framework/rft-hardening/TASK-RFT-0008-external-dispatch-brief-2026-06-14.md",
+    "title": "TASK-RFT-0008 External Dispatch Brief",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1964",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0001-next-ts-atomic-map-extraction.task.md",
+    "title": "TASK-RFT-0001 - next.ts atomic-map extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1965",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0002-hook-ts-phase-split.task.md",
+    "title": "TASK-RFT-0002 - hook.ts split by phase",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1966",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0003-framework-development-temp-claim-lifecycle.task.md",
+    "title": "TASK-RFT-0003 - framework-development.ts temp-claim lifecycle extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1967",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0004-task-ledger-invariant-registry.task.md",
+    "title": "TASK-RFT-0004 - validate-task-ledger-governance.ts invariant registry split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1968",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0005-captain-dispatch-mailbox-lane-split.task.md",
+    "title": "TASK-RFT-0005 - captain-dispatch-mailbox.ts lane split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1969",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0006-police-family-role-split.task.md",
+    "title": "TASK-RFT-0006 - police/family.ts role split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1970",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0007-evidence-verb-split.task.md",
+    "title": "TASK-RFT-0007 - evidence.ts verb split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1971",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0008-taskflow-size-tripwire-and-commit-message-strategy.task.md",
+    "title": "TASK-RFT-0008 - taskflow close fast validation surface and test atom decomposition",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1972",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0009-taskflow-production-close-atom-split.task.md",
+    "title": "TASK-RFT-0009 - taskflow.ts production close atom split and size tripwire recovery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1973",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0010-tasks-ts-thin-facade-recovery.task.md",
+    "title": "TASK-RFT-0010 - tasks.ts thin-facade recovery",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1974",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0011-atm-governance-fix-wave.task.md",
+    "title": "TASK-RFT-0011 — ATM governance-fix wave",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1975",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0012-tasks-orchestrator-body-extraction.task.md",
+    "title": "TASK-RFT-0012 — tasks.ts orchestrator body extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1976",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0013-tasks-close-helper-cluster-split.task.md",
+    "title": "TASK-RFT-0013 — tasks.ts close helper cluster split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1977",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0014-governance-surface-deletion-pass.task.md",
+    "title": "TASK-RFT-0014 — Governance surface deletion pass",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1978",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md",
+    "title": "TASK-RFT-0015 — Onefile nested launcher recursion runs stale runner",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1979",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0016-onefile-size-budget-trim.task.md",
+    "title": "TASK-RFT-0016 — Onefile size budget trim",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1980",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0017-tasks-claim-lifecycle-orchestrator.task.md",
+    "title": "TASK-RFT-0017 - tasks.ts claim lifecycle orchestrator split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1981",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0018-tasks-reconcile-repair-deliver-close.task.md",
+    "title": "TASK-RFT-0018 - tasks.ts reconcile / repair / deliver-close orchestrator split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1982",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0019-tasks-card-parser-scope-queue-final-facade.task.md",
+    "title": "TASK-RFT-0019 - tasks.ts card parser + scope/queue final facade split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1983",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0020-git-governance-commit-scope-policy-map.task.md",
+    "title": "TASK-RFT-0020 - git-governance.ts commit-scope policy map extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1984",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0021-team-command-strategy-map.task.md",
+    "title": "TASK-RFT-0021 - team.ts route and execution strategy map extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1985",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0022-next-action-assembly-map.task.md",
+    "title": "TASK-RFT-0022 - next.ts nextAction assembly second-wave extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1986",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md",
+    "title": "TASK-RFT-0023 - validate-team-agents.ts validator suite map extraction",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1987",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md",
+    "title": "TASK-RFT-0024 - tasks legacy implementation compatibility facade split",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1988",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md",
+    "title": "TASK-RFT-0025 - closure packet schema fragment and diagnostics map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1989",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0026-central-atomization-line-bound.task.md",
+    "title": "TASK-RFT-0026 - central configurable ATM atomic line bound",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1990",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0027-atomization-large-module-map-rollout.task.md",
+    "title": "TASK-RFT-0027 - apply configurable atomization line bound to existing RFT oversized modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1991",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0028-team-agent-governance-dogfood.task.md",
+    "title": "TASK-RFT-0028 - dogfood Team Agents after close transaction and shadow-first gates are stable",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1992",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0029-team-command-facade-atomization.task.md",
+    "title": "TASK-RFT-0029 - Atomize team.ts with a Strangler Facade command-handler architecture",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1993",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0030-team-legacy-command-path-extraction.task.md",
+    "title": "TASK-RFT-0030 - Extract team-legacy command paths into bounded modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1994",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0031-next-command-router-extraction.task.md",
+    "title": "TASK-RFT-0031 - Extract next.ts route resolution into bounded modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1995",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0032-git-governance-command-extraction.task.md",
+    "title": "TASK-RFT-0032 - Extract git-governance commit and push guards into bounded modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1996",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0033-tasks-legacy-impl-extraction.task.md",
+    "title": "TASK-RFT-0033 - Extract tasks legacy implementation into command modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1997",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0034-closure-packet-schema-extraction.task.md",
+    "title": "TASK-RFT-0034 - Split closure-packet schema into bounded schema modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1998",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0035-task-ledger-suite-extraction.task.md",
+    "title": "TASK-RFT-0035 - Split task-ledger validator suite implementation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_1999",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0036-evidence-bundle-io-extraction.task.md",
+    "title": "TASK-RFT-0036 - Split evidence bundle IO into bounded modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2000",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0037-pre-commit-hook-extraction.task.md",
+    "title": "TASK-RFT-0037 - Split pre-commit hook guard implementation into bounded modules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2001",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0038-team-legacy-runtime-contract-extraction.task.md",
+    "title": "TASK-RFT-0038 - Extract team legacy runtime contract helpers",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2002",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0039-team-legacy-patrol-contract-extraction.task.md",
+    "title": "TASK-RFT-0039 - Extract team legacy patrol contract helpers",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2003",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0040-team-legacy-permission-lease-extraction.task.md",
+    "title": "TASK-RFT-0040 - Extract team legacy permission lease policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2004",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0041-team-legacy-provider-execution-extraction.task.md",
+    "title": "TASK-RFT-0041 - Extract team legacy provider execution orchestration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2005",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0042-team-legacy-crew-decision-extraction.task.md",
+    "title": "TASK-RFT-0042 - Extract team legacy crew decision policy map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2006",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0043-team-legacy-plan-orchestration-extraction.task.md",
+    "title": "TASK-RFT-0043 - Extract team legacy plan orchestration map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2007",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0044-team-legacy-runtime-governance-surfaces.task.md",
+    "title": "TASK-RFT-0044 - Extract team legacy runtime governance surfaces",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2008",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0045-taskflow-dryrun-spec-atom-map.task.md",
+    "title": "TASK-RFT-0045 - Split taskflow dry-run regression suite atom map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2009",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0046-next-prompt-results-contract-extraction.task.md",
+    "title": "TASK-RFT-0046 - Extract next prompt-result contracts below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2010",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0047-next-route-resolution-strategy-map.task.md",
+    "title": "TASK-RFT-0047 - Extract next route-resolution strategy map below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2011",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0048-next-playbook-projection-contracts.task.md",
+    "title": "TASK-RFT-0048 - Extract next playbook projection contracts below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2012",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0049-next-command-facade-final-600.task.md",
+    "title": "TASK-RFT-0049 - Finish next command facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2013",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0050-team-legacy-facade-final-600.task.md",
+    "title": "TASK-RFT-0050 - Finish team legacy facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2014",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0051-broker-command-facade-final-600.task.md",
+    "title": "TASK-RFT-0051 - Finish broker command facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2015",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0052-validate-cli-script-map-final-600.task.md",
+    "title": "TASK-RFT-0052 - Finish validate-cli script map below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2016",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0053-run-validators-orchestrator-final-600.task.md",
+    "title": "TASK-RFT-0053 - Split run-validators orchestrator below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2017",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0054-taskflow-command-facade-final-600.task.md",
+    "title": "TASK-RFT-0054 - Split taskflow command facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2018",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0055-validate-governance-commands-final-600.task.md",
+    "title": "TASK-RFT-0055 - Split validate-governance-commands facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2019",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0056-integration-hooks-command-facade-final-600.task.md",
+    "title": "TASK-RFT-0056 - Split integration-hooks command facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2020",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0057-batch-command-facade-final-600.task.md",
+    "title": "TASK-RFT-0057 - Split batch command facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2021",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0058-shared-command-facade-final-600.task.md",
+    "title": "TASK-RFT-0058 - Split shared command facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2022",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0059-plugin-bootstrap-facade-final-600.task.md",
+    "title": "TASK-RFT-0059 - Split plugin bootstrap facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2023",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0060-capture-broker-evidence-final-600.task.md",
+    "title": "TASK-RFT-0060",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2024",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0061-task-option-parsers-final-600.task.md",
+    "title": "TASK-RFT-0061",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2025",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0062-validate-prompt-scoped-next-final-600.task.md",
+    "title": "TASK-RFT-0062",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2026",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0063-validate-police-family-final-600.task.md",
+    "title": "TASK-RFT-0063",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2027",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0064-team-knowledge-final-600.task.md",
+    "title": "TASK-RFT-0064",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2028",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0065-team-brokered-write-final-600.task.md",
+    "title": "TASK-RFT-0065",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2029",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0066-task-direction-governance-final-600.task.md",
+    "title": "TASK-RFT-0066",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2030",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0067-git-hooks-enforcement-final-600.task.md",
+    "title": "TASK-RFT-0067 - Split git hooks enforcement validator below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2031",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0068-cli-route-command-final-600.task.md",
+    "title": "TASK-RFT-0068 - Split CLI route command below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2032",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0069-core-registry-final-600.task.md",
+    "title": "TASK-RFT-0069 - Split core registry facade below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2033",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0070-task-import-validator-final-600.task.md",
+    "title": "TASK-RFT-0070 - Split task import validator below 600 lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2034",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0071-collect-broker-evidence-final-600.task.md",
+    "title": "TASK-RFT-0071 - Split Broker Evidence Collector Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2035",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0072-broker-decision-final-600.task.md",
+    "title": "TASK-RFT-0072 - Split Broker Decision Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2036",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0073-atm-chart-final-600.task.md",
+    "title": "TASK-RFT-0073 - Split Atm-Chart Command Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2037",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0074-integration-command-final-600.task.md",
+    "title": "TASK-RFT-0074 - Split Integration Command Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2038",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0075-validate-schemas-final-600.task.md",
+    "title": "TASK-RFT-0075 - Split Validate-Schemas Script Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2039",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0076-doctor-command-final-600.task.md",
+    "title": "TASK-RFT-0076 - Split Doctor Command Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2040",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0077-close-orchestrator-final-600.task.md",
+    "title": "TASK-RFT-0077 - Split Close Orchestrator Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2041",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0078-atomization-map-physical-cap.task.md",
+    "title": "TASK-RFT-0078 - Cap Atomization Coverage Map Physical Files",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2042",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0079-atom-ref-readability-final-600.task.md",
+    "title": "TASK-RFT-0079 - Atom Ref Readability Final 600",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2043",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0080-plugin-governance-stores-final-600.task.md",
+    "title": "TASK-RFT-0080 - Split Plugin Governance Local Stores Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2044",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0081-team-lane-final-600.task.md",
+    "title": "TASK-RFT-0081 - Split Core Broker Team Lane Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2045",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0082-task-direction-final-600.task.md",
+    "title": "TASK-RFT-0082 - Split CLI Task Direction Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2046",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0083-mao-parallel-routing-runner-final-600.task.md",
+    "title": "TASK-RFT-0083 - Split MAO Parallel Routing Benchmark Runner Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2047",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0084-validate-guidance-final-600.task.md",
+    "title": "TASK-RFT-0084 - Split Guidance Validator Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2048",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0085-operational-bench-runner-final-600.task.md",
+    "title": "TASK-RFT-0085 - Split Operational Bench Runner Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2049",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0086-registry-lineage-normalization-final-600.task.md",
+    "title": "TASK-RFT-0086 - Split Registry Lineage Normalization Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2050",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0087-test-runner-report-support-final-600.task.md",
+    "title": "TASK-RFT-0087 - Split Test Runner Report Support Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2051",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0088-map-generator-support-final-600.task.md",
+    "title": "TASK-RFT-0088 - Split Map Generator Support Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2052",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0089-git-commit-task-scoped-staging-test-final-600.task.md",
+    "title": "TASK-RFT-0089 - Split Git Commit Task-Scoped Staging Test Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2053",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0090-map-curator-final-600.task.md",
+    "title": "TASK-RFT-0090 - Split Atom Map Curator Below 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2054",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0091-python-language-adapter-map.task.md",
+    "title": "TASK-RFT-0091 - Split Python Language Adapter Atom Map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2055",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0092-replacement-lane-map.task.md",
+    "title": "TASK-RFT-0092 - Split Replacement Lane Atom Map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2056",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0093-internal-release-map.task.md",
+    "title": "TASK-RFT-0093 - Split Internal Release Command",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2057",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0094-commit-range-guard-map.task.md",
+    "title": "TASK-RFT-0094 - Split Commit Range Guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2058",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0095-upgrade-proposal-map.task.md",
+    "title": "TASK-RFT-0095 - Split Upgrade Proposal Command",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2059",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0096-core-spec-parser-final-600.task.md",
+    "title": "TASK-RFT-0096 - Split Core Spec Parser Under 600 Lines",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2060",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0097-global-physical-line-budget-gate.task.md",
+    "title": "TASK-RFT-0097 - Establish Global Physical-Line-Budget Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2061",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0098-touched-file-physical-line-admission.task.md",
+    "title": "TASK-RFT-0098 - Touched-File Physical-Line Admission Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2062",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0099-semantic-atomization-metrics.task.md",
+    "title": "TASK-RFT-0099 - Semantic Atomization Metrics for RFT Gate Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2063",
+    "path": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0100-continuation-card-generation.task.md",
+    "title": "TASK-RFT-0100 - Automatic RFT Continuation-Card Generation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2064",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/00-verified-facts.md",
+    "title": "SKL Tool-First 已驗證事實",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2065",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md",
+    "title": "SKL Tool-First 升級計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2066",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md",
+    "title": "TASK-SKL-0001 - SKL tool-first plan and task pack",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2067",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0002-tool-bridge-v1-schema-and-result-adapter.task.md",
+    "title": "TASK-SKL-0002",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2068",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0003-next-claim-framework-mode-tools.task.md",
+    "title": "TASK-SKL-0003",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2069",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md",
+    "title": "TASK-SKL-0004",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2070",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md",
+    "title": "TASK-SKL-0005",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2071",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md",
+    "title": "TASK-SKL-0006",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2072",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md",
+    "title": "TASK-SKL-0007",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2073",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md",
+    "title": "TASK-SKL-0008",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2074",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0009-team-role-routing-matrix-and-playbook-slices.task.md",
+    "title": "TASK-SKL-0009",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2075",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md",
+    "title": "TASK-SKL-0010",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2076",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0011-agent-plus-skill-runtime-pilot.task.md",
+    "title": "TASK-SKL-0011",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2077",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0012-team-role-growth-and-observability-integration.task.md",
+    "title": "TASK-SKL-0012",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2078",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0013-error-code-resolver-shared-skill.task.md",
+    "title": "TASK-SKL-0013",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2079",
+    "path": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0013-planning-authority-resolution-gate.task.md",
+    "title": "TASK-SKL-0013 - Planning Authority Resolution Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2080",
+    "path": "docs/ai_atomic_framework/team-agents/ATM 多 Agent 寫入治理里程碑計劃.md",
+    "title": "ATM 多 Agent 寫入治理里程碑計劃",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2081",
+    "path": "docs/ai_atomic_framework/team-agents/ATM 多廠商 Agent Runtime 與 Integration 藍圖.md",
+    "title": "ATM 多廠商 Agent Runtime 與 Integration 藍圖",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2082",
+    "path": "docs/ai_atomic_framework/team-agents/ATM多語言WorkerAdaptor方案.md",
+    "title": "ATM 多語言 Worker Adaptor 方案",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2083",
+    "path": "docs/ai_atomic_framework/team-agents/CAPTAIN-DISPATCH-2026-07-02-framework-sync-candidates-and-task-recommendations.md",
+    "title": "Captain Dispatch: Framework Sync Candidates And Task Recommendations",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2084",
+    "path": "docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-06-15-ATM-FEATURE-14-CONTINUATION.md",
+    "title": "Captain Handoff - ATM Feature 14 Continuation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2085",
+    "path": "docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-06-15-TEAM-AGENTS-0016-CONTINUATION.md",
+    "title": "Captain Handoff - Team Agents 0016 Continuation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2086",
+    "path": "docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-06-19-TEAM-AGENTS-RUNTIME-INTEGRATION-CONTINUATION.md",
+    "title": "Captain Handoff - Team Agents Runtime / Integration Continuation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2087",
+    "path": "docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-07-11-TASK-TEAM-0053-GEMINI-DIRECT-CONTINUATION.md",
+    "title": "Captain Handoff - TASK-TEAM-0053 Gemini Direct Continuation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2088",
+    "path": "docs/ai_atomic_framework/team-agents/CROSS-VENDOR-TEAM-MARKDOWN-HANDOFF-PLAN-2026-07-11.md",
+    "title": "Cross-Vendor Team Markdown Handoff Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2089",
+    "path": "docs/ai_atomic_framework/team-agents/TASK-TEAM-0004-external-dispatch-brief-2026-06-14.md",
+    "title": "TASK-TEAM-0004 External Dispatch Brief",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2090",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0018-team-lease-fencing-deadlock-contract.task.md",
+    "title": "TASK-TEAM-0018 Team lease fencing and deadlock contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2091",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0019-team-sandbox-attestation-closure-contract.task.md",
+    "title": "TASK-TEAM-0019 Team sandbox attestation and closure contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2092",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0020-team-knowledge-storage-boundary-index-contract.task.md",
+    "title": "TASK-TEAM-0020 — Team knowledge storage boundary and index contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2093",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0021-team-knowledge-build-query-dry-run.task.md",
+    "title": "TASK-TEAM-0021 — Team knowledge build and query dry-run",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2094",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0022-captain-knowledge-preflight-brief-integration.task.md",
+    "title": "TASK-TEAM-0022 — Captain knowledge preflight brief integration",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2095",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0023-team-knowledge-retention-disk-budget-guard.task.md",
+    "title": "TASK-TEAM-0023 — Team knowledge retention and disk budget guard",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2096",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0024-hybrid-knowledge-retrieval-opt-in.task.md",
+    "title": "TASK-TEAM-0024 — Hybrid knowledge retrieval opt-in",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2097",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0025-task-import-dispatch-metadata-preservation.task.md",
+    "title": "TASK-TEAM-0025 - Task import dispatch metadata preservation",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2098",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md",
+    "title": "TASK-TEAM-0026 - TEAM safe mirror/import ledger reconciliation lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2099",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0027-team-command-atom-boundary-preflight.task.md",
+    "title": "TASK-TEAM-0027 - Team command atom boundary preflight",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2100",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0028-team-same-atom-cid-negative-control.task.md",
+    "title": "TASK-TEAM-0028 — Team same-atom CID negative control",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2101",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0030-team-agents-planning-repo-path-lease-normalization.task.md",
+    "title": "TASK-TEAM-0030 Team Agents planning-repo path lease normalization",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2102",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0031-team-runtime-mode-and-adapter-contract.task.md",
+    "title": "TASK-TEAM-0031 Team runtime mode and adapter contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2103",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0032-editor-subagent-bridge-contract.task.md",
+    "title": "TASK-TEAM-0032 Editor subagent bridge contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2104",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0033-team-reviewer-validator-rework-route-state-machine.task.md",
+    "title": "TASK-TEAM-0033 Team reviewer-validator rework route state machine",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2105",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0034-role-artifact-handoff-and-bounded-retry-contract.task.md",
+    "title": "TASK-TEAM-0034 Role artifact handoff and bounded retry contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2106",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0035-nodejs-reference-worker-adapter-and-broker-only-fallback.task.md",
+    "title": "TASK-TEAM-0035 Node.js reference worker adapter and broker-only fallback",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2107",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0036-python-and-csharp-reference-worker-adapter-examples.task.md",
+    "title": "TASK-TEAM-0036 Python and C# reference worker adapter examples",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2108",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0037-vendor-neutral-team-agent-provider-contract-and-orchestration-kernel.task.md",
+    "title": "TASK-TEAM-0037 Vendor-neutral Team agent provider contract and orchestration kernel",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2109",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0038-permission-broker-and-configurable-policy-layer.task.md",
+    "title": "TASK-TEAM-0038 Permission broker and configurable policy layer",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2110",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0039-governed-repo-vendor-integration-config-surface.task.md",
+    "title": "TASK-TEAM-0039 Governed-repo vendor integration config surface",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2111",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0040-cross-vendor-observability-and-query-log.task.md",
+    "title": "TASK-TEAM-0040 Cross-vendor observability and query log",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2112",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0041-provider-selection-defaults-and-role-overrides.task.md",
+    "title": "TASK-TEAM-0041 Provider selection defaults and role overrides",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2113",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0042-openai-and-azure-openai-runtime-bridges.task.md",
+    "title": "TASK-TEAM-0042 OpenAI and Azure OpenAI runtime bridges",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2114",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0043-claude-code-and-gemini-execution-bridges.task.md",
+    "title": "TASK-TEAM-0043 Claude Code and Gemini execution bridges",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2115",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0044-microsoft-foundry-provider-family-bridge.task.md",
+    "title": "TASK-TEAM-0044 Microsoft Foundry provider family bridge",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2116",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0045-integration-capability-manifest-and-verification-wiring.task.md",
+    "title": "TASK-TEAM-0045 Integration capability manifest and verification wiring",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2117",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0046-broker-conflict-resolution-command.task.md",
+    "title": "TASK-TEAM-0046 Broker conflict resolution command",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2118",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0047-broker-override-gate-parity.task.md",
+    "title": "TASK-TEAM-0047 Broker override gate parity",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2119",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0048-conflict-ux-and-captain-playbook.task.md",
+    "title": "TASK-TEAM-0048 Conflict UX and Captain playbook",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2120",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0050-team-start-provider-execution-wiring.task.md",
+    "title": "TASK-TEAM-0050 Team start provider execution wiring",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2121",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0051-per-role-provider-config-and-sizing-roster.task.md",
+    "title": "TASK-TEAM-0051 Per-role provider selection config surface and sizing-driven roster",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2122",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0052-heterogeneous-multi-bot-e2e-proof.task.md",
+    "title": "TASK-TEAM-0052 Heterogeneous multi-bot team run end-to-end proof",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2123",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0053-gemini-direct-api-bridge.task.md",
+    "title": "TASK-TEAM-0053 Gemini direct API bridge for Team provider matrix",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2124",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0066-paid-multi-vendor-live-dogfood.task.md",
+    "title": "TASK-TEAM-0066 Paid OpenAI and Anthropic Team Agents live dogfood",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2125",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0067-direct-provider-execute-admission-repair.task.md",
+    "title": "TASK-TEAM-0067 Repair direct-provider execute admission and fail-closed semantics",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2126",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0068-direct-provider-scoped-path-forwarding.task.md",
+    "title": "TASK-TEAM-0068 Forward governed task scope to direct provider bridges",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2127",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0069-lock-cleanup-canonical-direction-lock.task.md",
+    "title": "TASK-TEAM-0069 Release canonical direction lock during stale lock cleanup",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2128",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0070-openai-metadata-string-values.task.md",
+    "title": "TASK-TEAM-0070 Normalize OpenAI Responses metadata values to strings",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2129",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0071-three-vendor-artifact-handoff-and-context-benchmark.task.md",
+    "title": "TASK-TEAM-0071 Three-vendor direct execution, artifact handoff, and context benchmark",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2130",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0072-cross-vendor-team-markdown-handoff-runtime-ledger.task.md",
+    "title": "TASK-TEAM-0072 Cross-vendor Team Markdown Handoff runtime ledger and archive promotion",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2131",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0073-cross-vendor-team-markdown-handoff-hard-gates.task.md",
+    "title": "TASK-TEAM-0073 Cross-vendor Team Markdown Handoff hard gates and bounded context",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2132",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0074-cross-vendor-team-markdown-handoff-assurance.task.md",
+    "title": "TASK-TEAM-0074 Cross-vendor Team Markdown Handoff patrol, documentation, and three-vendor dogfood",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2133",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0075-handoff-hard-gate-parity-and-integrity-regression.task.md",
+    "title": "TASK-TEAM-0075 Handoff hard-gate parity and integrity regression",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2134",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0076-broker-shared-surface-parallel-coordination.task.md",
+    "title": "TASK-TEAM-0076 Broker shared-surface parallel coordination and steward queue",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2135",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0077-node-utf8-skill-repair-and-captain-guidance.task.md",
+    "title": "TASK-TEAM-0077 Node UTF-8 verification and Captain encoding guidance",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2136",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0078-next-claim-admission-atom-map-and-observability.task.md",
+    "title": "TASK-TEAM-0078 Atomize next claim admission and queue observability",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2137",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0079-next-claim-shared-surface-queue-admission.task.md",
+    "title": "TASK-TEAM-0079 Queue-aware next claim admission",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2138",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0080-adopt-closure-lane-residue-and-scope-shrink.task.md",
+    "title": "TASK-TEAM-0080 Adopt closure-lane residue",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2139",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0081-git-head-evidence-failed-commit-reconciliation.task.md",
+    "title": "TASK-TEAM-0081 Reconcile git-head evidence from failed commits",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2140",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0082-deliverable-path-validation-and-card-repair-lane.task.md",
+    "title": "TASK-TEAM-0082 Deliverable path validation and card repair lane",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2141",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0083-proposal-first-plan-start-parity-and-l5-dogfood.task.md",
+    "title": "TASK-TEAM-0083 Proposal-first plan/start parity and L5 dogfood",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2142",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0084-protected-foreign-staged-resolution-authorized-defer.task.md",
+    "title": "TASK-TEAM-0084 Protected foreign staged resolution-authorized defer follow-up",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2143",
+    "path": "docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0085-team-lane-backlog-hygiene-and-operator-friction.task.md",
+    "title": "TASK-TEAM-0085 TEAM lane backlog hygiene and operator-friction records",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2144",
+    "path": "docs/ai_atomic_framework/team-agents/TEAM_AGENTS_CAPTAIN_LED_SOP.md",
+    "title": "Team Agents Captain-Led SOP",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2145",
+    "path": "docs/ai_atomic_framework/team-agents/TEAM-AGENTS-VOCABULARY-CANON-AND-REPLAN-2026-07-10.md",
+    "title": "Team Agents 分級詞彙正典與重新規劃(2026-07-10 全目錄稽核版)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2146",
+    "path": "docs/ai_atomic_framework/team-agents/TEAM-BROKER-ENFORCEMENT-INTEGRATION-PLAN-2026-07-10.md",
+    "title": "Team Broker 實戰強制性整合計畫（M8E Enforcement Lane）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2147",
+    "path": "docs/ai_atomic_framework/temporary-governance/temporary-governance-plan.md",
+    "title": "ATM Temporary Governance Quarantine Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2148",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-other-part-04.md",
+    "title": "Doc ID Registry Markdown Index — 其它類",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2149",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-other-part-05.md",
+    "title": "Doc ID Registry Markdown Index — 其它類",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2150",
+    "path": "docs/keep-memory/gotcha_atm-claim-session-traps.md",
+    "title": "ATM claim / session 陷阱",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2151",
+    "path": "docs/keep-memory/gotcha_atm-close-sequence.md",
+    "title": "ATM 收口標準序（約 20 次任務收口驗證，2026-07-12/13）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2152",
+    "path": "docs/keep-memory/gotcha_atm-skill-template-sync.md",
+    "title": "skill 分發鏈：安裝副本 vs 源頭模板",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2153",
+    "path": "docs/keep-memory/gotcha_atm-two-captain-close-storm.md",
+    "title": "雙隊長 close 風暴收斂戰術（MEM lane 實戰，2026-07-14/15）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2154",
+    "path": "docs/keep-memory/gotcha_atm-two-captain-concurrency.md",
+    "title": "雙隊長並行守則（2026-07-12/13 與 codex-backlog-captain 12 小時實戰）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2155",
+    "path": "docs/keep.registry.md",
+    "title": "keep.registry — 跨專案記憶入口登錄表",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2156",
+    "path": "docs/reports/3klife-cross-repo-packet-warning-baseline.md",
+    "title": "3KLife Cross-Repo Packet Warning Baseline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2157",
+    "path": "docs/reports/3klife-legacy-baseline-warning-baseline.md",
+    "title": "3KLife Legacy Baseline Warning Baseline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2158",
+    "path": "docs/reports/3klife-manual-done-closeback-backfill.md",
+    "title": "3KLife manual done closeback backfill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2159",
+    "path": "docs/reports/3klife-planning-only-warning-baseline.md",
+    "title": "3KLife Planning-only Warning Baseline",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2160",
+    "path": "docs/reports/3klife-stale-claim-and-lock-cleanup.md",
+    "title": "3KLife Stale Claim And Lock Cleanup",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2161",
+    "path": "docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md",
+    "title": "3KLife Stale Runtime Lock Cleanup Closeout",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2162",
+    "path": "docs/reports/3klife-task-audit-debt-triage.md",
+    "title": "3KLife Task Audit Debt Triage",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2163",
+    "path": "docs/reports/3klife-transition-event-missing-backfill.md",
+    "title": "3KLife Transition Event Missing Backfill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2164",
+    "path": "docs/reports/3klife-transition-evidence-missing-backfill.md",
+    "title": "3KLife transition evidence missing backfill",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2165",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-other-part-06.md",
+    "title": "Doc ID Registry Markdown Index — 其它類",
     "category": "other"
   }
 ]

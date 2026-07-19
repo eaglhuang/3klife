@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Tech / UI / Art / Data
 
-> 生成日期: 2026-07-14
+> 生成日期: 2026-07-19
 > 這是 `doc-id-registry.md` 的「Tech / UI / Art / Data」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 

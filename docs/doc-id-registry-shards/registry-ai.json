@@ -250,5 +250,11 @@
     "path": "docs/agent-briefs/npc-brain-handoff-2026-05-29.md",
     "title": "`npc-brain` 資料演進與交接摘要",
     "category": "ai"
+  },
+  {
+    "id": "doc_ai_0047",
+    "path": ".github/instructions/atm-atom-map-refactor.instructions.md",
+    "title": "ATM Atom Map Refactor",
+    "category": "ai"
   }
 ]

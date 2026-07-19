@@ -1,6 +1,6 @@
 # 文件代號 Registry (doc-id-registry)
 
-> 生成日期: 2026-05-30
+> 生成日期: 2026-07-19
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。
 > **已拆分為可讀分片，本檔為索引入口。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。
 > `docs/doc-id-registry.json` 現在是 index stub；實際 machine-readable 內容位於 `docs/doc-id-registry-shards/registry-*.json`。
@@ -18,13 +18,13 @@
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
-| 索引類 | `doc_index` | 32 |
+| 索引類 | `doc_index` | 53 |
 | 任務卡類 | `doc_task` | 386 |
-| AI Agent 專用 | `doc_ai` | 42 |
-| Agent Skill 專用 | `doc_agentskill` | 94 |
+| AI Agent 專用 | `doc_ai` | 43 |
+| Agent Skill 專用 | `doc_agentskill` | 102 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
-| 其它類 | `doc_other` | 727 |
-| **合計** | — | **1537** |
+| 其它類 | `doc_other` | 1440 |
+| **合計** | — | **2280** |
 
 ## Markdown 分片
 
@@ -33,8 +33,8 @@
 | 分類統計 | docs/doc-id-registry-md-shards/doc-id-registry-stats.md | 23 | 單一分片 |
 | Tech / UI / Art / Data | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | 101 | 單一分片 |
 | Spec / Index / Task | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | 12 | 3 個 parts |
-| AI / AgentSkill / Server | docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md | 160 | 單一分片 |
-| 其它類 | docs/doc-id-registry-md-shards/doc-id-registry-other.md | 12 | 3 個 parts |
+| AI / AgentSkill / Server | docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md | 169 | 單一分片 |
+| 其它類 | docs/doc-id-registry-md-shards/doc-id-registry-other.md | 15 | 6 個 parts |
 
 ## 使用方式
 

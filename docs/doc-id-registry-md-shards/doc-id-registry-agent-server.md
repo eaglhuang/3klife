@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — AI / AgentSkill / Server
 
-> 生成日期: 2026-07-14
+> 生成日期: 2026-07-19
 > 這是 `doc-id-registry.md` 的「AI / AgentSkill / Server」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 

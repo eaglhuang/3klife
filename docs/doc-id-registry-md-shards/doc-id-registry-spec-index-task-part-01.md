@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-07-14
+> 生成日期: 2026-07-19
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 1/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -215,7 +215,7 @@
 | `doc_index_0023` | docs/ai_atomic_framework/atomic-police-family/tasks/README.md | 原子警察家族 Task Cards |
 | `doc_index_0024` | docs/ai_atomic_framework/atomic-police-family/specs/README.md | 原子警察家族 Specs |
 | `doc_index_0025` | docs/ai_atomic_framework/universal-language-framework/tasks/README.md | ATM 通用語言框架 Task Cards |
-| `doc_index_0031` | docs/ai_atomic_framework/governance-optimization/tasks/README.md | ATM GOV Task Cards |
+| `doc_index_0031` | docs/ai_atomic_framework/governance-optimization/tasks/README-gov-0101-0123.md | ATM GOV Task Cards |
 | `doc_index_1001` | docs/ai_atomic_framework/atm-self-atomization/README.md | ATM 框架 100% 自我原子化協調區 |
 | `doc_index_1002` | docs/ai_atomic_framework/atm-self-atomization/tasks/README.md | ATM 100% 自我原子化任務卡索引 |
 | `doc_index_1003` | docs/ai_atomic_framework/atm-self-refactor/tasks/README.md | ATM 自我治理拆分 Task Cards |
@@ -223,23 +223,24 @@
 | `doc_index_1005` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md | AAO Task Index |
 | `doc_index_1006` | docs/ai_atomic_framework/team-agents/tasks/README.md | Team Agents Task Index |
 | `doc_index_1007` | docs/ai_atomic_framework/team-agents/templates/README.md | Team Agents Templates |
-| `doc_index_1008` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/README.md | Adapter-Guided Atomization SDK Initiative |
-| `doc_index_1009` | docs/ai_atomic_framework/arxiv-paper-v1/en/README.md | EN Workspace |
-| `doc_index_1010` | docs/ai_atomic_framework/arxiv-paper-v1/README.md | arXiv Paper v1 — Adapter-Guided Atomization |
-| `doc_index_1011` | docs/ai_atomic_framework/atm-memory-governance/README.md | ATM 跨專案記憶治理（MEM） |
-| `doc_index_1012` | docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md | B-12 Controlled Field Collision Archive |
-| `doc_index_1013` | docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/README.md | BLOCK Same-Owner Overlap Bounded Evidence |
-| `doc_index_1014` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-apply-success-2026-06-21-rerun/README.md | close-orch-live-apply-success-2026-06-21-rerun |
-| `doc_index_1015` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-lane-escalation-2026-06-21/README.md | close-orch-live-lane-escalation-2026-06-21 |
-| `doc_index_1016` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/README.md | close-orch-positive-layered-2026-06-21 |
-| `doc_index_1017` | docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/README.md | POS2 Same-Owner Bounded Evidence |
-| `doc_index_1018` | docs/ai_atomic_framework/cid-hardening/README.md | CID Hardening Lane |
-| `doc_index_1019` | docs/ai_atomic_framework/cid-hardening/tasks/README.md | CID Hardening Task Index |
-| `doc_index_1020` | docs/ai_atomic_framework/git-boundary-admission/README.md | GIT Boundary Admission |
-| `doc_index_1021` | docs/ai_atomic_framework/git-boundary-admission/tasks/README.md | GIT Boundary Admission Task Index |
-| `doc_index_1022` | docs/ai_atomic_framework/governance-optimization/tasks/README.md | ATM 治理流程與 Team Agents 加速優化 Task Cards |
+| `doc_index_1008` | docs/ai_atomic_framework/governance-optimization/tasks/README.md | ATM 治理流程與 Team Agents 加速優化 Task Cards |
+| `doc_index_1009` | docs/ai_atomic_framework/adapter-guided-atomization-sdk/README.md | Adapter-Guided Atomization SDK Initiative |
+| `doc_index_1010` | docs/ai_atomic_framework/arxiv-paper-v1/en/README.md | EN Workspace |
+| `doc_index_1011` | docs/ai_atomic_framework/arxiv-paper-v1/README.md | arXiv Paper v1 — Adapter-Guided Atomization |
+| `doc_index_1012` | docs/ai_atomic_framework/atm-memory-governance/README.md | ATM 跨專案記憶治理（MEM） |
+| `doc_index_1013` | docs/ai_atomic_framework/broker-collision-evidence/runs/B-12-field-2026-06-20/README.md | B-12 Controlled Field Collision Archive |
+| `doc_index_1014` | docs/ai_atomic_framework/broker-collision-evidence/runs/BLOCK-same-owner-overlap-2026-06-22/README.md | BLOCK Same-Owner Overlap Bounded Evidence |
+| `doc_index_1015` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-apply-success-2026-06-21-rerun/README.md | close-orch-live-apply-success-2026-06-21-rerun |
+| `doc_index_1016` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-live-lane-escalation-2026-06-21/README.md | close-orch-live-lane-escalation-2026-06-21 |
+| `doc_index_1017` | docs/ai_atomic_framework/broker-collision-evidence/runs/close-orch-positive-layered-2026-06-21/README.md | close-orch-positive-layered-2026-06-21 |
+| `doc_index_1018` | docs/ai_atomic_framework/broker-collision-evidence/runs/POS2-same-owner-bounded-2026-06-22/README.md | POS2 Same-Owner Bounded Evidence |
+| `doc_index_1019` | docs/ai_atomic_framework/cid-hardening/README.md | CID Hardening Lane |
+| `doc_index_1020` | docs/ai_atomic_framework/cid-hardening/tasks/README.md | CID Hardening Task Index |
+| `doc_index_1021` | docs/ai_atomic_framework/git-boundary-admission/README.md | GIT Boundary Admission |
+| `doc_index_1022` | docs/ai_atomic_framework/git-boundary-admission/tasks/README.md | GIT Boundary Admission Task Index |
 | `doc_index_1023` | docs/ai_atomic_framework/multi-agent-orchestration/README.md | MAO Multi-Agent Orchestration |
 | `doc_index_1024` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/README.md | MAO Task Index |
 | `doc_index_1025` | docs/ai_atomic_framework/rft-hardening/tasks/README.md | RFT (Refactor Tracking) Task Index |
 | `doc_index_1026` | docs/ai_atomic_framework/skl-tool-first-upgrade/README.md | SKL Tool-First 升級計畫 |
 | `doc_index_1027` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/README.md | SKL Tool-First Task Index |
+| `doc_index_1028` | docs/keep-memory/README.md | keep-memory/ 記憶筆記層契約 |

@@ -562,5 +562,53 @@
     "path": ".github/skills/atm-dispatch/SKILL.md",
     "title": "ATM Dispatch Skill — Project Captain 模式",
     "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0117",
+    "path": ".agents/skills/ai-role-router/references/project-captain-mode.md",
+    "title": "Project Captain Mode Reference",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0118",
+    "path": ".agents/skills/article-writing-mode/SKILL.md",
+    "title": "Article Writing Mode",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0119",
+    "path": ".agents/skills/atm-atom-map-refactor/SKILL.md",
+    "title": "ATM Atom Map Refactor",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0120",
+    "path": ".agents/skills/atm-captain-dispatch-standard/references/dispatch-template.md",
+    "title": "ATM Captain Dispatch Templates (派工單範例模板)",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0121",
+    "path": ".agents/skills/atm-captain-dispatch-standard/references/project-captain-mode.md",
+    "title": "Project Captain Mode Reference",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0122",
+    "path": ".agents/skills/atm-captain-dispatch-standard/SKILL.md",
+    "title": "ATM Captain Dispatch Standard (派工規範手冊)",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0123",
+    "path": ".github/skills/atm-captain-dispatch-standard/references/dispatch-template.md",
+    "title": "ATM Captain Dispatch Templates (派工單範例模板)",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0124",
+    "path": ".github/skills/atm-captain-dispatch-standard/SKILL.md",
+    "title": "ATM Captain Dispatch Standard (派工規範手冊)",
+    "category": "agentskill"
   }
 ]

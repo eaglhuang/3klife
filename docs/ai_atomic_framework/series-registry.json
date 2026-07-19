@@ -1,0 +1,47 @@
+{
+  "schemaId": "atm.seriesRegistry.v1",
+  "generatedAt": "2026-07-19T05:13:48.169Z",
+  "baseDir": ".",
+  "series": [
+    {
+      "series": "ERR",
+      "prefix": "TASK-ERR",
+      "familyDir": "error-governance",
+      "planDocs": [
+        "error-governance/error-governance-plan.md"
+      ],
+      "status": "active",
+      "approvedBy": "owner",
+      "approvedAt": "2026-07-19T05:13:48.112Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-07-19T05:13:48.112Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:5080fef5d6b023111701942a39323ded92c36e947c2f15383e1c64a44978c2b4"
+      }
+    },
+    {
+      "series": "TMP",
+      "prefix": "TASK-TMP",
+      "familyDir": "temporary-governance",
+      "planDocs": [
+        "temporary-governance/temporary-governance-plan.md"
+      ],
+      "status": "active",
+      "approvedBy": "owner",
+      "approvedAt": "2026-07-19T05:13:48.168Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-07-19T05:13:48.168Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:cb73f452addde975a03ca962351b266d15165e8b52e4ed97dc2033330b957c85"
+      }
+    }
+  ]
+}
