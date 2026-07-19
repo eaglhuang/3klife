@@ -1,14 +1,17 @@
 ---
 doc_id: doc_atm_gov_auto_batch_perf_plan
 owner: atm-core
-status: active
+status: superseded-by-v2
+successor: doc_atm_gov_auto_batch_perf_plan_v2
 related_cards_root: docs/ai_atomic_framework/governance-optimization/tasks
 upstream_repo: AI-Atomic-Framework
 created_at: 2026-07-18T00:00:00+08:00
-updated_at: 2026-07-18T00:00:00+08:00
+updated_at: 2026-07-19T00:00:00+08:00
 ---
 
 # ATM 端到端自動併批與效能證明計畫
+
+> 本計畫已完成 primitives，但 performance 尚未獲得真實 paired A/B 證明（primitives completed / performance unproven）。後續規劃與實作以 [ATM 端到端自動併批與效能證明計畫 2.0](./end-to-end-auto-batch-performance-plan-v2.md) 為準；本文件保留為 0168-0179 歷史依據。
 
 狀態更新：2026-07-18
 Planning 權威來源：`C:/Users/User/3KLife`
@@ -174,6 +177,8 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 - 驗收目標：median makespan 至少改善 25 percent、active throughput 至少改善 25 percent、eligible treatment `batchRate >= 0.70`、`buildsPerWave <= 1`、`projectionsPerWave <= 1`、validators/close audit 100 percent pass、out-of-scope 與 R1 violations 為零。
 - 只有資料支持時才 default-on；否則報告 `inconclusive` 或 `regressed`。
 - 新增 config/env controls：`batch.autoBatch.enabled`、`batch.autoBatch.maxWaveSize`、`batch.autoBatch.collectionTimeoutMs`、`ATM_AUTO_BATCH=0`、`--auto-batch off`、`ATM_AUTO_BATCH_CIRCUIT_OPEN`。
+
+Post-close audit note（2026-07-19）：0179 的 focused test 使用合成 broker ticket lane events 驗證 circuit breaker 與 analyzer 路徑，沒有執行真實 serial-control / treatment paired wave。現行 analyzer 也可能只依 `batchRate` 與 build/projection ticket counts 判為 `improved`，尚未要求 makespan、throughput、cost 與真實 lane evidence。因此 0179 的 `done` 歷史保持不變，但其效能主張仍屬 `performance unproven`；真實證明與判定修正由 2.0 的 ATM-GOV-0190 承接。
 
 ## 執行規則
 
