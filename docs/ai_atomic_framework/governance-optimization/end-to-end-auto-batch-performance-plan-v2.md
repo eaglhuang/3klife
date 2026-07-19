@@ -39,7 +39,7 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 
 2.0 同時把效能證明設計成計畫內部自我閉環：0183 落地 shadow instrumentation 之後，0184-0190 每張卡自身的施工過程就是被完整量測的真實 serial baseline 樣本（詳見 0183/0190），不需要額外等待外部流量。
 
-2.0 進一步把量測義務提前到全計畫第 0 步（以戰養戰）：0193 先落地治理閘門遙測基座（gate telemetry v1，涵蓋 hook/doctor/guard/next/preflight/tasks import/claim/close/handoff/taskflow/evidence/git governance/batch/broker/team/runner-sync/telemetry/analyzer 全部 ATM 治理節點），使 0182 起每一張卡的施工都累積 per-check 遙測；0185 收口後封存數據 v1.0（M1 baseline cohort）並授權依證據提早優化，0186-0190 的可比施工窗與 treatment runs 形成數據 v2.0（M2 matched cohort，由 0190 analyzer 收斂）。量測不是附屬品，而是每張卡的正式輸入、輸出與收口證據。
+2.0 進一步把量測義務提前到全計畫第 0 步（以戰養戰）：0193 先落地治理閘門遙測基座（gate telemetry v1，涵蓋 hook/doctor/guard/next/preflight/tasks import/claim/close/handoff/taskflow/evidence/git governance/batch/broker/team/runner-sync/telemetry/analyzer 全部 ATM 治理節點），使 0182 起每一張卡的施工都累積 per-check 遙測；0185 收口後封存數據 v1.0（M1 baseline cohort）並授權依證據提早優化，0186-0190 的可比施工窗與 treatment runs 形成數據 v2.0（M2 matched cohort，由 0190 analyzer 收斂）。量測不是附屬品，而是每張卡的正式輸入、輸出與收口證據。所有 validation unit 必須同時累積 invocation/skipped/duration/failure/blocking/fan-out/downstream-consumption 計數；少用但必要者降到 full，長期未用且無攔截/決策產出者標 archive-candidate，避免 default validation 隨任務卡越跑越久。
 
 唯一正式入口預計為：
 
@@ -259,6 +259,7 @@ dataDrivenDecision:
 
 - 交付「公開介面」節定義的 `atm.gateTelemetry.v1` schema、canonical check registry、runtime per-lane/process 分片 store 與單一 emit helper（各 gate 不得複製 writer 或自行發明 check identity）。
 - 接線全部 ATM 節點：pre-commit 逐項檢查、pre-push、doctor 各 named check、guard 子命令、next 路由決策、tasks claim/close 准入、batch/broker 決策，每次執行 per-check 記錄 result 與 durationMs。
+- 接線全部 validation unit：每個 validator/check 即使被 skip/cache/fan-out 也要記錄 invocationCount、skippedCount、durationMs、failureCount、blockingCount、cache status、fanOutConsumerCount、downstreamIncidentRef、tierPlacement 與 `usedForDecision`；0185 必須消費這些欄位產出 fast/default/full/archive-candidate 分層建議。
 - failureEnvelope 與 block 先落 runtime rejection store；close/checkpoint/seal 再以 watermark 封存 history，另寫 immutable classification event，與原事件雙向 ref。
 - Fail-open：遙測寫入失敗絕不影響原命令 outcome、exit code 或排序；以 parity 測試釘死（開關遙測前後 bit-for-bit 一致，僅多出合法 observation artifacts）。
 - 交付 `atm telemetry seal`、`report --json` 與 task summary：預設只讀 sealed history，輸出 eligible、unique block、true-positive 狀態、延遲、證據讀回與 meta-health；格式即 M1/M2 報告格式。
