@@ -6,13 +6,13 @@ related_cards_root: docs/ai_atomic_framework/governance-optimization/tasks
 upstream_repo: AI-Atomic-Framework
 predecessor: doc_atm_gov_auto_batch_perf_plan
 created_at: 2026-07-19T00:00:00+08:00
-updated_at: 2026-07-19T14:10:00+08:00
+updated_at: 2026-07-19T14:35:00+08:00
 ---
 
 # ATM 端到端自動併批與效能證明計畫 2.0
 
 狀態更新：2026-07-19（Captain review 修訂：wave commit 紀律、分歧復原通路、plan digest pin、token 量測契約、baseline 自我採樣、lane attribution、原子化出口）
-狀態更新（儀表先行修訂）：2026-07-19（新增 ATM-GOV-0191 治理閘門遙測基座為依賴圖第 0 步；0182-0190 逐卡加入遙測產出/消費義務；新增 M1/M2 數據里程碑，形成「以戰養戰」自我量測迴圈）
+狀態更新（儀表先行整合版）：2026-07-19（ATM-GOV-0193 為依賴圖第 0 步；採 runtime scratch → closure seal → history digest 二層儀表；0182-0190 各卡明載 producer/consumer 契約、M1/M2 可比 cohort 與遙測自我裁汰，形成「以戰養戰」閉環）
 前版計畫：[ATM 端到端自動併批與效能證明計畫](./end-to-end-auto-batch-performance-plan.md)
 Planning 權威來源：`C:/Users/User/3KLife`
 Target 權威來源：`C:/Users/User/AI-Atomic-Framework`
@@ -28,7 +28,7 @@ Target 權威來源：`C:/Users/User/AI-Atomic-Framework`
 - 既有 serial/manual lane 沒有 durable broker ticket 與 lane event 的 shadow instrumentation，導致真實 ledger 沒有足夠事件，0179 的 verdict 永遠容易停在 `inconclusive`。
 - 0179 focused test 使用合成 broker tickets；現行 analyzer 未比較 serial/treatment makespan 或 throughput，只靠 ticket batchRate 與 generated-write counts 就可能誤判 `improved`。
 - `atm next` 無法穩定辨識 plan-level continuation，仍可能要求在已完成單卡間二選一。
-- 治理閘門（pre-commit 20 項、doctor 25 項、pre-push、guard）沒有任何持久化的執行/攔截紀錄：failureEnvelope 不落盤、無 per-check 延遲數據，「哪些檢查有效、哪些是儀式」在結構上不可證明，fail-fast 重排與檢查裁汰因此失去數據基礎（2026-07-19 閘門稽核結論）。
+- 治理閘門（pre-commit 的基礎 predicates 與動態 findings、doctor 的固定/模式式 checks、pre-push、guard）沒有一致的持久化執行/攔截紀錄：failureEnvelope 不落盤、無 per-check 延遲數據；check 數量會隨模式與動態 findings 改變，不再把 20/25 當規格常數。「哪些檢查有效、哪些是儀式」在結構上不可證明，fail-fast 重排與檢查裁汰因此失去數據基礎（2026-07-19 閘門稽核結論）。
 - 實際 0168-0179 dogfood 仍要人工逐卡處理 planning 對齊、claim/close、validator、runner-sync、release artifact、跨 repo commit 與 push，約耗時 3 小時與 284 萬 tokens（量測口徑：單一 coordinator 對話 session 的累計 usage，含探索與重試；此數字是 0190 serial baseline 的錨點之一，引用時必須連同口徑一起引用）。
 
 2.0 不建立第四套 batch 系統，正式產品模型仍為：
@@ -39,7 +39,7 @@ Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
 
 2.0 同時把效能證明設計成計畫內部自我閉環：0183 落地 shadow instrumentation 之後，0184-0190 每張卡自身的施工過程就是被完整量測的真實 serial baseline 樣本（詳見 0183/0190），不需要額外等待外部流量。
 
-2.0 進一步把量測義務提前到全計畫第 0 步（以戰養戰）：0191 先落地治理閘門遙測基座（gate telemetry v1，涵蓋 hook/doctor/guard/next/claim/close/batch 全部 ATM 節點），使 0182 起每一張卡的施工 commit 都自動累積 per-check 遙測；0185 收口後產出數據 v1.0（M1 里程碑）並授權據此提早優化，0186-0190 的施工窗同時成為驗證優化效果的數據 v2.0（M2 里程碑，由 0190 analyzer 收斂成閘門效果五元組報告）。量測不是計畫的附屬品，而是每張卡的交付物之一。
+2.0 進一步把量測義務提前到全計畫第 0 步（以戰養戰）：0193 先落地治理閘門遙測基座（gate telemetry v1，涵蓋 hook/doctor/guard/next/claim/close/batch/broker 全部 ATM 節點），使 0182 起每一張卡的施工都累積 per-check 遙測；0185 收口後封存數據 v1.0（M1 baseline cohort）並授權依證據提早優化，0186-0190 的可比施工窗與 treatment runs 形成數據 v2.0（M2 matched cohort，由 0190 analyzer 收斂）。量測不是附屬品，而是每張卡的正式輸入、輸出與收口證據。
 
 唯一正式入口預計為：
 
@@ -60,7 +60,7 @@ node atm.mjs batch execute-plan \
 - `planning_repo_is_external_to_target`: `true`
 - `target_repo_root`: `C:/Users/User/AI-Atomic-Framework`
 - `source_plan_path`: `docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md`
-- `source_task_card_path`: `docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0182..0190-*.task.md`
+- `source_task_card_path`: `docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-*.task.md` 與 `ATM-GOV-0182..0190-*.task.md`
 - `target_import_method`: executor 內部透過既有 task import/taskflow orchestration 匯入；禁止直接編輯 `.atm/history/**`。
 
 Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號與閉卡事實的權威來源；本文的任務編號與對照表只是 planning snapshot，不得反向覆蓋 ledger。每張卡開卡前必須同時：
@@ -69,7 +69,7 @@ Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號
 2. 以 Node.js UTF-8 helper 掃描 planning `governance-optimization/tasks/` 的實際檔名與 task id。
 3. 確認 planning source 與 target ledger 都未占用後才配置 ID。
 
-2026-07-19 盤點時 `ATM-GOV-0182` 到 `ATM-GOV-0190` 均未占用。同日 ErrorCode 兩張卡自 GOV 系列改編為 `TASK-ERR-0001` 與 `TASK-TMP-0001`（bb4de4f0），原 `ATM-GOV-0191`/`ATM-GOV-0192` 號位已釋出，故遙測基座卡配置 `ATM-GOV-0191`（釋出後雙 repo 均未占用）。若正式開卡前任一 ID 被占用，整組依序平移到下一段連續空號，並更新本文快照；禁止覆寫既有卡或只平移部分卡。
+2026-07-19 盤點時 `ATM-GOV-0182` 到 `ATM-GOV-0190` 均未占用。ErrorCode 兩張卡雖已改編為 `TASK-ERR-0001` 與 `TASK-TMP-0001`（bb4de4f0），但 planning runtime 仍保留 `ATM-GOV-0191` close event，兩個 repo 的 Git 歷史也已有 0191 delivery/closure；依「歷史曾占用即不得混用新語意」原則，0191 不視為乾淨空號。遙測基座配置 `ATM-GOV-0193`；0193 在正式 ledger 無既有 task，只曾作為本計畫的暫定編號。若正式 import 前 ID 狀態改變，停止並重新配置，不覆寫歷史事件。
 
 ## 公開介面
 
@@ -110,14 +110,16 @@ Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號
 
 ### 治理閘門遙測（gate telemetry v1）
 
-0191 交付、全計畫共用的閘門層儀表。與 shadow instrumentation 分工明確：gate telemetry 量「每一項治理檢查」（granularity = check），shadow instrumentation 量「生命週期操作的等待與佇列語義」（granularity = claim/close/runner-sync 操作）；兩者共用 correlation keys，analyzer 可直接 join，不得互相替代或重複記錄同一事實。
+0193 交付、全計畫共用的閘門層儀表。與 shadow instrumentation 分工明確：gate telemetry 量「每一項治理檢查」（granularity = check），shadow instrumentation 量「生命週期操作的等待與佇列語義」（granularity = claim/close/runner-sync 操作）；兩者共用 correlation keys，analyzer 可直接 join，不得互相替代或重複記錄同一事實。
 
-- 新增 append-only `atm.gateTelemetry.v1`：每次 hook pre-commit/pre-push、doctor、guard、next、tasks claim/close 准入與 batch/broker 決策執行時，per-check 寫一筆 `{ts, gate, checkId, result: pass|warn|block|error, durationMs, actorId, laneSessionId?, taskId?, batchId?, waveId?, source}`。
-- 儲存為 per-lane-session 分片 JSONL（`.atm/history/telemetry/gate-events-<yyyymm>-<lane 短碼>.jsonl`），append-only 天然免跨 lane 寫入衝突；聚合一律由讀端合併。
-- failureEnvelope 持久化：hook block 時完整 envelope 落盤 `.atm/history/rejections/`，與遙測事件互相 ref——閘門攔截首次成為可統計事實。
-- Fail-open 鐵律：遙測寫入失敗只能產生 observability warning，絕不可使原本會成功的命令失敗或改變 exit code；遙測不是新的閘門。
-- 讀端：`atm telemetry report --json` 輸出 per-checkId 效果五元組（啟動次數、攔截次數、warn 次數、durationMs p50/p95、證據讀回數），支援時間窗過濾；此輸出即 M1/M2 里程碑報告與 0190 analyzer 的資料來源。
-- 與 `atm.planExecutionEvent.v1` 的 join 鍵：`laneSessionId` + `taskId` + `batchId`/`waveId`。
+- **第一層／runtime scratch**：各節點經單一 emit helper 把 `atm.gateTelemetry.v1` 事件寫入 `.atm/runtime/telemetry/gate-events/<runId>/<lane-or-process>.jsonl`；failure envelope 寫 `.atm/runtime/telemetry/rejections/` 並互相引用。這一層必須 gitignored、per-lane/process 分片、append-only，絕不可在 hook 或命令執行途中修改 tracked history。
+- **第二層／sealed history**：只在 task close、batch checkpoint 或明示 `atm telemetry seal` 時，以固定 watermark 封存本工作窗到 `.atm/history/telemetry/gate-events-<taskId>-<windowId>.jsonl`，並產生 `.atm/history/evidence/governance-telemetry/<windowId>.json` digest。watermark 後的新事件留給下一個 seal，避免封存過程與寫入競爭。
+- `atm telemetry report --json` 預設只讀 sealed history；`--include-runtime` 僅供診斷，不得作為 M1/M2 因果證據。report 輸出 eligible 啟動數、result 分布、unique block、真陽性裁決狀態、duration p50/p95、證據讀回、遺失/丟棄事件與來源可用性。
+- 事件最小欄位為 `specVersion,eventId,sequence,observedAt,gate,checkId,checkVersion,policyVersion,eligible,result,reasonClass,durationMs,actorId,runId,correlationId,laneSessionId?,taskId?,batchId?,waveId?,command,inputDigest,configDigest,source,redactionClass,failureEnvelopeRef?,evidenceReadRef?`。taxonomy 與 check identity 由 canonical registry 管理，節點不得自行發明近義 `checkId`。
+- 原始事件不可事後改寫。後續以 classification event 記錄 `resolutionRef`、`downstreamIncidentRef` 與 `adjudication`，據此判定 unique block 與 true positive；同一 correlation/reason 的重複檢查不得重複計功。
+- Fail-open 鐵律：emit、seal 或 schema 驗證失敗只能產生 observability warning 並遞增 dropped/malformed counter，絕不可改變原命令 outcome、exit code、排序或副作用。
+- 唯讀探索不上 write claim，但必須留下 lane presence/status 與 correlation；lane 可見性本身不得觸發 scheduler queue、HEAD、index、task lifecycle 或 registry 寫入。
+- 與 `atm.planExecutionEvent.v1` 的 join 鍵為 `runId`、`laneSessionId`、`taskId`、`batchId`/`waveId` 與 `correlationId`。
 
 ### ErrorCode 治理契約
 
@@ -153,14 +155,14 @@ amendment，不得在程式中臨時硬編碼未登錄代碼。
 | 0189 | `ATM_BATCH_PUSH_DIVERGED` | register | fetch 後 remote 與本 run commits 分歧且不可安全 fast-forward；停止自動 push 並輸出協調命令 |
 | 0189 | `ATM_BATCH_STATE_REPAIR_REQUIRED` | reuse | durable run state 無法安全 resume；執行明確 repair command 後重試 |
 | 0190 | 無新 ErrorCode | none | `improved`/`inconclusive`/`regressed` 是 verdict，不是錯誤碼 |
-| 0191 | 無新 ErrorCode | none | 遙測 fail-open；journal 寫入失敗與 schema 違規只產生 observability warning，不建錯誤碼 |
+| 0193 | 無新 ErrorCode | none | 遙測 fail-open；journal 寫入失敗與 schema 違規只產生 observability warning，不建錯誤碼 |
 
 Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已改編入 error-governance 家族）負責把本節 authoring flow
 落進共用 skill templates、重烘焙 adapters 與驗證零 drift。它不是第四套 batch
 功能，也不改變 0182-0190 的依賴圖；完成後，九張功能卡才能引用這份 ErrorCode
 契約。TASK-ERR-0001 不新增 runtime ErrorCode。
 
-`ATM-GOV-0191`（治理閘門遙測基座）同為 cross-cutting 卡，但位置不同：它是依賴
+`ATM-GOV-0193`（治理閘門遙測基座）同為 cross-cutting 卡，但位置不同：它是依賴
 圖第 0 步，0182 起所有功能卡的施工都必須在其儀表覆蓋下進行（見「數據里程碑與
 以戰養戰迴圈」節）。
 
@@ -177,17 +179,36 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 
 儀表先行、逐卡累積、期中優化、收官驗證：
 
-- **第 0 步（0191）**：遙測基座先落地。此後每張卡的施工（claim、pre-commit 逐項檢查、doctor、close）都自動產生 per-check 遙測——施工本身就是採樣，不需要額外的量測作業。
-- **逐卡義務（0182-0190 全部適用）**：（a）產出——本卡施工窗遙測完整落地；（b）消費——收口回報必附「遙測摘要」段（施工窗 per-gate 事件數、block/warn 數、異常延遲），Captain condition review 據此核實儀表持續健康；遙測缺漏視為收口不完整。
-- **M1 里程碑（數據 v1.0）**：0185 收口後，以 `atm telemetry report` 產出首份閘門效果報告（0191 + 0182-0185 施工窗累積）。授權據此提早優化：fail-fast 重排、doctor 靜態檢查 digest 快取等有數據支持的改動，開獨立 **gate-optimization 卡**執行，與 0186-0188 平行、不阻塞主鏈、不算 scope drift；無數據支持的閘門裁汰禁止。M1 報告是 0186 開工前 condition review 的必附件。
-- **M2 里程碑（數據 v2.0）**：0186-0190 施工窗 + treatment runs 構成第二期數據，天然形成 M1 優化的 before/after 對照。0190 analyzer v3 收斂出閘門效果五元組總表（啟動/攔截/真陽性/延遲/證據讀回）與裁汰候選清單（kill criteria：啟動 >= 30 次、零攔截、零 warn、證據零讀回 -> 降頻抽樣或退場**提案**，一律交 owner 裁決，不自動執行）。
-- **迴圈定義**：量測（0191）→ 施工即採樣（每卡）→ 期中裁決（M1）→ 優化與對照（gate-optimization 卡 + v2.0 數據）→ 收官驗證與裁汰提案（M2/0190）。治理系統從「只加不減」變成「有數據才加、有數據可減」。
+- **第 0 步（0193）**：先落地 runtime scratch、seal、report、classification 與 meta-health。此後每張卡的 claim、gate、validator、checkpoint、close 都自動採樣；但 runtime 活事件不直接成為 tracked 證據。
+- **逐卡義務（0182-0190 全部適用）**：每卡必須在卡內宣告 producer、consumer、工作窗、baseline/treatment 角色與 missing-data semantics；close 前 seal 固定 watermark，收口附 `atm.gateTelemetryTaskSummary.v1`。缺事件只能標成 `observability-missing` 或 `source: unavailable`，不得解讀為零延遲、零攔截或成功。
+- **每卡最小摘要**：`taskId`、`window{start,end,watermark}`、`correlation{runId,laneSessionId,batchId,waveId}`、`gateEvents{byCheckId,resultCounts,durationP50/P95}`、`uniqueBlocks`、`truePositiveStatus`、`evidenceReadbacks`、`warnings`、`droppedEvents`、`missingTelemetry`、`baselineOrTreatmentRole`、`sourceAvailability`、`historyDigest` 與 `configDigest`。
+- **M1／數據 v1.0**：0185 close 後 seal 0193+0182-0185 的 baseline cohort，另存 workload strata、eligible opportunity、check/policy/config digest 的 cohort manifest。M1 可以提出 fail-fast 重排、靜態 doctor digest cache 或降頻實驗卡；每項優化必須記 `optimizationId`、受影響 check、理由、啟用時間、config digest、rollback 與 owner。M1 本身不是因果證明，無可比較資料不得裁汰 gate。
+- **M2／數據 v2.0**：0186-0190 是 treatment 採樣窗，但不得把不同任務的自然前後期直接當 A/B。0190 依 check family、eligible opportunity、workload/surface strata 與 config digest 配對 cohort；不能配對就輸出 `inconclusive`。
+- **四種有效性驗證**：歷史事故 replay 證明 check 能攔住已知壞變更；shadow mode 量 false positive 與延遲；canonical/重複 evaluator parity 比對是否重複做同一判斷；matched batch A/B 量 speed、cost、safety 與 observability。單純啟動次數或文件產物數不算效果。
+- **frequency-aware kill criteria**：一般 check 只有在 `eligible >= 500`，或完整觀察至少 4 週且覆蓋其合理觸發機會後，仍為零 unique block、零 true positive、零 evidence readback 且無 escaped incident，才可提出降頻、合併或退場。低頻/安全關鍵 check 另須歷史 replay 與 owner 裁決；不得自動刪除。
+- **遙測自我治理**：若 M2 前遙測從未驅動任何重排、cache、降頻、合併或退場決策，0190 必須提出縮減 event detail 或採樣率；meta-health、dropped/malformed counters、sealed digest 與 rollback receipt 不得移除。
+- **迴圈定義**：量測（0193）→ 每卡施工即採樣與封存 → M1 提早優化 → matched treatment 採樣 → 四法驗證 → M2 裁汰/保留提案 → 下一輪以新 config digest 重啟，不把上一輪資料混為同一 cohort。
+
+### 每卡遙測 producer / consumer 契約
+
+| 任務卡 | 主要產出（producer） | 必須消費與決策（consumer） |
+|---|---|---|
+| 0193 | canonical check registry、runtime events、sealed history、rejection/classification、meta-health | 自我檢查 dropped/malformed 與 seal parity；建立 M1 baseline 起點 |
+| 0182 | next/preflight per-check、WIP provenance 與 read-only lane presence | 0193 schema/health；缺資料不得把 unknown 判成 unowned |
+| 0183 | BatchRun/shadow lifecycle、wait start/end、join 與 token source | 0182 route/preflight seal；缺 wait end 或 usage 時標 incomplete/unavailable |
+| 0184 | worker start/heartbeat/sweep/retry/defer 與 report ingestion | 0183 journal與 gate seal；缺 worker report 不得視為成功或零成本 |
+| 0185 | validator queue/execute/cache/fan-out 與 M1 cohort seal | 0193 duration/check reports；資料不足時只用宣告成本，禁止自動優化 |
+| 0186 | shared-write admission、per-check commit、payload assertion treatment | M1 report + optimization/config digest；無 matched baseline 輸出 inconclusive |
+| 0187 | generated write/build/projection/runner receipt treatment | M1/M2 check identity 與 input/output digest；不可用假 digest 補缺事件 |
+| 0188 | checkpoint/closeback、rejection/classification 與 evidence readback | sealed rejection/history；stdout-only failure 不算 durable evidence |
+| 0189 | collection-window、EMA、push/recovery 與 circuit-breaker treatment | 已封存事件密度與健康度；每次自動決策保存輸入 report digest |
+| 0190 | matched cohorts、replay/shadow/parity/A-B verdict、retirement receipt | 只讀 sealed history；資料不全、去重失敗或 cohort 不可比即 inconclusive |
 
 ## 任務總表
 
 | 任務卡 | 內容 | 主要驗收 |
 |---|---|---|
-| ATM-GOV-0191 | 治理閘門遙測基座（gate telemetry v1、rejection journal、telemetry report）——依賴圖第 0 步 | 全節點 per-check 遙測落地；fail-open parity；`telemetry report` 可出五元組；hook block 有持久 envelope |
+| ATM-GOV-0193 | 治理閘門遙測基座（runtime journal、sealed history、rejection/classification、telemetry report）——依賴圖第 0 步 | 全節點 per-check 遙測；fail-open parity；watermark seal；report 與 meta-health 可重現 |
 | ATM-GOV-0182 | Plan-scoped routing、身份與 WIP provenance preflight | 精確 plan route；顯示 owner/lane/files；stale generated receipt 不冒充 active work |
 | ATM-GOV-0183 | Durable Plan BatchRun、lane stamping 與 shadow journal | plan run 可 resume；digest pin/amendment；token 量測契約；全鏈 lane join；serial lane 無行為變更地留下 durable 事件 |
 | ATM-GOV-0184 | Real Team Wave worker executor | 真正啟動/接收 worker；每卡一 lane；heartbeat/sweep；worker 不 commit/close |
@@ -200,26 +221,26 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 
 ## 任務細節
 
-### ATM-GOV-0191 - 治理閘門遙測基座（Gate Telemetry v1）
+### ATM-GOV-0193 - 治理閘門遙測基座（Gate Telemetry v1）
 
 依賴：無（依賴圖第 0 步，先於 0182 執行）。
 主要 surface：hook pre-commit/pre-push instrumentation、doctor/guard/next instrumentation、claim/close 准入 instrumentation、telemetry store 與 report。
 
 必要行為：
 
-- 交付「公開介面」節定義的 `atm.gateTelemetry.v1` schema、per-lane-session 分片 JSONL store 與單一 emit helper 模組（各 gate 呼叫同一 helper，不得各自複製寫入邏輯）。
+- 交付「公開介面」節定義的 `atm.gateTelemetry.v1` schema、canonical check registry、runtime per-lane/process 分片 store 與單一 emit helper（各 gate 不得複製 writer 或自行發明 check identity）。
 - 接線全部 ATM 節點：pre-commit 逐項檢查、pre-push、doctor 各 named check、guard 子命令、next 路由決策、tasks claim/close 准入、batch/broker 決策，每次執行 per-check 記錄 result 與 durationMs。
-- failureEnvelope 與 block 事實持久化到 `.atm/history/rejections/`，與遙測事件互相 ref。
+- failureEnvelope 與 block 先落 runtime rejection store；close/checkpoint/seal 再以 watermark 封存 history，另寫 immutable classification event，與原事件雙向 ref。
 - Fail-open：遙測寫入失敗絕不影響原命令 outcome、exit code 或排序；以 parity 測試釘死（開關遙測前後 bit-for-bit 一致，僅多出合法 observation artifacts）。
-- 交付 `atm telemetry report --json`：per-checkId 五元組聚合 + 時間窗過濾；輸出格式即 M1/M2 報告格式。
+- 交付 `atm telemetry seal`、`report --json` 與 task summary：預設只讀 sealed history，輸出 eligible、unique block、true-positive 狀態、延遲、證據讀回與 meta-health；格式即 M1/M2 報告格式。
 - 全部新邏輯抽成新 modules（0170 extraction pathway），不膨脹 hook/doctor 既有大檔；觸碰 >600 行模組時原子化提案是回報義務。
 - ErrorCode：不新增（fail-open 原則，見「ErrorCode 治理契約」表）。
 
-驗收：各 gate 至少一條 per-check 事件的 isolated fixture；fail-open parity（telemetry store 唯讀或毀損時原命令照常成功並輸出 warning）；rejection envelope 落盤與雙向 ref 完整；report 聚合正確；分片檔案在雙 lane 並行寫入下零衝突。
+驗收：各 gate 至少一條 per-check 事件的 isolated fixture；fail-open parity；runtime 不污染 tracked worktree；watermark seal 可重放且不漏算/重算；rejection/classification ref 完整；report 去重正確；雙 lane 寫入零衝突；遙測停用可回復而 sealed history 仍可讀。
 
 ### ATM-GOV-0182 - Plan-Scoped Routing、Identity 與 WIP Provenance Preflight
 
-依賴：ATM-GOV-0191。
+依賴：ATM-GOV-0193。
 主要 surface：prompt-scoped next、plan resolver、active-work summary、batch preflight。
 
 必要行為：
@@ -229,7 +250,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - 一次解析 coordinator actor identity 與 lane，診斷 actor mismatch 時提供單一可執行 recovery command。
 - WIP 分類至少包含 current-run-owned、foreign-active、foreign-stale-generated、unowned-actionable、unrelated；顯示已知 owner、task、session、lane 與 intersecting files。
 - 0168/0181 類 runner receipts 若無 active owner 且不與候選 code scope 相交，不得被誤報成 active L3 blocker，也不得自動刪除。
-- 遙測：路由與 preflight 決策經 0191 emit helper 記錄（gate=next/preflight，含 WIP 分類結果）；本卡施工窗遙測完整落地，收口回報附遙測摘要（「數據里程碑與以戰養戰迴圈」節逐卡義務，以下各卡同，不再逐條重述）。
+- 遙測：路由與 preflight 決策經 0193 emit helper 記錄（gate=next/preflight，含 WIP 分類結果與 read-only lane presence）；收口 seal baseline 工作窗。缺資料只得標 `observability-missing`，unknown 不得降格為 unowned。
 - ErrorCode：依「ErrorCode 治理契約」重用 `ATM_NEXT_TASK_SCOPE_NOT_FOUND` 與 `ATM_NEXT_ACTIVE_TASK_DIVERGENCE_BLOCKED`；不得另造 plan-route 私有码。
 
 驗收：plan path route、已完成卡排除、actor mismatch、foreign active WIP、stale generated receipt、unrelated dirty files 均有 isolated fixture；`next` 與 `batch execute-plan --dry-run` 結論一致。
@@ -273,7 +294,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - worker 只可修改 claim scope 並回傳 patch/report/validator inputs；git write、broker execute、checkpoint 與 close 權限只屬 coordinator。
 - partial/blocked worker 可重試一次；仍失敗則 defer/reseal。剩一張時回既有 serial fallback。
 - out-of-scope report 進 `needs-review`，不得進 shared write。
-- 遙測：worker lifecycle 決策（啟動、heartbeat 判定、sweep、retry/defer）經 0191 記錄（gate=team-wave），帶 waveId 與 member laneSessionId。
+- 資料契約：worker lifecycle（啟動、heartbeat、sweep、retry/defer）經 0193 記錄，帶 wave/member lane；消費 0183 sealed journal。缺 worker report 或 usage 只得標 partial / `source: unavailable`，不得視為成功、零成本或零等待；收口 seal baseline 工作窗。
 - ErrorCode：重用 `ATM_TEAM_RUN_INVALID`、`ATM_TEAM_WRITE_SCOPE_OUT_OF_BOUNDS`、`ATM_TEAM_LEASE_CONFLICT`；`needs-review` 本身是狀態，不新增 ErrorCode。
 
 驗收：provider worker、editor report、heartbeat expiry、lane sweep、partial retry、out-of-scope、one-member fallback，以及 worker 嘗試 commit/close 的 coordinator guard。
@@ -290,7 +311,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - 可並行的 validator DAG 同時執行；共享 build/projection validator 交由 0187，不在 worker lane 重跑。
 - 未 sealed input、非 deterministic command、缺 input declaration、失敗結果與 stale runner 不得 cache。
 - 每筆結果記錄 queue wait、execution time、cache hit、lane attribution 與 `tokenUsage`（依 0183 契約；validator 為本機命令時記 `source: unavailable`）。
-- 遙測消費（以戰養戰首個實例）：validator DAG 排序與 cache 優先序以 0191 累積的 per-validator durationMs p50/p95 為輸入（無數據時退回宣告成本預設）；每筆 planner decision 記錄其依據的遙測輸入摘要。本卡收口即觸發 M1 里程碑（「數據里程碑與以戰養戰迴圈」節）。
+- 資料契約（以戰養戰首個 consumer）：validator DAG 排序與 cache 優先序消費 0193 sealed per-validator duration p50/p95；每筆 planner decision 保存 report/history/config digest。資料不足時只回退宣告成本，不授權 gate 優化。本卡產出 validator/cache events，收口 seal M1 baseline cohort 與 manifest。
 - ErrorCode：validator 真失敗重用 `ATM_VALIDATOR_FAILED`；cache miss、cache bypass 與 unsafe-to-cache 是 planner decision，不建立新碼。
 
 驗收：cache hit/miss、HEAD/lockfile/env invalidation、失敗不 cache、fan-out coverage、parallel DAG、取消與重試、telemetry-informed ordering（有數據/無數據兩型）。
@@ -310,7 +331,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - 落實「Wave commit 紀律」節：每 wave 恰好一顆 shared delivery commit，訊息載 wave id，receipt 為 per-card 對帳權威。
 - 落實「公開介面」節的 wave attribution 權威規則：commit 以 coordinator lane 執行；pre-commit lane 檢查對 manifest 內的 coordinator/member lanes 視為 acknowledged，不發 `ATM_COMMIT_LANE_MISMATCH` warn；manifest 之外的 lane 照常告警。
 - ticket 狀態完整經過 queued/head/batched/executing/released 或 failed，並為每次 transition 寫 lane event。
-- 遙測：wave shared commit 經 pre-commit 時的 per-check 事件必須帶 waveId/batchId；M1 閘門效果報告是本卡開工前 condition review 的必附件（「數據里程碑與以戰養戰迴圈」節）。
+- 資料契約：wave shared commit、admission、pre-commit per-check 與 payload assertion 產出 treatment events，必帶 waveId/batchId；開工必消費 M1 report、optimization/config digest。無 matched baseline 時本卡仍可施工，但效果只能標 `inconclusive`。
 - ErrorCode：重用 `ATM_BATCH_FILE_CONFLICT`、`ATM_BROKER_BATCH_COMMIT_BLOCKED`、`ATM_GIT_RECORD_COMMIT_PAYLOAD_DROPPED`，測試必須釘死 structured details 與 recovery command。
 
 驗收：真實 local git commit、temporary-index isolation、stale HEAD、foreign staged、payload mismatch、crash-after-commit resume、same-wave batch、cross-wave separation，以及 manifest 內 lane 不觸發 mismatch warn / manifest 外 lane 照常告警的成對測試。
@@ -327,7 +348,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - 重用 content-addressed build skip；skip 也要記錄 source/output digest 與 provenance。
 - runner-sync enqueue/release、receipt publication、release artifacts 與 projection outputs 在同一 coordinator lane 收口。
 - generated outputs 在 0186 最終 delivery commit 前加入其 temporary-index payload；失敗時不得生成成功 receipt 或進 checkpoint。
-- 遙測：build/projection/runner-sync 實際 duration 與 skip 決策進 gate telemetry（gate=generated-write），供 0189 EMA 與 0190 分析。
+- 資料契約：build/projection/runner-sync duration、skip、input/output digest 與 receipt validity 產出 treatment events，供 0189/0190 消費；缺真實 output digest 或 receipt 時不得補造成功事件。
 - ErrorCode：重用 `ATM_BROKER_BATCH_GENERATED_BLOCKED` 與 `ATM_RUNNER_SYNC_RECEIPT_INVALID`；一般 command exit code 保留在 receipt details，不再派生重複代碼。
 
 驗收：真實命令執行、content skip、build/projection retry、runner receipt mismatch、每 wave exactly-once、release/projection residue clean。
@@ -346,7 +367,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - checkpoint receipt 記錄 coordinator lane、member lanes、target/planning SHA、remote refs 與每卡 close transition。
 - coordinator 中途死亡時，TTL 到期後允許另一隊長透過既有 lane adopt/takeover 接手；新 coordinator lane 從 journal resume，已存在的 commit/close/push 不得重做。
 - `--push` 未提供時停在 `committed-not-pushed`，不宣告 remote-complete。
-- 遙測：wave close audit 與 checkpoint 決策 per-check 記錄；saga 與分歧診斷必須引用 `.atm/history/rejections/` 的持久 envelope，不得只靠當場 stdout 重建現場。
+- 資料契約：wave close audit、checkpoint、CAS 與 evidence readback 產出 treatment/classification events；saga 與分歧診斷必須引用 0193 sealed rejection/history，不得只靠 stdout 重建或把缺少 envelope 當成無拒絕。
 - ErrorCode：readiness 不足重用 `ATM_BATCH_WAVE_CHECKPOINT_BLOCKED`；planning CAS 衝突使用由 0183 登錄的 `ATM_BATCH_PLANNING_CLOSEBACK_CONFLICT`。`reconcile-required` 與 `committed-not-pushed` 是狀態。
 
 驗收：multi-task close、planning CAS conflict、target push success/planning push failure、crash before/after 各 side effect、coordinator TTL adopt、adopt 後 exactly-once closure，以及 wave closure commit 通過 task audit / pre-push 的整合測試。
@@ -365,7 +386,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - Push 分歧復原通路（見「執行與失敗語義」的授權分級）：push phase 先 fetch 並嘗試 fast-forward；分歧且本 run 自有 commits 與遠端新 commits 檔案不相交時，允許 governed ephemeral push-only worktree 復原——detached worktree checkout `origin/<branch>`、cherry-pick 本 run 自有 commits、push、立即刪除 worktree；全程不碰主 worktree 與 foreign WIP，並寫 recovery event（含採用原因、涉及 SHA、worktree 路徑與清除確認）。檔案相交或 cherry-pick 衝突則停在 `push-diverged`，輸出協調指引，不自動合併。
 - coordinator lane heartbeat 中斷時暫停新 side effect；TTL 到期後只接受正式 adopt/takeover。接手者由 0188 journal/receipt resume。
 - 每 wave 結束時，本 run 自有 dirty/untracked residue 必須為零；foreign/unrelated residue 只報告、不清除。
-- 遙測：dynamic window 的 EMA input 除 commit/ticket 事件外得納入 gate telemetry 事件密度；每次 window decision 與 recovery event 與遙測互 ref。
+- 資料契約：dynamic window 消費 sealed telemetry density/health 與 commit/ticket 事件；每次 EMA、window、push/recovery 與 circuit-breaker 決策保存輸入 report digest、config digest 並產出 treatment event。遙測缺漏時回退 floor policy，不能當成密度為零。
 - ErrorCode：push 無法安全收斂使用由 0183 登錄的 `ATM_BATCH_PUSH_DIVERGED`；不可安全 resume 重用 `ATM_BATCH_STATE_REPAIR_REQUIRED`。pause/cancel/circuit-open 是受控狀態，不新增 ErrorCode。
 
 驗收：完整 isolated plan run、dynamic window floor/ceiling/early-close、pause/resume/cancel、serial fallback、circuit open、coordinator adopt、push-pending resume、own-scope clean check，以及分歧復原的成對測試（不相交 -> ephemeral worktree 成功且事後無殘留；相交 -> 停在 push-diverged 不動任何歷史）。
@@ -387,7 +408,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 - verdict 分開輸出 speed、cost、safety、batching 四維，各維獨立標 `improved`/`inconclusive`/`regressed`；aggregate 只有全部必要 gate 達標才為 `improved`。
 - Cost 維度可判定性規則：token 數據以 0183 tokenUsage 契約為準（serial 錨點含摘要那筆 284 萬實測及其口徑）。當任一臂缺可比 token 樣本時，cost 維度單獨標 `inconclusive` 並在報告載明缺口，不得阻塞 speed/safety 維度的判定與輸出；此時 aggregate 不得為 `improved`（cost gate 未過），但報告必須能清楚指出「只缺 cost 樣本」，讓補樣本成為明確下一步，而不是重演 0179 式的整體不可判。
 - EMA collection window 常數（0189 初始預設）依實測數據評估與調整，調整結果寫入 performance report。
-- 遙測收官（M2）：analyzer v3 join gateTelemetry，輸出閘門效果五元組總表、M1 gate-optimization 的 before/after 對照與裁汰候選清單（kill criteria 見「數據里程碑與以戰養戰迴圈」節），隨 `atm.planPerformanceReport.v1` 一起交付。
+- 遙測收官（M2）：analyzer v3 只讀 sealed gateTelemetry，以 check family、eligible opportunity、workload/surface 與 config digest 建 matched cohorts；執行歷史事故 replay、shadow false-positive/latency、canonical evaluator parity 與 batch A/B。先用 correlation/reason 去重，再輸出 unique block、true-positive 裁決、evidence readback、frequency-aware 裁汰候選與 telemetry 自身縮減/保留 receipt；不可比或缺關鍵欄位即 `inconclusive`。
 - ErrorCode：本卡不新增代碼；四維 verdict 與樣本不足維持 report status，禁止把 `inconclusive` 包裝成錯誤。
 
 驗收門檻：
@@ -406,7 +427,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 
 ```mermaid
 flowchart LR
-  Z["0191 Gate telemetry v1 (step 0)"] --> A["0182 Plan route / preflight"]
+  Z["0193 Gate telemetry v1 (step 0)"] --> A["0182 Plan route / preflight"]
   A --> B["0183 Durable PlanRun / shadow journal"]
   B --> C["0184 Real Team Wave"]
   B --> D["0185 Validator DAG / cache"]
@@ -418,11 +439,12 @@ flowchart LR
   F --> G
   G --> H["0189 Plan-level driver"]
   H --> I["0190 Real A/B proof"]
+  Z -. "sealed M1/M2 evidence" .-> I
 ```
 
 0184 與 0185 可平行；0186 與 0187 使用獨立 executor modules，可平行實作；統一命令註冊由 0189 收斂。
 
-功能卡維持九張（0182-0190），不因 lane stamping、shadow instrumentation 或多隊長測試另開平行**功能**卡。cross-cutting 卡另計：TASK-ERR-0001（ErrorCode 契約落地，見「ErrorCode 治理契約」節）與 0191（遙測基座，依賴圖第 0 步）。例外只有兩類：ATM 原子化義務的 **extraction follow-up 卡**（觸碰 >600 行或半 minified 模組時抽新 module 的純重構卡，0170 pathway），以及 M1 里程碑授權、有數據支持的 **gate-optimization 卡**（「數據里程碑與以戰養戰迴圈」節）——前者是把既有邏輯搬家，後者是計畫設計內建的優化出口，都不是第四套系統。
+功能卡維持九張（0182-0190），不因 lane stamping、shadow instrumentation 或多隊長測試另開平行**功能**卡。cross-cutting 卡另計：TASK-ERR-0001（ErrorCode 契約落地，見「ErrorCode 治理契約」節）與 0193（遙測基座，依賴圖第 0 步）。例外只有兩類：ATM 原子化義務的 **extraction follow-up 卡**（觸碰 >600 行或半 minified 模組時抽新 module 的純重構卡，0170 pathway），以及 M1 里程碑授權、有數據支持的 **gate-optimization 卡**（「數據里程碑與以戰養戰迴圈」節）——前者是把既有邏輯搬家，後者是計畫設計內建的優化出口，都不是第四套系統。
 
 ## 執行與失敗語義
 
@@ -465,12 +487,12 @@ flowchart LR
 - Shared surfaces：waitedMs p50/p95、`sharedSurfaceWaitRatio`、batchRate、commits/builds/projections per wave、dynamic collection window（含 EMA input 與 decision trace）。
 - Cost：coordinator/worker/validator tokens（0183 tokenUsage 契約）、cache reads、total tokens/task、provider cost、discarded retries；缺樣本臂明示 `source: unavailable` 占比。
 - Safety/UX：validator/close audit pass rate、false blocks、lane intervention、repair closure、manual lifecycle interventions、out-of-scope/R1/cross-lane violations。
-- Gate effectiveness（0191）：per-checkId 啟動/攔截/warn 次數、durationMs p50/p95、rejection envelope 數、證據讀回數；M1/M2 里程碑報告與 kill-criteria 裁汰候選清單。
+- Gate effectiveness（0193）：eligible opportunities、unique blocks、true-positive 裁決、warn/error、duration p50/p95、evidence readback、escaped incidents、dropped/malformed 與 seal coverage；M1/M2 matched cohorts、四法驗證與 frequency-aware 裁汰候選。
 
 ## 實作與收口原則
 
-- 0191 與 0182-0190 每卡各自 claim、驗證、close、commit、push，且收乾淨自己的 scope；wave 模式收口紀律見「Wave commit 紀律」節。
-- 每卡收口回報必附施工窗遙測摘要（「數據里程碑與以戰養戰迴圈」節）；遙測缺漏視為收口不完整。M1 報告是 0186 開工前 condition review 必附件；gate-optimization 卡必須引用支持數據，無數據支持的閘門裁汰禁止。
+- 0193 與 0182-0190 每卡各自 claim、驗證、close、commit、push，且收乾淨自己的 scope；wave 模式收口紀律見「Wave commit 紀律」節。
+- 每卡收口回報必附 sealed task summary 與 producer/consumer 對帳；遙測缺漏視為收口不完整但不得反向讓原命令失敗。M1 報告是 0186 開工前 condition review 必附件；gate-optimization 卡必須引用 cohort/config digest、rollback 與支持數據，無比較證據的裁汰禁止。
 - 每張卡開工前以 target `node atm.mjs tasks audit --json` 加 planning Node.js ID scan 重驗編號；本文對照表不得當成 ledger。
 - 先抽取新 modules，不繼續膨脹半 minified 的 `batch/implementation.ts`；使用 0170 extraction pathway；原子化提案是每卡回報義務。
 - Windows planning Markdown/JSON/text 一律透過 Node.js UTF-8 helper 讀取與比對；編輯後立即做 UTF-8 without BOM、U+FFFD、mojibake 與 round-trip 檢查。

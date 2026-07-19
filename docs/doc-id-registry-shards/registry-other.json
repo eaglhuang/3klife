@@ -8638,5 +8638,11 @@
     "path": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0001-errorcode-post-close-projection-cleanup-quarantine.task.md",
     "title": "TASK-TMP-0001 - ErrorCode Post-Close Projection Cleanup",
     "category": "other"
+  },
+  {
+    "id": "doc_other_2168",
+    "path": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-gate-telemetry-v1.task.md",
+    "title": "ATM-GOV-0193 治理閘門遙測基座（Gate Telemetry v1）",
+    "category": "other"
   }
 ]

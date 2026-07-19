@@ -1,6 +1,6 @@
 {
   "schemaId": "atm.seriesRegistry.v1",
-  "generatedAt": "2026-07-19T05:13:48.169Z",
+  "generatedAt": "2026-07-19T06:30:19.801Z",
   "baseDir": ".",
   "series": [
     {
@@ -21,6 +21,26 @@
         "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
         "relativePath": "series-registry.json",
         "contentDigest": "sha256:5080fef5d6b023111701942a39323ded92c36e947c2f15383e1c64a44978c2b4"
+      }
+    },
+    {
+      "series": "GOV",
+      "prefix": "ATM-GOV",
+      "familyDir": "governance-optimization",
+      "planDocs": [
+        "governance-optimization/end-to-end-auto-batch-performance-plan-v2.md"
+      ],
+      "status": "active",
+      "approvedBy": "project-owner",
+      "approvedAt": "2026-07-19T06:30:19.800Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-07-19T06:30:19.801Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:c16669e623f3ffe4607d0c617ee0fbc98b6e59282dfcac4ba341300a932d4197"
       }
     },
     {

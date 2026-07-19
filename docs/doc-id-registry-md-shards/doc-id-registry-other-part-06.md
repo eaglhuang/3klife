@@ -13,3 +13,4 @@
 | `doc_other_2165` | docs/doc-id-registry-md-shards/doc-id-registry-other-part-06.md | Doc ID Registry Markdown Index — 其它類 |
 | `doc_other_2166` | docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0001-errorcode-skill-authoring-contract-and-adapter-parity.task.md | TASK-ERR-0001 - ErrorCode Skill Authoring Contract 與 Adapter Parity |
 | `doc_other_2167` | docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0001-errorcode-post-close-projection-cleanup-quarantine.task.md | TASK-TMP-0001 - ErrorCode Post-Close Projection Cleanup |
+| `doc_other_2168` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-gate-telemetry-v1.task.md | ATM-GOV-0193 治理閘門遙測基座（Gate Telemetry v1） |

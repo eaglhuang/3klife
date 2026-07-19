@@ -18,6 +18,7 @@ scopePaths:
   - tests/cli/validator-dag-shared-cache.test.ts
 deliverables:
   - validator DAG planner、sealed-input cache key 與 evidence fan-out
+  - telemetry-informed ordering 與 M1 baseline cohort seal
 validators:
   - node --strip-types tests/cli/validator-dag-shared-cache.test.ts
   - npm run typecheck
@@ -46,4 +47,45 @@ surfaceFamily: validator
 
 # ATM-GOV-0185 - Validator DAG、共享結果與安全 Cache
 
-相同 sealed inputs 與完整 toolchain/env key 的 validator 每 wave 只跑一次並 fan-out。cache miss、unsafe cache 與 bypass 是正常 planner decision；只有命令實際失敗才重用 `ATM_VALIDATOR_FAILED`。
+## 問題描述
+
+相同 sealed inputs 與完整 toolchain/env key 的 validator 每 wave 只跑一次並 fan-out；用已封存實測成本排序，不靠直覺增加等待。
+
+## INPUT_CONTRACT
+
+- 0183 journal、sealed inputs/HEAD、toolchain/lockfile/env whitelist、0193 sealed duration/check report。
+
+## OUTPUT_CONTRACT
+
+- Validator DAG、safe cache、evidence fan-out、planner decision receipt 與 M1 cohort manifest/report。
+
+## Telemetry Contract
+
+- Produces：queue/execute duration、cache hit/miss/bypass、fan-out coverage、validator result 與 M1 seal。
+- Consumes：0193 sealed p50/p95 與 config/history digest；角色為 M1 baseline 與第一個資料 consumer。
+- 缺資料時只使用宣告成本並標 `observability-missing`，不得授權自動重排、cache 擴張或 gate 裁汰。
+- Closure evidence：0193+0182-0185 cohort manifest、eligible opportunity、workload strata、config digest 與 dropped/missing 摘要。
+
+## 交付物
+
+- DAG/cache/fan-out、telemetry-informed planner 與可重現 M1 report。
+
+## VALIDATION_CMD
+
+```shell
+node --strip-types tests/cli/validator-dag-shared-cache.test.ts
+npm run typecheck
+npm run validate:cli
+```
+
+## ROLLBACK_HINT
+
+停用 cache/telemetry ordering，回到宣告成本與逐項執行；保留 M1 seal。
+
+## 執行步驟
+
+1. 建安全 cache key 與 DAG/fan-out。
+2. 接入 sealed report，保存每次 planner input digest 與 fallback 理由。
+3. 以固定 watermark 產生 M1 cohort；不可比較時明示 inconclusive。
+
+cache miss、unsafe cache 與 bypass 是正常 planner decision；只有命令實際失敗才重用 `ATM_VALIDATOR_FAILED`。

@@ -21,6 +21,7 @@ scopePaths:
 deliverables:
   - atm.atomicWaveCheckpointReceipt.v1 與 fan-out closure driver
   - target closure commit/push、planning CAS closeback 與 adopt-safe resume
+  - checkpoint/rejection/evidence-readback treatment telemetry
 validators:
   - node --strip-types tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
   - npm run typecheck
@@ -57,6 +58,45 @@ surfaceFamily: checkpoint
 
 # ATM-GOV-0188 - Atomic Wave Checkpoint 與 Cross-Repo Closeback Saga
 
+## 問題描述
+
 全部 member ready 後才 fan-out target closures；target push 成功後再以 planning seal CAS closeback。跨 repo 是可 resume saga，不宣稱單一 Git 原子交易。
+
+## INPUT_CONTRACT
+
+- 0186 shared delivery receipt、0187 generated receipt、member evidence、0193 sealed rejection/classification 與 planning source seal。
+
+## OUTPUT_CONTRACT
+
+- Atomic checkpoint receipt、per-card closure、target/planning saga state 與 adopt-safe resume。
+
+## Telemetry Contract
+
+- Produces：readiness/close audit/CAS/checkpoint、evidence readback、rejection classification treatment events。
+- Consumes：sealed rejection/history 與 member summaries；角色為 M2 treatment。
+- stdout-only failure 不算 durable evidence；缺 envelope/ref 必須標 missing，不能解讀為零拒絕。
+- Closure evidence：checkpoint watermark、sealed digest、evidenceConsumed/readback、unique block 與 missing/dropped 摘要。
+
+## 交付物
+
+- checkpoint/closeback saga、receipt、audit rule 與 rejection/evidence telemetry。
+
+## VALIDATION_CMD
+
+```shell
+node --strip-types tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
+npm run typecheck
+npm run validate:cli
+```
+
+## ROLLBACK_HINT
+
+已 push 的 target closure 保持有效；只 resume/repair planning side，保留 sealed rejection history。
+
+## 執行步驟
+
+1. 驗證所有 member receipt/evidence，再啟動 checkpoint。
+2. 封存 rejection/classification 與 evidence readback。
+3. 注入各 crash/CAS/adopt 場景，確認 side effects exactly once。
 
 `reconcile-required`、`committed-not-pushed` 是狀態；只有 readiness command failure 與 planning CAS conflict 使用 catalog 代碼。新碼由 0183 統一登錄，本卡只實作 emitter 與整合測試。

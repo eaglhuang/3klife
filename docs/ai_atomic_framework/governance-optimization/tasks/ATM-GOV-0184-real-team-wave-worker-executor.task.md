@@ -20,6 +20,7 @@ scopePaths:
 deliverables:
   - provider/editor worker executor 與 atm.teamWorkerReport.v1 ingestion
   - per-task lane heartbeat/sweep、retry 與 coordinator authority guard
+  - worker lifecycle telemetry 與 sealed task summary
 validators:
   - node --strip-types tests/cli/real-team-wave-worker-executor.test.ts
   - npm run typecheck
@@ -57,6 +58,45 @@ surfaceFamily: team-wave
 
 # ATM-GOV-0184 - Real Team Wave Worker Executor
 
+## 問題描述
+
 真正啟動或接收 Team workers；每卡永久綁定 lane，worker 只回傳 scope-bounded patch/report/evidence，commit、checkpoint 與 close 只屬 coordinator。
+
+## INPUT_CONTRACT
+
+- 0183 BatchRun/journal seal、wave manifest、provider/editor bridge、claim scope 與 lane lease。
+
+## OUTPUT_CONTRACT
+
+- Worker start/report/heartbeat/sweep/retry/defer 流程、coordinator authority guard 與 serial fallback。
+
+## Telemetry Contract
+
+- Produces：worker lifecycle、report ingestion、scope/lease verdict、retry/defer 與 token source，皆帶 wave/member lane。
+- Consumes：0183 sealed journal 與 0193 health；角色為 M1 baseline。
+- 缺 worker report/usage 不得視為成功、零成本或零等待，只能 partial / `source: unavailable`。
+- Closure evidence：worker/report coverage、sealed digest、missing/dropped 與 authority-guard 統計。
+
+## 交付物
+
+- provider/editor executor、report ingestion、lane lifecycle、authority guard 與 telemetry adapter。
+
+## VALIDATION_CMD
+
+```shell
+node --strip-types tests/cli/real-team-wave-worker-executor.test.ts
+npm run typecheck
+npm run validate:cli
+```
+
+## ROLLBACK_HINT
+
+強制 serial fallback 並 revert；不刪 sealed baseline。
+
+## 執行步驟
+
+1. 實作 worker/report adapter 與永久 lane binding。
+2. 接線 lifecycle telemetry，覆蓋 partial、stale、out-of-scope 與 missing report。
+3. seal 工作窗並驗證 worker 無 commit/close 權限。
 
 本卡只重用既有 Team ErrorCodes；`partial`、`needs-review` 與 one-member fallback 是狀態，不建立新碼。focused tests 必須驗證 structured details 與安全復原路徑。

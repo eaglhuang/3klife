@@ -21,6 +21,7 @@ scopePaths:
 deliverables:
   - real build/projection executor、content-addressed skip 與 generated-write receipt
   - runner-sync enqueue/release 與 residue-clean closeout
+  - generated-write treatment telemetry 與 sealed task summary
 validators:
   - node --strip-types tests/cli/real-build-projection-runner-sync-executor.test.ts
   - npm run typecheck
@@ -53,6 +54,45 @@ surfaceFamily: generated-write
 
 # ATM-GOV-0187 - Real Build、Projection 與 Runner-Sync Executor
 
+## 問題描述
+
 從 manifest/repository policy 執行真實 commands，每個相容 wave/surface 最多一次，觀測後產生 digest 與 receipt；失敗不得生成成功 receipt、commit 或 checkpoint。
+
+## INPUT_CONTRACT
+
+- 0184/0185 manifest/validator state、M1/config digest、repository build/projection policy 與 sealed inputs。
+
+## OUTPUT_CONTRACT
+
+- 真實 generated-write execution/skip、observed digest、receipt、runner-sync release 與 residue closeout。
+
+## Telemetry Contract
+
+- Produces：build/projection/runner-sync duration、skip reason、input/output digest、receipt validity treatment events。
+- Consumes：M1 check identity/config 與 prior sealed duration；角色為 M2 treatment。
+- 缺真實 output digest/receipt 不得補造成功或零成本事件；`source: unavailable` 必須顯式。
+- Closure evidence：sealed treatment digest、exactly-once/skip 統計、missing/dropped 與 residue result。
+
+## 交付物
+
+- command adapter、content-addressed skip、receipt/release 與 treatment telemetry。
+
+## VALIDATION_CMD
+
+```shell
+node --strip-types tests/cli/real-build-projection-runner-sync-executor.test.ts
+npm run typecheck
+npm run validate:cli
+```
+
+## ROLLBACK_HINT
+
+停用 generated-write executor、移除 run-owned residue；保留 sealed evidence。
+
+## 執行步驟
+
+1. 解析並執行真實 commands，觀測後才產生 digest。
+2. 接線 exactly-once/skip/receipt telemetry。
+3. seal 工作窗並驗證 retry、mismatch 與 clean closeout。
 
 一般 command exit code 放在 receipt details；只重用 catalog 內兩個 operator-actionable ErrorCodes，避免一個失敗衍生多個同義碼。

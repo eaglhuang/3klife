@@ -26,6 +26,7 @@ deliverables:
   - atm.batchRun.v1 0.2 compatible store 與 append-only plan journal
   - lane/token stamping 與 serial shadow instrumentation
   - plan-wide ErrorCode registry entries 與 regenerated docs/ERROR_CODES.md
+  - plan/shadow telemetry join 與 sealed task summary
 validators:
   - node --strip-types tests/cli/durable-plan-batchrun-shadow-journal.test.ts
   - npm run generate:error-codes
@@ -89,6 +90,47 @@ surfaceFamily: plan-runtime
 
 # ATM-GOV-0183 - Durable Plan BatchRun、Lane Stamping 與 Shadow Journal
 
-建立可 resume 的 plan run、全鏈 lane/token stamps 與不改變 serial 行為的 shadow events。本卡是計畫唯一 ErrorCode registry owner；所有新碼均須用 `atm-error-code-resolver` authoring flow 登錄、重生文件並以 focused tests 證明契約。
+## 問題描述
 
-驗收包含 crash/restart、duplicate event、digest amendment、legacy reader、malformed shadow warning、wait start/end、token unavailable，以及 0184 起可取得真實 serial baseline。
+建立可 resume 的 plan run、全鏈 lane/token stamps 與不改變 serial 行為的 shadow events。本卡是計畫唯一 ErrorCode registry owner。
+
+## INPUT_CONTRACT
+
+- 0182 sealed route/preflight summary、plan digest、member cards、coordinator/member lanes 與 0193 correlation schema。
+
+## OUTPUT_CONTRACT
+
+- Durable BatchRun/journal、合法 phase transition、lane/token stamps 與 serial shadow lifecycle events。
+- ErrorCode registry 由本卡集中寫入；其他卡只接 emitter。
+
+## Telemetry Contract
+
+- Produces：BatchRun phase、shadow claim/close/runner-sync、wait start/end、journal validity、join keys 與 token source。
+- Consumes：0182 sealed summary；角色為 M1 baseline。
+- 缺 wait end 表示 incomplete，不是 `waitedMs: 0`；本機無 provider usage 必須記 `source: unavailable`。
+- Closure evidence：shadow parity、sealed history/config digest、join coverage、dropped/malformed 摘要。
+
+## 交付物
+
+- BatchRun store/journal、shadow adapter、lane/token schema、ErrorCode registry 更新與 telemetry join。
+
+## VALIDATION_CMD
+
+```shell
+node --strip-types tests/cli/durable-plan-batchrun-shadow-journal.test.ts
+npm run generate:error-codes
+npm run typecheck
+npm run validate:cli
+```
+
+## ROLLBACK_HINT
+
+關閉 shadow instrumentation 並 revert；保留 journal 與 sealed telemetry 供 audit。
+
+## 執行步驟
+
+1. 抽取 journal/adapter modules，先釘 phase 與 idempotency。
+2. 接線 shadow 與 0193 correlation，做開關前後 bit-for-bit parity。
+3. 登錄 ErrorCodes、seal baseline 工作窗並驗證 join。
+
+驗收包含 crash/restart、duplicate event、digest amendment、legacy reader、malformed shadow warning、wait start/end、token unavailable，以及 0184 起可取得真實 serial baseline。所有新碼均須用 `atm-error-code-resolver` authoring flow 登錄。

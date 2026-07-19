@@ -23,8 +23,8 @@
 | AI Agent 專用 | `doc_ai` | 43 |
 | Agent Skill 專用 | `doc_agentskill` | 102 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
-| 其它類 | `doc_other` | 1440 |
-| **合計** | — | **2280** |
+| 其它類 | `doc_other` | 1441 |
+| **合計** | — | **2281** |
 
 ## Markdown 分片
 

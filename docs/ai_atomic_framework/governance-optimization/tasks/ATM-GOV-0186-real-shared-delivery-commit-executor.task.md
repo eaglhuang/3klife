@@ -22,6 +22,7 @@ scopePaths:
 deliverables:
   - temporary-index shared delivery executor 與 post-commit payload assertion
   - complete ticket transitions 與 wave lane acknowledgment
+  - shared-write treatment telemetry 與 M1 consumption receipt
 validators:
   - node --strip-types tests/cli/real-shared-delivery-commit-executor.test.ts
   - npm run typecheck
@@ -60,6 +61,45 @@ surfaceFamily: shared-delivery
 
 # ATM-GOV-0186 - Real Shared Delivery Commit Executor
 
+## 問題描述
+
 以 temporary index 將同 wave、相容 surface 的 worker slices 與 generated outputs 實際提交；foreign staged 不吸收，commit 後 tree 必須與 receipt bit-for-bit 對帳。
+
+## INPUT_CONTRACT
+
+- 0184/0185 worker/validator receipts、M1 report、optimization/config digest、sealed HEAD 與 wave manifest。
+
+## OUTPUT_CONTRACT
+
+- Shared delivery commit/receipt、ticket transitions、payload assertion 與 lane acknowledgment。
+
+## Telemetry Contract
+
+- Produces：admission、pre-commit per-check、temporary-index、payload assertion 與 ticket treatment events。
+- Consumes：M1 cohort/report 與 optimization receipt；角色為 M2 treatment。
+- 沒有 matched baseline 不阻塞安全施工，但效果只能 `inconclusive`；payload/receipt mismatch 必須安全失敗，不能被 telemetry fail-open 掩蓋。
+- Closure evidence：sealed treatment digest、M1 input digest、unique rejection/classification 與 missing/dropped 摘要。
+
+## 交付物
+
+- 真實 executor、receipt/assertion、lane attribution 與 treatment telemetry。
+
+## VALIDATION_CMD
+
+```shell
+node --strip-types tests/cli/real-shared-delivery-commit-executor.test.ts
+npm run typecheck
+npm run validate:cli
+```
+
+## ROLLBACK_HINT
+
+停用 executor、revert run-owned commits；不改 foreign index，保留 sealed evidence。
+
+## 執行步驟
+
+1. 驗證 M1/config input 後建立 temporary-index transaction。
+2. 接線 per-check treatment 與 payload assertion。
+3. seal 工作窗並驗證 crash resume、same/cross-wave 與 lane attribution。
 
 本卡只重用 catalog 既有代碼；所有 emitter tests 都要透過 `atm-error-code-resolver` 契約檢查 trigger、details 與 recovery。
