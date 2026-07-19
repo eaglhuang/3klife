@@ -84,6 +84,7 @@ The implementation must use `git diff --name-only <last-sealed-source>..HEAD` or
   - `incrementalBuild`: sealed input changed, but only affected packages/payloads were rebuilt or copied.
   - `fullRebuild`: dependency graph, manifest, cache invalidation, or safety fallback required a complete rebuild.
 - Receipt telemetry must include affected path count, affected package/script/template/schema groups, rebuilt package count, copied file count, reused file count, duration per phase, and fallback reason when applicable.
+- Runner build phase timings must be emitted into the generated-write treatment telemetry shape introduced by ATM-GOV-0187, including `phaseTimingsMs`, output digest, output file count, and execution/skip classification, so later cards can compare before/after speed without scraping console text.
 - Any fallback to full rebuild must be explicit and analyzable; it must not be reported as an incremental success.
 
 ## Acceptance
@@ -93,6 +94,7 @@ The implementation must use `git diff --name-only <last-sealed-source>..HEAD` or
 - [ ] A fixture proves a release mirror copy updates only hash-changed files.
 - [ ] A fixture proves onefile generation can reuse unchanged payload segments or records a justified `fullRebuild` fallback.
 - [ ] Receipt schema, test assertions, and CLI/broker output distinguish `cacheHitSkip`, `incrementalBuild`, and `fullRebuild`.
+- [ ] Runner build timing data is queryable as telemetry, not only visible in terminal output or one-off receipt prose.
 - [ ] Package-level incremental build receipt schema/fields are versioned and documented in the test fixture expectations.
 - [ ] Focused tests prove changed-input incremental rebuild is distinct from unchanged-input cache skip.
 - [ ] A safety fallback test proves dependency graph or manifest uncertainty becomes `fullRebuild` with a machine-readable reason.
