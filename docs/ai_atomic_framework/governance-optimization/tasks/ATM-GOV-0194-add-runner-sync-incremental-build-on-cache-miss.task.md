@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0194
 title: Add runner-sync incremental build on cache miss
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on:
@@ -60,6 +60,15 @@ atomizationImpact:
       source: scripts/build-package-dist.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-19T13:13:42.616Z"
+completed_by_agent: "codex-governance-optimizer"
+closedAt: "2026-07-19T13:13:42.616Z"
+closedByActor: "codex-governance-optimizer"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-19T13-13-42-616Z-close-66f64406f2c6"
+lastTransitionAt: "2026-07-19T13:13:42.616Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ca21936e907e5a66bf2893762148862cdcb11036"
 ---
 
 # ATM-GOV-0194 Add runner-sync incremental build on cache miss

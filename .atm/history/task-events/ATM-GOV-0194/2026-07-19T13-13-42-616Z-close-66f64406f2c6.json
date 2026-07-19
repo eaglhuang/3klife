@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-19T13-13-42-616Z-close-66f64406f2c6",
+  "taskId": "ATM-GOV-0194",
+  "action": "close",
+  "actorId": "codex-governance-optimizer",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0194-add-runner-sync-incremental-build-on-cache-miss.task.md",
+  "taskSha256": "sha256:ad37a53e9e4e39553dc4cb7b1a32654a7c9b3544be3f5bd50d714054a4f46b54",
+  "createdAt": "2026-07-19T13:13:42.616Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0194 --actor codex-governance-optimizer"
+}
