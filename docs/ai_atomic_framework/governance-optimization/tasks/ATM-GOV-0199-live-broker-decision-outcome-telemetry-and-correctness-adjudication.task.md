@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0199
 title: Live broker decision outcome telemetry and correctness adjudication
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -57,6 +57,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m3-observability-repair
 surfaceFamily: broker-decision
+completed_at: "2026-07-20T10:47:15.400Z"
+completed_by_agent: "codex-captain-0199"
+closedAt: "2026-07-20T10:47:15.400Z"
+closedByActor: "codex-captain-0199"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T10-47-15-400Z-close-2b8ba286e84e"
+lastTransitionAt: "2026-07-20T10:47:15.400Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6b4a8827de1f95bb770340dbeb3421334f7d0899"
 ---
 
 # ATM-GOV-0199 Live broker decision outcome telemetry and correctness adjudication

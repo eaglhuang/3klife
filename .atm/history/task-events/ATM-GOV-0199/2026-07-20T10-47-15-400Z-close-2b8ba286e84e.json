@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T10-47-15-400Z-close-2b8ba286e84e",
+  "taskId": "ATM-GOV-0199",
+  "action": "close",
+  "actorId": "codex-captain-0199",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0199-live-broker-decision-outcome-telemetry-and-correctness-adjudication.task.md",
+  "taskSha256": "sha256:65c84623a4df1a219da934ab165679b5b25553206d1913884e09e24badd5ceb1",
+  "createdAt": "2026-07-20T10:47:15.400Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0199 --actor codex-captain-0199"
+}
