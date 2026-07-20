@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0206
 title: Broker resource overlap matcher repair (pattern-aware conflict detection)
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -62,6 +62,15 @@ atomizationImpact:
       source: "packages/core/src/broker/conflict-matrix.ts"
       disposition: "extract"
       inlineReason: null
+completed_at: "2026-07-20T08:18:33.104Z"
+completed_by_agent: "codex-captain-0206"
+closedAt: "2026-07-20T08:18:33.104Z"
+closedByActor: "codex-captain-0206"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T08-18-33-104Z-close-d367bf9a9fe8"
+lastTransitionAt: "2026-07-20T08:18:33.104Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "667dc4cc5a0c539a1aba6e1a957c8352f82c1daf"
 ---
 
 # ATM-GOV-0206
