@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0213
 title: CID and read set semantic revalidation adjudicator
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -72,6 +72,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: broker-semantic-adjudication
+completed_at: "2026-07-20T09:29:11.919Z"
+completed_by_agent: "codex-captain-0213"
+closedAt: "2026-07-20T09:29:11.919Z"
+closedByActor: "codex-captain-0213"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T09-29-11-919Z-close-d61082207306"
+lastTransitionAt: "2026-07-20T09:29:11.919Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a34380ad40e238fe78209893fe42a8f83e9e807b"
 ---
 
 # ATM-GOV-0213 CID and read set semantic revalidation adjudicator

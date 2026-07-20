@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T09-29-11-919Z-close-d61082207306",
+  "taskId": "ATM-GOV-0213",
+  "action": "close",
+  "actorId": "codex-captain-0213",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0213-cid-and-read-set-semantic-revalidation-adjudicator.task.md",
+  "taskSha256": "sha256:b85e36600f21a95a7e4d81fcd2eb96fbb26101dc4039917feb40609d4d9fb9ef",
+  "createdAt": "2026-07-20T09:29:11.919Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0213 --actor codex-captain-0213"
+}
