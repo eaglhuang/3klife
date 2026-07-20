@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T07-52-30-383Z-close-f73ccc00404b",
+  "taskId": "ATM-GOV-0207",
+  "action": "close",
+  "actorId": "codex-captain-0207",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0207-canonical-broker-transaction-authority-and-linearizable-state.task.md",
+  "taskSha256": "sha256:2c93feca2ae8eb3836ffd5ded9f688fcb00381c72888de54c141453cf3626c2e",
+  "createdAt": "2026-07-20T07:52:30.383Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0207 --actor codex-captain-0207"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0207
 title: Canonical broker transaction authority and linearizable state
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -77,6 +77,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: broker-state
+completed_at: "2026-07-20T07:52:30.383Z"
+completed_by_agent: "codex-captain-0207"
+closedAt: "2026-07-20T07:52:30.383Z"
+closedByActor: "codex-captain-0207"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T07-52-30-383Z-close-f73ccc00404b"
+lastTransitionAt: "2026-07-20T07:52:30.383Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "07a24ae13c0ef61494616bb37dac365bf1d915eb"
 ---
 
 # ATM-GOV-0207 Canonical broker transaction authority and linearizable state
