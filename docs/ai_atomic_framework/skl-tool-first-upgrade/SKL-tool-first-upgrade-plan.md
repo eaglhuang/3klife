@@ -328,6 +328,7 @@ playbook 是本次工作的動態 orchestration contract，負責：
 | `TASK-SKL-0012` | execution card | 將 Team role skill packs 的 growth contract 與 observability 接入 Team runtime | AI-Atomic-Framework | `TASK-SKL-0007`, `TASK-SKL-0010`, `TASK-SKL-0011` |
 | `TASK-SKL-0013` | execution card | 建立 shared `atm-error-code-resolver` skill 與 registry-backed error-code knowledge | AI-Atomic-Framework | `TASK-SKL-0002`, `TASK-SKL-0005`, `TASK-SKL-0007` |
 | `TASK-SKL-0014` | execution card | 補齊 framework temp claim quickfix 的 `skill -> tools/playbook -> CLI fallback` 友善 AI 路徑 | AI-Atomic-Framework | `TASK-SKL-0002`, `TASK-SKL-0003`, `TASK-SKL-0005`, `TASK-SKL-0013` |
+| `TASK-SKL-0015` | execution card | 將 ATM 2.0/2.1 隊長交接中的穩定治理流程回寫到入口 skill 與其投影內容 | AI-Atomic-Framework | `TASK-SKL-0005`, `TASK-SKL-0007`, `TASK-SKL-0014` |
 
 ## 10. 完成定義
 
@@ -424,3 +425,26 @@ model and it must not become a hard-coded emergency bypass. The route must:
 This addendum is intentionally P1 because the gap affects agent entry safety and
 operator clarity before additional framework quickfix work should rely on the
 raw CLI path.
+
+## 16. Entry Skill Governance-Flow Backwrite Addendum
+
+The 2026-07-20 ATM 2.0 / 2.1 Captain handoff exposed a reusable skill-growth
+case. The handoff contains stable governance-flow rules that every future
+Captain, dispatcher, handoff writer, and evidence operator should see early:
+
+- every card should record consumed sealed summaries, missing data, assumption
+  changes, stop rule, and whether it touched a shared-write gate;
+- every shared-write gate should be checked against `INV-ATM-008` before a
+  blocker is normalized as expected;
+- repairs should be generalized and data-driven rather than hard-coded to one
+  actor, task id, queue id, path, date, or incident string;
+- closeout should check telemetry windows, watermarks, counters, timings,
+  compact digests, and explicit unavailable receipts;
+- runner, release, broker shared-write, first-layer, or generated integration
+  changes need frozen runner smoke evidence, not only source tests;
+- new dogfood friction should be captured in backlog or shared learning
+  references instead of remaining only in chat.
+
+Those stable rules belong in entry skills. Historical 2.0 / 2.1 state from the
+handoff does not. `TASK-SKL-0015` captures this boundary and requires source
+skill-template updates before installed editor copies are refreshed.
