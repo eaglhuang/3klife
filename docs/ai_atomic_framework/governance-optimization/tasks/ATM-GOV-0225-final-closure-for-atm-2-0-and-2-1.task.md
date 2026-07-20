@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0225
 title: Final closure for ATM 2.0 and 2.1
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -63,6 +63,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T22:22:28.515Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T22:22:28.515Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T22-22-28-515Z-close-070b754652e1"
+lastTransitionAt: "2026-07-20T22:22:28.515Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "25752f447addffcc231adce18820a633b59a1802"
 ---
 
 # ATM-GOV-0225 Final closure for ATM 2.0 and 2.1
