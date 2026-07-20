@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T08-05-09-147Z-close-1876bbe50d46",
+  "taskId": "ATM-GOV-0208",
+  "action": "close",
+  "actorId": "codex-captain-0208",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0208-content-anchored-code-boundary-and-resolver-substrate.task.md",
+  "taskSha256": "sha256:941b301beaf0cc9c3f621a1bd8057e0a9a94c0917686e999d85f55e9d811d1bf",
+  "createdAt": "2026-07-20T08:05:09.147Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0208 --actor codex-captain-0208"
+}

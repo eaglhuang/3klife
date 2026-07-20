@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0208
 title: Content anchored code boundary and resolver substrate
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -77,6 +77,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: broker-content-boundary
+completed_at: "2026-07-20T08:05:09.147Z"
+completed_by_agent: "codex-captain-0208"
+closedAt: "2026-07-20T08:05:09.147Z"
+closedByActor: "codex-captain-0208"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T08-05-09-147Z-close-1876bbe50d46"
+lastTransitionAt: "2026-07-20T08:05:09.147Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "57c1a1e478701590c9649052c53be9c331897890"
 ---
 
 # ATM-GOV-0208 Content anchored code boundary and resolver substrate
