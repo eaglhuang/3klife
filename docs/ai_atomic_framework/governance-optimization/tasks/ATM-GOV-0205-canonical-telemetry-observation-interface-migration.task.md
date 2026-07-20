@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0205
 title: Canonical telemetry observation interface migration
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on:
@@ -65,6 +65,15 @@ atomizationImpact:
       source: packages/cli/src/commands/evidence/
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-20T07:37:03.373Z"
+completed_by_agent: "codex-captain-0205"
+closedAt: "2026-07-20T07:37:03.373Z"
+closedByActor: "codex-captain-0205"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T07-37-03-373Z-close-9328b3086b41"
+lastTransitionAt: "2026-07-20T07:37:03.373Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b1de0bf94ff66d130220717f2550e2c704bbc450"
 ---
 
 # ATM-GOV-0205 Canonical telemetry observation interface migration

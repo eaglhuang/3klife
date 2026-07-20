@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T07-37-03-373Z-close-9328b3086b41",
+  "taskId": "ATM-GOV-0205",
+  "action": "close",
+  "actorId": "codex-captain-0205",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0205-canonical-telemetry-observation-interface-migration.task.md",
+  "taskSha256": "sha256:7deed7a4854b4c6f678d487757418777bc666dc293689ac28f76f77279e05587",
+  "createdAt": "2026-07-20T07:37:03.373Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0205 --actor codex-captain-0205"
+}
