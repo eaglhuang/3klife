@@ -6,8 +6,9 @@ owner: atm-governance
 priority: P1
 depends_on:
   - ATM-GOV-0196
+  - ATM-GOV-0211
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
-planning_repo: governance-workbench
+planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: Extends the registered GOV governance-optimization plan with first-layer dogfood UX repair.
@@ -104,5 +105,13 @@ surfaceFamily: guidance-ux
 - [ ] Node UTF-8 與 `rg` 範例在 Windows smoke 中以文件所列參數位置成功執行，且無 PowerShell range/document parsing 建議。
 - [ ] 修復前後 output size/help-fallback 有摘要；缺 live usage 時不誇大效果。
 - [ ] 0196 summary/config digest 已被 opening `dataDrivenDecision` 消費；0203 sealed summary 已完成同卡 readback，rollback regeneration 與 prior route-matrix digest 驗證通過。
+
+## v2.1 Required Adjustment (Ticket-first UX)
+
+- first layer直接呈現`execute-now`、`batch/applyStrategy=compose`、`queue(position/head/health/waitedMs/release condition)`、`revalidation-required`、`reconcile-required`與R1 `ATM_LOCK_CONFLICT`；不能只顯示blocked/retry prose。
+- queued/compose/revalidation都是ticket狀態，不新增ErrorCode；每個狀態顯示唯一next action、ticket id與read-only status command。
+- waiting shared write時明示reads/docs/private evidence/isolated proposal仍可繼續；R2只限制依賴輸出的code side effect。
+- canonical source先更新templates/skills與command specs，再投影Codex/Claude/Cursor/Copilot/Gemini/Antigravity；禁止只改installed copy。
+- 0203不實作broker capability；若0211 contract尚未sealed只可先做fixture/projection，不得自行發明另一套ticket shape。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:12.227Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0203-first-layer-routing-compact-orientation-and-windows-safe-command-contracts.task.md","contentDigest":"sha256:18407473d05688b973c55c09ac1b11e02d81fb033a4e3827ce312ceb6ae7512e"} -->

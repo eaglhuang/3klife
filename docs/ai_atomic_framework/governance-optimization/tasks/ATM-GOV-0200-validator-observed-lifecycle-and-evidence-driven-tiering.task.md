@@ -6,8 +6,9 @@ owner: atm-governance
 priority: P1
 depends_on:
   - ATM-GOV-0196
+  - ATM-GOV-0205
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
-planning_repo: governance-workbench
+planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: Extends the registered GOV governance-optimization plan with validator lifecycle governance.
@@ -92,5 +93,13 @@ surfaceFamily: validator-runtime
 - [ ] rollback 可恢復原 ordering/tier 並留下 compact receipt。
 - [ ] 開工 `dataDrivenDecision` 已引用 0196 history/config digest並留下 consumed receipt；本卡 sealed summary 可由同卡 validator 讀回並供 0202 後續消費。
 - [ ] rollback 會失效 treatment cache、恢復原 config digest／ordering／tier，且 parity validator 通過。
+
+## v2.1 Required Adjustment
+
+- validator lifecycle event必須使用0205 canonical observation interface；本卡不得另建validator timing schema或writer。
+- 將content-anchor resolver、structured-overlap、ticket transition、composer serial oracle/permutation、semantic revalidation與shared-delivery saga validators納入observed lifecycle inventory；尚未實作的producer標`planned-consumer`。
+- compose publish的safety gate至少區分text applicability、serializability、semantic revalidation與downstream invariant，不得把單一typecheck當成全部正確性。
+- validator cache key包含sealed base、composition group/member digests、semantic config與validator version；不同proposal tree不可誤用cache。
+- tiering仍由observed counter與歷史事故決定；低頻但阻止silent overwrite/lost update/duplicate publish的validator不可因invocation少而降階。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:07.299Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0200-validator-observed-lifecycle-and-evidence-driven-tiering.task.md","contentDigest":"sha256:17df20ff2bdee6fb88641a215c8900330618478871b3fd2cc7105ed2f0dd4fee"} -->

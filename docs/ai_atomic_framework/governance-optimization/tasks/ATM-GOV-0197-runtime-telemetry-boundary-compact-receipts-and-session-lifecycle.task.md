@@ -6,8 +6,9 @@ owner: atm-governance
 priority: P0
 depends_on:
   - ATM-GOV-0196
+  - ATM-GOV-0205
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
-planning_repo: governance-workbench
+planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: Extends the registered GOV governance-optimization plan with runtime evidence-boundary repair work.
@@ -94,5 +95,13 @@ surfaceFamily: telemetry-storage
 - [ ] 既有 tracked detailed receipt 有相容讀取或 migration strategy。
 - [ ] 開工 `dataDrivenDecision` 已引用 0196 history/config digest 並留下 consumed receipt。
 - [ ] 本卡 summary 已 sealed，且同卡 readback validator 可讀回 storage/lifecycle digest；0201/0202 的跨卡 consumed receipt 明確列為各 consumer 卡的 Acceptance。
+
+## v2.1 Required Adjustment (INV-ATM-008)
+
+- 開工除 0196 外必須消費 0205 canonical observation interface；本卡只擁有 runtime storage/session lifecycle adapter，不得另造 timing/correlation base contract。
+- isolated proposal、content-anchor resolution、broker decision/ticket、queue/wakeup、compose/revalidation 的 raw trace 全留 gitignored runtime；tracked receipt 只保存 schema/config/input/output digest、aggregate counters、selected decision refs 與 missing-source 語義。
+- 與 0199 共用 telemetry family 時，應以新 adapter/module 或明確 symbol ownership 分片；shared code write 交 0211 broker ticket，不能再用「預設序列化整張卡」處理。
+- stale/closed session 的修復不得讓 reads、docs、private evidence 或 isolated proposal 因 foreign write lane 排隊。
+- 互斥驗收分支：若0211–0213尚未sealed，本foundation close只需0205 adapter contract、runtime boundary self-readback與明確`planned-consumer` inventory；若能力已sealed，可額外讀回真compose-batch、queue/wakeup、semantic-revalidation receipts。真producer migration/readback由0199與各owner card驗收，0197不得等待未來consumer，也不得以填零取代。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:02.658Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0197-runtime-telemetry-boundary-compact-receipts-and-session-lifecycle.task.md","contentDigest":"sha256:de2a6d816eb8231a271f0e175455bce073e1537656f288372f778a923572ae96"} -->

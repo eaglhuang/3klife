@@ -2,12 +2,16 @@
 task_id: ATM-GOV-0206
 title: Broker resource overlap matcher repair (pattern-aware conflict detection)
 status: planned
+owner: atm-governance
+priority: P0
 milestone: P0
 severity: P0
 depends_on: []
 target_repo: AI-Atomic-Framework
-planning_repo: 3KLife
+planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 closure_authority: target_repo
+related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
+series_selection_reason: Extends the registered GOV plan with a P0 generalized matcher repair discovered during broker correctness dogfood.
 scopePaths:
   - "packages/core/src/broker/conflict-matrix.ts"
   - "packages/core/src/broker/types.ts"
@@ -23,13 +27,15 @@ validators:
   - "npm run validate:broker-proposal"
   - "npm run validate:brokered-write"
   - "git diff --check"
+errorCodes: []
 evidence:
   required: command-backed
 producer:
   - "Pattern-aware overlap contract and its negative-case fixtures"
 consumer:
   - "ATM-GOV-0199 broker decision/outcome telemetry"
-  - "Any future parallel admission or compose work"
+  - "ATM-GOV-0209 structured overlap evidence"
+  - "ATM-GOV-0211 compose-first ticket state machine"
 missingData:
   - "The gateResults-vs-conflicts inconsistency is observed but not root-caused; this card must diagnose before deciding whether it is in scope or a follow-up."
 dataDrivenStopRule:
@@ -49,7 +55,7 @@ rollback:
 atomizationImpact:
   ownerAtomOrMap: "atm.broker-conflict-matrix"
   mapUpdates:
-    - "atm.broker"
+    - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:
     - atom: "atm.broker-resource-overlap-matcher"
       pattern: "Shared pattern-aware resource key matcher"
@@ -107,28 +113,35 @@ patch to the `files` branch.
 - Pattern semantics must match whatever the rest of ATM already uses for
   scopePaths so operators are not asked to learn a second glob dialect. Derive
   this from the existing implementation; do not invent a new one.
-- Fail closed on ambiguity. If two keys cannot be decided (unsupported pattern
-  syntax, non-path key), treat as overlapping and let the conflict path run. A
-  false positive costs a serialization; a false negative costs a corrupted
-  concurrent write.
+- Fail closed in the fact layer on ambiguity. If two keys cannot be decided
+  (unsupported pattern syntax, non-path key), emit structured `unknown/possible
+  overlap` evidence. Before 0211 this matcher remains shadow-only; after 0211
+  the fact routes to compose adjudication or a durable queue ticket, never a
+  terminal shared-write refusal.
 - Direction matters: active-holds-glob vs new-holds-literal and the reverse must
   both be detected. The current bug is symmetric in code but must be tested in
   both directions.
 
 ## Acceptance
 
-- The probe A case from the evidence document returns a `file-range` conflict
-  instead of `parallel-safe`.
+- The probe A matcher returns a structured `file-range` overlap with matched
+  resource keys, normalization, provenance, and input digest; shadow mode
+  records the legacy `parallel-safe` discrepancy without live terminal block.
 - The probe B literal case is unchanged.
 - Both directions (active pattern / new literal, and the reverse) are detected.
 - Pattern-vs-pattern intersection is detected (`commands/**` vs
   `commands/taskflow/**`).
-- Genuinely disjoint patterns still return `parallel-safe`
+- Genuinely disjoint patterns return a structured matcher-clear result; only after
+  ATM-GOV-0211 activates the ticket state machine may that result become an
+  `execute` ticket rather than a legacy `parallel-safe` terminal verdict.
   (`templates/skills/**` vs `packages/core/**`) — the fix must not collapse into
   serializing everything.
 - Every resource axis is covered by the shared matcher, proven by a test per
   axis, not only `files`.
-- Ambiguous/unsupported key syntax resolves to overlap, with a test.
+- Ambiguous/unsupported key syntax returns a structured
+  `unknown/possible-overlap` fact and shadow discrepancy, with a test. It may
+  map to compose/queue only after ATM-GOV-0211 is sealed and must never become
+  a direct terminal overlap block.
 - The `gateResults`-vs-`conflicts` inconsistency noted in the evidence document
   is diagnosed. If it shares this root cause, fix it here; if not, record a
   structured follow-up rather than silently leaving a decision that reports
@@ -153,3 +166,10 @@ This card makes existing detection **correct**. It does not make overlapping
 tasks runnable in parallel — that is a capability change to the verdict model
 and belongs to its own card. Fixing this one first is what makes that later work
 safe to attempt, because you cannot compose conflicts you cannot see.
+
+## v2.1 Activation Gate
+
+- 本卡可完成source/tests/shadow telemetry並獨立close，但不得單獨live-enable成更廣的`blocked-shared-surface`或`blocked-cid-conflict`。
+- live activation的硬條件是0211 durable ticket state machine已sealed：different-task命中只能轉execute/compose-batch/queue ticket；R1同卡第二lane仍依憲章hard reject。
+- 0206與0211互相引用stop rule：matcher與0209 structured facts不一致、ticket persistence/CAS未通過、或任何cross-task命中回bare refusal時保持shadow並停止rollout。
+- genuinely disjoint case仍為clear；ambiguous case是unknown/possible-overlap fact，不可藉機序列化所有工作。

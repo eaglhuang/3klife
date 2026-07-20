@@ -9,12 +9,13 @@ created_at: 2026-07-19T00:00:00+08:00
 updated_at: 2026-07-20T00:00:00+08:00
 ---
 
-# ATM 端到端自動併批與效能證明計畫 2.0
+# ATM 端到端自動併批與效能證明計畫 2.0（v2.1 Scope Amendment）
 
 狀態更新：2026-07-19（Captain review 修訂：wave commit 紀律、分歧復原通路、plan digest pin、token 量測契約、baseline 自我採樣、lane attribution、原子化出口）
 狀態更新（儀表先行整合版）：2026-07-19（ATM-GOV-0193 為依賴圖第 0 步；採 gitignored runtime scratch/log → closure seal → digest-only history 二層儀表；0182-0190 各卡明載 producer/consumer 契約、M1/M2 可比 cohort 與遙測自我裁汰，形成「以戰養戰」閉環；所有 raw statistics、counter、per-run log、debug log、high-frequency receipt stream 均留硬碟，不進 Git）
 狀態更新（證據修復擴充版）：2026-07-19（0182-0195 的交付物已存在，但現場資料只有 `next.route-resolution` 事件、沒有逐卡 `atm.gateTelemetryTaskSummary.v1`、沒有可配對 control/treatment、broker correctness 樣本為零，既有 M2 verdict 因此維持 `inconclusive`。新增 0196-0205：先把 observed/sealed/consumed 證據鏈與真 executor 補齊，再用真實 dogfood、paired A/B、UX、task-import parser 與全 ATM telemetry observation interface migration 修復收官；任何後卡都必須讀前卡 sealed summary，數據反證原假設時可合法停卡並提請 owner 修訂計畫。）
-狀態更新（0196-0205 契約補強）：2026-07-20（producer 不得等待未來 consumer；同卡以 sealed summary + self-readback close，跨卡 consumed receipt 由下游卡的 opening dataDrivenDecision 負責寫入。0201 必須在 isolated repo 以真 source cache miss 呼叫 sealed runner；0202 驗收改成足量 rollout 與不足量 inconclusive 兩條互斥成功路徑；0197/0199 shared telemetry 寫入需序列化或明確 region ownership；0205 專門把 gate/evidence/validator/runner/broker/test-runner timing 與 correlation 遷移到 canonical telemetry observation interface；所有 validator 走 fail-closed，rollback 需可執行。開工前新增 actor identity gate，避免 planning/target/editor 身分分裂。）
+狀態更新（0196-0205 契約補強）：2026-07-20（producer 不得等待未來 consumer；同卡以 sealed summary + self-readback close，跨卡 consumed receipt 由下游卡的 opening dataDrivenDecision 負責寫入。0201 必須在 isolated repo 以真 source cache miss 呼叫 sealed runner；0202 驗收改成足量 rollout 與不足量 inconclusive 兩條互斥成功路徑；0197/0199 shared telemetry 寫入需明確 symbol/region ownership或經broker compose/queue ticket仲裁，不得blanket serialize；0205建立canonical telemetry observation interface，由各owner card逐步遷移gate/evidence/validator/runner/broker/test-runner timing與correlation；所有validator走fail-closed，rollback需可執行。開工前新增actor identity gate，避免planning/target/editor身分分裂。）
+狀態更新（v2.1 INV-ATM-008 scope amendment）：2026-07-20（owner 重申不同任務卡必須全面平行進入工作，實體或語意重疊時以 content-anchored compose batch 為首選、durable queue ticket 為降級，不能以 `scope overlap defer` 或固定四卡上限取代 broker 仲裁。新增 transaction authority、content-anchor、structured read/write set、isolated proposal lane、compose-first ticket state machine、transactional composer、semantic revalidation 與 shared-delivery saga 工作包；0206 matcher 先 shadow，live compose fast path 必須等 durable ticket state machine。Git branch + merge 只作 disposable fixture repo 的離線比較基線，不成為正式開發 lane。）
 前版計畫：[ATM 端到端自動併批與效能證明計畫](./end-to-end-auto-batch-performance-plan.md)
 Planning 權威來源：`C:/Users/User/3KLife`
 Target 權威來源：`C:/Users/User/AI-Atomic-Framework`
@@ -36,7 +37,7 @@ Target 權威來源：`C:/Users/User/AI-Atomic-Framework`
 2.0 不建立第四套 batch 系統，正式產品模型仍為：
 
 ```text
-Batch 選卡 -> Team Wave 做卡 -> Broker 併寫 -> Checkpoint 閉卡
+Batch 選卡 -> 不同卡各自進入 isolated lane/proposal -> Broker execute/compose-batch/queue ticket -> transactional shared delivery -> Checkpoint 閉卡
 ```
 
 2.0 同時把效能證明設計成計畫內部自我閉環：0183 落地 shadow instrumentation 之後，0184-0190 每張卡自身的施工過程就是被完整量測的真實 serial baseline 樣本（詳見 0183/0190），不需要額外等待外部流量。
@@ -56,13 +57,46 @@ node atm.mjs batch execute-plan \
 
 `--executor auto` 優先使用通過 preflight 的 Team provider，也可消費 editor/subagent worker report；沒有合法 executor 時 fail closed，不偷偷降級成無人追蹤的手工作業。commit 由 executor 自動完成，push 必須明確帶 `--push`。
 
+## v2.1 Scope Amendment：Compose-first Parallel Governance
+
+### 修訂理由
+
+2.0 的量測與 executor 工作假設 broker admission 已符合「不同卡平行、shared write 回 ticket」；實際計畫仍保留 `scope overlap defer`、shared telemetry 預設序列化與固定四卡上限，會把 claim 或 write overlap 退化為新的全域鎖。這與 `INV-ATM-008` 的 broker tickets-not-refusals 及本計畫的多隊長研究目的不相容，因此 v2.1 把 broker 准入能力納入正式 scope，而不是只在 0199/0202 量測既有行為。
+
+### 憲法邊界
+
+- shared code write 的頂層 broker disposition 只能是 `execute-now`、`queue` 或 `batch`；`compose` 是 `batch` ticket 的 `applyStrategy`，不是第四種裸 verdict，也不是 ErrorCode。
+- reads、planning/docs、各 lane 自有 evidence/task event/session record 與 isolated proposal 不因 foreign write lane 排隊。
+- R1 同卡第二 lane 仍以 `ATM_LOCK_CONFLICT` hard reject；R2 semantic dependency 只阻止依賴輸出的 code mutation；R3 `main` commit landing 保留為最小 serial core；R4 docs 不進 code broker。除此四項外，任何新序列化點都必須停下並取得 owner ruling。
+- 不同卡的 path/scope/CID overlap 不得直接 terminal block：先建立 versioned、content-anchored overlap facts，再嘗試 composition batch；不安全、證據不足或 semantic revalidation 未通過才發 durable queue/re-arbitration ticket。
+- ticket 必須保留 task/actor/lane、surface、base/config/input digest、position、head owner/health、enqueue time、`waitedMs`、release condition、wakeup key、retry/backoff、TTL/adopt/cancel 與具體 next action。狀態不得靠解析人類訊息重建。
+
+### Content-anchored boundary 原語
+
+- authoritative identity 由 sealed base blob/tree digest、content context/hash 與 language adapter 可提供的 AST/node/symbol anchor 組成；絕對 `lineStart/lineEnd` 只可作診斷顯示，不得單獨作 compose correctness authority。
+- anchor resolver 必須回傳 provenance、confidence、version 與 `resolved|stale|ambiguous|unsupported`；不得在 stale/ambiguous 時退回猜測行號。
+- `path-to-atom-map` 只提供 path-to-owner attribution，不宣稱已有 symbol/range boundary；v2.1 的研究貢獻是建立並驗證這層 boundary evidence。
+- public JSON schema、TypeScript contract、CLI parser、proposal schema 與 downstream telemetry 必須同版演進，不能再出現 TypeScript 允許但 schema `additionalProperties: false` 拒絕的漂移。
+
+### Revalidation、fairness 與規模
+
+- compose publish 前與 publish 後 rearbitration 都要比較 declared read-set 與最新 published write-set；相交時必須執行 semantic revalidation。文字 rebase 或 patch 可套用不等於語意仍成立。
+- revalidation read 本身不排隊；只有待發布的 code side effect 進入帶 rebase/recompute/validator next action 的 queue 或 batch ticket。docs/private work 繼續。
+- 100+ captains 的 scheduler 必須有 deterministic aging、bounded bypass、partial composition group、single-flight successor wakeup、observed/config-driven backoff 與反飢餓保證；不得把可調 threshold 或 timing 寫死在控制流程。
+- batching 只能合併同 dispatch wave 或 compatible surface family 的 related tasks；unrelated tasks 不得為降低 commit 數而共用一顆 commit。
+- 效能主張使用「serialization depth 從 N 個 authoring waits 收斂到一個 broker publish window；總成本為平行 authoring 最大值加 composition/publish 成本」，不得宣稱 compose 演算法是 O(1)。
+
+### Git 對照組邊界
+
+0202 增加 serial、queue-only、ATM compose-first、traditional Git feature-branch + merge 四臂 matched benchmark。第四臂只能在 disposable isolated fixture repo 離線執行，不得在 framework live repo 建立 feature branch、branch-attached source worktree、production fallback 或第四執行 lane；否則違反 R3 且必須另走 charter amendment。
+
 ## 權威與文件
 
 - `planning_repo_root`: `C:/Users/User/3KLife`
 - `planning_repo_is_external_to_target`: `true`
 - `target_repo_root`: `C:/Users/User/AI-Atomic-Framework`
 - `source_plan_path`: `docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md`
-- `source_task_card_path`: `docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-*.task.md`、`ATM-GOV-0182..0190-*.task.md`、`ATM-GOV-0194..0195-*.task.md` 與 `ATM-GOV-0196..0205-*.task.md`
+- `source_task_card_path`: `docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-*.task.md`、`ATM-GOV-0182..0190-*.task.md`、`ATM-GOV-0194..0195-*.task.md` 與 `ATM-GOV-0196..0214-*.task.md`
 - `target_import_method`: executor 內部透過既有 task import/taskflow orchestration 匯入；禁止直接編輯 `.atm/history/**`。
 
 Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號與閉卡事實的權威來源；本文的任務編號與對照表只是 planning snapshot，不得反向覆蓋 ledger。每張卡開卡前必須同時：
@@ -119,7 +153,7 @@ Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號
 - **第二層／digest-only history**：只在 task close、batch checkpoint 或明示 `atm telemetry seal` 時，以固定 watermark 封存本工作窗，但完整 JSONL/archive 仍保留在 gitignored `.atm/runtime/telemetry/**` 或本機 log store；Git-tracked `.atm/history/evidence/governance-telemetry/<windowId>.json` 只保存 compact digest、watermark、schema/version、source availability、aggregated counters、selected baseline snapshot 與決策引用。watermark 後的新事件留給下一個 seal，避免封存過程與寫入競爭；不得在 hook 或一般命令中把 raw event stream 寫入 tracked history。
 - `atm telemetry report --json` 預設只讀 digest-only history；`--include-runtime` 僅供本機診斷與重算，不得把 raw runtime archive 當成 Git 證據提交。report 輸出 eligible 啟動數、result 分布、unique block、真陽性裁決狀態、duration p50/p95、證據讀回、遺失/丟棄事件與來源可用性；若需要抽樣佐證，僅提交去識別/去重後的小型 baseline snapshot。
 - 事件最小欄位為 `specVersion,eventId,sequence,observedAt,gate,checkId,checkVersion,policyVersion,eligible,result,reasonClass,durationMs,actorId,runId,correlationId,laneSessionId?,taskId?,batchId?,waveId?,command,inputDigest,configDigest,source,redactionClass,failureEnvelopeRef?,evidenceReadRef?`。taxonomy 與 check identity 由 canonical registry 管理，節點不得自行發明近義 `checkId`。
-- Broker 決策是必測治理節點，不得只記 ticket 結果。`atm.brokerDecisionTelemetry.v1` 併入同一 seal/report pipeline，最小欄位包含：`decisionId`、`decisionKind`（admit/queue/batch/compose/serialize/defer/reject-adopt-only）、`requestedFiles`、`parallelAdmissionAttempted`、`parallelAdmissionReason`、`conflictDetected`、`conflictSet`、`conflictAxis`（same-task/semantic-dependency/file-overlap/generated-surface/commit-window/release-runner/planning-closeback）、`resolver`、`composeCandidate`、`composeDecision`（compose/separate/unsafe/inconclusive）、`compositionGroupId`、`finalDisposition`、`waitedMs`、`sideEffectAllowed`、`safetyFallback`、`decisionLatencyMs`、`inputDigest`、`configDigest`、`outcomeRef`、`correctnessVerdict`（pending/correct/false-positive/false-negative/escaped-conflict/manual-overridden）與 `ownerReviewRef`。這些事件回答「是否先允許 AI 平行進入再判斷衝突」、「是否可 compose 一起寫檔」、「衝突解決是否正確」與「broker 是否真的降低等待」。
+- Broker 決策是必測治理節點，不得只記 ticket 結果。`atm.brokerDecisionTelemetry.v1` 併入同一 seal/report pipeline，最小欄位包含：`decisionId`、`ticketKind`（execute/queue/batch；R1/R2 code gate時可缺）、`batchApplyStrategy`（compose/separate/steward）、`queueReason`、`constitutionalException`（none/R1/R2/R3/R4）、`legacyDecisionKind?`（只供歷史觀測，不得驅動控制流）、`requestedFiles`、`parallelAdmissionAttempted`、`parallelAdmissionReason`、`conflictDetected`、`conflictSet`、`conflictAxis`（same-task/semantic-dependency/file-overlap/generated-surface/commit-window/release-runner/planning-closeback）、`resolver`、`composeCandidate`、`compositionGroupId`、`finalDisposition`、`waitedMs`、`sideEffectAllowed`、`safetyFallback`、`decisionLatencyMs`、`inputDigest`、`configDigest`、`outcomeRef`、`correctnessVerdict`（pending/correct/false-positive/false-negative/escaped-conflict/manual-overridden）與 `ownerReviewRef`。這些事件回答「是否先允許 AI 平行進入再判斷衝突」、「是否可 compose 一起寫檔」、「衝突解決是否正確」與「broker 是否真的降低等待」。
 - 原始事件不可事後改寫。後續以 classification event 記錄 `resolutionRef`、`downstreamIncidentRef` 與 `adjudication`，據此判定 unique block 與 true positive；同一 correlation/reason 的重複檢查不得重複計功。
 - Fail-open 鐵律：emit、seal 或 schema 驗證失敗只能產生 observability warning 並遞增 dropped/malformed counter，絕不可改變原命令 outcome、exit code、排序或副作用。
 - 唯讀探索不上 write claim，但必須留下 lane presence/status 與 correlation；lane 可見性本身不得觸發 scheduler queue、HEAD、index、task lifecycle 或 registry 寫入。
@@ -209,7 +243,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 | 0183 | BatchRun/shadow lifecycle、wait start/end、broker decision journal、join 與 token source | 0182 route/preflight seal；缺 wait end 或 usage 時標 incomplete/unavailable；broker 缺 decision event 不得推論為無衝突 |
 | 0184 | worker start/heartbeat/sweep/retry/defer 與 report ingestion | 0183 journal與 gate seal；缺 worker report 不得視為成功或零成本 |
 | 0185 | validator queue/execute/cache/fan-out 與 M1 cohort seal | 0193 duration/check reports；資料不足時只用宣告成本，禁止自動優化 |
-| 0186 | shared-write admission、broker compose/serialize 決策、per-check commit、payload assertion treatment | M1 report + optimization/config digest；無 matched baseline 輸出 inconclusive；compose 決策必須可回放 |
+| 0186 | shared-write admission、legacy compose/serialize observation、per-check commit、payload assertion treatment | 僅作歷史 baseline；v2.1 由 0211 映射為 execute/queue/batch ticket + batch apply strategy，無 matched baseline 輸出 inconclusive |
 | 0187 | generated write/build/projection/runner receipt treatment | M1/M2 check identity 與 input/output digest；不可用假 digest 補缺事件 |
 | 0188 | checkpoint/closeback、rejection/classification 與 evidence readback | sealed rejection/history；stdout-only failure 不算 durable evidence |
 | 0189 | collection-window、EMA、broker queue/compose health、push/recovery 與 circuit-breaker treatment | 已封存事件密度與健康度；每次自動決策保存輸入 report digest；broker 缺漏時回退保守 serial floor |
@@ -218,7 +252,7 @@ Cross-cutting governance prerequisite：`TASK-ERR-0001`（原 ATM-GOV-0191，已
 | 0196 | observed coverage ledger、taskflow seal/readback enforcement、M3 cohort manifest | 消費 0195 preflight；同卡以 sealed summary + self-readback close，下游 consumed receipt 由 0197-0203 的 opening decision 負責；未 observed 或未封存的節點不得宣稱 covered |
 | 0197 | runtime-only raw telemetry/receipt store、compact tracked digest、session lifecycle receipt、`.gitignore` boundary | 消費 0196 coverage；同卡封存 compact digest 與 self-readback；任何 raw log/counter/timing/session trace 留在硬碟，Git 只收可重算的 compact decision digest |
 | 0198 | 真 plan phase execution、resume/recovery outcome、exactly-once receipt、circuit-breaker/recovery command | 消費 0196 sealed taskflow coverage；每個 phase 必須有真 side effect 或明示 skipped reason，不能只回傳下一條命令 |
-| 0199 | broker admission/conflict/compose/serialize decision、outcome adjudication 與 aging queue | 消費 0196 coverage；每個 decision 都要能 join outcome，correctness pending 必須有 aging/owner review 語義 |
+| 0199 | execute/queue/batch ticket、batch apply strategy、conflict facts、outcome adjudication 與 aging queue telemetry | 消費 0196/0205/0206/0211-0214；每個 decision 都要 join 0214 outcome，correctness pending 有 aging/owner review 語義 |
 | 0200 | validator eligible/invoke/skip/cache/fan-out/block/readback lifecycle、tier proposal 與 rollback receipt | 消費 0196 coverage；只依 observed opportunity 提出 fast/default/full/archive-candidate，安全 gate 不自動刪除 |
 | 0201 | isolated repo 真 cache-miss incremental build 樣本、phase timings、artifact digest 與 dominant-phase optimization | 消費 0194 implementation 與 0197 storage boundary；呼叫 sealed runner 證明 package-only source change 走 incremental，不接受 fixture 或 injected buildDecision |
 | 0202 | matched serial/treatment cohorts、四法驗證、fail-closed report helpers 與 rollout v4 verdict | 消費 0198-0201 sealed summaries；足量才可 rollout，缺樣則正式 inconclusive + 最小補樣卡，禁止 fixture 補樣 |
@@ -270,13 +304,22 @@ dataDrivenDecision:
 | ATM-GOV-0196 | Observed telemetry coverage 與逐卡 seal/readback enforcement | registered/code-wired/observed/sealed/consumed 五層 coverage；缺 task summary 不得冒充零事件或有效 cohort |
 | ATM-GOV-0197 | Runtime telemetry boundary、compact tracked receipts 與 session lifecycle | raw statistics/log/counter/session trace 全留 gitignored runtime；tracked history 只存 compact digest，stale session 不再誤導路由 |
 | ATM-GOV-0198 | 真正可續跑的 Plan Executor orchestration loop | 一個命令實際推進完整 phase chain；crash resume exactly once；不再只 append journal 後回傳下一條命令 |
-| ATM-GOV-0199 | Live broker decision/outcome telemetry 與 correctness adjudication | 量到 parallel admission、conflict、compose/serialize、結果與 correctness aging；可證明 broker 是否真的解衝突 |
+| ATM-GOV-0199 | Live broker decision/outcome telemetry 與 correctness adjudication | telemetry-only量到execute/queue/batch、compose strategy、conflict facts、0214結果與correctness aging；不擁有broker能力 |
 | ATM-GOV-0200 | Validator observed lifecycle 與 evidence-driven tiering | 每個 validator 有 eligible/invoke/skip/cache/fan-out/block/readback 數據；產出可回復分層實驗，不自動刪安全 gate |
 | ATM-GOV-0201 | Runner incremental dogfood 與 dominant-phase optimization | 真 cache-miss package-only change 走 incremental；量 worktree/TS/root-drop/assembly/sync，改善主要瓶頸 |
 | ATM-GOV-0202 | Real paired A/B v4 與 rollout verdict | 真 serial/treatment 配對；歷史 replay、shadow、parity、A/B 四法完成；只在 speed/cost/safety/observability 可判且通過時 default-on |
 | ATM-GOV-0203 | First-layer routing、compact orientation 與 Windows-safe command contracts | backlog/audit 不再誤路由；orientation 不傾倒完整 validator；skill 第一層直接揭露常用 CLI 與 Windows-safe 範例 |
 | ATM-GOV-0204 | Task import parser canonical ID boundary repair | 找出 importer 誤收 prefix fragment 的根因；抽泛用 canonical id parser contract；2.0 dry-run 不再產生假 `ATM-GOV-018` |
-| ATM-GOV-0205 | Canonical telemetry observation interface migration | 全 ATM timing/correlation/digest/storage-boundary 欄位共用 canonical observation interface；runner、validator、broker、evidence 與 test-runner producer 不再各寫各的 |
+| ATM-GOV-0205 | Canonical telemetry observation interface foundation | 建立共用 timing/correlation/digest/storage-boundary contract、normalizer/adapter port與inventory；producer migration由各owner card負責 |
+| ATM-GOV-0206 | Broker resource overlap matcher shadow repair | 泛用pattern-aware matcher、matched resource facts與false-negative shadow evidence；0211前不得live terminal block |
+| ATM-GOV-0207 | Canonical broker transaction authority | generation CAS、linearizable registry、corruption fail-closed、全入口same-task fence；零acknowledged lost update |
+| ATM-GOV-0208 | Content-anchored code boundary substrate | sealed base + content context + AST/symbol anchor；行號僅診斷；schema/TS/CLI/proposal同版 |
+| ATM-GOV-0209 | Versioned read/write sets and structured overlap | canonical read/write set與`ResourceOverlap[]`；不再由boolean或prose反推衝突 |
+| ATM-GOV-0210 | Parallel task start and isolated proposal lanes | 不同卡即使scope/CID overlap仍可各自claim/read/propose；shared side effect另交broker |
+| ATM-GOV-0211 | Compose-first durable ticket state machine | execute/queue/batch ticket、compose strategy、公平性、反飢餓、single-flight wakeup與0206 live gate |
+| ATM-GOV-0212 | Transactional bounded composer | 同base temp tree/index compose、context驗證、serializability、partial compose與零partial live mutation |
+| ATM-GOV-0213 | CID/read-set semantic revalidation | published write-set相交時重驗語意；text rebase不等於valid；結果回既有ticket transition |
+| ATM-GOV-0214 | Shared delivery saga hardening | 所有blocker在update-ref前；single CAS publish、crash resume、exactly-once與governed compensation |
 
 ## 任務細節
 
@@ -352,7 +395,7 @@ dataDrivenDecision:
 - worker 必須定期 heartbeat；coordinator 透過既有 lane sweep 判斷 stale/expired，不新增 wave-only TTL。
 - provider/editor worker report 必須帶 `tokenUsage`（0183 契約）；缺 usage 的 provider report 記 observability warning。
 - worker 只可修改 claim scope 並回傳 patch/report/validator inputs；git write、broker execute、checkpoint 與 close 權限只屬 coordinator。
-- partial/blocked worker 可重試一次；仍失敗則 defer/reseal。剩一張時回既有 serial fallback。
+- partial worker 可重試一次；仍失敗則封存 proposal 並交 broker 重新仲裁，取得 durable `queue`/`batch` ticket 與 release condition；剩一張時取得 `execute` ticket，不使用 bare defer 或 serial fallback。
 - out-of-scope report 進 `needs-review`，不得進 shared write。
 - 資料契約：worker lifecycle（啟動、heartbeat、sweep、retry/defer）經 0193 記錄，帶 wave/member lane；消費 0183 sealed journal。缺 worker report 或 usage 只得標 partial / `source: unavailable`，不得視為成功、零成本或零等待；收口 seal baseline 工作窗。
 - ErrorCode：重用 `ATM_TEAM_RUN_INVALID`、`ATM_TEAM_WRITE_SCOPE_OUT_OF_BOUNDS`、`ATM_TEAM_LEASE_CONFLICT`；`needs-review` 本身是狀態，不新增 ErrorCode。
@@ -440,16 +483,16 @@ dataDrivenDecision:
 必要行為：
 
 - 一個命令持續推進 preflight、select、claim lanes、workers、reconcile、validate、generated writes、delivery commit、checkpoint、target push、planning closeback/push、analyze 與 next wave。
-- 支援 `--dry-run`、`--batch <id>` resume、pause、cancel、serial fallback、`--push` 與 circuit breaker；每次輸出唯一 next/recovery command。
+- 支援 `--dry-run`、`--batch <id>` resume、pause、cancel、durable queue-ticket fallback、`--push` 與 circuit breaker；每次輸出唯一 next/recovery command。
 - `collectionTimeoutMs` 不再是單一固定 timeout；它只保留為舊 manifest 的相容輸入，解析後必須正規化成動態 collection policy。初始預設：`floorMs=15000`、`ceilingMs=120000`、`emaAlpha=0.25`、飽和密度 8 events/min；以最近 20 筆同 repo commit/ticket event 的 events-per-minute EMA 計算：`floor + (ceiling-floor) * min(1, emaRate/saturation)`，再 clamp 至 floor/ceiling。這些常數是可調參的初始預設而非規格常數，0190 得依實測數據調整。所有 expected tickets 到齊可提早收單。
 - 高事件密度時延長窗口以吸收相關 tickets；事件趨於安靜時回到 floor，避免固定等待 120 秒。報告每次 window 的 EMA input、decision 與實際等待。
-- Push 分歧復原通路（見「執行與失敗語義」的授權分級）：push phase 先 fetch 並嘗試 fast-forward；分歧且本 run 自有 commits 與遠端新 commits 檔案不相交時，允許 governed ephemeral push-only worktree 復原——detached worktree checkout `origin/<branch>`、cherry-pick 本 run 自有 commits、push、立即刪除 worktree；全程不碰主 worktree 與 foreign WIP，並寫 recovery event（含採用原因、涉及 SHA、worktree 路徑與清除確認）。檔案相交或 cherry-pick 衝突則停在 `push-diverged`，輸出協調指引，不自動合併。
+- Push 分歧復原通路（v2.1 supersession）：push phase 先 fetch 並判定 main authority generation。不得建立 branch-attached source worktree、cherry-pick lane 或 live feature-branch fallback；只有 0214 transactional main-lane saga 能在同一 canonical authority 下證明新 generation 仍可 publish 時才可續跑，否則停在 `push-diverged` 並輸出 broker 協調指引，不自動改寫歷史。
 - coordinator lane heartbeat 中斷時暫停新 side effect；TTL 到期後只接受正式 adopt/takeover。接手者由 0188 journal/receipt resume。
 - 每 wave 結束時，本 run 自有 dirty/untracked residue 必須為零；foreign/unrelated residue 只報告、不清除。
 - 資料契約：dynamic window 消費 sealed telemetry density/health 與 commit/ticket 事件；每次 EMA、window、push/recovery 與 circuit-breaker 決策保存輸入 report digest、config digest 並產出 treatment event。遙測缺漏時回退 floor policy，不能當成密度為零。
 - ErrorCode：push 無法安全收斂使用由 0183 登錄的 `ATM_BATCH_PUSH_DIVERGED`；不可安全 resume 重用 `ATM_BATCH_STATE_REPAIR_REQUIRED`。pause/cancel/circuit-open 是受控狀態，不新增 ErrorCode。
 
-驗收：完整 isolated plan run、dynamic window floor/ceiling/early-close、pause/resume/cancel、serial fallback、circuit open、coordinator adopt、push-pending resume、own-scope clean check，以及分歧復原的成對測試（不相交 -> ephemeral worktree 成功且事後無殘留；相交 -> 停在 push-diverged 不動任何歷史）。
+驗收：完整 isolated plan run、dynamic window floor/ceiling/early-close、pause/resume/cancel、durable queue-ticket fallback、circuit open、coordinator adopt、push-pending resume、own-scope clean check，以及分歧復原的成對測試（generation/authority 仍有效 -> 由 0214 transactional main-lane saga exactly-once publish；否則 -> 停在 push-diverged，不建立 worktree/branch lane且不改寫任何歷史）。
 
 ### ATM-GOV-0190 - Real Paired A/B、Analyzer v3 與 Rollout Verdict
 
@@ -500,7 +543,7 @@ dataDrivenDecision:
 
 ### ATM-GOV-0197 - Runtime Telemetry Boundary、Compact Tracked Receipts 與 Session Lifecycle
 
-依賴：ATM-GOV-0196。
+依賴：ATM-GOV-0196、ATM-GOV-0205。
 主要 surface：telemetry/runtime store、runner-sync detailed receipts、session-events lifecycle、history compact digest/projection。
 
 必要行為：
@@ -516,7 +559,7 @@ dataDrivenDecision:
 
 ### ATM-GOV-0198 - 真正可續跑的 Plan Executor Orchestration Loop
 
-依賴：ATM-GOV-0196、ATM-GOV-0188、ATM-GOV-0189。
+依賴：ATM-GOV-0196、ATM-GOV-0188、ATM-GOV-0189、ATM-GOV-0210、ATM-GOV-0211、ATM-GOV-0214。
 主要 surface：`batch execute-plan` phase driver、plan run journal、phase executors、resume/adopt/recovery。
 
 必要行為：
@@ -531,23 +574,23 @@ dataDrivenDecision:
 
 ### ATM-GOV-0199 - Live Broker Decision/Outcome Telemetry 與 Correctness Adjudication
 
-依賴：ATM-GOV-0196。
-主要 surface：broker admission/queue/conflict/compose/serialize、outcome classifier、telemetry seal/report。
+依賴：ATM-GOV-0196、ATM-GOV-0205、ATM-GOV-0206、ATM-GOV-0211、ATM-GOV-0212、ATM-GOV-0213、ATM-GOV-0214。
+主要 surface：`packages/core/src/telemetry/broker/**`、broker decision observation adapter、outcome classifier與telemetry seal/report；不得修改admission、ticket、composer、semantic或publish policy。
 
 必要行為：
 
-- 每次 broker decision 都記 `parallelAdmissionAttempted`、conflict axes/set、compose candidate/decision、serialize/defer/reject 原因、waitedMs、decision latency、config digest 與 safety fallback。
-- AI lane 的順序必須可判：先平行入場再評估、先保守序列化、或因 surface policy 禁止入場；報告分母採 eligible opportunity，不能把無事件當零衝突。
+- 每次 broker decision 都記`ticketKind=execute|queue|batch`、batch apply strategy、constitutional exception、conflict facts、waitedMs、decision latency、config digest與safety fallback；legacy blocked/serialize/defer字串只作觀測欄位，不得成為新控制流。
+- AI lane 的順序必須可判：先平行入場再評估、compose-batch或durable queue fallback；報告分母採eligible opportunity，不能把無事件當零衝突。
 - decision 必須在 side effect/close/incident 後 join `outcomeRef`，再以 immutable classification event 寫 correct/false-positive/false-negative/escaped/manual-overridden；pending 需 aging 與 owner review queue。
 - compose 是否正確以 commit/file slices、validator、rollback/escape 與 downstream incident 判定，不以「成功寫檔」單點計功。
-- 開工 consumed 0196；close self-readback broker correctness summary。若與 0197 同時修改 `packages/core/src/telemetry/**`，必須預先聲明 broker-bounded region 且不重疊，否則序列化。
-- rollback 必須能停用 live broker adjudication 並回到保守 serialize/fail-closed 策略。
+- 開工 consumed 0196/0205/0206/0211-0214；close self-readback broker correctness summary。shared telemetry寫入依0211 ticket仲裁，不能以整卡預設序列化。
+- rollback只停用observation adapter/classifier/aging，不得改變0211-0214 admission與publish行為；append-only decision仍保留供audit。
 
-驗收：平行無衝突、可 compose、必須 serialize、false-positive、escaped-conflict 各有 isolated case；至少一次真 dogfood decision 被封存且後續讀回裁決；0196 consumed、self-readback 與 rollback receipt 存在。
+驗收：無衝突execute、可compose batch、不安全queue fallback、R1 hard reject、false-positive、escaped-conflict各有isolated case；至少一次真dogfood decision經0214 outcome封存並讀回裁決；所有dependency consumed、self-readback與telemetry-only rollback receipt存在。
 
 ### ATM-GOV-0200 - Validator Observed Lifecycle 與 Evidence-Driven Tiering
 
-依賴：ATM-GOV-0196。
+依賴：ATM-GOV-0196、ATM-GOV-0205。
 主要 surface：validator registry、queue/execution/cache/fan-out、doctor/default/full profile、tier recommendation/report。
 
 必要行為：
@@ -562,7 +605,7 @@ dataDrivenDecision:
 
 ### ATM-GOV-0201 - Runner Incremental Dogfood 與 Dominant-Phase Optimization
 
-依賴：ATM-GOV-0194、ATM-GOV-0197。
+依賴：ATM-GOV-0194、ATM-GOV-0197、ATM-GOV-0205、ATM-GOV-0211。
 主要 surface：sealed runner build、incremental planner、package dist、persistent TS build state、root-drop/onefile assembly、artifact sync。
 
 必要行為：
@@ -577,22 +620,24 @@ dataDrivenDecision:
 
 ### ATM-GOV-0202 - Real Paired A/B v4 與 Rollout Verdict
 
-依賴：ATM-GOV-0198、ATM-GOV-0199、ATM-GOV-0200、ATM-GOV-0201。
+依賴：ATM-GOV-0198、ATM-GOV-0199、ATM-GOV-0200、ATM-GOV-0201、ATM-GOV-0214。
 主要 surface：real dogfood runner、cohort matcher、performance analyzer/report、rollout/circuit-breaker receipt。
 
 必要行為：
 
 - 只納入 observed+sealed+consumed、workload/surface/config 可匹配的 serial control 與 plan-executor treatment；先輸出 cohort manifest/exclusions，再計算效果。
+- 四臂固定為single-lane serial、broker queue-only、ATM compose-first與disposable isolated repo的真Git branch+commit+merge；四臂使用相同sealed base、workload、validators與hardware envelope，Git臂不得由synthetic fixture data代替。
+- benchmark config版本化宣告每個arm×scale×contention cell的minimum repeats、seed set、AB/BA或Latin-square ordering與observation horizon；required scale至少2/4/8/16/32/64/100+，sufficiency validator逐cell裁決。
 - 執行歷史事故 replay、shadow false-positive/latency、canonical evaluator parity、matched batch A/B；四法各自輸出可判定性，不得互相代替。`scripts/captain-parallel-ledger-report.ts` 與 `scripts/plan-performance-report-v3.ts --validate --require-sealed-cohorts` 必須 fail closed。
 - speed、cost、safety、observability、broker correctness 與 builder effect 分維裁決；必要 gate 全部可判且通過才允許 default-on，否則保持 opt-in/circuit breaker。
 - 若配對樣本仍不足，產生最小補樣 proposal，引用缺哪個 stratum/opportunity；不得用 fixture、自然前後期或文件產物數補樣。
 - rollback 必須可執行：rollout/circuit breaker receipt 能把 default-on 回復為 opt-in，並保留 cohort/config digest。
 
-驗收：共同條件是 0198-0201 consumed summaries、sealed cohort validator、報告可重算、安全違規為零、rollout/rollback receipt 引用 cohort/config digest。A 路徑：至少六組真實 matched pairs 且 AB/BA 交錯，speed/cost/safety/observability/broker/builder 全部可判且通過，才可 default-on。B 路徑：未達配對門檻或任一必要維度不可判時，正式輸出 `inconclusive`、保持 opt-in/circuit breaker，並附最小補樣 proposal；A/B 互斥，禁止把不足樣包裝成 rollout。
+驗收：共同條件是0198-0201與0211-0214證據均consumed、sealed cohort validator、四臂每個required scale/contention cell的config-derived sufficiency、報告可重算、安全違規為零、rollout/rollback receipt引用cohort/config digest。A路徑：所有required cells與speed/cost/safety/observability/broker/builder維度可判且通過才可default-on。B路徑：任一cell或維度不可判時正式輸出`inconclusive`、保持opt-in/circuit breaker並附逐cell最小補樣proposal；A/B互斥，禁止把不足樣或synthetic fixture包裝成rollout。
 
 ### ATM-GOV-0203 - First-Layer Routing、Compact Orientation 與 Windows-Safe Command Contracts
 
-依賴：ATM-GOV-0196。
+依賴：ATM-GOV-0196、ATM-GOV-0211。
 主要 surface：canonical skill source、next prompt router、guide/help、orientation renderer、backlog/audit/release/checkpoint command examples。
 
 必要行為：
@@ -607,7 +652,7 @@ dataDrivenDecision:
 
 ### ATM-GOV-0204 - Task Import Parser Canonical ID Boundary Repair
 
-依賴：ATM-GOV-0203。
+依賴：無；與0203只有soft evidence relation。
 主要 surface：`tasks import` parser、Markdown heading/table/link/body extractors、frontmatter/sibling-card merge、task import diagnostics。
 
 必要行為：
@@ -620,24 +665,96 @@ dataDrivenDecision:
 
 驗收：focused regression、`scripts/validate-task-import`、typecheck 與 validate:cli 全過；2.0 plan dry-run 只列真任務，不含 `ATM-GOV-018`；有效 ids（含 `ATM-GOV-0182`、`ATM-GOV-0204`、`TASK-ERR-0001`、`TASK-TMP-0001`）仍可匯入。
 
-### ATM-GOV-0205 - Canonical Telemetry Observation Interface Migration
+### ATM-GOV-0205 - Canonical Telemetry Observation Interface Foundation
 
 依賴：ATM-GOV-0196。
 
-主要 surface：`packages/core/src/telemetry/**`、`packages/cli/src/commands/evidence/**`、validator runner、runner-sync/incremental build receipts、broker timing/outcome producers、test-runner timing reports。
+主要surface：`packages/core/src/telemetry/**`、evidence command-run canary、canonical normalizer/adapter port、compatibility reader、inventory與focused validator。validator/runner/broker/test-runner/executor producer migration由0197/0198/0199/0200/0201各自負責。
 
-目的：把 Plan 2.0 的儀表資料抽象成一層可擴充或可 adapter-backed 的 canonical observation interface，避免 `durationMs`、`startedAt`、`finishedAt`、`observedAt`、`correlationId`、`runId`、cache/runner/source/digest/storage-policy 欄位在各 command 與 subsystem 中各自發明。domain-specific event 可繼承或 compose base contract；橫切欄位必須走共用 normalizer。
+目的：先把Plan 2.0儀表的橫切欄位抽象成可擴充或adapter-backed canonical observation interface，避免`durationMs`、`startedAt`、`finishedAt`、`observedAt`、`correlationId`、`runId`、cache/runner/source/digest/storage-policy在各subsystem各自發明。domain-specific event可compose base contract；0205不直接接管所有producer hot files，也不承擔content-anchor/read-write-set correctness identity。
 
 要求：
 
 - 開工 consumed 0196 sealed coverage；0197 runtime boundary、0200 validator lifecycle 與 0201 runner timing 是此卡的下游 consumers，不得等它們先產生異構資料才建立 interface。對尚未存在的下游樣本標 planned-consumer，不推論零成本或零等待。
 - inventory 全 repo timing/correlation producers，分類為 `canonical`、`adapter-backed`、`legacy-readable` 或 `not-yet-migrated`。
-- evidence commandRuns、validator lifecycle、runner-sync build timing、incremental build timing、broker queue/outcome timing 與 test-runner report timing 必須直接使用 canonical interface 或經 adapter 轉成 canonical shape。
+- evidence commandRuns作canary直接使用canonical interface；validator lifecycle、runner-sync/incremental build、broker queue/outcome、test-runner與executor timing由owner card經0205 adapter port轉成canonical shape。
 - historical evidence 必須 backward-compatible；不得手動 rewrite `.atm/history/**`。
 - raw logs、stdout/stderr、session trace、高頻 counter 仍留 gitignored runtime；Git 只保存 compact digest/timing/correlation summary。
 - 若 inventory 發現互斥 schema 無法相容遷移，合法停卡並提出 schema-version migration plan，不硬塞一次性轉換。
 
-驗收：新增 focused migration test 與 validator；typecheck、validate:cli 全過；至少一筆 validator command、一筆 cached command reuse、一筆 runner/build timing dogfood 都能經 canonical interface 讀寫；報告列出尚未遷移 producer 的 partial/missing-data 狀態與下一步。
+驗收：新增focused contract/compatibility test與validator；typecheck、validate:cli全過；至少一筆evidence command-run canary經canonical interface讀寫；inventory為validator、runner、broker、test-runner與executor列出owner card、adapter port與`planned-consumer|not-yet-migrated`狀態，不以fixture填零。
+
+### ATM-GOV-0206 - Broker Resource Overlap Matcher Shadow Repair
+
+依賴：無；可與0205/0207平行，但0211 live activation消費其sealed shadow summary。
+
+主要surface：`conflict-matrix.ts`、resource matcher/result contract與focused overlap fixtures。0206只修事實偵測，輸出matched resource set、normalization、provenance與unknown；在0211 durable ticket state machine完成前不得把新增命中live-enable成terminal block。
+
+驗收：glob/literal雙向、pattern/pattern、slash normalization、各resource axis、ambiguous/unsupported與真disjoint均有fixture；shadow discrepancy可重放；沒有path/task/string特判。
+
+### ATM-GOV-0207 - Canonical Broker Transaction Authority
+
+依賴：0196。
+
+主要surface：broker registry/lifecycle、versioned transaction authority、linearizable store與所有register/release/adopt入口。建立generation CAS、idempotency、corruption fail-closed與R1 same-task fence；不得建立第二registry或parallel lifecycle。
+
+驗收：1/16/64/128-process concurrency與killpoint fixtures中零acknowledged lost update、duplicate terminal transition或corruption-as-empty；所有入口的same-task fence一致。
+
+### ATM-GOV-0208 - Content-Anchored Code Boundary and Resolver Substrate
+
+依賴：0207。
+
+主要surface：broker boundary contracts、language adapter、write-intent/patch-proposal schemas。canonical identity由sealed base blob/tree、content context/hash與AST/node/symbol anchor構成；absolute line僅診斷。
+
+驗收：insert/reorder/rename/format/duplicate-context/same-name/base-mismatch可重現resolved/stale/ambiguous；unsupported不冒充compose-safe；schema/TypeScript/CLI/proposal同版。
+
+### ATM-GOV-0209 - Versioned Read/Write Sets and Structured Overlap
+
+依賴：0206、0207、0208。
+
+主要surface：intent enrichment、conflict matrix、canonical `ResourceOverlap[]`與public schemas。task-card scope只形成candidate surface；confirmed overlap必須保存左右owner/lane/intent、anchors、intersection、provenance與confidence。
+
+驗收：下游不再解析boolean/prose；unknown保持unknown；0206 shadow與structured facts有parity/discrepancy report。
+
+### ATM-GOV-0210 - Parallel Task Start and Isolated Proposal Lanes
+
+依賴：0207、0209。
+
+主要surface：next claim admission/orchestration與proposal lane。不同卡可同時claim/read/plan並產生sealed proposal；proposal lane禁止live index/source/build/release/projection/commit/close/push。
+
+驗收：disjoint、same-file、ambiguous與CID overlap不同卡皆能建proposal lane；R1同卡第二lane仍hard reject；R2只限制依賴code side effect。
+
+### ATM-GOV-0211 - Compose-First Broker Ticket State Machine
+
+依賴：0206、0207、0209、0210。
+
+主要surface：canonical decision、durable ticket/queue、fair scheduler與wakeup。頂層只有execute/queue/batch；compose是related batch的apply strategy。legacy preflight只能供應facts，不得在canonical ticket前throw；registry只持有ticket實際允許的resources，queued shared paths不得被誤記為active ownership。position、head health、`waitedMs`、release condition、aging、bounded bypass、single-flight wakeup、TTL/adopt/cancel皆為versioned policy/state；fairness config明示arrival model、max bypass/wait或等價wakeup-cycle bound、seed與observation horizon。
+
+驗收：100+ captains下每張eligible ticket都在sealed policy bound內executing/released或帶合法terminal/reconcile reason，且零duplicate wakeup、thundering herd或lost ticket；不同卡shared conflict沒有bare refusal；0206只能由本卡live-enable。
+
+### ATM-GOV-0212 - Transactional Bounded Composer
+
+依賴：0208、0209、0211。
+
+主要surface：composer/merge-plan/steward與adapter strategies。所有member pin同一base，在temp tree/index完成context、scope、hash、serial oracle與validator後才交0214發布；禁止逐proposal修改live working tree。
+
+驗收：已知line-shift silent-corruption反例消失；disjoint permutation invariant；composed tree等價某個合法serial order；partial compose保留未選ticket的age/order/attribution。
+
+### ATM-GOV-0213 - CID and Read-Set Semantic Revalidation
+
+依賴：0208、0209、0211；可與0212平行實作，0214同時消費兩者sealed contracts。
+
+主要surface：semantic adjudication、operation algebra、read-set/published-write-set join與targeted validators。read本身不排隊；只有未通過revalidation的code publish回queue/batch ticket transition。
+
+驗收：read/write stale reasoning、rename+modify、delete+modify、commutative scalar、same-CID disjoint anchor與validator-unavailable都有deterministic verdict；text rebase不能冒充semantic valid。
+
+### ATM-GOV-0214 - Shared Delivery Saga Hardening
+
+依賴：0211、0212、0213。
+
+主要surface：shared delivery plan、temp index/tree、single CAS publish、generated writes、checkpoint/closeback/push journal與recovery。所有blocker/compose/semantic/scope/validator/expected-HEAD assertions必須在`update-ref`前完成。
+
+驗收：每個phase killpoint重啟後零duplicate commit/close/push、零partial live mutation、零acknowledged side effect遺失；receipt可重算commit tree、member slices、ticket、validator與semantic refs。
 
 ## 依賴圖
 
@@ -661,27 +778,62 @@ flowchart LR
   Z -. "sealed M1/M2 evidence" .-> I
   I --> K["0195 Coverage repair / M2 preflight"]
   K --> L["0196 Observed coverage / task seal"]
-  L --> M["0197 Runtime boundary / session lifecycle"]
-  L --> N["0198 True plan executor loop"]
-  L --> O["0199 Broker outcome telemetry"]
+  L --> U["0205 Canonical observation foundation"]
+  V["0206 Matcher shadow repair"]
+  L --> W["0207 Transaction authority"]
+  W --> X["0208 Content-anchor substrate"]
+  V --> Y["0209 Structured read/write overlap"]
+  W --> Y
+  X --> Y
+  W --> AA["0210 Isolated proposal lanes"]
+  Y --> AA
+  V --> AB["0211 Compose-first ticket state"]
+  W --> AB
+  Y --> AB
+  AA --> AB
+  X --> AC["0212 Transactional composer"]
+  Y --> AC
+  AB --> AC
+  X --> AD["0213 Semantic revalidation"]
+  Y --> AD
+  AB --> AD
+  AB --> AE["0214 Shared delivery saga"]
+  AC --> AE
+  AD --> AE
+  U --> M["0197 Runtime boundary / session lifecycle"]
+  L --> M
   L --> P["0200 Validator lifecycle / tiering"]
+  U --> P
+  L --> N["0198 True plan executor loop"]
+  G --> N
+  H --> N
+  AA --> N
+  AB --> N
+  AE --> N
+  L --> O["0199 Broker outcome telemetry"]
+  U --> O
+  V --> O
+  AB --> O
+  AC --> O
+  AD --> O
+  AE --> O
   J --> Q["0201 Incremental dogfood / phase optimization"]
   M --> Q
+  U --> Q
+  AB --> Q
   N --> R["0202 Matched A/B v4"]
   O --> R
   P --> R
   Q --> R
+  AE --> R
   L --> S["0203 First-layer UX contracts"]
-  S --> T["0204 Task import parser boundary"]
-  L --> U["0205 Canonical telemetry observation interface"]
-  U --> M
-  U --> P
-  U --> Q
+  AB --> S
+  T["0204 Task import parser boundary"]
 ```
 
-0184 與 0185 可平行；0186 與 0187 使用獨立 executor modules，可平行實作；統一命令註冊由 0189 收斂。0196 是 M3/M4 head，必須先完成。0196 後優先做 0205，先把 canonical observation interface 打好，再讓 0197/0200/0201 產生 runtime、validator 與 runner timing 資料。0205 完成後，0198 與 0200 可在 scope disjoint 時平行；0197 與 0199 都可能觸碰 `packages/core/src/telemetry/**`，必須二選一：預先宣告不重疊的 file/region ownership，或序列化 shared telemetry slice（預設採序列化）。任何卡不得在未仲裁時同時寫入 shared telemetry region。
+0184與0185可平行；0186與0187使用獨立executor modules，可平行實作；統一命令註冊由0189收斂。0196是已sealed baseline，不重開。v2.1下一個foundation wave可讓0205、0206 shadow與0207在獨立surface平行：0205建立observation base、0206修matcher facts但不live block、0207建立transaction authority。0208完成content anchor後，0209收斂structured overlap；0210完成isolated proposal，0211才live-enable compose-first ticket routing。0212 composer與0213 semantic adjudicator在0211 contract後可平行實作，0214最後收斂publish saga。shared file/symbol寫入一律由0211 execute/compose-batch/queue ticket仲裁；不得因task-card粗scope而blanket serialize。
 
-原 0182-0190 功能主線不變；0193-0195 與 0196-0205 都是該主線的 instrumentation、evidence repair、效能驗證、UX、importer correctness 或 telemetry contract follow-up，不建立第四套 batch 系統。0191 已被歷史 runtime/closure 占用，不能再承載 runner 增量語意；canonical builder implementation card 是已交付的 0194，0201 負責真 cache-miss dogfood 與 dominant-phase 優化。M3 分三個可控 wave：Wave 3a 為 0196；Wave 3b 為 0205（foundation，先建立 canonical observation interface）；Wave 3c 為 0197-0200（用 0205 interface 產生 runtime、broker、validator 與 executor outcome 樣本）；Wave 4 為 0201-0204（0202 等 0198-0201，0203 可與 0201 平行，0204 依賴 0203 的 importer/first-layer UX 信號但可作為 parser correctness follow-up 單獨開工）。
+原0182-0190功能主線不變；0193-0195與0196-0214是該主線的instrumentation、evidence repair、capability expansion、效能驗證、UX、importer correctness或telemetry follow-up，不建立第四套batch系統。0191已被歷史runtime/closure占用，不能再承載runner增量語意；canonical builder implementation card是已交付的0194，0201負責真cache-miss dogfood。M3保留0196 sealed baseline；M4a為0205/0206/0207 foundation，M4b為0208-0211 admission capability，M4c為0212/0213 compose+semantic並行，M4d為0214 publish saga；0197/0200/0204可依DAG提早在disjoint surface開工，0198/0199/0201/0203消費對應capability，0202最後做四臂規模證明。0204對0203只保留soft evidence relation，不是hard dependency。
 
 ### ATM-GOV-0194 - Runner-sync cache-miss 增量 Build Executor（已交付的 M1 optimization follow-up）
 
@@ -703,9 +855,9 @@ flowchart LR
 
 ## 執行與失敗語義
 
-- 固定 phase：preflight -> select -> claim lanes -> workers -> reconcile reports -> validators -> generated writes -> temporary-index delivery commit -> checkpoint close -> target push -> planning CAS/commit/push -> analyze -> next wave。
+- 固定 phase：preflight -> select -> claim/proposal lanes -> workers -> reconcile proposals -> broker tickets -> compose/queue/revalidation -> validators -> prepare temporary tree/index -> single CAS delivery publish -> generated writes -> checkpoint close -> target push -> planning CAS/commit/push -> analyze -> next wave。
 - HEAD 移動但 task file slices 無交集時最多自動 reseal 一次；有交集則保留 broker ticket 排隊，不覆蓋 foreign WIP。
-- worker partial failure 重試一次；仍失敗就 defer。剩一張時走既有 serial fallback。
+- worker partial failure依versioned retry policy處理；超出policy時保留durable ticket/proposal並轉`reconcile-required`或queue，不回裸`defer`。只剩一張且shared surface可用時可取得execute-now ticket，但不得繞過broker。
 - build/projection 失敗不得產生成功 receipt，也不得 commit 或 close。
 - 遙測 fail-open：任何 phase 的 gate telemetry / rejection journal 寫入失敗只降級為 observability warning，不得改變 phase outcome；持久化缺口必須在 wave 報告中列出。
 - commit 後 crash 時，以 payload digest、commit SHA 與 event idempotency key 辨識已完成副作用，不建立第二個 commit。
@@ -715,11 +867,11 @@ flowchart LR
 - 每個 wave 結束時，所有本 wave 自有 dirty/untracked residue 必須為零；只列出並保留不相關 foreign WIP。
 - target 固定使用 `main`，3KLife planning 固定使用 `master`。
 
-### Branch/worktree 授權分級（owner 裁決 2026-07-19）
+### Branch/worktree 邊界（v2.1 INV-ATM-008 / R3 supersession）
 
-- **正常功能開發**：禁止建立或切換開發 branch/worktree。若確有需要，必須取得人類的**高級批准**（明確針對該分支開發需求的裁決，一般性「可以繼續」不算），批准紀錄要寫入該卡 evidence。
-- **緊急維修 / 修正做錯的東西**（含 push 分歧復原、錯誤 commit 補救）：允許 ephemeral 臨時分支或 push-only worktree 作為 governed 手段——detached、不碰主 worktree、不碰 foreign WIP、用完立即刪除、全程寫 recovery event。0189 的分歧復原通路屬於此類。
-- 兩類的判別以「是否產生新功能歷史」為準：只搬運/修復既有 commits 的是維修；產生新開發 commits 的是功能開發。
+- framework live repo 的功能開發、緊急維修、push 分歧復原與錯誤 commit 補救均不得建立或切換 feature branch、branch-attached source worktree、ephemeral branch 或 push-only worktree；一般 owner/task approval 不能擴張 R3 closed-list exception。
+- live 修復只能由 canonical main authority 下的 broker ticket、0212 temp tree/index、0214 single-CAS publish、governed revert/compensation 與 durable recovery journal完成；無法證明安全時停在 `reconcile-required`/`push-diverged`，不另造 branch lane。
+- 唯一允許的 Git branch+merge 是 0202 在 disposable isolated fixture repo 的離線 benchmark arm；其 commits/remotes/worktrees不得接觸framework live repo或成為production fallback。若未來確實要改變此邊界，必須先走正式 charter amendment，不是卡片內批准。
 
 ## 測試與效能證明
 
@@ -731,9 +883,11 @@ flowchart LR
 
 ### Concurrency 與多隊長
 
-- 最多四張 disjoint cards 並行；scope overlap defer；R1 同卡第二 lane 必須 `ATM_LOCK_CONFLICT`；docs-only 不受 code dependency gate。
-- 新增 wave-level dual-captain e2e：外部隊長使用自己的 lane 執行正常 serial task，同時 plan executor 在 disjoint tasks 跑 wave。
-- 斷言雙方 live index、temporary index、claim owner、batch queue、runner-sync queue、planning closeback 與 task events 互不污染；任何 cross-lane mutation 視為安全 gate 失敗。
+- 不設固定四卡產品上限；runtime capacity由versioned config與observed CPU/memory/provider/broker latency決定。不同卡預設可同時進isolated proposal，scope overlap不得直接defer。
+- 規模cohort至少2/4/8/16/32/64/100/128 captains，涵蓋disjoint、same-file disjoint anchor、ambiguous anchor、commutative/noncommutative CID與generated/shared surface。
+- 同檔/同surface仲裁順序固定為content-anchored facts -> compose batch -> semantic revalidation -> unsafe/unknown queue ticket -> release後自動rearbitrate/wakeup；只有R1同卡第二lane直接`ATM_LOCK_CONFLICT`。
+- 斷言各lane proposal/private evidence互不污染；live index、temporary index、claim owner、ticket queue、runner-sync queue、planning closeback與task events的shared mutation只由transaction authority/broker/saga執行。
+- 公平性驗收包含bounded wait、aging、bounded bypass、partial compose後剩餘ticket前進、single-flight wakeup、零starvation與零thundering herd；threshold/backoff由config/observation提供。
 - coordinator death 場景必須涵蓋 ticket collecting、commit 後、checkpoint 中與 target push 後四個切點，adopt 接手後所有副作用 exactly once。
 
 ### Metrics
@@ -743,23 +897,25 @@ flowchart LR
 - Cost：coordinator/worker/validator tokens（0183 tokenUsage 契約）、cache reads、total tokens/task、provider cost、discarded retries；缺樣本臂明示 `source: unavailable` 占比。
 - Safety/UX：validator/close audit pass rate、false blocks、lane intervention、repair closure、manual lifecycle interventions、out-of-scope/R1/cross-lane violations。
 - Gate effectiveness（0193）：eligible opportunities、unique blocks、true-positive 裁決、warn/error、duration p50/p95、evidence readback、escaped incidents、dropped/malformed 與 seal coverage；M1/M2 matched cohorts、四法驗證與 frequency-aware 裁汰候選。
-- Broker effectiveness：parallel admission rate、conflict detection precision/recall、false-positive/false-negative conflicts、compose acceptance rate、compose rollback/escape count、average waitedMs saved、serialization fallback rate、manual override rate、decision latency p50/p95、side-effect safety violations 與 correctness verdict aging。
+- Broker effectiveness：parallel admission rate、anchor resolution/structured-overlap coverage、conflict precision/recall、false-positive/false-negative、compose candidate/acceptance/rollback/escape、serializability/semantic revalidation、queue depth/position/aging/bypass/starvation/wakeup、average waitedMs saved、queue fallback rate、manual override、decision/composition/publish latency p50/p95/p99、side-effect violations與correctness aging。
+- Scale proof（0202）：serial、queue-only、ATM compose-first、isolated Git branch+merge四臂的makespan/throughput對concurrency曲線；分開報authoring max、composition cost、single-branch publish window、retries、tokens與resource cost。
 - Evidence-chain health（0196）：registered→codeWired→observed→sealed→consumed 各層轉換率、task summary coverage、missing source、watermark lag 與 consumer readback aging；只有最後兩層成立的事件可進效果 cohort。
 - Runner incremental（0201）：cacheHitSkip/incrementalBuild/fullRebuild 分流、各 phase median/p95、affected package ratio、unchanged reuse ratio、fallback reason 與 reproducibility parity；cache hit 不列為 incremental treatment。
 
 ## 實作與收口原則
 
 - Follow-up builder acceleration card: `ATM-GOV-0194` adds runner-sync incremental build on cache miss. This card exists because current sealed runner build distinguishes "no input changed, skip" from "input changed, rebuild", but does not yet prove package-level/diff-level incremental work when the sealed source changes. Its implementation must expose receipt categories for `cacheHitSkip`, `incrementalBuild`, and `fullRebuild`, so later cards can treat runner-sync cost as a measurable broker surface instead of a fixed 40-second tax.
-- 0193、0182-0190 與 0195-0205 每卡各自 claim、驗證、close、commit、push，且收乾淨自己的 scope；wave 模式收口紀律見「Wave commit 紀律」節。
+- 0193、0182-0190 與 0195-0214 每卡各自 claim、驗證、close、commit、push，且收乾淨自己的 scope；wave 模式收口紀律見「Wave commit 紀律」節。
 - 每卡開工前必附 data-driven decision record；每卡收口回報必附 sealed task summary、producer/consumer 對帳與「下一卡可消費的信號」。producer 的 close 條件是 sealed summary + self-readback；跨卡 consumed 證據由 consumer 開工時寫入，producer 不等未來卡。遙測缺漏視為收口不完整但不得反向讓原命令失敗。M1 報告是 0186 開工前 condition review 必附件；gate-optimization 卡必須引用 cohort/config digest、rollback 與支持數據，無比較證據的裁汰禁止。
 - 若 sealed data 指向「原卡應拆分、降階、重排、取消、或修改 acceptance criteria」，隊長必須停止繼續實作並提出修訂案；只有 owner 裁決後才能把修訂寫回 plan/task card 或繼續原路線。
-- 0196 是新 wave 的資料准入 head：0205 必須先讀 0196 summary 並建立 canonical observation interface；0197-0200 開工前必須讀 0196 與 0205 summary；0201 必須讀 0205、0197 與 0194；0202 必須讀 0198-0201。缺 consumed summary 時，依賴在檔案上即使標 done 也不構成效果證據。
+- 0196是新wave的sealed baseline：0205/0207開工先讀0196；0206是獨立matcher shadow repair，無0196硬依賴。0208-0214逐卡消費DAG前序sealed summary。0197/0200消費0196與0205；0198消費0196/0210/0211/0214；0199消費0196/0205/0206/0211-0214；0201消費0194/0197/0205/0211；0202消費0198-0201與0214，並讀取0211-0214能力證據。缺consumed summary時，依賴即使標done也不構成效果證據。
 - 每張卡開工前以 target `node atm.mjs actor whoami --json` 收斂 actor identity，再以 target `node atm.mjs tasks audit --json` 加 planning Node.js ID scan 重驗編號；本文對照表不得當成 ledger。
-- 0202 的完成結果只有兩種互斥路徑：足量 matched A/B 且所有必要維度通過才可 rollout/default-on；否則就是 `inconclusive`、保留 opt-in/circuit breaker 並開最小補樣 proposal。不得把不足樣、fixture、自然前後期或文件產物數包裝成成功。
+- 0202的完成結果只有兩種互斥路徑：四臂、必要規模strata與所有安全/效能維度足量可比且通過才可rollout/default-on；否則就是`inconclusive`、保留opt-in/circuit breaker並開最小補樣proposal。不得把不足樣、fixture-only、自然前後期或文件產物數包裝成成功。
+- 0202 Git branch+merge arm只能在disposable isolated fixture repo離線執行；不得在framework live repo建立feature branch/branch-attached source worktree或繞過main broker ticket與R3 commit ordering。
 - 先抽取新 modules，不繼續膨脹半 minified 的 `batch/implementation.ts`；使用 0170 extraction pathway；原子化提案是每卡回報義務。
 - Windows planning Markdown/JSON/text 一律透過 Node.js UTF-8 helper 讀取與比對；編輯後立即做 UTF-8 without BOM、U+FFFD、mojibake 與 round-trip 檢查。
 - 新增、改名或退役 `ATM_*` 必須先走 `atm-error-code-resolver` authoring flow，並同步本文、負責卡、canonical registry、generated `docs/ERROR_CODES.md` 與 focused tests；禁止私有碼表與未登錄 emitter。
 - 不碰他人 active WIP，不清除既有 0168/0181 foreign runner receipts；由 0182 provenance preflight 正式分類。
 - Code writes 受 task claim 與 broker/steward rules 治理；docs/planning writes 不進 code broker，但 git commit 仍需精確 stage 自己的檔案。
 - `--push` 是明確 opt-in；正式 dogfood 命令固定帶 `--push`，且完成條件包含 target `origin/main` 與 planning `origin/master` 都等於各自預期 SHA。
-- Branch/worktree 依「授權分級」節執行：功能開發需高級批准；緊急維修可用 ephemeral 通路並留 recovery event。
+- Branch/worktree 依「v2.1 INV-ATM-008 / R3 supersession」節執行：live repo全面禁止branch/worktree lane；僅0202 disposable benchmark repo可使用真Git branch+merge。

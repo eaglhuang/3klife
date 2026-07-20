@@ -7,8 +7,10 @@ priority: P1
 depends_on:
   - ATM-GOV-0194
   - ATM-GOV-0197
+  - ATM-GOV-0205
+  - ATM-GOV-0211
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
-planning_repo: governance-workbench
+planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: Extends the registered GOV governance-optimization plan with real runner performance proof.
@@ -100,5 +102,14 @@ surfaceFamily: runner-build
 - [ ] 至少一個 dominant phase 有改善，否則以有證據的 inconclusive 收口。
 - [ ] 0194/0197 history 與 config digests 已被 opening `dataDrivenDecision` 消費；0201 sealed summary 已完成同卡 readback，供 0202 另寫 cross-card consumed receipt。
 - [ ] cache invalidation、circuit breaker 與 recovery command 在隔離環境實際通過，compact rollback receipt 可驗證。
+- [ ] 至少一筆真 cache-miss runner/build phase timing 經 0205 canonical interface 寫入 0197 runtime boundary並完成 readback；fixture-only adapter sample 不算。
+
+## v2.1 Required Adjustment (Build as Shared Surface)
+
+- runner/build是INV-ATM-008 shared-write surface：build guidance先判cacheHitSkip，再incrementalBuild，最後fullRebuild；artifact/release sync必須消費0211 execute/queue/batch ticket，不能以`ATM_RUNNER_SYNC_QUEUE_HEAD_REQUIRED`裸拒絕結束。
+- compatible related tasks可batch共用sealed build window；unrelated tasks不可因省build而共用commit或混淆attribution。
+- cache/incremental/full decision與所有phase timing使用0205 canonical interface並遵守0197 runtime boundary；raw stdout/session trace不進Git。
+- waiting ticket時不阻止reads/docs/private evidence；release後自動wakeup並重驗sealed source/config/artifact manifest。
+- AB/BA除cache-miss incremental/full比較外，另報ticket waitedMs、batch saved builds與queue fallback reason；性能不足可`inconclusive`，不可放鬆reproducibility或unknown→full安全分流。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:08.803Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0201-runner-incremental-dogfood-and-dominant-phase-optimization.task.md","contentDigest":"sha256:dfbaf26b606d918eb274a00f4688ac9404f4fcb80dab760370c3f5d7eea5505f"} -->

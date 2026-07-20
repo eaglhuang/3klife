@@ -13,20 +13,14 @@ closure_authority: target_repo
 series_selection_reason: Extends the registered GOV governance-optimization plan with a cross-cutting telemetry interface migration required by Plan 2.0 instrumentation dogfood and ATM-BUG-2026-07-20-207.
 scopePaths:
   - packages/core/src/telemetry/**
-  - packages/core/src/test-runner/**
-  - packages/core/src/broker/**
   - packages/cli/src/commands/evidence/**
-  - packages/cli/src/commands/framework-development/**
-  - scripts/run-validators.ts
-  - scripts/run-validators/**
-  - scripts/run-sealed-runner-build.ts
-  - scripts/runner-sync-incremental-build.ts
+  - packages/cli/src/commands/telemetry.ts
   - scripts/validate-telemetry-observation-interface.ts
   - tests/cli/telemetry-observation-interface-migration.test.ts
 deliverables:
   - packages/core/src/telemetry/**
   - packages/cli/src/commands/evidence/**
-  - packages/cli/src/commands/framework-development/**
+  - packages/cli/src/commands/telemetry.ts
   - scripts/validate-telemetry-observation-interface.ts
   - tests/cli/telemetry-observation-interface-migration.test.ts
 validators:
@@ -38,6 +32,20 @@ errorCodes: []
 createdByCommand: atm plan card create
 evidence:
   required: command-backed
+producer:
+  - Versioned canonical observation interface, storage-policy contract, normalization adapters, and interface-coverage validator.
+consumer:
+  - ATM-GOV-0197 runtime storage and session lifecycle.
+  - ATM-GOV-0199 broker capability telemetry.
+  - ATM-GOV-0200 validator lifecycle and ATM-GOV-0201 runner incremental timing.
+missingData:
+  - The complete producer inventory, field-shape drift, missing validator duration frequency, and runtime storage-policy violations must be measured before migration ordering is sealed.
+dataDrivenStopRule:
+  - Stop if the foundation must own producer-specific broker, validator, runner, or plan-executor behavior instead of exposing one extensible contract plus adapters.
+  - Stop if migration requires hard-coded task IDs, command names, durations, paths, or field values in canonical control flow.
+out_of_scope:
+  - No broker ticket, compose, queue, validator-tiering, runner optimization, or plan-executor policy implementation.
+  - No migration of all producers in this foundation card; each owning consumer card performs its adapter migration.
 rollback:
   strategy: revert-commit
   notes: Revert the migration commit and keep the pre-migration observation inventory as evidence; do not delete raw runtime telemetry, and do not rewrite historical evidence bundles by hand.
@@ -97,10 +105,11 @@ fields must flow through one interface and one normalization layer.
 - Provide adapters or normalizers so domain-specific records can extend the
   base contract without duplicating local duration parsing or correlation
   semantics.
-- Migrate gate telemetry, evidence command runs, validator lifecycle,
-  runner-sync/sealed build receipts, incremental build timing, broker
-  decision/outcome timing, and test-runner timing producers to the shared
-  contract or an adapter-backed canonical shape.
+- Publish adapter/normalizer ports and a repository-wide migration inventory;
+  migrate evidence command-run timing as the canary. Validator, runner,
+  broker, test-runner, and plan-executor producers migrate in their owning
+  cards (0197/0199/0200/0201/0198) rather than widening this foundation across
+  every hot module.
 - Preserve raw log/detail boundaries: raw timing traces, stdout/stderr, session
   traces, and high-frequency counters remain under gitignored runtime; tracked
   Git artifacts keep compact digest/timing/correlation summaries only.
@@ -132,19 +141,19 @@ fields must flow through one interface and one normalization layer.
       `not-yet-migrated`.
 - [ ] `packages/core/src/telemetry/**` exports the canonical observation
       contract and normalizers used by migrated producers.
-- [ ] Evidence command runs, validator lifecycle, runner-sync build receipts,
-      incremental build receipts, and broker timing/queue observations either
-      directly extend the canonical contract or pass through an adapter that
-      produces the canonical shape.
+- [ ] Evidence command runs prove one canary producer through the canonical
+      contract; validator, runner, broker, test-runner, and executor producers
+      have versioned adapter ports plus explicit owning-card migration status.
 - [ ] Readers remain backward-compatible with historical records that lack
       timing fields; compatibility is explicit and test-covered.
 - [ ] Raw logs/traces remain gitignored runtime data; tracked evidence stores
       only compact timing/correlation/digest summaries.
 - [ ] A focused validator proves no migrated producer defines private
       duration/correlation parsing when the shared normalizer should be used.
-- [ ] A dogfood evidence run records at least one validator command, one cached
-      command reuse, and one runner/build timing sample through the canonical
-      interface.
+- [ ] A dogfood evidence command-run canary round-trips through the canonical
+      interface; validator/runner/broker/executor adapter-port schema fixtures
+      prove future producers can migrate without importing their behavior into
+      this foundation card. Live runner/build samples belong to ATM-GOV-0201.
 
 ## Rollback
 
@@ -152,3 +161,10 @@ Revert the migration commit and restore previous producer-specific fields. Keep
 the observation inventory and failing compatibility cases as evidence for a
 smaller follow-up migration. Do not delete runtime telemetry or rewrite tracked
 historical evidence by hand.
+
+## v2.1 Scope Boundary
+
+- 本卡只建立observation base contract、normalizer/adapter port、compatibility reader與inventory；不直接搬完所有producer，避免與0197/0199/0200/0201/0198形成粗粒度shared scope。
+- content anchor、read/write-set與resource identity屬0208/0209 correctness domain，不得塞進telemetry observation identity。
+- 0211-0214的ticket、compose、semantic、saga事件只能經adapter使用此介面；domain-specific facts保留自己的schema，橫切timing/correlation/digest/storage boundary才共用base。
+- raw logs、statistics、counters、session trace仍留gitignored runtime；tracked evidence只存compact digest與aggregate。

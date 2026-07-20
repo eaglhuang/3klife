@@ -8,8 +8,11 @@ depends_on:
   - ATM-GOV-0196
   - ATM-GOV-0188
   - ATM-GOV-0189
+  - ATM-GOV-0210
+  - ATM-GOV-0211
+  - ATM-GOV-0214
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
-planning_repo: governance-workbench
+planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: Extends the registered GOV governance-optimization plan with the missing live orchestration loop.
@@ -91,5 +94,13 @@ surfaceFamily: plan-executor
 - [ ] mock-only test 不算 live acceptance evidence。
 - [ ] 開工 `dataDrivenDecision` 已引用 0196 history/config digest 並留下 consumed receipt；本卡 close 已 seal 可由同卡 validator 讀回的 summary，供 0202 後續消費。
 - [ ] circuit breaker 可退回原 advisory 路徑，且 rollback/recovery 測試證明已完成副作用不會重放。
+
+## v2.1 Required Adjustment (Compose-first Executor)
+
+- phase chain 在 workers 後增加 `proposal-sealed -> broker-ticketed -> composing|queued -> semantic-revalidation -> prepared -> published`；queue/revalidation 是 durable resumable 非終態，不能轉成 `failed` 或要求 operator 手動重跑整個 plan。
+- 不同卡可同時進 0210 isolated proposal lane；executor 只在 shared code side effect 消費 0211 execute/queue/batch ticket，reads/docs/private work不等待。
+- compose batch 必須消費 0212 composed temp tree/serializability receipt與0213 semantic result；只有0214 shared-delivery saga可更新HEAD、執行generated write、checkpoint/closeback/push。
+- queue head release後由ticket wakeup自動resume；resume前重驗base/read-set/config digest，不可用stale proposal直接寫入。
+- 驗收另加：至少一個same-file composable wave、一個unsafe overlap queue→wakeup wave與一個read-set stale→revalidate wave在crash/restart後exactly once到terminal；R1同卡第二lane仍hard reject。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-19T15:31:04.113Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0198-true-resumable-plan-executor-orchestration-loop.task.md","contentDigest":"sha256:8dc1750dc5cb71766a975764a529cada19c2c829e884547fda829c35ebdc31ea"} -->
