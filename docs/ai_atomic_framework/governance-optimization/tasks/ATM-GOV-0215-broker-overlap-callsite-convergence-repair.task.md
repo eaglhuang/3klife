@@ -9,7 +9,7 @@ severity: P0
 depends_on:
   - ATM-GOV-0206
 target_repo: AI-Atomic-Framework
-planning_repo: 3KLife
+planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 closure_authority: target_repo
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
 series_selection_reason: Continuation of the registered GOV plan; repairs the incomplete ATM-GOV-0206 delivery in the same broker conflict-detection family rather than opening a new series. This card supersedes the unmet acceptance of ATM-GOV-0206.
@@ -238,6 +238,19 @@ runner-sync receipt proving the verified binary is the shipped one.
 - `TASK-SKL-0014` stays paused until this closes. It is not blocked by broker
   code, but it relies on trustworthy shared-write overlap verdicts; starting it
   first would invert the governance evidence order.
+
+## Backlog Disposition
+
+- `ATM-BUG-2026-07-20-213` is core evidence for this card and should be included
+  in the ATM-GOV-0215 delivery commit. Do not commit it separately under an
+  unowned framework temp claim.
+- `ATM-BUG-2026-07-20-214` and `ATM-BUG-2026-07-20-215` are consumed by
+  `ATM-GOV-0218` and `TASK-ERR-0002`; this card may reference them as context
+  but must not implement runner-sync recovery or ErrorCode registration.
+- `ATM-BUG-2026-07-20-216` records the task import parser defect where a
+  shell-comment-looking line inside a fenced code block is treated as a
+  Markdown heading and leads to a misleading empty-plan/import diagnostic. This
+  is parser/ErrorCode evidence, not an ATM-GOV-0215 implementation scope item.
 
 ## Notes
 

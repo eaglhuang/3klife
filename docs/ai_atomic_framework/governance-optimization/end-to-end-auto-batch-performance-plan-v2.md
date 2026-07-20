@@ -6,10 +6,10 @@ related_cards_root: docs/ai_atomic_framework/governance-optimization/tasks
 upstream_repo: AI-Atomic-Framework
 predecessor: doc_atm_gov_auto_batch_perf_plan
 created_at: 2026-07-19T00:00:00+08:00
-updated_at: 2026-07-20T00:00:00+08:00
+updated_at: 2026-07-20T21:55:00+08:00
 ---
 
-# ATM 端到端自動併批與效能證明計畫 2.0（v2.1 Scope Amendment）
+# ATM 端到端自動併批與效能證明計畫 2.0（v2.2 Closure Amendment）
 
 狀態更新：2026-07-19（Captain review 修訂：wave commit 紀律、分歧復原通路、plan digest pin、token 量測契約、baseline 自我採樣、lane attribution、原子化出口）
 狀態更新（儀表先行整合版）：2026-07-19（ATM-GOV-0193 為依賴圖第 0 步；採 gitignored runtime scratch/log → closure seal → digest-only history 二層儀表；0182-0190 各卡明載 producer/consumer 契約、M1/M2 可比 cohort 與遙測自我裁汰，形成「以戰養戰」閉環；所有 raw statistics、counter、per-run log、debug log、high-frequency receipt stream 均留硬碟，不進 Git）
@@ -90,13 +90,60 @@ node atm.mjs batch execute-plan \
 
 0202 增加 serial、queue-only、ATM compose-first、traditional Git feature-branch + merge 四臂 matched benchmark。第四臂只能在 disposable isolated fixture repo 離線執行，不得在 framework live repo 建立 feature branch、branch-attached source worktree、production fallback 或第四執行 lane；否則違反 R3 且必須另走 charter amendment。
 
+## v2.2 Closure Amendment：2.0／2.1 收官優化
+
+### 收官決策
+
+- 本修訂追加於既有 `end-to-end-auto-batch-performance-plan-v2.md`，不建立第二份平行計畫。
+- 範圍只限 2.0／2.1 的殘留問題與必要依賴；不擴張到無關 ATM 全域 backlog。
+- 所有功能閘門通過後，`compose-first` 在同一版本同步成為 framework 與 adopter pack 預設值。
+- circuit breaker 預設開啟；任何安全、正確性、可觀測性或效能門檻失敗，立即自動退回 `queue-only`。
+- 沿用 `atm.brokerTicket.v1`；禁止建立第二套並行票券、任務模型、queue registry 或 approval workflow。
+- 計畫只有在真實平行證據與完整 paired A/B 門檻通過後才能關閉；功能完成但證據不足不得宣稱 2.0／2.1 完成。
+
+### 新增任務卡順序
+
+| 階段 | 任務卡 | 交付與驗收摘要 |
+|---|---|---|
+| 0 | `ATM-GOV-0215` | shared-write gate census 與 0206 overlap call-site convergence repair，先證明 sample 0001 不再 false negative。 |
+| 0 | `TASK-ERR-0002` | ErrorCode 與 recovery contract；stale SHA、ID normalization、orphan/adopt/cancel/reconcile/atomic write/runner receipt 均有 recovery command。 |
+| 1 | `ATM-GOV-0216` | 統一 parallel admission policy；R3/R4 gates 回 canonical ticket，R1/R2 保持硬例外。 |
+| 2 | `ATM-GOV-0217` | 多 process ticket CAS、一致性、single wakeup、公平排程、adopt/revalidate/cancel。 |
+| 2 | `ATM-GOV-0218` | runner-sync 自我託管閉環；ID normalization、自動 temp claim、HEAD coalesce/revalidate、receipt release。 |
+| 2 | `ATM-GOV-0219` | 交易式 shared delivery；`atm.commandManifest.v1`、shell=false、temp index/tree、exactly-once side effects。 |
+| 2 | `ATM-GOV-0220` | task/lane lifecycle repair；orphan in_progress、actor/lane consistency、route oscillation、scope normalization、protected ledger guard。 |
+| 2 | `ATM-GOV-0221` | canonical telemetry 與 evidence seal；`atm.telemetryObservation.v1`、`atm.sharedWriteGateCoverage.v1`、window/watermark/sealed digest。 |
+| 3 | `ATM-GOV-0222` | managed `batch execute-plan --execute` 與第一層 UX；同版 adopter/framework compose-first default migration。 |
+| 4 | `ATM-GOV-0223` | 真實多 process/多 agent dogfood；concurrency >= 4、actual overlap > 0、parallel admission > 0、零 correctness side effect defect。 |
+| 5 | `ATM-GOV-0224` | 完整 420-cell paired A/B 與安全 controller；門檻失敗自動 trip queue-only。 |
+| 6 | `TASK-TMP-0002` | 產品級修復後，用正式 CLI 清理歷史 queue/session/stale locks/raw telemetry/dirty release residue。 |
+| 6 | `ATM-GOV-0225` | 最終收官；重跑 census、runner parity、adopter bootstrap/upgrade/rollback、backlog reconciliation。 |
+
+### 公開介面追加
+
+- `atm.parallelAdmissionPolicy.v1`：mode、circuit breaker、`fallbackMode: queue-only`、config digest、rollout scope、最近 trip/reset evidence。
+- `atm.sharedWriteGateCoverage.v1`：每個 shared-write gate 的 tier、owner、ticket adapter、telemetry producer、status、recovery command。
+- `atm.commandManifest.v1`：executable、argv[]、cwd、allowlisted env references、timeout、輸入輸出 digest；default `shell=false`。
+- 舊 `--run-command` 保留一版相容讀取，只能在 `queue-only` 路徑執行並輸出 deprecated notice；default-on 路徑禁止 shell command string。
+
+### 完成門檻
+
+- 單元與 schema：ticket state machine、policy、ErrorCode、command manifest、telemetry seal 全數通過。
+- 多 process 破壞測試：同時寫入、process kill、失主、stale SHA、重複 close/publish、Windows rename/path length 全部 covered。
+- 整合測試：framework frozen/source parity、runner-sync、projection、generated writes、Git commit/push、planning closeback。
+- Adopter 測試：新安裝與升級後均為 compose-first、circuit breaker enabled，且可一鍵退回 queue-only。
+- 效能門檻：median makespan 改善至少 25%、active throughput 改善至少 25%、production cost ratio 不高於 1.10。
+- 正確性門檻：escaped conflict、silent overwrite、duplicate side effect、unresolved starvation 均為 0。
+- 可觀測性門檻：shared-write producer observed coverage 100%，所有 task summary 有有效 window、水位與 sealed digest。
+- 任一門檻不滿足：自動退回 queue-only，`ATM-GOV-0225` 不得關閉，也不得以 deterministic fixture 取代真實平行證據。
+
 ## 權威與文件
 
 - `planning_repo_root`: `C:/Users/User/3KLife`
 - `planning_repo_is_external_to_target`: `true`
 - `target_repo_root`: `C:/Users/User/AI-Atomic-Framework`
 - `source_plan_path`: `docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md`
-- `source_task_card_path`: `docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-*.task.md`、`ATM-GOV-0182..0190-*.task.md`、`ATM-GOV-0194..0195-*.task.md` 與 `ATM-GOV-0196..0214-*.task.md`
+- `source_task_card_path`: `docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0193-*.task.md`、`ATM-GOV-0182..0190-*.task.md`、`ATM-GOV-0194..0195-*.task.md`、`ATM-GOV-0196..0214-*.task.md`、`ATM-GOV-0215..0225-*.task.md`、`docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0002-*.task.md` 與 `docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0002-*.task.md`
 - `target_import_method`: executor 內部透過既有 task import/taskflow orchestration 匯入；禁止直接編輯 `.atm/history/**`。
 
 Target ATM ledger 與 `node atm.mjs tasks audit --json` 是任務狀態、編號與閉卡事實的權威來源；本文的任務編號與對照表只是 planning snapshot，不得反向覆蓋 ledger。每張卡開卡前必須同時：
