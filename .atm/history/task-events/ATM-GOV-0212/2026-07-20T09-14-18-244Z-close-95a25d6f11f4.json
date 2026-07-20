@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T09-14-18-244Z-close-95a25d6f11f4",
+  "taskId": "ATM-GOV-0212",
+  "action": "close",
+  "actorId": "codex-captain-0212",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0212-transactional-bounded-composer-and-serializable-publish.task.md",
+  "taskSha256": "sha256:9ba716f595127823d251b42feb675d2643b8f1c133ac945b0b161305425d3acc",
+  "createdAt": "2026-07-20T09:14:18.244Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0212 --actor codex-captain-0212"
+}

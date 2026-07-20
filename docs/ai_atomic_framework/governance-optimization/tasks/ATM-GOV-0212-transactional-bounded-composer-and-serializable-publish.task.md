@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0212
 title: Transactional bounded composer and serializable publish
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -75,6 +75,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: broker-composer
+completed_at: "2026-07-20T09:14:18.244Z"
+completed_by_agent: "codex-captain-0212"
+closedAt: "2026-07-20T09:14:18.244Z"
+closedByActor: "codex-captain-0212"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T09-14-18-244Z-close-95a25d6f11f4"
+lastTransitionAt: "2026-07-20T09:14:18.244Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f2517ef95f3b295a121a76cabcf817f0cb0bf936"
 ---
 
 # ATM-GOV-0212 Transactional bounded composer and serializable publish
