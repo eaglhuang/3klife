@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0220
 title: Task and lane lifecycle repair
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -60,6 +60,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T17:29:03.239Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T17:29:03.239Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T17-29-03-239Z-close-a21aad659fc7"
+lastTransitionAt: "2026-07-20T17:29:03.239Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b7ae7c83130ed19c125cd3654488c60b582effb5"
 ---
 
 # ATM-GOV-0220 Task and lane lifecycle repair

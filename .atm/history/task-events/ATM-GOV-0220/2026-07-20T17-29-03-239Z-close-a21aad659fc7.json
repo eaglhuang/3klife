@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T17-29-03-239Z-close-a21aad659fc7",
+  "taskId": "ATM-GOV-0220",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0220-task-and-lane-lifecycle-repair.task.md",
+  "taskSha256": "sha256:879b5173ccf64f3c8262408243e3c60936d4ae21db89ba91a0c5b28026b61b59",
+  "createdAt": "2026-07-20T17:29:03.239Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0220 --actor codex-gpt-5.4-mini"
+}
