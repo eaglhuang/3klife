@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T15-52-59-295Z-close-2cee9179e20b",
+  "taskId": "ATM-GOV-0216",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0216-unified-parallel-admission-policy.task.md",
+  "taskSha256": "sha256:b7f548f96b4e0c723b6018659dcefe583ab89cc0147547084a0ebedddc2168ba",
+  "createdAt": "2026-07-20T15:52:59.295Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0216 --actor codex-gpt-5.4-mini"
+}

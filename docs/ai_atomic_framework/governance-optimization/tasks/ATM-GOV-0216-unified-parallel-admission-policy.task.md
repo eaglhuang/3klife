@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0216
 title: Unified parallel admission policy
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -56,6 +56,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T15:52:59.295Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T15:52:59.295Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T15-52-59-295Z-close-2cee9179e20b"
+lastTransitionAt: "2026-07-20T15:52:59.295Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d5fdb674af9c1856f741c5c547843e14cbd51f86"
 ---
 
 # ATM-GOV-0216 Unified parallel admission policy
