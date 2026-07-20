@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T08-32-47-304Z-close-6178be5c0163",
+  "taskId": "ATM-GOV-0209",
+  "action": "close",
+  "actorId": "codex-captain-0209",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0209-versioned-read-write-sets-and-structured-overlap-evidence.task.md",
+  "taskSha256": "sha256:dcbbe8ea780d7bfe31555200f785f6645212e74f0c451dd4367d4a0dd39c13c1",
+  "createdAt": "2026-07-20T08:32:47.304Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0209 --actor codex-captain-0209"
+}

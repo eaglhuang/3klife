@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0209
 title: Versioned read write sets and structured overlap evidence
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -77,6 +77,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: broker-overlap-evidence
+completed_at: "2026-07-20T08:32:47.304Z"
+completed_by_agent: "codex-captain-0209"
+closedAt: "2026-07-20T08:32:47.304Z"
+closedByActor: "codex-captain-0209"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T08-32-47-304Z-close-6178be5c0163"
+lastTransitionAt: "2026-07-20T08:32:47.304Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "355895571b170bb05775ad39698560d369abcea0"
 ---
 
 # ATM-GOV-0209 Versioned read write sets and structured overlap evidence
