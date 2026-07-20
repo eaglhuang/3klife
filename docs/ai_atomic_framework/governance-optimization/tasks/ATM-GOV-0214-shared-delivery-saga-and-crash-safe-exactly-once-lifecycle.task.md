@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0214
 title: Shared delivery saga and crash safe exactly once lifecycle
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -73,6 +73,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: shared-delivery-saga
+completed_at: "2026-07-20T09:46:27.660Z"
+completed_by_agent: "codex-captain-0214"
+closedAt: "2026-07-20T09:46:27.660Z"
+closedByActor: "codex-captain-0214"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T09-46-27-660Z-close-838fa321f5d9"
+lastTransitionAt: "2026-07-20T09:46:27.660Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b95abf409536d5879389b00d9ab1f32d5e972cdb"
 ---
 
 # ATM-GOV-0214 Shared delivery saga and crash safe exactly once lifecycle
