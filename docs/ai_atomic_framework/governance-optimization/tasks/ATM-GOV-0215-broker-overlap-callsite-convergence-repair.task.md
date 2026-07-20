@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0215
 title: Broker overlap call-site convergence repair (finish ATM-GOV-0206)
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -80,6 +80,15 @@ atomizationImpact:
       source: "tests/core/broker-overlap-callsite-inventory.test.ts"
       disposition: "extract"
       inlineReason: null
+completed_at: "2026-07-20T15:31:27.660Z"
+completed_by_agent: "claude-captain"
+closedAt: "2026-07-20T15:31:27.660Z"
+closedByActor: "claude-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T15-31-27-660Z-close-165d26ad4e16"
+lastTransitionAt: "2026-07-20T15:31:27.660Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e290914ed"
 ---
 
 # ATM-GOV-0215
