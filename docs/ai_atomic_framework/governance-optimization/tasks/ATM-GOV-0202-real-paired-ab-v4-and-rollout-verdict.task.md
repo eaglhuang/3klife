@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0202
 title: Real paired AB v4 and rollout verdict
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -59,6 +59,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m4-proof-and-ux
 surfaceFamily: performance-analysis
+completed_at: "2026-07-20T11:30:59.901Z"
+completed_by_agent: "codex-captain-0202"
+closedAt: "2026-07-20T11:30:59.901Z"
+closedByActor: "codex-captain-0202"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T11-30-59-901Z-close-aed32c07e235"
+lastTransitionAt: "2026-07-20T11:30:59.901Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9025fe681ed7afe07e69b69295adff72fe4fb303"
 ---
 
 # ATM-GOV-0202 Real paired AB v4 and rollout verdict

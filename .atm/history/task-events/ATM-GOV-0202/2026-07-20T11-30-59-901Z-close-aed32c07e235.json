@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T11-30-59-901Z-close-aed32c07e235",
+  "taskId": "ATM-GOV-0202",
+  "action": "close",
+  "actorId": "codex-captain-0202",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0202-real-paired-ab-v4-and-rollout-verdict.task.md",
+  "taskSha256": "sha256:614d1d24da2100fa54f7598388c05150b5ae8696c38a0b8a578e3cece7899650",
+  "createdAt": "2026-07-20T11:30:59.901Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0202 --actor codex-captain-0202"
+}
