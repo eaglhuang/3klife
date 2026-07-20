@@ -41,6 +41,7 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 | [TASK-SKL-0010](./TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md) | P4 | Provider-neutral role skill-pack manifest | planned | `TASK-SKL-0007`, `TASK-SKL-0008`, `TASK-SKL-0009` | Team runtime manifest |
 | [TASK-SKL-0011](./TASK-SKL-0011-agent-plus-skill-runtime-pilot.task.md) | P4 | Agent plus skill runtime pilot | planned | `TASK-SKL-0008`, `TASK-SKL-0009`, `TASK-SKL-0010` | Team runtime pilot |
 | [TASK-SKL-0012](./TASK-SKL-0012-team-role-growth-and-observability-integration.task.md) | P4 | Team role growth and observability integration | planned | `TASK-SKL-0007`, `TASK-SKL-0010`, `TASK-SKL-0011` | Team growth / observability |
+| [TASK-SKL-0014](./TASK-SKL-0014-framework-temp-claim-tool-first-workflow.task.md) | P1 | Framework temp claim tool-first workflow and skill route | planned | `TASK-SKL-0002`, `TASK-SKL-0003`, `TASK-SKL-0005`, `TASK-SKL-0013` | Framework quickfix governance |
 
 ## Sequencing Note
 
@@ -52,6 +53,7 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 6. `TASK-SKL-0003` and `TASK-SKL-0004` attach more governance surfaces onto that growth-enabled skill skeleton instead of fattening one entry skill first.
 7. `TASK-SKL-0008` to `TASK-SKL-0012` extend the same architecture into Team Agents, where `Agent + Skill` is the reusable unit.
 8. `TASK-SKL-0006` stays as later hardening and should absorb real dogfood friction such as residue, active-claim noise, runner skew, and cross-repo sync problems.
+9. `TASK-SKL-0014` is opened from `ATM-GOV-0196` dogfood and should run before more framework quickfixes rely on raw `framework-mode` CLI snippets. It must consume the sealed `ATM-GOV-0196` summary before final dogfood acceptance.
 
 ## Backlog To Skill Feed
 
@@ -63,6 +65,7 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
   - `ATM-BUG-2026-06-23-019`: imported planning-repo batch already exists, but claim path keeps rediscovering instead of trusting ledger truth.
   - `ATM-BUG-2026-06-23-020`: planning repo says done, target repo still blocks on stale imported dependency truth.
   - `ATM-BUG-2026-06-23-021`: host repo runner and framework repo runner expose different operator surfaces during closeback and evidence work.
+  - `TASK-SKL-0014` seed case: framework temp claim quickfix currently lacks a dedicated `skill -> tools/playbook -> CLI fallback` route and is too dependent on raw `framework-mode status/claim` snippets.
 
 ## Completion Gate
 

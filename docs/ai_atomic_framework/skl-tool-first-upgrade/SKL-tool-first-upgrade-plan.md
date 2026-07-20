@@ -327,6 +327,7 @@ playbook 是本次工作的動態 orchestration contract，負責：
 | `TASK-SKL-0011` | execution card | 將至少一組 Team roles 實際接成 Agent+Skill 可獨立治理單元 | AI-Atomic-Framework | `TASK-SKL-0008`, `TASK-SKL-0009`, `TASK-SKL-0010` |
 | `TASK-SKL-0012` | execution card | 將 Team role skill packs 的 growth contract 與 observability 接入 Team runtime | AI-Atomic-Framework | `TASK-SKL-0007`, `TASK-SKL-0010`, `TASK-SKL-0011` |
 | `TASK-SKL-0013` | execution card | 建立 shared `atm-error-code-resolver` skill 與 registry-backed error-code knowledge | AI-Atomic-Framework | `TASK-SKL-0002`, `TASK-SKL-0005`, `TASK-SKL-0007` |
+| `TASK-SKL-0014` | execution card | 補齊 framework temp claim quickfix 的 `skill -> tools/playbook -> CLI fallback` 友善 AI 路徑 | AI-Atomic-Framework | `TASK-SKL-0002`, `TASK-SKL-0003`, `TASK-SKL-0005`, `TASK-SKL-0013` |
 
 ## 10. 完成定義
 
@@ -394,3 +395,32 @@ not yet provide enough operator knowledge for live recovery.
 
 This keeps router, dispatch, evidence, handoff, Team, and commit skills from
 maintaining private error-code tables that drift apart.
+
+## 15. Framework Temp Claim Addendum
+
+Dogfood around `ATM-GOV-0196` exposed a separate SKL usability gap: framework
+temporary-claim quickfix work is currently documented as scattered
+`framework-mode status/claim` CLI snippets across existing skills, but it is not
+yet a first-class friendly AI route.
+
+`TASK-SKL-0014` adds that missing lane. The target design is:
+
+```text
+skill intent -> tool/playbook surface -> CLI fallback -> structured evidence
+```
+
+The lane must preserve normal ATM lifecycle authority. It is not a second task
+model and it must not become a hard-coded emergency bypass. The route must:
+
+- prefer structured tools/playbook output in tool-capable editors;
+- fall back to explicit CLI commands only when tools are unavailable or blocked;
+- distinguish normal task claim, framework temp claim, runner-sync release work,
+  and emergency ledger/history recovery;
+- route `ATM_*` blockers through the shared error-code resolver;
+- derive task id, actor, branch, dirty files, queue state, and blocker decisions
+  from runtime output instead of hard-coded data;
+- consume the sealed `ATM-GOV-0196` summary before final dogfood acceptance.
+
+This addendum is intentionally P1 because the gap affects agent entry safety and
+operator clarity before additional framework quickfix work should rely on the
+raw CLI path.
