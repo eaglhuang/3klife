@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0217
 title: Multi-process ticket consistency
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -64,6 +64,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T16:10:22.207Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T16:10:22.207Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T16-10-22-207Z-close-8eafb8cc1e09"
+lastTransitionAt: "2026-07-20T16:10:22.207Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6ca2c01230eea7e679ec9f19adadd4d051f57fe6"
 ---
 
 # ATM-GOV-0217 Multi-process ticket consistency
