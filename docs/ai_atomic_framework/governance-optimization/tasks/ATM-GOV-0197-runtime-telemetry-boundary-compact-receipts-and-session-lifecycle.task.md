@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0197
 title: Runtime telemetry boundary compact receipts and session lifecycle
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -52,6 +52,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m3-observability-repair
 surfaceFamily: telemetry-storage
+completed_at: "2026-07-20T10:12:26.456Z"
+completed_by_agent: "codex-captain-0197"
+closedAt: "2026-07-20T10:12:26.456Z"
+closedByActor: "codex-captain-0197"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T10-12-26-456Z-close-686d130bc83a"
+lastTransitionAt: "2026-07-20T10:12:26.456Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ba6fddb7f966c07c3391bd834bfda1744b62562c"
 ---
 
 # ATM-GOV-0197 Runtime telemetry boundary compact receipts and session lifecycle

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T10-12-26-456Z-close-686d130bc83a",
+  "taskId": "ATM-GOV-0197",
+  "action": "close",
+  "actorId": "codex-captain-0197",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0197-runtime-telemetry-boundary-compact-receipts-and-session-lifecycle.task.md",
+  "taskSha256": "sha256:7ea666b652b2dfbe7a77a5ad078c41cc71b0ba00df12058b3b122da137141950",
+  "createdAt": "2026-07-20T10:12:26.456Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0197 --actor codex-captain-0197"
+}
