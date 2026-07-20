@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0224
 title: Complete paired AB and safety controller
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -62,6 +62,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T18:43:05.130Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T18:43:05.130Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T18-43-05-130Z-close-58589f789423"
+lastTransitionAt: "2026-07-20T18:43:05.130Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "baaeddf8a6426aef4e1f9428d9e69934e3664db3"
 ---
 
 # ATM-GOV-0224 Complete paired AB and safety controller

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T18-43-05-130Z-close-58589f789423",
+  "taskId": "ATM-GOV-0224",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0224-complete-paired-ab-and-safety-controller.task.md",
+  "taskSha256": "sha256:35036a1646862202e0ceb39b89700306be5b5e4a56302c2d3ecc169b0b7eb0bd",
+  "createdAt": "2026-07-20T18:43:05.130Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0224 --actor codex-gpt-5.4-mini"
+}
