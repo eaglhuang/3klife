@@ -328,7 +328,7 @@ playbook 是本次工作的動態 orchestration contract，負責：
 | `TASK-SKL-0012` | execution card | 將 Team role skill packs 的 growth contract 與 observability 接入 Team runtime | AI-Atomic-Framework | `TASK-SKL-0007`, `TASK-SKL-0010`, `TASK-SKL-0011` |
 | `TASK-SKL-0013` | execution card | 建立 shared `atm-error-code-resolver` skill 與 registry-backed error-code knowledge | AI-Atomic-Framework | `TASK-SKL-0002`, `TASK-SKL-0005`, `TASK-SKL-0007` |
 | `TASK-SKL-0014` | execution card | 補齊 framework temp claim quickfix 的 `skill -> tools/playbook -> CLI fallback` 友善 AI 路徑 | AI-Atomic-Framework | `TASK-SKL-0002`, `TASK-SKL-0003`, `TASK-SKL-0005`, `TASK-SKL-0013` |
-| `TASK-SKL-0015` | execution card | 將 ATM 2.0/2.1 隊長交接中的穩定治理流程回寫到入口 skill 與其投影內容 | AI-Atomic-Framework | `TASK-SKL-0005`, `TASK-SKL-0007`, `TASK-SKL-0014` |
+| `TASK-SKL-0015` | execution card | 將 ATM 2.0/2.1 隊長交接中的穩定治理流程回寫到入口 skill 與其投影內容 | AI-Atomic-Framework | `TASK-SKL-0005`, `TASK-SKL-0007` |
 
 ## 10. 完成定義
 
@@ -448,3 +448,15 @@ Captain, dispatcher, handoff writer, and evidence operator should see early:
 Those stable rules belong in entry skills. Historical 2.0 / 2.1 state from the
 handoff does not. `TASK-SKL-0015` captures this boundary and requires source
 skill-template updates before installed editor copies are refreshed.
+
+`TASK-SKL-0014` is related because its specialist framework-temp-claim route may
+consume the same reusable guidance and may touch overlapping skill templates.
+That is a shared-write coordination concern, not a hard dependency. The two
+cards should coordinate through ATM claim/broker/projection validation rather
+than blocking `TASK-SKL-0015` until `TASK-SKL-0014` closes.
+
+## Follow-up: TASK-SKL-0016 Root-Drop Release Source List Stale Generated Output Guard
+
+TASK-SKL-0016 records a live runner-sync dogfood blocker discovered after TASK-SKL-0014: root-drop release assembly read stale tracked generated dist declarations from the Git index after package dist regeneration removed them from the sealed worktree. The follow-up keeps the repair in the SKL tool-first/release-governance family instead of expanding ATM-GOV-0225 final closure scope.
+
+Required evidence is command-backed: focused source-list test, root-drop assembly, typecheck, validate:cli, and git diff check.

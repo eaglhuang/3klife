@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T15-26-16-125Z-close-890851e77c7f",
+  "taskId": "ATM-GOV-0215",
+  "action": "close",
+  "actorId": "claude-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0215-broker-overlap-callsite-convergence-repair.task.md",
+  "taskSha256": "sha256:8b6ae07555fc69b5916e6e3ff8577b16d7541f78665a17dd4f7b8eee8ea09e99",
+  "createdAt": "2026-07-20T15:26:16.125Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0215 --actor claude-captain"
+}
