@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T16-38-17-257Z-close-7b0d28d9becf",
+  "taskId": "ATM-GOV-0218",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0218-runner-sync-self-hosting-closed-loop.task.md",
+  "taskSha256": "sha256:18d0d9b5d637241bfb07fbfd21f8d71f00165e3c89f35fa6dbabde5f8b4dd515",
+  "createdAt": "2026-07-20T16:38:17.257Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0218 --actor codex-gpt-5.4-mini"
+}

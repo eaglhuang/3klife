@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0218
 title: Runner sync self-hosting closed loop
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -63,6 +63,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T16:38:17.257Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T16:38:17.257Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T16-38-17-257Z-close-7b0d28d9becf"
+lastTransitionAt: "2026-07-20T16:38:17.257Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "93c3c19fedf255828b3e3ccc3245324ad6aafd6e"
 ---
 
 # ATM-GOV-0218 Runner sync self-hosting closed loop
