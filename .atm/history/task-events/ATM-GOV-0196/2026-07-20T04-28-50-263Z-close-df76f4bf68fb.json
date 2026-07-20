@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T04-28-50-263Z-close-df76f4bf68fb",
+  "taskId": "ATM-GOV-0196",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0196-observed-telemetry-coverage-and-task-seal-enforcement.task.md",
+  "taskSha256": "sha256:a964139f08da88bce1258e0207efd550e88746642298d6e639935abf03d30bd2",
+  "createdAt": "2026-07-20T04:28:50.263Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0196 --actor codex-captain"
+}
