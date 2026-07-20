@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T12-48-34-671Z-close-cab6bcf1d46d",
+  "taskId": "ATM-GOV-0203",
+  "action": "close",
+  "actorId": "codex-captain-0203",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0203-first-layer-routing-compact-orientation-and-windows-safe-command-contracts.task.md",
+  "taskSha256": "sha256:66809ee3b2aaa28d699944f8dd1265e2c16b1ba0dc5e9fba6493db60c0bd740c",
+  "createdAt": "2026-07-20T12:48:34.671Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0203 --actor codex-captain-0203"
+}
