@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T07-09-47-612Z-close-5c4556e9104c",
+  "taskId": "ATM-GOV-0204",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0204-task-import-parser-canonical-id-boundary-repair.task.md",
+  "taskSha256": "sha256:b0f8613651e92e1e1b579924fad053b499e6933c6926db6954ce195652d9a96d",
+  "createdAt": "2026-07-20T07:09:47.612Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0204 --actor codex-gpt-5.4-mini"
+}

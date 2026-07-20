@@ -1,11 +1,10 @@
 ---
 task_id: ATM-GOV-0204
 title: Task import parser canonical ID boundary repair
-status: planned
+status: done
 owner: unassigned
 priority: P1
-depends_on:
-  - ATM-GOV-0203
+depends_on: []
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v2.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -31,6 +30,19 @@ errorCodes: []
 createdByCommand: atm plan card create
 evidence:
   required: command-backed
+producer:
+  - Canonical task-ID boundary parser and import diagnostics that distinguish real task cards from prose, examples, ranges, and placeholders.
+consumer:
+  - Plan 2.0/v2.1 whole-plan import and every future planning-family dry-run.
+  - ATM-GOV-0197 through ATM-GOV-0214 task-card imports.
+missingData:
+  - The current plan dry-run proves a synthetic TASK-ID-0000 record is emitted, but the exact parser branch and all affected Markdown contexts remain to be measured by the focused fixture matrix.
+dataDrivenStopRule:
+  - Stop if the repair is a plan-specific string exclusion, task-number allowlist, or title-specific workaround rather than one canonical parser boundary shared by plan and sibling-card import.
+  - Stop if any previously valid canonical task card becomes unimportable or if ambiguity is silently discarded instead of reported as a diagnostic.
+out_of_scope:
+  - No target-ledger rewrite, task renumbering, or manual deletion of synthetic imported state.
+  - No broker admission, compose, queue, or telemetry behavior change.
 rollback:
   strategy: revert-commit
   notes: Restore the previous importer parser and keep the failing 2.0 dry-run output as regression evidence; do not edit target ledger task files by hand.
@@ -44,6 +56,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-20T07:09:47.612Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T07:09:47.612Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T07-09-47-612Z-close-5c4556e9104c"
+lastTransitionAt: "2026-07-20T07:09:47.612Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0f936232b852a894dbe2963dc4eaf7154917f29e"
 ---
 
 # ATM-GOV-0204 Task import parser canonical ID boundary repair
@@ -99,6 +120,13 @@ plan document, a supporting sibling task card or complete task metadata.
 - Missing-data semantics: if an extractor cannot attribute a candidate to a
   declaration source, it must not silently import it; it must mark the source
   as unavailable/reference-only or warn with enough path/line context to debug.
+
+## Data-Driven Stop Rule
+
+- Stop if the repair cannot be expressed as one reusable registered-prefix/canonical-boundary parser and instead needs plan-specific or id-specific suppression.
+- Stop if compatibility requires rewriting historical target ledger records or changing existing task ids.
+- Stop if different extractors cannot share the canonical result contract without a schema/version migration; propose that migration instead of leaving divergent parsers.
+- 0203 route/UX evidence is a soft consumer signal, not a hard implementation dependency; 0204 may proceed independently because its parser surface and rollback are separate.
 
 ## Acceptance
 
