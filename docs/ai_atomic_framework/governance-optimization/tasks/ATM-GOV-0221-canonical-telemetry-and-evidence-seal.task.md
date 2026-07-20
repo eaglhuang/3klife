@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0221
 title: Canonical telemetry and evidence seal
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -68,6 +68,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T17:47:59.257Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T17:47:59.257Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T17-47-59-257Z-close-9401711faffe"
+lastTransitionAt: "2026-07-20T17:47:59.257Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "aa0a88e92d8e8a2704e136e0b704f83a202989be"
 ---
 
 # ATM-GOV-0221 Canonical telemetry and evidence seal

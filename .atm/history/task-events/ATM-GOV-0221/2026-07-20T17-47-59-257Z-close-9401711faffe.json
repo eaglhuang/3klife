@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T17-47-59-257Z-close-9401711faffe",
+  "taskId": "ATM-GOV-0221",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0221-canonical-telemetry-and-evidence-seal.task.md",
+  "taskSha256": "sha256:a6bbfba1d90ed44b5a0d0da227ac0719ae06471319a3ce1f47688283c55dd2c3",
+  "createdAt": "2026-07-20T17:47:59.257Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0221 --actor codex-gpt-5.4-mini"
+}
