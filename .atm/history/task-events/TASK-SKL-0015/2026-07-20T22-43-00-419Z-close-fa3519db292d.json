@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T22-43-00-419Z-close-fa3519db292d",
+  "taskId": "TASK-SKL-0015",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0015-entry-skill-governance-flow-backwrite.task.md",
+  "taskSha256": "sha256:202fbfc766a24ce08b170fc973222f8c0f0ee4214832528911450da8658ef2da",
+  "createdAt": "2026-07-20T22:43:00.419Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0015 --actor codex-gpt-5.4-mini"
+}

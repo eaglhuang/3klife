@@ -1,16 +1,16 @@
 ---
 task_id: TASK-SKL-0015
 title: Entry skill governance-flow backwrite
-status: planned
+status: done
 milestone: P1
 depends_on:
   - TASK-SKL-0005
   - TASK-SKL-0007
-  - TASK-SKL-0014
 target_repo: AI-Atomic-Framework
 planning_repo: 3KLife
 closure_authority: target_repo
 related_plan: docs/ai_atomic_framework/skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md
+amendment_epoch: 1
 scopePaths:
   - "templates/skills/atm-governance-router.skill.md"
   - "templates/skills/atm-next.skill.md"
@@ -42,6 +42,10 @@ scopePaths:
   - ".github/instructions/atm-dispatch.instructions.md"
   - ".github/instructions/atm-handoff.instructions.md"
   - ".github/instructions/atm-evidence.instructions.md"
+  - ".github/prompts/atm-dispatch.prompt.md"
+  - ".github/prompts/atm-handoff.prompt.md"
+  - ".github/prompts/atm-evidence.prompt.md"
+  - ".github/prompts/atm-framework-temp-claim.prompt.md"
   - ".gemini/commands/atm-governance-router.toml"
   - ".gemini/commands/atm-next.toml"
   - ".gemini/commands/atm-dispatch.toml"
@@ -57,11 +61,21 @@ deliverables:
   - "templates/skills/atm-handoff.skill.md"
   - "templates/skills/atm-evidence.skill.md"
   - "integrations/codex-skills/atm-governance-router/**"
+  - "integrations/codex-skills/atm-next/**"
   - ".agents/skills/atm-governance-router/**"
+  - ".agents/skills/atm-next/**"
   - ".claude/skills/atm-governance-router/**"
+  - ".claude/skills/atm-next/**"
   - ".cursor/rules/skills/atm-governance-router/**"
+  - ".cursor/rules/skills/atm-next/**"
   - ".github/instructions/atm-governance-router.instructions.md"
+  - ".github/instructions/atm-next.instructions.md"
+  - ".github/prompts/atm-dispatch.prompt.md"
+  - ".github/prompts/atm-handoff.prompt.md"
+  - ".github/prompts/atm-evidence.prompt.md"
+  - ".github/prompts/atm-framework-temp-claim.prompt.md"
   - ".gemini/commands/atm-governance-router.toml"
+  - ".gemini/commands/atm-next.toml"
   - "GEMINI.md"
   - "tests/cli/integration-skill-template-sync.test.ts"
 validators:
@@ -119,6 +133,15 @@ nonGoals:
   - "No implementation of ATM-GOV-0215 through ATM-GOV-0225."
   - "No replacement for TASK-ERR-0002 error and recovery contract."
   - "No queue/composer/circuit-breaker policy implementation."
+completed_at: "2026-07-20T22:43:00.419Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T22:43:00.419Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T22-43-00-419Z-close-fa3519db292d"
+lastTransitionAt: "2026-07-20T22:43:00.419Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "8105c3d786723493a450d0c37a780346622579d4"
 ---
 
 # TASK-SKL-0015
@@ -142,6 +165,11 @@ evidence operator sees the stable rules before it starts work:
   shared-write entry behavior is touched;
 - route new dogfood friction into backlog or shared learning references instead
   of leaving it only in chat.
+
+`TASK-SKL-0014` is a related downstream/sibling consumer, not a hard
+prerequisite. If both cards touch the same source skill template, use the broker,
+claim lifecycle, and projection validators to coordinate the write. Do not encode
+that physical overlap as a semantic dependency.
 
 ## Why This Is A Skill Card
 
