@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0211
 title: Compose first broker ticket state machine and fair scheduling
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -92,6 +92,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: broker-ticket-scheduler
+completed_at: "2026-07-20T09:02:21.120Z"
+completed_by_agent: "codex-captain-0211"
+closedAt: "2026-07-20T09:02:21.120Z"
+closedByActor: "codex-captain-0211"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T09-02-21-120Z-close-536a17415336"
+lastTransitionAt: "2026-07-20T09:02:21.120Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "49011a5414f0619b0d69931e2a46f62ae6e09cf0"
 ---
 
 # ATM-GOV-0211 Compose first broker ticket state machine and fair scheduling
