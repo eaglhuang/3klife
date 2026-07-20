@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T11-01-10-687Z-close-bf2e4bc420a6",
+  "taskId": "ATM-GOV-0200",
+  "action": "close",
+  "actorId": "codex-captain-0200",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0200-validator-observed-lifecycle-and-evidence-driven-tiering.task.md",
+  "taskSha256": "sha256:8392573e9688f317ddc4f5620c31e39aeb3e9ef9340a354bbc3ceea0cf013780",
+  "createdAt": "2026-07-20T11:01:10.687Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0200 --actor codex-captain-0200"
+}
