@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T17-04-41-204Z-close-12c77a0b0e5b",
+  "taskId": "ATM-GOV-0219",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0219-transactional-shared-delivery.task.md",
+  "taskSha256": "sha256:36db997d4e119c86b6294ecfd3efaf9dfbbb9dc0ea38e4cddab068630d3b4a3d",
+  "createdAt": "2026-07-20T17:04:41.204Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0219 --actor codex-gpt-5.4-mini"
+}
