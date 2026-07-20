@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0002
 title: Historical residue governance cleanup
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -58,6 +58,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T18:57:50.148Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T18:57:50.148Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T18-57-50-148Z-close-b656ba1c9dbb"
+lastTransitionAt: "2026-07-20T18:57:50.148Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9b2bf9b4bea17a8d53157ecfcf8aa1a715dad353"
 ---
 
 # TASK-TMP-0002 Historical residue governance cleanup

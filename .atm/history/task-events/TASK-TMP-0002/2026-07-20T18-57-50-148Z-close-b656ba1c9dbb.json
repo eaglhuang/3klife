@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T18-57-50-148Z-close-b656ba1c9dbb",
+  "taskId": "TASK-TMP-0002",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0002-historical-residue-governance-cleanup.task.md",
+  "taskSha256": "sha256:1e91fd7e89e2b27a4cea094d9c149c39720584373a9053012e976d799035c9db",
+  "createdAt": "2026-07-20T18:57:50.148Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0002 --actor codex-gpt-5.4-mini"
+}
