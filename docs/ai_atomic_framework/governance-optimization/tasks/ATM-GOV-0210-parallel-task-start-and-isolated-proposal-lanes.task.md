@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0210
 title: Parallel task start and isolated proposal lanes
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -67,6 +67,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m5-compose-first
 surfaceFamily: proposal-lane
+completed_at: "2026-07-20T08:48:37.859Z"
+completed_by_agent: "codex-captain-0210"
+closedAt: "2026-07-20T08:48:37.859Z"
+closedByActor: "codex-captain-0210"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T08-48-37-859Z-close-790bf21939dd"
+lastTransitionAt: "2026-07-20T08:48:37.859Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "496544e448bbd2050f6402336e11c244978a485c"
 ---
 
 # ATM-GOV-0210 Parallel task start and isolated proposal lanes

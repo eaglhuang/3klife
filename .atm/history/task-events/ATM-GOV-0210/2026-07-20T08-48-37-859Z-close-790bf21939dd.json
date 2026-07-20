@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T08-48-37-859Z-close-790bf21939dd",
+  "taskId": "ATM-GOV-0210",
+  "action": "close",
+  "actorId": "codex-captain-0210",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0210-parallel-task-start-and-isolated-proposal-lanes.task.md",
+  "taskSha256": "sha256:892916c7bedacb03f433d516c39c309461e78b0696de6210080aa89eb9f9b0f9",
+  "createdAt": "2026-07-20T08:48:37.859Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0210 --actor codex-captain-0210"
+}
