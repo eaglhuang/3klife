@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0198
 title: True resumable plan executor orchestration loop
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on:
@@ -51,6 +51,15 @@ atomizationImpact:
       inlineReason: null
 waveId: auto-batch-perf-v2-m3-observability-repair
 surfaceFamily: plan-executor
+completed_at: "2026-07-20T10:27:01.716Z"
+completed_by_agent: "codex-captain-0198"
+closedAt: "2026-07-20T10:27:01.716Z"
+closedByActor: "codex-captain-0198"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T10-27-01-716Z-close-69fe89e38994"
+lastTransitionAt: "2026-07-20T10:27:01.716Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4fb612d9f3ac45051ec156e8c2b3881f9b5143a4"
 ---
 
 # ATM-GOV-0198 True resumable plan executor orchestration loop

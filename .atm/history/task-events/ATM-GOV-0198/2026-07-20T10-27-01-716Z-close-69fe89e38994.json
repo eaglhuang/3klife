@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T10-27-01-716Z-close-69fe89e38994",
+  "taskId": "ATM-GOV-0198",
+  "action": "close",
+  "actorId": "codex-captain-0198",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0198-true-resumable-plan-executor-orchestration-loop.task.md",
+  "taskSha256": "sha256:08fd2d992a1488b654ddbd64a7f891244e150e2df560e02424b9bb2e2608831c",
+  "createdAt": "2026-07-20T10:27:01.716Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0198 --actor codex-captain-0198"
+}
