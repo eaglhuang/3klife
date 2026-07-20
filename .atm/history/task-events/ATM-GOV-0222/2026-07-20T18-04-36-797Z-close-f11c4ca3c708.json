@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T18-04-36-797Z-close-f11c4ca3c708",
+  "taskId": "ATM-GOV-0222",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0222-managed-plan-executor-and-first-layer-ux.task.md",
+  "taskSha256": "sha256:54ccfa7f752d3f01ccf91206f1f417ea40437793bcb18ffaa2dc755eca50b8d4",
+  "createdAt": "2026-07-20T18:04:36.797Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0222 --actor codex-gpt-5.4-mini"
+}

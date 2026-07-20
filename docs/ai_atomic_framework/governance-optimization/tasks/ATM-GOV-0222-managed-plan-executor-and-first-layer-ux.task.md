@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0222
 title: Managed plan executor and first-layer UX
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: P0
@@ -70,6 +70,15 @@ atomizationImpact:
   mapUpdates:
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   extractionCandidates:[]
+completed_at: "2026-07-20T18:04:36.797Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T18:04:36.797Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T18-04-36-797Z-close-f11c4ca3c708"
+lastTransitionAt: "2026-07-20T18:04:36.797Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "eb43c47ae08f810e277652bd76fc3ea98c21ea1e"
 ---
 
 # ATM-GOV-0222 Managed plan executor and first-layer UX
