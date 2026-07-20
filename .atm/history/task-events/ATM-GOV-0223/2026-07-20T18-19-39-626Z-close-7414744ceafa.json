@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T18-19-39-626Z-close-7414744ceafa",
+  "taskId": "ATM-GOV-0223",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0223-real-multi-process-and-multi-agent-dogfood.task.md",
+  "taskSha256": "sha256:9b94f46c61a27681dc4e8e332ee271b4f1549f532d7433a04c3adf1811f64291",
+  "createdAt": "2026-07-20T18:19:39.626Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0223 --actor codex-gpt-5.4-mini"
+}
