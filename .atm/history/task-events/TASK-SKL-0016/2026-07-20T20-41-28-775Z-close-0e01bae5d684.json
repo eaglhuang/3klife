@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-20T20-41-28-775Z-close-0e01bae5d684",
+  "taskId": "TASK-SKL-0016",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0016-root-drop-release-source-list-stale-generated-output.task.md",
+  "taskSha256": "sha256:c48a893b71695fc63fa5b12653316721b81cd4b0b2bba8a60c6e33fef19ca4d1",
+  "createdAt": "2026-07-20T20:41:28.775Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0016 --actor codex-gpt-5.4-mini"
+}
