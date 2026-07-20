@@ -23,9 +23,6 @@ scopePaths:
   - ".github/instructions/atm-framework-temp-claim.instructions.md"
   - ".gemini/commands/atm-framework-temp-claim.toml"
   - ".atm/integrations/**"
-  - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
-  - "packages/cli/src/commands/taskflow/implementation.ts"
-  - "tests/cli/framework-temp-claim-runner-sync-id.test.ts"
   - "docs/governance/atm-bug-and-optimization-backlog.md"
   - "scripts/validate-skill-templates.ts"
 deliverables:
@@ -36,9 +33,10 @@ deliverables:
   - ".cursor/rules/skills/atm-framework-temp-claim/**"
   - ".github/instructions/atm-framework-temp-claim.instructions.md"
   - ".gemini/commands/atm-framework-temp-claim.toml"
-  - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
-  - "tests/cli/framework-temp-claim-runner-sync-id.test.ts"
   - "docs/governance/atm-bug-and-optimization-backlog.md"
+followUpCards:
+  - id: TASK-SKL-0014-FU-CLI-EMISSION
+    reason: "CLI emitter fixes for framework temp claim (runner-sync-admission.ts id normalizer + taskflow.ts blocker requiredCommand prerequisites) are needed to make the skill's CLI fallback copy-paste runnable. Deferred out of SKL-0014 because ATM-GOV-0216 holds atom-cli-router; folding CLI edits in now would require broker resolution or serialization. Backlog -215 is the evidence source for the follow-up."
 validators:
   - "npm run typecheck"
   - "npm run validate:cli"
