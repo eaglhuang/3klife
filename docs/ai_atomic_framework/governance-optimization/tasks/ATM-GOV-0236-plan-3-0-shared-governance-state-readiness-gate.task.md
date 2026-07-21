@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0236
 title: Plan 3.0 shared governance state readiness gate
-status: planned
+status: done
 owner: atm-taskflow
 priority: P0
 milestone: ATM-3.0-B0.5
@@ -86,6 +86,15 @@ atomizationImpact:
       source: "packages/cli/src/commands/taskflow/closeback-orchestration.ts"
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-21T06:17:33.022Z"
+completed_by_agent: "codex-plan3-captain-20260721-01"
+closedAt: "2026-07-21T06:17:33.022Z"
+closedByActor: "codex-plan3-captain-20260721-01"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-21T06-17-33-022Z-close-92cb30ea4778"
+lastTransitionAt: "2026-07-21T06:17:33.022Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4cc69b792e2e3c9e6cf4687f4d235daf851ca293"
 ---
 
 # ATM-GOV-0236 Plan 3.0 shared governance state readiness gate

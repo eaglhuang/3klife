@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T06-17-33-022Z-close-92cb30ea4778",
+  "taskId": "ATM-GOV-0236",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-01",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0236-plan-3-0-shared-governance-state-readiness-gate.task.md",
+  "taskSha256": "sha256:0f0ceec6e1ac26920f796afc76b6e1b0d448bc9b5b462951e3caac8f022147dd",
+  "createdAt": "2026-07-21T06:17:33.022Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0236 --actor codex-plan3-captain-20260721-01"
+}
