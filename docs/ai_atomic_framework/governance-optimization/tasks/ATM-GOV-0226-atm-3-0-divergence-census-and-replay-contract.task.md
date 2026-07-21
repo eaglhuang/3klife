@@ -8,6 +8,7 @@ milestone: ATM-3.0-A
 severity: P0
 depends_on:
   - TASK-ERR-0003
+  - TASK-TMP-0004
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -23,6 +24,7 @@ scopePaths:
   - "tests/cli/parallel-replay-scenario-contract.test.ts"
   - "tests/cli/atm-3-red-baseline-discrimination.test.ts"
   - "docs/governance/atm-bug-and-optimization-backlog.md"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/**"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json"
 deliverables:
@@ -33,6 +35,7 @@ deliverables:
   - "tests/cli/parallel-replay-scenario-contract.test.ts"
   - "tests/cli/atm-3-red-baseline-discrimination.test.ts"
   - "docs/governance/atm-bug-and-optimization-backlog.md"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/**"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json"
 validators:
@@ -102,7 +105,8 @@ atomizationImpact:
 - 在任何 broker implementation 前，以現行 frozen `node atm.mjs` 與隔離 fixture 執行紅色鑑別力基線，封存已知 stale/dimension/release-order failure counters 與 scenario digest；不得修改現場 runtime 來製造失敗。
 - census closure packet 的 task-owned changed-files、tree、parent、command-run 與 git-head evidence 是否同源；pre-push 才發現的不一致必須保留為 replay assertion。
 - 從已匯入卡片的 `scopePaths` 與 `ownerAtomOrMap` 資料預配置本計畫新增路徑的 atom-map ownership；後續平行卡不得各自重寫 shared map shard。
-- 對 `ATM-BUG-2026-07-20-213`、`-214`、`-216`、`ATM-BUG-2026-07-21-217`、`-218` 重跑 probe；已修項以證據關閉，未修項維持 Open 並映射到唯一 owner card。
+- 確認 `TASK-TMP-0004` 已把 `ATM-BUG-2026-07-20-213` 至 `ATM-BUG-2026-07-21-218` 落成 canonical item shards，再對 `-213`、`-214`、`-216`、`-217`、`-218` 重跑 probe；已修項以 item evidence 關閉，未修項維持 Open 並映射到唯一 owner card。
+- 對附件盤點的既有 open items 做 current-source discrimination：至少重跑 protected-ledger deletion、same-task concurrent evidence、orphan in-progress claim、framework-temp runner admission、foreign dirty-owner preservation。測試已通過者只做 frozen parity/closeback；測試仍失敗者不得因 backlog 年代或既有 test 檔存在而判定已修。
 - 對 frozen runner 與 source runner 執行同一組 decision coherence probe，核對 outer verdict、conflict matrix arbitration、各 gate status 與 conflict detail；不得把歷史輸出直接當成現行 bug。
 
 ## Acceptance
@@ -111,6 +115,8 @@ atomizationImpact:
 - [ ] 三張歷史 BCR、兩張 task terminal state 與實際 delivery order 被封成 compact digest。
 - [ ] 0014 closure packet 的 changed-files/tree/parent/command-run mismatch 有獨立 compact digest、重現命令與唯一 owner card。
 - [ ] `ATM-BUG-2026-07-20-213` 的 decision coherence probe 在 frozen/source 皆有 compact receipt；若一致則正式 closeback，若不一致則記錄 contradiction 與 0227 owner，不先寫特例修補。
+- [ ] canonical backlog census 以 item shards 為 authority，projection-only item count = 0；同 ID 不得因日期省略而對錯 item。
+- [ ] current-source discrimination matrix 對每個候選記錄 exact backlog ID、probe command、source/frozen result、owner/disposition；`Fixed`、`Open` 與 `inconclusive` 不以聊天判斷。
 - [ ] 不可取得的歷史 timing 欄位有 explicit unavailable receipt，不得填 0 或推測值。
 - [ ] replay schema 不含固定 task/actor/path/date 分支。
 - [ ] frozen 紅色 baseline 至少重現一項已知 failure class；若意外全綠，scenario 為 invalid/inconclusive 且不得解鎖 0227 implementation。

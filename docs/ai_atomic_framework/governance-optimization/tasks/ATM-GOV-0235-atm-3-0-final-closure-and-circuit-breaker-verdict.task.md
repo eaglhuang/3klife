@@ -8,7 +8,6 @@ milestone: ATM-3.0-F
 severity: P0
 depends_on:
   - ATM-GOV-0234
-  - ATM-GOV-0232
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -16,12 +15,14 @@ closure_authority: target_repo
 series_selection_reason: "GOV owns final cross-plan closure, rollout policy and evidence-bound verdict."
 scopePaths:
   - "docs/governance/atm-bug-and-optimization-backlog.md"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/**"
   - "docs/governance/atm-3-replay-evidence.md"
   - "packages/cli/src/commands/broker/parallel-admission/**"
   - "tests/cli/atm-3-final-closure.test.ts"
   - "tests/cli/parallel-admission-circuit-breaker.test.ts"
 deliverables:
   - "docs/governance/atm-bug-and-optimization-backlog.md"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/**"
   - "docs/governance/atm-3-replay-evidence.md"
   - "packages/cli/src/commands/broker/parallel-admission/**"
   - "tests/cli/atm-3-final-closure.test.ts"
@@ -73,6 +74,7 @@ atomizationImpact:
 - 核對 0226 紅色 baseline 與 0234 綠色 replay 使用同一 scenario/assertion/threshold digest；核對 controlled replay 與 real-task dogfood 為兩個獨立 passing segments。
 - 驗證 healthy replay 沒有非注入 trip 或 queue-only residency；故障演練能自動 trip `queue-only`，reset 綁定較新的 passing digest，並封存 trip reason 與 recovery latency。
 - 對每個 2.2 inherited acceptance 記錄 terminal disposition 與證據。
+- 對 `TASK-TMP-0004`、`ATM-GOV-0236` 及本次 readiness census 列出的 exact backlog IDs 逐一驗證 canonical shard、source/frozen disposition 與 projection digest；不得只看 Markdown 列或省略日期後的短號。
 - 任一失敗輸出精確 cell、authority generation、recovery manifests 與 next action。
 
 ## Acceptance
@@ -85,5 +87,6 @@ atomizationImpact:
 - [ ] legacy migration 的 immutable pre-snapshot、apply、rollback 與 round-trip digest 全部通過；rollback 不依賴直接修改 runtime JSON。
 - [ ] healthy replay 的 `unexpectedBreakerTripCount = 0`、`timeInQueueOnlyRatio = 0`；trip/reset 演練通過，reset 引用新的 passing digest。
 - [ ] 所有 2.2 未完成驗收有 terminal disposition；有任何 open 則本卡不得 close。
+- [ ] `TASK-TMP-0004`、`ATM-GOV-0236` 與 0226–0234 全部 target-close；projection-only backlog item count、unowned Plan 3.0 blocker count、failed/inconclusive readiness probe count皆為 0。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:48.696Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0235-atm-3-0-final-closure-and-circuit-breaker-verdict.task.md","contentDigest":"sha256:9908d53ea8eb46227ac7e31a0bcb5a2c60ae619bc4862c508b47afdc4407d6ee"} -->

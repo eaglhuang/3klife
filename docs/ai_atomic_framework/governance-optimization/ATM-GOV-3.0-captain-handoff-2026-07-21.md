@@ -3,7 +3,7 @@ doc_id: doc_atm_gov_3_0_captain_handoff_2026_07_21
 owner: atm-captain
 status: handoff
 created_at: 2026-07-21T11:48:34+08:00
-updated_at: 2026-07-21T12:00:04+08:00
+updated_at: 2026-07-21T12:32:34+08:00
 planning_repo_root: C:/Users/User/3KLife
 target_repo_root: C:/Users/User/AI-Atomic-Framework
 source_plan_path: docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
@@ -18,7 +18,7 @@ closure_authority: target_repo
 
 目前只能宣稱：
 
-- Plan coverage：`PASS`，已知缺口都有 owner、依賴與 acceptance。
+- Plan coverage：`PASS`；新 backlog readiness review 已有 owner，13-card import、DAG、B1 scope 與 encoding 驗證皆通過。
 - Current product replay：`FAIL`，產品修復與真多行程證據尚未完成。
 - Post-plan expectation：`conditionally solvable`，只有 `ATM-GOV-0235` 的全部門檻通過後才能宣稱達標。
 
@@ -30,7 +30,8 @@ closure_authority: target_repo
 - Closure authority：target repo 的 ATM ledger、events、evidence 與 governed delivery commit
 - Canonical plan：`governance-optimization/end-to-end-auto-batch-performance-plan-v3.md`
 - Error card：`error-governance/tasks/TASK-ERR-0003-atm-3-0-broker-and-recovery-errorcode-contracts.task.md`
-- GOV cards：`governance-optimization/tasks/ATM-GOV-0226` 至 `ATM-GOV-0235`
+- TMP prerequisite：`temporary-governance/tasks/TASK-TMP-0004-plan-3-0-backlog-canonical-source-repair.task.md`
+- GOV cards：`governance-optimization/tasks/ATM-GOV-0226` 至 `ATM-GOV-0236`
 - Target import method：正式 ATM CLI import；禁止手改 `.atm/history/**` 或 `.atm/runtime/**`
 
 完整 plan 與 source task cards 只留在 3KLife。AI-Atomic-Framework 只能接收 CLI-imported ledger records、實作、測試與卡片明列的產品證據。
@@ -41,14 +42,15 @@ closure_authority: target_repo
 
 - 交接文件建立前的 Plan 3.0 planning baseline：3KLife `master`、HEAD `dfc2dd65`，當時與 `origin/master` 同步且工作樹乾淨；本交接另以後續 commit 保存。
 - AI-Atomic-Framework：`main`，HEAD `2cc2badf1`，與 `origin/main` 同步，工作樹乾淨。
-- Plan 3.0 source plan 與 11 張卡已建立、解析通過，但尚未 import 到 target ledger。
+- Plan 3.0 source plan 與 13 張卡已建立、amendment validation 通過，但尚未正式 import 到 target ledger。
 - `node atm.mjs next --prompt <Plan 3.0 prompt> --json` 目前回 `ATM_NEXT_TASK_SCOPE_NOT_FOUND`；原因是 ledger 尚無 Plan 3.0 cards，不是產品執行失敗。
 - broker active write intents：`0`。
 - runner-sync steward queue：`0`。
 - parallel admission：`mode=enforce`、`circuitBreakerEnabled=true`、`fallbackMode=queue-only`、`tripped=false`。
-- 11 張卡 dry-run import：全部 `ok=true`、manifest diagnostics `0`、task import diagnostics `0`。
-- 依賴 DAG：acyclic。
-- 修正版波次 B1 的 0228/0229/0230/0231/0232 source scope census：`0` 個已知交集；B1 必須等 0227 legacy fail-closed safety gate 完成後才能啟動。
+- 13 張卡 dry-run import：全部 task count 1、manifest diagnostics 0、errors 0、warnings 0。
+- 新 DAG acyclic、missing dependency 0：TMP-0004 + ERR-0003 -> 0226 -> 0227 -> 0236 -> 0230 -> 0231 -> 0228/0229/0232 -> 0233 -> 0234 -> 0235。
+- 新 B1 只含 0228/0229/0232，exact/glob-containment scope overlap count = 0；必須等 protected-state、safe runner-sync 與 actor continuity 三個 readiness gate 完成。
+- touched encoding guard：15 files 全通過，BOM/U+FFFD/mojibake 均為 0。
 
 最新 planning commits：
 
@@ -56,6 +58,7 @@ closure_authority: target_repo
 - `d16ff406 docs(atm): capture mixed closure packet replay gap`
 - `dfc2dd65 docs(atm): harden Plan 3.0 authorization gates`
 - `dfd7c371 docs(atm): hand off Plan 3.0 closure execution`
+- `ab4481f9 docs(atm): strengthen Plan 3.0 proof gates`
 
 ## Non-Negotiable Decisions
 
@@ -67,10 +70,12 @@ closure_authority: target_repo
 6. `queue-only` 不是永久成功狀態。健康 replay 的非注入 trip 與 queue-only residency 必須為 0。
 7. 0014／0015 是負向 replay fixture，不是效能 baseline；效能證據必須來自 Plan 3.0 新跑的 paired runs。
 8. 不直接刪改 `.atm`、不偽造 receipt、不使用 `--no-verify` 或 waiver 取得假綠燈。
-9. 0226 必須先以現行 frozen runner 封存紅色鑑別力基線；0227 必須讓無 canonical generation/dimension grant 的 legacy BCR 失去授權能力，之後才可開始 B1 真平行 wave。
+9. TMP-0004 必須先補 canonical backlog shards；0226 再封存 frozen 紅色基線，0227 惰化 legacy BCR，0236/0230/0231 依序證明 protected state、safe shared build 與 actor continuity，之後才可開始 B1 真平行 wave。
 10. migration apply 前必須有 immutable snapshot receipt 與正式 rollback CLI；code revert 不能取代 runtime rollback。
 11. 0234 驗收 worker 強制由 frozen `node atm.mjs` 啟動；source/dev 結果只能作輔助，parity 比較 canonical behavior projection digest，不比較含時間戳的 raw envelope。
 12. 0234 必須同時通過 controlled replay 與兩張真實交集任務 dogfood；不得靠移除 declared intersection 取得綠燈。
+13. backlog `Open` 只表示尚未 closeback，不等於產品仍壞；先跑 exact-ID current source/frozen probe，通過就只關 item，失敗才修改 owning code。
+14. B1 worker 使用獨立 worktree/index/proposal；只有 canonical composer/steward 可以 shared build、publish、Git index 與 close window。
 
 ## First 15 Minutes In The New Conversation
 
@@ -82,7 +87,7 @@ git status --short --branch
 node atm.mjs broker status --json
 node atm.mjs broker runner-sync status --json
 node atm.mjs broker parallel-admission status --json
-node atm.mjs next --prompt "執行 ATM Plan 3.0，先匯入並完成 TASK-ERR-0003，之後依依賴執行 ATM-GOV-0226 至 ATM-GOV-0235。" --json
+node atm.mjs next --prompt "執行 ATM Plan 3.0 readiness amendment：先完成 TASK-TMP-0004 與 TASK-ERR-0003，再依 DAG 執行 ATM-GOV-0226 至 ATM-GOV-0236。" --json
 ```
 
 若新對話的 actor identity 不確定，claim 前先執行：
@@ -106,29 +111,30 @@ node atm.mjs tasks import --from "C:/Users/User/3KLife/docs/ai_atomic_framework/
 
 ```mermaid
 flowchart LR
+  TMP["TASK-TMP-0004"] --> G226["ATM-GOV-0226"]
   ERR["TASK-ERR-0003"] --> G226["ATM-GOV-0226"]
   G226 --> G227["0227 canonical authority"]
-  G227 --> G228["0228 projection CAS"]
-  G227 --> G229["0229 linked surfaces"]
-  G227 --> G230["0230 runner-sync"]
-  G227 --> G231["0231 command manifests"]
-  G227 --> G232["0232 parser and closeback"]
+  G227 --> G236["0236 protected state and close idempotency"]
+  G236 --> G230["0230 safe runner-sync"]
+  G230 --> G231["0231 identity and manifests"]
+  G231 --> G228["0228 projection CAS"]
+  G231 --> G229["0229 linked surfaces"]
+  G231 --> G232["0232 parser and closeback"]
   G228 --> G233["0233 terminal saga"]
   G229 --> G233
-  G230 --> G233
-  G231 --> G233
+  G232 --> G233
   G233 --> G234["0234 real replay"]
   G234 --> G235["0235 final verdict"]
-  G232 --> G235
 ```
 
 執行規則：
 
-- A0：先單獨完成 `TASK-ERR-0003`。
-- A：再完成 `ATM-GOV-0226`，建立 census、scenario/threshold schema、ownership baseline 與現行 frozen 紅色鑑別力基線。
+- R0/A0：`TASK-TMP-0004` 與 `TASK-ERR-0003` 可分開處理；兩者都完成後才進 0226。
+- A：完成 `ATM-GOV-0226`，建立 canonical-item census、current-source discrimination、scenario/threshold schema、ownership baseline 與現行 frozen 紅色鑑別力基線。
 - B0：單獨完成 `0227`，部署 canonical authority 與 legacy BCR fail-closed guard；它是後續平行 claim 的安全前置。
-- B1：`0228`、`0229`、`0230`、`0231`、`0232` 可使用獨立 actor 與 isolated proposal 真平行實作。
-- D：`0233` 必須等待 `0228/0229/0230/0231`；`0232` 可繼續平行，但最後 `0235` 仍必須等它。
+- B0.5–B0.7：依序完成 `0236 -> 0230 -> 0231`；不得把這三個 shared substrate 修補拿去並行自我 dogfood。
+- B1：`0228`、`0229`、`0232` 可使用獨立 actor、worktree/index 與 isolated proposal 真平行實作。
+- D：`0233` 必須等待完整 B1，接上 isolated index、terminal saga 與 migration。
 - E/F：`0234` 與 `0235` 是證據與收官 lane，不得提前用 fixture 宣告通過。
 
 若 ATM 對整個 Plan 回傳 batch route，只能交付目前 queue head，並在 commit 前執行：
@@ -183,15 +189,17 @@ node atm.mjs taskflow pre-close --task <task-id> --actor <actor-id> --json
 
 | 卡片 | 治理重點 | 必收數據／證據 | Close gate |
 |---|---|---|---|
-| `TASK-ERR-0003` | 先註冊或重用 7 個 exact ErrorCode；registry 是唯一 authority，`docs/ERROR_CODES.md` 只能 generator 產生。 | 每個 code 的 trigger、category、retryability、approval、status command、ordered manifests；registry/generated-doc digest。 | 7 個 code 均已註冊或有完整 reuse 證據；所有 GOV consumer 只引用正式名稱；`shell=false`。 |
-| `ATM-GOV-0226` | 建立 census、scenario/threshold contract 與 L0 frozen 紅色基線；歷史 0014/0015 只作資料。 | producer/consumer、authority、generation/digest、terminal status、recovery、observed/unavailable；scenario/threshold seal；三張 BCR、兩張 terminal tasks、delivery order、mixed closure packet digest；`-213/-214/-216/-217/-218` probe。 | unknown owner = 0；紅色 baseline 至少重現一項已知 failure class；意外全綠則 scenario invalid/inconclusive；threshold 不得事後調整。 |
+| `TASK-TMP-0004` | 將 projection-only 的 `-213` 至 `-218` 搬入 canonical item shards。 | 六份 item digest、projection before/after、兩次 rebuild digest、schema results。 | canonical item = 6、projection-only = 0、兩次 rebuild deterministic，無臨時轉換檔。 |
+| `TASK-ERR-0003` | 先註冊或重用 8 個 exact ErrorCode；registry 是唯一 authority，`docs/ERROR_CODES.md` 只能 generator 產生。 | 每個 code 的 trigger、category、retryability、approval、status command、ordered manifests；registry/generated-doc digest。 | 8 個 code 均已註冊或有完整 reuse 證據；所有 GOV consumer 只引用正式名稱；`shell=false`。 |
+| `ATM-GOV-0226` | 建立 canonical census、current-source discrimination、scenario/threshold contract 與 L0 frozen 紅色基線。 | exact item IDs、projection-only count、probe command/source/frozen result/owner/disposition；scenario/threshold seal與歷史 replay digests。 | unknown owner/projection-only = 0；紅色 baseline 有鑑別力；已修 backlog 只 closeback，仍紅才改 code。 |
 | `ATM-GOV-0227` | 讓 `atm.brokerTicket.v1` 成為唯一可寫仲裁；新增 dimension-preserving grants，並在 B1 前惰化無 generation/grant 的 legacy BCR。 | grant dimension/keys/operation/gate/generation/digest、legacy active authorization count、re-arbitration tickets、outer decision coherence、source/frozen behavior digest。 | legacy artifact active authorization = 0 且不刪 sidecar；同維度同資源有效 grant 可授權；跨維度/terminal/stale grant 不授權；無 terminal refusal。 |
 | `ATM-GOV-0228` | queue/BCR/freeze/direction-lock projection 使用 atomic replace、CAS generation 與 crash-safe reconcile。 | CAS attempts/conflicts、projection digest/watermark、reconcile count/result、publisher generation count、wakeup count、Windows retry。 | 有效 publisher generation 最多 1；stale projection authorization = 0；破壞測試通過；trip queue-only 時 ticket/proposal/evidence 無遺失。 |
 | `ATM-GOV-0229` | 建立 typed linked-surface closure graph；claim 前推導 template/compiler/validator/projection/manifest/build outputs。 | graph nodes/edges、required/optional/unavailable surfaces、provenance/confidence、cycle iterations、scope amendment phase、re-arbitration receipt。 | fixture 在 claim 前列出全部 shared/linked surfaces；disjoint graph 不被擴大；新增 edge 必須在 write 前更新 ticket。 |
-| `ATM-GOV-0230` | runner-sync reservation 與 logical task identity 分離；實作 cancel/expire/coalesce/revalidate。 | base SHA reachability、reservation generation、owner heartbeat/lease、queue position、`waitedMs`、aging、cancel/revalidate/release counts、`staleReleases` 與實際 mutation。 | active task 下的 stale reservation 仍可合法終止；reported count、`staleReleases` 與 mutation ids 一致；position 2 single-flight 喚醒；duplicate side effect = 0。 |
-| `ATM-GOV-0231` | 收斂 actor/task normalizer 與 recovery command authority；使用 `atm.commandManifest.v1`。 | normalizer call-site inventory、private regex count、argv/cwd/env/timeout/input-output digests、prerequisite chain 執行結果、Windows round-trip。 | dotted/space/Unicode identity 一致；emitted chain 可直接執行且含 temp claim/files/enqueue/build/release；私有 regex/string authority = 0。 |
-| `ATM-GOV-0232` | 驗證 parser fence 邊界、projection completeness、planning mirror reconcile 與 terminal closeback repair。 | fixture matrix、diagnostic code/sourceLine/task id、source/frozen parity、template/adapters count、planning before/after digest、mutation/no-op receipt、backlog disposition。 | fenced `#` 不重置 task；diagnostic line 正確；`done + released` 可冪等修 mirror；未修改宣告 mirror 時 fail closed。 |
-| `ATM-GOV-0233` | 整合 terminal saga、可逆 legacy migration、claim/Git 舊授權消費端與 task-owned closure packet。 | publish/release generation、active authorization、pre/apply/rollback receipts、round-trip state digest、quarantine、task-id-only consumer inventory、wakeup、closure digests。 | task-id-only production helper = 0；migration apply/rollback exactly-once且 round-trip 一致；single successor wakeup；mixed closure packet pre-close 被拒絕。 |
+| `ATM-GOV-0236` | 修 protected governance state deletion 與 close post-side-effect fake failure。 | protected path class/operation/owner receipts；close side-effect journal、idempotency keys、before/after digest與 fault matrix。 | tracked ledger deletion 在 mutation 前拒絕；合法 lifecycle 可寫；close retry 每個 side effect 最多一次；`-045/-015` terminal。 |
+| `ATM-GOV-0230` | B1 前完成 safe single-steward runner-sync、stale lifecycle、terminal parity 與 foreign WIP preservation。 | SHA/generation/lease/queue、source/frozen queue view、foreign file digests、framework-temp admission、advance receipts。 | stale entry 可終止；terminal ghost=0；foreign digest 不變；只有 queue-head steward build；相關 exact items terminal。 |
+| `ATM-GOV-0231` | 收斂 actor/task normalizer、runner actor continuity 與 recovery command authority。 | normalizer inventory、queue-head actor/ambient actor、argv/cwd/env/digests、prerequisite chain、Windows round-trip。 | manifest 攜帶 governed actor；ambient identity 不覆蓋；`-208` terminal；無 actor/task/path 特例。 |
+| `ATM-GOV-0232` | 驗證 parser fence、orphan imported claim、planning mirror reconcile 與 terminal closeback repair。 | fixture matrix、source/frozen parity、planning digests、adopt/rebind result、backlog disposition。 | fenced `#` 正確；orphan task normal claim 可恢復；`-012/-014/-216/-217` terminal；無 emergency reset。 |
+| `ATM-GOV-0233` | 整合 terminal saga、isolated index close、可逆 migration、舊授權消費端與 task-owned closure packet。 | publish/release generation、index before/after、pre/apply/rollback receipts、round-trip state、wakeup、closure digests。 | task-id-only helper=0；foreign index digest 不變；migration/close retry exactly-once；mixed packet pre-close 拒絕。 |
 | `ATM-GOV-0234` | 以 frozen workers 完成 controlled replay、真實交集任務 dogfood 與 compose-first/queue-only paired A/B。 | runner/scenario/threshold digests、real task selection provenance、AB/BA cells、workers、overlap/serialized ratios、starvation threshold、tickets/wakeup、7 counters、breaker、performance、coverage。 | L0 同 scenario 由紅轉綠；real dogfood 無移除交集/terminal refusal/人工 wakeup；ratios 達標；7 counters=0；coverage/performance/cost 通過。 |
 | `ATM-GOV-0235` | 重跑 census、parity、migration rollback、adopter、backlog 與 Plan 2.2 inherited acceptance；做唯一最終 verdict。 | L0/L3/L4 digests、source/frozen/release/adopter digests、migration/rollback、trip/reset、每個 inherited acceptance disposition。 | controlled + real dogfood 都 pass；七項為 0；ratios/threshold/breaker/parity/rollback 通過；任何 open/failed/inconclusive cell 都不得 close。 |
 
@@ -240,7 +248,7 @@ node atm.mjs taskflow pre-close --task <task-id> --actor <actor-id> --json
 
 | 維度 | 必要條件 | 失敗處置 |
 |---|---|---|
-| Functional | `TASK-ERR-0003`、0226–0234 全部以 target ledger/evidence close，沒有 source-card-only done。 | 保持 Plan 3.0 active。 |
+| Functional | `TASK-TMP-0004`、`TASK-ERR-0003`、0226–0234、0236 全部以 target ledger/evidence close，沒有 source-card-only done。 | 保持 Plan 3.0 active。 |
 | Discrimination | 0226 frozen 紅色 baseline 與 0234 新 frozen 綠色結果使用同一 scenario/assertion/threshold digest。 | scenario invalid/inconclusive，不得 close。 |
 | Correctness | 七個 counters 全為 0；terminal/stale/dimension-mismatched authorization 全為 0。 | 自動 trip `queue-only`。 |
 | True parallelism | controlled replay 與 real-task dogfood 都有 process/actor >=2、parallel admissions >0、overlap ratio >=0.30、serialized ratio <=0.70；real tasks 保留 declared intersection。 | verdict `failed` 或 `inconclusive`，不得用 fixture、縮 scope 或人工 wakeup 補。 |
@@ -262,6 +270,7 @@ node atm.mjs taskflow pre-close --task <task-id> --actor <actor-id> --json
 - scope 新增 linked surface，但尚未 re-arbitrate。
 - authorization 只剩 task id、未保留資源維度與 keys。
 - 0227 legacy fail-closed guard 尚未以 frozen runner證明，卻要啟動 B1 平行 wave。
+- TMP-0004、0236、0230 或 0231 尚未 close，卻要啟動 B1；或 B1 worker 共用同一 worktree/index、各自搶 runner build。
 - evidence 缺 window/watermark/digest，卻試圖填 0 或口頭推測。
 - queue/build/release 要求偽造 receipt 才能前進。
 - foreign commit 或移動 HEAD 被混入本卡 closure packet。
@@ -276,6 +285,8 @@ node atm.mjs taskflow pre-close --task <task-id> --actor <actor-id> --json
 - broker queue 現在為 0，只代表現場乾淨，不證明 stale reservation lifecycle 已修。
 - circuit breaker 現在未 trip，只代表目前沒有觸發，不證明健康 replay 不會長期退化成 queue-only。
 - parser 與 glob overlap 的 current source probe 可能已通過，但 backlog closeback 與 frozen parity 仍要由 0226/0232 正式封證。
+- backlog row 顯示 Open 不代表需要重寫產品；exact date/id、current source probe與 frozen parity 三者缺一就只能標 `inconclusive`。
+- `protected-ledger-destructive-guard` 在本次盤點實測仍紅，不能因 test 檔已存在就誤判已修。
 - source unit test 通過不等於 frozen runner、release mirror、adopter projection 通過。
 - 文件與卡片完成不等於產品完成；只有 0235 的 target evidence verdict 有 closure authority。
 
@@ -287,12 +298,12 @@ C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/ATM-GOV-3.
 以及 canonical plan：
 C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 
-Planning authority 是 C:/Users/User/3KLife，target 與 closure authority 是 C:/Users/User/AI-Atomic-Framework。先用 frozen node atm.mjs 做 preflight、確認自己的 actor identity、dry-run 並正式 import 11 張 Plan 3.0 cards。依 DAG 執行：TASK-ERR-0003 -> ATM-GOV-0226 紅色 baseline -> ATM-GOV-0227 legacy fail-closed safety gate -> 0228/0229/0230/0231/0232 B1 平行 wave -> ATM-GOV-0233 -> 0234 controlled replay + real-task dogfood -> 0235。所有 shared write 必須走 canonical broker ticket；方法必須資料驅動且不可為 0014/0015 寫死。只有同 scenario 由紅轉綠、真實交集任務不縮 scope、七個 correctness counters 為 0、ratios/starvation/效能/coverage/breaker/parity/migration rollback/Plan 2.2 dispositions 全部通過，才可以關閉 Plan 3.0。
+Planning authority 是 C:/Users/User/3KLife，target 與 closure authority 是 C:/Users/User/AI-Atomic-Framework。先用 frozen node atm.mjs 做 preflight、確認 actor identity、dry-run 並正式 import 13 張 cards。依 DAG 執行：TASK-TMP-0004 + TASK-ERR-0003 -> 0226 -> 0227 -> 0236 -> 0230 -> 0231 -> 0228/0229/0232 isolated B1 wave -> 0233 -> 0234 controlled replay + real-task dogfood -> 0235。開始 B1 前必須證明 canonical backlog、protected ledger、close idempotency、single runner steward 與 actor continuity；所有 shared write 走 canonical broker ticket，方法資料驅動且不可為 0014/0015 寫死。只有同 scenario 由紅轉綠、真實交集任務不縮 scope、七個 correctness counters 為 0、ratios/starvation/效能/coverage/breaker/parity/migration rollback/Plan 2.2 dispositions 全部通過，才可以關閉 Plan 3.0。
 ```
 
 ## Memory Write Check
 
-- Confirmed new pitfall + fix：none；本輪只把已存在於 Plan 3.0、task cards、backlog 與既有 operator memory 的內容整理成交接。
+- Confirmed new pitfall + fix：generated backlog projection 可包含沒有 canonical item shard 的孤兒列；以 TMP-0004 source repair 與 0226 projection-only census 防止證據在 rebuild 時消失。
 - Major closure snapshot：none；Plan 3.0 尚未實作完成。
 - Human working-method correction：none beyond the formal Plan 3.0 amendments already written into plan/cards。
 - Invalidated memory note：none。

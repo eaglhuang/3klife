@@ -35,6 +35,7 @@ errorCodes:
   - "ATM_SCOPE_AMENDMENT_REQUIRED"
   - "ATM_BROKER_REARBITRATION_REQUIRED"
   - "ATM_RUNNER_SYNC_ORPHAN"
+  - "ATM_PROTECTED_GOVERNANCE_STATE_DESTRUCTIVE_WRITE"
 createdByCommand: atm plan card create
 evidence:
   required: command-backed
@@ -46,6 +47,7 @@ consumer:
   - "ATM-GOV-0228"
   - "ATM-GOV-0229"
   - "ATM-GOV-0230"
+  - "ATM-GOV-0236"
   - "ATM-GOV-0233"
   - "ATM-GOV-0234"
 missingData:
@@ -86,11 +88,12 @@ atomizationImpact:
 - 盤點 exact 與 prefix registry，逐一決定 reuse 或 register。
 - 每個 code 定義 trigger、category、retryability、human approval、status command、ordered recovery manifests、source owner 與 tests。
 - 維度不符授權必須回傳 canonical ticket、requested/granted resource dimension 與可執行的 re-arbitration recovery，不得退化成 task-id 白名單或裸拒絕。
+- protected governance state destructive-write code 必須記錄 path class、requested operation、owner/authority、retryability 與正式 disposition/reconcile command；不得把正常 lifecycle 更新誤判成破壞性操作。
 - 由 generator 更新 `docs/ERROR_CODES.md`。
 
 ## Acceptance
 
-- [ ] 七個列名 code 都有 exact contract，或有證據證明由既有 exact/prefix contract 完整涵蓋並同步改用既有名稱。
+- [ ] 八個列名 code 都有 exact contract，或有證據證明由既有 exact/prefix contract 完整涵蓋並同步改用既有名稱。
 - [ ] recovery 使用 `atm.commandManifest.v1` 或 ordered manifests，預設 `shell=false`。
 - [ ] 每個 GOV consumer 只引用已註冊名稱。
 - [ ] generated docs 與 registry digest 一致。

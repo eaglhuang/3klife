@@ -11,6 +11,7 @@ depends_on:
   - ATM-GOV-0229
   - ATM-GOV-0230
   - ATM-GOV-0231
+  - ATM-GOV-0232
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -29,6 +30,11 @@ scopePaths:
   - "tests/cli/legacy-bcr-migration-rollback.test.ts"
   - "tests/cli/single-successor-wakeup.test.ts"
   - "tests/cli/broker-authorization-consumer-migration.test.ts"
+  - "tests/cli/taskflow-close-index-isolation.test.ts"
+  - "tests/cli/taskflow-close-exactly-once-result.test.ts"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/ATM-BUG-2026-07-13-161.json"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/ATM-BUG-2026-07-19-015.json"
+  - "docs/governance/atm-bug-and-optimization-backlog.md"
 deliverables:
   - "packages/core/src/broker/lifecycle/**"
   - "packages/cli/src/commands/broker-conflict-resolution.ts"
@@ -41,12 +47,19 @@ deliverables:
   - "tests/cli/legacy-bcr-migration-rollback.test.ts"
   - "tests/cli/single-successor-wakeup.test.ts"
   - "tests/cli/broker-authorization-consumer-migration.test.ts"
+  - "tests/cli/taskflow-close-index-isolation.test.ts"
+  - "tests/cli/taskflow-close-exactly-once-result.test.ts"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/ATM-BUG-2026-07-13-161.json"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/ATM-BUG-2026-07-19-015.json"
+  - "docs/governance/atm-bug-and-optimization-backlog.md"
 validators:
   - "node --strip-types tests/cli/transactional-ticket-completion.test.ts"
   - "node --strip-types tests/cli/legacy-bcr-migration.test.ts"
   - "node --strip-types tests/cli/legacy-bcr-migration-rollback.test.ts"
   - "node --strip-types tests/cli/single-successor-wakeup.test.ts"
   - "node --strip-types tests/cli/broker-authorization-consumer-migration.test.ts"
+  - "node --strip-types tests/cli/taskflow-close-index-isolation.test.ts"
+  - "node --strip-types tests/cli/taskflow-close-exactly-once-result.test.ts"
   - "npm run validate:cli"
   - "npm run validate:schemas"
   - "npm run typecheck"
@@ -107,6 +120,8 @@ atomizationImpact:
 - 每個消費端逐筆驗證 canonical ticket grant 的 resource dimension、normalized keys、operation、consumer gate 與 generation/digest；維度不符時 emit 正式 ErrorCode 與 re-arbitration manifest。
 - 以歷史三張 BCR 作資料 fixture，演算法不得識別其 id/task/path。
 - closure packet 只封裝 task-owned commit slice，並以同一 generation 的 git-head evidence 驗證 changed-files、tree、parents 與 command runs；不得從移動中的整體工作樹推導 task delta。
+- close window 必須使用 task-owned temp index/isolated proposal 或 canonical index lease；foreign staged entries 不得要求人工 park/restore，也不得被本卡 side effect 改動。
+- 0236 的 close side-effect journal 必須接入 terminal saga，讓 close/publish/closeback 的 retry 回傳同一 terminal receipt，不重複 commit、push、planning closeback 或 wakeup。
 
 ## Acceptance
 
@@ -118,6 +133,8 @@ atomizationImpact:
 - [ ] apply 後 fault injection 可由正式 rollback CLI 復原；重複 apply/rollback 結果穩定，round-trip state digest 一致，不需手改 `.atm`。
 - [ ] publisher crash 後只有一個 successor wakeup，無 starvation。
 - [ ] 並行 commit 穿插時，pre-close 即拒絕 mixed closure packet；合法 packet 可通過 commit-range pre-push，不需 emergency repair。
+- [ ] foreign staged index fixture 可 queue/compose 或使用隔離 index 完成 close，foreign entries before/after digest 相同，無人工 park/restore。
+- [ ] `ATM-BUG-2026-07-13-161` 與 `ATM-BUG-2026-07-19-015` 有 source/frozen terminal disposition；duplicate close side effect = 0。
 - [ ] source 與 frozen `node atm.mjs` 對相同 terminal/migration/closure probe 的 canonical behavior projection digest 一致，runner digest 已封存。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:43.039Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0233-transactional-ticket-completion-and-legacy-bcr-migration.task.md","contentDigest":"sha256:d53021e8d2c9cc8c93f577215a2b741359733af29f3606fd778b8b92710970c9"} -->

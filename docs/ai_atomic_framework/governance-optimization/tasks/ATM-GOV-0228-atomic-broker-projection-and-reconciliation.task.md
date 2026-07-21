@@ -7,7 +7,7 @@ priority: P0
 milestone: ATM-3.0-B1
 severity: P0
 depends_on:
-  - ATM-GOV-0227
+  - ATM-GOV-0231
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework

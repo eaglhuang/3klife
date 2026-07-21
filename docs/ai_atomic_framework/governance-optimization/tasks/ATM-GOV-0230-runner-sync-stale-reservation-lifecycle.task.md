@@ -4,10 +4,10 @@ title: Runner sync stale reservation lifecycle
 status: planned
 owner: atm-runner-sync
 priority: P0
-milestone: ATM-3.0-B1
+milestone: ATM-3.0-B0.6
 severity: P0
 depends_on:
-  - ATM-GOV-0227
+  - ATM-GOV-0236
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -15,17 +15,43 @@ closure_authority: target_repo
 series_selection_reason: "GOV owns runner-sync steward lifecycle and shared release artifact governance."
 scopePaths:
   - "packages/core/src/broker/runner-sync/**"
+  - "packages/core/src/broker/runner-sync-steward-queue.ts"
   - "packages/cli/src/commands/broker/runner-sync/**"
+  - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
+  - "scripts/assert-runner-sync-admission.ts"
+  - "scripts/run-sealed-runner-build.ts"
+  - "scripts/runner-sync-incremental-build.ts"
   - "tests/cli/runner-sync-stale-reservation-lifecycle.test.ts"
   - "tests/cli/runner-sync-head-movement.test.ts"
+  - "tests/cli/runner-sync-terminal-task-parity.test.ts"
+  - "tests/cli/runner-sync-build-source-preservation.test.ts"
+  - "tests/cli/runner-sync-framework-temp-hotfix.test.ts"
+  - "tests/cli/runner-sync-foreign-dirty-owner.test.ts"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/**"
+  - "docs/governance/atm-bug-and-optimization-backlog.md"
 deliverables:
   - "packages/core/src/broker/runner-sync/**"
+  - "packages/core/src/broker/runner-sync-steward-queue.ts"
   - "packages/cli/src/commands/broker/runner-sync/**"
+  - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
+  - "scripts/assert-runner-sync-admission.ts"
+  - "scripts/run-sealed-runner-build.ts"
+  - "scripts/runner-sync-incremental-build.ts"
   - "tests/cli/runner-sync-stale-reservation-lifecycle.test.ts"
   - "tests/cli/runner-sync-head-movement.test.ts"
+  - "tests/cli/runner-sync-terminal-task-parity.test.ts"
+  - "tests/cli/runner-sync-build-source-preservation.test.ts"
+  - "tests/cli/runner-sync-framework-temp-hotfix.test.ts"
+  - "tests/cli/runner-sync-foreign-dirty-owner.test.ts"
+  - "docs/governance/atm-bug-and-optimization-backlog.items/**"
+  - "docs/governance/atm-bug-and-optimization-backlog.md"
 validators:
   - "node --strip-types tests/cli/runner-sync-stale-reservation-lifecycle.test.ts"
   - "node --strip-types tests/cli/runner-sync-head-movement.test.ts"
+  - "node --strip-types tests/cli/runner-sync-terminal-task-parity.test.ts"
+  - "node --strip-types tests/cli/runner-sync-build-source-preservation.test.ts"
+  - "node --strip-types tests/cli/runner-sync-framework-temp-hotfix.test.ts"
+  - "node --strip-types tests/cli/runner-sync-foreign-dirty-owner.test.ts"
   - "npm run validate:cli"
   - "npm run typecheck"
   - "git diff --check"
@@ -69,6 +95,9 @@ atomizationImpact:
 - 提供 cancel、expire、coalesce、revalidate 的明確 state machine 與 CLI receipt。
 - HEAD 連續移動時只保留可滿足的最新相容工作，維持 aging/fairness。
 - cleanup 訊息、staleReleases 與實際 mutation 必須一致。
+- 將 build mutation 限定為 sealed source 與宣告 release surfaces；foreign dirty non-release files 必須保持 byte-for-byte 不變，無法安全隔離時回 canonical queue/revalidation ticket，不得 snapshot 後遺失。
+- source/frozen queue inspection 必須同樣排除 terminal tasks；ghost terminal task 不得成為 queue head。live framework temp claim 可作 steward owner，普通 missing/terminal task 仍拒絕。
+- B1 workers 不各自執行 shared runner build；由單一 queue-head steward 對 composed sealed source build/publish，並產生可驗證 release/advance receipt。
 
 ## Acceptance
 
@@ -77,6 +106,10 @@ atomizationImpact:
 - [ ] position 2 reservation 在 head 處置後被 single-flight 喚醒且不 starvation。
 - [ ] 重複 cancel/revalidate/release 無 duplicate side effect。
 - [ ] cleanup receipt 的 reported released count、`staleReleases` entries 與實際 state mutations 數量及 ids 完全一致；不允許訊息成功但明細為空。
+- [ ] runner build 前後所有 foreign dirty non-release file digest 一致；故障注入與 Windows rename retry 都不造成 silent overwrite 或 WIP loss。
+- [ ] source/frozen 對 terminal/open task queue view 一致；terminal ghost queue-head count = 0。
+- [ ] live `ATM-FRAMEWORK-TEMP-*` claim 可合法 enqueue/build/release，missing/terminal owner 不可；same-task sequential source 可自動 advance 或輸出 digest-ready command。
+- [ ] `ATM-BUG-2026-07-14-183`、`-184`、`ATM-BUG-2026-07-19-011`、`-046`、`ATM-BUG-2026-07-20-209` 各有 current source/frozen disposition 與 canonical item closeback；已修不得重寫，仍壞才由本卡修復。
 - [ ] source 與 frozen `node atm.mjs` 對相同 stale-reservation lifecycle probe 的 canonical behavior projection digest 一致，runner digest 已封存。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:34.479Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0230-runner-sync-stale-reservation-lifecycle.task.md","contentDigest":"sha256:b10ae7cfaf95b3c9aed3ff6a4252b39620c059b1a0a05cb58888b7419d9fe67c"} -->

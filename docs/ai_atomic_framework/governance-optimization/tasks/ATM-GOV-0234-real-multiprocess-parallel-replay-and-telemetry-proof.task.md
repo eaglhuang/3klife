@@ -8,6 +8,7 @@ milestone: ATM-3.0-E
 severity: P0
 depends_on:
   - ATM-GOV-0233
+  - ATM-GOV-0232
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -81,6 +82,7 @@ atomizationImpact:
 - controlled replay 使用至少兩個獨立 process/actor、isolated proposals、三個 shared/linked surfaces 與 private work；以 0226 同一紅色 baseline scenario digest 驗證由紅轉綠。
 - real-task dogfood 依 capability/resource graph 選兩張 registered、未交付、故意保留 declared intersection 的真實卡，由不同 Captain/actor 同時 claim、施工與 close；不得為通過而移除原始交集。
 - 注入 HEAD movement、stale runner reservation 與 publisher crash。
+- 驗證每個 worker 使用獨立 proposal/worktree/index；shared runtime/evidence 的 mutation 只經 canonical CAS/lease，runner build 只由 queue-head steward 執行。
 - 加入成對授權維度情境：file/path grant 不得抑制 atom id/CID block，atom grant 不得授權無關 path/surface；同時核對 outer decision、gate results 與 conflict details。
 - 同 sealed base/config/build 執行 queue-only 與 compose-first AB/BA，各至少三次有效 repeat；queue-only arm 只能由 policy CLI trip 產生，correctness/performance 使用同一組 valid cells。
 - 封存 `parallelOverlapRatio`、`serializedAdmissionRatio` 與 pre-sealed `starvationThresholdMs`/source；canonical closure profile 要求 overlap ratio 至少 0.30、serialized ratio 不高於 0.70。
@@ -96,6 +98,7 @@ atomizationImpact:
 - [ ] 兩張 real dogfood 卡都取得 execute/queue/batch ticket且無 terminal refusal；原始 declared intersection 全程保留，queued lane 由 successor wakeup 自動前進，兩份 closure packet changed files 互不污染。
 - [ ] unresolved starvation 依 scenario 預先 sealed 的 threshold 自動判定，不接受事後人工認定。
 - [ ] stale SHA reservation 不需偽造 receipt即可處置，queue 能前進。
+- [ ] protected ledger deletion、same-task concurrent evidence、foreign dirty-source preservation、actor continuity、orphan claim 與 post-side-effect close retry 全部在 frozen workers 下通過；沒有人工 unstaging、parking、restore 或 sequential evidence rerun。
 - [ ] median makespan/throughput 各改善至少 25%，cost ratio <= 1.10；否則 verdict 為 failed/inconclusive 並 trip queue-only。
 - [ ] 0226 的同一紅色 scenario 在新 frozen runner 轉綠；若 baseline 無鑑別力、dogfood 無可用真實卡或任何 cell inconclusive，本卡不得 close。
 

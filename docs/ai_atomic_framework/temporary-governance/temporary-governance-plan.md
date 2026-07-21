@@ -43,3 +43,9 @@ All TMP cards must be created by CLI:
 node atm.mjs plan card create --series TMP --title TITLE --write --json
 
 Every TMP card must include an exit condition.
+
+## Active One-Time Repairs
+
+| Task | Purpose | Exit condition |
+|---|---|---|
+| `TASK-TMP-0004` | Before ATM Plan 3.0 census, migrate backlog rows `ATM-BUG-2026-07-20-213` through `ATM-BUG-2026-07-21-218` from projection-only text into canonical item shards. | Six schema-valid item files exist, two projection rebuilds are deterministic, and no temporary conversion artifact remains. |
