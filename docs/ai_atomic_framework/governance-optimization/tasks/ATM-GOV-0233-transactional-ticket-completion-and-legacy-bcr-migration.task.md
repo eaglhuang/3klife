@@ -81,6 +81,7 @@ atomizationImpact:
 - complete/cancel/expire/adopt/publish/release/wakeup 重複呼叫結果穩定。
 - migrate CLI 支援 status、dry-run、apply、receipt；ambiguous legacy record quarantine 並 trip queue-only。
 - 以歷史三張 BCR 作資料 fixture，演算法不得識別其 id/task/path。
+- closure packet 只封裝 task-owned commit slice，並以同一 generation 的 git-head evidence 驗證 changed-files、tree、parents 與 command runs；不得從移動中的整體工作樹推導 task delta。
 
 ## Acceptance
 
@@ -88,5 +89,6 @@ atomizationImpact:
 - [ ] 兩個 terminal tasks 對應的 active authorization count 為 0。
 - [ ] migration 重跑不重複 side effect，歷史 evidence 可追溯。
 - [ ] publisher crash 後只有一個 successor wakeup，無 starvation。
+- [ ] 並行 commit 穿插時，pre-close 即拒絕 mixed closure packet；合法 packet 可通過 commit-range pre-push，不需 emergency repair。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:43.039Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0233-transactional-ticket-completion-and-legacy-bcr-migration.task.md","contentDigest":"sha256:d53021e8d2c9cc8c93f577215a2b741359733af29f3606fd778b8b92710970c9"} -->
