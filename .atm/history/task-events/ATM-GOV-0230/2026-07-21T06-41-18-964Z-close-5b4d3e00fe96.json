@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T06-41-18-964Z-close-5b4d3e00fe96",
+  "taskId": "ATM-GOV-0230",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-01",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0230-runner-sync-stale-reservation-lifecycle.task.md",
+  "taskSha256": "sha256:71163663b3f2793dabd16440afb5b5799eac5127a0dd74c5c8a13b5a4248a389",
+  "createdAt": "2026-07-21T06:41:18.964Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0230 --actor codex-plan3-captain-20260721-01"
+}

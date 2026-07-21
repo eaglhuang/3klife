@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0230
 title: Runner sync stale reservation lifecycle
-status: planned
+status: done
 owner: atm-runner-sync
 priority: P0
 milestone: ATM-3.0-B0.6
@@ -81,6 +81,15 @@ atomizationImpact:
   ownerAtomOrMap: "atm.runner-sync.steward"
   mapUpdates: []
   extractionCandidates: []
+completed_at: "2026-07-21T06:41:18.964Z"
+completed_by_agent: "codex-plan3-captain-20260721-01"
+closedAt: "2026-07-21T06:41:18.964Z"
+closedByActor: "codex-plan3-captain-20260721-01"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-21T06-41-18-964Z-close-5b4d3e00fe96"
+lastTransitionAt: "2026-07-21T06:41:18.964Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3dd569bf26050040f2ec08e8f21383a84bf5c4f9"
 ---
 
 # ATM-GOV-0230 Runner sync stale reservation lifecycle
