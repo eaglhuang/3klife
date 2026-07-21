@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0014
 title: Framework temp claim tool-first workflow and skill route
-status: planned
+status: done
 milestone: P1
 depends_on:
   - TASK-SKL-0002
@@ -87,6 +87,15 @@ nonGoals:
   - "No remote broker or hosted service migration in this card."
   - "No full rewrite of the SKL tool bridge."
   - "No hard-coded recovery for ATM-GOV-0196 or any one incident."
+completed_at: "2026-07-20T19:36:29.988Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-07-20T19:36:29.988Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-20T19-36-29-990Z-close-71db27a13223"
+lastTransitionAt: "2026-07-20T19:36:29.990Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "cbbe4d868b2243b1ce149f044165e44a71414fa0"
 ---
 
 # TASK-SKL-0014
