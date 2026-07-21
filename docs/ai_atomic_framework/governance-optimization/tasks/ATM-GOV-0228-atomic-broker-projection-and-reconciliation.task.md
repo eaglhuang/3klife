@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0228
 title: Atomic broker projection and reconciliation
-status: planned
+status: done
 owner: atm-broker
 priority: P0
 milestone: ATM-3.0-B1
@@ -61,6 +61,15 @@ atomizationImpact:
   ownerAtomOrMap: "atm.broker.projection-reconcile"
   mapUpdates: []
   extractionCandidates: []
+completed_at: "2026-07-21T07:10:09.952Z"
+completed_by_agent: "codex-plan3-captain-20260721-02"
+closedAt: "2026-07-21T07:10:09.952Z"
+closedByActor: "codex-plan3-captain-20260721-02"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-21T07-10-09-952Z-close-54c16d3969c2"
+lastTransitionAt: "2026-07-21T07:10:09.952Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "40da7c63b00694c6a80f940d7c3a6d5a3ab7b2bf"
 ---
 
 # ATM-GOV-0228 Atomic broker projection and reconciliation

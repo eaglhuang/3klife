@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T07-10-09-952Z-close-54c16d3969c2",
+  "taskId": "ATM-GOV-0228",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-02",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0228-atomic-broker-projection-and-reconciliation.task.md",
+  "taskSha256": "sha256:7b90cd11817959b5b41b63596a6a403b5b05f0c4f4f0515473d781d03d37caf9",
+  "createdAt": "2026-07-21T07:10:09.952Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0228 --actor codex-plan3-captain-20260721-02"
+}
