@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-21T17:47:00+08:00
+updated_at: 2026-07-21T22:27:31+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -84,12 +84,28 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
   `inconclusive`。
 - final verdict 新增 evidence-derived helper；沒有 broker command receipts 或未
   達 420-cell matrix 時不得 close。
-- `ATM-BUG-2026-07-21-222` 仍是 High/Open blocker；它不是 Plan 3 close waiver。
+- `ATM-BUG-2026-07-21-222` 已由 target repo 修復為 runner-sync／batch-checkpoint
+  recovery repair；這解除 pre-push／runner-sync deadlock 類 blocker，但不是 Plan 3
+  close waiver。
+- `ATM-BUG-2026-07-21-223` 已補上 validator resource-aware scheduler；`validate:standard`
+  可平行執行，但必須依 `executionMode`、`resourceProfile`、`resourceLocks` 與
+  `schedulerLane` 將 global fixture、runner-sync、release mirror、git worktree 等
+  validator 放入 serial／isolated lanes，而不是把所有 validator 盲目併發。
+
+2026-07-21T22:27:31+08:00 補充核對：
+
+- target repo `main` local/remote SHA 一致：`b5242bc145e8e9d30953fd95ff70b0f122316a20`。
+- `validate:standard` 的 current run `validator-resource-profile-standard-current`
+  通過 87/87，耗時 755,881ms，且為 resource-aware parallel run。
+- `node atm.mjs doctor --json` 通過；`node atm.mjs hook pre-push --base origin/main --head HEAD --json`
+  通過，git-head evidence missing 為 diagnostic only。
+- planning repo `master` 在本次 closeback repair 前 local/remote SHA 一致：
+  `c708a30bfc62b34f14394f47e6e0676b33e441bc`。
 
 因此本計畫保持 `active`。`TASK-TMP-0004` 與 `TASK-ERR-0003` 已依 target ledger
 closeback 標為 `done`；`ATM-GOV-0234` 與 `ATM-GOV-0235` 改回 `active`，等待真正的
-420-cell command-backed matrix、transactional runner-sync recovery、以及遠端 SHA
-核對後再收官。
+420-cell command-backed matrix、真實未交付交集卡 dogfood、paired AB/BA performance
+verdict、以及最終 source/target/remote closeout 核對後再收官。
 
 | 波次 | 任務卡 | 依賴 | 交付與驗收 |
 |---|---|---|---|

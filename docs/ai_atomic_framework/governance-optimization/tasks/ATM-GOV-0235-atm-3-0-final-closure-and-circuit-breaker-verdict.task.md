@@ -39,7 +39,7 @@ errorCodes:
   - "ATM_BROKER_STATE_DIVERGENCE"
 createdByCommand: atm plan card create
 reopened_at: 2026-07-21T17:47:00+08:00
-reopen_reason: "Evidence audit found final closure must derive from sealed replay/backlog evidence; ATM-BUG-2026-07-21-222 remains High/Open and the 420-cell matrix is not complete."
+reopen_reason: "Evidence audit found final closure must derive from sealed replay/backlog evidence; ATM-BUG-2026-07-21-222 is fixed as a recovery blocker but is not a close waiver, and the 420-cell real matrix is not complete."
 evidence:
   required: sealed-cross-plan
 producer:
@@ -69,6 +69,12 @@ atomizationImpact:
 ## Intent
 
 以新的真實 replay 證據決定是否完成 ATM 3.0，並同時處置 Plan 2.2 尚未滿足的驗收。功能存在但 evidence 不足仍不得關閉。
+
+## 2026-07-21 closeback supplement
+
+Target repo `b5242bc145e8e9d30953fd95ff70b0f122316a20` proves `ATM-BUG-2026-07-21-222` recovery repair, `ATM-BUG-2026-07-21-223` validator scheduler repair, current full standard 87/87, doctor pass, pre-push pass, and local/remote SHA parity. These remove the immediate pre-push blocker and the false-red parallel validator classification issue.
+
+Final closure remains blocked by `ATM-GOV-0234`: the required real multiprocess dogfood, command-backed 420-cell matrix, event-derived correctness counters, and paired AB/BA performance evidence are not yet sealed. Therefore this card stays `active` and its acceptance boxes remain unchecked.
 
 ## Required Work
 

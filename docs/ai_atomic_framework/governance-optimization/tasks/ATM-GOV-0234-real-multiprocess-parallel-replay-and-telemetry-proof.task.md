@@ -78,6 +78,12 @@ atomizationImpact:
 
 以新版本 ATM 真正重演 0014／0015 的故障形狀。scenario 用角色、resource graph 與 fault schedule 描述，因此同一 runner 可驗證其他任務組合，不是為歷史 incident 寫的腳本。
 
+## 2026-07-21 closeback supplement
+
+Target repo evidence as of `b5242bc145e8e9d30953fd95ff70b0f122316a20` proves evidence-gate hardening, current `validate:standard` green status, `ATM-BUG-2026-07-21-222` runner-sync／batch-checkpoint recovery repair, and `ATM-BUG-2026-07-21-223` resource-aware validator scheduling. This satisfies pre-push and validator false-red blocker cleanup only.
+
+This card remains `active`: the evidence still does not prove two real registered, not-yet-delivered task cards with preserved shared intersection, full frozen-worker claim/ticket/proposal/compose/commit/close lifecycle, command-backed 420-cell matrix, event-derived correctness counters, or paired AB/BA performance improvement >=25%.
+
 ## Required Work
 
 - 執行 controlled replay 與 real-task dogfood 兩個強制 segment；每個 acceptance worker 都以 frozen `node atm.mjs` 子行程啟動並封存 runner digest，source/dev 只作輔助 parity probe。
