@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0004
 title: Plan 3.0 backlog canonical source repair
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.0-R0
@@ -34,6 +34,8 @@ validators:
   - "git diff --check"
 errorCodes: []
 createdByCommand: atm plan card create
+closed_at: 2026-07-21T17:47:00+08:00
+closeback_note: "Target ledger is done/released; planning closeback repaired after Plan 3 evidence audit."
 evidence:
   required: command-backed
 producer:

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0235
 title: ATM 3.0 final closure and circuit breaker verdict
-status: planned
+status: active
 owner: atm-governance
 priority: P0
 milestone: ATM-3.0-F
@@ -38,6 +38,8 @@ errorCodes:
   - "ATM_EVIDENCE_SEAL_REQUIRED"
   - "ATM_BROKER_STATE_DIVERGENCE"
 createdByCommand: atm plan card create
+reopened_at: 2026-07-21T17:47:00+08:00
+reopen_reason: "Evidence audit found final closure must derive from sealed replay/backlog evidence; ATM-BUG-2026-07-21-222 remains High/Open and the 420-cell matrix is not complete."
 evidence:
   required: sealed-cross-plan
 producer:

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0234
 title: Real multiprocess parallel replay and telemetry proof
-status: planned
+status: active
 owner: atm-performance
 priority: P0
 milestone: ATM-3.0-E
@@ -45,6 +45,8 @@ errorCodes:
   - "ATM_BROKER_STATE_DIVERGENCE"
   - "ATM_BROKER_AUTHORIZATION_DIMENSION_MISMATCH"
 createdByCommand: atm plan card create
+reopened_at: 2026-07-21T17:47:00+08:00
+reopen_reason: "Evidence audit found original target close overstated real multiprocess dogfood/performance proof; target evidence-repair commit de4ed6bcb hardens gates but does not supply the full 420-cell real matrix."
 evidence:
   required: real-multiprocess-sealed
 producer:

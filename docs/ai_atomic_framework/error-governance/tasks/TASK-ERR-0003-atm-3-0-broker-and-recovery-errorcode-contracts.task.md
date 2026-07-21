@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0003
 title: ATM 3.0 broker and recovery ErrorCode contracts
-status: planned
+status: done
 owner: atm-error-governance
 priority: P0
 milestone: ATM-3.0-A0
@@ -37,6 +37,8 @@ errorCodes:
   - "ATM_RUNNER_SYNC_ORPHAN"
   - "ATM_PROTECTED_GOVERNANCE_STATE_DESTRUCTIVE_WRITE"
 createdByCommand: atm plan card create
+closed_at: 2026-07-21T17:47:00+08:00
+closeback_note: "Target ledger is done/released; planning closeback repaired after Plan 3 evidence audit."
 evidence:
   required: command-backed
 producer:

@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-21T12:32:34+08:00
+updated_at: 2026-07-21T17:47:00+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -71,6 +71,25 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 - 讓 backlog、task/event/evidence ledger 與 close transaction 本身先具備可重建、不可靜默刪除、可重試且 exactly-once 的證據基礎，避免用有 race 或假失敗的治理層驗證平行治理。
 
 ## 任務圖與執行順序
+
+## 2026-07-21 evidence repair closeback
+
+本輪稽核推翻了「Plan 3.0 已完全收官」的先前結論：target ledger 中
+`ATM-GOV-0234`／`ATM-GOV-0235` 雖曾標成 `done`，但原始證據不足以證明真實
+平行開發與 >=25% 效能提升。Target repo 已新增 evidence-gate hardening：
+
+- replay worker 不再以 `node atm.mjs --version` 冒充 broker dogfood；acceptance
+  必須含 frozen `broker decision` command receipts。
+- 沒有 serial/parallel makespan 時，throughput gain 不再預設為 `1.25`，而是
+  `inconclusive`。
+- final verdict 新增 evidence-derived helper；沒有 broker command receipts 或未
+  達 420-cell matrix 時不得 close。
+- `ATM-BUG-2026-07-21-222` 仍是 High/Open blocker；它不是 Plan 3 close waiver。
+
+因此本計畫保持 `active`。`TASK-TMP-0004` 與 `TASK-ERR-0003` 已依 target ledger
+closeback 標為 `done`；`ATM-GOV-0234` 與 `ATM-GOV-0235` 改回 `active`，等待真正的
+420-cell command-backed matrix、transactional runner-sync recovery、以及遠端 SHA
+核對後再收官。
 
 | 波次 | 任務卡 | 依賴 | 交付與驗收 |
 |---|---|---|---|
