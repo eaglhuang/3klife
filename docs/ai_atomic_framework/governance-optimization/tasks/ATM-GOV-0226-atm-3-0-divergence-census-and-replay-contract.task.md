@@ -95,13 +95,15 @@ atomizationImpact:
 - 將 0014／0015 故障形狀表達成通用 replay scenario schema。
 - census closure packet 的 task-owned changed-files、tree、parent、command-run 與 git-head evidence 是否同源；pre-push 才發現的不一致必須保留為 replay assertion。
 - 從已匯入卡片的 `scopePaths` 與 `ownerAtomOrMap` 資料預配置本計畫新增路徑的 atom-map ownership；後續平行卡不得各自重寫 shared map shard。
-- 對 `ATM-BUG-2026-07-20-214`、`-216`、`ATM-BUG-2026-07-21-217`、`-218` 重跑 probe；已修項以證據關閉，未修項維持 Open 並映射到唯一 owner card。
+- 對 `ATM-BUG-2026-07-20-213`、`-214`、`-216`、`ATM-BUG-2026-07-21-217`、`-218` 重跑 probe；已修項以證據關閉，未修項維持 Open 並映射到唯一 owner card。
+- 對 frozen runner 與 source runner 執行同一組 decision coherence probe，核對 outer verdict、conflict matrix arbitration、各 gate status 與 conflict detail；不得把歷史輸出直接當成現行 bug。
 
 ## Acceptance
 
 - [ ] Coverage matrix 對所有 shared-write producer/consumer 有唯一 authority 判定，沒有 unknown owner。
 - [ ] 三張歷史 BCR、兩張 task terminal state 與實際 delivery order 被封成 compact digest。
 - [ ] 0014 closure packet 的 changed-files/tree/parent/command-run mismatch 有獨立 compact digest、重現命令與唯一 owner card。
+- [ ] `ATM-BUG-2026-07-20-213` 的 decision coherence probe 在 frozen/source 皆有 compact receipt；若一致則正式 closeback，若不一致則記錄 contradiction 與 0227 owner，不先寫特例修補。
 - [ ] 不可取得的歷史 timing 欄位有 explicit unavailable receipt，不得填 0 或推測值。
 - [ ] replay schema 不含固定 task/actor/path/date 分支。
 - [ ] 0227–0234 的新增路徑在平行施工前已有 atom-map owner；預配置由 task metadata 推導，不維護人工 incident 清單。

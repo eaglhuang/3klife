@@ -19,22 +19,31 @@ series_selection_reason: "GOV owns the shared-delivery terminal saga and governe
 scopePaths:
   - "packages/core/src/broker/lifecycle/**"
   - "packages/cli/src/commands/broker-conflict-resolution.ts"
+  - "packages/cli/src/commands/next/claim-parallel-preflight.ts"
+  - "packages/cli/src/commands/next/claim-admission.ts"
+  - "packages/cli/src/commands/git-governance/implementation.ts"
   - "packages/cli/src/commands/broker/migrate/**"
   - "packages/cli/src/commands/broker/reconcile/**"
   - "tests/cli/transactional-ticket-completion.test.ts"
   - "tests/cli/legacy-bcr-migration.test.ts"
   - "tests/cli/single-successor-wakeup.test.ts"
+  - "tests/cli/broker-authorization-consumer-migration.test.ts"
 deliverables:
   - "packages/core/src/broker/lifecycle/**"
   - "packages/cli/src/commands/broker-conflict-resolution.ts"
+  - "packages/cli/src/commands/next/claim-parallel-preflight.ts"
+  - "packages/cli/src/commands/next/claim-admission.ts"
+  - "packages/cli/src/commands/git-governance/implementation.ts"
   - "packages/cli/src/commands/broker/migrate/**"
   - "tests/cli/transactional-ticket-completion.test.ts"
   - "tests/cli/legacy-bcr-migration.test.ts"
   - "tests/cli/single-successor-wakeup.test.ts"
+  - "tests/cli/broker-authorization-consumer-migration.test.ts"
 validators:
   - "node --strip-types tests/cli/transactional-ticket-completion.test.ts"
   - "node --strip-types tests/cli/legacy-bcr-migration.test.ts"
   - "node --strip-types tests/cli/single-successor-wakeup.test.ts"
+  - "node --strip-types tests/cli/broker-authorization-consumer-migration.test.ts"
   - "npm run validate:cli"
   - "npm run validate:schemas"
   - "npm run typecheck"
@@ -44,6 +53,7 @@ errorCodes:
   - "ATM_TICKET_ADOPT_REQUIRED"
   - "ATM_TICKET_CANCEL_REQUIRED"
   - "ATM_SIDE_EFFECT_RECONCILE_REQUIRED"
+  - "ATM_BROKER_AUTHORIZATION_DIMENSION_MISMATCH"
 createdByCommand: atm plan card create
 evidence:
   required: multiprocess-command-backed
@@ -66,7 +76,14 @@ atomizationImpact:
   ownerAtomOrMap: "atm.broker.shared-delivery-lifecycle"
   mapUpdates: []
   extractionCandidates:
-    - "Extract legacy BCR reader/migrator from broker-conflict-resolution.ts before extending command behavior."
+    - atom: "atm.broker.legacy-bcr-reader"
+      pattern: "Legacy BCR compatibility reader and migrator"
+      source: "packages/cli/src/commands/broker-conflict-resolution.ts"
+      disposition: extract
+    - atom: "atm.git-governance.authorization-consumer"
+      pattern: "Ticket-scoped authorization adapter"
+      source: "packages/cli/src/commands/git-governance/implementation.ts"
+      disposition: extract
 ---
 
 # ATM-GOV-0233 Transactional ticket completion and legacy BCR migration
@@ -80,6 +97,8 @@ atomizationImpact:
 - terminal transition 與 projection revoke 使用同一 generation/CAS；crash 後 reconcile exactly once。
 - complete/cancel/expire/adopt/publish/release/wakeup 重複呼叫結果穩定。
 - migrate CLI 支援 status、dry-run、apply、receipt；ambiguous legacy record quarantine 並 trip queue-only。
+- 盤點並遷移所有 legacy authorization 消費端，包括 claim parallel preflight、claim admission 與 Git commit gate；不得再把 BCR 的 `blockedTaskIds` 或其他 task-id set 當成跨資源授權。
+- 每個消費端逐筆驗證 canonical ticket grant 的 resource dimension、normalized keys、operation、consumer gate 與 generation/digest；維度不符時 emit 正式 ErrorCode 與 re-arbitration manifest。
 - 以歷史三張 BCR 作資料 fixture，演算法不得識別其 id/task/path。
 - closure packet 只封裝 task-owned commit slice，並以同一 generation 的 git-head evidence 驗證 changed-files、tree、parents 與 command runs；不得從移動中的整體工作樹推導 task delta。
 
@@ -87,6 +106,8 @@ atomizationImpact:
 
 - [ ] observed publish order 與 release projection 來自同一 generation，不能分歧。
 - [ ] 兩個 terminal tasks 對應的 active authorization count 為 0。
+- [ ] file/path grant 無法抑制 atom id/CID admission block，atom grant 無法授權無關 Git path/surface；所有 legacy CLI 消費端皆通過 migration fixtures。
+- [ ] production authorization path 不再存在只回傳或只消費 foreign task-id set 的 helper。
 - [ ] migration 重跑不重複 side effect，歷史 evidence 可追溯。
 - [ ] publisher crash 後只有一個 successor wakeup，無 starvation。
 - [ ] 並行 commit 穿插時，pre-close 即拒絕 mixed closure packet；合法 packet 可通過 commit-range pre-push，不需 emergency repair。

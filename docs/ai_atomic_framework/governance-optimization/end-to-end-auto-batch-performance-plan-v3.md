@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-21T09:19:26+08:00
+updated_at: 2026-07-21T11:34:06+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -42,6 +42,9 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 7. `tasks import --reconcile-mirror` 曾回報成功但未修改 planning source；後續 `taskflow close` 要求 active claim，而終態任務又不可 claim，形成無合法 recovery 的循環。
 8. 0014 closure packet 把其他並行 commit 的檔案納入 `targetCommitDelta`，使 changed-files、tree、parent、command-run 與 git-head evidence 全部不一致，直到 pre-push 才被 commit-range guard 攔下。
 9. 既有 evidence 缺少可比較的 `waitedMs`、實際 overlap window、wakeup 次數、starvation 與 paired baseline，不能把負向 correctness 樣本誤稱為效能證明。
+10. legacy BCR reader 將帶資源範圍的裁決壓縮成 foreign task-id set，claim admission 與 Git gate 因而可能把 file/path grant 放大成 task 級授權，錯誤抑制 atom CID 或其他維度的阻擋。
+11. 歷史 evidence 曾出現 outer decision、`gateResults` 與 conflict detail 不一致；目前 source probe 已無法重現，但缺少 frozen/source 同源 closeback 與防回歸 counter。
+12. circuit breaker 雖能退回 `queue-only`，既有門檻未量測非注入 trip 與 queue-only residency，可能在形式上安全、實際上長期序列化而仍被誤判完成。
 
 ## 目標
 
@@ -56,15 +59,15 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 
 | 波次 | 任務卡 | 依賴 | 交付與驗收 |
 |---|---|---|---|
-| A0 | `TASK-ERR-0003` | 無 | 註冊 Plan 3.0 使用的 exact ErrorCode 與 executable recovery contracts；GOV 卡不得自行發明 code。 |
+| A0 | `TASK-ERR-0003` | 無 | 註冊 Plan 3.0 使用的 exact ErrorCode 與 executable recovery contracts，包含授權維度不符；GOV 卡不得自行發明 code。 |
 | A | `ATM-GOV-0226` | ERR-0003 | 建立 divergence census、歷史證據封存、通用 replay scenario schema、backlog/closed-card 對帳矩陣，並依卡片 metadata 預配置 atom-map ownership。 |
-| B | `ATM-GOV-0227` | 0226 | 定義 canonical arbitration authority；BCR 降為 receipt/projection。 |
+| B | `ATM-GOV-0227` | 0226 | 定義 canonical arbitration authority、dimension-preserving grants 與 decision coherence；BCR 降為 receipt/projection。 |
 | B | `ATM-GOV-0229` | 0226 | 建立資料驅動 linked-surface closure graph 與 claim 前 scope preflight。 |
 | B | `ATM-GOV-0230` | 0226 | 修復 runner-sync stale SHA reservation 的 cancel/expire/coalesce/revalidate。 |
 | B | `ATM-GOV-0231` | 0226 | 統一 actor/task ID normalizer 與 command manifest recovery chain。 |
 | B | `ATM-GOV-0232` | 0226 | 驗證及修復 task-import fence/診斷邊界，並對帳已完成但 backlog 未關項。 |
 | C | `ATM-GOV-0228` | 0227 | 將 ticket 到 queue/freeze/direction lock/BCR view 的投影改為 CAS generation 與 crash-safe reconcile。可與 0229–0232 繼續平行。 |
-| D | `ATM-GOV-0233` | 0228、0229、0230、0231 | 整合完成/取消/失主/喚醒 exactly-once lifecycle，提供舊 BCR 正式 migration；禁止直接刪 runtime。0232 可繼續平行。 |
+| D | `ATM-GOV-0233` | 0228、0229、0230、0231 | 整合完成/取消/失主/喚醒 exactly-once lifecycle，提供舊 BCR 正式 migration，並遷移 claim/Git 的 task-id-only 授權消費端；禁止直接刪 runtime。0232 可繼續平行。 |
 | E | `ATM-GOV-0234` | 0233 | 真多行程 replay、故障注入、paired queue-only 對照與 canonical telemetry seal。 |
 | F | `ATM-GOV-0235` | 0234、0232 | 重跑 census、驗收 circuit breaker、對帳 parser/backlog 與 2.2 遺留並做最終 verdict。 |
 
@@ -72,7 +75,7 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 
 ## 公開介面
 
-- 延用並收斂 `atm.brokerTicket.v1`：新增或明確化 `generation`、`authorityDigest`、`projectionDigests`、`releaseCondition`、`wakeupKey`、`waitedMs`、`ownerHealth`、`cancelReason`、`reconciledAt`。
+- 延用並收斂 `atm.brokerTicket.v1`：新增或明確化 `generation`、`authorityDigest`、`projectionDigests`、`releaseCondition`、`wakeupKey`、`waitedMs`、`ownerHealth`、`cancelReason`、`reconciledAt`，以及 dimension-preserving `authorizationGrants[]`。每筆 grant 包含 resource kind/dimension、normalized keys、operation、consumer gate 與 authority generation/digest；task id 只作關聯，不作獨立授權。
 - 新增 `atm.brokerProjection.v1`：每份 queue/BCR/freeze/direction-lock view 都包含 ticket id、generation、authority digest、projection digest、watermark 與 terminal state；projection 不具有獨立授權語意。
 - 新增 `atm.linkedSurfaceClosure.v1`：以 producer/consumer、template/projection/compiler/manifest/validator/build output 關係推導閉包，回 provenance、confidence、owner atom/map 與 re-arbitration requirement。
 - 沿用 `atm.commandManifest.v1`：禁止 default-on 路徑輸出 shell command string；舊 `requiredCommand` 僅作一版 deprecated display，canonical action 為 argv manifest 或 ordered manifests。
@@ -85,15 +88,18 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 - `INV-ATM-009`：控制流程不得硬編碼 actor、task、path、日期或單次 incident；資料 fixture 可以保存歷史標籤。
 - 同一 ticket generation 最多一位有效 publisher；terminal ticket 不得再授權 write。
 - BCR release order 與實際 publish order 必須來自同一 authority generation；若 generation 改變，所有舊 projection 立即失效。
+- shared-write authorization 必須保留被仲裁的資源維度與 normalized resource keys；path、atom id、atom CID、surface 或 range 的 grant 只能授權同維度且同資源的操作，task id 不得單獨構成授權，也不得跨維度放大。
+- outer decision、conflict matrix、gate result 與 conflict detail 必須來自同一 arbitration result；同一 generation 內不得同時宣告 clear 與 block/freeze。
 - scope amendment 若新增 shared surface，必須在寫入前 re-arbitrate；禁止只補 direction lock 而不更新 ticket read/write set。
 - cancel、adopt、close、publish、release、wakeup 與 migration 都必須可重試且 side effect exactly-once。
-- `queue-only` fallback 不得遺失現有 ticket、proposal 或 evidence；reset 必須引用新的 passing evidence digest。
+- `queue-only` fallback 不得遺失現有 ticket、proposal 或 evidence；reset 必須引用新的 passing evidence digest，且長期停留 queue-only、非注入故障 trip 與 recovery latency 都必須可觀測。
 
 ## 驗證矩陣
 
 ### 單元與 schema
 
-- ticket state machine、generation/CAS、terminal authorization、projection digest。
+- ticket state machine、generation/CAS、terminal authorization、projection digest、dimension-preserving authorization grants。
+- 成對 negative fixtures：file/path grant 不得抑制 atom CID block，atom grant 不得授權無關 path/surface；outer decision 與 gate/conflict detail 必須一致。
 - linked-surface graph closure、cycle handling、unsupported/unavailable provenance。
 - actor/task normalizer、command manifest prerequisite chain、Windows argv rendering。
 - Markdown fence state、source-line diagnostics、backlog reconciliation。
@@ -114,20 +120,22 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 - BCR/projection release order 等於 observed publish order，兩卡 terminal 後 active authorization 為 0。
 - scope amendment 不得首次出現在 commit gate；若 runtime graph 新增 surface，必須留下 pre-write re-arbitration receipt。
 - stale reservation 可處置且 queue 繼續前進，不需偽造 receipt或釋放無關 claim。
-- escaped conflict、silent overwrite、duplicate side effect、unresolved starvation、stale authorization 均為 0。
+- escaped conflict、silent overwrite、duplicate side effect、unresolved starvation、stale authorization、dimension-mismatched authorization、decision contradiction 均為 0。
 
 ### 效能與觀測
 
 - 與相同 sealed base/config 的 queue-only 進行 AB/BA paired runs，至少 3 repeats；不足樣本只能 `inconclusive`，不得宣稱 improved。
 - median makespan 與 active throughput 沿用 2.2 門檻：各改善至少 25%；production cost ratio 不高於 1.10。
 - 所有 shared-write producer observed coverage 100%；每份 task summary 有 window/watermark/sealed digest。
-- 必填數據：enqueue/dequeue/publish timestamps、`waitedMs`、overlap duration、wakeup count、revalidation count、scope amendment phase、terminal authorization count。
+- 必填數據：enqueue/dequeue/publish timestamps、`waitedMs`、overlap duration、wakeup count、revalidation count、scope amendment phase、terminal authorization count、`breakerTripCount`、`unexpectedBreakerTripCount`、`timeInQueueOnlyMs`、`timeInQueueOnlyRatio`、trip reason 與 recovery latency。
+- healthy replay segment 要求 `unexpectedBreakerTripCount = 0` 且 `timeInQueueOnlyRatio = 0`；fault-injection segment 的每次 trip 必須對應已注入原因、保留 evidence，並以較新的 passing digest 完成 recovery。
 
 ## 0014／0015 Replay Preflight
 
 | 歷史失敗 | Primary closure owner | Supporting cards | 修復後預期 |
 |---|---|---|---|
 | 三張 BCR 與 publish order 不一致 | 0233 | 0227、0228 | BCR 只投影同一 ticket generation；不可能保留不同 release authority。 |
+| file/path 裁決被放大成 task 級授權並抑制 atom CID block | 0233 | 0227、ERR-0003 | ticket grant 保留資源維度與 keys；所有 CLI 消費端逐維度比對，task id 不再單獨授權。 |
 | 兩卡 done 後仍有 `currentAllowedTaskId` | 0233 | 0228 | terminal transition 原子撤銷所有 projection；reconcile 將 stale view fail closed 並遷移。 |
 | linked skill projection 到 commit 才要求 scope amendment | 0229 | 0226 | claim 前 closure graph 列出 template/compiler/validator/projection/manifest；新增 surface 在 write 前 re-arbitrate。 |
 | stale SHA queue-head 無 receipt 可釋放 | 0230 | 0233 | 以 reachability、generation 與 owner health判定 cancel/expire/revalidate，不要求完成 build receipt。 |
@@ -136,6 +144,8 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 | mirror reconcile 成功但未寫入，終態 repair 又要求不可取得的 claim | 0232 | ERR-0003 | reconcile 驗證宣告 mirror 的實際 mutation；終態 closeback 使用專責 repair authority，不依賴 active work claim。 |
 | closure packet 混入並行 commit 的檔案與 tree/evidence | 0233 | 0226、0228 | packet 由 task-owned commit slice 與同 generation git-head evidence封裝；pre-close 即驗證 changed-files/tree/parent/commands。 |
 | 無 waitedMs/overlap/wakeup paired data | 0234 | 0235 | 真多行程 sealed telemetry 與 queue-only paired verdict。 |
+| breaker 頻繁退回 queue-only 但不被完成門檻看見 | 0234 | 0235 | 健康 replay 禁止非注入 trip，封存 trip count、queue-only residency 與 recovery latency。 |
+| outer decision 與 gate/conflict detail 自相矛盾的歷史疑點 | 0226 | 0227、0234 | frozen/source probe 先判定現況；已修則 closeback `-213`，未修才交由 canonical arbitration contract 修復。 |
 
 結構 preflight 的判定是「所有已知故障都有唯一 owner 與可執行 acceptance，依賴圖無循環」；它不代表現行 ATM 已通過 replay。只有 0226–0234 的產品交付與真實證據完成後，0235 才能判定 solved。
 
@@ -159,9 +169,9 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 
 ### Preflight Verdict
 
-- **Plan coverage: PASS**。已知 0014/0015 故障、相關 bug、stale backlog 與缺失 telemetry 都有唯一 owner、acceptance 與依賴位置，沒有 unmapped known gap。
+- **Plan coverage: PASS**。已知 0014/0015 故障、授權維度放大、decision coherence、breaker residency、相關 bug、stale backlog 與缺失 telemetry 都有唯一 owner、acceptance 與依賴位置，沒有 unmapped known gap。
 - **Current product replay: FAIL**。文件與任務卡本身不等於產品修復；在 0227–0233 完成前重演，仍可能遇到 stale BCR authorization、runner-sync stale reservation 無合法終止及不完整 recovery chain。
-- **Post-plan expectation: conditionally solvable**。只有 0234 真多行程 replay 產出正確性五個零值與完整 telemetry，且 0235 circuit breaker/closure 通過，才可回答「再次並行 0014/0015 已解決所有已知問題」。
+- **Post-plan expectation: conditionally solvable**。只有 0234 真多行程 replay 產出正確性七個零值、健康/故障 breaker telemetry 與完整 evidence，且 0235 circuit breaker/closure 通過，才可回答「再次並行 0014/0015 已解決所有已知問題」。
 
 ## 完成門檻
 
@@ -170,8 +180,8 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 - 0226 census 的每個 divergence 都有 terminal disposition 與 evidence digest。
 - 0227–0233 的 source、frozen runner、release artifacts 與 adopter projection parity 全數通過。
 - 0234 真多行程 replay 與 paired A/B 有效，不能以 deterministic fixture 取代。
-- correctness 五個零值成立，observed coverage 100%，沒有 active stale BCR/ticket/direction-lock authorization。
-- circuit breaker 演練能自動 trip 到 `queue-only`，並只能以新的 passing evidence digest reset。
+- correctness 七個零值成立，observed coverage 100%，沒有 active stale BCR/ticket/direction-lock authorization。
+- healthy replay 沒有非注入 breaker trip 且 queue-only residency 為 0；故障演練能自動 trip 到 `queue-only`，並只能以新的 passing evidence digest reset。
 - 2.2 未完成驗收被逐項映射為 `satisfied`、`superseded-with-evidence` 或仍 `open`；只要有一項 open，3.0 保持 active。
 
 ## Out Of Scope

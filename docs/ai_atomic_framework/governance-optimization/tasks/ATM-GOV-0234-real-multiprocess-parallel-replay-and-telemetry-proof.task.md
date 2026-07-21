@@ -39,6 +39,7 @@ validators:
 errorCodes:
   - "ATM_EVIDENCE_SEAL_REQUIRED"
   - "ATM_BROKER_STATE_DIVERGENCE"
+  - "ATM_BROKER_AUTHORIZATION_DIMENSION_MISMATCH"
 createdByCommand: atm plan card create
 evidence:
   required: real-multiprocess-sealed
@@ -50,7 +51,7 @@ missingData:
   - "Historical 0014/0015 timing cannot seed passing metrics; all performance fields must come from new runs."
 dataDrivenStopRule:
   - "Stop with inconclusive if real overlap is zero, sample pairing breaks, or any required telemetry field lacks an unavailable receipt."
-  - "Trip queue-only on any escaped conflict, silent overwrite, duplicate side effect, unresolved starvation or stale authorization."
+  - "Trip queue-only on any escaped conflict, silent overwrite, duplicate side effect, unresolved starvation, stale authorization, dimension-mismatched authorization or decision contradiction."
 out_of_scope:
   - "No deterministic fixture may substitute for the real multiprocess acceptance run."
   - "No hardcoded task/path incident orchestration."
@@ -73,13 +74,15 @@ atomizationImpact:
 
 - 使用至少兩個獨立 process/actor、isolated proposals、三個 shared/linked surfaces 與 private work。
 - 注入 HEAD movement、stale runner reservation 與 publisher crash。
+- 加入成對授權維度情境：file/path grant 不得抑制 atom id/CID block，atom grant 不得授權無關 path/surface；同時核對 outer decision、gate results 與 conflict details。
 - 同 sealed base/config 執行 queue-only 與 compose-first AB/BA，各至少三次有效 repeat。
-- 封存 correctness、timing、coverage、watermark 與 unavailable receipts。
+- 封存 correctness、timing、coverage、watermark、breaker trip/residency/recovery 與 unavailable receipts；區分 healthy replay 與 fault-injection segment。
 
 ## Acceptance
 
 - [ ] `maxConcurrentWorkers >= 2`、overlap window > 0、parallel admissions > 0。
-- [ ] escaped conflict、silent overwrite、duplicate side effect、unresolved starvation、stale authorization全部為 0。
+- [ ] escaped conflict、silent overwrite、duplicate side effect、unresolved starvation、stale authorization、dimension-mismatched authorization、decision contradiction 全部為 0。
+- [ ] healthy replay 的 `unexpectedBreakerTripCount = 0`、`timeInQueueOnlyRatio = 0`；fault-injection 的每次 trip 都與注入原因、recovery latency 及較新的 passing digest 可關聯。
 - [ ] linked surface 在 write 前完成 closure/re-arbitration，commit gate 不再首次要求 amendment。
 - [ ] stale SHA reservation 不需偽造 receipt即可處置，queue 能前進。
 - [ ] median makespan/throughput 各改善至少 25%，cost ratio <= 1.10；否則 verdict 為 failed/inconclusive 並 trip queue-only。

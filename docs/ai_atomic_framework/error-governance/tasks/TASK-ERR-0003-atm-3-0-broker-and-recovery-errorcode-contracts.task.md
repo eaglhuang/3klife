@@ -31,6 +31,7 @@ errorCodes:
   - "ATM_BROKER_STATE_DIVERGENCE"
   - "ATM_EVIDENCE_SEAL_REQUIRED"
   - "ATM_BROKER_TICKET_STALE_GENERATION"
+  - "ATM_BROKER_AUTHORIZATION_DIMENSION_MISMATCH"
   - "ATM_SCOPE_AMENDMENT_REQUIRED"
   - "ATM_BROKER_REARBITRATION_REQUIRED"
   - "ATM_RUNNER_SYNC_ORPHAN"
@@ -45,6 +46,7 @@ consumer:
   - "ATM-GOV-0228"
   - "ATM-GOV-0229"
   - "ATM-GOV-0230"
+  - "ATM-GOV-0233"
   - "ATM-GOV-0234"
 missingData:
   - "Reuse any existing exact or prefix contract whose trigger and recovery semantics are truly identical."
@@ -60,7 +62,17 @@ rollback:
 atomizationImpact:
   ownerAtomOrMap: "atm.error-code-registry"
   mapUpdates: []
-  extractionCandidates: []
+  extractionCandidates:
+    - atom: "atm.error-code-registry.canonical-document"
+      pattern: "Single canonical machine-readable ErrorCode registry"
+      source: "docs/governance/error-code-registry.json"
+      disposition: inline
+      inlineReason: "Keep one schema-validated canonical registry; splitting would create multiple authorities and violate the registered catalog contract."
+    - atom: "atm.error-code-registry.generated-index"
+      pattern: "Generator-owned public ErrorCode index"
+      source: "docs/ERROR_CODES.md"
+      disposition: inline
+      inlineReason: "This file is generated from the canonical registry and must not be manually extracted or edited as a second source."
 ---
 
 # TASK-ERR-0003 ATM 3.0 broker and recovery ErrorCode contracts
@@ -73,11 +85,12 @@ atomizationImpact:
 
 - 盤點 exact 與 prefix registry，逐一決定 reuse 或 register。
 - 每個 code 定義 trigger、category、retryability、human approval、status command、ordered recovery manifests、source owner 與 tests。
+- 維度不符授權必須回傳 canonical ticket、requested/granted resource dimension 與可執行的 re-arbitration recovery，不得退化成 task-id 白名單或裸拒絕。
 - 由 generator 更新 `docs/ERROR_CODES.md`。
 
 ## Acceptance
 
-- [ ] 六個列名 code 都有 exact contract，或有證據證明由既有 exact/prefix contract 完整涵蓋並同步改用既有名稱。
+- [ ] 七個列名 code 都有 exact contract，或有證據證明由既有 exact/prefix contract 完整涵蓋並同步改用既有名稱。
 - [ ] recovery 使用 `atm.commandManifest.v1` 或 ordered manifests，預設 `shell=false`。
 - [ ] 每個 GOV consumer 只引用已註冊名稱。
 - [ ] generated docs 與 registry digest 一致。

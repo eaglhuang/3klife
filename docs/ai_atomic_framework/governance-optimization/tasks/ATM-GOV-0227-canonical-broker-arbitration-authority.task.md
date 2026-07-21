@@ -20,21 +20,25 @@ scopePaths:
   - "schemas/atm.broker-ticket.v1.schema.json"
   - "tests/broker/canonical-arbitration-authority.test.ts"
   - "tests/broker/terminal-ticket-authorization.test.ts"
+  - "tests/broker/authorization-resource-dimension.test.ts"
 deliverables:
   - "packages/core/src/broker/contracts/**"
   - "packages/core/src/broker/ticket-authority/**"
   - "schemas/atm.broker-ticket.v1.schema.json"
   - "tests/broker/canonical-arbitration-authority.test.ts"
   - "tests/broker/terminal-ticket-authorization.test.ts"
+  - "tests/broker/authorization-resource-dimension.test.ts"
 validators:
   - "node --strip-types tests/broker/canonical-arbitration-authority.test.ts"
   - "node --strip-types tests/broker/terminal-ticket-authorization.test.ts"
+  - "node --strip-types tests/broker/authorization-resource-dimension.test.ts"
   - "npm run validate:schemas"
   - "npm run typecheck"
   - "git diff --check"
 errorCodes:
   - "ATM_BROKER_STATE_DIVERGENCE"
   - "ATM_BROKER_TICKET_STALE_GENERATION"
+  - "ATM_BROKER_AUTHORIZATION_DIMENSION_MISMATCH"
 createdByCommand: atm plan card create
 evidence:
   required: command-backed
@@ -42,11 +46,14 @@ producer:
   - "Canonical ticket authority and terminal authorization contract."
 consumer:
   - "ATM-GOV-0228"
+  - "ATM-GOV-0233"
 missingData:
   - "Existing BCR fields must be inventoried before choosing a compatibility projection."
+  - "Legacy consumers that reduce path/atom/surface grants to foreign task-id sets must be inventoried before migration."
 dataDrivenStopRule:
   - "Stop if implementation introduces a second writable registry or lets currentAllowedTaskId authorize without ticket generation verification."
   - "Stop if a terminal ticket can still pass any shared-write gate."
+  - "Stop if task id alone authorizes a write, or if a grant for one resource dimension suppresses a conflict in another dimension."
 out_of_scope:
   - "No legacy runtime migration; ATM-GOV-0233 owns migration."
   - "No queue/freeze/direction-lock storage rewrite; ATM-GOV-0228 owns projection mechanics."
@@ -68,12 +75,16 @@ atomizationImpact:
 ## Required Work
 
 - 定義 ticket generation、authority digest、terminal authorization 與 compatible projection contract。
+- 在既有 `atm.brokerTicket.v1` 定義 `authorizationGrants[]`；每筆 grant 攜帶 resource dimension/kind、normalized resource keys、operation、consumer gate 與 authority generation/digest，不建立第二套票券或白名單。
 - 移除 BCR sidecar 的獨立授權語意；保留相容讀取時必須驗證 canonical ticket。
+- 定義單一 arbitration result 對 outer decision、conflict matrix、gate results 與 conflict details 的一致性投影契約。
 - 讓 execute/queue/batch 與 compose apply strategy 沿用現有模型，不新增 verdict 或任務模型。
 
 ## Acceptance
 
 - [ ] 任一 shared-write authorization 可反查唯一 canonical ticket id/generation/digest。
+- [ ] file/path grant 不得抑制 atom id/CID block，atom grant 不得授權無關 path/surface/range；成對 negative fixtures 通過。
+- [ ] outer decision、matrix arbitration、gate status 與 conflict detail 在同一 generation 不得產生 clear/block 或 clear/freeze 矛盾。
 - [ ] completed/cancelled/expired ticket 在所有 gate 都 fail closed，不能被 stale BCR 復活。
 - [ ] schema、TypeScript contract 與 tests 同版，`additionalProperties` 無漂移。
 - [ ] INV-ATM-008 與 INV-ATM-009 測試通過。

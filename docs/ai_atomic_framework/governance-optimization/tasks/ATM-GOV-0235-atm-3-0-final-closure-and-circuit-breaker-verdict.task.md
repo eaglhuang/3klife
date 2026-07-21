@@ -69,16 +69,16 @@ atomizationImpact:
 ## Required Work
 
 - 重跑 divergence census、runner parity、release/adopter projection、rollback 與 backlog reconciliation。
-- 驗證 circuit breaker 自動 trip `queue-only`，reset 綁定較新的 passing digest。
+- 驗證 healthy replay 沒有非注入 trip 或 queue-only residency；故障演練能自動 trip `queue-only`，reset 綁定較新的 passing digest，並封存 trip reason 與 recovery latency。
 - 對每個 2.2 inherited acceptance 記錄 terminal disposition 與證據。
 - 任一失敗輸出精確 cell、authority generation、recovery manifests 與 next action。
 
 ## Acceptance
 
 - [ ] 0226 所有 divergence terminal，active stale authorization 為 0。
-- [ ] 0234 真多行程與 paired evidence 有效，correctness 五項均為 0、coverage 100%。
+- [ ] 0234 真多行程與 paired evidence 有效，correctness 七項均為 0、coverage 100%。
 - [ ] source/frozen/release/adopter parity 與 rollback drill 通過。
-- [ ] trip/reset 演練通過，reset 引用新的 passing digest。
+- [ ] healthy replay 的 `unexpectedBreakerTripCount = 0`、`timeInQueueOnlyRatio = 0`；trip/reset 演練通過，reset 引用新的 passing digest。
 - [ ] 所有 2.2 未完成驗收有 terminal disposition；有任何 open 則本卡不得 close。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:48.696Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0235-atm-3-0-final-closure-and-circuit-breaker-verdict.task.md","contentDigest":"sha256:9908d53ea8eb46227ac7e31a0bcb5a2c60ae619bc4862c508b47afdc4407d6ee"} -->
