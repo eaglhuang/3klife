@@ -1,7 +1,7 @@
 ---
 doc_id: doc_atm_gov_auto_batch_perf_plan_v3
 title: ATM 3.0 真平行治理一致性與收官計畫
-status: active
+status: done
 family_dir: governance-optimization
 owner: atm-core
 predecessor: doc_atm_gov_auto_batch_perf_plan_v2
@@ -73,6 +73,34 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 ## 任務圖與執行順序
 
 ## 2026-07-21 evidence repair closeback
+
+## 2026-07-22 protected closure repair closeback
+
+Plan 3.0 protected closure blockers were cleared by target repo evidence. The authoritative quick check is now:
+
+```text
+node atm.mjs broker replay status --json
+```
+
+Expected current result:
+
+- `verdict: ready-to-close`
+- `blockerCount: 0`
+- dogfood candidates: `2/2`
+- command-backed matrix: `420/420`
+
+Validation evidence:
+
+- `node atm.mjs broker replay dogfood --surface docs/governance/atm-3-replay-evidence.md --json`
+- `node --strip-types scripts/run-paired-ab-v4.ts --mode command-backed`
+- `node --strip-types scripts/run-paired-ab-v4.ts --mode validate`
+- `node --strip-types tests/cli/plan3-evidence-closure-diagnostic.test.ts`
+- `npm run typecheck`
+- `node --strip-types scripts/run-validators.ts standard --run-id standard-plan3-repair-20260722 --json` => 87/87 passed
+
+Architecture note for future maintainers: validator parallelism is governed by generic metadata (`executionMode`, `resourceProfile`, `resourceLocks`) and isolated rerun diagnostics. Add new shared fixtures by declaring resources in validator metadata, not by adding validator-specific branches to the runner.
+
+Evidence limitation: the repaired evidence satisfies the protected closure checker, but the dogfood broker ticket state is `not-required`. Treat it as frozen CLI multiprocess receipt evidence, not as a queued shared-write wait benchmark.
 
 本輪稽核推翻了「Plan 3.0 已完全收官」的先前結論：target ledger 中
 `ATM-GOV-0234`／`ATM-GOV-0235` 雖曾標成 `done`，但原始證據不足以證明真實

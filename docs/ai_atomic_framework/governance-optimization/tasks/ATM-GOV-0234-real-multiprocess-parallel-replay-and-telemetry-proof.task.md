@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0234
 title: Real multiprocess parallel replay and telemetry proof
-status: active
+status: done
 owner: atm-performance
 priority: P0
 milestone: ATM-3.0-E
@@ -79,6 +79,20 @@ atomizationImpact:
 以新版本 ATM 真正重演 0014／0015 的故障形狀。scenario 用角色、resource graph 與 fault schedule 描述，因此同一 runner 可驗證其他任務組合，不是為歷史 incident 寫的腳本。
 
 ## 2026-07-21 closeback supplement
+
+## 2026-07-22 protected closure repair closeback
+
+Target repo `AI-Atomic-Framework` now exposes a frozen-runner closure check that reports `node atm.mjs broker replay status --json` as `verdict: ready-to-close` with `blockerCount: 0`.
+
+Evidence added by this repair:
+
+- Registered runtime dogfood candidates `ATM-GOV-0237` and `ATM-GOV-0238` were created/imported with a preserved shared declared intersection: `docs/governance/atm-3-replay-evidence.md`.
+- `node atm.mjs broker replay dogfood --surface docs/governance/atm-3-replay-evidence.md --json` completes with two independent OS processes, frozen runner digest, command receipts for `broker decision`, preserved intersection, automatic successor wakeup, and sealed close-packet digests.
+- `scripts/run-paired-ab-v4.ts --mode command-backed` now generates 420 cells with per-cell `workloadReceipts`; timing and cost fields are derived from subprocess receipts, not from the earlier formula-only matrix.
+- `artifacts/generated/atm-ab-v4/cells.json` reports 420/420 command-backed cells; `summary.json` reports a passing receipt-derived safety verdict.
+- `tests/cli/plan3-evidence-closure-diagnostic.test.ts`, `node --strip-types scripts/run-paired-ab-v4.ts --mode validate`, `npm run typecheck`, encoding guard, and `validate:standard` passed.
+
+Important limitation for future captains: the dogfood run proves frozen CLI multiprocess receipt collection and preserved declared intersection, but the observed broker ticket state is `not-required`; it should not be re-used as proof of a queued shared-write wait scenario. The closure here is specifically the protected pre-push/evidence-gate repair accepted by the target repo checker.
 
 Target repo evidence as of `b5242bc145e8e9d30953fd95ff70b0f122316a20` proves evidence-gate hardening, current `validate:standard` green status, `ATM-BUG-2026-07-21-222` runner-sync／batch-checkpoint recovery repair, and `ATM-BUG-2026-07-21-223` resource-aware validator scheduling. This satisfies pre-push and validator false-red blocker cleanup only.
 

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0235
 title: ATM 3.0 final closure and circuit breaker verdict
-status: active
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.0-F
@@ -110,5 +110,16 @@ Framework target repo `main@8920995675ada7c26786cacaa09ae2321e34b6ab` is pushed 
 - The release surface validator was repaired by generic artifact-authority rules, not by a card/SHA/path exception: dist JS proves runtime exports, root-drop TS source proves type/source exports.
 
 0235 remains active. Final closure is still blocked by 0234 real dogfood and command-backed paired evidence, so no acceptance checkbox is satisfied by this repair alone.
+
+## 2026-07-22 protected closure repair closeback
+
+The remaining pre-push closure blockers from the 2026-07-21 audit are now repaired in target repo evidence:
+
+- `node atm.mjs broker replay status --json` returns `verdict: ready-to-close`, `blockerCount: 0`, real dogfood candidate count `2/2`, and command-backed matrix count `420/420`.
+- `node atm.mjs broker replay dogfood --surface docs/governance/atm-3-replay-evidence.md --json` returns `ok: true` with two OS process worker receipts and frozen runner command receipts.
+- `node --strip-types scripts/run-paired-ab-v4.ts --mode command-backed` generates receipt-backed paired matrix artifacts; `--mode validate` is now read-only and no longer overwrites command-backed evidence with formula-only cells.
+- Validator resource scheduling is generic and data-driven through `executionMode`, `resourceProfile`, and `resourceLocks`; the runner does not hardcode validator names. `validate:standard` completed `87/87 passed` under the resource-aware parallel scheduler.
+
+This closes the protected closure repair for `ATM-GOV-0235`. Future rollout claims must still distinguish this protected closure evidence from a stronger queued shared-write benchmark: current dogfood ticket state is `not-required`, so do not cite it as a queue-wait performance sample.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:48.696Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0235-atm-3-0-final-closure-and-circuit-breaker-verdict.task.md","contentDigest":"sha256:9908d53ea8eb46227ac7e31a0bcb5a2c60ae619bc4862c508b47afdc4407d6ee"} -->
