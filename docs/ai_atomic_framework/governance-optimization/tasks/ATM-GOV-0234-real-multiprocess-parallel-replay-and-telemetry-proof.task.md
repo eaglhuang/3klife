@@ -84,6 +84,8 @@ Target repo evidence as of `b5242bc145e8e9d30953fd95ff70b0f122316a20` proves evi
 
 This card remains `active`: the evidence still does not prove two real registered, not-yet-delivered task cards with preserved shared intersection, full frozen-worker claim/ticket/proposal/compose/commit/close lifecycle, command-backed 420-cell matrix, event-derived correctness counters, or paired AB/BA performance improvement >=25%.
 
+Target repo `main@7c5780058af252365375f23da0e8693456bfdffe` adds `scripts/diagnose-plan3-evidence-closure.ts`, a fail-closed diagnostic for this card. Current diagnostic output is `remain-open` because the target repo has `0/2` registered dogfood candidates with the declared intersection, no public frozen `broker replay` CLI surface, and `0/420` existing cells with command/workload receipt evidence.
+
 ## Required Work
 
 - 執行 controlled replay 與 real-task dogfood 兩個強制 segment；每個 acceptance worker 都以 frozen `node atm.mjs` 子行程啟動並封存 runner digest，source/dev 只作輔助 parity probe。

@@ -76,6 +76,8 @@ Target repo `b5242bc145e8e9d30953fd95ff70b0f122316a20` proves `ATM-BUG-2026-07-2
 
 Final closure remains blocked by `ATM-GOV-0234`: the required real multiprocess dogfood, command-backed 420-cell matrix, event-derived correctness counters, and paired AB/BA performance evidence are not yet sealed. Therefore this card stays `active` and its acceptance boxes remain unchecked.
 
+Target repo `main@7c5780058af252365375f23da0e8693456bfdffe` adds a fail-closed Plan 3 evidence closure diagnostic. Its current `remain-open` verdict is now the authoritative quick check before any final closure attempt; it identifies missing real dogfood candidates, missing public frozen replay CLI, and non-command-backed 420-cell matrix evidence.
+
 ## Required Work
 
 - 重跑 divergence census、runner parity、release/adopter projection、rollback 與 backlog reconciliation。

@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-21T22:27:31+08:00
+updated_at: 2026-07-21T22:37:00+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -101,6 +101,18 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
   通過，git-head evidence missing 為 diagnostic only。
 - planning repo `master` 在本次 closeback repair 前 local/remote SHA 一致：
   `c708a30bfc62b34f14394f47e6e0676b33e441bc`。
+
+2026-07-21T22:37:00+08:00 補充診斷：
+
+- target repo 新增 fail-closed 診斷器 `scripts/diagnose-plan3-evidence-closure.ts`
+  與測試 `tests/cli/plan3-evidence-closure-diagnostic.test.ts`，並推到
+  `main@7c5780058af252365375f23da0e8693456bfdffe`。
+- 診斷命令 `node --strip-types scripts/diagnose-plan3-evidence-closure.ts --json --allow-inconclusive`
+  目前 verdict 為 `remain-open`，精確列出三個 blocker：
+  1. real dogfood registered candidates 為 `0/2`；
+  2. 沒有 public frozen `node atm.mjs broker replay ...` CLI surface；
+  3. 現有 420 cells 中 `0/420` 具有 command/workload receipts。
+- 因此 Plan 3.0 現在不再只是「等 validator 跑完」；卡點已可由診斷器直接重現與引用。
 
 因此本計畫保持 `active`。`TASK-TMP-0004` 與 `TASK-ERR-0003` 已依 target ledger
 closeback 標為 `done`；`ATM-GOV-0234` 與 `ATM-GOV-0235` 改回 `active`，等待真正的
