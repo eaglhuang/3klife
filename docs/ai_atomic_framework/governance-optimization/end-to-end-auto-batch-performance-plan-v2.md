@@ -1,15 +1,18 @@
 ---
 doc_id: doc_atm_gov_auto_batch_perf_plan_v2
 owner: atm-core
-status: active
+status: superseded
 related_cards_root: docs/ai_atomic_framework/governance-optimization/tasks
 upstream_repo: AI-Atomic-Framework
 predecessor: doc_atm_gov_auto_batch_perf_plan
+successor: doc_atm_gov_auto_batch_perf_plan_v3
 created_at: 2026-07-19T00:00:00+08:00
-updated_at: 2026-07-20T21:55:00+08:00
+updated_at: 2026-07-21T09:40:00+08:00
 ---
 
 # ATM 端到端自動併批與效能證明計畫 2.0（v2.2 Closure Amendment）
+
+> 執行狀態：本文件保留為不可覆寫的歷史基線。2026-07-21 起停止新增工作；尚未被真實平行證據滿足的驗收、現場分歧與後續修復，由 [ATM 3.0](./end-to-end-auto-batch-performance-plan-v3.md) 接管。既有已驗證交付不重做，未滿足項不得因本文件中的任務卡標記 `done` 而視為完成。
 
 狀態更新：2026-07-19（Captain review 修訂：wave commit 紀律、分歧復原通路、plan digest pin、token 量測契約、baseline 自我採樣、lane attribution、原子化出口）
 狀態更新（儀表先行整合版）：2026-07-19（ATM-GOV-0193 為依賴圖第 0 步；採 gitignored runtime scratch/log → closure seal → digest-only history 二層儀表；0182-0190 各卡明載 producer/consumer 契約、M1/M2 可比 cohort 與遙測自我裁汰，形成「以戰養戰」閉環；所有 raw statistics、counter、per-run log、debug log、high-frequency receipt stream 均留硬碟，不進 Git）
