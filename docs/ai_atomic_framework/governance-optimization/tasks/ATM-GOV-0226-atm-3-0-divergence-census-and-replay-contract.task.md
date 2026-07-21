@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0226
 title: ATM 3.0 divergence census and replay contract
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.0-A
@@ -88,6 +88,15 @@ atomizationImpact:
       source: "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json"
       disposition: "inline"
       inlineReason: "This card only registers Plan 3.0 ownership derived from task metadata; restructuring the canonical shard would expand scope without reducing the census implementation complexity."
+completed_at: "2026-07-21T05:39:00.385Z"
+completed_by_agent: "codex-plan3-captain-20260721-01"
+closedAt: "2026-07-21T05:39:00.385Z"
+closedByActor: "codex-plan3-captain-20260721-01"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-21T05-39-00-385Z-close-d6ec7789feaa"
+lastTransitionAt: "2026-07-21T05:39:00.385Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3c9bbb60c121e182a74e1f54f52f8c52e75d2c49"
 ---
 
 # ATM-GOV-0226 ATM 3.0 divergence census and replay contract

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T05-39-00-385Z-close-d6ec7789feaa",
+  "taskId": "ATM-GOV-0226",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-01",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0226-atm-3-0-divergence-census-and-replay-contract.task.md",
+  "taskSha256": "sha256:7a0610dd549ac4d7a44220108ab742144f329a18005c31b9f24442f257789ce6",
+  "createdAt": "2026-07-21T05:39:00.385Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0226 --actor codex-plan3-captain-20260721-01"
+}
