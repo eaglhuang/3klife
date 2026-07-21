@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T06-54-13-259Z-close-7052c5d82a75",
+  "taskId": "ATM-GOV-0231",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-02",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0231-generalized-command-manifest-and-recovery-emission.task.md",
+  "taskSha256": "sha256:a487cb9d92fbd6b98acabd34bea6cb8418039cef01b5a6cab927766c08a0e34b",
+  "createdAt": "2026-07-21T06:54:13.259Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0231 --actor codex-plan3-captain-20260721-02"
+}
