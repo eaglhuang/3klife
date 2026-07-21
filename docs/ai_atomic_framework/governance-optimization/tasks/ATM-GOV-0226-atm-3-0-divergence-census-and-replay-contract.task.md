@@ -21,6 +21,7 @@ scopePaths:
   - "packages/cli/src/commands/broker/census/**"
   - "tests/cli/atm-3-divergence-census.test.ts"
   - "tests/cli/parallel-replay-scenario-contract.test.ts"
+  - "tests/cli/atm-3-red-baseline-discrimination.test.ts"
   - "docs/governance/atm-bug-and-optimization-backlog.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json"
@@ -30,12 +31,14 @@ deliverables:
   - "schemas/atm.parallel-replay-scenario.v1.schema.json"
   - "tests/cli/atm-3-divergence-census.test.ts"
   - "tests/cli/parallel-replay-scenario-contract.test.ts"
+  - "tests/cli/atm-3-red-baseline-discrimination.test.ts"
   - "docs/governance/atm-bug-and-optimization-backlog.md"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-core.json"
   - "atomic_workbench/atomization-coverage/path-to-atom-map-shards/owner-shard-cli.json"
 validators:
   - "node --strip-types tests/cli/atm-3-divergence-census.test.ts"
   - "node --strip-types tests/cli/parallel-replay-scenario-contract.test.ts"
+  - "node --strip-types tests/cli/atm-3-red-baseline-discrimination.test.ts"
   - "npm run validate:schemas"
   - "npm run typecheck"
   - "git diff --check"
@@ -60,9 +63,11 @@ consumer:
 missingData:
   - "Historical waitedMs, overlap window and wakeup counts are unavailable and must receive explicit unavailable receipts."
   - "Backlog rows may describe code already fixed; current behavior must be probed before editing."
+  - "Starvation and parallelism thresholds must be sealed from policy or paired-baseline evidence before replay, not selected after observing results."
 dataDrivenStopRule:
   - "Stop if a mutable BCR/queue/runtime file would need direct editing; emit a divergence record instead."
   - "Stop if a replay assertion depends on a fixed task id, actor id or path rather than a resource-graph role."
+  - "Stop if the pre-change frozen baseline is unexpectedly green; mark the scenario invalid or prove the historical failure is already absent before implementation continues."
 out_of_scope:
   - "No broker state mutation or legacy migration in this card."
   - "No performance verdict from historical evidence alone."
@@ -93,6 +98,8 @@ atomizationImpact:
 - 逐一 census canonical ticket、BCR、queue、freeze、direction lock、claim、scope amendment、runner-sync reservation、task terminal state 與 closeback。
 - 每個 producer/consumer 記錄 authority、generation/digest、terminal status、recovery command、observed/unavailable 與 evidence reference。
 - 將 0014／0015 故障形狀表達成通用 replay scenario schema。
+- 在 scenario schema 加入 frozen runner entrypoint/digest、pre-sealed starvation threshold 與來源、minimum parallel overlap ratio、maximum serialized admission ratio；threshold 不能在看到 run 結果後調整。
+- 在任何 broker implementation 前，以現行 frozen `node atm.mjs` 與隔離 fixture 執行紅色鑑別力基線，封存已知 stale/dimension/release-order failure counters 與 scenario digest；不得修改現場 runtime 來製造失敗。
 - census closure packet 的 task-owned changed-files、tree、parent、command-run 與 git-head evidence 是否同源；pre-push 才發現的不一致必須保留為 replay assertion。
 - 從已匯入卡片的 `scopePaths` 與 `ownerAtomOrMap` 資料預配置本計畫新增路徑的 atom-map ownership；後續平行卡不得各自重寫 shared map shard。
 - 對 `ATM-BUG-2026-07-20-213`、`-214`、`-216`、`ATM-BUG-2026-07-21-217`、`-218` 重跑 probe；已修項以證據關閉，未修項維持 Open 並映射到唯一 owner card。
@@ -106,6 +113,8 @@ atomizationImpact:
 - [ ] `ATM-BUG-2026-07-20-213` 的 decision coherence probe 在 frozen/source 皆有 compact receipt；若一致則正式 closeback，若不一致則記錄 contradiction 與 0227 owner，不先寫特例修補。
 - [ ] 不可取得的歷史 timing 欄位有 explicit unavailable receipt，不得填 0 或推測值。
 - [ ] replay schema 不含固定 task/actor/path/date 分支。
+- [ ] frozen 紅色 baseline 至少重現一項已知 failure class；若意外全綠，scenario 為 invalid/inconclusive 且不得解鎖 0227 implementation。
+- [ ] `starvationThresholdMs`、threshold source、`minimumParallelOverlapRatio`、`maximumSerializedAdmissionRatio` 與 runner entrypoint 都在 scenario digest 中於 run 前 sealed。
 - [ ] 0227–0234 的新增路徑在平行施工前已有 atom-map owner；預配置由 task metadata 推導，不維護人工 incident 清單。
 - [ ] 每個 Open backlog row 有可重現 probe、owner card 與 recovery；已修 row 只在 probe 通過後關閉。
 

@@ -48,6 +48,7 @@ missingData:
 dataDrivenStopRule:
   - "Do not close if any inherited acceptance is open, any correctness counter is nonzero, observed coverage is below 100 percent, or replay evidence is not real multiprocess."
   - "Do not reset circuit breaker without a newer passing evidence digest."
+  - "Do not close if the red baseline did not turn green under the same scenario digest, real-task dogfood removed its declared intersection, or migration rollback was not exercised."
 out_of_scope:
   - "No new product implementation beyond minimal verdict/circuit-breaker wiring discovered by final integration."
   - "No rewriting Plan 2.2 history."
@@ -69,6 +70,7 @@ atomizationImpact:
 ## Required Work
 
 - 重跑 divergence census、runner parity、release/adopter projection、rollback 與 backlog reconciliation。
+- 核對 0226 紅色 baseline 與 0234 綠色 replay 使用同一 scenario/assertion/threshold digest；核對 controlled replay 與 real-task dogfood 為兩個獨立 passing segments。
 - 驗證 healthy replay 沒有非注入 trip 或 queue-only residency；故障演練能自動 trip `queue-only`，reset 綁定較新的 passing digest，並封存 trip reason 與 recovery latency。
 - 對每個 2.2 inherited acceptance 記錄 terminal disposition 與證據。
 - 任一失敗輸出精確 cell、authority generation、recovery manifests 與 next action。
@@ -77,7 +79,10 @@ atomizationImpact:
 
 - [ ] 0226 所有 divergence terminal，active stale authorization 為 0。
 - [ ] 0234 真多行程與 paired evidence 有效，correctness 七項均為 0、coverage 100%。
+- [ ] 0234 real-task dogfood 使用兩張未交付且有 declared intersection 的 registered cards，兩位 Captain 均獲 canonical ticket、無 terminal refusal、無移除交集、無人工 wakeup 或 bypass。
+- [ ] `parallelOverlapRatio >= 0.30`、`serializedAdmissionRatio <= 0.70`，starvation threshold 在 run 前 sealed，且 correctness/performance 來自同一組 valid cells。
 - [ ] source/frozen/release/adopter parity 與 rollback drill 通過。
+- [ ] legacy migration 的 immutable pre-snapshot、apply、rollback 與 round-trip digest 全部通過；rollback 不依賴直接修改 runtime JSON。
 - [ ] healthy replay 的 `unexpectedBreakerTripCount = 0`、`timeInQueueOnlyRatio = 0`；trip/reset 演練通過，reset 引用新的 passing digest。
 - [ ] 所有 2.2 未完成驗收有 terminal disposition；有任何 open 則本卡不得 close。
 

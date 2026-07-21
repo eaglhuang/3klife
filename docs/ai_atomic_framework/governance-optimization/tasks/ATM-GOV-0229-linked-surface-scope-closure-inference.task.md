@@ -4,10 +4,10 @@ title: Linked surface scope closure inference
 status: planned
 owner: atm-taskflow
 priority: P0
-milestone: ATM-3.0-B
+milestone: ATM-3.0-B1
 severity: P1
 depends_on:
-  - ATM-GOV-0226
+  - ATM-GOV-0227
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -81,5 +81,6 @@ atomizationImpact:
 - [ ] disjoint graph 不被錯誤擴大；cycle 能 deterministic 收斂。
 - [ ] 新增 linked surface 時先更新 ticket 再授權 write，commit gate 不再是首次發現點。
 - [ ] 無 task/path/actor hardcode，INV-ATM-009 測試通過。
+- [ ] source 與 frozen `node atm.mjs` 對相同 scope-closure/re-arbitration probe 的 canonical behavior projection digest 一致，runner digest 已封存。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:31.618Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0229-linked-surface-scope-closure-inference.task.md","contentDigest":"sha256:7d2eeca03d63cb32c330edee4058bd98294e641b0aa31e23b96e42b2eaf3a142"} -->

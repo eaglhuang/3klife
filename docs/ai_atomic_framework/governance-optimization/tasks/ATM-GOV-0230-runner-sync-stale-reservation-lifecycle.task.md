@@ -4,10 +4,10 @@ title: Runner sync stale reservation lifecycle
 status: planned
 owner: atm-runner-sync
 priority: P0
-milestone: ATM-3.0-B
+milestone: ATM-3.0-B1
 severity: P0
 depends_on:
-  - ATM-GOV-0226
+  - ATM-GOV-0227
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -76,5 +76,7 @@ atomizationImpact:
 - [ ] 不可達 SHA 不要求 build receipt；已完成 build 的 release 仍要求真 receipt。
 - [ ] position 2 reservation 在 head 處置後被 single-flight 喚醒且不 starvation。
 - [ ] 重複 cancel/revalidate/release 無 duplicate side effect。
+- [ ] cleanup receipt 的 reported released count、`staleReleases` entries 與實際 state mutations 數量及 ids 完全一致；不允許訊息成功但明細為空。
+- [ ] source 與 frozen `node atm.mjs` 對相同 stale-reservation lifecycle probe 的 canonical behavior projection digest 一致，runner digest 已封存。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:34.479Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0230-runner-sync-stale-reservation-lifecycle.task.md","contentDigest":"sha256:b10ae7cfaf95b3c9aed3ff6a4252b39620c059b1a0a05cb58888b7419d9fe67c"} -->

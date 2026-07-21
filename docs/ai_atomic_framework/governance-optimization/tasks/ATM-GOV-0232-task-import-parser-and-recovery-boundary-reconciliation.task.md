@@ -4,10 +4,10 @@ title: Task import parser and recovery boundary reconciliation
 status: planned
 owner: atm-task-import
 priority: P1
-milestone: ATM-3.0-B
+milestone: ATM-3.0-B1
 severity: P1
 depends_on:
-  - ATM-GOV-0226
+  - ATM-GOV-0227
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -78,7 +78,7 @@ atomizationImpact:
 
 - [ ] fenced 內容不會重置 task declaration context。
 - [ ] 診斷 code、source line、work item id 與 recovery hint 一致。
-- [ ] source 與 frozen runner parity；若 stale，走正式 runner-sync，不以 source-only 綠燈關卡。
+- [ ] source 與 frozen `node atm.mjs` 對相同 parser/closeback probe 的 canonical behavior projection digest 一致，runner digest 已封存；若 stale，走正式 runner-sync，不以 source-only 綠燈關卡。
 - [ ] 已完成 projection 可由 integration verify 證實，沒有重複修改或重複 backlog row。
 - [ ] `done + released` 任務可冪等修復 planning mirror，無須重新 claim、偽造 transition 或手改 `.atm`。
 - [ ] reconcile 的 success receipt 包含 planning path、before/after digest 與 mutation/no-op 結果；未更新宣告 mirror 時 fail closed。

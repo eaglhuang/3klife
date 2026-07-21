@@ -4,7 +4,7 @@ title: Atomic broker projection and reconciliation
 status: planned
 owner: atm-broker
 priority: P0
-milestone: ATM-3.0-C
+milestone: ATM-3.0-B1
 severity: P0
 depends_on:
   - ATM-GOV-0227
@@ -82,5 +82,6 @@ atomizationImpact:
 - [ ] 不可能同時出現兩個有效 publisher generation。
 - [ ] stale projection 不能授權，reconcile 後 canonical state 與全部 views 一致。
 - [ ] queue-only trip 保留 ticket/proposal/evidence，沒有 silent loss。
+- [ ] source 與 frozen `node atm.mjs` 對相同 projection/reconcile probe 的 canonical behavior projection digest 一致，runner digest 已封存。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:28.841Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0228-atomic-broker-projection-and-reconciliation.task.md","contentDigest":"sha256:279c91450a83ed76e972186cb93204fc5420449c58b6059840da21434aed4b19"} -->

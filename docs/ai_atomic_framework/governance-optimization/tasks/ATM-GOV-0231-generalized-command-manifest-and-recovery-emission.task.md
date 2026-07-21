@@ -4,10 +4,10 @@ title: Generalized command manifest and recovery emission
 status: planned
 owner: atm-cli
 priority: P0
-milestone: ATM-3.0-B
+milestone: ATM-3.0-B1
 severity: P1
 depends_on:
-  - ATM-GOV-0226
+  - ATM-GOV-0227
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -85,5 +85,6 @@ atomizationImpact:
 - [ ] emitted recovery chain 可在隔離 fixture repo 逐步執行，不需人工補旗標。
 - [ ] Windows quoting/path fixture 不經 shell 仍 round-trip。
 - [ ] call-site inventory 不再出現私有 identity regex 或第二套 command string authority。
+- [ ] source 與 frozen `node atm.mjs` 對相同 command-manifest/identity probe 的 canonical behavior projection digest 一致，runner digest 已封存。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:37.332Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0231-generalized-command-manifest-and-recovery-emission.task.md","contentDigest":"sha256:37e7c0236602f8c782e109b3f2e4bd58034d741bb6cbfed306cdb08bc211fef4"} -->

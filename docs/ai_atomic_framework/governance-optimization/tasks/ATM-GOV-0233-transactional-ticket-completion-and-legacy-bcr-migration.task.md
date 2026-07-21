@@ -26,6 +26,7 @@ scopePaths:
   - "packages/cli/src/commands/broker/reconcile/**"
   - "tests/cli/transactional-ticket-completion.test.ts"
   - "tests/cli/legacy-bcr-migration.test.ts"
+  - "tests/cli/legacy-bcr-migration-rollback.test.ts"
   - "tests/cli/single-successor-wakeup.test.ts"
   - "tests/cli/broker-authorization-consumer-migration.test.ts"
 deliverables:
@@ -37,11 +38,13 @@ deliverables:
   - "packages/cli/src/commands/broker/migrate/**"
   - "tests/cli/transactional-ticket-completion.test.ts"
   - "tests/cli/legacy-bcr-migration.test.ts"
+  - "tests/cli/legacy-bcr-migration-rollback.test.ts"
   - "tests/cli/single-successor-wakeup.test.ts"
   - "tests/cli/broker-authorization-consumer-migration.test.ts"
 validators:
   - "node --strip-types tests/cli/transactional-ticket-completion.test.ts"
   - "node --strip-types tests/cli/legacy-bcr-migration.test.ts"
+  - "node --strip-types tests/cli/legacy-bcr-migration-rollback.test.ts"
   - "node --strip-types tests/cli/single-successor-wakeup.test.ts"
   - "node --strip-types tests/cli/broker-authorization-consumer-migration.test.ts"
   - "npm run validate:cli"
@@ -63,15 +66,17 @@ consumer:
   - "ATM-GOV-0234"
 missingData:
   - "Legacy sidecars may lack canonical ticket references; migration must quarantine ambiguous records instead of guessing."
+  - "A migration cannot be rollout-ready until pre-migration snapshot and rollback round-trip digests are observed."
 dataDrivenStopRule:
   - "Stop if migration deletes evidence, manufactures a canonical mapping, or authorizes from a legacy field."
   - "Stop and trip queue-only on duplicate publisher, duplicate wakeup or terminal authorization count above zero."
+  - "Stop if migration apply has no immutable rollback receipt or if rollback requires manual runtime edits."
 out_of_scope:
   - "No manual runtime deletion."
   - "No performance claim; ATM-GOV-0234 owns measurement."
 rollback:
   strategy: circuit-breaker-and-revert
-  notes: "Trip queue-only, retain immutable receipts and canonical tickets, then revert code; migration must be idempotently reversible as projection state."
+  notes: "Trip queue-only and use broker migrate --rollback <receiptDigest> before code revert. Retain immutable pre/post receipts and canonical tickets; apply/rollback must be idempotently reversible as projection state."
 atomizationImpact:
   ownerAtomOrMap: "atm.broker.shared-delivery-lifecycle"
   mapUpdates: []
@@ -96,7 +101,8 @@ atomizationImpact:
 
 - terminal transition 與 projection revoke 使用同一 generation/CAS；crash 後 reconcile exactly once。
 - complete/cancel/expire/adopt/publish/release/wakeup 重複呼叫結果穩定。
-- migrate CLI 支援 status、dry-run、apply、receipt；ambiguous legacy record quarantine 並 trip queue-only。
+- migrate CLI 支援 status、dry-run、apply、immutable pre-migration snapshot receipt 與 `--rollback <receiptDigest>`；ambiguous legacy record quarantine 並 trip queue-only。
+- migration apply/rollback 使用同一 receipt generation，皆可重試且 exactly-once；rollback 後 canonical state digest 必須等於 pre-migration digest，append-only audit metadata 除外。
 - 盤點並遷移所有 legacy authorization 消費端，包括 claim parallel preflight、claim admission 與 Git commit gate；不得再把 BCR 的 `blockedTaskIds` 或其他 task-id set 當成跨資源授權。
 - 每個消費端逐筆驗證 canonical ticket grant 的 resource dimension、normalized keys、operation、consumer gate 與 generation/digest；維度不符時 emit 正式 ErrorCode 與 re-arbitration manifest。
 - 以歷史三張 BCR 作資料 fixture，演算法不得識別其 id/task/path。
@@ -109,7 +115,9 @@ atomizationImpact:
 - [ ] file/path grant 無法抑制 atom id/CID admission block，atom grant 無法授權無關 Git path/surface；所有 legacy CLI 消費端皆通過 migration fixtures。
 - [ ] production authorization path 不再存在只回傳或只消費 foreign task-id set 的 helper。
 - [ ] migration 重跑不重複 side effect，歷史 evidence 可追溯。
+- [ ] apply 後 fault injection 可由正式 rollback CLI 復原；重複 apply/rollback 結果穩定，round-trip state digest 一致，不需手改 `.atm`。
 - [ ] publisher crash 後只有一個 successor wakeup，無 starvation。
 - [ ] 並行 commit 穿插時，pre-close 即拒絕 mixed closure packet；合法 packet 可通過 commit-range pre-push，不需 emergency repair。
+- [ ] source 與 frozen `node atm.mjs` 對相同 terminal/migration/closure probe 的 canonical behavior projection digest 一致，runner digest 已封存。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:43.039Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0233-transactional-ticket-completion-and-legacy-bcr-migration.task.md","contentDigest":"sha256:d53021e8d2c9cc8c93f577215a2b741359733af29f3606fd778b8b92710970c9"} -->
