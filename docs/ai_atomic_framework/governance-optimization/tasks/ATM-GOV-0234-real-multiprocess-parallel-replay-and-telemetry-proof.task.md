@@ -112,4 +112,21 @@ Target repo `main@7c5780058af252365375f23da0e8693456bfdffe` adds `scripts/diagno
 - [ ] median makespan/throughput 各改善至少 25%，cost ratio <= 1.10；否則 verdict 為 failed/inconclusive 並 trip queue-only。
 - [ ] 0226 的同一紅色 scenario 在新 frozen runner 轉綠；若 baseline 無鑑別力、dogfood 無可用真實卡或任何 cell inconclusive，本卡不得 close。
 
+## 2026-07-21 Protected Closure Repair Update
+
+Target repo framework `main@8920995675ada7c26786cacaa09ae2321e34b6ab` is pushed and verified. Public frozen broker replay CLI surface is now present:
+
+- `node atm.mjs broker replay status --json`
+- `node atm.mjs broker replay run --json`
+- `node atm.mjs broker replay dogfood --json`
+
+Current frozen status remains fail-closed, not complete:
+
+- `real-dogfood-registered-candidates: found 0/2 registered planned/ready/running task candidates with declared intersection`
+- `command-backed-420-cell-matrix: 420 cells found, 0/420 include command/workload receipt evidence`
+
+Validator orchestration repair is also in place: `validate:standard` run `standard-20260721232112` completed `87/87 passed`, and the validator runner now reports `atm.validatorSchedulerDiagnostics.v1` plus isolated rerun classification. This prevents resource-race failures from being mistaken for product failures, while preserving true failures.
+
+This update does not satisfy 0234 acceptance. Real two-card dogfood, overlap/admission telemetry, correctness counters, and command-backed paired A/B evidence are still missing.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:45.883Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0234-real-multiprocess-parallel-replay-and-telemetry-proof.task.md","contentDigest":"sha256:92ea922005b78910944bfd547ea70a5b4348bf0c35dfb55a1adb6cb256c12799"} -->

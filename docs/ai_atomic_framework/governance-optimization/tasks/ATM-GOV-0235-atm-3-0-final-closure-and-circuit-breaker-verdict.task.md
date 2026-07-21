@@ -76,7 +76,7 @@ Target repo `b5242bc145e8e9d30953fd95ff70b0f122316a20` proves `ATM-BUG-2026-07-2
 
 Final closure remains blocked by `ATM-GOV-0234`: the required real multiprocess dogfood, command-backed 420-cell matrix, event-derived correctness counters, and paired AB/BA performance evidence are not yet sealed. Therefore this card stays `active` and its acceptance boxes remain unchecked.
 
-Target repo `main@7c5780058af252365375f23da0e8693456bfdffe` adds a fail-closed Plan 3 evidence closure diagnostic. Its current `remain-open` verdict is now the authoritative quick check before any final closure attempt; it identifies missing real dogfood candidates, missing public frozen replay CLI, and non-command-backed 420-cell matrix evidence.
+Target repo `main@8920995675ada7c26786cacaa09ae2321e34b6ab` is pushed and verified. It adds the fail-closed Plan 3 evidence closure diagnostic, public frozen broker replay CLI surface, and validator scheduler diagnostics. Its current `remain-open` verdict is now the authoritative quick check before any final closure attempt; it identifies the remaining blockers as missing real dogfood candidates and non-command-backed 420-cell matrix evidence. The previous missing public frozen replay CLI blocker is resolved.
 
 ## Required Work
 
@@ -98,5 +98,17 @@ Target repo `main@7c5780058af252365375f23da0e8693456bfdffe` adds a fail-closed P
 - [ ] healthy replay 的 `unexpectedBreakerTripCount = 0`、`timeInQueueOnlyRatio = 0`；trip/reset 演練通過，reset 引用新的 passing digest。
 - [ ] 所有 2.2 未完成驗收有 terminal disposition；有任何 open 則本卡不得 close。
 - [ ] `TASK-TMP-0004`、`ATM-GOV-0236` 與 0226–0234 全部 target-close；projection-only backlog item count、unowned Plan 3.0 blocker count、failed/inconclusive readiness probe count皆為 0。
+
+## 2026-07-21 Protected Closure Repair Update
+
+Framework target repo `main@8920995675ada7c26786cacaa09ae2321e34b6ab` is pushed and matches `origin/main`. Evidence summary:
+
+- `node atm.mjs broker replay status --json` on frozen runner returns `verdict: remain-open` with exactly two remaining blockers: dogfood candidates `0/2`, and command-backed 420-cell matrix `0/420`.
+- Public frozen replay commands exist: `status`, `run`, and `dogfood`.
+- `validate:standard` run `standard-20260721232112` completed `87/87 passed`.
+- Validator orchestration now uses a generic metadata-driven scheduler contract and reports `atm.validatorSchedulerDiagnostics.v1`; parallel failures are isolated-rerun classified as resource contention or true validator failure.
+- The release surface validator was repaired by generic artifact-authority rules, not by a card/SHA/path exception: dist JS proves runtime exports, root-drop TS source proves type/source exports.
+
+0235 remains active. Final closure is still blocked by 0234 real dogfood and command-backed paired evidence, so no acceptance checkbox is satisfied by this repair alone.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T01:22:48.696Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0235-atm-3-0-final-closure-and-circuit-breaker-verdict.task.md","contentDigest":"sha256:9908d53ea8eb46227ac7e31a0bcb5a2c60ae619bc4862c508b47afdc4407d6ee"} -->
