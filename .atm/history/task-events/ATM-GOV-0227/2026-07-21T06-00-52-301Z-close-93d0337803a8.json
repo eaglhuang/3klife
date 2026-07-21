@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T06-00-52-301Z-close-93d0337803a8",
+  "taskId": "ATM-GOV-0227",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-01",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0227-canonical-broker-arbitration-authority.task.md",
+  "taskSha256": "sha256:2c8b51d7a117100151fbc3ec2c0a246d771b715d27ac4f9667b7ed318bb2baf9",
+  "createdAt": "2026-07-21T06:00:52.301Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0227 --actor codex-plan3-captain-20260721-01"
+}

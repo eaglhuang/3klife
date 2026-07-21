@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0227
 title: Canonical broker arbitration authority
-status: planned
+status: done
 owner: atm-broker
 priority: P0
 milestone: ATM-3.0-B0
@@ -75,6 +75,15 @@ atomizationImpact:
   ownerAtomOrMap: "atm.broker.ticket-authority"
   mapUpdates: []
   extractionCandidates: []
+completed_at: "2026-07-21T06:00:52.301Z"
+completed_by_agent: "codex-plan3-captain-20260721-01"
+closedAt: "2026-07-21T06:00:52.301Z"
+closedByActor: "codex-plan3-captain-20260721-01"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-21T06-00-52-301Z-close-93d0337803a8"
+lastTransitionAt: "2026-07-21T06:00:52.301Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4caf97f9a115d7b725df02d33b0aaa2dd4684bb3"
 ---
 
 # ATM-GOV-0227 Canonical broker arbitration authority
