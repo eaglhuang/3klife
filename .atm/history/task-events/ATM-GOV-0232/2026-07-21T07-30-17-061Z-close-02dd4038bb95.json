@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T07-30-17-061Z-close-02dd4038bb95",
+  "taskId": "ATM-GOV-0232",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-02",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0232-task-import-parser-and-recovery-boundary-reconciliation.task.md",
+  "taskSha256": "sha256:a98ae502b05422b83680a224e1d22446e64850858b1c66ec245dfb6e6dae44b3",
+  "createdAt": "2026-07-21T07:30:17.061Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0232 --actor codex-plan3-captain-20260721-02"
+}
