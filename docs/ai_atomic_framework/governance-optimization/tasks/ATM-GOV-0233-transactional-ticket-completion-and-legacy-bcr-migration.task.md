@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0233
 title: Transactional ticket completion and legacy BCR migration
-status: planned
+status: done
 owner: atm-broker
 priority: P0
 milestone: ATM-3.0-D
@@ -102,6 +102,15 @@ atomizationImpact:
       pattern: "Ticket-scoped authorization adapter"
       source: "packages/cli/src/commands/git-governance/implementation.ts"
       disposition: extract
+completed_at: "2026-07-21T07:44:00.307Z"
+completed_by_agent: "codex-plan3-captain-20260721-02"
+closedAt: "2026-07-21T07:44:00.307Z"
+closedByActor: "codex-plan3-captain-20260721-02"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-21T07-44-00-307Z-close-49973f4d7935"
+lastTransitionAt: "2026-07-21T07:44:00.307Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f30eb8305d5664a06c20794fb7d8de3f6b076a97"
 ---
 
 # ATM-GOV-0233 Transactional ticket completion and legacy BCR migration

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-21T07-44-00-307Z-close-49973f4d7935",
+  "taskId": "ATM-GOV-0233",
+  "action": "close",
+  "actorId": "codex-plan3-captain-20260721-02",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0233-transactional-ticket-completion-and-legacy-bcr-migration.task.md",
+  "taskSha256": "sha256:c72aaec7e24f574cba2078a81fe72eca5b18ec29aa9fc698854cddf3bebb08ec",
+  "createdAt": "2026-07-21T07:44:00.307Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0233 --actor codex-plan3-captain-20260721-02"
+}
