@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-22T11-31-15-371Z-close-3ef81b62fab1",
+  "taskId": "ATM-GOV-0255",
+  "action": "close",
+  "actorId": "claude-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0255-broker-resolution-authority-parity-and-claim-admission-proof.task.md",
+  "taskSha256": "sha256:d182e79554429adf579a4675deabe119128db9a9d28cfae0d72f05c33301d80f",
+  "createdAt": "2026-07-22T11:31:15.371Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0255 --actor claude-plan31-captain"
+}
