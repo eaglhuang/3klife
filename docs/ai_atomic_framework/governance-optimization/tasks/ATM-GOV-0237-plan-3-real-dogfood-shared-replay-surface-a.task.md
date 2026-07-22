@@ -27,6 +27,7 @@ deliverables:
 validators:
   - "node --strip-types tests/cli/plan3-dashboard-ticket-observations.test.ts"
   - "node atm.mjs broker replay dashboard --json"
+  - "npm run typecheck"
   - "git diff --check"
 errorCodes:
   - "ATM_BROKER_REPLAY_DOGFOOD_BLOCKED"
@@ -61,6 +62,7 @@ never implementation control flow.
 - [ ] ATM-GOV-0237 and 0238 both retain `dashboard-view-model.ts` as a declared shared implementation surface; neither lane narrows scope to avoid arbitration.
 - [ ] The lane declares atom/content-anchor/bounded-range intent for its ticket-observation region and emits a patch/mutation proposal from a non-Git bounded proposal tree; it never directly writes the shared file.
 - [ ] Ticket observations are derived from canonical ticket/events and expose generation, digest, queue position, waitedMs, and release condition without queue mutation.
+- [ ] This card's declared validator set participates in validation of the exact shared candidate output before steward apply; a passing private test or serializability proof cannot independently authorize the shared write.
 - [ ] Dogfood evidence records actor/PID, canonical root/base/HEAD, intent digest, ticket state, adapter decision, compose batch membership, serializability proof, steward apply, shared-commit member attribution, and close-packet digest.
 - [ ] In the safe-compose cell, 0237 and 0238 are selected in one mutation batch and may legitimately record `waitedMs = 0`; any queue decision based only on the shared file path fails acceptance.
 - [ ] No implementation control flow special-cases ATM-GOV-0237, Codex, actor id, date, or local path.

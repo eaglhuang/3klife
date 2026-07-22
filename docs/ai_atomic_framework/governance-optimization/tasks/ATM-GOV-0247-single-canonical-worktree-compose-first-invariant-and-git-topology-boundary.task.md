@@ -16,27 +16,63 @@ scopePaths:
   - .atm/charter/atomic-charter.md
   - .atm/charter/charter-invariants.json
   - .atm/charter/atm-first-principles.md
+  - .atm/memory/atm-chart.md
   - docs/governance/parallel-governance-charter.md
   - packages/core/src/broker/workspace-topology-policy.ts
+  - packages/core/src/broker/index.ts
+  - packages/cli/src/commands/framework-development/closure-packet-schema/implementation.ts
+  - scripts/build-root-drop-release.ts
+  - scripts/build-package-dist.ts
   - templates/skills/atm-dispatch.skill.md
+  - templates/root-drop/.atm/charter/atomic-charter.template.md
+  - templates/root-drop/.atm/charter/atm-first-principles.template.md
+  - templates/root-drop/.atm/charter/charter-invariants.template.json
   - fixtures/charter/default-charter.json
-  - integrations/**/atm-dispatch/**
-  - .agents/skills/atm-dispatch/SKILL.md
-  - .claude/skills/atm-dispatch/SKILL.md
-  - .cursor/rules/skills/atm-dispatch/SKILL.md
-  - .gemini/commands/atm-dispatch.toml
-  - .github/instructions/atm-dispatch.instructions.md
+  - .atm/integrations/**
+  - .agents/skills/**
+  - .claude/skills/**
+  - .cursor/rules/skills/**
+  - .gemini/commands/**
+  - .github/instructions/**
+  - .github/prompts/**
+  - integrations/codex-skills/**
+  - GEMINI.md
   - tests/core/workspace-topology-policy.test.ts
+  - tests/cli/root-drop-release-source-list.test.ts
+  - tests/schema-fixtures/positive/integration-install-manifest.json
 deliverables:
   - .atm/charter/atomic-charter.md
   - .atm/charter/charter-invariants.json
   - .atm/charter/atm-first-principles.md
+  - .atm/memory/atm-chart.md
   - docs/governance/parallel-governance-charter.md
   - packages/core/src/broker/workspace-topology-policy.ts
+  - packages/core/src/broker/index.ts
+  - packages/cli/src/commands/framework-development/closure-packet-schema/implementation.ts
+  - scripts/build-root-drop-release.ts
+  - scripts/build-package-dist.ts
   - templates/skills/atm-dispatch.skill.md
+  - templates/root-drop/.atm/charter/atomic-charter.template.md
+  - templates/root-drop/.atm/charter/atm-first-principles.template.md
+  - templates/root-drop/.atm/charter/charter-invariants.template.json
+  - fixtures/charter/default-charter.json
+  - .atm/integrations/**
+  - .agents/skills/**
+  - .claude/skills/**
+  - .cursor/rules/skills/**
+  - .gemini/commands/**
+  - .github/instructions/**
+  - .github/prompts/**
+  - integrations/codex-skills/**
+  - GEMINI.md
   - tests/core/workspace-topology-policy.test.ts
+  - tests/cli/root-drop-release-source-list.test.ts
+  - tests/schema-fixtures/positive/integration-install-manifest.json
 validators:
   - node --strip-types tests/core/workspace-topology-policy.test.ts
+  - npm run validate:integration-adapter
+  - npm run validate:root-drop-release
+  - npm run validate:onefile-release
   - node atm.mjs integration verify codex --json
   - node atm.mjs integration verify claude-code --json
   - node atm.mjs integration verify cursor --json
@@ -80,6 +116,7 @@ dispatch/admission surfaces, not repeated path-specific conditionals.
 ## Acceptance
 
 - [ ] `INV-ATM-008` remains the ticket-not-refusal rule and is not overloaded. New `INV-ATM-010` separately defines the single-canonical-worktree and logical-intent execution substrate.
+- [ ] The charter cross-references the dependency without merging authorities: `INV-ATM-010` supplies the canonical execution substrate on which `INV-ATM-008` shared-write arbitration operates; weakening either invariant requires reviewers to evaluate the paired consequence.
 - [ ] The invariant states that same physical-file overlap is compose-eligible. Atom/CID/content-anchor/source-range intent, format adapters, transactional composer, and neutral steward decide compose, revalidation, escalation, or queue.
 - [ ] Normal AI development cannot use a Git branch, detached worktree, alternate index, merge, or rebase as an ATM concurrency/isolation mechanism. Git remains allowed only through the outer shared-delivery adapter after steward apply.
 - [ ] The exception enum is closed and receipt-backed: emergency/anomaly recovery, historical read-only discrimination, and non-development sealed packaging. Unknown reasons fail closed; no caller-provided free-form waiver is accepted.
@@ -87,7 +124,10 @@ dispatch/admission surfaces, not repeated path-specific conditionals.
 - [ ] The shared-file writer role is `neutral-steward`; workers may create bounded proposals but cannot directly apply to the canonical shared file.
 - [ ] A short English comment at the pure policy decision boundary explains why physical path equality is not a conflict decision and why Git topology is outside broker arbitration.
 - [ ] The source dispatch template is updated and all installed adapters are regenerated/verified so later captains receive the rule without copying policy logic into each adapter.
+- [ ] The canonical Codex integration golden manifest is refreshed from the regenerated skill bytes; adapter parity cannot pass against a stale pre-INV-010 digest.
 - [ ] Focused tests cover same-root safe compose, different-root normal development rejection, every closed exception, unknown exception rejection, worker direct-write rejection, and steward/shared-delivery acceptance.
+- [ ] Root-drop runner parity is content-sealed in the release manifest. Copy/extraction timestamp order cannot create false stale-runner failures, while any sealed runner-affecting source mutation still fails closed.
+- [ ] Sealed incremental builds guarantee every package declaration entrypoint after dist assembly; a cache hit without hydrated `.types` output cannot create a root-drop package-dist false failure.
 
 ## Evidence and rollback
 

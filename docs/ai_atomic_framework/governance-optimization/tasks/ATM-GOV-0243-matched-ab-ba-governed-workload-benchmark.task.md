@@ -62,9 +62,13 @@ matched AB/BA on the same sealed base, configuration, runner digest, and build.
 
 - [ ] Queue-only and compose-first arms use identical same-file/bounded-intent workload manifests; only policy mode and AB/BA execution order differ. Neither arm may remove the declared intersection or use a different worktree.
 - [ ] Queue-only is produced by the policy CLI trip/reset path, not by another build or a label.
+- [ ] Queue-only and compose-first execute the same workload adapter and the same compose/steward/shared-delivery implementation; the policy trip is the only behavioral switch and a locked call-path digest proves neither arm selects an alternate serial implementation.
 - [ ] The compose-first arm records both proposals in one mutation batch, serializability proof, steward-only apply, one shared commit, and complete member attribution; path-only locking or detached-worktree isolation invalidates the cell.
+- [ ] Both arms run the same sealed semantic validator union against the exact candidate/output they intend to deliver. A failed, unavailable, inconclusive, stale, or digest-mismatched validation invalidates the cell and contributes no performance sample.
+- [ ] The benchmark includes the locked serializable-but-semantically-broken negative control and proves it is rejected before canonical write in both policy modes; performance cannot be measured by bypassing correctness.
 - [ ] AB and BA each have at least three valid repeats per accepted comparison cell.
 - [ ] Makespan, active throughput, production cost, compose admission rate, steward apply latency, shared-commit count, correctness, queue residency, and starvation derive from the same command/event receipts.
+- [ ] Timing is split into proposal generation, proposal validation, compose planning, steward apply, and shared commit. Report proposal/validation overlap separately from the serialized steward tail; no claim may describe physical canonical writes as parallel.
 - [ ] Arm-specific delay constants, fixed cost ratios, cosmetic scale/contention fields, and prefilled zero counters cannot influence the verdict.
 - [ ] Provider, task id, arm name, or scenario label cannot select delays, costs, success paths, or other result-shaping control flow (`INV-ATM-009`).
 - [ ] Missing pairs, receipt loss, build drift, or insufficient samples return `inconclusive`.

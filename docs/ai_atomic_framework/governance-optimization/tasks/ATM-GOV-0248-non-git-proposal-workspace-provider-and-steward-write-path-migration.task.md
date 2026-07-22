@@ -23,6 +23,8 @@ scopePaths:
   - tests/cli/team-shadow-workspace.test.ts
   - tests/cli/team-plan-contract.test.ts
   - tests/cli/team-contribution-composer.test.ts
+  - scripts/validate-worktree-callsite-census.ts
+  - tests/cli/worktree-callsite-census.test.ts
 deliverables:
   - packages/cli/src/commands/team/proposal-workspace.ts
   - packages/cli/src/commands/team/shadow-workspace.ts
@@ -31,11 +33,14 @@ deliverables:
   - packages/cli/src/commands/team-wave.ts
   - tests/cli/team-proposal-workspace.test.ts
   - tests/cli/team-plan-contract.test.ts
+  - scripts/validate-worktree-callsite-census.ts
+  - tests/cli/worktree-callsite-census.test.ts
 validators:
   - node --strip-types tests/cli/team-proposal-workspace.test.ts
   - node --strip-types tests/cli/team-shadow-workspace.test.ts
   - node --strip-types tests/cli/team-plan-contract.test.ts
   - node --strip-types tests/cli/team-contribution-composer.test.ts
+  - node --strip-types tests/cli/worktree-callsite-census.test.ts
   - npm run typecheck
 errorCodes: []
 createdByCommand: atm plan card create
@@ -79,6 +84,8 @@ must no longer invoke Git or expose detached-worktree semantics.
 - [ ] Short English comments explain the base-tree immutability boundary, proposal-only worker contract, and why canonical writes are delegated to the steward.
 - [ ] Focused tests prove two same-file disjoint mutations compose from one immutable base, a true overlapping mutation is queued/revalidated, stale base is rejected, undeclared file access fails closed, and no Git topology command is spawned.
 - [ ] Scheduler and Team plan output use provider capabilities/data, not provider/task/path hardcoding; unknown provider versions fail closed and trip queue-only.
+- [ ] A source-wide call-site census classifies every production `git worktree add` invocation through a closed enum: emergency/anomaly recovery, historical read-only discrimination, or non-development sealed packaging. Each surviving call requires a named receipt contract; unclassified production call sites fail validation. Test/fixture strings are reported separately and cannot whitelist production code.
+- [ ] The provider migration cannot close on source-only tests. One card-defined behavior projection must pass through source and frozen `node atm.mjs` with matching canonical digest and a runner-sync/build receipt. A shared frozen build may satisfy multiple cards, but this card retains its own attributable parity receipt.
 
 ## Evidence and rollback
 

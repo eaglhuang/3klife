@@ -60,6 +60,7 @@ and passing-digest reset through command-backed evidence.
 - [ ] ATM-BUG-213 through 218 and 219 through 221 each have a canonical terminal disposition with evidence or a named owner card and non-blocking rationale.
 - [ ] ATM-BUG-222 remains fixed and ATM-BUG-223 remains resolved under focused regressions.
 - [ ] Source, frozen onefile, package dist, and release/adopter projections produce equivalent closure observations.
+- [ ] The aggregate parity matrix verifies every safety/governance runtime card's pre-existing attributable parity receipt and shared build lineage; it cannot retroactively convert a source-only closed card into valid completion.
 - [ ] Rollback drill restores the prior safe state without direct runtime JSON edits and is exactly-once on retry.
 - [ ] Healthy replay records zero unexpected trips and zero queue-only residency; injected failure trips queue-only and reset requires a newer passing digest.
 - [ ] Open blockers are discovered from canonical backlog state, not supplied as an empty caller list.

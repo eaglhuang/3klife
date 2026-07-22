@@ -9,6 +9,10 @@ depends_on:
   - ATM-GOV-0240
   - ATM-GOV-0241
   - ATM-GOV-0248
+  - ATM-GOV-0249
+  - ATM-GOV-0250
+  - ATM-GOV-0254
+  - ATM-GOV-0252
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -65,8 +69,11 @@ producer-owned success labels.
 ## Acceptance
 
 - [ ] A pre-run manifest seals run id, participant cards, provider/role scenario data, runtime-assigned actors, PID/process expectations, canonical worktree root, base/HEAD/build/runner digests, non-Git bounded proposal roots, declared shared physical file plus each logical intent digest, private outputs, thresholds, time window, and stop rule.
+- [ ] The manifest also seals validator-policy/union and selection-input digests before either producer can read the locked semantic-break payload. Negative-control reveal is a separately timestamped event, and any later validator-union mutation invalidates readiness.
 - [ ] Provider and task bindings are data only; dashboard and harness contain no Codex-, Claude-, actor-, task-, date-, or local-path-specific control-flow branches.
 - [ ] Dashboard shows canonical claim/close state, actor/PID, active overlap and ratio, canonical root/base/HEAD, shared physical file and logical intents, ticket state/generation/digest, adapter decision, selected/queued request ids, compose batch, serializability proof, steward before/after digests, shared-commit attribution, queue position, `waitedMs`, wakeup, faults/correctness, throughput/cost, source availability, and stop condition.
+- [ ] Dashboard shows candidate-output digest, sealed validator selection and source, command-backed validator runs, runner/build digest, and semantic `pass`/`fail`/`inconclusive`; this view is observational and grants no write authority.
+- [ ] Dashboard shows each closure-critical acceptance predicate, required/observed realness, authoritative-source availability, verifier mode, negative-control result, and `pass`/`fail`/`inconclusive` without allowing display state to become the authority.
 - [ ] `ready` requires two different actors and OS processes on one sealed canonical worktree/base/HEAD/build, non-Git proposal roots, a non-empty same-file intersection, and distinct bounded logical intents; separate Git worktrees/branches/indexes, missing evidence, contradictory digests, or `not-required` returns `not-ready`.
 - [ ] The view distinguishes the primary safe-compose cell from the true-conflict/stale fallback cell: zero queue residency is valid only for the former, while a queued fallback requires positive event-derived wait and automatic wakeup.
 - [ ] JSON and human-readable views share the same compact digest and can be refreshed live or reconstructed post-run from canonical sources.
