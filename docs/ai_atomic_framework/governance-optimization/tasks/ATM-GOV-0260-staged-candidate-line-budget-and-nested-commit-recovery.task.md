@@ -94,6 +94,16 @@ should not need to inspect `.atm/runtime/git-commit-attempts/**` manually to
 discover the true root cause, and exact recurring codes must be registered in
 the error-code registry.
 
+2026-07-23 escalation: the Gemini 0258 owner attempted the planned
+source-first WIP park route with `node atm.dev.mjs tasks release --wip-commit`.
+The source runner recognized the new release option, but the inner Git
+pre-commit hook still invoked the frozen `node atm.mjs hook pre-commit`, whose
+older hook implementation did not recognize `ATM_COMMIT_WIP=1`; the WIP park
+therefore failed again with nested `ATM_TOUCHED_PHYSICAL_LINE_BUDGET_BLOCKED`.
+This proves 0260 must cover both the explicit governed commit command and the
+hook pre-commit path. Source-first recovery is not complete if a frozen hook can
+reapply the stale line-budget policy during the inner commit.
+
 ## Acceptance
 
 - [ ] Governed commit line-budget calculation is based on the staged commit
@@ -126,6 +136,15 @@ the error-code registry.
 - [ ] `ATM-GOV-0258` can retry its existing minimal delivery commit after this
   card lands, without cleaning Cursor 0257 WIP or unrelated runner-sync receipt
   residue first.
+- [ ] Source-first WIP recovery cannot be re-blocked by a stale frozen
+  pre-commit hook: when `tasks release --wip-commit` or `git commit --wip`
+  sets `ATM_COMMIT_WIP=1`, the hook path either honors the WIP bypass policy or
+  delegates to the same candidate-scoped line-budget policy used by governed
+  commit.
+- [ ] The replay includes the frozen-hook self-hosting deadlock: `atm.dev.mjs`
+  starts the recovery command, inner Git invokes `atm.mjs hook pre-commit`, and
+  the result no longer fails merely because the hook inspected whole-worktree
+  dirty lines instead of the WIP/candidate commit set.
 - [ ] Plan 3.1 final verdict cannot claim autonomous high-coupling parallel
   development until this replay has command-backed evidence.
 
