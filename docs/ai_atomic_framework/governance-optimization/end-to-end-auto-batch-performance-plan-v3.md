@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-22T14:10:00+08:00
+updated_at: 2026-07-23T00:55:00+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -71,6 +71,20 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 - 讓 backlog、task/event/evidence ledger 與 close transaction 本身先具備可重建、不可靜默刪除、可重試且 exactly-once 的證據基礎，避免用有 race 或假失敗的治理層驗證平行治理。
 
 ## 任務圖與執行順序
+
+
+
+### Plan 3.1 commit-candidate isolation clarification (2026-07-23)
+
+Pathspec-based precise commit is not an ATM core capability. It is a useful Git adapter primitive and an emergency repair technique, but ATM must not depend on Git's index or pathspec semantics as its concurrency model.
+
+Plan 3.1 final verification therefore gains a hard dependency on `ATM-GOV-0261`:
+
+- ATM core must own a VCS-neutral commit-candidate envelope with actor, task/lane, base seal, allowed resource keys, candidate payload digests, evidence refs, validation plan, and adapter target.
+- The shared-write broker/steward must admit, queue, compose, revalidate, or reject commit candidates before any repository adapter writes.
+- The local Git adapter may use pathspec/`--only` only after ATM has admitted the candidate; adapter evidence must prove the persisted commit contains exactly the admitted candidate plus allowed provenance.
+- Direct native pathspec or `--no-verify` commits remain emergency/anomaly repair evidence and must not count as autonomous parallel-delivery success.
+- The final Plan 3.1 verdict must report normal candidate count, Git-adapter pathspec count, emergency pathspec count, false-block count, and unrelated-index-residue isolation count. If normal delivery still requires direct native pathspec, Plan 3.1 fails and the gap rolls into Plan 3.2.
 
 ## Plan 3.1 證據可信度與 compose-first 修復補充（2026-07-22）
 

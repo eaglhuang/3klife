@@ -96,3 +96,14 @@ This card turns the Plan 3.1 ATM-GOV-0255 and ATM-GOV-0257/0256 dogfood failure 
 - [ ] Final metrics include dirty-release attempts, governed non-delivery WIP commits, WIP validator bypasses, discard receipts, recovered overlapping claims, ownerless WIP blockers, manual intervention count, and false-block count.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-22T11:59:42.456Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0258-broker-managed-transactional-stage-commit-queue.task.md","contentDigest":"sha256:2fb40b623e0ad4b071a1c9f2459f540512c7aaa7859d028a890ba4c875631d1a"} -->
+
+
+## 2026-07-23 architecture boundary update
+
+Do not interpret this card as making Git pathspec or the Git index ATM's core isolation model. This card owns the local Git adapter queue/steward behavior that can persist an already-admitted payload. `ATM-GOV-0261` owns the VCS-neutral commit-candidate abstraction that must exist before Plan 3.1 can claim autonomous high-coupling parallel delivery.
+
+Acceptance for this card is therefore adapter-bound:
+
+- Git pathspec / `--only` may appear only as a Git adapter implementation detail after an ATM broker/steward admission decision.
+- Direct native pathspec commits are emergency repair evidence only and must not count as normal success for this card or the Plan 3.1 final verdict.
+- If this card can only pass by instructing agents to manually run native pathspec commits, it is not complete; the gap belongs to `ATM-GOV-0261` / Plan 3.2.
