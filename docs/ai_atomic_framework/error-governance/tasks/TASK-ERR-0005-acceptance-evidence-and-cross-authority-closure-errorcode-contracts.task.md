@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0005
 title: Acceptance evidence and cross-authority closure ErrorCode contracts
-status: planned
+status: done
 owner: atm-error-governance
 priority: P0
 milestone: ATM-3.1-R0
@@ -50,6 +50,15 @@ atomizationImpact:
       disposition: inline
       inlineReason: "This file is generated from the registry and must not be manually extracted or edited as an independent authority."
 createdByCommand: atm plan card create
+completed_at: "2026-07-22T08:46:41.104Z"
+completed_by_agent: "codex-plan31-captain-2"
+closedAt: "2026-07-22T08:46:41.104Z"
+closedByActor: "codex-plan31-captain-2"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-22T08-46-41-104Z-close-6810e37abdd2"
+lastTransitionAt: "2026-07-22T08:46:41.104Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2cb296da9f3b95bb71b62b03035e105d582e82a7"
 ---
 
 # TASK-ERR-0005 Acceptance evidence and cross-authority closure ErrorCode contracts

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-22T08-46-41-104Z-close-6810e37abdd2",
+  "taskId": "TASK-ERR-0005",
+  "action": "close",
+  "actorId": "codex-plan31-captain-2",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0005-acceptance-evidence-and-cross-authority-closure-errorcode-contracts.task.md",
+  "taskSha256": "sha256:5f98e53661aef268e49b1db56bf51ef6f7b3a9338d71bf3ee9076641f0a7c995",
+  "createdAt": "2026-07-22T08:46:41.104Z",
+  "command": "node atm.mjs tasks close --task TASK-ERR-0005 --actor codex-plan31-captain-2"
+}
