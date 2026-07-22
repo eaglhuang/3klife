@@ -7,8 +7,7 @@ priority: P0
 milestone: ATM-3.1-R0.12
 severity: P0
 depends_on:
-  - ATM-GOV-0258
-  - ATM-GOV-0259
+  - ATM-GOV-0255
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -84,6 +83,11 @@ correctly staged, in-scope delivery candidate from entering the governed commit
 queue. Whole-worktree dirty state may remain advisory or trigger separate
 foreign-WIP gates, but the physical line budget that decides whether this
 commit is too large must be based on the commit candidate being submitted.
+
+Dependency note: `ATM-GOV-0260` is intentionally not blocked by `ATM-GOV-0258`
+or `ATM-GOV-0259`. It exists to unblock the 0258 retry path and to provide
+evidence later consumed by 0259 / the Plan 3.1 final verdict. Treat 0258 and
+0259 as replay/verification context, not claim-admission prerequisites.
 
 This card also makes nested commit failures operator-actionable. A captain
 should not need to inspect `.atm/runtime/git-commit-attempts/**` manually to
