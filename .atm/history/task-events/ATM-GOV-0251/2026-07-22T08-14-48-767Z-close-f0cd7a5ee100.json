@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-22T08-14-48-767Z-close-f0cd7a5ee100",
+  "taskId": "ATM-GOV-0251",
+  "action": "close",
+  "actorId": "codex-plan31-captain-2",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0251-acceptance-evidence-predicates-and-realness-taxonomy.task.md",
+  "taskSha256": "sha256:9ab0fc853b4ed8a5b9e9f1be2fce97a138c433ad740e0c8e693f30fe0940a295",
+  "createdAt": "2026-07-22T08:14:48.767Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0251 --actor codex-plan31-captain-2"
+}
