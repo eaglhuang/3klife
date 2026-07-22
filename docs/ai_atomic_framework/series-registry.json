@@ -1,6 +1,6 @@
 {
   "schemaId": "atm.seriesRegistry.v1",
-  "generatedAt": "2026-07-21T01:19:37.788Z",
+  "generatedAt": "2026-07-22T17:00:20.315Z",
   "baseDir": ".",
   "series": [
     {
@@ -42,6 +42,26 @@
         "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
         "relativePath": "series-registry.json",
         "contentDigest": "sha256:8cbf6062565621082e694718a45a6608fc174563e64450e135874acfe2b759c1"
+      }
+    },
+    {
+      "series": "SKL",
+      "prefix": "TASK-SKL",
+      "familyDir": "skl-tool-first-upgrade",
+      "planDocs": [
+        "skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md"
+      ],
+      "status": "active",
+      "approvedBy": "owner",
+      "approvedAt": "2026-07-22T17:00:20.314Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-07-22T17:00:20.315Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:84502932d3902f5ac4ad4547ebc388800f961347a20273659fb054a5cf8b6b69"
       }
     },
     {

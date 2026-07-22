@@ -130,3 +130,6 @@ The final Plan3.1 report must include a table separating:
 | Direct native pathspec / --no-verify emergency | no | emergency receipt/trailer + backlog link |
 
 If the only way to complete overlapping task delivery is still direct native pathspec, Plan3.1 must fail the autonomous high-coupling parallel-development claim and open Plan3.2 follow-up work.
+
+
+2026-07-23 follow-up: `TASK-SKL-0017` owns the temporary Git pathspec emergency commit repair skill. This task still owns the normal VCS-neutral product path; SKL-0017 usage is anomaly evidence and must not satisfy normal acceptance here.
