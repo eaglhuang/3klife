@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-22T09-41-36-517Z-close-64503176662c",
+  "taskId": "ATM-GOV-0249",
+  "action": "close",
+  "actorId": "codex-plan31-captain-2",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0249-transactional-compose-output-and-single-write-steward-apply.task.md",
+  "taskSha256": "sha256:57b5be2886fa5828a9fac7bcc47a9792d7cf98fe6050687696f158bd90e94dc8",
+  "createdAt": "2026-07-22T09:41:36.517Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0249 --actor codex-plan31-captain-2"
+}

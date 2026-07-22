@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0249
 title: Transactional compose output and single-write steward apply
-status: planned
+status: done
 owner: atm-broker
 priority: P0
 milestone: ATM-3.1-R0
@@ -46,6 +46,15 @@ atomizationImpact:
       pattern: Transactional Apply
       source: packages/core/src/broker/steward-transactional-apply.ts
       disposition: extract
+completed_at: "2026-07-22T09:41:36.517Z"
+completed_by_agent: "codex-plan31-captain-2"
+closedAt: "2026-07-22T09:41:36.517Z"
+closedByActor: "codex-plan31-captain-2"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-22T09-41-36-517Z-close-64503176662c"
+lastTransitionAt: "2026-07-22T09:41:36.517Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "18cdc6076cb10be7d0fa156056aee60dff70a7c0"
 ---
 
 # ATM-GOV-0249 Transactional compose output and single-write steward apply
