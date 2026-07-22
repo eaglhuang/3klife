@@ -82,6 +82,8 @@ Plan 3.1 不是另一套產品或任務模型，而是 Plan 3.0 的後續驗收�
 
 跨隊長實作請以 [Plan 3.1 Captain Handoff](ATM-GOV-3.1-captain-handoff-2026-07-22.md) 的 dependency-gated dispatch waves 為操作入口；該 handoff 只投影本計畫與 source cards 的依賴，不另建 task lifecycle 或 closure authority。
 
+2026-07-22 dogfood 仲裁新增 `ATM-BUG-2026-07-22-229`：`tasks release` 不得在任務仍有 in-scope source dirty WIP 時把 claim 釋放成 ownerless 工作區狀態。Plan 3.1 不採用 stash 或 temp worktree 作為主路徑；MVP 收斂為 fail-close recovery：完成並 close、broker-managed governed WIP commit 後 release、或明確 discard receipt 後 release。`ATM-GOV-0258` 必須把此 recovery 納入 transactional commit queue 驗收；`ATM-GOV-0245` 在 229 仍無 command-backed 證據前不得給出 global close verdict。
+
 2026-07-22 codebase 對帳確認，`WriteIntent` 已能攜帶 atom、content anchor 與 source range；同一物理檔案會先由 proposal overlap、format adapter、mutation batch planner 與 transactional composer 判斷是否可交換／可序列化。可合併的同檔案 proposals 進入同一 compose batch，由 neutral steward 一次落到 canonical worktree 並以 shared delivery receipt 歸屬給所有成員；只有真正的 CID／anchor／range 衝突、stale base／CAS、無法解析的格式或 fairness bound 才退回 revalidation、steward escalation 或 queue。因此「同檔案必然 queue」不是 Plan 3.1 的前提，也不能成為驗收答案。
 
 本補充新增四個架構判準：刻意保留交集卻得到 `not-required` 屬於 `INV-ATM-008`；控制流程硬編碼 actor、task、path、日期、delay 或 cost 屬於 `INV-ATM-009`；正常平行開發以單一 canonical worktree 與邏輯 intent 隔離為基底、不得以 Git branch/worktree 當並行治理機制，另立 `INV-ATM-010`；evidence producer 與 closure oracle 必須分離，最終 verdict 從 canonical sources 重建，禁止呼叫端注入健康值。`INV-ATM-010` 新增而不併入 008，因 008 定義仲裁結果，010 定義仲裁成立所需的執行基底，兩者必須保持低耦合。
@@ -170,7 +172,7 @@ flowchart TD
 | R0H | `ATM-GOV-0255` | 0227、0233、0247 | 使 `team broker resolve` 產生的 BCR 與 claim admission 消費的 authority/ticket contract 完全一致，並以命令到重試的紅綠證據證明可解凍。 |
 | R0I | `ATM-GOV-0256` | 0230、0231 | 將 runner-sync ticket、cache key、receipt 與 release 綁定同一 immutable source snapshot；禁止舊 HEAD cache hit 偽裝完成新 source sync。 |
 | R0J | `ATM-GOV-0257` | 0231 | 保持 Captain actor 在 next／claim／Broker／runner-sync／closeout 的 authority continuity；legacy editor identity 只能作 provenance，不能靜默換人。 |
-| R0K | `ATM-GOV-0258` | 0231、0249、0250、0256、0257 | 建立 broker-managed transactional stage/commit queue；多 actor 只提交 scoped commit request，由 ATM 排序、stage、commit、清 index 並回傳證據，post-close release artifacts 與 backlog/projection commit 不再靠人類逐步指導。 |
+| R0K | `ATM-GOV-0258` | 0231、0249、0250、0256、0257；closes `ATM-BUG-2026-07-22-228`、`ATM-BUG-2026-07-22-229` | 建立 broker-managed transactional stage/commit queue；多 actor 只提交 scoped commit request，由 ATM 排序、stage、commit、清 index 並回傳證據；post-close release artifacts、backlog/projection commit，以及 dirty-release WIP commit/discard recovery 不再靠人類逐步指導。 |
 | R1 | `ATM-GOV-0239` | 0234、0235、0247、0251、0255 | 修正 closure truth gate；候選卡、receipt 形狀或把同檔案直接序列化都不得 ready-to-close。 |
 | R1.5 | `ATM-GOV-0252` | 0239、0251、ERR-0005 | 將 acceptance predicates 接到 closure packet/pre-close；per-card 支援兩種 verifier，Plan-global 強制 pre-sealed locked-policy。 |
 | R1.6 | `ATM-GOV-0253` | 0252、ERR-0005 | 以 durable two-phase saga 收束 target/planning authority；local commit、remote visibility 與 exactly-once reconcile 由 authority manifest 決定，未完成只能 closeback-pending。 |
