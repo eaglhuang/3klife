@@ -15,6 +15,7 @@ depends_on:
   - ATM-GOV-0256
   - ATM-GOV-0257
   - ATM-GOV-0258
+  - ATM-GOV-0259
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -90,6 +91,7 @@ are untrusted input until reconstructed from canonical sources.
 - [ ] Global close is rejected while any Plan 3.1 dogfood task can release with in-scope source dirty WIP that becomes ownerless, or while `ATM_CLAIM_FOREIGN_UNSTAGED_WIP` lacks a deterministic recoveryCommand for the next overlapping claim.
 - [ ] Global close treats non-delivery WIP commits as preservation evidence only: they prove interrupted work was saved and attributed, but they cannot count as task delivery, semantic validation, release artifact publication, or closeout evidence.
 - [ ] The verdict consumes `ATM-GOV-0258` evidence for broker-managed transactional stage/commit isolation and `ATM-BUG-2026-07-22-229` dirty-release recovery: queue ordering, request-owned staging, zero cross-actor staged-file leakage, post-close release artifact commit automation, runner receipt disposition, and manual captain intervention count.
+- [ ] The verdict consumes `ATM-GOV-0259` write-ticket/editor guard evidence: pre-write scope checks, amendment-required routing, unattached-WIP recording, true violation escalation, generated editor adapter instructions for Codex/Claude/Cursor/Gemini/Antigravity, and replay of the Antigravity/Gemini 3.6 out-of-scope counterexample.
 - [ ] Plan status advances only after this verdict passes. Historical 0234/0235 records remain terminal and immutable; continuation evidence and the 0253 closeback saga carry the new closure truth. Remote SHA parity is checked after push by the implementing captain.
 
 ## Evidence and rollback
