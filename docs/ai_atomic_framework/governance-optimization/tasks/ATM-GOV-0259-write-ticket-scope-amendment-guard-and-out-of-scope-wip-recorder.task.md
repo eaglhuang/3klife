@@ -16,6 +16,8 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: "GOV owns Plan 3.1 shared-write governance and editor/agent safety. This card extends the existing task scope, broker ticket, integration adapter, and dirty-WIP admission model instead of creating a parallel permission system."
 scopePaths:
+  - packages/cli/src/atm.ts
+  - packages/cli/src/commands/command-specs.ts
   - packages/cli/src/commands/write-ticket.ts
   - packages/cli/src/commands/command-specs/write-ticket.spec.ts
   - packages/cli/src/commands/tasks/scope-amendment.ts
@@ -26,6 +28,9 @@ scopePaths:
   - packages/cli/src/commands/git-index-ownership.ts
   - packages/core/src/broker/write-ticket.ts
   - packages/core/src/broker/write-scope-policy.ts
+  - docs/governance/error-code-registry.json
+  - templates/skills/atm-governance-router.skill.md
+  - packages/cli/src/commands/integration/bootstrap.ts
   - integrations/codex-skills/atm-governance-router/SKILL.md
   - .claude/skills/atm-governance-router/SKILL.md
   - .cursor/rules/skills/atm-governance-router/SKILL.md
@@ -34,17 +39,27 @@ scopePaths:
   - tests/cli/write-ticket-scope-guard.test.ts
   - tests/cli/write-ticket-scope-amendment.test.ts
   - tests/cli/out-of-scope-write-recorder.test.ts
+  - tests/cli/write-ticket-command-registration.test.ts
+  - tests/cli/write-ticket-error-code-registry.test.ts
 deliverables:
+  - packages/cli/src/atm.ts
+  - packages/cli/src/commands/command-specs.ts
   - packages/cli/src/commands/write-ticket.ts
   - packages/core/src/broker/write-ticket.ts
   - packages/core/src/broker/write-scope-policy.ts
+  - docs/governance/error-code-registry.json
+  - templates/skills/atm-governance-router.skill.md
   - tests/cli/write-ticket-scope-guard.test.ts
   - tests/cli/write-ticket-scope-amendment.test.ts
   - tests/cli/out-of-scope-write-recorder.test.ts
+  - tests/cli/write-ticket-command-registration.test.ts
+  - tests/cli/write-ticket-error-code-registry.test.ts
 validators:
   - node --strip-types tests/cli/write-ticket-scope-guard.test.ts
   - node --strip-types tests/cli/write-ticket-scope-amendment.test.ts
   - node --strip-types tests/cli/out-of-scope-write-recorder.test.ts
+  - node --strip-types tests/cli/write-ticket-command-registration.test.ts
+  - node --strip-types tests/cli/write-ticket-error-code-registry.test.ts
   - npm run validate:cli
   - npm run typecheck
 errorCodes:
@@ -100,13 +115,21 @@ post-write unattached WIP when an adapter cannot enforce the pre-write hook.
 ## Acceptance
 
 - [ ] `node atm.mjs write-ticket acquire --task <task> --actor <actor> --files <paths> --intent <intent> --json` or an equivalent command returns a ticket carrying actor id, task id, lane/session/lease when available, allowed files, scope digest, expiry, operation class, and recovery policy.
+- [ ] `write-ticket` is registered in the frozen CLI command runner, command spec registry, and help/manifest surfaces; command discovery proves the command is reachable.
+- [ ] The exact codes `ATM_WRITE_SCOPE_AMENDMENT_REQUIRED`, `ATM_WRITE_SCOPE_UNATTACHED_WIP`, `ATM_WRITE_TICKET_SCOPE_VIOLATION`, `ATM_WRITE_TICKET_MISSING`, and `ATM_WRITE_TICKET_STALE` are registered in `docs/governance/error-code-registry.json` with retryability, approval requirements, recovery command shape, source owner, and focused tests.
 - [ ] `write-ticket check` or equivalent accepts in-scope writes and rejects out-of-scope writes with `ATM_WRITE_SCOPE_AMENDMENT_REQUIRED` before the file is modified when an editor adapter can call the guard.
 - [ ] The required scope-amendment response includes a copyable `tasks scope add ... --reason ...` command and classifies the request as amendment-required rather than a violation when the worker asked before writing.
+- [ ] Scope-amendment path parsing rejects or normalizes shell quote artifacts before audit persistence; the Gemini 0258 malformed paths are replayed and cannot persist as `"path` or `path"` entries.
 - [ ] If a worker already produced out-of-scope dirty WIP, ATM classifies it as `ATM_WRITE_SCOPE_UNATTACHED_WIP`, records actor/task/lane/path/timestamp/digest evidence, blocks commit/close, and offers governed recovery choices: scope-amend-and-attach, non-delivery WIP commit, discard receipt, or split-to-new-task.
 - [ ] A true `ATM_WRITE_TICKET_SCOPE_VIOLATION` is emitted only when the worker writes or attempts to commit/close/push outside ticket scope while refusing or bypassing the amendment/unattached-WIP recovery path.
-- [ ] Commit, close, and pre-push gates consume write-ticket/touched-path evidence as a last-line defense, but editor adapters for Codex, Claude, Cursor, Gemini, and Antigravity receive generated instructions or command surfaces for pre-write ticket checks.
-- [ ] The Antigravity/Gemini 3.6 counterexample is replayed as a red/green test: wrong actor id, direct `.atm/history/**` edit attempt, and out-of-scope source writes must produce early warnings/events before commit, plus deterministic recovery commands.
+- [ ] Direct `.atm/history/**` mutation outside governed ATM lifecycle commands is detected as protected-ledger write intent before write when possible, or as protected unattached WIP immediately after detection.
+- [ ] Write-ticket acquire/check compares requested actor/lane/session with active task claim and ambient identity evidence; mismatches produce deterministic warning/block and recovery guidance.
+- [ ] Adapter guidance is updated at the source template/installer layer and regenerated for Codex, Claude, Cursor, Gemini, and Antigravity; installed copies alone do not satisfy acceptance.
+- [ ] Editor pre-write checks and post-write recorders share the same write-scope policy, so missing editor hooks degrade to `ATM_WRITE_SCOPE_UNATTACHED_WIP`, not silent pollution.
+- [ ] Commit, close, and pre-push gates consume write-ticket/touched-path evidence as a last-line defense and block delivery when unattached WIP remains unresolved.
+- [ ] The Antigravity/Gemini 3.6 counterexample is replayed as a red/green test: wrong actor id, malformed scope amendment path, direct `.atm/history/**` edit attempt, and out-of-scope source writes must produce early warnings/events before commit, plus deterministic recovery commands.
 - [ ] The system preserves flexibility for real task-card omissions: scope expansion is a normal governed path, not a punishment, and final reports distinguish amendment-required, unattached-WIP, and violation cases.
-- [ ] Final evidence reports counts for write-ticket acquisitions, pre-write blocks, scope amendments, unattached-WIP records, true violations, adapter-enforced blocks, post-write detections, and manual captain interventions.
+- [ ] Final evidence reports counts for write-ticket acquisitions, pre-write blocks, post-write detections, scope amendments, unattached-WIP records, true violations, adapter-enforced blocks, manual captain interventions, false blocks, and chosen recovery paths.
+- [ ] 0259 must not create a second permission model; write-ticket is broker/task-scope authority evidence consumed by 0258 transactional commit queue, not a replacement for it.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-22T14:47:07.432Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0259-write-ticket-scope-amendment-guard-and-out-of-scope-wip-recorder.task.md","contentDigest":"sha256:778e95e82f04bba966b823df793face06eef6b2d8a90a07472cd686bc88d1067"} -->
