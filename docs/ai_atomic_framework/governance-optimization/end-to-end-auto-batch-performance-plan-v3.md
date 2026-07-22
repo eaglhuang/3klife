@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-22T09:14:00+08:00
+updated_at: 2026-07-22T09:22:26+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -76,9 +76,11 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 
 ### 補充定位
 
-Plan 3.1 不是另一套產品或任務模型，而是 Plan 3.0 的後續驗收補充。它不重做已通過的 broker contract、legacy BCR fail-closed、runner recovery 與 validator scheduler；它專門修復「存在 receipt 就被視為已證明」的驗收漏洞。
+Plan 3.1 不是另一套產品或任務模型，而是 Plan 3.0 的後續驗收補充。它不重做已通過的 broker contract、legacy BCR fail-closed、runner recovery 與 validator scheduler；它專門修復「存在 receipt 就被視為已證明」的驗收漏洞。`ATM-GOV-0239` 至 `ATM-GOV-0246` 都沿用既有 GOV family，並明確作為 0234／0235 無效 closure 的 continuation repair lineage，不建立新的 task series 或 evidence authority。
 
 2026-07-22 重新稽核證明，現行 `ready-to-close` 只檢查兩張候選卡與 420 份 command-shaped receipts，但 dogfood worker 實際只執行 `broker decision`，claim、proposal、compose、wakeup 與 close 為自報 lifecycle label；paired matrix 則以 arm-specific sleep 預先決定結果。因此本補充正式推翻 2026-07-22 的 protected closure `done` 判定，Plan 3.0/3.1 在 `ATM-GOV-0245` 關閉前維持 `active`。
+
+本輪將缺口正式分類為三個架構問題：刻意保留交集的 dogfood 若得到 `not-required`，代表 scenario／broker evidence 未建立，屬於 `INV-ATM-008`，必須失敗；任何 arm-specific delay、固定 task id、固定 cost 或會塑造答案的控制流程屬於 `INV-ATM-009`；evidence producer、closure checker 與 final verdict 不得形成 self-attesting trust domain，最終 oracle 必須從 canonical sources 重建結果，禁止呼叫端注入健康布林值。
 
 ### 主要差異流程卡
 
@@ -88,9 +90,13 @@ flowchart TD
     B --> C["ATM-GOV-0239<br/>先讓假綠燈 fail closed"]
     C --> D["ATM-GOV-0240<br/>同一 sealed scenario：舊 runner 必紅、新 runner 才能綠"]
     C --> E["ATM-GOV-0241<br/>只接受 command/event 推導的 lifecycle 與 counters"]
-    D --> F["ATM-GOV-0242<br/>兩張真卡、兩 actor、queue ticket、自動 wakeup、真 close"]
-    E --> F
-    E --> G["ATM-GOV-0243<br/>同 base/build 的 AB/BA，queue-only 由 policy trip 產生"]
+    D --> L["ATM-GOV-0246<br/>先建立唯讀儀表與 sealed run manifest"]
+    E --> L
+    L --> CA["Codex 隊長<br/>實作 ATM-GOV-0237"]
+    L --> CL["Claude 隊長<br/>實作 ATM-GOV-0238"]
+    CA --> F["ATM-GOV-0242<br/>雙隊長、真交集、queue/wakeup、真 close"]
+    CL --> F
+    L --> G["ATM-GOV-0243<br/>同 base/build 的 AB/BA，queue-only 由 policy trip 產生"]
     F --> H["ATM-GOV-0244<br/>backlog、rollback、parity、circuit breaker 對帳"]
     G --> H
     H --> I{"ATM-GOV-0245<br/>從 sealed evidence 自動產生 verdict"}
@@ -106,6 +112,8 @@ flowchart TD
 | Performance | arm-specific sleep 與固定 cost | 同 sealed base/config/build，AB/BA 各至少 3 repeats，makespan/cost 從 command receipts 推導 |
 | Red baseline | 在 fixture 內寫入 failure shape | 舊 frozen runner 實際失敗，新 frozen runner 使用同 digest 轉綠 |
 | Final verdict | 呼叫端傳入空 backlog 與理想 boolean | verifier 自動讀取 ledger、backlog、rollback、parity、breaker 與 sealed evidence |
+| 觀測 | 跑完後拼接 receipt，執行中不可判讀 | 先封 run manifest，再由唯讀儀表同時提供 live 與 post-run canonical view |
+| 執行者 | 單一 harness 自報多個 worker | Codex 與 Claude 各用獨立 actor、OS process、worktree/index 執行一張真卡 |
 
 ### Plan 3.1 任務圖
 
@@ -114,16 +122,27 @@ flowchart TD
 | R1 | `ATM-GOV-0239` | 0234、0235 | 修正 closure truth gate；只有候選卡或 receipt 形狀不得 ready-to-close。 |
 | R2A | `ATM-GOV-0240` | 0239 | 舊/新 frozen runner 同 scenario digest 的可鑑別紅綠基線。 |
 | R2B | `ATM-GOV-0241` | 0239 | 定義事件推導 lifecycle、admission、waitedMs、wakeup、correctness counter receipt contract。 |
-| R3A | `ATM-GOV-0242` | 0240、0241 | 以 0237/0238 為真卡樣本，完成真 queue/wakeup/shared-write/close dogfood。 |
-| R3B | `ATM-GOV-0243` | 0240、0241 | 以真 ATM governance workload 完成 matched AB/BA benchmark。 |
+| R2.5 | `ATM-GOV-0246` | 0240、0241 | 建立 sealed run manifest 與唯讀 live/post-run 儀表，先讓人與機器都能判讀真實進度。 |
+| R3A | `ATM-GOV-0242` | 0240、0241、0246 | Codex 執行 0237、Claude 執行 0238，完成真 queue/wakeup/shared-write/close dogfood。 |
+| R3B | `ATM-GOV-0243` | 0240、0241、0246 | 以真 ATM governance workload完成 matched AB/BA benchmark，並將每個 paired cell 投影到儀表。 |
 | R4 | `ATM-GOV-0244` | 0242、0243 | 核銷 backlog 213–221，完成 rollback、source/frozen/release parity 與 breaker trip/reset drill。 |
 | R5 | `ATM-GOV-0245` | 0244 | 建立單一 evidence aggregator，由 canonical 來源自動產生最終 verdict。 |
 
-0240 與 0241 可在 0239 完成後並行；0242 與 0243 可在 receipt contract 穩定後並行。兩組並行都必須使用不交叉的私有輸出；只有共享 publish 表面由 canonical broker/composer 處理。
+0240 與 0241 可在 0239 完成後並行；0246 完成且 dashboard preflight 為 ready 後，0242 與 0243 才可開始。兩組並行都必須使用不交叉的私有輸出；只有預先宣告的共享 publish 表面由 canonical broker/composer 處理。
+
+### 雙隊長真實 dogfood 執行契約
+
+- 0246 的 dashboard 與 sealed run manifest 必須先可用；任何一項 canonical source 缺失時顯示 `not-ready`，不得先 claim 再補儀表。
+- manifest 在執行前封存 run id、兩張卡、provider／role、執行時指派的 actor ids、runner/build/base digests、worktree/index/proposal roots、共享交集、各自私有輸出、時間窗、門檻與 stop rule。Codex／Claude 對應只是 scenario data，harness 不得出現 provider-specific 分支。
+- Codex 隊長負責 0237，Claude 隊長負責 0238；兩者使用不同 actor、OS process、worktree/index，但使用相同 sealed base/build，且都必須真正修改程式與完成各自 validator。
+- 兩張卡共同修改 `dashboard-view-model.ts`，同時各有私有 observation module 與 focused test；原始交集不可縮減，active ledger interval 必須重疊，且至少一方產生 canonical queue wait 與 automatic wakeup。
+- 儀表只讀 canonical task-events、tickets、command receipts 與 sealed artifacts，顯示 claim/close、PID、overlap、queue position、`waitedMs`、ticket generation/digest、wakeup、correctness、throughput/cost 與 stop condition；refresh 不得改 queue 或 runtime state。
+- 任一隊長不可用、兩個 process/worktree/index 未隔離、shared intersection 為空、ticket 為 `not-required`、人工 wakeup、scope shrink、direct `.atm` mutation、bypass 或 emergency path 時，立即 `remain-open + queue-only`。
 
 ### Plan 3.1 完成門檻
 
 - `broker replay status` 必須在現有弱證據下回 `remain-open`，且能指出缺少的 exact lifecycle/evidence class。
+- repaired checker 必須把現行 fake-green fixture（420 份 synthetic receipts、`not-required` dogfood 與 hardcoded/fixed cost input）判為 `remain-open`；這是鎖定的回歸門檻，不得更新 fixture 來配合實作。
 - 舊 frozen runner 與新 frozen runner 使用同一 scenario/assertion/threshold digest：舊版必紅，新版必綠；任一邊不成立即測試作廢。
 - 0237/0238 由不同 actor 與 OS process 在真實 ledger 留下重疊 active interval，交集全程保留，至少一方有 canonical queue wait 與 automatic wakeup，兩卡最終 close。
 - claim、ticket、proposal、compose、publish、wakeup、close 每一步都有實際 command/event receipt；純 lifecycle label 不具授權或驗收語意。
@@ -139,15 +158,15 @@ flowchart TD
 
 ## 2026-07-21 evidence repair closeback
 
-## 2026-07-22 protected closure repair closeback
+## 2026-07-22 protected closure repair closeback（歷史紀錄，已由 Plan 3.1 推翻）
 
-Plan 3.0 protected closure blockers were cleared by target repo evidence. The authoritative quick check is now:
+以下段落保留當時判定供稽核，不代表目前 closure authority。Plan 3.1 的 locked fake-green regression 必須證明這組輸入現在得到 `remain-open`；目前 authoritative quick check 仍是：
 
 ```text
 node atm.mjs broker replay status --json
 ```
 
-Expected current result:
+Historical result that must no longer pass:
 
 - `verdict: ready-to-close`
 - `blockerCount: 0`

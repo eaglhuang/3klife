@@ -59,11 +59,17 @@ state, and runner/build digests. The caller may select an evidence root but may
 not pass healthy booleans, zero counters, empty blocker lists, or synthetic
 cell counts.
 
+The aggregator is the independent closure oracle, not another projection of
+the evidence producer. Producer-owned success labels, counters, and booleans
+are untrusted input until reconstructed from canonical sources.
+
 ## Acceptance
 
 - [ ] Final verdict input is reconstructed from canonical sources and records unavailable receipts explicitly.
+- [ ] The caller can choose an evidence root/window but cannot inject `rollbackExercised`, parity, blocker lists, correctness zeros, admission labels, or any equivalent healthy assertion.
 - [ ] Any missing source, open blocker, non-terminal dogfood card, unmatched AB/BA cell, failed parity, or stale reset digest produces `remain-open` and queue-only.
 - [ ] A close verdict requires closed 0237/0238, overlapping ledger intervals, canonical queue/wakeup evidence, valid red/green discrimination, matched performance, and all 0244 closeback gates.
+- [ ] Cross-captain post-run dashboard evidence is consumed only through its canonical digests and independently reproduced observations; dashboard display labels cannot close the plan.
 - [ ] The verdict seals evidence window, watermark, runner/build/scenario digests, counters, timings, compact digest, and source availability.
 - [ ] Plan status and 0234/0235 closeback are updated only after this verdict passes; remote SHA parity is checked after push by the implementing captain.
 

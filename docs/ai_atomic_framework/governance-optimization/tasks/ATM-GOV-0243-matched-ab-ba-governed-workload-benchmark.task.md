@@ -8,6 +8,7 @@ milestone: ATM-3.1-R3
 depends_on:
   - ATM-GOV-0240
   - ATM-GOV-0241
+  - ATM-GOV-0246
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -63,7 +64,9 @@ runner digest, and build.
 - [ ] AB and BA each have at least three valid repeats per accepted comparison cell.
 - [ ] Makespan, active throughput, production cost, correctness, queue residency, and starvation derive from the same command/event receipts.
 - [ ] Arm-specific delay constants, fixed cost ratios, cosmetic scale/contention fields, and prefilled zero counters cannot influence the verdict.
+- [ ] Provider, task id, arm name, or scenario label cannot select delays, costs, success paths, or other result-shaping control flow (`INV-ATM-009`).
 - [ ] Missing pairs, receipt loss, build drift, or insufficient samples return `inconclusive`.
+- [ ] The read-only dashboard exposes every accepted/rejected paired cell and its canonical receipt digests without mutating benchmark state.
 
 ## Evidence and rollback
 

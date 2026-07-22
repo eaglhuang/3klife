@@ -4,23 +4,29 @@ title: Plan 3 real dogfood shared replay surface A
 status: planned
 owner: atm-performance
 priority: P0
-milestone: ATM-3.0-E
+milestone: ATM-3.1-R3
 severity: P0
 depends_on:
-  - ATM-GOV-0234
+  - ATM-GOV-0246
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: "GOV owns Plan 3 real dogfood evidence; this card is one of two intentionally intersecting registered candidates."
 scopePaths:
+  - "packages/cli/src/commands/broker/replay/dashboard-view-model.ts"
+  - "packages/cli/src/commands/broker/replay/dashboard-ticket-observations.ts"
+  - "tests/cli/plan3-dashboard-ticket-observations.test.ts"
   - "docs/governance/atm-3-replay-evidence.md"
   - "artifacts/generated/atm-plan3-dogfood/ATM-GOV-0237.json"
 deliverables:
+  - "packages/cli/src/commands/broker/replay/dashboard-view-model.ts"
+  - "packages/cli/src/commands/broker/replay/dashboard-ticket-observations.ts"
+  - "tests/cli/plan3-dashboard-ticket-observations.test.ts"
   - "artifacts/generated/atm-plan3-dogfood/ATM-GOV-0237.json"
 validators:
-  - "node atm.mjs broker replay dogfood --surface docs/governance/atm-3-replay-evidence.md --json"
-  - "node atm.mjs broker replay status --json"
+  - "node --strip-types tests/cli/plan3-dashboard-ticket-observations.test.ts"
+  - "node atm.mjs broker replay dashboard --json"
   - "git diff --check"
 errorCodes:
   - "ATM_BROKER_REPLAY_DOGFOOD_BLOCKED"
@@ -41,18 +47,21 @@ atomizationImpact:
 
 ## Intent
 
-Provide the first real, registered, not-yet-delivered task candidate for the
-Plan 3 runtime dogfood replay. This card intentionally shares
-`docs/governance/atm-3-replay-evidence.md` with ATM-GOV-0238 while keeping its
-own output artifact separate, so broker admission must preserve the declared
-intersection without hardcoded task ids.
+Provide the Codex-captain implementation lane for the real Plan 3.1 dogfood.
+This is real product work: add canonical ticket observations to the dashboard
+and jointly evolve `dashboard-view-model.ts`. ATM-GOV-0238 intentionally shares
+that implementation surface while each lane keeps its observation module,
+focused test, and output artifact private. Provider binding is sealed run data,
+never implementation control flow.
 
 ## Acceptance
 
-- [ ] Target ledger import records this card as planned/ready/running.
-- [ ] `broker replay dogfood` selects this card by declared intersection, not by id.
+- [ ] ATM-GOV-0246 dashboard preflight is ready before the Codex actor claims this card.
+- [ ] The Codex lane makes substantive code and test changes in its isolated OS process, worktree, and index on the sealed base/build.
+- [ ] ATM-GOV-0237 and 0238 both retain `dashboard-view-model.ts` as a declared shared implementation surface; neither lane narrows scope to avoid arbitration.
+- [ ] Ticket observations are derived from canonical ticket/events and expose generation, digest, queue position, waitedMs, and release condition without queue mutation.
 - [ ] Dogfood evidence records actor, canonical ticket state, waitedMs, wakeup,
       proposal/compose trace, and close-packet digest.
-- [ ] No implementation control flow special-cases ATM-GOV-0237.
+- [ ] No implementation control flow special-cases ATM-GOV-0237, Codex, actor id, date, or local path.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T16:07:09.691Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0237-plan-3-real-dogfood-shared-replay-surface-a.task.md","contentDigest":"sha256:cde6635e38d8a24988f7a730e4c4e06d81b8ea6278cb9f265e1a59357afa451d"} -->

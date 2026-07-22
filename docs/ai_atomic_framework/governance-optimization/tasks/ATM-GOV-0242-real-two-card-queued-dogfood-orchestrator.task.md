@@ -8,6 +8,7 @@ milestone: ATM-3.1-R3
 depends_on:
   - ATM-GOV-0240
   - ATM-GOV-0241
+  - ATM-GOV-0246
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -48,18 +49,22 @@ createdByCommand: atm plan card create
 
 ## Intent
 
-Use ATM-GOV-0237 and ATM-GOV-0238 as the two registered dogfood participants.
-Execute their real governed lifecycle with separate actor identities and OS
-processes while preserving the declared shared intersection. The orchestrator
-coordinates receipts but does not invent task transitions or lifecycle labels.
+Use ATM-GOV-0237 and ATM-GOV-0238 as the two registered dogfood participants:
+Codex captain executes 0237 and Claude captain executes 0238. Provider binding
+is sealed scenario data only; the generic orchestrator executes their real
+governed lifecycle with separate actor identities and OS processes while
+preserving the declared shared intersection. It coordinates receipts but does
+not invent task transitions or lifecycle labels.
 
 ## Acceptance
 
-- [ ] Two explicit actors and two OS processes claim the two registered cards and their active intervals overlap.
+- [ ] ATM-GOV-0246 dashboard preflight is ready and the sealed run manifest exists before either claim.
+- [ ] Codex/0237 and Claude/0238 use two explicit actors, two OS processes, separate worktrees/indexes, and the same sealed base/build; their active intervals overlap.
 - [ ] Both cards preserve the shared surface throughout the run; neither narrows scope to avoid arbitration.
 - [ ] Canonical broker tickets exist; at least one participant records positive queue wait and automatic successor wakeup.
 - [ ] Proposal, shared write, compose/publish, validation, and close execute as real commands/events in isolated worktree/index or proposal surfaces.
 - [ ] Both target ledger cards close, active authorization returns to zero, and no manual wakeup, bypass, emergency edit, or direct `.atm` mutation occurs.
+- [ ] Dashboard post-run view is retained and reconstructs the same run digest from canonical sources; provider/task ids never alter orchestration control flow.
 
 ## Evidence and rollback
 

@@ -19,12 +19,14 @@ scopePaths:
   - scripts/diagnose-plan3-evidence-closure.ts
   - tests/cli/plan3-evidence-closure-diagnostic.test.ts
   - tests/cli/broker-replay-command-surface.test.ts
+  - tests/fixtures/plan3-fake-green/**
 deliverables:
   - packages/cli/src/commands/broker/replay-actions.ts
   - packages/cli/src/commands/broker/replay/closure-policy.ts
   - packages/cli/src/commands/broker/replay/command-backed-matrix.ts
   - scripts/diagnose-plan3-evidence-closure.ts
   - tests/cli/plan3-evidence-closure-diagnostic.test.ts
+  - tests/fixtures/plan3-fake-green/current-protected-closure.json
 validators:
   - node --strip-types tests/cli/plan3-evidence-closure-diagnostic.test.ts
   - node --strip-types tests/cli/broker-replay-command-surface.test.ts
@@ -58,7 +60,9 @@ closure prerequisite.
 ## Acceptance
 
 - [ ] Current weak repository evidence returns `remain-open` with exact missing lifecycle classes.
+- [ ] A locked regression feeds the repaired checker 420 synthetic receipts, `not-required` dogfood, and hardcoded/fixed cost input from the current fake-green closure; the only accepted verdict is `remain-open`.
 - [ ] `node atm.mjs --version`, sleep-only workloads, digest-only receipts, and self-reported lifecycle labels are rejected as closure evidence.
+- [ ] Deliberate-intersection dogfood with `not-required` is classified as `INV-ATM-008`; arm-specific delay, fixed task id/cost, or result-shaping control flow is classified as `INV-ATM-009`.
 - [ ] `formula-generated-matrix-disclosed` is informational and can never convert invalid performance evidence into a passing check.
 - [ ] Status distinguishes candidate availability, executed dogfood, matched performance, rollback/parity, backlog, and final verdict.
 - [ ] No task id, actor id, local path, date, or incident string is hardcoded into control flow.

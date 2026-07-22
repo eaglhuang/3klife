@@ -56,10 +56,12 @@ create evidence semantics.
 ## Acceptance
 
 - [ ] Every accepted lifecycle step references a successful command or canonical event receipt with task, actor, generation, digest, and time window.
-- [ ] Admission is derived from canonical ticket state; caller-provided `parallel` cannot override `not-required`, missing, or contradictory decisions.
+- [ ] Every semantic receipt binds command purpose, task/card, actor, ticket generation, shared surface, digest, and time window; unrelated successful commands do not count.
+- [ ] Admission is derived from canonical ticket state; caller-provided `parallel` cannot override `not-required`, missing, or contradictory decisions. A deliberate non-empty intersection with `not-required` is scenario-invalid and fails under `INV-ATM-008`.
 - [ ] `waitedMs`, wakeup, active interval, queue residency, and starvation are derived from events.
 - [ ] Correctness counters default to unavailable/inconclusive, never zero, when required observations are absent.
 - [ ] Receipt schema is workload-neutral and rejects unrelated commands that merely match a generic command shape.
+- [ ] Producer labels are outside the trust boundary: canonical events and command receipts are the authority consumed by independent closure readers.
 
 ## Evidence and rollback
 
