@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0247
 title: Single canonical worktree compose-first invariant and Git topology boundary
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.1-R0
@@ -96,6 +96,15 @@ atomizationImpact:
       pattern: Policy Object
       source: packages/core/src/broker/workspace-topology-policy.ts
       disposition: extract
+completed_at: "2026-07-22T08:27:41.536Z"
+completed_by_agent: "codex-plan31-captain-2"
+closedAt: "2026-07-22T08:27:41.536Z"
+closedByActor: "codex-plan31-captain-2"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-22T08-27-41-536Z-close-347647cc73e6"
+lastTransitionAt: "2026-07-22T08:27:41.536Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a4bd7602316b7583464b6eb78ea3e4ff0f5d4665"
 ---
 
 # ATM-GOV-0247 Single canonical worktree compose-first invariant and Git topology boundary

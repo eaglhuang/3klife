@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-22T08-27-41-536Z-close-347647cc73e6",
+  "taskId": "ATM-GOV-0247",
+  "action": "close",
+  "actorId": "codex-plan31-captain-2",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0247-single-canonical-worktree-compose-first-invariant-and-git-topology-boundary.task.md",
+  "taskSha256": "sha256:74d67bef43163ce4e904bbcf7f59a603dff951f0f4c01110d37b28bcfdf5c5bc",
+  "createdAt": "2026-07-22T08:27:41.536Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0247 --actor codex-plan31-captain-2"
+}
