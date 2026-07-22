@@ -172,7 +172,7 @@ flowchart TD
 | R0H | `ATM-GOV-0255` | 0227、0233、0247 | 使 `team broker resolve` 產生的 BCR 與 claim admission 消費的 authority/ticket contract 完全一致，並以命令到重試的紅綠證據證明可解凍。 |
 | R0I | `ATM-GOV-0256` | 0230、0231 | 將 runner-sync ticket、cache key、receipt 與 release 綁定同一 immutable source snapshot；禁止舊 HEAD cache hit 偽裝完成新 source sync。 |
 | R0J | `ATM-GOV-0257` | 0231 | 保持 Captain actor 在 next／claim／Broker／runner-sync／closeout 的 authority continuity；legacy editor identity 只能作 provenance，不能靜默換人。 |
-| R0K | `ATM-GOV-0258` | 0231、0249、0250、0256、0257；closes `ATM-BUG-2026-07-22-228`、`ATM-BUG-2026-07-22-229` | 建立 broker-managed transactional stage/commit queue；多 actor 只提交 scoped commit request，由 ATM 排序、stage、commit、清 index 並回傳證據；post-close release artifacts、backlog/projection commit，以及 dirty-release WIP commit/discard recovery 不再靠人類逐步指導。 |
+| R0K | `ATM-GOV-0258` | 0231、0249、0250、0256、0257；closes `ATM-BUG-2026-07-22-228`、`ATM-BUG-2026-07-22-229` | 建立 broker-managed transactional stage/commit queue；多 actor 只提交 scoped commit request，由 ATM 排序、stage、commit、清 index 並回傳證據；post-close release artifacts、backlog/projection commit，以及 dirty-release non-delivery WIP commit/discard recovery 不再靠人類逐步指導。 |
 | R1 | `ATM-GOV-0239` | 0234、0235、0247、0251、0255 | 修正 closure truth gate；候選卡、receipt 形狀或把同檔案直接序列化都不得 ready-to-close。 |
 | R1.5 | `ATM-GOV-0252` | 0239、0251、ERR-0005 | 將 acceptance predicates 接到 closure packet/pre-close；per-card 支援兩種 verifier，Plan-global 強制 pre-sealed locked-policy。 |
 | R1.6 | `ATM-GOV-0253` | 0252、ERR-0005 | 以 durable two-phase saga 收束 target/planning authority；local commit、remote visibility 與 exactly-once reconcile 由 authority manifest 決定，未完成只能 closeback-pending。 |
