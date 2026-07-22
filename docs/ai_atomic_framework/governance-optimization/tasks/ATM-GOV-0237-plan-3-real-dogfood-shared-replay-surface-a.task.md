@@ -57,11 +57,12 @@ never implementation control flow.
 ## Acceptance
 
 - [ ] ATM-GOV-0246 dashboard preflight is ready before the Codex actor claims this card.
-- [ ] The Codex lane makes substantive code and test changes in its isolated OS process, worktree, and index on the sealed base/build.
+- [ ] The Codex lane makes substantive code and test changes in its own actor and OS process while sharing the sealed canonical worktree/base/HEAD with 0238; it does not create or switch a Git branch, worktree, or task-local index.
 - [ ] ATM-GOV-0237 and 0238 both retain `dashboard-view-model.ts` as a declared shared implementation surface; neither lane narrows scope to avoid arbitration.
+- [ ] The lane declares atom/content-anchor/bounded-range intent for its ticket-observation region and emits a patch/mutation proposal from a non-Git bounded proposal tree; it never directly writes the shared file.
 - [ ] Ticket observations are derived from canonical ticket/events and expose generation, digest, queue position, waitedMs, and release condition without queue mutation.
-- [ ] Dogfood evidence records actor, canonical ticket state, waitedMs, wakeup,
-      proposal/compose trace, and close-packet digest.
+- [ ] Dogfood evidence records actor/PID, canonical root/base/HEAD, intent digest, ticket state, adapter decision, compose batch membership, serializability proof, steward apply, shared-commit member attribution, and close-packet digest.
+- [ ] In the safe-compose cell, 0237 and 0238 are selected in one mutation batch and may legitimately record `waitedMs = 0`; any queue decision based only on the shared file path fails acceptance.
 - [ ] No implementation control flow special-cases ATM-GOV-0237, Codex, actor id, date, or local path.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-21T16:07:09.691Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0237-plan-3-real-dogfood-shared-replay-surface-a.task.md","contentDigest":"sha256:cde6635e38d8a24988f7a730e4c4e06d81b8ea6278cb9f265e1a59357afa451d"} -->

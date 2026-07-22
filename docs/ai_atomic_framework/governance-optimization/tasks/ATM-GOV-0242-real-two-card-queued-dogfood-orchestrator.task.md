@@ -1,6 +1,6 @@
 ---
 task_id: ATM-GOV-0242
-title: Real two-card queued dogfood orchestrator
+title: Real two-card compose-first and fallback dogfood orchestrator
 status: planned
 owner: atm-performance
 priority: P0
@@ -45,7 +45,7 @@ atomizationImpact:
 createdByCommand: atm plan card create
 ---
 
-# ATM-GOV-0242 Real two-card queued dogfood orchestrator
+# ATM-GOV-0242 Real two-card compose-first and fallback dogfood orchestrator
 
 ## Intent
 
@@ -53,24 +53,31 @@ Use ATM-GOV-0237 and ATM-GOV-0238 as the two registered dogfood participants:
 Codex captain executes 0237 and Claude captain executes 0238. Provider binding
 is sealed scenario data only; the generic orchestrator executes their real
 governed lifecycle with separate actor identities and OS processes while
-preserving the declared shared intersection. It coordinates receipts but does
+sharing one canonical worktree/base/HEAD and preserving the declared physical
+file intersection. The primary cell proves safe same-file compose-first and
+neutral-steward delivery; a separate sealed true-conflict/stale cell proves the
+queue/revalidation fallback. The orchestrator coordinates receipts but does
 not invent task transitions or lifecycle labels.
 
 ## Acceptance
 
 - [ ] ATM-GOV-0246 dashboard preflight is ready and the sealed run manifest exists before either claim.
-- [ ] Codex/0237 and Claude/0238 use two explicit actors, two OS processes, separate worktrees/indexes, and the same sealed base/build; their active intervals overlap.
-- [ ] Both cards preserve the shared surface throughout the run; neither narrows scope to avoid arbitration.
-- [ ] Canonical broker tickets exist; at least one participant records positive queue wait and automatic successor wakeup.
-- [ ] Proposal, shared write, compose/publish, validation, and close execute as real commands/events in isolated worktree/index or proposal surfaces.
+- [ ] Codex/0237 and Claude/0238 use two explicit actors and OS processes but the same canonical worktree/base/HEAD/build; their active intervals overlap, and no task lane creates or switches a Git branch, worktree, or index.
+- [ ] Both cards preserve `dashboard-view-model.ts` throughout the run and declare disjoint semantic anchors/bounded ranges within it; neither narrows scope to avoid arbitration.
+- [ ] Both workers produce bounded patch/mutation proposals without directly writing the shared file. Existing format adapters and transactional composer select both requests in one mutation batch and emit a serializability proof.
+- [ ] Neutral steward is the only shared-file writer, applies the composed result once, and creates one shared-delivery receipt/commit with complete attribution to both cards. Private files remain attributable to their owning card.
+- [ ] The primary safe-compose cell may record zero queue residency and must fail if path equality alone causes serialization. `not-required`, direct-write, separate-worktree, or missing compose/steward evidence is invalid.
+- [ ] A separate sealed cell uses the same generic workload adapter but introduces a real logical collision or stale base; only this cell must reach canonical queue/revalidation and, if queued, positive `waitedMs` plus automatic successor wakeup.
 - [ ] Both target ledger cards close, active authorization returns to zero, and no manual wakeup, bypass, emergency edit, or direct `.atm` mutation occurs.
 - [ ] Dashboard post-run view is retained and reconstructs the same run digest from canonical sources; provider/task ids never alter orchestration control flow.
 
 ## Evidence and rollback
 
-Seal per-card command/event timelines, ticket generation/digest, overlap window,
-shared-surface digest, wakeup, close packet, and terminal authorization census.
-Failure preserves both cards and receipts and returns policy to queue-only.
+Seal per-card command/event timelines, canonical root/base/HEAD, intent and
+proposal digests, adapter decision, compose batch, serializability proof,
+steward journal, shared-commit attribution, fallback queue/wakeup, overlap
+window, close packet, and terminal authorization census. Failure preserves both
+cards and receipts and returns policy to queue-only.
 
 ## Atomization impact
 

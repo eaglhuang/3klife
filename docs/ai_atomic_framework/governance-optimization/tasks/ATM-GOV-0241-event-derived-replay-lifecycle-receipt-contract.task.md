@@ -48,9 +48,10 @@ createdByCommand: atm plan card create
 
 ## Intent
 
-Define the generic receipt-to-observation contract for claim, ticket,
-queue/wait, proposal, compose, publish, wakeup, close, admission, and
-correctness counters. Text labels are display projections only and cannot
+Define the generic receipt-to-observation contract for claim, bounded intent,
+ticket, adapter decision, mutation batch, compose, serializability, steward
+apply, shared delivery, queue/revalidation fallback, wakeup, close, admission,
+and correctness counters. Text labels are display projections only and cannot
 create evidence semantics.
 
 ## Acceptance
@@ -58,7 +59,9 @@ create evidence semantics.
 - [ ] Every accepted lifecycle step references a successful command or canonical event receipt with task, actor, generation, digest, and time window.
 - [ ] Every semantic receipt binds command purpose, task/card, actor, ticket generation, shared surface, digest, and time window; unrelated successful commands do not count.
 - [ ] Admission is derived from canonical ticket state; caller-provided `parallel` cannot override `not-required`, missing, or contradictory decisions. A deliberate non-empty intersection with `not-required` is scenario-invalid and fails under `INV-ATM-008`.
-- [ ] `waitedMs`, wakeup, active interval, queue residency, and starvation are derived from events.
+- [ ] Same-file intent evidence includes atom/content anchors or bounded source ranges, adapter identity/decision, selected and queued request ids, compose batch membership, legal-order/permutation serializability proof, steward before/after hashes, and shared-commit member attribution.
+- [ ] The contract distinguishes `compose-selected`, `revalidation-required`, and `queued`; a safe same-file compose may have `waitedMs = 0`, while `waitedMs`, wakeup, queue residency, and starvation are required only when canonical events show a queue transition.
+- [ ] Missing intent detail, a path-only file lock result, worker direct-write, detached-worktree isolation, or shared output without steward attribution fails closed under `INV-ATM-010`.
 - [ ] Correctness counters default to unavailable/inconclusive, never zero, when required observations are absent.
 - [ ] Receipt schema is workload-neutral and rejects unrelated commands that merely match a generic command shape.
 - [ ] Producer labels are outside the trust boundary: canonical events and command receipts are the authority consumed by independent closure readers.

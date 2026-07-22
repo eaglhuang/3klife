@@ -52,17 +52,19 @@ createdByCommand: atm plan card create
 
 ## Intent
 
-Replace arm-specific sleep timing with a governed workload that exercises ATM
-claim, broker admission, queue-only policy, isolated proposal/compose, and
-shared delivery. Run matched AB/BA on the same sealed base, configuration,
-runner digest, and build.
+Replace arm-specific sleep timing with one governed same-file workload whose
+bounded logical intents are mergeable. The treatment exercises compose-first,
+transactional batching, neutral-steward apply, and shared delivery; the control
+uses the policy-generated queue-only mode without changing the workload. Run
+matched AB/BA on the same sealed base, configuration, runner digest, and build.
 
 ## Acceptance
 
-- [ ] Queue-only and compose-first arms use identical workload manifests; only policy mode and execution order differ.
+- [ ] Queue-only and compose-first arms use identical same-file/bounded-intent workload manifests; only policy mode and AB/BA execution order differ. Neither arm may remove the declared intersection or use a different worktree.
 - [ ] Queue-only is produced by the policy CLI trip/reset path, not by another build or a label.
+- [ ] The compose-first arm records both proposals in one mutation batch, serializability proof, steward-only apply, one shared commit, and complete member attribution; path-only locking or detached-worktree isolation invalidates the cell.
 - [ ] AB and BA each have at least three valid repeats per accepted comparison cell.
-- [ ] Makespan, active throughput, production cost, correctness, queue residency, and starvation derive from the same command/event receipts.
+- [ ] Makespan, active throughput, production cost, compose admission rate, steward apply latency, shared-commit count, correctness, queue residency, and starvation derive from the same command/event receipts.
 - [ ] Arm-specific delay constants, fixed cost ratios, cosmetic scale/contention fields, and prefilled zero counters cannot influence the verdict.
 - [ ] Provider, task id, arm name, or scenario label cannot select delays, costs, success paths, or other result-shaping control flow (`INV-ATM-009`).
 - [ ] Missing pairs, receipt loss, build drift, or insufficient samples return `inconclusive`.

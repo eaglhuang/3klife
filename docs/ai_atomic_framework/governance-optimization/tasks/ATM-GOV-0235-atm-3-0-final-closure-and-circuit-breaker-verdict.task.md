@@ -51,7 +51,7 @@ missingData:
 dataDrivenStopRule:
   - "Do not close if any inherited acceptance is open, any correctness counter is nonzero, observed coverage is below 100 percent, or replay evidence is not real multiprocess."
   - "Do not reset circuit breaker without a newer passing evidence digest."
-  - "Do not close if the red baseline did not turn green under the same scenario digest, real-task dogfood removed its declared intersection, or migration rollback was not exercised."
+  - "Do not close if the red baseline did not turn green under the same scenario digest, real-task dogfood removed its declared intersection, normal development used separate Git topology, safe same-file proposals were path-lock serialized, or migration rollback was not exercised."
 out_of_scope:
   - "No new product implementation beyond minimal verdict/circuit-breaker wiring discovered by final integration."
   - "No rewriting Plan 2.2 history."
@@ -74,7 +74,7 @@ atomizationImpact:
 
 Target repo `b5242bc145e8e9d30953fd95ff70b0f122316a20` proves `ATM-BUG-2026-07-21-222` recovery repair, `ATM-BUG-2026-07-21-223` validator scheduler repair, current full standard 87/87, doctor pass, pre-push pass, and local/remote SHA parity. These remove the immediate pre-push blocker and the false-red parallel validator classification issue.
 
-Final closure remains blocked by `ATM-GOV-0234`: the required real multiprocess dogfood, command-backed 420-cell matrix, event-derived correctness counters, and paired AB/BA performance evidence are not yet sealed. Therefore this card stays `active` and its acceptance boxes remain unchecked.
+The historical protected closure is retained as target `done`, but the stronger Plan 3.1 closure remains blocked: the required real multiprocess compose-first dogfood, command-backed matched matrix, event-derived correctness counters, and paired AB/BA performance evidence are not yet sealed. Its continuation acceptance remains open under ATM-GOV-0239–0248.
 
 Target repo `main@8920995675ada7c26786cacaa09ae2321e34b6ab` is pushed and verified. It adds the fail-closed Plan 3 evidence closure diagnostic, public frozen broker replay CLI surface, and validator scheduler diagnostics. Its current `remain-open` verdict is now the authoritative quick check before any final closure attempt; it identifies the remaining blockers as missing real dogfood candidates and non-command-backed 420-cell matrix evidence. The previous missing public frozen replay CLI blocker is resolved.
 
@@ -91,7 +91,8 @@ Target repo `main@8920995675ada7c26786cacaa09ae2321e34b6ab` is pushed and verifi
 
 - [ ] 0226 所有 divergence terminal，active stale authorization 為 0。
 - [ ] 0234 真多行程與 paired evidence 有效，correctness 七項均為 0、coverage 100%。
-- [ ] 0234 real-task dogfood 使用兩張未交付且有 declared intersection 的 registered cards，兩位 Captain 均獲 canonical ticket、無 terminal refusal、無移除交集、無人工 wakeup 或 bypass。
+- [ ] 0234/Plan 3.1 real-task dogfood 使用兩張未交付、同一 canonical worktree 且有同檔案 declared intersection 的 registered cards；兩位 Captain 均獲 canonical ticket、以 disjoint bounded intents 同批 compose、由 neutral steward 唯一落盤並共享一個具完整 attribution 的 delivery commit，無 Git topology 隔離、無移除交集或 bypass。
+- [ ] Sealed true-conflict/stale fallback cell 具有 canonical queue/revalidation 與 automatic wakeup evidence；主 safe-compose cell 不以 queue wait 作成功前提，也不得以 path-only serialization 冒充平行治理。
 - [ ] `parallelOverlapRatio >= 0.30`、`serializedAdmissionRatio <= 0.70`，starvation threshold 在 run 前 sealed，且 correctness/performance 來自同一組 valid cells。
 - [ ] source/frozen/release/adopter parity 與 rollback drill 通過。
 - [ ] legacy migration 的 immutable pre-snapshot、apply、rollback 與 round-trip digest 全部通過；rollback 不依賴直接修改 runtime JSON。
@@ -109,7 +110,7 @@ Framework target repo `main@8920995675ada7c26786cacaa09ae2321e34b6ab` is pushed 
 - Validator orchestration now uses a generic metadata-driven scheduler contract and reports `atm.validatorSchedulerDiagnostics.v1`; parallel failures are isolated-rerun classified as resource contention or true validator failure.
 - The release surface validator was repaired by generic artifact-authority rules, not by a card/SHA/path exception: dist JS proves runtime exports, root-drop TS source proves type/source exports.
 
-0235 remains active. Final closure is still blocked by 0234 real dogfood and command-backed paired evidence, so no acceptance checkbox is satisfied by this repair alone.
+Plan 3.1 remains active even though 0235 retains its historical target `done` disposition. Strong final closure is still blocked by real compose-first dogfood and command-backed paired evidence, so no Plan 3.1 acceptance checkbox is satisfied by this repair alone.
 
 ## 2026-07-22 protected closure repair closeback
 

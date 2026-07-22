@@ -8,6 +8,7 @@ milestone: ATM-3.1-R1
 depends_on:
   - ATM-GOV-0234
   - ATM-GOV-0235
+  - ATM-GOV-0247
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -54,8 +55,8 @@ createdByCommand: atm plan card create
 
 Make Plan 3 closure status fail closed on semantic evidence, not candidate and
 receipt existence. Candidate cards, arbitrary successful commands, lifecycle
-labels, formula disclosure, or `not-required` ticket states must not satisfy a
-closure prerequisite.
+labels, formula disclosure, `not-required` ticket states, or conservative
+same-file serialization must not satisfy a closure prerequisite.
 
 ## Acceptance
 
@@ -63,6 +64,8 @@ closure prerequisite.
 - [ ] A locked regression feeds the repaired checker 420 synthetic receipts, `not-required` dogfood, and hardcoded/fixed cost input from the current fake-green closure; the only accepted verdict is `remain-open`.
 - [ ] `node atm.mjs --version`, sleep-only workloads, digest-only receipts, and self-reported lifecycle labels are rejected as closure evidence.
 - [ ] Deliberate-intersection dogfood with `not-required` is classified as `INV-ATM-008`; arm-specific delay, fixed task id/cost, or result-shaping control flow is classified as `INV-ATM-009`.
+- [ ] A same-file scenario with disjoint bounded intents is rejected if evidence shows path-only locking, separate-worktree isolation, missing compose batch membership, or no neutral-steward apply; these violate `INV-ATM-010` and cannot be counted as parallel success.
+- [ ] Queue/wakeup is required only for a sealed true-conflict/stale fallback cell. The primary safe-compose cell may have zero queue residency and must not be failed for that reason.
 - [ ] `formula-generated-matrix-disclosed` is informational and can never convert invalid performance evidence into a passing check.
 - [ ] Status distinguishes candidate availability, executed dogfood, matched performance, rollback/parity, backlog, and final verdict.
 - [ ] No task id, actor id, local path, date, or incident string is hardcoded into control flow.

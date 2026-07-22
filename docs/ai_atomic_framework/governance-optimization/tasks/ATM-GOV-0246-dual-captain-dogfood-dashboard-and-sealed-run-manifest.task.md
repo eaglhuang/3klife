@@ -8,6 +8,7 @@ milestone: ATM-3.1-R2.5
 depends_on:
   - ATM-GOV-0240
   - ATM-GOV-0241
+  - ATM-GOV-0248
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -63,10 +64,11 @@ producer-owned success labels.
 
 ## Acceptance
 
-- [ ] A pre-run manifest seals run id, participant cards, provider/role scenario data, runtime-assigned actors, PIDs/process expectations, base/build/runner digests, worktree/index/proposal roots, declared shared intersection, private outputs, thresholds, time window, and stop rule.
+- [ ] A pre-run manifest seals run id, participant cards, provider/role scenario data, runtime-assigned actors, PID/process expectations, canonical worktree root, base/HEAD/build/runner digests, non-Git bounded proposal roots, declared shared physical file plus each logical intent digest, private outputs, thresholds, time window, and stop rule.
 - [ ] Provider and task bindings are data only; dashboard and harness contain no Codex-, Claude-, actor-, task-, date-, or local-path-specific control-flow branches.
-- [ ] Dashboard shows canonical claim/close state, actor/PID, active overlap and ratio, shared/private scopes, ticket state/generation/digest, queue position, `waitedMs`, release condition, automatic wakeup, lifecycle completion, faults/correctness, throughput/cost, source availability, and stop condition.
-- [ ] `ready` requires two different actors, OS processes, worktrees, and indexes on the same sealed base/build with a non-empty intersection; missing evidence, contradictory digests, or `not-required` returns `not-ready`.
+- [ ] Dashboard shows canonical claim/close state, actor/PID, active overlap and ratio, canonical root/base/HEAD, shared physical file and logical intents, ticket state/generation/digest, adapter decision, selected/queued request ids, compose batch, serializability proof, steward before/after digests, shared-commit attribution, queue position, `waitedMs`, wakeup, faults/correctness, throughput/cost, source availability, and stop condition.
+- [ ] `ready` requires two different actors and OS processes on one sealed canonical worktree/base/HEAD/build, non-Git proposal roots, a non-empty same-file intersection, and distinct bounded logical intents; separate Git worktrees/branches/indexes, missing evidence, contradictory digests, or `not-required` returns `not-ready`.
+- [ ] The view distinguishes the primary safe-compose cell from the true-conflict/stale fallback cell: zero queue residency is valid only for the former, while a queued fallback requires positive event-derived wait and automatic wakeup.
 - [ ] JSON and human-readable views share the same compact digest and can be refreshed live or reconstructed post-run from canonical sources.
 - [ ] Refresh is strictly read-only: it cannot claim, wake, release, mutate queue/runtime state, or manufacture lifecycle events.
 - [ ] Focused tests prove untrusted producer labels cannot override canonical evidence and incomplete dual-captain setup fails closed.

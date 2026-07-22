@@ -68,7 +68,9 @@ are untrusted input until reconstructed from canonical sources.
 - [ ] Final verdict input is reconstructed from canonical sources and records unavailable receipts explicitly.
 - [ ] The caller can choose an evidence root/window but cannot inject `rollbackExercised`, parity, blocker lists, correctness zeros, admission labels, or any equivalent healthy assertion.
 - [ ] Any missing source, open blocker, non-terminal dogfood card, unmatched AB/BA cell, failed parity, or stale reset digest produces `remain-open` and queue-only.
-- [ ] A close verdict requires closed 0237/0238, overlapping ledger intervals, canonical queue/wakeup evidence, valid red/green discrimination, matched performance, and all 0244 closeback gates.
+- [ ] A close verdict requires closed 0237/0238, overlapping actor intervals on one canonical worktree/base/HEAD, disjoint bounded intents on the declared same-file intersection, one compose batch, valid serializability proof, neutral-steward-only apply, shared-commit member attribution, valid red/green discrimination, matched performance, and all 0244 closeback gates.
+- [ ] Queue/wakeup evidence is read from the sealed true-conflict/stale fallback cell; the aggregator must accept zero queue residency in the primary safe-compose cell and must reject path-only serialization as a parallel success.
+- [ ] Any normal-development use of separate Git branch/worktree/index, worker direct-write to the shared file, missing adapter decision, or missing steward journal produces `remain-open` under `INV-ATM-010`.
 - [ ] Cross-captain post-run dashboard evidence is consumed only through its canonical digests and independently reproduced observations; dashboard display labels cannot close the plan.
 - [ ] The verdict seals evidence window, watermark, runner/build/scenario digests, counters, timings, compact digest, and source availability.
 - [ ] Plan status and 0234/0235 closeback are updated only after this verdict passes; remote SHA parity is checked after push by the implementing captain.
