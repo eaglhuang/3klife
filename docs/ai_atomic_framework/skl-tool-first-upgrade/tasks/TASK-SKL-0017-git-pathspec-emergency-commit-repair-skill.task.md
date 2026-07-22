@@ -6,9 +6,9 @@ owner: atm-agent-skills
 priority: P0
 milestone: ATM-3.1-SKL-R0.1
 severity: P0
-depends_on:
-  - ATM-GOV-0261
+depends_on: []
 related_plan: skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md
+soft_dependency_note: "ATM-GOV-0261 is the formal VCS-neutral product route. TASK-SKL-0017 is allowed to proceed first because it is an emergency-only runbook needed while 0261 is not yet available; 0017 evidence must not satisfy 0261 normal acceptance. "
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
@@ -84,3 +84,7 @@ This skill is deliberately not a product feature and not a Plan 3.1 success path
 ## Relationship to ATM-GOV-0261
 
 ATM-GOV-0261 owns the normal product route: VCS-neutral commit candidates admitted by broker/steward before any repository adapter writes. This SKL card owns only the temporary emergency runbook. If future agents use this skill for normal delivery, that is a Plan 3.1 failure signal, not a success pattern.
+
+## 2026-07-23 dependency clarification
+
+ATM-GOV-0261 is intentionally a soft architectural reference, not a hard claim dependency. This emergency skill exists precisely because the normal VCS-neutral commit-candidate product route is not yet complete. Agents may implement TASK-SKL-0017 before ATM-GOV-0261, but any use of the resulting skill remains anomaly evidence and cannot satisfy 0261 or Plan 3.1 normal autonomous-delivery metrics.
