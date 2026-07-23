@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0017
 title: Git pathspec emergency commit repair skill
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-3.1-SKL-R0.1
@@ -41,6 +41,15 @@ atomizationImpact:
       source: templates/skills/atm-git-pathspec-emergency-commit.skill.md
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-23T02:17:33.024Z"
+completed_by_agent: "cursor-grok45-plan31-captain"
+closedAt: "2026-07-23T02:17:33.024Z"
+closedByActor: "cursor-grok45-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T02-17-33-024Z-close-eeaf940de09c"
+lastTransitionAt: "2026-07-23T02:17:33.024Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2f093fde15bf9200578871af18757d82fc0b1a56"
 ---
 
 # TASK-SKL-0017 Git pathspec emergency commit repair skill
