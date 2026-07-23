@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0006
 title: Post-compose semantic validation ErrorCode contracts
-status: planned
+status: done
 owner: atm-error-governance
 priority: P0
 milestone: ATM-3.1-R2
@@ -43,6 +43,15 @@ atomizationImpact:
   ownerAtomOrMap: atm.error-governance.registry
   mapUpdates: []
   extractionCandidates: []
+completed_at: "2026-07-23T13:47:04.617Z"
+completed_by_agent: "cursor-002-plan31-captain"
+closedAt: "2026-07-23T13:47:04.617Z"
+closedByActor: "cursor-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T13-47-04-617Z-close-74702489ff63"
+lastTransitionAt: "2026-07-23T13:47:04.617Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3e0ec78ab804cacc2997d1f2d629992a4a4d1f94"
 ---
 
 # TASK-ERR-0006 Post-compose semantic validation ErrorCode contracts
