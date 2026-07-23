@@ -57,13 +57,15 @@ and passing-digest reset through command-backed evidence.
 
 ## Acceptance
 
-- [ ] ATM-BUG-213 through 218 and 219 through 221 each have a canonical terminal disposition with evidence or a named owner card and non-blocking rationale.
+- [ ] Every item named in the Plan 3.1 full-backlog disposition matrix has a canonical terminal disposition with command-backed evidence or a named owner card and explicit non-blocking rationale; open status alone neither forces duplicate implementation nor permits silent omission.
+- [ ] ATM-BUG-213 and 219/227/237 consume 0262/0263 evidence; 214/215/217/218 retain their existing 0218/ERR/SKL owners and are not duplicated in GOV.
 - [ ] ATM-BUG-222 remains fixed and ATM-BUG-223 remains resolved under focused regressions.
 - [ ] Source, frozen onefile, package dist, and release/adopter projections produce equivalent closure observations.
 - [ ] The aggregate parity matrix verifies every safety/governance runtime card's pre-existing attributable parity receipt and shared build lineage; it cannot retroactively convert a source-only closed card into valid completion.
 - [ ] Rollback drill restores the prior safe state without direct runtime JSON edits and is exactly-once on retry.
 - [ ] Healthy replay records zero unexpected trips and zero queue-only residency; injected failure trips queue-only and reset requires a newer passing digest.
 - [ ] Open blockers are discovered from canonical backlog state, not supplied as an empty caller list.
+- [ ] The closeback summary records `inserted`, `absorbed-by-existing-card`, `external-owner`, `deferred-with-reason`, and `terminal` counts, plus any item lacking a unique consumer.
 
 ## Evidence and rollback
 

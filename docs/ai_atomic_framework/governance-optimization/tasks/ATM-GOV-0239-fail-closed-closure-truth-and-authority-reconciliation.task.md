@@ -10,6 +10,8 @@ depends_on:
   - ATM-GOV-0235
   - ATM-GOV-0247
   - ATM-GOV-0251
+  - ATM-GOV-0255
+  - ATM-GOV-0262
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -80,6 +82,7 @@ same-file serialization must not satisfy a closure prerequisite.
 - [ ] A predecessor's terminal `done` status is historical lifecycle truth, not proof that a successor plan's semantic evidence predicates passed. Evidence that no longer satisfies the active closure contract is classified generically as `superseded-for-plan-closure` and forces `remain-open`.
 - [ ] Reconciliation preserves immutable predecessor task/event/evidence history; it must not reopen, rewrite, or delete a terminal predecessor merely to express that continuation repair is still required.
 - [ ] This runtime closure gate cannot close on source-only evidence. The same card-defined behavior probe must pass through source and frozen `node atm.mjs`, bind source/frozen/build/projection digests, and use a runner-sync receipt whose build may be shared with other cards but whose parity result is attributable to this card.
+- [ ] Closure consumes `ATM-GOV-0262` call-site parity evidence; a conflict-matrix/physical-overlap/proposal-overlap disagreement is `remain-open`, never a valid no-conflict observation.
 - [ ] No task id, actor id, local path, date, or incident string is hardcoded into control flow.
 
 ## Evidence and rollback

@@ -15,14 +15,17 @@ scopePaths:
   - packages/core/src/broker/replay/**
   - packages/core/src/telemetry/parallel-replay/**
   - packages/cli/src/commands/broker/replay/**
+  - packages/cli/src/commands/telemetry/**
   - schemas/atm.parallel-replay-evidence.v1.schema.json
   - tests/e2e/atm-3-real-parallel-replay.test.ts
   - tests/e2e/atm-3-parallel-replay-faults.test.ts
+  - tests/cli/plan3-telemetry-obligation-seal.test.ts
 deliverables:
   - packages/core/src/broker/replay/lifecycle-receipts.ts
   - packages/core/src/telemetry/parallel-replay/index.ts
   - schemas/atm.parallel-replay-evidence.v1.schema.json
   - tests/e2e/atm-3-parallel-replay-faults.test.ts
+  - tests/cli/plan3-telemetry-obligation-seal.test.ts
 validators:
   - node --strip-types tests/e2e/atm-3-parallel-replay-faults.test.ts
   - node --strip-types tests/e2e/atm-3-real-parallel-replay.test.ts
@@ -67,6 +70,10 @@ display projections only and cannot create evidence semantics.
 - [ ] Correctness counters default to unavailable/inconclusive, never zero, when required observations are absent.
 - [ ] Receipt schema is workload-neutral and rejects unrelated commands that merely match a generic command shape.
 - [ ] Producer labels are outside the trust boundary: canonical events and command receipts are the authority consumed by independent closure readers.
+- [ ] Concurrent task-scoped evidence writers use append-only or leased writes and preserve both records; `ATM-BUG-2026-07-19-018` race replay has zero lost updates.
+- [ ] Telemetry distinguishes registered, code-wired, observed, and sealed/read-back states with event counts and last-observed timestamps; registry membership alone cannot satisfy coverage (`ATM-BUG-2026-07-19-027`).
+- [ ] Broker decision/outcome pairs include decision class, conflict axes, compose/queue result, wait, rework, override, and delayed correctness outcome, joined by an immutable outcome reference (`ATM-BUG-2026-07-19-036`).
+- [ ] Declared telemetry obligations are checked before close and expose a command-backed seal/recovery route; raw detail stays runtime-local while compact digest or unavailable receipt enters evidence (`ATM-BUG-2026-07-19-044`).
 
 ## Evidence and rollback
 

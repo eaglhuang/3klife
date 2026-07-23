@@ -20,10 +20,14 @@ scopePaths:
   - packages/cli/src/commands/taskflow/closeback-orchestration.ts
   - packages/cli/src/commands/taskflow/close-orchestration.ts
   - packages/cli/src/commands/taskflow/close-side-effect-reconcile.ts
+  - packages/cli/src/commands/tasks/import-planning-authority.ts
+  - packages/cli/src/commands/tasks/planning-mirror-close-diagnostics.ts
   - schemas/governance/cross-authority-closeback.schema.json
   - tests/cli/taskflow-cross-authority-closeback-saga.test.ts
   - tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
   - tests/cli/taskflow-cross-authority-remote-durability.test.ts
+  - tests/cli/taskflow-cross-task-residue-recovery.test.ts
+  - tests/cli/planning-source-seal.test.ts
 deliverables:
   - packages/cli/src/commands/taskflow/cross-authority-closeback.ts
   - packages/cli/src/commands/taskflow/closeback-orchestration.ts
@@ -32,10 +36,13 @@ deliverables:
   - tests/cli/taskflow-cross-authority-closeback-saga.test.ts
   - tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
   - tests/cli/taskflow-cross-authority-remote-durability.test.ts
+  - tests/cli/taskflow-cross-task-residue-recovery.test.ts
 validators:
   - node --strip-types tests/cli/taskflow-cross-authority-closeback-saga.test.ts
   - node --strip-types tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
   - node --strip-types tests/cli/taskflow-cross-authority-remote-durability.test.ts
+  - node --strip-types tests/cli/taskflow-cross-task-residue-recovery.test.ts
+  - node --strip-types tests/cli/planning-source-seal.test.ts
   - node --strip-types packages/cli/src/commands/taskflow/__tests__/closeback-orchestration.spec.ts
   - npm run validate:schemas
   - npm run typecheck
@@ -81,12 +88,15 @@ effects.
 - [ ] Remote durability policy is repository-neutral and data-driven. It does not hardcode a host path, branch, provider, or assumption that every authority auto-pushes; target and planning authorities are evaluated from the same manifest contract.
 - [ ] If target commit succeeds and planning commit fails, retry reuses the target receipt, does not close/release/notify twice, and either commits the sealed planning change or returns the same pending condition with exact diagnosis.
 - [ ] If planning HEAD/source-card CAS moves after prepare, ATM does not overwrite or silently rebase it. It returns `ATM_TASKFLOW_CROSS_AUTHORITY_CLOSEBACK_PENDING` and requires reconcile/re-prepare against the observed authority.
+- [ ] The imported task durably binds planning source identity/hash across repositories; drift during an active target task is detected before delivery or close and follows the saga reconcile path (`ATM-BUG-2026-07-12-119`).
 - [ ] If target HEAD moves, source identity changes, a commit crashes after object creation, or the process stops after any journal phase, restart deterministically detects the durable outcome and continues at most once.
 - [ ] Plan-level status remains `active` until all required source cards and target closures pass their declared gates; one caller cannot set the plan to complete early by passing a boolean.
 - [ ] The saga preserves unrelated dirty/staged work in both repositories and commits only the sealed bundle for each authority.
 - [ ] Dry-run prints both prepared bundles, phases, CAS expectations, and recovery action without writing either repository.
 - [ ] A crash matrix injects failure before/after each prepare, commit, receipt, and finalization boundary; every cell ends in both-committed or explicit pending, with zero duplicate side effects and no contradictory global completion.
 - [ ] Repeated close/reconcile calls are idempotent and never require manual `.atm` edits, `git reset`, branch/worktree merge, or task-specific repair code.
+- [ ] A done/released task's stale close residue beside another active task receives a scoped reconcile/advisory recovery without circularly requiring the active task to commit first (`ATM-BUG-2026-07-12-126`).
+- [ ] Protected override audit/provenance files are included only through the sealed authority bundle and direction-lock model; no unowned audit sidecar can block or leak into another task's close (`ATM-BUG-2026-07-13-163`).
 - [ ] Before the first delivery commit, the implementer inventories adjacent taskflow types, shared helpers, mutex/lock modules, and tests; any required linked surface is added once through governed scope amendment rather than copied into the new saga module.
 - [ ] Short English comments explain phase ownership, the no-distributed-ACID boundary, and why global completion is derived only after both receipts exist.
 - [ ] This cross-authority enforcement path has its own source/frozen behavior-parity receipt before close. A shared runner-sync build is allowed, but the saga's phase and pending behavior must be attributable to this card and cannot rely only on the later 0244 aggregate drill.

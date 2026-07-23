@@ -28,6 +28,48 @@ Source task cards must be imported with `node atm.mjs tasks import --from <card>
 
 ## Executable dependency graph
 
+### 2026-07-23 authoritative execution overlay
+
+The full-backlog sweep added `ATM-GOV-0262` and `ATM-GOV-0263`. This overlay
+supersedes the original wave table below whenever the two disagree.
+
+```mermaid
+flowchart LR
+    C0["0260 current closeout"] --> P1
+    subgraph P1["parallel prelude"]
+      I["0257 actor continuity"]
+      O["0262 overlap matcher parity"]
+    end
+    I --> R["0256 runner freshness"]
+    R --> Q["0258 transactional commit/WIP recovery"]
+    Q --> W["0259 write-ticket/scope guard"]
+    W --> V["0261 VCS-neutral candidate isolation"]
+    V --> A["0263 autonomous continuation"]
+    O --> T["0239 closure truth"]
+    A --> E
+    T --> E
+    subgraph E["parallel evidence/closure foundation"]
+      E1["0240 frozen discrimination"]
+      E2["0241 event/telemetry receipts"]
+      E3["0252 → 0253 closure saga"]
+      E4["0248／0254／0250 proposal-to-delivery chain"]
+    end
+    E --> D["0246 dashboard → 0242 dogfood → 0243 benchmark"]
+    D --> F["0244 closeback → 0245 final verdict"]
+```
+
+| Order | Dispatch rule |
+|---|---|
+| 1 | Finish/close 0260. TASK-SKL-0017 waits; do not let its foreign files enter 0260 close. |
+| 2 | 0257 and 0262 may run in parallel only after Broker confirms disjoint scopes. |
+| 3 | Run 0256 after 0257, then 0258 → 0259 → 0261. These share runner/Git/write surfaces and are sequential unless ATM returns a compose/queue ticket proving safe overlap. |
+| 4 | Run 0263 after 0257 and 0261. It is the zero-human-command-repair gate before real dogfood. |
+| 5 | Run 0239 after 0262; then open the parallel evidence/closure foundation shown above. |
+| 6 | 0246 preflight gates 0242/0243; 0244 and 0245 remain final serial integration gates. |
+
+Waiting-only dispatches are one sentence. Full dispatch packets are emitted
+only when a worker has executable work.
+
 ```mermaid
 flowchart LR
     D0247["0247 topology invariant"] --> D0248["0248 non-Git proposal workspace"]
@@ -69,7 +111,7 @@ flowchart LR
     D0254 --> D0245
 ```
 
-## Dispatch waves
+## Original dispatch waves (superseded by the 2026-07-23 overlay where different)
 
 The wave number is an execution gate, not a new lifecycle. Cards remain the canonical unit of work.
 
@@ -128,7 +170,7 @@ The W5 run is valid only when all of the following are observed rather than asse
 
 ## Current state at handoff creation
 
-- Plan 3.1 supplement, Lessons Learned, task cards 0237–0254, and ERR-0004/0005/0006 exist in the planning authority.
+- Plan 3.1 supplement, Lessons Learned, task cards 0237–0263, and ERR-0004/0005/0006 exist in the planning authority.
 - Historical 0234/0235 remain done and are not Plan 3.1 execution cards.
 - Target ledger contains open 0237, 0238, and 0247 from earlier dogfood/import activity. Remaining Plan 3.1 cards must be imported through the governed route when their wave is opened.
 - 0247 had released, unowned WIP at takeover. The closing captain must validate and publish it before treating W1-A or W1-B as unlocked.

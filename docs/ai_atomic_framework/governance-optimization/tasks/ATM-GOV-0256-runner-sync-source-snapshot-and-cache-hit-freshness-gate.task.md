@@ -22,6 +22,8 @@ scopePaths:
   - tests/cli/runner-sync-build-actor-continuity.test.ts
   - tests/cli/runner-sync-self-hosting-loop.test.ts
   - tests/cli/runner-sync-stale-sha-recovery.test.ts
+  - tests/cli/runner-sync-manifest-atomic-write.test.ts
+  - tests/cli/runner-sync-post-close-receipt-publication.test.ts
 deliverables:
   - scripts/run-sealed-runner-build.ts
   - packages/cli/src/commands/framework-development/runner-sync-admission.ts
@@ -29,11 +31,15 @@ deliverables:
   - tests/cli/runner-sync-build-source-preservation.test.ts
   - tests/cli/runner-sync-self-hosting-loop.test.ts
   - tests/cli/runner-sync-stale-sha-recovery.test.ts
+  - tests/cli/runner-sync-manifest-atomic-write.test.ts
+  - tests/cli/runner-sync-post-close-receipt-publication.test.ts
 validators:
   - node --strip-types tests/cli/runner-sync-build-source-preservation.test.ts
   - node --strip-types tests/cli/runner-sync-build-actor-continuity.test.ts
   - node --strip-types tests/cli/runner-sync-self-hosting-loop.test.ts
   - node --strip-types tests/cli/runner-sync-stale-sha-recovery.test.ts
+  - node --strip-types tests/cli/runner-sync-manifest-atomic-write.test.ts
+  - node --strip-types tests/cli/runner-sync-post-close-receipt-publication.test.ts
   - npm run typecheck
 errorCodes: []
 createdByCommand: atm plan card create
@@ -65,6 +71,9 @@ Bind runner-sync enqueue, build decision, receipt, and release to one immutable 
 - [ ] A valid cache hit either clears runner drift with receipt-backed output equivalence or returns an explicit no-op/revalidation state that does not claim sync completion.
 - [ ] No-op cache hits do not dirty tracked release manifests solely with timing or decision metadata.
 - [ ] A regression reproduces the Plan 3.1 case: build prints `cacheHitSkip` from an older commit while source is newer; the runner remains stale and the command emits a safe next action instead of a false-green receipt.
+- [ ] Source-first/frozen self-hosting has a bootstrap-safe sealed-source route; newer source, adapter/template drift, or emergency-landed source cannot be declared synchronized by an older frozen hook/build (`ATM-BUG-2026-07-14-183`, `ATM-BUG-2026-07-22-234`).
+- [ ] Windows release-manifest writes are retryable and atomic; interruption cannot expose a partial root-drop manifest (`ATM-BUG-2026-07-20-212`).
+- [ ] Post-close runner-sync receipts and release outputs have one governed publication/runtime-only disposition with a runnable recovery command and no protected-evidence manual-review residue (`ATM-BUG-2026-07-21-220`).
 - [ ] Backlog item `ATM-BUG-2026-07-22-225` is linked in delivery evidence.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-22T09:12:36.053Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0256-runner-sync-source-snapshot-and-cache-hit-freshness-gate.task.md","contentDigest":"sha256:4dad6fa037f860e44952ac41c82745d45d2bad5fbecb723372b40fb3ad3cabd8"} -->

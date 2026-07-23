@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-23T00:55:00+08:00
+updated_at: 2026-07-23T09:35:00+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -90,7 +90,7 @@ Plan 3.1 final verification therefore gains a hard dependency on `ATM-GOV-0261`:
 
 ### 補充定位
 
-Plan 3.1 不是另一套產品或任務模型，而是 Plan 3.0 的後續驗收補充。它不重做已完成的 intent、proposal、adapter、transactional composer、steward writer、ticket policy 與 shared-delivery 實作；它修復的是「測試沒有真正走過這些協定，卻因 receipt 形狀存在而被視為已證明」的驗收漏洞。`ATM-GOV-0239` 至 `ATM-GOV-0254` 都沿用既有 GOV family，並作為 0234／0235 歷史交付後的 continuation repair lineage，不建立新的 task series 或 evidence authority。
+Plan 3.1 不是另一套產品或任務模型，而是 Plan 3.0 的後續驗收補充。它不重做已完成的 intent、proposal、adapter、transactional composer、steward writer、ticket policy 與 shared-delivery 實作；它修復的是「測試沒有真正走過這些協定，卻因 receipt 形狀存在而被視為已證明」的驗收漏洞。`ATM-GOV-0239` 至 `ATM-GOV-0263` 都沿用既有 GOV family，並作為 0234／0235 歷史交付後的 continuation repair lineage，不建立新的 task series 或 evidence authority。
 
 本次事故的因果、反證、Five Whys 與組織學習收官門檻記錄於 [Plan 3.0 假綠燈收官 Lessons Learned](plan-3-0-false-green-lessons-learned-2026-07-22.md)。該文件判定治理機制、可執行驗收契約與 AI 執行行為共同造成偏差；Plan 3.1 的目標不是要求隊長靠記憶避免重犯，而是讓缺少真實語意證據的 closure 在系統上只能 `inconclusive`／`remain-open`。
 
@@ -107,13 +107,22 @@ Plan 3.1 不是另一套產品或任務模型，而是 Plan 3.0 的後續驗收�
 
 本補充新增四個架構判準：刻意保留交集卻得到 `not-required` 屬於 `INV-ATM-008`；控制流程硬編碼 actor、task、path、日期、delay 或 cost 屬於 `INV-ATM-009`；正常平行開發以單一 canonical worktree 與邏輯 intent 隔離為基底、不得以 Git branch/worktree 當並行治理機制，另立 `INV-ATM-010`；evidence producer 與 closure oracle 必須分離，最終 verdict 從 canonical sources 重建，禁止呼叫端注入健康值。`INV-ATM-010` 新增而不併入 008，因 008 定義仲裁結果，010 定義仲裁成立所需的執行基底，兩者必須保持低耦合。
 
-Git 僅位於 ATM 外層 delivery boundary：steward 完成 canonical compose 後，shared-delivery adapter 可以建立單一 commit 並核對 HEAD/CAS。AI worker 不得建立、切換或合併 branch/worktree 來隔離正常任務；緊急復原、歷史唯讀鑑別與非開發性的 sealed packaging 只能走封閉例外並留下具名 receipt。
+版本控制系統只透過 repository adapter 進入 ATM delivery boundary，但 adapter 的 mutation surface 仍是 Tier-2 shared-write。ATM 必須先以 VCS-neutral commit-candidate envelope 完成 broker/steward admission、queue/compose/revalidation 與 evidence sealing，Git adapter 才能操作 index/staging/pathspec、建立單一 commit 並核對 HEAD/CAS；Git index 不是 ATM ownership 的真相來源。AI worker 不得建立、切換或合併 branch/worktree 來隔離正常任務；緊急復原、歷史唯讀鑑別與非開發性的 sealed packaging 只能走封閉例外並留下具名 receipt。
 
 2026-07-22 steward enforcement audit 進一步確認：composer、steward apply 與 real shared-delivery commit executor 各自存在，但目前尚未形成不可繞過的同一條 provenance chain。pre-commit 對「提交者本身也是 shared file claim owner」的 multi-claim staged mutation 仍會放行；`broker batch execute --surface commit --apply` 也能根據呼叫端提供的 task/file slices 建立 shared commit，卻不要求該 staged blob 必須等於 transactional composer 的 output、也不要求有效的 steward-apply receipt。另一方面，現行 `applyStewardPlan` 逐 proposal 寫檔，同一檔案可能被寫入多次，尚未證明「兩 proposal 先在記憶體 compose，再由 steward 對每個 output file 單次落盤」。因此 Plan 3.1 新增 0249／0250；在兩卡完成前，「steward 唯一 writer」只能視為契約宣告，不能作為 dogfood 或論文證據。
 
 同日 post-compose audit 再確認一個獨立缺口：現有 patch overlap／serializability proof 只證明 proposal 可依某個合法順序組合，不證明組合後仍能通過型別、import、schema 或 targeted behavior。現有 transactional composer 雖攜帶 `validatorRefs`，但不執行 validator；TypeScript shared surface 也不能假設一定走 text-range adapter。因此 Plan 3.1 新增 `TASK-ERR-0006` 與 `ATM-GOV-0254`，在 compose 與 steward 之間建立 workload-neutral 的 candidate materialization + semantic-validation gate。此閘門重用 task/proposal validator、language adapter 與 test catalog，不在 core 硬編碼語言、路徑或測試名稱；任何 failed／unavailable validation 都必須在 canonical write 前 fail closed。
 
 Fresh closure review 補上四個橫切條件。第一，凡 safety／governance runtime gate 會由 frozen `node atm.mjs` 對外執行，owning card 必須在 close 前持有自己的 source/frozen behavior-parity receipt；runner-sync build 可以跨卡共享，但 parity attribution 不可延後由 0244 一次補做。第二，cross-authority durability 由 sealed authority manifest 宣告 local commit 與 remote visibility 條件；需要 remote 的 authority 在 exact SHA 可由 declared remote/ref 到達前只能 `closeback-pending`。第三，two-key verifier 採風險分層：per-card predicate 可用 locked-policy 或真正無 producer write scope 的 separate actor，Plan-global verdict 則強制 pre-sealed locked-policy，不能用另一位同目標 actor 的簽署取代。第四，validator policy 必須先於 locked negative-control payload reveal 封存，事後修改 oracle 直接使 cell 無效。這些規則都是 capability／risk metadata，不在控制流程列舉 host、task 或 provider 特例。
+
+### 2026-07-23 全 backlog 盤點與插單裁決
+
+本輪掃描 canonical item shards 共 319 筆，其中 116 筆尚非 terminal。Plan 3.1 只吸收會改變高耦合並行正確性、自主完成率或最終證據可信度的缺口；已有 TEAM／RFT／SKL owner、一般 UI／文件改善、或與 N=2 canonical-worktree 證明無直接因果的項目不重複開 GOV 卡。
+
+- **立即插單**：`ATM-GOV-0262` 消費 `ATM-BUG-2026-07-20-213`，統一所有 Broker overlap call sites；完成前 0239 與真 dogfood 不可信。`ATM-GOV-0263` 消費 `ATM-BUG-2026-07-20-206`、`ATM-BUG-2026-07-21-219`、`ATM-BUG-2026-07-22-227`、`ATM-BUG-2026-07-22-237`，保證 batch 能略過終態卡、所有 emitted command 可執行、正確任務卡可自行走到下一安全點。
+- **既有卡直接吸收**：0241 吸收 evidence journal／observed telemetry／obligation seal（07-19-018、027、036、044）；0252／0253 吸收 close dry-run/write parity、跨任務 stale residue、planning-source/CAS 與 commit-bundle exactly-once（07-11-098、07-12-119、126、162、163）；0256 吸收 runner frozen/source、Windows manifest、post-close receipt/source recovery（07-14-183、07-20-212、07-21-220、07-22-225、234）；0257 吸收 identity provenance/emergency author continuity（07-12-115、07-22-226、236）；0258／0261 吸收 unified index/steward、post-close artifacts、receipt residue、path-bounded candidate isolation（07-12-134、07-15-202、205、07-16-013、07-18-005、07-19-001、020、023、07-20-211、07-21-221、07-22-228、229、235）；0259 吸收 glob/CSV/scope amendment/write spillover（07-16-005、007、012、07-19-005、038、07-22-231、232）；0260 吸收 wrapper/hook parity、nested failure 與 stale frozen-hook bootstrap（07-13-162、07-22-230、233）。
+- **只做 terminal disposition，不重做**：已有 0218／ERR／TEAM／SKL owner 的 07-20-214、215、07-21-217、218，以及已由其他 family 承接的 provider、巨檔 refactor、一般 planning UX 項目，只由 0244/0245 驗證 owner、evidence 與 non-blocking rationale。
+- **排序規則**：先收 0260；再依共享面完成 0257 → 0256 → 0258 → 0259 → 0261；0262 可在不重疊時並行但必須早於 0239；0263 等 0257/0261 後完成。之後才允許 0239、0240/0241、0252/0253/0254/0250、0246、0242/0243、0244、0245。任何被標示「既有卡吸收」的 backlog 若 owning card close 時仍無 command-backed disposition，立即停下補 scope 或開 Plan3.2 follow-up，不得由 0245 忽略。
 
 ### 主要差異流程卡
 
@@ -124,6 +133,13 @@ flowchart TD
     EP --> EG["TASK-ERR-0005<br/>evidence/verification/closeback codes"]
     P --> W["ATM-GOV-0248<br/>非 Git bounded proposal workspace"]
     P --> TA["ATM-GOV-0249<br/>transactional candidate + steward 單次落盤 seam"]
+    TA --> TQ["ATM-GOV-0258<br/>transactional stage/commit queue + WIP recovery"]
+    TQ --> WT["ATM-GOV-0259<br/>write-ticket + scope amendment guard"]
+    RC["ATM-GOV-0260<br/>candidate-scoped line budget + nested recovery"] --> CI["ATM-GOV-0261<br/>VCS-neutral commit-candidate isolation"]
+    TQ --> CI
+    WT --> CI
+    BR["ATM-GOV-0262<br/>canonical overlap matcher parity"] --> C
+    CI --> AR["ATM-GOV-0263<br/>autonomous continuation + executable recovery"]
     E --> SE["TASK-ERR-0006<br/>semantic validation exact codes"]
     TA --> SV["ATM-GOV-0254<br/>candidate 物化 + post-compose semantic validation"]
     SE --> SV
@@ -150,6 +166,9 @@ flowchart TD
     S --> F["ATM-GOV-0242<br/>兩張真卡 close + fallback cell receipt"]
     Q --> F
     L --> G["ATM-GOV-0243<br/>compose-first 對 queue-only 的 matched AB/BA"]
+    CI --> F
+    CI --> G
+    AR --> F
     F --> H["ATM-GOV-0244<br/>backlog、rollback、parity、breaker"]
     G --> H
     VG --> XS["ATM-GOV-0253<br/>cross-authority closeback saga"]
@@ -158,6 +177,42 @@ flowchart TD
     I -->|"任一缺件"| J["remain-open + queue-only"]
     I -->|"全部成立"| K["Plan 3.1 close<br/>才可宣稱正確性與效能結論"]
 ```
+
+### 後續派工波次與可平行流程
+
+```mermaid
+flowchart LR
+    S0["現場收斂<br/>0260 close、0017 等待"] --> W1
+    subgraph W1["Wave 1：可平行前置"]
+      A1["0257<br/>actor continuity"]
+      A2["0262<br/>overlap matcher parity"]
+      A3["0251／0247<br/>已完成則只讀取證據"]
+    end
+    A1 --> A4["0256<br/>sealed runner freshness"]
+    A4 --> A5["0258<br/>transactional commit + WIP recovery"]
+    A5 --> A6["0259<br/>write ticket + scope amendment"]
+    A6 --> A7["0261<br/>VCS-neutral candidate isolation"]
+    A7 --> A8["0263<br/>autonomous continuation"]
+    A2 --> B1["0239<br/>closure truth"]
+    A8 --> B2
+    B1 --> B2
+    subgraph B2["Wave 2：可平行證據／closure 基礎"]
+      B21["0240<br/>frozen red-green"]
+      B22["0241<br/>event/telemetry receipts"]
+      B23["0252 → 0253<br/>acceptance gate／closeback saga"]
+      B24["0248／0254／0250<br/>proposal → semantic gate → receipt-bound write"]
+    end
+    B21 --> C1["0246<br/>sealed dashboard preflight"]
+    B22 --> C1
+    B23 --> C1
+    B24 --> C1
+    C1 --> D1["0242<br/>雙卡真 dogfood"]
+    D1 --> D2["0243<br/>matched AB/BA + A/A"]
+    D2 --> D3["0244<br/>backlog/parity/rollback"]
+    D3 --> D4["0245<br/>final verdict"]
+```
+
+Wave 內只有 target scope 無重疊、Broker 回 execute/compose ticket 且沒有 foreign dirty ownership 時可同時派工；共享 `runner-sync`、Git adapter、closure packet、projection/release surface 仍由 ticket/steward 排序。等待中的隊長只收到一句等待指示，不反覆消耗 token。任一卡出現 task-card contract 錯誤、無 recoveryCommand 的安全 blocker、或需要新增共享 scope，先回寫 backlog／amend card，再恢復該 wave。
 
 | 面向 | Plan 3.0 現行弱證據 | Plan 3.1 修正目標 |
 |---|---|---|
@@ -193,20 +248,24 @@ flowchart TD
 | R0J | `ATM-GOV-0257` | 0231 | 保持 Captain actor 在 next／claim／Broker／runner-sync／closeout 的 authority continuity；legacy editor identity 只能作 provenance，不能靜默換人。 |
 | R0K | `ATM-GOV-0258` | 0231、0249、0250、0256、0257；closes `ATM-BUG-2026-07-22-228`、`ATM-BUG-2026-07-22-229` | 建立 broker-managed transactional stage/commit queue；多 actor 只提交 scoped commit request，由 ATM 排序、stage、commit、清 index 並回傳證據；post-close release artifacts、backlog/projection commit，以及 dirty-release non-delivery WIP commit/discard recovery 不再靠人類逐步指導。 |
 | R0L | `ATM-GOV-0259` | 0247、0250、0258 | 建立 write-ticket/editor guard 與 scope amendment workflow；AI 寫檔前先以 ticket 驗 scope，scope 外合法需求導向 amendment，已寫出的卡外 WIP 被記錄為 unattached WIP 並提供 recovery，Antigravity/Gemini 3.6 手改 `.atm/history` 與卡外 source 的反例必須在下次被提早警告與記錄。 |
-| R1 | `ATM-GOV-0239` | 0234、0235、0247、0251、0255 | 修正 closure truth gate；候選卡、receipt 形狀或把同檔案直接序列化都不得 ready-to-close。 |
+| R0M | `ATM-GOV-0260` | 0255 | 讓 line-budget、hook 與 nested commit failure 只評估 admitted candidate；unrelated worktree residue 不得膨脹 candidate，top-level JSON 必須攜帶 exact nested root cause 與 recovery。 |
+| R0N | `ATM-GOV-0261` | 0258、0259、0260 | 建立 VCS-neutral commit-candidate envelope 與 broker/steward admission；Git index/pathspec 僅是 admitted candidate 的 adapter mutation surface，direct native pathspec 只算 emergency/anomaly evidence。 |
+| R0O | `ATM-GOV-0262` | 0255；closes `ATM-BUG-2026-07-20-213` | 建立 canonical resource-overlap matcher 與 call-site inventory；physical/conflict/proposal decision 不得再以不同 exact/glob 規則產生互斥判決。 |
+| R0P | `ATM-GOV-0263` | 0257、0261；closes 206、219、227、237 | 讓 `next`／batch 自動略過終態卡並讓所有 status/recovery command 以可執行 manifest 交付；正確任務卡可零人工修指令走到下一安全點。 |
+| R1 | `ATM-GOV-0239` | 0234、0235、0247、0251、0255、0262 | 修正 closure truth gate；候選卡、receipt 形狀或把同檔案直接序列化都不得 ready-to-close。 |
 | R1.5 | `ATM-GOV-0252` | 0239、0251、ERR-0005 | 將 acceptance predicates 接到 closure packet/pre-close；per-card 支援兩種 verifier，Plan-global 強制 pre-sealed locked-policy。 |
 | R1.6 | `ATM-GOV-0253` | 0252、ERR-0005 | 以 durable two-phase saga 收束 target/planning authority；local commit、remote visibility 與 exactly-once reconcile 由 authority manifest 決定，未完成只能 closeback-pending。 |
 | R2A | `ATM-GOV-0240` | 0239 | 舊/新 frozen runner 同 scenario digest 的可鑑別紅綠基線。 |
 | R2B | `ATM-GOV-0241` | 0239 | 定義事件推導 intent、compose batch、serializability、steward、shared commit 與 queue fallback receipt contract。 |
 | R2C | `TASK-ERR-0006` | 0241、0249 | 註冊 compose candidate 語意驗證 failed／unavailable 的 exact ErrorCode 與 recovery contract。 |
 | R2D | `ATM-GOV-0254` | 0241、0249、ERR-0006 | 從 immutable base 物化 exact candidate，執行通用 post-compose semantic validation；通過後才可交 steward。 |
-| R2.5 | `ATM-GOV-0246` | 0240、0241、0248、0249、0250、0252、0254 | 建立 sealed run manifest 與唯讀 live/post-run 儀表，先讓人與機器可判讀 safe compose、semantic validation、fallback 與 acceptance predicate readiness。 |
-| R3A | `ATM-GOV-0242` | 0240、0241、0246 | Codex 執行 0237、Claude 執行 0238；主 cell 證明同檔案 compose-first，fallback cell 證明真衝突 queue/wakeup。 |
-| R3B | `ATM-GOV-0243` | 0240、0241、0246 | 以同一真 ATM workload 完成 compose-first／queue-only matched AB/BA，並投影每個 paired cell。 |
+| R2.5 | `ATM-GOV-0246` | 0240、0241、0248、0249、0250、0252、0254、0263 | 建立 sealed run manifest 與唯讀 live/post-run 儀表，先讓人與機器可判讀 safe compose、semantic validation、fallback、autonomous continuation 與 acceptance predicate readiness。 |
+| R3A | `ATM-GOV-0242` | 0240、0241、0246、0261、0263 | Codex 執行 0237、Claude 執行 0238；以正常 commit-candidate lane 與 autonomous continuation 完成主 safe-compose cell 與真衝突 fallback，不得靠 native pathspec／manual stage 仲裁。 |
+| R3B | `ATM-GOV-0243` | 0240、0241、0242、0246、0261 | 先消耗 passing dogfood receipt，再以同一真 ATM workload 完成 compose-first／queue-only matched AB/BA 與 pre-sealed A/A noise calibration。 |
 | R4 | `ATM-GOV-0244` | 0242、0243 | 核銷 backlog 213–221，完成 rollback、source/frozen/release parity 與 breaker trip/reset drill。 |
-| R5 | `ATM-GOV-0245` | 0244、0250、0252、0253、0254、0255、0256、0257、0258 | 建立單一 evidence aggregator，由 canonical 來源自動產生最終 verdict，且只接受雙 authority 完成的 saga receipt、exact candidate semantic-validation evidence、可重播 BCR admission、fresh runner snapshot、actor continuity evidence 與 transactional commit/stage isolation evidence。 |
+| R5 | `ATM-GOV-0245` | 0244、0250、0252、0253、0254、0255、0256、0257、0258、0259、0260、0261、0262、0263 | 建立單一 evidence aggregator，由 canonical 來源自動產生最終 verdict；另強制 A/A noise calibration、VCS-neutral candidate isolation、executable autonomous continuation 與 N=2 claim boundary。 |
 
-0251 與 0247 可先並行，分別建立 evidence 與 execution topology 的純政策。ERR-0005 在 0251 schema 穩定後註冊 exact operator contracts；0255 必須先證明官方 Broker resolution 命令能被 claim admission 接受，0239 才能重新 claim。完成後由 0252 接到 closure packet 與 two-key verifier，再由 0253 建立跨 authority closeback saga。0240 與 0241 可在 0239 完成後並行；0248、0249 可與 0255、0256、0257 的 disjoint scope 並行，但 0249 的 runner parity/closeout 不得把舊 snapshot `cacheHitSkip` 當成同步成功。0258 在 0256/0257 建立 sealed-source 與 actor continuity 後補上 transactional stage/commit queue，使 release artifact、backlog/projection 與 task closeout commit 都能由 ATM 排序提交而非靠隊長手動 stage。ERR-0004 在 0249 receipt schema 穩定後註冊 steward contracts；ERR-0006 在 0241 event contract 與 0249 candidate/apply seam 穩定後註冊 semantic-validation contracts。0254 等待 0241、0249、ERR-0006，0250 再等待 0249、0254 與 ERR-0004，使任何 shared-write admission 都必須綁定 exact passing candidate。0246 必須等 proposal provider、唯一寫入、防繞道、post-compose semantic gate、event contract 及 acceptance gate 都完成。0242 與 0243 只能在 dashboard preflight 為 ready 後開始。0253、0255、0256、0257、0258 不阻塞純 replay implementation，但必須在 0245 global verdict 前完成。所有平行 worker 共用 canonical worktree；私有計算狀態是 in-memory／bounded proposal tree，不是 Git worktree 或 branch。
+0251 與 0247 可先並行，分別建立 evidence 與 execution topology 的純政策。現場解鎖順序固定為 0260 → 0257 → 0256 → 0258 → 0259 → 0261；0262 可在不重疊時並行，但必須早於 0239。0263 等 0257 與 0261 後驗證 autonomous continuation。ERR-0005 在 0251 schema 穩定後註冊 exact operator contracts；0255 已證明官方 Broker resolution 命令可被 claim admission 接受，但 0262 尚須證明所有 overlap call sites 使用同一規則，兩者皆成立後 0239 才能重新 claim。完成後由 0252 接到 closure packet 與 two-key verifier，再由 0253 建立跨 authority closeback saga。0240 與 0241 可在 0239 完成後並行。ERR-0004 在 0249 receipt schema 穩定後註冊 steward contracts；ERR-0006 在 0241 event contract 與 0249 candidate/apply seam 穩定後註冊 semantic-validation contracts。0254 等待 0241、0249、ERR-0006，0250 再等待 0249、0254 與 ERR-0004，使任何 shared-write admission 都必須綁定 exact passing candidate。0246 必須等 proposal provider、唯一寫入、防繞道、post-compose semantic gate、event contract 及 acceptance gate 都完成。0242 只有在 0246、0261、0263 passing 後開始；0243 再消耗 0242 passing dogfood receipt。所有 0255–0263 evidence 都必須在 0245 global verdict 前完成。所有平行 worker 共用 canonical worktree；私有計算狀態是 in-memory／bounded proposal tree，不是 Git worktree 或 branch。
 
 ### Plan 3.1 planned ErrorCode catalog
 
@@ -260,6 +319,8 @@ flowchart TD
 - runner-sync 的 queue ticket、cache decision、receipt 與 drift clearance 必須綁定同一 sealed source/config/output digest；舊 HEAD 的 `cacheHitSkip` 不得清除新 source 的 `ATM_RUNNER_SYNC_REQUIRED`。
 - claim、Broker、runner-sync 與 closeout 必須保留同一顯式 actor authority；ambient `AGENT_IDENTITY` 與 repo default 不得在 shared-write 邊界靜默取代 active lane owner。
 - `ATM-BUG-2026-07-22-224`–`226` 必須有 canonical backlog item、owning card 與 terminal disposition，才可產生 Plan 3.1 final verdict。
+- 本計畫「全 backlog 盤點與插單裁決」列出的 blocking/absorbed items 必須全部具有 owning card、command-backed terminal disposition 或明確 non-blocking owner rationale；不能只因 item 狀態仍是 `Open` 就一律重做，也不能只因後續卡存在就假設已修。
+- `ATM-GOV-0262` 的 call-site parity 與 `ATM-GOV-0263` 的零人工命令修復 replay 必須通過；任一 overlap call site 漂移、done queue head 重現、emitted command 回 `ATM_CLI_USAGE`，或正常流程仍需總隊長補指令，都使 autonomous verdict 為 fail。
 
 ### Stop rule
 
@@ -339,7 +400,7 @@ Evidence limitation: the repaired evidence satisfies the protected closure check
 與 `ATM-GOV-0235` 依 target ledger 保持歷史終態 `done`，不重開、不改寫其 task/event/evidence
 歷史；但 0234／0235 的既有證據 disposition 為 `superseded-for-plan-closure`，不得再用來滿足
 Plan 3.0／3.1 的 semantic closure predicates。真正的 420-cell command-backed matrix、真實未交付
-交集卡 dogfood、paired AB/BA performance verdict 與 source/target/remote closeout，由 0239–0254
+交集卡 dogfood、paired AB/BA performance verdict 與 source/target/remote closeout，由 0239–0261
 continuation repair lineage 承接；在新 evidence verdict 通過前，本計畫維持 `active`。
 
 | 波次 | 任務卡 | 依賴 | 交付與驗收 |
@@ -440,6 +501,7 @@ continuation repair lineage 承接；在新 evidence verdict 通過前，本計�
 ### L5 Paired A/B 效能與觀測
 
 - 以同一個「同檔案、disjoint bounded intents」workload 比較 compose-first 與相同 sealed base/config/build 的 queue-only AB/BA，至少 3 repeats；queue-only arm 必須由 policy CLI trip 產生，不得換 build、移除交集或改用另一份 workload。correctness 與 performance 必須來自同一組有效 sealed cells；不足樣本只能 `inconclusive`，且 0235 不得 close。
+- AB/BA 前先執行 pre-sealed A/A null-control cell：同一 arm、workload、base/build/runner、validator union 與 timing segmentation 重複配對，以 command/event receipts 推導雜訊分布。報告至少包含 median 與預先宣告的 dispersion statistic（例如 IQR）；AB/BA 增益除了達到 25% 外，還必須超過封存的 A/A noise bound，落在雜訊帶內一律 `inconclusive`。
 - median makespan 與 active throughput 沿用 2.2 門檻：各改善至少 25%；production cost ratio 不高於 1.10。
 - 所有 shared-write producer observed coverage 100%；每份 task summary 有 window/watermark/sealed digest。
 - 必填數據：enqueue/dequeue/publish timestamps、intent/anchor/range digest、adapter decision、compose batch membership、serializability proof digest、steward apply latency、shared commit/member attribution、`waitedMs`、overlap duration、wakeup count、revalidation count、scope amendment phase、terminal authorization count、`breakerTripCount`、`unexpectedBreakerTripCount`、`timeInQueueOnlyMs`、`timeInQueueOnlyRatio`、trip reason 與 recovery latency。
@@ -535,13 +597,15 @@ continuation repair lineage 承接；在新 evidence verdict 通過前，本計�
 - 0226 現行 frozen 紅色基線有效，且 0227 fail-closed guard 在任何 B1 平行 claim 前已部署並以 frozen runner 證明 legacy active authorization 為 0。
 - 0227、0236、0230、0231、0228、0229、0232、0233 的 source、frozen runner、release artifacts 與 adopter projection parity 全數通過。
 - 0233 migration apply/rollback round-trip、exactly-once 與 immutable receipt 通過。
-- 0234 的歷史 evidence 保持 `superseded-for-plan-closure`；0239–0254 continuation lineage 重新產生 controlled replay、真實交集任務 dogfood 與 paired A/B，有效結果不能以 deterministic fixture、歷史 `done` 或移除 declared intersection 取代。
+- 0234 的歷史 evidence 保持 `superseded-for-plan-closure`；0239–0261 continuation lineage 重新產生 controlled replay、真實交集任務 dogfood、paired A/B、write-ticket、candidate-scoped recovery 與 VCS-neutral commit-candidate isolation evidence，有效結果不能以 deterministic fixture、歷史 `done`、native emergency pathspec 或移除 declared intersection 取代。
 - exact composed candidate 在 neutral-steward apply 前已通過 sealed、command-backed semantic validator union；semantic-break negative control 具有鑑別力，failed/unavailable/inconclusive cell 的 canonical write count 為 0。
 - 所有 safety／governance runtime gates 在各自 close 前具有 card-attributable source/frozen parity；共用 build 不得弱化逐卡證據。
 - 所有 closure-critical claims 都由 0251 predicate contract 與 0252 independent gate 判定；command exit 0、producer label、低 realness 或 missing-to-zero fallback 不得滿足驗收。
 - Plan-global closure 具有 pre-sealed locked-policy verifier receipt；另一位 actor 的簽署只能作補充 review，不能獨立 close Plan。
 - correctness 七個零值成立，observed coverage 100%，沒有 active stale BCR/ticket/direction-lock authorization。
 - `parallelOverlapRatio >= 0.30`、`serializedAdmissionRatio <= 0.70`，且 unresolved starvation 由 pre-sealed threshold 自動判定。
+- paired performance 必須具有 pre-sealed A/A null-control 與 dispersion evidence；AB/BA 的 25% 增益若未超過 A/A noise bound，結果只能是 `inconclusive`。
+- 0245 最終宣稱只涵蓋已實證的 N=2、單一 canonical worktree/base/HEAD、同檔 disjoint bounded intents；N>2 fairness 與任意 workload 並行保持未證明，不得由 N=2 結果外推。
 - healthy replay 沒有非注入 breaker trip 且 queue-only residency 為 0；故障演練能自動 trip 到 `queue-only`，並只能以新的 passing evidence digest reset。
 - 2.2 未完成驗收被逐項映射為 `satisfied`、`superseded-with-evidence` 或仍 `open`；只要有一項 open，3.0 保持 active。
 - target/planning closeback 具有 0253 durable saga receipt；任一 authority 的 manifest-required remote SHA 不可達、push receipt 缺失、pending、CAS drift 或 reconcile 未完成時，3.0 保持 active。

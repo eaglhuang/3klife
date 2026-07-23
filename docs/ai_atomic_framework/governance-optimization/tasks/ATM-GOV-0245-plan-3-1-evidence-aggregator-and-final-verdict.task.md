@@ -16,6 +16,10 @@ depends_on:
   - ATM-GOV-0257
   - ATM-GOV-0258
   - ATM-GOV-0259
+  - ATM-GOV-0260
+  - ATM-GOV-0261
+  - ATM-GOV-0262
+  - ATM-GOV-0263
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -92,6 +96,12 @@ are untrusted input until reconstructed from canonical sources.
 - [ ] Global close treats non-delivery WIP commits as preservation evidence only: they prove interrupted work was saved and attributed, but they cannot count as task delivery, semantic validation, release artifact publication, or closeout evidence.
 - [ ] The verdict consumes `ATM-GOV-0258` evidence for broker-managed transactional stage/commit isolation and `ATM-BUG-2026-07-22-229` dirty-release recovery: queue ordering, request-owned staging, zero cross-actor staged-file leakage, post-close release artifact commit automation, runner receipt disposition, and manual captain intervention count.
 - [ ] The verdict consumes `ATM-GOV-0259` write-ticket/editor guard evidence: pre-write scope checks, amendment-required routing, unattached-WIP recording, true violation escalation, generated editor adapter instructions for Codex/Claude/Cursor/Gemini/Antigravity, and replay of the Antigravity/Gemini 3.6 out-of-scope counterexample.
+- [ ] The verdict consumes `ATM-GOV-0260` evidence proving line-budget and nested commit diagnostics are scoped to the admitted commit candidate rather than unrelated worktree residue, with the nested root cause and executable recovery surfaced at the top level.
+- [ ] The verdict consumes `ATM-GOV-0261` evidence proving normal delivery uses a VCS-neutral commit-candidate envelope and broker/steward admission before repository-adapter mutation. Direct native pathspec or other emergency commits are anomaly evidence and contribute zero autonomous-success samples.
+- [ ] The verdict consumes `ATM-GOV-0262` call-site inventory/red-green evidence and fails if any Broker overlap consumer uses divergent exact/glob/resource-dimension semantics.
+- [ ] The verdict consumes `ATM-GOV-0263` continuation receipts and reports emitted commands, usage errors, automatic continuations, terminal-task pruning, false stops, and manual captain interventions; normal delivery requires zero human command repair after dispatch.
+- [ ] Any performance pass consumes a pre-sealed A/A null-control receipt and dispersion statistic. The measured AB/BA gain must satisfy the existing 25% threshold and exceed the A/A noise bound; otherwise the performance predicate is `inconclusive`.
+- [ ] The final claim is bounded to the proven topology: two concurrent actors, one canonical worktree/base/HEAD, and same-file disjoint bounded intents. N greater than 2 fairness or arbitrary workload concurrency is reported as unproven and cannot be inferred from this verdict.
 - [ ] Plan status advances only after this verdict passes. Historical 0234/0235 records remain terminal and immutable; continuation evidence and the 0253 closeback saga carry the new closure truth. Remote SHA parity is checked after push by the implementing captain.
 
 ## Evidence and rollback

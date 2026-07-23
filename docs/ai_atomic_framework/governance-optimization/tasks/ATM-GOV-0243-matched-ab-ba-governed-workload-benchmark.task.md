@@ -9,6 +9,8 @@ depends_on:
   - ATM-GOV-0240
   - ATM-GOV-0241
   - ATM-GOV-0246
+  - ATM-GOV-0242
+  - ATM-GOV-0261
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -67,8 +69,11 @@ matched AB/BA on the same sealed base, configuration, runner digest, and build.
 - [ ] Both arms run the same sealed semantic validator union against the exact candidate/output they intend to deliver. A failed, unavailable, inconclusive, stale, or digest-mismatched validation invalidates the cell and contributes no performance sample.
 - [ ] The benchmark includes the locked serializable-but-semantically-broken negative control and proves it is rejected before canonical write in both policy modes; performance cannot be measured by bypassing correctness.
 - [ ] AB and BA each have at least three valid repeats per accepted comparison cell.
+- [ ] Before AB/BA measurement, a pre-sealed A/A null-control cell runs the same arm twice under the same workload, base, build, runner, validator union, and timing segmentation. Its paired dispersion is derived from command/event receipts rather than caller-provided constants.
+- [ ] The report includes median and a predeclared dispersion statistic such as IQR for A/A and AB/BA. A claimed improvement must meet the existing 25% threshold and exceed the sealed A/A noise bound; an effect inside that bound is `inconclusive`, never pass.
 - [ ] Makespan, active throughput, production cost, compose admission rate, steward apply latency, shared-commit count, correctness, queue residency, and starvation derive from the same command/event receipts.
 - [ ] Timing is split into proposal generation, proposal validation, compose planning, steward apply, and shared commit. Report proposal/validation overlap separately from the serialized steward tail; no claim may describe physical canonical writes as parallel.
+- [ ] Runner/build timing uses the same paired interface for full, incremental, and cache decisions with phase attribution and confidence/noise labels; an `incrementalBuild` decision is not reported as a speedup when matched evidence is slower (`ATM-BUG-2026-07-20-210`).
 - [ ] Arm-specific delay constants, fixed cost ratios, cosmetic scale/contention fields, and prefilled zero counters cannot influence the verdict.
 - [ ] Provider, task id, arm name, or scenario label cannot select delays, costs, success paths, or other result-shaping control flow (`INV-ATM-009`).
 - [ ] Missing pairs, receipt loss, build drift, or insufficient samples return `inconclusive`.

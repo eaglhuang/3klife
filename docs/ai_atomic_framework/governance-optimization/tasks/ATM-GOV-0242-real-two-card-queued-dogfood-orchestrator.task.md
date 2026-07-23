@@ -9,6 +9,8 @@ depends_on:
   - ATM-GOV-0240
   - ATM-GOV-0241
   - ATM-GOV-0246
+  - ATM-GOV-0261
+  - ATM-GOV-0263
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -62,6 +64,8 @@ not invent task transitions or lifecycle labels.
 ## Acceptance
 
 - [ ] ATM-GOV-0246 dashboard preflight is ready and the sealed run manifest exists before either claim.
+- [ ] ATM-GOV-0261 has command-backed passing evidence for the normal VCS-neutral commit-candidate lane. The dogfood must not depend on a direct native pathspec commit, alternate index, manual staging arbitration, or another emergency/anomaly delivery path.
+- [ ] ATM-GOV-0263 has passing emitted-command and batch-continuation evidence; both worker lanes follow task-card/playbook output without a captain repairing status/recovery commands or manually pruning terminal queue heads.
 - [ ] Codex/0237 and Claude/0238 use two explicit actors and OS processes but the same canonical worktree/base/HEAD/build; their active intervals overlap, and no task lane creates or switches a Git branch, worktree, or index.
 - [ ] Both cards preserve `dashboard-view-model.ts` throughout the run and declare disjoint semantic anchors/bounded ranges within it; neither narrows scope to avoid arbitration.
 - [ ] Both workers produce bounded patch/mutation proposals without directly writing the shared file. Existing format adapters and transactional composer select both requests in one mutation batch and emit a serializability proof.
@@ -73,6 +77,7 @@ not invent task transitions or lifecycle labels.
 - [ ] The primary safe-compose cell may record zero queue residency and must fail if path equality alone causes serialization. `not-required`, direct-write, separate-worktree, or missing compose/steward evidence is invalid.
 - [ ] A separate sealed cell uses the same generic workload adapter but introduces a real logical collision or stale base; only this cell must reach canonical queue/revalidation and, if queued, positive `waitedMs` plus automatic successor wakeup.
 - [ ] Both target ledger cards close, active authorization returns to zero, and no manual wakeup, bypass, emergency edit, or direct `.atm` mutation occurs.
+- [ ] Manual captain intervention count is zero after the sealed run starts; a genuine task-card error or owner-only stop invalidates the run instead of being silently repaired in chat.
 - [ ] Dashboard post-run view is retained and reconstructs the same run digest from canonical sources; provider/task ids never alter orchestration control flow.
 
 ## Evidence and rollback

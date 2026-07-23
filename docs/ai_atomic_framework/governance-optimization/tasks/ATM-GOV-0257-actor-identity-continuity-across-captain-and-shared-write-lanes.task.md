@@ -23,6 +23,7 @@ scopePaths:
   - tests/cli/identity-per-actor-routing.test.ts
   - tests/cli/runner-sync-build-actor-continuity.test.ts
   - tests/cli/command-manifest-recovery-chain.test.ts
+  - tests/cli/emergency-git-author-continuity.test.ts
 deliverables:
   - packages/cli/src/commands/actor-registry.ts
   - packages/cli/src/commands/identity.ts
@@ -32,10 +33,12 @@ deliverables:
   - tests/cli/identity-per-actor-routing.test.ts
   - tests/cli/runner-sync-build-actor-continuity.test.ts
   - tests/cli/command-manifest-recovery-chain.test.ts
+  - tests/cli/emergency-git-author-continuity.test.ts
 validators:
   - node --strip-types tests/cli/identity-per-actor-routing.test.ts
   - node --strip-types tests/cli/runner-sync-build-actor-continuity.test.ts
   - node --strip-types tests/cli/command-manifest-recovery-chain.test.ts
+  - node --strip-types tests/cli/emergency-git-author-continuity.test.ts
   - npm run typecheck
 errorCodes: []
 createdByCommand: atm plan card create
@@ -66,6 +69,8 @@ Preserve one explicit actor authority across `next`, claim, Team Broker resoluti
 - [ ] `ATM_ACTOR_ID` or an explicit CLI actor remains authoritative across child build commands; stale `AGENT_IDENTITY` is diagnostic-only when it disagrees.
 - [ ] Commands without sufficient actor continuity fail before mutation and identify the active claim/ticket owner plus the exact recovery command.
 - [ ] Regressions cover Codex and Claude actor handoff, stale repo defaults, stale legacy environment identity, and queue-head actor mismatch.
+- [ ] Identity provenance distinguishes verified active actor/lane authority from editor/model/ambient hints across Codex, Claude, Cursor, Gemini/Antigravity, and other adapters (`ATM-BUG-2026-07-12-115`).
+- [ ] Emergency/native fallback manifests, when explicitly authorized, set Git author and committer identity from the active actor authority and verify trailers plus commit metadata; stale host author cannot silently survive (`ATM-BUG-2026-07-22-236`).
 - [ ] No task id, actor slug, editor, or model name is hard-coded into the policy.
 - [ ] Backlog item `ATM-BUG-2026-07-22-226` is linked in delivery evidence.
 

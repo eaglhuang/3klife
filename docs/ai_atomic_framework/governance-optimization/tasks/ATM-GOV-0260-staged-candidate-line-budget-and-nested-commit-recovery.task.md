@@ -116,6 +116,7 @@ reapply the stale line-budget policy during the inner commit.
   attempt record in the top-level JSON response, including exact nested code,
   summary, attempt path, affected files or numstat when available, and the
   smallest safe next action.
+- [ ] Commit wrapper dry-run, real wrapper execution, and pre-commit hook consume the same candidate/ownership/residue policy; a dry-run pass followed by hook-only foreign-residue failure reproduces `ATM-BUG-2026-07-13-162` and must fail parity tests.
 - [ ] Exact registry entries exist for `ATM_GIT_COMMIT_FAILED` and
   `ATM_TOUCHED_PHYSICAL_LINE_BUDGET_BLOCKED`; if a new candidate-specific code
   is introduced, `ATM_GIT_COMMIT_CANDIDATE_LINE_BUDGET_BLOCKED` is also
@@ -147,5 +148,6 @@ reapply the stale line-budget policy during the inner commit.
   dirty lines instead of the WIP/candidate commit set.
 - [ ] Plan 3.1 final verdict cannot claim autonomous high-coupling parallel
   development until this replay has command-backed evidence.
+- [ ] Delivery evidence gives terminal dispositions to `ATM-BUG-2026-07-22-230` and `ATM-BUG-2026-07-22-233`; stale frozen-hook bootstrap is tested as a generalized source/frozen policy mismatch, not a Gemini/task-specific exception.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-22T15:57:17.783Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0260-staged-candidate-line-budget-and-nested-commit-recovery.task.md","contentDigest":"sha256:f8371f59734be01070270c6327496bfa8015031572554f0c66c3ecaa16dcbee1"} -->

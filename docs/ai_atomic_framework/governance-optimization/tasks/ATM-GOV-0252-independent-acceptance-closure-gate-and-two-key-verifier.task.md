@@ -24,6 +24,7 @@ scopePaths:
   - schemas/governance/closure-packet.schema.json
   - tests/cli/closure-acceptance-evidence-gate.test.ts
   - tests/cli/closure-required-gates-contract.test.ts
+  - tests/cli/taskflow-close-readiness-parity.test.ts
   - tests/fixtures/plan3-fake-green/**
 deliverables:
   - packages/cli/src/commands/tasks/close-orchestrator/acceptance-evidence-gate.ts
@@ -32,9 +33,11 @@ deliverables:
   - schemas/governance/closure-packet.schema.json
   - tests/cli/closure-acceptance-evidence-gate.test.ts
   - tests/cli/closure-required-gates-contract.test.ts
+  - tests/cli/taskflow-close-readiness-parity.test.ts
 validators:
   - node --strip-types tests/cli/closure-acceptance-evidence-gate.test.ts
   - node --strip-types tests/cli/closure-required-gates-contract.test.ts
+  - node --strip-types tests/cli/taskflow-close-readiness-parity.test.ts
   - npm run validate:schemas
   - npm run typecheck
 errorCodes:
@@ -82,6 +85,8 @@ prove the declared verifier mode.
 - [ ] A locked positive fixture with real command/event receipts, adequate realness, discriminating negative control, and an independent verifier passes without Plan 3- or task-specific branches.
 - [ ] Closure preflight emits `ATM_TASK_CLOSE_ACCEPTANCE_EVIDENCE_INSUFFICIENT` for semantic evidence failure and `ATM_TASK_CLOSE_INDEPENDENT_VERIFIER_REQUIRED` for a missing second key, preserving generated registry recovery semantics.
 - [ ] Closure-packet schema, framework-development packet generator, direct task close, and taskflow close use the same gate contract; no adapter owns a second acceptance algorithm.
+- [ ] `pre-close`, close dry-run, and close `--write` evaluate the same required validators, broker/commit ownership, and closure-packet contract. A dry-run `ready` followed by a first-write-only gate failure reproduces `ATM-BUG-2026-07-11-098` and must turn red.
+- [ ] Commit-wrapper and hook observations used by closure share one ownership/residue classifier; dry-run/write disagreement from `ATM-BUG-2026-07-13-162` is rejected as parity failure.
 - [ ] Existing task cards without `acceptanceEvidence` remain backward-compatible. A family or card may opt into closure-critical predicates without forcing unrelated low-risk tasks into a two-actor workflow.
 - [ ] Focused tests include forged producer labels, digest substitution, post-hoc threshold change, same-actor verifier, verifier scope overlap, missing data, failed negative control, lower-realness substitution, and valid locked-policy/separate-actor paths.
 - [ ] Short English comments explain why adapters collect evidence but cannot decide acceptance, and why `inconclusive` is a terminal block for closure rather than a healthy zero.
