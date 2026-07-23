@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0004
 title: Steward receipt required and invalid shared-write error contracts
-status: planned
+status: done
 owner: atm-error-governance
 priority: P0
 milestone: ATM-3.1-R0
@@ -42,6 +42,15 @@ atomizationImpact:
       source: docs/governance/error-code-registry.json
       disposition: inline
       inlineReason: "Owner-approved canonical registry and generated index must remain unified; splitting two entries into another registry would create competing authority."
+completed_at: "2026-07-23T11:00:51.757Z"
+completed_by_agent: "claude-002-plan31-captain"
+closedAt: "2026-07-23T11:00:51.757Z"
+closedByActor: "claude-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T11-00-51-757Z-close-ae7a46c686cf"
+lastTransitionAt: "2026-07-23T11:00:51.757Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "92d005a1ba26dcd4bb0aebc225e76c60694786b8"
 ---
 
 # TASK-ERR-0004 Steward receipt required and invalid shared-write error contracts
