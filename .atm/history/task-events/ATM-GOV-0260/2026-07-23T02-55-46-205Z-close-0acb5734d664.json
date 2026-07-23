@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-23T02-55-46-205Z-close-0acb5734d664",
+  "taskId": "ATM-GOV-0260",
+  "action": "close",
+  "actorId": "cursor-002-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0260-staged-candidate-line-budget-and-nested-commit-recovery.task.md",
+  "taskSha256": "sha256:8cc3f7993825e191a6d9b965b200894de3c7cf9eb75bd2028432d26cbb86fee3",
+  "createdAt": "2026-07-23T02:55:46.205Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0260 --actor cursor-002-plan31-captain"
+}

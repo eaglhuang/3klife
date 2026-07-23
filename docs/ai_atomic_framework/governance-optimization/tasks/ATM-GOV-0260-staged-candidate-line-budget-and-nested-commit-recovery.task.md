@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0260
 title: Staged candidate line-budget and nested commit recovery
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.1-R0.12
@@ -63,6 +63,15 @@ atomizationImpact:
       source: packages/cli/src/commands/git-governance/implementation.ts
       disposition: follow-up-card
 createdByCommand: atm plan card create
+completed_at: "2026-07-23T02:55:46.205Z"
+completed_by_agent: "cursor-002-plan31-captain"
+closedAt: "2026-07-23T02:55:46.205Z"
+closedByActor: "cursor-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T02-55-46-205Z-close-0acb5734d664"
+lastTransitionAt: "2026-07-23T02:55:46.205Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "37c752f44aaee0e819c70975aa4f5d83e71ea676"
 ---
 
 # ATM-GOV-0260 Staged candidate line-budget and nested commit recovery
