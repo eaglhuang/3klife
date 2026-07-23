@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-23T04-22-54-201Z-close-df2a2a5a0765",
+  "taskId": "ATM-GOV-0262",
+  "action": "close",
+  "actorId": "claude-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0262-canonical-overlap-matcher-call-site-parity.task.md",
+  "taskSha256": "sha256:8a0706f4b7ce3822f2b2339f76a5672d8d32b0b1573966576e7cddd2c0ab0547",
+  "createdAt": "2026-07-23T04:22:54.201Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0262 --actor claude-plan31-captain"
+}

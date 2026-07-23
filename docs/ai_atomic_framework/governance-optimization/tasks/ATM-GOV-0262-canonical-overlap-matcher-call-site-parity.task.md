@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0262
 title: Canonical overlap matcher call-site parity
-status: planned
+status: done
 owner: atm-broker
 priority: P0
 milestone: ATM-3.1-R0.14
@@ -44,6 +44,15 @@ atomizationImpact:
       source: packages/core/src/broker/resource-overlap.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-23T04:22:54.201Z"
+completed_by_agent: "claude-plan31-captain"
+closedAt: "2026-07-23T04:22:54.201Z"
+closedByActor: "claude-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T04-22-54-201Z-close-df2a2a5a0765"
+lastTransitionAt: "2026-07-23T04:22:54.201Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "36083cee102d9c7fb793931332de81a2ea7ab93e"
 ---
 
 # ATM-GOV-0262 Canonical overlap matcher call-site parity
