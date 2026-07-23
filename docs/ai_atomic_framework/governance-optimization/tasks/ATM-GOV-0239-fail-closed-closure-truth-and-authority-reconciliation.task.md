@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0239
 title: Fail-closed closure truth and authority reconciliation
-status: planned
+status: done
 owner: atm-performance
 priority: P0
 milestone: ATM-3.1-R1
@@ -57,6 +57,15 @@ atomizationImpact:
       source: packages/cli/src/commands/broker/replay/closure-policy.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-23T11:32:12.157Z"
+completed_by_agent: "cursor-002-plan31-captain"
+closedAt: "2026-07-23T11:32:12.157Z"
+closedByActor: "cursor-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T11-32-12-157Z-close-2585d754640d"
+lastTransitionAt: "2026-07-23T11:32:12.157Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a9d23e64c3e17729e401bd331744ae785bf7f90a"
 ---
 
 # ATM-GOV-0239 Fail-closed closure truth and authority reconciliation

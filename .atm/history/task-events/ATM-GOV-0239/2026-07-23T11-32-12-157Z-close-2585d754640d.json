@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-23T11-32-12-157Z-close-2585d754640d",
+  "taskId": "ATM-GOV-0239",
+  "action": "close",
+  "actorId": "cursor-002-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0239-fail-closed-closure-truth-and-authority-reconciliation.task.md",
+  "taskSha256": "sha256:a4c73cfb46aa3a5a9bd9e4765fea959ab7a1bc5a2c8e61af9d65c6ae0938bb1c",
+  "createdAt": "2026-07-23T11:32:12.157Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0239 --actor cursor-002-plan31-captain"
+}
