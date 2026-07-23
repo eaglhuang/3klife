@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0256
 title: Runner-sync source snapshot and cache-hit freshness gate
-status: planned
+status: done
 owner: atm-runner-sync
 priority: P0
 milestone: ATM-3.1-R0.8
@@ -56,6 +56,15 @@ atomizationImpact:
       pattern: Policy Object
       source: packages/cli/src/commands/framework-development/runner-sync-admission.ts
       disposition: extract
+completed_at: "2026-07-23T06:01:03.804Z"
+completed_by_agent: "claude-plan31-captain"
+closedAt: "2026-07-23T06:01:03.804Z"
+closedByActor: "claude-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T06-01-03-804Z-close-38571913d076"
+lastTransitionAt: "2026-07-23T06:01:03.804Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "137e9cd846ce184ee1b30bfdb6d66ecc761d4697"
 ---
 
 # ATM-GOV-0256 Runner-sync source snapshot and cache-hit freshness gate

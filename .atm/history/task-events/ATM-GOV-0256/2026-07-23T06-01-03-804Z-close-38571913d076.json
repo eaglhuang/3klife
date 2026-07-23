@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-23T06-01-03-804Z-close-38571913d076",
+  "taskId": "ATM-GOV-0256",
+  "action": "close",
+  "actorId": "claude-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0256-runner-sync-source-snapshot-and-cache-hit-freshness-gate.task.md",
+  "taskSha256": "sha256:9fe76c96a45f2c5d5196d3eeacf01bb1fc65a655ddabad398c5eac01011ef14c",
+  "createdAt": "2026-07-23T06:01:03.804Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0256 --actor claude-plan31-captain"
+}
