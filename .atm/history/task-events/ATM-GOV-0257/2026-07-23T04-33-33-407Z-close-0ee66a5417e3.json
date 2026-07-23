@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-23T04-33-33-407Z-close-0ee66a5417e3",
+  "taskId": "ATM-GOV-0257",
+  "action": "close",
+  "actorId": "cursor-grok45-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0257-actor-identity-continuity-across-captain-and-shared-write-lanes.task.md",
+  "taskSha256": "sha256:5b71934a5f9b8a187b8c2054332f16215f434f57f8fbecb3fd2dd049ef014c22",
+  "createdAt": "2026-07-23T04:33:33.407Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0257 --actor cursor-grok45-plan31-captain"
+}

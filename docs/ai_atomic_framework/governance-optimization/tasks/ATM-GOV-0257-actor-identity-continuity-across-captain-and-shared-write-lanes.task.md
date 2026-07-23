@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0257
 title: Actor identity continuity across captain and shared-write lanes
-status: planned
+status: done
 owner: atm-identity-governance
 priority: P1
 milestone: ATM-3.1-R0.9
@@ -55,6 +55,15 @@ atomizationImpact:
       pattern: Policy Object
       source: packages/cli/src/commands/shared/identity-normalization.ts
       disposition: extract
+completed_at: "2026-07-23T04:33:33.407Z"
+completed_by_agent: "cursor-grok45-plan31-captain"
+closedAt: "2026-07-23T04:33:33.407Z"
+closedByActor: "cursor-grok45-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T04-33-33-407Z-close-0ee66a5417e3"
+lastTransitionAt: "2026-07-23T04:33:33.407Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b7b2d429b363cd55c73b4b588b34e7920fc6aa17"
 ---
 
 # ATM-GOV-0257 Actor identity continuity across captain and shared-write lanes
