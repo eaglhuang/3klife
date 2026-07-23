@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-23T13-04-38-990Z-close-7febd7fbeb44",
+  "taskId": "ATM-GOV-0241",
+  "action": "close",
+  "actorId": "cursor-002-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0241-event-derived-replay-lifecycle-receipt-contract.task.md",
+  "taskSha256": "sha256:65d070146af9e4219cc07c03a9315aa4c3cbdbd4ada77e439de78fcd902bafae",
+  "createdAt": "2026-07-23T13:04:38.990Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0241 --actor cursor-002-plan31-captain"
+}

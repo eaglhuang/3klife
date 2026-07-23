@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0241
 title: Event-derived replay lifecycle receipt contract
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: ATM-3.1-R2
@@ -45,6 +45,15 @@ atomizationImpact:
       source: packages/core/src/broker/replay/lifecycle-receipts.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-23T13:04:38.990Z"
+completed_by_agent: "cursor-002-plan31-captain"
+closedAt: "2026-07-23T13:04:38.990Z"
+closedByActor: "cursor-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-23T13-04-38-990Z-close-7febd7fbeb44"
+lastTransitionAt: "2026-07-23T13:04:38.990Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6b44ce89e89183d1a904ab5b7494d25cf9b01e05"
 ---
 
 # ATM-GOV-0241 Event-derived replay lifecycle receipt contract
