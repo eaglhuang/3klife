@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0258
 title: Broker-managed transactional stage commit queue
-status: planned
+status: done
 owner: atm-git-governance
 priority: P0
 milestone: ATM-3.1-R0.10
@@ -85,6 +85,15 @@ atomizationImpact:
       pattern: Command Facade
       source: packages/cli/src/commands/framework-development/build-release-hygiene-hints.ts
       disposition: extract
+completed_at: "2026-07-24T05:15:55.865Z"
+completed_by_agent: "antigravity-gemini35-plan31-captain"
+closedAt: "2026-07-24T05:15:55.865Z"
+closedByActor: "antigravity-gemini35-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T05-15-55-865Z-close-f36e0a363b9a"
+lastTransitionAt: "2026-07-24T05:15:55.865Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "be91f583ab1f823ac714690a8f9eac619396eb1b"
 ---
 
 # ATM-GOV-0258 Broker-managed transactional stage commit queue

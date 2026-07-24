@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T05-15-55-865Z-close-f36e0a363b9a",
+  "taskId": "ATM-GOV-0258",
+  "action": "close",
+  "actorId": "antigravity-gemini35-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0258-broker-managed-transactional-stage-commit-queue.task.md",
+  "taskSha256": "sha256:dab86f198a0885b1001cdb9e0b939a9fed31d7e4dc7e46da742496e2b0fd4452",
+  "createdAt": "2026-07-24T05:15:55.865Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0258 --actor antigravity-gemini35-plan31-captain"
+}
