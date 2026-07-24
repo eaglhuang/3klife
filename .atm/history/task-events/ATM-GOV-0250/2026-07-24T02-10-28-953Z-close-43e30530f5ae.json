@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T02-10-28-953Z-close-43e30530f5ae",
+  "taskId": "ATM-GOV-0250",
+  "action": "close",
+  "actorId": "claude-002-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0250-receipt-bound-shared-write-admission-and-steward-only-delivery.task.md",
+  "taskSha256": "sha256:cc607578fee7727c01d95cc0ab999bfcb154bcad6e27e255e88577adb7c07f5a",
+  "createdAt": "2026-07-24T02:10:28.953Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0250 --actor claude-002-plan31-captain"
+}

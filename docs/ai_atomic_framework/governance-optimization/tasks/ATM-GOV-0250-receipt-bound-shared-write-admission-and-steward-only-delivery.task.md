@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0250
 title: Receipt-bound shared-write admission and steward-only delivery
-status: planned
+status: done
 owner: atm-git-governance
 priority: P0
 milestone: ATM-3.1-R0
@@ -42,7 +42,7 @@ validators:
   - node --strip-types tests/core/shared-write-provenance-policy.test.ts
   - node --strip-types tests/cli/steward-receipt-pre-commit-gate.test.ts
   - node --strip-types tests/cli/receipt-bound-shared-delivery-commit.test.ts
-  - node --strip-types scripts/validate-git-hooks-enforcement/index.ts
+  - node --strip-types scripts/validate-git-hooks-enforcement/closure-cross-checks.ts
   - npm run typecheck
 errorCodes:
   - ATM_BROKER_STEWARD_RECEIPT_REQUIRED
@@ -61,6 +61,15 @@ atomizationImpact:
       pattern: Pure Policy
       source: packages/core/src/broker/shared-write-provenance-policy.ts
       disposition: extract
+completed_at: "2026-07-24T02:10:28.953Z"
+completed_by_agent: "claude-002-plan31-captain"
+closedAt: "2026-07-24T02:10:28.953Z"
+closedByActor: "claude-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T02-10-28-953Z-close-43e30530f5ae"
+lastTransitionAt: "2026-07-24T02:10:28.953Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c979427a2903b8dd10078830b822f2c5c238361d"
 ---
 
 # ATM-GOV-0250 Receipt-bound shared-write admission and steward-only delivery
