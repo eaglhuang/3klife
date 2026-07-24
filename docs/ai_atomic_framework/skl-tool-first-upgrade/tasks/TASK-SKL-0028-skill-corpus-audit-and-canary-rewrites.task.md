@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0028
 title: Skill corpus audit and canary rewrites
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P1
 milestone: ATM-SKL-VG-R0.6
@@ -53,6 +53,15 @@ atomizationImpact:
       source: scripts/audit-skill-corpus.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-24T17:26:06.391Z"
+completed_by_agent: "codex-matt-skills-initiative-captain-20260724"
+closedAt: "2026-07-24T17:26:06.391Z"
+closedByActor: "codex-matt-skills-initiative-captain-20260724"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T17-26-06-391Z-close-9f7d714957af"
+lastTransitionAt: "2026-07-24T17:26:06.391Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d5d9e791971bb262040984715c0f24f814fea798"
 ---
 
 # TASK-SKL-0028 Skill corpus audit and canary rewrites

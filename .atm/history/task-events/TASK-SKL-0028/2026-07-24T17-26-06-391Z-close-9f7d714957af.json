@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T17-26-06-391Z-close-9f7d714957af",
+  "taskId": "TASK-SKL-0028",
+  "action": "close",
+  "actorId": "codex-matt-skills-initiative-captain-20260724",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0028-skill-corpus-audit-and-canary-rewrites.task.md",
+  "taskSha256": "sha256:95538e06c518f4388cce52ad9b97eebdf05786cdaad1cef4c220ebecae9079df",
+  "createdAt": "2026-07-24T17:26:06.391Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0028 --actor codex-matt-skills-initiative-captain-20260724"
+}
