@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T14-42-49-602Z-close-bf62b41cc28b",
+  "taskId": "ATM-GOV-0263",
+  "action": "close",
+  "actorId": "claude-002-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0263-autonomous-continuation-and-executable-recovery-parity.task.md",
+  "taskSha256": "sha256:397e868a1ccdf09f1165bd5b85f36022410060b80b2de931307b01e11109ea31",
+  "createdAt": "2026-07-24T14:42:49.602Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0263 --actor claude-002-plan31-captain"
+}
