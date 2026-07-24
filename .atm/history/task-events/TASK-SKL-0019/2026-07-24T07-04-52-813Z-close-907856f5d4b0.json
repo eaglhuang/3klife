@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T07-04-52-813Z-close-907856f5d4b0",
+  "taskId": "TASK-SKL-0019",
+  "action": "close",
+  "actorId": "codex-matt-skills-initiative-captain-20260724",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0019-skill-definition-vnext-and-progressive-disclosure-compiler.task.md",
+  "taskSha256": "sha256:451cf71fe5e263ca237d354dbb2e6f79484184b227a1645d4b0144a8c64546c0",
+  "createdAt": "2026-07-24T07:04:52.813Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0019 --actor codex-matt-skills-initiative-captain-20260724"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0019
 title: Skill definition vNext and progressive disclosure compiler
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P1
 milestone: ATM-SKL-VG-R0.2
@@ -38,6 +38,15 @@ atomizationImpact:
       source: templates/skills/skill.schema.json
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-24T07:04:52.813Z"
+completed_by_agent: "codex-matt-skills-initiative-captain-20260724"
+closedAt: "2026-07-24T07:04:52.813Z"
+closedByActor: "codex-matt-skills-initiative-captain-20260724"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T07-04-52-813Z-close-907856f5d4b0"
+lastTransitionAt: "2026-07-24T07:04:52.813Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e8d9226a3137fbed702dfab3b1925f55103836ac"
 ---
 
 # TASK-SKL-0019 Skill definition vNext and progressive disclosure compiler
