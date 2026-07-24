@@ -261,6 +261,84 @@ flowchart TD
     I -->|"全部成立"| K["Plan 3.1 close<br/>才可宣稱正確性與效能結論"]
 ```
 
+### 2026-07-25 Deep Module 核心模組 hardening 與依賴去重
+
+本節是尚未開工卡的最新排程權威；若較早段落列出更長的依賴清單，
+以本節與各任務卡 frontmatter 為準。規劃採 `to-tickets` 的
+cohesion-first 原則：一張卡交付可用的完整能力，只有真正的因果
+blocker 才形成 hard dependency；回歸樣本、歷史證據與可平行輸入用
+soft relation／acceptance 引用，不重複成排程邊。
+
+Deep Module 掃描確認五個優先主題：
+
+1. **Lane mutation authority + WIP continuity（P0 security）**：
+   `TASK-LANE-0022` 一次完成 protected mutation capability call-site
+   parity、single-use proxy、防 secret 洩漏，以及 release/handoff/reclaim
+   的 WIP ownership journal。它只依賴 `TASK-LANE-0021`。
+2. **Shared mutation finalization + sealed runner publication（P0
+   liveness）**：`ATM-GOV-0265` 內含兩個清楚的 deep modules，但作為
+   一張 end-to-end 卡交付：branch commit coordinator 與 runner
+   publication lifecycle。它只依賴 `TASK-LANE-0022`，並鎖定 orphan
+   branch lock、post-close framework-temp hygiene、receipt residue 與
+   release surface dirty 等反例。
+3. **Cross-authority close saga（P0 consistency）**：不開新卡，直接由
+   `ATM-GOV-0253` 擴充為 `executeTaskCloseSaga` 的唯一 close plan；
+   dry-run/write/backend/reconcile 只保留薄 adapter。
+4. **Validation contract（P1 correctness/efficiency）**：不開新卡，由
+   `TASK-SKL-0026` 定義純 `evaluateValidationContract`，再由
+   `TASK-SKL-0029` 接入 evidence/pre-close/pre-push。每卡只跑直接
+   causal impact 與指定 integration case IDs；更廣 suite 由 batch、
+   milestone、plan verdict、release phase owner 執行。
+5. **Skill corpus projection（P1 maintainability）**：不重開已 done 的
+   0019；由 `TASK-SKL-0028` 補上 sealed source snapshot 與
+   `compileSkillCorpus` projection contract，鎖定 0027 ignored-template
+   反例。
+
+所有上述重構卡在設計前必須實際呼叫
+`atm-deep-module-refactor`，封存 interface、ports、state ownership、
+adapter inventory、deletion test 與 review fingerprint。Skill 是可替換
+review provider，不是驗收替代品；任務仍須以卡片 validators 與
+command-backed evidence close。
+
+```mermaid
+flowchart LR
+    L21["TASK-LANE-0021 done"] --> L22["TASK-LANE-0022<br/>mutation capability + WIP continuity"]
+    L22 --> G265["ATM-GOV-0265<br/>branch finalization + sealed runner publication"]
+
+    S23["SKL-0023"] --> S26["SKL-0026<br/>validation contract"]
+    S24["SKL-0024"] --> S26
+    S26 --> S29["SKL-0029<br/>lifecycle integration"]
+    S28["SKL-0028<br/>corpus projection + canaries"] --> S29
+
+    C252["ATM-GOV-0252"] --> C253["ATM-GOV-0253<br/>single close saga"]
+    E5["TASK-ERR-0005"] --> C253
+
+    G265 --> D246["ATM-GOV-0246<br/>sealed readiness dashboard"]
+    C253 -. "可平行實作；避免同時修改 taskflow" .- G265
+    D246 --> D242["ATM-GOV-0242<br/>N=2 real dogfood"]
+    D242 --> D243["ATM-GOV-0243<br/>matched AB/BA"]
+    D243 --> D244["ATM-GOV-0244<br/>rollback/backlog"]
+    D244 --> D245["ATM-GOV-0245<br/>final verdict"]
+    C253 --> D245
+    G265 --> D245
+    S29 --> D245
+```
+
+排程規則：
+
+- Wave A 可平行：`TASK-LANE-0022` 與 SKL 0023/0024/0026 路線。
+- Wave B：`ATM-GOV-0265` 與 SKL 0028 可平行；0253 在其既有依賴完成
+  後可實作，但因與 0265 共享 taskflow seam，不安排兩者同時寫入。
+- Wave C：0246 只在 0265 及既有 canonical admission/semantic gates
+  都完成後開始；0242 只直接依賴 0246、0240、0241，不重複列出 0246
+  已封存的 lane/admission/publication 依賴。
+- Wave D：0243 → 0244 → 0245。0245 hard dependencies 只保留 immediate
+  phase gates；所有較早卡仍由 canonical evidence discovery fail-closed
+  驗證，不以大量 frontmatter edges 維持正確性。
+- 任何卡若因本機 ignore、staging、scope 或 adapter 工具問題受阻，
+  先修 governed admission 或 amendment；不得把原卡 essential
+  deliverable 拆到新微型卡。
+
 ### 後續派工波次與可平行流程
 
 ```mermaid

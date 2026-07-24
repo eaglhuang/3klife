@@ -17,9 +17,13 @@ series_selection_reason: "GOV owns taskflow closeback consistency; the design is
 scopePaths:
   - packages/cli/src/commands/taskflow/cross-authority-closeback.ts
   - packages/cli/src/commands/taskflow/commit-bundle-assembly.ts
+  - packages/cli/src/commands/taskflow/implementation.ts
+  - packages/cli/src/commands/taskflow/close-preflight.ts
+  - packages/cli/src/commands/taskflow/write-readiness.ts
   - packages/cli/src/commands/taskflow/closeback-orchestration.ts
   - packages/cli/src/commands/taskflow/close-orchestration.ts
   - packages/cli/src/commands/taskflow/close-side-effect-reconcile.ts
+  - packages/cli/src/commands/tasks/close-orchestrator.ts
   - packages/cli/src/commands/tasks/import-planning-authority.ts
   - packages/cli/src/commands/tasks/planning-mirror-close-diagnostics.ts
   - schemas/governance/cross-authority-closeback.schema.json
@@ -27,6 +31,7 @@ scopePaths:
   - tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
   - tests/cli/taskflow-cross-authority-remote-durability.test.ts
   - tests/cli/taskflow-cross-task-residue-recovery.test.ts
+  - tests/cli/taskflow-close-saga-plan-parity.test.ts
   - tests/cli/planning-source-seal.test.ts
 deliverables:
   - packages/cli/src/commands/taskflow/cross-authority-closeback.ts
@@ -37,11 +42,13 @@ deliverables:
   - tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
   - tests/cli/taskflow-cross-authority-remote-durability.test.ts
   - tests/cli/taskflow-cross-task-residue-recovery.test.ts
+  - tests/cli/taskflow-close-saga-plan-parity.test.ts
 validators:
   - node --strip-types tests/cli/taskflow-cross-authority-closeback-saga.test.ts
   - node --strip-types tests/cli/atomic-wave-checkpoint-closeback-saga.test.ts
   - node --strip-types tests/cli/taskflow-cross-authority-remote-durability.test.ts
   - node --strip-types tests/cli/taskflow-cross-task-residue-recovery.test.ts
+  - node --strip-types tests/cli/taskflow-close-saga-plan-parity.test.ts
   - node --strip-types tests/cli/planning-source-seal.test.ts
   - node --strip-types packages/cli/src/commands/taskflow/__tests__/closeback-orchestration.spec.ts
   - npm run validate:schemas
@@ -99,6 +106,9 @@ effects.
 
 ## Acceptance
 
+- [ ] Before implementation, invoke `atm-deep-module-refactor` on taskflow close/preflight/write/backend call sites. Seal the proposed `executeTaskCloseSaga(request, snapshot, ports)` interface, adapter inventory, deletion test, and `deep-module-review:b0331fea` baseline.
+- [ ] `executeTaskCloseSaga` produces the single immutable close plan consumed by dry-run, write, task backend close, and reconcile. The plan contains blockers, ordered steps, expected files, authority CAS, idempotency keys, compensations, and exact recovery commands.
+- [ ] Taskflow CLI, task-ledger close, planning closeback, and batch checkpoint are adapters. They do not maintain separate phase tables, dirty-file classifications, or close readiness policies.
 - [ ] Prepare validates both repository roots, current HEAD/CAS, source-card identity/status, target task/closure packet, required acceptance-evidence gate, cleanly isolated commit bundle, and authority writeability before either authority mutates.
 - [ ] The saga receipt seals task/source identity, target and planning roots, prepared HEADs, target bundle digest, planning patch digest, plan/source status transition, acceptance-evidence digest, phase, and exactly-once side-effect journal.
 - [ ] Target ledger `done`, planning card `done`, and any plan-level terminal status are not exposed as a globally completed closeback until both authority commit receipts are durable. An intermediate state is reported as `closeback-pending`, never as success.
@@ -113,6 +123,8 @@ effects.
 - [ ] Dry-run prints both prepared bundles, phases, CAS expectations, and recovery action without writing either repository.
 - [ ] A crash matrix injects failure before/after each prepare, commit, receipt, and finalization boundary; every cell ends in both-committed or explicit pending, with zero duplicate side effects and no contradictory global completion.
 - [ ] Repeated close/reconcile calls are idempotent and never require manual `.atm` edits, `git reset`, branch/worktree merge, or task-specific repair code.
+- [ ] Plan parity tests feed the same snapshot to dry-run, write, backend close, and reconcile and assert the same blocker/step digest. Crash tests prove restart resumes the sealed plan rather than recomputing a different one.
+- [ ] Deletion tests remove duplicate close readiness and phase derivation from adapters; deleting the saga planner makes every protected close path fail closed.
 - [ ] A done/released task's stale close residue beside another active task receives a scoped reconcile/advisory recovery without circularly requiring the active task to commit first (`ATM-BUG-2026-07-12-126`).
 - [ ] Protected override audit/provenance files are included only through the sealed authority bundle and direction-lock model; no unowned audit sidecar can block or leak into another task's close (`ATM-BUG-2026-07-13-163`).
 - [ ] Before the first delivery commit, the implementer inventories adjacent taskflow types, shared helpers, mutex/lock modules, and tests; any required linked surface is added once through governed scope amendment rather than copied into the new saga module.

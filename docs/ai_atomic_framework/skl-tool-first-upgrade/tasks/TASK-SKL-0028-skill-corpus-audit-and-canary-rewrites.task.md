@@ -70,6 +70,9 @@ contracts before any broader migration.
 - [ ] Canary order is router, dispatch, task-card authoring, plan authoring,
       next and framework-temp claim.
 - [ ] Source templates are changed before installed projections.
+- [ ] Before changing compiler/audit seams, invoke `atm-deep-module-refactor` and seal the source-snapshot/projection boundary plus `deep-module-review:52470e9f` and `deep-module-review:52b3cbe6` baselines.
+- [ ] `compileSkillCorpus({ sourceSnapshot, adapterDescriptor })` is the single projection interface. Source inclusion is determined by the sealed corpus snapshot, never by the caller's Git tracked/ignored state or local `.git/info/exclude`.
+- [ ] Every adapter projection carries source digest, compiler version, degradation diagnostics, and manifest digest; Codex, Claude, Cursor, Copilot, Gemini, and Antigravity consume the same compiled snapshot.
 - [ ] The canary rewrite productizes the TASK-SKL-0020 `to-tickets` lesson as
       a cohesion-first task split rule in `atm-task-card-authoring`,
       `atm-plan-authoring`, and `atm-dispatch`: keep a feature card
@@ -87,5 +90,6 @@ contracts before any broader migration.
 - [ ] Route fixtures, invocation precision, context tokens, follow-up count and
       premature stops are compared before/after.
 - [ ] Each canary wave has independent rollback and no blind bulk rewrite occurs.
+- [ ] The TASK-SKL-0027 ignored-template incident is a locked regression: a required source template present in the sealed snapshot must project and commit through governed admission without native force-add or a new microcard.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-24T03:32:35.858Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"skl-tool-first-upgrade/tasks/TASK-SKL-0028-skill-corpus-audit-and-canary-rewrites.task.md","contentDigest":"sha256:c04da7ac7ddbff537b68b41fbcd8cc1c7163de91f0401bd9be3631dcee7129f3"} -->

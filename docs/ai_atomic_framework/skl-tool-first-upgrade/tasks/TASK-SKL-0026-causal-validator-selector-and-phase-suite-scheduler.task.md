@@ -62,6 +62,8 @@ plan-verdict and release checkpoints.
 
 ## Acceptance
 
+- [ ] Before implementation, invoke `atm-deep-module-refactor` on validator selection, evidence freshness, and phase scheduling. Seal the proposed `evaluateValidationContract(task, changeSet, catalog, evidence)` interface, adapter inventory, deletion test, and `deep-module-review:7144d296` baseline.
+- [ ] The evaluator returns required/advisory case IDs, exact executable manifests, causal reasons, omissions, phase owners, freshness inputs, and unknown-boundary diagnostics without executing commands or mutating evidence.
 - [ ] Every selection and omission has a deterministic causal reason.
 - [ ] High risk deepens testing only inside the proven impact cone.
 - [ ] Unknown boundaries request scope/impact clarification instead of silently
@@ -69,5 +71,7 @@ plan-verdict and release checkpoints.
 - [ ] Phase-suite receipts block promotion/release when missing, stale or failed.
 - [ ] Cache, fan-out, queue wait, selection ratio, duration, false blocks and
       defect-detection tier are observable.
+- [ ] Task-local tests may contribute integration cases to shared groups by stable case ID without taking ownership of the shared test file. Promotion from `test_task_*` to `test_model_*` preserves aliases and lineage in the decentralized catalog.
+- [ ] Deletion tests remove required-set recomputation from runner and batch adapters. A missing evaluator makes required validation fail closed rather than defaulting to full-repository execution.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-24T03:32:35.866Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"skl-tool-first-upgrade/tasks/TASK-SKL-0026-causal-validator-selector-and-phase-suite-scheduler.task.md","contentDigest":"sha256:4ba8423fd039f63b7b5c9d6e6bfbb312ade51a378912779c7d3f62c81dd66118"} -->

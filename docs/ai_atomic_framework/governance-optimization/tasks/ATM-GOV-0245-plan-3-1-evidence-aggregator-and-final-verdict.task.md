@@ -7,21 +7,8 @@ priority: P0
 milestone: ATM-3.1-R5
 depends_on:
   - ATM-GOV-0244
-  - ATM-GOV-0250
-  - ATM-GOV-0252
   - ATM-GOV-0253
-  - ATM-GOV-0254
-  - ATM-GOV-0255
-  - ATM-GOV-0256
-  - ATM-GOV-0257
-  - ATM-GOV-0258
-  - ATM-GOV-0259
-  - ATM-GOV-0260
-  - ATM-GOV-0261
-  - ATM-GOV-0262
-  - ATM-GOV-0263
-  - TASK-LANE-0021
-  - ATM-GOV-0264
+  - ATM-GOV-0265
   - TASK-SKL-0029
   - TASK-SKL-0030
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
@@ -124,11 +111,20 @@ are untrusted input until reconstructed from canonical sources.
 - [ ] The verdict consumes `ATM-GOV-0261` evidence proving normal delivery uses a VCS-neutral commit-candidate envelope and broker/steward admission before repository-adapter mutation. Direct native pathspec or other emergency commits are anomaly evidence and contribute zero autonomous-success samples.
 - [ ] The verdict consumes `ATM-GOV-0262` call-site inventory/red-green evidence and fails if any Broker overlap consumer uses divergent exact/glob/resource-dimension semantics.
 - [ ] The verdict consumes `ATM-GOV-0263` continuation receipts and reports emitted commands, usage errors, automatic continuations, terminal-task pruning, false stops, and manual captain interventions; normal delivery requires zero human command repair after dispatch.
-- [ ] The verdict consumes `TASK-LANE-0021` evidence and fails if any normal Plan3.1 success sample required borrowed actor authority, reusable ticket disclosure, or unrecorded captain proxy execution.
+- [ ] The verdict consumes `TASK-LANE-0021` and `TASK-LANE-0022` evidence and fails if any normal Plan3.1 success sample required borrowed actor authority, reusable ticket disclosure, capability replay, ownerless dirty release, or non-executable WIP recovery.
 - [ ] The verdict consumes `ATM-GOV-0264` canonical-admission receipts and independently counts same-atom bounded-proposal requests, direct/compose admits, queue/revalidate outcomes, true conflicts, false blocks, and manual interventions. A bare atom-wide freeze, human release-order decision, caller-local verdict, or task-wide atom grant contributes zero autonomous-success samples.
+- [ ] The verdict consumes `ATM-GOV-0265` branch-finalization/publication evidence and fails if normal work required manual branch-lock deletion, framework-temp post-close hygiene, native pathspec, unarchived runner receipt, or dirty release surfaces.
 - [ ] Any performance pass consumes a pre-sealed A/A null-control receipt and dispersion statistic. The measured AB/BA gain must satisfy the existing 25% threshold and exceed the A/A noise bound; otherwise the performance predicate is `inconclusive`.
 - [ ] The final claim is bounded to the proven topology: two concurrent actors, one canonical worktree/base/HEAD, and same-file disjoint bounded intents. N greater than 2 fairness or arbitrary workload concurrency is reported as unproven and cannot be inferred from this verdict.
 - [ ] Plan status advances only after this verdict passes. Historical 0234/0235 records remain terminal and immutable; continuation evidence and the 0253 closeback saga carry the new closure truth. Remote SHA parity is checked after push by the implementing captain.
+
+## Dependency policy
+
+Hard dependencies name only immediate phase gates: dogfood/backlog closeback
+(`0244`), cross-authority closeback (`0253`), shared mutation finalization
+(`0265`), and the SKL lifecycle/verdict contracts (`0029`/`0030`). Earlier
+cards remain required canonical evidence discovered by the aggregator, but are
+not repeated as scheduling edges when already implied by those phase gates.
 
 ## Evidence and rollback
 

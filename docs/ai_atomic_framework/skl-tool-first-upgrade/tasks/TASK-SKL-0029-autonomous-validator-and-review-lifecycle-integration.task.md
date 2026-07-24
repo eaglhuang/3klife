@@ -62,6 +62,7 @@ into one autonomous lifecycle without making model review authoritative.
 
 ## Acceptance
 
+- [ ] Before integration, invoke `atm-deep-module-refactor` on evidence run, auto-evidence, pre-close, write-readiness, and review adapters. The review must prove they consume TASK-SKL-0026's validation contract rather than derive local required sets.
 - [ ] Import exposes exact missing contract/case/group fields and recovery.
 - [ ] Evidence runner executes selected case IDs and preserves structured output.
 - [ ] Candidate changes invalidate TDD, review and required-case receipts.
@@ -69,5 +70,8 @@ into one autonomous lifecycle without making model review authoritative.
       phase ownership while advisory checks remain non-blocking.
 - [ ] A representative captain can complete a card without step-by-step human
       instructions unless the card/scope/provider is genuinely invalid.
+- [ ] Evidence run, pre-close, close packet, and pre-push persist the same validation-contract digest. A shell command that exits zero without executing its declared assertions fails the execution contract.
+- [ ] Required task-impact cases run per card; broader integration, milestone, plan, and release groups run only at their declared phase owner. No adapter silently upgrades every task to a full repository suite.
+- [ ] Deletion tests remove duplicate freshness/required-set logic from taskflow and evidence adapters; contract unavailability fails closed with one executable recovery manifest.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-24T03:32:35.857Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"skl-tool-first-upgrade/tasks/TASK-SKL-0029-autonomous-validator-and-review-lifecycle-integration.task.md","contentDigest":"sha256:0ef667f3eca5f7089eaaa82e64d7c79c7fdc9ba49df4f7420cf50a27269c9f27"} -->

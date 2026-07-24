@@ -427,6 +427,24 @@ and
 TASK-SKL-0027 translates those inputs into a provider-neutral ATM interface;
 ATM runtime never imports the upstream skill text directly.
 
+## 9.1 Deep Module integration rule
+
+`TASK-SKL-0026`、`0028`、`0029` 在動工前必須實際呼叫
+`atm-deep-module-refactor`。Review 應產生 sealed provider receipt，至少
+包含：public interface、input/output contract、state owner、ports、
+adapter inventory、duplicated-policy deletion test、migration/rollback
+boundary。這些 receipt 可由未來 provider 取代；任務卡只依賴 receipt
+schema 與 fingerprint，不依賴 Matt Pocock 或特定模型名稱。
+
+- 0026 的 deep module 是純 `evaluateValidationContract`；runner 與
+  phase scheduler 不再各算一套 required validators。
+- 0028 的 deep module 是 `compileSkillCorpus`；sealed source snapshot
+  決定 projection，不受 Git tracked/ignored 或本機 exclude 影響。
+- 0029 只做 lifecycle adapters，讓 evidence、pre-close、close packet、
+  pre-push 消耗同一 validation-contract digest。
+- 不為 interface、adapter、fixture、migration 各拆一張卡。除非存在
+  無法同時交付的外部因果 blocker，否則一張卡保留完整能力與 rollback。
+
 ## 10. Task graph
 
 ```mermaid

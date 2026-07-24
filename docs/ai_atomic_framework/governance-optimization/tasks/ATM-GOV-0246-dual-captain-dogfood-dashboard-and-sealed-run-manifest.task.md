@@ -14,8 +14,8 @@ depends_on:
   - ATM-GOV-0254
   - ATM-GOV-0252
   - ATM-GOV-0263
-  - TASK-LANE-0021
   - ATM-GOV-0264
+  - ATM-GOV-0265
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -89,6 +89,7 @@ producer-owned success labels.
 - [ ] Dashboard shows canonical claim/close state, actor/PID, active overlap and ratio, canonical root/base/HEAD, shared physical file and logical intents, ticket state/generation/digest, adapter decision, selected/queued request ids, compose batch, serializability proof, steward before/after digests, shared-commit attribution, queue position, `waitedMs`, wakeup, faults/correctness, throughput/cost, source availability, and stop condition.
 - [ ] Dashboard also shows emitted-command executions, usage errors, automatic continuations, terminal-task prunes, manual captain interventions, false stops, and unavailable receipts so autonomous completion is measured rather than inferred from task status.
 - [ ] Dashboard shows whether each mutation was executed by the owning lane, an approved proxy/takeover receipt, or was blocked as borrowed actor authority; reusable lease/ticket keys are never displayed, only fingerprints/status.
+- [ ] Dashboard consumes TASK-LANE-0022 and ATM-GOV-0265 receipts and shows capability replay attempts, WIP owner transitions, orphan-commit recovery, publication phases, unarchived runner receipts, release-surface residue, and manual post-close hygiene count.
 - [ ] Dashboard shows the canonical admission-facade disposition and seven-layer trace for each participant, including bounded-proposal request, direct/compose/queue/revalidate/true-conflict outcome, decision digest, and whether any caller attempted to re-derive the verdict.
 - [ ] Dashboard shows candidate-output digest, sealed validator selection and source, command-backed validator runs, runner/build digest, and semantic `pass`/`fail`/`inconclusive`; this view is observational and grants no write authority.
 - [ ] Dashboard shows each closure-critical acceptance predicate, required/observed realness, authoritative-source availability, verifier mode, negative-control result, and `pass`/`fail`/`inconclusive` without allowing display state to become the authority.
@@ -97,5 +98,6 @@ producer-owned success labels.
 - [ ] JSON and human-readable views share the same compact digest and can be refreshed live or reconstructed post-run from canonical sources.
 - [ ] Refresh is strictly read-only: it cannot claim, wake, release, mutate queue/runtime state, or manufacture lifecycle events.
 - [ ] Focused tests prove untrusted producer labels cannot override canonical evidence and incomplete dual-captain setup fails closed.
+- [ ] Readiness is `not-ready` if normal-path publication still needs framework-temp cleanup, manual lock deletion, manual receipt archival, or a captain-authored recovery command.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-22T01:20:17.541Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0246-dual-captain-dogfood-dashboard-and-sealed-run-manifest.task.md","contentDigest":"sha256:56c32ea35b17499e21d3c874380a36b5e2e0b853fbe9cf58576e340228f17c13"} -->

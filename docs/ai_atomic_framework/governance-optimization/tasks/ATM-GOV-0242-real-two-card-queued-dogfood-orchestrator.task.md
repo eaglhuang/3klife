@@ -9,10 +9,6 @@ depends_on:
   - ATM-GOV-0240
   - ATM-GOV-0241
   - ATM-GOV-0246
-  - ATM-GOV-0261
-  - ATM-GOV-0263
-  - TASK-LANE-0021
-  - ATM-GOV-0264
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
