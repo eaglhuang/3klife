@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0027
 title: Replaceable deep-module refactoring provider route
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P1
 milestone: ATM-SKL-VG-R0.2
@@ -77,6 +77,15 @@ skl_validator_transition:
       coversImpactEdges:
         - scattered-policy-cluster-to-deep-module-review
         - provider-review-to-governed-refactor-card
+completed_at: "2026-07-24T15:46:02.430Z"
+completed_by_agent: "codex-matt-skills-initiative-captain-20260724"
+closedAt: "2026-07-24T15:46:02.430Z"
+closedByActor: "codex-matt-skills-initiative-captain-20260724"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T15-46-02-430Z-close-c4be2ecb965d"
+lastTransitionAt: "2026-07-24T15:46:02.430Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d8fee0a3e21b609b449d3e703b9cb2123ba248ae"
 ---
 
 # TASK-SKL-0027 Replaceable deep-module refactoring provider route

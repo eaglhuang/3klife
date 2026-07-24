@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T15-46-02-430Z-close-c4be2ecb965d",
+  "taskId": "TASK-SKL-0027",
+  "action": "close",
+  "actorId": "codex-matt-skills-initiative-captain-20260724",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0027-replaceable-deep-module-refactoring-provider-route.task.md",
+  "taskSha256": "sha256:be29be1ba244ba84fbd68ca730e03c959cfb0af745e3a7755e09cd8e86cb2aa4",
+  "createdAt": "2026-07-24T15:46:02.430Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0027 --actor codex-matt-skills-initiative-captain-20260724"
+}
