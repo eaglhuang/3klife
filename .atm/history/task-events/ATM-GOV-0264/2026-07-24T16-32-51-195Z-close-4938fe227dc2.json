@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T16-32-51-195Z-close-4938fe227dc2",
+  "taskId": "ATM-GOV-0264",
+  "action": "close",
+  "actorId": "codex-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0264-same-atom-bounded-proposal-admission-and-compose-routing.task.md",
+  "taskSha256": "sha256:2c0d56d92dcc08830decdaa89a9d0bd2c89995aaab7fae2c2991b7aa07a6d9a7",
+  "createdAt": "2026-07-24T16:32:51.195Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0264 --actor codex-plan31-captain"
+}

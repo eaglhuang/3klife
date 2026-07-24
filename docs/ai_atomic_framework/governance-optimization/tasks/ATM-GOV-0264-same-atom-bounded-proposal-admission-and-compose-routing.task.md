@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0264
 title: Canonical Broker Admission Facade and same-atom bounded proposal routing
-status: planned
+status: done
 owner: atm-broker
 priority: P0
 milestone: ATM-3.1-R0Q
@@ -108,6 +108,15 @@ skl_validator_transition:
       semanticKey: same-atom-disjoint-resource-compose
       coversImpactEdges:
         - same-atom-disjoint-resource-to-proposal-routing
+completed_at: "2026-07-24T16:32:51.195Z"
+completed_by_agent: "codex-plan31-captain"
+closedAt: "2026-07-24T16:32:51.195Z"
+closedByActor: "codex-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T16-32-51-195Z-close-4938fe227dc2"
+lastTransitionAt: "2026-07-24T16:32:51.195Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "5be3b43ba08feef8dbad79331dfc08adc425a68b"
 ---
 
 # ATM-GOV-0264 Canonical Broker Admission Facade and same-atom bounded proposal routing
