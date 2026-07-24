@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0018
 title: Provider-neutral skill capability and provenance foundation
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.1
@@ -41,6 +41,15 @@ atomizationImpact:
       source: templates/skills/skill.schema.json
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-24T06:22:40.570Z"
+completed_by_agent: "codex-matt-skills-initiative-captain-20260724"
+closedAt: "2026-07-24T06:22:40.570Z"
+closedByActor: "codex-matt-skills-initiative-captain-20260724"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T06-22-40-570Z-close-1ed0155336c0"
+lastTransitionAt: "2026-07-24T06:22:40.570Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bae58bbb390c91ebc6dd31246d3fd770279aa729"
 ---
 
 # TASK-SKL-0018 Provider-neutral skill capability and provenance foundation

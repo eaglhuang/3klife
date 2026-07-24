@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T06-22-40-570Z-close-1ed0155336c0",
+  "taskId": "TASK-SKL-0018",
+  "action": "close",
+  "actorId": "codex-matt-skills-initiative-captain-20260724",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0018-provider-neutral-skill-capability-and-provenance-foundation.task.md",
+  "taskSha256": "sha256:87f88223e57a8fc2c2f3ce28a6303794424b904492d68e636d5a7ebcb3fb2161",
+  "createdAt": "2026-07-24T06:22:40.570Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0018 --actor codex-matt-skills-initiative-captain-20260724"
+}
