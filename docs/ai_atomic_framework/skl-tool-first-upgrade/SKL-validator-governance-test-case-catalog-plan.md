@@ -495,6 +495,14 @@ claims production Broker files. The relationship is intentionally one-way:
 0027 reviews and structures the refactor; 0264 owns the actual seven-layer
 Broker admission implementation and evidence.
 
+2026-07-24 dogfood note: TASK-SKL-0027 must not be blocked by local
+`.git/info/exclude` rules that ignore new `templates/**` files. Its critical
+path is the provider-neutral route and sealed review receipt. New deep-module
+skill-template corpus files are allowed only when ATM can govern ignored
+deliverables without native force-add; otherwise they move to TASK-SKL-0028 or
+a dedicated ignored-deliverable admission follow-up. This keeps 0264 unblocked
+without normalizing native Git bypass.
+
 Plan 3.1 may not count a false-green command as proof. TASK-SKL-0022 through
 0026 provide the replacement validation contract; TASK-SKL-0029 integrates it;
 TASK-SKL-0030 supplies the measured evidence consumed by the final verdict.

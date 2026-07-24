@@ -68,6 +68,14 @@ contracts before any broader migration.
 - [ ] Canary order is router, dispatch, task-card authoring, next and
       framework-temp claim.
 - [ ] Source templates are changed before installed projections.
+- [ ] The audit explicitly reports source-template paths hidden by local ignore
+      rules such as `.git/info/exclude`; ignored but required deliverables must
+      use governed admission or be deferred with a named follow-up, not native
+      force-add.
+- [ ] If TASK-SKL-0027 deferred new deep-module template corpus files because
+      `templates/**` was locally ignored, this card either migrates them through
+      an ATM-governed ignored-deliverable route or records a blocker/follow-up
+      before broad canary rewrites proceed.
 - [ ] Route fixtures, invocation precision, context tokens, follow-up count and
       premature stops are compared before/after.
 - [ ] Each canary wave has independent rollback and no blind bulk rewrite occurs.
