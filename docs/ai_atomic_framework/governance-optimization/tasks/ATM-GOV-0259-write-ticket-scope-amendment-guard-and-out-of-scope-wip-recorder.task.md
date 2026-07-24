@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0259
 title: Write-ticket scope amendment guard and out-of-scope WIP recorder
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.1-R0.11
@@ -105,6 +105,15 @@ skl_validator_transition:
       coversImpactEdges:
         - write-intent-to-scope-ticket-admission
         - out-of-scope-wip-to-amendment-or-recovery
+completed_at: "2026-07-24T05:56:46.792Z"
+completed_by_agent: "codex-002-plan31-captain"
+closedAt: "2026-07-24T05:56:46.792Z"
+closedByActor: "codex-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T05-56-46-792Z-close-deedbe22a512"
+lastTransitionAt: "2026-07-24T05:56:46.792Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "366c359688f47e8c1b15b8f530e1a8bcfb7ce43b"
 ---
 
 # ATM-GOV-0259 Write-ticket scope amendment guard and out-of-scope WIP recorder

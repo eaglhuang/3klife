@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T05-56-46-792Z-close-deedbe22a512",
+  "taskId": "ATM-GOV-0259",
+  "action": "close",
+  "actorId": "codex-002-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0259-write-ticket-scope-amendment-guard-and-out-of-scope-wip-recorder.task.md",
+  "taskSha256": "sha256:c020efe5aea929327b775f57072cf66919bca24d73e9480e176cda4fc7294a29",
+  "createdAt": "2026-07-24T05:56:46.792Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0259 --actor codex-002-plan31-captain"
+}
