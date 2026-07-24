@@ -45,6 +45,24 @@ atomizationImpact:
       source: packages/cli/src/commands/broker/replay/dogfood-orchestrator.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - two-task-intents-to-compose-or-queue-decision
+    - broker-ticket-to-shared-delivery-attribution
+  requiredTestCaseIds:
+    - test_int_plan3_parallel_replay_two_card_safe_compose_fb9f0b06
+  phaseTestCaseIds:
+    - test_int_plan3_performance_matched_ab_ba_workload_4bc3165d
+  advisoryTestCaseIds: []
+  testContributions:
+    - caseId: test_int_plan3_parallel_replay_two_card_safe_compose_fb9f0b06
+      targetGroupId: test_group_plan3_parallel_replay
+      semanticKey: two-card-safe-compose
+      coversImpactEdges:
+        - two-task-intents-to-compose-or-queue-decision
+        - broker-ticket-to-shared-delivery-attribution
 ---
 
 # ATM-GOV-0242 Real two-card compose-first and fallback dogfood orchestrator

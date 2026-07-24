@@ -54,6 +54,20 @@ validators:
   - npm run typecheck
 errorCodes: []
 createdByCommand: atm plan card create
+planningSealAction: authorized-force-reimport-before-claim
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - broker-commit-request-to-index-isolated-delivery
+    - runner-sync-receipt-to-post-close-artifact-publication
+    - in-scope-wip-to-governed-preservation-or-discard
+  requiredTestCaseIds:
+    - test_task_atm_gov_0258_transactional_stage_commit_queue_b2045065
+  phaseTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  advisoryTestCaseIds: []
+  testContributions: []
 evidence:
   required: broker-managed-transactional-commit-queue-red-green
 rollback:

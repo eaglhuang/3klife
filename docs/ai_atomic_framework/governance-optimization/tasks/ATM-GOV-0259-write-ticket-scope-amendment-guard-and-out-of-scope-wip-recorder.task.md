@@ -86,6 +86,25 @@ atomizationImpact:
       source: packages/core/src/broker/write-scope-policy.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - write-intent-to-scope-ticket-admission
+    - out-of-scope-wip-to-amendment-or-recovery
+    - editor-adapter-to-pre-write-warning
+  requiredTestCaseIds:
+    - test_int_write_ticket_scope_amendment_recovery_04a0385b
+  phaseTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  advisoryTestCaseIds: []
+  testContributions:
+    - caseId: test_int_write_ticket_scope_amendment_recovery_04a0385b
+      targetGroupId: test_group_write_ticket
+      semanticKey: scope-amendment-recovery
+      coversImpactEdges:
+        - write-intent-to-scope-ticket-admission
+        - out-of-scope-wip-to-amendment-or-recovery
 ---
 
 # ATM-GOV-0259 Write-ticket scope amendment guard and out-of-scope WIP recorder

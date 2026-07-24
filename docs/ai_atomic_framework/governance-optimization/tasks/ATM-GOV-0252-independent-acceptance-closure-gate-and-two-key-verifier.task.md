@@ -57,6 +57,18 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/close-orchestrator/acceptance-evidence-gate.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - acceptance-predicate-to-independent-verifier-result
+    - closure-packet-to-close-readiness-decision
+  requiredTestCaseIds:
+    - test_task_atm_gov_0252_independent_acceptance_closure_7f6d2ee1
+  phaseTestCaseIds:
+    - test_int_authority_closeback_two_phase_durability_fde36800
+  advisoryTestCaseIds: []
+  testContributions: []
 ---
 
 # ATM-GOV-0252 Independent acceptance closure gate and two-key verifier

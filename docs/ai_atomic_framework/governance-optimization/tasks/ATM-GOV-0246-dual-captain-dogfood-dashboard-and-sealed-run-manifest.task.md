@@ -55,6 +55,18 @@ atomizationImpact:
       source: packages/cli/src/commands/broker/replay/run-manifest.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - broker-events-to-sealed-dashboard-manifest
+    - actor-provenance-to-dogfood-run-attribution
+  requiredTestCaseIds:
+    - test_task_atm_gov_0246_sealed_dashboard_manifest_a9803c88
+  phaseTestCaseIds:
+    - test_int_plan3_parallel_replay_two_card_safe_compose_fb9f0b06
+  advisoryTestCaseIds: []
+  testContributions: []
 ---
 
 # ATM-GOV-0246 Dual-captain dogfood dashboard and sealed run manifest

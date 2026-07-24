@@ -44,6 +44,18 @@ validators:
   - npm run typecheck
 errorCodes: []
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - sealed-base-blobs-to-bounded-proposal-workspace
+    - proposal-workspace-to-steward-composer-input
+  requiredTestCaseIds:
+    - test_task_atm_gov_0248_bounded_proposal_workspace_0ce45bb1
+  phaseTestCaseIds:
+    - test_int_plan3_parallel_replay_two_card_safe_compose_fb9f0b06
+  advisoryTestCaseIds: []
+  testContributions: []
 evidence:
   required: non-git-bounded-proposal-provider-receipts
 rollback:

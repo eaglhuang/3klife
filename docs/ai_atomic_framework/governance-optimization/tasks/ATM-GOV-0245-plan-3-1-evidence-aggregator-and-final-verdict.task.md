@@ -20,6 +20,8 @@ depends_on:
   - ATM-GOV-0261
   - ATM-GOV-0262
   - ATM-GOV-0263
+  - TASK-SKL-0029
+  - TASK-SKL-0030
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -60,6 +62,26 @@ atomizationImpact:
       source: packages/cli/src/commands/broker/replay/final-closure-reader.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: required-for-final-verdict
+  causalImpactEdges:
+    - canonical-evidence-sources-to-final-verdict
+    - phase-suite-receipts-to-autonomy-claim
+  requiredTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  phaseTestCaseIds:
+    - test_int_plan3_parallel_replay_two_card_safe_compose_fb9f0b06
+    - test_int_plan3_performance_matched_ab_ba_workload_4bc3165d
+    - test_int_authority_closeback_two_phase_durability_fde36800
+  advisoryTestCaseIds: []
+  testContributions:
+    - caseId: test_int_plan3_final_verdict_evidence_aggregation_35563247
+      targetGroupId: test_group_plan3_final_verdict
+      semanticKey: evidence-aggregation
+      coversImpactEdges:
+        - canonical-evidence-sources-to-final-verdict
+        - phase-suite-receipts-to-autonomy-claim
 ---
 
 # ATM-GOV-0245 Plan 3.1 evidence aggregator and final verdict

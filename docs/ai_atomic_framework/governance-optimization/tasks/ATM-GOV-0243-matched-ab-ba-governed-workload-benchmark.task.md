@@ -48,6 +48,24 @@ atomizationImpact:
       source: scripts/paired-ab-v4-cell-workload.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - sealed-workload-to-ab-ba-comparison
+    - replay-telemetry-to-parallelism-and-wait-metrics
+  requiredTestCaseIds:
+    - test_int_plan3_performance_matched_ab_ba_workload_4bc3165d
+  phaseTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  advisoryTestCaseIds: []
+  testContributions:
+    - caseId: test_int_plan3_performance_matched_ab_ba_workload_4bc3165d
+      targetGroupId: test_group_plan3_performance
+      semanticKey: matched-ab-ba-workload
+      coversImpactEdges:
+        - sealed-workload-to-ab-ba-comparison
+        - replay-telemetry-to-parallelism-and-wait-metrics
 ---
 
 # ATM-GOV-0243 Matched AB BA governed workload benchmark

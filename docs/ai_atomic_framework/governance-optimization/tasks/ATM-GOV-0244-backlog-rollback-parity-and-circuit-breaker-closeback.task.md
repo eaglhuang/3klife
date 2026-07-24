@@ -45,6 +45,18 @@ atomizationImpact:
       source: packages/cli/src/commands/broker/parallel-admission/closure-observation.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - backlog-state-to-plan-closeback-decision
+    - rollback-receipt-to-circuit-breaker-state
+  requiredTestCaseIds:
+    - test_task_atm_gov_0244_rollback_parity_circuit_breaker_f86e8493
+  phaseTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  advisoryTestCaseIds: []
+  testContributions: []
 ---
 
 # ATM-GOV-0244 Backlog rollback parity and circuit-breaker closeback

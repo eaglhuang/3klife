@@ -40,6 +40,18 @@ atomizationImpact:
       source: scripts/run-plan3-red-green-discrimination.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - sealed-scenario-to-frozen-runner-verdict
+    - runner-digest-to-red-green-discrimination
+  requiredTestCaseIds:
+    - test_task_atm_gov_0240_frozen_runner_red_green_discrimination_66aae9d7
+  phaseTestCaseIds:
+    - test_int_plan3_parallel_replay_two_card_safe_compose_fb9f0b06
+  advisoryTestCaseIds: []
+  testContributions: []
 ---
 
 # ATM-GOV-0240 Historical runner red-green discrimination harness

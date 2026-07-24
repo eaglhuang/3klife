@@ -33,6 +33,19 @@ errorCodes:
   - "ATM_BROKER_REPLAY_DOGFOOD_BLOCKED"
   - "ATM_EVIDENCE_SEAL_REQUIRED"
 createdByCommand: atm plan card create
+planningSealAction: authorized-force-reimport-before-claim
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - canonical-ticket-events-to-dashboard-observations
+    - bounded-proposal-to-shared-steward-output
+  requiredTestCaseIds:
+    - test_task_atm_gov_0237_dashboard_ticket_observations_89d5fca1
+  phaseTestCaseIds:
+    - test_int_plan3_parallel_replay_two_card_safe_compose_fb9f0b06
+  advisoryTestCaseIds: []
+  testContributions: []
 evidence:
   required: real-dogfood-command-backed
 rollback:

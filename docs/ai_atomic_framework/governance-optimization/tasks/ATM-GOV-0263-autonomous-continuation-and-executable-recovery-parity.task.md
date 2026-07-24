@@ -53,6 +53,18 @@ atomizationImpact:
       source: packages/cli/src/commands/next/playbook-projection/active-work-summary.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - task-state-to-next-safe-command-manifest
+    - command-manifest-to-autonomous-continuation
+  requiredTestCaseIds:
+    - test_task_atm_gov_0263_executable_recovery_continuation_8334b614
+  phaseTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  advisoryTestCaseIds: []
+  testContributions: []
 ---
 
 # ATM-GOV-0263 Autonomous continuation and executable recovery parity

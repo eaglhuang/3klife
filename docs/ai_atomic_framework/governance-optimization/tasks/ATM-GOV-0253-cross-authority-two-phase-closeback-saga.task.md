@@ -62,6 +62,24 @@ atomizationImpact:
       source: packages/cli/src/commands/taskflow/cross-authority-closeback.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - authority-manifest-to-durable-closeback-state
+    - remote-visibility-receipt-to-final-closeback-decision
+  requiredTestCaseIds:
+    - test_int_authority_closeback_two_phase_durability_fde36800
+  phaseTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  advisoryTestCaseIds: []
+  testContributions:
+    - caseId: test_int_authority_closeback_two_phase_durability_fde36800
+      targetGroupId: test_group_authority_closeback
+      semanticKey: two-phase-durability
+      coversImpactEdges:
+        - authority-manifest-to-durable-closeback-state
+        - remote-visibility-receipt-to-final-closeback-decision
 ---
 
 # ATM-GOV-0253 Cross-authority two-phase closeback saga

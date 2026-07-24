@@ -74,6 +74,19 @@ atomizationImpact:
       source: packages/cli/src/commands/git-governance/implementation.ts
       disposition: extract
 createdByCommand: atm plan card create
+skl_validator_transition:
+  schema_id: atm.validatorSelection.transition.v1
+  enforcement: advisory-until-TASK-SKL-0029
+  causalImpactEdges:
+    - candidate-envelope-to-broker-admission
+    - admitted-candidate-to-git-adapter-persisted-commit
+    - emergency-pathspec-to-anomaly-only-classification
+  requiredTestCaseIds:
+    - test_task_atm_gov_0261_vcs_neutral_commit_candidate_f826ccc6
+  phaseTestCaseIds:
+    - test_int_plan3_final_verdict_evidence_aggregation_35563247
+  advisoryTestCaseIds: []
+  testContributions: []
 ---
 
 # ATM-GOV-0261 VCS-neutral commit candidate isolation and Git adapter fallback

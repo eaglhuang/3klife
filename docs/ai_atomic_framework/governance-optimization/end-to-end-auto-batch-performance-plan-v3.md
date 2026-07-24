@@ -10,7 +10,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-21T09:19:26+08:00
-updated_at: 2026-07-23T09:35:00+08:00
+updated_at: 2026-07-24T00:00:00+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -73,6 +73,62 @@ Plan 2.2 保留為歷史基線，停止新增工作。Plan 3.0 是唯一 active 
 ## 任務圖與執行順序
 
 
+
+### Plan 3.1 SKL validator and test-case transition (2026-07-24)
+
+Plan 3.1 remains executable while the SKL validator/test-case catalog initiative
+is being built. It must not wait for a new runner merely to perform a correct
+feature repair, but it also must not continue to copy broad repository commands
+into every remaining card.
+
+All still-planned Plan 3.1 cards therefore carry the compatible
+`skl_validator_transition` frontmatter block. The block is descriptive and
+auditable until `TASK-SKL-0029` installs the parser, selector, structured
+execution receipt, and close gate. Existing listed validators remain mandatory
+during the transition; the new block never weakens a current gate.
+
+After the SKL gates are available, each transition block becomes executable:
+
+- `causalImpactEdges` selects the direct behavior and integration seams that
+  the card actually changes;
+- `requiredTestCaseIds` are task-close evidence and must emit non-zero,
+  candidate-bound execution receipts;
+- `phaseTestCaseIds` are centralized batch/milestone/release obligations, not
+  copied per-card broad validation;
+- `testContributions` names a decentralized integration-group contribution
+  that the feature card may design and add during its own TDD cycle;
+- `advisoryTestCaseIds` can inform review but can never satisfy acceptance.
+
+The canonical machine surface remains `scripts/test-catalog.config.json`,
+evolved by SKL rather than replaced. No global sequential test-ID allocator or
+parallel registry is permitted. The IDs already assigned to Plan 3.1 cards use
+the deterministic `test_task_*` / `test_int_*` grammar from
+`SKL-validator-governance-test-case-catalog-plan.md`; SKL must validate their
+digest and group membership when it imports these cards.
+
+The dependency policy is deliberately narrow. Implementation cards do not
+hard-depend on unfinished SKL infrastructure, because that would turn a
+validator migration into a delivery freeze. `ATM-GOV-0245`, the only final
+Plan 3.1 verdict, does depend on `TASK-SKL-0029` and `TASK-SKL-0030`: it cannot
+claim autonomous, fast, causally selected validation until the contracts are
+enforced and replayed against historical evidence. Until then its verdict is
+`inconclusive`, never a manual waiver.
+
+Ledger coordination is also explicit: `ATM-GOV-0237`, `ATM-GOV-0238`, and
+`ATM-GOV-0258` already have imported target ledgers. Their source-card seals
+are now intentionally stale because this transition contract changed. Before
+any of those cards is claimed, an authorized owner must reseal it by official
+force re-import; no worker may bypass the drift or hand-edit ledger state.
+Every other still-planned card remains source-only and can be imported normally
+when its dispatch wave opens. No source card may receive this transition update
+after it has an active claim; later changes require a bounded amendment card.
+
+| Planned card family | Task-close cases | Centralized phase cases | Contribution owner |
+|---|---|---|---|
+| 0237/0238/0242 | actor-local dashboard behavior | two-card safe-compose replay | 0242 orchestrator |
+| 0240/0243/0244/0245/0246 | harness, rollback, dashboard behavior | red-green, AB/BA, final verdict | 0242/0243/0245 |
+| 0248/0252/0253 | proposal, closure, durability behavior | authority/closeback integration | 0253 saga |
+| 0258/0259/0261/0263 | commit queue, write ticket, candidate, recovery behavior | governance integration groups | respective feature card |
 
 ### Plan 3.1 commit-candidate isolation clarification (2026-07-23)
 
