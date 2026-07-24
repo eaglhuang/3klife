@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0021
 title: Lane capability secrecy and proxy execution gate
-status: planned
+status: done
 owner: atm-lane-session
 priority: P0
 depends_on:
@@ -65,6 +65,15 @@ nonGoals:
   - Do not expose replayable lease, ticket, or lane capability keys in ordinary reports.
 backlogLinks:
   - ATM-BUG-2026-07-24-239
+completed_at: "2026-07-24T16:00:31.901Z"
+completed_by_agent: "claude-003-plan31-captain"
+closedAt: "2026-07-24T16:00:31.901Z"
+closedByActor: "claude-003-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T16-00-31-901Z-close-b2dddaf866b6"
+lastTransitionAt: "2026-07-24T16:00:31.901Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "8e0666e6b867603975ff137c1657e4a457da3d17"
 ---
 
 # TASK-LANE-0021 - Lane Capability Secrecy and Proxy Execution Gate
