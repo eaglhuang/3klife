@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0021
 title: Standards and Spec review receipt gate
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P1
 milestone: ATM-SKL-VG-R0.2
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/plugin-review-advisory/src/promotion-gates.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-24T08:09:24.990Z"
+completed_by_agent: "codex-matt-skills-initiative-captain-20260724"
+closedAt: "2026-07-24T08:09:24.990Z"
+closedByActor: "codex-matt-skills-initiative-captain-20260724"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T08-09-24-990Z-close-07e643458c1d"
+lastTransitionAt: "2026-07-24T08:09:24.990Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2cc221956081947a06e9f9e79bd522b49b5ce535"
 ---
 
 # TASK-SKL-0021 Standards and Spec review receipt gate

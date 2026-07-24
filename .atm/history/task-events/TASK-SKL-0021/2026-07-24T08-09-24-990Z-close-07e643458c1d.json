@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T08-09-24-990Z-close-07e643458c1d",
+  "taskId": "TASK-SKL-0021",
+  "action": "close",
+  "actorId": "codex-matt-skills-initiative-captain-20260724",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0021-standards-and-spec-review-receipt-gate.task.md",
+  "taskSha256": "sha256:5bb8936c4d607267e22e803ba61b238d8ca9e71e378e85a9c528b88786afada8",
+  "createdAt": "2026-07-24T08:09:24.990Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0021 --actor codex-matt-skills-initiative-captain-20260724"
+}
