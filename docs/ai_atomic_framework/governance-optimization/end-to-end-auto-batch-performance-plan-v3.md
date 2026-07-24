@@ -142,6 +142,55 @@ Plan 3.1 final verification therefore gains a hard dependency on `ATM-GOV-0261`:
 - Direct native pathspec or `--no-verify` commits remain emergency/anomaly repair evidence and must not count as autonomous parallel-delivery success.
 - The final Plan 3.1 verdict must report normal candidate count, Git-adapter pathspec count, emergency pathspec count, false-block count, and unrelated-index-residue isolation count. If normal delivery still requires direct native pathspec, Plan 3.1 fails and the gap rolls into Plan 3.2.
 
+## 2026-07-24 execution-wave clarification
+
+The deep-module hardening update defined the dependency graph correctly, but the
+captain side also needs an execution rule: the next waves should maximize
+capability unlock while minimizing repeated broker collisions and captain
+supervision overhead.
+
+The preferred remaining order is:
+
+1. `TASK-SKL-0028` in parallel with `TASK-LANE-0022`
+2. `ATM-GOV-0265` in parallel with `TASK-SKL-0023` and `TASK-SKL-0024`
+3. `TASK-SKL-0025` in parallel with `TASK-SKL-0026`
+4. `TASK-SKL-0029` in parallel with `ATM-GOV-0246`
+5. `ATM-GOV-0242` -> `ATM-GOV-0243` -> `ATM-GOV-0244` -> `ATM-GOV-0245`
+6. `TASK-SKL-0030` as the SKL historical verdict before or alongside the final
+   Plan 3.1 verdict, never as an implementation prerequisite
+
+Why this is now the preferred wave order:
+
+- `TASK-SKL-0028` has the highest captain-productivity leverage per unit time:
+  it reduces future skill projection, ignore-state, dispatch, and canary drift
+  across all captains.
+- `TASK-LANE-0022` is the next hard Plan 3.1 blocker. Mutation capability
+  replay and WIP continuity must be repaired before finalization/publication
+  work can claim autonomy.
+- `ATM-GOV-0265` must wait for `TASK-LANE-0022`, but it does not need to wait
+  for the entire SKL line.
+- `TASK-SKL-0029` is deliberately late. Starting it before `0025 + 0026 + 0028`
+  only creates churn and partial contracts.
+
+### Captain fit guidance
+
+| Work shape | Preferred captain |
+|---|---|
+| deep runtime governance, lane authority, finalization/publication, verdict synthesis | Claude |
+| skill corpus, canary rewrites, validator catalog, projection/compiler work | Cursor |
+| planning repair, dependency correction, deep-module review framing, cross-plan sequencing | Codex captain |
+
+### Cohesion-first dispatch rule
+
+Execution order also follows the authoring rule tightened by the SKL work:
+
+- keep one card equal to one complete capability seam;
+- do not split essential deliverables into another card merely to bypass local
+  ignore rules, staging friction, adapter quirks, or projection tooling gaps;
+- if tooling is the blocker, fix the admission/compiler/projection path or add
+  a named tooling follow-up without changing the semantic meaning of the
+  original card.
+
 ## Plan 3.1 證據可信度與 compose-first 修復補充（2026-07-22）
 
 ### 補充定位

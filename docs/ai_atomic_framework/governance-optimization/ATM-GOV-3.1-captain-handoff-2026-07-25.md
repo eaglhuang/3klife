@@ -1,12 +1,16 @@
-# Plan 3.1 Captain handoff — Deep Module hardening
+# Plan 3.1 Captain handoff and operations pack
 
-Date: 2026-07-25
+Date: 2026-07-24
 
 Planning authority: `C:/Users/User/3KLife/docs/ai_atomic_framework`
 
 Target authority: `C:/Users/User/AI-Atomic-Framework`
 
-Primary plan: `governance-optimization/end-to-end-auto-batch-performance-plan-v3.md`
+Primary Plan 3.1 doc:
+`governance-optimization/end-to-end-auto-batch-performance-plan-v3.md`
+
+Primary SKL doc:
+`skl-tool-first-upgrade/SKL-validator-governance-test-case-catalog-plan.md`
 
 ## Owner objective
 
@@ -17,117 +21,236 @@ disjoint work must reach canonical admission, mutation, publication, and close
 with zero borrowed authority, zero ownerless WIP, zero manual lock deletion,
 zero post-close hygiene conversation, and zero unarchived release receipt.
 
-## Planning decision
+This file is no longer a short memo. It is the captain-facing operations pack
+for the remaining Plan 3.1 and SKL work. Read it together with:
 
-The 2026-07-25 `atm-deep-module-refactor` scan found five high-value seams:
+- `governance-optimization/end-to-end-auto-batch-performance-plan-v3.md`
+- `skl-tool-first-upgrade/SKL-validator-governance-test-case-catalog-plan.md`
+- `governance-optimization/tasks/`
+- `skl-tool-first-upgrade/tasks/`
+- `docs/governance/atm-bug-and-optimization-backlog.md`
 
-| Priority | Seam | Planning owner | Review fingerprint |
-|---|---|---|---|
-| P0 security | mutation authority + WIP ownership | `TASK-LANE-0022` | `deep-module-review:300bfd3e` |
-| P0 liveness | branch commit coordinator | `ATM-GOV-0265` | `deep-module-review:2154f107` |
-| P0 liveness | sealed runner publication | `ATM-GOV-0265` | `deep-module-review:2797aed9` |
-| P0 consistency | task close saga | existing `ATM-GOV-0253` | `deep-module-review:b0331fea` |
-| P1 correctness | validation execution contract | existing `TASK-SKL-0026/0029` | `deep-module-review:7144d296` |
-| P1 maintainability | skill corpus projection | existing `TASK-SKL-0028` | `deep-module-review:52470e9f`, `deep-module-review:52b3cbe6` |
+## What is already proven
 
-Only two cards were added. Lane authority and WIP continuity are one complete
-lane vertical slice. Branch finalization and runner publication remain two
-internal deep modules but share one end-to-end delivery card. We intentionally
-did not create separate lock, cleanup, receipt, adapter, fixture, or migration
-cards.
+### Done Plan 3.1 foundations
 
-## Authoritative execution order
+- `ATM-GOV-0239` done: closure truth and evidence replay fail-closed
+- `ATM-GOV-0241` done: replay evidence schema and telemetry seal
+- `ATM-GOV-0250` done: receipt-bound shared-delivery commit repair
+- `ATM-GOV-0254` done: post-compose semantic validation
+- `ATM-GOV-0256` done: runner-sync source snapshot and receipt path hardening
+- `ATM-GOV-0257` done: actor continuity and executable recovery parity
+- `ATM-GOV-0258` done: transactional staged commit queue MVP
+- `ATM-GOV-0259` done: write-ticket scope amendment and out-of-scope WIP guard
+- `ATM-GOV-0260` done: candidate-scoped line budget and nested root-cause surfacing
+- `ATM-GOV-0261` done: VCS-neutral commit candidate isolation and Git fallback boundary
+- `ATM-GOV-0262` done: overlap matcher call-site parity
+- `ATM-GOV-0263` done: autonomous continuation and executable recovery parity
+- `ATM-GOV-0264` done: canonical admission facade and same-atom bounded proposal routing
 
-```mermaid
-flowchart LR
-    L21["TASK-LANE-0021 done"] --> L22["TASK-LANE-0022"]
-    L22 --> G265["ATM-GOV-0265"]
+### Done lane and SKL foundations
 
-    S23["SKL-0023"] --> S26["SKL-0026"]
-    S24["SKL-0024"] --> S26
-    S26 --> S29["SKL-0029"]
-    S28["SKL-0028"] --> S29
+- `TASK-LANE-0021` done: borrowed authority and ticket/secret reuse fail-closed
+- `TASK-SKL-0018` done: provider-neutral skill capability foundation
+- `TASK-SKL-0019` done: skill definition vNext and progressive disclosure compiler
+- `TASK-SKL-0020` done: intake and to-ticket style task graph foundation
+- `TASK-SKL-0021` done: Standards/Spec review foundation
+- `TASK-SKL-0027` done: replaceable deep-module review provider route
 
-    C252["ATM-GOV-0252"] --> C253["ATM-GOV-0253"]
-    E5["TASK-ERR-0005"] --> C253
+## Current planned frontier
 
-    G265 --> D246["ATM-GOV-0246"]
-    D246 --> D242["ATM-GOV-0242"]
-    D242 --> D243["ATM-GOV-0243"]
-    D243 --> D244["ATM-GOV-0244"]
-    D244 --> D245["ATM-GOV-0245"]
-    C253 --> D245
-    S29 --> D245
-```
+### Highest-value immediate cards
 
-1. Start `TASK-LANE-0022`. SKL 0023/0024/0026 may proceed in parallel when
-   their own dependencies are ready.
-2. After 0022, start `ATM-GOV-0265`. SKL 0028 may proceed in parallel.
-3. `ATM-GOV-0253` may start when 0252 and ERR-0005 are done, but do not run its
-   taskflow writes concurrently with 0265.
-4. Start 0246 only after 0265 and its existing evidence prerequisites pass.
-5. Run 0242 → 0243 → 0244 → 0245. Do not restore redundant transitive
-   dependencies to 0242 or 0245.
+- `TASK-SKL-0028`
+- `TASK-LANE-0022`
+
+### Downstream after those land
+
+- `ATM-GOV-0265`
+- `TASK-SKL-0023`
+- `TASK-SKL-0024`
+- `TASK-SKL-0025`
+- `TASK-SKL-0026`
+- `TASK-SKL-0029`
+- `ATM-GOV-0246`
+- `ATM-GOV-0242`
+- `ATM-GOV-0243`
+- `ATM-GOV-0244`
+- `ATM-GOV-0245`
+- `TASK-SKL-0030`
+
+## Why the next wave is 0028 plus 0022
+
+`ATM-GOV-0264` fixed canonical admission, but it did not eliminate every future
+serialization point. It only ensured that same atom or CID is not treated as an
+automatic final freeze before bounded comparison.
+
+The next best dispatch is:
+
+- `TASK-SKL-0028` because it productizes the skill/projection/canary/ignore-state
+  lessons and makes every later captain faster and less error-prone.
+- `TASK-LANE-0022` because Plan 3.1 still lacks the next hard capability seam:
+  mutation authority parity and WIP continuity.
+
+These two cards are the current best parallel pair because:
+
+- they unlock different layers;
+- they do not require `ATM-GOV-0265` to start;
+- they directly reduce the two biggest remaining forms of captain friction:
+  skill/tooling drift and lane-capability drift.
+
+## Authoritative wave order
+
+### Wave A: start now
+
+| Card | Reason | Recommended captain |
+|---|---|---|
+| `TASK-SKL-0028` | unlocks skill corpus, canary rewrites, ignored-template regression repair, and reusable captain ergonomics | `Cursor` |
+| `TASK-LANE-0022` | next hard Plan 3.1 blocker for mutation capability and WIP continuity | `Claude` |
+
+### Wave B: after `TASK-LANE-0022`
+
+| Card | Reason | Recommended captain |
+|---|---|---|
+| `ATM-GOV-0265` | branch finalization and sealed runner publication deep modules | `Claude` |
+| `TASK-SKL-0023` | decentralized test-case shards and Broker contribution model | `Cursor` |
+| `TASK-SKL-0024` | structured execution receipt and zero-test hard gate | `Cursor` |
+
+### Wave C: after `0023` and `0024`
+
+| Card | Reason | Recommended captain |
+|---|---|---|
+| `TASK-SKL-0025` | TDD red/green lifecycle bound to exact case IDs | `Cursor` |
+| `TASK-SKL-0026` | causal selector and phase suite scheduler deep module | `Claude` |
+
+### Wave D: convergence
+
+| Card | Reason | Recommended captain |
+|---|---|---|
+| `TASK-SKL-0029` | autonomous validator/review/evidence/pre-close integration | `Claude` |
+| `ATM-GOV-0246` | dashboard consumes lane/finalization/manual-intervention evidence | `Cursor` |
+
+### Wave E: verdict chain
+
+| Card | Reason | Recommended captain |
+|---|---|---|
+| `ATM-GOV-0242` | real two-card queued dogfood orchestrator | `Claude` |
+| `ATM-GOV-0243` | matched A/B benchmark | `Cursor` |
+| `ATM-GOV-0244` | backlog/rollback/circuit-breaker closeback | `Cursor` |
+| `TASK-SKL-0030` | SKL historical A/B replay and migration verdict | `Cursor` |
+| `ATM-GOV-0245` | final Plan 3.1 verdict aggregator | `Claude` |
+
+## Dispatch rule of thumb
+
+- High-coupling runtime governance, finalization, lane authority, and deep
+  evidence synthesis: prefer `Claude`.
+- Skill corpus, canary rewrites, validator catalog, projection/compiler work,
+  and structured migration work: prefer `Cursor`.
+- Captain planning updates, deep-module review framing, cross-plan sequencing,
+  and dependency correction: keep with `Codex captain` unless the user explicitly
+  reallocates.
+
+## Remaining dependency map
+
+### Plan 3.1 hard edges
+
+- `TASK-LANE-0022` -> `ATM-GOV-0265`
+- `ATM-GOV-0265` -> `ATM-GOV-0246`
+- `ATM-GOV-0246` -> `ATM-GOV-0242`
+- `ATM-GOV-0242` -> `ATM-GOV-0243`
+- `ATM-GOV-0243` -> `ATM-GOV-0244`
+- `ATM-GOV-0244` + `ATM-GOV-0253` + `ATM-GOV-0265` + `TASK-SKL-0029` + `TASK-SKL-0030` -> `ATM-GOV-0245`
+
+### SKL hard edges
+
+- `TASK-SKL-0027` -> `TASK-SKL-0028`
+- `TASK-SKL-0022` -> `TASK-SKL-0023`
+- `TASK-SKL-0022` -> `TASK-SKL-0024`
+- `TASK-SKL-0023` + `TASK-SKL-0024` -> `TASK-SKL-0025`
+- `TASK-SKL-0023` + `TASK-SKL-0024` -> `TASK-SKL-0026`
+- `TASK-SKL-0025` + `TASK-SKL-0026` + `TASK-SKL-0028` + `TASK-SKL-0021` -> `TASK-SKL-0029`
+- `TASK-SKL-0029` -> `TASK-SKL-0030`
+
+### Cross-plan bridges
+
+- `TASK-SKL-0027` supplies the deep-module review route consumed by `ATM-GOV-0264`
+- `TASK-SKL-0028` improves skill corpus/projection quality used by later captains
+- `TASK-SKL-0029` is a hard prerequisite for `ATM-GOV-0245` final autonomous verdict
+- `TASK-SKL-0030` supplies the historical A/B validator-governance verdict consumed by `ATM-GOV-0245`
+
+## Bug-to-owner map
+
+Do not open redundant microcards when an open planned card already owns the seam.
+
+| Bug / gap theme | Owning planned card |
+|---|---|
+| borrowed actor authority, lane takeover ambiguity, reusable ticket/lease disclosure | `TASK-LANE-0022` |
+| ownerless WIP after release, missing reclaim path, `ATM-BUG-2026-07-22-229` | `TASK-LANE-0022` |
+| dead branch queue lock before HEAD move, manual orphan-lock cleanup | `ATM-GOV-0265` |
+| post-close publication still needing framework-temp hygiene or non-governed cleanup | `ATM-GOV-0265` |
+| unarchived runner-sync receipt and publication/finalization residue path | `ATM-GOV-0265` |
+| ignored skill templates, projection drift, source snapshot vs local Git ignore mismatch | `TASK-SKL-0028` |
+| task split becoming harder to read because tooling blockers push essential deliverables into later cards | `TASK-SKL-0028` |
+| zero-exit/no-op validator commands | `TASK-SKL-0024` and then `TASK-SKL-0029` |
+| every card over-running broad validators instead of causal required cases | `TASK-SKL-0026` and then `TASK-SKL-0029` |
+| dashboard/verdict not exposing manual interventions, false blocks, residue, queue-only time | `ATM-GOV-0246` and `ATM-GOV-0245` |
+
+## Cohesion-first authoring rule
+
+This is now a locked captain rule and must be taught through SKL canaries:
+
+- one card should equal one complete capability seam;
+- do not split a card only because a local ignore rule, stage quirk, runner-sync
+  artifact, adapter mismatch, or projection tooling problem made delivery awkward;
+- split only on true causal blockers, independent public seams, or phase-owner
+  boundaries;
+- if the blocker is tooling, skill compiler, scope admission, or ignore-state,
+  repair that path or create a named tooling follow-up without changing the
+  semantic meaning of the original card.
+
+This rule exists because the attempted `TASK-SKL-0027` / `0028` split would
+have made the graph harder to read and forced downstream cards to depend on a
+hidden combination instead of one coherent capability card.
 
 ## Required use of `atm-deep-module-refactor`
 
-Every unfinished refactor card touched by this update explicitly requires the
-skill before implementation. The captain must:
+Every unfinished refactor card touched by the 2026-07-24/25 updates must:
 
-1. load the installed `atm-deep-module-refactor` skill;
-2. review the named seam and all production call sites;
-3. seal a provider-neutral receipt containing interface, ports, state owner,
-   adapter inventory, duplicated-policy deletion test, rollback boundary, and
+1. load `atm-deep-module-refactor`;
+2. review the seam and all real production call sites;
+3. emit a sealed provider-neutral receipt with interface, ports, adapter
+   inventory, rollback boundary, duplicated-policy deletion test, and review
    fingerprint;
-4. implement against that receipt;
-5. still run the task card validators and command-backed evidence.
+4. implement against that sealed receipt;
+5. still satisfy task-card validators and evidence.
 
-The skill is replaceable. Planning depends on the review receipt schema and
-fingerprint, not on Matt Pocock, a model vendor, or one installed projection.
+Planning depends on the receipt schema and review fingerprint, not on one model
+vendor or one skill provider.
 
-## Dependency rules for the next captain
+## Locked regressions that final verdict must still see
 
-- A hard edge means the downstream card cannot implement its public seam
-  correctly without the upstream capability.
-- Regression examples and historical card evidence are acceptance inputs, not
-  hard scheduling edges.
-- Final-verdict source discovery must fail closed when evidence is absent; it
-  must not duplicate every evidence producer in `depends_on`.
-- A local ignore, staging, scope, adapter, or manifest problem is not a reason
-  to split an essential deliverable into another card. Use governed scope
-  amendment or repair the admission path.
-- Do not edit done cards such as SKL-0019. Follow-up behavior belongs in the
-  closest planned card (SKL-0028 in this case).
+- borrowed actor authority and worker using another lane's capability
+- ownerless WIP after release and missing reclaim path
+- dead branch queue lock needing manual deletion
+- manual post-close release publication or unarchived receipt residue
+- shell validator exits zero without real assertions
+- required skill template/projection hidden by local ignore state
 
-## Locked counterexamples
+All of these must stay visible in `ATM-GOV-0246` dashboard evidence and
+`ATM-GOV-0245` final verdict evidence.
 
-- A captain could previously reuse another worker's actor/lease/ticket context.
-- `tasks release` could turn valid task WIP into unowned dirty that neither the
-  original worker nor the next worker could reclaim (`ATM-BUG-2026-07-22-229`).
-- A commit process killed before HEAD moved left a branch queue lock that ATM
-  could not self-recover.
-- Successful close repeatedly required framework-temp release publication and
-  left runner receipts as advisory/untracked residue.
-- Validator commands could exit zero without executing declared assertions,
-  while cards routinely ran repository-wide validators unrelated to the
-  causal impact.
-- Required skill templates could disappear from projections because local Git
-  ignore state influenced delivery.
+## Next captain operating style
 
-All six counterexamples must remain named regressions in their owning cards and
-must be visible in 0246/0245 evidence.
+- Give workers short, paste-ready dispatch blocks.
+- If the next step is normal governed execution, explicitly say they can keep
+  going autonomously until `close --dry-run` or `prewrite` stop point.
+- Ask for stop-and-report only at real authority, scope, planning-seal, or
+  cross-lane boundaries.
+- Do not let workers bounce on repetitive "I can continue if approved" loops
+  when ATM already emitted an executable recovery path.
 
-## Files intentionally updated
+## First next action
 
-- Plan 3.1 primary plan and this handoff.
-- New `TASK-LANE-0022` and `ATM-GOV-0265`.
-- Existing planned cards: 0253, 0246, 0242, 0245.
-- SKL validator plan and existing planned cards: 0026, 0028, 0029.
-- SKL-0019 and all done task cards remain unchanged.
-
-## First command for the next captain
-
-Run a read-only preflight of `TASK-LANE-0022`, confirm its planning seal and
-dependencies, then dispatch it to a high-capability captain. Stop only for a
-real card/scope/authority defect; ordinary executable ATM recovery should be
-followed autonomously.
+Dispatch `TASK-SKL-0028` to `Cursor` and `TASK-LANE-0022` to `Claude` as the
+current best parallel pair. Keep `Codex captain` on dependency correction,
+deep-module review sanity checks, and plan updates while those two advance.
