@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0261
 title: VCS-neutral commit candidate isolation and Git adapter fallback
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: ATM-3.1-R0.13
@@ -87,6 +87,15 @@ skl_validator_transition:
     - test_int_plan3_final_verdict_evidence_aggregation_35563247
   advisoryTestCaseIds: []
   testContributions: []
+completed_at: "2026-07-24T13:45:28.796Z"
+completed_by_agent: "claude-002-plan31-captain"
+closedAt: "2026-07-24T13:45:28.796Z"
+closedByActor: "claude-002-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T13-45-28-796Z-close-0d43b51fe4a2"
+lastTransitionAt: "2026-07-24T13:45:28.796Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "8d8e9533c50f10e25661ee0e6a59913fa36afdd9"
 ---
 
 # ATM-GOV-0261 VCS-neutral commit candidate isolation and Git adapter fallback

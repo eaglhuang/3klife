@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T13-45-28-796Z-close-0d43b51fe4a2",
+  "taskId": "ATM-GOV-0261",
+  "action": "close",
+  "actorId": "claude-002-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0261-vcs-neutral-commit-candidate-isolation-and-git-adapter-fallback.task.md",
+  "taskSha256": "sha256:906a28e780f9cb10c99210f5f447b5829f4d5ac3a210117be232adee34553eb8",
+  "createdAt": "2026-07-24T13:45:28.796Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0261 --actor claude-002-plan31-captain"
+}
