@@ -17,6 +17,7 @@ scopePaths:
   - templates/skills/atm-governance-router.skill.md
   - templates/skills/atm-dispatch.skill.md
   - templates/skills/atm-task-card-authoring.skill.md
+  - templates/skills/atm-plan-authoring.skill.md
   - templates/skills/atm-next.skill.md
   - templates/skills/atm-framework-temp-claim.skill.md
   - packages/integrations-core/src/compiler/skill-templates.ts
@@ -28,6 +29,7 @@ deliverables:
   - templates/skills/atm-governance-router.skill.md
   - templates/skills/atm-dispatch.skill.md
   - templates/skills/atm-task-card-authoring.skill.md
+  - templates/skills/atm-plan-authoring.skill.md
   - templates/skills/atm-next.skill.md
   - templates/skills/atm-framework-temp-claim.skill.md
   - scripts/audit-skill-corpus.ts
@@ -65,17 +67,23 @@ contracts before any broader migration.
 
 - [ ] Every skill is classified keep, prune, disclose, split, merge, retire or
       replace with provider/version evidence.
-- [ ] Canary order is router, dispatch, task-card authoring, next and
-      framework-temp claim.
+- [ ] Canary order is router, dispatch, task-card authoring, plan authoring,
+      next and framework-temp claim.
 - [ ] Source templates are changed before installed projections.
+- [ ] The canary rewrite productizes the TASK-SKL-0020 `to-tickets` lesson as
+      a cohesion-first task split rule in `atm-task-card-authoring`,
+      `atm-plan-authoring`, and `atm-dispatch`: keep a feature card
+      semantically complete, split only on causal blockers or independent public
+      seams, and never move essential deliverables solely to bypass a local
+      staging/ignore/tooling blocker.
 - [ ] The audit explicitly reports source-template paths hidden by local ignore
       rules such as `.git/info/exclude`; ignored but required deliverables must
       use governed admission or be deferred with a named follow-up, not native
       force-add.
-- [ ] If TASK-SKL-0027 deferred new deep-module template corpus files because
-      `templates/**` was locally ignored, this card either migrates them through
-      an ATM-governed ignored-deliverable route or records a blocker/follow-up
-      before broad canary rewrites proceed.
+- [ ] If a prior card hit ignored required deliverables, this card records the
+      reusable skill guidance and tooling gap, but it does not silently absorb
+      another card's required completion semantics. The original card remains
+      the owner unless a human-approved amendment changes that boundary.
 - [ ] Route fixtures, invocation precision, context tokens, follow-up count and
       premature stops are compared before/after.
 - [ ] Each canary wave has independent rollback and no blind bulk rewrite occurs.

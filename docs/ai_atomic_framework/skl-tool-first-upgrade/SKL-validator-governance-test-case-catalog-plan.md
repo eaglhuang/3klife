@@ -495,13 +495,28 @@ claims production Broker files. The relationship is intentionally one-way:
 0027 reviews and structures the refactor; 0264 owns the actual seven-layer
 Broker admission implementation and evidence.
 
-2026-07-24 dogfood note: TASK-SKL-0027 must not be blocked by local
-`.git/info/exclude` rules that ignore new `templates/**` files. Its critical
-path is the provider-neutral route and sealed review receipt. New deep-module
-skill-template corpus files are allowed only when ATM can govern ignored
-deliverables without native force-add; otherwise they move to TASK-SKL-0028 or
-a dedicated ignored-deliverable admission follow-up. This keeps 0264 unblocked
-without normalizing native Git bypass.
+2026-07-24 dogfood note: TASK-SKL-0027 exposed a task-authoring pitfall. A
+captain attempted to move required deep-module template deliverables into a
+later corpus-audit card because the target worktree locally ignored new
+`templates/**` files. That reduces immediate friction but makes the dependency
+graph harder to read: 0027 would no longer mean "the deep-module provider is
+complete", and downstream cards would need to depend on a hidden combination of
+0027 plus 0028.
+
+The corrected rule is cohesion-first splitting. A card remains the owner of the
+capability named by its title and acceptance. Do not split or reassign
+essential deliverables merely to bypass local staging, ignore, runner, or tool
+admission blockers. Split only on causal blockers, independent public seams,
+phase/release checkpoints, or a human-approved semantic amendment. Tooling
+blockers should produce a governed recovery/admission path or a clearly named
+tooling follow-up while preserving the original card's completion meaning.
+
+Dependency boundary: ATM-GOV-0264 depends on TASK-SKL-0027 because it needs the
+sealed architecture-review/provider receipt and the complete deep-module
+provider contract before changing Broker production code. TASK-SKL-0028 owns
+corpus audit, canary rewrites and productizing the cohesion-first authoring
+lesson into reusable skills; it is not a substitute owner for 0027's required
+deliverables.
 
 Plan 3.1 may not count a false-green command as proof. TASK-SKL-0022 through
 0026 provide the replacement validation contract; TASK-SKL-0029 integrates it;

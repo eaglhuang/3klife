@@ -355,6 +355,16 @@ Wave 內只有 target scope 無重疊、Broker 回 execute/compose ticket 且沒
 
 0251 與 0247 可先並行，分別建立 evidence 與 execution topology 的純政策。現場解鎖順序固定為 0260 → 0257 → 0256 → 0258 → 0259 → 0261；0262 可在不重疊時並行，但必須早於 0239。0263 等 0257 與 0261 後驗證 autonomous continuation。若 0263 佔用 `atom-cli-router` 而讓 SKL-0022 freeze，SKL 隊長暫停 0022，改做已由 0018 解鎖且 scope 獨立的 0027；0027 完整 close 後產生 sealed Deep Module review。0263 完成後先插入 TASK-LANE-0021，確保 borrowed actor / ticket secrecy hard gate 成立；再由 0264 同時消耗 0027 review 與 0021 lane-boundary evidence，修復 canonical admission。ERR-0005 在 0251 schema 穩定後註冊 exact operator contracts；0255 已證明官方 Broker resolution 命令可被 claim admission 接受，但 0262 尚須證明所有 overlap call sites 使用同一規則，兩者皆成立後 0239 才能重新 claim。完成後由 0252 接到 closure packet 與 two-key verifier，再由 0253 建立跨 authority closeback saga。0240 與 0241 可在 0239 完成後並行。ERR-0004 在 0249 receipt schema 穩定後註冊 steward contracts；ERR-0006 在 0241 event contract 與 0249 candidate/apply seam 穩定後註冊 semantic-validation contracts。0254 等待 0241、0249、ERR-0006，0250 再等待 0249、0254 與 ERR-0004，使任何 shared-write admission 都必須綁定 exact passing candidate。0246 必須等 proposal provider、唯一寫入、防繞道、post-compose semantic gate、event contract、acceptance gate、TASK-LANE-0021 與 0264 canonical admission 都完成。0242 只有在 0246、0261、0263、TASK-LANE-0021、0264 passing 後開始；0243 再消耗 0242 passing dogfood receipt。所有 0255–0264 與 TASK-LANE-0021 evidence 都必須在 0245 global verdict 前完成。所有平行 worker 共用 canonical worktree；私有計算狀態是 in-memory／bounded proposal tree，不是 Git worktree 或 branch。
 
+0027 與 0028 的依賴邊界固定為語意完整性而非工具便利性：0264 依賴
+0027，是因為 0027 代表完整 sealed Deep Module review/provider contract。
+不得為了繞過 local ignore、staging 或 admission blocker，把 0027 的必要
+deliverables 移到 0028，否則未來讀者會無法從卡號與標題判斷 capability
+是否真正完成。若 0027 遇到 ignored `templates/**` deliverable，應停下走
+ATM-governed ignored-deliverable recovery 或人類明確修訂卡片語意；0028 只負責
+skill corpus audit、canary rewrite，並把這條 cohesion-first / to-tickets
+教訓寫入 `atm-task-card-authoring`、`atm-plan-authoring`、`atm-dispatch`
+等 reusable skills。
+
 ### Plan 3.1 planned ErrorCode catalog
 
 | Code | Exact trigger | Category | Retryable | Human approval | Required recovery |

@@ -29,12 +29,17 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
   - templates/skills/atm-atom-map-refactor.skill.md
+  - templates/skills/atm-deep-module-refactor.skill.md
+  - templates/skills/atm-deep-module-refactor.files/references/**
   - packages/plugin-review-advisory/src/deep-module-provider.ts
   - packages/plugin-review-advisory/src/index.ts
   - scripts/validate-skill-templates.ts
   - tests/cli/deep-module-refactor-provider.test.ts
 deliverables:
   - templates/skills/atm-atom-map-refactor.skill.md
+  - templates/skills/atm-deep-module-refactor.skill.md
+  - templates/skills/atm-deep-module-refactor.files/references/deepening.md
+  - templates/skills/atm-deep-module-refactor.files/references/design-it-twice.md
   - packages/plugin-review-advisory/src/deep-module-provider.ts
   - tests/cli/deep-module-refactor-provider.test.ts
 validators:
@@ -52,7 +57,7 @@ atomizationImpact:
   extractionCandidates:
     - atom: atm.deep-module-refactor-provider
       pattern: Refactoring Strategy Provider
-      source: templates/skills/atm-deep-module-refactor.skill.md
+      source: packages/plugin-review-advisory/src/deep-module-provider.ts
       disposition: extract
 createdByCommand: atm plan card create
 skl_validator_transition:
@@ -126,11 +131,15 @@ provider-neutral contract delivered by TASK-SKL-0018.
 - [ ] After this card closes, ATM-GOV-0264 consumes one sealed deep-module
       review receipt before implementation; TASK-SKL-0027 does not itself edit
       Broker production code.
-- [ ] This card must not rely on native `git add -f` or force-add for ignored
-      template deliverables. If the target worktree's local ignore rules hide
-      new `templates/**` files, the provider route and sealed review receipt are
-      still delivered through tracked source/test files; new skill-template
-      corpus files move to TASK-SKL-0028 or a dedicated ignored-deliverable
-      admission card.
+- [ ] This card remains the complete semantic unit for the deep-module provider:
+      source template, progressive-disclosure references, provider route and
+      sealed review receipt are all part of the same completion signal.
+- [ ] If local ignore rules hide required new `templates/**` deliverables, do
+      not redefine the card or move essential deliverables merely to bypass the
+      tool. Stop for an ATM-governed ignored-deliverable admission/recovery, or
+      obtain a human card amendment that explicitly declares the hidden files
+      nonessential. TASK-SKL-0028 may later audit or rewrite the broader skill
+      corpus, but it must not become the hidden owner of 0027's required
+      completion semantics.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-24T03:32:35.357Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"skl-tool-first-upgrade/tasks/TASK-SKL-0027-replaceable-deep-module-refactoring-provider-route.task.md","contentDigest":"sha256:5be7a8182231b5723745f320ecad79305252c85a5e3c65b431f452ea6c5541a2"} -->
