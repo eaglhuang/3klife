@@ -126,6 +126,7 @@ to lane-aware behavior while preserving legacy actor fallback.
 | `TASK-LANE-0018` | Add lane heartbeat, sweep, analyzer, and error-code documentation. | Lane lifecycle and error-code validation |
 | `TASK-LANE-0019` | Persist append-only lane session events and connect them to the parallel ledger analyzer. | Analyzer reports `maxConcurrency >= 2` from lane evidence |
 | `TASK-LANE-0020` | Adjudicate the cross-lane `repair-claim` on `TASK-CODEX-0204` and capture guard/backlog follow-up if it was unsafe. | Repair-claim adjudication report |
+| `TASK-LANE-0021` | Bind mutation authority to lane capability, redact reusable ticket keys, and require explicit proxy/takeover receipts for captain-executed worker commands. | Borrowed-actor close/commit/runner-sync tests and capability-redaction tests |
 
 ## Follow-up: First Real Parallel Evidence
 
@@ -141,6 +142,22 @@ Two follow-up cards preserve that evidence path:
 
 - `TASK-LANE-0019` turns lane runtime snapshots into durable event evidence and
   teaches the analyzer to report the overlap automatically.
+
+## Follow-up: Capability Secrecy and Proxy Execution
+
+The Plan 3.1 dogfood on 2026-07-24 produced a new negative sample: a total
+captain process could execute another worker actor's close/write and
+post-close release publish by passing the worker `--actor` value. The same
+reports also exposed reusable lane/lease/ticket details broadly enough for a
+non-owner to learn and attempt to reuse them.
+
+`TASK-LANE-0021` closes that gap. Actor id remains human-readable attribution;
+mutation authority must be bound to the executing lane capability. Captain
+approval is not execution authority unless ATM records an explicit
+proxy/takeover receipt with approver, executor lane, owner lane, TTL, command
+class, reason, and exact delegated surfaces. Ordinary status/report output must
+redact reusable capability keys and expose only fingerprints, state, queue
+verdict, and recovery class to non-owner lanes.
 
 ## Follow-up: Runner Gate Precision for Parallel Work
 

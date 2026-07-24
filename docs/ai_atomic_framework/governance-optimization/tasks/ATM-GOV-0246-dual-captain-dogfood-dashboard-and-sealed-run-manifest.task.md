@@ -14,6 +14,8 @@ depends_on:
   - ATM-GOV-0254
   - ATM-GOV-0252
   - ATM-GOV-0263
+  - TASK-LANE-0021
+  - ATM-GOV-0264
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -86,6 +88,8 @@ producer-owned success labels.
 - [ ] Provider and task bindings are data only; dashboard and harness contain no Codex-, Claude-, actor-, task-, date-, or local-path-specific control-flow branches.
 - [ ] Dashboard shows canonical claim/close state, actor/PID, active overlap and ratio, canonical root/base/HEAD, shared physical file and logical intents, ticket state/generation/digest, adapter decision, selected/queued request ids, compose batch, serializability proof, steward before/after digests, shared-commit attribution, queue position, `waitedMs`, wakeup, faults/correctness, throughput/cost, source availability, and stop condition.
 - [ ] Dashboard also shows emitted-command executions, usage errors, automatic continuations, terminal-task prunes, manual captain interventions, false stops, and unavailable receipts so autonomous completion is measured rather than inferred from task status.
+- [ ] Dashboard shows whether each mutation was executed by the owning lane, an approved proxy/takeover receipt, or was blocked as borrowed actor authority; reusable lease/ticket keys are never displayed, only fingerprints/status.
+- [ ] Dashboard shows the canonical admission-facade disposition and seven-layer trace for each participant, including bounded-proposal request, direct/compose/queue/revalidate/true-conflict outcome, decision digest, and whether any caller attempted to re-derive the verdict.
 - [ ] Dashboard shows candidate-output digest, sealed validator selection and source, command-backed validator runs, runner/build digest, and semantic `pass`/`fail`/`inconclusive`; this view is observational and grants no write authority.
 - [ ] Dashboard shows each closure-critical acceptance predicate, required/observed realness, authoritative-source availability, verifier mode, negative-control result, and `pass`/`fail`/`inconclusive` without allowing display state to become the authority.
 - [ ] `ready` requires two different actors and OS processes on one sealed canonical worktree/base/HEAD/build, non-Git proposal roots, a non-empty same-file intersection, and distinct bounded logical intents; separate Git worktrees/branches/indexes, missing evidence, contradictory digests, or `not-required` returns `not-ready`.

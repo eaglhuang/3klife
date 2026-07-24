@@ -180,6 +180,30 @@ Fresh closure review 補上四個橫切條件。第一，凡 safety／governance
 - **只做 terminal disposition，不重做**：已有 0218／ERR／TEAM／SKL owner 的 07-20-214、215、07-21-217、218，以及已由其他 family 承接的 provider、巨檔 refactor、一般 planning UX 項目，只由 0244/0245 驗證 owner、evidence 與 non-blocking rationale。
 - **排序規則**：先收 0260；再依共享面完成 0257 → 0256 → 0258 → 0259 → 0261；0262 可在不重疊時並行但必須早於 0239；0263 等 0257/0261 後完成。之後才允許 0239、0240/0241、0252/0253/0254/0250、0246、0242/0243、0244、0245。任何被標示「既有卡吸收」的 backlog 若 owning card close 時仍無 command-backed disposition，立即停下補 scope 或開 Plan3.2 follow-up，不得由 0245 忽略。
 
+### 2026-07-24 canonical Broker Admission Facade 補強
+
+0261 完成後的實測證明 VCS-neutral candidate isolation 是必要條件，但
+仍不足以讓高耦合 claim 自動並行。ATM-GOV-0263 與 TASK-SKL-0022 沒有
+shared path，卻因同屬 `atom-cli-router` 在 bounded proposal comparison
+之前被 freeze。Codebase audit 顯示七層 conflict matrix 仍存在，但最終
+判決分散在 core decision、proposal overlap、claim parallel preflight、
+claim admission 與 conflict log；其中 atom-id 分支可在沒有 material
+shared-write surface 時先行阻擋，而 claim preflight 又會重新推導自己的
+Broker verdict。這是決策 locality 與 caller parity 缺口，不是七層模型
+本身缺失。
+
+新增 `TASK-LANE-0021` 與 `ATM-GOV-0264`。0021 先補 lane capability
+secrecy 與 borrowed actor hard gate，確保總隊長不能只靠 `--actor`
+字串執行 worker lane 的 close/commit/runner-sync，也不能從普通報告讀到
+可重放票據。0264 再以 TASK-SKL-0027 的 replaceable deep-module
+provider 先產生 sealed architecture review，再建立單一 canonical Broker
+Admission Facade。七層檢查、bounded proposal、compose、queue、
+revalidation、ticket、recovery manifest 與 metrics 全部藏在該 module
+後面；CLI/core callers 只正規化輸入與消費同一 sealed decision，不得
+自行把 atom/CID match 升格成 freeze。0021 與 0264 未完成前，
+0246/0242/0245 不得把 same-atom 平行開發或 captain-mediated closeout
+列為 autonomous success。
+
 ### 主要差異流程卡
 
 ```mermaid
@@ -196,6 +220,9 @@ flowchart TD
     WT --> CI
     BR["ATM-GOV-0262<br/>canonical overlap matcher parity"] --> C
     CI --> AR["ATM-GOV-0263<br/>autonomous continuation + executable recovery"]
+    AR --> LG["TASK-LANE-0021<br/>capability secrecy + proxy gate"]
+    AR --> AF["TASK-SKL-0027 → ATM-GOV-0264<br/>Deep Module review + canonical admission facade"]
+    LG --> AF
     E --> SE["TASK-ERR-0006<br/>semantic validation exact codes"]
     TA --> SV["ATM-GOV-0254<br/>candidate 物化 + post-compose semantic validation"]
     SE --> SV
@@ -224,7 +251,7 @@ flowchart TD
     L --> G["ATM-GOV-0243<br/>compose-first 對 queue-only 的 matched AB/BA"]
     CI --> F
     CI --> G
-    AR --> F
+    AF --> F
     F --> H["ATM-GOV-0244<br/>backlog、rollback、parity、breaker"]
     G --> H
     VG --> XS["ATM-GOV-0253<br/>cross-authority closeback saga"]
@@ -249,8 +276,11 @@ flowchart LR
     A5 --> A6["0259<br/>write ticket + scope amendment"]
     A6 --> A7["0261<br/>VCS-neutral candidate isolation"]
     A7 --> A8["0263<br/>autonomous continuation"]
+    A8 --> A8b["TASK-LANE-0021<br/>borrowed actor hard gate"]
+    A8 --> A9["SKL-0027 → 0264<br/>Deep Module review／canonical admission"]
+    A8b --> A9
     A2 --> B1["0239<br/>closure truth"]
-    A8 --> B2
+    A9 --> B2
     B1 --> B2
     subgraph B2["Wave 2：可平行證據／closure 基礎"]
       B21["0240<br/>frozen red-green"]
@@ -308,6 +338,8 @@ Wave 內只有 target scope 無重疊、Broker 回 execute/compose ticket 且沒
 | R0N | `ATM-GOV-0261` | 0258、0259、0260 | 建立 VCS-neutral commit-candidate envelope 與 broker/steward admission；Git index/pathspec 僅是 admitted candidate 的 adapter mutation surface，direct native pathspec 只算 emergency/anomaly evidence。 |
 | R0O | `ATM-GOV-0262` | 0255；closes `ATM-BUG-2026-07-20-213` | 建立 canonical resource-overlap matcher 與 call-site inventory；physical/conflict/proposal decision 不得再以不同 exact/glob 規則產生互斥判決。 |
 | R0P | `ATM-GOV-0263` | 0257、0261；closes 206、219、227、237 | 讓 `next`／batch 自動略過終態卡並讓所有 status/recovery command 以可執行 manifest 交付；正確任務卡可零人工修指令走到下一安全點。 |
+| R0P-L | `TASK-LANE-0021` | TASK-LANE-0017、TASK-LANE-0020；closes 239 | 讓 lane capability 而非 `--actor` 字串成為 mutation authority；captain 可核准／監控／仲裁，但不可直接借 worker actor close/write/commit/runner-sync/push。普通報告只揭露 ticket fingerprint/status，不揭露可重放 key。 |
+| R0Q | `ATM-GOV-0264` | 0262、0263、TASK-LANE-0021、TASK-SKL-0027 | 以 sealed deep-module review 建立 canonical Broker Admission Facade；七層檢查、proposal/compose/queue/revalidate、ticket 與 recovery manifest 只有一個最終判決來源。同 atom、無 shared path 或 bounded disjoint intent 不得在 proposal comparison 前被整體 freeze。 |
 | R1 | `ATM-GOV-0239` | 0234、0235、0247、0251、0255、0262 | 修正 closure truth gate；候選卡、receipt 形狀或把同檔案直接序列化都不得 ready-to-close。 |
 | R1.5 | `ATM-GOV-0252` | 0239、0251、ERR-0005 | 將 acceptance predicates 接到 closure packet/pre-close；per-card 支援兩種 verifier，Plan-global 強制 pre-sealed locked-policy。 |
 | R1.6 | `ATM-GOV-0253` | 0252、ERR-0005 | 以 durable two-phase saga 收束 target/planning authority；local commit、remote visibility 與 exactly-once reconcile 由 authority manifest 決定，未完成只能 closeback-pending。 |
@@ -315,13 +347,13 @@ Wave 內只有 target scope 無重疊、Broker 回 execute/compose ticket 且沒
 | R2B | `ATM-GOV-0241` | 0239 | 定義事件推導 intent、compose batch、serializability、steward、shared commit 與 queue fallback receipt contract。 |
 | R2C | `TASK-ERR-0006` | 0241、0249 | 註冊 compose candidate 語意驗證 failed／unavailable 的 exact ErrorCode 與 recovery contract。 |
 | R2D | `ATM-GOV-0254` | 0241、0249、ERR-0006 | 從 immutable base 物化 exact candidate，執行通用 post-compose semantic validation；通過後才可交 steward。 |
-| R2.5 | `ATM-GOV-0246` | 0240、0241、0248、0249、0250、0252、0254、0263 | 建立 sealed run manifest 與唯讀 live/post-run 儀表，先讓人與機器可判讀 safe compose、semantic validation、fallback、autonomous continuation 與 acceptance predicate readiness。 |
-| R3A | `ATM-GOV-0242` | 0240、0241、0246、0261、0263 | Codex 執行 0237、Claude 執行 0238；以正常 commit-candidate lane 與 autonomous continuation 完成主 safe-compose cell 與真衝突 fallback，不得靠 native pathspec／manual stage 仲裁。 |
+| R2.5 | `ATM-GOV-0246` | 0240、0241、0248、0249、0250、0252、0254、0263、0264 | 建立 sealed run manifest 與唯讀 live/post-run 儀表，先讓人與機器可判讀 safe compose、semantic validation、fallback、autonomous continuation、same-atom proposal disposition 與 acceptance predicate readiness。 |
+| R3A | `ATM-GOV-0242` | 0240、0241、0246、0261、0263、0264 | Codex 執行 0237、Claude 執行 0238；以 canonical admission facade 與正常 commit-candidate lane完成主 safe-compose cell 與真衝突 fallback，不得靠 atom-wide grant、native pathspec／manual stage 仲裁。 |
 | R3B | `ATM-GOV-0243` | 0240、0241、0242、0246、0261 | 先消耗 passing dogfood receipt，再以同一真 ATM workload 完成 compose-first／queue-only matched AB/BA 與 pre-sealed A/A noise calibration。 |
 | R4 | `ATM-GOV-0244` | 0242、0243 | 核銷 backlog 213–221，完成 rollback、source/frozen/release parity 與 breaker trip/reset drill。 |
-| R5 | `ATM-GOV-0245` | 0244、0250、0252、0253、0254、0255、0256、0257、0258、0259、0260、0261、0262、0263 | 建立單一 evidence aggregator，由 canonical 來源自動產生最終 verdict；另強制 A/A noise calibration、VCS-neutral candidate isolation、executable autonomous continuation 與 N=2 claim boundary。 |
+| R5 | `ATM-GOV-0245` | 0244、0250、0252、0253、0254、0255、0256、0257、0258、0259、0260、0261、0262、0263、0264 | 建立單一 evidence aggregator，由 canonical 來源自動產生最終 verdict；另強制 A/A noise calibration、VCS-neutral candidate isolation、executable autonomous continuation、canonical same-atom admission 與 N=2 claim boundary。 |
 
-0251 與 0247 可先並行，分別建立 evidence 與 execution topology 的純政策。現場解鎖順序固定為 0260 → 0257 → 0256 → 0258 → 0259 → 0261；0262 可在不重疊時並行，但必須早於 0239。0263 等 0257 與 0261 後驗證 autonomous continuation。ERR-0005 在 0251 schema 穩定後註冊 exact operator contracts；0255 已證明官方 Broker resolution 命令可被 claim admission 接受，但 0262 尚須證明所有 overlap call sites 使用同一規則，兩者皆成立後 0239 才能重新 claim。完成後由 0252 接到 closure packet 與 two-key verifier，再由 0253 建立跨 authority closeback saga。0240 與 0241 可在 0239 完成後並行。ERR-0004 在 0249 receipt schema 穩定後註冊 steward contracts；ERR-0006 在 0241 event contract 與 0249 candidate/apply seam 穩定後註冊 semantic-validation contracts。0254 等待 0241、0249、ERR-0006，0250 再等待 0249、0254 與 ERR-0004，使任何 shared-write admission 都必須綁定 exact passing candidate。0246 必須等 proposal provider、唯一寫入、防繞道、post-compose semantic gate、event contract 及 acceptance gate 都完成。0242 只有在 0246、0261、0263 passing 後開始；0243 再消耗 0242 passing dogfood receipt。所有 0255–0263 evidence 都必須在 0245 global verdict 前完成。所有平行 worker 共用 canonical worktree；私有計算狀態是 in-memory／bounded proposal tree，不是 Git worktree 或 branch。
+0251 與 0247 可先並行，分別建立 evidence 與 execution topology 的純政策。現場解鎖順序固定為 0260 → 0257 → 0256 → 0258 → 0259 → 0261；0262 可在不重疊時並行，但必須早於 0239。0263 等 0257 與 0261 後驗證 autonomous continuation。若 0263 佔用 `atom-cli-router` 而讓 SKL-0022 freeze，SKL 隊長暫停 0022，改做已由 0018 解鎖且 scope 獨立的 0027；0027 完整 close 後產生 sealed Deep Module review。0263 完成後先插入 TASK-LANE-0021，確保 borrowed actor / ticket secrecy hard gate 成立；再由 0264 同時消耗 0027 review 與 0021 lane-boundary evidence，修復 canonical admission。ERR-0005 在 0251 schema 穩定後註冊 exact operator contracts；0255 已證明官方 Broker resolution 命令可被 claim admission 接受，但 0262 尚須證明所有 overlap call sites 使用同一規則，兩者皆成立後 0239 才能重新 claim。完成後由 0252 接到 closure packet 與 two-key verifier，再由 0253 建立跨 authority closeback saga。0240 與 0241 可在 0239 完成後並行。ERR-0004 在 0249 receipt schema 穩定後註冊 steward contracts；ERR-0006 在 0241 event contract 與 0249 candidate/apply seam 穩定後註冊 semantic-validation contracts。0254 等待 0241、0249、ERR-0006，0250 再等待 0249、0254 與 ERR-0004，使任何 shared-write admission 都必須綁定 exact passing candidate。0246 必須等 proposal provider、唯一寫入、防繞道、post-compose semantic gate、event contract、acceptance gate、TASK-LANE-0021 與 0264 canonical admission 都完成。0242 只有在 0246、0261、0263、TASK-LANE-0021、0264 passing 後開始；0243 再消耗 0242 passing dogfood receipt。所有 0255–0264 與 TASK-LANE-0021 evidence 都必須在 0245 global verdict 前完成。所有平行 worker 共用 canonical worktree；私有計算狀態是 in-memory／bounded proposal tree，不是 Git worktree 或 branch。
 
 ### Plan 3.1 planned ErrorCode catalog
 

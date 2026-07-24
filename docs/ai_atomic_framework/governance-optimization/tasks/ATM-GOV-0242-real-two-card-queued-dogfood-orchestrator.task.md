@@ -11,6 +11,8 @@ depends_on:
   - ATM-GOV-0246
   - ATM-GOV-0261
   - ATM-GOV-0263
+  - TASK-LANE-0021
+  - ATM-GOV-0264
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
 planning_repo: C:/Users/User/3KLife/docs/ai_atomic_framework
 target_repo: AI-Atomic-Framework
@@ -84,6 +86,8 @@ not invent task transitions or lifecycle labels.
 - [ ] ATM-GOV-0246 dashboard preflight is ready and the sealed run manifest exists before either claim.
 - [ ] ATM-GOV-0261 has command-backed passing evidence for the normal VCS-neutral commit-candidate lane. The dogfood must not depend on a direct native pathspec commit, alternate index, manual staging arbitration, or another emergency/anomaly delivery path.
 - [ ] ATM-GOV-0263 has passing emitted-command and batch-continuation evidence; both worker lanes follow task-card/playbook output without a captain repairing status/recovery commands or manually pruning terminal queue heads.
+- [ ] TASK-LANE-0021 has passing borrowed-actor hard-gate evidence; the dogfood cannot rely on a captain using another worker actor's lease, ticket, or close/write authority.
+- [ ] ATM-GOV-0264 has passing canonical-admission evidence. Both claims consume the same sealed façade decision; same atom identity cannot be treated as a task-wide grant or freeze before bounded proposal comparison.
 - [ ] Codex/0237 and Claude/0238 use two explicit actors and OS processes but the same canonical worktree/base/HEAD/build; their active intervals overlap, and no task lane creates or switches a Git branch, worktree, or index.
 - [ ] Both cards preserve `dashboard-view-model.ts` throughout the run and declare disjoint semantic anchors/bounded ranges within it; neither narrows scope to avoid arbitration.
 - [ ] Both workers produce bounded patch/mutation proposals without directly writing the shared file. Existing format adapters and transactional composer select both requests in one mutation batch and emit a serializability proof.

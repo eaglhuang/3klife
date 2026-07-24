@@ -415,6 +415,18 @@ contracts. Provider text is replaceable through manifests, conformance fixtures,
 shadow runs, version pinning and rollback. Replacing a provider must not migrate
 task cards, case IDs, receipts, claims or close semantics.
 
+The initial deep-module reference snapshot is pinned to Matt Pocock
+`mattpocock/skills` commit
+`ed37663cc5fbef691ddfecd080dff42f7e7e350d` under the MIT license.
+`codebase-design` supplies the model-invoked vocabulary and principles;
+`improve-codebase-architecture` supplies the user-invoked exploration route.
+Their downloaded bundle digests are respectively
+`sha256:c46b49303a81c7fc8934d0f4fbc44382cdecb73942d85d8d7db3523407fff8fa`
+and
+`sha256:d3682058df92c259b47c36503baa02345d5811758621b5dc03081d5ba0f7b69b`.
+TASK-SKL-0027 translates those inputs into a provider-neutral ATM interface;
+ATM runtime never imports the upstream skill text directly.
+
 ## 10. Task graph
 
 ```mermaid
@@ -443,6 +455,10 @@ flowchart LR
 Parallel frontier:
 
 - after 0018: 0019, 0020, 0021 and 0027 may proceed when Broker scope permits;
+- if 0022 is temporarily frozen by a Plan 3.1 `atom-cli-router` claim, the SKL
+  captain should complete independent 0027 rather than wait or repeatedly
+  retry the same claim; this is a planned frontier switch, not dependency
+  bypass;
 - after 0022: 0023 and 0024 may proceed in parallel;
 - after 0023/0024: 0025 and 0026 may proceed in parallel;
 - 0028 may proceed after its three inputs without waiting for validator runtime
@@ -472,6 +488,12 @@ Parallel frontier:
 Plan 3.1 remains authority for Broker tickets, sealed source, actor continuity,
 transactional shared writes, commit/close isolation and high-coupling parallel
 proof. This SKL plan owns skill/provider quality and validator/test governance.
+
+TASK-SKL-0027 is the architecture-review prerequisite for ATM-GOV-0264. It
+must close with a provider-neutral deep-module receipt contract before 0264
+claims production Broker files. The relationship is intentionally one-way:
+0027 reviews and structures the refactor; 0264 owns the actual seven-layer
+Broker admission implementation and evidence.
 
 Plan 3.1 may not count a false-green command as proof. TASK-SKL-0022 through
 0026 provide the replacement validation contract; TASK-SKL-0029 integrates it;
