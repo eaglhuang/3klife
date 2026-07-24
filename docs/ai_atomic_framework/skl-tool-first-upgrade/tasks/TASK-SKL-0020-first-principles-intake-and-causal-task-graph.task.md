@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0020
 title: First-principles intake and causal task graph
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.2
@@ -43,6 +43,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/task-card-writer.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-24T07:43:16.987Z"
+completed_by_agent: "codex-matt-skills-initiative-captain-20260724"
+closedAt: "2026-07-24T07:43:16.987Z"
+closedByActor: "codex-matt-skills-initiative-captain-20260724"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-24T07-43-16-987Z-close-d225820274a8"
+lastTransitionAt: "2026-07-24T07:43:16.987Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d3312405e6c31caf11eb0d21f6c56854ed038024"
 ---
 
 # TASK-SKL-0020 First-principles intake and causal task graph

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-24T07-43-16-987Z-close-d225820274a8",
+  "taskId": "TASK-SKL-0020",
+  "action": "close",
+  "actorId": "codex-matt-skills-initiative-captain-20260724",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0020-first-principles-intake-and-causal-task-graph.task.md",
+  "taskSha256": "sha256:f74ede0c96cc86adf48343ee04793804416d337ebb58c2d9a64df9dd2d6207f0",
+  "createdAt": "2026-07-24T07:43:16.987Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0020 --actor codex-matt-skills-initiative-captain-20260724"
+}
