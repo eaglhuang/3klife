@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0023
 title: Decentralized test case shards and Broker contributions
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.4
@@ -46,6 +46,15 @@ atomizationImpact:
       source: packages/core/src/broker/test-case-contribution.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-25T08:19:33.027Z"
+completed_by_agent: "cursor-skl-0023-captain"
+closedAt: "2026-07-25T08:19:33.027Z"
+closedByActor: "cursor-skl-0023-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-25T08-19-33-027Z-close-f6971e575d5f"
+lastTransitionAt: "2026-07-25T08:19:33.027Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "5c0c432995124c0572a729c3201b39e1e311f5d3"
 ---
 
 # TASK-SKL-0023 Decentralized test case shards and Broker contributions
