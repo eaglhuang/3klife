@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-25T13-23-44-847Z-close-3642473e4989",
+  "taskId": "ATM-GOV-0265",
+  "action": "close",
+  "actorId": "claude-0265-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0265-shared-mutation-finalization-and-sealed-runner-publication.task.md",
+  "taskSha256": "sha256:185bbdd3a0c2e350b50b877505538410cff2a193798f60a98db02405c6d32ad7",
+  "createdAt": "2026-07-25T13:23:44.847Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0265 --actor claude-0265-plan31-captain"
+}

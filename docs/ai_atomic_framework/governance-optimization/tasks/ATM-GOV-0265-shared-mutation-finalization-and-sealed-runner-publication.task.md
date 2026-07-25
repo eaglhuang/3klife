@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0265
 title: Shared mutation finalization and sealed runner publication
-status: planned
+status: done
 owner: atm-shared-mutation-runtime
 priority: P0
 milestone: ATM-3.1-R0Q.3
@@ -84,6 +84,15 @@ atomizationImpact:
       source: packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-25T13:23:44.847Z"
+completed_by_agent: "claude-0265-plan31-captain"
+closedAt: "2026-07-25T13:23:44.847Z"
+closedByActor: "claude-0265-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-25T13-23-44-847Z-close-3642473e4989"
+lastTransitionAt: "2026-07-25T13:23:44.847Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c1cd15ea28eee82ab358740f7703d25fd7f013fb"
 ---
 
 # ATM-GOV-0265 Shared mutation finalization and sealed runner publication
