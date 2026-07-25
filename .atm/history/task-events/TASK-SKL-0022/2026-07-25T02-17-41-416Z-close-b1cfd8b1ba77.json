@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-25T02-17-41-416Z-close-b1cfd8b1ba77",
+  "taskId": "TASK-SKL-0022",
+  "action": "close",
+  "actorId": "claude-003-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0022-causal-validator-contract-and-task-authoring-migration.task.md",
+  "taskSha256": "sha256:486b7ba4358f387bc50550d9d5ecc09381d3043d2e8a43b9a367f8e44f558341",
+  "createdAt": "2026-07-25T02:17:41.416Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0022 --actor claude-003-plan31-captain"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0022
 title: Causal validator contract and task authoring migration
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.3
@@ -42,6 +42,15 @@ atomizationImpact:
       source: schemas/validators/validator-execution-contract.schema.json
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-25T02:17:41.416Z"
+completed_by_agent: "claude-003-plan31-captain"
+closedAt: "2026-07-25T02:17:41.416Z"
+closedByActor: "claude-003-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-25T02-17-41-416Z-close-b1cfd8b1ba77"
+lastTransitionAt: "2026-07-25T02:17:41.416Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6dea40d8bdc74d71350dbeb382d02cb1a9782b68"
 ---
 
 # TASK-SKL-0022 Causal validator contract and task authoring migration
