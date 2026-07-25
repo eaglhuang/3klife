@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-25T11-58-30-796Z-close-b6c1ffbee077",
+  "taskId": "TASK-SKL-0025",
+  "action": "close",
+  "actorId": "cursor-skl-0025-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0025-test-case-id-bound-tdd-red-green-lifecycle.task.md",
+  "taskSha256": "sha256:76677549170744970092daac3760dc2a034eedf3677eb93bd100bc9da754b89d",
+  "createdAt": "2026-07-25T11:58:30.796Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0025 --actor cursor-skl-0025-captain"
+}

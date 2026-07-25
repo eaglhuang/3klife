@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0025
 title: Test case ID bound TDD red-green lifecycle
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.5
@@ -41,6 +41,15 @@ atomizationImpact:
       source: packages/core/src/evidence/tdd-cycle.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-25T11:58:30.796Z"
+completed_by_agent: "cursor-skl-0025-captain"
+closedAt: "2026-07-25T11:58:30.796Z"
+closedByActor: "cursor-skl-0025-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-25T11-58-30-796Z-close-b6c1ffbee077"
+lastTransitionAt: "2026-07-25T11:58:30.796Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9cd36eae21cedffc8acdd98f39e0fecc02d0d44f"
 ---
 
 # TASK-SKL-0025 Test case ID bound TDD red-green lifecycle
