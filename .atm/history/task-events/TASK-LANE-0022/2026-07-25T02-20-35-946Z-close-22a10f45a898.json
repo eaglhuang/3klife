@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-25T02-20-35-946Z-close-22a10f45a898",
+  "taskId": "TASK-LANE-0022",
+  "action": "close",
+  "actorId": "claude-003-plan31-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0022-mutation-capability-and-wip-continuity.task.md",
+  "taskSha256": "sha256:acb833ccf47dbfbc8c3190e5e65da33d471f2eb0ffe1e4ea2b08334edaddf796",
+  "createdAt": "2026-07-25T02:20:35.946Z",
+  "command": "node atm.mjs tasks close --task TASK-LANE-0022 --actor claude-003-plan31-captain"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: TASK-LANE-0022
 title: Mutation capability parity and WIP ownership continuity
-status: planned
+status: done
 owner: atm-lane-authority
 priority: P0
 milestone: ATM-3.1-R0Q.2
@@ -78,6 +78,15 @@ atomizationImpact:
       source: packages/core/src/lane/wip-ownership-transition.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-25T02:20:35.946Z"
+completed_by_agent: "claude-003-plan31-captain"
+closedAt: "2026-07-25T02:20:35.946Z"
+closedByActor: "claude-003-plan31-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-25T02-20-35-946Z-close-22a10f45a898"
+lastTransitionAt: "2026-07-25T02:20:35.946Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "8a112a863325e7427048f579b84e66bd4b3f1990"
 ---
 
 # TASK-LANE-0022 Mutation capability parity and WIP ownership continuity
