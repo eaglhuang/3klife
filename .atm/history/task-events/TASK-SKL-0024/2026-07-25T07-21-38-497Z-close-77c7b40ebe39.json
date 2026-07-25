@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-25T07-21-38-497Z-close-77c7b40ebe39",
+  "taskId": "TASK-SKL-0024",
+  "action": "close",
+  "actorId": "gemini36-skl-0024-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0024-structured-execution-receipt-and-zero-test-hard-gate.task.md",
+  "taskSha256": "sha256:3f3f1a5397da234c8c5dae9b6ae932bd2e3e28cabc3e3357c5a15dcad0152c12",
+  "createdAt": "2026-07-25T07:21:38.497Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0024 --actor gemini36-skl-0024-captain"
+}

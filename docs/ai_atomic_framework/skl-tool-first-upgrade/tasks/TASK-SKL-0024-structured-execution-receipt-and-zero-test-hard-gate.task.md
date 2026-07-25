@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0024
 title: Structured execution receipt and zero-test hard gate
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.4
@@ -44,6 +44,15 @@ atomizationImpact:
       source: packages/core/src/evidence/validation-receipt.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-25T07:21:38.497Z"
+completed_by_agent: "gemini36-skl-0024-captain"
+closedAt: "2026-07-25T07:21:38.497Z"
+closedByActor: "gemini36-skl-0024-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-25T07-21-38-497Z-close-77c7b40ebe39"
+lastTransitionAt: "2026-07-25T07:21:38.497Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6ea33fd4a21b29348ca627d3d3dbba3db59fb319"
 ---
 
 # TASK-SKL-0024 Structured execution receipt and zero-test hard gate
