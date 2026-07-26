@@ -518,9 +518,10 @@ No new card is created for `codebase-design`,
 general TDD lifecycle, or Standards/Spec review. Those capabilities are already
 owned by `TASK-SKL-0020`, `0021`, `0025`, `0027`, and `0029`.
 
-`TASK-SKL-0004` and `TASK-SKL-0006` are superseded. Their broad historical
-goals were replaced by the stable CLI result contract and completed Plan 3.1
-and LANE close, commit, ownership, staged-bundle, and publication seams.
+`TASK-SKL-0004` was completed in target delivery commit `596b6d6ca`, but its
+planning mirror remained stale. `TASK-SKL-0006` is superseded because its broad
+historical goals were replaced by completed Plan 3.1 and LANE close, commit,
+ownership, staged-bundle, and publication seams.
 
 ### Remaining dependency graph
 
@@ -536,8 +537,9 @@ flowchart LR
 
 `TASK-SKL-0031` is the only new hard sequencing bridge. It prevents newly
 authored specialist skills from becoming canonical but uninstallable. The four
-downstream cards are otherwise independent and may run in parallel subject to
-Broker admission.
+downstream cards are otherwise semantically independent. `TASK-SKL-0034` and
+`0035` share the deep-module skill template, so their write lanes require
+Broker compose or serialization rather than a fabricated semantic dependency.
 
 ### Plan 3.1 execution ruling
 

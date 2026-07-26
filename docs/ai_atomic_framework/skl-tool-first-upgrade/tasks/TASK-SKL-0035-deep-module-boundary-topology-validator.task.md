@@ -6,6 +6,7 @@ owner: atm-architecture
 priority: P1
 milestone: ATM-SKL-VG-R1.2
 depends_on:
+  - TASK-SKL-0027
   - TASK-SKL-0031
 causalGraph:
   causalDependencies:

@@ -264,7 +264,8 @@ current active SKL convergence card.
 After 0029:
 
 - run `TASK-SKL-0030` and `TASK-SKL-0031` in parallel;
-- 0031 unlocks the independent `TASK-SKL-0032` through `0035` frontier;
+- 0031 unlocks `TASK-SKL-0032` through `0035`; 0034 and 0035 still require
+  Broker compose or serialization for their shared skill-template path;
 - prioritize 0033 diagnostic causality and 0035 deterministic module
   boundaries when assigning new high-risk implementation work;
 - do not block existing Plan 3.1 replay, dashboard or benchmark cards on

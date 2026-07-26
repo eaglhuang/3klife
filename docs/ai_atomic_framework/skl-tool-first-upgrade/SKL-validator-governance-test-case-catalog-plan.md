@@ -487,7 +487,8 @@ Parallel frontier:
   integration;
 - 0029 is the convergence point; 0030 is the measured verdict.
 - 0031 follows 0029 and makes every canonical specialist skill distributable;
-- after 0031, 0033, 0034 and 0035 are an independent parallel frontier.
+- after 0031, 0033, 0034 and 0035 are semantically independent; 0034 and 0035
+  still require Broker compose or serialization for their shared skill template.
 
 ## 11. Task inventory
 
