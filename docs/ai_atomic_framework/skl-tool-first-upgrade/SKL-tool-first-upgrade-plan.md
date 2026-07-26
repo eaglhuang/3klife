@@ -460,3 +460,18 @@ than blocking `TASK-SKL-0015` until `TASK-SKL-0014` closes.
 TASK-SKL-0016 records a live runner-sync dogfood blocker discovered after TASK-SKL-0014: root-drop release assembly read stale tracked generated dist declarations from the Git index after package dist regeneration removed them from the sealed worktree. The follow-up keeps the repair in the SKL tool-first/release-governance family instead of expanding ATM-GOV-0225 final closure scope.
 
 Required evidence is command-backed: focused source-list test, root-drop assembly, typecheck, validate:cli, and git diff check.
+
+## Follow-up: TASK-SKL-0031 Data-Driven Skill Tiers and Full-Corpus Integration Profiles
+
+The current adapter contract intentionally guarantees a minimum entry set, but
+the compiler has no supported path to install specialist skills. This has made
+canonical specialist templates discoverable to corpus tooling while leaving
+them unavailable to normal editor installation. It also maintains duplicated
+minimum-entry metadata outside template frontmatter.
+
+`TASK-SKL-0031` preserves the minimum-entry default while moving skill tier
+classification into schema-validated template data and introducing a compiler-
+generated full-corpus profile for every supported adapter. It depends on
+`TASK-SKL-0029` so the integration work begins from the current autonomous
+validator lifecycle and refreshed generated surfaces. The repair must not
+hand-copy installed editor skills or add task-specific allowlists.
