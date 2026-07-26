@@ -1,7 +1,16 @@
 ---
 task_id: TASK-SKL-0006
 title: Governed commit and close lane hardening
-status: planned
+status: superseded
+superseded_by:
+  - TASK-LANE-0022
+  - ATM-GOV-0250
+  - ATM-GOV-0257
+  - ATM-GOV-0258
+  - ATM-GOV-0259
+  - ATM-GOV-0265
+closed_reason: "Plan 3.1 and LANE cards delivered the residue, ownership, staged-bundle, runner publication, and close/commit hardening as narrower governed capabilities."
+retirement_policy: "Do not import or claim this historical umbrella card. Route new defects to the owning seam or ATM bug backlog."
 milestone: P3
 depends_on:
   - TASK-SKL-0003
@@ -42,6 +51,13 @@ nonGoals:
 ---
 
 # TASK-SKL-0006
+
+## Retirement
+
+Superseded by the completed Plan 3.1 and LANE hardening chain. Reopening this
+broad umbrella would duplicate already sealed ownership, staged-bundle,
+runner-publication, and close/commit policies. New defects must route to the
+specific owning seam or the ATM bug backlog.
 
 ## Goal
 

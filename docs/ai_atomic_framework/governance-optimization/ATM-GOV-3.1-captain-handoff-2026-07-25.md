@@ -254,3 +254,22 @@ All of these must stay visible in `ATM-GOV-0246` dashboard evidence and
 Dispatch `TASK-SKL-0028` to `Cursor` and `TASK-LANE-0022` to `Claude` as the
 current best parallel pair. Keep `Codex captain` on dependency correction,
 deep-module review sanity checks, and plan updates while those two advance.
+
+## 2026-07-26 SKL frontier addendum
+
+The frontier above is historical. `TASK-SKL-0022` through `0028`,
+`TASK-LANE-0022`, and `ATM-GOV-0265` are complete; `TASK-SKL-0029` is the
+current active SKL convergence card.
+
+After 0029:
+
+- run `TASK-SKL-0030` and `TASK-SKL-0031` in parallel;
+- 0031 unlocks the independent `TASK-SKL-0032` through `0035` frontier;
+- prioritize 0033 diagnostic causality and 0035 deterministic module
+  boundaries when assigning new high-risk implementation work;
+- do not block existing Plan 3.1 replay, dashboard or benchmark cards on
+  0032-0035 unless their acceptance explicitly consumes a new receipt.
+
+No blanket dependency is added from remaining Plan 3.1 cards to the whole SKL
+family. Skills improve agent quality, but a hard graph edge requires a consumed
+schema, provider interface, receipt or validator contract.

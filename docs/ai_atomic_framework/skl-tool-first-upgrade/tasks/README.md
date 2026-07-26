@@ -34,8 +34,8 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 | [TASK-SKL-0013](./TASK-SKL-0013-error-code-resolver-shared-skill.task.md) | P1 | Error-code resolver shared skill and registry | planned | `TASK-SKL-0002`, `TASK-SKL-0005`, `TASK-SKL-0007` | ATM error-code knowledge |
 | [TASK-SKL-0005](./TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md) | P1 | Skill tool-first orchestration migration | planned | `TASK-SKL-0002`, `TASK-SKL-0007` | ATM skills / integrations |
 | [TASK-SKL-0003](./TASK-SKL-0003-next-claim-framework-mode-tools.task.md) | P2 | Next, claim, and framework-mode tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002`, `TASK-SKL-0005` | ATM CLI / governance entry |
-| [TASK-SKL-0004](./TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md) | P2 | Evidence, guard, taskflow, and governed commit tools | planned | `TASK-SKL-0001`, `TASK-SKL-0002`, `TASK-SKL-0005` | ATM operators |
-| [TASK-SKL-0006](./TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md) | P3 | Governed commit and close lane hardening | planned | `TASK-SKL-0003`, `TASK-SKL-0004`, `TASK-SKL-0005`, `TASK-SKL-0007` | ATM close/commit safety |
+| [TASK-SKL-0004](./TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md) | retired | Evidence, guard, taskflow, and governed commit tools | superseded | focused CLI/result/lifecycle cards | ATM operators |
+| [TASK-SKL-0006](./TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md) | retired | Governed commit and close lane hardening | superseded | completed Plan 3.1/LANE hardening | ATM close/commit safety |
 | [TASK-SKL-0008](./TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md) | P3 | Team role skill-pack and capability boundary contract | planned | `TASK-SKL-0005`, `TASK-SKL-0007` | Team role contract |
 | [TASK-SKL-0009](./TASK-SKL-0009-team-role-routing-matrix-and-playbook-slices.task.md) | P3 | Team role-routing matrix and playbook slices | planned | `TASK-SKL-0003`, `TASK-SKL-0005`, `TASK-SKL-0008` | Team playbook routing |
 | [TASK-SKL-0010](./TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md) | P4 | Provider-neutral role skill-pack manifest | planned | `TASK-SKL-0007`, `TASK-SKL-0008`, `TASK-SKL-0009` | Team runtime manifest |
@@ -45,6 +45,9 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 | [TASK-SKL-0015](./TASK-SKL-0015-entry-skill-governance-flow-backwrite.task.md) | P1 | Entry skill governance-flow backwrite | planned | `TASK-SKL-0005`, `TASK-SKL-0007` | ATM entry skills / integrations |
 | [TASK-SKL-0031](./TASK-SKL-0031-data-driven-skill-tiers-and-full-corpus-integration-profiles.task.md) | P1 | Data-driven skill tiers and full-corpus integration profiles | planned | `TASK-SKL-0029` | ATM skill compiler / integrations |
 | [TASK-SKL-0032](./TASK-SKL-0032-editor-global-skill-source-federation-and-overlay-manifests.task.md) | P1 | Editor-global skill source federation and overlay manifests | planned | `TASK-SKL-0031` | Editor-global external skill overlays |
+| [TASK-SKL-0033](./TASK-SKL-0033-diagnostic-feedback-loop-provider-and-causal-repair-receipt.task.md) | P1 | Diagnostic feedback loop provider and causal repair receipt | planned | `TASK-SKL-0031` | Diagnostic evidence lifecycle |
+| [TASK-SKL-0034](./TASK-SKL-0034-engineering-change-method-profiles-and-fidelity-receipts.task.md) | P2 | Engineering change method profiles and fidelity receipts | planned | `TASK-SKL-0031` | Data-driven engineering methods |
+| [TASK-SKL-0035](./TASK-SKL-0035-deep-module-boundary-topology-validator.task.md) | P1 | Deep module boundary topology validator | planned | `TASK-SKL-0031` | Architecture boundary validation |
 
 ## Sequencing Note
 
@@ -53,13 +56,24 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 3. `TASK-SKL-0007` is intentionally pulled forward so the growth contract exists before the first orchestration skill grows large.
 4. `TASK-SKL-0013` adds shared error-code resolution before more specialist skills duplicate recovery prose.
 5. `TASK-SKL-0005` also moves into early P1 so we can stand up the first usable `router / playbook / specialist skill` seam quickly and let it learn while being used.
-6. `TASK-SKL-0003` and `TASK-SKL-0004` attach more governance surfaces onto that growth-enabled skill skeleton instead of fattening one entry skill first.
+6. `TASK-SKL-0003` attached the remaining entry surface. `TASK-SKL-0004` is retired because the stable CLI result contract and focused lifecycle cards replaced the proposed umbrella wrapper.
 7. `TASK-SKL-0008` to `TASK-SKL-0012` extend the same architecture into Team Agents, where `Agent + Skill` is the reusable unit.
-8. `TASK-SKL-0006` stays as later hardening and should absorb real dogfood friction such as residue, active-claim noise, runner skew, and cross-repo sync problems.
+8. `TASK-SKL-0006` is retired because Plan 3.1 and LANE cards delivered its close/commit hardening as narrower governed seams.
 9. `TASK-SKL-0014` is opened from `ATM-GOV-0196` dogfood and should run before more framework quickfixes rely on raw `framework-mode` CLI snippets. It must consume the sealed `ATM-GOV-0196` summary before final dogfood acceptance.
 10. `TASK-SKL-0015` promotes stable governance-flow rules from the 2026-07-20 ATM 2.0/2.1 Captain handoff into source skill templates, while keeping historical task state out of reusable entry skills. It may coordinate with `TASK-SKL-0014` when both touch the same skill templates, but `TASK-SKL-0014` is not a semantic prerequisite.
 11. `TASK-SKL-0031` retains the minimum-entry install contract while making the skill tier data-driven and adding a governed full-corpus install profile. It follows `TASK-SKL-0029` and is the only route for repairing specialist-skill installation parity.
 12. `TASK-SKL-0032` keeps personal and third-party skill portability outside the ATM canonical corpus. It follows the 0031 distribution interface and owns only provenance-aware editor-global overlays and their managed manifests.
+13. `TASK-SKL-0033` adds the missing diagnostic lifecycle; it follows 0031 so the new specialist skill is actually distributable.
+14. `TASK-SKL-0034` absorbs expand-contract, independent TDD oracle, review-smell and conflict-intent techniques as profiles, not parallel task models.
+15. `TASK-SKL-0035` turns deep-module boundary claims into a deterministic, language-adaptable topology validator.
+
+## Current Executable Order
+
+1. Finish the already-running `TASK-SKL-0029`.
+2. Run `TASK-SKL-0030` and `TASK-SKL-0031` in parallel after 0029.
+3. After 0031, run `TASK-SKL-0032`, `TASK-SKL-0033`, `TASK-SKL-0034`, and
+   `TASK-SKL-0035` in parallel when their declared target scopes are admitted.
+4. Prioritize 0033 and 0035 over 0032 and 0034 when capacity is limited.
 
 ## Backlog To Skill Feed
 

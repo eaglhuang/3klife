@@ -496,3 +496,64 @@ editor-global overlay manifests, deterministic source priority, collision
 reports, incomplete-source fallback, stale managed reconciliation, and
 preservation of unmanaged user files. Real home directories remain outside
 automated tests and machine-specific paths remain outside production policy.
+
+## 2026-07-26 Capability Gap Convergence
+
+The Matt Pocock skills audit was pinned to
+`mattpocock/skills@ed37663cc5fbef691ddfecd080dff42f7e7e350d`. ATM does not
+mirror one upstream skill into one ATM task. The audit produced three coherent
+capability seams:
+
+1. `TASK-SKL-0033` owns the missing diagnostic feedback loop and causal repair
+   receipt.
+2. `TASK-SKL-0034` owns data-driven engineering method profiles.
+   Expand-contract migration, independent TDD oracles, review smell heuristics
+   and intent-preserving conflict analysis remain profiles consumed by existing
+   ATM lifecycles, not new task models.
+3. `TASK-SKL-0035` owns deterministic module-boundary topology validation and
+   connects it to the existing deep-module provider route.
+
+No new card is created for `codebase-design`,
+`improve-codebase-architecture`, `to-spec`, `to-tickets`, `wayfinder`,
+general TDD lifecycle, or Standards/Spec review. Those capabilities are already
+owned by `TASK-SKL-0020`, `0021`, `0025`, `0027`, and `0029`.
+
+`TASK-SKL-0004` and `TASK-SKL-0006` are superseded. Their broad historical
+goals were replaced by the stable CLI result contract and completed Plan 3.1
+and LANE close, commit, ownership, staged-bundle, and publication seams.
+
+### Remaining dependency graph
+
+```mermaid
+flowchart LR
+    T29["0029 Autonomous lifecycle"] --> T30["0030 Historical A/B verdict"]
+    T29 --> T31["0031 Corpus profiles and reconciliation"]
+    T31 --> T32["0032 Editor-global federation"]
+    T31 --> T33["0033 Diagnostic loop"]
+    T31 --> T34["0034 Method profiles"]
+    T31 --> T35["0035 Boundary validator"]
+```
+
+`TASK-SKL-0031` is the only new hard sequencing bridge. It prevents newly
+authored specialist skills from becoming canonical but uninstallable. The four
+downstream cards are otherwise independent and may run in parallel subject to
+Broker admission.
+
+### Plan 3.1 execution ruling
+
+Do not pause all remaining Plan 3.1 work until every SKL enhancement is done.
+Dependencies represent consumed contracts, not the general belief that better
+skills may improve code:
+
+- finish `TASK-SKL-0029`, because Plan 3.1 final evidence consumes its lifecycle;
+- prioritize `TASK-SKL-0031` immediately afterward so every editor can receive
+  the complete canonical ATM corpus;
+- run `TASK-SKL-0030` and independent Plan 3.1 dashboard, replay and benchmark
+  work in parallel with 0031;
+- after 0031, prefer 0033 and 0035 before assigning new high-uncertainty repair
+  or architecture cards, but do not retrofit them as hard dependencies of
+  already-authored Plan 3.1 cards;
+- keep 0032 and 0034 off the Plan 3.1 critical path.
+
+A hard cross-plan dependency is justified only when acceptance explicitly
+consumes the corresponding schema, provider interface, receipt or validator.

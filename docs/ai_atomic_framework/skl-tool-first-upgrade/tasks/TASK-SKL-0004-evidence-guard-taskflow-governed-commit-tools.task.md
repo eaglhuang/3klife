@@ -1,7 +1,10 @@
 ---
 task_id: TASK-SKL-0004
 title: Evidence, guard, taskflow, and governed commit tools
-status: planned
+status: done
+completed_at: "2026-06-23T16:11:14.466Z"
+completed_by_agent: codex-main
+delivery_commit: 596b6d6ca
 milestone: P1
 depends_on:
   - TASK-SKL-0001
@@ -39,6 +42,12 @@ nonGoals:
 ---
 
 # TASK-SKL-0004
+
+## Historical closeback
+
+Target delivery commit `596b6d6ca` closed this card on
+`2026-06-23T16:11:14.466Z`. The planning mirror remained stale at `planned`;
+this closeback records the target-ledger truth and prevents duplicate execution.
 
 ## Goal
 

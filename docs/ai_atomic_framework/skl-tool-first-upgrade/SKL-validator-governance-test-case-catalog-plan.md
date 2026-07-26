@@ -468,6 +468,10 @@ flowchart LR
     T26 --> T29
     T28 --> T29
     T29 --> T30["0030 Historical A/B verdict and migration"]
+    T29 --> T31["0031 Full-corpus distribution profiles"]
+    T31 --> T33["0033 Diagnostic loop receipt"]
+    T31 --> T34["0034 Engineering method profiles"]
+    T31 --> T35["0035 Module-boundary validator"]
 ```
 
 Parallel frontier:
@@ -482,6 +486,8 @@ Parallel frontier:
 - 0028 may proceed after its three inputs without waiting for validator runtime
   integration;
 - 0029 is the convergence point; 0030 is the measured verdict.
+- 0031 follows 0029 and makes every canonical specialist skill distributable;
+- after 0031, 0033, 0034 and 0035 are an independent parallel frontier.
 
 ## 11. Task inventory
 
@@ -500,6 +506,11 @@ Parallel frontier:
 | TASK-SKL-0028 | Full skill corpus audit and canary rewrites |
 | TASK-SKL-0029 | Autonomous authoring/review/evidence/pre-close integration |
 | TASK-SKL-0030 | Historical A/B replay, performance verdict and migration guide |
+| TASK-SKL-0031 | Data-driven full-corpus profiles and manifest reconciliation |
+| TASK-SKL-0032 | Optional editor-global external skill federation |
+| TASK-SKL-0033 | Diagnostic feedback loop and causal repair receipt |
+| TASK-SKL-0034 | Data-driven engineering method profiles and fidelity receipts |
+| TASK-SKL-0035 | Deterministic deep-module boundary topology validator |
 
 ## 12. Relationship to Plan 3.1
 
