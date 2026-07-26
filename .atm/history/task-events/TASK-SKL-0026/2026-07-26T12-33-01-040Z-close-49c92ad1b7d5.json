@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-26T12-33-01-040Z-close-49c92ad1b7d5",
+  "taskId": "TASK-SKL-0026",
+  "action": "close",
+  "actorId": "claude-004-skl-0026-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0026-causal-validator-selector-and-phase-suite-scheduler.task.md",
+  "taskSha256": "sha256:d33bbadd23c48ce4d72420dd1dbaab7b60eaa6489219da2ad2e7278c777e4ad0",
+  "createdAt": "2026-07-26T12:33:01.040Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0026 --actor claude-004-skl-0026-captain"
+}

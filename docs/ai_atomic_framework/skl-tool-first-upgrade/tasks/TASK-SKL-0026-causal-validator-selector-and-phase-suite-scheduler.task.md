@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0026
 title: Causal validator selector and phase-suite scheduler
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.5
@@ -50,6 +50,15 @@ atomizationImpact:
       source: packages/core/src/evidence/phase-suite.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-26T12:33:01.040Z"
+completed_by_agent: "claude-004-skl-0026-captain"
+closedAt: "2026-07-26T12:33:01.040Z"
+closedByActor: "claude-004-skl-0026-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-26T12-33-01-040Z-close-49c92ad1b7d5"
+lastTransitionAt: "2026-07-26T12:33:01.040Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c778a76b8c2b0f6c8461bfb47713662c81cb8393"
 ---
 
 # TASK-SKL-0026 Causal validator selector and phase-suite scheduler
