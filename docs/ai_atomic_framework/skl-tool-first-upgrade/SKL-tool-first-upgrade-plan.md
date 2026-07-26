@@ -469,9 +469,30 @@ canonical specialist templates discoverable to corpus tooling while leaving
 them unavailable to normal editor installation. It also maintains duplicated
 minimum-entry metadata outside template frontmatter.
 
-`TASK-SKL-0031` preserves the minimum-entry default while moving skill tier
-classification into schema-validated template data and introducing a compiler-
-generated full-corpus profile for every supported adapter. It depends on
-`TASK-SKL-0029` so the integration work begins from the current autonomous
-validator lifecycle and refreshed generated surfaces. The repair must not
-hand-copy installed editor skills or add task-specific allowlists.
+`TASK-SKL-0031` creates an `atm-skill-distribution-manager` deep module. It
+concentrates canonical template validation, data-driven profiles, adapter
+projection planning, collision handling, and manifest reconciliation behind one
+public interface. It depends on `TASK-SKL-0029` so the integration work begins
+from the current autonomous validator lifecycle and refreshed generated
+surfaces. The repair must not hand-copy installed editor skills, add
+task-specific allowlists, or treat installed directories as source authority.
+
+The framework-repository profile must include every valid canonical ATM skill,
+while adopter bootstrap remains a smaller compatible profile. All editors must
+carry the same ATM skill IDs, source digest, capabilities, and governance
+semantics even when their projection formats differ. Verification must compare
+the desired catalog with the installed manifest so missing canonical and stale
+managed projections are visible.
+
+## Follow-up: TASK-SKL-0032 Editor-Global Skill Source Federation and Overlay Manifests
+
+The 2026-07-26 Claude global-sync probe demonstrated a separate boundary:
+personal and third-party skills may need cross-editor portability, but they are
+not ATM product templates and must not become a second canonical ATM corpus.
+
+`TASK-SKL-0032` follows `TASK-SKL-0031` and implements external source catalogs
+as provenance-aware adapters to the distribution manager. It owns
+editor-global overlay manifests, deterministic source priority, collision
+reports, incomplete-source fallback, stale managed reconciliation, and
+preservation of unmanaged user files. Real home directories remain outside
+automated tests and machine-specific paths remain outside production policy.

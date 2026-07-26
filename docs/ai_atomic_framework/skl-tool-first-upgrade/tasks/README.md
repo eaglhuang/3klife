@@ -44,6 +44,7 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 | [TASK-SKL-0014](./TASK-SKL-0014-framework-temp-claim-tool-first-workflow.task.md) | P1 | Framework temp claim tool-first workflow and skill route | planned | `TASK-SKL-0002`, `TASK-SKL-0003`, `TASK-SKL-0005`, `TASK-SKL-0013` | Framework quickfix governance |
 | [TASK-SKL-0015](./TASK-SKL-0015-entry-skill-governance-flow-backwrite.task.md) | P1 | Entry skill governance-flow backwrite | planned | `TASK-SKL-0005`, `TASK-SKL-0007` | ATM entry skills / integrations |
 | [TASK-SKL-0031](./TASK-SKL-0031-data-driven-skill-tiers-and-full-corpus-integration-profiles.task.md) | P1 | Data-driven skill tiers and full-corpus integration profiles | planned | `TASK-SKL-0029` | ATM skill compiler / integrations |
+| [TASK-SKL-0032](./TASK-SKL-0032-editor-global-skill-source-federation-and-overlay-manifests.task.md) | P1 | Editor-global skill source federation and overlay manifests | planned | `TASK-SKL-0031` | Editor-global external skill overlays |
 
 ## Sequencing Note
 
@@ -58,6 +59,7 @@ All `TASK-SKL-*` cards follow the ATM task-card contract.
 9. `TASK-SKL-0014` is opened from `ATM-GOV-0196` dogfood and should run before more framework quickfixes rely on raw `framework-mode` CLI snippets. It must consume the sealed `ATM-GOV-0196` summary before final dogfood acceptance.
 10. `TASK-SKL-0015` promotes stable governance-flow rules from the 2026-07-20 ATM 2.0/2.1 Captain handoff into source skill templates, while keeping historical task state out of reusable entry skills. It may coordinate with `TASK-SKL-0014` when both touch the same skill templates, but `TASK-SKL-0014` is not a semantic prerequisite.
 11. `TASK-SKL-0031` retains the minimum-entry install contract while making the skill tier data-driven and adding a governed full-corpus install profile. It follows `TASK-SKL-0029` and is the only route for repairing specialist-skill installation parity.
+12. `TASK-SKL-0032` keeps personal and third-party skill portability outside the ATM canonical corpus. It follows the 0031 distribution interface and owns only provenance-aware editor-global overlays and their managed manifests.
 
 ## Backlog To Skill Feed
 
