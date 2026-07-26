@@ -222,13 +222,13 @@ Implementation of an executable validator that replays this scenario (for exampl
 | `TASK-AAO-0022` | Rollback-proof evidence | M7 | planned | `TASK-AAO-0016` | `schemas/rollback-proof.schema.json`<br>`scripts/validate-rollback-proof.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0023` | Map spec schema validator | M8 | planned | `TASK-AAO-0006` | `schemas/atom-map.schema.json`<br>`scripts/validate-map-spec-schema.ts`<br>`package.json` |
 | `TASK-AAO-0024` | batch status 增強 | M8 | done | `TASK-AAO-0014` | `packages/cli/src/commands/batch.ts`<br>`packages/cli/src/commands/command-specs/batch.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
-| `TASK-AAO-0025` | tasks show --planning-doc | M8 | planned | `TASK-AAO-0010` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0025` | tasks show --planning-doc | M8 | superseded | `TASK-AAO-0010` | `packages/cli/src/commands/tasks.ts`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0026` | atm status 綜覽 | M8 | planned | `TASK-AAO-0024`, `TASK-AAO-0025` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/command-specs/status.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0027` | dev runner 提示 | M8 | planned | `TASK-AAO-0026` | `README.md`<br>`AGENTS.md`<br>`packages/cli/src/commands/next.ts` |
 | `TASK-AAO-0028` | batch playbook 文件化 | M9 | planned | `TASK-AAO-0014` | `docs/governance/batch-playbook.md`<br>`templates/agent-pack/**`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0029` | Low-level task lifecycle deprecation | M9 | planned | `TASK-AAO-0014`, `TASK-AAO-0028` | `docs/DEPRECATIONS.md`<br>`packages/cli/src/commands/command-specs/tasks.spec.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0030` | CRLF policy | M9 | planned | `TASK-AAO-0009` | `.gitattributes`<br>`docs/governance/line-ending-policy.md`<br>`scripts/validate-line-endings.ts` |
-| `TASK-AAO-0031` | Background work pause advisory | M9 | planned | `TASK-AAO-0024` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/handoff.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
+| `TASK-AAO-0031` | Background work pause advisory | M9 | superseded | `TASK-AAO-0024` | `packages/cli/src/commands/status.ts`<br>`packages/cli/src/commands/handoff.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0032` | Artifact commit policy 收斂 | M9 | planned | `TASK-AAO-0019` | `docs/governance/artifact-commit-policy.md`<br>`packages/cli/src/commands/hook.ts`<br>`atomic_workbench/atomization-coverage/path-to-atom-map.json` |
 | `TASK-AAO-0033` | Final dogfood rerun 與雙 repo sync | M10 | planned | `TASK-AAO-0020`, `TASK-AAO-0021`, `TASK-AAO-0022`, `TASK-AAO-0023`, `TASK-AAO-0028`, `TASK-AAO-0032` | `atomic_workbench/reports/aao-final-dogfood-report.json`<br>`docs/ai_atomic_framework/atm-agent-first-operability/AAO_FINAL_REPORT.md`<br>`release/**` |
 | `TASK-AAO-0034` | next explicit selector 與 routing memory | M11 | done | `TASK-AAO-0001`, `TASK-AAO-0003`, `TASK-AAO-0024`, `TASK-AAO-0026` | `packages/cli/src/commands/next.ts`<br>`packages/cli/src/commands/task-intent.ts`<br>`packages/cli/src/commands/command-specs/next.spec.ts` |
@@ -304,7 +304,7 @@ This line folds the latest practical feedback into the AAO plan without redesign
 | Expected failing gates need evidence | `TASK-AAO-0016` | Diagnostic / expected-failure evidence is separate from validation passes. |
 | Playbook only handles batch | `TASK-AAO-0014` | Playbook covers batch, single-task, and explicit task-list modes. |
 | Completion attestation is not closed-loop | `TASK-AAO-0019` | Scanner validates attestation schema and closure-packet hashes. |
-| Background pause is only prose | `TASK-AAO-0031` | Add active-session state and `atm status --background-safe`. |
+| Background pause is only prose | `TASK-AAO-0031` (superseded) | `atm status --json` now exposes active-worker heartbeat and expiry state; open a new narrow UX card only for a confirmed pause-advisory gap. |
 | Artifact policy is abstract | `TASK-AAO-0032` | Add a decision table and hook diagnostics tied to table rows. |
 | Dev runner warning is too weak | `TASK-AAO-0027` | Add runtime warning when frozen runner is older than source. |
 | Lock edits can hide in ignored runtime files | `TASK-AAO-0012` | Detect lock mtime changes without matching ATM CLI events. |

@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0025
 task_id: TASK-AAO-0025
 title: "tasks show --planning-doc"
-status: planned
+status: superseded
 owner: atm-core
 priority: P1
 milestone: M8
@@ -43,6 +43,14 @@ nonGoals:
   - "不繞過 ATM evidence gate"
 ---
 # TASK-AAO-0025 — tasks show --planning-doc
+
+## Supersession
+
+Superseded by the current `tasks show --task <id>` task-contract projection and
+planning-source seal. The remaining request to print raw planning Markdown is
+a convenience feature, not a current governance or Plan 3.1 delivery gap.
+Open a new, narrow UX card only if direct raw planning-section output becomes a
+confirmed user need.
 
 ## Goal
 

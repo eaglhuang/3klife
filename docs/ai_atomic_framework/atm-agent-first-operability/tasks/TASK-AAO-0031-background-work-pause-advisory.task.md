@@ -2,7 +2,7 @@
 doc_id: doc_other_aao_0031
 task_id: TASK-AAO-0031
 title: "Background work pause advisory"
-status: planned
+status: superseded
 owner: atm-core
 priority: P2
 milestone: M9
@@ -44,6 +44,14 @@ nonGoals:
   - "不繞過 ATM evidence gate"
 ---
 # TASK-AAO-0031 — Background work pause advisory
+
+## Supersession
+
+Superseded by the current `atm status --json` active-worker dashboard, which
+reports worker heartbeat, TTL, expiry state, scope, and lock path without
+automatically stopping a process. Explicit pause, checkpoint, or handoff
+recommendations remain optional UX work and require a new narrow card if they
+become a confirmed operator need.
 
 ## Goal
 
