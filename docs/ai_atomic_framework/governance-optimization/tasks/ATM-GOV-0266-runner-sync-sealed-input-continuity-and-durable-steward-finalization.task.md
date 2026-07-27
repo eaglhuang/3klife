@@ -47,12 +47,14 @@ scopePaths:
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - packages/cli/src/commands/framework-development/runner-sync-admission.ts
   - packages/cli/src/commands/git-governance/implementation.ts
+  - packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - scripts/run-sealed-runner-build.ts
   - scripts/runner-sync-incremental-build.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
   - docs/governance/error-code-registry.json
+  - docs/ERROR_CODES.md
   - packages/core/src/error-code-registry.generated.ts
   - tests/cli/git-record-commit.test.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
@@ -67,9 +69,11 @@ deliverables:
   - packages/core/src/broker/runner-sync-steward-queue.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - packages/cli/src/commands/git-governance/implementation.ts
+  - packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
   - docs/governance/error-code-registry.json
+  - docs/ERROR_CODES.md
   - packages/core/src/error-code-registry.generated.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
