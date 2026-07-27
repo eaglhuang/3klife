@@ -859,4 +859,40 @@ Evidence now available:
 
 Plan 3.0 remains active. The public frozen replay surface and standard validator orchestration are no longer blockers, but 0234/0235 cannot close until real two-card dogfood and command-backed 420-cell performance evidence exist.
 
+## 2026-07-27 Runner-sync Continuity Addendum
+
+Real Plan 3.1 dogfood exposed a missing resilience boundary: a coalesced
+runner-sync reservation can expire during a valid full build, while an unrelated
+parallel commit can advance HEAD after the build seal. A whole-HEAD equality
+rule would incorrectly make normal parallel delivery depend on every captain
+remaining idle; merely increasing a fixed TTL would preserve the same shallow
+coupling.
+
+`ATM-GOV-0266` is the single owner for this correction. It introduces a durable
+runner-sync session with immutable `sealedSourceSha`, aggregate
+`runnerInputTreeHash`, and a content-addressed runner input/output graph. At
+publication, the session classifies the delta from seal to current HEAD by
+runner-affecting paths. Non-runner changes remain publishable with the existing
+verified build. A runner-input change rebuilds only its declared graph closure,
+reuses outputs whose recorded input digests still match, and regenerates one
+fenced aggregate manifest; an unknown dependency fails closed. One version
+manifest records the distinct development candidate, sealed-and-verified local
+runner, and externally published release states, so no surface can relabel an
+unpublished artifact as a release. The session renews its build lease, persists
+a provisional receipt before publication, and reconciles interrupted builds from
+fenced evidence rather than manual lock cleanup.
+
+Task admission obtains its execution runner from this registry rather than
+assuming that one global latest build must serve every task. The registry returns
+the highest trusted version compatible with the card's declared capabilities,
+validator/schema contract, required surfaces, and sealed-input boundary. A
+non-latest selection is valid only with an attributable compatibility receipt;
+otherwise ATM fails closed and requests revalidation or a new build.
+
+This is not a retrospective blocker for a current build that already has a
+matching sealed input proof. It is a required gate before the next shared
+multi-captain runner-sync window. The design preserves `INV-ATM-010`: workers
+may make independent normal commits; the neutral steward alone decides whether
+those commits affect its runner input boundary.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-07-21T01:19:26.105Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/end-to-end-auto-batch-performance-plan-v3.md","contentDigest":"sha256:77768264cb2be6c40233560fd4b46d7a5c9fb8bf04dabf1c9d6ae862a002c927"} -->
