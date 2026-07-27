@@ -915,7 +915,7 @@ correct or safe to promote.
 | Order | Card / boundary | May run with | Required outcome |
 |---|---|---|---|
 | 0 | Current 0240/0248/0029 coalesced closeout evidence capture | No manual release, receipt edit, rebuild, close, or push | Preserve the head-owner-only receipt and vanished queue as the recovery fixture; park or transfer blocked lanes through normal lifecycle commands. |
-| 1 | 0266 governed recovery, deep-module review, and Phase A contract handoff | 0267 planning and fixture review only | Repair the receipt/reconcile path before attempting non-head close; seal the version/selection receipt schema, public requirement/version contract, and deterministic fixture digest. |
+| 1 | 0266 governed recovery, deep-module review, lifecycle-record bridge, and Phase A contract handoff | 0267 planning and fixture review only | Repair the receipt/reconcile path and persist each parked card's blocked/released history without releasing the active recovery claim; then seal the version/selection receipt schema, public requirement/version contract, and deterministic fixture digest. |
 | 2A | 0266 durable session, input graph, registry, and publication implementation | 0267 verifier/replay work | Build the production owner module and its thin adapters. |
 | 2B | 0267 pure verifier and counterfactual replay | 0266 session implementation | Consume Phase A read-only fixtures; do not modify registry or lifecycle evidence adapters. |
 | 3 | 0266 + 0267 integration checkpoint | Ordinary tasks only in shadow selection mode | Verify task receipt/attestation against the sealed registry and collect disagreement telemetry. |

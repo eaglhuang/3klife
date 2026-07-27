@@ -46,11 +46,15 @@ scopePaths:
   - packages/core/src/broker/runner-sync-steward-queue.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - packages/cli/src/commands/framework-development/runner-sync-admission.ts
+  - packages/cli/src/commands/git-governance/implementation.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - scripts/run-sealed-runner-build.ts
   - scripts/runner-sync-incremental-build.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
+  - docs/governance/error-code-registry.json
+  - packages/core/src/error-code-registry.generated.ts
+  - tests/cli/git-record-commit.test.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
@@ -62,12 +66,16 @@ deliverables:
   - packages/core/src/broker/runner-version-registry.ts
   - packages/core/src/broker/runner-sync-steward-queue.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
+  - packages/cli/src/commands/git-governance/implementation.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
+  - docs/governance/error-code-registry.json
+  - packages/core/src/error-code-registry.generated.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
   - tests/cli/runner-version-selection.test.ts
+  - tests/cli/git-record-commit.test.ts
 recoveryEvidencePaths:
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - release/atm-onefile/atm.mjs
@@ -79,6 +87,8 @@ validators:
   - node --strip-types tests/cli/runner-sync-steward-crash-resume.test.ts
   - node --strip-types tests/cli/runner-version-selection.test.ts
   - node --strip-types tests/cli/sealed-runner-publication-lifecycle.test.ts
+  - node --strip-types tests/cli/git-record-commit.test.ts
+  - npm run generate:error-codes
   - npm run typecheck
   - npm run validate:cli
 testContributions: []
@@ -179,6 +189,9 @@ module.
 - [ ] Admission persists an immutable `runnerSelectionReceipt` in the task execution evidence before the task invokes a runner. It binds the task requirement digest, selection-policy version, sealed registry snapshot digest, candidate set digest, selected runner version/digests, rejected candidates with reasons, and revalidation boundary.
 - [ ] Close persists a `runnerExecutionAttestation` that binds the exact selected runner receipt to command-backed validator results, frozen entrypoint/output digests, task change digest, and any runner transition. A task cannot claim runner-backed completion when either record is missing or inconsistent.
 - [ ] Crash or child interruption after build start is recoverable through `reconcileRunnerSyncSession`. Resume is allowed only when the provisional receipt and sealed input proof are intact; otherwise the returned recovery is reseal/rebuild. No raw runtime-lock deletion or manually fabricated receipt is permitted.
+- [ ] `git record-commit` can persist exactly one already-`blocked`/`released` task's ledger plus its matching `block` event while another framework task has an active claim. The exception is record-only, requires the target task's retained actor/lease attribution, rejects source, evidence, close, release, and non-block lifecycle files, and never admits a mixed-task payload.
+- [ ] The active framework claim's source bundle remains isolated while the record-only lifecycle commit is prepared. The command neither stages active-claim source nor defers, snapshots, unstages, or changes foreign worktree content; it returns a fail-closed diagnostic when the target task is not `blocked`/`released` or the pair is incomplete.
+- [ ] The canonical error-code registry and generated projection define `ATM_RUNNER_SYNC_SEAL_REVALIDATION_REQUIRED`, `ATM_RUNNER_SYNC_STEWARD_LEASE_EXPIRED`, `ATM_RUNNER_SYNC_RESUME_REQUIRED`, and `ATM_RUNNER_SYNC_COALESCED_ATTRIBUTION_MISSING`; each exposes an executable recovery path and is covered by registry generation validation.
 - [ ] Taskflow close and internal release use the same session result. They do not require a worker to predict that all unrelated captains will refrain from committing while a shared build runs.
 - [ ] Regression proves a docs-only commit during a coalesced build can publish the matching sealed runner without rebuild or false stale verdict.
 - [ ] Regression proves a runner-input commit during a coalesced build rebuilds only the declared affected graph closure, preserves valid unaffected outputs, regenerates the aggregate manifest, and rejects publication of the old or mixed input generation.
@@ -204,3 +217,13 @@ runner-input impact rather than prohibited by a whole-HEAD equality rule.
 `ATM-GOV-0267` independently qualifies selection correctness after this card is
 available. It may consume receipts and shadow-recommend versions, but it must
 not alter the selection policy merely because an individual task passed.
+
+## Active-claim lifecycle-record recovery
+
+The recovery fixture exposed a second atomicity boundary: parking several
+coalesced cards can leave one ledger/event pair per card while a new framework
+claim is active. Those records must not be folded into the new task's delivery,
+and releasing the recovery task merely to persist them can make its source WIP
+unowned again. This card therefore owns the narrow record-only bridge above.
+It is not a general cross-task commit bypass: it applies only to a complete
+blocked/released pair and preserves each parked card's own history.
