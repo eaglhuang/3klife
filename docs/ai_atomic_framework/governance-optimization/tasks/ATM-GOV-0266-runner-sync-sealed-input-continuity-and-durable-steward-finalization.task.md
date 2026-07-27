@@ -53,6 +53,7 @@ scopePaths:
   - packages/cli/dist/commands/git-governance/implementation.js
   - packages/cli/dist/commands/hook/pre-commit/implementation.js
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
+  - packages/cli/dist/commands/broker/steward-queues.js
   - scripts/run-sealed-runner-build.ts
   - scripts/runner-sync-incremental-build.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
@@ -90,6 +91,7 @@ recoveryEvidencePaths:
   - packages/cli/dist/commands/git-governance/implementation.js
   - packages/cli/dist/commands/hook/pre-commit/implementation.js
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
+  - packages/cli/dist/commands/broker/steward-queues.js
   - release/atm-onefile/atm.mjs
   - release/atm-onefile/release-manifest.json
   - release/atm-root-drop/**
