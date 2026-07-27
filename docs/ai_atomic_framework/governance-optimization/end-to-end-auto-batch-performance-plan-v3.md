@@ -896,6 +896,22 @@ uses future task cards only in shadow mode. A successful task is valuable
 telemetry, but never sufficient proof that the version-selection policy was
 correct or safe to promote.
 
+### Runner Version Development Order
+
+| Order | Card / boundary | May run with | Required outcome |
+|---|---|---|---|
+| 0 | Current 0240/0248/0029 coalesced closeout | None on runner-sync owner paths | Reach published or reconciled terminal state; do not mix this recovery with the new architecture. |
+| 1 | 0266 deep-module review and Phase A contract handoff | Planning and fixture review only | Seal the version/selection receipt schema, public requirement/version contract, and deterministic fixture digest. |
+| 2A | 0266 durable session, input graph, registry, and publication implementation | 0267 verifier/replay work | Build the production owner module and its thin adapters. |
+| 2B | 0267 pure verifier and counterfactual replay | 0266 session implementation | Consume Phase A read-only fixtures; do not modify registry or lifecycle evidence adapters. |
+| 3 | 0266 + 0267 integration checkpoint | Ordinary tasks only in shadow selection mode | Verify task receipt/attestation against the sealed registry and collect disagreement telemetry. |
+| 4 | 0267 policy-promotion verdict | No concurrent policy promotion | Promote only after the independent report passes with zero false-compatible grants. |
+
+This ordering lets validation begin as soon as the contract is stable, while
+keeping a single production decision owner. It avoids the false choice between
+waiting for every implementation detail and allowing two cards to edit the same
+registry policy.
+
 This is not a retrospective blocker for a current build that already has a
 matching sealed input proof. It is a required gate before the next shared
 multi-captain runner-sync window. The design preserves `INV-ATM-010`: workers

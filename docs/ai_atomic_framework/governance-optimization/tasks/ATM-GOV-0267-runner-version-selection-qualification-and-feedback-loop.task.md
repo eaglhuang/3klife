@@ -6,14 +6,13 @@ owner: atm-runner-sync
 priority: P1
 milestone: ATM-3.1-R0Q.5
 severity: P1
-depends_on:
-  - ATM-GOV-0266
+depends_on: []
 causalGraph:
-  causalDependencies:
-    - ATM-GOV-0266
+  causalDependencies: []
   startConditions:
-    - runner selection receipts and execution attestations are emitted by normal task lifecycle
+    - ATM-GOV-0266 Phase A version/selection contract handoff digest is sealed and available read-only
   softRelations:
+    - ATM-GOV-0266
     - TASK-SKL-0029
   changedPublicSeams:
     - runner version selection verification
@@ -34,9 +33,7 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 series_selection_reason: "Selection telemetry is not proof of selection correctness. This card independently recomputes and qualifies version choices before any feedback can influence the policy."
 scopePaths:
-  - packages/core/src/broker/runner-version-registry.ts
   - packages/core/src/broker/runner-version-selection-verifier.ts
-  - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - scripts/runner-version-selection-replay.ts
   - tests/core/runner-version-selection-verifier.test.ts
   - tests/cli/runner-selection-counterfactual-replay.test.ts
@@ -100,9 +97,10 @@ No outcome may automatically promote or rewrite the selection policy.
 
 ## Execution boundary
 
-This card follows the production session and receipt contract in ATM-GOV-0266.
-It is deliberately a verifier and feedback card, not a second selection engine:
-the registry remains the sole production decision owner. It may run alongside
-ordinary future tasks in shadow mode, but policy promotion is serialized behind
-the qualification report.
-
+This card starts after the sealed Phase A contract handoff from ATM-GOV-0266,
+not after that card's final close. It is deliberately a verifier and feedback
+card, not a second selection engine: the registry remains the sole production
+decision owner. Its scope does not include the registry or lifecycle evidence
+adapter, so it can run in parallel with 0266 session implementation. It may run
+alongside ordinary future tasks in shadow mode, but policy promotion is
+serialized behind the qualification report.

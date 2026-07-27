@@ -40,6 +40,7 @@ closure_authority: target_repo
 series_selection_reason: "This is the post-dogfood resilience correction for shared runner-sync. It generalizes sealed-build continuity for normal parallel commits instead of adding incident-specific TTL, task-id, actor, or path exceptions."
 scopePaths:
   - packages/core/src/broker/runner-sync-session.ts
+  - packages/core/src/broker/runner-version-contract.ts
   - packages/core/src/broker/runner-version-registry.ts
   - packages/core/src/broker/runner-sync-steward-queue.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
@@ -47,6 +48,7 @@ scopePaths:
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - scripts/run-sealed-runner-build.ts
   - scripts/runner-sync-incremental-build.ts
+  - schemas/validators/runner-version-selection-receipt.schema.json
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
@@ -54,10 +56,12 @@ scopePaths:
   - tests/cli/sealed-runner-publication-lifecycle.test.ts
 deliverables:
   - packages/core/src/broker/runner-sync-session.ts
+  - packages/core/src/broker/runner-version-contract.ts
   - packages/core/src/broker/runner-version-registry.ts
   - packages/core/src/broker/runner-sync-steward-queue.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
+  - schemas/validators/runner-version-selection-receipt.schema.json
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
@@ -138,9 +142,19 @@ Deletion test: deleting this module must force sealed-input comparison, lease
 renewal, head-delta classification, receipt ordering, and recovery rules back
 into several callers. If that is not true, the proposed module is too shallow.
 
+## Phase A contract handoff
+
+Before any session mutation work, publish a sealed contract handoff containing
+the version/selection receipt schema, public requirement and version types, and
+deterministic fixture pack. This handoff is a stable read-only input for
+ATM-GOV-0267. It permits that card's verifier and counterfactual replay work to
+start early; it does not authorize either card to change the other's owner
+module.
+
 ## Acceptance
 
 - [ ] The session records immutable `sealedSourceSha`, an aggregate `runnerInputTreeHash`, and a content-addressed `runnerInputGraph`. The graph maps schema-declared input segments to package/release-entry outputs and their input/output digests; the aggregate is a consistency summary, not the only rebuild key.
+- [ ] Phase A emits the version/selection receipt contract, public requirement/version types, and deterministic fixtures with a sealed contract digest. Later session work is backward-compatible with this handoff or advances it through an explicit versioned migration.
 - [ ] Publication compares the seal with current HEAD by a schema-owned runner-affecting path classifier. A commit that changes only non-runner paths, including planning or backlog documentation, may advance HEAD without invalidating an otherwise matching sealed build.
 - [ ] A runner-affecting commit after the seal is classified against the input graph. Only the affected graph closure is rebuilt; unaffected package and release-entry outputs are reused only when their recorded input digests still match. The final aggregate manifest is regenerated and fenced to one coherent runner version.
 - [ ] An input change with no valid graph owner fails closed with `ATM_RUNNER_SYNC_SEAL_REVALIDATION_REQUIRED` and returns one executable graph-refresh/rebuild path. It must never publish a runner assembled from mixed or unproven input generations.
