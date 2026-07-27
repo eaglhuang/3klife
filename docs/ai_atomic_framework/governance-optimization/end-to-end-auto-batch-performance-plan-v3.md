@@ -889,6 +889,15 @@ validator/schema contract, required surfaces, and sealed-input boundary. A
 non-latest selection is valid only with an attributable compatibility receipt;
 otherwise ATM fails closed and requests revalidation or a new build.
 
+Coalesced build evidence has two levels: an immutable group manifest naming all
+member tasks and a child receipt attributable to each member. A head-owner
+receipt is insufficient evidence for another task. After receipt publication,
+the steward remains in durable `receipt-published` state until an explicit
+release or reconciliation records the terminal outcome; the queue may not
+silently disappear while presenting an auto-release command. This requirement
+comes from the 2026-07-27 three-card dogfood recovery, where a valid build was
+sealed but only the head owner had a receipt.
+
 Every runner-backed task writes its selection receipt at admission and execution
 attestation at close. `ATM-GOV-0267` then independently recomputes those choices
 from sealed registry snapshots, runs a deterministic counterfactual corpus, and

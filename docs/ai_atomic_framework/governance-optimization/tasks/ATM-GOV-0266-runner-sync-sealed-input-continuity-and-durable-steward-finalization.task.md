@@ -89,6 +89,7 @@ errorCodes:
   - ATM_RUNNER_SYNC_SEAL_REVALIDATION_REQUIRED
   - ATM_RUNNER_SYNC_STEWARD_LEASE_EXPIRED
   - ATM_RUNNER_SYNC_RESUME_REQUIRED
+  - ATM_RUNNER_SYNC_COALESCED_ATTRIBUTION_MISSING
 evidence:
   required: runner-sync-sealed-input-continuity-and-durable-finalization-receipt
 rollback:
@@ -161,6 +162,8 @@ module.
 - [ ] The queue lifecycle is durable and fenced: `queued -> building -> built-provisional -> publication-ready -> published` with explicit terminal `reconciled` and `abandoned` paths. Queue expiry cannot silently erase a live build.
 - [ ] The build child renews the steward lease through a bounded heartbeat while it is alive. Expiry decisions use the recorded fencing generation and liveness observation, not a fixed wall-clock TTL alone.
 - [ ] A successful build atomically persists a provisional receipt before release/publication. The receipt includes session/fence, coalesced member attribution, `sealedSourceSha`, `runnerInputTreeHash`, output digests, observed current HEAD, classified head delta, timing, and heartbeat evidence.
+- [ ] A coalesced build writes one immutable group manifest containing every `memberTaskId`, member actor/lane authority, member request digest, and shared sealed input/output digest. It also writes an attributable child receipt for each member; a head-owner task id or queue position alone is never evidence that another task received the build.
+- [ ] The durable queue retains an explicit `receipt-published` state after build and before terminal `released` or `reconciled`. It must not erase the steward group while emitting an `autoReleaseCommand`; release/reconcile fails closed when the group manifest or any member child receipt is missing.
 - [ ] One version manifest owns the complete runner lineage: a mutable development candidate, an immutable sealed-and-verified runner, local frozen surfaces, and the externally published release. Each transition records parent version, input/output graph digests, compatibility identity, and publication state; no surface may invent an independent version label.
 - [ ] A partial graph rebuild creates a new coherent sealed runner version that references reused output nodes by digest. It never presents a development candidate, provisional receipt, local frozen artifact, or external release as the same lifecycle state.
 - [ ] Task admission asks the runner session registry for the highest trusted version compatible with the task's declared capability, validator-contract/schema range, required surfaces, and sealed-input constraints. `latest` is a preference, not a correctness requirement.
@@ -173,6 +176,7 @@ module.
 - [ ] Regression proves a runner-input commit during a coalesced build rebuilds only the declared affected graph closure, preserves valid unaffected outputs, regenerates the aggregate manifest, and rejects publication of the old or mixed input generation.
 - [ ] Regression proves a deterministic long build exceeds the former 30-minute lease interval without losing its queue ownership or coalesced member attribution. Use an injected clock, not sleeps.
 - [ ] Regression proves process interruption after build success but before final release resumes from the provisional receipt exactly once; duplicate publication remains impossible.
+- [ ] Regression reproduces a head-owner-only receipt for a three-member coalesced build. Child receipt lookup, release, and non-head task close must fail closed until the group manifest and all member receipts are present.
 - [ ] Regression proves one version lineage can distinguish a development candidate, a sealed local runner, and an externally published release while preserving their parent/digest provenance across a partial rebuild.
 - [ ] Regression proves two concurrent task cards can receive different compatible trusted runner versions from the registry, with attributable selection receipts, while a card whose required capability is absent fails closed.
 - [ ] Interface tests replace duplicated private queue/admission/publication policy tests where the new session owns the decision. Existing public CLI contracts remain compatible.
