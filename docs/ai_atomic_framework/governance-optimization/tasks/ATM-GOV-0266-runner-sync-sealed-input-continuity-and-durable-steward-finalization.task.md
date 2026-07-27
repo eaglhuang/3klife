@@ -50,6 +50,8 @@ scopePaths:
   - packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
   - packages/cli/src/commands/hook/pre-commit/implementation.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
+  - packages/cli/dist/commands/git-governance/implementation.js
+  - packages/cli/dist/commands/hook/pre-commit/implementation.js
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - scripts/run-sealed-runner-build.ts
   - scripts/runner-sync-incremental-build.ts
@@ -85,6 +87,8 @@ deliverables:
   - tests/cli/git-record-commit.test.ts
   - tests/cli/pre-commit-hook-extraction.test.ts
 recoveryEvidencePaths:
+  - packages/cli/dist/commands/git-governance/implementation.js
+  - packages/cli/dist/commands/hook/pre-commit/implementation.js
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - release/atm-onefile/atm.mjs
   - release/atm-onefile/release-manifest.json
