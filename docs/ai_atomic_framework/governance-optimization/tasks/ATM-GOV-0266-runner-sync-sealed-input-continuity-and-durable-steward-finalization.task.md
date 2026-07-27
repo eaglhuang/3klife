@@ -48,6 +48,7 @@ scopePaths:
   - packages/cli/src/commands/framework-development/runner-sync-admission.ts
   - packages/cli/src/commands/git-governance/implementation.ts
   - packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
+  - packages/cli/src/commands/hook/pre-commit/implementation.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - scripts/run-sealed-runner-build.ts
@@ -57,6 +58,7 @@ scopePaths:
   - docs/ERROR_CODES.md
   - packages/core/src/error-code-registry.generated.ts
   - tests/cli/git-record-commit.test.ts
+  - tests/cli/pre-commit-hook-extraction.test.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
@@ -70,6 +72,7 @@ deliverables:
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - packages/cli/src/commands/git-governance/implementation.ts
   - packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
+  - packages/cli/src/commands/hook/pre-commit/implementation.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
   - docs/governance/error-code-registry.json
@@ -80,6 +83,7 @@ deliverables:
   - tests/cli/runner-sync-steward-crash-resume.test.ts
   - tests/cli/runner-version-selection.test.ts
   - tests/cli/git-record-commit.test.ts
+  - tests/cli/pre-commit-hook-extraction.test.ts
 recoveryEvidencePaths:
   - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - release/atm-onefile/atm.mjs
@@ -92,6 +96,7 @@ validators:
   - node --strip-types tests/cli/runner-version-selection.test.ts
   - node --strip-types tests/cli/sealed-runner-publication-lifecycle.test.ts
   - node --strip-types tests/cli/git-record-commit.test.ts
+  - node --strip-types tests/cli/pre-commit-hook-extraction.test.ts
   - npm run generate:error-codes
   - npm run typecheck
   - npm run validate:cli
@@ -195,6 +200,7 @@ module.
 - [ ] Crash or child interruption after build start is recoverable through `reconcileRunnerSyncSession`. Resume is allowed only when the provisional receipt and sealed input proof are intact; otherwise the returned recovery is reseal/rebuild. No raw runtime-lock deletion or manually fabricated receipt is permitted.
 - [ ] `git record-commit` can persist exactly one already-`blocked`/`released` task's ledger plus its matching `block` event while another framework task has an active claim. The exception is record-only, requires the target task's retained actor/lease attribution, rejects source, evidence, close, release, and non-block lifecycle files, and never admits a mixed-task payload.
 - [ ] The active framework claim's source bundle remains isolated while the record-only lifecycle commit is prepared. The command neither stages active-claim source nor defers, snapshots, unstages, or changes foreign worktree content; it returns a fail-closed diagnostic when the target task is not `blocked`/`released` or the pair is incomplete.
+- [ ] The pre-commit hook consumes the same block-lifecycle classifier as `git record-commit`. It permits the eligible two-file record-only bundle without bypassing hooks, while preserving `ATM_CROSS_TASK_MUTATION_BLOCKED` for every ineligible, mixed-task, source, or non-block-history payload.
 - [ ] The canonical error-code registry and generated projection define `ATM_RUNNER_SYNC_SEAL_REVALIDATION_REQUIRED`, `ATM_RUNNER_SYNC_STEWARD_LEASE_EXPIRED`, `ATM_RUNNER_SYNC_RESUME_REQUIRED`, and `ATM_RUNNER_SYNC_COALESCED_ATTRIBUTION_MISSING`; each exposes an executable recovery path and is covered by registry generation validation.
 - [ ] Taskflow close and internal release use the same session result. They do not require a worker to predict that all unrelated captains will refrain from committing while a shared build runs.
 - [ ] Regression proves a docs-only commit during a coalesced build can publish the matching sealed runner without rebuild or false stale verdict.
