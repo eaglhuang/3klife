@@ -44,6 +44,7 @@ scopePaths:
   - packages/core/src/broker/runner-sync-steward-queue.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - packages/cli/src/commands/framework-development/runner-sync-admission.ts
+  - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - scripts/run-sealed-runner-build.ts
   - scripts/runner-sync-incremental-build.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
@@ -56,6 +57,7 @@ deliverables:
   - packages/core/src/broker/runner-version-registry.ts
   - packages/core/src/broker/runner-sync-steward-queue.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
+  - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
@@ -149,6 +151,8 @@ into several callers. If that is not true, the proposed module is too shallow.
 - [ ] A partial graph rebuild creates a new coherent sealed runner version that references reused output nodes by digest. It never presents a development candidate, provisional receipt, local frozen artifact, or external release as the same lifecycle state.
 - [ ] Task admission asks the runner session registry for the highest trusted version compatible with the task's declared capability, validator-contract/schema range, required surfaces, and sealed-input constraints. `latest` is a preference, not a correctness requirement.
 - [ ] When the registry selects a non-latest runner, its selection receipt names the selected version, parent/current versions, compatibility proof, excluded newer input segments, and expiry/revalidation boundary. An unproven older runner fails closed rather than being silently reused.
+- [ ] Admission persists an immutable `runnerSelectionReceipt` in the task execution evidence before the task invokes a runner. It binds the task requirement digest, selection-policy version, sealed registry snapshot digest, candidate set digest, selected runner version/digests, rejected candidates with reasons, and revalidation boundary.
+- [ ] Close persists a `runnerExecutionAttestation` that binds the exact selected runner receipt to command-backed validator results, frozen entrypoint/output digests, task change digest, and any runner transition. A task cannot claim runner-backed completion when either record is missing or inconsistent.
 - [ ] Crash or child interruption after build start is recoverable through `reconcileRunnerSyncSession`. Resume is allowed only when the provisional receipt and sealed input proof are intact; otherwise the returned recovery is reseal/rebuild. No raw runtime-lock deletion or manually fabricated receipt is permitted.
 - [ ] Taskflow close and internal release use the same session result. They do not require a worker to predict that all unrelated captains will refrain from committing while a shared build runs.
 - [ ] Regression proves a docs-only commit during a coalesced build can publish the matching sealed runner without rebuild or false stale verdict.
@@ -167,3 +171,7 @@ does not retroactively invalidate a build whose sealed input proof is already
 correct. Before the next multi-captain runner-sync window, it is the required
 resilience gate: normal parallel commits must be classified by runner-input
 impact rather than prohibited by a whole-HEAD equality rule.
+
+`ATM-GOV-0267` independently qualifies selection correctness after this card is
+available. It may consume receipts and shadow-recommend versions, but it must
+not alter the selection policy merely because an individual task passed.

@@ -889,6 +889,13 @@ validator/schema contract, required surfaces, and sealed-input boundary. A
 non-latest selection is valid only with an attributable compatibility receipt;
 otherwise ATM fails closed and requests revalidation or a new build.
 
+Every runner-backed task writes its selection receipt at admission and execution
+attestation at close. `ATM-GOV-0267` then independently recomputes those choices
+from sealed registry snapshots, runs a deterministic counterfactual corpus, and
+uses future task cards only in shadow mode. A successful task is valuable
+telemetry, but never sufficient proof that the version-selection policy was
+correct or safe to promote.
+
 This is not a retrospective blocker for a current build that already has a
 matching sealed input proof. It is a required gate before the next shared
 multi-captain runner-sync window. The design preserves `INV-ATM-010`: workers
