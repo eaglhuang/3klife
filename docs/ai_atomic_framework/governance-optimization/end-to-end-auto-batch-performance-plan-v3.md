@@ -909,17 +909,19 @@ correct or safe to promote.
 
 | Order | Card / boundary | May run with | Required outcome |
 |---|---|---|---|
-| 0 | Current 0240/0248/0029 coalesced closeout | None on runner-sync owner paths | Reach published or reconciled terminal state; do not mix this recovery with the new architecture. |
-| 1 | 0266 deep-module review and Phase A contract handoff | Planning and fixture review only | Seal the version/selection receipt schema, public requirement/version contract, and deterministic fixture digest. |
+| 0 | Current 0240/0248/0029 coalesced closeout evidence capture | No manual release, receipt edit, rebuild, close, or push | Preserve the head-owner-only receipt and vanished queue as the recovery fixture; park or transfer blocked lanes through normal lifecycle commands. |
+| 1 | 0266 governed recovery, deep-module review, and Phase A contract handoff | 0267 planning and fixture review only | Repair the receipt/reconcile path before attempting non-head close; seal the version/selection receipt schema, public requirement/version contract, and deterministic fixture digest. |
 | 2A | 0266 durable session, input graph, registry, and publication implementation | 0267 verifier/replay work | Build the production owner module and its thin adapters. |
 | 2B | 0267 pure verifier and counterfactual replay | 0266 session implementation | Consume Phase A read-only fixtures; do not modify registry or lifecycle evidence adapters. |
 | 3 | 0266 + 0267 integration checkpoint | Ordinary tasks only in shadow selection mode | Verify task receipt/attestation against the sealed registry and collect disagreement telemetry. |
 | 4 | 0267 policy-promotion verdict | No concurrent policy promotion | Promote only after the independent report passes with zero false-compatible grants. |
 
 This ordering lets validation begin as soon as the contract is stable, while
-keeping a single production decision owner. It avoids the false choice between
-waiting for every implementation detail and allowing two cards to edit the same
-registry policy.
+keeping a single production decision owner. A live missing-attribution receipt
+is a recovery trigger for 0266, not a reason to leave already-delivered cards
+permanently uncloseable. The order avoids the false choice between waiting for
+every implementation detail and allowing two cards to edit the same registry
+policy.
 
 This is not a retrospective blocker for a current build that already has a
 matching sealed input proof. It is a required gate before the next shared

@@ -12,7 +12,8 @@ causalGraph:
   causalDependencies:
     - ATM-GOV-0265
   startConditions:
-    - current coalesced runner-sync closeout window has reached a terminal published or reconciled state
+    - current coalesced runner-sync receipt gap is preserved as read-only recovery evidence
+    - a single governed recovery owner holds the runner-sync implementation scope
   softRelations:
     - ATM-BUG-2026-07-27-241
     - ATM-BUG-2026-07-27-243
@@ -183,12 +184,15 @@ module.
 
 ## Execution boundary
 
-This card follows ATM-GOV-0265 and begins only after the presently active
-coalesced closeout window reaches a terminal published or reconciled state. It
-does not retroactively invalidate a build whose sealed input proof is already
-correct. Before the next multi-captain runner-sync window, it is the required
-resilience gate: normal parallel commits must be classified by runner-input
-impact rather than prohibited by a whole-HEAD equality rule.
+This card follows ATM-GOV-0265. A current coalesced closeout window with a
+missing member receipt or erased pre-release queue is itself a governed recovery
+trigger for this card: preserve the evidence, transfer/park the blocked closeout
+lanes through normal lifecycle commands, then claim this implementation. It does
+not retroactively invalidate a build whose sealed input proof is already correct,
+but it must repair the receipt/reconcile path before that build is used to close
+non-head member tasks. Before the next multi-captain runner-sync window, it is
+the required resilience gate: normal parallel commits must be classified by
+runner-input impact rather than prohibited by a whole-HEAD equality rule.
 
 `ATM-GOV-0267` independently qualifies selection correctness after this card is
 available. It may consume receipts and shadow-recommend versions, but it must
