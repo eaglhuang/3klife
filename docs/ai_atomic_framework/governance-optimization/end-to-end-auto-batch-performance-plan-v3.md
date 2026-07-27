@@ -898,6 +898,11 @@ silently disappear while presenting an auto-release command. This requirement
 comes from the 2026-07-27 three-card dogfood recovery, where a valid build was
 sealed but only the head owner had a receipt.
 
+The retained dist/release outputs from that recovery are scope-admission inputs
+for ATM-GOV-0266, not publishable delivery artifacts. They remain unstaged and
+cannot be used to close a non-head member until the repaired lifecycle creates
+the group manifest and every child receipt.
+
 Every runner-backed task writes its selection receipt at admission and execution
 attestation at close. `ATM-GOV-0267` then independently recomputes those choices
 from sealed registry snapshots, runs a deterministic counterfactual corpus, and

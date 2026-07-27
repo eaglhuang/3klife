@@ -47,6 +47,7 @@ scopePaths:
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - packages/cli/src/commands/framework-development/runner-sync-admission.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
+  - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
   - scripts/run-sealed-runner-build.ts
   - scripts/runner-sync-incremental-build.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
@@ -67,6 +68,11 @@ deliverables:
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
   - tests/cli/runner-version-selection.test.ts
+recoveryEvidencePaths:
+  - packages/cli/dist/commands/taskflow/auto-evidence-mapper.js
+  - release/atm-onefile/atm.mjs
+  - release/atm-onefile/release-manifest.json
+  - release/atm-root-drop/**
 validators:
   - node --strip-types tests/cli/runner-sync-sealed-input-continuity.test.ts
   - node --strip-types tests/cli/runner-sync-build-lease-heartbeat.test.ts
@@ -157,6 +163,7 @@ module.
 
 - [ ] The session records immutable `sealedSourceSha`, an aggregate `runnerInputTreeHash`, and a content-addressed `runnerInputGraph`. The graph maps schema-declared input segments to package/release-entry outputs and their input/output digests; the aggregate is a consistency summary, not the only rebuild key.
 - [ ] Phase A emits the version/selection receipt contract, public requirement/version types, and deterministic fixtures with a sealed contract digest. Later session work is backward-compatible with this handoff or advances it through an explicit versioned migration.
+- [ ] Existing dirty dist/release outputs from the head-owner-only recovery are claim-admission inputs only. They must remain preserved and unstaged; they are not 0266 delivery artifacts and cannot be committed, published, or used for a non-head task close until the repaired group manifest and child receipts exist.
 - [ ] Publication compares the seal with current HEAD by a schema-owned runner-affecting path classifier. A commit that changes only non-runner paths, including planning or backlog documentation, may advance HEAD without invalidating an otherwise matching sealed build.
 - [ ] A runner-affecting commit after the seal is classified against the input graph. Only the affected graph closure is rebuilt; unaffected package and release-entry outputs are reused only when their recorded input digests still match. The final aggregate manifest is regenerated and fenced to one coherent runner version.
 - [ ] An input change with no valid graph owner fails closed with `ATM_RUNNER_SYNC_SEAL_REVALIDATION_REQUIRED` and returns one executable graph-refresh/rebuild path. It must never publish a runner assembled from mixed or unproven input generations.
