@@ -142,6 +142,16 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G14 | TASK-GIT-0022 | Publication disposition enforcement and clean-worktree finalization |
 | G15 | TASK-GIT-0023 | Foreign generated residue admission deferral and ticket continuity |
 
+### G9 Foundation Boundary
+
+`TASK-GIT-0017` remains closed and is the sole authority for sealed runner
+publication inventory. This plan does not reopen it for later admission or
+hook defects: G9.1 consumes its inventory through a compatibility projection,
+while G11.1 classifies task-scoped staged governance bundles. Neither card may
+recreate runner-output membership, infer it from release filenames, or add a
+second inventory registry. A future change to the inventory's public contract
+must be a new explicitly-versioned G9 follow-up, not a silent edit to GIT-0017.
+
 ## Work-Admission Ticket Continuation
 
 ### First-Principles Boundary
