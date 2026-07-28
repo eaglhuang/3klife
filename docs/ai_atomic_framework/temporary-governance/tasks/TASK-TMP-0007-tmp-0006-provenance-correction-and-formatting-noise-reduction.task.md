@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0007
 title: TMP-0006 provenance correction and formatting-noise reduction
-status: planned
+status: done
 owner: atm-governance
 priority: P1
 depends_on: []
