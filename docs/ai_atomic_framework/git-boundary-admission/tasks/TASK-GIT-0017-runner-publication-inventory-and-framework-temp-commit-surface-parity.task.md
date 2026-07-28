@@ -30,6 +30,8 @@ scopePaths:
   - "release/atm-onefile/release-manifest.json"
   - "release/atm-root-drop/**"
   - "scripts/run-sealed-runner-build.ts"
+  - "scripts/runner-sync-incremental-build.ts"
+  - "scripts/runner-sync-observability.ts"
   - "scripts/build-package-dist.ts"
   - "scripts/AtmCore/runner-build-scope.json"
   - "tests/cli/runner-publication-inventory-parity.test.ts"
@@ -69,6 +71,9 @@ atomizationImpact:
     - path: "packages/cli/src/commands/framework-development/closure-packet-schema/implementation.ts"
       disposition: extract
       reason: "The framework-mode implementation exceeds the physical line budget. Extract framework-temp lock parsing and freshness projection so runner publication callers consume one small contract rather than re-reading runtime locks."
+    - path: "scripts/runner-sync-incremental-build.ts"
+      disposition: extract
+      reason: "Keep incremental planning and receipt assembly bounded by moving telemetry, cache persistence, and phase observation behind one observability adapter."
 outOfScope:
   - "Reopening TASK-GIT-0016 or ATM-GOV-0266."
   - "Changing which source files the runner build compiles."
