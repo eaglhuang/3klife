@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-28T11-48-49-374Z-close-89ffb01d1c12",
+  "taskId": "TASK-TMP-0005",
+  "action": "close",
+  "actorId": "cursor-004-tmp-0005-steward",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0005-post-close-shared-residue-reconciliation.task.md",
+  "taskSha256": "sha256:1eca2373e9868f3e6a80dd5a2870c3d77d71f19fe874c75c2e3fc22a9bf46407",
+  "createdAt": "2026-07-28T11:48:49.374Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0005 --actor cursor-004-tmp-0005-steward"
+}

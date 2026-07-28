@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0005
 title: Post-close shared residue reconciliation
-status: planned
+status: done
 owner: atm-governance
 priority: P1
 depends_on:
@@ -73,6 +73,15 @@ atomizationImpact:
       disposition: inline
       inlineReason: "This card only classifies and reconciles the generated projection against its source seal; it must not edit or split generated runtime code."
 createdByCommand: atm plan card create
+completed_at: "2026-07-28T11:48:49.374Z"
+completed_by_agent: "cursor-004-tmp-0005-steward"
+closedAt: "2026-07-28T11:48:49.374Z"
+closedByActor: "cursor-004-tmp-0005-steward"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T11-48-49-374Z-close-89ffb01d1c12"
+lastTransitionAt: "2026-07-28T11:48:49.374Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9666c2111e02abdd1660629451e2728161fe2ac4"
 ---
 
 # TASK-TMP-0005 Post-close shared residue reconciliation
