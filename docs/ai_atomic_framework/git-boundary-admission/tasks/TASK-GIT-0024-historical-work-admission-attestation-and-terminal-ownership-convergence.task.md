@@ -7,6 +7,8 @@ priority: P0
 depends_on:
   - TASK-GIT-0022
   - TASK-GIT-0023
+  - TASK-GIT-0025
+  - TASK-GIT-0026
 causalGraph:
   causalDependencies:
     - TASK-GIT-0022

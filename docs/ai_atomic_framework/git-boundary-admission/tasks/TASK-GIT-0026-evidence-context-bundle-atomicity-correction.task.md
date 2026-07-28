@@ -7,15 +7,13 @@ priority: P0
 milestone: G11.1
 depends_on:
   - TASK-GIT-0019
-  - TASK-GIT-0025
 causalGraph:
   causalDependencies:
     - "G11 ticket coverage gate"
-    - "G9.1 ticket scope and deferred-index parity"
   startConditions:
     - "GIT-0024 evidence bundle reproduces the protected-state false block"
   softRelations:
-    - "unblocks GIT-0024 historical attestation closeout"
+    - "unblocks GIT-0024 historical attestation closeout after the independent G9.1 projection correction"
   changedPublicSeams:
     - "pre-commit protected evidence context classifier"
   causalImpactEdges:
@@ -55,6 +53,14 @@ Repair the G11 protected-state adapter so it evaluates the actual single-task
 staged bundle, not a partial internal subset. The live reproduction is
 TASK-GIT-0024: its attestation evidence, ledger, and two renew events are all
 staged together, yet pre-commit reports that the evidence lacks task context.
+
+## Ordering
+
+This is an independent G11.1 correction. It depends on the delivered G11
+coverage authority (`TASK-GIT-0019`), not on G9.1 (`TASK-GIT-0025`): the
+hook's task-bundle classifier is a separate protected-state projection and is
+needed to unblock the already-staged G16 closeout. G9.1 and G11.1 may proceed
+in parallel; G16 retries its closeout only after both have landed.
 
 ## First-Principles and Deep-Module Design
 
