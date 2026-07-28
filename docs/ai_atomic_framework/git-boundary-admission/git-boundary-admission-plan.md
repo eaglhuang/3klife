@@ -32,6 +32,7 @@ related_tasks:
   - TASK-GIT-0023
   - TASK-GIT-0024
   - TASK-GIT-0025
+  - TASK-GIT-0026
 updated_at: 2026-07-29T12:00:00+08:00
 ---
 
@@ -133,6 +134,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G8 | TASK-GIT-0016 | Restricted external-worker execution gateway, interpreter escape denial, and ATM-only guidance projection |
 | G9 | TASK-GIT-0017 | Runner publication inventory and framework-temp claim/commit-surface parity |
 | G9.1 | TASK-GIT-0025 | Correct G9/G10 projection and glob-scope parity before further ticket-dependent closeout |
+| G11.1 | TASK-GIT-0026 | Make protected evidence context evaluate the complete task-scoped staged bundle |
 | G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
