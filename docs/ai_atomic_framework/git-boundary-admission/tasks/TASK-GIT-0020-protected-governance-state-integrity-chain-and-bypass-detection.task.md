@@ -1,7 +1,13 @@
 ---
 task_id: TASK-GIT-0020
 title: Protected governance-state integrity chain and bypass detection
-status: planned
+status: superseded
+amendment_epoch: 1
+superseded_by:
+  - TASK-GIT-0018
+  - TASK-GIT-0019
+closed_reason: "Cohesion-first redesign moved protected-state provenance into content-addressed ticket coverage and shared lifecycle gate adapters."
+retirement_policy: "Do not import or claim this card. The current importer may normalize superseded to planned; planning authority still forbids execution. Route implementation to TASK-GIT-0018 and TASK-GIT-0019."
 owner: atm-core
 priority: P0
 milestone: G12
@@ -49,6 +55,13 @@ createdByCommand: atm plan card create
 ---
 
 # TASK-GIT-0020 Protected governance-state integrity chain and bypass detection
+
+## Retirement
+
+Superseded before target import. A standalone integrity chain would duplicate
+the same task, actor, lane, scope, digest, and recovery decisions already owned
+by the work-admission ticket authority. Protected-state checks are coverage
+adapters in `TASK-GIT-0019`, not a third policy owner.
 
 ## Intent
 

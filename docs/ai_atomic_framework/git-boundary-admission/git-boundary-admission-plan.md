@@ -28,7 +28,7 @@ related_tasks:
   - TASK-GIT-0019
   - TASK-GIT-0020
   - TASK-GIT-0021
-updated_at: 2026-07-28T20:00:00+08:00
+updated_at: 2026-07-29T12:00:00+08:00
 ---
 
 # ATM Git Boundary Admission Plan
@@ -47,7 +47,23 @@ Follow-up: `TASK-GIT-0016` closes the execution-surface gap exposed by external-
 
 Follow-up: `TASK-GIT-0017` corrects a runner-publication gap found while closing `TASK-GIT-0016`: a sealed build can update tracked `packages/cli/dist/**`, the onefile manifest, and its steward receipt while the framework-temp publication route commits only a subset. The extension makes one build-output inventory the authority for enqueue, claim, receipt, publication commit, and doctor freshness.
 
-Second-principles extension: `TASK-GIT-0018` through `TASK-GIT-0021` finish the capability boundary that `TASK-GIT-0016` deliberately did not claim to be. A policy gateway is not a hard boundary when a worker can launch an ambient host process without consulting it. These stages make brokered process launch the only external-write authority, make adapter enforcement evidence explicit, detect protected-state bypasses at every later governed boundary, and prove the envelope on real editor adapters. They do not claim to sandbox arbitrary human shells.
+First-principles simplification: `TASK-GIT-0018` and `TASK-GIT-0019` finish the
+capability boundary without adding an OS sandbox or another worker launcher.
+The protected resource is not process creation; it is progression of a task or
+change into accepted shared state. Claim atomically issues a work-admission
+ticket derived from the card's scope, lifecycle intent, validators, and
+declared command manifests. ATM tools record content-addressed mutation
+attribution against that ticket. Police, Broker, Reviewer, governed commit,
+close, protected push, and remote required checks consume one coverage
+decision. A native write may still occur in an unrestricted host shell, but it
+cannot become a valid ATM delivery until it is attributed or recovered.
+
+The earlier launcher, independent protected-state chain, and separate
+conformance-matrix decomposition in `TASK-GIT-0018` through `TASK-GIT-0021`
+created four policy owners around one invariant. The cohesion-first replacement
+keeps two modules: one admission-ticket authority and one shared
+coverage/gate rollout. `TASK-GIT-0020` and `TASK-GIT-0021` are superseded by
+these narrower active cards.
 
 ATM should extend broker admission to the Git boundary by adding a pre-push admission bridge. The bridge fetches the remote branch, computes the merge base, converts both local and remote branch deltas into mutation requests, and asks the broker whether the push is safe, blocked, or composer-routed.
 
@@ -110,54 +126,122 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G7 | TASK-GIT-0015 | Broker-owned staging index arbitration, foreign-active staged protection, and override lease evidence |
 | G8 | TASK-GIT-0016 | Restricted external-worker execution gateway, interpreter escape denial, and ATM-only guidance projection |
 | G9 | TASK-GIT-0017 | Runner publication inventory and framework-temp claim/commit-surface parity |
-| G10 | TASK-GIT-0018 | Brokered external-worker launcher and capability-bound process execution |
-| G11 | TASK-GIT-0019 | Adapter enforcement capability attestation and fail-closed write dispatch |
-| G12 | TASK-GIT-0020 | Protected governance-state integrity chain and bypass detection |
-| G13 | TASK-GIT-0021 | Cross-adapter controlled-execution dogfood and rollout evidence |
+| G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
+| G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
+| G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
+| G13 | TASK-GIT-0021 | Superseded by G11: conformance evidence belongs to rollout acceptance |
 
-## Controlled Execution Continuation
+## Work-Admission Ticket Continuation
 
 ### First-Principles Boundary
 
-The protected resource is not a command spelling, a Git hook, or an ATM task
-file. It is the capability to cause a repository mutation. Prompt text, an
-editor skill, a command deny list, and an actor label are all advisory if a
-worker can independently launch an ambient host process.
+The protected resource is not a command spelling, a Git hook, an ATM task file,
+or the ability to invoke a host process. It is the ability to advance a task or
+mutation into accepted shared state. Prompt text, editor skills, and command
+deny lists improve behavior, but none of them is authority.
 
-Therefore the trustworthy chain is:
+The trustworthy chain is:
 
-`task/lane authority -> capability-bound launch request -> trusted launcher -> declared outputs -> immutable execution receipt -> lifecycle and publication gates`.
+`task card -> atomic claim + admission ticket -> mutation attribution -> validators/review -> delivery authorization -> close/protected publication`.
 
-The gateway remains the policy owner. The launcher owns process creation. The
-adapter capability registry owns whether an editor can honestly claim the
-pre-tool enforcement needed for external write work. The integrity chain owns
-post-bypass detection. No caller is allowed to rebuild these decisions from
-prompt wording or its own command list.
+The ticket is derived only from governed task data:
+
+- file authority comes from `scopePaths` and the active direction lock;
+- Git authority is a lifecycle operation class such as stage, commit, close, or
+  push, never arbitrary raw Git argv;
+- process authority comes from declared validator or generated-write command
+  manifests, never generic `node -e`, shell text, or PowerShell write access;
+- actor, task, lane, claim generation, scope digest, expiry, and runner
+  selection are bound into the ticket.
+
+Git does not provide arbitrary per-file metadata, so ATM records attribution in
+a content-addressed ledger keyed by path, base digest, observed digest,
+operation class, and ticket id. A file itself is not rewritten merely to carry
+governance metadata.
+
+Recovery uses a bounded sparse temporary snapshot, not a commit or continuous
+backup stream. Each task may retain at most two save points:
+
+1. the claim baseline;
+2. one replaceable pre-risk save point created only before a destructive
+   recovery or high-risk overwrite.
+
+Clean tracked files reference existing Git blob ids and consume no copied
+content. Only dirty or untracked preimages are compressed into the gitignored
+`.atm/runtime/work-admission-temp/` content-addressed store. Post-write state is
+represented by digests, not another full blob. Per-task and repository-wide
+hard byte budgets fail closed instead of expanding storage silently.
+
+Successful close immediately removes temporary blobs and retains only a small
+digest manifest. Handoff or blocked recovery may pin the two save points with a
+TTL. A governed GC command removes expired task snapshots quickly. No recovery
+blob or temporary manifest is committed to Git.
+
+Without an OS sandbox, ATM cannot truthfully claim that a native write or local
+raw commit never happened. It can guarantee that an unattributed mutation
+cannot pass ATM lifecycle gates. To prevent a direct raw push from bypassing
+the local process entirely, protected branches must require the same ticket
+coverage result as a remote status check.
 
 ### Deep-Module Decomposition
 
-- **G10 / `ExternalWorkerLauncher`**: one narrow `launch(request, capability)` interface hides process creation, capability verification, output observation, receipt persistence, cancellation, and the distinction between read-only and declared generated writes. Its adapters are the Team worker executor and broker command-manifest executor.
-- **G11 / `AdapterEnforcementCapability`**: one evidence-bearing capability interface hides editor hook installation, version/probe results, policy digest binding, and expiry. Its adapters are dispatch admission and integration verification.
-- **G12 / `ProtectedStateIntegrityChain`**: one verifier derives the governed-state digest chain and compares it at claim, commit, close, and push boundaries. It detects a direct write but does not pretend to undo it or sandbox a human host.
-- **G13 / `ControlledExecutionConformance`**: one fixture/attestation matrix proves the same capability semantics across supported and unsupported adapters; it is evidence-only and never becomes another policy owner.
+- **G10 / `WorkAdmissionTicketAuthority`**: deepens the existing `WriteTicket`
+  and `RestrictedExecutionGateway` instead of replacing them. It atomically
+  issues a ticket with claim, evaluates content-addressed mutation coverage,
+  advances ticket stages, and returns one recovery plan for unattached WIP.
+  Its two primary adapters are claim issuance and mutation observation.
+- **G11 / `WorkAdmissionCoverageGate`**: projects the G10 decision into Police,
+  Broker, Reviewer, governed commit, close, protected push, and remote required
+  checks. It owns no new permission rules. Cross-adapter fixtures and rollout
+  evidence live here instead of in a separate conformance module.
+- **G12 / G13**: retired before import. Their protected-state and conformance
+  responsibilities are adapters and tests of G10/G11, not independent deep
+  modules.
 
-Deletion test: removing any one of these modules would force at least two
-callers to duplicate a non-local decision: process authority, adapter
-enforceability, protected-state provenance, or conformance classification.
+Deletion test: removing G10 forces claim, write-ticket, and execution policy to
+reconstruct task authority independently. Removing G11 forces Police, Broker,
+Reviewer, commit, close, and push to maintain separate ticket checks. No third
+module passes the deletion test.
+
+### Recoverable Violation State Machine
+
+A bypass is recoverable but never silently normalized:
+
+1. **Covered write**: ticket, scope, digest, and operation match; continue.
+2. **Late attach**: a native write is in-scope and attributable. Record a
+   violation receipt, bind the observed digest, rerun validators and review,
+   then allow stage advancement.
+3. **Scope recovery**: out-of-scope WIP must be amended, split to a new task,
+   handed off, quarantined as non-delivery WIP, or discarded with proof.
+4. **Native commit recovery**: accept only through provenance review as a
+   historical delivery or through a governed corrective commit; never rewrite
+   history automatically.
+5. **Published bypass**: a raw push without valid coverage is a remote
+   governance incident. Block task closure/promotion and require a forward
+   recovery; do not pretend a local ticket can retroactively prevent it.
+
+Every recovery is idempotent and preserves the original violation evidence.
+Without an OS watcher, ATM guarantees recovery to the claim baseline and the
+optional pre-risk save point, not every intermediate byte written by an
+unmanaged process.
 
 ### Dependency and Rollout Order
 
-1. Complete `TASK-GIT-0017` first to remove the live runner-publication
-   residue and make the frozen runner trustworthy for follow-on enforcement.
-2. `TASK-GIT-0018` depends on the completed policy owner in `TASK-GIT-0016`.
-3. `TASK-GIT-0019` and `TASK-GIT-0020` depend on `TASK-GIT-0018` and may run
-   in parallel because one owns adapter capability and the other owns
-   integrity verification.
-4. `TASK-GIT-0021` depends on both `0019` and `0020`; it is the release gate
-   for advertising an adapter as external-write capable.
+1. Complete `TASK-GIT-0017` first to remove live runner-publication ambiguity.
+2. `TASK-GIT-0018` depends on the restricted execution and ATM-only guidance
+   delivered by `TASK-GIT-0016`; it reuses those decisions while making claim
+   ticket issuance and recovery authoritative.
+3. `TASK-GIT-0019` depends on `TASK-GIT-0018` and performs the full gate,
+   adapter, dogfood, and remote-check rollout as one large integration card.
+4. Do not import or claim `TASK-GIT-0020` or `TASK-GIT-0021`; they are
+   superseded planning records. The current target importer normalizes
+   non-terminal planning statuses to `planned`, so retirement authority remains
+   the planning card/index/plan contract until importer-level retirement
+   fidelity is implemented.
 
-Unsupported adapters remain read-only/broker-only. They must not receive an
-external-write dispatch merely because their skill text contains ATM guidance.
+Unsupported adapters may still assist with read-only work. Their prose does not
+grant write authority. An unrestricted worker can produce a patch or dirty WIP,
+but only an ATM ticket and shared coverage gate can promote it to delivery.
 
 ## Non-Goals
 
@@ -168,9 +252,13 @@ external-write dispatch merely because their skill text contains ATM guidance.
 - No automatic commit after steward apply by default.
 - No promise to resolve all Git conflicts semantically.
 - No claim that local hooks alone can prevent raw destructive Git commands by unrestricted AI shells.
-- No claim that skill text alone constrains an external worker. The hard gate must be a brokered execution surface or an equivalent host policy.
+- No claim that skill text alone constrains an external worker.
+- No new general worker launcher or OS sandbox.
+- No arbitrary command strings in tickets; only structured ATM operation classes and declared manifests.
+- No per-file content rewriting solely to carry ticket metadata.
+- No silent laundering of native writes; late attachment always retains violation evidence and requires revalidation.
 - No raw Git workaround for generated runner residue. Every declared publication output needs an ATM-governed disposition.
-- No claim that ATM can sandbox arbitrary user-owned terminal sessions. Host-level sandboxing is an adapter/runtime capability, and absence of proof means external-write capability is unsupported.
+- No claim that ATM can stop arbitrary user-owned terminal sessions from creating local bytes or commits.
 
 ## Final Acceptance
 
@@ -180,5 +268,8 @@ external-write dispatch merely because their skill text contains ATM guidance.
 - True overlap blocks before push and produces reviewable evidence.
 - Post-push-fail fallback can explain and rerun the same admission path.
 - Evidence can be archived for paper claims without inventing a new envelope schema.
-- External-worker mutation is admitted only through the restricted execution gateway; direct raw Git, interpreter evaluation, and shell write paths fail closed or remain explicitly unsupported without a host policy.
+- Claim and work-admission ticket issuance are atomic; a write-capable claim without a valid ticket cannot start.
+- Ticket coverage is content-addressed and consumed by Police, Broker, Reviewer, governed commit, close, protected push, and the remote required check through one evaluator.
+- Direct native writes remain recoverable through late attach, scope amendment, split, handoff, quarantine, discard-with-proof, historical-delivery review, or forward incident recovery.
+- Direct raw Git, interpreter evaluation, and shell write paths may create local state in unrestricted hosts, but unattributed results cannot pass ATM or protected-branch acceptance.
 - A runner is not publication-current merely because its source mtime is current; the sealed build-output inventory and its receipt must be committed or explicitly retained by a governed recovery state.

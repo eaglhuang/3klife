@@ -20,6 +20,11 @@ The goal is to make ATM broker admission useful at the Git boundary, especially 
 - Convert Git diffs into broker mutation requests and patch proposals.
 - Allow clean disjoint changes, block true conflicts, and route mergeable same-file changes through deterministic composer.
 - Default to no auto-commit after steward apply.
+- For AI task work, issue one work-admission ticket atomically with claim.
+- Treat native writes as recoverable but unattributed until ATM records
+  content-addressed coverage.
+- Use one coverage decision at Police, Broker, Reviewer, commit, close,
+  protected push, and remote required-check boundaries.
 
 ## Files
 
@@ -29,5 +34,10 @@ The goal is to make ATM broker admission useful at the Git boundary, especially 
 
 ## Boundary
 
-This is not a replacement for Git. Git still owns object storage, branches, commit history, fetch, push, and remote transport. ATM owns semantic admission, conflict explanation, proposal routing, deterministic merge planning, and evidence.
-
+This is not a replacement for Git or an OS sandbox. Git still owns object
+storage, branches, commit history, fetch, push, and remote transport. ATM owns
+semantic admission, work-admission tickets, mutation attribution, recoverable
+violation handling, conflict explanation, proposal routing, deterministic
+merge planning, and evidence. An unrestricted shell may still create local
+state, but that state is not an accepted ATM delivery until the shared ticket
+coverage gate passes.

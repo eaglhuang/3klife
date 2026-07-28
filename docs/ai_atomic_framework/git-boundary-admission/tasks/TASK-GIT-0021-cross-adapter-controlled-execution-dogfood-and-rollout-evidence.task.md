@@ -1,7 +1,12 @@
 ---
 task_id: TASK-GIT-0021
 title: Cross-adapter controlled-execution dogfood and rollout evidence
-status: planned
+status: superseded
+amendment_epoch: 1
+superseded_by:
+  - TASK-GIT-0019
+closed_reason: "Cross-adapter conformance is acceptance evidence for the unified ticket coverage rollout and does not justify an independent module or execution card."
+retirement_policy: "Do not import or claim this card. The current importer may normalize superseded to planned; planning authority still forbids execution. Execute its retained dogfood intent inside TASK-GIT-0019."
 owner: atm-core
 priority: P1
 milestone: G13
@@ -45,6 +50,12 @@ createdByCommand: atm plan card create
 ---
 
 # TASK-GIT-0021 Cross-adapter controlled-execution dogfood and rollout evidence
+
+## Retirement
+
+Superseded before target import. Cross-adapter conformance remains required,
+but it is a validator matrix and rollout acceptance for `TASK-GIT-0019`, not an
+independent runtime authority.
 
 ## Intent
 

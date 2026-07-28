@@ -7,7 +7,7 @@ target_repo: AI-Atomic-Framework
 created_at: 2026-06-23
 related_plan: docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md
 completed_at: 2026-06-23T07:26:40.163Z
-updated_at: 2026-07-28T20:00:00+08:00
+updated_at: 2026-07-29T12:00:00+08:00
 ---
 
 # GIT Boundary Admission Task Index
@@ -39,6 +39,10 @@ Every `TASK-GIT-*` card is a planning card for the ATM framework repository unle
 | [TASK-GIT-0015](./TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md) | G7 | Broker-owned staging index arbitration for parallel agents | planned | TASK-GIT-0013, TASK-GIT-0014 | broker / index / command policy |
 | [TASK-GIT-0016](./TASK-GIT-0016-restricted-external-worker-execution-surface-and-atm-only-guidance.task.md) | G8 | Restricted external-worker execution surface and ATM-only guidance | planned | TASK-GIT-0015 | worker runtime / integrations / skills |
 | [TASK-GIT-0017](./TASK-GIT-0017-runner-publication-inventory-and-framework-temp-commit-surface-parity.task.md) | G9 | Runner publication inventory and framework-temp claim/commit-surface parity | planned | TASK-GIT-0016 | runner-sync / framework-temp / publication |
+| [TASK-GIT-0018](./TASK-GIT-0018-brokered-external-worker-launcher-and-capability-bound-process-execution.task.md) | G10 | Claim-issued work-admission ticket authority, attribution, and recovery | planned | TASK-GIT-0016, TASK-GIT-0017 | claim / ticket / recovery |
+| [TASK-GIT-0019](./TASK-GIT-0019-adapter-enforcement-capability-attestation-and-fail-closed-write-dispatch.task.md) | G11 | Unified ticket coverage gates and cross-adapter rollout evidence | planned | TASK-GIT-0018 | Police / Broker / review / commit / close / push |
+| [TASK-GIT-0020](./TASK-GIT-0020-protected-governance-state-integrity-chain-and-bypass-detection.task.md) | G12 | Protected governance-state integrity chain and bypass detection | superseded | TASK-GIT-0018, TASK-GIT-0019 | merged into ticket authority and coverage gates |
+| [TASK-GIT-0021](./TASK-GIT-0021-cross-adapter-controlled-execution-dogfood-and-rollout-evidence.task.md) | G13 | Cross-adapter controlled-execution dogfood and rollout evidence | superseded | TASK-GIT-0019 | merged into rollout acceptance |
 
 ## Sequencing Note
 
@@ -55,3 +59,11 @@ The first production-worthy milestone is `TASK-GIT-0001` through `TASK-GIT-0008`
 `TASK-GIT-0016` turns the remaining policy-only boundary into an execution boundary. It introduces one restricted gateway for external workers, denies interpreter and raw-shell mutation escapes, and makes ATM entry skills plus structured CLI guidance consistently point back to approved ATM commands rather than native mutation shortcuts.
 
 `TASK-GIT-0017` corrects the runner publication seam exposed by G8 closeout: all sealed build outputs, including top-level package dist, manifests, and steward receipts, must have one inventory-backed ATM publication path. Runner freshness must fail closed when that publication remains incomplete.
+
+`TASK-GIT-0018` and `TASK-GIT-0019` replace the earlier four-card controlled
+execution continuation. Claim now atomically issues one content-addressed
+work-admission ticket derived from the task card. Native writes remain possible
+on unrestricted hosts, but they cannot advance through ATM or protected-branch
+acceptance without ticket coverage or an explicit recovery disposition.
+`TASK-GIT-0020` and `TASK-GIT-0021` are planning-only superseded records and
+must not be imported or claimed.

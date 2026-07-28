@@ -1,74 +1,137 @@
 ---
 task_id: TASK-GIT-0018
-title: Brokered external-worker launcher and capability-bound process execution
+title: Claim-issued work-admission ticket authority, attribution, and recovery
 status: planned
+amendment_epoch: 1
 owner: atm-core
 priority: P0
 milestone: G10
 depends_on:
   - TASK-GIT-0016
+  - TASK-GIT-0017
 causalGraph:
-  causalDependencies: [TASK-GIT-0016]
-  startConditions: ["RestrictedExecutionGateway is closed and its policy receipt contract is available."]
-  softRelations: [TASK-GIT-0017]
-  changedPublicSeams: ["atm.externalWorkerLauncher.v1"]
-  causalImpactEdges: ["external-write dispatch -> capability-bound launch -> execution receipt -> lifecycle evidence"]
-  parallelFrontierInputs: ["TASK-GIT-0017 may close independently; do not consume its dirty publication residue."]
-  validatorReferences: ["tests/cli/external-worker-launcher.test.ts", "tests/cli/restricted-execution-gateway.test.ts"]
-  phaseOwner: "external-worker control plane"
+  causalDependencies: [TASK-GIT-0016, TASK-GIT-0017]
+  startConditions: ["RestrictedExecutionGateway and runner publication inventory are closed."]
+  softRelations: []
+  changedPublicSeams: ["atm.workAdmissionTicket.v1", "atm.workAdmissionCoverageReceipt.v1"]
+  causalImpactEdges: ["task card -> atomic claim/ticket -> mutation coverage -> recovery or delivery authorization"]
+  parallelFrontierInputs: []
+  validatorReferences: ["tests/cli/work-admission-ticket-claim.test.ts", "tests/cli/work-admission-ticket-recovery.test.ts", "tests/cli/write-ticket-scope-guard.test.ts"]
+  phaseOwner: "work-admission authority"
 related_plan: git-boundary-admission/git-boundary-admission-plan.md
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
+  - packages/core/src/broker/work-admission-ticket.ts
   - packages/core/src/team-agents/restricted-execution-gateway.ts
-  - packages/core/src/team-agents/external-worker-launcher.ts
-  - packages/core/src/team-agents/worker-executor.ts
-  - packages/cli/src/commands/broker/batch-execute-actions.ts
-  - packages/cli/src/commands/team-runtime-gates.ts
-  - schemas/validators/external-worker-execution-receipt.schema.json
-  - tests/cli/external-worker-launcher.test.ts
+  - packages/core/src/broker/write-ticket.ts
+  - packages/core/src/broker/write-scope-policy.ts
+  - packages/core/src/broker/freeze.ts
+  - packages/core/src/broker/patch-envelope.ts
+  - packages/cli/src/commands/write-ticket.ts
+  - packages/cli/src/commands/tasks/claim-orchestrator.ts
+  - schemas/validators/work-admission-envelope.schema.json
+  - docs/governance/error-code-registry.json
+  - packages/core/src/error-code-registry.generated.ts
+  - docs/ERROR_CODES.md
+  - tests/cli/work-admission-ticket-claim.test.ts
+  - tests/cli/work-admission-ticket-recovery.test.ts
+  - tests/cli/write-ticket-scope-guard.test.ts
   - tests/cli/restricted-execution-gateway.test.ts
+  - tests/catalog/groups/test_group_work_admission_authority.shard.json
 deliverables:
-  - "One ExternalWorkerLauncher deep module whose only public mutation-capable interface accepts a gateway-approved, task/actor/lane-bound execution capability and a structured request."
-  - "The Team worker executor and command-manifest executor delegate process creation to the launcher; they never spawn a worker mutation process directly."
-  - "Each admitted launch records declared outputs, observed output digest, capability digest, normalized command class, cancellation result, and receipt linkage."
-  - "An absent, expired, wrong-task, wrong-lane, or wrong-output capability fails before launch; warning text, environment variables, and prompt phrases cannot substitute for it."
-  - "Read-only validators remain explicitly classified and cannot be upgraded into a generated-write route by argv or output declaration drift."
+  - "One WorkAdmissionTicketAuthority deep module that deepens existing WriteTicket and RestrictedExecutionGateway contracts instead of introducing another launcher or permission registry."
+  - "Claim and ticket issuance are one atomic lifecycle transition; write-capable claim success returns and persists the ticket id, ticket digest, scope digest, actor, lane, claim generation, expiry, runner selection, and structured grants."
+  - "Ticket grants are derived from existing task data: scopePaths/direction lock for file writes, ATM lifecycle operation classes for Git, and declared validator/generated-write manifests for process execution. Generic node eval, shell text, PowerShell writes, and arbitrary Git argv are never grants."
+  - "Content-addressed mutation coverage receipts bind ticket id, path, base digest, observed digest, operation class, and producing ATM command without rewriting file contents to carry metadata."
+  - "The existing WIP snapshot/patch-envelope seam becomes a bounded sparse temp store: clean tracked files reference Git blob ids; only dirty/untracked preimages are compressed into .atm/runtime/work-admission-temp; post-write state stores digests only."
+  - "Each task has at most two save points: an immutable claim baseline and one replaceable pre-risk snapshot. No per-edit or continuous snapshotting is allowed."
+  - "Per-task and repository-wide byte budgets fail closed before snapshot growth. Successful close deletes temp blobs immediately; blocked/handoff tasks may pin them with TTL; a governed GC command removes expired snapshots. No temp snapshot enters Git."
+  - "One recoverUnattributedMutation decision returns late-attach, scope-amendment, split, handoff, quarantine, discard-with-proof, historical-delivery-review, corrective-commit, or remote-incident recovery without silently normalizing a bypass."
+  - "The minimal ticket state machine is admitted -> covered -> delivery-authorized, with recovery-required as a non-terminal detour. Recovery is idempotent and retains the original violation receipt."
 validators:
-  - node --strip-types tests/cli/external-worker-launcher.test.ts
+  - node --strip-types tests/cli/work-admission-ticket-claim.test.ts
+  - node --strip-types tests/cli/work-admission-ticket-recovery.test.ts
+  - node --strip-types tests/cli/write-ticket-scope-guard.test.ts
   - node --strip-types tests/cli/restricted-execution-gateway.test.ts
+  - npm run generate:error-codes
   - npm run typecheck
-errorCodes: []
+testContributions: []
+requiredTestCaseIds:
+  - test_task_git_0018_work_admission_ticket_claim_atomicity_463f76de
+  - test_task_git_0018_work_admission_ticket_recovery_8d9f886c
+phaseTestCaseIds: []
+advisoryTestCaseIds: []
+errorCodes:
+  - ATM_WRITE_TICKET_MISSING
+  - ATM_WRITE_TICKET_STALE
+  - ATM_WRITE_SCOPE_UNATTACHED_WIP
+  - ATM_WRITE_TICKET_SCOPE_VIOLATION
+  - ATM_WORK_ADMISSION_RECOVERY_REQUIRED
+  - ATM_WORK_ADMISSION_DELIVERY_NOT_AUTHORIZED
+evidence:
+  required: command-backed-ticket-coverage-and-recovery
+rollback:
+  strategy: revert-commit-and-disable-claim-ticket-admission
+  notes: "Revert the authority wiring while retaining violation and snapshot artifacts for audit; never delete recovery evidence as rollback."
+atomizationImpact:
+  ownerAtomOrMap: atm.work-admission-ticket-authority
+  mapUpdates: []
+  extractionCandidates:
+    - atom: atm.work-admission-ticket-authority
+      pattern: Deep Module
+      source: packages/cli/src/commands/tasks/claim-orchestrator.ts
+      disposition: extract
+      inlineReason: null
+    - atom: atm.error-code-registry-projection
+      pattern: Generated Registry
+      source: docs/governance/error-code-registry.json
+      disposition: inline
+      inlineReason: "The task adds canonical ErrorCode entries through the existing generator; it does not add decision logic to the registry document."
+    - atom: atm.error-code-documentation-projection
+      pattern: Generated Documentation
+      source: docs/ERROR_CODES.md
+      disposition: inline
+      inlineReason: "Generated projection only; authority remains in the registry and WorkAdmissionTicketAuthority."
 createdByCommand: atm plan card create
+out_of_scope:
+  - "No OS sandbox, background filesystem watcher, or generic external-worker launcher."
+  - "No continuous backup, per-edit snapshot stream, recovery blob in Git, or unbounded disk retention."
+  - "No arbitrary shell, Node eval, PowerShell write, or raw Git argv capability."
+  - "No automatic history rewrite or silent cleanup of unattributed WIP."
 ---
 
-# TASK-GIT-0018 Brokered external-worker launcher and capability-bound process execution
+# TASK-GIT-0018 Claim-issued work-admission ticket authority, attribution, and recovery
 
 ## Intent
 
-Make the existing gateway a real authority boundary for ATM-managed external
-workers. The protected resource is repository mutation capability; a policy
-decision that an unmanaged shell may ignore is not sufficient.
+Make a valid ticket inseparable from a write-capable claim. ATM does not need
+to own every host process; it needs to own the transition from local bytes to
+accepted task delivery.
 
 ## First-Principles and Deep-Module Design
 
-`ExternalWorkerLauncher.launch({ capability, executable, argv, cwd, declaredOutputs })`
-is the only mutation-capable process-launch interface. It hides capability
-verification, process invocation, cancellation, output observation, receipt
-writing, and safe failure classification. The gateway is its policy adapter;
-the Team worker executor and command-manifest executor are its two launch
-adapters.
+`WorkAdmissionTicketAuthority` owns issue, observe, recover, and authorize. It
+hides task-card grant derivation, claim binding, ticket expiry, content digest
+attribution, violation classification, and recovery planning. Claim issuance
+and mutation observation are its two primary adapters. `WriteTicket` and
+`RestrictedExecutionGateway` become internal compatibility/policy components,
+not competing authorities.
 
-Deletion test: without the launcher, both executors must independently verify
-capabilities and observe outputs, recreating an ambient-shell bypass.
+Deletion test: without this authority, claim, write-ticket, and restricted
+execution must each reconstruct task scope, actor/lane identity, command
+authority, and bypass recovery.
 
 ## Acceptance
 
-- [ ] A sealed deep-module review names the public interface, two adapters, rollback, and causal validators before source edits.
-- [ ] A raw Git mutation, `node -e`, PowerShell write, and shell escape are denied before child process creation.
-- [ ] A valid declared generated-write request launches exactly once and records its capability/output receipt; wrong task, lane, expiry, or outputs fail closed.
-- [ ] Tests prove worker and command-manifest paths cannot directly spawn a mutation process outside the launcher.
-- [ ] No OS sandbox claim is made for arbitrary human-owned shells outside an ATM-managed worker process.
+- [ ] A sealed deep-module review compares launcher-centric and ticket-centric designs and selects the smaller ticket authority with an explicit deletion test.
+- [ ] A write-capable claim cannot succeed without atomically persisted ticket evidence; read-only claims receive no mutation grants.
+- [ ] Wrong task, actor, lane, claim generation, expiry, runner selection, scope digest, operation class, or command manifest fails closed.
+- [ ] Native in-scope WIP can be late-attached only with a violation receipt, fresh validators, and required review; no path can mint clean provenance retroactively from prose.
+- [ ] Out-of-scope, native-commit, and already-published cases produce deterministic reversible recovery plans and preserve original evidence.
+- [ ] Tests prove byte-identical recovery of dirty tracked and untracked claim baselines, zero-copy clean Git-blob references, maximum-two snapshot rotation, hard byte-budget denial, handoff TTL pinning, immediate close cleanup, and idempotent GC.
+- [ ] Without an OS watcher, the contract promises recovery to the claim baseline and optional pre-risk save point only, never every unmanaged intermediate write.
+- [ ] No OS sandbox or arbitrary-process-prevention claim is made. The guarantee is that unattributed state cannot become ATM-authorized delivery.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-28T16:28:03.036Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"git-boundary-admission/tasks/TASK-GIT-0018-brokered-external-worker-launcher-and-capability-bound-process-execution.task.md","contentDigest":"sha256:1a2fc958048811d038fd30c174d8c93ffa26c18a33baaeaf9cf2813b706aa1a2"} -->
