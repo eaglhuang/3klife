@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0018
 title: Claim-issued work-admission ticket authority, attribution, and recovery
-status: planned
+status: done
 amendment_epoch: 2
 owner: atm-core
 priority: P0
@@ -125,6 +125,15 @@ out_of_scope:
   - "No continuous backup, per-edit snapshot stream, recovery blob in Git, or unbounded disk retention."
   - "No arbitrary shell, Node eval, PowerShell write, or raw Git argv capability."
   - "No automatic history rewrite or silent cleanup of unattributed WIP."
+completed_at: "2026-07-28T19:32:04.959Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-28T19:32:04.959Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T19-32-04-959Z-close-bd5953eb3964"
+lastTransitionAt: "2026-07-28T19:32:04.959Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "dfd03f7c2fd32953cdd44946a2e61ab8ee3dff00"
 ---
 
 # TASK-GIT-0018 Claim-issued work-admission ticket authority, attribution, and recovery

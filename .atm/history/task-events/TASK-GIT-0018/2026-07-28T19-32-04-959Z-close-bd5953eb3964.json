@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-28T19-32-04-959Z-close-bd5953eb3964",
+  "taskId": "TASK-GIT-0018",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0018-brokered-external-worker-launcher-and-capability-bound-process-execution.task.md",
+  "taskSha256": "sha256:4fb5a484528ff998ea8472d4896a08409bfee29848749cb1635487fffd6dff18",
+  "createdAt": "2026-07-28T19:32:04.959Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0018 --actor codex-git-series-captain"
+}
