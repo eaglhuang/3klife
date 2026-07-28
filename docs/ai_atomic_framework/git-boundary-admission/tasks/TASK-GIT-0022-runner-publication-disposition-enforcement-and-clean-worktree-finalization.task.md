@@ -36,6 +36,7 @@ scopePaths:
   - "packages/core/src/broker/runner-build-output-inventory.ts"
   - "packages/core/src/broker/index.ts"
   - "packages/cli/src/commands/doctor/run-doctor.ts"
+  - "packages/cli/src/commands/broker/steward-queues.ts"
   - "packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts"
   - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
   - "packages/cli/src/commands/framework-development/runner-sync-queue-ownership.ts"
