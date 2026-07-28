@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0006
 title: Historical planning transition provenance sweep
-status: done
+status: planned
 owner: atm-governance
 priority: P1
 depends_on:
@@ -38,13 +38,6 @@ evidence:
   required: command-backed
 rollback:
   strategy: revert-commit
-completed_at: "2026-07-28T19:57:45.000Z"
-completed_by_agent: "gemini-3.6-scout"
-closedAt: "2026-07-28T19:57:45.000Z"
-closedByActor: "gemini-3.6-scout"
-lastTransitionId: "2026-07-28T19-57-45-000Z-sweep-provenance"
-lastTransitionAt: "2026-07-28T19:57:45.000Z"
-ledgerContractVersion: task-ledger/v1
 ---
 
 # TASK-TMP-0006 Historical planning transition provenance sweep
@@ -52,6 +45,10 @@ ledgerContractVersion: task-ledger/v1
 ## Intent
 
 Sweep all completed planning task cards in 3KLife and align their `lastTransitionId` frontmatter with the verified target live ledger in `AI-Atomic-Framework/.atm/history/tasks/`.
+
+## Governance Note
+
+Planning sweep was executed in commit `5f53e505`, but because this card has no target live ledger or closure packet in target `AI-Atomic-Framework`, its status is updated to `planned` (not target `done`). Target attestation and reconciliation are formally tracked under `TASK-TMP-0007`.
 
 ## Required Work
 

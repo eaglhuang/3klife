@@ -1,0 +1,44 @@
+{
+  "schemaId": "atm.tmp0007ReconciliationReport.v1",
+  "taskId": "TASK-TMP-0007",
+  "timestamp": "2026-07-28T20:10:35.000Z",
+  "actorId": "gemini36-tmp-provenance-corrector",
+  "summary": {
+    "commitAnalyzed": "5f53e505e263d9154f8bbdc0bc736a5cff30d220",
+    "totalFilesAnalyzed": 488,
+    "semanticFixesCount": 133,
+    "missingInParentAddedCount": 147,
+    "legacyFormatUpdatedCount": 208,
+    "revertedCount": 0,
+    "targetLedgerAccuracy": "100% (486/486 existing target live ledgers match 5f53e505 exactly)"
+  },
+  "tmp0006StatusCorrection": {
+    "taskId": "TASK-TMP-0006",
+    "previousStatus": "done",
+    "newStatus": "planned",
+    "reason": "TASK-TMP-0006 was pushed to planning repo but has no target ledger or closure packet. Status updated to planned to prevent false target-done claims."
+  },
+  "tmp0005EvidenceDisposition": {
+    "files": [
+      ".atm/history/evidence/TASK-TMP-0005.seal-and-commit.json",
+      ".atm/history/evidence/TASK-TMP-0005.residue-reconciliation.json",
+      ".atm/history/evidence/TASK-TMP-0005.runner-sync-receipt.json"
+    ],
+    "disposition": "retain",
+    "reason": "Committed post-close historical evidence receipts for TASK-TMP-0005; verified valid and retained in target evidence store."
+  },
+  "keyFixesVerified": [
+    {
+      "taskId": "TASK-ERR-0001",
+      "planningTransitionId": "2026-07-19T04-04-56-002Z-close-1c3aa337733f",
+      "targetLiveLedger": "2026-07-19T04-04-56-002Z-close-1c3aa337733f",
+      "status": "VERIFIED_MATCH"
+    },
+    {
+      "taskId": "TASK-SKL-0014",
+      "planningTransitionId": "2026-07-21T02-25-26-704Z-repair-closure-b82036883535",
+      "targetLiveLedger": "2026-07-21T02-25-26-704Z-repair-closure-b82036883535",
+      "status": "VERIFIED_MATCH"
+    }
+  ]
+}
