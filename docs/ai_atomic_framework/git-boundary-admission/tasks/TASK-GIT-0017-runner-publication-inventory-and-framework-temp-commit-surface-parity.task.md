@@ -14,6 +14,7 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo
 scopePaths:
   - "packages/core/src/broker/runner-build-output-inventory.ts"
+  - "packages/core/src/broker/index.ts"
   - "packages/core/src/broker/runner-sync-steward-queue.ts"
   - "packages/cli/src/commands/broker/steward-queues.ts"
   - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
