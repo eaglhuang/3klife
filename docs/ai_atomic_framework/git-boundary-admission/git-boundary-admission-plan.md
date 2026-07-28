@@ -317,3 +317,12 @@ the remaining adapter boundary: a sealed generation has one inventory digest
 and one terminal disposition, consumed by publication, runner-sync release,
 claim admission, and doctor. Unrelated Plan3.1/TMP evidence remains outside
 that inventory and must retain its own governed owner or recovery receipt.
+
+G14 is also the sole registry owner for `ATM_RUNNER_PUBLICATION_PENDING` and
+`ATM_RUNNER_PUBLICATION_INVENTORY_INCOMPLETE`. The first reports a sealed
+generation that has no terminal publication/recovery disposition; the second
+reports a receipt or transaction whose membership does not match the sealed
+inventory digest. Both must be emitted with structured details and registered
+through the canonical error-code pipeline. They are not aliases for source-mtime
+drift and must never be replaced by doctor-local allowlists or prose-only
+recovery guidance.

@@ -40,6 +40,9 @@ scopePaths:
   - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
   - "packages/cli/src/commands/framework-development/runner-sync-queue-ownership.ts"
   - "packages/cli/src/commands/internal-release/publication.ts"
+  - "docs/governance/error-code-registry.json"
+  - "packages/core/src/error-code-registry.generated.ts"
+  - "docs/ERROR_CODES.md"
   - "scripts/run-sealed-runner-build.ts"
   - "tests/cli/runner-publication-inventory-parity.test.ts"
   - "tests/cli/runner-publication-residue-classification.test.ts"
@@ -57,8 +60,24 @@ validators:
   - "npm run typecheck"
   - "npm run validate:cli"
 errorCodes:
-  - "ATM_RUNNER_PUBLICATION_PENDING"
-  - "ATM_RUNNER_PUBLICATION_INVENTORY_INCOMPLETE"
+  - code: "ATM_RUNNER_PUBLICATION_PENDING"
+    disposition: register
+    trigger: "Doctor, runner-sync release, or publication observes a sealed generation with dirty inventory members that have no terminal governed disposition."
+    category: runner-publication
+    retryable: true
+    requiresHumanApproval: false
+    recovery: "Use the receipt-bound publication or recovery transaction returned by ATM; do not restore or stage a subset manually."
+    sourceOwner: "packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts"
+    focusedTest: "tests/cli/runner-publication-disposition-gate.test.ts"
+  - code: "ATM_RUNNER_PUBLICATION_INVENTORY_INCOMPLETE"
+    disposition: register
+    trigger: "A receipt, release, or publication transaction omits, adds, or attributes a member inconsistently with the sealed inventory digest."
+    category: runner-publication
+    retryable: true
+    requiresHumanApproval: false
+    recovery: "Regenerate the receipt-bound inventory for the sealed source and retry the exact ATM publication transaction."
+    sourceOwner: "packages/core/src/broker/runner-build-output-inventory.ts"
+    focusedTest: "tests/cli/runner-publication-inventory-parity.test.ts"
 recoveryEvidencePaths:
   - "packages/cli/dist/**"
   - "release/atm-onefile/**"
@@ -135,5 +154,8 @@ residue is the proof that those decisions must not diverge.
 - [ ] The final target worktree is clean except only independently active,
   explicitly preserved Plan3.1 work; planning worktree is clean.
 - [ ] Focused tests, typecheck, and `validate:cli` pass.
+- [ ] Canonical error-code registry, generated TypeScript registry, and generated
+  error-code documentation describe both G14 publication gates; no caller keeps
+  private recovery prose for either error.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-28T20:33:18.953Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"git-boundary-admission/tasks/TASK-GIT-0022-runner-publication-disposition-enforcement-and-clean-worktree-finalization.task.md","contentDigest":"sha256:3eeeb99dddd4486cd51068f5ff2f4e97e48fd5360cb41e14f293fddca7fcf6ea"} -->
