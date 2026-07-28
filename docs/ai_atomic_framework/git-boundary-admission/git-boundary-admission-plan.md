@@ -28,6 +28,10 @@ related_tasks:
   - TASK-GIT-0019
   - TASK-GIT-0020
   - TASK-GIT-0021
+  - TASK-GIT-0022
+  - TASK-GIT-0023
+  - TASK-GIT-0024
+  - TASK-GIT-0025
 updated_at: 2026-07-29T12:00:00+08:00
 ---
 
@@ -128,6 +132,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G7 | TASK-GIT-0015 | Broker-owned staging index arbitration, foreign-active staged protection, and override lease evidence |
 | G8 | TASK-GIT-0016 | Restricted external-worker execution gateway, interpreter escape denial, and ATM-only guidance projection |
 | G9 | TASK-GIT-0017 | Runner publication inventory and framework-temp claim/commit-surface parity |
+| G9.1 | TASK-GIT-0025 | Correct G9/G10 projection and glob-scope parity before further ticket-dependent closeout |
 | G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
@@ -264,7 +269,10 @@ snapshot policy never weakens ticket coverage or delivery gates.
 ### Dependency and Rollout Order
 
 1. Complete `TASK-GIT-0017` first to remove live runner-publication ambiguity.
-2. `TASK-GIT-0018` depends on the restricted execution and ATM-only guidance
+2. `TASK-GIT-0025` follows the delivered G9/G10 contracts and restores their
+   shared projection/scope fidelity. It is required before a ticket-dependent
+   closeout may treat the G8 fixture as classified recovery input.
+3. `TASK-GIT-0018` depends on the restricted execution and ATM-only guidance
    delivered by `TASK-GIT-0016`; it reuses those decisions while making claim
    ticket issuance and recovery authoritative.
 3. `TASK-GIT-0019` depends on `TASK-GIT-0018` and performs the full gate,
@@ -383,7 +391,9 @@ released claim and released direction lock must not be treated as active by
 pre-commit. Conversely, a ledger/lock mismatch remains blocked. One shared
 lifecycle predicate replaces independent hook and repair heuristics.
 
-G16 depends on G14/G15 outcomes (`TASK-GIT-0022`, `TASK-GIT-0023`) because it
-must distinguish their exact sealed receipts and emergency preservation from
-ordinary unprovenanced commits. It is the required gate before retrying a push
-blocked solely by `ATM_WRITE_TICKET_MISSING` in historical local commits.
+G16 depends on G14/G15 outcomes (`TASK-GIT-0022`, `TASK-GIT-0023`) and the
+G9.1 parity correction (`TASK-GIT-0025`), because it must distinguish their
+exact sealed receipts and emergency preservation from ordinary unprovenanced
+commits without treating its own forward-attestation evidence as ticket
+out-of-scope. It is the required gate before retrying a push blocked solely by
+`ATM_WRITE_TICKET_MISSING` in historical local commits.
