@@ -43,6 +43,7 @@ Every `TASK-GIT-*` card is a planning card for the ATM framework repository unle
 | [TASK-GIT-0019](./TASK-GIT-0019-adapter-enforcement-capability-attestation-and-fail-closed-write-dispatch.task.md) | G11 | Unified ticket coverage gates and cross-adapter rollout evidence | planned | TASK-GIT-0018 | Police / Broker / review / commit / close / push |
 | [TASK-GIT-0020](./TASK-GIT-0020-protected-governance-state-integrity-chain-and-bypass-detection.task.md) | G12 | Protected governance-state integrity chain and bypass detection | superseded | TASK-GIT-0018, TASK-GIT-0019 | merged into ticket authority and coverage gates |
 | [TASK-GIT-0021](./TASK-GIT-0021-cross-adapter-controlled-execution-dogfood-and-rollout-evidence.task.md) | G13 | Cross-adapter controlled-execution dogfood and rollout evidence | superseded | TASK-GIT-0019 | merged into rollout acceptance |
+| [TASK-GIT-0027](./TASK-GIT-0027-index-lease-consumption-and-atomic-staged-bundle-parking.task.md) | G7.1 | Index lease consumption and atomic staged-bundle parking | planned | TASK-GIT-0015 | governed index lease authority |
 
 ## Sequencing Note
 

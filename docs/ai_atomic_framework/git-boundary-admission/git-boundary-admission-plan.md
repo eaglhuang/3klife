@@ -135,6 +135,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G9 | TASK-GIT-0017 | Runner publication inventory and framework-temp claim/commit-surface parity |
 | G9.1 | TASK-GIT-0025 | Correct G9/G10 projection and glob-scope parity; runs independently of G11.1 |
 | G11.1 | TASK-GIT-0026 | Make protected evidence context evaluate the complete task-scoped staged bundle; unblocks G16 closeout independently of G9.1 |
+| G7.1 | TASK-GIT-0027 | Consume exact stage-override leases through one atomic index park/restore authority |
 | G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
@@ -284,16 +285,19 @@ snapshot policy never weakens ticket coverage or delivery gates.
 2. `TASK-GIT-0025` follows the delivered G9/G10 contracts and restores their
    shared projection/scope fidelity. `TASK-GIT-0026` independently repairs
    G11's protected staged-bundle projection. They may run in parallel.
-3. G16 (`TASK-GIT-0024`) retries historical-attestation closeout only after
-   both G9.1 and G11.1 have landed; this keeps ticket admission and protected
-   evidence context as separate deep modules rather than coupling either fix
-   to the other.
-4. `TASK-GIT-0018` depends on the restricted execution and ATM-only guidance
+3. G7.1 (`TASK-GIT-0027`) may proceed after G7 and before any blocked delivery
+   replay. It repairs the authority-to-effect gap in stage-override leases;
+   G9.1 and G11.1 remain independent source corrections.
+4. G16 (`TASK-GIT-0024`) retries historical-attestation closeout only after
+   G9.1, G11.1, and G7.1 have landed; this keeps ticket admission, protected
+   evidence context, and index parking as separate deep modules rather than
+   coupling any fix to an incident-specific workaround.
+5. `TASK-GIT-0018` depends on the restricted execution and ATM-only guidance
    delivered by `TASK-GIT-0016`; it reuses those decisions while making claim
    ticket issuance and recovery authoritative.
-5. `TASK-GIT-0019` depends on `TASK-GIT-0018` and performs the full gate,
+6. `TASK-GIT-0019` depends on `TASK-GIT-0018` and performs the full gate,
    adapter, dogfood, and remote-check rollout as one large integration card.
-6. Do not import or claim `TASK-GIT-0020` or `TASK-GIT-0021`; they are
+7. Do not import or claim `TASK-GIT-0020` or `TASK-GIT-0021`; they are
    superseded planning records. The current target importer normalizes
    non-terminal planning statuses to `planned`, so retirement authority remains
    the planning card/index/plan contract until importer-level retirement
