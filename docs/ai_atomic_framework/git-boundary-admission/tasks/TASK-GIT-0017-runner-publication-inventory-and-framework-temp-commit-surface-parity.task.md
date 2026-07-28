@@ -24,7 +24,6 @@ scopePaths:
   - "packages/cli/src/commands/git-governance/implementation.ts"
   - "packages/cli/src/commands/next/route-resolution/pending-worktree.ts"
   - "packages/cli/src/commands/next/playbook-projection/active-work-summary.ts"
-  - "packages/cli/src/commands/task-direction.ts"
   - "packages/cli/dist/**"
   - "release/atm-onefile/release-manifest.json"
   - "scripts/run-sealed-runner-build.ts"
