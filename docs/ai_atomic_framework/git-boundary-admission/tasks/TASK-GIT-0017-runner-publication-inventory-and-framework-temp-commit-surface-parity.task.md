@@ -19,27 +19,33 @@ scopePaths:
   - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
   - "packages/cli/src/commands/framework-development/runner-sync-queue-ownership.ts"
   - "packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts"
-  - "packages/cli/src/commands/framework-mode.ts"
+  - "packages/cli/src/commands/framework-development/closure-packet-schema/implementation.ts"
+  - "packages/cli/src/commands/framework-development/framework-temp-lock-projection.ts"
   - "packages/cli/src/commands/git-governance/implementation.ts"
+  - "packages/cli/src/commands/next/route-resolution/pending-worktree.ts"
+  - "packages/cli/src/commands/next/playbook-projection/active-work-summary.ts"
+  - "packages/cli/src/commands/task-direction.ts"
   - "scripts/run-sealed-runner-build.ts"
   - "scripts/build-package-dist.ts"
   - "scripts/AtmCore/runner-build-scope.json"
   - "tests/cli/runner-publication-inventory-parity.test.ts"
   - "tests/cli/framework-temp-claim-lifecycle-parity.test.ts"
   - "tests/cli/runner-sync-publication-residue.test.ts"
+  - "tests/cli/runner-publication-residue-classification.test.ts"
 validators:
   - "node --strip-types tests/cli/runner-publication-inventory-parity.test.ts"
   - "node --strip-types tests/cli/framework-temp-claim-lifecycle-parity.test.ts"
   - "node --strip-types tests/cli/runner-sync-publication-residue.test.ts"
+  - "node --strip-types tests/cli/runner-publication-residue-classification.test.ts"
   - "npm run validate:cli"
   - "npm run typecheck"
 deliverables:
   - "A single BuildOutputInventory deep module that derives the complete publication set for a sealed runner build, including top-level packages/cli/dist outputs, release manifests, root-drop/onefile outputs, and the steward receipt."
   - "Runner-sync enqueue surfaces, framework-temp claim files, publication commit candidates, receipt ownership, and doctor freshness all consume the same inventory rather than re-deriving output lists."
-  - "A framework-temp re-claim updates one lifecycle record with linkedTaskId, lane, status, heartbeat, TTL, and claimed paths; it must not mint an unrelated lane-suffixed work item."
+  - "One framework-temp lock projection normalizes linkedTaskId, lane, status, heartbeat, TTL, claimed paths, and lifecycle freshness; re-claim updates that record instead of minting an unrelated lane-suffixed work item."
   - "A completed steward receipt is claimed and published with its output inventory, never left as untracked residue."
   - "Doctor and runner-sync status fail closed when a sealed build has declared outputs that remain uncommitted or lack a governed retained/recovery disposition."
-  - "A governed recovery path adopts the seven G8 residue inputs through an ATM transaction; raw staging, raw commit, or silent discard are not valid remedies."
+  - "The inventory classifies complete, foreign-live, stale-recovery-input, and unowned publication residue from lock state plus sealed inventory. An unrelated task must never adopt the G8 fixture merely to pass claim admission; any publish or safe-discard remains a dedicated governed recovery transaction."
 evidence:
   required: command-backed
 rollback:
@@ -52,6 +58,9 @@ atomizationImpact:
   extractionCandidates:
     - path: "packages/core/src/broker/runner-build-output-inventory.ts"
       reason: "Deleting it would force five callers to duplicate artifact discovery and reintroduce publication divergence."
+    - path: "packages/cli/src/commands/framework-development/closure-packet-schema/implementation.ts"
+      disposition: extract
+      reason: "The framework-mode implementation exceeds the physical line budget. Extract framework-temp lock parsing and freshness projection so runner publication callers consume one small contract rather than re-reading runtime locks."
 outOfScope:
   - "Reopening TASK-GIT-0016 or ATM-GOV-0266."
   - "Changing which source files the runner build compiles."
@@ -103,6 +112,7 @@ those independent derivations drifted.
 4. Runner status is `publication-pending` or equivalent, never current, while inventory outputs are dirty/untracked without a governed recovery disposition.
 5. Existing G8 residue is admitted only through a task-scoped ATM recovery transaction that verifies the prior sealed SHA and inventory digest before publishing or producing an audited safe-discard receipt.
 6. Receipt release is impossible until the receipt is attributable to the same inventory and every member has a governed disposition.
+7. Claim admission and active-work reporting consume the same normalized lock projection and inventory classification. A known stale recovery input is surfaced with its governed disposition; it is neither an arbitrary `release/**` advisory nor an unrelated task's scope expansion.
 
 ## Acceptance
 
@@ -112,7 +122,8 @@ those independent derivations drifted.
 - A regression proves re-claim updates the original framework-temp record, preserving `linkedTaskId`, lifecycle status, lane, heartbeat, TTL, and claimed paths.
 - A regression proves the steward receipt cannot remain untracked after successful publication.
 - A regression proves missing, extra, stale, foreign-owned, or mismatched-seal outputs block release/publication with an executable ATM recovery command.
-- A controlled fixture proves the seven G8 residue inputs can be recovered through one governed transaction without raw Git staging or discard.
+- A regression proves `pending-worktree` and active-work summary return the same ownership/disposition for a framework-temp lock with `files[]`, including an expired lock without a direction lock.
+- A controlled fixture proves the seven G8 residue inputs are classified as recovery inputs without raw Git staging, discard, or accidental adoption by TASK-GIT-0017.
 - `npm run validate:cli` and `npm run typecheck` pass.
 
 ## Recovery Inputs
@@ -127,6 +138,8 @@ The initial reproduction/recovery fixture must represent these G8 residue classe
 ## Implementation Notes
 
 Do not patch individual output paths into another allowlist. Make the inventory
-the single public interface and let current callers become adapters. Preserve a
-human-visible recovery command, but no prompt text or raw Git path may substitute
-for its governed transaction.
+and framework-temp lock projection the two small public interfaces: inventory owns
+what a sealed build produced; projection owns who may govern its residue. Let
+current callers become adapters. Preserve a human-visible recovery command, but no
+prompt text or raw Git path may substitute for its governed transaction. GIT-0017
+does not implement GIT-0018 work-admission tickets, recoveryMode, or snapshots.
