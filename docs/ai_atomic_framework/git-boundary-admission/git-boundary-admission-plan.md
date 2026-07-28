@@ -132,6 +132,8 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
 | G13 | TASK-GIT-0021 | Superseded by G11: conformance evidence belongs to rollout acceptance |
+| G14 | TASK-GIT-0022 | Publication disposition enforcement and clean-worktree finalization |
+| G15 | TASK-GIT-0023 | Foreign generated residue admission deferral and ticket continuity |
 
 ## Work-Admission Ticket Continuation
 
@@ -326,3 +328,32 @@ inventory digest. Both must be emitted with structured details and registered
 through the canonical error-code pipeline. They are not aliases for source-mtime
 drift and must never be replaced by doctor-local allowlists or prose-only
 recovery guidance.
+
+## G15 - Foreign Generated Residue Admission Deferral
+
+`TASK-GIT-0023` resolves a distinct dogfood gap exposed after G14: a task can
+have a current runner, fresh validators, and a valid delivery, yet be unable to
+renew its admission ticket or close because an independently owned generated
+artifact is dirty in the common worktree. The solution must not fold every
+generated file into `BuildOutputInventory`; that would turn the runner
+publication module into a second, global artifact registry.
+
+G15 therefore adds one `ForeignGeneratedResidueDisposition` adapter beneath the
+existing work-admission ticket authority. It first asks G9's
+`BuildOutputInventory` whether a path belongs to a sealed runner generation. A
+member is never deferred and follows G9/G14 publication recovery. For a
+non-member, G15 permits only a verifiable producer/provenance proof with
+content digests and independently attributable ownership. The result is either:
+
+- **deferred foreign generated residue**: recorded in ticket evidence but never
+  granted to the candidate task for write, staging, commit, restore, deletion,
+  or close-bundle membership; or
+- **blocked residue**: the default for unknown, semantic, stale, or
+  unverifiable WIP.
+
+Claim admission, ticket renewal, write-readiness, and close consume this one
+result. G15 has no automatic cleanup behavior and no path allowlist. Its first
+fixture is the SKL-owned corpus audit artifact that blocks G14's GIT-0022
+closeout. G15 releases the ticket continuity problem without taking ownership
+of the SKL artifact; its canonical producer remains responsible for later
+regeneration or delivery.
