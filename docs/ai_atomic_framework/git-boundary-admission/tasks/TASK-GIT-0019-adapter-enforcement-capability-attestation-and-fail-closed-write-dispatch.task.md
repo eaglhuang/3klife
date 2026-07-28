@@ -2,7 +2,7 @@
 task_id: TASK-GIT-0019
 title: Unified ticket coverage gates and cross-adapter rollout evidence
 status: planned
-amendment_epoch: 2
+amendment_epoch: 3
 owner: atm-core
 priority: P0
 milestone: G11
@@ -39,6 +39,33 @@ scopePaths:
   - templates/skills/atm-governance-router.skill.md
   - templates/skills/atm-dispatch.skill.md
   - templates/skills/atm-next.skill.md
+  - .agents/skills/atm-dispatch/SKILL.md
+  - .agents/skills/atm-governance-router/SKILL.md
+  - .agents/skills/atm-next/SKILL.md
+  - .claude/skills/atm-dispatch/SKILL.md
+  - .claude/skills/atm-governance-router/SKILL.md
+  - .claude/skills/atm-next/SKILL.md
+  - .cursor/rules/skills/atm-dispatch/SKILL.md
+  - .cursor/rules/skills/atm-governance-router/SKILL.md
+  - .cursor/rules/skills/atm-next/SKILL.md
+  - .gemini/commands/atm-dispatch.toml
+  - .gemini/commands/atm-governance-router.toml
+  - .gemini/commands/atm-next.toml
+  - .github/instructions/atm-dispatch.instructions.md
+  - .github/instructions/atm-governance-router.instructions.md
+  - .github/instructions/atm-next.instructions.md
+  - .github/prompts/atm-dispatch.prompt.md
+  - .github/prompts/atm-governance-router.prompt.md
+  - .github/prompts/atm-next.prompt.md
+  - integrations/codex-skills/atm-dispatch/SKILL.md
+  - integrations/codex-skills/atm-governance-router/SKILL.md
+  - integrations/codex-skills/atm-next/SKILL.md
+  - .atm/integrations/antigravity.manifest.json
+  - .atm/integrations/claude-code.manifest.json
+  - .atm/integrations/codex.manifest.json
+  - .atm/integrations/copilot.manifest.json
+  - .atm/integrations/cursor.manifest.json
+  - .atm/integrations/gemini.manifest.json
   - docs/governance/integration-plugin-matrix.md
   - docs/AGENT_PACK_ONBOARDING.md
   - tests/cli/work-admission-coverage-gates.test.ts
@@ -48,7 +75,7 @@ deliverables:
   - "Police, Broker, Reviewer, governed commit, taskflow close, protected push, and the remote required-check command consume the same WorkAdmissionTicketAuthority decision and ErrorCode family; none maintains a private allowlist."
   - "Warnings are projections of the shared decision. Hard boundaries reject missing, stale, wrong-scope, wrong-digest, wrong-operation, recovery-required, or not-delivery-authorized tickets."
   - "The protected-branch check verifies committed ticket coverage evidence so direct raw push cannot publish an accepted mainline change merely by bypassing local hooks."
-  - "Cross-adapter fixtures cover Claude, Codex, Cursor, Gemini, Copilot, and Antigravity as behavior/evidence surfaces. Adapter prose and pre-tool support may improve prevention, but every adapter receives the same downstream coverage verdict."
+  - "Cross-adapter fixtures cover Claude, Codex, Cursor, Gemini, Copilot, and Antigravity as behavior/evidence surfaces. The three canonical entry skills are recompiled through each adapter and verified against its manifest; adapter prose and pre-tool support may improve prevention, but every adapter receives the same downstream coverage verdict."
   - "Dogfood covers governed writes, native in-scope late attach, out-of-scope split/quarantine, raw local commit review, missing ticket, stale ticket, digest drift, raw push rejection, and recovery retry idempotency."
   - "Dogfood proves that recoveryMode=disabled performs zero snapshot writes while the same Police, Broker, Reviewer, commit, close, push, and remote ticket gates remain mandatory."
   - "Skills, next, doctor, and onboarding explain the ATM-only route and exact recovery command without claiming that text itself grants or enforces authority."
