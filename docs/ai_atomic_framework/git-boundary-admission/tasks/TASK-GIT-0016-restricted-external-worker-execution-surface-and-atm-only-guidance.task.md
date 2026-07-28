@@ -2,7 +2,7 @@
 doc_id: doc_TASK-GIT-0016
 task_id: TASK-GIT-0016
 title: "Restricted external-worker execution surface and ATM-only guidance"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: G8
@@ -65,6 +65,15 @@ outOfScope:
 nonGoals:
   - "Do not treat prompt text, a skill warning, or an env variable alone as execution authorization."
   - "Do not allow a generic interpreter exception that reintroduces node -e or PowerShell write escapes."
+completed_at: "2026-07-28T14:37:05.122Z"
+completed_by_agent: "claude-005-git-0016-captain"
+closedAt: "2026-07-28T14:37:05.122Z"
+closedByActor: "claude-005-git-0016-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T14-37-05-122Z-close-3d650eea3aa4"
+lastTransitionAt: "2026-07-28T14:37:05.122Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "34de57dacebda9516c894502739d84cb2600d7b9"
 ---
 
 # TASK-GIT-0016 - Restricted external-worker execution surface and ATM-only guidance

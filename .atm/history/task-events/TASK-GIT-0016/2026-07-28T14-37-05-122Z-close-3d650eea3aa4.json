@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-28T14-37-05-122Z-close-3d650eea3aa4",
+  "taskId": "TASK-GIT-0016",
+  "action": "close",
+  "actorId": "claude-005-git-0016-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0016-restricted-external-worker-execution-surface-and-atm-only-guidance.task.md",
+  "taskSha256": "sha256:6190cdd808d07ec145f63a0e2ec307e861fc89d3ec2dce31b59f4f3703f195ca",
+  "createdAt": "2026-07-28T14:37:05.122Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0016 --actor claude-005-git-0016-captain"
+}
