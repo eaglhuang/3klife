@@ -25,9 +25,11 @@ scopePaths:
   - packages/core/src/broker/work-admission-ticket.ts
   - packages/cli/src/commands/police.ts
   - packages/cli/src/commands/review-advisory.ts
+  - packages/cli/src/commands/git-governance.ts
   - packages/cli/src/commands/git-governance/work-admission-check.ts
   - packages/cli/src/commands/git-governance/implementation.ts
   - packages/cli/src/commands/hook/pre-commit/implementation.ts
+  - packages/cli/src/commands/hook/commit-range-guard/implementation.ts
   - packages/cli/src/commands/hook/pre-push.ts
   - packages/cli/src/commands/taskflow/write-readiness.ts
   - packages/cli/src/commands/taskflow/broker-gate.ts
