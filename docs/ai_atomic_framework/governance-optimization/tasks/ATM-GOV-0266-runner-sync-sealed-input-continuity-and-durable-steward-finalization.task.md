@@ -49,6 +49,7 @@ scopePaths:
   - packages/cli/src/commands/git-governance/implementation.ts
   - packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
   - packages/cli/src/commands/hook/pre-commit/implementation.ts
+  - packages/cli/src/commands/taskflow/implementation.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - packages/cli/dist/commands/git-governance/implementation.js
   - packages/cli/dist/commands/hook/pre-commit/implementation.js
@@ -62,6 +63,7 @@ scopePaths:
   - packages/core/src/error-code-registry.generated.ts
   - tests/cli/git-record-commit.test.ts
   - tests/cli/pre-commit-hook-extraction.test.ts
+  - tests/cli/taskflow-stale-runner-lane.test.ts
   - tests/cli/runner-sync-sealed-input-continuity.test.ts
   - tests/cli/runner-sync-build-lease-heartbeat.test.ts
   - tests/cli/runner-sync-steward-crash-resume.test.ts
@@ -76,6 +78,7 @@ deliverables:
   - packages/cli/src/commands/git-governance/implementation.ts
   - packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
   - packages/cli/src/commands/hook/pre-commit/implementation.ts
+  - packages/cli/src/commands/taskflow/implementation.ts
   - packages/cli/src/commands/taskflow/runner-selection-evidence.ts
   - schemas/validators/runner-version-selection-receipt.schema.json
   - docs/governance/error-code-registry.json
@@ -87,6 +90,7 @@ deliverables:
   - tests/cli/runner-version-selection.test.ts
   - tests/cli/git-record-commit.test.ts
   - tests/cli/pre-commit-hook-extraction.test.ts
+  - tests/cli/taskflow-stale-runner-lane.test.ts
 recoveryEvidencePaths:
   - packages/cli/dist/commands/git-governance/implementation.js
   - packages/cli/dist/commands/hook/pre-commit/implementation.js
@@ -103,6 +107,7 @@ validators:
   - node --strip-types tests/cli/sealed-runner-publication-lifecycle.test.ts
   - node --strip-types tests/cli/git-record-commit.test.ts
   - node --strip-types tests/cli/pre-commit-hook-extraction.test.ts
+  - node --strip-types tests/cli/taskflow-stale-runner-lane.test.ts
   - npm run generate:error-codes
   - npm run typecheck
   - npm run validate:cli
@@ -209,6 +214,9 @@ module.
 - [ ] The pre-commit hook consumes the same block-lifecycle classifier as `git record-commit`. It permits the eligible two-file record-only bundle without bypassing hooks, while preserving `ATM_CROSS_TASK_MUTATION_BLOCKED` for every ineligible, mixed-task, source, or non-block-history payload.
 - [ ] The canonical error-code registry and generated projection define `ATM_RUNNER_SYNC_SEAL_REVALIDATION_REQUIRED`, `ATM_RUNNER_SYNC_STEWARD_LEASE_EXPIRED`, `ATM_RUNNER_SYNC_RESUME_REQUIRED`, and `ATM_RUNNER_SYNC_COALESCED_ATTRIBUTION_MISSING`; each exposes an executable recovery path and is covered by registry generation validation.
 - [ ] Taskflow close and internal release use the same session result. They do not require a worker to predict that all unrelated captains will refrain from committing while a shared build runs.
+- [ ] Close-preflight runner receipt validation uses the durable receipt's `runnerInputTreeHash` and a schema-owned runner-affecting diff from `sealedSourceSha` to current HEAD. A sealed source may be a HEAD ancestor only when the ancestor-to-HEAD delta is non-runner-affecting lifecycle/evidence work and the current runner input hash still matches the receipt.
+- [ ] Any delta under runner-affecting inputs (`packages/`, `scripts/`, `templates/`, `schemas/`, `atomic_workbench/`, root package/tsconfig release inputs) keeps failing closed with a rebuild requirement even if the previous receipt was finalizable.
+- [ ] Regression proves delivery -> build receipt -> receipt+renew commit -> pre-close ALLOW without a second build, while runner-input drift, missing attribution, and stale child receipt cases still fail closed.
 - [ ] Regression proves a docs-only commit during a coalesced build can publish the matching sealed runner without rebuild or false stale verdict.
 - [ ] Regression proves a runner-input commit during a coalesced build rebuilds only the declared affected graph closure, preserves valid unaffected outputs, regenerates the aggregate manifest, and rejects publication of the old or mixed input generation.
 - [ ] Regression proves a deterministic long build exceeds the former 30-minute lease interval without losing its queue ownership or coalesced member attribution. Use an injected clock, not sleeps.
