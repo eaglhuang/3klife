@@ -307,3 +307,13 @@ but only an ATM ticket and shared coverage gate can promote it to delivery.
 - Direct native writes remain recoverable through late attach, scope amendment, split, handoff, quarantine, discard-with-proof, historical-delivery review, or forward incident recovery.
 - Direct raw Git, interpreter evaluation, and shell write paths may create local state in unrestricted hosts, but unattributed results cannot pass ATM or protected-branch acceptance.
 - A runner is not publication-current merely because its source mtime is current; the sealed build-output inventory and its receipt must be committed or explicitly retained by a governed recovery state.
+
+## G14 - Publication Disposition Enforcement
+
+`TASK-GIT-0022` is the correction card for the post-GIT-0019 observation that
+a sealed build can leave generated members dirty while doctor reports current.
+It does not reopen GIT-0017. It makes the GIT-0017 inventory authoritative at
+the remaining adapter boundary: a sealed generation has one inventory digest
+and one terminal disposition, consumed by publication, runner-sync release,
+claim admission, and doctor. Unrelated Plan3.1/TMP evidence remains outside
+that inventory and must retain its own governed owner or recovery receipt.
