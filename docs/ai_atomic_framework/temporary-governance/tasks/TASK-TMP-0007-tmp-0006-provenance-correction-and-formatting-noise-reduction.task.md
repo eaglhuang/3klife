@@ -46,7 +46,8 @@ evidence:
 rollback:
   strategy: revert-commit
 createdByCommand: atm plan card create
-amendmentNote: "Forward recovery amendment: planning status was prematurely marked done while target remained open/running; restore running and require a target-side attestation deliverable before closure."
+amendment_epoch: 1
+amendmentNote: "Forward recovery amendment: planning status was prematurely marked done while target remained open/running; restore running and require a target-side attestation deliverable before closure. Epoch 1 enables governed claim/close without emergency force-import while handoff claim remains active."
 ---
 
 # TASK-TMP-0007 TMP-0006 provenance correction and formatting-noise reduction
