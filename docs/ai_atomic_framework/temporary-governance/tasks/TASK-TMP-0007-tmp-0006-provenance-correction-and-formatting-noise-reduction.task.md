@@ -32,11 +32,7 @@ scopePaths:
   - ".atm/history/evidence/TASK-TMP-0005.seal-and-commit.json"
   - ".atm/history/evidence/TASK-TMP-0005.residue-reconciliation.json"
   - ".atm/history/evidence/TASK-TMP-0005.runner-sync-receipt.json"
-deliverables:
-  - "temporary-governance/tasks/TASK-TMP-0007-tmp-0006-provenance-correction-and-formatting-noise-reduction.task.md"
-  - "temporary-governance/reports/TASK-TMP-0007-reconciliation-report.json"
-  - "temporary-governance/reports/TASK-TMP-0007-reconciliation-report.md"
-  - ".atm/history/evidence/TASK-TMP-0007.reconciliation-evidence.json"
+deliverables: []
 validators:
   - "git diff --check"
   - "node atm.mjs doctor --json"
