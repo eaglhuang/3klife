@@ -33,9 +33,11 @@ scopePaths:
   - packages/core/src/broker/patch-envelope.ts
   - packages/cli/src/commands/write-ticket.ts
   - packages/cli/src/commands/tasks/claim-orchestrator.ts
+  - packages/cli/src/commands/tasks/claim-work-admission.ts
   - packages/cli/src/commands/tasks/import-orchestrator.ts
   - packages/cli/src/commands/tasks/result-contracts.ts
   - packages/cli/src/commands/tasks/task-import-validators.ts
+  - packages/cli/src/commands/tasks/task-work-admission-import.ts
   - schemas/validators/work-admission-envelope.schema.json
   - docs/governance/error-code-registry.json
   - packages/core/src/error-code-registry.generated.ts
@@ -52,6 +54,7 @@ deliverables:
   - "Content-addressed mutation coverage receipts bind ticket id, path, base digest, observed digest, operation class, and producing ATM command without rewriting file contents to carry metadata."
   - "Recovery snapshot policy is one task-card field: workAdmission.recoveryMode = auto | enabled | disabled, defaulting to auto. Claim seals the requested mode, resolved enabled/disabled result, evidence-based reasons, and policy digest into the ticket."
   - "Task import validates and preserves workAdmission.recoveryMode in the target ledger and dry-run manifest; unknown values fail import instead of being dropped as unknown planning metadata."
+  - "Claim and import orchestration call narrow adapters for work-admission authority; the existing oversized lifecycle and validator modules lose rather than gain policy branches."
   - "Auto enables snapshots only for elevated task risk/complexity, destructive capability, sensitive shared surfaces, or untrusted/degraded/unproven worker or adapter evidence; it otherwise resolves disabled. Model brand is never a trust signal."
   - "Only the task author, Captain, or human owner may force enabled/disabled. A worker cannot self-disable after claim; in-flight changes require governed amendment and ticket reseal, never prompt or environment override."
   - "When enabled, the existing WIP snapshot/patch-envelope seam becomes a bounded sparse temp store: clean tracked files reference Git blob ids; only dirty/untracked preimages are compressed into .atm/runtime/work-admission-temp; post-write state stores digests only."
@@ -94,6 +97,16 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/claim-orchestrator.ts
       disposition: extract
       inlineReason: null
+    - atom: atm.claim-work-admission-adapter
+      pattern: Orchestration Adapter
+      source: packages/cli/src/commands/tasks/claim-work-admission.ts
+      disposition: extract
+      inlineReason: "Keeps atomic claim/ticket assembly out of the already oversized claim orchestrator."
+    - atom: atm.task-work-admission-import-adapter
+      pattern: Import Adapter
+      source: packages/cli/src/commands/tasks/task-work-admission-import.ts
+      disposition: extract
+      inlineReason: "Keeps workAdmission parsing separate from the already oversized generic task-import validator."
     - atom: atm.error-code-registry-projection
       pattern: Generated Registry
       source: docs/governance/error-code-registry.json
