@@ -37,6 +37,7 @@ scopePaths:
   - "packages/core/src/broker/index.ts"
   - "packages/cli/src/commands/doctor/run-doctor.ts"
   - "packages/cli/src/commands/broker/steward-queues.ts"
+  - "packages/cli/src/commands/broker/parser.ts"
   - "packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts"
   - "packages/cli/src/commands/framework-development/runner-sync-admission.ts"
   - "packages/cli/src/commands/framework-development/runner-sync-queue-ownership.ts"
@@ -48,11 +49,13 @@ scopePaths:
   - "tests/cli/runner-publication-inventory-parity.test.ts"
   - "tests/cli/runner-publication-residue-classification.test.ts"
   - "tests/cli/runner-publication-disposition-gate.test.ts"
+  - "tests/cli/runner-publication-reconciliation.test.ts"
 deliverables:
   - "BuildOutputInventory is the single authority for the exact sealed build output set, receipt membership, ownership, and terminal disposition."
   - "doctor reports a blocking publication-pending result whenever the current sealed build has dirty or untracked inventory members without a governed publication or recovery disposition; source mtime alone cannot report current."
   - "One governed publication/recovery transaction can either publish the exact owned inventory or retain an explicit stale/foreign recovery disposition; it never silently restores, adopts, or drops Plan3.1/TMP evidence."
   - "Runner-sync release rejects a receipt whose declared inventory is incomplete, unowned, mismatched to its sealed source, or lacks an attributable terminal disposition."
+  - "A receipt-only stale-generation reconciliation is exposed through an ATM runner-sync command. It proves the prior committed receipt matches the named path, refuses any dirty generated member or foreign task ownership, restores only the verified stale receipt through ATM, and records a TASK-GIT-0022 reconciliation receipt."
   - "The current GIT-0019 build residue is either published as exact inventory or preserved under an attributable recovery receipt, leaving both repositories clean except for separately classified active Plan3.1 work."
 validators:
   - "node --strip-types tests/cli/runner-publication-inventory-parity.test.ts"
@@ -150,6 +153,10 @@ residue is the proof that those decisions must not diverge.
 - [ ] Publication and release consume the same inventory digest; missing,
   extra, foreign, stale-seal, or unattributed receipt members fail with a
   structured remediation.
+- [ ] The GIT-0019 receipt-only residue is reconciled through the ATM
+  runner-sync route, not a raw Git command; the route refuses to touch any
+  dirty dist/release member or a receipt whose committed predecessor does not
+  match the requested task-owned evidence path.
 - [ ] A governed recovery transaction handles the GIT-0019 generation without
   raw Git and leaves unrelated Plan3.1/TMP evidence untouched.
 - [ ] The final target worktree is clean except only independently active,
