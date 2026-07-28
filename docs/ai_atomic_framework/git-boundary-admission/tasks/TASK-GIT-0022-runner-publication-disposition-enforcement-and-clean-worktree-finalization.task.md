@@ -52,7 +52,6 @@ scopePaths:
   - "tests/cli/runner-publication-disposition-gate.test.ts"
   - "tests/cli/runner-publication-reconciliation.test.ts"
   - ".atm/history/evidence/TASK-GIT-0019.runner-sync-receipt.json"
-  - ".atm/history/evidence/ATM-FRAMEWORK-TEMP-claude-005-git-0016-captain.runner-sync-receipt.json"
   - ".atm/history/evidence/ATM-FRAMEWORK-TEMP-codex-git-series-captain.runner-sync-receipt.json"
   - ".atm/history/evidence/TASK-GIT-0018.runner-sync-receipt.json"
 deliverables:
@@ -95,7 +94,6 @@ recoveryEvidencePaths:
   - "release/atm-onefile/**"
   - "release/atm-root-drop/**"
   - ".atm/history/evidence/TASK-GIT-0019.runner-sync-receipt.json"
-  - ".atm/history/evidence/ATM-FRAMEWORK-TEMP-claude-005-git-0016-captain.runner-sync-receipt.json"
   - ".atm/history/evidence/ATM-FRAMEWORK-TEMP-codex-git-series-captain.runner-sync-receipt.json"
   - ".atm/history/evidence/TASK-GIT-0018.runner-sync-receipt.json"
 evidence:
@@ -116,6 +114,7 @@ outOfScope:
   - "Discarding, staging, or committing Plan3.1/TMP evidence not attributable to the selected sealed inventory."
   - "Changing source files compiled by the runner build."
   - "Reopening GIT-0017 or GIT-0019."
+  - "Deleting legacy runner receipts that do not carry a validated BuildOutputInventory."
 nonGoals:
   - "No raw Git restore, reset, or pathspec cleanup for generated runner outputs."
   - "No blanket worktree cleanup that treats foreign evidence as runner output."
