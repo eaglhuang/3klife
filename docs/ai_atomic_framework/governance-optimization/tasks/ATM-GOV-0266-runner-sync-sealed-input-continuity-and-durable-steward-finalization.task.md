@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0266
 title: Runner-sync sealed-input continuity and durable steward finalization
-status: planned
+status: done
 owner: atm-runner-sync
 priority: P0
 milestone: ATM-3.1-R0Q.4
@@ -145,6 +145,15 @@ atomizationImpact:
       source: packages/cli/src/commands/framework-development/runner-sync-admission.ts
       disposition: retain-thin
 createdByCommand: atm plan card create
+completed_at: "2026-07-28T10:18:44.919Z"
+completed_by_agent: "codex-002-plan31-0248"
+closedAt: "2026-07-28T10:18:44.919Z"
+closedByActor: "codex-002-plan31-0248"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T10-18-44-919Z-close-c4ecd2dd879d"
+lastTransitionAt: "2026-07-28T10:18:44.919Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6c92badaa301f6af26e59abd3b12d90d9d546c78"
 ---
 
 # ATM-GOV-0266 Runner-sync sealed-input continuity and durable steward finalization
