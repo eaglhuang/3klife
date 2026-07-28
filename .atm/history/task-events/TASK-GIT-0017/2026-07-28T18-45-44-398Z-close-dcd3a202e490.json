@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-28T18-45-44-398Z-close-dcd3a202e490",
+  "taskId": "TASK-GIT-0017",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0017-runner-publication-inventory-and-framework-temp-commit-surface-parity.task.md",
+  "taskSha256": "sha256:b014fa70e04adae4d3ce1dfce9601620fc0829c31f32bbc2a3da65cbd5e04c82",
+  "createdAt": "2026-07-28T18:45:44.398Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0017 --actor codex-git-series-captain"
+}

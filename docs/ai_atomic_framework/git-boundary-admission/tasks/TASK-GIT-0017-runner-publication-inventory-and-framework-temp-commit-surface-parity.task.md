@@ -2,7 +2,7 @@
 doc_id: doc_TASK-GIT-0017
 task_id: TASK-GIT-0017
 title: "Runner publication inventory and framework-temp claim/commit-surface parity"
-status: planned
+status: done
 owner: atm-core
 priority: P0
 milestone: G9
@@ -81,6 +81,15 @@ outOfScope:
 nonGoals:
   - "Do not use raw Git to stage, commit, restore, or discard generated runner residue."
   - "Do not treat source-mtime freshness alone as proof that publication completed."
+completed_at: "2026-07-28T18:45:44.398Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-28T18:45:44.398Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T18-45-44-398Z-close-dcd3a202e490"
+lastTransitionAt: "2026-07-28T18:45:44.398Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a366f518f6dcb43bab11c7004b83173e9c29a798"
 ---
 
 # TASK-GIT-0017 - Runner publication inventory and framework-temp claim/commit-surface parity
