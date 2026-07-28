@@ -39,11 +39,14 @@ scopePaths:
   - "packages/cli/src/commands/next/playbook-projection/active-work-summary.ts"
   - "packages/cli/src/commands/tasks/claim-work-admission.ts"
   - "packages/cli/src/commands/git-governance/work-admission-check.ts"
+  - "packages/cli/src/commands/git-governance.ts"
   - "tests/cli/framework-temp-lock-admission-parity.test.ts"
   - "tests/cli/work-admission-ticket-scope-glob-parity.test.ts"
+  - "tests/cli/work-admission-ticket-deferred-index-parity.test.ts"
 deliverables:
   - "One framework-temp lock disposition projection consumed identically by claim admission and active-work reporting, including files[]-only locks, TTL state, linked task/lane identity, and sealed-inventory membership."
   - "One scope matcher owned by WorkAdmissionTicketAuthority that accepts exact paths and task-card glob scope consistently for write, stage, commit, close, and push."
+  - "A governed commit with --defer-foreign-staged validates the ticket against its filtered task bundle, never against foreign index residue that the commit operation will preserve."
   - "A bounded recovery disposition for expired files[]-only framework-temp locks: stale recovery input is visible but cannot be adopted by an unrelated claim."
 validators:
   - "node --strip-types tests/cli/framework-temp-lock-admission-parity.test.ts"
@@ -109,6 +112,9 @@ card must deepen existing modules rather than add a registry or allowlist.
 - [ ] Ticket checks accept exact paths and card scope globs with identical
   normalization across write, stage, commit, close, and push; genuine outside
   paths still fail closed.
+- [ ] `--defer-foreign-staged` filters foreign staged paths before work-admission
+  validation; foreign residue remains untouched and an in-scope bundle still
+  fails closed for a genuine outside path.
 - [ ] The G8 fixture is inspected only through test fixtures/receipts and is
   never swept into this card's commit bundle.
 - [ ] Focused tests, `npm run typecheck`, and `npm run validate:cli` pass.
