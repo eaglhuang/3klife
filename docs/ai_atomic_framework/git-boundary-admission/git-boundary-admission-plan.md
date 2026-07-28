@@ -357,3 +357,33 @@ fixture is the SKL-owned corpus audit artifact that blocks G14's GIT-0022
 closeout. G15 releases the ticket continuity problem without taking ownership
 of the SKL artifact; its canonical producer remains responsible for later
 regeneration or delivery.
+
+## G16 - Historical Admission Attestation and Terminal Ownership Convergence
+
+`TASK-GIT-0024` owns the forward-only recovery for a protected push that sees
+an already-created critical commit without an `ATM-Work-Admission` trailer.
+It does not reopen GIT-0017, GIT-0022, or GIT-0023, and it must never rewrite
+history to make an old commit appear governed after the fact.
+
+The design adds one deep `HistoricalWorkAdmissionAttestationAuthority`:
+
+- normal commits remain covered by their committed ticket trailer;
+- a historical exception requires an append-only, governed attestation binding
+  the exact commit SHA, parent and tree context, pushed range, canonical ticket
+  digest or approved emergency provenance, task/lane attribution, and review
+  evidence;
+- pre-push, the attestation command, and future remote enforcement consume the
+  same evaluator; unknown, tampered, future, non-ancestor, or conflicting
+  records fail closed;
+- the record is corrective provenance only. It grants no write capability,
+  cannot cover a different commit, and does not erase the emergency signal.
+
+The same card converges terminal ownership semantics. A `done` task with a
+released claim and released direction lock must not be treated as active by
+pre-commit. Conversely, a ledger/lock mismatch remains blocked. One shared
+lifecycle predicate replaces independent hook and repair heuristics.
+
+G16 depends on G14/G15 outcomes (`TASK-GIT-0022`, `TASK-GIT-0023`) because it
+must distinguish their exact sealed receipts and emergency preservation from
+ordinary unprovenanced commits. It is the required gate before retrying a push
+blocked solely by `ATM_WRITE_TICKET_MISSING` in historical local commits.
