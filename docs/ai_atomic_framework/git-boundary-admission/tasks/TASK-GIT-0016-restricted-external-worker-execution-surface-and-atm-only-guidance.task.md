@@ -26,6 +26,10 @@ scopePaths:
   - "tests/cli/restricted-execution-gateway.test.ts"
   - "tests/cli/command-manifest-shellless.test.ts"
   - "tests/cli/integration-raw-git-command-guard.test.ts"
+  - "artifacts/generated/skill-corpus-audit.json"
+  - "docs/governance/error-code-registry.json"
+  - "packages/core/src/error-code-registry.generated.ts"
+  - "docs/ERROR_CODES.md"
 validators:
   - "node --strip-types tests/cli/restricted-execution-gateway.test.ts"
   - "node --strip-types tests/cli/command-manifest-shellless.test.ts"
@@ -40,6 +44,8 @@ deliverables:
   - "Supported editor integration hooks delegate to the same gateway decision; adapters unable to enforce pre-tool policy advertise no external-write capability instead of implying a hard gate."
   - "ATM entry skills (governance router, dispatch, next) and structured CLI recovery output state that raw Git, node -e, PowerShell write commands, and direct shell mutation are not approved worker routes; they name the returned ATM command as the only normal mutation path."
   - "A sealed deep-module review receipt records the chosen interface, two adapters, deletion-test result, rollback, and causal validators before production edits."
+  - "The declared skill-template validator's regenerated skill corpus audit artifact ships with the change that alters the template source digests."
+  - "The fail-closed restricted-execution ErrorCode is registered in the canonical error-code registry, its generated core projection, and the generated public error-code index as one governance delivery."
 evidence:
   required: command-backed
 rollback:
@@ -104,6 +110,23 @@ Deletion test: removing this module would force each worker executor, command-ma
 - The three canonical ATM entry skills and structured CLI guidance contain the ATM-only route warning, compiled projections validate, and no unresolved template placeholder is introduced.
 - Tests prove warning text cannot itself grant permission, and missing/wrong actor, task, lane, declared output, or broker authority fails closed.
 - `npm run validate:skill-templates` and `npm run typecheck` pass.
+
+## Scope Amendment (2026-07-28)
+
+Owner-approved amendment adding four paths to `scopePaths` and `deliverables`:
+`artifacts/generated/skill-corpus-audit.json`,
+`docs/governance/error-code-registry.json`,
+`packages/core/src/error-code-registry.generated.ts`, and `docs/ERROR_CODES.md`.
+
+Reason: this card's declared skill-template validator necessarily regenerates
+the skill corpus audit artifact once the three canonical entry templates change,
+and the new fail-closed `ATM_RESTRICTED_EXECUTION_BLOCKED` code must land with
+its canonical registry and generated documentation as one governance delivery.
+The original card did not cover those required files, so the active ledger is
+synchronized through an audited amendment.
+
+The amendment does not change claim owner, lane session, foreign task work,
+existing delivery scope, or closure authority.
 
 ## Implementation Notes
 
