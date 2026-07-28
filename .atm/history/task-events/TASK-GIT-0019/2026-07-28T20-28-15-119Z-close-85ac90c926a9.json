@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-28T20-28-15-119Z-close-85ac90c926a9",
+  "taskId": "TASK-GIT-0019",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0019-adapter-enforcement-capability-attestation-and-fail-closed-write-dispatch.task.md",
+  "taskSha256": "sha256:4088e4a7be21c3982750547035ebd4e23c946fef999d96b5c9fc21eda0b332aa",
+  "createdAt": "2026-07-28T20:28:15.119Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0019 --actor codex-git-series-captain"
+}

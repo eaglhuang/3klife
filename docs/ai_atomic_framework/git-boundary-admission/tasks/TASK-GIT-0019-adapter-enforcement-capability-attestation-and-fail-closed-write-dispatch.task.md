@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0019
 title: Unified ticket coverage gates and cross-adapter rollout evidence
-status: planned
+status: done
 amendment_epoch: 3
 owner: atm-core
 priority: P0
@@ -117,6 +117,15 @@ out_of_scope:
   - "No second adapter capability registry or conformance policy owner."
   - "No claim that skills, prompts, or editor labels grant authority."
   - "No remote merge/rebase engine; the remote check verifies ticket coverage only."
+completed_at: "2026-07-28T20:28:15.119Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-28T20:28:15.119Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T20-28-15-119Z-close-85ac90c926a9"
+lastTransitionAt: "2026-07-28T20:28:15.119Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bf99dd0ffd52f9fe2548526600045041fcf2b679"
 ---
 
 # TASK-GIT-0019 Unified ticket coverage gates and cross-adapter rollout evidence
