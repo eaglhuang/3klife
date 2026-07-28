@@ -48,7 +48,7 @@ Sweep all completed planning task cards in 3KLife and align their `lastTransitio
 
 ## Governance Note
 
-Planning sweep was executed in commit `5f53e505`, but because this card has no target live ledger or closure packet in target `AI-Atomic-Framework`, its status is updated to `planned` (not target `done`). Target attestation and reconciliation are formally tracked under `TASK-TMP-0007`.
+Planning sweep was executed in commit `5f53e505`, but because this card has no target live ledger or closure packet in target `AI-Atomic-Framework`, its status remains `planned` (not target `done`). There is **no target closure** for TASK-TMP-0006. Target attestation and reconciliation are formally tracked under `TASK-TMP-0007`.
 
 ## Required Work
 
