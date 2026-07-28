@@ -24,6 +24,10 @@ related_tasks:
   - TASK-GIT-0015
   - TASK-GIT-0016
   - TASK-GIT-0017
+  - TASK-GIT-0018
+  - TASK-GIT-0019
+  - TASK-GIT-0020
+  - TASK-GIT-0021
 updated_at: 2026-07-28T20:00:00+08:00
 ---
 
@@ -42,6 +46,8 @@ Follow-up: `TASK-GIT-0015` formalizes the emergency `TASK-AAO-0189` plan created
 Follow-up: `TASK-GIT-0016` closes the execution-surface gap exposed by external-worker dogfood. Integration command guards are necessary but do not confine an agent that can invoke an unrestricted host shell. The extension introduces one brokered restricted-execution gateway for external workers, rejects interpreter-evaluation and raw mutation escape hatches, and projects the same ATM-only route through every entry skill and structured CLI recovery message.
 
 Follow-up: `TASK-GIT-0017` corrects a runner-publication gap found while closing `TASK-GIT-0016`: a sealed build can update tracked `packages/cli/dist/**`, the onefile manifest, and its steward receipt while the framework-temp publication route commits only a subset. The extension makes one build-output inventory the authority for enqueue, claim, receipt, publication commit, and doctor freshness.
+
+Second-principles extension: `TASK-GIT-0018` through `TASK-GIT-0021` finish the capability boundary that `TASK-GIT-0016` deliberately did not claim to be. A policy gateway is not a hard boundary when a worker can launch an ambient host process without consulting it. These stages make brokered process launch the only external-write authority, make adapter enforcement evidence explicit, detect protected-state bypasses at every later governed boundary, and prove the envelope on real editor adapters. They do not claim to sandbox arbitrary human shells.
 
 ATM should extend broker admission to the Git boundary by adding a pre-push admission bridge. The bridge fetches the remote branch, computes the merge base, converts both local and remote branch deltas into mutation requests, and asks the broker whether the push is safe, blocked, or composer-routed.
 
@@ -104,6 +110,54 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G7 | TASK-GIT-0015 | Broker-owned staging index arbitration, foreign-active staged protection, and override lease evidence |
 | G8 | TASK-GIT-0016 | Restricted external-worker execution gateway, interpreter escape denial, and ATM-only guidance projection |
 | G9 | TASK-GIT-0017 | Runner publication inventory and framework-temp claim/commit-surface parity |
+| G10 | TASK-GIT-0018 | Brokered external-worker launcher and capability-bound process execution |
+| G11 | TASK-GIT-0019 | Adapter enforcement capability attestation and fail-closed write dispatch |
+| G12 | TASK-GIT-0020 | Protected governance-state integrity chain and bypass detection |
+| G13 | TASK-GIT-0021 | Cross-adapter controlled-execution dogfood and rollout evidence |
+
+## Controlled Execution Continuation
+
+### First-Principles Boundary
+
+The protected resource is not a command spelling, a Git hook, or an ATM task
+file. It is the capability to cause a repository mutation. Prompt text, an
+editor skill, a command deny list, and an actor label are all advisory if a
+worker can independently launch an ambient host process.
+
+Therefore the trustworthy chain is:
+
+`task/lane authority -> capability-bound launch request -> trusted launcher -> declared outputs -> immutable execution receipt -> lifecycle and publication gates`.
+
+The gateway remains the policy owner. The launcher owns process creation. The
+adapter capability registry owns whether an editor can honestly claim the
+pre-tool enforcement needed for external write work. The integrity chain owns
+post-bypass detection. No caller is allowed to rebuild these decisions from
+prompt wording or its own command list.
+
+### Deep-Module Decomposition
+
+- **G10 / `ExternalWorkerLauncher`**: one narrow `launch(request, capability)` interface hides process creation, capability verification, output observation, receipt persistence, cancellation, and the distinction between read-only and declared generated writes. Its adapters are the Team worker executor and broker command-manifest executor.
+- **G11 / `AdapterEnforcementCapability`**: one evidence-bearing capability interface hides editor hook installation, version/probe results, policy digest binding, and expiry. Its adapters are dispatch admission and integration verification.
+- **G12 / `ProtectedStateIntegrityChain`**: one verifier derives the governed-state digest chain and compares it at claim, commit, close, and push boundaries. It detects a direct write but does not pretend to undo it or sandbox a human host.
+- **G13 / `ControlledExecutionConformance`**: one fixture/attestation matrix proves the same capability semantics across supported and unsupported adapters; it is evidence-only and never becomes another policy owner.
+
+Deletion test: removing any one of these modules would force at least two
+callers to duplicate a non-local decision: process authority, adapter
+enforceability, protected-state provenance, or conformance classification.
+
+### Dependency and Rollout Order
+
+1. Complete `TASK-GIT-0017` first to remove the live runner-publication
+   residue and make the frozen runner trustworthy for follow-on enforcement.
+2. `TASK-GIT-0018` depends on the completed policy owner in `TASK-GIT-0016`.
+3. `TASK-GIT-0019` and `TASK-GIT-0020` depend on `TASK-GIT-0018` and may run
+   in parallel because one owns adapter capability and the other owns
+   integrity verification.
+4. `TASK-GIT-0021` depends on both `0019` and `0020`; it is the release gate
+   for advertising an adapter as external-write capable.
+
+Unsupported adapters remain read-only/broker-only. They must not receive an
+external-write dispatch merely because their skill text contains ATM guidance.
 
 ## Non-Goals
 
@@ -116,6 +170,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 - No claim that local hooks alone can prevent raw destructive Git commands by unrestricted AI shells.
 - No claim that skill text alone constrains an external worker. The hard gate must be a brokered execution surface or an equivalent host policy.
 - No raw Git workaround for generated runner residue. Every declared publication output needs an ATM-governed disposition.
+- No claim that ATM can sandbox arbitrary user-owned terminal sessions. Host-level sandboxing is an adapter/runtime capability, and absence of proof means external-write capability is unsupported.
 
 ## Final Acceptance
 

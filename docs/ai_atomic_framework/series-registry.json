@@ -1,6 +1,6 @@
 {
   "schemaId": "atm.seriesRegistry.v1",
-  "generatedAt": "2026-07-24T03:28:48.043Z",
+  "generatedAt": "2026-07-28T16:27:38.821Z",
   "baseDir": ".",
   "series": [
     {
@@ -21,6 +21,26 @@
         "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
         "relativePath": "series-registry.json",
         "contentDigest": "sha256:5080fef5d6b023111701942a39323ded92c36e947c2f15383e1c64a44978c2b4"
+      }
+    },
+    {
+      "series": "GIT",
+      "prefix": "TASK-GIT",
+      "familyDir": "git-boundary-admission",
+      "planDocs": [
+        "git-boundary-admission/git-boundary-admission-plan.md"
+      ],
+      "status": "active",
+      "approvedBy": "captain",
+      "approvedAt": "2026-07-28T16:27:38.820Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-07-28T16:27:38.821Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:81e623d919c25f2934737ecbd965c10ae8fc01f49d4bc0aa3ce941307e10b370"
       }
     },
     {
