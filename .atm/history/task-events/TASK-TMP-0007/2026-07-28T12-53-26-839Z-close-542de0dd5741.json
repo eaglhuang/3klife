@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-28T12-53-26-839Z-close-542de0dd5741",
+  "taskId": "TASK-TMP-0007",
+  "action": "close",
+  "actorId": "cursor-003-tmp-0007-recovery",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0007-tmp-0006-provenance-correction-and-formatting-noise-reduction.task.md",
+  "taskSha256": "sha256:127d74a65b8cd8a2d0dba088459747d94e70b07881d7431a852d8831aca161f5",
+  "createdAt": "2026-07-28T12:53:26.839Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0007 --actor cursor-003-tmp-0007-recovery"
+}

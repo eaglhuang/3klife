@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0007
 title: TMP-0006 provenance correction and formatting-noise reduction
-status: running
+status: done
 owner: atm-governance
 priority: P1
 depends_on: []
@@ -48,6 +48,15 @@ rollback:
 createdByCommand: atm plan card create
 amendment_epoch: 1
 amendmentNote: "Forward recovery amendment: planning status was prematurely marked done while target remained open/running; restore running and require a target-side attestation deliverable before closure. Epoch 1 enables governed claim/close without emergency force-import while handoff claim remains active."
+completed_at: "2026-07-28T12:53:26.839Z"
+completed_by_agent: "cursor-003-tmp-0007-recovery"
+closedAt: "2026-07-28T12:53:26.839Z"
+closedByActor: "cursor-003-tmp-0007-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T12-53-26-839Z-close-542de0dd5741"
+lastTransitionAt: "2026-07-28T12:53:26.839Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0e9241ac51c4ed9cfe37405a13f2696a559e09ae"
 ---
 
 # TASK-TMP-0007 TMP-0006 provenance correction and formatting-noise reduction
