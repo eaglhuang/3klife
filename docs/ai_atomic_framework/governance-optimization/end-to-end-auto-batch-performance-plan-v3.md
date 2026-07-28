@@ -921,6 +921,34 @@ correct or safe to promote.
 | 3 | 0266 + 0267 integration checkpoint | Ordinary tasks only in shadow selection mode | Verify task receipt/attestation against the sealed registry and collect disagreement telemetry. |
 | 4 | 0267 policy-promotion verdict | No concurrent policy promotion | Promote only after the independent report passes with zero false-compatible grants. |
 
+#### 2026-07-28 amendment: ATM-GOV-0268 producer-contract prerequisite
+
+A read-only preflight of `ATM-GOV-0267` found that the Phase A surface sealed by
+`ATM-GOV-0266` is narrower than what an independent qualifier can consume. There
+is no serializable registry snapshot, no `policyVersion` on the selection
+receipt, no explicit candidate ordering behind the plan's "highest trusted
+compatible version" wording, no representable revalidation boundary, and
+`runnerExecutionAttestation` exists only as card prose with no type, schema, or
+producer. The taskflow selection adapter also has no caller, so shadow mode has
+no production integration point.
+
+`ATM-GOV-0268` is inserted as the producer-side owner of exactly those gaps, and
+`ATM-GOV-0267` is narrowed to a pure consumer: ports, verifier, counterfactual
+replay, and qualification report. Shadow feedback moves out of 0267 — its sink
+boundary belongs to 0268, and live shadow rollout stays at Order 3.
+
+| Order | Card / boundary | May run with | Required outcome |
+|---|---|---|---|
+| 2A-bis | 0268 producer contract: registry snapshot, policy version, total candidate ordering, revalidation boundary, execution attestation, shadow sink boundary | 0267 planning and corpus authoring only | Additive, versioned, behaviour-frozen extension of the 0266 surface. No task may be granted a different runner than before. |
+| 2B (revised) | 0267 pure verifier, counterfactual corpus, and qualification report | 0268 delivery and ordinary tasks | Consume 0268 values through consumer-owned ports; never edit the registry or the lifecycle evidence adapter. |
+
+Neither card introduces a new `ATM_*` error code. 0267 verdicts
+(`qualified`, `unqualified`, `pending-contract`, `revalidation-required`) are
+data-shaped per `INV-ATM-009`, which also removes the shared-write contention on
+`docs/governance/error-code-registry.json` that a code-based design would have
+created.
+
+
 This ordering lets validation begin as soon as the contract is stable, while
 keeping a single production decision owner. A live missing-attribution receipt
 is a recovery trigger for 0266, not a reason to leave already-delivered cards
