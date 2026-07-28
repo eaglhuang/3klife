@@ -25,6 +25,8 @@ scopePaths:
   - "packages/cli/src/commands/next/route-resolution/pending-worktree.ts"
   - "packages/cli/src/commands/next/playbook-projection/active-work-summary.ts"
   - "packages/cli/src/commands/task-direction.ts"
+  - "packages/cli/dist/**"
+  - "release/atm-onefile/release-manifest.json"
   - "scripts/run-sealed-runner-build.ts"
   - "scripts/build-package-dist.ts"
   - "scripts/AtmCore/runner-build-scope.json"
@@ -46,6 +48,10 @@ deliverables:
   - "A completed steward receipt is claimed and published with its output inventory, never left as untracked residue."
   - "Doctor and runner-sync status fail closed when a sealed build has declared outputs that remain uncommitted or lack a governed retained/recovery disposition."
   - "The inventory classifies complete, foreign-live, stale-recovery-input, and unowned publication residue from lock state plus sealed inventory. An unrelated task must never adopt the G8 fixture merely to pass claim admission; any publish or safe-discard remains a dedicated governed recovery transaction."
+recoveryEvidencePaths:
+  - "packages/cli/dist/**"
+  - "release/atm-onefile/release-manifest.json"
+  - ".atm/history/evidence/ATM-FRAMEWORK-TEMP-claude-005-git-0016-captain.runner-sync-receipt.json"
 evidence:
   required: command-backed
 rollback:
@@ -113,6 +119,7 @@ those independent derivations drifted.
 5. Existing G8 residue is admitted only through a task-scoped ATM recovery transaction that verifies the prior sealed SHA and inventory digest before publishing or producing an audited safe-discard receipt.
 6. Receipt release is impossible until the receipt is attributable to the same inventory and every member has a governed disposition.
 7. Claim admission and active-work reporting consume the same normalized lock projection and inventory classification. A known stale recovery input is surfaced with its governed disposition; it is neither an arbitrary `release/**` advisory nor an unrelated task's scope expansion.
+8. Recovery-input paths are admitted only so the inventory can inspect and classify the G8 fixture. They are excluded from ordinary source delivery; a commit may include them only through the verified publication or safe-discard transaction recorded by the inventory.
 
 ## Acceptance
 
