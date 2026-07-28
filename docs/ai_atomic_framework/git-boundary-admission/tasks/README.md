@@ -1,13 +1,13 @@
 ---
 doc_id: doc_git_boundary_admission_tasks_0001
 owner: atm-core
-status: completed
+status: active
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 created_at: 2026-06-23
 related_plan: docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md
 completed_at: 2026-06-23T07:26:40.163Z
-updated_at: 2026-07-12T23:15:00+08:00
+updated_at: 2026-07-28T20:00:00+08:00
 ---
 
 # GIT Boundary Admission Task Index
@@ -37,6 +37,7 @@ Every `TASK-GIT-*` card is a planning card for the ATM framework repository unle
 | [TASK-GIT-0013](./TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md) | G5 | Agent raw Git deny and ATM Git tool gate | done | TASK-GIT-0010, TASK-GIT-0011 | integrations / command policy |
 | [TASK-GIT-0014](./TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md) | G6 | ATM Git push wrapper and tool-only push lane | done | TASK-GIT-0013 | CLI / integrations / pre-push |
 | [TASK-GIT-0015](./TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md) | G7 | Broker-owned staging index arbitration for parallel agents | planned | TASK-GIT-0013, TASK-GIT-0014 | broker / index / command policy |
+| [TASK-GIT-0016](./TASK-GIT-0016-restricted-external-worker-execution-surface-and-atm-only-guidance.task.md) | G8 | Restricted external-worker execution surface and ATM-only guidance | planned | TASK-GIT-0015 | worker runtime / integrations / skills |
 
 ## Sequencing Note
 
@@ -49,3 +50,5 @@ The first production-worthy milestone is `TASK-GIT-0001` through `TASK-GIT-0008`
 `TASK-GIT-0014` follows from the `TASK-GIT-0013` closeout: ATM can admit a push, and the pre-push hook can guard a commit range, but the final remote mutation still happens through raw host `git push`. The G6 extension adds a governed `atm git push` wrapper and makes supported integrations route raw push attempts to that wrapper.
 
 `TASK-GIT-0015` formalizes the emergency `TASK-AAO-0189` plan created from `ATM-BUG-2026-07-12-161`: raw Git denial and governed push are not enough while multiple agents share one Git index. The G7 extension makes the staging index a Broker-owned lane, blocks foreign-active unstage/restore/reset/clean operations by default, and introduces explicit stage-only and destructive override leases with audit evidence.
+
+`TASK-GIT-0016` turns the remaining policy-only boundary into an execution boundary. It introduces one restricted gateway for external workers, denies interpreter and raw-shell mutation escapes, and makes ATM entry skills plus structured CLI guidance consistently point back to approved ATM commands rather than native mutation shortcuts.

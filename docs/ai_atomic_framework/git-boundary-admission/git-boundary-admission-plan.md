@@ -1,7 +1,7 @@
 ---
 doc_id: doc_git_boundary_admission_plan_0001
 owner: atm-core
-status: completed
+status: active
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 created_at: 2026-06-23
@@ -22,20 +22,23 @@ related_tasks:
   - TASK-GIT-0013
   - TASK-GIT-0014
   - TASK-GIT-0015
-updated_at: 2026-07-13T10:04:00+08:00
+  - TASK-GIT-0016
+updated_at: 2026-07-28T20:00:00+08:00
 ---
 
 # ATM Git Boundary Admission Plan
 
 ## Summary
 
-Execution status: all `TASK-GIT-0001` through `TASK-GIT-0012` were completed in the target repository on 2026-06-23. This planning mirror remains as the design/archive record for the delivered series.
+MVP execution status: all `TASK-GIT-0001` through `TASK-GIT-0012` were completed in the target repository on 2026-06-23. This planning mirror remains the design/archive record for the delivered series and the active record for post-MVP hard-gate extensions.
 
 Post-MVP extension: `TASK-GIT-0013` is the P0 hard-gate follow-up after Team Agents dogfood showed that pre-push admission and local hooks do not prevent an unrestricted AI agent from directly running raw destructive Git commands. The extension treats Git mutation as a governed capability: supported integrations should deny raw Git mutation by default and route agents through ATM Git tools, Broker index lanes, and scoped emergency leases.
 
 Follow-up: `TASK-GIT-0014` closes the remaining push gap discovered while closing `TASK-GIT-0013`: ATM can admit a push and the pre-push hook can guard commit ranges, but the final remote mutation still requires raw host `git push`. The follow-up adds a governed `atm git push` wrapper and makes supported integrations route raw `git push` attempts to that wrapper.
 
 Follow-up: `TASK-GIT-0015` formalizes the emergency `TASK-AAO-0189` plan created from `ATM-BUG-2026-07-12-161`: raw Git denial and governed push are not enough while multiple AI agents share one Git index. The follow-up makes the staging index a Broker-owned lane, blocks foreign-active unstage/restore/reset/clean operations by default, and introduces explicit stage-only and destructive override leases with audit evidence.
+
+Follow-up: `TASK-GIT-0016` closes the execution-surface gap exposed by external-worker dogfood. Integration command guards are necessary but do not confine an agent that can invoke an unrestricted host shell. The extension introduces one brokered restricted-execution gateway for external workers, rejects interpreter-evaluation and raw mutation escape hatches, and projects the same ATM-only route through every entry skill and structured CLI recovery message.
 
 ATM should extend broker admission to the Git boundary by adding a pre-push admission bridge. The bridge fetches the remote branch, computes the merge base, converts both local and remote branch deltas into mutation requests, and asks the broker whether the push is safe, blocked, or composer-routed.
 
@@ -96,6 +99,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G5 | TASK-GIT-0013 | AI agent raw-Git deny policy, ATM Git tool gate, and emergency lease hard gate |
 | G6 | TASK-GIT-0014 | Governed ATM Git push wrapper and tool-only push lane |
 | G7 | TASK-GIT-0015 | Broker-owned staging index arbitration, foreign-active staged protection, and override lease evidence |
+| G8 | TASK-GIT-0016 | Restricted external-worker execution gateway, interpreter escape denial, and ATM-only guidance projection |
 
 ## Non-Goals
 
@@ -106,6 +110,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 - No automatic commit after steward apply by default.
 - No promise to resolve all Git conflicts semantically.
 - No claim that local hooks alone can prevent raw destructive Git commands by unrestricted AI shells.
+- No claim that skill text alone constrains an external worker. The hard gate must be a brokered execution surface or an equivalent host policy.
 
 ## Final Acceptance
 
@@ -115,3 +120,4 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 - True overlap blocks before push and produces reviewable evidence.
 - Post-push-fail fallback can explain and rerun the same admission path.
 - Evidence can be archived for paper claims without inventing a new envelope schema.
+- External-worker mutation is admitted only through the restricted execution gateway; direct raw Git, interpreter evaluation, and shell write paths fail closed or remain explicitly unsupported without a host policy.
