@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-28T22-28-03-951Z-close-efefdda86bbe",
+  "taskId": "TASK-GIT-0023",
+  "action": "close",
+  "actorId": "codex-git-0023-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0023-foreign-generated-residue-admission-deferral-and-ticket-continuity.task.md",
+  "taskSha256": "sha256:719c211eb72998fba135a185d5ae7bf06b066628521b7e71e4cb7b30f8ee9b22",
+  "createdAt": "2026-07-28T22:28:03.951Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0023 --actor codex-git-0023-captain"
+}

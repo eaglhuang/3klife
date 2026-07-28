@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0023
 title: Foreign generated residue admission deferral and ticket continuity
-status: planned
+status: done
 owner: unassigned
 priority: P1
 milestone: G15
@@ -51,14 +51,18 @@ scopePaths:
   - "packages/cli/src/commands/tasks/claim-orchestrator.ts"
   - "packages/cli/src/commands/git-governance/work-admission-check.ts"
   - "packages/cli/src/commands/taskflow/write-readiness.ts"
+  - "packages/cli/src/commands/hook/pre-commit/failure-envelope.ts"
+  - "packages/cli/src/commands/hook/pre-commit/implementation.ts"
   - "packages/cli/src/commands/next/__tests__/claim-admission.spec.ts"
   - "packages/cli/src/commands/tasks/__tests__/claim-orchestrator.spec.ts"
   - "packages/cli/src/commands/taskflow/__tests__/write-readiness.spec.ts"
   - "tests/cli/foreign-generated-residue-ticket-continuity.test.ts"
+  - "packages/cli/src/commands/hook/__tests__/pre-commit.spec.ts"
 deliverables:
   - "One ForeignGeneratedResidueDisposition deep module that first queries BuildOutputInventory and then classifies a non-member only from verifiable producer/provenance facts, ownership, and base/observed digests."
   - "A deferred disposition records path, producer identity, owner/task attribution when available, base digest, observed digest, and reason in the work-admission ticket evidence; it grants no write, stage, commit, restore, delete, or close-bundle authority over that path."
   - "Claim admission, ticket renewal, governed write-readiness, and taskflow close consume the same disposition result. Unknown, semantic, stale, or unverifiable foreign WIP remains a hard block through the existing admission error route."
+  - "Pre-commit consumes the same disposition result before it emits generated-residue findings, so hook and ticket cannot disagree about a verified deferred foreign artifact."
   - "BuildOutputInventory remains the only authority for runner-output membership and terminal publication disposition. Any inventory member is rejected from the deferred branch and follows GIT-0017/GIT-0022 publication recovery."
   - "The TASK-GIT-0022 dogfood artifact may be deferred with its canonical skill producer proof, allowing a fresh task ticket and close readiness while preserving that artifact for its SKL owner."
 validators:
@@ -90,6 +94,15 @@ nonGoals:
   - "No automatic cleanup or adoption of foreign residue."
   - "No relaxation for unknown source, semantic WIP, or any BuildOutputInventory member."
 createdByCommand: atm plan card create
+completed_at: "2026-07-28T22:28:03.951Z"
+completed_by_agent: "codex-git-0023-captain"
+closedAt: "2026-07-28T22:28:03.951Z"
+closedByActor: "codex-git-0023-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-28T22-28-03-951Z-close-efefdda86bbe"
+lastTransitionAt: "2026-07-28T22:28:03.951Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bf99dd0ffd52f9fe2548526600045041fcf2b679"
 ---
 
 # TASK-GIT-0023 Foreign generated residue admission deferral and ticket continuity
@@ -139,6 +152,8 @@ generated artifacts and recreate the broad registry it was designed to avoid.
   publication/recovery disposition.
 - [ ] Claim admission, renewal, write-readiness, and close observe identical
   deferred/block outcomes from one content-addressed evidence record.
+- [ ] Pre-commit produces the same deferred/block outcome as claim and ticket
+  for the identical artifact fixture; it never defers a staged foreign artifact.
 - [ ] Focused tests, typecheck, and `validate:cli` pass.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-28T21:52:57.443Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"git-boundary-admission/tasks/TASK-GIT-0023-foreign-generated-residue-admission-deferral-and-ticket-continuity.task.md","contentDigest":"sha256:b68c50577cd0f7008ffd4502ac15f4cc7c9ab7df7c8e7d15777dbb3e77ee23b8"} -->
