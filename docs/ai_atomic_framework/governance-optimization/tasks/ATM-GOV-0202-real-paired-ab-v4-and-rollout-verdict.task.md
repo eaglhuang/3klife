@@ -64,7 +64,7 @@ completed_by_agent: "codex-captain-0202"
 closedAt: "2026-07-20T11:30:59.901Z"
 closedByActor: "codex-captain-0202"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-20T11-30-59-901Z-close-aed32c07e235"
+lastTransitionId: "2026-07-20T11-30-59-779Z-close-c4ebfa699144"
 lastTransitionAt: "2026-07-20T11:30:59.901Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "9025fe681ed7afe07e69b69295adff72fe4fb303"

@@ -65,6 +65,7 @@ nonGoals:
   - "Do not weaken historical delivery scope validation."
 completed_at: "2026-06-17T01:46:29.847Z"
 completed_by_agent: "agent-007"
+lastTransitionId: "2026-06-17T01-46-29-768Z-close-5bf738dd81f0"
 delivery_commit: "13eff3bbeed2d4e52fa798b1c005e9b748f5a415"
 ---
 

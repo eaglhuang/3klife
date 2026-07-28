@@ -57,6 +57,7 @@ nonGoals:
   - "Do not change task close semantics"
 completed_at: "2026-06-18T18:28:15.595Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-18T18-28-15-491Z-close-f1678ce26408"
 delivery_commit: "01740270fdb0def5bdb9bb06cf1059f59d733eaf"
 ---
 # TASK-TEAM-0019 Team sandbox attestation and closure contract

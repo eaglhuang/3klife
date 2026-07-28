@@ -87,7 +87,7 @@ completed_by_agent: "cursor-composer-rft0004"
 closedAt: "2026-07-10T01:38:39.415Z"
 closedByActor: "cursor-composer-rft0004"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-10T01-38-39-415Z-close-c1ba5ae10da1"
+lastTransitionId: "2026-07-10T01-38-39-335Z-close-f8c56c429d85"
 lastTransitionAt: "2026-07-10T01:38:39.415Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "d16e18b2657a8234a5395f75ee2e19168ecfb0f8"

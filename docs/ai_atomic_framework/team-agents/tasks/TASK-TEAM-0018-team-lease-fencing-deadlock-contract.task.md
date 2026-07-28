@@ -60,6 +60,7 @@ nonGoals:
   - "Do not replace ATM scope locks or taskDirectionLock"
 completed_at: "2026-06-18T16:50:16.865Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-18T16-50-16-422Z-close-29a4ba95591f"
 delivery_commit: "bff419f43e6a8d620a7d0b6e4022d010e1b64257"
 ---
 # TASK-TEAM-0018 Team lease fencing and deadlock contract

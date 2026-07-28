@@ -41,6 +41,7 @@ outOfScope:
   - "Steward arbitration"
 completed_at: "2026-06-16T12:00:47.085Z"
 completed_by_agent: "codex-captain-continuation"
+lastTransitionId: "2026-06-16T12-00-47-008Z-close-2fb1aedfefda"
 delivery_commit: "803ffc335"
 ---
 

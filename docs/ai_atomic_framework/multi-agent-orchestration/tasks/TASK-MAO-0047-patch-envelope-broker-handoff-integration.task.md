@@ -70,6 +70,7 @@ nonGoals:
   - "Do not create a second broker submission store."
 completed_at: "2026-06-18T04:43:20.080Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-18T04-43-19-741Z-close-1edc9d9c56a8"
 delivery_commit: "a4975ae04"
 ---
 

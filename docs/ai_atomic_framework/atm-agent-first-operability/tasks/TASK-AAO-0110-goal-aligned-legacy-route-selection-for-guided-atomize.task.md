@@ -53,6 +53,7 @@ non_goals:
 notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 create card for ATM routing gap in ATM next leaf selection | blocker: none | risk: helper-leaf preference can hide goal-aligned proposal. 2026-06-19 | required-adjustment: scope repaired because the card requested framework route-engine behavior but only allowed planning files and globally forbade packages/**; narrowed source scope now permits packages/core/src/guidance only and still forbids CLI/release/runtime surfaces, including the active TASK-AAO-0135 broker lane. 2026-06-19 | metadata repair: scopePaths/deliverables are target-repo only; 3KLife files are planningReadOnlyPaths/planningMirrorPaths so taskflow close can compute the dual-repo bundle."
 completed_at: "2026-06-19T01:18:45.068Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-19T01-18-44-435Z-close-b7dc479d9eb6"
 delivery_commit: "fc318d992d17353dd6c714790167f761561a5297"
 ---
 

@@ -57,7 +57,7 @@ completed_by_agent: "cursor-grok-4.5"
 closedAt: "2026-07-13T09:14:51.015Z"
 closedByActor: "cursor-grok-4.5"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-13T09-14-51-015Z-close-196d4154d238"
+lastTransitionId: "2026-07-13T09-14-50-924Z-close-b85c7f839112"
 lastTransitionAt: "2026-07-13T09:14:51.015Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "f69b2a17424b5a844898219b0a0812a2fda06ead"

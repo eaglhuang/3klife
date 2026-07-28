@@ -45,7 +45,7 @@ completed_by_agent: "codex-task-rft-0076"
 closedAt: "2026-07-16T09:00:33.499Z"
 closedByActor: "codex-task-rft-0076"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-16T09-00-33-499Z-close-716763d12109"
+lastTransitionId: "2026-07-16T09-00-33-409Z-close-4a3f4e4617ad"
 lastTransitionAt: "2026-07-16T09:00:33.499Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "ae3c6f8f67ac034db670832421135be8dd29022a"

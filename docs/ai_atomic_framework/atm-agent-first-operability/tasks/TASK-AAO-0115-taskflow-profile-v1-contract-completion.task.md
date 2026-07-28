@@ -79,6 +79,7 @@ non_goals:
 notes: "2026-06-20 | status: done | validation: pass | change: governance close historical delivery 318d40b62 team team-0f0dde907b5a | blocker: none | risk: profile contract drift"
 completed_at: "2026-06-20T02:11:34.622Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-20T02-11-34-561Z-close-19c5c51f1594"
 delivery_commit: "318d40b62"
 ---
 

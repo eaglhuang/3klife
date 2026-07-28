@@ -32,7 +32,7 @@ completed_by_agent: "claude-fable-5"
 closedAt: "2026-07-14T10:22:16.477Z"
 closedByActor: "claude-fable-5"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-14T10-22-16-477Z-close-098b5eb6aeed"
+lastTransitionId: "2026-07-14T10-56-33-600Z-close-debbbe7e1277"
 lastTransitionAt: "2026-07-14T10:22:16.477Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "bea3e88510053e4c8658bdcaf20389ffa1467c5d"

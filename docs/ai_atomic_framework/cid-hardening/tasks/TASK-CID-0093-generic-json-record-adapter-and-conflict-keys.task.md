@@ -40,6 +40,7 @@ nonGoals:
   - "Do not allow concurrent direct writes to JSON files."
 completed_at: "2026-06-18T06:03:04.110Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T06-03-03-561Z-close-6c79bf45554e"
 delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 

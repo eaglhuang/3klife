@@ -5,6 +5,7 @@ title: "Intent registration, lease, heartbeat, and lease bounds"
 status: done
 completed_at: "2026-06-12T13:51:44.605Z"
 completed_by_agent: "001"
+lastTransitionId: "2026-06-12T13-51-44-606Z-close-786551898dd8"
 delivery_commit: "daf47aa840c45cf00bb1564cfbecfaa4fd02774d"
 owner: atm-core
 priority: P1

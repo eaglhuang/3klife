@@ -45,6 +45,7 @@ nonGoals:
   - "Do not change AI-manual-task audit semantics — they remain the safety net."
 completed_at: "2026-06-18T10:33:57.231Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T10-33-57-076Z-close-6a20cbec4f79"
 delivery_commit: "718f2f4913d15d7bab67b4bb54343faff6d0a148"
 ---
 

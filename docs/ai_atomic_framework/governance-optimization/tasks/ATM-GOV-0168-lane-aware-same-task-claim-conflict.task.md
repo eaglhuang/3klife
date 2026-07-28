@@ -81,7 +81,7 @@ completed_by_agent: "cursor-gov-0168"
 closedAt: "2026-07-18T11:11:55.450Z"
 closedByActor: "cursor-gov-0168"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-18T11-11-55-450Z-close-3f4b142b0cf3"
+lastTransitionId: "2026-07-18T11-11-55-032Z-close-d4979a32bfbd"
 lastTransitionAt: "2026-07-18T11:11:55.450Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "4c39901a7"

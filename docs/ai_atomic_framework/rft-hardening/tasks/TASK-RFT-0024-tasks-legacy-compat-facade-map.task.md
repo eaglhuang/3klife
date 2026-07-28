@@ -15,6 +15,7 @@ closed_at: "2026-07-13T18:11:21.047Z"
 closed_by: "Codex-GPT 5.5"
 closedByCommand: atm tasks close
 lastTransitionAt: "2026-07-13T18:11:21.047Z"
+lastTransitionId: "2026-07-13T18-33-45-518Z-repair-closure-65d71cf35b51"
 delivery_commit: "648ea16c0773daf995cafd9e28f66ed1d369dc13"
 target_ledger_status: done
 planning_closeback_status: reconciled-from-target-ledger

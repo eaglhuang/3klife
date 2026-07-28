@@ -10,6 +10,7 @@ started_at: "2026-06-13T07:04:10Z"
 started_by_agent: captain
 completed_at: "2026-06-13T07:14:55Z"
 completed_by_agent: captain
+lastTransitionId: "2026-06-13T07-14-55-171Z-close-3343e039159d"
 delivery_commit: f90944b4c851b7e15cc54f1c3d48cbb8f0cda220
 related_plan: docs/ai_atomic_framework/cid-hardening/atm-tasks-command-atomic-map-refactor-plan.md
 planning_repo: 3KLife

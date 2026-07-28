@@ -63,6 +63,7 @@ non_goals:
 notes: "2026-06-04 | status: open | validation: pending | change: Phase 0 open card for repair-closure protected-state commit context alignment | blocker: none | risk: toolchain context misalignment / protected-state pre-commit false negatives"
 completed_at: "2026-06-18T16:01:23.056Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-18T16-01-22-680Z-close-fee4b39f884f"
 delivery_commit: "437b05f9a"
 ---
 

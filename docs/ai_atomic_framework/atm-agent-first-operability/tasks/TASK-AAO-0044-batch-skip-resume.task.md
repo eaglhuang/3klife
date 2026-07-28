@@ -48,6 +48,7 @@ nonGoals:
   - "Weakening dependency gates"
 completed_at: "2026-06-20T05:55:07.631Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-20T05-55-07-548Z-close-8eb6fa8c8c80"
 delivery_commit: "8c2fa16d3fc655c31d1974112edd767685415eaa"
 ---
 # TASK-AAO-0044 — batch skip / resume

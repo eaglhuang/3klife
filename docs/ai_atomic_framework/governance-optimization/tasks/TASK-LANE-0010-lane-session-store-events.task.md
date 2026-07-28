@@ -44,7 +44,7 @@ completed_by_agent: "codex-lane-0010-takeover"
 closedAt: "2026-07-16T16:50:52.812Z"
 closedByActor: "codex-lane-0010-takeover"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-16T16-50-52-812Z-close-b644ae17d76a"
+lastTransitionId: "2026-07-16T16-50-52-715Z-close-376c28abe57c"
 lastTransitionAt: "2026-07-16T16:50:52.812Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "02b3959e4159bc3a32c494233fc452df8918d808"

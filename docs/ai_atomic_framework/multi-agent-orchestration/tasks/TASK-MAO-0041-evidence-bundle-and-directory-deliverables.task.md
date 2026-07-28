@@ -60,6 +60,7 @@ nonGoals:
   - "Do not make evidence run stage files globally."
 completed_at: "2026-06-17T12:31:20.562Z"
 completed_by_agent: "cursor-composer-2.5"
+lastTransitionId: "2026-06-17T12-31-20-199Z-close-0b20bdb8e1cd"
 delivery_commit: "72f80446fd290d6aac39570edee27fcafca39e49"
 ---
 

@@ -49,6 +49,7 @@ nonGoals:
 completed_at: "2026-06-18T17:03:33.224Z"
 completed_by_agent: "codex-gpt-5.4-mini"
 closed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-18T17-03-32-828Z-close-869f8d3452d8"
 delivery_commit: "08f0ea8e56643b99ee0caafeeda52c288e030e75"
 ---
 # TASK-TEAM-0031 Team runtime mode and adapter contract

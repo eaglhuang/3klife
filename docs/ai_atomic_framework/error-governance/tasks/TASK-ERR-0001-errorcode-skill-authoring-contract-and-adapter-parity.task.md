@@ -49,7 +49,7 @@ completed_by_agent: "codex-error-code-governance"
 closedAt: "2026-07-19T04:04:56.222Z"
 closedByActor: "codex-error-code-governance"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-19T04-04-56-222Z-close-70d7e9237ba3"
+lastTransitionId: "2026-07-19T04-04-56-002Z-close-1c3aa337733f"
 lastTransitionAt: "2026-07-19T04:04:56.222Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "056292af13ed57dc4d27f3f10263917b88797919"

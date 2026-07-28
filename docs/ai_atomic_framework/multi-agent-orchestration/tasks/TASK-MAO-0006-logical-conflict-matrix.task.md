@@ -40,6 +40,7 @@ outOfScope:
   - "Steward merge execution"
 completed_at: "2026-06-15T12:44:07.542Z"
 completed_by_agent: "codex-captain-continuation"
+lastTransitionId: "2026-06-15T12-44-07-402Z-close-259ed8716b67"
 delivery_commit: "e41539cdd4cd7e957b0102602f25808ee2740f7b"
 ---
 

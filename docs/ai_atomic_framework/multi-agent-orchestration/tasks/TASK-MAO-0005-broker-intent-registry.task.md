@@ -41,6 +41,7 @@ outOfScope:
   - "Route CLI commands beyond the data contract needed for registry tests"
 completed_at: "2026-06-15T12:40:04.447Z"
 completed_by_agent: "codex-captain-continuation"
+lastTransitionId: "2026-06-15T12-40-04-292Z-close-70727f84ffbd"
 delivery_commit: "962aa300"
 ---
 

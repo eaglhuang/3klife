@@ -44,6 +44,7 @@ outOfScope:
   - "General-purpose semantic merge"
   - "Humanless resolution of ambiguous conflicts"
 completed_by_agent: "cursor-composer-2.5"
+lastTransitionId: "2026-06-16T15-52-03-915Z-close-26ce002fc218"
 delivery_commit: "240b6b436752876acd58a2fff99940b9aef47c6c"
 ---
 

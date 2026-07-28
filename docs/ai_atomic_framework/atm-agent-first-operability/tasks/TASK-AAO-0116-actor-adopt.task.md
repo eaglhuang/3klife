@@ -59,6 +59,7 @@ non_goals:
 notes: "2026-06-02 | status: in-progress | phase0 planning card; phase1 adds adopt subcommand that atomically writes actor record + runtime default + git local config in one transaction."
 completed_at: "2026-06-18T15:22:17.488Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-18T15-22-17-362Z-close-11490bfe7f62"
 delivery_commit: "3ad6d63ed"
 ---
 

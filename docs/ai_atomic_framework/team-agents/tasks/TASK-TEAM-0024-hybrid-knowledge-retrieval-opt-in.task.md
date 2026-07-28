@@ -79,6 +79,7 @@ dispatch_pattern:
     - "No embedding artifact is committed as canonical knowledge"
 completed_at: "2026-06-17T18:26:42.259Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-17T18-26-42-167Z-close-2c5770d88f86"
 delivery_commit: "85a24878b6a170faef950a96775fcc93122325d0"
 ---
 # TASK-TEAM-0024 — Hybrid knowledge retrieval opt-in

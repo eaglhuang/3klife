@@ -54,6 +54,7 @@ nonGoals:
   - "Do not bypass broker or permission lease enforcement"
 completed_at: "2026-06-20T15:50:06.742Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-20T15-50-06-647Z-close-d5e5bbf1d25d"
 delivery_commit: "86b51db32d9078b3d941d450d617096b2d088961"
 ---
 # TASK-TEAM-0037 Vendor-neutral Team agent provider contract and orchestration kernel

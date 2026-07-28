@@ -45,6 +45,7 @@ nonGoals:
   - "Do not unignore broad release directories just to make staging easier."
 completed_at: "2026-06-14T05:40:31.137Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-14T05-40-30-981Z-close-167a1cbb17bf"
 delivery_commit: "c1a67ecdbc1f460a13e17fd1f9be85d6a8f438c3"
 ---
 

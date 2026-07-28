@@ -68,7 +68,7 @@ completed_by_agent: "cursor-002-plan31-captain"
 closedAt: "2026-07-23T14:22:37.930Z"
 closedByActor: "cursor-002-plan31-captain"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-23T14-22-37-930Z-close-1f583638cfbd"
+lastTransitionId: "2026-07-23T14-22-37-833Z-close-47ea8e75647f"
 lastTransitionAt: "2026-07-23T14:22:37.930Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "35a08fc6b243f6a4a6410211825afddedf9e53c5"

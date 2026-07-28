@@ -94,7 +94,7 @@ completed_by_agent: "codex"
 closedAt: "2026-06-24T12:37:59.430Z"
 closedByActor: "codex"
 closedByCommand: atm tasks reconcile
-lastTransitionId: "2026-06-24T12-37-59-430Z-close-8ec998991b33"
+lastTransitionId: "2026-06-24T12-32-21-026Z-close-409dca1baa42"
 lastTransitionAt: "2026-06-24T12:37:59.430Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "66c6237901815ff1be3124788f4db54a2c595064"

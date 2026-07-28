@@ -37,6 +37,7 @@ nonGoals:
   - "Do not remove tasks close as protected backend surface."
 completed_at: "2026-06-17T12:18:03.190Z"
 completed_by_agent: "cursor-composer-2.5"
+lastTransitionId: "2026-06-17T12-18-02-775Z-close-df3bce6c65a3"
 delivery_commit: "ba96fe2ef"
 ---
 

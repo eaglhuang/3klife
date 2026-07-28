@@ -44,6 +44,7 @@ nonGoals:
   - "Do not serialize unrelated tasks together when the race only concerns the same task bundle."
 completed_at: "2026-06-14T04:02:26.568Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-14T04-02-26-429Z-close-14fa1fb50f75"
 delivery_commit: "240927fcfd58924d84a5d26891b8f130365b043f"
 ---
 

@@ -67,6 +67,7 @@ non_goals:
 notes: "2026-06-19 | status: done | validation: pass | change: governance close historical delivery 04d67737f target b0174a95f | blocker: none"
 completed_at: "2026-06-19T14:27:30.415Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-19T14-27-29-219Z-close-6c065f0b53bf"
 delivery_commit: "04d67737f"
 ---
 

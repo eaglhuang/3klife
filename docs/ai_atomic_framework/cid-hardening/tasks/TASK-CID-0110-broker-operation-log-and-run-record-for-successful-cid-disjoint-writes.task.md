@@ -41,6 +41,7 @@ atomizationImpact:
   mapUpdates:
     - "atm.task-closure-map"
     - "atm.evidence-command-map"
+lastTransitionId: "2026-06-18T15-07-07-813Z-close-0d052d610063"
 delivery_commit: "1f07c32b1c5c271dc9e27d42985a654bd22efc40"
 completed_at: "2026-06-18T15:07:07.944Z"
 completed_by_agent: "cursor-gpt-5.2"

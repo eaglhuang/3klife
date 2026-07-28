@@ -53,6 +53,7 @@ non_goals:
 notes: "2026-06-04 | open | runner sync only after TASK-AAO-0126; no source changes"
 completed_at: "2026-06-18T16:17:57.421Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-18T16-17-56-549Z-close-06f4b18ea498"
 delivery_commit: "005f799b8"
 ---
 

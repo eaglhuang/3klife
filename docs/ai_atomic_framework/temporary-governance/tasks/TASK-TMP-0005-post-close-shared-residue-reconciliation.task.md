@@ -78,7 +78,7 @@ completed_by_agent: "cursor-004-tmp-0005-steward"
 closedAt: "2026-07-28T11:48:49.374Z"
 closedByActor: "cursor-004-tmp-0005-steward"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-28T11-48-49-374Z-close-89ffb01d1c12"
+lastTransitionId: "2026-07-28T11-48-49-273Z-close-da2b2bfa4f21"
 lastTransitionAt: "2026-07-28T11:48:49.374Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "9666c2111e02abdd1660629451e2728161fe2ac4"

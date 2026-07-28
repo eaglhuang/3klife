@@ -39,6 +39,7 @@ nonGoals:
   - "Do not implement cross-repo planning mirror queueing in this card."
 completed_at: "2026-06-18T10:21:28.708Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T10-21-28-374Z-close-d99f1d6acd8d"
 delivery_commit: "4a02d28882d6e33278eae77263c30340af79d0b8"
 ---
 

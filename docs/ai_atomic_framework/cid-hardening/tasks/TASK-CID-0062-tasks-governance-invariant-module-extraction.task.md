@@ -62,6 +62,7 @@ nonGoals:
   - "Do not remove the hard gate introduced by TASK-CID-0061."
 completed_at: "2026-06-13T16:16:12.089Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T16-16-11-975Z-close-d94c31294353"
 delivery_commit: "9f22c9fe"
 ---
 

@@ -38,7 +38,7 @@ started_at: 2026-05-19T23:18:55+08:00
 started_by_agent: codex-gpt-5.5
 completed_at: 2026-05-19T23:55:38.2492514+08:00
 completed_by_agent: codex-gpt-5.5
-lastTransitionId: 2026-05-21T10-29-44-306Z-migrate-legacy-ledger-f48e78fbae3b
+lastTransitionId: "2026-07-18T04-41-35-606Z-close-89d1d44951b3"
 lastTransitionAt: 2026-05-21T10:29:44.306Z
 ledgerContractVersion: task-ledger/v1
 ledgerBaselineKind: legacy-transition-backfill

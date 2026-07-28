@@ -61,7 +61,7 @@ delivery_commit: "c13a564cd"
 closedAt: "2026-06-18T10:24:41.371Z"
 closedByActor: "cursor-gpt-5.2"
 closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
-lastTransitionId: "2026-06-18T10-24-41-371Z-close-91c7764e6e9a"
+lastTransitionId: "2026-06-18T10-24-40-425Z-close-96a3a5c69882"
 lastTransitionAt: "2026-06-18T10:24:41.371Z"
 ledgerContractVersion: "task-ledger/v1"
 ---

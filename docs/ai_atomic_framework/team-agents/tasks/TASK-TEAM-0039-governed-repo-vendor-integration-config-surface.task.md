@@ -49,6 +49,7 @@ nonGoals:
   - "Do not require one global provider choice for every role"
 completed_at: "2026-06-20T15:55:14.486Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-20T15-55-14-405Z-close-e30e9a3da263"
 delivery_commit: "86b51db32d9078b3d941d450d617096b2d088961"
 ---
 # TASK-TEAM-0039 Governed-repo vendor integration config surface

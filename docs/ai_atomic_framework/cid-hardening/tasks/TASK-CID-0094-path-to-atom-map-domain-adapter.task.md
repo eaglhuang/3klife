@@ -48,6 +48,7 @@ nonGoals:
   - "Do not make path-to-atom-map.json the only supported domain adapter."
 completed_at: "2026-06-18T06:20:35.912Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T06-20-35-267Z-close-85f92dd44ecf"
 delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 

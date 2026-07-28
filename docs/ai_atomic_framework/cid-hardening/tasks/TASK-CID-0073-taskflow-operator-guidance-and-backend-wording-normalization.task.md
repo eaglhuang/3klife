@@ -60,6 +60,7 @@ nonGoals:
   - "Do not keep `tasks new` or `tasks import` worded as co-equal operator defaults when taskflow open exists."
 completed_at: "2026-06-13T13:31:42.133Z"
 completed_by_agent: "004"
+lastTransitionId: "2026-06-13T13-31-42-055Z-close-fad8b50cd900"
 delivery_commit: "235fd821"
 ---
 

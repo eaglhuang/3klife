@@ -48,6 +48,7 @@ nonGoals:
   - "Do not change task ledger / claim / session per-actor semantics — those are already actor-isolated."
 completed_at: "2026-06-18T11:16:43.491Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T11-16-43-109Z-close-351243e31e54"
 delivery_commit: "fbf020be1486c424aa7a9c5ffaafb5e3c645372d"
 ---
 

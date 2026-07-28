@@ -60,6 +60,7 @@ nonGoals:
   - "Do not make dry-run mutate the worktree."
 completed_at: "2026-06-17T06:02:48.123Z"
 completed_by_agent: "cursor-composer-2.5"
+lastTransitionId: "2026-06-17T06-02-47-989Z-close-e5c5c4c9dfd0"
 delivery_commit: "cf1259d0d5ad3c910aefb97b1ba8900c2b61167b"
 ---
 

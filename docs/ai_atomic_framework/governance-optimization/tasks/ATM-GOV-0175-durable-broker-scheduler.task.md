@@ -63,7 +63,7 @@ completed_by_agent: "codex-gov-auto-batch"
 closedAt: "2026-07-18T18:10:38.909Z"
 closedByActor: "codex-gov-auto-batch"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-18T18-10-38-909Z-close-0437d2712278"
+lastTransitionId: "2026-07-18T18-10-38-779Z-close-c081b269fcef"
 lastTransitionAt: "2026-07-18T18:10:38.909Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "23be4213da9e998c45493cbb3c718aaa4545074c"

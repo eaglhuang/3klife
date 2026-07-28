@@ -46,6 +46,7 @@ nonGoals:
   - "Do not allow `.atm/runtime/**` hand edits"
 completed_at: "2026-06-14T15:17:40.575Z"
 completed_by_agent: "codex-captain"
+lastTransitionId: "2026-06-14T15-17-40-495Z-close-4b90ad8202bc"
 delivery_commit: "3acba6bda4a846a019127d8f62a613771a512622"
 ---
 # TASK-TEAM-0013 — file.write scope validator

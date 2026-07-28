@@ -46,7 +46,7 @@ completed_by_agent: "coordinator"
 closedAt: "2026-07-11T02:26:23.947Z"
 closedByActor: "coordinator"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-11T02-26-23-947Z-close-7fe8b8d06afb"
+lastTransitionId: "2026-07-11T02-26-23-876Z-close-26e3bc62461d"
 lastTransitionAt: "2026-07-11T02:26:23.947Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "072cadf4"

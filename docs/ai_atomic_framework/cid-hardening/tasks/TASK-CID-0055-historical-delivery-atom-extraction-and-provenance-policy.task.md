@@ -43,6 +43,7 @@ nonGoals:
   - "Do not let a broad mixed commit silently become trusted task delivery."
 completed_at: "2026-06-13T15:13:28.148Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T15-13-28-040Z-close-ab6678b715b3"
 delivery_commit: "01d524029e94169dfcce1fbec4e4f07e44145805"
 ---
 

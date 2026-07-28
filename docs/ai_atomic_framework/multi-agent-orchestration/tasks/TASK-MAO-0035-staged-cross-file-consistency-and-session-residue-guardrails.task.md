@@ -51,6 +51,7 @@ nonGoals:
   - "Do not solve the entire broker/team-lane integration backlog in this card."
 completed_at: "2026-06-16T09:23:16.490Z"
 completed_by_agent: "antigravity-gemini-3.5-flash"
+lastTransitionId: "2026-06-16T09-23-16-307Z-close-cce05ff298fa"
 delivery_commit: "e05afdd223c9b687e939c82512c6feaf991a9537"
 ---
 

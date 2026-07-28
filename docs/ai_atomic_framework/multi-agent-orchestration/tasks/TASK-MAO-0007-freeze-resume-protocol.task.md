@@ -42,6 +42,7 @@ outOfScope:
   - "Automatic agent interruption during LLM inference"
 completed_at: "2026-06-16T06:42:26.776Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-16T06-42-26-684Z-close-43652a62f7da"
 delivery_commit: "803ffc335"
 ---
 

@@ -71,6 +71,7 @@ contextMap:
       description: "reuse existing closeout-only claim and historical-delivery semantics instead of inventing a new lifecycle branch"
 completed_at: "2026-06-13T14:44:38.729Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T14-44-38-641Z-close-b1fef334d759"
 delivery_commit: "8bbeac2c"
 ---
 

@@ -91,6 +91,7 @@ contextMap:
       reason: "dry-run stage-file contract regression"
 completed_at: "2026-06-24T09:02:51.066Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-24T12-32-21-026Z-close-409dca1baa42"
 delivery_commit: "30301f1427f102709697ccfcd201a483ef1314d3"
 ---
 

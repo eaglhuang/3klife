@@ -45,6 +45,7 @@ nonGoals:
   - "Do not encode every historical case into SKILL.md; use references/casebook.md for growth."
 completed_at: "2026-06-13T10:14:18.224Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T10-14-18-143Z-close-2e7b325e2c5d"
 delivery_commit: "c7060c8aabdd6da55bd5bd8a035b92751f7c75d3"
 ---
 

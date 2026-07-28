@@ -1,0 +1,1066 @@
+[
+  {
+    "taskId": "TASK-AAO-0002",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0002-cli-spec-runner-ssot-drift-guard.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-12-04-060Z-close-ecd3ee2c53f6",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0002.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-12-04-060Z-close-ecd3ee2c53f6)."
+  },
+  {
+    "taskId": "TASK-AAO-0014",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0014-state-aware-batch-playbook.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-12-15-058Z-close-60dd1f936c51",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0014.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-12-15-058Z-close-60dd1f936c51)."
+  },
+  {
+    "taskId": "TASK-AAO-0015",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0015-evidence-validator-catalog.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-08-30-131Z-close-c716be756629",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0015.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-08-30-131Z-close-c716be756629)."
+  },
+  {
+    "taskId": "TASK-AAO-0016",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0016-evidence-run-recent-run.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-08-30-118Z-close-2cd776ba2e84",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0016.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-08-30-118Z-close-2cd776ba2e84)."
+  },
+  {
+    "taskId": "TASK-AAO-0023",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0023-map-spec-schema-validator.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-08-32-259Z-close-ee7489289851",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0023.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-08-32-259Z-close-ee7489289851)."
+  },
+  {
+    "taskId": "TASK-AAO-0028",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0028-batch-playbook-docs.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-08-32-336Z-close-e6dd67211c34",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0028.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-08-32-336Z-close-e6dd67211c34)."
+  },
+  {
+    "taskId": "TASK-AAO-0034",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0034-next-selector-routing-memory.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-08-32-257Z-close-d08525d29315",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0034.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-08-32-257Z-close-d08525d29315)."
+  },
+  {
+    "taskId": "TASK-AAO-0038",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0038-task-import-contract-fidelity.task.md",
+    "oldId": null,
+    "newId": "2026-06-20T12-22-00-321Z-close-0ce5b2e59ed6",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0038.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-20T12-22-00-321Z-close-0ce5b2e59ed6)."
+  },
+  {
+    "taskId": "TASK-AAO-0039",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md",
+    "oldId": null,
+    "newId": "2026-06-20T12-22-14-698Z-close-85a8d7e0571f",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0039.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-20T12-22-14-698Z-close-85a8d7e0571f)."
+  },
+  {
+    "taskId": "TASK-AAO-0047",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0047-p0-throughput-acceleration-bundle.task.md",
+    "oldId": null,
+    "newId": "2026-06-29T05-08-32-337Z-close-eab0b6f5c7a9",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0047.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-29T05-08-32-337Z-close-eab0b6f5c7a9)."
+  },
+  {
+    "taskId": "TASK-AAO-0051",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0051-mirror-sync-commit-wrapper-support.task.md",
+    "oldId": null,
+    "newId": "2026-06-19T00-54-46-079Z-close-375b51397ec2",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0051.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-19T00-54-46-079Z-close-375b51397ec2)."
+  },
+  {
+    "taskId": "TASK-AAO-0063",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0063-evidence-required-command-quoting-validator-auto-link.task.md",
+    "oldId": null,
+    "newId": "2026-05-28T16-44-20-152Z-close-833ab35feedb",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0063.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-05-28T16-44-20-152Z-close-833ab35feedb)."
+  },
+  {
+    "taskId": "TASK-AAO-0106",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0106-path-to-atom-map-owner-shards.task.md",
+    "oldId": null,
+    "newId": "2026-06-09T10-14-47-824Z-close-bfcbdb75d96f",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0106.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-09T10-14-47-824Z-close-bfcbdb75d96f)."
+  },
+  {
+    "taskId": "TASK-AAO-0123",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0123-protect-active-claims-from-task-import-refresh-overwrite.task.md",
+    "oldId": null,
+    "newId": "2026-06-19T00-50-45-554Z-close-1d8c4b196681",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0123.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-19T00-50-45-554Z-close-1d8c4b196681)."
+  },
+  {
+    "taskId": "TASK-AAO-0126",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0126-allow-release-runner-outputs-as-task-deliverables.task.md",
+    "oldId": null,
+    "newId": "2026-06-18T16-26-04-934Z-close-a0ee35348fce",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0126.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-18T16-26-04-934Z-close-a0ee35348fce)."
+  },
+  {
+    "taskId": "TASK-AAO-0131",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0131-route-hygiene-follow-up-planning-artifact-synthetic-alias-scope-guard.task.md",
+    "oldId": null,
+    "newId": "2026-06-06T06-00-57-430Z-close-268df7643adc",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0131.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-06T06-00-57-430Z-close-268df7643adc)."
+  },
+  {
+    "taskId": "TASK-AAO-0138C",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138C-residue-classification-and-finalization-operator-flow.task.md",
+    "oldId": null,
+    "newId": "2026-06-19T00-56-18-669Z-close-820077394c0c",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0138C.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-19T00-56-18-669Z-close-820077394c0c)."
+  },
+  {
+    "taskId": "TASK-AAO-0139",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0139-task-id-casing-governance.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T06-56-49-912Z-close-b2f1e47f33b8",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0139.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T06-56-49-912Z-close-b2f1e47f33b8)."
+  },
+  {
+    "taskId": "TASK-AAO-0191",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0191-defer-foreign-staged-ordinary-unowned.task.md",
+    "oldId": null,
+    "newId": "2026-07-13T12-06-28-655Z-close-521bd786df53",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0191.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-13T12-06-28-655Z-close-521bd786df53)."
+  },
+  {
+    "taskId": "TASK-AAO-0194",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0194-close-deferred-governance-dirty-snapshot-enoent.task.md",
+    "oldId": null,
+    "newId": "2026-07-13T12-30-03-251Z-close-95027057f7c4",
+    "targetEvidencePath": ".atm/history/tasks/TASK-AAO-0194.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-13T12-30-03-251Z-close-95027057f7c4)."
+  },
+  {
+    "taskId": "TASK-CID-0001",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0001-cid-hardening-control-plane-bootstrap.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T16-23-01-387Z-import-c7ec70a37526",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0001.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T16-23-01-387Z-import-c7ec70a37526)."
+  },
+  {
+    "taskId": "TASK-CID-0002",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0002-cid-semantics-and-fingerprint-profile-schema.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T16-27-48-825Z-close-0bb1d2ec63ae",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0002.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T16-27-48-825Z-close-0bb1d2ec63ae)."
+  },
+  {
+    "taskId": "TASK-CID-0003",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0003-validate-semantic-fingerprint-determinism.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T16-33-56-431Z-close-c4e2156098ba",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0003.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T16-33-56-431Z-close-c4e2156098ba)."
+  },
+  {
+    "taskId": "TASK-CID-0013",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0013-cid-first-advisor-team-next-preflight-integration.task.md",
+    "oldId": null,
+    "newId": "2026-06-06T13-48-42-247Z-close-0d872e676812",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0013.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-06T13-48-42-247Z-close-0d872e676812)."
+  },
+  {
+    "taskId": "TASK-CID-0015",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0015-broker-contract-schemas-and-types.task.md",
+    "oldId": null,
+    "newId": "2026-06-07T03-26-35-727Z-close-a3913564af9b",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0015.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-07T03-26-35-727Z-close-a3913564af9b)."
+  },
+  {
+    "taskId": "TASK-CID-0016",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0016-local-write-broker-registry-and-cli.task.md",
+    "oldId": null,
+    "newId": "2026-06-07T03-59-47-571Z-close-62b672d22a2d",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0016.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-07T03-59-47-571Z-close-62b672d22a2d)."
+  },
+  {
+    "taskId": "TASK-CID-0017",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0017-cid-advisor-broker-decision-model.task.md",
+    "oldId": null,
+    "newId": "2026-06-07T06-31-39-026Z-close-17947b883c2b",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0017.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-07T06-31-39-026Z-close-17947b883c2b)."
+  },
+  {
+    "taskId": "TASK-CID-0018",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0018-patch-proposal-capsule-runtime.task.md",
+    "oldId": null,
+    "newId": "2026-06-08T09-50-11-471Z-close-87fd05b401c1",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0018.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-08T09-50-11-471Z-close-87fd05b401c1)."
+  },
+  {
+    "taskId": "TASK-CID-0019",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0019-deterministic-composer-and-merge-plan.task.md",
+    "oldId": null,
+    "newId": "2026-06-08T15-57-19-559Z-close-1e1359642ea3",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0019.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-08T15-57-19-559Z-close-1e1359642ea3)."
+  },
+  {
+    "taskId": "TASK-CID-0020",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0020-neutral-write-steward-apply-flow.task.md",
+    "oldId": null,
+    "newId": "2026-06-08T16-20-00-468Z-close-851d250b5be0",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0020.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-08T16-20-00-468Z-close-851d250b5be0)."
+  },
+  {
+    "taskId": "TASK-CID-0021",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0021-team-agents-brokered-write-runtime-integration.task.md",
+    "oldId": null,
+    "newId": "2026-06-08T16-23-25-596Z-close-ca4bba1ba739",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0021.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-08T16-23-25-596Z-close-ca4bba1ba739)."
+  },
+  {
+    "taskId": "TASK-CID-0022",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0022-next-claim-and-closeout-broker-integration.task.md",
+    "oldId": null,
+    "newId": "2026-06-08T12-54-48-162Z-close-21a33aaa6f4c",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0022.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-08T12-54-48-162Z-close-21a33aaa6f4c)."
+  },
+  {
+    "taskId": "TASK-CID-0023",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0023-end-to-end-brokered-write-acceptance-harness.task.md",
+    "oldId": null,
+    "newId": "2026-06-09T01-13-14-275Z-close-9b2cff9570e9",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0023.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-09T01-13-14-275Z-close-9b2cff9570e9)."
+  },
+  {
+    "taskId": "TASK-CID-0024",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0024-same-file-parallel-claim-shared-delivery-closeout.task.md",
+    "oldId": null,
+    "newId": "2026-06-10T17-55-06-873Z-close-cf83df481aaf",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0024.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-10T17-55-06-873Z-close-cf83df481aaf)."
+  },
+  {
+    "taskId": "TASK-CID-0025",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0025-broker-owned-write-actor-runtime-boundary.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T16-38-46-717Z-close-06076dd84e4a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0025.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T16-38-46-717Z-close-06076dd84e4a)."
+  },
+  {
+    "taskId": "TASK-CID-0028",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0028-enclosing-unit-and-virtual-atom-sdk-contract.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T17-33-51-492Z-close-37d0978df211",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0028.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T17-33-51-492Z-close-37d0978df211)."
+  },
+  {
+    "taskId": "TASK-CID-0029",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0029-layer1-syntactic-enclosure-broker-refinement.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T17-34-05-743Z-close-fea95e89cc48",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0029.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T17-34-05-743Z-close-fea95e89cc48)."
+  },
+  {
+    "taskId": "TASK-CID-0031",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0031-layer2-decomposition-trigger-and-threshold-policy.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T17-34-16-246Z-close-f76a95a51014",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0031.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T17-34-16-246Z-close-f76a95a51014)."
+  },
+  {
+    "taskId": "TASK-CID-0032",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0032-broker-augmented-decision-rule-and-read-set-contract.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T14-20-04-461Z-close-2b645d3f37dd",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0032.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T14-20-04-461Z-close-2b645d3f37dd)."
+  },
+  {
+    "taskId": "TASK-CID-0033",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0033-adapter-manifest-symbol-canonicalization-contract.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T17-25-12-584Z-close-e62bf3b4eff8",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0033.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T17-25-12-584Z-close-e62bf3b4eff8)."
+  },
+  {
+    "taskId": "TASK-CID-0034",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0034-mid-execution-registration-and-virtual-atom-in-use-registry.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T15-05-38-595Z-close-9bfc9725ad3a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0034.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T15-05-38-595Z-close-9bfc9725ad3a)."
+  },
+  {
+    "taskId": "TASK-CID-0035",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0035-agr-aware-neutral-writer-and-steward-orchestration.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T17-32-20-836Z-close-387653bb8b12",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0035.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T17-32-20-836Z-close-387653bb8b12)."
+  },
+  {
+    "taskId": "TASK-CID-0036",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0036-agr-integration-for-tasks-parallel-next-claim-and-closeout.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T14-51-27-910Z-close-e5078e41b53d",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0036.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T14-51-27-910Z-close-e5078e41b53d)."
+  },
+  {
+    "taskId": "TASK-CID-0037",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0037-validator-benchmark-scenarios-and-catch-rate-harness.task.md",
+    "oldId": null,
+    "newId": "2026-06-11T17-32-20-833Z-close-0c2874e826b6",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0037.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-11T17-32-20-833Z-close-0c2874e826b6)."
+  },
+  {
+    "taskId": "TASK-CID-0041",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0041-conflict-set-model-and-arbitration-verdicts.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T15-47-58-014Z-close-f03a3c3b4060",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0041.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T15-47-58-014Z-close-f03a3c3b4060)."
+  },
+  {
+    "taskId": "TASK-CID-0042",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0042-freeze-patch-envelope-checkpoint-and-filesystem-wip-snapshot.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T08-30-18-487Z-close-a7eae4c781d1",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0042.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T08-30-18-487Z-close-a7eae4c781d1)."
+  },
+  {
+    "taskId": "TASK-CID-0043",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0043-neutral-writer-steward-takeover-isolated-merge-and-validator-gated-apply.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T01-40-05-198Z-close-c70df85aefef",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0043.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T01-40-05-198Z-close-c70df85aefef)."
+  },
+  {
+    "taskId": "TASK-CID-0044",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0044-recovery-orphan-cleanup-manual-override-audit-and-snapshot-recovery.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T01-41-55-690Z-close-860a82dbbd0f",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0044.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T01-41-55-690Z-close-860a82dbbd0f)."
+  },
+  {
+    "taskId": "TASK-CID-0045",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0045-conflict-benchmark-validator-catch-rate-and-latency-reporting.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T01-46-08-401Z-close-340b4285c9a2",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0045.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T01-46-08-401Z-close-340b4285c9a2)."
+  },
+  {
+    "taskId": "TASK-CID-0046",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0046-dependency-closeout-integrity-gate-for-next-and-claim.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T12-30-00-562Z-close-f93e92b3da63",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0046.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T12-30-00-562Z-close-f93e92b3da63)."
+  },
+  {
+    "taskId": "TASK-CID-0048",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0048-task-close-state-machine-and-closure-metadata-hard-gate.task.md",
+    "oldId": null,
+    "newId": "2026-06-19T07-08-17-740Z-repair-closure-48b51d808de0",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0048.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-19T07-08-17-740Z-repair-closure-48b51d808de0)."
+  },
+  {
+    "taskId": "TASK-CID-0049",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0049-historical-delivery-scope-and-commit-provenance-hard-gate.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T11-41-38-786Z-close-9830fd1bd60a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0049.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T11-41-38-786Z-close-9830fd1bd60a)."
+  },
+  {
+    "taskId": "TASK-CID-0050",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0050-tasks-command-atomic-map-and-invariant-inventory.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T12-14-25-954Z-import-97fcea82fb5f",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0050.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T12-14-25-954Z-import-97fcea82fb5f)."
+  },
+  {
+    "taskId": "TASK-CID-0051",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0051-tasks-invariant-characterization-regression-pack.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T13-17-28-581Z-close-894eb4061830",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0051.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T13-17-28-581Z-close-894eb4061830)."
+  },
+  {
+    "taskId": "TASK-CID-0052",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0052-closeout-provenance-atom-extraction.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T09-23-32-208Z-close-4398771ba389",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0052.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T09-23-32-208Z-close-4398771ba389)."
+  },
+  {
+    "taskId": "TASK-CID-0060",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0060-source-done-vs-governed-done-guidance-and-hard-gate.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T12-01-34-365Z-close-f3b07949ec62",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0060.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T12-01-34-365Z-close-f3b07949ec62)."
+  },
+  {
+    "taskId": "TASK-CID-0061",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0061-tasks-command-surface-invariant-hard-gate.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T14-32-50-198Z-close-41711ebd387d",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0061.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T14-32-50-198Z-close-41711ebd387d)."
+  },
+  {
+    "taskId": "TASK-CID-0063",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0063-taskflow-open-close-default-lane-hardening-and-reconcile-residue-queue-head-demotion.task.md",
+    "oldId": null,
+    "newId": "2026-06-12T16-28-13-882Z-close-7c32c0107f96",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0063.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-12T16-28-13-882Z-close-7c32c0107f96)."
+  },
+  {
+    "taskId": "TASK-CID-0065",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0065-emergency-maintenance-permission-lease-and-backend-surface-gate.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T05-32-48-515Z-close-1720b049065b",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0065.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T05-32-48-515Z-close-1720b049065b)."
+  },
+  {
+    "taskId": "TASK-CID-0069",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0069-taskflow-close-normal-lane-end-to-end-dogfood-hardening.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T07-36-59-132Z-close-c18386cd75c1",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0069.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T07-36-59-132Z-close-c18386cd75c1)."
+  },
+  {
+    "taskId": "TASK-CID-0070",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0070-emergency-backend-lease-audit-and-use-record-hardening.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T08-15-54-916Z-close-31c4d7fc1ded",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0070.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T08-15-54-916Z-close-31c4d7fc1ded)."
+  },
+  {
+    "taskId": "TASK-CID-0074",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0074-taskflow-close-profile-root-fallback-when-source-plan-path-is-missing.task.md",
+    "oldId": null,
+    "newId": "2026-06-13T12-26-00-601Z-close-f9d36681f438",
+    "targetEvidencePath": ".atm/history/tasks/TASK-CID-0074.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-13T12-26-00-601Z-close-f9d36681f438)."
+  },
+  {
+    "taskId": "TASK-ERR-0003",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0003-atm-3-0-broker-and-recovery-errorcode-contracts.task.md",
+    "oldId": null,
+    "newId": "2026-07-21T09-53-29-930Z-repair-closure-7860ba35f60f",
+    "targetEvidencePath": ".atm/history/tasks/TASK-ERR-0003.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-21T09-53-29-930Z-repair-closure-7860ba35f60f)."
+  },
+  {
+    "taskId": "TASK-GIT-0001",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0001-pre-push-admission-architecture-contract.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T04-34-20-935Z-close-9ccfec9900e8",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0001.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T04-34-20-935Z-close-9ccfec9900e8)."
+  },
+  {
+    "taskId": "TASK-GIT-0002",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0002-git-diff-to-mutation-request-converter.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T04-46-06-444Z-close-6454eda85a3a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0002.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T04-46-06-444Z-close-6454eda85a3a)."
+  },
+  {
+    "taskId": "TASK-GIT-0003",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0003-format-adapter-remote-diff-bridge.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T04-54-49-595Z-close-6424169e9351",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0003.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T04-54-49-595Z-close-6424169e9351)."
+  },
+  {
+    "taskId": "TASK-GIT-0004",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0004-git-admission-cli.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T05-06-09-031Z-close-43dc10a83633",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0004.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T05-06-09-031Z-close-43dc10a83633)."
+  },
+  {
+    "taskId": "TASK-GIT-0005",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0005-pre-push-hook-installer.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T05-20-33-734Z-close-b75fbc03fdf0",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0005.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T05-20-33-734Z-close-b75fbc03fdf0)."
+  },
+  {
+    "taskId": "TASK-GIT-0006",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0006-git-boundary-evidence-envelope.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T05-33-49-488Z-close-a77ad0e4c8e3",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0006.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T05-33-49-488Z-close-a77ad0e4c8e3)."
+  },
+  {
+    "taskId": "TASK-GIT-0007",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0007-neutral-steward-git-apply-dry-run.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T06-05-59-896Z-close-1f357c18477a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0007.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T06-05-59-896Z-close-1f357c18477a)."
+  },
+  {
+    "taskId": "TASK-GIT-0008",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0008-structured-file-fixture-suite.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T06-18-50-055Z-close-d45126b0bab5",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0008.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T06-18-50-055Z-close-d45126b0bab5)."
+  },
+  {
+    "taskId": "TASK-GIT-0009",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0009-post-push-fail-fallback.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T06-29-19-689Z-close-fdb7f10b9348",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0009.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T06-29-19-689Z-close-fdb7f10b9348)."
+  },
+  {
+    "taskId": "TASK-GIT-0010",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0010-operator-policy-and-bypass-audit.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T06-46-31-992Z-close-b47fb829374e",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0010.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T06-46-31-992Z-close-b47fb829374e)."
+  },
+  {
+    "taskId": "TASK-GIT-0011",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0011-adopter-docs-and-runbook.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T06-59-27-102Z-close-09be45579a48",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0011.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T06-59-27-102Z-close-09be45579a48)."
+  },
+  {
+    "taskId": "TASK-GIT-0012",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md",
+    "oldId": null,
+    "newId": "2026-06-23T07-26-40-166Z-close-3d8dc8924453",
+    "targetEvidencePath": ".atm/history/tasks/TASK-GIT-0012.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-23T07-26-40-166Z-close-3d8dc8924453)."
+  },
+  {
+    "taskId": "ATM-GOV-0124",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0124-charter-authority-bundle.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T13-17-33-994Z-lock-cleanup-fcfdced54d06",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0124.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T13-17-33-994Z-lock-cleanup-fcfdced54d06)."
+  },
+  {
+    "taskId": "ATM-GOV-0125",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0125-captain-quick-wins.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T13-36-53-920Z-lock-cleanup-e54b57ab1eb4",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0125.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T13-36-53-920Z-lock-cleanup-e54b57ab1eb4)."
+  },
+  {
+    "taskId": "ATM-GOV-0126",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0126-paired-cost-baseline.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T15-55-03-490Z-lock-cleanup-b92745fd290d",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0126.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T15-55-03-490Z-lock-cleanup-b92745fd290d)."
+  },
+  {
+    "taskId": "ATM-GOV-0127",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0127-release-steward-safety.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T13-45-47-893Z-lock-cleanup-b7e8922edb27",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0127.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T13-45-47-893Z-lock-cleanup-b7e8922edb27)."
+  },
+  {
+    "taskId": "ATM-GOV-0128",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0128-multi-captain-index-isolation.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T14-00-12-574Z-lock-cleanup-f4ff32170567",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0128.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T14-00-12-574Z-lock-cleanup-f4ff32170567)."
+  },
+  {
+    "taskId": "ATM-GOV-0129",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0129-seal-and-commit.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T14-33-17-743Z-lock-cleanup-62de0f2ee484",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0129.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T14-33-17-743Z-lock-cleanup-62de0f2ee484)."
+  },
+  {
+    "taskId": "ATM-GOV-0130",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0130-close-crash-residue-recovery.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T14-40-21-443Z-lock-cleanup-a82da73edb29",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0130.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T14-40-21-443Z-lock-cleanup-a82da73edb29)."
+  },
+  {
+    "taskId": "ATM-GOV-0131",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0131-validation-receipt-reuse.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T14-53-35-516Z-lock-cleanup-0dc7a48773f6",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0131.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T14-53-35-516Z-lock-cleanup-0dc7a48773f6)."
+  },
+  {
+    "taskId": "ATM-GOV-0132",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0132-framework-taskflow-opener.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T14-08-45-117Z-lock-cleanup-7ba89af01b1d",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0132.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T14-08-45-117Z-lock-cleanup-7ba89af01b1d)."
+  },
+  {
+    "taskId": "ATM-GOV-0133",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0133-planning-source-seal.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T14-17-02-845Z-lock-cleanup-c5fdfca24cab",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0133.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T14-17-02-845Z-lock-cleanup-c5fdfca24cab)."
+  },
+  {
+    "taskId": "ATM-GOV-0134",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0134-governance-hotfile-sharding.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T15-10-00-222Z-lock-cleanup-76d62c7af8f4",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0134.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T15-10-00-222Z-lock-cleanup-76d62c7af8f4)."
+  },
+  {
+    "taskId": "ATM-GOV-0135",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0135-shadow-first-team-scheduler.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T16-06-02-344Z-lock-cleanup-fadbeb69086c",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0135.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T16-06-02-344Z-lock-cleanup-fadbeb69086c)."
+  },
+  {
+    "taskId": "ATM-GOV-0136",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0136-contribution-composer.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T16-13-47-607Z-lock-cleanup-e473cf6e2726",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0136.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T16-13-47-607Z-lock-cleanup-e473cf6e2726)."
+  },
+  {
+    "taskId": "ATM-GOV-0137",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0137-team-admission-projection.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T16-20-25-266Z-lock-cleanup-73656d5555b1",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0137.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T16-20-25-266Z-lock-cleanup-73656d5555b1)."
+  },
+  {
+    "taskId": "ATM-GOV-0138",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0138-broker-registry-transaction.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T16-26-38-817Z-lock-cleanup-ce44ca41ec4b",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0138.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T16-26-38-817Z-lock-cleanup-ce44ca41ec4b)."
+  },
+  {
+    "taskId": "ATM-GOV-0139",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0139-obligation-map-canary.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T15-26-02-546Z-lock-cleanup-11d6722ef7e0",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0139.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T15-26-02-546Z-lock-cleanup-11d6722ef7e0)."
+  },
+  {
+    "taskId": "ATM-GOV-0140",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0140-team-efficiency-controller.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T16-34-05-125Z-lock-cleanup-e7898a117095",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0140.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T16-34-05-125Z-lock-cleanup-e7898a117095)."
+  },
+  {
+    "taskId": "ATM-GOV-0141",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0141-batch-mode-integration.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T16-41-24-663Z-lock-cleanup-4bd04ea4129c",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0141.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T16-41-24-663Z-lock-cleanup-4bd04ea4129c)."
+  },
+  {
+    "taskId": "ATM-GOV-0142",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0142-release-publication-steward.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T15-38-25-757Z-lock-cleanup-5a83aca8fb97",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0142.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T15-38-25-757Z-lock-cleanup-5a83aca8fb97)."
+  },
+  {
+    "taskId": "ATM-GOV-0143",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0143-provider-billing-cost-accounting.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T15-47-27-830Z-lock-cleanup-c73d5818c944",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0143.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T15-47-27-830Z-lock-cleanup-c73d5818c944)."
+  },
+  {
+    "taskId": "ATM-GOV-0144",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0144-official-pricing-catalog-refresh.task.md",
+    "oldId": null,
+    "newId": "2026-07-14T16-52-46-114Z-lock-cleanup-187c7676f7b0",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0144.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-14T16-52-46-114Z-lock-cleanup-187c7676f7b0)."
+  },
+  {
+    "taskId": "ATM-GOV-0234",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0234-real-multiprocess-parallel-replay-and-telemetry-proof.task.md",
+    "oldId": null,
+    "newId": "2026-07-21T09-54-33-800Z-repair-closure-92e2bdafbf52",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0234.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-21T09-54-33-800Z-repair-closure-92e2bdafbf52)."
+  },
+  {
+    "taskId": "ATM-GOV-0235",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0235-atm-3-0-final-closure-and-circuit-breaker-verdict.task.md",
+    "oldId": null,
+    "newId": "2026-07-21T09-54-51-010Z-repair-closure-a2b279425696",
+    "targetEvidencePath": ".atm/history/tasks/ATM-GOV-0235.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-21T09-54-51-010Z-repair-closure-a2b279425696)."
+  },
+  {
+    "taskId": "TASK-MAO-0001",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0001-logical-parallel-routing-architecture-contract.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T11-22-06-856Z-close-0d85b0b68242",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0001.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T11-22-06-856Z-close-0d85b0b68242)."
+  },
+  {
+    "taskId": "TASK-MAO-0002",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0002-route-context-state-schema.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T11-28-41-471Z-close-9e1558a1bb32",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0002.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T11-28-41-471Z-close-9e1558a1bb32)."
+  },
+  {
+    "taskId": "TASK-MAO-0003",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0003-route-lifecycle-cli.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T11-39-13-320Z-close-76e28c890173",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0003.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T11-39-13-320Z-close-76e28c890173)."
+  },
+  {
+    "taskId": "TASK-MAO-0011",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0011-reproducible-runner-build-audit.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T10-43-36-578Z-close-8af7ab4789be",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0011.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T10-43-36-578Z-close-8af7ab4789be)."
+  },
+  {
+    "taskId": "TASK-MAO-0012",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0012-runner-build-scope-manifest.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T10-48-16-051Z-close-e76c2f546485",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0012.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T10-48-16-051Z-close-e76c2f546485)."
+  },
+  {
+    "taskId": "TASK-MAO-0013",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0013-atm-core-scope-classifier.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T10-56-17-886Z-close-ef052e0cbcc5",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0013.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T10-56-17-886Z-close-ef052e0cbcc5)."
+  },
+  {
+    "taskId": "TASK-MAO-0015",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0015-patch-envelope-atm-core-specialization.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T15-31-57-364Z-close-d546fdd08e40",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0015.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T15-31-57-364Z-close-d546fdd08e40)."
+  },
+  {
+    "taskId": "TASK-MAO-0018",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0018-closure-runner-binding.task.md",
+    "oldId": null,
+    "newId": "2026-06-18T04-16-31-915Z-close-e98cb3c47b19",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0018.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-18T04-16-31-915Z-close-e98cb3c47b19)."
+  },
+  {
+    "taskId": "TASK-MAO-0023",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0023-team-agents-wave-mode-architecture-contract.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T03-48-31-664Z-close-7f53ae1b060b",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0023.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T03-48-31-664Z-close-7f53ae1b060b)."
+  },
+  {
+    "taskId": "TASK-MAO-0024",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0024-wave-candidate-planner-and-dag-grouping.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T04-30-50-487Z-close-fdd1c641544e",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0024.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T04-30-50-487Z-close-fdd1c641544e)."
+  },
+  {
+    "taskId": "TASK-MAO-0025",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0025-wave-execution-envelope-schema.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T04-32-24-634Z-close-4b9cf3d72043",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0025.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T04-32-24-634Z-close-4b9cf3d72043)."
+  },
+  {
+    "taskId": "TASK-MAO-0026",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0026-team-wave-broker-admission-integration.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T04-40-12-688Z-close-37a54f14c71f",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0026.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T04-40-12-688Z-close-37a54f14c71f)."
+  },
+  {
+    "taskId": "TASK-MAO-0027",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0027-team-wave-runtime-record-and-dispatch-surface.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T04-43-57-826Z-close-ee4e3469a5e1",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0027.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T04-43-57-826Z-close-ee4e3469a5e1)."
+  },
+  {
+    "taskId": "TASK-MAO-0029",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0029-per-task-evidence-slicing-from-wave-diff.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T04-57-59-282Z-close-5ae199771d32",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0029.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T04-57-59-282Z-close-5ae199771d32)."
+  },
+  {
+    "taskId": "TASK-MAO-0030",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0030-wave-checkpoint-partial-completion-semantics.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T05-06-30-790Z-close-8ebf0cb70f3a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0030.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T05-06-30-790Z-close-8ebf0cb70f3a)."
+  },
+  {
+    "taskId": "TASK-MAO-0031",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0031-coordinator-only-git-and-closeout-guard-for-waves.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T05-17-31-779Z-close-e53191960ce5",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0031.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T05-17-31-779Z-close-e53191960ce5)."
+  },
+  {
+    "taskId": "TASK-MAO-0032",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0032-validator-and-reviewer-team-agents-roles-for-waves.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T05-28-32-337Z-close-fcfba6f7667e",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0032.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T05-28-32-337Z-close-fcfba6f7667e)."
+  },
+  {
+    "taskId": "TASK-MAO-0033",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0033-team-wave-dogfood-benchmark-with-cid-phase-b-shape.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T05-39-58-898Z-close-fb81e49139c2",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0033.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T05-39-58-898Z-close-fb81e49139c2)."
+  },
+  {
+    "taskId": "TASK-MAO-0034",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0034-operator-docs-and-migration-guide-for-team-agents-wave-mode.task.md",
+    "oldId": null,
+    "newId": "2026-06-17T05-45-10-619Z-close-6fd180f608b6",
+    "targetEvidencePath": ".atm/history/tasks/TASK-MAO-0034.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-17T05-45-10-619Z-close-6fd180f608b6)."
+  },
+  {
+    "taskId": "TASK-SKL-0001",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md",
+    "oldId": null,
+    "newId": "2026-07-10T04-33-17-843Z-import-832c1a03b0a4",
+    "targetEvidencePath": ".atm/history/tasks/TASK-SKL-0001.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-10T04-33-17-843Z-import-832c1a03b0a4)."
+  },
+  {
+    "taskId": "TASK-TEAM-0002",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0002-minimal-task-crew-briefing-contract.task.md",
+    "oldId": null,
+    "newId": "2026-06-05T15-38-04-542Z-close-a1412ec60073",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0002.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-05T15-38-04-542Z-close-a1412ec60073)."
+  },
+  {
+    "taskId": "TASK-TEAM-0003",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0003-atomization-planner-required-role.task.md",
+    "oldId": null,
+    "newId": "2026-06-05T14-22-47-414Z-close-c692d41f682a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0003.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-05T14-22-47-414Z-close-c692d41f682a)."
+  },
+  {
+    "taskId": "TASK-TEAM-0004",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0004-team-brief-report-templates.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T12-32-08-879Z-close-f27632092407",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0004.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T12-32-08-879Z-close-f27632092407)."
+  },
+  {
+    "taskId": "TASK-TEAM-0005",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0005-team-memory-captain-decision-templates.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T12-47-52-227Z-close-60f67cd5a5dd",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0005.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T12-47-52-227Z-close-60f67cd5a5dd)."
+  },
+  {
+    "taskId": "TASK-TEAM-0006",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0006-patrol-report-template.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T12-58-00-524Z-close-ee06480282bb",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0006.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T12-58-00-524Z-close-ee06480282bb)."
+  },
+  {
+    "taskId": "TASK-TEAM-0007",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0007-captain-decision-team-sizing-dry-run.task.md",
+    "oldId": null,
+    "newId": "2026-06-10T12-28-06-130Z-close-7886253c267a",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0007.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-10T12-28-06-130Z-close-7886253c267a)."
+  },
+  {
+    "taskId": "TASK-TEAM-0008",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0008-task-lieutenant-escalation-rules.task.md",
+    "oldId": null,
+    "newId": "2026-06-10T15-24-54-448Z-close-6f9809d957be",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0008.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-10T15-24-54-448Z-close-6f9809d957be)."
+  },
+  {
+    "taskId": "TASK-TEAM-0015",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0015-next-playbook-team-recommendation.task.md",
+    "oldId": null,
+    "newId": "2026-06-14T16-28-01-736Z-close-cc3cb3c7d3e9",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0015.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-14T16-28-01-736Z-close-cc3cb3c7d3e9)."
+  },
+  {
+    "taskId": "TASK-TEAM-0027",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0027-team-command-atom-boundary-preflight.task.md",
+    "oldId": null,
+    "newId": "2026-06-09T12-43-34-274Z-close-fd96efbb3e00",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0027.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-09T12-43-34-274Z-close-fd96efbb3e00)."
+  },
+  {
+    "taskId": "TASK-TEAM-0028",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0028-team-same-atom-cid-negative-control.task.md",
+    "oldId": null,
+    "newId": "2026-06-15T03-17-04-521Z-abandon-9310158dfd32",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0028.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-06-15T03-17-04-521Z-abandon-9310158dfd32)."
+  },
+  {
+    "taskId": "TASK-TEAM-0066",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0066-paid-multi-vendor-live-dogfood.task.md",
+    "oldId": null,
+    "newId": "2026-07-11T12-44-57-723Z-close-2748a22d9b11",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0066.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-11T12-44-57-723Z-close-2748a22d9b11)."
+  },
+  {
+    "taskId": "TASK-TEAM-0068",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0068-direct-provider-scoped-path-forwarding.task.md",
+    "oldId": null,
+    "newId": "2026-07-11T12-20-37-656Z-close-d3327ad94327",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0068.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-11T12-20-37-656Z-close-d3327ad94327)."
+  },
+  {
+    "taskId": "TASK-TEAM-0069",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0069-lock-cleanup-canonical-direction-lock.task.md",
+    "oldId": null,
+    "newId": "2026-07-11T12-26-59-365Z-close-4cf6010512e1",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0069.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-11T12-26-59-365Z-close-4cf6010512e1)."
+  },
+  {
+    "taskId": "TASK-TEAM-0070",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0070-openai-metadata-string-values.task.md",
+    "oldId": null,
+    "newId": "2026-07-11T12-37-37-622Z-close-f9432b4ecb15",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TEAM-0070.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-11T12-37-37-622Z-close-f9432b4ecb15)."
+  },
+  {
+    "taskId": "TASK-TMP-0004",
+    "file": "C:/Users/User/3KLife/docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0004-plan-3-0-backlog-canonical-source-repair.task.md",
+    "oldId": null,
+    "newId": "2026-07-21T05-24-25-061Z-lock-cleanup-44e8a4d3ce70",
+    "targetEvidencePath": ".atm/history/tasks/TASK-TMP-0004.json",
+    "reason": "Planning card lastTransitionId (null) mismatched target live ledger (2026-07-21T05-24-25-061Z-lock-cleanup-44e8a4d3ce70)."
+  }
+]

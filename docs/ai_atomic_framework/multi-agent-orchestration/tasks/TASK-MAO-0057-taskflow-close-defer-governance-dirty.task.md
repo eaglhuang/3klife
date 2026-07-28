@@ -52,6 +52,7 @@ nonGoals:
   - "Do not silently bypass governance — defer always snapshots."
 completed_at: "2026-06-18T09:14:21.287Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T09-14-20-958Z-close-9e1aa1c26548"
 delivery_commit: "5fb80222398c2175a4de64a3639ff969ebb6d34d"
 ---
 

@@ -52,6 +52,7 @@ non_goals:
 notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for frozen runner alignment for ATM_RUNNER_SYNC_REQUIRED | blocker: ATM_RUNNER_SYNC_REQUIRED | risk: runner/source drift"
 completed_at: "2026-06-18T15:51:20.582Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-18T15-51-19-859Z-close-90d7ae1a6fa7"
 delivery_commit: "ae15e9869"
 ---
 

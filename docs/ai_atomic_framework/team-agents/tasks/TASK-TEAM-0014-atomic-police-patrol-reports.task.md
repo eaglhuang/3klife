@@ -46,6 +46,7 @@ nonGoals:
   - "Do not replace validators with patrol text"
 completed_at: "2026-06-17T18:37:46.821Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-17T18-37-46-739Z-close-538617ec46e4"
 delivery_commit: "e09dad80fd3e378dd3cefbeb9d342b068dc53232"
 ---
 # TASK-TEAM-0014 — Atomic police patrol reports

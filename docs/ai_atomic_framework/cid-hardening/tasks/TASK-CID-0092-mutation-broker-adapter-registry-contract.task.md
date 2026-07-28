@@ -50,6 +50,7 @@ nonGoals:
   - "Do not hard-code format-specific merge logic in broker core."
 completed_at: "2026-06-18T05:59:10.390Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T05-59-10-078Z-close-2f4b745954bf"
 delivery_commit: "31fd89ff0b359edf8641e0a6c11d4449c11a9ca8"
 ---
 

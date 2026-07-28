@@ -36,6 +36,7 @@ nonGoals:
   - "Do not claim format adapters already exist."
 completed_at: "2026-06-18T05:45:25.711Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T05-45-25-607Z-close-f7478055e108"
 delivery_commit: "68ba34ea"
 ---
 

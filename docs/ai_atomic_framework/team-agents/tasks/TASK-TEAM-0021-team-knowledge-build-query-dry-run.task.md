@@ -82,6 +82,7 @@ dispatch_pattern:
     - "No generated cache file is added as a deliverable"
 completed_at: "2026-06-17T17:49:28.845Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-17T17-49-28-596Z-close-da85773e1487"
 delivery_commit: "aae5c5b68d744bee900947d97e443243231344b8"
 ---
 # TASK-TEAM-0021 — Team knowledge build and query dry-run

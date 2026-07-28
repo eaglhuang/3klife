@@ -80,6 +80,7 @@ dispatch_pattern:
     - "No line describes knowledge as a new registry or authority source"
 completed_at: "2026-06-17T17:12:14.543Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-17T17-12-14-022Z-close-41caecd9431b"
 delivery_commit: "e7f214a3b458531cf8d88cf3abbed4fd3780b284"
 ---
 # TASK-TEAM-0020 — Team knowledge storage boundary and index contract

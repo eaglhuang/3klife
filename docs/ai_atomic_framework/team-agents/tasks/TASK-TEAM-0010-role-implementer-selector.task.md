@@ -46,6 +46,7 @@ nonGoals:
   - "Do not auto-install external plugins"
 completed_at: "2026-06-14T14:38:45.471Z"
 completed_by_agent: "captain-teamagents"
+lastTransitionId: "2026-06-14T14-38-45-389Z-close-d9df8ed42db4"
 delivery_commit: "6f893e5a366e5e0a2c928edc5e158d06bf2039a0"
 ---
 # TASK-TEAM-0010 — Role and implementer selector

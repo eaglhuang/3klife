@@ -48,6 +48,7 @@ nonGoals:
   - "Do not hide historical-delivery repo or waiver constraints behind backend-only errors."
 completed_at: "2026-06-14T04:14:48.221Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-14T04-14-48-221Z-close-58e1388d0ca6"
 delivery_commit: "b6f2d0e9846f544466690fa5cb79f98263f02592"
 ---
 

@@ -39,6 +39,7 @@ nonGoals:
   - "No direct skill migration before the bridge contract is stable."
 completed_at: "2026-06-23T15:55:26.395Z"
 completed_by_agent: "codex-main"
+lastTransitionId: "2026-06-28T14-50-58-650Z-close-d639245d4750"
 delivery_commit: "09865d5099a147fbec60c8d41d69d2a09df7ed2c"
 ---
 

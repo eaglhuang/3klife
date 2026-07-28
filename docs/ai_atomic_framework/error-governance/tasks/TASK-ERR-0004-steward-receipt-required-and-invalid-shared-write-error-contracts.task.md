@@ -47,7 +47,7 @@ completed_by_agent: "claude-002-plan31-captain"
 closedAt: "2026-07-23T11:00:51.757Z"
 closedByActor: "claude-002-plan31-captain"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-23T11-00-51-757Z-close-ae7a46c686cf"
+lastTransitionId: "2026-07-23T11-00-51-532Z-close-9751efb16f76"
 lastTransitionAt: "2026-07-23T11:00:51.757Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "92d005a1ba26dcd4bb0aebc225e76c60694786b8"

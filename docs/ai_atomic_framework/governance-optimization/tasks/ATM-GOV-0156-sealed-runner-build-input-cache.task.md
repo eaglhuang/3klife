@@ -50,7 +50,7 @@ completed_by_agent: "atm-core"
 closedAt: "2026-07-18T07:10:34.815Z"
 closedByActor: "atm-core"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-18T07-10-34-815Z-close-978511e33995"
+lastTransitionId: "2026-07-18T07-10-34-080Z-close-a9883b099c1c"
 lastTransitionAt: "2026-07-18T07:10:34.815Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "b26ca22eed11d5d9022ca70c5e8f9184caa97eb1"

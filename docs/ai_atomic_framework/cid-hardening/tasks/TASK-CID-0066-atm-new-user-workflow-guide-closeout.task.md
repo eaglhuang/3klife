@@ -51,7 +51,7 @@ contextMap:
 closedAt: "2026-06-13T11:07:58+08:00"
 closedByActor: "captain"
 closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
-lastTransitionId: "2026-06-13T11-07-58+08-00-close-e8d79ec6eba4"
+lastTransitionId: "2026-06-13T03-07-58-611Z-close-97b50c091876"
 lastTransitionAt: "2026-06-13T11:07:58+08:00"
 ledgerContractVersion: "task-ledger/v1"
 delivery_commit: "fc26e6b6e645cb19e0df77c0a2b5782e4455d568"

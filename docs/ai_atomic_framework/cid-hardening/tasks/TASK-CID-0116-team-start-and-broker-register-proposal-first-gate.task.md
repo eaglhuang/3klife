@@ -37,6 +37,7 @@ atomizationImpact:
   mapUpdates: []
 completed_at: "2026-06-21T15:59:28.668Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-21T15-59-28-582Z-close-a2c3d1d52cf7"
 delivery_commit: "79315fe16dc95ab1e49d5e2320c7bcdb6ae67b25"
 ---
 

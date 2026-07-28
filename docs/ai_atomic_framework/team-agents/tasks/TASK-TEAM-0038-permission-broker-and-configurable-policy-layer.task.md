@@ -46,6 +46,7 @@ nonGoals:
   - "Do not let provider bridges self-authorize writes"
 completed_at: "2026-06-20T15:53:21.520Z"
 completed_by_agent: "codex-gpt-5.4-mini"
+lastTransitionId: "2026-06-20T15-53-21-427Z-close-79bd05052548"
 delivery_commit: "86b51db32d9078b3d941d450d617096b2d088961"
 ---
 # TASK-TEAM-0038 Permission broker and configurable policy layer

@@ -27,6 +27,7 @@ atomization_impact:
     - atm.evidence-command-map
 completed_at: "2026-06-16T03:34:58.668Z"
 completed_by_agent: "codex-main"
+lastTransitionId: "2026-06-16T03-34-58-581Z-close-2ec5954c4a35"
 delivery_commit: "917e54c3e23f9929652c636435642f59d974a8bd"
 ---
 

@@ -47,6 +47,7 @@ nonGoals:
   - "Do not weaken raw evidence requirements for advanced or admin-only cases."
 completed_at: "2026-06-13T14:51:59.552Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T14-51-59-457Z-close-ff0abeb90e07"
 delivery_commit: "96eeaec4"
 ---
 

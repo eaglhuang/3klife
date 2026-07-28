@@ -58,6 +58,7 @@ nonGoals:
   - "Do not require a pre-existing source delivery commit when uncommitted declared deliverables are present and in scope."
 completed_at: "2026-06-13T14:24:37.323Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T14-24-37-201Z-close-5a4dae2774b1"
 delivery_commit: "7f78ea0e0a52bf50b43af024cb21d595e80752e1"
 ---
 

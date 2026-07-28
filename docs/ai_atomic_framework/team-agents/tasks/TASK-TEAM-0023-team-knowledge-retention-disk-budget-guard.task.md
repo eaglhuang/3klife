@@ -77,6 +77,7 @@ dispatch_pattern:
     - "Generated cache remains disposable and rebuildable"
 completed_at: "2026-06-17T18:15:37.860Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-17T18-15-37-768Z-close-586d3a3c4bd2"
 delivery_commit: "4a4e6f861012f0950a6a3863aa23475e9e2d4b0d"
 ---
 # TASK-TEAM-0023 — Team knowledge retention and disk budget guard

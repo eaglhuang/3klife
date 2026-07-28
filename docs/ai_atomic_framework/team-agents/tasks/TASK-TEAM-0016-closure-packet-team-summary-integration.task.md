@@ -51,6 +51,7 @@ nonGoals:
   - "Do not weaken close/checkpoint gates"
 completed_at: "2026-06-14T17:12:16.898Z"
 completed_by_agent: "captain-teamagents"
+lastTransitionId: "2026-06-14T17-12-16-803Z-close-221c1aa8ed9e"
 delivery_commit: "4c2676b43fb3be12beb79f175a2b103817e15212"
 ---
 # TASK-TEAM-0016 — Closure packet team summary integration

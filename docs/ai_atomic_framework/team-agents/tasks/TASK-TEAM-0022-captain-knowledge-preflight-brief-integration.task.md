@@ -81,6 +81,7 @@ dispatch_pattern:
     - "Implementer-facing output receives summary, not corpus dump"
 completed_at: "2026-06-17T18:02:29.582Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-17T18-02-29-487Z-close-990081b5a2a9"
 delivery_commit: "4233812e207ba197408e34052c11c5028110eca7"
 ---
 # TASK-TEAM-0022 — Captain knowledge preflight brief integration

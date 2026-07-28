@@ -43,6 +43,7 @@ nonGoals:
   - "Do not convert ambiguous-manual-review into a pass state."
 completed_at: "2026-06-13T15:36:17.587Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T15-36-17-438Z-close-4eafa8806389"
 delivery_commit: "a699c87ed89743055759c0e59ec8975ac10871b9"
 ---
 

@@ -49,7 +49,7 @@ completed_by_agent: "codex-main"
 closedAt: "2026-07-18T03:06:25.204Z"
 closedByActor: "codex-main"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-18T03-06-25-204Z-close-d7c086b1dd04"
+lastTransitionId: "2026-07-18T03-06-25-019Z-close-82dd7b426b21"
 lastTransitionAt: "2026-07-18T03:06:25.204Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "beba951a40eaa309772c495029b2a4323996b3c4"

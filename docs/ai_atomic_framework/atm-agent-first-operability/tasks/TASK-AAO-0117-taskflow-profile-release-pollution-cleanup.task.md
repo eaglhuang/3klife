@@ -57,6 +57,7 @@ non_goals:
 notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for TASK-AAO-0115 release tracked pollution cleanup | blocker: none | risk: release-tracked cleanup drift / claimed-work interference"
 completed_at: "2026-06-18T15:29:48.812Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-18T15-29-48-675Z-close-7ca37e417133"
 delivery_commit: "d8e46172a"
 ---
 

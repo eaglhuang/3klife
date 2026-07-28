@@ -50,6 +50,7 @@ non_goals:
 notes: "2026-06-01 | status: open | validation: pending | change: Phase 0 create card for clean checkout stable runner and CI contract | blocker: TASK-AAO-0108 | risk: artifact tracking vs build order conflicts"
 completed_at: "2026-06-20T03:07:08.938Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-20T03-07-08-848Z-close-7fc5e2040b93"
 delivery_commit: "c1cc87996"
 ---
 

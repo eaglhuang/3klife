@@ -45,6 +45,7 @@ outOfScope:
   - "Accepting direct `release/**` edits from external contributors"
 completed_at: "2026-06-18T05:42:28.164Z"
 completed_by_agent: "claude-code-opus-4-7"
+lastTransitionId: "2026-06-18T05-42-28-051Z-close-a4e44863ec7b"
 delivery_commit: "f8ec923b86c62f040dfcdfd52bedacaf08c4651f"
 ---
 

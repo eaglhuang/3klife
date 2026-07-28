@@ -53,6 +53,7 @@ nonGoals:
   - "Do not make write close best-effort."
 completed_at: "2026-06-17T06:48:45.928Z"
 completed_by_agent: "cursor-composer-2.5"
+lastTransitionId: "2026-06-17T06-48-45-410Z-close-a99adad01962"
 delivery_commit: "971ae3374ae4bd9393827e1632d4bda4eac0f5fb"
 ---
 

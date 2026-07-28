@@ -62,6 +62,7 @@ nonGoals:
   - "Do not make task-view a second task lifecycle."
 completed_at: "2026-06-17T17:11:03.458Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-17T17-11-03-311Z-close-93dab6bd1afc"
 delivery_commit: "c111872f3"
 ---
 

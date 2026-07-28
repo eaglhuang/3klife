@@ -54,7 +54,7 @@ completed_by_agent: "Codex-GPT5.6 Terra"
 closedAt: "2026-07-12T04:44:39.386Z"
 closedByActor: "Codex-GPT5.6 Terra"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-12T04-44-39-386Z-close-22afc7d96f12"
+lastTransitionId: "2026-07-12T04-44-39-337Z-close-d3e923abcabb"
 lastTransitionAt: "2026-07-12T04:44:39.386Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "4fe21e1930f62b3f4b635c335f53ec929e1f7a57"

@@ -43,6 +43,7 @@ nonGoals:
   - "Do not let --claim-first auto-claim across dependency blockers."
 completed_at: "2026-06-18T11:34:31.266Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T11-34-31-152Z-close-00d5d32d3fd0"
 delivery_commit: "1f07c32b1c5c271dc9e27d42985a654bd22efc40"
 ---
 

@@ -53,7 +53,7 @@ completed_by_agent: "codex-lane-0018"
 closedAt: "2026-07-16T19:13:45.629Z"
 closedByActor: "codex-lane-0018"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-16T19-13-45-629Z-close-bf1e82123ea7"
+lastTransitionId: "2026-07-16T19-13-45-537Z-close-0d5c8cba2d78"
 lastTransitionAt: "2026-07-16T19:13:45.629Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "7eaeb3d0deb76e2d6e8c7706de26d67a06e33b74"

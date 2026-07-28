@@ -79,6 +79,7 @@ nonGoals:
   - "Do not treat authorization as proof of successful delivery."
 completed_at: "2026-06-17T04:48:48.627Z"
 completed_by_agent: "cursor-composer-2.5"
+lastTransitionId: "2026-06-17T04-48-48-539Z-close-f7c07351abbc"
 delivery_commit: "44deeace1"
 ---
 

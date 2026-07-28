@@ -38,6 +38,7 @@ forbidden_files:
 completed_at: "2026-06-15T06:34:32.645Z"
 closed_by_agent: "codex-captain-continuation"
 team_run_id: "team-48495f14cfa8"
+lastTransitionId: "2026-06-15T06-34-32-645Z-close-e2d33be6ad09"
 delivery_commit: "898d97515"
 evidence_commit: "e49365ef5"
 closure_commit: "46264c4cc"

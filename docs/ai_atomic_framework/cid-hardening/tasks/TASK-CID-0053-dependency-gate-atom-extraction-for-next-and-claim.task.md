@@ -47,6 +47,7 @@ nonGoals:
   - "Do not treat prose dependencies in dispatch files as sufficient machine gates."
 completed_at: "2026-06-13T09:47:41.896Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T09-47-41-810Z-close-0ff0ec8f0f13"
 delivery_commit: "7f72057e3791b6e6e0ad5c8d0e1eae78aaa36083"
 ---
 

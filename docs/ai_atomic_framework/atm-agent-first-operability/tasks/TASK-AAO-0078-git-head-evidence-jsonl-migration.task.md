@@ -60,6 +60,7 @@ nonGoals:
   - "Do not break existing closure packet cross-check"
 completed_at: "2026-06-20T02:24:10.269Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-20T02-24-10-195Z-close-dba42978eb15"
 delivery_commit: "138adbef8"
 notes: "2026-06-20 | status: done | validation: pass | change: governance close historical delivery 138adbef8 target b2de3f984 planning 817deced team team-55943e9668dd | blocker: none | risk: git-head merge driver drift"
 ---

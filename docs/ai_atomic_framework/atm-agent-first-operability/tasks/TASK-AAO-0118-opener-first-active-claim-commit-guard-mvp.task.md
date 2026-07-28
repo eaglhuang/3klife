@@ -49,6 +49,7 @@ non_goals:
 notes: "2026-06-02 | status: open | validation: pending | change: Phase 0 open card for opener-first active-claim commit guard MVP | blocker: none | risk: next-id guessing / trailer-guard drift"
 completed_at: "2026-06-18T15:40:38.706Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-18T15-40-38-590Z-close-db318e542c1b"
 delivery_commit: "2c6f90664"
 ---
 

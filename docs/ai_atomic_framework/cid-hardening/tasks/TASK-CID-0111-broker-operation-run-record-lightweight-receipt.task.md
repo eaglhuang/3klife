@@ -70,6 +70,7 @@ contextMap:
       description: "使用 command spec 作為輸出欄位檢核基準"
 completed_at: "2026-06-16T14:23:56.218Z"
 completed_by_agent: "codex"
+lastTransitionId: "2026-06-16T14-23-56-048Z-close-b9c422f69fc6"
 delivery_commit: "5d2bbff36"
 ---
 

@@ -51,7 +51,7 @@ completed_by_agent: "cursor-skl-0023-captain"
 closedAt: "2026-07-25T08:19:33.027Z"
 closedByActor: "cursor-skl-0023-captain"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-25T08-19-33-027Z-close-f6971e575d5f"
+lastTransitionId: "2026-07-25T08-19-32-902Z-close-a5a572ea72ff"
 lastTransitionAt: "2026-07-25T08:19:33.027Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "5c0c432995124c0572a729c3201b39e1e311f5d3"

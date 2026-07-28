@@ -42,6 +42,7 @@ nonGoals:
   - "Do not add alternate task statuses outside the existing schema without a separate design card."
 completed_at: "2026-06-13T15:04:37.483Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T15-04-37-314Z-close-cf79938e27c5"
 delivery_commit: "ec9d8be8"
 ---
 

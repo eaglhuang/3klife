@@ -36,7 +36,7 @@ completed_by_agent: "codex-backlog-captain"
 closedAt: "2026-07-12T10:57:30.984Z"
 closedByActor: "codex-backlog-captain"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-12T10-57-30-984Z-close-67d5cbaf318e"
+lastTransitionId: "2026-07-12T10-57-30-924Z-close-aa21fac71bf0"
 lastTransitionAt: "2026-07-12T10:57:30.984Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "90361542b04b6299bfeb649e027968c08df1e141"

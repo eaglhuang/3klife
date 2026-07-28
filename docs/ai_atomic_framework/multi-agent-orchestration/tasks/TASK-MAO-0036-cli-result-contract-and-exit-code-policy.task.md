@@ -79,6 +79,7 @@ nonGoals:
   - "Do not make warning exits inconsistent across JSON and non-JSON output."
 completed_at: "2026-06-17T01:12:59.365Z"
 completed_by_agent: "cursor-composer-2.5"
+lastTransitionId: "2026-06-17T01-12-59-264Z-close-6118de9850ce"
 delivery_commit: "742334b69"
 ---
 

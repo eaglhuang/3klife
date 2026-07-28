@@ -4,6 +4,7 @@ title: "git commit task-scoped staging required-command diagnostics"
 status: done
 completed_at: "2026-06-11T14:46:09.837Z"
 completed_by_agent: cursor-agent
+lastTransitionId: "2026-06-11T14-46-09-837Z-close-95939d700644"
 delivery_commit: "0af42bd14"
 owner: atm-core
 priority: P1

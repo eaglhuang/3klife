@@ -16,6 +16,7 @@ closed_at: "2026-06-14T13:30:33.648Z"
 closed_by: "captain-teamagents"
 closedByCommand: atm tasks close
 lastTransitionAt: "2026-06-14T13:30:33.648Z"
+lastTransitionId: "2026-06-14T13-30-33-650Z-close-65a03132d349"
 delivery_commit: "56413eea628c5078675aa877e052f474143d5729"
 target_ledger_status: done
 planning_closeback_status: reconciled-from-target-ledger

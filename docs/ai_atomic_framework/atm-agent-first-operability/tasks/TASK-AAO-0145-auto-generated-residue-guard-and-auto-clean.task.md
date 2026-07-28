@@ -62,7 +62,7 @@ delivery_commit: "43f5f5d0a02c23ef827330d299310d229d4fb570"
 closedAt: "2026-06-19T16:34:37.625Z"
 closedByActor: "codex-gpt-5.4-mini"
 closedByCommand: "historical planning closeback backfill for TASK-CID-0124"
-lastTransitionId: "2026-06-19T16-34-37-625Z-close-41a754ef774f"
+lastTransitionId: "2026-06-19T16-34-36-760Z-close-6144d8abfaed"
 lastTransitionAt: "2026-06-19T16:34:37.625Z"
 ledgerContractVersion: "task-ledger/v1"
 ---

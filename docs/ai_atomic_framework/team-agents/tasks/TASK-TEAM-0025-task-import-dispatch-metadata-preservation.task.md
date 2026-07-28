@@ -80,6 +80,7 @@ condition_review:
   - "payload stays compact and does not duplicate freeform Markdown body content"
 completed_at: "2026-06-17T17:36:45.231Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-17T17-36-45-139Z-close-69f5c50cd69f"
 delivery_commit: "dd67b530d422f1ec0b52f301d9e27ff65a88ac8e"
 ---
 # TASK-TEAM-0025 - Task import dispatch metadata preservation

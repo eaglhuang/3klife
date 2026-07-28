@@ -82,6 +82,7 @@ non_goals:
 notes: "2026-06-19 | status: done | validation: passed | change: governance close historical delivery 9aa7ed619 | blocker: none"
 completed_at: "2026-06-19T14:06:33.088Z"
 completed_by_agent: "cursor-gpt-5.2"
+lastTransitionId: "2026-06-19T14-06-32-982Z-close-9818ac7d7a72"
 delivery_commit: "9aa7ed619"
 ---
 

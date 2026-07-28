@@ -46,7 +46,7 @@ completed_by_agent: "cursor-grok45-plan31-captain"
 closedAt: "2026-07-23T02:17:33.024Z"
 closedByActor: "cursor-grok45-plan31-captain"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-23T02-17-33-024Z-close-eeaf940de09c"
+lastTransitionId: "2026-07-23T02-17-32-806Z-close-20d645550f3b"
 lastTransitionAt: "2026-07-23T02:17:33.024Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "2f093fde15bf9200578871af18757d82fc0b1a56"

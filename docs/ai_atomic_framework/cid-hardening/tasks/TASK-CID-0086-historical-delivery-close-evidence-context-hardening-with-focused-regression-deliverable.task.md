@@ -45,6 +45,7 @@ supersedes:
   - "TASK-CID-0085"
 completed_at: "2026-06-14T05:10:02.914Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-14T05-10-02-777Z-close-9ebb18ba6c08"
 delivery_commit: "5cbcb4c188ce83abf75cef9a67e90ced34deb4bd"
 ---
 

@@ -58,7 +58,7 @@ completed_by_agent: "codex-matt-skills-initiative-captain-20260724"
 closedAt: "2026-07-24T17:26:06.391Z"
 closedByActor: "codex-matt-skills-initiative-captain-20260724"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-24T17-26-06-391Z-close-9f7d714957af"
+lastTransitionId: "2026-07-24T17-26-06-233Z-close-5d42a30cb87e"
 lastTransitionAt: "2026-07-24T17:26:06.391Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "d5d9e791971bb262040984715c0f24f814fea798"

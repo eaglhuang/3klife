@@ -41,6 +41,7 @@ nonGoals:
   - "Do not declare success without command-backed validation."
 completed_at: "2026-06-13T16:00:30.925Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T16-00-30-779Z-close-d51e9ab1d7d6"
 delivery_commit: "f741908f"
 ---
 

@@ -45,6 +45,7 @@ nonGoals:
   - "Do not remove explicit --claim-intent; it remains the override."
 completed_at: "2026-06-18T10:56:52.675Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-18T10-56-52-235Z-close-a4790cab323b"
 delivery_commit: "8bffe6b81"
 ---
 

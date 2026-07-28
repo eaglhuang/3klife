@@ -69,7 +69,7 @@ completed_by_agent: "claude-code-opus-4-7"
 closedAt: "2026-07-01T11:38:30.910Z"
 closedByActor: "claude-code-opus-4-7"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-01T11-38-30-910Z-close-5f9367381136"
+lastTransitionId: "2026-07-01T11-38-30-832Z-close-41df1a9f0c12"
 lastTransitionAt: "2026-07-01T11:38:30.910Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "44a9408889a93a00da36de2310643664c1c2d434"

@@ -59,7 +59,7 @@ completed_by_agent: "codex-governance-optimizer"
 closedAt: "2026-07-19T09:13:36.490Z"
 closedByActor: "codex-governance-optimizer"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-07-19T09-13-36-490Z-close-980753ce33e9"
+lastTransitionId: "2026-07-19T09-13-36-388Z-close-4dbfc533c58a"
 lastTransitionAt: "2026-07-19T09:13:36.490Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "d5bd615463fd791123ae88eee4da9132fb2bf384"

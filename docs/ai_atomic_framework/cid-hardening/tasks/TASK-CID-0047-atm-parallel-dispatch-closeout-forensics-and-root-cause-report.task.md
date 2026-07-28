@@ -40,6 +40,7 @@ nonGoals:
   - "Do not duplicate TASK-CID-0046 implementation work; this task is forensic and read-only except for the report."
 completed_at: "2026-06-13T14:56:14.470Z"
 completed_by_agent: "captain"
+lastTransitionId: "2026-06-13T14-56-14-350Z-close-fcaa7738c1dc"
 delivery_commit: "0ead5b53"
 ---
 
