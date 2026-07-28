@@ -21,6 +21,8 @@ The goal is to make ATM broker admission useful at the Git boundary, especially 
 - Allow clean disjoint changes, block true conflicts, and route mergeable same-file changes through deterministic composer.
 - Default to no auto-commit after steward apply.
 - For AI task work, issue one work-admission ticket atomically with claim.
+- Keep ticket attribution and delivery gates always on, while resolving
+  snapshot recovery from the task card's `auto | enabled | disabled` policy.
 - Treat native writes as recoverable but unattributed until ATM records
   content-addressed coverage.
 - Use one coverage decision at Police, Broker, Reviewer, commit, close,
@@ -41,3 +43,10 @@ violation handling, conflict explanation, proposal routing, deterministic
 merge planning, and evidence. An unrestricted shell may still create local
 state, but that state is not an accepted ATM delivery until the shared ticket
 coverage gate passes.
+
+Recovery snapshots are optional operational protection, not the authority
+boundary. The default `auto` mode enables at most two bounded temporary save
+points only for elevated-risk or insufficiently trusted work. A task author,
+Captain, or human owner may force snapshots on or off; the worker cannot alter
+the claim-sealed result. Disabling snapshots removes their disk I/O but never
+disables ticket, validator, close, push, or protected-branch gates.

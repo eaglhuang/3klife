@@ -159,8 +159,32 @@ a content-addressed ledger keyed by path, base digest, observed digest,
 operation class, and ticket id. A file itself is not rewritten merely to carry
 governance metadata.
 
-Recovery uses a bounded sparse temporary snapshot, not a commit or continuous
-backup stream. Each task may retain at most two save points:
+Recovery snapshots are a policy-controlled aid, not part of the always-on
+admission boundary. Every write-capable claim still receives the cheap ticket,
+content digests, and downstream coverage gates. The task card declares:
+
+`workAdmission.recoveryMode: auto | enabled | disabled`
+
+The default is `auto`. The authority resolves `auto` to `enabled` only when
+governed evidence identifies elevated task risk/complexity, destructive
+capability, sensitive shared surfaces, or an untrusted, degraded, or
+not-yet-proven worker/adapter. It otherwise resolves to `disabled`, producing
+no snapshot scan, blob write, or task snapshot GC work. Trust is evidence-based
+and must not be inferred from a model brand.
+
+Task authors, Captains, and the human owner may force `enabled` or `disabled`.
+A worker cannot change this setting after claim. The requested mode, resolved
+mode, reasons, and policy digest are sealed into the admission ticket. An
+in-flight change requires a governed planning amendment and ticket reseal; a
+prompt or environment variable cannot disable recovery.
+
+The planning importer must validate and preserve this field in the target
+ledger. Unknown modes fail import, and dry-run import must expose the normalized
+policy. The field is not allowed to remain planning prose that disappears
+before claim.
+
+When enabled, recovery uses a bounded sparse temporary snapshot, not a commit
+or continuous backup stream. Each task may retain at most two save points:
 
 1. the claim baseline;
 2. one replaceable pre-risk save point created only before a destructive
@@ -176,6 +200,13 @@ Successful close immediately removes temporary blobs and retains only a small
 digest manifest. Handoff or blocked recovery may pin the two save points with a
 TTL. A governed GC command removes expired task snapshots quickly. No recovery
 blob or temporary manifest is committed to Git.
+
+When disabled, ATM creates no recovery snapshot directory or blob for that
+task. Admission tickets, mutation attribution, Police/Broker/Reviewer checks,
+validators, commit, close, push, and remote required checks remain fully
+enforced. Recovery is then limited to existing Git objects, provenance review,
+late attach where evidence permits it, quarantine, corrective commits, or
+forward recovery. Claim and `next` must state that tradeoff concisely.
 
 Without an OS sandbox, ATM cannot truthfully claim that a native write or local
 raw commit never happened. It can guarantee that an unattributed mutation
@@ -222,8 +253,9 @@ A bypass is recoverable but never silently normalized:
 
 Every recovery is idempotent and preserves the original violation evidence.
 Without an OS watcher, ATM guarantees recovery to the claim baseline and the
-optional pre-risk save point, not every intermediate byte written by an
-unmanaged process.
+optional pre-risk save point only when the resolved recovery policy is enabled,
+not every intermediate byte written by an unmanaged process. A disabled
+snapshot policy never weakens ticket coverage or delivery gates.
 
 ### Dependency and Rollout Order
 

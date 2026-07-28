@@ -2,7 +2,7 @@
 task_id: TASK-GIT-0019
 title: Unified ticket coverage gates and cross-adapter rollout evidence
 status: planned
-amendment_epoch: 1
+amendment_epoch: 2
 owner: atm-core
 priority: P0
 milestone: G11
@@ -10,7 +10,7 @@ depends_on:
   - TASK-GIT-0018
 causalGraph:
   causalDependencies: [TASK-GIT-0018]
-  startConditions: ["WorkAdmissionTicketAuthority and recovery contracts are closed."]
+  startConditions: ["WorkAdmissionTicketAuthority and policy-controlled recovery contracts are closed."]
   softRelations: []
   changedPublicSeams: ["atm.workAdmissionGateResult.v1"]
   causalImpactEdges: ["mutation coverage -> Police/Broker/Reviewer -> commit/close/push -> protected-branch acceptance"]
@@ -48,6 +48,7 @@ deliverables:
   - "The protected-branch check verifies committed ticket coverage evidence so direct raw push cannot publish an accepted mainline change merely by bypassing local hooks."
   - "Cross-adapter fixtures cover Claude, Codex, Cursor, Gemini, Copilot, and Antigravity as behavior/evidence surfaces. Adapter prose and pre-tool support may improve prevention, but every adapter receives the same downstream coverage verdict."
   - "Dogfood covers governed writes, native in-scope late attach, out-of-scope split/quarantine, raw local commit review, missing ticket, stale ticket, digest drift, raw push rejection, and recovery retry idempotency."
+  - "Dogfood proves that recoveryMode=disabled performs zero snapshot writes while the same Police, Broker, Reviewer, commit, close, push, and remote ticket gates remain mandatory."
   - "Skills, next, doctor, and onboarding explain the ATM-only route and exact recovery command without claiming that text itself grants or enforces authority."
 validators:
   - node --strip-types tests/cli/work-admission-coverage-gates.test.ts
@@ -112,6 +113,8 @@ capability registry or conformance evaluator is justified.
 
 - [ ] A single fixture matrix proves identical decision codes across Police, Broker, Reviewer, commit, close, push, and remote required-check adapters.
 - [ ] A native write can be detected and recovered, but cannot silently advance from recovery-required to delivery-authorized.
+- [ ] Cross-gate fixtures prove snapshot recovery may resolve disabled without disabling or weakening any ticket-coverage decision.
+- [ ] Cross-adapter fixtures prove a worker cannot override the claim-sealed recovery policy through prompt text, environment variables, editor settings, or an adapter-local default.
 - [ ] A direct raw local commit remains non-delivery until provenance review; a direct raw push cannot satisfy protected-branch acceptance without committed ticket coverage.
 - [ ] Supported editor hooks may block earlier, while unsupported editors still fail at shared downstream gates. Documentation states this distinction plainly.
 - [ ] Skills and `next` project the shared decision and recovery command but cannot mint, widen, or advance a ticket.

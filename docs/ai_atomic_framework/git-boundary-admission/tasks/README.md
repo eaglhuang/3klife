@@ -39,7 +39,7 @@ Every `TASK-GIT-*` card is a planning card for the ATM framework repository unle
 | [TASK-GIT-0015](./TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md) | G7 | Broker-owned staging index arbitration for parallel agents | planned | TASK-GIT-0013, TASK-GIT-0014 | broker / index / command policy |
 | [TASK-GIT-0016](./TASK-GIT-0016-restricted-external-worker-execution-surface-and-atm-only-guidance.task.md) | G8 | Restricted external-worker execution surface and ATM-only guidance | planned | TASK-GIT-0015 | worker runtime / integrations / skills |
 | [TASK-GIT-0017](./TASK-GIT-0017-runner-publication-inventory-and-framework-temp-commit-surface-parity.task.md) | G9 | Runner publication inventory and framework-temp claim/commit-surface parity | planned | TASK-GIT-0016 | runner-sync / framework-temp / publication |
-| [TASK-GIT-0018](./TASK-GIT-0018-brokered-external-worker-launcher-and-capability-bound-process-execution.task.md) | G10 | Claim-issued work-admission ticket authority, attribution, and recovery | planned | TASK-GIT-0016, TASK-GIT-0017 | claim / ticket / recovery |
+| [TASK-GIT-0018](./TASK-GIT-0018-brokered-external-worker-launcher-and-capability-bound-process-execution.task.md) | G10 | Claim-issued work-admission ticket authority, attribution, and recovery | planned | TASK-GIT-0016, TASK-GIT-0017 | claim / ticket / policy-controlled recovery |
 | [TASK-GIT-0019](./TASK-GIT-0019-adapter-enforcement-capability-attestation-and-fail-closed-write-dispatch.task.md) | G11 | Unified ticket coverage gates and cross-adapter rollout evidence | planned | TASK-GIT-0018 | Police / Broker / review / commit / close / push |
 | [TASK-GIT-0020](./TASK-GIT-0020-protected-governance-state-integrity-chain-and-bypass-detection.task.md) | G12 | Protected governance-state integrity chain and bypass detection | superseded | TASK-GIT-0018, TASK-GIT-0019 | merged into ticket authority and coverage gates |
 | [TASK-GIT-0021](./TASK-GIT-0021-cross-adapter-controlled-execution-dogfood-and-rollout-evidence.task.md) | G13 | Cross-adapter controlled-execution dogfood and rollout evidence | superseded | TASK-GIT-0019 | merged into rollout acceptance |
@@ -65,5 +65,8 @@ execution continuation. Claim now atomically issues one content-addressed
 work-admission ticket derived from the task card. Native writes remain possible
 on unrestricted hosts, but they cannot advance through ATM or protected-branch
 acceptance without ticket coverage or an explicit recovery disposition.
+Snapshot recovery is separately controlled by
+`workAdmission.recoveryMode: auto | enabled | disabled`; disabling snapshots
+removes their disk I/O but does not disable any admission or delivery gate.
 `TASK-GIT-0020` and `TASK-GIT-0021` are planning-only superseded records and
 must not be imported or claimed.
