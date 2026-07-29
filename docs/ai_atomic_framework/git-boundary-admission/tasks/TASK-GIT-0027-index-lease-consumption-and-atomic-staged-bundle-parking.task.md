@@ -16,9 +16,9 @@ causalGraph:
     - "Unblocks delivery and closeout retries for TASK-GIT-0024, TASK-GIT-0025, and TASK-GIT-0026 without giving any of them special-case policy."
   changedPublicSeams:
     - "GitIndexLeaseAuthority park-and-restore decision"
-    - "task-scoped governed commit bundle assembly"
+  - "validated park-and-restore plan for later task-scoped commit adapters"
   causalImpactEdges:
-    - "human-approved exact lease -> atomic index park -> current task commit -> byte-identical foreign index restore"
+  - "human-approved exact lease -> validated atomic park/restore plan -> byte-identical foreign index restore"
   parallelFrontierInputs: []
   validatorReferences:
     - "tests/cli/git-commit-task-scoped-staging.test.ts"
@@ -36,7 +36,7 @@ scopePaths:
   - "tests/cli/git-index-override-lease-consumption.test.ts"
 deliverables:
   - "One GitIndexLeaseAuthority interface that consumes a non-expired, single-use stage-override lease only when its actor, task, normalized paths, staged blob IDs, and staged modes exactly match the live foreign index entries."
-  - "A transactional task-scoped commit path that parks only the authorized foreign entries, commits only the current task bundle, restores every parked index entry byte-identically, and emits an auditable park/restore receipt."
+  - "A validated, atomic park/restore plan for only the authorized foreign entries; TASK-GIT-0028 is the sole owner of wiring that plan into task-scoped commit and closeout adapters."
   - "Fail-closed diagnostics for missing, expired, consumed, partial, mismatched-path, mismatched-blob, mismatched-mode, or restore-failed leases; no raw Git recovery instruction and no task/actor/path incident allowlist."
 validators:
   - "node --strip-types tests/cli/git-commit-task-scoped-staging.test.ts"
@@ -52,41 +52,39 @@ createdByCommand: atm plan card create
 
 ## Intent
 
-Make the G7 stage-override lease a real capability in the governed commit
-path. Today the CLI can mint an audited lease but the task-scoped bundle
-resolver does not consume it, leaving workers stuck between a valid human
-approval and the same foreign-index rejection. This card repairs that broken
-capability chain without weakening index ownership.
+Make the G7 stage-override lease a real, content-bound capability. Today the
+CLI can mint an audited lease but no one validates its actor, task and exact
+index identity as one decision. This card repairs the authority-to-effect gap
+without weakening index ownership. TASK-GIT-0028 subsequently wires the
+validated plan into the two commit callers.
 
 ## First-Principles and Deep-Module Design
 
 The protected resource is the exact staged index entry, not a filename and not
 a task label. One owner module, `GitIndexLeaseAuthority`, must hide lease
 parsing, expiration, one-time consumption, identity fencing, and index
-park/restore mechanics behind a small decision interface. The caller supplies
-the requested current-task bundle and receives either a verified transactional
-plan or a fail-closed diagnostic.
+park/restore mechanics behind a small decision interface. The later caller
+supplies a requested current-task bundle and receives either a verified plan
+or a fail-closed diagnostic.
 
 Deletion test: without this authority, every commit and closeout caller would
-need to parse leases, compare blobs, manipulate the shared index, and attempt
-its own rollback. The public test surface is the decision plus the resulting
-index identities, not private helper sequencing. Use two adapters: ordinary
-task-scoped `git commit --defer-foreign-staged` and taskflow close-bundle
-assembly. Dependencies are in-process Git index operations, local-substitutable
-lease storage, and no remote-owned or true-external dependency.
+need to parse leases, compare blobs and modes, and invent its own index
+authority. The public test surface is the decision plus the resulting index
+identities, not private helper sequencing. GIT-0028 supplies the two adapters:
+ordinary task-scoped commit and taskflow close-bundle assembly. Dependencies
+are in-process Git index operations, local-substitutable lease storage, and no
+remote-owned or true-external dependency.
 
 ## Acceptance
 
-- [ ] A valid lease can defer only its exact foreign staged entries while the
-  current task bundle commits; after success, each foreign entry has the same
-  path, blob ID, and mode as before parking.
+- [ ] A valid lease authorizes a plan that parks only its exact foreign staged
+  entries; after park and restore, each entry has the same path, blob ID and
+  mode as before parking.
 - [ ] Missing, expired, already-consumed, partial, path-mismatched,
   blob-mismatched, and mode-mismatched leases fail before any index mutation.
-- [ ] A commit failure restores the authorized foreign entries before reporting
-  failure; a restore failure is explicit and leaves a durable recovery receipt.
-- [ ] The implementation contains no TASK-GIT incident ID, actor ID, date, or
-  hard-coded path policy; protected-state hooks and closeout both consume the
-  same authority rather than duplicating park logic.
+- [ ] The authority contains no TASK-GIT incident ID, actor ID, date, or
+  hard-coded path policy. GIT-0028 is responsible for the two caller adapters
+  and commit-failure receipt lifecycle.
 - [ ] Focused staging, lease-consumption, typecheck, and CLI validation pass.
 
 ## Non-Goals
