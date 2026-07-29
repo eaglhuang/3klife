@@ -38,15 +38,19 @@ scopePaths:
   - "packages/cli/src/commands/next/route-resolution/pending-worktree.ts"
   - "packages/cli/src/commands/next/playbook-projection/active-work-summary.ts"
   - "packages/cli/src/commands/tasks/claim-work-admission.ts"
+  - "packages/cli/src/commands/tasks/import-orchestrator.ts"
+  - "packages/cli/src/commands/tasks/task-import-work-admission.ts"
   - "packages/cli/src/commands/git-governance/work-admission-check.ts"
   - "packages/cli/src/commands/git-governance.ts"
   - "tests/cli/framework-temp-lock-admission-parity.test.ts"
   - "tests/cli/work-admission-ticket-scope-glob-parity.test.ts"
   - "tests/cli/work-admission-ticket-deferred-index-parity.test.ts"
+  - "tests/cli/work-admission-ticket-import-bundle-parity.test.ts"
 deliverables:
   - "One framework-temp lock disposition projection consumed identically by claim admission and active-work reporting, including files[]-only locks, TTL state, linked task/lane identity, and sealed-inventory membership."
+  - "One admission-origin model owned by WorkAdmissionTicketAuthority: a claim origin permits the claimed task scope, while a task-import origin permits only the imported ledger and its matching import transition."
   - "One scope matcher owned by WorkAdmissionTicketAuthority that accepts exact paths and task-card glob scope consistently for write, stage, commit, close, and push."
-  - "A governed commit with --defer-foreign-staged validates the ticket against its filtered task bundle, never against foreign index residue that the commit operation will preserve."
+  - "A governed commit with --defer-foreign-staged computes its filtered task bundle once and validates that same bundle, never foreign index residue that the commit operation will preserve."
   - "A bounded recovery disposition for expired files[]-only framework-temp locks: stale recovery input is visible but cannot be adopted by an unrelated claim."
 validators:
   - "node --strip-types tests/cli/framework-temp-lock-admission-parity.test.ts"
@@ -81,20 +85,24 @@ remain the only authorities:
   sealed runner generation.
 - the framework-temp lock projection decides the lifecycle/owner disposition
   of a claimed path, including `files[]`-only and expired records.
-- `WorkAdmissionTicketAuthority` decides whether a normalized observed path is
-  within the ticket's declared scope.
+- `WorkAdmissionTicketAuthority` decides both the bounded admission origin and
+  whether a normalized observed path is within the ticket's declared scope.
 
 The two adapters for the lock projection are claim admission/pending-worktree
-and active-work summary. The two adapters for the ticket matcher are governed
-commit and the later close/push coverage gates. Deleting either authority would
-force those adapters to reconstruct TTL, lock shape, glob semantics, and
-inventory membership independently; that is the deletion-test proof that this
-card must deepen existing modules rather than add a registry or allowlist.
+and active-work summary. The ticket adapters are task import, governed commit,
+and later close/push coverage gates. A task-import ticket is not a second
+authority: it is a constrained origin in the same authority, bound to one
+imported ledger and its matching transition. Deleting either authority would
+force adapters to reconstruct TTL, lock shape, import provenance, glob
+semantics, and inventory membership independently; that is the deletion-test
+proof that this card must deepen existing modules rather than add a registry or
+allowlist.
 
 ## Non-Goals
 
 - Do not reopen TASK-GIT-0017 or TASK-GIT-0018.
-- Do not create snapshots, another ticket type, or a second residue registry.
+- Do not create snapshots, a parallel ticket authority, or a second residue
+  registry.
 - Do not mutate, stage, commit, discard, or adopt the preserved G8 Lock B and
   seven-residue fixture as ordinary task delivery.
 - Do not add path-specific exceptions for TASK-GIT-0024, actors, dates, or
@@ -112,9 +120,13 @@ card must deepen existing modules rather than add a registry or allowlist.
 - [ ] Ticket checks accept exact paths and card scope globs with identical
   normalization across write, stage, commit, close, and push; genuine outside
   paths still fail closed.
+- [ ] The same WorkAdmissionTicket authority has explicit `claim` and
+  `task-import` origins. A task-import origin permits only its imported ledger
+  plus matching import transition, and cannot authorize source writes, close,
+  push, or a generic planned-task commit.
 - [ ] `--defer-foreign-staged` filters foreign staged paths before work-admission
-  validation; foreign residue remains untouched and an in-scope bundle still
-  fails closed for a genuine outside path.
+  validation using one computed bundle; foreign residue remains untouched and
+  an in-scope bundle still fails closed for a genuine outside path.
 - [ ] The G8 fixture is inspected only through test fixtures/receipts and is
   never swept into this card's commit bundle.
 - [ ] Focused tests, `npm run typecheck`, and `npm run validate:cli` pass.

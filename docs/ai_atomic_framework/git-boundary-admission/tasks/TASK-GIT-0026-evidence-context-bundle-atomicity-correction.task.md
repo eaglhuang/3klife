@@ -7,6 +7,7 @@ priority: P0
 milestone: G11.1
 depends_on:
   - TASK-GIT-0019
+  - TASK-GIT-0025
 causalGraph:
   causalDependencies:
     - "G11 ticket coverage gate"
@@ -56,11 +57,11 @@ staged together, yet pre-commit reports that the evidence lacks task context.
 
 ## Ordering
 
-This is an independent G11.1 correction. It depends on the delivered G11
-coverage authority (`TASK-GIT-0019`), not on G9.1 (`TASK-GIT-0025`): the
-hook's task-bundle classifier is a separate protected-state projection and is
-needed to unblock the already-staged G16 closeout. G9.1 and G11.1 may proceed
-in parallel; G16 retries its closeout only after both have landed.
+This is a G11.1 correction layered on the delivered G11 coverage authority
+(`TASK-GIT-0019`) and G9.1 (`TASK-GIT-0025`). Its source classifier can be
+drafted independently, but its delivery commit must wait for G9.1: the commit
+gate must validate the same filtered staged bundle that the hook classifies.
+G16 retries its closeout only after both have landed.
 
 ## First-Principles and Deep-Module Design
 
