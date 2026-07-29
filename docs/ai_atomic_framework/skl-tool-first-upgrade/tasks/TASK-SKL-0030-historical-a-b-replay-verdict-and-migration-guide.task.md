@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0030
 title: Historical A-B replay verdict and migration guide
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.8
@@ -41,6 +41,15 @@ atomizationImpact:
       source: scripts/validate-validator-governance-verdict.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T22:57:54.029Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T22:57:54.029Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T22-57-54-029Z-close-f43b052a8b3e"
+lastTransitionAt: "2026-07-29T22:57:54.029Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ea8b818202e01d44e07a45e15b6577e5ea991a75"
 ---
 
 # TASK-SKL-0030 Historical A-B replay verdict and migration guide
