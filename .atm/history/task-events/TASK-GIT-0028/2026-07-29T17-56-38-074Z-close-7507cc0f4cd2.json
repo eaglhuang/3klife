@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T17-56-38-074Z-close-7507cc0f4cd2",
+  "taskId": "TASK-GIT-0028",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0028-task-scoped-commit-transaction-adapter-extraction-and-index-lease-bridge.task.md",
+  "taskSha256": "sha256:939fe3af53ff31984f3647708258441762186b8436d75f2a0e5385f57da3df01",
+  "createdAt": "2026-07-29T17:56:38.074Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0028 --actor codex-git-series-captain"
+}

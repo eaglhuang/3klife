@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0028
 title: Task-scoped commit transaction adapter extraction and index lease bridge
-status: planned
+status: done
 owner: unassigned
 priority: P0
 milestone: G7.2
@@ -79,6 +79,15 @@ atomizationImpact:
 errorCodes:
   - "ATM_INDEX_FOREIGN_ACTIVE_STAGED"
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T17:56:38.074Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T17:56:38.074Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T17-56-38-074Z-close-7507cc0f4cd2"
+lastTransitionAt: "2026-07-29T17:56:38.074Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "48c6111b8f8f9605fbc26c17d164ded6691a5c2f"
 ---
 
 # TASK-GIT-0028 Task-scoped commit transaction adapter extraction and index lease bridge
