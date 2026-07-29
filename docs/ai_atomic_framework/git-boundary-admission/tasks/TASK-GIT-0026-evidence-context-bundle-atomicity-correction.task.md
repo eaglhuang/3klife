@@ -1,7 +1,12 @@
 ---
 task_id: TASK-GIT-0026
 title: Evidence context bundle atomicity correction
-status: planned
+status: done
+completed_at: 2026-07-29T16:26:26.044Z
+completed_by: codex-git-series-captain
+delivery_commit: 91fcf80a5855f5b00abb0cdc86c256401885475d
+closure_commit: d1c77258ffebf8cd21352101b06e323470853fd8
+closure_packet: .atm/history/evidence/TASK-GIT-0026.closure-packet.json
 owner: claude-005
 priority: P0
 milestone: G11.1

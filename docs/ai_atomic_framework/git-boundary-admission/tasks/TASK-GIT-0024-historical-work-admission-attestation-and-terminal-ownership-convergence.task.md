@@ -1,7 +1,12 @@
 ---
 task_id: TASK-GIT-0024
 title: Historical work-admission attestation and terminal ownership convergence
-status: planned
+status: done
+completed_at: 2026-07-29T18:03:47.453Z
+completed_by: codex-git-series-captain
+delivery_commit: 91fcf80a5855f5b00abb0cdc86c256401885475d
+closure_commit: 5e0bb05474f6ac50269067207cc2fb1d9d76162d
+closure_packet: .atm/history/evidence/TASK-GIT-0024.closure-packet.json
 owner: atm-core
 priority: P0
 depends_on:

@@ -1,7 +1,12 @@
 ---
 task_id: TASK-GIT-0025
 title: G9.1 lock projection and ticket scope parity correction
-status: planned
+status: done
+completed_at: 2026-07-29T13:13:55.850Z
+completed_by: codex-git-series-captain
+delivery_commit: 87319eb03eaf9d0101e817042ab5a5c770dbb80e
+closure_commit: 87319eb03eaf9d0101e817042ab5a5c770dbb80e
+closure_packet: .atm/history/evidence/TASK-GIT-0025.closure-packet.json
 owner: atm-core
 priority: P0
 milestone: G9.1
