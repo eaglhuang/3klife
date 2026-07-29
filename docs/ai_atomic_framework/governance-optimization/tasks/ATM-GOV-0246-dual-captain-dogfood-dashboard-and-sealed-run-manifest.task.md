@@ -1,7 +1,12 @@
 ---
 task_id: ATM-GOV-0246
 title: Dual-captain dogfood dashboard and sealed run manifest
-status: planned
+status: done
+completed_at: 2026-07-29T20:22:02.873Z
+completed_by: codex-git-series-captain
+delivery_commit: 1e4db7cfba41ffb2d9fd11541da41662c3eeee43
+runner_publication_commit: 06618257d
+closure_packet: .atm/history/evidence/ATM-GOV-0246.closure-packet.json
 owner: atm-observability
 priority: P0
 milestone: ATM-3.1-R2.5
