@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T15-57-41-653Z-close-223d9aee87e4",
+  "taskId": "TASK-AAO-0206",
+  "action": "close",
+  "actorId": "claude-005-aao-0206",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0206-controlled-multi-task-read-only-projection-for-tasks-audit.task.md",
+  "taskSha256": "sha256:5c7d93256e56881dbd65971bbcc813ef6c614b4c6bb5f5f584a93fb44f750064",
+  "createdAt": "2026-07-29T15:57:41.653Z",
+  "command": "node atm.mjs tasks close --task TASK-AAO-0206 --actor claude-005-aao-0206"
+}

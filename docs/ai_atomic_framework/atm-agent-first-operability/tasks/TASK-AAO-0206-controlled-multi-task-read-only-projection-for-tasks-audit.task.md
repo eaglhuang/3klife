@@ -1,20 +1,19 @@
 ---
 task_id: TASK-AAO-0206
 title: Controlled multi-task read-only projection for tasks audit
-status: planned
+status: done
 owner: unassigned
 priority: P2
 depends_on:
-  - "TASK-AAO-0068"
   - "TASK-MAO-0044"
 causalGraph:
   causalDependencies:
-    - "TASK-AAO-0068"
     - "TASK-MAO-0044"
   startConditions:
-    - "TASK-AAO-0068 delivered packages/cli/src/commands/output-projection.ts with projectFields/projectSummary."
+    - "packages/cli/src/commands/output-projection.ts exists in the worktree with projectFields/projectSummary."
     - "TASK-MAO-0044 delivered buildTaskViewDashboard() as a read-only per-task summary."
-  softRelations: []
+  softRelations:
+    - "TASK-AAO-0068"
   changedPublicSeams:
     - "node atm.mjs tasks audit --summary|--fields|--tasks|--series|--all"
   causalImpactEdges: []
@@ -66,6 +65,15 @@ atomizationImpact:
   extractionCandidates: []
   notes: "New read-projection.ts is a leaf adapter under the tasks command map; command-dispatch.ts gains one branch. No extraction required."
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T15:57:41.653Z"
+completed_by_agent: "claude-005-aao-0206"
+closedAt: "2026-07-29T15:57:41.653Z"
+closedByActor: "claude-005-aao-0206"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T15-57-41-653Z-close-223d9aee87e4"
+lastTransitionAt: "2026-07-29T15:57:41.653Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "7f41b662043cc73a19b9511a1b1373da20a8990f"
 ---
 
 # TASK-AAO-0206 Controlled multi-task read-only projection for tasks audit
@@ -86,6 +94,13 @@ reuses the summaries already delivered by `TASK-AAO-0068` and `TASK-MAO-0044`.
 This is an adapter over existing read surfaces. It is explicitly **not** a new
 deep module: it introduces no registry, ticket, lease, or policy owner, and it
 does not re-derive any lifecycle or status decision.
+
+`TASK-AAO-0068` is recorded as a soft relation rather than a hard dependency.
+It delivered `output-projection.ts`, which this card reuses and which is
+present in the worktree, but its `.atm/history` closure evidence was removed
+from the working tree by commit `6c82446a2` ("initial", 2026-06-05), so it
+cannot satisfy a governed dependency gate. Restoring that history is a
+separate concern affecting many cards and is out of scope here.
 
 ## Contract
 
