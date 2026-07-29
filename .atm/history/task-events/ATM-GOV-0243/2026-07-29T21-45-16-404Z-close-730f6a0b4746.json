@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T21-45-16-404Z-close-730f6a0b4746",
+  "taskId": "ATM-GOV-0243",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0243-matched-ab-ba-governed-workload-benchmark.task.md",
+  "taskSha256": "sha256:1dad9852c4d98368a86bfdba8f38bc5555418434ce45eebfd2d209ed09986e9f",
+  "createdAt": "2026-07-29T21:45:16.404Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0243 --actor codex-git-series-captain"
+}

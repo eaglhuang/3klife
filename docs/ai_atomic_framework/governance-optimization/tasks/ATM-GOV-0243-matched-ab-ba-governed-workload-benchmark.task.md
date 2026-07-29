@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0243
 title: Matched AB BA governed workload benchmark
-status: planned
+status: done
 owner: atm-performance
 priority: P0
 milestone: ATM-3.1-R3
@@ -66,6 +66,15 @@ skl_validator_transition:
       coversImpactEdges:
         - sealed-workload-to-ab-ba-comparison
         - replay-telemetry-to-parallelism-and-wait-metrics
+completed_at: "2026-07-29T21:45:16.404Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T21:45:16.404Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T21-45-16-404Z-close-730f6a0b4746"
+lastTransitionAt: "2026-07-29T21:45:16.404Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ecf573c44b7b71fb3369f51547262fff69d02ac8"
 ---
 
 # ATM-GOV-0243 Matched AB BA governed workload benchmark
