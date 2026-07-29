@@ -46,6 +46,7 @@ scopePaths:
   - "packages/cli/src/commands/tasks/claim-work-admission.ts"
   - "packages/cli/src/commands/tasks/import-orchestrator.ts"
   - "packages/cli/src/commands/tasks/task-import-work-admission.ts"
+  - "packages/cli/src/commands/tasks/task-work-admission-import.ts"
   - "packages/cli/src/commands/git-governance/work-admission-check.ts"
   - "packages/cli/src/commands/git-governance.ts"
   - "tests/cli/framework-temp-lock-admission-parity.test.ts"
@@ -59,11 +60,13 @@ deliverables:
   - "A governed commit with --defer-foreign-staged computes its filtered task bundle once and validates that same bundle, never foreign index residue that the commit operation will preserve."
   - "A bounded recovery disposition for expired files[]-only framework-temp locks: stale recovery input is visible but cannot be adopted by an unrelated claim."
   - "One task-reservation projection module that owns reservation JSON parsing, freshness, lane extraction, and single-task inspection; active-work summary consumes its compact output rather than retaining that lifecycle policy."
+  - "A task-import admission ticket constrained to exactly one imported ledger and its matching import transition, with no authority for source, close, or push work."
 validators:
   - "node --strip-types tests/cli/framework-temp-lock-admission-parity.test.ts"
   - "node --strip-types tests/cli/work-admission-ticket-scope-glob-parity.test.ts"
   - "npm run typecheck"
   - "npm run validate:cli"
+  - "node --strip-types tests/cli/work-admission-ticket-import-bundle-parity.test.ts"
 errorCodes:
   - "ATM_CLAIM_FOREIGN_UNSTAGED_WIP"
   - "ATM_WRITE_TICKET_SCOPE_VIOLATION"
