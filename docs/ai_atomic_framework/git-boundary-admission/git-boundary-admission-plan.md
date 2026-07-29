@@ -289,10 +289,13 @@ snapshot policy never weakens ticket coverage or delivery gates.
 3. G7.1 (`TASK-GIT-0027`) may proceed after G7 and before any blocked delivery
    replay. It repairs the authority-to-effect gap in stage-override leases;
    G9.1 and G11.1 remain independent source corrections.
-4. G7.2 (`TASK-GIT-0028`) follows G7.1 and extracts the shared commit
-   transaction before either production caller consumes the capability. This
-   preserves one lease authority and two adapters instead of enlarging the
-   CLI wrapper with another policy branch.
+4. G7.1 (`TASK-GIT-0027`) and G7.2 (`TASK-GIT-0028`) are one same-owner
+   coalesced implementation lane: G7.1 supplies the exact lease authority,
+   while G7.2 extracts the shared commit transaction before either production
+   caller consumes that authority. G7.2 must land before the production
+   wiring and closeout replay, but it does not wait for a separately closed
+   G7.1 card. This preserves one lease authority and two adapters instead of
+   enlarging the CLI wrapper with another policy branch.
 5. G16 (`TASK-GIT-0024`) retries historical-attestation closeout only after
    G9.1, G11.1, G7.1 and G7.2 have landed; this keeps ticket admission, protected
    evidence context, and index parking as separate deep modules rather than
