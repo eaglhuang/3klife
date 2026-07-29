@@ -31,12 +31,18 @@ related_plan: git-boundary-admission/git-boundary-admission-plan.md
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
 closure_authority: target_repo
+atomizationImpact:
+  ownerAtomOrMap: "atm.git-boundary-admission"
+  extractionCandidates:
+    - "packages/cli/src/commands/next/playbook-projection/active-work-summary.ts"
+  reason: "Extract reservation lifecycle parsing into one projection atom so the summary remains an adapter and the physical line budget is satisfied by decomposition, not waiver."
 scopePaths:
   - "packages/core/src/broker/work-admission-ticket.ts"
   - "packages/core/src/broker/runner-build-output-inventory.ts"
   - "packages/cli/src/commands/framework-development/framework-temp-lock-projection.ts"
   - "packages/cli/src/commands/next/route-resolution/pending-worktree.ts"
   - "packages/cli/src/commands/next/playbook-projection/active-work-summary.ts"
+  - "packages/cli/src/commands/next/playbook-projection/task-reservation-projection.ts"
   - "packages/cli/src/commands/tasks/claim-work-admission.ts"
   - "packages/cli/src/commands/tasks/import-orchestrator.ts"
   - "packages/cli/src/commands/tasks/task-import-work-admission.ts"
@@ -52,6 +58,7 @@ deliverables:
   - "One scope matcher owned by WorkAdmissionTicketAuthority that accepts exact paths and task-card glob scope consistently for write, stage, commit, close, and push."
   - "A governed commit with --defer-foreign-staged computes its filtered task bundle once and validates that same bundle, never foreign index residue that the commit operation will preserve."
   - "A bounded recovery disposition for expired files[]-only framework-temp locks: stale recovery input is visible but cannot be adopted by an unrelated claim."
+  - "One task-reservation projection module that owns reservation JSON parsing, freshness, lane extraction, and single-task inspection; active-work summary consumes its compact output rather than retaining that lifecycle policy."
 validators:
   - "node --strip-types tests/cli/framework-temp-lock-admission-parity.test.ts"
   - "node --strip-types tests/cli/work-admission-ticket-scope-glob-parity.test.ts"
@@ -98,6 +105,15 @@ semantics, and inventory membership independently; that is the deletion-test
 proof that this card must deepen existing modules rather than add a registry or
 allowlist.
 
+### Admission-first extraction
+
+`active-work-summary.ts` is one line over the physical claim budget. This card
+does not seek a budget waiver. Extract the task-reservation reader as one deep
+module with a small interface: list fresh reservations and inspect one task's
+reservation. It hides JSON parsing, task-source metadata, lane extraction,
+TTL calculation, and freshness classification. `active-work-summary` remains
+the adapter that aggregates claims, locks, and the projection result.
+
 ## Non-Goals
 
 - Do not reopen TASK-GIT-0017 or TASK-GIT-0018.
@@ -127,6 +143,9 @@ allowlist.
 - [ ] `--defer-foreign-staged` filters foreign staged paths before work-admission
   validation using one computed bundle; foreign residue remains untouched and
   an in-scope bundle still fails closed for a genuine outside path.
+- [ ] `active-work-summary.ts` is at or below the 600-line physical budget after
+  the reservation projection is extracted; the new module owns the reservation
+  parser and has focused coverage through the existing admission parity tests.
 - [ ] The G8 fixture is inspected only through test fixtures/receipts and is
   never swept into this card's commit bundle.
 - [ ] Focused tests, `npm run typecheck`, and `npm run validate:cli` pass.
