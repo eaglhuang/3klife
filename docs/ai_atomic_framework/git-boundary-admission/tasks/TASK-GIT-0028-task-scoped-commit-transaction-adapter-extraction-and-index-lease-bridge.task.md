@@ -51,13 +51,18 @@ testContributions:
   - caseId: "test_int_git_index_lease_transaction"
     responsibility: "task-required"
     contributionResourceKey: "git-index-lease-transaction"
-    coversAcceptance: ["exact-park-restore", "failure-rollback"]
+    coversAcceptance:
+      - "Normal governed commit and close-bundle callers use the same transaction adapter and the same G7.1 authority."
+      - "A valid explicit lease parks only its exact foreign entries; successful and failed commits both restore path/blob/mode identically before returning."
+      - "Missing, expired, used, owner-mismatched, partial or drifted leases fail before index mutation. Restore failure creates durable receipt evidence and a specific diagnostic."
     coversImpactEdges: ["validated-lease-to-restored-index"]
   - caseId: "test_task_git_commit_transaction_adapter"
     responsibility: "task-required"
     contributionResourceKey: "task-scoped-commit-adapter"
-    coversAcceptance: ["two-adapter-parity", "thin-cli-adapter"]
-    coversImpactEdges: ["adapter-to-governed-commit"]
+    coversAcceptance:
+      - "`implementation.ts` becomes a thin CLI adapter; the transaction policy has one public interface and two real adapters."
+      - "Focused tests, typecheck and CLI validation pass."
+    coversImpactEdges: ["validated lease -> isolated task commit -> byte-identical foreign index restoration"]
 requiredTestCaseIds:
   - "test_int_git_index_lease_transaction"
   - "test_task_git_commit_transaction_adapter"
