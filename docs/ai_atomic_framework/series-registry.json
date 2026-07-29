@@ -1,8 +1,28 @@
 {
   "schemaId": "atm.seriesRegistry.v1",
-  "generatedAt": "2026-07-28T16:27:38.821Z",
+  "generatedAt": "2026-07-29T01:35:38.038Z",
   "baseDir": ".",
   "series": [
+    {
+      "series": "AAO",
+      "prefix": "TASK-AAO",
+      "familyDir": "atm-agent-first-operability",
+      "planDocs": [
+        "atm-agent-first-operability/ATM Agent-First 可操作性優化計畫書.md"
+      ],
+      "status": "active",
+      "approvedBy": "owner",
+      "approvedAt": "2026-07-29T01:35:38.037Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-07-29T01:35:38.038Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:1bdc8a20e06ba40a7f3348f832ea23f62e61ce822e183f841e60d0a21780069c"
+      }
+    },
     {
       "series": "ERR",
       "prefix": "TASK-ERR",
