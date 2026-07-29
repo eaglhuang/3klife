@@ -92,6 +92,28 @@ Its first-principles/deep-module contract is deliberately narrow:
 - `implementation.ts` becomes a thin typed adapter under 600 lines.
 - The over-budget staging test becomes a facade with bounded support modules.
 
+## RFT-0101 Active Recovery Checkpoint
+
+`TASK-RFT-0101` is imported and claimed by `codex-git-series-captain` after
+Broker serial-release decisions for its overlaps with GIT-0024 and GIT-0027.
+Those decisions authorize only RFT extraction work; the two GIT tasks remain
+blocked/running in their existing lifecycle states.
+
+The first source inventory confirms that the 5,734-line facade contains
+multiple independently changing responsibilities, not one oversized algorithm:
+
+1. CLI option parsing, identities, and admission dispatch.
+2. Git-head evidence and commit-attempt diagnostics.
+3. Record-only block-bundle classification and staging policy.
+4. Task-scoped index parking/restoration and bundle resolution (the transaction
+   core, beginning around `withTaskScopedCommitIndex`).
+5. Framework-temp staging and branch-commit queue recovery.
+
+Start with a map/report and extract the transaction core plus test fixtures;
+keep `implementation.ts` as a typed facade. Do not add behavior to the
+preservation diff. The test is currently 623 lines, so its facade/support split
+is part of the same atomic boundary.
+
 ## Backlog Items To Retain
 
 - `ATM-BUG-2026-07-29-247`: unowned WIP claim-recovery loop.
