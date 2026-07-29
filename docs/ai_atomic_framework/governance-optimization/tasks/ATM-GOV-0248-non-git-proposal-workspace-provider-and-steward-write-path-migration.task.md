@@ -1,11 +1,13 @@
 ---
 task_id: ATM-GOV-0248
 title: Non-Git proposal workspace provider and steward write-path migration
-status: planned
+status: done
 owner: atm-team-agents
 priority: P0
 milestone: ATM-3.1-R0
 severity: P0
+completed_at: "2026-07-29T18:52:37.196Z"
+delivery_commit: 185a39d035c2a3d33d7fa72ad8793fbb9f697f5e
 depends_on:
   - ATM-GOV-0247
 related_plan: governance-optimization/end-to-end-auto-batch-performance-plan-v3.md
