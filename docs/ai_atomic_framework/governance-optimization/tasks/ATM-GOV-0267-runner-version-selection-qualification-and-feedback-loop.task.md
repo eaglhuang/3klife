@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0267
 title: Runner version selection qualification and feedback loop
-status: planned
+status: done
 owner: atm-runner-sync
 priority: P1
 milestone: ATM-3.1-R0Q.5
@@ -86,6 +86,15 @@ atomizationImpact:
       disposition: extract
       rationale: "Dependency inversion boundary. The verifier declares what it needs to read; ATM-GOV-0268 provides implementations. Prevents fs/git/task-lifecycle leakage into the verifier."
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T19:36:36.749Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T19:36:36.749Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T19-36-36-749Z-close-0412cda3aa12"
+lastTransitionAt: "2026-07-29T19:36:36.749Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "36093ba8ad0984aa53462f81d720e1193a2ddd3f"
 ---
 
 # ATM-GOV-0267 Runner version selection qualification and feedback loop

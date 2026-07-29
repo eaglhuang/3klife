@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T19-36-36-749Z-close-0412cda3aa12",
+  "taskId": "ATM-GOV-0267",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0267-runner-version-selection-qualification-and-feedback-loop.task.md",
+  "taskSha256": "sha256:9833c0d704d72472f815e4eed4302e65da4bf0bdfbbe48f78ea5634036a04357",
+  "createdAt": "2026-07-29T19:36:36.749Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0267 --actor codex-git-series-captain"
+}
