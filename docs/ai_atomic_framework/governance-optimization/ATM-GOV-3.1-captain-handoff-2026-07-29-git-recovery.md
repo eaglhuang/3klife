@@ -11,8 +11,8 @@ or closed target task.
 
 | Repository | HEAD at handoff | Push state |
 |---|---|---|
-| AI-Atomic-Framework | `0a817b33f` | Local work is ahead of `origin/main`; do not push until the active GIT recovery lane is reconciled and pre-push is green. |
-| 3KLife | `305493c1` | Local planning is ahead of `origin/master`; do not push as part of this handoff. |
+| AI-Atomic-Framework | `5891f6884` | Local work is ahead of `origin/main`; do not push until the active GIT recovery lane is reconciled and pre-push is green. |
+| 3KLife | `63574adf` | Local planning is ahead of `origin/master`; do not push as part of this handoff. |
 
 No blanket cleanup is authorized. Preserve unrelated `.atm/history/**`, staged
 GIT-0024 records, and untracked receipts until their owning lifecycle is
@@ -36,14 +36,14 @@ reconciled through ATM.
 | TASK-GIT-0025 | running / active | G9.1 import-origin work-admission ticket parity. Source and focused tests exist as WIP; do not call it delivered. | Reconcile after the frozen runner is healthy; then validate and govern a real delivery. |
 | TASK-GIT-0026 | ready / released | Evidence-context bundle atomicity correction. | Claim after GIT-0025 and the transaction facade are stable. |
 | TASK-GIT-0027 | running / active | G7.1 exact staged-entry lease authority. Delivery commit `0de8db0a4` exists. | Complete runner publication/evidence, then close with historical delivery. |
-| TASK-RFT-0101 | planning only | Mandatory deep-module rehabilitation of the preservation WIP. | Import and execute after GIT-0027 closes. |
+| TASK-RFT-0101 | planning only | Mandatory deep-module rehabilitation of the preservation WIP. | Import after confirming delivery `0de8db0a4` is an ancestor; it deliberately runs before GIT-0027 close to break the line-budget cycle. |
 | TASK-GIT-0028 | planned | G7.2 production transaction wiring. | Blocked by GIT-0027 and RFT-0101; never use preservation commits as its evidence. |
 
 Canonical execution order:
 
-1. Recover the current runner-sync steward window.
-2. Close `TASK-GIT-0027` using delivery `0de8db0a4` after fresh evidence.
-3. Import and complete `TASK-RFT-0101`.
+1. Treat frozen runner generation `5891f6884` as published and released; do not reuse the expired earlier queue.
+2. Import and complete `TASK-RFT-0101` against landed delivery `0de8db0a4`.
+3. Close `TASK-GIT-0027` using delivery `0de8db0a4` after the RFT split removes the line-budget conflict and fresh evidence is recorded.
 4. Re-import/claim `TASK-GIT-0028`; wire only the RFT-0101 stable interface.
 5. Complete `TASK-GIT-0025`, then `TASK-GIT-0026`, then resume `TASK-GIT-0024`.
 
@@ -63,19 +63,14 @@ Commit `39b13905f` preserved a **5,734-line diff** in
 
 ## Runner-Sync Incident
 
-The current queue head is `runner-sync-bb069f32`, sealed to `4724c81a3` and
-owned by `TASK-GIT-0027`. Its build succeeded but must **not** be published:
-that seal predates `0a817b33f`, therefore its frozen onefile cannot import the
-new transaction module. Its TTL expires at `2026-07-29T02:51:53Z`.
+The earlier queue incident is resolved for the current generation: commit
+`5891f6884` published the exact receipt-declared outputs sealed to
+`0a817b33f`, and its steward group was released. Frozen `node atm.mjs` loads
+again. Do not reuse or hand-edit any expired queue record.
 
-After expiry:
-
-1. Run `node atm.mjs broker runner-sync cleanup --json`.
-2. Confirm the old group is gone; do not hand-edit the queue.
-3. Enqueue a new GIT-0027 runner-sync group sealed to current HEAD.
-4. Build with `ATM_RETAIN_RELEASE_ARTIFACTS=1 npm run build`.
-5. Verify frozen `node atm.mjs` can load and focused GIT-0027 tests pass.
-6. Publish only the receipt-declared output inventory, then release the group.
+The remaining lifecycle blocker is not runner loading: GIT-0027 pre-close sees
+the over-budget `git-commit-task-scoped-staging.test.ts` WIP. RFT-0101 owns the
+structural split that removes that blocker.
 
 The framework still lacks a normal CLI publication verb between build and
 runner-sync release. The previous exact pathspec publication of generation

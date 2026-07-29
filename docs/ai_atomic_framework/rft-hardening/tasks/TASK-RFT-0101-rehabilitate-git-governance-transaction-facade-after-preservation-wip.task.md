@@ -4,13 +4,12 @@ title: Rehabilitate git-governance transaction facade after preservation WIP
 status: planned
 owner: atm-core
 priority: P0
-depends_on:
-  - TASK-GIT-0027
+depends_on: []
 causalGraph:
   causalDependencies:
     - "G7.1 exact staged-entry lease authority is landed, but its consuming implementation was preserved as a 5,734-line non-delivery WIP diff."
   startConditions:
-    - "TASK-GIT-0027 is closed and its exact-entry lease authority is available."
+    - "G7.1 delivery 0de8db0a4 is an ancestor of the target HEAD; TASK-GIT-0027 may remain open because this card repairs the oversized test and facade that currently prevent its close."
     - "The preserved implementation diff is explicitly treated as recovery input, not delivery evidence."
   softRelations:
     - "TASK-GIT-0028 consumes the stable transaction interface after this card; it must not repeat this extraction."
@@ -80,6 +79,15 @@ That commit contains a 5,734-line change to `git-governance/implementation.ts`
 and is explicitly non-delivery evidence. This card turns the recovery input
 into a bounded, testable deep module before GIT-0028 wires the transaction into
 normal commit and close flows.
+
+## Delivery-First Start Rule
+
+This card deliberately consumes the landed G7.1 delivery rather than waiting
+for `TASK-GIT-0027` close. Requiring a closed predecessor would create a
+cycle: GIT-0027 pre-close observes the over-budget staging-test WIP that this
+card owns and must split. The immutable ancestor check on `0de8db0a4` is the
+causal gate; GIT-0027 close remains a later lifecycle operation, not a
+behavioral prerequisite.
 
 ## First-Principles Boundary
 
