@@ -28,6 +28,59 @@ reconciled through ATM.
 - The active risk is now the GIT boundary-admission continuation, not a reason
   to reopen completed Plan 3.1 governance cards.
 
+## Plan 3.1 Progress And Remaining Work
+
+### Landed Foundations
+
+- The SKL contracts through the catalog, TDD, selected-validator, and skill
+  corpus waves are landed. In particular, the validator execution contract,
+  shard/contribution model, TDD evidence lifecycle, selected validator flow,
+  and corpus compilation/canary work are usable framework foundations.
+- `ATM-GOV-0265` and `ATM-GOV-0266` are closed and pushed. The latter provides
+  the durable runner-session/receipt direction, including sealed-input and
+  child-attribution contracts. Treat their closed evidence as baseline, not
+  as proof that Plan 3.1 as a whole is closed.
+
+### Live Open Or Parked Plan 3.1 Work
+
+| Work item | Live truth | What remains |
+|---|---|---|
+| `TASK-SKL-0029` | blocked / released | Reconcile its autonomous validator/review lifecycle delivery and its blocked bundle before using it as the enforcement gate for later dogfood. |
+| `ATM-GOV-0240` | blocked / released | Historical/current runner red-green discrimination delivery needs a governed replay/close path. |
+| `ATM-GOV-0248` | blocked / released | Non-Git proposal workspace and steward-write migration needs the same replay/close treatment. |
+| `ATM-GOV-0267` | planning only, not imported | Runner-version selection qualification and feedback-loop implementation remains unstarted. |
+| `ATM-GOV-0268` | planning only, not imported | Runner-selection producer contract/snapshot provider remains unstarted. |
+| `ATM-GOV-0242`–`0244`, `0246`–`0263` | planning backlog | Compose-first dogfood, paired AB/BA evidence, transactional steward/commit candidate, overlap parity, autonomous recovery, and final-proof lanes remain open. |
+| `ATM-GOV-0245` | planning backlog | Final evidence aggregation/verdict; it must be last and cannot close Plan 3.1 while any preceding dogfood or recovery proof is open. |
+
+Planning frontmatter often still says `planned`; the target live ledger is the
+authoritative lifecycle state. Do not re-import a blocked task merely to make
+the mirror look tidy.
+
+### Required Plan 3.1 Order
+
+1. Preserve the independent GIT recovery sequence below; it repairs the
+   framework machinery used by every subsequent close.
+2. Reconcile and close `TASK-SKL-0029`, then replay/close `ATM-GOV-0240` and
+   `ATM-GOV-0248` with their existing evidence. Do not recreate their source
+   delivery from scratch.
+3. Before importing either runner-selection card, perform a small
+   planning-fidelity repair: `ATM-GOV-0267` names qualification as its role,
+   while `ATM-GOV-0268` describes itself as the producer required before that
+   qualification but currently declares the opposite dependency direction.
+   Normalize this producer -> consumer order in the cards first.
+4. Execute the runner-selection producer/qualification pair, then the
+   compose-first dogfood and transactional-steward lanes in dependency order.
+5. Run paired workload evidence, rollback parity, dashboard/manifest, and
+   independent acceptance gates only after the underlying execution substrate
+   is proven.
+6. Execute `ATM-GOV-0245` last as the evidence aggregator and final verdict.
+
+`TASK-AAO-0206` is a separate, currently active support lane for the bounded
+read-only `tasks audit` projection. It may run in parallel because it does not
+change Plan 3.1 behavior; its result reduces the cost of the captain audits
+above.
+
 ## GIT Status And Required Order
 
 | Task | Live state | Meaning | Next allowed movement |
