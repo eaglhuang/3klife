@@ -8,6 +8,7 @@ milestone: G7.2
 depends_on:
   - TASK-GIT-0015
   - TASK-GIT-0027
+  - TASK-RFT-0101
 causalGraph:
   causalDependencies:
     - "G7 broker-owned staging index arbitration"
@@ -16,6 +17,7 @@ causalGraph:
     - "The exact index-lease authority is validated, but the large CLI wrapper cannot consume a caller-provided task bundle without duplicating transaction policy."
   softRelations:
     - "G7.1 and G7.2 may be implemented in one same-owner coalesced lane; G7.2 must land before either production caller consumes G7.1."
+    - "RFT-0101 first rehabilitates the preserved oversized transaction facade; G7.2 consumes that bounded interface rather than extending recovery WIP."
     - "Unblocks G16 historical closeout without reopening G9 runner-publication work."
   changedPublicSeams:
     - "TaskScopedCommitTransaction adapter interface"
@@ -89,6 +91,10 @@ production commit and closeout flows. The protected resource remains the exact
 index entry. The transaction adapter owns orchestration; `GitIndexLeaseAuthority`
 remains the only owner of lease parsing, identity fencing, expiry, one-time use,
 and path/blob/mode equality.
+
+`TASK-RFT-0101` is a hard predecessor: it converts the existing non-delivery
+preservation WIP into the bounded transaction contract this card consumes.
+Do not treat any preservation commit as G7.2 evidence.
 
 ## First-Principles and Deep-Module Design
 

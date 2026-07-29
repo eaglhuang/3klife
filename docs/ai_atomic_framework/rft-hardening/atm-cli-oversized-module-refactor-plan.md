@@ -495,3 +495,19 @@ Queue closeback:
 ledger so 3KLife no longer presents this wave as unfinished implementation
 work. Future RFT work should start from a new card based on current target file
 measurements.
+
+## 2026-07-29 Recovery-Driven Git Transaction Rehabilitation
+
+`TASK-RFT-0101` is a mandatory recovery-driven RFT card. During the GIT G7
+lane, commit `39b13905f` preserved a 5,734-line diff in
+`packages/cli/src/commands/git-governance/implementation.ts` so shared-worktree
+state would not be lost. It is explicitly `ATM-Delivery: false` and must never
+be used as feature-completion evidence.
+
+First-principles ruling: the recovery revealed that command parsing, lease
+authority, index parking/restoration, commit execution, and failure receipts
+had collapsed into one facade. `TASK-RFT-0101` restores the deep-module boundary
+before `TASK-GIT-0028` may wire production callers. It must leave a <=600-line
+typed facade, a bounded transaction module, bounded test support, a baseline
+report, and command-backed proof. This is a hard predecessor of GIT-0028, not
+an optional cleanup lane.

@@ -1,6 +1,6 @@
 {
   "schemaId": "atm.seriesRegistry.v1",
-  "generatedAt": "2026-07-29T01:35:38.038Z",
+  "generatedAt": "2026-07-29T02:25:28.837Z",
   "baseDir": ".",
   "series": [
     {
@@ -82,6 +82,26 @@
         "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
         "relativePath": "series-registry.json",
         "contentDigest": "sha256:8cbf6062565621082e694718a45a6608fc174563e64450e135874acfe2b759c1"
+      }
+    },
+    {
+      "series": "RFT",
+      "prefix": "TASK-RFT",
+      "familyDir": "rft-hardening",
+      "planDocs": [
+        "rft-hardening/atm-cli-oversized-module-refactor-plan.md"
+      ],
+      "status": "active",
+      "approvedBy": "owner",
+      "approvedAt": "2026-07-29T02:25:28.836Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-07-29T02:25:28.837Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:a7846c8cba5a46faa1fbb313eb0673745099621f4b9b05a16a6d1d660c566814"
       }
     },
     {
