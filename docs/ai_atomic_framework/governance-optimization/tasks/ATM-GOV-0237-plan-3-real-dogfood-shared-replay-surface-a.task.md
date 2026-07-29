@@ -1,7 +1,13 @@
 ---
 task_id: ATM-GOV-0237
 title: Plan 3 real dogfood shared replay surface A
-status: planned
+status: done
+completed_at: 2026-07-29T20:42:56.299Z
+completed_by: codex-git-series-captain
+delivery_commit: ec63950aae38188b96f7da9ca5b8478adf958bd2
+runner_publication_commit: 539be865ef13a19d823b421d7e7edb061012429e
+closure_commit: 9ec2c4c4211839392740b0ddf73e4af43a5fd20b
+closure_packet: .atm/history/evidence/ATM-GOV-0237.closure-packet.json
 owner: atm-performance
 priority: P0
 milestone: ATM-3.1-R3

@@ -1,7 +1,14 @@
 ---
 task_id: ATM-GOV-0242
 title: Real two-card compose-first and fallback dogfood orchestrator
-status: planned
+status: done
+completed_at: 2026-07-29T21:04:41.932Z
+completed_by: codex-git-series-captain
+delivery_commit: 822462f513199ae1933465361866fceb4c0165eb
+runner_publication_commit: fb4e0c43ab530433d3f8c710e31bc7d57018e97a
+runner_publication_followup_commit: afef1e0e9ab8565806daef5df58ef8af2542095c
+closure_commit: 3618ea81d10418e1bf7488349ac842cc94605dba
+closure_packet: .atm/history/evidence/ATM-GOV-0242.closure-packet.json
 owner: atm-performance
 priority: P0
 milestone: ATM-3.1-R3
