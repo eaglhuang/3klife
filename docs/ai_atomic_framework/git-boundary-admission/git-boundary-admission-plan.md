@@ -135,7 +135,8 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G9 | TASK-GIT-0017 | Runner publication inventory and framework-temp claim/commit-surface parity |
 | G9.1 | TASK-GIT-0025 | Correct G9/G10 projection, import-origin admission, and filtered-bundle parity |
 | G11.1 | TASK-GIT-0026 | Make protected evidence context evaluate the complete task-scoped staged bundle after G9.1 lands |
-| G7.1/G7.2 | TASK-GIT-0027 / TASK-GIT-0028 | Deferred for one deep-module consolidation review; no further production wiring until the shared transaction boundary is proven |
+| G7.1 | TASK-GIT-0027 | Exact-entry, single-use stage-override lease authority only; it never mutates the index or wires a caller |
+| G7.2 | TASK-GIT-0028 | The sole park/commit/restore transaction adapter; consumes G7.1 plus G9.1's filtered bundle after both land |
 | G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
@@ -289,10 +290,12 @@ snapshot policy never weakens ticket coverage or delivery gates.
 3. `TASK-GIT-0026` then repairs G11's protected staged-bundle projection using
    that same bundle. Its source may be drafted early, but its delivery commit
    cannot precede G9.1.
-4. G7.1/G7.2 (`TASK-GIT-0027` and `TASK-GIT-0028`) are frozen pending one
-   deep-module consolidation review. They currently overlap on lease
-   consumption, index parking, and the commit transaction; neither may gain
-   further production wiring until that review proves two distinct invariants.
+4. Deep-module review retains two, and only two, distinct invariants. G7.1
+   (`TASK-GIT-0027`) validates and consumes the exact-entry capability without
+   index mutation. G7.2 (`TASK-GIT-0028`) is the sole transaction owner for
+   park/commit/restore and depends on G7.1 plus G9.1 (`TASK-GIT-0025`). No
+   third policy module, duplicate lease parser, or caller-local parking logic
+   is permitted.
 5. G16 (`TASK-GIT-0024`) retries historical-attestation closeout only after
    G9.1 and G11.1 land. Any later G7 replay is included only if the
    consolidation review retains it as a separate requirement.

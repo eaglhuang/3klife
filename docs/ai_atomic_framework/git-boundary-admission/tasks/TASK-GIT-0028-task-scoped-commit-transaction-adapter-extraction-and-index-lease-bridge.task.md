@@ -7,12 +7,15 @@ priority: P0
 milestone: G7.2
 depends_on:
   - TASK-GIT-0015
+  - TASK-GIT-0025
+  - TASK-GIT-0027
 causalGraph:
   causalDependencies:
     - "G7 broker-owned staging index arbitration"
     - "G7.1 exact stage-override lease authority source contract"
+    - "G9.1 filtered task-bundle parity contract"
   startConditions:
-    - "The exact index-lease authority is validated but the large CLI wrapper cannot consume it without duplicating transaction policy."
+    - "The exact index-lease authority and the one filtered task-bundle contract are validated, but the large CLI wrapper cannot consume them without duplicating transaction policy."
   softRelations:
     - "G7.1 and G7.2 may be implemented in one same-owner coalesced lane; G7.2 must land before either production caller consumes G7.1."
     - "Unblocks G16 historical closeout without reopening G9 runner-publication work."
@@ -20,7 +23,7 @@ causalGraph:
     - "TaskScopedCommitTransaction adapter interface"
     - "GitIndexLeaseAuthority transaction adapter"
   causalImpactEdges:
-    - "validated lease -> isolated task commit -> byte-identical foreign index restoration"
+  - "validated exact-entry lease plus filtered task bundle -> isolated task commit -> byte-identical foreign index restoration"
   parallelFrontierInputs: []
   validatorReferences:
     - "tests/cli/git-commit-task-scoped-staging.test.ts"
@@ -95,9 +98,10 @@ The required effect is small: commit one current-task bundle without losing
 someone else's staged entries. The hidden complexity is large: temporary index
 construction, hook environment, branch queue, durable receipts, failure
 rollback, and two callers. Put that complexity behind
-`TaskScopedCommitTransaction.execute(request)`. Callers provide their intended
-bundle and an optional explicit lease id; they receive a commit outcome or a
-fail-closed diagnostic. They never manipulate the live index directly.
+`TaskScopedCommitTransaction.execute(request)`. Callers provide the already
+filtered task bundle plus a `GitIndexLeaseAuthority` decision; they receive a
+commit outcome or a fail-closed diagnostic. They never manipulate the live
+index directly.
 
 Deletion test: deleting this module would force both `git commit` and
 `taskflow close` to duplicate index parking, restoration and receipt logic.
@@ -108,14 +112,17 @@ dates or local incident paths in production control flow.
 ## Acceptance
 
 - [ ] Normal governed commit and close-bundle callers use the same transaction
-  adapter and the same G7.1 authority.
+  adapter, the same G7.1 authorization decision, and the same G9.1 filtered
+  bundle.
 - [ ] A valid explicit lease parks only its exact foreign entries; successful
   and failed commits both restore path/blob/mode identically before returning.
 - [ ] Missing, expired, used, owner-mismatched, partial or drifted leases fail
   before index mutation. Restore failure creates durable receipt evidence and
   a specific diagnostic.
-- [ ] `implementation.ts` becomes a thin CLI adapter; the transaction policy
-  has one public interface and two real adapters.
+- [ ] `implementation.ts` remains a CLI parser/adapter: it neither parses nor
+  consumes lease storage, parks/restores index entries, nor recomputes the
+  filtered bundle. The transaction policy has one public interface and two
+  real adapters.
 - [ ] Focused tests, typecheck and CLI validation pass.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-29T00:06:38.450Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"git-boundary-admission/tasks/TASK-GIT-0028-task-scoped-commit-transaction-adapter-extraction-and-index-lease-bridge.task.md","contentDigest":"sha256:cf3e8634757a6f4cac02bf19e79928aba466bcfe4848976ebb409197ce6d5ff9"} -->
