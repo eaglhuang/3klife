@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T22-38-31-814Z-close-1bd944ae0103",
+  "taskId": "ATM-GOV-0253",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0253-cross-authority-two-phase-closeback-saga.task.md",
+  "taskSha256": "sha256:d1553706f46494dd70278221b6265d46491087058bf438d85960ac836b3341f3",
+  "createdAt": "2026-07-29T22:38:31.814Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0253 --actor codex-git-series-captain"
+}

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0253
 title: Cross-authority two-phase closeback saga
-status: planned
+status: done
 owner: atm-taskflow
 priority: P0
 milestone: ATM-3.1-R0
@@ -87,6 +87,15 @@ skl_validator_transition:
       coversImpactEdges:
         - authority-manifest-to-durable-closeback-state
         - remote-visibility-receipt-to-final-closeback-decision
+completed_at: "2026-07-29T22:38:31.814Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T22:38:31.814Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T22-38-31-814Z-close-1bd944ae0103"
+lastTransitionAt: "2026-07-29T22:38:31.814Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3cf1a3bc1f4ca62efc4ef150eba7a8448e804d70"
 ---
 
 # ATM-GOV-0253 Cross-authority two-phase closeback saga
