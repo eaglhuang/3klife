@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T17-13-17-009Z-close-18795ce9710e",
+  "taskId": "TASK-GIT-0027",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0027-index-lease-consumption-and-atomic-staged-bundle-parking.task.md",
+  "taskSha256": "sha256:7ee4df18a987e7e94ce20fb880b17fb871004be6133f72e802246c789bb8f992",
+  "createdAt": "2026-07-29T17:13:17.009Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0027 --actor codex-git-series-captain"
+}

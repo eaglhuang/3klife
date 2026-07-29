@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0027
 title: Index lease consumption and atomic staged-bundle parking
-status: planned
+status: done
 owner: unassigned
 priority: P0
 milestone: G7.1
@@ -41,6 +41,15 @@ validators:
 errorCodes:
   - "ATM_INDEX_FOREIGN_ACTIVE_STAGED"
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T17:13:17.009Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T17:13:17.009Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T17-13-17-009Z-close-18795ce9710e"
+lastTransitionAt: "2026-07-29T17:13:17.009Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0de8db0a413c65ee017a020fde6c22e25c6f1cf2"
 ---
 
 # TASK-GIT-0027 Index lease consumption and atomic staged-bundle parking
