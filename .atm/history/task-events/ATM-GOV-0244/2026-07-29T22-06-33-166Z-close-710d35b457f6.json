@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T22-06-33-166Z-close-710d35b457f6",
+  "taskId": "ATM-GOV-0244",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0244-backlog-rollback-parity-and-circuit-breaker-closeback.task.md",
+  "taskSha256": "sha256:bcb66d8107dbc95410afa5b2963784791ae1d67e6b80eb5173064cff9a0d2eee",
+  "createdAt": "2026-07-29T22:06:33.166Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0244 --actor codex-git-series-captain"
+}

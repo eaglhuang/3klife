@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0244
 title: Backlog rollback parity and circuit-breaker closeback
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.1-R4
@@ -57,6 +57,15 @@ skl_validator_transition:
     - test_int_plan3_final_verdict_evidence_aggregation_35563247
   advisoryTestCaseIds: []
   testContributions: []
+completed_at: "2026-07-29T22:06:33.166Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T22:06:33.166Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T22-06-33-166Z-close-710d35b457f6"
+lastTransitionAt: "2026-07-29T22:06:33.166Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f67f9ecbcf8a3328d4e588418208016e8b4c5694"
 ---
 
 # ATM-GOV-0244 Backlog rollback parity and circuit-breaker closeback
