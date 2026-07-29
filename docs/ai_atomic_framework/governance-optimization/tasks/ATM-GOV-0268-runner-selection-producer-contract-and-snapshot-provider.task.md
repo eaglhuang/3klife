@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0268
 title: Runner selection producer contract and snapshot provider
-status: planned
+status: done
 owner: atm-runner-sync
 priority: P1
 milestone: ATM-3.1-R0Q.5
@@ -98,6 +98,15 @@ atomizationImpact:
       source: packages/core/src/broker/runner-shadow-feedback-sink.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T19:18:27.455Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T19:18:27.455Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T19-18-27-455Z-close-e63d51a3a0d2"
+lastTransitionAt: "2026-07-29T19:18:27.455Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "598bb8118ce2f8622b886dcbf243c409a45e6380"
 ---
 
 # ATM-GOV-0268 Runner selection producer contract and snapshot provider

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T19-18-27-455Z-close-e63d51a3a0d2",
+  "taskId": "ATM-GOV-0268",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0268-runner-selection-producer-contract-and-snapshot-provider.task.md",
+  "taskSha256": "sha256:34afe5cbfc6b00938511530300603ba56258dd6b44281f3b2f30e69db724ef77",
+  "createdAt": "2026-07-29T19:18:27.455Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0268 --actor codex-git-series-captain"
+}
