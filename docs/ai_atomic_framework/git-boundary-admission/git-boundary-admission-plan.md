@@ -136,7 +136,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G9.1 | TASK-GIT-0025 | Correct G9/G10 projection, import-origin admission, and filtered-bundle parity |
 | G11.1 | TASK-GIT-0026 | Make protected evidence context evaluate the complete task-scoped staged bundle after G9.1 lands |
 | G7.1 | TASK-GIT-0027 | Exact-entry, single-use stage-override lease authority only; it never mutates the index or wires a caller |
-| G7.2 | TASK-GIT-0028 | The sole park/commit/restore transaction adapter; consumes G7.1 plus G9.1's filtered bundle after both land |
+| G7.2 | TASK-GIT-0028 | The sole park/commit/restore transaction adapter; consumes G7.1 and a caller-provided validated bundle |
 | G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
@@ -293,7 +293,8 @@ snapshot policy never weakens ticket coverage or delivery gates.
 4. Deep-module review retains two, and only two, distinct invariants. G7.1
    (`TASK-GIT-0027`) validates and consumes the exact-entry capability without
    index mutation. G7.2 (`TASK-GIT-0028`) is the sole transaction owner for
-   park/commit/restore and depends on G7.1 plus G9.1 (`TASK-GIT-0025`). No
+   park/commit/restore and depends only on G7.1. G9.1 (`TASK-GIT-0025`) later
+   makes commit and close callers calculate their supplied bundle once. No
    third policy module, duplicate lease parser, or caller-local parking logic
    is permitted.
 5. G16 (`TASK-GIT-0024`) retries historical-attestation closeout only after
