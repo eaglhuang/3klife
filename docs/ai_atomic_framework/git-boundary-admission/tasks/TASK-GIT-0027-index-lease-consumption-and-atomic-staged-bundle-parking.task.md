@@ -21,7 +21,6 @@ changedPublicSeams:
   - "human-approved exact lease -> validated exact-entry authorization -> transaction-owned byte-identical foreign index restore"
   parallelFrontierInputs: []
   validatorReferences:
-    - "tests/cli/git-commit-task-scoped-staging.test.ts"
     - "tests/cli/git-index-override-lease-consumption.test.ts"
   phaseOwner: atm.git-boundary-admission
 related_plan: git-boundary-admission/git-boundary-admission-plan.md
@@ -36,7 +35,6 @@ deliverables:
   - "An immutable exact-entry authorization result for TASK-GIT-0028; this card never parks, restores, commits, or wires a caller."
   - "Fail-closed diagnostics for missing, expired, consumed, partial, mismatched-path, mismatched-blob, or mismatched-mode leases; no raw Git recovery instruction and no task/actor/path incident allowlist."
 validators:
-  - "node --strip-types tests/cli/git-commit-task-scoped-staging.test.ts"
   - "node --strip-types tests/cli/git-index-override-lease-consumption.test.ts"
   - "npm run typecheck"
   - "npm run validate:cli"
