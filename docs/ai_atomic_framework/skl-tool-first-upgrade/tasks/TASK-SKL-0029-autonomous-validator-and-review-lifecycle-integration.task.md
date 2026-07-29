@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0029
 title: Autonomous validator and review lifecycle integration
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-VG-R0.7
@@ -50,6 +50,8 @@ atomizationImpact:
       source: packages/cli/src/commands/taskflow/close-preflight.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T18:32:51.142Z"
+delivery_commit: "a58b814fa49619ce2076bad4c72a5763c7f13cbd"
 ---
 
 # TASK-SKL-0029 Autonomous validator and review lifecycle integration
