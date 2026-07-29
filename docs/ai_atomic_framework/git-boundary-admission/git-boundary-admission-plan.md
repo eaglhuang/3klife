@@ -136,6 +136,7 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G9.1 | TASK-GIT-0025 | Correct G9/G10 projection and glob-scope parity; runs independently of G11.1 |
 | G11.1 | TASK-GIT-0026 | Make protected evidence context evaluate the complete task-scoped staged bundle; unblocks G16 closeout independently of G9.1 |
 | G7.1 | TASK-GIT-0027 | Consume exact stage-override leases through one atomic index park/restore authority |
+| G7.2 | TASK-GIT-0028 | Extract one task-scoped commit transaction adapter before wiring G7.1 into commit and closeout callers |
 | G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |
@@ -288,8 +289,12 @@ snapshot policy never weakens ticket coverage or delivery gates.
 3. G7.1 (`TASK-GIT-0027`) may proceed after G7 and before any blocked delivery
    replay. It repairs the authority-to-effect gap in stage-override leases;
    G9.1 and G11.1 remain independent source corrections.
-4. G16 (`TASK-GIT-0024`) retries historical-attestation closeout only after
-   G9.1, G11.1, and G7.1 have landed; this keeps ticket admission, protected
+4. G7.2 (`TASK-GIT-0028`) follows G7.1 and extracts the shared commit
+   transaction before either production caller consumes the capability. This
+   preserves one lease authority and two adapters instead of enlarging the
+   CLI wrapper with another policy branch.
+5. G16 (`TASK-GIT-0024`) retries historical-attestation closeout only after
+   G9.1, G11.1, G7.1 and G7.2 have landed; this keeps ticket admission, protected
    evidence context, and index parking as separate deep modules rather than
    coupling any fix to an incident-specific workaround.
 5. `TASK-GIT-0018` depends on the restricted execution and ATM-only guidance
