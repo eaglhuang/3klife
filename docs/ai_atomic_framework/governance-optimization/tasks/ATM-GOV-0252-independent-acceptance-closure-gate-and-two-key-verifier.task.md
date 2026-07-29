@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0252
 title: Independent acceptance closure gate and two-key verifier
-status: planned
+status: done
 owner: atm-taskflow
 priority: P0
 milestone: ATM-3.1-R0
@@ -69,6 +69,15 @@ skl_validator_transition:
     - test_int_authority_closeback_two_phase_durability_fde36800
   advisoryTestCaseIds: []
   testContributions: []
+completed_at: "2026-07-29T20:02:15.873Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T20:02:15.873Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T20-02-15-873Z-close-e9527ea8e14d"
+lastTransitionAt: "2026-07-29T20:02:15.873Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "56a506b3ea5bb6c4df187cc247d543525e8da169"
 ---
 
 # ATM-GOV-0252 Independent acceptance closure gate and two-key verifier

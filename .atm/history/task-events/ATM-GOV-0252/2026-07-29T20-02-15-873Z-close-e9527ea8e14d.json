@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T20-02-15-873Z-close-e9527ea8e14d",
+  "taskId": "ATM-GOV-0252",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0252-independent-acceptance-closure-gate-and-two-key-verifier.task.md",
+  "taskSha256": "sha256:7c72f1a1fb6a4ef88b27f131756a63b0ebaa12f956bb2625c753b9b3b10f20d7",
+  "createdAt": "2026-07-29T20:02:15.873Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0252 --actor codex-git-series-captain"
+}
