@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0240
 title: Historical runner red-green discrimination harness
-status: planned
+status: done
 owner: atm-performance
 priority: P0
 milestone: ATM-3.1-R2
@@ -40,6 +40,8 @@ atomizationImpact:
       source: scripts/run-plan3-red-green-discrimination.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T18:43:41.188Z"
+delivery_commit: "9faccadbdd379ddf4d846c9659701f37bee1cde8"
 skl_validator_transition:
   schema_id: atm.validatorSelection.transition.v1
   enforcement: advisory-until-TASK-SKL-0029
