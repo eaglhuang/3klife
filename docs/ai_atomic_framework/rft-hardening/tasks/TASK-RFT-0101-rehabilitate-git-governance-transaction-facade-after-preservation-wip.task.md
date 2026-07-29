@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0101
 title: Rehabilitate git-governance transaction facade after preservation WIP
-status: planned
+status: done
 owner: atm-core
 priority: P0
 depends_on: []
@@ -68,6 +68,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-07-29T17:10:40.055Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-29T17:10:40.055Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-29T17-10-40-055Z-close-786265595741"
+lastTransitionAt: "2026-07-29T17:10:40.055Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "dff658e7abc3e145876b4342f861296c7c86edfb"
 ---
 
 # TASK-RFT-0101 Rehabilitate git-governance transaction facade after preservation WIP

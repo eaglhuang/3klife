@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-29T17-10-40-055Z-close-786265595741",
+  "taskId": "TASK-RFT-0101",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0101-rehabilitate-git-governance-transaction-facade-after-preservation-wip.task.md",
+  "taskSha256": "sha256:ba42bdbcdeb32a3a940b4f1bb6fe801e0e1b2463a0bec9f8d70e249f43b7b008",
+  "createdAt": "2026-07-29T17:10:40.055Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0101 --actor codex-git-series-captain"
+}
