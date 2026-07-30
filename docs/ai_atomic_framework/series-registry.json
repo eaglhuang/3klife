@@ -1,6 +1,6 @@
 {
   "schemaId": "atm.seriesRegistry.v1",
-  "generatedAt": "2026-07-30T03:34:55.561Z",
+  "generatedAt": "2026-07-30T12:32:02.264Z",
   "baseDir": ".",
   "series": [
     {
@@ -70,19 +70,20 @@
       "planDocs": [
         "governance-optimization/end-to-end-auto-batch-performance-plan-v2.md",
         "governance-optimization/end-to-end-auto-batch-performance-plan-v3-2.md",
-        "governance-optimization/end-to-end-auto-batch-performance-plan-v3.md"
+        "governance-optimization/end-to-end-auto-batch-performance-plan-v3.md",
+        "governance-optimization/end-to-end-auto-batch-performance-plan-v4.md"
       ],
       "status": "active",
       "approvedBy": "project-owner",
-      "approvedAt": "2026-07-30T03:34:55.560Z",
+      "approvedAt": "2026-07-30T12:32:02.263Z",
       "createdByCommand": "atm plan series register",
       "creationSeal": {
         "schemaId": "atm.planningCreationSeal.v1",
         "command": "atm plan series register",
-        "createdAt": "2026-07-30T03:34:55.561Z",
+        "createdAt": "2026-07-30T12:32:02.264Z",
         "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
         "relativePath": "series-registry.json",
-        "contentDigest": "sha256:8d3a91c6730c439bbbfa609c9939351e27327d24d80cf6504297440d46cb89f5"
+        "contentDigest": "sha256:c75bca8e1c8bd726c87257e1b478c1e609c277090d4e0d9e5ff814267078463f"
       }
     },
     {
