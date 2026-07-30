@@ -9,7 +9,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-30T20:26:12+08:00
-updated_at: 2026-07-30T20:26:12+08:00
+updated_at: 2026-07-30T21:44:02+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -21,7 +21,7 @@ ATM 4.0 的主題不是再增加一批零散 validator，而是把 ATM 從「遇
 缺陷後補測試」提升成「先建立可枚舉的治理義務，再以案例生成、變異、重播與獨立
 證據持續消除缺口」的主動驗證系統。
 
-本計畫採用三層 deep-module 架構：
+本計畫採用一個外部 facade 與三個內部 deep modules：
 
 1. `QualityGauntlet` 是 task close、check-in、phase suite 與 release 的唯一外部
    interface。
@@ -29,6 +29,9 @@ ATM 4.0 的主題不是再增加一批零散 validator，而是把 ATM 從「遇
    coverage obligations。
 3. `ClosureAssuranceMachine` 執行「找缺口、產生案例、隔離執行、縮減、變異、裁決、
    續跑、簽證」迴圈。
+4. `CausalRegressionFamily` 把每次真實缺陷編譯成故障指紋、因果鄰域、因素組合與
+   累積 regression family；未來只在相關 impact cone 重跑該家族，新復發則擴張
+   家族而不是覆蓋舊證據。
 
 ATM 4.0 不承諾「軟體在無限輸入與所有未來環境下 100% 正確」。它能嚴格承諾的是：
 
@@ -59,6 +62,18 @@ Plan 4.0 可以在 Plan 3.2 完成前先完成規格、模型與 read-only shado
 production cutover 必須消費 Plan 3.2 的 resumable validation、evidence freshness、
 legal recovery 與 closeback seams。
 
+責任邊界如下：
+
+- **Plan 3.2** 擁有「依 task causal cone 經濟地選擇、續跑、重用 fresh evidence 與
+  合法 close」的 execution substrate。
+- **Plan 4.0** 擁有「從真實 escaped defect 學習 semantic family、補因果鄰域與因素
+  組合、累積 recurrence memory，再把 derived cases 交給 Plan 3.2 selector」的
+  learning substrate。
+
+因此不修改 Plan 3.2 的完成定義，也不在 3.2 臨時塞入第二套 family store；Plan 4.0
+可以先做 schemas、in-memory interface tests 與 historical corpus，production routing
+integration 則等待 Plan 3.2 seams 穩定。
+
 ## 2. Source article: ATM can learn
 
 使用者提供文章的核心不是「人類不用看 AI 程式碼」，而是把人工審查從逐行 diff
@@ -88,6 +103,12 @@ legal recovery 與 closeback seams。
 ATM 現有 test catalog、causal selector、validator runner、micro receipts、
 acceptance predicate、phase suite、realness taxonomy 與 neutral steward 是底座；Plan 4.0
 不得建立第二套 test catalog 或第二套 runner。
+
+每次 escaped defect 也必須被視為一次「模型不知道自己不知道什麼」的學習事件：
+修復本身只處理當前 counterexample；Plan 4.0 還要沿根因與相鄰 seams 擴張測試，
+保存成版本化 regression family。之後相同家族受影響時重跑新舊案例，不相關家族
+則不進入 task-close profile；分類證據不足時阻擋 close 並要求補 causal mapping，
+而不是全跑或空跑後放行。
 
 ## 3. Current evidence and why Plan 4.0 is necessary
 
@@ -319,7 +340,34 @@ interface ClosureAssuranceMachine {
 - budget accounting and resume；
 - stopping proof and certificate。
 
-### 6.4 Internal seams, not caller APIs
+### 6.4 Internal deep module: `CausalRegressionFamily`
+
+```ts
+interface CausalRegressionFamily {
+  observe(input: ConfirmedDefectObservation): Promise<FamilyRevision>;
+  route(input: RegressionRoutingInput): Promise<RegressionSelection>;
+}
+```
+
+`observe()` 同時處理首次 defect 與 recurrence：驗證真實 red-before/green-after、
+建立 fault fingerprint、尋找或建立 family、擴張 causal neighborhood、生成受
+constraints 約束的因素組合，並更新 same-family pack。`route()` 只決定哪些既有
+catalog case IDs 因本次 change 與 family 有因果關係而必須執行；它不執行 tests、
+不寫 closure evidence，也不取代 validation contract。
+
+它隱藏：
+
+- evidence-backed fingerprint normalization and semantic-family matching；
+- upstream/downstream/adjacent-state/sibling-adapter neighborhood expansion；
+- factor discovery、constraint solving、exhaustive or bounded combination generation；
+- cumulative family revision、dedupe、lineage、minimization and recurrence memory；
+- selected-versus-full shadow comparison and escaped-defect feedback。
+
+LLM 可提出 root-cause/factor 候選，但不能單獨授權 family merge、test exclusion 或
+close。決策必須回到 sealed observations、registered seams/invariants、constraint
+proof 與可重播 receipt。
+
+### 6.5 Internal seams, not caller APIs
 
 ```text
 QualityAuthorityPort
@@ -329,19 +377,23 @@ CandidateSandboxPort
 OraclePort
 EvidenceJournalPort
 ConstraintSolverPort
+IncidentEvidencePort
+RegressionFamilyStorePort
 ```
 
 每個 seam 必須至少有兩個真實 adapters，或明確留在 in-process implementation。
 不要公開 `discoverGaps()`、`runMutants()`、`openCoverageFile()`、`selectPlugin()` 等
 內部步驟。
 
-### 6.5 Deletion test
+### 6.6 Deletion test
 
 若刪除上述 modules，coverage denominator、authority resolution、case generation、
 mutation、oracle、sandbox、convergence、certificate 與 replay policy 會重新散回
 `run-validators`、test catalog、taskflow close、phase suite、各 tool scripts 與
-steward callers，因此這是真正有 depth、leverage 與 locality 的 module，而不是
-pass-through wrapper。
+steward callers。若只刪除 `CausalRegressionFamily`，fault fingerprint、因果鄰域、
+同根因組合、復發記憶與 selective family routing 會散回 bug intake、incident
+fixtures、test catalog、validation selector 與 close adapter。因此這些是真正有
+depth、leverage 與 locality 的 modules，而不是 pass-through wrappers。
 
 ## 7. State machine and terminal semantics
 
@@ -490,6 +542,59 @@ Test Generator 只能產生 proposal，不直接寫 canonical source。Proposal 
 - replay digest；
 - assumptions and expiration/freshness rules。
 
+### 8.8 `atm.failureFingerprint.v1`
+
+語意家族鍵不得依賴 task ID、actor、vendor、日期、process ID 或本機路徑，至少包含：
+
+- violated invariant/acceptance/error/recovery class；
+- owning module、public seam、state/transition/guard；
+- input/data-shape equivalence class and boundary class；
+- root causal anchors、event ordering and externally observable outcome；
+- write/no-write、rollback and environment class；
+- root-cause confidence、supporting/contradicting evidence and canonical digest。
+
+相同錯誤文字或 stack similarity 不足以合併 family；至少要有 invariant/transition 與
+一個 root causal anchor 相容。
+
+### 8.9 `atm.causalNeighborhood.v1`
+
+包含 upstream producers、same-policy callers、downstream consumers、adjacent
+states/transitions、sibling adapters、error/recovery seams、shared invariant/impact
+edges，以及 boundary、timing、ordering、failure injection、write visibility 和
+rollback factors。每個 node/edge 都要有 distance、provenance、included/excluded
+reason、constraint set、model epoch 與 digest。
+
+### 8.10 `atm.incidentRegressionFamily.v1`
+
+這是既有 test catalog 的 derived shard，不是第二套 catalog。包含：
+
+- stable semantic family ID、revision and digest；
+- fingerprint/neighborhood history and incident lineage；
+- minimal seed、old/new retained cases and semantic dedupe keys；
+- factor model、valid combinations and infeasibility proofs；
+- historical-red/current-green/root-cause-mutant discrimination receipts；
+- recurrence count、escape rate、catalog group ID and gate-promotion policy。
+
+Family revision 只能 append/expand；刪除 edge 或 case 需要 supersession proof，且不得
+移除任何唯一 witness。
+
+### 8.11 `atm.regressionFamilySelection.v1`
+
+包含 sealed candidate/impact cone/catalog digest、selected family/case IDs、deterministic
+causal reasons、explicit omissions and disjointness proofs、stale/ambiguous diagnostics、
+baseline task/phase cases、estimated cost and selection digest。
+
+Selection 只能補充既有 task-required/phase cases，不能移除它們。分類不充分時
+`failClosed = true` 並阻擋 close，要求補 causal mapping；不得以 run-all 或空集合
+掩蓋 unknown。
+
+### 8.12 `atm.incidentLearningReceipt.v1`
+
+封存 before/after family revision、accepted/rejected hypotheses、新增 neighborhood
+edges/factors/combinations、retained/deduplicated/minimized cases、red/green/mutant
+discrimination、selected/full shadow outcome、authority/tool/model/catalog digests 與
+explicit non-claims。
+
 ## 9. Quality vector: no compensating score
 
 禁止使用一個 `Quality Score = 87` 讓安全缺陷被 coverage 或文件分數抵銷。
@@ -572,6 +677,28 @@ pass | fail | inconclusive | ratchet-regression | advisory | not-applicable-prov
 14. 更新 receipts、frontier、budget 與 resume token。
 15. 重複直到 finite proof、合法 bounded sufficiency、確定性 counterexample 或
     indeterminate stop。
+
+當 round 的來源是真實 escaped defect 時，插入 incident learning sub-loop：
+
+1. Seal minimal reproduction、failure observation、pre-fix red、post-fix green 與 oracle。
+2. 將違反 invariant、state/transition、causal anchors、資料形狀、event order 與
+   write/rollback outcome 正規化成 fault fingerprint。
+3. 以 registered causal graph 擴張 upstream、same-policy callers、downstream、
+   adjacent transitions、sibling adapters 與 recovery seams。
+4. 從鄰域抽出因素與 constraints。critical finite domain 產生所有 valid combinations；
+   其他 domain 明確標記 bounded，使用 covering array、boundary、mutation-directed
+   與 fault-directed cases。
+5. 新案例必須能重現 historical red、驗證 current green，或殺死代表同根因的 mutant；
+   否則只保留為未證候選。
+6. 將有效案例 append 到相同 semantic family；去重與縮減不得刪除唯一 witness。
+7. 用 candidate impact cone 選擇 baseline cases 加相關 family packs；每個選取與省略
+   都要有 deterministic causal reason。
+8. causal mapping 不足、衝突或 stale 時阻擋 close 並要求補 mapping；不能退回全跑，
+   也不能以空 selected plan 放行。
+9. shadow 階段以 broad profile 比對 selected plan；若 broad profile 找到漏選的相關
+   defect，回寫 escaped edge、擴張 neighborhood，並使 selector policy epoch 失效。
+10. 相同 family 復發時 revision 必須單調增加，加入新因素、組合、鄰域邊與
+    counterexample；不得只替同一案例換名字。
 
 排序目標不是加權平均：
 
@@ -669,6 +796,20 @@ tests/fixtures/governance-incidents/<semantic-family>/
 fixture 不得以特定 task ID、actor、日期或本機路徑成為 production control flow。Incident
 只提供 sealed observations、minimal counterexample、expected invariant 與 red/green runner
 pair。
+
+### 11.8 Incident-driven causal-neighborhood generator
+
+這個 generator 回答「同一原因還可能在哪些條件組合下失敗」，不是把所有 tests 全跑：
+
+- 從 fingerprint 找 direct match、shared invariant、same-policy caller、sibling
+  adapter、upstream/downstream impact edge 與 adjacent recovery；
+- 從每個 seam 提取 input class、state、ordering、adapter、environment、failure mode、
+  write visibility 與 rollback factors；
+- 使用 constraints 移除不可能組合；pairwise/covering array 只可聲稱 sampled
+  coverage，critical 小型有限空間才可聲稱 exhaustive；
+- 以 original counterexample、root-cause mutant 與 independent invariant 三角辨識；
+- 相同 family 復發時提高 expansion radius 或補新 factor，不重置既有 corpus；
+- 不相交 family 在 focused profile 明確跳過並留下 disjointness proof。
 
 ## 12. Mutation, flaky, oracle and uncertainty governance
 
@@ -806,7 +947,8 @@ Python/C# adapters follow the same contracts. Unsupported language capabilities 
 - mutation-survivor generator；
 - fuzz corpus generator；
 - concurrency schedule generator；
-- historical incident replay generator。
+- historical incident replay generator；
+- causal-neighborhood/factor-combination generator。
 
 ### 14.4 Sandbox adapters
 
@@ -817,6 +959,19 @@ Python/C# adapters follow the same contracts. Unsupported language capabilities 
 
 另有 in-memory adapter 供 interface tests。Generator 永遠不直接取得 canonical writer。
 
+### 14.5 Incident-learning adapters
+
+至少包含：
+
+- ATM ledger/evidence/bug-backlog historical incident adapter；
+- governance model/test-catalog/validation-contract projection adapter；
+- deterministic in-memory incident/family store adapter for interface tests。
+
+第一個 adapter 將 command-backed red/green evidence 正規化成 confirmed observation；
+第二個把 derived family 投影成既有 `atm.testCaseGroup.v1` shards，並將 selection 合併到
+既有 validation contract 的 required cases、test contributions 與 causal impact
+edges。任何 adapter 都不能繞過 catalog authority 直接執行或 close。
+
 ## 15. Execution profiles and economics
 
 Plan 4.0 不得成為另一個 monolithic、每卡 30 分鐘以上、無進度的
@@ -825,7 +980,7 @@ Plan 4.0 不得成為另一個 monolithic、每卡 30 分鐘以上、無進度�
 | Profile | Purpose | Required slices |
 | --- | --- | --- |
 | `check-in` | 秒級至低分鐘 changed-obligation feedback | seal、inventory drift、cheap hard gates、changed structural coverage |
-| `task-close` | task causal cone proof | check-in + required acceptance/property + focused mutation |
+| `task-close` | task causal cone proof | check-in + required acceptance/property + focused mutation + selected incident families |
 | `phase` | 跨卡 shared seam 與 adapter parity | task-close + phase-owned obligations |
 | `nightly` | deep fuzz、broad mutation、torture、trend | resumable full frontier |
 | `release` | finite-model strict certificate and broad open-world assurance | all required dimensions、replay、negative controls |
@@ -843,6 +998,16 @@ Plan 4.0 不得成為另一個 monolithic、每卡 30 分鐘以上、無進度�
 
 cache key 至少綁定 candidate、model、obligation、tool、config、oracle、environment、
 adapter digests。
+
+Focused selection 的效率規則：
+
+- 永遠執行 profile baseline hard gates，再加 selected family packs；
+- 「漏水」與「漏瓦斯」只有在 shared invariant、impact edge 或 adapter 重疊時才同跑；
+- `nightly/release` 可作 broad audit，`task-close` 不因曾發生任何 defect 就全跑；
+- ambiguity/unknown 不是 run-all，也不是 run-none-and-pass，而是阻擋 close 並要求補
+  causal mapping；
+- rollout 期間用 selected/full shadow 估計 recall；發現漏選即是 selector blocker；
+- selection receipt 必須同時證明為何選與為何不選，不能只輸出 case list。
 
 ## 16. Interface tests
 
@@ -876,6 +1041,14 @@ adapter digests。
 28. 重送 idempotency key 不得重跑 external side effect。
 29. failed operation 必須維持 canonical source、ledger、index 與 evidence no-write invariant。
 30. close caller 傳 raw ratio 或 healthy boolean 無法改變 verdict。
+31. 相同 semantic family 第二次 incident 必須增加 revision 並保留前代 cases。
+32. task impact cone 只命中 family A 時，不相關 family B 不得進入 focused plan。
+33. family A/B 共享 required invariant 時，兩者皆須被選入。
+34. fingerprint/causal mapping unknown 時不得產生可 close 的 selected plan。
+35. pairwise 組合不得被標記為 exhaustive root-cause combinations。
+36. family minimization 不得移除 historical-red/current-green 唯一 witness。
+37. selected plan 全綠但 shadow full 找到同家族 defect 時，selection policy 必須失效。
+38. raw incident task ID、actor 或日期改變不得改變 semantic family identity。
 
 ## 17. Implementation phases and proposed GOV cards
 
@@ -950,28 +1123,32 @@ Exit：
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
 | `ATM-GOV-0292` | mutation adapter、lineage、lower/upper score and equivalence governance | 0285 |
-| `ATM-GOV-0293` | gap normalization、lexicographic planner and deterministic proposal ordering | 0286, 0288, 0292 |
-| `ATM-GOV-0294` | sandboxed test patch proposal、monotonic acceptance and minimization | 0293 |
-| `ATM-GOV-0295` | example/branch and mutation-survivor-directed generators | 0294 |
-| `ATM-GOV-0296` | property/metamorphic/model-based generator pack | 0294 |
-| `ATM-GOV-0297` | concurrency/fuzz/torture/fault generator pack | 0282, 0294 |
-| `ATM-GOV-0298` | acceptance/Gherkin and acceptance-spec mutation | 0278, 0294 |
+| `ATM-GOV-0293` | fault fingerprint、semantic family matching and evidence/confidence policy | 0279, 0292 |
+| `ATM-GOV-0294` | causal-neighborhood compiler、factor constraints and combination generator | 0280, 0293 |
+| `ATM-GOV-0295` | gap normalization、lexicographic planner and deterministic proposal ordering | 0286, 0288, 0292 |
+| `ATM-GOV-0296` | sandboxed test patch proposal、monotonic acceptance and minimization | 0295 |
+| `ATM-GOV-0297` | example/branch and mutation-survivor-directed generators | 0294, 0296 |
+| `ATM-GOV-0298` | property/metamorphic/model-based generator pack | 0294, 0296 |
+| `ATM-GOV-0299` | concurrency/fuzz/torture/fault generator pack | 0282, 0294, 0296 |
+| `ATM-GOV-0300` | acceptance/Gherkin and acceptance-spec mutation | 0278, 0296 |
 
 Exit：
 
 - generator 只能提出 proposal；
 - 每個 accepted proposal 單調縮小 gap frontier；
 - all seeds/counterexamples 可重播與縮減；
-- critical surviving non-equivalent mutants 清零。
+- critical surviving non-equivalent mutants 清零；
+- family identity 不依賴 task/actor/date/path；
+- root-cause combination claims 明確區分 exhaustive 與 sampled。
 
 ### Phase 4.0-5 — Hostile quality and anti-gaming
 
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
-| `ATM-GOV-0299` | seed commitment、hidden negative controls and anti-gaming checks | 0278, 0293 |
-| `ATM-GOV-0300` | security quality dimension and risk acceptance receipts | 0278, 0285 |
-| `ATM-GOV-0301` | performance、memory、resilience ratchet and benchmark evidence | 0285 |
-| `ATM-GOV-0302` | independent oracle arbitration、flaky and contradictory evidence adjudication | 0278, 0292 |
+| `ATM-GOV-0301` | seed commitment、hidden negative controls and anti-gaming checks | 0278, 0295 |
+| `ATM-GOV-0302` | security quality dimension and risk acceptance receipts | 0278, 0285 |
+| `ATM-GOV-0303` | performance、memory、resilience ratchet and benchmark evidence | 0285 |
+| `ATM-GOV-0304` | independent oracle arbitration、flaky and contradictory evidence adjudication | 0278, 0292 |
 
 Exit：
 
@@ -984,18 +1161,21 @@ Exit：
 
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
-| `ATM-GOV-0303` | coverage certificate、quality vector、explicit non-claims | 0286, 0299, 0302 |
-| `ATM-GOV-0304` | state/execution replay、proof invalidation and incident corpus | 0303 |
-| `ATM-GOV-0305` | Plan 3.x/3.2 shadow comparison and escaped-defect adjudication | 0303, Plan 3.2 0273 |
-| `ATM-GOV-0306` | six editor/provider adapter parity canary | 0304, 0305 |
-| `ATM-GOV-0307` | real ATM dogfood、two-captain hostile workloads and saturation evidence | 0305, 0306 |
-| `ATM-GOV-0308` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0307 |
+| `ATM-GOV-0305` | cumulative regression family store、catalog projection、selective routing and recurrence revisions | 0293, 0294, 0285 |
+| `ATM-GOV-0306` | coverage certificate、quality vector、explicit non-claims | 0286, 0301, 0304, 0305 |
+| `ATM-GOV-0307` | state/execution replay、proof invalidation and incident corpus | 0306 |
+| `ATM-GOV-0308` | Plan 3.x/3.2 selected-versus-full shadow comparison and escaped-defect adjudication | 0305, 0306, Plan 3.2 0273 |
+| `ATM-GOV-0309` | six editor/provider adapter parity canary | 0307, 0308 |
+| `ATM-GOV-0310` | real ATM dogfood、two-captain hostile workloads、incident recurrence learning and saturation evidence | 0308, 0309 |
+| `ATM-GOV-0311` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0310 |
 
 Exit：
 
 - strict certificate deterministic replay；
 - legacy red/new green 必須有 independent model correction，否則 block；
 - six adapter projections parity；
+- selected routing 對 shadow full 無 escaped related defect；
+- recurrence 單調擴張 family revision、causal neighborhood 與 retained corpus；
 - real dogfood command-backed cells > 0 且所有 required obligations covered；
 - rollback 可切回 legacy authority，不刪新 evidence。
 
@@ -1013,7 +1193,7 @@ Exit：
 - 0284/0285 production execution depends on ATM-GOV-0269；
 - 0286 freshness reuse depends on ATM-GOV-0270；
 - 0287 close/recovery projection depends on ATM-GOV-0271；
-- 0305 cross-authority shadow rollout depends on ATM-GOV-0273。
+- 0308 cross-authority shadow rollout depends on ATM-GOV-0273。
 
 ### 18.3 Parallel card rule
 
@@ -1024,7 +1204,8 @@ Exit：
 
 1. **Observe-only**：新 universe/gauntlet 只產生 divergence report，legacy gate 仍是 authority。
 2. **Shadow**：同一 sealed candidate 同時跑 legacy 與 Plan 4.0，記錄 selected cases、
-   false blocks、escaped defects、latency、cache、unknowns。
+   skipped families、false blocks、escaped defects、latency、cache、unknowns；focused
+   selection 同時與 broad profile 比對。
 3. **Advisory**：structural、mutation、complexity dimensions 先顯示 gaps，不阻擋。
 4. **Ratchet**：changed/impacted obligations 不得退化；新 critical gaps 阻擋。
 5. **Canary hard gate**：限定 adapters/tasks 消費 certificate。
@@ -1048,7 +1229,10 @@ Exit：
 - false closes / false blocks；
 - negative-control false greens；
 - stale receipt reuse attempts；
-- replay divergences。
+- replay divergences；
+- same-family recurrence and escape rate；
+- incident family false merge / false split；
+- selected-family recall against shadow broad profile。
 
 ### 20.2 Generator effectiveness
 
@@ -1058,7 +1242,10 @@ Exit：
 - minimized/retained case ratio；
 - duplicate proposal rate；
 - time to first counterexample；
-- plateau rounds。
+- plateau rounds；
+- causal-neighborhood edges/factors added per incident；
+- combinations generated/retained/deduplicated；
+- family revisions advanced by genuine new counterexamples。
 
 ### 20.3 Reliability
 
@@ -1075,7 +1262,10 @@ Exit：
 - cache hit and resume savings；
 - information gain per second；
 - time to stopping proof；
-- full-suite work avoided without escaped-defect regression。
+- full-suite work avoided without escaped-defect regression；
+- unrelated family tests avoided；
+- family selection precision/recall；
+- selected/broad runtime ratio and saved wall-clock。
 
 ### 20.5 Release success criteria
 
@@ -1088,7 +1278,9 @@ Exit：
 - command-backed execution evidence exists；
 - source/frozen and adapter parity pass；
 - replay produces the same certificate digest；
-- evidence packet states assumptions and non-claims。
+- evidence packet states assumptions and non-claims；
+- every admitted incident has fingerprint、family、neighborhood and learning receipt；
+- selected routing has zero known related-family escape during required shadow window。
 
 ## 21. Stop rules
 
@@ -1098,6 +1290,10 @@ Exit：
 - 不得將 timeout、unsupported、flaky、unknown、0 tests 或 missing receipt 降級為 pass。
 - 不得把 pairwise/fuzz sampling 稱為 exhaustive，除非有 proof。
 - 不得把 full mutation/fuzz 預設塞進每次 check-in。
+- 不得因任何 incident 就在每次 task-close 全跑所有 historical families。
+- 不得把 unknown/conflicting family mapping 當作「不相關」而跳過或放行。
+- 不得覆寫舊 regression family revision；新 incident 必須 append lineage。
+- 不得讓 LLM-only root-cause 猜測授權 family merge、test exclusion 或 close。
 - 不得建立第二 test catalog、第二 task lifecycle 或第二 evidence authority。
 - 不得把 incident task ID、actor、日期或 local path 寫入 production control flow。
 - 新增或改名公開 `ATM_*` ErrorCode 時，必須另走 ERR family 與
@@ -1143,8 +1339,11 @@ Plan 4.0 is accepted as the successor architecture direction when:
 
 1. GOV registry includes this plan document；
 2. ATM-GOV-0276 restores safe planning import fidelity；
-3. first cards preserve the three deep-module seams and do not collapse them into a monolith；
+3. first cards preserve `QualityGauntlet`、`CoverageUniverseCompiler`、
+   `ClosureAssuranceMachine` 與 `CausalRegressionFamily` seams，不把它們壓成 monolith；
 4. every card uses interface tests、independent evidence、explicit rollback and causal validators；
-5. task cards are created through `atm plan card create` and dry-run imported before dispatch。
+5. incident learning 能累積擴張同家族 regression pack，並以 Plan 3.2 causal selector
+   跳過有 disjointness proof 的不相關家族；
+6. task cards are created through `atm plan card create` and dry-run imported before dispatch。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-07-30T12:26:12.488Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/end-to-end-auto-batch-performance-plan-v4.md","contentDigest":"sha256:703113329a67851b469272e8091e30a8b2d10fdaa1f3772ef1355ef76508a7d0"} -->
