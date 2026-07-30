@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-30T01-18-09-197Z-close-454faca19c49",
+  "taskId": "ATM-GOV-0245",
+  "action": "close",
+  "actorId": "codex-git-series-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0245-plan-3-1-evidence-aggregator-and-final-verdict.task.md",
+  "taskSha256": "sha256:ada6bd812f2a7ad5e198fc5faeede84517d82ee63538d3cccae595c9559d4f40",
+  "createdAt": "2026-07-30T01:18:09.197Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0245 --actor codex-git-series-captain"
+}

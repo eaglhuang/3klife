@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0245
 title: Plan 3.1 evidence aggregator and final verdict
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 milestone: ATM-3.1-R5
@@ -33,8 +33,8 @@ validators:
   - node --strip-types tests/cli/atm-3-final-closure.test.ts
   - node --strip-types tests/cli/plan3-evidence-closure-diagnostic.test.ts
   - node atm.mjs broker replay status --json
+  - node atm.mjs broker replay final-verdict --json
   - node atm.mjs doctor --json
-  - npm run validate:standard -- --json
   - node atm.mjs hook pre-push --base origin/main --head HEAD --json
 errorCodes: []
 evidence:
@@ -71,6 +71,15 @@ skl_validator_transition:
       coversImpactEdges:
         - canonical-evidence-sources-to-final-verdict
         - phase-suite-receipts-to-autonomy-claim
+completed_at: "2026-07-30T01:18:09.197Z"
+completed_by_agent: "codex-git-series-captain"
+closedAt: "2026-07-30T01:18:09.197Z"
+closedByActor: "codex-git-series-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T01-18-09-197Z-close-454faca19c49"
+lastTransitionAt: "2026-07-30T01:18:09.197Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "4813c4464a517a10d4f2351b9ab58d369c086934"
 ---
 
 # ATM-GOV-0245 Plan 3.1 evidence aggregator and final verdict
