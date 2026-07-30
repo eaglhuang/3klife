@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0034
 title: Engineering change method profiles and fidelity receipts
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P2
 milestone: ATM-SKL-VG-R1.2
@@ -73,6 +73,15 @@ atomizationImpact:
       source: packages/core/src/skills/engineering-change-method.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-30T19:23:10.493Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-30T19:23:10.493Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T19-23-10-493Z-close-4210d5a20353"
+lastTransitionAt: "2026-07-30T19:23:10.493Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "1bcc5324a15de28961d5a009c084db4e8c6fa665"
 ---
 
 # TASK-SKL-0034 Engineering change method profiles and fidelity receipts

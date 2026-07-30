@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-30T19-23-10-493Z-close-4210d5a20353",
+  "taskId": "TASK-SKL-0034",
+  "action": "close",
+  "actorId": "codex-skl-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0034-engineering-change-method-profiles-and-fidelity-receipts.task.md",
+  "taskSha256": "sha256:d5a4fb4c5af522e7ff4ee8e148e0f53499bc7c177475cac59d8cfca5f1534359",
+  "createdAt": "2026-07-30T19:23:10.493Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0034 --actor codex-skl-captain"
+}
