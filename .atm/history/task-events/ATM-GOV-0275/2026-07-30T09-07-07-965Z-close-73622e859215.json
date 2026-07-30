@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-30T09-07-07-965Z-close-73622e859215",
+  "taskId": "ATM-GOV-0275",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0275-preserve-foreign-work-during-dual-captain-governed-commit.task.md",
+  "taskSha256": "sha256:add736e65dc0eafb6f8d01d1f7811e462337200d830fb2b7907fa22d5a66df06",
+  "createdAt": "2026-07-30T09:07:07.965Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0275 --actor codex-captain"
+}

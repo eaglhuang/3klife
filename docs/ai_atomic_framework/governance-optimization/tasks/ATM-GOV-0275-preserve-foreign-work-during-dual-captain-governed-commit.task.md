@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0275
 title: Preserve foreign work during dual-captain governed commit
-status: planned
+status: done
 owner: unassigned
 assignee: Claude-005
 priority: P0
@@ -73,6 +73,15 @@ atomizationImpact:
       disposition: follow-up-card
       inlineReason: null
 createdByCommand: atm plan card create
+completed_at: "2026-07-30T09:07:07.965Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-07-30T09:07:07.965Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T09-07-07-965Z-close-73622e859215"
+lastTransitionAt: "2026-07-30T09:07:07.965Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2ddfd007a19fc6db1bfc32406a8622974f1e03a3"
 ---
 
 # ATM-GOV-0275 Preserve foreign work during dual-captain governed commit
