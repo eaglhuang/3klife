@@ -9,7 +9,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-30T20:26:12+08:00
-updated_at: 2026-07-30T21:44:02+08:00
+updated_at: 2026-07-30T21:53:50+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -99,6 +99,8 @@ integration 則等待 Plan 3.2 seams 穩定。
 | Deterministic tool gauntlet | sealed commands、tool digests、environment、seed 與 replay |
 | Context reset | 不依賴聊天記憶；以 plan、model、receipt、counterexample corpus 續跑 |
 | Evidence review | 人類審查 proof、assumptions、unknowns、risk，而不是相信單一綠燈 |
+| First-class tests as workflow | skills 在 bug intake、開卡、派工、evidence、handoff 各入口保存同一條 test-learning lineage |
+| Independent exam authority | skills 只能收集、提議、路由與解釋；不能由 Writer skill 同時生成 oracle、降門檻與裁決 close |
 
 ATM 現有 test catalog、causal selector、validator runner、micro receipts、
 acceptance predicate、phase suite、realness taxonomy 與 neutral steward 是底座；Plan 4.0
@@ -972,6 +974,75 @@ Python/C# adapters follow the same contracts. Unsupported language capabilities 
 既有 validation contract 的 required cases、test contributions 與 causal impact
 edges。任何 adapter 都不能繞過 catalog authority 直接執行或 close。
 
+### 14.6 Skill-entry learning plane
+
+Skills 是最靠近人類與 Agent 行為的入口，因此適合負責「何時問、收集什麼、把資料交給
+誰」，但不適合保存另一套 root-cause policy、test catalog 或 final verdict。Plan 4.0
+採以下責任表：
+
+| Skill | Plan 4.0 responsibility | Produces / consumes | Must not |
+| --- | --- | --- | --- |
+| `atm-governance-router` / `atm-next` | 辨識 record-only、bug-fix、confirmed incident、recurrence 與 audit intent，選窄路徑 | consumes typed route/selection；surfaces unknown mapping | 自行猜 family 或以 full suite 代替分類 |
+| `atm-bug-backlog` | 將「記 bug」升級為 incident-learning intake，記錄測試廣度與深度缺口 | produces `atm.incidentLearningCandidate.v1` | 宣告 root cause、family match、fix success 或 close |
+| `atm-task-card-authoring` | 將 confirmed candidate 轉成 acceptance、case IDs、independent oracle、red/green、mutation、protected exam surfaces 與 family-learning obligations | produces card validation/incident contract and gauntlet profile ref | 只列 validator command、降低 threshold 或讓 Writer 控制考卷 |
+| `atm-dispatch` | 依風險分離 Writer、Test Generator、Validator/Reviewer，傳遞 family revision 與 selection receipt requirements | consumes sealed card and current route | 把 Captain identity、oracle authority 或未封存猜測交給 worker |
+| `atm-evidence` | 驗證 same-case red-before/green-after、independent oracle、selected/omitted reasons、mutation discrimination 與 zero-test | produces confirmed observation and receipts | 以 coverage、exit 0 或 Writer attestation 單獨證明修復 |
+| `atm-handoff` | 傳遞 unresolved hypotheses、family revision、new factors、selected/skipped families 與 replay refs | consumes receipts, produces continuation summary | 把聊天推論升格為 canonical family memory |
+| `atm-upgrade-scan` | 聚合 recurrent families、escape rate、CRAP/complexity/dependency hotspots，提出測試或 deep-module upgrade | consumes family/evidence trend | 用總分抵銷 blocker 或直接修改 production |
+| `atm-deep-module-refactor` | 把 repeated-family evidence 當作 shotgun policy/caller complexity 的架構訊號 | consumes family lineage and causal neighborhood | 只因 file length 或單一 incident 強制抽模組 |
+| `mailbox-worker-execution` | 只執行 sealed selection manifest，回報 progress、partial terminal 與 receipt | consumes selected cases | 重算 required set、freshness 或 family identity |
+
+### 14.7 `atm.incidentLearningCandidate.v1`
+
+`atm-bug-backlog` 的新輸出是候選 intake，不是 confirmed defect。至少包含：
+
+- symptom/error/recovery class and affected public seam；
+- violated invariant/acceptance refs or explicit `unknown`；
+- failing command/receipt、minimal reproduction and externally observable wrong outcome；
+- known preconditions、state/transition、data shape、ordering、adapter/environment factors；
+- **breadth hypothesis**：upstream/downstream、same-policy callers、sibling adapters、
+  adjacent transitions and shared invariants 還應檢查哪些；
+- **depth hypothesis**：boundary、negative、rollback、retry、concurrency、mutation、
+  property/metamorphic and independent-oracle tests 還缺哪些；
+- existing tests that should have caught it and why they did not；
+- failed quality-vector dimension and policy kind: `hard-blocker | ratchet | trend | unknown`；
+- root-cause hypotheses with evidence/confidence，明確標為 non-authoritative；
+- possible recurrence/family refs、privacy/redaction and source availability；
+- disposition: `intake-only | needs-reproduction | confirmed-candidate |
+  optimization-only | rejected-not-defect`。
+
+Backlog skill 必須允許資訊不足時寫 `unknown/unavailable`，不能為了填滿欄位而虛構。
+只有 `atm-evidence` 取得 command-backed same-scenario red/green 與 independent oracle 後，
+`CausalRegressionFamily.observe()` 才可建立或擴張 family。
+
+### 14.8 Skill-to-module learning loop
+
+```text
+human/agent reports defect
+  -> atm-bug-backlog: incidentLearningCandidate
+  -> atm-task-card-authoring: acceptance + case/evidence contract
+  -> atm-dispatch: separated Writer / Generator / Validator authority
+  -> atm-evidence: confirmed red/green observation
+  -> CausalRegressionFamily.observe(): family revision + neighborhood + factors
+  -> canonical test catalog projection
+  -> atm-next / validation contract: focused family selection
+  -> mailbox worker / QualityGauntlet: execute and prove
+  -> atm-handoff + atm-upgrade-scan: recurrence and structural learning
+```
+
+Rollout 分兩期：
+
+1. **Pre-module advisory**：skills 可先收集 candidate fields、指出 missing data、建立
+   card/evidence obligations，但不得宣稱 family 已存在。
+2. **Typed module active**：skills 只消費 `observe/route` 的 typed output；任何 projection
+   不支援新欄位時 fail closed，不能把 machine field 降成 prose。
+
+Skill 變更一律先修改 `templates/skills/*.skill.md` canonical corpus，再由 sealed source
+snapshot 編譯至 Codex、Claude Code、Cursor、Copilot、Gemini 與 Antigravity。現有
+`atm-bug-backlog` 只有 repo-local skill 而缺 canonical template，必須先補 template
+authority、schema validation、projection parity 與 reinstall survival test，禁止只改
+`.agents/skills/atm-bug-backlog/SKILL.md`。
+
 ## 15. Execution profiles and economics
 
 Plan 4.0 不得成為另一個 monolithic、每卡 30 分鐘以上、無進度的
@@ -1049,6 +1120,14 @@ Focused selection 的效率規則：
 36. family minimization 不得移除 historical-red/current-green 唯一 witness。
 37. selected plan 全綠但 shadow full 找到同家族 defect 時，selection policy 必須失效。
 38. raw incident task ID、actor 或日期改變不得改變 semantic family identity。
+39. backlog intake 缺 invariant/root-cause evidence 時保留 `unknown`，不得虛構 family。
+40. backlog candidate 不能單獨建立 confirmed family 或授權 close。
+41. skill projection 掉 `breadthHypothesis`、`depthHypothesis` 或 machine refs 時 fail closed。
+42. Writer 與 Test Generator 產生相同誤解時，independent oracle/negative control 必須辨識。
+43. 同一 typed skill output 投影至六種 editor/provider adapters 後 machine fields parity。
+44. reinstall/refresh skills 後 canonical incident-learning instructions 與 digest 不漂移。
+45. `atm-upgrade-scan` 對 recurrent family 提出 deep-module review，不直接改 production。
+46. handoff 缺 family revision/selection digest 時標記 unavailable，不從聊天重建。
 
 ## 17. Implementation phases and proposed GOV cards
 
@@ -1162,12 +1241,14 @@ Exit：
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
 | `ATM-GOV-0305` | cumulative regression family store、catalog projection、selective routing and recurrence revisions | 0293, 0294, 0285 |
-| `ATM-GOV-0306` | coverage certificate、quality vector、explicit non-claims | 0286, 0301, 0304, 0305 |
-| `ATM-GOV-0307` | state/execution replay、proof invalidation and incident corpus | 0306 |
-| `ATM-GOV-0308` | Plan 3.x/3.2 selected-versus-full shadow comparison and escaped-defect adjudication | 0305, 0306, Plan 3.2 0273 |
-| `ATM-GOV-0309` | six editor/provider adapter parity canary | 0307, 0308 |
-| `ATM-GOV-0310` | real ATM dogfood、two-captain hostile workloads、incident recurrence learning and saturation evidence | 0308, 0309 |
-| `ATM-GOV-0311` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0310 |
+| `ATM-GOV-0306` | canonical `atm-bug-backlog` template、incident-learning candidate schema、first-layer intent routing and reinstall survival | 0293 |
+| `ATM-GOV-0307` | task-card/evidence/dispatch/handoff/upgrade-scan/mailbox skill projections and six-adapter machine-field parity | 0305, 0306 |
+| `ATM-GOV-0308` | coverage certificate、quality vector、explicit non-claims | 0286, 0301, 0304, 0305, 0307 |
+| `ATM-GOV-0309` | state/execution replay、proof invalidation and incident corpus | 0308 |
+| `ATM-GOV-0310` | Plan 3.x/3.2 selected-versus-full shadow comparison and escaped-defect adjudication | 0305, 0307, 0308, Plan 3.2 0273 |
+| `ATM-GOV-0311` | six editor/provider adapter parity canary | 0307, 0309, 0310 |
+| `ATM-GOV-0312` | real ATM dogfood、two-captain hostile workloads、incident recurrence learning and saturation evidence | 0310, 0311 |
+| `ATM-GOV-0313` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0312 |
 
 Exit：
 
@@ -1176,6 +1257,8 @@ Exit：
 - six adapter projections parity；
 - selected routing 對 shadow full 無 escaped related defect；
 - recurrence 單調擴張 family revision、causal neighborhood 與 retained corpus；
+- backlog intake 能保存 breadth/depth hypotheses 而不冒充 confirmed family；
+- canonical skill corpus refresh 後六種 adapters machine-field parity；
 - real dogfood command-backed cells > 0 且所有 required obligations covered；
 - rollback 可切回 legacy authority，不刪新 evidence。
 
@@ -1186,6 +1269,8 @@ Exit：
 - 0277、0278、0279 的 plan/schema/interface work；
 - 0280、0281 的 pure compiler/in-memory interface tests；
 - historical incident corpus inventory；
+- `atm.incidentLearningCandidate.v1` schema、canonical skill-template inventory and
+  pre-module advisory wording；
 - read-only tool adapter spikes。
 
 ### 18.2 Must wait for Plan 3.2 capabilities
@@ -1193,7 +1278,7 @@ Exit：
 - 0284/0285 production execution depends on ATM-GOV-0269；
 - 0286 freshness reuse depends on ATM-GOV-0270；
 - 0287 close/recovery projection depends on ATM-GOV-0271；
-- 0308 cross-authority shadow rollout depends on ATM-GOV-0273。
+- 0310 cross-authority shadow rollout depends on ATM-GOV-0273。
 
 ### 18.3 Parallel card rule
 
@@ -1212,6 +1297,15 @@ Exit：
 6. **Release authority**：只有 strict/bounded policy 合法 certificate 才可 close/release。
 7. **Replace-don't-layer**：interface coverage 穩定後，刪除 caller-local duplicated verdicts
    與被取代的 private-internal tests。
+
+Skill plane 另採：
+
+1. `atm-bug-backlog` 先以 advisory candidate intake 上線，量測欄位完整度與填寫成本。
+2. `atm-task-card-authoring` / `atm-evidence` 再要求 selected high-risk cards 具備
+   breadth/depth、oracle 與 red/green bindings。
+3. `observe/route` typed APIs 穩定後，router/next/dispatch/handoff 才消費 family output。
+4. 六 adapter projection parity 與 reinstall survival 通過後，才允許 skill-driven hard
+   gate；舊 skills 不能靜默丟欄位。
 
 若 legacy red/new green：
 
@@ -1232,7 +1326,9 @@ Exit：
 - replay divergences；
 - same-family recurrence and escape rate；
 - incident family false merge / false split；
-- selected-family recall against shadow broad profile。
+- selected-family recall against shadow broad profile；
+- incident-learning candidate field completeness；
+- skill-route false positive / false negative。
 
 ### 20.2 Generator effectiveness
 
@@ -1246,6 +1342,8 @@ Exit：
 - causal-neighborhood edges/factors added per incident；
 - combinations generated/retained/deduplicated；
 - family revisions advanced by genuine new counterexamples。
+- backlog-to-confirmed-family conversion rate and latency；
+- breadth/depth hypotheses that become retained tests。
 
 ### 20.3 Reliability
 
@@ -1266,6 +1364,8 @@ Exit：
 - unrelated family tests avoided；
 - family selection precision/recall；
 - selected/broad runtime ratio and saved wall-clock。
+- skill intake/dispatch overhead；
+- duplicate questions avoided through typed handoff。
 
 ### 20.5 Release success criteria
 
@@ -1280,7 +1380,8 @@ Exit：
 - replay produces the same certificate digest；
 - evidence packet states assumptions and non-claims；
 - every admitted incident has fingerprint、family、neighborhood and learning receipt；
-- selected routing has zero known related-family escape during required shadow window。
+- selected routing has zero known related-family escape during required shadow window；
+- six installed skill projections preserve required machine fields and source digest。
 
 ## 21. Stop rules
 
@@ -1294,6 +1395,11 @@ Exit：
 - 不得把 unknown/conflicting family mapping 當作「不相關」而跳過或放行。
 - 不得覆寫舊 regression family revision；新 incident 必須 append lineage。
 - 不得讓 LLM-only root-cause 猜測授權 family merge、test exclusion 或 close。
+- 不得讓 skill prompt 成為 root-cause、family、coverage denominator 或 verdict authority。
+- 不得只改 installed skill copy；canonical template、schema、compiler projection 與 parity
+  evidence 必須同批交付。
+- 不得要求 backlog reporter 為未知欄位編造答案；`unknown/unavailable` 是合法 intake。
+- 不得把每個 backlog item 都升級為 confirmed incident 或強迫執行 broad suite。
 - 不得建立第二 test catalog、第二 task lifecycle 或第二 evidence authority。
 - 不得把 incident task ID、actor、日期或 local path 寫入 production control flow。
 - 新增或改名公開 `ATM_*` ErrorCode 時，必須另走 ERR family 與
@@ -1344,6 +1450,10 @@ Plan 4.0 is accepted as the successor architecture direction when:
 4. every card uses interface tests、independent evidence、explicit rollback and causal validators；
 5. incident learning 能累積擴張同家族 regression pack，並以 Plan 3.2 causal selector
    跳過有 disjointness proof 的不相關家族；
-6. task cards are created through `atm plan card create` and dry-run imported before dispatch。
+6. ATM entry skills preserve one typed learning lineage from backlog intake through task card、
+   dispatch、evidence、family selection、handoff and upgrade scan；
+7. canonical skill templates and six adapter projections pass machine-field parity and reinstall
+   survival；
+8. task cards are created through `atm plan card create` and dry-run imported before dispatch。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-07-30T12:26:12.488Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/end-to-end-auto-batch-performance-plan-v4.md","contentDigest":"sha256:703113329a67851b469272e8091e30a8b2d10fdaa1f3772ef1355ef76508a7d0"} -->
