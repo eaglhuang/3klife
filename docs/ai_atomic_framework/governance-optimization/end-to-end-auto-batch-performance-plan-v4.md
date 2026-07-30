@@ -58,6 +58,11 @@ close admission、validator economics、multi-agent authority 與 release confid
 它不是 ErrorCode registry migration、TMP cleanup、單純 oversized refactor 或 Git-only
 boundary work。
 
+Family exception：所有 skill template、skill schema、entry routing 與六
+editor/provider skill projection 變更改由已註冊的 `SKL / TASK-SKL` family 擁有，
+並由 ATM Captain 自己實作。GOV 卡只消費 typed skill/module contracts，不重複修改
+skill source。
+
 Plan 4.0 可以在 Plan 3.2 完成前先完成規格、模型與 read-only shadow design，但正式
 production cutover 必須消費 Plan 3.2 的 resumable validation、evidence freshness、
 legal recovery 與 closeback seams。
@@ -1043,6 +1048,13 @@ snapshot 編譯至 Codex、Claude Code、Cursor、Copilot、Gemini 與 Antigravi
 authority、schema validation、projection parity 與 reinstall survival test，禁止只改
 `.agents/skills/atm-bug-backlog/SKILL.md`。
 
+Implementation ownership：
+
+- `TASK-SKL-0036` owns incident-learning intake and canonical backlog skill.
+- `TASK-SKL-0037` owns the remaining lifecycle skill projections and parity.
+- Both cards remain in the ATM Captain's own implementation lane; GOV captains
+  receive only their typed outputs and do not edit skill sources.
+
 ## 15. Execution profiles and economics
 
 Plan 4.0 不得成為另一個 monolithic、每卡 30 分鐘以上、無進度的
@@ -1241,14 +1253,14 @@ Exit：
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
 | `ATM-GOV-0305` | cumulative regression family store、catalog projection、selective routing and recurrence revisions | 0293, 0294, 0285 |
-| `ATM-GOV-0306` | canonical `atm-bug-backlog` template、incident-learning candidate schema、first-layer intent routing and reinstall survival | 0293 |
-| `ATM-GOV-0307` | task-card/evidence/dispatch/handoff/upgrade-scan/mailbox skill projections and six-adapter machine-field parity | 0305, 0306 |
-| `ATM-GOV-0308` | coverage certificate、quality vector、explicit non-claims | 0286, 0301, 0304, 0305, 0307 |
-| `ATM-GOV-0309` | state/execution replay、proof invalidation and incident corpus | 0308 |
-| `ATM-GOV-0310` | Plan 3.x/3.2 selected-versus-full shadow comparison and escaped-defect adjudication | 0305, 0307, 0308, Plan 3.2 0273 |
-| `ATM-GOV-0311` | six editor/provider adapter parity canary | 0307, 0309, 0310 |
-| `ATM-GOV-0312` | real ATM dogfood、two-captain hostile workloads、incident recurrence learning and saturation evidence | 0310, 0311 |
-| `ATM-GOV-0313` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0312 |
+| `TASK-SKL-0036` | canonical `atm-bug-backlog` template、incident-learning candidate schema、first-layer intent routing and reinstall survival | TASK-SKL-0031, TASK-SKL-0033 |
+| `TASK-SKL-0037` | task-card/evidence/dispatch/handoff/upgrade-scan/mailbox skill projections and six-adapter machine-field parity | TASK-SKL-0036, ATM-GOV-0305 |
+| `ATM-GOV-0306` | coverage certificate、quality vector、explicit non-claims | 0286, 0301, 0304, 0305, TASK-SKL-0037 |
+| `ATM-GOV-0307` | state/execution replay、proof invalidation and incident corpus | 0306 |
+| `ATM-GOV-0308` | Plan 3.x/3.2 selected-versus-full shadow comparison and escaped-defect adjudication | 0305, 0306, TASK-SKL-0037, Plan 3.2 0273 |
+| `ATM-GOV-0309` | six editor/provider runtime adapter parity canary | 0307, 0308 |
+| `ATM-GOV-0310` | real ATM dogfood、two-captain hostile workloads、incident recurrence learning、saturation evidence and all-branch phase-exit manifest | 0281, 0282, 0283, 0287, 0289, 0290, 0291, 0297, 0298, 0299, 0300, 0302, 0303, 0308, 0309, TASK-SKL-0037 |
+| `ATM-GOV-0311` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0310 |
 
 Exit：
 
@@ -1278,12 +1290,45 @@ Exit：
 - 0284/0285 production execution depends on ATM-GOV-0269；
 - 0286 freshness reuse depends on ATM-GOV-0270；
 - 0287 close/recovery projection depends on ATM-GOV-0271；
-- 0310 cross-authority shadow rollout depends on ATM-GOV-0273。
+- 0308 cross-authority shadow rollout depends on ATM-GOV-0273。
+- TASK-SKL-0037 lifecycle projection depends on ATM-GOV-0305 typed family/selection seams。
 
 ### 18.3 Parallel card rule
 
 可並行的卡必須擁有不同 behavior/interface/evidence/rollback seam。相同 physical file
 仍遵守 ATM compose-first proposal/steward contract；不要用 branch/worktree 當正常隔離。
+
+### 18.4 Plan 3.2 + Plan 4.0 captain execution overlay
+
+目前不是「所有 proposed card 都可立即 claim」的狀態。`ATM-GOV-0276` 必須先修復
+external-planning bootstrap、import machine-field fidelity 與 failed-claim residue
+ordering；在其 target-ledger import/claim/close 證據成立前，不得把 0277 之後的
+proposed IDs 當成可寫入任務。
+
+正常上限為兩條 writer lane，加一條 Captain read-only review lane：
+
+| Wave | Claude captain（較難的 formal/core lane） | Cursor captain（adapter/execution lane） | ATM Captain |
+| --- | --- | --- | --- |
+| Gate 0 | `ATM-GOV-0276` bootstrap/import fidelity repair；完成後裁決 0269 residue | read-only fixture/reproduction review | steward、scope collision、import/claim/close gate |
+| 3.2 closeout | `ATM-GOV-0269`；接續保有 0270→0271 shared close seam 的單一 ownership | 0269 完成後承接不碰 shared close seam 的 evidence/replay review | 每卡 checkpoint；0270→0271→0272→0273 依 hard dependency 序列放行 |
+| 4.0 foundation | 0277 semantics、0278 authority、0280 universe compiler | 0279 inventory；之後 0281/0282/0283 中不重疊的 collector/oracle work | 最多同時放行兩個 writers；驗證 phase-exit receipt |
+| 3.2 joins | 0269 後做 0284→0285；0270 後做 0286 | 0271 後做 0287 | 缺 Plan 3.2 delivery evidence 時保持 blocked |
+| 4.0 structure | 0293→0294→0305 cohesive family/fingerprint/selector lane | 0288/0290/0291/0292/0302/0303 adapters，分波避免 shared-file overlap | family revision、selection digest 與 unknown mapping 裁決 |
+| 4.0 generation | 0295、0297/0298/0299/0300 中的 formal generator/core work | 0289/0296/0301/0304 中的 runner、mutation、oracle integration | 每波只開兩個 writers，跨卡共檔改由 steward compose |
+| SKL retained | no skill-source write authority | no skill-source write authority | 親自完成 TASK-SKL-0031→0033→0036；0305 後完成 0037 |
+| Certification | 0306 certificate、0307 replay | 0308 shadow、0309 runtime adapter canary | 0273 與 TASK-SKL-0037 證據 join；裁決 legacy/new divergence |
+| Release | 0310 hostile dogfood 與 all-branch phase-exit manifest | 0310 independent hostile-workload lane | 0311 final verdict；manifest 缺任一 mandatory branch 即 fail-closed |
+
+派工啟動條件：
+
+1. Gate 0 只允許 `ATM-GOV-0276` 寫入；其他 GOV captain 保持 read-only。
+2. 每張 proposed card 必須先成為 canonical source card，commit planning source，再以
+   target frozen runner dry-run import；machine fields 有任何 loss 就禁止 `--write`。
+3. 每位外派 captain 使用自己的 actor claim；派工文字本身不授予 write authority。
+4. shared sources、catalog、schema、reducer、release artifacts 維持
+   broker/steward/compose-first；不得以 branch/worktree 假裝沒有重疊。
+5. `ATM-GOV-0310` 的 phase-exit manifest 是所有支線的 fan-in authority；
+   `ATM-GOV-0311` 不得只沿單一 DAG 主幹判定 Plan 4.0 完成。
 
 ## 19. Rollout policy
 

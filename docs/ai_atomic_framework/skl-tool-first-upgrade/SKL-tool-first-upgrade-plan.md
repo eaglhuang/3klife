@@ -559,3 +559,66 @@ skills may improve code:
 
 A hard cross-plan dependency is justified only when acceptance explicitly
 consumes the corresponding schema, provider interface, receipt or validator.
+
+## 2026-07-30 Plan 4.0 Incident-Learning Skill Plane
+
+Project-owner ruling: all skill-template, skill-schema, skill-routing and
+installed-adapter projection changes required by Plan 3.2 plus Plan 4.0 remain
+in the registered `SKL / TASK-SKL` family and are implemented by the ATM
+Captain's own skill lane. They are not delegated to GOV feature captains.
+
+The boundary is:
+
+- GOV owns `QualityGauntlet`, `CoverageUniverseCompiler`,
+  `ClosureAssuranceMachine`, `CausalRegressionFamily`, execution, evidence
+  storage and final product policy.
+- SKL owns when an agent asks for incident data, how it preserves
+  breadth/depth hypotheses, how typed module outputs are routed through entry
+  skills, and how six editor/provider projections retain the machine fields.
+- Skills may collect, propose, route and explain. They do not own root-cause
+  truth, family identity, coverage denominator, oracle authority or close
+  verdict.
+
+### New cohesive cards
+
+1. `TASK-SKL-0036` owns `atm.incidentLearningCandidate.v1`, the canonical
+   `atm-bug-backlog` source template, backlog intake/projection compatibility,
+   and first-layer distinction between record-only, reproduce, confirmed
+   incident, recurrence and optimization intents. It consumes the distribution
+   contract from `TASK-SKL-0031` and diagnostic receipt contract from
+   `TASK-SKL-0033`.
+2. `TASK-SKL-0037` owns the typed learning-lineage projection through
+   `atm-governance-router`, `atm-next`, `atm-task-card-authoring`,
+   `atm-dispatch`, `atm-evidence`, `atm-handoff`, `atm-upgrade-scan`,
+   `atm-deep-module-refactor` and `mailbox-worker-execution`, plus six-adapter
+   parity and reinstall-survival evidence. It depends on `TASK-SKL-0036` and
+   the Plan 4.0 canonical family/selection seam.
+
+### Skill-lane execution order
+
+```mermaid
+flowchart LR
+    S31["TASK-SKL-0031 Corpus distribution"] --> S33["TASK-SKL-0033 Diagnostic receipt"]
+    S33 --> S36["TASK-SKL-0036 Incident intake skill"]
+    S36 --> S37["TASK-SKL-0037 Lifecycle projections"]
+    G305["ATM-GOV-0305 Family store and selector"] --> S37
+```
+
+`TASK-SKL-0031`, `0033`, `0036` and `0037` are retained by the ATM Captain's
+own implementation lane. Other captains may read and review them, but they do
+not receive write authority for their skill source templates or projections.
+
+### Acceptance boundary
+
+- `atm-bug-backlog` records breadth and depth hypotheses, existing-test gaps,
+  unavailable data and candidate-only root-cause hints without inventing
+  answers.
+- Same-scenario command-backed red/green evidence and an independent oracle are
+  required before a candidate can become a confirmed family observation.
+- Source templates are authoritative; direct-only edits to installed copies
+  fail review.
+- Codex, Claude Code, Cursor, Copilot, Gemini and Antigravity preserve required
+  machine fields, source digest, compiler version, degradation diagnostics and
+  manifest digest.
+- Unknown mapping is neither run-all nor run-none-and-pass. It blocks closure
+  with an executable mapping-repair route.
