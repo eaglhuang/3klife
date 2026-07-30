@@ -110,4 +110,23 @@ rollback boundary, and a small set of adapters.
   independent dry-run/write/explain/recover seams and can be coordinated by a
   saga without becoming one large hidden transaction.
 
+## Pre-Plan 3.2 dual-captain readiness addendum
+
+The 2026-07-30 readiness check found that the broker and neutral-steward layers
+already model proposal-first overlap correctly, but the outer claim and commit
+adapters are not yet safe enough for live Plan 3.2 parallel rollout.
+
+Two P0 GOV follow-up cards must be handled before starting normal Plan 3.2
+implementation:
+
+- `ATM-GOV-0274`: enforce same-task different-lane claim rejection. Assigned to
+  Cursor.
+- `ATM-GOV-0275`: preserve foreign staged and unstaged work during governed
+  dual-captain commit. Assigned to Claude-005.
+
+These cards are intentionally parallel frontier work. They share the
+`atm.work-coordination-authority` design baseline and the deep-module review
+fingerprint `deep-module-review:9433b14b`, but they must not directly edit each
+other's primary files without Captain integration review.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-07-30T03:34:41.963Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/end-to-end-auto-batch-performance-plan-v3-2.md","contentDigest":"sha256:726c0a172b3e746febb177ae270db449c5cc7ec1b5c53ae99aed4761b98c0559"} -->
