@@ -129,4 +129,19 @@ These cards are intentionally parallel frontier work. They share the
 fingerprint `deep-module-review:9433b14b`, but they must not directly edit each
 other's primary files without Captain integration review.
 
+## Pre-Plan 3.2 planning-source admission blocker addendum
+
+The 2026-07-30 ATM-GOV-0269 claim attempt exposed a third blocking capability
+gap before true dual-captain overlap testing can start:
+
+- `ATM-GOV-0276`: planning seal benign upgrade, task import fidelity, and
+  preclaim transaction guard. Assigned to Claude-005.
+
+This card is not a workaround for ATM-GOV-0269. It must fix the framework
+behavior that currently treats `planningCommitSha: null -> <sha>` with unchanged
+`contentDigest` as source identity drift, allows `tasks import --force` to drop
+machine-readable `causalGraph`, and lets failed claim preflight leave
+reserve/promote ledger residue. ATM-GOV-0269 remains paused until this blocker is
+delivered.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-07-30T03:34:41.963Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/end-to-end-auto-batch-performance-plan-v3-2.md","contentDigest":"sha256:726c0a172b3e746febb177ae270db449c5cc7ec1b5c53ae99aed4761b98c0559"} -->
