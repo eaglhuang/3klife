@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0276
 title: Planning seal benign upgrade and task import fidelity guard
-status: planned
+status: done
 owner: unassigned
 assignee: Claude-005
 priority: P0
@@ -104,6 +104,15 @@ atomizationImpact:
       disposition: follow-up-card
       inlineReason: null
 createdByCommand: atm plan card create
+completed_at: "2026-07-30T17:45:04.962Z"
+completed_by_agent: "claude-006"
+closedAt: "2026-07-30T17:45:04.962Z"
+closedByActor: "claude-006"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T17-45-04-962Z-close-9b80946edfca"
+lastTransitionAt: "2026-07-30T17:45:04.962Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e5754637228fd496abcbea3a17e730cd3988e062"
 ---
 
 # ATM-GOV-0276 Planning seal benign upgrade and task import fidelity guard

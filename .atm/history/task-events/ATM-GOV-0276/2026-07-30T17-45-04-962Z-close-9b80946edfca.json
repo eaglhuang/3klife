@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-30T17-45-04-962Z-close-9b80946edfca",
+  "taskId": "ATM-GOV-0276",
+  "action": "close",
+  "actorId": "claude-006",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0276-planning-seal-benign-upgrade-and-task-import-fidelity-guard.task.md",
+  "taskSha256": "sha256:802dcf7b89b2c109c4e473d98cdd924746fab8864e4018dc912b031375ebe30c",
+  "createdAt": "2026-07-30T17:45:04.962Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0276 --actor claude-006"
+}
