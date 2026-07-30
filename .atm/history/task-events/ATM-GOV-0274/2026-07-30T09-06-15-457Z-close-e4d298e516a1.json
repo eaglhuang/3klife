@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-30T09-06-15-457Z-close-e4d298e516a1",
+  "taskId": "ATM-GOV-0274",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0274-enforce-same-task-different-lane-claim-rejection.task.md",
+  "taskSha256": "sha256:e42920a51c927283d8b60303bf3fdf25f6662d6a084058af9770b29ef9cd834b",
+  "createdAt": "2026-07-30T09:06:15.457Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0274 --actor codex-captain"
+}

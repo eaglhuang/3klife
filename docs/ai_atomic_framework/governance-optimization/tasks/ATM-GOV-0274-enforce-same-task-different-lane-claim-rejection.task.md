@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0274
 title: Enforce same-task different-lane claim rejection
-status: planned
+status: done
 owner: unassigned
 assignee: Cursor
 priority: P0
@@ -72,6 +72,15 @@ atomizationImpact:
       disposition: follow-up-card
       inlineReason: null
 createdByCommand: atm plan card create
+completed_at: "2026-07-30T09:06:15.457Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-07-30T09:06:15.457Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T09-06-15-457Z-close-e4d298e516a1"
+lastTransitionAt: "2026-07-30T09:06:15.457Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e6581748d782bc11e34ee24147562363415b081d"
 ---
 
 # ATM-GOV-0274 Enforce same-task different-lane claim rejection
