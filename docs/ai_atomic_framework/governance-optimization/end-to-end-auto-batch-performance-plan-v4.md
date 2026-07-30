@@ -9,7 +9,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-30T20:26:12+08:00
-updated_at: 2026-07-30T21:53:50+08:00
+updated_at: 2026-07-30T23:34:00+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -174,6 +174,21 @@ structural coverage 回答「走過哪裡」；mutation、negative controls、di
 Writer 可改 admitted production code，也可提出 test proposal；不可在同一 candidate
 epoch 修改 thresholds、oracle、baseline、exclusions、plugin pins、negative controls、
 CI policy、waiver 或 final verdict。
+
+Plan 4.0 將這句話落成兩種 operational modes：
+
+1. **No-Team task-card mode**：未啟用 Team Agents 時，任務卡作者就是
+   Test Generator。它必須在任務卡內先封存完整的測試 id 範圍，包括
+   `testContributions`、`requiredTestCaseIds`、`advisoryTestCaseIds`、
+   `phaseTestCaseIds`、oracle refs、expected red predicates、negative controls
+   與 protected exam surfaces。任務執行者不得是寫卡者；若同一 actor 要兼任，
+   必須有 owner-approved waiver，且不得回溯降低本次 candidate 的考卷。
+2. **Team Agents mode**：啟用 Team Agents 時，新增獨立 Test Generator role。
+   它在 Writer 開始實作前檢查任務卡目前引用的測試 id 是否合理、是否缺少
+   breadth/depth/family/negative/rollback/concurrency/mutation/property coverage，
+   並可提出補充、縮減或分層建議。Test Generator 與 Writer 必須是不同 actor，
+   且預設使用不同 provider/model family；若 provider 分離不可得，必須留下
+   unavailable receipt 與等效獨立性證明，否則只能 advisory，不可 hard close。
 
 ### 4.6 Unknown is not pass
 
@@ -884,7 +899,7 @@ required obligation 使用 `heuristic/conflicting/missing` 不得 close。
 | Role | May do | Must not do |
 | --- | --- | --- |
 | Writer | 修改 admitted production scope、提出 tests | 改 policy、oracle、baseline、exclusion、waiver、final verdict |
-| Test Generator | 從 public gaps 提出 test proposals | 降低既有 oracle、直接寫 canonical source、宣告 pass |
+| Test Generator | 在執行前檢查/產生 required/advisory/phase test case id 範圍、oracle refs、negative controls 與 family selection proposals | 降低既有 oracle、直接寫 production source、宣告 pass、兼任同一 candidate 的 Writer |
 | Validator | 在 sealed sandbox 執行 deterministic tools | 信任 Writer 傳入 threshold/skip/healthy boolean |
 | Reviewer | 裁決 equivalent、unreachable、合法 exclusion、risk acceptance | 無 receipt 地改當前結果 |
 | Neutral Steward | 核對 authority separation、digests、negative controls 後 close | 自行重算另一套 coverage verdict |
@@ -909,7 +924,32 @@ Writer 認為 threshold 不合理時只能開下一 epoch policy proposal。新 
 同一 Writer lane 修改 protected surface 時，當前 run 失效，除非存在獨立授權與分離
 candidate epoch。
 
-### 13.3 Seed commitment
+### 13.3 Exam-authority separation modes
+
+Task cards are the canonical exam contract. A task is closure-eligible only if
+its evidence shows one of these authority shapes:
+
+- **No-Team task-card mode**: the card author generated or confirmed the
+  complete test id range before implementation, and the Writer actor is not the
+  card author. The card must bind required case ids, advisory case ids, phase
+  case ids, oracle refs, negative controls, protected exam surfaces and expected
+  red predicates. Later Writer proposals may add tests, but cannot remove,
+  weaken or reclassify the sealed exam without a new policy epoch.
+- **Team Agents mode**: before Writer implementation, a Test Generator role
+  checks the sealed card's test id range and records a selection/amendment
+  receipt. Test Generator and Writer must be different actors and must use
+  different provider/model families by default, mirroring the Reviewer-vs-Writer
+  independence rule. If provider diversity is unavailable, the run records an
+  explicit unavailable receipt and falls back to advisory unless Reviewer and
+  Steward both accept an equivalent independence proof.
+
+Dispatch, task-card authoring, evidence and close must preserve the selected
+mode, `examAuthorActorId`, `testGeneratorActorId`, `writerActorId`,
+`providerModelSeparation`, `requiredTestCaseIds`, `advisoryTestCaseIds`,
+`phaseTestCaseIds`, oracle refs and protected exam surface digests. Missing or
+contradictory fields are `unknown`, not pass.
+
+### 13.4 Seed commitment
 
 Validator 在 candidate seal 前承諾 seed root digest；candidate seal 後以：
 
@@ -989,8 +1029,8 @@ Skills 是最靠近人類與 Agent 行為的入口，因此適合負責「何時
 | --- | --- | --- | --- |
 | `atm-governance-router` / `atm-next` | 辨識 record-only、bug-fix、confirmed incident、recurrence 與 audit intent，選窄路徑 | consumes typed route/selection；surfaces unknown mapping | 自行猜 family 或以 full suite 代替分類 |
 | `atm-bug-backlog` | 將「記 bug」升級為 incident-learning intake，記錄測試廣度與深度缺口 | produces `atm.incidentLearningCandidate.v1` | 宣告 root cause、family match、fix success 或 close |
-| `atm-task-card-authoring` | 將 confirmed candidate 轉成 acceptance、case IDs、independent oracle、red/green、mutation、protected exam surfaces 與 family-learning obligations | produces card validation/incident contract and gauntlet profile ref | 只列 validator command、降低 threshold 或讓 Writer 控制考卷 |
-| `atm-dispatch` | 依風險分離 Writer、Test Generator、Validator/Reviewer，傳遞 family revision 與 selection receipt requirements | consumes sealed card and current route | 把 Captain identity、oracle authority 或未封存猜測交給 worker |
+| `atm-task-card-authoring` | 將 confirmed candidate 轉成 acceptance、case IDs、independent oracle、red/green、mutation、protected exam surfaces、exam-author mode 與 family-learning obligations | produces card validation/incident contract and gauntlet profile ref | 只列 validator command、降低 threshold、漏封 test id range 或讓 Writer 控制考卷 |
+| `atm-dispatch` | 依風險分離 Writer、Test Generator、Validator/Reviewer；Team Agents 模式要求 Test Generator 先檢查 case id range 並與 Writer 不同 actor/provider/model family | consumes sealed card and current route | 把 Captain identity、oracle authority、Test Generator 權限或未封存猜測交給 worker |
 | `atm-evidence` | 驗證 same-case red-before/green-after、independent oracle、selected/omitted reasons、mutation discrimination 與 zero-test | produces confirmed observation and receipts | 以 coverage、exit 0 或 Writer attestation 單獨證明修復 |
 | `atm-handoff` | 傳遞 unresolved hypotheses、family revision、new factors、selected/skipped families 與 replay refs | consumes receipts, produces continuation summary | 把聊天推論升格為 canonical family memory |
 | `atm-upgrade-scan` | 聚合 recurrent families、escape rate、CRAP/complexity/dependency hotspots，提出測試或 deep-module upgrade | consumes family/evidence trend | 用總分抵銷 blocker 或直接修改 production |
@@ -1239,11 +1279,13 @@ Exit：
 | `ATM-GOV-0301` | seed commitment、hidden negative controls and anti-gaming checks | 0278, 0295 |
 | `ATM-GOV-0302` | security quality dimension and risk acceptance receipts | 0278, 0285 |
 | `ATM-GOV-0303` | performance、memory、resilience ratchet and benchmark evidence | 0285 |
-| `ATM-GOV-0304` | independent oracle arbitration、flaky and contradictory evidence adjudication | 0278, 0292 |
+| `ATM-GOV-0304` | independent oracle arbitration、flaky/contradictory evidence adjudication and exam-authority separation enforcement | 0278, 0292, 0301 |
 
 Exit：
 
 - Writer 無法降低考卷；
+- No-Team 模式任務卡先封 required/advisory/phase test case ids，且 Writer 不是寫卡者；
+- Team Agents 模式 Test Generator 在 Writer 前完成 case-range review，且與 Writer 不同 actor/provider/model family；
 - critical negative controls 必須 red；
 - required flaky/oracle uncertainty 不得 close；
 - security/performance evidence 有各自 hard/ratchet semantics。
@@ -1347,7 +1389,8 @@ Skill plane 另採：
 
 1. `atm-bug-backlog` 先以 advisory candidate intake 上線，量測欄位完整度與填寫成本。
 2. `atm-task-card-authoring` / `atm-evidence` 再要求 selected high-risk cards 具備
-   breadth/depth、oracle 與 red/green bindings。
+   breadth/depth、oracle、red/green bindings、exam-author mode 與 required/advisory/phase
+   test case id 範圍。
 3. `observe/route` typed APIs 穩定後，router/next/dispatch/handoff 才消費 family output。
 4. 六 adapter projection parity 與 reinstall survival 通過後，才允許 skill-driven hard
    gate；舊 skills 不能靜默丟欄位。

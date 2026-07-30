@@ -5,6 +5,7 @@ status: planned
 owner: atm-agent-skills
 priority: P0
 milestone: ATM-SKL-PLAN4-R1
+amendment_epoch: 1
 depends_on:
   - TASK-SKL-0036
   - ATM-GOV-0305
@@ -103,9 +104,22 @@ testContributions:
     expectedRedPredicate: An editor projection loses required fields, provenance, or fail-closed behavior.
     responsibility: task-required
     contractEdge: plan4-skill-adapter-parity
+  - caseId: test_task_skl_0037_exam_authority_modes_91b0a64e
+    targetGroupId: test_group_plan4_skill_learning
+    semanticKey: plan4_skill_exam_authority_modes
+    coversAcceptance:
+      - ACC-2
+      - ACC-7
+    coversImpactEdges:
+      - typed incident candidate -> task/evidence contract
+      - family selection -> focused worker execution and handoff
+    expectedRedPredicate: Skill projection omits No-Team card-author/Test-Generator separation or Team Agents Test Generator versus Writer actor/provider separation.
+    responsibility: task-required
+    contractEdge: plan4-exam-authority-separation
 requiredTestCaseIds:
   - test_task_skl_0037_learning_lineage_8c542ad1
   - test_task_skl_0037_six_adapter_parity_3d79f2b6
+  - test_task_skl_0037_exam_authority_modes_91b0a64e
 phaseTestCaseIds: []
 advisoryTestCaseIds: []
 tddMode: required
@@ -155,11 +169,28 @@ family selection, focused execution, handoff and upgrade review.
       it does not trigger run-all and cannot produce run-none-and-pass.
 - [ ] ACC-6: Source templates remain authoritative and installed-copy-only edits fail
       review.
+- [ ] ACC-7: task-card, dispatch, evidence, handoff and mailbox skills preserve
+      Plan 4.0 exam-authority mode. No-Team mode requires card-author-as-Test-
+      Generator, sealed required/advisory/phase test case ids, and a Writer actor
+      different from the card author. Team Agents mode requires a pre-implementation
+      Test Generator review/amendment receipt, with Test Generator and Writer as
+      different actors and different provider/model families by default.
 
 ## Execution ownership
 
 This card is retained by `atm-captain-skill-lane`. Other captains may perform
 read-only review but receive no write authority for its canonical skill
 templates, compiler projections, installed adapters or parity tests.
+
+## Owner amendment 2026-07-30
+
+Owner clarified that "Writer cannot own the exam" has two operational modes,
+not just a general warning. Skill projections must make those modes visible to
+agents before execution: No-Team task-card mode relies on the card author as
+Test Generator and forbids the same actor from implementing; Team Agents mode
+adds a dedicated Test Generator role before Writer execution and requires
+actor plus provider/model-family separation from Writer by default. Missing
+mode, missing case id range or missing separation proof must fail closed or stay
+advisory.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-30T14:04:57.856Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"skl-tool-first-upgrade/tasks/TASK-SKL-0037-plan-4-lifecycle-skill-projections-and-adapter-parity.task.md","contentDigest":"sha256:fd519b6fd828438d131cf0b094c955bb53480a3990f648a0daf5f28e9bf6bb86"} -->

@@ -5,6 +5,7 @@ status: planned
 owner: unassigned
 assignee: Claude-005
 priority: P0
+amendment_epoch: 1
 depends_on:
   - ATM-GOV-0274
   - ATM-GOV-0275
@@ -29,7 +30,7 @@ causalGraph:
       reason: planningCommitSha null to committed sha with identical contentDigest must be a benign seal upgrade, not source drift.
     - source: packages/cli/src/commands/tasks/task-import-validators.ts
       target: tests/cli/task-import-diagnostic-contract.test.ts
-      reason: machine-readable task frontmatter such as causalGraph must round-trip or fail closed instead of silently dropping fields.
+      reason: machine-readable task frontmatter such as causalGraph and test-id/exam-authority fields must round-trip or fail closed instead of silently dropping fields.
     - source: packages/cli/src/commands/tasks/claim-orchestrator.ts
       target: tests/cli/tasks-reserve-planning-precheck.test.ts
       reason: claim seal validation must occur before reserve/promote/owner ledger mutation or be transactionally rolled back on failure.
@@ -149,6 +150,11 @@ fidelity rules, and claim transaction ordering back into ad hoc adapter code.
       `causalGraph` from frontmatter, including `softRelations`,
       `changedPublicSeams`, `causalImpactEdges`, `parallelFrontierInputs`,
       `validatorReferences`, and `phaseOwner`.
+- [ ] `tasks import --dry-run` and `tasks import --write` also preserve
+      Plan 4.0 exam-contract fields when present, including
+      `testContributions`, `requiredTestCaseIds`, `advisoryTestCaseIds`,
+      `phaseTestCaseIds`, and future exam-authority metadata. Dropping these
+      fields while preserving only `validatorReferences` is a fidelity failure.
 - [ ] If an unsupported machine-readable frontmatter field would be dropped by
       import, the command fails closed with a diagnostic instead of silently
       writing a reduced ledger record.
@@ -177,5 +183,12 @@ imported into the target ledger. Do not use `tasks import --force` or
 The implementation should favor extracting small policy/fidelity modules over
 adding more inline branches to `task-import-validators.ts`, which is already
 over the 600-line review budget.
+
+## Owner amendment 2026-07-30
+
+Owner clarified that Plan 3.2 already owns validator execution economy, but
+Plan 4.0 will rely on task cards as the sealed exam contract. Therefore this
+card's import-fidelity work must preserve test case id ranges and
+exam-authority metadata, not only `causalGraph`.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-07-30T12:01:12.574Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0276-planning-seal-benign-upgrade-and-task-import-fidelity-guard.task.md","contentDigest":"sha256:4457268da91b63e6e6361111168099954cda199f30019028b98c02b960bc7ad7"} -->

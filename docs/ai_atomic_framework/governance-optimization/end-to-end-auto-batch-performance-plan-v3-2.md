@@ -9,7 +9,7 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-30T11:34:41+08:00
-updated_at: 2026-07-30T11:34:41+08:00
+updated_at: 2026-07-30T23:34:00+08:00
 createdByCommand: atm plan doc create
 ---
 
@@ -95,6 +95,27 @@ rollback boundary, and a small set of adapters.
 - Close path changes must be proven by interface tests, not private-internal
   tests glued onto the old shallow modules.
 
+## Test-id and exam-authority boundary
+
+Plan 3.2 owns the execution substrate for validation economy: validator
+selection, resumable runs, freshness, rerun planning and legal close recovery.
+It does not by itself decide who is allowed to author the exam.
+
+The intended boundary is:
+
+- task cards are the source of sealed test intent, including
+  `validatorReferences` and, when available, `testContributions`,
+  `requiredTestCaseIds`, `advisoryTestCaseIds` and `phaseTestCaseIds`;
+- `ATM-GOV-0269` makes those validators observable, resumable and economical;
+- `ATM-GOV-0270` decides freshness and rerun need from sealed receipts;
+- Plan 4.0 adds the anti-gaming authority rule: the Writer cannot be the same
+  authority that creates, weakens or closes its own exam.
+
+Therefore, before Plan 4.0 hard gates are enabled, Plan 3.2 implementations
+must preserve task-card test-id fields if present and must not collapse them
+into an unstructured validator command list. Missing test-id fields remain a
+Plan 4.0 readiness gap, not proof that no tests are required.
+
 ## Success criteria
 
 - `validate:standard -- --json` emits observable sub-validator progress and a
@@ -143,5 +164,15 @@ behavior that currently treats `planningCommitSha: null -> <sha>` with unchanged
 machine-readable `causalGraph`, and lets failed claim preflight leave
 reserve/promote ledger residue. ATM-GOV-0269 remains paused until this blocker is
 delivered.
+
+### Test-id preservation note for ATM-GOV-0276
+
+Because Plan 4.0 will rely on task cards as the sealed exam contract,
+`ATM-GOV-0276` must treat test-id and exam-authority fields as
+machine-readable task-card fidelity surfaces alongside `causalGraph`. An import
+or dry-run path that preserves `validatorReferences` but drops
+`testContributions`, `requiredTestCaseIds`, `advisoryTestCaseIds`,
+`phaseTestCaseIds` or future exam-authority metadata is not acceptable for the
+Plan 4.0 cutover path.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-07-30T03:34:41.963Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/end-to-end-auto-batch-performance-plan-v3-2.md","contentDigest":"sha256:726c0a172b3e746febb177ae270db449c5cc7ec1b5c53ae99aed4761b98c0559"} -->
