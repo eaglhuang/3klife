@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-30T22-04-24-524Z-close-ec45ff979a19",
+  "taskId": "ATM-GOV-0270",
+  "action": "close",
+  "actorId": "codex-skl-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0270-evidence-freshness-engine-for-incremental-close-validation.task.md",
+  "taskSha256": "sha256:3e11072b8ac479d5b9d6b8619dd174bb453aa7016df6c43a3c5dea6aa4fffa08",
+  "createdAt": "2026-07-30T22:04:24.524Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0270 --actor codex-skl-captain"
+}

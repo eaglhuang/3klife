@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0270
 title: Evidence freshness engine for incremental close validation
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on:
@@ -69,6 +69,15 @@ atomizationImpact:
       source: packages/cli/src/commands/evidence/missing-report.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-30T22:04:24.524Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-30T22:04:24.524Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T22-04-24-524Z-close-ec45ff979a19"
+lastTransitionAt: "2026-07-30T22:04:24.524Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d939ece33fde2187985fe6717c0badda21bf2b93"
 ---
 
 # ATM-GOV-0270 Evidence freshness engine for incremental close validation
