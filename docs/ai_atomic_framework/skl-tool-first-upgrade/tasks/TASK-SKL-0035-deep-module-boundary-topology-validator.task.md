@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0035
 title: Deep module boundary topology validator
-status: planned
+status: done
 owner: atm-architecture
 priority: P1
 milestone: ATM-SKL-VG-R1.2
@@ -74,6 +74,15 @@ atomizationImpact:
       source: packages/core/src/architecture/module-boundary.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-30T19:48:05.626Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-30T19:48:05.626Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T19-48-05-626Z-close-a2fce40792d1"
+lastTransitionAt: "2026-07-30T19:48:05.626Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d9496313218e803693af4520526ef374fa95978f"
 ---
 
 # TASK-SKL-0035 Deep module boundary topology validator
