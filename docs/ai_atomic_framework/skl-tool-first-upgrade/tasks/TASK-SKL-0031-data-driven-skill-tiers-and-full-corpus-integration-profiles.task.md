@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0031
 title: Data-driven skill tiers and full-corpus integration profiles
-status: planned
+status: done
 owner: atm-integrations
 priority: P1
 milestone: ATM-SKL-VG-R0.9
@@ -101,6 +101,15 @@ atomizationImpact:
       source: packages/integrations-core/src/distribution/skill-distribution-manager.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-30T17:42:33.371Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-30T17:42:33.371Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T17-42-33-371Z-close-dff3849f88cc"
+lastTransitionAt: "2026-07-30T17:42:33.371Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "68374405ee0c7c03b5533094f2fc5c96ef801b99"
 ---
 
 # TASK-SKL-0031 Data-driven skill tiers and full-corpus integration profiles
