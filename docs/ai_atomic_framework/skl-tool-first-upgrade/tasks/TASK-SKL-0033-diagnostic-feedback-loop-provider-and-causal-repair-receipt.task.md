@@ -1,7 +1,7 @@
 ---
 task_id: TASK-SKL-0033
 title: Diagnostic feedback loop provider and causal repair receipt
-status: planned
+status: done
 owner: atm-agent-skills
 priority: P1
 milestone: ATM-SKL-VG-R1.1
@@ -78,6 +78,15 @@ atomizationImpact:
       source: packages/core/src/evidence/diagnostic-loop.ts
       disposition: extract
 createdByCommand: atm plan card create
+completed_at: "2026-07-30T18:57:08.159Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-30T18:57:08.159Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T18-57-08-159Z-close-b3e63c4ee34f"
+lastTransitionAt: "2026-07-30T18:57:08.159Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "42bb218b6a8d7b68bb1c74bedf33cdda40793ba4"
 ---
 
 # TASK-SKL-0033 Diagnostic feedback loop provider and causal repair receipt

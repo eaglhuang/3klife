@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-30T18-57-08-159Z-close-b3e63c4ee34f",
+  "taskId": "TASK-SKL-0033",
+  "action": "close",
+  "actorId": "codex-skl-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0033-diagnostic-feedback-loop-provider-and-causal-repair-receipt.task.md",
+  "taskSha256": "sha256:b0bab542a33bec2de4ef916935043f56ae9266711b78d7abc3802e86ddb4eb05",
+  "createdAt": "2026-07-30T18:57:08.159Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0033 --actor codex-skl-captain"
+}
