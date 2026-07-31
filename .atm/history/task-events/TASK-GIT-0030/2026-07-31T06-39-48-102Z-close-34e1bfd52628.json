@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T06-39-48-102Z-close-34e1bfd52628",
+  "taskId": "TASK-GIT-0030",
+  "action": "close",
+  "actorId": "claude-006",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0030-represent-deletions-in-sealed-commit-bundles.task.md",
+  "taskSha256": "sha256:e762dddda9eecfcd1b54cc113b2e3f154f366944a363d62c3eaaf42f10c87bfc",
+  "createdAt": "2026-07-31T06:39:48.102Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0030 --actor claude-006"
+}
