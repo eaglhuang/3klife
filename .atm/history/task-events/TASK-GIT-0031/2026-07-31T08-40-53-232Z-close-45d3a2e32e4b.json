@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T08-40-53-232Z-close-45d3a2e32e4b",
+  "taskId": "TASK-GIT-0031",
+  "action": "close",
+  "actorId": "claude-006",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0031-cover-sealed-commit-concurrency-and-override-free-attribution-gates.task.md",
+  "taskSha256": "sha256:6c8718814d4aae54e2424b9605281bd5942086d8d3d09be6e84b2fa135540d65",
+  "createdAt": "2026-07-31T08:40:53.232Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0031 --actor claude-006"
+}
