@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T01-14-11-204Z-close-77ba6068a1aa",
+  "taskId": "ATM-GOV-0279",
+  "action": "close",
+  "actorId": "codex-skl-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0279-obligation-inventory-schema-and-inventory-drift-detector.task.md",
+  "taskSha256": "sha256:76b703bb9d398f17c78d286ceb13533260232bea7379052e4952608bb88e1f96",
+  "createdAt": "2026-07-31T01:14:11.204Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0279 --actor codex-skl-captain"
+}

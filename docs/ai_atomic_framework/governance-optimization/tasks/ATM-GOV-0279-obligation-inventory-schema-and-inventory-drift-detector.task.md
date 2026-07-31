@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0279
 title: Obligation inventory schema and inventory drift detector
-status: planned
+status: done
 owner: unassigned
 priority: P1
 milestone: ATM-GOV-PLAN4-R1
@@ -78,6 +78,15 @@ atomizationImpact:
       pattern: Schema / Drift Detector
       source: packages/core/src/evidence/obligation-inventory.ts
       disposition: extract
+completed_at: "2026-07-31T01:14:11.204Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-31T01:14:11.204Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-31T01-14-11-204Z-close-77ba6068a1aa"
+lastTransitionAt: "2026-07-31T01:14:11.204Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9e603ea3f9868d89a96bf0c74b2bf472a03d3f5d"
 ---
 
 # ATM-GOV-0279 Obligation inventory schema and inventory drift detector
