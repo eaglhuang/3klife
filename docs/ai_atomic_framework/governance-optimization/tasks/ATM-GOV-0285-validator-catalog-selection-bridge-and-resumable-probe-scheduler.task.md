@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0285
 title: Validator catalog selection bridge and resumable probe scheduler
-status: planned
+status: done
 owner: unassigned
 priority: P0
 milestone: ATM-GOV-PLAN4-R1
@@ -108,6 +108,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-07-31T13:00:30.852Z"
+completed_by_agent: "claude-006"
+closedAt: "2026-07-31T13:00:30.852Z"
+closedByActor: "claude-006"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-31T13-00-30-852Z-close-e6a5659bd03e"
+lastTransitionAt: "2026-07-31T13:00:30.852Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c00b9875aed0507856e91b3b8924f20bf638c648"
 ---
 
 # ATM-GOV-0285 Validator catalog selection bridge and resumable probe scheduler
