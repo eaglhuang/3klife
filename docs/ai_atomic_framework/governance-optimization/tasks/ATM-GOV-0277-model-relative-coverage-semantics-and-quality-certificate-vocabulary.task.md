@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0277
 title: Model-relative coverage semantics and quality certificate vocabulary
-status: planned
+status: done
 owner: unassigned
 priority: P1
 milestone: ATM-GOV-PLAN4-R1
@@ -79,6 +79,15 @@ atomizationImpact:
       pattern: Value Object / Vocabulary Module
       source: packages/core/src/evidence/coverage-semantics.ts
       disposition: extract
+completed_at: "2026-07-31T00:44:45.259Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-31T00:44:45.259Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-31T00-44-45-259Z-close-8b4b11af9097"
+lastTransitionAt: "2026-07-31T00:44:45.259Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0b0918c3bfc14d90a68b51738d0e5f433f895858"
 ---
 
 # ATM-GOV-0277 Model-relative coverage semantics and quality certificate vocabulary

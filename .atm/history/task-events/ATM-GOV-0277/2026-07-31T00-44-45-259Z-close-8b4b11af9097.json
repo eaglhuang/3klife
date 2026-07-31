@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T00-44-45-259Z-close-8b4b11af9097",
+  "taskId": "ATM-GOV-0277",
+  "action": "close",
+  "actorId": "codex-skl-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0277-model-relative-coverage-semantics-and-quality-certificate-vocabulary.task.md",
+  "taskSha256": "sha256:f20bc3dbb017e3c5906093e17cec9da834245b9c70ca6df254968a70e4a00aaa",
+  "createdAt": "2026-07-31T00:44:45.259Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0277 --actor codex-skl-captain"
+}
