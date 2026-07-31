@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T01-35-08-052Z-close-cdb4c9d6502a",
+  "taskId": "ATM-GOV-0280",
+  "action": "close",
+  "actorId": "codex-skl-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0280-coverage-universe-compiler-interface-reachability-and-canonical-obligation-ids.task.md",
+  "taskSha256": "sha256:11679141891ac49a4799e9c494b22073de06a269383dd1cdbbb039f8140aeae8",
+  "createdAt": "2026-07-31T01:35:08.052Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0280 --actor codex-skl-captain"
+}

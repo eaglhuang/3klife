@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0280
 title: CoverageUniverseCompiler interface reachability and canonical obligation IDs
-status: planned
+status: done
 owner: unassigned
 priority: P1
 milestone: ATM-GOV-PLAN4-R1
@@ -92,6 +92,15 @@ atomizationImpact:
       pattern: Facade / Compiler
       source: packages/core/src/evidence/coverage-universe-compiler.ts
       disposition: extract
+completed_at: "2026-07-31T01:35:08.052Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-31T01:35:08.052Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-31T01-35-08-052Z-close-cdb4c9d6502a"
+lastTransitionAt: "2026-07-31T01:35:08.052Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d1a1f2beeabbb65a63934e1c256120b32548a05c"
 ---
 
 # ATM-GOV-0280 CoverageUniverseCompiler interface reachability and canonical obligation IDs
