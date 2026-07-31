@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T04-53-26-238Z-close-f95e77d36f19",
+  "taskId": "TASK-GIT-0029",
+  "action": "close",
+  "actorId": "claude-006",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0029-seal-governed-commit-attribution-transaction.task.md",
+  "taskSha256": "sha256:a51530e4c37ea18f64169504cb1ed548c6f038c089ad8d2128b5d810e4cf777c",
+  "createdAt": "2026-07-31T04:53:26.238Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0029 --actor claude-006"
+}
