@@ -55,8 +55,11 @@ testContributions:
       - ACC-1
       - ACC-2
       - ACC-3
+      - ACC-4
+      - ACC-5
     coversImpactEdges:
       - Plan 4.0 coverage claims -> model-relative assumptions and vocabulary
+      - validation receipts -> quality certificate terminology
       - closure evidence -> explicit proven/sufficient/unknown distinction
     expectedRedPredicate: A closure certificate can claim absolute 100% coverage without naming the model, assumptions, and unknown/gap status.
     responsibility: task-required

@@ -56,6 +56,7 @@ testContributions:
       - ACC-1
       - ACC-2
       - ACC-3
+      - ACC-5
     coversImpactEdges:
       - repository/model input -> canonical coverage obligation IDs
       - compiled universe digest -> QualityGauntlet start input
@@ -68,6 +69,7 @@ testContributions:
     coversAcceptance:
       - ACC-2
       - ACC-4
+      - ACC-5
     coversImpactEdges:
       - reachability decision -> obligation inventory status
       - coverage gap evidence -> causal-neighborhood compiler inputs

@@ -54,6 +54,8 @@ testContributions:
       - ACC-1
       - ACC-2
       - ACC-3
+      - ACC-4
+      - ACC-5
     coversImpactEdges:
       - source seams and validators -> obligation inventory entries
       - obligation inventory digest -> inventory drift detector
