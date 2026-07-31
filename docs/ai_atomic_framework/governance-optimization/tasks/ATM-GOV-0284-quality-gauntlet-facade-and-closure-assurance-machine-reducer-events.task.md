@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0284
 title: QualityGauntlet facade and ClosureAssuranceMachine reducer events
-status: planned
+status: done
 owner: unassigned
 priority: P2
 milestone: ATM-GOV-PLAN4-R1
@@ -112,6 +112,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-07-31T10:57:26.480Z"
+completed_by_agent: "claude-006"
+closedAt: "2026-07-31T10:57:26.480Z"
+closedByActor: "claude-006"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-31T10-57-26-480Z-close-9a52924ac29c"
+lastTransitionAt: "2026-07-31T10:57:26.480Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b54f7723b369427635a47eaf834ef0056404af77"
 ---
 
 # ATM-GOV-0284 QualityGauntlet facade and ClosureAssuranceMachine reducer events

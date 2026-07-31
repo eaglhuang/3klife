@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T10-57-26-480Z-close-9a52924ac29c",
+  "taskId": "ATM-GOV-0284",
+  "action": "close",
+  "actorId": "claude-006",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0284-quality-gauntlet-facade-and-closure-assurance-machine-reducer-events.task.md",
+  "taskSha256": "sha256:dd7938fc061137798a9282c5c3bcedd6147b7a062685667fb5f48fcddb9d4571",
+  "createdAt": "2026-07-31T10:57:26.480Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0284 --actor claude-006"
+}
