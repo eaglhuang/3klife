@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-07-31T13-50-25-765Z-close-27bec557bc2a",
+  "taskId": "ATM-GOV-0306",
+  "action": "close",
+  "actorId": "cursor-0306",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0306-mutation-adapter-lineage-and-equivalence-governance.task.md",
+  "taskSha256": "sha256:5e73b475615de3049c0ecc157df4e93776f9f7d7555783fb505b6dcee5a85983",
+  "createdAt": "2026-07-31T13:50:25.765Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0306 --actor cursor-0306"
+}
