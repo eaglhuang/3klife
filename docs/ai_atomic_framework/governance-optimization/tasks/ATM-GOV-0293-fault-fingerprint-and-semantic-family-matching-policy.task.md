@@ -1,21 +1,21 @@
 ---
 task_id: ATM-GOV-0293
 title: Fault fingerprint and semantic family matching policy
-status: planned
+status: done
 owner: unassigned
 priority: P0
 milestone: ATM-GOV-PLAN4-R1
-amendment_epoch: 1
+amendment_epoch: 3
 depends_on:
   - ATM-GOV-0279
-  - ATM-GOV-0292
+  - ATM-GOV-0306
 causalGraph:
   causalDependencies:
     - ATM-GOV-0279
-    - ATM-GOV-0292
+    - ATM-GOV-0306
   startConditions:
     - ATM-GOV-0279 is done and exposes confirmed incident observation inputs.
-    - ATM-GOV-0292 is done and exposes mutation lineage and equivalence governance.
+    - ATM-GOV-0306 is done and exposes mutation lineage and equivalence governance.
   softRelations:
     - governance-optimization/end-to-end-auto-batch-performance-plan-v4.md
     - TASK-SKL-0036 incident-learning candidate schema
@@ -28,9 +28,11 @@ causalGraph:
     - public seam and error class -> semantic family candidate
     - confidence threshold -> exact match, new family proposal, or human mapping review
     - mutation lineage -> survivor/equivalence matching evidence
+    - parallel-governance incident family -> recurrence classification and gate selection
   parallelFrontierInputs:
     - TASK-SKL-0036 incidentLearningCandidate schema
-    - ATM-GOV-0292 mutation lineage outputs
+    - ATM-GOV-0306 mutation lineage outputs
+    - Plan 3.2 dual-captain incident fixtures and broker receipts
   validatorReferences:
     - node --strip-types tests/cli/plan4-fault-fingerprint.test.ts
     - node --strip-types tests/cli/plan4-semantic-family-match.test.ts
@@ -79,9 +81,12 @@ testContributions:
       - ACC-2
       - ACC-3
       - ACC-5
+      - ACC-6
+      - ACC-7
     coversImpactEdges:
       - public seam and error class -> semantic family candidate
       - confidence threshold -> exact match, new family proposal, or human mapping review
+      - parallel-governance incident family -> recurrence classification and gate selection
     expectedRedPredicate: Low-confidence or conflicting family match is accepted as exact.
     responsibility: task-required
     contractEdge: plan4-family-match-confidence
@@ -105,6 +110,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-08T18:32:41.610Z"
+completed_by_agent: "codex-captain-2026-08-09"
+closedAt: "2026-08-08T18:32:41.610Z"
+closedByActor: "codex-captain-2026-08-09"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-08T18-32-41-610Z-close-92809ec16601"
+lastTransitionAt: "2026-08-08T18:32:41.610Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2cbee21acbbd940616a6ca0bafc4700b3bd1a87e"
 ---
 
 # ATM-GOV-0293 Fault fingerprint and semantic family matching policy
@@ -118,6 +132,12 @@ requires human mapping review. This is the "what kind of leak is this?" layer.
 ## Acceptance
 
 - [ ] ACC-1: equivalent incidents normalize to stable fingerprints.
+- [ ] ACC-6: fingerprints preserve the incident family for shared-index
+  attribution, sealed-commit fallback, CAS/queue, foreign-dirty, stale-batch,
+  and close-deferral failures; an unknown family is fail-closed.
+- [ ] ACC-7: focused tests replay at least one Plan 3.2 dual-captain fixture
+  and prove family routing is derived from sealed observations, not task id,
+  actor, date, or hard-coded incident text.
 - [ ] ACC-2: family matching uses public seam, error/recovery class, causal
       impact, and mutation lineage; it does not rely on task id or actor.
 - [ ] ACC-3: low-confidence or conflicting matches fail closed with mapping
