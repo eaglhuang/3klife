@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-08T18-17-19-179Z-close-508349dd9a9d",
+  "taskId": "ATM-GOV-0283",
+  "action": "close",
+  "actorId": "codex-captain-2026-08-09",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0283-task-lane-broker-close-runner-first-model-adapters.task.md",
+  "taskSha256": "sha256:a19d3c2bcebb5583f186a45056438f512ecc70d7d35f41954bc2789affd25978",
+  "createdAt": "2026-08-08T18:17:19.179Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0283 --actor codex-captain-2026-08-09"
+}
