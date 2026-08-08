@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0294
 title: Causal neighborhood compiler and factor combination generator
-status: planned
+status: done
 owner: unassigned
 priority: P0
 milestone: ATM-GOV-PLAN4-R1
@@ -105,6 +105,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-08T18:42:56.435Z"
+completed_by_agent: "codex-captain-2026-08-09"
+closedAt: "2026-08-08T18:42:56.435Z"
+closedByActor: "codex-captain-2026-08-09"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-08T18-42-56-435Z-close-34a83d26bc2e"
+lastTransitionAt: "2026-08-08T18:42:56.435Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d417b2e4f32d291db8352e7d880517eaebb7ce5a"
 ---
 
 # ATM-GOV-0294 Causal neighborhood compiler and factor combination generator

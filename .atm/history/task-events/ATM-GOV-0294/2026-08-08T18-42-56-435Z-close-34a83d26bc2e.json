@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-08T18-42-56-435Z-close-34a83d26bc2e",
+  "taskId": "ATM-GOV-0294",
+  "action": "close",
+  "actorId": "codex-captain-2026-08-09",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0294-causal-neighborhood-compiler-and-factor-combination-generator.task.md",
+  "taskSha256": "sha256:c5ee76d3c37bf34b2dcce5002abcd5a6540f70f337653430a684a4cd346b1373",
+  "createdAt": "2026-08-08T18:42:56.435Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0294 --actor codex-captain-2026-08-09"
+}
