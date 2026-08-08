@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-08T18-04-57-537Z-close-6bfaba2652f2",
+  "taskId": "ATM-GOV-0282",
+  "action": "close",
+  "actorId": "codex-captain-2026-08-09",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0282-concurrency-partial-order-reduction-and-schedule-obligations.task.md",
+  "taskSha256": "sha256:9322346791daf108f9b7379478847909afb2591f3bab1005030987d1447fd458",
+  "createdAt": "2026-08-08T18:04:57.537Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0282 --actor codex-captain-2026-08-09"
+}
