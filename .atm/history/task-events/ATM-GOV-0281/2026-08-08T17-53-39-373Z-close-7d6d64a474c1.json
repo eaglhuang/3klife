@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-08T17-53-39-373Z-close-7d6d64a474c1",
+  "taskId": "ATM-GOV-0281",
+  "action": "close",
+  "actorId": "codex-captain-2026-08-09",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0281-constraint-solver-infeasibility-abstraction-proofs-semantic-quotient.task.md",
+  "taskSha256": "sha256:9a0c5a7b0060e582f1a10980e82106e0df52b098da5a1685a409832159cf5feb",
+  "createdAt": "2026-08-08T17:53:39.373Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0281 --actor codex-captain-2026-08-09"
+}
