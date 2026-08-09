@@ -19,12 +19,14 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo_plus_planning_closeback
 scopePaths:
   - packages/core/src/broker/runner-build-output-inventory.ts
+  - scripts/run-sealed-runner-build.ts
   - packages/cli/src/commands/next/route-resolution/pending-worktree.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - tests/cli/runner-publication-inventory-parity.test.ts
   - tests/cli/pending-task-artifact-scope.test.ts
 deliverables:
   - packages/core/src/broker/runner-build-output-inventory.ts
+  - scripts/run-sealed-runner-build.ts
   - packages/cli/src/commands/next/route-resolution/pending-worktree.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - tests/cli/runner-publication-inventory-parity.test.ts
