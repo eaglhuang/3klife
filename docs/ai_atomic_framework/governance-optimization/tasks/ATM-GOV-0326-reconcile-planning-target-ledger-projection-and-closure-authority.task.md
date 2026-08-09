@@ -24,12 +24,16 @@ scopePaths:
   - packages/cli/src/commands/tasks/import-task.ts
   - packages/cli/src/commands/tasks/planning-root-authorship.ts
   - packages/cli/src/commands/taskflow/cross-authority-closeback.ts
-  - packages/cli/src/commands/taskflow/closeback-orchestration.ts
+  - packages/cli/src/commands/taskflow/close-orchestration.ts
+  - packages/cli/src/commands/taskflow/implementation.ts
+  - packages/cli/src/commands/taskflow/__tests__/taskflow-close-atomicity.test.ts
   - schemas/governance/cross-authority-closeback.schema.json
   - scripts/validate-taskflow-close-atomicity.ts
 deliverables:
   - packages/cli/src/commands/taskflow/cross-authority-closeback.ts
-  - packages/cli/src/commands/taskflow/closeback-orchestration.ts
+  - packages/cli/src/commands/taskflow/close-orchestration.ts
+  - packages/cli/src/commands/taskflow/implementation.ts
+  - packages/cli/src/commands/taskflow/__tests__/taskflow-close-atomicity.test.ts
   - schemas/governance/cross-authority-closeback.schema.json
   - tests/cli/cross-authority-closeback-authority.test.ts
 validators:
