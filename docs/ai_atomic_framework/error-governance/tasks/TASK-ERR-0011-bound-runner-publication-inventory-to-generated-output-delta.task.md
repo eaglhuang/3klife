@@ -4,9 +4,9 @@ title: Bound runner publication inventory to generated output delta
 status: planned
 owner: atm-captain
 priority: P0
-depends_on: [TASK-ERR-0010]
+depends_on: []
 causalGraph:
-  causalDependencies: [TASK-ERR-0010]
+  causalDependencies: []
   startConditions: [runner-publication-pending-reproduced-with-foreign-dirty-wip]
   softRelations: [ATM-GOV-0328-closeback-blocked-until-runner-publication-releases]
   changedPublicSeams: [runner-build-output-inventory, runner-publication-disposition]
