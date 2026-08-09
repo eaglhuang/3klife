@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T09-22-51-611Z-close-0eadd038b301",
+  "taskId": "ATM-GOV-0326",
+  "action": "close",
+  "actorId": "codex-captain-20260809",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0326-reconcile-planning-target-ledger-projection-and-closure-authority.task.md",
+  "taskSha256": "sha256:aeaf1a9ed53add66149324e3cae9c4aa94bccecbd61ba6788ada05c4a681c663",
+  "createdAt": "2026-08-09T09:22:51.611Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0326 --actor codex-captain-20260809"
+}

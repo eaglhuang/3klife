@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0326
 title: Reconcile planning target ledger projection and closure authority
-status: planned
+status: done
 owner: atm-authority
 priority: P0
 depends_on: [ATM-GOV-0325]
@@ -64,6 +64,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-09T09:22:51.611Z"
+completed_by_agent: "codex-captain-20260809"
+closedAt: "2026-08-09T09:22:51.611Z"
+closedByActor: "codex-captain-20260809"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-09T09-22-51-611Z-close-0eadd038b301"
+lastTransitionAt: "2026-08-09T09:22:51.611Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "7566c5f202d7401b42b4f562bba8eee10811c176"
 ---
 
 # ATM-GOV-0326 Reconcile planning target ledger projection and closure authority
