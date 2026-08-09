@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T18-16-18-313Z-close-4f214d95ea3a",
+  "taskId": "TASK-ERR-0012",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0012-released-residue-transaction-and-commit-readiness.task.md",
+  "taskSha256": "sha256:c37420b44f4df81db2a93a42caff06ac8593d1f4ccf8a23d2397d7d1ae13c26f",
+  "createdAt": "2026-08-09T18:16:18.313Z",
+  "command": "node atm.mjs tasks close --task TASK-ERR-0012 --actor codex-gpt-5.4-mini"
+}
