@@ -23,6 +23,7 @@ scopePaths:
   - packages/cli/src/commands/next/route-resolution/pending-worktree.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - tests/cli/runner-publication-inventory-parity.test.ts
+  - tests/cli/runner-publication-disposition-gate.test.ts
   - tests/cli/pending-task-artifact-scope.test.ts
 deliverables:
   - packages/core/src/broker/runner-build-output-inventory.ts
@@ -30,6 +31,7 @@ deliverables:
   - packages/cli/src/commands/next/route-resolution/pending-worktree.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
   - tests/cli/runner-publication-inventory-parity.test.ts
+  - tests/cli/runner-publication-disposition-gate.test.ts
   - tests/cli/pending-task-artifact-scope.test.ts
 validators:
   - node --strip-types tests/cli/runner-publication-inventory-parity.test.ts
