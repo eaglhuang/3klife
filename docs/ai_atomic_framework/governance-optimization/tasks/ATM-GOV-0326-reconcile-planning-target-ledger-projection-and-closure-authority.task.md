@@ -29,6 +29,7 @@ scopePaths:
   - packages/cli/src/commands/taskflow/__tests__/taskflow-close-atomicity.test.ts
   - schemas/governance/cross-authority-closeback.schema.json
   - scripts/validate-taskflow-close-atomicity.ts
+  - tests/cli/cross-authority-closeback-authority.test.ts
 deliverables:
   - packages/cli/src/commands/taskflow/cross-authority-closeback.ts
   - packages/cli/src/commands/taskflow/close-orchestration.ts
