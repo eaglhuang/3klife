@@ -189,7 +189,7 @@ createdByCommand: atm plan doc create
 
 允許的早期平行 frontier 只有：0326、0327、0328 在 0325 完成後處理互不交疊的 authority/audit/performance surface；ERR-0007 可與 0326/0328 平行，但 error registry 只由 ERR-0007 寫。TMP-0008 不屬完成主鏈的自動執行步驟；它只有在 owner 審閱 0327 archive 後另行批准才可動作。其餘主鏈按上表依賴序列收斂。
 
-Authoring verification（2026-08-09）：19/19 source cards 已通過 target frozen runner 的 `tasks import --from <absolute-card-path> --dry-run --json`，沒有 acceptance coverage、frontmatter fidelity 或 unresolved case errors。因 planning files 尚未 commit，dry-run seal 的 `planningCommitSha` 仍為 `null`；正式 `--write` import 必須在 planning commit 產生後執行，避免立即製造 stale source seal。這項延後只限制 target ledger import，不降低卡片內容或完成門檻。
+Authoring verification（2026-08-09）：19/19 source cards 已通過 target frozen runner 的 `tasks import --from <absolute-card-path> --dry-run --json`，沒有 acceptance coverage、frontmatter fidelity 或 unresolved case errors。規劃來源已由 commit `261d893658808b02643768c240a72617b3aee9fb` 封存，19 張卡均已匯入 target ledger。初次未封存匯入留下的 `ATM-GOV-0325` null `planningCommitSha` 以一次受稽核、保留 active claim 的 `tasks import --force --write` 修復；該 emergency lease 與 protected-override audit 皆在 target `.atm` 留存。這項修復不降低任何卡片完成門檻。
 
 ## Execution waves
 

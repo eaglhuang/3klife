@@ -78,10 +78,10 @@ createdByCommand: atm plan card create
 - [ ] ACC-1: 所有 census 都具時間窗、分母、來源、digest 與 unavailable 欄位，可由相同輸入 byte-stable 重建。
 - [ ] ACC-2: 23/23 rescue entries 皆在 manifest，且檔案明示 evidence hold。
 - [ ] ACC-3: 三點 commit lineage 與 façade timing observations 分開記錄，`a548eb381` 被認列為真修復但整體仍 NOT COMPLETE。
-- [ ] ACC-4: 沒有 mutation、cleanup、reset、rebase、merge、commit 或 completion promotion。
+- [ ] ACC-4: 沒有未經授權的產品／證據資料 mutation、cleanup、reset、rebase、merge 或 completion promotion；ATM 所需的 identity、claim、import、evidence 與受治理 commit control-plane 寫入必須最小化、可稽核且在報告中逐一列出。
 
 ## Stop rules, rollback, and report
 
-任何 source 消失、digest 衝突、HEAD 改變或外部 actor 正在修改受驗資料時立即停止，將欄位標記 conflicting/unavailable，重新封存新 window。報告必含 consumed summaries、missing data、assumption changes、stop rule、shared-write verdict、window/watermark/count/duration/digest、artifact paths 與 `keep-memory write`。
+任何 source 消失、digest 衝突、HEAD 改變或外部 actor 正在修改受驗資料時立即停止，將欄位標記 conflicting/unavailable，重新封存新 window。禁止把 ATM control-plane 寫入誤列為產品證據 mutation；若 control-plane 寫入改變 validator 結果，必須停下並把因果關係列為 blocker。報告必含 consumed summaries、missing data、assumption changes、stop rule、shared-write verdict、window/watermark/count/duration/digest、artifact paths 與 `keep-memory write`。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-08-09T07:22:28.523Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0325-freeze-false-green-evidence-and-establish-reproducible-baseline.task.md","contentDigest":"sha256:57e87ba33ef5f209b2524bdc925d6af622dab0c6c5446e568c0cd59e62a0af29"} -->
