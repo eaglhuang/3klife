@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T22-47-50-177Z-close-e11bf16c6b04",
+  "taskId": "ATM-GOV-0344",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0344-restore-taskflow-close-failure-index-and-worktree-atomicity.task.md",
+  "taskSha256": "sha256:6aea465e7d2b669d80040653e435f03724743ebec8d53a5ac8aa465ece761ab4",
+  "createdAt": "2026-08-09T22:47:50.177Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0344 --actor codex-gpt-5.4-mini"
+}
