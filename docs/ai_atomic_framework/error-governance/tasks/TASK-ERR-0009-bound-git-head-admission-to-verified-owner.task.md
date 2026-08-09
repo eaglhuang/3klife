@@ -4,7 +4,7 @@ title: Bound git-head admission to the verified receipt owner
 status: planned
 owner: atm-captain
 priority: P0
-depends_on: [TASK-ERR-0008]
+depends_on: []
 causalGraph:
   changedPublicSeams: [work-admission-ticket-file-write-grants]
   causalImpactEdges: [renew-to-index-ownership-preservation]
