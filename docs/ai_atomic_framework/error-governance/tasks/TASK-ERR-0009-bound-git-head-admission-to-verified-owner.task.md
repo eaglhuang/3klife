@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0009
 title: Bound git-head admission to the verified receipt owner
-status: planned
+status: done
 owner: atm-captain
 priority: P0
 depends_on: []
@@ -53,6 +53,15 @@ atomizationImpact:
       disposition: inline
       inlineReason: Receipt-owner grant is a small policy inside the existing admission deep module; a second grant facade would split authority.
 createdByCommand: atm plan card create
+completed_at: "2026-08-09T12:18:30.433Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-09T12:18:30.433Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-09T12-18-30-433Z-close-ddb4e73d0ee4"
+lastTransitionAt: "2026-08-09T12:18:30.433Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a3009dc8262c98bd13813d952eaca80dcccd8d36"
 ---
 
 # TASK-ERR-0009 Bound git-head admission to the verified receipt owner

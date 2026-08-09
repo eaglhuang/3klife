@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T12-18-30-433Z-close-ddb4e73d0ee4",
+  "taskId": "TASK-ERR-0009",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0009-bound-git-head-admission-to-verified-owner.task.md",
+  "taskSha256": "sha256:34b34ee2b2cd1f6d05a402afc82e607007859beebda45f284bcfadaa922dc4c4",
+  "createdAt": "2026-08-09T12:18:30.433Z",
+  "command": "node atm.mjs tasks close --task TASK-ERR-0009 --actor codex-gpt-5.4-mini"
+}
