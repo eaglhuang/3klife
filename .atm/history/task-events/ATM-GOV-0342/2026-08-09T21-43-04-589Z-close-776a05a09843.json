@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T21-43-04-589Z-close-776a05a09843",
+  "taskId": "ATM-GOV-0342",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0342-restore-lane-registry-claim-authority-continuity.task.md",
+  "taskSha256": "sha256:ea2eda367605ac2f6aaed5220b2198c98b330492aec5cafd9caf9f5803456f35",
+  "createdAt": "2026-08-09T21:43:04.589Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0342 --actor codex-gpt-5.4-mini"
+}
