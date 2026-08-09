@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T21-49-31-231Z-close-ff5a6fbd5441",
+  "taskId": "ATM-GOV-0343",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0343-preserve-same-task-retained-wip-continuity-across-fresh-lane-reclaim.task.md",
+  "taskSha256": "sha256:d6bf3acd2692e622df1c55214c123e782c16d0dd0d358b09c5bc57bf4b712198",
+  "createdAt": "2026-08-09T21:49:31.231Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0343 --actor codex-gpt-5.4-mini"
+}
