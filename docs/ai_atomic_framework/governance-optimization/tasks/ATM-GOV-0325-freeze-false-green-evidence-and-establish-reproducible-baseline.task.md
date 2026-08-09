@@ -38,7 +38,21 @@ testContributions:
     expectedRedPredicate: missing source, digest, window, watermark, unavailable receipt, or rescue HEAD fails the manifest
     responsibility: task-required
     contractEdge: atm.falseGreenEvidenceFreeze.v1
-requiredTestCaseIds: [test_false_green_freeze_manifest_complete_0325]
+  - caseId: test_false_green_freeze_raw_receipts_0325
+    semanticKey: false_green_freeze_raw_receipts
+    coversAcceptance: [ACC-5]
+    coversImpactEdges: [validator-baseline]
+    expectedRedPredicate: missing raw command receipt, command digest, timeout status, or blocker receipt fails the manifest
+    responsibility: task-required
+    contractEdge: atm.falseGreenEvidenceFreeze.v1
+  - caseId: test_false_green_freeze_current_head_baseline_0325
+    semanticKey: false_green_freeze_current_head_baseline
+    coversAcceptance: [ACC-6]
+    coversImpactEdges: [validator-baseline, authority-baseline]
+    expectedRedPredicate: absent current-HEAD façade, module-boundaries, quick, or standard result fails the manifest
+    responsibility: task-required
+    contractEdge: atm.falseGreenEvidenceFreeze.v1
+requiredTestCaseIds: [test_false_green_freeze_manifest_complete_0325, test_false_green_freeze_raw_receipts_0325, test_false_green_freeze_current_head_baseline_0325]
 tddMode: reasoned-not-applicable
 tddNotApplicableReason: Evidence preservation card creates immutable census artifacts without changing runtime behavior.
 tddExemptions:
@@ -56,15 +70,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
-completed_at: "2026-08-09T08:35:46.556Z"
-completed_by_agent: "codex-captain-20260809"
-closedAt: "2026-08-09T08:35:46.556Z"
-closedByActor: "codex-captain-20260809"
+completed_at: "2026-08-09T19:20:26.436Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-09T19:20:26.436Z"
+closedByActor: "codex-gpt-5.4-mini"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-08-09T08-35-46-556Z-close-826a636d5d66"
-lastTransitionAt: "2026-08-09T08:35:46.556Z"
+lastTransitionId: "2026-08-09T19-20-26-436Z-close-ae6c4034bd41"
+lastTransitionAt: "2026-08-09T19:20:26.436Z"
 ledgerContractVersion: task-ledger/v1
-delivery_commit: "9e6f8cf41263dfe3fc289a2585ed18bb6e7f447b"
+delivery_commit: "2f11f9d5b875590e1c5309bf0a5c82b7029e1047"
 ---
 
 # ATM-GOV-0325 Freeze false-green evidence and establish reproducible baseline
@@ -81,6 +95,8 @@ delivery_commit: "9e6f8cf41263dfe3fc289a2585ed18bb6e7f447b"
 4. 封存 `51ab0b3fe`、`a548eb381`、`0d50ba508` lineage，將 hash-placeholder 功能紅與 timeout flake 分成兩列。
 5. 對 `validate-skew-matrix` 只做事前宣告的 cold/warm/loaded 樣本；保存 duration、exit、timedOut、stdout/stderr digest。禁止用一次綠燈宣告穩定。
 6. 對 23 個 rescue worktrees 建 evidence-hold manifest，逐一保存 path、HEAD、registry state；不得 prune/remove。
+7. 對每個已宣稱的 baseline command 保存可重播 raw command receipt：精確命令、開始/結束時間、exit code、timeout、stdout/stderr digest、runner/source/release SHA 與環境摘要。若命令受阻，保存 blocker receipt，不得以 prose 或舊摘要替代。
+8. 在同一 sealed window 重跑 current-HEAD 的 `validate:test-facade`、`validate:module-boundaries`、quick 與 standard baseline；任何 red、timeout 或 unavailable 都維持 Wave 0 未完成，並列出回送 Wave owner。
 
 ## Acceptance
 
@@ -88,6 +104,8 @@ delivery_commit: "9e6f8cf41263dfe3fc289a2585ed18bb6e7f447b"
 - [ ] ACC-2: 23/23 rescue entries 皆在 manifest，且檔案明示 evidence hold。
 - [ ] ACC-3: 三點 commit lineage 與 façade timing observations 分開記錄，`a548eb381` 被認列為真修復但整體仍 NOT COMPLETE。
 - [ ] ACC-4: 沒有未經授權的產品／證據資料 mutation、cleanup、reset、rebase、merge 或 completion promotion；ATM 所需的 identity、claim、import、evidence 與受治理 commit control-plane 寫入必須最小化、可稽核且在報告中逐一列出。
+- [ ] ACC-5: freeze manifest 對每個 baseline command 具 raw receipt 或明確 unavailable/blocker receipt；`sourceDigestStatus: unavailable` 不能作為成功完成的替代值。
+- [ ] ACC-6: current-HEAD façade、module-boundaries、quick、standard baseline 在同一封存 window 有完整結果；任何 failure 或 timeout 都被保留為 NOT COMPLETE 的可追溯事實。
 
 ## Stop rules, rollback, and report
 

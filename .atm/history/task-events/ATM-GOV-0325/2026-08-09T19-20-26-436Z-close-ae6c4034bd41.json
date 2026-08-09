@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T19-20-26-436Z-close-ae6c4034bd41",
+  "taskId": "ATM-GOV-0325",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0325-freeze-false-green-evidence-and-establish-reproducible-baseline.task.md",
+  "taskSha256": "sha256:d847c1d52315d127bdc6f320d39e2fd0ac170c9cafbd7a19f74e24614f03cfc3",
+  "createdAt": "2026-08-09T19:20:26.436Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0325 --actor codex-gpt-5.4-mini"
+}
