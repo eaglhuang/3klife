@@ -30,7 +30,7 @@ validators:
 testContributions:
   - caseId: test_git_head_admission_owner_boundary_0009
     semanticKey: git_head_admission_owner_boundary
-    coversAcceptance: [ACC-1, ACC-2, ACC-3, ACC-4]
+    coversAcceptance: [ACC-1, ACC-2, ACC-3, ACC-4, ACC-5]
     coversImpactEdges: [renew-to-index-ownership-preservation]
     expectedRedPredicate: renewing an unrelated task grants file-write for a foreign staged git-head receipt
     responsibility: task-required
