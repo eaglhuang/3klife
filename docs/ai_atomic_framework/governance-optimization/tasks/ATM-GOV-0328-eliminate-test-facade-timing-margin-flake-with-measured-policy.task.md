@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0328
 title: Eliminate test facade timing-margin flake with measured policy
-status: planned
+status: done
 owner: atm-validator-runtime
 priority: P0
 depends_on: [ATM-GOV-0325]
@@ -67,6 +67,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-09T16:01:50.322Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-09T16:01:50.322Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-09T16-01-50-322Z-close-653df36f6456"
+lastTransitionAt: "2026-08-09T16:01:50.322Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0ffcff9bc0a00b333b016d1639756293d7bda1f7"
 ---
 
 # ATM-GOV-0328 Eliminate test facade timing-margin flake with measured policy

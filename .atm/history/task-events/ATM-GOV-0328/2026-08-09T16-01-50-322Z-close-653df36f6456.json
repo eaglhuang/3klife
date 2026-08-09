@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T16-01-50-322Z-close-653df36f6456",
+  "taskId": "ATM-GOV-0328",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0328-eliminate-test-facade-timing-margin-flake-with-measured-policy.task.md",
+  "taskSha256": "sha256:2567c4c82c81b98e262b8502ca9ed8042036f5a00bbe0505fdfa5ec7e0d5abf1",
+  "createdAt": "2026-08-09T16:01:50.322Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0328 --actor codex-gpt-5.4-mini"
+}
