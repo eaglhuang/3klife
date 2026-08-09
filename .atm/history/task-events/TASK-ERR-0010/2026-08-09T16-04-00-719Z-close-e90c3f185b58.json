@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T16-04-00-719Z-close-e90c3f185b58",
+  "taskId": "TASK-ERR-0010",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0010-preserve-foreign-staged-bytes-across-taskflow-close.task.md",
+  "taskSha256": "sha256:a0172f9205b3b859c600293bf53e20e981fb15f251b225bb4def081a31664c9c",
+  "createdAt": "2026-08-09T16:04:00.719Z",
+  "command": "node atm.mjs tasks close --task TASK-ERR-0010 --actor codex-gpt-5.4-mini"
+}

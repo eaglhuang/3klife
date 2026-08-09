@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0010
 title: Preserve foreign staged bytes across taskflow close
-status: planned
+status: done
 owner: atm-captain
 priority: P0
 depends_on: [TASK-ERR-0008, TASK-ERR-0009]
@@ -66,6 +66,15 @@ atomizationImpact:
       inlineReason: The close-window lock is the existing transactional boundary; a separate facade would split snapshot, lease-consumption, and restore authority.
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-09T16:04:00.719Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-09T16:04:00.719Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-09T16-04-00-719Z-close-e90c3f185b58"
+lastTransitionAt: "2026-08-09T16:04:00.719Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "cb925c2b47c2b48f0578976f1e2355eb312b8f37"
 ---
 
 # TASK-ERR-0010 Preserve foreign staged bytes across taskflow close
