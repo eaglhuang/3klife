@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T12-25-05-429Z-close-b6fbd69d4b14",
+  "taskId": "TASK-ERR-0008",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0008-unify-taskflow-close-and-stage-override-index-ownership-snapshots.task.md",
+  "taskSha256": "sha256:4cd31d8f04f5554ceeec167c554a57c6f4fbc63728d45c67731c95edf6b811d5",
+  "createdAt": "2026-08-09T12:25:05.429Z",
+  "command": "node atm.mjs tasks close --task TASK-ERR-0008 --actor codex-gpt-5.4-mini"
+}

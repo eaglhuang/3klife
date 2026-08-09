@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0008
 title: Unify taskflow close and stage-override index ownership snapshots
-status: planned
+status: done
 owner: atm-captain
 priority: P0
 depends_on: []
@@ -63,6 +63,15 @@ errorCodes:
   - ATM_GIT_INDEX_OVERRIDE_LEASE_INDEX_DRIFT
   - ATM_INDEX_FOREIGN_ACTIVE_STAGED
 createdByCommand: atm plan card create
+completed_at: "2026-08-09T12:25:05.429Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-09T12:25:05.429Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-09T12-25-05-429Z-close-b6fbd69d4b14"
+lastTransitionAt: "2026-08-09T12:25:05.429Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f2f264e12a7a4346f4bd51d5a2fcce2da367b336"
 ---
 
 # TASK-ERR-0008 Unify taskflow close and stage-override index ownership snapshots
