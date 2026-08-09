@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-09T21-52-28-207Z-close-c2977eabcc92",
+  "taskId": "TASK-ERR-0007",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0007-register-planning-root-ambiguity-operator-contract-and-recovery.task.md",
+  "taskSha256": "sha256:b94f094d185be257bc31d9eb07876daa383eb56c72f1ec6eda53e83ddf3d1057",
+  "createdAt": "2026-08-09T21:52:28.207Z",
+  "command": "node atm.mjs tasks close --task TASK-ERR-0007 --actor codex-gpt-5.4-mini"
+}

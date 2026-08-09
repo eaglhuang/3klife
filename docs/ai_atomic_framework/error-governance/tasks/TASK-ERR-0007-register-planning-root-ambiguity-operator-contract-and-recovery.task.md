@@ -1,7 +1,7 @@
 ---
 task_id: TASK-ERR-0007
 title: Register planning-root ambiguity operator contract and recovery
-status: planned
+status: done
 owner: atm-error-governance
 priority: P0
 depends_on: [ATM-GOV-0325]
@@ -66,6 +66,15 @@ errorCodes:
     registryOwnerTask: TASK-ERR-0007
     tests: [packages/cli/src/commands/next/__tests__/planning-root-preference.test.ts]
 createdByCommand: atm plan card create
+completed_at: "2026-08-09T21:52:28.207Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-09T21:52:28.207Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-09T21-52-28-207Z-close-c2977eabcc92"
+lastTransitionAt: "2026-08-09T21:52:28.207Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "3dfad6969f5d307e47c82fa6168eb6cabd2f274f"
 ---
 
 # TASK-ERR-0007 Register planning-root ambiguity operator contract and recovery
