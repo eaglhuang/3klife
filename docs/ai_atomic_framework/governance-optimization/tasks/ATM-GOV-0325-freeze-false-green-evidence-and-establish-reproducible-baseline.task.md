@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0325
 title: Freeze false-green evidence and establish reproducible baseline
-status: planned
+status: done
 owner: atm-evidence
 priority: P0
 depends_on: []
@@ -56,6 +56,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-09T08:35:46.556Z"
+completed_by_agent: "codex-captain-20260809"
+closedAt: "2026-08-09T08:35:46.556Z"
+closedByActor: "codex-captain-20260809"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-09T08-35-46-556Z-close-826a636d5d66"
+lastTransitionAt: "2026-08-09T08:35:46.556Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9e6f8cf41263dfe3fc289a2585ed18bb6e7f447b"
 ---
 
 # ATM-GOV-0325 Freeze false-green evidence and establish reproducible baseline
