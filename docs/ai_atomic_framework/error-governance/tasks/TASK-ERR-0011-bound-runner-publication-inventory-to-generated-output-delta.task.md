@@ -19,17 +19,19 @@ target_repo: AI-Atomic-Framework
 closure_authority: target_repo_plus_planning_closeback
 scopePaths:
   - packages/core/src/broker/runner-build-output-inventory.ts
-  - packages/core/src/broker/__tests__/runner-build-output-inventory.test.ts
+  - packages/cli/src/commands/next/route-resolution/pending-worktree.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
-  - packages/cli/src/commands/framework-development/__tests__/runner-publication-lifecycle.test.ts
+  - tests/cli/runner-publication-inventory-parity.test.ts
+  - tests/cli/pending-task-artifact-scope.test.ts
 deliverables:
   - packages/core/src/broker/runner-build-output-inventory.ts
-  - packages/core/src/broker/__tests__/runner-build-output-inventory.test.ts
+  - packages/cli/src/commands/next/route-resolution/pending-worktree.ts
   - packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
-  - packages/cli/src/commands/framework-development/__tests__/runner-publication-lifecycle.test.ts
+  - tests/cli/runner-publication-inventory-parity.test.ts
+  - tests/cli/pending-task-artifact-scope.test.ts
 validators:
-  - node --strip-types packages/core/src/broker/__tests__/runner-build-output-inventory.test.ts
-  - node --strip-types packages/cli/src/commands/framework-development/__tests__/runner-publication-lifecycle.test.ts
+  - node --strip-types tests/cli/runner-publication-inventory-parity.test.ts
+  - node --strip-types tests/cli/pending-task-artifact-scope.test.ts
   - npm run typecheck
   - npm run validate:cli
 testContributions:
@@ -97,13 +99,20 @@ publication-pending and refused steward release.
   repair does not weaken detection of uncommitted generated artifacts.
 - [ ] ACC-4: Tests prove both the foreign-WIP counterexample and declared-output
   fail-closed path. No task-, actor-, filename-, or release-specific allowlist.
+- [ ] ACC-5: Claim admission treats a dirty file outside the candidate task's
+  scope as foreign/unowned WIP unless it is explicitly evidenced as a
+  deliverable of the candidate task; it must not silently add that file to the
+  candidate scope or force an unrelated task-card amendment.
 
 ## Engineering method
 
 - First principles: publication authority covers bytes produced by this build,
   not all bytes physically located below a shared directory.
 - Deep module: the inventory provider remains the sole place that derives
-  generated membership and publication disposition; callers consume its verdict.
+  generated membership and publication disposition; the pending-worktree
+  boundary remains the sole place that decides whether a dirty path belongs to
+  the candidate claim. Callers consume those verdicts and do not duplicate
+  ownership heuristics.
 - Charter: foreign WIP remains visible and protected without becoming a bare
   refusal at the shared runner-sync surface (INV-ATM-008/010).
 
