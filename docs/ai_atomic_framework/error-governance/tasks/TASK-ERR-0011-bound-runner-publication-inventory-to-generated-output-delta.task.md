@@ -42,7 +42,14 @@ testContributions:
     expectedRedPredicate: a foreign dirty file within a release root makes an otherwise committed runner generation publication-pending
     responsibility: task-required
     contractEdge: runner-publication-inventory
-requiredTestCaseIds: [test_runner_inventory_delta_0011]
+  - caseId: test_pending_worktree_foreign_wip_0011
+    semanticKey: pending_worktree_does_not_reclassify_foreign_dirty_wip_as_candidate_scope_expansion
+    coversAcceptance: [ACC-5]
+    coversImpactEdges: [foreign-dirty-wip-to-nonblocking-publication]
+    expectedRedPredicate: a foreign or unowned dirty tracked file outside the candidate task scope triggers TASK_SCOPE_EXPANSION_REQUIRED
+    responsibility: task-required
+    contractEdge: pending-task-artifact-scope
+requiredTestCaseIds: [test_runner_inventory_delta_0011, test_pending_worktree_foreign_wip_0011]
 phaseTestCaseIds: [typecheck, validate:cli]
 tddMode: required
 tddNotApplicableReason: null
