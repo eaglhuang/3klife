@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0327
 title: Audit governance bypasses and classify rescue worktree history
-status: planned
+status: done
 owner: atm-governance
 priority: P0
 depends_on: [ATM-GOV-0325, TASK-ERR-0007]
@@ -72,6 +72,15 @@ errorCodes:
     registryOwnerTask: TASK-ERR-0007
     tests: [packages/cli/src/commands/next/__tests__/planning-root-preference.test.ts]
 createdByCommand: atm plan card create
+completed_at: "2026-08-10T15:41:33.729Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-10T15:41:33.729Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-10T15-41-33-729Z-close-2bfcb5bdcae8"
+lastTransitionAt: "2026-08-10T15:41:33.729Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "aa5c555b3c88ea920e360195048836d9e598ca30"
 ---
 
 # ATM-GOV-0327 Audit governance bypasses and classify rescue worktree history

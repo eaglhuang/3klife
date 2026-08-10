@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-10T15-41-33-729Z-close-2bfcb5bdcae8",
+  "taskId": "ATM-GOV-0327",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0327-audit-governance-bypasses-and-classify-rescue-worktree-history.task.md",
+  "taskSha256": "sha256:22649796ed08bc714e48a777a7a4b565f80b367a5debf1e668e14d64cc52b538",
+  "createdAt": "2026-08-10T15:41:33.729Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0327 --actor codex-gpt-5.4-mini"
+}
