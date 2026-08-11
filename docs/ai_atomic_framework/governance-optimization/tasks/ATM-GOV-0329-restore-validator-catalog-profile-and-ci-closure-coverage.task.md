@@ -1,7 +1,9 @@
 ---
 task_id: ATM-GOV-0329
 title: Restore validator catalog profile and CI closure coverage
-status: planned
+status: in-progress
+started_at: 2026-08-11T23:51:50+08:00
+started_by_agent: codex-gpt-5.4-mini
 owner: atm-validator-governance
 priority: P0
 depends_on: [ATM-GOV-0326, ATM-GOV-0328]
@@ -24,33 +26,50 @@ scopePaths:
   - scripts/test-catalog.config.json
   - scripts/validators.config.json
   - scripts/run-validators/implementation.ts
+  - scripts/validate-test-facade.ts
   - packages/cli/src/commands/validation-obligations.ts
   - tests/catalog/groups/
+  - tests/cli/plan-3x-4x-validator-profile-coverage.test.ts
+  - tests/cli/plan4-catalog-contract.test.ts
+  - tests/cli/plan4-mutation-lineage-equivalence.test.ts
+  - tests/cli/plan4-obligation-inventory.test.ts
+  - tests/cli/validation-obligation-map.test.ts
   - .github/workflows/ci.yml
   - .github/workflows/release-npm.yml
 deliverables:
   - scripts/test-catalog.config.json
   - scripts/validators.config.json
+  - scripts/run-validators/implementation.ts
+  - scripts/validate-test-facade.ts
   - packages/cli/src/commands/validation-obligations.ts
   - tests/catalog/groups/test_group_plan_3x_4x_complete_closeout.shard.json
   - tests/cli/plan-3x-4x-validator-profile-coverage.test.ts
+  - tests/cli/plan4-catalog-contract.test.ts
+  - tests/cli/plan4-mutation-lineage-equivalence.test.ts
+  - tests/cli/plan4-obligation-inventory.test.ts
+  - tests/cli/validation-obligation-map.test.ts
   - .github/workflows/ci.yml
   - .github/workflows/release-npm.yml
 validators:
   - node --strip-types tests/cli/plan-3x-4x-validator-profile-coverage.test.ts
   - npm run validate:test-facade
   - npm run validate:module-boundaries
-  - npm run validate:standard
 testContributions:
-  - caseId: test_plan_3x_4x_catalog_profile_coverage_0329
+  - caseId: test_task_atm_gov_0329_plan_3x_4x_catalog_profile_coverage_fad18eba
     semanticKey: plan_3x_4x_catalog_profile_coverage
     coversAcceptance: [ACC-1, ACC-2, ACC-3, ACC-4, ACC-5]
     coversImpactEdges: [catalog-ownership, profile-selection, ci-coverage, release-gates]
     expectedRedPredicate: any required Plan 4 case lacks a canonical group profile or CI owner
     responsibility: task-required
     contractEdge: atm.validatorProfileResponsibility.v1
-requiredTestCaseIds: [test_plan_3x_4x_catalog_profile_coverage_0329]
-phaseTestCaseIds: [test_group_plan4_catalog_contract, test_group_plan4_validator_selection]
+requiredTestCaseIds: [test_task_atm_gov_0329_plan_3x_4x_catalog_profile_coverage_fad18eba]
+# phaseTestCaseIds must name executable catalog cases; group ids are catalog containers,
+# not validation-contract selections.
+phaseTestCaseIds:
+  - test_task_atm_gov_0313_historical_shard_namespace_migration_8a48480f
+  - test_task_atm_gov_0313_complete_catalog_schema_contract_7d958211
+  - test_task_atm_gov_0285_catalog_selection_by_impact_cone_c4972e33
+  - test_task_atm_gov_0285_resumable_probe_cursor_f1238b6c
 tddMode: required
 tddNotApplicableReason: null
 tddExemptions: []
@@ -83,6 +102,6 @@ createdByCommand: atm plan card create
 
 ## Dispatch and stop rules
 
-只新增有明確責任的 profile edge；不可用「把全部測試塞進 quick」解決 catalog 缺口。shared catalog/config/workflow 寫入須由 broker/compose steward 處理。任何 standard/full 紅燈都保持 blocker。報告列出新增/移除 case、profile ownership matrix、CI diff、negative controls、runtime 與 rollback。
+只新增有明確責任的 profile edge；不可用「把全部測試塞進 quick」解決 catalog 缺口。task-close 只消費本卡 required case 與直接受影響的 facade/module validators；standard/full 是 correction-wave-3-ci 的 phase gate，必須有獨立、可追溯 receipt，且任何紅燈都保持 blocker，不得以 task receipt 或 retry 偽造通過。shared catalog/config/workflow 寫入須由 broker/compose steward 處理。報告列出新增/移除 case、profile ownership matrix、CI diff、negative controls、runtime 與 rollback。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan card create","createdAt":"2026-08-09T07:22:37.264Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/tasks/ATM-GOV-0329-restore-validator-catalog-profile-and-ci-closure-coverage.task.md","contentDigest":"sha256:32526f3ab6d5ab94272243703bc99ff82cd5b1a547d5eb97c956e7719be655f1"} -->
