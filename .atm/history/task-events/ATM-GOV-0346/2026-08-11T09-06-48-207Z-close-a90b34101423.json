@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-11T09-06-48-207Z-close-a90b34101423",
+  "taskId": "ATM-GOV-0346",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0346-stabilize-validate-skew-matrix-timeout-boundary-and-ci-facade-closure.task.md",
+  "taskSha256": "sha256:6d72417e28961c17ab29f111ccffbaf0a7159ac69d74bfc473016d3bc3467ca9",
+  "createdAt": "2026-08-11T09:06:48.207Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0346 --actor codex-gpt-5.4-mini"
+}
