@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0329
 title: Restore validator catalog profile and CI closure coverage
-status: in-progress
+status: done
 started_at: 2026-08-11T23:51:50+08:00
 started_by_agent: codex-gpt-5.4-mini
 owner: atm-validator-governance
@@ -84,6 +84,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-11T16:46:12.558Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-11T16:46:12.558Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-11T16-46-12-558Z-close-543a57c607bc"
+lastTransitionAt: "2026-08-11T16:46:12.558Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "08a9e2eca49fb12f24e3766801ce35ac9b2f7496"
 ---
 
 # ATM-GOV-0329 Restore validator catalog profile and CI closure coverage

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-11T16-46-12-558Z-close-543a57c607bc",
+  "taskId": "ATM-GOV-0329",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0329-restore-validator-catalog-profile-and-ci-closure-coverage.task.md",
+  "taskSha256": "sha256:525ccc47f8cd0a0f330a7f65b6afb1206108aa0974086e15cc09c390036550ed",
+  "createdAt": "2026-08-11T16:46:12.558Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0329 --actor codex-gpt-5.4-mini"
+}
