@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-11T14-23-38-885Z-close-da90c719d011",
+  "taskId": "TASK-ERR-0013",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/error-governance/tasks/TASK-ERR-0013-make-closure-repair-commit-ticket-durable-and-consumable.task.md",
+  "taskSha256": "sha256:094580b9c4a44ee3842dab83e1e177b5575f3d7098786f571d09ae7be038be7c",
+  "createdAt": "2026-08-11T14:23:38.885Z",
+  "command": "node atm.mjs tasks close --task TASK-ERR-0013 --actor codex-gpt-5.4-mini"
+}
