@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0331
 title: Wire deep evidence modules into production callers and remove shallow shells
-status: planned
+status: done
 owner: atm-evidence-integration
 priority: P0
 depends_on: [ATM-GOV-0330]
@@ -71,6 +71,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-12T17:50:30.382Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-12T17:50:30.382Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-12T17-50-30-382Z-close-c2c263293174"
+lastTransitionAt: "2026-08-12T17:50:30.382Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d9ed2a68c1c2626c363a1351cbf428a012f78a8d"
 ---
 
 # ATM-GOV-0331 Wire deep evidence modules into production callers and remove shallow shells

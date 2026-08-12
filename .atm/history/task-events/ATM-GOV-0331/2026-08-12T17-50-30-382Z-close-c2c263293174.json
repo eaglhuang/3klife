@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-12T17-50-30-382Z-close-c2c263293174",
+  "taskId": "ATM-GOV-0331",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0331-wire-deep-evidence-modules-into-production-callers-and-remove-shallow-shells.task.md",
+  "taskSha256": "sha256:88f28a5189b64a35c1527ad29ce1d49d2b9f76565810d1953faa18bcd7d348b6",
+  "createdAt": "2026-08-12T17:50:30.382Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0331 --actor codex-gpt-5.4-mini"
+}
