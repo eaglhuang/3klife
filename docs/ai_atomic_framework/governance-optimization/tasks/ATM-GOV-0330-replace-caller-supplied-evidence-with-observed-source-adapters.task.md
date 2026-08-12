@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0330
 title: Replace caller-supplied evidence with observed source adapters
-status: planned
+status: done
 owner: atm-evidence-core
 priority: P0
 depends_on: [ATM-GOV-0326, ATM-GOV-0329]
@@ -74,6 +74,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-12T09:48:54.233Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-12T09:48:54.233Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-12T09-48-54-233Z-close-490d71f3ec80"
+lastTransitionAt: "2026-08-12T09:48:54.233Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2532c874"
 ---
 
 # ATM-GOV-0330 Replace caller-supplied evidence with observed source adapters
