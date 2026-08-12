@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-12T02-45-31-576Z-close-96e7f1938140",
+  "taskId": "ATM-GOV-0290",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0290-cyclomatic-complexity-crap-module-interface-size-adapter.task.md",
+  "taskSha256": "sha256:d332b87b4e4f9fd7312d0f9d86f194db01f8d0a86317ed444407f40963dd8982",
+  "createdAt": "2026-08-12T02:45:31.576Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0290 --actor codex-gpt-5.4-mini"
+}

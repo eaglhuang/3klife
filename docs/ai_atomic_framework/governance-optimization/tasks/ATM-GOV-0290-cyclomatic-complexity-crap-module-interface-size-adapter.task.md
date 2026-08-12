@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0290
 title: cyclomatic complexity, CRAP, module/interface size adapter
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on:
@@ -80,6 +80,15 @@ atomizationImpact:
       disposition: extract
       inlineReason: null
 createdByCommand: atm plan card create
+completed_at: "2026-08-12T02:45:31.576Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-12T02:45:31.576Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-12T02-45-31-576Z-close-96e7f1938140"
+lastTransitionAt: "2026-08-12T02:45:31.576Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "646947c2e34bd27dd8ae5b807952aa4c976b4e74"
 ---
 
 # ATM-GOV-0290 cyclomatic complexity, CRAP, module/interface size adapter
