@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-12T10-25-07-556Z-close-1ee0dac6e0e5",
+  "taskId": "ATM-GOV-0350",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0350-unify-current-task-close-evidence-bundle-classification.task.md",
+  "taskSha256": "sha256:12d5dda36c57f53f3893fea77079275d22c520cef799c89eba3d7e7210a8f659",
+  "createdAt": "2026-08-12T10:25:07.556Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0350 --actor codex-gpt-5.4-mini"
+}
