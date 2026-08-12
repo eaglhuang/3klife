@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-12T01-24-34-490Z-close-c457d25ba1bc",
+  "taskId": "ATM-GOV-0348",
+  "action": "close",
+  "actorId": "claude-008-gov-0348",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0348-scope-commit-work-admission-to-the-ticket-bundle-not-the-whole-index.task.md",
+  "taskSha256": "sha256:064064bdf3196c35aa2ffbdd5b3aef5558dce2a02d20bca6b413cd1b162d96d4",
+  "createdAt": "2026-08-12T01:24:34.490Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0348 --actor claude-008-gov-0348"
+}
