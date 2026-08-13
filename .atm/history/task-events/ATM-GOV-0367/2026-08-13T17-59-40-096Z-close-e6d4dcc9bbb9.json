@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T17-59-40-096Z-close-e6d4dcc9bbb9",
+  "taskId": "ATM-GOV-0367",
+  "action": "close",
+  "actorId": "claude-008-gov-0366",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0367-record-the-close-write-rollback-that-an-identical-retry-resolves.task.md",
+  "taskSha256": "sha256:528353900c69ce0d2ad6325d7656a55031da6ca78a2f45114850adaa6af763ed",
+  "createdAt": "2026-08-13T17:59:40.096Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0367 --actor claude-008-gov-0366"
+}
