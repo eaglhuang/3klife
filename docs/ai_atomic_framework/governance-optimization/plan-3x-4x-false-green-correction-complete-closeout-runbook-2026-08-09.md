@@ -559,4 +559,23 @@ may substitute for that proof. This recovery is a prerequisite for resuming
 
 本計畫不授權搬移 ErrorCode registry。若修正工作需要新增、變更或退役 `ATM_*` code，必須使用既有 ERR family 與 canonical `docs/governance/error-code-registry.json`；同步更新 emitter、generator、schema、`docs/ERROR_CODES.md` 與 focused tests。
 
+## Governance substrate follow-up: operation-owned transient residue lifecycle
+
+Observed during the 0359/0360 runner publication window: failed, timed-out or
+stale-CAS build attempts can leave generated outputs whose producer is known
+but whose durable cleanup ownership is not. A later queue-head can safely
+reconcile them only after reconstructing an exact digest-bound takeover plan.
+Fail-closed primary behavior is necessary but insufficient when the operation
+externalizes its cleanup cost to the next actor.
+
+`ATM-GOV-0363` owns the generalized correction. It promotes operation-owned
+transient-artifact lifecycle management to `INV-ATM-012`, introduces one deep
+cleanup receipt contract, a normal `atm cleanup` facade and the
+`atm-residue-cleanup` skill. Every success, failure, timeout and cancellation
+must end in byte-identical restoration or a durable, owned, resumable recovery
+receipt. Unowned residue, broad cleanup and incident-specific allowlists are
+forbidden. This follow-up does not change the current four-plan verdict:
+until 0363 and the original completion gates are command-backed, the result
+remains `NOT COMPLETE`.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
