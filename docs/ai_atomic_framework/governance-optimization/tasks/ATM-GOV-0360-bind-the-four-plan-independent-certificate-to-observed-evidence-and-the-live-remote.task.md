@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0360
 title: Bind the four-plan independent certificate to observed evidence and the live remote
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: []
@@ -122,6 +122,15 @@ nonGoals:
   - Making the certificate green. If the evidence is stale, not-complete is the correct and required output.
   - Regenerating replays, the closeback, or the frozen runner. This card observes those artifacts; it does not produce them.
 createdByCommand: atm plan card create
+completed_at: "2026-08-13T16:51:53.475Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-13T16:51:53.475Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-13T16-51-53-475Z-close-9ce783bd1ede"
+lastTransitionAt: "2026-08-13T16:51:53.475Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "09adc42a182e372bd79d5685133dbe151fd36cef"
 ---
 
 # ATM-GOV-0360 Bind the four-plan independent certificate to observed evidence and the live remote

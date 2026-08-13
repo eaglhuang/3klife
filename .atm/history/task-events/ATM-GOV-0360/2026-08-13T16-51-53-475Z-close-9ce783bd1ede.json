@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T16-51-53-475Z-close-9ce783bd1ede",
+  "taskId": "ATM-GOV-0360",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0360-bind-the-four-plan-independent-certificate-to-observed-evidence-and-the-live-remote.task.md",
+  "taskSha256": "sha256:c4707f80f23ceb53e6b8ec267d9cbe72596d47c5914795a486361e85596ce85c",
+  "createdAt": "2026-08-13T16:51:53.475Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0360 --actor codex-gpt-5.4-mini"
+}
