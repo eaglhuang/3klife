@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T17-36-18-751Z-close-352c32a0a040",
+  "taskId": "ATM-GOV-0361",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0361-independently-recompute-four-plan-objective-backlog-and-charter-verdict.task.md",
+  "taskSha256": "sha256:4343bd2cad6e0c96266f28a04fabd3412e94afd16bbcc286441ddf6c8ff3c1ea",
+  "createdAt": "2026-08-13T17:36:18.751Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0361 --actor codex-gpt-5.4-mini"
+}

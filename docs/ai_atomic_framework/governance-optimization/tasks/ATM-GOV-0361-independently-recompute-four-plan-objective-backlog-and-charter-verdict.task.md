@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0361
 title: Independently recompute four-plan objective backlog and charter verdict
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: [ATM-GOV-0360]
@@ -57,6 +57,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-13T17:36:18.751Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-13T17:36:18.751Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-13T17-36-18-751Z-close-352c32a0a040"
+lastTransitionAt: "2026-08-13T17:36:18.751Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0748dff1d2ad79cd8a780ff99f9e7ffa5b7eef2e"
 ---
 
 # ATM-GOV-0361 Independently recompute four-plan objective backlog and charter verdict
