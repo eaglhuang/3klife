@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T12-12-52-053Z-close-0a69b8fde7d6",
+  "taskId": "ATM-GOV-0317",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0317-plan-4-0-final-four-plan-objective-certification-and-legacy-authority-retirement.task.md",
+  "taskSha256": "sha256:6a820a0d4873d65dba8bed6f32b6f6d303c9309a80878e2dc540ba796f5d2735",
+  "createdAt": "2026-08-13T12:12:52.053Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0317 --actor codex-gpt-5.4-mini"
+}

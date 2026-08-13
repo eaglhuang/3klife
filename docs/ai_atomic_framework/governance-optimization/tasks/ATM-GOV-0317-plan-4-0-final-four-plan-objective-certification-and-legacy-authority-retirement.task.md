@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0317
 title: Plan 4.0 final four-plan objective certification and legacy-authority retirement
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: [ATM-GOV-0316, ATM-GOV-0324]
@@ -63,6 +63,15 @@ rollback:
   notes: Retirement is reversible; any unresolved row, bug, unknown, or stale mirror keeps legacy authority active.
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-13T12:12:52.053Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-13T12:12:52.053Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-13T12-12-52-053Z-close-0a69b8fde7d6"
+lastTransitionAt: "2026-08-13T12:12:52.053Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e9785f2064aef8f3a5de7d0e9bfa1f272f920ff9"
 ---
 
 # ATM-GOV-0317 Plan 4.0 final four-plan objective certification and legacy-authority retirement
