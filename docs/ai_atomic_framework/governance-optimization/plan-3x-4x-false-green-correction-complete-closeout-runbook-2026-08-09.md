@@ -525,6 +525,36 @@ Complete =
 
 任何一項為 false、unknown、unavailable、stale 或 conflicting，結果都是 `NOT COMPLETE`。
 
+## Wave 3 recovery follow-up: current-task close evidence classification
+
+Observed during `ATM-GOV-0349`: a successful governed commit can generate a
+current-task live-index reconciliation receipt after bundle planning. The next
+pre-close then classifies that same receipt as unexpected staged residue because
+bundle assembly and pre-close use different recognition rules. This creates an
+evidence-only commit loop and violates the plan's false-green correction goal.
+
+`ATM-GOV-0350` owns the generalized repair. It extracts one current-task close
+evidence result contract, used by both bundle assembly and pre-close. The
+contract admits only supported, task-identified evidence types; foreign and
+unknown evidence remains fail-closed. The required proof is a focused
+idempotence fixture, not a task-ID-specific exception or a broad validator run.
+
+## Wave 3 recovery follow-up: deferred foreign index transaction atomicity
+
+Observed while delivering `ATM-GOV-0350`: a governed commit using
+`--defer-foreign-staged` can fail after entering the shared-index path and leave
+staged deletions or other altered foreign entries behind. This is a generic
+transaction-boundary regression, not a 0350-specific evidence rule.
+
+`ATM-GOV-0351` owns the repair. It extracts one deferred-index transaction
+module with exact path/mode/blob baselines and one finalization boundary for
+success, failure, and unprovable-restore outcomes. The focused fixtures must
+prove that injected post-mutation failure restores the entire pre-state and
+that successful task-scoped commits preserve multiple foreign entries. No raw
+index repair, alternate worktree, hard-coded task ID, or broad validation run
+may substitute for that proof. This recovery is a prerequisite for resuming
+0350/0349 closeout and the Wave 3 runner publication lane.
+
 ## ErrorCode Registry Migration Note
 
 本計畫不授權搬移 ErrorCode registry。若修正工作需要新增、變更或退役 `ATM_*` code，必須使用既有 ERR family 與 canonical `docs/governance/error-code-registry.json`；同步更新 emitter、generator、schema、`docs/ERROR_CODES.md` 與 focused tests。
