@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T16-00-23-206Z-close-998f08b10038",
+  "taskId": "ATM-GOV-0365",
+  "action": "close",
+  "actorId": "claude-008-gov-0365",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0365-land-subcommand-help-dispatch-and-the-round-trip-backlog-dispositions.task.md",
+  "taskSha256": "sha256:bf836c050b1ee7cb4be2fa391c3b46af0d96143b3f2e8f7aab96bdd5320b417f",
+  "createdAt": "2026-08-13T16:00:23.206Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0365 --actor claude-008-gov-0365"
+}
