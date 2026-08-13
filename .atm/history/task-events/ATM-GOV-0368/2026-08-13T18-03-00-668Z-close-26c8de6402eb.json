@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T18-03-00-668Z-close-26c8de6402eb",
+  "taskId": "ATM-GOV-0368",
+  "action": "close",
+  "actorId": "claude-008-gov-0366",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0368-let-one-command-satisfy-every-emergency-permission-it-needs.task.md",
+  "taskSha256": "sha256:988bb670570ed01fe3622f21250cbdc7de5bb4377b0e944a316143b1fc6abc8a",
+  "createdAt": "2026-08-13T18:03:00.668Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0368 --actor claude-008-gov-0366"
+}
