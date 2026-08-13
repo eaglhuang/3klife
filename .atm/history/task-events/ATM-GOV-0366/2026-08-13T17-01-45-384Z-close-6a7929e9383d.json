@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T17-01-45-384Z-close-6a7929e9383d",
+  "taskId": "ATM-GOV-0366",
+  "action": "close",
+  "actorId": "claude-008-gov-0366",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0366-disclose-the-owner-lane-source-in-lane-capability-refusals.task.md",
+  "taskSha256": "sha256:b2dd949cd07d03b0d63889aae50ca348f86a2cabe7f4cc4e55c75c60fdf4501f",
+  "createdAt": "2026-08-13T17:01:45.384Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0366 --actor claude-008-gov-0366"
+}
