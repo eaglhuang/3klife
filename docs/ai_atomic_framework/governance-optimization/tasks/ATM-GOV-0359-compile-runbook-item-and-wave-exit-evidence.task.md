@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0359
 title: Compile complete runbook item and wave-exit evidence
-status: planned
+status: done
 owner: codex-gpt-5.4-mini
 priority: P0
 depends_on: [ATM-GOV-0358]
@@ -64,6 +64,15 @@ outOfScope:
   - Deleting rescue worktrees
 nonGoals:
   - Treating authorized deferred work as silently complete
+completed_at: "2026-08-13T14:57:09.210Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-08-13T14:57:09.210Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-13T14-57-09-210Z-close-4f25b7cbd8d8"
+lastTransitionAt: "2026-08-13T14:57:09.210Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "16582a5ef"
 ---
 
 # ATM-GOV-0359 Compile complete runbook item and wave-exit evidence

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-13T14-57-09-210Z-close-4f25b7cbd8d8",
+  "taskId": "ATM-GOV-0359",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0359-compile-runbook-item-and-wave-exit-evidence.task.md",
+  "taskSha256": "sha256:432284aa2c247f8feddee47f9d63e24e6c3459765cb34b58dfdbf8281c1a6f67",
+  "createdAt": "2026-08-13T14:57:09.210Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0359 --actor codex-gpt-5.4-mini"
+}
