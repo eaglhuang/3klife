@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T02-02-47-211Z-close-7cc96aa54482",
+  "taskId": "ATM-GOV-0371",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0371-fail-closed-when-governed-commit-tree-diverges-from-sealed-candidate.task.md",
+  "taskSha256": "sha256:6b2f5e9c91f21f6dc1556ca6792e051baba01e41a6b352348663203041ac546b",
+  "createdAt": "2026-08-14T02:02:47.211Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0371 --actor codex-gpt-5.4-mini"
+}
