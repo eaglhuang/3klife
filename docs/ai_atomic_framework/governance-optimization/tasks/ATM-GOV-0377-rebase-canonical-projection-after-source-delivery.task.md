@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0377
 title: Rebase canonical projection after source delivery
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: [ATM-GOV-0376]
@@ -62,6 +62,15 @@ outOfScope:
   - Treating source delivery as a publication-only delta.
 nonGoals:
   - Making the four-plan verdict proven.
+completed_at: "2026-08-14T07:33:36.312Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T07:33:36.312Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T07-33-36-312Z-close-06f98d3ea711"
+lastTransitionAt: "2026-08-14T07:33:36.312Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "48eaddec79f106f2dcad3192edc036547004a81c"
 ---
 
 # ATM-GOV-0377 Rebase canonical projection after source delivery

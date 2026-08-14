@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T07-33-36-312Z-close-06f98d3ea711",
+  "taskId": "ATM-GOV-0377",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0377-rebase-canonical-projection-after-source-delivery.task.md",
+  "taskSha256": "sha256:2c3dc8e26ea48a920254fb6f807e491b13faa43a8018ae570fdd369a89e3ca79",
+  "createdAt": "2026-08-14T07:33:36.312Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0377 --actor codex-captain-recovery"
+}
