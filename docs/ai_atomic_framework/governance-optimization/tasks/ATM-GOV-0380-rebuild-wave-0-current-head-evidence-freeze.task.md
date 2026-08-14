@@ -26,7 +26,6 @@ deliverables:
   - docs/reports/plan-3x-4x-false-green-evidence-freeze.json
   - docs/reports/plan-3x-4x-false-green-evidence-freeze.md
 validators:
-  - node --strip-types scripts/diagnose-plan3-evidence-closure.ts --freeze-current-head --output docs/reports/plan-3x-4x-false-green-evidence-freeze.json
   - node --strip-types scripts/validate-git-head-evidence.ts --mode validate
   - node --strip-types scripts/validate-charter.ts --mode validate
 testContributions:
@@ -77,6 +76,8 @@ explicit `remain-open` evidence.
 
 - ACC-1 The freeze JSON and Markdown record one current-head raw receipt window
   with planning, target, origin, runner, worktree, and rescue observations.
-- ACC-2 The task evidence contains fresh command receipts for the collector,
-  Git-head evidence validator, and charter validator. The task does not promote
-  the four-plan verdict.
+- ACC-2 The task evidence contains fresh command receipts for the Git-head
+  evidence validator and charter validator. The collector's raw
+  command receipts live in the generated freeze artifact; a successor verifier
+  consumes that sealed artifact without re-running its heavy command window.
+  The task does not promote the four-plan verdict.
