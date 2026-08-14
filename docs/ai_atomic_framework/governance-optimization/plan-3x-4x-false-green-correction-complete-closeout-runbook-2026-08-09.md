@@ -655,4 +655,13 @@ task-card bytes. Any change to requirements, validators, acceptance,
 dependencies, scope, deliverables, or contract fields remains fail-closed.
 This repair does not alter the current `NOT COMPLETE` verdict.
 
+## Wave 10 recovery follow-up: post-semantic-snapshot projection rebase
+
+`ATM-GOV-0379` owns the one projection-only convergence publication after the
+committed semantic-snapshot producer delivery. The producer is a real source
+change and must stale any projection that predates it. The successor may change
+only the canonical generated projection and must validate from the committed
+producer HEAD after its own closeback. It must not convert the source delivery
+into a freshness exception or promote the current `NOT COMPLETE` verdict.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
