@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T12-15-03-362Z-close-a5a37bfd0d2c",
+  "taskId": "ATM-GOV-0387",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0387-observe-current-wave-0-freeze-independently.task.md",
+  "taskSha256": "sha256:bc340e707755370f80bb1ddecbb8b718dda9dcbdff964b09f94c81911c0ba663",
+  "createdAt": "2026-08-14T12:15:03.362Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0387 --actor codex-captain-recovery"
+}
