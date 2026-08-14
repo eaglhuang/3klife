@@ -21,6 +21,14 @@ createdByCommand: atm plan doc create
 
 本文件不是新的 completion authority，也不取代原始計畫。它只定義如何修正錯誤收口、如何重建證據，以及如何讓原始 objective matrix 得到合法更新。任何 task ledger 的 `done/released`、單一 focused test、closure packet、runner-sync receipt 或 Doctor 綠燈，都不能單獨把計畫標成完成。
 
+## Follow-up: projection freshness after canonical closeout
+
+`ATM-GOV-0374` owns only regeneration of the runbook-completion and
+release-authority projections when a later canonical closeout changes their
+inputs. It deliberately does not reopen the historical implementation cards or
+change their verifier logic. A refreshed `not-complete` verdict is correct
+progress evidence, not a failure to be overwritten.
+
 目前正式裁決固定為：
 
 > `NOT COMPLETE / FALSE-GREEN CORRECTION REQUIRED`
