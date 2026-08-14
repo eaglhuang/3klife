@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T08-49-38-824Z-close-ef76111e44df",
+  "taskId": "ATM-GOV-0382",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0382-bind-evidence-bundle-manifest-to-semantic-task-context.task.md",
+  "taskSha256": "sha256:4dcd6a4e0ddb799991d653aca1bef19bfb14d4e7233ec9caabc6b40a61093eac",
+  "createdAt": "2026-08-14T08:49:38.824Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0382 --actor codex-captain-recovery"
+}

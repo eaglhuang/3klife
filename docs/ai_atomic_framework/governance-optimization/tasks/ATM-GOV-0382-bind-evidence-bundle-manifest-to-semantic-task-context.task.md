@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0382
 title: Bind evidence bundle manifests to semantic task context
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: []
@@ -74,6 +74,15 @@ outOfScope:
   - Bypassing pre-commit or taskflow close with raw Git.
 nonGoals:
   - Declaring Wave 0 or the four plans complete.
+completed_at: "2026-08-14T08:49:38.824Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T08:49:38.824Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T08-49-38-824Z-close-ef76111e44df"
+lastTransitionAt: "2026-08-14T08:49:38.824Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0c5d461c96b50a70bf1408d59f170a7930e93ae9"
 ---
 
 # ATM-GOV-0382 Bind evidence bundle manifests to semantic task context
