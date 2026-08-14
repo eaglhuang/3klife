@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0379
 title: Rebase canonical projection after semantic snapshot delivery
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: [ATM-GOV-0378]
@@ -62,6 +62,15 @@ outOfScope:
   - Treating source delivery as a publication-only delta.
 nonGoals:
   - Making the four-plan verdict proven.
+completed_at: "2026-08-14T07:51:32.608Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T07:51:32.608Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T07-51-32-608Z-close-d257d88160f9"
+lastTransitionAt: "2026-08-14T07:51:32.608Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a18a319e2dd4045917dee5729e12e8135e2b5cff"
 ---
 
 # ATM-GOV-0379 Rebase canonical projection after semantic snapshot delivery
