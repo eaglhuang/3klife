@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0362
 title: Independently recompute runbook wave exits and live remote release verdict
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: [ATM-GOV-0360]
@@ -57,6 +57,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-14T03:17:24.244Z"
+completed_by_agent: "codex-captain-repair"
+closedAt: "2026-08-14T03:17:24.244Z"
+closedByActor: "codex-captain-repair"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T03-17-24-244Z-close-290693b53703"
+lastTransitionAt: "2026-08-14T03:17:24.244Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "58d6c5506b5dbab3f786fa5b8fea4bf1e3782a30"
 ---
 
 # ATM-GOV-0362 Independently recompute runbook wave exits and live remote release verdict

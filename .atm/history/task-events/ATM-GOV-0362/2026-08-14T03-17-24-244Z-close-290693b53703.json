@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T03-17-24-244Z-close-290693b53703",
+  "taskId": "ATM-GOV-0362",
+  "action": "close",
+  "actorId": "codex-captain-repair",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0362-independently-recompute-runbook-wave-exits-and-live-remote-release-verdict.task.md",
+  "taskSha256": "sha256:d8bb3a7ca2158230378ef0925ab79c26b9fa169e22596f1b376ecb98e1d803a3",
+  "createdAt": "2026-08-14T03:17:24.244Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0362 --actor codex-captain-repair"
+}
