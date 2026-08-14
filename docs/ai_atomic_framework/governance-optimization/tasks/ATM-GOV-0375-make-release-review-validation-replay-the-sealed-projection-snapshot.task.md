@@ -4,11 +4,12 @@ title: Make release-review validation replay the sealed projection snapshot
 status: planned
 owner: codex-captain-recovery
 priority: P0
-depends_on: [ATM-GOV-0374]
+depends_on: []
 causalGraph:
-  causalDependencies: [ATM-GOV-0374]
+  causalDependencies: []
   startConditions:
     - Release-review validation is stale solely because it regenerates a new timestamp instead of replaying its sealed projection snapshot.
+  softRelations: [ATM-GOV-0374]
   changedPublicSeams: [atm.fourPlanIndependentReleaseReview.v1]
   causalImpactEdges: [release-review-determinism, independent-release-verdict-freshness]
   parallelFrontierInputs: [completion-projection, runbook-source, observed-remote-head]
@@ -38,7 +39,7 @@ testContributions:
     expectedRedPredicate: a projection written at one timestamp fails validation later despite unchanged declared inputs
     contributionResourceKey: four-plan-release-review-determinism
     responsibility: task-required
-    dependencyEdge: ATM-GOV-0374
+    dependencyEdge: null
     contractEdge: atm.fourPlanIndependentReleaseReview.v1
     resourceKey: four-plan-release-review-determinism
 requiredTestCaseIds: [test_atm_gov_0375_release_review_validate_replays_sealed_timestamp]
