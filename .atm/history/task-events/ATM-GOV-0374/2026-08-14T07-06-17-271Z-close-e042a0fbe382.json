@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T07-06-17-271Z-close-e042a0fbe382",
+  "taskId": "ATM-GOV-0374",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0374-refresh-runbook-evidence-projections-after-closeout.task.md",
+  "taskSha256": "sha256:e5d5f4a50259bada46ee2b06e49067088fdd5ccfb2614e2056f3c37240aa67ab",
+  "createdAt": "2026-08-14T07:06:17.271Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0374 --actor codex-captain-recovery"
+}

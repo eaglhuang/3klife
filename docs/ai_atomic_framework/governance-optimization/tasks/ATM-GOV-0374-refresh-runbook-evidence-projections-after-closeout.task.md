@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0374
 title: Refresh runbook evidence projections after canonical closeout changes
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: [ATM-GOV-0359, ATM-GOV-0360, ATM-GOV-0362]
@@ -70,6 +70,15 @@ outOfScope:
   - Treating a not-complete result as a task failure or overriding it to green.
 nonGoals:
   - Creating reviewer receipts or release authorization.
+completed_at: "2026-08-14T07:06:17.271Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T07:06:17.271Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T07-06-17-271Z-close-e042a0fbe382"
+lastTransitionAt: "2026-08-14T07:06:17.271Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d42f09a2b99791b89c5bd5b4e13aa0cff7f440bc"
 ---
 
 # ATM-GOV-0374 Refresh runbook evidence projections after canonical closeout changes
