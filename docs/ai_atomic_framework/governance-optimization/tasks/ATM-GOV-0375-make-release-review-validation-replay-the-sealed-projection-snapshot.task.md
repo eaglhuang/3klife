@@ -6,7 +6,6 @@ owner: codex-captain-recovery
 priority: P0
 depends_on: []
 causalGraph:
-  causalDependencies: []
   startConditions:
     - Release-review validation is stale solely because it regenerates a new timestamp instead of replaying its sealed projection snapshot.
   softRelations: [ATM-GOV-0374]
