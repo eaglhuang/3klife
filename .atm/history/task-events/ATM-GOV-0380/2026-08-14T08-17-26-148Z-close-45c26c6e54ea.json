@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T08-17-26-148Z-close-45c26c6e54ea",
+  "taskId": "ATM-GOV-0380",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0380-rebuild-wave-0-current-head-evidence-freeze.task.md",
+  "taskSha256": "sha256:8002544f1ec38061c20104b303d379a179c716298da65970fc8706086dc99c44",
+  "createdAt": "2026-08-14T08:17:26.148Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0380 --actor codex-captain-recovery"
+}

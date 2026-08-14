@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0380
 title: Rebuild Wave 0 current-head evidence freeze
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: [ATM-GOV-0379]
@@ -60,6 +60,15 @@ outOfScope:
   - Deleting, pruning, resetting, rebasing, or modifying rescue worktrees.
 nonGoals:
   - Converting unavailable historical evidence into a passing observation.
+completed_at: "2026-08-14T08:17:26.148Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T08:17:26.148Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T08-17-26-148Z-close-45c26c6e54ea"
+lastTransitionAt: "2026-08-14T08:17:26.148Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "1ca19e2db03a7cb7f555dfe3418d894eba2bc703"
 ---
 
 # ATM-GOV-0380 Rebuild Wave 0 current-head evidence freeze
