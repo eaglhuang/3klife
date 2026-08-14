@@ -645,4 +645,14 @@ a separate projection-only publication. Subsequent closeback may add only
 durable governance receipts already admitted by the sealed bundle. This does
 not alter any objective evidence or the current `NOT COMPLETE` verdict.
 
+## Wave 10 recovery follow-up: semantic planning snapshots
+
+`ATM-GOV-0378` owns the planning-side counterpart. Closeback lifecycle fields
+and durable task events are not planning-contract changes, so projection
+freshness must bind a sealed semantic snapshot of the runbook and discovered
+task-card contracts—not an incidental repository-wide planning HEAD or raw
+task-card bytes. Any change to requirements, validators, acceptance,
+dependencies, scope, deliverables, or contract fields remains fail-closed.
+This repair does not alter the current `NOT COMPLETE` verdict.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
