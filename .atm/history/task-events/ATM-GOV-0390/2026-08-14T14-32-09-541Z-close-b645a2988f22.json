@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T14-32-09-541Z-close-b645a2988f22",
+  "taskId": "ATM-GOV-0390",
+  "action": "close",
+  "actorId": "claude-008-gov-0366",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0390-record-publication-verification-evidence-on-the-pending-backlog-items.task.md",
+  "taskSha256": "sha256:932848071959a91c0f5ea18c1c6e748acb744b1444b62d0f1a1eb5384d64d907",
+  "createdAt": "2026-08-14T14:32:09.541Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0390 --actor claude-008-gov-0366"
+}
