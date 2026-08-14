@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T04-28-25-560Z-close-7ec1bdaa4384",
+  "taskId": "ATM-GOV-0359",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0359-compile-runbook-item-and-wave-exit-evidence.task.md",
+  "taskSha256": "sha256:a209ee079f5b5886752bbb13e961658523bffbb2bd9fbebd544b19d7e502c58c",
+  "createdAt": "2026-08-14T04:28:25.560Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0359 --actor codex-captain-recovery"
+}
