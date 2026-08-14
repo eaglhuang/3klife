@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T08-53-52-777Z-close-c241545c70b4",
+  "taskId": "ATM-GOV-0381",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0381-verify-sealed-wave-0-freeze-artifact.task.md",
+  "taskSha256": "sha256:ff91e15eb951c6309a062e1d2d0d2e14819b856d509d5c80e0c1eb26135662d0",
+  "createdAt": "2026-08-14T08:53:52.777Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0381 --actor codex-captain-recovery"
+}

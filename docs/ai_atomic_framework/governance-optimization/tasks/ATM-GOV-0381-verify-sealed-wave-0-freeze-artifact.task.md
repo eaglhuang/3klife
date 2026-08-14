@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0381
 title: Verify sealed Wave 0 freeze artifact
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: [ATM-GOV-0380]
@@ -60,6 +60,15 @@ outOfScope:
   - Reclassifying remain-open, unavailable, timeout, or non-zero observations as pass.
 nonGoals:
   - Declaring Wave 0 or the four plans complete.
+completed_at: "2026-08-14T08:53:52.777Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T08:53:52.777Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T08-53-52-777Z-close-c241545c70b4"
+lastTransitionAt: "2026-08-14T08:53:52.777Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "63a9ca25f6993faa7ca7b6b12ab0bd7d2ee7fe7e"
 ---
 
 # ATM-GOV-0381 Verify sealed Wave 0 freeze artifact
