@@ -122,13 +122,13 @@ nonGoals:
   - Making the certificate green. If the evidence is stale, not-complete is the correct and required output.
   - Regenerating replays, the closeback, or the frozen runner. This card observes those artifacts; it does not produce them.
 createdByCommand: atm plan card create
-completed_at: "2026-08-13T16:51:53.475Z"
-completed_by_agent: "codex-gpt-5.4-mini"
-closedAt: "2026-08-13T16:51:53.475Z"
-closedByActor: "codex-gpt-5.4-mini"
+completed_at: "2026-08-14T05:52:38.991Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T05:52:38.991Z"
+closedByActor: "codex-captain-recovery"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-08-13T16-51-53-475Z-close-9ce783bd1ede"
-lastTransitionAt: "2026-08-13T16:51:53.475Z"
+lastTransitionId: "2026-08-14T05-52-38-991Z-close-c12017366454"
+lastTransitionAt: "2026-08-14T05:52:38.991Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "09adc42a182e372bd79d5685133dbe151fd36cef"
 ---
