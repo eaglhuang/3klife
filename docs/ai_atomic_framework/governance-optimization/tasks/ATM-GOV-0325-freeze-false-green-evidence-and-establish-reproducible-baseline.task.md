@@ -70,13 +70,13 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
-completed_at: "2026-08-09T19:20:26.436Z"
-completed_by_agent: "codex-gpt-5.4-mini"
-closedAt: "2026-08-09T19:20:26.436Z"
-closedByActor: "codex-gpt-5.4-mini"
+completed_at: "2026-08-14T05:43:58.189Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T05:43:58.189Z"
+closedByActor: "codex-captain-recovery"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-08-09T19-20-26-436Z-close-ae6c4034bd41"
-lastTransitionAt: "2026-08-09T19:20:26.436Z"
+lastTransitionId: "2026-08-14T05-43-58-189Z-close-34e478a02823"
+lastTransitionAt: "2026-08-14T05:43:58.189Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "2f11f9d5b875590e1c5309bf0a5c82b7029e1047"
 ---

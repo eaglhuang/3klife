@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T05-43-58-189Z-close-34e478a02823",
+  "taskId": "ATM-GOV-0325",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "done",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0325-freeze-false-green-evidence-and-establish-reproducible-baseline.task.md",
+  "taskSha256": "sha256:108c776641f81bb67433427b56cd79dedb1df4dea23ea75817abb5c3671619e6",
+  "createdAt": "2026-08-14T05:43:58.189Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0325 --actor codex-captain-recovery"
+}
