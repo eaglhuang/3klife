@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-12T07-38-25-379Z-close-43d04588a9dc",
+  "taskId": "ATM-GOV-0351",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0351-make-deferred-foreign-index-commit-failures-transactionally-reversible.task.md",
+  "taskSha256": "sha256:14d4d98dad8237a851f3691867c678ced008963537c0400f44103f462ccb3cdc",
+  "createdAt": "2026-08-12T07:38:25.379Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0351 --actor codex-gpt-5.4-mini"
+}

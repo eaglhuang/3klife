@@ -624,4 +624,25 @@ from the near-limit hook facade, with focused positive and negative Git-backed
 fixtures. This remains a prerequisite for 0372/0362 closure and therefore does
 not alter the current `NOT COMPLETE` verdict.
 
+## Wave 10 recovery follow-up: sealed projection publication bundles
+
+`ATM-GOV-0376` owns the general freshness rule for generated closeout
+projections. A projection must validate its declared input snapshot against a
+sealed, data-declared publication bundle, rather than assuming that only one
+hard-coded output path may change after observation. The permitted descendant
+delta is the bundle's declared generated artifacts plus durable governance
+receipts; any other source, authority input, or undeclared projection change
+must remain stale and fail closed. This repair restores reproducible dashboard
+validation only. It does not alter the 112 objective rows, any Wave exit, or
+the current `NOT COMPLETE` verdict.
+
+## Wave 10 recovery follow-up: post-delivery projection rebase
+
+`ATM-GOV-0377` owns the bounded convergence step after a projection producer
+source delivery. Source and test changes are never publication-only: the
+canonical projection must be regenerated from that committed producer head in
+a separate projection-only publication. Subsequent closeback may add only
+durable governance receipts already admitted by the sealed bundle. This does
+not alter any objective evidence or the current `NOT COMPLETE` verdict.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
