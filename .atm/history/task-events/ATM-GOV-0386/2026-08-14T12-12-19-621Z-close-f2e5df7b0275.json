@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T12-12-19-621Z-close-f2e5df7b0275",
+  "taskId": "ATM-GOV-0386",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0386-replay-wave-0-command-evidence-with-source-provenance.task.md",
+  "taskSha256": "sha256:fd2ef8b5da0ab34ef770a712254dc1f9d1f5ce3966d130e919cebf2a7b171328",
+  "createdAt": "2026-08-14T12:12:19.621Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0386 --actor codex-captain-recovery"
+}
