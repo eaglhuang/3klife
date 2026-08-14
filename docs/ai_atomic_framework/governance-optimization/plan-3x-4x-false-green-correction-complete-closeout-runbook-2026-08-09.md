@@ -29,6 +29,10 @@ inputs. It deliberately does not reopen the historical implementation cards or
 change their verifier logic. A refreshed `not-complete` verdict is correct
 progress evidence, not a failure to be overwritten.
 
+`ATM-GOV-0375` owns deterministic replay of the release-review projection.
+Validation must reuse a sealed projection timestamp only for identical declared
+inputs; changed authority inputs remain fail-closed and require regeneration.
+
 目前正式裁決固定為：
 
 > `NOT COMPLETE / FALSE-GREEN CORRECTION REQUIRED`
