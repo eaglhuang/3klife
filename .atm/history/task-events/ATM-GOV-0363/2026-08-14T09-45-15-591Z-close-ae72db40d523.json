@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T09-45-15-591Z-close-ae72db40d523",
+  "taskId": "ATM-GOV-0363",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0363-make-governed-operations-own-and-clean-their-transient-residue.task.md",
+  "taskSha256": "sha256:a7d8af731985d51c95bf92ff4264ab4669c453751fb4092910b85aafaceeb763",
+  "createdAt": "2026-08-14T09:45:15.591Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0363 --actor codex-captain-recovery"
+}

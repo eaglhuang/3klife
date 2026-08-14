@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0363
 title: Make governed operations own and clean their transient residue
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: []
@@ -95,6 +95,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-14T09:45:15.591Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T09:45:15.591Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T09-45-15-591Z-close-ae72db40d523"
+lastTransitionAt: "2026-08-14T09:45:15.591Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "660df5b7b87bc2eb0011052634f9b1f047beb027"
 ---
 
 # ATM-GOV-0363 Make governed operations own and clean their transient residue
