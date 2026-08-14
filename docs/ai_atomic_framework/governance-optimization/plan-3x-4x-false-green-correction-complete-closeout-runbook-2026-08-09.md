@@ -664,4 +664,12 @@ only the canonical generated projection and must validate from the committed
 producer HEAD after its own closeback. It must not convert the source delivery
 into a freshness exception or promote the current `NOT COMPLETE` verdict.
 
+## Wave 0 recovery follow-up: current-head evidence freeze replay
+
+`ATM-GOV-0380` replays the Wave 0 evidence collector at the current sealed
+authority snapshot. Its output preserves raw command receipts, timeout and
+availability states, plus worktree and rescue observations; it never converts a
+negative, missing, or unavailable observation into pass. This is a prerequisite
+for independent Wave 0 exit evidence and does not change `NOT COMPLETE`.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
