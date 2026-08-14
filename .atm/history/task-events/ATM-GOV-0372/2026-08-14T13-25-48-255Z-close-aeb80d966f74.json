@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T13-25-48-255Z-close-aeb80d966f74",
+  "taskId": "ATM-GOV-0372",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0372-unify-direction-lock-authority-snapshots-for-framework-publication.task.md",
+  "taskSha256": "sha256:2e2cc08b86a20aa476d073c1efdef661184b0fa55d053ccf6c20db2c607da385",
+  "createdAt": "2026-08-14T13:25:48.255Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0372 --actor codex-captain-recovery"
+}
