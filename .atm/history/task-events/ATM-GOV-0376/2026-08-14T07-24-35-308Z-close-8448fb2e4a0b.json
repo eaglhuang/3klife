@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T07-24-35-308Z-close-8448fb2e4a0b",
+  "taskId": "ATM-GOV-0376",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0376-seal-projection-publication-bundles-for-freshness-validation.task.md",
+  "taskSha256": "sha256:335270aecfff42bb58e24efbc9f52ac290f902a9ac796525d09c1649cb02a5b3",
+  "createdAt": "2026-08-14T07:24:35.308Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0376 --actor codex-captain-recovery"
+}
