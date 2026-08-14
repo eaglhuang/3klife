@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0359
 title: Compile complete runbook item and wave-exit evidence
-status: done
+status: planned
 owner: codex-gpt-5.4-mini
 priority: P0
 depends_on: [ATM-GOV-0358]
