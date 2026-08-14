@@ -4,12 +4,12 @@ title: Bind evidence bundle manifests to semantic task context
 status: planned
 owner: codex-captain-recovery
 priority: P0
-depends_on: [ATM-GOV-0381]
+depends_on: []
 causalGraph:
-  causalDependencies: [ATM-GOV-0381]
+  causalDependencies: []
   startConditions:
     - A taskflow close transaction has reproduced a protected-state rejection for its generated evidence bundle manifest.
-  softRelations: [TASK-MAO-0057, TASK-GIT-0026]
+  softRelations: [ATM-GOV-0381, TASK-MAO-0057, TASK-GIT-0026]
   changedPublicSeams: [atm.evidenceBundleManifest.v1, protected-evidence-bundle-admission]
   causalImpactEdges: [manifest-producer-consumer-parity, taskflow-close-atomicity]
   parallelFrontierInputs: [evidence-bundle-manifest, pre-commit-protected-state]
@@ -41,7 +41,7 @@ testContributions:
     expectedRedPredicate: a generated same-task manifest without a semantic taskId is rejected before the producer fix, while a manifest with a mismatched taskId remains rejected
     contributionResourceKey: evidence-bundle-manifest
     responsibility: task-required
-    dependencyEdge: ATM-GOV-0381
+    dependencyEdge: null
     contractEdge: atm.evidenceBundleManifest.v1
     resourceKey: evidence-bundle-manifest
 requiredTestCaseIds: [test_atm_gov_0382_manifest_semantic_task_context]
