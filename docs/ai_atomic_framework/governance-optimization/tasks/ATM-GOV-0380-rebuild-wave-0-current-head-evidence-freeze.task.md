@@ -26,7 +26,7 @@ deliverables:
   - docs/reports/plan-3x-4x-false-green-evidence-freeze.json
   - docs/reports/plan-3x-4x-false-green-evidence-freeze.md
 validators:
-  - node --strip-types scripts/diagnose-plan3-evidence-closure.ts --freeze-current-head
+  - node --strip-types scripts/diagnose-plan3-evidence-closure.ts --freeze-current-head --output docs/reports/plan-3x-4x-false-green-evidence-freeze.json
   - node --strip-types scripts/validate-git-head-evidence.ts --mode validate
   - node --strip-types scripts/validate-charter.ts --mode validate
 testContributions:
