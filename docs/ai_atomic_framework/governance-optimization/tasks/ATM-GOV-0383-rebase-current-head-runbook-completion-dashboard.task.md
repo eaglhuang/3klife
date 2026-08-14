@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0383
 title: Rebase the runbook completion dashboard to current sealed HEAD
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: [ATM-GOV-0381, ATM-GOV-0382]
@@ -66,6 +66,15 @@ outOfScope:
   - Declaring the four plans complete.
 nonGoals:
   - Repairing any unresolved requirement discovered by the regenerated report.
+completed_at: "2026-08-14T09:06:02.254Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T09:06:02.254Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T09-06-02-254Z-close-13da5070980a"
+lastTransitionAt: "2026-08-14T09:06:02.254Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "5db860f60669d9183979a202268eaa3a6156ffb9"
 ---
 
 # ATM-GOV-0383 Rebase the runbook completion dashboard to current sealed HEAD

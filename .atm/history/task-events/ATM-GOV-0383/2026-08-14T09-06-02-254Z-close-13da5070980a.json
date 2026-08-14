@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T09-06-02-254Z-close-13da5070980a",
+  "taskId": "ATM-GOV-0383",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0383-rebase-current-head-runbook-completion-dashboard.task.md",
+  "taskSha256": "sha256:c75864cc37ee1043a0fb076fa909e33ffbaa167ef2ddfb08e02858cc613413bd",
+  "createdAt": "2026-08-14T09:06:02.254Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0383 --actor codex-captain-recovery"
+}
