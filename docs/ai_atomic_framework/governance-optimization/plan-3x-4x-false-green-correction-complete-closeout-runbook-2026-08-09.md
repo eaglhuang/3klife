@@ -672,4 +672,12 @@ availability states, plus worktree and rescue observations; it never converts a
 negative, missing, or unavailable observation into pass. This is a prerequisite
 for independent Wave 0 exit evidence and does not change `NOT COMPLETE`.
 
+## Wave 0 recovery follow-up: sealed freeze artifact verifier
+
+`ATM-GOV-0381` adds a fast verifier for the sealed Wave 0 freeze artifact. It
+checks receipt coverage, digests, current authority observations and explicit
+`remain-open` semantics, allowing later completion mapping to consume one
+heavy collector window rather than duplicate it. Malformed, missing or promoted
+artifacts fail closed; this does not change `NOT COMPLETE`.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
