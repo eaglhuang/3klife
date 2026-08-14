@@ -6,7 +6,7 @@ owner: codex-captain-recovery
 priority: P0
 depends_on: []
 causalGraph:
-  causalDependencies: []
+  causalDependencies: [TASK-MAO-0057]
   startConditions:
     - A taskflow close transaction has reproduced a protected-state rejection for its generated evidence bundle manifest.
   softRelations: [ATM-GOV-0381, TASK-MAO-0057, TASK-GIT-0026]
