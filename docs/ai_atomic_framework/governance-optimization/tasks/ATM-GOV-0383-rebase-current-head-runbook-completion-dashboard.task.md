@@ -56,7 +56,10 @@ rollback:
 atomizationImpact:
   ownerAtomOrMap: atm.runbook-completion-evidence
   mapUpdates: []
-  extractionCandidates: []
+  extractionCandidates:
+    - path: docs/reports/plan-3x-4x-runbook-completion-evidence.json
+      disposition: inline
+      inlineReason: This is one generated, schema-validated authority projection. Splitting it into manually maintained shards would create a second completion authority and weaken atomic regeneration.
 errorCodes: []
 outOfScope:
   - Changing runbook requirement wording, row status, or Wave exit rules to force completion.
@@ -85,4 +88,3 @@ reason to reinterpret a requirement.
   verdict remains `not-complete`.
 - ACC-3 The focused regression proves the report remains a derived projection:
   stale authority or a caller-authored green row is rejected.
-
