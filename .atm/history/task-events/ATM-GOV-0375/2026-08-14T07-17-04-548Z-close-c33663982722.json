@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T07-17-04-548Z-close-c33663982722",
+  "taskId": "ATM-GOV-0375",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0375-make-release-review-validation-replay-the-sealed-projection-snapshot.task.md",
+  "taskSha256": "sha256:25f817bde3817555bc3185f829353cda5555a06b376b3d8666c52dafa5d31237",
+  "createdAt": "2026-08-14T07:17:04.548Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0375 --actor codex-captain-recovery"
+}

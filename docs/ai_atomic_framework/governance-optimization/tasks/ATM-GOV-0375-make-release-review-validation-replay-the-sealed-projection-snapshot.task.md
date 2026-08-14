@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0375
 title: Make release-review validation replay the sealed projection snapshot
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: []
@@ -59,6 +59,15 @@ outOfScope:
   - Altering runbook row completion semantics.
 nonGoals:
   - Making the release verdict proven.
+completed_at: "2026-08-14T07:17:04.548Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T07:17:04.548Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T07-17-04-548Z-close-c33663982722"
+lastTransitionAt: "2026-08-14T07:17:04.548Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ca716104c8752ef6a073fe908403ba90023ef528"
 ---
 
 # ATM-GOV-0375 Make release-review validation replay the sealed projection snapshot
