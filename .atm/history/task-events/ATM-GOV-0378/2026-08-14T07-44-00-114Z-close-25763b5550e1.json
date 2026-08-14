@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-14T07-44-00-114Z-close-25763b5550e1",
+  "taskId": "ATM-GOV-0378",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0378-seal-semantic-planning-inputs-for-projection-freshness.task.md",
+  "taskSha256": "sha256:32969c0a8c51f1fad1fa95ae5311ead12a2e2181613ba2a931a4b770c54752e2",
+  "createdAt": "2026-08-14T07:44:00.114Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0378 --actor codex-captain-recovery"
+}

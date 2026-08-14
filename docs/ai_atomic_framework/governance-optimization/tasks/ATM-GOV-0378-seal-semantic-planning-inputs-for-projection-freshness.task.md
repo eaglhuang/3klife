@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0378
 title: Seal semantic planning inputs for projection freshness
-status: planned
+status: done
 owner: codex-captain-recovery
 priority: P0
 depends_on: [ATM-GOV-0377]
@@ -67,6 +67,15 @@ outOfScope:
   - Changing the four-plan verdict.
 nonGoals:
   - Treating arbitrary planning HEAD changes as safe without semantic comparison.
+completed_at: "2026-08-14T07:44:00.114Z"
+completed_by_agent: "codex-captain-recovery"
+closedAt: "2026-08-14T07:44:00.114Z"
+closedByActor: "codex-captain-recovery"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-14T07-44-00-114Z-close-25763b5550e1"
+lastTransitionAt: "2026-08-14T07:44:00.114Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "59e162d23a50d4b1997be170fd9a983a804961d1"
 ---
 
 # ATM-GOV-0378 Seal semantic planning inputs for projection freshness
