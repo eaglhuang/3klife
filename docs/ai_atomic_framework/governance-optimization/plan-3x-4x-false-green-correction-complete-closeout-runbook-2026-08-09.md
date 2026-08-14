@@ -555,6 +555,23 @@ index repair, alternate worktree, hard-coded task ID, or broad validation run
 may substitute for that proof. This recovery is a prerequisite for resuming
 0350/0349 closeout and the Wave 3 runner publication lane.
 
+## Wave 3 recovery follow-up: current authority snapshots for cross-task mutation
+
+Observed during the correction runner-publication window: an old frozen runner
+can classify the historical scope of terminal/released tasks as a live source
+owner, then preserve that obsolete incident indefinitely. This is neither a
+valid lock nor a valid active claim, and clearing foreign staged evidence or
+incident files by hand would conceal—not repair—the authority split.
+
+`ATM-GOV-0369` owns the general repair and publication. Cross-task source
+ownership must consume a current canonical authority snapshot: a terminal
+released task cannot own a source path, while a live claim, active lock, or
+broker intent still blocks. Foreign task-history evidence remains fail-closed
+for every task state. The proof includes a terminal-scope negative case, a
+foreign-history preservation case, stale-incident reconciliation, and a fresh
+frozen-runner doctor result. This is a Wave 3 prerequisite; until it passes,
+the validator/runner path remains `NOT COMPLETE`.
+
 ## ErrorCode Registry Migration Note
 
 本計畫不授權搬移 ErrorCode registry。若修正工作需要新增、變更或退役 `ATM_*` code，必須使用既有 ERR family 與 canonical `docs/governance/error-code-registry.json`；同步更新 emitter、generator、schema、`docs/ERROR_CODES.md` 與 focused tests。
@@ -577,5 +594,22 @@ receipt. Unowned residue, broad cleanup and incident-specific allowlists are
 forbidden. This follow-up does not change the current four-plan verdict:
 until 0363 and the original completion gates are command-backed, the result
 remains `NOT COMPLETE`.
+
+## Wave 3 recovery follow-up: authoritative committed context for evidence-only closeback
+
+Observed while closing `ATM-GOV-0372`: the task's source delivery and canonical
+task ledger were already committed, but the normal evidence-only closeback
+bundle was rejected because the pre-commit hook recognized task context only
+when the ledger or transition was staged again. Re-staging an unchanged ledger
+would create an endless closeback loop; bypassing the hook would hide it.
+
+`ATM-GOV-0373` owns the generalized repair. Protected evidence admission must
+resolve one semantic task identity from payloads and admit an evidence-only
+bundle only when an authoritative committed ledger proves that same identity.
+Missing, malformed, mismatched, multi-task or filename-only context remains
+fail-closed. The implementation extracts a committed-context result contract
+from the near-limit hook facade, with focused positive and negative Git-backed
+fixtures. This remains a prerequisite for 0372/0362 closure and therefore does
+not alter the current `NOT COMPLETE` verdict.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
