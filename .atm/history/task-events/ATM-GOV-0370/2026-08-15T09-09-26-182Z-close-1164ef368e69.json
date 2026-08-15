@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-15T09-09-26-182Z-close-1164ef368e69",
+  "taskId": "ATM-GOV-0370",
+  "action": "close",
+  "actorId": "cursor-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0370-bind-runner-publication-outputs-to-producer-authority-before-taskflow-close-bundling.task.md",
+  "taskSha256": "sha256:5046b1ae129caa5661cec76651374f30d1e3d02f6d6f8315d11c1377ec472f90",
+  "createdAt": "2026-08-15T09:09:26.182Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0370 --actor cursor-captain"
+}
