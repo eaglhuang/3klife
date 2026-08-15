@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-15T09-12-37-688Z-close-77078cf95007",
+  "taskId": "ATM-GOV-0391",
+  "action": "close",
+  "actorId": "cursor-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0391-make-root-drop-runner-builds-incrementally-overlay-verified-base-releases.task.md",
+  "taskSha256": "sha256:74bc40a0d56a0bdde41dcfb42341a69fda3d985ed24923216270fa27e073bf44",
+  "createdAt": "2026-08-15T09:12:37.688Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0391 --actor cursor-captain"
+}
