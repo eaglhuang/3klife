@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-15T10-19-39-793Z-close-779dbb83e7a1",
+  "taskId": "ATM-GOV-0396",
+  "action": "close",
+  "actorId": "cursor-captain",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0396-do-not-forward-stale-runner-emergency-arguments-after-runner-publication-is-accepted.task.md",
+  "taskSha256": "sha256:6a050d97b530a211cfcc9f41e03adc409e35477f5053f065b6241bdd283a218b",
+  "createdAt": "2026-08-15T10:19:39.793Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0396 --actor cursor-captain"
+}
