@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-15T09-14-47-371Z-close-92eec6042a93",
+  "taskId": "ATM-GOV-0393",
+  "action": "close",
+  "actorId": "cursor-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0393-make-scope-amendments-atomically-reseal-delivery-authority.task.md",
+  "taskSha256": "sha256:e2f68f76f5fc63076fe4bd7aa2af67010ef87f70c9cba1a88d4222c4acb1c872",
+  "createdAt": "2026-08-15T09:14:47.371Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0393 --actor cursor-captain"
+}
