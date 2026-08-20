@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-20T17-08-01-203Z-close-373921665b21",
+  "taskId": "ATM-GOV-0401",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0401-make-governed-hook-failures-summary-first-and-full-diagnostic-addressable.task.md",
+  "taskSha256": "sha256:f20322f713f573e7d26137d9793e77284e1394efaea738b0ca57f30acc84f989",
+  "createdAt": "2026-08-20T17:08:01.203Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0401 --actor codex-captain"
+}
