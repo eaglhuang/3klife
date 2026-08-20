@@ -680,4 +680,46 @@ checks receipt coverage, digests, current authority observations and explicit
 heavy collector window rather than duplicate it. Malformed, missing or promoted
 artifacts fail closed; this does not change `NOT COMPLETE`.
 
+## Governance usability follow-up: lossless hook failure diagnostics
+
+Observed in repeated governed-commit dogfood, including the Wave 3 recovery
+work: a hook can correctly produce a structured failure envelope while the
+governed commit wrapper exposes only a truncated fragment. Operators then must
+re-run internal hooks or inspect opaque persisted output to identify the actual
+blocking code and recovery command. This wastes recovery time and violates the
+plan's fail-fast objective without changing the underlying guard decision.
+
+`ATM-GOV-0401` owns one summary-first diagnostic transport contract shared by
+the native pre-commit hook and governed commit wrapper. It must show a bounded
+actionable summary immediately and provide a lossless, digest-addressable
+structured diagnostic reference. Formatter/write failure remains fail-closed
+and must preserve the original blocker; no task, claim, close, runner, release,
+or admission rule is changed. This improves recovery ergonomics only and does
+not change the current `NOT COMPLETE` verdict.
+
+## Team Agents escalation follow-up: actionable, proportional coordination
+
+`ATM-GOV-0402` is the completed source quickfix for proposal-first recovery:
+it makes the existing Team plan/start block machine-actionable without creating
+a proposal or weakening broker admission. `ATM-GOV-0403` follows with the
+decision layer: `next` must classify observable coordination risk as advisory,
+recommended, or required, and must name the minimum Team level and official
+state-only recovery. `ATM-GOV-0404` consumes a current Team receipt only at a
+proven expensive shared boundary—runner publication, certificate/release
+transition, or multi-task closeout. Focused validation and isolated quickfixes
+remain ungated. These follow-ups reduce coordination omissions without turning
+L5 into a universal serialization mechanism and do not change the current
+`NOT COMPLETE` verdict.
+
+## Team Agents runtime follow-up: state-only start must not require execution
+
+`ATM-GOV-0405` is a P0 bounded quickfix exposed by the first valid L5
+proposal. Plain `team start` is contractually state-only, yet its current
+admission rejects a valid plan when an editor-subagent execution backend is not
+installed. State-only start must create no worker execution and must not depend
+on execution capability; `team start --execute` remains strictly capability
+validated and must return structured recovery when unavailable. This does not
+permit a manifest to claim a nonexistent backend, and it does not change the
+current `NOT COMPLETE` verdict.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-09T06:49:05.547Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md","contentDigest":"sha256:f309fbdd97312c31602e50a6635ec3a95fd53aa12287b22c3c5991e343278fc7"} -->
