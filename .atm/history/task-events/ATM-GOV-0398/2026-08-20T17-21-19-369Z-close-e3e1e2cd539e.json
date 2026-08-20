@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-20T17-21-19-369Z-close-e3e1e2cd539e",
+  "taskId": "ATM-GOV-0398",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0398-repair-the-remaining-declared-validator-regressions-behind-atm-gov-0331-evidence.task.md",
+  "taskSha256": "sha256:3fadd7d1e776ffce06e392e0b00f25f1d0d9de12abb88a775f08cd9bcfb71135",
+  "createdAt": "2026-08-20T17:21:19.369Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0398 --actor codex-captain"
+}
