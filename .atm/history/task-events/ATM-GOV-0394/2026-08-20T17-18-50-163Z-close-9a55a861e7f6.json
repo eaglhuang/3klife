@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-20T17-18-50-163Z-close-9a55a861e7f6",
+  "taskId": "ATM-GOV-0394",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0394-guarantee-dry-run-purity-across-every-lifecycle-branch.task.md",
+  "taskSha256": "sha256:098714b3745d2da731917004ec58c2db07c056c84ff1d146812e8667f8042e5c",
+  "createdAt": "2026-08-20T17:18:50.163Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0394 --actor codex-captain"
+}
