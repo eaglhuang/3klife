@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-20T17-19-23-169Z-close-c5a2255fb212",
+  "taskId": "ATM-GOV-0395",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0395-give-closed-task-generated-residue-one-governed-reconciliation-entry.task.md",
+  "taskSha256": "sha256:fd49fbebc867e7d5b2324da39b6dc62382fcd9b6bf18f22364cc990496f7b540",
+  "createdAt": "2026-08-20T17:19:23.169Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0395 --actor codex-captain"
+}
