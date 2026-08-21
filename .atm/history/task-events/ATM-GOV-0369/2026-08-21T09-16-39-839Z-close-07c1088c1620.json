@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-21T09-16-39-839Z-close-07c1088c1620",
+  "taskId": "ATM-GOV-0369",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0369-make-cross-task-mutation-ownership-require-current-authority-snapshots.task.md",
+  "taskSha256": "sha256:f394c0bf1d78f6452d3d92f3f6d840c1624083472e28e2b3301e38461c41b7a1",
+  "createdAt": "2026-08-21T09:16:39.839Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0369 --actor codex-captain"
+}
