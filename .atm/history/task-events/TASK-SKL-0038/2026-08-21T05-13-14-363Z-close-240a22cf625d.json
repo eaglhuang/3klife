@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-21T05-13-14-363Z-close-240a22cf625d",
+  "taskId": "TASK-SKL-0038",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0038-enforce-sealed-skill-source-universe-and-projection-parity.task.md",
+  "taskSha256": "sha256:2012297455d707912f2c9e1428452cb378f564fca3225e168b611a1b66d1b6b0",
+  "createdAt": "2026-08-21T05:13:14.363Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0038 --actor codex-gpt-5.4-mini"
+}
