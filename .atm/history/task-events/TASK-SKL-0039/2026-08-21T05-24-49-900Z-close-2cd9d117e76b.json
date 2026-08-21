@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-21T05-24-49-900Z-close-2cd9d117e76b",
+  "taskId": "TASK-SKL-0039",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0039-repair-canonical-dispatch-skill-projection-parity-without-corpus-wide-overwrite.task.md",
+  "taskSha256": "sha256:3d2e345c03476775079728ce1010eefd4c27d4c02a2b1c5270b0f28231f3b262",
+  "createdAt": "2026-08-21T05:24:49.900Z",
+  "command": "node atm.mjs tasks close --task TASK-SKL-0039 --actor codex-gpt-5.4-mini"
+}
