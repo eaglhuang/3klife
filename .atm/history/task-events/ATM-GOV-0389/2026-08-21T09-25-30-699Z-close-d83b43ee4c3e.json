@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-21T09-25-30-699Z-close-d83b43ee4c3e",
+  "taskId": "ATM-GOV-0389",
+  "action": "close",
+  "actorId": "codex-captain-recovery",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0389-fail-fast-and-avoid-unnecessary-runner-publication-on-governed-closeout.task.md",
+  "taskSha256": "sha256:89c54ab4fe50c01946c259c36591c920a808671cabe645ccde010896e6146baa",
+  "createdAt": "2026-08-21T09:25:30.699Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0389 --actor codex-captain-recovery"
+}
