@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0341
 title: Produce independent four-plan certification and governed release
-status: planned
+status: done
 owner: atm-independent-review
 priority: P0
 depends_on: [ATM-GOV-0340]
@@ -21,21 +21,148 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo_plus_planning_closeback
 scopePaths:
+  - packages/core/src/evidence/four-plan-independent-certificate.ts
   - packages/core/src/evidence/quality-authority.ts
   - packages/core/src/evidence/quality-vector.ts
   - packages/core/src/evidence/oracle-adjudication.ts
   - scripts/validate-four-plan-objectives.ts
   - scripts/validate-backlog-census.ts
   - scripts/validate-runner-reproducibility.ts
+  - scripts/compile-four-plan-independent-certificate.ts
+  - scripts/review-four-plan-objective-authority.ts
+  - scripts/review-runbook-release-authority.ts
+  - tests/cli/four-plan-independent-certificate.test.ts
+  - tests/cli/four-plan-objective-authority-review.test.ts
+  - tests/cli/runbook-release-authority-review.test.ts
+  - tests/cli/plan4-final-certification.test.ts
+  - governance-optimization/plan-3x-4x-objective-audit-2026-07-31.json
+  - docs/reports/plan-3x-4x-closeout-blocker-map.json
+  - docs/reports/plan-3x-4x-independent-certificate.json
+  - docs/reports/plan-3x-4x-release-closeback.json
+  - docs/reports/reviews/plan-3x-4x-objective-authority-review.json
+  - docs/reports/reviews/plan-3x-4x-runbook-release-review.json
+  - packages/cli/dist/commands/tasks/__tests__/historical-delivery.test.d.ts
+  - packages/cli/dist/commands/tasks/historical-delivery.d.ts
+  - release/atm-onefile/atm.mjs
+  - release/atm-onefile/release-manifest.json
+  - release/atm-root-drop/docs/reports/plan-3x-4x-closeout-blocker-map.json
+  - release/atm-root-drop/docs/reports/plan-3x-4x-independent-certificate.json
+  - release/atm-root-drop/docs/reports/reviews/plan-3x-4x-objective-authority-review.json
+  - release/atm-root-drop/docs/reports/reviews/plan-3x-4x-runbook-release-review.json
+  - release/atm-root-drop/packages/cli/dist/commands/tasks/__tests__/historical-delivery.test.d.ts
+  - release/atm-root-drop/packages/cli/dist/commands/tasks/historical-delivery.d.ts
+  - release/atm-root-drop/release-manifest.json
+  - packages/cli/dist/commands/taskflow/implementation.js
+  - release/atm-root-drop/docs/governance/atm-bug-and-optimization-backlog.md
+  - release/atm-root-drop/docs/multi-agent-compatibility-matrix.md
+  - release/atm-root-drop/docs/reports/plan-3x-4x-runbook-completion-evidence.json
+  - release/atm-root-drop/eslint.config.mjs
+  - release/atm-root-drop/packages/atm-markdown-task-source/dist/index.d.ts
+  - release/atm-root-drop/packages/cli/dist/atm.d.ts
+  - release/atm-root-drop/packages/cli/dist/commands/hook/pre-commit/scope-ownership.js
+  - release/atm-root-drop/packages/cli/dist/commands/hook/pre-commit/support.js
+  - release/atm-root-drop/packages/cli/dist/commands/integration-hooks/implementation.js
+  - release/atm-root-drop/packages/cli/dist/commands/next/claim-orchestration.js
+  - release/atm-root-drop/packages/cli/dist/commands/next/claim-parallel-preflight.js
+  - release/atm-root-drop/packages/cli/dist/commands/next/route-resolution/pending-worktree.js
+  - release/atm-root-drop/packages/cli/dist/commands/task-direction/support.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/__tests__/mixed-delivery-close-ux.spec.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/__tests__/taskflow-close-crash-matrix.test.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/historical-close-preflight.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/implementation.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/write-readiness.js
+  - release/atm-root-drop/packages/cli/src/commands/broker/steward-queues.ts
+  - release/atm-root-drop/packages/cli/src/commands/hook/pre-commit/scope-ownership.ts
+  - release/atm-root-drop/packages/cli/src/commands/hook/pre-commit/support.ts
+  - release/atm-root-drop/packages/cli/src/commands/integration-hooks/implementation.ts
+  - release/atm-root-drop/packages/cli/src/commands/next/claim-orchestration.ts
+  - release/atm-root-drop/packages/cli/src/commands/next/claim-parallel-preflight.ts
+  - release/atm-root-drop/packages/cli/src/commands/next/route-resolution/pending-worktree.ts
+  - release/atm-root-drop/packages/cli/src/commands/task-direction/support.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/__tests__/mixed-delivery-close-ux.spec.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/__tests__/taskflow-close-crash-matrix.test.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/historical-close-preflight.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/implementation.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/write-readiness.ts
+  - release/atm-root-drop/packages/core/dist/upgrade/propose.js
+  - release/atm-root-drop/packages/core/src/git/admission.ts
+  - release/atm-root-drop/packages/core/src/upgrade/propose.ts
+  - release/atm-root-drop/scripts/compile-runbook-completion-evidence.ts
+  - release/atm-root-drop/scripts/validate-upgrade-proposal.ts
+  - release/atm-root-drop/tests/cli/git-admission-cli.test.ts
+  - release/atm-root-drop/tests/cli/runbook-completion-evidence.test.ts
+  - release/atm-root-drop/tests/cli/runner-sync-build-script-admission.test.ts
   - tests/catalog/groups/test_group_plan4_final_certification.shard.json
 deliverables:
   - packages/core/src/evidence/four-plan-independent-certificate.ts
   - schemas/evidence/four-plan-independent-certificate.schema.json
+  - scripts/compile-four-plan-independent-certificate.ts
+  - scripts/review-four-plan-objective-authority.ts
+  - scripts/review-runbook-release-authority.ts
   - tests/cli/four-plan-independent-certificate.test.ts
+  - tests/cli/four-plan-objective-authority-review.test.ts
+  - tests/cli/runbook-release-authority-review.test.ts
+  - tests/cli/plan4-final-certification.test.ts
+  - governance-optimization/plan-3x-4x-objective-audit-2026-07-31.json
+  - docs/reports/plan-3x-4x-closeout-blocker-map.json
   - docs/reports/plan-3x-4x-independent-certificate.json
   - docs/reports/plan-3x-4x-release-closeback.json
+  - docs/reports/reviews/plan-3x-4x-objective-authority-review.json
+  - docs/reports/reviews/plan-3x-4x-runbook-release-review.json
+  - packages/cli/dist/commands/tasks/__tests__/historical-delivery.test.d.ts
+  - packages/cli/dist/commands/tasks/historical-delivery.d.ts
+  - release/atm-onefile/atm.mjs
+  - release/atm-onefile/release-manifest.json
+  - release/atm-root-drop/docs/reports/plan-3x-4x-closeout-blocker-map.json
+  - release/atm-root-drop/docs/reports/plan-3x-4x-independent-certificate.json
+  - release/atm-root-drop/docs/reports/reviews/plan-3x-4x-objective-authority-review.json
+  - release/atm-root-drop/docs/reports/reviews/plan-3x-4x-runbook-release-review.json
+  - release/atm-root-drop/packages/cli/dist/commands/tasks/__tests__/historical-delivery.test.d.ts
+  - release/atm-root-drop/packages/cli/dist/commands/tasks/historical-delivery.d.ts
+  - release/atm-root-drop/release-manifest.json
+  - packages/cli/dist/commands/taskflow/implementation.js
+  - release/atm-root-drop/docs/governance/atm-bug-and-optimization-backlog.md
+  - release/atm-root-drop/docs/multi-agent-compatibility-matrix.md
+  - release/atm-root-drop/docs/reports/plan-3x-4x-runbook-completion-evidence.json
+  - release/atm-root-drop/eslint.config.mjs
+  - release/atm-root-drop/packages/atm-markdown-task-source/dist/index.d.ts
+  - release/atm-root-drop/packages/cli/dist/atm.d.ts
+  - release/atm-root-drop/packages/cli/dist/commands/hook/pre-commit/scope-ownership.js
+  - release/atm-root-drop/packages/cli/dist/commands/hook/pre-commit/support.js
+  - release/atm-root-drop/packages/cli/dist/commands/integration-hooks/implementation.js
+  - release/atm-root-drop/packages/cli/dist/commands/next/claim-orchestration.js
+  - release/atm-root-drop/packages/cli/dist/commands/next/claim-parallel-preflight.js
+  - release/atm-root-drop/packages/cli/dist/commands/next/route-resolution/pending-worktree.js
+  - release/atm-root-drop/packages/cli/dist/commands/task-direction/support.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/__tests__/mixed-delivery-close-ux.spec.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/__tests__/taskflow-close-crash-matrix.test.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/historical-close-preflight.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/implementation.js
+  - release/atm-root-drop/packages/cli/dist/commands/taskflow/write-readiness.js
+  - release/atm-root-drop/packages/cli/src/commands/broker/steward-queues.ts
+  - release/atm-root-drop/packages/cli/src/commands/hook/pre-commit/scope-ownership.ts
+  - release/atm-root-drop/packages/cli/src/commands/hook/pre-commit/support.ts
+  - release/atm-root-drop/packages/cli/src/commands/integration-hooks/implementation.ts
+  - release/atm-root-drop/packages/cli/src/commands/next/claim-orchestration.ts
+  - release/atm-root-drop/packages/cli/src/commands/next/claim-parallel-preflight.ts
+  - release/atm-root-drop/packages/cli/src/commands/next/route-resolution/pending-worktree.ts
+  - release/atm-root-drop/packages/cli/src/commands/task-direction/support.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/__tests__/mixed-delivery-close-ux.spec.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/__tests__/taskflow-close-crash-matrix.test.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/historical-close-preflight.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/implementation.ts
+  - release/atm-root-drop/packages/cli/src/commands/taskflow/write-readiness.ts
+  - release/atm-root-drop/packages/core/dist/upgrade/propose.js
+  - release/atm-root-drop/packages/core/src/git/admission.ts
+  - release/atm-root-drop/packages/core/src/upgrade/propose.ts
+  - release/atm-root-drop/scripts/compile-runbook-completion-evidence.ts
+  - release/atm-root-drop/scripts/validate-upgrade-proposal.ts
+  - release/atm-root-drop/tests/cli/git-admission-cli.test.ts
+  - release/atm-root-drop/tests/cli/runbook-completion-evidence.test.ts
+  - release/atm-root-drop/tests/cli/runner-sync-build-script-admission.test.ts
 validators:
   - node --strip-types tests/cli/four-plan-independent-certificate.test.ts
+  - node --strip-types tests/cli/plan4-final-certification.test.ts
   - node --strip-types scripts/validate-four-plan-objectives.ts --mode validate
   - node --strip-types scripts/validate-backlog-census.ts --mode validate
   - npm run typecheck
@@ -85,6 +212,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-22T10:25:41.951Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-22T10:25:41.951Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-22T10-25-41-951Z-close-3f7339a18d4d"
+lastTransitionAt: "2026-08-22T10:25:41.951Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "285cfa4cf36b3210193cfccb8fca9511c2bbc0df"
 ---
 
 # ATM-GOV-0341 Produce independent four-plan certification and governed release

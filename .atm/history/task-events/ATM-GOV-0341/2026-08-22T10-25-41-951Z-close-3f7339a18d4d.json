@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-22T10-25-41-951Z-close-3f7339a18d4d",
+  "taskId": "ATM-GOV-0341",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0341-produce-independent-four-plan-certification-and-governed-release.task.md",
+  "taskSha256": "sha256:2dbdefced1e859c6d40b58c4705567512f1c12c7da9963da0289a0bf8f75ae6f",
+  "createdAt": "2026-08-22T10:25:41.951Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0341 --actor codex-captain"
+}
