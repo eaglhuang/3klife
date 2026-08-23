@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-23T16-01-45-008Z-close-e40c1afc9bd1",
+  "taskId": "ATM-GOV-0406",
+  "action": "close",
+  "actorId": "claude-008",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0406-define-and-enforce-proven-hard-causal-dependencies.task.md",
+  "taskSha256": "sha256:d2494b436cf3024dd6fe1950c636b16ae04d77ed4aada111c3604e9d289c8db5",
+  "createdAt": "2026-08-23T16:01:45.008Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0406 --actor claude-008"
+}
