@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-23T16-13-54-433Z-close-702c8d335595",
+  "taskId": "ATM-GOV-0407",
+  "action": "close",
+  "actorId": "cursor-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0407-prove-cross-editor-parallel-work-with-typed-dependency-telemetry.task.md",
+  "taskSha256": "sha256:6eb945a7516dc4f97c0161ad4304e13560baf5d9e98b833f913c1c6584029f41",
+  "createdAt": "2026-08-23T16:13:54.433Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0407 --actor cursor-captain"
+}
