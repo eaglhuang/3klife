@@ -110,8 +110,8 @@ rollback:
   strategy: revert-commit
   notes: Restore last clean-install-passing manifests and allowlist; do not relax budgets silently.
 atomizationImpact:
-  ownerAtomOrMap: atm.product-delivery-map
-  mapUpdates: [atomic_workbench/maps/atm-product-delivery-map.json]
+  ownerAtomOrMap: atom.npm-package.artifact-budget
+  mapUpdates: [atomic_workbench/atoms/ATM-CORE-0007/atom.spec.json]
   newScriptsAllowed: true
   extractionCandidates: []
 errorCodes: []

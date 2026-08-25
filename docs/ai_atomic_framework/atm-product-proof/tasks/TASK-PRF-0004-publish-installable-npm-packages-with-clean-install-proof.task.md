@@ -104,8 +104,8 @@ rollback:
   strategy: deprecate-release-and-revert-commit
   notes: Deprecate a broken prerelease, restore the prior dist-tag and revert the release commit; never overwrite a version.
 atomizationImpact:
-  ownerAtomOrMap: atm.product-delivery-map
-  mapUpdates: [atomic_workbench/maps/atm-product-delivery-map.json]
+  ownerAtomOrMap: atom.npm-package.runtime-allowlist
+  mapUpdates: [atomic_workbench/atoms/ATM-CORE-0006/atom.spec.json]
   newScriptsAllowed: true
   extractionCandidates: []
 errorCodes: []

@@ -286,6 +286,18 @@ rule:
 7. `TASK-PRF-0008`: external benchmark execution, analysis and keep/narrow/stop
    decision.
 
+### Shared-manifest compose amendment
+
+`TASK-PRF-0004` and `TASK-PRF-0006` may prepare proposals concurrently against
+the same `packages/cli/package.json` baseline. Their shared-file intents are
+distinct resources: the runtime allowlist owns `/files` through
+`atom.npm-package.runtime-allowlist` (`ATM-CORE-0006`), while the artifact
+budget owns `/atmArtifactBudget` through `atom.npm-package.artifact-budget`
+(`ATM-CORE-0007`). A neutral Broker steward is the only writer for their
+composed transaction. A shared filename alone is never a reason to serialize
+their claims; compose remains fail-closed on an overlapping resource, stale
+base, CAS mismatch, or unsupported format adapter.
+
 No task in Phase 3–5 may start merely because its predecessor has a green
 internal task status; it requires the predecessor's stated external exit gate.
 
