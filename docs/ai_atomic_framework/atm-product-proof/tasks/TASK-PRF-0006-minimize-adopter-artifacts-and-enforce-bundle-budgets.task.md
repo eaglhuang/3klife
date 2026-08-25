@@ -111,6 +111,7 @@ rollback:
   notes: Restore last clean-install-passing manifests and allowlist; do not relax budgets silently.
 atomizationImpact:
   ownerAtomOrMap: atom.npm-package.artifact-budget
+  atomCid: cid:atom.npm-package.artifact-budget
   mapUpdates: [atomic_workbench/atoms/ATM-CORE-0007/atom.spec.json]
   newScriptsAllowed: true
   extractionCandidates: []

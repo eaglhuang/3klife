@@ -105,6 +105,7 @@ rollback:
   notes: Deprecate a broken prerelease, restore the prior dist-tag and revert the release commit; never overwrite a version.
 atomizationImpact:
   ownerAtomOrMap: atom.npm-package.runtime-allowlist
+  atomCid: cid:atom.npm-package.runtime-allowlist
   mapUpdates: [atomic_workbench/atoms/ATM-CORE-0006/atom.spec.json]
   newScriptsAllowed: true
   extractionCandidates: []
