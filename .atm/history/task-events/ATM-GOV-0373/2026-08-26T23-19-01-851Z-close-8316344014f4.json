@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-26T23-19-01-851Z-close-8316344014f4",
+  "taskId": "ATM-GOV-0373",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0373-allow-committed-task-context-for-evidence-only-closeback.task.md",
+  "taskSha256": "sha256:360b1d64035c1f694a41712b67a154aa91f6faac687b4eb79cb696e2da2946d1",
+  "createdAt": "2026-08-26T23:19:01.851Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0373 --actor codex-captain"
+}
