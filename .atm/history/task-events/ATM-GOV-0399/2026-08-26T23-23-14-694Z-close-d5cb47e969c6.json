@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-26T23-23-14-694Z-close-d5cb47e969c6",
+  "taskId": "ATM-GOV-0399",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0399-prefer-reachable-registered-sealed-planning-authority-and-fail-closed-on-ambiguity.task.md",
+  "taskSha256": "sha256:335233d220b5076003bf9637ed62347d6b002a1c166e3bc658969b82177c2a0b",
+  "createdAt": "2026-08-26T23:23:14.694Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0399 --actor codex-captain"
+}
