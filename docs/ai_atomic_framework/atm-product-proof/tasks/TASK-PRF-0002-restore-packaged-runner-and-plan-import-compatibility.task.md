@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0002
 title: Restore packaged-runner and plan-import compatibility
-status: planned
+status: done
 owner: atm-release
 priority: P0
 series: PRF
@@ -111,6 +111,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-26T23:28:00.844Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-26T23:28:00.844Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-26T23-28-00-844Z-close-952a8484315d"
+lastTransitionAt: "2026-08-26T23:28:00.844Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "d3312405e6c31caf11eb0d21f6c56854ed038024"
 ---
 
 # TASK-PRF-0002 Restore packaged-runner and plan-import compatibility

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-26T23-28-00-844Z-close-952a8484315d",
+  "taskId": "TASK-PRF-0002",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0002-restore-packaged-runner-and-plan-import-compatibility.task.md",
+  "taskSha256": "sha256:7b7eab615b3af519b5049d46ba51dcbc24eb2aa26b0038500c5897508d86d283",
+  "createdAt": "2026-08-26T23:28:00.844Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0002 --actor codex-captain"
+}
