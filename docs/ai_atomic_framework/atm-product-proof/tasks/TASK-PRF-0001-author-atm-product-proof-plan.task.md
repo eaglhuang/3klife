@@ -23,13 +23,7 @@ scopePaths:
   - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0001-author-atm-product-proof-plan.task.md
 deliverables:
   - docs/ai_atomic_framework/atm-product-proof/atm-product-proof-plan.md
-  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0002-restore-packaged-runner-and-plan-import-compatibility.task.md
-  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0003-separate-required-product-ci-and-enforce-protected-main.task.md
-  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0004-publish-installable-npm-packages-with-clean-install-proof.task.md
-  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0005-migrate-runtime-evidence-to-the-evidence-ledger.task.md
-  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0006-minimize-adopter-artifacts-and-enforce-bundle-budgets.task.md
-  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0007-preregister-an-independent-external-atm-benchmark.task.md
-  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0008-execute-the-external-benchmark-and-issue-the-product-decision.task.md
+  - docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0001-author-atm-product-proof-plan.task.md
 validators:
   - node atm.mjs tasks import --from ../3KLife/docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0001-author-atm-product-proof-plan.task.md --dry-run --json
 evidence:

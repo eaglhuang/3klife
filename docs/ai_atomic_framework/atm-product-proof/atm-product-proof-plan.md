@@ -8,6 +8,15 @@ createdByCommand: atm plan doc create
 
 # ATM Product Proof Plan
 
+## Delivery contract
+
+This document is the planning authority for the Product Proof family. Its
+execution contracts are the separately governed `TASK-PRF-0002` through
+`TASK-PRF-0008` cards; their existence is an acceptance condition for this
+authoring task, not a request to re-deliver their bytes in this task's planning
+commit. Each implementation card carries its own target-repository scope,
+evidence, delivery commit, and closeout.
+
 ## Owner decision and planning-only exception
 
 The owner authorized a planning-only exception on 2026-08-14. This document may
