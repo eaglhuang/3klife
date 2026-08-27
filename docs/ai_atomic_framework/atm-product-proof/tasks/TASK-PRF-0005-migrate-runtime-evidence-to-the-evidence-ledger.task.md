@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0005
 title: Migrate runtime evidence to the Evidence Ledger
-status: planned
+status: done
 owner: atm-evidence
 priority: P1
 series: PRF
@@ -111,6 +111,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-27T16:20:19.094Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-27T16:20:19.094Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-27T16-20-19-094Z-close-ae497cc051cc"
+lastTransitionAt: "2026-08-27T16:20:19.094Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "76f77a9395fe4e5f5c35cca79fea668bebcfd6b5"
 ---
 
 # TASK-PRF-0005 Migrate runtime evidence to the Evidence Ledger

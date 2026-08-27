@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-27T16-20-19-094Z-close-ae497cc051cc",
+  "taskId": "TASK-PRF-0005",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0005-migrate-runtime-evidence-to-the-evidence-ledger.task.md",
+  "taskSha256": "sha256:055853ae87e7ad69e759c869ef3d47482a1e42f2e32417516e77568d4d5cef39",
+  "createdAt": "2026-08-27T16:20:19.094Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0005 --actor codex-captain"
+}
