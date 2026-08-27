@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0001
 title: Author ATM Product Proof Plan
-status: planned
+status: done
 owner: codex-captain
 priority: P2
 depends_on: []
@@ -34,6 +34,15 @@ tddMode: reasoned-not-applicable
 tddNotApplicableReason: Planning-authoring task; the deterministic import route is the required executable validation.
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-27T16:39:20.467Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-27T16:39:20.467Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-27T16-39-20-467Z-close-4bdfe2f42c7b"
+lastTransitionAt: "2026-08-27T16:39:20.467Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0270778cb23752fb23a332da8c2279b9c5572cf9"
 ---
 
 # TASK-PRF-0001 Author ATM Product Proof Plan
