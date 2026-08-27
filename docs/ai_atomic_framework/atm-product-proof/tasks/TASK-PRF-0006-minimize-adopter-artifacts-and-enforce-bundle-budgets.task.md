@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0006
 title: Minimize adopter artifacts and enforce bundle budgets
-status: planned
+status: done
 owner: atm-release
 priority: P1
 series: PRF
@@ -117,6 +117,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-27T01:56:20.219Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-27T01:56:20.219Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-27T01-56-20-219Z-close-d7d07a04f4fc"
+lastTransitionAt: "2026-08-27T01:56:20.219Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0e05913298a797e08edd74d5d288e8a55c0c73bd"
 ---
 
 # TASK-PRF-0006 Minimize adopter artifacts and enforce bundle budgets

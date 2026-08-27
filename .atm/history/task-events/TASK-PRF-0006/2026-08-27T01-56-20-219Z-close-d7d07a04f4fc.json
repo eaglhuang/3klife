@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-27T01-56-20-219Z-close-d7d07a04f4fc",
+  "taskId": "TASK-PRF-0006",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0006-minimize-adopter-artifacts-and-enforce-bundle-budgets.task.md",
+  "taskSha256": "sha256:f77455b1a717ec0d4735072829b28a58fc9b6ca6e622cdd184df9348b0cb9cc1",
+  "createdAt": "2026-08-27T01:56:20.219Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0006 --actor codex-captain"
+}
