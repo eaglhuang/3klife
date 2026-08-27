@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-27T01-43-25-133Z-close-f93b6870a8c3",
+  "taskId": "TASK-PRF-0004",
+  "action": "close",
+  "actorId": "claude-008",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0004-publish-installable-npm-packages-with-clean-install-proof.task.md",
+  "taskSha256": "sha256:bec1d0dfded05fc0197b4e51855d7e98b5a4d4c924d43972be4e94150207dc53",
+  "createdAt": "2026-08-27T01:43:25.133Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0004 --actor claude-008"
+}

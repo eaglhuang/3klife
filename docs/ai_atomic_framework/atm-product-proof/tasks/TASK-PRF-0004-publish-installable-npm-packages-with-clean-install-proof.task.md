@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0004
 title: Publish installable npm packages with clean-install proof
-status: planned
+status: done
 owner: atm-release
 priority: P0
 series: PRF
@@ -111,6 +111,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-27T01:43:25.133Z"
+completed_by_agent: "claude-008"
+closedAt: "2026-08-27T01:43:25.133Z"
+closedByActor: "claude-008"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-27T01-43-25-133Z-close-f93b6870a8c3"
+lastTransitionAt: "2026-08-27T01:43:25.133Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "656b6d4f53447b730ed627afbbac0943a0d5146b"
 ---
 
 # TASK-PRF-0004 Publish installable npm packages with clean-install proof
