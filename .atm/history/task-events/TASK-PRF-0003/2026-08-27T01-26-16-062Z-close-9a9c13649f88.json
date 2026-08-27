@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-27T01-26-16-062Z-close-9a9c13649f88",
+  "taskId": "TASK-PRF-0003",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0003-separate-required-product-ci-and-enforce-protected-main.task.md",
+  "taskSha256": "sha256:89156676ef332a34a221afd98b05eedad663d1da6678114dcb0c3b43b7158f89",
+  "createdAt": "2026-08-27T01:26:16.062Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0003 --actor codex-captain"
+}

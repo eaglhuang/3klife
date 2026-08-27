@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0003
 title: Separate required product CI and enforce protected main
-status: planned
+status: done
 owner: atm-ci
 priority: P0
 series: PRF
@@ -99,6 +99,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-27T01:26:16.062Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-27T01:26:16.062Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-27T01-26-16-062Z-close-9a9c13649f88"
+lastTransitionAt: "2026-08-27T01:26:16.062Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f7d86c44bde8158137b5cd6d7b67f4ca5cac88c3"
 ---
 
 # TASK-PRF-0003 Separate required product CI and enforce protected main
