@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0007
 title: Preregister an independent external ATM benchmark
-status: planned
+status: done
 owner: atm-evaluation
 priority: P1
 series: PRF
@@ -102,6 +102,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-27T16:52:17.618Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-27T16:52:17.618Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-27T16-52-17-618Z-close-a5296a196a93"
+lastTransitionAt: "2026-08-27T16:52:17.618Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "23f69f7bc805bff5a15a0467635e13c435cd3daa"
 ---
 
 # TASK-PRF-0007 Preregister an independent external ATM benchmark

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-27T16-52-17-618Z-close-a5296a196a93",
+  "taskId": "TASK-PRF-0007",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0007-preregister-an-independent-external-atm-benchmark.task.md",
+  "taskSha256": "sha256:0fb3b0727534e8319d11db71acc6edbc3c9f813506318d844edfe6ba3a995648",
+  "createdAt": "2026-08-27T16:52:17.618Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0007 --actor codex-captain"
+}
