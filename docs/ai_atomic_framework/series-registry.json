@@ -88,6 +88,26 @@
       }
     },
     {
+      "series": "MBX",
+      "prefix": "TASK-MBX",
+      "familyDir": "agent-mailbox",
+      "planDocs": [
+        "agent-mailbox/agent-mailbox-plan.md"
+      ],
+      "status": "active",
+      "approvedBy": "User",
+      "approvedAt": "2026-08-29T10:41:04.290Z",
+      "createdByCommand": "atm plan series register",
+      "creationSeal": {
+        "schemaId": "atm.planningCreationSeal.v1",
+        "command": "atm plan series register",
+        "createdAt": "2026-08-29T10:41:04.291Z",
+        "planningRoot": "C:/Users/User/3KLife/docs/ai_atomic_framework",
+        "relativePath": "series-registry.json",
+        "contentDigest": "sha256:7336fbc177e3e2a76918a670c89676305bc5518a7a47f2cf57b416de42de3cab"
+      }
+    },
+    {
       "series": "RFT",
       "prefix": "TASK-RFT",
       "familyDir": "rft-hardening",
