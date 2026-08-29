@@ -1,11 +1,11 @@
 {
   "schemaId": "atm.identityDefault.v1",
   "specVersion": "0.1.0",
-  "actorId": "cursor-gpt-5.2",
-  "gitName": "cursor-gpt-5.2",
-  "gitEmail": "cursor-gpt-5.2@3klife.local",
-  "editor": "cursor",
-  "provider": "OpenAI",
+  "actorId": "codex-gpt-5",
+  "gitName": "codex-gpt-5",
+  "gitEmail": "codex-gpt-5@atm.local",
+  "editor": "codex",
+  "provider": null,
   "activeSessionId": null,
-  "updatedAt": "2026-06-18T04:28:35.989Z"
+  "updatedAt": "2026-08-29T18:07:28.981Z"
 }

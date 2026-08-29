@@ -1,18 +1,53 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-07-14T10:23:47.540Z",
+  "generatedAt": "2026-08-29T18:07:28.908Z",
   "actors": [
+    {
+      "actorId": "codex-captain-20260809",
+      "actorKind": "ai-agent",
+      "displayName": "Codex Captain",
+      "provider": "openai",
+      "editor": "codex",
+      "gitName": "Codex Captain",
+      "gitEmail": "codex-captain-20260809@atm.local",
+      "capabilities": [
+        "captain",
+        "governance",
+        "evidence"
+      ],
+      "createdAt": "2026-08-09T08:15:50.085Z",
+      "updatedAt": "2026-08-09T08:15:50.085Z"
+    },
+    {
+      "actorId": "codex-gpt-5",
+      "actorKind": "ai-agent",
+      "displayName": "codex-gpt-5",
+      "editor": "codex",
+      "gitName": "codex-gpt-5",
+      "gitEmail": "codex-gpt-5@atm.local",
+      "createdAt": "2026-07-30T12:26:04.256Z",
+      "updatedAt": "2026-08-29T18:07:28.907Z"
+    },
+    {
+      "actorId": "codex-gpt-5-6-terra-medium",
+      "actorKind": "ai-agent",
+      "displayName": "codex-gpt-5-6-terra-medium",
+      "editor": "codex",
+      "gitName": "codex-gpt-5-6-terra-medium",
+      "gitEmail": "codex-gpt-5-6-terra-medium@atm.local",
+      "createdAt": "2026-08-16T16:53:40.199Z",
+      "updatedAt": "2026-08-16T16:53:40.199Z"
+    },
     {
       "actorId": "codex-gpt-5.4-mini",
       "actorKind": "ai-agent",
-      "displayName": "Codex GPT-5.4 Mini",
-      "provider": "OpenAI",
+      "displayName": "codex-gpt-5.4-mini",
       "editor": "codex",
       "gitName": "codex-gpt-5.4-mini",
-      "gitEmail": "codex-gpt-5.4-mini@3klife.local",
+      "gitEmail": "codex-gpt-5.4-mini@atm.local",
       "createdAt": "2026-06-11T03:22:21.756Z",
-      "updatedAt": "2026-06-24T14:42:39.466Z"
+      "updatedAt": "2026-08-11T15:51:46.111Z"
     },
     {
       "actorId": "codex-gpt-5.5",
