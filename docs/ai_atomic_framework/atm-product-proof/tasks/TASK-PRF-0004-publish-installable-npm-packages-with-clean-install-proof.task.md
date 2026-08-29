@@ -111,15 +111,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
-completed_at: "2026-08-27T01:43:25.133Z"
-completed_by_agent: "claude-008"
-closedAt: "2026-08-27T01:43:25.133Z"
-closedByActor: "claude-008"
+completed_at: "2026-08-29T16:27:15.993Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-08-29T16:27:15.993Z"
+closedByActor: "codex-captain"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-08-27T01-43-25-133Z-close-f93b6870a8c3"
-lastTransitionAt: "2026-08-27T01:43:25.133Z"
+lastTransitionId: "2026-08-29T16-27-15-993Z-close-bb2690734418"
+lastTransitionAt: "2026-08-29T16:27:15.993Z"
 ledgerContractVersion: task-ledger/v1
-delivery_commit: "656b6d4f53447b730ed627afbbac0943a0d5146b"
+delivery_commit: "976754ed7be986416afe9f31ff20970ff99a329f"
 ---
 
 # TASK-PRF-0004 Publish installable npm packages with clean-install proof
