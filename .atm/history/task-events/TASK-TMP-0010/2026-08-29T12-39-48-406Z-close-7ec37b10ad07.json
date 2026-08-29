@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-29T12-39-48-406Z-close-7ec37b10ad07",
+  "taskId": "TASK-TMP-0010",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0010-publish-planning-mirror-reconciliation-and-drain-proven-residue.task.md",
+  "taskSha256": "sha256:f8272e17110def926eb88601b9edb29c099f072af25c032ac6ec51610b73e870",
+  "createdAt": "2026-08-29T12:39:48.406Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0010 --actor codex-captain"
+}
