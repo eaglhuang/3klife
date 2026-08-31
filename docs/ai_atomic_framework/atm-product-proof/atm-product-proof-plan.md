@@ -295,6 +295,20 @@ rule:
 7. `TASK-PRF-0008`: external benchmark execution, analysis and keep/narrow/stop
    decision.
 
+## Publication recovery follow-up
+
+`TASK-PRF-0009` is a transport-and-verification recovery slice. It exists
+because the Product Proof source has a fail-closed correction that prevents a
+digest-only hidden-corpus claim from being presented as an independent external
+acceptance, but the correction must reach protected main and CI without changing
+the blocked state of `TASK-PRF-0008`.
+
+The recovery card may publish only the already-reviewed correction and its
+generated public runner projections, then verify protected-main CI. It must not
+create, reseal, or accept hidden-corpus, adjudication, provider-telemetry, raw
+run, or product-decision evidence. `TASK-PRF-0008` remains blocked until those
+artifacts are independently produced and verified.
+
 ### Shared-manifest compose amendment
 
 `TASK-PRF-0004` and `TASK-PRF-0006` may prepare proposals concurrently against
