@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-08-31T14-11-41-932Z-close-1b00c9c3e07a",
+  "taskId": "TASK-PRF-0009",
+  "action": "close",
+  "actorId": "codex-gpt-5-4-mini",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0009-publish-fail-closed-benchmark-evidence-correction-and-verify-protected-main-ci.task.md",
+  "taskSha256": "sha256:6c181d2d546e9aa40e58c1eac0b06fac6ccdef31ecb38bf75cdeacf0506a8db7",
+  "createdAt": "2026-08-31T14:11:41.932Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0009 --actor codex-gpt-5-4-mini"
+}

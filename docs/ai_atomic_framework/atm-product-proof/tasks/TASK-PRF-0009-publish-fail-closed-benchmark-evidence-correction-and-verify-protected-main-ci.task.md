@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0009
 title: Publish fail-closed benchmark evidence correction and verify protected-main CI
-status: in-progress
+status: done
 started_at: 2026-08-31T13:55:23.980Z
 started_by_agent: codex-gpt-5-4-mini
 owner: atm-release
@@ -110,6 +110,15 @@ atomizationImpact:
       inlineReason: No source extraction is permitted in this transport-only recovery slice.
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-08-31T14:11:41.932Z"
+completed_by_agent: "codex-gpt-5-4-mini"
+closedAt: "2026-08-31T14:11:41.932Z"
+closedByActor: "codex-gpt-5-4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-08-31T14-11-41-932Z-close-1b00c9c3e07a"
+lastTransitionAt: "2026-08-31T14:11:41.932Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "8027419ec5594cac25c293a0817acc6d562eebc0"
 ---
 
 # TASK-PRF-0009 Publish fail-closed benchmark evidence correction and verify protected-main CI
