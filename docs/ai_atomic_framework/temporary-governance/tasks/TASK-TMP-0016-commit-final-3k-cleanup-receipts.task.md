@@ -22,8 +22,10 @@ scopePaths:
   - .atm/history/evidence/git-head.jsonl
   - .atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json
   - docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0016-commit-final-3k-cleanup-receipts.task.md
+  - docs/reports/residue-disposition/TASK-TMP-0016-final-receipt-index.json
 deliverables:
   - .atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json
+  - docs/reports/residue-disposition/TASK-TMP-0016-final-receipt-index.json
 validators:
   - git diff --check
   - git status --porcelain=v1

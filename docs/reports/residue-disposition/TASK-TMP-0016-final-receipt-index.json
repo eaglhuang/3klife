@@ -1,0 +1,10 @@
+{
+  "schemaId": "atm.finalCleanupReceiptIndex.v1",
+  "taskId": "TASK-TMP-0016",
+  "receiptPaths": [
+    ".atm/history/evidence/git-head.jsonl",
+    ".atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json"
+  ],
+  "disposition": "A",
+  "reason": "Both residual records are committed as durable governance history; no deletion or ignore rule was used for either receipt."
+}
