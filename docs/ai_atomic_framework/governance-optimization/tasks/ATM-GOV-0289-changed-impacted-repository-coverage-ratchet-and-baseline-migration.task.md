@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0289
 title: changed/impacted/repository coverage ratchet and baseline migration
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on:

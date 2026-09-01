@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0269
 title: Validation plan observability and resumable standard gate
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: []
@@ -68,6 +68,15 @@ atomizationImpact:
       source: scripts/run-validators/implementation.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-07-30T21:38:18.823Z"
+completed_by_agent: "codex-skl-captain"
+closedAt: "2026-07-30T21:38:18.823Z"
+closedByActor: "codex-skl-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-07-30T21-38-18-823Z-close-95d3485f0cc1"
+lastTransitionAt: "2026-07-30T21:38:18.823Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "0b5f5bab7"
 ---
 
 # ATM-GOV-0269 Validation plan observability and resumable standard gate

@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0313
 title: Canonical test-catalog namespace repair and historical shard migration
-status: ready
+status: done
 owner: unassigned
 priority: P2
 depends_on:

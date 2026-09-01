@@ -137,6 +137,9 @@ Both leases must be actor-scoped, task-scoped, path-scoped, TTL-bound, single-us
 | G11.1 | TASK-GIT-0026 | Make protected evidence context evaluate the complete task-scoped staged bundle after G9.1 lands |
 | G7.1 | TASK-GIT-0027 | Exact-entry, single-use stage-override lease authority only; it never mutates the index or wires a caller |
 | G7.2 | TASK-GIT-0028 | The sole park/commit/restore transaction adapter; consumes G7.1 and a caller-provided validated bundle |
+| G17 | TASK-GIT-0029 | Sealed commit attribution transaction: actual tree must equal admitted path/mode/blob/provenance bundle before ref mutation |
+| G17.1 | TASK-GIT-0030 | Sealed commit bundle deletion tombstones: in-scope deletions must be delivered and proven against the committed tree |
+| G17.2 | TASK-GIT-0031 | Sealed commit concurrency/override-free gates: parallel prepare, broker/CAS finalization, provenance mismatch fail-closed |
 | G10 | TASK-GIT-0018 | Claim-issued work-admission ticket authority, attribution, and recovery |
 | G11 | TASK-GIT-0019 | Unified ticket coverage gates and cross-adapter rollout evidence |
 | G12 | TASK-GIT-0020 | Superseded by G10/G11: protected-state checks are coverage adapters |

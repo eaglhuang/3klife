@@ -31,7 +31,10 @@ inspect them as new state; do not assume they came from this handoff.
 
 ## Plan 3.1 Completion Verdict
 
-Plan 3.1 is complete enough to hand off to Plan 3.2.
+Plan 3.1 delivery is handed off to Plan 3.2, but this is not a plan-level
+completion verdict. The four-plan objective/evidence matrix must still prove
+every Plan 3.1 goal with fresh sealed and real-dogfood evidence before any
+overall completion claim.
 
 Live ATM projection checked these 32 Plan 3.1 frontier items:
 
@@ -251,4 +254,3 @@ The following backlog items are directly relevant to Plan 3.2:
 - Human corrected working method: yes, Plan 3.2 was explicitly requested as the
   proper successor shape; captured in the plan and this handoff.
 - Existing memory note proven wrong: none observed.
-

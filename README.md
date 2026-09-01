@@ -9,7 +9,7 @@
 After reading this repository overview, run:
 
 ```bash
-node atm.mjs next --json
+node atm.mjs next --prompt "<current user prompt>" --json
 ```
 
 If the result includes an `ATM_USER_NOTICE` message or `evidence.userNotice`, show it to the user in natural language before running the returned next action.

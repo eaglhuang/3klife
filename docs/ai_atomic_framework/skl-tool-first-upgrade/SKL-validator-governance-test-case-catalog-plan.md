@@ -512,6 +512,7 @@ Parallel frontier:
 | TASK-SKL-0033 | Diagnostic feedback loop and causal repair receipt |
 | TASK-SKL-0034 | Data-driven engineering method profiles and fidelity receipts |
 | TASK-SKL-0035 | Deterministic deep-module boundary topology validator |
+| TASK-SKL-0038 | Sealed skill source-universe and projection-parity integrity follow-up |
 
 ## 12. Relationship to Plan 3.1
 
@@ -586,5 +587,26 @@ be admitted by Broker and scheduled according to the graph.
 - [ ] Provider swap and adapter projection parity are fixture-tested.
 - [ ] Canary skill rewrites reduce context/follow-up cost without route
       regressions.
+
+## 11.1 SKL-0038 sealed source-universe and projection-parity follow-up
+
+TASK-SKL-0038 extends the completed corpus-audit boundary without reopening
+TASK-SKL-0028.  It owns one coherent contract: audit or sealing proves a
+version-controlled source universe; `compileSkillCorpus` consumes only that
+sealed snapshot; every adapter projection carries reproducible metadata; and
+installed-copy drift receives a finite disposition.
+
+The compiler must not consult a caller's live Git tracked, ignored, or local
+exclude state.  Those facts are audit or seal-time inputs, where a formal source
+template that is untracked or ignored is a hard actionable finding.  This
+preserves the 0028 deep-module boundary while preventing a workstation-only
+template from silently disappearing before publication.
+
+The initial disposition for `atm-diagnostic-loop` is formal source candidacy.
+It can be admitted only after the source-universe contract accepts it and a
+normal governed delivery tracks it.  Installed copies remain derived artifacts;
+they may not be edited directly to substitute for a source template.  Existing
+foreign corpus and adapter residue remains outside the card until the audit
+classifies and explicitly admits it.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-07-24T03:28:36.102Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"skl-tool-first-upgrade/SKL-validator-governance-test-case-catalog-plan.md","contentDigest":"sha256:dd6c68d8aa5930515243892a49eba1fef603da54d1e137edc88ba39655de2456"} -->

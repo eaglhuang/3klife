@@ -9,11 +9,28 @@ planning_repo: C:/Users/User/3KLife
 target_repo: C:/Users/User/AI-Atomic-Framework
 closure_authority: target_repo
 created_at: 2026-07-30T20:26:12+08:00
-updated_at: 2026-07-30T23:34:00+08:00
+updated_at: 2026-07-31T23:53:02+08:00
 createdByCommand: atm plan doc create
 ---
 
 # ATM 4.0 Proof-Carrying Quality Gauntlet and Governance Coverage Closure Plan
+
+The current four-plan audit ledger is
+`governance-optimization/plan-3x-4x-objective-audit-2026-07-31.json`.
+It is an evidence index, not a completion claim; its current
+`completionVerdict` is `not-complete`.
+The reproducible input snapshot is
+`governance-optimization/plan-3x-4x-audit-snapshot-2026-07-31.json`.
+The phase execution readiness ledger is
+`governance-optimization/plan4-phase-readiness-2026-07-31.json`; all four
+phase cards currently report `claimReady=false`.
+Its recommended topological order is authoritative for dispatch; phase cards
+must not be claimed across an unresolved dependency edge.
+The order follows a first-principles gate: stabilize identity and evidence
+denominators before optimizing selection, prove portability before hostile
+contention, and certify only after rollback and legacy-authority preservation
+are independently observed. Missing or stale observations preserve the prior
+authority and cannot be waived into a pass.
 
 ## 0. Executive verdict
 
@@ -655,6 +672,7 @@ pass | fail | inconclusive | ratchet-regression | advisory | not-applicable-prov
 - stale/replayed evidence mismatch；
 - critical surviving non-equivalent mutant；
 - canonical worktree contamination；
+- commit content attribution boundary violation；
 - required adapter parity failure。
 
 ### 9.2 Ratchet metrics
@@ -818,6 +836,11 @@ tests/fixtures/governance-incidents/<semantic-family>/
 fixture 不得以特定 task ID、actor、日期或本機路徑成為 production control flow。Incident
 只提供 sealed observations、minimal counterexample、expected invariant 與 red/green runner
 pair。
+
+Initial required family: `governance-incidents/shared-index-commit-attribution/`.
+It covers successful governed commits whose actual tree diff is not exactly the
+sealed admitted bundle at path/mode/blob/provenance granularity, plus rejected
+admission paths that must leave HEAD unchanged.
 
 ### 11.8 Incident-driven causal-neighborhood generator
 
@@ -1191,7 +1214,7 @@ Focused selection 的效率規則：
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
 | `ATM-GOV-0277` | model-relative coverage semantics、quality vector、strict 100% certificate vocabulary | `ATM-GOV-0276` |
-| `ATM-GOV-0278` | sealed quality authority、policy epoch、protected exam surfaces、role capability matrix | 0277 |
+| `ATM-GOV-0321` | sealed quality authority、policy epoch、protected exam surfaces、role capability matrix | 0277 |
 | `ATM-GOV-0279` | obligation inventory schema and inventory-drift detector | 0277 |
 
 Exit：
@@ -1223,7 +1246,7 @@ Exit：
 | --- | --- | --- |
 | `ATM-GOV-0284` | `QualityGauntlet` facade and `ClosureAssuranceMachine` reducer/events | 0280, Plan 3.2 0269 |
 | `ATM-GOV-0285` | validator/test-catalog selection bridge and resumable probe scheduler | 0284, 0269 |
-| `ATM-GOV-0286` | evidence freshness、cache、resume and certificate binding | 0284, Plan 3.2 0270 |
+| `ATM-GOV-0318` | evidence freshness、cache、resume and certificate binding | 0284, Plan 3.2 0270 |
 | `ATM-GOV-0287` | legal recovery and checkpoint projection for check-in/close/phase/release | 0284, Plan 3.2 0271 |
 
 Exit：
@@ -1253,15 +1276,15 @@ Exit：
 
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
-| `ATM-GOV-0292` | mutation adapter、lineage、lower/upper score and equivalence governance | 0285 |
-| `ATM-GOV-0293` | fault fingerprint、semantic family matching and evidence/confidence policy | 0279, 0292 |
+| `ATM-GOV-0306` | mutation adapter、lineage、lower/upper score and equivalence governance | 0285 |
+| `ATM-GOV-0293` | fault fingerprint、semantic family matching and evidence/confidence policy | 0279, 0306 |
 | `ATM-GOV-0294` | causal-neighborhood compiler、factor constraints and combination generator | 0280, 0293 |
-| `ATM-GOV-0295` | gap normalization、lexicographic planner and deterministic proposal ordering | 0286, 0288, 0292 |
-| `ATM-GOV-0296` | sandboxed test patch proposal、monotonic acceptance and minimization | 0295 |
+| `ATM-GOV-0322` | gap normalization、lexicographic planner and deterministic proposal ordering | 0318, 0288, 0306 |
+| `ATM-GOV-0296` | sandboxed test patch proposal、monotonic acceptance and minimization | 0322 |
 | `ATM-GOV-0297` | example/branch and mutation-survivor-directed generators | 0294, 0296 |
 | `ATM-GOV-0298` | property/metamorphic/model-based generator pack | 0294, 0296 |
 | `ATM-GOV-0299` | concurrency/fuzz/torture/fault generator pack | 0282, 0294, 0296 |
-| `ATM-GOV-0300` | acceptance/Gherkin and acceptance-spec mutation | 0278, 0296 |
+| `ATM-GOV-0300` | acceptance/Gherkin and acceptance-spec mutation | 0321, 0296 |
 
 Exit：
 
@@ -1276,10 +1299,10 @@ Exit：
 
 | Proposed card | Cohesive ownership | Hard dependency |
 | --- | --- | --- |
-| `ATM-GOV-0301` | seed commitment、hidden negative controls and anti-gaming checks | 0278, 0295 |
-| `ATM-GOV-0302` | security quality dimension and risk acceptance receipts | 0278, 0285 |
+| `ATM-GOV-0319` | seed commitment、hidden negative controls and anti-gaming checks | 0278, 0295 |
+| `ATM-GOV-0302` | security quality dimension and risk acceptance receipts | 0321, 0285 |
 | `ATM-GOV-0303` | performance、memory、resilience ratchet and benchmark evidence | 0285 |
-| `ATM-GOV-0304` | independent oracle arbitration、flaky/contradictory evidence adjudication and exam-authority separation enforcement | 0278, 0292, 0301 |
+| `ATM-GOV-0320` | independent oracle arbitration、flaky/contradictory evidence adjudication and exam-authority separation enforcement | 0278, 0306, 0319 |
 
 Exit：
 
@@ -1297,12 +1320,22 @@ Exit：
 | `ATM-GOV-0305` | cumulative regression family store、catalog projection、selective routing and recurrence revisions | 0293, 0294, 0285 |
 | `TASK-SKL-0036` | canonical `atm-bug-backlog` template、incident-learning candidate schema、first-layer intent routing and reinstall survival | TASK-SKL-0031, TASK-SKL-0033 |
 | `TASK-SKL-0037` | task-card/evidence/dispatch/handoff/upgrade-scan/mailbox skill projections and six-adapter machine-field parity | TASK-SKL-0036, ATM-GOV-0305 |
-| `ATM-GOV-0306` | coverage certificate、quality vector、explicit non-claims | 0286, 0301, 0304, 0305, TASK-SKL-0037 |
-| `ATM-GOV-0307` | state/execution replay、proof invalidation and incident corpus | 0306 |
-| `ATM-GOV-0308` | Plan 3.x/3.2 selected-versus-full shadow comparison and escaped-defect adjudication | 0305, 0306, TASK-SKL-0037, Plan 3.2 0273 |
-| `ATM-GOV-0309` | six editor/provider runtime adapter parity canary | 0307, 0308 |
-| `ATM-GOV-0310` | real ATM dogfood、two-captain hostile workloads、incident recurrence learning、saturation evidence and all-branch phase-exit manifest | 0281, 0282, 0283, 0287, 0289, 0290, 0291, 0297, 0298, 0299, 0300, 0302, 0303, 0308, 0309, TASK-SKL-0037 |
-| `ATM-GOV-0311` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0310 |
+| `ATM-GOV-0312` | coverage certificate、quality vector、explicit non-claims | 0318, 0319, 0320, 0305, TASK-SKL-0037 |
+| `ATM-GOV-0307` | state/execution replay、proof invalidation, and the seven-family commit/governance incident corpus | 0306, 0293, 0312 |
+| `ATM-GOV-0313` | canonical test-catalog namespace migration and full-shard contract | 0306 | dedicated repair for ATM-BUG-2026-07-31-012; imported planned/no-claim; must be green before 0307/0312 completion |
+| `ATM-GOV-0314` | Plan 3.x/3.2 selected-versus-full shadow comparison and escaped-defect adjudication | 0305, 0312, TASK-SKL-0037, Plan 3.2 0273 |
+| `ATM-GOV-0315` | six editor/provider runtime adapter parity canary | 0307, 0314 |
+| `ATM-GOV-0316` | real ATM dogfood、two-captain hostile workloads、incident recurrence learning、saturation evidence and all-branch phase-exit manifest | 0281, 0282, 0283, 0287, 0289, 0290, 0291, 0297, 0298, 0299, 0300, 0302, 0303, 0314, 0315, TASK-SKL-0037 |
+| `ATM-GOV-0324` | recent governance operator regression closure and transaction-status receipts | 0307, 0287 |
+| `ATM-GOV-0317` | Plan 4.0 final verdict、release gate and legacy-authority retirement | 0316, 0324 |
+
+Phase-card registry note: `ATM-GOV-0313` is an imported planned repair card for
+the catalog-contract blocker. `ATM-GOV-0314`–`ATM-GOV-0317` are now the
+created/imported successor cards for the formerly reserved phase entries.
+Their source cards and target ledgers are planned and not claimable until
+dependencies are sealed; their existence is not implementation or phase-exit
+evidence. Each must receive complete acceptance, test ids,
+validator, causal graph, and rollback fields before dispatch.
 
 Exit：
 
@@ -1320,6 +1353,12 @@ Exit：
 
 ### 18.1 May start before Plan 3.2 completes
 
+This section authorizes only bounded, dependency-safe **start** conditions. It
+does not certify Plan 3.0, 3.1, or 3.2 completion, and it does not relax the
+objective matrix or phase-exit gates in §18.4. A started card remains
+non-authoritative until its own evidence tuple and the predecessor plan's
+objective matrix rows are verified.
+
 - 0277、0278、0279 的 plan/schema/interface work；
 - 0280、0281 的 pure compiler/in-memory interface tests；
 - historical incident corpus inventory；
@@ -1332,7 +1371,7 @@ Exit：
 - 0284/0285 production execution depends on ATM-GOV-0269；
 - 0286 freshness reuse depends on ATM-GOV-0270；
 - 0287 close/recovery projection depends on ATM-GOV-0271；
-- 0308 cross-authority shadow rollout depends on ATM-GOV-0273。
+- 0314 cross-authority shadow rollout depends on ATM-GOV-0273。
 - TASK-SKL-0037 lifecycle projection depends on ATM-GOV-0305 typed family/selection seams。
 
 ### 18.3 Parallel card rule
@@ -1341,6 +1380,121 @@ Exit：
 仍遵守 ATM compose-first proposal/steward contract；不要用 branch/worktree 當正常隔離。
 
 ### 18.4 Plan 3.2 + Plan 4.0 captain execution overlay
+
+### 18.4.1 Dual-captain incident gate (mandatory cross-plan contract)
+
+Plan 4.0 quality authority must consume the operational failures found while
+Plan 3.2 runs in parallel. The incident corpus is not documentation-only: the
+following families are mandatory gate inputs and may not be waived by a green
+unit test alone:
+
+1. shared-index commit attribution, out-of-scope tree content, sealed
+   prepare/apply, provenance, HEAD-moved CAS, forbidden override success, and
+   ordinary-unowned foreign-dirty classification;
+2. sealed commit deletion/tombstone handling;
+3. close deferral ordering that leaves derived manifests behind;
+4. active-batch router helper failure;
+5. planning import fidelity for causal/test authority fields;
+6. runner-sync protected-state admission, publication ordering, and frozen
+   runner parity;
+7. stale or mixed batch ownership, split/handoff, and abandon.
+
+Each family requires a sealed observation fixture, a focused regression case,
+an owning task-card acceptance reference, and a receipt proving the successful
+path used no override lease. The initial required corpus is tracked by
+`ATM-GOV-0307`; it covers backlog incidents 009, 010, 011, 270, 0276 plus
+runner-sync protected-state and stale/mixed-batch families. A Plan 4.0 phase
+exit is blocked when any family is missing, only prose-covered, or has
+evidence whose source commit is not task-matched.
+
+### 18.4.2 Four-plan objective certification gate
+
+The single authoritative matrix for this gate is:
+
+`governance-optimization/plan-3x-4x-objective-evidence-matrix-2026-07-31.md`
+
+Do not create a parallel checklist in a task card, handoff, dashboard, or
+release note. Amend that matrix when evidence changes and retain its
+`audit-in-progress`/final verdict history.
+
+As of 2026-07-31, ATM-GOV-0306 is card-level `done/released` with closure,
+seal-and-commit, and runner-sync receipts. This satisfies the mutation-lineage
+delivery prerequisite for ATM-GOV-0293 but does not certify the corresponding
+Plan 4.0 objective: the matrix must still record fresh downstream consumption,
+real parallel dogfood, incident-family replay, and rollback evidence.
+
+Plan 4.0 is the final evidence authority for the complete Plan 3.0--4.0
+programme, but it must not certify completion from task-card status alone. The
+phase-exit manifest must include an objective-level matrix for every declared
+goal in Plans 3.0, 3.1, 3.2, and 4.0. Each row binds the objective to its
+implementation, task card, acceptance predicate, required test case,
+validator receipt, fresh sealed evidence, real dogfood observation, and known
+bug/incident disposition.
+
+The manifest is hard-blocked when any objective is historical-only, stale,
+unknown, unsupported without an owner-approved exception, or lacks a real
+observation where the plan promises real parallel behavior. All known ATM bugs
+and dogfood incidents must be represented in the Plan 4.0 incident corpus,
+assigned to a generic family, repaired, and covered by a regression test before
+the final verdict. Open or merely documented bugs are not completion evidence.
+
+The current audit includes `ATM-BUG-2026-07-31-012` as an explicit blocker:
+the historical `test_group_commit_attribution` shard still uses legacy
+`test_atm_gov_*` identifiers that violate the canonical test-catalog schema,
+so the full catalog validator is red even though the newly added 0307/0312
+shards use valid `test_task_*` identifiers. This bug requires a dedicated
+catalog-contract repair card (migration or an explicitly governed alias), a
+regression test, and a fresh validator receipt; it must not be silently
+counted as repaired by an unrelated task card.
+
+`ATM-GOV-0313` is now the dedicated repair card. Its live ledger is
+`running` with an active `claude-007` claim while the planning mirror remains
+`planned`; it has two required catalog-contract cases. Its implementation
+must precede any claim that the Plan 4.0 catalog, 0307 replay corpus, or 0312
+certificate is complete; card import itself is not repair evidence. The active
+implementation has additionally admitted a linked schema/loader surface for
+`legacyAliases`; this is a constrained compatibility seam, not a relaxation
+of canonical test-case identity, and requires its own regression proof before
+the catalog gate can turn green.
+Current full-catalog red proof is reproducible with
+`node --strip-types tests/cli/test-case-catalog-shards.test.ts`:
+`shard test_group_commit_attribution must validate` (assertion failure).
+The gate remains blocked until 0313 migrates the historical IDs through the
+declared alias lineage and the same full command turns green.
+
+The final verdict must separately report: plan objective completion, task-card
+completion, incident repair completion, fresh evidence status, and release/push
+readiness. No single green task-card validator may substitute for any of these
+five dimensions.
+
+The incident gate also consumes a complete backlog disposition census. The
+2026-07-31 read-only census is sealed as
+`governance-optimization/plan4-backlog-disposition-census-2026-07-31.json`
+(`sortedOpenLikeIdDigest=sha256:48271f04905274a5c795c894395d578c1e29b196aeba1193279e50d26ca18ff6`).
+It contains `378` backlog shards, of which `169` are
+open-like (`81 Open`, `78 Needs task card`, `2 Needs triage`, `1 In progress`,
+and seven partial/active/deferred/follow-up statuses; `73 High`, `1 Critical`
+severity).
+The seven confirmed parallel-development families and catalog blocker 012 do
+not cover every backlog item. Before Plan 4.0 can reach final verdict, every
+open-like item must be mapped to an owning repair/family, explicitly classified
+as a non-confirmed candidate/duplicate/product gap with durable owner rationale,
+or held under an owner-approved exception. Any unresolved census item blocks
+the verdict; backlog count alone must never be silently equated with incident
+completion or ignored as historical noise.
+
+The census authority itself must also be converged: a live ledger marked
+`done/released` while its planning source remains `planned` is `stale-import`,
+not completion evidence. The current TASK-SKL-0036 divergence therefore
+blocks consumption of its incident-learning contract until the governed
+mirror-reconcile command succeeds and fresh projection evidence is sealed.
+
+The 0314–0317 ledger-only imports emitted `ATM_RUNNER_SYNC_REQUIRED` because
+the frozen runner predates current framework sources. This advisory is allowed
+for planning-ledger writes only; before any phase card is claimed or any
+validator result is accepted, run the governed runner-sync/build path and prove
+the frozen runner digest matches the source snapshot. A green result from a
+stale runner is non-evidence.
 
 目前不是「所有 proposed card 都可立即 claim」的狀態。`ATM-GOV-0276` 必須先修復
 external-planning bootstrap、import machine-field fidelity 與 failed-claim residue
@@ -1355,11 +1509,11 @@ proposed IDs 當成可寫入任務。
 | 3.2 closeout | `ATM-GOV-0269`；接續保有 0270→0271 shared close seam 的單一 ownership | 0269 完成後承接不碰 shared close seam 的 evidence/replay review | 每卡 checkpoint；0270→0271→0272→0273 依 hard dependency 序列放行 |
 | 4.0 foundation | 0277 semantics、0278 authority、0280 universe compiler | 0279 inventory；之後 0281/0282/0283 中不重疊的 collector/oracle work | 最多同時放行兩個 writers；驗證 phase-exit receipt |
 | 3.2 joins | 0269 後做 0284→0285；0270 後做 0286 | 0271 後做 0287 | 缺 Plan 3.2 delivery evidence 時保持 blocked |
-| 4.0 structure | 0293→0294→0305 cohesive family/fingerprint/selector lane | 0288/0290/0291/0292/0302/0303 adapters，分波避免 shared-file overlap | family revision、selection digest 與 unknown mapping 裁決 |
+| 4.0 structure | 0293→0294→0305 cohesive family/fingerprint/selector lane | 0288/0290/0291/0306/0302/0303 adapters，分波避免 shared-file overlap | family revision、selection digest 與 unknown mapping 裁決 |
 | 4.0 generation | 0295、0297/0298/0299/0300 中的 formal generator/core work | 0289/0296/0301/0304 中的 runner、mutation、oracle integration | 每波只開兩個 writers，跨卡共檔改由 steward compose |
 | SKL retained | no skill-source write authority | no skill-source write authority | 親自完成 TASK-SKL-0031→0033→0036；0305 後完成 0037 |
-| Certification | 0306 certificate、0307 replay | 0308 shadow、0309 runtime adapter canary | 0273 與 TASK-SKL-0037 證據 join；裁決 legacy/new divergence |
-| Release | 0310 hostile dogfood 與 all-branch phase-exit manifest | 0310 independent hostile-workload lane | 0311 final verdict；manifest 缺任一 mandatory branch 即 fail-closed |
+| Certification | 0312 certificate、0307 replay | 0314 shadow、0315 runtime adapter canary | 0273 與 TASK-SKL-0037 證據 join；裁決 legacy/new divergence |
+| Release | 0316 hostile dogfood 與 all-branch phase-exit manifest | 0316 independent hostile-workload lane | 0317 final verdict；manifest 缺任一 mandatory branch 即 fail-closed |
 
 派工啟動條件：
 
@@ -1369,8 +1523,8 @@ proposed IDs 當成可寫入任務。
 3. 每位外派 captain 使用自己的 actor claim；派工文字本身不授予 write authority。
 4. shared sources、catalog、schema、reducer、release artifacts 維持
    broker/steward/compose-first；不得以 branch/worktree 假裝沒有重疊。
-5. `ATM-GOV-0310` 的 phase-exit manifest 是所有支線的 fan-in authority；
-   `ATM-GOV-0311` 不得只沿單一 DAG 主幹判定 Plan 4.0 完成。
+5. `ATM-GOV-0316` 的 phase-exit manifest 是所有支線的 fan-in authority；
+   `ATM-GOV-0317` 不得只沿單一 DAG 主幹判定 Plan 4.0 完成。
 
 ## 19. Rollout policy
 

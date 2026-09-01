@@ -17,9 +17,12 @@ createdByCommand: atm plan doc create
 
 ## Positioning
 
-Plan 3.1 is complete and remains the closed dogfood evidence baseline. Plan 3.2
-does not reopen Plan 3.1 delivery. It starts from the Plan 3.1 measured closeout
-costs and fixes the next bottleneck: ATM currently mixes high-value safety gates
+Plan 3.1 delivery cards are closed and remain the historical dogfood baseline;
+Plan-level certification is still subject to the four-plan objective matrix and
+fresh sealed evidence. Plan 3.2 does not reopen the delivery commits, but it
+must not treat their card status as proof that every Plan 3.1 objective is
+complete. It starts from the measured closeout costs and fixes the next
+bottleneck: ATM currently mixes high-value safety gates
 with repeated, blocking, or unobservable close-time gates.
 
 The owner-approved planning family remains `GOV / ATM-GOV` under
@@ -151,6 +154,33 @@ fingerprint `deep-module-review:9433b14b`, but they must not directly edit each
 other's primary files without Captain integration review.
 
 ## Pre-Plan 3.2 planning-source admission blocker addendum
+
+## Pre-Plan 3.2 parallel-commit safety addendum
+
+The dual-captain dogfood incidents exposed a commit-level gap that is not
+covered by claim rejection or foreign-work preservation alone: two valid lanes
+can still produce a successful commit whose tree contains the other lane's
+work. Plan 3.2 is not ready for normal parallel rollout until the following
+invariants are executable and evidenced:
+
+- a governed commit tree is a subset of the claimed bundle plus explicitly
+  authorized shared-delivery members;
+- each lane seals its bundle before shared-write admission, and final apply
+  consumes that seal rather than re-reading the live index;
+- HEAD mutation is broker-mediated and CAS-guarded; a moved HEAD returns a
+  queue/wait/retry ticket and never falls through to override lease;
+- two or more active lanes classify unowned staged/unstaged paths as
+  fail-closed, while shared files use proposal/compose/steward attribution;
+- close deferral snapshots derived evidence indexes after evidence generation,
+  so a close cannot leave a post-close manifest delta;
+- batch ownership must support explicit split, handoff, stale-head repair, and
+  safe abandon without allowing a foreign queue head to be claimed ad hoc.
+
+Required proof before Plan 3.2 exit: parallel sealed-prepare, bundle-vs-tree
+attribution, provenance mismatch, CAS/queue-only HEAD, no-override-success,
+deferral-order, stale-batch routing, and foreign-dirty classification tests.
+Every confirmed incident becomes a generic fixture under the Plan 4.0 incident
+corpus and is referenced by the owning task card.
 
 The 2026-07-30 ATM-GOV-0269 claim attempt exposed a third blocking capability
 gap before true dual-captain overlap testing can start:

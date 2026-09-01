@@ -93,4 +93,8 @@
 - [gotcha-atm-skill-template-sync](docs/keep-memory/gotcha_atm-skill-template-sync.md) — 改 .agents/skills/ 安裝副本必查 templates/skills/ 源頭模板，否則重裝洗掉修改
 - [gotcha-atm-two-captain-close-storm](docs/keep-memory/gotcha_atm-two-captain-close-storm.md) — 雙隊長高頻並行下 close 收斂戰術——auto-evidence 原子收口、安靜窗衝刺、失敗回滾會吞證據
 - [gotcha-atm-two-captain-concurrency](docs/keep-memory/gotcha_atm-two-captain-concurrency.md) — 雙隊長同工作樹並行——lease TTL、對方 staged 檔、repair-claim diagnose-first 三守則
+- [status-atm-plan41-0407-close-wait](docs/keep-memory/status_atm-plan41-0407-close-wait.md) — ATM-GOV-0407 formal close 仍在等 0406 正式 closed；Cursor 隊長不得搶先 taskflow close
+- [status-atm-plan41-common-frozen-publication](docs/keep-memory/status_atm-plan41-common-frozen-publication.md) — Plan 4.1 0406/0407 唯一一次共同 frozen publication 已從封印 source ff37dccd 完成；尚未 close／push
+- [gotcha-atm-plan41-acc3-product-proof-window](docs/keep-memory/gotcha_atm-plan41-acc3-product-proof-window.md) — Plan 4.1 ACC-3 只算單一封印 product-proof window 的 commandRun 區間聯集，禁止跨歷史 burst 累加分母或把命令間空白當工作
+- [gotcha-planning-root-authority-resolution](docs/keep-memory/gotcha_planning-root-authority-resolution.md) — Planning root 解析應以 series-registry 存在且包含 active series 為準，多候選 fail-closed
 <!-- keep-memory-index:end -->

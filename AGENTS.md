@@ -5,12 +5,12 @@
 Read the repository root README.md for project context, then run:
 
 ```bash
-node atm.mjs next --json
+node atm.mjs next --prompt "<current user prompt>" --json
 ```
 
 First-contact behavior:
 
-1. If `node atm.mjs next --json` returns an `ATM_USER_NOTICE` message or `evidence.userNotice`, show that notice to the user in natural language before running the returned next action.
+1. If `node atm.mjs next --prompt "<current user prompt>" --json` returns an `ATM_USER_NOTICE` message or `evidence.userNotice`, show that notice to the user in natural language before running the returned next action.
 2. If existing host instructions reference a missing local document, mention the missing file once and continue with the ATM route.
 3. After an onboarding or refresh command succeeds, return to the user original request and continue the actual work.
 
@@ -24,6 +24,7 @@ Editor integration self-check:
    - `cursor`: `.cursor/rules/skills/atm-governance-router/SKILL.md` via `node atm.mjs integration add cursor --json`
    - `copilot`: `.github/instructions/atm-governance-router.instructions.md` via `node atm.mjs integration add copilot --json`
    - `gemini`: `.gemini/commands/atm-governance-router.toml` via `node atm.mjs integration add gemini --json`
+4. Refresh local project skills with `powershell -ExecutionPolicy Bypass -File tools_node/sync-project-skills.ps1` before trusting Captain / dispatch routing based on copied skills.
 
 Python-only runtime self-check:
 
@@ -72,6 +73,10 @@ node tools_node/task-lock.js lock <task-id> <agent-name>
 ```bash
 node tools_node/task-lock.js unlock <task-id> <agent-name>
 ```
+
+## 武將頭像工作流
+
+- 若工作是武將頭像裁切或批次生成，先用 `general-avatar-crop`，再執行 `node tools_node/generate-general-avatars.js [generalId]`；完成後在 Cocos Creator 對 `assets/resources/sprites/generals/avatars/` 做 `Refresh Assets`。
 
 ## 全域縮圖讀取規則
 
@@ -145,5 +150,11 @@ node tools_node/task-lock.js unlock <task-id> <agent-name>
 - 若要處理框體資產，必須先判斷它是不是 `non-9-slice ornate frame`：凡是四角完整花角 + 四邊連續 ornament 的整框，禁止直接九宮拉伸；只能固定尺寸、拆角邊件，或改畫 stretch-safe 中段版本。
 
 ## Skill 指名
+
+若工作會用到 Captain / dispatch 類流程，先確認已執行 `powershell -ExecutionPolicy Bypass -File C:\Users\User\3KLife\tools_node\sync-project-skills.ps1`，再以同步後的 `.codex/skills` 版本為準。
+
+若使用者直接提到隊長 / 派工 / dispatch，優先套用 `atm-captain-dispatch-standard`，再配合 `atm-dispatch` 產出可轉貼派工單。
+
+若工作需要三國外部證據驗證、公開資料查核或 web evidence 比對，優先套用 `3kweb-check`。
 
 若使用者直接提到 `$context-budget-guard`，Agent 必須優先套用對應 skill。

@@ -1,0 +1,88 @@
+{
+  "schemaId": "atm.planAuditSnapshot.v1",
+  "specVersion": "0.1.0",
+  "capturedAt": "2026-08-08T21:47:35+08:00",
+  "purpose": "Reproducible input snapshot for the four-plan objective audit; not a completion claim.",
+  "documentSha256": {
+    "end-to-end-auto-batch-performance-plan-v3.md": "482fb011297b1205d0d4f7e0bea51165b1218dba27c498995ee401c54b3a8da8",
+    "end-to-end-auto-batch-performance-plan-v3-2.md": "14f5cc0cb7ba49be4e93fcf3961d5c0700265c72b9d281718e4d9a29ec3e9b3f",
+    "end-to-end-auto-batch-performance-plan-v4.md": "270fe6b6a972504631f372058ed50ed958aa35f88882277727b61c8a5fdb57e2",
+    "plan-3x-4x-objective-evidence-matrix-2026-07-31.md": "8e3021130d08decc6357e918b6eb07e3f897c9fe3b4b203ea4ba90c0b3a77721",
+    "plan4-backlog-disposition-census-2026-07-31.json": "29d400b514975df48c7313931ef8ba4c7ac4782a9fdc1a39382a8ee3eb3bb511",
+    "plan-3x-4x-objective-audit-2026-07-31.json": "364745b12a16f2d03d77fd91110974427bb9f33acdb576d200d4d3628c5f6386",
+    "plan4-phase-readiness-2026-07-31.json": "303fc751a1ab714410efb982fccf3256d26e0d6ddd2033e91ad64dff627f314e",
+    "plan-3x-4x-execution-checklist-2026-08-08.md": "0914a55ea95b91f751fbb6ef59a1e50a788d0d6a9ae25378ffe8819b0c7bebb1"
+  },
+  "taskLedgerSnapshot": {
+    "ATM-GOV-0285": { "status": "done", "claim": "released" },
+    "ATM-GOV-0306": { "status": "done", "claim": "released" },
+    "ATM-GOV-0293": { "status": "planned", "claim": null },
+    "ATM-GOV-0307": { "status": "planned", "claim": null },
+    "ATM-GOV-0312": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0318", "ATM-GOV-0319", "ATM-GOV-0320", "ATM-GOV-0305", "TASK-SKL-0037"] },
+    "ATM-GOV-0318": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0284", "ATM-GOV-0270"], "frontmatterFidelity": true },
+    "ATM-GOV-0319": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0321", "ATM-GOV-0322"], "frontmatterFidelity": true },
+    "ATM-GOV-0320": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0321", "ATM-GOV-0306", "ATM-GOV-0319"], "frontmatterFidelity": true },
+    "ATM-GOV-0321": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0277"], "frontmatterFidelity": true },
+    "ATM-GOV-0322": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0318", "ATM-GOV-0288", "ATM-GOV-0306"], "frontmatterFidelity": true },
+    "ATM-GOV-0288": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0279", "ATM-GOV-0285"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0281": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0280"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0282": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0280"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0283": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0280"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0287": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0284", "ATM-GOV-0271"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0289": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0288"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0290": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0285"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0291": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0285"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0296": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0322"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0297": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0294", "ATM-GOV-0296"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0298": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0294", "ATM-GOV-0296"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0299": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0282", "ATM-GOV-0294", "ATM-GOV-0296"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0300": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0321", "ATM-GOV-0296"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0302": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0321", "ATM-GOV-0285"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0303": { "status": "planned", "claim": null, "dependencies": ["ATM-GOV-0285"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "ATM-GOV-0313": { "status": "running", "claim": "active", "owner": "claude-007", "planningMirror": "planned", "divergence": "status" },
+    "ATM-GOV-0314": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0294", "ATM-GOV-0305", "ATM-GOV-0312", "TASK-SKL-0037"], "requiredTestCaseCount": 2, "frontmatterFidelity": true, "divergence": [], "residueClassification": "ambiguous-manual-review" },
+    "ATM-GOV-0315": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0314"], "requiredTestCaseCount": 2, "frontmatterFidelity": true, "divergence": [], "residueClassification": "ambiguous-manual-review" },
+    "ATM-GOV-0316": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0315"], "requiredTestCaseCount": 2, "frontmatterFidelity": true, "divergence": [], "residueClassification": "ambiguous-manual-review" },
+    "ATM-GOV-0317": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0316", "ATM-GOV-0324"], "requiredTestCaseCount": 2, "frontmatterFidelity": true, "divergence": [], "residueClassification": "ambiguous-manual-review" },
+    "ATM-GOV-0324": { "status": "planned", "claim": null, "planningMirror": "planned", "dependencies": ["ATM-GOV-0307", "ATM-GOV-0287"], "requiredTestCaseCount": 2, "frontmatterFidelity": true },
+    "TASK-SKL-0036": { "status": "done", "claim": "released", "planningMirror": "planned", "divergence": "status" },
+    "TASK-SKL-0037": { "status": "planned", "claim": null }
+  },
+  "phaseCardMap": {
+    "shadow": "ATM-GOV-0314",
+    "adapterParity": "ATM-GOV-0315",
+    "hostileDogfood": "ATM-GOV-0316",
+    "finalCertification": "ATM-GOV-0317"
+  },
+  "commands": [
+    "node atm.mjs tasks status --task ATM-GOV-0313 --json",
+    "node atm.mjs tasks status --task TASK-SKL-0036 --json",
+    "node atm.mjs broker status --json",
+    "node atm.mjs batch status --json",
+    "git diff --check (both repositories)"
+  ],
+  "latestObservedScopeAmendment": {
+    "taskId": "ATM-GOV-0313",
+    "transitionId": "2026-07-31T14:59:27.575Z-scope-amendment-b86272291276",
+    "addedPaths": [
+      "schemas/validators/test-case-group.schema.json",
+      "packages/cli/src/commands/test-catalog.ts",
+      "tests/cli/commit-attribution-sealed-transaction.test.ts"
+    ],
+    "requiredInvariant": "legacyAliases compatibility must preserve canonical test_task identity validation"
+  },
+  "fullCatalogGate": {
+    "command": "node --strip-types tests/cli/test-case-catalog-shards.test.ts",
+    "verdict": "fail",
+    "failure": "shard test_group_commit_attribution must validate",
+    "releaseCondition": "historical shard migration plus alias lineage and the exact full command pass"
+  },
+  "runnerFreshness": {
+    "frozenRunner": "ATM_RUNNER_SYNC_REQUIRED",
+    "allowedUse": "ledger-only planning writes",
+    "blockedUse": "phase implementation, validator acceptance, completion evidence",
+    "requiredAction": "ATM_RETAIN_RELEASE_ARTIFACTS=1 npm run build then prove source/frozen digest parity"
+  },
+  "verdict": "not-complete",
+  "interpretation": "Live task ledger is authoritative for active claims; planning mirror drift is recorded and must not be silently treated as completion. Do not mutate another captain's active lane."
+}

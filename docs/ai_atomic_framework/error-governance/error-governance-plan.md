@@ -35,6 +35,29 @@ Creating the ERR family does not move that registry. A future governed migration
 - ErrorCode baseline fields for plan and task-card templates.
 - ErrorCode reference analyzer for plans, task cards, backlog, and registry references.
 
+## Wave 2 correction follow-up (2026-08-09)
+
+`TASK-ERR-0012` owns the generic released-task residue transaction exposed by
+the Plan 3.x/4.x false-green correction baseline. A released or abandoned task
+may leave protected generated/staged governance bytes in the canonical index.
+Those bytes must retain a durable lifecycle owner and a byte-identity snapshot;
+an unrelated task must receive a brokered preserve/queue/recovery verdict, not
+a bare refusal or a task-specific stage override. This follow-up reuses existing
+index-ownership and WIP-admission error contracts; it introduces no new
+task-, actor-, or filename-specific error code.
+
+## Wave 0 unblock follow-up (2026-08-11)
+
+`TASK-ERR-0013` owns the adjacent but distinct closure-repair commit boundary
+recorded in `ATM-BUG-2026-07-31-002`. The corrective rule is general: a repair
+may return a governed commit command only after it creates durable, task-scoped
+write authority that the governed commit adapter can consume. It must preserve
+the same authority across closure repair, explicit write-ticket operations, and
+the commit adapter; it must not create task-, filename-, terminal-status-, or
+incident-specific bypasses. Its fixture proves repair-to-commit end-to-end and
+also proves that pre-write rejection does not consume an emergency lease or
+leave partial staged state.
+
 ## Active Plan 3.1 Contracts (2026-07-22)
 
 `TASK-ERR-0004` owns the registry and generated-document contract for receipt-bound
@@ -87,3 +110,16 @@ All ERR cards must be created by CLI:
 node atm.mjs plan card create --series ERR --title TITLE --write --json
 
 Do not hand-write TASK-ERR task cards.
+
+## Taskflow close recovery follow-up (2026-08-20)
+
+`TASK-ERR-0015` owns the canonical ErrorCode registry contract for
+`ATM_TASKFLOW_PRECLOSE_BLOCKED`, `ATM_TASKFLOW_CLOSE_WRITE_NOT_READY`, and
+`ATM_TASKFLOW_CLOSE_OWNED_DIRTY_PENDING`. The contract was exposed by a
+false-green closeout: one authority snapshot classified receipt-owned dirty
+files advisory while a later close blocker reused those same advisory paths as
+blocking, and the blocker inherited an unrelated preceding blocker's recovery
+command. Every blocker must derive recovery from its own registered code and
+consume the same canonical authority snapshot as the gate it describes.
+`ATM-GOV-0398` owns the implementation and fixture seam; this ERR card owns
+the registry and generated-document source of truth.

@@ -1,0 +1,88 @@
+{
+  "schemaId": "atm.planObjectiveAudit.v1",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-08-08T21:47:35+08:00",
+  "authority": {
+    "sourceMatrix": "governance-optimization/plan-3x-4x-objective-evidence-matrix-2026-07-31.md",
+    "sourcePlans": [
+      "governance-optimization/end-to-end-auto-batch-performance-plan-v3.md",
+      "governance-optimization/end-to-end-auto-batch-performance-plan-v3-2.md",
+      "governance-optimization/end-to-end-auto-batch-performance-plan-v4.md"
+    ],
+    "targetRepo": "AI-Atomic-Framework"
+  },
+  "auditRule": "task-card done is not plan completion; each objective needs implementation, acceptance, fresh command-backed evidence, provenance, and rollback/recovery proof",
+  "objectiveEvidenceTuple": {
+    "requiredFields": [
+      "sourceAnchorDigest",
+      "owningTaskCard",
+      "requiredTestCaseIds",
+      "validatorReceipt",
+      "sealedDeliveryProvenance",
+      "rollbackOrFailClosedProof",
+      "deepModuleReviewReport",
+      "realDogfoodObservation",
+      "knownBugDisposition",
+      "releaseAndPushProvenance"
+    ],
+    "passRule": "Every mapped clause/objective row must provide all fields with fresh, command-backed, task-attributable evidence; null, stale, prose-only, fixture-only, ambiguous, or unsupported fields keep the row not-complete.",
+    "aggregationRule": "A plan verdict is verified only when every clause row is verified; a task/card done state, focused test, or release receipt cannot upgrade neighboring rows.",
+    "failureClosure": "On any failed or unavailable field, preserve the prior authority, record the failure and recovery command, and prohibit downstream certification until the tuple is re-sealed."
+  },
+  "sourceCoverage": {
+    "plan3_0": { "clauseRange": "820-836", "mappedClauses": 17, "mappedClausesExpected": 17 },
+    "plan3_1": { "clauseRange": "526-548", "mappedClauses": 23, "mappedClausesExpected": 23 },
+    "plan3_2": { "clauseRanges": ["124-135", "166-177", "179-183"], "mappedClauses": 29, "mappedClausesExpected": 29 },
+    "plan4_0": { "sectionRange": "4-18.4.2", "mappedSectionAnchors": 17, "mappedSectionAnchorsExpected": 17 }
+  },
+  "plans": [
+    {
+      "plan": "3.0",
+      "verdict": "not-complete",
+      "evidenceStatus": "historical-or-partial",
+      "blockingReasons": ["fresh end-to-end objective evidence absent", "rollback/parity/telemetry/performance objectives not re-proven as one sealed phase"],
+      "requiredNext": "re-run every mapped completion clause with fresh evidence and record objective-level disposition"
+    },
+    {
+      "plan": "3.1",
+      "verdict": "not-complete",
+      "evidenceStatus": "historical-or-partial",
+      "blockingReasons": ["authority/compose/runner/identity/rollback/autonomous-command objectives lack fresh unified proof"],
+      "requiredNext": "produce command-backed evidence for all 23 mapped clauses and verify release/rollback provenance"
+    },
+    {
+      "plan": "3.2",
+      "verdict": "partial",
+      "evidenceStatus": "0285-and-0306-slices-only",
+      "blockingReasons": ["0293/0294/0305 chain not complete", "dual-captain hostile dogfood and sealed TOCTOU/queue guarantees not phase-exit proven"],
+      "requiredNext": "complete dependency chain, replay incidents, and fresh two-lane phase-exit evidence"
+    },
+    {
+      "plan": "4.0",
+      "verdict": "not-complete",
+      "evidenceStatus": "contracts-and-cards-partial",
+      "blockingReasons": ["0307/0312 are planned and 0313 is implementation-running", "0281/0282/0283/0287/0288/0289/0290/0291/0296/0297/0298/0299/0300/0302/0303/0324 and 0321/0318/0322/0319/0320 are registered prerequisites but are not implemented", "0314-0317 are planned and not implemented", "169 open-like backlog shards unresolved", "2026-07-31-002..008 regression cluster is mapped to 0324 but not repaired", "catalog validator red on historical namespace", "TASK-SKL-0036 stale-import divergence"],
+      "requiredNext": "repair catalog, reconcile mirrors, disposition every open-like shard, then execute 0307-0312 and final phase fan-in"
+    }
+  ],
+  "deepModuleGate": {
+    "required": true,
+    "rule": "each implementation must expose a small semantic interface, keep policy separate from adapters/transport, and prove invariants at the module boundary",
+    "currentVerdict": "not-proven",
+    "missingEvidence": ["fresh deep-module review report linked to each phase objective", "first-principles rationale for execution ordering and failure closure"]
+  },
+  "firstPrinciplesExecutionOrder": {
+    "invariant": "Do not certify a downstream objective whose evidence denominator, catalog identity, or shared-write boundary is still unstable.",
+    "ordering": [
+      {"step": 1, "work": "repair and seal catalog identity/lineage", "cards": ["ATM-GOV-0313"], "reason": "every later validator and certificate needs a canonical test identity"},
+      {"step": 2, "work": "finish dependency chain, mutation/coverage contracts, and operator-regression closure", "cards": ["ATM-GOV-0293", "ATM-GOV-0294", "ATM-GOV-0305", "ATM-GOV-0321", "ATM-GOV-0318", "ATM-GOV-0322", "ATM-GOV-0319", "ATM-GOV-0320", "ATM-GOV-0312", "ATM-GOV-0307", "ATM-GOV-0287", "ATM-GOV-0324"], "reason": "replay and coverage claims require authority, freshness, denominator, planning, anti-gaming, oracle separation, explicit non-claims, and closure of the 2026-07-31-002..008 operator regressions before phase certification"},
+      {"step": 3, "work": "prove selected-vs-full policy and adapter parity", "cards": ["ATM-GOV-0314", "ATM-GOV-0315"], "reason": "optimization is admissible only after an independent legacy authority and portable adapters agree"},
+      {"step": 4, "work": "run hostile dual-captain dogfood and saturation", "cards": ["ATM-GOV-0316"], "reason": "parallel shared-write and recovery invariants must be observed under real contention"},
+      {"step": 5, "work": "certify all four plans and retire legacy authority reversibly", "cards": ["ATM-GOV-0317"], "reason": "final certification must consume the complete Plan 3.0/3.1/3.2/4.0 matrix, backlog census, rollback proof, deep-module receipts, and fresh release provenance"}
+    ],
+    "failureClosure": "Any missing, stale, ambiguous, or unsupported observation keeps the current step not-complete and preserves the prior authority; no downstream waiver may convert missing evidence into pass."
+  },
+  "completionVerdict": "not-complete",
+  "completionBlockers": ["backlog disposition census", "catalog namespace repair ATM-GOV-0313", "TASK-SKL-0036 mirror reconciliation", "Plan 3.0/3.1 fresh objective evidence", "Plan 3.2 hostile parallel dogfood", "Plan 4.0 phase fan-in and legacy-authority retirement"],
+  "countsAreAuditEvidenceOnly": true
+}

@@ -1,0 +1,92 @@
+{
+  "schemaId": "atm.plan4BacklogDispositionCensus.v1",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-08-08T21:47:35+08:00",
+  "source": {
+    "repo": "AI-Atomic-Framework",
+    "relativeDir": "docs/governance/atm-bug-and-optimization-backlog.items",
+    "fileCount": 378,
+    "sortedOpenLikeIdDigest": "sha256:48271f04905274a5c795c894395d578c1e29b196aeba1193279e50d26ca18ff6"
+  },
+  "counts": {
+    "total": 378,
+    "terminalOrFixedStyle": 209,
+    "openLike": 169,
+    "openLikeByStatus": {
+      "In progress": 1,
+      "Needs task card": 78,
+      "Open": 81,
+      "Needs triage": 2,
+      "Mitigated in TASK-TEAM-0074; follow-up open": 1,
+      "Active in TASK-TEAM-0079": 1,
+      "Follow-up in TASK-TEAM-0084": 1,
+      "Partially fixed in ATM-GOV-0230": 1,
+      "Partially fixed in source change pending release": 1,
+      "Deferred": 1,
+      "Has task card": 1
+    },
+    "openLikeBySeverity": {
+      "Critical": 1,
+      "High": 73,
+      "Low": 4,
+      "Medium": 91
+    },
+    "openLikeByType": {
+      "Bug / Product gap": 1,
+      "Bug": 98,
+      "Documentation / AI routing": 11,
+      "Optimization": 39,
+      "Product gap": 19,
+      "Task": 1
+    }
+  },
+  "openLikeDefinition": [
+    "Open",
+    "Needs task card",
+    "In progress",
+    "Candidate",
+    "Confirmed"
+  ],
+  "dispositionRule": {
+    "confirmed": "map to generic incident family, owning repair card, regression, fresh sealed evidence, and rollback",
+    "nonConfirmed": "record durable candidate/duplicate/product-gap rationale and owner",
+    "exception": "owner-approved exception remains a final-verdict blocker"
+  },
+  "confirmedOpenLikeDispositions": [
+    {
+      "family": "parallel-commit-and-close-incidents",
+      "backlogIds": ["ATM-BUG-2026-07-31-009", "ATM-BUG-2026-07-31-010", "ATM-BUG-2026-07-31-011", "ATM-BUG-2026-07-29-270"],
+      "status": "confirmed-open-like-with-owner-card",
+      "ownerCards": ["ATM-GOV-0307"],
+      "requiredRegression": "sealed attribution, tombstone deletion, deferred-manifest ordering, and active-batch router replay with real dogfood evidence",
+      "freshEvidence": null
+    },
+    {
+      "family": "catalog-alias-lineage-schema",
+      "backlogIds": ["ATM-BUG-2026-07-31-012"],
+      "status": "confirmed-open-like-with-active-owner",
+      "ownerCards": ["ATM-GOV-0313"],
+      "requiredRegression": "legacyAliases resolver/load path preserves canonical test_task identity and full catalog validator turns green",
+      "freshEvidence": null,
+      "dispositionBlocker": "active 0313 lane must release before final backlog projection and closure"
+    },
+    {
+      "family": "recent-governance-operator-regressions",
+      "backlogIds": ["ATM-BUG-2026-07-31-002", "ATM-BUG-2026-07-31-003", "ATM-BUG-2026-07-31-004", "ATM-BUG-2026-07-31-005", "ATM-BUG-2026-07-31-006", "ATM-BUG-2026-07-31-007", "ATM-BUG-2026-07-31-008"],
+      "status": "confirmed-open-like-with-owner-card-planned",
+      "ownerCards": ["ATM-GOV-0324"],
+      "requiredRegression": "repair-closure/write-ticket authority, record-commit parity, dry-run no-mutation, runner-sync publication, cross-task import attribution, and close transaction status receipts",
+      "freshEvidence": null,
+      "dispositionBlocker": "ATM-GOV-0324 is planned/no-claim; implementation, fresh evidence, and closure remain required before ATM-GOV-0317; no Plan 4.0 completion waiver"
+    },
+    {
+      "family": "runner-sync-freshness-and-publication",
+      "backlogIds": ["ATM-BUG-2026-07-22-225", "ATM-BUG-2026-07-29-265", "ATM-BUG-2026-07-30-283"],
+      "status": "confirmed-open-like",
+      "ownerCards": ["ATM-GOV-0314", "ATM-GOV-0316", "ATM-GOV-0317"],
+      "requiredRegression": "sealed source/cache parity, checkpoint recovery, framework-temp publication, and no-dirty-residue close",
+      "freshEvidence": null
+    }
+  ],
+  "authority": "Counts are audit evidence only; this artifact does not close or reclassify backlog items."
+}

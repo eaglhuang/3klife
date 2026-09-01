@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0287
 title: legal recovery and checkpoint projection for check-in/close/phase/release
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on:

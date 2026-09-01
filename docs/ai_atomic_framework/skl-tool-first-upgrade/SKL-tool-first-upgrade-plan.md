@@ -622,3 +622,12 @@ not receive write authority for their skill source templates or projections.
   manifest digest.
 - Unknown mapping is neither run-all nor run-none-and-pass. It blocks closure
   with an executable mapping-repair route.
+
+### Follow-up: TASK-SKL-0040 sealed adapter refresh
+
+`TASK-SKL-0040` is the cohesive post-audit delivery for a source snapshot that
+is valid while one or more installed adapter manifests are stale. It consumes
+the sealed corpus contract from 0038 and the targeted-refresh isolation proof
+from 0039. It refreshes only audit-enumerated generated projections and their
+six manifests, then proves adapter parity; it does not reopen source ownership,
+rewrite the corpus, or alter runner, certificate, or closeout policy.

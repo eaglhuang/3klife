@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0288
 title: JS/TS structural coverage adapter and authoritative denominator reconciliation
-status: planned
+status: done
 owner: unassigned
 priority: P2
 depends_on:
