@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-910f9222def2",
+  "recordedAt": "2026-09-01T17:49:38.582Z",
+  "actorId": null,
+  "taskId": "TASK-TMP-0016",
+  "surface": "tasks import --write recovery flags",
+  "command": "node atm.mjs tasks import --from temporary-governance/tasks/TASK-TMP-0016-commit-final-3k-cleanup-receipts.task.md --write --force --json",
+  "flags": [
+    "--force"
+  ],
+  "permission": "backend.tasks.import.write",
+  "leaseId": "EMG-TASK-TMP-0016-ba0471bcd7",
+  "reason": "Force import would overwrite a task with an active or unreadable claim state.",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.import.write"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-09-01T17-49-38-581Z-EMG-TASK-TMP-0016-ba0471bcd7.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}

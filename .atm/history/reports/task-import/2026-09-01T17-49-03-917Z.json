@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-09-01T17:49:03.917Z",
+  "planPath": "temporary-governance/tasks/TASK-TMP-0016-commit-final-3k-cleanup-receipts.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-TMP-0016.json"
+  ],
+  "taskIds": [
+    "TASK-TMP-0016"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-TMP-0016",
+      "planPath": "temporary-governance/tasks/TASK-TMP-0016-commit-final-3k-cleanup-receipts.task.md",
+      "sectionTitle": "TASK-TMP-0016",
+      "headingLine": 36,
+      "hash": "f2d1f265133edbbe"
+    }
+  ]
+}
