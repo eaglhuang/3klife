@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-01T20-06-28-140Z-close-3ea525e4d19d",
+  "taskId": "TASK-TMP-0019",
+  "action": "close",
+  "actorId": "codex-cleanup-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0019-commit-verified-atm-gov-0349-planning-mirror-reconciliation.task.md",
+  "taskSha256": "sha256:a2d738e3ce20363118400480cd31af7093ffc5f93c56553e437915ee683e8f75",
+  "createdAt": "2026-09-01T20:06:28.140Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0019 --actor codex-cleanup-captain"
+}
