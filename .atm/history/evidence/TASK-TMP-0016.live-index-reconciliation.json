@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.liveIndexReconciliation.v1",
+  "headAdvanced": true,
+  "reconciledPaths": [
+    ".atm/history/task-events/TASK-TMP-0016/2026-09-01T17-46-12-075Z-import-3e1d2039e771.json",
+    ".atm/history/task-events/TASK-TMP-0016/2026-09-01T17-46-14-383Z-reserve-f5cd149a5f2e.json",
+    ".atm/history/task-events/TASK-TMP-0016/2026-09-01T17-46-14-388Z-promote-044a3ad559ef.json",
+    ".atm/history/task-events/TASK-TMP-0016/2026-09-01T17-46-14-930Z-claim-6978d9972ea7.json",
+    ".atm/history/tasks/TASK-TMP-0016.json"
+  ],
+  "retainedPaths": [
+    {
+      "path": ".atm/history/evidence/git-head.jsonl",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "79ad3ea5308cd47b69baa414003e7d14f9ef4cc3"
+    }
+  ],
+  "clean": false,
+  "failure": null,
+  "taskId": "TASK-TMP-0016",
+  "createdAt": "2026-09-01T17:46:54.301Z"
+}

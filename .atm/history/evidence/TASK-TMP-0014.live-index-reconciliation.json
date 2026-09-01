@@ -1,0 +1,38 @@
+{
+  "schemaId": "atm.liveIndexReconciliation.v1",
+  "headAdvanced": true,
+  "reconciledPaths": [
+    ".atm/catalog/registry/actors.json",
+    ".atm/history/guidance/audit-log.jsonl",
+    ".atm/history/guidance/sessions/guidance-20260813160541-3c070405af.json",
+    ".atm/history/guidance/sessions/guidance-20260814035802-60afef3770.json",
+    ".atm/history/guidance/sessions/guidance-20260829130059-19e8abb469.json",
+    ".atm/history/guidance/sessions/guidance-20260901145500-27b1d49fa5.json",
+    ".atm/history/guidance/sessions/guidance-20260901172635-baa544ae8a.json",
+    ".atm/history/protected-override-audit/2026-08-30T15-17-46-071Z-POA-55b8047a0a0a.json",
+    ".atm/history/protected-override-audit/2026-09-01T16-20-28-018Z-POA-cc6bafba8693.json",
+    ".atm/history/task-events/ATM-GOV-0382/2026-08-14T08-31-05-647Z-import-08574396e86d.json",
+    ".atm/history/task-events/TASK-PRF-0001/2026-08-13T16-07-55-345Z-import-ed1e96645a9d.json",
+    ".atm/history/task-events/TASK-PRF-0004/2026-08-29T14-08-05-102Z-close-8a1f9aaf6478.json",
+    ".atm/history/task-events/TASK-PRF-0004/2026-08-30T14-50-11-527Z-import-509761d58344.json",
+    ".atm/history/task-events/TASK-TMP-0014/2026-09-01T17-30-24-507Z-import-05bf74652ff7.json",
+    ".atm/history/task-events/TASK-TMP-0014/2026-09-01T17-30-27-248Z-reserve-7d9f307cc2df.json",
+    ".atm/history/task-events/TASK-TMP-0014/2026-09-01T17-30-27-253Z-promote-27d40124e331.json",
+    ".atm/history/task-events/TASK-TMP-0014/2026-09-01T17-30-32-248Z-claim-43ab82f40792.json",
+    ".atm/history/tasks/ATM-GOV-0382.json",
+    ".atm/history/tasks/TASK-PRF-0001.json",
+    ".atm/history/tasks/TASK-PRF-0004.json",
+    ".atm/history/tasks/TASK-TMP-0014.json"
+  ],
+  "retainedPaths": [
+    {
+      "path": ".atm/history/evidence/git-head.jsonl",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "72394a8c3c8bfe20f9d7f3b1120c7632d5ce5c33"
+    }
+  ],
+  "clean": false,
+  "failure": null,
+  "taskId": "TASK-TMP-0014",
+  "createdAt": "2026-09-01T17:37:36.403Z"
+}

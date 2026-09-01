@@ -1,0 +1,46 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-TMP-0016",
+  "updatedAt": "2026-09-01T17:47:09.480Z",
+  "updatedBy": "codex-gpt-5.6",
+  "freshValidationPasses": [
+    "git diff --check",
+    "git status --porcelain=v1"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-09-01T17:47:07.530Z",
+      "startedAt": "2026-09-01T17:47:07.279Z",
+      "finishedAt": "2026-09-01T17:47:07.530Z",
+      "durationMs": 251,
+      "runnerKind": "dev-source",
+      "sourceCommit": "79ad3ea5308cd47b69baa414003e7d14f9ef4cc3",
+      "cached": false
+    },
+    {
+      "command": "git status --porcelain=v1",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:1329d1dba424cd3ab47b95c40f922e14f70c71a20e7bd53f0f559457ffb56c1a",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git status --porcelain=v1"
+      ],
+      "generatedAt": "2026-09-01T17:47:09.479Z",
+      "startedAt": "2026-09-01T17:47:09.214Z",
+      "finishedAt": "2026-09-01T17:47:09.479Z",
+      "durationMs": 265,
+      "runnerKind": "dev-source",
+      "sourceCommit": "79ad3ea5308cd47b69baa414003e7d14f9ef4cc3",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}
