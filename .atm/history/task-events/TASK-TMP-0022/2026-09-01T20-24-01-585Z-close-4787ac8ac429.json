@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-01T20-24-01-585Z-close-4787ac8ac429",
+  "taskId": "TASK-TMP-0022",
+  "action": "close",
+  "actorId": "codex-cleanup-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0022-retain-released-governance-evidence-and-verified-cleanup-artifacts.task.md",
+  "taskSha256": "sha256:6229e20d35032f6211e7aa8c55d4dd359737057c337f12f2f73f05997e9b5da7",
+  "createdAt": "2026-09-01T20:24:01.585Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0022 --actor codex-cleanup-captain"
+}
