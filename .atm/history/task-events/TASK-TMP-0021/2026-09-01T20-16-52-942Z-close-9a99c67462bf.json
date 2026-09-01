@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-01T20-16-52-942Z-close-9a99c67462bf",
+  "taskId": "TASK-TMP-0021",
+  "action": "close",
+  "actorId": "codex-cleanup-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0021-commit-verified-historical-batch-and-index-recovery-receipts.task.md",
+  "taskSha256": "sha256:c2d8786e6b5cf6aee130885c4d33ce316dae0aa0b01fc92d814d5cd223698119",
+  "createdAt": "2026-09-01T20:16:52.942Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0021 --actor codex-cleanup-captain"
+}
