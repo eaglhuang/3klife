@@ -1,0 +1,63 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "TASK-TMP-0015",
+  "updatedAt": "2026-09-01T17:44:30.243Z",
+  "updatedBy": "codex-gpt-5.6",
+  "freshValidationPasses": [
+    "git diff --check",
+    "git status --porcelain=v1",
+    "node atm.mjs status --json"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-09-01T17:44:25.595Z",
+      "startedAt": "2026-09-01T17:44:25.330Z",
+      "finishedAt": "2026-09-01T17:44:25.595Z",
+      "durationMs": 265,
+      "runnerKind": "dev-source",
+      "sourceCommit": "2fca9e447ae32e7ca65bb17de0cf2f0b8aee72a0",
+      "cached": false
+    },
+    {
+      "command": "git status --porcelain=v1",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:b7b5c433d6270f70c5fb0f39ed9baddf7e716b1db7e543142bf1b1b8b330e3a1",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git status --porcelain=v1"
+      ],
+      "generatedAt": "2026-09-01T17:44:27.576Z",
+      "startedAt": "2026-09-01T17:44:27.305Z",
+      "finishedAt": "2026-09-01T17:44:27.576Z",
+      "durationMs": 271,
+      "runnerKind": "dev-source",
+      "sourceCommit": "2fca9e447ae32e7ca65bb17de0cf2f0b8aee72a0",
+      "cached": false
+    },
+    {
+      "command": "node atm.mjs status --json",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:ad26dff1719600d039e332923211dfcb2d36cd96a97184bdade620c3f36ac084",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node atm.mjs status --json"
+      ],
+      "generatedAt": "2026-09-01T17:44:30.242Z",
+      "startedAt": "2026-09-01T17:44:29.273Z",
+      "finishedAt": "2026-09-01T17:44:30.242Z",
+      "durationMs": 969,
+      "runnerKind": "dev-source",
+      "sourceCommit": "2fca9e447ae32e7ca65bb17de0cf2f0b8aee72a0",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

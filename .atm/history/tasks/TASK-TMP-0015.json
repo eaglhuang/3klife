@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-TMP-0015",
   "title": "Classify tracked runtime pointers and transient ATM residue",
-  "status": "running",
+  "status": "done",
   "milestone": null,
   "dependencies": [],
   "acceptance": [
@@ -158,7 +158,7 @@
     "actorId": "codex-gpt-5.6",
     "leaseId": "lease-d289f1374f70",
     "claimedAt": "2026-09-01T17:40:25.799Z",
-    "heartbeatAt": "2026-09-01T17:43:35.878Z",
+    "heartbeatAt": "2026-09-01T17:45:15.823Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/tasks/TASK-TMP-0015.json",
@@ -174,13 +174,14 @@
       ".gitignore",
       "docs/reports/residue-disposition/TASK-TMP-0015-runtime-artifact-disposition.json"
     ],
-    "state": "active",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20260901174026-codex-gpt-5.6-982ac6197a",
       "status": "adopted",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260901174026-codex-gpt-5.6-982ac6197a\""
-    }
+    },
+    "reason": "closed"
   },
   "owner": "codex-gpt-5.6",
   "startedAt": "2026-09-01T17:40:25.799Z",
@@ -224,8 +225,8 @@
     "createdAt": "2026-09-01T17:40:30.966Z",
     "status": "active"
   },
-  "lastTransitionId": "2026-09-01T17-43-35-965Z-renew-6c5d98365594",
-  "lastTransitionAt": "2026-09-01T17:43:35.965Z",
+  "lastTransitionId": "2026-09-01T17-45-15-824Z-close-3514f48861b3",
+  "lastTransitionAt": "2026-09-01T17:45:15.824Z",
   "ledgerContractVersion": "task-ledger/v1",
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
@@ -297,5 +298,8 @@
       "tempRoot": ".atm/runtime/work-admission-temp",
       "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
     }
-  }
+  },
+  "closedAt": "2026-09-01T17:45:15.823Z",
+  "closedByActor": "codex-gpt-5.6",
+  "closedBySessionId": "session-20260901174025-codex-gpt-5.6-TASK-TMP-0015-4570b51f28"
 }

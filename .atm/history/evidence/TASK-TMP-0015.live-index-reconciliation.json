@@ -1,0 +1,41 @@
+{
+  "schemaId": "atm.liveIndexReconciliation.v1",
+  "headAdvanced": true,
+  "reconciledPaths": [
+    ".atm/history/protected-override-audit/2026-09-01T17-43-15-199Z-POA-b123a2b50a3e.json",
+    ".atm/history/session-events/lane-20260901173027-codex-gpt-5.6-7f36bb97b3/2026-09-01T17-31-45-440Z-adopt-9c9b6f1a9279.json",
+    ".atm/history/session-events/lane-20260901174026-codex-gpt-5.6-982ac6197a/2026-09-01T17-43-34-481Z-adopt-997be26b86bb.json",
+    ".atm/history/task-events/TASK-TMP-0014/2026-09-01T17-39-19-820Z-release-a3755430b1a7.json",
+    ".atm/history/task-events/TASK-TMP-0015/2026-09-01T17-40-23-169Z-import-7545bc1087af.json",
+    ".atm/history/task-events/TASK-TMP-0015/2026-09-01T17-40-25-791Z-reserve-a8097eac4313.json",
+    ".atm/history/task-events/TASK-TMP-0015/2026-09-01T17-40-25-795Z-promote-4345cbd6f3e8.json",
+    ".atm/history/task-events/TASK-TMP-0015/2026-09-01T17-40-30-967Z-claim-9cb846a81b9d.json",
+    ".atm/history/task-events/TASK-TMP-0015/2026-09-01T17-43-15-207Z-import-de9258999340.json",
+    ".atm/history/task-events/TASK-TMP-0015/2026-09-01T17-43-35-965Z-renew-6c5d98365594.json",
+    ".atm/history/tasks/TASK-TMP-0014.json",
+    ".atm/history/tasks/TASK-TMP-0015.json",
+    ".gitignore",
+    "docs/reports/residue-disposition/TASK-TMP-0015-runtime-artifact-disposition.json"
+  ],
+  "retainedPaths": [
+    {
+      "path": ".atm/history/evidence/git-head.jsonl",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "2fca9e447ae32e7ca65bb17de0cf2f0b8aee72a0"
+    },
+    {
+      "path": ".atm/runtime/guidance/active-session.json",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "2fca9e447ae32e7ca65bb17de0cf2f0b8aee72a0"
+    },
+    {
+      "path": ".atm/runtime/identity/default.json",
+      "reason": "worktree-diverged",
+      "firstUnreconciledCommit": "2fca9e447ae32e7ca65bb17de0cf2f0b8aee72a0"
+    }
+  ],
+  "clean": false,
+  "failure": null,
+  "taskId": "TASK-TMP-0015",
+  "createdAt": "2026-09-01T17:44:09.770Z"
+}
