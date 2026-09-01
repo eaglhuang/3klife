@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-01T18-39-07-075Z-close-75246419d488",
+  "taskId": "TASK-TMP-0017",
+  "action": "close",
+  "actorId": "codex-cleanup-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0017-classify-and-settle-released-framework-history-residue.task.md",
+  "taskSha256": "sha256:e0bf3ec748ca8f1c1dc805b347438523f166e20d6f5e89159aa477b864309eb6",
+  "createdAt": "2026-09-01T18:39:07.075Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0017 --actor codex-cleanup-captain"
+}
