@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-01T18-30-40-919Z-close-5ebeae7c6a93",
+  "taskId": "TASK-TMP-0013",
+  "action": "close",
+  "actorId": "codex-cleanup-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0013-commit-durable-history-bundles-for-released-tasks.task.md",
+  "taskSha256": "sha256:14d677ecfd13be35e5831c8761da1a86b6451986a66ba9b25e4d9062c963a162",
+  "createdAt": "2026-09-01T18:30:40.919Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0013 --actor codex-cleanup-captain"
+}

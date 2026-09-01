@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0013
 title: Commit durable history bundles for released tasks
-status: planned
+status: done
 owner: codex-cleanup-captain
 priority: P1
 depends_on: []
@@ -166,6 +166,15 @@ methodProfiles:
   - operational-recovery
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-01T18:30:40.919Z"
+completed_by_agent: "codex-cleanup-captain"
+closedAt: "2026-09-01T18:30:40.919Z"
+closedByActor: "codex-cleanup-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-01T18-30-40-919Z-close-5ebeae7c6a93"
+lastTransitionAt: "2026-09-01T18:30:40.919Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "963d5b0345948269f954fc5ac8040d1701c835a4"
 ---
 
 # TASK-TMP-0013 Commit durable history bundles for released tasks
