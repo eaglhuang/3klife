@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-TMP-0016",
   "title": "Commit final 3K cleanup receipts",
-  "status": "running",
+  "status": "open",
   "milestone": null,
   "dependencies": [],
   "acceptance": [
@@ -135,20 +135,21 @@
     "actorId": "codex-gpt-5.6",
     "leaseId": "lease-56094d7beb2c",
     "claimedAt": "2026-09-01T17:46:14.392Z",
-    "heartbeatAt": "2026-09-01T17:49:39.994Z",
+    "heartbeatAt": "2026-09-01T17:50:03.816Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/tasks/TASK-TMP-0016.json",
       ".atm/history/evidence/git-head.jsonl",
       ".atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json"
     ],
-    "state": "active",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20260901174614-codex-gpt-5.6-3732a31967",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260901174614-codex-gpt-5.6-3732a31967\""
-    }
+    },
+    "reason": "Taskflow close remains blocked by active-claim scope drift after reseal; lifecycle evidence preserved and formal close deferred."
   },
   "owner": "codex-gpt-5.6",
   "startedAt": "2026-09-01T17:46:14.392Z",
@@ -183,8 +184,8 @@
     "createdAt": "2026-09-01T17:46:14.929Z",
     "status": "active"
   },
-  "lastTransitionId": "2026-09-01T17-49-40-073Z-renew-2213d1d2b0a1",
-  "lastTransitionAt": "2026-09-01T17:49:40.073Z",
+  "lastTransitionId": "2026-09-01T17-50-08-849Z-release-89cf86d64ead",
+  "lastTransitionAt": "2026-09-01T17:50:08.849Z",
   "ledgerContractVersion": "task-ledger/v1",
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
