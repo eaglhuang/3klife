@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-01T15-18-42-013Z-close-0a679ae78a78",
+  "taskId": "TASK-TMP-0011",
+  "action": "close",
+  "actorId": "codex-cleanup-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0011-reconcile-and-eliminate-dual-repository-dirty-residue.task.md",
+  "taskSha256": "sha256:0140a77ceaef8e3d1f85c61e7b9480ccf1cab513c4c71f7bce1bf71b4273a472",
+  "createdAt": "2026-09-01T15:18:42.013Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0011 --actor codex-cleanup-captain"
+}
