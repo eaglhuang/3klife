@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0349
 title: Bridge batch checkpoint runner recovery through verified lease
-status: planned
+status: done
 owner: unassigned
 priority: P0
 depends_on: []
