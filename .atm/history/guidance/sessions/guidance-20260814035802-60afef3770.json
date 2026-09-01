@@ -1,0 +1,231 @@
+{
+  "schemaId": "atm.guidanceSession",
+  "specVersion": "0.1.0",
+  "sessionId": "guidance-20260814035802-60afef3770",
+  "repositoryRoot": "C:\\Users\\User\\3KLife",
+  "goal": "Seal the current Plan 3.0–4.0 false-green closeout runbook additions as the planning authority without touching unrelated planning WIP.",
+  "createdAt": "2026-08-14T03:58:02.428Z",
+  "updatedAt": "2026-08-14T03:58:02.428Z",
+  "actor": "ATM CLI",
+  "orientation": {
+    "schemaId": "atm.projectOrientationReport",
+    "specVersion": "0.1.0",
+    "repositoryRoot": "C:\\Users\\User\\3KLife",
+    "detectedLanguages": [
+      "JavaScript",
+      "TypeScript"
+    ],
+    "packageManager": "npm",
+    "testEntrypoints": [
+      "harness:eslint: node tools_node/check-eslint-rules.js --fix-hint",
+      "test: node tools_node/run-tests.js",
+      "test:atm-atomize: node tools_node/test/atm-atomize.test.js",
+      "test:atm-closeout-regression: node tools_node/test/atm-closeout-regression.test.js",
+      "test:atm-flow: node tools_node/test/atm-flow.test.js",
+      "test:atm-governance-profile: node tools_node/test/atm-governance-profile.test.js",
+      "test:atm-kickoff-doctor-flow: node tools_node/test/atm-kickoff-doctor-flow.integration.test.js",
+      "test:atm-onboarding-arrows: node tools_node/test/atm-onboarding-arrows.test.js",
+      "test:atm-start-entry: node tools_node/test/atm-start-entry.test.js",
+      "test:atm-task-store-single-truth: node tools_node/test/validate-atm-task-store-single-truth.test.js",
+      "test:battle-skill-smoke: ts-node --transpile-only -r ./tests/register-cc-test-stub.js -r ./tests/register-tsconfig-test-paths.js --project tsconfig.test.json tests/run-battle-skill-smoke.ts",
+      "test:legacy-h2u-first-win-regression: node tools_node/test/legacy-h2u-first-win-regression.test.js",
+      "test:snapshot: node tools_node/headless-snapshot-test.js",
+      "test:snapshot:ci: node tools_node/headless-snapshot-test.js --ci",
+      "test:snapshot:update: node tools_node/headless-snapshot-test.js --update",
+      "test:ucuf: ts-node --project tsconfig.test.json tests/run-ucuf-only.ts",
+      "test:ucuf:governance: ts-node --project tsconfig.test.json tests/run-ucuf-only.ts --suite governance",
+      "test:ucuf:m10: ts-node --project tsconfig.test.json tests/run-m10-only.ts",
+      "test:ucuf:m11: ts-node --project tsconfig.test.json tests/run-m11-only.ts",
+      "test:watch: node tools_node/watch-tests.js",
+      "validate:atm-any-boundaries: node tools_node/validate-atm-any-boundaries.js",
+      "validate:atm-milestone: node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+      "validate:atm-stability-closeout: node tools_node/validate-atm-stability-closeout.js",
+      "validate:atm-task-store-single-truth: node tools_node/validate-atm-task-store-single-truth.js",
+      "validate:atm-task-store: node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+      "validate:full: node scripts/validate-full.ts --mode validate",
+      "validate:guide: node scripts/validate-guide.ts --mode validate",
+      "validate:h2u-evolution-pilot: node tools_node/validate-h2u-evolution-pilot.js",
+      "validate:language-csharp: node scripts/validate-language-csharp.ts --mode validate",
+      "validate:language-js: node scripts/validate-language-js.ts --mode validate",
+      "validate:legacy-h2u-first-win: node tools_node/validate-legacy-h2u-first-win.js",
+      "validate:legacy-h2u-launch: node tools_node/validate-legacy-h2u-launch.js",
+      "validate:map-curator: node scripts/validate-map-curator.ts --mode validate",
+      "validate:neutrality: node scripts/validate-neutrality.ts --mode validate",
+      "validate:plugin-sdk: node scripts/validate-plugin-sdk.ts",
+      "validate:python-adapter: node scripts/validate-python-adapter.ts --mode validate",
+      "validate:registry-backfill-sweep: node tools_node/validate-registry-backfill-sweep.js",
+      "validate:registry-sidecar-convergence: node tools_node/validate-registry-sidecar-convergence.js",
+      "validate:registry-version-governance: node tools_node/validate-registry-version-governance.js",
+      "validate:rule-guard-read-only: node tools_node/validate-rule-guard-read-only.js",
+      "validate:schemas: node scripts/validate-schemas.ts",
+      "validate:turn-artifact-retention: node tools_node/validate-turn-artifact-retention.js",
+      "validate:usage-evidence-shadow: node tools_node/validate-usage-evidence-shadow.js"
+    ],
+    "governanceFiles": [
+      ".atm/config.json",
+      ".atm/runtime/current-task.json",
+      ".atm/runtime/project-probe.json",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "atomic-registry.json"
+    ],
+    "adapterStatus": {
+      "status": "available",
+      "reason": "at least one adapter is available"
+    },
+    "availableAdapters": [
+      "@ai-atomic-framework/language-js",
+      "@ai-atomic-framework/language-python"
+    ],
+    "registryState": {
+      "status": "partial",
+      "paths": [
+        "atomic-registry.json"
+      ],
+      "count": 1
+    },
+    "mapState": {
+      "status": "present",
+      "paths": [
+        "atomic_workbench/maps",
+        ".atm/catalog/shards"
+      ],
+      "count": 1
+    },
+    "atomState": {
+      "status": "present",
+      "paths": [
+        "atomic_workbench/atoms",
+        "packages/core/src"
+      ],
+      "count": 6
+    },
+    "legacyUriSupport": {
+      "supported": true,
+      "scheme": "legacy",
+      "resolver": "local-git-compatible"
+    },
+    "hostGates": [],
+    "noTouchZones": [
+      {
+        "path": "tools_node/lib/dom-to-ui/draft-builder-core.js#processElement",
+        "reason": "release blocker: processElement is a trunk coordination function",
+        "scope": "file"
+      }
+    ],
+    "mutationPolicy": {
+      "requireSession": true,
+      "requireDryRunProposal": true,
+      "requireReviewBeforeApply": true,
+      "allowUnguidedInDev": true,
+      "allowUnguidedInCI": false
+    },
+    "legacyHotspots": [
+      {
+        "path": "packages/core/src/guidance/candidate-ranking-signal-model.ts",
+        "reason": "source file has 251 lines",
+        "riskLevel": "medium"
+      },
+      {
+        "path": "packages/language-csharp/src/csharp-csproj-risk.ts",
+        "reason": "source file has 292 lines",
+        "riskLevel": "medium"
+      },
+      {
+        "path": "packages/language-csharp/src/csharp-diagnostics.ts",
+        "reason": "source file has 350 lines",
+        "riskLevel": "medium"
+      },
+      {
+        "path": "scripts/lib/operational-bench/runner.ts",
+        "reason": "source file has 723 lines",
+        "riskLevel": "high"
+      },
+      {
+        "path": "scripts/validate-language-csharp.ts",
+        "reason": "source file has 1168 lines",
+        "riskLevel": "high"
+      }
+    ],
+    "configLegacyHotspots": [
+      {
+        "path": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "releaseBlockers": [
+          "processElement"
+        ],
+        "demandReportPath": ".atm/guidance/h2u-demand-report.json",
+        "existingAtomIndexPath": ".atm/guidance/h2u-atom-index.json"
+      }
+    ],
+    "releaseBlockers": [],
+    "releaseAdvisories": [],
+    "defaultLegacyFlow": "shadow",
+    "unknowns": []
+  },
+  "routeDecision": {
+    "schemaId": "atm.guidanceRouteDecision",
+    "specVersion": "0.1.0",
+    "recommendedRoute": "create-atom",
+    "confidence": 0.72,
+    "reasons": [
+      "No legacy or upgrade evidence was detected, so a new atom discovery path is the safest default."
+    ],
+    "routeChoices": [
+      {
+        "route": "create-atom",
+        "reason": "default for new capability work"
+      },
+      {
+        "route": "docs-first",
+        "reason": "choose this if the goal is only specification/documentation"
+      }
+    ],
+    "requiredEvidence": [
+      "bucket",
+      "title",
+      "description",
+      "logical-name"
+    ],
+    "blockedBy": [],
+    "nextCommand": "node atm.mjs guide create-atom --json"
+  },
+  "packet": {
+    "schemaId": "atm.guidancePacket",
+    "specVersion": "0.1.0",
+    "sessionId": "guidance-20260814035802-60afef3770",
+    "readFirst": [
+      "README.md",
+      "docs/QUICK_START.md"
+    ],
+    "doNotTouch": [
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#processElement"
+    ],
+    "nextCommand": "node atm.mjs guide create-atom --json",
+    "allowedCommands": [
+      "node atm.mjs orient --cwd . --json",
+      "node atm.mjs start --cwd . --goal \"<goal>\" --json",
+      "node atm.mjs next --cwd . --json",
+      "node atm.mjs explain --why blocked --json",
+      "node atm.mjs guide create-atom --json"
+    ],
+    "blockedCommands": [
+      "host mutation without active guidance session",
+      "atomize/infect/split apply without dry-run proposal",
+      "apply without human review approval",
+      "apply without rollback proof or rollback instructions",
+      "direct trunk function rewrite",
+      "release promote while release blockers exist"
+    ],
+    "requiredGates": [],
+    "missingEvidence": [
+      "bucket",
+      "title",
+      "description",
+      "logical-name"
+    ],
+    "rollbackHint": "Discard generated guidance proposals and rerun `node atm.mjs orient --cwd . --json` before retrying.",
+    "whyThisRoute": [
+      "No legacy or upgrade evidence was detected, so a new atom discovery path is the safest default."
+    ]
+  }
+}

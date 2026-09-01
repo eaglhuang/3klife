@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-PRF-0004",
+  "title": "Publish installable npm packages with clean-install proof",
+  "status": "done",
+  "milestone": null,
+  "dependencies": [
+    "taskId: TASK-PRF-0003"
+  ],
+  "acceptance": [
+    "ACC-1: Every supported public package and runtime dependency resolves from the registry as one coherent version set.",
+    "ACC-2: `npm pack` matches an allowlist and excludes tests, fixtures, private evidence and development-only files.",
+    "ACC-3: The exact candidate passes `--help`, `init`, one documented governed smoke flow and cleanup in a temporary registry.",
+    "ACC-4: A prerelease is independently installed from public npm and reports the expected version and digest.",
+    "ACC-5: Stable promotion requires fresh external clean-install proof and explicit human publication approval."
+  ],
+  "deliverables": [
+    "packages/cli/package.json",
+    "packages/create-atm/package.json",
+    ".github/workflows/release-npm.yml",
+    "scripts/validate-npm-clean-install.ts",
+    "tests/cli/npm-clean-install.test.ts",
+    "docs/release-trust-ops.md"
+  ],
+  "scopePaths": [
+    "package.json",
+    "packages/cli/package.json",
+    "packages/create-atm/package.json",
+    "packages/create-atm/src/index.ts",
+    ".github/workflows/release-npm.yml",
+    "scripts/build-package-dist.ts",
+    "scripts/validate-package-skeleton.ts",
+    "scripts/validate-npm-clean-install.ts",
+    "tests/cli/npm-clean-install.test.ts",
+    "docs/release-trust-ops.md"
+  ],
+  "validators": [
+    "node --strip-types scripts/validate-package-skeleton.ts",
+    "node --strip-types tests/cli/npm-clean-install.test.ts",
+    "node --strip-types scripts/validate-npm-clean-install.ts"
+  ],
+  "planningRepo": "C:/Users/User/3KLife",
+  "targetRepo": "C:/Users/User/AI-Atomic-Framework",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "deprecate-release-and-revert-commit",
+  "rollbackNotes": "Deprecate a broken prerelease, restore the prior dist-tag and revert the release commit; never overwrite a version.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": "atom.npm-package.runtime-allowlist",
+    "atomCid": "cid:atom.npm-package.runtime-allowlist",
+    "mapUpdates": [
+      "atomic_workbench/atoms/ATM-CORE-0006/atom.spec.json"
+    ]
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "atm-product-proof/tasks/TASK-PRF-0004-publish-installable-npm-packages-with-clean-install-proof.task.md",
+    "sectionTitle": "TASK-PRF-0004",
+    "headingLine": 125,
+    "hash": "c7726946901ee8a5"
+  },
+  "importedAt": "2026-08-30T14:50:11.516Z",
+  "lastTransitionId": "2026-08-30T14-50-11-527Z-import-509761d58344",
+  "lastTransitionAt": "2026-08-30T14:50:11.527Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-PRF-0001",
+  "title": "Author ATM Product Proof Plan",
+  "status": "planned",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [
+    "Deliverables and validators are filled before import or implementation."
+  ],
+  "deliverables": [],
+  "scopePaths": [],
+  "validators": [],
+  "planningRepo": "docs",
+  "targetRepo": "C:\\Users\\User\\AI-Atomic-Framework",
+  "closureAuthority": "planning-repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "atm-product-proof/tasks/TASK-PRF-0001-author-atm-product-proof-plan.task.md",
+    "sectionTitle": "TASK-PRF-0001",
+    "headingLine": 28,
+    "hash": "558566ca1a11fbbb"
+  },
+  "importedAt": "2026-08-13T16:07:55.339Z",
+  "lastTransitionId": "2026-08-13T16-07-55-345Z-import-ed1e96645a9d",
+  "lastTransitionAt": "2026-08-13T16:07:55.345Z",
+  "ledgerContractVersion": "task-ledger/v1"
+}

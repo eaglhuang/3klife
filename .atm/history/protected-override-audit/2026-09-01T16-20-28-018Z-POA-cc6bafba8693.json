@@ -1,0 +1,23 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-cc6bafba8693",
+  "recordedAt": "2026-09-01T16:20:28.018Z",
+  "actorId": "codex-gpt-5.6",
+  "taskId": "TASK-PRF-0004",
+  "surface": "tasks reconcile",
+  "command": "node atm.mjs tasks reconcile --task TASK-PRF-0004 --actor codex-gpt-5.6 --delivery-commit 12f3eed7e --json",
+  "flags": [],
+  "permission": "backend.tasks.reconcile",
+  "leaseId": "EMG-TASK-PRF-0004-6187f485c5",
+  "reason": "Direct reconcile backend closeback.",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.reconcile"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-09-01T16-20-28-016Z-EMG-TASK-PRF-0004-6187f485c5.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}
