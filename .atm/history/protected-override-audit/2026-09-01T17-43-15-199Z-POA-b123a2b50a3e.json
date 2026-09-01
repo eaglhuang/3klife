@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.protectedOverrideAuditEvent.v1",
+  "eventId": "POA-b123a2b50a3e",
+  "recordedAt": "2026-09-01T17:43:15.199Z",
+  "actorId": null,
+  "taskId": "TASK-TMP-0015",
+  "surface": "tasks import --write recovery flags",
+  "command": "node atm.mjs tasks import --from temporary-governance/tasks/TASK-TMP-0015-classify-tracked-runtime-pointers-and-transient-atm-residue.task.md --write --force --json",
+  "flags": [
+    "--force"
+  ],
+  "permission": "backend.tasks.import.write",
+  "leaseId": "EMG-TASK-TMP-0015-0e0af18d16",
+  "reason": "Force import would overwrite a task with an active or unreadable claim state.",
+  "skippedChecks": [
+    "protected-backend-surface",
+    "backend.tasks.import.write"
+  ],
+  "touchedFiles": [],
+  "outcome": "authorized",
+  "failureCode": null,
+  "emergencyUsePath": "C:\\Users\\User\\3KLife\\.atm\\runtime\\emergency\\uses\\2026-09-01T17-43-15-198Z-EMG-TASK-TMP-0015-0e0af18d16.json",
+  "parentEventId": null,
+  "repairCandidate": null
+}

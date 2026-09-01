@@ -1,0 +1,26 @@
+{
+  "schemaId": "atm.laneSessionEvent.v1",
+  "specVersion": "0.1.0",
+  "eventId": "2026-09-01T17-31-45-440Z-adopt-9c9b6f1a9279",
+  "laneId": "lane-20260901173027-codex-gpt-5.6-7f36bb97b3",
+  "sequence": 1,
+  "action": "adopt",
+  "actorId": "codex-gpt-5.6",
+  "createdAt": "2026-09-01T17:31:45.440Z",
+  "details": {
+    "previousActorId": "codex-gpt-5.6",
+    "previousStatus": "active",
+    "reason": null,
+    "authorization": "confirm",
+    "ttlPhaseBefore": "fresh",
+    "reboundSessionIds": [
+      "session-20260901173027-codex-gpt-5.6-TASK-TMP-0014-74a4c43651"
+    ],
+    "reboundTaskIds": [
+      "TASK-TMP-0014"
+    ],
+    "preservedLeaseIds": [
+      "lease-a98e8cfe94de"
+    ]
+  }
+}

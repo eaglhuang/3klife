@@ -87,6 +87,11 @@ Design System*.zip
 .atm/runtime/version-cache.json
 .atm/runtime/welcome.lineage.json
 .atm/runtime/guidance/
+.atm/runtime/identity/default.json
+.atm/runtime/lane-sessions/
+.atm/runtime/telemetry/
+.atm/runtime/broker-intents/
+.atm/runtime/broker-shared-surface-freezes.json
 .atm/runtime/*-audit.json
 .atm/runtime/*.raw.txt
 .atm/runtime/git-commit-attempts/

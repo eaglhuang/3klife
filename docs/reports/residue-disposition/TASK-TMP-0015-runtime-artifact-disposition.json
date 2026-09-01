@@ -1,0 +1,46 @@
+{
+  "schemaId": "atm.runtimeArtifactDisposition.v1",
+  "taskId": "TASK-TMP-0015",
+  "decisions": [
+    {
+      "paths": [
+        ".atm/runtime/guidance/active-session.json",
+        ".atm/runtime/identity/default.json"
+      ],
+      "action": "C",
+      "authority": "ATM guidance session-store and identity commands write host-local runtime state",
+      "proof": "Both paths are tracked yet differ only by current session/actor metadata; .atm/runtime/guidance/ is already ignored, proving the intended lifecycle is regenerated local state.",
+      "operation": "remove from Git index while preserving the working-tree files; add exact ignore rules"
+    },
+    {
+      "paths": [
+        ".atm/runtime/lane-sessions/**",
+        ".atm/runtime/telemetry/**",
+        ".atm/runtime/broker-intents/**",
+        ".atm/runtime/broker-shared-surface-freezes.json"
+      ],
+      "action": "C",
+      "authority": "ATM runtime command receipts",
+      "proof": "Residue diagnosis marks broker state disposable after the owning lane completes; these records are host-local mutable coordination state, not durable evidence.",
+      "operation": "add narrow ignore rules; retain current bytes on disk for the active lane"
+    },
+    {
+      "paths": [
+        ".atm/history/task-events/TASK-TMP-0014/**",
+        ".atm/history/tasks/TASK-TMP-0014.json",
+        ".atm/history/session-events/**",
+        ".atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json",
+        ".atm/history/task-events/TASK-TMP-0015/**",
+        ".atm/history/tasks/TASK-TMP-0015.json"
+      ],
+      "action": "A",
+      "authority": "immutable task and session history",
+      "proof": "These are governance evidence, not runtime caches. They remain visible for the taskflow close/commit lifecycle and must never be hidden by .gitignore.",
+      "operation": "include only the current task's lifecycle bundle through governed close and commit"
+    }
+  ],
+  "nonActions": [
+    "No raw deletion of active-task evidence.",
+    "No change to TASK-MBX-0001 or its owner-controlled paths."
+  ]
+}
