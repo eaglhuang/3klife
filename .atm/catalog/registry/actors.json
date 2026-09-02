@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-09-01T21:13:11.037Z",
+  "generatedAt": "2026-09-02T02:35:39.591Z",
   "actors": [
     {
       "actorId": "codex-captain-20260809",
@@ -54,10 +54,10 @@
       "actorKind": "ai-agent",
       "displayName": "codex-gpt-5.4-mini",
       "editor": "codex",
-      "gitName": "Codex",
-      "gitEmail": "codex@localhost",
+      "gitName": "codex-gpt-5.4-mini",
+      "gitEmail": "codex-gpt-5.4-mini@atm.local",
       "createdAt": "2026-06-11T03:22:21.756Z",
-      "updatedAt": "2026-09-01T21:13:11.037Z"
+      "updatedAt": "2026-09-02T02:35:39.591Z"
     },
     {
       "actorId": "codex-gpt-5.5",
