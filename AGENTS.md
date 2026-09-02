@@ -46,7 +46,7 @@ Treat these ATM runtime files as supporting state only:
 
 本檔補充專案內的高優先級 Agent 行為規則。
 
-**必經入口**：任何 Agent 先讀 [docs/agent-identity-map.md](docs/agent-identity-map.md)，完成 `AGENT_IDENTITY` 與 repo-local git 身份設定，再進入其他規則。
+**必經入口**：任何 Agent 先讀 [docs/agent-identity-map.md](docs/agent-identity-map.md)，並用 `node atm.mjs actor adopt --editor <editor> --model <model> --kind ai-agent --json` 完成 `AGENT_IDENTITY` 與 repo-local git 身份設定，再進入其他規則。
 
 ## ⛔ 硬規則 #0：接任務卡前必須先上鎖（不可省略）
 
