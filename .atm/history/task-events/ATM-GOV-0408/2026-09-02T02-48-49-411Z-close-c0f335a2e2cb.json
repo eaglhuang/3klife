@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-02T02-48-49-411Z-close-c0f335a2e2cb",
+  "taskId": "ATM-GOV-0408",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0408-prove-bounded-validator-deadlines-and-single-writer-evidence-concurrency.task.md",
+  "taskSha256": "sha256:33f3a28f6a65756191dbcff942b2912d812cab98cde212142da72ff36f3a1baf",
+  "createdAt": "2026-09-02T02:48:49.411Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0408 --actor codex-gpt-5.4-mini"
+}
