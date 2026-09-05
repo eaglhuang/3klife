@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-TMP-0016",
   "title": "Commit final 3K cleanup receipts",
-  "status": "open",
+  "status": "review",
   "milestone": null,
   "dependencies": [],
   "acceptance": [
@@ -132,78 +132,82 @@
     "findings": []
   },
   "claim": {
-    "actorId": "codex-gpt-5.6",
-    "leaseId": "lease-56094d7beb2c",
-    "claimedAt": "2026-09-01T17:46:14.392Z",
-    "heartbeatAt": "2026-09-01T17:50:03.816Z",
+    "actorId": "codex-gpt-5.4-mini",
+    "leaseId": "lease-b17a9fa711c1",
+    "claimedAt": "2026-09-05T12:29:01.428Z",
+    "heartbeatAt": "2026-09-05T12:32:10.382Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/tasks/TASK-TMP-0016.json",
       ".atm/history/evidence/git-head.jsonl",
-      ".atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json"
+      ".atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json",
+      ".atm/history/evidence/TASK-TMP-0016.*",
+      ".atm/history/task-events/TASK-TMP-0016/**",
+      "docs/reports/residue-disposition/TASK-TMP-0016-final-receipt-index.json"
     ],
     "state": "released",
     "laneSession": {
-      "laneSessionId": "lane-20260901174614-codex-gpt-5.6-3732a31967",
+      "laneSessionId": "lane-20260905122901-codex-gpt-5.4-mini-96c33c66bc",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260901174614-codex-gpt-5.6-3732a31967\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260905122901-codex-gpt-5.4-mini-96c33c66bc\""
     },
-    "reason": "Taskflow close remains blocked by active-claim scope drift after reseal; lifecycle evidence preserved and formal close deferred."
+    "reason": "Historical receipt index exists, but current batch gate requires a present non-.atm deliverable diff; retain for governed review."
   },
-  "owner": "codex-gpt-5.6",
+  "owner": "codex-gpt-5.4-mini",
   "startedAt": "2026-09-01T17:46:14.392Z",
-  "startedBySessionId": "session-20260901174614-codex-gpt-5.6-TASK-TMP-0016-7244f1133c",
+  "startedBySessionId": "session-20260905122901-codex-gpt-5.4-mini-TASK-TMP-0016-4557b7bdb4",
   "taskDirectionLock": {
     "schemaId": "atm.taskDirectionLock.v1",
     "specVersion": "0.1.0",
     "taskId": "TASK-TMP-0016",
-    "batchId": null,
-    "scopeKey": null,
-    "queueId": null,
-    "queueIndex": null,
+    "batchId": "batch-2799e5d198ea",
+    "scopeKey": "tasks-e114568e95fe",
+    "queueId": "queue-684ccb259eca146e",
+    "queueIndex": 0,
     "allowedFiles": [
       ".atm/history/evidence/git-head.jsonl",
       ".atm/history/evidence/TASK-TMP-0014.live-index-reconciliation.json",
       ".atm/history/evidence/TASK-TMP-0016.*",
       ".atm/history/task-events/TASK-TMP-0016/**",
-      ".atm/history/tasks/TASK-TMP-0016.json"
+      ".atm/history/tasks/TASK-TMP-0016.json",
+      "docs/reports/residue-disposition/TASK-TMP-0016-final-receipt-index.json"
     ],
     "planningReadOnlyPaths": [],
     "planningMirrorPaths": [],
     "allowPlanningMirror": false,
     "promptHash": "d30f6ad5920c9d2239ed02265e302876f34ea017fd79a2227dc0df434d26c5c5",
-    "actorId": "codex-gpt-5.6",
-    "sessionId": "session-20260901174614-codex-gpt-5.6-TASK-TMP-0016-7244f1133c",
+    "actorId": "codex-gpt-5.4-mini",
+    "sessionId": "session-20260905122901-codex-gpt-5.4-mini-TASK-TMP-0016-4557b7bdb4",
     "laneSession": {
-      "laneSessionId": "lane-20260901174614-codex-gpt-5.6-3732a31967",
+      "laneSessionId": "lane-20260905122901-codex-gpt-5.4-mini-96c33c66bc",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260901174614-codex-gpt-5.6-3732a31967\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260905122901-codex-gpt-5.4-mini-96c33c66bc\""
     },
-    "createdAt": "2026-09-01T17:46:14.929Z",
+    "createdAt": "2026-09-05T12:29:07.097Z",
     "status": "active"
   },
-  "lastTransitionId": "2026-09-01T17-50-08-849Z-release-89cf86d64ead",
-  "lastTransitionAt": "2026-09-01T17:50:08.849Z",
+  "lastTransitionId": "2026-09-05T12-32-10-383Z-close-d88276b6cc36",
+  "lastTransitionAt": "2026-09-05T12:32:10.383Z",
   "ledgerContractVersion": "task-ledger/v1",
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-ad7b2304c71eb9d1",
-    "ticketDigest": "sha256:ad7b2304c71eb9d179d69f233b5a77ba701241c7c8f8a035d8b922ea7bbcfc3b",
+    "ticketId": "wat-d16bfd137353b361",
+    "ticketDigest": "sha256:d16bfd137353b3617cb858377cfb997b23c06222d1f392fab2cdeea5cb6998ad",
     "taskId": "TASK-TMP-0016",
     "origin": "claim",
-    "actorId": "codex-gpt-5.6",
-    "laneSessionId": "lane-20260901174614-codex-gpt-5.6-3732a31967",
-    "claimGeneration": "lease-56094d7beb2c",
-    "issuedAt": "2026-09-01T17:49:39.994Z",
-    "expiresAt": "2026-09-01T18:19:39.994Z",
-    "scopeDigest": "sha256:c0c8d91f7c2b7eb2f488d14979a395b26eaac5454f17f6a8c0df832ab16c98b8",
+    "actorId": "codex-gpt-5.4-mini",
+    "laneSessionId": "lane-20260905122901-codex-gpt-5.4-mini-96c33c66bc",
+    "claimGeneration": "lease-b17a9fa711c1",
+    "issuedAt": "2026-09-05T12:29:01.428Z",
+    "expiresAt": "2026-09-05T12:59:01.428Z",
+    "scopeDigest": "sha256:afc523f1853f9beda1947586c3f663c29344b6e22c88897c493029779e3bdee9",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-09-01T17:49:39.994Z"
+      "selectedAt": "2026-09-05T12:29:01.428Z"
     },
     "grants": [
       {
@@ -213,9 +217,10 @@
           ".atm/history/evidence/TASK-TMP-0016.*",
           ".atm/history/evidence/git-head.jsonl",
           ".atm/history/task-events/TASK-TMP-0016/**",
-          ".atm/history/tasks/TASK-TMP-0016.json"
+          ".atm/history/tasks/TASK-TMP-0016.json",
+          "docs/reports/residue-disposition/TASK-TMP-0016-final-receipt-index.json"
         ],
-        "digest": "sha256:eb9864eb6306fd322adb130b6b9550bd73e1af18adf46e3b9deac3769bffa95b"
+        "digest": "sha256:79bd651cbd7b4cf388143dc443f8ff230460b2cc350a2a3aa96d8ec3fcb8af07"
       },
       {
         "kind": "lifecycle-operation",
@@ -248,5 +253,12 @@
       "tempRoot": ".atm/runtime/work-admission-temp",
       "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
     }
-  }
+  },
+  "reservedAt": "2026-09-05T12:29:01.420Z",
+  "promotedAt": "2026-09-05T12:29:01.424Z",
+  "startedByActor": "codex-gpt-5.4-mini",
+  "closedAt": "2026-09-05T12:32:10.382Z",
+  "closedByActor": "codex-gpt-5.4-mini",
+  "closedBySessionId": "session-20260905122901-codex-gpt-5.4-mini-TASK-TMP-0016-4557b7bdb4",
+  "closeReason": "Historical receipt index exists, but current batch gate requires a present non-.atm deliverable diff; retain for governed review."
 }
