@@ -27,15 +27,25 @@
     "TASK-SKL-0011",
     "TASK-SKL-0012"
   ],
-  "currentIndex": 1,
-  "currentTaskId": "ATM-GOV-0382",
+  "currentIndex": 2,
+  "currentTaskId": "TASK-CID-0024",
   "commitMode": "per-task",
   "checkpointSize": 3,
   "pendingCommitTaskId": null,
   "status": "active",
   "createdByActor": "codex-gpt-5.4-mini",
   "createdAt": "2026-09-05T12:25:02.128Z",
-  "updatedAt": "2026-09-05T12:32:17.458Z",
-  "skippedTasks": [],
+  "updatedAt": "2026-09-05T12:34:05.598Z",
+  "skippedTasks": [
+    {
+      "schemaId": "atm.batchSkippedTask.v1",
+      "taskId": "ATM-GOV-0382",
+      "reason": "Target AI-Atomic-Framework ledger already reports ATM-GOV-0382 done; no duplicate delivery or closeout mutation.",
+      "skippedByActor": "codex-gpt-5.4-mini",
+      "skippedAt": "2026-09-05T12:34:05.595Z",
+      "batchIndex": 1,
+      "resumeCommand": "node atm.mjs batch resume --task ATM-GOV-0382 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+    }
+  ],
   "hold": null
 }

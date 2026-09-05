@@ -1,0 +1,13 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T12-34-05-599Z-batch-skip-9149f4c51aff",
+  "taskId": "ATM-GOV-0382",
+  "action": "batch-skip",
+  "actorId": "codex-gpt-5.4-mini",
+  "batchId": "batch-2799e5d198ea",
+  "reason": "Target AI-Atomic-Framework ledger already reports ATM-GOV-0382 done; no duplicate delivery or closeout mutation.",
+  "batchIndex": 1,
+  "createdAt": "2026-09-05T12:34:05.599Z",
+  "command": "node atm.mjs batch skip --task ATM-GOV-0382 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+}
