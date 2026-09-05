@@ -45,6 +45,7 @@ Every `TASK-GIT-*` card is a planning card for the ATM framework repository unle
 | [TASK-GIT-0021](./TASK-GIT-0021-cross-adapter-controlled-execution-dogfood-and-rollout-evidence.task.md) | G13 | Cross-adapter controlled-execution dogfood and rollout evidence | superseded | TASK-GIT-0019 | merged into rollout acceptance |
 | [TASK-GIT-0027](./TASK-GIT-0027-index-lease-consumption-and-atomic-staged-bundle-parking.task.md) | G7.1 | Index lease consumption and atomic staged-bundle parking | planned | TASK-GIT-0015 | governed index lease authority |
 | [TASK-GIT-0028](./TASK-GIT-0028-task-scoped-commit-transaction-adapter-extraction-and-index-lease-bridge.task.md) | G7.2 | Task-scoped commit transaction adapter extraction and index lease bridge | planned | TASK-GIT-0015, TASK-GIT-0027 | shared commit / closeout transaction adapter |
+| [TASK-GIT-0032](./TASK-GIT-0032-broker-managed-transactional-commit-queue-and-receipt-closeout.task.md) | G17.3 | Broker-managed transactional commit queue and receipt closeout | planned | TASK-GIT-0029, TASK-GIT-0030, TASK-GIT-0031 | broker / commit / runner-sync |
 
 ## Sequencing Note
 

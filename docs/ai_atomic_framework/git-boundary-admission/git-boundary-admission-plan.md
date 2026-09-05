@@ -33,6 +33,7 @@ related_tasks:
   - TASK-GIT-0024
   - TASK-GIT-0025
   - TASK-GIT-0026
+  - TASK-GIT-0032
 updated_at: 2026-07-29T12:00:00+08:00
 ---
 
@@ -429,3 +430,28 @@ exact sealed receipts and emergency preservation from ordinary unprovenanced
 commits without treating its own forward-attestation evidence as ticket
 out-of-scope. It is the required gate before retrying a push blocked solely by
 `ATM_WRITE_TICKET_MISSING` in historical local commits.
+
+## G17.3 - Broker-Managed Transactional Commit Queue and Receipt Closeout
+
+`TASK-GIT-0032` is the successor card for `ATM-BUG-2026-07-22-228`. The
+existing sealed commit and runner-publication paths prove individual delivery
+boundaries, but a shared worktree still requires a human to supervise staging,
+commit serialization, and runner-sync receipt completion. This follow-up adds
+one broker-owned transactional request path for bounded commit delivery and
+post-close runner-sync disposition; it does not reopen the sealed attribution
+or publication inventories owned by G9/G14/G17.
+
+The card must keep all preparation, validation, and evidence generation outside
+the Tier 2 shared-write interval. A request carries its actor/task identity,
+allowed files, sealed source/base digest, evidence references, commit message,
+and artifact surface. The broker serializes only the irreducible index/ref
+transition, stages exactly the admitted bundle, returns a verifiable receipt,
+and releases immediately on success or a resumable failure. Queue ordering,
+CAS/head movement, foreign staged-byte preservation, and runner-sync receipt
+disposition must be observable without manual captain choreography.
+
+This work is intentionally separate from the Critical cross-card residue
+authority decision in `ATM-BUG-2026-08-12-001`; it may not auto-drain another
+task's reconciliation residue or weaken close admission. It must reuse the
+canonical attribution, inventory, broker, and receipt authorities rather than
+introducing a second queue or artifact registry.
