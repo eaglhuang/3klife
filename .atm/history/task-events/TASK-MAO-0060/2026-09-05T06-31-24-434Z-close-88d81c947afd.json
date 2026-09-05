@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T06-31-24-434Z-close-88d81c947afd",
+  "taskId": "TASK-MAO-0060",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0060-frozen-runner-checkpoint-recovery-bridge.task.md",
+  "taskSha256": "sha256:d88b30fe273c0f66a1eb2014890620afb6bdb7339cd1653eb15c5a416bcaddd3",
+  "createdAt": "2026-09-05T06:31:24.434Z",
+  "command": "node atm.mjs tasks close --task TASK-MAO-0060 --actor codex-gpt-5.4-mini"
+}

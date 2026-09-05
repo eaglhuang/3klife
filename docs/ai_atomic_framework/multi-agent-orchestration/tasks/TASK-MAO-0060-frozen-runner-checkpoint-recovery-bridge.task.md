@@ -2,7 +2,7 @@
 task_id: TASK-MAO-0060
 doc_id: doc_mao_0060
 title: "frozen runner checkpoint recovery bridge"
-status: planned
+status: done
 owner: atm-core
 priority: P1
 milestone: M8F
@@ -128,6 +128,15 @@ outOfScope:
   - "Do not decide cross-card shared-index authority; ATM-BUG-2026-08-12-001 remains owner-policy deferred."
   - "Do not run npm publication or modify release tags."
   - "Do not edit .atm/runtime/** directly or use native Git as the normal recovery path."
+completed_at: "2026-09-05T06:31:24.434Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-05T06:31:24.434Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-05T06-31-24-434Z-close-88d81c947afd"
+lastTransitionAt: "2026-09-05T06:31:24.434Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6c51ccf74870ec8d929ec0e333d99a59c9c01759"
 ---
 
 # TASK-MAO-0060 - frozen runner checkpoint recovery bridge
