@@ -92,3 +92,9 @@ atomizationImpact:
       disposition: inline
       inlineReason: Existing runner-sync admission seam is below the extraction threshold and already owns the compatibility decision.
 errorCodes: []
+
+## ATM-GOV-0412
+
+This isolated follow-up plan is the single-card import source for the runner
+compatibility digest precondition and owned recover-push timeout proof. The
+parent end-to-end plan remains the governing program context.
