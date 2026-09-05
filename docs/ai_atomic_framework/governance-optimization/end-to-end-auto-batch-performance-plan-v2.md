@@ -969,3 +969,14 @@ flowchart LR
 - Code writes 受 task claim 與 broker/steward rules 治理；docs/planning writes 不進 code broker，但 git commit 仍需精確 stage 自己的檔案。
 - `--push` 是明確 opt-in；正式 dogfood 命令固定帶 `--push`，且完成條件包含 target `origin/main` 與 planning `origin/master` 都等於各自預期 SHA。
 - Branch/worktree 依「v2.1 INV-ATM-008 / R3 supersession」節執行：live repo全面禁止branch/worktree lane；僅0202 disposable benchmark repo可使用真Git branch+merge。
+
+### ATM-GOV-0412 - runner compatibility digest precondition
+
+This follow-up is opened from `ATM-BUG-2026-08-14-009`. The existing same-commit
+git-head provenance repair is published, but the governed commit path still needs
+an immutable compatibility proof before it performs an irreversible write. The
+successor must bind the public transaction contract to a deterministic digest,
+fail before staging or committing when the frozen runner is incompatible, and
+prove that a recover-push failure terminates owned child processes while leaving
+an owner-bound timeout receipt. It must not change the shared 420000ms boundary,
+the protected evidence policy, or any foreign residue behavior.
