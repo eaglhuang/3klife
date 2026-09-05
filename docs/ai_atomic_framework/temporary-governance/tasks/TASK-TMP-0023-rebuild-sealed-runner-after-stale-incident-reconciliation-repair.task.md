@@ -1,7 +1,7 @@
 ---
 task_id: TASK-TMP-0023
 title: Rebuild sealed runner after stale incident reconciliation repair
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on: []
@@ -39,6 +39,15 @@ validators:
   - node --strip-types packages/core/src/broker/__tests__/cross-task-mutation-terminal-entitlement.test.ts
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-05T12:19:57.198Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-05T12:19:57.198Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-05T12-19-57-198Z-close-145640673b8d"
+lastTransitionAt: "2026-09-05T12:19:57.198Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "7d660768ae56f055152180731e9510dd6a9f3870"
 ---
 
 # TASK-TMP-0023 Rebuild sealed runner after stale incident reconciliation repair

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T12-19-57-198Z-close-145640673b8d",
+  "taskId": "TASK-TMP-0023",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0023-rebuild-sealed-runner-after-stale-incident-reconciliation-repair.task.md",
+  "taskSha256": "sha256:102bf3803486808390731a2e752502374dfab4bbb77b67812322783a6aec24e3",
+  "createdAt": "2026-09-05T12:19:57.198Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0023 --actor codex-gpt-5.4-mini"
+}
