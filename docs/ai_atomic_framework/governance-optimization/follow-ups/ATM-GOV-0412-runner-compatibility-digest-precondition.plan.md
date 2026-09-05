@@ -92,9 +92,29 @@ atomizationImpact:
       disposition: inline
       inlineReason: Existing runner-sync admission seam is below the extraction threshold and already owns the compatibility decision.
 errorCodes: []
+---
 
-## ATM-GOV-0412
+## ATM-GOV-0412 Enforce runner compatibility digest before governed writes
 
-This isolated follow-up plan is the single-card import source for the runner
-compatibility digest precondition and owned recover-push timeout proof. The
-parent end-to-end plan remains the governing program context.
+### Deliverables
+- packages/cli/src/commands/framework-development/runner-sync-admission.ts
+- packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
+- packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
+- tests/cli/runner-compatibility-digest-precondition.test.ts
+- tests/cli/recover-push-fail-timeout.test.ts
+
+### Scope
+- packages/cli/src/commands/framework-development/runner-sync-admission.ts
+- packages/cli/src/commands/framework-development/runner-publication-lifecycle.ts
+- packages/cli/src/commands/git-governance/record-only-block-lifecycle-bridge.ts
+- tests/cli/runner-compatibility-digest-precondition.test.ts
+- tests/cli/recover-push-fail-timeout.test.ts
+
+### Validators
+- node --strip-types tests/cli/runner-compatibility-digest-precondition.test.ts
+- node --strip-types tests/cli/recover-push-fail-timeout.test.ts
+- npm run typecheck
+
+### Acceptance
+- ACC-1: The runner-sync admission report includes a digest-bound compatibility result, and a stale frozen runner is rejected before governed writes.
+- ACC-2: Recover-push child processes remain bounded by the governed timeout policy.
