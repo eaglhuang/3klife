@@ -227,3 +227,25 @@ Blocked until later:
 - shared file / scope drift 必須可追溯；存在不清楚情況就 block，不可硬關。
 - wave diff 若無法切片到 per-task evidence，則標為 partial 或 blocked，不得直接 done。
 - Unknown / ambiguous scope 需列為 open risk，直到可治理後才能放行。
+
+## 10. Follow-up: frozen-runner checkpoint recovery bridge
+
+The 2026-07-29 dogfood exposed a remaining lifecycle gap: a batch checkpoint
+with staged source changes can correctly refuse a stale frozen runner, but the
+operator has no governed recovery path that publishes the candidate runner or
+creates a VCS-neutral commit candidate before closeout. This follow-up is
+owned by the existing MAO family and must preserve the source-first fail-closed
+boundary already repaired in the prior lane.
+
+Acceptance is a deterministic red/green contract for both recovery choices:
+
+- a staged-source candidate can obtain a brokered runner-publication ticket,
+  rebuild against the candidate base, and resume checkpoint only after the
+  sealed runner matches that candidate;
+- when publication is not admissible, the command returns a governed
+  commit-candidate bridge with an executable recovery command and no partial
+  task close mutation;
+- source-first execution remains read-only and byte-identical when writes are
+  forbidden;
+- stale candidate, changed HEAD, missing ticket, and failed publication remain
+  fail-closed with the existing error contracts.

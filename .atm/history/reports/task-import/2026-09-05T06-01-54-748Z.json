@@ -1,0 +1,22 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-09-05T06:01:54.748Z",
+  "planPath": "multi-agent-orchestration/tasks/TASK-MAO-0060-frozen-runner-checkpoint-recovery-bridge.task.md",
+  "taskCount": 1,
+  "writtenPaths": [
+    ".atm/history/tasks/TASK-MAO-0060.json"
+  ],
+  "taskIds": [
+    "TASK-MAO-0060"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-MAO-0060",
+      "planPath": "multi-agent-orchestration/tasks/TASK-MAO-0060-frozen-runner-checkpoint-recovery-bridge.task.md",
+      "sectionTitle": "TASK-MAO-0060",
+      "headingLine": 133,
+      "hash": "d7d08172589feb35"
+    }
+  ]
+}
