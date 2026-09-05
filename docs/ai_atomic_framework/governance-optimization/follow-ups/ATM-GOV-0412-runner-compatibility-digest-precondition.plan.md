@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0412
 title: Enforce runner compatibility digest before governed writes
-status: planned
+status: done
 owner: atm-git-governance
 priority: P1
 depends_on: []

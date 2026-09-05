@@ -1,0 +1,16 @@
+{
+  "schemaId": "atm.gitPushAttemptStatus.v1",
+  "actorId": "codex-goal-20260906",
+  "taskId": null,
+  "branch": "master",
+  "remote": "origin",
+  "status": "pushed",
+  "phase": "complete",
+  "dryRun": false,
+  "startedAt": "2026-09-05T17:40:13.355Z",
+  "updatedAt": "2026-09-05T17:40:16.931Z",
+  "headShaBeforePush": "e2ad94e71a9cf3cc81ec45f0932f3c4155283007",
+  "headShaAfterAttempt": "e2ad94e71a9cf3cc81ec45f0932f3c4155283007",
+  "admissionOutcome": "allow",
+  "remoteShaAfterPush": "e2ad94e71a9cf3cc81ec45f0932f3c4155283007"
+}
