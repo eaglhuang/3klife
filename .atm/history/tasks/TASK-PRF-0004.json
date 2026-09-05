@@ -61,10 +61,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "atm-product-proof/tasks/TASK-PRF-0004-publish-installable-npm-packages-with-clean-install-proof.task.md",
+    "planPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0004-publish-installable-npm-packages-with-clean-install-proof.task.md",
     "sectionTitle": "TASK-PRF-0004",
     "headingLine": 125,
-    "hash": "c7726946901ee8a5"
+    "hash": "c7726946901ee8a5",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "atm-product-proof/tasks/TASK-PRF-0004-publish-installable-npm-packages-with-clean-install-proof.task.md",
+      "planningCommitSha": "f6f3ea94a8eb70295b13171120c154368db5605c",
+      "contentDigest": "sha256:c7726946901ee8a5ad133dfd35c2819a6d3ed08747688653b242e8403f5a69dd",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:47.586Z"
+    }
   },
   "importedAt": "2026-08-30T14:50:11.516Z",
   "lastTransitionId": "2026-08-30T14-50-11-527Z-import-509761d58344",

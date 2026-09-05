@@ -66,10 +66,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md",
+    "planPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md",
     "sectionTitle": "TASK-RFT-0025",
     "headingLine": 69,
-    "hash": "8a2257b15b86813a"
+    "hash": "8a2257b15b86813a",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md",
+      "planningCommitSha": "5f53e5059d117a0fb5a03e2512539af7c98be46b",
+      "contentDigest": "sha256:cc6830b122d6e70677fadd9edf2530bb9ee6bbf8822a1aa0918894a98899580a",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:48.863Z"
+    }
   },
   "importedAt": "2026-07-18T10:32:34.340Z",
   "lastTransitionId": "2026-07-18T10-32-34-346Z-import-add463072915",

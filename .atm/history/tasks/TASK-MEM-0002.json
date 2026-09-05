@@ -67,10 +67,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "atm-memory-governance/tasks/TASK-MEM-0002-memory-manager-tooling.task.md",
+    "planPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0002-memory-manager-tooling.task.md",
     "sectionTitle": "TASK-MEM-0002",
     "headingLine": 40,
-    "hash": "394dee0759f75a4e"
+    "hash": "394dee0759f75a4e",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "atm-memory-governance/tasks/TASK-MEM-0002-memory-manager-tooling.task.md",
+      "planningCommitSha": "5f53e5059d117a0fb5a03e2512539af7c98be46b",
+      "contentDigest": "sha256:6d946734005f3f9f1a20da8c92fa297c5d1cf6b5b28c1b448dc38fc2f96ffb0f",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:46.880Z"
+    }
   },
   "importedAt": "2026-07-14T10:23:10.587Z",
   "lastTransitionId": "2026-07-14T10-30-30-826Z-close-5d4d41b3c700",

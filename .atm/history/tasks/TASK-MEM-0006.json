@@ -55,10 +55,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "atm-memory-governance/tasks/TASK-MEM-0006-staleness-and-budget-patrol.task.md",
+    "planPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0006-staleness-and-budget-patrol.task.md",
     "sectionTitle": "TASK-MEM-0006",
     "headingLine": 40,
-    "hash": "478b7c285078a59a"
+    "hash": "478b7c285078a59a",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "atm-memory-governance/tasks/TASK-MEM-0006-staleness-and-budget-patrol.task.md",
+      "planningCommitSha": "98ee32653906af7875c2492f459f4a5a52da6993",
+      "contentDigest": "sha256:a23319025df0c2d9daef24bf156bffe19325ddc6da93011a86ea4da945433a42",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:47.350Z"
+    }
   },
   "importedAt": "2026-07-14T16:13:35.701Z",
   "lastTransitionId": "2026-07-14T16-18-25-525Z-close-7f7a54205ff6",

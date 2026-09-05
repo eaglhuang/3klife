@@ -64,10 +64,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md",
+    "planPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md",
     "sectionTitle": "TASK-RFT-0023",
     "headingLine": 68,
-    "hash": "c291d05026c23def"
+    "hash": "c291d05026c23def",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md",
+      "planningCommitSha": "5f53e5059d117a0fb5a03e2512539af7c98be46b",
+      "contentDigest": "sha256:7c2e1f02181fbe3433ce108a3c7c595c31ab5a5f3ddb8ff9a9591c1ccdefd362",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:48.410Z"
+    }
   },
   "importedAt": "2026-07-18T10:32:29.421Z",
   "lastTransitionId": "2026-07-18T10-32-29-428Z-import-746f2eedb59f",

@@ -56,10 +56,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "cid-hardening/tasks/TASK-CID-0121-stale-claim-and-framework-lock-cleanup.task.md",
+    "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0121-stale-claim-and-framework-lock-cleanup.task.md",
     "sectionTitle": "TASK-CID-0121",
     "headingLine": 44,
-    "hash": "97c283580d6a79db"
+    "hash": "97c283580d6a79db",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "cid-hardening/tasks/TASK-CID-0121-stale-claim-and-framework-lock-cleanup.task.md",
+      "planningCommitSha": "278e8d5f80dbc28724603e01a411a8195972496b",
+      "contentDigest": "sha256:3102377a7dca65c4a61c14acff84621b237b529ed93fabe2fdff1d27fdae96ee",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:44.772Z"
+    }
   },
   "importedAt": "2026-07-18T11:16:56.239Z",
   "lastTransitionId": "2026-07-18T11-21-54-042Z-close-cdfc9a7fa3f7",

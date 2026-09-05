@@ -55,10 +55,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+    "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
     "sectionTitle": "TASK-CID-0127",
     "headingLine": 44,
-    "hash": "ae4739f052d59e8d"
+    "hash": "ae4739f052d59e8d",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "cid-hardening/tasks/TASK-CID-0127-legacy-baseline-warning-baseline.task.md",
+      "planningCommitSha": "6a7eda48e9694ed8348fa3dd3bc294ff3ec1fa6a",
+      "contentDigest": "sha256:6ca4befaaf986e35d579ecc00366570180867bc12421490bf7c3f1cf04bb38a5",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:46.195Z"
+    }
   },
   "importedAt": "2026-07-18T13:08:13.957Z",
   "lastTransitionId": "2026-07-18T13-19-07-904Z-close-60500fe83336",

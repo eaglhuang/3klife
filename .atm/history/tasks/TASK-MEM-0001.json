@@ -44,10 +44,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "atm-memory-governance/tasks/TASK-MEM-0001-keep-memory-contract-and-directory.task.md",
+    "planPath": "docs/ai_atomic_framework/atm-memory-governance/tasks/TASK-MEM-0001-keep-memory-contract-and-directory.task.md",
     "sectionTitle": "TASK-MEM-0001",
     "headingLine": 32,
-    "hash": "caec2c0ee318da40"
+    "hash": "caec2c0ee318da40",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "atm-memory-governance/tasks/TASK-MEM-0001-keep-memory-contract-and-directory.task.md",
+      "planningCommitSha": "5f53e5059d117a0fb5a03e2512539af7c98be46b",
+      "contentDigest": "sha256:17c77eee6cfb30d2e7b12eb29b3e1dbd1d2a6185cd80838a78688a5b43e1d2fd",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:46.662Z"
+    }
   },
   "importedAt": "2026-07-14T10:17:55.259Z",
   "lastTransitionId": "2026-07-14T10-22-16-398Z-close-057565506c40",

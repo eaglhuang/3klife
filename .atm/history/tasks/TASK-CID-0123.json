@@ -64,10 +64,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md",
+    "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md",
     "sectionTitle": "TASK-CID-0123",
     "headingLine": 52,
-    "hash": "8a13e365cc56a8c7"
+    "hash": "8a13e365cc56a8c7",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "cid-hardening/tasks/TASK-CID-0123-transition-event-missing-backfill.task.md",
+      "planningCommitSha": "b1bc7c07c07f3dd62fe0973e3204a89edc9e4723",
+      "contentDigest": "sha256:956dfe57831af3b16cb976e9171fd58537ee6553d460745d4ab180544b97f4ea",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:45.255Z"
+    }
   },
   "importedAt": "2026-07-18T11:57:40.716Z",
   "claim": {

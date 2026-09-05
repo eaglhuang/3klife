@@ -63,10 +63,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md",
+    "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md",
     "sectionTitle": "TASK-CID-0122",
     "headingLine": 50,
-    "hash": "b9e49901c91c0fc1"
+    "hash": "b9e49901c91c0fc1",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "cid-hardening/tasks/TASK-CID-0122-stale-runtime-lock-cleanup-closeout.task.md",
+      "planningCommitSha": "06a6383296873c16cb0c2ad24857624f4a37b00b",
+      "contentDigest": "sha256:0a7f5ee2f6f1506ccdbd3d3acee9b501efa88b98a6f28d9759d91b29fa21e1f5",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:45.012Z"
+    }
   },
   "importedAt": "2026-07-18T11:38:43.430Z",
   "claim": {

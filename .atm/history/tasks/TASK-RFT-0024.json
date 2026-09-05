@@ -77,10 +77,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md",
+    "planPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md",
     "sectionTitle": "TASK-RFT-0024",
     "headingLine": 79,
-    "hash": "091338ff0034ce9f"
+    "hash": "091338ff0034ce9f",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md",
+      "planningCommitSha": "5f53e5059d117a0fb5a03e2512539af7c98be46b",
+      "contentDigest": "sha256:633b8bcbf8cd257cd4b9b85484479b70a55908e6e0180e3263a38059679b7c7b",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:48.632Z"
+    }
   },
   "importedAt": "2026-07-18T10:32:31.577Z",
   "lastTransitionId": "2026-07-18T10-32-31-584Z-import-cda1163b1145",

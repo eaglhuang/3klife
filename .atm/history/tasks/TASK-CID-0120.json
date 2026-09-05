@@ -62,10 +62,20 @@
   "tags": [],
   "notes": null,
   "source": {
-    "planPath": "cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md",
+    "planPath": "docs/ai_atomic_framework/cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md",
     "sectionTitle": "TASK-CID-0120",
     "headingLine": 47,
-    "hash": "898b01fcf03174f5"
+    "hash": "898b01fcf03174f5",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/3KLife",
+      "taskCardPath": "cid-hardening/tasks/TASK-CID-0120-3klife-task-audit-debt-triage.task.md",
+      "planningCommitSha": "5f53e5059d117a0fb5a03e2512539af7c98be46b",
+      "contentDigest": "sha256:562527423b328d4c4de5744b689f9a136b124f9e82a0469ed19527d858250b4e",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-09-05T18:48:44.532Z"
+    }
   },
   "importedAt": "2026-07-18T11:10:52.366Z",
   "claim": {
