@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T09-27-54-586Z-close-cabe7d05694c",
+  "taskId": "ATM-GOV-0409",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0409-end-to-end-auto-batch-orchestration-dogfood-and-closure.task.md",
+  "taskSha256": "sha256:a08fef83c3e82a5e9c4a47203efccf34cb95b9b945857dc814dea59d021d37b9",
+  "createdAt": "2026-09-05T09:27:54.586Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0409 --actor codex-gpt-5.4-mini"
+}
