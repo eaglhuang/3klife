@@ -27,15 +27,15 @@
     "TASK-SKL-0011",
     "TASK-SKL-0012"
   ],
-  "currentIndex": 6,
-  "currentTaskId": "TASK-PRF-0001",
+  "currentIndex": 7,
+  "currentTaskId": "TASK-SKL-0002",
   "commitMode": "per-task",
   "checkpointSize": 3,
   "pendingCommitTaskId": null,
   "status": "active",
   "createdByActor": "codex-gpt-5.4-mini",
   "createdAt": "2026-09-05T12:25:02.128Z",
-  "updatedAt": "2026-09-05T12:50:07.425Z",
+  "updatedAt": "2026-09-05T12:51:13.979Z",
   "skippedTasks": [
     {
       "schemaId": "atm.batchSkippedTask.v1",
@@ -81,6 +81,15 @@
       "skippedAt": "2026-09-05T12:50:07.422Z",
       "batchIndex": 5,
       "resumeCommand": "node atm.mjs batch resume --task TASK-MAO-0060 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+    },
+    {
+      "schemaId": "atm.batchSkippedTask.v1",
+      "taskId": "TASK-PRF-0001",
+      "reason": "Target AI-Atomic-Framework ledger already reports TASK-PRF-0001 done with a closure packet; no duplicate source delivery or closure mutation.",
+      "skippedByActor": "codex-gpt-5.4-mini",
+      "skippedAt": "2026-09-05T12:51:13.977Z",
+      "batchIndex": 6,
+      "resumeCommand": "node atm.mjs batch resume --task TASK-PRF-0001 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
     }
   ],
   "hold": null
