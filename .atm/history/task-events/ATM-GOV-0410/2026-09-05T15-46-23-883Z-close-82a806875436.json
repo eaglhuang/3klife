@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T15-46-23-883Z-close-82a806875436",
+  "taskId": "ATM-GOV-0410",
+  "action": "close",
+  "actorId": "codex-backlog-audit-20260905",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0410-complete-governed-temporary-index-isolation-across-commit-surfaces.task.md",
+  "taskSha256": "sha256:1beda85bf8c04017b3b6c7082ed757dee1c7f8da32ae29ea0f500f4b6d6bb679",
+  "createdAt": "2026-09-05T15:46:23.883Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0410 --actor codex-backlog-audit-20260905"
+}

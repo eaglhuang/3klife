@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0410
 title: Complete governed temporary-index isolation across commit surfaces
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: []
@@ -30,6 +30,7 @@ scopePaths:
   - packages/cli/src/commands/git-governance/implementation/git-index-transaction.ts
   - packages/cli/src/commands/broker/batch-execute-actions.ts
   - tests/cli/git-commit-task-scoped-staging.test.ts
+  - tests/cli/git-commit-task-scoped-staging/fixture.ts
   - tests/cli/real-shared-delivery-commit-executor.test.ts
   - tests/cli/governed-commit-surface-audit.test.ts
 deliverables:
@@ -38,6 +39,7 @@ deliverables:
   - packages/cli/src/commands/git-governance/implementation/git-index-transaction.ts
   - packages/cli/src/commands/broker/batch-execute-actions.ts
   - tests/cli/git-commit-task-scoped-staging.test.ts
+  - tests/cli/git-commit-task-scoped-staging/fixture.ts
   - tests/cli/real-shared-delivery-commit-executor.test.ts
   - tests/cli/governed-commit-surface-audit.test.ts
 validators:
@@ -112,6 +114,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-05T15:46:23.883Z"
+completed_by_agent: "codex-backlog-audit-20260905"
+closedAt: "2026-09-05T15:46:23.883Z"
+closedByActor: "codex-backlog-audit-20260905"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-05T15-46-23-883Z-close-82a806875436"
+lastTransitionAt: "2026-09-05T15:46:23.883Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "bb3cb26db0a27bb85989a428c44a330777c3b988"
 ---
 
 # ATM-GOV-0410 Complete governed temporary-index isolation across commit surfaces
