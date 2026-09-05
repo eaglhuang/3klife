@@ -1,7 +1,7 @@
 ---
 task_id: TASK-GIT-0032
 title: Broker-managed transactional commit queue and receipt closeout
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on:
