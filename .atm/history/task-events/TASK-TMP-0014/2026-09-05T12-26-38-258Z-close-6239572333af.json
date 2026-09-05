@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T12-26-38-258Z-close-6239572333af",
+  "taskId": "TASK-TMP-0014",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": "session-20260905122501-codex-gpt-5.4-mini-TASK-TMP-0014-a6cc23f0bb",
+  "fromStatus": "running",
+  "toStatus": "done",
+  "taskPath": ".atm/history/tasks/TASK-TMP-0014.json",
+  "taskSha256": "sha256:e78039a82a22704ab13d74d6ad06c19341fe23335a2fa6e599c6eaeddc955539",
+  "createdAt": "2026-09-05T12:26:38.258Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0014 --actor codex-gpt-5.4-mini --status done --from-batch-checkpoint --batch batch-2799e5d198ea --historical-delivery 7c5495e5100e573195061fd17ca466e4a3539d93",
+  "closure": {
+    "schemaId": "atm.taskClosureTransition.v1",
+    "batchId": "batch-2799e5d198ea",
+    "sessionId": "session-20260905122501-codex-gpt-5.4-mini-TASK-TMP-0014-a6cc23f0bb",
+    "closurePacketPath": null,
+    "evidenceFreshness": null,
+    "validationPasses": [],
+    "requiredGates": [],
+    "requiredGatesSnapshot": null
+  }
+}

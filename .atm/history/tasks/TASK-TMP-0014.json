@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "TASK-TMP-0014",
   "title": "Classify and settle 3K planning and governance residue",
-  "status": "open",
+  "status": "done",
   "milestone": null,
   "dependencies": [],
   "acceptance": [
@@ -146,26 +146,28 @@
     ],
     "findings": []
   },
-  "lastTransitionId": "2026-09-01T17-39-19-820Z-release-a3755430b1a7",
-  "lastTransitionAt": "2026-09-01T17:39:19.820Z",
+  "lastTransitionId": "2026-09-05T12-26-38-258Z-close-6239572333af",
+  "lastTransitionAt": "2026-09-05T12:26:38.258Z",
   "ledgerContractVersion": "task-ledger/v1",
-  "owner": "codex-gpt-5.6",
-  "reservedAt": "2026-09-01T17:30:27.248Z",
-  "promotedAt": "2026-09-01T17:30:27.253Z",
+  "owner": "codex-gpt-5.4-mini",
+  "reservedAt": "2026-09-05T12:25:01.491Z",
+  "promotedAt": "2026-09-05T12:25:01.496Z",
   "claim": {
-    "actorId": "codex-gpt-5.6",
-    "leaseId": "lease-a98e8cfe94de",
-    "claimedAt": "2026-09-01T17:30:27.257Z",
-    "heartbeatAt": "2026-09-01T17:39:19.345Z",
+    "actorId": "codex-gpt-5.4-mini",
+    "leaseId": "lease-e2f5b49e7321",
+    "claimedAt": "2026-09-05T12:25:01.500Z",
+    "heartbeatAt": "2026-09-05T12:26:38.257Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/tasks/TASK-TMP-0014.json",
       ".atm/catalog/registry/actors.json",
+      ".atm/history/evidence/TASK-TMP-0014.*",
       ".atm/history/guidance/**",
       ".atm/history/protected-override-audit/**",
       ".atm/history/task-events/ATM-GOV-0382/**",
       ".atm/history/task-events/TASK-PRF-0001/**",
       ".atm/history/task-events/TASK-PRF-0004/**",
+      ".atm/history/task-events/TASK-TMP-0014/**",
       ".atm/history/tasks/ATM-GOV-0382.json",
       ".atm/history/tasks/TASK-PRF-0001.json",
       ".atm/history/tasks/TASK-PRF-0004.json",
@@ -177,12 +179,12 @@
     ],
     "state": "released",
     "laneSession": {
-      "laneSessionId": "lane-20260901173027-codex-gpt-5.6-7f36bb97b3",
-      "status": "adopted",
+      "laneSessionId": "lane-20260905122501-codex-gpt-5.4-mini-731360a1a9",
+      "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260901173027-codex-gpt-5.6-7f36bb97b3\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260905122501-codex-gpt-5.4-mini-731360a1a9\""
     },
-    "reason": "Disposition receipt committed; mutable runtime residue requires a separately scoped lifecycle task."
+    "reason": "closed"
   },
   "startedAt": "2026-09-01T17:30:27.257Z",
   "startedByActor": "codex-gpt-5.6",
@@ -261,15 +263,15 @@
       "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
     }
   },
-  "startedBySessionId": "session-20260901173027-codex-gpt-5.6-TASK-TMP-0014-74a4c43651",
+  "startedBySessionId": "session-20260905122501-codex-gpt-5.4-mini-TASK-TMP-0014-a6cc23f0bb",
   "taskDirectionLock": {
     "schemaId": "atm.taskDirectionLock.v1",
     "specVersion": "0.1.0",
     "taskId": "TASK-TMP-0014",
     "batchId": null,
-    "scopeKey": null,
-    "queueId": null,
-    "queueIndex": null,
+    "scopeKey": "tasks-e114568e95fe",
+    "queueId": "queue-e8da1d6093edb711",
+    "queueIndex": 0,
     "allowedFiles": [
       ".atm/catalog/registry/actors.json",
       ".atm/history/evidence/TASK-TMP-0014.*",
@@ -293,15 +295,18 @@
     "planningMirrorPaths": [],
     "allowPlanningMirror": false,
     "promptHash": "9bb408149653c4b854b0a0a6cfe09f263336abbf75a019d81bb2fb07e27e203b",
-    "actorId": "codex-gpt-5.6",
-    "sessionId": "session-20260901173027-codex-gpt-5.6-TASK-TMP-0014-74a4c43651",
+    "actorId": "codex-gpt-5.4-mini",
+    "sessionId": "session-20260905122501-codex-gpt-5.4-mini-TASK-TMP-0014-a6cc23f0bb",
     "laneSession": {
-      "laneSessionId": "lane-20260901173027-codex-gpt-5.6-7f36bb97b3",
+      "laneSessionId": "lane-20260905122501-codex-gpt-5.4-mini-731360a1a9",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260901173027-codex-gpt-5.6-7f36bb97b3\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260905122501-codex-gpt-5.4-mini-731360a1a9\""
     },
-    "createdAt": "2026-09-01T17:30:32.247Z",
+    "createdAt": "2026-09-05T12:25:02.119Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-09-05T12:26:38.257Z",
+  "closedByActor": "codex-gpt-5.4-mini",
+  "closedBySessionId": "session-20260905122501-codex-gpt-5.4-mini-TASK-TMP-0014-a6cc23f0bb"
 }
