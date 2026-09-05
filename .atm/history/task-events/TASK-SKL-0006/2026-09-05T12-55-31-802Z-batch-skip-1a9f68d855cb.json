@@ -1,0 +1,13 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T12-55-31-802Z-batch-skip-1a9f68d855cb",
+  "taskId": "TASK-SKL-0006",
+  "action": "batch-skip",
+  "actorId": "codex-gpt-5.4-mini",
+  "batchId": "batch-2799e5d198ea",
+  "reason": "Planning card is explicitly superseded by TASK-LANE-0022 and ATM-GOV-0250/0257/0258/0259/0265; retirement policy forbids importing or claiming the historical umbrella card.",
+  "batchIndex": 12,
+  "createdAt": "2026-09-05T12:55:31.802Z",
+  "command": "node atm.mjs batch skip --task TASK-SKL-0006 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+}
