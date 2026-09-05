@@ -1,0 +1,13 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T12-50-07-426Z-batch-skip-7d343d024fd9",
+  "taskId": "TASK-MAO-0060",
+  "action": "batch-skip",
+  "actorId": "codex-gpt-5.4-mini",
+  "batchId": "batch-2799e5d198ea",
+  "reason": "Target AI-Atomic-Framework ledger already reports TASK-MAO-0060 done with a closure packet; no duplicate source delivery or closure mutation.",
+  "batchIndex": 5,
+  "createdAt": "2026-09-05T12:50:07.426Z",
+  "command": "node atm.mjs batch skip --task TASK-MAO-0060 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+}
