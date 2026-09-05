@@ -1,0 +1,13 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T12-42-39-472Z-batch-skip-b52cfaba3da7",
+  "taskId": "TASK-CID-0024",
+  "action": "batch-skip",
+  "actorId": "codex-gpt-5.4-mini",
+  "batchId": "batch-2799e5d198ea",
+  "reason": "Historical commit e0b98ec9 contains governance closure only and no scoped non-.atm deliverable diff; target ledger reconciliation correctly failed closed, so skip duplicate delivery.",
+  "batchIndex": 2,
+  "createdAt": "2026-09-05T12:42:39.472Z",
+  "command": "node atm.mjs batch skip --task TASK-CID-0024 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+}

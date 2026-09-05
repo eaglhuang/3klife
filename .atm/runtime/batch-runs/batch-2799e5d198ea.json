@@ -27,15 +27,15 @@
     "TASK-SKL-0011",
     "TASK-SKL-0012"
   ],
-  "currentIndex": 2,
-  "currentTaskId": "TASK-CID-0024",
+  "currentIndex": 3,
+  "currentTaskId": "TASK-CID-0025",
   "commitMode": "per-task",
   "checkpointSize": 3,
   "pendingCommitTaskId": null,
   "status": "active",
   "createdByActor": "codex-gpt-5.4-mini",
   "createdAt": "2026-09-05T12:25:02.128Z",
-  "updatedAt": "2026-09-05T12:34:05.598Z",
+  "updatedAt": "2026-09-05T12:42:39.471Z",
   "skippedTasks": [
     {
       "schemaId": "atm.batchSkippedTask.v1",
@@ -45,6 +45,15 @@
       "skippedAt": "2026-09-05T12:34:05.595Z",
       "batchIndex": 1,
       "resumeCommand": "node atm.mjs batch resume --task ATM-GOV-0382 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+    },
+    {
+      "schemaId": "atm.batchSkippedTask.v1",
+      "taskId": "TASK-CID-0024",
+      "reason": "Historical commit e0b98ec9 contains governance closure only and no scoped non-.atm deliverable diff; target ledger reconciliation correctly failed closed, so skip duplicate delivery.",
+      "skippedByActor": "codex-gpt-5.4-mini",
+      "skippedAt": "2026-09-05T12:42:39.469Z",
+      "batchIndex": 2,
+      "resumeCommand": "node atm.mjs batch resume --task TASK-CID-0024 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
     }
   ],
   "hold": null
