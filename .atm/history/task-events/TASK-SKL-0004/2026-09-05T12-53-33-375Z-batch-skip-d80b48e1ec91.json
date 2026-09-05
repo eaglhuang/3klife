@@ -1,0 +1,13 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-05T12-53-33-375Z-batch-skip-d80b48e1ec91",
+  "taskId": "TASK-SKL-0004",
+  "action": "batch-skip",
+  "actorId": "codex-gpt-5.4-mini",
+  "batchId": "batch-2799e5d198ea",
+  "reason": "Planning card records completed_at 2026-06-23 and delivery_commit 596b6d6ca; framework target has no new scoped source gap, so do not duplicate historical delivery.",
+  "batchIndex": 9,
+  "createdAt": "2026-09-05T12:53:33.375Z",
+  "command": "node atm.mjs batch skip --task TASK-SKL-0004 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+}

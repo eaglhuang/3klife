@@ -27,15 +27,15 @@
     "TASK-SKL-0011",
     "TASK-SKL-0012"
   ],
-  "currentIndex": 9,
-  "currentTaskId": "TASK-SKL-0004",
+  "currentIndex": 10,
+  "currentTaskId": "TASK-SKL-0005",
   "commitMode": "per-task",
   "checkpointSize": 3,
   "pendingCommitTaskId": null,
   "status": "active",
   "createdByActor": "codex-gpt-5.4-mini",
   "createdAt": "2026-09-05T12:25:02.128Z",
-  "updatedAt": "2026-09-05T12:52:24.165Z",
+  "updatedAt": "2026-09-05T12:53:33.374Z",
   "skippedTasks": [
     {
       "schemaId": "atm.batchSkippedTask.v1",
@@ -108,6 +108,15 @@
       "skippedAt": "2026-09-05T12:52:24.162Z",
       "batchIndex": 8,
       "resumeCommand": "node atm.mjs batch resume --task TASK-SKL-0003 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
+    },
+    {
+      "schemaId": "atm.batchSkippedTask.v1",
+      "taskId": "TASK-SKL-0004",
+      "reason": "Planning card records completed_at 2026-06-23 and delivery_commit 596b6d6ca; framework target has no new scoped source gap, so do not duplicate historical delivery.",
+      "skippedByActor": "codex-gpt-5.4-mini",
+      "skippedAt": "2026-09-05T12:53:33.372Z",
+      "batchIndex": 9,
+      "resumeCommand": "node atm.mjs batch resume --task TASK-SKL-0004 --batch batch-2799e5d198ea --actor codex-gpt-5.4-mini --json"
     }
   ],
   "hold": null
