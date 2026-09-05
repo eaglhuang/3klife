@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0411
 title: Bound every git-derived path argv caller
-status: planned
+status: done
 owner: atm-git-governance
 priority: P1
 depends_on: []
