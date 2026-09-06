@@ -44,7 +44,7 @@ deliverables:
 validators:
   - node --strip-types tests/cli/claim-foreign-unstaged-wip.test.ts
   - node --strip-types tests/cli/claim-adopt-unowned-wip.test.ts
-  - node --strip-types tests/cli/claim-orchestrator.spec.ts
+  - node --strip-types packages/cli/src/commands/tasks/__tests__/claim-orchestrator.spec.ts
   - npm run typecheck
 testContributions:
   - caseId: test_claim_bounded_unowned_wip_adoption_0413_7b8f2d1a
@@ -163,7 +163,7 @@ target commit if adoption evidence or ownership invariants regress.
 ### Validators
 - node --strip-types tests/cli/claim-foreign-unstaged-wip.test.ts
 - node --strip-types tests/cli/claim-adopt-unowned-wip.test.ts
-- node --strip-types tests/cli/claim-orchestrator.spec.ts
+- node --strip-types packages/cli/src/commands/tasks/__tests__/claim-orchestrator.spec.ts
 - npm run typecheck
 
 ### Acceptance
