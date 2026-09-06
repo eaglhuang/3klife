@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0414
 title: Provide same-owner metadata-only planning import and seal repair
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on:
@@ -50,6 +50,15 @@ validators:
   - npm run typecheck
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-06T03:23:58.553Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-06T03:23:58.553Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T03-23-58-553Z-close-86414d3317d0"
+lastTransitionAt: "2026-09-06T03:23:58.553Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e1a09c3ed5b1a9ff36aa0bbf78314c89d57c13b6"
 ---
 
 # ATM-GOV-0414 Provide same-owner metadata-only planning import and seal repair
