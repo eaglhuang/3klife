@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-06T15-29-07-358Z-close-cc5e1fe9c199",
+  "taskId": "TASK-RFT-0102",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0102-git-governance-typed-implementation-modules.task.md",
+  "taskSha256": "sha256:f9bc8a630bb029805b55677c290f8a94e92c668cb89b6849ac5f760cebb0a59f",
+  "createdAt": "2026-09-06T15:29:07.358Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0102 --actor codex-gpt-5.4-mini"
+}

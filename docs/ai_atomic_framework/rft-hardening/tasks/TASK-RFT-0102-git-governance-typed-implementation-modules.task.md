@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0102
 title: Expand git-governance implementation carrier into typed bounded modules
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: []
@@ -76,6 +76,15 @@ atomizationImpact:
       source: packages/cli/src/commands/git-governance/implementation.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-09-06T15:29:07.358Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-06T15:29:07.358Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T15-29-07-358Z-close-cc5e1fe9c199"
+lastTransitionAt: "2026-09-06T15:29:07.358Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "65aa32730"
 ---
 
 # TASK-RFT-0102 - Expand git-governance implementation carrier into typed bounded modules
