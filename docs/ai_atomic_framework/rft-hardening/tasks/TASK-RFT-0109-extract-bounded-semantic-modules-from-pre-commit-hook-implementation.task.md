@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0109
 title: Extract bounded semantic modules from pre-commit hook implementation
-status: planned
+status: done
 owner: atm-cli
 priority: P1
 depends_on: []
