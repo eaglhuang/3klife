@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-06T14-25-41-243Z-close-106e6ac632d1",
+  "taskId": "ATM-GOV-0418",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0418-deferred-closeback-must-not-leave-stale-derived-manifests.task.md",
+  "taskSha256": "sha256:fbd48791d67f60f8560c6637078c4203955cf30d793e5d9f55473382107a1a9c",
+  "createdAt": "2026-09-06T14:25:41.243Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0418 --actor codex-captain"
+}
