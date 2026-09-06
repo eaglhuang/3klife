@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-06T13-29-07-188Z-close-e158f885ddf1",
+  "taskId": "TASK-TMP-0024",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/temporary-governance/tasks/TASK-TMP-0024-include-declared-ignored-artifacts-in-taskflow-close-delivery.task.md",
+  "taskSha256": "sha256:1ffe5906fd2a6a7e0f724a028aed3a6e4d9aefe5fb166881a982a4ed4cacf141",
+  "createdAt": "2026-09-06T13:29:07.188Z",
+  "command": "node atm.mjs tasks close --task TASK-TMP-0024 --actor codex-captain"
+}
