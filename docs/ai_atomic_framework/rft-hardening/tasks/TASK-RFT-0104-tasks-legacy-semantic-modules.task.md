@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0104
 title: Extract bounded semantic modules from tasks legacy implementation
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: []
@@ -72,6 +72,15 @@ atomizationImpact:
       source: packages/cli/src/commands/tasks/legacy/implementation.ts
       disposition: extract
       inlineReason: null
+completed_at: "2026-09-06T16:09:52.105Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-06T16:09:52.105Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T16-09-52-105Z-close-2ba421847384"
+lastTransitionAt: "2026-09-06T16:09:52.105Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "463745d226c950858fd07c42eb8fbce73e0cd366"
 ---
 
 # TASK-RFT-0104 - Extract bounded semantic modules from tasks legacy implementation
