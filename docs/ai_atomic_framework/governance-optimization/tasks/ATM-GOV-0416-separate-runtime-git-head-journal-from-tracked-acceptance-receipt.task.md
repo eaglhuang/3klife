@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0416
 title: Separate runtime git-head journal from tracked acceptance receipt
-status: planned
+status: done
 owner: atm-governance
 priority: P1
 depends_on: []
@@ -69,6 +69,15 @@ atomizationImpact:
   mapUpdates: []
   extractionCandidates: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-06T12:57:50.058Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-06T12:57:50.058Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T12-57-50-058Z-close-9bc058599e95"
+lastTransitionAt: "2026-09-06T12:57:50.058Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "c7eff27dc2d1cfad9e70982c2bd5cedd1fb95f45"
 ---
 
 # ATM-GOV-0416 Separate runtime git-head journal from tracked acceptance receipt
