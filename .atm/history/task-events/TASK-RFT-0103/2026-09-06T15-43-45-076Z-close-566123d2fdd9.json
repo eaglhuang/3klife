@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-06T15-43-45-076Z-close-566123d2fdd9",
+  "taskId": "TASK-RFT-0103",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0103-pre-commit-hook-parity-contract.task.md",
+  "taskSha256": "sha256:2d4a961bf7983d8b23dd515a319529353805b68dd7789ea8e8d14cf0b80dd358",
+  "createdAt": "2026-09-06T15:43:45.076Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0103 --actor codex-gpt-5.4-mini"
+}

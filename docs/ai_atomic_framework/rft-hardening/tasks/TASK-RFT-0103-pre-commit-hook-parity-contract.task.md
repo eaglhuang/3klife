@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0103
 title: Align pre-commit hook parity test with unique staged task context
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: []
@@ -61,6 +61,15 @@ atomizationImpact:
   ownerAtomOrMap: atm.pre-commit-hook
   mapUpdates: []
   extractionCandidates: []
+completed_at: "2026-09-06T15:43:45.076Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-06T15:43:45.076Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T15-43-45-076Z-close-566123d2fdd9"
+lastTransitionAt: "2026-09-06T15:43:45.076Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "1ce30c9a5f552dddeba767a2bbf1ba254d7e4dd5"
 ---
 
 # TASK-RFT-0103 - Align pre-commit hook parity test with unique staged task context
