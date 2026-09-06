@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0105
 title: Extract bounded semantic modules from closure-packet schema implementation
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: []
@@ -77,6 +77,15 @@ atomizationImpact:
       source: packages/cli/src/commands/framework-development/closure-packet-schema/implementation.ts
       disposition: follow-up-card
       inlineReason: null
+completed_at: "2026-09-06T17:11:33.774Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-06T17:11:33.774Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T17-11-33-774Z-close-3cf07decfad5"
+lastTransitionAt: "2026-09-06T17:11:33.774Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ba19a03c0eb8e44a5d03ac3d07fc344c81932b82"
 ---
 
 # TASK-RFT-0105 - Extract bounded semantic modules from closure-packet schema implementation

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-06T17-11-33-774Z-close-3cf07decfad5",
+  "taskId": "TASK-RFT-0105",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0105-closure-packet-semantic-modules.task.md",
+  "taskSha256": "sha256:33452f974df3428a36c81ca9e1d3dd66375e41150e602f24c9325505f6d1f7b7",
+  "createdAt": "2026-09-06T17:11:33.774Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0105 --actor codex-gpt-5.4-mini"
+}
