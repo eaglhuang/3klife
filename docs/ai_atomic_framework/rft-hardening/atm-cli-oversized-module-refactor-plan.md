@@ -524,6 +524,15 @@ tests, evidence, and closure remain in `C:/Users/User/AI-Atomic-Framework`.
 The follow-up must not reopen `TASK-RFT-0032`, must not change public command
 behavior, and must leave every new or touched module at or below 600 lines.
 
+## 2026-09-06 Follow-up: tasks legacy semantic modules
+
+`ATM-BUG-2026-07-15-196` remains an active Medium optimization. The current
+tasks legacy implementation technically reports only 22 physical lines, but
+one line is an approximately 80K-character compressed carrier. `TASK-RFT-0104`
+will extract one bounded semantic command family into readable modules and
+strengthen the extraction contract to reject oversized physical lines, while
+preserving the facade exports and task lifecycle behavior.
+
 ## 2026-09-06 Follow-up: pre-commit hook parity contract
 
 `ATM-BUG-2026-07-15-200` remains an active Medium optimization because its
