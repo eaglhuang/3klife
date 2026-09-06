@@ -511,3 +511,15 @@ before `TASK-GIT-0028` may wire production callers. It must leave a <=600-line
 typed facade, a bounded transaction module, bounded test support, a baseline
 report, and command-backed proof. This is a hard predecessor of GIT-0028, not
 an optional cleanup lane.
+
+## 2026-09-06 Follow-up: typed git-governance implementation modules
+
+`ATM-BUG-2026-07-15-195` remains an active Medium optimization because the
+original `TASK-RFT-0032` extraction left a compact implementation carrier
+behind. `TASK-RFT-0102` is the bounded follow-up: expand that carrier into
+semantically typed modules while preserving the public facade and the already
+closed extraction contract. Planning remains in `C:/Users/User/3KLife`; code,
+tests, evidence, and closure remain in `C:/Users/User/AI-Atomic-Framework`.
+
+The follow-up must not reopen `TASK-RFT-0032`, must not change public command
+behavior, and must leave every new or touched module at or below 600 lines.
