@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskImportEvidence",
+  "specVersion": "0.1.0",
+  "generatedAt": "2026-09-06T13:17:18.982Z",
+  "planPath": "temporary-governance/tasks/TASK-TMP-0024-include-declared-ignored-artifacts-in-taskflow-close-delivery.task.md",
+  "taskCount": 1,
+  "writtenPaths": [],
+  "taskIds": [
+    "TASK-TMP-0024"
+  ],
+  "sourceTraces": [
+    {
+      "workItemId": "TASK-TMP-0024",
+      "planPath": "temporary-governance/tasks/TASK-TMP-0024-include-declared-ignored-artifacts-in-taskflow-close-delivery.task.md",
+      "sectionTitle": "TASK-TMP-0024",
+      "headingLine": 70,
+      "hash": "3908f840f3874001"
+    }
+  ]
+}
