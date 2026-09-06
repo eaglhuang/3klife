@@ -523,3 +523,12 @@ tests, evidence, and closure remain in `C:/Users/User/AI-Atomic-Framework`.
 
 The follow-up must not reopen `TASK-RFT-0032`, must not change public command
 behavior, and must leave every new or touched module at or below 600 lines.
+
+## 2026-09-06 Follow-up: pre-commit hook parity contract
+
+`ATM-BUG-2026-07-15-200` remains an active Medium optimization because its
+extraction regression test still asserts the pre-`528c5b5c` task-context
+semantics. `TASK-RFT-0103` updates that test to model a raw commit as an
+explicitly unrelated commit context, while preserving the product behavior
+that a unique staged task is treated as the committing task. The task is test
+contract-only and must not alter the hook implementation or foreign residue.
