@@ -980,3 +980,13 @@ fail before staging or committing when the frozen runner is incompatible, and
 prove that a recover-push failure terminates owned child processes while leaving
 an owner-bound timeout receipt. It must not change the shared 420000ms boundary,
 the protected evidence policy, or any foreign residue behavior.
+## Follow-up: ATM-GOV-0415 runtime-only git-head journal and tracked digest acceptance
+
+This follow-up closes the remaining portion of ATM-BUG-2026-07-19-026. The
+existing runtime telemetry policy already requires raw journals to remain on
+gitignored runtime surfaces and tracked history to contain compact evidence;
+the remaining gap is the pre-push consumer that still expects the raw
+`.atm/history/evidence/git-head.jsonl` path. The task must preserve existing
+foreign and historical bytes, accept a verifiable owner-bound compact digest,
+and fail closed for missing or stale compact evidence. The required focused
+case and validators are declared in `ATM-GOV-0415`.
