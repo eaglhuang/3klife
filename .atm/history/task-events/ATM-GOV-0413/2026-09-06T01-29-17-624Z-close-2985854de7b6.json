@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-06T01-29-17-624Z-close-2985854de7b6",
+  "taskId": "ATM-GOV-0413",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/follow-ups/ATM-GOV-0413-claim-side-adoption-of-bounded-unowned-wip.plan.md",
+  "taskSha256": "sha256:47496d0e47d914fbe6cc095ff916a0025a91a14931976fe0507ee4dfb6fd57b8",
+  "createdAt": "2026-09-06T01:29:17.624Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0413 --actor codex-captain"
+}

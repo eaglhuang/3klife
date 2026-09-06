@@ -1,7 +1,7 @@
 ---
 task_id: ATM-GOV-0413
 title: Add an explicit bounded claim-side adoption route for unowned WIP
-status: planned
+status: done
 owner: atm-git-governance
 priority: P1
 planning_repo: docs
@@ -105,6 +105,15 @@ errorCodes:
     tests:
       - tests/cli/claim-foreign-unstaged-wip.test.ts
       - tests/cli/claim-adopt-unowned-wip.test.ts
+completed_at: "2026-09-06T01:29:17.624Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-06T01:29:17.624Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T01-29-17-624Z-close-2985854de7b6"
+lastTransitionAt: "2026-09-06T01:29:17.624Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "a50574095eb8694a5e0657d16349c0cc063d3c78"
 ---
 
 # ATM-GOV-0413 — Claim-side adoption of bounded unowned WIP
