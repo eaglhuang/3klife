@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-06T17-53-14-583Z-close-5d9edd8b3928",
+  "taskId": "TASK-RFT-0108",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0108-extract-bounded-semantic-modules-from-evidence-bundle-io-implementation.task.md",
+  "taskSha256": "sha256:13ef2134c0f8a716d690284a0aaf74422212e10ea47d4a82797ae78fbc31554e",
+  "createdAt": "2026-09-06T17:53:14.583Z",
+  "command": "node atm.mjs tasks close --task TASK-RFT-0108 --actor codex-gpt-5.4-mini"
+}

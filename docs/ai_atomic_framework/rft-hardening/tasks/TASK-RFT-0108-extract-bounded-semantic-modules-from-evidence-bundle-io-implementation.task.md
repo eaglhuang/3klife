@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0108
 title: Extract bounded semantic modules from evidence bundle IO implementation
-status: planned
+status: done
 owner: atm-cli
 priority: P1
 depends_on: []
@@ -53,6 +53,15 @@ atomizationImpact:
 errorCodes: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-06T17:53:14.583Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-06T17:53:14.583Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T17-53-14-583Z-close-5d9edd8b3928"
+lastTransitionAt: "2026-09-06T17:53:14.583Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e75075c5d998ae4fc82343ea99b04b7ab877e703"
 ---
 
 # TASK-RFT-0108 Extract bounded semantic modules from evidence bundle IO implementation
