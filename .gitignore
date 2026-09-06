@@ -95,6 +95,7 @@ Design System*.zip
 .atm/runtime/*-audit.json
 .atm/runtime/*.raw.txt
 .atm/runtime/git-commit-attempts/
+.atm/runtime/git-push-attempts/
 .atm/runtime/identity/actors/
 .atm/runtime/sessions/
 .atm/runtime/write-broker.registry.json
