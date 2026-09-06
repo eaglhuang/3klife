@@ -1,7 +1,7 @@
 ---
 task_id: TASK-RFT-0106
 title: Extract bounded semantic modules from task-ledger validator implementation
-status: planned
+status: done
 owner: atm-core
 priority: P1
 depends_on: []
@@ -77,6 +77,15 @@ atomizationImpact:
       source: scripts/validators/task-ledger/suite-impl/implementation.ts
       disposition: follow-up-card
       inlineReason: null
+completed_at: "2026-09-06T16:42:51.442Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-06T16:42:51.442Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-06T16-42-51-442Z-close-56c9cfc620f4"
+lastTransitionAt: "2026-09-06T16:42:51.442Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "25d4dc6e4f6f8dfd097b2875667c686fc8ecc82a"
 ---
 
 # TASK-RFT-0106 - Extract bounded semantic modules from task-ledger validator implementation
