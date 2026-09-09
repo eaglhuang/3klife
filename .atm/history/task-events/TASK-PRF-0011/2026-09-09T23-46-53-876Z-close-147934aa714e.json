@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-09T23-46-53-876Z-close-147934aa714e",
+  "taskId": "TASK-PRF-0011",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0011-restore-atom-templates-in-compact-npm-runtime.task.md",
+  "taskSha256": "sha256:c03d9babc4a6a4ddd1a7b1f6fe11ee8cd1d233b0b81a5dcbea5aaeffa8f0a275",
+  "createdAt": "2026-09-09T23:46:53.876Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0011 --actor codex-product-proof"
+}
