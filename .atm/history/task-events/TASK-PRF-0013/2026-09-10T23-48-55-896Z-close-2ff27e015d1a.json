@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-10T23-48-55-896Z-close-2ff27e015d1a",
+  "taskId": "TASK-PRF-0013",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0013-prove-clean-installable-npm-tarball-and-enforce-it-in-product-ci.task.md",
+  "taskSha256": "sha256:390107f8c09d0eb716eaa3f43646d52322934dd7613454285904fdb69618fc90",
+  "createdAt": "2026-09-10T23:48:55.896Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0013 --actor codex-captain"
+}
