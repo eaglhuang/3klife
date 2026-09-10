@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-10T23-57-23-775Z-close-3b7d516b1c67",
+  "taskId": "TASK-PRF-0014",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0014-reverify-protected-main-product-ci-after-clean-install-delivery.task.md",
+  "taskSha256": "sha256:a103f86cb63e987ffd13d6ee2000e6fc287062bc5ade64fe41b7722394e53538",
+  "createdAt": "2026-09-10T23:57:23.775Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0014 --actor codex-captain"
+}
