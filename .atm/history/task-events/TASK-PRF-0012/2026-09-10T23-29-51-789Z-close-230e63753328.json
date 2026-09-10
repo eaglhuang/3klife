@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-10T23-29-51-789Z-close-230e63753328",
+  "taskId": "TASK-PRF-0012",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0012-make-npm-and-onefile-release-payloads-disjoint-and-budget-verifiable.task.md",
+  "taskSha256": "sha256:4a9e0bbb143adaf7c8e9424b6ad76d9dbff21165cf343882d241e7c78ddba808",
+  "createdAt": "2026-09-10T23:29:51.789Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0012 --actor codex-captain"
+}
