@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-10T14-21-47-873Z-close-c8d77c4696ad",
+  "taskId": "TASK-PRF-0010",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0010-complete-runtime-evidence-caller-migration-and-git-boundary.task.md",
+  "taskSha256": "sha256:4afa4491d9ec9ce2931aba25550521b5558f4dc2d46909452509fa0d1b0b3430",
+  "createdAt": "2026-09-10T14:21:47.873Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0010 --actor codex-product-proof"
+}
