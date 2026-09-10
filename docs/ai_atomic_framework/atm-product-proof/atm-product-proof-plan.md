@@ -324,6 +324,90 @@ base, CAS mismatch, or unsupported format adapter.
 No task in Phase 3–5 may start merely because its predecessor has a green
 internal task status; it requires the predecessor's stated external exit gate.
 
+## Evidence-ledger completion correction
+
+`TASK-PRF-0010` corrects the gap exposed by the 2026-09-10 caller-level audit.
+`TASK-PRF-0005` delivered a provider-neutral ledger and migration prototype,
+but its closure did not prove that runtime callers stopped depending on
+`.atm/history/evidence`. At audit time Git still tracked 3,191 files under that
+root (92,513,826 bytes), and runtime source contained many direct path
+references outside the designated legacy reader.
+
+The correction is deliberately interface-first: classify evidence by lifecycle,
+route ephemeral runtime payloads through one content-addressed ledger, retain
+only compact durable checkpoint/closure receipts in Git, and make the static
+boundary validator scan every production caller. It does not rewrite Git
+history or delete legacy records. Those destructive actions remain a separate,
+owner-approved decision after digest-preserving migration and restore proof.
+
+The phase exit gate is not "a ledger type exists". It is a clean-repository
+runtime exercise showing that newly generated command evidence stays outside
+the Git candidate set, remains resolvable offline by digest, can be restored
+from an exported checkpoint, and leaves only the documented durable receipt
+classes eligible for commit.
+
+### Installable-runtime prerequisite correction
+
+`TASK-PRF-0011` is a P0 interruption discovered while preparing PRF-0010. The
+compact frozen runner can report version, initialize an adopter and run doctor,
+but `atm create --dry-run` fails because the package omits the atom scaffold
+templates. This means the published-shape artifact is small but not yet a
+functionally closed ATM product. PRF-0011 restores only the runtime-required
+templates and adds the exact command to the isolated tarball smoke gate before
+Evidence Ledger atom extraction resumes.
+
+### Release-surface disjointness correction
+
+`TASK-PRF-0012` is a P0 follow-up from the 2026-09-10 installability and CI
+audit. The compact npm runtime now builds as a 76-file / 3,330,457-byte runtime,
+but the current onefile budget rebuild embeds the npm-runtime surface again and
+reports 6,128,982 bytes against the 4,500,000-byte cap. The same run reports
+`ONEFILE_BUILD_SCRIPT_BOUNDARY_DRIFT`: `package.json`, the sealed runner wrapper,
+and `validate-onefile-budget` do not agree on the canonical builder entrypoint.
+
+This correction must make the npm and onefile inventories explicit and
+non-overlapping, then bind package scripts, sealed publication, manifests, and
+validators to one builder contract. It must preserve the original size cap and
+fail closed on missing release evidence. It is independent of `TASK-PRF-0008`:
+no external custodian, adjudicator, provider telemetry, or A/B verdict may be
+invented or inferred while this packaging work proceeds.
+
+### Clean-install npm proof correction
+
+`TASK-PRF-0013` is the next product-proof slice. The existing Product CI job
+checks package metadata and `npm pack --workspaces --dry-run`, but that is not
+equivalent to proving that a consumer can install the produced CLI tarball and
+execute its public bin from an empty directory. The package must be packed as
+the real workspace artifact, installed with scripts disabled in an isolated
+temporary consumer, and exercised through the same public command that an
+adopter receives. Product CI must run this smoke on every protected-main
+candidate and retain the measured tarball inventory and command output as
+evidence.
+
+The card is deliberately narrower than publication: it does not publish to
+npm, change dist-tags, or claim that remote protected-main CI is green. Its
+exit gate is a local, command-backed install proof plus a workflow contract
+that fails closed when the clean-install smoke is removed or weakened.
+
+### Protected-main CI re-verification correction
+
+The first remote run after the clean-install work is still not a green
+product signal. Read-only inspection of GitHub Actions run `34136912919`
+(`a85ed1203a3ddb279c9dc659d24373706bb2172e`, 2026-09-07) shows the Product
+CI job failed in the ATM Dogfood lint step on a tracked duplicate import in
+`tests/cli/write-ticket-scope-amendment.test.ts`. The current local checkout
+now passes `npm run lint`, so the observation is a stale remote-main proof,
+not evidence that protected main is green.
+
+`TASK-PRF-0014` is an evidence-and-transport gate, not permission to push or
+to weaken CI. It may begin only after the owner authorizes delivery of the
+already-reviewed local commits. It must record the exact remote SHA, workflow
+run IDs, required Product CI conclusion, and consecutive-run count. A local
+green result, a successful sandbox workflow, or a manually supplied receipt
+cannot satisfy this gate. If remote CI fails, the task remains open and must
+name the first failing command and preserve the run URL; no waiver converts a
+red required lane into green.
+
 ## ErrorCode Registry Migration Note
 
 If this family owns error governance, keep the canonical
