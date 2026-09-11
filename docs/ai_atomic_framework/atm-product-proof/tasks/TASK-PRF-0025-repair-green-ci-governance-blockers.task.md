@@ -24,7 +24,9 @@ scopePaths:
   - scripts/render-agent-matrix.ts
   - scripts/validate-multi-agent-confidence.ts
   - scripts/validate-task-ledger-governance.ts
+  - scripts/validators/task-ledger/suite-impl/implementation.ts
   - docs/reports/atm-product-ci-burn-in.md
+  - docs/multi-agent-compatibility-matrix.md
 deliverables:
   - generalized module-boundary contract that accepts the runtime build seam without weakening unrelated checks
   - regenerated and validated multi-agent compatibility matrix with one canonical source
