@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0024
 title: Remediate production dependency vulnerabilities
-status: planned
+status: done
 owner: owner-authorized-release-steward
 priority: P2
 depends_on: []
@@ -35,6 +35,15 @@ validators:
   - node --strip-types scripts/validate-npm-clean-install.ts
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-11T16:43:56.413Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-11T16:43:56.413Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-11T16-43-56-413Z-close-ca72c7e1d368"
+lastTransitionAt: "2026-09-11T16:43:56.413Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "44bc8d926c6bf5105de510e26053f2250abd66d8"
 ---
 
 # TASK-PRF-0024 Remediate production dependency vulnerabilities

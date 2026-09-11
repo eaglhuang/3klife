@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T16-43-56-413Z-close-ca72c7e1d368",
+  "taskId": "TASK-PRF-0024",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0024-remediate-production-dependency-vulnerabilities.task.md",
+  "taskSha256": "sha256:afc07db2d46fe2f2da5e97ba5fc06782703ef1f1d8c458c8bc50f3771ec14402",
+  "createdAt": "2026-09-11T16:43:56.413Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0024 --actor codex-captain"
+}
