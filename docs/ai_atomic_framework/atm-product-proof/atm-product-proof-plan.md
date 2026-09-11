@@ -599,6 +599,11 @@ the installable product lane; a green advisory Dogfood result proves the
 repository's self-hosting hygiene; only the separately observed release-
 candidate window can establish protected-main burn-in.
 
+The reviewed local delivery candidate is currently `747aad21ea5b9105e39e414d9ff96cd764ca5f68` (with the slim-runtime source change at
+`c86d88cb539dd0de15f1a28f368039066b6169b`). It contains `origin/main` as an
+ancestor and passes local lint, but it is not remote evidence until an
+authorized steward pushes it and records the resulting workflow runs.
+
 ### Requirement-to-evidence scorecard (2026-09-11)
 
 | Product requirement | Authoritative evidence | Current status | Why this is not yet a market claim |
