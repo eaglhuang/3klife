@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T22-26-16-645Z-close-e77e5fab2d9a",
+  "taskId": "TASK-PRF-0028",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0028-repair-windows-onefile-cache-rename-eperm-and-stabilize-validate-bootstrap.task.md",
+  "taskSha256": "sha256:4f2739b1caef0f238a626a4f2de7744c8a6e5f0c44bedaecc969496d03f97f4d",
+  "createdAt": "2026-09-11T22:26:16.645Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0028 --actor codex-captain"
+}
