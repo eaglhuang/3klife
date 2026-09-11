@@ -604,6 +604,19 @@ The reviewed local delivery candidate is currently `747aad21ea5b9105e39e414d9ff9
 ancestor and passes local lint, but it is not remote evidence until an
 authorized steward pushes it and records the resulting workflow runs.
 
+### Post-push CI finding (run 34607184874)
+
+The authorized push reached `origin/main`, and the new CI run confirmed that
+the duplicate-import lint regression is gone: Dogfood lint passed. However,
+the required Product CI packed-CLI smoke failed during `npm pack` with 280
+esbuild resolution errors, beginning with missing
+`../_vendor/agent-pack-sdk/dist/index.js` and the Claude/Copilot/Cursor/Gemini
+vendor modules. This is stronger evidence than the earlier historical lint
+failure: the slim package boundary itself is incomplete in a clean checkout.
+TASK-PRF-0022 now tracks the vendor-boundary repair and explicitly blocks npm
+publication until an isolated pack/install smoke succeeds. The product proof
+remains unestablished.
+
 ### Requirement-to-evidence scorecard (2026-09-11)
 
 | Product requirement | Authoritative evidence | Current status | Why this is not yet a market claim |
