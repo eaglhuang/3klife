@@ -60,6 +60,10 @@ vendor residues.
 
 - Trace why the clean-install build omits `_vendor/agent-pack-*` while the
   source tree still references those modules.
+- Verify the clean-checkout distinction explicitly: `buildCliRuntimeClosure`
+  currently copies only pre-existing workspace `dist` trees, so a missing
+  `packages/<name>/dist` must not be treated as an optional dependency when a
+  CLI module references that workspace.
 - Choose one explicit, budget-compatible closure: bundle the required runtime
   code, declare installable package dependencies, or remove unreachable
   command paths from the published runtime. Preserve CLI behavior and record
@@ -73,6 +77,9 @@ vendor residues.
 
 - [ ] A clean checkout can run `npm pack --workspace packages/cli` with zero
       unresolved `_vendor` imports.
+- [ ] The prepack path deterministically builds or validates every referenced
+      workspace runtime; it fails closed rather than silently skipping absent
+      vendor roots.
 - [ ] The packed tarball installs in an isolated directory and `atm --help`
       (or the declared smoke command) succeeds.
 - [ ] Artifact remains within the declared 3,365,772-byte / 308-entry cap and

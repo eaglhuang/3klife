@@ -617,6 +617,16 @@ TASK-PRF-0022 now tracks the vendor-boundary repair and explicitly blocks npm
 publication until an isolated pack/install smoke succeeds. The product proof
 remains unestablished.
 
+Initial source inspection narrows the mechanism further: `buildCliRuntimeClosure`
+copies only each workspace's declared `files` roots from already-built
+`packages/<name>/dist`. In a clean checkout, the agent-pack workspace `dist`
+trees are absent, so the closure silently skips them while the CLI transpiled
+modules still reference `_vendor/agent-pack-*/dist/*.js`. Local inventories can
+pass only because prior builds left those dist trees behind. TASK-PRF-0022 must
+therefore make prepack deterministic (build required workspace outputs or use a
+validated source-to-runtime transform) and fail closed when a referenced vendor
+root is missing.
+
 ### Requirement-to-evidence scorecard (2026-09-11)
 
 | Product requirement | Authoritative evidence | Current status | Why this is not yet a market claim |
