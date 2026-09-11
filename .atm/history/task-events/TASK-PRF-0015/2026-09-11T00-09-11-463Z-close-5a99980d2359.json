@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T00-09-11-463Z-close-5a99980d2359",
+  "taskId": "TASK-PRF-0015",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0015-prove-public-npm-registry-installability-and-provenance.task.md",
+  "taskSha256": "sha256:0fe5634149084d43b225491c34b66c3528145abf2f9da2454b77de466e9900e6",
+  "createdAt": "2026-09-11T00:09:11.463Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0015 --actor codex-captain"
+}
