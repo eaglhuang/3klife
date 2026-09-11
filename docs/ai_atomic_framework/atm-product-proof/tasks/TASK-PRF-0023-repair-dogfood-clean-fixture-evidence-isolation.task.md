@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0023
 title: Repair Dogfood clean-fixture evidence isolation
-status: planned
+status: done
 owner: owner-authorized-release-steward
 priority: P2
 depends_on: []
@@ -33,6 +33,15 @@ validators:
   - node --strip-types scripts/validate-self-hosting-alpha.ts --mode test
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-11T16:21:15.797Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-11T16:21:15.797Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-11T16-21-15-797Z-close-872c0ac6decc"
+lastTransitionAt: "2026-09-11T16:21:15.797Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2effeea4fc118c8929f08097977514ea7b11e901"
 ---
 
 # TASK-PRF-0023 Repair Dogfood clean-fixture evidence isolation

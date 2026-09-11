@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T16-21-15-797Z-close-872c0ac6decc",
+  "taskId": "TASK-PRF-0023",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0023-repair-dogfood-clean-fixture-evidence-isolation.task.md",
+  "taskSha256": "sha256:cb87670fe55aeb3d48bf9cd07e57d7ef3fdbf2b85feea304573b6b85df98c740",
+  "createdAt": "2026-09-11T16:21:15.797Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0023 --actor codex-captain"
+}
