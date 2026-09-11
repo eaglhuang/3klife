@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T15-58-11-677Z-close-efdaabb35416",
+  "taskId": "TASK-PRF-0022",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0022-repair-clean-install-packed-cli-vendor-boundary.task.md",
+  "taskSha256": "sha256:b0ff81d3a54c5c93fc0ccfae9da409617c5dd3cacb81ba5a7f34373687b51e04",
+  "createdAt": "2026-09-11T15:58:11.677Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0022 --actor codex-captain"
+}
