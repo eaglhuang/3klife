@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0025
 title: Repair remaining green CI governance blockers
-status: planned
+status: done
 owner: owner-authorized-ci-steward
 priority: P2
 depends_on: []
@@ -41,6 +41,15 @@ validators:
   - npm run lint
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-11T18:14:32.547Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-11T18:14:32.547Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-11T18-14-32-547Z-close-64e456fd99d0"
+lastTransitionAt: "2026-09-11T18:14:32.547Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "e3442d498218f377685d833761e7e10a156d4b3c"
 ---
 
 # TASK-PRF-0025 Repair remaining green CI governance blockers

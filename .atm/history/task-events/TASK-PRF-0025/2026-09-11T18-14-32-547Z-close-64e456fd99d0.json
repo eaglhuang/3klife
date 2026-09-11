@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T18-14-32-547Z-close-64e456fd99d0",
+  "taskId": "TASK-PRF-0025",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0025-repair-green-ci-governance-blockers.task.md",
+  "taskSha256": "sha256:7d3a94ca4e88795deea6182ec10bb1c789f9ab9b0fa85e87e9c02103629be7a3",
+  "createdAt": "2026-09-11T18:14:32.547Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0025 --actor codex-captain"
+}
