@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0026
 title: Align OSV and npm production dependency security baselines
-status: planned
+status: done
 owner: owner-authorized-security-steward
 priority: P2
 depends_on: []
@@ -34,6 +34,15 @@ validators:
   - npm run lint
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-11T17:01:17.952Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-11T17:01:17.952Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-11T17-01-17-952Z-close-7b0bf1c8fe7f"
+lastTransitionAt: "2026-09-11T17:01:17.952Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "b42e8d1ea02cd48ac966c8688ce25c014a765d29"
 ---
 
 # TASK-PRF-0026 Align OSV and npm production dependency security baselines
