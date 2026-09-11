@@ -600,6 +600,20 @@ the installable product lane; a green advisory Dogfood result proves the
 repository's self-hosting hygiene; only the separately observed release-
 candidate window can establish protected-main burn-in.
 
+### Requirement-to-evidence scorecard (2026-09-11)
+
+| Product requirement | Authoritative evidence | Current status | Why this is not yet a market claim |
+|---|---|---|---|
+| Small, installable npm package | Local `validate-adopter-artifact-manifest` (3,357,258 bytes / 78 files), clean-install validator, and public registry snapshot | **Local PASS; public FAIL** | The only public `next` artifact is beta.4 at 7,599,532 bytes / 1,152 files; no slim version is published. |
+| Long-lived green CI | Ten newest remote `ci.yml` runs with `Product CI=success`; zero release-candidate runs; advisory Dogfood lint failure | **Product lane PASS; burn-in INCOMPLETE** | Ten standard observations do not satisfy the two release-candidate requirement, and overall workflow health is still red. |
+| Independently rerunnable A/B data | Protocol/metrics/decision validators; fixture has `hiddenCorpusAcceptance.sealed=false` and `runEligibility=blocked:hiddenCorpusAcceptance` | **Instrument PASS; execution BLOCKED** | No independent sealed corpus, adjudication packet, provider telemetry, or measured ATM-vs-worktree result exists. |
+
+The scorecard is deliberately conjunctive: a local package proof cannot
+substitute for public installation, standard green runs cannot substitute for
+protected-main candidate observations, and a valid benchmark protocol cannot
+substitute for independently signed execution data. Product Proof remains
+**not established** until all three rows reach their stated evidence level.
+
 ## ErrorCode Registry Migration Note
 
 If this family owns error governance, keep the canonical
