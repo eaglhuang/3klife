@@ -408,6 +408,198 @@ cannot satisfy this gate. If remote CI fails, the task remains open and must
 name the first failing command and preserve the run URL; no waiver converts a
 red required lane into green.
 
+### Public-registry proof correction
+
+The clean-install tarball proof is still local evidence, not public npm
+delivery. A read-only registry check on 2026-09-10 returned `E404` for
+`@ai-atomic-framework/cli@0.1.0`; only `create-atm@0.1.0-beta.0` resolved.
+`TASK-PRF-0015` therefore owns the public-registry exit gate separately from
+the local pack/install implementation. It must first establish owner-approved
+npm organization ownership, provenance and token policy, then publish only
+after the protected-main Product CI gate is green. The task must verify the
+exact public version from an isolated consumer with no workspace link and
+record the registry tarball digest. Missing credentials, package ownership,
+or a 404 remain blocked/inconclusive; they must not be replaced by a local
+tarball or a `create-atm` bootstrap result.
+
+### Public beta closure correction
+
+The first public-registry probe exposed a second actionable failure class:
+`@ai-atomic-framework/cli@0.1.0-beta.0` resolves but its workspace dependencies
+still request unpublished stable `0.1.0` versions; `0.1.0-beta.1` resolves its
+dependency versions but fails in an isolated consumer because the published
+runtime cannot resolve `integration-claude-code`. The current worktree's
+rebuilt runtime passes the local isolated `scripts/validate-npm-clean-install.ts`
+gate, so the remaining gap is publication of a corrected immutable version and
+independent registry re-verification.
+
+`TASK-PRF-0016` owns this correction. It must preserve the existing release
+workflow's workspace-version synchronization and runtime-closure build, add a
+public-beta regression contract for dependency resolution and CLI startup, and
+keep publication/provenance owner-authorized. A local tarball pass, a registry
+metadata lookup alone, or an old beta tag cannot close the task.
+
+The later sealed benchmark protocol names `@ai-atomic-framework/cli@0.1.0-beta.4`
+with tarball digest
+`sha256:6b1affb435479a7bf62e0d69d504f979b2f490680273692ad747ec766f460424`.
+On 2026-09-11 a fresh public-registry consumer verified that exact beta.4
+tarball with no workspace link and a successful `atm --version` startup. This
+strengthens the package prerequisite for the benchmark, but does not alter the
+benchmark's independent-custodian, adjudication or provider-telemetry gates.
+
+However, public beta.4 is not yet an acceptable size proof: its registry
+metadata reports 1,703,377 compressed bytes, 7,599,532 unpacked bytes and 1,152
+files, while the current local `npm-runtime` candidate reports 930,475
+compressed bytes, 3,357,258 unpacked bytes and 76 generated runtime files.
+`TASK-PRF-0018` therefore owns republishing an immutable slim beta and rebinding
+the benchmark manifest to that exact tarball. Installability alone does not
+close the adopter-bundle requirement.
+
+Implementation checkpoint (2026-09-11): the public-install validator now fails
+closed when registry metadata exceeds the declared artifact budget. Both beta.2
+and beta.4 are installable/startable but exceed the current 3,365,772-byte and
+308-entry limits (beta.4: 7,599,532 unpacked bytes, 1,152 files), so their
+reports are explicitly **BLOCKED / INCONCLUSIVE** rather than verified size
+proof. The local candidate is 3,357,258 unpacked bytes across 78 files; it is
+the rebuild target, not yet a published release. No publish or push is implied
+by this checkpoint.
+
+### Independent benchmark execution card
+
+`TASK-PRF-0019` is now registered for the final proof layer. It treats the
+worktree-plus-Git workflow as a first-class baseline and requires the same
+hidden task corpus, repository snapshots, provider budget and task order in
+both arms. The card explicitly measures false blocks, missed conflicts,
+human minutes, token usage, wall-clock time, retries and merge/rebase overhead;
+it also requires an independent corpus custodian and a preregistered
+non-inferiority/cost decision rule. Missing seals or telemetry keep the result
+**BLOCKED / INCONCLUSIVE**.
+
+### Protected-main CI burn-in correction
+
+The local Product CI contract, typecheck and lint are currently green, but the
+live protected-main evidence is still red/inconclusive: the ten newest `ci`
+runs on `main` are historical standard failures and the required set contains
+no two release-candidate observations. This means ATM has not yet demonstrated
+long-term green CI at the boundary a market adopter would rely on.
+
+`TASK-PRF-0017` owns the next proof gate. It requires a fresh candidate commit
+that passes local gates, then a live API verification of ten newest main runs,
+at least two manually dispatched release-candidate runs, and successful
+`Product CI` in every run. The task explicitly forbids replacing remote proof
+with local output or rewriting historical red evidence. Push and dispatch
+remain owner-authorized actions; without that authority the result stays red or
+inconclusive rather than being waived.
+
+The live run ledger was also corrected for evidence fidelity: run `34136912919`
+has `Product CI=success` and `ATM Dogfood=failure`. The latter is advisory and
+does not invalidate the required Product CI job, but the run still does not
+satisfy the burn-in because it is standard (not release-candidate) and the
+current ten-run window lacks the required two release-candidate observations.
+
+### External execution handoff packet
+
+The benchmark verifier and protocol tests are green, but execution is still
+blocked by the missing signed hidden-corpus acceptance. The handoff boundary is
+therefore explicit:
+
+1. The hidden-corpus custodian signs `hidden-corpus-acceptance.json` with
+   `visibility: oracle-only` and the preregistered protocol digest.
+2. A neutral steward updates only the mutable execution-prerequisite seals; the
+   workload, thresholds, repository SHAs, arm definitions and counterbalancing
+   order remain immutable.
+3. Baseline and ATM operators run fresh AB and BA pairs, recording raw
+   timestamps, prompts, provider tokens, billed cost, human minutes, retries,
+   commands and repairs. Workspace links, modeled timing and missing cost data
+   invalidate the round.
+4. The independent adjudicator signs anonymized labels; the telemetry signer
+   supplies the original provider export. The verifier then produces only
+   `keep`, `narrow`, `stop` or `inconclusive`.
+
+Until those four roles return signed artifacts, TASK-PRF-0008 remains planned;
+no local fixture, synthetic timing or ATM-authored adjudication can substitute
+for the external packet.
+
+### Latest command-backed checkpoint (2026-09-11)
+
+The external benchmark protocol, metrics, and decision-rule contract tests all
+pass, and protocol validation remains `preregistered` with two repositories;
+execution is still `blocked:hiddenCorpusAcceptance`. This proves that the
+measurement instrument is internally coherent, not that ATM has won the
+comparison.
+
+The slim local runtime build now passes its declared artifact budget
+(`3,353,170` bytes / `76` files in the generated npm-runtime directory). After
+committing the source change at `c86d88cb539dd0de15f1a28f368039066b6169b1`, a
+fresh full sealed build made the frozen runner source seal valid; `doctor`,
+adopter-artifact validation, and internal-release validation are green. The
+remaining TASK-PRF-0018 gate is the public registry proof for a newly published
+slim version, which is intentionally not fabricated from beta.4. Consequently
+TASK-PRF-0018 remains open, TASK-PRF-0019 remains dependency-blocked, and no
+public npm publish, Git push, or benchmark result is implied by this checkpoint.
+
+### Owner action packet (external-state boundary)
+
+The remaining work now has a narrow external boundary rather than an
+implementation ambiguity:
+
+1. **Publish:** an owner-authorized release steward publishes the exact commit
+   `c86d88cb539dd0de15f1a28f368039066b6169b1` (or a later reviewed descendant)
+   under a new immutable npm version. The steward records the tarball URL,
+   integrity, `dist.unpackedSize`, and `dist.fileCount`; the public-install
+   validator must pass against that version. Republishing beta.4 is not a
+   substitute because it is over budget.
+2. **Protected-main CI:** after the reviewed commit reaches the protected
+   remote, the owner dispatches two release-candidate `ci` runs and captures
+   the newest ten `main` runs. Every required `Product CI` job must succeed;
+   advisory `ATM Dogfood` failures remain separately classified. The owner
+   retains remote run URLs and commit SHAs as immutable evidence.
+3. **Benchmark handoff:** once the public version is sealed, an independent
+   custodian signs hidden-corpus acceptance, then neutral operators execute
+   ATM and worktree+Git arms in AB/BA order. The adjudicator and telemetry
+   signer return raw conflict labels, human minutes, provider tokens/cost,
+   retries and wall-clock data before the decision rule is evaluated.
+
+Until those owner/external artifacts exist, the product claim is intentionally
+limited to **locally installable and internally validated**, not market-proven.
+
+Evidence-fidelity correction was committed in target repo at
+`747aad21ea5b9105e39e414d9ff96cd764ca5f68`; the benchmark report now states
+that hidden-corpus acceptance is not sealed, matching the protocol fixture.
+
+### Registry snapshot (read-only, 2026-09-11)
+
+The public registry currently exposes only `0.1.0-beta.0` through
+`0.1.0-beta.4`; `next` still points to beta.4 and `latest` to beta.0. Beta.4
+reports `dist.unpackedSize=7,599,532` and `dist.fileCount=1,152`, confirming
+that no new slim public version has appeared. This snapshot is observational
+only and does not authorize publication.
+
+The current local Product CI contract, CI product-lane test, and release-trust
+contract all pass on the reviewed tree. A read-only API audit of the latest ten
+remote `ci.yml` runs found the required `Product CI` job successful in all ten;
+the overall workflow is red because the separate advisory `ATM Dogfood` job
+fails lint. This is a workflow-health problem, but not a Product CI gate
+failure. TASK-PRF-0017 remains open because the window contains zero
+release-candidate runs and therefore still lacks the required two candidate
+observations for protected-main burn-in.
+
+### Advisory Dogfood lint remediation (TASK-PRF-0021)
+
+The remote failure is now reproducible to a single mechanical lint defect:
+run `34136912919` failed `npm run lint` because
+`packages/cli/src/commands/tasks/status-triangulation.ts:6` declares a
+duplicated import and violates ESLint `no-duplicate-imports`. The `Product CI`
+job itself succeeded, so this is a workflow-health regression rather than a
+product-gate failure. TASK-PRF-0021 isolates the import consolidation,
+focused regression coverage, and historical report update. It must not be
+used to count or waive TASK-PRF-0017's two release-candidate runs.
+
+This distinction improves the evidence model: a green Product CI result proves
+the installable product lane; a green advisory Dogfood result proves the
+repository's self-hosting hygiene; only the separately observed release-
+candidate window can establish protected-main burn-in.
+
 ## ErrorCode Registry Migration Note
 
 If this family owns error governance, keep the canonical
