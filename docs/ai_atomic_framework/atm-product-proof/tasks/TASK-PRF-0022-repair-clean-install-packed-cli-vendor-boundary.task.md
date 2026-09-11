@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0022
 title: Repair clean-install packed CLI vendor boundary
-status: planned
+status: done
 owner: owner-authorized-release-steward
 priority: P2
 depends_on: []
@@ -40,6 +40,15 @@ validators:
   - npm run typecheck
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-11T15:58:11.677Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-11T15:58:11.677Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-11T15-58-11-677Z-close-efdaabb35416"
+lastTransitionAt: "2026-09-11T15:58:11.677Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "6d55ea993354cbafe2db361c9f461342e1313015"
 ---
 
 # TASK-PRF-0022 Repair clean-install packed CLI vendor boundary
