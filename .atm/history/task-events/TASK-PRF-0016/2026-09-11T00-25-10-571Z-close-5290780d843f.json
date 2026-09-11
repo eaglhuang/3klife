@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T00-25-10-571Z-close-5290780d843f",
+  "taskId": "TASK-PRF-0016",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0016-repair-and-reverify-public-beta-npm-install.task.md",
+  "taskSha256": "sha256:6a14a15263dd888faf529fb08d3ec53500f2a720444b02e9897257058ce4019d",
+  "createdAt": "2026-09-11T00:25:10.571Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0016 --actor codex-captain"
+}
