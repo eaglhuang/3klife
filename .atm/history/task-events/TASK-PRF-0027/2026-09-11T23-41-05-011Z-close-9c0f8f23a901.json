@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-11T23-41-05-011Z-close-9c0f8f23a901",
+  "taskId": "TASK-PRF-0027",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0027-repair-release-full-validation-regressions.task.md",
+  "taskSha256": "sha256:751a64b1bfa489651c937a735d2e9cafa0089318530a015e2ff048549daaff70",
+  "createdAt": "2026-09-11T23:41:05.011Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0027 --actor codex-captain"
+}

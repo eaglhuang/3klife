@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0027
 title: Repair release full-validation regressions before npm publish
-status: planned
+status: done
 owner: owner-authorized-ci-steward
 priority: P2
 depends_on: [TASK-PRF-0025]
@@ -39,6 +39,15 @@ validators:
   - npm run validate:full -- --parallel
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-11T23:41:05.011Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-11T23:41:05.011Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-11T23-41-05-011Z-close-9c0f8f23a901"
+lastTransitionAt: "2026-09-11T23:41:05.011Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "51c5058014303a44da07267792e9189accf37b09"
 ---
 
 # TASK-PRF-0027 Repair release full-validation regressions before npm publish
