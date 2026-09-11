@@ -40,18 +40,20 @@ createdByCommand: atm plan card create
 
 ## Intent
 
-Restore advisory `ATM Dogfood` workflow health after the remote `ci.yml` run
-34136912919 failed its lint step on a duplicated import of
-`packages/cli/src/commands/tasks/status-triangulation.ts` (line 6,
-`no-duplicate-imports`). Keep the Product CI gate and the advisory Dogfood
-signal separately classified: this card repairs the lint regression and
-records the remote proof, but does not waive the two release-candidate runs
-required by TASK-PRF-0017.
+Restore advisory `ATM Dogfood` workflow health after the historical remote
+`ci.yml` run 34136912919 failed its lint step on a duplicated import of
+`packages/cli/src/commands/tasks/status-triangulation.ts` (`no-duplicate-imports`).
+The current reviewed worktree already has one import declaration and
+`npm run lint` passes, so the remaining work is to identify the reviewed commit
+that contains this state, deliver it through the authorized remote path, and
+capture a post-delivery run. Keep the Product CI gate and advisory Dogfood
+signal separately classified; this card does not waive TASK-PRF-0017.
 
 ## Required Work
 
-- Consolidate the duplicate import declaration without changing runtime
-  behavior, exports, or task-routing semantics.
+- If a reviewed remote base still contains the duplicate, consolidate only the
+  import declaration without changing runtime behavior, exports, or semantics;
+  otherwise treat the code change as already complete and do not duplicate it.
 - Add or adjust only the focused contract assertion needed to prevent the
   regression from returning.
 - Update the burn-in report with the exact failing run, remediation commit,

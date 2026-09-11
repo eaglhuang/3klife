@@ -586,14 +586,13 @@ observations for protected-main burn-in.
 
 ### Advisory Dogfood lint remediation (TASK-PRF-0021)
 
-The remote failure is now reproducible to a single mechanical lint defect:
+The remote failure is now traced to a single historical mechanical lint defect:
 run `34136912919` failed `npm run lint` because
-`packages/cli/src/commands/tasks/status-triangulation.ts:6` declares a
-duplicated import and violates ESLint `no-duplicate-imports`. The `Product CI`
-job itself succeeded, so this is a workflow-health regression rather than a
-product-gate failure. TASK-PRF-0021 isolates the import consolidation,
-focused regression coverage, and historical report update. It must not be
-used to count or waive TASK-PRF-0017's two release-candidate runs.
+`packages/cli/src/commands/tasks/status-triangulation.ts` had a duplicated
+import under ESLint `no-duplicate-imports`. The reviewed local worktree now has
+one import declaration and `npm run lint` passes, so TASK-PRF-0021 is primarily
+a remote-delivery and post-delivery evidence card; it must not duplicate an
+already-applied code fix or count/waive TASK-PRF-0017's release-candidate runs.
 
 This distinction improves the evidence model: a green Product CI result proves
 the installable product lane; a green advisory Dogfood result proves the
