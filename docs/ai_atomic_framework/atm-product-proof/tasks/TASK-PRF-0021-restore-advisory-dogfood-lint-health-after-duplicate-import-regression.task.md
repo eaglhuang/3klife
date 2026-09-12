@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0021
 title: Restore advisory Dogfood lint health after duplicate import regression
-status: planned
+status: done
 owner: owner-authorized-release-steward
 priority: P2
 depends_on: []
@@ -34,6 +34,15 @@ validators:
   - node --strip-types scripts/validate-ci-product-lane.ts --remote
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-12T16:27:53.887Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-12T16:27:53.887Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-12T16-27-53-887Z-close-dc16c6a6df15"
+lastTransitionAt: "2026-09-12T16:27:53.887Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ecb902f4c16f63b448d7396532e931435996e6ea"
 ---
 
 # TASK-PRF-0021 Restore advisory Dogfood lint health after duplicate import regression

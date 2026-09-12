@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T16-27-53-887Z-close-dc16c6a6df15",
+  "taskId": "TASK-PRF-0021",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0021-restore-advisory-dogfood-lint-health-after-duplicate-import-regression.task.md",
+  "taskSha256": "sha256:8e09c1bdd7ae260d6761e7b19cd769fc9cb95197007a3676f5a62dd38554b6cb",
+  "createdAt": "2026-09-12T16:27:53.887Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0021 --actor codex-captain"
+}
