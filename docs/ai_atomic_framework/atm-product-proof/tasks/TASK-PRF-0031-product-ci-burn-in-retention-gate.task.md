@@ -66,13 +66,13 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
-completed_at: "2026-09-12T16:46:05.710Z"
+completed_at: "2026-09-12T16:56:12.528Z"
 completed_by_agent: "codex-captain"
-closedAt: "2026-09-12T16:46:05.710Z"
+closedAt: "2026-09-12T16:56:12.528Z"
 closedByActor: "codex-captain"
 closedByCommand: atm tasks close
-lastTransitionId: "2026-09-12T16-46-05-710Z-close-cafc6f5cabf8"
-lastTransitionAt: "2026-09-12T16:46:05.710Z"
+lastTransitionId: "2026-09-12T16-56-12-528Z-close-b9730822a965"
+lastTransitionAt: "2026-09-12T16:56:12.528Z"
 ledgerContractVersion: task-ledger/v1
 delivery_commit: "08627995ca1b4047171b1613cfa84e2e23aa3ccc"
 ---

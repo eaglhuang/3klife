@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T16-56-12-528Z-close-b9730822a965",
+  "taskId": "TASK-PRF-0031",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0031-product-ci-burn-in-retention-gate.task.md",
+  "taskSha256": "sha256:54f9688aa693b42951d1eed262133346ba27645d8847cb6d3bd625b87625d2f9",
+  "createdAt": "2026-09-12T16:56:12.528Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0031 --actor codex-captain"
+}
