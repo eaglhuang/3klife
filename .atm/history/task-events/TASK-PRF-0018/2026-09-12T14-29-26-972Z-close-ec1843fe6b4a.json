@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T14-29-26-972Z-close-ec1843fe6b4a",
+  "taskId": "TASK-PRF-0018",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0018-republish-slim-npm-runtime-and-rebind-benchmark-package.task.md",
+  "taskSha256": "sha256:d224e873c70a558b688c71136cb30762957028ff703afc5ef605111b7ee7d043",
+  "createdAt": "2026-09-12T14:29:26.972Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0018 --actor codex-captain"
+}

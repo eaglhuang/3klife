@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0018
 title: Republish slim npm runtime and rebind benchmark package
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on:
@@ -78,6 +78,15 @@ atomizationImpact:
   mapUpdates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-12T14:29:26.972Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-12T14:29:26.972Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-12T14-29-26-972Z-close-ec1843fe6b4a"
+lastTransitionAt: "2026-09-12T14:29:26.972Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "f16e22f6ebd954f482ed2e2c094c8ad9f24ad466"
 ---
 
 # TASK-PRF-0018 Republish slim npm runtime and rebind benchmark package
