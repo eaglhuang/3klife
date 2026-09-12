@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T18-23-57-898Z-close-85d5b274bab0",
+  "taskId": "TASK-PRF-0033",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0033-fail-closed-timeout-and-diagnostics-for-standard-dogfood-ci.task.md",
+  "taskSha256": "sha256:89377ada42369b35a203add0eae402bf0b472c47a8a07e4363c4aec25989e0c0",
+  "createdAt": "2026-09-12T18:23:57.898Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0033 --actor codex-captain"
+}
