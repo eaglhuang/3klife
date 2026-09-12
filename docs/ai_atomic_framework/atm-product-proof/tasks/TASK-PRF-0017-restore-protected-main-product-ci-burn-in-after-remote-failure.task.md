@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0017
 title: Restore protected-main Product CI burn-in after remote failure
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on:
@@ -75,6 +75,15 @@ atomizationImpact:
   mapUpdates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-12T15:01:59.445Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-12T15:01:59.445Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-12T15-01-59-445Z-close-81a7c513f8a7"
+lastTransitionAt: "2026-09-12T15:01:59.445Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "29635d942a261775395a69d564f4a976f15cece0"
 ---
 
 # TASK-PRF-0017 Restore protected-main Product CI burn-in after remote failure

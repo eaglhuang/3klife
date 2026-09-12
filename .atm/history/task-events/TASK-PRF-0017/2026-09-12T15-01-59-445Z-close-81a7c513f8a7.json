@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T15-01-59-445Z-close-81a7c513f8a7",
+  "taskId": "TASK-PRF-0017",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0017-restore-protected-main-product-ci-burn-in-after-remote-failure.task.md",
+  "taskSha256": "sha256:950c9eb62712ee0001c3f2d43ceac6bb76d6a50248babeaf850588e7bdd8daec",
+  "createdAt": "2026-09-12T15:01:59.445Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0017 --actor codex-captain"
+}
