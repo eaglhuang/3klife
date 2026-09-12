@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T16-19-14-489Z-close-494efee79d8f",
+  "taskId": "TASK-PRF-0030",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0030-product-ci-burn-in-fail-closed-gate.task.md",
+  "taskSha256": "sha256:482a4d3e7b8707e3ebdd27fd8c90dfc5f8e055731ae232600ea14eecc10a4654",
+  "createdAt": "2026-09-12T16:19:14.489Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0030 --actor codex-captain"
+}
