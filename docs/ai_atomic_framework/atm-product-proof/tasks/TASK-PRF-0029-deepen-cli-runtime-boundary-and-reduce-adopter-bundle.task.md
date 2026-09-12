@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0029
 title: Deepen CLI runtime boundary and reduce adopter bundle
-status: planned
+status: done
 owner: atm-release
 priority: P1
 series: PRF
@@ -106,6 +106,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-12T15:49:57.808Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-12T15:49:57.808Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-12T15-49-57-808Z-close-94e8bc9a6501"
+lastTransitionAt: "2026-09-12T15:49:57.808Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "19d893ffdb17a63b31a02b861585356308f1e5bd"
 ---
 
 # TASK-PRF-0029 Deepen CLI runtime boundary and reduce adopter bundle

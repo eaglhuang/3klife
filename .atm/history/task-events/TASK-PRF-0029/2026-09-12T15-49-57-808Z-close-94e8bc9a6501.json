@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T15-49-57-808Z-close-94e8bc9a6501",
+  "taskId": "TASK-PRF-0029",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0029-deepen-cli-runtime-boundary-and-reduce-adopter-bundle.task.md",
+  "taskSha256": "sha256:51aebc1031c608607a636e7d2143ab37cc55facd966798a8d5d2f6d2a8dd5123",
+  "createdAt": "2026-09-12T15:49:57.808Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0029 --actor codex-captain"
+}
