@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-12T17-21-16-544Z-close-3f6446546e1f",
+  "taskId": "TASK-PRF-0032",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0032-product-ci-burn-in-baseline-boundary.task.md",
+  "taskSha256": "sha256:fe698d0041a0398c9e24bd7464e66b4e655e07e893a06b0baf43ee3e76882831",
+  "createdAt": "2026-09-12T17:21:16.544Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0032 --actor codex-captain"
+}
