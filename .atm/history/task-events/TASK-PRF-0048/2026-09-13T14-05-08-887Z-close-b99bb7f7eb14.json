@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T14-05-08-887Z-close-b99bb7f7eb14",
+  "taskId": "TASK-PRF-0048",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0048-remove-cli-module-load-git-subprocess-side-effects.task.md",
+  "taskSha256": "sha256:686afdfb80bb6146d2479af8ca7d172db2328be121c8d57db949e1e80df8ac4d",
+  "createdAt": "2026-09-13T14:05:08.887Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0048 --actor codex-captain"
+}
