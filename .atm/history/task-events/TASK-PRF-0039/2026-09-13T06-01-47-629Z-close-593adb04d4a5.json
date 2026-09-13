@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T06-01-47-629Z-close-593adb04d4a5",
+  "taskId": "TASK-PRF-0039",
+  "action": "close",
+  "actorId": "codex-benchmark-paired",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0039-execute-paired-atm-and-git-baseline-arms.task.md",
+  "taskSha256": "sha256:1b0ddf42d1077d07264f8ea0c967207c9f2b2c3f1a7c40c52e5ece4be1689ea5",
+  "createdAt": "2026-09-13T06:01:47.629Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0039 --actor codex-benchmark-paired"
+}
