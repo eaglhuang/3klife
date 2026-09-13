@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T05-20-08-761Z-close-d4b52282185e",
+  "taskId": "TASK-PRF-0034",
+  "action": "close",
+  "actorId": "codex-benchmark-contract",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0034-define-versioned-benchmark-evidence-and-independence-contract.task.md",
+  "taskSha256": "sha256:b6a4355de9e81649aa9cfd2e5ba6588f2d4e6b6cf59b4c86b3d17258aa140ffd",
+  "createdAt": "2026-09-13T05:20:08.761Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0034 --actor codex-benchmark-contract"
+}
