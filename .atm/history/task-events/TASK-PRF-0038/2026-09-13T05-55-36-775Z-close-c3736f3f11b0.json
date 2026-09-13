@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T05-55-36-775Z-close-c3736f3f11b0",
+  "taskId": "TASK-PRF-0038",
+  "action": "close",
+  "actorId": "codex-benchmark-oracle",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0038-implement-sealed-corpus-and-blinded-adjudication.task.md",
+  "taskSha256": "sha256:a61e2f45935786b3840bb5daf4d6609ccef71d64c235050b9312f747cc69ae68",
+  "createdAt": "2026-09-13T05:55:36.775Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0038 --actor codex-benchmark-oracle"
+}
