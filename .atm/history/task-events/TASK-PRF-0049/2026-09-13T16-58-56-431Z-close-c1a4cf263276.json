@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T16-58-56-431Z-close-c1a4cf263276",
+  "taskId": "TASK-PRF-0049",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0049-reduce-published-cli-unpacked-runtime-with-measured-boundary-split.task.md",
+  "taskSha256": "sha256:6e6feafad9bbc4f340240f24ca754f01d80ea16e76b6b6f9777eb2137ae0ed9b",
+  "createdAt": "2026-09-13T16:58:56.431Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0049 --actor codex-captain"
+}
