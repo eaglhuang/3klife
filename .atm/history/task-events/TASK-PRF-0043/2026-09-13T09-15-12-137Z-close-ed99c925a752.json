@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T09-15-12-137Z-close-ed99c925a752",
+  "taskId": "TASK-PRF-0043",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0043-verify-sustained-ci-and-clean-adopter-evidence.task.md",
+  "taskSha256": "sha256:82974ad7b1cfc4404d28cce6c812788212426af6b83d3df3c56f95f44af9553b",
+  "createdAt": "2026-09-13T09:15:12.137Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0043 --actor codex-captain"
+}
