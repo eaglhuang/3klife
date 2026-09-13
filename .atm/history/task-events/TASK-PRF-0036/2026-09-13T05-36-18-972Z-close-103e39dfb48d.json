@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T05-36-18-972Z-close-103e39dfb48d",
+  "taskId": "TASK-PRF-0036",
+  "action": "close",
+  "actorId": "codex-benchmark-isolation",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0036-build-isolated-benchmark-environment-and-leakage-controls.task.md",
+  "taskSha256": "sha256:16460ca4182b48a7a7acfb5e770f1eaa87397554fa20aae09c44f2c567d3ea1b",
+  "createdAt": "2026-09-13T05:36:18.972Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0036 --actor codex-benchmark-isolation"
+}
