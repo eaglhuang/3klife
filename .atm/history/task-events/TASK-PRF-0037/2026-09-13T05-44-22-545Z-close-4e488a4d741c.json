@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T05-44-22-545Z-close-4e488a4d741c",
+  "taskId": "TASK-PRF-0037",
+  "action": "close",
+  "actorId": "codex-benchmark-telemetry",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0037-capture-attributable-provider-and-human-cost-telemetry.task.md",
+  "taskSha256": "sha256:2071e7fafdc2d7b565bed7a128dbda4fffe1615f1dc4947216aed28f25ac457c",
+  "createdAt": "2026-09-13T05:44:22.545Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0037 --actor codex-benchmark-telemetry"
+}
