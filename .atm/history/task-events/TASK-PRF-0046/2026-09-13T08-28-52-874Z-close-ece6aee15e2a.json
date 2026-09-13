@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T08-28-52-874Z-close-ece6aee15e2a",
+  "taskId": "TASK-PRF-0046",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0046-repair-duplicate-protocol-v2-import-blocking-atm-dogfood-lint.task.md",
+  "taskSha256": "sha256:32636f55e1ed91f2f81c16de680dc5e7ef305683d481a1498885c261f5381661",
+  "createdAt": "2026-09-13T08:28:52.874Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0046 --actor codex-captain"
+}
