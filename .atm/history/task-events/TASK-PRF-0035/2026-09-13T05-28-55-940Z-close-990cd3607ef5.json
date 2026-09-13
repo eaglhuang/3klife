@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T05-28-55-940Z-close-990cd3607ef5",
+  "taskId": "TASK-PRF-0035",
+  "action": "close",
+  "actorId": "codex-benchmark-metrics",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0035-repair-operation-denominators-and-total-cost-decision.task.md",
+  "taskSha256": "sha256:1295258407478429b1fbd0c79c2544990ae133cfb24d50ddffbe39712ff9ea8e",
+  "createdAt": "2026-09-13T05:28:55.940Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0035 --actor codex-benchmark-metrics"
+}
