@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T08-23-17-733Z-close-08bc560183fb",
+  "taskId": "TASK-PRF-0045",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "ready",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0045-repair-nullable-human-cost-benchmark-contract-before-release-ci.task.md",
+  "taskSha256": "sha256:3574290b1ecbb42fe2905d32c0445d4ff0904b33c8569c6eb40a95d15d04f700",
+  "createdAt": "2026-09-13T08:23:17.733Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0045 --actor codex-captain"
+}

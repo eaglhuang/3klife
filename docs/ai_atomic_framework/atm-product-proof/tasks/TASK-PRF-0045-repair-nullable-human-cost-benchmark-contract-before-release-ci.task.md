@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0045
 title: Repair nullable human-cost benchmark contract before release CI
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on: [TASK-PRF-0035]
@@ -46,6 +46,15 @@ atomizationImpact:
       inlineReason: The existing aggregate result contract is the sole public seam; extracting it would add a second interface without reducing coupling.
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-13T08:23:17.733Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-13T08:23:17.733Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-13T08-23-17-733Z-close-08bc560183fb"
+lastTransitionAt: "2026-09-13T08:23:17.733Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "2ac0d474749aff39fe5106bc884ec3781e9b22ce"
 ---
 
 # TASK-PRF-0045 Repair nullable human-cost benchmark contract before release CI
