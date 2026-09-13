@@ -641,10 +641,62 @@ protected-main candidate observations, and a valid benchmark protocol cannot
 substitute for independently signed execution data. Product Proof remains
 **not established** until all three rows reach their stated evidence level.
 
+## Follow-up: Isolated AI benchmark and independent replication
+
+The owner requested a complete execution plan and all ATM task cards on 2026-09-13.
+The detailed plan is [isolated-ai-benchmark-plan.md](isolated-ai-benchmark-plan.md).
+Reuse the approved PRF family. TASK-PRF-0034 through TASK-PRF-0044 own the
+versioned measurement repair, isolated pilot, formal trial, external replication,
+and combined product decision. TASK-PRF-0008 and TASK-PRF-0019 remain historical
+blocked execution records until their evidence obligations are reconciled; new
+card creation does not close them or claim independent evidence.
+
+The existing planning-only exception applies to this plan and source cards.
+Actual framework changes require target admission. Benchmark worktrees are
+disposable external-project experimental units, not framework development lanes.
+
 ## ErrorCode Registry Migration Note
 
 If this family owns error governance, keep the canonical
 `docs/governance/error-code-registry.json` in place until a governed migration
 task updates emitters, generators, tests and documentation together.
+
+## Follow-up: TASK-PRF-0031 — Continuous Product CI burn-in retention
+
+The latest burn-in measurement showed only a 6.17-day observation window,
+despite the Product CI lane itself passing. The workflow currently runs on
+pushes and manual dispatches but has no recurring protected-main observation.
+TASK-PRF-0031 adds a low-cost daily schedule and a fail-closed contract that
+preserves the existing Product CI checks, denies publish/write permissions,
+and keeps the burn-in evaluator as the sole source of the long-term claim.
+
+The task does not alter historical records, claim long-term success early, or
+substitute scheduled CI for the independent A/B benchmark.
+
+## Follow-up: TASK-PRF-0033 — Fail-closed timeout and diagnostics for Standard Dogfood
+
+The protected-main observation `34708532902` delivered a successful Product CI,
+but remained in progress at `ATM Dogfood -> Validate Standard` with no updated
+timestamp or available live log. Local execution shows the validator suite is
+progress-aware and can run for a long time, so the current workflow cannot
+distinguish a slow legitimate suite from a stalled runner. This follow-up adds
+an outer job timeout and preserves the validator progress/active-validator
+diagnostic when the bound is exceeded. It must keep Product CI independent and
+must classify timeout separately from ordinary validator failure.
+
+The task changes the measurable CI contract (bounded completion and actionable
+timeout evidence), not the burn-in thresholds; a timeout remains a non-green
+observation and cannot be silently excluded from the history.
+
+## Follow-up: TASK-PRF-0045 — Repair nullable human-cost benchmark contract
+
+Release dry-run `34743456433` passed the version-synchronization step after
+TASK-PRF-0020, then failed TypeScript validation at
+`scripts/lib/external-benchmark/metrics.ts(75,5)`: the aggregate implementation
+returns `null` for unavailable human minutes while its declared result contract
+still required `number`. TASK-PRF-0045 aligns the public result type with the
+fail-closed cost policy and adds focused regression coverage. It must complete
+before another release dry-run; it does not authorize npm publication or alter
+benchmark conclusions.
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-13T16:06:54.992Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-product-proof-plan.md","contentDigest":"sha256:f11f250ccae9ba9126b89000f968a456214ca8415903d8c2a9955debe310d47e"} -->
