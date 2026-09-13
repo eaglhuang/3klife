@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T06-40-15-193Z-close-6c30e5102a55",
+  "taskId": "TASK-PRF-0020",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0020-repair-sealed-runner-publication-transaction-and-stable-entrypoint-sync.task.md",
+  "taskSha256": "sha256:3bbf5d2d49ed3f4dddc8d415993d6ff544c5ae2e57f9f39c90c6560cb998215b",
+  "createdAt": "2026-09-13T06:40:15.193Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0020 --actor codex-captain"
+}

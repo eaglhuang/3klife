@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0020
 title: Repair sealed runner publication transaction and stable entrypoint sync
-status: planned
+status: done
 owner: unassigned
 priority: P2
 depends_on: [TASK-PRF-0018]
@@ -37,6 +37,15 @@ validators:
   - npm run validate:internal-release-sync -- --mode validate
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-13T06:40:15.193Z"
+completed_by_agent: "codex-captain"
+closedAt: "2026-09-13T06:40:15.193Z"
+closedByActor: "codex-captain"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-13T06-40-15-193Z-close-6c30e5102a55"
+lastTransitionAt: "2026-09-13T06:40:15.193Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "08e28d7973e8443bb11e91a77adcd25f3ea69afb"
 ---
 
 # TASK-PRF-0020 Repair sealed runner publication transaction and stable entrypoint sync
