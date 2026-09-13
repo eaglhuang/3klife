@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-13T09-33-52-752Z-close-8c1d1f41ddd1",
+  "taskId": "TASK-PRF-0047",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0047-align-public-npm-install-proof-with-stable-latest-release.task.md",
+  "taskSha256": "sha256:e1e09cfc1d91ff2a5fa3469bd842762c34ad9d1c5dbcf3c2773637fccc7cccb6",
+  "createdAt": "2026-09-13T09:33:52.752Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0047 --actor codex-captain"
+}
