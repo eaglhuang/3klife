@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T04-22-05-609Z-close-2812dc4b3ed7",
+  "taskId": "TASK-PRF-0060",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0060-restore-complete-npm-runtime-boundary-without-fake-slimming.task.md",
+  "taskSha256": "sha256:b50285ed6a8dffac42b7b996ea04e3ef1de554819ac8220342a21e4e43ccedff",
+  "createdAt": "2026-09-14T04:22:05.609Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0060 --actor codex-gpt-5.4-mini"
+}
