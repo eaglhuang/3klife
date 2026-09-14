@@ -155,10 +155,35 @@ ATM 的價值是讓 AI 更可靠、更低成本地交付軟體，並留下足以
 | [TASK-PRF-0099](tasks/TASK-PRF-0099-deliver-bounded-quickfix-workflow-with-fewer-operator-decisions.task.md) | 既有 Quickfix 操作簡化 | 先量固定小bug的實际操作 | 固定bug必要呼叫或決策下降≥30%；不新增指令 |
 | [TASK-PRF-0100](tasks/TASK-PRF-0100-verify-convergence-release-against-fixed-product-acceptance.task.md) | 整合產品 go/no-go 驗收 | 0096–0099，以及下表既有產品證據 | 全部產品門檻逐項有版本綁定證據 |
 | [TASK-PRF-0101](tasks/TASK-PRF-0101-integrate-millisecond-cost-score-into-product-proof.task.md) | 將指令/gate 毫秒成本整合進產品判定 | 既有 telemetry/report 或獨立收集的固定 workload；可消費 0097、0099 樣本但不等待其結案 | 前十大熱點、覆蓋率、每任務節省 ms、p50/p95 與失敗成本可重跑；未量測不宣稱 |
+| [TASK-PRF-0108](tasks/TASK-PRF-0108-eliminate-duplicate-package-dist-build-during-onefile-root-drop-assembly.task.md) | 移除 onefile/root-drop 重複 package-dist 建置 | 0101 熱點盤點顯示 validate-bootstrap 秒級成本；既有 artifact digest 可比對 | onefile 僅建置一次、直接 root-drop 安全預設不變、artifact digest/語義不變、AB/BA＋A/A 毫秒證據；未達門檻即停止 |
 
 所有新卡由 plan CLI 分配。跨卡共享 atm-public.ts：0095先交付，0096/0097後續依實際source版本協调，不同時覆蓋彼此變更。六張卡是本轮新增範圍全部，下面是併入本計畫的既有工作，不能重複開發。
 
 ## 既有任務對照與接續
+
+### CI 觀察窗口現況（2026-09-15 唯讀快照）
+
+以 GitHub `ci.yml` 的最近 100 次 workflow run 作為目前可查的外部基線：
+36 次 success、64 次 failure；最早 `2026-09-06T15:45:42Z`，最新
+`2026-09-14T03:31:44Z`。因此目前只有約 7.5 天的混合結果，尚未達到產品
+要求的「受保護主分支連續 30 天、90 次有效執行」，也不能把 CI badge 或最後一次
+成功當成長期綠色證明。0100/0059/0066 必須保留每次首敗、重跑、修復耗時與排除理由，
+並在同一 job 覆蓋 build、test、package、clean-install 後，才可重新計算 burn-in。
+
+查詢口徑：
+`gh run list --repo eaglhuang/AI-Atomic-Framework --workflow ci.yml --limit 100 --json databaseId,status,conclusion,createdAt,updatedAt`
+
+補充：最近一次 lint 失敗的根因是 `external-benchmark-v2-contract.test.ts` 的重複
+`protocol-v2.ts` import；該檔案已有合併 import 的修復提交。修復後可見的 4 次
+`ci.yml` run（兩次在 `ba0b6335`、兩次在 `e46dfa74`）均為 success，這是修復後
+的短期綠色訊號，不是 30 天／90 次 burn-in 證明。
+
+公開 npm 的 `next` tag（`@ai-atomic-framework/cli@0.1.0-beta.5`）也已做一次
+完整 clean-install 檢查：安裝與 version/doctor/bootstrap 可執行，但
+`atm-chart render/verify` 仍回 `ATM_CHART_SCHEMA_SOURCE_MISSING`，因此不能用
+beta tag 覆蓋 latest 的產品交付缺口。該次 receipt 已放在外部 sink：
+`C:/Users/User/atm-benchmark-sink/npm-beta5-proof.json`。
+
 
 | 原始問題 | 既有卡 | 本計畫的處理 |
 |---|---|---|
@@ -231,5 +256,49 @@ FAIL、BLOCKED、timeout 與 retry。報告以 frequency-weighted cumulative wai
 - 以相同工作區、Node、cache 與 runner 做前後配對，至少 30 組 doctor 樣本；目標 p50 降低 ≥30%，p95 不得回歸 >10%，並保留每個檢查結果與失敗碼。
 - 若快速路徑不能證明 manifest 檔案完整性，仍須 fail-closed；不得移除 integration drift 的明確修復指引。
 - 只改既有 health adapter seam 與測試，不新增命令、registry、daemon 或第二套狀態來源；回退為單一 revert commit。
+
+## 累積熱點快修 follow-up（TASK-PRF-0105）
+
+0104 的 30-run 量測已把「每次都會付出的控制面成本」改成可排序的毫秒資料。現有觀測中，
+`next.route-resolution` 的 frequency-weighted cumulative mandatory wait 約 380,415 ms，
+高於其他已量測路徑；因此下一步只處理 route resolution 的重複掃描／程序啟動成本，不擴張治理範圍。
+
+- 先在相同 workload 以既有 telemetry 與外部單調時鐘拆出 route-resolution 的子步驟，確認最大成本是否來自 queue/task ledger 掃描、`spawnSync` 或重複路徑解析；沒有證據的部分維持 unknown。
+- 只選一個最高成本、可回滾的 seam 做快修；保留多 AI 並行能力，讀取與各 agent 私有 evidence 不排隊，共享寫入仍使用既有 broker，不新增 gate、registry、daemon 或全歷史索引。
+- 驗收必須同時看 p50、p95、每任務累積 ms、錯誤／重試語義與 CPU/記憶體開銷；候選至少讓 route-resolution p50 降低 20%，p95 不回歸超過 10%，否則記錄反證並停止擴大。
+- 以同 runner、同 Node、同 cache 做 AB/BA 與 A/A；結果寫入外部 sink，Git 只保留摘要、腳本與 digest。回退為單一 revert commit。
+
+首次外部同 runner 15 對 AB/BA 實測得到 baseline p50 129.982ms、candidate p50 111.276ms，下降 14.391%；candidate p95 126.644ms，改善 10.876%，A/A 噪聲控制 p50 108.349ms。這是方向正確且可回滾的實際減負，但未達 20% p50 正式門檻，因此標記為 inconclusive，不再為追門檻擴大程式或治理複雜度；receipt 與重跑 harness 留在外部 sink。
+
+## Governance-readiness Git spawn follow-up（TASK-PRF-0106）
+
+0105 的 profiling 顯示 `build-governance-readiness` 約 500–550ms，主要成本來自 `readDirtyWorktreeFiles` 同步啟動兩次 Git process。0106 只把這兩次讀取合併為一次 `git status --porcelain=v1 -z` 並保留 staged、tracked-dirty、untracked 與路徑正規化語義；不改 broker、claim、lock、close 或多 AI 並行規則。
+
+驗收以同 runner、同 Node、同 dirty/staged fixture 做 AB/BA 與 A/A，記錄該 gate 的 p50、p95、累積 ms 與分類結果；若 p50 未下降至少 20% 或 dirty/staged 分類任一改變，停止並回退單一提交。不得新增 command、registry、daemon、database 或第二狀態源。
+
+初次外部 15 對 AB/BA 結果：兩次 Git process baseline p50 264.362ms、p95 308.032ms；單次 status process candidate p50 120.583ms、p95 167.245ms；p50 下降 54.387%、p95 改善 45.705%，A/A p50 117.800ms。舊新 93-path digest 相同，故此切口達到 provisional gate；仍須在正式 release runner 與完整 command-level matrix 中重驗，不能把 substep 成效直接外推為整體 ATM 成效。
+
+## npm 安裝完整性與毫秒評分接續（TASK-PRF-0107）
+
+0104–0106 已把「必經 gate 的等待毫秒」變成可排序的證據，但公開 npm 0.1.0 的乾淨安裝仍在 `atm-chart render/verify` 失敗：套件 manifest 宣稱有 schema 的邏輯資產，實際 tarball 卻沒有可供 chart lifecycle 讀取的 source。這是產品交付缺口，不是再增加治理流程的理由；必須用最小的既有 runtime seam 修正，並把修正後的 clean-install wall ms 一起量測。
+
+- 先以 clean install 重現 `ATM_CHART_SCHEMA_SOURCE_MISSING`，確認 registry tarball、候選 tarball、source-first runner 三者的差異；不得把 `--version` 通過當作功能通過。
+- 以現有 `resolveATMChartSchemaSource` 與 `embeddedATMChartSchemaAssets` 為唯一 seam：優先讓 chart render/verify 在套件內使用已封存的 schema digest/最小必要資料；若必須攜帶檔案，先量測 bytes/entries 並證明不破壞既有 artifact budget。不得複製整個 `schemas/`，不得新增第二份 registry。
+- 以 TDD 補一個「無 repo 根目錄、只有 npm runtime」的 render→verify case，再跑既有 public-install validator 的完整命令矩陣與故意缺 schema 負測。保留 missing/invalid schema 的 fail-closed 語義。
+- 成效評分同時記錄 clean-install command/gate wall ms（p50/p95、失敗率、重試）與 unpacked bytes/entries；安裝正確性是硬門檻，毫秒改善不能抵銷功能失敗。若套件仍缺功能或超出預算，停止 publish，保留外部 receipt 與反證。
+- 量測最少 30 組交錯 AB/BA 與 8 組 A/A；固定 Node/npm、registry version、cache 定義與 tarball digest。raw samples 放既有外部 sink，Git 只留摘要及 digest。回退為單一 revert commit，不重寫既有 0104–0106 provenance。
+
+## Standard-validator build duplication follow-up (TASK-PRF-0108)
+
+標準 profile 的最新 telemetry 顯示 `validate-bootstrap` 為 146,542 ms 熱點。
+唯讀 source trace 發現 `buildOnefileRelease()` 先直接呼叫
+`build-package-dist.ts`，再呼叫 `buildRootDropRelease()`；後者的安全預設又
+無條件呼叫同一建置。0108 只會讓 onefile 將「已完成 package-dist 建置」明確
+傳給 root-drop，保留 root-drop 被其他 caller 直接呼叫時的 freshness build。
+
+這是重複工作刪除，不是移除驗證：驗收仍需比較 root-drop/onefile manifest、
+launcher 行為與 bootstrap 語義，並以 AB/BA、A/A 的毫秒收據確認實際收益。若
+digest 或任何語義改變，或 p50 未下降 20%／p95 回歸超過 10%，即回退單一提交，
+不再擴張成新的建置快取或治理服務。
 
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-09-14T15:08:44.119Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-convergence-plan.md","contentDigest":"sha256:61b1ba3a1bbcbb5daacce3f747356e2a1c465b0197ac19b4a685e27caa0f6d8c"} -->
