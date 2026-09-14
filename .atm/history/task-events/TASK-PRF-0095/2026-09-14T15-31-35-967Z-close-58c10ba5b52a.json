@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T15-31-35-967Z-close-58c10ba5b52a",
+  "taskId": "TASK-PRF-0095",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0095-unify-public-command-registry-and-reject-inherited-command-names.task.md",
+  "taskSha256": "sha256:e338d2d7a502f814144bd7ac437ac9ebccecaa7f225e41533e47df7fa07bffbf",
+  "createdAt": "2026-09-14T15:31:35.967Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0095 --actor codex-product-proof"
+}
