@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T00-40-06-029Z-close-2983f8704ead",
+  "taskId": "TASK-PRF-0050",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0050-repair-cli-published-boundary-and-validator-false-greens-after-task-prf-0050.task.md",
+  "taskSha256": "sha256:f7a4ad5df9216e4190a2dbf1912a56060cec89c59710561670cb8818d2eac5af",
+  "createdAt": "2026-09-14T00:40:06.029Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0050 --actor codex-captain"
+}
