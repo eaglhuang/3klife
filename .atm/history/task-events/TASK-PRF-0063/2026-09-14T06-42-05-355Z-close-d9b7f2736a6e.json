@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T06-42-05-355Z-close-d9b7f2736a6e",
+  "taskId": "TASK-PRF-0063",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0063-make-ci-lifecycle-receipts-replayable-and-semantically-fail-closed.task.md",
+  "taskSha256": "sha256:2afd98c9a363ebb8bf0f52210b48b4a73f0da8d2d5cb65745b76e824c2ebf2ae",
+  "createdAt": "2026-09-14T06:42:05.355Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0063 --actor codex-gpt-5.4-mini"
+}
