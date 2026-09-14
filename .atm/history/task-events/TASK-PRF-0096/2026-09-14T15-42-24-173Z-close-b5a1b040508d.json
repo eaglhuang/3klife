@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T15-42-24-173Z-close-b5a1b040508d",
+  "taskId": "TASK-PRF-0096",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0096-converge-adopter-workflows-and-retire-redundant-command-implementations.task.md",
+  "taskSha256": "sha256:d3810d414de395667a97c9911e32d5fb61ed3fc0786e14cf38313f3c7cd9d63e",
+  "createdAt": "2026-09-14T15:42:24.173Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0096 --actor codex-product-proof"
+}
