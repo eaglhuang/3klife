@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T00-30-05-973Z-close-233fa292fbf0",
+  "taskId": "ATM-GOV-0420",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0420-repair-false-green-closure-when-runner-scope-changes-before-batch-checkpoint.task.md",
+  "taskSha256": "sha256:69222a885d714fe45812d42ec72f3443056f41bfdac5cc8e9708e7f464302da8",
+  "createdAt": "2026-09-14T00:30:05.973Z",
+  "command": "node atm.mjs tasks close --task ATM-GOV-0420 --actor codex-captain"
+}
