@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T20-59-46-557Z-close-57114b384004",
+  "taskId": "TASK-PRF-0108",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0108-eliminate-duplicate-package-dist-build-during-onefile-root-drop-assembly.task.md",
+  "taskSha256": "sha256:bd8c2a142e197c22b2b83a552b2c1d157b7023420fdb72c0e43e61dea02c122c",
+  "createdAt": "2026-09-14T20:59:46.557Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0108 --actor codex-gpt-5.4-mini"
+}
