@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0094
 title: Require job-level provenance in CI lifecycle evidence before burn-in replay
-status: planned
+status: done
 owner: atm-product-proof
 priority: P1
 depends_on: []
@@ -111,6 +111,15 @@ atomizationImpact:
   extractionCandidates: []
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-14T14:50:23.229Z"
+completed_by_agent: "codex-product-proof"
+closedAt: "2026-09-14T14:50:23.229Z"
+closedByActor: "codex-product-proof"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-14T14-50-23-229Z-close-b23c0e05655d"
+lastTransitionAt: "2026-09-14T14:50:23.229Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "14126f7a08ad05ab27a333f03eac6323663be56f"
 ---
 
 # TASK-PRF-0094 Require job-level provenance in CI lifecycle evidence before burn-in replay

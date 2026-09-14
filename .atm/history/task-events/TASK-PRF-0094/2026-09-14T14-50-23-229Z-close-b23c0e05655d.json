@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T14-50-23-229Z-close-b23c0e05655d",
+  "taskId": "TASK-PRF-0094",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0094-repair-ci-lifecycle-replay-contract-and-failure-classification.task.md",
+  "taskSha256": "sha256:6ea662becfaa04257361a75d6f689840f30cdf2e5038704367bb639386807ae5",
+  "createdAt": "2026-09-14T14:50:23.229Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0094 --actor codex-product-proof"
+}
