@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T13-47-23-833Z-close-dd52db22f822",
+  "taskId": "TASK-PRF-0092",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0092-make-runtime-evidence-boundary-portable.task.md",
+  "taskSha256": "sha256:8c393620ddd6bfa2b20eb287ab41f64c82d84f0d897cc3a1f9e20fa5a5a63f25",
+  "createdAt": "2026-09-14T13:47:23.833Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0092 --actor codex-product-proof"
+}
