@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T03-17-58-152Z-close-5880edae13e7",
+  "taskId": "TASK-PRF-0057",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0057-preserve-complete-metadata-for-explicit-candidate-tarballs.task.md",
+  "taskSha256": "sha256:c6751d31d5eb608dbf7ae614e25194edb54fba9cc968086e5469b3784589416f",
+  "createdAt": "2026-09-14T03:17:58.152Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0057 --actor codex-gpt-5.4-mini"
+}
