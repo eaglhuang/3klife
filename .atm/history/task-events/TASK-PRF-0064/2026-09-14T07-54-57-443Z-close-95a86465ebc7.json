@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T07-54-57-443Z-close-95a86465ebc7",
+  "taskId": "TASK-PRF-0064",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0064-scope-ci-burn-in-evidence-to-the-product-workflow.task.md",
+  "taskSha256": "sha256:cf84cd2661e547bf3a8d93f45e40551e3b6cf3ff96a4f144e783fa2db0424766",
+  "createdAt": "2026-09-14T07:54:57.443Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0064 --actor codex-gpt-5.4-mini"
+}
