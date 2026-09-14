@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T01-01-12-304Z-close-fa59a4dcf438",
+  "taskId": "TASK-PRF-0051",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0051-re-establish-protected-main-product-ci-burn-in-after-delivery-drift.task.md",
+  "taskSha256": "sha256:0f1f4f4b07ab2578bd5bc389b2e21fc60868d4ecb3ae35f2a6549a343849fbd4",
+  "createdAt": "2026-09-14T01:01:12.304Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0051 --actor codex-gpt-5.4-mini"
+}
