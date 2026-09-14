@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T01-43-07-319Z-close-5523c6fcff8c",
+  "taskId": "TASK-PRF-0052",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0052-repair-public-npm-runtime-schema-closure-and-complete-clean-workflow.task.md",
+  "taskSha256": "sha256:e3ce4e4da5c59bbd19103d59c17c2c9357cb9b38558f07c9bffc5a10ff35c667",
+  "createdAt": "2026-09-14T01:43:07.319Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0052 --actor codex-gpt-5.4-mini"
+}
