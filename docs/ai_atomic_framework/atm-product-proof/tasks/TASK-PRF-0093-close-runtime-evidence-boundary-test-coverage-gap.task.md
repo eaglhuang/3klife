@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0093
 title: Close the runtime evidence boundary negative-test coverage gap
-status: planned
+status: done
 owner: atm-evidence
 priority: P1
 depends_on: [TASK-PRF-0092]
@@ -111,6 +111,15 @@ atomizationImpact:
   newScriptsAllowed: false
   extractionCandidates: []
 errorCodes: []
+completed_at: "2026-09-14T13:59:33.908Z"
+completed_by_agent: "codex-product-proof"
+closedAt: "2026-09-14T13:59:33.908Z"
+closedByActor: "codex-product-proof"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-14T13-59-33-908Z-close-346352c597fb"
+lastTransitionAt: "2026-09-14T13:59:33.908Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "250ddd3ff96ce6b72480a587eac9ac69d2a142da"
 ---
 
 # TASK-PRF-0093 Close the runtime evidence boundary negative-test coverage gap

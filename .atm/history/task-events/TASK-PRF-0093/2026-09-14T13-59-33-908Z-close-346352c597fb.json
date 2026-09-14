@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T13-59-33-908Z-close-346352c597fb",
+  "taskId": "TASK-PRF-0093",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0093-close-runtime-evidence-boundary-test-coverage-gap.task.md",
+  "taskSha256": "sha256:e4e59587f45d239fb024a6f3ffcee30bea2d5cc99c3345a3722c9ec6b7a6c607",
+  "createdAt": "2026-09-14T13:59:33.908Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0093 --actor codex-product-proof"
+}
