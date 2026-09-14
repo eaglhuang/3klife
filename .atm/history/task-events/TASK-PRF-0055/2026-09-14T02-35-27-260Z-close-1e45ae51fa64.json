@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T02-35-27-260Z-close-1e45ae51fa64",
+  "taskId": "TASK-PRF-0055",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0055-retain-ci-first-failure-retry-and-repair-time-evidence.task.md",
+  "taskSha256": "sha256:9233475815e860ccf104575b1dc0432180441c0a6f39826dca072cf3ee759f7f",
+  "createdAt": "2026-09-14T02:35:27.260Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0055 --actor codex-gpt-5.4-mini"
+}
