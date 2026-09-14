@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T03-46-11-742Z-close-8ecbe3994893",
+  "taskId": "TASK-PRF-0058",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0058-collect-protected-main-ci-lifecycle-evidence-for-a-rerunnable-30-day-burn-in-proof.task.md",
+  "taskSha256": "sha256:1657428fd856739597788f821ad75de98ac320e77733efdb0ab66eb5e70bdce6",
+  "createdAt": "2026-09-14T03:46:11.742Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0058 --actor codex-gpt-5.4-mini"
+}
