@@ -1239,4 +1239,29 @@ baseline and legacy retention assertions remain unchanged. No runtime storage
 policy, durable allowlist, history, package artifact, or publish workflow may
 change.
 
+## Follow-up: TASK-PRF-0094 — Require job-level provenance before CI burn-in replay
+
+The TASK-PRF-0059 external export is correctly retained as a negative result:
+the replay observed 800 completed attempts spanning the requested window but
+returned `unexplained-failure` (180 successes, 620 failures, and no retries).
+The evidence review also identified that the source records do not carry an
+immutable Product CI job identifier, name, and URL for each attempt. Without
+that attribution, an evaluator cannot distinguish a genuine product failure
+from an incomplete provider export, nor audit the failure class and repair path.
+
+This is not a reason to reopen 0059, and it is not a wrapper-replay bug: the
+canonical wrapper contract was repaired by TASK-PRF-0063. TASK-PRF-0094 is a
+follow-up implementation card that strengthens the collector/evaluator input
+boundary. Every in-scope attempt must preserve Product CI job provenance through
+retry grouping, while missing or malformed provenance fails closed. The existing
+0059 raw export, receipt, failure counts, and report remain byte-for-byte
+unchanged; only an append-only note may reference this card.
+
+The card changes only the CI lifecycle evidence contract, its focused tests, and
+the lifecycle report. It does not change workflow permissions, burn-in
+thresholds, npm publication, benchmark arms, task history, or external raw
+evidence. Completion is proven by command-backed collector/evaluator tests,
+typecheck, and the encoding guard; it does not establish long-term green until
+a new independently sourced export passes the 30-day/90-run policy.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-13T16:06:54.992Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-product-proof-plan.md","contentDigest":"sha256:2d46db99108aeffcba1bf465ed329695af6f99516e09ad8d4bd91090392ebce9"} -->
