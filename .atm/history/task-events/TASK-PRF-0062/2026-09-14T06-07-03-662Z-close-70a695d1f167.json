@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T06-07-03-662Z-close-70a695d1f167",
+  "taskId": "TASK-PRF-0062",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0062-re-establish-measured-entry-reduction-after-complete-runtime-closure.task.md",
+  "taskSha256": "sha256:62da91b41ed4d0ea3395479bc1028bed4a8f3a89c4726ab2015a40a586d7d962",
+  "createdAt": "2026-09-14T06:07:03.662Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0062 --actor codex-gpt-5.4-mini"
+}
