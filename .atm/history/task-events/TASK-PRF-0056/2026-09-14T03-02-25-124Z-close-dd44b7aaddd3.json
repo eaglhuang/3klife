@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-14T03-02-25-124Z-close-dd44b7aaddd3",
+  "taskId": "TASK-PRF-0056",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0056-require-the-complete-core-workflow-in-candidate-npm-proof.task.md",
+  "taskSha256": "sha256:bed7af2f95b76a2ba9049ac01c26140d0b2a6203aceeb7dd9dc4aea54c91d737",
+  "createdAt": "2026-09-14T03:02:25.124Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0056 --actor codex-gpt-5.4-mini"
+}
