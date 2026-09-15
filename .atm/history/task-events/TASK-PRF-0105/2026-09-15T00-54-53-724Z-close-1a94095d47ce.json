@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-15T00-54-53-724Z-close-1a94095d47ce",
+  "taskId": "TASK-PRF-0105",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0105-optimize-highest-cumulative-route-resolution-latency-hotspot.task.md",
+  "taskSha256": "sha256:52edbb40cf8be80a6897b130db62c9a8c67b5387d35d1f60179cceef413b2a39",
+  "createdAt": "2026-09-15T00:54:53.724Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0105 --actor codex-gpt-5.4-mini"
+}
