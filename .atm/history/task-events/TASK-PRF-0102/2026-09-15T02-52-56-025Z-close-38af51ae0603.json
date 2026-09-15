@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-15T02-52-56-025Z-close-38af51ae0603",
+  "taskId": "TASK-PRF-0102",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0102-instrument-mandatory-atm-gates-with-millisecond-telemetry.task.md",
+  "taskSha256": "sha256:86b964ec0f63416357f9ab4a8f9cd4fd8eccc13fb2131c96661a4d0c82322a95",
+  "createdAt": "2026-09-15T02:52:56.025Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0102 --actor codex-gpt-5.4-mini"
+}

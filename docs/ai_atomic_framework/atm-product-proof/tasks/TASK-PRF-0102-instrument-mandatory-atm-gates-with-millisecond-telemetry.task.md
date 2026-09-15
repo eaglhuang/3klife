@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0102
 title: Instrument mandatory ATM gates with millisecond telemetry
-status: planned
+status: done
 owner: codex-product-proof
 priority: P1
 depends_on: []
@@ -84,6 +84,15 @@ atomizationImpact:
       source: packages/cli/src/atm.ts
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-15T02:52:56.025Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-15T02:52:56.025Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-15T02-52-56-025Z-close-38af51ae0603"
+lastTransitionAt: "2026-09-15T02:52:56.025Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ea324151ec92d564c18dcd995cacba7e702213b2"
 ---
 
 # TASK-PRF-0102 Instrument mandatory ATM gates with millisecond telemetry
