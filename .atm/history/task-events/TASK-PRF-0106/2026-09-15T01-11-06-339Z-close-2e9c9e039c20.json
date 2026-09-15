@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-15T01-11-06-339Z-close-2e9c9e039c20",
+  "taskId": "TASK-PRF-0106",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0106-reduce-governance-readiness-git-process-startup.task.md",
+  "taskSha256": "sha256:8b2cc6b00850f208fc0f7f9bc8637651eb86e9160142b69820881c758c5749b0",
+  "createdAt": "2026-09-15T01:11:06.339Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0106 --actor codex-gpt-5.4-mini"
+}
