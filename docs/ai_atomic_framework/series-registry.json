@@ -1,6 +1,6 @@
 {
   "schemaId": "atm.seriesRegistry.v1",
-  "generatedAt": "2026-08-29T10:41:04.291Z",
+  "generatedAt": "2026-09-14T15:08:44.120Z",
   "baseDir": ".",
   "series": [
     {
@@ -113,6 +113,7 @@
       "prefix": "TASK-PRF",
       "familyDir": "atm-product-proof",
       "planDocs": [
+        "atm-product-proof/atm-convergence-plan.md",
         "atm-product-proof/atm-product-proof-plan.md"
       ],
       "status": "active",

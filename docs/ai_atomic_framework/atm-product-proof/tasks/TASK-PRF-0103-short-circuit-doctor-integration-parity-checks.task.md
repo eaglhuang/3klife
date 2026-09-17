@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0103
 title: Short-circuit doctor integration parity checks
-status: planned
+status: done
 owner: codex-product-proof
 priority: P1
 depends_on: []
