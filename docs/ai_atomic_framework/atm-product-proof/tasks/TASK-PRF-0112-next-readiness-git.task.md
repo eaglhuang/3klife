@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0112
 title: Integrate deferred next readiness probes and bounded Git scans
-status: planned
+status: done
 owner: unassigned
 priority: P1
 depends_on: [TASK-PRF-0109]
@@ -40,6 +40,15 @@ validators:
   - "git diff --check"
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-17T16:55:59.490Z"
+completed_by_agent: "claude-code-opus-5"
+closedAt: "2026-09-17T16:55:59.490Z"
+closedByActor: "claude-code-opus-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-17T16-55-59-490Z-close-d344719ed695"
+lastTransitionAt: "2026-09-17T16:55:59.490Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "9474cc211"
 ---
 
 # TASK-PRF-0112 Integrate deferred next readiness probes and bounded Git scans

@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-17T16-55-59-490Z-close-d344719ed695",
+  "taskId": "TASK-PRF-0112",
+  "action": "close",
+  "actorId": "claude-code-opus-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0112-next-readiness-git.task.md",
+  "taskSha256": "sha256:54062176fe146116a8b193e0cd61b375163ff6154945c19af0355f5a68f1db42",
+  "createdAt": "2026-09-17T16:55:59.490Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0112 --actor claude-code-opus-5"
+}
