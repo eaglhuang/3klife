@@ -49,7 +49,7 @@ ATM 的價值是讓 AI 更可靠、更低成本地交付軟體，並留下足以
 ## 已知基線與證據限制
 
 - Node：WSL Ubuntu 原生 Linux v24.12.0/npm 11.6.2 已安裝並 smoke PASS；這只證明 Node 環境，不等於 pilot 完成。Windows 與 Linux 分開記錄。
-- 公開 facade 原始表列 21 個 commands，名稱與 runner 重複維護；目前第一項開發驗證 inherited property 的行為，尚未宣稱修好。
+- 公開 facade 的歷史表列曾是 21 個 commands，但目前 frozen runner 的 help 實際列出 62 個 top-level ATM 指令；名稱、runner 與 telemetry mapping 仍可能不一致。這個數字差異本身是可追溯性缺口，後續以 `listCommandSpecs()`／help 的實際輸出作為 inventory authority，不再沿用 21 的舊摘要。
 - 先前 build 回報 64 files/2,629,665 bytes，只是 runtime manifest 口徑，不是完整 npm unpacked 或依賴體積。每項體積實驗必須凍結新的實際 tarball baseline。
 - 先前 CI 匯出 800 attempts、180 success/620 failure 是歷史觀察，不是長期綠色證明；不可跨 workflow 混算。
 - PRF-0092/0093 已提供外置 evidence/負測；PRF-0094 提供 job provenance。不能因卡 done 就認定所有 runtime evidence 已從 Git 歷史移除。
@@ -67,7 +67,7 @@ ATM 的價值是讓 AI 更可靠、更低成本地交付軟體，並留下足以
 | `node atm.mjs broker status --json` | 858 ms | 868 ms | 8/8 通過 | 讀取型 broker 成本候選 |
 | `node atm.mjs --version` | 108 ms | 203 ms | 8/8 通過 | 程序啟動基線；單次低但高頻時仍計入累積成本 |
 
-同一時間的 gate telemetry coverage report 顯示 9 個家族中 5 個 `instrumented`、1 個 `not-yet-covered`、3 個 `read-only-summary`；`m2Comparable=false`。缺口包括 validator queue/execution/cache/fan-out、evidence seal/readback/handoff、git governance/hooks/branch queue 及 runner-sync/release/projection 的真實 producer 或必要 correlation。這個快照只證明目前 coverage 不足，不能用來補造 duration=0。
+同一時間的 gate telemetry coverage report 顯示 9 個家族中 5 個 `instrumented`、2 個 `not-yet-covered`、2 個 `read-only-summary`；`m2Comparable=false`。缺口包括 validator queue/execution/cache/fan-out、evidence seal/readback/handoff、git governance/hooks/branch queue 及 runner-sync/release/projection 的真實 producer 或必要 correlation。這個快照只證明目前 coverage 不足，不能用來補造 duration=0。
 
 下一個基線批次必須先把 `doctor` 的 runner-publication blocker 與性能觀測分離：同一固定版本建立可通過與預期失敗兩條 workload，分別報成功延遲、失敗延遲、錯誤碼及重工時間。完成正式 30 組前，本表所有 p50/p95 僅用於排序候選，不作門檻判定。
 
@@ -136,6 +136,15 @@ ATM 的價值是讓 AI 更可靠、更低成本地交付軟體，並留下足以
 
 第一版只需要可重跑 JSON＋Markdown 排行榜，優先擴充現有 report，不建新 GUI。每列顯示指令/gate、適用路徑、mandatory、樣本數、頻次、p50/p95 ms、排隊 ms、累積成本、失敗率、版本及實測/未知標記；另顯示前十大熱點與未覆蓋清單。資料不足時不能只展示綠色結論。
 
+**全量覆蓋硬門檻：** 最終產品證明的 command inventory 必須等於當版
+`listCommandSpecs()`／help 的實際 top-level 指令集合（目前基線為 62），每個
+被執行的指令都要有外部 wall `durationMs`；品質 gate 另依 workflow applicability
+標示必經或條件執行。八個 canonical gate 的 registry 通過，不代表其餘指令已量測。
+中途可保留 `unknown` 供排序，但在 0100 go/no-go 前，所有固定任務必經 gate 必須
+有真實樣本，command coverage 與 mandatory-gate coverage 均不得以 fixture 或
+`duration=0` 補足；未達覆蓋即 no-go。這項門檻只要求重用現有 telemetry/report
+資料流，不新增常駐服務、第二 registry 或 GUI。
+
 #### 執行順序、目標與停止條件
 
 1. **盤點與基線：** 0099 接續固定小 bug 流程與上述必經路徑計時，0101 整合所有已量到的指令/gate 收據，先交覆蓋清單、真實 baseline 和前十大熱點；0096/0098 提供各自受影響步驟，不新增常駐治理機制。
@@ -156,8 +165,23 @@ ATM 的價值是讓 AI 更可靠、更低成本地交付軟體，並留下足以
 | [TASK-PRF-0100](tasks/TASK-PRF-0100-verify-convergence-release-against-fixed-product-acceptance.task.md) | 整合產品 go/no-go 驗收 | 0096–0099，以及下表既有產品證據 | 全部產品門檻逐項有版本綁定證據 |
 | [TASK-PRF-0101](tasks/TASK-PRF-0101-integrate-millisecond-cost-score-into-product-proof.task.md) | 將指令/gate 毫秒成本整合進產品判定 | 既有 telemetry/report 或獨立收集的固定 workload；可消費 0097、0099 樣本但不等待其結案 | 前十大熱點、覆蓋率、每任務節省 ms、p50/p95 與失敗成本可重跑；未量測不宣稱 |
 | [TASK-PRF-0108](tasks/TASK-PRF-0108-eliminate-duplicate-package-dist-build-during-onefile-root-drop-assembly.task.md) | 移除 onefile/root-drop 重複 package-dist 建置 | 0101 熱點盤點顯示 validate-bootstrap 秒級成本；既有 artifact digest 可比對 | onefile 僅建置一次、直接 root-drop 安全預設不變、artifact digest/語義不變、AB/BA＋A/A 毫秒證據；未達門檻即停止 |
+| [TASK-PRF-0109](tasks/TASK-PRF-0109-defer-full-framework-status-from-normal-next-guidance.task.md) | 將完整 framework status 延後至 claim/guard 邊界 | profiler 證明 `next` 的 `build-governance-readiness` 在框架 prompt 約 4.0–4.2 秒；完整 claim/guard 檢查仍可獨立執行 | normal guidance p50 至少下降 20%、p95 不回歸超過 10%；安全 blocker、claim hint 與多 AI private-read 語義不變；不新增 command、gate、registry、daemon 或第二狀態來源 |
+| [TASK-PRF-0111](tasks/TASK-PRF-0111-complete-full-atm-command-and-mandatory-gate-millisecond-coverage.task.md) | 補齊全量 command 與必經 gate 的真實毫秒樣本 | 0101 ledger 已結案但目前只映射 8 個 canonical gate；help/listCommandSpecs 實際列出 62 個 top-level 指令 | inventory 對齊當版 62 commands；每個被執行指令有真實 wall `durationMs`；必經 gate coverage 不得用 fixture/0 補足；p50、p95、秒級熱點與 overhead 綁定 0100 go/no-go |
 
 所有新卡由 plan CLI 分配。跨卡共享 atm-public.ts：0095先交付，0096/0097後續依實際source版本協调，不同時覆蓋彼此變更。六張卡是本轮新增範圍全部，下面是併入本計畫的既有工作，不能重複開發。
+
+### 0109 的量測錨點（2026-09-15）
+
+同一台 Windows／Node 24.12.0／frozen runner 的 profiler 結果：明確含 ATM／框架語意的
+task prompt，`build-governance-readiness` 為 4,026–4,166 ms；只以 task id 路由時為
+1,066–1,080 ms。差額約 3 秒，來自 guidance 階段無條件重建完整
+`createFrameworkModeStatus()`，不是 task route 本身。這項差異是 0109 的候選優化邊界，
+目前尚未是產品收益證明；正式判定仍需 30 組 AB/BA、A/A、失敗狀態與外部 receipt。
+
+目前 telemetry snapshot（混合歷史樣本，僅作排序）：`next.route-resolution` 累積
+576,061 ms、`doctor.readiness` 250,496 ms、`taskflow.close-readiness` 238,533 ms。
+`taskflow.close-readiness` 雖在全域 registry 標為條件執行，但對 close 流程屬必經等待，
+後續報表必須按 workflow applicability 重新計算，不得只依賴單一 global `mandatory` 布林值。
 
 ## 既有任務對照與接續
 
@@ -288,6 +312,12 @@ FAIL、BLOCKED、timeout 與 retry。報告以 frequency-weighted cumulative wai
 - 成效評分同時記錄 clean-install command/gate wall ms（p50/p95、失敗率、重試）與 unpacked bytes/entries；安裝正確性是硬門檻，毫秒改善不能抵銷功能失敗。若套件仍缺功能或超出預算，停止 publish，保留外部 receipt 與反證。
 - 量測最少 30 組交錯 AB/BA 與 8 組 A/A；固定 Node/npm、registry version、cache 定義與 tarball digest。raw samples 放既有外部 sink，Git 只留摘要及 digest。回退為單一 revert commit，不重寫既有 0104–0106 provenance。
 
+2026-09-15 對目前工作區 dist 產生的候選 tarball（2,654,799 unpacked bytes、66
+entries）已在 Windows 與 WSL 原生 Linux Node 各自的全新 consumer 重跑：
+`version`、`bootstrap`、`atm-chart render`、`atm-chart verify` 均以 exit 0
+完成，未出現 module resolution failure。這只是 candidate-only 可攜性證據；
+尚未改變公開 registry 的 0.1.0，也不涵蓋完整 62-command acceptance。
+
 ## Standard-validator build duplication follow-up (TASK-PRF-0108)
 
 標準 profile 的最新 telemetry 顯示 `validate-bootstrap` 為 146,542 ms 熱點。
@@ -301,4 +331,89 @@ launcher 行為與 bootstrap 語義，並以 AB/BA、A/A 的毫秒收據確認�
 digest 或任何語義改變，或 p50 未下降 20%／p95 回歸超過 10%，即回退單一提交，
 不再擴張成新的建置快取或治理服務。
 
-<!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-09-14T15:08:44.119Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-convergence-plan.md","contentDigest":"sha256:61b1ba3a1bbcbb5daacce3f747356e2a1c465b0197ac19b4a685e27caa0f6d8c"} -->
+## Parallel-preserving command boundary follow-up (TASK-PRF-0110)
+
+平行 adopter 實驗證明，不能靠刪除命令解決 bundle 衝突：最小四命令 profile
+雖達 24.822% 解壓縮縮減，卻失去 `tasks`、`broker`、`taskflow`；保留多 AI
+協作命令的 profile 只有 15.274%。目前 public CLI 又靜態載入完整命令圖，
+最新 1,449 個事件中，必經 `next.route-resolution` 累積等待 1,679,895 ms。
+0110 因此只負責一個 cohesive command-boundary refactor，不新增治理層。
+
+- 定義單一 `PublicCommandBoundary` 介面，提供 capability discovery、命令解析
+  與 lazy runner loading；保留既有命令名稱、錯誤語義、tasks/broker/taskflow
+  行為與 opt-in telemetry。
+- 提供兩個 production adapter（in-process/frozen runner、installed npm
+  runtime）及一個 fixture adapter。不得新增第二 task store、daemon、網路下載
+  或隱藏 runtime dependency。
+- 每個命令及必經 gate 以毫秒量測，按「頻率 × p50/p95 × 必經性」排序；先處理
+  `next.route-resolution`，再處理 `doctor.readiness`。候選必須讓必經等待 p50
+  下降至少 20%，且 p95 不回歸超過 10%。
+- 重建 clean npm tarball，驗證解壓大小、entries、依賴占用、安裝時間與完整
+  命令矩陣；`tasks`、`broker`、`taskflow` 必須通過有效任務端到端測試，只有
+  invalid-argument 探測不算證據。
+- 保留 AB/BA、A/A timing receipt、失敗、重試、false-block 與 missed-conflict
+  計數，raw evidence 放外部 sink。若靠刪除並行行為或未量測下載達標，立即拒絕；
+  任一 public 或 parallel contract 改變即以單一 commit 回退。
+
+## 全量 command/gate telemetry follow-up（TASK-PRF-0111）
+
+目前 `commandGateCheckIds` 只對 8 個 canonical gate 產生 runtime event，然而
+同版 frozen runner 的 help inventory 有 62 個 top-level commands；因此 0101
+雖已在 live ledger 標為 done，仍不足以證明「每個 ATM 指令／gate 的耗時」。
+0111 是對 0101 的產品證明補強，不改寫 0101 的歷史 provenance，也不新增第二套
+telemetry store。
+
+- 以現有 `listCommandSpecs()`／help 作 inventory authority；中央 dispatch wrapper
+  對每個實際執行的 command 記錄外部 wall `durationMs`、runner/version、workload、
+  run/task correlation 與 outcome。
+- 依 workflow applicability 區分 canonical 與 local mandatory gate；固定任務等待
+  以 span 聯集計算，不重複計父子或重疊 worker；失敗、timeout、取消與 retry 保留。
+- 沿用 `telemetry --report --include-runtime` 與既有 latency report，秒級（p50/p95
+  ≥5,000 ms）先診斷，再按 frequency-weighted cumulative wait 排序；不新增 daemon、
+  database、remote collector、第二 registry 或 GUI。
+- 0100 go/no-go 前 command inventory 與 mandatory-gate coverage 必須有真實樣本；
+  unknown、fixture、`duration=0` 皆為 no-go。必經等待 p50 目標至少下降 20%，選定
+  秒級熱點至少下降 30%，p95 回歸超過 10% 或 telemetry overhead ≥1% 即停止／回退。
+
+### 目前可觀測基線（2026-09-15，僅 8 個已映射節點）
+
+`telemetry --report --include-runtime` 目前讀到 2,054 個事件；這是
+`sealed-history+runtime` 的觀測摘要，不是 62 個 top-level command 的全量證明。
+在完成 0111 前，以下數字只用來決定優化順序，不能用來宣稱 ATM 整體已改善：
+
+| 節點 | samples | p50 ms | p95 ms | 累積等待 ms | 優先級判讀 |
+|---|---:|---:|---:|---:|---|
+| `taskflow.close-readiness` | 75 | 19,871 | 50,605.2 | 1,634,005 | 首要秒級熱點；先查重複掃描與可安全快取的讀取 |
+| `next.route-resolution`（mandatory） | 1,345 | 408 | 7,419 | 2,603,313 | 高頻累積成本；在 taskflow 後處理 |
+| `doctor.readiness` | 73 | 3,655 | 12,310.4 | 396,988 | 第二層秒級熱點 |
+| `tasks.claim-admission` | 221 | 2,153 | 3,325 | 439,917 | 中頻 admission 成本 |
+| `batch.checkpoint-readiness` | 40 | 349.5 | 15,414.85 | 199,642 | p95 尾端異常，先補原因分類 |
+
+目前 `measurementOverheadMs` 仍為 unknown，且只有 8/62 節點有真實事件；因此
+任何優化 PR 都必須同時補上 overhead 與全量 coverage，並以相同 workload 做
+AB/BA。優先順序固定為「先處理單次 ≥5 秒的 gate，再處理頻率加權累積成本」，
+不以增加新服務或新治理資料源換取數字下降。
+
+跨平台環境補充：WSL Ubuntu 已實測有原生 Linux Node v24.12.0 與 npm 11.6.2，
+所以「WSL 缺 Linux Node」不再是目前 blocker。剩餘問題是本 repo 的
+`.git/config` 將 `core.worktree` 固定為 `C:/Users/User/AI-Atomic-Framework`；
+WSL 原生 Git 直接進入 repo 會失敗，但以明確的
+`git --git-dir=/mnt/c/Users/User/AI-Atomic-Framework/.git --work-tree=/mnt/c/Users/User/AI-Atomic-Framework …`
+可成功讀取。此 workaround 只供 cross-platform 測試標記使用，不修改既有 Git
+設定，也不把 interop 結果混入 WSL 原生能力分數。
+
+唯讀 source trace 顯示，`buildHistoricalClosePreflight` 會串行組合多個既有
+檢查：target/planning 的 dirty 與 staged 探測、index ownership、歷史交付
+檢查、planning mirror 檢查，以及 `computeMissingValidatorReport`。本機目前
+單次 `git status --porcelain -uall` 約 111–213 ms、`git diff --name-only`
+約 163–166 ms、`git diff --cached --name-only` 約 34–42 ms；因此不能把
+19.9 秒的 gate p50 直接歸因於某一個 Git 子程序。這只是待驗證假設，下一步
+必須先為上述每個子步驟記錄 internal span，再用相同 dirty/staged fixture 做
+AB/BA；只有確認某個 span 佔據主要 wall time，才允許做單一快取、合併探測或
+延後非必要檢查的改動。若分段後找不到可重現的主要熱點，保留現狀，不新增
+抽象層或快取狀態。
+
+0111 已由 plan CLI 建立並成功 import；目前實作仍須等待既有 batch queue head
+`TASK-PRF-0100` 的治理路由釋放，不能以後續卡的 prompt 越過 queue。
+
+<!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-09-14T15:08:44.119Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-convergence-plan.md","contentDigest":"sha256:fd2cae90ff25f44aed995c5bb00183c8e939cfb85b98568aee7207aa0f8f5b43"} -->
