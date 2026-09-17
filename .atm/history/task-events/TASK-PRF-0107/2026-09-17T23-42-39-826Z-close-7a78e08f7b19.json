@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-17T23-42-39-826Z-close-7a78e08f7b19",
+  "taskId": "TASK-PRF-0107",
+  "action": "close",
+  "actorId": "claude-code-opus-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0107-restore-installable-npm-chart-lifecycle-without-inflating-the-bundle.task.md",
+  "taskSha256": "sha256:0a3795287344f37bdb7ce0f35635c33ee78611a5a39cc505d629ebe922fb9629",
+  "createdAt": "2026-09-17T23:42:39.826Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0107 --actor claude-code-opus-5"
+}

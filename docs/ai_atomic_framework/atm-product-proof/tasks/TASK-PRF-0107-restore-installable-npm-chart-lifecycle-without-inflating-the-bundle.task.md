@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0107
 title: Restore installable npm chart lifecycle without inflating the bundle
-status: planned
+status: done
 owner: atm-release
 priority: P0
 depends_on: []
@@ -115,6 +115,15 @@ atomizationImpact:
       inlineReason: existing resolver and embedded digest table already form one bounded seam; extracting a second module would increase bundle surface without another adapter
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-17T23:42:39.826Z"
+completed_by_agent: "claude-code-opus-5"
+closedAt: "2026-09-17T23:42:39.826Z"
+closedByActor: "claude-code-opus-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-17T23-42-39-826Z-close-7a78e08f7b19"
+lastTransitionAt: "2026-09-17T23:42:39.826Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "36b780ff3"
 ---
 
 # TASK-PRF-0107 Restore installable npm chart lifecycle without inflating the bundle
