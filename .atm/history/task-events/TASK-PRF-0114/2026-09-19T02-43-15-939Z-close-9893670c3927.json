@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-19T02-43-15-939Z-close-9893670c3927",
+  "taskId": "TASK-PRF-0114",
+  "action": "close",
+  "actorId": "claude-code-opus-5",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0114-build-dry-run-capable-paired-benchmark-executor.task.md",
+  "taskSha256": "sha256:e5ce1252472fac708a438d808b748a7a26375c0b3d4aaa1135c46fc94223b4eb",
+  "createdAt": "2026-09-19T02:43:15.939Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0114 --actor claude-code-opus-5"
+}

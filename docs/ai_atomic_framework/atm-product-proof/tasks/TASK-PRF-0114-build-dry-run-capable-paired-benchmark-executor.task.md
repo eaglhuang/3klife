@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0114
 title: Build dry-run capable paired benchmark executor
-status: planned
+status: done
 owner: benchmark-executor-engineer
 priority: P1
 depends_on: ["TASK-PRF-0039"]
@@ -75,6 +75,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-19T02:43:15.939Z"
+completed_by_agent: "claude-code-opus-5"
+closedAt: "2026-09-19T02:43:15.939Z"
+closedByActor: "claude-code-opus-5"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-19T02-43-15-939Z-close-9893670c3927"
+lastTransitionAt: "2026-09-19T02:43:15.939Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "ec1b7e69d"
 ---
 
 # TASK-PRF-0114 Build dry-run capable paired benchmark executor
