@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-21T23-51-09-203Z-close-170b6637b532",
+  "taskId": "TASK-PRF-0117",
+  "action": "close",
+  "actorId": "codex-gpt-5-4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0117-reseal-the-frozen-runner-from-the-current-committed-source.task.md",
+  "taskSha256": "sha256:c05032000d48510b5f1ee5c0ca6c01414bc65ef5b365fb3e2c774491f2608312",
+  "createdAt": "2026-09-21T23:51:09.203Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0117 --actor codex-gpt-5-4-mini"
+}
