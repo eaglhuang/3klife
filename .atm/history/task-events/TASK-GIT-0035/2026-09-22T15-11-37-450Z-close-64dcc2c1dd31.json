@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T15-11-37-450Z-close-64dcc2c1dd31",
+  "taskId": "TASK-GIT-0035",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0035-commit-failure-cancellation-preserves-work.task.md",
+  "taskSha256": "sha256:e360aea59a4f218e64391af349cc597993a2582ec10ccfc9556657c9b9e2d89a",
+  "createdAt": "2026-09-22T15:11:37.450Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0035 --actor codex-captain"
+}
