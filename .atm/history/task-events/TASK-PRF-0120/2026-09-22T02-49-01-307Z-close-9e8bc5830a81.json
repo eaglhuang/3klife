@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T02-49-01-307Z-close-9e8bc5830a81",
+  "taskId": "TASK-PRF-0120",
+  "action": "close",
+  "actorId": "codex-product-proof",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0120-map-public-runtime-schema-dependencies-before-any-further-bundle-slimming.task.md",
+  "taskSha256": "sha256:9d9e369d6e9161fa79f483208c6626e29927f539c393526f15d6fc3163d7ab8f",
+  "createdAt": "2026-09-22T02:49:01.307Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0120 --actor codex-product-proof"
+}
