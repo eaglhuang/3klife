@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T13-05-22-352Z-close-3627a37ffdfe",
+  "taskId": "TASK-PRF-0122",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0122-make-ci-failure-dispositions-replayable-across-scope-policy-changes.task.md",
+  "taskSha256": "sha256:ef03314073436f654fee30d56cabba872c9ecf2753ee4f4761ca4994e1fc249f",
+  "createdAt": "2026-09-22T13:05:22.352Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0122 --actor codex-captain"
+}
