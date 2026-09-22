@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T23-06-36-893Z-close-ea3c18b190c1",
+  "taskId": "TASK-GIT-0039",
+  "action": "close",
+  "actorId": "codex-captain-20260923",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0039-reconcile-staged-deletion-and-rename-readers-after-false-close-parity-gap.task.md",
+  "taskSha256": "sha256:f97d071db7b53918b5714d804a898786f41677e14ad978756a9a5da85e919893",
+  "createdAt": "2026-09-22T23:06:36.893Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0039 --actor codex-captain-20260923"
+}
