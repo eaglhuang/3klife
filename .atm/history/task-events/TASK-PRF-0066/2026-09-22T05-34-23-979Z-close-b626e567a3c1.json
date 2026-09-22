@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T05-34-23-979Z-close-b626e567a3c1",
+  "taskId": "TASK-PRF-0066",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0066-make-product-ci-coverage-match-the-burn-in-claim.task.md",
+  "taskSha256": "sha256:b35fd09357d3e145168bf1a1849677133378ef01799721f7a2b0cbea8ec95c61",
+  "createdAt": "2026-09-22T05:34:23.979Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0066 --actor codex-gpt-5.4-mini"
+}

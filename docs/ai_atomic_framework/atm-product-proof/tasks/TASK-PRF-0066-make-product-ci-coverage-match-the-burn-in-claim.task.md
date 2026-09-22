@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0066
 title: Make Product CI coverage match the burn-in claim
-status: planned
+status: done
 owner: release-runtime-steward
 priority: P1
 depends_on: [TASK-PRF-0064]
@@ -102,6 +102,15 @@ atomizationImpact:
       inlineReason: null
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-22T05:34:23.979Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-22T05:34:23.979Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-22T05-34-23-979Z-close-b626e567a3c1"
+lastTransitionAt: "2026-09-22T05:34:23.979Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "239242f94f006dcc911bf30f6d93a7ae37bea8d0"
 ---
 
 # TASK-PRF-0066 Make Product CI coverage match the burn-in claim
