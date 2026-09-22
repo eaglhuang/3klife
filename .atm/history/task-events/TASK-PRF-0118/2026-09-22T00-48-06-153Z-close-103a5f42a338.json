@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T00-48-06-153Z-close-103a5f42a338",
+  "taskId": "TASK-PRF-0118",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0118-complete-external-benchmark-data-plane-metrics-and-fail-closed-validation.task.md",
+  "taskSha256": "sha256:82c010e792feccecd7ab72e461163bbb8eabab3401949cbf3ec81c7a1b6c2f71",
+  "createdAt": "2026-09-22T00:48:06.153Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0118 --actor codex-gpt-5.4-mini"
+}
