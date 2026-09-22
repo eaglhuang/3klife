@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T04-02-10-738Z-close-d9666245a0a8",
+  "taskId": "TASK-PRF-0121",
+  "action": "close",
+  "actorId": "codex-product-ci-coverage",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0121-decouple-ci-build-validation-from-release-publication-authority.task.md",
+  "taskSha256": "sha256:33ab3da06368506e5d342ddbd8165a946f0b9bdc1c7709206bead920e31f1dfd",
+  "createdAt": "2026-09-22T04:02:10.738Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0121 --actor codex-product-ci-coverage"
+}
