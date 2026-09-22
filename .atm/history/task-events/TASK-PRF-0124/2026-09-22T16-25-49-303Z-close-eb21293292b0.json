@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T16-25-49-303Z-close-eb21293292b0",
+  "taskId": "TASK-PRF-0124",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0124-eliminate-false-close-blocks-from-validator-canonicalization-and-empty-batch-routing.task.md",
+  "taskSha256": "sha256:3aef00431ed6b936e1ebe8912e28d66488da4d6204ba97cb8637bc2d87f0075d",
+  "createdAt": "2026-09-22T16:25:49.303Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0124 --actor codex-gpt-5.4-mini"
+}
