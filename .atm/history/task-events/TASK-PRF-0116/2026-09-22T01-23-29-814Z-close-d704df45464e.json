@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T01-23-29-814Z-close-d704df45464e",
+  "taskId": "TASK-PRF-0116",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0116-reconcile-current-product-ci-failure-dispositions-from-raw-lifecycle-evidence.task.md",
+  "taskSha256": "sha256:b8e8f58a33bc1257bfb81cc16f3f5d216b7da9b84350e5a8eee84bca48537e8b",
+  "createdAt": "2026-09-22T01:23:29.814Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0116 --actor codex-gpt-5.4-mini"
+}
