@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T23-20-07-193Z-close-3bcadc47dac2",
+  "taskId": "TASK-GIT-0040",
+  "action": "close",
+  "actorId": "codex-captain-20260923",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0040-make-context-map-advisor-preserve-staged-deletion-semantics.task.md",
+  "taskSha256": "sha256:8546545a5965ae65de0691081d0103f0c171cbf4e54e6e7b0c69f5f6e9648cfb",
+  "createdAt": "2026-09-22T23:20:07.193Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0040 --actor codex-captain-20260923"
+}
