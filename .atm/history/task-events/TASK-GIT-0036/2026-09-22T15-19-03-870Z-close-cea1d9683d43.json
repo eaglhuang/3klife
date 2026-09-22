@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T15-19-03-870Z-close-cea1d9683d43",
+  "taskId": "TASK-GIT-0036",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0036-commit-success-matches-intended-tree.task.md",
+  "taskSha256": "sha256:2e62571e533b7b9baa314927a7f210a55ab04700d945db6037675da3468fbb76",
+  "createdAt": "2026-09-22T15:19:03.870Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0036 --actor codex-captain"
+}
