@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T14-54-53-448Z-close-29385a481bb5",
+  "taskId": "TASK-GIT-0033",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0033-commit-hook-deletion-rename-parity.task.md",
+  "taskSha256": "sha256:0fad9b3c23aa5856460bf033d77a4adebf8db45ddc5631026fe8c642025aa48a",
+  "createdAt": "2026-09-22T14:54:53.448Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0033 --actor codex-captain"
+}
