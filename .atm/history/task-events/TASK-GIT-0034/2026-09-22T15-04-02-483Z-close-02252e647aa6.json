@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T15-04-02-483Z-close-02252e647aa6",
+  "taskId": "TASK-GIT-0034",
+  "action": "close",
+  "actorId": "codex-captain",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0034-git-read-failures-and-lossless-paths.task.md",
+  "taskSha256": "sha256:46a2b9946b8a3ac523e93579a63305bf1d914bb43354987f088e0799841225e5",
+  "createdAt": "2026-09-22T15:04:02.483Z",
+  "command": "node atm.mjs tasks close --task TASK-GIT-0034 --actor codex-captain"
+}
