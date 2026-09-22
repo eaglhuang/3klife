@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0111
 title: Complete full ATM command and mandatory-gate millisecond coverage
-status: planned
+status: done
 owner: unassigned
 priority: P2
 depends_on: [TASK-PRF-0101]
@@ -88,6 +88,15 @@ atomizationImpact:
       inlineReason: "Owner explicitly prioritizes zero new runtime layers; the existing dispatch wrapper is the single caller seam and a separate adapter would add maintenance cost without reducing callers."
 errorCodes: []
 createdByCommand: atm plan card create
+completed_at: "2026-09-22T01:05:18.557Z"
+completed_by_agent: "codex-gpt-5.4-mini"
+closedAt: "2026-09-22T01:05:18.557Z"
+closedByActor: "codex-gpt-5.4-mini"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-09-22T01-05-18-557Z-close-ebbc23e3ba27"
+lastTransitionAt: "2026-09-22T01:05:18.557Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "70ebc167d56bc7588ac9f0437ac7c51e3ff6d7a1"
 ---
 
 # TASK-PRF-0111 Complete full ATM command and mandatory-gate millisecond coverage

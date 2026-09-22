@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-22T01-05-18-557Z-close-ebbc23e3ba27",
+  "taskId": "TASK-PRF-0111",
+  "action": "close",
+  "actorId": "codex-gpt-5.4-mini",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0111-complete-full-atm-command-and-mandatory-gate-millisecond-coverage.task.md",
+  "taskSha256": "sha256:56e946f2b6fca4c5e7d0758ae16c23d806bf6fd75e4b7f7f9d5c190999542791",
+  "createdAt": "2026-09-22T01:05:18.557Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0111 --actor codex-gpt-5.4-mini"
+}
