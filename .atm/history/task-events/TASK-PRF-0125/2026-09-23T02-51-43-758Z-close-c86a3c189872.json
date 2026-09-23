@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-09-23T02-51-43-758Z-close-c86a3c189872",
+  "taskId": "TASK-PRF-0125",
+  "action": "close",
+  "actorId": "codex-captain-20260923",
+  "sessionId": null,
+  "fromStatus": "planned",
+  "toStatus": "done",
+  "taskPath": "docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0125-memoize-close-readiness-read-only-git-snapshot-with-verdict-preserving-ab-proof.task.md",
+  "taskSha256": "sha256:94497c381f510b6618a111e94fa764159cf40f10e052912162834d2b3501dfc5",
+  "createdAt": "2026-09-23T02:51:43.758Z",
+  "command": "node atm.mjs tasks close --task TASK-PRF-0125 --actor codex-captain-20260923"
+}
