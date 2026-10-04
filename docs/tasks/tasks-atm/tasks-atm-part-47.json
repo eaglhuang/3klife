@@ -1,76 +1,87 @@
 [
   {
-    "doc_id": "doc_task_0296",
-    "id": "ATM-0-0011",
-    "title": "Context budget 治理補強與文件回寫",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "doc_id": "doc_task_0400",
+    "id": "ATM-0-0021",
+    "title": "試行二：監督單一 bug 快修不擴張治理",
+    "owner": "codex-gpt-5",
+    "priority": "P1",
     "status": "done",
-    "type": "docs-governance",
+    "type": "docs-review",
     "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T23:05:36.3800604+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
+    "created": "2026-09-15",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-09-16T03:10:00+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
-    "related": [
-      "ATM-2-0011"
-    ],
+    "description": "試行二：監督單一 bug 快修不擴張治理；只做 3KLife 操作與審核試行，不授權 ATM source write。",
+    "related": [],
     "depends": [
-      "ATM-0-0010"
+      "ATM-0-0018",
+      "ATM-0-0019"
     ],
     "acceptance": [
-      "四份 ATM 規劃文件補上 context budget upstream primitive",
-      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
-      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
-      "新增對應 ATM 任務卡與 tasks-atm 條目"
+      "只監督一張已定位 bug 的既有實作卡；用同一測試證明修前失敗與修後成功",
+      "審核要求最小修正與不相關功能不退步；不得要求額外 registry、command 或治理重构",
+      "同一 blocker 無狀態改變不重試；需要維修通道時沿已授權且可追溯的路徑，不隱藏略過的檢查",
+      "記錄修補、檢查、審核、等待、整合成本與實際產品結果；不以 commit 次數當 bug 數",
+      "反例：故意提供只改測試期待值而未修 bug 的候選說明，審核必須拒絕；正常最小修補不得被要求順手架構升級。",
+      "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md",
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0011.md"
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-2.md"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?context budget / governance bundle ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: context budget governance ????????? task shard ????? | ??: none",
+    "notes": "2026-09-16 | 狀態: done | 驗證: Review001 通過；artifact SHA-256 F6629AD32F7388204DCFF3BCC84FEF6D846273A036D57610457DC9290AB39BB0；control/candidate 均 exit 0，但無修前失敗與明確 patch | 變更: 完成單一 bug 快修的唯讀觀測；據實收口為 UNKNOWN，未宣稱修復成功 | 阻塞: 需既有 reproduction、修前失敗 receipt、最小 patch 與修後 receipt 才能重開",
+    "completed_at": "2026-09-16",
+    "completed_by_agent": "codex-gpt-5",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance bundle 開卡",
-      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0010"
+      "label": "",
+      "summary": "試行二：監督單一 bug 快修不擴張治理",
+      "position": "第三方案：獨立跨模型審核，既有 ATM-0 文件系列",
+      "prereq": ""
     },
     "contracts": {
       "input": [
-        "encoding 已進入 upstream governance 規劃",
-        "context budget 尚未成為對等 primitive"
+        "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+        "原卡的實際驗收與版本證據；不是自述摘要"
       ],
       "output": [
-        "context budget primitive 定義",
-        "Agent Governance Bundle 收斂",
-        "新增對應任務卡"
+        "只監督一張已定位 bug 的既有實作卡；用同一測試證明修前失敗與修後成功",
+        "審核要求最小修正與不相關功能不退步；不得要求額外 registry、command 或治理重构",
+        "同一 blocker 無狀態改變不重試；需要維修通道時沿已授權且可追溯的路徑，不隱藏略過的檢查",
+        "記錄修補、檢查、審核、等待、整合成本與實際產品結果；不以 commit 次數當 bug 數",
+        "反例：故意提供只改測試期待值而未修 bug 的候選說明，審核必須拒絕；正常最小修補不得被要求順手架構升級。",
+        "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
+      "validation_cmd": "人工逐項核對 ACC 與反例，記錄 PASS/FAIL/UNKNOWN 及證據路徑\\nnode tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-2.md",
+      "rollback_hint": "最多兩輪修正仍有爭議交 Owner 裁決。只撤回本卡自己的變更，保留失敗紀錄；不回退他人 WIP、不降低驗收。",
       "execution_steps": [
-        "建立新任務卡",
-        "建立 ATM-2-0011 後續卡",
-        "鎖卡並更新 frontmatter",
-        "回寫四份主文件",
-        "跑 encoding/task-scope/standard gate"
+        "確認輸入版本與執行權限",
+        "依母計畫 P1-P6 執行本卡唯一結果",
+        "跑正例與反例",
+        "核算耗時並提出最小修正或停止"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
+      "artifact_paths": [
+        "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-2.md"
+      ],
+      "validation_evidence": [
+        "Review001 通過（SHA-256 F6629AD32F7388204DCFF3BCC84FEF6D846273A036D57610457DC9290AB39BB0）；control/candidate receipts hash 已核對；負結果：未找到可驗證的單一 bug 快修證據"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "related_plan": "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+    "allowed_files": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-2.md"
+    ],
+    "targetRepo": "3KLife",
+    "hostKind": "tracking-docs",
+    "executionMode": "manual-review-pilot"
   },
   {
     "id": "ATM-1.5-0001",

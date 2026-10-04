@@ -1,91 +1,87 @@
 [
   {
-    "doc_id": "doc_task_0257",
-    "id": "ATM-1-0007",
-    "title": "Hello-world 與 legacy-strangler 範例",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0401",
+    "id": "ATM-0-0022",
+    "title": "試行三：監督保留多 AI 並行的減負",
+    "owner": "codex-gpt-5",
     "priority": "P1",
     "status": "done",
-    "type": "example",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T15:03:13+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "type": "docs-review",
+    "phase": "ATM-0",
+    "created": "2026-09-15",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-09-16T03:35:00+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
+    "description": "試行三：監督保留多 AI 並行的減負；只做 3KLife 操作與審核試行，不授權 ATM source write。",
     "related": [],
     "depends": [
-      "ATM-1-0004",
-      "ATM-1-0005"
+      "ATM-0-0018",
+      "ATM-0-0019"
     ],
     "acceptance": [
-      "hello-world 可在 standalone mode validate",
-      "legacy-strangler-minimal 不含 3KLife 私有路徑",
-      "Quick Start 30 分鐘可跑完"
+      "只監督既有並行驗證卡；實作寫入範圍與所有權仍由原卡決定",
+      "驗證不同範圍可以進展；同範圍真衝突與 stale base 不得漏檢；只暫停受影響整合，不停全隊",
+      "報告並行 makespan、總 agent 工時、等待與衝突檢查 ms，區別 wall clock 與投入總量",
+      "記錄 reviewer 介入是否減少返工；mock 與真實多 AI 執行分列，不以模擬冒充真跑",
+      "反例：以一個無衝突與一個真衝突對照驗證：不可全擋也不可全放；不得靠移除衝突保護換取更快數字。",
+      "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
     ],
     "deliverables": [
-      "examples/hello-world",
-      "examples/legacy-strangler-minimal",
-      "docs/QUICK_START.md 範例命令"
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-3.md"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:examples / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 2d7e21f 建立 hello-world、legacy-strangler-minimal、docs/QUICK_START.md 與 examples validation gate | 阻塞: none",
+    "notes": "2026-09-16 | 狀態: done | 驗證: Review001 通過；artifact SHA-256 154E63D2A77FDA729D2C166E8B9D6C8B7B46D44AD832F55F6FF9770EEF6AC50C；四 arms 各 35 insufficient、overall inconclusive | 變更: 完成並行 validator 的唯讀觀測；據實收口為 UNKNOWN，未宣稱真實多 AI 或安全改善 | 阻塞: 需 supplemental samples 與真實多 AI 執行才可重開",
+    "completed_at": "2026-09-16",
+    "completed_by_agent": "codex-gpt-5",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0004、ATM-1-0005"
+      "label": "",
+      "summary": "試行三：監督保留多 AI 並行的減負",
+      "position": "第三方案：獨立跨模型審核，既有 ATM-0 文件系列",
+      "prereq": ""
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+        "原卡的實際驗收與版本證據；不是自述摘要"
       ],
       "output": [
-        "examples/hello-world",
-        "examples/legacy-strangler-minimal",
-        "docs/QUICK_START.md 範例命令"
+        "只監督既有並行驗證卡；實作寫入範圍與所有權仍由原卡決定",
+        "驗證不同範圍可以進展；同範圍真衝突與 stale base 不得漏檢；只暫停受影響整合，不停全隊",
+        "報告並行 makespan、總 agent 工時、等待與衝突檢查 ms，區別 wall clock 與投入總量",
+        "記錄 reviewer 介入是否減少返工；mock 與真實多 AI 執行分列，不以模擬冒充真跑",
+        "反例：以一個無衝突與一個真衝突對照驗證：不可全擋也不可全放；不得靠移除衝突保護換取更快數字。",
+        "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "人工逐項核對 ACC 與反例，記錄 PASS/FAIL/UNKNOWN 及證據路徑\\nnode tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-3.md",
+      "rollback_hint": "最多兩輪修正仍有爭議交 Owner 裁決。只撤回本卡自己的變更，保留失敗紀錄；不回退他人 WIP、不降低驗收。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "確認輸入版本與執行權限",
+        "依母計畫 P1-P6 執行本卡唯一結果",
+        "跑正例與反例",
+        "核算耗時並提出最小修正或停止"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/examples/hello-world",
-        "AI-Atomic-Framework/examples/legacy-strangler-minimal",
-        "AI-Atomic-Framework/docs/QUICK_START.md",
-        "AI-Atomic-Framework/scripts/validate-examples.mjs",
-        "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/package-lock.json"
+        "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-3.md"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 2d7e21f",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:examples",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
+        "Review001 通過（SHA-256 154E63D2A77FDA729D2C166E8B9D6C8B7B46D44AD832F55F6FF9770EEF6AC50C）；四 arms 均 35 insufficient、overall inconclusive；負結果：並行能力尚未證明"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 2d7e21f",
-        "hello-world compute atom validates in standalone flow",
-        "legacy-strangler-minimal wraps existing code without downstream private paths",
-        "Quick Start includes install, package list, example tests, spec validation, and full gate commands",
-        "validate:examples verifies 2 examples and Quick Start commands"
-      ]
+      "metrics_summary": []
     },
-    "completed_at": "2026-05-06T15:07:10+08:00"
+    "related_plan": "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+    "allowed_files": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-3.md"
+    ],
+    "targetRepo": "3KLife",
+    "hostKind": "tracking-docs",
+    "executionMode": "manual-review-pilot"
   },
   {
     "doc_id": "doc_task_0277",

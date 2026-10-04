@@ -1,6 +1,12 @@
 <!-- doc_id: doc_ai_0022 -->
 # Agent Briefs CheckList
 
+## ATM 獨立審核減負試行（2026-09-16）
+
+- 計畫：[獨立審核試行](../ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md)
+- ATM-0-0016～ATM-0-0025：10 張卡已於 2026-09-16 完成審核試行與停止規則結案；卡片及狀態真相見 `docs/tasks/tasks-atm.json` 指向的既有分片。結案不代表 npm、CI 或外部 A/B 產品證明完成。
+- 先完成目標、校準、基線，再執行三張既有 PRF 工作的審核試行；禁止把本批開卡當成產品交付。
+
 ## UI 量產新增檢查
 
 - 新 UI 任務預設必須走：`template family -> content contract -> skin fragment -> smoke route -> docs backwrite`

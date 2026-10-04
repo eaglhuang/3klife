@@ -1,5 +1,83 @@
 [
   {
+    "doc_id": "doc_task_0395",
+    "id": "ATM-0-0016",
+    "title": "固定產品目標並對照既有減負任務",
+    "owner": "codex-gpt-5",
+    "priority": "P1",
+    "status": "done",
+    "type": "docs-review",
+    "phase": "ATM-0",
+    "created": "2026-09-15",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-09-16T00:00:00+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "固定產品目標並對照既有減負任務；只做 3KLife 操作與審核試行，不授權 ATM source write。",
+    "related": [],
+    "depends": [],
+    "acceptance": [
+      "列出既有 PRF-0100/0101/0102/0107/0109/0110/0111 的實際狀態與證據路徑；找不到標 unknown，不全磁碟搜尋",
+      "選定三件範圍清楚的候選小工作：單一耗時熱點、單一正確性修補、並行能力驗證；只連結既有實作卡",
+      "將安裝可用性／CI／bundle／並行／足跡五項目標映射到證據，不以卡片完成替代產品交付",
+      "反例：同時提供已關卡但產品驗證失敗的反例；必須判定產品未完成。",
+      "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/scope-baseline.md"
+    ],
+    "completed_at": "2026-09-16T00:35:00+08:00",
+    "notes": "2026-09-16 | 狀態: done | 驗證: Review001 C 版通過；scope-baseline encoding pass；tasks-atm shard/index/milestone strict pass | 變更: 唯讀盤點 PRF-0100/0101/0102/0107/0109/0110/0111，選出 0109/0107/0110 三候選；0109 要求 control 配對，0110 clean-install 維持 UNKNOWN | 阻塞: 無；不代表 npm、CI、bundle、並行或外部 benchmark 產品結果完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "",
+      "summary": "固定產品目標並對照既有減負任務",
+      "position": "第三方案：獨立跨模型審核，既有 ATM-0 文件系列",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [
+        "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+        "原卡的實際驗收與版本證據；不是自述摘要"
+      ],
+      "output": [
+        "列出既有 PRF-0100/0101/0102/0107/0109/0110/0111 的實際狀態與證據路徑；找不到標 unknown，不全磁碟搜尋",
+        "選定三件範圍清楚的候選小工作：單一耗時熱點、單一正確性修補、並行能力驗證；只連結既有實作卡",
+        "將安裝可用性／CI／bundle／並行／足跡五項目標映射到證據，不以卡片完成替代產品交付",
+        "反例：同時提供已關卡但產品驗證失敗的反例；必須判定產品未完成。",
+        "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
+      ],
+      "validation_cmd": "人工逐項核對 ACC 與反例，記錄 PASS/FAIL/UNKNOWN 及證據路徑\\nnode tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-product-proof/review-pilot/scope-baseline.md",
+      "rollback_hint": "最多兩輪修正仍有爭議交 Owner 裁決。只撤回本卡自己的變更，保留失敗紀錄；不回退他人 WIP、不降低驗收。",
+      "execution_steps": [
+        "確認輸入版本與執行權限",
+        "依母計畫 P1-P6 執行本卡唯一結果",
+        "跑正例與反例",
+        "核算耗時並提出最小修正或停止"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "docs/ai_atomic_framework/atm-product-proof/review-pilot/scope-baseline.md"
+      ],
+      "validation_evidence": [
+        "pending；本輪只開卡，未執行試行"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "related_plan": "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+    "allowed_files": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/scope-baseline.md"
+    ],
+    "targetRepo": "3KLife",
+    "hostKind": "tracking-docs",
+    "executionMode": "manual-review-pilot"
+  },
+  {
     "doc_id": "doc_task_0291",
     "id": "ATM-2-0009",
     "title": "Artifact Log Evidence Store contracts",

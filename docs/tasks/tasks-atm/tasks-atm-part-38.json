@@ -1,93 +1,88 @@
 [
   {
-    "doc_id": "doc_task_0254",
-    "id": "ATM-1-0004",
-    "title": "CLI init/status/validate MVP",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "doc_id": "doc_task_0402",
+    "id": "ATM-0-0023",
+    "title": "核算三次試行的淨成本與糾偏品質",
+    "owner": "codex-gpt-5",
+    "priority": "P1",
     "status": "done",
-    "type": "cli",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T14:06:20+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "type": "docs-review",
+    "phase": "ATM-0",
+    "created": "2026-09-15",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-09-16T04:05:00+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+    "description": "核算三次試行的淨成本與糾偏品質；只做 3KLife 操作與審核試行，不授權 ATM source write。",
     "related": [],
     "depends": [
-      "ATM-1-0003"
+      "ATM-0-0020",
+      "ATM-0-0021",
+      "ATM-0-0022"
     ],
     "acceptance": [
-      "空白 repo 可執行 init/status/validate",
-      "未實作 adapter 時可進入 standalone mode",
-      "錯誤輸出可被 Agent 讀懂"
+      "逐次列出實作/驗證/審核/等待/修正/整合與未知 ms，報告區間聯集而非重複累加",
+      "校準案例可報 false block 與 missed drift；live 未經獨立事後查核不得宣稱漏判率為零",
+      "有固定可比基線才估計成本差；不同任務與歷史單筆只算描述，不宣稱因果或虛構省下的返工時間",
+      "報告審核成本比例、Token/費用、真正產品驗收與未達目標；初始15% overhead 是檢討線而不是自動品質否決",
+      "反例：把 nested 計時、缺漏費用、失敗樣本與不可比基線放進報表，確認不會被排除以製造正收益。",
+      "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
     ],
     "deliverables": [
-      "packages/cli/src/commands/init.*",
-      "packages/cli/src/commands/status.*",
-      "packages/cli/src/commands/validate.*",
-      "CLI integration fixture"
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-score.md"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 0176686 建立可執行 ATM CLI init/status/validate MVP、standalone config、agent-readable JSON output 與 integration fixture | 阻塞: none",
+    "notes": "2026-09-16 | 狀態: done | 驗證: Review001 通過；artifact SHA-256 D11C4CD3964CAD77B0BFC4D60757363CA67387D07B1066970F9FA8BD35228B57；0/3 合格 paired A/B；成本、校準與淨效益均 UNKNOWN | 變更: 彙總三次 pilot 的 receipts、負結果與停止擴張裁決，分離彙總口徑 PASS 與產品結果 UNKNOWN | 阻塞: 尚無足夠證據進行 0024 保留決策",
+    "completed_at": "2026-09-16",
+    "completed_by_agent": "codex-gpt-5",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0003"
+      "label": "",
+      "summary": "核算三次試行的淨成本與糾偏品質",
+      "position": "第三方案：獨立跨模型審核，既有 ATM-0 文件系列",
+      "prereq": ""
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+        "原卡的實際驗收與版本證據；不是自述摘要"
       ],
       "output": [
-        "packages/cli/src/commands/init.*",
-        "packages/cli/src/commands/status.*",
-        "packages/cli/src/commands/validate.*",
-        "CLI integration fixture"
+        "逐次列出實作/驗證/審核/等待/修正/整合與未知 ms，報告區間聯集而非重複累加",
+        "校準案例可報 false block 與 missed drift；live 未經獨立事後查核不得宣稱漏判率為零",
+        "有固定可比基線才估計成本差；不同任務與歷史單筆只算描述，不宣稱因果或虛構省下的返工時間",
+        "報告審核成本比例、Token/費用、真正產品驗收與未達目標；初始15% overhead 是檢討線而不是自動品質否決",
+        "反例：把 nested 計時、缺漏費用、失敗樣本與不可比基線放進報表，確認不會被排除以製造正收益。",
+        "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "人工逐項核對 ACC 與反例，記錄 PASS/FAIL/UNKNOWN 及證據路徑\\nnode tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-score.md",
+      "rollback_hint": "最多兩輪修正仍有爭議交 Owner 裁決。只撤回本卡自己的變更，保留失敗紀錄；不回退他人 WIP、不降低驗收。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "確認輸入版本與執行權限",
+        "依母計畫 P1-P6 執行本卡唯一結果",
+        "跑正例與反例",
+        "核算耗時並提出最小修正或停止"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/shared.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+        "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-score.md"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 0176686",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
+        "Review001 通過（SHA-256 D11C4CD3964CAD77B0BFC4D60757363CA67387D07B1066970F9FA8BD35228B57）；0/3 合格 paired A/B；成本與淨效益 UNKNOWN；停止 live pilot 擴張"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 0176686",
-        "3 CLI commands implemented: init/status/validate",
-        "blank repo fixture runs commands from empty working directory",
-        "standalone mode works before adapter implementation",
-        "errors emit machine-readable JSON with code/message/evidence"
-      ]
+      "metrics_summary": []
     },
-    "completed_at": "2026-05-06T14:12:54+08:00"
+    "related_plan": "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+    "allowed_files": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-score.md"
+    ],
+    "targetRepo": "3KLife",
+    "hostKind": "tracking-docs",
+    "executionMode": "manual-review-pilot"
   },
   {
     "doc_id": "doc_task_0276",

@@ -1,94 +1,87 @@
 [
   {
-    "doc_id": "doc_task_0252",
-    "id": "ATM-1-0002",
-    "title": "上游 monorepo package skeleton",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "doc_id": "doc_task_0399",
+    "id": "ATM-0-0020",
+    "title": "試行一：監督單一高耗時熱點的減負",
+    "owner": "codex-gpt-5",
+    "priority": "P1",
     "status": "done",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T13:35:05+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "type": "docs-review",
+    "phase": "ATM-0",
+    "created": "2026-09-15",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-09-16T02:45:00+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
+    "description": "試行一：監督單一高耗時熱點的減負；只做 3KLife 操作與審核試行，不授權 ATM source write。",
     "related": [],
     "depends": [
-      "ATM-1-0001"
+      "ATM-0-0018",
+      "ATM-0-0019"
     ],
     "acceptance": [
-      "npm install 成功",
-      "workspace scripts 可列出 package",
-      "不依賴 3KLife 檔案"
+      "僅審核 scope-baseline 選定的一張熱點實作卡；實作者仍沿原卡權限施工，本卡不授權 source write",
+      "動手前、首個有效 patch 或偏移訊號、整合前收取版本綁定審核；不逐命令輪詢",
+      "優先刪除不必要操作而非新增快取層或 gate；候選以頻率乘耗時及關鍵路徑排序",
+      "記錄前後 paired 量測、實際功能驗證、review overhead；沒有改善可回滾並據實完成實驗，不得宣稱优化成功",
+      "反例：快取或略過檢查後，變更受影響輸入必須仍被正確識別；不准用 stale PASS 換取速度。",
+      "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
     ],
     "deliverables": [
-      "packages/core",
-      "packages/cli",
-      "packages/plugin-sdk",
-      "packages/adapter-local-git",
-      "packages/language-js",
-      "workspace package config"
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-1.md"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install --package-lock=false / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 28b368a 建立 packages/core、cli、plugin-sdk、adapter-local-git、language-js、workspace package config、package list 與 skeleton validation fixture | 阻塞: none",
+    "notes": "2026-09-16 | 狀態: done | 驗證: Review001 通過；artifact SHA-256 43E0A646DC1428CCCF5446F308B7017447766901670EF39FC6A9EB79F3A77011；control p50 74.2055/p95 90.764，candidate p50 170.9220/p95 177.691；receipts 10/10 exit 0 | 變更: 完成單一高耗時熱點的描述性 paired 量測；保留 candidate dirty fixture 導致 P4 FAIL/UNKNOWN，未宣稱減負成功 | 阻塞: 未取得乾淨固定 fixture 的合格因果 A/B，未授權 source write",
+    "completed_at": "2026-09-16",
+    "completed_by_agent": "codex-gpt-5",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0001"
+      "label": "",
+      "summary": "試行一：監督單一高耗時熱點的減負",
+      "position": "第三方案：獨立跨模型審核，既有 ATM-0 文件系列",
+      "prereq": ""
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+        "原卡的實際驗收與版本證據；不是自述摘要"
       ],
       "output": [
-        "packages/core",
-        "packages/cli",
-        "packages/plugin-sdk",
-        "packages/adapter-local-git",
-        "packages/language-js",
-        "workspace package config"
+        "僅審核 scope-baseline 選定的一張熱點實作卡；實作者仍沿原卡權限施工，本卡不授權 source write",
+        "動手前、首個有效 patch 或偏移訊號、整合前收取版本綁定審核；不逐命令輪詢",
+        "優先刪除不必要操作而非新增快取層或 gate；候選以頻率乘耗時及關鍵路徑排序",
+        "記錄前後 paired 量測、實際功能驗證、review overhead；沒有改善可回滾並據實完成實驗，不得宣稱优化成功",
+        "反例：快取或略過檢查後，變更受影響輸入必須仍被正確識別；不准用 stale PASS 換取速度。",
+        "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "人工逐項核對 ACC 與反例，記錄 PASS/FAIL/UNKNOWN 及證據路徑\\nnode tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-1.md",
+      "rollback_hint": "最多兩輪修正仍有爭議交 Owner 裁決。只撤回本卡自己的變更，保留失敗紀錄；不回退他人 WIP、不降低驗收。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "確認輸入版本與執行權限",
+        "依母計畫 P1-P6 執行本卡唯一結果",
+        "跑正例與反例",
+        "核算耗時並提出最小修正或停止"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/packages/core",
-        "AI-Atomic-Framework/packages/cli",
-        "AI-Atomic-Framework/packages/plugin-sdk",
-        "AI-Atomic-Framework/packages/adapter-local-git",
-        "AI-Atomic-Framework/packages/language-js",
-        "AI-Atomic-Framework/scripts/validate-package-skeleton.mjs",
-        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
+        "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-1.md"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 28b368a",
-        "npm install --package-lock=false",
-        "npm run packages:list",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
+        "Review001 通過（SHA-256 43E0A646DC1428CCCF5446F308B7017447766901670EF39FC6A9EB79F3A77011）；外部 sink receipts hash 已核對；負結果：候選較慢、未證明減負"
       ],
-      "handoff_diff_status": "upstream committed; tracking pending commit",
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 28b368a",
-        "5 workspace packages created",
-        "package skeleton validation fixture dependency-free"
-      ]
+      "metrics_summary": []
     },
-    "completed_at": "2026-05-06T13:38:00+08:00"
+    "related_plan": "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+    "allowed_files": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/pilot-1.md"
+    ],
+    "targetRepo": "3KLife",
+    "hostKind": "tracking-docs",
+    "executionMode": "manual-review-pilot"
   },
   {
     "doc_id": "doc_task_0285",

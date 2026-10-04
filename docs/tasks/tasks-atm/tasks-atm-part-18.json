@@ -1,5 +1,95 @@
 [
   {
+    "doc_id": "doc_task_0254",
+    "id": "ATM-1-0004",
+    "title": "CLI init/status/validate MVP",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "cli",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T14:06:20+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+    "related": [],
+    "depends": [
+      "ATM-1-0003"
+    ],
+    "acceptance": [
+      "空白 repo 可執行 init/status/validate",
+      "未實作 adapter 時可進入 standalone mode",
+      "錯誤輸出可被 Agent 讀懂"
+    ],
+    "deliverables": [
+      "packages/cli/src/commands/init.*",
+      "packages/cli/src/commands/status.*",
+      "packages/cli/src/commands/validate.*",
+      "CLI integration fixture"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 0176686 建立可執行 ATM CLI init/status/validate MVP、standalone config、agent-readable JSON output 與 integration fixture | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0003"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/cli/src/commands/init.*",
+        "packages/cli/src/commands/status.*",
+        "packages/cli/src/commands/validate.*",
+        "CLI integration fixture"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/shared.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 0176686",
+        "npm install",
+        "npm run packages:list",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "upstream commit 0176686",
+        "3 CLI commands implemented: init/status/validate",
+        "blank repo fixture runs commands from empty working directory",
+        "standalone mode works before adapter implementation",
+        "errors emit machine-readable JSON with code/message/evidence"
+      ]
+    },
+    "completed_at": "2026-05-06T14:12:54+08:00"
+  },
+  {
     "doc_id": "doc_task_0361",
     "id": "ATM-2-0051",
     "title": "Coverage Gate Promotion & Self-Coverage Follow-up",

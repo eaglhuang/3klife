@@ -2314,5 +2314,71 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-0019.md",
     "title": "[PROG-2-0019] Top50 needs-etl-fill ready-event promotion：primary-canon source-event-packets → staged-ready-events",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0395",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0016.md",
+    "title": "[ATM-0-0016] 固定產品目標並對照既有減負任務",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0396",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0017.md",
+    "title": "[ATM-0-0017] 建立獨立審核員短指令與訊息格式",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0397",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0018.md",
+    "title": "[ATM-0-0018] 校準審核員的抓偏移與誤擋能力",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0398",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0019.md",
+    "title": "[ATM-0-0019] 固定毫秒成本量測與試行基線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0399",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0020.md",
+    "title": "[ATM-0-0020] 試行一：監督單一高耗時熱點的減負",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0400",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0021.md",
+    "title": "[ATM-0-0021] 試行二：監督單一 bug 快修不擴張治理",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0401",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0022.md",
+    "title": "[ATM-0-0022] 試行三：監督保留多 AI 並行的減負",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0402",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0023.md",
+    "title": "[ATM-0-0023] 核算三次試行的淨成本與糾偏品質",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0403",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0024.md",
+    "title": "[ATM-0-0024] 裁決保留縮減或停止獨立審核",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0404",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0025.md",
+    "title": "[ATM-0-0025] 交付後續 AI 可直接使用的精簡操作單",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0405",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-0-0026.md",
+    "title": "[ATM-0-0026] 把 Review001 改成產品方向校準器而非逐行找錯",
+    "category": "task"
   }
 ]

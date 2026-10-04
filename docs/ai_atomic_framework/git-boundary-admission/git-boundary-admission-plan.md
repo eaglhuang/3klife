@@ -455,3 +455,100 @@ authority decision in `ATM-BUG-2026-08-12-001`; it may not auto-drain another
 task's reconciliation residue or weaken close admission. It must reuse the
 canonical attribution, inventory, broker, and receipt authorities rather than
 introducing a second queue or artifact registry.
+
+## G18 — 2026-09-22 交付正確性與治理摩擦收斂
+
+Owner 授權：將 deletion 漏交付事件及同類高價值修復分批開卡。Planning authority 為 3KLife；target / closure authority 為 AI-Atomic-Framework。沿用 GIT 系列，承接 GIT-0022、0029–0032；不重開歷史卡，也不把既有局部 PASS 當完整交付。
+
+中心目標：以最少執行步驟正確交付使用者預期變更，保留多 AI 並行、scope 防護與可追溯性。優先順序是漏交付／破壞 WIP、卡住／重做、必經路徑毫秒。禁止為完成卡片新增 CLI、審批層、平行 ledger 或儀表板。
+
+執行順序與邊界：
+1. GIT-0033：commit / hook 刪除與重新命名一致性。
+2. GIT-0034：Git 讀取失敗與合法空狀態區分、特殊路徑完整性。
+3. GIT-0035：提交失敗／取消的 index、HEAD、WIP 復原。
+4. GIT-0036：提交成功必須符合預期 tree，禁止漏交付假成功。
+5. GIT-0037：runner 發布前置檢查、來源與產物一致、避免重複 build。
+6. GIT-0038：claim / queue 終止釋放與真實恢復路徑，完成整體成本比較。
+
+方法：每卡先查現有卡及測試；已修部分直接以現況證明，不重做。以真實暫存 Git fixture 從正式入口重現，Git tree/index/檔案內容作獨立 oracle。先 red 再最小修復再 green；故意拿掉修正應使相同測試失敗。source-only PASS 不足，對外行為需在一個封存候選上重跑。Fixture 是測試資料，不是開發 worktree。
+
+每卡共同驗收：列出案例數與實際 assertions；漏交付、foreign WIP 變動、錯誤放行為零；合法不相交工作可並行，真重疊及 stale base 仍擋。記錄同機同 fixture 的 p50/p95 毫秒、Git 子程序數、重試/build 次數、修復到提交分鐘數。測不到寫 unknown，不以文件量、卡數或 commit 數代表產品改善。正確性修復的成本增量須揭露；性能卡必須有配對量測改善。
+
+停止與校正：單卡最多兩輪修正；第二輪仍不通或工作需超出 scope 時，保留最小重現、原因與可交付 patch，回到原假設檢討，禁止 v3/v4 候選堆疊。沒有失敗重現就不臆造 runtime 修補，可交付有效回歸測試並標明未發現 bug。审查只針對產品偏移、資料損害、真衝突漏擋及可重現缺陷提出 BLOCK；其他 NOTE 不阻塞。
+
+交付節奏：source 與 focused tests 通過即整合；release 產物按 source 變更批次建置一次，有 source 變更或 build 失敗才重跑。以程序 ID、退出碼判斷完成，不以暫無輸出判斷。每張卡一份簡短報告，raw evidence 在 repo 外。完成六卡只證明本矩陣覆蓋的邊界，不宣稱找完所有未知 bug，也不替代 npm、30 日 CI、外部 A/B 的驗收。
+## G19 — False-close 後的 staged deletion / rename 讀取器一致性
+
+`TASK-GIT-0039` 承接 G18 收口後發現的真實缺口：GIT-0033 已有局部 PASS，
+但正式 `readStagedFiles()` 仍有入口使用 `--diff-filter=ACMRT`，因此 staged
+deletion 可能從 commit/hook 的變更集合消失。這不是重新開 GIT-0033，而是
+針對「同一 Git 狀態被多個讀取器以不同語義解讀」的 follow-up；卡片必須先
+列出所有受影響讀取器，再以同一 disposable fixture 驗證 commit、hook、
+attribution 與內容掃描看到相同 deletion/rename 語義。
+
+卡片只允許最小修復與回歸測試，不新增 CLI、gate、ledger、審核層或平行
+索引。必測案例為 deletion-only、modified+deletion、pure rename、rename+
+modify、foreign deletion/cross-scope rename，以及不存在路徑的內容掃描。故意
+恢復漏 `D` 的入口必須令相同 oracle 失敗；只有測試通過不能推導整個 ATM
+已無同類缺陷。完成後要列出未納入的讀取器與理由，並揭露 focused command
+與正式 frozen runner 的毫秒成本。
+## G20 — Context-map advisor staged deletion parity
+
+`TASK-GIT-0040` 是 G19 盤點後獨立出的 reader 修復：
+`hook/context-map-advisor.ts` 仍直接使用不含 `D` 的 staged filter。它只負責
+context-map advisor 的 deletion/rename 語義與回歸測試，不擴大 GIT-0039 的
+已 claim scope。完成條件是 disposable fixture 的 deletion-only、rename、
+合法空 index 與不存在路徑負控制；不得以新增 gate 或文件取代產品修復。
+
+## G21 — Encoding guard staged deletion parity
+
+`TASK-GIT-0041` 是 G20 之後的同類唯讀盤點結果：
+`scripts/check-encoding-touched.ts` 在 `--mode staged` 仍使用不含 `D` 的 filter，
+因此刪除的文字檔可能完全不進入 encoding guard。這張卡只修正既有 staged
+候選集合與 deleted-path 安全行為，並以 disposable fixture 驗證；不得新增 gate、
+ledger、審核層或平行索引。故意恢復漏 `D` 的 filter 必須令相同 oracle 失敗，
+且合法空 index 不得被誤報為錯誤。
+
+## G22 — Rename endpoint audit before any further reader refactor
+
+`TASK-GIT-0042` 是 G19～G21 的盤點型 follow-up，不假設把 `D` 加回
+filter 就等於 rename 已正確。Git 的 `--name-only` 對 rename 通常只提供
+新路徑；若 ATM 把這個輸出當成完整變更集合，scope、ownership、attribution、
+hook 與內容掃描可能各自看到不同的 old/new endpoint，形成 false-close。
+
+本卡只建立 disposable fixture、共同 endpoint oracle 與 audit report，覆蓋
+deletion-only、pure rename、rename+modify、foreign deletion、cross-scope rename
+及工作樹不存在的刪除端點。先列出每個 reader 的實際輸出，再作
+`keep / fix-in-place / defer` 判定；不直接新增 parser、CLI、gate、ledger、
+審核層或 splitting。只有 oracle 證明某一至兩個 reader 漏端點時，才另開
+最小修復卡；若需要跨模組新抽象，先走 deep-module review。每個 reader 的
+p50/p95 與 Git 子程序成本都要揭露，未知不得假稱改善。
+
+## G23 — Preserve both rename endpoints only where scope authority needs them
+
+`TASK-GIT-0043` is conditional on G22 evidence. Current read-only inventory shows
+several `--name-only` consumers (`git-governance.ts`, `git-index-ownership.ts`,
+`residue-candidates.ts`, and `claim-intent.ts`) that may see only the new endpoint
+of a rename. This is a concrete cross-scope protection risk, not a reason to add
+a universal parser immediately.
+
+If G22's oracle confirms a gap, G23 changes only the affected scope/ownership/
+attribution boundaries in place and reuses existing modules. It must preserve
+same-scope rename and non-overlapping parallel work, add no CLI, gate, ledger,
+approval layer, or dashboard, and report the p50/p95 and subprocess cost delta.
+If the audit shows no product-impacting gap, G23 is cancelled rather than
+implemented.
+
+## G24 — Remove timing-induced false negatives from advisory readers
+
+`TASK-GIT-0044` was opened after the G20 regression test produced exit results
+`0, 1, 0` across three identical runs. The source already includes the `D`
+filter, but `context-map-advisor.ts` abandons the inspection when elapsed time
+passes a hard-coded 50ms threshold. That converts host scheduling/Git startup
+variance into a silent `null`, so a required observation can disappear without
+an error.
+
+G24 treats correctness as the first invariant: preserve the advisory-only
+contract and measure latency, but do not use a fixed wall-clock cutoff as a
+false-success path. The card may alter only this advisor and its regression
+fixture; it may not add retries, a new gate, a service, a ledger, or a cache.

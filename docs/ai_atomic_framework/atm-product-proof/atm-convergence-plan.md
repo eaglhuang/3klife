@@ -416,4 +416,92 @@ AB/BA；只有確認某個 span 佔據主要 wall time，才允許做單一快�
 0111 已由 plan CLI 建立並成功 import；目前實作仍須等待既有 batch queue head
 `TASK-PRF-0100` 的治理路由釋放，不能以後續卡的 prompt 越過 queue。
 
+## Required CI sweep wall-time follow-up（TASK-PRF-0115）
+
+最新綠色 Product CI 的 CLI sweep 約消耗七分鐘；其中七個 release-oriented
+tests 因共用 `packages/cli/dist` 與 `release/**` 而被串行。這是每次整合都會
+支付的等待成本，優先於只在證據收集時出現的 GitHub API 匯出延遲。
+
+0115 先以同 runner 的 AB/BA 與 A/A 建立真正 wall-clock 基線，不能拿各 child
+duration 加總冒充 CI 時間。再只選一種最小安全作法：私有 temporary output root
+或可驗證的 read-only build fixture。兩者都必須維持 release manifest、frozen
+launcher、npm clean install、failure 與 timeout 語義；不得新增 daemon、第二
+registry、長期 worktree、共享寫入 lane 或 ATM command。若 p50 未降至少 20% 或
+p95 回歸超過 10%，保留反證並停止，不為取得數字擴張架構。
+
+此項只證明 required gate 的內部等待下降；外部產品淨效益仍必須由獨立配對 A/B
+實驗證明。
+
+## Current CI failure lifecycle reconciliation follow-up（TASK-PRF-0116）
+
+2026-09-21 的 Git 外 receipt 保留三筆新 eligible failures，因為舊 disposition
+資料尚未涵蓋它們。0116 只允許在既有 disposition 資料加上 raw log、repair commit
+與後續 successful Product CI run 可重建的鏈結；不可刪 run、降低 30-day/90-run
+門檻或把 repair 的存在當成 sustained-green 證明。若任一鏈不成立，維持
+`unknown-failure` 與 reject。
+
+## CI build authority decoupling follow-up（TASK-PRF-0121）
+
+0066 已把 Product CI 的必要步驟與逐步 provenance 補齊，但在 clean source
+工作樹執行 `npm run build` 時，sealed runner publication 仍要求一個
+release-surface claim。這把「驗證 build 是否可重現」與「取得發布權並寫入
+release surface」錯誤耦合，造成 CI coverage 卡在不屬於產品 CI 的權限邊界。
+
+0121 只允許建立一個可重現、不可發布的 CI build/validation 路徑：它必須能
+驗證編譯輸出與 source/build-input digest，並在未持有 release-surface claim 時
+明確禁止 release artifact publication。正式 release build 的 claim、runner-sync
+與 CAS 安全邊界不得放寬，也不得透過環境變數或測試 shim 繞過。
+
+- 先以目前 `npm run build` 的錯誤 receipt 做最小反例，確認阻塞點確實是
+  publication admission，而非 TypeScript、輸入 digest 或輸出內容錯誤。
+- 只選一個最小 seam（build script 的 validation-only mode，或等價的既有
+  non-publication helper）；不得新增 ATM command、registry、daemon、cache、
+  第二 task store 或新的長期狀態源。
+- TDD 驗收須同時證明：無 claim 的 validation 會成功且不改 release surface；
+  有 claim 的正式 publish 路徑仍通過既有 release-sync/CAS 驗證；故意嘗試
+  publish 的負測試必須 fail-closed。
+- 以同一 source SHA 做 validation-only 與正式 build 的 digest/manifest 對照，
+  並記錄 wall ms；若 validation-only 仍需發布權、改變正式發布語義，或無法
+  證明輸出等價，立即停止並回退，不擴大範圍。
+
+此卡的完成條件是讓 0066 能取得真實 build evidence；它不等於 30 天 CI
+證明，也不等於 npm 發布授權。完成後仍須重跑 0066 pre-close，並以既有
+runner-sync 流程處理任何真正的 release artifact 變更。
+
+## Close-readiness snapshot optimization follow-up (TASK-PRF-0125)
+
+The 2026-09-23 gate evidence ranked `taskflow.close-readiness` at roughly
+17 seconds p50. A disposable child-process trace found repeated read-only Git
+queries; a cache simulation preserved the focused regression suite and reduced
+wall time by about 12%, but it was not safe evidence for a product cache.
+
+0125 is the bounded follow-up. It may introduce only a run-local, read-only
+repository snapshot seam and its tests. It must not create a persistent cache,
+new command, daemon, registry, governance gate, or cross-run state. The
+snapshot must invalidate whenever HEAD, the index, or untracked-file inventory
+can change. Cached and uncached close verdicts must be byte-identical across
+deletion, rename, stale-base, foreign-staged, and planning-drift cases. If the
+measured saving does not offset the added code and invalidation complexity, the
+card must stop and retain the negative result.
+
+## CI race follow-up: isolate charter verdict test output (TASK-PRF-0128)
+
+The 2026-09-26 Product CI run failed in the CLI test sweep on the same source
+SHA that passed on adjacent scheduled runs. The current charter-verdict test
+invokes write mode on a tracked report while the objective-authority review
+also reads that report's inputs; the CLI sweep runs four tests concurrently.
+This is a credible race hypothesis, not a confirmed diagnosis of that
+historical failure.
+
+Change only the charter-verdict test so its refresh/validation cycle operates
+on a temporary report copy through the validator's existing `--input` option.
+The test must prove the canonical tracked report's bytes and modification time
+remain unchanged, and remove its temporary directory on success or failure.
+Do not add a serial lane, runtime gate, validator feature, or production code.
+
+Acceptance evidence: the focused charter test and objective-authority test pass
+individually and in the configured concurrent CLI sweep; the canonical report
+is unchanged; no new failure category is introduced. A passing local run does
+not retroactively prove this was the cause of the 2026-09-26 CI failure.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-09-14T15:08:44.119Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-convergence-plan.md","contentDigest":"sha256:fd2cae90ff25f44aed995c5bb00183c8e939cfb85b98568aee7207aa0f8f5b43"} -->

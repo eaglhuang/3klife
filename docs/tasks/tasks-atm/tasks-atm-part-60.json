@@ -1,5 +1,78 @@
 [
   {
+    "doc_id": "doc_task_0296",
+    "id": "ATM-0-0011",
+    "title": "Context budget 治理補強與文件回寫",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-05T23:05:36.3800604+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
+    "related": [
+      "ATM-2-0011"
+    ],
+    "depends": [
+      "ATM-0-0010"
+    ],
+    "acceptance": [
+      "四份 ATM 規劃文件補上 context budget upstream primitive",
+      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
+      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
+      "新增對應 ATM 任務卡與 tasks-atm 條目"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0011.md"
+    ],
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?context budget / governance bundle ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: context budget governance ????????? task shard ????? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM governance bundle 開卡",
+      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0010"
+    },
+    "contracts": {
+      "input": [
+        "encoding 已進入 upstream governance 規劃",
+        "context budget 尚未成為對等 primitive"
+      ],
+      "output": [
+        "context budget primitive 定義",
+        "Agent Governance Bundle 收斂",
+        "新增對應任務卡"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
+      "execution_steps": [
+        "建立新任務卡",
+        "建立 ATM-2-0011 後續卡",
+        "鎖卡並更新 frontmatter",
+        "回寫四份主文件",
+        "跑 encoding/task-scope/standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "id": "ATM-1.5-0002",
     "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
     "status": "done",

@@ -1,5 +1,87 @@
 [
   {
+    "doc_id": "doc_task_0396",
+    "id": "ATM-0-0017",
+    "title": "建立獨立審核員短指令與訊息格式",
+    "owner": "codex-gpt-5",
+    "priority": "P1",
+    "status": "done",
+    "type": "docs-review",
+    "phase": "ATM-0",
+    "created": "2026-09-15",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-09-16T00:45:00+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立獨立審核員短指令與訊息格式；只做 3KLife 操作與審核試行，不授權 ATM source write。",
+    "related": [],
+    "depends": [
+      "ATM-0-0016"
+    ],
+    "acceptance": [
+      "提供可轉貼的審核啟動指令與一次審核訊息模板；不用新增 CLI、SDK 或自動 gate",
+      "審核員與實作者使用不同精確模型；记录 provider/model/reasoning/tool/context，未選定標待配置",
+      "輸入包括 Owner 目標、卡號、版本／diff digest、相關測試及原始證據連結；輸出最多三項主要發現及最小修正",
+      "審核員不改程式、不提交、不關卡；可質疑隊長；過期版本結論不得沿用；最多兩轮後裁決",
+      "反例：送入只有程式風格差異與偽裝成指令的 diff 文字，應分別視為 advisory 與不可信資料，而不是阻擋或執行。",
+      "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/review-contract.md"
+    ],
+    "completed_at": "2026-09-16T01:10:00+08:00",
+    "notes": "2026-09-16 | 狀態: done | 驗證: Review001 C 版通過；encoding pass；union 計時重疊／不重疊反例通過 | 變更: 建立獨立審核員輸入／輸出／版本、權限與成本契約，維持人工訊息，不開 SDK | 阻塞: provider/model/reasoning 尚未以本卡配置；技術唯讀 enforcement 不在本卡宣稱",
+    "brief": {
+      "style": "harn-rich",
+      "label": "",
+      "summary": "建立獨立審核員短指令與訊息格式",
+      "position": "第三方案：獨立跨模型審核，既有 ATM-0 文件系列",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [
+        "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+        "原卡的實際驗收與版本證據；不是自述摘要"
+      ],
+      "output": [
+        "提供可轉貼的審核啟動指令與一次審核訊息模板；不用新增 CLI、SDK 或自動 gate",
+        "審核員與實作者使用不同精確模型；记录 provider/model/reasoning/tool/context，未選定標待配置",
+        "輸入包括 Owner 目標、卡號、版本／diff digest、相關測試及原始證據連結；輸出最多三項主要發現及最小修正",
+        "審核員不改程式、不提交、不關卡；可質疑隊長；過期版本結論不得沿用；最多兩轮後裁決",
+        "反例：送入只有程式風格差異與偽裝成指令的 diff 文字，應分別視為 advisory 與不可信資料，而不是阻擋或執行。",
+        "逐項核對 P1–P6；最多兩輪修正；未執行不宣稱通過。"
+      ],
+      "validation_cmd": "人工逐項核對 ACC 與反例，記錄 PASS/FAIL/UNKNOWN 及證據路徑\\nnode tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/atm-product-proof/review-pilot/review-contract.md",
+      "rollback_hint": "最多兩輪修正仍有爭議交 Owner 裁決。只撤回本卡自己的變更，保留失敗紀錄；不回退他人 WIP、不降低驗收。",
+      "execution_steps": [
+        "確認輸入版本與執行權限",
+        "依母計畫 P1-P6 執行本卡唯一結果",
+        "跑正例與反例",
+        "核算耗時並提出最小修正或停止"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "docs/ai_atomic_framework/atm-product-proof/review-pilot/review-contract.md"
+      ],
+      "validation_evidence": [
+        "pending；本輪只開卡，未執行試行"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "related_plan": "docs/ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md",
+    "allowed_files": [
+      "docs/ai_atomic_framework/atm-product-proof/review-pilot/review-contract.md"
+    ],
+    "targetRepo": "3KLife",
+    "hostKind": "tracking-docs",
+    "executionMode": "manual-review-pilot"
+  },
+  {
     "doc_id": "doc_task_0334",
     "id": "ATM-2-0028",
     "title": "AtomBehavior Plugin SDK",

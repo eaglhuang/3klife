@@ -1264,4 +1264,111 @@ evidence. Completion is proven by command-backed collector/evaluator tests,
 typecheck, and the encoding guard; it does not establish long-term green until
 a new independently sourced export passes the 30-day/90-run policy.
 
+## Follow-up: TASK-PRF-0119 — Exclude unreachable schemas from the public npm runtime with clean-install proof
+
+The fixed public `@ai-atomic-framework/cli@0.1.2` package is installable and
+passes the core workflow, but its measured payload is larger than `0.1.1`.
+The only newly packed payload is three schema files that are not reached by the
+current adopter-core command matrix: `layout/schemas/registry.schema.json`,
+`layout/schemas/test-report.schema.json`, and
+`layout/schemas/test-report/metrics.schema.json`. A clean negative-control
+tarball that omits exactly those files measured 2,652,111 unpacked bytes and
+65 entries versus 2,683,003 bytes and 69 entries for the public `0.1.2`
+baseline, while install, core workflow, dependency path count, and 22 command
+help surfaces remained intact. Short startup A/B data is noisy and is not a
+performance claim.
+
+TASK-PRF-0119 is an implementation-and-test follow-up, not a reopening of
+0097/0110 and not a general bundler redesign. It may add a narrow, explicit
+release-packaging exclusion for exactly these unreachable files and a
+regression guard proving that the exclusion cannot hide a schema later needed
+by an adopter-core command. It must preserve source-repository schemas and
+multi-agent command surfaces, rebuild the official candidate from the formal
+release path, and compare a cleanly installed tarball against the fixed public
+`0.1.2` baseline. The measured reduction is an acceptance requirement for this
+candidate, not evidence that the whole ATM runtime is solved. If any required
+schema, command, or clean-install behavior regresses, or if the formal build
+does not reproduce the negative-control reduction, stop and retain the
+counter-evidence; do not open splitting or add runtime downloads.
+
+The card does not authorize npm publish, GitHub push, hidden-corpus changes,
+benchmark execution, historical evidence rewrites, or direct mutation while
+the target worktree contains foreign WIP. Rollback is removal of the exclusion
+and restoration of the prior package-build output in one revertable change.
+
+## Follow-up: TASK-PRF-0120 — Map public runtime schema dependencies before any further bundle slimming
+
+TASK-PRF-0119 was rolled back after a formal clean-install candidate reached
+`create` and failed because `test-report.schema.json` and
+`test-report/metrics.schema.json` are runtime dependencies. The failure proves
+that static asset size and a partial command matrix are not sufficient to label
+a schema unreachable.
+
+TASK-PRF-0120 is a read-mostly dependency-map and regression-contract card. It
+must inventory every schema copied into the public CLI runtime, identify its
+source call sites and command paths, and classify it as runtime-required,
+validation-only, embedded, or removable-candidate. The map must explicitly
+include `create`, test-report validation, registry operations, bootstrap/chart
+lifecycle, and the complete public help matrix. It may add a focused map test
+and an English product-proof report, but it must not change the bundler,
+package boundary, lockfile, publish workflow, or runtime download behavior.
+
+No future slimming card may use a removable-candidate classification until the
+map and the clean-install red gates pass. A missing schema, command regression,
+or dependency-map/source mismatch is a stop condition; the 0119 failure receipt
+remains immutable counter-evidence.
+
+## Follow-up: TASK-PRF-0122 — Make CI failure dispositions replayable across scope-policy changes
+
+The current Product CI collector correctly excludes observations that lack the
+required step coverage, but it still applies every historical failure
+disposition as if its failed run were eligible under the current policy. A
+disposition that points to an older, now scope-excluded run therefore aborts
+collection with `failureDisposition-<runId>-not-an-eligible-run` and makes the
+whole receipt `invalid-input`. This prevents replay of the current 30-day/90-run
+evidence without changing the underlying observations.
+
+TASK-PRF-0122 is a bounded evidence-contract follow-up. It may change only
+`scripts/collect-ci-burn-in-evidence.ts` and its focused collector/evaluator
+tests. Scope-excluded historical dispositions must remain visible as excluded
+provenance, must not mutate the eligible lifecycle, and must not invalidate the
+receipt. Eligible failures still require a specific failure class, root cause,
+and a later eligible successful repair; retries must retain first-attempt and
+later-attempt provenance. The existing required-step policy, 30-day/90-run
+thresholds, raw GitHub export, Product CI workflow, npm release path, and
+benchmark protocol are unchanged.
+
+Acceptance requires replaying the current external export and proving that the
+receipt is structurally evaluable, reports excluded dispositions explicitly,
+retains eligible failure and retry evidence, and still returns an incomplete or
+unexplained verdict when the thresholds or lifecycle evidence are insufficient.
+This card does not establish long-term green CI and does not authorize a push,
+publish, or historical evidence rewrite. Rollback is one revert of the collector
+and focused regression case; raw exports and prior receipts remain untouched.
+
+## Follow-up: TASK-PRF-0127 — Generate valid npm CLI entry guidance after bootstrap
+
+A clean Windows consumer installed public `@ai-atomic-framework/cli@0.1.2`,
+ran `atm bootstrap`, and received an `AGENTS.md` that instructs agents to run
+`node atm.mjs next ...`. The consumer contains no `atm.mjs`; following the
+generated instruction fails with `MODULE_NOT_FOUND` (exit 1), while
+`npm exec -- atm next --cwd . --json` succeeds. Review001 independently
+confirmed this is a real npm-adopter entrypoint defect. The reproducible
+receipt is retained outside Git at
+`C:/Users/User/atm-benchmark-sink/ATM-PRODUCT-PROOF-20260923/public-npm-bootstrap-entrypoint-defect-20260923.md`.
+
+TASK-PRF-0127 fixes only the generated-entrypoint mismatch. npm-installed CLI
+consumers must receive an executable `atm`-bin instruction; root-drop and
+onefile consumers retain their local `node atm.mjs` route. Add one post-
+bootstrap smoke to the existing clean-candidate validator, rather than a new
+gate. Do not include the root-drop runner in the npm package, add a runtime
+dependency/download, publish, or rewrite historical product evidence.
+
+Acceptance requires the same regression case to fail against the current
+behavior and pass after the fix in a fresh candidate npm consumer, with the
+generated command executed successfully. The existing root-drop smoke and npm
+core command matrix must stay green, with no package-surface expansion beyond
+the instruction/test changes. Rollback is one revert of the scoped generator,
+validator, and test changes; retain the external reproduction note.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-13T16:06:54.992Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-product-proof-plan.md","contentDigest":"sha256:2d46db99108aeffcba1bf465ed329695af6f99516e09ad8d4bd91090392ebce9"} -->
