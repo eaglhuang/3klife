@@ -1371,4 +1371,38 @@ core command matrix must stay green, with no package-surface expansion beyond
 the instruction/test changes. Rollback is one revert of the scoped generator,
 validator, and test changes; retain the external reproduction note.
 
+## Follow-up: TASK-PRF-0129 — Stop writing runtime git-head receipts into tracked Git history
+
+The completed runtime-evidence migrations moved append-only payloads to
+`.atm/runtime/telemetry`, but the implementation still writes and stages a
+compact mutable `.atm/history/evidence/git-head.json` receipt for governed
+commits. `git-head-runtime-only-receipt.test.ts` currently asserts that the
+tracked receipt exists. This remains inconsistent with the product goal:
+runtime evidence should not grow Git history merely because a command or hook
+ran, while the commit itself must remain attributable and recoverable.
+
+Create one cohesive PRF successor card to retire that tracked writer/stager
+behavior. Keep Git commit metadata and existing `ATM-*` trailers as the source
+of commit provenance. Write new runtime observations only to the ignored,
+runtime-local evidence location; retain legacy tracked receipts as read-only
+inputs where compatibility requires them. Remove the tracked snapshot from
+candidate expectations and pre-commit staging. Do not replace it with a
+second ledger, persistent cache, new command, or new required gate.
+
+Acceptance must use a fresh temporary Git repository and the real commit and
+pre-commit paths: new git-head observations remain runtime-local; the staged
+index and committed tree contain no newly written
+`.atm/history/evidence/git-head.json`; existing trailers still identify
+actor/task provenance; and legacy receipt reads remain backward compatible.
+Measure current tracked receipt/history footprint and report it separately
+from expected future-growth reduction. A dry-run or mocked writer is not
+sufficient proof.
+
+This cutover does not delete legacy evidence or rewrite published Git history;
+existing task and closure records remain unchanged. Therefore the card proves
+that new runtime evidence stops entering Git history, but does not prove that
+historical runtime evidence has been removed from the repository's existing
+Git history. A separate owner-approved migration is required for that state.
+Rollback is one revert of the writer/stager and matching regression changes.
+
 <!-- atmPlanningCreationSeal {"schemaId":"atm.planningCreationSeal.v1","command":"atm plan doc create","createdAt":"2026-08-13T16:06:54.992Z","planningRoot":"C:/Users/User/3KLife/docs/ai_atomic_framework","relativePath":"atm-product-proof/atm-product-proof-plan.md","contentDigest":"sha256:2d46db99108aeffcba1bf465ed329695af6f99516e09ad8d4bd91090392ebce9"} -->
