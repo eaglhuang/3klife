@@ -187,17 +187,17 @@ Six cards implement the sequence:
 |---|---|---|
 | `ATM-GOV-0159` (F1) | Promote `code` / `docs` / `ledger` scope classification plus lane event append coverage into shared policy. | Foundation; run first. |
 | `ATM-GOV-0160` (F2) | Make dependency gates block code claims only while allowing docs/ledger/planning claims. | May run after F1 and in parallel with F3/F4. |
-| `ATM-GOV-0157` (F3) | Skip runner staleness close blockers when `scopeClass` contains no code. | May run after F1 and in parallel with F2/F4. |
+| `ATM-GOV-0165` (F3) | Skip runner staleness close blockers when `scopeClass` contains no code. | May run after F1 and in parallel with F2/F4. |
 | `ATM-GOV-0158` (F4) | Make runner-sync foreign-WIP admission block only landed-not-closed build-input conflicts. | May run after F1 and in parallel with F2/F3. |
 | `ATM-GOV-0161` (F5) | Convert code-class Tier 2 shared-surface refusals into broker tickets with queue/session events. | Runs after F1-F4 and lane event history. |
 | `ATM-GOV-0162` (F6) | Add related-task batching for commit/build/projection windows using `waveId` and compatible surface families. | Runs after F5. |
 
 `ATM-GOV-0156` remains on the independent build-cache line and depends on
-`ATM-GOV-0157`, `ATM-GOV-0158`, and `ATM-GOV-0155` closeback.
+`ATM-GOV-0165`, `ATM-GOV-0158`, and `ATM-GOV-0155` closeback.
 
 Metrics required by this follow-up:
 
-- `ATM-GOV-0157`: close/pre-close evidence exposes
+- `ATM-GOV-0165`: close/pre-close evidence exposes
   `runnerGateDecision: "skipped-non-code" | "required"` so the analyzer can
   measure build-free closeback rate.
 - `ATM-GOV-0158`: admission refusals expose `blockingTaskId`,
