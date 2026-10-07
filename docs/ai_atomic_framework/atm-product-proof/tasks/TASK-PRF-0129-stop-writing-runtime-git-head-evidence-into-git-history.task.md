@@ -1,7 +1,7 @@
 ---
 task_id: TASK-PRF-0129
 title: Stop writing runtime git-head evidence into Git history
-status: planned
+status: done
 owner: atm-product-proof
 priority: P1
 depends_on: []
