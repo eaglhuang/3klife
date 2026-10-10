@@ -1,7 +1,7 @@
 <!-- doc_id: doc_index_0002 -->
 # Cross-Reference: 規格書索引（文件 → 相關文件）
 
-> 這是 doc_index_0005 的 A 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005)。
+> 這是 doc_index_0007 的 A 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007)。
 > 最後更新請參考母檔 Header。
 >
 > **doc_id 查詢**：用 `node tools_node/resolve-doc-id.js <搜尋詞>` 查文件代號，或瀏覽 `docs/doc-id-registry.md (doc_other_0001)` (doc_other_0001)。
@@ -107,8 +107,8 @@
 | doc_spec_0161 |doc_tech_0007、doc_ui_0001|doc_spec_0040、doc_spec_0012、doc_data_0001|
 | doc_tech_0015 |—|doc_data_0001、doc_spec_0038、doc_spec_0033、doc_spec_0039|
 | doc_tech_0007 |—|doc_spec_0161|
-| doc_spec_0159 |doc_index_0011|doc_index_0005|
-| doc_spec_0001 |doc_index_0011|doc_spec_0159、doc_index_0005|
+| doc_spec_0159 |doc_index_0011|doc_index_0007|
+| doc_spec_0001 |doc_index_0011|doc_spec_0159、doc_index_0007|
 | doc_tech_0008 |—|doc_spec_0031、doc_spec_0011、doc_spec_0042|
 | doc_tech_0009 |doc_tech_0015、doc_tech_0014、doc_spec_0008、doc_spec_0010、doc_spec_0011| — |
 | doc_ui_0027 |doc_spec_0004、doc_ui_0049、doc_ui_0012、doc_ui_0009|doc_spec_0031、doc_tech_0008、doc_spec_0011、doc_spec_0012、doc_spec_0015、doc_spec_0007、doc_spec_0032|

@@ -10,7 +10,7 @@
 ## ✅ Pre-flight 檢查（5 分鐘）
 
 - [ ] `docs/cross-ref/cross-ref-進度.md (doc_index_0017)` 已開啟並備份
-- [ ] `docs/cross-reference-index.md (doc_index_0005)` 母檔已備份
+- [ ] `docs/cross-reference-index.md (doc_index_0007)` 母檔已備份
 - [ ] 確認 M6 的 4 份規格書已更新：
   - [ ] `docs/遊戲規格文件/系統規格書/培育系統.md (doc_spec_0026)`
   - [ ] `docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md (doc_spec_0027)`
@@ -158,7 +158,7 @@ UI 系統：75% → 70%
 
 ### 文檔更新
 
-編輯 `docs/cross-reference-index.md (doc_index_0005)` Header：
+編輯 `docs/cross-reference-index.md (doc_index_0007)` Header：
 
 **原文**：
 ```markdown

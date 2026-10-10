@@ -9,11 +9,11 @@
  * 使用 cc.mock 隔離 Cocos 引擎 API
  */
 
-import '../../assets/scripts/tools/tests/cc.mock';
-import { ResultPopup, BattleResult } from '../../assets/scripts/ui/components/ResultPopup';
+import '../assets/scripts/tools/tests/cc.mock';
+import { ResultPopup, BattleResult } from '../assets/scripts/ui/components/ResultPopup';
 
 // ── Mock UISpecLoader ────────────────────────────────────────────
-jest.mock('../../assets/scripts/ui/core/UISpecLoader', () => ({
+jest.mock('../assets/scripts/ui/core/UISpecLoader', () => ({
     UISpecLoader: jest.fn().mockImplementation(() => ({
         loadFullScreen: jest.fn().mockResolvedValue({
             screen: { id: 'result-popup-screen', uiId: 'ResultPopup' },
@@ -52,7 +52,7 @@ jest.mock('../../assets/scripts/ui/core/UISpecLoader', () => ({
 }));
 
 // ── Mock UIPreviewBuilder.buildScreen ────────────────────────────
-jest.mock('../../assets/scripts/ui/core/UIPreviewBuilder', () => {
+jest.mock('../assets/scripts/ui/core/UIPreviewBuilder', () => {
     const { Node } = require('cc');
     return {
         UIPreviewBuilder: class {

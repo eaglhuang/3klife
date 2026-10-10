@@ -11,7 +11,7 @@
  *       無法在純 Node.js 環境下驗證；此處僅測試純邏輯部分。
  */
 
-import { EventSystem } from '../../core/systems/EventSystem';
+import { EventSystem } from '../assets/scripts/core/systems/EventSystem';
 import { TestSuite, assert } from './TestRunner';
 
 export function createEventSystemSuite(): TestSuite {

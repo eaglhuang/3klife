@@ -109,8 +109,8 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillDamageResolverSuite());
 
     // Deprecated API 靜態掃描
-    // __dirname = assets/scripts/tools/tests/  →  ../../../../ = 專案根目錄
-    const projectRoot = path.resolve(__dirname, '../../../../');
+    // __dirname = tests/  →  ../ = 專案根目錄
+    const projectRoot = path.resolve(__dirname, '..');
     runner.register(createDeprecatedApiSuite({
         scanRoots: [
             path.join(projectRoot, 'assets/scripts'),  // 遊戲邏輯腳本

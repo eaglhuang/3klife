@@ -1,8 +1,8 @@
 import { TestSuite, assert } from './TestRunner';
-import { SyncManager, SyncActionType, EVENT_SYNC_COMPLETE } from '../../core/systems/SyncManager';
-import { NetworkService } from '../../core/systems/NetworkService';
-import { EventSystem } from '../../core/systems/EventSystem';
-import { sys } from './cc.mock';
+import { SyncManager, SyncActionType, EVENT_SYNC_COMPLETE } from '../assets/scripts/core/systems/SyncManager';
+import { NetworkService } from '../assets/scripts/core/systems/NetworkService';
+import { EventSystem } from '../assets/scripts/core/systems/EventSystem';
+import { sys } from 'cc'; // 與被測程式共用同一份 cc stub，monkey-patch 才會生效
 
 // ★ mock fetch 工廠函式（不在頂層執行，避免 Cocos 打包後在瀏覽器崩潰）
 function installMockFetch(): void {

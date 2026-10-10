@@ -12,8 +12,8 @@
  *   或在 Cocos DevMode 中由 TestEntryPoint.ts 觸發
  */
 
-import { FormulaSystem, DamageContext } from '../../core/systems/FormulaSystem';
-import { TroopType, TerrainType, COUNTER_MULTIPLIER, DISADVANTAGE_MULTIPLIER, MIN_DAMAGE } from '../../core/config/Constants';
+import { FormulaSystem, DamageContext } from '../assets/scripts/core/systems/FormulaSystem';
+import { TroopType, TerrainType, COUNTER_MULTIPLIER, DISADVANTAGE_MULTIPLIER, MIN_DAMAGE } from '../assets/scripts/core/config/Constants';
 import { TestSuite, assert } from './TestRunner';
 
 // 每個 test 用全新的 FormulaSystem 實例（無狀態，所以可重用但明確隔離更清楚）

@@ -14,9 +14,9 @@
  */
 
 import { TestSuite, assert } from "./TestRunner";
-import { UIManager } from "../../core/managers/UIManager";
-import { UIID, UIConfig, LayerType } from "../../core/config/UIConfig";
-import { UILayer } from "../../ui/layers/UILayer";
+import { UIManager } from "../assets/scripts/core/managers/UIManager";
+import { UIID, UIConfig, LayerType } from "../assets/scripts/core/config/UIConfig";
+import { UILayer } from "../assets/scripts/ui/layers/UILayer";
 
 // ─── Mock UILayer（tracker 版）────────────────────────────────────────────────
 // 不依賴真實 cc 渲染，只追蹤 show / hide 呼叫次數與可見狀態
@@ -24,6 +24,8 @@ class MockUILayer {
     public showCount = 0;
     public hideCount = 0;
     public isVisible = false;
+    /** UIManager 只會對 isValid 的 node 呼叫 hide() */
+    public node = { isValid: true };
 
     show(): void { this.showCount++; this.isVisible = true; }
     hide(): void { this.hideCount++; this.isVisible = false; }
@@ -41,7 +43,7 @@ export function createUIManagerSuite(): TestSuite {
 
     // ── UIConfig 結構驗證 ────────────────────────────────────────────────────
 
-    suite.test("UIConfig 包含所有 UIID 項目", () => {
+    suite.test("UIConfig 包含所有 UIID 項目", async () => {
         const ids = Object.values(UIID);
         ids.forEach(id => {
             assert.isDefined(UIConfig[id], `UIConfig 應包含 UIID.${id}`);
@@ -49,46 +51,46 @@ export function createUIManagerSuite(): TestSuite {
         });
     });
 
-    suite.test("UIConfig.ResultPopup 為 Dialog 層且啟用 mask", () => {
+    suite.test("UIConfig.ResultPopup 為 Dialog 層且啟用 mask", async () => {
         const cfg = UIConfig[UIID.ResultPopup];
         assert.equals(cfg.layer, LayerType.Dialog, "ResultPopup 應在 Dialog 層");
         assert.equals(cfg.mask, true, "ResultPopup 應啟用 mask");
     });
 
-    suite.test("UIConfig.BattleHUD 為 Game 層", () => {
+    suite.test("UIConfig.BattleHUD 為 Game 層", async () => {
         const cfg = UIConfig[UIID.BattleHUD];
         assert.equals(cfg.layer, LayerType.Game, "BattleHUD 應在 Game 層");
     });
 
     // ── register / isOpen 基礎 ───────────────────────────────────────────────
 
-    suite.test("open 未 register 的 UIID 回傳 false", () => {
+    suite.test("open 未 register 的 UIID 回傳 false", async () => {
         const mgr = new UIManager();
-        assert.equals(mgr.open(UIID.BattleHUD), false, "未 register 應回傳 false");
+        assert.equals(await mgr.open(UIID.BattleHUD), false, "未 register 應回傳 false");
     });
 
-    suite.test("close 未開啟的 UIID 回傳 false", () => {
+    suite.test("close 未開啟的 UIID 回傳 false", async () => {
         const mgr = new UIManager();
         const { layer } = makeMock();
         mgr.register(UIID.BattleHUD, layer);
-        assert.equals(mgr.close(UIID.BattleHUD), false, "未開啟時 close 應回傳 false");
+        assert.equals(await mgr.close(UIID.BattleHUD), false, "未開啟時 close 應回傳 false");
     });
 
-    suite.test("isOpen 在 open/close 前後正確切換", () => {
+    suite.test("isOpen 在 open/close 前後正確切換", async () => {
         const mgr = new UIManager();
         const { layer } = makeMock();
         mgr.register(UIID.BattleHUD, layer);
 
         assert.equals(mgr.isOpen(UIID.BattleHUD), false, "初始應為 false");
-        mgr.open(UIID.BattleHUD);
+        await mgr.open(UIID.BattleHUD);
         assert.equals(mgr.isOpen(UIID.BattleHUD), true, "open 後應為 true");
-        mgr.close(UIID.BattleHUD);
+        await mgr.close(UIID.BattleHUD);
         assert.equals(mgr.isOpen(UIID.BattleHUD), false, "close 後應為 false");
     });
 
     // ── LayerGame 行為 ───────────────────────────────────────────────────────
 
-    suite.test("LayerGame: 多個可同時開啟", () => {
+    suite.test("LayerGame: 多個可同時開啟", async () => {
         const mgr = new UIManager();
         const hud  = makeMock();
         const dp   = makeMock();
@@ -98,9 +100,9 @@ export function createUIManagerSuite(): TestSuite {
         mgr.register(UIID.DeployPanel, dp.layer);
         mgr.register(UIID.BattleLogPanel, log.layer);
 
-        mgr.open(UIID.BattleHUD);
-        mgr.open(UIID.DeployPanel);
-        mgr.open(UIID.BattleLogPanel);
+        await mgr.open(UIID.BattleHUD);
+        await mgr.open(UIID.DeployPanel);
+        await mgr.open(UIID.BattleLogPanel);
 
         assert.equals(mgr.isOpen(UIID.BattleHUD),   true, "BattleHUD 應開啟");
         assert.equals(mgr.isOpen(UIID.DeployPanel),  true, "DeployPanel 應開啟");
@@ -109,12 +111,12 @@ export function createUIManagerSuite(): TestSuite {
         assert.equals(dp.mock.showCount,  1, "DeployPanel show 應呼叫 1 次");
     });
 
-    suite.test("LayerGame: open 後 close 呼叫 hide", () => {
+    suite.test("LayerGame: open 後 close 呼叫 hide", async () => {
         const mgr = new UIManager();
         const { mock, layer } = makeMock();
         mgr.register(UIID.BattleHUD, layer);
-        mgr.open(UIID.BattleHUD);
-        mgr.close(UIID.BattleHUD);
+        await mgr.open(UIID.BattleHUD);
+        await mgr.close(UIID.BattleHUD);
         assert.equals(mock.hideCount, 1, "close 後 hide 應呼叫 1 次");
         assert.equals(mgr.isOpen(UIID.BattleHUD), false, "close 後 isOpen 應為 false");
     });
@@ -122,7 +124,7 @@ export function createUIManagerSuite(): TestSuite {
     // ── LayerPopUp 堆疊行為 ──────────────────────────────────────────────────
     // 注意：目前 UIID 中無 PopUp 層 entry，用臨時擴展 UIID + UIConfig 模擬
 
-    suite.test("LayerPopUp: peekPopup 回傳最後開啟的彈窗", () => {
+    suite.test("LayerPopUp: peekPopup 回傳最後開啟的彈窗", async () => {
         // 此測試使用 UIManager 內部直接操控狀態（透過 closeAll 驗證）
         // 由於目前 UIConfig 無 PopUp 層 entry，僅驗證 peekPopup 初始為 null
         const mgr = new UIManager();
@@ -132,60 +134,60 @@ export function createUIManagerSuite(): TestSuite {
 
     // ── LayerDialog 佇列行為 ─────────────────────────────────────────────────
 
-    suite.test("LayerDialog: open 第一個立即顯示", () => {
+    suite.test("LayerDialog: open 第一個立即顯示", async () => {
         const mgr = new UIManager();
         const { mock, layer } = makeMock();
         mgr.register(UIID.ResultPopup, layer);
 
-        mgr.open(UIID.ResultPopup);
+        await mgr.open(UIID.ResultPopup);
 
         assert.equals(mock.showCount, 1, "第一個 Dialog 應立即 show");
         assert.equals(mgr.isOpen(UIID.ResultPopup), true, "應處於開啟狀態");
     });
 
-    suite.test("LayerDialog: getDialogQueueLength 初始為 0", () => {
+    suite.test("LayerDialog: getDialogQueueLength 初始為 0", async () => {
         const mgr = new UIManager();
         assert.equals(mgr.getDialogQueueLength(), 0, "初始佇列長度應為 0");
     });
 
-    suite.test("LayerDialog: close 後 isOpen 更新為 false", () => {
+    suite.test("LayerDialog: close 後 isOpen 更新為 false", async () => {
         const mgr = new UIManager();
         const { mock, layer } = makeMock();
         mgr.register(UIID.ResultPopup, layer);
 
-        mgr.open(UIID.ResultPopup);
+        await mgr.open(UIID.ResultPopup);
         assert.equals(mgr.isOpen(UIID.ResultPopup), true, "open 後應為 open");
-        mgr.close(UIID.ResultPopup);
+        await mgr.close(UIID.ResultPopup);
         assert.equals(mgr.isOpen(UIID.ResultPopup), false, "close 後應為 closed");
         assert.equals(mock.hideCount, 1, "hide 應呼叫一次");
     });
 
     // ── LayerNotify / LayerSystem 行為 ───────────────────────────────────────
 
-    suite.test("LayerNotify(Toast): open/close 呼叫對應 show/hide", () => {
+    suite.test("LayerNotify(Toast): open/close 呼叫對應 show/hide", async () => {
         const mgr = new UIManager();
         const { mock, layer } = makeMock();
         mgr.register(UIID.Toast, layer);
 
-        mgr.open(UIID.Toast);
+        await mgr.open(UIID.Toast);
         assert.equals(mock.showCount, 1, "Toast open 應呼叫 show");
-        mgr.close(UIID.Toast);
+        await mgr.close(UIID.Toast);
         assert.equals(mock.hideCount, 1, "Toast close 應呼叫 hide");
     });
 
-    suite.test("LayerSystem(SystemAlert): open 立即顯示", () => {
+    suite.test("LayerSystem(SystemAlert): open 立即顯示", async () => {
         const mgr = new UIManager();
         const { mock, layer } = makeMock();
         mgr.register(UIID.SystemAlert, layer);
 
-        mgr.open(UIID.SystemAlert);
+        await mgr.open(UIID.SystemAlert);
         assert.equals(mock.isVisible, true, "SystemAlert 應立即可見");
         assert.equals(mgr.isOpen(UIID.SystemAlert), true, "isOpen 應為 true");
     });
 
     // ── closeAll 重置行為 ────────────────────────────────────────────────────
 
-    suite.test("closeAll: 所有已開啟的 UI 都會呼叫 hide", () => {
+    suite.test("closeAll: 所有已開啟的 UI 都會呼叫 hide", async () => {
         const mgr = new UIManager();
         const hud     = makeMock();
         const result  = makeMock();
@@ -195,11 +197,11 @@ export function createUIManagerSuite(): TestSuite {
         mgr.register(UIID.ResultPopup,result.layer);
         mgr.register(UIID.Toast,      toast.layer);
 
-        mgr.open(UIID.BattleHUD);
-        mgr.open(UIID.ResultPopup);
-        mgr.open(UIID.Toast);
+        await mgr.open(UIID.BattleHUD);
+        await mgr.open(UIID.ResultPopup);
+        await mgr.open(UIID.Toast);
 
-        mgr.closeAll();
+        await mgr.closeAll();
 
         assert.equals(hud.mock.isVisible,    false, "BattleHUD 應被隱藏");
         assert.equals(result.mock.isVisible, false, "ResultPopup 應被隱藏");
@@ -210,14 +212,14 @@ export function createUIManagerSuite(): TestSuite {
         assert.equals(mgr.getDialogQueueLength(), 0, "佇列應清空");
     });
 
-    suite.test("closeAll 後可重新 open 相同 UI", () => {
+    suite.test("closeAll 後可重新 open 相同 UI", async () => {
         const mgr = new UIManager();
         const { mock, layer } = makeMock();
         mgr.register(UIID.Toast, layer);
 
-        mgr.open(UIID.Toast);
-        mgr.closeAll();
-        mgr.open(UIID.Toast);
+        await mgr.open(UIID.Toast);
+        await mgr.closeAll();
+        await mgr.open(UIID.Toast);
 
         assert.equals(mock.showCount, 2, "closeAll 後重新 open 應再次呼叫 show");
         assert.equals(mgr.isOpen(UIID.Toast), true, "重新 open 後應為 true");
@@ -225,42 +227,43 @@ export function createUIManagerSuite(): TestSuite {
 
     // ── getCurrentUI ────────────────────────────────────────────────────────
 
-    suite.test("getCurrentUI 初始為 null", () => {
+    suite.test("getCurrentUI 初始為 null", async () => {
         const mgr = new UIManager();
         assert.equals(mgr.getCurrentUI(), null, "初始 currentUI 應為 null");
     });
 
     // ── M-2 快取機制 ─────────────────────────────────────────────────────────
 
-    suite.test("M-2: ResultPopup close 後 isCached 為 true", () => {
+    suite.test("M-2: ResultPopup close 後 isCached 為 true", async () => {
         const mgr = new UIManager();
         const { layer } = makeMock();
         mgr.register(UIID.ResultPopup, layer);
 
-        mgr.open(UIID.ResultPopup);
+        await mgr.open(UIID.ResultPopup);
         assert.equals(mgr.isCached(UIID.ResultPopup), false, "open 中不應為 cached");
 
-        mgr.close(UIID.ResultPopup);
+        await mgr.close(UIID.ResultPopup);
         assert.equals(mgr.isCached(UIID.ResultPopup), true, "close 後應標記為 cached");
     });
 
-    suite.test("M-2: 非 cache 的 UI (Toast) close 後 isCached 為 false", () => {
+    suite.test("M-2: 非 cache 的 UI (Toast) close 後 isCached 為 false", async () => {
         const mgr = new UIManager();
         const { layer } = makeMock();
         mgr.register(UIID.Toast, layer);
 
-        mgr.open(UIID.Toast);
-        mgr.close(UIID.Toast);
+        await mgr.open(UIID.Toast);
+        await mgr.close(UIID.Toast);
         assert.equals(mgr.isCached(UIID.Toast), false, "Toast 不應被快取");
     });
 
-    suite.test("M-2: 快取後再 open 呼叫 resetState", () => {
+    suite.test("M-2: 快取後再 open 呼叫 resetState", async () => {
         // 建立帶有 resetState 追蹤的 mock
         class TrackedMockLayer {
             public showCount = 0;
             public hideCount = 0;
             public resetCount = 0;
             public isVisible = false;
+            public node = { isValid: true };
 
             show(): void   { this.showCount++;  this.isVisible = true; }
             hide(): void   { this.hideCount++;  this.isVisible = false; }
@@ -271,36 +274,37 @@ export function createUIManagerSuite(): TestSuite {
         const tm = new TrackedMockLayer();
         mgr.register(UIID.ResultPopup, tm as unknown as UILayer);
 
-        mgr.open(UIID.ResultPopup);
+        await mgr.open(UIID.ResultPopup);
         assert.equals(tm.resetCount, 0, "首次 open 不應呼叫 resetState");
 
-        mgr.close(UIID.ResultPopup);
+        await mgr.close(UIID.ResultPopup);
         assert.equals(mgr.isCached(UIID.ResultPopup), true, "close 後應為 cached");
 
-        mgr.open(UIID.ResultPopup);
+        await mgr.open(UIID.ResultPopup);
         assert.equals(tm.resetCount, 1, "從快取 open 應呼叫 resetState 一次");
         assert.equals(mgr.isCached(UIID.ResultPopup), false, "open 後快取標記應清除");
     });
 
-    suite.test("M-2: clearCache 清除快取標記", () => {
+    suite.test("M-2: clearCache 清除快取標記", async () => {
         const mgr = new UIManager();
         const { layer } = makeMock();
         mgr.register(UIID.ResultPopup, layer);
 
-        mgr.open(UIID.ResultPopup);
-        mgr.close(UIID.ResultPopup);
+        await mgr.open(UIID.ResultPopup);
+        await mgr.close(UIID.ResultPopup);
         assert.equals(mgr.isCached(UIID.ResultPopup), true, "close 後應為 cached");
 
         mgr.clearCache(UIID.ResultPopup);
         assert.equals(mgr.isCached(UIID.ResultPopup), false, "clearCache 後應為 false");
     });
 
-    suite.test("M-2: 多次快取 open 每次都呼叫 resetState", () => {
+    suite.test("M-2: 多次快取 open 每次都呼叫 resetState", async () => {
         class TrackedMockLayer {
             public showCount = 0;
             public hideCount = 0;
             public resetCount = 0;
             public isVisible = false;
+            public node = { isValid: true };
 
             show(): void   { this.showCount++;  this.isVisible = true; }
             hide(): void   { this.hideCount++;  this.isVisible = false; }
@@ -313,12 +317,12 @@ export function createUIManagerSuite(): TestSuite {
 
         // 模擬 10 次開關（驗收條件：每次都 resetState，記憶體不增長）
         for (let i = 0; i < 10; i++) {
-            mgr.open(UIID.ResultPopup);
-            mgr.close(UIID.ResultPopup);
+            await mgr.open(UIID.ResultPopup);
+            await mgr.close(UIID.ResultPopup);
         }
 
         // 最後一次 open
-        mgr.open(UIID.ResultPopup);
+        await mgr.open(UIID.ResultPopup);
         assert.equals(tm.resetCount, 10, "10 次快取 open 應呼叫 resetState 共 10 次");
         assert.equals(tm.showCount, 11, "open 共 11 次（包含最後一次）");
     });

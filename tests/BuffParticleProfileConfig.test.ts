@@ -1,7 +1,7 @@
 import {
     DEFAULT_BUFF_PARTICLE_PROFILES,
     normalizeBuffParticleProfileTable,
-} from '../../battle/views/effects/BuffParticleProfileConfig';
+} from '../assets/scripts/battle/views/effects/BuffParticleProfileConfig';
 import { TestSuite, assert } from './TestRunner';
 
 export function createBuffParticleProfileConfigSuite(): TestSuite {

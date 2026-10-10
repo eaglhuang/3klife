@@ -2,7 +2,7 @@ import {
     CURRENT_VFX_EFFECT_TABLE_VERSION,
     DEFAULT_VFX_EFFECTS,
     normalizeVfxEffectTable,
-} from '../../core/config/VfxEffectConfig';
+} from '../assets/scripts/core/config/VfxEffectConfig';
 import { TestSuite, assert } from './TestRunner';
 
 export function createVfxEffectConfigSuite(): TestSuite {

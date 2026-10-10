@@ -17,6 +17,8 @@ const paths = {
   runtime: path.join(projectRoot, 'assets/resources/data/generals.json'),
   runtimeIndex: path.join(projectRoot, 'assets/resources/data/generals-index.json'),
   runtimeStories: path.join(projectRoot, 'assets/resources/data/generals-stories.json'),
+  masterLore: path.join(projectRoot, 'assets/resources/data/master/generals-lore.json'),
+  masterStories: path.join(projectRoot, 'assets/resources/data/master/generals-stories.json'),
 };
 
 const backups = new Map();
@@ -114,6 +116,9 @@ async function testExtension() {
   backupFile(paths.runtime);
   backupFile(paths.runtimeIndex);
   backupFile(paths.runtimeStories);
+  // 存檔流程也會改寫 master 的 lore / stories（例如 updatedAt），驗收後必須還原
+  backupFile(paths.masterLore);
+  backupFile(paths.masterStories);
 
   const saveResult = await extensionModule.updateGeneralFields({
     uid: target.uid,
@@ -326,6 +331,13 @@ function loadRuntimePanelClass(devValue, sampleData) {
       }
       if (request.endsWith('GeneralSearch')) {
         return { matchesGeneralQuery };
+      }
+      if (request.endsWith('UCUFLogger')) {
+        const noop = () => {};
+        return {
+          UCUFLogger: { debug: noop, info: noop, warn: noop, error: noop },
+          LogCategory: new Proxy({}, { get: (_target, key) => String(key) }),
+        };
       }
       throw new Error(`Unsupported mock require: ${request}`);
     },

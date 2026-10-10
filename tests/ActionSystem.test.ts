@@ -13,7 +13,7 @@
  * 用 fake AudioSource / fake ParticleSystem 驗證 Timeline 邏輯。
  */
 
-import { ActionSystem, SkillDef } from '../../core/systems/ActionSystem';
+import { ActionSystem, SkillDef } from '../assets/scripts/core/systems/ActionSystem';
 import { TestSuite, assert } from './TestRunner';
 
 // ─── Mock 服務 ──────────────────────────────────────────────────────────────
