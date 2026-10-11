@@ -24,6 +24,7 @@ import {
 } from '../assets/scripts/core/systems/BreedingSystem';
 import {
     buildFactorDictionary,
+    EARLY_REVEAL_FACTOR_COLORS,
     FactorDictionary,
     inheritFactors,
     resolveFactorColor,
@@ -181,12 +182,25 @@ export function createBreedingSuite(): TestSuite {
         assert.equals('gene_command', none.map((f) => f.id).join(','));
     });
 
-    suite.test('因子：MVP 只繼承藍粉綠，白紅不進池；開六色後才進', () => {
-        const sources = [{ uid: 'p', generation: 1 as const, factorIds: ['gene_honor', 'gene_guard', 'gene_command'] }];
-        const mvp = inheritFactors(sources, { random: () => 0.9, dictionary });
-        assert.equals('gene_command', mvp.map((f) => f.id).join(','));
-        const full = inheritFactors(sources, { random: () => 0.9, dictionary, enabledColors: ['blue', 'pink', 'green', 'white', 'red', 'purple'] });
-        assert.equals(3, full.length, 'gene_honor / gene_guard 是白色，開啟六色後才進池');
+    suite.test('因子：MVP 預設六色全進池，enabledColors 可縮減', () => {
+        const sources = [{
+            uid: 'p',
+            generation: 1 as const,
+            factorIds: ['gene_honor', 'gene_command', 'gene_destiny', 'gene_vitality', 'gene_cavalry', 'gene_strategy'],
+        }];
+        const full = inheritFactors(sources, { random: () => 0.9, dictionary, maxFactors: 6 });
+        assert.equals('blue,green,pink,purple,red,white', full.map((f) => f.color).sort().join(','), '六色各一個都進池');
+        const early = inheritFactors(sources, { random: () => 0.9, dictionary, enabledColors: EARLY_REVEAL_FACTOR_COLORS });
+        assert.equals('blue,green,pink', early.map((f) => f.color).sort().join(','), '縮減成藍粉綠時白紫紅不進池');
+    });
+
+    suite.test('因子字典：六色都至少有一個可繼承因子', () => {
+        const colors = new Set<string>();
+        for (const id of dictionary.keys()) {
+            const color = resolveFactorColor(id, dictionary);
+            if (color) colors.add(color);
+        }
+        assert.equals('blue,green,pink,purple,red,white', [...colors].sort().join(','));
     });
 
     suite.test('因子：同因子多來源取最高星，且最多保留 maxFactors 個', () => {
@@ -314,7 +328,7 @@ export function createBreedingSuite(): TestSuite {
         assert.equals(40, child.str);
         assert.equals('f', child.fatherId);
         assert.equals(7, child.birthSeason);
-        assert.equals('gene_cavalry,gene_command', (child.genes ?? []).map((g) => g.id).sort().join(','), '白色 gene_honor 不繼承');
+        assert.equals('gene_cavalry,gene_command,gene_honor', (child.genes ?? []).map((g) => g.id).sort().join(','), '六色全開：白色 gene_honor 也繼承');
         assert.isTrue((child.genes ?? []).every((g) => g.isLocked === true));
         assert.equals(PREGNANCY_LOCK_SEASONS, result.mother.pregnancySeasonsLeft);
         assert.equals(1, result.father.breedingCount);
