@@ -23,7 +23,7 @@
         "type": "panel",
         "name": "LeadSelectCard",
         "widget": {
-          "top": 520,
+          "top": 608,
           "left": 32
         },
         "width": 320,

@@ -32,6 +32,8 @@ import type { RandomSource } from '../systems/GeneralAging';
 export interface BreedingServiceOptions {
     random?: RandomSource;
     dictionary?: FactorDictionary;
+    /** 執行期才載入的因子字典（優先於 dictionary） */
+    getDictionary?: () => FactorDictionary | undefined;
     enabledColors?: readonly FactorColor[];
     maxFactors?: number;
     isHistoricalPair?: AffinityResolver;
@@ -104,7 +106,7 @@ export class BreedingService {
             random: this._options.random ?? Math.random,
             childId,
             birthSeason: this._options.currentSeason?.(),
-            dictionary: this._options.dictionary,
+            dictionary: this._options.getDictionary?.() ?? this._options.dictionary,
             enabledColors: this._options.enabledColors,
             maxFactors: this._options.maxFactors,
             isHistoricalPair: this._options.isHistoricalPair,

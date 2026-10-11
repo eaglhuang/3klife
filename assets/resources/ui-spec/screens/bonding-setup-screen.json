@@ -1,0 +1,17 @@
+{
+  "id": "bonding-setup-screen",
+  "version": 1,
+  "uiId": "BondingSetup",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "bonding-setup-main",
+  "skin": "bonding-setup-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

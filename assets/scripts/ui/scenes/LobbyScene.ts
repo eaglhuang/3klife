@@ -19,7 +19,8 @@ import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { NurtureFlowController } from '../core/NurtureFlowController';
-import { applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
+import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
+import { BondingSetupController } from '../core/BondingSetupController';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
@@ -100,6 +101,8 @@ export class LobbyScene extends Component {
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
+    private _bondingHost: UIScreenPreviewHost | null = null;
+    private _bonding: BondingSetupController | null = null;
     private _deckSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectPage = 0;
@@ -151,6 +154,7 @@ export class LobbyScene extends Component {
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
         await this._mountNurtureFlow();
+        await this._mountBondingSetup();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
         await this._mountCharacterDs3Host();
@@ -220,6 +224,7 @@ export class LobbyScene extends Component {
         this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
             { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
             { buttonId: 'btnOpenNurture', handler: () => { this._openNurtureFlow(); } },
+            { buttonId: 'btnOpenBonding', handler: () => { void this._openBondingSetup(); } },
         ]);
         this._refreshSeasonHud();
 
@@ -318,6 +323,86 @@ export class LobbyScene extends Component {
             return;
         }
         applyNurtureFlowView(binder, this._nurtureFlow.getView());
+    }
+
+    /**
+     * 結緣配置畫面：以 UCUF JSON（bonding-setup-screen）執行期組裝。
+     * 挑父母、資格、受孕率、EP 預估都在 BondingSetupController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountBondingSetup(): Promise<void> {
+        const bonding = new BondingSetupController({
+            roster: { getAll: () => services().session.roster },
+            breeding: services().breeding,
+            prepare: () => services().prepareBreeding(),
+            persist: async () => {
+                if (services().session.hasSaveService) {
+                    await services().session.save();
+                }
+            },
+        });
+        this._bonding = bonding;
+
+        this._bondingHost = await this._mountPreviewScreenHost('BondingSetupHost', 'bonding-setup-screen', [
+            { buttonId: 'btnCloseBond', handler: () => { this._closeBondingSetup(); } },
+            { buttonId: 'btnPrevFather', handler: () => { bonding.cycleFather(-1); this._refreshBondingSetup(); } },
+            { buttonId: 'btnNextFather', handler: () => { bonding.cycleFather(1); this._refreshBondingSetup(); } },
+            { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); } },
+            { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); } },
+            { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
+        ]);
+
+        const refresh = (): void => { this._refreshBondingSetup(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+            event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
+        );
+    }
+
+    private async _openBondingSetup(): Promise<void> {
+        const host = this._bondingHost;
+        if (!host || !this._bonding) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshBondingSetup();
+        await this._bonding.open();
+        this._refreshBondingSetup();
+    }
+
+    private _closeBondingSetup(): void {
+        if (this._bondingHost) {
+            this._bondingHost.node.active = false;
+        }
+    }
+
+    private _refreshBondingSetup(): void {
+        const binder = this._bondingHost?.binder;
+        if (!binder || !this._bonding) {
+            return;
+        }
+        applyFlowView(binder, this._bonding.getView());
+    }
+
+    private async _onClickConfirmBond(): Promise<void> {
+        if (!this._bonding) {
+            return;
+        }
+        try {
+            const result = await this._bonding.confirm();
+            if (result.outcome === 'conceived') {
+                // 子嗣加入名冊：出戰清單與培育畫面跟著刷新
+                this._refreshLeadSelect();
+                this._refreshNurtureFlow();
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 結緣失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '結緣失敗', duration: 2.5 });
+        } finally {
+            this._refreshBondingSetup();
+        }
     }
 
     /** 最小選卡 UI：以 UCUF JSON（lobby-deck-select-screen）執行期組裝，點卡加入 / 移除出戰卡組 */
@@ -1073,6 +1158,7 @@ export class LobbyScene extends Component {
                     this._seasonHudHost.node.active = false;
                 }
                 this._closeNurtureFlow();
+                this._closeBondingSetup();
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = false;
                 }

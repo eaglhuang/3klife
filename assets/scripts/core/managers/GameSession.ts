@@ -7,6 +7,7 @@
  *   2. 名冊中所有存活武將增齡、判定退役候選與死亡
  *   3. 年滿 5 歲的子嗣自動開獎（揭曉五維與初始因子，產生宿命建議）
  *   3.5 武將精力回補（出征 +25%、待命 +50%）
+ *   3.6 母方待產倒數 −1；待產中的母方精力不回補（Pregnancy_Lock）
    4. 透過注入的名冊來源寫回名冊
  *   5. 若有掛 SeasonLifecycle（LegacyService）：死亡武將歸檔成英靈卡並移出名冊，
  *      再跑季結 / 年底資料壓縮與清掃
@@ -47,6 +48,7 @@ import {
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
+import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
     BattleResult,
     BattleSettlement,
@@ -349,7 +351,8 @@ export class GameSession {
             season: advance.current.totalSeasonsElapsed,
             dictionary: this._factorDictionary,
         });
-        let roster: GeneralConfig[] = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1);
+        const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1);
+        let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;
         let lifecycle: LifecycleSettlement | undefined;
         if (this._lifecycle) {
             const settled = await this._lifecycle.settleSeason(roster, advance, aging.events);
