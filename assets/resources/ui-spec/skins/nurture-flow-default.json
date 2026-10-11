@@ -1,0 +1,106 @@
+{
+  "id": "nurture-flow-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "nurture.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    },
+    "nurture.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 246
+    },
+    "nurture.slot.bg": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "alpha": 230
+    },
+    "nurture.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 160
+    },
+    "nurture.button.rest.bg": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "alpha": 240
+    },
+    "nurture.button.danger.bg": {
+      "kind": "color-rect",
+      "color": "error",
+      "alpha": 140
+    },
+    "nurture.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 40,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "nurture.label.name": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 30,
+      "lineHeight": 38,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "SHRINK"
+    },
+    "nurture.label.phase": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "nurture.label.stats": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "nurture.label.meta": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "nurture.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "secondaryLight",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "nurture.label.log": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "nurture.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    }
+  }
+}

@@ -15,6 +15,11 @@ import { LocalGachaService, type LocalGachaResultEntry } from '../../core/servic
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
+import type { UnveilingEvent } from '../../core/systems/Unveiling';
+import type { NurtureAction } from '../../core/systems/NurtureSystem';
+import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
+import { NurtureFlowController } from '../core/NurtureFlowController';
+import { applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
@@ -93,6 +98,8 @@ export class LobbyScene extends Component {
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
+    private _nurtureFlowHost: UIScreenPreviewHost | null = null;
+    private _nurtureFlow: NurtureFlowController | null = null;
     private _deckSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectPage = 0;
@@ -143,6 +150,7 @@ export class LobbyScene extends Component {
         await this._mountLobbyMainHub();
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
+        await this._mountNurtureFlow();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
         await this._mountCharacterDs3Host();
@@ -211,6 +219,7 @@ export class LobbyScene extends Component {
     private async _mountSeasonHud(): Promise<void> {
         this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
             { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
+            { buttonId: 'btnOpenNurture', handler: () => { this._openNurtureFlow(); } },
         ]);
         this._refreshSeasonHud();
 
@@ -228,6 +237,87 @@ export class LobbyScene extends Component {
             seasonLabel: formatSeasonLabel(time),
             modeLabel: formatModeLabel(time.currentMode),
         });
+    }
+
+    /**
+     * 開獎與培育畫面：以 UCUF JSON（nurture-flow-screen）執行期組裝。
+     * 規則全在 NurtureFlowController（純邏輯），這裡只綁按鈕、套 FlowView。
+     */
+    private async _mountNurtureFlow(): Promise<void> {
+        const flow = new NurtureFlowController({
+            roster: { getAll: () => services().session.roster },
+            unveiling: services().unveiling,
+            nurture: services().nurture,
+            loadMentorCards: async () => (await services().legacy?.getMentorCards()) ?? [],
+            persist: async () => {
+                if (services().session.hasSaveService) {
+                    await services().session.save();
+                }
+            },
+        });
+        this._nurtureFlow = flow;
+
+        const act = (task: () => Promise<unknown>): (() => void) => () => {
+            void task()
+                .catch((error) => {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 開獎 / 培育動作失敗', error);
+                    services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '操作失敗', duration: 2.5 });
+                })
+                .finally(() => { this._refreshNurtureFlow(); });
+        };
+        const trainBindings = TRAINING_KINDS.map((kind) => ({
+            buttonId: `btnTrain_${kind}`,
+            handler: act(() => flow.train(kind as NurtureAction)),
+        }));
+        this._nurtureFlowHost = await this._mountPreviewScreenHost('NurtureFlowHost', 'nurture-flow-screen', [
+            { buttonId: 'btnCloseFlow', handler: () => { this._closeNurtureFlow(); } },
+            { buttonId: 'btnPrevChild', handler: () => { flow.selectNext(-1); this._refreshNurtureFlow(); } },
+            { buttonId: 'btnNextChild', handler: () => { flow.selectNext(1); this._refreshNurtureFlow(); } },
+            { buttonId: 'btnFateAccept', handler: act(() => flow.chooseFate('accept')) },
+            { buttonId: 'btnFateDefy', handler: act(() => flow.chooseFate('defy')) },
+            { buttonId: 'btnStartNurture', handler: act(() => flow.startNurture()) },
+            ...trainBindings,
+            { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
+            { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
+            { buttonId: 'btnGraduate', handler: act(() => flow.graduate()) },
+            { buttonId: 'btnDismissReport', handler: () => { flow.dismissReport(); this._refreshNurtureFlow(); } },
+        ]);
+
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.GeneralUnveiled, (payload?: unknown) => {
+                const unveiled = payload as UnveilingEvent | undefined;
+                const name = services().session.roster.find((g) => g.id === unveiled?.generalId)?.name ?? '子嗣';
+                services().event.emit('SHOW_TOAST', { message: `${name} 滿 5 歲開獎！請到「開獎・培育」選擇宿命`, duration: 3 });
+                this._refreshNurtureFlow();
+            }),
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => { this._refreshNurtureFlow(); }),
+            event.on(GAME_SESSION_EVENTS.Loaded, () => { this._refreshNurtureFlow(); }),
+        );
+    }
+
+    private _openNurtureFlow(): void {
+        const host = this._nurtureFlowHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshNurtureFlow();
+    }
+
+    private _closeNurtureFlow(): void {
+        if (this._nurtureFlowHost) {
+            this._nurtureFlowHost.node.active = false;
+        }
+    }
+
+    private _refreshNurtureFlow(): void {
+        const binder = this._nurtureFlowHost?.binder;
+        if (!binder || !this._nurtureFlow) {
+            return;
+        }
+        applyNurtureFlowView(binder, this._nurtureFlow.getView());
     }
 
     /** 最小選卡 UI：以 UCUF JSON（lobby-deck-select-screen）執行期組裝，點卡加入 / 移除出戰卡組 */
@@ -982,6 +1072,7 @@ export class LobbyScene extends Component {
                 if (this._seasonHudHost) {
                     this._seasonHudHost.node.active = false;
                 }
+                this._closeNurtureFlow();
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = false;
                 }
