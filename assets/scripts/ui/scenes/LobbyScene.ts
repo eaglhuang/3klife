@@ -16,12 +16,14 @@ import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
+import type { AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
+import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
@@ -304,6 +306,13 @@ export class LobbyScene extends Component {
             }),
             event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => { this._refreshNurtureFlow(); }),
             event.on(GAME_SESSION_EVENTS.Loaded, () => { this._refreshNurtureFlow(); }),
+            // 壽命 UI（PROG-2-0074）：武將辭世時提示 UI_DEATH_NOTIFY
+            event.on(GAME_SESSION_EVENTS.GeneralDied, (payload?: unknown) => {
+                const died = payload as AgingEvent | undefined;
+                if (!died) return;
+                const name = services().session.roster.find((g) => g.id === died.generalId)?.name ?? died.generalId;
+                services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
+            }),
         );
     }
 

@@ -5,8 +5,10 @@
  * 對應 fragment: gd-tab-basics.json
  * dataSource: 'config'
  */
-import { Label } from 'cc';
+import { Color, Label, Sprite, UITransform } from 'cc';
 import type { Node } from 'cc';
+import { SolidBackground } from '../SolidBackground';
+import { describeLifespan, describeVitality } from '../../core/LifeVitalityPresenter';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
@@ -31,6 +33,12 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
     private _lLifespan!: Label;
     private _lVitality!: Label;
     private _lSource!:   Label;
+    private _lLifespanTitle: Label | null = null;
+    private _lVitalityTitle: Label | null = null;
+    private _lifespanFill: Node | null = null;
+    private _vitalityFill: Node | null = null;
+    /** 條的滿格寬度（取版面上 Fill 節點的原始寬度） */
+    private _meterWidth = 220;
 
     _lastData: GeneralConfig | null = null;
 
@@ -52,6 +60,13 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
         this._lLifespan = this._label(h, 'StatusRowThree/LifespanCard/LifespanValue');
         this._lVitality = this._label(h, 'StatusRowTwo/VitalityCard/VitalityValue');
         this._lSource   = this._label(h, 'StatusRowThree/SourceCard/SourceValue');
+        // 壽命 / 精力條（PROG-2-0074）：舊版面沒有這些節點時只顯示文字
+        this._lLifespanTitle = this._optionalLabel(h, 'StatusRowThree/LifespanCard/LifespanLabel');
+        this._lVitalityTitle = this._optionalLabel(h, 'StatusRowTwo/VitalityCard/VitalityLabel');
+        this._lifespanFill = h.getChildByPath(`${GeneralDetailBasicsChild.ROOT_PATH}/StatusRowThree/LifespanCard/LifespanMeterFill`);
+        this._vitalityFill = h.getChildByPath(`${GeneralDetailBasicsChild.ROOT_PATH}/StatusRowTwo/VitalityCard/VitalityMeterFill`);
+        const fillTransform = this._lifespanFill?.getComponent(UITransform);
+        if (fillTransform && fillTransform.width > 0) this._meterWidth = fillTransform.width;
         if (this._lastData) this.onDataUpdate(this._lastData);
     }
 
@@ -64,19 +79,18 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
         this._set(this._lTemplate, mask(cfg.templateId));
         this._set(this._lFaction, formatFaction(cfg.faction));
         this._set(this._lGender, mask(cfg.gender));
-        this._set(this._lAge,
-            cfg.age !== undefined
-                ? `${cfg.age} ${this.t('ui.general.basics.age_unit')}`
-                : this.t('ui.general.basics.unlocked')
-        );
+        const life = cfg.age !== undefined ? describeLifespan(cfg) : null;
+        this._set(this._lAge, life ? life.ageText : this.t('ui.general.basics.unlocked'));
         this._set(this._lRole, formatRole(cfg.role));
         this._set(this._lStatus, formatStatus(cfg.status));
-        this._set(this._lLifespan, this.t('ui.general.basics.lifespan_locked'));
-        this._set(this._lVitality,
-            cfg.vitality !== undefined && cfg.maxVitality !== undefined
-                ? `${cfg.vitality}/${cfg.maxVitality}`
-                : this.t('ui.general.basics.unlocked')
-        );
+        this._set(this._lLifespan, life ? life.lifespanText : this.t('ui.general.basics.lifespan_locked'));
+        this._setOptional(this._lLifespanTitle, life?.overLifespan ? '壽命 · 已超過天年' : '壽命');
+        this._applyMeter(this._lifespanFill, life ? life.ratio : 0, life ? life.color : null);
+
+        const vit = cfg.vitality !== undefined && cfg.maxVitality !== undefined ? describeVitality(cfg) : null;
+        this._set(this._lVitality, vit ? vit.text : this.t('ui.general.basics.unlocked'));
+        this._setOptional(this._lVitalityTitle, vit?.statusText ? `精力 · ${vit.statusText}` : '精力');
+        this._applyMeter(this._vitalityFill, vit ? vit.ratio : 0, vit ? vit.color : null);
         this._set(this._lSource, mask(cfg.source, this.t('ui.general.basics.source_unlisted')));
     }
 
@@ -110,5 +124,35 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
 
     private _set(label: Label | null, text: string): void {
         if (label) label.string = text;
+    }
+
+    private _optionalLabel(root: Node, name: string): Label | null {
+        return root.getChildByPath(`${GeneralDetailBasicsChild.ROOT_PATH}/${name}`)?.getComponent(Label) ?? null;
+    }
+
+    private _setOptional(label: Label | null, text: string): void {
+        if (label) label.string = text;
+    }
+
+    /** 依比例調整條的寬度並換色；沒有資料時隱藏 */
+    private _applyMeter(fill: Node | null, ratio: number, hex: string | null): void {
+        if (!fill) return;
+        fill.active = hex !== null && ratio > 0;
+        if (!hex) return;
+        const transform = fill.getComponent(UITransform);
+        if (transform) {
+            // 版面以 left widget 對齊；改寬度後自己把左緣釘回原位（Widget 不會每次重新對齊）
+            const leftEdge = fill.position.x - transform.width * transform.anchorX;
+            transform.width = Math.round(this._meterWidth * ratio);
+            fill.setPosition(leftEdge + transform.width * transform.anchorX, fill.position.y, fill.position.z);
+        }
+        const color = new Color();
+        Color.fromHEX(color, hex);
+        const solid = fill.getComponent(SolidBackground);
+        if (solid) solid.color = color;
+        else {
+            const sprite = fill.getComponent(Sprite);
+            if (sprite) sprite.color = color;
+        }
     }
 }

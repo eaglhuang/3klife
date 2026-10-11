@@ -305,6 +305,16 @@
       "borderColor": "outline",
       "borderWidth": 1
     },
+    "detail.meter.track": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.12
+    },
+    "detail.meter.fill": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 1
+    },
     "detail.aptitude.summaryCard": {
       "kind": "color-rect",
       "color": "colorWhite",
