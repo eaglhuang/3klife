@@ -20,7 +20,7 @@ export class Label {
     static readonly VerticalAlign   = { TOP: 0, CENTER: 1, BOTTOM: 2 };
     static readonly Overflow        = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
     string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
-    isBold = false; font: any = null;
+    isBold = false; font: any = null; lineHeight = 0;
     getComponent<T = any>(_type: (new (...args: any[]) => T) | string): T | null { return null; }
 }
 
@@ -36,6 +36,7 @@ export class Button {
     static readonly EventType = { CLICK: 'click' };
     static readonly Transition = { NONE: 0, COLOR: 1, SPRITE: 2, SCALE: 3 };
     transition = 0; interactable = true; enabled = true;
+    node: any = null;
 }
 export class Sprite { enabled = true; spriteFrame: any = null; }
 export class UIOpacity { opacity = 255; }
@@ -63,8 +64,8 @@ export class Node {
         if (v && v.children.indexOf(this) === -1) v.children.push(this);
     }
 
-    addComponent<T>(type: any): T {
-        const comp = new type() as any;
+    addComponent<T = any>(type: (new (...args: any[]) => T) | string): T {
+        const comp = new (type as new (...args: any[]) => T)() as any;
         comp.node = this;
         this._components.push(comp);
         return comp;
@@ -213,10 +214,30 @@ export class EffectAsset { [key: string]: any; }
 export class MeshRenderer { [key: string]: any; }
 export class NodePool { [key: string]: any; }
 export class AssetManager { [key: string]: any; }
+/* 命名空間型別：AssetManager.Bundle 供 load 回呼標註用 */
+export declare namespace AssetManager {
+    interface Bundle {
+        load(path: string, type: any, onComplete: (err: any, asset: any) => void): void;
+        load(path: string, onComplete: (err: any, asset: any) => void): void;
+        [key: string]: any;
+    }
+}
 /* 單例或命名空間的佔位，mock 不提供實作（runtime 仍為 undefined，與舊行為一致） */
 export declare const director: any;
-export declare const resources: any;
-export declare const assetManager: any;
+export declare const resources: {
+    load(path: string, type: any, onComplete: (err: any, asset: any) => void): void;
+    load(path: string, onComplete: (err: any, asset: any) => void): void;
+    loadDir(path: string, type: any, onComplete: (err: any, assets: any[]) => void): void;
+    loadDir(path: string, onComplete: (err: any, assets: any[]) => void): void;
+    [key: string]: any;
+};
+export declare const assetManager: {
+    getBundle(name: string): AssetManager.Bundle | null;
+    loadBundle(name: string, onComplete: (err: any, bundle: AssetManager.Bundle) => void): void;
+    loadRemote(url: string, onComplete: (err: any, asset: any) => void): void;
+    loadRemote(url: string, options: any, onComplete: (err: any, asset: any) => void): void;
+    [key: string]: any;
+};
 export declare const utils: any;
 export declare const primitives: any;
 export declare const v3: any;
