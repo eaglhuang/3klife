@@ -253,11 +253,9 @@ export function buildTacticSummary(general: GeneralUnit): BattleTacticSummary {
 
 // ─── 資料建構 ───────────────────────────────────────────────────────────────
 
-/**
- * 根據兵種資料（troops.json + Constants）建立虎符卡片初始資料。
- * 若 selectedCardIds 有值，未來可從卡組資料查出對應卡片；目前為空時使用 demo 預設 4 張手牌。
- * Unity 對照：BattleHandManager.BuildInitialHand() → List<CardData>
- */
+/** 戰場手牌上限（對應 tiger-tally 面板 tally[0..3]） */
+export const TALLY_HAND_SIZE = 4;
+
 const TALLY_CARD_ART_RESOURCE_FALLBACK = 'ui/tiger-tally/card-art/troops';
 const TALLY_CARD_ART_RESOURCE_BY_TYPE: Record<TroopType, string> = {
   [TroopType.Cavalry]: 'ui/tiger-tally/card-art/troops_cavalry',
@@ -274,9 +272,60 @@ function resolveTallyCardArtResource(type: TroopType): string {
   return TALLY_CARD_ART_RESOURCE_BY_TYPE[type] ?? TALLY_CARD_ART_RESOURCE_FALLBACK;
 }
 
-export function buildTallyCards(_selectedCardIds?: string[]): TallyCardData[] {
-  // TODO: 當 _selectedCardIds 有值時，從卡組資料庫查出對應卡片
-  // 目前一律使用 demo 預設卡組
+/**
+ * 根據玩家選定卡組建立虎符手牌資料。
+ *
+ * 卡片 ID 即卡片的 tacticId（例如 `tiger-tally-cavalry-shock`），依 selectedCardIds 的順序查表：
+ *   - 查不到的 ID 會略過並記 warn；同一 ID 可重複出現（同款虎符多張）
+ *   - 超過 TALLY_HAND_SIZE 的部分截掉
+ *   - selectedCardIds 為空、或全部查不到時，退回 demo 預設卡組（getDefaultTallyDeckIds）
+ *
+ * Unity 對照：BattleHandManager.BuildInitialHand(deckIds) → 用 Dictionary<string, CardDef>
+ * 把存檔裡的卡片 ID 轉成 List<CardData>，找不到的 ID 當成壞資料跳過。
+ */
+export function buildTallyCards(selectedCardIds?: readonly string[]): TallyCardData[] {
+  const catalog = buildTallyCardCatalog();
+  return resolveTallyDeckIds(selectedCardIds).map((cardId) => ({ ...catalog.get(cardId)! }));
+}
+
+/** 卡片目錄中所有可用的虎符卡片 ID（目前 = demo 預設 4 張） */
+export function getTallyCardCatalogIds(): string[] {
+  return Array.from(buildTallyCardCatalog().keys());
+}
+
+/** demo 預設卡組：目錄中的前 TALLY_HAND_SIZE 張 */
+export function getDefaultTallyDeckIds(): string[] {
+  return getTallyCardCatalogIds().slice(0, TALLY_HAND_SIZE);
+}
+
+/**
+ * 把玩家選定的卡片 ID 解析成實際上場的卡片 ID 清單（純函式，可 headless 測試）。
+ */
+export function resolveTallyDeckIds(selectedCardIds?: readonly string[]): string[] {
+  const selected = (selectedCardIds ?? []).filter((id) => typeof id === 'string' && id.length > 0);
+  if (selected.length === 0) {
+    return getDefaultTallyDeckIds();
+  }
+
+  const catalogIds = new Set(getTallyCardCatalogIds());
+  const unknownIds = selected.filter((id) => !catalogIds.has(id));
+  if (unknownIds.length > 0) {
+    UCUFLogger.warn(LogCategory.BATTLE, '[BattleSceneLoader] 卡組含未知虎符卡片 ID，已略過', { unknownIds });
+  }
+
+  const resolved = selected.filter((id) => catalogIds.has(id)).slice(0, TALLY_HAND_SIZE);
+  if (resolved.length === 0) {
+    UCUFLogger.warn(LogCategory.BATTLE, '[BattleSceneLoader] 卡組沒有任何有效卡片，改用預設卡組');
+    return getDefaultTallyDeckIds();
+  }
+  return resolved;
+}
+
+/**
+ * 根據兵種資料（troops.json + Constants）建立虎符卡片目錄，key = 卡片 ID（tacticId）。
+ * Unity 對照：CardDatabase（ScriptableObject）→ Dictionary<string, CardData>
+ */
+function buildTallyCardCatalog(): Map<string, TallyCardData> {
   const slots: Array<{
     type: TroopType;
     name: string;
@@ -471,9 +520,9 @@ export function buildTallyCards(_selectedCardIds?: string[]): TallyCardData[] {
   };
   const troopData: Record<string, any> = TROOP_DEFAULTS;
 
-  return slots.map(s => {
+  return new Map(slots.map((s): [string, TallyCardData] => {
     const stats = troopData[s.type as string] || {};
-    return {
+    return [s.tacticMeta.tacticId, {
       unitType:    s.type as string,
       unitName:    s.name,
       unitSub:     s.sub,
@@ -499,8 +548,8 @@ export function buildTallyCards(_selectedCardIds?: string[]): TallyCardData[] {
       timing: s.tacticMeta.timing,
       desc:        s.desc,
       isDisabled:  false,
-    } as TallyCardData;
-  });
+    } as TallyCardData];
+  }));
 }
 
 /**
