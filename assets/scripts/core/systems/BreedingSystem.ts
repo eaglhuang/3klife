@@ -247,7 +247,7 @@ export function resolveAncestorProfile(
 }
 
 function unique<T>(list: T[]): T[] {
-    return [...new Set(list)];
+    return Array.from(new Set(list));
 }
 
 export interface EpBreakdown {
@@ -282,7 +282,7 @@ export function computeEpMvp(
     }
     let topTag: string | null = null;
     let topTagCount = 0;
-    for (const [tag, count] of [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+    for (const [tag, count] of Array.from(tagCounts.entries()).sort((a, b) => a[0].localeCompare(b[0]))) {
         if (count > topTagCount) {
             topTag = tag;
             topTagCount = count;
