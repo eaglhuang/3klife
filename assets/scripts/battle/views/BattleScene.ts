@@ -17,7 +17,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
 import { Camera, view } from "cc";
-import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata } from './BattleSceneLoader';
+import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
@@ -194,6 +194,9 @@ export class BattleScene extends Component {
 
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
       this.ctrl.initBattle(pg, eg, terrain, battleParams.weather, battleParams.battleTactic);
+      // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
+      const sortieInput = buildRosterSortieInput(pg);
+      if (sortieInput) this.ctrl.configureSortie(sortieInput);
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 戰鬥已初始化");
 
       // 6. 連結 UI 元件（自動尋找，不依賴 Inspector 綁定）
@@ -301,7 +304,7 @@ export class BattleScene extends Component {
       this.hud?.refresh(
         snap.turn,
         snap.playerFood,
-        GAME_CONFIG.MAX_FOOD,
+        services().battle.getMaxFood(),
         pg.currentHp,
         pg.maxHp,
         eg.currentHp,
@@ -333,7 +336,7 @@ export class BattleScene extends Component {
         this.hud.refresh(
           latestSnap.turn,
           latestSnap.playerFood,
-          GAME_CONFIG.MAX_FOOD,
+          services().battle.getMaxFood(),
           pg.currentHp,
           pg.maxHp,
           eg.currentHp,

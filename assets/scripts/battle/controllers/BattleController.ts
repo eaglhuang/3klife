@@ -41,14 +41,38 @@ import {
   type JsonListEnvelope,
   type SkillExecutionResult,
 } from '../../shared/SkillRuntimeContract';
+import {
+  applyDeploy,
+  checkDeploy,
+  createSortieState,
+  finishSortie,
+  retireUnit,
+  troopsFromHp,
+  updateUnitTroops,
+  type CreateSortieInput,
+  type SortieDeployBlockReason,
+  type SortieState,
+  type SortieSummary,
+} from '../../core/systems/SortieDeploy';
 
-/** [P2-N3] 部署失敗原因：food = 糧草不足（原 dp） */
-export type DeployFailReason = "food" | "occupied" | "limit" | "battle-locked";
+/**
+ * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
+ * 有出征帳本時（PROG-2-0070）另有 troops-short 軍勢不足 / food-short 糧草不足 / field-limit 場上部隊已滿。
+ */
+export type DeployFailReason = "food" | "occupied" | "limit" | "battle-locked" | "troops-short" | "food-short" | "field-limit";
+
+const SORTIE_BLOCK_TO_FAIL_REASON: Record<SortieDeployBlockReason, DeployFailReason> = {
+  TROOPS_SHORT: "troops-short",
+  FOOD_SHORT: "food-short",
+  FIELD_UNIT_LIMIT: "field-limit",
+};
 
 export interface DeployOutcome {
   ok: boolean;
   unit: TroopUnit | null;
   reason?: DeployFailReason;
+  /** 有出征帳本時列出全部不可部署原因（UI 可各自顯示） */
+  reasons?: DeployFailReason[];
 }
 
 export type { GeneralSkillCastOptions };
@@ -90,6 +114,8 @@ export class BattleController {
     consumeTileBuff: (unit) => this.tileBuffLifecycleManager.consumeTileBuff(unit),
   });
   private tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
+  /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
+  private sortie: SortieState | null = null;
 
   // ─── 武將單挑系統狀態 ──────────────────────────────────────────────────
   private readonly combatResolver = new BattleCombatResolver({
@@ -176,6 +202,7 @@ export class BattleController {
     this.unitSpawner.resetForBattle();
     this.pendingAdvanceTurnResult = null;
     this.pendingEnemyTurnResult = null;
+    this.sortie = null;
     services().buff.clearAll(); // 清除上一場的狀態效果
     services().battle.beginBattle();
     this.applyStartOfBattleSceneGambit();
@@ -227,9 +254,60 @@ export class BattleController {
       return { ok: false, unit: null, reason: "occupied" };
     }
 
+    if (this.sortie) {
+      this.syncSortieWithField();
+      const check = checkDeploy(this.sortie, { troopType: type });
+      if (!check.ok) {
+        const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
+        return { ok: false, unit: null, reason: reasons[0], reasons };
+      }
+    }
+
     const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName);
     this.turnManager.notePlayerDeployment();
+    if (this.sortie) {
+      const applied = applyDeploy(this.sortie, unit.id, { troopType: type });
+      this.sortie = applied.state;
+      services().battle.spendFood(applied.check.cost.foodCost);
+    }
     return { ok: true, unit };
+  }
+
+  /**
+   * 啟用出征帳本（PROG-2-0070）：必須在 initBattle() 之後呼叫。
+   * 我方部署改扣出征軍勢與糧草，HUD 糧草改顯示本場糧草（不再每回合補）。
+   */
+  public configureSortie(input: CreateSortieInput): SortieState {
+    this.sortie = createSortieState(input);
+    services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
+    return this.sortie;
+  }
+
+  /** 目前帳本（已同步場上存活與剩餘兵力）；沒有出征帳本時回傳 null */
+  public getSortieState(): SortieState | null {
+    if (!this.sortie) return null;
+    this.syncSortieWithField();
+    return this.sortie;
+  }
+
+  /** 戰後結算：剩餘部隊返還、計算戰損與城市兵源變化；沒有出征帳本時回傳 null */
+  public finishSortie(cityTroopsBefore: number, recruitRegen?: number): SortieSummary | null {
+    const state = this.getSortieState();
+    return state ? finishSortie(state, cityTroopsBefore, recruitRegen) : null;
+  }
+
+  /** 陣亡（已從場上移除）的部隊退場兵力 0；存活部隊依血量比例更新剩餘兵力 */
+  private syncSortieWithField(): void {
+    if (!this.sortie) return;
+    let next = this.sortie;
+    for (const record of Object.values(next.units)) {
+      if (record.retired) continue;
+      const unit = this.state.units.get(record.unitId);
+      next = unit
+        ? updateUnitTroops(next, record.unitId, troopsFromHp(record.troopCost, unit.currentHp, unit.getEffectiveMaxHp()))
+        : retireUnit(next, record.unitId, 0);
+    }
+    this.sortie = next;
   }
 
   /**

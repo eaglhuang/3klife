@@ -1,9 +1,9 @@
 import { IBattleHUDLike, IBattleLogLike, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { Color } from 'cc';
-import { Faction, GAME_CONFIG } from '../../core/config/Constants';
+import { Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { BattleController } from '../controllers/BattleController';
-import { createGeneral, loadEncounter } from './BattleSceneLoader';
+import { buildRosterSortieInput, createGeneral, loadEncounter } from './BattleSceneLoader';
 import { buildSceneGambitSummary } from './BattleSceneGambitSummary';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 import type { IBattleEntryParams } from '../../shared/BattleEntryParams';
@@ -71,11 +71,14 @@ export class BattleSceneFlow {
     this.ctx.setEnemyGeneral(eg);
 
     ctrl.initBattle(pg, eg, terrain, battleParams?.weather, battleParams?.battleTactic);
+    // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
+    const sortieInput = buildRosterSortieInput(pg);
+    if (sortieInput) ctrl.configureSortie(sortieInput);
 
     const deployRuntime = this.ctx.getDeployRuntime();
     if (deployRuntime) {
       deployRuntime.node.active = true;
-      deployRuntime.updateDp(GAME_CONFIG.INITIAL_FOOD);
+      deployRuntime.updateDp(services().battle.getSnapshot().playerFood);
     }
 
     const snap = services().battle.getSnapshot();
@@ -87,7 +90,7 @@ export class BattleSceneFlow {
     hud?.refresh(
       snap.turn,
       snap.playerFood,
-      GAME_CONFIG.MAX_FOOD,
+      services().battle.getMaxFood(),
       pg.currentHp,
       pg.maxHp,
       eg.currentHp,
