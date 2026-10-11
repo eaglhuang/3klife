@@ -17,7 +17,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * Unity 對照：GameHUDController，監聽事件更新各個 Binding
  */
 import { _decorator, Button, Color, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
-import { EVENT_NAMES, Faction, GAME_CONFIG } from '../../core/config/Constants';
+import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
@@ -229,7 +229,7 @@ export class BattleHUD extends UIPreviewBuilder {
 
     private _onTurnPhaseChanged(snap: { turn: number; playerFood: number }): void {
         this._setTurn(snap.turn);
-        this._setFood(snap.playerFood, GAME_CONFIG.MAX_FOOD);
+        this._setFood(snap.playerFood, services().battle.getMaxFood());
         this._clearStatus();
     }
 

@@ -8,6 +8,7 @@ import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
 import { Faction } from "../../core/config/Constants";
+import { computeCommandCapacity, DEFAULT_CITY_TROOPS, DEFAULT_SORTIE_FOOD, type CreateSortieInput } from '../../core/systems/SortieDeploy';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 import { VFX_BLOCK_REGISTRY } from '../../core/config/vfx-block-registry';
@@ -233,6 +234,21 @@ export async function createGeneral(id: string, faction: Faction): Promise<Gener
   }
 
   return new GeneralUnit(DEFAULT[id]);
+}
+
+/**
+ * 名冊武將出戰時的出征帳本設定（PROG-2-0070）：帶兵上限由統率推算，城市兵源與糧草暫用預設值。
+ * 內建 demo 武將（名冊裡沒有）回傳 null，戰場維持舊版不扣軍勢。
+ */
+export function buildRosterSortieInput(general: GeneralUnit): CreateSortieInput | null {
+  if (general.faction !== Faction.Player || !services().session.getBattleConfig(general.id, Faction.Player)) {
+    return null;
+  }
+  return {
+    commandCapacity: computeCommandCapacity({ lea: general.lea }),
+    cityTroops: DEFAULT_CITY_TROOPS,
+    food: DEFAULT_SORTIE_FOOD,
+  };
 }
 
 export function buildTacticSummary(general: GeneralUnit): BattleTacticSummary {

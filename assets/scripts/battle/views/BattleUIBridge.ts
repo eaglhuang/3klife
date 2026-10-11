@@ -11,8 +11,9 @@
 
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
-import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
+import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
+import { DEFAULT_CITY_TROOPS } from '../../core/systems/SortieDeploy';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
@@ -277,7 +278,7 @@ export class BattleUIBridge {
   private _onUnitDeployed(data: { unitId: string; faction: Faction; type: TroopType; lane: number; unitName?: string }): void {
     const c = this.ctx;
     const snap = services().battle.getSnapshot();
-    c.hud?.setFood(snap.playerFood, GAME_CONFIG.MAX_FOOD);
+    c.hud?.setFood(snap.playerFood, services().battle.getMaxFood());
     c.deployRuntime?.updateDp(snap.playerFood);
     const side = data.faction === Faction.Player ? '我方' : '敵方';
     const unitName = data.unitName?.trim() || this.toTroopName(data.type);
@@ -510,6 +511,10 @@ export class BattleUIBridge {
   private _settleRosterBattle(result: BattleResult): void {
     const actions = this.specialActions.finish(result);
     this.specialActions.reset();
+    const sortie = this.ctx.ctrl?.finishSortie(DEFAULT_CITY_TROOPS) ?? null;
+    if (sortie) {
+      this.appendLog(`出征軍勢 ${sortie.poolMax}：返還 ${sortie.returnedTroops}、戰損 ${sortie.lostTroops}，糧草消耗 ${sortie.foodSpent}；城市兵源 ${sortie.cityTroopsBefore}→${sortie.cityTroopsAfter}（約 ${sortie.turnsToRecover} 季補回）`);
+    }
     const pgId = this.ctx.pg?.id;
     if (!pgId) return;
     if (actions.length > 0) {

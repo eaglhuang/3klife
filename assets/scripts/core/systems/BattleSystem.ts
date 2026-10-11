@@ -9,12 +9,26 @@ export interface TurnSnapshot {
   playerFood: number;
 }
 
+export interface BattleFoodConfig {
+  initial: number;
+  max: number;
+  perTurn: number;
+}
+
+const DEFAULT_FOOD_CONFIG: BattleFoodConfig = {
+  initial: GAME_CONFIG.INITIAL_FOOD,
+  max: GAME_CONFIG.MAX_FOOD,
+  perTurn: GAME_CONFIG.FOOD_PER_TURN,
+};
+
 export class BattleSystem {
   private turn = 1;
   private phase = TurnPhase.PlayerDeploy;
   /** [P2-N2] 玩家糧草（原 playerDp） */
   private playerFood = GAME_CONFIG.INITIAL_FOOD;
   private eventSystem: EventSystem | null = null;
+  /** 本場糧草設定；出征帳本（PROG-2-0070）會改成「玩家糧草儲備、不每回合補」 */
+  private foodConfig: BattleFoodConfig = { ...DEFAULT_FOOD_CONFIG };
 
   /** 由 ServiceLoader 或外部注入 EventSystem */
   public setEventSystem(eventSystem: EventSystem): void {
@@ -24,8 +38,20 @@ export class BattleSystem {
   public beginBattle(): void {
     this.turn = 1;
     this.phase = TurnPhase.PlayerDeploy;
-    this.playerFood = GAME_CONFIG.INITIAL_FOOD;
+    this.foodConfig = { ...DEFAULT_FOOD_CONFIG };
+    this.playerFood = this.foodConfig.initial;
     this.emitPhaseChange();
+  }
+
+  /** 改用指定的糧草設定並重設目前糧草；beginBattle() 會恢復預設 */
+  public configureFood(config: BattleFoodConfig): void {
+    this.foodConfig = { ...config };
+    this.playerFood = config.initial;
+    this.emitPhaseChange();
+  }
+
+  public getMaxFood(): number {
+    return this.foodConfig.max;
   }
 
   public getSnapshot(): TurnSnapshot {
@@ -69,7 +95,7 @@ export class BattleSystem {
 
     if (this.phase === TurnPhase.PlayerDeploy) {
       this.turn += 1;
-      this.playerFood = Math.min(this.playerFood + GAME_CONFIG.FOOD_PER_TURN, GAME_CONFIG.MAX_FOOD);
+      this.playerFood = Math.min(this.playerFood + this.foodConfig.perTurn, this.foodConfig.max);
     }
 
     this.emitPhaseChange();
@@ -86,7 +112,7 @@ export class BattleSystem {
    */
   public nextTurn(): TurnSnapshot {
     this.turn += 1;
-    this.playerFood = Math.min(this.playerFood + GAME_CONFIG.FOOD_PER_TURN, GAME_CONFIG.MAX_FOOD);
+    this.playerFood = Math.min(this.playerFood + this.foodConfig.perTurn, this.foodConfig.max);
     this.phase = TurnPhase.PlayerDeploy;
     this.emitPhaseChange();
     return this.getSnapshot();
