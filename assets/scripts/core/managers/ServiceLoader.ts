@@ -22,6 +22,8 @@ import { GameManager } from "./GameManager";
 import { GameSession } from "./GameSession";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
+import { BloodlineGraph } from "../services/BloodlineGraph";
+import type { PersonRegistryData } from "../models/PersonRegistry";
 import { DataStorageAdapter } from "../storage/DataStorageAdapter";
 import { IndexedDbAdapter } from "../storage/IndexedDbAdapter";
 import { MemoryStorageAdapter } from "../storage/MemoryStorageAdapter";
@@ -135,6 +137,11 @@ export class ServiceLoader {
             replaceAll: (generals) => PlayerRosterService.replaceAll(generals),
         });
         this.session.setSaveService(new PlayerSaveService(this.createSaveStorageAdapter()));
+
+        // 血統圖本身不依賴 cc，person-registry.json 由 ResourceManager 讀取
+        BloodlineGraph.getInstance().setRegistryLoader(
+            () => this.resource.loadJson<PersonRegistryData>('data/person-registry'),
+        );
 
         this.initialized = true;
     }
