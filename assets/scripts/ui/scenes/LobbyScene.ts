@@ -21,7 +21,7 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
-import { SageOracleController } from '../core/SageOracleController';
+import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
@@ -353,7 +353,15 @@ export class LobbyScene extends Component {
             { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); } },
             { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); } },
             { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
-            { buttonId: 'btnOpenOracle', handler: () => { this._openSageOracle(bonding.fatherId); } },
+            {
+                buttonId: 'btnOpenOracle',
+                handler: () => {
+                    const couple = bonding.fatherId && bonding.motherId
+                        ? { fatherId: bonding.fatherId, motherId: bonding.motherId }
+                        : null;
+                    this._openSageOracle(bonding.fatherId, couple);
+                },
+            },
         ]);
 
         const refresh = (): void => { this._refreshBondingSetup(); };
@@ -418,6 +426,7 @@ export class LobbyScene extends Component {
         const oracle = new SageOracleController({
             roster: { getAll: () => services().session.roster },
             session: services().session,
+            breeding: services().breeding,
         });
         this._oracle = oracle;
 
@@ -428,6 +437,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnPrevSage', handler: () => { oracle.cycleSage(-1); this._refreshSageOracle(); } },
             { buttonId: 'btnNextSage', handler: () => { oracle.cycleSage(1); this._refreshSageOracle(); } },
             { buttonId: 'btnDivine', handler: () => { void this._onClickDivine(); } },
+            { buttonId: 'btnPredict', handler: () => { void this._onClickPredict(); } },
         ]);
 
         const refresh = (): void => { this._refreshSageOracle(); };
@@ -440,12 +450,12 @@ export class LobbyScene extends Component {
         );
     }
 
-    private _openSageOracle(preferredTargetId: string | null): void {
+    private _openSageOracle(preferredTargetId: string | null, couple: OracleCouple | null = null): void {
         const host = this._oracleHost;
         if (!host || !this._oracle) {
             return;
         }
-        this._oracle.open(preferredTargetId);
+        this._oracle.open(preferredTargetId, couple);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshSageOracle();
@@ -474,6 +484,20 @@ export class LobbyScene extends Component {
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 名士占卜失敗', error);
             services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '名士占卜失敗', duration: 2.5 });
+        } finally {
+            this._refreshSageOracle();
+        }
+    }
+
+    private async _onClickPredict(): Promise<void> {
+        if (!this._oracle) {
+            return;
+        }
+        try {
+            await this._oracle.predict();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 預言子嗣失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '預言子嗣失敗', duration: 2.5 });
         } finally {
             this._refreshSageOracle();
         }

@@ -112,14 +112,14 @@ export function createSageDivinationSuite(): TestSuite {
         session.setEventEmitter({ emit: (name) => { events.push(name); } });
 
         session.setRandomSource(seq(0.95).random);
-        const miss = await session.divineFactor('sch', 'zuo-ci');
+        const miss = await session.divineFactor('sch', 'sima-hui');
         assert.equals('distorted', miss.outcome);
         assert.equals(true, session.roster[0].genes![0].isLocked);
         assert.equals(0, events.filter((e) => e === GAME_SESSION_EVENTS.FactorAwakened).length);
         assert.isTrue(events.includes(GAME_SESSION_EVENTS.Saved), '有擲骰就存檔');
 
         session.setRandomSource(seq(0, 0).random);
-        const hit = await session.divineFactor('sch', 'zuo-ci');
+        const hit = await session.divineFactor('sch', 'sima-hui');
         assert.equals('awakened', hit.outcome);
         assert.equals(false, session.roster[0].genes![0].isLocked);
         assert.equals(1, events.filter((e) => e === GAME_SESSION_EVENTS.FactorAwakened).length);

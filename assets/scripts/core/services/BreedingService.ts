@@ -23,7 +23,9 @@ import {
     BreedingResult,
     checkBreedingEligibility,
     EpBreakdown,
+    FactorPoolEntry,
     previewBreedingEp,
+    previewFactorPool,
     toPersonRecord,
 } from '../systems/BreedingSystem';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
@@ -90,6 +92,19 @@ export class BreedingService {
             isHistoricalPair: this._options.isHistoricalPair,
             rosterLookup: this._rosterLookup(),
         }).ep;
+    }
+
+    /** 名士預言用：子嗣可能繼承的因子池與機率（不改資料、不擲骰） */
+    previewFactorPool(fatherId: string, motherId: string): FactorPoolEntry[] {
+        const { father, mother } = this._findPair(fatherId, motherId);
+        return previewFactorPool({
+            father,
+            mother,
+            pedigree: this._graph,
+            dictionary: this._options.getDictionary?.() ?? this._options.dictionary,
+            enabledColors: this._options.enabledColors,
+            rosterLookup: this._rosterLookup(),
+        });
     }
 
     /** 執行結緣；精力無論成敗都會扣，受孕成功時子嗣加入名冊 */

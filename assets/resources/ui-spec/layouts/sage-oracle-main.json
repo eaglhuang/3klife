@@ -350,7 +350,7 @@
                 "id": "btnDivine",
                 "widget": {
                   "top": 422,
-                  "hCenter": true
+                  "left": 180
                 },
                 "width": 240,
                 "height": 64,
@@ -370,6 +370,46 @@
                     "styleSlot": "oracle.label.button"
                   }
                 ]
+              },
+              {
+                "type": "button",
+                "name": "BtnPredict",
+                "id": "btnPredict",
+                "widget": {
+                  "top": 422,
+                  "right": 180
+                },
+                "width": 240,
+                "height": 64,
+                "skinSlot": "oracle.button.confirm.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPredictLabel",
+                    "id": "predictLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 56,
+                    "text": "預言子嗣",
+                    "styleSlot": "oracle.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "CoupleLabel",
+                "id": "coupleLabel",
+                "widget": {
+                  "top": 494,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "oracle.label.meta"
               }
             ]
           },

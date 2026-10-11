@@ -46,9 +46,11 @@ import {
     normalizeDiscoveryProgress,
 } from '../systems/DiscoveryProgress';
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
+import { resolveFactorColor } from '../systems/FactorInheritance';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
-import { divineFactor, SageDivinationResult } from '../systems/SageDivination';
+import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
+import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
@@ -178,6 +180,7 @@ export class GameSession {
     private _discoveryLevel = 1;
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
+    private _oracleCount = 0;
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -214,6 +217,15 @@ export class GameSession {
     /** 道具庫存（唯讀副本） */
     public get inventory(): PlayerInventory {
         return { ...this._inventory };
+    }
+
+    /** 累計名士占卜次數（覺醒占卜與子嗣預言都算，決定名士解鎖） */
+    public get oracleCount(): number {
+        return this._oracleCount;
+    }
+
+    public isSageUnlocked(sageId: string): boolean {
+        return isSageUnlocked(sageId, this._oracleCount);
     }
 
     public itemCount(itemId: string): number {
@@ -277,6 +289,7 @@ export class GameSession {
         this._discoveryLevel = 1;
         this._discoveryExp = 0;
         this._inventory = { ...STARTER_INVENTORY };
+        this._oracleCount = 0;
     }
 
     /** 指定出戰主將；必須是目前可出戰的名冊武將，否則回傳 false 且不變 */
@@ -363,6 +376,9 @@ export class GameSession {
      * 覺醒成功才改名冊並廣播 FactorAwakened。
      */
     public async divineFactor(generalId: string, sageId: string): Promise<SageDivinationResult> {
+        if (!this.isSageUnlocked(sageId)) {
+            return { sageId, outcome: getSage(sageId) ? 'sage-locked' : 'no-such-sage', hintColor: null, consumed: false };
+        }
         if (this.itemCount(ITEM_ORACLE_TOKEN) < 1) {
             return { sageId, outcome: 'no-token', hintColor: null, consumed: false };
         }
@@ -373,16 +389,50 @@ export class GameSession {
             this._roster.replaceAll(roster.map((g) => (g.id === generalId ? general : g)));
         }
         if (result.consumed) {
-            this._inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN) ?? this._inventory;
-            if (this._autoSave && this._save) {
-                await this.save();
-            }
-            this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+            await this._spendOracleToken();
         }
         if (result.event) {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, result.event);
         }
         return result;
+    }
+
+    /**
+     * 名士預言：結緣前依父母祖譜的因子池（BreedingService.previewFactorPool）預測子嗣的色彩傾向與關鍵詞。
+     * 名士未解鎖或沒有求籤令時不擲骰；有預言才扣 1 張求籤令、累計占卜次數並存檔。
+     */
+    public async predictOffspring(pool: readonly FactorPoolEntry[], sageId: string): Promise<ProphecyResult> {
+        if (!this.isSageUnlocked(sageId)) {
+            return { sageId, outcome: getSage(sageId) ? 'sage-locked' : 'no-such-sage', consumed: false };
+        }
+        if (this.itemCount(ITEM_ORACLE_TOKEN) < 1) {
+            return { sageId, outcome: 'no-token', consumed: false };
+        }
+        const result = predictOffspring(pool, sageId, this._random, this._prophecyKeywordSources());
+        if (result.consumed) {
+            await this._spendOracleToken();
+        }
+        return result;
+    }
+
+    /** 扣 1 張求籤令、累計占卜次數、存檔並廣播庫存變動 */
+    private async _spendOracleToken(): Promise<void> {
+        this._inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN) ?? this._inventory;
+        this._oracleCount += 1;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+    }
+
+    /** 扭曲預言借用關鍵詞的因子：字典裡可判定色系的因子 */
+    private _prophecyKeywordSources(): ProphecyKeywordSource[] {
+        const out: ProphecyKeywordSource[] = [];
+        for (const def of this._factorDictionary?.values() ?? []) {
+            const color = resolveFactorColor(def.id, this._factorDictionary);
+            if (color) out.push({ id: def.id, color, displayName: def.displayName });
+        }
+        return out;
     }
 
     /** 整組覆寫出戰卡組（以 catalogIds 過濾未知 ID、去重、截到上限）並自動存檔 */
@@ -557,7 +607,7 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -584,6 +634,7 @@ export class GameSession {
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
         this._inventory = normalizeInventory(snapshot.inventory);
+        this._oracleCount = snapshot.oracleCount ?? 0;
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }
