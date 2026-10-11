@@ -196,7 +196,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
             panel: this.constructor.name,
             screenId,
             lazySlotCount: this._lazySlots.size,
-            defaultFragments: [...this._lazySlots.entries()]
+            defaultFragments: Array.from(this._lazySlots.entries())
                 .filter(([, entry]) => !!entry.spec.defaultFragment)
                 .map(([slotId, entry]) => `${slotId}:${entry.spec.defaultFragment}`),
         });

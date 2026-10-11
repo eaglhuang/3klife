@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { TroopType } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 

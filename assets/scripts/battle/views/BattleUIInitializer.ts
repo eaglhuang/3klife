@@ -8,7 +8,10 @@
  * Unity 對照：LevelUIBootstrap / UIAutoBinder（自動根據命名慣例找 Inspector 未綁定的元件）
  */
 
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Node, Camera } from 'cc';
+import { BoardRenderer } from './BoardRenderer';
+import { UnitRenderer } from './UnitRenderer';
 import { GAME_CONFIG } from '../../core/config/Constants';
 
 

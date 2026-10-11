@@ -1,5 +1,6 @@
 
 // @spec-source → 見 docs/cross-reference-index.md
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import {
   _decorator,
   ImageAsset,
