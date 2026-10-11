@@ -13,6 +13,7 @@ import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
 import { normalizeDeck } from './PlayerDeckRules';
+import { RandomState, validateRandomState } from '../systems/SeededRandom';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -20,6 +21,8 @@ export const PLAYER_SAVE_SCHEMA_VERSION = 1;
 
 export interface PlayerSaveSnapshot {
     schemaVersion: number;
+    /** 選填以相容舊檔；保存目前游標，而非只有起始種子。 */
+    randomState?: RandomState;
     /** ISO 時間字串，供 UI 顯示「最後存檔時間」 */
     savedAt: string;
     gameTime: GameTimeState;
@@ -46,9 +49,11 @@ export function createPlayerSaveSnapshot(
     deck: readonly string[] = [],
     leadGeneralId?: string | null,
     discoveryLevel = 1,
+    randomState?: RandomState,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
+        ...(randomState !== undefined ? { randomState: validateRandomState(randomState) } : {}),
         savedAt: now.toISOString(),
         gameTime: GameClock.normalize(gameTime),
         roster: roster.map((general) => ({ ...general })),
@@ -89,6 +94,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     }
     return {
         schemaVersion: snapshot.schemaVersion,
+        ...(snapshot.randomState !== undefined ? { randomState: validateRandomState(snapshot.randomState) } : {}),
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,

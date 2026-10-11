@@ -27,6 +27,7 @@ import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/Gener
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
+import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createPlayerSaveSnapshot, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import type { NurtureState } from '../services/NurtureService';
 import { awakenFactor, AwakeningFailReason, AwakeningTrigger, FactorAwakenedEvent } from '../systems/FactorAwakening';
@@ -125,13 +126,21 @@ export class GameSession {
     private _save: PlayerSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
     private _lifecycle: SeasonLifecycle | null = null;
-    private _random: RandomSource = Math.random;
+    private _seeded: SeededRandom;
+    private _random: RandomSource = () => this._seeded.next();
+    /** 共用入口保持同一函式身分，讀檔恢復游標後既有服務會立即使用新狀態。 */
+    public readonly randomSource: RandomSource = () => this._random();
+
     private _autoSave = true;
     private _nurture: NurtureStatePort | null = null;
     private _factorDictionary: FactorDictionary | undefined;
     private _deck: string[] = [];
     private _leadGeneralId: string | null = null;
     private _discoveryLevel = 1;
+
+    constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
+        this._seeded = new SeededRandom(seed);
+    }
 
     public get gameTime(): GameTimeState {
         return this._clock.state;
@@ -176,7 +185,7 @@ export class GameSession {
         this._save = service;
     }
 
-    /** 測試用：注入可重現的亂數 */
+    /** 測試替身：外部 callback 的內部狀態不納入存檔。 */
     public setRandomSource(random: RandomSource): void {
         this._random = random;
     }
@@ -195,7 +204,8 @@ export class GameSession {
     }
 
         /** 開新局：時鐘與卡組歸零，名冊不動（由開場流程決定初始武將） */
-    public startNewGame(): void {
+    public startNewGame(seed: number = Math.floor(Math.random() * 4294967296)): void {
+        this._seeded = new SeededRandom(seed);
         this._clock = new GameClock();
         this._deck = [];
         this._leadGeneralId = null;
@@ -391,7 +401,7 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot());
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -409,6 +419,7 @@ export class GameSession {
             return false;
         }
         this._clock.restore(snapshot.gameTime);
+        this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
         this._roster.replaceAll(snapshot.roster);
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];

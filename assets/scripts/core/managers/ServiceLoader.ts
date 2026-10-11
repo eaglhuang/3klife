@@ -64,9 +64,10 @@ export class ServiceLoader {
         replaceAll: (generals) => PlayerRosterService.replaceAll(generals),
     };
     /** 宿命選擇（5 歲開獎後順應或逆天，PROG-2-0028） */
-    public readonly unveiling = new UnveilingService(this.rosterStore);
+    public readonly unveiling = new UnveilingService(this.rosterStore, this.session.randomSource);
     /** 36 回合培育與教官（PROG-2-0028）；季度與模式取自 session 時鐘 */
     public readonly nurture = new NurtureService(this.rosterStore, {
+        random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         currentMode: () => this.session.gameTime.currentMode,
     });
