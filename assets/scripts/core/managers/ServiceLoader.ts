@@ -20,10 +20,14 @@ import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { GameSession } from "./GameSession";
+import type { RosterStore } from "./GameSession";
 import { PlayerSaveService } from "../services/PlayerSaveService";
 import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
 import { BloodlineGraph } from "../services/BloodlineGraph";
+import { NurtureService } from "../services/NurtureService";
+import { UnveilingService } from "../services/UnveilingService";
+import { buildFactorDictionary } from "../systems/FactorInheritance";
 import type { PersonRegistryData } from "../models/PersonRegistry";
 import { DataStorageAdapter } from "../storage/DataStorageAdapter";
 import { IndexedDbAdapter } from "../storage/IndexedDbAdapter";
@@ -54,6 +58,18 @@ export class ServiceLoader {
     public readonly game = new GameManager();
     /** 長局主迴圈：季度推進、武將增齡、玩家存檔（PROG-2-0021） */
     public readonly session = new GameSession();
+    /** 名冊後端：沿用 PlayerRosterService，供長局主迴圈與養成服務共用 */
+    private readonly rosterStore: RosterStore = {
+        getAll: () => PlayerRosterService.getAll(),
+        replaceAll: (generals) => PlayerRosterService.replaceAll(generals),
+    };
+    /** 宿命選擇（5 歲開獎後順應或逆天，PROG-2-0028） */
+    public readonly unveiling = new UnveilingService(this.rosterStore);
+    /** 36 回合培育與教官（PROG-2-0028）；季度與模式取自 session 時鐘 */
+    public readonly nurture = new NurtureService(this.rosterStore, {
+        currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
+        currentMode: () => this.session.gameTime.currentMode,
+    });
     public readonly ui = new UIManager();
     public readonly network = new NetworkService();
     public readonly sync = new SyncManager();
@@ -133,10 +149,8 @@ export class ServiceLoader {
 
         // 長局主迴圈：名冊沿用 PlayerRosterService，存檔後端依平台選擇
         this.session.setEventEmitter(this.event);
-        this.session.setRosterStore({
-            getAll: () => PlayerRosterService.getAll(),
-            replaceAll: (generals) => PlayerRosterService.replaceAll(generals),
-        });
+        this.session.setRosterStore(this.rosterStore);
+        this.session.setNurtureStatePort(this.nurture);
         const storageAdapter = this.createSaveStorageAdapter();
         this.session.setSaveService(new PlayerSaveService(storageAdapter));
         // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
@@ -159,6 +173,19 @@ export class ServiceLoader {
         }
         UCUFLogger.warn(LogCategory.DATA, "[ServiceLoader] 目前平台沒有可用的持久化存檔後端，改用記憶體暫存（重開後不會保留）");
         return new MemoryStorageAdapter();
+    }
+
+    /**
+     * 載入因子字典，讓 5 歲開獎的宿命建議能依因子分武 / 文。
+     * 沒載入時宿命建議退回只看五維，不會中斷遊戲。
+     */
+    public async loadFactorDictionary(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<{ data?: [] }>('data/master/gene-dictionary');
+            this.session.setFactorDictionary(buildFactorDictionary(raw as Parameters<typeof buildFactorDictionary>[0]));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] gene-dictionary.json 載入失敗，宿命建議退回只看五維:', e);
+        }
     }
 
     /**

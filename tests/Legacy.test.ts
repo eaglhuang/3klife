@@ -195,14 +195,10 @@ export function createLegacySuite(): TestSuite {
         session.setRosterStore(store);
         const breeding = new BreedingService(store, graph, { random: () => 0, currentSeason: () => session.gameTime.totalSeasonsElapsed });
 
-        // 培育的最小替身：滿 5 歲就從 Mystery 揭曉成一般狀態（正式的開獎與 36 回合培育由另一張卡做）
-        const standInReveal = (): void => {
-            store.replaceAll(store.getAll().map((g) => (g.status === 'Mystery' && (g.age ?? 0) >= 5 ? { ...g, status: 'Active' } : g)));
-        };
+        // 滿 5 歲的子嗣由 GameSession 每季自動開獎（PROG-2-0028），不再需要替身
         const nextSeason = async (): Promise<SeasonAdvancedPayload> => {
             const payload = await session.advanceSeason();
             breeding.advanceSeason();
-            standInReveal();
             return payload;
         };
 
@@ -215,7 +211,7 @@ export function createLegacySuite(): TestSuite {
         for (let i = 0; i < 80; i++) await nextSeason();
         const dad = store.getAll().find((g) => g.id === dadId)!;
         assert.equals(20, dad.age as number);
-        assert.equals('Active', dad.status as string);
+        assert.equals('Unveiled', dad.status as string);
         store.replaceAll([...store.getAll(), makeGeneral('wife', '女', 22)]);
         const second = breeding.breed(dadId, 'wife');
         assert.equals('conceived', second.outcome);
