@@ -1,0 +1,471 @@
+{
+  "id": "bonding-setup-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "BondingSetupRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "BondBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "bonding.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "BondCard",
+        "id": "bondCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1200,
+        "height": 780,
+        "skinSlot": "bonding.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "BondTitle",
+            "id": "bondTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "width": 520,
+            "height": 40,
+            "text": "結緣配置",
+            "styleSlot": "bonding.label.title"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseBond",
+            "id": "btnCloseBond",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseBondLabel",
+                "id": "closeBondLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "BondEmptyHint",
+            "id": "bondEmptyHint",
+            "widget": {
+              "top": 160,
+              "left": 80,
+              "right": 80
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "bonding.label.body"
+          },
+          {
+            "type": "container",
+            "name": "BondPanel",
+            "id": "bondPanel",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 64
+            },
+            "children": [
+              {
+                "type": "panel",
+                "name": "FatherColumn",
+                "widget": {
+                  "top": 8,
+                  "left": 8
+                },
+                "width": 540,
+                "height": 200,
+                "skinSlot": "bonding.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "FatherName",
+                    "id": "fatherName",
+                    "widget": {
+                      "top": 16,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 38,
+                    "text": "父方：－",
+                    "styleSlot": "bonding.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "FatherInfo",
+                    "id": "fatherInfo",
+                    "widget": {
+                      "top": 62,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnPrevFather",
+                    "id": "btnPrevFather",
+                    "widget": {
+                      "bottom": 16,
+                      "left": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "bonding.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnPrevFatherLabel",
+                        "id": "prevFatherLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "＜",
+                        "styleSlot": "bonding.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "FatherPager",
+                    "id": "fatherPager",
+                    "widget": {
+                      "bottom": 26,
+                      "hCenter": true
+                    },
+                    "width": 140,
+                    "height": 28,
+                    "text": "0 / 0",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextFather",
+                    "id": "btnNextFather",
+                    "widget": {
+                      "bottom": 16,
+                      "right": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "bonding.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextFatherLabel",
+                        "id": "nextFatherLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "＞",
+                        "styleSlot": "bonding.label.button"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "MotherColumn",
+                "widget": {
+                  "top": 8,
+                  "right": 8
+                },
+                "width": 540,
+                "height": 200,
+                "skinSlot": "bonding.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "MotherName",
+                    "id": "motherName",
+                    "widget": {
+                      "top": 16,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 38,
+                    "text": "母方：－",
+                    "styleSlot": "bonding.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "MotherInfo",
+                    "id": "motherInfo",
+                    "widget": {
+                      "top": 62,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnPrevMother",
+                    "id": "btnPrevMother",
+                    "widget": {
+                      "bottom": 16,
+                      "left": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "bonding.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnPrevMotherLabel",
+                        "id": "prevMotherLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "＜",
+                        "styleSlot": "bonding.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "MotherPager",
+                    "id": "motherPager",
+                    "widget": {
+                      "bottom": 26,
+                      "hCenter": true
+                    },
+                    "width": 140,
+                    "height": 28,
+                    "text": "0 / 0",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextMother",
+                    "id": "btnNextMother",
+                    "widget": {
+                      "bottom": 16,
+                      "right": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "bonding.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextMotherLabel",
+                        "id": "nextMotherLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "＞",
+                        "styleSlot": "bonding.label.button"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ModeChip",
+                "id": "modeChip",
+                "widget": {
+                  "top": 220,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "bonding.label.chip"
+              },
+              {
+                "type": "panel",
+                "name": "EstimateBox",
+                "widget": {
+                  "top": 262,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 196,
+                "skinSlot": "bonding.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "EpEstimate",
+                    "id": "epEstimate",
+                    "widget": {
+                      "top": 14,
+                      "left": 24,
+                      "right": 24
+                    },
+                    "height": 40,
+                    "text": "",
+                    "styleSlot": "bonding.label.ep"
+                  },
+                  {
+                    "type": "label",
+                    "name": "EpDetail",
+                    "id": "epDetail",
+                    "widget": {
+                      "top": 60,
+                      "left": 24,
+                      "right": 24
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "label",
+                    "name": "ConceptionLabel",
+                    "id": "conceptionLabel",
+                    "widget": {
+                      "top": 98,
+                      "left": 24,
+                      "right": 24
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "bonding.label.stats"
+                  },
+                  {
+                    "type": "label",
+                    "name": "InbreedingLabel",
+                    "id": "inbreedingLabel",
+                    "widget": {
+                      "top": 140,
+                      "left": 24,
+                      "right": 24
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "bonding.label.stats"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "EligibilityLabel",
+                "id": "eligibilityLabel",
+                "widget": {
+                  "top": 472,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "bonding.label.stats"
+              },
+              {
+                "type": "label",
+                "name": "CostLabel",
+                "id": "costLabel",
+                "widget": {
+                  "top": 510,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "bonding.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnConfirmBond",
+                "id": "btnConfirmBond",
+                "widget": {
+                  "top": 556,
+                  "hCenter": true
+                },
+                "width": 240,
+                "height": 64,
+                "skinSlot": "bonding.button.confirm.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnConfirmBondLabel",
+                    "id": "confirmBondLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 56,
+                    "text": "確認結緣",
+                    "styleSlot": "bonding.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "BondNotice",
+            "id": "bondNotice",
+            "widget": {
+              "bottom": 16,
+              "left": 32,
+              "right": 32
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "bonding.label.log"
+          }
+        ]
+      }
+    ]
+  }
+}

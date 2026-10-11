@@ -26,8 +26,9 @@ import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
 import { BloodlineGraph } from "../services/BloodlineGraph";
 import { NurtureService } from "../services/NurtureService";
+import { BreedingService } from "../services/BreedingService";
 import { UnveilingService } from "../services/UnveilingService";
-import { buildFactorDictionary } from "../systems/FactorInheritance";
+import { buildFactorDictionary, FactorDictionary } from "../systems/FactorInheritance";
 import type { PersonRegistryData } from "../models/PersonRegistry";
 import { DataStorageAdapter } from "../storage/DataStorageAdapter";
 import { IndexedDbAdapter } from "../storage/IndexedDbAdapter";
@@ -70,6 +71,14 @@ export class ServiceLoader {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         currentMode: () => this.session.gameTime.currentMode,
+    });
+    /** loadFactorDictionary() 載入後的因子字典；結緣產生子嗣時用來補因子名稱與顏色 */
+    private factorDictionary: FactorDictionary | undefined;
+    /** 結緣（PROG-2-0045）：名冊與血統圖接線，亂數與季度取自 session */
+    public readonly breeding = new BreedingService(this.rosterStore, BloodlineGraph.getInstance(), {
+        random: this.session.randomSource,
+        currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
+        getDictionary: () => this.factorDictionary,
     });
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
     public legacy: LegacyService | null = null;
@@ -186,10 +195,23 @@ export class ServiceLoader {
     public async loadFactorDictionary(): Promise<void> {
         try {
             const raw = await this.resource.loadJson<{ data?: [] }>('data/master/gene-dictionary');
-            this.session.setFactorDictionary(buildFactorDictionary(raw as Parameters<typeof buildFactorDictionary>[0]));
+            this.factorDictionary = buildFactorDictionary(raw as Parameters<typeof buildFactorDictionary>[0]);
+            this.session.setFactorDictionary(this.factorDictionary);
         } catch (e) {
             UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] gene-dictionary.json 載入失敗，宿命建議退回只看五維:', e);
         }
+    }
+
+    /**
+     * 結緣畫面開啟前呼叫：載入因子字典與 person-registry.json，再把名冊裡已出生的子嗣補回血統圖。
+     * 讀檔後名冊可能多出前幾輪生下的子嗣，所以每次開啟都同步一次（重複呼叫不會重複登記）。
+     */
+    public async prepareBreeding(): Promise<void> {
+        if (!this.factorDictionary) {
+            await this.loadFactorDictionary();
+        }
+        await BloodlineGraph.getInstance().loadRegistry();
+        this.breeding.syncGraphFromRoster();
     }
 
     /**

@@ -27,7 +27,7 @@
           "left": 32
         },
         "width": 320,
-        "height": 184,
+        "height": 232,
         "skinSlot": "season.hud.card.bg",
         "children": [
           {
@@ -106,6 +106,33 @@
                 },
                 "height": 24,
                 "text": "開獎・培育",
+                "styleSlot": "season.hud.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "OpenBondingButton",
+            "id": "btnOpenBonding",
+            "widget": {
+              "bottom": 104,
+              "left": 12,
+              "right": 12
+            },
+            "height": 40,
+            "skinSlot": "season.hud.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenBondingLabel",
+                "id": "openBondingLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "結緣",
                 "styleSlot": "season.hud.label.button"
               }
             ]

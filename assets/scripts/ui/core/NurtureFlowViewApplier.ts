@@ -1,6 +1,6 @@
 // @spec-source → UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) NurtureSession
 /**
- * NurtureFlowViewApplier — 把 NurtureFlowController 吐出的 FlowView 套到 UCUF 組出來的節點上
+ * NurtureFlowViewApplier — 把 NurtureFlowController / BondingSetupController 吐出的 view 套到 UCUF 組出來的節點上
  *
  * 只做「照單顯示」：文字、顯示 / 隱藏、按鈕可按與否（變暗）。沒有任何規則判斷。
  *
@@ -14,7 +14,10 @@ import type { FlowView } from './NurtureFlowController';
 const DISABLED_OPACITY = 110;
 const ENABLED_OPACITY = 255;
 
-export function applyNurtureFlowView(binder: UITemplateBinder, view: FlowView): void {
+/** 任何流程控制器吐出的 view 只要有這三組 key → 值，就能用同一個 applier 套到節點上 */
+export type FlowViewState = Pick<FlowView, 'texts' | 'actives' | 'enabled'>;
+
+export function applyFlowView(binder: UITemplateBinder, view: FlowViewState): void {
     binder.setTexts(view.texts);
     binder.setActives(view.actives);
     for (const [id, enabled] of Object.entries(view.enabled)) {
@@ -25,3 +28,5 @@ export function applyNurtureFlowView(binder: UITemplateBinder, view: FlowView): 
         opacity.opacity = enabled ? ENABLED_OPACITY : DISABLED_OPACITY;
     }
 }
+
+export const applyNurtureFlowView = applyFlowView;

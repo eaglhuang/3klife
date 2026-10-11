@@ -497,6 +497,19 @@ export function advanceBreedingSeason(generals: BreedingGeneral[]): { generals: 
     return { generals: next, pregnancyEnded };
 }
 
+/**
+ * 待產凍結（Pregnancy_Lock）：本季開始時仍在待產的母方，精力不隨季度回補。
+ * before = 回補前名冊、after = 回補後名冊；回傳把待產者精力還原後的 after。
+ */
+export function holdPregnancyVigor(before: readonly BreedingGeneral[], after: readonly BreedingGeneral[]): BreedingGeneral[] {
+    const held = new Map<string, number | undefined>();
+    for (const general of before) {
+        if ((general.pregnancySeasonsLeft ?? 0) > 0) held.set(general.id, general.vitality);
+    }
+    if (held.size === 0) return [...after];
+    return after.map((general) => (held.has(general.id) ? { ...general, vitality: held.get(general.id) } : general));
+}
+
 /** 給 BloodlineGraph.registerChild 用的輕量人物記錄 */
 export function toPersonRecord(child: BreedingGeneral): PersonRecord {
     return {
