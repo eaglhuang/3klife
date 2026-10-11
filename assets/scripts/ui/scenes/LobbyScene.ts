@@ -1086,6 +1086,40 @@ export class LobbyScene extends Component {
         }
         // gacha-ds3 uses BannerSlide nodes; legacy node names (PoolTabBar etc.) no longer exist
         this._setupGachaPoolCarousel(host);
+        this._ensureGachaReturnButton(host);
+    }
+
+    /** Unity 對照：執行期補 Button，返回仍由既有 UI navigation stack 管理。 */
+    private _ensureGachaReturnButton(host: UIScreenPreviewHost): void {
+        const node = host.node.getChildByName('GachaReturnToLobby') ?? new Node('GachaReturnToLobby');
+        node.layer = host.node.layer;
+        if (!node.parent) node.parent = host.node;
+        const transform = node.getComponent(UITransform) ?? node.addComponent(UITransform);
+        transform.setContentSize(180, 52);
+        const widget = node.getComponent(Widget) ?? node.addComponent(Widget);
+        widget.isAlignLeft = true;
+        widget.isAlignTop = true;
+        widget.left = 24;
+        widget.top = 24;
+        widget.alignMode = Widget.AlignMode.ALWAYS;
+        const background = node.getComponent(SolidBackground) ?? node.addComponent(SolidBackground);
+        background.color = new Color(36, 44, 62, 235);
+        const button = node.getComponent(Button) ?? node.addComponent(Button);
+        button.transition = Button.Transition.NONE;
+        node.off(Button.EventType.CLICK, undefined, this);
+        node.on(Button.EventType.CLICK, () => { void this._goBackToLobby(); }, this);
+        const labelNode = node.getChildByName('Label') ?? new Node('Label');
+        labelNode.layer = node.layer;
+        if (!labelNode.parent) labelNode.parent = node;
+        const labelTransform = labelNode.getComponent(UITransform) ?? labelNode.addComponent(UITransform);
+        labelTransform.setContentSize(180, 52);
+        const label = labelNode.getComponent(Label) ?? labelNode.addComponent(Label);
+        label.string = '‹ 返回大廳';
+        label.fontSize = 22;
+        label.color = Color.WHITE;
+        label.horizontalAlign = Label.HorizontalAlign.CENTER;
+        label.verticalAlign = Label.VerticalAlign.CENTER;
+        node.setSiblingIndex(host.node.children.length - 1);
     }
 
     private _setupGachaPoolCarousel(host: UIScreenPreviewHost | null): void {
