@@ -153,8 +153,8 @@ async function waitForEngine(page, timeoutMs) {
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
-    if (args.flow && args.flow !== 'lifecycle') {
-        console.error('[web-smoke] --flow 僅支援 lifecycle');
+    if (args.flow && !['lifecycle', 'lifecycle-full'].includes(args.flow)) {
+        console.error('[web-smoke] --flow 僅支援 lifecycle、lifecycle-full');
         return 2;
     }
     const buildDir = path.resolve(projectRoot, args.dir || 'build/web-desktop');
@@ -225,11 +225,23 @@ async function main() {
             engineState = await waitForEngine(page, 1000);
         }
 
-        if (args.flow === 'lifecycle' && engineState.engine) {
+        if (args.flow && engineState.engine) {
             try {
-                flow = await require('./lib/web-lifecycle-flow').runLifecycleFlow(page, { timeoutMs });
+                const lifecycle = require('./lib/web-lifecycle-flow');
+                const run = args.flow === 'lifecycle-full' ? lifecycle.runFullFlow : lifecycle.runLifecycleFlow;
+                let shotIndex = 0;
+                // lifecycle-full 每步截圖：<序號>-<步驟>.png
+                const onStep = args.flow === 'lifecycle-full'
+                    ? async (name) => {
+                        await delay(settleMs);
+                        shotIndex += 1;
+                        await page.screenshot({ path: path.join(outDir, `${String(shotIndex).padStart(2, '0')}-${name}.png`) }).catch(() => undefined);
+                        console.log(`[web-smoke] 步驟 ${shotIndex} ${name}（累計錯誤 ${errors.length}）`);
+                    }
+                    : undefined;
+                flow = await run(page, { timeoutMs, onStep });
             } catch (error) {
-                flow = { name: 'lifecycle', completed: false };
+                flow = { name: args.flow, completed: false };
                 errors.push({ kind: 'lifecycle-flow', detail: String(error && error.stack || error) });
             }
             engineState = await waitForEngine(page, 1000);
