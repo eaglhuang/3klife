@@ -156,7 +156,7 @@ function buildTacticSlots(general: BattleRosterGeneral): GeneralTacticSlotConfig
     if (general.tacticSlots && general.tacticSlots.length > 0) {
         return general.tacticSlots.slice(0, BATTLE_TACTIC_SLOT_LIMIT).map((slot) => ({ ...slot }));
     }
-    const learned = [...new Set(general.learnedTactics ?? [])].slice(0, BATTLE_TACTIC_SLOT_LIMIT);
+    const learned = Array.from(new Set(general.learnedTactics ?? [])).slice(0, BATTLE_TACTIC_SLOT_LIMIT);
     return learned.map((tacticId, index) => ({ slotId: `slot-${index + 1}`, tacticId, source: 'learned' as GeneralTacticSlotConfig['source'] }));
 }
 
