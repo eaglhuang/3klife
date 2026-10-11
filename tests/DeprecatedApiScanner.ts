@@ -97,6 +97,11 @@ const DEPRECATED_RULES: DeprecatedRule[] = [
         pattern: /^import\s+\*\s+as\s+(fs|path)\s+from\s+['"](fs|path)['"]/m,
         whitelist: [
             'assets/scripts/tools/tests/DeprecatedApiScanner.ts',  // 規則定義字串
+            // Cocos Editor 擴充套件在 Editor 的 Node 進程執行，不會被打包進遊戲 bundle
+            'extensions/cocos-mcp-server/source/settings.ts',
+            'extensions/cocos-mcp-server/source/tools/debug-tools.ts',
+            'extensions/cocos-mcp-server/source/tools/project-tools.ts',
+            'extensions/cocos-mcp-server/source/tools/tool-manager.ts',
         ],
         replacement: '改用函式內部的 require("fs") / require("path")，並包覆 typeof window === "undefined" guard',
         reason:      '頂層 import fs/path 在 Cocos bundle 載入時觸發 Node.js 模組解析，導致場景 Console 錯誤',

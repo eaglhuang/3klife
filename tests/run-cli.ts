@@ -20,6 +20,7 @@ import { createUnityParticlePrefabParserSuite } from './UnityParticlePrefabParse
 import { createDeprecatedApiSuite } from './DeprecatedApiScanner';
 import { createSyncManagerSuite } from './SyncManager.test';
 import { createNetworkServiceSuite } from './NetworkService.test';
+import { createGameSessionSuite } from './GameSession.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
 import { createCompositePanelSuite } from './ucuf/compositePanel.test';
 import { createAttributePanelSuite } from './ucuf/attributePanel.test';
@@ -70,6 +71,7 @@ if (typeof window === 'undefined') {
     runner.register(createUnityParticlePrefabParserSuite());
     runner.register(createSyncManagerSuite());
     runner.register(createNetworkServiceSuite());
+    runner.register(createGameSessionSuite());
     runner.register(createSkinLayersSuite());
     runner.register(createCompositePanelSuite());
     runner.register(createAttributePanelSuite());
@@ -109,8 +111,8 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillDamageResolverSuite());
 
     // Deprecated API 靜態掃描
-    // __dirname = assets/scripts/tools/tests/  →  ../../../../ = 專案根目錄
-    const projectRoot = path.resolve(__dirname, '../../../../');
+    // __dirname = tests/  →  ../ = 專案根目錄
+    const projectRoot = path.resolve(__dirname, '..');
     runner.register(createDeprecatedApiSuite({
         scanRoots: [
             path.join(projectRoot, 'assets/scripts'),  // 遊戲邏輯腳本

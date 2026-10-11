@@ -9,7 +9,7 @@
  * 執行指令：node tools/run-tests.js
  */
 
-import { CurveAsset, CurveGroup, CurveSystem } from '../../core/systems/CurveSystem';
+import { CurveAsset, CurveGroup, CurveSystem } from '../assets/scripts/core/systems/CurveSystem';
 import { TestSuite, assert } from './TestRunner';
 
 export function createCurveSuite(): TestSuite {

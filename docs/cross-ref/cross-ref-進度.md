@@ -1,7 +1,7 @@
 <!-- doc_id: doc_index_0017 -->
 # Cross-Reference: 實作進度（規格書 × 代碼 × 測試）
 
-> 這是 `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005) 的 D 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005)。
+> 這是 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007) 的 D 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007)。
 > 最後更新請參考母檔 Header。
 >
 > ⚠️ **本檔是唯一保留完整中文規格書名稱的分片**，供人類查閱進度。

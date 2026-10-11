@@ -850,7 +850,7 @@
       "pressed":  "sprites/ui_families/common/nav_ink/btn_primary_pressed",
       "disabled": "sprites/ui_families/common/nav_ink/btn_primary_disabled",
       "spriteType": "sliced",
-      "border": [12,12,12,12],
+      "border": [20,20,20,20],
       "allowAutoAtlas": true,
       "note": "slimmer dark action used for pull-bar alt buttons; closer to HTML 44px / radius 8 secondary chip"
     },

@@ -1,7 +1,7 @@
 <!-- doc_id: doc_index_0001 -->
 # Cross-Reference: 代碼索引（代碼 ↔ 規格書 雙向映射）
 
-> 這是 doc_index_0005 的 B 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005)。
+> 這是 doc_index_0007 的 B 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007)。
 > 最後更新請參考母檔 Header。
 >
 > **doc_id 查詢**：用 `node tools_node/resolve-doc-id.js <搜尋詞>` 查文件代號，或瀏覽 `docs/doc-id-registry.md (doc_other_0001)` (doc_other_0001)。
@@ -324,10 +324,10 @@
 | cocos-screenshot | doc_agentskill_0012 / 0005 | PrintWindow capture | doc_ui_0049 |
 | comfyui-sdxl-partial-asset-gen | doc_agentskill_0013 | ComfyUI local backend | doc_ui_0046 |
 | context-budget-guard | doc_agentskill_0006 | check-context-budget.js, summarize-structured-diff.js | doc_ai_0015 |
-| crossref-progress-scanner | doc_agentskill_0032 | resolve-doc-id.js, cross-ref shards | doc_index_0005 |
+| crossref-progress-scanner | doc_agentskill_0032 | resolve-doc-id.js, cross-ref shards | doc_index_0007 |
 | dalle3-image-gen | doc_agentskill_0014 | MCP DALL-E 3 | doc_ui_0046 |
-| doc-consolidation-flow | doc_agentskill_0034 | consolidation-manifest tools | doc_index_0005 |
-| doc-shard-manager | doc_agentskill_0015 | shard-manager.js | doc_index_0005 |
+| doc-consolidation-flow | doc_agentskill_0034 | consolidation-manifest tools | doc_index_0007 |
+| doc-shard-manager | doc_agentskill_0015 | shard-manager.js | doc_index_0007 |
 | encoding-touched-guard | doc_agentskill_0016 / 0007 | check-encoding-integrity.js, check-encoding-touched.js | doc_ai_0008 |
 | general-balance-tuner | doc_agentskill_0017 | — | doc_data_0001 |
 | general-data-pipeline | doc_agentskill_0018 | — | doc_data_0001, doc_spec_0016 |

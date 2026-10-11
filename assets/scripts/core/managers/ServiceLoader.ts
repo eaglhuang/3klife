@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { Node } from "cc";
+import { Node, sys } from "cc";
 import { AudioSystem } from "../systems/AudioSystem";
 import { BuffSystem } from "../systems/BuffSystem";
 import { MaterialSystem } from "../systems/MaterialSystem";
@@ -19,6 +19,12 @@ import { SyncManager } from "../systems/SyncManager";
 import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
+import { GameSession } from "./GameSession";
+import { PlayerSaveService } from "../services/PlayerSaveService";
+import { PlayerRosterService } from "../services/PlayerRosterService";
+import { DataStorageAdapter } from "../storage/DataStorageAdapter";
+import { IndexedDbAdapter } from "../storage/IndexedDbAdapter";
+import { MemoryStorageAdapter } from "../storage/MemoryStorageAdapter";
 import { UIManager } from "./UIManager";
 import { UISpecLoader } from "../../ui/core/UISpecLoader";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
@@ -43,6 +49,8 @@ export class ServiceLoader {
     public readonly battle = new BattleSystem();
     public readonly scene = new SceneManager();
     public readonly game = new GameManager();
+    /** 長局主迴圈：季度推進、武將增齡、玩家存檔（PROG-2-0021） */
+    public readonly session = new GameSession();
     public readonly ui = new UIManager();
     public readonly network = new NetworkService();
     public readonly sync = new SyncManager();
@@ -120,7 +128,26 @@ export class ServiceLoader {
         this.sync.setup(this.event, this.network);
         this.npcMemory.setup(this.event, this.npcDialogue, this.sync);
 
+        // 長局主迴圈：名冊沿用 PlayerRosterService，存檔後端依平台選擇
+        this.session.setEventEmitter(this.event);
+        this.session.setRosterStore({
+            getAll: () => PlayerRosterService.getAll(),
+            replaceAll: (generals) => PlayerRosterService.replaceAll(generals),
+        });
+        this.session.setSaveService(new PlayerSaveService(this.createSaveStorageAdapter()));
+
         this.initialized = true;
+    }
+
+    /**
+     * 選擇玩家存檔後端：瀏覽器用 IndexedDB；原生 SQLite 尚未接線前先用記憶體並警告。
+     */
+    private createSaveStorageAdapter(): DataStorageAdapter {
+        if (!sys.isNative && typeof indexedDB !== "undefined") {
+            return new IndexedDbAdapter();
+        }
+        UCUFLogger.warn(LogCategory.DATA, "[ServiceLoader] 目前平台沒有可用的持久化存檔後端，改用記憶體暫存（重開後不會保留）");
+        return new MemoryStorageAdapter();
     }
 
     /**

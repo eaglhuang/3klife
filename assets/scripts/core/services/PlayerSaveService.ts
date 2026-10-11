@@ -1,0 +1,102 @@
+// @spec-source → 遊戲時間系統.md (doc_spec_0034) §I、Data Schema文件（本機端與Server端）.md (doc_tech_0013)
+/**
+ * PlayerSaveService — 玩家長局存檔快照（純邏輯，不依賴 cc）
+ *
+ * 只負責「快照長什麼樣子」與「存 / 讀 / 驗證」，實際儲存後端由 DataStorageAdapter 注入：
+ * Web 用 IndexedDbAdapter、原生用 SqliteAdapter、測試用 MemoryStorageAdapter。
+ *
+ * Unity 對照：像一個 SaveSystem，把 [Serializable] 的 SaveData 交給
+ * 可替換的儲存後端（PlayerPrefs / 檔案 / 雲端），而不是自己去碰檔案路徑。
+ */
+import type { GeneralConfig } from '../models/GeneralUnit';
+import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
+import { GameClock, GameTimeState } from '../systems/GameClock';
+
+export const PLAYER_SAVE_KEY = 'player.save';
+export const PLAYER_SAVE_SCHEMA_VERSION = 1;
+
+export interface PlayerSaveSnapshot {
+    schemaVersion: number;
+    /** ISO 時間字串，供 UI 顯示「最後存檔時間」 */
+    savedAt: string;
+    gameTime: GameTimeState;
+    roster: GeneralConfig[];
+}
+
+export function createPlayerSaveSnapshot(
+    gameTime: GameTimeState,
+    roster: readonly GeneralConfig[],
+    now: Date = new Date(),
+): PlayerSaveSnapshot {
+    return {
+        schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
+        savedAt: now.toISOString(),
+        gameTime: GameClock.normalize(gameTime),
+        roster: roster.map((general) => ({ ...general })),
+    };
+}
+
+/** 驗證讀回的資料；格式不符時拋錯，避免壞檔被當成新遊戲默默覆蓋 */
+export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
+    if (!raw || typeof raw !== 'object') {
+        throw new Error('[PlayerSaveService] 存檔格式錯誤：不是物件');
+    }
+    const snapshot = raw as Partial<PlayerSaveSnapshot>;
+    if (snapshot.schemaVersion !== PLAYER_SAVE_SCHEMA_VERSION) {
+        throw new Error(`[PlayerSaveService] 不支援的存檔版本: ${String(snapshot.schemaVersion)}`);
+    }
+    if (typeof snapshot.savedAt !== 'string') {
+        throw new Error('[PlayerSaveService] 存檔缺少 savedAt');
+    }
+    if (!Array.isArray(snapshot.roster)) {
+        throw new Error('[PlayerSaveService] 存檔缺少 roster');
+    }
+    const invalid = snapshot.roster.find((general) => !general || typeof general.id !== 'string');
+    if (invalid !== undefined) {
+        throw new Error('[PlayerSaveService] roster 內有缺少 id 的武將');
+    }
+    return {
+        schemaVersion: snapshot.schemaVersion,
+        savedAt: snapshot.savedAt,
+        gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
+        roster: snapshot.roster,
+    };
+}
+
+export class PlayerSaveService {
+    private _ready: Promise<void> | null = null;
+
+    constructor(private readonly _adapter: DataStorageAdapter, private readonly _key: string = PLAYER_SAVE_KEY) {}
+
+    public get adapterName(): string {
+        return this._adapter.adapterName;
+    }
+
+    public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
+        await this._ensureReady();
+        await this._adapter.set(this._key, validatePlayerSaveSnapshot(snapshot));
+    }
+
+    /** 沒有存檔時回傳 null；有存檔但格式錯誤時拋錯 */
+    public async load(): Promise<PlayerSaveSnapshot | null> {
+        await this._ensureReady();
+        const raw = await this._adapter.get<unknown>(this._key);
+        return raw === null ? null : validatePlayerSaveSnapshot(raw);
+    }
+
+    public async clear(): Promise<void> {
+        await this._ensureReady();
+        await this._adapter.delete(this._key);
+    }
+
+    /** 第一次存取時才初始化後端（例如開啟 IndexedDB），之後重用同一個 Promise */
+    private _ensureReady(): Promise<void> {
+        if (!this._ready) {
+            this._ready = this._adapter.init().catch((error) => {
+                this._ready = null;
+                throw error;
+            });
+        }
+        return this._ready;
+    }
+}
