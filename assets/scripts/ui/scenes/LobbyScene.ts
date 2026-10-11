@@ -15,6 +15,8 @@ import { LocalGachaService, type LocalGachaResultEntry } from '../../core/servic
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
+import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
+import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
@@ -71,6 +73,9 @@ interface GeneralListOpenPayload {
     };
 }
 
+/** 選卡畫面的卡片按鈕數（對應 lobby-deck-select-main.json 的 btnDeckCard0..3，目前卡片目錄只有 4 張） */
+const DECK_SELECT_SLOTS = 4;
+
 interface ScreenButtonBinding {
     buttonId: string;
     handler: () => void;
@@ -87,6 +92,7 @@ export class LobbyScene extends Component {
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
+    private _deckSelectHost: UIScreenPreviewHost | null = null;
     private readonly _sessionEventUnsubscribers: Array<() => void> = [];
     private _spiritFamilyOverviewHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
@@ -134,6 +140,7 @@ export class LobbyScene extends Component {
         await this._mountLobbyMainHub();
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
+        await this._mountDeckSelect();
         await this._mountCharacterDs3Host();
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
@@ -217,6 +224,59 @@ export class LobbyScene extends Component {
             seasonLabel: formatSeasonLabel(time),
             modeLabel: formatModeLabel(time.currentMode),
         });
+    }
+
+    /** 最小選卡 UI：以 UCUF JSON（lobby-deck-select-screen）執行期組裝，點卡加入 / 移除出戰卡組 */
+    private async _mountDeckSelect(): Promise<void> {
+        const bindings: ScreenButtonBinding[] = Array.from({ length: DECK_SELECT_SLOTS }, (_, slot) => ({
+            buttonId: `btnDeckCard${slot}`,
+            handler: () => { void this._onClickDeckCard(slot); },
+        }));
+        this._deckSelectHost = await this._mountPreviewScreenHost('DeckSelectHost', 'lobby-deck-select-screen', bindings);
+        this._refreshDeckSelect();
+        const refresh = (): void => { this._refreshDeckSelect(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.DeckChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    private _refreshDeckSelect(): void {
+        const binder = this._deckSelectHost?.binder;
+        if (!binder) {
+            return;
+        }
+        const deck = services().session.deck;
+        const cards = getTallyCardSummaries();
+        const texts: Record<string, string> = {
+            deckTitleLabel: `出戰卡組 ${deck.length}/${PLAYER_DECK_MAX_SIZE}`,
+        };
+        const actives: Record<string, boolean> = {};
+        for (let slot = 0; slot < DECK_SELECT_SLOTS; slot++) {
+            const card = cards[slot];
+            texts[`deckCardLabel${slot}`] = card ? `${deck.includes(card.id) ? '✓' : '　'} ${card.name}（${card.sub}）` : '－';
+            actives[`btnDeckCard${slot}`] = card !== undefined;
+        }
+        binder.setTexts(texts);
+        binder.setActives(actives);
+    }
+
+    private async _onClickDeckCard(slot: number): Promise<void> {
+        const cards = getTallyCardSummaries();
+        const card = cards[slot];
+        if (!card) {
+            return;
+        }
+        try {
+            const outcome = await services().session.toggleDeckCard(card.id, cards.map((entry) => entry.id));
+            if (outcome === 'full') {
+                services().event.emit('SHOW_TOAST', { message: `卡組已滿（上限 ${PLAYER_DECK_MAX_SIZE} 張）`, duration: 1.8 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 卡組存檔失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '卡組存檔失敗，請稍後再試', duration: 2 });
+        }
     }
 
     private async _onClickAdvanceSeason(): Promise<void> {
@@ -839,11 +899,19 @@ export class LobbyScene extends Component {
                     this._bringNodeToFront(this._seasonHudHost.node);
                     this._refreshSeasonHud();
                 }
+                if (this._deckSelectHost) {
+                    this._deckSelectHost.node.active = true;
+                    this._bringNodeToFront(this._deckSelectHost.node);
+                    this._refreshDeckSelect();
+                }
             },
             hide: () => {
                 this._lobbyMainHost!.node.active = false;
                 if (this._seasonHudHost) {
                     this._seasonHudHost.node.active = false;
+                }
+                if (this._deckSelectHost) {
+                    this._deckSelectHost.node.active = false;
                 }
             },
         };
@@ -1553,6 +1621,7 @@ export class LobbyScene extends Component {
             return {
                 ...DEFAULT_BATTLE_ENTRY_PARAMS,
                 entrySource: 'lobby',
+                selectedCardIds: services().session.deck,
                 battleTactic: battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             };
         }
@@ -1564,7 +1633,7 @@ export class LobbyScene extends Component {
             enemyGeneralId: encounter.enemyGeneralId,
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
-            selectedCardIds: [],
+            selectedCardIds: services().session.deck,
             weather: encounter.weather ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,

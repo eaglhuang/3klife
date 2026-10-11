@@ -26,6 +26,7 @@ import { createBreedingSuite } from './Breeding.test';
 import { createNurtureSuite } from './Nurture.test';
 import { createLegacySuite } from './Legacy.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
+import { createPlayerDeckSuite } from './PlayerDeck.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
 import { createCompositePanelSuite } from './ucuf/compositePanel.test';
 import { createAttributePanelSuite } from './ucuf/attributePanel.test';
@@ -82,6 +83,7 @@ if (typeof window === 'undefined') {
     runner.register(createNurtureSuite());
     runner.register(createLegacySuite());
     runner.register(createBattleDeckLoadingSuite());
+    runner.register(createPlayerDeckSuite());
     runner.register(createSkinLayersSuite());
     runner.register(createCompositePanelSuite());
     runner.register(createAttributePanelSuite());

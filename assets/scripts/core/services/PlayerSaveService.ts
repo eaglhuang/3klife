@@ -12,8 +12,10 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
+import { normalizeDeck } from './PlayerDeckRules';
 
 export const PLAYER_SAVE_KEY = 'player.save';
+/** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
 export const PLAYER_SAVE_SCHEMA_VERSION = 1;
 
 export interface PlayerSaveSnapshot {
@@ -24,6 +26,8 @@ export interface PlayerSaveSnapshot {
     roster: GeneralConfig[];
     /** 進行中的培育會話；舊存檔沒有這個欄位（視為沒有進行中的培育） */
     nurture?: NurtureState;
+    /** 玩家出戰卡組：虎符卡片 ID（tacticId）有序清單，進戰場時成為 selectedCardIds */
+    deck: string[];
 }
 
 export function createPlayerSaveSnapshot(
@@ -31,6 +35,7 @@ export function createPlayerSaveSnapshot(
     roster: readonly GeneralConfig[],
     now: Date = new Date(),
     nurture?: NurtureState,
+    deck: readonly string[] = [],
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -38,6 +43,7 @@ export function createPlayerSaveSnapshot(
         gameTime: GameClock.normalize(gameTime),
         roster: roster.map((general) => ({ ...general })),
         ...(nurture ? { nurture } : {}),
+        deck: normalizeDeck(deck),
     };
 }
 
@@ -63,12 +69,16 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (snapshot.nurture !== undefined && (!snapshot.nurture || !Array.isArray(snapshot.nurture.sessions))) {
         throw new Error('[PlayerSaveService] nurture 欄位格式錯誤');
     }
+    if (snapshot.deck !== undefined && !Array.isArray(snapshot.deck)) {
+        throw new Error('[PlayerSaveService] 存檔 deck 不是陣列');
+    }
     return {
         schemaVersion: snapshot.schemaVersion,
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
+        deck: normalizeDeck(snapshot.deck),
     };
 }
 
