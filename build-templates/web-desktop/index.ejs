@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <title><%= projectName %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="<%= cssUrl %>">
+    <link rel="icon" href="favicon.ico">
+  </head>
+  <body>
+    <div id="GameDiv" cc_exact_fit_screen="false">
+      <div id="Cocos3dGameContainer">
+        <canvas id="GameCanvas" tabindex="0" aria-label="3KLife 遊戲畫面"></canvas>
+      </div>
+    </div>
+    <%- include(cocosTemplate, {}) %>
+    <script src="responsive-frame.js"></script>
+  </body>
+</html>
