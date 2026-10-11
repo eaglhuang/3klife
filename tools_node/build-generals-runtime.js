@@ -10,6 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { createHistoricalMap } = require('./validate-historical-flag');
 
 const ROOT = path.join(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'assets', 'resources', 'data');
@@ -266,6 +267,34 @@ function main() {
   const legacyRuntime = loadJson(RUNTIME_PATH, []);
 
   const base = baseWrapper.data;
+  const historical = createHistoricalMap(loadJson(path.join(DATA_DIR, 'person-registry.json'), {}).persons);
+  const flagFor = (id) => {
+    if (!historical.has(id)) throw new Error(`${id}: 找不到 registry uid，不能產生史實旗標`);
+    return historical.get(id);
+  };
+  // 正式編譯來源由 registry 提供；先驗證所有 master 身份，避免輸出到一半才失敗。
+  for (const record of base) flagFor(record.id);
+  if (process.argv.includes('--historical-only')) {
+    // 修補既有 runtime 的身份來源時不重算屬性、故事、索引時間或其他工作中的資料。
+    if (!Array.isArray(legacyRuntime) || legacyRuntime.length !== base.length) {
+      throw new Error('historical-only 要求既有 runtime 與 master 數量一致');
+    }
+    const masterIds = new Set(base.map(record => record.id));
+    const index = loadJson(INDEX_PATH, {});
+    if (!Array.isArray(index.data) || index.data.length !== base.length) throw new Error('索引數量與 master 不一致');
+    const runtime = legacyRuntime.map(record => {
+      if (!masterIds.has(record.id)) throw new Error(`${record.id}: runtime 不在 master`);
+      return { ...record, isHistorical: flagFor(record.id) };
+    });
+    const indexData = index.data.map(record => {
+      if (!masterIds.has(record.uid)) throw new Error(`${record.uid}: 索引不在 master`);
+      return { ...record, isHistorical: flagFor(record.uid) };
+    });
+    writeJson(RUNTIME_PATH, runtime);
+    writeJson(INDEX_PATH, { ...index, data: indexData });
+    console.log(`[build-generals-runtime] historical-only: ${runtime.length} 筆，僅更新 isHistorical`);
+    return;
+  }
   const loreMap = toMap(loreWrapper.data);
   const storiesMap = toMap(storiesWrapper.data);
   const legacyMap = toMap(Array.isArray(legacyRuntime) ? legacyRuntime : (legacyRuntime.data || []));
@@ -283,9 +312,10 @@ function main() {
     const storyRecord = storiesMap.get(record.id) || {};
     const legacyRecord = legacyMap.get(record.id) || {};
     const runtimeRecord = buildRuntimeRecord(record, loreRecord, storyRecord, legacyRecord);
+    runtimeRecord.isHistorical = flagFor(record.id);
     runtimeList.push(runtimeRecord);
     storiesList.push({ id: record.id, storyStripCells: runtimeRecord.storyStripCells });
-    indexList.push(buildIndexRecord(record, index));
+    indexList.push({ ...buildIndexRecord(record, index), isHistorical: flagFor(record.id) });
   });
 
   const now = new Date().toISOString();
