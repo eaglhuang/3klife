@@ -47,6 +47,7 @@ import {
 } from '../systems/DiscoveryProgress';
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import type { FactorDictionary } from '../systems/FactorInheritance';
+import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -125,8 +126,10 @@ export interface BattleRecordResult extends BattleSettlement {
 }
 
 export interface RecordBattleOptions {
-    /** 在戰場完成「特定動作」的武將（覺醒機率 0.05 → 0.15，並視同滿足特殊條件） */
+    /** 在戰場完成「特定動作」的武將（覺醒機率 0.05 → 0.15，並視同滿足特殊條件），不指定是哪個動作 */
     specialActionIds?: readonly string[];
+    /** 武將 id → 本場完成的特定動作（BattleSpecialActionId）；會用動作標籤優先挑相符的因子 */
+    specialActions?: Readonly<Record<string, readonly string[]>>;
 }
 
 export interface AddGeneralsResult {
@@ -463,14 +466,18 @@ export class GameSession {
         const source = battleExpSource(result);
         const discovery = source ? this._applyDiscoveryExp(source) : undefined;
         const special = new Set(options.specialActionIds ?? []);
+        const dictionary = this._factorDictionary;
+        const factorTags = dictionary ? (factorId: string) => dictionary.get(factorId)?.defaultTags : undefined;
         const awakenings: FactorAwakenedEvent[] = [];
         let roster = settlement.roster;
         for (const entry of settlement.entries) {
             const index = roster.findIndex((g) => g.id === entry.generalId);
+            const actions = options.specialActions?.[entry.generalId] ?? [];
             const rolled = rollBattleAwakening(roster[index], {
                 discoveryLevel: this._discoveryLevel,
-                special: result === 'player-win',
-                specialAction: special.has(entry.generalId),
+                specialAction: special.has(entry.generalId) || actions.length > 0,
+                actionTags: specialActionFactorTags(actions),
+                factorTags,
                 random: this._random,
             });
             if (rolled?.ok) {

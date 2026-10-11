@@ -202,20 +202,20 @@ export function createFactorAwakeningSuite(): TestSuite {
         assert.equals('mentor', hit.event.trigger);
     });
 
-    suite.test('戰場擲骰：敗戰只開藍粉；戰勝才開紫紅（仍要 45 級）；特定動作機率 0.15', () => {
+    suite.test('戰場擲骰：一般實戰只開藍粉；特定動作才開綠白紫紅（紫紅仍要 45 級），機率 0.15', () => {
         const kid = child();
-        const loss = fixed(0);
-        assert.equals(null, rollBattleAwakening(kid, { discoveryLevel: 99, special: false, random: loss.random }));
-        assert.equals(0, loss.calls(), '敗戰：藍已解鎖，綠紫紅不在候選');
+        const plain = fixed(0);
+        assert.equals(null, rollBattleAwakening(kid, { discoveryLevel: 99, random: plain.random }));
+        assert.equals(0, plain.calls(), '一般實戰：藍已解鎖，綠紫紅不在候選');
 
-        assert.equals(null, rollBattleAwakening(kid, { discoveryLevel: 99, special: true, random: fixed(0.06).random }), '0.06 ≥ 0.05');
-        const boosted = rollBattleAwakening(kid, { discoveryLevel: 99, special: false, specialAction: true, random: fixed(0.06).random });
+        assert.equals(null, rollBattleAwakening(kid, { discoveryLevel: 99, specialAction: true, random: fixed(0.16).random }), '0.16 ≥ 0.15');
+        const boosted = rollBattleAwakening(kid, { discoveryLevel: 99, specialAction: true, random: fixed(0.06).random });
         assert.isTrue(boosted !== null && boosted.ok, '特定動作 0.15 > 0.06');
 
-        const low = rollBattleAwakening(kid, { discoveryLevel: 20, special: true, random: fixed(0).random });
+        const low = rollBattleAwakening(kid, { discoveryLevel: 20, specialAction: true, random: fixed(0).random });
         assert.isTrue(low !== null && low.ok);
         if (!low || !low.ok) return;
-        assert.equals('gene_strategy', low.event.factorId, '20 級戰勝：候選只有綠');
+        assert.equals('gene_strategy', low.event.factorId, '20 級特定動作：候選只有綠');
     });
 
     suite.test('GameSession.recordBattle：給經驗、擲覺醒、升級廣播，經驗隨存檔往返', async () => {
@@ -236,11 +236,11 @@ export function createFactorAwakeningSuite(): TestSuite {
 
         await session.setDiscoveryLevel(44);
         await session.gainDiscoveryExp('battle-win', 80);
-        const won = await session.recordBattle(['w'], 'player-win');
+        const won = await session.recordBattle(['w'], 'player-win', { specialActions: { w: ['last-stand'] } });
         assert.equals(45, session.discoveryLevel, '80 + 30 = 110 → 升到 45');
         assert.equals(10, session.discoveryExp);
         assert.isDefined(won.discovery);
-        assert.equals('gene_destiny', won.awakenings[0]?.factorId, '升到 45 後同場戰勝即可覺醒紫');
+        assert.equals('gene_destiny', won.awakenings[0]?.factorId, '升到 45 後同場做出特定動作即可覺醒紫');
         assert.isTrue(events.includes(GAME_SESSION_EVENTS.DiscoveryLevelChanged));
         assert.equals(2, events.filter((e) => e === GAME_SESSION_EVENTS.FactorAwakened).length);
 
