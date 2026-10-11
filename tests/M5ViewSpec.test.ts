@@ -13,6 +13,9 @@ import { PrisonerPopupController } from '../assets/scripts/ui/core/PrisonerPopup
 import { createPowRecord, createPrisonState, type PowDecision, type PrisonState } from '../assets/scripts/core/systems/PrisonerOfWar';
 import { STARTER_MILITARY } from '../assets/scripts/core/systems/MilitaryReserve';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { SortieSetupController } from '../assets/scripts/ui/core/SortieSetupController';
+import { getDeputyFoodBonus } from '../assets/scripts/core/systems/SortieDeploy';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 const UI_SPEC = path.resolve(__dirname, '../assets/resources/ui-spec');
 
@@ -172,6 +175,102 @@ export function createM5ViewSpecSuite(): TestSuite {
         assert.isTrue(empty.texts.powNotice.includes('義釋'), empty.texts.powNotice);
         assert.equals(500, session.prison.fame, 'SSR 放走 +500 名聲');
     });
+
+    // ── 0083 出征編制（參謀官 / 後勤官） ─────────────────────────────────
+
+    const officer = (id: string, name: string, extra: Partial<GeneralConfig> = {}): GeneralConfig => ({
+        id, name, faction: 'player', age: 25, hp: 1000, str: 60, int: 60, lea: 60, pol: 60, cha: 60, luk: 50, ...extra,
+    } as GeneralConfig);
+
+    async function sortieSession(): Promise<GameSession> {
+        const session = new GameSession(7);
+        session.setRosterStore(new InMemoryRosterStore([
+            officer('cao-cao', '曹操', { lea: 95 }),
+            officer('xun-yu', '荀彧', { int: 95, pol: 90 }),
+            officer('cao-ren', '曹仁', { lea: 85, pol: 50 }),
+            officer('cao-cao-2', '曹操（同名）', { bloodlineId: 'bl-cao' }),
+            officer('cao-pi', '曹丕', { bloodlineId: 'bl-cao' }),
+        ]));
+        assert.isTrue(await session.setLeadGeneral('cao-cao'));
+        return session;
+    }
+
+    suite.test('0083 出征編制：view key 對得到 sortie-setup-main 的節點 id；選主將卡片有開啟按鈕且大廳有綁定', async () => {
+        const layout = readSpec<{ root: SpecNode & { id?: string } }>('layouts/sortie-setup-main.json');
+        const ids = collectIds(layout.root, new Set());
+        const session = await sortieSession();
+        assertViewKeysInLayout(new SortieSetupController({ session }).getView(), ids, 'sortie-setup-main');
+        const screen = readSpec<{ layout: string; skin: string }>('screens/sortie-setup-screen.json');
+        assert.equals('sortie-setup-main', screen.layout);
+        assert.equals('sortie-setup-screen.skin', screen.skin);
+        const lead = readSpec<{ root: SpecNode & { id?: string } }>('layouts/lobby-lead-select-main.json');
+        assert.isTrue(collectIds(lead.root, new Set()).has('btnOpenSortie'));
+        const lobby = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        assert.isTrue(lobby.includes("buttonId: 'btnOpenSortie'") && lobby.includes("'sortie-setup-screen'"));
+        assert.isTrue(lobby.includes("'prisoner-popup-screen'") && lobby.includes('_openPrisonerPopupIfPending()'));
+    });
+
+    suite.test('0083 GameSession：角色鎖、同名血統擋下；後勤官軍糧加進出征帳本，主將換人後失效的支援不生效', async () => {
+        const session = await sortieSession();
+        assert.equals('ROLE_LOCK', session.setSortieSupport('cao-cao', null).issues.join(','), '主將不能兼參謀');
+        assert.equals('ROLE_LOCK', session.setSortieSupport('xun-yu', 'xun-yu').issues.join(','));
+        assert.isTrue(session.setSortieSupport('cao-pi', 'cao-cao-2').issues.includes('SAME_BLOODLINE'));
+        assert.equals(null, session.sortieSupport.strategistUid, '失敗不變更');
+
+        const base = session.getSortieInput('cao-cao')!;
+        assert.equals(undefined, base.foodBonus);
+        assert.isTrue(session.setSortieSupport('xun-yu', 'cao-ren').ok);
+        const summary = session.getSortieSupportSummary('cao-cao');
+        assert.equals('荀彧', summary.strategist?.name);
+        assert.isTrue(summary.strategistBonus.maxTacticBonus > 0);
+        const expected = getDeputyFoodBonus({ id: 'cao-ren', lea: 85, pol: 50 }, session.military.food).startingFoodBonus;
+        assert.isTrue(expected > 0);
+        assert.equals(expected, session.getSortieInput('cao-cao')!.foodBonus, '後勤官開局補給');
+
+        await session.setLeadGeneral('cao-ren');
+        const swapped = session.getSortieSupportSummary('cao-ren');
+        assert.equals(null, swapped.deputy, '後勤官被改成主將 → 不派');
+        assert.equals('荀彧', swapped.strategist?.name);
+        assert.equals(undefined, session.getSortieInput('cao-ren')!.foodBonus);
+    });
+
+    suite.test('0083 出征編制畫面：沒有主將顯示提示；循環挑人跳過主將與另一角色、遇同名血統往下找', async () => {
+        const empty = new SortieSetupController({ session: new GameSession(1) }).getView();
+        assert.isFalse(empty.actives.sortiePanel);
+        assert.isTrue(empty.actives.sortieEmptyHint);
+        assert.isFalse(empty.enabled.btnNextStrategist);
+
+        const session = await sortieSession();
+        const ctrl = new SortieSetupController({ session });
+        const first = ctrl.getView();
+        assert.equals('主將：曹操（統率 95）', first.texts.sortieCommander);
+        assert.equals('不派', first.texts.strategistName);
+        assert.isFalse(first.enabled.btnClearStrategist);
+        assert.isTrue(first.texts.sortieSummary.startsWith('出征軍勢上限'), first.texts.sortieSummary);
+
+        ctrl.cycle('strategist', 1);
+        assert.equals('荀彧', ctrl.getView().texts.strategistName);
+        assert.isTrue(ctrl.getView().texts.strategistInfo.includes('計謀點上限 +'), ctrl.getView().texts.strategistInfo);
+        ctrl.cycle('deputy', 1);
+        const view = ctrl.getView();
+        assert.equals('曹仁', view.texts.deputyName, '跳過主將與參謀官');
+        assert.isTrue(view.texts.sortieSummary.includes('後勤 +'), view.texts.sortieSummary);
+        assert.isTrue(view.enabled.btnClearDeputy);
+        ctrl.clear('deputy');
+        assert.equals('不派', ctrl.getView().texts.deputyName);
+
+        assert.isTrue(session.setSortieSupport('cao-pi', null).ok);
+        ctrl.cycle('deputy', 1);
+        ctrl.cycle('deputy', 1);
+        ctrl.cycle('deputy', 1);
+        assert.isTrue(ctrl.getView().texts.deputyName !== '曹操（同名）', '同名血統不會被選上');
+        assert.isTrue(validDeputyIds(session).every((id) => id !== 'cao-cao-2'));
+    });
+
+    function validDeputyIds(session: GameSession): string[] {
+        const d = session.getSortieSupportSummary('cao-cao').deputy;
+        return d ? [d.id] : [];
+    }
 
     return suite;
 }

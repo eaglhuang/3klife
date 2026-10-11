@@ -23,6 +23,7 @@ import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
+import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
@@ -113,6 +114,8 @@ export class LobbyScene extends Component {
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
     private _prisoner: PrisonerPopupController | null = null;
+    private _sortieHost: UIScreenPreviewHost | null = null;
+    private _sortie: SortieSetupController | null = null;
     private _deckSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectPage = 0;
@@ -170,6 +173,7 @@ export class LobbyScene extends Component {
         await this._mountPrisonerPopup();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
+        await this._mountSortieSetup();
         await this._mountCharacterDs3Host();
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
@@ -647,6 +651,7 @@ export class LobbyScene extends Component {
                 handler: () => { void this._onClickLeadGeneral(slot); },
             })),
             { buttonId: 'btnLeadPage', handler: () => { this._leadSelectPage += 1; this._refreshLeadSelect(); } },
+            { buttonId: 'btnOpenSortie', handler: () => { this._openSortieSetup(); } },
         ];
         this._leadSelectHost = await this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings);
         this._refreshLeadSelect();
@@ -659,6 +664,58 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
             event.on(GAME_SESSION_EVENTS.Loaded, refresh),
         );
+    }
+
+    /**
+     * 出征編制畫面（PROG-2-0083）：從選主將卡片開啟，挑參謀官 / 後勤官。
+     * 候選與加成都在 SortieSetupController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountSortieSetup(): Promise<void> {
+        const sortie = new SortieSetupController({ session: services().session });
+        this._sortie = sortie;
+        const step = (role: SortieRole, delta: number): void => { sortie.cycle(role, delta); this._refreshSortieSetup(); };
+        this._sortieHost = await this._mountPreviewScreenHost('SortieSetupHost', 'sortie-setup-screen', [
+            { buttonId: 'btnCloseSortie', handler: () => { this._closeSortieSetup(); } },
+            { buttonId: 'btnPrevStrategist', handler: () => { step('strategist', -1); } },
+            { buttonId: 'btnNextStrategist', handler: () => { step('strategist', 1); } },
+            { buttonId: 'btnClearStrategist', handler: () => { sortie.clear('strategist'); this._refreshSortieSetup(); } },
+            { buttonId: 'btnPrevDeputy', handler: () => { step('deputy', -1); } },
+            { buttonId: 'btnNextDeputy', handler: () => { step('deputy', 1); } },
+            { buttonId: 'btnClearDeputy', handler: () => { sortie.clear('deputy'); this._refreshSortieSetup(); } },
+        ]);
+        const refresh = (): void => { this._refreshSortieSetup(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    private _openSortieSetup(): void {
+        const host = this._sortieHost;
+        if (!host || !this._sortie) {
+            return;
+        }
+        this._sortie.open();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshSortieSetup();
+    }
+
+    private _closeSortieSetup(): void {
+        if (this._sortieHost) {
+            this._sortieHost.node.active = false;
+        }
+    }
+
+    private _refreshSortieSetup(): void {
+        const binder = this._sortieHost?.binder;
+        if (!binder || !this._sortie || !this._sortieHost?.node.active) {
+            return;
+        }
+        applyFlowView(binder, this._sortie.getView());
     }
 
     private _currentLeadView(): ReturnType<typeof buildLeadSelectView> {
@@ -1392,6 +1449,7 @@ export class LobbyScene extends Component {
                 this._closeNurtureFlow();
                 this._closeBondingSetup();
                 this._closeSageOracle();
+                this._closeSortieSetup();
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = false;
                 }

@@ -54,7 +54,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
-import { computeCommandCapacity, type CreateSortieInput, type SortieSummary } from '../systems/SortieDeploy';
+import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
@@ -87,6 +87,8 @@ export const GAME_SESSION_EVENTS = {
     BattleSettled: 'game-session-battle-settled',
     /** payload: string | null（出戰主將 id） */
     LeadGeneralChanged: 'game-session-lead-general-changed',
+    /** payload: SortieSupport（參謀官 / 後勤官，PROG-2-0083） */
+    SortieSupportChanged: 'game-session-sortie-support-changed',
     /** payload: PlayerSaveSnapshot */
     Saved: 'game-session-saved',
     /** payload: GeneralConfig[]（本次新加入名冊的武將） */
@@ -172,6 +174,29 @@ export class InMemoryRosterStore implements RosterStore {
     }
 }
 
+/** 出征支援：參謀官 / 後勤官（PROG-2-0083） */
+export interface SortieSupport {
+    strategistUid: string | null;
+    deputyUid: string | null;
+}
+
+export interface SortieSupportSummary {
+    strategist: GeneralConfig | null;
+    deputy: GeneralConfig | null;
+    strategistBonus: StrategistBonus;
+    deputyBonus: DeputyFoodBonus;
+}
+
+function toSortieMember(g: GeneralConfig): SortieMember {
+    return {
+        id: g.id,
+        int: g.int ?? g.stats?.int,
+        pol: g.pol ?? g.stats?.pol,
+        lea: g.lea ?? g.stats?.lea,
+        ...(g.bloodlineId ? { bloodlineId: g.bloodlineId } : {}),
+    };
+}
+
 export class GameSession {
     private _clock = new GameClock();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -188,6 +213,8 @@ export class GameSession {
     private _factorDictionary: FactorDictionary | undefined;
     private _deck: string[] = [];
     private _leadGeneralId: string | null = null;
+    /** 出征支援（參謀官 / 後勤官）；暫定只存在本次遊玩，不寫存檔 */
+    private _sortieSupport: SortieSupport = { strategistUid: null, deputyUid: null };
     private _discoveryLevel = 1;
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
@@ -299,6 +326,7 @@ export class GameSession {
         this._clock = new GameClock();
         this._deck = [];
         this._leadGeneralId = null;
+        this._sortieSupport = { strategistUid: null, deputyUid: null };
         this._discoveryLevel = 1;
         this._discoveryExp = 0;
         this._inventory = { ...STARTER_INVENTORY };
@@ -397,11 +425,13 @@ export class GameSession {
     public getSortieInput(generalId: string, stageSortieCap?: number): CreateSortieInput | null {
         const config = this.getBattleConfig(generalId, Faction.Player);
         if (!config) return null;
+        const foodBonus = this.getSortieSupportSummary(generalId).deputyBonus.startingFoodBonus;
         return {
             commandCapacity: computeCommandCapacity({ lea: config.lea ?? config.stats?.lea ?? 0 }),
             cityTroops: this._military.cityTroops,
             ...(stageSortieCap !== undefined ? { stageSortieCap } : {}),
             food: this._military.food,
+            ...(foodBonus > 0 ? { foodBonus } : {}),
         };
     }
 
@@ -416,6 +446,47 @@ export class GameSession {
         }
         this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, generalId);
         return true;
+    }
+
+    public get sortieSupport(): SortieSupport {
+        return { ...this._sortieSupport };
+    }
+
+    /**
+     * 指定出征支援（參謀官 / 後勤官，null = 不派）。
+     * 角色鎖、同名血統、可出戰檢查不通過時不變更並回傳問題清單（PROG-2-0083）。
+     */
+    public setSortieSupport(strategistUid: string | null, deputyUid: string | null, commanderUid: string | null = this._leadGeneralId): SortieLoadoutCheck {
+        const check = this._checkSortieSupport(commanderUid, strategistUid, deputyUid);
+        if (!check.ok) return check;
+        this._sortieSupport = { strategistUid, deputyUid };
+        this._emit(GAME_SESSION_EVENTS.SortieSupportChanged, this.sortieSupport);
+        return check;
+    }
+
+    /** 某主將出征時實際生效的支援與加成；失效的支援（不能出戰、與主將撞角色或血統）視為不派 */
+    public getSortieSupportSummary(commanderUid: string): SortieSupportSummary {
+        const deployable = this.getDeployableGenerals();
+        const members = deployable.map(toSortieMember);
+        const byId = new Map(deployable.map((g) => [g.id, g]));
+        const pick = (uid: string | null): GeneralConfig | null => (uid && uid !== commanderUid ? byId.get(uid) ?? null : null);
+        const fits = (st: GeneralConfig | null, dp: GeneralConfig | null): boolean =>
+            validateSortieLoadout({ commanderUid, strategistUid: st?.id ?? null, deputyUid: dp?.id ?? null }, members).ok;
+        let strategist = pick(this._sortieSupport.strategistUid);
+        if (strategist && !fits(strategist, null)) strategist = null;
+        let deputy = pick(this._sortieSupport.deputyUid);
+        if (deputy && !fits(strategist, deputy)) deputy = null;
+        return {
+            strategist,
+            deputy,
+            strategistBonus: getStrategistBonus(strategist ? toSortieMember(strategist) : null),
+            deputyBonus: getDeputyFoodBonus(deputy ? toSortieMember(deputy) : null, this._military.food),
+        };
+    }
+
+    private _checkSortieSupport(commanderUid: string | null, strategistUid: string | null, deputyUid: string | null): SortieLoadoutCheck {
+        const members = this.getDeployableGenerals().map(toSortieMember);
+        return validateSortieLoadout({ commanderUid: commanderUid ?? '', strategistUid, deputyUid }, members);
     }
 
     /** 進戰場的我軍主將：指定的主將還能出戰就用它，否則用 fallbackId（遭遇戰預設） */
@@ -756,6 +827,7 @@ export class GameSession {
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
+        this._sortieSupport = { strategistUid: null, deputyUid: null };
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;

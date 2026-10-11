@@ -27,7 +27,7 @@
           "left": 32
         },
         "width": 320,
-        "height": 232,
+        "height": 276,
         "skinSlot": "lead.select.card.bg",
         "children": [
           {
@@ -147,6 +147,33 @@
                 },
                 "height": 24,
                 "text": "換頁 ▶",
+                "styleSlot": "lead.select.label.item"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "OpenSortieButton",
+            "id": "btnOpenSortie",
+            "widget": {
+              "top": 224,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "lead.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenSortieLabel",
+                "id": "openSortieLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "出征編制（參謀／後勤）",
                 "styleSlot": "lead.select.label.item"
               }
             ]
