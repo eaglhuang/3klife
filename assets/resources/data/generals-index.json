@@ -18,7 +18,8 @@
       "cha": 90,
       "luk": 86,
       "ep": 92,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-bei",
@@ -35,7 +36,8 @@
       "cha": 96,
       "luk": 88,
       "ep": 88,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-quan",
@@ -52,7 +54,8 @@
       "cha": 90,
       "luk": 85,
       "ep": 87,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhuge-liang",
@@ -69,7 +72,8 @@
       "cha": 92,
       "luk": 90,
       "ep": 89,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhou-yu",
@@ -86,7 +90,8 @@
       "cha": 95,
       "luk": 86,
       "ep": 90,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "guan-yu",
@@ -103,7 +108,8 @@
       "cha": 91,
       "luk": 82,
       "ep": 87,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-fei",
@@ -120,7 +126,8 @@
       "cha": 74,
       "luk": 76,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhao-yun",
@@ -137,7 +144,8 @@
       "cha": 94,
       "luk": 89,
       "ep": 89,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lu-bu",
@@ -154,7 +162,8 @@
       "cha": 72,
       "luk": 70,
       "ep": 71,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sima-yi",
@@ -171,7 +180,8 @@
       "cha": 88,
       "luk": 84,
       "ep": 90,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "dian-wei",
@@ -188,7 +198,8 @@
       "cha": 78,
       "luk": 60,
       "ep": 75,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xu-zhu",
@@ -205,7 +216,8 @@
       "cha": 74,
       "luk": 63,
       "ep": 73,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "huang-zhong",
@@ -222,7 +234,8 @@
       "cha": 74,
       "luk": 66,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ma-chao",
@@ -239,7 +252,8 @@
       "cha": 80,
       "luk": 58,
       "ep": 79,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lu-xun",
@@ -256,7 +270,8 @@
       "cha": 76,
       "luk": 64,
       "ep": 80,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "taishi-ci",
@@ -273,7 +288,8 @@
       "cha": 76,
       "luk": 60,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-liao",
@@ -290,7 +306,8 @@
       "cha": 74,
       "luk": 64,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xu-huang",
@@ -307,7 +324,8 @@
       "cha": 68,
       "luk": 63,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cao-ren",
@@ -324,7 +342,8 @@
       "cha": 72,
       "luk": 59,
       "ep": 77,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "pang-tong",
@@ -341,7 +360,8 @@
       "cha": 82,
       "luk": 61,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "guo-jia",
@@ -358,7 +378,8 @@
       "cha": 80,
       "luk": 56,
       "ep": 78,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xun-yu",
@@ -375,7 +396,8 @@
       "cha": 82,
       "luk": 56,
       "ep": 78,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "jia-xu",
@@ -392,7 +414,8 @@
       "cha": 72,
       "luk": 59,
       "ep": 75,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-he",
@@ -409,7 +432,8 @@
       "cha": 74,
       "luk": 58,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yu-jin",
@@ -426,7 +450,8 @@
       "cha": 68,
       "luk": 64,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cao-ang",
@@ -443,7 +468,8 @@
       "cha": 75,
       "luk": 58,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xiahou-dun",
@@ -460,7 +486,8 @@
       "cha": 72,
       "luk": 58,
       "ep": 74,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xiahou-yuan",
@@ -477,7 +504,8 @@
       "cha": 74,
       "luk": 64,
       "ep": 75,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wei-yan",
@@ -494,7 +522,8 @@
       "cha": 72,
       "luk": 59,
       "ep": 74,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "jiang-wei",
@@ -511,7 +540,8 @@
       "cha": 76,
       "luk": 65,
       "ep": 79,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "deng-ai",
@@ -528,7 +558,8 @@
       "cha": 68,
       "luk": 58,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhong-hui",
@@ -545,7 +576,8 @@
       "cha": 72,
       "luk": 64,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "huang-gai",
@@ -562,7 +594,8 @@
       "cha": 74,
       "luk": 66,
       "ep": 73,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cheng-pu",
@@ -579,7 +612,8 @@
       "cha": 72,
       "luk": 58,
       "ep": 74,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "han-dang",
@@ -596,7 +630,8 @@
       "cha": 71,
       "luk": 61,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "gan-ning",
@@ -613,7 +648,8 @@
       "cha": 76,
       "luk": 67,
       "ep": 74,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ling-tong",
@@ -630,7 +666,8 @@
       "cha": 68,
       "luk": 64,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhou-tai",
@@ -647,7 +684,8 @@
       "cha": 72,
       "luk": 65,
       "ep": 71,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xu-sheng",
@@ -664,7 +702,8 @@
       "cha": 67,
       "luk": 58,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ding-feng",
@@ -681,7 +720,8 @@
       "cha": 70,
       "luk": 60,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-zhao",
@@ -698,7 +738,8 @@
       "cha": 70,
       "luk": 61,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lu-meng",
@@ -715,7 +756,8 @@
       "cha": 76,
       "luk": 67,
       "ep": 78,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-ce",
@@ -732,7 +774,8 @@
       "cha": 84,
       "luk": 64,
       "ep": 80,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-jian",
@@ -749,7 +792,8 @@
       "cha": 78,
       "luk": 63,
       "ep": 76,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "dong-zhuo",
@@ -766,7 +810,8 @@
       "cha": 54,
       "luk": 57,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yuan-shao",
@@ -783,7 +828,8 @@
       "cha": 51,
       "luk": 53,
       "ep": 61,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-biao",
@@ -800,7 +846,8 @@
       "cha": 80,
       "luk": 64,
       "ep": 71,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ma-teng",
@@ -817,7 +864,8 @@
       "cha": 66,
       "luk": 60,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "gongsun-zan",
@@ -834,7 +882,8 @@
       "cha": 58,
       "luk": 57,
       "ep": 61,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "tao-qian",
@@ -851,7 +900,8 @@
       "cha": 68,
       "luk": 59,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-zhang",
@@ -868,7 +918,8 @@
       "cha": 68,
       "luk": 60,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-lu",
@@ -885,7 +936,8 @@
       "cha": 64,
       "luk": 57,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "han-sui",
@@ -902,7 +954,8 @@
       "cha": 52,
       "luk": 51,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yuan-shu",
@@ -919,7 +972,8 @@
       "cha": 55,
       "luk": 53,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "kong-rong",
@@ -936,7 +990,8 @@
       "cha": 76,
       "luk": 55,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-yan",
@@ -953,7 +1008,8 @@
       "cha": 66,
       "luk": 63,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cao-pi",
@@ -970,7 +1026,8 @@
       "cha": 64,
       "luk": 62,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cao-xiu",
@@ -987,7 +1044,8 @@
       "cha": 67,
       "luk": 55,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sima-zhao",
@@ -1004,7 +1062,8 @@
       "cha": 62,
       "luk": 58,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sima-shi",
@@ -1021,7 +1080,8 @@
       "cha": 68,
       "luk": 56,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhuge-jin",
@@ -1038,7 +1098,8 @@
       "cha": 69,
       "luk": 64,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhuge-ke",
@@ -1055,7 +1116,8 @@
       "cha": 67,
       "luk": 58,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "bu-zhi",
@@ -1072,7 +1134,8 @@
       "cha": 71,
       "luk": 61,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhu-ran",
@@ -1089,7 +1152,8 @@
       "cha": 65,
       "luk": 66,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "pan-zhang",
@@ -1106,7 +1170,8 @@
       "cha": 69,
       "luk": 62,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ma-zhong",
@@ -1123,7 +1188,8 @@
       "cha": 69,
       "luk": 63,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-feng",
@@ -1140,7 +1206,8 @@
       "cha": 68,
       "luk": 64,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "meng-da",
@@ -1157,7 +1224,8 @@
       "cha": 65,
       "luk": 60,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "peng-yang",
@@ -1174,7 +1242,8 @@
       "cha": 74,
       "luk": 63,
       "ep": 65,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "fa-zheng",
@@ -1191,7 +1260,8 @@
       "cha": 70,
       "luk": 57,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "huang-quan",
@@ -1208,7 +1278,8 @@
       "cha": 70,
       "luk": 57,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "li-yan",
@@ -1225,7 +1296,8 @@
       "cha": 73,
       "luk": 61,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wang-ping",
@@ -1242,7 +1314,8 @@
       "cha": 66,
       "luk": 65,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-yi",
@@ -1259,7 +1332,8 @@
       "cha": 71,
       "luk": 61,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liao-hua",
@@ -1276,7 +1350,8 @@
       "cha": 65,
       "luk": 62,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "guan-xing",
@@ -1293,7 +1368,8 @@
       "cha": 66,
       "luk": 66,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-bao",
@@ -1310,7 +1386,8 @@
       "cha": 68,
       "luk": 61,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ma-dai",
@@ -1327,7 +1404,8 @@
       "cha": 70,
       "luk": 60,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cao-hong",
@@ -1344,7 +1422,8 @@
       "cha": 64,
       "luk": 58,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cao-zhang",
@@ -1361,7 +1440,8 @@
       "cha": 64,
       "luk": 60,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "man-chong",
@@ -1378,7 +1458,8 @@
       "cha": 66,
       "luk": 61,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wang-shuang",
@@ -1395,7 +1476,8 @@
       "cha": 64,
       "luk": 62,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "guo-huai",
@@ -1412,7 +1494,8 @@
       "cha": 64,
       "luk": 58,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "chen-tai",
@@ -1429,7 +1512,8 @@
       "cha": 69,
       "luk": 57,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wen-pin",
@@ -1446,7 +1530,8 @@
       "cha": 61,
       "luk": 61,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "le-jin",
@@ -1463,7 +1548,8 @@
       "cha": 62,
       "luk": 60,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "li-dian",
@@ -1480,7 +1566,8 @@
       "cha": 66,
       "luk": 61,
       "ep": 71,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "chen-qun",
@@ -1497,7 +1584,8 @@
       "cha": 76,
       "luk": 61,
       "ep": 72,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "hua-xin",
@@ -1514,7 +1602,8 @@
       "cha": 65,
       "luk": 60,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wang-lang",
@@ -1531,7 +1620,8 @@
       "cha": 70,
       "luk": 58,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xun-you",
@@ -1548,7 +1638,8 @@
       "cha": 72,
       "luk": 64,
       "ep": 74,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cheng-yu",
@@ -1565,7 +1656,8 @@
       "cha": 67,
       "luk": 61,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-ye",
@@ -1582,7 +1674,8 @@
       "cha": 68,
       "luk": 55,
       "ep": 73,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-shao",
@@ -1599,7 +1692,8 @@
       "cha": 64,
       "luk": 66,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "gu-yong",
@@ -1616,7 +1710,8 @@
       "cha": 69,
       "luk": 64,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhu-jun",
@@ -1633,7 +1728,8 @@
       "cha": 64,
       "luk": 64,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lv-fan",
@@ -1650,7 +1746,8 @@
       "cha": 69,
       "luk": 62,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-huan",
@@ -1667,7 +1764,8 @@
       "cha": 68,
       "luk": 64,
       "ep": 65,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-jun",
@@ -1684,7 +1782,8 @@
       "cha": 65,
       "luk": 63,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "he-qi",
@@ -1701,7 +1800,8 @@
       "cha": 70,
       "luk": 61,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lu-kang",
@@ -1718,7 +1818,8 @@
       "cha": 74,
       "luk": 70,
       "ep": 77,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhu-huan",
@@ -1735,7 +1836,8 @@
       "cha": 68,
       "luk": 67,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lu-yin",
@@ -1752,7 +1854,8 @@
       "cha": 71,
       "luk": 67,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cheng-bing",
@@ -1769,7 +1872,8 @@
       "cha": 68,
       "luk": 62,
       "ep": 65,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "han-xuan",
@@ -1786,7 +1890,8 @@
       "cha": 62,
       "luk": 57,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "jin-xuan",
@@ -1803,7 +1908,8 @@
       "cha": 60,
       "luk": 56,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-du",
@@ -1820,7 +1926,8 @@
       "cha": 60,
       "luk": 59,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhao-fan",
@@ -1837,7 +1944,8 @@
       "cha": 69,
       "luk": 62,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wen-chou",
@@ -1854,7 +1962,8 @@
       "cha": 57,
       "luk": 52,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yan-liang",
@@ -1871,7 +1980,8 @@
       "cha": 53,
       "luk": 50,
       "ep": 58,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-bao-enemy",
@@ -1888,7 +1998,8 @@
       "cha": 52,
       "luk": 59,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-jue",
@@ -1905,7 +2016,8 @@
       "cha": 74,
       "luk": 53,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-liang-enemy",
@@ -1922,7 +2034,8 @@
       "cha": 53,
       "luk": 55,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "hua-tuo",
@@ -1939,7 +2052,8 @@
       "cha": 69,
       "luk": 60,
       "ep": 71,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "mi-zhu",
@@ -1956,7 +2070,8 @@
       "cha": 71,
       "luk": 58,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "jian-yong",
@@ -1973,7 +2088,8 @@
       "cha": 65,
       "luk": 65,
       "ep": 65,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-qian",
@@ -1990,7 +2106,8 @@
       "cha": 80,
       "luk": 60,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yin-mo",
@@ -2007,7 +2124,8 @@
       "cha": 68,
       "luk": 57,
       "ep": 65,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "deng-zhi",
@@ -2024,7 +2142,8 @@
       "cha": 72,
       "luk": 63,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yang-yi",
@@ -2041,7 +2160,8 @@
       "cha": 67,
       "luk": 59,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "fei-yi",
@@ -2058,7 +2178,8 @@
       "cha": 82,
       "luk": 57,
       "ep": 75,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "dong-yun",
@@ -2075,7 +2196,8 @@
       "cha": 69,
       "luk": 62,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xu-shu",
@@ -2092,7 +2214,8 @@
       "cha": 66,
       "luk": 63,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "pang-de",
@@ -2109,7 +2232,8 @@
       "cha": 52,
       "luk": 52,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-xiu",
@@ -2126,7 +2250,8 @@
       "cha": 54,
       "luk": 57,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-xian",
@@ -2143,7 +2268,8 @@
       "cha": 68,
       "luk": 59,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-bao",
@@ -2160,7 +2286,8 @@
       "cha": 52,
       "luk": 51,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ke-bi-neng",
@@ -2177,7 +2304,8 @@
       "cha": 52,
       "luk": 53,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "meng-huo",
@@ -2194,7 +2322,8 @@
       "cha": 52,
       "luk": 55,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhu-rong",
@@ -2211,7 +2340,8 @@
       "cha": 56,
       "luk": 59,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wu-tugu",
@@ -2228,7 +2358,8 @@
       "cha": 55,
       "luk": 57,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ahui-nan",
@@ -2245,7 +2376,8 @@
       "cha": 54,
       "luk": 52,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "dong-tu-na",
@@ -2262,7 +2394,8 @@
       "cha": 50,
       "luk": 57,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "jin-huan-san-jie",
@@ -2279,7 +2412,8 @@
       "cha": 52,
       "luk": 58,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yuan-tan",
@@ -2296,7 +2430,8 @@
       "cha": 50,
       "luk": 52,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yuan-shang",
@@ -2313,7 +2448,8 @@
       "cha": 51,
       "luk": 55,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yuan-xi",
@@ -2330,7 +2466,8 @@
       "cha": 59,
       "luk": 57,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "gao-lan",
@@ -2347,7 +2484,8 @@
       "cha": 59,
       "luk": 58,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "gao-gan",
@@ -2364,7 +2502,8 @@
       "cha": 58,
       "luk": 51,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "tian-feng",
@@ -2381,7 +2520,8 @@
       "cha": 66,
       "luk": 52,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ju-shou",
@@ -2398,7 +2538,8 @@
       "cha": 68,
       "luk": 53,
       "ep": 71,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "guo-tu",
@@ -2415,7 +2556,8 @@
       "cha": 58,
       "luk": 56,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "shen-pei",
@@ -2432,7 +2574,8 @@
       "cha": 62,
       "luk": 55,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "dong-zhao",
@@ -2449,7 +2592,8 @@
       "cha": 68,
       "luk": 60,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "han-hao",
@@ -2466,7 +2610,8 @@
       "cha": 67,
       "luk": 59,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wang-yi",
@@ -2483,7 +2628,8 @@
       "cha": 66,
       "luk": 58,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xi-zhi-cai",
@@ -2500,7 +2646,8 @@
       "cha": 66,
       "luk": 62,
       "ep": 71,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "mao-jie",
@@ -2517,7 +2664,8 @@
       "cha": 66,
       "luk": 58,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lu-su",
@@ -2534,7 +2682,8 @@
       "cha": 84,
       "luk": 60,
       "ep": 78,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "huo-yi",
@@ -2551,7 +2700,8 @@
       "cha": 64,
       "luk": 66,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liao-li",
@@ -2568,7 +2718,8 @@
       "cha": 48,
       "luk": 38,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "du-qiong",
@@ -2585,7 +2736,8 @@
       "cha": 70,
       "luk": 55,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "fei-guan",
@@ -2602,7 +2754,8 @@
       "cha": 65,
       "luk": 52,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "luo-xian",
@@ -2619,7 +2772,8 @@
       "cha": 60,
       "luk": 55,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "jiang-wan",
@@ -2636,7 +2790,8 @@
       "cha": 84,
       "luk": 70,
       "ep": 78,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "gou-fu",
@@ -2653,7 +2808,8 @@
       "cha": 55,
       "luk": 58,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-chen",
@@ -2670,7 +2826,8 @@
       "cha": 70,
       "luk": 40,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhu-bao",
@@ -2687,7 +2844,8 @@
       "cha": 40,
       "luk": 35,
       "ep": 49,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "li-hui",
@@ -2704,7 +2862,8 @@
       "cha": 58,
       "luk": 55,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "chen-zhi",
@@ -2721,7 +2880,8 @@
       "cha": 68,
       "luk": 55,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-yi-shu",
@@ -2738,7 +2898,8 @@
       "cha": 52,
       "luk": 55,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "fu-tong",
@@ -2755,7 +2916,8 @@
       "cha": 60,
       "luk": 48,
       "ep": 61,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "ma-liang",
@@ -2772,7 +2934,8 @@
       "cha": 76,
       "luk": 60,
       "ep": 72,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "guan-suo",
@@ -2789,7 +2952,8 @@
       "cha": 62,
       "luk": 52,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yu-fan",
@@ -2806,7 +2970,8 @@
       "cha": 62,
       "luk": 50,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "chen-wu",
@@ -2823,7 +2988,8 @@
       "cha": 60,
       "luk": 55,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-yi",
@@ -2840,7 +3006,8 @@
       "cha": 62,
       "luk": 48,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhu-ji",
@@ -2857,7 +3024,8 @@
       "cha": 58,
       "luk": 55,
       "ep": 65,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "quan-cong",
@@ -2874,7 +3042,8 @@
       "cha": 60,
       "luk": 55,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lv-dai",
@@ -2891,7 +3060,8 @@
       "cha": 58,
       "luk": 58,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "hu-zun",
@@ -2908,7 +3078,8 @@
       "cha": 52,
       "luk": 55,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wang-ji",
@@ -2925,7 +3096,8 @@
       "cha": 60,
       "luk": 58,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-li",
@@ -2942,7 +3114,8 @@
       "cha": 58,
       "luk": 55,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wang-hun",
@@ -2959,7 +3132,8 @@
       "cha": 55,
       "luk": 52,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wen-qin",
@@ -2976,7 +3150,8 @@
       "cha": 50,
       "luk": 45,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "gongsun-yuan",
@@ -2993,7 +3168,8 @@
       "cha": 50,
       "luk": 38,
       "ep": 61,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "mu-lu-da-wang",
@@ -3010,7 +3186,8 @@
       "cha": 50,
       "luk": 48,
       "ep": 56,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "e-huan",
@@ -3027,7 +3204,8 @@
       "cha": 42,
       "luk": 45,
       "ep": 53,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sha-mo-ke",
@@ -3044,7 +3222,8 @@
       "cha": 48,
       "luk": 50,
       "ep": 55,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "mi-heng",
@@ -3061,7 +3240,8 @@
       "cha": 78,
       "luk": 25,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "tian-chou",
@@ -3078,7 +3258,8 @@
       "cha": 65,
       "luk": 52,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "guan-ning",
@@ -3095,7 +3276,8 @@
       "cha": 86,
       "luk": 65,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zuo-ci",
@@ -3112,7 +3294,8 @@
       "cha": 75,
       "luk": 80,
       "ep": 61,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yu-ji",
@@ -3129,7 +3312,8 @@
       "cha": 80,
       "luk": 82,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "liu-ba",
@@ -3146,7 +3330,8 @@
       "cha": 72,
       "luk": 55,
       "ep": 67,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "qin-mi",
@@ -3163,7 +3348,8 @@
       "cha": 75,
       "luk": 52,
       "ep": 64,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "yi-ji",
@@ -3180,7 +3366,8 @@
       "cha": 70,
       "luk": 55,
       "ep": 65,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "fei-shi",
@@ -3197,7 +3384,8 @@
       "cha": 68,
       "luk": 50,
       "ep": 61,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhang-nan",
@@ -3214,7 +3402,8 @@
       "cha": 52,
       "luk": 48,
       "ep": 60,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "fu-shou",
@@ -3231,7 +3420,8 @@
       "cha": 55,
       "luk": 45,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-sheng",
@@ -3248,7 +3438,8 @@
       "cha": 65,
       "luk": 55,
       "ep": 66,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wei-zhao",
@@ -3265,7 +3456,8 @@
       "cha": 70,
       "luk": 58,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "xue-zong",
@@ -3282,7 +3474,8 @@
       "cha": 68,
       "luk": 52,
       "ep": 63,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "zhu-yi",
@@ -3299,7 +3492,8 @@
       "cha": 52,
       "luk": 45,
       "ep": 62,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "pan-jun",
@@ -3316,7 +3510,8 @@
       "cha": 64,
       "luk": 62,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "cao-zhi",
@@ -3333,7 +3528,8 @@
       "cha": 92,
       "luk": 50,
       "ep": 69,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "lv-kai",
@@ -3350,7 +3546,8 @@
       "cha": 74,
       "luk": 62,
       "ep": 70,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "chen-dao",
@@ -3367,7 +3564,8 @@
       "cha": 60,
       "luk": 58,
       "ep": 68,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "wu-ban",
@@ -3384,7 +3582,8 @@
       "cha": 52,
       "luk": 50,
       "ep": 61,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "sun-hao",
@@ -3401,7 +3600,8 @@
       "cha": 52,
       "luk": 35,
       "ep": 59,
-      "gender": "男"
+      "gender": "男",
+      "isHistorical": true
     },
     {
       "uid": "diao-chan",
@@ -3418,7 +3618,8 @@
       "cha": 95,
       "luk": 84,
       "ep": 65,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "da-qiao",
@@ -3435,7 +3636,8 @@
       "cha": 90,
       "luk": 82,
       "ep": 61,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "xiao-qiao",
@@ -3452,7 +3654,8 @@
       "cha": 94,
       "luk": 83,
       "ep": 61,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "zhen-ji",
@@ -3469,7 +3672,8 @@
       "cha": 90,
       "luk": 81,
       "ep": 58,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "sun-shang-xiang",
@@ -3486,7 +3690,8 @@
       "cha": 80,
       "luk": 76,
       "ep": 69,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "cai-yan",
@@ -3503,7 +3708,8 @@
       "cha": 85,
       "luk": 79,
       "ep": 59,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "huang-yue-ying",
@@ -3520,7 +3726,8 @@
       "cha": 70,
       "luk": 78,
       "ep": 66,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "zhang-chun-hua",
@@ -3537,7 +3744,8 @@
       "cha": 62,
       "luk": 72,
       "ep": 60,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "xin-xian-ying",
@@ -3554,7 +3762,8 @@
       "cha": 71,
       "luk": 77,
       "ep": 63,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "bu-lian-shi",
@@ -3571,7 +3780,8 @@
       "cha": 87,
       "luk": 80,
       "ep": 57,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "guan-yin-ping",
@@ -3588,7 +3798,8 @@
       "cha": 70,
       "luk": 72,
       "ep": 62,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "lu-ling-qi",
@@ -3605,7 +3816,8 @@
       "cha": 52,
       "luk": 70,
       "ep": 55,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "ma-yun-lu",
@@ -3622,7 +3834,8 @@
       "cha": 61,
       "luk": 71,
       "ep": 59,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "dong-bai",
@@ -3639,7 +3852,8 @@
       "cha": 57,
       "luk": 63,
       "ep": 37,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "fan-shi",
@@ -3656,7 +3870,8 @@
       "cha": 65,
       "luk": 66,
       "ep": 47,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "bian-fu-ren",
@@ -3673,7 +3888,8 @@
       "cha": 88,
       "luk": 80,
       "ep": 65,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "wu-guo-tai",
@@ -3690,7 +3906,8 @@
       "cha": 75,
       "luk": 76,
       "ep": 58,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "guo-nu-wang",
@@ -3707,7 +3924,8 @@
       "cha": 68,
       "luk": 74,
       "ep": 51,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "wang-yuan-ji",
@@ -3724,7 +3942,8 @@
       "cha": 86,
       "luk": 80,
       "ep": 62,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "xiahou-shi",
@@ -3741,7 +3960,8 @@
       "cha": 63,
       "luk": 68,
       "ep": 44,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "xiahou-ling-nv",
@@ -3758,7 +3978,8 @@
       "cha": 73,
       "luk": 76,
       "ep": 52,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "gan-shi",
@@ -3775,7 +3996,8 @@
       "cha": 72,
       "luk": 72,
       "ep": 50,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "mi-shi",
@@ -3792,7 +4014,8 @@
       "cha": 73,
       "luk": 73,
       "ep": 53,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "cao-jie",
@@ -3809,7 +4032,8 @@
       "cha": 82,
       "luk": 78,
       "ep": 53,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "sun-lu-ban",
@@ -3826,7 +4050,8 @@
       "cha": 65,
       "luk": 70,
       "ep": 58,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "sun-lu-yu",
@@ -3843,7 +4068,8 @@
       "cha": 68,
       "luk": 71,
       "ep": 47,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "zhao-e",
@@ -3860,7 +4086,8 @@
       "cha": 64,
       "luk": 73,
       "ep": 59,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "yang-hui-yu",
@@ -3877,7 +4104,8 @@
       "cha": 74,
       "luk": 77,
       "ep": 54,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "zhu-rong-furen",
@@ -3894,7 +4122,8 @@
       "cha": 82,
       "luk": 72,
       "ep": 69,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "bao-san-niang",
@@ -3911,7 +4140,8 @@
       "cha": 72,
       "luk": 68,
       "ep": 61,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "hua-man",
@@ -3928,7 +4158,8 @@
       "cha": 68,
       "luk": 65,
       "ep": 56,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "cai-shi",
@@ -3945,7 +4176,8 @@
       "cha": 78,
       "luk": 72,
       "ep": 56,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "cao-hua",
@@ -3962,7 +4194,8 @@
       "cha": 74,
       "luk": 68,
       "ep": 50,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "cao-xian",
@@ -3979,7 +4212,8 @@
       "cha": 73,
       "luk": 67,
       "ep": 49,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     },
     {
       "uid": "xu-shi",
@@ -3996,7 +4230,8 @@
       "cha": 76,
       "luk": 68,
       "ep": 55,
-      "gender": "女"
+      "gender": "女",
+      "isHistorical": true
     }
   ]
 }

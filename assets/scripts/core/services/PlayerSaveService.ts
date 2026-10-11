@@ -40,7 +40,7 @@ export interface PlayerSaveSnapshot {
     discoveryExp?: number;
     /** 道具庫存（PROG-2-0053，目前只有求籤令）；後加的選填欄位，舊檔讀回補起始庫存 */
     inventory?: Record<string, number>;
-    /** 累計名士占卜次數（PROG-2-0054，決定名士解鎖）；後加的選填欄位，舊檔讀回補 0 */
+    /** 累計名士占卜次數（PROG-2-0065，決定名士解鎖）；後加的選填欄位，舊檔讀回補 0 */
     oracleCount?: number;
 }
 

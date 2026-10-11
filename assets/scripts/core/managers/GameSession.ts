@@ -428,7 +428,7 @@ export class GameSession {
     /** 扭曲預言借用關鍵詞的因子：字典裡可判定色系的因子 */
     private _prophecyKeywordSources(): ProphecyKeywordSource[] {
         const out: ProphecyKeywordSource[] = [];
-        for (const def of this._factorDictionary?.values() ?? []) {
+        for (const def of Array.from(this._factorDictionary?.values() ?? [])) {
             const color = resolveFactorColor(def.id, this._factorDictionary);
             if (color) out.push({ id: def.id, color, displayName: def.displayName });
         }

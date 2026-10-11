@@ -13,7 +13,7 @@
  * - 扭曲：不覺醒，只回傳名士偏見方向的提示色（司馬徽沒有偏好，提示為 null）
  * - 諸葛亮「智力 / 政治」歸藍色（基礎屬性）；司馬徽「全面 / 中庸」不加權
  * - 沒有可覺醒的因子時不擲骰，呼叫端不應扣求籤令
- * - 求籤令扣除在 GameSession（PROG-2-0053）；名士依累計占卜次數解鎖（PROG-2-0054）；名士等級提高準確率未做
+ * - 求籤令扣除在 GameSession（PROG-2-0053）；名士依累計占卜次數解鎖（PROG-2-0065）；名士等級提高準確率未做
  *
  * Unity 對照：像一個 static class OracleService.Divine(general, sage, rng)，
  * 只回傳結果與新資料，由 GameManager 存檔並廣播事件。
@@ -138,7 +138,7 @@ export function divineFactor(
     };
 }
 
-// ── 結緣前預測子嗣（PROG-2-0054） ─────────────────────────────────────────
+// ── 結緣前預測子嗣（PROG-2-0065） ─────────────────────────────────────────
 //
 // 規格 §F：if (Random() <= accuracy) Prediction = WeightedSample(child_genes, bias)
 //          else Prediction = Distort(WeightedSample(child_genes, bias))

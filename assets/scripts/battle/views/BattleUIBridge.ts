@@ -9,6 +9,7 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';

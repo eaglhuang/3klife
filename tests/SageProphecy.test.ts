@@ -1,5 +1,5 @@
 /**
- * SageProphecy.test.ts — 結緣前預言子嗣與名士解鎖（PROG-2-0054，headless）
+ * SageProphecy.test.ts — 結緣前預言子嗣與名士解鎖（PROG-2-0065，headless）
  *
  * 驗證：父母祖譜因子池的進池機率、名士預言的準確 / 扭曲分支與偏好加權、
  * 名士依累計占卜次數解鎖、GameSession 扣求籤令與存檔往返，以及 SageOracleController 的預言畫面。

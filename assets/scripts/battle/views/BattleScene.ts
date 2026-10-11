@@ -6,6 +6,7 @@ import {
   GAME_CONFIG,
   BattleTactic,
 } from "../../core/config/Constants";
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
 import { GeneralUnit } from "../../core/models/GeneralUnit";

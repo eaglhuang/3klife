@@ -984,6 +984,155 @@
             "height": 720
           }
         ]
+      },
+      {
+        "type": "container",
+        "name": "GameplayNavigation",
+        "widget": {
+          "left": 24,
+          "right": 24,
+          "bottom": 24
+        },
+        "height": 68,
+        "layout": {
+          "type": "horizontal",
+          "justifyContent": "center",
+          "spacingX": 12
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "GameplayBattle",
+            "id": "btnBattle",
+            "width": "15%",
+            "height": 68,
+            "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_1",
+            "children": [
+              {
+                "type": "label",
+                "name": "GameplayBattleLabel",
+                "widget": {
+                  "left": 8,
+                  "right": 8,
+                  "vCenter": true
+                },
+                "height": 30,
+                "textKey": "UI_NAV_BATTLE",
+                "styleSlot": "lobby.gameplay.nav.label"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "GameplayGenerals",
+            "id": "btnGenerals",
+            "width": "15%",
+            "height": 68,
+            "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_1",
+            "children": [
+              {
+                "type": "label",
+                "name": "GameplayGeneralsLabel",
+                "widget": {
+                  "left": 8,
+                  "right": 8,
+                  "vCenter": true
+                },
+                "height": 30,
+                "textKey": "UI_NAV_GENERALS",
+                "styleSlot": "lobby.gameplay.nav.label"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "GameplaySupportCard",
+            "id": "btnSupportCard",
+            "width": "15%",
+            "height": 68,
+            "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_1",
+            "children": [
+              {
+                "type": "label",
+                "name": "GameplaySupportCardLabel",
+                "widget": {
+                  "left": 8,
+                  "right": 8,
+                  "vCenter": true
+                },
+                "height": 30,
+                "textKey": "UI_NAV_SUPPORT",
+                "styleSlot": "lobby.gameplay.nav.label"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "GameplayGacha",
+            "id": "btnGacha",
+            "width": "15%",
+            "height": 68,
+            "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_1",
+            "children": [
+              {
+                "type": "label",
+                "name": "GameplayGachaLabel",
+                "widget": {
+                  "left": 8,
+                  "right": 8,
+                  "vCenter": true
+                },
+                "height": 30,
+                "textKey": "UI_NAV_GACHA",
+                "styleSlot": "lobby.gameplay.nav.label"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "GameplayShop",
+            "id": "btnShop",
+            "width": "15%",
+            "height": 68,
+            "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_1",
+            "children": [
+              {
+                "type": "label",
+                "name": "GameplayShopLabel",
+                "widget": {
+                  "left": 8,
+                  "right": 8,
+                  "vCenter": true
+                },
+                "height": 30,
+                "textKey": "UI_NAV_SHOP",
+                "styleSlot": "lobby.gameplay.nav.label"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "GameplayFloodBattle",
+            "id": "btnFloodBattle",
+            "width": "15%",
+            "height": 68,
+            "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_1",
+            "children": [
+              {
+                "type": "label",
+                "name": "GameplayFloodBattleLabel",
+                "widget": {
+                  "left": 8,
+                  "right": 8,
+                  "vCenter": true
+                },
+                "height": 30,
+              "textKey": "UI_NAV_FLOOD",
+                "styleSlot": "lobby.gameplay.nav.label"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

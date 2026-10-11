@@ -67,8 +67,8 @@ export function createTigerTallySuite(): TestSuite {
         assert.isFalse(isTallyEligible({ ...female, characterCategory: 'other' }));
         assert.isFalse(isTallyEligible({ ...female, gender: '男' }));
     });
-    suite.test('平民與無身分資料不因高分或史實旗標取得虎符', () => {
-        assert.isFalse(isTallyEligible({ id: 'civilian', characterCategory: 'civilian', isHistorical: true }));
+    suite.test('正式史實旗標優先於平民分類，空白身分仍不得取得虎符', () => {
+        assert.isTrue(isTallyEligible({ id: 'civilian', characterCategory: 'civilian', isHistorical: true }));
         assert.isFalse(isTallyEligible({ id: ' ', isHistorical: true }));
     });
     suite.test('死亡重試 UID 穩定，不同季節死亡 UID 不同', () => {

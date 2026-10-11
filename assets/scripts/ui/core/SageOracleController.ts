@@ -253,7 +253,7 @@ export class SageOracleController {
 
                 const key = `${father.id}|${mother.id}`;
                 const seen = this._prophecies.get(key) ?? new Map<SageId, FactorColor>();
-                const conflict = [...seen.entries()].some(([other, c]) => other !== sage.id && c !== prophecy.color);
+                const conflict = Array.from(seen.entries()).some(([other, c]) => other !== sage.id && c !== prophecy.color);
                 seen.set(sage.id, prophecy.color);
                 this._prophecies.set(key, seen);
                 return conflict ? `${parts.join(' · ')}　${ORACLE_CONFLICT_TEXT}` : parts.join(' · ');

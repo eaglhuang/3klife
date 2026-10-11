@@ -250,7 +250,7 @@ export function resolveAncestorProfile(
 }
 
 function unique<T>(list: T[]): T[] {
-    return [...new Set(list)];
+    return Array.from(new Set(list));
 }
 
 export interface EpBreakdown {
@@ -285,7 +285,7 @@ export function computeEpMvp(
     }
     let topTag: string | null = null;
     let topTagCount = 0;
-    for (const [tag, count] of [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+    for (const [tag, count] of Array.from(tagCounts.entries()).sort((a, b) => a[0].localeCompare(b[0]))) {
         if (count > topTagCount) {
             topTag = tag;
             topTagCount = count;
@@ -445,7 +445,7 @@ export function previewFactorPool(
     const enabled = new Set(request.enabledColors ?? DEFAULT_ENABLED_FACTOR_COLORS);
     const miss = new Map<string, { color: FactorColor; miss: number }>();
     for (const source of sources) {
-        for (const factorId of new Set(source.factorIds)) {
+        for (const factorId of Array.from(new Set(source.factorIds))) {
             if (!factorId) continue;
             const gene = source.genes?.find((g) => g.id === factorId);
             const color = resolveFactorColor(factorId, request.dictionary, gene);
@@ -455,7 +455,8 @@ export function previewFactorPool(
             miss.set(factorId, entry);
         }
     }
-    return [...miss.entries()]
+    // Cocos Web 轉譯的 loose spread 不會展開 Map iterator，一律用 Array.from（同 PROG-2-0062）
+    return Array.from(miss.entries())
         .map(([id, { color, miss: m }]) => ({ id, color, chance: 1 - m, displayName: request.dictionary?.get(id)?.displayName }))
         .sort((a, b) => b.chance - a.chance || a.id.localeCompare(b.id));
 }
