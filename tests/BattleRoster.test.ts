@@ -189,7 +189,7 @@ export function createBattleRosterSuite(): TestSuite {
         assert.equals(0, (settled.roster[0] as BattleRosterGeneral).vitality!);
     });
 
-    suite.test('每季回補：待命 +50%、出征 +25%、不超過上限、死亡不回補', () => {
+    suite.test('每季回補：待命 +30%、出征 +10%、不超過上限、死亡不回補', () => {
         const roster: BattleRosterGeneral[] = [
             graduate('idle', { vitality: 20 }),
             graduate('fought', { vitality: 20, lastDeployedSeason: 4 }),
@@ -199,11 +199,22 @@ export function createBattleRosterSuite(): TestSuite {
         ];
         const next = recoverVitalityOneSeason(roster, 4) as BattleRosterGeneral[];
         const v = (id: string) => next.find((g) => g.id === id)!.vitality!;
-        assert.equals(70, v('idle'));
-        assert.equals(45, v('fought'));
+        assert.equals(50, v('idle'));
+        assert.equals(30, v('fought'));
         assert.equals(100, v('full'));
         assert.equals(20, v('dead'));
         assert.equals(100, v('almost'));
+    });
+
+    suite.test('回補依精力上限計算，下一季改為待命且不修改原名冊', () => {
+        const source = graduate('hero', { vitality: 20, maxVitality: 120, lastDeployedSeason: 4 });
+        const deployed = recoverVitalityOneSeason([source], 4)[0] as BattleRosterGeneral;
+        assert.equals(32, deployed.vitality!);
+        const standby = recoverVitalityOneSeason([deployed], 5)[0] as BattleRosterGeneral;
+        assert.equals(68, standby.vitality!);
+        assert.equals(120, standby.maxVitality!);
+        assert.equals(20, source.vitality!);
+        assert.equals(32, deployed.vitality!);
     });
 
     // ── GameSession 整合 ───────────────────────────────────────────────────
@@ -263,7 +274,7 @@ export function createBattleRosterSuite(): TestSuite {
         assert.equals(null, session.getBattleConfig('zhang-fei', 'player' as never));
     });
 
-    suite.test('GameSession：advanceSeason 回補精力（待命 +50%，出征 +25%）', async () => {
+    suite.test('GameSession：advanceSeason 回補精力（待命 +30%，出征 +10%）', async () => {
         const session = new GameSession();
         session.setAutoSave(false);
         session.setRandomSource(() => 0.99);
@@ -274,8 +285,8 @@ export function createBattleRosterSuite(): TestSuite {
         await session.recordBattle(['fought'], 'player-win'); // 100 → 70，記在第 0 季
         await session.advanceSeason();
         const byId = (id: string) => session.roster.find((g) => g.id === id) as BattleRosterGeneral;
-        assert.equals(95, byId('fought').vitality!, '70 + 25');
-        assert.equals(90, byId('idle').vitality!, '40 + 50');
+        assert.equals(80, byId('fought').vitality!, '70 + 10');
+        assert.equals(70, byId('idle').vitality!, '40 + 30');
     });
 
     // ── 大廳選主將 ─────────────────────────────────────────────────────────

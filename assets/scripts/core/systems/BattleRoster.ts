@@ -24,8 +24,9 @@ export const BATTLE_VITALITY_COST = 30;
 /** 出戰最低精力：至少要付得起戰鬥消耗（暫定，規格未寫門檻） */
 export const BATTLE_MIN_VITALITY = BATTLE_VITALITY_COST;
 /** 每季自然回補（占精力上限比例）：數值系統「出征 +25%、待命 +50%」 */
-export const VITALITY_RECOVER_DEPLOYED = 0.25;
-export const VITALITY_RECOVER_STANDBY = 0.5;
+/** Q17 採數值系統 Q45 裁決：自然／出征回補 10%、待命 30%，取代舊表 25%／50%。 */
+export const VITALITY_RECOVER_DEPLOYED = 0.1;
+export const VITALITY_RECOVER_STANDBY = 0.3;
 export const DEFAULT_MAX_VITALITY = 100;
 
 /** 戰場數值 = 實力層 ÷ 2，與畢業評級（PROWESS_PER_RATING_POINT）同一把尺（暫定）：實力層 180 ≈ 戰場 90 */
@@ -263,7 +264,7 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
 // ── 每季精力回補 ───────────────────────────────────────────────────────────
 
 /**
- * 每季自然回補：本季出過戰的 +25%、其餘（待命）+50%（皆為精力上限的比例），不超過上限。
+ * 每季自然回補：本季出過戰的 +10%、其餘（待命）+30%（皆為精力上限的比例），不超過上限。
  * 死亡武將不回補。endedSeason 是「剛結束的那一季」的累計序號（與 recordBattle 記下的季度同一把尺）。
  */
 export function recoverVitalityOneSeason(roster: readonly GeneralConfig[], endedSeason: number): GeneralConfig[] {
