@@ -9,6 +9,8 @@
  * 可替換的儲存後端（PlayerPrefs / 檔案 / 雲端），而不是自己去碰檔案路徑。
  */
 import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
+import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
+import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
@@ -42,6 +44,10 @@ export interface PlayerSaveSnapshot {
     inventory?: Record<string, number>;
     /** 累計名士占卜次數（PROG-2-0065，決定名士解鎖）；後加的選填欄位，舊檔讀回補 0 */
     oracleCount?: number;
+    /** 城市兵源與糧草儲備（PROG-2-0072）；後加的選填欄位，舊檔讀回補起始值 */
+    military?: MilitaryReserve;
+    /** 待處置俘虜與監獄（PROG-2-0073）；後加的選填欄位，舊檔讀回為空監獄 */
+    prison?: PrisonState<GeneralConfig>;
 }
 
 function normalizeDiscoveryLevel(value: unknown): number {
@@ -122,6 +128,8 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         discoveryExp: normalizeDiscoveryExp(snapshot.discoveryExp),
         inventory: { ...normalizeInventory(snapshot.inventory) },
         oracleCount: normalizeDiscoveryExp(snapshot.oracleCount),
+        ...(snapshot.military !== undefined ? { military: normalizeMilitaryReserve(snapshot.military) } : {}),
+        ...(snapshot.prison !== undefined ? { prison: normalizePrisonState<GeneralConfig>(snapshot.prison) } : {}),
     };
 }
 

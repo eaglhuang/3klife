@@ -13,7 +13,10 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
-import { DEFAULT_CITY_TROOPS } from '../../core/systems/SortieDeploy';
+import { BattlePerformanceTracker, formatPerformance, milestoneDisplayName } from '../../core/systems/BattleRecordStats';
+import { formatSortieSummary } from '../../core/systems/SortieDeploy';
+import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
+import { loadGeneralConfig } from './BattleSceneLoader';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
@@ -109,6 +112,8 @@ export class BattleUIBridge {
   private readonly unsubs: (() => void)[] = [];
   /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
   private readonly specialActions = new BattleSpecialActionTracker();
+  /** 我方主將帶隊的單場表現（擊殺 / 傷害 / 承傷 / 治療），戰後寫進戰績（PROG-2-0072） */
+  private readonly performance = new BattlePerformanceTracker(Faction.Player);
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -131,6 +136,7 @@ export class BattleUIBridge {
   }): void {
     this.unsubscribeEvents();
     this.specialActions.reset();
+    this.performance.reset();
     const svc = services();
     const c = this.ctx;
     const actionCommandNode = (c.battleScenePanel?.actionCommandComposite ?? c.battleScenePanel?.actionCommandPanel)?.node ?? null;
@@ -144,6 +150,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TurnPhaseChanged,        this._onTurnPhaseChanged.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDeployed,            this._onUnitDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDamaged,             this._onUnitDamaged.bind(this)),
+      svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -301,6 +308,7 @@ export class BattleUIBridge {
     const c = this.ctx;
     this._observeSpecialActionHit(data);
     const unit = c.ctrl?.state.units.get(data.unitId);
+    this.performance.observeUnitDamaged(data.damage, data.attackerFaction, unit?.faction ?? null);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
       const suffix = data.damageSource === 'night-raid-opening-strike'
@@ -341,10 +349,25 @@ export class BattleUIBridge {
     }
   }
 
+  /** 適性命中落空：記一行戰報、攻方照樣撲上去（PROG-2-0080） */
+  private _onUnitAttackMissed(data?: { attackerId: string; targetId: string; hitRate: number }): void {
+    if (!data) return;
+    const c = this.ctx;
+    const attacker = c.ctrl?.state.units.get(data.attackerId);
+    const target = c.ctrl?.state.units.get(data.targetId);
+    if (!attacker || !target) return;
+    const side = attacker.faction === Faction.Player ? '我方' : '敵方';
+    this.appendLog(`${side}${attacker.name} 攻擊${target.name}落空（命中率 ${Math.round(data.hitRate * 100)}%）`);
+    this._enqueueCombatVisual(`unit-miss:${data.attackerId}`, async () => {
+      await (c.unitRenderer?.playAttackAnimationAsync(data.attackerId, target.lane, target.depth) ?? Promise.resolve());
+    });
+  }
+
   private _onUnitHealed(data: { unitId: string; amount: number; hp: number }): void {
     const c = this.ctx;
     this._observeSpecialActionHit(data);
     const unit = c.ctrl?.state.units.get(data.unitId);
+    this.performance.observeHealed(data.amount, unit?.faction ?? null);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
       this.appendLog(`${side}${unit.name} 回復 ${data.amount}，目前 HP ${Math.max(0, data.hp)}`);
@@ -382,6 +405,7 @@ export class BattleUIBridge {
 
   private _onUnitDied(data: { unitId: string; lane: number; depth: number; faction: Faction; type: TroopType }): void {
     const c = this.ctx;
+    this.performance.observeUnitDied(data.faction);
     this.appendLog(`單位陣亡：${data.unitId}`);
     c.unitRenderer?.markDyingUnit?.(data.unitId);
     this._enqueueCombatVisual(`unit-death:${data.unitId}`, async () => {
@@ -402,6 +426,7 @@ export class BattleUIBridge {
     const c = this.ctx;
     const target = data.faction === Faction.Player ? '我方主將' : '敵方主將';
     const maxHp = c.ctrl?.state.getGeneral(data.faction)?.maxHp ?? 0;
+    if (!data.wasDodged) this.performance.observeGeneralDamaged(data.damage ?? 0, data.faction);
     this.specialActions.observeGeneralHp({ faction: data.faction, hp: data.hp, maxHp });
     if (data.wasDodged) {
       this.appendLog(`${target} 閃躲攻擊！`);
@@ -482,9 +507,9 @@ export class BattleUIBridge {
     if (effectKey) {
       playBattleFlowEffectAtBoardCenter(services().effect, c.boardRenderer, effectKey, data.result === 'draw' ? 1.6 : 1.8);
     }
-    c.resultPopup?.showResult(data.result as any);
     this.appendLog(`戰鬥結束：${data.result}`);
-    this._settleRosterBattle(data.result as BattleResult);
+    const details = this._settleRosterBattle(data.result as BattleResult);
+    c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined);
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
     c.hud?.clearSceneGambitBadge();
@@ -507,24 +532,32 @@ export class BattleUIBridge {
     }));
   }
 
-  /** 戰後結算寫回名冊（精力、戰績、功勳）並擲覺醒；名冊裡沒有的內建武將會被略過 */
-  private _settleRosterBattle(result: BattleResult): void {
+  /**
+   * 戰後結算寫回名冊（精力、戰績、功勳、城市兵源與糧草）並擲覺醒；名冊裡沒有的內建武將會被略過。
+   * 回傳給結果彈窗的結算摘要行（出征軍勢六項 + 本場戰績）；內建 demo 戰鬥回傳空陣列。
+   */
+  private _settleRosterBattle(result: BattleResult): string[] {
     const actions = this.specialActions.finish(result);
     this.specialActions.reset();
-    const sortie = this.ctx.ctrl?.finishSortie(DEFAULT_CITY_TROOPS) ?? null;
-    if (sortie) {
-      this.appendLog(`出征軍勢 ${sortie.poolMax}：返還 ${sortie.returnedTroops}、戰損 ${sortie.lostTroops}，糧草消耗 ${sortie.foodSpent}；城市兵源 ${sortie.cityTroopsBefore}→${sortie.cityTroopsAfter}（約 ${sortie.turnsToRecover} 季補回）`);
-    }
+    const performance = this.performance.snapshot();
+    this.performance.reset();
+    const sortie = this.ctx.ctrl?.finishSortie(services().session.military.cityTroops, services().session.military.recruitRegen) ?? null;
+    const details = sortie ? [...formatSortieSummary(sortie), formatPerformance(performance)] : [];
+    for (const line of details) this.appendLog(line);
     const pgId = this.ctx.pg?.id;
-    if (!pgId) return;
+    if (!pgId) return details;
     if (actions.length > 0) {
       this.appendLog(`戰場特定動作：${actions.map(specialActionDisplayName).join('、')}`);
     }
     const specialActions = actions.length > 0 ? { [pgId]: actions } : undefined;
-    void services().session.recordBattle([pgId], result, { specialActions }).then((settlement) => {
+    if (result === 'player-win' && sortie) this._captureEnemyGeneral();
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance } }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
+        for (const milestone of entry.newMilestones) {
+          this.appendLog(`【${milestoneDisplayName(milestone)}】達成！`);
+        }
       }
       for (const awakened of settlement.awakenings) {
         this.appendLog(`【覺醒】${awakened.displayName}！`);
@@ -532,6 +565,23 @@ export class BattleUIBridge {
     }).catch((error) => {
       UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回名冊失敗', error);
     });
+    return details;
+  }
+
+  /** 戰勝後俘虜敵將，進待處置清單（四選一在大廳處置；試用傭兵豁免）（PROG-2-0073） */
+  private _captureEnemyGeneral(): void {
+    const egId = this.ctx.eg?.id;
+    if (!egId) return;
+    void loadGeneralConfig(egId)
+      .then((config) => (config ? services().session.capturePrisoner(config) : null))
+      .then((record) => {
+        if (!record) return;
+        const labels = powOptionLabels(record);
+        this.appendLog(`俘虜 ${record.targetName}：${labels.persuade}、${labels.recruit}、${labels.imprison}、${labels.release}`);
+      })
+      .catch((error) => {
+        UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 俘虜敵將失敗', error);
+      });
   }
 
   private _onUltimateSkillSelected(data: { skillId?: string | null }): void {

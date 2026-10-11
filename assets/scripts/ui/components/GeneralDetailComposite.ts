@@ -16,6 +16,7 @@ import { GeneralDetailStatsChild } from './general-detail/GeneralDetailStatsChil
 import { GeneralDetailBloodlineChild } from './general-detail/GeneralDetailBloodlineChild';
 import { GeneralDetailSkillsChild } from './general-detail/GeneralDetailSkillsChild';
 import { GeneralDetailAptitudeChild } from './general-detail/GeneralDetailAptitudeChild';
+import { GeneralDetailRecordChild } from './general-detail/GeneralDetailRecordChild';
 import { CharacterDs3StatsChild } from './character-ds3/CharacterDs3StatsChild';
 import { CharacterDs3BloodlineChild } from './character-ds3/CharacterDs3BloodlineChild';
 import { CharacterDs3TacticsChild } from './character-ds3/CharacterDs3TacticsChild';
@@ -30,11 +31,14 @@ import type { SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOvervi
 
 const { ccclass } = _decorator;
 
-type TabKey = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
+type TabKey = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude' | 'Record';
 type UnifiedOverviewContentState = GeneralDetailOverviewContentState;
 
-const TAB_ORDER: TabKey[] = ['Overview', 'Stats', 'Tactics', 'Bloodline', 'Equip', 'Aptitude'];
-const DS3_TAB_BUTTON_NODE: Record<TabKey, string> = {
+const TAB_ORDER: TabKey[] = ['Overview', 'Stats', 'Tactics', 'Bloodline', 'Equip', 'Aptitude', 'Record'];
+/** 後加的分頁（PROG-2-0081 戰績）：舊 layout 沒有按鈕時不 fail-fast */
+const OPTIONAL_TABS: ReadonlySet<TabKey> = new Set<TabKey>(['Record']);
+/** DS3 版面沒有戰績按鈕，Record 不列入 */
+const DS3_TAB_BUTTON_NODE: Partial<Record<TabKey, string>> = {
     Overview: 'CharacterDs3Main_button_4',
     Stats: 'CharacterDs3Main_button_5',
     Tactics: 'CharacterDs3Main_button_6',
@@ -252,7 +256,8 @@ export class GeneralDetailComposite extends CompositePanel {
         });
 
         for (const tab of TAB_ORDER) {
-            this._bindClick(`RightTabBar/BtnTab${tab}`, () => {
+            const bind = OPTIONAL_TABS.has(tab) ? this._bindOptionalClick.bind(this) : this._bindClick.bind(this);
+            bind(`RightTabBar/BtnTab${tab}`, () => {
                 void this._switchToTab(tab);
             });
         }
@@ -265,6 +270,7 @@ export class GeneralDetailComposite extends CompositePanel {
 
         for (const tab of TAB_ORDER) {
             const nodeName = DS3_TAB_BUTTON_NODE[tab];
+            if (!nodeName) continue;
             this._bindOptionalClickByNodeName(nodeName, () => {
                 const overview = this._currentConfig ? this._buildUnifiedOverviewState(this._currentConfig) : null;
                 void this._switchToDs3Tab(tab, overview);
@@ -350,6 +356,8 @@ export class GeneralDetailComposite extends CompositePanel {
             return new CharacterDs3EquipChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
         case 'Aptitude':
             return new CharacterDs3AptitudeChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        case 'Record':
+            return new GeneralDetailRecordChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
         }
     }
 
@@ -359,7 +367,8 @@ export class GeneralDetailComposite extends CompositePanel {
         }
 
         for (const tab of TAB_ORDER) {
-            const button = this._gdBinder.getButton(DS3_TAB_BUTTON_NODE[tab]);
+            const nodeName = DS3_TAB_BUTTON_NODE[tab];
+            const button = nodeName ? this._gdBinder.getButton(nodeName) : null;
             if (!button) {
                 continue;
             }
@@ -427,6 +436,8 @@ export class GeneralDetailComposite extends CompositePanel {
             return new GeneralDetailBasicsChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
         case 'Aptitude':
             return new GeneralDetailAptitudeChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        case 'Record':
+            return new GeneralDetailRecordChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
         }
     }
 
@@ -725,7 +736,10 @@ export class GeneralDetailComposite extends CompositePanel {
 
         for (const tab of TAB_ORDER) {
             const isActive = tab === this._activeTab;
-            const button = this._requireNode(`RightTabBar/BtnTab${tab}`);
+            const button = OPTIONAL_TABS.has(tab)
+                ? this.node.getChildByPath(this._mainPath(`RightTabBar/BtnTab${tab}`))
+                : this._requireNode(`RightTabBar/BtnTab${tab}`);
+            if (!button) continue;
             const opacity = button.getComponent(UIOpacity) || button.addComponent(UIOpacity);
             const label = button.getChildByName('Label')?.getComponent(Label);
             const enLabel = button.getChildByName('EnLabel')?.getComponent(Label);

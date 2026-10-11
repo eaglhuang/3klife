@@ -87,6 +87,10 @@ export class GeneralUnit {
   public readonly preferredTerrain: TerrainType;
   /** 擅長地形上的額外防禦加成比例 */
   public readonly terrainDefenseBonus: number;
+  /** 戰場適性（兵種 / 地形 / 天氣，S~D）；沒有資料的維度視為 B（PROG-2-0071） */
+  public readonly troopAptitude: Readonly<Record<string, string>>;
+  public readonly terrainAptitude: Readonly<Record<string, string>>;
+  public readonly weatherAptitude: Readonly<Record<string, string>>;
 
   constructor(config: GeneralConfig) {
     this.id = config.id;
@@ -109,6 +113,9 @@ export class GeneralUnit {
     this.attackBonus = config.attackBonus ?? 0;
     this.preferredTerrain = config.preferredTerrain ?? TerrainType.Plain;
     this.terrainDefenseBonus = config.terrainDefenseBonus ?? 0;
+    this.troopAptitude = { ...(config.troopAptitude ?? {}) };
+    this.terrainAptitude = { ...(config.terrainAptitude ?? {}) };
+    this.weatherAptitude = { ...(config.weatherAptitude ?? {}) };
   }
 
   public takeDamage(value: number): void {

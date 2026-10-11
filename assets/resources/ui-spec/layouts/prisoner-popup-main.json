@@ -1,0 +1,329 @@
+{
+  "id": "prisoner-popup-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "PrisonerPopupRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "PrisonerPopupBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "pow.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "PrisonerPopupCard",
+        "id": "powCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 900,
+        "height": 620,
+        "skinSlot": "pow.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "PowTitle",
+            "id": "powTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "俘虜處置",
+            "styleSlot": "pow.label.title",
+            "width": 360
+          },
+          {
+            "type": "label",
+            "name": "PowPager",
+            "id": "powPager",
+            "widget": {
+              "top": 26,
+              "right": 150
+            },
+            "height": 32,
+            "text": "0 / 0",
+            "styleSlot": "pow.label.stats",
+            "width": 200
+          },
+          {
+            "type": "button",
+            "name": "BtnClosePow",
+            "id": "btnClosePow",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "height": 48,
+            "skinSlot": "pow.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnClosePowLabel",
+                "id": "closePowLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "稍後",
+                "styleSlot": "pow.label.button"
+              }
+            ],
+            "width": 110
+          },
+          {
+            "type": "label",
+            "name": "PowEmptyHint",
+            "id": "powEmptyHint",
+            "widget": {
+              "top": 160,
+              "left": 80,
+              "right": 80
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "pow.label.body"
+          },
+          {
+            "type": "container",
+            "name": "PowPanel",
+            "id": "powPanel",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 24
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "PowTarget",
+                "id": "powTarget",
+                "widget": {
+                  "top": 0,
+                  "left": 8,
+                  "right": 200
+                },
+                "height": 40,
+                "text": "敵將：－",
+                "styleSlot": "pow.label.name"
+              },
+              {
+                "type": "label",
+                "name": "PowResource",
+                "id": "powResource",
+                "widget": {
+                  "top": 48,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "pow.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnPrevPow",
+                "id": "btnPrevPow",
+                "widget": {
+                  "top": 0,
+                  "right": 108
+                },
+                "height": 40,
+                "skinSlot": "pow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevPowLabel",
+                    "id": "prevPowLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "上一位",
+                    "styleSlot": "pow.label.button"
+                  }
+                ],
+                "width": 88
+              },
+              {
+                "type": "button",
+                "name": "BtnNextPow",
+                "id": "btnNextPow",
+                "widget": {
+                  "top": 0,
+                  "right": 8
+                },
+                "height": 40,
+                "skinSlot": "pow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextPowLabel",
+                    "id": "nextPowLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "下一位",
+                    "styleSlot": "pow.label.button"
+                  }
+                ],
+                "width": 88
+              },
+              {
+                "type": "button",
+                "name": "BtnPersuade",
+                "id": "btnPersuade",
+                "widget": {
+                  "top": 92,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 64,
+                "skinSlot": "pow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPersuadeLabel",
+                    "id": "persuadeLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "勸降",
+                    "styleSlot": "pow.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnRecruit",
+                "id": "btnRecruit",
+                "widget": {
+                  "top": 168,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 64,
+                "skinSlot": "pow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnRecruitLabel",
+                    "id": "recruitLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "招募",
+                    "styleSlot": "pow.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnImprison",
+                "id": "btnImprison",
+                "widget": {
+                  "top": 244,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 64,
+                "skinSlot": "pow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnImprisonLabel",
+                    "id": "imprisonLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "無期徒刑",
+                    "styleSlot": "pow.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnRelease",
+                "id": "btnRelease",
+                "widget": {
+                  "top": 320,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 64,
+                "skinSlot": "pow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnReleaseLabel",
+                    "id": "releaseLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "放走",
+                    "styleSlot": "pow.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "PowNotice",
+                "id": "powNotice",
+                "widget": {
+                  "top": 404,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 84,
+                "text": "",
+                "styleSlot": "pow.label.body"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

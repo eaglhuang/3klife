@@ -1,0 +1,17 @@
+{
+  "id": "prisoner-popup-screen",
+  "version": 1,
+  "uiId": "PrisonerPopup",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "prisoner-popup-main",
+  "skin": "prisoner-popup-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

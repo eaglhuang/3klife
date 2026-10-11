@@ -78,6 +78,8 @@ export const EVENT_NAMES = {
   GameModeChanged:   "game-mode-changed",
   UnitDeployed:      "unit-deployed",
   UnitDamaged:       "unit-damaged",
+  /** 適性命中判定落空（PROG-2-0080）：payload { attackerId, targetId, hitRate } */
+  UnitAttackMissed:  "unit-attack-missed",
   UnitDied:          "unit-died",
   UnitMoved:         "unit-moved",
   UnitHealed:        "unit-healed",

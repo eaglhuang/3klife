@@ -147,6 +147,19 @@ export class LocalGachaService {
         return this._wallet[currencyKey];
     }
 
+    /** 非抽卡用途的扣款（例如招募俘虜，PROG-2-0082）；餘額不足時不扣、回傳 false */
+    public spendCurrency(currencyKey: GachaCurrencyKey, amount: number): boolean {
+        const cost = Math.max(0, Math.floor(Number.isFinite(amount) ? amount : 0));
+        if (cost <= 0) {
+            return true;
+        }
+        if (this._wallet[currencyKey] < cost) {
+            return false;
+        }
+        this._spendCurrency(currencyKey, cost);
+        return true;
+    }
+
     public async getRecentPullHistory(limit: number): Promise<{ total: number; records: GachaHistoryRecord[] }> {
         return this._actionLogStore.getRecentGachaHistory(limit);
     }

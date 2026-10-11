@@ -1,0 +1,420 @@
+{
+  "id": "sortie-setup-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SortieSetupRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "SortieSetupBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "sortie.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "SortieSetupCard",
+        "id": "sortieCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1000,
+        "height": 600,
+        "skinSlot": "sortie.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "SortieTitle",
+            "id": "sortieTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "出征編制",
+            "styleSlot": "sortie.label.title",
+            "width": 360
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseSortie",
+            "id": "btnCloseSortie",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "height": 48,
+            "skinSlot": "sortie.button.confirm.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseSortieLabel",
+                "id": "closeSortieLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "完成",
+                "styleSlot": "sortie.label.button"
+              }
+            ],
+            "width": 110
+          },
+          {
+            "type": "label",
+            "name": "SortieEmptyHint",
+            "id": "sortieEmptyHint",
+            "widget": {
+              "top": 160,
+              "left": 80,
+              "right": 80
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "sortie.label.body"
+          },
+          {
+            "type": "container",
+            "name": "SortiePanel",
+            "id": "sortiePanel",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 24
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "SortieCommander",
+                "id": "sortieCommander",
+                "widget": {
+                  "top": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 38,
+                "text": "主將：－",
+                "styleSlot": "sortie.label.name"
+              },
+              {
+                "type": "panel",
+                "name": "StrategistColumn",
+                "widget": {
+                  "top": 52,
+                  "left": 8,
+                  "right": 484
+                },
+                "height": 300,
+                "skinSlot": "sortie.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "StrategistTitle",
+                    "id": "strategistTitle",
+                    "widget": {
+                      "top": 14,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 32,
+                    "text": "參謀官",
+                    "styleSlot": "sortie.label.stats"
+                  },
+                  {
+                    "type": "label",
+                    "name": "StrategistName",
+                    "id": "strategistName",
+                    "widget": {
+                      "top": 52,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 38,
+                    "text": "不派",
+                    "styleSlot": "sortie.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "StrategistInfo",
+                    "id": "strategistInfo",
+                    "widget": {
+                      "top": 98,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 112,
+                    "text": "",
+                    "styleSlot": "sortie.label.body"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnPrevStrategist",
+                    "id": "btnPrevStrategist",
+                    "widget": {
+                      "bottom": 16,
+                      "left": 20
+                    },
+                    "height": 48,
+                    "skinSlot": "sortie.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnPrevStrategistLabel",
+                        "id": "prevStrategistLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "上一位",
+                        "styleSlot": "sortie.label.button"
+                      }
+                    ],
+                    "width": 96
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnClearStrategist",
+                    "id": "btnClearStrategist",
+                    "widget": {
+                      "bottom": 16,
+                      "hCenter": true
+                    },
+                    "height": 48,
+                    "skinSlot": "sortie.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnClearStrategistLabel",
+                        "id": "clearStrategistLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "不派",
+                        "styleSlot": "sortie.label.button"
+                      }
+                    ],
+                    "width": 96
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextStrategist",
+                    "id": "btnNextStrategist",
+                    "widget": {
+                      "bottom": 16,
+                      "right": 20
+                    },
+                    "height": 48,
+                    "skinSlot": "sortie.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextStrategistLabel",
+                        "id": "nextStrategistLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "下一位",
+                        "styleSlot": "sortie.label.button"
+                      }
+                    ],
+                    "width": 96
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DeputyColumn",
+                "widget": {
+                  "top": 52,
+                  "left": 484,
+                  "right": 8
+                },
+                "height": 300,
+                "skinSlot": "sortie.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DeputyTitle",
+                    "id": "deputyTitle",
+                    "widget": {
+                      "top": 14,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 32,
+                    "text": "後勤官",
+                    "styleSlot": "sortie.label.stats"
+                  },
+                  {
+                    "type": "label",
+                    "name": "DeputyName",
+                    "id": "deputyName",
+                    "widget": {
+                      "top": 52,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 38,
+                    "text": "不派",
+                    "styleSlot": "sortie.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "DeputyInfo",
+                    "id": "deputyInfo",
+                    "widget": {
+                      "top": 98,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 112,
+                    "text": "",
+                    "styleSlot": "sortie.label.body"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnPrevDeputy",
+                    "id": "btnPrevDeputy",
+                    "widget": {
+                      "bottom": 16,
+                      "left": 20
+                    },
+                    "height": 48,
+                    "skinSlot": "sortie.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnPrevDeputyLabel",
+                        "id": "prevDeputyLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "上一位",
+                        "styleSlot": "sortie.label.button"
+                      }
+                    ],
+                    "width": 96
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnClearDeputy",
+                    "id": "btnClearDeputy",
+                    "widget": {
+                      "bottom": 16,
+                      "hCenter": true
+                    },
+                    "height": 48,
+                    "skinSlot": "sortie.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnClearDeputyLabel",
+                        "id": "clearDeputyLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "不派",
+                        "styleSlot": "sortie.label.button"
+                      }
+                    ],
+                    "width": 96
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextDeputy",
+                    "id": "btnNextDeputy",
+                    "widget": {
+                      "bottom": 16,
+                      "right": 20
+                    },
+                    "height": 48,
+                    "skinSlot": "sortie.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextDeputyLabel",
+                        "id": "nextDeputyLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "下一位",
+                        "styleSlot": "sortie.label.button"
+                      }
+                    ],
+                    "width": 96
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "SortieSummary",
+                "id": "sortieSummary",
+                "widget": {
+                  "top": 368,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "sortie.label.stats"
+              },
+              {
+                "type": "label",
+                "name": "SortieNotice",
+                "id": "sortieNotice",
+                "widget": {
+                  "top": 408,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 60,
+                "text": "",
+                "styleSlot": "sortie.label.body"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

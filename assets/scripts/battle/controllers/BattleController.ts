@@ -587,6 +587,7 @@ export class BattleController {
           getFactionUnits: (faction) => this.combatResolver.getFactionUnits(faction),
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
+          getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitAptitude(unit).moveDelta,
         });
         return {};
       case 'enemy-auto-move':
@@ -598,6 +599,7 @@ export class BattleController {
           getFactionUnits: (faction) => this.combatResolver.getFactionUnits(faction),
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
+          getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitAptitude(unit).moveDelta,
         });
         return {};
       case 'player-tile-effect':

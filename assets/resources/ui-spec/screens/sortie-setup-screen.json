@@ -1,0 +1,17 @@
+{
+  "id": "sortie-setup-screen",
+  "version": 1,
+  "uiId": "SortieSetup",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "sortie-setup-main",
+  "skin": "sortie-setup-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

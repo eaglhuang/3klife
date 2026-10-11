@@ -52,6 +52,11 @@ import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { Faction } from '../config/Constants';
+import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
+import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
+import type { BattlePerformance } from '../systems/BattleRecordStats';
+import { createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -82,6 +87,8 @@ export const GAME_SESSION_EVENTS = {
     BattleSettled: 'game-session-battle-settled',
     /** payload: string | null（出戰主將 id） */
     LeadGeneralChanged: 'game-session-lead-general-changed',
+    /** payload: SortieSupport（參謀官 / 後勤官，PROG-2-0083） */
+    SortieSupportChanged: 'game-session-sortie-support-changed',
     /** payload: PlayerSaveSnapshot */
     Saved: 'game-session-saved',
     /** payload: GeneralConfig[]（本次新加入名冊的武將） */
@@ -131,6 +138,8 @@ export interface BattleRecordResult extends BattleSettlement {
     /** 有給經驗才有（ongoing 或名冊沒人出戰時省略） */
     discovery?: DiscoveryGain;
     awakenings: FactorAwakenedEvent[];
+    /** 有出征帳本才有：寫回後的城市兵源與糧草（PROG-2-0072） */
+    military?: MilitaryReserve;
 }
 
 export interface RecordBattleOptions {
@@ -138,6 +147,10 @@ export interface RecordBattleOptions {
     specialActionIds?: readonly string[];
     /** 武將 id → 本場完成的特定動作（BattleSpecialActionId）；會用動作標籤優先挑相符的因子 */
     specialActions?: Readonly<Record<string, readonly string[]>>;
+    /** 出征帳本結算（戰損回扣城市兵源、糧草消耗）；沒有時城市兵源與糧草不變 */
+    sortie?: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null;
+    /** 武將 id → 本場表現（擊殺 / 傷害 / 承傷 / 治療），累加進戰績 */
+    performance?: Readonly<Record<string, BattlePerformance>>;
 }
 
 export interface AddGeneralsResult {
@@ -161,6 +174,29 @@ export class InMemoryRosterStore implements RosterStore {
     }
 }
 
+/** 出征支援：參謀官 / 後勤官（PROG-2-0083） */
+export interface SortieSupport {
+    strategistUid: string | null;
+    deputyUid: string | null;
+}
+
+export interface SortieSupportSummary {
+    strategist: GeneralConfig | null;
+    deputy: GeneralConfig | null;
+    strategistBonus: StrategistBonus;
+    deputyBonus: DeputyFoodBonus;
+}
+
+function toSortieMember(g: GeneralConfig): SortieMember {
+    return {
+        id: g.id,
+        int: g.int ?? g.stats?.int,
+        pol: g.pol ?? g.stats?.pol,
+        lea: g.lea ?? g.stats?.lea,
+        ...(g.bloodlineId ? { bloodlineId: g.bloodlineId } : {}),
+    };
+}
+
 export class GameSession {
     private _clock = new GameClock();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -177,10 +213,14 @@ export class GameSession {
     private _factorDictionary: FactorDictionary | undefined;
     private _deck: string[] = [];
     private _leadGeneralId: string | null = null;
+    /** 出征支援（參謀官 / 後勤官）；暫定只存在本次遊玩，不寫存檔 */
+    private _sortieSupport: SortieSupport = { strategistUid: null, deputyUid: null };
     private _discoveryLevel = 1;
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
+    private _military: MilitaryReserve = { ...STARTER_MILITARY };
+    private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -286,10 +326,113 @@ export class GameSession {
         this._clock = new GameClock();
         this._deck = [];
         this._leadGeneralId = null;
+        this._sortieSupport = { strategistUid: null, deputyUid: null };
         this._discoveryLevel = 1;
         this._discoveryExp = 0;
         this._inventory = { ...STARTER_INVENTORY };
         this._oracleCount = 0;
+        this._military = { ...STARTER_MILITARY };
+        this._prison = createPrisonState<GeneralConfig>();
+    }
+
+    /** 俘虜與監獄（PROG-2-0073）：待處置俘虜、關押中、名聲、情報 */
+    public get prison(): PrisonState<GeneralConfig> {
+        return {
+            ...this._prison,
+            pending: this._prison.pending.map((p) => ({ record: { ...p.record }, target: { ...p.target } })),
+            prisoners: this._prison.prisoners.map((p) => ({ ...p })),
+        };
+    }
+
+    /**
+     * 戰勝後俘虜敗將：產生 POW_Record 放進待處置清單並存檔。
+     * 試用傭兵豁免、已在名冊 / 已被俘 / 已關押的武將不重複俘虜，回傳 null。
+     * 勸降率以出戰主將（沒有時用名冊第一位可出戰武將）的魅力與運氣計算。
+     */
+    public async capturePrisoner(target: GeneralConfig): Promise<PowRecord | null> {
+        const taken = new Set([
+            ...this._roster.getAll().map((g) => g.id),
+            ...this._prison.pending.map((p) => p.record.targetUid),
+            ...this._prison.prisoners.map((p) => p.targetUid),
+        ]);
+        if (taken.has(target.id)) return null;
+        const persuaderId = this._leadGeneralId ?? this.getDeployableGenerals()[0]?.id ?? null;
+        const persuader = persuaderId ? this._roster.getAll().find((g) => g.id === persuaderId) : undefined;
+        const record = createPowRecord(
+            { ...target, cha: target.cha ?? target.stats?.cha, luk: target.luk ?? target.stats?.luk, int: target.int ?? target.stats?.int, pol: target.pol ?? target.stats?.pol } as Parameters<typeof createPowRecord>[0],
+            { cha: persuader?.cha ?? persuader?.stats?.cha ?? 0, luk: persuader?.luk ?? persuader?.stats?.luk ?? 0 },
+        );
+        if (!record) return null;
+        this._prison = { ...this._prison, pending: [...this._prison.pending, { record, target: { ...target } }] };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return record;
+    }
+
+    /**
+     * 處置待處置俘虜（勸降 / 招募 / 無期徒刑 / 放走）。
+     * 加入麾下 → 寫進名冊；招募扣城市兵源（黃金由呼叫端依 goldSpent 從錢包扣）；關押進監獄；放走加名聲。
+     * 勸降失敗俘虜仍留在待處置清單（不能再勸降，可改關押或放走）；資源不足時什麼都不扣。
+     */
+    public async resolvePrisoner(targetUid: string, decision: PowDecision, options: { gold?: number } = {}): Promise<PowResolution | null> {
+        const pending = this._prison.pending.find((p) => p.record.targetUid === targetUid);
+        if (!pending) return null;
+        const resolution = resolvePowDecision(pending.record, decision, {
+            random: this._random,
+            gold: options.gold ?? 0,
+            cityTroops: this._military.cityTroops,
+            prisonUsed: this._prison.prisoners.length,
+            prisonSlots: this._prison.slots,
+        });
+        const others = this._prison.pending.filter((p) => p !== pending);
+        const done = resolution.joined || resolution.imprisoned || resolution.released;
+        this._prison = {
+            ...this._prison,
+            pending: done ? others : this._prison.pending.map((p) => (p === pending ? { ...p, record: resolution.record } : p)),
+            prisoners: resolution.imprisoned
+                ? [...this._prison.prisoners, {
+                    targetUid,
+                    targetName: pending.record.targetName,
+                    imprisonedSeason: this._clock.state.totalSeasonsElapsed,
+                    yieldPerSeason: { ...pending.record.options.prisonYield },
+                }]
+                : this._prison.prisoners,
+            fame: this._prison.fame + resolution.fameGained,
+        };
+        if (resolution.cityTroopsSpent > 0) {
+            this._military = { ...this._military, cityTroops: Math.max(0, this._military.cityTroops - resolution.cityTroopsSpent) };
+        }
+        if (resolution.joined) {
+            // addGenerals 廣播 RosterChanged；監獄狀態另外存檔
+            await this.addGenerals([{ ...pending.target }]);
+        }
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return resolution;
+    }
+
+    /** 城市兵源與糧草儲備（PROG-2-0072） */
+    public get military(): MilitaryReserve {
+        return { ...this._military };
+    }
+
+    /**
+     * 名冊武將出戰的出征帳本設定：帶兵上限由戰場統率推算，城市兵源與糧草取目前儲備。
+     * 不在名冊或不能出戰時回傳 null（戰場維持舊版不扣軍勢）。
+     */
+    public getSortieInput(generalId: string, stageSortieCap?: number): CreateSortieInput | null {
+        const config = this.getBattleConfig(generalId, Faction.Player);
+        if (!config) return null;
+        const foodBonus = this.getSortieSupportSummary(generalId).deputyBonus.startingFoodBonus;
+        return {
+            commandCapacity: computeCommandCapacity({ lea: config.lea ?? config.stats?.lea ?? 0 }),
+            cityTroops: this._military.cityTroops,
+            ...(stageSortieCap !== undefined ? { stageSortieCap } : {}),
+            food: this._military.food,
+            ...(foodBonus > 0 ? { foodBonus } : {}),
+        };
     }
 
     /** 指定出戰主將；必須是目前可出戰的名冊武將，否則回傳 false 且不變 */
@@ -303,6 +446,47 @@ export class GameSession {
         }
         this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, generalId);
         return true;
+    }
+
+    public get sortieSupport(): SortieSupport {
+        return { ...this._sortieSupport };
+    }
+
+    /**
+     * 指定出征支援（參謀官 / 後勤官，null = 不派）。
+     * 角色鎖、同名血統、可出戰檢查不通過時不變更並回傳問題清單（PROG-2-0083）。
+     */
+    public setSortieSupport(strategistUid: string | null, deputyUid: string | null, commanderUid: string | null = this._leadGeneralId): SortieLoadoutCheck {
+        const check = this._checkSortieSupport(commanderUid, strategistUid, deputyUid);
+        if (!check.ok) return check;
+        this._sortieSupport = { strategistUid, deputyUid };
+        this._emit(GAME_SESSION_EVENTS.SortieSupportChanged, this.sortieSupport);
+        return check;
+    }
+
+    /** 某主將出征時實際生效的支援與加成；失效的支援（不能出戰、與主將撞角色或血統）視為不派 */
+    public getSortieSupportSummary(commanderUid: string): SortieSupportSummary {
+        const deployable = this.getDeployableGenerals();
+        const members = deployable.map(toSortieMember);
+        const byId = new Map(deployable.map((g) => [g.id, g]));
+        const pick = (uid: string | null): GeneralConfig | null => (uid && uid !== commanderUid ? byId.get(uid) ?? null : null);
+        const fits = (st: GeneralConfig | null, dp: GeneralConfig | null): boolean =>
+            validateSortieLoadout({ commanderUid, strategistUid: st?.id ?? null, deputyUid: dp?.id ?? null }, members).ok;
+        let strategist = pick(this._sortieSupport.strategistUid);
+        if (strategist && !fits(strategist, null)) strategist = null;
+        let deputy = pick(this._sortieSupport.deputyUid);
+        if (deputy && !fits(strategist, deputy)) deputy = null;
+        return {
+            strategist,
+            deputy,
+            strategistBonus: getStrategistBonus(strategist ? toSortieMember(strategist) : null),
+            deputyBonus: getDeputyFoodBonus(deputy ? toSortieMember(deputy) : null, this._military.food),
+        };
+    }
+
+    private _checkSortieSupport(commanderUid: string | null, strategistUid: string | null, deputyUid: string | null): SortieLoadoutCheck {
+        const members = this.getDeployableGenerals().map(toSortieMember);
+        return validateSortieLoadout({ commanderUid: commanderUid ?? '', strategistUid, deputyUid }, members);
     }
 
     /** 進戰場的我軍主將：指定的主將還能出戰就用它，否則用 fallbackId（遭遇戰預設） */
@@ -470,6 +654,11 @@ export class GameSession {
         this._roster.replaceAll(roster);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
+        this._military = regenMilitaryOneSeason(this._military);
+        // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
+        const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
+        this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
+        this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
 
         const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
         if (this._autoSave && this._save) {
@@ -565,9 +754,13 @@ export class GameSession {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
+            performance: options.performance,
         });
         if (settlement.entries.length === 0) {
             return { ...settlement, awakenings: [] };
+        }
+        if (options.sortie) {
+            this._military = applySortieResult(this._military, options.sortie);
         }
 
         const source = battleExpSource(result);
@@ -593,7 +786,7 @@ export class GameSession {
             }
         }
 
-        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings };
+        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, ...(options.sortie ? { military: this.military } : {}) };
         this._roster.replaceAll(roster);
         if (this._autoSave && this._save) {
             await this.save();
@@ -607,6 +800,10 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
+        return { ...this._createBaseSnapshot(now), military: this.military, prison: this.prison };
+    }
+
+    private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
         return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount);
     }
 
@@ -630,11 +827,14 @@ export class GameSession {
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
+        this._sortieSupport = { strategistUid: null, deputyUid: null };
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
         this._inventory = normalizeInventory(snapshot.inventory);
         this._oracleCount = snapshot.oracleCount ?? 0;
+        this._military = normalizeMilitaryReserve(snapshot.military);
+        this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }

@@ -41,6 +41,10 @@ export interface DamageContext {
   defenderTerrain: TerrainType;
   attackBonus?: number;
   defenseBonus?: number;
+  /** 攻方指揮武將的適性攻擊倍率（地形×天氣×兵種，PROG-2-0071）；預設 1 */
+  attackerAptitudeMultiplier?: number;
+  /** 守方指揮武將的適性防禦倍率；預設 1 */
+  defenderAptitudeMultiplier?: number;
 }
 
 export class FormulaSystem {
@@ -73,8 +77,11 @@ export class FormulaSystem {
     const attackBonus = 1 + (context.attackBonus || 0);
     const defenseBonus = 1 + (context.defenseBonus || 0);
 
-    const effectiveAttack = context.attackerAttack * counterMultiplier * attackTerrain * attackBonus;
-    const effectiveDefense = context.defenderDefense * defenseTerrain * defenseBonus;
+    const attackAptitude = context.attackerAptitudeMultiplier ?? 1;
+    const defenseAptitude = context.defenderAptitudeMultiplier ?? 1;
+
+    const effectiveAttack = context.attackerAttack * counterMultiplier * attackTerrain * attackBonus * attackAptitude;
+    const effectiveDefense = context.defenderDefense * defenseTerrain * defenseBonus * defenseAptitude;
     return Math.max(MIN_DAMAGE, Math.floor(effectiveAttack - effectiveDefense));
   }
 

@@ -23,6 +23,7 @@
     "Tactics":   { "slotId": "ContentSlot", "fragment": "fragments/layouts/gd-tab-skills" },
     "Bloodline": { "slotId": "ContentSlot", "fragment": "fragments/layouts/gd-tab-bloodline" },
     "Equip":     { "slotId": "ContentSlot", "fragment": "fragments/layouts/gd-tab-basics" },
-    "Aptitude":  { "slotId": "ContentSlot", "fragment": "fragments/layouts/gd-tab-aptitude" }
+    "Aptitude":  { "slotId": "ContentSlot", "fragment": "fragments/layouts/gd-tab-aptitude" },
+    "Record":    { "slotId": "ContentSlot", "fragment": "fragments/layouts/gd-tab-record" }
   }
 }
