@@ -26,6 +26,7 @@ import { createBreedingSuite } from './Breeding.test';
 import { createNurtureSuite } from './Nurture.test';
 import { createNurtureFlowSuite } from './NurtureFlow.test';
 import { createLegacySuite } from './Legacy.test';
+import { createSeededRandomSuite } from './SeededRandom.test';
 import { createTigerTallySuite } from './TigerTally.test';
 import { createBattleRosterSuite } from './BattleRoster.test';
 import { createLegacyTallySuite } from './LegacyTally.test';
@@ -89,6 +90,7 @@ if (typeof window === 'undefined') {
     runner.register(createNurtureFlowSuite());
     runner.register(createLegacySuite());
     runner.register(createTigerTallySuite());
+    runner.register(createSeededRandomSuite());
     runner.register(createBattleRosterSuite());
     runner.register(createLegacyTallySuite());
     runner.register(createBattleDeckLoadingSuite());
