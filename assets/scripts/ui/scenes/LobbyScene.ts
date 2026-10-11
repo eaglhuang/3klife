@@ -1629,7 +1629,7 @@ export class LobbyScene extends Component {
         return {
             entrySource: 'lobby',
             encounterId: encounter.id,
-            playerGeneralId: encounter.playerGeneralId,
+            playerGeneralId: services().session.resolveLeadGeneralId(encounter.playerGeneralId),
             enemyGeneralId: encounter.enemyGeneralId,
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
