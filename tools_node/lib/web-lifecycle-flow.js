@@ -42,6 +42,7 @@ async function runLifecycleFlow(page, options = {}) {
         if (!start(window.cc.director.getScene())) throw new Error('Login entry missing');
     });
     const steps = ['LoginScene.onClickStart'];
+    if (options.onStep) await options.onStep('login');
     for (const name of ['OpenBondingButton', 'BtnOpenOracle']) {
         await page.waitForFunction((target) => {
             function find(node) {
@@ -64,6 +65,7 @@ async function runLifecycleFlow(page, options = {}) {
             if (!click(window.cc.director.getScene())) throw new Error(`Button unavailable: ${target}`);
         }, name);
         steps.push(name);
+        if (options.onStep) await options.onStep(name);
     }
     await page.waitForFunction(() => {
         function find(node) {
@@ -94,4 +96,117 @@ async function runLifecycleFlow(page, options = {}) {
     };
 }
 
-module.exports = { runLifecycleFlow, validateOracleState };
+// ── 擴充：結緣確認 → 推進一季 → 出戰（PROG-2-0054）。建立在上面的 lifecycle 之上，不另造一套 ──
+
+/** 頁面內：找名稱為 target 的節點狀態（顯示中 / 可按） */
+function readNode(target) {
+    function find(node) {
+        if (node.name === target && node.activeInHierarchy) return node;
+        for (const child of node.children) {
+            const hit = find(child);
+            if (hit) return hit;
+        }
+        return null;
+    }
+    const node = find(window.cc.director.getScene());
+    if (!node) return null;
+    const button = node.getComponent('cc.Button');
+    const label = node.getComponent('cc.Label');
+    return { interactable: button ? button.interactable : null, text: label ? label.string : null };
+}
+
+async function clickNamed(page, target, timeout) {
+    await page.waitForFunction((name) => {
+        function find(node) {
+            const button = node.getComponent('cc.Button');
+            return (node.name === name && node.activeInHierarchy && button && button.interactable) || node.children.some(find);
+        }
+        return find(window.cc.director.getScene());
+    }, { timeout }, target);
+    await page.evaluate((name) => {
+        function click(node) {
+            const button = node.getComponent('cc.Button');
+            if (node.name === name && node.activeInHierarchy && button && button.interactable) {
+                node.emit('click', button);
+                return true;
+            }
+            return node.children.some(click);
+        }
+        if (!click(window.cc.director.getScene())) throw new Error(`Button unavailable: ${name}`);
+    }, target);
+}
+
+async function waitGone(page, target, timeout) {
+    await page.waitForFunction((name) => {
+        function find(node) {
+            return (node.name === name && node.activeInHierarchy) || node.children.some(find);
+        }
+        return !find(window.cc.director.getScene());
+    }, { timeout }, target);
+}
+
+/**
+ * 登入 → 大廳 → 結緣 → 占卜（既有 lifecycle）→ 關占卜 → 結緣確認 → 關結緣 → 推進一季 → 出戰。
+ * 空名冊時結緣確認鈕不可按，記為 skipped 並寫明原因，不當成失敗也不假裝通過。
+ * options.onStep(name) 每步完成後呼叫（run-web-smoke 用來截圖）。
+ */
+async function runFullFlow(page, options = {}) {
+    const timeout = options.timeoutMs || 45000;
+    const base = await runLifecycleFlow(page, options);
+    const steps = [...base.steps];
+    const skipped = [];
+    const mark = async (name) => {
+        steps.push(name);
+        if (options.onStep) await options.onStep(name);
+    };
+
+    await clickNamed(page, 'BtnCloseOracle', timeout);
+    await waitGone(page, 'OracleTitle', timeout);
+    await mark('BtnCloseOracle');
+
+    const confirm = await page.evaluate(readNode, 'BtnConfirmBond');
+    if (confirm && confirm.interactable) {
+        await clickNamed(page, 'BtnConfirmBond', timeout);
+        await new Promise((resolve) => setTimeout(resolve, options.actionSettleMs || 800));
+        await mark('BtnConfirmBond');
+    } else {
+        skipped.push({ step: 'BtnConfirmBond', reason: confirm ? '按鈕不可按（名冊內沒有符合資格的一男一女）' : '找不到結緣確認鈕' });
+    }
+
+    await clickNamed(page, 'BtnCloseBond', timeout);
+    await mark('BtnCloseBond');
+
+    const before = await page.evaluate(readNode, 'SeasonLabel');
+    if (!before || !before.text) throw new Error('Season label missing');
+    await clickNamed(page, 'AdvanceSeasonButton', timeout);
+    await page.waitForFunction((text) => {
+        function find(node) {
+            const label = node.getComponent('cc.Label');
+            return (node.name === 'SeasonLabel' && node.activeInHierarchy && label && label.string !== text) || node.children.some(find);
+        }
+        return find(window.cc.director.getScene());
+    }, { timeout }, before.text);
+    const after = await page.evaluate(readNode, 'SeasonLabel');
+    await mark('AdvanceSeasonButton');
+
+    await clickNamed(page, 'BtnBattle', timeout);
+    await page.waitForFunction(() => {
+        const scene = window.cc.director.getScene();
+        return scene && scene.name === 'BattleScene';
+    }, { timeout });
+    // 戰場初始化的非同步錯誤要有機會冒出來
+    await new Promise((resolve) => setTimeout(resolve, options.battleSettleMs || 3000));
+    await mark('BtnBattle');
+
+    return {
+        ...base,
+        name: 'lifecycle-full',
+        scene: 'BattleScene',
+        steps,
+        skipped,
+        season: { before: before.text, after: after && after.text },
+        limitations: [...base.limitations, 'Battle only entered, not played'],
+    };
+}
+
+module.exports = { runLifecycleFlow, runFullFlow, validateOracleState };
