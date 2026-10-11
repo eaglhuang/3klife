@@ -83,6 +83,33 @@
             ]
           },
           {
+            "type": "button",
+            "name": "BtnOpenOracle",
+            "id": "btnOpenOracle",
+            "widget": {
+              "top": 16,
+              "right": 150
+            },
+            "width": 180,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOpenOracleLabel",
+                "id": "openOracleLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "名士占卜",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
             "type": "label",
             "name": "BondEmptyHint",
             "id": "bondEmptyHint",

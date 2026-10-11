@@ -21,6 +21,7 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
+import { SageOracleController } from '../core/SageOracleController';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
@@ -103,6 +104,8 @@ export class LobbyScene extends Component {
     private _nurtureFlow: NurtureFlowController | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
+    private _oracleHost: UIScreenPreviewHost | null = null;
+    private _oracle: SageOracleController | null = null;
     private _deckSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectPage = 0;
@@ -155,6 +158,7 @@ export class LobbyScene extends Component {
         await this._mountSeasonHud();
         await this._mountNurtureFlow();
         await this._mountBondingSetup();
+        await this._mountSageOracle();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
         await this._mountCharacterDs3Host();
@@ -349,6 +353,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); } },
             { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); } },
             { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
+            { buttonId: 'btnOpenOracle', handler: () => { this._openSageOracle(bonding.fatherId); } },
         ]);
 
         const refresh = (): void => { this._refreshBondingSetup(); };
@@ -402,6 +407,75 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '結緣失敗', duration: 2.5 });
         } finally {
             this._refreshBondingSetup();
+        }
+    }
+
+    /**
+     * 名士占卜畫面：以 UCUF JSON（sage-oracle-screen）執行期組裝，從結緣畫面開啟並預選父方。
+     * 挑對象、換名士、求籤令檢查都在 SageOracleController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountSageOracle(): Promise<void> {
+        const oracle = new SageOracleController({
+            roster: { getAll: () => services().session.roster },
+            session: services().session,
+        });
+        this._oracle = oracle;
+
+        this._oracleHost = await this._mountPreviewScreenHost('SageOracleHost', 'sage-oracle-screen', [
+            { buttonId: 'btnCloseOracle', handler: () => { this._closeSageOracle(); } },
+            { buttonId: 'btnPrevTarget', handler: () => { oracle.cycleTarget(-1); this._refreshSageOracle(); } },
+            { buttonId: 'btnNextTarget', handler: () => { oracle.cycleTarget(1); this._refreshSageOracle(); } },
+            { buttonId: 'btnPrevSage', handler: () => { oracle.cycleSage(-1); this._refreshSageOracle(); } },
+            { buttonId: 'btnNextSage', handler: () => { oracle.cycleSage(1); this._refreshSageOracle(); } },
+            { buttonId: 'btnDivine', handler: () => { void this._onClickDivine(); } },
+        ]);
+
+        const refresh = (): void => { this._refreshSageOracle(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+            event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.InventoryChanged, refresh),
+        );
+    }
+
+    private _openSageOracle(preferredTargetId: string | null): void {
+        const host = this._oracleHost;
+        if (!host || !this._oracle) {
+            return;
+        }
+        this._oracle.open(preferredTargetId);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshSageOracle();
+    }
+
+    private _closeSageOracle(): void {
+        if (this._oracleHost) {
+            this._oracleHost.node.active = false;
+        }
+    }
+
+    private _refreshSageOracle(): void {
+        const binder = this._oracleHost?.binder;
+        if (!binder || !this._oracle) {
+            return;
+        }
+        applyFlowView(binder, this._oracle.getView());
+    }
+
+    private async _onClickDivine(): Promise<void> {
+        if (!this._oracle) {
+            return;
+        }
+        try {
+            await this._oracle.divine();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 名士占卜失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '名士占卜失敗', duration: 2.5 });
+        } finally {
+            this._refreshSageOracle();
         }
     }
 
@@ -1159,6 +1233,7 @@ export class LobbyScene extends Component {
                 }
                 this._closeNurtureFlow();
                 this._closeBondingSetup();
+                this._closeSageOracle();
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = false;
                 }

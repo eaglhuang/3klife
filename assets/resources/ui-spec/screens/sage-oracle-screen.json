@@ -1,0 +1,17 @@
+{
+  "id": "sage-oracle-screen",
+  "version": 1,
+  "uiId": "SageOracle",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "sage-oracle-main",
+  "skin": "sage-oracle-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
