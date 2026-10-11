@@ -39,6 +39,7 @@ import { createFactorAwakeningSuite } from './FactorAwakening.test';
 import { createBattleSpecialActionsSuite } from './BattleSpecialActions.test';
 import { createSageDivinationSuite } from './SageDivination.test';
 import { createSageOracleSuite } from './SageOracle.test';
+import { createSageProphecySuite } from './SageProphecy.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
 import { createCompositePanelSuite } from './ucuf/compositePanel.test';
 import { createAttributePanelSuite } from './ucuf/attributePanel.test';
@@ -108,6 +109,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSpecialActionsSuite());
     runner.register(createSageDivinationSuite());
     runner.register(createSageOracleSuite());
+    runner.register(createSageProphecySuite());
     runner.register(createSkinLayersSuite());
     runner.register(createCompositePanelSuite());
     runner.register(createAttributePanelSuite());

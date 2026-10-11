@@ -19,10 +19,13 @@ import type { PersonRecord } from '../models/PersonRegistry';
 import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSlotGeneration } from '../services/BloodlineGraph';
 import {
     AncestorFactorSource,
+    DEFAULT_ENABLED_FACTOR_COLORS,
+    FACTOR_POOL_RATE,
     FactorColor,
     FactorDictionary,
     InheritedFactor,
     inheritFactors,
+    resolveFactorColor,
     toGeneConfigs,
 } from './FactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
@@ -419,6 +422,43 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
     const profiles = collectProfiles(pedigree, request);
     const historical = request.isHistoricalPair?.(request.father, request.mother) ?? false;
     return { pedigree, ep: computeEpMvp(pedigree, profiles, historical) };
+}
+
+/** 子嗣可能繼承的一個因子：至少一位祖先進池的機率（不含星等與 5 格上限） */
+export interface FactorPoolEntry {
+    id: string;
+    color: FactorColor;
+    /** 1 − Π(1 − 進池率)，同因子多位祖先帶時機率疊加 */
+    chance: number;
+    displayName?: string;
+}
+
+/**
+ * 預覽子嗣的因子池（名士預言用），不消耗亂數也不改任何資料。
+ * 依祖譜位置的進池率（G1 100% / G2 50% / G3 25%）計算每個因子至少進池一次的機率，機率高的在前。
+ */
+export function previewFactorPool(
+    request: Omit<BreedingRequest, 'random' | 'childId'>,
+): FactorPoolEntry[] {
+    const pedigree = buildChildPedigree(request.father.id, request.mother.id, request.pedigree);
+    const sources = buildFactorSources(pedigree, collectProfiles(pedigree, request));
+    const enabled = new Set(request.enabledColors ?? DEFAULT_ENABLED_FACTOR_COLORS);
+    const miss = new Map<string, { color: FactorColor; miss: number }>();
+    for (const source of sources) {
+        for (const factorId of Array.from(new Set(source.factorIds))) {
+            if (!factorId) continue;
+            const gene = source.genes?.find((g) => g.id === factorId);
+            const color = resolveFactorColor(factorId, request.dictionary, gene);
+            if (!color || !enabled.has(color)) continue;
+            const entry = miss.get(factorId) ?? { color, miss: 1 };
+            entry.miss *= 1 - FACTOR_POOL_RATE[source.generation];
+            miss.set(factorId, entry);
+        }
+    }
+    // Cocos Web 轉譯的 loose spread 不會展開 Map iterator，一律用 Array.from（同 PROG-2-0062）
+    return Array.from(miss.entries())
+        .map(([id, { color, miss: m }]) => ({ id, color, chance: 1 - m, displayName: request.dictionary?.get(id)?.displayName }))
+        .sort((a, b) => b.chance - a.chance || a.id.localeCompare(b.id));
 }
 
 function collectProfiles(

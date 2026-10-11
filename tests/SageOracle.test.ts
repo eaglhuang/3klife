@@ -110,9 +110,9 @@ export function createSageOracleSuite(): TestSuite {
         assert.equals('2', inventoryEvents.join(','));
 
         const broke = makeSession([person('a', lockedBlue())], seq(0.99).random);
-        for (let i = 0; i < 3; i++) await broke.divineFactor('a', 'zuo-ci');
+        for (let i = 0; i < 3; i++) await broke.divineFactor('a', 'sima-hui');
         assert.equals(0, broke.itemCount(ITEM_ORACLE_TOKEN), '扭曲 3 次用光');
-        const noToken = await broke.divineFactor('a', 'zuo-ci');
+        const noToken = await broke.divineFactor('a', 'sima-hui');
         assert.equals('no-token', noToken.outcome);
         assert.isFalse(noToken.consumed);
     });
@@ -121,7 +121,7 @@ export function createSageOracleSuite(): TestSuite {
         const adapter = new MemoryStorageAdapter();
         const session = makeSession([person('a', lockedBlue())], seq(0.99).random);
         session.setSaveService(new PlayerSaveService(adapter));
-        await session.divineFactor('a', 'zuo-ci');
+        await session.divineFactor('a', 'sima-hui');
         assert.equals(2, session.itemCount(ITEM_ORACLE_TOKEN), '扭曲也扣');
 
         const reloaded = new GameSession();
@@ -171,7 +171,7 @@ export function createSageOracleSuite(): TestSuite {
         assert.equals('求籤令 ×2', view.texts.tokenLabel);
 
         flow.cycleSage(-1);
-        assert.equals('左慈', flow.getView().texts.sageName, '名士循環');
+        assert.equals('左慈（未解鎖）', flow.getView().texts.sageName, '名士循環；左慈需累計占卜 100 次');
     });
 
     suite.test('畫面：扭曲批語、空名冊提示', async () => {
@@ -222,7 +222,7 @@ export function createSageOracleSuite(): TestSuite {
         const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
         assert.isTrue(lobby.includes("'sage-oracle-screen'"));
         assert.isTrue(lobby.includes("buttonId: 'btnOpenOracle'"));
-        for (const id of ['btnCloseOracle', 'btnPrevTarget', 'btnNextTarget', 'btnPrevSage', 'btnNextSage', 'btnDivine']) {
+        for (const id of ['btnCloseOracle', 'btnPrevTarget', 'btnNextTarget', 'btnPrevSage', 'btnNextSage', 'btnDivine', 'btnPredict']) {
             assert.isTrue(ids.has(id), `layout 有 ${id}`);
             assert.isTrue(lobby.includes(`buttonId: '${id}'`), `LobbyScene 綁 ${id}`);
         }

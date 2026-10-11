@@ -13,14 +13,15 @@
  * - 扭曲：不覺醒，只回傳名士偏見方向的提示色（司馬徽沒有偏好，提示為 null）
  * - 諸葛亮「智力 / 政治」歸藍色（基礎屬性）；司馬徽「全面 / 中庸」不加權
  * - 沒有可覺醒的因子時不擲骰，呼叫端不應扣求籤令
- * - 求籤令扣除在 GameSession.divineFactor（PROG-2-0053）；名士解鎖條件、名士等級提高準確率未做
+ * - 求籤令扣除在 GameSession（PROG-2-0053）；名士依累計占卜次數解鎖（PROG-2-0065）；名士等級提高準確率未做
  *
  * Unity 對照：像一個 static class OracleService.Divine(general, sage, rng)，
  * 只回傳結果與新資料，由 GameManager 存檔並廣播事件。
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { awakenFactor, AwakeningCandidate, FactorAwakenedEvent, listAwakeningCandidates } from './FactorAwakening';
-import { FactorColor, normalizeFactorColor } from './FactorInheritance';
+import { ALL_FACTOR_COLORS, FactorColor, normalizeFactorColor } from './FactorInheritance';
+import type { FactorPoolEntry } from './BreedingSystem';
 
 export type SageId = 'zhuge-liang' | 'hua-tuo' | 'sima-hui' | 'xu-shao' | 'pang-tong' | 'zuo-ci';
 
@@ -33,22 +34,26 @@ export interface SageDefinition {
     accuracy: number;
     /** 偏好的因子色系；空陣列表示不加權 */
     biasColors: readonly FactorColor[];
+    /** 累計占卜幾次後解鎖；0 = 一開始就可用 */
+    unlockDivinations: number;
 }
 
 export const SAGES: Readonly<Record<SageId, SageDefinition>> = {
-    'zhuge-liang': { id: 'zhuge-liang', name: '諸葛亮', focus: '智力/政治', accuracy: 0.85, biasColors: ['blue'] },
-    'hua-tuo': { id: 'hua-tuo', name: '華佗', focus: '壽命/體魄', accuracy: 0.8, biasColors: ['red'] },
-    'sima-hui': { id: 'sima-hui', name: '司馬徽', focus: '全面/中庸', accuracy: 0.75, biasColors: [] },
-    'xu-shao': { id: 'xu-shao', name: '許劭', focus: '性格/天賦', accuracy: 0.8, biasColors: ['white'] },
-    'pang-tong': { id: 'pang-tong', name: '龐統', focus: '軍事/戰法', accuracy: 0.85, biasColors: ['green'] },
-    'zuo-ci': { id: 'zuo-ci', name: '左慈', focus: '運氣/天命', accuracy: 0.7, biasColors: ['purple'] },
+    'zhuge-liang': { id: 'zhuge-liang', name: '諸葛亮', focus: '智力/政治', accuracy: 0.85, biasColors: ['blue'], unlockDivinations: 0 },
+    'hua-tuo': { id: 'hua-tuo', name: '華佗', focus: '壽命/體魄', accuracy: 0.8, biasColors: ['red'], unlockDivinations: 0 },
+    'sima-hui': { id: 'sima-hui', name: '司馬徽', focus: '全面/中庸', accuracy: 0.75, biasColors: [], unlockDivinations: 0 },
+    'xu-shao': { id: 'xu-shao', name: '許劭', focus: '性格/天賦', accuracy: 0.8, biasColors: ['white'], unlockDivinations: 0 },
+    // 規格 §C 範例：占卜 50 次解鎖龐統
+    'pang-tong': { id: 'pang-tong', name: '龐統', focus: '軍事/戰法', accuracy: 0.85, biasColors: ['green'], unlockDivinations: 50 },
+    // 規格 §C：左慈為限定活動 VIP 名士；活動系統未做，暫定累計 100 次解鎖
+    'zuo-ci': { id: 'zuo-ci', name: '左慈', focus: '運氣/天命', accuracy: 0.7, biasColors: ['purple'], unlockDivinations: 100 },
 };
 
 /** 偏好色系的抽樣權重（其他色系為 1） */
 export const SAGE_BIAS_WEIGHT = 3;
 
-/** no-token 由 GameSession 回傳（求籤令不足，未擲骰） */
-export type SageDivinationOutcome = 'awakened' | 'distorted' | 'no-candidate' | 'no-such-general' | 'no-such-sage' | 'no-token';
+/** no-token / sage-locked 由 GameSession 回傳（求籤令不足 / 名士未解鎖，未擲骰） */
+export type SageDivinationOutcome = 'awakened' | 'distorted' | 'no-candidate' | 'no-such-general' | 'no-such-sage' | 'no-token' | 'sage-locked';
 
 export interface SageDivinationResult {
     sageId: string;
@@ -64,6 +69,12 @@ export interface SageDivinationResult {
 
 export function getSage(sageId: string): SageDefinition | undefined {
     return SAGES[sageId as SageId];
+}
+
+/** 名士是否已依累計占卜次數解鎖 */
+export function isSageUnlocked(sageId: string, divinationCount: number): boolean {
+    const sage = getSage(sageId);
+    return sage !== undefined && divinationCount >= sage.unlockDivinations;
 }
 
 function candidateColor(general: GeneralConfig, candidate: AwakeningCandidate): FactorColor | null {
@@ -124,5 +135,87 @@ export function divineFactor(
         event: awakened.event,
         hintColor: awakened.event.color,
         consumed: true,
+    };
+}
+
+// ── 結緣前預測子嗣（PROG-2-0065） ─────────────────────────────────────────
+//
+// 規格 §F：if (Random() <= accuracy) Prediction = WeightedSample(child_genes, bias)
+//          else Prediction = Distort(WeightedSample(child_genes, bias))
+// 規格 §K：預測結果採「批語 + 色彩傾向 + 關鍵詞」，不顯示精準數字
+//
+// 暫定（規格沒寫）：
+// - 結緣前子嗣還不存在，child_genes 以父母祖譜的因子池代替（FactorPoolEntry），權重 = 進池機率 × 偏好權重
+// - Distort：色彩傾向改成另一個色系（名士偏好色優先，其次依六色順序取下一個），關鍵詞換成字典裡該色系、
+//   但不在因子池內的因子名（找不到就不給關鍵詞）
+// - isDistorted 只給測試與紀錄用，畫面不顯示
+
+export interface OffspringProphecy {
+    /** 色彩傾向 */
+    color: FactorColor;
+    /** 關鍵詞來源因子；扭曲且字典沒有可用因子時為 null */
+    factorId: string | null;
+    keyword: string | null;
+    isDistorted: boolean;
+}
+
+export interface ProphecyResult {
+    sageId: string;
+    outcome: 'predicted' | 'no-candidate' | 'no-such-sage' | 'no-token' | 'sage-locked';
+    prophecy?: OffspringProphecy;
+    consumed: boolean;
+}
+
+/** 可供扭曲時借用關鍵詞的因子（id、色系、名稱） */
+export interface ProphecyKeywordSource {
+    id: string;
+    color: FactorColor;
+    displayName?: string;
+}
+
+function distortColor(actual: FactorColor, sage: SageDefinition): FactorColor {
+    const biased = sage.biasColors.find((c) => c !== actual);
+    if (biased) return biased;
+    const index = ALL_FACTOR_COLORS.indexOf(actual);
+    return ALL_FACTOR_COLORS[(index + 1) % ALL_FACTOR_COLORS.length];
+}
+
+export function predictOffspring(
+    pool: readonly FactorPoolEntry[],
+    sageId: string,
+    random: () => number,
+    keywordSources: readonly ProphecyKeywordSource[] = [],
+): ProphecyResult {
+    const sage = getSage(sageId);
+    if (!sage) return { sageId, outcome: 'no-such-sage', consumed: false };
+    const candidates = pool.filter((entry) => entry.chance > 0);
+    if (candidates.length === 0) return { sageId, outcome: 'no-candidate', consumed: false };
+
+    const accurate = random() <= sage.accuracy;
+    const weights = candidates.map((entry) => entry.chance * (sage.biasColors.includes(entry.color) ? SAGE_BIAS_WEIGHT : 1));
+    const total = weights.reduce((sum, w) => sum + w, 0);
+    let roll = random() * total;
+    let pick = candidates[candidates.length - 1];
+    for (let i = 0; i < candidates.length; i++) {
+        roll -= weights[i];
+        if (roll < 0) { pick = candidates[i]; break; }
+    }
+
+    if (accurate) {
+        return {
+            sageId,
+            outcome: 'predicted',
+            consumed: true,
+            prophecy: { color: pick.color, factorId: pick.id, keyword: pick.displayName ?? pick.id, isDistorted: false },
+        };
+    }
+    const color = distortColor(pick.color, sage);
+    const inPool = new Set(pool.map((entry) => entry.id));
+    const decoy = keywordSources.find((source) => source.color === color && !inPool.has(source.id));
+    return {
+        sageId,
+        outcome: 'predicted',
+        consumed: true,
+        prophecy: { color, factorId: decoy?.id ?? null, keyword: decoy ? decoy.displayName ?? decoy.id : null, isDistorted: true },
     };
 }
