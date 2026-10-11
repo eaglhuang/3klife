@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updatedAt": "2026-04-15",
+  "updatedAt": "2026-10-11",
   "description": "六色因子共用字典。供 M1-E 戰法/奧義與 M1-F 虛擬祖先生成器共用。",
   "data": [
     {
@@ -154,6 +154,30 @@
       "category": "physique",
       "maxLevel": 5,
       "defaultTags": ["vigor", "stamina", "survival"]
+    },
+    {
+      "id": "gene_naval",
+      "displayName": "水戰適性",
+      "color": "pink",
+      "category": "terrain",
+      "maxLevel": 5,
+      "defaultTags": ["naval", "river", "water"]
+    },
+    {
+      "id": "gene_mountain",
+      "displayName": "山地適性",
+      "color": "pink",
+      "category": "terrain",
+      "maxLevel": 5,
+      "defaultTags": ["mountain", "terrain"]
+    },
+    {
+      "id": "gene_forest",
+      "displayName": "林地適性",
+      "color": "pink",
+      "category": "terrain",
+      "maxLevel": 5,
+      "defaultTags": ["forest", "terrain"]
     },
     {
       "id": "gene_hidden_01",

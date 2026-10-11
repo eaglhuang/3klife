@@ -48,6 +48,7 @@ import {
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
+import { divineFactor, SageDivinationResult } from '../systems/SageDivination';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -328,6 +329,27 @@ export class GameSession {
         }
         this._emit(GAME_SESSION_EVENTS.FactorAwakened, result.event);
         return { ok: true, event: result.event };
+    }
+
+    /**
+     * 名士占卜：依名士偏好與準確率覺醒名冊中某位武將的一個鎖定因子。
+     * 有擲骰（consumed）就存檔（亂數狀態前進）；覺醒成功才改名冊並廣播 FactorAwakened。
+     * 求籤令扣除由呼叫端依 consumed 處理。
+     */
+    public async divineFactor(generalId: string, sageId: string): Promise<SageDivinationResult> {
+        const roster = this._roster.getAll();
+        const result = divineFactor(roster.find((g) => g.id === generalId), sageId, this._discoveryLevel, this._random);
+        if (result.outcome === 'awakened' && result.general) {
+            const general = result.general;
+            this._roster.replaceAll(roster.map((g) => (g.id === generalId ? general : g)));
+        }
+        if (result.consumed && this._autoSave && this._save) {
+            await this.save();
+        }
+        if (result.event) {
+            this._emit(GAME_SESSION_EVENTS.FactorAwakened, result.event);
+        }
+        return result;
     }
 
     /** 整組覆寫出戰卡組（以 catalogIds 過濾未知 ID、去重、截到上限）並自動存檔 */
