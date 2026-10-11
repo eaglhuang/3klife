@@ -27,5 +27,5 @@ applyTo: "docs/**"
 - 新增 `.md` 文件後，必須呼叫 `node tools_node/doc-id-registry.js --assign <path>` 分配 doc_id
 - 禁止手動填寫 doc_id 或複製他人 doc_id — 代號必須透過工具取得
 - 搜尋文件：`node tools_node/resolve-doc-id.js <doc_id>` 或 `node tools_node/resolve-doc-id.js <搜尋關鍵詞>`
-- Registry 位置：`docs/doc-id-registry.json`（index stub）/ `docs/doc-id-registry-shards/registry-*.json`（機器可讀分片）/ `docs/doc-id-registry.md (doc_other_0001)` (doc_other_0001)（完整列表）
+- Registry 位置：`docs/doc-id-registry.json`（index stub）/ `docs/doc-id-registry-shards/registry-*.json`（機器可讀分片）/ `docs/doc-id-registry.md (doc_other_0006)` (doc_other_0006)（完整列表）
 - 大 shard 讀取規則：`registry-spec.json`、`registry-task.json` 有 auto-parts 時，先讀 part 檔，不先讀整份母 shard

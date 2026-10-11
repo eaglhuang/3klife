@@ -124,6 +124,38 @@
       "defaultTags": ["berserk", "burst", "aoe"]
     },
     {
+      "id": "gene_destiny",
+      "displayName": "天命",
+      "color": "purple",
+      "category": "fortune",
+      "maxLevel": 5,
+      "defaultTags": ["fortune", "fate", "fire-attack"]
+    },
+    {
+      "id": "gene_luck",
+      "displayName": "福運",
+      "color": "purple",
+      "category": "fortune",
+      "maxLevel": 5,
+      "defaultTags": ["fortune", "crit", "rockfall"]
+    },
+    {
+      "id": "gene_vitality",
+      "displayName": "強健",
+      "color": "red",
+      "category": "physique",
+      "maxLevel": 5,
+      "defaultTags": ["vigor", "recovery", "lifespan"]
+    },
+    {
+      "id": "gene_endurance",
+      "displayName": "耐戰",
+      "color": "red",
+      "category": "physique",
+      "maxLevel": 5,
+      "defaultTags": ["vigor", "stamina", "survival"]
+    },
+    {
       "id": "gene_hidden_01",
       "displayName": "咆哮覺醒因子",
       "color": "gold",

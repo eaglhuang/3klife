@@ -19,7 +19,18 @@ import { createCurveSuite } from './CurveSystem.test';
 import { createUnityParticlePrefabParserSuite } from './UnityParticlePrefabParser.test';
 import { createDeprecatedApiSuite } from './DeprecatedApiScanner';
 import { createSyncManagerSuite } from './SyncManager.test';
+import { createSyncContractSuite } from './SyncContract.test';
 import { createNetworkServiceSuite } from './NetworkService.test';
+import { createGameSessionSuite } from './GameSession.test';
+import { createBreedingSuite } from './Breeding.test';
+import { createNurtureSuite } from './Nurture.test';
+import { createNurtureFlowSuite } from './NurtureFlow.test';
+import { createLegacySuite } from './Legacy.test';
+import { createTigerTallySuite } from './TigerTally.test';
+import { createBattleRosterSuite } from './BattleRoster.test';
+import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
+import { createPlayerDeckSuite } from './PlayerDeck.test';
+import { createFactorAwakeningSuite } from './FactorAwakening.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
 import { createCompositePanelSuite } from './ucuf/compositePanel.test';
 import { createAttributePanelSuite } from './ucuf/attributePanel.test';
@@ -69,7 +80,18 @@ if (typeof window === 'undefined') {
     runner.register(createCurveSuite());
     runner.register(createUnityParticlePrefabParserSuite());
     runner.register(createSyncManagerSuite());
+    runner.register(createSyncContractSuite());
     runner.register(createNetworkServiceSuite());
+    runner.register(createGameSessionSuite());
+    runner.register(createBreedingSuite());
+    runner.register(createNurtureSuite());
+    runner.register(createNurtureFlowSuite());
+    runner.register(createLegacySuite());
+    runner.register(createTigerTallySuite());
+    runner.register(createBattleRosterSuite());
+    runner.register(createBattleDeckLoadingSuite());
+    runner.register(createPlayerDeckSuite());
+    runner.register(createFactorAwakeningSuite());
     runner.register(createSkinLayersSuite());
     runner.register(createCompositePanelSuite());
     runner.register(createAttributePanelSuite());
@@ -109,8 +131,8 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillDamageResolverSuite());
 
     // Deprecated API 靜態掃描
-    // __dirname = assets/scripts/tools/tests/  →  ../../../../ = 專案根目錄
-    const projectRoot = path.resolve(__dirname, '../../../../');
+    // __dirname = tests/  →  ../ = 專案根目錄
+    const projectRoot = path.resolve(__dirname, '..');
     runner.register(createDeprecatedApiSuite({
         scanRoots: [
             path.join(projectRoot, 'assets/scripts'),  // 遊戲邏輯腳本

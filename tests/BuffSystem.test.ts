@@ -9,8 +9,8 @@
  *   - getBuffs：唯讀快照正確
  */
 
-import { BuffSystem } from '../../core/systems/BuffSystem';
-import { StatusEffect } from '../../core/config/Constants';
+import { BuffSystem } from '../assets/scripts/core/systems/BuffSystem';
+import { StatusEffect } from '../assets/scripts/core/config/Constants';
 import { TestSuite, assert } from './TestRunner';
 
 export function createBuffSuite(): TestSuite {

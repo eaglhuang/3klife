@@ -1,7 +1,7 @@
 import { TestSuite, assert } from './TestRunner';
-import { NetworkService, EVENT_NETWORK_OFFLINE, EVENT_NETWORK_ONLINE } from '../../core/systems/NetworkService';
-import { EventSystem } from '../../core/systems/EventSystem';
-import { sys } from './cc.mock';
+import { NetworkService, EVENT_NETWORK_OFFLINE, EVENT_NETWORK_ONLINE } from '../assets/scripts/core/systems/NetworkService';
+import { EventSystem } from '../assets/scripts/core/systems/EventSystem';
+import { sys } from 'cc'; // 與被測程式共用同一份 cc stub，monkey-patch 才會生效
 
 export function createNetworkServiceSuite() {
     const suite = new TestSuite("NetworkService (Cross-platform Detection)");

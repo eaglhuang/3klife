@@ -3,6 +3,7 @@ import type { GeneralConfig, GeneralDetailRarityTier } from '../models/GeneralUn
 import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
+import { checkWalletBalance, formatInsufficientMessage } from './GachaWalletRules';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
@@ -36,6 +37,7 @@ interface PerformGachaRequest {
 }
 
 const SINGLE_PLAYER_MODE_KEY = 'ucuf.gacha.single-player-mode';
+const DEV_AUTO_TOPUP_KEY = 'ucuf.gacha.dev-auto-topup';
 const WALLET_STORAGE_KEY = 'ucuf.gacha.wallet.v1';
 const DEFAULT_WALLET: LocalGachaWalletSnapshot = {
     gems: 1280,
@@ -115,6 +117,15 @@ export class LocalGachaService {
     public setSinglePlayerModeEnabled(enabled: boolean): void {
         this._singlePlayerModeEnabled = !!enabled;
         this._persistSinglePlayerModeEnabled();
+    }
+
+    /** 開發開關：餘額不足時自動補款。正式流程預設關閉。 */
+    public isDevAutoTopUpEnabled(): boolean {
+        return sys.localStorage.getItem(DEV_AUTO_TOPUP_KEY) === 'true';
+    }
+
+    public setDevAutoTopUpEnabled(enabled: boolean): void {
+        sys.localStorage.setItem(DEV_AUTO_TOPUP_KEY, enabled ? 'true' : 'false');
     }
 
     public getWalletSnapshot(): LocalGachaWalletSnapshot {
@@ -317,11 +328,17 @@ export class LocalGachaService {
             return;
         }
 
-        const current = this._wallet[currencyKey];
-        if (current < cost) {
-            // Dev preview: auto-top-up so pulls never hard-fail.
-            const topUp = cost - current + DEFAULT_WALLET[currencyKey];
-            this._wallet[currencyKey] = current + topUp;
+        const check = checkWalletBalance(
+            this._wallet[currencyKey],
+            cost,
+            this.isDevAutoTopUpEnabled(),
+            DEFAULT_WALLET[currencyKey],
+        );
+        if (!check.ok) {
+            throw new Error(formatInsufficientMessage(currencyKey, check.shortfall));
+        }
+        if (check.toppedUpBalance !== undefined) {
+            this._wallet[currencyKey] = check.toppedUpBalance;
             this._persistWalletSnapshot();
         }
     }

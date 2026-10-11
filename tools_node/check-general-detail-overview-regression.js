@@ -8,10 +8,13 @@ const layoutPath = path.join(projectRoot, 'assets/resources/ui-spec/layouts/gene
 const skinPath = path.join(projectRoot, 'assets/resources/ui-spec/skins/general-detail-bloodline-v3-default.json');
 const overviewContractPath = path.join(projectRoot, 'assets/resources/ui-spec/contracts/general-detail-overview-content.schema.json');
 const overviewFragmentPath = path.join(projectRoot, 'assets/resources/ui-spec/fragments/layouts/gd-tab-overview.json');
-const shellPath = path.join(projectRoot, 'assets/scripts/ui/components/GeneralDetailOverviewShell.ts');
+// unified-only 階段：OverviewShell 相容層已刪除，Overview 內容改由 OverviewChild + content contract 綁定。
+// 這兩個路徑只用來守門「不應再出現」（與 tests/ucuf/architectureGovernance.test.ts 一致）。
+const removedShellPath = path.join(projectRoot, 'assets/scripts/ui/components/GeneralDetailOverviewShell.ts');
+const removedShellResourcesPath = path.join(projectRoot, 'assets/scripts/ui/components/general-detail/GeneralDetailOverviewShellResources.ts');
+const overviewChildPath = path.join(projectRoot, 'assets/scripts/ui/components/general-detail/GeneralDetailOverviewChild.ts');
 const compositePath = path.join(projectRoot, 'assets/scripts/ui/components/GeneralDetailComposite.ts');
 const bindPolicyPath = path.join(projectRoot, 'assets/scripts/ui/components/general-detail/GeneralDetailOverviewBindPathPolicy.ts');
-const shellResourcesPath = path.join(projectRoot, 'assets/scripts/ui/components/general-detail/GeneralDetailOverviewShellResources.ts');
 const tabBindPolicyInterfacePath = path.join(projectRoot, 'assets/scripts/ui/components/general-detail/TabBindPathPolicy.ts');
 const loadingScenePath = path.join(projectRoot, 'assets/scripts/ui/scenes/LoadingScene.ts');
 
@@ -78,31 +81,42 @@ const overviewContract = readJson(overviewContractPath);
 const overviewFragment = readJson(overviewFragmentPath);
 const unifiedLayout = readJson(unifiedLayoutPath);
 const unifiedScreen = readJson(unifiedScreenPath);
-const shellCode = fs.readFileSync(shellPath, 'utf8');
+const overviewChildCode = fs.readFileSync(overviewChildPath, 'utf8');
 const compositeCode = fs.readFileSync(compositePath, 'utf8');
 const bindPolicyCode = fs.readFileSync(bindPolicyPath, 'utf8');
-const shellResourcesCode = fs.readFileSync(shellResourcesPath, 'utf8');
 const tabBindPolicyCode = fs.readFileSync(tabBindPolicyInterfacePath, 'utf8');
 const loadingSceneCode = fs.readFileSync(loadingScenePath, 'utf8');
 
-const unifiedBindPathAliases = {
-    headerTitle: 'HeaderRow/NameTitleColumn/TitleLabel',
-    headerName: 'HeaderRow/NameTitleColumn/NameLabel',
-    headerMeta: 'HeaderRow/MetaColumn/MetaLabel',
-    rarityLabel: 'HeaderRow/MetaColumn/RarityBadgeDock/RarityBadge/RarityBadgeLabel',
-    coreStatsTitle: 'OverviewSummaryModules/CoreStatsCard/CoreStatsTitleBand/CoreStatsTitle',
-    coreStatsValue: 'OverviewSummaryModules/CoreStatsCard/CoreStatsValue',
-    roleTitle: 'OverviewSummaryModules/RoleCard/RoleTitleBand/RoleTitle',
-    roleValue: 'OverviewSummaryModules/RoleCard/RoleValue',
-    traitTitle: 'OverviewSummaryModules/TraitCard/TraitTitleBand/TraitTitle',
-    traitValue: 'OverviewSummaryModules/TraitCard/TraitValue',
-    bloodlineName: 'BloodlineOverviewModules/BloodlineUnifiedCard/BloodlineSummaryCard/BloodlineName',
-    awakeningLabel: 'BloodlineOverviewModules/BloodlineUnifiedCard/BloodlineSummaryCard/AwakeningProgressGroup/AwakeningLabel',
-    personalityValue: 'BloodlineOverviewModules/BloodlineUnifiedCard/BloodlineSummaryCard/PersonalityValue',
-    bloodlineBody: 'BloodlineOverviewModules/BloodlineUnifiedCard/BloodlineSummaryCard/BloodlineBody',
-    crestTitle: 'BloodlineOverviewModules/BloodlineUnifiedCard/BloodlineCrestCard/CrestTitle',
-    crestHint: 'BloodlineOverviewModules/BloodlineUnifiedCard/BloodlineCrestCard/CrestHint',
+// unified alias 以 GeneralDetailOverviewBindPathPolicy.ts 為唯一真相來源（不在此重抄一份，避免兩邊漂移）
+function parseUnifiedAliases(code) {
+    const block = code.match(/OVERVIEW_UNIFIED_BIND_PATH_ALIASES[^=]*=\s*\{([\s\S]*?)\n\};/);
+    const aliases = {};
+    if (!block) {
+        return aliases;
+    }
+    for (const match of block[1].matchAll(/^\s*(\w+):\s*'([^']+)'/gm)) {
+        aliases[match[1]] = match[2];
+    }
+    return aliases;
+}
+
+// 這些欄位一定要有 unified alias（刪掉任何一個都視為回歸）
+const requiredUnifiedAliasKeys = [
+    'headerTitle', 'headerName', 'headerMeta', 'rarityLabel',
+    'coreStatsTitle', 'coreStatsValue', 'roleTitle', 'roleValue', 'traitTitle', 'traitValue',
+    'bloodlineName', 'awakeningLabel', 'personalityValue', 'bloodlineBody',
+    'crestTitle', 'crestHint',
+];
+
+// 摘要卡正文已改為 HTML parity 的格狀 / 條列渲染（OverviewChild._applyHtmlParitySummary），
+// alias 指向的單一 Value label 不再存在於 fragment；改驗 OverviewChild 有接手這些欄位。
+// key = alias 欄位，value = OverviewChild 實際讀取的 state 欄位（核心六維改讀 dualLayerStats）
+const htmlParitySummarySources = {
+    coreStatsValue: 'dualLayerStats',
+    roleValue: 'roleValue',
+    traitValue: 'traitValue',
 };
+const htmlParitySummaryFields = Object.keys(htmlParitySummarySources);
 
 // $ref 展開（解析後與靜態 JSON 行為一致）
 resolveRefs(layout.root);
@@ -117,36 +131,16 @@ function requirePath(nodePath) {
     }
 }
 
-function requireShellPath(nodePath) {
+function requireContractPath(nodePath) {
     const contractFields = overviewContract?.fields && typeof overviewContract.fields === 'object'
         ? Object.values(overviewContract.fields)
         : [];
-    const coveredByContract = contractFields.some((field) => field?.bindPath === nodePath);
-    const binderFirstShell = shellCode.includes('this._screenSpec?.contentRequirements')
-        && shellCode.includes('await this._contentBinder.bind(');
-
-    if (coveredByContract && binderFirstShell) {
-        return;
-    }
-
-    const equivalentPaths = [nodePath];
-    const legacyShellPath = nodePath.replace(
-        'InfoContent/BloodlineOverviewModules/BloodlineRow/BloodlineUnifiedCard/BloodlineSummaryCard',
-        'InfoContent/BloodlineOverviewModules/BloodlineRow/BloodlineSummaryCard',
-    );
-    if (legacyShellPath !== nodePath) {
-        equivalentPaths.push(legacyShellPath);
-    }
-
-    if (!equivalentPaths.some((candidate) => shellCode.includes(candidate))) {
-        failures.push(`shell 缺少關鍵 path 綁定：${nodePath}`);
+    if (!contractFields.some((field) => field?.bindPath === nodePath)) {
+        failures.push(`content contract 缺少關鍵 bindPath：${nodePath}`);
     }
 }
 
 function requireUnifiedAlias(fieldKey, nodePath) {
-    if (!bindPolicyCode.includes(`${fieldKey}: '${nodePath}'`)) {
-        failures.push(`bind policy 缺少 unified alias：${fieldKey} -> ${nodePath}`);
-    }
     if (!overviewFragmentPaths.has(`OverviewTabContent/${nodePath}`)) {
         failures.push(`unified fragment 缺少 alias 目標節點：OverviewTabContent/${nodePath}`);
     }
@@ -171,16 +165,33 @@ for (const name of ['BloodlineTitle', 'BloodlineName', 'AwakeningLabel', 'Person
 }
 
 // ─── 2. 摘要卡寬度守門 ──────────────────────────────────────────────
+function parsePercent(value) {
+    return typeof value === 'string' && value.endsWith('%') ? Number.parseFloat(value) : NaN;
+}
 const roleCard = findNodeByName(layout.root, 'RoleCard');
-if (roleCard?.width !== '26%') {
-    failures.push('RoleCard 寬度應維持 26%，避免中間摘要卡再次擠壓到正文');
+const roleCardPercent = parsePercent(roleCard?.width);
+if (!(roleCardPercent >= 26)) {
+    failures.push(`RoleCard 寬度應至少 26%（現為 ${roleCard?.width}），避免中間摘要卡再次擠壓到正文`);
+}
+const summaryCardPercents = ['CoreStatsCard', 'RoleCard', 'TraitCard']
+    .map((name) => parsePercent(findNodeByName(layout.root, name)?.width));
+if (summaryCardPercents.some((value) => Number.isNaN(value))) {
+    failures.push('CoreStatsCard / RoleCard / TraitCard 寬度都應使用百分比');
+} else if (summaryCardPercents.reduce((sum, value) => sum + value, 0) > 100) {
+    failures.push(`三張摘要卡寬度總和 ${summaryCardPercents.join('% + ')}% 超過 100%`);
 }
 
-// ─── 3. 摘要卡正文 style 檢查 ───────────────────────────────────────
-for (const name of ['CoreStatsValue', 'RoleValue', 'TraitValue']) {
-    const node = findNodeByName(layout.root, name);
-    if (node?.styleSlot !== 'gdv3.label.cardBodySummary') {
-        failures.push(`${name} 應使用 gdv3.label.cardBodySummary，避免摘要卡正文在窄卡中被擠掉`);
+// ─── 3. 摘要卡正文：HTML parity 格狀 / 條列節點 ─────────────────────
+// OverviewChild 直接寫入的 OverviewSummaryModules 路徑，必須都存在於 unified fragment
+for (const match of overviewChildCode.matchAll(/'(OverviewSummaryModules\/[^']+)'/g)) {
+    const nodePath = match[1];
+    if (!overviewFragmentPaths.has(`OverviewTabContent/${nodePath}`)) {
+        failures.push(`OverviewChild 引用的摘要卡節點不存在於 unified fragment：OverviewTabContent/${nodePath}`);
+    }
+}
+for (const [fieldKey, sourceKey] of Object.entries(htmlParitySummarySources)) {
+    if (!overviewChildCode.includes(`state.${sourceKey}`)) {
+        failures.push(`OverviewChild._applyHtmlParitySummary 未接手 ${fieldKey}（應讀取 state.${sourceKey}）`);
     }
 }
 
@@ -271,21 +282,29 @@ function walkAndCheck(node, path) {
 }
 walkAndCheck(layout.root, '');
 
-// ─── 7. 關鍵節點路徑與 shell 綁定 ──────────────────────────────────
+// ─── 7. 關鍵節點路徑與 content contract 綁定 ──────────────────────────────────
 
 for (const nodePath of [
     'InfoContent/OverviewSummaryModules/CoreStatsCard/CoreStatsTitleBand/CoreStatsTitle',
     'InfoContent/OverviewSummaryModules/RoleCard/RoleTitleBand/RoleTitle',
-    'InfoContent/OverviewSummaryModules/RoleCard/RoleValue',
     'InfoContent/OverviewSummaryModules/TraitCard/TraitTitleBand/TraitTitle',
     'InfoContent/BloodlineOverviewModules/BloodlineRow/BloodlineUnifiedCard/BloodlineSummaryCard/BloodlineSummaryFields/BloodlineTitle',
     'InfoContent/BloodlineOverviewModules/BloodlineRow/BloodlineUnifiedCard/BloodlineSummaryCard/BloodlineSummaryFields/PersonalityLabel'
 ]) {
     requirePath(nodePath);
-    requireShellPath(nodePath);
+    requireContractPath(nodePath);
 }
 
+const unifiedBindPathAliases = parseUnifiedAliases(bindPolicyCode);
+for (const fieldKey of requiredUnifiedAliasKeys) {
+    if (!unifiedBindPathAliases[fieldKey]) {
+        failures.push(`bind policy 缺少 unified alias：${fieldKey}`);
+    }
+}
 for (const [fieldKey, nodePath] of Object.entries(unifiedBindPathAliases)) {
+    if (htmlParitySummaryFields.includes(fieldKey)) {
+        continue;
+    }
     requireUnifiedAlias(fieldKey, nodePath);
 }
 
@@ -326,30 +345,20 @@ if (compositeCode.includes('private async _showOverviewShell(') || compositeCode
     failures.push('GeneralDetailComposite 不應再有 _showOverviewShell()（shell routing 已移除）');
 }
 
-// 8e. Shell chrome/resource split 仍維持（shell 本身依然存在，用於 GeneralDetailPanel 相容）
-if (!shellCode.includes('private _applyChromeOnlyContent(') || !shellCode.includes('private async _applyResourceOnlyContent(')) {
-    failures.push('GeneralDetailOverviewShell 尚未拆成 chrome-only / resource-only content flow');
+// 8e. OverviewShell 相容層已移除（unified-only），不可復活
+if (fs.existsSync(removedShellPath)) {
+    failures.push('GeneralDetailOverviewShell.ts 應已刪除（unified-only 階段，Overview 由 OverviewChild 綁定）');
+}
+if (fs.existsSync(removedShellResourcesPath)) {
+    failures.push('GeneralDetailOverviewShellResources.ts 應已刪除');
 }
 
-// 8f. Shell 資源載入已移至 ShellResources
-if (shellCode.includes('private async _applyCrestFace(')) {
-    failures.push('GeneralDetailOverviewShell._applyCrestFace() 應已移至 GeneralDetailOverviewShellResources，shell 不應自持該方法');
+// 8f. OverviewChild 走 content contract 綁定（binder-first），並透過 bind policy 轉成 unified 路徑
+if (!overviewChildCode.includes('this._contentBinder.bindWithSchema(')) {
+    failures.push('GeneralDetailOverviewChild 未透過 UIContentBinder.bindWithSchema 套用 content contract');
 }
-
-if (shellCode.includes('private async _loadPortrait(')) {
-    failures.push('GeneralDetailOverviewShell._loadPortrait() 應已移至 GeneralDetailOverviewShellResources，shell 不應自持該方法');
-}
-
-if (!shellCode.includes("from './general-detail/GeneralDetailOverviewShellResources'")) {
-    failures.push('GeneralDetailOverviewShell 缺少 GeneralDetailOverviewShellResources import');
-}
-
-if (!shellResourcesCode.includes('export async function applyShellOverviewCrestFace(')) {
-    failures.push('GeneralDetailOverviewShellResources 缺少 applyShellOverviewCrestFace export');
-}
-
-if (!shellResourcesCode.includes('export async function applyShellOverviewPortrait(')) {
-    failures.push('GeneralDetailOverviewShellResources 缺少 applyShellOverviewPortrait export');
+if (!overviewChildCode.includes("resolveOverviewBindPathForTarget(fieldKey, bindPath, 'unified')")) {
+    failures.push('GeneralDetailOverviewChild 未用 resolveOverviewBindPathForTarget 轉成 unified bindPath');
 }
 
 // 8g. TabBindPathPolicy 介面與 overviewBindPathPolicy

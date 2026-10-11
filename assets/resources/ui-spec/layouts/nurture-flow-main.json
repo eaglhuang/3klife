@@ -1,0 +1,1046 @@
+{
+  "id": "nurture-flow-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "NurtureFlowRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "FlowBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "nurture.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "FlowCard",
+        "id": "flowCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1200,
+        "height": 780,
+        "skinSlot": "nurture.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "FlowTitle",
+            "id": "flowTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "width": 520,
+            "height": 40,
+            "styleSlot": "nurture.label.title"
+          },
+          {
+            "type": "label",
+            "name": "FlowPager",
+            "id": "flowPager",
+            "widget": {
+              "top": 28,
+              "right": 300
+            },
+            "width": 120,
+            "height": 28,
+            "styleSlot": "nurture.label.meta"
+          },
+          {
+            "type": "button",
+            "name": "BtnPrevChild",
+            "id": "btnPrevChild",
+            "widget": {
+              "top": 16,
+              "right": 220
+            },
+            "width": 64,
+            "height": 48,
+            "skinSlot": "nurture.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnPrevChildLabel",
+                "id": "prevChildLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "＜",
+                "styleSlot": "nurture.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNextChild",
+            "id": "btnNextChild",
+            "widget": {
+              "top": 16,
+              "right": 150
+            },
+            "width": 64,
+            "height": 48,
+            "skinSlot": "nurture.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnNextChildLabel",
+                "id": "nextChildLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "＞",
+                "styleSlot": "nurture.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseFlow",
+            "id": "btnCloseFlow",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "nurture.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseFlowLabel",
+                "id": "closeFlowLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "nurture.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "FlowEmptyHint",
+            "id": "flowEmptyHint",
+            "widget": {
+              "top": 300,
+              "left": 80,
+              "right": 80
+            },
+            "height": 80,
+            "styleSlot": "nurture.label.body"
+          },
+          {
+            "type": "container",
+            "name": "FatePanel",
+            "id": "fatePanel",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 64
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "FateName",
+                "id": "fateName",
+                "widget": {
+                  "top": 8,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 48,
+                "styleSlot": "nurture.label.name"
+              },
+              {
+                "type": "label",
+                "name": "FateAge",
+                "id": "fateAge",
+                "widget": {
+                  "top": 62,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 28,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "FateStats",
+                "id": "fateStats",
+                "widget": {
+                  "top": 110,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 36,
+                "styleSlot": "nurture.label.stats"
+              },
+              {
+                "type": "label",
+                "name": "FateFactors",
+                "id": "fateFactors",
+                "widget": {
+                  "top": 160,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 60,
+                "styleSlot": "nurture.label.body"
+              },
+              {
+                "type": "label",
+                "name": "FateRecommend",
+                "id": "fateRecommend",
+                "widget": {
+                  "top": 240,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 40,
+                "styleSlot": "nurture.label.name"
+              },
+              {
+                "type": "button",
+                "name": "BtnFateAccept",
+                "id": "btnFateAccept",
+                "widget": {
+                  "top": 310,
+                  "left": 120
+                },
+                "width": 420,
+                "height": 72,
+                "skinSlot": "nurture.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnFateAcceptLabel",
+                    "id": "fateAcceptLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 64,
+                    "text": "順應天命",
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnFateDefy",
+                "id": "btnFateDefy",
+                "widget": {
+                  "top": 310,
+                  "right": 120
+                },
+                "width": 420,
+                "height": 72,
+                "skinSlot": "nurture.button.danger.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnFateDefyLabel",
+                    "id": "fateDefyLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 64,
+                    "text": "逆天而行",
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "FateDefyHint",
+                "id": "fateDefyHint",
+                "widget": {
+                  "top": 406,
+                  "left": 120,
+                  "right": 120
+                },
+                "height": 56,
+                "styleSlot": "nurture.label.meta"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "NurturePanel",
+            "id": "nurturePanel",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 64
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "NurtureName",
+                "id": "nurtureName",
+                "widget": {
+                  "top": 0,
+                  "left": 27
+                },
+                "width": 520,
+                "height": 40,
+                "styleSlot": "nurture.label.name"
+              },
+              {
+                "type": "label",
+                "name": "NurturePhase",
+                "id": "nurturePhase",
+                "widget": {
+                  "top": 0,
+                  "right": 27
+                },
+                "width": 520,
+                "height": 32,
+                "styleSlot": "nurture.label.phase"
+              },
+              {
+                "type": "label",
+                "name": "NurtureRound",
+                "id": "nurtureRound",
+                "widget": {
+                  "top": 36,
+                  "right": 27
+                },
+                "width": 300,
+                "height": 28,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "NurtureGrowth",
+                "id": "nurtureGrowth",
+                "widget": {
+                  "top": 44,
+                  "left": 27
+                },
+                "width": 300,
+                "height": 24,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "NurtureVigor",
+                "id": "nurtureVigor",
+                "widget": {
+                  "top": 84,
+                  "left": 27
+                },
+                "width": 260,
+                "height": 28,
+                "styleSlot": "nurture.label.stats"
+              },
+              {
+                "type": "label",
+                "name": "NurtureFail",
+                "id": "nurtureFail",
+                "widget": {
+                  "top": 84,
+                  "left": 300
+                },
+                "width": 260,
+                "height": 28,
+                "styleSlot": "nurture.label.stats"
+              },
+              {
+                "type": "label",
+                "name": "NurtureTp",
+                "id": "nurtureTp",
+                "widget": {
+                  "top": 84,
+                  "left": 573
+                },
+                "width": 200,
+                "height": 28,
+                "styleSlot": "nurture.label.stats"
+              },
+              {
+                "type": "label",
+                "name": "NurtureFactors",
+                "id": "nurtureFactors",
+                "widget": {
+                  "top": 84,
+                  "right": 27
+                },
+                "width": 340,
+                "height": 28,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "NurtureMentors",
+                "id": "nurtureMentors",
+                "widget": {
+                  "top": 122,
+                  "left": 27,
+                  "right": 27
+                },
+                "height": 56,
+                "styleSlot": "nurture.label.body"
+              },
+              {
+                "type": "container",
+                "name": "StartBlock",
+                "id": "startBlock",
+                "widget": {
+                  "top": 196,
+                  "left": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "StartHint",
+                    "id": "startHint",
+                    "widget": {
+                      "top": 20,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 56,
+                    "styleSlot": "nurture.label.body"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnStartNurture",
+                    "id": "btnStartNurture",
+                    "widget": {
+                      "top": 100,
+                      "left": 360
+                    },
+                    "width": 420,
+                    "height": 72,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnStartNurtureLabel",
+                        "id": "startLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 64,
+                        "text": "入學開始培育",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "TrainBlock",
+                "id": "trainBlock",
+                "widget": {
+                  "top": 196,
+                  "left": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "SlotRow",
+                    "widget": {
+                      "top": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 150,
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "Slot_str",
+                        "widget": {
+                          "top": 0,
+                          "left": 27
+                        },
+                        "width": 212,
+                        "height": 150,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "SlotStat_str",
+                            "id": "slotStat_str",
+                            "widget": {
+                              "top": 10,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 24,
+                            "styleSlot": "nurture.label.meta"
+                          },
+                          {
+                            "type": "label",
+                            "name": "SlotMentors_str",
+                            "id": "slotMentors_str",
+                            "widget": {
+                              "top": 40,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 48,
+                            "styleSlot": "nurture.label.body"
+                          },
+                          {
+                            "type": "button",
+                            "name": "BtnTrain_str",
+                            "id": "btnTrain_str",
+                            "widget": {
+                              "left": 8,
+                              "right": 8,
+                              "bottom": 8
+                            },
+                            "width": 196,
+                            "height": 52,
+                            "skinSlot": "nurture.button.bg",
+                            "children": [
+                              {
+                                "type": "label",
+                                "name": "BtnTrain_strLabel",
+                                "id": "trainLabel_str",
+                                "widget": {
+                                  "vCenter": true,
+                                  "left": 0,
+                                  "right": 0
+                                },
+                                "height": 44,
+                                "text": "str",
+                                "styleSlot": "nurture.label.button"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "Slot_int",
+                        "widget": {
+                          "top": 0,
+                          "left": 251
+                        },
+                        "width": 212,
+                        "height": 150,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "SlotStat_int",
+                            "id": "slotStat_int",
+                            "widget": {
+                              "top": 10,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 24,
+                            "styleSlot": "nurture.label.meta"
+                          },
+                          {
+                            "type": "label",
+                            "name": "SlotMentors_int",
+                            "id": "slotMentors_int",
+                            "widget": {
+                              "top": 40,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 48,
+                            "styleSlot": "nurture.label.body"
+                          },
+                          {
+                            "type": "button",
+                            "name": "BtnTrain_int",
+                            "id": "btnTrain_int",
+                            "widget": {
+                              "left": 8,
+                              "right": 8,
+                              "bottom": 8
+                            },
+                            "width": 196,
+                            "height": 52,
+                            "skinSlot": "nurture.button.bg",
+                            "children": [
+                              {
+                                "type": "label",
+                                "name": "BtnTrain_intLabel",
+                                "id": "trainLabel_int",
+                                "widget": {
+                                  "vCenter": true,
+                                  "left": 0,
+                                  "right": 0
+                                },
+                                "height": 44,
+                                "text": "int",
+                                "styleSlot": "nurture.label.button"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "Slot_lea",
+                        "widget": {
+                          "top": 0,
+                          "left": 475
+                        },
+                        "width": 212,
+                        "height": 150,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "SlotStat_lea",
+                            "id": "slotStat_lea",
+                            "widget": {
+                              "top": 10,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 24,
+                            "styleSlot": "nurture.label.meta"
+                          },
+                          {
+                            "type": "label",
+                            "name": "SlotMentors_lea",
+                            "id": "slotMentors_lea",
+                            "widget": {
+                              "top": 40,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 48,
+                            "styleSlot": "nurture.label.body"
+                          },
+                          {
+                            "type": "button",
+                            "name": "BtnTrain_lea",
+                            "id": "btnTrain_lea",
+                            "widget": {
+                              "left": 8,
+                              "right": 8,
+                              "bottom": 8
+                            },
+                            "width": 196,
+                            "height": 52,
+                            "skinSlot": "nurture.button.bg",
+                            "children": [
+                              {
+                                "type": "label",
+                                "name": "BtnTrain_leaLabel",
+                                "id": "trainLabel_lea",
+                                "widget": {
+                                  "vCenter": true,
+                                  "left": 0,
+                                  "right": 0
+                                },
+                                "height": 44,
+                                "text": "lea",
+                                "styleSlot": "nurture.label.button"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "Slot_pol",
+                        "widget": {
+                          "top": 0,
+                          "left": 699
+                        },
+                        "width": 212,
+                        "height": 150,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "SlotStat_pol",
+                            "id": "slotStat_pol",
+                            "widget": {
+                              "top": 10,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 24,
+                            "styleSlot": "nurture.label.meta"
+                          },
+                          {
+                            "type": "label",
+                            "name": "SlotMentors_pol",
+                            "id": "slotMentors_pol",
+                            "widget": {
+                              "top": 40,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 48,
+                            "styleSlot": "nurture.label.body"
+                          },
+                          {
+                            "type": "button",
+                            "name": "BtnTrain_pol",
+                            "id": "btnTrain_pol",
+                            "widget": {
+                              "left": 8,
+                              "right": 8,
+                              "bottom": 8
+                            },
+                            "width": 196,
+                            "height": 52,
+                            "skinSlot": "nurture.button.bg",
+                            "children": [
+                              {
+                                "type": "label",
+                                "name": "BtnTrain_polLabel",
+                                "id": "trainLabel_pol",
+                                "widget": {
+                                  "vCenter": true,
+                                  "left": 0,
+                                  "right": 0
+                                },
+                                "height": 44,
+                                "text": "pol",
+                                "styleSlot": "nurture.label.button"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "Slot_cha",
+                        "widget": {
+                          "top": 0,
+                          "left": 923
+                        },
+                        "width": 212,
+                        "height": 150,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "SlotStat_cha",
+                            "id": "slotStat_cha",
+                            "widget": {
+                              "top": 10,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 24,
+                            "styleSlot": "nurture.label.meta"
+                          },
+                          {
+                            "type": "label",
+                            "name": "SlotMentors_cha",
+                            "id": "slotMentors_cha",
+                            "widget": {
+                              "top": 40,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 48,
+                            "styleSlot": "nurture.label.body"
+                          },
+                          {
+                            "type": "button",
+                            "name": "BtnTrain_cha",
+                            "id": "btnTrain_cha",
+                            "widget": {
+                              "left": 8,
+                              "right": 8,
+                              "bottom": 8
+                            },
+                            "width": 196,
+                            "height": 52,
+                            "skinSlot": "nurture.button.bg",
+                            "children": [
+                              {
+                                "type": "label",
+                                "name": "BtnTrain_chaLabel",
+                                "id": "trainLabel_cha",
+                                "widget": {
+                                  "vCenter": true,
+                                  "left": 0,
+                                  "right": 0
+                                },
+                                "height": 44,
+                                "text": "cha",
+                                "styleSlot": "nurture.label.button"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnRest",
+                    "id": "btnRest",
+                    "widget": {
+                      "top": 168,
+                      "left": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnRestLabel",
+                        "id": "restLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "休息回復精力",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnAbandon",
+                    "id": "btnAbandon",
+                    "widget": {
+                      "top": 168,
+                      "right": 27
+                    },
+                    "width": 220,
+                    "height": 52,
+                    "skinSlot": "nurture.button.danger.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnAbandonLabel",
+                        "id": "abandonLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "中止培育",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "NurtureLog",
+                    "id": "nurtureLog",
+                    "widget": {
+                      "top": 236,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 60,
+                    "styleSlot": "nurture.label.log"
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "GraduateBlock",
+                "id": "graduateBlock",
+                "widget": {
+                  "top": 196,
+                  "left": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GraduateHint",
+                    "id": "graduateHint",
+                    "widget": {
+                      "top": 20,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 40,
+                    "styleSlot": "nurture.label.body"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnGraduate",
+                    "id": "btnGraduate",
+                    "widget": {
+                      "top": 100,
+                      "left": 360
+                    },
+                    "width": 420,
+                    "height": 72,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnGraduateLabel",
+                        "id": "graduateLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 64,
+                        "text": "畢業結算",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "ReportBlock",
+                "id": "reportBlock",
+                "widget": {
+                  "top": 196,
+                  "left": 0,
+                  "right": 0,
+                  "bottom": 0
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "ReportRating",
+                    "id": "reportRating",
+                    "widget": {
+                      "top": 0,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 56,
+                    "styleSlot": "nurture.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "ReportScore",
+                    "id": "reportScore",
+                    "widget": {
+                      "top": 64,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 28,
+                    "styleSlot": "nurture.label.meta"
+                  },
+                  {
+                    "type": "label",
+                    "name": "ReportProwess",
+                    "id": "reportProwess",
+                    "widget": {
+                      "top": 104,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 32,
+                    "styleSlot": "nurture.label.stats"
+                  },
+                  {
+                    "type": "label",
+                    "name": "ReportTags",
+                    "id": "reportTags",
+                    "widget": {
+                      "top": 150,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 32,
+                    "styleSlot": "nurture.label.body"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnDismissReport",
+                    "id": "btnDismissReport",
+                    "widget": {
+                      "top": 210,
+                      "left": 360
+                    },
+                    "width": 420,
+                    "height": 64,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnDismissReportLabel",
+                        "id": "dismissLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 56,
+                        "text": "完成",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "FlowNotice",
+            "id": "flowNotice",
+            "widget": {
+              "left": 32,
+              "right": 32,
+              "bottom": 16
+            },
+            "height": 32,
+            "styleSlot": "nurture.label.log"
+          }
+        ]
+      }
+    ]
+  }
+}

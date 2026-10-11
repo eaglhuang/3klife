@@ -1,7 +1,7 @@
 <!-- doc_id: doc_index_0017 -->
 # Cross-Reference: 實作進度（規格書 × 代碼 × 測試）
 
-> 這是 `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005) 的 D 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005)。
+> 這是 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007) 的 D 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007)。
 > 最後更新請參考母檔 Header。
 >
 > ⚠️ **本檔是唯一保留完整中文規格書名稱的分片**，供人類查閱進度。
@@ -20,63 +20,70 @@
 > - ✅ **已建立**：`tests/FormulaSystem.test.ts`, `tests/ActionSystem.test.ts`, `tests/BuffSystem.test.ts`, `tests/BuffParticleProfileConfig.test.ts`, `tests/CurveSystem.test.ts`, `tests/EventSystem.test.ts`, `tests/GeneralListPanel.test.ts`, `tests/NetworkService.test.ts`, `tests/ResultPopup.test.ts`, `tests/SyncManager.test.ts`, `tests/UIManager.test.ts`, `tests/UISpecParser.test.ts`, `tests/UnityParticlePrefabParser.test.ts`, `tests/VfxEffectConfig.test.ts`
 > - ⚠️ **發現問題**：`tsconfig.test.json` 的 `include` 路徑已修正為 `tests/**/*.ts`，但測試檔內的相對 import（如 `../../core/systems/FormulaSystem`）尚需更新為對應絕對路徑模式（規劃中，見 `keep.md (doc_index_0011) §9`）
 
-| 規格書 | 對應代碼檔 | 完成度估算 | 單元測試關聯區塊 (Test Target) |
-|---|---|---|---|
-| **數值系統.md (doc_data_0001)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, GeneralUnit.ts, BattleController.ts, BattleState.ts | 🟢 80% | `tests/FormulaSystem.test.ts` ✅ (核心算式驗證) |
-| **兵種（虎符）系統.md (doc_spec_0012)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, BattleController.ts, EnemyAI.ts | 🟢 60% | 尚無（TroopUnit.test.ts 待建） |
-| **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts | 🟢 75% | 尚無（BattleController.test.ts 待建）；已有：`tests/ResultPopup.test.ts` ✅ |
-| **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts | 🟡 55% | 尚無（GeneralUnit.test.ts 待建） |
-| **武將人物介面規格書.md (doc_ui_0012)** | GeneralDetailComposite.ts, general-detail/GeneralDetailOverviewChild.ts, GeneralListPanel.ts, LobbyScene.ts, GeneralUnit.ts | 🟢 70% | 尚無（GeneralDetailComposite integration test / overview child regression 待建）；已有：`tests/GeneralListPanel.test.ts` ✅、`tests/ucuf/architectureGovernance.test.ts` ✅ |
-| **戰法系統.md (doc_spec_0038)** | ActionSystem.ts | 🔴 10% | `tests/ActionSystem.test.ts` ✅ (時間軸分發機制) |
-| **奧義系統.md (doc_spec_0030)** | ActionSystem.ts | 🔴 0% | 尚無 |
-| **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts | 🔴 30% | `tests/BuffSystem.test.ts` ✅ (Buff 疊加與消退)；亦有：`tests/BuffParticleProfileConfig.test.ts` ✅ |
-| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts | 🔴 10% | 尚無（EnemyAI.test.ts 待建） |
-| **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | 🟡 25% | 尚無（LobbyScene hall workflow test 待建） |
-| **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts | 🔴 0% | 尚無（OfficerSystem 實作待建） |
-| **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts | 🔴 0% | 尚無 |
-| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts | 🔴 5% | 尚無 |
-| **關卡設計系統.md (doc_spec_0044)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | 🔴 5% | 尚無（連環破 / Strategist_HUD / Stage_Salvage 實作待建） |
-| **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts（大廳入口預留） | 🔴 0% | 尚無 |
-| **MVP遊戲驗證規格書.md (doc_spec_0045)** | GameManager.ts | 🟢 80% | 尚無（GameManager.test.ts 待建） |
-| **新手開場規格書.md (doc_spec_0031)** | SceneManager.ts, LoadingScene.ts, LobbyScene.ts, LoginScene.ts | 🟢 85% | (主要為 UI 流水線，由 E2E 或整合測試涵蓋) |
-| **UI 規格書.md (doc_ui_0027)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleLogPanel.ts, DeployPanel.ts, ToastMessage.ts, UILayer.ts | 🔴 30% | `tests/UIManager.test.ts` ✅ (UI 堆疊演算法)；亦有：`tests/UISpecParser.test.ts` ✅ |
-| **主戰場UI規格書.md (doc_ui_0001)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleScenePanel.ts, TigerTallyPanel.ts, UnitInfoPanel.ts, ActionCommandPanel.ts | 🟢 80% | (組件渲染邏輯，主要依賴手動或 VRT 驗證) |
-| **主戰場UI規格補充_v3.md (doc_ui_0003)** | BattleHUD.ts, ActionCommandPanel.ts, BattleLogPanel.ts, TigerTallyPanel.ts, GeneralQuickViewPanel.ts, Constants.ts | 🟢 90% | v3 全套：DP→Food、Zone7 軌道圓、Zone3 AtkLabel/HpLabel、頭像QuickView，已完成 |
-| **美術素材規劃與使用說明.md (doc_art_0003)** | UnitAssetCatalog.ts, MaterialSystem.ts, UnitRenderer.ts, ResourceManager.ts, I18nSystem.ts, BattleScene.ts, DeployPanel.ts, VfxComposerTool.ts, vfx-block-registry.ts, VideoPlayerTest.ts | 🩵 95% | (路徑 / 命名 / manifest 一致性驗證) |
-| **UI技術規格書.md (doc_ui_0049)** | SolidBackground.ts, GeneralListPanel.ts, NetworkStatusIndicator.ts | 🩵 90% | 尚無（SolidBackground.test.ts 待建） |
-| **Data Schema文件（本機端與Server端）.md (doc_tech_0013)** | ResourceManager.ts, NetworkService.ts, SyncManager.ts, NetworkStatusIndicator.ts, server/src/index.ts | 🟢 85% | 尚無（ResourceManager.test.ts 待建）；已有：`tests/NetworkService.test.ts` ✅, `tests/SyncManager.test.ts` ✅ |
-| **場景搭建指南.md (doc_tech_0007)** | SceneAutoBuilder.ts | ☑️ 100% | 編輯器擴充功能測試 (免常規 Jest 執行) |
-| **demo_playbook.md (doc_spec_0161)** | BattleScene.ts | ☑️ 100% | 腳本規格文件不參與代碼覆蓋率 |
-| **demo_技術架構.md (doc_tech_0015)** | ServiceLoader.ts, PoolSystem.ts, ResourceManager.ts, EffectSystem.ts, AudioSystem.ts... | 🩵 90% | 尚無（ServiceLoader.test.ts 待建）；已有：`tests/EventSystem.test.ts` ✅, `tests/CurveSystem.test.ts` ✅, `tests/VfxEffectConfig.test.ts` ✅ |
-| **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts | ☑️ 100% | (過渡 API，無需測試) |
-| 俘虜處理系統.md (doc_spec_0021) | 尚無實作 | 🔴 0% | 尚無 |
-| 傭兵系統（試用）.md (doc_spec_0029) | 尚無實作 | 🔴 0% | 尚無 |
-| 可結緣女性來源系統.md (doc_spec_0003) | 尚無實作 | 🔴 0% | 尚無 |
-| 同名武將系統.md (doc_spec_0005) | 尚無實作 | 🔴 0% | 尚無 |
-| 名士預言系統.md (doc_spec_0006) | 尚無實作 | 🔴 0% | 尚無 |
-| 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ☑️ 100% | 靜態定義，無邏輯測 |
-| 因子解鎖系統.md (doc_spec_0009) | 尚無實作 | 🔴 0% | 尚無 |
-| 培育系統.md (doc_spec_0026) | 尚無實作 | 🔴 0% | 尚無 |
-| 家族關係（史實相性）系統.md (doc_spec_0024) | 尚無實作 | 🔴 0% | 尚無 |
-| 戰場適性系統.md (doc_spec_0041) | 尚無實作 | 🔴 0% | 尚無 |
-| 教官系統（支援卡）.md (doc_spec_0027) | 尚無實作 | 🔴 0% | 尚無 |
-| 正式版劇本文案.md (doc_spec_0004) | 尚無實作 | 🔴 0% | 文案文件 |
-| 武將壽命系統.md (doc_spec_0018) | 尚無實作 | 🔴 0% | 尚無 |
-| 武將戰績系統.md (doc_spec_0019) | 尚無實作 | 🔴 0% | 尚無 |
-| 武將背包（倉庫）系統.md (doc_spec_0017) | 尚無實作 | 🔴 0% | 尚無 |
-| 留存系統.md (doc_spec_0025) | 尚無實作 | 🔴 0% | 尚無 |
-| 結緣系統（配種）.md (doc_spec_0028) | 尚無實作 | 🔴 0% | 尚無 |
-| 經濟系統.md (doc_spec_0032) | 尚無實作 | 🔴 0% | 尚無 |
-| 血統理論系統.md (doc_spec_0011) | 尚無實作 | 🔴 0% | 尚無 |
-| 資源循環系統.md (doc_spec_0033) | 尚無實作 | 🔴 0% | 尚無 |
-| 轉職與宿命系統.md (doc_spec_0043) | 尚無實作 | 🔴 0% | 尚無 |
-| 轉蛋系統.md (doc_spec_0042) | 尚無實作 | 🔴 0% | 尚無 |
-| 遊戲時間系統.md (doc_spec_0034) | 尚無實作 | 🔴 0% | 尚無 |
-| 運氣系統.md (doc_spec_0035) | 尚無實作 | 🔴 0% | 尚無 |
-| 道具系統（付費免費道具）.md (doc_spec_0036) | 尚無實作 | 🔴 0% | 尚無 |
-| 領地治理系統.md (doc_spec_0037) | 尚無實作 | 🔴 0% | 尚無 |
-| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts (部分) | 🔴 5% | `tests/core/systems/ActionSystem.test.ts` (場景戰法效果驗證) |
-| 熱更新與版本控制規格書.md (doc_tech_0012) | 尚無實作 | 🔷 100% | 策略流程文件 |
+> **五欄判定（PROG-2-0027）**——Unity 類比：像 Test Runner 的燈號，不是自評百分比。由 `node tools_node/build-progress-matrix.js` 依 repo 現況重算：
+> - **規格**：規格書 doc_id 在 registry 內且檔案存在（像 ScriptableObject 資產存在）
+> - **邏輯**：對應代碼檔存在於 `assets/scripts`（✅ 完整 / 🟡 部分或估算未滿 / ❌ 無）
+> - **接線**：代碼檔被其他腳本 import（像 Component 有掛到場景物件；只寫沒人呼叫 = ❌）
+> - **測試**：`tests/` 內有對應 `*.test.ts`
+> - **runtime 驗收**：headless / Playwright 實跑證據；沒有證據一律 ⬜（不是 ✅）。代碼檔欄位為「尚無實作」代表邏輯尚未落地
+
+| 規格書 | 對應代碼檔 | 規格 | 邏輯 | 接線 | 測試 | runtime 驗收 |
+|---|---|:-:|:-:|:-:|:-:|:-:|
+| **數值系統.md (doc_data_0001)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, GeneralUnit.ts, BattleController.ts, BattleState.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
+| **兵種（虎符）系統.md (doc_spec_0012)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, BattleController.ts, EnemyAI.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
+| **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
+| **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
+| **武將人物介面規格書.md (doc_ui_0012)** | GeneralDetailComposite.ts, GeneralDetailOverviewChild.ts, GeneralListPanel.ts, LobbyScene.ts, GeneralUnit.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
+| **戰法系統.md (doc_spec_0038)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **奧義系統.md (doc_spec_0030)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts | ✅ | 🟡 | ❌ | ❌ | ⬜ |
+| **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
+| **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| **MVP遊戲驗證規格書.md (doc_spec_0045)** | GameManager.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
+| **新手開場規格書.md (doc_spec_0031)** | SceneManager.ts, LoadingScene.ts, LobbyScene.ts, LoginScene.ts | ✅ | ✅ | 🟡 | ❌ | ⬜ |
+| **UI 規格書.md (doc_ui_0027)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleLogPanel.ts, DeployPanel.ts, ToastMessage.ts, UILayer.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| **主戰場UI規格書.md (doc_ui_0001)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleScenePanel.ts, TigerTallyPanel.ts, UnitInfoPanel.ts, ActionCommandPanel.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
+| **主戰場UI規格補充_v3.md (doc_ui_0003)** | BattleHUD.ts, ActionCommandPanel.ts, BattleLogPanel.ts, TigerTallyPanel.ts, GeneralQuickViewPanel.ts, Constants.ts | ✅ | ✅ | 🟡 | ❌ | ⬜ |
+| **美術素材規劃與使用說明.md (doc_art_0003)** | UnitAssetCatalog.ts, MaterialSystem.ts, UnitRenderer.ts, ResourceManager.ts, I18nSystem.ts, BattleScene.ts, DeployPanel.ts, VfxComposerTool.ts, vfx-block-registry.ts, VideoPlayerTest.ts | ✅ | ✅ | 🟡 | ❌ | ⬜ |
+| **UI技術規格書.md (doc_ui_0049)** | SolidBackground.ts, GeneralListPanel.ts, NetworkStatusIndicator.ts | ✅ | ✅ | 🟡 | ❌ | ⬜ |
+| **Data Schema文件（本機端與Server端）.md (doc_tech_0013)** | ResourceManager.ts, NetworkService.ts, SyncManager.ts, NetworkStatusIndicator.ts, index.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
+| **場景搭建指南.md (doc_tech_0007)** | SceneAutoBuilder.ts | ✅ | ✅ | ❌ | ❌ | ⬜ |
+| **demo_playbook.md (doc_spec_0161)** | BattleScene.ts | ✅ | ✅ | ❌ | ❌ | ⬜ |
+| **demo_技術架構.md (doc_tech_0015)** | ServiceLoader.ts, PoolSystem.ts, ResourceManager.ts, EffectSystem.ts, AudioSystem.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
+| **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
+| 俘虜處理系統.md (doc_spec_0021) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 傭兵系統（試用）.md (doc_spec_0029) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 可結緣女性來源系統.md (doc_spec_0003) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 同名武將系統.md (doc_spec_0005) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 名士預言系統.md (doc_spec_0006) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
+| 因子解鎖系統.md (doc_spec_0009) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 培育系統.md (doc_spec_0026) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 家族關係（史實相性）系統.md (doc_spec_0024) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 戰場適性系統.md (doc_spec_0041) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 教官系統（支援卡）.md (doc_spec_0027) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 正式版劇本文案.md (doc_spec_0004) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| 武將戰績系統.md (doc_spec_0019) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 武將背包（倉庫）系統.md (doc_spec_0017) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 留存系統.md (doc_spec_0025) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 結緣系統（配種）.md (doc_spec_0028) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 經濟系統.md (doc_spec_0032) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 血統理論系統.md (doc_spec_0011) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 資源循環系統.md (doc_spec_0033) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 轉職與宿命系統.md (doc_spec_0043) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 轉蛋系統.md (doc_spec_0042) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 遊戲時間系統.md (doc_spec_0034) | GameClock.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| 運氣系統.md (doc_spec_0035) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 道具系統（付費免費道具）.md (doc_spec_0036) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 領地治理系統.md (doc_spec_0037) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 熱更新與版本控制規格書.md (doc_tech_0012) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
 
 ---
 
@@ -125,8 +132,8 @@
 | 結緣模式摘要 | `pending: bonding-lineage-mode-chip` | `BondingSetup` 父母摘要列 / 結果預估卡 | 結緣系統（配種）.md (doc_spec_0028)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 | 培育學年階段列 | `pending: nurture-phase-block-header` | `NurtureSession` 頂部進度列 | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 | 畢業戰術標籤條 | `pending: graduation-tags-strip` | `NurtureSession` 畢業摘要 / `GeneralDetail` peek | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 軍師 HUD 摘要 | `pending: strategist-hud-summary` | `BattleScene` Top HUD 次層 / 右側可收合抽屜 | 關卡設計系統.md (doc_spec_0044)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 關卡回收摘要 | `pending: stage-salvage-summary` | `BattleScene` 戰中提示條 / 戰後摘要卡 | 關卡設計系統.md (doc_spec_0044)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 軍師 HUD 摘要 | `pending: strategist-hud-summary` | `BattleScene` Top HUD 次層 / 右側可收合抽屜 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 關卡回收摘要 | `pending: stage-salvage-summary` | `BattleScene` 戰中提示條 / 戰後摘要卡 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 | 雙池定位導覽 | `pending: gacha-pool-positioning-brief` | `GachaMain` tab header / pity 區旁說明帶 | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 | 轉蛋 Banner 主視覺 | `pending: gacha-banner-hero-art-policy` | `GachaMain` BannerStage 人物主視覺 / pool-specific key visual | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 

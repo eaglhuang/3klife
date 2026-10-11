@@ -146,6 +146,24 @@ function createDummyClass(name) {
   };
 }
 
+const RESOURCES_ROOT = require('path').resolve(__dirname, '..', 'assets', 'resources');
+
+function loadTestResourceJson(resourcePath) {
+  if (typeof resourcePath !== 'string') {
+    return null;
+  }
+  const fs = require('fs');
+  const filePath = require('path').join(RESOURCES_ROOT, `${resourcePath}.json`);
+  if (!filePath.startsWith(RESOURCES_ROOT) || !fs.existsSync(filePath)) {
+    return null;
+  }
+  return {
+    json: JSON.parse(fs.readFileSync(filePath, 'utf8')),
+    addRef() { return this; },
+    decRef() { return this; },
+  };
+}
+
 const baseCcStub = {
   _decorator: {
     ccclass: createClassDecoratorPassthrough(),
@@ -196,9 +214,12 @@ const baseCcStub = {
   AssetManager: class {},
   Asset: class {},
   resources: {
+    // 若 assets/resources/<path>.json 存在，就以 JsonAsset 回傳真實資料（例如戰法表），
+    // 讓依賴 resources.load 的邏輯在測試中拿到與 runtime 相同的資料；其餘資產仍回傳 null。
     load(_path, _typeOrCb, cb) {
-      const callback = typeof _typeOrCb === 'function' ? _typeOrCb : cb;
-      callback?.(null, null);
+      // 支援 load(path, cb) 與 load(path, Type, cb) 兩種簽章；Type 本身也是 function，不能當成 callback
+      const callback = typeof cb === 'function' ? cb : (typeof _typeOrCb === 'function' ? _typeOrCb : undefined);
+      callback?.(null, loadTestResourceJson(_path));
     },
     release() {},
   },
@@ -224,6 +245,7 @@ const baseCcStub = {
         getItem(key) { return storage.has(key) ? storage.get(key) : null; },
         setItem(key, value) { storage.set(key, String(value)); },
         removeItem(key) { storage.delete(key); },
+        clear() { storage.clear(); },
       },
     };
   })(),

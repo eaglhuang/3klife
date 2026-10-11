@@ -46,9 +46,15 @@ const STORE_ACTIVE_IDS = 'generals_active_ids';
 
 export class GeneralArchiver {
     private adapter: DataStorageAdapter;
+    private pendingDelete: PendingDeleteStore | null;
 
-    constructor(adapter: DataStorageAdapter) {
+    /**
+     * @param pendingDelete 可注入待刪隔離層；省略時沿用 PendingDeleteStore 單例（相容舊呼叫端）。
+     *                      headless 測試用不同 adapter 時應注入，避免吃到前一個測試的單例。
+     */
+    constructor(adapter: DataStorageAdapter, pendingDelete?: PendingDeleteStore) {
         this.adapter = adapter;
+        this.pendingDelete = pendingDelete ?? null;
     }
 
     /**
@@ -124,7 +130,7 @@ export class GeneralArchiver {
                 lifecycleClass === GeneralLifecycleClass.Unrecoverable) &&
             seasonCtx
         ) {
-            const pds = PendingDeleteStore.getInstance(this.adapter);
+            const pds = this.pendingDelete ?? PendingDeleteStore.getInstance(this.adapter);
             await pds.enqueue(card, seasonCtx.season, seasonCtx.year, seasonCtx.retentionSeasons ?? 2);
         }
 

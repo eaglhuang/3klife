@@ -11,8 +11,18 @@ import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
-import { LocalGachaService } from '../../core/services/LocalGachaService';
+import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
+import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
+import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
+import type { UnveilingEvent } from '../../core/systems/Unveiling';
+import type { NurtureAction } from '../../core/systems/NurtureSystem';
+import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
+import { NurtureFlowController } from '../core/NurtureFlowController';
+import { applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
+import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
+import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
+import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
@@ -69,6 +79,9 @@ interface GeneralListOpenPayload {
     };
 }
 
+/** 選卡畫面的卡片按鈕數（對應 lobby-deck-select-main.json 的 btnDeckCard0..3，目前卡片目錄只有 4 張） */
+const DECK_SELECT_SLOTS = 4;
+
 interface ScreenButtonBinding {
     buttonId: string;
     handler: () => void;
@@ -84,6 +97,13 @@ export class LobbyScene extends Component {
     private _lobbyMainHost: UIScreenPreviewHost | null = null;
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
+    private _seasonHudHost: UIScreenPreviewHost | null = null;
+    private _nurtureFlowHost: UIScreenPreviewHost | null = null;
+    private _nurtureFlow: NurtureFlowController | null = null;
+    private _deckSelectHost: UIScreenPreviewHost | null = null;
+    private _leadSelectHost: UIScreenPreviewHost | null = null;
+    private _leadSelectPage = 0;
+    private readonly _sessionEventUnsubscribers: Array<() => void> = [];
     private _spiritFamilyOverviewHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorAwakeningHost: UIScreenPreviewHost | null = null;
@@ -126,8 +146,13 @@ export class LobbyScene extends Component {
         this._detailPanel = detailNode?.getComponent(GeneralDetailComposite) || detailNode?.addComponent(GeneralDetailComposite) || null;
         this._ensureWidget(detailNode);
 
+        await this._loadPlayerSave();
         await this._mountLobbyMainHub();
         await this._mountSecondaryMainHubs();
+        await this._mountSeasonHud();
+        await this._mountNurtureFlow();
+        await this._mountDeckSelect();
+        await this._mountLeadSelect();
         await this._mountCharacterDs3Host();
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
@@ -171,9 +196,279 @@ export class LobbyScene extends Component {
     }
 
     protected onDestroy(): void {
+        for (const unsubscribe of this._sessionEventUnsubscribers) {
+            unsubscribe();
+        }
+        this._sessionEventUnsubscribers.length = 0;
         void services().ui.closeAll();
         detachCurrencyCheatPanel();
         detachRosterClearButton();
+    }
+
+    /** 開場讀檔：沒有存檔就維持新局；壞檔只警告，不覆蓋也不中斷大廳啟動 */
+    private async _loadPlayerSave(): Promise<void> {
+        try {
+            const loaded = await services().session.load();
+            UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
+        }
+    }
+
+    /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
+    private async _mountSeasonHud(): Promise<void> {
+        this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
+            { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
+            { buttonId: 'btnOpenNurture', handler: () => { this._openNurtureFlow(); } },
+        ]);
+        this._refreshSeasonHud();
+
+        const refresh = (): void => { this._refreshSeasonHud(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    private _refreshSeasonHud(): void {
+        const time = services().session.gameTime;
+        this._seasonHudHost?.binder?.setTexts({
+            seasonLabel: formatSeasonLabel(time),
+            modeLabel: formatModeLabel(time.currentMode),
+        });
+    }
+
+    /**
+     * 開獎與培育畫面：以 UCUF JSON（nurture-flow-screen）執行期組裝。
+     * 規則全在 NurtureFlowController（純邏輯），這裡只綁按鈕、套 FlowView。
+     */
+    private async _mountNurtureFlow(): Promise<void> {
+        const flow = new NurtureFlowController({
+            roster: { getAll: () => services().session.roster },
+            unveiling: services().unveiling,
+            nurture: services().nurture,
+            loadMentorCards: async () => (await services().legacy?.getMentorCards()) ?? [],
+            persist: async () => {
+                if (services().session.hasSaveService) {
+                    await services().session.save();
+                }
+            },
+        });
+        this._nurtureFlow = flow;
+
+        const act = (task: () => Promise<unknown>): (() => void) => () => {
+            void task()
+                .catch((error) => {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 開獎 / 培育動作失敗', error);
+                    services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '操作失敗', duration: 2.5 });
+                })
+                .finally(() => { this._refreshNurtureFlow(); });
+        };
+        const trainBindings = TRAINING_KINDS.map((kind) => ({
+            buttonId: `btnTrain_${kind}`,
+            handler: act(() => flow.train(kind as NurtureAction)),
+        }));
+        this._nurtureFlowHost = await this._mountPreviewScreenHost('NurtureFlowHost', 'nurture-flow-screen', [
+            { buttonId: 'btnCloseFlow', handler: () => { this._closeNurtureFlow(); } },
+            { buttonId: 'btnPrevChild', handler: () => { flow.selectNext(-1); this._refreshNurtureFlow(); } },
+            { buttonId: 'btnNextChild', handler: () => { flow.selectNext(1); this._refreshNurtureFlow(); } },
+            { buttonId: 'btnFateAccept', handler: act(() => flow.chooseFate('accept')) },
+            { buttonId: 'btnFateDefy', handler: act(() => flow.chooseFate('defy')) },
+            { buttonId: 'btnStartNurture', handler: act(() => flow.startNurture()) },
+            ...trainBindings,
+            { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
+            { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
+            { buttonId: 'btnGraduate', handler: act(() => flow.graduate()) },
+            { buttonId: 'btnDismissReport', handler: () => { flow.dismissReport(); this._refreshNurtureFlow(); } },
+        ]);
+
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.GeneralUnveiled, (payload?: unknown) => {
+                const unveiled = payload as UnveilingEvent | undefined;
+                const name = services().session.roster.find((g) => g.id === unveiled?.generalId)?.name ?? '子嗣';
+                services().event.emit('SHOW_TOAST', { message: `${name} 滿 5 歲開獎！請到「開獎・培育」選擇宿命`, duration: 3 });
+                this._refreshNurtureFlow();
+            }),
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => { this._refreshNurtureFlow(); }),
+            event.on(GAME_SESSION_EVENTS.Loaded, () => { this._refreshNurtureFlow(); }),
+        );
+    }
+
+    private _openNurtureFlow(): void {
+        const host = this._nurtureFlowHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshNurtureFlow();
+    }
+
+    private _closeNurtureFlow(): void {
+        if (this._nurtureFlowHost) {
+            this._nurtureFlowHost.node.active = false;
+        }
+    }
+
+    private _refreshNurtureFlow(): void {
+        const binder = this._nurtureFlowHost?.binder;
+        if (!binder || !this._nurtureFlow) {
+            return;
+        }
+        applyNurtureFlowView(binder, this._nurtureFlow.getView());
+    }
+
+    /** 最小選卡 UI：以 UCUF JSON（lobby-deck-select-screen）執行期組裝，點卡加入 / 移除出戰卡組 */
+    private async _mountDeckSelect(): Promise<void> {
+        const bindings: ScreenButtonBinding[] = Array.from({ length: DECK_SELECT_SLOTS }, (_, slot) => ({
+            buttonId: `btnDeckCard${slot}`,
+            handler: () => { void this._onClickDeckCard(slot); },
+        }));
+        this._deckSelectHost = await this._mountPreviewScreenHost('DeckSelectHost', 'lobby-deck-select-screen', bindings);
+        this._refreshDeckSelect();
+        const refresh = (): void => { this._refreshDeckSelect(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.DeckChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    private _refreshDeckSelect(): void {
+        const binder = this._deckSelectHost?.binder;
+        if (!binder) {
+            return;
+        }
+        const deck = services().session.deck;
+        const cards = getTallyCardSummaries();
+        const texts: Record<string, string> = {
+            deckTitleLabel: `出戰卡組 ${deck.length}/${PLAYER_DECK_MAX_SIZE}`,
+        };
+        const actives: Record<string, boolean> = {};
+        for (let slot = 0; slot < DECK_SELECT_SLOTS; slot++) {
+            const card = cards[slot];
+            texts[`deckCardLabel${slot}`] = card ? `${deck.includes(card.id) ? '✓' : '　'} ${card.name}（${card.sub}）` : '－';
+            actives[`btnDeckCard${slot}`] = card !== undefined;
+        }
+        binder.setTexts(texts);
+        binder.setActives(actives);
+    }
+
+    private async _onClickDeckCard(slot: number): Promise<void> {
+        const cards = getTallyCardSummaries();
+        const card = cards[slot];
+        if (!card) {
+            return;
+        }
+        try {
+            const outcome = await services().session.toggleDeckCard(card.id, cards.map((entry) => entry.id));
+            if (outcome === 'full') {
+                services().event.emit('SHOW_TOAST', { message: `卡組已滿（上限 ${PLAYER_DECK_MAX_SIZE} 張）`, duration: 1.8 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 卡組存檔失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '卡組存檔失敗，請稍後再試', duration: 2 });
+        }
+    }
+
+    /** 選主將 UI：以 UCUF JSON（lobby-lead-select-screen）執行期組裝，列出可出戰武將，點選指定 / 再點取消 */
+    private async _mountLeadSelect(): Promise<void> {
+        const bindings: ScreenButtonBinding[] = [
+            ...Array.from({ length: LEAD_SELECT_PAGE_SIZE }, (_, slot) => ({
+                buttonId: `btnLeadGeneral${slot}`,
+                handler: () => { void this._onClickLeadGeneral(slot); },
+            })),
+            { buttonId: 'btnLeadPage', handler: () => { this._leadSelectPage += 1; this._refreshLeadSelect(); } },
+        ];
+        this._leadSelectHost = await this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings);
+        this._refreshLeadSelect();
+        const refresh = (): void => { this._refreshLeadSelect(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    private _currentLeadView(): ReturnType<typeof buildLeadSelectView> {
+        const session = services().session;
+        return buildLeadSelectView(session.getDeployableGenerals(), session.leadGeneralId, this._leadSelectPage);
+    }
+
+    private _refreshLeadSelect(): void {
+        const binder = this._leadSelectHost?.binder;
+        if (!binder) {
+            return;
+        }
+        let view = this._currentLeadView();
+        this._leadSelectPage = view.page;
+        const lead = services().session.leadGeneralId;
+        const leadName = view.rows.find((row) => row.id === lead)?.label;
+        const texts: Record<string, string> = {
+            leadTitleLabel: `出戰主將：${leadName ?? (lead ? '（不可出戰）' : '預設')}`,
+            leadPageLabel: `換頁 ▶ ${view.page + 1}/${view.pageCount}`,
+        };
+        const actives: Record<string, boolean> = { btnLeadPage: view.pageCount > 1 };
+        for (let slot = 0; slot < LEAD_SELECT_PAGE_SIZE; slot++) {
+            const row = view.rows[slot];
+            texts[`leadGeneralLabel${slot}`] = row ? `${row.selected ? '✓' : '　'} ${row.label}` : '－';
+            actives[`btnLeadGeneral${slot}`] = row !== undefined;
+        }
+        binder.setTexts(texts);
+        binder.setActives(actives);
+    }
+
+    private async _onClickLeadGeneral(slot: number): Promise<void> {
+        const row = this._currentLeadView().rows[slot];
+        if (!row) {
+            return;
+        }
+        try {
+            await services().session.setLeadGeneral(nextLeadId(services().session.leadGeneralId, row.id));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 主將存檔失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '主將存檔失敗，請稍後再試', duration: 2 });
+        }
+    }
+
+    private async _onClickAdvanceSeason(): Promise<void> {
+        try {
+            const { advance, agingEvents } = await services().session.advanceSeason();
+            const died = agingEvents.filter((event) => event.type === 'died').length;
+            const suffix = died > 0 ? `（${died} 位武將離世）` : '';
+            services().event.emit('SHOW_TOAST', {
+                message: `進入${formatSeasonLabel(advance.current)}${suffix}`,
+                duration: 2,
+            });
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });
+        }
+    }
+
+    /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
+    private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
+        try {
+            const { added, duplicates } = await services().session.addGenerals(results.map((entry) => entry.general));
+            const parts: string[] = [];
+            if (added.length > 0) {
+                parts.push(`新增 ${added.length} 位武將入名冊`);
+            }
+            if (duplicates.length > 0) {
+                parts.push(`${duplicates.length} 位已持有`);
+            }
+            if (parts.length > 0) {
+                services().event.emit('SHOW_TOAST', { message: parts.join('，'), duration: 2.2 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 抽卡結果寫入名冊 / 存檔失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '武將存檔失敗，請稍後再試', duration: 2.5 });
+        }
     }
 
     private async _mountLobbyMainHub(): Promise<void> {
@@ -756,9 +1051,34 @@ export class LobbyScene extends Component {
                 await this._lobbyMainHost!.showScreen('lobby-main-screen');
                 this._configureLobbyMainHub(this._lobbyMainHost!.binder);
                 this._refreshWalletPreviewState();
+                if (this._seasonHudHost) {
+                    this._seasonHudHost.node.active = true;
+                    this._bringNodeToFront(this._seasonHudHost.node);
+                    this._refreshSeasonHud();
+                }
+                if (this._deckSelectHost) {
+                    this._deckSelectHost.node.active = true;
+                    this._bringNodeToFront(this._deckSelectHost.node);
+                    this._refreshDeckSelect();
+                }
+                if (this._leadSelectHost) {
+                    this._leadSelectHost.node.active = true;
+                    this._bringNodeToFront(this._leadSelectHost.node);
+                    this._refreshLeadSelect();
+                }
             },
             hide: () => {
                 this._lobbyMainHost!.node.active = false;
+                if (this._seasonHudHost) {
+                    this._seasonHudHost.node.active = false;
+                }
+                this._closeNurtureFlow();
+                if (this._deckSelectHost) {
+                    this._deckSelectHost.node.active = false;
+                }
+                if (this._leadSelectHost) {
+                    this._leadSelectHost.node.active = false;
+                }
             },
         };
     }
@@ -1223,6 +1543,7 @@ export class LobbyScene extends Component {
             getGenerals: () => this._generals,
             factionFilter: 'player',
             tenPullHeaderText: '本地轉蛋結果 · 十連抽',
+            onAfterPullSuccess: (results) => { void this._onGachaPullSuccess(results); },
             onWalletChanged: () => {
                 this._refreshSinglePlayerModeToggleVisuals();
                 this._refreshWalletPreviewState();
@@ -1466,6 +1787,7 @@ export class LobbyScene extends Component {
             return {
                 ...DEFAULT_BATTLE_ENTRY_PARAMS,
                 entrySource: 'lobby',
+                selectedCardIds: services().session.deck,
                 battleTactic: battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             };
         }
@@ -1473,11 +1795,11 @@ export class LobbyScene extends Component {
         return {
             entrySource: 'lobby',
             encounterId: encounter.id,
-            playerGeneralId: encounter.playerGeneralId,
+            playerGeneralId: services().session.resolveLeadGeneralId(encounter.playerGeneralId),
             enemyGeneralId: encounter.enemyGeneralId,
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
-            selectedCardIds: [],
+            selectedCardIds: services().session.deck,
             weather: encounter.weather ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,

@@ -1,5 +1,5 @@
-import { buildUnityCompoundEffectDraft, renderCompoundEffectSnippet } from '../unity/UnityParticleCompoundMapper';
-import { extractUnityParticlePrefab, parseUnityYamlDocuments } from '../unity/UnityParticlePrefabParser';
+import { buildUnityCompoundEffectDraft, renderCompoundEffectSnippet } from '../assets/scripts/tools/unity/UnityParticleCompoundMapper';
+import { extractUnityParticlePrefab, parseUnityYamlDocuments } from '../assets/scripts/tools/unity/UnityParticlePrefabParser';
 import { TestSuite, assert } from './TestRunner';
 
 const SAMPLE_UNITY_PREFAB = `%YAML 1.1

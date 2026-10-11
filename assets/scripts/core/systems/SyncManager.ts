@@ -1,7 +1,16 @@
 import { sys } from 'cc';
 import { EventSystem } from './EventSystem';
 import { NetworkService, EVENT_NETWORK_ONLINE } from './NetworkService';
-import type { ActionRecord, SyncRequest, SyncResponse } from '../../../../shared/protocols';
+import type {
+    ActionRecord,
+    CompressedActionsSyncRequest,
+    DeltaSyncRequest,
+    FullSyncRequest,
+    SyncEndpointResponse,
+    SyncRequest,
+    SyncResponse,
+} from '../../../../shared/protocols';
+import { computeSyncTxHash } from './SyncHash';
 import { IndexedDbAdapter } from '../storage/IndexedDbAdapter';
 import { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
@@ -11,6 +20,8 @@ interface SyncLocalMeta {
     deviceId: string;
     sessionSecret: string;
     lastHash: string;
+    /** 伺服器確認過的同步錨點；舊版 meta 沒有此欄位 */
+    anchorHash?: string;
 }
 
 export interface SyncDebugSnapshot {
@@ -21,23 +32,6 @@ export interface SyncDebugSnapshot {
     pendingCount: number;
     isHydrated: boolean;
     records: ActionRecord[];
-}
-
-function computeSyncDigest(data: string, secret: string): string {
-    let stateA = 0x811c9dc5;
-    let stateB = 0x01000193;
-    const input = `${secret.length}:${secret}|${data}|${secret.split('').reverse().join('')}`;
-
-    for (let index = 0; index < input.length; index++) {
-        const code = input.charCodeAt(index);
-        stateA ^= code;
-        stateA = Math.imul(stateA, 0x01000193) >>> 0;
-        stateB ^= code + (index & 0xff);
-        stateB = Math.imul(stateB, 0x85ebca6b) >>> 0;
-        stateB = ((stateB << 13) | (stateB >>> 19)) >>> 0;
-    }
-
-    return `${stateA.toString(16).padStart(8, '0')}${stateB.toString(16).padStart(8, '0')}`;
 }
 
 export const EVENT_SYNCING = 'EVENT_SYNCING';
@@ -67,7 +61,8 @@ export class SyncManager {
     private actionRecords: ActionRecord[] = [];
     private currentSeq: number = 0;
     private sessionSecret: string = 'MOCK_SECRET_KEY'; // 當前有效金鑰 (Server 成功連線時下發)
-    private lastHash: string = 'INIT_HASH';          // 上次同步成功後的雜湊錨點
+    private lastHash: string = 'INIT_HASH';          // 本地雜湊鏈的鏈頭（最後一筆待同步紀錄的 Tx_Hash）
+    private anchorHash: string = 'INIT_HASH';        // 伺服器確認過的同步錨點（下次同步的 Previous_Hash）
     private deviceId: string = '';
 
     private isSyncing: boolean = false;
@@ -82,7 +77,9 @@ export class SyncManager {
     private readonly DEVICE_KEY = 'CLIENT_DEVICE_ID';
     private readonly ACTION_LOG_STORAGE_KEY = 'sync.action-log';
     private readonly META_STORAGE_KEY = 'sync.meta';
-    private readonly SERVER_URL = 'http://localhost:3000'; // 模擬伺服器位址
+    private readonly PLAYER_ID = 'PLAYER_TEST_01';
+    private serverUrl = 'http://localhost:3000'; // 模擬伺服器位址
+    private persistChain: Promise<void> = Promise.resolve();
 
     public getActionRecords(): ActionRecord[] {
         return [...this.actionRecords];
@@ -109,6 +106,26 @@ export class SyncManager {
             isHydrated: this.hasHydratedLocalState,
             records: [...this.actionRecords],
         };
+    }
+
+    /** 切換同步伺服器位址（測試或不同環境用）。 */
+    public setServerUrl(url: string): void {
+        this.serverUrl = url.replace(/\/+$/, '');
+    }
+
+    /** 伺服器確認過的同步錨點。 */
+    public getAnchorHash(): string {
+        return this.anchorHash;
+    }
+
+    /** 等待本地狀態還原完成。 */
+    public async whenHydrated(): Promise<void> {
+        await this.restorePromise;
+    }
+
+    /** 等待所有排隊中的本地持久化寫入完成（IndexedDB 是非同步的）。 */
+    public async flushLocalState(): Promise<void> {
+        await this.persistChain;
     }
 
     public getMemorySaveId(): string {
@@ -162,9 +179,14 @@ export class SyncManager {
             if (storedMeta?.sessionSecret) {
                 this.sessionSecret = storedMeta.sessionSecret;
             }
-            if (storedMeta?.lastHash) {
-                this.lastHash = storedMeta.lastHash;
+            if (storedMeta?.anchorHash) {
+                this.anchorHash = storedMeta.anchorHash;
+            } else if (storedMeta?.lastHash && this.actionRecords.length === 0) {
+                // 舊版 meta：沒有待同步紀錄時，鏈頭就是上次同步的錨點
+                this.anchorHash = storedMeta.lastHash;
             }
+            // 從錨點重新串鏈：涵蓋 hydration 前寫入的紀錄與舊版摘要算法產生的紀錄
+            this.rechainPendingRecords();
             if (storedMeta?.deviceId && storedMeta.deviceId !== this.deviceId) {
                 UCUFLogger.warn(
                     LogCategory.DATA,
@@ -221,7 +243,37 @@ export class SyncManager {
     }
 
     private queuePersistLocalState(): void {
-        void this.persistLocalState();
+        // 串行化寫入，避免較舊的快照晚於較新的快照落地
+        this.persistChain = this.persistChain
+            .then(() => this.persistLocalState())
+            .catch((error) => UCUFLogger.error(LogCategory.DATA, '[SyncManager] 本地同步狀態寫入失敗。', error));
+    }
+
+    /** 以目前金鑰從 anchorHash 重新計算所有待同步紀錄的 Tx_Hash，並更新鏈頭。 */
+    private rechainPendingRecords(): void {
+        let previous = this.anchorHash;
+        this.actionRecords = this.actionRecords.map((record) => {
+            const txHash = computeSyncTxHash(record.Action, record.Payload, this.sessionSecret, previous);
+            previous = txHash;
+            return { ...record, Tx_Hash: txHash };
+        });
+        this.lastHash = previous;
+    }
+
+    /**
+     * 套用伺服器的同步成功結果：移除已送出的紀錄、更新錨點與金鑰，
+     * 同步途中新寫入的紀錄改用新金鑰從新錨點重新串鏈。
+     */
+    private applySyncSuccess(sentCount: number, newHash: string | undefined, newSecret: string | undefined): void {
+        this.actionRecords = this.actionRecords.slice(sentCount);
+        if (newHash) {
+            this.anchorHash = newHash;
+        }
+        if (newSecret) {
+            this.sessionSecret = newSecret;
+        }
+        this.rechainPendingRecords();
+        this.queuePersistLocalState();
     }
 
     private async persistLocalState(): Promise<void> {
@@ -230,6 +282,7 @@ export class SyncManager {
             deviceId: this.deviceId,
             sessionSecret: this.sessionSecret,
             lastHash: this.lastHash,
+            anchorHash: this.anchorHash,
         };
         const adapter = await this.ensureStorageAdapter();
 
@@ -244,7 +297,11 @@ export class SyncManager {
             }
         }
 
-        sys.localStorage.setItem(this.LEGACY_STORAGE_KEY, JSON.stringify(this.actionRecords));
+        if (this.actionRecords.length === 0) {
+            sys.localStorage.removeItem(this.LEGACY_STORAGE_KEY);
+        } else {
+            sys.localStorage.setItem(this.LEGACY_STORAGE_KEY, JSON.stringify(this.actionRecords));
+        }
     }
 
     private async ensureStorageAdapter(): Promise<DataStorageAdapter | null> {
@@ -315,13 +372,9 @@ export class SyncManager {
 
         this.currentSeq++;
         
-        // HMAC-SHA256 驗證公式: SHA256 (Action + Payload + Secret + PreviousHash)
-        const payloadStr = JSON.stringify(payload);
-        const secret = this.sessionSecret;
-        const dataToHash = `${actionName}${payloadStr}${secret}${this.lastHash}`;
-        
-        // 此處產生的 HMAC 是鏈式的，若任何一步被竄改，後續所有雜湊皆會連動失效
-        const calculatedHash = computeSyncDigest(dataToHash, secret);
+        // 同步契約：HMAC-SHA256(secret, Action + JSON(Payload) + secret + previousHash)，與 server/src/sync.ts 一致。
+        // 雜湊是鏈式的，若任何一步被竄改，後續所有雜湊皆會連動失效
+        const calculatedHash = computeSyncTxHash(actionName, payload, this.sessionSecret, this.lastHash);
         this.lastHash = calculatedHash;
 
         const record: ActionRecord = {
@@ -379,17 +432,18 @@ export class SyncManager {
         this.isSyncing = true;
         this.eventSystem?.emit(EVENT_SYNCING);
 
+        const sentRecords = [...this.actionRecords];
         const syncData: SyncRequest = {
-            Player_ID: 'PLAYER_TEST_01', 
+            Player_ID: this.PLAYER_ID,
             Session_Secret: this.sessionSecret,
-            Action_Records: this.actionRecords,
-            Previous_Hash: this.lastHash // 實務應為存檔快照的最後雜湊錨點
+            Action_Records: sentRecords,
+            Previous_Hash: this.anchorHash, // 雜湊鏈起點 = 伺服器確認過的錨點
         };
 
-        UCUFLogger.info(LogCategory.DATA, `[SyncManager] Requesting Sync for ${this.actionRecords.length} records...`);
+        UCUFLogger.info(LogCategory.DATA, `[SyncManager] Requesting Sync for ${sentRecords.length} records...`);
 
         try {
-            const response = await fetch(`${this.SERVER_URL}/sync`, {
+            const response = await fetch(`${this.serverUrl}/sync`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(syncData)
@@ -399,13 +453,13 @@ export class SyncManager {
 
             if (result.Success) {
                 UCUFLogger.info(LogCategory.DATA, '[SyncManager] Sync OK. New Secret issued.');
-                this.actionRecords = []; 
-                
-                this.sessionSecret = result.New_Session_Secret!;
-                this.lastHash = result.New_Hash!; // 以此為下次離線的第一個雜湊鎖
-                this.queuePersistLocalState();
+                this.applySyncSuccess(sentRecords.length, result.New_Hash, result.New_Session_Secret);
                 this.isSyncing = false;
                 this.eventSystem?.emit(EVENT_SYNC_COMPLETE);
+                // 同步途中又寫入的紀錄（已改用新金鑰串鏈）接著送出
+                if (this.actionRecords.length > 0 && this.network?.isOnline) {
+                    void this.syncNow();
+                }
             } else {
                 UCUFLogger.error(LogCategory.DATA, `[SyncManager] Sync Rejected: ${result.Message}`);
                 this.isSyncing = false;
@@ -443,20 +497,22 @@ export class SyncManager {
             // 動態引入以避免循環依賴
             const { DeltaPatchBuilder } = await import('../services/DeltaPatchBuilder');
             const patches = DeltaPatchBuilder.build(baseSave, currentSave);
+            const sentRecords = [...this.actionRecords];
 
-            const body = JSON.stringify({
+            const request: DeltaSyncRequest = {
+                playerId: this.PLAYER_ID,
                 deviceId: this.deviceId,
                 sessionToken: this.sessionSecret,
-                baseHash: this.lastHash,
+                baseHash: this.anchorHash,
                 patches,
-                actionRecords: this.actionRecords,
+                actionRecords: sentRecords,
                 clientTimestamp: Date.now(),
-            });
+            };
 
-            const response = await fetch(`${this.SERVER_URL}/sync/delta`, {
+            const response = await fetch(`${this.serverUrl}/sync/delta`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body,
+                body: JSON.stringify(request),
             });
 
             if (response.status === 409) {
@@ -468,11 +524,9 @@ export class SyncManager {
             }
 
             if (response.ok) {
-                const result = await response.json();
-                this.lastHash = result.newHash ?? this.lastHash;
-                this.actionRecords = [];
+                const result: SyncEndpointResponse = await response.json();
+                this.applySyncSuccess(sentRecords.length, result.newHash, result.newSessionSecret);
                 this.deltaPatchQueue = [];
-                this.queuePersistLocalState();
                 this.eventSystem?.emit(EVENT_SYNC_COMPLETE);
                 UCUFLogger.info(LogCategory.DATA, '[SyncManager] delta sync OK');
             } else {
@@ -488,7 +542,7 @@ export class SyncManager {
     }
 
     /**
-     * 全量同步（fallback）。
+     * 全量同步（fallback）。完整存檔已反映所有待同步行動，成功後清空已送出的行動紀錄。
      */
     public async syncFull(saveData: object): Promise<void> {
         if (this.isSyncing) return;
@@ -496,25 +550,25 @@ export class SyncManager {
         this.eventSystem?.emit(EVENT_SYNCING);
 
         try {
-            const body = JSON.stringify({
+            const sentCount = this.actionRecords.length;
+            const request: FullSyncRequest = {
+                playerId: this.PLAYER_ID,
                 deviceId: this.deviceId,
                 sessionToken: this.sessionSecret,
                 saveData,
                 clientTimestamp: Date.now(),
-            });
+            };
 
-            const response = await fetch(`${this.SERVER_URL}/sync/full`, {
+            const response = await fetch(`${this.serverUrl}/sync/full`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body,
+                body: JSON.stringify(request),
             });
 
             if (response.ok) {
-                const result = await response.json();
-                this.lastHash = result.newHash ?? this.lastHash;
-                this.actionRecords = [];
+                const result: SyncEndpointResponse = await response.json();
+                this.applySyncSuccess(sentCount, result.newHash, result.newSessionSecret);
                 this.deltaPatchQueue = [];
-                this.queuePersistLocalState();
                 this.eventSystem?.emit(EVENT_SYNC_COMPLETE);
                 UCUFLogger.info(LogCategory.DATA, '[SyncManager] full sync OK');
             } else {
@@ -542,40 +596,52 @@ export class SyncManager {
      * 自動呼叫 GzipCodec，需確保 pako 已引入。
      */
     public async flushCompressedActions(): Promise<void> {
-        if (this.actionRecords.length === 0 || !this.network?.isOnline) return;
+        if (this.isSyncing || this.actionRecords.length === 0 || !this.network?.isOnline) return;
 
+        this.isSyncing = true;
         try {
             const { GzipCodec } = await import('../serialization/GzipCodec');
-            const jsonStr = JSON.stringify(this.actionRecords);
-            const compressed = GzipCodec.compressJson(jsonStr);
+            const sentRecords = [...this.actionRecords];
+            const compressed = GzipCodec.compressJson(JSON.stringify(sentRecords));
 
-            // 轉為 Base64 供 JSON body 傳送
-            const base64 = btoa(String.fromCharCode(...compressed));
+            // 轉為 Base64 供 JSON body 傳送（分段組字串，避免大陣列展開爆 call stack）
+            let binary = '';
+            const CHUNK = 0x8000;
+            for (let offset = 0; offset < compressed.length; offset += CHUNK) {
+                binary += String.fromCharCode(...compressed.subarray(offset, offset + CHUNK));
+            }
 
-            const body = JSON.stringify({
+            const request: CompressedActionsSyncRequest = {
+                playerId: this.PLAYER_ID,
                 deviceId: this.deviceId,
                 sessionToken: this.sessionSecret,
-                actionRecordsCompressed: base64,
-                count: this.actionRecords.length,
+                baseHash: this.anchorHash,
+                actionRecordsCompressed: btoa(binary),
+                count: sentRecords.length,
                 clientTimestamp: Date.now(),
-            });
+            };
 
-            const response = await fetch(`${this.SERVER_URL}/sync/actions`, {
+            const response = await fetch(`${this.serverUrl}/sync/actions`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body,
+                body: JSON.stringify(request),
             });
 
             if (response.ok) {
+                const result: SyncEndpointResponse = await response.json();
+                this.applySyncSuccess(sentRecords.length, result.newHash, result.newSessionSecret);
                 UCUFLogger.info(
                     LogCategory.DATA,
-                    `[SyncManager] flushed ${this.actionRecords.length} actions (compressed)`,
+                    `[SyncManager] flushed ${sentRecords.length} actions (compressed)`,
                 );
-                this.actionRecords = [];
-                this.queuePersistLocalState();
+                this.eventSystem?.emit(EVENT_SYNC_COMPLETE);
+            } else {
+                UCUFLogger.error(LogCategory.DATA, `[SyncManager] flushCompressedActions failed: ${response.status}`);
             }
         } catch (e) {
             UCUFLogger.error(LogCategory.DATA, '[SyncManager] flushCompressedActions error:', e);
+        } finally {
+            this.isSyncing = false;
         }
     }
 

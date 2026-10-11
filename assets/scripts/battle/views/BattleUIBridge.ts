@@ -14,6 +14,7 @@ import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, TroopType, TurnPhase } 
 import { services } from '../../core/managers/ServiceLoader';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
+import type { BattleResult } from '../BattleTypes';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 
 import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
@@ -473,6 +474,7 @@ export class BattleUIBridge {
     }
     c.resultPopup?.showResult(data.result as any);
     this.appendLog(`戰鬥結束：${data.result}`);
+    this._settleRosterBattle(data.result as BattleResult);
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
     c.hud?.clearSceneGambitBadge();
@@ -482,6 +484,20 @@ export class BattleUIBridge {
     c.isAdvancingTurn = false;
     c.isDuelPanelActive = false;
     if (c.deployRuntime) c.deployRuntime.node.active = false;
+  }
+
+  /** 戰後結算寫回名冊（精力、戰績、功勳）；名冊裡沒有的內建武將會被略過 */
+  private _settleRosterBattle(result: BattleResult): void {
+    const pgId = this.ctx.pg?.id;
+    if (!pgId) return;
+    void services().session.recordBattle([pgId], result).then((settlement) => {
+      const entry = settlement.entries[0];
+      if (entry) {
+        this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
+      }
+    }).catch((error) => {
+      UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回名冊失敗', error);
+    });
   }
 
   private _onUltimateSkillSelected(data: { skillId?: string | null }): void {

@@ -1,0 +1,158 @@
+{
+  "id": "lobby-deck-select-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LobbyDeckSelectRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "DeckSelectCard",
+        "widget": {
+          "top": 270,
+          "left": 32
+        },
+        "width": 320,
+        "height": 232,
+        "skinSlot": "deck.select.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "DeckTitleLabel",
+            "id": "deckTitleLabel",
+            "widget": {
+              "top": 10,
+              "left": 12,
+              "right": 12
+            },
+            "height": 30,
+            "text": "出戰卡組 0/4",
+            "styleSlot": "deck.select.label.title"
+          },
+          {
+            "type": "button",
+            "name": "DeckCardButton0",
+            "id": "btnDeckCard0",
+            "widget": {
+              "top": 48,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "deck.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DeckCardLabel0",
+                "id": "deckCardLabel0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "－",
+                "styleSlot": "deck.select.label.card"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "DeckCardButton1",
+            "id": "btnDeckCard1",
+            "widget": {
+              "top": 92,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "deck.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DeckCardLabel1",
+                "id": "deckCardLabel1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "－",
+                "styleSlot": "deck.select.label.card"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "DeckCardButton2",
+            "id": "btnDeckCard2",
+            "widget": {
+              "top": 136,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "deck.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DeckCardLabel2",
+                "id": "deckCardLabel2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "－",
+                "styleSlot": "deck.select.label.card"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "DeckCardButton3",
+            "id": "btnDeckCard3",
+            "widget": {
+              "top": 180,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "deck.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DeckCardLabel3",
+                "id": "deckCardLabel3",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "－",
+                "styleSlot": "deck.select.label.card"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

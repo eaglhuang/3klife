@@ -1,8 +1,8 @@
 import { TestSuite, assert } from './TestRunner';
-import { SyncManager, SyncActionType, EVENT_SYNC_COMPLETE } from '../../core/systems/SyncManager';
-import { NetworkService } from '../../core/systems/NetworkService';
-import { EventSystem } from '../../core/systems/EventSystem';
-import { sys } from './cc.mock';
+import { SyncManager, SyncActionType, EVENT_SYNC_COMPLETE } from '../assets/scripts/core/systems/SyncManager';
+import { NetworkService } from '../assets/scripts/core/systems/NetworkService';
+import { EventSystem } from '../assets/scripts/core/systems/EventSystem';
+import { sys } from 'cc'; // 與被測程式共用同一份 cc stub，monkey-patch 才會生效
 
 // ★ mock fetch 工廠函式（不在頂層執行，避免 Cocos 打包後在瀏覽器崩潰）
 function installMockFetch(): void {
@@ -44,13 +44,17 @@ export function createSyncManagerSuite() {
         const success = sync.pushAction("BATTLE_WIN", { gold: 50 }, SyncActionType.DEFERRABLE);
         assert.isTrue(success, "離線推入可延遲動作應成功");
 
+        // 本地持久化是非同步的（IndexedDB 失敗才回退 localStorage），等寫入落地再檢查
+        await sync.whenHydrated();
+        await sync.flushLocalState();
+
         // 檢查本地儲存
         const stored = sys.localStorage.getItem('OFFLINE_ACTION_LOGS');
         assert.isDefined(stored, "localStorage 應含有離線日誌");
         const logs = JSON.parse(stored!);
         assert.lengthEquals(1, logs);
         assert.equals("BATTLE_WIN", logs[0].Action);
-        assert.isDefined(logs[0].Tx_Hash, "應產生 HMAC 雜湊");
+        assert.isTrue(/^[0-9a-f]{64}$/.test(logs[0].Tx_Hash), "應產生 HMAC-SHA256 雜湊（64 字元 hex）");
     });
 
     suite.test("離線狀態下 Immediate Action 應被攔截且不記錄", async () => {
@@ -89,6 +93,7 @@ export function createSyncManagerSuite() {
         // 為了測試快速，我們在 implementation 已經把 setTimeout 改為 await fetch 了
         // 由於我們 mock 了 fetch，應該是立即完成
         await new Promise(resolve => setTimeout(resolve, 50)); // 緩衝一下 async 流程
+        await sync.flushLocalState();
 
         assert.isTrue(syncFinished, "應完成同步流程");
         assert.equals(0, (sync as any).actionRecords.length, "同步後佇列應清空");

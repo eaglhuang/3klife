@@ -32,6 +32,8 @@ const REGISTRY_PATH  = path.join(ROOT, 'assets', 'resources', 'data', 'person-re
 const FORCE        = process.argv.includes('--force') || process.argv.includes('--all');
 const LINK_PARENTS = process.argv.includes('--link-parents') || process.argv.includes('--all');
 const DRY_RUN      = process.argv.includes('--dry-run');
+// 只補紫/紅因子（決策題 Q1=B，PROG-2-0036）：不動既有 gene_refs，可重複執行
+const AUGMENT_SIX_COLOR = process.argv.includes('--augment-six-color');
 
 // ---------------------------------------------------------------------------
 // Known paternal parent relationships (childId → fatherId)
@@ -190,6 +192,22 @@ function deriveCoreGenes(general, allGeneIds) {
   return coreList;
 }
 
+// ---------------------------------------------------------------------------
+// 紫（運氣天命）/ 紅（生命體魄）因子：由五維推導，門檻規格未定，暫以下列規則（PROG-2-0036）
+//   LUK >= 80 → gene_destiny；LUK >= 70 → gene_luck
+//   STR >= 80 → gene_vitality；STR >= 88 → gene_endurance
+// ---------------------------------------------------------------------------
+function deriveSixColorExtras(general, allGeneIds) {
+  const extras = [];
+  const luk = general.luk ?? general.stats?.luk ?? 0;
+  const str = general.str ?? general.stats?.str ?? 0;
+  if (luk >= 80) extras.push('gene_destiny');
+  if (luk >= 70) extras.push('gene_luck');
+  if (str >= 80) extras.push('gene_vitality');
+  if (str >= 88) extras.push('gene_endurance');
+  return extras.filter(id => allGeneIds.has(id));
+}
+
 /**
  * Assign gene_refs to one ancestor slot based on weight profile.
  * Returns an array of gene IDs (deduplicated, length 1-4).
@@ -328,6 +346,32 @@ for (const general of generals) {
   // For each virtual ancestor UID, populate gene_refs if empty (or --force).
   // -------------------------------------------------------------------------
   const ancestor_chain = Array.isArray(general.ancestor_chain) ? general.ancestor_chain : [];
+
+  if (AUGMENT_SIX_COLOR) {
+    const extras = deriveSixColorExtras(general, allGeneIds);
+    if (extras.length > 0) {
+      const own = personsMap.get(general.id);
+      if (own) {
+        own.gene_refs = Array.isArray(own.gene_refs) ? own.gene_refs : [];
+        for (const id of extras) if (!own.gene_refs.includes(id)) { own.gene_refs.push(id); geneAssigned++; }
+      }
+      for (let slotIndex = 0; slotIndex < Math.min(ancestor_chain.length, 14); slotIndex++) {
+        const uid = ancestor_chain[slotIndex];
+        if (generalIdSet.has(uid)) continue;
+        const person = personsMap.get(uid);
+        const slotRule = slotTemplate.slotRules[slotIndex];
+        const weightProfile = slotRule && weightProfiles.get(slotRule.weightProfileId);
+        if (!person || !weightProfile) continue;
+        const count = Math.max(1, Math.round(extras.length * weightProfile.coreTagWeight));
+        person.gene_refs = Array.isArray(person.gene_refs) ? person.gene_refs : [];
+        for (const id of deterministicPick(extras, count, `${general.id}:slot${slotIndex + 1}:six`)) {
+          if (!person.gene_refs.includes(id)) { person.gene_refs.push(id); geneAssigned++; }
+        }
+      }
+    }
+    continue; // 補色模式不重算其他欄位
+  }
+
   if (ancestor_chain.length === 0) continue; // female generals with no chain (pre-existing)
 
   const coreGenes     = deriveCoreGenes(general, allGeneIds);
