@@ -11,6 +11,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
+import type { NurtureState } from './NurtureService';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 export const PLAYER_SAVE_SCHEMA_VERSION = 1;
@@ -21,18 +22,22 @@ export interface PlayerSaveSnapshot {
     savedAt: string;
     gameTime: GameTimeState;
     roster: GeneralConfig[];
+    /** 進行中的培育會話；舊存檔沒有這個欄位（視為沒有進行中的培育） */
+    nurture?: NurtureState;
 }
 
 export function createPlayerSaveSnapshot(
     gameTime: GameTimeState,
     roster: readonly GeneralConfig[],
     now: Date = new Date(),
+    nurture?: NurtureState,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
         savedAt: now.toISOString(),
         gameTime: GameClock.normalize(gameTime),
         roster: roster.map((general) => ({ ...general })),
+        ...(nurture ? { nurture } : {}),
     };
 }
 
@@ -55,11 +60,15 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (invalid !== undefined) {
         throw new Error('[PlayerSaveService] roster 內有缺少 id 的武將');
     }
+    if (snapshot.nurture !== undefined && (!snapshot.nurture || !Array.isArray(snapshot.nurture.sessions))) {
+        throw new Error('[PlayerSaveService] nurture 欄位格式錯誤');
+    }
     return {
         schemaVersion: snapshot.schemaVersion,
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
+        ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
     };
 }
 

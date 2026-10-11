@@ -22,6 +22,7 @@ import { createSyncManagerSuite } from './SyncManager.test';
 import { createNetworkServiceSuite } from './NetworkService.test';
 import { createGameSessionSuite } from './GameSession.test';
 import { createBreedingSuite } from './Breeding.test';
+import { createNurtureSuite } from './Nurture.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
 import { createCompositePanelSuite } from './ucuf/compositePanel.test';
 import { createAttributePanelSuite } from './ucuf/attributePanel.test';
@@ -74,6 +75,7 @@ if (typeof window === 'undefined') {
     runner.register(createNetworkServiceSuite());
     runner.register(createGameSessionSuite());
     runner.register(createBreedingSuite());
+    runner.register(createNurtureSuite());
     runner.register(createSkinLayersSuite());
     runner.register(createCompositePanelSuite());
     runner.register(createAttributePanelSuite());
