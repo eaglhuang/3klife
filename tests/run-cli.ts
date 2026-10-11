@@ -19,6 +19,7 @@ import { createCurveSuite } from './CurveSystem.test';
 import { createUnityParticlePrefabParserSuite } from './UnityParticlePrefabParser.test';
 import { createDeprecatedApiSuite } from './DeprecatedApiScanner';
 import { createSyncManagerSuite } from './SyncManager.test';
+import { createSyncContractSuite } from './SyncContract.test';
 import { createNetworkServiceSuite } from './NetworkService.test';
 import { createGameSessionSuite } from './GameSession.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
@@ -70,6 +71,7 @@ if (typeof window === 'undefined') {
     runner.register(createCurveSuite());
     runner.register(createUnityParticlePrefabParserSuite());
     runner.register(createSyncManagerSuite());
+    runner.register(createSyncContractSuite());
     runner.register(createNetworkServiceSuite());
     runner.register(createGameSessionSuite());
     runner.register(createSkinLayersSuite());

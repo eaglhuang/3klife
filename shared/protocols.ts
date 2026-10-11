@@ -30,3 +30,50 @@ export interface SyncResponse {
     Message?: string;
     Server_Time: number;
 }
+
+// ========== 存檔同步端點（/sync/delta、/sync/full、/sync/actions）==========
+// 共同欄位：playerId + sessionToken（= Session_Secret）做身分驗證；
+// 雜湊鏈規則與 /sync 相同（見 assets/scripts/core/systems/SyncHash.ts）。
+
+/** JSON Patch（RFC 6902）操作，僅使用 add / remove / replace */
+export interface SyncJsonPatch {
+    op: 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test';
+    path: string;
+    value?: unknown;
+    from?: string;
+}
+
+interface SyncEndpointRequestBase {
+    playerId: string;
+    deviceId: string;
+    sessionToken: string;
+    clientTimestamp: number;
+}
+
+/** POST /sync/delta：以存檔差異 + 行動紀錄同步；baseHash 與伺服器錨點不符時回 409 */
+export interface DeltaSyncRequest extends SyncEndpointRequestBase {
+    baseHash: string;
+    patches: SyncJsonPatch[];
+    actionRecords: ActionRecord[];
+}
+
+/** POST /sync/full：以完整存檔覆蓋伺服器快照（delta 衝突時的 fallback） */
+export interface FullSyncRequest extends SyncEndpointRequestBase {
+    saveData: unknown;
+}
+
+/** POST /sync/actions：gzip + Base64 壓縮後的 ActionRecord[] 批次上傳 */
+export interface CompressedActionsSyncRequest extends SyncEndpointRequestBase {
+    baseHash: string;
+    actionRecordsCompressed: string;
+    count: number;
+}
+
+/** 三個存檔同步端點共用的回應 */
+export interface SyncEndpointResponse {
+    success: boolean;
+    newHash?: string;
+    newSessionSecret?: string;
+    message?: string;
+    serverTime: number;
+}
