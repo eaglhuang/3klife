@@ -28,6 +28,12 @@ export interface PlayerSaveSnapshot {
     nurture?: NurtureState;
     /** 玩家出戰卡組：虎符卡片 ID（tacticId）有序清單，進戰場時成為 selectedCardIds */
     deck: string[];
+    /** 因子覺醒用的玩家層級；後加的選填欄位，舊檔讀回補 1 */
+    discoveryLevel: number;
+}
+
+function normalizeDiscoveryLevel(value: unknown): number {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 1 ? Math.floor(value) : 1;
 }
 
 export function createPlayerSaveSnapshot(
@@ -36,6 +42,7 @@ export function createPlayerSaveSnapshot(
     now: Date = new Date(),
     nurture?: NurtureState,
     deck: readonly string[] = [],
+    discoveryLevel = 1,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -44,6 +51,7 @@ export function createPlayerSaveSnapshot(
         roster: roster.map((general) => ({ ...general })),
         ...(nurture ? { nurture } : {}),
         deck: normalizeDeck(deck),
+        discoveryLevel: normalizeDiscoveryLevel(discoveryLevel),
     };
 }
 
@@ -79,6 +87,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         roster: snapshot.roster,
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
         deck: normalizeDeck(snapshot.deck),
+        discoveryLevel: normalizeDiscoveryLevel(snapshot.discoveryLevel),
     };
 }
 
