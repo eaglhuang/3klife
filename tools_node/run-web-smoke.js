@@ -153,6 +153,10 @@ async function waitForEngine(page, timeoutMs) {
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
+    if (args.flow && args.flow !== 'lifecycle') {
+        console.error('[web-smoke] --flow 僅支援 lifecycle');
+        return 2;
+    }
     const buildDir = path.resolve(projectRoot, args.dir || 'build/web-desktop');
     const outDir = path.resolve(projectRoot, args.out || 'artifacts/web-smoke');
     const timeoutMs = Number(args.timeout || 45000);
@@ -179,6 +183,7 @@ async function main() {
     const consoleLines = [];
     let browser = null;
     let engineState = { engine: false };
+    let flow = null;
 
     try {
         browser = await browserCaptureCore.launchBrowser({
@@ -220,6 +225,15 @@ async function main() {
             engineState = await waitForEngine(page, 1000);
         }
 
+        if (args.flow === 'lifecycle' && engineState.engine) {
+            try {
+                flow = await require('./lib/web-lifecycle-flow').runLifecycleFlow(page, { timeoutMs });
+            } catch (error) {
+                flow = { name: 'lifecycle', completed: false };
+                errors.push({ kind: 'lifecycle-flow', detail: String(error && error.stack || error) });
+            }
+            engineState = await waitForEngine(page, 1000);
+        }
         const screenshotPath = path.join(outDir, 'boot.png');
         await page.screenshot({ path: screenshotPath });
         console.log(`[web-smoke] 截圖 ${screenshotPath}`);
@@ -228,10 +242,12 @@ async function main() {
             generatedAt: new Date().toISOString(),
             url,
             buildDir: path.relative(projectRoot, buildDir),
+            buildRevision: args['build-revision'] || null,
             viewport,
             engineStarted: engineState.engine,
             sceneName: engineState.sceneName || null,
             errorCount: errors.length,
+            flow,
             errors,
             consoleTail: consoleLines.slice(-50),
             screenshot: path.relative(projectRoot, screenshotPath),
