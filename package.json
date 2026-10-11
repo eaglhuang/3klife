@@ -17,6 +17,8 @@
     "test:snapshot:update": "node tools_node/headless-snapshot-test.js --update",
     "test:snapshot:ci": "node tools_node/headless-snapshot-test.js --ci",
     "check:deprecated-refs": "node tools_node/scan-deprecated-refs.js --strict",
+    "build:web": "node tools_node/build-web.js",
+    "test:web-smoke": "node tools_node/run-web-smoke.js",
     "gate:ucuf": "node tools_node/finalize-agent-turn.js --workflow ucuf --changed",
     "gate:ucuf:staged": "node tools_node/finalize-agent-turn.js --workflow ucuf --staged",
     "gate:quick": "node tools_node/compute-gate.js --profile quick",
