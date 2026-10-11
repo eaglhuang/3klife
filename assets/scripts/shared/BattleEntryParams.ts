@@ -45,7 +45,7 @@ export interface IBattleEntryParams {
   /** 敵軍裝備 ID 列表（預留） */
   enemyEquipment?: string[];
 
-  /** 虎符卡組 ID 列表。為空時使用 demo 預設卡組 */
+  /** 玩家選定的虎符卡組（卡片 ID = tacticId，依序上手，最多 4 張）。為空或全部無效時使用 demo 預設卡組 */
   selectedCardIds?: string[];
 
   /** 天氣 */
