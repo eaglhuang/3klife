@@ -4,7 +4,7 @@
  * Unity 對照：等同 EditMode Test，不開 Scene 直接驗證 GameManager 的純 C# 邏輯。
  */
 import { TestSuite, assert } from './TestRunner';
-import { GameClock, GameTimeMode, createInitialGameTimeState } from '../assets/scripts/core/systems/GameClock';
+import { GameClock, GameTimeMode, createInitialGameTimeState, formatModeLabel, formatSeasonLabel } from '../assets/scripts/core/systems/GameClock';
 import {
     ageGeneralsOneSeason,
     AgingGeneral,
@@ -21,6 +21,7 @@ import {
     validatePlayerSaveSnapshot,
 } from '../assets/scripts/core/services/PlayerSaveService';
 import { GAME_SESSION_EVENTS, GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { checkWalletBalance, formatInsufficientMessage } from '../assets/scripts/core/services/GachaWalletRules';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function makeGeneral(id: string, age: number | undefined, extra: Partial<AgingGeneral> = {}): AgingGeneral {
@@ -226,6 +227,84 @@ export function createGameSessionSuite(): TestSuite {
             GAME_SESSION_EVENTS.GeneralReachedRetirementAge,
             GAME_SESSION_EVENTS.GeneralDied,
         ], emitted);
+    });
+
+    // ── 大廳接線：抽卡進名冊 / 季度顯示 / 開場讀檔 / 扣款規則（PROG-2-0025） ──
+
+    suite.test('大廳：季度標籤顯示「第 N 年 M 季」，模式顯示中文', () => {
+        const clock = new GameClock();
+        assert.equals('第 1 年 1 季', formatSeasonLabel(clock.state));
+        assert.equals('治理', formatModeLabel(clock.state.currentMode));
+        for (let i = 0; i < 4; i++) clock.advanceSeason();
+        assert.equals('第 2 年 1 季', formatSeasonLabel(clock.state));
+        assert.equals('作戰', formatModeLabel(GameTimeMode.Battle));
+        assert.equals('培育', formatModeLabel(GameTimeMode.Nurture));
+    });
+
+    suite.test('大廳：抽卡成功 addGenerals 寫進名冊並立即存檔', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const session = createSession(adapter, []);
+        const result = await session.addGenerals([makeGeneral('g1', 20), makeGeneral('g2', 30)]);
+        assert.equals(2, result.added.length);
+        assert.equals(0, result.duplicates.length);
+        assert.equals(2, session.roster.length);
+
+        const saved = validatePlayerSaveSnapshot(await adapter.get(PLAYER_SAVE_KEY));
+        assertSameJson(['g1', 'g2'], saved.roster.map((general) => general.id));
+    });
+
+    suite.test('大廳：重複抽到已持有武將不重複加入，只回報 duplicates', async () => {
+        const session = createSession(new MemoryStorageAdapter(), [makeGeneral('g1', 20)]);
+        const result = await session.addGenerals([makeGeneral('g1', 20), makeGeneral('g2', 30), makeGeneral('g2', 30)]);
+        assertSameJson(['g2'], result.added.map((general) => general.id));
+        assertSameJson(['g1', 'g2'], result.duplicates.map((general) => general.id));
+        assertSameJson(['g1', 'g2'], session.roster.map((general) => general.id));
+    });
+
+    suite.test('大廳：全部重複時不存檔、不廣播', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const emitted: string[] = [];
+        const session = createSession(adapter, [makeGeneral('g1', 20)]);
+        session.setEventEmitter({ emit: (name) => emitted.push(name) });
+        await session.addGenerals([makeGeneral('g1', 20)]);
+        assert.equals(null, await adapter.get(PLAYER_SAVE_KEY));
+        assert.equals(0, emitted.length);
+    });
+
+    suite.test('大廳：抽卡後重開（新 Session 讀檔）名冊與季度都還在', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const first = createSession(adapter, []);
+        await first.addGenerals([makeGeneral('g1', 20)]);
+        await first.advanceSeason();
+        await first.advanceSeason();
+
+        const reopened = createSession(adapter, []);
+        assert.isTrue(await reopened.load(), '應讀到存檔');
+        assert.equals('第 1 年 3 季', formatSeasonLabel(reopened.gameTime));
+        assertSameJson(['g1'], reopened.roster.map((general) => general.id));
+    });
+
+    suite.test('大廳：開場讀檔遇到壞檔會拋錯且不改動現況（由大廳 catch 後當新局）', async () => {
+        const adapter = new MemoryStorageAdapter();
+        await adapter.set(PLAYER_SAVE_KEY, { schemaVersion: 999 });
+        const session = createSession(adapter, [makeGeneral('keep', 20)]);
+        await assertRejects(() => session.load(), '壞檔應拋錯');
+        assertSameJson(['keep'], session.roster.map((general) => general.id));
+        assert.equals('第 1 年 1 季', formatSeasonLabel(session.gameTime));
+    });
+
+    suite.test('大廳：正式模式餘額不足拒絕扣款，開發開關才自動補款', () => {
+        const rejected = checkWalletBalance(50, 100, false);
+        assert.isTrue(!rejected.ok, '正式模式應拒絕');
+        assert.equals(50, rejected.shortfall);
+        assert.equals('玉不足，還差 50', formatInsufficientMessage('gems', rejected.shortfall));
+
+        const enough = checkWalletBalance(100, 100, false);
+        assert.isTrue(enough.ok, '剛好足夠');
+
+        const topUp = checkWalletBalance(50, 100, true, 1280);
+        assert.isTrue(topUp.ok, '開發模式補款');
+        assert.equals(1380, topUp.toppedUpBalance);
     });
 
     return suite;

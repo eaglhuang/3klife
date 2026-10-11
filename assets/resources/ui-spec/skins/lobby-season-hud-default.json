@@ -1,0 +1,36 @@
+{
+  "id": "lobby-season-hud-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "season.hud.card.bg": { "kind": "color-rect", "color": "backgroundDeep", "alpha": 224 },
+    "season.hud.button.bg": { "kind": "color-rect", "color": "primary", "alpha": 140 },
+    "season.hud.label.season": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 28,
+      "lineHeight": 34,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "season.hud.label.mode": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    },
+    "season.hud.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    }
+  }
+}

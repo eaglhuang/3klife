@@ -1,0 +1,66 @@
+{
+  "id": "lobby-season-hud-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LobbySeasonHudRoot",
+    "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "children": [
+      {
+        "type": "panel",
+        "name": "SeasonHudCard",
+        "widget": { "top": 120, "left": 32 },
+        "width": 320,
+        "height": 132,
+        "skinSlot": "season.hud.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "SeasonLabel",
+            "id": "seasonLabel",
+            "widget": { "top": 10, "left": 12, "right": 12 },
+            "height": 36,
+            "text": "第 1 年 1 季",
+            "styleSlot": "season.hud.label.season"
+          },
+          {
+            "type": "label",
+            "name": "ModeLabel",
+            "id": "modeLabel",
+            "widget": { "top": 50, "left": 12, "right": 12 },
+            "height": 24,
+            "text": "治理",
+            "styleSlot": "season.hud.label.mode"
+          },
+          {
+            "type": "button",
+            "name": "AdvanceSeasonButton",
+            "id": "btnAdvanceSeason",
+            "widget": { "bottom": 8, "left": 12, "right": 12 },
+            "height": 40,
+            "skinSlot": "season.hud.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "AdvanceSeasonLabel",
+                "id": "advanceSeasonLabel",
+                "widget": { "vCenter": true, "left": 0, "right": 0 },
+                "height": 24,
+                "text": "推進一季",
+                "styleSlot": "season.hud.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

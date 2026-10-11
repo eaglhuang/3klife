@@ -1,0 +1,13 @@
+{
+  "id": "lobby-season-hud-screen",
+  "version": 1,
+  "uiId": "LobbySeasonHud",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "lobby-season-hud-main",
+  "skin": "lobby-season-hud-default",
+  "validation": {
+    "devices": ["phone-16-9", "phone-19_5-9", "tablet-4-3"],
+    "allowMissingSkin": false
+  }
+}
