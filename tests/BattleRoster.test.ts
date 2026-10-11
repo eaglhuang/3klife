@@ -17,6 +17,7 @@ import {
     recoverVitalityOneSeason,
     settleBattle,
 } from '../assets/scripts/core/systems/BattleRoster';
+import { baseVitalityMaxOf, VITALITY_MAX_FEMALE, VITALITY_MAX_MALE, VITALITY_MAX_UNKNOWN } from '../assets/scripts/core/systems/VitalityCap';
 import { GAME_SESSION_EVENTS, GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
@@ -402,6 +403,18 @@ export function createBattleRosterSuite(): TestSuite {
         assert.equals(after.graduationRating!, loaded.graduationRating!);
         assert.equals(1, loaded.battleRecord!.wins);
         assert.equals(childId, restored.leadGeneralId!);
+    });
+
+    suite.test('精力上限：男 120 / 女 100（Q46），缺資料時依性別給基礎值，已存的數值不覆寫', () => {
+        assert.equals(120, baseVitalityMaxOf('男'));
+        assert.equals(120, baseVitalityMaxOf(' Male '));
+        assert.equals(100, baseVitalityMaxOf('女'));
+        assert.equals(100, baseVitalityMaxOf(undefined));
+        assert.equals(VITALITY_MAX_MALE, baseVitalityMaxOf('m'));
+        assert.equals(VITALITY_MAX_FEMALE, baseVitalityMaxOf('f'));
+        assert.equals(VITALITY_MAX_UNKNOWN, baseVitalityMaxOf('?'));
+        const saved = recoverVitalityOneSeason([graduate('f', { gender: '女', vitality: 0, maxVitality: 80 })], 1);
+        assert.equals(24, saved[0].vitality!, '已存 maxVitality=80 沿用，不被性別基礎值覆寫');
     });
 
     return suite;

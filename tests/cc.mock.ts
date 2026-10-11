@@ -19,7 +19,7 @@ export class Label {
     static readonly VerticalAlign   = { TOP: 0, CENTER: 1, BOTTOM: 2 };
     static readonly Overflow        = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
     string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
-    getComponent<T>(_type: any): T | null { return null; }
+    getComponent<T = any>(_type: (new (...args: any[]) => T) | string): T | null { return null; }
 }
 
 export class Layout {
@@ -64,7 +64,7 @@ export class Node {
         return comp;
     }
 
-    getComponent<T>(type: any): T | null {
+    getComponent<T = any>(type: (new (...args: any[]) => T) | string): T | null {
         if (!type || typeof type !== 'function') return null;
         return this._components.find(c => c instanceof type) || null;
     }
@@ -144,7 +144,7 @@ export const sys = {
 };
 
 // 補齊 Animation 等
-export class Animation { play(): void {} }
+export class Animation { play(_clip?: string): void {} }
 export class Camera {}
 export class Graphics {}
 export class ParticleSystem { startColor: any; play(): void {} }

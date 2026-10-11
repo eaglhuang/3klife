@@ -26,6 +26,7 @@ import {
     toGeneConfigs,
 } from './FactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
+import { baseVitalityMaxOf } from './VitalityCap';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -118,11 +119,11 @@ function statOf(general: GeneralConfig, key: keyof GeneralStatsConfig): number {
 }
 
 function vigorOf(general: GeneralConfig): number {
-    return general.vitality ?? general.maxVitality ?? 100;
+    return general.vitality ?? general.maxVitality ?? baseVitalityMaxOf(general.gender);
 }
 
 function maxVigorOf(general: GeneralConfig): number {
-    return general.maxVitality ?? general.vitality ?? 100;
+    return general.maxVitality ?? general.vitality ?? baseVitalityMaxOf(general.gender);
 }
 
 /**
