@@ -26,6 +26,7 @@ import { createBreedingSuite } from './Breeding.test';
 import { createNurtureSuite } from './Nurture.test';
 import { createLegacySuite } from './Legacy.test';
 import { createTigerTallySuite } from './TigerTally.test';
+import { createBattleRosterSuite } from './BattleRoster.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
 import { createPlayerDeckSuite } from './PlayerDeck.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
@@ -84,6 +85,7 @@ if (typeof window === 'undefined') {
     runner.register(createNurtureSuite());
     runner.register(createLegacySuite());
     runner.register(createTigerTallySuite());
+    runner.register(createBattleRosterSuite());
     runner.register(createBattleDeckLoadingSuite());
     runner.register(createPlayerDeckSuite());
     runner.register(createSkinLayersSuite());

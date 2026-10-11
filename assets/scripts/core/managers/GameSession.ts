@@ -6,7 +6,8 @@
  *   1. GameClock 推進 1 季（含模式輪轉、跨年判斷）
  *   2. 名冊中所有存活武將增齡、判定退役候選與死亡
  *   3. 年滿 5 歲的子嗣自動開獎（揭曉五維與初始因子，產生宿命建議）
- *   4. 透過注入的名冊來源寫回名冊
+ *   3.5 武將精力回補（出征 +25%、待命 +50%）
+   4. 透過注入的名冊來源寫回名冊
  *   5. 若有掛 SeasonLifecycle（LegacyService）：死亡武將歸檔成英靈卡並移出名冊，
  *      再跑季結 / 年底資料壓縮與清掃
  *   6. 若有掛存檔服務，自動存檔（含進行中的培育會話）
@@ -30,6 +31,16 @@ import { createPlayerSaveSnapshot, PlayerSaveService, PlayerSaveSnapshot } from 
 import type { NurtureState } from '../services/NurtureService';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
+import {
+    BattleResult,
+    BattleSettlement,
+    buildBattleConfig,
+    checkDeployable,
+    DeployCheck,
+    listDeployable,
+    recoverVitalityOneSeason,
+    settleBattle,
+} from '../systems/BattleRoster';
 
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
@@ -44,6 +55,10 @@ export const GAME_SESSION_EVENTS = {
     GeneralRetired: 'game-session-general-retired',
     /** payload: SpiritCard（每位死亡武將一張） */
     SpiritCardCreated: 'game-session-spirit-card-created',
+    /** payload: BattleSettlement（戰後精力、戰績、功勳已寫回名冊） */
+    BattleSettled: 'game-session-battle-settled',
+    /** payload: string | null（出戰主將 id） */
+    LeadGeneralChanged: 'game-session-lead-general-changed',
     /** payload: PlayerSaveSnapshot */
     Saved: 'game-session-saved',
     /** payload: GeneralConfig[]（本次新加入名冊的武將） */
@@ -112,6 +127,7 @@ export class GameSession {
     private _nurture: NurtureStatePort | null = null;
     private _factorDictionary: FactorDictionary | undefined;
     private _deck: string[] = [];
+    private _leadGeneralId: string | null = null;
 
     public get gameTime(): GameTimeState {
         return this._clock.state;
@@ -122,6 +138,11 @@ export class GameSession {
     }
 
     /** 玩家出戰卡組（複本）；空陣列 = 尚未選卡，戰場端會退回預設卡組 */
+    /** 玩家指定的出戰主將 id（可能已不能出戰，取用請走 resolveLeadGeneralId） */
+    public get leadGeneralId(): string | null {
+        return this._leadGeneralId;
+    }
+
     public get deck(): string[] {
         return [...this._deck];
     }
@@ -168,6 +189,35 @@ export class GameSession {
     public startNewGame(): void {
         this._clock = new GameClock();
         this._deck = [];
+        this._leadGeneralId = null;
+    }
+
+    /** 指定出戰主將；必須是目前可出戰的名冊武將，否則回傳 false 且不變 */
+    public async setLeadGeneral(generalId: string | null): Promise<boolean> {
+        if (generalId !== null && !this.checkDeployable(generalId).eligible) {
+            return false;
+        }
+        this._leadGeneralId = generalId;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, generalId);
+        return true;
+    }
+
+    /** 進戰場的我軍主將：指定的主將還能出戰就用它，否則用 fallbackId（遭遇戰預設） */
+    public resolveLeadGeneralId(fallbackId: string): string {
+        const lead = this._leadGeneralId;
+        return lead && this.checkDeployable(lead).eligible ? lead : fallbackId;
+    }
+
+    /** 戰場建立我軍主將時查詢：名冊內可出戰才回傳戰場用設定，否則 null（沿用內建 / JSON 武將） */
+    public getBattleConfig(generalId: string, faction: GeneralConfig['faction']): GeneralConfig | null {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general || !this.checkDeployable(generalId).eligible) {
+            return null;
+        }
+        return buildBattleConfig(general, faction);
     }
 
     /** 整組覆寫出戰卡組（以 catalogIds 過濾未知 ID、去重、截到上限）並自動存檔 */
@@ -194,7 +244,7 @@ export class GameSession {
             season: advance.current.totalSeasonsElapsed,
             dictionary: this._factorDictionary,
         });
-        let roster: GeneralConfig[] = unveil.roster;
+        let roster: GeneralConfig[] = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1);
         let lifecycle: LifecycleSettlement | undefined;
         if (this._lifecycle) {
             const settled = await this._lifecycle.settleSeason(roster, advance, aging.events);
@@ -270,8 +320,42 @@ export class GameSession {
         return { added, duplicates };
     }
 
+    /** 目前名冊中可以出戰的武將（排除死亡、退役教官、未畢業子嗣、精力不足、培育中） */
+    public getDeployableGenerals(): GeneralConfig[] {
+        return listDeployable(this._roster.getAll(), { nurturingIds: this._nurturingIds() });
+    }
+
+    public checkDeployable(generalId: string): DeployCheck {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) {
+            return { eligible: false, reasons: [] };
+        }
+        return checkDeployable(general, { nurturingIds: this._nurturingIds() });
+    }
+
+    /**
+     * 戰後結算：出戰武將扣精力、記戰績與功勳，寫回名冊並存檔。
+     * 名冊裡找不到的 id（例如內建 demo 武將）略過；ongoing 不結算。
+     */
+    public async recordBattle(deployedIds: readonly string[], result: BattleResult): Promise<BattleSettlement> {
+        const settlement = settleBattle(this._roster.getAll(), {
+            deployedIds,
+            result,
+            season: this._clock.state.totalSeasonsElapsed,
+        });
+        if (settlement.entries.length === 0) {
+            return settlement;
+        }
+        this._roster.replaceAll(settlement.roster);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.BattleSettled, settlement);
+        return settlement;
+    }
+
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -292,6 +376,7 @@ export class GameSession {
         this._roster.replaceAll(snapshot.roster);
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];
+        this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }
@@ -301,6 +386,10 @@ export class GameSession {
             await this.save();
         }
         this._emit(GAME_SESSION_EVENTS.DeckChanged, this.deck);
+    }
+
+    private _nurturingIds(): string[] {
+        return (this._nurture?.getState().sessions ?? []).map((session) => session.childId);
     }
 
     private _requireSave(): PlayerSaveService {

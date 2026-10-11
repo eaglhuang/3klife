@@ -28,6 +28,8 @@ export interface PlayerSaveSnapshot {
     nurture?: NurtureState;
     /** 玩家出戰卡組：虎符卡片 ID（tacticId）有序清單，進戰場時成為 selectedCardIds */
     deck: string[];
+    /** 玩家指定的出戰主將 id；沒有（或已不能出戰）時戰場用遭遇戰預設主將。後加的選填欄位，舊檔讀回為 undefined */
+    leadGeneralId?: string;
 }
 
 export function createPlayerSaveSnapshot(
@@ -36,6 +38,7 @@ export function createPlayerSaveSnapshot(
     now: Date = new Date(),
     nurture?: NurtureState,
     deck: readonly string[] = [],
+    leadGeneralId?: string | null,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -44,6 +47,7 @@ export function createPlayerSaveSnapshot(
         roster: roster.map((general) => ({ ...general })),
         ...(nurture ? { nurture } : {}),
         deck: normalizeDeck(deck),
+        ...(leadGeneralId ? { leadGeneralId } : {}),
     };
 }
 
@@ -72,6 +76,9 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (snapshot.deck !== undefined && !Array.isArray(snapshot.deck)) {
         throw new Error('[PlayerSaveService] 存檔 deck 不是陣列');
     }
+    if (snapshot.leadGeneralId !== undefined && typeof snapshot.leadGeneralId !== 'string') {
+        throw new Error('[PlayerSaveService] 存檔 leadGeneralId 不是字串');
+    }
     return {
         schemaVersion: snapshot.schemaVersion,
         savedAt: snapshot.savedAt,
@@ -79,6 +86,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         roster: snapshot.roster,
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
         deck: normalizeDeck(snapshot.deck),
+        ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),
     };
 }
 

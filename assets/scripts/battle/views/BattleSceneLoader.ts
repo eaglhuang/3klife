@@ -206,6 +206,14 @@ export async function loadEncounter(encounterId: string): Promise<EncounterConfi
  * Unity 對照：GeneralFactory.Create(id, faction)
  */
 export async function createGeneral(id: string, faction: Faction): Promise<GeneralUnit> {
+  // 我軍主將若是名冊裡可出戰的武將（培育畢業 / 抽卡），用名冊數值（實力層、因子、戰法）建立
+  if (faction === Faction.Player) {
+    const rosterConfig = services().session.getBattleConfig(id, faction);
+    if (rosterConfig) {
+      return new GeneralUnit(rosterConfig);
+    }
+  }
+
   const DEFAULT: Record<string, GeneralConfig> = {
     "zhang-fei": { id: "zhang-fei", name: "張飛", faction: Faction.Player, hp: 1000, maxSp: 100, str:  90, lea: 85, luk: 40, attackBonus: 0.10, skillId: "zhang-fei-roar" },
     "guan-yu":   { id: "guan-yu",   name: "關羽", faction: Faction.Player, hp: 1200, maxSp: 100, str: 100, lea: 90, luk: 50, attackBonus: 0.15, skillId: "guan-yu-slash"  },
