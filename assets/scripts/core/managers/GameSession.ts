@@ -49,6 +49,7 @@ import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { divineFactor, SageDivinationResult } from '../systems/SageDivination';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -89,6 +90,8 @@ export const GAME_SESSION_EVENTS = {
     DeckChanged: 'game-session-deck-changed',
     /** payload: FactorAwakenedEvent */
     FactorAwakened: 'game-session-factor-awakened',
+    /** payload: PlayerInventory（道具數量變動後的庫存） */
+    InventoryChanged: 'game-session-inventory-changed',
     /** payload: DiscoveryGain（只在升級時廣播；phaseAfter > phaseBefore 時 UI 播放新色階解鎖提示） */
     DiscoveryLevelChanged: 'game-session-discovery-level-changed',
 } as const;
@@ -111,6 +114,8 @@ export interface SeasonAdvancedPayload {
     unveilings: UnveilingEvent[];
     /** 有掛 SeasonLifecycle 才有；包含本季新建的英靈卡與季結 / 年底排程結果 */
     lifecycle?: LifecycleSettlement;
+    /** 本季免費發放的求籤令（已達免費上限時為 0） */
+    oracleTokensGranted?: number;
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -172,6 +177,7 @@ export class GameSession {
     private _leadGeneralId: string | null = null;
     private _discoveryLevel = 1;
     private _discoveryExp = 0;
+    private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -203,6 +209,25 @@ export class GameSession {
     /** 目前等級內累積的覺醒經驗 */
     public get discoveryExp(): number {
         return this._discoveryExp;
+    }
+
+    /** 道具庫存（唯讀副本） */
+    public get inventory(): PlayerInventory {
+        return { ...this._inventory };
+    }
+
+    public itemCount(itemId: string): number {
+        return itemCount(this._inventory, itemId);
+    }
+
+    /** 增加道具（商城購買、活動獎勵）並自動存檔 */
+    public async addItem(itemId: string, amount: number): Promise<number> {
+        this._inventory = addItem(this._inventory, itemId, amount);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return this.itemCount(itemId);
     }
 
     public get hasSaveService(): boolean {
@@ -251,6 +276,7 @@ export class GameSession {
         this._leadGeneralId = null;
         this._discoveryLevel = 1;
         this._discoveryExp = 0;
+        this._inventory = { ...STARTER_INVENTORY };
     }
 
     /** 指定出戰主將；必須是目前可出戰的名冊武將，否則回傳 false 且不變 */
@@ -333,18 +359,25 @@ export class GameSession {
 
     /**
      * 名士占卜：依名士偏好與準確率覺醒名冊中某位武將的一個鎖定因子。
-     * 有擲骰（consumed）就存檔（亂數狀態前進）；覺醒成功才改名冊並廣播 FactorAwakened。
-     * 求籤令扣除由呼叫端依 consumed 處理。
+     * 沒有求籤令時不擲骰（outcome = no-token）；有擲骰（consumed）才扣 1 張求籤令並存檔，
+     * 覺醒成功才改名冊並廣播 FactorAwakened。
      */
     public async divineFactor(generalId: string, sageId: string): Promise<SageDivinationResult> {
+        if (this.itemCount(ITEM_ORACLE_TOKEN) < 1) {
+            return { sageId, outcome: 'no-token', hintColor: null, consumed: false };
+        }
         const roster = this._roster.getAll();
         const result = divineFactor(roster.find((g) => g.id === generalId), sageId, this._discoveryLevel, this._random);
         if (result.outcome === 'awakened' && result.general) {
             const general = result.general;
             this._roster.replaceAll(roster.map((g) => (g.id === generalId ? general : g)));
         }
-        if (result.consumed && this._autoSave && this._save) {
-            await this.save();
+        if (result.consumed) {
+            this._inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN) ?? this._inventory;
+            if (this._autoSave && this._save) {
+                await this.save();
+            }
+            this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         }
         if (result.event) {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, result.event);
@@ -385,8 +418,10 @@ export class GameSession {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
+        const tokens = grantSeasonalOracleTokens(this._inventory);
+        this._inventory = tokens.inventory;
 
-        const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events, lifecycle };
+        const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -522,7 +557,7 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -548,6 +583,7 @@ export class GameSession {
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
+        this._inventory = normalizeInventory(snapshot.inventory);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }

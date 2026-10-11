@@ -1,0 +1,393 @@
+{
+  "id": "sage-oracle-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SageOracleRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "OracleBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "oracle.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "OracleCard",
+        "id": "oracleCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1000,
+        "height": 680,
+        "skinSlot": "oracle.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "OracleTitle",
+            "id": "oracleTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "width": 360,
+            "height": 40,
+            "text": "名士占卜",
+            "styleSlot": "oracle.label.title"
+          },
+          {
+            "type": "label",
+            "name": "TokenLabel",
+            "id": "tokenLabel",
+            "widget": {
+              "top": 26,
+              "right": 150
+            },
+            "width": 240,
+            "height": 32,
+            "text": "求籤令 ×0",
+            "styleSlot": "oracle.label.stats"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseOracle",
+            "id": "btnCloseOracle",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "oracle.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseOracleLabel",
+                "id": "closeOracleLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "oracle.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "OracleEmptyHint",
+            "id": "oracleEmptyHint",
+            "widget": {
+              "top": 160,
+              "left": 80,
+              "right": 80
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "oracle.label.body"
+          },
+          {
+            "type": "container",
+            "name": "OraclePanel",
+            "id": "oraclePanel",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 64
+            },
+            "children": [
+              {
+                "type": "panel",
+                "name": "TargetColumn",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 170,
+                "skinSlot": "oracle.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "TargetName",
+                    "id": "targetName",
+                    "widget": {
+                      "top": 16,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 38,
+                    "text": "占卜對象：－",
+                    "styleSlot": "oracle.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "TargetInfo",
+                    "id": "targetInfo",
+                    "widget": {
+                      "top": 62,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "oracle.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnPrevTarget",
+                    "id": "btnPrevTarget",
+                    "widget": {
+                      "bottom": 16,
+                      "left": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "oracle.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnPrevTargetLabel",
+                        "id": "prevTargetLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "上一位",
+                        "styleSlot": "oracle.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "TargetPager",
+                    "id": "targetPager",
+                    "widget": {
+                      "bottom": 26,
+                      "hCenter": true
+                    },
+                    "width": 140,
+                    "height": 28,
+                    "text": "0 / 0",
+                    "styleSlot": "oracle.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextTarget",
+                    "id": "btnNextTarget",
+                    "widget": {
+                      "bottom": 16,
+                      "right": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "oracle.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextTargetLabel",
+                        "id": "nextTargetLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "下一位",
+                        "styleSlot": "oracle.label.button"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "SageColumn",
+                "widget": {
+                  "top": 190,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 170,
+                "skinSlot": "oracle.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "SageName",
+                    "id": "sageName",
+                    "widget": {
+                      "top": 16,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 38,
+                    "text": "名士：－",
+                    "styleSlot": "oracle.label.name"
+                  },
+                  {
+                    "type": "label",
+                    "name": "SageInfo",
+                    "id": "sageInfo",
+                    "widget": {
+                      "top": 62,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "oracle.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnPrevSage",
+                    "id": "btnPrevSage",
+                    "widget": {
+                      "bottom": 16,
+                      "left": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "oracle.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnPrevSageLabel",
+                        "id": "prevSageLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "上一位",
+                        "styleSlot": "oracle.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "SagePager",
+                    "id": "sagePager",
+                    "widget": {
+                      "bottom": 26,
+                      "hCenter": true
+                    },
+                    "width": 140,
+                    "height": 28,
+                    "text": "0 / 0",
+                    "styleSlot": "oracle.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextSage",
+                    "id": "btnNextSage",
+                    "widget": {
+                      "bottom": 16,
+                      "right": 20
+                    },
+                    "width": 96,
+                    "height": 48,
+                    "skinSlot": "oracle.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextSageLabel",
+                        "id": "nextSageLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "下一位",
+                        "styleSlot": "oracle.label.button"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "CostLabel",
+                "id": "costLabel",
+                "widget": {
+                  "top": 380,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "oracle.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnDivine",
+                "id": "btnDivine",
+                "widget": {
+                  "top": 422,
+                  "hCenter": true
+                },
+                "width": 240,
+                "height": 64,
+                "skinSlot": "oracle.button.confirm.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDivineLabel",
+                    "id": "divineLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 56,
+                    "text": "占卜",
+                    "styleSlot": "oracle.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "OracleNotice",
+            "id": "oracleNotice",
+            "widget": {
+              "bottom": 12,
+              "left": 32,
+              "right": 32
+            },
+            "height": 44,
+            "text": "",
+            "styleSlot": "oracle.label.log"
+          }
+        ]
+      }
+    ]
+  }
+}

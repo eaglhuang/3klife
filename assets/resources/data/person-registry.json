@@ -774,7 +774,8 @@
         "gene_command",
         "gene_discipline",
         "gene_destiny",
-        "gene_luck"
+        "gene_luck",
+        "gene_naval"
       ],
       "ep_base": 67,
       "faction": "wu",
@@ -2692,7 +2693,9 @@
         "gene_strategy",
         "gene_shout",
         "gene_command",
-        "gene_discipline"
+        "gene_discipline",
+        "gene_naval",
+        "gene_forest"
       ],
       "ep_base": 66,
       "faction": "wu",
@@ -4272,7 +4275,8 @@
       "name": "張郃",
       "gene_refs": [
         "gene_bravery",
-        "gene_discipline"
+        "gene_discipline",
+        "gene_mountain"
       ],
       "ep_base": 67,
       "faction": "wei",
@@ -5099,7 +5103,8 @@
       "name": "魏延",
       "gene_refs": [
         "gene_bravery",
-        "gene_discipline"
+        "gene_discipline",
+        "gene_mountain"
       ],
       "ep_base": 66,
       "faction": "shu",
@@ -5272,7 +5277,8 @@
       "gene_refs": [
         "gene_bravery",
         "gene_shout",
-        "gene_discipline"
+        "gene_discipline",
+        "gene_mountain"
       ],
       "ep_base": 66,
       "faction": "shu",
@@ -5446,7 +5452,8 @@
       "gene_refs": [
         "gene_politics",
         "gene_honor",
-        "gene_strategy"
+        "gene_strategy",
+        "gene_mountain"
       ],
       "ep_base": 66,
       "faction": "wei",
@@ -5792,7 +5799,8 @@
       "gene_refs": [
         "gene_command",
         "gene_discipline",
-        "gene_bravery"
+        "gene_bravery",
+        "gene_naval"
       ],
       "ep_base": 65,
       "faction": "wu",
@@ -6314,7 +6322,8 @@
       "gene_refs": [
         "gene_bravery",
         "gene_halberd",
-        "gene_vitality"
+        "gene_vitality",
+        "gene_naval"
       ],
       "ep_base": 67,
       "faction": "wu",
@@ -6675,7 +6684,8 @@
       "gene_refs": [
         "gene_bravery",
         "gene_halberd",
-        "gene_vitality"
+        "gene_vitality",
+        "gene_naval"
       ],
       "ep_base": 67,
       "faction": "wu",
@@ -6862,7 +6872,8 @@
       "gene_refs": [
         "gene_honor",
         "gene_strategy",
-        "gene_shout"
+        "gene_shout",
+        "gene_naval"
       ],
       "ep_base": 63,
       "faction": "wu",
@@ -7036,7 +7047,8 @@
       "gene_refs": [
         "gene_honor",
         "gene_politics",
-        "gene_command"
+        "gene_command",
+        "gene_naval"
       ],
       "ep_base": 64,
       "faction": "wu",
@@ -7383,7 +7395,8 @@
       "name": "呂蒙",
       "gene_refs": [
         "gene_shout",
-        "gene_discipline"
+        "gene_discipline",
+        "gene_naval"
       ],
       "ep_base": 68,
       "faction": "wu",
@@ -12777,7 +12790,8 @@
       "gene_refs": [
         "gene_command",
         "gene_discipline",
-        "gene_bravery"
+        "gene_bravery",
+        "gene_mountain"
       ],
       "ep_base": 66,
       "faction": "shu",
@@ -22494,7 +22508,8 @@
       "gene_refs": [
         "gene_bravery",
         "gene_halberd",
-        "gene_command"
+        "gene_command",
+        "gene_forest"
       ],
       "ep_base": 55,
       "faction": "enemy",
@@ -22668,7 +22683,8 @@
       "gene_refs": [
         "gene_bravery",
         "gene_halberd",
-        "gene_vitality"
+        "gene_vitality",
+        "gene_forest"
       ],
       "ep_base": 55,
       "faction": "enemy",
@@ -22855,7 +22871,8 @@
       "gene_refs": [
         "gene_bravery",
         "gene_halberd",
-        "gene_vitality"
+        "gene_vitality",
+        "gene_forest"
       ],
       "ep_base": 57,
       "faction": "enemy",

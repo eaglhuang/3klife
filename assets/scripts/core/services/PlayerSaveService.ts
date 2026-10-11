@@ -8,6 +8,7 @@
  * Unity 對照：像一個 SaveSystem，把 [Serializable] 的 SaveData 交給
  * 可替換的儲存後端（PlayerPrefs / 檔案 / 雲端），而不是自己去碰檔案路徑。
  */
+import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
@@ -37,6 +38,8 @@ export interface PlayerSaveSnapshot {
     discoveryLevel: number;
     /** 目前等級內的覺醒經驗（PROG-2-0044）；後加的選填欄位，舊檔讀回補 0 */
     discoveryExp?: number;
+    /** 道具庫存（PROG-2-0053，目前只有求籤令）；後加的選填欄位，舊檔讀回補起始庫存 */
+    inventory?: Record<string, number>;
 }
 
 function normalizeDiscoveryLevel(value: unknown): number {
@@ -57,6 +60,7 @@ export function createPlayerSaveSnapshot(
     discoveryLevel = 1,
     randomState?: RandomState,
     discoveryExp = 0,
+    inventory?: PlayerInventory,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -69,6 +73,7 @@ export function createPlayerSaveSnapshot(
         ...(leadGeneralId ? { leadGeneralId } : {}),
         discoveryLevel: normalizeDiscoveryLevel(discoveryLevel),
         discoveryExp: normalizeDiscoveryExp(discoveryExp),
+        inventory: { ...normalizeInventory(inventory) },
     };
 }
 
@@ -111,6 +116,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),
         discoveryLevel: normalizeDiscoveryLevel(snapshot.discoveryLevel),
         discoveryExp: normalizeDiscoveryExp(snapshot.discoveryExp),
+        inventory: { ...normalizeInventory(snapshot.inventory) },
     };
 }
 

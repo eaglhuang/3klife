@@ -13,7 +13,7 @@
  * - 扭曲：不覺醒，只回傳名士偏見方向的提示色（司馬徽沒有偏好，提示為 null）
  * - 諸葛亮「智力 / 政治」歸藍色（基礎屬性）；司馬徽「全面 / 中庸」不加權
  * - 沒有可覺醒的因子時不擲骰，呼叫端不應扣求籤令
- * - 求籤令扣除、名士解鎖條件、名士等級提高準確率留給道具 / 名士系統
+ * - 求籤令扣除在 GameSession.divineFactor（PROG-2-0053）；名士解鎖條件、名士等級提高準確率未做
  *
  * Unity 對照：像一個 static class OracleService.Divine(general, sage, rng)，
  * 只回傳結果與新資料，由 GameManager 存檔並廣播事件。
@@ -47,7 +47,8 @@ export const SAGES: Readonly<Record<SageId, SageDefinition>> = {
 /** 偏好色系的抽樣權重（其他色系為 1） */
 export const SAGE_BIAS_WEIGHT = 3;
 
-export type SageDivinationOutcome = 'awakened' | 'distorted' | 'no-candidate' | 'no-such-general' | 'no-such-sage';
+/** no-token 由 GameSession 回傳（求籤令不足，未擲骰） */
+export type SageDivinationOutcome = 'awakened' | 'distorted' | 'no-candidate' | 'no-such-general' | 'no-such-sage' | 'no-token';
 
 export interface SageDivinationResult {
     sageId: string;
