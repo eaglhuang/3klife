@@ -33,6 +33,7 @@ import {
 } from '../systems/NurtureSystem';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
+import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwakening';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -73,6 +74,24 @@ export interface NurtureServiceOptions {
     currentMode?: () => GameTimeMode;
     requireNurtureMode?: boolean;
     admissionsPerSeason?: number;
+    /** 培育回合的因子覺醒（PROG-2-0044）；沒提供就不擲骰，回合結果與舊版完全相同 */
+    awakening?: NurtureAwakeningHooks;
+    /** 畢業後通知（例如給玩家 discoveryLevel 經驗） */
+    onGraduated?: (result: GraduationResult) => void;
+}
+
+export interface NurtureAwakeningHooks {
+    /** 玩家目前的 discoveryLevel（GameSession 持有） */
+    discoveryLevel: () => number;
+    /** 覺醒成功、名冊已寫回之後呼叫（例如廣播 FactorAwakened） */
+    onAwakened?: (event: FactorAwakenedEvent) => void;
+}
+
+export interface NurtureTrainResult {
+    session: NurtureSession;
+    log: NurtureRoundLog;
+    /** 本回合覺醒的因子；沒有則省略 */
+    awakening?: FactorAwakenedEvent;
 }
 
 export function createEmptyNurtureState(): NurtureState {
@@ -180,11 +199,16 @@ export class NurtureService {
         return session;
     }
 
-    /** 執行一回合；第 36 回合後會話變 completed，等待 graduate() */
-    train(childId: string, action: NurtureAction): { session: NurtureSession; log: NurtureRoundLog } {
+    /**
+     * 執行一回合；第 36 回合後會話變 completed，等待 graduate()。
+     * 有掛 awakening 時，訓練回合結束後再擲一次覺醒（亂數接在回合之後，沒有候選因子就不擲）。
+     */
+    train(childId: string, action: NurtureAction): NurtureTrainResult {
         const current = this._requireSession(childId);
-        const result = executeRound(current, action, this._rng());
+        const result: NurtureTrainResult = executeRound(current, action, this._rng());
         this._replace(result.session);
+        const awakening = this._rollAwakening(childId, result.session, result.log);
+        if (awakening) result.awakening = awakening;
         return result;
     }
 
@@ -199,6 +223,7 @@ export class NurtureService {
         next[index] = result.general;
         this._roster.replaceAll(next);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
+        this._options.onGraduated?.(result);
         return result;
     }
 
@@ -209,6 +234,27 @@ export class NurtureService {
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
+
+    private _rollAwakening(childId: string, session: NurtureSession, log: NurtureRoundLog): FactorAwakenedEvent | undefined {
+        const hooks = this._options.awakening;
+        if (!hooks || log.action === 'rest') return undefined;
+        const roster = this._roster.getAll();
+        const index = roster.findIndex((g) => g.id === childId);
+        if (index < 0) return undefined;
+        const mentorRank = session.mentors.reduce((max, m) => Math.max(max, m.stars ?? 0), 0);
+        const result = rollNurtureAwakening(roster[index], {
+            discoveryLevel: hooks.discoveryLevel(),
+            mentorRank,
+            mentorOnSlot: log.mentorsOnSlot.length > 0,
+            random: this._rng(),
+        });
+        if (!result?.ok) return undefined;
+        const next = [...roster];
+        next[index] = result.general;
+        this._roster.replaceAll(next);
+        hooks.onAwakened?.(result.event);
+        return result.event;
+    }
 
     private _rng(): RandomSource {
         return this._options.random ?? Math.random;

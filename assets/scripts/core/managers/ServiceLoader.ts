@@ -70,6 +70,9 @@ export class ServiceLoader {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         currentMode: () => this.session.gameTime.currentMode,
+        // 因子覺醒（PROG-2-0044）：訓練回合擲培育窺探 / 教官覺醒；畢業給 discoveryLevel 經驗
+        awakening: this.session.nurtureAwakeningHooks(),
+        onGraduated: () => { void this.session.gainDiscoveryExp('nurture-graduate'); },
     });
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
     public legacy: LegacyService | null = null;

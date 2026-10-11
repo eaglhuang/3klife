@@ -30,7 +30,21 @@ import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/Pl
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createPlayerSaveSnapshot, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import type { NurtureState } from '../services/NurtureService';
-import { awakenFactor, AwakeningFailReason, AwakeningTrigger, FactorAwakenedEvent } from '../systems/FactorAwakening';
+import {
+    awakenFactor,
+    AwakeningFailReason,
+    AwakeningTrigger,
+    FactorAwakenedEvent,
+    rollBattleAwakening,
+} from '../systems/FactorAwakening';
+import {
+    battleExpSource,
+    DiscoveryExpSource,
+    DiscoveryGain,
+    gainDiscoveryExp,
+    normalizeDiscoveryProgress,
+} from '../systems/DiscoveryProgress';
+import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import {
@@ -71,6 +85,8 @@ export const GAME_SESSION_EVENTS = {
     DeckChanged: 'game-session-deck-changed',
     /** payload: FactorAwakenedEvent */
     FactorAwakened: 'game-session-factor-awakened',
+    /** payload: DiscoveryGain（只在升級時廣播；phaseAfter > phaseBefore 時 UI 播放新色階解鎖提示） */
+    DiscoveryLevelChanged: 'game-session-discovery-level-changed',
 } as const;
 
 /** 名冊來源；正式環境接 PlayerRosterService，測試接記憶體陣列 */
@@ -97,6 +113,18 @@ export interface SeasonAdvancedPayload {
 export interface NurtureStatePort {
     getState(): NurtureState;
     restoreState(state: NurtureState | null | undefined): void;
+}
+
+/** 戰後結算結果：名冊結算 + 覺醒經驗 + 本場覺醒的因子 */
+export interface BattleRecordResult extends BattleSettlement {
+    /** 有給經驗才有（ongoing 或名冊沒人出戰時省略） */
+    discovery?: DiscoveryGain;
+    awakenings: FactorAwakenedEvent[];
+}
+
+export interface RecordBattleOptions {
+    /** 在戰場完成「特定動作」的武將（覺醒機率 0.05 → 0.15，並視同滿足特殊條件） */
+    specialActionIds?: readonly string[];
 }
 
 export interface AddGeneralsResult {
@@ -137,6 +165,7 @@ export class GameSession {
     private _deck: string[] = [];
     private _leadGeneralId: string | null = null;
     private _discoveryLevel = 1;
+    private _discoveryExp = 0;
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -163,6 +192,11 @@ export class GameSession {
     /** 因子覺醒用的玩家層級（決定能解鎖到哪個色階） */
     public get discoveryLevel(): number {
         return this._discoveryLevel;
+    }
+
+    /** 目前等級內累積的覺醒經驗 */
+    public get discoveryExp(): number {
+        return this._discoveryExp;
     }
 
     public get hasSaveService(): boolean {
@@ -210,6 +244,7 @@ export class GameSession {
         this._deck = [];
         this._leadGeneralId = null;
         this._discoveryLevel = 1;
+        this._discoveryExp = 0;
     }
 
     /** 指定出戰主將；必須是目前可出戰的名冊武將，否則回傳 false 且不變 */
@@ -240,11 +275,35 @@ export class GameSession {
         return buildBattleConfig(general, faction);
     }
 
+    /** 直接指定等級（除錯 / 劇情獎勵）；等級內經驗歸零 */
     public async setDiscoveryLevel(level: number): Promise<void> {
-        this._discoveryLevel = Number.isFinite(level) && level >= 1 ? Math.floor(level) : 1;
+        const progress = normalizeDiscoveryProgress(level, 0);
+        this._discoveryLevel = progress.level;
+        this._discoveryExp = progress.exp;
         if (this._autoSave && this._save) {
             await this.save();
         }
+    }
+
+    /** 加覺醒經驗（戰場結算、培育畢業）；升級時廣播 DiscoveryLevelChanged，並自動存檔 */
+    public async gainDiscoveryExp(source: DiscoveryExpSource, amount?: number): Promise<DiscoveryGain> {
+        const gain = this._applyDiscoveryExp(source, amount);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emitDiscoveryGain(gain);
+        return gain;
+    }
+
+    /**
+     * 給 NurtureService 的覺醒掛鉤：讀目前 discoveryLevel，覺醒成功時廣播 FactorAwakened。
+     * 名冊已由 NurtureService 寫回，存檔交給培育流程每回合的存檔。
+     */
+    public nurtureAwakeningHooks(): NurtureAwakeningHooks {
+        return {
+            discoveryLevel: () => this._discoveryLevel,
+            onAwakened: (event) => this._emit(GAME_SESSION_EVENTS.FactorAwakened, event),
+        };
     }
 
     /** 覺醒名冊中某位武將的鎖定因子；失敗回傳原因，成功才改名冊、存檔並廣播 */
@@ -380,28 +439,58 @@ export class GameSession {
     }
 
     /**
-     * 戰後結算：出戰武將扣精力、記戰績與功勳，寫回名冊並存檔。
-     * 名冊裡找不到的 id（例如內建 demo 武將）略過；ongoing 不結算。
+     * 戰後結算：出戰武將扣精力、記戰績與功勳，給玩家覺醒經驗，再為每位出戰武將擲一次戰場覺醒；
+     * 寫回名冊並存檔。名冊裡找不到的 id（例如內建 demo 武將）略過；ongoing 不結算。
+     * 覺醒用的是加完經驗後的 discoveryLevel。
      */
-    public async recordBattle(deployedIds: readonly string[], result: BattleResult): Promise<BattleSettlement> {
+    public async recordBattle(
+        deployedIds: readonly string[],
+        result: BattleResult,
+        options: RecordBattleOptions = {},
+    ): Promise<BattleRecordResult> {
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
         });
         if (settlement.entries.length === 0) {
-            return settlement;
+            return { ...settlement, awakenings: [] };
         }
-        this._roster.replaceAll(settlement.roster);
+
+        const source = battleExpSource(result);
+        const discovery = source ? this._applyDiscoveryExp(source) : undefined;
+        const special = new Set(options.specialActionIds ?? []);
+        const awakenings: FactorAwakenedEvent[] = [];
+        let roster = settlement.roster;
+        for (const entry of settlement.entries) {
+            const index = roster.findIndex((g) => g.id === entry.generalId);
+            const rolled = rollBattleAwakening(roster[index], {
+                discoveryLevel: this._discoveryLevel,
+                special: result === 'player-win',
+                specialAction: special.has(entry.generalId),
+                random: this._random,
+            });
+            if (rolled?.ok) {
+                roster = roster.map((g, i) => (i === index ? rolled.general : g));
+                awakenings.push(rolled.event);
+            }
+        }
+
+        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings };
+        this._roster.replaceAll(roster);
         if (this._autoSave && this._save) {
             await this.save();
         }
-        this._emit(GAME_SESSION_EVENTS.BattleSettled, settlement);
-        return settlement;
+        this._emit(GAME_SESSION_EVENTS.BattleSettled, record);
+        if (discovery) this._emitDiscoveryGain(discovery);
+        for (const event of awakenings) {
+            this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
+        }
+        return record;
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot());
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -424,7 +513,9 @@ export class GameSession {
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
-        this._discoveryLevel = snapshot.discoveryLevel;
+        const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
+        this._discoveryLevel = progress.level;
+        this._discoveryExp = progress.exp;
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }
@@ -434,6 +525,19 @@ export class GameSession {
             await this.save();
         }
         this._emit(GAME_SESSION_EVENTS.DeckChanged, this.deck);
+    }
+
+    private _applyDiscoveryExp(source: DiscoveryExpSource, amount?: number): DiscoveryGain {
+        const gain = gainDiscoveryExp({ level: this._discoveryLevel, exp: this._discoveryExp }, source, amount);
+        this._discoveryLevel = gain.after.level;
+        this._discoveryExp = gain.after.exp;
+        return gain;
+    }
+
+    private _emitDiscoveryGain(gain: DiscoveryGain): void {
+        if (gain.levelsGained > 0) {
+            this._emit(GAME_SESSION_EVENTS.DiscoveryLevelChanged, gain);
+        }
     }
 
     private _nurturingIds(): string[] {

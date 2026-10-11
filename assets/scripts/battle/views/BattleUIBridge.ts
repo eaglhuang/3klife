@@ -495,6 +495,9 @@ export class BattleUIBridge {
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
       }
+      for (const awakened of settlement.awakenings) {
+        this.appendLog(`【覺醒】${awakened.displayName}！`);
+      }
     }).catch((error) => {
       UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回名冊失敗', error);
     });

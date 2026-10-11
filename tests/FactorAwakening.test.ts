@@ -7,7 +7,18 @@ import { TestSuite, assert } from './TestRunner';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService, validatePlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import { GAME_SESSION_EVENTS, GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
-import { awakenFactor, discoveryPhase } from '../assets/scripts/core/systems/FactorAwakening';
+import {
+    awakenFactor,
+    discoveryPhase,
+    nurturePeekChance,
+    rollBattleAwakening,
+    rollNurtureAwakening,
+} from '../assets/scripts/core/systems/FactorAwakening';
+import { DISCOVERY_LEVEL_CAP, gainDiscoveryExp } from '../assets/scripts/core/systems/DiscoveryProgress';
+import { NurtureService } from '../assets/scripts/core/services/NurtureService';
+import { NURTURE_TOTAL_ROUNDS } from '../assets/scripts/core/systems/NurtureSystem';
+import { chooseFate, unveilGeneral, UnveilingGeneral } from '../assets/scripts/core/systems/Unveiling';
+import type { FactorAwakenedEvent } from '../assets/scripts/core/systems/FactorAwakening';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -25,6 +36,36 @@ function child(): GeneralConfig {
             { id: 'gene_vitality', type: 'red', level: 2, isLocked: true, discoveryLevel: 45 },
         ],
     } as GeneralConfig;
+}
+
+/** 回傳固定值並記錄被呼叫次數的亂數替身 */
+function fixed(value: number): { random: () => number; calls: () => number } {
+    let n = 0;
+    return { random: () => { n++; return value; }, calls: () => n };
+}
+
+/** 可出戰的成年武將，帶一顆鎖住的粉與紫 */
+function warrior(): GeneralConfig {
+    return {
+        id: 'w', name: '武將', faction: 'shu', gender: '男', age: 30, hp: 1000,
+        vitality: 100, maxVitality: 100,
+        str: 90, int: 50, lea: 85, pol: 40, cha: 50, luk: 40,
+        genes: [
+            { id: 'gene_cavalry', type: 'pink', level: 2, isLocked: true, discoveryLevel: 1, displayName: '騎兵' },
+            { id: 'gene_destiny', type: 'purple', level: 4, isLocked: true, discoveryLevel: 45, displayName: '天命' },
+        ],
+    } as unknown as GeneralConfig;
+}
+
+/** 已開獎、選過宿命、帶一顆鎖住綠因子的子嗣 */
+function pupil(): UnveilingGeneral {
+    const base = {
+        id: 'kid', name: '小孩', faction: 'shu', gender: '男', age: 5, status: 'Mystery', hp: 800,
+        str: 60, int: 50, lea: 55, pol: 40, cha: 45, luk: 30,
+        hiddenFlags: ['mystery-phase'],
+        genes: [{ id: 'gene_strategy', type: 'green', level: 3, isLocked: true, discoveryLevel: 20, displayName: '謀略' }],
+    } as unknown as UnveilingGeneral;
+    return chooseFate(unveilGeneral(base).general, 'accept');
 }
 
 export function createFactorAwakeningSuite(): TestSuite {
@@ -119,6 +160,148 @@ export function createFactorAwakeningSuite(): TestSuite {
         assert.isTrue(persons.every((p) => p.gene_refs.every((g) => dict.has(g))), 'gene_refs 全部在字典內');
         const lubu = persons.find((p) => p.uid === 'lu-bu');
         if (lubu) assert.isTrue(lubu.gene_refs.includes('gene_vitality'), '呂布 STR 高 → 強健');
+    });
+
+    // ── PROG-2-0044：成長來源與事件接線 ──────────────────────────────────
+
+    suite.test('覺醒經驗：100 經驗升一級、可連升、跨 20 級換階段、99 級封頂', () => {
+        const up = gainDiscoveryExp({ level: 19, exp: 90 }, 'battle-win');
+        assert.equals(20, up.after.level);
+        assert.equals(20, up.after.exp);
+        assert.equals(1, up.levelsGained);
+        assert.equals(1, up.phaseBefore);
+        assert.equals(2, up.phaseAfter);
+        const multi = gainDiscoveryExp({ level: 1, exp: 0 }, 'nurture-graduate', 250);
+        assert.equals(3, multi.after.level);
+        assert.equals(50, multi.after.exp);
+        const cap = gainDiscoveryExp({ level: 98, exp: 99 }, 'battle-win', 500);
+        assert.equals(DISCOVERY_LEVEL_CAP, cap.after.level);
+        assert.equals(0, cap.after.exp);
+    });
+
+    suite.test('培育窺探機率：0.08 ×（1 + 星等 × 0.1），星等夾在 0~5', () => {
+        assert.isTrue(Math.abs(nurturePeekChance(0) - 0.08) < 1e-9);
+        assert.isTrue(Math.abs(nurturePeekChance(5) - 0.12) < 1e-9);
+        assert.isTrue(Math.abs(nurturePeekChance(9) - 0.12) < 1e-9);
+    });
+
+    suite.test('培育擲骰：綠只在教官站格時可覺醒；沒有候選不消耗亂數', () => {
+        const kid = child();
+        const noMentor = fixed(0);
+        assert.equals(null, rollNurtureAwakening(kid, { discoveryLevel: 20, mentorRank: 0, mentorOnSlot: false, random: noMentor.random }));
+        assert.equals(0, noMentor.calls(), '藍已解鎖、綠需要教官 → 沒候選');
+
+        const miss = fixed(0.09);
+        assert.equals(null, rollNurtureAwakening(kid, { discoveryLevel: 20, mentorRank: 0, mentorOnSlot: true, random: miss.random }));
+        assert.equals(1, miss.calls(), '0.09 ≥ 0.08 沒觸發，只擲一次');
+
+        const hit = rollNurtureAwakening(kid, { discoveryLevel: 20, mentorRank: 2, mentorOnSlot: true, random: fixed(0.09).random });
+        assert.isTrue(hit !== null && hit.ok, '2 星教官機率 0.096 > 0.09');
+        if (!hit || !hit.ok) return;
+        assert.equals('gene_strategy', hit.event.factorId);
+        assert.equals('mentor', hit.event.trigger);
+    });
+
+    suite.test('戰場擲骰：敗戰只開藍粉；戰勝才開紫紅（仍要 45 級）；特定動作機率 0.15', () => {
+        const kid = child();
+        const loss = fixed(0);
+        assert.equals(null, rollBattleAwakening(kid, { discoveryLevel: 99, special: false, random: loss.random }));
+        assert.equals(0, loss.calls(), '敗戰：藍已解鎖，綠紫紅不在候選');
+
+        assert.equals(null, rollBattleAwakening(kid, { discoveryLevel: 99, special: true, random: fixed(0.06).random }), '0.06 ≥ 0.05');
+        const boosted = rollBattleAwakening(kid, { discoveryLevel: 99, special: false, specialAction: true, random: fixed(0.06).random });
+        assert.isTrue(boosted !== null && boosted.ok, '特定動作 0.15 > 0.06');
+
+        const low = rollBattleAwakening(kid, { discoveryLevel: 20, special: true, random: fixed(0).random });
+        assert.isTrue(low !== null && low.ok);
+        if (!low || !low.ok) return;
+        assert.equals('gene_strategy', low.event.factorId, '20 級戰勝：候選只有綠');
+    });
+
+    suite.test('GameSession.recordBattle：給經驗、擲覺醒、升級廣播，經驗隨存檔往返', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const session = new GameSession(7);
+        session.setRosterStore(new InMemoryRosterStore([warrior()]));
+        session.setSaveService(new PlayerSaveService(adapter));
+        session.setRandomSource(() => 0);
+        const events: string[] = [];
+        session.setEventEmitter({ emit: (name) => { events.push(name); } });
+
+        const lost = await session.recordBattle(['w'], 'enemy-win');
+        assert.equals(10, session.discoveryExp);
+        assert.equals(1, lost.awakenings.length);
+        assert.equals('gene_cavalry', lost.awakenings[0].factorId);
+        assert.equals(false, session.roster[0].genes![0].isLocked);
+        assert.equals(true, session.roster[0].genes![1].isLocked, '敗戰不開紫');
+
+        await session.setDiscoveryLevel(44);
+        await session.gainDiscoveryExp('battle-win', 80);
+        const won = await session.recordBattle(['w'], 'player-win');
+        assert.equals(45, session.discoveryLevel, '80 + 30 = 110 → 升到 45');
+        assert.equals(10, session.discoveryExp);
+        assert.isDefined(won.discovery);
+        assert.equals('gene_destiny', won.awakenings[0]?.factorId, '升到 45 後同場戰勝即可覺醒紫');
+        assert.isTrue(events.includes(GAME_SESSION_EVENTS.DiscoveryLevelChanged));
+        assert.equals(2, events.filter((e) => e === GAME_SESSION_EVENTS.FactorAwakened).length);
+
+        const reloaded = new GameSession();
+        reloaded.setRosterStore(new InMemoryRosterStore());
+        reloaded.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await reloaded.load());
+        assert.equals(45, reloaded.discoveryLevel);
+        assert.equals(10, reloaded.discoveryExp);
+        assert.equals(false, reloaded.roster[0].genes![1].isLocked);
+
+        const legacy = validatePlayerSaveSnapshot({ ...session.createSnapshot(), discoveryExp: undefined });
+        assert.equals(0, legacy.discoveryExp);
+    });
+
+    suite.test('GameSession.recordBattle：ongoing 不給經驗也不覺醒；名冊沒人出戰則什麼都不做', async () => {
+        const session = new GameSession(7);
+        session.setRosterStore(new InMemoryRosterStore([warrior()]));
+        session.setRandomSource(() => 0);
+        const ongoing = await session.recordBattle(['w'], 'ongoing');
+        assert.equals(0, ongoing.awakenings.length);
+        assert.equals(0, session.discoveryExp);
+        const nobody = await session.recordBattle(['ghost'], 'player-win');
+        assert.equals(0, nobody.awakenings.length);
+        assert.equals(0, session.discoveryExp);
+    });
+
+    suite.test('NurtureService：有掛覺醒時教官站格的訓練回合覺醒綠因子；休息與未掛鉤不擲', () => {
+        const awakened: FactorAwakenedEvent[] = [];
+        let graduated = 0;
+        const make = (withHooks: boolean, level: number) => {
+            const store = new InMemoryRosterStore([pupil() as unknown as GeneralConfig]);
+            const service = new NurtureService(store, {
+                random: () => 0,
+                requireNurtureMode: false,
+                currentSeason: () => 3,
+                ...(withHooks ? { awakening: { discoveryLevel: () => level, onAwakened: (e: FactorAwakenedEvent) => { awakened.push(e); } } } : {}),
+                onGraduated: () => { graduated++; },
+            });
+            service.start('kid', [{ id: 'm', name: '教官', tpBonus: 20, specialty: 'str', burstRate: 1, stars: 1 }]);
+            return { store, service };
+        };
+
+        const plain = make(false, 99);
+        assert.equals(undefined, plain.service.train('kid', 'str').awakening, '未掛鉤不擲');
+
+        const low = make(true, 19);
+        assert.equals(undefined, low.service.train('kid', 'str').awakening, '19 級綠還沒開');
+
+        const ok = make(true, 20);
+        assert.equals(undefined, ok.service.train('kid', 'rest').awakening, '休息回合不擲');
+        const round = ok.service.train('kid', 'str');
+        assert.equals('gene_strategy', round.awakening?.factorId);
+        assert.equals('mentor', round.awakening?.trigger);
+        assert.equals(1, awakened.length);
+        assert.equals(false, ok.store.getAll()[0].genes![0].isLocked, '名冊立即寫回');
+
+        for (let i = 2; i < NURTURE_TOTAL_ROUNDS; i++) ok.service.train('kid', 'rest');
+        ok.service.graduate('kid');
+        assert.equals(1, graduated);
+        assert.equals(false, ok.store.getAll()[0].genes![0].isLocked, '畢業寫回不會蓋掉覺醒');
     });
 
     return suite;
