@@ -11,8 +11,10 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
+import { normalizeDeck } from './PlayerDeckRules';
 
 export const PLAYER_SAVE_KEY = 'player.save';
+/** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
 export const PLAYER_SAVE_SCHEMA_VERSION = 1;
 
 export interface PlayerSaveSnapshot {
@@ -21,18 +23,22 @@ export interface PlayerSaveSnapshot {
     savedAt: string;
     gameTime: GameTimeState;
     roster: GeneralConfig[];
+    /** 玩家出戰卡組：虎符卡片 ID（tacticId）有序清單，進戰場時成為 selectedCardIds */
+    deck: string[];
 }
 
 export function createPlayerSaveSnapshot(
     gameTime: GameTimeState,
     roster: readonly GeneralConfig[],
     now: Date = new Date(),
+    deck: readonly string[] = [],
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
         savedAt: now.toISOString(),
         gameTime: GameClock.normalize(gameTime),
         roster: roster.map((general) => ({ ...general })),
+        deck: normalizeDeck(deck),
     };
 }
 
@@ -55,11 +61,15 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (invalid !== undefined) {
         throw new Error('[PlayerSaveService] roster 內有缺少 id 的武將');
     }
+    if (snapshot.deck !== undefined && !Array.isArray(snapshot.deck)) {
+        throw new Error('[PlayerSaveService] 存檔 deck 不是陣列');
+    }
     return {
         schemaVersion: snapshot.schemaVersion,
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
+        deck: normalizeDeck(snapshot.deck),
     };
 }
 

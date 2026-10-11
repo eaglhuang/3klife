@@ -17,6 +17,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
+import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { createPlayerSaveSnapshot, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 
 export const GAME_SESSION_EVENTS = {
@@ -32,6 +33,8 @@ export const GAME_SESSION_EVENTS = {
     RosterChanged: 'game-session-roster-changed',
     /** payload: PlayerSaveSnapshot */
     Loaded: 'game-session-loaded',
+    /** payload: string[]（新的出戰卡組） */
+    DeckChanged: 'game-session-deck-changed',
 } as const;
 
 /** 名冊來源；正式環境接 PlayerRosterService，測試接記憶體陣列 */
@@ -78,6 +81,7 @@ export class GameSession {
     private _events: SessionEventEmitter | null = null;
     private _random: RandomSource = Math.random;
     private _autoSave = true;
+    private _deck: string[] = [];
 
     public get gameTime(): GameTimeState {
         return this._clock.state;
@@ -85,6 +89,11 @@ export class GameSession {
 
     public get roster(): GeneralConfig[] {
         return this._roster.getAll();
+    }
+
+    /** 玩家出戰卡組（複本）；空陣列 = 尚未選卡，戰場端會退回預設卡組 */
+    public get deck(): string[] {
+        return [...this._deck];
     }
 
     public get hasSaveService(): boolean {
@@ -112,9 +121,27 @@ export class GameSession {
         this._autoSave = enabled;
     }
 
-    /** 開新局：時鐘歸零，名冊不動（由開場流程決定初始武將） */
+    /** 開新局：時鐘與卡組歸零，名冊不動（由開場流程決定初始武將） */
     public startNewGame(): void {
         this._clock = new GameClock();
+        this._deck = [];
+    }
+
+    /** 整組覆寫出戰卡組（以 catalogIds 過濾未知 ID、去重、截到上限）並自動存檔 */
+    public async setDeck(ids: readonly string[], catalogIds?: readonly string[]): Promise<string[]> {
+        this._deck = normalizeDeck(ids, catalogIds);
+        await this._commitDeck();
+        return this.deck;
+    }
+
+    /** 選卡 UI 點一張卡：在卡組內就移除，否則加入（滿了不變）；有變動才存檔並廣播 */
+    public async toggleDeckCard(cardId: string, catalogIds: readonly string[]): Promise<DeckToggleOutcome> {
+        const result = toggleDeckCard(this._deck, cardId, catalogIds);
+        if (result.outcome === 'added' || result.outcome === 'removed') {
+            this._deck = result.deck;
+            await this._commitDeck();
+        }
+        return result.outcome;
     }
 
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
@@ -170,7 +197,7 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._deck);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -189,8 +216,16 @@ export class GameSession {
         }
         this._clock.restore(snapshot.gameTime);
         this._roster.replaceAll(snapshot.roster);
+        this._deck = [...snapshot.deck];
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
+    }
+
+    private async _commitDeck(): Promise<void> {
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.DeckChanged, this.deck);
     }
 
     private _requireSave(): PlayerSaveService {
