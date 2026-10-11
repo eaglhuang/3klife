@@ -178,8 +178,9 @@ export class NurtureFlowController {
 
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
         const child = this._requireSelected();
-        const { log } = this._deps.nurture.train(child.id, action);
-        this._notice = describeRound(log);
+        const { log, awakening } = this._deps.nurture.train(child.id, action);
+        // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
+        this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
         await this._persist();
         return log;
     }

@@ -35,10 +35,16 @@ export interface PlayerSaveSnapshot {
     leadGeneralId?: string;
     /** 因子覺醒用的玩家層級；後加的選填欄位，舊檔讀回補 1 */
     discoveryLevel: number;
+    /** 目前等級內的覺醒經驗（PROG-2-0044）；後加的選填欄位，舊檔讀回補 0 */
+    discoveryExp?: number;
 }
 
 function normalizeDiscoveryLevel(value: unknown): number {
     return typeof value === 'number' && Number.isFinite(value) && value >= 1 ? Math.floor(value) : 1;
+}
+
+function normalizeDiscoveryExp(value: unknown): number {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.floor(value) : 0;
 }
 
 export function createPlayerSaveSnapshot(
@@ -50,6 +56,7 @@ export function createPlayerSaveSnapshot(
     leadGeneralId?: string | null,
     discoveryLevel = 1,
     randomState?: RandomState,
+    discoveryExp = 0,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -61,6 +68,7 @@ export function createPlayerSaveSnapshot(
         deck: normalizeDeck(deck),
         ...(leadGeneralId ? { leadGeneralId } : {}),
         discoveryLevel: normalizeDiscoveryLevel(discoveryLevel),
+        discoveryExp: normalizeDiscoveryExp(discoveryExp),
     };
 }
 
@@ -102,6 +110,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         deck: normalizeDeck(snapshot.deck),
         ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),
         discoveryLevel: normalizeDiscoveryLevel(snapshot.discoveryLevel),
+        discoveryExp: normalizeDiscoveryExp(snapshot.discoveryExp),
     };
 }
 
