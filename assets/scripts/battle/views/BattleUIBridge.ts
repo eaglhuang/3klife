@@ -15,6 +15,8 @@ import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../c
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, milestoneDisplayName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
+import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
+import { loadGeneralConfig } from './BattleSceneLoader';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
@@ -533,6 +535,7 @@ export class BattleUIBridge {
       this.appendLog(`戰場特定動作：${actions.map(specialActionDisplayName).join('、')}`);
     }
     const specialActions = actions.length > 0 ? { [pgId]: actions } : undefined;
+    if (result === 'player-win' && sortie) this._captureEnemyGeneral();
     void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance } }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
@@ -548,6 +551,22 @@ export class BattleUIBridge {
       UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回名冊失敗', error);
     });
     return details;
+  }
+
+  /** 戰勝後俘虜敵將，進待處置清單（四選一在大廳處置；試用傭兵豁免）（PROG-2-0073） */
+  private _captureEnemyGeneral(): void {
+    const egId = this.ctx.eg?.id;
+    if (!egId) return;
+    void loadGeneralConfig(egId)
+      .then((config) => (config ? services().session.capturePrisoner(config) : null))
+      .then((record) => {
+        if (!record) return;
+        const labels = powOptionLabels(record);
+        this.appendLog(`俘虜 ${record.targetName}：${labels.persuade}、${labels.recruit}、${labels.imprison}、${labels.release}`);
+      })
+      .catch((error) => {
+        UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 俘虜敵將失敗', error);
+      });
   }
 
   private _onUltimateSkillSelected(data: { skillId?: string | null }): void {

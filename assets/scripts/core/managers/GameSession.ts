@@ -56,6 +56,7 @@ import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, type CreateSortieInput, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
+import { createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -192,6 +193,7 @@ export class GameSession {
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
+    private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -302,6 +304,85 @@ export class GameSession {
         this._inventory = { ...STARTER_INVENTORY };
         this._oracleCount = 0;
         this._military = { ...STARTER_MILITARY };
+        this._prison = createPrisonState<GeneralConfig>();
+    }
+
+    /** 俘虜與監獄（PROG-2-0073）：待處置俘虜、關押中、名聲、情報 */
+    public get prison(): PrisonState<GeneralConfig> {
+        return {
+            ...this._prison,
+            pending: this._prison.pending.map((p) => ({ record: { ...p.record }, target: { ...p.target } })),
+            prisoners: this._prison.prisoners.map((p) => ({ ...p })),
+        };
+    }
+
+    /**
+     * 戰勝後俘虜敗將：產生 POW_Record 放進待處置清單並存檔。
+     * 試用傭兵豁免、已在名冊 / 已被俘 / 已關押的武將不重複俘虜，回傳 null。
+     * 勸降率以出戰主將（沒有時用名冊第一位可出戰武將）的魅力與運氣計算。
+     */
+    public async capturePrisoner(target: GeneralConfig): Promise<PowRecord | null> {
+        const taken = new Set([
+            ...this._roster.getAll().map((g) => g.id),
+            ...this._prison.pending.map((p) => p.record.targetUid),
+            ...this._prison.prisoners.map((p) => p.targetUid),
+        ]);
+        if (taken.has(target.id)) return null;
+        const persuaderId = this._leadGeneralId ?? this.getDeployableGenerals()[0]?.id ?? null;
+        const persuader = persuaderId ? this._roster.getAll().find((g) => g.id === persuaderId) : undefined;
+        const record = createPowRecord(
+            { ...target, cha: target.cha ?? target.stats?.cha, luk: target.luk ?? target.stats?.luk, int: target.int ?? target.stats?.int, pol: target.pol ?? target.stats?.pol } as Parameters<typeof createPowRecord>[0],
+            { cha: persuader?.cha ?? persuader?.stats?.cha ?? 0, luk: persuader?.luk ?? persuader?.stats?.luk ?? 0 },
+        );
+        if (!record) return null;
+        this._prison = { ...this._prison, pending: [...this._prison.pending, { record, target: { ...target } }] };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return record;
+    }
+
+    /**
+     * 處置待處置俘虜（勸降 / 招募 / 無期徒刑 / 放走）。
+     * 加入麾下 → 寫進名冊；招募扣城市兵源（黃金由呼叫端依 goldSpent 從錢包扣）；關押進監獄；放走加名聲。
+     * 勸降失敗俘虜仍留在待處置清單（不能再勸降，可改關押或放走）；資源不足時什麼都不扣。
+     */
+    public async resolvePrisoner(targetUid: string, decision: PowDecision, options: { gold?: number } = {}): Promise<PowResolution | null> {
+        const pending = this._prison.pending.find((p) => p.record.targetUid === targetUid);
+        if (!pending) return null;
+        const resolution = resolvePowDecision(pending.record, decision, {
+            random: this._random,
+            gold: options.gold ?? 0,
+            cityTroops: this._military.cityTroops,
+            prisonUsed: this._prison.prisoners.length,
+            prisonSlots: this._prison.slots,
+        });
+        const others = this._prison.pending.filter((p) => p !== pending);
+        const done = resolution.joined || resolution.imprisoned || resolution.released;
+        this._prison = {
+            ...this._prison,
+            pending: done ? others : this._prison.pending.map((p) => (p === pending ? { ...p, record: resolution.record } : p)),
+            prisoners: resolution.imprisoned
+                ? [...this._prison.prisoners, {
+                    targetUid,
+                    targetName: pending.record.targetName,
+                    imprisonedSeason: this._clock.state.totalSeasonsElapsed,
+                    yieldPerSeason: { ...pending.record.options.prisonYield },
+                }]
+                : this._prison.prisoners,
+            fame: this._prison.fame + resolution.fameGained,
+        };
+        if (resolution.cityTroopsSpent > 0) {
+            this._military = { ...this._military, cityTroops: Math.max(0, this._military.cityTroops - resolution.cityTroopsSpent) };
+        }
+        if (resolution.joined) {
+            // addGenerals 廣播 RosterChanged；監獄狀態另外存檔
+            await this.addGenerals([{ ...pending.target }]);
+        }
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return resolution;
     }
 
     /** 城市兵源與糧草儲備（PROG-2-0072） */
@@ -503,6 +584,10 @@ export class GameSession {
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._military = regenMilitaryOneSeason(this._military);
+        // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
+        const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
+        this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
+        this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
 
         const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
         if (this._autoSave && this._save) {
@@ -644,7 +729,7 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return { ...this._createBaseSnapshot(now), military: this.military };
+        return { ...this._createBaseSnapshot(now), military: this.military, prison: this.prison };
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
@@ -677,6 +762,7 @@ export class GameSession {
         this._inventory = normalizeInventory(snapshot.inventory);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._military = normalizeMilitaryReserve(snapshot.military);
+        this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }

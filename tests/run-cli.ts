@@ -40,6 +40,7 @@ import { createBattleSpecialActionsSuite } from './BattleSpecialActions.test';
 import { createSortieDeploySuite } from './SortieDeploy.test';
 import { createBattleAptitudeSuite } from './BattleAptitude.test';
 import { createBattleRecordStatsSuite } from './BattleRecordStats.test';
+import { createPrisonerOfWarSuite } from './PrisonerOfWar.test';
 import { createSageDivinationSuite } from './SageDivination.test';
 import { createSageOracleSuite } from './SageOracle.test';
 import { createSageProphecySuite } from './SageProphecy.test';
@@ -115,6 +116,7 @@ if (typeof window === 'undefined') {
     runner.register(createSortieDeploySuite());
     runner.register(createBattleAptitudeSuite());
     runner.register(createBattleRecordStatsSuite());
+    runner.register(createPrisonerOfWarSuite());
     runner.register(createSageDivinationSuite());
     runner.register(createSageOracleSuite());
     runner.register(createSageProphecySuite());

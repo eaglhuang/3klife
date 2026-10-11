@@ -202,6 +202,16 @@ export async function loadEncounter(encounterId: string): Promise<EncounterConfi
   }
 }
 
+/** 從 generals.json 讀原始武將設定（俘虜用）；找不到回傳 null */
+export async function loadGeneralConfig(id: string): Promise<GeneralConfig | null> {
+  try {
+    const list = await services().resource.loadJson<GeneralConfig[]>("data/generals");
+    return list.find(g => g.id === id) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * 從 generals.json 或內建預設值建立 GeneralUnit。
  * Unity 對照：GeneralFactory.Create(id, faction)
