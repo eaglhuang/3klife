@@ -33,6 +33,7 @@ import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPay
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import { bindGachaActions } from '../core/GachaActionBindings';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
 const { ccclass } = _decorator;
@@ -123,6 +124,7 @@ export class LobbyScene extends Component {
     private readonly _singlePlayerModeToggleHandles: Array<{ root: Node; label: Label }> = [];
     private readonly _localGachaService = new LocalGachaService();
     private _gachaFlowCoordinator: GachaFlowCoordinator | null = null;
+    private _gachaPullPending = false;
     private _ready = false;
 
     /** 等待 LobbyScene 資料初始化完成（供 headless smoke route 使用） */
@@ -1105,24 +1107,40 @@ export class LobbyScene extends Component {
 
         showPool(this._gachaPoolIndex);
 
-        const prevBtn = host.binder.getButton('BtnPoolPrev');
-        const nextBtn = host.binder.getButton('BtnPoolNext');
-
-        if (prevBtn) {
-            prevBtn.node.off(Node.EventType.TOUCH_END, undefined, this);
-            prevBtn.node.on(Node.EventType.TOUCH_END, () => {
+        bindGachaActions((name) => host.binder!.getNode(name), (node) => {
+            const button = node.getComponent(Button) ?? node.addComponent(Button);
+            button.interactable = true;
+        }, {
+            previous: () => {
                 this._gachaPoolIndex = (this._gachaPoolIndex - 1 + pools.length) % pools.length;
                 showPool(this._gachaPoolIndex);
-            }, this);
-        }
-
-        if (nextBtn) {
-            nextBtn.node.off(Node.EventType.TOUCH_END, undefined, this);
-            nextBtn.node.on(Node.EventType.TOUCH_END, () => {
+            },
+            next: () => {
                 this._gachaPoolIndex = (this._gachaPoolIndex + 1) % pools.length;
                 showPool(this._gachaPoolIndex);
-            }, this);
+            },
+            history: () => { void this._showGachaHistory(); },
+            single: () => { void this._runGachaAction(() => this._runLocalGacha(1)); },
+            ten: () => { void this._runGachaAction(() => this._runLocalGacha(10)); },
+            gold: () => { void this._runGachaAction(() => this._runGoldSummon()); },
+            ticket: () => { void this._runGachaAction(() => this._runTicketSummon()); },
+        }, this, Button.EventType.CLICK);
+        host.binder.setTexts({
+            GachaDs3_div_44: '單 抽 ×1', GachaDs3_div_47: '100',
+            GachaDs3_div_49: '十 連 ×10', GachaDs3_div_53: '1000',
+            GachaDs3_div_55: '金幣召喚（500）', GachaDs3_div_56: '使用召喚券（1）',
+        });
+    }
+
+    private async _runGachaAction(action: () => Promise<void>): Promise<void> {
+        if (this._gachaPullPending) return;
+        // 現有 LocalGachaService 只有一般武將池，避免把支援池抽成武將。
+        if (this._gachaPoolIndex !== 0) {
+            services().event.emit('SHOW_TOAST', { message: '此卡池尚未開放召喚，請切回名將召喚。', duration: 2.5 });
+            return;
         }
+        this._gachaPullPending = true;
+        try { await action(); } finally { this._gachaPullPending = false; }
     }
 
     private _openUIOnNextTick(uiId: UIID): void {
@@ -1194,6 +1212,7 @@ export class LobbyScene extends Component {
 
         this._gachaHost?.binder?.setTexts({
             CostBalanceValue: gachaBalanceText,
+            GachaDs3TabGeneral_div_48: gachaBalanceText,
         });
     }
 
@@ -1702,7 +1721,8 @@ export class LobbyScene extends Component {
             gachaService: this._localGachaService,
             getHost: () => this._gachaHost,
             getGenerals: () => this._generals,
-            factionFilter: 'player',
+            // 模板的 faction 是魏／蜀／吳等歷史陣營，不是名冊的持有狀態。
+            factionFilter: 'all',
             tenPullHeaderText: '本地轉蛋結果 · 十連抽',
             onAfterPullSuccess: (results) => { void this._onGachaPullSuccess(results); },
             onWalletChanged: () => {
