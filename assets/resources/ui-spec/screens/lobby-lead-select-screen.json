@@ -1,0 +1,17 @@
+{
+  "id": "lobby-lead-select-screen",
+  "version": 1,
+  "uiId": "LobbyLeadSelect",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "lobby-lead-select-main",
+  "skin": "lobby-lead-select-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

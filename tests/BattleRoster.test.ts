@@ -28,6 +28,7 @@ import { NURTURE_TOTAL_ROUNDS, TRAINING_KINDS } from '../assets/scripts/core/sys
 import { buildFactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
 import type { BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../assets/scripts/core/services/LeadGeneralSelectRules';
 import { Faction } from '../assets/scripts/core/config/Constants';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -275,6 +276,55 @@ export function createBattleRosterSuite(): TestSuite {
         const byId = (id: string) => session.roster.find((g) => g.id === id) as BattleRosterGeneral;
         assert.equals(95, byId('fought').vitality!, '70 + 25');
         assert.equals(90, byId('idle').vitality!, '40 + 50');
+    });
+
+    // ── 大廳選主將 ─────────────────────────────────────────────────────────
+
+    suite.test('選主將：分頁、標出目前主將、頁碼夾回有效範圍', () => {
+        const list = ['a', 'b', 'c', 'd', 'e'].map((id) => graduate(id) as GeneralConfig);
+        const first = buildLeadSelectView(list, 'b', 0);
+        assert.equals(2, first.pageCount);
+        assert.equals(LEAD_SELECT_PAGE_SIZE, first.rows.length);
+        assert.equals('b', first.rows.find((r) => r.selected)!.id);
+        assert.equals('a（A）', first.rows[0].label);
+        const last = buildLeadSelectView(list, 'b', 99);
+        assert.equals(1, last.page);
+        assert.equals(2, last.rows.length);
+        assert.isFalse(last.rows.some((r) => r.selected));
+        const empty = buildLeadSelectView([], null, 3);
+        assert.equals(1, empty.pageCount);
+        assert.equals(0, empty.rows.length);
+    });
+
+    suite.test('選主將：再點同一位取消，點別人改選', () => {
+        assert.equals(null, nextLeadId('a', 'a'));
+        assert.equals('b', nextLeadId('a', 'b'));
+        assert.equals('a', nextLeadId(null, 'a'));
+    });
+
+    suite.test('選主將：UCUF JSON 三層齊全、按鈕與文字 id 對得上、.meta 的 uuid 不重複', () => {
+        const read = (rel: string) => JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec', rel), 'utf8'));
+        const screen = read('screens/lobby-lead-select-screen.json');
+        assert.equals('lobby-lead-select-main', screen.layout);
+        assert.equals('lobby-lead-select-default', screen.skin);
+        const ids = new Set<string>();
+        const skinSlots = new Set<string>();
+        const walk = (node: { id?: string; skinSlot?: string; styleSlot?: string; children?: unknown[] }) => {
+            if (node.id) ids.add(node.id);
+            if (node.skinSlot) skinSlots.add(node.skinSlot);
+            if (node.styleSlot) skinSlots.add(node.styleSlot);
+            (node.children ?? []).forEach((child) => walk(child as typeof node));
+        };
+        walk(read('layouts/lobby-lead-select-main.json').root);
+        for (let i = 0; i < LEAD_SELECT_PAGE_SIZE; i++) {
+            assert.isTrue(ids.has(`btnLeadGeneral${i}`) && ids.has(`leadGeneralLabel${i}`), `缺少第 ${i} 列`);
+        }
+        for (const id of ['btnLeadPage', 'leadPageLabel', 'leadTitleLabel']) assert.isTrue(ids.has(id), `缺少 ${id}`);
+        const skin = read('skins/lobby-lead-select-default.json');
+        for (const slot of skinSlots) assert.isTrue(slot in skin.slots, `skin 缺少 ${slot}`);
+        const uuids = ['screens/lobby-lead-select-screen', 'layouts/lobby-lead-select-main', 'skins/lobby-lead-select-default', 'screens/lobby-deck-select-screen']
+            .map((rel) => JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec', `${rel}.json.meta`), 'utf8')).uuid as string);
+        assert.equals(uuids.length, new Set(uuids).size);
     });
 
     // ── 端到端 ─────────────────────────────────────────────────────────────

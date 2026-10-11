@@ -17,6 +17,7 @@ import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
+import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
@@ -93,6 +94,8 @@ export class LobbyScene extends Component {
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _deckSelectHost: UIScreenPreviewHost | null = null;
+    private _leadSelectHost: UIScreenPreviewHost | null = null;
+    private _leadSelectPage = 0;
     private readonly _sessionEventUnsubscribers: Array<() => void> = [];
     private _spiritFamilyOverviewHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
@@ -141,6 +144,7 @@ export class LobbyScene extends Component {
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
         await this._mountDeckSelect();
+        await this._mountLeadSelect();
         await this._mountCharacterDs3Host();
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
@@ -276,6 +280,69 @@ export class LobbyScene extends Component {
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 卡組存檔失敗', error);
             services().event.emit('SHOW_TOAST', { message: '卡組存檔失敗，請稍後再試', duration: 2 });
+        }
+    }
+
+    /** 選主將 UI：以 UCUF JSON（lobby-lead-select-screen）執行期組裝，列出可出戰武將，點選指定 / 再點取消 */
+    private async _mountLeadSelect(): Promise<void> {
+        const bindings: ScreenButtonBinding[] = [
+            ...Array.from({ length: LEAD_SELECT_PAGE_SIZE }, (_, slot) => ({
+                buttonId: `btnLeadGeneral${slot}`,
+                handler: () => { void this._onClickLeadGeneral(slot); },
+            })),
+            { buttonId: 'btnLeadPage', handler: () => { this._leadSelectPage += 1; this._refreshLeadSelect(); } },
+        ];
+        this._leadSelectHost = await this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings);
+        this._refreshLeadSelect();
+        const refresh = (): void => { this._refreshLeadSelect(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    private _currentLeadView(): ReturnType<typeof buildLeadSelectView> {
+        const session = services().session;
+        return buildLeadSelectView(session.getDeployableGenerals(), session.leadGeneralId, this._leadSelectPage);
+    }
+
+    private _refreshLeadSelect(): void {
+        const binder = this._leadSelectHost?.binder;
+        if (!binder) {
+            return;
+        }
+        let view = this._currentLeadView();
+        this._leadSelectPage = view.page;
+        const lead = services().session.leadGeneralId;
+        const leadName = view.rows.find((row) => row.id === lead)?.label;
+        const texts: Record<string, string> = {
+            leadTitleLabel: `出戰主將：${leadName ?? (lead ? '（不可出戰）' : '預設')}`,
+            leadPageLabel: `換頁 ▶ ${view.page + 1}/${view.pageCount}`,
+        };
+        const actives: Record<string, boolean> = { btnLeadPage: view.pageCount > 1 };
+        for (let slot = 0; slot < LEAD_SELECT_PAGE_SIZE; slot++) {
+            const row = view.rows[slot];
+            texts[`leadGeneralLabel${slot}`] = row ? `${row.selected ? '✓' : '　'} ${row.label}` : '－';
+            actives[`btnLeadGeneral${slot}`] = row !== undefined;
+        }
+        binder.setTexts(texts);
+        binder.setActives(actives);
+    }
+
+    private async _onClickLeadGeneral(slot: number): Promise<void> {
+        const row = this._currentLeadView().rows[slot];
+        if (!row) {
+            return;
+        }
+        try {
+            await services().session.setLeadGeneral(nextLeadId(services().session.leadGeneralId, row.id));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 主將存檔失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '主將存檔失敗，請稍後再試', duration: 2 });
         }
     }
 
@@ -904,6 +971,11 @@ export class LobbyScene extends Component {
                     this._bringNodeToFront(this._deckSelectHost.node);
                     this._refreshDeckSelect();
                 }
+                if (this._leadSelectHost) {
+                    this._leadSelectHost.node.active = true;
+                    this._bringNodeToFront(this._leadSelectHost.node);
+                    this._refreshLeadSelect();
+                }
             },
             hide: () => {
                 this._lobbyMainHost!.node.active = false;
@@ -912,6 +984,9 @@ export class LobbyScene extends Component {
                 }
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = false;
+                }
+                if (this._leadSelectHost) {
+                    this._leadSelectHost.node.active = false;
                 }
             },
         };

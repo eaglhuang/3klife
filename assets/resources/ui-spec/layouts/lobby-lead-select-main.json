@@ -1,0 +1,158 @@
+{
+  "id": "lobby-lead-select-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LobbyLeadSelectRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "LeadSelectCard",
+        "widget": {
+          "top": 520,
+          "left": 32
+        },
+        "width": 320,
+        "height": 232,
+        "skinSlot": "lead.select.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "LeadTitleLabel",
+            "id": "leadTitleLabel",
+            "widget": {
+              "top": 10,
+              "left": 12,
+              "right": 12
+            },
+            "height": 30,
+            "text": "出戰主將：預設",
+            "styleSlot": "lead.select.label.title"
+          },
+          {
+            "type": "button",
+            "name": "LeadGeneralButton0",
+            "id": "btnLeadGeneral0",
+            "widget": {
+              "top": 48,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "lead.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LeadGeneralLabel0",
+                "id": "leadGeneralLabel0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "－",
+                "styleSlot": "lead.select.label.item"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "LeadGeneralButton1",
+            "id": "btnLeadGeneral1",
+            "widget": {
+              "top": 92,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "lead.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LeadGeneralLabel1",
+                "id": "leadGeneralLabel1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "－",
+                "styleSlot": "lead.select.label.item"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "LeadGeneralButton2",
+            "id": "btnLeadGeneral2",
+            "widget": {
+              "top": 136,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "lead.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LeadGeneralLabel2",
+                "id": "leadGeneralLabel2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "－",
+                "styleSlot": "lead.select.label.item"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "LeadPageButton",
+            "id": "btnLeadPage",
+            "widget": {
+              "top": 180,
+              "left": 12,
+              "right": 12
+            },
+            "height": 38,
+            "skinSlot": "lead.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "LeadPageLabel",
+                "id": "leadPageLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 24,
+                "text": "換頁 ▶",
+                "styleSlot": "lead.select.label.item"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
