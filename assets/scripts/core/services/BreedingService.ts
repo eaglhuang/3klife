@@ -29,6 +29,7 @@ import {
     toPersonRecord,
 } from '../systems/BreedingSystem';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
+import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
 import type { RandomSource } from '../systems/GeneralAging';
 
 export interface BreedingServiceOptions {
@@ -64,8 +65,32 @@ export class BreedingService {
         private readonly _options: BreedingServiceOptions = {},
     ) {}
 
-    /** 把名冊中帶有父母資訊、但血統圖還沒有的武將登記回去（讀檔後呼叫） */
+    /**
+     * 初代名將（名冊沒有父母、血統圖也沒有祖先）補齊 14 位虛擬祖先（BLT-02）。
+     * 生成結果以武將 id 為種子，讀檔後重建也一致；回傳這次補了幾位武將。
+     */
+    ensureFounderAncestry(ids?: readonly string[]): number {
+        const wanted = ids ? new Set(ids) : null;
+        let added = 0;
+        for (const general of this._roster.getAll() as BreedingGeneral[]) {
+            if (wanted && !wanted.has(general.id)) continue;
+            if (general.fatherId || general.motherId) continue;
+            const parents = this._graph.getParents(general.id);
+            if (parents.father || parents.mother) continue;
+            const ancestry = generateVirtualAncestry(general, {
+                dictionary: this._options.getDictionary?.() ?? this._options.dictionary,
+                coreFactorIds: this._graph.getPerson(general.id)?.gene_refs,
+            });
+            const { persons, links } = toRegistryEntries(ancestry, general.faction);
+            if (!this._graph.hasPerson(general.id)) this._graph.upsertPerson(toPersonRecord(general));
+            if (this._graph.registerFounderAncestry(general.id, persons, links)) added++;
+        }
+        return added;
+    }
+
+    /** 把名冊中帶有父母資訊、但血統圖還沒有的武將登記回去（讀檔後呼叫）；初代名將順便補虛擬祖先 */
     syncGraphFromRoster(): number {
+        this.ensureFounderAncestry();
         let added = 0;
         for (const general of this._roster.getAll() as BreedingGeneral[]) {
             if (!general.fatherId || !general.motherId) continue;
@@ -157,6 +182,7 @@ export class BreedingService {
         const mother = roster.find((g) => g.id === motherId);
         if (!father) throw new BreedingError(`名冊中找不到父方 ${fatherId}`);
         if (!mother) throw new BreedingError(`名冊中找不到母方 ${motherId}`);
+        this.ensureFounderAncestry([father.id, mother.id]);
         return { father, mother };
     }
 }
