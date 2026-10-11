@@ -25,6 +25,7 @@ import { createGameSessionSuite } from './GameSession.test';
 import { createBreedingSuite } from './Breeding.test';
 import { createNurtureSuite } from './Nurture.test';
 import { createLegacySuite } from './Legacy.test';
+import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
 import { createSkinLayersSuite } from './ucuf/skinLayers.test';
 import { createCompositePanelSuite } from './ucuf/compositePanel.test';
 import { createAttributePanelSuite } from './ucuf/attributePanel.test';
@@ -80,6 +81,7 @@ if (typeof window === 'undefined') {
     runner.register(createBreedingSuite());
     runner.register(createNurtureSuite());
     runner.register(createLegacySuite());
+    runner.register(createBattleDeckLoadingSuite());
     runner.register(createSkinLayersSuite());
     runner.register(createCompositePanelSuite());
     runner.register(createAttributePanelSuite());
