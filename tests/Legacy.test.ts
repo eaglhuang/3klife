@@ -116,7 +116,7 @@ export function createLegacySuite(): TestSuite {
         assert.isTrue(await adapter.get('player.save') !== null, '退役後應自動存檔');
     });
 
-    suite.test('死亡：建立英靈卡、寫入 L5、從名冊移除，教官資料保留', async () => {
+    suite.test('一般角色死亡：建立快照而非英靈卡、寫入 L5、教官保留', async () => {
         const adapter = new MemoryStorageAdapter();
         const { session, legacy, events } = createSession(adapter, [
             makeGeneral('elder', '男', 70, { maxLifespan: 70 }),
@@ -125,8 +125,9 @@ export function createLegacySuite(): TestSuite {
         await session.retireGeneral('elder');
         const payload = await advanceUntil(session, (p) => p.agingEvents.some((e) => e.type === 'died'));
 
-        assert.equals(1, payload.lifecycle!.spiritCards.length);
-        const card = payload.lifecycle!.spiritCards[0];
+        assert.equals(0, payload.lifecycle!.spiritCards.length);
+        assert.equals(1, payload.lifecycle!.archivedSnapshots!.length);
+        const card = payload.lifecycle!.archivedSnapshots![0];
         assert.equals('elder', card.uid);
         assert.equals('age', card.deathContext.cause);
         assert.isTrue(session.roster.every((g) => g.id !== 'elder'), '死者應離開名冊');
@@ -135,7 +136,7 @@ export function createLegacySuite(): TestSuite {
         assert.equals('elder', (await archiver.getSpiritCard('elder'))!.uid);
         assert.equals('elder', (await archiver.getArchivedGeneral('elder'))!['id'] as string);
         assert.equals(1, (await legacy.getMentorCards()).length, '退役後再死亡，教官資料仍保留');
-        assert.isTrue(events.some(([name]) => name === GAME_SESSION_EVENTS.SpiritCardCreated));
+        assert.isTrue(events.every(([name]) => name !== GAME_SESSION_EVENTS.SpiritCardCreated));
     });
 
     suite.test('死亡：有存活後代 → C 類（進待刪隔離）；無後代 → D 類', async () => {
@@ -145,7 +146,7 @@ export function createLegacySuite(): TestSuite {
             makeGeneral('lonely', '男', 80, { maxLifespan: 70 }),
         ]);
         const payload = await session.advanceSeason();
-        const byUid = new Map(payload.lifecycle!.spiritCards.map((c) => [c.uid, c]));
+        const byUid = new Map(payload.lifecycle!.archivedSnapshots!.map((c) => [c.uid, c]));
         assert.equals('C', byUid.get('dad')!.lifecycleClass as string);
         assert.equals('D', byUid.get('lonely')!.lifecycleClass as string);
         assert.equals(2, (await legacy.getArchiver().getAllSpiritCards()).length);
@@ -225,14 +226,14 @@ export function createLegacySuite(): TestSuite {
         assert.equals('mentor-grandpa', mentor.uid);
         assert.equals(0, (await new LegacyService(adapter).getArchiver().getAllSpiritCards()).length, '退役不產生英靈卡');
 
-        // 祖父超過壽命上限後死亡 → 英靈卡 + 歸檔，父與子仍在名冊
+        // 非名將祖父死亡 → 僅歸檔快照，父與子仍在名冊
         const death = await advanceUntil(session, (p) => p.agingEvents.some((e) => e.type === 'died' && e.generalId === 'grandpa'));
-        const spirit: SpiritCard = death.lifecycle!.spiritCards.find((c) => c.uid === 'grandpa')!;
+        const spirit: SpiritCard = death.lifecycle!.archivedSnapshots!.find((c) => c.uid === 'grandpa')!;
         assert.equals('C', spirit.lifecycleClass as string);
         const ids = session.roster.map((g) => g.id);
         assert.isFalse(ids.includes('grandpa'), '祖父應離開名冊');
         assert.isTrue(ids.includes(dadId) && ids.includes(sonId), '父與子應仍在名冊');
-        assert.isTrue(events.some(([name]) => name === GAME_SESSION_EVENTS.SpiritCardCreated));
+        assert.isTrue(events.every(([name]) => name !== GAME_SESSION_EVENTS.SpiritCardCreated));
 
         // 存檔 → 另起一個 session 讀回，三代資料完整
         const reloaded = new GameSession();

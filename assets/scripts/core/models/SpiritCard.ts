@@ -31,6 +31,8 @@ export interface DeathContext {
 export type SpiritCardRarityTier = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
 
 export interface SpiritCard {
+    /** 正式英靈卡資格；未標記的舊快照視為 false，不做資料遷移。 */
+    isSpiritRelic?: boolean;
     uid: string;               // 武將 uid（保留，可反查歸檔資料）
     name: string;
     faction: string;
