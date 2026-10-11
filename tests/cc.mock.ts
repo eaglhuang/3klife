@@ -12,6 +12,7 @@ export class UITransform {
     setContentSize(w: number, h: number): void { this.width = w; this.height = h; }
     getContentSize() { return { width: this.width, height: this.height }; }
     setAnchorPoint(x: number, y: number): void { this.anchorX = x; this.anchorY = y; }
+    convertToNodeSpaceAR(_worldPoint: any, _out?: any): any { return _out ?? new Vec3(); }
 }
 
 export class Label {
@@ -19,6 +20,7 @@ export class Label {
     static readonly VerticalAlign   = { TOP: 0, CENTER: 1, BOTTOM: 2 };
     static readonly Overflow        = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
     string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
+    isBold = false; font: any = null;
     getComponent<T = any>(_type: (new (...args: any[]) => T) | string): T | null { return null; }
 }
 
@@ -30,10 +32,14 @@ export class Layout {
     updateLayout(_force?: boolean): void { /* mock */ }
 }
 
-export class Button { static readonly EventType = { CLICK: 'click' }; }
-export class Sprite {}
+export class Button {
+    static readonly EventType = { CLICK: 'click' };
+    static readonly Transition = { NONE: 0, COLOR: 1, SPRITE: 2, SCALE: 3 };
+    transition = 0; interactable = true; enabled = true;
+}
+export class Sprite { enabled = true; spriteFrame: any = null; }
 export class UIOpacity { opacity = 255; }
-export class Prefab {}
+export class Prefab { decRef(): void { /* mock */ } }
 
 // ─── Node ───────────────────────────────────────────────────────────────────
 
@@ -94,6 +100,25 @@ export class Node {
     set active(_v: boolean) {}
     get isValid(): boolean { return true; }
 
+    destroy(): boolean { this.parent = null; return true; }
+    getSiblingIndex(): number { return this._parent ? this._parent.children.indexOf(this) : 0; }
+    setSiblingIndex(_index: number): void { /* mock */ }
+    walk(cb: (node: Node) => void): void { cb(this); this.children.forEach(c => c.walk(cb)); }
+    getComponentInChildren<T = any>(type: (new (...args: any[]) => T) | string): T | null {
+        const own = this.getComponent(type);
+        if (own) return own;
+        for (const c of this.children) {
+            const found = c.getComponentInChildren(type);
+            if (found) return found;
+        }
+        return null;
+    }
+    getComponentsInChildren<T = any>(type: (new (...args: any[]) => T) | string): T[] {
+        const out: T[] = [];
+        this.walk(n => { const c = n.getComponent(type); if (c) out.push(c); });
+        return out;
+    }
+
     __emit(event: string, arg?: any): void {
         const list = this._handlers.get(event) ?? [];
         list.forEach(h => h(arg));
@@ -111,9 +136,14 @@ export function instantiate(noP: any): Node {
     return new Node("New Instance");
 }
 
+export class Tween {
+    [key: string]: any;
+    static stopAllByTarget(_target: any): void { /* mock */ }
+}
 export function tween(_target: any) {
     return {
-        to: (_duration?: number, _props?: Record<string, unknown>) => tween(_target),
+        to: (_duration?: number, _props?: Record<string, unknown>, _opts?: Record<string, unknown>) => tween(_target),
+        delay: (_duration?: number) => tween(_target),
         call: (_fn?: () => void) => tween(_target),
         start: () => {},
     };
@@ -125,7 +155,7 @@ export const Layers = { Enum: { DEFAULT: 1 } };
 export const geometry = {};
 export const gfx = { CullMode: { NONE: 0 } };
 export const _decorator = {
-    ccclass: () => (_: any) => {},
+    ccclass: (_name?: string) => (_: any) => {},
     property: () => (_: any, __: any) => {},
     requireComponent: () => (_: any, __: any) => {},
 };
@@ -133,6 +163,7 @@ export const _decorator = {
 export const sys = {
     isBrowser: false,
     NetworkType: { NONE: 0, LAN: 1, WWAN: 2 },
+    isNative: false,
     getNetworkType(): number { return 1; },
     localStorage: {
         _data: new Map<string, string>(),
@@ -144,10 +175,19 @@ export const sys = {
 };
 
 // 補齊 Animation 等
-export class Animation { play(_clip?: string): void {} }
-export class Camera {}
+export class Animation { play(_clip?: string): void {} stop(): void {} }
+export class Camera {
+    worldToScreen(_out: any, _worldPos?: any): any { return _out; }
+    screenToWorld(_out: any, _screenPos?: any, _w?: number, _h?: number): any { return _out; }
+    convertToUINode(_worldPos: any, _uiNode: any, _out?: any): any { return _out; }
+}
 export class Graphics {}
-export class ParticleSystem { startColor: any; play(): void {} }
+export class ParticleSystem {
+    startColor: any; play(): void {}
+    /* 以下欄位只做型別佔位，mock 不模擬粒子行為 */
+    [key: string]: any;
+}
+export class Burst { time = 0; repeatCount = 1; repeatInterval = 0; count: any = 0; }
 export class AudioSource {
     loop = false;
     volume = 1;
@@ -159,4 +199,25 @@ export class AudioSource {
 }
 export class AudioClip {}
 export class CurveRange { constant = 0; }
+export class Vec4 { constructor(public x = 0, public y = 0, public z = 0, public w = 0) {} }
+export class Rect { constructor(public x = 0, public y = 0, public width = 0, public height = 0) {} }
+export class Widget { [key: string]: any; }
+export class Font { [key: string]: any; }
+export class JsonAsset { [key: string]: any; }
+export class Asset { [key: string]: any; }
+export class ImageAsset { [key: string]: any; }
+export class Texture2D { [key: string]: any; }
+export class SpriteFrame { [key: string]: any; }
+export class Material { [key: string]: any; }
+export class EffectAsset { [key: string]: any; }
+export class MeshRenderer { [key: string]: any; }
+export class NodePool { [key: string]: any; }
+export class AssetManager { [key: string]: any; }
+/* 單例或命名空間的佔位，mock 不提供實作（runtime 仍為 undefined，與舊行為一致） */
+export declare const director: any;
+export declare const resources: any;
+export declare const assetManager: any;
+export declare const utils: any;
+export declare const primitives: any;
+export declare const v3: any;
 export class GradientRange { color = new Color(); }
