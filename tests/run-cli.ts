@@ -38,6 +38,7 @@ import { createPlayerDeckSuite } from './PlayerDeck.test';
 import { createFactorAwakeningSuite } from './FactorAwakening.test';
 import { createBattleSpecialActionsSuite } from './BattleSpecialActions.test';
 import { createSortieDeploySuite } from './SortieDeploy.test';
+import { createBattleAptitudeSuite } from './BattleAptitude.test';
 import { createSageDivinationSuite } from './SageDivination.test';
 import { createSageOracleSuite } from './SageOracle.test';
 import { createSageProphecySuite } from './SageProphecy.test';
@@ -111,6 +112,7 @@ if (typeof window === 'undefined') {
     runner.register(createFactorAwakeningSuite());
     runner.register(createBattleSpecialActionsSuite());
     runner.register(createSortieDeploySuite());
+    runner.register(createBattleAptitudeSuite());
     runner.register(createSageDivinationSuite());
     runner.register(createSageOracleSuite());
     runner.register(createSageProphecySuite());

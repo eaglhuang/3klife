@@ -4,6 +4,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
+import { resolveAptitude, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 
 export interface BattleCombatAction {
   attackerId: string;
@@ -21,6 +22,17 @@ export interface BattleCombatResolverContext {
 
 export class BattleCombatResolver {
   constructor(private readonly context: BattleCombatResolverContext) {}
+
+  /** 部隊所在格的適性修正：取同陣營主將的兵種 / 地形 / 天氣適性（PROG-2-0071） */
+  public getUnitAptitude(unit: TroopUnit): ResolvedAptitude {
+    const state = this.context.state;
+    const cell = state.getCell(unit.lane, unit.depth);
+    return resolveAptitude(state.getGeneral(unit.faction), {
+      troopType: unit.type,
+      terrain: cell?.terrain ?? TerrainType.Plain,
+      weather: state.weather,
+    });
+  }
 
   public getFactionUnits(faction: Faction): TroopUnit[] {
     const result: TroopUnit[] = [];
@@ -117,6 +129,8 @@ export class BattleCombatResolver {
       attackerTerrain: aCell?.terrain ?? TerrainType.Plain,
       defenderTerrain: dCell?.terrain ?? TerrainType.Plain,
       attackBonus: attackerGeneral?.attackBonus,
+      attackerAptitudeMultiplier: this.getUnitAptitude(attacker).attackMultiplier,
+      defenderAptitudeMultiplier: this.getUnitAptitude(defender).defenseMultiplier,
     });
 
     const damageAdjustment = tacticBehavior.resolveDamageAdjustment({
@@ -460,6 +474,8 @@ export class BattleCombatResolver {
       attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,
       defenderTerrain: attackerCell?.terrain ?? TerrainType.Plain,
       attackBonus: defenderGeneral?.attackBonus,
+      attackerAptitudeMultiplier: this.getUnitAptitude(defender).attackMultiplier,
+      defenderAptitudeMultiplier: this.getUnitAptitude(attacker).defenseMultiplier,
     });
 
     this.applyUnitDamage(attacker, counterDamage, defender.faction, {
