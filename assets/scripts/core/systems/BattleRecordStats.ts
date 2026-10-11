@@ -185,3 +185,33 @@ export function buildBattleRecordPanel(record: BattleRecordLike | null | undefin
         hasRecord: wins + losses + nonNeg(r.draws) > 0,
     };
 }
+
+// ── 戰績分頁文字（PROG-2-0081） ─────────────────────────────────────────────
+
+export interface BattleRecordTabText {
+    career: string;
+    winRate: string;
+    stats: string;
+    milestones: string;
+    retire: string;
+}
+
+/** 數字加千分位，傷害、守護力動輒上萬 */
+function groupDigits(value: number): string {
+    return String(Math.floor(value)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+/**
+ * 武將詳情「戰績」分頁要顯示的五段文字（View 只負責塞進 Label）。
+ * Unity 對照：Presenter 把 ViewModel 轉成字串，MonoBehaviour 只做 label.text = ...
+ */
+export function buildBattleRecordTabText(record: BattleRecordLike | null | undefined): BattleRecordTabText {
+    const panel = buildBattleRecordPanel(record);
+    return {
+        career: panel.hasRecord ? panel.careerText : '尚未出征',
+        winRate: panel.hasRecord ? panel.winRateText : '勝率 —',
+        stats: panel.rows.map((row) => `${row.label}：${groupDigits(row.value)}`).join('\n'),
+        milestones: panel.milestones.length > 0 ? `里程碑：${panel.milestones.join('、')}` : '里程碑：尚未達成',
+        retire: `退役評價：${panel.retireGrade}`,
+    };
+}

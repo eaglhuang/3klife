@@ -62,72 +62,83 @@
         "widget": { "top": 150, "bottom": 20, "right": 16 },
         "width": 160,
         "skinSlot": "detail.tabbar.bg",
-        "layout": { "type": "vertical", "spacing": 20, "paddingTop": 0, "paddingBottom": 0, "paddingLeft": 10, "paddingRight": 16 },
+        "layout": { "type": "vertical", "spacing": 12, "paddingTop": 0, "paddingBottom": 0, "paddingLeft": 10, "paddingRight": 16 },
         "children": [
           {
             "type": "button",
             "name": "BtnTabOverview",
-            "width": 128,
-            "height": 128,
+            "width": 112,
+            "height": 112,
             "skinSlot": "detail.tab.circle.overview",
             "children": [
-              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 39 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "將" },
-              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 39 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "GEN" }
+              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 31 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "將" },
+              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 31 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "GEN" }
             ]
           },
           {
             "type": "button",
             "name": "BtnTabStats",
-            "width": 128,
-            "height": 128,
+            "width": 112,
+            "height": 112,
             "skinSlot": "detail.tab.circle.stats",
             "children": [
-              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 39 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "屬" },
-              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 39 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "STAT" }
+              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 31 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "屬" },
+              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 31 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "STAT" }
             ]
           },
           {
             "type": "button",
             "name": "BtnTabTactics",
-            "width": 128,
-            "height": 128,
+            "width": 112,
+            "height": 112,
             "skinSlot": "detail.tab.circle.skills",
             "children": [
-              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 39 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "技" },
-              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 39 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "TACT" }
+              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 31 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "技" },
+              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 31 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "TACT" }
             ]
           },
           {
             "type": "button",
             "name": "BtnTabBloodline",
-            "width": 128,
-            "height": 128,
+            "width": 112,
+            "height": 112,
             "skinSlot": "detail.tab.circle.bloodline",
             "children": [
-              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 39 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "命" },
-              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 39 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "FATE" }
+              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 31 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "命" },
+              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 31 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "FATE" }
             ]
           },
           {
             "type": "button",
             "name": "BtnTabEquip",
-            "width": 128,
-            "height": 128,
+            "width": 112,
+            "height": 112,
             "skinSlot": "detail.tab.circle.basics",
             "children": [
-              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 39 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "寶" },
-              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 39 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "GEAR" }
+              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 31 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "寶" },
+              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 31 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "GEAR" }
             ]
           },
           {
             "type": "button",
             "name": "BtnTabAptitude",
-            "width": 128,
-            "height": 128,
+            "width": 112,
+            "height": 112,
             "skinSlot": "detail.tab.circle.aptitude",
             "children": [
-              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 39 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "適" },
-              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 39 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "APT" }
+              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 31 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "適" },
+              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 31 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "APT" }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnTabRecord",
+            "width": 112,
+            "height": 112,
+            "skinSlot": "detail.tab.circle.extended",
+            "children": [
+              { "type": "label", "name": "Label", "widget": { "left": 10, "right": 10, "top": 31 }, "height": 32, "styleSlot": "detail.label.circleTabMain", "text": "戰" },
+              { "type": "label", "name": "EnLabel", "widget": { "left": 10, "right": 10, "bottom": 31 }, "height": 12, "styleSlot": "detail.label.circleTabLabel", "text": "REC" }
             ]
           }
         ]
