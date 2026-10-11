@@ -203,7 +203,8 @@ export function inheritFactors(sources: AncestorFactorSource[], options: FactorI
         }
     }
 
-    return [...merged.values()]
+    // Cocos loose spread treats a Map iterator as one item; explicitly consume it before sorting.
+    return Array.from(merged.values())
         .sort((a, b) => b.level - a.level || a.generation - b.generation || a.id.localeCompare(b.id))
         .slice(0, Math.max(0, maxFactors));
 }
