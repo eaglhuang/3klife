@@ -70,6 +70,8 @@ export class ServiceLoader {
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         currentMode: () => this.session.gameTime.currentMode,
     });
+    /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
+    public legacy: LegacyService | null = null;
     public readonly ui = new UIManager();
     public readonly network = new NetworkService();
     public readonly sync = new SyncManager();
@@ -154,7 +156,8 @@ export class ServiceLoader {
         const storageAdapter = this.createSaveStorageAdapter();
         this.session.setSaveService(new PlayerSaveService(storageAdapter));
         // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
-        this.session.setLifecycle(new LegacyService(storageAdapter));
+        this.legacy = new LegacyService(storageAdapter);
+        this.session.setLifecycle(this.legacy);
 
         // 血統圖本身不依賴 cc，person-registry.json 由 ResourceManager 讀取
         BloodlineGraph.getInstance().setRegistryLoader(

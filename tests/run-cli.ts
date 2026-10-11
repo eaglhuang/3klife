@@ -24,6 +24,7 @@ import { createNetworkServiceSuite } from './NetworkService.test';
 import { createGameSessionSuite } from './GameSession.test';
 import { createBreedingSuite } from './Breeding.test';
 import { createNurtureSuite } from './Nurture.test';
+import { createNurtureFlowSuite } from './NurtureFlow.test';
 import { createLegacySuite } from './Legacy.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
 import { createPlayerDeckSuite } from './PlayerDeck.test';
@@ -81,6 +82,7 @@ if (typeof window === 'undefined') {
     runner.register(createGameSessionSuite());
     runner.register(createBreedingSuite());
     runner.register(createNurtureSuite());
+    runner.register(createNurtureFlowSuite());
     runner.register(createLegacySuite());
     runner.register(createBattleDeckLoadingSuite());
     runner.register(createPlayerDeckSuite());
