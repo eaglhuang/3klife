@@ -30,7 +30,7 @@ export function createEventSystemSuite(): TestSuite {
     suite.test('emit：payload 正確傳遞', () => {
         const sys = new EventSystem();
         let received: number | null = null;
-        sys.on<number>('msg', (v) => { received = v; });
+        sys.on<number>('msg', (v) => { received = v ?? null; });
         sys.emit('msg', 42);
         assert.equals(42, received);
     });
@@ -96,7 +96,7 @@ export function createEventSystemSuite(): TestSuite {
     suite.test('once：payload 正確傳遞', () => {
         const sys = new EventSystem();
         let val = 0;
-        sys.once<number>('e', (v) => { val = v; });
+        sys.once<number>('e', (v) => { val = v ?? 0; });
         sys.emit('e', 99);
         assert.equals(99, val);
     });
