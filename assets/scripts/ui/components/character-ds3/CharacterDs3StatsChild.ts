@@ -6,6 +6,7 @@ import type { RadarChartConfig } from '../../core/interfaces/ICompositeRenderer'
 import { resolveStat } from '../general-detail/GeneralDetailFormatters';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
+import { describeLifespan, describeVitality } from '../../core/LifeVitalityPresenter';
 
 type StatKey = keyof GeneralStatsConfig;
 
@@ -331,12 +332,14 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         const maxHp = cfg.hp;
         const currentSp = cfg.currentSp ?? cfg.initialSp ?? cfg.maxSp ?? 0;
         const maxSp = cfg.maxSp ?? currentSp;
-        const vitality = cfg.vitality ?? cfg.maxVitality ?? 0;
-        const maxVitality = cfg.maxVitality ?? cfg.vitality ?? 0;
 
         this._syncVital(this._hp, currentHp, maxHp, 'gdv3StatLea');
         this._syncVital(this._sp, currentSp, maxSp, 'gdv3StatStr');
-        this._syncVital(this._vitality, vitality, maxVitality, 'accent.gold.light');
+
+        // 精力條沿用 LifeVitalityPresenter 的比例與三段變色（PROG-2-0074）
+        const vit = describeVitality(cfg);
+        this._syncVital(this._vitality, vit.current, vit.max, 'accent.gold.light');
+        this._setBarColorHex(this._vitality.barFill, vit.color);
     }
 
     private _syncVital(binding: VitalBinding, value: number, max: number, colorToken: string): void {
@@ -350,8 +353,8 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     }
 
     private _syncProfile(cfg: GeneralConfig): void {
-        const vitality = cfg.vitality ?? cfg.maxVitality ?? 0;
-        const maxVitality = cfg.maxVitality ?? cfg.vitality ?? 0;
+        const life = describeLifespan(cfg);
+        const vit = describeVitality(cfg);
         const level = typeof (cfg as { level?: unknown }).level === 'number'
             ? Math.round((cfg as { level?: number }).level ?? 0)
             : null;
@@ -359,8 +362,9 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
             ? Math.round((cfg as { maxLevel?: number }).maxLevel ?? 0)
             : null;
 
-        this._age.string = cfg.age != null ? `${cfg.age} 歲` : '--';
-        this._vitalityProfile.string = `${Math.max(0, Math.round(vitality))} / ${Math.max(0, Math.round(maxVitality))}`;
+        this._age.string = cfg.age != null ? life.ageText : '--';
+        // 待產優先，其次精力不足；都沒有時顯示「精力 / 上限」
+        this._vitalityProfile.string = vit.statusText || `${vit.current} / ${vit.max}`;
         this._status.string = cfg.status?.trim() ? cfg.status : '--';
         this._level.string = level != null
             ? `${level}${maxLevel != null ? ` / ${maxLevel}` : ''}`
@@ -388,6 +392,20 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
             : {};
         if (designTokens?.generalDetailStats && typeof designTokens.generalDetailStats === 'object') {
             this._metrics = { ...this._metrics, ...designTokens.generalDetailStats };
+        }
+    }
+
+    /** 條的寬度已由 _syncVital 依比例設定，這裡只換成 LifeVitalityPresenter 給的三段色 */
+    private _setBarColorHex(fillNode: Node, hex: string): void {
+        const color = this._hexToColor(hex);
+        const sprite = fillNode.getComponent(Sprite);
+        if (sprite) {
+            sprite.color = color;
+            return;
+        }
+        const solidBackground = fillNode.getComponent(SolidBackground);
+        if (solidBackground) {
+            solidBackground.color = color;
         }
     }
 
