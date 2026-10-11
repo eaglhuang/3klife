@@ -4,6 +4,7 @@ import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { BattleTurnManager } from '../BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../../shared/BattleTacticBehavior';
+import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -18,6 +19,8 @@ export interface BattleAutoMovePhaseContext {
   getFactionUnits(faction: Faction): TroopUnit[];
   isCellMovementBlocked(lane: number, depth: number): boolean;
   isGeneralUnit(unitId: string): boolean;
+  /** 主將適性給的移動修正（PROG-2-0080）；不提供時視為 0 */
+  getAptitudeMoveDelta?(unit: TroopUnit): number;
 }
 
 export function executeBattleAutoMovePhase(context: BattleAutoMovePhaseContext): void {
@@ -51,7 +54,9 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
   const slowPenalty = svc.buff.hasBuff(unit.id, StatusEffect.Slow) ? 1 : 0;
   const tacticMoveRange = resolveBattleTacticBehavior(context.state.battleTactic).getEffectiveMoveRange(unit, context.state);
   const isFloodBattle = context.state.battleTactic === BattleTactic.FloodAttack;
-  const baseMoveRange = isFloodBattle ? 1 : tacticMoveRange;
+  const baseMoveRange = isFloodBattle
+    ? 1
+    : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0);
   let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty);
   if (!isFloodBattle) {
     remainingMoveBudget += resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth);

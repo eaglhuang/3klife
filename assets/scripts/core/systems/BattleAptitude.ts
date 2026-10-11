@@ -160,6 +160,39 @@ export function resolveAptitude(profile: AptitudeProfile | null | undefined, con
     };
 }
 
+// ── 移動與命中（PROG-2-0080） ──────────────────────────────────────────────
+
+/**
+ * 基礎命中率（暫定 100%）：規格只給「final_acc = base + 地形 + 天氣」沒有基礎值。
+ * 取 100% 讓 B 級以上永遠命中、舊戰場行為不變；只有負修正（C/D）才會出現未命中。
+ */
+export const BASE_HIT_RATE = 1;
+/** 命中率下限（暫定 50%）：D 地形 + D 天氣也不會打不到人 */
+export const MIN_HIT_RATE = 0.5;
+
+/** 最終命中率 = clamp(基礎 + 適性命中修正, 下限, 100%) */
+export function hitRateOf(accuracyDelta: number): number {
+    const delta = Number.isFinite(accuracyDelta) ? accuracyDelta : 0;
+    return round3(Math.max(MIN_HIT_RATE, Math.min(1, BASE_HIT_RATE + delta)));
+}
+
+/** 擲骰判定命中；命中率 100% 時不消耗亂數（保持確定性） */
+export function rollHit(accuracyDelta: number, random: () => number = Math.random): boolean {
+    const rate = hitRateOf(accuracyDelta);
+    if (rate >= 1) return true;
+    return random() < rate;
+}
+
+/**
+ * 套用適性移動修正：原本會走（≥1 格）的部隊，修正後至少還能走 1 格，
+ * 避免 C/D 級步兵（基礎 1 格）整場站著不動（暫定）；原本就不能走的維持不動。
+ */
+export function applyAptitudeMove(baseMove: number, moveDelta: number): number {
+    if (baseMove <= 0) return baseMove;
+    const delta = Number.isFinite(moveDelta) ? Math.trunc(moveDelta) : 0;
+    return Math.max(1, baseMove + delta);
+}
+
 // ── 粉色因子 → 適性 ────────────────────────────────────────────────────────
 
 /** 14 人血統中至少幾人攜帶同一適性因子時升一級 */

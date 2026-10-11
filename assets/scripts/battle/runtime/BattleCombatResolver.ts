@@ -4,7 +4,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
-import { resolveAptitude, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
+import { hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 
 export interface BattleCombatAction {
   attackerId: string;
@@ -21,6 +21,9 @@ export interface BattleCombatResolverContext {
 }
 
 export class BattleCombatResolver {
+  /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
+  public hitRandom: () => number = Math.random;
+
   constructor(private readonly context: BattleCombatResolverContext) {}
 
   /** 部隊所在格的適性修正：取同陣營主將的兵種 / 地形 / 天氣適性（PROG-2-0071） */
@@ -117,6 +120,17 @@ export class BattleCombatResolver {
     const attackerGeneral = this.context.state.getGeneral(attacker.faction);
     const aCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const dCell = this.context.state.getCell(defender.lane, defender.depth);
+
+    // 適性命中：命中率 < 100% 時擲骰，落空就不造成傷害、也不觸發反擊（PROG-2-0080）
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta;
+    if (!rollHit(attackerAccuracy, this.hitRandom)) {
+      svc.event.emit(EVENT_NAMES.UnitAttackMissed, {
+        attackerId: attacker.id,
+        targetId: defender.id,
+        hitRate: hitRateOf(attackerAccuracy),
+      });
+      return;
+    }
 
     // 盾牆：防禦力加倍
     const effectiveDef = defender.defense * (defender.isShieldWallActive ? 2 : 1);

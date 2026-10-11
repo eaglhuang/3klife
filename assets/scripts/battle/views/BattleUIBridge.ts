@@ -150,6 +150,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TurnPhaseChanged,        this._onTurnPhaseChanged.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDeployed,            this._onUnitDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDamaged,             this._onUnitDamaged.bind(this)),
+      svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -346,6 +347,19 @@ export class BattleUIBridge {
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] unit-damage end unit=${data.unitId}`);
       });
     }
+  }
+
+  /** 適性命中落空：記一行戰報、攻方照樣撲上去（PROG-2-0080） */
+  private _onUnitAttackMissed(data: { attackerId: string; targetId: string; hitRate: number }): void {
+    const c = this.ctx;
+    const attacker = c.ctrl?.state.units.get(data.attackerId);
+    const target = c.ctrl?.state.units.get(data.targetId);
+    if (!attacker || !target) return;
+    const side = attacker.faction === Faction.Player ? '我方' : '敵方';
+    this.appendLog(`${side}${attacker.name} 攻擊${target.name}落空（命中率 ${Math.round(data.hitRate * 100)}%）`);
+    this._enqueueCombatVisual(`unit-miss:${data.attackerId}`, async () => {
+      await (c.unitRenderer?.playAttackAnimationAsync(data.attackerId, target.lane, target.depth) ?? Promise.resolve());
+    });
   }
 
   private _onUnitHealed(data: { unitId: string; amount: number; hp: number }): void {
