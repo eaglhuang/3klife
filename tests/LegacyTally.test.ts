@@ -43,11 +43,12 @@ export function createLegacyTallySuite(): TestSuite {
         assert.equals(1, result.roster.length);
     });
 
-    suite.test('一般子嗣只有英靈；即使殘留女性名將模板也不得產虎符', async () => {
+    suite.test('一般子嗣只有歸檔快照；即使殘留女性名將模板也不得產雙卡', async () => {
         const service = new LegacyService(new MemoryStorageAdapter());
         const child = general('child', { gender: '女', fatherId: 'dad', motherId: 'mom', birthSeason: 0 });
         const result = await service.settleSeason([child], new GameClock().advanceSeason(), deaths(child));
-        assert.equals(1, result.settlement.spiritCards.length);
+        assert.equals(0, result.settlement.spiritCards.length);
+        assert.equals(1, result.settlement.archivedSnapshots!.length);
         assert.equals(0, result.settlement.tigerTallies!.length);
         assert.equals(0, (await service.getTigerTallies()).length);
     });
@@ -152,7 +153,8 @@ export function createLegacyTallySuite(): TestSuite {
             general('no-category', { characterCategory: undefined }),
         ];
         const result = await service.settleSeason(roster, new GameClock().advanceSeason(), deaths(...roster));
-        assert.equals(4, result.settlement.spiritCards.length);
+        assert.equals(1, result.settlement.spiritCards.length);
+        assert.equals(4, result.settlement.archivedSnapshots!.length);
         assert.equals(1, result.settlement.tigerTallies!.length);
         assert.equals('female', result.settlement.tigerTallies![0].sourceGeneralUid);
     });
