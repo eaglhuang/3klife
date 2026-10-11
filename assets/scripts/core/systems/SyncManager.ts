@@ -239,7 +239,7 @@ export class SyncManager {
             }
         }
 
-        return [...merged.values()].sort((left, right) => left.Seq - right.Seq);
+        return Array.from(merged.values()).sort((left, right) => left.Seq - right.Seq);
     }
 
     private queuePersistLocalState(): void {
