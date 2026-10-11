@@ -1,4 +1,4 @@
-import { Node } from 'cc';
+import { Button } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -44,6 +44,7 @@ export class GachaFlowCoordinator {
     private readonly _options: GachaFlowCoordinatorOptions;
     private _resultBackAction: (() => void | Promise<void>) | null = null;
     private _resultRepullAction: (() => void | Promise<void>) | null = null;
+    private _resultRepullPending = false;
 
     public constructor(options: GachaFlowCoordinatorOptions) {
         this._options = options;
@@ -65,8 +66,8 @@ export class GachaFlowCoordinator {
                 this._options.getGenerals(),
                 { factionFilter: this._options.factionFilter },
             );
-            showGachaResults('金幣召喚', results, () => { void this.runGoldSummon(); });
             this._notifyPullSuccess(results);
+            await this._presentLocalGachaResults(1, results, '金幣召喚', () => this.runGoldSummon(), 'gold');
         } catch (error) {
             this._emitError(error, '金幣召喚失敗');
         }
@@ -79,8 +80,8 @@ export class GachaFlowCoordinator {
                 this._options.getGenerals(),
                 { factionFilter: this._options.factionFilter },
             );
-            showGachaResults('召喚券', results, () => { void this.runTicketSummon(); });
             this._notifyPullSuccess(results);
+            await this._presentLocalGachaResults(1, results, '召喚券', () => this.runTicketSummon(), 'tickets');
         } catch (error) {
             this._emitError(error, '召喚券失敗');
         }
@@ -100,23 +101,29 @@ export class GachaFlowCoordinator {
                 this._options.getGenerals(),
                 { factionFilter: this._options.factionFilter },
             );
-            await this._presentLocalGachaResults(resolvedCount, results);
             this._notifyPullSuccess(results);
+            await this._presentLocalGachaResults(resolvedCount, results);
         } catch (error) {
             this._emitError(error, '單機轉蛋失敗');
         }
     }
 
-    private async _presentLocalGachaResults(drawCount: number, results: LocalGachaResultEntry[]): Promise<void> {
+    private async _presentLocalGachaResults(
+        drawCount: number, results: LocalGachaResultEntry[],
+        title = drawCount === 1 ? '單抽' : '十連抽',
+        retry?: () => Promise<void>, currency: 'gems' | 'gold' | 'tickets' = 'gems',
+    ): Promise<void> {
         const host = this._options.getHost();
-        if (drawCount !== 10 || !host) {
-            showGachaResults(drawCount === 1 ? '單抽' : '十連抽', results, () => {
-                void this.runLocalGacha(drawCount);
-            });
+        const repull = retry ?? (drawCount === 10 && this._options.onRepullTen
+            ? this._options.onRepullTen : () => this.runLocalGacha(drawCount));
+        if (!host) {
+            await showGachaResults(title, results, () => { void repull(); });
             return;
         }
 
-        const topResult = results[0];
+        const ranks: Record<string, number> = { mythic: 5, legendary: 4, epic: 3, rare: 2, common: 1 };
+        const topResult = results.reduce<LocalGachaResultEntry | undefined>((best, entry) =>
+            !best || (ranks[entry.rarityTier] ?? 0) > (ranks[best.rarityTier] ?? 0) ? entry : best, undefined);
         const summary = results
             .slice(0, 5)
             .map((entry) => `${this._toPullResultRarityLabel(entry.rarityTier)} ${entry.general.name}`)
@@ -133,43 +140,53 @@ export class GachaFlowCoordinator {
 
         const rarityStats = this._buildPullResultRarityStats(results);
 
-        await host.showScreen(GACHA_PULL_RESULT_SCREEN_ID);
+        try { await host.showScreen(GACHA_PULL_RESULT_SCREEN_ID); }
+        catch { throw new Error('召喚已完成並入冊，但結果畫面載入失敗。'); }
         const binder = host.binder;
         if (!binder) {
-            return;
+            throw new Error('召喚已完成並入冊，但結果畫面 binder 缺失。');
         }
+
+        const cards = ['347', '353', '359', '365', '371', '378', '383', '388', '393', '398'];
+        const cardActives: Record<string, boolean> = {};
+        cards.forEach((id, index) => { cardActives[`GachaPullResult_div_${id}`] = index < results.length; });
+        binder.setActives(cardActives);
 
         binder.setTexts({
             ...cardTexts,
-            GachaPullResult_div_42: this._options.tenPullHeaderText ?? '本地轉蛋結果 · 十連抽',
+            GachaPullResult_div_42: drawCount === 10 ? this._options.tenPullHeaderText ?? '本地轉蛋結果 · 十連抽' : `${title}結果`,
             GachaPullResult_div_195: topResult ? topResult.general.name : '本次召喚結果',
             GachaPullResult_div_196: topResult
                 ? `${this._toPullResultRarityLabel(topResult.rarityTier)} · 本次最高稀有`
-                : '十連抽完成',
-            GachaPullResult_div_139: summary || '本次十連抽已完成。',
+                : '召喚完成',
+            GachaPullResult_div_139: summary || '本次召喚已完成。',
             GachaPullResult_div_203: `${results.length} / ${drawCount}`,
-            GachaPullResult_div_343: `✦ 召喚結果 · 十連 (${results.length}/${drawCount})`,
+            GachaPullResult_div_343: `✦ ${title}結果 (${results.length}/${drawCount})${topResult ? ` · 最高 ${this._toPullResultRarityLabel(topResult.rarityTier)} ${topResult.general.name}` : ''}`,
             GachaPullResult_div_202: '返回轉蛋 ›',
-            GachaPullResult_div_173: '再抽十連',
-            GachaPullResult_div_186: wallet.gems.toLocaleString('zh-TW'),
+            GachaPullResult_div_173: drawCount === 10 ? '再抽十連' : `再${title}一次`,
+            GachaPullResult_div_412: '返回卡池',
+            GachaPullResult_div_413: drawCount === 10 ? '再抽十連' : `再${title}一次`,
+            GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
             GachaPullResult_span_13: `SSR+ ×${rarityStats.high}`,
             GachaPullResult_span_14: `SR ×${rarityStats.mid}`,
             GachaPullResult_span_15: `R/N ×${rarityStats.low}`,
         });
 
         this._resultBackAction = this._options.onBackToGacha;
-        this._resultRepullAction = this._options.onRepullTen ?? (() => this.runLocalGacha(10));
+        this._resultRepullAction = repull;
 
-        const backNode = binder.getNode('GachaPullResult_div_202');
+        const backNode = binder.getNode('GachaPullResult_div_412');
         if (backNode) {
-            backNode.off(Node.EventType.TOUCH_END, this._onResultBack, this);
-            backNode.on(Node.EventType.TOUCH_END, this._onResultBack, this);
+            backNode.getComponent(Button) ?? backNode.addComponent(Button);
+            backNode.off(Button.EventType.CLICK, this._onResultBack, this);
+            backNode.on(Button.EventType.CLICK, this._onResultBack, this);
         }
 
-        const repullNode = binder.getNode('GachaPullResult_div_173');
+        const repullNode = binder.getNode('GachaPullResult_div_413');
         if (repullNode) {
-            repullNode.off(Node.EventType.TOUCH_END, this._onResultRepullTen, this);
-            repullNode.on(Node.EventType.TOUCH_END, this._onResultRepullTen, this);
+            repullNode.getComponent(Button) ?? repullNode.addComponent(Button);
+            repullNode.off(Button.EventType.CLICK, this._onResultRepullTen, this);
+            repullNode.on(Button.EventType.CLICK, this._onResultRepullTen, this);
         }
     }
 
@@ -223,7 +240,7 @@ export class GachaFlowCoordinator {
 
     private _onResultBack(): void {
         const action = this._resultBackAction;
-        if (!action) {
+        if (!action || this._resultRepullPending) {
             return;
         }
 
@@ -234,13 +251,13 @@ export class GachaFlowCoordinator {
 
     private _onResultRepullTen(): void {
         const action = this._resultRepullAction;
-        if (!action) {
+        if (!action || this._resultRepullPending) {
             return;
         }
-
+        this._resultRepullPending = true;
         Promise.resolve(action()).catch((error) => {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] repull action failed', error);
-        });
+        }).then(() => { this._resultRepullPending = false; });
     }
 
     private _emitError(error: unknown, fallbackMessage: string): void {
