@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 // @spec-source → 見 docs/cross-reference-index.md
 // [UCUF M9] 從 BattleScene.ts 提取的場景設置函數。

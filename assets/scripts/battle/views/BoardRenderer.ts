@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { _decorator, Component, Node, Vec3, Vec4, MeshRenderer, primitives, utils, Material, Color, Layers, gfx, tween, Tween, resources, EffectAsset, assetManager, AssetManager, Texture2D, ImageAsset } from 'cc';
 import { BattleTactic, Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { BattleState } from '../models/BattleState';

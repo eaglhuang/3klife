@@ -15,6 +15,7 @@
  * Unity 對照：BattleTurnController (MonoBehaviour, drives turn coroutines)
  */
 
+import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component } from 'cc';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { geometry, Vec3 } from 'cc';
