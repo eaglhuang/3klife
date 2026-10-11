@@ -176,7 +176,9 @@
           "skinSlot": "detail.aptitude.card",
           "children": [
             { "type": "label", "name": "VitalityLabel", "widget": { "top": 10, "left": 12, "right": 12 }, "height": 16, "text": "精力", "styleSlot": "detail.label.meta" },
-            { "type": "label", "name": "VitalityValue", "widget": { "left": 12, "right": 12, "bottom": 10 }, "height": 26, "styleSlot": "detail.label.value" }
+            { "type": "label", "name": "VitalityValue", "widget": { "left": 12, "right": 12, "bottom": 12 }, "height": 26, "styleSlot": "detail.label.value" },
+            { "type": "panel", "name": "VitalityMeterTrack", "widget": { "left": 12, "bottom": 4 }, "width": 220, "height": 5, "skinSlot": "detail.meter.track" },
+            { "type": "panel", "name": "VitalityMeterFill", "widget": { "left": 12, "bottom": 4 }, "width": 220, "height": 5, "skinSlot": "detail.meter.fill" }
           ]
         }
       ]
@@ -195,8 +197,10 @@
           "height": 72,
           "skinSlot": "detail.aptitude.card",
           "children": [
-            { "type": "label", "name": "LifespanLabel", "widget": { "top": 10, "left": 12, "right": 12 }, "height": 16, "text": "天命值", "styleSlot": "detail.label.meta" },
-            { "type": "label", "name": "LifespanValue", "widget": { "left": 12, "right": 12, "bottom": 10 }, "height": 26, "styleSlot": "detail.label.value" }
+            { "type": "label", "name": "LifespanLabel", "widget": { "top": 10, "left": 12, "right": 12 }, "height": 16, "text": "壽命", "styleSlot": "detail.label.meta" },
+            { "type": "label", "name": "LifespanValue", "widget": { "left": 12, "right": 12, "bottom": 12 }, "height": 26, "styleSlot": "detail.label.value" },
+            { "type": "panel", "name": "LifespanMeterTrack", "widget": { "left": 12, "bottom": 4 }, "width": 220, "height": 5, "skinSlot": "detail.meter.track" },
+            { "type": "panel", "name": "LifespanMeterFill", "widget": { "left": 12, "bottom": 4 }, "width": 220, "height": 5, "skinSlot": "detail.meter.fill" }
           ]
         },
         {
