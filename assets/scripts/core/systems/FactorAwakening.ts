@@ -105,9 +105,10 @@ export function awakenFactor(
 // 暫定（規格沒寫）：
 //   - Mentor_Rank = 本場教官最高突破星等（0~5）；沒有教官 = 0
 //   - 培育只在「訓練」回合擲骰（休息不擲）；教官站在所選訓練格時，綠 / 白也可由「教官觸發」覺醒
-//   - 戰場：任何已結算的戰鬥可覺醒藍 / 粉；「戰場特定動作 / 高等級戰場特殊條件」先以「戰勝」代表，
-//     戰勝時綠 / 白 / 紫 / 紅也進候選（紫紅仍受 discoveryLevel 45 門檻限制）；
-//     呼叫端回報特定動作的武將，機率 0.15 並視同滿足條件
+//   - 戰場：任何已結算的戰鬥可覺醒藍 / 粉；做出特定動作（BattleSpecialActions 偵測，PROG-2-0048）的武將
+//     機率 0.15，綠 / 白 / 紫 / 紅也進候選（紫紅仍受 discoveryLevel 45 門檻限制）；
+//     有給動作標籤時，優先從標籤相符的因子裡挑（騎兵衝鋒 → 騎兵因子），沒有相符才從全部候選挑
+//   - PROG-2-0048 起不再以「戰勝」代替特定動作
 //   - 每位武將每回合 / 每場最多覺醒 1 個因子；沒有可覺醒的因子時不消耗亂數
 
 export const NURTURE_PEEK_BASE_CHANCE = 0.08;
@@ -169,18 +170,36 @@ export function rollNurtureAwakening(
     return rollAwakening(general, candidates, nurturePeekChance(input.mentorRank), input.discoveryLevel, input.random);
 }
 
-/** 戰後覺醒：special = 戰勝或呼叫端回報特定動作；specialAction 才把機率提到 0.15 */
+/** 因子 id → 因子標籤（正式環境取 gene-dictionary.json 的 defaultTags） */
+export type FactorTagLookup = (factorId: string) => readonly string[] | undefined;
+
+export interface BattleAwakeningInput {
+    discoveryLevel: number;
+    /** 本場做出特定動作（機率 0.15，並開放綠白紫紅候選） */
+    specialAction?: boolean;
+    /** 特定動作對應的因子標籤；有相符的候選時只從相符的裡面挑 */
+    actionTags?: readonly string[];
+    factorTags?: FactorTagLookup;
+    random: () => number;
+}
+
+/** 戰後覺醒：一般實戰只開藍粉、機率 0.05；做出特定動作開綠白紫紅、機率 0.15 */
 export function rollBattleAwakening(
     general: GeneralConfig | undefined,
-    input: { discoveryLevel: number; special: boolean; specialAction?: boolean; random: () => number },
+    input: BattleAwakeningInput,
 ): AwakeningResult | null {
-    const special = input.special || input.specialAction === true;
-    const candidates = listAwakeningCandidates(
+    const special = input.specialAction === true;
+    let candidates = listAwakeningCandidates(
         general,
         ['battle'],
         input.discoveryLevel,
         (color) => special || (color !== null && BATTLE_BASIC_COLORS.includes(color)),
     );
-    const chance = input.specialAction ? BATTLE_AWAKENING_SPECIAL_CHANCE : BATTLE_AWAKENING_CHANCE;
+    if (special && input.actionTags?.length && input.factorTags) {
+        const wanted = new Set(input.actionTags);
+        const matched = candidates.filter((c) => (input.factorTags!(c.factorId) ?? []).some((tag) => wanted.has(tag)));
+        if (matched.length > 0) candidates = matched;
+    }
+    const chance = special ? BATTLE_AWAKENING_SPECIAL_CHANCE : BATTLE_AWAKENING_CHANCE;
     return rollAwakening(general, candidates, chance, input.discoveryLevel, input.random);
 }

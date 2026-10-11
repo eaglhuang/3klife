@@ -15,6 +15,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
+import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 
 import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
@@ -104,6 +105,8 @@ export function createBattleSceneContext(): BattleSceneContext {
 
 export class BattleUIBridge {
   private readonly unsubs: (() => void)[] = [];
+  /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
+  private readonly specialActions = new BattleSpecialActionTracker();
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -125,6 +128,7 @@ export class BattleUIBridge {
     onReplay:       () => void;
   }): void {
     this.unsubscribeEvents();
+    this.specialActions.reset();
     const svc = services();
     const c = this.ctx;
     const actionCommandNode = (c.battleScenePanel?.actionCommandComposite ?? c.battleScenePanel?.actionCommandPanel)?.node ?? null;
@@ -293,6 +297,7 @@ export class BattleUIBridge {
     damageSource?: string;
   }): void {
     const c = this.ctx;
+    this._observeSpecialActionHit(data);
     const unit = c.ctrl?.state.units.get(data.unitId);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
@@ -336,6 +341,7 @@ export class BattleUIBridge {
 
   private _onUnitHealed(data: { unitId: string; amount: number; hp: number }): void {
     const c = this.ctx;
+    this._observeSpecialActionHit(data);
     const unit = c.ctrl?.state.units.get(data.unitId);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
@@ -352,6 +358,7 @@ export class BattleUIBridge {
     forcedMove?: boolean; forcedMoveReason?: string;
   }): void {
     const c = this.ctx;
+    this._observeSpecialActionHit(data);
     const unit = c.ctrl?.state.units.get(data.unitId);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
@@ -393,6 +400,7 @@ export class BattleUIBridge {
     const c = this.ctx;
     const target = data.faction === Faction.Player ? '我方主將' : '敵方主將';
     const maxHp = c.ctrl?.state.getGeneral(data.faction)?.maxHp ?? 0;
+    this.specialActions.observeGeneralHp({ faction: data.faction, hp: data.hp, maxHp });
     if (data.wasDodged) {
       this.appendLog(`${target} 閃躲攻擊！`);
       this._enqueueCombatVisual(`general-dodge:${data.faction}`, async () => {
@@ -486,11 +494,28 @@ export class BattleUIBridge {
     if (c.deployRuntime) c.deployRuntime.node.active = false;
   }
 
-  /** 戰後結算寫回名冊（精力、戰績、功勳）；名冊裡沒有的內建武將會被略過 */
+  /** 把單位受傷事件餵給特定動作偵測；攻方兵種與站位地形從戰場狀態查 */
+  private _observeSpecialActionHit(data: UnitDamagedPayload): void {
+    const ctrl = this.ctx.ctrl;
+    if (!ctrl) return;
+    this.specialActions.observeUnitHit(toUnitHitObservation(data, {
+      unitType: (unitId) => ctrl.state.units.get(unitId)?.type ?? null,
+      isGeneralUnit: (unitId) => unitId === ctrl.playerGeneralUnitId || unitId === ctrl.enemyGeneralUnitId,
+      terrainAt: (lane, depth) => ctrl.state.getCell(lane, depth)?.terrain ?? null,
+    }));
+  }
+
+  /** 戰後結算寫回名冊（精力、戰績、功勳）並擲覺醒；名冊裡沒有的內建武將會被略過 */
   private _settleRosterBattle(result: BattleResult): void {
+    const actions = this.specialActions.finish(result);
+    this.specialActions.reset();
     const pgId = this.ctx.pg?.id;
     if (!pgId) return;
-    void services().session.recordBattle([pgId], result).then((settlement) => {
+    if (actions.length > 0) {
+      this.appendLog(`戰場特定動作：${actions.map(specialActionDisplayName).join('、')}`);
+    }
+    const specialActions = actions.length > 0 ? { [pgId]: actions } : undefined;
+    void services().session.recordBattle([pgId], result, { specialActions }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
