@@ -452,6 +452,15 @@ export const SORTIE_LOADOUT_ISSUE_TEXT: Readonly<Record<SortieLoadoutIssue, stri
     UNKNOWN_GENERAL: '編制中有不在名冊的武將',
 };
 
+/** 戰後結算面板六項：出征軍勢 / 返還兵力 / 本戰損耗 / 城市兵源變化 / 補兵速度 / 預估恢復回合（另附糧草消耗） */
+export function formatSortieSummary(summary: SortieSummary): string[] {
+    const recover = Number.isFinite(summary.turnsToRecover) ? `${summary.turnsToRecover} 季` : '無法補回';
+    return [
+        `出征軍勢 ${summary.poolMax}｜返還 ${summary.returnedTroops}｜戰損 ${summary.lostTroops}｜糧草 -${summary.foodSpent}`,
+        `城市兵源 ${summary.cityTroopsBefore}→${summary.cityTroopsAfter}｜補兵 ${summary.recruitRegen}/季｜約 ${recover}恢復`,
+    ];
+}
+
 /** 部署失敗提示：「軍勢不足，無法派出 {TroopName}。」；場上已滿另有固定句 */
 export function deployBlockMessage(reason: SortieDeployBlockReason, troopName: string): string {
     if (reason === 'FIELD_UNIT_LIMIT') return '場上部隊已滿，請先等待退場或撤回部隊。';

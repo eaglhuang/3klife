@@ -59,7 +59,7 @@ export class ResultPopupComposite extends CompositePanel {
     }
 
     /** BattleScene 使用的結果 key 相容入口。 */
-    public async showResult(result: string): Promise<void> {
+    public async showResult(result: string, details?: string): Promise<void> {
         const typeMap: Record<string, BattleResult['resultType']> = {
             'player-win': 'victory', 'victory': 'victory',
             'enemy-win': 'defeat',   'defeat': 'defeat',
@@ -79,7 +79,7 @@ export class ResultPopupComposite extends CompositePanel {
         await this.show({
             resultType,
             title: titleMap[resultType],
-            description: descMap[resultType],
+            description: details ? `${descMap[resultType]}\n${details}` : descMap[resultType],
         });
     }
 

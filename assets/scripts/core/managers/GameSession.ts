@@ -52,6 +52,10 @@ import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { Faction } from '../config/Constants';
+import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
+import { computeCommandCapacity, type CreateSortieInput, type SortieSummary } from '../systems/SortieDeploy';
+import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -131,6 +135,8 @@ export interface BattleRecordResult extends BattleSettlement {
     /** 有給經驗才有（ongoing 或名冊沒人出戰時省略） */
     discovery?: DiscoveryGain;
     awakenings: FactorAwakenedEvent[];
+    /** 有出征帳本才有：寫回後的城市兵源與糧草（PROG-2-0072） */
+    military?: MilitaryReserve;
 }
 
 export interface RecordBattleOptions {
@@ -138,6 +144,10 @@ export interface RecordBattleOptions {
     specialActionIds?: readonly string[];
     /** 武將 id → 本場完成的特定動作（BattleSpecialActionId）；會用動作標籤優先挑相符的因子 */
     specialActions?: Readonly<Record<string, readonly string[]>>;
+    /** 出征帳本結算（戰損回扣城市兵源、糧草消耗）；沒有時城市兵源與糧草不變 */
+    sortie?: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null;
+    /** 武將 id → 本場表現（擊殺 / 傷害 / 承傷 / 治療），累加進戰績 */
+    performance?: Readonly<Record<string, BattlePerformance>>;
 }
 
 export interface AddGeneralsResult {
@@ -181,6 +191,7 @@ export class GameSession {
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
+    private _military: MilitaryReserve = { ...STARTER_MILITARY };
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -290,6 +301,27 @@ export class GameSession {
         this._discoveryExp = 0;
         this._inventory = { ...STARTER_INVENTORY };
         this._oracleCount = 0;
+        this._military = { ...STARTER_MILITARY };
+    }
+
+    /** 城市兵源與糧草儲備（PROG-2-0072） */
+    public get military(): MilitaryReserve {
+        return { ...this._military };
+    }
+
+    /**
+     * 名冊武將出戰的出征帳本設定：帶兵上限由戰場統率推算，城市兵源與糧草取目前儲備。
+     * 不在名冊或不能出戰時回傳 null（戰場維持舊版不扣軍勢）。
+     */
+    public getSortieInput(generalId: string, stageSortieCap?: number): CreateSortieInput | null {
+        const config = this.getBattleConfig(generalId, Faction.Player);
+        if (!config) return null;
+        return {
+            commandCapacity: computeCommandCapacity({ lea: config.lea ?? config.stats?.lea ?? 0 }),
+            cityTroops: this._military.cityTroops,
+            ...(stageSortieCap !== undefined ? { stageSortieCap } : {}),
+            food: this._military.food,
+        };
     }
 
     /** 指定出戰主將；必須是目前可出戰的名冊武將，否則回傳 false 且不變 */
@@ -470,6 +502,7 @@ export class GameSession {
         this._roster.replaceAll(roster);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
+        this._military = regenMilitaryOneSeason(this._military);
 
         const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
         if (this._autoSave && this._save) {
@@ -565,9 +598,13 @@ export class GameSession {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
+            performance: options.performance,
         });
         if (settlement.entries.length === 0) {
             return { ...settlement, awakenings: [] };
+        }
+        if (options.sortie) {
+            this._military = applySortieResult(this._military, options.sortie);
         }
 
         const source = battleExpSource(result);
@@ -593,7 +630,7 @@ export class GameSession {
             }
         }
 
-        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings };
+        const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, ...(options.sortie ? { military: this.military } : {}) };
         this._roster.replaceAll(roster);
         if (this._autoSave && this._save) {
             await this.save();
@@ -607,6 +644,10 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
+        return { ...this._createBaseSnapshot(now), military: this.military };
+    }
+
+    private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
         return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount);
     }
 
@@ -635,6 +676,7 @@ export class GameSession {
         this._discoveryExp = progress.exp;
         this._inventory = normalizeInventory(snapshot.inventory);
         this._oracleCount = snapshot.oracleCount ?? 0;
+        this._military = normalizeMilitaryReserve(snapshot.military);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }

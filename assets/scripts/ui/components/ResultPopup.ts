@@ -87,7 +87,7 @@ export class ResultPopup extends UIPreviewBuilder {
 
     // ── 公開 API ─────────────────────────────────────────────
 
-    public async showResult(result: BattleResult): Promise<void> {
+    public async showResult(result: BattleResult, details?: string): Promise<void> {
         if (!this._initialized) {
             await this._initialize();
         }
@@ -97,7 +97,7 @@ export class ResultPopup extends UIPreviewBuilder {
         if (this._binder) {
             this._binder.setTexts({
                 TitleLabel: this.t(config.titleI18nKey),
-                DescLabel:  config.descText,
+                DescLabel:  details ? `${config.descText}\n${details}` : config.descText,
             });
         }
 

@@ -17,6 +17,7 @@ import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
 import { GENERAL_STATUS_DEAD } from './GeneralAging';
 import { baseVitalityMaxOf } from './VitalityCap';
 import type { NurtureRating } from './NurtureSystem';
+import { guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';
 
 // ── 常數（規格有的標出處；沒有的標「暫定」）────────────────────────────────
 
@@ -61,6 +62,13 @@ export interface BattleRecord {
     /** 累計功勳 */
     merit: number;
     lastBattleSeason?: number;
+    /** 以下為武將戰績系統欄位（PROG-2-0072）；舊存檔沒有，讀到時當 0 */
+    kills?: number;
+    totalDamage?: number;
+    /** 守護力 = 承受傷害 + 治療量 */
+    guardianPower?: number;
+    /** 已達成的里程碑 id（百人斬、不敗神話……） */
+    milestones?: string[];
 }
 
 /** 戰場整合會讀寫的名冊欄位；比照 BreedingGeneral 以延伸型別承載 */
@@ -209,6 +217,10 @@ export interface BattleSettlementEntry {
     vitalityAfter: number;
     meritGained: number;
     record: BattleRecord;
+    /** 本場表現（沒有提供時為 undefined） */
+    performance?: BattlePerformance;
+    /** 本場新達成的里程碑 id */
+    newMilestones: string[];
 }
 
 export interface BattleSettlement {
@@ -222,6 +234,8 @@ export interface SettleBattleRequest {
     deployedIds: readonly string[];
     result: BattleResult;
     season?: number;
+    /** 各出戰武將本場表現（擊殺 / 傷害 / 承傷 / 治療）；沒有的武將只記勝敗 */
+    performance?: Readonly<Record<string, BattlePerformance>>;
 }
 
 /** 戰後結算：出戰武將扣精力、記戰績與功勳；result 為 ongoing 時原樣回傳 */
@@ -241,14 +255,22 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
         const after = Math.max(0, before - BATTLE_VITALITY_COST);
         const previous = g.battleRecord ?? { wins: 0, losses: 0, draws: 0, merit: 0 };
         const merit = BATTLE_MERIT[outcome];
+        const performance = request.performance?.[g.id];
         const record: BattleRecord = {
+            ...previous,
             wins: previous.wins + (outcome === 'win' ? 1 : 0),
             losses: previous.losses + (outcome === 'loss' ? 1 : 0),
             draws: previous.draws + (outcome === 'draw' ? 1 : 0),
             merit: previous.merit + merit,
             lastBattleSeason: request.season ?? previous.lastBattleSeason,
+            kills: (previous.kills ?? 0) + (performance?.kills ?? 0),
+            totalDamage: (previous.totalDamage ?? 0) + (performance?.damageDealt ?? 0),
+            guardianPower: (previous.guardianPower ?? 0) + (performance ? guardianPowerOf(performance) : 0),
+            milestones: [...(previous.milestones ?? [])],
         };
-        entries.push({ generalId: g.id, outcome, vitalityBefore: before, vitalityAfter: after, meritGained: merit, record });
+        const newMilestones = newlyReachedMilestones(record);
+        record.milestones = [...(record.milestones ?? []), ...newMilestones];
+        entries.push({ generalId: g.id, outcome, vitalityBefore: before, vitalityAfter: after, meritGained: merit, record, performance, newMilestones });
         const updated: BattleRosterGeneral = {
             ...g,
             vitality: after,
