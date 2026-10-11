@@ -22,6 +22,7 @@ import { GameManager } from "./GameManager";
 import { GameSession } from "./GameSession";
 import type { RosterStore } from "./GameSession";
 import { PlayerSaveService } from "../services/PlayerSaveService";
+import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
 import { BloodlineGraph } from "../services/BloodlineGraph";
 import { NurtureService } from "../services/NurtureService";
@@ -150,7 +151,10 @@ export class ServiceLoader {
         this.session.setEventEmitter(this.event);
         this.session.setRosterStore(this.rosterStore);
         this.session.setNurtureStatePort(this.nurture);
-        this.session.setSaveService(new PlayerSaveService(this.createSaveStorageAdapter()));
+        const storageAdapter = this.createSaveStorageAdapter();
+        this.session.setSaveService(new PlayerSaveService(storageAdapter));
+        // 退役 / 死亡歸檔 / 季結排程與存檔共用同一個儲存後端（key 不同，不會互蓋）
+        this.session.setLifecycle(new LegacyService(storageAdapter));
 
         // 血統圖本身不依賴 cc，person-registry.json 由 ResourceManager 讀取
         BloodlineGraph.getInstance().setRegistryLoader(

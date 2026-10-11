@@ -15,6 +15,7 @@
  * 教官就是掛在 Session 上的 buff Component，每回合重新決定「站在哪一格」。
  */
 import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralStatsConfig } from '../models/GeneralUnit';
+import type { MentorCard } from '../models/MentorCard';
 import { RandomSource } from './GeneralAging';
 import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
@@ -65,8 +66,12 @@ export type NurtureStatus = 'active' | 'completed' | 'abandoned';
 
 export class NurtureError extends Error {}
 
-/** 教官卡；資料來源（退役轉化、卡池、傭兵）由外部注入，這裡只認這份契約 */
-export interface MentorCard {
+/**
+ * 培育中實際生效的教官（訓練加成參數）。
+ * 與 models/MentorCard（退役當下的武將快照）不同：後者是「資料」，這個是「效果」；
+ * 退役教官用 mentorFromCard() 轉換，其他來源（卡池、傭兵）直接組出這個型別。
+ */
+export interface TrainingMentor {
     id: string;
     name: string;
     /** 教官家族名，之後做世家保底時比對子嗣姓氏 */
@@ -114,7 +119,7 @@ export interface NurtureSession {
     tp: number;
     growthModifier: number;
     /** 入學時鎖定的教官 */
-    mentors: MentorCard[];
+    mentors: TrainingMentor[];
     /** 即將進行的回合，每位教官站在哪一格（玩家選訓練前就看得到） */
     mentorSlots: Record<string, TrainingKind>;
     negativeFactors: string[];
@@ -154,18 +159,18 @@ export function failureRateForVigor(vigor: number): number {
     return 0.2 + ((30 - Math.max(0, vigor)) / 30) * 0.4;
 }
 
-function mentorStarEffect(mentor: MentorCard): number {
+function mentorStarEffect(mentor: TrainingMentor): number {
     const stars = Math.max(0, Math.min(5, Math.floor(mentor.stars ?? 0)));
     return MENTOR_STAR_EFFECT[stars];
 }
 
 /** 這位教官對指定科目提供的加成（小數，0.2 = +20%），已套用星等倍率 */
-export function mentorBonusFor(mentor: MentorCard, kind: TrainingKind): number {
+export function mentorBonusFor(mentor: TrainingMentor, kind: TrainingKind): number {
     return ((mentor.tpBonus + (mentor.statBonus?.[kind] ?? 0)) / 100) * mentorStarEffect(mentor);
 }
 
 /** 骰每位教官本回合站哪一格：burstRate 機率站擅長格，否則平均落在其餘 4 格 */
-export function rollMentorSlots(mentors: readonly MentorCard[], random: RandomSource): Record<string, TrainingKind> {
+export function rollMentorSlots(mentors: readonly TrainingMentor[], random: RandomSource): Record<string, TrainingKind> {
     const slots: Record<string, TrainingKind> = {};
     for (const mentor of mentors) {
         // 兩次亂數固定都消耗，測試注入序列時位置才穩定
@@ -186,12 +191,12 @@ export function rollMentorSlots(mentors: readonly MentorCard[], random: RandomSo
 export interface CreateNurtureSessionInput {
     sessionId: string;
     child: UnveilingGeneral;
-    mentors: readonly MentorCard[];
+    mentors: readonly TrainingMentor[];
     startSeason: number;
     random: RandomSource;
 }
 
-export function validateMentors(mentors: readonly MentorCard[]): void {
+export function validateMentors(mentors: readonly TrainingMentor[]): void {
     if (mentors.length > NURTURE_MENTOR_SLOTS) {
         throw new NurtureError(`教官最多 ${NURTURE_MENTOR_SLOTS} 位，收到 ${mentors.length} 位`);
     }
@@ -256,7 +261,7 @@ export function computeStatGain(
     return { base, mentorBonus, synergyBonus, burst, growthModifier: session.growthModifier, gain: Math.max(1, Math.round(raw)) };
 }
 
-export function computeTpGain(mentors: readonly MentorCard[]): number {
+export function computeTpGain(mentors: readonly TrainingMentor[]): number {
     const bonus = mentors.reduce((sum, mentor) => sum + (mentor.tpBonus / 100) * mentorStarEffect(mentor), 0);
     return Math.round(BASE_TP_PER_TRAINING * (1 + bonus));
 }
@@ -429,4 +434,41 @@ export function graduate(session: NurtureSession, child: UnveilingGeneral, seaso
         },
     };
     return { general, rating, ratingScore, tags };
+}
+
+// ── 退役教官卡 → 培育教官 ───────────────────────────────────────────────────
+
+const WARRIOR_KINDS: readonly TrainingKind[] = ['str', 'lea'];
+const SCHOLAR_KINDS: readonly TrainingKind[] = ['int', 'pol'];
+
+/** 退役教官轉換的預設值；規格沒有數值，暫定，可由呼叫端覆寫 */
+export const MENTOR_CARD_DEFAULT_BURST_RATE = 0.5;
+/** tpBonus = ep_snapshot ÷ 10（EP 50 → +5%，EP 90 → +9%） */
+export const MENTOR_CARD_EP_PER_TP_POINT = 10;
+/** 擅長科目的屬性加成 = 該項數值 ÷ 5（80 → +16%） */
+export const MENTOR_CARD_STAT_PER_BONUS_POINT = 5;
+
+/**
+ * 把退役教官卡（PROG-2-0029 的 MentorCard）換算成培育教官。
+ * - 擅長科目：武官取武力 / 統率較高者、文官取智力 / 政治較高者，沒有職能就五項取最高（同分依武、智、統、政、魅）
+ * - 加成：tpBonus 看退役時的 EP，擅長科目另有屬性加成；星等預設 0
+ * 教官不參與血統因子遺傳，這裡不讀 gene_refs。
+ */
+export function mentorFromCard(
+    card: MentorCard,
+    overrides: Partial<Pick<TrainingMentor, 'stars' | 'burstRate' | 'familyName'>> = {},
+): TrainingMentor {
+    const snapshot = card.generalSnapshot as UnveilingGeneral;
+    const pool = snapshot.careerClass === 'Warrior' ? WARRIOR_KINDS : snapshot.careerClass === 'Scholar' ? SCHOLAR_KINDS : TRAINING_KINDS;
+    const specialty = pool.reduce((best, kind) => (statOf(snapshot, kind) > statOf(snapshot, best) ? kind : best), pool[0]);
+    return {
+        id: card.uid,
+        name: card.name,
+        tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT),
+        statBonus: { [specialty]: Math.round(statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) },
+        specialty,
+        stars: overrides.stars ?? 0,
+        burstRate: overrides.burstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
+        familyName: overrides.familyName,
+    };
 }

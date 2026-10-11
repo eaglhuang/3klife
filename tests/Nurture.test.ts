@@ -29,7 +29,8 @@ import {
     graduate,
     graduationTags,
     MENTOR_BURST_MULTIPLIER,
-    MentorCard,
+    mentorFromCard,
+    TrainingMentor,
     NURTURE_MENTOR_SLOTS,
     NURTURE_TOTAL_ROUNDS,
     NurtureSession,
@@ -46,6 +47,8 @@ import { BreedingService } from '../assets/scripts/core/services/BreedingService
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import type { MentorCard } from '../assets/scripts/core/models/MentorCard';
+import { LegacyService } from '../assets/scripts/core/services/LegacyService';
 import { GAME_SESSION_EVENTS, GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { GameTimeMode } from '../assets/scripts/core/systems/GameClock';
 import { buildFactorDictionary, FactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
@@ -107,7 +110,7 @@ function readyChild(id: string, extra: Partial<UnveilingGeneral> = {}): Unveilin
     return chooseFate(unveiled, 'accept');
 }
 
-function makeMentor(id: string, extra: Partial<MentorCard> = {}): MentorCard {
+function makeMentor(id: string, extra: Partial<TrainingMentor> = {}): TrainingMentor {
     return { id, name: id, tpBonus: 20, specialty: 'str', burstRate: 0.5, stars: 0, ...extra };
 }
 
@@ -304,7 +307,7 @@ export function createNurtureSuite(): TestSuite {
     });
 
     suite.test('Stat_Gain：無教官 = 基礎值；教官加成、同格羈絆、爆發、星等、成長率逐項相乘', () => {
-        const base = { mentors: [] as MentorCard[], mentorSlots: {}, growthModifier: 1 };
+        const base = { mentors: [] as TrainingMentor[], mentorSlots: {}, growthModifier: 1 };
         assert.equals(12, computeStatGain(base, 'str', 12).gain);
 
         const a = makeMentor('a', { tpBonus: 10, specialty: 'str' });
@@ -327,7 +330,7 @@ export function createNurtureSuite(): TestSuite {
     });
 
     suite.test('Stat_Gain：成長率修正（抗命 ×0.8）與至少 +1', () => {
-        const s = { mentors: [] as MentorCard[], mentorSlots: {}, growthModifier: FATE_DEFY_GROWTH_MODIFIER };
+        const s = { mentors: [] as TrainingMentor[], mentorSlots: {}, growthModifier: FATE_DEFY_GROWTH_MODIFIER };
         assert.equals(10, computeStatGain(s, 'str', 12).gain, '12 × 0.8 = 9.6 → 10');
         assert.equals(1, computeStatGain({ ...s, growthModifier: 0.01 }, 'str', 10).gain);
         assert.equals(MENTOR_BURST_MULTIPLIER, 1.5);
@@ -363,7 +366,7 @@ export function createNurtureSuite(): TestSuite {
 
     suite.test('建立會話：教官最多 6 位、不可重複、burstRate 要在 0~1', () => {
         const child = readyChild('c');
-        const make = (list: MentorCard[]) => () => createNurtureSession({ sessionId: 's', child, mentors: list, startSeason: 0, random: seeded(1) });
+        const make = (list: TrainingMentor[]) => () => createNurtureSession({ sessionId: 's', child, mentors: list, startSeason: 0, random: seeded(1) });
         const six = Array.from({ length: NURTURE_MENTOR_SLOTS }, (_, i) => makeMentor(`m${i}`));
         assert.doesNotThrow(make(six));
         assert.throws(make([...six, makeMentor('extra')]), '第 7 位教官');
@@ -483,7 +486,7 @@ export function createNurtureSuite(): TestSuite {
 
     suite.test('教官讓培育結果變好：同一組亂數下有教官的實力層總和較高', () => {
         const child = readyChild('c');
-        const run = (mentors: MentorCard[]) => {
+        const run = (mentors: TrainingMentor[]) => {
             const done = playOut(createNurtureSession({ sessionId: 's', child, mentors, startSeason: 0, random: seeded(3) }), seeded(5));
             return TRAINING_KINDS.reduce((sum, kind) => sum + done.prowess[kind], 0);
         };
@@ -675,6 +678,57 @@ export function createNurtureSuite(): TestSuite {
         assert.throws(() => b.service.restoreState({ sessions: 'bad' } as never));
     });
 
+    // ── 退役教官卡接培育 ───────────────────────────────────────────────────
+
+    function cardOf(id: string, snapshot: Partial<UnveilingGeneral>, ep = 80): MentorCard {
+        return {
+            uid: `mentor-${id}`, sourceGeneralId: id, name: id, faction: 'shu',
+            retiredAge: 66, retiredSeason: 4, retiredYear: 2, ep_snapshot: ep, gene_refs: ['gene_bravery'],
+            parentUids: ['f', 'm'],
+            generalSnapshot: { id, name: id, faction: 'shu', hp: 1000, str: 90, int: 40, lea: 70, pol: 30, cha: 50, ...snapshot } as GeneralConfig,
+        };
+    }
+
+    suite.test('退役教官卡轉培育教官：武官取武力 / 統率較高者，文官取智力 / 政治，加成看 EP 與屬性', () => {
+        const warrior = mentorFromCard(cardOf('guan', { careerClass: 'Warrior', int: 99 }, 90));
+        assert.equals('mentor-guan', warrior.id);
+        assert.equals('str', warrior.specialty);
+        assert.equals(9, warrior.tpBonus);
+        assert.equals(18, warrior.statBonus!.str!);
+        assert.equals(0, warrior.stars!);
+
+        const scholar = mentorFromCard(cardOf('zhuge', { careerClass: 'Scholar', int: 95, pol: 80, str: 99 }), { stars: 3, burstRate: 0.8 });
+        assert.equals('int', scholar.specialty);
+        assert.equals(8, scholar.tpBonus);
+        assert.equals(19, scholar.statBonus!.int!);
+        assert.equals(3, scholar.stars!);
+        assert.equals(0.8, scholar.burstRate);
+
+        assert.equals('int', mentorFromCard(cardOf('x', { int: 99 })).specialty, '沒職能：五項取最高');
+        assert.doesNotThrow(() => createNurtureSession({ sessionId: 's', child: readyChild('c'), mentors: [warrior, scholar], startSeason: 0, random: seeded(1) }));
+    });
+
+    suite.test('退役 → 教官卡 → 培育：LegacyService 產生的卡可直接餵給 startWithCards，且同卡不能同時任教兩場', async () => {
+        const store = new InMemoryRosterStore([
+            { id: 'old', name: 'old', faction: 'shu', gender: '男', age: 66, hp: 900, str: 85, int: 40, lea: 75, pol: 30, cha: 40, luk: 20, ep: 70, careerClass: 'Warrior' } as unknown as GeneralConfig,
+            readyChild('kidA'),
+            readyChild('kidB'),
+        ]);
+        const session = new GameSession();
+        session.setRosterStore(store);
+        session.setLifecycle(new LegacyService(new MemoryStorageAdapter()));
+        session.setAutoSave(false);
+        const card = await session.retireGeneral('old');
+
+        const nurture = new NurtureService(store, { random: seeded(5), requireNurtureMode: false, currentSeason: () => 8 });
+        const started = nurture.startWithCards('kidA', [card]);
+        sameJson(['mentor-old'], started.mentors.map((m) => m.id));
+        assert.equals('str', started.mentors[0].specialty);
+        assert.equals(7, started.mentors[0].tpBonus);
+        assert.isFalse(nurture.checkStart('kidB', [mentorFromCard(card)]).eligible);
+        sameJson(['mentor-locked'], nurture.checkStart('kidB', [mentorFromCard(card)]).reasons);
+    });
+
     // ── GameSession 整合 ───────────────────────────────────────────────────
 
     suite.test('GameSession：每季增齡後子嗣滿 5 歲自動開獎並發事件；之後不會重複開獎', async () => {
@@ -747,8 +801,8 @@ export function createNurtureSuite(): TestSuite {
         const person = (uid: string) => ({ uid, template_id: null, name: uid, gene_refs: [] as string[], ep_base: 50, faction: 'shu', is_virtual: false });
         graph.loadFromData({ version: 't', updatedAt: 't', persons: [person('dad'), person('mom')], links: [] });
 
-        const dad = { id: 'dad', name: 'dad', faction: 'shu', gender: '男', age: 30, hp: 1000, vitality: 200, maxVitality: 200, str: 90, int: 50, lea: 80, pol: 40, cha: 50, luk: 40 } as BreedingGeneral;
-        const mom = { id: 'mom', name: 'mom', faction: 'shu', gender: '女', age: 28, hp: 800, vitality: 200, maxVitality: 200, str: 50, int: 70, lea: 60, pol: 60, cha: 70, luk: 40 } as BreedingGeneral;
+        const dad = { id: 'dad', name: 'dad', faction: 'shu', gender: '男', age: 30, hp: 1000, vitality: 200, maxVitality: 200, str: 90, int: 50, lea: 80, pol: 40, cha: 50, luk: 40 } as unknown as BreedingGeneral;
+        const mom = { id: 'mom', name: 'mom', faction: 'shu', gender: '女', age: 28, hp: 800, vitality: 200, maxVitality: 200, str: 50, int: 70, lea: 60, pol: 60, cha: 70, luk: 40 } as unknown as BreedingGeneral;
         const store = new InMemoryRosterStore([dad, mom]);
         const session = new GameSession();
         session.setRosterStore(store);

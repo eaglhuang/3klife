@@ -7,8 +7,13 @@
  *   2. 名冊中所有存活武將增齡、判定退役候選與死亡
  *   3. 年滿 5 歲的子嗣自動開獎（揭曉五維與初始因子，產生宿命建議）
  *   4. 透過注入的名冊來源寫回名冊
- *   5. 若有掛存檔服務，自動存檔（含進行中的培育會話）
- *   6. 廣播事件給 UI / 其他系統
+ *   5. 若有掛 SeasonLifecycle（LegacyService）：死亡武將歸檔成英靈卡並移出名冊，
+ *      再跑季結 / 年底資料壓縮與清掃
+ *   6. 若有掛存檔服務，自動存檔（含進行中的培育會話）
+ *   7. 廣播事件給 UI / 其他系統
+ *
+ * 退役是玩家的決定，不會自動發生：UI 收到 GeneralReachedRetirementAge 後讓玩家選，
+ * 再呼叫 retireGeneral()。
  *
  * 名冊來源與事件匯流排都用介面注入，因此可以在 headless 測試直接跑完整迴圈。
  *
@@ -18,6 +23,8 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
+import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
+import type { MentorCard } from '../models/MentorCard';
 import { createPlayerSaveSnapshot, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import type { NurtureState } from '../services/NurtureService';
 import type { FactorDictionary } from '../systems/FactorInheritance';
@@ -32,6 +39,10 @@ export const GAME_SESSION_EVENTS = {
     GeneralDied: 'game-session-general-died',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
+    /** payload: MentorCard */
+    GeneralRetired: 'game-session-general-retired',
+    /** payload: SpiritCard（每位死亡武將一張） */
+    SpiritCardCreated: 'game-session-spirit-card-created',
     /** payload: PlayerSaveSnapshot */
     Saved: 'game-session-saved',
     /** payload: PlayerSaveSnapshot */
@@ -54,6 +65,8 @@ export interface SeasonAdvancedPayload {
     agingEvents: AgingEvent[];
     /** 本季新開獎的子嗣 */
     unveilings: UnveilingEvent[];
+    /** 有掛 SeasonLifecycle 才有；包含本季新建的英靈卡與季結 / 年底排程結果 */
+    lifecycle?: LifecycleSettlement;
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -83,6 +96,7 @@ export class GameSession {
     private _roster: RosterStore = new InMemoryRosterStore();
     private _save: PlayerSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
+    private _lifecycle: SeasonLifecycle | null = null;
     private _random: RandomSource = Math.random;
     private _autoSave = true;
     private _nurture: NurtureStatePort | null = null;
@@ -106,6 +120,10 @@ export class GameSession {
 
     public setEventEmitter(emitter: SessionEventEmitter | null): void {
         this._events = emitter;
+    }
+
+    public setLifecycle(lifecycle: SeasonLifecycle | null): void {
+        this._lifecycle = lifecycle;
     }
 
     public setSaveService(service: PlayerSaveService | null): void {
@@ -142,9 +160,16 @@ export class GameSession {
             season: advance.current.totalSeasonsElapsed,
             dictionary: this._factorDictionary,
         });
-        this._roster.replaceAll(unveil.roster);
+        let roster: GeneralConfig[] = unveil.roster;
+        let lifecycle: LifecycleSettlement | undefined;
+        if (this._lifecycle) {
+            const settled = await this._lifecycle.settleSeason(roster, advance, aging.events);
+            roster = settled.roster;
+            lifecycle = settled.settlement;
+        }
+        this._roster.replaceAll(roster);
 
-        const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events };
+        const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events, lifecycle };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -161,7 +186,24 @@ export class GameSession {
                 event,
             );
         }
+        for (const card of lifecycle?.spiritCards ?? []) {
+            this._emit(GAME_SESSION_EVENTS.SpiritCardCreated, card);
+        }
         return payload;
+    }
+
+    /** 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔 */
+    public async retireGeneral(generalId: string): Promise<MentorCard> {
+        if (!this._lifecycle) {
+            throw new Error('[GameSession] 尚未設定 SeasonLifecycle（setLifecycle）');
+        }
+        const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
+        this._roster.replaceAll(result.roster);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
+        return result.card;
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {

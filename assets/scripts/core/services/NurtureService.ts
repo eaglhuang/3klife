@@ -14,6 +14,7 @@
  * Unity 對照：像 NurtureManager（單例 service），UI 只呼叫 Start / Train / Graduate，
  * 並從 session 讀取目前回合、精力與教官站位來更新畫面。
  */
+import type { MentorCard } from '../models/MentorCard';
 import type { RosterStore } from '../managers/GameSession';
 import { GameTimeMode } from '../systems/GameClock';
 import type { RandomSource } from '../systems/GeneralAging';
@@ -21,8 +22,9 @@ import {
     createNurtureSession,
     executeRound,
     graduate as graduateSession,
+    mentorFromCard,
     GraduationResult,
-    MentorCard,
+    TrainingMentor,
     NURTURE_MENTOR_SLOTS,
     NurtureAction,
     NurtureError,
@@ -122,7 +124,7 @@ export class NurtureService {
         return Math.max(0, (this._options.admissionsPerSeason ?? DEFAULT_ADMISSIONS_PER_SEASON) - used);
     }
 
-    checkStart(childId: string, mentors: readonly MentorCard[] = []): NurtureEligibility {
+    checkStart(childId: string, mentors: readonly TrainingMentor[] = []): NurtureEligibility {
         const reasons: NurtureBlockReason[] = [];
         const child = this._find(childId);
         if (!child) {
@@ -152,8 +154,13 @@ export class NurtureService {
 
     // ── 動作 ───────────────────────────────────────────────────────────────
 
+    /** 以退役教官卡（LegacyService.getMentorCards）開場；換算規則見 mentorFromCard */
+    startWithCards(childId: string, cards: readonly MentorCard[]): NurtureSession {
+        return this.start(childId, cards.map((card) => mentorFromCard(card)));
+    }
+
     /** 消耗 1 張入學令，建立鏡像快照並鎖定教官；不合格時拋 NurtureError */
-    start(childId: string, mentors: readonly MentorCard[] = []): NurtureSession {
+    start(childId: string, mentors: readonly TrainingMentor[] = []): NurtureSession {
         const check = this.checkStart(childId, mentors);
         if (!check.eligible) {
             throw new NurtureError(`${childId} 不能進入培育：${check.reasons.join(', ')}`);
