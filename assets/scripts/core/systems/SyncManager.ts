@@ -150,7 +150,7 @@ export class SyncManager {
     }
 
     private initDeviceId(): void {
-        this.deviceId = sys.localStorage.getItem(this.DEVICE_KEY);
+        this.deviceId = sys.localStorage.getItem(this.DEVICE_KEY) ?? '';
         if (!this.deviceId) {
             this.deviceId = `DEV_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
             sys.localStorage.setItem(this.DEVICE_KEY, this.deviceId);

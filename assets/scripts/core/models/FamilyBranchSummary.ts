@@ -16,8 +16,8 @@
 export interface LineageNode {
     uid: string;
     parentUids: [string, string]; // [父 uid, 母 uid]
-    birthYear: number;
-    deathYear: number;
+    birthYear: number | undefined;
+    deathYear: number | undefined;
     rarityTier: string;
 }
 
