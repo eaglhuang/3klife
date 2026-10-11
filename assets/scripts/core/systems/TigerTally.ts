@@ -35,13 +35,15 @@ export function resolveTallyQuality(score: number): TigerTallyQuality {
  * 正式名將保守門檻：明確 isHistorical === true 的武將，或性別為女、具非空
  * 正式 templateId 且 category 為 general/famed/mythical/titled 的女性名將。
  * templateId 由呼叫端保證來自正式模板登錄；此純函式不查詢外部人物資料表。
- * civilian 一律排除；稀有度、EP、父母與 category 單獨存在均不代表正式名將。
+ * 正式 true 旗標優先於分類；無正式旗標時 civilian 維持舊有排除規則。
+ * 稀有度、EP、父母與 category 單獨存在均不代表正式名將。
  * 欄位不足或 category 未知時不推定女性名將；一般子嗣預設不產卡。
  * 生前退役不呼叫死亡產卡；已退役名將真正死亡時仍符合本門檻。
  */
 export function isTallyEligible(general: TigerTallyGeneral): boolean {
-    if (!general.id.trim() || general.characterCategory === 'civilian') return false;
+    if (!general.id.trim()) return false;
     if (general.isHistorical === true) return true;
+    if (general.characterCategory === 'civilian') return false;
     const gender = general.gender?.trim().toLowerCase();
     const female = gender === '女' || gender === 'female';
     const namedCategory = ['general', 'famed', 'mythical', 'titled'].includes(general.characterCategory ?? '');

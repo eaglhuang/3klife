@@ -80,13 +80,11 @@ export interface LegacyServiceOptions {
 type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number };
 
 /**
- * 暫定模板契約：目前 generals.json 的 235 位武將皆有 GEN_ 大寫模板，無
- * isHistorical／父母／birthSeason；結緣子嗣則由 createChild 寫入父母與出生季。
- * 沒有明確史實旗標時，只將 GEN_ 模板 + general/famed/titled 分類且沒有子嗣
- * 標記的角色推定為史實；不以名字、稀有度或「沒有父母」單獨推定。
- * 女性正式模板亦須符合相同來源限制，再由 TigerTally 判斷女性名將分類。
- * 此格式契約不是人物登記表驗證：未來若模板規則改變或史實人物補上父母，
- * 需改用權威身份欄位；目前寧可漏判也不把遊戲子嗣或未知模板當名將。
+ * 明確布林 isHistorical 直接採用，正式資料由 registry uid / is_virtual 產出；
+ * 史實人物即使有父母資料也不取消史實資格。不使用 registry template_id。
+ * 舊資料缺欄位時才沿用 GEN_ 模板 + general/famed/titled、無子嗣標記的推定。
+ * 女性正式模板仍需官方 GEN_ 格式且無遊戲子嗣標記；明確 false 不關閉女性路徑。
+ * 舊資料模板格式契約仍是暫定相容規則，不以名字、稀有度或沒有父母單獨推定。
  */
 export function toTigerTallyGeneral(general: GeneralConfig): TigerTallyGeneral {
     const identity = general as BreedingGeneral & { uid?: string; isHistorical?: boolean; troopType?: string };
@@ -99,7 +97,9 @@ export function toTigerTallyGeneral(general: GeneralConfig): TigerTallyGeneral {
         id: general.id,
         uid: identity.uid,
         templateId: !descendant && officialTemplate ? templateId : undefined,
-        isHistorical: !descendant && (identity.isHistorical ?? (officialTemplate && historicalCategory)),
+        isHistorical: typeof identity.isHistorical === 'boolean'
+            ? identity.isHistorical
+            : !descendant && officialTemplate && historicalCategory,
         characterCategory: general.characterCategory,
         gender: general.gender,
         troopType: identity.troopType,

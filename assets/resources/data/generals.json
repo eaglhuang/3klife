@@ -217,7 +217,8 @@
     "initialRole": "commander",
     "introLine": "治世之能臣，亂世之梟雄。",
     "portraitKey": "portraits/generals/cao-cao",
-    "battleVoiceKey": "audio/voice/generals/cao-cao/battle"
+    "battleVoiceKey": "audio/voice/generals/cao-cao/battle",
+    "isHistorical": true
   },
   {
     "id": "liu-bei",
@@ -400,7 +401,8 @@
     "initialRole": "vanguard",
     "introLine": "仁德服人，以義立業。",
     "portraitKey": "portraits/generals/liu-bei",
-    "battleVoiceKey": "audio/voice/generals/liu-bei/battle"
+    "battleVoiceKey": "audio/voice/generals/liu-bei/battle",
+    "isHistorical": true
   },
   {
     "id": "sun-quan",
@@ -583,7 +585,8 @@
     "initialRole": "strategist",
     "introLine": "坐鎮江東，以謀固本。",
     "portraitKey": "portraits/generals/sun-quan",
-    "battleVoiceKey": "audio/voice/generals/sun-quan/battle"
+    "battleVoiceKey": "audio/voice/generals/sun-quan/battle",
+    "isHistorical": true
   },
   {
     "id": "zhuge-liang",
@@ -766,7 +769,8 @@
     "initialRole": "strategist",
     "introLine": "鞠躬盡瘁，死而後已。",
     "portraitKey": "portraits/generals/zhuge-liang",
-    "battleVoiceKey": "audio/voice/generals/zhuge-liang/battle"
+    "battleVoiceKey": "audio/voice/generals/zhuge-liang/battle",
+    "isHistorical": true
   },
   {
     "id": "zhou-yu",
@@ -949,7 +953,8 @@
     "initialRole": "commander",
     "introLine": "英姿勃發，年少有為。",
     "portraitKey": "portraits/generals/zhou-yu",
-    "battleVoiceKey": "audio/voice/generals/zhou-yu/battle"
+    "battleVoiceKey": "audio/voice/generals/zhou-yu/battle",
+    "isHistorical": true
   },
   {
     "id": "guan-yu",
@@ -1169,7 +1174,8 @@
     "initialRole": "vanguard",
     "introLine": "忠義千秋，萬世仰德。",
     "portraitKey": "portraits/generals/guan-yu",
-    "battleVoiceKey": "audio/voice/generals/guan-yu/battle"
+    "battleVoiceKey": "audio/voice/generals/guan-yu/battle",
+    "isHistorical": true
   },
   {
     "id": "zhang-fei",
@@ -1389,7 +1395,8 @@
       "VIRT_ZHANG_FEI_12",
       "VIRT_ZHANG_FEI_13",
       "VIRT_ZHANG_FEI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhao-yun",
@@ -1595,7 +1602,8 @@
       "VIRT_ZHAO_YUN_12",
       "VIRT_ZHAO_YUN_13",
       "VIRT_ZHAO_YUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lu-bu",
@@ -1808,7 +1816,8 @@
       "VIRT_LU_BU_12",
       "VIRT_LU_BU_13",
       "VIRT_LU_BU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sima-yi",
@@ -1984,7 +1993,8 @@
       "VIRT_SIMA_YI_12",
       "VIRT_SIMA_YI_13",
       "VIRT_SIMA_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "dian-wei",
@@ -2119,7 +2129,8 @@
       "VIRT_DIAN_WEI_12",
       "VIRT_DIAN_WEI_13",
       "VIRT_DIAN_WEI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xu-zhu",
@@ -2254,7 +2265,8 @@
       "VIRT_XU_ZHU_12",
       "VIRT_XU_ZHU_13",
       "VIRT_XU_ZHU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "huang-zhong",
@@ -2389,7 +2401,8 @@
       "VIRT_HUANG_ZHONG_12",
       "VIRT_HUANG_ZHONG_13",
       "VIRT_HUANG_ZHONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ma-chao",
@@ -2524,7 +2537,8 @@
       "VIRT_MA_CHAO_12",
       "VIRT_MA_CHAO_13",
       "VIRT_MA_CHAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lu-xun",
@@ -2659,7 +2673,8 @@
       "VIRT_LU_XUN_12",
       "VIRT_LU_XUN_13",
       "VIRT_LU_XUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "taishi-ci",
@@ -2794,7 +2809,8 @@
       "VIRT_TAISHI_CI_12",
       "VIRT_TAISHI_CI_13",
       "VIRT_TAISHI_CI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-liao",
@@ -2929,7 +2945,8 @@
       "VIRT_ZHANG_LIAO_12",
       "VIRT_ZHANG_LIAO_13",
       "VIRT_ZHANG_LIAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xu-huang",
@@ -3064,7 +3081,8 @@
       "VIRT_XU_HUANG_12",
       "VIRT_XU_HUANG_13",
       "VIRT_XU_HUANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-ren",
@@ -3199,7 +3217,8 @@
       "VIRT_CAO_REN_12",
       "VIRT_CAO_REN_13",
       "VIRT_CAO_REN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "pang-tong",
@@ -3334,7 +3353,8 @@
       "VIRT_PANG_TONG_12",
       "VIRT_PANG_TONG_13",
       "VIRT_PANG_TONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guo-jia",
@@ -3510,7 +3530,8 @@
       "VIRT_GUO_JIA_12",
       "VIRT_GUO_JIA_13",
       "VIRT_GUO_JIA_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xun-yu",
@@ -3645,7 +3666,8 @@
       "VIRT_XUN_YU_12",
       "VIRT_XUN_YU_13",
       "VIRT_XUN_YU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "jia-xu",
@@ -3780,7 +3802,8 @@
       "VIRT_JIA_XU_12",
       "VIRT_JIA_XU_13",
       "VIRT_JIA_XU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-he",
@@ -3915,7 +3938,8 @@
       "VIRT_ZHANG_HE_12",
       "VIRT_ZHANG_HE_13",
       "VIRT_ZHANG_HE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yu-jin",
@@ -4050,7 +4074,8 @@
       "VIRT_YU_JIN_12",
       "VIRT_YU_JIN_13",
       "VIRT_YU_JIN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-ang",
@@ -4185,7 +4210,8 @@
       "VIRT_CAO_ANG_12",
       "VIRT_CAO_ANG_13",
       "VIRT_CAO_ANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xiahou-dun",
@@ -4320,7 +4346,8 @@
       "VIRT_XIAHOU_DUN_12",
       "VIRT_XIAHOU_DUN_13",
       "VIRT_XIAHOU_DUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xiahou-yuan",
@@ -4455,7 +4482,8 @@
       "VIRT_XIAHOU_YUAN_12",
       "VIRT_XIAHOU_YUAN_13",
       "VIRT_XIAHOU_YUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wei-yan",
@@ -4590,7 +4618,8 @@
       "VIRT_WEI_YAN_12",
       "VIRT_WEI_YAN_13",
       "VIRT_WEI_YAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "jiang-wei",
@@ -4725,7 +4754,8 @@
       "VIRT_JIANG_WEI_12",
       "VIRT_JIANG_WEI_13",
       "VIRT_JIANG_WEI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "deng-ai",
@@ -4860,7 +4890,8 @@
       "VIRT_DENG_AI_12",
       "VIRT_DENG_AI_13",
       "VIRT_DENG_AI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhong-hui",
@@ -4995,7 +5026,8 @@
       "VIRT_ZHONG_HUI_12",
       "VIRT_ZHONG_HUI_13",
       "VIRT_ZHONG_HUI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "huang-gai",
@@ -5130,7 +5162,8 @@
       "VIRT_HUANG_GAI_12",
       "VIRT_HUANG_GAI_13",
       "VIRT_HUANG_GAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cheng-pu",
@@ -5265,7 +5298,8 @@
       "VIRT_CHENG_PU_12",
       "VIRT_CHENG_PU_13",
       "VIRT_CHENG_PU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "han-dang",
@@ -5400,7 +5434,8 @@
       "VIRT_HAN_DANG_12",
       "VIRT_HAN_DANG_13",
       "VIRT_HAN_DANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gan-ning",
@@ -5535,7 +5570,8 @@
       "VIRT_GAN_NING_12",
       "VIRT_GAN_NING_13",
       "VIRT_GAN_NING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ling-tong",
@@ -5670,7 +5706,8 @@
       "VIRT_LING_TONG_12",
       "VIRT_LING_TONG_13",
       "VIRT_LING_TONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhou-tai",
@@ -5805,7 +5842,8 @@
       "VIRT_ZHOU_TAI_12",
       "VIRT_ZHOU_TAI_13",
       "VIRT_ZHOU_TAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xu-sheng",
@@ -5940,7 +5978,8 @@
       "VIRT_XU_SHENG_12",
       "VIRT_XU_SHENG_13",
       "VIRT_XU_SHENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ding-feng",
@@ -6075,7 +6114,8 @@
       "VIRT_DING_FENG_12",
       "VIRT_DING_FENG_13",
       "VIRT_DING_FENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-zhao",
@@ -6210,7 +6250,8 @@
       "VIRT_ZHANG_ZHAO_12",
       "VIRT_ZHANG_ZHAO_13",
       "VIRT_ZHANG_ZHAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lu-meng",
@@ -6345,7 +6386,8 @@
       "VIRT_LU_MENG_12",
       "VIRT_LU_MENG_13",
       "VIRT_LU_MENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-ce",
@@ -6480,7 +6522,8 @@
       "VIRT_SUN_CE_12",
       "VIRT_SUN_CE_13",
       "VIRT_SUN_CE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-jian",
@@ -6615,7 +6658,8 @@
       "VIRT_SUN_JIAN_12",
       "VIRT_SUN_JIAN_13",
       "VIRT_SUN_JIAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "dong-zhuo",
@@ -6750,7 +6794,8 @@
       "VIRT_DONG_ZHUO_12",
       "VIRT_DONG_ZHUO_13",
       "VIRT_DONG_ZHUO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yuan-shao",
@@ -6885,7 +6930,8 @@
       "VIRT_YUAN_SHAO_12",
       "VIRT_YUAN_SHAO_13",
       "VIRT_YUAN_SHAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-biao",
@@ -7020,7 +7066,8 @@
       "VIRT_LIU_BIAO_12",
       "VIRT_LIU_BIAO_13",
       "VIRT_LIU_BIAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ma-teng",
@@ -7155,7 +7202,8 @@
       "VIRT_MA_TENG_12",
       "VIRT_MA_TENG_13",
       "VIRT_MA_TENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gongsun-zan",
@@ -7290,7 +7338,8 @@
       "VIRT_GONGSUN_ZAN_12",
       "VIRT_GONGSUN_ZAN_13",
       "VIRT_GONGSUN_ZAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "tao-qian",
@@ -7425,7 +7474,8 @@
       "VIRT_TAO_QIAN_12",
       "VIRT_TAO_QIAN_13",
       "VIRT_TAO_QIAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-zhang",
@@ -7560,7 +7610,8 @@
       "VIRT_LIU_ZHANG_12",
       "VIRT_LIU_ZHANG_13",
       "VIRT_LIU_ZHANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-lu",
@@ -7695,7 +7746,8 @@
       "VIRT_ZHANG_LU_12",
       "VIRT_ZHANG_LU_13",
       "VIRT_ZHANG_LU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "han-sui",
@@ -7830,7 +7882,8 @@
       "VIRT_HAN_SUI_12",
       "VIRT_HAN_SUI_13",
       "VIRT_HAN_SUI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yuan-shu",
@@ -7965,7 +8018,8 @@
       "VIRT_YUAN_SHU_12",
       "VIRT_YUAN_SHU_13",
       "VIRT_YUAN_SHU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "kong-rong",
@@ -8100,7 +8154,8 @@
       "VIRT_KONG_RONG_12",
       "VIRT_KONG_RONG_13",
       "VIRT_KONG_RONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-yan",
@@ -8235,7 +8290,8 @@
       "VIRT_LIU_YAN_12",
       "VIRT_LIU_YAN_13",
       "VIRT_LIU_YAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-pi",
@@ -8370,7 +8426,8 @@
       "VIRT_CAO_PI_12",
       "VIRT_CAO_PI_13",
       "VIRT_CAO_PI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-xiu",
@@ -8505,7 +8562,8 @@
       "VIRT_CAO_XIU_12",
       "VIRT_CAO_XIU_13",
       "VIRT_CAO_XIU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sima-zhao",
@@ -8640,7 +8698,8 @@
       "VIRT_SIMA_ZHAO_12",
       "VIRT_SIMA_ZHAO_13",
       "VIRT_SIMA_ZHAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sima-shi",
@@ -8775,7 +8834,8 @@
       "VIRT_SIMA_SHI_12",
       "VIRT_SIMA_SHI_13",
       "VIRT_SIMA_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhuge-jin",
@@ -8910,7 +8970,8 @@
       "VIRT_ZHUGE_JIN_12",
       "VIRT_ZHUGE_JIN_13",
       "VIRT_ZHUGE_JIN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhuge-ke",
@@ -9045,7 +9106,8 @@
       "VIRT_ZHUGE_KE_12",
       "VIRT_ZHUGE_KE_13",
       "VIRT_ZHUGE_KE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "bu-zhi",
@@ -9180,7 +9242,8 @@
       "VIRT_BU_ZHI_12",
       "VIRT_BU_ZHI_13",
       "VIRT_BU_ZHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-ran",
@@ -9315,7 +9378,8 @@
       "VIRT_ZHU_RAN_12",
       "VIRT_ZHU_RAN_13",
       "VIRT_ZHU_RAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "pan-zhang",
@@ -9450,7 +9514,8 @@
       "VIRT_PAN_ZHANG_12",
       "VIRT_PAN_ZHANG_13",
       "VIRT_PAN_ZHANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ma-zhong",
@@ -9585,7 +9650,8 @@
       "VIRT_MA_ZHONG_12",
       "VIRT_MA_ZHONG_13",
       "VIRT_MA_ZHONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-feng",
@@ -9720,7 +9786,8 @@
       "VIRT_LIU_FENG_12",
       "VIRT_LIU_FENG_13",
       "VIRT_LIU_FENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "meng-da",
@@ -9855,7 +9922,8 @@
       "VIRT_MENG_DA_12",
       "VIRT_MENG_DA_13",
       "VIRT_MENG_DA_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "peng-yang",
@@ -9990,7 +10058,8 @@
       "VIRT_PENG_YANG_12",
       "VIRT_PENG_YANG_13",
       "VIRT_PENG_YANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "fa-zheng",
@@ -10125,7 +10194,8 @@
       "VIRT_FA_ZHENG_12",
       "VIRT_FA_ZHENG_13",
       "VIRT_FA_ZHENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "huang-quan",
@@ -10260,7 +10330,8 @@
       "VIRT_HUANG_QUAN_12",
       "VIRT_HUANG_QUAN_13",
       "VIRT_HUANG_QUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "li-yan",
@@ -10395,7 +10466,8 @@
       "VIRT_LI_YAN_12",
       "VIRT_LI_YAN_13",
       "VIRT_LI_YAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wang-ping",
@@ -10530,7 +10602,8 @@
       "VIRT_WANG_PING_12",
       "VIRT_WANG_PING_13",
       "VIRT_WANG_PING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-yi",
@@ -10665,7 +10738,8 @@
       "VIRT_ZHANG_YI_12",
       "VIRT_ZHANG_YI_13",
       "VIRT_ZHANG_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liao-hua",
@@ -10800,7 +10874,8 @@
       "VIRT_LIAO_HUA_12",
       "VIRT_LIAO_HUA_13",
       "VIRT_LIAO_HUA_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guan-xing",
@@ -10935,7 +11010,8 @@
       "VIRT_GUAN_XING_12",
       "VIRT_GUAN_XING_13",
       "VIRT_GUAN_XING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-bao",
@@ -11070,7 +11146,8 @@
       "VIRT_ZHANG_BAO_12",
       "VIRT_ZHANG_BAO_13",
       "VIRT_ZHANG_BAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ma-dai",
@@ -11205,7 +11282,8 @@
       "VIRT_MA_DAI_12",
       "VIRT_MA_DAI_13",
       "VIRT_MA_DAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-hong",
@@ -11340,7 +11418,8 @@
       "VIRT_CAO_HONG_12",
       "VIRT_CAO_HONG_13",
       "VIRT_CAO_HONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-zhang",
@@ -11475,7 +11554,8 @@
       "VIRT_CAO_ZHANG_12",
       "VIRT_CAO_ZHANG_13",
       "VIRT_CAO_ZHANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "man-chong",
@@ -11610,7 +11690,8 @@
       "VIRT_MAN_CHONG_12",
       "VIRT_MAN_CHONG_13",
       "VIRT_MAN_CHONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wang-shuang",
@@ -11745,7 +11826,8 @@
       "VIRT_WANG_SHUANG_12",
       "VIRT_WANG_SHUANG_13",
       "VIRT_WANG_SHUANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guo-huai",
@@ -11880,7 +11962,8 @@
       "VIRT_GUO_HUAI_12",
       "VIRT_GUO_HUAI_13",
       "VIRT_GUO_HUAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "chen-tai",
@@ -12015,7 +12098,8 @@
       "VIRT_CHEN_TAI_12",
       "VIRT_CHEN_TAI_13",
       "VIRT_CHEN_TAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wen-pin",
@@ -12150,7 +12234,8 @@
       "VIRT_WEN_PIN_12",
       "VIRT_WEN_PIN_13",
       "VIRT_WEN_PIN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "le-jin",
@@ -12285,7 +12370,8 @@
       "VIRT_LE_JIN_12",
       "VIRT_LE_JIN_13",
       "VIRT_LE_JIN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "li-dian",
@@ -12420,7 +12506,8 @@
       "VIRT_LI_DIAN_12",
       "VIRT_LI_DIAN_13",
       "VIRT_LI_DIAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "chen-qun",
@@ -12555,7 +12642,8 @@
       "VIRT_CHEN_QUN_12",
       "VIRT_CHEN_QUN_13",
       "VIRT_CHEN_QUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "hua-xin",
@@ -12690,7 +12778,8 @@
       "VIRT_HUA_XIN_12",
       "VIRT_HUA_XIN_13",
       "VIRT_HUA_XIN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wang-lang",
@@ -12825,7 +12914,8 @@
       "VIRT_WANG_LANG_12",
       "VIRT_WANG_LANG_13",
       "VIRT_WANG_LANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xun-you",
@@ -12960,7 +13050,8 @@
       "VIRT_XUN_YOU_12",
       "VIRT_XUN_YOU_13",
       "VIRT_XUN_YOU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cheng-yu",
@@ -13095,7 +13186,8 @@
       "VIRT_CHENG_YU_12",
       "VIRT_CHENG_YU_13",
       "VIRT_CHENG_YU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-ye",
@@ -13230,7 +13322,8 @@
       "VIRT_LIU_YE_12",
       "VIRT_LIU_YE_13",
       "VIRT_LIU_YE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-shao",
@@ -13365,7 +13458,8 @@
       "VIRT_SUN_SHAO_12",
       "VIRT_SUN_SHAO_13",
       "VIRT_SUN_SHAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gu-yong",
@@ -13500,7 +13594,8 @@
       "VIRT_GU_YONG_12",
       "VIRT_GU_YONG_13",
       "VIRT_GU_YONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-jun",
@@ -13635,7 +13730,8 @@
       "VIRT_ZHU_JUN_12",
       "VIRT_ZHU_JUN_13",
       "VIRT_ZHU_JUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lv-fan",
@@ -13770,7 +13866,8 @@
       "VIRT_LV_FAN_12",
       "VIRT_LV_FAN_13",
       "VIRT_LV_FAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-huan",
@@ -13905,7 +14002,8 @@
       "VIRT_SUN_HUAN_12",
       "VIRT_SUN_HUAN_13",
       "VIRT_SUN_HUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-jun",
@@ -14040,7 +14138,8 @@
       "VIRT_SUN_JUN_12",
       "VIRT_SUN_JUN_13",
       "VIRT_SUN_JUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "he-qi",
@@ -14175,7 +14274,8 @@
       "VIRT_HE_QI_12",
       "VIRT_HE_QI_13",
       "VIRT_HE_QI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lu-kang",
@@ -14310,7 +14410,8 @@
       "VIRT_LU_KANG_12",
       "VIRT_LU_KANG_13",
       "VIRT_LU_KANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-huan",
@@ -14445,7 +14546,8 @@
       "VIRT_ZHU_HUAN_12",
       "VIRT_ZHU_HUAN_13",
       "VIRT_ZHU_HUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lu-yin",
@@ -14580,7 +14682,8 @@
       "VIRT_LU_YIN_12",
       "VIRT_LU_YIN_13",
       "VIRT_LU_YIN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cheng-bing",
@@ -14715,7 +14818,8 @@
       "VIRT_CHENG_BING_12",
       "VIRT_CHENG_BING_13",
       "VIRT_CHENG_BING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "han-xuan",
@@ -14850,7 +14954,8 @@
       "VIRT_HAN_XUAN_12",
       "VIRT_HAN_XUAN_13",
       "VIRT_HAN_XUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "jin-xuan",
@@ -14985,7 +15090,8 @@
       "VIRT_JIN_XUAN_12",
       "VIRT_JIN_XUAN_13",
       "VIRT_JIN_XUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-du",
@@ -15120,7 +15226,8 @@
       "VIRT_LIU_DU_12",
       "VIRT_LIU_DU_13",
       "VIRT_LIU_DU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhao-fan",
@@ -15255,7 +15362,8 @@
       "VIRT_ZHAO_FAN_12",
       "VIRT_ZHAO_FAN_13",
       "VIRT_ZHAO_FAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wen-chou",
@@ -15390,7 +15498,8 @@
       "VIRT_WEN_CHOU_12",
       "VIRT_WEN_CHOU_13",
       "VIRT_WEN_CHOU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yan-liang",
@@ -15525,7 +15634,8 @@
       "VIRT_YAN_LIANG_12",
       "VIRT_YAN_LIANG_13",
       "VIRT_YAN_LIANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-bao-enemy",
@@ -15660,7 +15770,8 @@
       "VIRT_ZHANG_BAO_ENEMY_12",
       "VIRT_ZHANG_BAO_ENEMY_13",
       "VIRT_ZHANG_BAO_ENEMY_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-jue",
@@ -15795,7 +15906,8 @@
       "VIRT_ZHANG_JUE_12",
       "VIRT_ZHANG_JUE_13",
       "VIRT_ZHANG_JUE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-liang-enemy",
@@ -15930,7 +16042,8 @@
       "VIRT_ZHANG_LIANG_ENEMY_12",
       "VIRT_ZHANG_LIANG_ENEMY_13",
       "VIRT_ZHANG_LIANG_ENEMY_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "hua-tuo",
@@ -16065,7 +16178,8 @@
       "VIRT_HUA_TUO_12",
       "VIRT_HUA_TUO_13",
       "VIRT_HUA_TUO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "mi-zhu",
@@ -16200,7 +16314,8 @@
       "VIRT_MI_ZHU_12",
       "VIRT_MI_ZHU_13",
       "VIRT_MI_ZHU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "jian-yong",
@@ -16335,7 +16450,8 @@
       "VIRT_JIAN_YONG_12",
       "VIRT_JIAN_YONG_13",
       "VIRT_JIAN_YONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-qian",
@@ -16470,7 +16586,8 @@
       "VIRT_SUN_QIAN_12",
       "VIRT_SUN_QIAN_13",
       "VIRT_SUN_QIAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yin-mo",
@@ -16605,7 +16722,8 @@
       "VIRT_YIN_MO_12",
       "VIRT_YIN_MO_13",
       "VIRT_YIN_MO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "deng-zhi",
@@ -16740,7 +16858,8 @@
       "VIRT_DENG_ZHI_12",
       "VIRT_DENG_ZHI_13",
       "VIRT_DENG_ZHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yang-yi",
@@ -16875,7 +16994,8 @@
       "VIRT_YANG_YI_12",
       "VIRT_YANG_YI_13",
       "VIRT_YANG_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "fei-yi",
@@ -17010,7 +17130,8 @@
       "VIRT_FEI_YI_12",
       "VIRT_FEI_YI_13",
       "VIRT_FEI_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "dong-yun",
@@ -17145,7 +17266,8 @@
       "VIRT_DONG_YUN_12",
       "VIRT_DONG_YUN_13",
       "VIRT_DONG_YUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xu-shu",
@@ -17280,7 +17402,8 @@
       "VIRT_XU_SHU_12",
       "VIRT_XU_SHU_13",
       "VIRT_XU_SHU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "pang-de",
@@ -17415,7 +17538,8 @@
       "VIRT_PANG_DE_12",
       "VIRT_PANG_DE_13",
       "VIRT_PANG_DE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-xiu",
@@ -17550,7 +17674,8 @@
       "VIRT_ZHANG_XIU_12",
       "VIRT_ZHANG_XIU_13",
       "VIRT_ZHANG_XIU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-xian",
@@ -17685,7 +17810,8 @@
       "VIRT_ZHANG_XIAN_12",
       "VIRT_ZHANG_XIAN_13",
       "VIRT_ZHANG_XIAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-bao",
@@ -17820,7 +17946,8 @@
       "VIRT_LIU_BAO_12",
       "VIRT_LIU_BAO_13",
       "VIRT_LIU_BAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ke-bi-neng",
@@ -17955,7 +18082,8 @@
       "VIRT_KE_BI_NENG_12",
       "VIRT_KE_BI_NENG_13",
       "VIRT_KE_BI_NENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "meng-huo",
@@ -18090,7 +18218,8 @@
       "VIRT_MENG_HUO_12",
       "VIRT_MENG_HUO_13",
       "VIRT_MENG_HUO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-rong",
@@ -18225,7 +18354,8 @@
       "VIRT_ZHU_RONG_12",
       "VIRT_ZHU_RONG_13",
       "VIRT_ZHU_RONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wu-tugu",
@@ -18360,7 +18490,8 @@
       "VIRT_WU_TUGU_12",
       "VIRT_WU_TUGU_13",
       "VIRT_WU_TUGU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ahui-nan",
@@ -18495,7 +18626,8 @@
       "VIRT_AHUI_NAN_12",
       "VIRT_AHUI_NAN_13",
       "VIRT_AHUI_NAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "dong-tu-na",
@@ -18630,7 +18762,8 @@
       "VIRT_DONG_TU_NA_12",
       "VIRT_DONG_TU_NA_13",
       "VIRT_DONG_TU_NA_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "jin-huan-san-jie",
@@ -18765,7 +18898,8 @@
       "VIRT_JIN_HUAN_SAN_JIE_12",
       "VIRT_JIN_HUAN_SAN_JIE_13",
       "VIRT_JIN_HUAN_SAN_JIE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yuan-tan",
@@ -18900,7 +19034,8 @@
       "VIRT_YUAN_TAN_12",
       "VIRT_YUAN_TAN_13",
       "VIRT_YUAN_TAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yuan-shang",
@@ -19035,7 +19170,8 @@
       "VIRT_YUAN_SHANG_12",
       "VIRT_YUAN_SHANG_13",
       "VIRT_YUAN_SHANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yuan-xi",
@@ -19170,7 +19306,8 @@
       "VIRT_YUAN_XI_12",
       "VIRT_YUAN_XI_13",
       "VIRT_YUAN_XI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gao-lan",
@@ -19305,7 +19442,8 @@
       "VIRT_GAO_LAN_12",
       "VIRT_GAO_LAN_13",
       "VIRT_GAO_LAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gao-gan",
@@ -19440,7 +19578,8 @@
       "VIRT_GAO_GAN_12",
       "VIRT_GAO_GAN_13",
       "VIRT_GAO_GAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "tian-feng",
@@ -19575,7 +19714,8 @@
       "VIRT_TIAN_FENG_12",
       "VIRT_TIAN_FENG_13",
       "VIRT_TIAN_FENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ju-shou",
@@ -19710,7 +19850,8 @@
       "VIRT_JU_SHOU_12",
       "VIRT_JU_SHOU_13",
       "VIRT_JU_SHOU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guo-tu",
@@ -19839,7 +19980,8 @@
       "VIRT_GUO_TU_12",
       "VIRT_GUO_TU_13",
       "VIRT_GUO_TU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "shen-pei",
@@ -19974,7 +20116,8 @@
       "VIRT_SHEN_PEI_12",
       "VIRT_SHEN_PEI_13",
       "VIRT_SHEN_PEI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "dong-zhao",
@@ -20109,7 +20252,8 @@
       "VIRT_DONG_ZHAO_12",
       "VIRT_DONG_ZHAO_13",
       "VIRT_DONG_ZHAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "han-hao",
@@ -20244,7 +20388,8 @@
       "VIRT_HAN_HAO_12",
       "VIRT_HAN_HAO_13",
       "VIRT_HAN_HAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wang-yi",
@@ -20379,7 +20524,8 @@
       "VIRT_WANG_YI_12",
       "VIRT_WANG_YI_13",
       "VIRT_WANG_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xi-zhi-cai",
@@ -20514,7 +20660,8 @@
       "VIRT_XI_ZHI_CAI_12",
       "VIRT_XI_ZHI_CAI_13",
       "VIRT_XI_ZHI_CAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "mao-jie",
@@ -20649,7 +20796,8 @@
       "VIRT_MAO_JIE_12",
       "VIRT_MAO_JIE_13",
       "VIRT_MAO_JIE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lu-su",
@@ -20784,7 +20932,8 @@
       "VIRT_LU_SU_12",
       "VIRT_LU_SU_13",
       "VIRT_LU_SU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "huo-yi",
@@ -20919,7 +21068,8 @@
       "VIRT_HUO_YI_12",
       "VIRT_HUO_YI_13",
       "VIRT_HUO_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liao-li",
@@ -21054,7 +21204,8 @@
       "VIRT_LIAO_LI_12",
       "VIRT_LIAO_LI_13",
       "VIRT_LIAO_LI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "du-qiong",
@@ -21189,7 +21340,8 @@
       "VIRT_DU_QIONG_12",
       "VIRT_DU_QIONG_13",
       "VIRT_DU_QIONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "fei-guan",
@@ -21324,7 +21476,8 @@
       "VIRT_FEI_GUAN_12",
       "VIRT_FEI_GUAN_13",
       "VIRT_FEI_GUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "luo-xian",
@@ -21459,7 +21612,8 @@
       "VIRT_LUO_XIAN_12",
       "VIRT_LUO_XIAN_13",
       "VIRT_LUO_XIAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "jiang-wan",
@@ -21594,7 +21748,8 @@
       "VIRT_JIANG_WAN_12",
       "VIRT_JIANG_WAN_13",
       "VIRT_JIANG_WAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gou-fu",
@@ -21729,7 +21884,8 @@
       "VIRT_GOU_FU_12",
       "VIRT_GOU_FU_13",
       "VIRT_GOU_FU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-chen",
@@ -21864,7 +22020,8 @@
       "VIRT_LIU_CHEN_12",
       "VIRT_LIU_CHEN_13",
       "VIRT_LIU_CHEN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-bao",
@@ -21972,7 +22129,8 @@
       "VIRT_ZHU_BAO_12",
       "VIRT_ZHU_BAO_13",
       "VIRT_ZHU_BAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "li-hui",
@@ -22107,7 +22265,8 @@
       "VIRT_LI_HUI_12",
       "VIRT_LI_HUI_13",
       "VIRT_LI_HUI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "chen-zhi",
@@ -22242,7 +22401,8 @@
       "VIRT_CHEN_ZHI_12",
       "VIRT_CHEN_ZHI_13",
       "VIRT_CHEN_ZHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-yi-shu",
@@ -22377,7 +22537,8 @@
       "VIRT_ZHANG_YI_SHU_12",
       "VIRT_ZHANG_YI_SHU_13",
       "VIRT_ZHANG_YI_SHU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "fu-tong",
@@ -22512,7 +22673,8 @@
       "VIRT_FU_TONG_12",
       "VIRT_FU_TONG_13",
       "VIRT_FU_TONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ma-liang",
@@ -22647,7 +22809,8 @@
       "VIRT_MA_LIANG_12",
       "VIRT_MA_LIANG_13",
       "VIRT_MA_LIANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guan-suo",
@@ -22782,7 +22945,8 @@
       "VIRT_GUAN_SUO_12",
       "VIRT_GUAN_SUO_13",
       "VIRT_GUAN_SUO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yu-fan",
@@ -22917,7 +23081,8 @@
       "VIRT_YU_FAN_12",
       "VIRT_YU_FAN_13",
       "VIRT_YU_FAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "chen-wu",
@@ -23052,7 +23217,8 @@
       "VIRT_CHEN_WU_12",
       "VIRT_CHEN_WU_13",
       "VIRT_CHEN_WU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-yi",
@@ -23187,7 +23353,8 @@
       "VIRT_SUN_YI_12",
       "VIRT_SUN_YI_13",
       "VIRT_SUN_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-ji",
@@ -23322,7 +23489,8 @@
       "VIRT_ZHU_JI_12",
       "VIRT_ZHU_JI_13",
       "VIRT_ZHU_JI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "quan-cong",
@@ -23457,7 +23625,8 @@
       "VIRT_QUAN_CONG_12",
       "VIRT_QUAN_CONG_13",
       "VIRT_QUAN_CONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lv-dai",
@@ -23592,7 +23761,8 @@
       "VIRT_LV_DAI_12",
       "VIRT_LV_DAI_13",
       "VIRT_LV_DAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "hu-zun",
@@ -23727,7 +23897,8 @@
       "VIRT_HU_ZUN_12",
       "VIRT_HU_ZUN_13",
       "VIRT_HU_ZUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wang-ji",
@@ -23862,7 +24033,8 @@
       "VIRT_WANG_JI_12",
       "VIRT_WANG_JI_13",
       "VIRT_WANG_JI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-li",
@@ -23997,7 +24169,8 @@
       "VIRT_SUN_LI_12",
       "VIRT_SUN_LI_13",
       "VIRT_SUN_LI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wang-hun",
@@ -24132,7 +24305,8 @@
       "VIRT_WANG_HUN_12",
       "VIRT_WANG_HUN_13",
       "VIRT_WANG_HUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wen-qin",
@@ -24267,7 +24441,8 @@
       "VIRT_WEN_QIN_12",
       "VIRT_WEN_QIN_13",
       "VIRT_WEN_QIN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gongsun-yuan",
@@ -24402,7 +24577,8 @@
       "VIRT_GONGSUN_YUAN_12",
       "VIRT_GONGSUN_YUAN_13",
       "VIRT_GONGSUN_YUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "mu-lu-da-wang",
@@ -24537,7 +24713,8 @@
       "VIRT_MU_LU_DA_WANG_12",
       "VIRT_MU_LU_DA_WANG_13",
       "VIRT_MU_LU_DA_WANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "e-huan",
@@ -24672,7 +24849,8 @@
       "VIRT_E_HUAN_12",
       "VIRT_E_HUAN_13",
       "VIRT_E_HUAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sha-mo-ke",
@@ -24807,7 +24985,8 @@
       "VIRT_SHA_MO_KE_12",
       "VIRT_SHA_MO_KE_13",
       "VIRT_SHA_MO_KE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "mi-heng",
@@ -24942,7 +25121,8 @@
       "VIRT_MI_HENG_12",
       "VIRT_MI_HENG_13",
       "VIRT_MI_HENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "tian-chou",
@@ -25077,7 +25257,8 @@
       "VIRT_TIAN_CHOU_12",
       "VIRT_TIAN_CHOU_13",
       "VIRT_TIAN_CHOU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guan-ning",
@@ -25212,7 +25393,8 @@
       "VIRT_GUAN_NING_12",
       "VIRT_GUAN_NING_13",
       "VIRT_GUAN_NING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zuo-ci",
@@ -25347,7 +25529,8 @@
       "VIRT_ZUO_CI_12",
       "VIRT_ZUO_CI_13",
       "VIRT_ZUO_CI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yu-ji",
@@ -25482,7 +25665,8 @@
       "VIRT_YU_JI_12",
       "VIRT_YU_JI_13",
       "VIRT_YU_JI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "liu-ba",
@@ -25617,7 +25801,8 @@
       "VIRT_LIU_BA_12",
       "VIRT_LIU_BA_13",
       "VIRT_LIU_BA_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "qin-mi",
@@ -25752,7 +25937,8 @@
       "VIRT_QIN_MI_12",
       "VIRT_QIN_MI_13",
       "VIRT_QIN_MI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yi-ji",
@@ -25887,7 +26073,8 @@
       "VIRT_YI_JI_12",
       "VIRT_YI_JI_13",
       "VIRT_YI_JI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "fei-shi",
@@ -26022,7 +26209,8 @@
       "VIRT_FEI_SHI_12",
       "VIRT_FEI_SHI_13",
       "VIRT_FEI_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-nan",
@@ -26157,7 +26345,8 @@
       "VIRT_ZHANG_NAN_12",
       "VIRT_ZHANG_NAN_13",
       "VIRT_ZHANG_NAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "fu-shou",
@@ -26292,7 +26481,8 @@
       "VIRT_FU_SHOU_12",
       "VIRT_FU_SHOU_13",
       "VIRT_FU_SHOU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-sheng",
@@ -26427,7 +26617,8 @@
       "VIRT_SUN_SHENG_12",
       "VIRT_SUN_SHENG_13",
       "VIRT_SUN_SHENG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wei-zhao",
@@ -26562,7 +26753,8 @@
       "VIRT_WEI_ZHAO_12",
       "VIRT_WEI_ZHAO_13",
       "VIRT_WEI_ZHAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xue-zong",
@@ -26697,7 +26889,8 @@
       "VIRT_XUE_ZONG_12",
       "VIRT_XUE_ZONG_13",
       "VIRT_XUE_ZONG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-yi",
@@ -26832,7 +27025,8 @@
       "VIRT_ZHU_YI_12",
       "VIRT_ZHU_YI_13",
       "VIRT_ZHU_YI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "pan-jun",
@@ -26967,7 +27161,8 @@
       "VIRT_PAN_JUN_12",
       "VIRT_PAN_JUN_13",
       "VIRT_PAN_JUN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-zhi",
@@ -27143,7 +27338,8 @@
       "VIRT_CAO_ZHI_12",
       "VIRT_CAO_ZHI_13",
       "VIRT_CAO_ZHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lv-kai",
@@ -27278,7 +27474,8 @@
       "VIRT_LV_KAI_12",
       "VIRT_LV_KAI_13",
       "VIRT_LV_KAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "chen-dao",
@@ -27413,7 +27610,8 @@
       "VIRT_CHEN_DAO_12",
       "VIRT_CHEN_DAO_13",
       "VIRT_CHEN_DAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wu-ban",
@@ -27548,7 +27746,8 @@
       "VIRT_WU_BAN_12",
       "VIRT_WU_BAN_13",
       "VIRT_WU_BAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-hao",
@@ -27683,7 +27882,8 @@
       "VIRT_SUN_HAO_12",
       "VIRT_SUN_HAO_13",
       "VIRT_SUN_HAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "diao-chan",
@@ -27859,7 +28059,8 @@
       "VIRT_DIAO_CHAN_12",
       "VIRT_DIAO_CHAN_13",
       "VIRT_DIAO_CHAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "da-qiao",
@@ -27994,7 +28195,8 @@
       "VIRT_DA_QIAO_12",
       "VIRT_DA_QIAO_13",
       "VIRT_DA_QIAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xiao-qiao",
@@ -28129,7 +28331,8 @@
       "VIRT_XIAO_QIAO_12",
       "VIRT_XIAO_QIAO_13",
       "VIRT_XIAO_QIAO_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhen-ji",
@@ -28265,7 +28468,8 @@
       "VIRT_ZHEN_JI_12",
       "VIRT_ZHEN_JI_13",
       "VIRT_ZHEN_JI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-shang-xiang",
@@ -28400,7 +28604,8 @@
       "VIRT_SUN_SHANG_XIANG_12",
       "VIRT_SUN_SHANG_XIANG_13",
       "VIRT_SUN_SHANG_XIANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cai-yan",
@@ -28534,7 +28739,8 @@
       "VIRT_CAI_YAN_12",
       "VIRT_CAI_YAN_13",
       "VIRT_CAI_YAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "huang-yue-ying",
@@ -28669,7 +28875,8 @@
       "VIRT_HUANG_YUE_YING_12",
       "VIRT_HUANG_YUE_YING_13",
       "VIRT_HUANG_YUE_YING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhang-chun-hua",
@@ -28803,7 +29010,8 @@
       "VIRT_ZHANG_CHUN_HUA_12",
       "VIRT_ZHANG_CHUN_HUA_13",
       "VIRT_ZHANG_CHUN_HUA_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xin-xian-ying",
@@ -28937,7 +29145,8 @@
       "VIRT_XIN_XIAN_YING_12",
       "VIRT_XIN_XIAN_YING_13",
       "VIRT_XIN_XIAN_YING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "bu-lian-shi",
@@ -29071,7 +29280,8 @@
       "VIRT_BU_LIAN_SHI_12",
       "VIRT_BU_LIAN_SHI_13",
       "VIRT_BU_LIAN_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guan-yin-ping",
@@ -29206,7 +29416,8 @@
       "VIRT_GUAN_YIN_PING_12",
       "VIRT_GUAN_YIN_PING_13",
       "VIRT_GUAN_YIN_PING_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "lu-ling-qi",
@@ -29340,7 +29551,8 @@
       "VIRT_LU_LING_QI_12",
       "VIRT_LU_LING_QI_13",
       "VIRT_LU_LING_QI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "ma-yun-lu",
@@ -29474,7 +29686,8 @@
       "VIRT_MA_YUN_LU_12",
       "VIRT_MA_YUN_LU_13",
       "VIRT_MA_YUN_LU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "dong-bai",
@@ -29601,7 +29814,8 @@
       "VIRT_DONG_BAI_12",
       "VIRT_DONG_BAI_13",
       "VIRT_DONG_BAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "fan-shi",
@@ -29734,7 +29948,8 @@
       "VIRT_FAN_SHI_12",
       "VIRT_FAN_SHI_13",
       "VIRT_FAN_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "bian-fu-ren",
@@ -29869,7 +30084,8 @@
       "VIRT_BIAN_FU_REN_12",
       "VIRT_BIAN_FU_REN_13",
       "VIRT_BIAN_FU_REN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wu-guo-tai",
@@ -30004,7 +30220,8 @@
       "VIRT_WU_GUO_TAI_12",
       "VIRT_WU_GUO_TAI_13",
       "VIRT_WU_GUO_TAI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "guo-nu-wang",
@@ -30138,7 +30355,8 @@
       "VIRT_GUO_NU_WANG_12",
       "VIRT_GUO_NU_WANG_13",
       "VIRT_GUO_NU_WANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "wang-yuan-ji",
@@ -30272,7 +30490,8 @@
       "VIRT_WANG_YUAN_JI_12",
       "VIRT_WANG_YUAN_JI_13",
       "VIRT_WANG_YUAN_JI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xiahou-shi",
@@ -30400,7 +30619,8 @@
       "VIRT_XIAHOU_SHI_12",
       "VIRT_XIAHOU_SHI_13",
       "VIRT_XIAHOU_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xiahou-ling-nv",
@@ -30534,7 +30754,8 @@
       "VIRT_XIAHOU_LING_NV_12",
       "VIRT_XIAHOU_LING_NV_13",
       "VIRT_XIAHOU_LING_NV_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "gan-shi",
@@ -30669,7 +30890,8 @@
       "VIRT_GAN_SHI_12",
       "VIRT_GAN_SHI_13",
       "VIRT_GAN_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "mi-shi",
@@ -30804,7 +31026,8 @@
       "VIRT_MI_SHI_12",
       "VIRT_MI_SHI_13",
       "VIRT_MI_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-jie",
@@ -30938,7 +31161,8 @@
       "VIRT_CAO_JIE_12",
       "VIRT_CAO_JIE_13",
       "VIRT_CAO_JIE_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-lu-ban",
@@ -31073,7 +31297,8 @@
       "VIRT_SUN_LU_BAN_12",
       "VIRT_SUN_LU_BAN_13",
       "VIRT_SUN_LU_BAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "sun-lu-yu",
@@ -31208,7 +31433,8 @@
       "VIRT_SUN_LU_YU_12",
       "VIRT_SUN_LU_YU_13",
       "VIRT_SUN_LU_YU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhao-e",
@@ -31342,7 +31568,8 @@
       "VIRT_ZHAO_E_12",
       "VIRT_ZHAO_E_13",
       "VIRT_ZHAO_E_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "yang-hui-yu",
@@ -31476,7 +31703,8 @@
       "VIRT_YANG_HUI_YU_12",
       "VIRT_YANG_HUI_YU_13",
       "VIRT_YANG_HUI_YU_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "zhu-rong-furen",
@@ -31612,7 +31840,8 @@
       "VIRT_ZHU_RONG_FUREN_12",
       "VIRT_ZHU_RONG_FUREN_13",
       "VIRT_ZHU_RONG_FUREN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "bao-san-niang",
@@ -31746,7 +31975,8 @@
       "VIRT_BAO_SAN_NIANG_12",
       "VIRT_BAO_SAN_NIANG_13",
       "VIRT_BAO_SAN_NIANG_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "hua-man",
@@ -31880,7 +32110,8 @@
       "VIRT_HUA_MAN_12",
       "VIRT_HUA_MAN_13",
       "VIRT_HUA_MAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cai-shi",
@@ -32014,7 +32245,8 @@
       "VIRT_CAI_SHI_12",
       "VIRT_CAI_SHI_13",
       "VIRT_CAI_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-hua",
@@ -32151,7 +32383,8 @@
       "VIRT_CAO_HUA_12",
       "VIRT_CAO_HUA_13",
       "VIRT_CAO_HUA_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "cao-xian",
@@ -32288,7 +32521,8 @@
       "VIRT_CAO_XIAN_12",
       "VIRT_CAO_XIAN_13",
       "VIRT_CAO_XIAN_14"
-    ]
+    ],
+    "isHistorical": true
   },
   {
     "id": "xu-shi",
@@ -32423,6 +32657,7 @@
       "VIRT_XU_SHI_12",
       "VIRT_XU_SHI_13",
       "VIRT_XU_SHI_14"
-    ]
+    ],
+    "isHistorical": true
   }
 ]
