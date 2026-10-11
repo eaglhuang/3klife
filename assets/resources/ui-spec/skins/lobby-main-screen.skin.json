@@ -1442,6 +1442,14 @@
         "pressed": "#747474",
         "disabled": "#555555"
       }
+    },
+    "lobby.gameplay.nav.label": {
+      "kind": "label-style",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "#ffffff",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     }
   },
   "bundles": [

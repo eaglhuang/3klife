@@ -1,0 +1,86 @@
+{
+  "task": "PROG-2-0057",
+  "testedAt": "2026-10-11T14:19:50.275Z",
+  "scope": "Gameplay navigation wiring",
+  "status": "navigation-pass-with-sync-environment-errors",
+  "reference": "Existing runtime lobby-main-screen layout; additive navigation only",
+  "changes": [
+    "Six stable button IDs",
+    "Localized captions",
+    "Bottom Widget + horizontal Layout; existing button skin"
+  ],
+  "buildSource": {
+    "base": "fb02ff99",
+    "temporaryRuntimeFix": "PR #37 / 0a2de92d",
+    "navigation": "PROG-2-0057 working tree"
+  },
+  "tests": {
+    "nodeSuite": "3/3",
+    "uiSpecStrict": "pass with existing warnings",
+    "snapshot": "exit 0; existing baseline drift +211 / -0 / ~17; not rebaselined",
+    "gate": "9/9"
+  },
+  "runs": [
+    {
+      "ratio": "16x9",
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "buttonCount": 6,
+      "allButtonsActive": true,
+      "generalsOpenedByPointer": true,
+      "errors": [
+        "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+        "[UCUF:data] [SyncManager] API Call Failed (Network Error?). TypeError: Failed to fetch"
+      ]
+    },
+    {
+      "ratio": "19x9",
+      "canvas": {
+        "width": 2340,
+        "height": 1080,
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 2340,
+          "height": 1080
+        },
+        "scaleX": 1,
+        "scaleY": 1
+      },
+      "buttonCount": 6,
+      "allButtonsActive": true,
+      "generalsOpenedByPointer": true,
+      "errors": [
+        "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+        "[UCUF:data] [SyncManager] API Call Failed (Network Error?). TypeError: Failed to fetch"
+      ]
+    }
+  ],
+  "limitations": [
+    "Other five destinations were not opened",
+    "Visual design is not approved by this wiring test",
+    "Target-ratio probes resize and position GameDiv explicitly; default build HTML remains 1280x960 and needs separate follow-up",
+    "Sync backend localhost:3000 unavailable"
+  ],
+  "handoff": {
+    "modifiedFiles": [
+      "layouts/lobby-main-screen.json",
+      "layouts/lobby-main-screen.layout.json",
+      "skins/lobby-main-screen.skin.json",
+      "tests/lobby-navigation.test.cjs"
+    ],
+    "decision": "Restore existing controller IDs without replacing the imported visual layout",
+    "blocker": "Full smoke still needs sync backend; default Web container aspect ratio requires follow-up",
+    "next": "Fix packaged Web container sizing and run pointer routes for remaining destinations"
+  }
+}
