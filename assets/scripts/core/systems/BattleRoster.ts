@@ -15,6 +15,7 @@
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig, GeneralTacticSlotConfig } from '../models/GeneralUnit';
 import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
 import { GENERAL_STATUS_DEAD } from './GeneralAging';
+import { baseVitalityMaxOf } from './VitalityCap';
 import type { NurtureRating } from './NurtureSystem';
 
 // ── 常數（規格有的標出處；沒有的標「暫定」）────────────────────────────────
@@ -27,7 +28,6 @@ export const BATTLE_MIN_VITALITY = BATTLE_VITALITY_COST;
 /** Q17 採數值系統 Q45 裁決：自然／出征回補 10%、待命 30%，取代舊表 25%／50%。 */
 export const VITALITY_RECOVER_DEPLOYED = 0.1;
 export const VITALITY_RECOVER_STANDBY = 0.3;
-export const DEFAULT_MAX_VITALITY = 100;
 
 /** 戰場數值 = 實力層 ÷ 2，與畢業評級（PROWESS_PER_RATING_POINT）同一把尺（暫定）：實力層 180 ≈ 戰場 90 */
 export const PROWESS_PER_BATTLE_STAT = 2;
@@ -95,11 +95,11 @@ export interface DeployOptions {
 // ── 資格 ───────────────────────────────────────────────────────────────────
 
 function vitalityOf(general: BattleRosterGeneral): number {
-    return general.vitality ?? general.maxVitality ?? DEFAULT_MAX_VITALITY;
+    return general.vitality ?? general.maxVitality ?? baseVitalityMaxOf(general.gender);
 }
 
 function maxVitalityOf(general: BattleRosterGeneral): number {
-    return general.maxVitality ?? general.vitality ?? DEFAULT_MAX_VITALITY;
+    return general.maxVitality ?? general.vitality ?? baseVitalityMaxOf(general.gender);
 }
 
 /** 子嗣（有開獎 / 宿命痕跡）必須畢業才能出戰；抽卡來的成年武將沒有這些痕跡，直接可用 */
