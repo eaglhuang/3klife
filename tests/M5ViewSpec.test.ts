@@ -9,6 +9,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
 import { buildBattleRecordTabText } from '../assets/scripts/core/systems/BattleRecordStats';
+import { PrisonerPopupController } from '../assets/scripts/ui/core/PrisonerPopupController';
+import { createPowRecord, createPrisonState, type PowDecision, type PrisonState } from '../assets/scripts/core/systems/PrisonerOfWar';
+import { STARTER_MILITARY } from '../assets/scripts/core/systems/MilitaryReserve';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 
 const UI_SPEC = path.resolve(__dirname, '../assets/resources/ui-spec');
 
@@ -25,6 +29,18 @@ function findPath(root: SpecNode, nodePath: string): SpecNode | null {
         if (!current) return null;
     }
     return current;
+}
+
+function collectIds(node: { id?: string; children?: unknown[] }, out: Set<string>): Set<string> {
+    if (node.id) out.add(node.id);
+    for (const c of node.children ?? []) collectIds(c as { id?: string; children?: unknown[] }, out);
+    return out;
+}
+
+/** View 的 texts / actives / enabled key 都要對得到 layout 節點 id（applyFlowView 靠 id 綁定） */
+function assertViewKeysInLayout(view: { texts: Record<string, string>; actives: Record<string, boolean>; enabled: Record<string, boolean> }, ids: Set<string>, layoutName: string): void {
+    const missing = [...Object.keys(view.texts), ...Object.keys(view.actives), ...Object.keys(view.enabled)].filter((k) => !ids.has(k));
+    assert.equals('', missing.join(','), `${layoutName} 缺節點 id`);
 }
 
 function findByName(root: SpecNode, name: string): SpecNode | null {
@@ -69,6 +85,92 @@ export function createM5ViewSpecSuite(): TestSuite {
         assert.equals(5, veteran.stats.split('\n').length);
         assert.equals('里程碑：百人斬、千人斬', veteran.milestones);
         assert.equals('退役評價：R', veteran.retire, `retire ${veteran.retire}`);
+    });
+
+    // ── 0082 俘虜四選一 ──────────────────────────────────────────────────
+
+    const powTarget = (id: string, name: string, rarityTier = 'epic') => ({ id, name, rarityTier, cha: 60, luk: 50, int: 70, pol: 40 });
+
+    function fakePowDeps(gold: number, pendingCount = 1) {
+        let prison: PrisonState = createPrisonState();
+        for (let i = 0; i < pendingCount; i += 1) {
+            const target = powTarget(`pow-${i}`, `敵將${i}`);
+            prison.pending.push({ record: createPowRecord(target, { cha: 80, luk: 60 })!, target });
+        }
+        let wallet = gold;
+        const calls: PowDecision[] = [];
+        const deps = {
+            session: {
+                get prison() { return prison; },
+                get military() { return { ...STARTER_MILITARY }; },
+                async resolvePrisoner(uid: string, decision: PowDecision) {
+                    calls.push(decision);
+                    const pending = prison.pending.find((p) => p.record.targetUid === uid)!;
+                    const goldSpent = decision === 'recruit' ? pending.record.options.recruitCost.gold : 0;
+                    prison = { ...prison, pending: prison.pending.filter((p) => p !== pending) };
+                    return { decision, ok: true, reasons: [], joined: decision === 'recruit', imprisoned: false, released: false, goldSpent, cityTroopsSpent: 0, fameGained: 0, record: { ...pending.record, decision } };
+                },
+            },
+            wallet: { gold: () => wallet, spendGold: (n: number) => { wallet -= n; return true; } },
+        };
+        return { deps, calls, wallet: () => wallet };
+    }
+
+    suite.test('0082 俘虜彈窗：view key 全部對得到 prisoner-popup-main 的節點 id，screen 指向自己的 layout/skin', () => {
+        const layout = readSpec<{ root: SpecNode & { id?: string } }>('layouts/prisoner-popup-main.json');
+        const ids = collectIds(layout.root, new Set());
+        const { deps } = fakePowDeps(100000, 2);
+        const ctrl = new PrisonerPopupController(deps);
+        assertViewKeysInLayout(ctrl.getView(), ids, 'prisoner-popup-main');
+        assertViewKeysInLayout(new PrisonerPopupController(fakePowDeps(0, 0).deps).getView(), ids, 'prisoner-popup-main（空）');
+        const screen = readSpec<{ layout: string; skin: string }>('screens/prisoner-popup-screen.json');
+        assert.equals('prisoner-popup-main', screen.layout);
+        assert.equals('prisoner-popup-screen.skin', screen.skin);
+        assert.isTrue(fs.existsSync(path.join(UI_SPEC, 'skins/prisoner-popup-screen.skin.json')));
+    });
+
+    suite.test('0082 俘虜彈窗：四選一文字與可按狀態，黃金不足不能招募；招募後從錢包扣金並換下一位', async () => {
+        const poor = new PrisonerPopupController(fakePowDeps(0).deps).getView();
+        assert.isTrue(poor.texts.powTarget.includes('敵將0（SR）'), poor.texts.powTarget);
+        assert.isTrue(poor.texts.persuadeLabel.startsWith('勸降（成功率'), poor.texts.persuadeLabel);
+        assert.isTrue(poor.texts.recruitLabel.includes('2000 黃金'), poor.texts.recruitLabel);
+        assert.isTrue(poor.enabled.btnPersuade && poor.enabled.btnImprison && poor.enabled.btnRelease);
+        assert.isFalse(poor.enabled.btnRecruit, '黃金不足');
+        assert.isFalse(poor.enabled.btnPrevPow, '只有一位不能翻頁');
+
+        const rich = fakePowDeps(5000, 2);
+        const ctrl = new PrisonerPopupController(rich.deps);
+        assert.equals('1 / 2', ctrl.getView().texts.powPager);
+        assert.isTrue(ctrl.getView().enabled.btnRecruit);
+        const result = await ctrl.decide('recruit');
+        assert.isTrue(!!result?.joined);
+        assert.equals(3000, rich.wallet(), '扣掉 SR 招募的 2000 黃金');
+        const after = ctrl.getView();
+        assert.isTrue(after.texts.powNotice.includes('勉強就範'), after.texts.powNotice);
+        assert.equals('1 / 1', after.texts.powPager);
+        assert.isTrue(after.texts.powTarget.includes('敵將1'));
+    });
+
+    suite.test('0082 俘虜彈窗 × GameSession：勸降失敗後勸降鈕關閉、仍可放走；放走後清單清空、顯示空提示', async () => {
+        const session = new GameSession(3);
+        session.setRosterStore(new InMemoryRosterStore([]));
+        await session.capturePrisoner(powTarget('lu-bu', '呂布', 'legendary') as never);
+        let gold = 0;
+        const ctrl = new PrisonerPopupController({ session, wallet: { gold: () => gold, spendGold: (n) => { gold -= n; return true; } } });
+        assert.isTrue(ctrl.hasPending());
+        await ctrl.decide('persuade');
+        const failed = ctrl.getView();
+        assert.isTrue(failed.texts.powNotice.includes('寧死不降'), failed.texts.powNotice);
+        assert.isFalse(failed.enabled.btnPersuade, '勸降失敗不能重擲');
+        assert.isTrue(failed.enabled.btnRelease && failed.enabled.btnImprison);
+        assert.equals('勸降（已失敗，寧死不屈）', failed.texts.persuadeLabel);
+        await ctrl.decide('release');
+        const empty = ctrl.getView();
+        assert.isFalse(ctrl.hasPending());
+        assert.isFalse(empty.actives.powPanel);
+        assert.isTrue(empty.actives.powEmptyHint);
+        assert.isTrue(empty.texts.powNotice.includes('義釋'), empty.texts.powNotice);
+        assert.equals(500, session.prison.fame, 'SSR 放走 +500 名聲');
     });
 
     return suite;

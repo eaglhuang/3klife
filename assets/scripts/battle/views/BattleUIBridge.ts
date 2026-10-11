@@ -350,7 +350,8 @@ export class BattleUIBridge {
   }
 
   /** 適性命中落空：記一行戰報、攻方照樣撲上去（PROG-2-0080） */
-  private _onUnitAttackMissed(data: { attackerId: string; targetId: string; hitRate: number }): void {
+  private _onUnitAttackMissed(data?: { attackerId: string; targetId: string; hitRate: number }): void {
+    if (!data) return;
     const c = this.ctx;
     const attacker = c.ctrl?.state.units.get(data.attackerId);
     const target = c.ctrl?.state.units.get(data.targetId);

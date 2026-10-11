@@ -22,6 +22,8 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
+import { PrisonerPopupController } from '../core/PrisonerPopupController';
+import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
@@ -109,6 +111,8 @@ export class LobbyScene extends Component {
     private _bonding: BondingSetupController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
+    private _prisonerHost: UIScreenPreviewHost | null = null;
+    private _prisoner: PrisonerPopupController | null = null;
     private _deckSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectPage = 0;
@@ -163,6 +167,7 @@ export class LobbyScene extends Component {
         await this._mountNurtureFlow();
         await this._mountBondingSetup();
         await this._mountSageOracle();
+        await this._mountPrisonerPopup();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
         await this._mountCharacterDs3Host();
@@ -170,6 +175,7 @@ export class LobbyScene extends Component {
         await this._mountLobbyMissionDetailDialogPanel();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
+        this._openPrisonerPopupIfPending();
 
         // 動態注入輕提示系統 (Toast)
         const toastNode = new Node('ToastContainer');
@@ -459,6 +465,72 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
             event.on(GAME_SESSION_EVENTS.InventoryChanged, refresh),
         );
+    }
+
+    /**
+     * 俘虜四選一彈窗（PROG-2-0082）：戰勝帶回的俘虜在回到大廳時跳出處置；「稍後」關掉，下次進大廳再問。
+     * 選項能否按、扣黃金都在 PrisonerPopupController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountPrisonerPopup(): Promise<void> {
+        const gacha = this._localGachaService;
+        const prisoner = new PrisonerPopupController({
+            session: services().session,
+            wallet: {
+                gold: () => gacha.getCurrencyAmount('gold'),
+                spendGold: (amount) => gacha.spendCurrency('gold', amount),
+            },
+        });
+        this._prisoner = prisoner;
+
+        const decide = (decision: PowDecision): void => { void this._onClickPrisonerDecision(decision); };
+        this._prisonerHost = await this._mountPreviewScreenHost('PrisonerPopupHost', 'prisoner-popup-screen', [
+            { buttonId: 'btnClosePow', handler: () => { this._closePrisonerPopup(); } },
+            { buttonId: 'btnPrevPow', handler: () => { prisoner.cycle(-1); this._refreshPrisonerPopup(); } },
+            { buttonId: 'btnNextPow', handler: () => { prisoner.cycle(1); this._refreshPrisonerPopup(); } },
+            { buttonId: 'btnPersuade', handler: () => { decide('persuade'); } },
+            { buttonId: 'btnRecruit', handler: () => { decide('recruit'); } },
+            { buttonId: 'btnImprison', handler: () => { decide('imprison'); } },
+            { buttonId: 'btnRelease', handler: () => { decide('release'); } },
+        ]);
+    }
+
+    private _openPrisonerPopupIfPending(): void {
+        const host = this._prisonerHost;
+        if (!host || !this._prisoner?.hasPending()) {
+            return;
+        }
+        this._prisoner.open();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshPrisonerPopup();
+    }
+
+    private _closePrisonerPopup(): void {
+        if (this._prisonerHost) {
+            this._prisonerHost.node.active = false;
+        }
+    }
+
+    private _refreshPrisonerPopup(): void {
+        const binder = this._prisonerHost?.binder;
+        if (!binder || !this._prisoner) {
+            return;
+        }
+        applyFlowView(binder, this._prisoner.getView());
+    }
+
+    private async _onClickPrisonerDecision(decision: PowDecision): Promise<void> {
+        if (!this._prisoner) {
+            return;
+        }
+        try {
+            await this._prisoner.decide(decision);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 俘虜處置失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '俘虜處置失敗', duration: 2.5 });
+        } finally {
+            this._refreshPrisonerPopup();
+        }
     }
 
     private _openSageOracle(preferredTargetId: string | null, couple: OracleCouple | null = null): void {
