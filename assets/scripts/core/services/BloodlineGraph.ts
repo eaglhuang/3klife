@@ -272,6 +272,19 @@ export class BloodlineGraph {
     this._addLink({ child_uid: child.uid, parent_uid: motherUid, relation: 'M', generation: 1 });
   }
 
+  /**
+   * 登記初代名將的虛擬祖先（VirtualAncestorGenerator 產出）。
+   * 名將已經有父母連結（registry 或子嗣）時不動，回傳 false；已存在的人物記錄不覆寫。
+   */
+  registerFounderAncestry(founderUid: string, persons: PersonRecord[], links: BloodlineLink[]): boolean {
+    if ((this._parentLinks.get(founderUid) ?? []).length > 0) return false;
+    for (const person of persons) {
+      if (!this._persons.has(person.uid)) this._persons.set(person.uid, person);
+    }
+    for (const link of links) this._addLink(link);
+    return true;
+  }
+
   /** 清除快取 */
   clear(): void {
     this._persons.clear();

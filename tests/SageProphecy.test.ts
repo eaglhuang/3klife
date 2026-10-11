@@ -75,10 +75,13 @@ export function createSageProphecySuite(): TestSuite {
         graph.loadFromData({
             version: 't',
             updatedAt: 't',
-            persons: [node('gf', ['gene_command']), node('gm', ['gene_command']), node('dad'), node('mom')],
+            persons: [node('gf', ['gene_command']), node('gm', ['gene_command']), node('mf'), node('mm'), node('dad'), node('mom')],
+            // 母方也登記父母（不帶因子），避免被當成初代名將自動補虛擬祖先（PROG-2-0067）
             links: [
                 { child_uid: 'dad', parent_uid: 'gf', relation: 'F', generation: 1 },
                 { child_uid: 'dad', parent_uid: 'gm', relation: 'M', generation: 1 },
+                { child_uid: 'mom', parent_uid: 'mf', relation: 'F', generation: 1 },
+                { child_uid: 'mom', parent_uid: 'mm', relation: 'M', generation: 1 },
             ],
         });
         const store = new InMemoryRosterStore([
