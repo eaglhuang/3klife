@@ -29,6 +29,7 @@ import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { createPlayerSaveSnapshot, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import type { NurtureState } from '../services/NurtureService';
+import { awakenFactor, AwakeningFailReason, AwakeningTrigger, FactorAwakenedEvent } from '../systems/FactorAwakening';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import {
@@ -67,6 +68,8 @@ export const GAME_SESSION_EVENTS = {
     Loaded: 'game-session-loaded',
     /** payload: string[]（新的出戰卡組） */
     DeckChanged: 'game-session-deck-changed',
+    /** payload: FactorAwakenedEvent */
+    FactorAwakened: 'game-session-factor-awakened',
 } as const;
 
 /** 名冊來源；正式環境接 PlayerRosterService，測試接記憶體陣列 */
@@ -128,6 +131,7 @@ export class GameSession {
     private _factorDictionary: FactorDictionary | undefined;
     private _deck: string[] = [];
     private _leadGeneralId: string | null = null;
+    private _discoveryLevel = 1;
 
     public get gameTime(): GameTimeState {
         return this._clock.state;
@@ -145,6 +149,11 @@ export class GameSession {
 
     public get deck(): string[] {
         return [...this._deck];
+    }
+
+    /** 因子覺醒用的玩家層級（決定能解鎖到哪個色階） */
+    public get discoveryLevel(): number {
+        return this._discoveryLevel;
     }
 
     public get hasSaveService(): boolean {
@@ -190,6 +199,7 @@ export class GameSession {
         this._clock = new GameClock();
         this._deck = [];
         this._leadGeneralId = null;
+        this._discoveryLevel = 1;
     }
 
     /** 指定出戰主將；必須是目前可出戰的名冊武將，否則回傳 false 且不變 */
@@ -218,6 +228,32 @@ export class GameSession {
             return null;
         }
         return buildBattleConfig(general, faction);
+    }
+
+    public async setDiscoveryLevel(level: number): Promise<void> {
+        this._discoveryLevel = Number.isFinite(level) && level >= 1 ? Math.floor(level) : 1;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+    }
+
+    /** 覺醒名冊中某位武將的鎖定因子；失敗回傳原因，成功才改名冊、存檔並廣播 */
+    public async awakenFactor(
+        generalId: string,
+        factorId: string,
+        trigger: AwakeningTrigger,
+    ): Promise<{ ok: true; event: FactorAwakenedEvent } | { ok: false; reason: AwakeningFailReason }> {
+        const roster = this._roster.getAll();
+        const result = awakenFactor(roster.find((g) => g.id === generalId), factorId, trigger, this._discoveryLevel);
+        if (!result.ok) {
+            return result;
+        }
+        this._roster.replaceAll(roster.map((g) => (g.id === generalId ? result.general : g)));
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.FactorAwakened, result.event);
+        return { ok: true, event: result.event };
     }
 
     /** 整組覆寫出戰卡組（以 catalogIds 過濾未知 ID、去重、截到上限）並自動存檔 */
@@ -355,7 +391,7 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -377,6 +413,7 @@ export class GameSession {
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
+        this._discoveryLevel = snapshot.discoveryLevel;
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }

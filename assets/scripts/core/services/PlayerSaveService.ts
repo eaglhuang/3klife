@@ -30,6 +30,12 @@ export interface PlayerSaveSnapshot {
     deck: string[];
     /** 玩家指定的出戰主將 id；沒有（或已不能出戰）時戰場用遭遇戰預設主將。後加的選填欄位，舊檔讀回為 undefined */
     leadGeneralId?: string;
+    /** 因子覺醒用的玩家層級；後加的選填欄位，舊檔讀回補 1 */
+    discoveryLevel: number;
+}
+
+function normalizeDiscoveryLevel(value: unknown): number {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 1 ? Math.floor(value) : 1;
 }
 
 export function createPlayerSaveSnapshot(
@@ -39,6 +45,7 @@ export function createPlayerSaveSnapshot(
     nurture?: NurtureState,
     deck: readonly string[] = [],
     leadGeneralId?: string | null,
+    discoveryLevel = 1,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -48,6 +55,7 @@ export function createPlayerSaveSnapshot(
         ...(nurture ? { nurture } : {}),
         deck: normalizeDeck(deck),
         ...(leadGeneralId ? { leadGeneralId } : {}),
+        discoveryLevel: normalizeDiscoveryLevel(discoveryLevel),
     };
 }
 
@@ -87,6 +95,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
         deck: normalizeDeck(snapshot.deck),
         ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),
+        discoveryLevel: normalizeDiscoveryLevel(snapshot.discoveryLevel),
     };
 }
 

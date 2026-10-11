@@ -5,7 +5,7 @@
  * 規格重點：
  * - 進池機率：G1（父母）100%、G2（祖父母）50%、G3（曾祖父母）25%
  * - 星等依「來源世代」決定：G1 ★3(80%)/★4(20%)、G2 ★2(70%)/★3(30%)、G3 ★1(90%)/★2(10%)
- * - 資料層保留六色；MVP 先只讓藍 / 粉 / 綠三色參與繼承（enabledColors 可調）
+ * - 六色（藍/粉/綠/紫/白/紅）預設全部參與繼承（決策 Q1=B，2026-10-11）；enabledColors 可縮減，供測試與灰度開關
  * - 同一因子從多位祖先進池時取最高星等
  * - 子嗣出生時所有因子都是鎖定狀態（灰色鎖頭），由開獎 / 覺醒流程解鎖
  *
@@ -18,8 +18,11 @@ import type { RandomSource } from './GeneralAging';
 export type FactorColor = 'blue' | 'pink' | 'green' | 'purple' | 'white' | 'red';
 
 export const ALL_FACTOR_COLORS: readonly FactorColor[] = ['blue', 'pink', 'green', 'purple', 'white', 'red'];
-/** MVP 新手期揭露的三色（因子爆發系統 §K） */
-export const MVP_FACTOR_COLORS: readonly FactorColor[] = ['blue', 'pink', 'green'];
+/** 新手期揭露的三色（因子爆發系統 §K）；僅作揭露順序參考，不再限制繼承 */
+export const EARLY_REVEAL_FACTOR_COLORS: readonly FactorColor[] = ['blue', 'pink', 'green'];
+
+/** 繼承時預設啟用的色系：MVP 採完整六色（決策 Q1=B） */
+export const DEFAULT_ENABLED_FACTOR_COLORS: readonly FactorColor[] = ALL_FACTOR_COLORS;
 
 /** 子嗣最多保留幾個因子；規格未定，暫比照人物頁 5 格 */
 export const DEFAULT_MAX_INHERITED_FACTORS = 5;
@@ -169,7 +172,7 @@ export function rollFactorStar(generation: 1 | 2 | 3, random: RandomSource): num
  * 亂數消耗順序固定：依來源順序、每個因子先擲進池、通過後再擲星等，方便測試注入固定序列。
  */
 export function inheritFactors(sources: AncestorFactorSource[], options: FactorInheritanceOptions): InheritedFactor[] {
-    const enabled = new Set(options.enabledColors ?? MVP_FACTOR_COLORS);
+    const enabled = new Set(options.enabledColors ?? DEFAULT_ENABLED_FACTOR_COLORS);
     const maxFactors = options.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS;
     const merged = new Map<string, InheritedFactor>();
 
