@@ -11,8 +11,10 @@ import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
-import { LocalGachaService } from '../../core/services/LocalGachaService';
+import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
+import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
+import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
@@ -84,6 +86,8 @@ export class LobbyScene extends Component {
     private _lobbyMainHost: UIScreenPreviewHost | null = null;
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
+    private _seasonHudHost: UIScreenPreviewHost | null = null;
+    private readonly _sessionEventUnsubscribers: Array<() => void> = [];
     private _spiritFamilyOverviewHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorAwakeningHost: UIScreenPreviewHost | null = null;
@@ -126,8 +130,10 @@ export class LobbyScene extends Component {
         this._detailPanel = detailNode?.getComponent(GeneralDetailComposite) || detailNode?.addComponent(GeneralDetailComposite) || null;
         this._ensureWidget(detailNode);
 
+        await this._loadPlayerSave();
         await this._mountLobbyMainHub();
         await this._mountSecondaryMainHubs();
+        await this._mountSeasonHud();
         await this._mountCharacterDs3Host();
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
@@ -171,9 +177,81 @@ export class LobbyScene extends Component {
     }
 
     protected onDestroy(): void {
+        for (const unsubscribe of this._sessionEventUnsubscribers) {
+            unsubscribe();
+        }
+        this._sessionEventUnsubscribers.length = 0;
         void services().ui.closeAll();
         detachCurrencyCheatPanel();
         detachRosterClearButton();
+    }
+
+    /** 開場讀檔：沒有存檔就維持新局；壞檔只警告，不覆蓋也不中斷大廳啟動 */
+    private async _loadPlayerSave(): Promise<void> {
+        try {
+            const loaded = await services().session.load();
+            UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
+        }
+    }
+
+    /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
+    private async _mountSeasonHud(): Promise<void> {
+        this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
+            { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
+        ]);
+        this._refreshSeasonHud();
+
+        const refresh = (): void => { this._refreshSeasonHud(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    private _refreshSeasonHud(): void {
+        const time = services().session.gameTime;
+        this._seasonHudHost?.binder?.setTexts({
+            seasonLabel: formatSeasonLabel(time),
+            modeLabel: formatModeLabel(time.currentMode),
+        });
+    }
+
+    private async _onClickAdvanceSeason(): Promise<void> {
+        try {
+            const { advance, agingEvents } = await services().session.advanceSeason();
+            const died = agingEvents.filter((event) => event.type === 'died').length;
+            const suffix = died > 0 ? `（${died} 位武將離世）` : '';
+            services().event.emit('SHOW_TOAST', {
+                message: `進入${formatSeasonLabel(advance.current)}${suffix}`,
+                duration: 2,
+            });
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });
+        }
+    }
+
+    /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
+    private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
+        try {
+            const { added, duplicates } = await services().session.addGenerals(results.map((entry) => entry.general));
+            const parts: string[] = [];
+            if (added.length > 0) {
+                parts.push(`新增 ${added.length} 位武將入名冊`);
+            }
+            if (duplicates.length > 0) {
+                parts.push(`${duplicates.length} 位已持有`);
+            }
+            if (parts.length > 0) {
+                services().event.emit('SHOW_TOAST', { message: parts.join('，'), duration: 2.2 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 抽卡結果寫入名冊 / 存檔失敗', error);
+            services().event.emit('SHOW_TOAST', { message: '武將存檔失敗，請稍後再試', duration: 2.5 });
+        }
     }
 
     private async _mountLobbyMainHub(): Promise<void> {
@@ -756,9 +834,17 @@ export class LobbyScene extends Component {
                 await this._lobbyMainHost!.showScreen('lobby-main-screen');
                 this._configureLobbyMainHub(this._lobbyMainHost!.binder);
                 this._refreshWalletPreviewState();
+                if (this._seasonHudHost) {
+                    this._seasonHudHost.node.active = true;
+                    this._bringNodeToFront(this._seasonHudHost.node);
+                    this._refreshSeasonHud();
+                }
             },
             hide: () => {
                 this._lobbyMainHost!.node.active = false;
+                if (this._seasonHudHost) {
+                    this._seasonHudHost.node.active = false;
+                }
             },
         };
     }
@@ -1223,6 +1309,7 @@ export class LobbyScene extends Component {
             getGenerals: () => this._generals,
             factionFilter: 'player',
             tenPullHeaderText: '本地轉蛋結果 · 十連抽',
+            onAfterPullSuccess: (results) => { void this._onGachaPullSuccess(results); },
             onWalletChanged: () => {
                 this._refreshSinglePlayerModeToggleVisuals();
                 this._refreshWalletPreviewState();

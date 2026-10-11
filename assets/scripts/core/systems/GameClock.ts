@@ -45,6 +45,22 @@ export interface SeasonAdvanceResult {
     yearEnded: boolean;
 }
 
+const MODE_LABELS: Record<GameTimeMode, string> = {
+    [GameTimeMode.Governance]: '治理',
+    [GameTimeMode.Battle]: '作戰',
+    [GameTimeMode.Nurture]: '培育',
+};
+
+/** 大廳顯示用：「第 N 年 M 季」 */
+export function formatSeasonLabel(state: Pick<GameTimeState, 'currentYear' | 'currentSeason'>): string {
+    return `第 ${state.currentYear} 年 ${state.currentSeason} 季`;
+}
+
+/** 大廳顯示用：目前模式中文名（治理 / 作戰 / 培育） */
+export function formatModeLabel(mode: GameTimeMode): string {
+    return MODE_LABELS[mode] ?? String(mode);
+}
+
 export function createInitialGameTimeState(): GameTimeState {
     return {
         currentYear: 1,

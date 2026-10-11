@@ -28,6 +28,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralDied: 'game-session-general-died',
     /** payload: PlayerSaveSnapshot */
     Saved: 'game-session-saved',
+    /** payload: GeneralConfig[]（本次新加入名冊的武將） */
+    RosterChanged: 'game-session-roster-changed',
     /** payload: PlayerSaveSnapshot */
     Loaded: 'game-session-loaded',
 } as const;
@@ -46,6 +48,11 @@ export interface SessionEventEmitter {
 export interface SeasonAdvancedPayload {
     advance: SeasonAdvanceResult;
     agingEvents: AgingEvent[];
+}
+
+export interface AddGeneralsResult {
+    added: GeneralConfig[];
+    duplicates: GeneralConfig[];
 }
 
 export class InMemoryRosterStore implements RosterStore {
@@ -130,6 +137,36 @@ export class GameSession {
             );
         }
         return payload;
+    }
+
+    /**
+     * 抽卡 / 招募入口：把新武將寫進名冊（以 id 去重）並自動存檔。
+     * 已持有的武將不會重複加入，回傳 duplicates 供 UI 提示（之後可換算成碎片）。
+     */
+    public async addGenerals(generals: GeneralConfig[]): Promise<AddGeneralsResult> {
+        const owned = new Set(this._roster.getAll().map((general) => general.id));
+        const added: GeneralConfig[] = [];
+        const duplicates: GeneralConfig[] = [];
+        for (const general of generals) {
+            if (!general || typeof general.id !== 'string') {
+                continue;
+            }
+            if (owned.has(general.id)) {
+                duplicates.push(general);
+                continue;
+            }
+            owned.add(general.id);
+            added.push({ ...general });
+        }
+
+        if (added.length > 0) {
+            this._roster.replaceAll([...this._roster.getAll(), ...added]);
+            if (this._autoSave && this._save) {
+                await this.save();
+            }
+            this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
+        }
+        return { added, duplicates };
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
