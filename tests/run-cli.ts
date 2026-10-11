@@ -28,6 +28,7 @@ import { createNurtureFlowSuite } from './NurtureFlow.test';
 import { createLegacySuite } from './Legacy.test';
 import { createTigerTallySuite } from './TigerTally.test';
 import { createBattleRosterSuite } from './BattleRoster.test';
+import { createLegacyTallySuite } from './LegacyTally.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
 import { createPlayerDeckSuite } from './PlayerDeck.test';
 import { createFactorAwakeningSuite } from './FactorAwakening.test';
@@ -89,6 +90,7 @@ if (typeof window === 'undefined') {
     runner.register(createLegacySuite());
     runner.register(createTigerTallySuite());
     runner.register(createBattleRosterSuite());
+    runner.register(createLegacyTallySuite());
     runner.register(createBattleDeckLoadingSuite());
     runner.register(createPlayerDeckSuite());
     runner.register(createFactorAwakeningSuite());
