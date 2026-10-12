@@ -39,6 +39,7 @@ import { createFactorAwakeningSuite } from './FactorAwakening.test';
 import { createBattleSpecialActionsSuite } from './BattleSpecialActions.test';
 import { createSortieDeploySuite } from './SortieDeploy.test';
 import { createBattleAptitudeSuite } from './BattleAptitude.test';
+import { createBattleVictorySuite } from './BattleVictory.test';
 import { createBattleRecordStatsSuite } from './BattleRecordStats.test';
 import { createM5ViewSpecSuite } from './M5ViewSpec.test';
 import { createPrisonerOfWarSuite } from './PrisonerOfWar.test';
@@ -116,6 +117,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSpecialActionsSuite());
     runner.register(createSortieDeploySuite());
     runner.register(createBattleAptitudeSuite());
+    runner.register(createBattleVictorySuite());
     runner.register(createBattleRecordStatsSuite());
     runner.register(createM5ViewSpecSuite());
     runner.register(createPrisonerOfWarSuite());
