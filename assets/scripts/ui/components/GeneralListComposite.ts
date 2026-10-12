@@ -19,6 +19,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { RetirementFlowController } from '../core/RetirementFlowController';
 
 const { ccclass } = _decorator;
 
@@ -124,6 +125,10 @@ export class GeneralListComposite extends CompositePanel {
     private _isMounted   = false;
     private _binder:    UITemplateBinder | null = null;
     private _allGenerals: GeneralConfig[] = [];
+    private readonly _retirementFlow = new RetirementFlowController({
+        roster: () => services().session.roster,
+        retireGeneral: (id) => services().session.retireGeneral(id),
+    });
     private _filterMode: GeneralFilterMode = 'all';
     private _sortKey: SortKey | null = null;
     private _sortAsc     = false;
@@ -167,6 +172,7 @@ export class GeneralListComposite extends CompositePanel {
      */
     public async show(generals: GeneralConfig[], filterMode: GeneralFilterMode = 'all', options: GeneralListShowOptions = {}): Promise<void> {
         this.node.active = true;
+        this._retirementFlow.cancel();
         this._allGenerals = generals;
         this._filterMode = filterMode;
         this._npcDialogueDevControls = !!options.npcDialogueDevControls;
@@ -189,6 +195,7 @@ export class GeneralListComposite extends CompositePanel {
         }
 
         this._syncNpcDialogueDevToolbarVisibility();
+        this._ensureRetirementToolbar();
         await this._repopulate();
         this.playEnterTransition(this.node);
         UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralListComposite] show complete', {
@@ -579,6 +586,100 @@ export class GeneralListComposite extends CompositePanel {
         button.transition = Button.Transition.NONE;
         button.node.on(Button.EventType.CLICK, handler, this);
         return label;
+    }
+
+    /** Uses the owned roster even when this list is showing the full template catalogue. */
+    private _ensureRetirementToolbar(): void {
+        const panel = this.node.getChildByPath(this._mainPath(LIST_PANEL_REL_PATH));
+        if (!panel) return;
+        let toolbar = panel.getChildByName('RetirementToolbar');
+        if (!toolbar) {
+            toolbar = new Node('RetirementToolbar');
+            toolbar.layer = panel.layer;
+            panel.addChild(toolbar);
+            toolbar.addComponent(UITransform).setContentSize(940, 110);
+            const widget = toolbar.addComponent(Widget);
+            widget.isAlignLeft = true;
+            widget.isAlignRight = true;
+            widget.isAlignBottom = true;
+            widget.left = 24;
+            widget.right = 24;
+            widget.bottom = 12;
+            widget.alignMode = Widget.AlignMode.ON_WINDOW_RESIZE;
+            const controls = new Node('RetirementControls');
+            controls.layer = toolbar.layer;
+            toolbar.addChild(controls);
+            controls.addComponent(UITransform).setContentSize(940, 48);
+            const controlsWidget = controls.addComponent(Widget);
+            controlsWidget.isAlignTop = controlsWidget.isAlignLeft = controlsWidget.isAlignRight = true;
+            controlsWidget.top = controlsWidget.left = controlsWidget.right = 0;
+            const layout = controls.addComponent(Layout);
+            layout.type = Layout.Type.HORIZONTAL;
+            layout.resizeMode = Layout.ResizeMode.NONE;
+            layout.spacingX = 16;
+            this._addToolbarLabel(controls, 'RetirementTarget', 390, 48, 0, 0, '', 19, HorizontalTextAlignment.LEFT);
+            this._addToolbarButton(controls, 'RetirementNext', 120, 48, 0, 0, '下一位', () => {
+                this._retirementFlow.selectNext(); this._refreshRetirementToolbar();
+            });
+            this._addToolbarButton(controls, 'RetirementConfirm', 180, 48, 0, 0, '退役轉教官', () => { void this._retireSelected(); });
+            this._addToolbarButton(controls, 'RetirementCancel', 120, 48, 0, 0, '取消', () => {
+                this._retirementFlow.cancel(); this._refreshRetirementToolbar();
+            });
+            const notice = this._addToolbarLabel(toolbar, 'RetirementNotice', 940, 44, 0, 0, '', 17, HorizontalTextAlignment.LEFT);
+            // The existing dialogue helper uses dark ink for its paper toolbar; this footer has a dark background.
+            for (const child of controls.children) {
+                const label = child.getComponent(Label);
+                if (label) label.color = Color.WHITE;
+            }
+            notice.color = Color.WHITE;
+            const noticeWidget = notice.node.addComponent(Widget);
+            noticeWidget.isAlignLeft = noticeWidget.isAlignRight = noticeWidget.isAlignBottom = true;
+            noticeWidget.left = noticeWidget.right = noticeWidget.bottom = 0;
+            widget.updateAlignment();
+            controlsWidget.updateAlignment();
+            layout.updateLayout();
+            noticeWidget.updateAlignment();
+        }
+        // Reserve footer space instead of covering the last list rows.
+        const listWidget = this.node.getChildByPath(this._mainPath(LIST_REL_PATH))?.getComponent(Widget);
+        if (listWidget) { listWidget.bottom = 134; listWidget.updateAlignment(); }
+        toolbar.setSiblingIndex(panel.children.length - 1);
+        this._refreshRetirementToolbar();
+    }
+
+    private _refreshRetirementToolbar(): void {
+        const toolbar = this.node.getChildByPath(this._mainPath(LIST_PANEL_REL_PATH))?.getChildByName('RetirementToolbar');
+        if (!toolbar) return;
+        const flow = this._retirementFlow;
+        const target = flow.selected;
+        const controls = toolbar.getChildByName('RetirementControls');
+        const targetLabel = controls?.getChildByName('RetirementTarget')?.getComponent(Label);
+        if (targetLabel) targetLabel.string = target ? `可退役：${target.name}（${target.age} 歲）` : '自有名冊沒有可退役的武將（65 歲起）';
+        const notice = toolbar.getChildByName('RetirementNotice')?.getComponent(Label);
+        if (notice) notice.string = flow.notice;
+        const confirm = controls?.getChildByName('RetirementConfirm');
+        const confirmLabel = confirm?.getComponent(Label);
+        if (confirmLabel) confirmLabel.string = flow.busy ? '退役中…' : flow.confirming ? '確認退役' : '退役轉教官';
+        for (const name of ['RetirementNext', 'RetirementConfirm', 'RetirementCancel']) {
+            const button = controls?.getChildByName(name)?.getComponent(Button);
+            if (button) {
+                button.interactable = !flow.busy && !!target && (name !== 'RetirementCancel' || flow.confirming);
+                const label = button.node.getComponent(Label);
+                if (label) label.color = button.interactable ? Color.WHITE : Color.GRAY;
+            }
+        }
+    }
+
+    private async _retireSelected(): Promise<void> {
+        const pending = this._retirementFlow.retire();
+        this._refreshRetirementToolbar();
+        const outcome = await pending;
+        if (outcome === 'retired') {
+            const owned = new Map(services().session.roster.map(g => [g.id, g]));
+            this._allGenerals = this._allGenerals.map(g => owned.get(g.id) ?? g);
+            await this._repopulate();
+        }
+        this._refreshRetirementToolbar();
     }
 
     private _ensureNpcDialogueKeywordMenu(listPanel: Node): void {
