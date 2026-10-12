@@ -188,6 +188,38 @@ export function createBattleAptitudeSuite(): TestSuite {
         assert.isTrue(defender.currentHp < 1000, '擲中就照常造成傷害');
     });
 
+    suite.test('隱蔽修正：弓兵在林地時，敵方命中率 −20%（仍受 50% 下限），平原弓兵不變', () => {
+        services().initialize();
+        const general = new GeneralUnit({
+            id: 'g-stealth', name: 'D', faction: Faction.Player, hp: 1000, str: 80, lea: 80,
+            troopAptitude: { CAVALRY: 'D' }, terrainAptitude: { PLAIN: 'D' }, weatherAptitude: { SUNNY: 'D' },
+        });
+        const enemyGeneral = new GeneralUnit({ id: 'e-stealth', name: 'e', faction: Faction.Enemy, hp: 1000, str: 80, lea: 80 });
+        const ctrl = new BattleController();
+        ctrl.initBattle(general, enemyGeneral, undefined, Weather.Clear);
+        const attacker = new TroopUnit('p-cav-st', TroopType.Cavalry, Faction.Player, { hp: 100, attack: 40, defense: 20, moveRange: 2, attackRange: 1 });
+        const archer = new TroopUnit('e-arc-st', TroopType.Archer, Faction.Enemy, { hp: 1000, attack: 30, defense: 15, moveRange: 1, attackRange: 2 });
+        attacker.moveTo(2, 3);
+        archer.moveTo(2, 4);
+        ctrl.state.addUnit(attacker);
+        ctrl.state.addUnit(archer);
+        const resolver = ctrl['combatResolver'];
+        const rateSeen: number[] = [];
+        const off = services().event.on(EVENT_NAMES.UnitAttackMissed, (data?: { hitRate: number }) => { if (data) rateSeen.push(data.hitRate); });
+        resolver.hitRandom = () => 0.6;
+        ctrl.state.getCell(2, 4)!.terrain = TerrainType.Plain;
+        resolver.resolveCombat(attacker, archer, services());
+        assert.isTrue(archer.currentHp < 1000, '平原弓兵：0.6 < 0.7 命中，傷害照常');
+        ctrl.state.getCell(2, 4)!.terrain = TerrainType.Forest;
+        archer.currentHp = 1000;
+        attacker.currentHp = 100;
+        resolver.resolveCombat(attacker, archer, services());
+        off();
+        assert.equals(1, rateSeen.length, '林地弓兵：0.6 ≥ 0.5 落空');
+        assert.equals(0.5, rateSeen[0], '0.7 − 0.2 = 0.5');
+        assert.equals(1000, archer.currentHp, '落空沒有傷害');
+    });
+
     suite.test('戰場回歸：自動推進套用主將移動修正，S 級騎兵多走 1 格、D 級少走但至少 1 格', () => {
         services().initialize();
         const advance = (grade: string): number => {
