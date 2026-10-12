@@ -18,6 +18,8 @@ import {
     weatherGradeOf,
 } from '../assets/scripts/core/systems/BattleAptitude';
 import { FormulaSystem } from '../assets/scripts/core/systems/FormulaSystem';
+import { getTerrainTroopEffect, NO_TERRAIN_TROOP_EFFECT } from '../assets/scripts/core/systems/TerrainTroopRules';
+import { TerrainType, TroopType } from '../assets/scripts/shared/CommonEnums';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -215,6 +217,20 @@ export function createBattleAptitudeSuite(): TestSuite {
         assert.equals(2, advance('B'), 'B 級照基礎 2 格');
         assert.equals(4, advance('S'), '平原 S +1、騎兵 S +1');
         assert.equals(1, advance('D'), 'D 級 -4 但夾在 1 格');
+    });
+
+    suite.test('兵種 × 地形強弱勢：騎兵平原 +2 移動、山地 −2、林地 −1；步兵山地防禦 +30%；弓兵林地隱蔽 +20%、水域射程 −1', () => {
+        assert.equals(2, getTerrainTroopEffect(TroopType.Cavalry, TerrainType.Plain).moveDelta);
+        assert.equals(-2, getTerrainTroopEffect(TroopType.Cavalry, TerrainType.Mountain).moveDelta);
+        assert.equals(-1, getTerrainTroopEffect(TroopType.Cavalry, TerrainType.Forest).moveDelta);
+        assert.equals(0.3, getTerrainTroopEffect(TroopType.Infantry, TerrainType.Mountain).defenseMult);
+        assert.equals(0.2, getTerrainTroopEffect(TroopType.Archer, TerrainType.Forest).stealthBonus);
+        assert.equals(-1, getTerrainTroopEffect(TroopType.Archer, TerrainType.River).attackRangeDelta);
+    });
+
+    suite.test('兵種 × 地形強弱勢：沒有規則的組合回傳全 0（不憑空加數值）', () => {
+        assert.equals(JSON.stringify(NO_TERRAIN_TROOP_EFFECT), JSON.stringify(getTerrainTroopEffect(TroopType.Infantry, TerrainType.Plain)));
+        assert.equals(JSON.stringify(NO_TERRAIN_TROOP_EFFECT), JSON.stringify(getTerrainTroopEffect(TroopType.Shield, TerrainType.Mountain)));
     });
 
     return suite;
