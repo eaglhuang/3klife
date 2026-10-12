@@ -46,6 +46,7 @@ import {
   checkDeploy,
   createSortieState,
   finishSortie,
+  getTacticTpCost,
   regenTactic,
   spendTactic,
   retireUnit,
@@ -367,13 +368,19 @@ export class BattleController {
     if (!general?.canUseSkill()) return false;
 
     const descriptor = this.getPlayerSeedTacticDescriptor();
+    const tacticId = options.tacticId ?? descriptor?.tacticId ?? null;
+    // 有出征帳本時，戰法要先付計謀點（PROG-2-0085）；點數不足直接不施放、不扣精力
+    const tpCost = getTacticTpCost(tacticId);
+    if (this.sortie && this.sortie.tacticCurrent < tpCost) return false;
+
     const result = this.skillDispatcher.dispatchSeedTactic(Faction.Player, {
       ...options,
       battleSkillId: options.battleSkillId ?? descriptor?.skillId ?? null,
-      tacticId: options.tacticId ?? descriptor?.tacticId ?? null,
+      tacticId,
     });
     if (!result.applied) return false;
 
+    if (this.sortie) this.sortie = spendTactic(this.sortie, tpCost).state;
     general.currentSp = 0;
     services().event.emit(EVENT_NAMES.GeneralSpChanged, {
       faction: Faction.Player,
