@@ -57,29 +57,16 @@ async function runContinuityFlow(page, options = {}) {
                 if (c) result = { id: c._pg?.id, outcome: c.ctrl?.flowStateMachine?.result,
                     ready: !!c.ctrl?.canAdvanceBattleTurn() && !c.sceneContext?.isAdvancingTurn,
                     duelActive: !!c.sceneContext?.isDuelPanelActive,
-                    playerFortressHp: c.ctrl?.state?.playerFortressHp };
+                    playerFortressHp: c.ctrl?.state?.playerFortressHp,
+                    enemyFortressHp: c.ctrl?.state?.enemyFortressHp,
+                    units: Array.from(c.ctrl?.state?.units?.values() || []).map(u =>
+                        ({ id: u.id, faction: u.faction, lane: u.lane, depth: u.depth, hp: u.hp })) };
                 n.children.forEach(walk);
             }
             walk(window.cc.director.getScene());
             if (!result) throw Error('BattleScene missing');
             return result;
         });
-    }
-    async function savedGeneral(id) {
-        return page.evaluate(id => new Promise((resolve, reject) => {
-            const request = indexedDB.open('3KLifeData');
-            request.onerror = () => reject(String(request.error));
-            request.onblocked = () => reject(Error('Save database blocked'));
-            request.onsuccess = () => {
-                const db = request.result;
-                if (!db.objectStoreNames.contains('kv')) { db.close(); reject(Error('Save store missing')); return; }
-                const tx = db.transaction('kv', 'readonly'), read = tx.objectStore('kv').get('player.save');
-                let value;
-                read.onsuccess = () => { value = read.result?.value; };
-                tx.oncomplete = () => { db.close(); resolve(value?.roster?.find(g => g.id === id) || null); };
-                tx.onerror = () => { db.close(); reject(String(tx.error)); };
-            };
-        }), id);
     }
     async function saveState() {
         return page.evaluate(() => new Promise((resolve, reject) => {
@@ -132,6 +119,9 @@ async function runContinuityFlow(page, options = {}) {
         evidence.before = before;
         await waitForTurn(); await click('DuelBtn');
         const point = await boardPoint(2, 0); await page.mouse.click(point.x, point.y); await sleep(1000);
+        const placement = await battle(); evidence.placement = placement;
+        if (!placement.units.some(u => u.id === 'player-general-1' && u.lane === 2 && u.depth === 0))
+            throw Error('Pointer placement did not create the player general at the requested cell');
         await mark('general-pointer-placement');
         for (let turns = 0; turns < 50; turns++) {
             const current = await waitForTurn();
@@ -140,15 +130,14 @@ async function runContinuityFlow(page, options = {}) {
             await click('EndTurnBtn');
             if ((turns + 1) % 5 === 0) await mark('battle-turn-' + (turns + 1));
         }
-        const final = await waitForTurn(); evidence.outcome = final.outcome;
+        const final = await waitForTurn(); evidence.outcome = final.outcome; evidence.finalBattle = final;
         if (final.outcome !== 'player-win') throw Error('Natural victory not achieved: ' + final.outcome);
         await mark('natural-victory');
         const old = before.battleRecord || { wins: 0, losses: 0, draws: 0, merit: 0 };
         await page.waitForFunction(({id, wins}) => JSON.parse(localStorage.getItem('ucuf.player-roster') || '[]')
             .find(g => g.id === id)?.battleRecord?.wins === wins + 1, {timeout}, {id: before.id, wins: old.wins});
         const after = (await roster()).find(g => g.id === before.id); evidence.after = after;
-        if (after.battleRecord.losses !== old.losses || after.battleRecord.draws !== old.draws
-            || after.battleRecord.merit <= old.merit || after.vitality >= before.vitality) throw Error('Victory record/merit/vitality inconsistent');
+        assertVictorySettlement(before, after);
         const deadline = Date.now() + timeout;
         let saved;
         do { saved = await saveState(); if (JSON.stringify(saved?.roster) === JSON.stringify(await roster())) break; await sleep(250); } while (Date.now() < deadline);
@@ -239,4 +228,13 @@ function assertTacticSpend(before, after) {
         throw Error('Tactics UI produced no point spending: slot summary is not a cast');
     if (!after.effects?.slice(before.effects?.length || 0).some(event => event.faction === 'player')) throw Error('Tactic effect event evidence missing');
 }
-module.exports = { runContinuityFlow, assertSaveEqual, assertTacticSpend };
+function assertVictorySettlement(before, after) {
+    const old = before.battleRecord || { wins: 0, losses: 0, draws: 0, merit: 0 };
+    const record = after?.battleRecord;
+    // Current BattleRoster contract: one victory +10 merit, one sortie costs 30 vitality.
+    if (!record || record.wins !== old.wins + 1 || record.losses !== old.losses
+        || record.draws !== old.draws || record.merit !== old.merit + 10
+        || after.vitality !== Math.max(0, before.vitality - 30))
+        throw Error('Victory record/merit/vitality inconsistent');
+}
+module.exports = { runContinuityFlow, assertSaveEqual, assertTacticSpend, assertVictorySettlement };

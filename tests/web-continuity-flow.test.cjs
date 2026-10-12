@@ -1,6 +1,18 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { assertSaveEqual, assertTacticSpend, runContinuityFlow } = require('../tools_node/lib/web-continuity-flow');
+const { assertSaveEqual, assertTacticSpend, assertVictorySettlement, runContinuityFlow } = require('../tools_node/lib/web-continuity-flow');
+
+test('victory gate rejects double settlement and incorrect merit or vitality', () => {
+    const before = { vitality: 100, battleRecord: { wins: 2, losses: 1, draws: 0, merit: 23 } };
+    const after = { vitality: 70, battleRecord: { wins: 3, losses: 1, draws: 0, merit: 33 } };
+    assertVictorySettlement(before, after);
+    assert.throws(() => assertVictorySettlement(before, { ...after, vitality: 69 }), /inconsistent/);
+    for (const key of ['wins', 'losses', 'draws', 'merit']) {
+        assert.throws(() => assertVictorySettlement(before, {
+            ...after, battleRecord: { ...after.battleRecord, [key]: after.battleRecord[key] + 1 },
+        }), /inconsistent/);
+    }
+});
 
 test('save comparison includes optional state and ignores only write timestamp', () => {
     const before = { roster: [{ id: 'a', battleRecord: { wins: 1 } }], deck: ['x'], gameTime: { year: 2 }, military: { food: 9 }, savedAt: 'before' };
@@ -17,7 +29,7 @@ test('summary or spending without a player effect event cannot pass tactics', ()
     assertTacticSpend(before, { sortie: { tacticCurrent: 5 }, effects: [{ faction: 'player' }] });
 });
 test('failed pointer login preserves incomplete progress and propagates failure', async () => {
-    const page = { waitForFunction: async () => { throw Error('login unavailable'); } };
+    const page = { evaluate: async () => false, waitForFunction: async () => { throw Error('login unavailable'); } };
     await assert.rejects(runContinuityFlow(page), error => {
         assert.equal(error.flowReport.completed, false);
         assert.equal(error.flowReport.failedStep, 'pointer-login');
