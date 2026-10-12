@@ -336,5 +336,21 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(resolver.getUnitAptitude(infantry).moveDelta, resolver.getUnitMoveDelta(infantry));
     });
 
+    suite.test('防禦地形修正：步兵在山地防禦 ×1.3，平原與騎兵不變', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        const infantry = new TroopUnit('inf-def', TroopType.Infantry, Faction.Player, { hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
+        infantry.moveTo(0, 3);
+        const cavalry = new TroopUnit('cav-def', TroopType.Cavalry, Faction.Player, { hp: 100, attack: 30, defense: 10, moveRange: 2, attackRange: 1 });
+        cavalry.moveTo(1, 3);
+        const resolver = ctrl['combatResolver'];
+        assert.equals(1, resolver.getUnitTerrainDefenseMultiplier(infantry), '預設平原為 1');
+        ctrl.state.getCell(0, 3)!.terrain = TerrainType.Mountain;
+        ctrl.state.getCell(1, 3)!.terrain = TerrainType.Mountain;
+        assert.equals(1.3, resolver.getUnitTerrainDefenseMultiplier(infantry));
+        assert.equals(1, resolver.getUnitTerrainDefenseMultiplier(cavalry), '騎兵山地無防禦加成');
+    });
+
     return suite;
 }

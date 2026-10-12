@@ -38,6 +38,13 @@ export class BattleCombatResolver {
     });
   }
 
+  /** 兵種 × 地形防禦倍率（步兵山地 +30%，PROG-2-0200）；沒有規則時為 1 */
+  public getUnitTerrainDefenseMultiplier(unit: TroopUnit): number {
+    const cell = this.context.state.getCell(unit.lane, unit.depth);
+    const terrain = cell?.terrain ?? TerrainType.Plain;
+    return 1 + getTerrainTroopEffect(unit.type, terrain).defenseMult;
+  }
+
   /** 移動格數修正 = 適性等級修正 + 兵種 × 地形固定效果（PROG-2-0089） */
   public getUnitMoveDelta(unit: TroopUnit): number {
     const cell = this.context.state.getCell(unit.lane, unit.depth);
@@ -141,7 +148,7 @@ export class BattleCombatResolver {
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.defense * (defender.isShieldWallActive ? 2 : 1);
+    const effectiveDef = defender.defense * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender);
 
     let damage = svc.formula.calculateDamage({
       attackerAttack: attacker.getEffectiveAttack(),
@@ -490,7 +497,7 @@ export class BattleCombatResolver {
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const counterDamage = svc.formula.calculateDamage({
       attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * reaction.counterRatio)),
-      defenderDefense: attacker.defense * (attacker.isShieldWallActive ? 2 : 1),
+      defenderDefense: attacker.defense * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker),
       attackerType: defender.type,
       defenderType: attacker.type,
       attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,
