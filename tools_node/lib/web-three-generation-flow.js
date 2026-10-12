@@ -40,6 +40,7 @@ async function runThreeGenerationFlow(page, options = {}) {
         await sleep(settle);
     }
     async function login() {
+        if (options.login) return options.login(page);
         await page.waitForFunction(() => window.cc && window.cc.director.getScene(), { timeout });
         await sleep(8000);
         await page.evaluate(() => new Promise((resolve, reject) => window.cc.director.loadScene('LoginScene', e => e ? reject(String(e)) : resolve())));

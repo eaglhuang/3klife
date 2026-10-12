@@ -154,8 +154,8 @@ async function waitForEngine(page, timeoutMs) {
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
-    if (args.flow && !['lifecycle', 'lifecycle-full', 'three-generation', 'battle-settlement'].includes(args.flow)) {
-        console.error('[web-smoke] --flow 僅支援 lifecycle、lifecycle-full、three-generation、battle-settlement');
+    if (args.flow && !['lifecycle', 'lifecycle-full', 'three-generation', 'battle-settlement', 'continuity'].includes(args.flow)) {
+        console.error('[web-smoke] --flow 僅支援 lifecycle、lifecycle-full、three-generation、battle-settlement、continuity');
         return 2;
     }
     const buildDir = path.resolve(projectRoot, args.dir || 'build/web-desktop');
@@ -196,10 +196,11 @@ async function main() {
             viewport,
             headless: true,
         });
-        const page = await browser.newPage();
+        let page = await browser.newPage();
         removeAccountRouting = await installVerificationAccount(page, testBackend,
             error => errors.push({ kind: 'test-account-routing', detail: String(error && error.stack || error) }));
 
+        function observePage(page) {
         page.on('console', (message) => {
             const text = message.text();
             consoleLines.push(`[${message.type()}] ${text}`);
@@ -222,6 +223,9 @@ async function main() {
             }
         });
 
+        }
+        observePage(page);
+
         await page.goto(url, { waitUntil: 'load', timeout: timeoutMs });
         engineState = await waitForEngine(page, timeoutMs);
         if (!engineState.engine) {
@@ -235,7 +239,9 @@ async function main() {
         if (args.flow && engineState.engine) {
             try {
                 const lifecycle = require('./lib/web-lifecycle-flow');
-                const run = args.flow === 'battle-settlement'
+                const run = args.flow === 'continuity'
+                    ? require('./lib/web-continuity-flow').runContinuityFlow
+                    : args.flow === 'battle-settlement'
                     ? require('./lib/web-battle-settlement-flow').runBattleSettlementFlow
                     : args.flow === 'three-generation'
                     ? require('./lib/web-three-generation-flow').runThreeGenerationFlow
@@ -249,12 +255,12 @@ async function main() {
                         await page.screenshot({ path: path.join(outDir, `${String(shotIndex).padStart(2, '0')}-${name}.png`) }).catch(() => undefined);
                         console.log(`[web-smoke] 步驟 ${shotIndex} ${name}（累計錯誤 ${errors.length}）`);
                     }
-                    : ['three-generation', 'battle-settlement'].includes(args.flow)
+                    : ['three-generation', 'battle-settlement', 'continuity'].includes(args.flow)
                         ? async (name) => console.log(`[web-smoke] ${args.flow} 步驟 ${name}`)
                         : undefined;
-                flow = await run(page, { timeoutMs, onStep });
+                flow = await run(page, { timeoutMs, onStep, onPage: next => { page = next; observePage(next); } });
             } catch (error) {
-                flow = { name: args.flow, completed: false };
+                flow = error.flowReport || { name: args.flow, completed: false };
                 errors.push({ kind: 'lifecycle-flow', detail: String(error && error.stack || error) });
             }
             engineState = await waitForEngine(page, 1000);
