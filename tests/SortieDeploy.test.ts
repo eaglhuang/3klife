@@ -21,12 +21,14 @@ import {
     getDeputyFoodBonus,
     getEliteDeployCap,
     getStrategistBonus,
+    getTacticTpCost,
     getTallyGrainCost,
     MILITIA_FOOD_COST,
     MILITIA_TROOP_COST,
     regenTactic,
     retireUnit,
     spendTactic,
+    DEFAULT_TACTIC_TP_COST,
     STRATEGIST_TACTIC_CAP_MAX,
     STRATEGIST_TACTIC_START_MAX,
     troopsFromHp,
@@ -38,6 +40,8 @@ import { BattleController } from '../assets/scripts/battle/controllers/BattleCon
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
+import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
+import { BattleSkillTargetMode } from '../shared/skill-runtime';
 
 function deepEq(expected: unknown, actual: unknown, msg?: string): void {
     assert.equals(JSON.stringify(expected), JSON.stringify(actual), msg);
@@ -268,6 +272,30 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(MILITIA_FOOD_COST, cost.foodCost);
         assert.equals(MILITIA_TROOP_COST, cost.troopCost);
         assert.equals(false, cost.isElite);
+    });
+
+    suite.test('出征帳本：戰法需先付計謀點，點數不足不施放且不扣精力；成功後扣計謀點', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        const playerGeneral = new GeneralUnit({ id: 'guan-yu', name: 'guan-yu', faction: Faction.Player, hp: 1000, maxSp: 100, initialSp: 100, str: 100, int: 90, lea: 90, skillId: 'guan-yu-slash', battlePrimarySkillId: 'guan-yu-slash' });
+        const enemyGeneral = new GeneralUnit({ id: 'lu-bu', name: 'lu-bu', faction: Faction.Enemy, hp: 1000, maxSp: 100, initialSp: 100, str: 100, int: 90, lea: 90, skillId: 'lu-bu-rampage', battlePrimarySkillId: 'lu-bu-rampage' });
+        ctrl.initBattle(playerGeneral, enemyGeneral);
+        ctrl.configureSortie({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        const anchor = new TroopUnit('enemy-anchor', TroopType.Infantry, Faction.Enemy, { hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
+        anchor.moveTo(2, 3);
+        ctrl.state.addUnit(anchor);
+        playerGeneral.currentSp = playerGeneral.maxSp;
+
+        assert.equals(DEFAULT_TACTIC_TP_COST, getTacticTpCost(null));
+        ctrl['sortie'].tacticCurrent = DEFAULT_TACTIC_TP_COST - 1;
+        const refused = ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
+        assert.equals(false, refused);
+        assert.equals(playerGeneral.maxSp, playerGeneral.currentSp, '點數不足不扣精力');
+
+        ctrl['sortie'].tacticCurrent = 40;
+        const cast = ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
+        assert.equals(true, cast);
+        assert.equals(40 - DEFAULT_TACTIC_TP_COST, ctrl.getSortieState()!.tacticCurrent);
     });
 
     return suite;
