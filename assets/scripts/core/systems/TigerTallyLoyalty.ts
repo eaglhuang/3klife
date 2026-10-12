@@ -100,3 +100,22 @@ export function applyTallyLoyaltyChange(
         multiplier,
     };
 }
+
+/** 忠誠 < 30：戰場每回合拒絕執行命令的機率（PROG-2-0204，數值系統 §忠誠度） */
+export const LOYALTY_REFUSE_THRESHOLD = 30;
+export const LOYALTY_REFUSE_CHANCE_PER_TURN = 0.25;
+/** 忠誠 < 10：每季叛變的機率 */
+export const LOYALTY_REBELLION_THRESHOLD = 10;
+export const LOYALTY_REBELLION_CHANCE_PER_SEASON = 0.05;
+
+/** 本回合是否拒絕命令。rand 可注入（回傳 [0,1)），測試用固定序列 */
+export function rollLoyaltyRefusal(loyalty: number, rand: () => number = Math.random): boolean {
+    if (loyalty >= LOYALTY_REFUSE_THRESHOLD) return false;
+    return rand() < LOYALTY_REFUSE_CHANCE_PER_TURN;
+}
+
+/** 本季是否叛變。叛變時是否攜帶虎符出走，規格只寫「可能」，未定機率，這裡不處理 */
+export function rollLoyaltyRebellion(loyalty: number, rand: () => number = Math.random): boolean {
+    if (loyalty >= LOYALTY_REBELLION_THRESHOLD) return false;
+    return rand() < LOYALTY_REBELLION_CHANCE_PER_SEASON;
+}
