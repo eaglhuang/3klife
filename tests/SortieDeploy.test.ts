@@ -24,6 +24,7 @@ import {
     getTacticTpCost,
     getTallyGrainCost,
     MILITIA_FOOD_COST,
+    MILITIA_STAT_RATIO,
     MILITIA_TROOP_COST,
     regenTactic,
     retireUnit,
@@ -37,6 +38,7 @@ import {
     validateSortieLoadout,
 } from '../assets/scripts/core/systems/SortieDeploy';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
+import { DEFAULT_TROOP_STATS } from '../assets/scripts/battle/runtime/BattleUnitSpawner';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
@@ -296,6 +298,26 @@ export function createSortieDeploySuite(): TestSuite {
         const cast = ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
         assert.equals(true, cast);
         assert.equals(40 - DEFAULT_TACTIC_TP_COST, ctrl.getSortieState()!.tacticCurrent);
+    });
+
+    suite.test('普通小兵部署：扣 300 兵與 5 糧，單位攻擊為基礎 40%，不影響一般兵種', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        ctrl.configureSortie({ commandCapacity: 9000, cityTroops: 10000, food: 40 });
+        const poolBefore = ctrl.getSortieState()!.poolCurrent;
+
+        const militia = ctrl.tryDeployTroop(TroopType.Infantry, 0, undefined, { militia: true });
+        assert.equals(true, militia.ok);
+        const baseAttack = DEFAULT_TROOP_STATS[TroopType.Infantry].attack;
+        assert.equals(Math.floor(baseAttack * MILITIA_STAT_RATIO), militia.unit!.attack);
+        assert.equals(poolBefore - MILITIA_TROOP_COST, ctrl.getSortieState()!.poolCurrent);
+        assert.equals(40 - MILITIA_FOOD_COST, services().battle.getSnapshot().playerFood);
+
+        ctrl['turnManager'].refreshForNextTurn();
+        const regular = ctrl.tryDeployTroop(TroopType.Infantry, 1);
+        assert.equals(true, regular.ok);
+        assert.equals(baseAttack, regular.unit!.attack, '一般兵種不受影響');
     });
 
     return suite;

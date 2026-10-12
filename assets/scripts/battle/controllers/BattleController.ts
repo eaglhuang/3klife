@@ -241,7 +241,7 @@ export class BattleController {
     return this.tryDeployTroop(type, lane, unitName).unit;
   }
 
-  public tryDeployTroop(type: TroopType, lane: number, unitName?: string): DeployOutcome {
+  public tryDeployTroop(type: TroopType, lane: number, unitName?: string, options: { militia?: boolean } = {}): DeployOutcome {
     if (!this.flowStateMachine.canDeployTroop()) {
       return { ok: false, unit: null, reason: "battle-locked" };
     }
@@ -259,17 +259,17 @@ export class BattleController {
 
     if (this.sortie) {
       this.syncSortieWithField();
-      const check = checkDeploy(this.sortie, { troopType: type });
+      const check = checkDeploy(this.sortie, { troopType: type, militia: options.militia });
       if (!check.ok) {
         const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
         return { ok: false, unit: null, reason: reasons[0], reasons };
       }
     }
 
-    const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName);
+    const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName, { militia: options.militia });
     this.turnManager.notePlayerDeployment();
     if (this.sortie) {
-      const applied = applyDeploy(this.sortie, unit.id, { troopType: type });
+      const applied = applyDeploy(this.sortie, unit.id, { troopType: type, militia: options.militia });
       this.sortie = applied.state;
       services().battle.spendFood(applied.check.cost.foodCost);
     }

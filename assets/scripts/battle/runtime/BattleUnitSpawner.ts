@@ -6,6 +6,7 @@ import {
 import { TroopUnit, TroopStats } from '../../core/models/TroopUnit';
 import { BattleState } from '../models/BattleState';
 import { services } from '../../core/managers/ServiceLoader';
+import { getMilitiaCombatStats } from '../../core/systems/SortieDeploy';
 
 /** troops.json 的 key 是 TroopType 字串，value 是 TroopStats */
 export type TroopDataTable = Partial<Record<TroopType, TroopStats>>;
@@ -21,6 +22,11 @@ export const DEFAULT_TROOP_STATS: Record<TroopType, TroopStats> = {
   [TroopType.Medic]:    { hp:  90, attack:  0, defense: 15, moveRange: 1, attackRange: 0 },
   [TroopType.Navy]:     { hp: 100, attack: 30, defense: 20, moveRange: 1, attackRange: 1 },
 };
+
+export interface SpawnUnitOptions {
+  /** 普通小兵：攻防為基礎的 40% */
+  militia?: boolean;
+}
 
 export interface BattleUnitSpawnerContext {
   readonly state: BattleState;
@@ -44,8 +50,10 @@ export class BattleUnitSpawner {
     this.troopData = data;
   }
 
-  public spawnUnit(type: TroopType, faction: Faction, lane: number, depth: number, unitName?: string): TroopUnit {
-    const stats = this.troopData[type] ?? DEFAULT_TROOP_STATS[type];
+  public spawnUnit(type: TroopType, faction: Faction, lane: number, depth: number, unitName?: string, options: SpawnUnitOptions = {}): TroopUnit {
+    const baseStats = this.troopData[type] ?? DEFAULT_TROOP_STATS[type];
+    // 普通小兵（PROG-2-0087）：攻防為基礎兵種 40%，沒有其他特殊能力
+    const stats = options.militia ? { ...baseStats, ...getMilitiaCombatStats(baseStats) } : baseStats;
     const unit  = new TroopUnit(`${faction}-${type}-${++this.serial}`, type, faction, stats, unitName);
     unit.moveTo(lane, depth);
 
