@@ -6,6 +6,8 @@ import { TestSuite, assert } from './TestRunner';
 import {
     applyTallyLoyaltyChange,
     createTallyLoyaltyState,
+    rollLoyaltyRebellion,
+    rollLoyaltyRefusal,
     TALLY_EQUIP_LOYALTY_BONUS,
     TALLY_REMOVE_LOYALTY_PENALTY,
 } from '../assets/scripts/core/systems/TigerTallyLoyalty';
@@ -98,6 +100,19 @@ export function createTigerTallyLoyaltySuite(): TestSuite {
         assert.equals(0, first.delta);
         const second = applyTallyLoyaltyChange(first.state, 'equip', 'R', 3);
         assert.isTrue(second.ok, '轉蛋名將同季不被擋');
+    });
+
+    suite.test('忠誠 < 30 才會拒命（25%/回合），≥ 30 永不拒命', () => {
+        assert.isFalse(rollLoyaltyRefusal(30, () => 0), '30 正好不算低');
+        assert.isTrue(rollLoyaltyRefusal(29, () => 0.24), '0.24 < 0.25 拒命');
+        assert.isFalse(rollLoyaltyRefusal(29, () => 0.25), '0.25 不小於 0.25');
+    });
+
+    suite.test('忠誠 < 10 才可能叛變（5%/季），≥ 10 永不叛變', () => {
+        assert.isFalse(rollLoyaltyRebellion(10, () => 0), '10 正好不算低');
+        assert.isTrue(rollLoyaltyRebellion(9, () => 0.04), '0.04 < 0.05 叛變');
+        assert.isFalse(rollLoyaltyRebellion(9, () => 0.05));
+        assert.isFalse(rollLoyaltyRebellion(20, () => 0), '忠誠 20 不叛變');
     });
 
     return suite;
