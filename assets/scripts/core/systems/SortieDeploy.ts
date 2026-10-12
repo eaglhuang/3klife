@@ -372,6 +372,17 @@ export function spendTactic(state: SortieState, cost: number): TacticSpendResult
     return { ok: true, state: { ...state, tacticCurrent: state.tacticCurrent - need }, spent: need };
 }
 
+/** 戰法計謀點成本預設（暫定：戰法系統範例 20~55 TP，尚未逐招定案，先取中間值 30） */
+export const DEFAULT_TACTIC_TP_COST = 30;
+/** 逐招成本覆寫表（tacticId → 成本）；定案前留空 */
+export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {};
+
+/** 施放戰法所需計謀點；沒有 tacticId（只有普通攻擊或 demo 技能）時用預設值 */
+export function getTacticTpCost(tacticId: string | null | undefined): number {
+    if (!tacticId) return DEFAULT_TACTIC_TP_COST;
+    return TACTIC_TP_COST_OVERRIDE[tacticId] ?? DEFAULT_TACTIC_TP_COST;
+}
+
 /** 回合開始回復計謀點，不超過上限 */
 export function regenTactic(state: SortieState): SortieState {
     const next = Math.min(state.tacticMax, state.tacticCurrent + nonNegInt(state.tacticRegenPerTurn));
