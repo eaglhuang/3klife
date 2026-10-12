@@ -1,6 +1,21 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { assertSaveEqual, assertTacticSpend, assertVictorySettlement, runContinuityFlow } = require('../tools_node/lib/web-continuity-flow');
+const { assertSaveEqual, assertTacticSpend, assertVictorySettlement, runContinuityFlow, reopenPage } = require('../tools_node/lib/web-continuity-flow');
+
+test('closes old runtime before replacement and observes errors before navigation', async () => {
+    const calls = [], viewport = { width: 1920, height: 1080 }, url = 'http://127.0.0.1:1234/';
+    const reopened = {
+        setViewport: async value => { assert.deepEqual(value, viewport); calls.push('viewport'); },
+        goto: async value => { assert.equal(value, url); calls.push('navigate'); },
+    };
+    const page = {
+        viewport: () => viewport, url: () => url,
+        close: async () => calls.push('close'),
+        browserContext: () => ({ newPage: async () => { calls.push('open'); return reopened; } }),
+    };
+    assert.equal(await reopenPage(page, { onPage: async () => calls.push('observe') }), reopened);
+    assert.deepEqual(calls, ['close', 'open', 'observe', 'viewport', 'navigate']);
+});
 
 test('victory gate rejects double settlement and incorrect merit or vitality', () => {
     const before = { vitality: 100, battleRecord: { wins: 2, losses: 1, draws: 0, merit: 23 } };

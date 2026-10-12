@@ -144,12 +144,7 @@ async function runContinuityFlow(page, options = {}) {
         if (JSON.stringify(saved?.roster) !== JSON.stringify(await roster())) throw Error('Roster not saved to IndexedDB');
         evidence.saved = saved; await mark('victory-saved');
         // A fresh page shares the same browser context and origin, but no old page runtime.
-        const reopened = await page.browserContext().newPage();
-        await reopened.setViewport(page.viewport());
-        const savedUrl = page.url();
-        if (options.onPage) await options.onPage(reopened);
-        await reopened.goto(savedUrl, {waitUntil: 'load', timeout});
-        await page.close(); page = reopened;
+        page = await reopenPage(page, { timeout, onPage: options.onPage });
 
         await login();
         const restored = await saveState(); assertSaveEqual(saved, restored);
@@ -214,6 +209,16 @@ async function runContinuityFlow(page, options = {}) {
         throw error;
     }
 }
+async function reopenPage(page, options = {}) {
+    const context = page.browserContext(), viewport = page.viewport(), url = page.url();
+    // Close the old runtime before opening its replacement: no simultaneous autosave writers.
+    await page.close();
+    const reopened = await context.newPage();
+    if (options.onPage) await options.onPage(reopened);
+    await reopened.setViewport(viewport);
+    await reopened.goto(url, { waitUntil: 'load', timeout: options.timeout || 45000 });
+    return reopened;
+}
 function assertSaveEqual(before, after) {
     if (!before || !after) throw Error('Missing save snapshot');
     for (const key of ['roster', 'deck', 'gameTime']) {
@@ -237,4 +242,4 @@ function assertVictorySettlement(before, after) {
         || after.vitality !== Math.max(0, before.vitality - 30))
         throw Error('Victory record/merit/vitality inconsistent');
 }
-module.exports = { runContinuityFlow, assertSaveEqual, assertTacticSpend, assertVictorySettlement };
+module.exports = { runContinuityFlow, assertSaveEqual, assertTacticSpend, assertVictorySettlement, reopenPage };
