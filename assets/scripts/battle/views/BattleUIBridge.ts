@@ -114,6 +114,7 @@ export class BattleUIBridge {
   private readonly specialActions = new BattleSpecialActionTracker();
   /** 我方主將帶隊的單場表現（擊殺 / 傷害 / 承傷 / 治療），戰後寫進戰績（PROG-2-0072） */
   private readonly performance = new BattlePerformanceTracker(Faction.Player);
+  private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -132,14 +133,20 @@ export class BattleUIBridge {
     onPlayerDeployed: () => void;
     onTactics:      () => void;
     onGeneralDuelRequest: () => void;
+    onBoardPlacement?: (screenX: number, screenY: number) => void;
     onReplay:       () => void;
   }): void {
     this.unsubscribeEvents();
+    this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
     this.specialActions.reset();
     this.performance.reset();
     const svc = services();
     const c = this.ctx;
     const actionCommandNode = (c.battleScenePanel?.actionCommandComposite ?? c.battleScenePanel?.actionCommandPanel)?.node ?? null;
+    // 指令區用 { faction } 發出玩家出陣請求；已結算的單挑事件使用 challengerFaction，不能再觸發出陣。
+    this.unsubs.push(svc.event.on(EVENT_NAMES.GeneralDuelChallenge, (request: { faction?: Faction }) => {
+      if (request?.faction === Faction.Player) externalHandlers.onGeneralDuelRequest();
+    }));
     const bindNodeEvent = (node: Node | null | undefined, eventName: string, handler: (...args: any[]) => void): void => {
       if (!node) return;
       node.on(eventName, handler, this.scene);
@@ -183,6 +190,7 @@ export class BattleUIBridge {
   public unsubscribeEvents(): void {
     this.unsubs.forEach(fn => fn());
     this.unsubs.length = 0;
+    this.onBoardPlacement = null;
   }
 
   // ── 公開 UI 更新 API（供 TurnFlowManager 呼叫）────────────────────────────
@@ -596,15 +604,23 @@ export class BattleUIBridge {
   }
 
   private _onGlobalBoardTouchEnd(ev: EventTouch): void {
-    if (!this.ctx.skillTargetingFlow?.isPending) return;
     const loc = ev.getLocation();
-    this.ctx.skillTargetingFlow.handleSkillTargetClick(loc.x, loc.y);
+    this.handleBoardRelease(loc.x, loc.y);
   }
 
   private _onGlobalBoardMouseUp(ev: EventMouse): void {
-    if (!this.ctx.skillTargetingFlow?.isPending) return;
     const loc = ev.getLocation();
-    this.ctx.skillTargetingFlow.handleSkillTargetClick(loc.x, loc.y);
+    this.handleBoardRelease(loc.x, loc.y);
+  }
+
+  private handleBoardRelease(screenX: number, screenY: number): void {
+    if (this.ctx.skillTargetingFlow?.isPending) {
+      this.ctx.skillTargetingFlow.handleSkillTargetClick(screenX, screenY);
+      return;
+    }
+    if (!this.ctx.ctrl?.isWaitingDuelPlacement || this.ctx.isAdvancingTurn || this.ctx.isDuelPanelActive) return;
+    // 沿用 TurnFlowManager 的射線與格子驗證；觸控後的相容 mouse-up 會因放置狀態已清除而被忽略。
+    this.onBoardPlacement?.(screenX, screenY);
   }
 
   private _onGlobalKeyUp(ev: EventKeyboard): void {

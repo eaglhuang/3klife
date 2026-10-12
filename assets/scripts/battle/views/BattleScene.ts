@@ -361,6 +361,7 @@ export class BattleScene extends Component {
         onPlayerDeployed: () => this._onPlayerDeployed(),
         onTactics: () => this._onTactics(),
         onGeneralDuelRequest: () => this._onGeneralDuelRequest(),
+        onBoardPlacement: (x, y) => this.turnFlowManager?.doDeployRaycast(x, y),
         onReplay: () => this.onReplay(),
       });
       this.refreshBattleViews();
