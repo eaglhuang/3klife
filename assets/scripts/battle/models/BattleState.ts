@@ -87,6 +87,8 @@ export class BattleState {
   /** 場景戰法（特殊戰場規則預留欄位） */
   public battleTactic: BattleTactic = BattleTactic.Normal;
   public sceneFlags: SceneBattleFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
+  /** 本局是否已對外發出 BattleEnded（勝負判定可重複呼叫，事件只發一次） */
+  public battleEndAnnounced = false;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
@@ -122,6 +124,7 @@ export class BattleState {
     this.weather     = weather     ?? Weather.Clear;
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
+    this.battleEndAnnounced = false;
 
     // 重置武將狀態
     playerGeneral.currentHp = playerGeneral.maxHp;
