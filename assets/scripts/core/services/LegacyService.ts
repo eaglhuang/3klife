@@ -179,9 +179,12 @@ export class LegacyService implements SeasonLifecycle {
             const previous = await this._archiver.getSpiritCard(dead.id);
             const archived = await this._archiveDeath(dead, roster, deadIds, season, year);
             const identity = toTigerTallyGeneral(dead);
-            const snapshot = await this._archiver.markSpiritRelic(
-                archived.uid, previous?.isSpiritRelic ?? isTallyEligible(identity),
-            );
+            // 已決定的標記優先保留；新死亡者只有在同模板尚無正式卡時才取得資格。
+            // 查詢排除自己，快照與虎符仍照常產出，不處理舊檔中既有重複卡。
+            const isSpiritRelic = previous?.isSpiritRelic ??
+                (isTallyEligible(identity) &&
+                    !await this._archiver.hasOtherSpiritRelic(dead.id, dead.templateId));
+            const snapshot = await this._archiver.markSpiritRelic(archived.uid, isSpiritRelic);
             archivedSnapshots.push(snapshot);
             if (snapshot.isSpiritRelic === true) spiritCards.push(snapshot);
             const scores = this._tallyScoreProvider?.(dead) ?? { deathBattleScore: 0, legacyQualityScore: 0 };
