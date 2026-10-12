@@ -468,8 +468,13 @@ export class BattleCombatResolver {
     return resolveBattleTacticBehavior(this.context.state.battleTactic).isFactionHiddenFrom(attackerFaction, targetFaction, this.context.state);
   }
 
+  /** 戰術修正後的射程 + 兵種 × 地形射程修正（弓兵水域 −1，PROG-2-0201）；有射程的兵種至少保留 1 */
   private getEffectiveAttackRange(unit: TroopUnit): number {
-    return resolveBattleTacticBehavior(this.context.state.battleTactic).getEffectiveAttackRange(unit, this.context.state);
+    const baseRange = resolveBattleTacticBehavior(this.context.state.battleTactic).getEffectiveAttackRange(unit, this.context.state);
+    if (baseRange === 0) return 0;
+    const cell = this.context.state.getCell(unit.lane, unit.depth);
+    const terrain = cell?.terrain ?? TerrainType.Plain;
+    return Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
   }
 
   private getForwardDirection(unit: TroopUnit): number {
