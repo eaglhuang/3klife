@@ -82,5 +82,18 @@ export function createBattleVictorySuite(): TestSuite {
         assert.equals('enemy-win', resolveBattleVictory(ctrl.state));
     });
 
+    suite.test('同一局重複判定：BattleEnded 只發一次，結果仍每次回傳；重開新局後可再發', () => {
+        const ctrl = freshBattle();
+        let ended = 0;
+        const off = services().event.on(EVENT_NAMES.BattleEnded, () => { ended += 1; });
+        ctrl.state.enemyGeneral!.currentHp = 0;
+        assert.equals('player-win', resolveBattleVictory(ctrl.state));
+        assert.equals('player-win', resolveBattleVictory(ctrl.state), '第二次仍回傳同一結果');
+        assert.equals('player-win', resolveBattleVictory(ctrl.state));
+        assert.equals(1, ended, '事件只發一次');
+        freshBattle();
+        off();
+    });
+
     return suite;
 }

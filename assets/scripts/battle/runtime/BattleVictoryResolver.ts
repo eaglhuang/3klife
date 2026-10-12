@@ -20,7 +20,9 @@ export function resolveBattleVictory(state: BattleState): BattleResult {
   else if (playerLost) result = 'enemy-win';
   else if (enemyLost) result = 'player-win';
 
-  if (result !== 'ongoing') {
+  // 勝負一經分出就鎖定：同一局重複判定只發一次 BattleEnded（PROG-2-0207）
+  if (result !== 'ongoing' && !state.battleEndAnnounced) {
+    state.battleEndAnnounced = true;
     svc.event.emit(EVENT_NAMES.BattleEnded, { result });
   }
 
