@@ -17,11 +17,13 @@ import {
     deployBlockMessage,
     finishSortie,
     getDeployCost,
+    getMilitiaCombatStats,
     getDeputyFoodBonus,
     getEliteDeployCap,
     getStrategistBonus,
     getTallyGrainCost,
     MILITIA_FOOD_COST,
+    MILITIA_TROOP_COST,
     regenTactic,
     retireUnit,
     spendTactic,
@@ -255,6 +257,17 @@ export function createSortieDeploySuite(): TestSuite {
 
         ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
         assert.equals(true, ctrl.trySpendTacticPoints(999).ok, '沒有帳本（內建 demo 武將）不擋計謀點');
+    });
+
+    suite.test('普通小兵：攻防為基礎兵種 40%（捨去小數），扣 5 糧、300 兵，不算精銳', () => {
+        const stats = getMilitiaCombatStats({ attack: 1000, defense: 850 });
+        assert.equals(400, stats.attack);
+        assert.equals(340, stats.defense);
+        assert.equals(0, getMilitiaCombatStats({ attack: -5, defense: 0 }).attack, '負數夾成 0');
+        const cost = getDeployCost({ troopType: TroopType.Infantry, militia: true });
+        assert.equals(MILITIA_FOOD_COST, cost.foodCost);
+        assert.equals(MILITIA_TROOP_COST, cost.troopCost);
+        assert.equals(false, cost.isElite);
     });
 
     return suite;

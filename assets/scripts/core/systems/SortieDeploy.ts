@@ -241,6 +241,14 @@ export function getEliteDeployCap(scenePresetId?: string | null, officerTierDepl
     return ELITE_DEPLOY_LIMIT.baseActiveCap + siege + officer;
 }
 
+/** 普通小兵戰力：基礎兵種攻防的 40%，無特殊能力（戰場部署 §精銳 vs 普通小兵）；小數無條件捨去（暫定，規格未寫取捨） */
+export function getMilitiaCombatStats(base: { attack: number; defense: number }): { attack: number; defense: number } {
+    return {
+        attack: Math.floor(nonNegInt(base.attack) * MILITIA_STAT_RATIO),
+        defense: Math.floor(nonNegInt(base.defense) * MILITIA_STAT_RATIO),
+    };
+}
+
 /** 一隊的投入兵力、糧耗與是否算精銳；未知兵種比照步兵 */
 export function getDeployCost(request: DeployRequest): DeployCost {
     if (request.militia) {
