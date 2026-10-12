@@ -84,6 +84,12 @@ export const TALLY_TROOP_COST: Readonly<Record<string, number>> = { R: 1200, SR:
 /** 參謀官 / 後勤官上限（戰場部署 §F） */
 export const STRATEGIST_TACTIC_CAP_MAX = 30;
 export const STRATEGIST_TACTIC_START_MAX = 15;
+/** 計謀點基礎上限（暫定：戰場部署 §I 範例 Max_Tactic_Points 48 − Strategist_Max_Tactic_Bonus 18 反推） */
+export const BASE_TACTIC_CAP = 30;
+/** 計謀點基礎開局值（暫定：§I 範例 Current 21 − Strategist_Start_Tactic_Bonus 9 反推） */
+export const BASE_TACTIC_START = 12;
+/** 計謀點每回合回復（暫定：規格未定回復速率，先給 +2） */
+export const TACTIC_REGEN_PER_TURN = 2;
 export const DEPUTY_FOOD_CAP_RATE_MAX = 0.18;
 
 // ── 兵種代碼 ───────────────────────────────────────────────────────────────
@@ -155,6 +161,12 @@ export interface SortieState {
     units: Readonly<Record<string, SortieUnitRecord>>;
     militiaDeployed: number;
     eliteDeployed: number;
+    /** 計謀點上限（基礎 + 參謀官加成） */
+    tacticMax: number;
+    /** 目前計謀點 */
+    tacticCurrent: number;
+    /** 每回合回復的計謀點 */
+    tacticRegenPerTurn: number;
 }
 
 export interface CommandCapacityInput {
@@ -174,6 +186,8 @@ export interface CreateSortieInput {
     food: number;
     /** 後勤官提供的開局補給 / 軍糧上限加成 */
     foodBonus?: number;
+    /** 參謀官提供的計謀點上限 / 開局補點加成（getStrategistBonus 的結果） */
+    strategistBonus?: StrategistBonus;
     scenePresetId?: string | null;
     officerTierDeployBonus?: number;
     fieldUnitLimit?: number;
@@ -326,6 +340,8 @@ export function getDeputyFoodBonus(deputy: SortieMember | null | undefined, base
 export function createSortieState(input: CreateSortieInput): SortieState {
     const poolMax = computeSortiePoolMax(input.commandCapacity, input.cityTroops, input.stageSortieCap);
     const food = nonNegInt(input.food) + nonNegInt(input.foodBonus);
+    const tacticMax = BASE_TACTIC_CAP + nonNegInt(input.strategistBonus?.maxTacticBonus);
+    const tacticStart = Math.min(tacticMax, BASE_TACTIC_START + nonNegInt(input.strategistBonus?.startTacticBonus));
     return {
         poolMax,
         poolCurrent: poolMax,
@@ -337,7 +353,29 @@ export function createSortieState(input: CreateSortieInput): SortieState {
         units: {},
         militiaDeployed: 0,
         eliteDeployed: 0,
+        tacticMax,
+        tacticCurrent: tacticStart,
+        tacticRegenPerTurn: TACTIC_REGEN_PER_TURN,
     };
+}
+
+// ── 計謀點 ─────────────────────────────────────────────────────────────────
+
+export type TacticSpendResult =
+    | { ok: true; state: SortieState; spent: number }
+    | { ok: false; state: SortieState; reason: 'TACTIC_SHORT' };
+
+/** 花費計謀點；不足時不扣、回報 TACTIC_SHORT。cost 為 0 或負數視為免費。 */
+export function spendTactic(state: SortieState, cost: number): TacticSpendResult {
+    const need = nonNegInt(cost);
+    if (state.tacticCurrent < need) return { ok: false, state, reason: 'TACTIC_SHORT' };
+    return { ok: true, state: { ...state, tacticCurrent: state.tacticCurrent - need }, spent: need };
+}
+
+/** 回合開始回復計謀點，不超過上限 */
+export function regenTactic(state: SortieState): SortieState {
+    const next = Math.min(state.tacticMax, state.tacticCurrent + nonNegInt(state.tacticRegenPerTurn));
+    return next === state.tacticCurrent ? state : { ...state, tacticCurrent: next };
 }
 
 function activeUnits(state: SortieState): SortieUnitRecord[] {

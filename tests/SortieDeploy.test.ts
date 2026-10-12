@@ -7,6 +7,8 @@ import { TestSuite, assert } from './TestRunner';
 import {
     applyDeploy,
     BASE_DEPLOY_FOOD_COST,
+    BASE_TACTIC_CAP,
+    BASE_TACTIC_START,
     checkDeploy,
     COMMAND_CAPACITY_FLOOR,
     computeCommandCapacity,
@@ -20,7 +22,11 @@ import {
     getStrategistBonus,
     getTallyGrainCost,
     MILITIA_FOOD_COST,
+    regenTactic,
     retireUnit,
+    spendTactic,
+    STRATEGIST_TACTIC_CAP_MAX,
+    STRATEGIST_TACTIC_START_MAX,
     troopsFromHp,
     UNIT_TROOP_COST,
     updateUnitTroops,
@@ -188,6 +194,67 @@ export function createSortieDeploySuite(): TestSuite {
 
         ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
         assert.equals(null, ctrl.getSortieState(), '新的一場清掉帳本');
+    });
+
+    suite.test('參謀官加成：智力 0.7 + 政治 0.5 → 計謀點上限與開局補點，套進本場帳本', () => {
+        const bonus = getStrategistBonus({ id: 's', int: 60, pol: 40, lea: 0 } as SortieMember);
+        assert.equals(6, bonus.maxTacticBonus, '62 / 10 = 6');
+        assert.equals(3, bonus.startTacticBonus, '6 × 0.5 = 3');
+        const state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100, strategistBonus: bonus });
+        assert.equals(BASE_TACTIC_CAP + 6, state.tacticMax);
+        assert.equals(BASE_TACTIC_START + 3, state.tacticCurrent);
+        const none = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        assert.equals(BASE_TACTIC_CAP, none.tacticMax, '沒有參謀官只有基礎上限');
+        assert.equals(BASE_TACTIC_START, none.tacticCurrent);
+    });
+
+    suite.test('參謀官加成封頂：上限不超過 30 + 30、開局不超過上限', () => {
+        const huge = getStrategistBonus({ id: 's', int: 999, pol: 999, lea: 0 } as SortieMember);
+        assert.equals(STRATEGIST_TACTIC_CAP_MAX, huge.maxTacticBonus);
+        assert.equals(STRATEGIST_TACTIC_START_MAX, huge.startTacticBonus);
+        const state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100, strategistBonus: huge });
+        assert.equals(BASE_TACTIC_CAP + STRATEGIST_TACTIC_CAP_MAX, state.tacticMax);
+        assert.equals(BASE_TACTIC_START + STRATEGIST_TACTIC_START_MAX, state.tacticCurrent);
+        assert.equals(true, state.tacticCurrent <= state.tacticMax);
+    });
+
+    suite.test('計謀點花費：足夠才扣，不足回報 TACTIC_SHORT 且不扣', () => {
+        const state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        const ok = spendTactic(state, 10);
+        assert.equals(true, ok.ok);
+        assert.equals(BASE_TACTIC_START - 10, ok.state.tacticCurrent);
+        assert.equals(10, ok.spent);
+        const short = spendTactic(ok.state, 999);
+        assert.equals(false, short.ok);
+        assert.equals('TACTIC_SHORT', short.ok ? '' : short.reason);
+        assert.equals(ok.state.tacticCurrent, short.state.tacticCurrent, '失敗時帳本不變');
+        assert.equals(true, spendTactic(state, 0).ok, '0 成本視為免費');
+    });
+
+    suite.test('計謀點回復：每回合 +regen，不超過上限', () => {
+        let state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100, strategistBonus: { maxTacticBonus: 0, startTacticBonus: 0 } });
+        state = { ...state, tacticCurrent: state.tacticMax - 1 };
+        state = regenTactic(state);
+        assert.equals(state.tacticMax, state.tacticCurrent, '回復到上限為止');
+        const full = regenTactic(state);
+        assert.equals(state.tacticMax, full.tacticCurrent);
+        assert.equals(true, full === state, '已滿時回傳同一物件');
+    });
+
+    suite.test('戰鬥控制器：參謀官計謀點進帳本，花費與回合回復生效', () => {
+        const ctrl = new BattleController();
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        ctrl.configureSortie({ commandCapacity: 8000, cityTroops: 10000, food: 100, strategistBonus: { maxTacticBonus: 6, startTacticBonus: 3 } });
+        const start = ctrl.getSortieState()!;
+        assert.equals(BASE_TACTIC_START + 3, start.tacticCurrent);
+        assert.equals(true, ctrl.trySpendTacticPoints(5).ok);
+        assert.equals(BASE_TACTIC_START + 3 - 5, ctrl.getSortieState()!.tacticCurrent);
+        const short = ctrl.trySpendTacticPoints(999);
+        assert.equals(false, short.ok);
+        assert.equals('TACTIC_SHORT', short.reason ?? '');
+
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        assert.equals(true, ctrl.trySpendTacticPoints(999).ok, '沒有帳本（內建 demo 武將）不擋計謀點');
     });
 
     return suite;

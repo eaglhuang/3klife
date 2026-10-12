@@ -43,8 +43,8 @@ export interface SortieSetupDeps {
     };
 }
 
-/** 計謀點系統尚未進戰場，先顯示並記錄參謀官加成（暫定） */
-export const TACTIC_POINTS_PENDING_NOTE = '（計謀點尚未開放，先記錄加成）';
+/** 計謀點已進戰場（PROG-2-0084）：上限與開局補點會套進本場帳本 */
+export const TACTIC_POINTS_NOTE = '（進戰場後生效）';
 
 function statOf(g: GeneralConfig, key: 'int' | 'pol' | 'lea'): number {
     return Math.floor(g[key] ?? g.stats?.[key] ?? 0);
@@ -139,7 +139,7 @@ export class SortieSetupController {
             const s = summary.strategist;
             const b = summary.strategistBonus;
             texts.strategistName = s.name;
-            texts.strategistInfo = `智力 ${statOf(s, 'int')} · 政治 ${statOf(s, 'pol')} → 計謀點上限 +${b.maxTacticBonus}、開局 +${b.startTacticBonus}${TACTIC_POINTS_PENDING_NOTE}`;
+            texts.strategistInfo = `智力 ${statOf(s, 'int')} · 政治 ${statOf(s, 'pol')} → 計謀點上限 +${b.maxTacticBonus}、開局 +${b.startTacticBonus}${TACTIC_POINTS_NOTE}`;
         }
         if (summary.deputy) {
             const d = summary.deputy;
