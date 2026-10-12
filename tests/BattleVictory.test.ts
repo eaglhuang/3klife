@@ -11,6 +11,7 @@ import { TestSuite, assert } from './TestRunner';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { resolveBattleVictory } from '../assets/scripts/battle/runtime/BattleVictoryResolver';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
+import { BattleFlowState } from '../assets/scripts/battle/controllers/BattleFlowStateMachine';
 import { EVENT_NAMES, Faction, GAME_CONFIG, Weather } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 
@@ -80,6 +81,18 @@ export function createBattleVictorySuite(): TestSuite {
         assert.equals('ongoing', resolveBattleVictory(ctrl.state), '正好到上限還不算超過');
         services().battle['turn'] = GAME_CONFIG.TURN_LIMIT + 1;
         assert.equals('enemy-win', resolveBattleVictory(ctrl.state));
+    });
+
+    suite.test('控制器結束流程：提交勝負後狀態機進 Finished 並鎖住結果；進行中則維持 Planning', () => {
+        const ctrl = freshBattle();
+        const flow = ctrl['flowStateMachine'];
+        ctrl['commitBattleResult'](ctrl['checkVictory']());
+        assert.equals('ongoing', flow.result, '未分勝負時結果為 ongoing');
+        assert.equals(BattleFlowState.Planning, flow['_state']);
+        ctrl.state.enemyGeneral!.currentHp = 0;
+        ctrl['commitBattleResult'](ctrl['checkVictory']());
+        assert.equals('player-win', flow.result);
+        assert.equals(BattleFlowState.Finished, flow['_state']);
     });
 
     return suite;
