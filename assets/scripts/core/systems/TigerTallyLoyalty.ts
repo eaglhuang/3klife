@@ -119,3 +119,28 @@ export function rollLoyaltyRebellion(loyalty: number, rand: () => number = Math.
     if (loyalty >= LOYALTY_REBELLION_THRESHOLD) return false;
     return rand() < LOYALTY_REBELLION_CHANCE_PER_SEASON;
 }
+
+/**
+ * 虎符轉交：從 from 卸下、裝到 to。規格寫轉交算在「每季 1 次變更」內，
+ * 但沒有寫轉交本身的忠誠數值，所以這裡只記季次，不改忠誠（暫定，記入待辦）。
+ * 任一方本季已變更過就整筆拒絕，兩邊都不記。
+ */
+export type TallyTransferResult =
+    | { ok: true; from: TallyLoyaltyState; to: TallyLoyaltyState }
+    | { ok: false; reason: 'SEASON_LIMIT'; from: TallyLoyaltyState; to: TallyLoyaltyState };
+
+export function applyTallyTransferSeason(
+    from: TallyLoyaltyState,
+    to: TallyLoyaltyState,
+    season: number,
+): TallyTransferResult {
+    if (from.lastChangeSeason === season || to.lastChangeSeason === season) {
+        return { ok: false, reason: 'SEASON_LIMIT', from, to };
+    }
+    const bump = (s: TallyLoyaltyState): TallyLoyaltyState => ({
+        ...s,
+        lastChangeSeason: season,
+        consecutiveSeasons: s.lastChangeSeason === season - 1 ? s.consecutiveSeasons + 1 : 1,
+    });
+    return { ok: true, from: bump(from), to: bump(to) };
+}
