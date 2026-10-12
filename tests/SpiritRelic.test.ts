@@ -29,7 +29,7 @@ export function createSpiritRelicSuite(): TestSuite {
     suite.test('名將與正式女性名將死亡：快照標記、正式英靈與虎符', async () => {
         const adapter = new MemoryStorageAdapter();
         const service = new LegacyService(adapter);
-        const roster = [general('hero'), general('female', { gender: '女', characterCategory: 'mythical' })];
+        const roster = [general('hero'), general('female', { gender: '女', characterCategory: 'mythical', templateId: 'GEN_FEMALE_HERO' })];
         const result = await service.settleSeason(roster, new GameClock().advanceSeason(), death(...roster));
         assert.equals(2, result.settlement.spiritCards.length);
         assert.equals(2, result.settlement.archivedSnapshots!.length);

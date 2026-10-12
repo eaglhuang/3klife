@@ -177,4 +177,24 @@ export class GeneralArchiver {
         const cards = await this.getAllSpiritCards();
         return cards.find(c => c.uid === uid) ?? null;
     }
+
+    /**
+     * 查詢其他死亡者是否已有同模板正式卡；不修改或合併舊重複資料。
+     * 快照不含模板，從既有 L5 本體取得；缺模板／本體時以 uid 為鍵。
+     * 模板鍵與 uid 鍵分開比較，避免兩種識別字串恰巧相同造成誤判。
+     */
+    public async hasOtherSpiritRelic(generalId: string, templateId?: string): Promise<boolean> {
+        const cards = await this.getAllSpiritCards();
+        const archive = (await this.adapter.get<Record<string, unknown>[]>(STORE_ARCHIVE_L5)) ?? [];
+        const template = typeof templateId === 'string' && templateId.trim() ? templateId : undefined;
+        return cards.some(card => {
+            if (card.uid === generalId || card.isSpiritRelic !== true) return false;
+            const body = archive.find(g => g['id'] === card.uid);
+            const value = body?.['templateId'];
+            const existingTemplate = typeof value === 'string' && value.trim() ? value : undefined;
+            return template !== undefined
+                ? existingTemplate === template
+                : existingTemplate === undefined && card.uid === generalId;
+        });
+    }
 }
