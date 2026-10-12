@@ -5,6 +5,7 @@
 import { TestSuite, assert } from './TestRunner';
 import {
     applyTallyLoyaltyChange,
+    applyTallyTransferSeason,
     createTallyLoyaltyState,
     rollLoyaltyRebellion,
     rollLoyaltyRefusal,
@@ -113,6 +114,24 @@ export function createTigerTallyLoyaltySuite(): TestSuite {
         assert.isTrue(rollLoyaltyRebellion(9, () => 0.04), '0.04 < 0.05 叛變');
         assert.isFalse(rollLoyaltyRebellion(9, () => 0.05));
         assert.isFalse(rollLoyaltyRebellion(20, () => 0), '忠誠 20 不叛變');
+    });
+
+    suite.test('轉交：雙方各記一次季次；任一方本季已變更就整筆拒絕，忠誠不變', () => {
+        const giver = createTallyLoyaltyState(70);
+        const taker = createTallyLoyaltyState(40);
+        const done = applyTallyTransferSeason(giver, taker, 5);
+        assert.isTrue(done.ok);
+        if (!done.ok) return;
+        assert.equals(5, done.from.lastChangeSeason);
+        assert.equals(5, done.to.lastChangeSeason);
+        assert.equals(70, done.from.loyalty, '轉交不改忠誠（規格未定數值）');
+        assert.equals(40, done.to.loyalty);
+        const used = applyTallyLoyaltyChange(done.to, 'equip', 'SR', 5);
+        assert.isFalse(used.ok, '受贈方本季已用掉次數');
+        const blocked = applyTallyTransferSeason(done.from, createTallyLoyaltyState(10), 5);
+        assert.isFalse(blocked.ok);
+        if (blocked.ok) return;
+        assert.equals('SEASON_LIMIT', blocked.reason);
     });
 
     return suite;
