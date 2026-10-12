@@ -41,6 +41,7 @@ import { BattleController } from '../assets/scripts/battle/controllers/BattleCon
 import { DEFAULT_TROOP_STATS } from '../assets/scripts/battle/runtime/BattleUnitSpawner';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { TerrainType } from '../assets/scripts/shared/CommonEnums';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { BattleSkillTargetMode } from '../shared/skill-runtime';
@@ -318,6 +319,21 @@ export function createSortieDeploySuite(): TestSuite {
         const regular = ctrl.tryDeployTroop(TroopType.Infantry, 1);
         assert.equals(true, regular.ok);
         assert.equals(baseAttack, regular.unit!.attack, '一般兵種不受影響');
+    });
+
+    suite.test('移動修正含兵種 × 地形：騎兵在山地 −2 格，一般步兵不變', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        const cavalry = new TroopUnit('cav-test', TroopType.Cavalry, Faction.Player, { hp: 100, attack: 30, defense: 10, moveRange: 2, attackRange: 1 });
+        cavalry.moveTo(0, 2);
+        const infantry = new TroopUnit('inf-test', TroopType.Infantry, Faction.Player, { hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
+        infantry.moveTo(0, 2);
+        const resolver = ctrl['combatResolver'];
+        const base = resolver.getUnitAptitude(cavalry).moveDelta;
+        ctrl.state.getCell(0, 2)!.terrain = TerrainType.Mountain;
+        assert.equals(base - 2, resolver.getUnitMoveDelta(cavalry));
+        assert.equals(resolver.getUnitAptitude(infantry).moveDelta, resolver.getUnitMoveDelta(infantry));
     });
 
     return suite;

@@ -5,6 +5,7 @@ import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
+import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
 
 export interface BattleCombatAction {
   attackerId: string;
@@ -35,6 +36,13 @@ export class BattleCombatResolver {
       terrain: cell?.terrain ?? TerrainType.Plain,
       weather: state.weather,
     });
+  }
+
+  /** 移動格數修正 = 適性等級修正 + 兵種 × 地形固定效果（PROG-2-0089） */
+  public getUnitMoveDelta(unit: TroopUnit): number {
+    const cell = this.context.state.getCell(unit.lane, unit.depth);
+    const terrain = cell?.terrain ?? TerrainType.Plain;
+    return this.getUnitAptitude(unit).moveDelta + getTerrainTroopEffect(unit.type, terrain).moveDelta;
   }
 
   public getFactionUnits(faction: Faction): TroopUnit[] {
