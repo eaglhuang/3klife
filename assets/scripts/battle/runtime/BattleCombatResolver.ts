@@ -137,7 +137,10 @@ export class BattleCombatResolver {
     const dCell = this.context.state.getCell(defender.lane, defender.depth);
 
     // 適性命中：命中率 < 100% 時擲骰，落空就不造成傷害、也不觸發反擊（PROG-2-0080）
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta;
+    // 隱蔽（弓兵林地 +20%，PROG-2-0201）：防守方的隱蔽讓攻擊方命中率 −隱蔽值，仍受命中下限約束
+    const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
+    const defenderStealth = getTerrainTroopEffect(defender.type, defenderCell?.terrain ?? TerrainType.Plain).stealthBonus;
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth;
     if (!rollHit(attackerAccuracy, this.hitRandom)) {
       svc.event.emit(EVENT_NAMES.UnitAttackMissed, {
         attackerId: attacker.id,
@@ -468,8 +471,13 @@ export class BattleCombatResolver {
     return resolveBattleTacticBehavior(this.context.state.battleTactic).isFactionHiddenFrom(attackerFaction, targetFaction, this.context.state);
   }
 
+  /** 戰術修正後的射程 + 兵種 × 地形射程修正（弓兵水域 −1，PROG-2-0201）；有射程的兵種至少保留 1 */
   private getEffectiveAttackRange(unit: TroopUnit): number {
-    return resolveBattleTacticBehavior(this.context.state.battleTactic).getEffectiveAttackRange(unit, this.context.state);
+    const baseRange = resolveBattleTacticBehavior(this.context.state.battleTactic).getEffectiveAttackRange(unit, this.context.state);
+    if (baseRange === 0) return 0;
+    const cell = this.context.state.getCell(unit.lane, unit.depth);
+    const terrain = cell?.terrain ?? TerrainType.Plain;
+    return Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
   }
 
   private getForwardDirection(unit: TroopUnit): number {

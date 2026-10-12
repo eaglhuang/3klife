@@ -352,5 +352,21 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(1, resolver.getUnitTerrainDefenseMultiplier(cavalry), '騎兵山地無防禦加成');
     });
 
+    suite.test('射程地形修正：弓兵水域射程 −1（最少保留 1），平原不變，步兵不受影響', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        const archer = new TroopUnit('archer-range', TroopType.Archer, Faction.Player, { hp: 80, attack: 30, defense: 15, moveRange: 1, attackRange: 2 });
+        archer.moveTo(0, 4);
+        const infantry = new TroopUnit('inf-range', TroopType.Infantry, Faction.Player, { hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
+        infantry.moveTo(1, 4);
+        const resolver = ctrl['combatResolver'];
+        assert.equals(2, resolver['getEffectiveAttackRange'](archer), '平原弓兵射程 2');
+        ctrl.state.getCell(0, 4)!.terrain = TerrainType.River;
+        assert.equals(1, resolver['getEffectiveAttackRange'](archer), '水域弓兵射程 −1');
+        ctrl.state.getCell(1, 4)!.terrain = TerrainType.River;
+        assert.equals(1, resolver['getEffectiveAttackRange'](infantry), '步兵水域不變');
+    });
+
     return suite;
 }
