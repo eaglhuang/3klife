@@ -46,6 +46,8 @@ import {
   checkDeploy,
   createSortieState,
   finishSortie,
+  regenTactic,
+  spendTactic,
   retireUnit,
   troopsFromHp,
   updateUnitTroops,
@@ -281,6 +283,14 @@ export class BattleController {
     this.sortie = createSortieState(input);
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
+  }
+
+  /** 花費計謀點（PROG-2-0084）；沒有出征帳本時視為不需計謀點，直接成功 */
+  public trySpendTacticPoints(cost: number): { ok: boolean; reason?: 'TACTIC_SHORT' } {
+    if (!this.sortie) return { ok: true };
+    const result = spendTactic(this.sortie, cost);
+    this.sortie = result.state;
+    return result.ok ? { ok: true } : { ok: false, reason: result.reason };
   }
 
   /** 目前帳本（已同步場上存活與剩餘兵力）；沒有出征帳本時回傳 null */
@@ -701,6 +711,7 @@ export class BattleController {
         onUnitKilled: (unit, killer, combatSvc) => this.combatResolver.onUnitKilled(unit, killer, combatSvc),
       });
     }
+    if (this.sortie) this.sortie = regenTactic(this.sortie);
     svc.battle.nextTurn();
     this.turnManager.refreshForNextTurn();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();

@@ -425,13 +425,15 @@ export class GameSession {
     public getSortieInput(generalId: string, stageSortieCap?: number): CreateSortieInput | null {
         const config = this.getBattleConfig(generalId, Faction.Player);
         if (!config) return null;
-        const foodBonus = this.getSortieSupportSummary(generalId).deputyBonus.startingFoodBonus;
+        const support = this.getSortieSupportSummary(generalId);
+        const foodBonus = support.deputyBonus.startingFoodBonus;
         return {
             commandCapacity: computeCommandCapacity({ lea: config.lea ?? config.stats?.lea ?? 0 }),
             cityTroops: this._military.cityTroops,
             ...(stageSortieCap !== undefined ? { stageSortieCap } : {}),
             food: this._military.food,
             ...(foodBonus > 0 ? { foodBonus } : {}),
+            strategistBonus: support.strategistBonus,
         };
     }
 
