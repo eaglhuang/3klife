@@ -31,6 +31,7 @@ import { createSeededRandomSuite } from './SeededRandom.test';
 import { createTigerTallySuite } from './TigerTally.test';
 import { createBattleRosterSuite } from './BattleRoster.test';
 import { createHistoricalFlagSuite } from './HistoricalFlag.test';
+import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createLegacyTallySuite } from './LegacyTally.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
@@ -112,6 +113,7 @@ if (typeof window === 'undefined') {
     runner.register(createLegacyTallySuite());
     runner.register(createSpiritRelicSuite());
     runner.register(createHistoricalFlagSuite());
+    runner.register(createStarterRosterSuite());
     runner.register(createBattleDeckLoadingSuite());
     runner.register(createPlayerDeckSuite());
     runner.register(createFactorAwakeningSuite());

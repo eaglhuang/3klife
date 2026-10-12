@@ -21,6 +21,7 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const browserCaptureCore = require('./lib/browser-capture-core');
+const { startIsolatedSyncBackend, installVerificationAccount } = require('./lib/web-test-account');
 
 const projectRoot = path.resolve(__dirname, '..');
 
@@ -184,14 +185,20 @@ async function main() {
     let browser = null;
     let engineState = { engine: false };
     let flow = null;
+    let testBackend = null;
+    let removeAccountRouting = null;
 
     try {
+        testBackend = await startIsolatedSyncBackend();
+        console.log(`[web-smoke] 隔離測試帳號 ${testBackend.account.playerId}`);
         browser = await browserCaptureCore.launchBrowser({
             executablePath: browserPath,
             viewport,
             headless: true,
         });
         const page = await browser.newPage();
+        removeAccountRouting = await installVerificationAccount(page, testBackend,
+            error => errors.push({ kind: 'test-account-routing', detail: String(error && error.stack || error) }));
 
         page.on('console', (message) => {
             const text = message.text();
@@ -266,6 +273,7 @@ async function main() {
             sceneName: engineState.sceneName || null,
             errorCount: errors.length,
             flow,
+            testAccount: { playerId: testBackend.account.playerId, isolation: 'per-run-account-and-backend', routedSyncRequests: testBackend.routedRequests },
             errors,
             consoleTail: consoleLines.slice(-50),
             screenshot: path.relative(projectRoot, screenshotPath),
@@ -278,10 +286,12 @@ async function main() {
 
         return errors.length === 0 && report.engineStarted ? 0 : 1;
     } finally {
+        if (removeAccountRouting) removeAccountRouting();
         if (browser) {
             await browserCaptureCore.closeBrowser(browser).catch(() => undefined);
         }
         server.close();
+        if (testBackend) await testBackend.close();
     }
 }
 
