@@ -33,6 +33,7 @@ import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacySer
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
+import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
@@ -248,6 +249,8 @@ export class GameSession {
     private _tallyCards: Record<string, TigerTallyCard> = {};
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
+    /** 傭兵存檔包（試用、薪水、冷卻）；隨存檔保存（MERC-01 接線） */
+    private _mercenaries: MercenarySaveBundle = createEmptyMercenaryBundle();
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -307,6 +310,16 @@ export class GameSession {
     }
 
     /** 虎符卡資料（唯讀副本）；uid → 卡 */
+    /** 傭兵存檔包的副本；改動需透過 setMercenaries。 */
+    public get mercenaries(): MercenarySaveBundle {
+        return serializeMercenaryBundle(this._mercenaries);
+    }
+
+    /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
+    public setMercenaries(bundle: MercenarySaveBundle): void {
+        this._mercenaries = normalizeMercenaryBundle(bundle);
+    }
+
     public get tallyCards(): Readonly<Record<string, TigerTallyCard>> {
         return { ...this._tallyCards };
     }
@@ -478,6 +491,7 @@ export class GameSession {
         this._tallyCards = {};
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
+        this._mercenaries = createEmptyMercenaryBundle();
     }
 
     /** 開場流程選用：先驗證資料，再開新局並以六位名將替換名冊；既有 startNewGame 不變。 */
@@ -1037,7 +1051,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -1076,6 +1090,7 @@ export class GameSession {
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
+        this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }
