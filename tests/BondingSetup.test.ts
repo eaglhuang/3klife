@@ -48,7 +48,7 @@ interface Rig {
     saves: { count: number };
 }
 
-function makeRig(generals: GeneralConfig[], options: { random?: () => number; failSave?: boolean } = {}): Rig {
+function makeRig(generals: GeneralConfig[], options: { random?: () => number; failSave?: boolean; spendLifespan?: (id: string) => { events: { type: string }[] } | null } = {}): Rig {
     const roster = new InMemoryRosterStore(generals);
     const service = new BreedingService(roster, new BloodlineGraph(), { random: options.random ?? seq(0.01, 0.5) });
     const saves = { count: 0 };
@@ -60,6 +60,7 @@ function makeRig(generals: GeneralConfig[], options: { random?: () => number; fa
             saves.count += 1;
             if (options.failSave) throw new Error('disk full');
         },
+        spendLifespan: (id) => options.spendLifespan?.(id) ?? { events: [] },
     });
     return { roster, flow, saves };
 }
@@ -129,6 +130,14 @@ export function createBondingSetupSuite(): TestSuite {
         assert.equals('消耗 liu 精力 50 與 sun 精力 100，確認結緣？', view.texts.costLabel);
         assert.isTrue(view.texts.eligibilityLabel.includes('良緣天成'));
         assert.isTrue(view.texts.fatherInfo.includes('精力 100 / 100'));
+    });
+
+    suite.test('結緣後母方壽命耗盡：通知列出已故武將名', async () => {
+        const rig = makeRig([general('liu', '男'), general('sun', '女')], {
+            spendLifespan: (id) => ({ events: id === 'sun' ? [{ type: 'died' }] : [] }),
+        });
+        await rig.flow.confirm();
+        assert.equals('sun壽命耗盡，已故', rig.flow.getView().texts.bondNotice.split('　').pop()!);
     });
 
     suite.test('確認結緣（受孕）：子嗣加入名冊、扣精力、母方待產、存檔一次', async () => {
