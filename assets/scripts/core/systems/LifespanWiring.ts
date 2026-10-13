@@ -113,3 +113,17 @@ export function applyActiveLifespanToRoster(
     next[index] = result.general;
     return { roster: next, result };
 }
+
+/**
+ * 讀檔後主動指令死亡的「季結前名冊」基準：把這些武將還原為非陣亡，
+ * 讓虎符結算能認出「這次季結才死」。沒有待季結死亡時回傳 null。
+ */
+export function preLifespanBaseline(
+    roster: readonly GeneralConfig[],
+    generalIds: readonly string[],
+): GeneralConfig[] | null {
+    if (generalIds.length === 0) return null;
+    const ids = new Set(generalIds);
+    return roster.map((general) =>
+        ids.has(general.id) && isGeneralDead(general) ? { ...general, status: undefined } : { ...general });
+}

@@ -25,7 +25,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
-import { applyActiveLifespanToRoster, ActiveLifespanResult } from '../systems/LifespanWiring';
+import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import type { LifespanCommand } from '../systems/LifespanCost';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { MentorCard } from '../models/MentorCard';
@@ -1012,6 +1012,8 @@ export class GameSession {
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
         this._roster.replaceAll(snapshot.roster);
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
+        // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
+        this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
