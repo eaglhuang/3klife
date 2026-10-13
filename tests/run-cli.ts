@@ -41,6 +41,7 @@ import { createMercenaryBondSuite } from './MercenaryBond.test';
 import { createLifespanWiringSuite } from './LifespanWiring.test';
 import { createLifespanDeathPersistSuite } from './LifespanDeathPersist.test';
 import { createLifespanDeathSeasonSuite } from './LifespanDeathSeason.test';
+import { createJobChangeWiringSuite } from './JobChangeWiring.test';
 import { createPeaceLineageSuite } from './PeaceLineage.test';
 import { createDomesticTasksSuite } from './DomesticTasks.test';
 import { createOnboardingTutorialSuite } from './OnboardingTutorial.test';
@@ -154,6 +155,7 @@ if (typeof window === 'undefined') {
     runner.register(createLifespanWiringSuite());
     runner.register(createLifespanDeathPersistSuite());
     runner.register(createLifespanDeathSeasonSuite());
+    runner.register(createJobChangeWiringSuite());
     runner.register(createPeaceLineageSuite());
     runner.register(createWildGeneSuite());
     runner.register(createSpiritRelicUniqueSuite());
