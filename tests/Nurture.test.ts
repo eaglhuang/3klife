@@ -43,6 +43,7 @@ import {
 } from '../assets/scripts/core/systems/NurtureSystem';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
 import { hybridSourceFromFactors, hybridSourcesFromParents } from '../assets/scripts/core/systems/HybridSkill';
+import { commitReportCard, emptyReportCardBook, keepReportCard, RETAKE_ITEM_COST } from '../assets/scripts/core/systems/ReportCardBook';
 import { revealStat } from '../assets/scripts/core/systems/StatRevelation';
 import { UnveilingService } from '../assets/scripts/core/services/UnveilingService';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
@@ -451,6 +452,22 @@ export function createNurtureSuite(): TestSuite {
         sameJson(['a'], result.log.mentorsOnSlot);
         assert.isTrue(result.log.burst);
         assert.equals(15, result.log.statGained, '10 × 1.5 爆發');
+    });
+
+    suite.test('成績單：最多保留 3 份（丟最舊）、定型後其餘銷毀且不得重來、重修無代價但消耗補腦湯 ×1', () => {
+        let book = emptyReportCardBook<string>();
+        for (const card of ['A', 'B', 'C', 'D']) book = keepReportCard(book, card);
+        assert.equals('B', book.cards[0], '第 4 份進來時丟掉最舊的 A');
+        assert.lengthEquals(3, book.cards);
+
+        const picked = commitReportCard(book, 1);
+        assert.equals('C', picked.card);
+        assert.isTrue(picked.book.committed);
+        assert.lengthEquals(0, picked.book.cards, '其餘成績單全部銷毀');
+        assert.throws(() => keepReportCard(picked.book, 'E'), '定型後不能再保留');
+        assert.throws(() => commitReportCard(picked.book, 0), '不得重複定型');
+        assert.throws(() => commitReportCard(book, 3), '索引超出範圍');
+        assert.equals(1, RETAKE_ITEM_COST);
     });
 
     suite.test('分層揭露：HIDDEN 不給數值、TENDENCY 三段、RANGE 十位區間、EXACT 精確值；非法數值拋錯', () => {
