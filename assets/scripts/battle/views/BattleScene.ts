@@ -17,7 +17,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
 import { Camera, view } from "cc";
-import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput } from './BattleSceneLoader';
+import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
@@ -198,6 +198,7 @@ export class BattleScene extends Component {
       // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
       const sortieInput = buildRosterSortieInput(pg);
       if (sortieInput) this.ctrl.configureSortie(sortieInput);
+      this.ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 戰鬥已初始化");
 
       // 6. 連結 UI 元件（自動尋找，不依賴 Inspector 綁定）

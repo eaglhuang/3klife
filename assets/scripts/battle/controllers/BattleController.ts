@@ -33,6 +33,7 @@ import { createBattlePhaseExecutor, type BattlePhaseExecutor } from '../runtime/
 import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoController';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
+import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import {
   BattleSkillTargetMode,
   SkillSourceType,
@@ -62,7 +63,7 @@ import {
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
  * 有出征帳本時（PROG-2-0070）另有 troops-short 軍勢不足 / food-short 糧草不足 / field-limit 場上部隊已滿。
  */
-export type DeployFailReason = "food" | "occupied" | "limit" | "battle-locked" | "troops-short" | "food-short" | "field-limit";
+export type DeployFailReason = "food" | "occupied" | "limit" | "battle-locked" | "troops-short" | "food-short" | "field-limit" | "order-refused";
 
 const SORTIE_BLOCK_TO_FAIL_REASON: Record<SortieDeployBlockReason, DeployFailReason> = {
   TROOPS_SHORT: "troops-short",
@@ -93,6 +94,11 @@ async function loadJsonWithFileFallback<T>(resourcePath: string, _relativeFilePa
 export class BattleController {
   private readonly runtimeOrchestrator = new BattleRuntimeOrchestrator(new TurnBasedTempoController());
   private readonly turnManager = new BattleTurnManager();
+  /** 主將忠誠（TRP-09）；null 表示沒有紀錄，不拒令 */
+  private orderLoyalty: number | null = null;
+  private orderRand: () => number = Math.random;
+  /** 本回合是否拒絕部署命令（每回合擲一次） */
+  private orderRefusedThisTurn = false;
   private readonly flowStateMachine = new BattleFlowStateMachine();
   private readonly skillSourceTranslator = new BattleSkillSourceTranslator(() => this.tacticDefinitionMap);
   public readonly state = new BattleState();
@@ -248,6 +254,9 @@ export class BattleController {
     if (!this.turnManager.canDeployPlayer()) {
       return { ok: false, unit: null, reason: "limit" };
     }
+    if (this.orderRefusedThisTurn) {
+      return { ok: false, unit: null, reason: "order-refused" };
+    }
 
     const deployDepth = 0;
     if (this.state.getCell(lane, deployDepth)?.occupantId) {
@@ -284,6 +293,20 @@ export class BattleController {
     this.sortie = createSortieState(input);
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
+  }
+
+  /**
+   * 主將忠誠對命令的影響（TRP-09）：忠誠 < 30 時每回合 25% 拒絕執行部署命令。
+   * loyalty 為 null 表示沒有忠誠紀錄，不拒令。rand 可注入（測試用）。
+   */
+  public configureOrderLoyalty(loyalty: number | null, rand: () => number = Math.random): void {
+    this.orderLoyalty = loyalty;
+    this.orderRand = rand;
+    this.orderRefusedThisTurn = this.rollOrderRefusal();
+  }
+
+  private rollOrderRefusal(): boolean {
+    return this.orderLoyalty !== null && rollLoyaltyRefusal(this.orderLoyalty, this.orderRand);
   }
 
   /** 花費計謀點（PROG-2-0084）；沒有出征帳本時視為不需計謀點，直接成功 */
@@ -721,6 +744,7 @@ export class BattleController {
     if (this.sortie) this.sortie = regenTactic(this.sortie);
     svc.battle.nextTurn();
     this.turnManager.refreshForNextTurn();
+    this.orderRefusedThisTurn = this.rollOrderRefusal();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
   }
 

@@ -255,6 +255,12 @@ export function buildRosterSortieInput(general: GeneralUnit): CreateSortieInput 
   return services().session.getSortieInput(general.id);
 }
 
+/** 主將的虎符忠誠（TRP-09）；沒有紀錄或不是我方時回傳 null（不拒令） */
+export function buildOrderLoyalty(general: GeneralUnit): number | null {
+  if (general.faction !== Faction.Player) return null;
+  return services().session.tallyLoyalty[general.id]?.loyalty ?? null;
+}
+
 export function buildTacticSummary(general: GeneralUnit): BattleTacticSummary {
   const names = (general.tacticSlots ?? [])
     .map((slot) => tacticDefinitionMap.get(slot.tacticId)?.displayName ?? slot.tacticId)

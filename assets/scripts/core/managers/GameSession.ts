@@ -29,7 +29,9 @@ import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacySer
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
-import { createPlayerSaveSnapshot, normalizeClearedStageIds, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
+import type { TigerTallyQuality } from '../models/TigerTallyCard';
 import type { NurtureState } from '../services/NurtureService';
 import {
     awakenFactor,
@@ -200,6 +202,9 @@ function toSortieMember(g: GeneralConfig): SortieMember {
     };
 }
 
+/** 虎符忠誠度初始值（規格未定，暫定）；武將沒有紀錄時以此起算 */
+const TALLY_LOYALTY_INITIAL = 50;
+
 export class GameSession {
     private _clock = new GameClock();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -224,6 +229,8 @@ export class GameSession {
     private _oracleCount = 0;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
+    /** 武將 id → 虎符忠誠度狀態（TRP-09） */
+    private _tallyLoyalty: Record<string, TallyLoyaltyState> = {};
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
 
@@ -272,6 +279,34 @@ export class GameSession {
     /** 已通關的關卡 id（連環破，唯讀副本） */
     public get clearedStageIds(): readonly string[] {
         return [...this._clearedStageIds];
+    }
+
+    /** 虎符忠誠度狀態（唯讀副本）；沒有紀錄的武將不在表內 */
+    public get tallyLoyalty(): Readonly<Record<string, TallyLoyaltyState>> {
+        return { ...this._tallyLoyalty };
+    }
+
+    /**
+     * 虎符拔除 / 裝上對武將忠誠度的影響（TRP-09）。季編碼用 totalSeasonsElapsed（每季 +1）。
+     * 只改忠誠狀態並自動存檔；虎符本身的歸屬由呼叫端決定。武將不在名冊時回傳 null。
+     * 初始忠誠規格未定，暫定 50（記入待辦暫定設計）。
+     */
+    public async changeTallyLoyalty(
+        generalId: string,
+        action: TallyLoyaltyAction,
+        quality: TigerTallyQuality,
+        isGachaHero = false,
+    ): Promise<TallyLoyaltyResult | null> {
+        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
+        const result = applyTallyLoyaltyChange(current, action, quality, this._clock.state.totalSeasonsElapsed);
+        if (result.ok) {
+            this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: result.state };
+            if (this._autoSave && this._save) {
+                await this.save();
+            }
+        }
+        return result;
     }
 
     public isSageUnlocked(sageId: string): boolean {
@@ -342,6 +377,7 @@ export class GameSession {
         this._inventory = { ...STARTER_INVENTORY };
         this._oracleCount = 0;
         this._clearedStageIds = [];
+        this._tallyLoyalty = {};
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
     }
@@ -840,7 +876,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -870,6 +906,7 @@ export class GameSession {
         this._inventory = normalizeInventory(snapshot.inventory);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
+        this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
