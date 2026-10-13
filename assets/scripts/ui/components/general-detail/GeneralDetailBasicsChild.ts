@@ -9,6 +9,7 @@ import { Color, Label, Sprite, UITransform } from 'cc';
 import type { Node } from 'cc';
 import { SolidBackground } from '../SolidBackground';
 import { describeLifespan, describeVitality } from '../../core/LifeVitalityPresenter';
+import { describeLifecycle } from '../../core/GeneralLifecyclePresenter';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
@@ -83,7 +84,8 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
         this._set(this._lAge, life ? life.ageText : this.t('ui.general.basics.unlocked'));
         this._set(this._lRole, formatRole(cfg.role));
         this._set(this._lStatus, formatStatus(cfg.status));
-        this._set(this._lLifespan, life ? life.lifespanText : this.t('ui.general.basics.lifespan_locked'));
+        const lifecycle = cfg.age !== undefined ? describeLifecycle(cfg) : null;
+        this._set(this._lLifespan, life && lifecycle ? `${life.lifespanText}　${lifecycle.remainingText}` : this.t('ui.general.basics.lifespan_locked'));
         this._setOptional(this._lLifespanTitle, life?.overLifespan ? '壽命 · 已超過天年' : '壽命');
         this._applyMeter(this._lifespanFill, life ? life.ratio : 0, life ? life.color : null);
 
