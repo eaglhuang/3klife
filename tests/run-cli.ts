@@ -35,6 +35,7 @@ import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createFactorVisibilitySuite } from './FactorVisibility.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
+import { createMercenaryDepartureSuite } from './MercenaryDeparture.test';
 import { createMercenaryUpkeepSuite } from './MercenaryUpkeep.test';
 import { createWildGeneSuite } from './WildGene.test';
 import { createSpiritRelicUniqueSuite } from './SpiritRelicUnique.test';
@@ -202,6 +203,7 @@ if (typeof window === 'undefined') {
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createMercenaryDepartureSuite());
     runner.register(createMercenaryUpkeepSuite());
 
     // Deprecated API 靜態掃描
