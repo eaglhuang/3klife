@@ -35,6 +35,7 @@ import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createFactorVisibilitySuite } from './FactorVisibility.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
+import { createMercenaryUpkeepSuite } from './MercenaryUpkeep.test';
 import { createWildGeneSuite } from './WildGene.test';
 import { createSpiritRelicUniqueSuite } from './SpiritRelicUnique.test';
 import { createLegacyTallySuite } from './LegacyTally.test';
@@ -201,6 +202,7 @@ if (typeof window === 'undefined') {
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createMercenaryUpkeepSuite());
 
     // Deprecated API 靜態掃描
     // __dirname = tests/  →  ../ = 專案根目錄
