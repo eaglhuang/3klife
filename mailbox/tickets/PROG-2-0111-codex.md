@@ -1,0 +1,29 @@
+# [PROG-2-0111] 情報度與 AI 委任邏輯（HALL-05 純邏輯）
+
+給：Codex Agent｜里程碑：M6（大廳）｜WBS v3：HALL-05，P1，工時 2.0，狀態「純邏輯」（依賴 HALL-04，UI 已接線）
+
+## 為什麼做
+任務詳情彈窗（HALL-04）已接線，但情報度與 AI 委任的規則還沒有純邏輯。規格要求：再探把 Intel_Reveal_Percent 刷新到 100 並完整揭露內容；Required_Intel（需求情報）與 Reveal（揭露進度）要分開計算；委任後由 AI 選將，並保留回看紀錄。本卡只做規則的純函式，不接彈窗。
+
+## 開工前
+- `git fetch origin`，看 **master 的 git log**（不只看開著的 PR 與分支），確認目前 master 的 HEAD 並在 PR 說明寫出。
+- 搜尋 `assets/scripts` 內是否已有 `Intel`、`Reveal`、委任相關純邏輯（只讀）。若已有等價實作，**停下來**回信到 `mailbox/to-claude/`，列出位置與差異。
+- 讀 `docs/` 內的大廳與任務規格（搜尋 `情報度`、`Intel_Reveal`、`委任`）。找不到原文就以本工單與 WBS CSV 為準，並在 PR 說明寫明。
+
+## 範圍
+- 新增 `assets/scripts/core/systems/HallIntel.ts`：
+  - `rerollIntel(task)`：再探後 `Intel_Reveal_Percent` 為 100，並回傳完整揭露旗標。純函式，不改輸入。
+  - `getIntelStatus(task)`：分別回傳 `requiredIntel`（需求情報）與 `revealPercent`（揭露進度），兩者不互相推算。
+  - `delegateTask(task, candidates, random)`：由注入的 `random` 從候選武將中選一位，回傳新的任務物件與一筆回看紀錄（`delegationLog`）。候選為空時回傳 `reason: 'NO_CANDIDATE'`，不拋例外。
+- 測試 `tests/HallIntel.test.ts`：再探後揭露 100 且完整；`requiredIntel` 與 `revealPercent` 分開計算；委任會寫入回看紀錄；候選為空時回傳 `NO_CANDIDATE`；同一隨機種子結果一致；所有函式不改輸入。
+- 不接進大廳、不改彈窗、不改存檔格式、不改 `generals.json` 與 spec JSON。
+
+## 共同規則（每張都適用）
+- 基底分支 `master`，工作分支 `codex/PROG-2-{號}-{slug}`，PR 目標 `master`。
+- 只用本工單編號，不得自行另取編號。
+- 開工前先 `git fetch origin`，搜尋遠端分支與開著的 PR，確認沒有人在做同一項或撞號；撞了就停下來回覆到 `mailbox/to-claude/`。
+- 新模組不依賴 cc，不讀寫存檔，不發事件，不改輸入；測試需在 `tests/run-cli.ts` 註冊。
+- 不開 Cocos 編輯器；不手改 meta。
+- 驗收：全套 headless 通過（`npx ts-node --project tsconfig.test.json tests/run-cli.ts`），`compute-gate --profile standard --agent-feedback` 通過，UTF-8 無 BOM，`git diff --check` 通過，新模組沒有 `cc` import 與 `any`。
+- 規格與工單不一致時停下來回信，不自行決定；可逆的實作選擇照本工單與 PM 推薦做，並在 PR 說明列出。
+- 交回：PR 說明開頭寫「Before／After」；任務卡 `status: done`，寫明測試結果與暫定項目，然後解鎖。
