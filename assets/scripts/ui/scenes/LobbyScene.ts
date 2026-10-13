@@ -24,6 +24,8 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
+import { JobChangeController } from '../core/JobChangeController';
+import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
@@ -112,6 +114,8 @@ export class LobbyScene extends Component {
     private _nurtureFlow: NurtureFlowController | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
+    private _jobChangeHost: UIScreenPreviewHost | null = null;
+    private _jobChange: JobChangeController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
@@ -171,6 +175,7 @@ export class LobbyScene extends Component {
         await this._mountSeasonHud();
         await this._mountNurtureFlow();
         await this._mountBondingSetup();
+        await this._mountJobChange();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
         await this._mountDeckSelect();
@@ -245,6 +250,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
             { buttonId: 'btnOpenNurture', handler: () => { this._openNurtureFlow(); } },
             { buttonId: 'btnOpenBonding', handler: () => { void this._openBondingSetup(); } },
+            { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
         ]);
         this._refreshSeasonHud();
 
@@ -396,6 +402,66 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.Loaded, refresh),
             event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
         );
+    }
+
+    /**
+     * 成人禮轉職畫面：以 UCUF JSON（job-change-screen）執行期組裝。
+     * 名單、副職選項、資格都在 JobChangeController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountJobChange(): Promise<void> {
+        const jobChange = new JobChangeController({
+            roster: { getAll: () => services().session.roster },
+            ordersOwned: () => services().session.itemCount(ITEM_JOB_CHANGE_ORDER),
+            changeJob: (generalId, subClass) => services().session.changeJob(generalId, subClass),
+        });
+        this._jobChange = jobChange;
+        this._jobChangeHost = await this._mountPreviewScreenHost('JobChangeHost', 'job-change-screen', [
+            { buttonId: 'btnCloseJob', handler: () => { this._closeJobChange(); } },
+            { buttonId: 'btnPrevGeneral', handler: () => { jobChange.cycleGeneral(-1); this._refreshJobChange(); } },
+            { buttonId: 'btnNextGeneral', handler: () => { jobChange.cycleGeneral(1); this._refreshJobChange(); } },
+            { buttonId: 'btnSubWarrior', handler: () => { jobChange.selectSubClass('Warrior'); this._refreshJobChange(); } },
+            { buttonId: 'btnSubScholar', handler: () => { jobChange.selectSubClass('Scholar'); this._refreshJobChange(); } },
+            { buttonId: 'btnConfirmJob', handler: () => { void this._onClickConfirmJob(); } },
+        ]);
+        this._jobChangeHost.node.active = false;
+    }
+
+    private _openJobChange(): void {
+        const host = this._jobChangeHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshJobChange();
+    }
+
+    private _closeJobChange(): void {
+        if (this._jobChangeHost) {
+            this._jobChangeHost.node.active = false;
+        }
+    }
+
+    private _refreshJobChange(): void {
+        const binder = this._jobChangeHost?.binder;
+        if (!binder || !this._jobChange) {
+            return;
+        }
+        applyFlowView(binder, this._jobChange.getFlowView());
+    }
+
+    private async _onClickConfirmJob(): Promise<void> {
+        if (!this._jobChange) {
+            return;
+        }
+        try {
+            await this._jobChange.confirm();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 轉職失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '轉職失敗', duration: 2.5 });
+        } finally {
+            this._refreshJobChange();
+        }
     }
 
     private async _openBondingSetup(): Promise<void> {
