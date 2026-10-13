@@ -46,6 +46,7 @@ import {
     normalizeDiscoveryProgress,
 } from '../systems/DiscoveryProgress';
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
+import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
@@ -333,6 +334,18 @@ export class GameSession {
         this._oracleCount = 0;
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
+    }
+
+    /** 開場流程選用：先驗證資料，再開新局並以六位名將替換名冊；既有 startNewGame 不變。 */
+    public async startNewGameWithStarters(seed: number, generals: readonly GeneralConfig[], options: StarterRosterOptions = {}): Promise<void> {
+        const starters = buildStarterRoster(generals, options);
+        const coreId = options.coreGeneralId ?? STARTER_CORE_GENERAL_ID;
+        const core = starters.find(general => general.id === coreId)!;
+        if (!checkDeployable(core, { nurturingIds: this._nurturingIds() }).eligible) throw new Error('[GameSession] 初始核心主將不可出戰');
+        this.startNewGame(seed);
+        this._roster.replaceAll(starters);
+        if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
+        this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
     }
 
     /** 俘虜與監獄（PROG-2-0073）：待處置俘虜、關押中、名聲、情報 */
