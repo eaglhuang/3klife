@@ -34,13 +34,13 @@ export interface AptitudeModifier {
     acc: number;
 }
 
-/** Q16=C 重訂適性表（暫定） */
+/** Q16=C 重訂適性表（暫定）；D 攻防依數值系統 F-5 APTITUDE_ATK_DEF 為 −0.25（PM 2026-10-13 決定） */
 export const APTITUDE_MODIFIERS: Readonly<Record<AptitudeGrade, AptitudeModifier>> = {
     S: { atk: 0.2, def: 0.2, move: 1, acc: 0.15 },
     A: { atk: 0.1, def: 0.1, move: 0, acc: 0.1 },
     B: { atk: 0, def: 0, move: 0, acc: 0 },
     C: { atk: -0.1, def: -0.1, move: -1, acc: -0.05 },
-    D: { atk: -0.3, def: -0.3, move: -2, acc: -0.15 },
+    D: { atk: -0.25, def: -0.25, move: -2, acc: -0.15 },
 };
 
 /** 沒有資料的維度一律視為 B（普通、無修正） */
