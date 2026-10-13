@@ -33,8 +33,15 @@ import { createBattleRosterSuite } from './BattleRoster.test';
 import { createHistoricalFlagSuite } from './HistoricalFlag.test';
 import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
+import { createFactorVisibilitySuite } from './FactorVisibility.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
 import { createOnboardingTutorialSuite } from './OnboardingTutorial.test';
+import { createJobChangeSuite } from './JobChange.test';
+import { createGeneralStageSuite } from './GeneralStage.test';
+import { createMercenaryAffectionSuite } from './MercenaryAffection.test';
+import { createMercenaryDepartureSuite } from './MercenaryDeparture.test';
+import { createMercenaryUpkeepSuite } from './MercenaryUpkeep.test';
+import { createWildGeneSuite } from './WildGene.test';
 import { createSpiritRelicUniqueSuite } from './SpiritRelicUnique.test';
 import { createLegacyTallySuite } from './LegacyTally.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
@@ -128,7 +135,9 @@ if (typeof window === 'undefined') {
     runner.register(createBattleRosterSuite());
     runner.register(createLegacyTallySuite());
     runner.register(createSpiritRelicSuite());
+    runner.register(createFactorVisibilitySuite());
     runner.register(createLifespanCostSuite());
+    runner.register(createWildGeneSuite());
     runner.register(createSpiritRelicUniqueSuite());
     runner.register(createHistoricalFlagSuite());
     runner.register(createStarterRosterSuite());
@@ -199,6 +208,11 @@ if (typeof window === 'undefined') {
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
     runner.register(createOnboardingTutorialSuite());
+    runner.register(createJobChangeSuite());
+    runner.register(createGeneralStageSuite());
+    runner.register(createMercenaryAffectionSuite());
+    runner.register(createMercenaryDepartureSuite());
+    runner.register(createMercenaryUpkeepSuite());
 
     // Deprecated API 靜態掃描
     // __dirname = tests/  →  ../ = 專案根目錄
