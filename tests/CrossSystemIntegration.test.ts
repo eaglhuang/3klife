@@ -363,6 +363,41 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.equals(0, b.mercenaries.mercenaries.length, '開新局清空傭兵包');
     });
 
+    suite.test('內政任務：入帳、同季限一次、存檔重開後仍限一次，換季後可再選，糧草不超過上限', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, makeRoster());
+        const foodBefore = a.military.food;
+        let gold = 0;
+        const farmed = await a.chooseDomesticTask('farming', (amount) => { gold += amount; });
+        assert.isTrue(farmed.ok, '農耕可選');
+        assert.equals(Math.min(a.military.foodCap, foodBefore + 120), a.military.food, '糧草入帳且不超過上限');
+        assert.equals(0, gold, '農耕不給黃金');
+
+        const again = await a.chooseDomesticTask('diplomacy');
+        assert.isFalse(again.ok, '同季第二項被拒');
+        assert.equals(0, a.fame, '被拒時名聲不變');
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        b.setLifecycle(new LegacyService(adapter));
+        assert.isTrue(await b.load());
+        assert.equals(a.military.food, b.military.food, '糧草讀回一致');
+        assert.isFalse((await b.chooseDomesticTask('diplomacy')).ok, '重開遊戲不能繞過同季限制');
+
+        await b.advanceSeason();
+        assert.isTrue((await b.chooseDomesticTask('diplomacy')).ok, '換季後可再選');
+        assert.equals(40, b.fame, '外交 +40 名聲');
+        let earned = 0;
+        assert.isTrue((await (async () => { await b.advanceSeason(); return b.chooseDomesticTask('commerce', (amount) => { earned += amount; }); })()).ok);
+        assert.equals(100, earned, '商業 100 黃金交給錢包回呼');
+        assert.isTrue(b.military.food <= b.military.foodCap, '糧草不超過上限');
+
+        b.startNewGame(1);
+        assert.equals(0, b.fame, '開新局名聲歸零');
+        assert.isTrue(b.domesticLog.lastSeason === null, '開新局內政紀錄清空');
+    });
+
     suite.test('結緣＋血統活性：同亂數種子結果完全一致，因子星級不超過 5★、不低於 1★', () => {
         const lcg = (seed: number) => () => {
             seed = (seed * 1664525 + 1013904223) >>> 0;
