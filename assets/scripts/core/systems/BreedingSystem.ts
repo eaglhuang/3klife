@@ -424,8 +424,16 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
 
 // ── 一次完整結緣 ───────────────────────────────────────────────────────────
 
+/**
+ * 結緣模式標記（Data Schema Breeding_Mode）。Peace_Lineage 只是標記，仍沿用同一套資格與扣費規則。
+ * 退役但仍為活體的武將可走 Peace_Lineage；已卡片化（教官／支援卡）者由 isMentorCard 規則擋下。
+ */
+export type BreedingMode = 'Standard' | 'Peace_Lineage';
+
 export interface BreedingRequest {
     father: BreedingGeneral;
+    /** 選填；舊呼叫端不傳時視為 Standard */
+    mode?: BreedingMode;
     mother: BreedingGeneral;
     pedigree: PedigreeSource;
     random: RandomSource;
@@ -443,6 +451,8 @@ export type BreedingOutcome = 'blocked' | 'failed' | 'conceived';
 
 export interface BreedingResult {
     outcome: BreedingOutcome;
+    /** 本次結緣的模式標記；舊呼叫端不傳時為 Standard */
+    breedingMode?: BreedingMode;
     reasons: BreedingBlockReason[];
     conceptionRate: number;
     /** 結緣後的父母（blocked 時與輸入相同） */
@@ -521,6 +531,10 @@ function collectProfiles(
  * 亂數消耗順序：受孕 → 因子（依祖譜位置）→ 子嗣性別。
  */
 export function breed(request: BreedingRequest): BreedingResult {
+    return { ...runBreeding(request), breedingMode: request.mode ?? 'Standard' };
+}
+
+function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
     const rate = conceptionRate(request.father, request.mother);
     if (!eligibility.ok) {
