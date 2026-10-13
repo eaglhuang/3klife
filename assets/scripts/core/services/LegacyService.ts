@@ -8,6 +8,9 @@
  *   - settleSeason：每季增齡後呼叫。死亡的武將交給 GeneralArchiver 產生歸檔快照，名將才標記正式英靈卡、
  *     寫入 L5 歸檔並從名冊移除；再呼叫 DataLifecycleScheduler 做季結／年底壓縮與清掃
  *
+ * 虎符的唯一來源是 GameSession 的虎符結算（TallyDeathSettlement，PROG-2-0236）。
+ * 本服務不產生、不保存虎符，避免兩套產卡規則並存。
+ *
  * 這個類別不持有名冊：名冊由 GameSession 傳進來、改完回傳，因此和結緣（BreedingService）
  * 共用同一份 RosterStore 也不會互相覆寫。
  *
@@ -17,8 +20,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
 import type { SpiritCard } from '../models/SpiritCard';
-import type { TigerTallyCard } from '../models/TigerTallyCard';
-import { isTallyEligible, produceDeathTally, TigerTallyGeneral } from '../systems/TigerTally';
+import { isTallyEligible, TigerTallyGeneral } from '../systems/TigerTally';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import type { GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import {
@@ -37,7 +39,6 @@ import { PendingDeleteStore } from './PendingDeleteStore';
 import { SeasonalRollup } from './SeasonalRollup';
 
 export const STORE_MENTOR_CARDS = 'mentor_cards';
-export const STORE_TIGER_TALLIES = 'tiger_tallies';
 
 export class LegacyError extends Error {}
 
@@ -47,8 +48,6 @@ export interface LifecycleSettlement {
     spiritCards: SpiritCard[];
     /** 全部死亡者的快照；供需要生命週期資料的消費者使用。 */
     archivedSnapshots?: SpiritCard[];
-    /** 本季死亡產出的虎符；選填以相容既有 SeasonLifecycle 實作 */
-    tigerTallies?: TigerTallyCard[];
     seasonEnd: SeasonEndResult | null;
     /** 只有跨年那一季才有 */
     yearEnd: YearEndResult | null;
@@ -73,8 +72,6 @@ export interface SeasonLifecycle {
 export interface LegacyServiceOptions {
     scheduler?: DataLifecycleScheduler;
     archiver?: GeneralArchiver;
-    /** 戰場／敘事尚未回寫分數時，預設使用 0 / 0。 */
-    tallyScoreProvider?: (dead: GeneralConfig) => { deathBattleScore: number; legacyQualityScore: number };
 }
 
 type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number };
@@ -113,11 +110,9 @@ function isAlive(general: GeneralConfig): boolean {
 export class LegacyService implements SeasonLifecycle {
     private readonly _scheduler: DataLifecycleScheduler;
     private readonly _archiver: GeneralArchiver;
-    private readonly _tallyScoreProvider: LegacyServiceOptions['tallyScoreProvider'];
     private _ready: Promise<void> | null = null;
 
     constructor(private readonly _adapter: DataStorageAdapter, options: LegacyServiceOptions = {}) {
-        this._tallyScoreProvider = options.tallyScoreProvider;
         // 不用各服務的 getInstance 單例：單例只認第一個 adapter，換存檔後端或跑多個測試會串到舊資料
         const pendingDelete = new PendingDeleteStore(_adapter);
         this._archiver = options.archiver ?? new GeneralArchiver(_adapter, pendingDelete);
@@ -170,7 +165,6 @@ export class LegacyService implements SeasonLifecycle {
         const deadIds = new Set(events.filter((e) => e.type === 'died').map((e) => e.generalId));
         const spiritCards: SpiritCard[] = [];
         const archivedSnapshots: SpiritCard[] = [];
-        const tigerTallies: TigerTallyCard[] = [];
         for (const id of deadIds) {
             const dead = roster.find((g) => g.id === id) as LegacyGeneral | undefined;
             if (!dead) continue;
@@ -187,23 +181,12 @@ export class LegacyService implements SeasonLifecycle {
             const snapshot = await this._archiver.markSpiritRelic(archived.uid, isSpiritRelic);
             archivedSnapshots.push(snapshot);
             if (snapshot.isSpiritRelic === true) spiritCards.push(snapshot);
-            const scores = this._tallyScoreProvider?.(dead) ?? { deathBattleScore: 0, legacyQualityScore: 0 };
-            // 虎符使用累計季數；currentSeason 是每年重複的 1～4，不能用作產物身份。
-            const tally = produceDeathTally(
-                identity, scores.deathBattleScore, scores.legacyQualityScore,
-                advance.previous.totalSeasonsElapsed,
-            );
-            if (tally) {
-                const stored = await this.getTigerTallies();
-                await this._adapter.set(STORE_TIGER_TALLIES, [...stored.filter((c) => c.uid !== tally.uid), tally]);
-                tigerTallies.push(tally);
-            }
         }
         const nextRoster = roster.filter((g) => !deadIds.has(g.id));
 
         const seasonEnd = await this._scheduler.onSeasonEnd(season, year);
         const yearEnd = advance.yearEnded ? await this._scheduler.onYearEnd(year) : null;
-        return { roster: nextRoster, settlement: { spiritCards, archivedSnapshots, tigerTallies, seasonEnd, yearEnd } };
+        return { roster: nextRoster, settlement: { spiritCards, archivedSnapshots, seasonEnd, yearEnd } };
     }
 
     public getArchiver(): GeneralArchiver {
@@ -213,11 +196,6 @@ export class LegacyService implements SeasonLifecycle {
     public async getMentorCards(): Promise<MentorCard[]> {
         await this._ensureReady();
         return (await this._adapter.get<MentorCard[]>(STORE_MENTOR_CARDS)) ?? [];
-    }
-
-    public async getTigerTallies(): Promise<TigerTallyCard[]> {
-        await this._ensureReady();
-        return (await this._adapter.get<TigerTallyCard[]>(STORE_TIGER_TALLIES)) ?? [];
     }
 
     private async _archiveDeath(

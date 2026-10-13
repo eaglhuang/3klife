@@ -33,7 +33,6 @@ export function createSpiritRelicSuite(): TestSuite {
         const result = await service.settleSeason(roster, new GameClock().advanceSeason(), death(...roster));
         assert.equals(2, result.settlement.spiritCards.length);
         assert.equals(2, result.settlement.archivedSnapshots!.length);
-        assert.equals(2, result.settlement.tigerTallies!.length);
         const stored = (await adapter.get<SpiritCard[]>('spirit_cards'))!;
         assert.isTrue(stored.every(card => card.isSpiritRelic === true));
         assert.isTrue(result.settlement.spiritCards.every(card => card.isSpiritRelic === true));
@@ -44,7 +43,6 @@ export function createSpiritRelicSuite(): TestSuite {
         const child = general('child', { fatherId: 'dad', motherId: 'mom', birthSeason: 0 });
         const result = await service.settleSeason([child], new GameClock().advanceSeason(), death(child));
         assert.equals(0, result.settlement.spiritCards.length);
-        assert.equals(0, result.settlement.tigerTallies!.length);
         assert.equals(1, result.settlement.archivedSnapshots!.length);
         assert.isFalse(result.settlement.archivedSnapshots![0].isSpiritRelic === true);
         assert.equals('child', (await adapter.get<SpiritCard[]>('spirit_cards'))![0].uid);
@@ -71,10 +69,8 @@ export function createSpiritRelicSuite(): TestSuite {
         const advance = new GameClock().advanceSeason();
         const retired = await service.retireGeneral([general('hero')], 'hero', advance.previous);
         assert.equals(0, (await service.getArchiver().getAllSpiritCards()).length);
-        assert.equals(0, (await service.getTigerTallies()).length);
         const result = await service.settleSeason(retired.roster, advance, death(...retired.roster));
         assert.equals(1, result.settlement.spiritCards.length);
-        assert.equals(1, result.settlement.tigerTallies!.length);
         assert.equals(1, (await service.getMentorCards()).length);
     });
     suite.test('archive 預設仍只建快照；舊資料不自動變成正式卡', async () => {

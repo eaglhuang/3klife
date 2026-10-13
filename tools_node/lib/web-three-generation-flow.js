@@ -123,9 +123,12 @@ async function runThreeGenerationFlow(page, options = {}) {
                 const db = request.result;
                 if (!db.objectStoreNames.contains('kv')) { db.close(); reject(Error('Card store missing')); return; }
                 const tx = db.transaction('kv', 'readonly'), store = tx.objectStore('kv'), result = {};
-                for (const key of ['mentor_cards', 'spirit_cards', 'tiger_tallies']) {
+                for (const key of ['mentor_cards', 'spirit_cards']) {
                     const read = store.get(key); read.onsuccess = () => { result[key] = read.result?.value || []; };
                 }
+                // 虎符唯一來源是 GameSession 的存檔欄位 tallyCards（單一來源），不再讀 legacy 的 tiger_tallies 庫
+                const saveRead = store.get('player.save');
+                saveRead.onsuccess = () => { result.tiger_tallies = Object.values(saveRead.result?.value?.tallyCards || {}); };
                 tx.oncomplete = () => { db.close(); resolve(result); }; tx.onerror = () => reject(String(tx.error));
             };
         }));
