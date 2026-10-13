@@ -11,6 +11,7 @@
 import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
+import { normalizeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
@@ -67,6 +68,8 @@ export interface PlayerSaveSnapshot {
     tallyCards?: Record<string, TigerTallyCard>;
     /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
     pendingLifespanDeaths?: PendingLifespanDeath[];
+    /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
+    mercenaries?: MercenarySaveBundle;
 }
 
 /** 虎符卡表：只保留 uid 與 templateId 為非空字串的卡；非物件視為沒有紀錄 */
@@ -145,6 +148,7 @@ export function createPlayerSaveSnapshot(
     tallyLoyalty: Readonly<Record<string, TallyLoyaltyState>> = {},
     tallyHoldings: Readonly<Record<string, TallyHolder>> = {},
     tallyCards: Readonly<Record<string, TigerTallyCard>> = {},
+    mercenaries?: MercenarySaveBundle,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -163,6 +167,7 @@ export function createPlayerSaveSnapshot(
         tallyLoyalty: normalizeTallyLoyaltyMap(tallyLoyalty),
         tallyHoldings: normalizeTallyHoldingsMap(tallyHoldings),
         tallyCards: normalizeTallyCardsMap(tallyCards),
+        ...(mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(mercenaries) } : {}),
     };
 }
 
@@ -220,6 +225,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         tallyHoldings: normalizeTallyHoldingsMap(snapshot.tallyHoldings),
         tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
+        ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
     };
 }
 
