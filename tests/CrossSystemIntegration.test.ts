@@ -13,6 +13,9 @@ import { advanceMercenaryDay, bondMercenary, canBondMercenary, createTrialMercen
 import { applyDailyAffection, AFFECTION_CAP } from '../assets/scripts/core/systems/MercenaryAffection';
 import { isAvailableForPool, POOL_COOLDOWN_DAYS, settleTrialRollover, startCooldownAfterBond } from '../assets/scripts/core/systems/MercenaryDeparture';
 import { createUpkeepState, repayUpkeep, settleUpkeepDay } from '../assets/scripts/core/systems/MercenaryUpkeep';
+import { BondingSetupController } from '../assets/scripts/ui/core/BondingSetupController';
+import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
+import { BreedingService } from '../assets/scripts/core/services/BreedingService';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function makeGeneral(id: string, gender: '男' | '女', age: number, extra: Partial<GeneralConfig> = {}): GeneralConfig {
@@ -209,6 +212,48 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         const late = repayUpkeep(departed.state, { gold: 999, wine: 99 }, cost);
         assert.equals('Departed', late.state.status, '離隊後補繳無效');
         assert.equals(999, late.wallet.gold, '補繳無效時不扣錢');
+    });
+
+    suite.test('結緣→父親壽命耗盡→季結→下一代：子嗣留在名冊、父親歸檔移出，存檔往返一致', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const store = new InMemoryRosterStore([
+            // 父親剩 3 個月壽命，結緣扣 6 個月 → 當場耗盡
+            makeGeneral('father', '男', 59.75, { maxLifespan: 60, isHistorical: true } as never),
+            makeGeneral('mother', '女', 30),
+        ]);
+        const session = new GameSession();
+        session.setRosterStore(store);
+        session.setSaveService(new PlayerSaveService(adapter));
+        session.setLifecycle(new LegacyService(adapter));
+        session.setRandomSource(() => 0.99);
+        const breeding = new BreedingService(store, new BloodlineGraph(), { random: () => 0.01 });
+        const bonding = new BondingSetupController({
+            roster: store,
+            breeding,
+            prepare: async () => breeding.syncGraphFromRoster(),
+            persist: async () => { await session.save(); },
+            spendLifespan: (id, command) => session.spendLifespan(id, command),
+        });
+        await bonding.open();
+        const result = await bonding.confirm();
+        assert.equals('conceived', result.outcome, '結緣應受孕');
+
+        const afterBond = store.getAll();
+        assert.equals('dead', (afterBond.find((g) => g.id === 'father') as { status?: string }).status ?? '', '父親壽命耗盡當場死亡');
+        const child = afterBond.find((g) => g.id === result.child!.id);
+        assert.isTrue(!!child, '子嗣已加入名冊');
+
+        await session.advanceSeason();
+        const afterSeason = store.getAll();
+        assert.isFalse(afterSeason.some((g) => g.id === 'father'), '父親季結後歸檔並移出名冊');
+        assert.isTrue(afterSeason.some((g) => g.id === result.child!.id), '子嗣不受父親死亡影響');
+        assert.isTrue(afterSeason.some((g) => g.id === 'mother'), '母親仍在名冊');
+
+        const reopened = new GameSession();
+        reopened.setRosterStore(new InMemoryRosterStore([]));
+        reopened.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await reopened.load());
+        assert.equals(canonical(store.getAll()), canonical(reopened.roster), '讀檔後名冊與季結後一致');
     });
 
     return suite;
