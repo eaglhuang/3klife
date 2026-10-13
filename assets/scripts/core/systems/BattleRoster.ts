@@ -18,6 +18,7 @@ import { GENERAL_STATUS_DEAD } from './GeneralAging';
 import { baseVitalityMaxOf } from './VitalityCap';
 import type { NurtureRating } from './NurtureSystem';
 import { guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';
+import { isTrialMercenary } from './PrisonerOfWar';
 
 // ── 常數（規格有的標出處；沒有的標「暫定」）────────────────────────────────
 
@@ -250,6 +251,8 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
     const next = roster.map((general) => {
         if (!ids.has(general.id)) return { ...general };
         found.add(general.id);
+        // 試用傭兵（MERC-06）：出戰不計精力、戰績、功勳，名冊原樣保留
+        if (isTrialMercenary(general)) return { ...general };
         const g = general as BattleRosterGeneral;
         const before = vitalityOf(g);
         const after = Math.max(0, before - BATTLE_VITALITY_COST);

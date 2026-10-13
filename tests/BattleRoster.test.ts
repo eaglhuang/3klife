@@ -177,6 +177,19 @@ export function createBattleRosterSuite(): TestSuite {
         assert.equals(10, (draw.roster[0] as BattleRosterGeneral).vitality!);
     });
 
+    suite.test('結算（MERC-06）：試用傭兵出戰不寫入精力、戰績、功勳，也不進結算清單', () => {
+        const merc = adult('merc', { isMercenary: true, vitality: 100 });
+        const flagged = adult('flagged', { templateFlag: 'MERC_TRIAL', vitality: 100 });
+        const result = settleBattle([merc, flagged, graduate('g')], { deployedIds: ['merc', 'flagged', 'g'], result: 'player-win', season: 3 });
+        const [m, f] = result.roster as BattleRosterGeneral[];
+        assert.equals(100, m.vitality!, '傭兵精力不扣');
+        assert.isTrue(m.battleRecord === undefined, '傭兵不寫戰績');
+        assert.equals(100, f.vitality!, '以 MERC_TRIAL 旗標判定的傭兵也不扣');
+        assert.equals(1, result.entries.length, '只有正式武將進結算清單');
+        assert.equals('g', result.entries[0].generalId);
+        assert.equals(0, result.skippedIds.length, '傭兵在名冊內，不算略過');
+    });
+
     suite.test('結算：ongoing 不結算；名冊沒有的內建武將略過並回報', () => {
         const roster = [graduate('g')];
         assert.equals(0, settleBattle(roster, { deployedIds: ['g'], result: 'ongoing' }).entries.length);
