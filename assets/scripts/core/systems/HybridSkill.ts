@@ -9,10 +9,12 @@
  * 暫定（規格只寫在註解）：
  *   - 「不同領域」以 domain 字串比對，兩邊 domain 相同或缺值時視為沒有混種來源。
  *   - 只在視窗內擲骰；視窗外與無來源時不消耗亂數，維持既有亂數序列。
+ *   - 父母來源取自身上最高等級的綠色（tactic-seed）因子；領域取該因子字典 defaultTags 的第一個，沒有字典時退回因子 id。
  *
  * Unity 對照：像一個 static 觸發器，只回答「這一回合要不要觸發」，不改武將資料；寫入戰法由上層負責。
  */
 import type { RandomSource } from './GeneralAging';
+import type { FactorDictionary, InheritedFactor } from './FactorInheritance';
 
 export const HYBRID_WINDOW_START_ROUND = 15;
 export const HYBRID_WINDOW_END_ROUND = 25;
@@ -38,4 +40,32 @@ export function rollHybridTrigger(round: number, father: HybridSkillSource, moth
     const chance = hybridTriggerChance(round, father, mother);
     if (chance <= 0) return false;
     return random() < chance;
+}
+
+/**
+ * 從一方的繼承因子推導戰法來源：取最高等級的綠色因子（同等級取較前面的），沒有綠色因子則為 undefined。
+ * 領域 = 字典 defaultTags[0]；沒有字典或沒有 tag 時用因子 id。
+ */
+export function hybridSourceFromFactors(factors: readonly InheritedFactor[] | undefined, dictionary?: FactorDictionary): HybridSkillSource {
+    if (!factors) return undefined;
+    let best: InheritedFactor | undefined;
+    for (const factor of factors) {
+        if (factor.color !== 'green') continue;
+        if (!best || factor.level > best.level) best = factor;
+    }
+    if (!best) return undefined;
+    const tag = dictionary?.get(best.id)?.defaultTags?.[0];
+    return { domain: tag ?? best.id };
+}
+
+/** 父母雙方的戰法來源；沒有任何一方有來源時回傳 undefined，讓培育會話完全不擲混種 */
+export function hybridSourcesFromParents(
+    parents: { father?: readonly InheritedFactor[]; mother?: readonly InheritedFactor[] } | undefined,
+    dictionary?: FactorDictionary,
+): { father?: HybridSkillSource; mother?: HybridSkillSource } | undefined {
+    if (!parents) return undefined;
+    const father = hybridSourceFromFactors(parents.father, dictionary);
+    const mother = hybridSourceFromFactors(parents.mother, dictionary);
+    if (!father && !mother) return undefined;
+    return { father, mother };
 }
