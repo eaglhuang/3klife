@@ -6,6 +6,8 @@ import {
     FIRST_BATTLE_BOARD,
     FRESH_FIRST_BATTLE_PROGRESS,
     currentFirstBattleHint,
+    FIRST_BATTLE_HINT_TEXT,
+    FirstBattleTutorialPresenter,
     isFirstBattleTeachingDone,
     recordFirstBattleEvent,
 } from '../assets/scripts/core/systems/FirstBattleTutorial';
@@ -46,6 +48,32 @@ export function createFirstBattleTutorialSuite(): TestSuite {
         const p = recordFirstBattleEvent(FRESH_FIRST_BATTLE_PROGRESS, 'clash');
         assert.isTrue(p.clashed);
         assert.equals('deploy', currentFirstBattleHint(p)?.step ?? '');
+    });
+
+    suite.test('Presenter：敵方事件不推進教學，我方事件依序推進', () => {
+        const presenter = new FirstBattleTutorialPresenter();
+        assert.isFalse(presenter.onUnitDeployed(false).changed, '敵方部署不算');
+        assert.isFalse(presenter.onUnitMoved(false).changed, '敵方移動不算');
+        assert.isFalse(presenter.onUnitDamaged(false).changed, '敵方攻擊不算');
+        assert.isFalse(presenter.onUnitDamaged(null).changed, '無攻擊者不算');
+        assert.equals('deploy', presenter.hint?.step ?? '');
+
+        const deployed = presenter.onUnitDeployed(true);
+        assert.isTrue(deployed.changed);
+        assert.equals('advance', deployed.hint?.step ?? '');
+        assert.isFalse(presenter.onUnitDeployed(true).changed, '重複部署不重算');
+
+        assert.equals('clash', presenter.onUnitMoved(true).hint?.step ?? '');
+        const clashed = presenter.onUnitDamaged(true);
+        assert.isTrue(clashed.changed);
+        assert.equals(null, clashed.hint);
+        assert.isTrue(isFirstBattleTeachingDone(clashed.progress));
+    });
+
+    suite.test('Presenter：每個步驟都有浮窗文字', () => {
+        assert.isTrue(FIRST_BATTLE_HINT_TEXT.deploy.length > 0);
+        assert.isTrue(FIRST_BATTLE_HINT_TEXT.advance.length > 0);
+        assert.isTrue(FIRST_BATTLE_HINT_TEXT.clash.length > 0);
     });
 
     return suite;
