@@ -94,11 +94,13 @@ export class BondingSetupController {
     }
 
     get fatherId(): string | null {
-        return this._resolve(this.fathers(), this._fatherId, (id) => { this._fatherId = id; })?.id ?? null;
+        this._ensureDefaultPair();
+        return this._fatherId;
     }
 
     get motherId(): string | null {
-        return this._resolve(this.mothers(), this._motherId, (id) => { this._motherId = id; })?.id ?? null;
+        this._ensureDefaultPair();
+        return this._motherId;
     }
 
     selectFather(id: string): void {
@@ -170,8 +172,9 @@ export class BondingSetupController {
     getView(): BondingView {
         const fathers = this.fathers();
         const mothers = this.mothers();
-        const father = this._resolve(fathers, this._fatherId, (id) => { this._fatherId = id; });
-        const mother = this._resolve(mothers, this._motherId, (id) => { this._motherId = id; });
+        this._ensureDefaultPair();
+        const father = fathers.find((g) => g.id === this._fatherId) ?? null;
+        const mother = mothers.find((g) => g.id === this._motherId) ?? null;
 
         const texts: Record<string, string> = {
             bondTitle: '結緣配置',
@@ -238,12 +241,43 @@ export class BondingSetupController {
             && (g.age ?? 0) >= BREEDING_MIN_AGE);
     }
 
-    private _resolve(list: BreedingGeneral[], id: string | null, remember: (id: string) => void): BreedingGeneral | null {
-        if (list.length === 0) return null;
-        const found = list.find((g) => g.id === id);
-        if (found) return found;
-        remember(list[0].id);
-        return list[0];
+    /**
+     * 預設配對：雙方都沒選或選的已不在清單時，挑第一組「可結緣」的配對（親傳次數用完、精力不足等會被略過）。
+     * 只有一方已選時，另一方挑第一位可與它結緣者。全部不合格時才退回清單第一位，由資格檢查顯示原因。
+     */
+    private _ensureDefaultPair(): void {
+        const fathers = this.fathers();
+        const mothers = this.mothers();
+        const fatherValid = fathers.some((g) => g.id === this._fatherId);
+        const motherValid = mothers.some((g) => g.id === this._motherId);
+        if (fatherValid && motherValid) return;
+
+        const pair = this._firstEligiblePair(fathers, mothers, fatherValid ? this._fatherId : null, motherValid ? this._motherId : null);
+        if (pair) {
+            this._fatherId = pair.father;
+            this._motherId = pair.mother;
+            return;
+        }
+        if (!fatherValid) this._fatherId = fathers[0]?.id ?? null;
+        if (!motherValid) this._motherId = mothers[0]?.id ?? null;
+    }
+
+    private _firstEligiblePair(
+        fathers: BreedingGeneral[],
+        mothers: BreedingGeneral[],
+        lockedFather: string | null,
+        lockedMother: string | null,
+    ): { father: string; mother: string } | null {
+        for (const father of fathers) {
+            if (lockedFather !== null && father.id !== lockedFather) continue;
+            for (const mother of mothers) {
+                if (lockedMother !== null && mother.id !== lockedMother) continue;
+                if (this._deps.breeding.checkEligibility(father.id, mother.id).ok) {
+                    return { father: father.id, mother: mother.id };
+                }
+            }
+        }
+        return null;
     }
 
     private async _persist(): Promise<void> {

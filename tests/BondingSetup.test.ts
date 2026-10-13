@@ -132,6 +132,37 @@ export function createBondingSetupSuite(): TestSuite {
         assert.isTrue(view.texts.fatherInfo.includes('精力 100 / 100'));
     });
 
+    suite.test('預設配對：名冊第一位親傳次數用完時，預設挑第一組可結緣的配對，不會一直被擋', () => {
+        const { flow } = makeRig([
+            general('a', '男', { breedingCount: 99 }),
+            general('b', '男'),
+            general('x', '女'),
+        ]);
+        assert.equals('b', flow.fatherId, '略過不可結緣的 a');
+        assert.equals('x', flow.motherId);
+        const view = flow.getView();
+        assert.isTrue(view.enabled.btnConfirmBond);
+        assert.isTrue(view.texts.eligibilityLabel.includes('良緣天成'));
+    });
+
+    suite.test('預設配對：已選父方時，母方挑第一位能與它結緣者；全部不合格才退回第一位並顯示原因', () => {
+        const { flow } = makeRig([
+            general('a', '男'),
+            general('x', '女', { breedingCount: 99 }),
+            general('y', '女'),
+        ]);
+        assert.equals('a', flow.fatherId);
+        assert.equals('y', flow.motherId, '略過 x，挑 y');
+
+        const blocked = makeRig([
+            general('a', '男', { breedingCount: 99 }),
+            general('x', '女'),
+        ]).flow.getView();
+        assert.equals('父方：a', blocked.texts.fatherName);
+        assert.isFalse(blocked.enabled.btnConfirmBond);
+        assert.isTrue(blocked.texts.eligibilityLabel.startsWith('無法結緣'));
+    });
+
     suite.test('結緣後母方壽命耗盡：通知列出已故武將名', async () => {
         const rig = makeRig([general('liu', '男'), general('sun', '女')], {
             spendLifespan: (id) => ({ events: id === 'sun' ? [{ type: 'died' }] : [] }),
