@@ -13,7 +13,8 @@
 
 ## 規則
 1. 一封信一個 md 檔，不要改別人寫的信。
-2. 讀信後，把它 `git mv` 到同一個收件方的 `archive/`，再 commit。
+2. 讀信後**立刻** `git mv` 到同一個收件方的 `archive/`，再 commit。收件匣不留已讀的信。
+   `archive/` 超過 30 天，或信裡的工單已 done，就刪除（git 歷史仍保留）。
 3. 回信直接寫新檔，不要覆蓋舊檔。
 4. 工單內容寫在信裡；工單檔仍放在 `/mnt/project-files/tickets/`，信只附上檔名。
 5. 只 push 到 `mailbox` 分支，不要 push 到 `master` 或其他分支。
