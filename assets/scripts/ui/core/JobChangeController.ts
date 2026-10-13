@@ -22,7 +22,7 @@ import {
     JobChangeResult,
     JobClass,
 } from '../../core/systems/JobChange';
-import { primaryAbilityOf, JobWiringGeneral } from '../../core/systems/JobChangeWiring';
+import { primaryAbilityOf, JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
 
 export const JOB_CHANGE_REJECT_TEXT: Record<JobChangeRejectReason, string> = {
     'too-young': `未滿 ${JOB_CHANGE_MIN_AGE} 歲，尚不能轉職`,
@@ -78,7 +78,6 @@ export class JobChangeController {
                 return wiring.status !== GENERAL_STATUS_DEAD
                     && typeof wiring.age === 'number'
                     && wiring.age >= JOB_CHANGE_MIN_AGE
-                    && wiring.primaryClass !== undefined
                     && (wiring.subClass ?? null) === null;
             });
     }
@@ -157,7 +156,7 @@ export class JobChangeController {
         return {
             texts: {
                 generalName: general ? general.name : '－',
-                generalInfo: general ? `${general.age} 歲　主職：${general.primaryClass === 'Warrior' ? '武官' : '文官'}` : '',
+                generalInfo: general ? `${general.age} 歲　主職：${resolvePrimaryClass(general) === 'Warrior' ? '武官' : '文官'}` : '',
                 pager: `${this.eligibleGenerals().findIndex((item) => item.id === general?.id) + 1} / ${this.eligibleGenerals().length}`,
                 subInfo: [warrior, scholar]
                     .filter((choice): choice is JobChangeChoice => choice !== undefined)
@@ -193,7 +192,7 @@ export class JobChangeController {
     }
 
     private _candidateOf(general: JobWiringGeneral) {
-        const primaryClass = general.primaryClass as JobClass;
+        const primaryClass = resolvePrimaryClass(general);
         return {
             age: general.age as number,
             primaryClass,
