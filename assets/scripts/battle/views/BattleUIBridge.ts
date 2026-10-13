@@ -1,4 +1,3 @@
-import { buildTacticSummary } from './BattleSceneLoader';
 /**
  * BattleUIBridge.ts — 戰鬥 UI 連結器
  *
@@ -17,7 +16,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, milestoneDisplayName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
-import { loadGeneralConfig } from './BattleSceneLoader';
+import { buildTacticSummary, loadGeneralConfig } from './BattleSceneLoader';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
