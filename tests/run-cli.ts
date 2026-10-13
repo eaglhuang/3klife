@@ -43,6 +43,7 @@ import { createSortieDeploySuite } from './SortieDeploy.test';
 import { createBattleAptitudeSuite } from './BattleAptitude.test';
 import { createBattleVictorySuite } from './BattleVictory.test';
 import { createTigerTallyLoyaltySuite } from './TigerTallyLoyalty.test';
+import { createBattlePowerPredictionSuite } from './BattlePowerPrediction.test';
 import { createBattleRecordStatsSuite } from './BattleRecordStats.test';
 import { createM5ViewSpecSuite } from './M5ViewSpec.test';
 import { createPrisonerOfWarSuite } from './PrisonerOfWar.test';
@@ -124,6 +125,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattleAptitudeSuite());
     runner.register(createBattleVictorySuite());
     runner.register(createTigerTallyLoyaltySuite());
+    runner.register(createBattlePowerPredictionSuite());
     runner.register(createBattleRecordStatsSuite());
     runner.register(createM5ViewSpecSuite());
     runner.register(createPrisonerOfWarSuite());
