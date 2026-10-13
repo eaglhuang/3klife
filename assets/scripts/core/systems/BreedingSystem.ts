@@ -30,6 +30,7 @@ import {
 } from './FactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { baseVitalityMaxOf } from './VitalityCap';
+import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -383,6 +384,24 @@ export function applyInbreedingPurification(
     });
 }
 
+/**
+ * 血統活性 Wild Gene（BLT-07）：每個因子以來源世代擲一次 rollWildGene，命中則星級 +STAR_JUMP_STEP，封頂於字典 maxLevel。
+ * 暫定接線方式：Wild Gene 的命中本身就是跳升，不再套 applyStarJump 的第二次基礎機率（WildGene.ts 註明組合方式另定）。
+ * 只在一般配對呼叫；近親配對走純化，不額外擲變異，維持既有亂數序列。
+ */
+export function applyWildGeneMutation(
+    factors: InheritedFactor[],
+    random: RandomSource,
+    dictionary?: FactorDictionary,
+): InheritedFactor[] {
+    return factors.map((factor) => {
+        if (!rollWildGene(factor.generation, random)) return factor;
+        const maxLevel = Math.min(STAR_JUMP_MAX_LEVEL, dictionary?.get(factor.id)?.maxLevel ?? STAR_JUMP_MAX_LEVEL);
+        if (factor.level >= maxLevel) return factor;
+        return { ...factor, level: Math.min(maxLevel, factor.level + STAR_JUMP_STEP) };
+    });
+}
+
 export function createChild(input: CreateChildInput): BreedingGeneral {
     const { father, mother, ep } = input;
     const gender = input.random() < 0.5 ? '男' : '女';
@@ -547,7 +566,8 @@ export function breed(request: BreedingRequest): BreedingResult {
         maxFactors: request.maxFactors,
     });
     const inbred = isSameBloodline(request.father, request.mother);
-    const finalFactors = inbred ? applyInbreedingPurification(factors, request.random, request.dictionary) : factors;
+    const purified = inbred ? applyInbreedingPurification(factors, request.random, request.dictionary) : factors;
+    const finalFactors = inbred ? purified : applyWildGeneMutation(purified, request.random, request.dictionary);
     const child = createChild({
         id: request.childId,
         father: request.father,
