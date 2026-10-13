@@ -39,6 +39,7 @@ import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwak
 import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
 import { hybridSourcesFromParents } from '../systems/HybridSkill';
 import { revealStat, RevealedStat, RevelationLevel } from '../systems/StatRevelation';
+import { commitReportCard, emptyReportCardBook, keepReportCard, ReportCardBook } from '../systems/ReportCardBook';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -69,6 +70,8 @@ export interface NurtureState {
     sessions: NurtureSession[];
     /** 當季已用的入學令；季度變了就視為重置 */
     admission: { season: number; used: number };
+    /** 每位子嗣保留的畢業成績單（最多 3 份）；舊存檔沒有此欄位視為空 */
+    reportBooks?: Record<string, ReportCardBook<GraduationResult>>;
 }
 
 /** 父母各自的繼承因子；用來推導混種戰法來源，沒提供就不擲混種 */
@@ -252,6 +255,53 @@ export class NurtureService {
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
         this._options.onGraduated?.(result);
         return result;
+    }
+
+    /** 畢業後保留成績單（不寫入名冊，最多 3 份，超過丟最舊的）；會話保留為 completed */
+    keepReport(childId: string): GraduationResult {
+        const session = this._requireSession(childId);
+        const roster = this._roster.getAll() as UnveilingGeneral[];
+        const child = roster.find((g) => g.id === childId);
+        if (!child) throw new NurtureError(`名冊中找不到 ${childId}`);
+        const result = graduateSession(session, child, this._season());
+        const books = this._state.reportBooks ?? {};
+        const book = books[childId] ?? emptyReportCardBook<GraduationResult>();
+        this._state.reportBooks = { ...books, [childId]: keepReportCard(book, result) };
+        return result;
+    }
+
+    /**
+     * 保留並重修：清掉已完成的會話、重新開場（照常消耗入學令與教官鎖定）。
+     * 已保留的成績單不會丟；補腦湯 ×1 的扣除由上層處理（RETAKE_ITEM_COST）。
+     */
+    retake(childId: string, mentors: readonly TrainingMentor[] = []): NurtureSession {
+        const session = this._requireSession(childId);
+        if (session.status !== 'completed') throw new NurtureError(`${childId} 尚未完成，不能重修`);
+        const book = this._state.reportBooks?.[childId];
+        if (!book || book.cards.length === 0) throw new NurtureError(`${childId} 沒有保留的成績單`);
+        const blocking = this.checkStart(childId, mentors).reasons.filter((reason) => reason !== 'already-nurturing');
+        if (blocking.length > 0) throw new NurtureError(`${childId} 不能重修：${blocking.join(', ')}`);
+        this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
+        return this.start(childId, mentors);
+    }
+
+    /** 定型：從保留的成績單選一份正式畢業，寫入名冊，其餘成績單與會話一併銷毀 */
+    commitReport(childId: string, index: number): GraduationResult {
+        const book = this._state.reportBooks?.[childId];
+        if (!book) throw new NurtureError(`${childId} 沒有保留的成績單`);
+        const { card } = commitReportCard(book, index);
+        const roster = this._roster.getAll() as UnveilingGeneral[];
+        const rosterIndex = roster.findIndex((g) => g.id === childId);
+        if (rosterIndex < 0) throw new NurtureError(`名冊中找不到 ${childId}`);
+        const next = [...roster];
+        next[rosterIndex] = card.general;
+        this._roster.replaceAll(next);
+        this._state.sessions = this._state.sessions.filter((s) => s.childId !== childId);
+        const rest = { ...(this._state.reportBooks ?? {}) };
+        delete rest[childId];
+        this._state.reportBooks = rest;
+        this._options.onGraduated?.(card);
+        return card;
     }
 
     /** 中途放棄：本體不變、入學令不退、教官解鎖 */
