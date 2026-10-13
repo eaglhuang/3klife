@@ -331,6 +331,38 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.equals(1, b.onboarding.nextIndex, '引導停在第二段');
     });
 
+    suite.test('傭兵經 GameSession 存檔往返：試用中途、欠薪凍結、冷卻都讀回一致，讀回後可接著結義', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, makeRoster());
+        let trial = createTrialMercenary('merc-s');
+        for (let day = 0; day < 3; day++) trial = advanceMercenaryDay(trial).state;
+        const frozen = settleUpkeepDay(createUpkeepState('merc-f'), { gold: 0, wine: 0 }, { gold: 100, wine: 2 }).state;
+        const cooldowns = startCooldownAfterBond('merc-old', 5, []);
+        a.setMercenaries({
+            mercenaries: [trial],
+            upkeep: [frozen],
+            cooldowns,
+        } as never);
+        await a.save();
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await b.load());
+        assert.equals(canonical(a.mercenaries), canonical(b.mercenaries), '傭兵包讀檔後一致');
+        assert.equals('Frozen', b.mercenaries.upkeep[0].status);
+        assert.isFalse(isAvailableForPool('merc-old', 5 + POOL_COOLDOWN_DAYS - 1, b.mercenaries.cooldowns), '冷卻讀回後仍生效');
+
+        // 讀回的試用傭兵繼續走完剩餘天數後可結義
+        let resumed = { ...b.mercenaries.mercenaries[0] } as ReturnType<typeof createTrialMercenary>;
+        assert.isFalse(canBondMercenary(resumed), '試用中途不能結義');
+        for (let day = 0; day < TRIAL_DAYS - 3; day++) resumed = advanceMercenaryDay(resumed).state;
+        assert.isTrue(canBondMercenary(resumed), '剩餘天數走完後可結義');
+
+        b.startNewGame(1);
+        assert.equals(0, b.mercenaries.mercenaries.length, '開新局清空傭兵包');
+    });
+
     suite.test('結緣＋血統活性：同亂數種子結果完全一致，因子星級不超過 5★、不低於 1★', () => {
         const lcg = (seed: number) => () => {
             seed = (seed * 1664525 + 1013904223) >>> 0;
