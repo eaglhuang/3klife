@@ -39,6 +39,7 @@ import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
 import { createPlayerDeckSuite } from './PlayerDeck.test';
 import { createFactorAwakeningSuite } from './FactorAwakening.test';
 import { createFactorMaskSuite } from './FactorMask.test';
+import { createNurtureEventsSuite } from './NurtureEvents.test';
 import { createAwakeningTitleSuite } from './AwakeningTitle.test';
 import { createBattleSpecialActionsSuite } from './BattleSpecialActions.test';
 import { createSortieDeploySuite } from './SortieDeploy.test';
@@ -131,6 +132,7 @@ if (typeof window === 'undefined') {
     runner.register(createPlayerDeckSuite());
     runner.register(createFactorAwakeningSuite());
     runner.register(createFactorMaskSuite());
+    runner.register(createNurtureEventsSuite());
     runner.register(createAwakeningTitleSuite());
     runner.register(createBattleSpecialActionsSuite());
     runner.register(createSortieDeploySuite());
