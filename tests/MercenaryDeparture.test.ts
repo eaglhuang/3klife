@@ -1,10 +1,12 @@
 import { assert, TestSuite } from './TestRunner';
+import { createUpkeepState, settleUpkeepDay, FREEZE_GRACE_DAYS } from '../assets/scripts/core/systems/MercenaryUpkeep';
 import {
     FAREWELL_TEXT_KEY,
     isAvailableForPool,
     MercenaryRecord,
     POOL_COOLDOWN_DAYS,
     settleTrialRollover,
+    settleUpkeepDeparture,
     startCooldownAfterBond,
     startPoolCooldown,
 } from '../assets/scripts/core/systems/MercenaryDeparture';
@@ -80,6 +82,55 @@ export function createMercenaryDepartureSuite(): TestSuite {
         assert.throws(() => startPoolCooldown([], 'merc-1', -1));
         assert.throws(() => isAvailableForPool('merc-1', 1.5, []));
         assert.throws(() => settleTrialRollover(TRIAL_DONE, NaN, []));
+    });
+
+    suite.test('薪水欠款離隊：發離隊、告別信與冷卻事件', () => {
+        const result = settleUpkeepDeparture([{ type: 'departed', uid: 'merc-1', reason: 'upkeep-unpaid' }], 10, []);
+        assert.isTrue(result.departed);
+        assert.equals(3, result.events.length);
+        assert.equals('departed', result.events[0].type);
+        assert.equals('upkeep-unpaid', (result.events[0] as { reason: string }).reason);
+        assert.equals('farewell-letter', result.events[1].type);
+        assert.equals(FAREWELL_TEXT_KEY, (result.events[1] as { textKey: string }).textKey);
+        assert.equals(10 + POOL_COOLDOWN_DAYS, (result.events[2] as { availableOnDay: number }).availableOnDay);
+        assert.isFalse(isAvailableForPool('merc-1', 10, result.cooldowns));
+    });
+
+    suite.test('沒有離隊事件時不產生離隊事件，冷卻不變', () => {
+        const before: { uid: string; availableOnDay: number }[] = [{ uid: 'merc-2', availableOnDay: 50 }];
+        const result = settleUpkeepDeparture([{ type: 'frozen', uid: 'merc-1', frozenDaysLeft: 1 }], 10, before);
+        assert.isFalse(result.departed);
+        assert.equals(0, result.events.length);
+        assert.equals(1, result.cooldowns.length);
+        assert.equals(50, result.cooldowns[0].availableOnDay);
+    });
+
+    suite.test('非薪水原因的離隊事件不接線', () => {
+        const result = settleUpkeepDeparture([{ type: 'departed', uid: 'merc-1', reason: 'trial-expired' }], 10, []);
+        assert.isFalse(result.departed);
+        assert.equals(0, result.events.length);
+    });
+
+    suite.test('完整流程：欠薪凍結、倒數歸零後離隊，接上告別信與 30 天冷卻', () => {
+        const cost = { gold: 10, wine: 1 };
+        let state = createUpkeepState('merc-1');
+        let wallet = { gold: 0, wine: 0 };
+        const frozen = settleUpkeepDay(state, wallet, cost);
+        assert.equals('Frozen', frozen.state.status);
+        state = frozen.state;
+        let departedEvents: { type: string; uid: string; reason?: string }[] = [];
+        for (let day = 0; day < FREEZE_GRACE_DAYS + 1; day++) {
+            const next = settleUpkeepDay(state, wallet, cost);
+            state = next.state;
+            wallet = next.wallet;
+            departedEvents = departedEvents.concat(next.events);
+        }
+        assert.equals('Departed', state.status);
+        const result = settleUpkeepDeparture(departedEvents, 20, []);
+        assert.isTrue(result.departed);
+        assert.equals(3, result.events.length);
+        assert.isFalse(isAvailableForPool('merc-1', 20 + POOL_COOLDOWN_DAYS - 1, result.cooldowns));
+        assert.isTrue(isAvailableForPool('merc-1', 20 + POOL_COOLDOWN_DAYS, result.cooldowns));
     });
 
     return suite;

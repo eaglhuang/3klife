@@ -29,8 +29,10 @@ export interface PoolCooldown {
     availableOnDay: number;
 }
 
+export type DepartureReason = 'trial-expired' | 'upkeep-unpaid';
+
 export type DepartureEvent =
-    | { type: 'departed'; uid: string; reason: 'trial-expired' }
+    | { type: 'departed'; uid: string; reason: DepartureReason }
     | { type: 'farewell-letter'; uid: string; textKey: typeof FAREWELL_TEXT_KEY }
     | { type: 'cooldown-started'; uid: string; availableOnDay: number };
 
@@ -84,6 +86,38 @@ export function settleTrialRollover(record: MercenaryRecord, today: number, cool
         { type: 'cooldown-started', uid: record.uid, availableOnDay: today + POOL_COOLDOWN_DAYS },
     );
     return result;
+}
+
+export interface UpkeepDepartureResult {
+    cooldowns: PoolCooldown[];
+    departed: boolean;
+    /** 只含離隊相關事件（離隊、告別信、冷卻）；薪水本身的事件仍由 MercenaryUpkeep 回傳。 */
+    events: DepartureEvent[];
+}
+
+/**
+ * 薪水欠款到期離隊的接線（PM 裁定：欠薪離隊同樣發告別信並開始冷卻）。
+ * 呼叫端把 settleUpkeepDay / repayUpkeep 的事件陣列傳入；沒有 departed 事件則不變。
+ * 只看 upkeep-unpaid 原因，不改輸入、不寫存檔。
+ */
+export function settleUpkeepDeparture(
+    upkeepEvents: readonly { type: string; uid: string; reason?: string }[],
+    today: number,
+    cooldowns: readonly PoolCooldown[],
+): UpkeepDepartureResult {
+    assertDay(today);
+    const leaving = upkeepEvents.find(e => e.type === 'departed' && e.reason === 'upkeep-unpaid');
+    if (!leaving) return { cooldowns: [...cooldowns], departed: false, events: [] };
+    const uid = leaving.uid;
+    return {
+        cooldowns: startPoolCooldown(cooldowns, uid, today),
+        departed: true,
+        events: [
+            { type: 'departed', uid, reason: 'upkeep-unpaid' },
+            { type: 'farewell-letter', uid, textKey: FAREWELL_TEXT_KEY },
+            { type: 'cooldown-started', uid, availableOnDay: today + POOL_COOLDOWN_DAYS },
+        ],
+    };
 }
 
 /** 結義成功後同樣開始冷卻；只負責冷卻，不改變傭兵狀態。 */
