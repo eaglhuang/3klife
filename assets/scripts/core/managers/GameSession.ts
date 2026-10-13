@@ -62,6 +62,7 @@ import { resolveFactorColor } from '../systems/FactorInheritance';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
@@ -173,6 +174,8 @@ export interface AddGeneralsResult {
     duplicates: GeneralConfig[];
     /** 重複抽到且啟用轉生時，每位被轉生的武將結果（GCH-05） */
     rebirths: Array<RebirthPullResult & { id: string }>;
+    /** 滿轉溢出換得的結義點數（GCH-06） */
+    bondPointsGained: number;
 }
 
 export interface AddGeneralsOptions {
@@ -249,6 +252,8 @@ export class GameSession {
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
     private _onboarding: OnboardingState = { ...FRESH_ONBOARDING };
+    /** 結義點數（轉蛋滿轉溢出獲得，傭兵轉永久用）；存檔欄位 bondPoints */
+    private _bondPoints = 0;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 武將 id → 虎符忠誠度狀態（TRP-09） */
@@ -296,6 +301,11 @@ export class GameSession {
 
     /** 道具庫存（唯讀副本） */
     /** 新手引導進度（只讀副本）；讀檔後由存檔還原 */
+    /** 結義點數餘額（GCH-06） */
+    public get bondPoints(): number {
+        return this._bondPoints;
+    }
+
     public get onboarding(): OnboardingState {
         return { ...this._onboarding };
     }
@@ -963,6 +973,7 @@ export class GameSession {
         const added: GeneralConfig[] = [];
         const duplicates: GeneralConfig[] = [];
         const rebirths: Array<RebirthPullResult & { id: string }> = [];
+        let bondPointsGained = 0;
         for (const general of generals) {
             if (!general || typeof general.id !== 'string') {
                 continue;
@@ -985,10 +996,14 @@ export class GameSession {
                 const pull = applyDuplicatePull(target.rebirthCount);
                 byId.set(duplicate.id, { ...target, rebirthCount: pull.rebirthCount });
                 rebirths.push({ id: duplicate.id, ...pull });
+                if (pull.overflow) {
+                    bondPointsGained += overflowBondPoints(overflowRarityOf(target));
+                }
             }
             if (rebirths.length > 0) {
                 this._roster.replaceAll(roster.map((general) => byId.get(general.id) ?? general));
             }
+            this._bondPoints += bondPointsGained;
         }
 
         if (added.length > 0) {
@@ -1002,7 +1017,7 @@ export class GameSession {
         if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
         }
-        return { added, duplicates, rebirths };
+        return { added, duplicates, rebirths, bondPointsGained };
     }
 
     /** 目前名冊中可以出戰的武將（排除死亡、退役教官、未畢業子嗣、精力不足、培育中） */
@@ -1096,6 +1111,7 @@ export class GameSession {
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
+            bondPoints: this._bondPoints,
         };
     }
 
@@ -1126,6 +1142,7 @@ export class GameSession {
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
         this._nurture?.restoreState(snapshot.nurture);
         this._onboarding = normalizeOnboardingState(snapshot.onboarding);
+        this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
