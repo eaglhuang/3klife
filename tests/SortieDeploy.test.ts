@@ -369,6 +369,13 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(1, resolver['getEffectiveAttackRange'](infantry), '步兵水域不變');
     });
 
+    suite.test('帶兵上限（TERM-03）：將階與名聲進入 Command_Capacity，缺欄位時與舊值相同', () => {
+        const base = computeCommandCapacity({ lea: 200 });
+        assert.equals(base, computeCommandCapacity({ lea: 200, generalRank: 0, fameBonus: 0 }), '缺欄位等同 0');
+        assert.isTrue(computeCommandCapacity({ lea: 200, generalRank: 3 }) > base, '將階越高帶兵越多');
+        assert.equals(base + 300, computeCommandCapacity({ lea: 200, fameBonus: 300 }), '名聲直接加成');
+    });
+
     suite.test('整隊血統（SAME-02）：同 Bloodline_ID 不可同場，無血統者不參與比對', () => {
         assert.isTrue(checkFormationBloodlines(['liu', 'guan', 'zhang']).ok, '三個不同血統應通過');
         assert.isTrue(checkFormationBloodlines([undefined, undefined, 'liu']).ok, '沒有血統的武將略過');

@@ -488,7 +488,7 @@ export class GameSession {
         const foodBonus = support.deputyBonus.startingFoodBonus;
         const commander = this._roster.getAll().find((g) => g.id === generalId);
         return {
-            commandCapacity: computeCommandCapacity({ lea: config.lea ?? config.stats?.lea ?? 0 }),
+            commandCapacity: computeCommandCapacity({ lea: config.lea ?? config.stats?.lea ?? 0, generalRank: commander?.generalRank, fameBonus: commander?.generalFame }),
             cityTroops: this._military.cityTroops,
             ...(stageSortieCap !== undefined ? { stageSortieCap } : {}),
             food: this._military.food,
