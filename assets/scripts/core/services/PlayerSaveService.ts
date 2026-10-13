@@ -48,6 +48,18 @@ export interface PlayerSaveSnapshot {
     military?: MilitaryReserve;
     /** 待處置俘虜與監獄（PROG-2-0073）；後加的選填欄位，舊檔讀回為空監獄 */
     prison?: PrisonState<GeneralConfig>;
+    /** 已通關的關卡 id（連環破用）；後加的選填欄位，舊檔讀回補空陣列（沒有任何通關紀錄） */
+    clearedStageIds?: string[];
+}
+
+/** 通關紀錄：只留非空字串、去重、保留第一次出現的順序；非陣列視為沒有紀錄 */
+export function normalizeClearedStageIds(value: unknown): string[] {
+    if (!Array.isArray(value)) return [];
+    const seen = new Set<string>();
+    for (const id of value) {
+        if (typeof id === 'string' && id.length > 0) seen.add(id);
+    }
+    return [...seen];
 }
 
 function normalizeDiscoveryLevel(value: unknown): number {
@@ -70,6 +82,7 @@ export function createPlayerSaveSnapshot(
     discoveryExp = 0,
     inventory?: PlayerInventory,
     oracleCount = 0,
+    clearedStageIds: readonly string[] = [],
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -84,6 +97,7 @@ export function createPlayerSaveSnapshot(
         discoveryExp: normalizeDiscoveryExp(discoveryExp),
         inventory: { ...normalizeInventory(inventory) },
         oracleCount: normalizeDiscoveryExp(oracleCount),
+        clearedStageIds: normalizeClearedStageIds(clearedStageIds),
     };
 }
 
@@ -115,6 +129,9 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (snapshot.leadGeneralId !== undefined && typeof snapshot.leadGeneralId !== 'string') {
         throw new Error('[PlayerSaveService] 存檔 leadGeneralId 不是字串');
     }
+    if (snapshot.clearedStageIds !== undefined && !Array.isArray(snapshot.clearedStageIds)) {
+        throw new Error('[PlayerSaveService] 存檔 clearedStageIds 不是陣列');
+    }
     return {
         schemaVersion: snapshot.schemaVersion,
         ...(snapshot.randomState !== undefined ? { randomState: validateRandomState(snapshot.randomState) } : {}),
@@ -130,6 +147,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         oracleCount: normalizeDiscoveryExp(snapshot.oracleCount),
         ...(snapshot.military !== undefined ? { military: normalizeMilitaryReserve(snapshot.military) } : {}),
         ...(snapshot.prison !== undefined ? { prison: normalizePrisonState<GeneralConfig>(snapshot.prison) } : {}),
+        clearedStageIds: normalizeClearedStageIds(snapshot.clearedStageIds),
     };
 }
 

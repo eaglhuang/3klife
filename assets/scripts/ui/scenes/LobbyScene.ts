@@ -15,6 +15,7 @@ import { LocalGachaService, type LocalGachaResultEntry } from '../../core/servic
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
+import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
@@ -671,11 +672,11 @@ export class LobbyScene extends Component {
      * 候選與加成都在 SortieSetupController（純邏輯），這裡只綁按鈕、套 view。
      */
     private async _mountSortieSetup(): Promise<void> {
-        // 守方 = 大廳開戰用的第一個關卡敵將（與開戰時取的 _encounters[0] 同一來源）
+        // 守方 = 大廳開戰用的當前關卡敵將（與開戰時取的 _currentEncounter() 同一來源）
         const sortie = new SortieSetupController({
             session: services().session,
             getEnemyGeneral: () => {
-                const enemyId = this._encounters[0]?.enemyGeneralId;
+                const enemyId = this._currentEncounter()?.enemyGeneralId;
                 return enemyId ? this._generals.find((g) => g.id === enemyId) ?? null : null;
             },
         });
@@ -2166,8 +2167,18 @@ export class LobbyScene extends Component {
         services().scene.switchScene(SceneName.Battle, this._buildBattleEntryParams(BattleTactic.FloodAttack));
     }
 
+    /**
+     * 大廳目前的開戰關卡（連環破，PROG-2-0215）：取主鏈上第一個已解鎖且未通關的關卡；
+     * 全部通關或沒有可用關卡時回到清單第一關。獨立關卡（沒有 chainId）永遠視為已解鎖。
+     */
+    private _currentEncounter(): EncounterConfig | undefined {
+        const cleared = new Set(services().session.clearedStageIds);
+        const pending = this._encounters.find((e) => !cleared.has(e.id) && isStageUnlocked(e.id, this._encounters, cleared));
+        return pending ?? this._encounters[0];
+    }
+
     private _buildBattleEntryParams(battleTactic?: BattleTactic): IBattleEntryParams {
-        const encounter = this._encounters[0];
+        const encounter = this._currentEncounter();
         if (!encounter) {
             return {
                 ...DEFAULT_BATTLE_ENTRY_PARAMS,

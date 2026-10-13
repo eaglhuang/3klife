@@ -3,6 +3,8 @@
     {
       "id": "encounter-001",
       "name": "虎牢關之戰",
+      "chainId": "changban-chain",
+      "order": 1,
       "playerGeneralId": "zhang-fei",
       "enemyGeneralId": "lu-bu",
       "backgroundId": "bg_normal_day",
@@ -26,6 +28,8 @@
     {
       "id": "encounter-002",
       "name": "長板坡突圍",
+      "chainId": "changban-chain",
+      "order": 2,
       "playerGeneralId": "zhang-fei",
       "enemyGeneralId": "cao-cao",
       "backgroundId": "bg_normal_night",
