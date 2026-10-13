@@ -30,12 +30,15 @@ import {
     NurtureError,
     NurtureRoundLog,
     NurtureSession,
+    TRAINING_KINDS,
+    TrainingKind,
 } from '../systems/NurtureSystem';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
 import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwakening';
 import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
 import { hybridSourcesFromParents } from '../systems/HybridSkill';
+import { revealStat, RevealedStat, RevelationLevel } from '../systems/StatRevelation';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -134,6 +137,18 @@ export class NurtureService {
     }
 
     // ── 查詢 ───────────────────────────────────────────────────────────────
+
+    /** 子嗣的分層揭露視圖：各屬性依 levels 決定可見程度；沒給的屬性預設 HIDDEN（不洩漏數值） */
+    revealedStats(childId: string, levels: Partial<Record<TrainingKind, RevelationLevel>>): Partial<Record<TrainingKind, RevealedStat>> {
+        const child = this._find(childId);
+        if (!child) throw new NurtureError(`找不到子嗣 ${childId}`);
+        const view: Partial<Record<TrainingKind, RevealedStat>> = {};
+        for (const kind of TRAINING_KINDS) {
+            const level = levels[kind] ?? 'HIDDEN';
+            view[kind] = revealStat(Number(child[kind] ?? 0), level);
+        }
+        return view;
+    }
 
     getSession(childId: string): NurtureSession | null {
         return this._state.sessions.find((s) => s.childId === childId && s.status !== 'abandoned') ?? null;
