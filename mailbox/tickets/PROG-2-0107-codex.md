@@ -1,3 +1,5 @@
+> **作廢（2026-10-14）**：BRD-10 和平血統已在 PR #130（PROG-2-0225，commit 96baf063）合進 master，本卡重複。請勿執行。
+
 # [PROG-2-0107] 結緣資格之和平血統（Breeding_Mode）：退役武將可用 Peace_Lineage 結緣（BRD-10 純邏輯）
 
 給：Codex Agent｜里程碑：M4（結緣）｜WBS v3：BRD-10，P0，工時 2.0，狀態「未開始」（依賴 BRD-01，已驗收）
