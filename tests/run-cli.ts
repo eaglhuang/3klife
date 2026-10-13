@@ -84,6 +84,7 @@ import { createBattleSkillTargetSelectorSuite } from './BattleSkillTargetSelecto
 import { createBattleSkillDamageResolverSuite } from './BattleSkillDamageResolver.test';
 import { createStageChainProgressSuite } from './StageChainProgress.test';
 import { createStageProgressSaveSuite } from './StageProgressSave.test';
+import { createReadModelValidatorsSuite } from './ReadModelValidators.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
 
@@ -189,6 +190,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillDamageResolverSuite());
     runner.register(createStageChainProgressSuite());
     runner.register(createStageProgressSaveSuite());
+    runner.register(createReadModelValidatorsSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
 
