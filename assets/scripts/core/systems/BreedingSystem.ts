@@ -51,6 +51,13 @@ export const EP_RESONANCE_MIN_COUNT = 3;
 
 /** 同 Bloodline_ID 配對時子嗣 Vitality_Max × 0.7 */
 export const INBREEDING_VITALITY_MULTIPLIER = 0.7;
+/** 近親劣化：子嗣負面特質出現率 +50%（血脈理論 §近親劣化公式 Mutant_Rate(Negative) += 50%） */
+export const INBREEDING_NEGATIVE_TRAIT_BONUS = 0.5;
+/** 暫定（規格只寫「有機率純化」沒有數值）：近親時同名因子每個有 30% 機率 ★+1 */
+export const INBREEDING_PURIFICATION_CHANCE = 0.3;
+/** 暫定 Age_Factor 門檻（規格只有名稱沒有數值）：≤40 歲 ×1.0；41~45 歲 ×0.8；>45 歲 ×0.6 */
+export const AGE_FACTOR_FULL_MAX_AGE = 40;
+export const AGE_FACTOR_MID_MAX_AGE = 45;
 
 export const CHILD_STATUS_MYSTERY = 'Mystery';
 
@@ -70,6 +77,8 @@ export type BreedingGeneral = GeneralConfig & {
     isMentorCard?: boolean;
     /** 出生時的 totalSeasonsElapsed */
     birthSeason?: number;
+    /** 負面特質出現率加成（近親子嗣 +0.5，其餘 0） */
+    negativeTraitRateBonus?: number;
 };
 
 export type BreedingBlockReason =
@@ -192,9 +201,17 @@ export function birthLoadFactor(mother: BreedingGeneral): number {
     return Math.max(0.4, 1 - 0.15 * Math.max(0, (mother.breedingCount ?? 0) - 1));
 }
 
+/** 單方 Age_Factor（暫定數值，見 AGE_FACTOR_*）；年齡未知視為 1 */
+export function parentAgeFactor(age: number | undefined): number {
+    if (age === undefined || !Number.isFinite(age)) return 1;
+    if (age <= AGE_FACTOR_FULL_MAX_AGE) return 1;
+    if (age <= AGE_FACTOR_MID_MAX_AGE) return 0.8;
+    return 0.6;
+}
+
 /**
  * 受孕率（以扣精力前的狀態計算）。
- * Age_Factor 規格只寫了名稱沒有數值，MVP 先視為 1。
+ * Final = min(Base × (1+CHA/200) × (1+LUK/200) × Vitality × Birth_Load × Age_Father × Age_Mother, 0.95)
  */
 export function conceptionRate(father: BreedingGeneral, mother: BreedingGeneral): number {
     const chaAvg = (statOf(father, 'cha') + statOf(mother, 'cha')) / 2;
@@ -203,7 +220,9 @@ export function conceptionRate(father: BreedingGeneral, mother: BreedingGeneral)
         * (1 + chaAvg / 200)
         * (1 + lukAvg / 200)
         * vitalityFactor(father, mother)
-        * birthLoadFactor(mother);
+        * birthLoadFactor(mother)
+        * parentAgeFactor(father.age)
+        * parentAgeFactor(mother.age);
     return Math.min(rate, CONCEPTION_RATE_CAP);
 }
 
@@ -346,6 +365,24 @@ export function childBaseStat(fatherStat: number, motherStat: number, ep: number
     return Math.max(1, Math.round(((fatherStat + motherStat) / 2) * (ep / 100)));
 }
 
+/**
+ * 近親純化：同名因子（inheritFactors 合併時 sourceUids ≥ 2）有機率 ★+1，未達 maxLevel 才會升。
+ * 只應在近親配對時呼叫；非近親不呼叫，因此不消耗額外亂數。
+ */
+export function applyInbreedingPurification(
+    factors: InheritedFactor[],
+    random: RandomSource,
+    dictionary?: FactorDictionary,
+    chance: number = INBREEDING_PURIFICATION_CHANCE,
+): InheritedFactor[] {
+    return factors.map((factor) => {
+        if (factor.sourceUids.length < 2) return factor;
+        const maxLevel = dictionary?.get(factor.id)?.maxLevel ?? 5;
+        if (factor.level >= maxLevel) return factor;
+        return random() < chance ? { ...factor, level: factor.level + 1 } : factor;
+    });
+}
+
 export function createChild(input: CreateChildInput): BreedingGeneral {
     const { father, mother, ep } = input;
     const gender = input.random() < 0.5 ? '男' : '女';
@@ -377,6 +414,7 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
         genes: toGeneConfigs(input.factors, input.dictionary),
         ancestor_chain: PEDIGREE_SLOTS.map((slot) => input.pedigree[slot]).filter((uid): uid is string => !!uid),
         hiddenFlags: inbred ? ['mystery-phase', 'inbreeding-penalty'] : ['mystery-phase'],
+        negativeTraitRateBonus: inbred ? INBREEDING_NEGATIVE_TRAIT_BONUS : 0,
         fatherId: father.id,
         motherId: mother.id,
         breedingCount: 0,
@@ -508,19 +546,21 @@ export function breed(request: BreedingRequest): BreedingResult {
         enabledColors: request.enabledColors,
         maxFactors: request.maxFactors,
     });
+    const inbred = isSameBloodline(request.father, request.mother);
+    const finalFactors = inbred ? applyInbreedingPurification(factors, request.random, request.dictionary) : factors;
     const child = createChild({
         id: request.childId,
         father: request.father,
         mother: request.mother,
         ep,
-        factors,
+        factors: finalFactors,
         pedigree,
         random: request.random,
         dictionary: request.dictionary,
         birthSeason: request.birthSeason,
     });
 
-    return { outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors };
+    return { outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: finalFactors };
 }
 
 /**
