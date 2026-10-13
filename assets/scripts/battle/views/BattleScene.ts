@@ -224,7 +224,7 @@ export class BattleScene extends Component {
       const initialCards = buildTallyCards(battleParams.selectedCardIds);
       this.battleScenePanel?.setCards(initialCards);
       this.battleScenePanel?.setUltimateSkills(buildUltimateSkills(pg));
-      this.battleScenePanel?.setTacticSummary(buildTacticSummary(pg).label);
+      this.battleScenePanel?.setTacticSummary(buildTacticSummary(pg).label, this.ctrl.getPlayerTacticPointState());
       this.sceneContext.hud = this.hud;
       this.sceneContext.deployRuntime = this._deployPanelRuntime;
       this.sceneContext.battleLogPanel = this.battleLogPanel;
@@ -595,6 +595,9 @@ export class BattleScene extends Component {
   private refreshBattleViews(): void {
     if (!this.ctrl) return;
 
+    const currentGeneral = this.ctrl.state.playerGeneral;
+    if (currentGeneral) this.battleScenePanel?.setTacticSummary(
+      buildTacticSummary(currentGeneral).label, this.ctrl.getPlayerTacticPointState());
     this.updateGridDebug();
     this.boardRenderer?.renderState(this.ctrl.state);
     this.unitRenderer?.renderState(this.ctrl.state);

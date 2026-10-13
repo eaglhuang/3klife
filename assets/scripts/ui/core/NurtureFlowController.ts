@@ -107,6 +107,8 @@ export interface NurtureFlowDeps {
     loadMentorCards: () => Promise<MentorCard[]>;
     /** 每次動作後存檔；失敗只回報，不中斷流程 */
     persist?: () => Promise<unknown>;
+    /** 培育回合的壽命消耗（1 月）；正式環境接 GameSession.spendLifespan */
+    spendLifespan?: (generalId: string, command: 'nurture') => { events: readonly { type: string }[] } | null;
 }
 
 export class NurtureFlowController {
@@ -181,6 +183,10 @@ export class NurtureFlowController {
         const { log, awakening } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
+        const lifespan = this._deps.spendLifespan?.(child.id, 'nurture');
+        if (lifespan?.events.some((event) => event.type === 'died')) {
+            this._notice += '　壽命耗盡，武將已故';
+        }
         await this._persist();
         return log;
     }
