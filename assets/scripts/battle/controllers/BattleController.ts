@@ -384,6 +384,13 @@ export class BattleController {
     };
   }
 
+  /** UI 與目標選取共用目前戰法的計謀點門檻；demo 沒有帳本時免扣點。 */
+  public getPlayerTacticPointState(): { current?: number; max?: number; enabled: boolean } {
+    const descriptor = this.getPlayerSeedTacticDescriptor();
+    return { current: this.sortie?.tacticCurrent, max: this.sortie?.tacticMax,
+      enabled: !!descriptor && (!this.sortie || this.sortie.tacticCurrent >= getTacticTpCost(descriptor.tacticId)) };
+  }
+
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
     if (!this.canUsePlayerSkills()) return false;
 
@@ -403,7 +410,7 @@ export class BattleController {
     });
     if (!result.applied) return false;
 
-    if (this.sortie) this.sortie = spendTactic(this.sortie, tpCost).state;
+    this.trySpendTacticPoints(tpCost);
     general.currentSp = 0;
     services().event.emit(EVENT_NAMES.GeneralSpChanged, {
       faction: Faction.Player,

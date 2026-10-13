@@ -20,7 +20,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Unity 對照：UltimateButtonController + ActionBtnGroup，但透過 CompositePanel 統一管理
  */
-import { _decorator, Button, Label, Node, Sprite } from 'cc';
+import { _decorator, Button, Color, Label, Node, Sprite, UITransform } from 'cc';
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
@@ -51,6 +51,9 @@ export class ActionCommandComposite extends CompositePanel {
     private _tacticsSummaryLabel = '計謀';
 
     // ── 目前 SP 狀態 ──────────────────────────────────────────
+    private _tacticEnabled = true;
+    private _tacticsButton: Button | null = null;
+    private _tacticsEnabledColor: Color | null = null;
     private _maxSp = 100;
     private _currentSp = 0;
     private _isMounted = false;
@@ -101,10 +104,15 @@ export class ActionCommandComposite extends CompositePanel {
         this._ultimateSkills = [...skills];
     }
 
-    public setTacticSummary(label: string): void {
-        this._tacticsSummaryLabel = label.trim() || '計謀';
+    public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }): void {
+        this._tacticsSummaryLabel = (label.trim() || '計謀') +
+            (points?.current !== undefined ? `\n點 ${points.current}/${points.max}` : '');
+        this._tacticEnabled = points?.enabled ?? true;
+        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticEnabled;
         if (this._tacticsLabel) {
             this._tacticsLabel.string = this._tacticsSummaryLabel;
+            if (this._tacticsEnabledColor) this._tacticsLabel.color = this._tacticEnabled
+                ? this._tacticsEnabledColor : new Color(130, 130, 130, 255);
         }
     }
 
@@ -137,7 +145,13 @@ export class ActionCommandComposite extends CompositePanel {
         this._spPctLabel    = binder.getLabel('SpPctLabel');
         this._tacticsLabel  = binder.getLabel('TacticsLabel');
         if (this._tacticsLabel) {
+            this._tacticsEnabledColor = this._tacticsLabel.color.clone();
+            this._tacticsLabel.node.getComponent(UITransform)?.setContentSize(62, 32);
+            this._tacticsLabel.fontSize = 12;
+            this._tacticsLabel.lineHeight = 14;
+            this._tacticsLabel.overflow = Label.Overflow.SHRINK;
             this._tacticsLabel.string = this._tacticsSummaryLabel;
+            if (!this._tacticEnabled) this._tacticsLabel.color = new Color(130, 130, 130, 255);
         }
         
         // 奧義大圓點擊
@@ -147,6 +161,8 @@ export class ActionCommandComposite extends CompositePanel {
 
         // 結束回合、計謀、單挑
         binder.getNode('EndTurnBtn')?.on(Button.EventType.CLICK, this._onEndTurnClick, this);
+        this._tacticsButton = binder.getNode('TacticsBtn')?.getComponent(Button) ?? null;
+        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticEnabled;
         binder.getNode('TacticsBtn')?.on(Button.EventType.CLICK, this._onTacticsClick, this);
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
 
@@ -238,6 +254,7 @@ export class ActionCommandComposite extends CompositePanel {
 
     /** 計謀：通知父節點 */
     private _onTacticsClick(): void {
+        if (!this._tacticEnabled) return;
         this.node.emit('tactics');
     }
 
