@@ -525,6 +525,27 @@ export function createNurtureSuite(): TestSuite {
         assert.equals(undefined, graduate(normalDone, normal).general.awakeningTitle);
     });
 
+    suite.test('混種戰法接線：父母不同領域來源時，第 15~25 回合才可能觸發，只觸發一次；沒有來源永不觸發', () => {
+        const child = readyChild('hy');
+        const withSources = createNurtureSession({
+            sessionId: 'hy1', child, mentors: [makeMentor('a')], startSeason: 0, random: seeded(1),
+            hybridSources: { father: { domain: '火' }, mother: { domain: '水' } },
+        });
+        let current = withSources;
+        for (let i = 0; i < 14; i++) current = executeRound(current, 'rest', () => 0).session;
+        assert.equals(undefined, current.hybridRound, '第 15 回合前不觸發');
+        current = executeRound(current, 'rest', () => 0).session;
+        assert.equals(15, current.hybridRound!, '第 15 回合擲中即觸發');
+        const again = executeRound(current, 'rest', () => 0);
+        assert.equals(15, again.session.hybridRound!, '觸發後不再改寫');
+        assert.isFalse(!!again.log.hybridTriggered);
+
+        const withoutSources = createNurtureSession({ sessionId: 'hy2', child, mentors: [makeMentor('a')], startSeason: 0, random: seeded(1) });
+        let plain = withoutSources;
+        for (let i = 0; i < 20; i++) plain = executeRound(plain, 'rest', () => 0).session;
+        assert.equals(undefined, plain.hybridRound, '沒有來源不擲');
+    });
+
     suite.test('畢業：實力層與標籤寫回本體，資質層（原五維）不變，未完成或對象不符會拋錯', () => {
         const child = readyChild('c');
         const start = createNurtureSession({ sessionId: 's9', child, mentors: [makeMentor('a')], startSeason: 0, random: seeded(2) });

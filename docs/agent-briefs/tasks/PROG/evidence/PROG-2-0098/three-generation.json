@@ -1,0 +1,33 @@
+{
+  "flow": {
+    "name": "three-generation",
+    "completed": true,
+    "interaction": "actual-pointer-and-public-login",
+    "steps": [
+      "first-generation-born",
+      "first-generation-grown-and-graduated",
+      "grandchild-born-with-founder-lineage",
+      "founder-retired-and-mentor-saved",
+      "grandchild-trained-with-retired-founder",
+      "retired-founder-death-dual-cards-saved",
+      "three-generations-and-cards-restored"
+    ],
+    "ids": {
+      "grandparents": [
+        "lu-xun",
+        "xu-shi"
+      ],
+      "first": "child-lu-xun-xu-shi-1",
+      "second": "child-ling-tong-child-lu-xun-xu-shi-1-1",
+      "retired": "lu-xun"
+    },
+    "mentorCount": 1,
+    "snapshotCount": 6,
+    "tallyCount": 6,
+    "limitations": [
+      "Combat outcome not covered",
+      "Natural RNG may produce a bounded diagnostic failure"
+    ]
+  },
+  "errorCount": 0
+}
