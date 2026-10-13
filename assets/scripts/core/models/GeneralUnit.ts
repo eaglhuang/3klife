@@ -290,6 +290,10 @@ export interface GeneralConfig {
   ep?: number;
   epRating?: string;
   bloodlineId?: string;
+  /** 將階 General_Rank 0~5（TERM-03）；缺欄位視為 0，Command_Capacity 用 */
+  generalRank?: number;
+  /** 名聲 General_Fame（TERM-03）；暫定直接作為 Command_Capacity 的名聲加成，缺欄位視為 0 */
+  generalFame?: number;
   parentsSummary?: string;
   ancestorsSummary?: string;
   awakeningTitle?: string;
