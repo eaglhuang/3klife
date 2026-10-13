@@ -384,11 +384,24 @@ export class BattleController {
     };
   }
 
-  /** UI 與目標選取共用目前戰法的計謀點門檻；demo 沒有帳本時免扣點。 */
-  public getPlayerTacticPointState(): { current?: number; max?: number; enabled: boolean } {
+  /** 本次施放實際使用的戰法 id：呼叫端指定優先，否則用主戰法；UI 預檢與施放扣點共用這一個來源。 */
+  private resolveSeedTacticId(options: Pick<GeneralSkillCastOptions, 'tacticId'> = {}): string | null {
+    return options.tacticId ?? this.getPlayerSeedTacticDescriptor()?.tacticId ?? null;
+  }
+
+  /** 有出征帳本時，目前計謀點是否付得起這個戰法；demo 沒有帳本時免扣點。 */
+  private canAffordTactic(tacticId: string | null): boolean {
+    return !this.sortie || this.sortie.tacticCurrent >= getTacticTpCost(tacticId);
+  }
+
+  /**
+   * UI 與目標選取共用目前戰法的計謀點門檻；demo 沒有帳本時免扣點。
+   * 傳入 options.tacticId 時以該戰法計價，與實際施放（triggerPlayerSeedTactic）同一來源。
+   */
+  public getPlayerTacticPointState(options: Pick<GeneralSkillCastOptions, 'tacticId'> = {}): { current?: number; max?: number; enabled: boolean } {
     const descriptor = this.getPlayerSeedTacticDescriptor();
     return { current: this.sortie?.tacticCurrent, max: this.sortie?.tacticMax,
-      enabled: !!descriptor && (!this.sortie || this.sortie.tacticCurrent >= getTacticTpCost(descriptor.tacticId)) };
+      enabled: !!descriptor && this.canAffordTactic(this.resolveSeedTacticId(options)) };
   }
 
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
@@ -398,10 +411,10 @@ export class BattleController {
     if (!general?.canUseSkill()) return false;
 
     const descriptor = this.getPlayerSeedTacticDescriptor();
-    const tacticId = options.tacticId ?? descriptor?.tacticId ?? null;
+    const tacticId = this.resolveSeedTacticId(options);
     // 有出征帳本時，戰法要先付計謀點（PROG-2-0085）；點數不足直接不施放、不扣精力
     const tpCost = getTacticTpCost(tacticId);
-    if (this.sortie && this.sortie.tacticCurrent < tpCost) return false;
+    if (!this.canAffordTactic(tacticId)) return false;
 
     const result = this.skillDispatcher.dispatchSeedTactic(Faction.Player, {
       ...options,
