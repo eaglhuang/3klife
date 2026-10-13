@@ -57,6 +57,10 @@ export class BattleSkillTargetingFlow {
     const ctrl = this.ctx.getCtrl();
     if (!ctrl) return;
 
+    if (sourceType === SkillSourceType.SeedTactic && !ctrl.getPlayerTacticPointState().enabled) {
+      this.ctx.showToast('計謀點不足', 1.5);
+      return;
+    }
     const general = ctrl.state.playerGeneral;
     if (!general?.canUseSkill()) {
       this.ctx.showToast(`${sourceLabel}蓄力中，SP 不足`, 1.5);
