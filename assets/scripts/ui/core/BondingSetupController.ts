@@ -72,7 +72,7 @@ export interface BondingSetupDeps {
     /** 結緣後存檔；失敗只回報，不回滾 */
     persist?: () => Promise<unknown>;
     /** 結緣的壽命消耗（6 月，父母各扣）；正式環境接 GameSession.spendLifespan */
-    spendLifespan?: (generalId: string, command: 'breeding') => unknown;
+    spendLifespan?: (generalId: string, command: 'breeding') => { events: readonly { type: string }[] } | null;
 }
 
 export class BondingSetupController {
@@ -143,8 +143,8 @@ export class BondingSetupController {
             this._notice = `無法結緣：${result.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;
             return result;
         }
-        this._deps.spendLifespan?.(fatherId, 'breeding');
-        this._deps.spendLifespan?.(motherId, 'breeding');
+        const fatherLifespan = this._deps.spendLifespan?.(fatherId, 'breeding');
+        const motherLifespan = this._deps.spendLifespan?.(motherId, 'breeding');
         if (result.outcome === 'failed') {
             this._notice = `${result.father.name} 與 ${result.mother.name} 此番未能結緣受孕，精力已消耗`;
         } else {
@@ -152,6 +152,14 @@ export class BondingSetupController {
             const gender = child.gender === '女' ? '千金' : '麟兒';
             this._notice = `恭喜主公！${result.father.name} 與 ${result.mother.name} 喜獲${gender}「${child.name}」！`
                 + `${result.mother.name} 已進入待產期（${PREGNANCY_LOCK_SEASONS} 季），子嗣神祕期至 5 歲開獎`;
+        }
+        // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
+        const deceased = [
+            fatherLifespan?.events.some((event) => event.type === 'died') ? result.father.name : null,
+            motherLifespan?.events.some((event) => event.type === 'died') ? result.mother.name : null,
+        ].filter((name): name is string => name !== null);
+        if (deceased.length > 0) {
+            this._notice += `　${deceased.join('、')}壽命耗盡，已故`;
         }
         await this._persist();
         return result;
