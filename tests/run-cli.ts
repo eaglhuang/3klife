@@ -34,6 +34,7 @@ import { createHistoricalFlagSuite } from './HistoricalFlag.test';
 import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createFactorVisibilitySuite } from './FactorVisibility.test';
+import { createGeneCatalystSuite } from './GeneCatalyst.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
 import { createSpiritRelicUniqueSuite } from './SpiritRelicUnique.test';
 import { createLegacyTallySuite } from './LegacyTally.test';
@@ -129,6 +130,7 @@ if (typeof window === 'undefined') {
     runner.register(createLegacyTallySuite());
     runner.register(createSpiritRelicSuite());
     runner.register(createFactorVisibilitySuite());
+    runner.register(createGeneCatalystSuite());
     runner.register(createLifespanCostSuite());
     runner.register(createSpiritRelicUniqueSuite());
     runner.register(createHistoricalFlagSuite());
