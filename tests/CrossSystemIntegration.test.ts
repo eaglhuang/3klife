@@ -9,6 +9,10 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { LegacyService } from '../assets/scripts/core/services/LegacyService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import { advanceMercenaryDay, bondMercenary, canBondMercenary, createTrialMercenary, TRIAL_DAYS } from '../assets/scripts/core/systems/MercenaryBond';
+import { applyDailyAffection, AFFECTION_CAP } from '../assets/scripts/core/systems/MercenaryAffection';
+import { isAvailableForPool, POOL_COOLDOWN_DAYS, settleTrialRollover, startCooldownAfterBond } from '../assets/scripts/core/systems/MercenaryDeparture';
+import { createUpkeepState, repayUpkeep, settleUpkeepDay } from '../assets/scripts/core/systems/MercenaryUpkeep';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function makeGeneral(id: string, gender: '男' | '女', age: number, extra: Partial<GeneralConfig> = {}): GeneralConfig {
@@ -156,6 +160,55 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
 
         await a.advanceSeason();
         assert.equals(1, Object.keys(a.tallyCards).filter((uid) => uid !== 't1').length, '再過一季不會重複產卡');
+    });
+
+    suite.test('傭兵 6 日試用：每日好感剛好在最後一天滿、結義需在到期結算前完成，到期不結義則離隊並冷卻 30 日', () => {
+        let merc = createTrialMercenary('merc-1');
+        let affection = 0;
+        for (let day = 1; day <= TRIAL_DAYS; day++) {
+            const advanced = advanceMercenaryDay(merc);
+            assert.isTrue(advanced.ok, `第 ${day} 天應可推進`);
+            merc = advanced.state;
+            affection = applyDailyAffection(affection).affection;
+            // 試用中途的結算不得提早讓傭兵離隊
+            if (day < TRIAL_DAYS) {
+                const mid = settleTrialRollover(merc, day, []);
+                assert.isFalse(mid.departed, `第 ${day} 天倒數未歸零不應離隊`);
+            }
+        }
+        assert.equals(AFFECTION_CAP, affection, '6 天 × 10 好感 = 上限 60');
+        assert.isTrue(canBondMercenary(merc), '第 6 天推進後倒數歸零，可結義');
+
+        // 路線 A：玩家在到期結算前結義 → 變 Bonded，不離隊，且開始冷卻
+        const bonded = bondMercenary(merc);
+        assert.isTrue(bonded.ok);
+        const afterBond = settleTrialRollover({ uid: bonded.state.uid, status: bonded.state.status, daysLeft: bonded.state.daysLeft }, 6, []);
+        assert.isFalse(afterBond.departed, '已結義者不會被到期結算趕走');
+        const cooldowns = startCooldownAfterBond('merc-1', 6, []);
+        assert.isFalse(isAvailableForPool('merc-1', 6 + POOL_COOLDOWN_DAYS - 1, cooldowns));
+        assert.isTrue(isAvailableForPool('merc-1', 6 + POOL_COOLDOWN_DAYS, cooldowns));
+
+        // 路線 B：沒結義 → 到期結算離隊、冷卻 30 日
+        const expired = settleTrialRollover({ uid: merc.uid, status: merc.status, daysLeft: merc.daysLeft }, 7, []);
+        assert.isTrue(expired.departed);
+        assert.isFalse(isAvailableForPool('merc-1', 7 + POOL_COOLDOWN_DAYS - 1, expired.cooldowns));
+    });
+
+    suite.test('傭兵欠薪：凍結當日補繳即可救回；錯過一天即離隊，之後補繳無效', () => {
+        const cost = { gold: 100, wine: 2 };
+        let state = createUpkeepState('merc-2');
+        const frozen = settleUpkeepDay(state, { gold: 0, wine: 0 }, cost);
+        assert.equals('Frozen', frozen.state.status);
+        const rescued = repayUpkeep(frozen.state, { gold: 100, wine: 2 }, cost);
+        assert.equals('Active', rescued.state.status);
+        assert.equals(0, rescued.wallet.gold);
+
+        state = frozen.state;
+        const departed = settleUpkeepDay(state, { gold: 999, wine: 99 }, cost);
+        assert.equals('Departed', departed.state.status, '凍結倒數歸零即離隊，即使此刻錢包足夠也不自動補繳');
+        const late = repayUpkeep(departed.state, { gold: 999, wine: 99 }, cost);
+        assert.equals('Departed', late.state.status, '離隊後補繳無效');
+        assert.equals(999, late.wallet.gold, '補繳無效時不扣錢');
     });
 
     return suite;
