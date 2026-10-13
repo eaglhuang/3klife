@@ -1,0 +1,17 @@
+{
+  "id": "job-change-screen",
+  "version": 1,
+  "uiId": "JobChange",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "job-change-main",
+  "skin": "job-change-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
