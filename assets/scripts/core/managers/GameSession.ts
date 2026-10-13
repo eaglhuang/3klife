@@ -24,12 +24,13 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
-import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
+import { ageGeneralsOneSeason, AgingEvent, GENERAL_STATUS_DEAD, RandomSource } from '../systems/GeneralAging';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
-import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TigerTallyQuality } from '../models/TigerTallyCard';
 import type { NurtureState } from '../services/NurtureService';
@@ -231,6 +232,8 @@ export class GameSession {
     private _clearedStageIds: string[] = [];
     /** 武將 id → 虎符忠誠度狀態（TRP-09） */
     private _tallyLoyalty: Record<string, TallyLoyaltyState> = {};
+    /** 虎符持有關係（TRP-08）：虎符 uid → 持有武將 id（null 為君主） */
+    private _tallyHoldings: TallyHoldings = createTallyHoldings([]);
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
 
@@ -284,6 +287,66 @@ export class GameSession {
     /** 虎符忠誠度狀態（唯讀副本）；沒有紀錄的武將不在表內 */
     public get tallyLoyalty(): Readonly<Record<string, TallyLoyaltyState>> {
         return { ...this._tallyLoyalty };
+    }
+
+    /** 虎符持有關係（唯讀副本）；uid → 持有武將 id，null 為君主 */
+    public get tallyHoldings(): Readonly<Record<string, string | null>> {
+        return { ...this._tallyHoldings.holders };
+    }
+
+    /** 登記君主持有的虎符（新產出或新取得的卡）；已登記的 uid 不會被覆蓋 */
+    public async registerTallyCards(cardUids: readonly string[]): Promise<void> {
+        const holders = { ...this._tallyHoldings.holders };
+        for (const uid of cardUids) {
+            if (uid.length > 0 && !(uid in holders)) holders[uid] = null;
+        }
+        this._tallyHoldings = { holders };
+        await this._autoSaveAfterTallyChange();
+    }
+
+    /** 把君主持有的虎符裝到武將身上；武將不在名冊、虎符不存在、已被持有或武將已有虎符時回傳失敗 */
+    public async equipTally(cardUid: string, generalId: string): Promise<TallyHoldingsResult | null> {
+        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        const result = equipTally(this._tallyHoldings, cardUid, generalId);
+        return this._commitTallyResult(result);
+    }
+
+    /** 把虎符從武將身上拔回君主 */
+    public async unequipTally(cardUid: string): Promise<TallyHoldingsResult> {
+        return this._commitTallyResult(unequipTally(this._tallyHoldings, cardUid));
+    }
+
+    /** 武將目前持有的虎符 uid（沒有則 null） */
+    public tallyOf(generalId: string): string | null {
+        return tallyOfGeneral(this._tallyHoldings, generalId);
+    }
+
+    private async _commitTallyResult(result: TallyHoldingsResult): Promise<TallyHoldingsResult> {
+        if (result.ok) {
+            this._tallyHoldings = result.state;
+            await this._autoSaveAfterTallyChange();
+        }
+        return result;
+    }
+
+    private async _autoSaveAfterTallyChange(): Promise<void> {
+        if (this._autoSave && this._save) await this.save();
+    }
+
+    /**
+     * 陣亡事件的虎符結算（TRP-08）：名冊中已陣亡的武將，手上的虎符退回君主。
+     * 只改持有關係，不自動存檔；由呼叫端在同一次存檔中一起寫入。回傳退回的虎符 uid。
+     */
+    private _returnTalliesOfDead(roster: readonly GeneralConfig[]): string[] {
+        const returned: string[] = [];
+        for (const general of roster) {
+            if ((general.status ?? '').toLowerCase() !== GENERAL_STATUS_DEAD) continue;
+            const result = onGeneralDeath(this._tallyHoldings, general.id);
+            if (result.returned.length === 0) continue;
+            this._tallyHoldings = result.state;
+            returned.push(...result.returned);
+        }
+        return returned;
     }
 
     /**
@@ -378,6 +441,7 @@ export class GameSession {
         this._oracleCount = 0;
         this._clearedStageIds = [];
         this._tallyLoyalty = {};
+        this._tallyHoldings = createTallyHoldings([]);
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
     }
@@ -715,6 +779,7 @@ export class GameSession {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
+        this._returnTalliesOfDead(roster);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._military = regenMilitaryOneSeason(this._military);
@@ -860,6 +925,7 @@ export class GameSession {
 
         const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, ...(options.sortie ? { military: this.military } : {}) };
         this._roster.replaceAll(roster);
+        this._returnTalliesOfDead(roster);
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -876,7 +942,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -907,6 +973,7 @@ export class GameSession {
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
+        this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);

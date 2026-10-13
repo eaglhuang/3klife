@@ -85,6 +85,7 @@ import { createBattleSkillDamageResolverSuite } from './BattleSkillDamageResolve
 import { createStageChainProgressSuite } from './StageChainProgress.test';
 import { createStageProgressSaveSuite } from './StageProgressSave.test';
 import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
+import { createTallyHoldingsWiringSuite } from './TallyHoldingsWiring.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
 
@@ -191,6 +192,7 @@ if (typeof window === 'undefined') {
     runner.register(createStageChainProgressSuite());
     runner.register(createStageProgressSaveSuite());
     runner.register(createTigerTallyHoldingsSuite());
+    runner.register(createTallyHoldingsWiringSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
 
