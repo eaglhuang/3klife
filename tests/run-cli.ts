@@ -33,6 +33,18 @@ import { createBattleRosterSuite } from './BattleRoster.test';
 import { createHistoricalFlagSuite } from './HistoricalFlag.test';
 import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
+import { createFactorVisibilitySuite } from './FactorVisibility.test';
+import { createLifespanCostSuite } from './LifespanCost.test';
+import { createMercenaryBondSuite } from './MercenaryBond.test';
+import { createLifespanWiringSuite } from './LifespanWiring.test';
+import { createDomesticTasksSuite } from './DomesticTasks.test';
+import { createOnboardingTutorialSuite } from './OnboardingTutorial.test';
+import { createJobChangeSuite } from './JobChange.test';
+import { createGeneralStageSuite } from './GeneralStage.test';
+import { createMercenaryAffectionSuite } from './MercenaryAffection.test';
+import { createMercenaryDepartureSuite } from './MercenaryDeparture.test';
+import { createMercenaryUpkeepSuite } from './MercenaryUpkeep.test';
+import { createWildGeneSuite } from './WildGene.test';
 import { createSpiritRelicUniqueSuite } from './SpiritRelicUnique.test';
 import { createLegacyTallySuite } from './LegacyTally.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
@@ -40,6 +52,7 @@ import { createPlayerDeckSuite } from './PlayerDeck.test';
 import { createFactorAwakeningSuite } from './FactorAwakening.test';
 import { createFactorMaskSuite } from './FactorMask.test';
 import { createAwakeningTitleSuite } from './AwakeningTitle.test';
+import { createHybridSkillSuite } from './HybridSkill.test';
 import { createBattleSpecialActionsSuite } from './BattleSpecialActions.test';
 import { createSortieDeploySuite } from './SortieDeploy.test';
 import { createBattleAptitudeSuite } from './BattleAptitude.test';
@@ -82,12 +95,12 @@ import { createDeployDragDebugSuite } from './DeployDragDebug.test';
 import { createBattleSkillExecutorSuite } from './BattleSkillExecutor.test';
 import { createBattleSkillTargetSelectorSuite } from './BattleSkillTargetSelector.test';
 import { createBattleSkillDamageResolverSuite } from './BattleSkillDamageResolver.test';
-import { createStageChainProgressSuite } from './StageChainProgress.test';
 import { createStageProgressSaveSuite } from './StageProgressSave.test';
 import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTallyHoldingsWiringSuite } from './TallyHoldingsWiring.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
+import { createCrossSystemIntegrationSuite } from './CrossSystemIntegration.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -126,6 +139,10 @@ if (typeof window === 'undefined') {
     runner.register(createBattleRosterSuite());
     runner.register(createLegacyTallySuite());
     runner.register(createSpiritRelicSuite());
+    runner.register(createFactorVisibilitySuite());
+    runner.register(createLifespanCostSuite());
+    runner.register(createLifespanWiringSuite());
+    runner.register(createWildGeneSuite());
     runner.register(createSpiritRelicUniqueSuite());
     runner.register(createHistoricalFlagSuite());
     runner.register(createStarterRosterSuite());
@@ -134,6 +151,7 @@ if (typeof window === 'undefined') {
     runner.register(createFactorAwakeningSuite());
     runner.register(createFactorMaskSuite());
     runner.register(createAwakeningTitleSuite());
+    runner.register(createHybridSkillSuite());
     runner.register(createBattleSpecialActionsSuite());
     runner.register(createSortieDeploySuite());
     runner.register(createBattleAptitudeSuite());
@@ -189,12 +207,20 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillExecutorSuite());
     runner.register(createBattleSkillTargetSelectorSuite());
     runner.register(createBattleSkillDamageResolverSuite());
-    runner.register(createStageChainProgressSuite());
     runner.register(createStageProgressSaveSuite());
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTallyHoldingsWiringSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createMercenaryBondSuite());
+    runner.register(createDomesticTasksSuite());
+    runner.register(createCrossSystemIntegrationSuite());
+    runner.register(createOnboardingTutorialSuite());
+    runner.register(createJobChangeSuite());
+    runner.register(createGeneralStageSuite());
+    runner.register(createMercenaryAffectionSuite());
+    runner.register(createMercenaryDepartureSuite());
+    runner.register(createMercenaryUpkeepSuite());
 
     // Deprecated API 靜態掃描
     // __dirname = tests/  →  ../ = 專案根目錄

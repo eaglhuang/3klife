@@ -16,7 +16,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, milestoneDisplayName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
-import { loadGeneralConfig } from './BattleSceneLoader';
+import { buildTacticSummary, loadGeneralConfig } from './BattleSceneLoader';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
@@ -201,6 +201,8 @@ export class BattleUIBridge {
     const c = this.ctx;
     if (!c.ctrl) return;
     const state = c.ctrl.state;
+    if (state.playerGeneral) c.battleScenePanel?.setTacticSummary(
+      buildTacticSummary(state.playerGeneral).label, c.ctrl.getPlayerTacticPointState());
     // 棋盤格狀態與兵種渲染（對應原 BattleScene.refreshBattleViews）
     c.boardRenderer?.renderState(state);
     c.unitRenderer?.renderState(state);
@@ -485,6 +487,7 @@ export class BattleUIBridge {
   }
 
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType }): void {
+    this.refreshBattleViews();
     const skillId = data.skillId ?? data.skillName ?? null;
     if (!skillId) return;
     this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType));

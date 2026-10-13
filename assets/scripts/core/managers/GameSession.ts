@@ -25,6 +25,8 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
+import { applyActiveLifespanToRoster, ActiveLifespanResult } from '../systems/LifespanWiring';
+import type { LifespanCommand } from '../systems/LifespanCost';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
@@ -216,6 +218,8 @@ export class GameSession {
     private _lifecycle: SeasonLifecycle | null = null;
     private _seeded: SeededRandom;
     private _random: RandomSource = () => this._seeded.next();
+    /** 主動指令造成的死亡事件；下一次季結時併入 aging 事件交給季結結算（不寫入存檔，見 PROG-2-0221） */
+    private _pendingLifespanEvents: AgingEvent[] = [];
     /** 共用入口保持同一函式身分，讀檔恢復游標後既有服務會立即使用新狀態。 */
     public readonly randomSource: RandomSource = () => this._random();
 
@@ -771,10 +775,28 @@ export class GameSession {
         return result.outcome;
     }
 
+    /**
+     * 主動指令（培育／攻城／結緣）的壽命消耗入口：更新名冊但不存檔，由呼叫端的 persist 一併存。
+     * 死亡事件暫存到下一次季結。找不到武將回傳 null。
+     */
+    public spendLifespan(generalId: string, command: LifespanCommand): ActiveLifespanResult | null {
+        const applied = applyActiveLifespanToRoster(this._roster.getAll(), generalId, command, this._random);
+        if (!applied) return null;
+        this._roster.replaceAll(applied.roster);
+        for (const event of applied.result.events) {
+            if (event.type === 'died') {
+                this._pendingLifespanEvents.push({ type: 'died', generalId: event.generalId, age: event.age });
+            }
+        }
+        return applied.result;
+    }
+
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
         const beforeRoster = this._roster.getAll();
         const aging = ageGeneralsOneSeason(beforeRoster, this._random);
+        const agingEvents = [...this._pendingLifespanEvents, ...aging.events];
+        this._pendingLifespanEvents = [];
         const unveil = unveilDueGenerals(aging.roster as UnveilingGeneral[], {
             season: advance.current.totalSeasonsElapsed,
             dictionary: this._factorDictionary,
@@ -783,7 +805,7 @@ export class GameSession {
         let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;
         let lifecycle: LifecycleSettlement | undefined;
         if (this._lifecycle) {
-            const settled = await this._lifecycle.settleSeason(roster, advance, aging.events);
+            const settled = await this._lifecycle.settleSeason(roster, advance, agingEvents);
             roster = settled.roster;
             lifecycle = settled.settlement;
         }
@@ -797,7 +819,7 @@ export class GameSession {
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
 
-        const payload: SeasonAdvancedPayload = { advance, agingEvents: aging.events, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
+        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
         if (this._autoSave && this._save) {
             await this.save();
         }
