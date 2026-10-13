@@ -39,6 +39,7 @@ import {
     UnveilingGeneral,
 } from '../../core/systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
+import { describeLifecycle } from './GeneralLifecyclePresenter';
 
 /** 培育一次最多帶的教官數（NURTURE_MENTOR_SLOTS）由 NurtureService 把關，這裡只負責挑人 */
 const MAX_AUTO_MENTORS = 6;
@@ -343,7 +344,7 @@ function buildFateTexts(child: UnveilingGeneral): Record<string, string> {
     const factors = (child.genes ?? []).filter((gene) => !gene.isLocked);
     return {
         fateName: child.name,
-        fateAge: `${child.age ?? 5} 歲 · 開獎於第 ${(child.unveiledSeason ?? 0) + 1} 季`,
+        fateAge: `${child.age ?? 5} 歲 · ${describeLifecycle(child).summary} · 開獎於第 ${(child.unveiledSeason ?? 0) + 1} 季`,
         fateStats: UNVEILED_STAT_KEYS.map((key) => `${STAT_LABELS[key]} ${statOf(child, key)}`).join('　'),
         fateFactors: factors.length > 0
             ? `初始因子：${factors.map((gene) => gene.displayName ?? gene.id ?? '？').join('、')}`
