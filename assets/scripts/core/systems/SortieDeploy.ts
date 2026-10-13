@@ -191,6 +191,8 @@ export interface CreateSortieInput {
     scenePresetId?: string | null;
     officerTierDeployBonus?: number;
     fieldUnitLimit?: number;
+    /** 出征整隊各武將的 Bloodline_ID（主將、參謀、後勤）；重複時拒絕建立帳本（SAME-02） */
+    formationBloodlineIds?: readonly (string | undefined)[];
 }
 
 export interface SortieSummary {
@@ -294,6 +296,17 @@ export interface SortieLoadoutCheck {
     issues: SortieLoadoutIssue[];
 }
 
+/**
+ * 整隊血統檢查（SAME-02）：出征整隊（主將 + 參謀 + 後勤）的 Bloodline_ID 不可重複。
+ * 沒有 bloodlineId 的武將不參與比對。與 validateSortieLoadout 的 SAME_BLOODLINE 規則相同，
+ * 但只看血統清單，給戰場開戰時再檢查一次用。
+ */
+export function checkFormationBloodlines(bloodlineIds: readonly (string | undefined)[]): SortieLoadoutCheck {
+    const present = bloodlineIds.filter((b): b is string => typeof b === 'string' && b.length > 0);
+    const unique = new Set(present).size === present.length;
+    return { ok: unique, issues: unique ? [] : ['SAME_BLOODLINE'] };
+}
+
 function loadoutIds(loadout: SortieLoadout): string[] {
     return [loadout.commanderUid, loadout.strategistUid, loadout.deputyUid].filter((id): id is string => typeof id === 'string' && id.length > 0);
 }
@@ -346,6 +359,9 @@ export function getDeputyFoodBonus(deputy: SortieMember | null | undefined, base
 // ── 帳本 ───────────────────────────────────────────────────────────────────
 
 export function createSortieState(input: CreateSortieInput): SortieState {
+    if (!checkFormationBloodlines(input.formationBloodlineIds ?? []).ok) {
+        throw new Error('[SortieDeploy] 同名武將（Bloodline_ID 重複）不可同場出征');
+    }
     const poolMax = computeSortiePoolMax(input.commandCapacity, input.cityTroops, input.stageSortieCap);
     const food = nonNegInt(input.food) + nonNegInt(input.foodBonus);
     const tacticMax = BASE_TACTIC_CAP + nonNegInt(input.strategistBonus?.maxTacticBonus);

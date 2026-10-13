@@ -440,6 +440,7 @@ export class GameSession {
         if (!config) return null;
         const support = this.getSortieSupportSummary(generalId);
         const foodBonus = support.deputyBonus.startingFoodBonus;
+        const commander = this._roster.getAll().find((g) => g.id === generalId);
         return {
             commandCapacity: computeCommandCapacity({ lea: config.lea ?? config.stats?.lea ?? 0 }),
             cityTroops: this._military.cityTroops,
@@ -447,6 +448,7 @@ export class GameSession {
             food: this._military.food,
             ...(foodBonus > 0 ? { foodBonus } : {}),
             strategistBonus: support.strategistBonus,
+            formationBloodlineIds: [commander?.bloodlineId, support.strategist?.bloodlineId, support.deputy?.bloodlineId],
         };
     }
 

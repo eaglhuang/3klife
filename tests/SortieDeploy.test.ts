@@ -10,6 +10,7 @@ import {
     BASE_TACTIC_CAP,
     BASE_TACTIC_START,
     checkDeploy,
+    checkFormationBloodlines,
     COMMAND_CAPACITY_FLOOR,
     computeCommandCapacity,
     computeSortiePoolMax,
@@ -366,6 +367,20 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(1, resolver['getEffectiveAttackRange'](archer), '水域弓兵射程 −1');
         ctrl.state.getCell(1, 4)!.terrain = TerrainType.River;
         assert.equals(1, resolver['getEffectiveAttackRange'](infantry), '步兵水域不變');
+    });
+
+    suite.test('整隊血統（SAME-02）：同 Bloodline_ID 不可同場，無血統者不參與比對', () => {
+        assert.isTrue(checkFormationBloodlines(['liu', 'guan', 'zhang']).ok, '三個不同血統應通過');
+        assert.isTrue(checkFormationBloodlines([undefined, undefined, 'liu']).ok, '沒有血統的武將略過');
+        const dup = checkFormationBloodlines(['liu', 'guan', 'liu']);
+        assert.isFalse(dup.ok, '同血統應拒絕');
+        assert.isTrue(dup.issues.includes('SAME_BLOODLINE'));
+    });
+
+    suite.test('整隊血統（SAME-02）：createSortieState 遇到同血統整隊直接拒絕建立帳本', () => {
+        const base = { commandCapacity: 100, cityTroops: 20000, food: 1000 };
+        assert.throws(() => createSortieState({ ...base, formationBloodlineIds: ['liu', 'liu'] }), '同血統應拋錯');
+        assert.isTrue(createSortieState({ ...base, formationBloodlineIds: ['liu', 'guan'] }).poolMax > 0, '不同血統可建立');
     });
 
     return suite;
