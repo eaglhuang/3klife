@@ -96,6 +96,7 @@ import { createBattleSkillExecutorSuite } from './BattleSkillExecutor.test';
 import { createBattleSkillTargetSelectorSuite } from './BattleSkillTargetSelector.test';
 import { createBattleSkillDamageResolverSuite } from './BattleSkillDamageResolver.test';
 import { createStageProgressSaveSuite } from './StageProgressSave.test';
+import { createReadModelValidatorsSuite } from './ReadModelValidators.test';
 import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTallyHoldingsWiringSuite } from './TallyHoldingsWiring.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
@@ -208,6 +209,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillTargetSelectorSuite());
     runner.register(createBattleSkillDamageResolverSuite());
     runner.register(createStageProgressSaveSuite());
+    runner.register(createReadModelValidatorsSuite());
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTallyHoldingsWiringSuite());
     runner.register(createTigerTallyWiringSuite());
