@@ -21,6 +21,7 @@ import { RandomSource } from './GeneralAging';
 import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
+import { rollNurtureRoundEvents } from './NurtureEvents';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -106,6 +107,12 @@ export interface NurtureRoundLog {
     negativeFactor?: string;
     /** 本回合混種戰法觸發（只會在第一次觸發時為 true） */
     hybridTriggered?: boolean;
+    /** 本回合因受傷而訓練無效（實力與 TP 歸零），下一回合跳過 */
+    injured?: boolean;
+    /** 本回合是受傷後被跳過的回合：不消耗精力、不加屬性，動作不生效 */
+    skipped?: boolean;
+    /** 本回合好感 +1 */
+    affectionGained?: boolean;
 }
 
 /** 培育會話；全部是純資料，可直接 JSON 存檔（對應 Data Schema Nurture_Session） */
@@ -128,6 +135,10 @@ export interface NurtureSession {
     hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
     /** 混種戰法觸發的回合；尚未觸發為 undefined */
     hybridRound?: number;
+    /** 累積好感次數（舊存檔可能沒有此欄位，視為 0） */
+    affection?: number;
+    /** 尚待跳過的回合數（受傷後設為 1；舊存檔可能沒有此欄位，視為 0） */
+    skipRounds?: number;
     /** 即將進行的回合，每位教官站在哪一格（玩家選訓練前就看得到） */
     mentorSlots: Record<string, TrainingKind>;
     negativeFactors: string[];
@@ -242,6 +253,8 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
+        affection: 0,
+        skipRounds: 0,
         log: [],
         status: 'active',
     };
@@ -313,7 +326,12 @@ export function executeRound(
         burst: false,
     };
 
-    if (action === 'rest') {
+    if ((source.skipRounds ?? 0) > 0) {
+        // 受傷後的跳過回合：動作不生效，不擲任何結算骰
+        session.skipRounds = (source.skipRounds ?? 0) - 1;
+        log.skipped = true;
+        log.success = false;
+    } else if (action === 'rest') {
         session.vigor = Math.min(VIGOR_MAX, vigorBefore + randInt(random, REST_VIGOR_RECOVER[0], REST_VIGOR_RECOVER[1]));
     } else {
         const failureRate = failureRateForVigor(vigorBefore);
@@ -343,6 +361,22 @@ export function executeRound(
             log.burst = breakdown.burst;
             log.tpGained = computeTpGain(source.mentors);
             session.tp += log.tpGained;
+        }
+
+        // 受傷 / 好感事件擲骰放在所有結算骰之後，既有的亂數順序不受影響
+        const events = rollNurtureRoundEvents(true, random);
+        if (events.injured) {
+            // 受傷：本回合訓練無效，實力與 TP 撤回，下一回合跳過
+            session.prowess[action] -= log.statGained;
+            session.tp -= log.tpGained;
+            log.statGained = 0;
+            log.tpGained = 0;
+            log.burst = false;
+            log.injured = true;
+            session.skipRounds = 1;
+        } else if (events.affection) {
+            session.affection = (source.affection ?? 0) + 1;
+            log.affectionGained = true;
         }
     }
 

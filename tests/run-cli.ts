@@ -34,10 +34,12 @@ import { createHistoricalFlagSuite } from './HistoricalFlag.test';
 import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createFactorVisibilitySuite } from './FactorVisibility.test';
+import { createGeneCatalystSuite } from './GeneCatalyst.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
 import { createMercenaryBondPermanentSuite } from './MercenaryBondPermanent.test';
 import { createMercenaryBondSuite } from './MercenaryBond.test';
 import { createLifespanWiringSuite } from './LifespanWiring.test';
+import { createLifespanDeathPersistSuite } from './LifespanDeathPersist.test';
 import { createDomesticTasksSuite } from './DomesticTasks.test';
 import { createOnboardingTutorialSuite } from './OnboardingTutorial.test';
 import { createJobChangeSuite } from './JobChange.test';
@@ -103,6 +105,7 @@ import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTallyHoldingsWiringSuite } from './TallyHoldingsWiring.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
+import { createMercenaryTrialTicketSuite } from './MercenaryTrialTicket.test';
 import { createCrossSystemIntegrationSuite } from './CrossSystemIntegration.test';
 
 /**
@@ -143,8 +146,10 @@ if (typeof window === 'undefined') {
     runner.register(createLegacyTallySuite());
     runner.register(createSpiritRelicSuite());
     runner.register(createFactorVisibilitySuite());
+    runner.register(createGeneCatalystSuite());
     runner.register(createLifespanCostSuite());
     runner.register(createLifespanWiringSuite());
+    runner.register(createLifespanDeathPersistSuite());
     runner.register(createWildGeneSuite());
     runner.register(createSpiritRelicUniqueSuite());
     runner.register(createHistoricalFlagSuite());
@@ -218,6 +223,7 @@ if (typeof window === 'undefined') {
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
     runner.register(createMercenaryBondPermanentSuite());
+    runner.register(createMercenaryTrialTicketSuite());
     runner.register(createMercenaryBondSuite());
     runner.register(createDomesticTasksSuite());
     runner.register(createCrossSystemIntegrationSuite());

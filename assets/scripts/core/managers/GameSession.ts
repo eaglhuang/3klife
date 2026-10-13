@@ -980,7 +980,13 @@ export class GameSession {
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
-        return { ...this._createBaseSnapshot(now), military: this.military, prison: this.prison };
+        const pending = this._pendingLifespanEvents.map((event) => ({ generalId: event.generalId, age: event.age }));
+        return {
+            ...this._createBaseSnapshot(now),
+            military: this.military,
+            prison: this.prison,
+            ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
+        };
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
@@ -1005,6 +1011,7 @@ export class GameSession {
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
         this._roster.replaceAll(snapshot.roster);
+        this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
         this._nurture?.restoreState(snapshot.nurture);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;

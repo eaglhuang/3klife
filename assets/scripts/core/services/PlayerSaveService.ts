@@ -25,6 +25,12 @@ export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
 export const PLAYER_SAVE_SCHEMA_VERSION = 1;
 
+/** 主動指令造成的死亡，等下一次季結併入英靈結算 */
+export interface PendingLifespanDeath {
+    generalId: string;
+    age: number;
+}
+
 export interface PlayerSaveSnapshot {
     schemaVersion: number;
     /** 選填以相容舊檔；保存目前游標，而非只有起始種子。 */
@@ -59,6 +65,8 @@ export interface PlayerSaveSnapshot {
     tallyHoldings?: Record<string, TallyHolder>;
     /** 虎符卡資料（uid → 卡）；後加的選填欄位，舊檔讀回補空物件 */
     tallyCards?: Record<string, TigerTallyCard>;
+    /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
+    pendingLifespanDeaths?: PendingLifespanDeath[];
 }
 
 /** 虎符卡表：只保留 uid 與 templateId 為非空字串的卡；非物件視為沒有紀錄 */
@@ -211,7 +219,15 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         tallyLoyalty: normalizeTallyLoyaltyMap(snapshot.tallyLoyalty),
         tallyHoldings: normalizeTallyHoldingsMap(snapshot.tallyHoldings),
         tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
+        pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
     };
+}
+
+/** 舊檔沒有欄位視為空；壞掉的項目丟棄，不猜測 */
+function normalizePendingLifespanDeaths(value: unknown): PendingLifespanDeath[] {
+    if (!Array.isArray(value)) return [];
+    return value.filter((item): item is PendingLifespanDeath =>
+        !!item && typeof item.generalId === 'string' && typeof item.age === 'number' && Number.isFinite(item.age));
 }
 
 export class PlayerSaveService {
