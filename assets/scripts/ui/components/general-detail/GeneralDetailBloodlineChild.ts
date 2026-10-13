@@ -17,6 +17,16 @@ import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { mask, formatGene } from './GeneralDetailFormatters';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
+import { services } from '../../../core/managers/ServiceLoader';
+
+/** 玩家發現等級；服務尚未初始化時退回 1（只顯示藍粉因子） */
+function currentDiscoveryLevel(): number {
+    try {
+        return services().session.discoveryLevel;
+    } catch {
+        return 1;
+    }
+}
 
 export class GeneralDetailBloodlineChild extends ChildPanelBase {
     override dataSource = 'config';
@@ -71,7 +81,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._set(this._lAncestors, `${this.t('ui.general.bloodline.ancestors')}${mask(cfg.ancestorsSummary, this.t('ui.general.bloodline.ancestors_hint'))}`);
 
         for (let i = 0; i < 5; i++) {
-            this._set(this._lGenes[i], formatGene(i + 1, cfg.genes?.[i]));
+            this._set(this._lGenes[i], formatGene(i + 1, cfg.genes?.[i], currentDiscoveryLevel()));
         }
 
         this._set(this._lAwakening, `${this.t('ui.general.bloodline.awakening')}${mask(cfg.awakeningTitle, this.t('ui.general.bloodline.awakening_locked'))}`);

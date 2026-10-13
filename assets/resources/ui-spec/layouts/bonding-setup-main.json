@@ -171,6 +171,19 @@
                     "styleSlot": "bonding.label.meta"
                   },
                   {
+                    "type": "label",
+                    "name": "FatherFactors",
+                    "id": "fatherFactors",
+                    "widget": {
+                      "top": 92,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
                     "type": "button",
                     "name": "BtnPrevFather",
                     "id": "btnPrevFather",
@@ -269,6 +282,19 @@
                     "id": "motherInfo",
                     "widget": {
                       "top": 62,
+                      "left": 20,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "label",
+                    "name": "MotherFactors",
+                    "id": "motherFactors",
+                    "widget": {
+                      "top": 92,
                       "left": 20,
                       "right": 20
                     },

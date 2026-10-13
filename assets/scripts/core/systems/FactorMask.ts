@@ -40,6 +40,11 @@ export function factorMaskView(gene: GeneralGeneConfig, playerLevel: number): Fa
     return { revealed, active: gene.isLocked === false, requiredLevel, label };
 }
 
+/** 一組因子在指定玩家等級下的畫面文字，順序與輸入相同（結緣、詳情畫面共用） */
+export function factorMaskLabels(genes: readonly GeneralGeneConfig[], playerLevel: number): string[] {
+    return genes.map((gene) => factorMaskView(gene, playerLevel).label);
+}
+
 /** 玩家等級已開放的因子色系，依 ALL_FACTOR_COLORS 順序（Lv1 只有藍粉） */
 export function visibleFactorColors(playerLevel: number): FactorColor[] {
     return ALL_FACTOR_COLORS.filter((color) => playerLevel >= FACTOR_DISCOVERY_LEVEL[color]);
