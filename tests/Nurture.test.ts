@@ -393,7 +393,7 @@ export function createNurtureSuite(): TestSuite {
         const child = readyChild('c');
         const session = createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) });
         // 失敗率 0 時不擲失敗；第一個亂數 = 精力消耗 (0 → 15)，第二個 = 基礎值 (0 → 10)
-        const result = executeRound(session, 'str', seq(0, 0));
+        const result = executeRound(session, 'str', seq(0, 0, 0.99)); // 第三個亂數 0.99 → 不受傷、不好感
         assert.isTrue(result.log.success);
         assert.equals(85, result.session.vigor);
         assert.equals(10, result.log.statGained);
@@ -411,31 +411,31 @@ export function createNurtureSuite(): TestSuite {
         const child = readyChild('c');
         const base = createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) });
         const tired = { ...base, vigor: 50 }; // 失敗率 8%
-        const failed = executeRound(tired, 'str', seq(0.01, 0, 0.1, 0)); // 失敗、扣 15、得因子、挑第 1 個
+        const failed = executeRound(tired, 'str', seq(0.01, 0, 0.1, 0, 0.99)); // 失敗、扣 15、得因子、挑第 1 個
         assert.isFalse(failed.log.success);
         assert.equals(35, failed.session.vigor);
         assert.equals(0, failed.session.prowess.str);
         assert.equals(0, failed.session.tp);
         sameJson(['挫敗'], failed.session.negativeFactors);
 
-        const again = executeRound({ ...failed.session, vigor: 50 }, 'str', seq(0.01, 0, 0.1, 0));
+        const again = executeRound({ ...failed.session, vigor: 50 }, 'str', seq(0.01, 0, 0.1, 0, 0.99));
         sameJson(['挫敗', '厭學'], again.session.negativeFactors, '已有挫敗 → 只剩厭學可得');
 
         const lucky = executeRound(tired, 'str', seq(0.01, 0, 0.9));
         assert.lengthEquals(0, lucky.session.negativeFactors, '50% 沒中就不給');
 
-        const passed = executeRound(tired, 'str', seq(0.5, 0, 0));
+        const passed = executeRound(tired, 'str', seq(0.5, 0, 0.99));
         assert.isTrue(passed.log.success, 'random ≥ 失敗率則成功');
     });
 
     suite.test('回合：精力降到 0 不會變負；實力層不超過資質 ×20', () => {
         const child = readyChild('c', { str: 1 });
         const base = createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) });
-        const drained = executeRound({ ...base, vigor: 10 }, 'int', seq(0.99, 0.99, 0));
+        const drained = executeRound({ ...base, vigor: 10 }, 'int', seq(0.99, 0.99, 0, 0.99));
         assert.equals(0, drained.session.vigor);
 
         const cap = 1 * PROWESS_PER_TALENT;
-        const nearCap = executeRound({ ...base, prowess: { ...base.prowess, str: cap - 2 } }, 'str', seq(0, 0));
+        const nearCap = executeRound({ ...base, prowess: { ...base.prowess, str: cap - 2 } }, 'str', seq(0, 0, 0.99));
         assert.equals(cap, nearCap.session.prowess.str);
         assert.equals(2, nearCap.log.statGained);
     });
@@ -445,10 +445,53 @@ export function createNurtureSuite(): TestSuite {
         const mentor = makeMentor('a', { tpBonus: 0, specialty: 'str', burstRate: 1 });
         const session = createNurtureSession({ sessionId: 's', child, mentors: [mentor], startSeason: 0, random: seq(0, 0) });
         assert.equals('str', session.mentorSlots['a']);
-        const result = executeRound(session, 'str', seq(0, 0, 0, 0)); // 消耗 15、基礎 10、下回合站位
+        const result = executeRound(session, 'str', seq(0, 0, 0.99, 0)); // 消耗 15、基礎 10、不受傷、下回合站位
         sameJson(['a'], result.log.mentorsOnSlot);
         assert.isTrue(result.log.burst);
         assert.equals(15, result.log.statGained, '10 × 1.5 爆發');
+    });
+
+    suite.test('培育事件：受傷時訓練無效並跳過下一回合；跳過回合不消耗精力也不加屬性', () => {
+        const child = readyChild('c');
+        const base = createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) });
+        // 消耗 0 → 15、基礎 0 → 10、受傷擲 0 < 3% → 受傷
+        const hurt = executeRound(base, 'str', seq(0, 0, 0));
+        assert.isTrue(!!hurt.log.injured);
+        assert.equals(0, hurt.log.statGained, '受傷回合的訓練無效');
+        assert.equals(0, hurt.session.prowess.str);
+        assert.equals(0, hurt.session.tp);
+        assert.equals(1, hurt.session.skipRounds);
+
+        const skipped = executeRound(hurt.session, 'int', seq(0.5));
+        assert.isTrue(!!skipped.log.skipped);
+        assert.equals(2, skipped.session.round, '跳過回合仍然計入回合數');
+        assert.equals(hurt.session.vigor, skipped.session.vigor, '跳過回合不消耗精力');
+        assert.equals(0, skipped.session.skipRounds);
+        assert.equals(0, skipped.session.prowess.int);
+        assert.equals('int', skipped.log.action);
+
+        const resumed = executeRound(skipped.session, 'str', seq(0, 0, 0.99));
+        assert.isFalse(!!resumed.log.skipped);
+        assert.equals(10, resumed.log.statGained, '跳過結束後恢復正常訓練');
+    });
+
+    suite.test('培育事件：訓練回合有機會好感 +1，休息回合不擲事件', () => {
+        const child = readyChild('c');
+        const base = createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) });
+        assert.equals(0, base.affection);
+        assert.equals(0, base.skipRounds);
+
+        // 消耗 0、基礎 0、受傷擲 0.5（不受傷）、好感擲 0.01 < 5% → 好感
+        const liked = executeRound(base, 'str', seq(0, 0, 0.5, 0.01));
+        assert.isTrue(!!liked.log.affectionGained);
+        assert.equals(1, liked.session.affection);
+        assert.equals(10, liked.log.statGained, '好感不影響本回合屬性');
+
+        // 休息回合只消耗一個亂數（恢復量），不擲受傷與好感
+        const rested = executeRound(liked.session, 'rest', seq(0));
+        assert.isFalse(!!rested.log.affectionGained);
+        assert.isFalse(!!rested.log.injured);
+        assert.equals(1, rested.session.affection);
     });
 
     suite.test('36 回合：跑完變 completed、站位清空、再出手會拋錯、輸入會話不被修改', () => {
