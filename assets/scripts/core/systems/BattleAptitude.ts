@@ -39,7 +39,7 @@ export const APTITUDE_MODIFIERS: Readonly<Record<AptitudeGrade, AptitudeModifier
     S: { atk: 0.2, def: 0.2, move: 1, acc: 0.15 },
     A: { atk: 0.1, def: 0.1, move: 0, acc: 0.1 },
     B: { atk: 0, def: 0, move: 0, acc: 0 },
-    C: { atk: -0.1, def: -0.1, move: -1, acc: -0.05 },
+    C: { atk: -0.1, def: -0.1, move: -1, acc: 0 },
     D: { atk: -0.25, def: -0.25, move: -2, acc: -0.15 },
 };
 
