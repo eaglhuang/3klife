@@ -20,6 +20,7 @@ import { Camera, view } from "cc";
 import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
+import { validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
@@ -198,6 +199,10 @@ export class BattleScene extends Component {
       // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
       const sortieInput = buildRosterSortieInput(pg);
       if (sortieInput) this.ctrl.configureSortie(sortieInput);
+      // 戰前檢查出征編制 read model（DS-06）：只記錄，不擋戰鬥；實際生效的參謀／後勤已由 session 過濾
+      const support = services().session.getSortieSupportSummary(pg.id);
+      const sortieCheck = validateSortieLoadoutReadModel({ Commander_UID: pg.id, Strategist_UID: support.strategist?.id ?? null, Deputy_UID: support.deputy?.id ?? null });
+      if (!sortieCheck.ok) UCUFLogger.warn(LogCategory.BATTLE, `[BattleScene] 出征編制 read model 不合法: ${sortieCheck.issues.join(', ')}`);
       this.ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 戰鬥已初始化");
 
