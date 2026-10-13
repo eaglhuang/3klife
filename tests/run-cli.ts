@@ -37,6 +37,7 @@ import { createFactorVisibilitySuite } from './FactorVisibility.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
 import { createMercenaryBondSuite } from './MercenaryBond.test';
 import { createLifespanWiringSuite } from './LifespanWiring.test';
+import { createLifespanDeathPersistSuite } from './LifespanDeathPersist.test';
 import { createDomesticTasksSuite } from './DomesticTasks.test';
 import { createOnboardingTutorialSuite } from './OnboardingTutorial.test';
 import { createJobChangeSuite } from './JobChange.test';
@@ -144,6 +145,7 @@ if (typeof window === 'undefined') {
     runner.register(createFactorVisibilitySuite());
     runner.register(createLifespanCostSuite());
     runner.register(createLifespanWiringSuite());
+    runner.register(createLifespanDeathPersistSuite());
     runner.register(createWildGeneSuite());
     runner.register(createSpiritRelicUniqueSuite());
     runner.register(createHistoricalFlagSuite());
