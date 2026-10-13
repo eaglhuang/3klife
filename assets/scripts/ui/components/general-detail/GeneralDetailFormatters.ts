@@ -5,6 +5,7 @@
  * 供各 ChildPanel 類別直接導入使用。
  */
 import type { GeneralConfig, GeneralGeneConfig } from '../../../core/models/GeneralUnit';
+import { factorMaskView } from '../../../core/systems/FactorMask';
 
 // ─── 顯示對照表 ───────────────────────────────────────────────────────────────
 
@@ -109,8 +110,16 @@ export function buildRoleSummary(str?: number, int?: number, lea?: number): stri
     return values[0].value >= 0 ? values[0].key : '🔒 尚未判定';
 }
 
-export function formatGene(slotIndex: number, gene?: GeneralGeneConfig): string {
+/**
+ * 因子槽文字。傳入玩家發現等級時走 FactorMask：看不到的因子顯示「??? (Lv N 解鎖)」，
+ * 未傳等級時維持舊行為（直接顯示名稱）。
+ */
+export function formatGene(slotIndex: number, gene?: GeneralGeneConfig, playerLevel?: number): string {
     if (!gene) return `因子槽 ${slotIndex}：🔒 未知因子`;
+    if (playerLevel !== undefined) {
+        const view = factorMaskView(gene, playerLevel);
+        return `因子槽 ${slotIndex}：${view.active ? '' : '🔒 '}${view.label}`;
+    }
     if (gene.isLocked) {
         const dl = gene.discoveryLevel !== undefined ? `（發現等級 ${gene.discoveryLevel}）` : '';
         return `因子槽 ${slotIndex}：🔒 ${gene.displayName ?? gene.id ?? '未知因子'}${dl}`;

@@ -378,6 +378,7 @@ export class LobbyScene extends Component {
                 }
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
+            playerDiscoveryLevel: () => services().session.discoveryLevel,
         });
         this._bonding = bonding;
 

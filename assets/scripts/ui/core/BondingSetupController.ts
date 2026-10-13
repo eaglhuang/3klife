@@ -15,6 +15,7 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
+import { factorMaskLabels } from '../../core/systems/FactorMask';
 import type { BreedingService } from '../../core/services/BreedingService';
 import {
     BREEDING_MIN_AGE,
@@ -73,6 +74,8 @@ export interface BondingSetupDeps {
     persist?: () => Promise<unknown>;
     /** 結緣的壽命消耗（6 月，父母各扣）；正式環境接 GameSession.spendLifespan */
     spendLifespan?: (generalId: string, command: 'breeding') => { events: readonly { type: string }[] } | null;
+    /** 玩家發現等級，決定父母因子是否顯示名稱；未提供時視為 1（只看得到藍粉） */
+    playerDiscoveryLevel?: () => number;
 }
 
 export class BondingSetupController {
@@ -196,14 +199,16 @@ export class BondingSetupController {
             btnConfirmBond: false,
         };
 
+        const level = this._deps.playerDiscoveryLevel?.() ?? 1;
+
         if (!father || !mother) {
             actives.bondEmptyHint = true;
-            Object.assign(texts, parentTexts('father', father), parentTexts('mother', mother));
+            Object.assign(texts, parentTexts('father', father, level), parentTexts('mother', mother, level));
             return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, texts, actives, enabled };
         }
 
         actives.bondPanel = true;
-        Object.assign(texts, parentTexts('father', father), parentTexts('mother', mother));
+        Object.assign(texts, parentTexts('father', father, level), parentTexts('mother', mother, level));
 
         const mode: BondingMode = (father.age ?? 0) >= RETIREMENT_AGE || (mother.age ?? 0) >= RETIREMENT_AGE ? 'Peace_Lineage' : 'Standard';
         texts.modeChip = mode === 'Peace_Lineage'
@@ -304,7 +309,13 @@ function pagerText(list: BreedingGeneral[], selected: BreedingGeneral | null): s
     return `${list.findIndex((g) => g.id === selected.id) + 1} / ${list.length}`;
 }
 
-function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null): Record<string, string> {
+/** 父母因子的遮罩文字；沒有因子時顯示「無因子」 */
+function factorLine(general: BreedingGeneral, playerLevel: number): string {
+    const labels = factorMaskLabels(general.genes ?? [], playerLevel);
+    return labels.length > 0 ? `因子：${labels.join(' · ')}` : '因子：無';
+}
+
+function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null, playerLevel: number): Record<string, string> {
     if (!general) {
         return {
             [`${side}Name`]: side === 'father' ? '父方：無人可選' : '母方：無人可選',
@@ -322,5 +333,6 @@ function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null)
     return {
         [`${side}Name`]: `${side === 'father' ? '父方' : '母方'}：${general.name}`,
         [`${side}Info`]: parts.join(' · '),
+        [`${side}Factors`]: factorLine(general, playerLevel),
     };
 }

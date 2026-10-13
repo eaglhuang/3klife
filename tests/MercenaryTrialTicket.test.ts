@@ -17,7 +17,7 @@ export function createMercenaryTrialTicketSuite(): TestSuite {
     });
 
     suite.test('有試用券：消耗 1 張並產生 Trial 傭兵，天數為 TRIAL_DAYS', () => {
-        const result = useTrialTicket({ trialTickets: 2 }, 'merc-1', ORIGIN);
+        const result = useTrialTicket({ trialTickets: 2 }, 'merc-1', ORIGIN, 'gen-1');
         assert.isTrue(result.ok);
         assert.equals(1, result.wallet.trialTickets);
         assert.equals('Trial', result.mercenary!.status);
@@ -25,8 +25,21 @@ export function createMercenaryTrialTicketSuite(): TestSuite {
         assert.equals('merc-1', result.mercenary!.uid);
     });
 
+    suite.test('產生的傭兵帶入 generalId，好感從 0 開始', () => {
+        const result = useTrialTicket({ trialTickets: 1 }, 'merc-1', ORIGIN, 'gen-1');
+        assert.equals('gen-1', result.mercenary!.generalId!);
+        assert.equals(undefined, result.mercenary!.affection);
+    });
+
+    suite.test('generalId 為空字串：回 no-general，錢包不變', () => {
+        const result = useTrialTicket({ trialTickets: 1 }, 'merc-1', ORIGIN, '');
+        assert.isFalse(result.ok);
+        assert.equals('no-general', result.reason!);
+        assert.equals(1, result.wallet.trialTickets);
+    });
+
     suite.test('能力數值 = 原值 × 1.0（數值不變）', () => {
-        const result = useTrialTicket({ trialTickets: 1 }, 'merc-1', ORIGIN);
+        const result = useTrialTicket({ trialTickets: 1 }, 'merc-1', ORIGIN, 'gen-1');
         assert.equals(80, result.stats!.STR);
         assert.equals(60, result.stats!.INT);
         assert.equals(40, result.stats!.POL);
@@ -36,7 +49,7 @@ export function createMercenaryTrialTicketSuite(): TestSuite {
 
     suite.test('沒有試用券：拒絕，錢包不變且不產生傭兵', () => {
         const wallet = { trialTickets: 0 };
-        const result = useTrialTicket(wallet, 'merc-1', ORIGIN);
+        const result = useTrialTicket(wallet, 'merc-1', ORIGIN, 'gen-1');
         assert.isFalse(result.ok);
         assert.equals('no-ticket', result.reason!);
         assert.equals(0, result.wallet.trialTickets);
@@ -56,7 +69,7 @@ export function createMercenaryTrialTicketSuite(): TestSuite {
     suite.test('輸入錢包與原武將數值不被修改，結果為副本', () => {
         const wallet = Object.freeze({ trialTickets: 1 });
         const origin = Object.freeze({ ...ORIGIN });
-        const result = useTrialTicket(wallet, 'merc-1', origin);
+        const result = useTrialTicket(wallet, 'merc-1', origin, 'gen-1');
         assert.equals(1, wallet.trialTickets);
         assert.equals(80, origin.STR);
         assert.isTrue(result.stats !== origin);
