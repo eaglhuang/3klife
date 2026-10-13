@@ -36,6 +36,7 @@ import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createFactorVisibilitySuite } from './FactorVisibility.test';
 import { createGeneCatalystSuite } from './GeneCatalyst.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
+import { createMercenaryBondPermanentSuite } from './MercenaryBondPermanent.test';
 import { createMercenaryBondSuite } from './MercenaryBond.test';
 import { createLifespanWiringSuite } from './LifespanWiring.test';
 import { createLifespanDeathPersistSuite } from './LifespanDeathPersist.test';
@@ -221,6 +222,7 @@ if (typeof window === 'undefined') {
     runner.register(createTallyHoldingsWiringSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createMercenaryBondPermanentSuite());
     runner.register(createMercenaryTrialTicketSuite());
     runner.register(createMercenaryBondSuite());
     runner.register(createDomesticTasksSuite());
