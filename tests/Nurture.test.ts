@@ -44,8 +44,6 @@ import {
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
 import { hybridSourceFromFactors, hybridSourcesFromParents } from '../assets/scripts/core/systems/HybridSkill';
 import { commitReportCard, emptyReportCardBook, keepReportCard, RETAKE_ITEM_COST } from '../assets/scripts/core/systems/ReportCardBook';
-    });
-
 import { revealStat } from '../assets/scripts/core/systems/StatRevelation';
 import { UnveilingService } from '../assets/scripts/core/services/UnveilingService';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
