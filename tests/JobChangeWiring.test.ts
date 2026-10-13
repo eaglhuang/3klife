@@ -1,5 +1,5 @@
 import { assert, TestSuite } from './TestRunner';
-import { applyJobChangeToRoster, primaryAbilityOf, JobWiringGeneral } from '../assets/scripts/core/systems/JobChangeWiring';
+import { applyJobChangeToRoster, primaryAbilityOf, resolvePrimaryClass, JobWiringGeneral } from '../assets/scripts/core/systems/JobChangeWiring';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
@@ -22,9 +22,27 @@ export function createJobChangeWiringSuite(): TestSuite {
         assert.equals(0, primaryAbilityOf({ ...general, str: undefined, lea: undefined }, 'Warrior'));
     });
 
-    suite.test('沒有主職資料或找不到武將時不轉職（回傳 null）', () => {
-        assert.isTrue(applyJobChangeToRoster([youth('liu', { primaryClass: undefined })], 'liu', 'Scholar', 1) === null);
+    suite.test('找不到武將或缺少年齡時不轉職（回傳 null）', () => {
         assert.isTrue(applyJobChangeToRoster([youth('liu')], 'guan', 'Scholar', 1) === null);
+        assert.isTrue(applyJobChangeToRoster([youth('liu', { age: undefined } as Partial<JobWiringGeneral>)], 'liu', 'Scholar', 1) === null);
+    });
+
+    suite.test('主職解析順序：primaryClass → careerClass → 暫定後備（武官能力高則武官）', () => {
+        assert.equals('Scholar', resolvePrimaryClass(youth('a', { primaryClass: 'Scholar' })));
+        assert.equals('Scholar', resolvePrimaryClass(youth('a', { primaryClass: undefined, careerClass: 'Scholar' })));
+        // 武官平均 70（武力 80、統率 60）高於文官平均 60
+        assert.equals('Warrior', resolvePrimaryClass(youth('a', { primaryClass: undefined })));
+        // 文官平均 90（智識 100、政治 80）高於武官平均 70
+        assert.equals('Scholar', resolvePrimaryClass(youth('a', { primaryClass: undefined, int: 100, pol: 80 } as Partial<JobWiringGeneral>)));
+        // 平手歸文官，與 Unveiling.recommendFate 的 martial > civil 一致
+        assert.equals('Scholar', resolvePrimaryClass(youth('a', { primaryClass: undefined, str: 60, lea: 60, int: 60, pol: 60 } as Partial<JobWiringGeneral>)));
+    });
+
+    suite.test('沒有主職資料的既有武將轉職成功時，寫回後備主職與副職', () => {
+        const applied = applyJobChangeToRoster([youth('liu', { primaryClass: undefined })], 'liu', 'Scholar', 1);
+        assert.isTrue(applied!.result.ok);
+        assert.equals('Warrior', applied!.roster[0].primaryClass!);
+        assert.equals('Scholar', applied!.roster[0].subClass!);
     });
 
     suite.test('轉職令不足：不改名冊，回報 no-order', () => {
