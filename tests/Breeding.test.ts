@@ -7,6 +7,7 @@ import { TestSuite, assert } from './TestRunner';
 import { BloodlineGraph, PEDIGREE_SLOTS } from '../assets/scripts/core/services/BloodlineGraph';
 import {
     advanceBreedingSeason,
+    applyInbreedingPurification,
     birthLoadFactor,
     breed,
     BreedingGeneral,
@@ -17,7 +18,9 @@ import {
     conceptionRate,
     CONCEPTION_RATE_CAP,
     epRatingLabel,
+    INBREEDING_NEGATIVE_TRAIT_BONUS,
     lifetimeBreedingCap,
+    parentAgeFactor,
     PREGNANCY_LOCK_SEASONS,
     resolveAncestorProfile,
     AncestorProfile,
@@ -26,6 +29,7 @@ import {
     buildFactorDictionary,
     EARLY_REVEAL_FACTOR_COLORS,
     FactorDictionary,
+    InheritedFactor,
     inheritFactors,
     resolveFactorColor,
     rollFactorStar,
@@ -343,6 +347,48 @@ export function createBreedingSuite(): TestSuite {
             childId: 'baby',
         });
         assert.equals(70, result.child!.maxVitality);
+    });
+
+    suite.test('近親子嗣：負面特質出現率 +0.5；非近親為 0', () => {
+        const inbred = breed({
+            father: makeGeneral('f', '男', { bloodlineId: 'BL_X' }),
+            mother: makeGeneral('m', '女', { bloodlineId: 'BL_X' }),
+            pedigree: new BloodlineGraph(),
+            random: () => 0,
+            childId: 'baby',
+        });
+        assert.equals(INBREEDING_NEGATIVE_TRAIT_BONUS, inbred.child!.negativeTraitRateBonus);
+        const normal = breed({
+            father: makeGeneral('f2', '男'),
+            mother: makeGeneral('m2', '女'),
+            pedigree: new BloodlineGraph(),
+            random: () => 0,
+            childId: 'baby2',
+        });
+        assert.equals(0, normal.child!.negativeTraitRateBonus);
+    });
+
+    suite.test('近親純化：只升多來源同名因子，且不超過 maxLevel', () => {
+        const merged: InheritedFactor = { id: 'g_a', color: 'blue', level: 2, generation: 1, sourceUids: ['x', 'y'] };
+        const single: InheritedFactor = { ...merged, id: 'g_b', sourceUids: ['x'] };
+        const capped: InheritedFactor = { ...merged, id: 'g_c', level: 5 };
+        const up = applyInbreedingPurification([merged, single, capped], seq(0, 0, 0));
+        assert.equals(3, up[0].level);
+        assert.equals(2, up[1].level);
+        assert.equals(5, up[2].level);
+        const miss = applyInbreedingPurification([merged], seq(0.99));
+        assert.equals(2, miss[0].level);
+    });
+
+    suite.test('Age_Factor 暫定分段：高齡方降低受孕率', () => {
+        assert.equals(1, parentAgeFactor(40));
+        assert.equals(0.8, parentAgeFactor(41));
+        assert.equals(0.6, parentAgeFactor(46));
+        assert.equals(1, parentAgeFactor(undefined));
+        const m = makeGeneral('m', '女', { cha: 30, luk: 20, age: 30 });
+        const base = conceptionRate(makeGeneral('f', '男', { cha: 30, luk: 20, age: 30 }), m);
+        const old = conceptionRate(makeGeneral('f2', '男', { cha: 30, luk: 20, age: 50 }), m);
+        assert.inRange(old, base * 0.6 - 1e-9, base * 0.6 + 1e-9);
     });
 
     suite.test('advanceBreedingSeason：待產倒數，到 0 時回報', () => {
