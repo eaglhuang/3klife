@@ -65,7 +65,7 @@ export interface IBattleScenePanelLike {
     wirePanels(panels: { battleHUD?: any, battleLogPanel?: any }): void;
     setCards(cards: any[]): void;
     setUltimateSkills(skills: any[]): void;
-    setTacticSummary(summary: string): void;
+    setTacticSummary(summary: string, points?: { current?: number; max?: number; enabled: boolean }): void;
     appendLog(text: string): void;
     actionCommandComposite?: any;
     actionCommandPanel?: any;

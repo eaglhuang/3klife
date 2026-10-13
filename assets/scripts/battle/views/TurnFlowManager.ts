@@ -1,3 +1,4 @@
+import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 
 /**
  * TurnFlowManager.ts — 回合推進與交互流程管理器
@@ -21,7 +22,6 @@ import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { geometry, Vec3 } from 'cc';
 import { BattleSceneContext } from './BattleUIBridge';
 import { BattleUIBridge } from './BattleUIBridge';
-import { buildTacticSummary } from './BattleSceneLoader';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 
 export class TurnFlowManager {
@@ -114,11 +114,12 @@ export class TurnFlowManager {
       return;
     }
 
-    const summary = buildTacticSummary(general);
-    this.ctx.deployRuntime?.showToast(summary.message, summary.count > 0 ? BATTLE_TURN_FLOW_TIMING.summaryToastSec : BATTLE_TURN_FLOW_TIMING.shortToastSec);
-    if (summary.count > 0) {
-      this.ctx.battleLogPanel?.append(`戰法槽位：${summary.names.join('｜')}`);
+    const descriptor = this.ctx.ctrl?.getPlayerSeedTacticDescriptor();
+    if (!descriptor || !this.ctx.ctrl?.getPlayerTacticPointState().enabled) {
+      this.ctx.deployRuntime?.showToast('計謀點不足或尚未配置戰法');
+      return;
     }
+    this.ctx.skillTargetingFlow?.beginPlayerSkillFlow(descriptor.skillId, SkillSourceType.SeedTactic, '戰法');
   }
 
   // ── 武將出陣請求 ──────────────────────────────────────────────────────────

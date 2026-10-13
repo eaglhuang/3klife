@@ -16,9 +16,11 @@
  */
 import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
+import { evaluateAwakeningTitle } from './AwakeningTitle';
 import { RandomSource } from './GeneralAging';
 import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
+import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -102,6 +104,8 @@ export interface NurtureRoundLog {
     mentorsOnSlot: string[];
     burst: boolean;
     negativeFactor?: string;
+    /** 本回合混種戰法觸發（只會在第一次觸發時為 true） */
+    hybridTriggered?: boolean;
 }
 
 /** 培育會話；全部是純資料，可直接 JSON 存檔（對應 Data Schema Nurture_Session） */
@@ -120,6 +124,10 @@ export interface NurtureSession {
     growthModifier: number;
     /** 入學時鎖定的教官 */
     mentors: TrainingMentor[];
+    /** 父母的戰法來源（混種戰法用）；沒有則不擲 */
+    hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
+    /** 混種戰法觸發的回合；尚未觸發為 undefined */
+    hybridRound?: number;
     /** 即將進行的回合，每位教官站在哪一格（玩家選訓練前就看得到） */
     mentorSlots: Record<string, TrainingKind>;
     negativeFactors: string[];
@@ -194,6 +202,8 @@ export interface CreateNurtureSessionInput {
     mentors: readonly TrainingMentor[];
     startSeason: number;
     random: RandomSource;
+    /** 父母的戰法來源（領域）；沒有或缺一方時不會擲混種戰法 */
+    hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
 }
 
 export function validateMentors(mentors: readonly TrainingMentor[]): void {
@@ -229,6 +239,7 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         tp: 0,
         growthModifier: effectiveGrowthModifier(input.child),
         mentors,
+        hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
         log: [],
@@ -337,6 +348,13 @@ export function executeRound(
 
     log.vigorAfter = session.vigor;
     session.round = round;
+    if (session.hybridRound === undefined && session.hybridSources) {
+        const { father, mother } = session.hybridSources;
+        if (rollHybridTrigger(round, father, mother, random)) {
+            session.hybridRound = round;
+            log.hybridTriggered = true;
+        }
+    }
     session.log.push(log);
     if (round >= NURTURE_TOTAL_ROUNDS) {
         session.status = 'completed';
@@ -402,8 +420,16 @@ export interface GraduationResult {
     tags: string[];
 }
 
-/** 36 回合完成後結算：數值寫回本體；會話必須是 completed */
-export function graduate(session: NurtureSession, child: UnveilingGeneral, season?: number): GraduationResult {
+/**
+ * 36 回合完成後結算：數值寫回本體；會話必須是 completed。
+ * 天才子嗣依 evaluateAwakeningTitle 授予覺醒名號（畢業值 = 實力層；ancestorTagCounts 由呼叫端提供，沒有則視為 0）。
+ */
+export function graduate(
+    session: NurtureSession,
+    child: UnveilingGeneral,
+    season?: number,
+    options: { ancestorTagCounts?: Record<string, number> } = {},
+): GraduationResult {
     if (session.status !== 'completed') throw new NurtureError(`培育會話 ${session.sessionId} 尚未完成（${session.status}）`);
     if (session.childId !== child.id) throw new NurtureError(`培育會話屬於 ${session.childId}，不是 ${child.id}`);
 
@@ -433,6 +459,14 @@ export function graduate(session: NurtureSession, child: UnveilingGeneral, seaso
             graduationTags: tags,
         },
     };
+    const awakening = evaluateAwakeningTitle({
+        graduationRank: rating,
+        graduationStats: session.prowess,
+        ep: child.ep ?? 0,
+        ancestorTagCounts: options.ancestorTagCounts,
+    });
+    if (awakening.title) general.awakeningTitle = awakening.title;
+
     return { general, rating, ratingScore, tags };
 }
 

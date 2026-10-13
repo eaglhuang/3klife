@@ -1,0 +1,36 @@
+{
+  "flow": {
+    "name": "battle-points-disabled",
+    "completed": true,
+    "before": {
+      "points": {
+        "current": 12,
+        "max": 30,
+        "enabled": false
+      },
+      "sp": 0,
+      "enabled": false,
+      "label": {
+        "text": "計謀\n點 12/30",
+        "color": "828282"
+      }
+    },
+    "after": {
+      "points": {
+        "current": 12,
+        "max": 30,
+        "enabled": false
+      },
+      "sp": 0,
+      "enabled": false,
+      "label": {
+        "text": "計謀\n點 12/30",
+        "color": "828282"
+      }
+    },
+    "limitations": [
+      "Successful cast and turn regeneration are headless-tested, not covered by this Web check"
+    ]
+  },
+  "errorCount": 0
+}
