@@ -16,7 +16,7 @@ export function createSpiritRelicUniqueSuite(): TestSuite {
         service.settleSeason(roster, clock.advanceSeason(), roster.map(g =>
             ({ type: 'died' as const, generalId: g.id, age: 80 })));
 
-    suite.test('同模板跨季死亡：第二位只留快照，兩位仍有虎符', async () => {
+    suite.test('同模板跨季死亡：第二位只留快照，（虎符由 GameSession 負責，本服務不產）', async () => {
         const adapter = new MemoryStorageAdapter();
         const service = new LegacyService(adapter);
         const clock = new GameClock();
@@ -25,7 +25,6 @@ export function createSpiritRelicUniqueSuite(): TestSuite {
         assert.equals(0, second.settlement.spiritCards.length);
         assert.equals(false, second.settlement.archivedSnapshots![0].isSpiritRelic);
         assert.equals(2, (await service.getArchiver().getAllSpiritCards()).length);
-        assert.equals(2, (await service.getTigerTallies()).length);
     });
     suite.test('不同模板同季各一張正式卡；同模板同季僅第一張', async () => {
         const service = new LegacyService(new MemoryStorageAdapter());
@@ -33,7 +32,6 @@ export function createSpiritRelicUniqueSuite(): TestSuite {
         assert.equals(2, result.settlement.spiritCards.length);
         assert.equals('a,b', result.settlement.spiritCards.map(c => c.uid).join(','));
         assert.equals(3, result.settlement.archivedSnapshots!.length);
-        assert.equals(3, result.settlement.tigerTallies!.length);
     });
     suite.test('缺模板以 id 為鍵：不同 id 各自產卡，同 id 不追加', async () => {
         const service = new LegacyService(new MemoryStorageAdapter());
@@ -44,7 +42,7 @@ export function createSpiritRelicUniqueSuite(): TestSuite {
         assert.equals(2, (await service.getArchiver().getAllSpiritCards()).length);
         assert.equals(true, (await service.getArchiver().getSpiritCard('a'))!.isSpiritRelic);
     });
-    suite.test('同季重跑保留第一位 true 與第二位 false，不增加快照或虎符', async () => {
+    suite.test('同季重跑保留第一位 true 與第二位 false，不增加快照', async () => {
         const service = new LegacyService(new MemoryStorageAdapter());
         const roster = [hero('first', 'GEN_A'), hero('second', 'GEN_A')];
         const advance = new GameClock().advanceSeason();
@@ -55,7 +53,6 @@ export function createSpiritRelicUniqueSuite(): TestSuite {
         assert.equals('first', replay.settlement.spiritCards[0].uid);
         assert.equals(false, (await service.getArchiver().getSpiritCard('second'))!.isSpiritRelic);
         assert.equals(2, (await service.getArchiver().getAllSpiritCards()).length);
-        assert.equals(2, (await service.getTigerTallies()).length);
     });
     suite.test('舊檔兩張重複正式卡保留；新死者被擋，舊死者重跑仍為 true', async () => {
         const adapter = new MemoryStorageAdapter();

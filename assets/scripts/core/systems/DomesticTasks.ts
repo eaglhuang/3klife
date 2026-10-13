@@ -57,6 +57,15 @@ export interface DomesticTaskResult {
 
 export const EMPTY_DOMESTIC_LOG: Readonly<DomesticSeasonLog> = Object.freeze({ lastSeason: null, lastTask: null });
 
+/** 舊存檔沒有內政紀錄時補空紀錄；壞掉的欄位也視為空，不猜測。 */
+export function normalizeDomesticLog(raw: unknown): DomesticSeasonLog {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return { ...EMPTY_DOMESTIC_LOG };
+    const r = raw as Record<string, unknown>;
+    const lastSeason = typeof r.lastSeason === 'number' && Number.isInteger(r.lastSeason) ? r.lastSeason : null;
+    const lastTask = typeof r.lastTask === 'string' && isDomesticTaskId(r.lastTask) ? r.lastTask : null;
+    return { lastSeason, lastTask };
+}
+
 export function isDomesticTaskId(value: string): value is DomesticTaskId {
     return (DOMESTIC_TASK_IDS as readonly string[]).indexOf(value) >= 0;
 }

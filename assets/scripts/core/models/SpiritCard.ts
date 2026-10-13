@@ -17,6 +17,7 @@
  */
 
 import { GeneralLifecycleClass } from './GeneralLifecycle';
+import type { SpiritArchiveSnapshot } from '../systems/SpiritArchiveSnapshot';
 
 export interface DeathContext {
     battleId: string;          // 死亡時的戰鬥 ID
@@ -57,4 +58,6 @@ export interface SpiritCard {
     birthYear?: number;
     /** 死亡年份（遊戲內年份，通常與 deathContext.year 相同） */
     deathYear?: number;
+    /** 英靈死亡快照（英勇事蹟 / 最終屬性 / 技能）；舊快照沒有此欄位，不做遷移 */
+    archiveSnapshot?: SpiritArchiveSnapshot;
 }

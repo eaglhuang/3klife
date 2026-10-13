@@ -10,6 +10,7 @@ import {
     normalizePrisonState,
     persuadeRate,
     powOptionLabels,
+    captiveFemaleSourceOf,
     powRarityOf,
     powResultLine,
     PRISON_SLOTS_INITIAL,
@@ -148,6 +149,17 @@ export function createPrisonerOfWarSuite(): TestSuite {
         assert.equals(100, restored.prison.fame);
         await restored.advanceSeason();
         assert.equals(9, restored.prison.intel, '陳宮 INT 90 → 每季情報 9');
+    });
+
+    suite.test('女俘虜帶 CAPTIVE 來源：SSR 封頂 SR、R 保留 R；男俘虜與試用傭兵不帶來源', () => {
+        const female = { id: 'diaochan', name: '貂蟬', rarityTier: 'legendary', gender: '女' };
+        const ssr = captiveFemaleSourceOf(female, 7);
+        assert.equals('CAPTIVE', ssr?.Source_Type ?? '');
+        assert.equals('SR', ssr?.Quality_Grade ?? '');
+        assert.equals(7, ssr?.Acquired_Season ?? -1);
+        assert.equals('R', captiveFemaleSourceOf({ ...female, rarityTier: 'common' }, 7)?.Quality_Grade ?? '');
+        assert.equals(null, captiveFemaleSourceOf({ ...female, gender: '男' }, 7));
+        assert.equals(null, captiveFemaleSourceOf({ ...female, isMercenary: true, templateFlag: 'MERC_TRIAL' }, 7));
     });
 
     return suite;

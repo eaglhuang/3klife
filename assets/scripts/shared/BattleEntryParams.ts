@@ -60,6 +60,8 @@ export interface IBattleEntryParams {
   battleTactic: BattleTactic;
   /** 背景 ID（覆蓋 encounter 設定；為空時由 encounter 決定） */
   backgroundId?: string;
+  /** 首戰教學戰：開啟教學提示浮窗（PROG-2-0241）；預設關閉 */
+  tutorial?: boolean;
 }
 
 /** QA 工具 / preview target 5 使用的預設參數 */

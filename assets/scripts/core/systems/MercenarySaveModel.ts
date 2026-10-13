@@ -9,6 +9,7 @@
  * Unity 對照：像 JsonUtility 讀檔後的 OnValidate，壞欄位直接丟棄而不是讓遊戲崩潰。
  */
 import { MercenaryState, MercenaryStatus, TRIAL_DAYS } from './MercenaryBond';
+import { AFFECTION_CAP } from './MercenaryAffection';
 import { PoolCooldown } from './MercenaryDeparture';
 import { UpkeepState, UpkeepStatus } from './MercenaryUpkeep';
 
@@ -51,7 +52,11 @@ function readMercenary(raw: unknown): MercenaryState | null {
     const { uid, daysLeft, bond, status } = raw;
     if (!isNonEmptyString(uid) || !isCount(daysLeft, TRIAL_DAYS) || !isCount(bond)) return null;
     if (!MERC_STATUSES.includes(status as MercenaryStatus)) return null;
-    return { uid, daysLeft, bond, status: status as MercenaryStatus };
+    const mercenary: MercenaryState = { uid, daysLeft, bond, status: status as MercenaryStatus };
+    // 選填欄位壞掉只丟該欄，不丟整筆傭兵
+    if (isNonEmptyString(raw.generalId)) mercenary.generalId = raw.generalId;
+    if (isCount(raw.affection, AFFECTION_CAP)) mercenary.affection = raw.affection;
+    return mercenary;
 }
 
 function readUpkeep(raw: unknown): UpkeepState | null {

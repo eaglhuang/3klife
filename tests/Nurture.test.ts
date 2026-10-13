@@ -508,6 +508,36 @@ export function createNurtureSuite(): TestSuite {
         assert.equals(70, executeRound({ ...plain, vigor: 30 }, 'rest', seq(0)).session.vigor);
     });
 
+    suite.test('重修接線：保留成績單後可重修、重修後再保留、定型寫入名冊並銷毀其餘成績單與會話', () => {
+        const store = new InMemoryRosterStore([readyChild('kid') as never]);
+        const svc = new NurtureService(store as never, { random: seeded(3), currentSeason: () => 0, admissionsPerSeason: 5 });
+        const playOutRest = () => {
+            for (let i = 0; i < NURTURE_TOTAL_ROUNDS; i++) svc.train('kid', 'rest');
+        };
+        assert.throws(() => svc.retake('kid'), '沒有會話時不能重修');
+
+        svc.start('kid', []);
+        assert.throws(() => svc.retake('kid'), '未完成不能重修');
+        playOutRest();
+        svc.keepReport('kid');
+        assert.equals(undefined, (store.getAll() as Array<{ graduationRating?: string }>)[0].graduationRating, '保留不寫入名冊');
+
+        svc.retake('kid', []);
+        assert.equals(0, svc.getSession('kid')!.round, '重修重新開場');
+        playOutRest();
+        svc.keepReport('kid');
+        assert.lengthEquals(2, svc.getState().reportBooks!['kid'].cards);
+
+        const committed = svc.commitReport('kid', 1);
+        assert.isTrue(!!committed.rating);
+        const child = (store.getAll() as Array<{ id: string; graduationRating?: string }>).find((g) => g.id === 'kid')!;
+        assert.equals(committed.rating, child.graduationRating!, '定型寫入名冊');
+        assert.equals(null, svc.getSession('kid'), '會話銷毀');
+        assert.equals(undefined, svc.getState().reportBooks!['kid'], '其餘成績單銷毀');
+        assert.throws(() => svc.commitReport('kid', 0), '不得重來');
+        assert.throws(() => svc.retake('kid'), '定型後不能重修');
+    });
+
     suite.test('培育事件：受傷時訓練無效並跳過下一回合；跳過回合不消耗精力也不加屬性', () => {
         const child = readyChild('c');
         const base = createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) });
