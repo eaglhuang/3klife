@@ -71,6 +71,8 @@ export interface BondingSetupDeps {
     prepare?: () => Promise<unknown>;
     /** 結緣後存檔；失敗只回報，不回滾 */
     persist?: () => Promise<unknown>;
+    /** 結緣的壽命消耗（6 月，父母各扣）；正式環境接 GameSession.spendLifespan */
+    spendLifespan?: (generalId: string, command: 'breeding') => unknown;
 }
 
 export class BondingSetupController {
@@ -141,6 +143,8 @@ export class BondingSetupController {
             this._notice = `無法結緣：${result.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;
             return result;
         }
+        this._deps.spendLifespan?.(fatherId, 'breeding');
+        this._deps.spendLifespan?.(motherId, 'breeding');
         if (result.outcome === 'failed') {
             this._notice = `${result.father.name} 與 ${result.mother.name} 此番未能結緣受孕，精力已消耗`;
         } else {
