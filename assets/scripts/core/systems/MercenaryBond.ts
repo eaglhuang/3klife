@@ -10,6 +10,10 @@ export interface MercenaryState {
     /** 已完成的試用天數（結義進度），0~6。 */
     bond: number;
     status: MercenaryStatus;
+    /** 選填：對應 generals.json 的武將 id，結義入名冊時取用（舊存檔可能沒有）。 */
+    generalId?: string;
+    /** 選填：好感 0~60；結義點數即好感值（PM 暫定）。 */
+    affection?: number;
 }
 
 export type MercenaryEvent =
