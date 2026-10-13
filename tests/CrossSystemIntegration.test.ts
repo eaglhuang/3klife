@@ -269,6 +269,68 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.isFalse(describeRound(base).includes('好感'), '沒有好感事件時不顯示');
     });
 
+    suite.test('攻城開戰扣壽命致死 → 存檔重開 → 季結：陣亡虎符只產一次，持有的虎符退回君主', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const roster = [
+            makeGeneral('hist-siege', '男', 59.9, { isHistorical: true, maxLifespan: 60, battleRecord: { wins: 3, kills: 3, merit: 30 } } as never),
+            makeGeneral('young', '男', 20),
+        ];
+        const a = createSession(adapter, roster);
+        a.setRandomSource(() => 0.99);
+        await a.registerTallyCards([{ uid: 't1', templateId: 'tpl-1', sourceGeneralUid: 'src', quality: 'R', score: 0, source: 'death', producedSeason: 0 } as never]);
+        await a.equipTally('t1', 'hist-siege');
+
+        const spent = await a.spendSiegeLifespan('hist-siege');
+        assert.isTrue(spent?.events.some((e) => e.type === 'died') ?? false, '剩不到 3 個月壽命，攻城開戰應致死');
+        await a.save();
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        b.setLifecycle(new LegacyService(adapter));
+        assert.isTrue(await b.load());
+        await b.advanceSeason();
+        assert.isTrue(b.tallyOf('hist-siege') === null, '重開後季結，陣亡武將不再持有虎符');
+        assert.isTrue(b.tallyHoldings['t1'] === null, '虎符退回君主');
+        const produced = Object.keys(b.tallyCards).filter((uid) => uid !== 't1');
+        assert.equals(1, produced.length, '重開後季結應剛好產出 1 張陣亡虎符');
+        await b.advanceSeason();
+        assert.equals(1, Object.keys(b.tallyCards).filter((uid) => uid !== 't1').length, '再過一季不重複產卡');
+    });
+
+    suite.test('關卡資料：battleKind 只能是 field 或 siege，且第一關（虎牢關）標為攻城', () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const data = JSON.parse(require('fs').readFileSync('assets/resources/data/encounters.json', 'utf8')) as { encounters: Array<{ id: string; battleKind?: string }> };
+        for (const encounter of data.encounters) {
+            assert.isTrue(encounter.battleKind === undefined || encounter.battleKind === 'field' || encounter.battleKind === 'siege', `${encounter.id} battleKind 不合法：${encounter.battleKind}`);
+        }
+        assert.isTrue(data.encounters.some((e) => e.battleKind === 'siege'), '至少一關標為攻城');
+    });
+
+    suite.test('沒收虎符與新手引導進度：存檔往返後仍在', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, makeRoster());
+        await a.registerTallyCards([{ uid: 't9', templateId: 'tpl-9', sourceGeneralUid: 'src', quality: 'R', score: 0, source: 'death', producedSeason: 0 } as never]);
+        await a.equipTally('t9', 'hero-a');
+        const before = a.tallyLoyalty['hero-a']?.loyalty;
+        const seized = await a.confiscateTally('hero-a');
+        assert.equals('t9', seized?.cardUid ?? '');
+        assert.isTrue(a.tallyOf('hero-a') === null, '沒收後武將不再持有虎符');
+        const first = await a.acknowledgeOnboarding('fate');
+        assert.isTrue(first.ok, '第一段引導可確認');
+        assert.isFalse((await a.acknowledgeOnboarding('legacy')).ok, '跳段確認被拒');
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await b.load());
+        assert.isTrue(b.tallyOf('hero-a') === null, '讀檔後仍是沒收狀態');
+        assert.equals(a.tallyLoyalty['hero-a']?.loyalty, b.tallyLoyalty['hero-a']?.loyalty, '忠誠度一致');
+        assert.isTrue((b.tallyLoyalty['hero-a']?.loyalty ?? 0) !== before, '沒收應改變忠誠度');
+        assert.equals(canonical(a.onboarding), canonical(b.onboarding), '引導進度讀檔後一致');
+        assert.equals(1, b.onboarding.nextIndex, '引導停在第二段');
+    });
+
     suite.test('結緣＋血統活性：同亂數種子結果完全一致，因子星級不超過 5★、不低於 1★', () => {
         const lcg = (seed: number) => () => {
             seed = (seed * 1664525 + 1013904223) >>> 0;
