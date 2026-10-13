@@ -33,6 +33,7 @@ import { createBattleRosterSuite } from './BattleRoster.test';
 import { createHistoricalFlagSuite } from './HistoricalFlag.test';
 import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
+import { createFactorVisibilitySuite } from './FactorVisibility.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
 import { createWildGeneSuite } from './WildGene.test';
 import { createSpiritRelicUniqueSuite } from './SpiritRelicUnique.test';
@@ -128,6 +129,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattleRosterSuite());
     runner.register(createLegacyTallySuite());
     runner.register(createSpiritRelicSuite());
+    runner.register(createFactorVisibilitySuite());
     runner.register(createLifespanCostSuite());
     runner.register(createWildGeneSuite());
     runner.register(createSpiritRelicUniqueSuite());
