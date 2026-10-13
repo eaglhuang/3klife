@@ -23,3 +23,10 @@ PROG-2-0100 已有 `getFactorVisibility`（可見／鎖定、requiredLevel）。
 - 規格原文不在 repo 時，以工單與 WBS CSV 為準；找到原文且與工單不同，停下來在 PR 說明回報，不自行決定。
 - 交回：PR 說明開頭寫「Before／After」；任務卡 `status: done`，寫明測試結果與暫定項目，然後解鎖。
 
+
+---
+
+## PM 裁定補充（2026-10-14）
+撞號檢查發現既有 `FactorMask.ts`（PR #91，已合併）已有遮罩 label／灰鎖與未知色系 fallback。依裁定採薄包裝：
+- 新 `FactorMaskState.ts` 只委派既有 `FactorMask.ts` 取得 label、locked、revealed，只新增 `previousView` → `playAnimation` 的一次性判斷。
+- 不改 `FactorMask.ts` 與其測試。未知色系以既有模組為準，差異寫入 PR 說明。
