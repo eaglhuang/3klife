@@ -90,11 +90,16 @@ export function powRarityOf(rarityTier: string | undefined): PowRarity {
     return 'R';
 }
 
-/** 試用傭兵（Q74）：戰敗必定安全撤退，不可被俘 */
-export function isPowExempt(target: PowTarget): boolean {
+/** 試用傭兵（MERC-06 / Q74）：出戰不寫入永久紀錄（精力、戰績、功勳），戰敗必定安全撤退、不可被俘 */
+export function isTrialMercenary(target: PowTarget): boolean {
     return Boolean(target.isMercenary)
         || target.templateFlag === MERC_TRIAL_FLAG
         || (target.hiddenFlags ?? []).includes(MERC_TRIAL_FLAG);
+}
+
+/** 試用傭兵（Q74）：戰敗必定安全撤退，不可被俘 */
+export function isPowExempt(target: PowTarget): boolean {
+    return isTrialMercenary(target);
 }
 
 function num(value: number | null | undefined, fallback = 0): number {
