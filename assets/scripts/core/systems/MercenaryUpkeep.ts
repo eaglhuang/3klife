@@ -10,7 +10,7 @@
  *   - Frozen：不可出戰、不可教官；每日倒數減 1。倒數歸零仍未補繳即離隊（Departed）。
  *   - repayUpkeep：補足所有欠款（每欠一日付一份日成本）即回到 Active。
  *
- * 規格沒寫倒數歸零的結果，離隊為本模組的判斷；離隊後的告別信與冷卻由 MERC-05 接線。
+ * 規格沒寫倒數歸零的結果，離隊為本模組的判斷；離隊後的告別信與冷卻由 MercenaryDeparture.settleUpkeepDeparture 接線。
  * 薪水金額由呼叫端傳入，規格的「隨武將強度掛鉤」公式尚未定義。尚未接存檔。
  *
  * Unity 對照：像 Subscription 的狀態機，每天 Tick 一次，欠費時進入 Grace 倒數。
