@@ -35,6 +35,7 @@ import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createFactorVisibilitySuite } from './FactorVisibility.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
+import { createGeneralStageSuite } from './GeneralStage.test';
 import { createMercenaryAffectionSuite } from './MercenaryAffection.test';
 import { createMercenaryDepartureSuite } from './MercenaryDeparture.test';
 import { createMercenaryUpkeepSuite } from './MercenaryUpkeep.test';
@@ -204,6 +205,7 @@ if (typeof window === 'undefined') {
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createGeneralStageSuite());
     runner.register(createMercenaryAffectionSuite());
     runner.register(createMercenaryDepartureSuite());
     runner.register(createMercenaryUpkeepSuite());
