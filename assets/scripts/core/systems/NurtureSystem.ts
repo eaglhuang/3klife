@@ -16,6 +16,7 @@
  */
 import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
+import { evaluateAwakeningTitle } from './AwakeningTitle';
 import { RandomSource } from './GeneralAging';
 import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
@@ -402,8 +403,16 @@ export interface GraduationResult {
     tags: string[];
 }
 
-/** 36 回合完成後結算：數值寫回本體；會話必須是 completed */
-export function graduate(session: NurtureSession, child: UnveilingGeneral, season?: number): GraduationResult {
+/**
+ * 36 回合完成後結算：數值寫回本體；會話必須是 completed。
+ * 天才子嗣依 evaluateAwakeningTitle 授予覺醒名號（畢業值 = 實力層；ancestorTagCounts 由呼叫端提供，沒有則視為 0）。
+ */
+export function graduate(
+    session: NurtureSession,
+    child: UnveilingGeneral,
+    season?: number,
+    options: { ancestorTagCounts?: Record<string, number> } = {},
+): GraduationResult {
     if (session.status !== 'completed') throw new NurtureError(`培育會話 ${session.sessionId} 尚未完成（${session.status}）`);
     if (session.childId !== child.id) throw new NurtureError(`培育會話屬於 ${session.childId}，不是 ${child.id}`);
 
@@ -433,6 +442,14 @@ export function graduate(session: NurtureSession, child: UnveilingGeneral, seaso
             graduationTags: tags,
         },
     };
+    const awakening = evaluateAwakeningTitle({
+        graduationRank: rating,
+        graduationStats: session.prowess,
+        ep: child.ep ?? 0,
+        ancestorTagCounts: options.ancestorTagCounts,
+    });
+    if (awakening.title) general.awakeningTitle = awakening.title;
+
     return { general, rating, ratingScore, tags };
 }
 
