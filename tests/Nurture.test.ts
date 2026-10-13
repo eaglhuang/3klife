@@ -452,6 +452,20 @@ export function createNurtureSuite(): TestSuite {
         assert.equals(15, result.log.statGained, '10 × 1.5 爆發');
     });
 
+    suite.test('紅色因子：未鎖定的紅因子總級數加成休息精力回復（每級 +10%），鎖定的不計', () => {
+        const child = readyChild('c');
+        const dict = buildFactorDictionary([{ id: 'gene_hp', category: 'physique' }, { id: 'gene_lock', category: 'physique' }]);
+        const genes = [{ id: 'gene_hp', level: 2, isLocked: false }, { id: 'gene_lock', level: 3, isLocked: true }];
+        const red = createNurtureSession({ sessionId: 'rd', child: { ...child, genes }, mentors: [], startSeason: 0, random: seeded(1), factorDictionary: dict });
+        assert.equals(2, red.redGeneLevel);
+        const plain = createNurtureSession({ sessionId: 'pl', child, mentors: [], startSeason: 0, random: seeded(1) });
+        assert.equals(0, plain.redGeneLevel);
+
+        // 休息恢復 40 × (1 + 0.1 × 2) = 48
+        assert.equals(78, executeRound({ ...red, vigor: 30 }, 'rest', seq(0)).session.vigor);
+        assert.equals(70, executeRound({ ...plain, vigor: 30 }, 'rest', seq(0)).session.vigor);
+    });
+
     suite.test('培育事件：受傷時訓練無效並跳過下一回合；跳過回合不消耗精力也不加屬性', () => {
         const child = readyChild('c');
         const base = createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) });
