@@ -43,6 +43,7 @@ import {
 } from '../assets/scripts/core/systems/NurtureSystem';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
 import { hybridSourceFromFactors, hybridSourcesFromParents } from '../assets/scripts/core/systems/HybridSkill';
+import { revealStat } from '../assets/scripts/core/systems/StatRevelation';
 import { UnveilingService } from '../assets/scripts/core/services/UnveilingService';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
@@ -450,6 +451,30 @@ export function createNurtureSuite(): TestSuite {
         sameJson(['a'], result.log.mentorsOnSlot);
         assert.isTrue(result.log.burst);
         assert.equals(15, result.log.statGained, '10 × 1.5 爆發');
+    });
+
+    suite.test('分層揭露：HIDDEN 不給數值、TENDENCY 三段、RANGE 十位區間、EXACT 精確值；非法數值拋錯', () => {
+        assert.equals('HIDDEN', revealStat(77, 'HIDDEN').level);
+        assert.isFalse('value' in revealStat(77, 'HIDDEN'), '隱藏不洩漏數值');
+        assert.equals('低', (revealStat(39, 'TENDENCY') as { tendency: string }).tendency);
+        assert.equals('中', (revealStat(40, 'TENDENCY') as { tendency: string }).tendency);
+        assert.equals('高', (revealStat(70, 'TENDENCY') as { tendency: string }).tendency);
+        const range = revealStat(77, 'RANGE') as { low: number; high: number };
+        assert.equals(70, range.low);
+        assert.equals(79, range.high);
+        assert.equals(105, (revealStat(105, 'EXACT') as { value: number }).value, 'Max_Potential 可超過 100');
+        assert.throws(() => revealStat(-1, 'EXACT'), '負數拒絕');
+        assert.throws(() => revealStat(Number.NaN, 'RANGE'), 'NaN 拒絕');
+    });
+
+    suite.test('分層揭露接線：NurtureService.revealedStats 依各屬性層級回傳，沒給的預設 HIDDEN', () => {
+        const store = new InMemoryRosterStore([readyChild('kid', { str: 77, int: 45 }) as never]);
+        const service = new NurtureService(store as never, {});
+        const view = service.revealedStats('kid', { str: 'EXACT', int: 'TENDENCY' });
+        assert.equals(77, (view.str as { value: number }).value);
+        assert.equals('中', (view.int as { tendency: string }).tendency);
+        assert.equals('HIDDEN', view.lea!.level, '沒給層級的屬性不洩漏');
+        assert.throws(() => service.revealedStats('nobody', {}), '找不到子嗣');
     });
 
     suite.test('紅色因子：未鎖定的紅因子總級數加成休息精力回復（每級 +10%），鎖定的不計', () => {
