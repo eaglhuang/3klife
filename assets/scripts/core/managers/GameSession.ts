@@ -220,6 +220,8 @@ export class GameSession {
     private _random: RandomSource = () => this._seeded.next();
     /** 主動指令造成的死亡事件；下一次季結時併入 aging 事件交給季結結算（不寫入存檔，見 PROG-2-0221） */
     private _pendingLifespanEvents: AgingEvent[] = [];
+    /** 本季第一次主動扣壽命前的名冊；季結時當作陣亡虎符結算的「之前」基準，結算後清掉（不存檔） */
+    private _preLifespanRoster: GeneralConfig[] | null = null;
     /** 共用入口保持同一函式身分，讀檔恢復游標後既有服務會立即使用新狀態。 */
     public readonly randomSource: RandomSource = () => this._random();
 
@@ -442,6 +444,7 @@ export class GameSession {
         /** 開新局：時鐘與卡組歸零，名冊不動（由開場流程決定初始武將） */
     public startNewGame(seed: number = Math.floor(Math.random() * 4294967296)): void {
         this._seeded = new SeededRandom(seed);
+        this._preLifespanRoster = null;
         this._clock = new GameClock();
         this._deck = [];
         this._leadGeneralId = null;
@@ -780,8 +783,10 @@ export class GameSession {
      * 死亡事件暫存到下一次季結。找不到武將回傳 null。
      */
     public spendLifespan(generalId: string, command: LifespanCommand): ActiveLifespanResult | null {
-        const applied = applyActiveLifespanToRoster(this._roster.getAll(), generalId, command, this._random);
+        const current = this._roster.getAll();
+        const applied = applyActiveLifespanToRoster(current, generalId, command, this._random);
         if (!applied) return null;
+        this._preLifespanRoster ??= current;
         this._roster.replaceAll(applied.roster);
         for (const event of applied.result.events) {
             if (event.type === 'died') {
@@ -794,6 +799,9 @@ export class GameSession {
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
         const beforeRoster = this._roster.getAll();
+        // 主動扣壽命致死的武將在 beforeRoster 已是陣亡；虎符結算要用扣壽命之前的名冊才認得出「這次才死」
+        const deathBaseline = this._preLifespanRoster ?? beforeRoster;
+        this._preLifespanRoster = null;
         const aging = ageGeneralsOneSeason(beforeRoster, this._random);
         const agingEvents = [...this._pendingLifespanEvents, ...aging.events];
         this._pendingLifespanEvents = [];
@@ -804,13 +812,15 @@ export class GameSession {
         const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1);
         let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;
         let lifecycle: LifecycleSettlement | undefined;
+        // 季結會把死者從名冊移除，所以陣亡虎符要用移除前的名冊結算，否則真實 lifecycle 下一個都抓不到
+        const rosterBeforeLifecycle = roster;
         if (this._lifecycle) {
             const settled = await this._lifecycle.settleSeason(roster, advance, agingEvents);
             roster = settled.roster;
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
-        this._settleDeaths(beforeRoster, roster, advance.current.totalSeasonsElapsed);
+        this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._military = regenMilitaryOneSeason(this._military);
@@ -991,6 +1001,7 @@ export class GameSession {
         if (!snapshot) {
             return false;
         }
+        this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
         this._roster.replaceAll(snapshot.roster);

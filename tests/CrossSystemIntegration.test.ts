@@ -106,5 +106,57 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.equals(canonical(snapshotOf(a)), canonical(snapshotOf(b)), '續玩幾季後整份快照仍一致');
     });
 
+    suite.test('老死（真實 LegacyService 季結）：持有的虎符退回君主，名將產出陣亡虎符，存檔往返不遺失', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const roster = [
+            makeGeneral('hist-old', '男', 80, { isHistorical: true, maxLifespan: 60, battleRecord: { wins: 10, kills: 20, merit: 100 } } as never),
+            makeGeneral('young', '男', 20),
+        ];
+        const a = createSession(adapter, roster);
+        a.setRandomSource(() => 0);
+        await a.registerTallyCards([{ uid: 't1', templateId: 'tpl-1', sourceGeneralUid: 'src', quality: 'R', score: 0, source: 'death', producedSeason: 0 } as never]);
+        await a.equipTally('t1', 'hist-old');
+        assert.equals('t1', a.tallyOf('hist-old') ?? '');
+
+        const payload = await a.advanceSeason();
+        assert.isTrue(payload.agingEvents.some((e) => e.type === 'died' && e.generalId === 'hist-old'), '應發生老死');
+        assert.isTrue(a.tallyOf('hist-old') === null, '陣亡武將不應繼續持有虎符');
+        assert.isTrue(a.tallyHoldings['t1'] === null, '虎符 t1 應退回君主');
+        const produced = Object.keys(a.tallyCards).filter((uid) => uid !== 't1');
+        assert.equals(1, produced.length, '歷史名將老死應產出 1 張陣亡虎符');
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        await b.load();
+        assert.equals(canonical(a.tallyHoldings), canonical(b.tallyHoldings));
+        assert.equals(canonical(a.tallyCards), canonical(b.tallyCards));
+    });
+
+    suite.test('壽命耗盡死亡（主動指令）→ 下一次季結：持有的虎符退回君主並產出陣亡虎符', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const roster = [
+            // 壽命上限 60、年齡 59.75：剩 3 個月，結緣扣 6 個月 → 當場死亡
+            makeGeneral('hist-spent', '男', 59.75, { isHistorical: true, maxLifespan: 60, battleRecord: { wins: 5, kills: 5, merit: 40 } } as never),
+            makeGeneral('young', '男', 20),
+        ];
+        const a = createSession(adapter, roster);
+        a.setRandomSource(() => 0.99);
+        await a.registerTallyCards([{ uid: 't1', templateId: 'tpl-1', sourceGeneralUid: 'src', quality: 'R', score: 0, source: 'death', producedSeason: 0 } as never]);
+        await a.equipTally('t1', 'hist-spent');
+
+        const spent = a.spendLifespan('hist-spent', 'breeding');
+        assert.isTrue(spent?.events.some((e) => e.type === 'died') ?? false, '剩餘壽命不足時結緣應導致死亡');
+        assert.equals('t1', a.tallyOf('hist-spent') ?? '', '主動指令死亡的當下還沒進季結，虎符先不動');
+
+        await a.advanceSeason();
+        assert.isTrue(a.tallyOf('hist-spent') === null, '季結後陣亡武將不再持有虎符');
+        assert.isTrue(a.tallyHoldings['t1'] === null, '虎符退回君主');
+        assert.equals(1, Object.keys(a.tallyCards).filter((uid) => uid !== 't1').length, '應產出 1 張陣亡虎符');
+
+        await a.advanceSeason();
+        assert.equals(1, Object.keys(a.tallyCards).filter((uid) => uid !== 't1').length, '再過一季不會重複產卡');
+    });
+
     return suite;
 }
