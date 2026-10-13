@@ -796,6 +796,15 @@ export class GameSession {
         return applied.result;
     }
 
+    /** 攻城戰開戰的壽命消耗（PROG-2-0237）：扣完即存檔；武將不在名冊時回傳 null */
+    public async spendSiegeLifespan(generalId: string): Promise<ActiveLifespanResult | null> {
+        const result = this.spendLifespan(generalId, 'siege');
+        if (result && this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
         const beforeRoster = this._roster.getAll();

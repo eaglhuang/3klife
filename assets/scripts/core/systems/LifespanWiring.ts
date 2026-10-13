@@ -25,6 +25,11 @@ import { applyLifespanCost, LifespanCommand } from './LifespanCost';
 
 export const MONTHS_PER_YEAR = 12;
 
+/** 戰場類型 → 主動指令：攻城戰扣攻城壽命（PROG-2-0237）；野戰與未標記者不扣 */
+export function lifespanCommandForBattleKind(kind: 'field' | 'siege' | undefined): 'siege' | null {
+    return kind === 'siege' ? 'siege' : null;
+}
+
 export type LifespanWiringEvent =
     | { type: 'died'; generalId: string; age: number; cause: 'lifespan-cost' | 'over-age' }
     | { type: 'unknown-command'; generalId: string; command: string };

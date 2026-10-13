@@ -16,6 +16,7 @@ import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
+import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
@@ -2162,11 +2163,21 @@ export class LobbyScene extends Component {
     }
 
     public onClickEnterBattle() {
-        services().scene.switchScene(SceneName.Battle, this._buildBattleEntryParams());
+        void this._enterBattle();
     }
 
     public onClickFloodBattle() {
-        services().scene.switchScene(SceneName.Battle, this._buildBattleEntryParams(BattleTactic.FloodAttack));
+        void this._enterBattle(BattleTactic.FloodAttack);
+    }
+
+    /** 開戰：攻城戰先扣主將的攻城壽命（存檔後才切場景），其餘直接切場景 */
+    private async _enterBattle(battleTactic?: BattleTactic): Promise<void> {
+        const params = this._buildBattleEntryParams(battleTactic);
+        const siege = lifespanCommandForBattleKind(this._currentEncounter()?.battleKind);
+        if (siege && params.playerGeneralId) {
+            await services().session.spendSiegeLifespan(params.playerGeneralId);
+        }
+        services().scene.switchScene(SceneName.Battle, params);
     }
 
     /**
