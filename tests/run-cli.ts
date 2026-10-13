@@ -102,6 +102,7 @@ import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTallyHoldingsWiringSuite } from './TallyHoldingsWiring.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
+import { createMercenaryTrialTicketSuite } from './MercenaryTrialTicket.test';
 import { createCrossSystemIntegrationSuite } from './CrossSystemIntegration.test';
 
 /**
@@ -216,6 +217,7 @@ if (typeof window === 'undefined') {
     runner.register(createTallyHoldingsWiringSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createMercenaryTrialTicketSuite());
     runner.register(createMercenaryBondSuite());
     runner.register(createDomesticTasksSuite());
     runner.register(createCrossSystemIntegrationSuite());
