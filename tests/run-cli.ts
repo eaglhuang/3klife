@@ -105,6 +105,7 @@ import { createStageProgressSaveSuite } from './StageProgressSave.test';
 import { createReadModelValidatorsSuite } from './ReadModelValidators.test';
 import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTallyHoldingsWiringSuite } from './TallyHoldingsWiring.test';
+import { createEncounterBattleKindSuite } from './EncounterBattleKind.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
 import { createMercenarySaveModelSuite } from './MercenarySaveModel.test';
@@ -225,6 +226,7 @@ if (typeof window === 'undefined') {
     runner.register(createReadModelValidatorsSuite());
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTallyHoldingsWiringSuite());
+    runner.register(createEncounterBattleKindSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
     runner.register(createMercenarySaveModelSuite());
