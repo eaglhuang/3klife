@@ -13,6 +13,8 @@ export interface EncounterConfig {
   terrain?: TerrainGrid;
   /** 對應 scene-backgrounds.json 中的 id，決定要顯示的背景圖 */
   backgroundId?: string;
+  /** 戰場類型（可選，預設野戰）；攻城戰開戰時主將扣攻城壽命（PROG-2-0237） */
+  battleKind?: 'field' | 'siege';
   /** 天氣條件（可選，預設 Clear） */
   weather?: Weather;
   /** 場景戰法（可選，預設 Normal） */

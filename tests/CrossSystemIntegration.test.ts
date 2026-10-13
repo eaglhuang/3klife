@@ -16,6 +16,8 @@ import { createUpkeepState, repayUpkeep, settleUpkeepDay } from '../assets/scrip
 import { BondingSetupController } from '../assets/scripts/ui/core/BondingSetupController';
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
+import { buildFactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
+import { breed } from '../assets/scripts/core/systems/BreedingSystem';
 import { describeRound } from '../assets/scripts/ui/core/NurtureFlowController';
 import type { NurtureRoundLog } from '../assets/scripts/core/systems/NurtureSystem';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
@@ -265,6 +267,29 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.isTrue(skipped.includes('無法行動') && !skipped.includes('失敗'), '跳過回合不能說訓練失敗');
         assert.isTrue(describeRound({ ...base, affectionGained: true }).includes('好感 +1'), '好感事件要顯示');
         assert.isFalse(describeRound(base).includes('好感'), '沒有好感事件時不顯示');
+    });
+
+    suite.test('結緣＋血統活性：同亂數種子結果完全一致，因子星級不超過 5★、不低於 1★', () => {
+        const lcg = (seed: number) => () => {
+            seed = (seed * 1664525 + 1013904223) >>> 0;
+            return seed / 0x100000000;
+        };
+        const father = makeGeneral('wf', '男', 30, { genes: [{ id: 'gene_command', level: 3 }, { id: 'gene_charge', level: 4 }] });
+        const mother = makeGeneral('wm', '女', 28, { genes: [{ id: 'gene_cavalry', level: 3 }, { id: 'gene_honor', level: 2 }] });
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const dictionary = buildFactorDictionary(JSON.parse(require('fs').readFileSync('assets/resources/data/master/gene-dictionary.json', 'utf8')));
+        let sawAboveParents = false;
+        for (let seed = 1; seed <= 300; seed++) {
+            const run = () => breed({ father: father as any, mother: mother as any, pedigree: new BloodlineGraph(), random: lcg(seed), childId: 'kid', birthSeason: 1, dictionary });
+            const a = run();
+            const b = run();
+            assert.equals(canonical(a.child ?? null), canonical(b.child ?? null), `seed ${seed} 重跑結果不同`);
+            for (const g of a.child?.genes ?? []) {
+                assert.isTrue(g.level >= 1 && g.level <= 5, `seed ${seed} 因子 ${g.id} 星級 ${g.level} 超出 1~5`);
+                if (g.level > 4) sawAboveParents = true;
+            }
+        }
+        assert.isTrue(sawAboveParents, '300 個種子內至少要有一次血統活性把星級推高到父母最高 4★ 之上');
     });
 
     return suite;
