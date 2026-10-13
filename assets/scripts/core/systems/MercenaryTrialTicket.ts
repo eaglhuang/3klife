@@ -5,6 +5,7 @@
  * - 消耗 1 張試用券，產生 daysLeft = TRIAL_DAYS 的 Trial 傭兵。
  * - 能力固定為原武將數值 × TRIAL_TICKET_ABILITY_RATIO（目前 1.0）。
  * - 沒有試用券則拒絕，錢包與數值都不變。
+- 傭兵寫入 generalId（PM 裁定：產生時就記錄對應的 generals.json 武將），空字串則拒絕。
  *
  * 規格沒有寫試用券的存放欄位名稱，這裡用 trialTickets 暫定；接存檔時再對齊。
  * Unity 對照：像 Inventory.Consume(item)，先檢查數量，再回傳扣除後的新背包。
@@ -25,7 +26,7 @@ export interface TrialTicketWallet {
     trialTickets: number;
 }
 
-export type TrialTicketRejectReason = 'no-ticket';
+export type TrialTicketRejectReason = 'no-ticket' | 'no-general';
 
 export interface TrialTicketResult {
     ok: boolean;
@@ -50,19 +51,24 @@ export function scaleTrialStats(source: Readonly<TrialStats>, ratio: number): Tr
 
 /**
  * 使用一張試用券產生 Trial 傭兵。回傳新錢包，不改輸入、不用亂數、不寫存檔。
+ * generalId：對應 generals.json 的武將 id，之後結義入名冊時取用。
  */
 export function useTrialTicket(
     wallet: Readonly<TrialTicketWallet>,
     uid: string,
     originalStats: Readonly<TrialStats>,
+    generalId: string,
 ): TrialTicketResult {
     if (wallet.trialTickets < 1) {
         return { ok: false, reason: 'no-ticket', wallet: { ...wallet } };
     }
+    if (generalId.length === 0) {
+        return { ok: false, reason: 'no-general', wallet: { ...wallet } };
+    }
     return {
         ok: true,
         wallet: { trialTickets: wallet.trialTickets - 1 },
-        mercenary: createTrialMercenary(uid),
+        mercenary: { ...createTrialMercenary(uid), generalId },
         stats: scaleTrialStats(originalStats, TRIAL_TICKET_ABILITY_RATIO),
     };
 }
