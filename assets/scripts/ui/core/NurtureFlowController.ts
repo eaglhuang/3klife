@@ -14,6 +14,7 @@
  * Unity 對照：像 MVP 裡的 Presenter。View（UCUF 組出來的節點）只負責顯示，
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
+import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { MentorCard } from '../../core/models/MentorCard';
 import type { NurtureBlockReason, NurtureService } from '../../core/services/NurtureService';
@@ -404,7 +405,7 @@ function buildSessionTexts(session: NurtureSession, notice: string): Record<stri
             ? `教官：${session.mentors.map((m) => m.name).join('、')}`
             : '教官：無',
         nurtureFactors: session.negativeFactors.length > 0 ? `負面因子：${session.negativeFactors.join('、')}` : '負面因子：無',
-        nurtureLog: notice || (last ? describeRound(last) : '選擇本回合的訓練，或休息回復精力'),
+        nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last) : '選擇本回合的訓練，或休息回復精力'),
     };
 }
 
