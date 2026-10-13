@@ -23,6 +23,7 @@ import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
+import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -68,6 +69,8 @@ export interface PlayerSaveSnapshot {
     tallyHoldings?: Record<string, TallyHolder>;
     /** 虎符卡資料（uid → 卡）；後加的選填欄位，舊檔讀回補空物件 */
     tallyCards?: Record<string, TigerTallyCard>;
+    /** 女性武將來源（uid → 來源，FEM-01）；後加的選填欄位，舊檔讀回補空物件 */
+    femaleSources?: Record<string, FemaleSource>;
     /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
     pendingLifespanDeaths?: PendingLifespanDeath[];
     /** 名聲等非軍備資源（暫定）；後加的選填欄位，舊檔讀回補 0 */
@@ -157,6 +160,7 @@ export function createPlayerSaveSnapshot(
     tallyHoldings: Readonly<Record<string, TallyHolder>> = {},
     tallyCards: Readonly<Record<string, TigerTallyCard>> = {},
     mercenaries?: MercenarySaveBundle,
+    femaleSources: Readonly<Record<string, FemaleSource>> = {},
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -175,6 +179,7 @@ export function createPlayerSaveSnapshot(
         tallyLoyalty: normalizeTallyLoyaltyMap(tallyLoyalty),
         tallyHoldings: normalizeTallyHoldingsMap(tallyHoldings),
         tallyCards: normalizeTallyCardsMap(tallyCards),
+        femaleSources: normalizeFemaleSourcesMap(femaleSources),
         ...(mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(mercenaries) } : {}),
     };
 }
@@ -232,6 +237,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         tallyLoyalty: normalizeTallyLoyaltyMap(snapshot.tallyLoyalty),
         tallyHoldings: normalizeTallyHoldingsMap(snapshot.tallyHoldings),
         tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
+        femaleSources: normalizeFemaleSourcesMap(snapshot.femaleSources),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
         ...(snapshot.resources !== undefined ? { resources: { fame: normalizeFame(snapshot.resources.fame) } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
