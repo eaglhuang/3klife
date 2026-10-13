@@ -57,3 +57,61 @@ export function currentFirstBattleHint(progress: FirstBattleProgress): FirstBatt
 export function isFirstBattleTeachingDone(progress: FirstBattleProgress): boolean {
     return currentFirstBattleHint(progress) === null;
 }
+
+/** 各步驟浮窗文字（暫定，待 P0 UI_ 字串表定案） */
+export const FIRST_BATTLE_HINT_TEXT: Readonly<Record<FirstBattleStep, string>> = Object.freeze({
+    deploy: '從底線選一位部將，點擊格子部署',
+    advance: '讓部隊向前推進，逼近敵陣',
+    clash: '讓我方部隊與敵軍正面交鋒，完成對推',
+});
+
+export interface FirstBattleUpdate {
+    readonly progress: FirstBattleProgress;
+    readonly hint: FirstBattleHint | null;
+    /** 本次事件是否推進了進度（重複事件或非我方事件為 false） */
+    readonly changed: boolean;
+}
+
+/**
+ * 教學戰狀態機：View 把戰場事件翻成 on* 呼叫，回傳的 hint 交給浮窗顯示。
+ * 只接受「我方」事件；敵方部署、移動、攻擊不推進教學。
+ *
+ * Unity 對照：TutorialManager 的 OnEvent，收到事件後更新 TutorialStep 旗標。
+ */
+export class FirstBattleTutorialPresenter {
+    private _progress: FirstBattleProgress = FRESH_FIRST_BATTLE_PROGRESS;
+
+    get progress(): FirstBattleProgress {
+        return this._progress;
+    }
+
+    get hint(): FirstBattleHint | null {
+        return currentFirstBattleHint(this._progress);
+    }
+
+    /** 我方單位部署 */
+    onUnitDeployed(isPlayer: boolean): FirstBattleUpdate {
+        return isPlayer ? this._record('deploy') : this._unchanged();
+    }
+
+    /** 我方單位移動（推進） */
+    onUnitMoved(isPlayer: boolean): FirstBattleUpdate {
+        return isPlayer ? this._record('advance') : this._unchanged();
+    }
+
+    /** 我方單位造成傷害（對推）；attackerIsPlayer 為 null 表示無攻擊者（例如地形傷害） */
+    onUnitDamaged(attackerIsPlayer: boolean | null): FirstBattleUpdate {
+        return attackerIsPlayer === true ? this._record('clash') : this._unchanged();
+    }
+
+    private _record(step: FirstBattleStep): FirstBattleUpdate {
+        const next = recordFirstBattleEvent(this._progress, step);
+        const changed = next !== this._progress;
+        this._progress = next;
+        return { progress: next, hint: this.hint, changed };
+    }
+
+    private _unchanged(): FirstBattleUpdate {
+        return { progress: this._progress, hint: this.hint, changed: false };
+    }
+}
