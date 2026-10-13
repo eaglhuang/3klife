@@ -61,6 +61,7 @@ import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } fro
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
+import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
@@ -170,6 +171,13 @@ export interface RecordBattleOptions {
 export interface AddGeneralsResult {
     added: GeneralConfig[];
     duplicates: GeneralConfig[];
+    /** 重複抽到且啟用轉生時，每位被轉生的武將結果（GCH-05） */
+    rebirths: Array<RebirthPullResult & { id: string }>;
+}
+
+export interface AddGeneralsOptions {
+    /** 轉蛋抽到重複同名武將時改為轉生（+1 轉）；預設關閉，俘虜招募等來源維持原行為 */
+    rebirthOnDuplicate?: boolean;
 }
 
 export class InMemoryRosterStore implements RosterStore {
@@ -950,10 +958,11 @@ export class GameSession {
      * 抽卡 / 招募入口：把新武將寫進名冊（以 id 去重）並自動存檔。
      * 已持有的武將不會重複加入，回傳 duplicates 供 UI 提示（之後可換算成碎片）。
      */
-    public async addGenerals(generals: GeneralConfig[]): Promise<AddGeneralsResult> {
+    public async addGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): Promise<AddGeneralsResult> {
         const owned = new Set(this._roster.getAll().map((general) => general.id));
         const added: GeneralConfig[] = [];
         const duplicates: GeneralConfig[] = [];
+        const rebirths: Array<RebirthPullResult & { id: string }> = [];
         for (const general of generals) {
             if (!general || typeof general.id !== 'string') {
                 continue;
@@ -966,14 +975,34 @@ export class GameSession {
             added.push({ ...general });
         }
 
+        if (options.rebirthOnDuplicate && duplicates.length > 0) {
+            // 同一批可能抽到同名多次，逐筆依序累加轉數
+            const roster = this._roster.getAll();
+            const byId = new Map(roster.map((general) => [general.id, general]));
+            for (const duplicate of duplicates) {
+                const target = byId.get(duplicate.id);
+                if (!target) continue;
+                const pull = applyDuplicatePull(target.rebirthCount);
+                byId.set(duplicate.id, { ...target, rebirthCount: pull.rebirthCount });
+                rebirths.push({ id: duplicate.id, ...pull });
+            }
+            if (rebirths.length > 0) {
+                this._roster.replaceAll(roster.map((general) => byId.get(general.id) ?? general));
+            }
+        }
+
         if (added.length > 0) {
             this._roster.replaceAll([...this._roster.getAll(), ...added]);
+        }
+        if (added.length > 0 || rebirths.length > 0) {
             if (this._autoSave && this._save) {
                 await this.save();
             }
+        }
+        if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
         }
-        return { added, duplicates };
+        return { added, duplicates, rebirths };
     }
 
     /** 目前名冊中可以出戰的武將（排除死亡、退役教官、未畢業子嗣、精力不足、培育中） */

@@ -294,6 +294,8 @@ export interface GeneralConfig {
   generalRank?: number;
   /** 名聲 General_Fame（TERM-03）；暫定直接作為 Command_Capacity 的名聲加成，缺欄位視為 0 */
   generalFame?: number;
+  /** 轉數 Rebirth_Count 1~5（GCH-05）；重複抽到同名武將 +1，缺欄位視為 1 轉 */
+  rebirthCount?: number;
   parentsSummary?: string;
   ancestorsSummary?: string;
   awakeningTitle?: string;
