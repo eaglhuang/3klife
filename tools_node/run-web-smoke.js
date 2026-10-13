@@ -258,7 +258,13 @@ async function main() {
                     : ['three-generation', 'battle-settlement', 'continuity'].includes(args.flow)
                         ? async (name) => console.log(`[web-smoke] ${args.flow} 步驟 ${name}`)
                         : undefined;
-                flow = await run(page, { timeoutMs, onStep, onPage: next => { page = next; observePage(next); } });
+                flow = await run(page, { timeoutMs, onStep, onPage: async next => {
+                    if (removeAccountRouting) removeAccountRouting();
+                    page = next;
+                    removeAccountRouting = await installVerificationAccount(next, testBackend,
+                        error => errors.push({ kind: 'test-account-routing', detail: String(error && error.stack || error) }));
+                    observePage(next);
+                } });
             } catch (error) {
                 flow = error.flowReport || { name: args.flow, completed: false };
                 errors.push({ kind: 'lifecycle-flow', detail: String(error && error.stack || error) });

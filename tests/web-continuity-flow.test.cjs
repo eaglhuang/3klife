@@ -13,7 +13,10 @@ test('closes old runtime before replacement and observes errors before navigatio
         close: async () => calls.push('close'),
         browserContext: () => ({ newPage: async () => { calls.push('open'); return reopened; } }),
     };
-    assert.equal(await reopenPage(page, { onPage: async () => calls.push('observe') }), reopened);
+    assert.equal(await reopenPage(page, { onPage: async () => {
+        await new Promise(resolve => setImmediate(resolve));
+        calls.push('observe');
+    } }), reopened);
     assert.deepEqual(calls, ['close', 'open', 'observe', 'viewport', 'navigate']);
 });
 
