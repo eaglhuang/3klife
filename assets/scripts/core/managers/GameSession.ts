@@ -26,6 +26,8 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
+import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
+import type { JobChangeResult, JobClass } from '../systems/JobChange';
 import type { LifespanCommand } from '../systems/LifespanCost';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { MentorCard } from '../models/MentorCard';
@@ -59,7 +61,7 @@ import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
@@ -782,6 +784,25 @@ export class GameSession {
      * 主動指令（培育／攻城／結緣）的壽命消耗入口：更新名冊但不存檔，由呼叫端的 persist 一併存。
      * 死亡事件暫存到下一次季結。找不到武將回傳 null。
      */
+    /**
+     * 20 歲轉職：扣轉職令 ×1、設定副職並存檔（PROG-2-0226）。
+     * 名冊找不到武將或沒有主職資料時回傳 null；條件不符時回傳 ok=false 且不扣轉職令。
+     */
+    public async changeJob(generalId: string, targetSubClass: JobClass): Promise<JobChangeResult | null> {
+        const orders = itemCount(this._inventory, ITEM_JOB_CHANGE_ORDER);
+        const applied = applyJobChangeToRoster(this._roster.getAll() as JobWiringGeneral[], generalId, targetSubClass, orders);
+        if (!applied) return null;
+        if (applied.result.ok) {
+            this._roster.replaceAll(applied.roster);
+            this._inventory = consumeItem(this._inventory, ITEM_JOB_CHANGE_ORDER) ?? this._inventory;
+            this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        }
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return applied.result;
+    }
+
     public spendLifespan(generalId: string, command: LifespanCommand): ActiveLifespanResult | null {
         const current = this._roster.getAll();
         const applied = applyActiveLifespanToRoster(current, generalId, command, this._random);
