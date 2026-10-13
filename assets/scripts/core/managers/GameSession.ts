@@ -35,7 +35,6 @@ import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/Pl
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { bondMercenaryToRoster, type RosterBondResult } from '../systems/MercenaryRoster';
-import type { BondStats } from '../systems/MercenaryBondPermanent';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
@@ -347,15 +346,15 @@ export class GameSession {
     }
 
     /**
-     * 結義入名冊：傭兵結義轉永久（好感扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
-     * 失敗時不改任何狀態。rarity、stats 由呼叫端傳入（規格未定來源，見 PROG-2-0308）。
+     * 結義入名冊：傭兵結義轉永久（好感滿 60 為門檻，扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
+     * 失敗時不改任何狀態。bondPoints 由呼叫端傳入，餘額來源待 GCH-06 接上（見 PROG-2-0308）。
      */
-    public async bondMercenaryToRoster(uid: string, template: GeneralConfig, stats: BondStats, rarity: string, today: number): Promise<RosterBondResult & { rosterAdded?: boolean }> {
+    public async bondMercenaryToRoster(uid: string, template: GeneralConfig, bondPoints: number, today: number): Promise<RosterBondResult & { rosterAdded?: boolean }> {
         const mercenary = this._mercenaries.mercenaries.find((m) => m.uid === uid);
         if (!mercenary) {
             return { ok: false, reason: 'not-found', pointsSpent: 0 };
         }
-        const result = bondMercenaryToRoster(mercenary, template, stats, rarity, this._mercenaries.cooldowns, today);
+        const result = bondMercenaryToRoster(mercenary, template, bondPoints, this._mercenaries.cooldowns, today);
         if (!result.ok || !result.mercenary || !result.general || !result.cooldowns) {
             return result;
         }
