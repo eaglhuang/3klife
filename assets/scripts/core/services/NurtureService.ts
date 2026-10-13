@@ -203,6 +203,7 @@ export class NurtureService {
             startSeason: season,
             random: this._rng(),
             hybridSources: hybridSourcesFromParents(parents, this._options.factorDictionary),
+            factorDictionary: this._options.factorDictionary,
         });
         const used = this._state.admission.season === season ? this._state.admission.used : 0;
         this._state.admission = { season, used: used + 1 };

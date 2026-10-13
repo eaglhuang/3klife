@@ -14,7 +14,7 @@
  * Unity 對照：像一個 StateMachineBehaviour，每回合是一個 state；
  * 教官就是掛在 Session 上的 buff Component，每回合重新決定「站在哪一格」。
  */
-import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralStatsConfig } from '../models/GeneralUnit';
+import type { GeneralConfig, GeneralDualLayerStatConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
 import { evaluateAwakeningTitle } from './AwakeningTitle';
 import { RandomSource } from './GeneralAging';
@@ -22,6 +22,7 @@ import type { UnveilingGeneral } from './Unveiling';
 import { effectiveGrowthModifier } from './Unveiling';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
+import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -43,6 +44,8 @@ export const TRAINING_BASE_RANGE: Record<PhaseBlock, readonly [number, number]> 
 export const VIGOR_MAX = 100;
 export const TRAINING_VIGOR_COST: readonly [number, number] = [15, 25];
 export const REST_VIGOR_RECOVER: readonly [number, number] = [40, 60];
+/** 紅色因子每級的精力回復加成（暫定：規格只寫「精力回復速度」，未給數值） */
+export const RED_VIGOR_RECOVER_PER_LEVEL = 0.1;
 
 /** 每次成功訓練的基礎 TP（教官系統 §F-2）；規格另有「固定 5 TP」的說法，採教官系統這條 */
 export const BASE_TP_PER_TRAINING = 10;
@@ -139,6 +142,8 @@ export interface NurtureSession {
     affection?: number;
     /** 尚待跳過的回合數（受傷後設為 1；舊存檔可能沒有此欄位，視為 0） */
     skipRounds?: number;
+    /** 開場時未鎖定的紅色因子總級數，影響休息的精力回復（舊存檔視為 0） */
+    redGeneLevel?: number;
     /** 即將進行的回合，每位教官站在哪一格（玩家選訓練前就看得到） */
     mentorSlots: Record<string, TrainingKind>;
     negativeFactors: string[];
@@ -215,6 +220,8 @@ export interface CreateNurtureSessionInput {
     random: RandomSource;
     /** 父母的戰法來源（領域）；沒有或缺一方時不會擲混種戰法 */
     hybridSources?: { father?: HybridSkillSource; mother?: HybridSkillSource };
+    /** 用來判定基因顏色（紅色因子）；沒提供時只認 gene.type 的舊資料色名 */
+    factorDictionary?: FactorDictionary;
 }
 
 export function validateMentors(mentors: readonly TrainingMentor[]): void {
@@ -232,6 +239,15 @@ export function validateMentors(mentors: readonly TrainingMentor[]): void {
             throw new NurtureError(`教官 ${mentor.id} 的擅長科目不合法：${mentor.specialty}`);
         }
     }
+}
+
+/** 紅色因子總級數（只計未鎖定的基因）；暫定：規格未定義疊加方式，採級數加總 */
+export function redGeneLevelOf(genes: readonly GeneralGeneConfig[] | undefined, dictionary?: FactorDictionary): number {
+    if (!genes) return 0;
+    return genes.reduce((sum, gene) => {
+        if (gene.isLocked || !gene.id) return sum;
+        return resolveFactorColor(gene.id, dictionary, gene) === 'red' ? sum + Math.max(0, gene.level ?? 0) : sum;
+    }, 0);
 }
 
 export function createNurtureSession(input: CreateNurtureSessionInput): NurtureSession {
@@ -255,6 +271,7 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         negativeFactors: [],
         affection: 0,
         skipRounds: 0,
+        redGeneLevel: redGeneLevelOf(input.child.genes, input.factorDictionary),
         log: [],
         status: 'active',
     };
@@ -332,7 +349,9 @@ export function executeRound(
         log.skipped = true;
         log.success = false;
     } else if (action === 'rest') {
-        session.vigor = Math.min(VIGOR_MAX, vigorBefore + randInt(random, REST_VIGOR_RECOVER[0], REST_VIGOR_RECOVER[1]));
+        const recovered = randInt(random, REST_VIGOR_RECOVER[0], REST_VIGOR_RECOVER[1]);
+        const redBoost = 1 + RED_VIGOR_RECOVER_PER_LEVEL * (source.redGeneLevel ?? 0);
+        session.vigor = Math.min(VIGOR_MAX, vigorBefore + Math.round(recovered * redBoost));
     } else {
         const failureRate = failureRateForVigor(vigorBefore);
         const failed = failureRate > 0 && random() < failureRate;
