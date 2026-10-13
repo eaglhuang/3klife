@@ -671,7 +671,14 @@ export class LobbyScene extends Component {
      * 候選與加成都在 SortieSetupController（純邏輯），這裡只綁按鈕、套 view。
      */
     private async _mountSortieSetup(): Promise<void> {
-        const sortie = new SortieSetupController({ session: services().session });
+        // 守方 = 大廳開戰用的第一個關卡敵將（與開戰時取的 _encounters[0] 同一來源）
+        const sortie = new SortieSetupController({
+            session: services().session,
+            getEnemyGeneral: () => {
+                const enemyId = this._encounters[0]?.enemyGeneralId;
+                return enemyId ? this._generals.find((g) => g.id === enemyId) ?? null : null;
+            },
+        });
         this._sortie = sortie;
         const step = (role: SortieRole, delta: number): void => { sortie.cycle(role, delta); this._refreshSortieSetup(); };
         this._sortieHost = await this._mountPreviewScreenHost('SortieSetupHost', 'sortie-setup-screen', [
