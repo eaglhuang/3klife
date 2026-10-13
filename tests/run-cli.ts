@@ -43,6 +43,7 @@ import { createLifespanDeathPersistSuite } from './LifespanDeathPersist.test';
 import { createLifespanDeathSeasonSuite } from './LifespanDeathSeason.test';
 import { createJobChangeWiringSuite } from './JobChangeWiring.test';
 import { createJobChangeControllerSuite } from './JobChangeController.test';
+import { createPeaceLineageSuite } from './PeaceLineage.test';
 import { createDomesticTasksSuite } from './DomesticTasks.test';
 import { createOnboardingTutorialSuite } from './OnboardingTutorial.test';
 import { createJobChangeSuite } from './JobChange.test';
@@ -108,6 +109,7 @@ import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTallyHoldingsWiringSuite } from './TallyHoldingsWiring.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
+import { createMercenarySaveModelSuite } from './MercenarySaveModel.test';
 import { createMercenaryTrialTicketSuite } from './MercenaryTrialTicket.test';
 import { createCrossSystemIntegrationSuite } from './CrossSystemIntegration.test';
 
@@ -156,6 +158,7 @@ if (typeof window === 'undefined') {
     runner.register(createLifespanDeathSeasonSuite());
     runner.register(createJobChangeWiringSuite());
     runner.register(createJobChangeControllerSuite());
+    runner.register(createPeaceLineageSuite());
     runner.register(createWildGeneSuite());
     runner.register(createSpiritRelicUniqueSuite());
     runner.register(createHistoricalFlagSuite());
@@ -228,6 +231,7 @@ if (typeof window === 'undefined') {
     runner.register(createTallyHoldingsWiringSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createMercenarySaveModelSuite());
     runner.register(createMercenaryBondPermanentSuite());
     runner.register(createMercenaryTrialTicketSuite());
     runner.register(createMercenaryBondSuite());

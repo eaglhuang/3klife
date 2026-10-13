@@ -407,16 +407,20 @@ function buildSessionTexts(session: NurtureSession, notice: string): Record<stri
     };
 }
 
-function describeRound(log: NurtureRoundLog): string {
+export function describeRound(log: NurtureRoundLog): string {
     const head = `第 ${log.round} 回合`;
+    // 受傷事件（NUR-09）：跳過回合與受傷回合的動作都不生效，不能顯示成「訓練失敗」或「+0」
+    if (log.skipped) return `${head}：傷勢未癒，本回合無法行動`;
+    if (log.injured) return `${head}：訓練時受傷，本回合成果作廢，下回合無法行動`;
+    const affection = log.affectionGained ? '　好感 +1' : '';
     if (log.action === 'rest') {
-        return `${head}：休息，精力 ${log.vigorBefore} → ${log.vigorAfter}`;
+        return `${head}：休息，精力 ${log.vigorBefore} → ${log.vigorAfter}${affection}`;
     }
     const label = STAT_LABELS[log.action];
     if (!log.success) {
-        return `${head}：${label}訓練失敗${log.negativeFactor ? `，獲得「${log.negativeFactor}」` : ''}`;
+        return `${head}：${label}訓練失敗${log.negativeFactor ? `，獲得「${log.negativeFactor}」` : ''}${affection}`;
     }
-    return `${head}：${label} +${log.statGained}，TP +${log.tpGained}${log.burst ? '（教官爆發！）' : ''}`;
+    return `${head}：${label} +${log.statGained}，TP +${log.tpGained}${log.burst ? '（教官爆發！）' : ''}${affection}`;
 }
 
 function buildReportTexts(report: GraduationReport): Record<string, string> {

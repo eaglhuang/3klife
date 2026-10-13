@@ -16,6 +16,8 @@ import { createUpkeepState, repayUpkeep, settleUpkeepDay } from '../assets/scrip
 import { BondingSetupController } from '../assets/scripts/ui/core/BondingSetupController';
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
+import { describeRound } from '../assets/scripts/ui/core/NurtureFlowController';
+import type { NurtureRoundLog } from '../assets/scripts/core/systems/NurtureSystem';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function makeGeneral(id: string, gender: '男' | '女', age: number, extra: Partial<GeneralConfig> = {}): GeneralConfig {
@@ -254,6 +256,15 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         reopened.setSaveService(new PlayerSaveService(adapter));
         assert.isTrue(await reopened.load());
         assert.equals(canonical(store.getAll()), canonical(reopened.roster), '讀檔後名冊與季結後一致');
+    });
+
+    suite.test('培育回合文字：受傷、傷後跳過、好感事件都要明講，不能顯示成「訓練失敗」或「+0」', () => {
+        const base = { round: 5, action: 'str', vigorBefore: 80, vigorAfter: 70, success: true, statGained: 6, tpGained: 3, burst: false } as unknown as NurtureRoundLog;
+        assert.isTrue(describeRound({ ...base, statGained: 0, tpGained: 0, injured: true }).includes('受傷'), '受傷回合要說受傷');
+        const skipped = describeRound({ ...base, success: false, statGained: 0, tpGained: 0, skipped: true });
+        assert.isTrue(skipped.includes('無法行動') && !skipped.includes('失敗'), '跳過回合不能說訓練失敗');
+        assert.isTrue(describeRound({ ...base, affectionGained: true }).includes('好感 +1'), '好感事件要顯示');
+        assert.isFalse(describeRound(base).includes('好感'), '沒有好感事件時不顯示');
     });
 
     return suite;
