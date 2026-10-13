@@ -1,3 +1,4 @@
+import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
 // @spec-source → 遊戲時間系統.md (doc_spec_0034) §I、Data Schema文件（本機端與Server端）.md (doc_tech_0013)
 /**
  * PlayerSaveService — 玩家長局存檔快照（純邏輯，不依賴 cc）
@@ -69,6 +70,10 @@ export interface PlayerSaveSnapshot {
     tallyCards?: Record<string, TigerTallyCard>;
     /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
     pendingLifespanDeaths?: PendingLifespanDeath[];
+    /** 名聲等非軍備資源（暫定）；後加的選填欄位，舊檔讀回補 0 */
+    resources?: { fame: number };
+    /** 內政本季紀錄（同季只能選一項）；後加的選填欄位，舊檔讀回為空紀錄 */
+    domestic?: DomesticSeasonLog;
     /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
     mercenaries?: MercenarySaveBundle;
     /** 新手 3 段式引導進度；後加的選填欄位，舊檔讀回視為從頭開始（PROG-2-0229） */
@@ -228,9 +233,16 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         tallyHoldings: normalizeTallyHoldingsMap(snapshot.tallyHoldings),
         tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
+        ...(snapshot.resources !== undefined ? { resources: { fame: normalizeFame(snapshot.resources.fame) } } : {}),
+        ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
     };
+}
+
+/** 名聲：非負整數，壞掉視為 0 */
+export function normalizeFame(value: unknown): number {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0;
 }
 
 /** 舊檔沒有欄位視為空；壞掉的項目丟棄，不猜測 */

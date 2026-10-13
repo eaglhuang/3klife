@@ -34,7 +34,8 @@ import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
-import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
+import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
@@ -250,6 +251,10 @@ export class GameSession {
     private _tallyCards: Record<string, TigerTallyCard> = {};
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
+    /** 名聲（暫定：存於 resources.fame） */
+    private _fame = 0;
+    /** 內政本季紀錄：同季只能選一項 */
+    private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -497,6 +502,8 @@ export class GameSession {
         this._tallyCards = {};
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
+        this._fame = 0;
+        this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
     }
 
     /** 開場流程選用：先驗證資料，再開新局並以六位名將替換名冊；既有 startNewGame 不變。 */
@@ -590,6 +597,36 @@ export class GameSession {
     }
 
     /** 城市兵源與糧草儲備（PROG-2-0072） */
+    public get fame(): number {
+        return this._fame;
+    }
+
+    public get domesticLog(): Readonly<DomesticSeasonLog> {
+        return { ...this._domesticLog };
+    }
+
+    /**
+     * 選一項內政任務，依規格當下入帳：糧草、城市兵源寫進軍備，名聲寫進 fame，黃金交給 grantGold（沿用 LocalGachaService 錢包）。
+     * 同季已選過則拒絕且不變動任何資源。成功時自動存檔（若有開啟）。
+     */
+    public async chooseDomesticTask(taskId: string, grantGold: (amount: number) => void = () => {}): Promise<DomesticTaskResult> {
+        const season = this._clock.state.totalSeasonsElapsed;
+        const result = runDomesticTask(
+            { food: this._military.food, gold: 0, fame: this._fame, cityTroops: this._military.cityTroops },
+            this._domesticLog,
+            season,
+            taskId,
+            { food: this._military.foodCap, gold: Infinity, fame: Infinity, cityTroops: this._military.cityTroopsCap },
+        );
+        if (!result.ok) return result;
+        this._military = { ...this._military, food: result.stock.food, cityTroops: result.stock.cityTroops };
+        this._fame = result.stock.fame;
+        this._domesticLog = result.log;
+        if (result.output?.resource === 'gold' && result.granted > 0) grantGold(result.granted);
+        if (this._autoSave && this._save) await this.save();
+        return result;
+    }
+
     public get military(): MilitaryReserve {
         return { ...this._military };
     }
@@ -1050,6 +1087,8 @@ export class GameSession {
         return {
             ...this._createBaseSnapshot(now),
             military: this.military,
+            resources: { fame: this._fame },
+            domestic: { ...this._domesticLog },
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
@@ -1097,6 +1136,8 @@ export class GameSession {
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
+        this._fame = normalizeFame(snapshot.resources?.fame);
+        this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }
