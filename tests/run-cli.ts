@@ -40,6 +40,7 @@ import { createPlayerDeckSuite } from './PlayerDeck.test';
 import { createFactorAwakeningSuite } from './FactorAwakening.test';
 import { createFactorMaskSuite } from './FactorMask.test';
 import { createAwakeningTitleSuite } from './AwakeningTitle.test';
+import { createHybridSkillSuite } from './HybridSkill.test';
 import { createBattleSpecialActionsSuite } from './BattleSpecialActions.test';
 import { createSortieDeploySuite } from './SortieDeploy.test';
 import { createBattleAptitudeSuite } from './BattleAptitude.test';
@@ -133,6 +134,7 @@ if (typeof window === 'undefined') {
     runner.register(createFactorAwakeningSuite());
     runner.register(createFactorMaskSuite());
     runner.register(createAwakeningTitleSuite());
+    runner.register(createHybridSkillSuite());
     runner.register(createBattleSpecialActionsSuite());
     runner.register(createSortieDeploySuite());
     runner.register(createBattleAptitudeSuite());
