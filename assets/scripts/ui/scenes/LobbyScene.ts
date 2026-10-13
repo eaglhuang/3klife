@@ -901,12 +901,16 @@ export class LobbyScene extends Component {
     /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
     private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
         try {
-            const { added, duplicates } = await services().session.addGenerals(results.map((entry) => entry.general));
+            const { added, duplicates, rebirths } = await services().session.addGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
             const parts: string[] = [];
             if (added.length > 0) {
                 parts.push(`新增 ${added.length} 位武將入名冊`);
             }
-            if (duplicates.length > 0) {
+            if (rebirths.length > 0) {
+                const overflow = rebirths.filter((entry) => entry.overflow).length;
+                parts.push(`${rebirths.length - overflow} 位轉生`);
+                if (overflow > 0) parts.push(`${overflow} 位滿轉溢出`);
+            } else if (duplicates.length > 0) {
                 parts.push(`${duplicates.length} 位已持有`);
             }
             if (parts.length > 0) {

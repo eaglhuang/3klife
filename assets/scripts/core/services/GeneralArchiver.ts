@@ -23,6 +23,7 @@ import {
     ClassifyOptions,
 } from '../models/GeneralLifecycle';
 import { PendingDeleteStore } from './PendingDeleteStore';
+import { buildSpiritArchiveSnapshot, SpiritSnapshotSource } from '../systems/SpiritArchiveSnapshot';
 
 // 簡化的武將資料介面（避免循環依賴）
 interface GeneralUnitMinimal {
@@ -100,6 +101,7 @@ export class GeneralArchiver {
             parentUids: general.parentUids ?? ['', ''],
             birthYear: general.birthYear,
             deathYear: general.deathYear,
+            archiveSnapshot: buildSpiritArchiveSnapshot(general as SpiritSnapshotSource, { season: deathContext.season }),
         };
 
         // ─── 3. 儲存 SpiritCard ────────────────────────────────────────────────

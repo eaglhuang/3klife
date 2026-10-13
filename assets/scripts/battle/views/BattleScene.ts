@@ -21,6 +21,7 @@ import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounte
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
+import { BattleTutorialHint } from './BattleTutorialHint';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
@@ -113,6 +114,7 @@ export class BattleScene extends Component {
   /** 場景背景管理元件 */
   private sceneBackground: SceneBackground | null = null;
   private deployRuntime: IDeployRuntimeLike | null = null;
+  private tutorialHint: BattleTutorialHint | null = null;
   private skillTargetingFlow: BattleSkillTargetingFlow | null = null;
   private readonly sceneContext = createBattleSceneContext();
   private battleUIBridge: BattleUIBridge | null = null;
@@ -204,6 +206,10 @@ export class BattleScene extends Component {
       const sortieCheck = validateSortieLoadoutReadModel({ Commander_UID: pg.id, Strategist_UID: support.strategist?.id ?? null, Deputy_UID: support.deputy?.id ?? null });
       if (!sortieCheck.ok) UCUFLogger.warn(LogCategory.BATTLE, `[BattleScene] 出征編制 read model 不合法: ${sortieCheck.issues.join(', ')}`);
       this.ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
+      // 首戰教學浮窗（PROG-2-0241）：只在教學戰開啟，用既有 toast 顯示
+      if (battleParams.tutorial) {
+        this.tutorialHint = new BattleTutorialHint(services().event, (msg) => this.deployRuntime?.showToast(msg));
+      }
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 戰鬥已初始化");
 
       // 6. 連結 UI 元件（自動尋找，不依賴 Inspector 綁定）
@@ -389,6 +395,8 @@ export class BattleScene extends Component {
     this.sceneContext.isDuelPanelActive = false;
     this.skillTargetingFlow?.cancelPendingSkillTargeting(false);
     this.battleUIBridge?.unsubscribeEvents();
+    this.tutorialHint?.dispose();
+    this.tutorialHint = null;
     this.sceneContext.skillTargetingFlow = null;
     this.sceneContext.raycastBoardCell = null;
     this.battleUIBridge = null;
