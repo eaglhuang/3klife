@@ -515,6 +515,16 @@ export function createNurtureSuite(): TestSuite {
         sameJson([], graduationTags({ str: 0, int: 0, lea: 0, pol: 0, cha: 0 }));
     });
 
+    suite.test('畢業覺醒名號：EP ≥ 98 的天才子嗣寫入「麒麟」；非天才不寫', () => {
+        const genius = readyChild('g', { ep: 98 });
+        const geniusDone = { ...playOut(createNurtureSession({ sessionId: 'sg', child: genius, mentors: [makeMentor('a')], startSeason: 0, random: seeded(3) }), seeded(5)), prowess: { str: 10, int: 10, lea: 10, pol: 10, cha: 10 } };
+        assert.equals('麒麟', graduate(geniusDone, genius).general.awakeningTitle!);
+
+        const normal = readyChild('n', { ep: 50 });
+        const normalDone = { ...playOut(createNurtureSession({ sessionId: 'sn', child: normal, mentors: [makeMentor('a')], startSeason: 0, random: seeded(3) }), seeded(5)), prowess: { str: 10, int: 10, lea: 10, pol: 10, cha: 10 } };
+        assert.equals(undefined, graduate(normalDone, normal).general.awakeningTitle);
+    });
+
     suite.test('混種戰法接線：父母不同領域來源時，第 15~25 回合才可能觸發，只觸發一次；沒有來源永不觸發', () => {
         const child = readyChild('hy');
         const withSources = createNurtureSession({
