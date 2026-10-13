@@ -83,6 +83,7 @@ import { createBattleSkillTargetSelectorSuite } from './BattleSkillTargetSelecto
 import { createBattleSkillDamageResolverSuite } from './BattleSkillDamageResolver.test';
 import { createStageChainProgressSuite } from './StageChainProgress.test';
 import { createStageProgressSaveSuite } from './StageProgressSave.test';
+import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -185,6 +186,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillDamageResolverSuite());
     runner.register(createStageChainProgressSuite());
     runner.register(createStageProgressSaveSuite());
+    runner.register(createTigerTallyWiringSuite());
 
     // Deprecated API 靜態掃描
     // __dirname = tests/  →  ../ = 專案根目錄

@@ -17,6 +17,7 @@ import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
 import { normalizeDeck } from './PlayerDeckRules';
 import { RandomState, validateRandomState } from '../systems/SeededRandom';
+import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -50,6 +51,26 @@ export interface PlayerSaveSnapshot {
     prison?: PrisonState<GeneralConfig>;
     /** 已通關的關卡 id（連環破用）；後加的選填欄位，舊檔讀回補空陣列（沒有任何通關紀錄） */
     clearedStageIds?: string[];
+    /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
+    tallyLoyalty?: Record<string, TallyLoyaltyState>;
+}
+
+/** 忠誠度表：只保留格式正確的條目；非物件視為沒有紀錄，壞掉的單筆條目丟棄 */
+export function normalizeTallyLoyaltyMap(value: unknown): Record<string, TallyLoyaltyState> {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+    const out: Record<string, TallyLoyaltyState> = {};
+    for (const [id, raw] of Object.entries(value as Record<string, unknown>)) {
+        const s = raw as Partial<TallyLoyaltyState> | null;
+        if (!s || typeof s !== 'object') continue;
+        if (typeof s.loyalty !== 'number' || !Number.isFinite(s.loyalty)) continue;
+        const base = createTallyLoyaltyState(s.loyalty, s.isGachaHero === true);
+        out[id] = {
+            ...base,
+            lastChangeSeason: typeof s.lastChangeSeason === 'number' ? s.lastChangeSeason : null,
+            consecutiveSeasons: typeof s.consecutiveSeasons === 'number' && s.consecutiveSeasons >= 0 ? Math.floor(s.consecutiveSeasons) : 0,
+        };
+    }
+    return out;
 }
 
 /** 通關紀錄：只留非空字串、去重、保留第一次出現的順序；非陣列視為沒有紀錄 */
@@ -83,6 +104,7 @@ export function createPlayerSaveSnapshot(
     inventory?: PlayerInventory,
     oracleCount = 0,
     clearedStageIds: readonly string[] = [],
+    tallyLoyalty: Readonly<Record<string, TallyLoyaltyState>> = {},
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -98,6 +120,7 @@ export function createPlayerSaveSnapshot(
         inventory: { ...normalizeInventory(inventory) },
         oracleCount: normalizeDiscoveryExp(oracleCount),
         clearedStageIds: normalizeClearedStageIds(clearedStageIds),
+        tallyLoyalty: normalizeTallyLoyaltyMap(tallyLoyalty),
     };
 }
 
@@ -132,6 +155,9 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (snapshot.clearedStageIds !== undefined && !Array.isArray(snapshot.clearedStageIds)) {
         throw new Error('[PlayerSaveService] 存檔 clearedStageIds 不是陣列');
     }
+    if (snapshot.tallyLoyalty !== undefined && (!snapshot.tallyLoyalty || typeof snapshot.tallyLoyalty !== 'object' || Array.isArray(snapshot.tallyLoyalty))) {
+        throw new Error('[PlayerSaveService] 存檔 tallyLoyalty 不是物件');
+    }
     return {
         schemaVersion: snapshot.schemaVersion,
         ...(snapshot.randomState !== undefined ? { randomState: validateRandomState(snapshot.randomState) } : {}),
@@ -148,6 +174,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.military !== undefined ? { military: normalizeMilitaryReserve(snapshot.military) } : {}),
         ...(snapshot.prison !== undefined ? { prison: normalizePrisonState<GeneralConfig>(snapshot.prison) } : {}),
         clearedStageIds: normalizeClearedStageIds(snapshot.clearedStageIds),
+        tallyLoyalty: normalizeTallyLoyaltyMap(snapshot.tallyLoyalty),
     };
 }
 
