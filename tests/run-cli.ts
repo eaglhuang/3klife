@@ -48,6 +48,7 @@ import { createBattleModifiersSuite } from './BattleModifiers.test';
 import { createBattlePowerPredictionSuite } from './BattlePowerPrediction.test';
 import { createSortiePredictionSuite } from './SortiePrediction.test';
 import { createBattleRecordStatsSuite } from './BattleRecordStats.test';
+import { createStageChainProgressSuite } from './StageChainProgress.test';
 import { createM5ViewSpecSuite } from './M5ViewSpec.test';
 import { createPrisonerOfWarSuite } from './PrisonerOfWar.test';
 import { createSageDivinationSuite } from './SageDivination.test';
@@ -133,6 +134,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattlePowerPredictionSuite());
     runner.register(createSortiePredictionSuite());
     runner.register(createBattleRecordStatsSuite());
+    runner.register(createStageChainProgressSuite());
     runner.register(createM5ViewSpecSuite());
     runner.register(createPrisonerOfWarSuite());
     runner.register(createSageDivinationSuite());
