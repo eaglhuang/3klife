@@ -14,9 +14,12 @@
  */
 
 export const ITEM_ORACLE_TOKEN = 'ITEM_ORACLE';
+/** 轉職令（20 歲追加副職；PROG-2-0226 接線）。起始庫存為 0，靠商城與活動取得。 */
+export const ITEM_JOB_CHANGE_ORDER = 'ITEM_JOB_ORDER';
 
 export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_ORACLE_TOKEN]: '求籤令',
+    [ITEM_JOB_CHANGE_ORDER]: '轉職令',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;
