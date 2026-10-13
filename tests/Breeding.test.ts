@@ -24,6 +24,7 @@ import {
     PREGNANCY_LOCK_SEASONS,
     resolveAncestorProfile,
     AncestorProfile,
+    applyWildGeneMutation,
 } from '../assets/scripts/core/systems/BreedingSystem';
 import {
     buildFactorDictionary,
@@ -480,6 +481,28 @@ export function createBreedingSuite(): TestSuite {
         const profile = resolveAncestorProfile('guan-yu', graph, (uid) => (uid === 'guan-yu' ? guanYu : undefined));
         assert.isTrue(profile.factorIds.includes('gene_halberd'));
         assert.isTrue(profile.tags.includes('gene_halberd'));
+    });
+
+    suite.test('血統活性 Wild Gene 接線：命中才 +2★，封頂於字典 maxLevel，初代來源機率較高', () => {
+        const f = (id: string, level: number, generation: 1 | 2 | 3) => ({ id, color: 'green' as const, level, generation, sourceUids: ['a'] });
+        const seq = (...values: number[]) => {
+            let i = 0;
+            return () => values[Math.min(i++, values.length - 1)];
+        };
+        // 後代基礎 10%：亂數 0.05 命中 → 3★ → 5★
+        const hit = applyWildGeneMutation([f('gene_charge', 3, 2)], seq(0.05));
+        assert.equals(5, hit[0].level);
+        // 初代 +10 百分點 = 20%：亂數 0.15 只有初代命中
+        assert.equals(5, applyWildGeneMutation([f('gene_charge', 3, 1)], seq(0.15))[0].level, '初代命中');
+        assert.equals(3, applyWildGeneMutation([f('gene_charge', 3, 2)], seq(0.15))[0].level, '後代不命中');
+        // 封頂：字典 maxLevel 4 → 3★ 只到 4★；已達上限不變
+        const dict = buildFactorDictionary([{ id: 'gene_charge', maxLevel: 4 }]);
+        assert.equals(4, applyWildGeneMutation([f('gene_charge', 3, 2)], seq(0.05), dict)[0].level);
+        assert.equals(4, applyWildGeneMutation([f('gene_charge', 4, 2)], seq(0.05), dict)[0].level);
+        // 不改輸入
+        const input = [f('gene_charge', 3, 2)];
+        applyWildGeneMutation(input, seq(0.05));
+        assert.equals(3, input[0].level);
     });
 
     return suite;

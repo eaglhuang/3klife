@@ -20,6 +20,7 @@ import {
     breed,
     BreedingEligibility,
     BreedingGeneral,
+    BreedingMode,
     BreedingResult,
     checkBreedingEligibility,
     EpBreakdown,
@@ -133,7 +134,7 @@ export class BreedingService {
     }
 
     /** 執行結緣；精力無論成敗都會扣，受孕成功時子嗣加入名冊 */
-    breed(fatherId: string, motherId: string): BreedingResult {
+    breed(fatherId: string, motherId: string, mode?: BreedingMode): BreedingResult {
         const roster = this._roster.getAll() as BreedingGeneral[];
         const { father, mother } = this._findPair(fatherId, motherId, roster);
         const ids = new Set(roster.map((g) => g.id));
@@ -142,6 +143,7 @@ export class BreedingService {
         const result = breed({
             father,
             mother,
+            mode,
             pedigree: this._graph,
             random: this._options.random ?? Math.random,
             childId,
