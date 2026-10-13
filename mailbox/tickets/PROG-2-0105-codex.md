@@ -1,3 +1,5 @@
+> **PM 裁定（2026-10-14）**：正式規格（英靈世家系統.md:22、兵種（虎符）系統.md:38~39）規定生前退役不直接產虎符卡。destination 改為：武職 `tactic_mentor`、文職 `wisdom_mentor`、雙職 `all_round_mentor`；不得回傳 `tiger_tally`，不產卡；無法判定回 `UNKNOWN_CLASS` 與安全預設。以下原文中的 `tiger_tally`、`scroll_mentor` 規則作廢。
+
 # [PROG-2-0105] 退役分流：武→虎符／戰技教官，文→竹簡／智識教官，雙職能→全能教官（FATE-08）
 
 給：Codex Agent｜里程碑：M4（退役與世代傳承）｜WBS v3：FATE-08，P0，工時 3.0，狀態「未開始」

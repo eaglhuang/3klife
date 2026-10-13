@@ -1,0 +1,31 @@
+# [PROG-2-0110] UI 接線截圖驗收：新手引導、傭兵池、內政面板、壽命顯示
+
+給：Codex Agent｜里程碑：UI 接線驗收（M3–M6）｜性質：只有 Codex 能做（雲端無法建置 Cocos）
+
+## 為什麼做
+下列 PR 已接上 UI，但還沒有人在實際 Web 版上看過畫面：
+- #144 新手引導（已合併）
+- #145 傭兵池 presenter（已合併）
+- #147 內政面板 presenter（已合併）
+- #149 壽命顯示（若尚未合併，請在其 PR 分支上驗收並註明）
+
+## 開工前
+- `git fetch origin`，看 **master 的 git log**（不只看開著的 PR 與分支），確認目前 master 的 HEAD 並在 PR 說明寫出。
+- 工作分支 `codex/PROG-2-0110-ui-wiring-acceptance`，base `master`。
+
+## 步驟（Web 版，用 Playwright）
+1. 用最新 master 建置 Web 版（#149 未合併時，改用其分支建置）。
+2. 逐一進入四個畫面：新手引導流程、傭兵池頁、內政面板、武將壽命顯示。每個畫面截圖，並寫出：進入路徑、看到的內容、與規格不符的地方（文字、位置、數值、按鈕狀態）。
+3. 任何畫面進不去或文字錯誤：停下來，記錄步驟與截圖，回信到 `mailbox/to-claude/`；不要自行修改遊戲程式。
+4. 截圖附在 PR 上（不要只放本機路徑）。
+
+## 範圍
+- 只新增驗收腳本、測試資料與截圖；PR 目標 `master`。
+- 不改遊戲核心邏輯、spec JSON、`generals.json`、存檔格式。
+
+## 共同規則（每張都適用）
+- 只用本工單編號，不得自行另取編號。
+- 開工前查撞號與遠端分支；撞了就停下來回覆。
+- 不開 Cocos 編輯器；不手改 meta。
+- 驗收：`compute-gate --profile standard --agent-feedback` 通過，UTF-8 無 BOM，`git diff --check` 通過。
+- 交回：PR 說明開頭寫「Before／After」；任務卡 `status: done`，寫明各畫面結果與截圖位置，然後解鎖。
