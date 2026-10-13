@@ -756,6 +756,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     if (reason === 'occupied') return '目標格已有單位，請改放其他格子';
     if (reason === 'troops-short') return '⚠ 軍勢不足，無法部署';
     if (reason === 'field-limit') return '⚠ 場上部隊已滿，請先等待退場或撤回部隊';
+    if (reason === 'order-refused') return '⚠ 主將忠誠不足，本回合拒絕執行命令';
     return '糧草不足，無法部署';
   }
 

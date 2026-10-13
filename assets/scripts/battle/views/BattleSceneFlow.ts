@@ -3,7 +3,7 @@ import { Color } from 'cc';
 import { Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { BattleController } from '../controllers/BattleController';
-import { buildRosterSortieInput, createGeneral, loadEncounter } from './BattleSceneLoader';
+import { buildOrderLoyalty, buildRosterSortieInput, createGeneral, loadEncounter } from './BattleSceneLoader';
 import { buildSceneGambitSummary } from './BattleSceneGambitSummary';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 import type { IBattleEntryParams } from '../../shared/BattleEntryParams';
@@ -74,6 +74,7 @@ export class BattleSceneFlow {
     // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
     const sortieInput = buildRosterSortieInput(pg);
     if (sortieInput) ctrl.configureSortie(sortieInput);
+    ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
 
     const deployRuntime = this.ctx.getDeployRuntime();
     if (deployRuntime) {
