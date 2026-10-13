@@ -36,8 +36,8 @@ import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
-import { createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
-import { applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
+import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
+import { applyTallyConfiscation, applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TigerTallyQuality } from '../models/TigerTallyCard';
 import type { NurtureState } from '../services/NurtureService';
 import {
@@ -330,6 +330,23 @@ export class GameSession {
         if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
         const result = equipTally(this._tallyHoldings, cardUid, generalId);
         return this._commitTallyResult(result);
+    }
+
+    /**
+     * 君主沒收武將身上的虎符（TRP-08 / PROG-2-0239）：忠誠大幅下降，虎符退回君主並存檔。
+     * 武將未持有虎符時回傳 null；武將不在名冊時也回傳 null。
+     */
+    public async confiscateTally(generalId: string, isGachaHero = false): Promise<{ cardUid: string; loyalty: number } | null> {
+        if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        const cardUid = tallyOfGeneral(this._tallyHoldings, generalId);
+        if (cardUid === null) return null;
+        const quality = this._tallyCards[cardUid]?.quality ?? 'R';
+        const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
+        const next = applyTallyConfiscation(current, quality);
+        this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: next };
+        this._tallyHoldings = confiscateFrom(this._tallyHoldings, generalId).state;
+        await this._autoSaveAfterTallyChange();
+        return { cardUid, loyalty: next.loyalty };
     }
 
     /** 把虎符從武將身上拔回君主 */
