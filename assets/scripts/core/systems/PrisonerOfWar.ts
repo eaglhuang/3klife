@@ -30,6 +30,8 @@ export interface PowTarget {
     hiddenFlags?: readonly string[];
     isMercenary?: boolean;
     templateFlag?: string;
+    /** 性別：資料為「女」「男」（FEM-05 用來判斷是否為女俘虜） */
+    gender?: string;
 }
 
 export interface PowPersuader {
@@ -88,6 +90,27 @@ export function powRarityOf(rarityTier: string | undefined): PowRarity {
     if (tier === 'legendary' || tier === 'ssr' || tier === 'ur') return 'SSR';
     if (tier === 'epic' || tier === 'sr') return 'SR';
     return 'R';
+}
+
+/** 女俘虜來源標籤（可結緣女性來源系統 §I FemaleSource）；男俘虜或豁免者為 null */
+export interface CaptiveFemaleSource {
+    Source_Type: 'CAPTIVE';
+    /** 俘虜品質上限為 SR（來源表：戰場俘虜 SR~N）；R 原樣保留 */
+    Quality_Grade: 'SR' | 'R';
+    Acquired_Season: number;
+}
+
+const FEMALE_GENDER_VALUES: readonly string[] = ['女', 'female'];
+
+/** 破城後抓到的女俘虜會帶上 CAPTIVE 來源（FEM-05）。品質對應暫定：SSR→SR、SR→SR、R→R */
+export function captiveFemaleSourceOf(target: PowTarget, season: number): CaptiveFemaleSource | null {
+    if (isPowExempt(target)) return null;
+    if (!FEMALE_GENDER_VALUES.includes(target.gender ?? '')) return null;
+    return {
+        Source_Type: 'CAPTIVE',
+        Quality_Grade: powRarityOf(target.rarityTier) === 'R' ? 'R' : 'SR',
+        Acquired_Season: season,
+    };
 }
 
 /** 試用傭兵（MERC-06 / Q74）：出戰不寫入永久紀錄（精力、戰績、功勳），戰敗必定安全撤退、不可被俘 */
