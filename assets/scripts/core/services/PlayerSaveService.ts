@@ -19,6 +19,7 @@ import { normalizeDeck } from './PlayerDeckRules';
 import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
+import type { TigerTallyCard } from '../models/TigerTallyCard';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -56,6 +57,21 @@ export interface PlayerSaveSnapshot {
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
     tallyHoldings?: Record<string, TallyHolder>;
+    /** 虎符卡資料（uid → 卡）；後加的選填欄位，舊檔讀回補空物件 */
+    tallyCards?: Record<string, TigerTallyCard>;
+}
+
+/** 虎符卡表：只保留 uid 與 templateId 為非空字串的卡；非物件視為沒有紀錄 */
+export function normalizeTallyCardsMap(value: unknown): Record<string, TigerTallyCard> {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+    const out: Record<string, TigerTallyCard> = {};
+    for (const [uid, raw] of Object.entries(value as Record<string, unknown>)) {
+        const card = raw as Partial<TigerTallyCard> | null;
+        if (!card || typeof card !== 'object') continue;
+        if (typeof card.uid !== 'string' || card.uid !== uid || typeof card.templateId !== 'string' || card.templateId.length === 0) continue;
+        out[uid] = card as TigerTallyCard;
+    }
+    return out;
 }
 
 /** 虎符持有表：只保留字串或 null 的條目；非物件視為沒有紀錄 */
@@ -120,6 +136,7 @@ export function createPlayerSaveSnapshot(
     clearedStageIds: readonly string[] = [],
     tallyLoyalty: Readonly<Record<string, TallyLoyaltyState>> = {},
     tallyHoldings: Readonly<Record<string, TallyHolder>> = {},
+    tallyCards: Readonly<Record<string, TigerTallyCard>> = {},
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -137,6 +154,7 @@ export function createPlayerSaveSnapshot(
         clearedStageIds: normalizeClearedStageIds(clearedStageIds),
         tallyLoyalty: normalizeTallyLoyaltyMap(tallyLoyalty),
         tallyHoldings: normalizeTallyHoldingsMap(tallyHoldings),
+        tallyCards: normalizeTallyCardsMap(tallyCards),
     };
 }
 
@@ -192,6 +210,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         clearedStageIds: normalizeClearedStageIds(snapshot.clearedStageIds),
         tallyLoyalty: normalizeTallyLoyaltyMap(snapshot.tallyLoyalty),
         tallyHoldings: normalizeTallyHoldingsMap(snapshot.tallyHoldings),
+        tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
     };
 }
 

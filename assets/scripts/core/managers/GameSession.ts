@@ -24,12 +24,14 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
-import { ageGeneralsOneSeason, AgingEvent, GENERAL_STATUS_DEAD, RandomSource } from '../systems/GeneralAging';
+import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
-import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { settleDeathTallies } from '../systems/TallyDeathSettlement';
+import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TigerTallyQuality } from '../models/TigerTallyCard';
@@ -234,6 +236,8 @@ export class GameSession {
     private _tallyLoyalty: Record<string, TallyLoyaltyState> = {};
     /** 虎符持有關係（TRP-08）：虎符 uid → 持有武將 id（null 為君主） */
     private _tallyHoldings: TallyHoldings = createTallyHoldings([]);
+    /** 虎符卡資料（uid → 卡）；陣亡產出的卡會登記到這裡 */
+    private _tallyCards: Record<string, TigerTallyCard> = {};
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
 
@@ -294,13 +298,22 @@ export class GameSession {
         return { ...this._tallyHoldings.holders };
     }
 
-    /** 登記君主持有的虎符（新產出或新取得的卡）；已登記的 uid 不會被覆蓋 */
-    public async registerTallyCards(cardUids: readonly string[]): Promise<void> {
+    /** 虎符卡資料（唯讀副本）；uid → 卡 */
+    public get tallyCards(): Readonly<Record<string, TigerTallyCard>> {
+        return { ...this._tallyCards };
+    }
+
+    /** 登記君主持有的虎符卡（新取得的卡）；已登記的 uid 不會被覆蓋 */
+    public async registerTallyCards(cards: readonly TigerTallyCard[]): Promise<void> {
         const holders = { ...this._tallyHoldings.holders };
-        for (const uid of cardUids) {
-            if (uid.length > 0 && !(uid in holders)) holders[uid] = null;
+        const stored = { ...this._tallyCards };
+        for (const card of cards) {
+            if (card.uid.length === 0 || card.uid in holders) continue;
+            holders[card.uid] = null;
+            stored[card.uid] = card;
         }
         this._tallyHoldings = { holders };
+        this._tallyCards = stored;
         await this._autoSaveAfterTallyChange();
     }
 
@@ -334,19 +347,13 @@ export class GameSession {
     }
 
     /**
-     * 陣亡事件的虎符結算（TRP-08）：名冊中已陣亡的武將，手上的虎符退回君主。
-     * 只改持有關係，不自動存檔；由呼叫端在同一次存檔中一起寫入。回傳退回的虎符 uid。
+     * 陣亡事件的虎符結算（TRP-08 / PROG-2-0236）：只處理這次才變成陣亡的武將，
+     * 手上的虎符退回君主，符合條件者產出一張陣亡虎符（君主持有）。只改記憶體狀態，由呼叫端的存檔一併寫入。
      */
-    private _returnTalliesOfDead(roster: readonly GeneralConfig[]): string[] {
-        const returned: string[] = [];
-        for (const general of roster) {
-            if ((general.status ?? '').toLowerCase() !== GENERAL_STATUS_DEAD) continue;
-            const result = onGeneralDeath(this._tallyHoldings, general.id);
-            if (result.returned.length === 0) continue;
-            this._tallyHoldings = result.state;
-            returned.push(...result.returned);
-        }
-        return returned;
+    private _settleDeaths(before: readonly GeneralConfig[], after: readonly GeneralConfig[], season: number): void {
+        const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before, after, season);
+        this._tallyHoldings = result.holdings;
+        this._tallyCards = { ...result.cards };
     }
 
     /**
@@ -442,6 +449,7 @@ export class GameSession {
         this._clearedStageIds = [];
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
+        this._tallyCards = {};
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
     }
@@ -765,7 +773,8 @@ export class GameSession {
 
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
-        const aging = ageGeneralsOneSeason(this._roster.getAll(), this._random);
+        const beforeRoster = this._roster.getAll();
+        const aging = ageGeneralsOneSeason(beforeRoster, this._random);
         const unveil = unveilDueGenerals(aging.roster as UnveilingGeneral[], {
             season: advance.current.totalSeasonsElapsed,
             dictionary: this._factorDictionary,
@@ -779,7 +788,7 @@ export class GameSession {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
-        this._returnTalliesOfDead(roster);
+        this._settleDeaths(beforeRoster, roster, advance.current.totalSeasonsElapsed);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._military = regenMilitaryOneSeason(this._military);
@@ -880,6 +889,7 @@ export class GameSession {
     ): Promise<BattleRecordResult> {
         // 勝利才記通關；同一關重複通關不會重複記入
         const clearedBefore = this._clearedStageIds.length;
+        const beforeRoster = this._roster.getAll();
         if (result === 'player-win' && options.stageId) {
             this._clearedStageIds = normalizeClearedStageIds([...this._clearedStageIds, options.stageId]);
         }
@@ -925,7 +935,7 @@ export class GameSession {
 
         const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, ...(options.sortie ? { military: this.military } : {}) };
         this._roster.replaceAll(roster);
-        this._returnTalliesOfDead(roster);
+        this._settleDeaths(beforeRoster, roster, this._clock.state.totalSeasonsElapsed);
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -942,7 +952,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -974,6 +984,7 @@ export class GameSession {
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
+        this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
