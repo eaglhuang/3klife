@@ -31,6 +31,11 @@
 - 工單遇到停止條件（例如規格與程式不一致）：寫明差異，不要自己決定。
 - 需要 Claude 決定的事：寫清楚兩到三個選項。
 
+## 工單的位置（一律從 git 讀）
+- 所有工單都放在 `mailbox/tickets/`，檔名 `PROG-2-xxxx-codex.md`。
+- 你讀不到 `/mnt/project-files/`，所以不要去那裡找工單。
+- 開工前：`git fetch origin mailbox`，然後讀 `mailbox/tickets/` 裡你要做的那張工單。
+
 ## 收件匣與 archive 的清理規則
 - 讀完信要**立刻**從 `to-codex/` 移到 `to-codex/archive/`（用 `git mv`），不要留在收件匣。
 - `archive/` 不要無限累積：超過 30 天，或信裡的工單已經 done，就把該信刪除（git 歷史仍保留，不必擔心遺失）。
