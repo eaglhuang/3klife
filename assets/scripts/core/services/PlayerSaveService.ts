@@ -9,6 +9,7 @@
  * 可替換的儲存後端（PlayerPrefs / 檔案 / 雲端），而不是自己去碰檔案路徑。
  */
 import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
+import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
 import { normalizeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
@@ -70,6 +71,8 @@ export interface PlayerSaveSnapshot {
     pendingLifespanDeaths?: PendingLifespanDeath[];
     /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
     mercenaries?: MercenarySaveBundle;
+    /** 新手 3 段式引導進度；後加的選填欄位，舊檔讀回視為從頭開始（PROG-2-0229） */
+    onboarding?: OnboardingState;
 }
 
 /** 虎符卡表：只保留 uid 與 templateId 為非空字串的卡；非物件視為沒有紀錄 */
@@ -226,6 +229,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
+        ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
     };
 }
 

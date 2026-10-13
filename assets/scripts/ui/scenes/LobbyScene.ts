@@ -25,6 +25,7 @@ import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
 import { JobChangeController } from '../core/JobChangeController';
+import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
@@ -116,6 +117,8 @@ export class LobbyScene extends Component {
     private _bonding: BondingSetupController | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _jobChange: JobChangeController | null = null;
+    private _onboardingHost: UIScreenPreviewHost | null = null;
+    private _onboarding: OnboardingFlowController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
@@ -176,6 +179,7 @@ export class LobbyScene extends Component {
         await this._mountNurtureFlow();
         await this._mountBondingSetup();
         await this._mountJobChange();
+        await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
         await this._mountDeckSelect();
@@ -424,6 +428,49 @@ export class LobbyScene extends Component {
             { buttonId: 'btnConfirmJob', handler: () => { void this._onClickConfirmJob(); } },
         ]);
         this._jobChangeHost.node.active = false;
+    }
+
+    /**
+     * 新手 3 段式引導：首次進大廳且未看完時顯示（PROG-2-0229）。
+     * 進度存在 GameSession，每段確認後自動存檔。開場流程本身不在這裡（OPEN-01）。
+     */
+    private async _mountOnboardingTutorial(): Promise<void> {
+        const onboarding = new OnboardingFlowController({
+            state: () => services().session.onboarding,
+            acknowledge: (segmentId) => services().session.acknowledgeOnboarding(segmentId),
+        });
+        this._onboarding = onboarding;
+        this._onboardingHost = await this._mountPreviewScreenHost('OnboardingTutorialHost', 'onboarding-tutorial-screen', [
+            { buttonId: 'btnNextTutorial', handler: () => { void this._onClickNextTutorial(); } },
+        ]);
+        this._refreshOnboardingTutorial();
+    }
+
+    private _refreshOnboardingTutorial(): void {
+        const host = this._onboardingHost;
+        const onboarding = this._onboarding;
+        if (!host || !onboarding) {
+            return;
+        }
+        host.node.active = onboarding.shouldShow();
+        if (!host.node.active) {
+            return;
+        }
+        this._bringNodeToFront(host.node);
+        applyFlowView(host.binder, onboarding.getFlowView());
+    }
+
+    private async _onClickNextTutorial(): Promise<void> {
+        if (!this._onboarding) {
+            return;
+        }
+        try {
+            await this._onboarding.next();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 新手引導存檔失敗', error);
+        } finally {
+            this._refreshOnboardingTutorial();
+        }
     }
 
     private _openJobChange(): void {

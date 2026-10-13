@@ -55,15 +55,21 @@ async function makeRig(generals: GeneralConfig[], orders: number, adapter?: Memo
 export function createJobChangeControllerSuite(): TestSuite {
     const suite = new TestSuite('JobChangeController (PROG-2-0227 成人禮轉職選單)');
 
-    suite.test('名單只列出滿 20 歲、存活、有主職、尚無副職的武將', async () => {
+    suite.test('名單只列出滿 20 歲、存活、尚無副職的武將', async () => {
         const { controller } = await makeRig([
             youth('young', { age: 19 }),
             youth('ok'),
             youth('dead', { status: GENERAL_STATUS_DEAD }),
-            youth('nomain', { primaryClass: undefined }),
             youth('hasSub', { subClass: 'Scholar' }),
         ], 1);
         assert.equals('ok', controller.eligibleGenerals().map((general) => general.id).join(','));
+    });
+
+    suite.test('沒有主職資料的既有武將也會進名單，主職由後備規則解析（PROG-2-0228）', async () => {
+        const { controller } = await makeRig([youth('plain', { primaryClass: undefined })], 1);
+        assert.equals('plain', controller.eligibleGenerals().map((general) => general.id).join(','));
+        // 武將無主職時依武力統率 vs 智識政治決定；youth 的武官能力較高，所以主職為武官，副職只剩文官
+        assert.equals('Scholar', controller.getView().choices.map((choice) => choice.subClass).join(','));
     });
 
     suite.test('名單為空時 view 顯示無可轉職武將，確認鈕不可按', async () => {
