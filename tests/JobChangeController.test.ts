@@ -16,6 +16,22 @@ import { JobWiringGeneral } from '../assets/scripts/core/systems/JobChangeWiring
 import { GENERAL_STATUS_DEAD } from '../assets/scripts/core/systems/GeneralAging';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const fs = require('fs') as typeof import('fs');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('path') as typeof import('path');
+
+function layoutIds(): Set<string> {
+    const layout = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets/resources/ui-spec/layouts/job-change-main.json'), 'utf8'));
+    const ids = new Set<string>();
+    const walk = (node: { id?: string; children?: unknown[] }): void => {
+        if (node.id) ids.add(node.id);
+        for (const child of node.children ?? []) walk(child as { id?: string; children?: unknown[] });
+    };
+    walk(layout.root);
+    return ids;
+}
+
 function youth(id: string, extra: Partial<JobWiringGeneral> = {}): GeneralConfig {
     return {
         id, name: id, faction: 'shu', gender: '男', age: 20, hp: 1000,
@@ -114,6 +130,40 @@ export function createJobChangeControllerSuite(): TestSuite {
         const result = await controller.confirm();
         assert.isTrue(result === null);
         assert.equals(0, session.itemCount(ITEM_JOB_CHANGE_ORDER));
+    });
+
+    suite.test('flow view 的 key 都對得到 job-change-main.json 的節點 id', async () => {
+        const { controller } = await makeRig([youth('liu')], 1);
+        const view = controller.getFlowView();
+        const ids = layoutIds();
+        const keys = [...Object.keys(view.texts), ...Object.keys(view.actives), ...Object.keys(view.enabled)];
+        for (const key of keys) {
+            assert.isTrue(ids.has(key));
+        }
+    });
+
+    suite.test('flow view：有武將時顯示副職能力與轉職令，選了副職後按鈕文字打勾', async () => {
+        const { controller } = await makeRig([youth('liu')], 2);
+        let view = controller.getFlowView();
+        assert.equals('轉職令 ×2', view.texts.ordersLabel);
+        assert.equals('文官能力 42', view.texts.subInfo);
+        assert.isTrue(view.actives.contentPanel);
+        assert.isFalse(view.actives.emptyHint);
+        assert.isFalse(view.enabled.btnConfirmJob);
+        controller.selectSubClass('Scholar');
+        view = controller.getFlowView();
+        assert.equals('✓ 追加文官', view.texts.btnSubScholarLabel);
+        assert.isTrue(view.enabled.btnConfirmJob);
+        assert.isFalse(view.enabled.btnSubWarrior);
+    });
+
+    suite.test('flow view：沒有可轉職武將時只顯示提示，內容區隱藏', async () => {
+        const { controller } = await makeRig([youth('young', { age: 18 })], 1);
+        const view = controller.getFlowView();
+        assert.isFalse(view.actives.contentPanel);
+        assert.isTrue(view.actives.emptyHint);
+        assert.isFalse(view.actives.blockedLabel);
+        assert.isFalse(view.enabled.btnConfirmJob);
     });
 
     return suite;

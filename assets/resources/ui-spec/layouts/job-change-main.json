@@ -1,0 +1,331 @@
+{
+  "id": "job-change-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "JobChangeRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "JobChangeCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1200,
+        "height": 780,
+        "skinSlot": "job.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "JobTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "成人禮・轉職",
+            "styleSlot": "job.label.title",
+            "width": 520,
+            "id": "jobTitle"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseJob",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "job.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseJobLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "job.label.button",
+                "id": "btnCloseJobLabel"
+              }
+            ],
+            "id": "btnCloseJob"
+          },
+          {
+            "type": "label",
+            "name": "EmptyHint",
+            "widget": {
+              "top": 160,
+              "left": 80,
+              "right": 80
+            },
+            "height": 120,
+            "text": "",
+            "styleSlot": "job.label.body",
+            "id": "emptyHint"
+          },
+          {
+            "type": "container",
+            "name": "JobPanel",
+            "widget": {
+              "top": 84,
+              "left": 24,
+              "right": 24,
+              "bottom": 64
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "GeneralName",
+                "widget": {
+                  "top": 16,
+                  "left": 20,
+                  "right": 20
+                },
+                "height": 38,
+                "text": "－",
+                "styleSlot": "job.label.name",
+                "id": "generalName"
+              },
+              {
+                "type": "label",
+                "name": "GeneralInfo",
+                "widget": {
+                  "top": 62,
+                  "left": 20,
+                  "right": 20
+                },
+                "height": 28,
+                "text": "",
+                "styleSlot": "job.label.meta",
+                "id": "generalInfo"
+              },
+              {
+                "type": "button",
+                "name": "BtnPrevGeneral",
+                "widget": {
+                  "bottom": 16,
+                  "left": 20
+                },
+                "width": 96,
+                "height": 48,
+                "skinSlot": "job.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevGeneralLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "＜",
+                    "styleSlot": "job.label.button",
+                    "id": "btnPrevGeneralLabel"
+                  }
+                ],
+                "id": "btnPrevGeneral"
+              },
+              {
+                "type": "label",
+                "name": "Pager",
+                "widget": {
+                  "bottom": 26,
+                  "hCenter": true
+                },
+                "height": 28,
+                "text": "0 / 0",
+                "styleSlot": "job.label.meta",
+                "width": 140,
+                "id": "pager"
+              },
+              {
+                "type": "button",
+                "name": "BtnNextGeneral",
+                "widget": {
+                  "bottom": 16,
+                  "right": 20
+                },
+                "width": 96,
+                "height": 48,
+                "skinSlot": "job.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextGeneralLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "＞",
+                    "styleSlot": "job.label.button",
+                    "id": "btnNextGeneralLabel"
+                  }
+                ],
+                "id": "btnNextGeneral"
+              },
+              {
+                "type": "label",
+                "name": "OrdersLabel",
+                "widget": {
+                  "top": 220,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "job.label.stats",
+                "id": "ordersLabel"
+              },
+              {
+                "type": "button",
+                "name": "BtnSubWarrior",
+                "widget": {
+                  "top": 270,
+                  "left": 16
+                },
+                "width": 260,
+                "height": 56,
+                "skinSlot": "job.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnSubWarriorLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "追加武官",
+                    "styleSlot": "job.label.button",
+                    "id": "btnSubWarriorLabel"
+                  }
+                ],
+                "id": "btnSubWarrior"
+              },
+              {
+                "type": "button",
+                "name": "BtnSubScholar",
+                "widget": {
+                  "top": 270,
+                  "right": 16
+                },
+                "width": 260,
+                "height": 56,
+                "skinSlot": "job.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnSubScholarLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "追加文官",
+                    "styleSlot": "job.label.button",
+                    "id": "btnSubScholarLabel"
+                  }
+                ],
+                "id": "btnSubScholar"
+              },
+              {
+                "type": "label",
+                "name": "SubInfo",
+                "widget": {
+                  "top": 344,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "job.label.ep",
+                "id": "subInfo"
+              },
+              {
+                "type": "label",
+                "name": "BlockedLabel",
+                "widget": {
+                  "top": 400,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "job.label.stats",
+                "id": "blockedLabel"
+              },
+              {
+                "type": "button",
+                "name": "BtnConfirmJob",
+                "widget": {
+                  "top": 456,
+                  "hCenter": true
+                },
+                "width": 240,
+                "height": 64,
+                "skinSlot": "job.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnConfirmJobLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "確認轉職",
+                    "styleSlot": "job.label.button",
+                    "id": "btnConfirmJobLabel"
+                  }
+                ],
+                "id": "btnConfirmJob"
+              }
+            ],
+            "id": "contentPanel"
+          },
+          {
+            "type": "label",
+            "name": "NoticeLabel",
+            "widget": {
+              "bottom": 16,
+              "left": 32,
+              "right": 32
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "job.label.log",
+            "id": "noticeLabel"
+          }
+        ],
+        "id": "jobChangeCard"
+      }
+    ],
+    "id": "jobChangeRoot"
+  }
+}

@@ -48,6 +48,13 @@ export interface JobChangeView {
     confirmEnabled: boolean;
 }
 
+/** 與 BondingView 同形：texts / actives / enabled 的 key 都是 job-change-main.json 的節點 id */
+export interface JobChangeFlowView {
+    texts: Record<string, string>;
+    actives: Record<string, boolean>;
+    enabled: Record<string, boolean>;
+}
+
 export interface JobChangeDeps {
     roster: { getAll(): GeneralConfig[] };
     /** 目前持有的轉職令數 */
@@ -133,6 +140,49 @@ export class JobChangeController {
             blockedText: blocked ? JOB_CHANGE_REJECT_TEXT[blocked] : null,
             notice: this._notice,
             confirmEnabled: this._subClass !== null && blocked === null,
+        };
+    }
+
+    /**
+     * 畫面用的扁平 view：key 與 job-change-main.json 的節點 id 一一對應，
+     * 形狀與 BondingSetup 相同，可直接交給 applyFlowView。
+     */
+    public getFlowView(): JobChangeFlowView {
+        const view = this.getView();
+        const general = this._current();
+        const warrior = view.choices.find((choice) => choice.subClass === 'Warrior');
+        const scholar = view.choices.find((choice) => choice.subClass === 'Scholar');
+        const pick = (subClass: JobClass, label: string): string =>
+            `${view.subClass === subClass ? '✓ ' : ''}${label}`;
+        return {
+            texts: {
+                generalName: general ? general.name : '－',
+                generalInfo: general ? `${general.age} 歲　主職：${general.primaryClass === 'Warrior' ? '武官' : '文官'}` : '',
+                pager: `${this.eligibleGenerals().findIndex((item) => item.id === general?.id) + 1} / ${this.eligibleGenerals().length}`,
+                subInfo: [warrior, scholar]
+                    .filter((choice): choice is JobChangeChoice => choice !== undefined)
+                    .map((choice) => `${choice.subClass === 'Warrior' ? '武官' : '文官'}能力 ${choice.projectedSubAbility}`)
+                    .join('　'),
+                ordersLabel: `轉職令 ×${view.orders}`,
+                blockedLabel: view.blockedText ?? '',
+                noticeLabel: view.notice ?? '',
+                btnSubWarriorLabel: pick('Warrior', '追加武官'),
+                btnSubScholarLabel: pick('Scholar', '追加文官'),
+                emptyHint: view.blockedText ?? '',
+            },
+            actives: {
+                emptyHint: general === null,
+                contentPanel: general !== null,
+                blockedLabel: general !== null && view.blockedText !== null,
+                noticeLabel: view.notice !== null,
+            },
+            enabled: {
+                btnPrevGeneral: this.eligibleGenerals().length > 1,
+                btnNextGeneral: this.eligibleGenerals().length > 1,
+                btnSubWarrior: warrior !== undefined,
+                btnSubScholar: scholar !== undefined,
+                btnConfirmJob: view.confirmEnabled,
+            },
         };
     }
 
