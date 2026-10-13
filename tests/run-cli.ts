@@ -97,6 +97,7 @@ import { createStageProgressSaveSuite } from './StageProgressSave.test';
 import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
 import { createOrderLoyaltyRefusalSuite } from './OrderLoyaltyRefusal.test';
+import { createCrossSystemIntegrationSuite } from './CrossSystemIntegration.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -207,6 +208,7 @@ if (typeof window === 'undefined') {
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createCrossSystemIntegrationSuite());
     runner.register(createOnboardingTutorialSuite());
     runner.register(createJobChangeSuite());
     runner.register(createGeneralStageSuite());

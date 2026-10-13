@@ -23,6 +23,7 @@ import {
     getEliteDeployCap,
     getStrategistBonus,
     getTacticTpCost,
+    TACTIC_TP_COST_OVERRIDE,
     getTallyGrainCost,
     MILITIA_FOOD_COST,
     MILITIA_STAT_RATIO,
@@ -317,6 +318,32 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(true, ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' }));
         assert.equals(2, spends, '回復後施放仍只扣一次');
         off();
+    });
+
+    suite.test('計謀點計價單一來源：指定 tacticId 時，UI 預檢與實際施放用同一個成本', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        const pg = new GeneralUnit({ id: 'guan-yu', name: 'guan-yu', faction: Faction.Player, hp: 1000, maxSp: 100, initialSp: 100, str: 100, int: 90, lea: 90, skillId: 'guan-yu-slash', battlePrimarySkillId: 'guan-yu-slash' });
+        const eg = new GeneralUnit({ id: 'lu-bu', name: 'lu-bu', faction: Faction.Enemy, hp: 1000, maxSp: 100, initialSp: 100, str: 100, int: 90, lea: 90, skillId: 'lu-bu-rampage', battlePrimarySkillId: 'lu-bu-rampage' });
+        ctrl.initBattle(pg, eg);
+        ctrl.configureSortie({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        const anchor = new TroopUnit('enemy-anchor', TroopType.Infantry, Faction.Enemy, { hp: 50000, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
+        anchor.moveTo(2, 3);
+        ctrl.state.addUnit(anchor);
+        pg.currentSp = pg.maxSp;
+        const overrides = TACTIC_TP_COST_OVERRIDE as Record<string, number>;
+        overrides['qa-expensive'] = 50;
+        try {
+            ctrl['sortie']!.tacticCurrent = 40;
+            assert.equals(true, ctrl.getPlayerTacticPointState().enabled, '預設戰法 30 點，40 點付得起');
+            assert.equals(false, ctrl.getPlayerTacticPointState({ tacticId: 'qa-expensive' }).enabled, '指定 50 點戰法，UI 預檢也要說付不起');
+            const refused = ctrl.triggerGeneralSkill({ tacticId: 'qa-expensive', targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
+            assert.equals(false, refused, '施放端與預檢同一來源，同樣拒絕');
+            assert.equals(pg.maxSp, pg.currentSp, '被拒不扣精力');
+            assert.equals(40, ctrl.getSortieState()!.tacticCurrent, '被拒不扣計謀點');
+        } finally {
+            delete overrides['qa-expensive'];
+        }
     });
 
     suite.test('內建 demo 無帳本：實際施放不受計謀點限制', () => {
