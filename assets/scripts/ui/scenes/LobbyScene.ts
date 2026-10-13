@@ -278,6 +278,7 @@ export class LobbyScene extends Component {
                     await services().session.save();
                 }
             },
+            spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
         });
         this._nurtureFlow = flow;
 
@@ -365,6 +366,7 @@ export class LobbyScene extends Component {
                     await services().session.save();
                 }
             },
+            spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
         });
         this._bonding = bonding;
 
