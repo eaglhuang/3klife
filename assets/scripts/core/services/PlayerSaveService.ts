@@ -10,6 +10,7 @@ import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/Domesti
  * 可替換的儲存後端（PlayerPrefs / 檔案 / 雲端），而不是自己去碰檔案路徑。
  */
 import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
+import { normalizeBondPoints } from '../systems/OverflowBond';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
@@ -78,6 +79,8 @@ export interface PlayerSaveSnapshot {
     mercenaries?: MercenarySaveBundle;
     /** 新手 3 段式引導進度；後加的選填欄位，舊檔讀回視為從頭開始（PROG-2-0229） */
     onboarding?: OnboardingState;
+    /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
+    bondPoints?: number;
 }
 
 /** 虎符卡表：只保留 uid 與 templateId 為非空字串的卡；非物件視為沒有紀錄 */
@@ -237,6 +240,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
+        ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
     };
 }
 
