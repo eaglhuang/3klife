@@ -42,6 +42,7 @@ import {
     TrainingKind,
 } from '../assets/scripts/core/systems/NurtureSystem';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
+import { hybridSourceFromFactors, hybridSourcesFromParents } from '../assets/scripts/core/systems/HybridSkill';
 import { UnveilingService } from '../assets/scripts/core/services/UnveilingService';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
@@ -587,6 +588,41 @@ export function createNurtureSuite(): TestSuite {
         let plain = withoutSources;
         for (let i = 0; i < 20; i++) plain = executeRound(plain, 'rest', () => 0).session;
         assert.equals(undefined, plain.hybridRound, '沒有來源不擲');
+    });
+
+    suite.test('混種來源：取最高等級的綠色因子，領域為字典 defaultTags[0]；沒有綠色因子或沒有父母則無來源', () => {
+        const dict = buildFactorDictionary([
+            { id: 'gene_charge', color: 'green', category: 'tactic-seed', defaultTags: ['cavalry', 'pierce'] },
+            { id: 'gene_fire', color: 'green', category: 'tactic-seed', defaultTags: ['fire'] },
+            { id: 'gene_str', color: 'blue', category: 'attribute', defaultTags: ['str'] },
+        ]);
+        const f = (id: string, color: 'blue' | 'green', level: number) => ({ id, color, level, generation: 1 as const, sourceUids: ['u'] });
+
+        assert.equals('fire', hybridSourceFromFactors([f('gene_str', 'blue', 9), f('gene_charge', 'green', 2), f('gene_fire', 'green', 3)], dict)!.domain, '等級最高的綠色因子');
+        assert.equals('cavalry', hybridSourceFromFactors([f('gene_charge', 'green', 2), f('gene_fire', 'green', 2)], dict)!.domain, '同等級取較前面的');
+        assert.equals('gene_unknown', hybridSourceFromFactors([f('gene_unknown', 'green', 1)])!.domain, '沒有字典時退回因子 id');
+        assert.equals(undefined, hybridSourceFromFactors([f('gene_str', 'blue', 9)], dict), '沒有綠色因子');
+        assert.equals(undefined, hybridSourceFromFactors(undefined, dict), '沒有繼承資料');
+
+        const both = hybridSourcesFromParents({ father: [f('gene_fire', 'green', 1)], mother: [f('gene_charge', 'green', 1)] }, dict)!;
+        assert.equals('fire', both.father!.domain);
+        assert.equals('cavalry', both.mother!.domain);
+        assert.equals(undefined, hybridSourcesFromParents(undefined, dict), '沒有父母資料不擲');
+        assert.equals(undefined, hybridSourcesFromParents({ father: [f('gene_str', 'blue', 1)] }, dict), '兩邊都沒有綠色因子不擲');
+    });
+
+    suite.test('混種來源：推導出的來源傳入會話後，第 15~25 回合才會擲中', () => {
+        const child = readyChild('c');
+        const sources = hybridSourcesFromParents({
+            father: [{ id: 'gene_fire', color: 'green', level: 1, generation: 1, sourceUids: ['f'] }],
+            mother: [{ id: 'gene_charge', color: 'green', level: 1, generation: 1, sourceUids: ['m'] }],
+        }, buildFactorDictionary([{ id: 'gene_fire', defaultTags: ['fire'] }, { id: 'gene_charge', defaultTags: ['cavalry'] }]));
+        const session = createNurtureSession({ sessionId: 'hy3', child, mentors: [], startSeason: 0, random: seeded(1), hybridSources: sources });
+        assert.equals('fire', session.hybridSources!.father!.domain);
+        let current = session;
+        for (let i = 0; i < 14; i++) current = executeRound(current, 'rest', () => 0).session;
+        current = executeRound(current, 'rest', () => 0).session;
+        assert.equals(15, current.hybridRound!, '第 15 回合擲中（亂數 0 < 5%）');
     });
 
     suite.test('畢業：實力層與標籤寫回本體，資質層（原五維）不變，未完成或對象不符會拋錯', () => {

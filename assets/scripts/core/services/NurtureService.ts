@@ -34,6 +34,8 @@ import {
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
 import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwakening';
+import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
+import { hybridSourcesFromParents } from '../systems/HybridSkill';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -66,6 +68,12 @@ export interface NurtureState {
     admission: { season: number; used: number };
 }
 
+/** 父母各自的繼承因子；用來推導混種戰法來源，沒提供就不擲混種 */
+export interface NurtureParentFactors {
+    father?: readonly InheritedFactor[];
+    mother?: readonly InheritedFactor[];
+}
+
 export interface NurtureServiceOptions {
     random?: RandomSource;
     /** 目前的 totalSeasonsElapsed */
@@ -78,6 +86,8 @@ export interface NurtureServiceOptions {
     awakening?: NurtureAwakeningHooks;
     /** 畢業後通知（例如給玩家 discoveryLevel 經驗） */
     onGraduated?: (result: GraduationResult) => void;
+    /** 因子字典；用來推導混種戰法領域（defaultTags），沒提供則退回因子 id */
+    factorDictionary?: FactorDictionary;
 }
 
 export interface NurtureAwakeningHooks {
@@ -179,7 +189,7 @@ export class NurtureService {
     }
 
     /** 消耗 1 張入學令，建立鏡像快照並鎖定教官；不合格時拋 NurtureError */
-    start(childId: string, mentors: readonly TrainingMentor[] = []): NurtureSession {
+    start(childId: string, mentors: readonly TrainingMentor[] = [], parents?: NurtureParentFactors): NurtureSession {
         const check = this.checkStart(childId, mentors);
         if (!check.eligible) {
             throw new NurtureError(`${childId} 不能進入培育：${check.reasons.join(', ')}`);
@@ -192,6 +202,7 @@ export class NurtureService {
             mentors,
             startSeason: season,
             random: this._rng(),
+            hybridSources: hybridSourcesFromParents(parents, this._options.factorDictionary),
         });
         const used = this._state.admission.season === season ? this._state.admission.used : 0;
         this._state.admission = { season, used: used + 1 };
