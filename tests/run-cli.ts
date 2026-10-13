@@ -46,6 +46,7 @@ import { createTigerTallyLoyaltySuite } from './TigerTallyLoyalty.test';
 import { createBattlePowerRatingSuite } from './BattlePowerRating.test';
 import { createBattleModifiersSuite } from './BattleModifiers.test';
 import { createBattlePowerPredictionSuite } from './BattlePowerPrediction.test';
+import { createSortiePredictionSuite } from './SortiePrediction.test';
 import { createBattleRecordStatsSuite } from './BattleRecordStats.test';
 import { createM5ViewSpecSuite } from './M5ViewSpec.test';
 import { createPrisonerOfWarSuite } from './PrisonerOfWar.test';
@@ -130,6 +131,7 @@ if (typeof window === 'undefined') {
     runner.register(createBattlePowerRatingSuite());
     runner.register(createBattleModifiersSuite());
     runner.register(createBattlePowerPredictionSuite());
+    runner.register(createSortiePredictionSuite());
     runner.register(createBattleRecordStatsSuite());
     runner.register(createM5ViewSpecSuite());
     runner.register(createPrisonerOfWarSuite());

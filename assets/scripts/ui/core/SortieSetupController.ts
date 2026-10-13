@@ -21,6 +21,7 @@ import {
     type CreateSortieInput,
     type SortieLoadoutCheck,
 } from '../../core/systems/SortieDeploy';
+import { sortiePredictText } from '../../core/systems/SortiePrediction';
 
 export type SortieRole = 'strategist' | 'deputy';
 
@@ -41,6 +42,8 @@ export interface SortieSetupDeps {
         getSortieSupportSummary(commanderUid: string): SortieSupportSummary;
         getSortieInput(generalId: string): CreateSortieInput | null;
     };
+    /** 大廳開戰時的守方敵將（第一個關卡）；未載入時回傳 null，畫面顯示資料未載入 */
+    getEnemyGeneral?: () => GeneralConfig | null;
 }
 
 /** 計謀點已進戰場（PROG-2-0084）：上限與開局補點會套進本場帳本 */
@@ -114,6 +117,7 @@ export class SortieSetupController {
             deputyName: '不派',
             deputyInfo: '提供軍糧上限與開局補給（看統率、政治）',
             sortieSummary: '',
+            sortiePredict: '',
             sortieNotice: this._notice,
         };
         const actives: Record<string, boolean> = {
@@ -153,6 +157,8 @@ export class SortieSetupController {
             const bonus = input.foodBonus ?? 0;
             texts.sortieSummary = `出征軍勢上限 ${pool} · 糧草 ${input.food + bonus}${bonus > 0 ? `（後勤 +${bonus}）` : ''} · 城市兵源 ${input.cityTroops}`;
         }
+
+        texts.sortiePredict = sortiePredictText(commander, this._deps.getEnemyGeneral?.() ?? null);
 
         const strategistOptions = this.options('strategist').length;
         const deputyOptions = this.options('deputy').length;

@@ -400,6 +400,19 @@
               },
               {
                 "type": "label",
+                "name": "SortiePredict",
+                "id": "sortiePredict",
+                "widget": {
+                  "top": 472,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "sortie.label.stats"
+              },
+              {
+                "type": "label",
                 "name": "SortieNotice",
                 "id": "sortieNotice",
                 "widget": {
