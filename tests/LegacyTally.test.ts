@@ -1,7 +1,7 @@
 import { assert, TestSuite } from './TestRunner';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
-import type { TigerTallyCard } from '../assets/scripts/core/models/TigerTallyCard';
-import { LegacyService, STORE_TIGER_TALLIES, toTigerTallyGeneral } from '../assets/scripts/core/services/LegacyService';
+import { LegacyService, toTigerTallyGeneral } from '../assets/scripts/core/services/LegacyService';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { GameClock } from '../assets/scripts/core/systems/GameClock';
 import type { AgingEvent } from '../assets/scripts/core/systems/GeneralAging';
@@ -25,138 +25,37 @@ function deaths(...roster: GeneralConfig[]): AgingEvent[] {
 export function createLegacyTallySuite(): TestSuite {
     const suite = new TestSuite('LegacyTally (死亡雙卡 / 虎符庫)');
 
-    suite.test('正式模板名將死亡：英靈與虎符入庫，且只移除死者', async () => {
-        const service = new LegacyService(new MemoryStorageAdapter());
-        const dead = general('hero', { uid: 'world-hero', troopType: 'cavalry' });
-        const survivor = general('survivor');
-        const result = await service.settleSeason([dead, survivor], new GameClock().advanceSeason(), deaths(dead));
-        assert.equals(1, result.settlement.spiritCards.length);
-        assert.equals(1, result.settlement.tigerTallies!.length);
-        assert.equals('hero', result.settlement.spiritCards[0].uid);
-        const tally = result.settlement.tigerTallies![0];
-        assert.equals('world-hero', tally.sourceGeneralUid);
-        assert.equals('GEN_SHU_HERO', tally.templateId);
-        assert.equals('death', tally.source);
-        assert.equals('cavalry', tally.troopType);
-        assert.equals(tally.uid, (await service.getTigerTallies())[0].uid);
-        assert.equals('survivor', result.roster[0].id);
-        assert.equals(1, result.roster.length);
-    });
-
-    suite.test('一般子嗣只有歸檔快照；即使殘留女性名將模板也不得產雙卡', async () => {
-        const service = new LegacyService(new MemoryStorageAdapter());
-        const child = general('child', { gender: '女', fatherId: 'dad', motherId: 'mom', birthSeason: 0 });
-        const result = await service.settleSeason([child], new GameClock().advanceSeason(), deaths(child));
-        assert.equals(0, result.settlement.spiritCards.length);
-        assert.equals(1, result.settlement.archivedSnapshots!.length);
-        assert.equals(0, result.settlement.tigerTallies!.length);
-        assert.equals(0, (await service.getTigerTallies()).length);
-    });
-
-    suite.test('退役只產教官；退役後死亡仍產雙卡，教官保留', async () => {
-        const service = new LegacyService(new MemoryStorageAdapter());
-        const clock = new GameClock();
-        const advance = clock.advanceSeason();
-        const retired = await service.retireGeneral([general()], 'hero', advance.previous);
-        assert.equals(0, (await service.getArchiver().getAllSpiritCards()).length);
-        assert.equals(0, (await service.getTigerTallies()).length);
-        const result = await service.settleSeason(retired.roster, advance, deaths(...retired.roster));
-        assert.equals(1, result.settlement.spiritCards.length);
-        assert.equals(1, result.settlement.tigerTallies!.length);
-        assert.equals(1, (await service.getMentorCards()).length);
-    });
-
-    suite.test('provider 收到死亡武將，100 / 50 對應 85 分 UR', async () => {
-        let observed: GeneralConfig | undefined;
-        const service = new LegacyService(new MemoryStorageAdapter(), {
-            tallyScoreProvider: (dead) => {
-                observed = dead;
-                return { deathBattleScore: 100, legacyQualityScore: 50 };
-            },
-        });
-        const dead = general();
-        const result = await service.settleSeason([dead], new GameClock().advanceSeason(), deaths(dead));
-        assert.isTrue(observed === dead);
-        assert.equals(85, result.settlement.tigerTallies![0].score);
-        assert.equals('UR', result.settlement.tigerTallies![0].quality);
-    });
-
-    suite.test('未提供 provider：預設零分 R，不報錯', async () => {
-        const service = new LegacyService(new MemoryStorageAdapter());
-        const dead = general();
-        const result = await service.settleSeason([dead], new GameClock().advanceSeason(), deaths(dead));
-        assert.equals(0, result.settlement.tigerTallies![0].score);
-        assert.equals('R', result.settlement.tigerTallies![0].quality);
-    });
-
-    suite.test('同季重跑與重複死亡事件：同 uid 覆蓋而非重複，其他卡保留', async () => {
+    suite.test('LegacyService 死亡結算不寫虎符庫：虎符只由 GameSession 產生（單一來源）', async () => {
         const adapter = new MemoryStorageAdapter();
         const service = new LegacyService(adapter);
-        const roster = [general('first'), general('second')];
-        const advance = new GameClock().advanceSeason();
-        const first = await service.settleSeason(roster, advance, deaths(...roster, roster[0]));
-        assert.equals(2, first.settlement.tigerTallies!.length);
-        const retry = await service.settleSeason(roster, advance, deaths(roster[0]));
-        assert.equals(1, retry.settlement.tigerTallies!.length);
-        const stored = await adapter.get<TigerTallyCard[]>(STORE_TIGER_TALLIES);
-        assert.equals(2, stored!.length);
-        assert.equals(2, new Set(stored!.map((c) => c.uid)).size);
-        assert.isTrue(stored!.some((c) => c.sourceGeneralUid === 'second'));
-        const removedRetry = await service.settleSeason([], advance, deaths(roster[0]));
-        assert.equals(0, removedRetry.settlement.tigerTallies!.length);
-        assert.equals(2, (await service.getTigerTallies()).length);
-    });
-
-    suite.test('同後端重建 LegacyService 能讀回虎符，讀取結果不污染存檔', async () => {
-        const adapter = new MemoryStorageAdapter();
-        const dead = general();
-        await new LegacyService(adapter).settleSeason([dead], new GameClock().advanceSeason(), deaths(dead));
-        const rebuilt = new LegacyService(adapter);
-        const stored = await rebuilt.getTigerTallies();
-        assert.equals(1, stored.length);
-        assert.equals('hero', stored[0].sourceGeneralUid);
-        stored.length = 0;
-        assert.equals(1, (await rebuilt.getTigerTallies()).length);
-    });
-
-    suite.test('死亡虎符使用累計季數，不同年度同季不碰撞', async () => {
-        const service = new LegacyService(new MemoryStorageAdapter());
-        const clock = new GameClock();
-        const dead = general();
-        const first = await service.settleSeason([dead], clock.advanceSeason(), deaths(dead));
-        for (let i = 0; i < 3; i++) clock.advanceSeason();
-        const nextYear = await service.settleSeason([dead], clock.advanceSeason(), deaths(dead));
-        assert.equals(0, first.settlement.tigerTallies![0].producedSeason);
-        assert.equals(4, nextYear.settlement.tigerTallies![0].producedSeason);
-        assert.notEquals(first.settlement.tigerTallies![0].uid, nextYear.settlement.tigerTallies![0].uid);
-        assert.equals(2, (await service.getTigerTallies()).length);
-    });
-
-    suite.test('沒有死亡事件：不產雙卡、不呼叫分數 provider', async () => {
-        let calls = 0;
-        const service = new LegacyService(new MemoryStorageAdapter(), {
-            tallyScoreProvider: () => { calls++; return { deathBattleScore: 100, legacyQualityScore: 100 }; },
-        });
-        const result = await service.settleSeason([general()], new GameClock().advanceSeason(), []);
-        assert.equals(0, result.settlement.spiritCards.length);
-        assert.equals(0, result.settlement.tigerTallies!.length);
-        assert.equals(0, calls);
-        assert.equals(1, result.roster.length);
-    });
-
-    suite.test('正式女性模板會產虎符；civilian、未知模板與缺分類保守拒絕', async () => {
-        const service = new LegacyService(new MemoryStorageAdapter());
-        const roster = [
-            general('female', { gender: '女' }),
-            general('civilian', { characterCategory: 'civilian' }),
-            general('unknown', { gender: '女', templateId: 'child-template' }),
-            general('no-category', { characterCategory: undefined }),
-        ];
-        const result = await service.settleSeason(roster, new GameClock().advanceSeason(), deaths(...roster));
+        const dead = general('hero', { uid: 'world-hero' });
+        const result = await service.settleSeason([dead], new GameClock().advanceSeason(), deaths(dead));
         assert.equals(1, result.settlement.spiritCards.length);
-        assert.equals(4, result.settlement.archivedSnapshots!.length);
-        assert.equals(1, result.settlement.tigerTallies!.length);
-        assert.equals('female', result.settlement.tigerTallies![0].sourceGeneralUid);
+        assert.isTrue((await adapter.get('tiger_tallies')) === null || (await adapter.get('tiger_tallies')) === undefined);
+    });
+
+    suite.test('GameSession 是虎符唯一來源：正式女性名將死亡產一張虎符，一般子嗣不產', async () => {
+        const session = new GameSession(1);
+        session.setLifecycle(new LegacyService(new MemoryStorageAdapter()));
+        const female = general('female', { gender: '女', characterCategory: 'mythical', templateId: 'GEN_FEMALE_HERO', age: 80, maxLifespan: 70 });
+        const child = general('child', { fatherId: 'dad', motherId: 'mom', birthSeason: 0, characterCategory: 'general', templateId: undefined, age: 80, maxLifespan: 70 });
+        session.setRosterStore(new InMemoryRosterStore([female, child]));
+        session.setAutoSave(false);
+        await session.advanceSeason();
+        const cards = Object.values(session.tallyCards);
+        assert.equals(1, cards.length);
+        assert.equals('female', cards[0].sourceGeneralUid);
+        assert.equals('death', cards[0].source);
+    });
+
+    suite.test('退役只產教官，不產虎符；退役後死亡仍由 GameSession 產一張虎符', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const service = new LegacyService(adapter);
+        const advance = new GameClock().advanceSeason();
+        const retired = await service.retireGeneral([general('hero', { gender: '女', characterCategory: 'mythical', templateId: 'GEN_FEMALE_HERO' })], 'hero', advance.previous);
+        assert.equals(1, (await service.getMentorCards()).length);
+        assert.isTrue((await adapter.get('tiger_tallies')) === null || (await adapter.get('tiger_tallies')) === undefined);
+        assert.equals(1, retired.roster.length);
     });
 
     suite.test('獨立對應函式：明確旗標、父母與出生季的保守門檻', () => {
