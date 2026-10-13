@@ -33,6 +33,7 @@ import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacySer
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
+import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
@@ -238,6 +239,7 @@ export class GameSession {
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
+    private _onboarding: OnboardingState = { ...FRESH_ONBOARDING };
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 武將 id → 虎符忠誠度狀態（TRP-09） */
@@ -282,6 +284,23 @@ export class GameSession {
     }
 
     /** 道具庫存（唯讀副本） */
+    /** 新手引導進度（只讀副本）；讀檔後由存檔還原 */
+    public get onboarding(): OnboardingState {
+        return { ...this._onboarding };
+    }
+
+    /**
+     * 確認一段新手引導已看過。依序確認，跳段或重複被拒（回傳 ok=false 且不存檔）。
+     * 成功時自動存檔，讓關掉遊戲再開也不會重看。
+     */
+    public async acknowledgeOnboarding(segmentId: 'fate' | 'growth' | 'legacy'): Promise<OnboardingResult> {
+        const result = acknowledgeOnboardingSegment(this._onboarding, segmentId);
+        if (!result.ok) return result;
+        this._onboarding = result.state;
+        if (this._autoSave && this._save) await this.save();
+        return result;
+    }
+
     public get inventory(): PlayerInventory {
         return { ...this._inventory };
     }
@@ -1033,6 +1052,7 @@ export class GameSession {
             military: this.military,
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
+            onboarding: { ...this._onboarding },
         };
     }
 
@@ -1062,6 +1082,7 @@ export class GameSession {
         // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
         this._nurture?.restoreState(snapshot.nurture);
+        this._onboarding = normalizeOnboardingState(snapshot.onboarding);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };

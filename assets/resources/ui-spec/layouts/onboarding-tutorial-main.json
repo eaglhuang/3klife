@@ -1,0 +1,103 @@
+{
+  "id": "onboarding-tutorial-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "OnboardingTutorialRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "TutorialBackdrop",
+        "id": "tutorialBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "tutorial.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "TutorialCard",
+        "id": "tutorialCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 900,
+        "height": 420,
+        "skinSlot": "tutorial.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "TutorialStep",
+            "id": "tutorialStep",
+            "widget": {
+              "top": 24,
+              "left": 32
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "tutorial.label.meta",
+            "width": 300
+          },
+          {
+            "type": "label",
+            "name": "TutorialText",
+            "id": "tutorialText",
+            "widget": {
+              "top": 90,
+              "left": 48,
+              "right": 48
+            },
+            "height": 180,
+            "text": "",
+            "styleSlot": "tutorial.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnNextTutorial",
+            "id": "btnNextTutorial",
+            "widget": {
+              "bottom": 28,
+              "hCenter": true
+            },
+            "width": 240,
+            "height": 64,
+            "skinSlot": "tutorial.button.confirm.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnNextTutorialLabel",
+                "id": "btnNextTutorialLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 56,
+                "text": "下一步",
+                "styleSlot": "tutorial.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
