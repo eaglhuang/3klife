@@ -49,7 +49,7 @@ export function createBattleAptitudeSuite(): TestSuite {
             assert.isTrue(APTITUDE_MODIFIERS[grades[i]].acc <= APTITUDE_MODIFIERS[grades[i - 1]].acc);
         }
         assert.equals(0, APTITUDE_MODIFIERS.B.atk, 'B 級普通、無修正');
-        assert.equals(-0.3, APTITUDE_MODIFIERS.D.atk);
+        assert.equals(-0.25, APTITUDE_MODIFIERS.D.atk);
         assert.equals(0.2, APTITUDE_MODIFIERS.S.def);
     });
 
@@ -86,7 +86,8 @@ export function createBattleAptitudeSuite(): TestSuite {
             { troopAptitude: { CAVALRY: 'D' }, terrainAptitude: { MOUNTAIN: 'D' }, weatherAptitude: { NIGHT: 'C' } },
             { troopType: 'cavalry', terrain: 'mountain', weather: 'night' },
         );
-        near(0.7 * 0.9 * 0.7, worst.attackMultiplier);
+        // round3((1−0.25) × (1−0.1) × (1−0.25)) = round3(0.50625) = 0.506
+        near(0.506, worst.attackMultiplier);
         assert.equals(-4, worst.moveDelta);
         // 地形 D 命中 −0.15 + 天氣 C 命中 0（F-5 APTITUDE_ACC）
         near(-0.15, worst.accuracyDelta);
