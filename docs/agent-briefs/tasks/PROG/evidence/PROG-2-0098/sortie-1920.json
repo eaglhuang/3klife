@@ -1,0 +1,54 @@
+{
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "flow": {
+    "name": "sortie-shot",
+    "completed": true,
+    "prediction": {
+      "text": "攻方勝率 29%（攻方劣勢）· 粗估",
+      "width": 936,
+      "fontSize": 22,
+      "overflow": 2
+    },
+    "clicks": [
+      {
+        "name": "BtnStart",
+        "x": 960,
+        "y": 620
+      },
+      {
+        "name": "GameplayGacha",
+        "x": 1106,
+        "y": 1022
+      },
+      {
+        "name": "GachaDs3_div_48",
+        "x": 1064,
+        "y": 980
+      },
+      {
+        "name": "GachaPullResult_div_412",
+        "x": 624.5,
+        "y": 960.5
+      },
+      {
+        "name": "GachaReturnToLobby",
+        "x": 114.00000000000003,
+        "y": 50
+      },
+      {
+        "name": "LeadGeneralButton0",
+        "x": 191.99999999999994,
+        "y": 675
+      },
+      {
+        "name": "OpenSortieButton",
+        "x": 191.99999999999994,
+        "y": 851
+      }
+    ]
+  },
+  "errorCount": 0
+}

@@ -41,7 +41,7 @@ import {
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { DEFAULT_TROOP_STATS } from '../assets/scripts/battle/runtime/BattleUnitSpawner';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
-import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { TerrainType } from '../assets/scripts/shared/CommonEnums';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -285,21 +285,55 @@ export function createSortieDeploySuite(): TestSuite {
         const enemyGeneral = new GeneralUnit({ id: 'lu-bu', name: 'lu-bu', faction: Faction.Enemy, hp: 1000, maxSp: 100, initialSp: 100, str: 100, int: 90, lea: 90, skillId: 'lu-bu-rampage', battlePrimarySkillId: 'lu-bu-rampage' });
         ctrl.initBattle(playerGeneral, enemyGeneral);
         ctrl.configureSortie({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
-        const anchor = new TroopUnit('enemy-anchor', TroopType.Infantry, Faction.Enemy, { hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
+        const anchor = new TroopUnit('enemy-anchor', TroopType.Infantry, Faction.Enemy, { hp: 50000, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
         anchor.moveTo(2, 3);
         ctrl.state.addUnit(anchor);
         playerGeneral.currentSp = playerGeneral.maxSp;
 
+        let effects = 0, spends = 0;
+        const off = services().event.on(EVENT_NAMES.GeneralSkillEffect, () => { effects += 1; });
+        const spend = ctrl.trySpendTacticPoints.bind(ctrl);
+        ctrl.trySpendTacticPoints = cost => { spends += 1; return spend(cost); };
         assert.equals(DEFAULT_TACTIC_TP_COST, getTacticTpCost(null));
         ctrl['sortie'].tacticCurrent = DEFAULT_TACTIC_TP_COST - 1;
         const refused = ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
         assert.equals(false, refused);
         assert.equals(playerGeneral.maxSp, playerGeneral.currentSp, '點數不足不扣精力');
+        assert.equals(DEFAULT_TACTIC_TP_COST - 1, ctrl.getSortieState()!.tacticCurrent);
+        assert.equals(0, effects, '不足不產生效果');
+        assert.equals(0, spends, '不足不進扣點入口');
+        assert.equals(false, ctrl.getPlayerTacticPointState().enabled);
 
         ctrl['sortie'].tacticCurrent = 40;
         const cast = ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
         assert.equals(true, cast);
         assert.equals(40 - DEFAULT_TACTIC_TP_COST, ctrl.getSortieState()!.tacticCurrent);
+        assert.equals(1, spends, '成功只扣一次');
+        assert.greaterOrEqual(1, effects);
+        ctrl['sortie']!.tacticCurrent = DEFAULT_TACTIC_TP_COST - 1;
+        ctrl.advanceTurn(); ctrl.finalizeAdvanceTurn();
+        assert.equals(true, ctrl.getPlayerTacticPointState().enabled, '回合回復後可支付');
+        playerGeneral.currentSp = playerGeneral.maxSp;
+        assert.equals(true, ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' }));
+        assert.equals(2, spends, '回復後施放仍只扣一次');
+        off();
+    });
+
+    suite.test('內建 demo 無帳本：實際施放不受計謀點限制', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        const pg = new GeneralUnit({ id: 'guan-yu', name: 'demo', faction: Faction.Player, hp: 1000,
+            maxSp: 100, initialSp: 100, str: 100, int: 90, lea: 90, skillId: 'guan-yu-slash', battlePrimarySkillId: 'guan-yu-slash' });
+        const eg = new GeneralUnit({ id: 'enemy', name: 'enemy', faction: Faction.Enemy, hp: 1000 });
+        ctrl.initBattle(pg, eg);
+        pg.currentSp = pg.maxSp;
+        const target = new TroopUnit('demo-target', TroopType.Infantry, Faction.Enemy,
+            { hp: 5000, attack: 30, defense: 10, moveRange: 1, attackRange: 1 });
+        target.moveTo(2, 3); ctrl.state.addUnit(target);
+        assert.equals(null, ctrl.getSortieState());
+        assert.equals(true, ctrl.getPlayerTacticPointState().enabled, 'demo point availability');
+        assert.equals(true, ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: target.id }), 'demo actual cast');
+        assert.equals(null, ctrl.getSortieState());
     });
 
     suite.test('普通小兵部署：扣 300 兵與 5 糧，單位攻擊為基礎 40%，不影響一般兵種', () => {

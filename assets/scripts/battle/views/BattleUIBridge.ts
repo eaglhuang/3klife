@@ -1,3 +1,4 @@
+import { buildTacticSummary } from './BattleSceneLoader';
 /**
  * BattleUIBridge.ts — 戰鬥 UI 連結器
  *
@@ -201,6 +202,8 @@ export class BattleUIBridge {
     const c = this.ctx;
     if (!c.ctrl) return;
     const state = c.ctrl.state;
+    if (state.playerGeneral) c.battleScenePanel?.setTacticSummary(
+      buildTacticSummary(state.playerGeneral).label, c.ctrl.getPlayerTacticPointState());
     // 棋盤格狀態與兵種渲染（對應原 BattleScene.refreshBattleViews）
     c.boardRenderer?.renderState(state);
     c.unitRenderer?.renderState(state);
@@ -485,6 +488,7 @@ export class BattleUIBridge {
   }
 
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType }): void {
+    this.refreshBattleViews();
     const skillId = data.skillId ?? data.skillName ?? null;
     if (!skillId) return;
     this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType));
