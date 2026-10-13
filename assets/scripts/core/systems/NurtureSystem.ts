@@ -23,6 +23,7 @@ import { effectiveGrowthModifier } from './Unveiling';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
+import { MENTOR_STAR_TABLE } from './MentorBreakthrough';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -54,7 +55,7 @@ export const MENTOR_BURST_MULTIPLIER = 1.5;
 /** 同格多一位教官 +10% */
 export const SYNERGY_BONUS_PER_EXTRA_MENTOR = 0.1;
 /** 教官星等 ★0~★5 的訓練效果倍率（教官系統 §F-4） */
-export const MENTOR_STAR_EFFECT: readonly number[] = [1, 1.05, 1.1, 1.15, 1.2, 1.3];
+export const MENTOR_STAR_EFFECT: readonly number[] = MENTOR_STAR_TABLE.map(entry => entry.trainingMultiplier);
 
 /** 訓練失敗時獲得負面因子的機率；規格只說「有機率」，暫定 50% */
 export const NEGATIVE_FACTOR_CHANCE = 0.5;
