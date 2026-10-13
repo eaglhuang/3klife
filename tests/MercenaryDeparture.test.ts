@@ -9,6 +9,7 @@ import {
     settleUpkeepDeparture,
     startCooldownAfterBond,
     startPoolCooldown,
+    isGeneralAvailableForPool,
 } from '../assets/scripts/core/systems/MercenaryDeparture';
 
 const TRIAL_DONE: MercenaryRecord = Object.freeze({ uid: 'merc-1', status: 'Trial' as const, daysLeft: 0 });
@@ -131,6 +132,24 @@ export function createMercenaryDepartureSuite(): TestSuite {
         assert.equals(3, result.events.length);
         assert.isFalse(isAvailableForPool('merc-1', 20 + POOL_COOLDOWN_DAYS - 1, result.cooldowns));
         assert.isTrue(isAvailableForPool('merc-1', 20 + POOL_COOLDOWN_DAYS, result.cooldowns));
+    });
+
+    suite.test('同武將 30 天內不再出現：換新 uid 的傭兵也擋下（以武將為單位）', () => {
+        const expired = settleTrialRollover({ ...TRIAL_DONE, generalId: 'gen-1' }, 20, []);
+        assert.isFalse(isGeneralAvailableForPool('gen-1', 49, expired.cooldowns));
+        assert.isTrue(isGeneralAvailableForPool('gen-1', 50, expired.cooldowns));
+        assert.isTrue(isGeneralAvailableForPool('gen-2', 49, expired.cooldowns));
+    });
+
+    suite.test('舊冷卻紀錄沒有 generalId 時不擋任何武將', () => {
+        const legacy = startPoolCooldown([], 'merc-1', 10);
+        assert.isTrue(isGeneralAvailableForPool('gen-1', 11, legacy));
+    });
+
+    suite.test('結義也寫入武將冷卻：startCooldownAfterBond 帶 generalId', () => {
+        const cooldowns = startCooldownAfterBond('merc-1', 10, [], 'gen-1');
+        assert.isFalse(isGeneralAvailableForPool('gen-1', 39, cooldowns));
+        assert.isTrue(isGeneralAvailableForPool('gen-1', 40, cooldowns));
     });
 
     return suite;

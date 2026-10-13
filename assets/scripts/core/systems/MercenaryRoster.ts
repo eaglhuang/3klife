@@ -66,6 +66,6 @@ export function bondMercenaryToRoster(
         pointsSpent: points.pointsSpent,
         general: generalFromBondStats(template, stats),
         mercenary: { ...bonded.state, affection: points.wallet.bondPoints },
-        cooldowns: startCooldownAfterBond(mercenary.uid, today, cooldowns),
+        cooldowns: startCooldownAfterBond(mercenary.uid, today, cooldowns, template.id),
     };
 }
