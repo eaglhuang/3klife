@@ -79,6 +79,8 @@ import { createDeployDragDebugSuite } from './DeployDragDebug.test';
 import { createBattleSkillExecutorSuite } from './BattleSkillExecutor.test';
 import { createBattleSkillTargetSelectorSuite } from './BattleSkillTargetSelector.test';
 import { createBattleSkillDamageResolverSuite } from './BattleSkillDamageResolver.test';
+import { createStageChainProgressSuite } from './StageChainProgress.test';
+import { createStageProgressSaveSuite } from './StageProgressSave.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -177,6 +179,8 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillExecutorSuite());
     runner.register(createBattleSkillTargetSelectorSuite());
     runner.register(createBattleSkillDamageResolverSuite());
+    runner.register(createStageChainProgressSuite());
+    runner.register(createStageProgressSaveSuite());
 
     // Deprecated API 靜態掃描
     // __dirname = tests/  →  ../ = 專案根目錄

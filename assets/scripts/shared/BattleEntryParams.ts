@@ -21,6 +21,10 @@ export interface EncounterConfig {
   playerEquipment?: string[];
   /** 敵軍裝備 ID 列表（預留） */
   enemyEquipment?: string[];
+  /** 所屬連環破主鏈 id（PROG-2-0215）；沒有就是獨立關卡 */
+  chainId?: string;
+  /** 主鏈內順序，越小越前面（PROG-2-0215） */
+  order?: number;
 }
 
 /**

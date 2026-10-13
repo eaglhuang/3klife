@@ -29,7 +29,7 @@ import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacySer
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
-import { createPlayerSaveSnapshot, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeClearedStageIds, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import type { NurtureState } from '../services/NurtureService';
 import {
     awakenFactor,
@@ -152,6 +152,8 @@ export interface RecordBattleOptions {
     sortie?: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null;
     /** 武將 id → 本場表現（擊殺 / 傷害 / 承傷 / 治療），累加進戰績 */
     performance?: Readonly<Record<string, BattlePerformance>>;
+    /** 本場的關卡 id；勝利時記入通關紀錄（連環破，PROG-2-0215） */
+    stageId?: string;
 }
 
 export interface AddGeneralsResult {
@@ -220,6 +222,8 @@ export class GameSession {
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
+    /** 已通關的關卡 id（連環破，PROG-2-0215） */
+    private _clearedStageIds: string[] = [];
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
 
@@ -263,6 +267,11 @@ export class GameSession {
     /** 累計名士占卜次數（覺醒占卜與子嗣預言都算，決定名士解鎖） */
     public get oracleCount(): number {
         return this._oracleCount;
+    }
+
+    /** 已通關的關卡 id（連環破，唯讀副本） */
+    public get clearedStageIds(): readonly string[] {
+        return [...this._clearedStageIds];
     }
 
     public isSageUnlocked(sageId: string): boolean {
@@ -332,6 +341,7 @@ export class GameSession {
         this._discoveryExp = 0;
         this._inventory = { ...STARTER_INVENTORY };
         this._oracleCount = 0;
+        this._clearedStageIds = [];
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
     }
@@ -765,6 +775,12 @@ export class GameSession {
         result: BattleResult,
         options: RecordBattleOptions = {},
     ): Promise<BattleRecordResult> {
+        // 勝利才記通關；同一關重複通關不會重複記入
+        const clearedBefore = this._clearedStageIds.length;
+        if (result === 'player-win' && options.stageId) {
+            this._clearedStageIds = normalizeClearedStageIds([...this._clearedStageIds, options.stageId]);
+        }
+        const clearChanged = this._clearedStageIds.length !== clearedBefore;
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
@@ -772,6 +788,9 @@ export class GameSession {
             performance: options.performance,
         });
         if (settlement.entries.length === 0) {
+            if (clearChanged && this._autoSave && this._save) {
+                await this.save();
+            }
             return { ...settlement, awakenings: [] };
         }
         if (options.sortie) {
@@ -819,7 +838,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -848,6 +867,7 @@ export class GameSession {
         this._discoveryExp = progress.exp;
         this._inventory = normalizeInventory(snapshot.inventory);
         this._oracleCount = snapshot.oracleCount ?? 0;
+        this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);

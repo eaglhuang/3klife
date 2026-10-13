@@ -72,6 +72,8 @@ export interface BattleSceneContext {
   ctrl:              BattleController | null;
   pg:                GeneralUnit | null;
   eg:                GeneralUnit | null;
+  /** 本場的關卡 id（連環破，勝利時記入通關紀錄） */
+  encounterId:       string | null;
   isAdvancingTurn:   boolean;
   isDuelPanelActive: boolean;
   combatVisualQueue: CombatVisualTask[];
@@ -98,7 +100,7 @@ export function createBattleSceneContext(): BattleSceneContext {
     hud: null, deployRuntime: null, battleLogPanel: null,
     battleScenePanel: null, boardRenderer: null, unitRenderer: null,
     resultPopup: null, duelChallengePanel: null,
-    ctrl: null, pg: null, eg: null,
+    ctrl: null, pg: null, eg: null, encounterId: null,
     isAdvancingTurn: false, isDuelPanelActive: false,
     combatVisualQueue: [], isDrainingCombatVisual: false,
     combatVisualTaskId: 0,
@@ -559,7 +561,8 @@ export class BattleUIBridge {
     }
     const specialActions = actions.length > 0 ? { [pgId]: actions } : undefined;
     if (result === 'player-win' && sortie) this._captureEnemyGeneral();
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance } }).then((settlement) => {
+    const stageId = this.ctx.encounterId ?? undefined;
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);

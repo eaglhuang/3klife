@@ -167,6 +167,7 @@ export class BattleScene extends Component {
       const battleParams = this._resolveBattleParams();
       this._battleParams = battleParams;
       this.currentEncounterId = battleParams.encounterId;
+      this.sceneContext.encounterId = battleParams.encounterId;
 
       // 3. 從 encounters.json 讀取遭遇戰設定
       const encounter = await loadEncounter(this.currentEncounterId);
