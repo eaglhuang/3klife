@@ -34,6 +34,7 @@ import { createHistoricalFlagSuite } from './HistoricalFlag.test';
 import { createStarterRosterSuite } from './StarterRoster.test';
 import { createSpiritRelicSuite } from './SpiritRelic.test';
 import { createLifespanCostSuite } from './LifespanCost.test';
+import { createMercenaryBondSuite } from './MercenaryBond.test';
 import { createSpiritRelicUniqueSuite } from './SpiritRelicUnique.test';
 import { createLegacyTallySuite } from './LegacyTally.test';
 import { createBattleDeckLoadingSuite } from './BattleDeckLoading.test';
@@ -84,7 +85,6 @@ import { createDeployDragDebugSuite } from './DeployDragDebug.test';
 import { createBattleSkillExecutorSuite } from './BattleSkillExecutor.test';
 import { createBattleSkillTargetSelectorSuite } from './BattleSkillTargetSelector.test';
 import { createBattleSkillDamageResolverSuite } from './BattleSkillDamageResolver.test';
-import { createStageChainProgressSuite } from './StageChainProgress.test';
 import { createStageProgressSaveSuite } from './StageProgressSave.test';
 import { createTigerTallyHoldingsSuite } from './TigerTallyHoldings.test';
 import { createTigerTallyWiringSuite } from './TigerTallyWiring.test';
@@ -192,11 +192,11 @@ if (typeof window === 'undefined') {
     runner.register(createBattleSkillExecutorSuite());
     runner.register(createBattleSkillTargetSelectorSuite());
     runner.register(createBattleSkillDamageResolverSuite());
-    runner.register(createStageChainProgressSuite());
     runner.register(createStageProgressSaveSuite());
     runner.register(createTigerTallyHoldingsSuite());
     runner.register(createTigerTallyWiringSuite());
     runner.register(createOrderLoyaltyRefusalSuite());
+    runner.register(createMercenaryBondSuite());
 
     // Deprecated API 靜態掃描
     // __dirname = tests/  →  ../ = 專案根目錄
