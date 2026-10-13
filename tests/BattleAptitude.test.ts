@@ -88,7 +88,8 @@ export function createBattleAptitudeSuite(): TestSuite {
         );
         near(0.7 * 0.9 * 0.7, worst.attackMultiplier);
         assert.equals(-4, worst.moveDelta);
-        near(-0.2, worst.accuracyDelta);
+        // 地形 D 命中 −0.15 + 天氣 C 命中 0（F-5 APTITUDE_ACC）
+        near(-0.15, worst.accuracyDelta);
     });
 
     suite.test('粉色因子→適性：★0~3 = D/C/B/A，≥5 位祖先同因子升一級（最高 S）', () => {
