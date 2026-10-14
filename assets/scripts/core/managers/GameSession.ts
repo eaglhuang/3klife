@@ -34,7 +34,9 @@ import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
-import { bondMercenaryToRoster, type RosterBondResult } from '../systems/MercenaryRoster';
+import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
+import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
+import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
@@ -70,7 +72,7 @@ import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
@@ -230,6 +232,9 @@ function toSortieMember(g: GeneralConfig): SortieMember {
 
 /** 虎符忠誠度初始值（規格未定，暫定）；武將沒有紀錄時以此起算 */
 const TALLY_LOYALTY_INITIAL = 50;
+
+/** 試用券招募結果：沿用 TrialTicketResult，另加上 uid 重複的拒絕原因。 */
+export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: TrialTicketRejectReason | 'uid-taken' };
 
 /** 單一遊戲日的傭兵結算結果：日序與本日產生的離隊事件（告別信等）。 */
 export interface MercenaryDayReport {
@@ -453,6 +458,36 @@ export class GameSession {
         this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    /**
+     * 試用券招募（MERC-02）：消耗背包 1 張試用券，產生 Trial 傭兵並建立薪水紀錄，自動存檔。
+     * uid 已存在、無試用券或武將 id 為空時拒絕，失敗不改任何狀態。uid 由呼叫端提供。
+     */
+    public async hireTrialMercenary(uid: string, template: GeneralConfig): Promise<HireTrialResult> {
+        const wallet = { trialTickets: this.itemCount(ITEM_TRIAL_TICKET) };
+        if (this._mercenaries.mercenaries.some((m) => m.uid === uid)) {
+            return { ok: false, reason: 'uid-taken', wallet };
+        }
+        const result = useTrialTicket(wallet, uid, statsOfTemplate(template), template.id);
+        if (!result.ok || !result.mercenary) {
+            return result;
+        }
+        const inventory = consumeItem(this._inventory, ITEM_TRIAL_TICKET);
+        if (!inventory) {
+            return { ok: false, reason: 'no-ticket', wallet };
+        }
+        this._inventory = inventory;
+        this._mercenaries = {
+            ...this._mercenaries,
+            mercenaries: [...this._mercenaries.mercenaries, result.mercenary],
+            upkeep: [...this._mercenaries.upkeep, createUpkeepState(uid)],
+        };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return result;
     }
 
     public get femaleSources(): Readonly<Record<string, FemaleSource>> {

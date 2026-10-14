@@ -16,10 +16,13 @@
 export const ITEM_ORACLE_TOKEN = 'ITEM_ORACLE';
 /** 轉職令（20 歲追加副職；PROG-2-0226 接線）。起始庫存為 0，靠商城與活動取得。 */
 export const ITEM_JOB_CHANGE_ORDER = 'ITEM_JOB_ORDER';
+/** 試用券（MERC-02 招募 Trial 傭兵；PROG-2-0327 接線）。起始庫存為 0（暫定）。 */
+export const ITEM_TRIAL_TICKET = 'ITEM_TRIAL_TICKET';
 
 export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_ORACLE_TOKEN]: '求籤令',
     [ITEM_JOB_CHANGE_ORDER]: '轉職令',
+    [ITEM_TRIAL_TICKET]: '試用券',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;
