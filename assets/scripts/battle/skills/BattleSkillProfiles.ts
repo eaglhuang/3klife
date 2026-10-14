@@ -6,6 +6,8 @@ export type BattleSkillEffectKind = 'damage' | 'heal' | 'control' | 'link' | 'co
 
 export interface BattleSkillProfile {
   battleSkillId: string;
+  /** 戰法標籤（PROG-2-0406）：例如 fire 火計，供天氣強約束判定 */
+  tags?: readonly string[];
   targetMode: BattleSkillTargetMode;
   manualTargeting?: boolean;
   autoAimMode?: BattleSkillAutoAimMode;
@@ -120,6 +122,7 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
   },
   'zhou-yu-inferno': {
     battleSkillId: 'zhou-yu-inferno',
+    tags: ['fire'],
     targetMode: BattleSkillTargetMode.Tile,
     manualTargeting: false,
     autoAimMode: 'occupied-tile',

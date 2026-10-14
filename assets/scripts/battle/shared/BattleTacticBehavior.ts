@@ -4,6 +4,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode';
+import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -56,9 +57,11 @@ function applyFloodAttackTerrain(state: BattleState): void {
     const floodDepthStart = lane === 0 || lane === GAME_CONFIG.GRID_LANES - 1
       ? FLOOD_DEPTH_START + 1
       : FLOOD_DEPTH_START;
-    const floodDepthEnd = lane === 0 || lane === GAME_CONFIG.GRID_LANES - 1
-      ? FLOOD_DEPTH_END
-      : FLOOD_DEPTH_END + 1;
+    // 雨天水攻範圍擴大（PROG-2-0406）；不超過最後一格
+    const floodDepthEnd = Math.min(
+      GAME_CONFIG.GRID_DEPTH - 1,
+      (lane === 0 || lane === GAME_CONFIG.GRID_LANES - 1 ? FLOOD_DEPTH_END : FLOOD_DEPTH_END + 1) + floodDepthBonus(state.weather),
+    );
 
     for (let depth = floodDepthStart; depth <= floodDepthEnd; depth++) {
       const cell = state.getCell(lane, depth);
