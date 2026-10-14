@@ -189,6 +189,77 @@
             }
           }
         ]
+      },
+      "Expedition": {
+        "Last_Refresh_At": "2026-10-14T06:00:00",
+        "Tasks": [
+          {
+            "Task_ID": "E-EASY-01",
+            "Task_Title": "中原邊境巡防",
+            "Task_Brief": "中原邊境巡防（遠征）",
+            "Task_Detail": "中原邊境巡防（範例資料，正式文案待企劃提供）",
+            "Difficulty": "EASY",
+            "Required_Rank": 0,
+            "Intel_Reveal_Percent": 0,
+            "Selected_General_UID": null,
+            "Is_Accepted": false,
+            "Suggested_General_UID": null,
+            "Volunteer_General_UIDs": [],
+            "AI_Assign_Enabled": false,
+            "Available_Actions": [
+              "ASSIGN"
+            ],
+            "Rewards": {
+              "Base": [
+                {
+                  "Type": "SILVER",
+                  "Amount": 600
+                }
+              ],
+              "Perfect_Bonus": []
+            },
+            "Costs": {
+              "GRAIN": 0,
+              "TROOPS": 0,
+              "SILVER": 0,
+              "TIME_MINUTES": 0
+            },
+            "Required_Stage": 1
+          },
+          {
+            "Task_ID": "E-NORMAL-01",
+            "Task_Title": "渡河奪取渡口",
+            "Task_Brief": "渡河奪取渡口（遠征）",
+            "Task_Detail": "渡河奪取渡口（範例資料，正式文案待企劃提供）",
+            "Difficulty": "NORMAL",
+            "Required_Rank": 0,
+            "Intel_Reveal_Percent": 0,
+            "Selected_General_UID": null,
+            "Is_Accepted": false,
+            "Suggested_General_UID": null,
+            "Volunteer_General_UIDs": [],
+            "AI_Assign_Enabled": false,
+            "Available_Actions": [
+              "ASSIGN"
+            ],
+            "Rewards": {
+              "Base": [
+                {
+                  "Type": "SILVER",
+                  "Amount": 1200
+                }
+              ],
+              "Perfect_Bonus": []
+            },
+            "Costs": {
+              "GRAIN": 0,
+              "TROOPS": 0,
+              "SILVER": 0,
+              "TIME_MINUTES": 0
+            },
+            "Required_Stage": 2
+          }
+        ]
       }
     }
   }
