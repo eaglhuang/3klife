@@ -8,8 +8,6 @@ import {
     applyFateWave,
     computeEpMvp,
     epRatingLabel,
-    FATE_WAVE_RANDOM_MAX,
-    FATE_WAVE_RANDOM_MIN,
     rollFateWave,
     BreedingGeneral,
 } from '../assets/scripts/core/systems/BreedingSystem';
@@ -38,23 +36,35 @@ function graphFor(ids: string[]): BloodlineGraph {
 export function createFateWaveSuite(): TestSuite {
     const suite = new TestSuite('FateWave (天命波動接入 EP PROG-2-0511)');
 
-    suite.test('區間 Random(-0.5, 1.5)：亂數 0 → 下限，接近 1 → 上限', () => {
-        assert.equals(-0.5, FATE_WAVE_RANDOM_MIN);
-        assert.equals(1.5, FATE_WAVE_RANDOM_MAX);
-        assert.isTrue(near(60 * -0.5, rollFateWave(60, () => 0)));
-        assert.isTrue(near(60 * 1.5, rollFateWave(60, () => 1)));
+    suite.test('高 LUK（> 80）：亂數 0 → +5，接近 1 → +15', () => {
+        assert.isTrue(near(5, rollFateWave(90, () => 0)));
+        assert.isTrue(near(15, rollFateWave(90, () => 1)));
+        assert.isTrue(near(5, rollFateWave(80.5, () => 0)));
     });
 
-    suite.test('LUK 為 0、缺省、負數、非有限值時波動為 0', () => {
-        assert.equals(0, rollFateWave(0, () => 0.7));
-        assert.equals(0, rollFateWave(-30, () => 0.7));
-        assert.equals(0, rollFateWave(NaN, () => 0.7));
+    suite.test('低 LUK（< 40）：亂數 0 → -10，接近 1 → -5', () => {
+        assert.isTrue(near(-10, rollFateWave(30, () => 0)));
+        assert.isTrue(near(-5, rollFateWave(39.5, () => 1)));
+    });
+
+    suite.test('中段（40～80 含邊界）波動為 0 且不擲骰', () => {
+        const noDraw = () => { throw new Error('should not draw'); };
+        for (const luk of [40, 60, 80]) {
+            assert.equals(0, rollFateWave(luk, noDraw));
+        }
+    });
+
+    suite.test('LUK 為 0、缺省、負數、非有限值視為無資料：波動 0 且不擲骰', () => {
+        const noDraw = () => { throw new Error('should not draw'); };
+        for (const luk of [0, -30, NaN, Infinity]) {
+            assert.equals(0, rollFateWave(luk, noDraw));
+        }
     });
 
     suite.test('注入相同隨機序列，波動可重現', () => {
-        const first = rollFateWave(80, () => 0.2);
-        const second = rollFateWave(80, () => 0.2);
-        assert.isTrue(near(first, 80 * (-0.5 + 0.2 * 2)));
+        const first = rollFateWave(90, () => 0.2);
+        const second = rollFateWave(90, () => 0.2);
+        assert.isTrue(near(first, 5 + 0.2 * 10));
         assert.isTrue(near(first, second));
     });
 
@@ -93,7 +103,7 @@ export function createFateWaveSuite(): TestSuite {
         assert.equals('conceived', none.outcome);
         assert.equals(0, none.ep?.fate ?? -1);
 
-        const high = runWith(80);
+        const high = runWith(90);
         assert.equals('conceived', high.outcome);
         assert.isTrue((high.ep?.fate ?? 0) !== 0, '高 LUK 父母的子嗣有天命波動');
         const ep = high.ep!;
