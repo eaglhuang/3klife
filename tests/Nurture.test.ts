@@ -1048,3 +1048,57 @@ export function createNurtureSuite(): TestSuite {
 
     return suite;
 }
+
+/**
+ * 鏡像快照（NUR-02）：進入培育時複製資質層，培育中名冊本體不變，畢業才寫回。
+ * Unity 對照：像開 Prefab 的 Variant，變體複製一份數值；原 Prefab 不動，直到按「套用」才寫回。
+ */
+export function createNurtureMirrorSnapshotSuite(): TestSuite {
+    const suite = new TestSuite('NurtureMirrorSnapshot (NUR-02 鏡像快照與畢業寫回)');
+
+    suite.test('開場後改動名冊本體，快照資質層不跟著變', () => {
+        const store = new InMemoryRosterStore([readyChild('kid')]);
+        const service = new NurtureService(store, { random: seeded(5), currentSeason: () => 3, currentMode: () => GameTimeMode.Nurture });
+        const session = service.start('kid');
+        const talentBefore = session.talent.str;
+        store.replaceAll(store.getAll().map((g) => (g.id === 'kid' ? { ...g, str: 1 } : g)));
+        assert.equals(talentBefore, service.getSession('kid')!.talent.str, '快照不隨本體改動');
+    });
+
+    suite.test('培育期間名冊本體五維不變，畢業時才寫回實力層', () => {
+        const store = new InMemoryRosterStore([readyChild('kid')]);
+        const service = new NurtureService(store, { random: seeded(9), currentSeason: () => 12, currentMode: () => GameTimeMode.Nurture });
+        service.start('kid');
+        const beforeStr = (store.getAll().find((g) => g.id === 'kid') as unknown as { str: number }).str;
+        for (let i = 0; i < NURTURE_TOTAL_ROUNDS; i++) {
+            const current = service.getSession('kid')!;
+            service.train('kid', current.vigor < 45 ? 'rest' : TRAINING_KINDS[i % 5]);
+        }
+        const midStr = (store.getAll().find((g) => g.id === 'kid') as unknown as { str: number }).str;
+        assert.equals(beforeStr, midStr, '未畢業前本體不寫入');
+        service.graduate('kid');
+        const saved = store.getAll().find((g) => g.id === 'kid') as unknown as { graduationRating?: string };
+        assert.isTrue(!!saved.graduationRating, '畢業後名冊已寫回評級');
+    });
+
+    suite.test('MENT-09 鏡像鎖定：進行中培育的教官快照不受外部升星影響', () => {
+        const store = new InMemoryRosterStore([readyChild('kid')]);
+        const service = new NurtureService(store, { random: seeded(4), currentSeason: () => 3, currentMode: () => GameTimeMode.Nurture });
+        const mentor = makeMentor('guan', { stars: 1 });
+        service.start('kid', [mentor]);
+        mentor.stars = 5;
+        assert.equals(1, service.getSession('kid')!.mentors[0].stars!, '培育中教官星等不隨外部改動');
+    });
+
+    suite.test('MENT-09 同一教官不能同時在兩場培育', () => {
+        const store = new InMemoryRosterStore([readyChild('kid1'), readyChild('kid2')]);
+        const service = new NurtureService(store, { random: seeded(6), currentSeason: () => 3, currentMode: () => GameTimeMode.Nurture });
+        service.start('kid1', [makeMentor('guan')]);
+        const eligibility = service.checkStart('kid2', [makeMentor('guan')]);
+        assert.isTrue(eligibility.reasons.includes('mentor-locked'));
+        assert.isTrue(eligibility.lockedMentorIds.includes('guan'));
+        assert.throws(() => service.start('kid2', [makeMentor('guan')]));
+    });
+
+    return suite;
+}
