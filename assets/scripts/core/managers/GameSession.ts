@@ -1530,7 +1530,7 @@ export class GameSession {
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
-        const comradeChanged = this._recordBattleComrades(result);
+        const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
@@ -1586,12 +1586,12 @@ export class GameSession {
     }
 
     /**
-     * 共鬥（戰後）：出征編制的主將與參謀官／後勤官各記一筆戰友（battle-comrade）。
-     * 不等多武將出戰；ongoing 不記。回傳是否新增了任何關係（呼叫端負責存檔）。
+     * 共鬥（戰後）：本場有使用出征編制（options.sortie）時，出征主將與參謀官／後勤官各記一筆戰友（battle-comrade）。
+     * 不等多武將出戰；未出征或 ongoing 不記。回傳是否新增了任何關係（呼叫端負責存檔）。
      */
-    private _recordBattleComrades(result: BattleResult): boolean {
+    private _recordBattleComrades(result: BattleResult, usedSortie: boolean): boolean {
         const commander = this._leadGeneralId;
-        if (!commander || result === 'ongoing') return false;
+        if (!usedSortie || !commander || result === 'ongoing') return false;
         const support = this.getSortieSupportSummary(commander);
         const pairs = battleComradePairs(commander, [support.strategist?.id ?? null, support.deputy?.id ?? null]);
         const season = this._clock.state.totalSeasonsElapsed;

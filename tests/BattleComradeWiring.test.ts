@@ -39,7 +39,7 @@ export function createBattleComradeWiringSuite(): TestSuite {
         const session = readySession();
         assert.isTrue(await session.setLeadGeneral('lead-1'));
         assert.isTrue(session.setSortieSupport('strat-1', 'dep-1').ok);
-        await session.recordBattle(['lead-1'], 'player-win', { stageId: 'stage-1' });
+        await session.recordBattle(['lead-1'], 'player-win', { stageId: 'stage-1', sortie: { lostTroops: 0, foodSpent: 0 } });
         assert.equals(2, session.dynamicRelations.listFor('lead-1').length);
         assert.equals(1, session.dynamicRelations.listFor('strat-1').length);
         assert.equals(1, session.dynamicRelations.listFor('dep-1').length);
@@ -52,14 +52,22 @@ export function createBattleComradeWiringSuite(): TestSuite {
         assert.equals(0, session.dynamicRelations.listFor('lead-1').length);
     });
 
+    suite.test('有設定出征支援但本場未出征（沒有 sortie）時不記戰友', async () => {
+        const session = readySession();
+        await session.setLeadGeneral('lead-1');
+        session.setSortieSupport('strat-1', 'dep-1');
+        await session.recordBattle(['lead-1'], 'player-win', { stageId: 'stage-1' });
+        assert.equals(0, session.dynamicRelations.listFor('lead-1').length);
+    });
+
     suite.test('ongoing 不記戰友；同一編制重複戰鬥不重複記錄', async () => {
         const session = readySession();
         await session.setLeadGeneral('lead-1');
         session.setSortieSupport('strat-1', null);
-        await session.recordBattle(['lead-1'], 'ongoing');
+        await session.recordBattle(['lead-1'], 'ongoing', { sortie: { lostTroops: 0, foodSpent: 0 } });
         assert.equals(0, session.dynamicRelations.listFor('strat-1').length);
-        await session.recordBattle(['lead-1'], 'player-win');
-        await session.recordBattle(['lead-1'], 'enemy-win');
+        await session.recordBattle(['lead-1'], 'player-win', { sortie: { lostTroops: 0, foodSpent: 0 } });
+        await session.recordBattle(['lead-1'], 'enemy-win', { sortie: { lostTroops: 0, foodSpent: 0 } });
         assert.equals(1, session.dynamicRelations.listFor('strat-1').length);
     });
 
