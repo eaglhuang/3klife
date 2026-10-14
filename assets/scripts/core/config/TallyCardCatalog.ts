@@ -14,6 +14,7 @@ import type {
   SkillSourceType,
 } from '../../shared/SkillRuntimeContract';
 import type { TallyAffinityProfile, TallyCardData } from '../../shared/TallyCardContract';
+import type { TigerTallyCard } from '../models/TigerTallyCard';
 
 const TALLY_CARD_ART_RESOURCE_FALLBACK = 'ui/tiger-tally/card-art/troops';
 const TALLY_CARD_ART_RESOURCE_BY_TYPE: Record<TroopType, string> = {
@@ -272,4 +273,36 @@ export function getTallyCardSummaries(): Array<{ id: string; name: string; sub: 
     name: card.unitName,
     sub: card.unitSub,
   }));
+}
+
+/** 出陣參數：cardUid 是玩家持有的卡片實例 uid（星級與戰後經驗以它為鍵），templateId 是目錄卡 id（適性用） */
+export interface TallyDeployRef {
+    cardUid: string;
+    templateId: string;
+}
+
+/** 手牌卡的出陣參數；沒有目錄 id 時回傳 null（一般兵種） */
+export function tallyDeployRefOf(card: Pick<TallyCardData, 'tacticId' | 'instanceUid'>): TallyDeployRef | null {
+    if (!card.tacticId) return null;
+    return { cardUid: card.instanceUid ?? card.tacticId, templateId: card.tacticId };
+}
+
+/**
+ * 把手牌綁到玩家持有的卡片實例（PROG-2-0579）。
+ * 規則：卡組的每張目錄卡，依兵種（unitType）取用持有卡中第一張尚未綁定的實例（依 uid 字典序，結果穩定）；
+ * 同一張實例只綁一次；找不到同兵種的持有卡就不綁（instanceUid 保持 undefined，星級視為 1★、無戰後經驗）。
+ *
+ * Unity 對照：像把 UI 格子綁到 Inventory 裡的 ItemInstance，按類型挑第一個還沒被用掉的實例。
+ */
+export function bindHeldTallyInstances(
+    cards: readonly TallyCardData[],
+    held: Readonly<Record<string, Pick<TigerTallyCard, 'uid' | 'troopType'>>>,
+): TallyCardData[] {
+    const free = Object.keys(held).sort().map((key) => held[key]);
+    return cards.map((card) => {
+        const index = free.findIndex((instance) => instance.troopType === card.unitType);
+        if (index < 0) return { ...card };
+        const [instance] = free.splice(index, 1);
+        return { ...card, instanceUid: instance.uid };
+    });
 }
