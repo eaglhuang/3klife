@@ -181,8 +181,12 @@ export class BattleSkillDispatcher {
         : request.sourceType === SkillSourceType.SeedTactic ? 'active-tactic'
           : null;
     if (!action) return { allowed: true, reason: '' };
+    // 直接派發的 ownerUid 是陣營字串（Faction.Player / Faction.Enemy），不是單位 uid，兩種都要能解析
     const caster = this.context.state.units.get(request.ownerUid) ?? null;
-    const general = caster ? this.context.state.getGeneral(caster.faction) : null;
+    const faction = caster?.faction ?? (request.ownerUid as Faction);
+    const general = faction === Faction.Player || faction === Faction.Enemy
+      ? this.context.state.getGeneral(faction)
+      : null;
     if (!general) return { allowed: true, reason: '' };
     const band = vitalityBandOf(general.vitality, general.maxVitality);
     if (canPerformAction(band, action)) return { allowed: true, reason: '' };
