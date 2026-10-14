@@ -4,6 +4,8 @@ export class BattleTurnManager {
   public enemyFood = GAME_CONFIG.INITIAL_FOOD;
   public playerDeployCountThisTurn = 0;
   public readonly movedUnitIdsThisTurn = new Set<string>();
+  /** 撤退失敗的部隊：當回合不能再行動（PM 暫定），下一回合清空 */
+  public readonly actionBlockedUnitIdsThisTurn = new Set<string>();
   public readonly generalSwapUsedThisTurn: Record<Faction, boolean> = {
     [Faction.Player]: false,
     [Faction.Enemy]: false,
@@ -16,6 +18,7 @@ export class BattleTurnManager {
     this.enemyFood = GAME_CONFIG.INITIAL_FOOD;
     this.playerDeployCountThisTurn = 0;
     this.movedUnitIdsThisTurn.clear();
+    this.actionBlockedUnitIdsThisTurn.clear();
     this.generalSwapUsedThisTurn[Faction.Player] = false;
     this.generalSwapUsedThisTurn[Faction.Enemy] = false;
     this.buffConsumedSinceLastSpawn = true;
@@ -35,12 +38,23 @@ export class BattleTurnManager {
     this.enemyFood = Math.min(this.enemyFood + GAME_CONFIG.FOOD_PER_TURN, GAME_CONFIG.MAX_FOOD);
     this.playerDeployCountThisTurn = 0;
     this.movedUnitIdsThisTurn.clear();
+    this.actionBlockedUnitIdsThisTurn.clear();
     this.generalSwapUsedThisTurn[Faction.Player] = false;
     this.generalSwapUsedThisTurn[Faction.Enemy] = false;
   }
 
   public markUnitMoved(unitId: string): void {
     this.movedUnitIdsThisTurn.add(unitId);
+  }
+
+  /** 撤退失敗後呼叫：本回合不能再行動（同時視為已移動，移動閘門自動生效） */
+  public markUnitActionBlocked(unitId: string): void {
+    this.actionBlockedUnitIdsThisTurn.add(unitId);
+    this.movedUnitIdsThisTurn.add(unitId);
+  }
+
+  public isUnitActionBlockedThisTurn(unitId: string): boolean {
+    return this.actionBlockedUnitIdsThisTurn.has(unitId);
   }
 
   public hasUnitMovedThisTurn(unitId: string): boolean {
