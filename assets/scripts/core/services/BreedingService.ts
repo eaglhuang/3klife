@@ -14,6 +14,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { RosterStore } from '../managers/GameSession';
 import { BloodlineGraph } from './BloodlineGraph';
+import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     AffinityResolver,
     advanceBreedingSeason,
@@ -162,7 +163,7 @@ export class BreedingService {
 
         const next = roster.map((g) => (g.id === father.id ? result.father : g.id === mother.id ? result.mother : g));
         if (result.child) {
-            next.push(result.child);
+            next.push(normalizeRosterRoles([result.child])[0]);
             this._graph.registerChild(toPersonRecord(result.child), father.id, mother.id);
         }
         this._roster.replaceAll(next);
