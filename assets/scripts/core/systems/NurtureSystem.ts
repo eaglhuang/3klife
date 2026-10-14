@@ -26,6 +26,7 @@ import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
 import { MENTOR_STAR_TABLE } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
 import { surnameOf } from './VirtualAncestorGenerator';
+import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -103,6 +104,8 @@ export interface TrainingMentor {
     specialty: TrainingKind;
     /** 每回合站在擅長格的機率 0~1（Slot_Burst_Rate） */
     burstRate: number;
+    /** 友情（曉蔭情誼，MENT-12 羈絆判定用）；缺值視為 0 */
+    friendship?: number;
     /** 戰法靈感資料（只有支援卡才有）；friendshipBonusByStar 依星等索引，小數（0.2 = +20%） */
     inspire?: { events: InspireEvent[]; friendshipBonusByStar: number[] };
 }
@@ -129,6 +132,8 @@ export interface NurtureRoundLog {
     skipped?: boolean;
     /** 本回合好感 +1 */
     affectionGained?: boolean;
+    /** 本回合觸發的師友羈絆群組 id（MENT-12） */
+    synergyId?: string;
 }
 
 /** 培育會話；全部是純資料，可直接 JSON 存檔（對應 Data Schema Nurture_Session） */
@@ -166,6 +171,8 @@ export interface NurtureSession {
     negativeTraitRateBonus?: number;
     log: NurtureRoundLog[];
     status: NurtureStatus;
+    /** 本場已觸發的師友羈絆群組 id（一次性，MENT-12） */
+    triggeredSynergies?: string[];
 }
 
 // ── 小工具 ─────────────────────────────────────────────────────────────────
@@ -430,6 +437,20 @@ export function executeRound(
         }
     }
     session.log.push(log);
+    // 師友羈絆（MENT-12）：一次性、回合上限內
+    const synergy = findTriggeredSynergy({
+        round,
+        mentorIds: source.mentors.map((mentor) => mentor.id),
+        friendship: Object.fromEntries(source.mentors.map((mentor) => [mentor.id, mentor.friendship ?? 0])),
+        triggered: session.triggeredSynergies ?? [],
+    });
+    if (synergy) {
+        const bonus = synergyTpBonus(synergy);
+        session.triggeredSynergies = [...(session.triggeredSynergies ?? []), synergy.id];
+        session.tp += bonus;
+        log.tpGained += bonus;
+        log.synergyId = synergy.id;
+    }
     if (round >= NURTURE_TOTAL_ROUNDS) {
         session.status = 'completed';
         session.mentorSlots = {};
