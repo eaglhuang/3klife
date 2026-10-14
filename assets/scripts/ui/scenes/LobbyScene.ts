@@ -1041,6 +1041,9 @@ export class LobbyScene extends Component {
     /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
     private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
         try {
+            // 抽到支援卡武將 → 產生 Gacha 來源的教官卡（PROG-2-0506）
+            const catalog = await this._loadSupportCatalog();
+            await services().legacy?.addGachaMentors(results.map((entry) => entry.general), catalog, services().session.gameTime);
             const { added, duplicates, rebirths } = await services().session.addGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
             const parts: string[] = [];
             if (added.length > 0) {

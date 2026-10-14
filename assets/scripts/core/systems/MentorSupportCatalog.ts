@@ -15,6 +15,8 @@
  */
 import { parseSupportCard, SupportCardDef } from '../models/MentorSupportSchema';
 import type { MentorCard } from '../models/MentorCard';
+import type { GeneralConfig } from '../models/GeneralUnit';
+import { addMentorToHoldings } from './MentorSources';
 
 export interface SupportCatalogProblem {
     index: number;
@@ -61,4 +63,51 @@ export function attachSupportToCards(cards: readonly MentorCard[], catalog: Supp
         const support = catalog.byGeneralId.get(card.sourceGeneralId);
         return support ? { ...card, support } : card;
     });
+}
+
+/** 轉蛋抽到時的時間（季與年），給新產生的教官卡填入 */
+export interface GachaMentorTime {
+    currentYear: number;
+    currentSeason: number;
+}
+
+/**
+ * 轉蛋抽到支援卡武將：產生 source=Gacha 的教官卡。
+ * 轉蛋沒有退役資料，年齡欄位填 0（暫定），季與年用抽卡當下的時間；沒有父母，parentUids 留空字串。
+ */
+export function mentorCardFromGachaDraw(general: GeneralConfig, support: SupportCardDef, time: GachaMentorTime): MentorCard {
+    return {
+        uid: `mentor-${general.id}`,
+        sourceGeneralId: general.id,
+        name: general.name,
+        faction: String(general.faction ?? ''),
+        retiredAge: 0,
+        retiredSeason: time.currentSeason,
+        retiredYear: time.currentYear,
+        ep_snapshot: general.ep ?? 0,
+        gene_refs: [],
+        parentUids: ['', ''],
+        generalSnapshot: general,
+        support,
+        source: 'Gacha',
+    };
+}
+
+/**
+ * 把抽到的武將裡有支援卡的，加進教官持有清單（同 uid 保留舊卡與舊來源，不重複新增）。
+ * 回傳新陣列，不改傳入的清單。
+ */
+export function addGachaMentorCards(
+    holdings: readonly MentorCard[],
+    drawn: readonly GeneralConfig[],
+    catalog: SupportCatalog,
+    time: GachaMentorTime,
+): MentorCard[] {
+    let next: MentorCard[] = [...holdings];
+    for (const general of drawn) {
+        const support = general ? catalog.byGeneralId.get(general.id) : undefined;
+        if (!support) continue;
+        next = addMentorToHoldings(next, mentorCardFromGachaDraw(general, support, time), 'Gacha');
+    }
+    return next;
 }
