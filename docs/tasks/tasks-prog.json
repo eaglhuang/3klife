@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 31,
-    "in_progress": 1,
-    "open": 28,
-    "total": 60
+    "done": 34,
+    "in_progress": 2,
+    "open": 30,
+    "total": 66
   },
   "tasks": [
     {
@@ -2671,6 +2671,177 @@
           "needs-etl-fill count reduced from 16 to 10"
         ]
       }
+    },
+    {
+      "id": "PROG-2-0111",
+      "title": "情報度與 AI 委任邏輯（HALL-05 純邏輯）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "ready",
+      "type": "logic",
+      "phase": "M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "由 mailbox/tickets 正式登錄，內容見對應 Markdown 任務卡。",
+      "related": [],
+      "depends": [
+        "HALL-04"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機或純邏輯驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0111.md"
+      ],
+      "scopePaths": [
+        "assets/scripts/core/systems/HallIntel.ts",
+        "tests/HallIntel.test.ts",
+        "tests/run-cli.ts"
+      ],
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0114",
+      "title": "Web 實機重驗：0108 完整流程（受傷可觀測版）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "ready",
+      "type": "acceptance",
+      "phase": "M3-M5",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "由 mailbox/tickets 正式登錄，內容見對應 Markdown 任務卡。",
+      "related": [],
+      "depends": [
+        "PROG-2-0112"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機或純邏輯驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0114.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0114/**"
+      ],
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0116",
+      "title": "UI 實機驗收：大廳武將點位（#233，HALL-07 畫面）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "ready",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "由 mailbox/tickets 正式登錄，內容見對應 Markdown 任務卡。",
+      "related": [],
+      "depends": [
+        "PR #233"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機或純邏輯驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0116.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0116/**"
+      ],
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0117",
+      "title": "UI 實機驗收：HUD 戰法按鈕與 FEM 系列（#255、#253、#254、#256）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "ready",
+      "type": "acceptance",
+      "phase": "M5-M7",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "由 mailbox/tickets 正式登錄，內容見對應 Markdown 任務卡。",
+      "related": [],
+      "depends": [
+        "PR #255",
+        "PR #253",
+        "PR #254",
+        "PR #256"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機或純邏輯驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0117.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0117/**"
+      ],
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0118",
+      "title": "實機驗收：GCH-10 卡池定位文案與死亡傳承提示（PR #266）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "ready",
+      "type": "acceptance",
+      "phase": "M5-M7",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "由 mailbox/tickets 正式登錄，內容見對應 Markdown 任務卡。",
+      "related": [],
+      "depends": [
+        "PR #266"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機或純邏輯驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0118.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0118/**"
+      ],
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0119",
+      "title": "實機驗收：M6 大廳收藏、指派、點位與任務牆（#260、#262、#265、#270、#272）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "ready",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "由 mailbox/tickets 正式登錄，內容見對應 Markdown 任務卡。",
+      "related": [],
+      "depends": [
+        "PR #260",
+        "PR #262",
+        "PR #265",
+        "PR #270",
+        "PR #272"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機或純邏輯驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0119.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0119/**"
+      ],
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
     }
   ]
 }
