@@ -49,3 +49,15 @@ export function buildCountdownIconView(state: Readonly<CountdownState>, now: num
         rushEnabled: visible && state.canAccelerate,
     };
 }
+
+/** 主畫面 HUD 的 flow view：key 與 lobby-season-hud-main.json 的 countdownIconLabel 對應；沒有倒數時隱藏。 */
+export function buildCountdownIconFlowView(
+    state: Readonly<CountdownState> | null,
+    now: number,
+): { texts: Record<string, string>; actives: Record<string, boolean> } {
+    const view = state ? buildCountdownIconView(state, now) : { visible: false, label: '' };
+    return {
+        texts: { countdownIconLabel: view.label },
+        actives: { countdownIconLabel: view.visible },
+    };
+}
