@@ -20,6 +20,7 @@ import {
 import { services } from '../../../core/managers/ServiceLoader';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { buildIdMap } from '../../../shared/SkillRuntimeContract';
+import { tacticLoadoutCapacity } from '../../../core/systems/TacticLoadout';
 import type {
     JsonListEnvelope,
     CanonicalTacticDefinition,
@@ -195,7 +196,7 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
 
     private _buildNoteDisplay(cfg: GeneralConfig, tacticCount: number, ultimateCount: number, lockedCount: number): string {
         const summaryParts = [
-            `${cfg.name} 目前已配置 ${tacticCount} 個天賦戰法`,
+            `${cfg.name} 目前已配置 ${tacticCount} 個天賦戰法（槽位 ${tacticCount}/${tacticLoadoutCapacity(cfg.int ?? 0)}，依智力）`,
             `${ultimateCount} 個奧義定義`,
             `${lockedCount} 個轉生解鎖節點`,
         ];
