@@ -33,21 +33,22 @@ export function createGameSessionMercenarySuite(): TestSuite {
     });
 
     // 成功路徑（扣點、入名冊、冷卻）的數值已由 MercenaryRoster.test.ts 覆蓋。
-    // 這裡 setMercenaries 會丟掉超過好感上限 60 的值，R 結義需 100 點，正式規則下目前全部失敗（見 PROG-2-0308 待決）。
-    suite.test('bondMercenaryToRoster：好感 60 不足 R 的 100 點，傭兵與名冊都不變', async () => {
+    // 新存檔的結義點數餘額為 0（GCH-06 溢出入帳才會增加），因此驗證點數不足的失敗路徑。
+    suite.test('bondMercenaryToRoster：點數不足 R 的 100 點，傭兵與名冊都不變', async () => {
         const session = new GameSession(1);
         session.setMercenaries({
             mercenaries: [{ uid: 'merc-1', daysLeft: 0, bond: 6, status: 'Trial', generalId: 'gen-merc', affection: 60 }],
             upkeep: [{ uid: 'merc-1', status: 'Active', unpaidDays: 0, frozenDaysLeft: 0 }],
             cooldowns: [],
         });
-        const template = { id: 'gen-merc', name: '測試', faction: 'shu', hp: 1000 } as unknown as GeneralConfig;
-        const result = await session.bondMercenaryToRoster('merc-1', template, { STR: 80, INT: 60, POL: 40, CHR: 70, LUK: 50 }, 'R', 10);
+        const template = { id: 'gen-merc', name: '測試', faction: 'shu', hp: 1000, rarityTier: 'common' } as unknown as GeneralConfig;
+        const result = await session.bondMercenaryToRoster('merc-1', template);
         assert.isFalse(result.ok);
         assert.equals('insufficient-points', result.reason!);
         assert.equals('Trial', session.mercenaries.mercenaries[0].status);
         assert.equals(1, session.mercenaries.upkeep.length);
         assert.equals(0, session.roster.length);
+        assert.equals(0, session.bondPoints);
     });
 
     suite.test('startNewGame 會清空傭兵包', () => {

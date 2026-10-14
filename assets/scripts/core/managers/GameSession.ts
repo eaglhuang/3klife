@@ -35,7 +35,9 @@ import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/Pl
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { bondMercenaryToRoster, type RosterBondResult } from '../systems/MercenaryRoster';
-import type { BondStats } from '../systems/MercenaryBondPermanent';
+import { advanceTrialDay } from '../systems/MercenaryTrialDay';
+import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
+import { filterPoolGeneralIds } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
@@ -229,6 +231,12 @@ function toSortieMember(g: GeneralConfig): SortieMember {
 /** 虎符忠誠度初始值（規格未定，暫定）；武將沒有紀錄時以此起算 */
 const TALLY_LOYALTY_INITIAL = 50;
 
+/** 單一遊戲日的傭兵結算結果：日序與本日產生的離隊事件（告別信等）。 */
+export interface MercenaryDayReport {
+    day: number;
+    events: DepartureEvent[];
+}
+
 export class GameSession {
     private _clock = new GameClock();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -362,21 +370,64 @@ export class GameSession {
         return serializeMercenaryBundle(this._mercenaries);
     }
 
+    /** 傭兵系統目前的遊戲日（從 0 起算）。 */
+    public get mercenaryDay(): number {
+        return this._mercenaries.day ?? 0;
+    }
+
+    /**
+     * 推進一個遊戲日：試用中傭兵倒數 −1、好感 +10。
+     * 倒數已在前一日歸零且仍未結義者，本日離隊、寫入告別事件並開始 30 天冷卻。
+     * 遊戲日的觸發入口（時間軸）尚未定案，由呼叫端決定何時呼叫。
+     */
+    public async advanceMercenaryDay(): Promise<MercenaryDayReport> {
+        const today = this.mercenaryDay + 1;
+        const events: DepartureEvent[] = [];
+        const departed = new Set<string>();
+        let cooldowns = this._mercenaries.cooldowns;
+        const mercenaries = this._mercenaries.mercenaries.map((merc) => {
+            const settled = settleTrialRollover(merc, today, cooldowns);
+            cooldowns = settled.cooldowns;
+            if (settled.departed) {
+                departed.add(merc.uid);
+                events.push(...settled.events);
+                return { ...merc, status: settled.record.status };
+            }
+            return advanceTrialDay(merc).state;
+        });
+        this._mercenaries = {
+            ...this._mercenaries,
+            mercenaries,
+            upkeep: this._mercenaries.upkeep.filter((u) => !departed.has(u.uid)),
+            cooldowns,
+            day: today,
+        };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { day: today, events };
+    }
+
+    /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
+    public availablePoolGeneralIds(generalIds: readonly string[]): string[] {
+        return filterPoolGeneralIds(generalIds, this.mercenaryDay, this._mercenaries.cooldowns);
+    }
+
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
     public setMercenaries(bundle: MercenarySaveBundle): void {
         this._mercenaries = normalizeMercenaryBundle(bundle);
     }
 
     /**
-     * 結義入名冊：傭兵結義轉永久（好感扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
-     * 失敗時不改任何狀態。rarity、stats 由呼叫端傳入（規格未定來源，見 PROG-2-0308）。
+     * 結義入名冊：傭兵結義轉永久（好感滿 60 為門檻，扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
+     * 失敗時不改任何狀態。結義點數從 GCH-06 的餘額（bondPoints）扣除。
      */
-    public async bondMercenaryToRoster(uid: string, template: GeneralConfig, stats: BondStats, rarity: string, today: number): Promise<RosterBondResult & { rosterAdded?: boolean }> {
+    public async bondMercenaryToRoster(uid: string, template: GeneralConfig): Promise<RosterBondResult & { rosterAdded?: boolean }> {
         const mercenary = this._mercenaries.mercenaries.find((m) => m.uid === uid);
         if (!mercenary) {
             return { ok: false, reason: 'not-found', pointsSpent: 0 };
         }
-        const result = bondMercenaryToRoster(mercenary, template, stats, rarity, this._mercenaries.cooldowns, today);
+        const result = bondMercenaryToRoster(mercenary, template, this._bondPoints, this._mercenaries.cooldowns, this.mercenaryDay);
         if (!result.ok || !result.mercenary || !result.general || !result.cooldowns) {
             return result;
         }
@@ -384,7 +435,9 @@ export class GameSession {
             mercenaries: this._mercenaries.mercenaries.map((m) => (m.uid === uid ? result.mercenary! : m)),
             upkeep: this._mercenaries.upkeep.filter((u) => u.uid !== uid),
             cooldowns: result.cooldowns,
+            day: this.mercenaryDay,
         };
+        this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
         return { ...result, rosterAdded: added.length > 0 };
     }
