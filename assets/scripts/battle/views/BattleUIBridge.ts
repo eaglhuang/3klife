@@ -17,6 +17,8 @@ import { BattlePerformanceTracker, formatPerformance, milestoneDisplayName } fro
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { buildTacticSummary, loadGeneralConfig } from './BattleSceneLoader';
+import { buildTacticAvailability } from '../../ui/core/TacticAvailabilityPresenter';
+import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
@@ -201,8 +203,22 @@ export class BattleUIBridge {
     const c = this.ctx;
     if (!c.ctrl) return;
     const state = c.ctrl.state;
-    if (state.playerGeneral) c.battleScenePanel?.setTacticSummary(
-      buildTacticSummary(state.playerGeneral).label, c.ctrl.getPlayerTacticPointState());
+    if (state.playerGeneral) {
+      // 戰法按鈕可用狀態與原因（PROG-2-0408）：Presenter 判定，這裡只套用
+      const pg = state.playerGeneral;
+      const summary = buildTacticSummary(pg).label;
+      const tacticPoints = c.ctrl.getPlayerTacticPointState();
+      const descriptor = c.ctrl.getPlayerSeedTacticDescriptor();
+      const [availability] = buildTacticAvailability(
+        descriptor ? [{ id: descriptor.skillId, label: summary, tags: resolveBattleSkillProfile(descriptor.skillId)?.tags ?? [] }] : [],
+        { weather: state.weather, tacticPointEnabled: tacticPoints.enabled, generalCanUseSkill: pg.canUseSkill() },
+      );
+      c.battleScenePanel?.setTacticSummary(
+        summary,
+        { ...tacticPoints, enabled: availability?.enabled ?? tacticPoints.enabled },
+        availability?.reason ?? null,
+      );
+    }
     // 棋盤格狀態與兵種渲染（對應原 BattleScene.refreshBattleViews）
     c.boardRenderer?.renderState(state);
     c.unitRenderer?.renderState(state);
