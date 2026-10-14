@@ -90,6 +90,12 @@ export interface JsonListEnvelope<T> {
     data?: T[];
 }
 
+/** 與 core/systems/TacticCondition 的 TacticCondition 同形；shared 層不引用 core，故在此宣告 */
+export type TacticConditionLike =
+    | { kind: 'troopType'; allowed: readonly string[] }
+    | { kind: 'weather'; allowed: readonly string[] }
+    | { kind: 'adjacentCount'; side: 'ally' | 'enemy'; min: number };
+
 export interface CanonicalTacticDefinition {
     id: string;
     displayName: string;
@@ -98,6 +104,8 @@ export interface CanonicalTacticDefinition {
     sourceType?: SkillSourceType;
     targetMode?: BattleSkillTargetMode;
     timing?: BattleSkillTiming;
+    /** 條件觸發（TCOND）：全部成立才可發動；缺省代表無條件（TAC-07） */
+    tcond?: readonly TacticConditionLike[];
     manualTargeting?: boolean;
     autoAimMode?: BattleSkillAutoAimMode | null;
     tacticModules?: TacticModuleType[];

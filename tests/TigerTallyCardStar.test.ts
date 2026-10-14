@@ -2,7 +2,7 @@
  * TigerTallyCardStar — 卡片實例上的星級與戰鬥經驗（TRP-10 接線，PROG-2-0571）的純邏輯測試
  */
 import { TestSuite, assert } from './TestRunner';
-import { applyBattleExpToCard, readCardStarState } from '../assets/scripts/core/systems/TigerTallyStar';
+import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../assets/scripts/core/systems/TigerTallyStar';
 import { normalizeTallyCardsMap } from '../assets/scripts/core/services/PlayerSaveService';
 
 export function createTigerTallyCardStarSuite(): TestSuite {
@@ -38,6 +38,19 @@ export function createTigerTallyCardStarSuite(): TestSuite {
         });
         assert.equals(1, map.t1.stars ?? 0);
         assert.equals(0, map.t1.battleExp ?? -1);
+    });
+
+    suite.test('讀回時 R 虎符即使存檔是 5★ 也夾回 3★（QA 複查：品質封頂）', () => {
+        assert.equals(3, readCardStarState({ quality: 'R', stars: 5 }).star);
+        assert.equals(4, readCardStarState({ quality: 'SR', stars: 5 }).star);
+        assert.equals(5, readCardStarState({ quality: 'SSR', stars: 5 }).star);
+    });
+
+    suite.test('戰場結果轉虎符經驗結果：勝、敗、平對應，進行中不結算', () => {
+        assert.equals('win', tallyBattleOutcome('player-win') ?? '');
+        assert.equals('lose', tallyBattleOutcome('enemy-win') ?? '');
+        assert.equals('draw', tallyBattleOutcome('draw') ?? '');
+        assert.isTrue(tallyBattleOutcome('ongoing') === null);
     });
 
     return suite;

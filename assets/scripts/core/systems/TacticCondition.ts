@@ -48,3 +48,31 @@ function isSatisfied(condition: TacticCondition, context: TacticConditionContext
         }
     }
 }
+
+export interface CasterTacticConditionInput {
+    /** 施放者是戰場上的兵種單位時給兵種；施放者是武將（沒有兵種）時給 null */
+    casterTroopType: TroopType | null;
+    weather: Weather;
+    adjacentAllies: number;
+    adjacentEnemies: number;
+}
+
+/**
+ * 戰鬥中實際發動戰法時使用的條件檢查（TAC-07 接線）。
+ * 施放者是武將、沒有兵種時，兵種條件略過（武將本身沒有兵種可比），其餘條件照常檢查。
+ */
+export function evaluateCasterTacticConditions(
+    conditions: readonly TacticCondition[] | undefined,
+    input: CasterTacticConditionInput,
+): TacticConditionResult {
+    const applicable = input.casterTroopType === null
+        ? (conditions ?? []).filter((condition) => condition.kind !== 'troopType')
+        : conditions;
+    return evaluateTacticConditions(applicable, {
+        // 施放者為 null 時兵種條件已被濾掉，這個值不會被讀取，只是為了滿足型別
+        casterTroopType: input.casterTroopType ?? TroopType.Infantry,
+        weather: input.weather,
+        adjacentAllies: input.adjacentAllies,
+        adjacentEnemies: input.adjacentEnemies,
+    });
+}
