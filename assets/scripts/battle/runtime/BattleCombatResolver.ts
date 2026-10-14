@@ -4,7 +4,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
-import { hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
+import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
 
 export interface BattleCombatAction {
@@ -31,7 +31,7 @@ export class BattleCombatResolver {
   public getUnitAptitude(unit: TroopUnit): ResolvedAptitude {
     const state = this.context.state;
     const cell = state.getCell(unit.lane, unit.depth);
-    return resolveAptitude(state.getGeneral(unit.faction), {
+    return resolveAptitude(battleAptitudeProfileOf(state.getGeneral(unit.faction)), {
       troopType: unit.type,
       terrain: cell?.terrain ?? TerrainType.Plain,
       weather: state.weather,
