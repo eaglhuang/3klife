@@ -123,7 +123,8 @@ export function createNurtureFlowSuite(): TestSuite {
         const view = flow.getView();
         assert.equals('fate', view.mode);
         assert.isTrue(view.actives.fatePanel);
-        assert.equals('alpha', view.texts.fateName);
+        // PROG-2-0527：開獎標題改用規格 UI_UNVEIL_5（未注入語系表時用 zh-TW 預設）
+        assert.equals('天命開獎！alpha 五維資質揭曉：', view.texts.fateName);
         assert.isTrue(view.texts.fateStats.includes('武力 60'));
         assert.isTrue(view.texts.fateStats.includes('運氣 30'));
         // str+lea = 115 > int+pol = 90 → 武官
