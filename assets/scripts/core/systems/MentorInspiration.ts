@@ -97,11 +97,17 @@ export function rollInspireRound(
     ctx: InspireContext,
     confirmed: ReadonlySet<string>,
     random: RandomSource,
+    options: { guaranteed?: boolean } = {},
 ): string[] {
     const triggered: string[] = [];
     for (const event of events) {
         if (confirmed.has(event.eventId)) continue;
         if (inspireBlockReasons(event, round, ctx).length > 0) continue;
+        // 保底（世家血脈）：合格即觸發，不擲骰
+        if (options.guaranteed) {
+            triggered.push(event.eventId);
+            continue;
+        }
         if (random() < inspireChance(event, ctx)) triggered.push(event.eventId);
     }
     return triggered;
