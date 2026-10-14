@@ -80,6 +80,7 @@ export const WEAK_ATTACK_MULTIPLIER = 0.7;
 
 export const EVENT_NAMES = {
   TurnPhaseChanged:  "turn-phase-changed",
+  WeatherChanged:    "weather-changed",
   BattleEnded:       "battle-ended",
   GameModeChanged:   "game-mode-changed",
   UnitDeployed:      "unit-deployed",

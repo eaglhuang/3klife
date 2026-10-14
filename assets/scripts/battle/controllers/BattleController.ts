@@ -10,6 +10,7 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { BattleState, TerrainGrid } from "../models/BattleState";
+import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { EnemyAI } from "./EnemyAI";
 import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
@@ -777,6 +778,23 @@ export class BattleController {
     }
   }
 
+  /** 設定天氣排程（PROG-2-0401）：第 1 回合立即套用該回合天氣，之後每回合由 finalizeRuntimeTurnCycle 切換 */
+  public setWeatherSchedule(schedule: readonly WeatherScheduleEntry[]): void {
+    this.state.weatherSchedule = validateWeatherSchedule(schedule);
+    this.state.weather = weatherForTurn(this.state.weatherSchedule, 1);
+  }
+
+  /** 依排程套用指定回合的天氣；天氣改變時發出 WeatherChanged 事件。沒有排程時不動 */
+  private applyWeatherForTurn(turn: number): void {
+    const schedule = this.state.weatherSchedule;
+    if (schedule.length === 0) return;
+    const transition = detectWeatherTransition(schedule, turn);
+    this.state.weather = transition.current;
+    if (transition.changed) {
+      services().event.emit(EVENT_NAMES.WeatherChanged, { turn, previous: transition.previous, current: transition.current });
+    }
+  }
+
   private finalizeRuntimeTurnCycle(): void {
     const svc = services();
     svc.buff.tickBuff();
@@ -790,6 +808,7 @@ export class BattleController {
     }
     if (this.sortie) this.sortie = regenTactic(this.sortie);
     svc.battle.nextTurn();
+    this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
     this.turnManager.refreshForNextTurn();
     this.orderRefusedThisTurn = this.rollOrderRefusal();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
