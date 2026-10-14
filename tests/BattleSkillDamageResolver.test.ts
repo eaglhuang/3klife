@@ -20,7 +20,8 @@ export function createBattleSkillDamageResolverSuite(): TestSuite {
     });
 
     const damage = resolver.resolveDamage(profile!, caster, defender, bundle.context, 0);
-    assert.equals(55, damage);
+    // 剋制表改為規格五角後重算（原為 55）
+    assert.equals(71, damage);
   });
 
   suite.test('linear-step：後續命中必須穩定遞減，不受掃描順序漂移', () => {

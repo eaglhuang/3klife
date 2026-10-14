@@ -25,13 +25,19 @@ export { Faction, TroopType, TerrainType, Weather, BattleTactic, TurnPhase, Stat
 
 
 
+/** 剋制表（key 剋 value）：依 兵種（虎符）系統.md 五角剋制（PROG-2-0343，PM 裁定規格優先） */
 export const TROOP_COUNTER_MAP: Partial<Record<TroopType, TroopType>> = {
-  [TroopType.Cavalry]: TroopType.Infantry,
-  [TroopType.Infantry]: TroopType.Shield,
+  [TroopType.Cavalry]: TroopType.Shield,
   [TroopType.Shield]: TroopType.Archer,
-  [TroopType.Archer]: TroopType.Pikeman,
+  [TroopType.Archer]: TroopType.Infantry,
+  [TroopType.Infantry]: TroopType.Pikeman,
   [TroopType.Pikeman]: TroopType.Cavalry,
 };
+
+/** 機械（暫定對應工兵 Engineer）被近戰攻擊時的倍率（兵種（虎符）系統.md；暫定，見待辦檔） */
+export const SIEGE_TROOP_TYPE = TroopType.Engineer;
+export const MELEE_TROOP_TYPES: ReadonlySet<TroopType> = new Set([TroopType.Cavalry, TroopType.Infantry, TroopType.Pikeman, TroopType.Shield]);
+export const SIEGE_MELEE_MULTIPLIER = 1.5;
 
 export const COUNTER_MULTIPLIER = 1.3;
 export const DISADVANTAGE_MULTIPLIER = 0.8;

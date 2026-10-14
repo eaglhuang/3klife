@@ -127,7 +127,8 @@ export function createBattleSkillExecutorSuite(): TestSuite {
         assert.isTrue(result.applied);
         assert.lengthEquals(1, bundle.damageLog);
         assert.equals('enemy-high-def', bundle.damageLog[0].unitId);
-        assert.equals(45, defender.currentHp);
+        // 剋制表改為規格五角後重算（原為 45）
+        assert.equals(29, defender.currentHp);
         assert.equals(100, otherEnemy.currentHp);
     });
 
@@ -152,9 +153,12 @@ export function createBattleSkillExecutorSuite(): TestSuite {
         assert.equals('enemy-center', bundle.damageLog[0].unitId);
         assert.equals('enemy-adjacent', bundle.damageLog[1].unitId);
         assert.equals('enemy-diagonal', bundle.damageLog[2].unitId);
-        assert.equals(30, center.currentHp);
-        assert.equals(38, adjacent.currentHp);
-        assert.equals(46, diagonal.currentHp);
+        // 剋制表改為規格五角後重算（原為 30）
+        assert.equals(6, center.currentHp);
+        // 剋制表改為規格五角後重算（原為 38）
+        assert.equals(17, adjacent.currentHp);
+        // 剋制表改為規格五角後重算（原為 46）
+        assert.equals(27, diagonal.currentHp);
         assert.equals(100, far.currentHp);
     });
 
@@ -179,8 +183,10 @@ export function createBattleSkillExecutorSuite(): TestSuite {
         assert.equals('enemy-diagonal', bundle.damageLog[0].unitId);
         assert.equals('enemy-adjacent', bundle.damageLog[1].unitId);
         assert.equals(100, center.currentHp);
-        assert.equals(46, diagonal.currentHp);
-        assert.equals(53, adjacent.currentHp);
+        // 剋制表改為規格五角後重算（原為 46）
+        assert.equals(27, diagonal.currentHp);
+        // 剋制表改為規格五角後重算（原為 53）
+        assert.equals(36, adjacent.currentHp);
         assert.equals(100, far.currentHp);
     });
 

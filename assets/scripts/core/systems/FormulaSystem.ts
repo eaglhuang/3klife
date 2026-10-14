@@ -2,6 +2,9 @@
 import {
   COUNTER_MULTIPLIER,
   DISADVANTAGE_MULTIPLIER,
+  MELEE_TROOP_TYPES,
+  SIEGE_MELEE_MULTIPLIER,
+  SIEGE_TROOP_TYPE,
   GAME_CONFIG,
   MIN_DAMAGE,
   TERRAIN_ATTACK_MOD,
@@ -124,6 +127,10 @@ export class FormulaSystem {
   }
 
   public getCounterMultiplier(attackerType: TroopType, defenderType: TroopType): number {
+    if (defenderType === SIEGE_TROOP_TYPE && MELEE_TROOP_TYPES.has(attackerType)) {
+      return SIEGE_MELEE_MULTIPLIER;
+    }
+
     if (TROOP_COUNTER_MAP[attackerType] === defenderType) {
       return COUNTER_MULTIPLIER;
     }
