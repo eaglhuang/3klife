@@ -52,7 +52,7 @@ export function loadLobbyHub(raw: unknown): LoadLobbyHubResult {
  * 不改 hub 與玩家狀態。
  */
 export function buildHallBoardRows(hub: Readonly<LobbyHub>, board: HallBoardKey, player: Readonly<HallPlayerState>): HallTaskRow[] {
-    const tasks: HallTask[] = hub.Mission_Boards[board].Tasks;
+    const tasks: HallTask[] = hub.Mission_Boards[board]?.Tasks ?? [];
     const visible = arrangeHallTasks(getVisibleHallTasks(player, tasks, board));
     return visible.map(task => ({
         taskId: task.Task_ID,

@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-10-14T14:20:00.000Z",
+  "note": "lore id 以 base 為準。aliases：lore 舊 id → base id。deprecated：不進 runtime 的 lore 條目（重複或 base 無對應），條目保留不刪除。",
+  "aliases": {
+    "cao-cao-pi": "cao-pi",
+    "lu-dai": "lu-yin",
+    "gong-yan": "gou-fu",
+    "cao-cao-junior": "cao-zhang",
+    "cao-cao-zhi": "cao-zhi",
+    "quan-zong": "quan-cong"
+  },
+  "deprecated": {
+    "peng-yong": "與 peng-yang（彭羕）重複；peng-yang 為真實內容",
+    "zhang-bao-shu": "與 zhang-bao（張苞）重複；zhang-bao 為真實內容",
+    "zheng-bing": "base 無對應；待確認是否為 cheng-bing（程秉）之誤",
+    "chen-shou-shu": "base 無對應（陳壽非武將資料，待企劃確認）",
+    "hua-ge": "base 無對應",
+    "jing-biao": "base 無對應"
+  }
+}

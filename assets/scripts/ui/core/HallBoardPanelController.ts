@@ -1,10 +1,11 @@
-// @spec-source → WBS v5 HALL-03（雙牆任務板）、HALL-07（點位）、HALL-06（自告奮勇列）；大廳系統 E-3（PROG-2-0456，暫定）
+// @spec-source → WBS v5 HALL-03（雙牆任務板）、HALL-07（點位）、HALL-06（自告奮勇列）；大廳系統 E-3（PROG-2-0456，暫定）；戰法場景規格書 B-1（Q16 方案 B，PROG-2-0459）
 /**
  * HallBoardPanelController — 大廳任務牆與武將點位的畫面流程（純邏輯，不依賴 cc）。
  *
  * 職責：
  *   - 依目前牆別（軍事 / 內政）產生任務列，已接取的任務以 GameSession 的指派狀態覆蓋（不讀靜態的 Is_Accepted）
  *   - 接取任務：指派給出戰主將；沒有主將時只回報提示，不呼叫 GameSession
+ *   - 天下沙盤（Expedition 牆）與軍事 / 內政雙牆共用同一條接取入口（Q16 方案 B），大廳只是呈現面
  *   - 產生點位列（HALL-07），由呼叫端注入刷新函式
  *   - 輸出扁平的 FlowView，key 與 hall-board-main.json 的節點 id 一一對應
  *
@@ -43,6 +44,12 @@ export interface HallBoardPanelDeps {
     displayName: (generalId: string) => string;
 }
 
+const BOARD_TITLE: Readonly<Record<HallBoardKey, string>> = Object.freeze({
+    Military: '大廳・軍事任務牆',
+    Domestic: '大廳・內政任務牆',
+    Expedition: '天下沙盤・遠征',
+});
+
 const NOTICE_TEXT: Readonly<Record<string, string>> = Object.freeze({
     'no-lead': '請先設定出戰主將，才能接取任務',
     'assign-failed': '接取失敗，請確認武將仍在名冊內',
@@ -68,13 +75,15 @@ export class HallBoardPanelController {
     public rows(): HallTaskRow[] {
         const hub = this._deps.hub();
         const assigned = this._deps.assignments();
+        const current = hub.Mission_Boards[this._board];
+        if (!current) return [];
         const overlaid: LobbyHub = {
             ...hub,
             Mission_Boards: {
                 ...hub.Mission_Boards,
                 [this._board]: {
-                    ...hub.Mission_Boards[this._board],
-                    Tasks: hub.Mission_Boards[this._board].Tasks.map((task) => (
+                    ...current,
+                    Tasks: current.Tasks.map((task) => (
                         task.Task_ID in assigned ? { ...task, Is_Accepted: true } : task
                     )),
                 },
@@ -111,15 +120,17 @@ export class HallBoardPanelController {
         const spots = this.spotRows();
         const leadId = this._deps.leadGeneralId();
         const texts: Record<string, string> = {
-            hallBoardTitle: this._board === 'Military' ? '大廳・軍事任務牆' : '大廳・內政任務牆',
+            hallBoardTitle: BOARD_TITLE[this._board],
             btnHallBoardMilitaryLabel: '軍事',
             btnHallBoardDomesticLabel: '內政',
+            btnHallBoardExpeditionLabel: '天下沙盤',
             noticeLabel: this._notice ?? '',
         };
         const actives: Record<string, boolean> = {};
         const enabled: Record<string, boolean> = {
             btnHallBoardMilitary: true,
             btnHallBoardDomestic: true,
+            btnHallBoardExpedition: true,
         };
         for (let i = 0; i < HALL_BOARD_MAX_ROWS; i++) {
             const row = rows[i];

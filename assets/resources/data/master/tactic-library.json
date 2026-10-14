@@ -24,6 +24,14 @@
           "minGrade": "A"
         }
       ],
+      "tcond": [
+        {
+          "kind": "troopType",
+          "allowed": [
+            "cavalry"
+          ]
+        }
+      ],
       "sourceGeneIds": [
         "gene_cavalry",
         "gene_charge"
@@ -56,6 +64,14 @@
           "minGrade": "B"
         }
       ],
+      "tcond": [
+        {
+          "kind": "troopType",
+          "allowed": [
+            "infantry"
+          ]
+        }
+      ],
       "sourceGeneIds": [
         "gene_command",
         "gene_guard"
@@ -86,6 +102,14 @@
           "scope": "troop",
           "key": "ARCHER",
           "minGrade": "A"
+        }
+      ],
+      "tcond": [
+        {
+          "kind": "troopType",
+          "allowed": [
+            "archer"
+          ]
         }
       ],
       "sourceGeneIds": [
@@ -124,6 +148,14 @@
           "minGrade": "B"
         }
       ],
+      "tcond": [
+        {
+          "kind": "weather",
+          "allowed": [
+            "WINDY"
+          ]
+        }
+      ],
       "sourceGeneIds": [
         "gene_strategy"
       ],
@@ -154,6 +186,14 @@
           "scope": "troop",
           "key": "INFANTRY",
           "minGrade": "C"
+        }
+      ],
+      "tcond": [
+        {
+          "kind": "troopType",
+          "allowed": [
+            "infantry"
+          ]
         }
       ],
       "sourceGeneIds": [
@@ -218,6 +258,14 @@
           "minGrade": "B"
         }
       ],
+      "tcond": [
+        {
+          "kind": "troopType",
+          "allowed": [
+            "infantry"
+          ]
+        }
+      ],
       "sourceGeneIds": [
         "gene_shout",
         "gene_bravery"
@@ -246,6 +294,14 @@
           "scope": "troop",
           "key": "CAVALRY",
           "minGrade": "A"
+        }
+      ],
+      "tcond": [
+        {
+          "kind": "troopType",
+          "allowed": [
+            "cavalry"
+          ]
         }
       ],
       "sourceGeneIds": [
