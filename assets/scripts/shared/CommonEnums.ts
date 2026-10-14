@@ -53,7 +53,7 @@ const LEGACY_WEATHER_CODES: Readonly<Record<string, Weather>> = {
     sandstorm: Weather.Windy,
 };
 
-/** 把規格代碼或舊字串轉成 Weather；認不得回傳 null（PROG-2-0401） */
+/** 把規格代碼或舊字串轉成 Weather；認不得回傳 null（PROG-2-0402） */
 export function normalizeWeather(value: unknown): Weather | null {
     if (typeof value !== 'string') return null;
     const exact = (Object.values(Weather) as string[]).find((code) => code === value);
