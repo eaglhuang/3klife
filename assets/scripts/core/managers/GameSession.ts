@@ -90,7 +90,7 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../sy
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
-import { DynamicRelationBook, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
@@ -1530,6 +1530,7 @@ export class GameSession {
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
+        const comradeChanged = this._recordBattleComrades(result);
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
@@ -1538,7 +1539,7 @@ export class GameSession {
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
         if (settlement.entries.length === 0) {
-            if ((clearChanged || tallyChanged) && this._autoSave && this._save) {
+            if ((clearChanged || tallyChanged || comradeChanged) && this._autoSave && this._save) {
                 await this.save();
             }
             return { ...settlement, awakenings: [] };
@@ -1582,6 +1583,24 @@ export class GameSession {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
         }
         return record;
+    }
+
+    /**
+     * 共鬥（戰後）：出征編制的主將與參謀官／後勤官各記一筆戰友（battle-comrade）。
+     * 不等多武將出戰；ongoing 不記。回傳是否新增了任何關係（呼叫端負責存檔）。
+     */
+    private _recordBattleComrades(result: BattleResult): boolean {
+        const commander = this._leadGeneralId;
+        if (!commander || result === 'ongoing') return false;
+        const support = this.getSortieSupportSummary(commander);
+        const pairs = battleComradePairs(commander, [support.strategist?.id ?? null, support.deputy?.id ?? null]);
+        const season = this._clock.state.totalSeasonsElapsed;
+        let changed = false;
+        for (const [a, b] of pairs) {
+            const recorded = this.dynamicRelations.record('battle-comrade', a, b, season);
+            if (recorded.ok && recorded.created) changed = true;
+        }
+        return changed;
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
