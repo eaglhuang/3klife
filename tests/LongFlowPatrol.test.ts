@@ -100,5 +100,17 @@ export function createLongFlowPatrolSuite(): TestSuite {
         assert.equals(null, b.femaleSystemState.rescueRefreshedAtMs, '開新局清空刷新時間');
     });
 
+    suite.test('刷新時間戳在未來（時鐘被調回）視為到期；開新局清掉大廳點位', async () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([gen('hero', '男', 30)]));
+        session.startNewGame(9);
+        assert.isTrue(session.rollDungeonRescueIfDue(10_000_000, () => 0.5) !== null, '第一次一定刷新');
+        assert.equals(null, session.rollDungeonRescueIfDue(10_000_000 + 60_000, () => 0.5), '正常情況冷卻中');
+        assert.isTrue(session.rollDungeonRescueIfDue(5_000_000, () => 0.5) !== null, '時鐘倒退視為到期');
+        session.refreshHallSpots(0, () => 0.1);
+        session.startNewGame(10);
+        assert.equals(0, session.hallSpotRows.length, '開新局清空大廳點位');
+    });
+
     return suite;
 }
