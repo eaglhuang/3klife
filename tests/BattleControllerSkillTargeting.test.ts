@@ -509,9 +509,10 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         assert.isTrue(outcome.ok);
         assert.isDefined(outcome.unit);
 
+        // 騎兵移動力 2 + 平原加成 2（TerrainTroopRules，PROG-2-0088）= 4，從部署格 depth 0 前進到 depth 4
         const result = ctrl.resolvePlayerTurn();
         assert.equals('ongoing', result);
-        assert.equals(2, outcome.unit!.depth);
+        assert.equals(4, outcome.unit!.depth);
     });
 
     suite.test('FloodAttack：敵軍站在 river current 上時，回合結束會先前進一格再往左推一格', () => {
