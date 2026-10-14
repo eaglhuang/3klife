@@ -35,6 +35,7 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS, HALL_DEFAULT_PLAYER } fr
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
+import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
@@ -137,6 +138,8 @@ export class LobbyScene extends Component {
     private _domesticHost: UIScreenPreviewHost | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
+    private _mercPanelHost: UIScreenPreviewHost | null = null;
+    private _mercPanel: MercenaryPanelController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
     private _lobbyHub: LobbyHub | null = null;
@@ -220,6 +223,7 @@ export class LobbyScene extends Component {
         await this._mountJobChange();
         await this._mountDomestic();
         await this._mountHallBoard();
+        await this._mountMercenaryPanel();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
@@ -603,6 +607,85 @@ export class LobbyScene extends Component {
             ...rowBindings,
         ]);
         this._hallBoardHost.node.active = false;
+    }
+
+    /** 傭兵面板（MERC-07）：隱藏掛載，入口待 PM 指定，對外提供 openMercenaryPanel()。 */
+    private async _mountMercenaryPanel(): Promise<void> {
+        this._mercPanel = new MercenaryPanelController({
+            mercenaries: () => services().session.mercenaries.mercenaries,
+            info: (state) => {
+                const general = this._generals.find(g => g.id === state.generalId);
+                return {
+                    // 原主與稀有度尚無正式來源（暫定），待企劃定後替換
+                    originalOwnerName: '原主未定',
+                    generalName: general?.name ?? state.generalId ?? '未知武將',
+                    rarity: 'R',
+                };
+            },
+            bondPoints: () => services().session.bondPoints,
+            bond: async (uid) => {
+                const state = services().session.mercenaries.mercenaries.find(m => m.uid === uid);
+                const template = this._generals.find(g => g.id === state?.generalId);
+                if (!template) return false;
+                const result = await services().session.bondMercenaryToRoster(uid, template);
+                return result.ok;
+            },
+        });
+        const rowBindings = Array.from({ length: MERC_PANEL_MAX_ROWS }, (_, i) => ({
+            buttonId: `btnMercRow${i}`,
+            handler: () => { this._selectMercenary(i); },
+        }));
+        this._mercPanelHost = await this._mountPreviewScreenHost('MercenaryPanelHost', 'mercenary-panel-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeMercenaryPanel(); } },
+            { buttonId: 'btnMercBond', handler: () => { void this._onClickMercenaryBond(); } },
+            ...rowBindings,
+        ]);
+        this._mercPanelHost.node.active = false;
+    }
+
+    public openMercenaryPanel(): void {
+        const host = this._mercPanelHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshMercenaryPanel();
+    }
+
+    private _closeMercenaryPanel(): void {
+        if (this._mercPanelHost) {
+            this._mercPanelHost.node.active = false;
+        }
+    }
+
+    private _selectMercenary(index: number): void {
+        this._mercPanel?.select(index);
+        this._refreshMercenaryPanel();
+    }
+
+    private async _onClickMercenaryBond(): Promise<void> {
+        if (!this._mercPanel) {
+            return;
+        }
+        try {
+            const ok = await this._mercPanel.bondSelected();
+            if (!ok) {
+                services().event.emit('SHOW_TOAST', { message: '無法結義此傭兵', duration: 2.5 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 傭兵結義失敗', error);
+        } finally {
+            this._refreshMercenaryPanel();
+        }
+    }
+
+    private _refreshMercenaryPanel(): void {
+        const binder = this._mercPanelHost?.binder;
+        if (!binder || !this._mercPanel) {
+            return;
+        }
+        applyFlowView(binder, this._mercPanel.getFlowView());
     }
 
     private _loadLobbyHub(): Promise<LobbyHub | null> {
