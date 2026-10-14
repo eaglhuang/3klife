@@ -6,7 +6,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import { GameSession, InMemoryRosterStore, type NurtureStatePort } from '../assets/scripts/core/managers/GameSession';
-import { buildBattleConfig } from '../assets/scripts/core/systems/BattleRoster';
+import { battleIntelligenceOf, buildBattleConfig } from '../assets/scripts/core/systems/BattleRoster';
 import { TACTIC_TP_COST_OVERRIDE } from '../assets/scripts/core/systems/SortieDeploy';
 import { hasMatchingGreenFactor, tacticFactorColor } from '../assets/scripts/core/systems/TacticLearning';
 import type { NurtureState } from '../assets/scripts/core/services/NurtureService';
@@ -102,6 +102,22 @@ export function createTacticLearnWiringSuite(): TestSuite {
     suite.test('戰場槽位依智力：智力 10 只給 1 槽，即使已學 3 招', () => {
         const config = buildBattleConfig(makeGeneral('low', 10, ['TAC_A', 'TAC_B', 'TAC_C']), 'shu' as GeneralConfig['faction']);
         assert.equals(1, config.tacticSlots?.length ?? 0);
+    });
+
+    suite.test('戰場智力取實力層：頂層底值 20、實力層 200（戰場智力 100）→ 4 槽，與戰場一致', () => {
+        const child = makeGeneral('child', 20, ['TAC_A', 'TAC_B', 'TAC_C', 'TAC_D', 'TAC_E']);
+        (child as unknown as { prowess: Record<string, number> }).prowess = { int: 200 };
+        assert.equals(100, battleIntelligenceOf(child));
+        const config = buildBattleConfig(child, 'shu' as GeneralConfig['faction']);
+        assert.equals(4, config.tacticSlots?.length ?? 0);
+    });
+
+    suite.test('學戰法的槽位也用戰場智力：頂層底值 20、實力層 200 → 第 2 招可學（不被底值擋成 1 槽）', async () => {
+        const child = makeGeneral('child', 20, ['TAC_A']);
+        (child as unknown as { prowess: Record<string, number> }).prowess = { int: 200 };
+        const { session } = sessionWith(child, 999);
+        const check = await session.learnTactic('child', 'TAC_B');
+        assert.isTrue(check.ok);
     });
 
     suite.test('戰場槽位依智力：智力 95 可給 4 槽（上限）', () => {

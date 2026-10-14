@@ -22,6 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
@@ -1081,7 +1082,7 @@ export class GameSession {
         if (!state || !session) return { ok: false, blocked: 'NOT_NURTURING', learned: [...(general.learnedTactics ?? [])] };
         const green = hasMatchingGreenFactor(general.genes, tacticId);
         const tpCost = Math.ceil(learnTpCost(getTacticTpCost(tacticId), green));
-        const check = learnTacticInto(general.learnedTactics ?? [], tacticId, general.int ?? 0, session.tp, tpCost);
+        const check = learnTacticInto(general.learnedTactics ?? [], tacticId, battleIntelligenceOf(general), session.tp, tpCost);
         if (!check.ok) return check;
         this._nurture!.restoreState({
             ...state,

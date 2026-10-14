@@ -147,6 +147,11 @@ function battleStat(general: BattleRosterGeneral, key: (typeof BATTLE_STAT_KEYS)
     return typeof direct === 'number' ? direct : 0;
 }
 
+/** 戰場智力（與 buildBattleConfig 一致）：有實力層時取實力層，否則取卡面數值。戰法槽位與學戰法都用此值。 */
+export function battleIntelligenceOf(general: GeneralConfig): number {
+    return battleStat(general as BattleRosterGeneral, 'int');
+}
+
 function unlockedFactors(general: BattleRosterGeneral): GeneralGeneConfig[] {
     return (general.genes ?? []).filter((gene) => gene.isLocked !== true);
 }
@@ -163,8 +168,8 @@ export function computeAttackBonus(general: GeneralConfig): number {
 }
 
 function buildTacticSlots(general: BattleRosterGeneral): GeneralTacticSlotConfig[] {
-    // 槽位上限依智力（規格 §F-7），並不超過全域上限
-    const capacity = Math.min(tacticLoadoutCapacity(general.int ?? 0), BATTLE_TACTIC_SLOT_LIMIT);
+    // 槽位上限依戰場智力（規格 §F-7），並不超過全域上限
+    const capacity = Math.min(tacticLoadoutCapacity(battleIntelligenceOf(general)), BATTLE_TACTIC_SLOT_LIMIT);
     if (general.tacticSlots && general.tacticSlots.length > 0) {
         return general.tacticSlots.slice(0, capacity).map((slot) => ({ ...slot }));
     }

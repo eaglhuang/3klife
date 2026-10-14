@@ -38,7 +38,7 @@ export interface TacticLearnCheck {
 
 /**
  * 培育學戰法（純邏輯）：依序檢查 戰法 id → 是否已學 → TP 門檻 → 槽位（智力決定）。
- * 通過才回傳新清單；不扣 TP（PM 暫定：門檻只判定持有量，不消耗）。
+ * 通過才回傳新清單；本函式只判定與回傳清單，不扣 TP。扣實際成本由 GameSession.learnTactic 負責。
  */
 export function learnTacticInto(
     learned: readonly string[],
