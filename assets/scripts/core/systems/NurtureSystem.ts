@@ -25,6 +25,7 @@ import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
 import { MENTOR_STAR_TABLE } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
+import { surnameOf } from './VirtualAncestorGenerator';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -565,7 +566,7 @@ export function mentorFromCard(
         specialty,
         stars: overrides.stars ?? 0,
         burstRate: overrides.burstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
-        familyName: overrides.familyName,
+        familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
             ? {
                 inspire: {
