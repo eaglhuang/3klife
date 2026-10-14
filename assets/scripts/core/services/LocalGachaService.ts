@@ -4,10 +4,15 @@ import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
 import { checkWalletBalance, formatInsufficientMessage } from './GachaWalletRules';
+import { drawGeneralOnce, normalizeGachaPity, type GachaPityState, type GachaPool } from '../systems/GachaDraw';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
     factionFilter?: 'all' | 'player' | 'enemy';
+    /** Up 武將 id 名單（規格：SSR 70% / SR 80% 從 Up 抽）；沒有 Up 時所有桶都走常設 */
+    upGeneralIds?: readonly string[];
+    /** 測試用隨機來源；正式環境用 Math.random */
+    rng?: () => number;
 }
 
 export interface LocalGachaResultEntry {
@@ -39,6 +44,7 @@ interface PerformGachaRequest {
 const SINGLE_PLAYER_MODE_KEY = 'ucuf.gacha.single-player-mode';
 const DEV_AUTO_TOPUP_KEY = 'ucuf.gacha.dev-auto-topup';
 const WALLET_STORAGE_KEY = 'ucuf.gacha.wallet.v1';
+const PITY_STORAGE_KEY = 'ucuf.gacha.pity.v1';
 const DEFAULT_WALLET: LocalGachaWalletSnapshot = {
     gems: 1280,
     gold: 128450,
@@ -91,18 +97,35 @@ function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
     }
 }
 
+/** 候選武將分桶：legendary／mythic 為 SSR，epic 為 SR，其餘為 R；Up 名單命中者進 Up 桶 */
+function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly string[]): GachaPool<GeneralConfig> {
+    const up = new Set(upGeneralIds);
+    const ssrUp: GeneralConfig[] = [];
+    const ssrOther: GeneralConfig[] = [];
+    const srUp: GeneralConfig[] = [];
+    const srOther: GeneralConfig[] = [];
+    const rOther: GeneralConfig[] = [];
+    for (const general of candidates) {
+        const tier = inferRarityTier(general);
+        const isUp = up.has(general.id);
+        if (tier === 'legendary' || tier === 'mythic') (isUp ? ssrUp : ssrOther).push(general);
+        else if (tier === 'epic') (isUp ? srUp : srOther).push(general);
+        else rOther.push(general);
+    }
+    return { ssrUp, ssrOther, srUp, srOther, rOther };
+}
+
 function formatDrawResultText(index: number, general: GeneralConfig, rarityTier: GeneralDetailRarityTier): string {
     return `#${index + 1} [${rarityTier}] ${general.name}`;
 }
 
-function compareWeight(left: { weight: number }, right: { weight: number }): number {
-    return right.weight - left.weight;
-}
 
 export class LocalGachaService {
     private readonly _actionLogStore = ActionLogStore.getInstance();
     private _singlePlayerModeEnabled = this._loadSinglePlayerModeEnabled();
     private _wallet = this._loadWalletSnapshot();
+    /** 各池保底計數（poolId → 狀態）；各池獨立計數（轉蛋系統 §保底計算） */
+    private _pityBook: Record<string, GachaPityState> = this._loadPityBook();
 
     public isSinglePlayerModeEnabled(): boolean {
         return this._singlePlayerModeEnabled;
@@ -227,14 +250,15 @@ export class LocalGachaService {
 
         this._assertSufficientCurrency(request.currencyKey, cost);
 
-        const weightedCandidates = candidates.map((general) => ({
-            general,
-            weight: this._estimateWeight(general),
-        })).sort(compareWeight);
+        const pool = buildGachaPool(candidates, request.options?.upGeneralIds ?? []);
+        const rng = request.options?.rng ?? Math.random;
+        let pity = normalizeGachaPity(this._pityBook[request.poolId]);
 
         const results: LocalGachaResultEntry[] = [];
         for (let index = 0; index < drawCount; index++) {
-            const picked = this._pickCandidate(weightedCandidates).general;
+            const drawn = drawGeneralOnce(pool, pity, rng);
+            pity = drawn.nextPity;
+            const picked = drawn.item;
             const clonedGeneral = cloneGeneral(picked);
             const rarityTier = inferRarityTier(clonedGeneral);
 
@@ -248,6 +272,9 @@ export class LocalGachaService {
                 currencyKey: request.currencyKey,
             });
         }
+
+        this._pityBook = { ...this._pityBook, [request.poolId]: pity };
+        this._persistPityBook();
 
         const logged = services().sync.pushAction(
             request.actionType,
@@ -288,37 +315,6 @@ export class LocalGachaService {
             default:
                 return list;
         }
-    }
-
-    private _estimateWeight(general: GeneralConfig): number {
-        const rarityTier = inferRarityTier(general);
-        switch (rarityTier) {
-            case 'mythic':
-                return 1;
-            case 'legendary':
-                return 3;
-            case 'epic':
-                return 8;
-            case 'rare':
-                return 22;
-            case 'common':
-            default:
-                return 60;
-        }
-    }
-
-    private _pickCandidate(weightedCandidates: Array<{ general: GeneralConfig; weight: number }>): { general: GeneralConfig; weight: number } {
-        const totalWeight = weightedCandidates.reduce((total, entry) => total + Math.max(1, entry.weight), 0);
-        let cursor = Math.random() * totalWeight;
-
-        for (const entry of weightedCandidates) {
-            cursor -= Math.max(1, entry.weight);
-            if (cursor <= 0) {
-                return entry;
-            }
-        }
-
-        return weightedCandidates[weightedCandidates.length - 1];
     }
 
     private _loadSinglePlayerModeEnabled(): boolean {
@@ -363,6 +359,21 @@ export class LocalGachaService {
 
         this._wallet[currencyKey] = Math.max(0, this._wallet[currencyKey] - cost);
         this._persistWalletSnapshot();
+    }
+
+    private _loadPityBook(): Record<string, GachaPityState> {
+        try {
+            const stored = sys.localStorage.getItem(PITY_STORAGE_KEY);
+            const parsed = stored ? JSON.parse(stored) as Record<string, unknown> | null : null;
+            if (!parsed || typeof parsed !== 'object') return {};
+            return Object.fromEntries(Object.entries(parsed).map(([poolId, value]) => [poolId, normalizeGachaPity(value)]));
+        } catch {
+            return {};
+        }
+    }
+
+    private _persistPityBook(): void {
+        sys.localStorage.setItem(PITY_STORAGE_KEY, JSON.stringify(this._pityBook));
     }
 
     private _loadWalletSnapshot(): LocalGachaWalletSnapshot {
