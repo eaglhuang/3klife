@@ -225,6 +225,36 @@
       "isHidden": true
     },
     {
+      "id": "gene_hidden_undefeated",
+      "displayName": "不敗因子",
+      "color": "white",
+      "category": "hidden",
+      "maxLevel": 1,
+      "defaultTags": ["exclusive", "awakening", "milestone", "undefeated"],
+      "isHidden": true,
+      "provisional": true
+    },
+    {
+      "id": "gene_hidden_iron_wall",
+      "displayName": "鐵壁因子",
+      "color": "white",
+      "category": "hidden",
+      "maxLevel": 1,
+      "defaultTags": ["exclusive", "awakening", "milestone", "iron-wall"],
+      "isHidden": true,
+      "provisional": true
+    },
+    {
+      "id": "gene_hidden_killing_intent",
+      "displayName": "殺意因子",
+      "color": "red",
+      "category": "hidden",
+      "maxLevel": 1,
+      "defaultTags": ["exclusive", "awakening", "milestone", "killing-intent"],
+      "isHidden": true,
+      "provisional": true
+    },
+    {
       "id": "gene_fog_immune",
       "displayName": "大霧免疫",
       "color": "pink",
