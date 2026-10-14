@@ -31,6 +31,10 @@ import { BondingSetupController } from '../core/BondingSetupController';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
+import { HallBoardPanelController, HALL_BOARD_MAX_ROWS, HALL_DEFAULT_PLAYER } from '../core/HallBoardPanelController';
+import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
+import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
+import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
@@ -129,8 +133,11 @@ export class LobbyScene extends Component {
     private _motherTree: BloodlineTreePanel | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
+    private _hallBoardHost: UIScreenPreviewHost | null = null;
+    private _hallBoard: HallBoardPanelController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
+    private _lobbyHub: LobbyHub | null = null;
     private _onboardingHost: UIScreenPreviewHost | null = null;
     private _onboarding: OnboardingFlowController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
@@ -210,6 +217,7 @@ export class LobbyScene extends Component {
         await this._mountBondingSetup();
         await this._mountJobChange();
         await this._mountDomestic();
+        await this._mountHallBoard();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
@@ -289,6 +297,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenBonding', handler: () => { void this._openBondingSetup(); } },
             { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
             { buttonId: 'btnOpenDomestic', handler: () => { this._openDomestic(); } },
+            { buttonId: 'btnOpenHallBoard', handler: () => { this._openHallBoard(); } },
         ]);
         this._refreshSeasonHud();
 
@@ -549,6 +558,102 @@ export class LobbyScene extends Component {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 新手引導存檔失敗', error);
         } finally {
             this._refreshOnboardingTutorial();
+        }
+    }
+
+    /**
+     * 大廳任務牆（HALL-03）與武將點位（HALL-07）：以 UCUF JSON（hall-board-screen）執行期組裝。
+     * 任務資料載入或驗證失敗時不掛載，HUD 入口保留但開不起來（會在 log 留下原因）。
+     */
+    private async _mountHallBoard(): Promise<void> {
+        const hub = await this._loadLobbyHub();
+        if (!hub) {
+            return;
+        }
+        this._lobbyHub = hub;
+        this._hallBoard = new HallBoardPanelController({
+            hub: () => hub,
+            player: () => HALL_DEFAULT_PLAYER,
+            assignments: () => services().session.hallAssignments,
+            leadGeneralId: () => services().session.leadGeneralId,
+            assign: (taskId, generalId) => services().session.assignHallTask(taskId, generalId),
+            refreshSpots: () => services().session.refreshHallSpots(Date.now() / 1000, Math.random),
+            displayName: (generalId) => services().session.roster.find((g) => g.id === generalId)?.name ?? generalId,
+        });
+        const rowBindings = Array.from({ length: HALL_BOARD_MAX_ROWS }, (_, i) => ({
+            buttonId: `btnHallRow${i}`,
+            handler: () => { void this._onClickHallAccept(i); },
+        }));
+        this._hallBoardHost = await this._mountPreviewScreenHost('HallBoardHost', 'hall-board-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeHallBoard(); } },
+            { buttonId: 'btnHallBoardMilitary', handler: () => { this._switchHallBoard('Military'); } },
+            { buttonId: 'btnHallBoardDomestic', handler: () => { this._switchHallBoard('Domestic'); } },
+            ...rowBindings,
+        ]);
+        this._hallBoardHost.node.active = false;
+    }
+
+    private _loadLobbyHub(): Promise<LobbyHub | null> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>('data/lobby-hub', JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務資料載入失敗', err);
+                    resolve(null);
+                    return;
+                }
+                const result = loadLobbyHub(asset.json);
+                if (!result.ok) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務資料驗證失敗', result.issues);
+                    resolve(null);
+                    return;
+                }
+                resolve(result.hub);
+            });
+        });
+    }
+
+    private _openHallBoard(): void {
+        const host = this._hallBoardHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshHallBoard();
+    }
+
+    private _closeHallBoard(): void {
+        if (this._hallBoardHost) {
+            this._hallBoardHost.node.active = false;
+        }
+    }
+
+    private _switchHallBoard(board: HallBoardKey): void {
+        this._hallBoard?.switchBoard(board);
+        this._refreshHallBoard();
+    }
+
+    private _refreshHallBoard(): void {
+        const binder = this._hallBoardHost?.binder;
+        if (!binder || !this._hallBoard) {
+            return;
+        }
+        applyFlowView(binder, this._hallBoard.getFlowView());
+    }
+
+    private async _onClickHallAccept(index: number): Promise<void> {
+        if (!this._hallBoard) {
+            return;
+        }
+        try {
+            const ok = await this._hallBoard.accept(index);
+            if (!ok) {
+                services().event.emit('SHOW_TOAST', { message: '無法接取此任務', duration: 2.5 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 接取大廳任務失敗', error);
+        } finally {
+            this._refreshHallBoard();
         }
     }
 

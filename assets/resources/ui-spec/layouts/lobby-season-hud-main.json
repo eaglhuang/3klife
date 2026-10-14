@@ -190,6 +190,33 @@
                 "styleSlot": "season.hud.label.button"
               }
             ]
+          },
+          {
+            "type": "button",
+            "name": "BtnOpenHallBoard",
+            "id": "btnOpenHallBoard",
+            "widget": {
+              "bottom": 248,
+              "left": 12,
+              "right": 12
+            },
+            "height": 40,
+            "skinSlot": "season.hud.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenHallBoardLabel",
+                "id": "openHallBoardLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "任務牆",
+                "styleSlot": "season.hud.label.button"
+              }
+            ]
           }
         ]
       }
