@@ -30,6 +30,7 @@ import {
     toPersonRecord,
 } from '../systems/BreedingSystem';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
+import { femaleSourceConceptionMod, type FemaleSource } from '../systems/FemaleSource';
 import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
 import type { RandomSource } from '../systems/GeneralAging';
 
@@ -45,6 +46,8 @@ export interface BreedingServiceOptions {
     currentSeason?: () => number;
     /** 子嗣 id 產生器；預設 child-{父}-{母}-{序號} */
     childIdFactory?: (father: GeneralConfig, mother: GeneralConfig, existingIds: Set<string>) => string;
+    /** 依武將 uid 取母體來源（FEM-02 受孕率倍率）；沒有來源回傳 null */
+    getFemaleSource?: (uid: string) => FemaleSource | null;
 }
 
 export class BreedingError extends Error {}
@@ -153,6 +156,7 @@ export class BreedingService {
             maxFactors: this._options.maxFactors,
             isHistoricalPair: this._options.isHistoricalPair,
             rosterLookup: this._rosterLookup(roster),
+            motherConceptionMod: femaleSourceConceptionMod(this._options.getFemaleSource?.(mother.id) ?? null),
         });
         if (result.outcome === 'blocked') return result;
 

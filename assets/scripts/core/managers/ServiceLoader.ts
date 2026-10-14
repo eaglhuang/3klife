@@ -82,6 +82,7 @@ export class ServiceLoader {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         getDictionary: () => this.factorDictionary,
+        getFemaleSource: (uid) => this.session.femaleSources[uid] ?? null,
     });
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
     public legacy: LegacyService | null = null;
