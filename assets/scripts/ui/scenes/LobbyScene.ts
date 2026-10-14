@@ -24,6 +24,7 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
+import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
@@ -117,6 +118,8 @@ export class LobbyScene extends Component {
     private _nurtureFlow: NurtureFlowController | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
+    private _fatherTree: BloodlineTreePanel | null = null;
+    private _motherTree: BloodlineTreePanel | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
     private _jobChange: JobChangeController | null = null;
@@ -406,6 +409,10 @@ export class LobbyScene extends Component {
             },
         ]);
 
+        // 父方在左、母方在右，各掛一棵 3 代祖先樹（版面節點 FatherTree / MotherTree）
+        this._fatherTree = this._mountTreePanel(this._bondingHost.node, 'FatherTree');
+        this._motherTree = this._mountTreePanel(this._bondingHost.node, 'MotherTree');
+
         const refresh = (): void => { this._refreshBondingSetup(); };
         const event = services().event;
         this._sessionEventUnsubscribers.push(
@@ -599,7 +606,41 @@ export class LobbyScene extends Component {
         if (!binder || !this._bonding) {
             return;
         }
-        applyFlowView(binder, this._bonding.getView());
+        const view = this._bonding.getView();
+        applyFlowView(binder, view);
+        this._syncTreePanel(this._fatherTree, view.fatherId);
+        this._syncTreePanel(this._motherTree, view.motherId);
+    }
+
+    /** 在版面節點上掛 BloodlineTreePanel，並把 Gen1~3 容器接上；找不到節點時回傳 null（不擋畫面） */
+    private _mountTreePanel(root: Node, nodeName: string): BloodlineTreePanel | null {
+        const treeRoot = this._findChildByName(root, nodeName);
+        if (!treeRoot) return null;
+        let panel = treeRoot.getComponent(BloodlineTreePanel);
+        if (!panel) panel = treeRoot.addComponent(BloodlineTreePanel);
+        panel.gen3Container = this._findChildByName(treeRoot, 'Gen3Container');
+        panel.gen2Container = this._findChildByName(treeRoot, 'Gen2Container');
+        panel.gen1Container = this._findChildByName(treeRoot, 'Gen1Container');
+        panel.clear();
+        return panel;
+    }
+
+    private _syncTreePanel(panel: BloodlineTreePanel | null, uid: string | null): void {
+        if (!panel) return;
+        if (uid) {
+            void panel.loadForGeneral(uid);
+        } else {
+            panel.clear();
+        }
+    }
+
+    private _findChildByName(root: Node, name: string): Node | null {
+        for (const child of root.children) {
+            if (child.name === name) return child;
+            const found = this._findChildByName(child, name);
+            if (found) return found;
+        }
+        return null;
     }
 
     private async _onClickConfirmBond(): Promise<void> {
