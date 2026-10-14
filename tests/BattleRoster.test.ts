@@ -147,7 +147,8 @@ export function createBattleRosterSuite(): TestSuite {
     });
 
     suite.test('轉換：學會的戰法帶進天賦戰法槽，最多 4 個、去重', () => {
-        const config = buildBattleConfig(graduate('g', { learnedTactics: ['a', 'b', 'a', 'c', 'd', 'e'] }), 'player' as never);
+        // 槽位上限依戰場智力（§F-7，實力層 190 ÷ 2 = 95）→ 4 槽；INT 不足時見 TacticLearnWiring
+        const config = buildBattleConfig(graduate('g', { prowess: { str: 180, int: 190, lea: 160, pol: 40, cha: 50 }, learnedTactics: ['a', 'b', 'a', 'c', 'd', 'e'] }), 'player' as never);
         assert.equals(JSON.stringify(['a', 'b', 'c', 'd']), JSON.stringify(config.tacticSlots!.map((s) => s.tacticId)));
         const slotted = buildBattleConfig(graduate('g', { tacticSlots: [{ slotId: 's1', tacticId: 'fire' }] }), 'player' as never);
         assert.equals('fire', slotted.tacticSlots![0].tacticId, '已有槽位優先於 learnedTactics');

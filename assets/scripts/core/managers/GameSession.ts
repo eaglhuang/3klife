@@ -22,6 +22,9 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { battleIntelligenceOf } from '../systems/BattleRoster';
+import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
+import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
@@ -81,7 +84,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
-import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
+import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -1075,6 +1078,31 @@ export class GameSession {
             favorite: favorites.has(g.id),
             assigned: assigned.has(g.id),
         }));
+    }
+
+    /**
+     * 培育學戰法（PM 2026-10-14 裁定）：TP 為武將培育中的個人 TP（NurtureSession.tp）。
+     * 綠因子相符時成本 ×0.5 再 ceil；門檻 = 實際成本 ×2；通過後扣實際成本並寫入 learnedTactics。
+     */
+    public async learnTactic(generalId: string, tacticId: string): Promise<TacticLearnCheck> {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return { ok: false, blocked: 'INVALID_TACTIC', learned: [] };
+        const state = this._nurture?.getState();
+        const session = state?.sessions.find((s) => s.childId === generalId);
+        if (!state || !session) return { ok: false, blocked: 'NOT_NURTURING', learned: [...(general.learnedTactics ?? [])] };
+        const green = hasMatchingGreenFactor(general.genes, tacticId);
+        const tpCost = Math.ceil(learnTpCost(getTacticTpCost(tacticId), green));
+        const check = learnTacticInto(general.learnedTactics ?? [], tacticId, battleIntelligenceOf(general), session.tp, tpCost);
+        if (!check.ok) return check;
+        this._nurture!.restoreState({
+            ...state,
+            sessions: state.sessions.map((s) => (s.childId === generalId ? { ...s, tp: s.tp - tpCost } : s)),
+        });
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, learnedTactics: check.learned } : g)));
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return check;
     }
 
     /** 目前的趕路倒數（複本）；沒有趕路中的角色時為 null。 */
