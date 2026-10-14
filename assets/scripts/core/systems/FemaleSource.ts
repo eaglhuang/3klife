@@ -80,3 +80,17 @@ export function normalizeFemaleSourcesMap(value: unknown): Record<string, Female
     }
     return out;
 }
+
+/**
+ * 母體來源對受孕率的倍率（FEM-02，§F 受孕率修正）：
+ *   轉蛋 SSR ×1.2、地下城民女（DUNGEON + R）×0.8、使用安胎藥 ×1.5。
+ * 母齡 > 40 ×0.7 不在這裡算：BRD-03 的 parentAgeFactor 已經有年齡因子，避免重複扣。
+ * 沒有來源或不符合任何條件時回傳 1。
+ */
+export function femaleSourceConceptionMod(source: FemaleSource | null, options: { fetalMedicine?: boolean } = {}): number {
+    let mod = 1;
+    if (source?.Source_Type === 'GACHA' && source.Quality_Grade === 'SSR') mod *= 1.2;
+    if (source?.Source_Type === 'DUNGEON' && source.Quality_Grade === 'R') mod *= 0.8;
+    if (options.fetalMedicine) mod *= 1.5;
+    return mod;
+}
