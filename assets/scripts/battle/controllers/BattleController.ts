@@ -690,6 +690,13 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
+          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
+            attackerId: null,
+            attackerLane: null,
+            attackerDepth: null,
+            damageSource: 'forced-move',
+            allowDamageLink: false,
+          }),
         });
         return {};
       case 'enemy-auto-move':
@@ -702,6 +709,13 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
+          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
+            attackerId: null,
+            attackerLane: null,
+            attackerDepth: null,
+            damageSource: 'forced-move',
+            allowDamageLink: false,
+          }),
         });
         return {};
       case 'player-tile-effect':
