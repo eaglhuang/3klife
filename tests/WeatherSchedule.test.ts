@@ -1,5 +1,5 @@
 /**
- * WeatherSchedule.test.ts — 戰場天氣排程純邏輯 headless 測試（PROG-2-0342 / WBS APT-06）
+ * WeatherSchedule.test.ts — 戰場天氣排程純邏輯 headless 測試（PROG-2-0346 / WBS APT-06）
  *
  * Unity 對照：EditMode Test 直接餵一張時間表，檢查每回合查到的天氣與切換事件。
  */
