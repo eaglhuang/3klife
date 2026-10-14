@@ -1409,6 +1409,9 @@ export class BoardRenderer extends Component {
                 return { primary: this.lightningArcFillMaterial || this.sceneEffectCampFillMaterial, accent: null };
             case 'ambush-field':
                 return { primary: this.poisonFogFillMaterial || this.sceneEffectForestFillMaterial, accent: null };
+            case 'scene-camp':
+                // 營帳（PROG-2-0591）：不能被攻擊的地形格，用營帳底色標示
+                return { primary: this.sceneEffectCampFillMaterial, accent: null };
             default:
                 return { primary: null, accent: null };
         }
