@@ -26,7 +26,7 @@ import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
 import { resolveBattleVictory } from '../runtime/BattleVictoryResolver';
-import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
+import { refreshFloodAttackTerrain, resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { services } from "../../core/managers/ServiceLoader";
 import type { BattleRuntimeContext } from '../runtime/BattleRuntimeContext';
 import type { BattleRuntimePhaseName, BattleRuntimePhaseOutcome } from '../runtime/BattleRuntimeContract';
@@ -782,6 +782,12 @@ export class BattleController {
   public setWeatherSchedule(schedule: readonly WeatherScheduleEntry[]): void {
     this.state.weatherSchedule = validateWeatherSchedule(schedule);
     this.state.weather = weatherForTurn(this.state.weatherSchedule, 1);
+    this.refreshFloodForWeather();
+  }
+
+  /** 水攻範圍跟著天氣即時重算（PROG-2-0407）；非水攻戰場不動 */
+  private refreshFloodForWeather(): void {
+    if (this.state.battleTactic === BattleTactic.FloodAttack) refreshFloodAttackTerrain(this.state);
   }
 
   /** 依排程套用指定回合的天氣；天氣改變時發出 WeatherChanged 事件。沒有排程時不動 */
@@ -792,6 +798,7 @@ export class BattleController {
     this.state.weather = transition.current;
     if (transition.changed) {
       services().event.emit(EVENT_NAMES.WeatherChanged, { turn, previous: transition.previous, current: transition.current });
+      this.refreshFloodForWeather();
     }
   }
 

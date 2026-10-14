@@ -13,7 +13,7 @@ import {
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { BattleTactic, GAME_CONFIG, Weather } from '../assets/scripts/core/config/Constants';
 import { TerrainType } from '../assets/scripts/shared/CommonEnums';
-import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
+import { refreshFloodAttackTerrain, resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import { resolveBattleSkillProfile } from '../assets/scripts/battle/skills/BattleSkillProfiles';
 import { BattleSkillDispatcher } from '../assets/scripts/battle/runtime/BattleSkillDispatcher';
 
@@ -90,6 +90,34 @@ export function createWeatherTacticRestrictionSuite(): TestSuite {
             return last;
         };
         assert.equals(deepest(Weather.Clear) + RAIN_FLOOD_DEPTH_BONUS, deepest(Weather.Rain));
+    });
+
+    suite.test('水攻範圍跟著天氣即時重算：轉雨擴大，轉晴還原並保留原地形', () => {
+        const state = new BattleState();
+        // 原地形：中間列 depth 6 原本是山地，淹沒前要能還原
+        state.getCell(1, 6)!.terrain = TerrainType.Mountain;
+        const riverDepth = (lane: number): number => {
+            let last = -1;
+            for (let depth = 0; depth < GAME_CONFIG.GRID_DEPTH; depth++) {
+                if (state.getCell(lane, depth)?.terrain === TerrainType.River) last = depth;
+            }
+            return last;
+        };
+        state.weather = Weather.Clear;
+        refreshFloodAttackTerrain(state);
+        assert.equals(5, riverDepth(1), '晴天中間列淹到 5');
+        assert.equals(TerrainType.Mountain, state.getCell(1, 6)!.terrain, '晴天 depth 6 還沒淹，保留山地');
+
+        state.weather = Weather.Rain;
+        refreshFloodAttackTerrain(state);
+        assert.equals(6, riverDepth(1), '轉雨後中間列擴大到 6');
+        assert.equals(TerrainType.River, state.getCell(1, 6)!.terrain);
+
+        state.weather = Weather.Clear;
+        refreshFloodAttackTerrain(state);
+        assert.equals(5, riverDepth(1), '轉晴後還原');
+        assert.equals(TerrainType.Mountain, state.getCell(1, 6)!.terrain, '原地形山地要還原');
+        assert.equals(null, state.getTileEffect(1, 6), '範圍外的河流效果要移除');
     });
 
     return suite;
