@@ -14,6 +14,9 @@ import {
     canNavalCombinedAttack,
     hitRateInWeather,
     forestMoveBonus,
+    isFogHitGuaranteed,
+    forestMoveBonusFor,
+    hasBattleEffect,
 } from '../assets/scripts/core/systems/FactorTacticLinkage';
 
 export function createFactorTacticLinkageSuite(): TestSuite {
@@ -42,6 +45,53 @@ export function createFactorTacticLinkageSuite(): TestSuite {
         assert.equals(1, forestMoveBonus(TerrainType.Forest, true));
         assert.equals(0, forestMoveBonus(TerrainType.Forest, false));
         assert.equals(0, forestMoveBonus(TerrainType.Plain, true));
+    });
+
+    suite.test('戰場效果接線：大霧必中只在大霧且有 fog-immunity 時成立', () => {
+        assert.isTrue(isFogHitGuaranteed(Weather.Fog, ['fog-immunity']));
+        assert.isFalse(isFogHitGuaranteed(Weather.Fog, []));
+        assert.isFalse(isFogHitGuaranteed(Weather.Clear, ['fog-immunity']));
+    });
+
+    suite.test('戰場效果接線：林地加成只看 forest-move-bonus 且格子為林地', () => {
+        assert.equals(1, forestMoveBonusFor(TerrainType.Forest, ['forest-move-bonus']));
+        assert.equals(0, forestMoveBonusFor(TerrainType.Forest, ['fog-immunity']));
+        assert.equals(0, forestMoveBonusFor(TerrainType.Plain, ['forest-move-bonus']));
+    });
+
+    suite.test('戰場效果接線：hasBattleEffect 只回報清單內的效果', () => {
+        assert.isTrue(hasBattleEffect(['naval-combined-attack'], 'naval-combined-attack'));
+        assert.isFalse(hasBattleEffect(['naval-combined-attack'], 'fog-immunity'));
+    });
+
+    return suite;
+}
+
+// ── 戰場效果接線守衛（PROG-2-0584）──
+export function createFactorBattleWiringSuite(): TestSuite {
+    const suite = new TestSuite('FactorBattleWiring (因子戰場效果接線 PROG-2-0584)');
+    const root = path.resolve(__dirname, '..');
+    const read = (rel: string) => fs.readFileSync(path.join(root, rel), 'utf8');
+
+    suite.test('部隊模型有 factorEffects 欄位，預設為空陣列', () => {
+        assert.isTrue(read('assets/scripts/core/models/TroopUnit.ts').includes('public factorEffects: readonly string[] = [];'));
+    });
+
+    suite.test('戰場控制器載入對應表，部隊出陣時算出 factorEffects', () => {
+        const source = read('assets/scripts/battle/controllers/BattleController.ts');
+        assert.isTrue(source.includes("'assets/resources/data/master/factor-battle-effect-map.json'"), '沒有載入效果對應表');
+        assert.isTrue(source.includes('unit.factorEffects = factorBattleEffectsOf(unit.factorGenes, this.factorEffectMap);'), 'tryDeployTroop 沒有算出 factorEffects');
+    });
+
+    suite.test('戰鬥結算的命中擲骰會先檢查大霧必中', () => {
+        const source = read('assets/scripts/battle/runtime/BattleCombatResolver.ts');
+        assert.isTrue(source.includes('isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects)'), '命中擲骰沒有接大霧免疫');
+        assert.isTrue(source.includes('!fogGuaranteed && !rollHit('), '大霧必中時仍會擲骰');
+    });
+
+    suite.test('自動移動的起始移動力加上林地加成', () => {
+        const source = read('assets/scripts/battle/runtime/phases/BattleAutoMovePhase.ts');
+        assert.isTrue(source.includes('forestMoveBonusFor(cell?.terrain ?? TerrainType.Plain, unit.factorEffects)'), '移動力沒有接林地加成');
     });
 
     return suite;

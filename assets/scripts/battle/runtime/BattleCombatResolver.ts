@@ -7,6 +7,7 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
+import { isFogHitGuaranteed } from '../../core/systems/FactorTacticLinkage';
 
 export interface BattleCombatAction {
   attackerId: string;
@@ -163,7 +164,9 @@ export class BattleCombatResolver {
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
     const defenderStealth = getTerrainTroopEffect(defender.type, defenderCell?.terrain ?? TerrainType.Plain).stealthBonus;
     const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth;
-    if (!rollHit(attackerAccuracy, this.hitRandom)) {
+    // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
+    const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
+    if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
       svc.event.emit(EVENT_NAMES.UnitAttackMissed, {
         attackerId: attacker.id,
         targetId: defender.id,

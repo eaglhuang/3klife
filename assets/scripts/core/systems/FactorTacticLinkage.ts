@@ -60,6 +60,21 @@ export function factorBattleEffectsOf(genes: readonly HeldGene[], map: FactorBat
     return effects;
 }
 
+/** 部隊是否具有某項戰場效果（呼叫端傳入 factorBattleEffectsOf 的結果） */
+export function hasBattleEffect(effects: readonly string[], effect: FactorBattleEffect): boolean {
+    return effects.includes(effect);
+}
+
+/** 攻擊方在大霧天氣且有大霧免疫時，本次命中必中（略過擲骰） */
+export function isFogHitGuaranteed(weather: Weather, effects: readonly string[]): boolean {
+    return weather === Weather.Fog && hasBattleEffect(effects, 'fog-immunity');
+}
+
+/** 依戰場效果決定的林地移動力加成：格子為林地且持有 forest-move-bonus 時 +1 */
+export function forestMoveBonusFor(terrain: TerrainType, effects: readonly string[]): number {
+    return forestMoveBonus(terrain, hasBattleEffect(effects, 'forest-move-bonus'));
+}
+
 /** 綠色戰法種子基因 id：字典中 color 為 green 的基因（PM 裁定） */
 export function greenTacticSeedGeneIds(dictionary: readonly { id: string; color: string }[]): Set<string> {
     return new Set(dictionary.filter((gene) => gene.color === 'green').map((gene) => gene.id));
