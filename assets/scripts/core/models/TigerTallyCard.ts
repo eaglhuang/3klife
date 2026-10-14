@@ -10,4 +10,8 @@ export interface TigerTallyCard {
     source: 'death' | 'surrender' | 'reward';
     producedSeason: number;
     troopType?: string;
+    /** 星級 1~5（TRP-10）；舊存檔缺欄位時讀回 1★ */
+    stars?: number;
+    /** 戰鬥經驗（TRP-10）；舊存檔缺欄位時讀回 0 */
+    battleExp?: number;
 }

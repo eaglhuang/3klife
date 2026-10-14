@@ -1,3 +1,4 @@
+import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
 // @spec-source → 遊戲時間系統.md (doc_spec_0034) §I、Data Schema文件（本機端與Server端）.md (doc_tech_0013)
 /**
@@ -109,7 +110,9 @@ export function normalizeTallyCardsMap(value: unknown): Record<string, TigerTall
         const card = raw as Partial<TigerTallyCard> | null;
         if (!card || typeof card !== 'object') continue;
         if (typeof card.uid !== 'string' || card.uid !== uid || typeof card.templateId !== 'string' || card.templateId.length === 0) continue;
-        out[uid] = card as TigerTallyCard;
+        // 星級欄位（TRP-10）缺欄位時補 1★ / 0 經驗
+        const starState = readCardStarState(card as TigerTallyCard);
+        out[uid] = { ...(card as TigerTallyCard), stars: starState.star, battleExp: starState.exp };
     }
     return out;
 }

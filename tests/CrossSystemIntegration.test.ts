@@ -6,7 +6,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
-import { PlayerSaveService, PLAYER_SAVE_KEY } from '../assets/scripts/core/services/PlayerSaveService';
+import { PlayerSaveService, PLAYER_SAVE_KEY, normalizeTallyCardsMap } from '../assets/scripts/core/services/PlayerSaveService';
 import { LegacyService } from '../assets/scripts/core/services/LegacyService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { advanceMercenaryDay, bondMercenary, canBondMercenary, createTrialMercenary, TRIAL_DAYS } from '../assets/scripts/core/systems/MercenaryBond';
@@ -142,7 +142,8 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         b.setSaveService(new PlayerSaveService(adapter));
         await b.load();
         assert.equals(canonical(a.tallyHoldings), canonical(b.tallyHoldings));
-        assert.equals(canonical(a.tallyCards), canonical(b.tallyCards));
+        // 讀回時存檔會補上 stars/battleExp 預設值（PROG-2-0571），比對前先用同一套正規化處理記憶體中的卡組
+        assert.equals(canonical(normalizeTallyCardsMap(a.tallyCards)), canonical(b.tallyCards));
     });
 
     suite.test('壽命耗盡死亡（主動指令）→ 下一次季結：持有的虎符退回君主並產出陣亡虎符', async () => {
