@@ -17,6 +17,7 @@ import { BondingSetupController } from '../assets/scripts/ui/core/BondingSetupCo
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
 import { buildFactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
+import { createFemaleSource } from '../assets/scripts/core/systems/FemaleSource';
 import { breed } from '../assets/scripts/core/systems/BreedingSystem';
 import { describeRound } from '../assets/scripts/ui/core/NurtureFlowController';
 import type { NurtureRoundLog } from '../assets/scripts/core/systems/NurtureSystem';
@@ -396,6 +397,51 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         b.startNewGame(1);
         assert.equals(0, b.fame, '開新局名聲歸零');
         assert.isTrue(b.domesticLog.lastSeason === null, '開新局內政紀錄清空');
+    });
+
+    suite.test('女性武將來源：登記→存檔→重開讀回一致；不合法的來源被拒；開新局清空', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, makeRoster());
+        assert.isTrue(a.setFemaleSource('hero-c', createFemaleSource('CAPTIVE', 'SR', 5)), '合法來源可登記');
+        assert.isFalse(a.setFemaleSource('hero-c', { Source_Type: 'BOGUS', Quality_Grade: 'SR' } as never), '不合法來源被拒');
+        assert.isFalse(a.setFemaleSource('', createFemaleSource('GACHA', 'R', 0)), '空 id 被拒');
+        assert.equals('CAPTIVE', a.femaleSources['hero-c'].Source_Type, '被拒的登記不覆蓋既有紀錄');
+        await a.save();
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await b.load());
+        assert.equals(canonical(a.femaleSources), canonical(b.femaleSources), '來源紀錄讀檔後一致');
+        assert.equals(5, b.femaleSources['hero-c'].Acquired_Season);
+        b.femaleSources['hero-c'].Quality_Grade = 'N' as never;
+        assert.equals('SR', b.femaleSources['hero-c'].Quality_Grade, 'getter 回傳副本');
+
+        b.startNewGame(9);
+        assert.equals(0, Object.keys(b.femaleSources).length, '開新局清空');
+    });
+
+    suite.test('傭兵 6 天試用走完後結義：好感停在上限 60，R 級需 100 點仍被擋，傭兵與名冊都不變（規格待決 PROG-2-0308）', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, makeRoster());
+        let merc = { ...createTrialMercenary('merc-r'), generalId: 'gen-merc', affection: 0 } as ReturnType<typeof createTrialMercenary> & { generalId: string; affection: number };
+        for (let day = 0; day < TRIAL_DAYS; day++) {
+            merc = { ...merc, ...advanceMercenaryDay(merc).state, affection: applyDailyAffection(merc.affection).affection };
+        }
+        assert.equals(AFFECTION_CAP, merc.affection, '好感停在上限');
+        a.setMercenaries({ mercenaries: [merc], upkeep: [], cooldowns: [] } as never);
+        await a.save();
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore(makeRoster()));
+        b.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await b.load());
+        const template = { id: 'gen-merc', name: '傭兵', faction: 'shu', hp: 1000 } as unknown as GeneralConfig;
+        const result = await b.bondMercenaryToRoster('merc-r', template, { STR: 70, INT: 60, POL: 50, CHR: 50, LUK: 40 }, 'R', 6);
+        assert.isFalse(result.ok, '正式好感上限 60 低於 R 的 100 點，目前無法經點數結義');
+        assert.equals('insufficient-points', result.reason ?? '');
+        assert.equals('Trial', b.mercenaries.mercenaries[0].status, '失敗時傭兵狀態不變');
+        assert.isFalse(b.roster.some((g) => g.id === 'gen-merc'), '失敗時名冊不變');
     });
 
     suite.test('結緣＋血統活性：同亂數種子結果完全一致，因子星級不超過 5★、不低於 1★', () => {
