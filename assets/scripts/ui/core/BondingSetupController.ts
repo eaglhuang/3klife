@@ -16,6 +16,7 @@
  */
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
+import { factorStageText } from '../../core/systems/FactorVisibility';
 import type { BreedingService } from '../../core/services/BreedingService';
 import {
     BREEDING_MIN_AGE,
@@ -202,6 +203,7 @@ export class BondingSetupController {
         };
 
         const level = this._deps.playerDiscoveryLevel?.() ?? 1;
+        texts.factorStage = factorStageText(level);
 
         if (!father || !mother) {
             actives.bondEmptyHint = true;

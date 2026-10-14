@@ -12,7 +12,8 @@
  *
  * Unity 對照：像一個 Sprite 遮罩元件，只回傳「要顯示的文字與狀態」，不碰 Label 節點；畫面層自己套用。
  */
-import { ALL_FACTOR_COLORS, FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';
+import { ALL_FACTOR_COLORS, FACTOR_DISCOVERY_LEVEL, FactorColor } from './FactorInheritance';
+import { requiredDiscoveryLevel } from './FactorVisibility';
 import type { GeneralGeneConfig } from '../models/GeneralUnit';
 
 export interface FactorMaskView {
@@ -26,10 +27,9 @@ export interface FactorMaskView {
     label: string;
 }
 
-/** 因子的發現門檻：先看出生時寫入的 discoveryLevel，沒有則用色系預設 */
+/** 因子的發現門檻：與 FactorVisibility 共用同一條規則（PROG-2-0513），不在這裡重複判斷 */
 export function factorRequiredLevel(gene: GeneralGeneConfig): number {
-    const color = normalizeFactorColor(gene.type);
-    return gene.discoveryLevel ?? (color ? FACTOR_DISCOVERY_LEVEL[color] : 1);
+    return requiredDiscoveryLevel(gene);
 }
 
 /** 單一因子在指定玩家等級下的遮罩狀態；不改輸入 */
