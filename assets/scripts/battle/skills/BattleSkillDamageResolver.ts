@@ -15,6 +15,7 @@ export class BattleSkillDamageResolver {
     target: TroopUnit,
     context: BattleSkillExecutionContext,
     hitIndex: number,
+    stageIndex = 0,
   ): number {
     const scaledAttack = this.resolveScaledAttack(profile, caster, hitIndex);
     const rawDefense = profile.ignoreDefense ? 0 : target.getEffectiveDefense() * (target.isShieldWallActive ? 2 : 1);
@@ -31,10 +32,13 @@ export class BattleSkillDamageResolver {
       attackBonus: caster.attackBonus,
     });
 
+    const stageMultiplier = profile.hitStageMultipliers?.[stageIndex] ?? 1;
+    const staged = stageMultiplier === 1 ? baseDamage : Math.max(1, Math.floor(baseDamage * stageMultiplier));
+
     if (profile.critBonus) {
-      return Math.max(1, Math.floor(baseDamage * (1 + profile.critBonus)));
+      return Math.max(1, Math.floor(staged * (1 + profile.critBonus)));
     }
-    return baseDamage;
+    return staged;
   }
 
   private resolveScaledAttack(
