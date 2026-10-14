@@ -34,7 +34,9 @@ export function createFateBlessingSuite(): TestSuite {
         assert.equals(0.05, FATE_BLESSING_PER_LEVEL);
         assert.equals(0.6, fateSuccessChance(0.5, 2));
         assert.equals(1, fateSuccessChance(0.9, 5));
-        assert.equals(1, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 0));
+        assert.equals(0.85, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 0), '落石基礎 85%');
+        assert.equals(0.9, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 1), '1 級天命 +5%');
+        assert.equals(1, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 4), '上限 100%');
     });
 
     suite.test('傷害倍率 = 1 + 每級 5%；等級 0 時為 1', () => {

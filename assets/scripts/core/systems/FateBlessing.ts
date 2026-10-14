@@ -3,7 +3,7 @@
  * FateBlessing — 紫色因子戰場效果「天命加護」（純邏輯，不依賴 cc）
  *
  * 規則（Q39 選項 A）：紫色因子提升戰場隨機事件（火計、落石）的成功機率與傷害。
- * 數值為 PM 暫定：每級 +5%；落石基礎成功率 100%（行為不變，待 PM 裁定）。
+ * 數值為 PM 暫定：每級 +5%；落石基礎成功率 85%（PM 裁定，天命加成另計）。
  *
  * Unity 對照：像一個 Buff 的 StatModifier，等級越高 modifier 越大；
  * 這裡只算數字，由呼叫端決定套在火計傷害或落石判定上。
@@ -15,8 +15,8 @@ export const FATE_BLESSING_GENE_IDS: readonly string[] = ['gene_destiny', 'gene_
 /** 每級天命加成（PM 暫定 5%） */
 export const FATE_BLESSING_PER_LEVEL = 0.05;
 
-/** 落石基礎成功率（PM 暫定 100%：目前行為不變） */
-export const ROCK_SLIDE_BASE_SUCCESS = 1;
+/** 落石基礎成功率（PM 暫定 85%，天命加成另計） */
+export const ROCK_SLIDE_BASE_SUCCESS = 0.85;
 
 /** 武將持有的基因（只需要 id / level / isLocked） */
 export interface FateHeldGene {
