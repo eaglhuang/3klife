@@ -7,6 +7,34 @@ import { assert, TestSuite } from './TestRunner';
 import { LocalGachaService } from '../assets/scripts/core/services/LocalGachaService';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
+import { LegacyService } from '../assets/scripts/core/services/LegacyService';
+import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import { sys } from 'cc';
+
+/** 同步管理器會檢查裝置 id；其他測試可能改過，這裡先還原，避免召喚紀錄被誤判寫入失敗 */
+function resetSyncDevice(): void {
+    sys.localStorage.removeItem('CLIENT_DEVICE_ID');
+}
+
+function newSession(adapter: MemoryStorageAdapter): GameSession {
+    const session = new GameSession();
+    session.setRosterStore(new InMemoryRosterStore([]));
+    session.setSaveService(new PlayerSaveService(adapter));
+    session.setLifecycle(new LegacyService(adapter));
+    session.startNewGame(1);
+    return session;
+}
+
+function storeOf(session: GameSession) {
+    return {
+        readPity: () => session.gachaPityBook,
+        writePity: (book: Parameters<GameSession['setGachaPityBook']>[0]) => session.setGachaPityBook(book),
+        readWallet: () => session.gachaWalletSave,
+        writeWallet: (wallet: Parameters<GameSession['setGachaWalletSave']>[0]) => session.setGachaWalletSave(wallet),
+    };
+}
 import type { GachaPityBook } from '../assets/scripts/core/systems/GachaDraw';
 import type { LocalGachaWalletSnapshot } from '../assets/scripts/core/services/LocalGachaService';
 
@@ -42,6 +70,7 @@ export function createLocalGachaServiceSuite(): TestSuite {
     const suite = new TestSuite('LocalGachaService (轉蛋服務層 保底與錢包)');
 
     suite.test('保底計數跨服務實例保留：10 抽 + 新實例再 40 抽，第 50 抽必為 SR 以上', async () => {
+        resetSyncDevice();
         const generals = makeGenerals();
         const store = makeSaveStore();
         const a = new LocalGachaService(store);
@@ -53,6 +82,7 @@ export function createLocalGachaServiceSuite(): TestSuite {
     });
 
     suite.test('召喚紀錄寫入失敗：不扣款，保底計數也不前進', async () => {
+        resetSyncDevice();
         const generals = makeGenerals();
         const svc = new LocalGachaService();
         svc.grantCurrency('tickets', 100);
@@ -74,6 +104,7 @@ export function createLocalGachaServiceSuite(): TestSuite {
     });
 
     suite.test('大量抽樣經服務層：SSR 約 3%、SR 約 10%+保底提升', async () => {
+        resetSyncDevice();
         const generals = makeGenerals();
         const svc = new LocalGachaService();
         svc.grantCurrency('tickets', 20000);
@@ -94,6 +125,39 @@ export function createLocalGachaServiceSuite(): TestSuite {
         a.grantCurrency('gems', 50);
         const b = new LocalGachaService(store);
         assert.equals(before + 50, b.getCurrencyAmount('gems'));
+    });
+
+    suite.test('接上存檔：抽卡→存檔→新 Session 讀檔→新服務接續保底與錢包', async () => {
+        resetSyncDevice();
+        const adapter = new MemoryStorageAdapter();
+        const a = newSession(adapter);
+        const svc = new LocalGachaService(storeOf(a));
+        svc.grantCurrency('tickets', 100);
+        await svc.performTicketSummon(10, makeGenerals(), { rng: lcg(3) });
+        const wallet = svc.getWalletSnapshot();
+        await a.save();
+
+        const b = newSession(adapter);
+        assert.isTrue(await b.load());
+        const svc2 = new LocalGachaService(storeOf(b));
+        assert.equals(JSON.stringify(wallet), JSON.stringify(svc2.getWalletSnapshot()), '錢包隨存檔還原');
+        const rest = await svc2.performTicketSummon(40, makeGenerals(), { rng: lcg(4) });
+        assert.notEquals('common', rest[39].rarityTier, '保底計數隨存檔還原，第 50 抽觸發保底');
+    });
+
+    suite.test('新遊戲重置保底與錢包；舊 localStorage 只遷移一次', async () => {
+        resetSyncDevice();
+        sys.localStorage.setItem('ucuf.gacha.wallet.v1', JSON.stringify({ gems: 11, gold: 22, tickets: 33 }));
+        const adapter = new MemoryStorageAdapter();
+        const a = newSession(adapter);
+        const svc = new LocalGachaService(storeOf(a));
+        assert.equals(33, svc.getCurrencyAmount('tickets'), '存檔沒有錢包時遷移舊 localStorage');
+        assert.isTrue(sys.localStorage.getItem('ucuf.gacha.wallet.v1') === null, '遷移後清掉舊 key');
+        a.startNewGame(2);
+        assert.isTrue(a.gachaWalletSave === null, '新遊戲清掉錢包');
+        assert.equals(0, Object.keys(a.gachaPityBook).length, '新遊戲清掉保底');
+        const fresh = new LocalGachaService(storeOf(a));
+        assert.equals(12, fresh.getCurrencyAmount('tickets'), '新遊戲錢包回預設，不吃舊值');
     });
 
     return suite;

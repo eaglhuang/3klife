@@ -48,6 +48,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { bindGachaActions } from '../core/GachaActionBindings';
+import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
 const { ccclass } = _decorator;
@@ -352,7 +353,8 @@ export class LobbyScene extends Component {
         this._sessionEventUnsubscribers.push(
             event.on(GAME_SESSION_EVENTS.GeneralUnveiled, (payload?: unknown) => {
                 const unveiled = payload as UnveilingEvent | undefined;
-                const name = services().session.roster.find((g) => g.id === unveiled?.generalId)?.name ?? '子嗣';
+                const unveiledGeneral = services().session.roster.find((g) => g.id === unveiled?.generalId);
+                const name = unveiledGeneral ? formatGeneralDisplayName(unveiledGeneral.name, unveiledGeneral.title) : '子嗣';
                 services().event.emit('SHOW_TOAST', { message: `${name} 滿 5 歲開獎！請到「開獎・培育」選擇宿命`, duration: 3 });
                 this._refreshNurtureFlow();
             }),
@@ -362,7 +364,8 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.GeneralDied, (payload?: unknown) => {
                 const died = payload as AgingEvent | undefined;
                 if (!died) return;
-                const name = services().session.roster.find((g) => g.id === died.generalId)?.name ?? died.generalId;
+                const diedGeneral = services().session.roster.find((g) => g.id === died.generalId);
+                const name = diedGeneral ? formatGeneralDisplayName(diedGeneral.name, diedGeneral.title) : died.generalId;
                 services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
             }),
         );
@@ -2326,7 +2329,7 @@ export class LobbyScene extends Component {
     private _buildMissionDetailGeneralOptions(): MissionGeneralOption[] {
         return this._generals.map((config) => ({
             id: config.id,
-            label: config.name,
+            label: formatGeneralDisplayName(config.name, config.title),
             volunteer: this._isMissionDetailVolunteerGeneral(config),
         }));
     }
