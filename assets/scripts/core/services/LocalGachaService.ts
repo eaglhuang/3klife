@@ -29,6 +29,10 @@ export interface LocalGachaWalletSnapshot {
     gems: number;
     gold: number;
     tickets: number;
+    /** 銅錢符（免費貨幣，僅常設池）；PROG-2-0339 新增，舊檔補 0 */
+    bronze: number;
+    /** 求籤令（定向道具，不是池幣）；PROG-2-0339 新增，舊檔補 0 */
+    oracle: number;
 }
 
 interface PerformGachaRequest {
@@ -49,6 +53,8 @@ const DEFAULT_WALLET: LocalGachaWalletSnapshot = {
     gems: 1280,
     gold: 128450,
     tickets: 12,
+    bronze: 0,
+    oracle: 0,
 };
 
 function cloneGeneral(general: GeneralConfig): GeneralConfig {
@@ -82,6 +88,8 @@ function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): Loca
         gems: normalizeWalletValue(value.gems, DEFAULT_WALLET.gems),
         gold: normalizeWalletValue(value.gold, DEFAULT_WALLET.gold),
         tickets: normalizeWalletValue(value.tickets, DEFAULT_WALLET.tickets),
+        bronze: normalizeWalletValue(value.bronze, DEFAULT_WALLET.bronze),
+        oracle: normalizeWalletValue(value.oracle, DEFAULT_WALLET.oracle),
     };
 }
 

@@ -266,6 +266,10 @@ export interface GachaWalletSave {
     gems: number;
     gold: number;
     tickets: number;
+    /** 銅錢符；舊檔缺欄位補 0（PROG-2-0339） */
+    bronze: number;
+    /** 求籤令；舊檔缺欄位補 0（PROG-2-0339） */
+    oracle: number;
 }
 
 export function normalizeGachaWalletSave(value: unknown): GachaWalletSave {
@@ -274,7 +278,7 @@ export function normalizeGachaWalletSave(value: unknown): GachaWalletSave {
         const n = Math.floor(Number(raw[key]));
         return Number.isFinite(n) && n >= 0 ? n : 0;
     };
-    return { gems: pick('gems'), gold: pick('gold'), tickets: pick('tickets') };
+    return { gems: pick('gems'), gold: pick('gold'), tickets: pick('tickets'), bronze: pick('bronze'), oracle: pick('oracle') };
 }
 
 /** 名聲：非負整數，壞掉視為 0 */
