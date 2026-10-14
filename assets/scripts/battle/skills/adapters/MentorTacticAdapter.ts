@@ -8,7 +8,9 @@ export class MentorTacticAdapter extends SeedTacticAdapter {
   }
 
   public override buildRequest(general: GeneralUnit, ownerUid: string, options: SeedTacticRequestOptions = {}) {
-    const request = super.buildRequest(general, ownerUid, options);
+    // 未指定戰法時優先取 awakened 槽；否則第一個普通種子槽會擋掉 Mentor 來源（MENT-16）
+    const tacticId = options.tacticId ?? this.firstAwakenedTacticId(general);
+    const request = super.buildRequest(general, ownerUid, { ...options, tacticId });
     if (!request) {
       return null;
     }
@@ -21,6 +23,10 @@ export class MentorTacticAdapter extends SeedTacticAdapter {
       ...request,
       sourceType: SkillSourceType.Mentor,
     };
+  }
+
+  private firstAwakenedTacticId(general: GeneralUnit): string | null {
+    return (general.tacticSlots ?? []).find((slot) => slot.source === 'awakened')?.tacticId ?? null;
   }
 
   private isMentorSlot(general: GeneralUnit, tacticId?: string | null): boolean {
