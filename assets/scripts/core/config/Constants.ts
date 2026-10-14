@@ -25,7 +25,7 @@ export { Faction, TroopType, TerrainType, Weather, BattleTactic, TurnPhase, Stat
 
 
 
-/** 剋制表（key 剋 value）：依 兵種（虎符）系統.md 五角剋制（PROG-2-0341，PM 裁定規格優先） */
+/** 剋制表（key 剋 value）：依 兵種（虎符）系統.md 五角剋制（PROG-2-0343，PM 裁定規格優先） */
 export const TROOP_COUNTER_MAP: Partial<Record<TroopType, TroopType>> = {
   [TroopType.Cavalry]: TroopType.Shield,
   [TroopType.Shield]: TroopType.Archer,
