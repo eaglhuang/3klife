@@ -53,7 +53,7 @@ import { TallyCardData } from "../../shared/TallyCardContract";
 import type { ToastOptions } from "./ToastMessage";
 import { emitDeployDragDebug, shouldLogDeployDragMove } from "./DeployDragDebug";
 import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
-import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
+import { UCUFLogger, LogLevel, LogCategory } from '../../core/utils/UCUFLogger';
 
 const { ccclass, property } = _decorator;
 
