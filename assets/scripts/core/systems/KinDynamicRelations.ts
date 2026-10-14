@@ -156,3 +156,19 @@ export class DynamicRelationBook {
         return { loaded, skipped };
     }
 }
+
+/**
+ * 共鬥戰友配對（純函式）：出征主將與參謀官／後勤官各成一對。
+ * 略過空值、與主將同 id 的支援，以及重複的 id；主將為空時不配對。
+ */
+export function battleComradePairs(commanderUid: string | null, supportUids: readonly (string | null)[]): Array<[string, string]> {
+    if (!commanderUid) return [];
+    const seen = new Set<string>();
+    const pairs: Array<[string, string]> = [];
+    for (const uid of supportUids) {
+        if (!uid || uid === commanderUid || seen.has(uid)) continue;
+        seen.add(uid);
+        pairs.push([commanderUid, uid]);
+    }
+    return pairs;
+}
