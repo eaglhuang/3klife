@@ -152,66 +152,71 @@ function mergeIntoList(existingList, incoming, key = 'id') {
   return { merged: Array.from(existingMap.values()), added, updated, untouched };
 }
 
-// --- 主流程 ---
-console.log('=== merge-generals-master.js ===');
-if (isDryRun) console.log('[INFO]  --dry-run 模式，不寫入檔案。\n');
+// 純函式匯出給測試用（GDP-03）；直接執行腳本時才跑主流程
+module.exports = { extractBase, extractLore, mergeIntoList };
 
-// 載入來源
-const wikiRecords = loadJson(wikiPath);
-const aiRecords = loadJson(aiPath);
-const allIncoming = [...wikiRecords, ...aiRecords];
-console.log(`[INFO]  wiki: ${wikiRecords.length} 筆  ai: ${aiRecords.length} 筆  合計: ${allIncoming.length} 筆\n`);
+if (require.main === module) {
+  // --- 主流程 ---
+  console.log('=== merge-generals-master.js ===');
+  if (isDryRun) console.log('[INFO]  --dry-run 模式，不寫入檔案。\n');
 
-// 載入現有 master
-const baseObj = loadMasterJson(GENERALS_BASE);
-const loreObj = loadMasterJson(GENERALS_LORE);
+  // 載入來源
+  const wikiRecords = loadJson(wikiPath);
+  const aiRecords = loadJson(aiPath);
+  const allIncoming = [...wikiRecords, ...aiRecords];
+  console.log(`[INFO]  wiki: ${wikiRecords.length} 筆  ai: ${aiRecords.length} 筆  合計: ${allIncoming.length} 筆\n`);
 
-// 提取分類欄位
-const incomingBase = allIncoming.map(extractBase).filter(r => r.id);
-const incomingLore = allIncoming.map(extractLore).filter(r => r.id);
+  // 載入現有 master
+  const baseObj = loadMasterJson(GENERALS_BASE);
+  const loreObj = loadMasterJson(GENERALS_LORE);
 
-// 合併
-const baseResult = mergeIntoList(baseObj.data, incomingBase);
-const loreResult = mergeIntoList(loreObj.data, incomingLore);
+  // 提取分類欄位
+  const incomingBase = allIncoming.map(extractBase).filter(r => r.id);
+  const incomingLore = allIncoming.map(extractLore).filter(r => r.id);
 
-// Diff 報告
-console.log(`[generals-base] 新增 ${baseResult.added.length} 筆，更新 ${baseResult.updated.length} 筆，未變更 ${baseResult.untouched.length} 筆`);
-if (baseResult.added.length > 0) console.log(`  新增: ${baseResult.added.join(', ')}`);
-if (baseResult.updated.length > 0) console.log(`  更新: ${baseResult.updated.join(', ')}`);
+  // 合併
+  const baseResult = mergeIntoList(baseObj.data, incomingBase);
+  const loreResult = mergeIntoList(loreObj.data, incomingLore);
 
-console.log(`[generals-lore] 新增 ${loreResult.added.length} 筆，更新 ${loreResult.updated.length} 筆，未變更 ${loreResult.untouched.length} 筆`);
-if (loreResult.added.length > 0) console.log(`  新增: ${loreResult.added.join(', ')}`);
-if (loreResult.updated.length > 0) console.log(`  更新: ${loreResult.updated.join(', ')}`);
+  // Diff 報告
+  console.log(`[generals-base] 新增 ${baseResult.added.length} 筆，更新 ${baseResult.updated.length} 筆，未變更 ${baseResult.untouched.length} 筆`);
+  if (baseResult.added.length > 0) console.log(`  新增: ${baseResult.added.join(', ')}`);
+  if (baseResult.updated.length > 0) console.log(`  更新: ${baseResult.updated.join(', ')}`);
 
-if (isDryRun) {
-  console.log('\n[INFO]  --dry-run 結束，未寫入任何檔案。');
-  process.exit(0);
-}
+  console.log(`[generals-lore] 新增 ${loreResult.added.length} 筆，更新 ${loreResult.updated.length} 筆，未變更 ${loreResult.untouched.length} 筆`);
+  if (loreResult.added.length > 0) console.log(`  新增: ${loreResult.added.join(', ')}`);
+  if (loreResult.updated.length > 0) console.log(`  更新: ${loreResult.updated.join(', ')}`);
 
-// 寫入
-baseObj.data = baseResult.merged;
-baseObj.updatedAt = new Date().toISOString();
-loreObj.data = loreResult.merged;
-loreObj.updatedAt = new Date().toISOString();
+  if (isDryRun) {
+    console.log('\n[INFO]  --dry-run 結束，未寫入任何檔案。');
+    process.exit(0);
+  }
 
-fs.writeFileSync(GENERALS_BASE, JSON.stringify(baseObj, null, 2), 'utf-8');
-fs.writeFileSync(GENERALS_LORE, JSON.stringify(loreObj, null, 2), 'utf-8');
-console.log('\n[OK]    master/generals-base.json 已更新。');
-console.log('[OK]    master/generals-lore.json 已更新。');
+  // 寫入
+  baseObj.data = baseResult.merged;
+  baseObj.updatedAt = new Date().toISOString();
+  loreObj.data = loreResult.merged;
+  loreObj.updatedAt = new Date().toISOString();
 
-// 自動執行驗證
-console.log('\n[INFO]  執行 validate-generals-data.js...');
-try {
-  execSync(`node "${VALIDATE_SCRIPT}"`, { stdio: 'inherit' });
-} catch (_e) {
-  console.error('[ERROR] 驗證發現問題，請修正後重新合併。');
-  process.exit(1);
-}
+  fs.writeFileSync(GENERALS_BASE, JSON.stringify(baseObj, null, 2), 'utf-8');
+  fs.writeFileSync(GENERALS_LORE, JSON.stringify(loreObj, null, 2), 'utf-8');
+  console.log('\n[OK]    master/generals-base.json 已更新。');
+  console.log('[OK]    master/generals-lore.json 已更新。');
 
-console.log('\n[INFO]  執行 build-generals-runtime.js...');
-try {
-  execSync(`node "${BUILD_RUNTIME_SCRIPT}"`, { stdio: 'inherit' });
-} catch (_e) {
-  console.error('[ERROR] runtime build 失敗，master 與 runtime 可能不同步。');
-  process.exit(1);
+  // 自動執行驗證
+  console.log('\n[INFO]  執行 validate-generals-data.js...');
+  try {
+    execSync(`node "${VALIDATE_SCRIPT}"`, { stdio: 'inherit' });
+  } catch (_e) {
+    console.error('[ERROR] 驗證發現問題，請修正後重新合併。');
+    process.exit(1);
+  }
+
+  console.log('\n[INFO]  執行 build-generals-runtime.js...');
+  try {
+    execSync(`node "${BUILD_RUNTIME_SCRIPT}"`, { stdio: 'inherit' });
+  } catch (_e) {
+    console.error('[ERROR] runtime build 失敗，master 與 runtime 可能不同步。');
+    process.exit(1);
+  }
 }
