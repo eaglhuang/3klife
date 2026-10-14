@@ -436,8 +436,8 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         b.setRosterStore(new InMemoryRosterStore(makeRoster()));
         b.setSaveService(new PlayerSaveService(adapter));
         assert.isTrue(await b.load());
-        const template = { id: 'gen-merc', name: '傭兵', faction: 'shu', hp: 1000 } as unknown as GeneralConfig;
-        const result = await b.bondMercenaryToRoster('merc-r', template, { STR: 70, INT: 60, POL: 50, CHR: 50, LUK: 40 }, 'R', 6);
+        const template = { id: 'gen-merc', name: '傭兵', faction: 'shu', hp: 1000, rarityTier: 'common', str: 70, lea: 60 } as unknown as GeneralConfig;
+        const result = await b.bondMercenaryToRoster('merc-r', template);
         assert.isFalse(result.ok, '結義點數餘額為 0，付不起 R 的 100 點');
         assert.equals('insufficient-points', result.reason ?? '');
         assert.equals('Trial', b.mercenaries.mercenaries[0].status, '失敗時傭兵狀態不變');

@@ -33,7 +33,6 @@ import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacySer
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
-import { normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { bondMercenaryToRoster, type RosterBondResult } from '../systems/MercenaryRoster';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
@@ -77,7 +76,7 @@ import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMili
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
-import { createFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -285,8 +284,6 @@ export class GameSession {
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 傭兵存檔包（試用、薪水、冷卻）；隨存檔保存（MERC-01 接線） */
     private _mercenaries: MercenarySaveBundle = createEmptyMercenaryBundle();
-    /** 女性武將來源與品質（FEM-01）：武將 id → 來源紀錄 */
-    private _femaleSources: Record<string, FemaleSource> = {};
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
@@ -421,11 +418,6 @@ export class GameSession {
         this._mercenaries = normalizeMercenaryBundle(bundle);
     }
 
-    /** 女性武將來源紀錄的副本（武將 id → 來源）；改動需透過 setFemaleSource。 */
-    public get femaleSources(): Readonly<Record<string, FemaleSource>> {
-        return normalizeFemaleSourcesMap(this._femaleSources);
-    }
-
     /** 登記或覆寫一位武將的女性來源；格式不合法時回傳 false 且不變動。不寫存檔，由呼叫端決定何時 save。 */
     public setFemaleSource(generalId: string, source: FemaleSource): boolean {
         const normalized = normalizeFemaleSource(source);
@@ -459,7 +451,7 @@ export class GameSession {
     }
 
     public get femaleSources(): Readonly<Record<string, FemaleSource>> {
-        return { ...this._femaleSources };
+        return normalizeFemaleSourcesMap(this._femaleSources);
     }
 
     public get tallyCards(): Readonly<Record<string, TigerTallyCard>> {
@@ -637,7 +629,6 @@ export class GameSession {
         this._fame = 0;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._mercenaries = createEmptyMercenaryBundle();
-        this._femaleSources = {};
     }
 
     /** 開場流程選用：先驗證資料，再開新局並以六位名將替換名冊；既有 startNewGame 不變。 */
@@ -1307,7 +1298,6 @@ export class GameSession {
         this._fame = normalizeFame(snapshot.resources?.fame);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
-        this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         return true;
     }
