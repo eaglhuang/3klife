@@ -320,8 +320,9 @@ export function createBreedingSuite(): TestSuite {
     });
 
     suite.test('受孕成功：0 歲子嗣、五維 = 父母平均 × EP/100、母方待產 4 季', () => {
-        const father = makeGeneral('f', '男', { str: 90, genes: [{ id: 'gene_command', level: 3 }] });
-        const mother = makeGeneral('m', '女', { str: 70, genes: [{ id: 'gene_cavalry', level: 2 }, { id: 'gene_honor', level: 2 }] });
+        // LUK 0：天命波動為 0（PROG-2-0511），本測試只驗證 EP 基礎分與子嗣欄位
+        const father = makeGeneral('f', '男', { str: 90, luk: 0, genes: [{ id: 'gene_command', level: 3 }] });
+        const mother = makeGeneral('m', '女', { str: 70, luk: 0, genes: [{ id: 'gene_cavalry', level: 2 }, { id: 'gene_honor', level: 2 }] });
         const result = breed({ father, mother, pedigree: new BloodlineGraph(), random: seq(0, 0.9, 0.9, 0.9, 0.9, 0.1), childId: 'baby', dictionary, birthSeason: 7 });
         assert.equals('conceived', result.outcome);
         const child = result.child!;
@@ -421,7 +422,8 @@ export function createBreedingSuite(): TestSuite {
         assert.equals(3, roster.length);
         const child = roster.find((g) => g.id === 'child-guan-yu-diao-chan-1')!;
         assert.equals(0, child.age);
-        assert.equals(85, child.ep);
+        // 子嗣 EP = 預覽基礎分 + 天命波動（PROG-2-0511）；波動依父母 LUK 與亂數而定
+        assert.equals(85 + result.ep!.fate, child.ep);
         assert.equals(14, (child.ancestor_chain ?? []).length);
 
         const pedigree = graph.getPedigree(child.id);
