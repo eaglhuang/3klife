@@ -36,7 +36,9 @@ import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { bondMercenaryToRoster, type RosterBondResult } from '../systems/MercenaryRoster';
-import type { BondStats } from '../systems/MercenaryBondPermanent';
+import { advanceTrialDay } from '../systems/MercenaryTrialDay';
+import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
+import { filterPoolGeneralIds } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
@@ -74,7 +76,8 @@ import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
-import { createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
+import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
+import { createFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -229,6 +232,12 @@ function toSortieMember(g: GeneralConfig): SortieMember {
 /** 虎符忠誠度初始值（規格未定，暫定）；武將沒有紀錄時以此起算 */
 const TALLY_LOYALTY_INITIAL = 50;
 
+/** 單一遊戲日的傭兵結算結果：日序與本日產生的離隊事件（告別信等）。 */
+export interface MercenaryDayReport {
+    day: number;
+    events: DepartureEvent[];
+}
+
 export class GameSession {
     private _clock = new GameClock();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -266,6 +275,8 @@ export class GameSession {
     private _tallyHoldings: TallyHoldings = createTallyHoldings([]);
     /** 虎符卡資料（uid → 卡）；陣亡產出的卡會登記到這裡 */
     private _tallyCards: Record<string, TigerTallyCard> = {};
+    /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
+    private _femaleSources: Record<string, FemaleSource> = {};
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -362,6 +373,49 @@ export class GameSession {
         return serializeMercenaryBundle(this._mercenaries);
     }
 
+    /** 傭兵系統目前的遊戲日（從 0 起算）。 */
+    public get mercenaryDay(): number {
+        return this._mercenaries.day ?? 0;
+    }
+
+    /**
+     * 推進一個遊戲日：試用中傭兵倒數 −1、好感 +10。
+     * 倒數已在前一日歸零且仍未結義者，本日離隊、寫入告別事件並開始 30 天冷卻。
+     * 遊戲日的觸發入口（時間軸）尚未定案，由呼叫端決定何時呼叫。
+     */
+    public async advanceMercenaryDay(): Promise<MercenaryDayReport> {
+        const today = this.mercenaryDay + 1;
+        const events: DepartureEvent[] = [];
+        const departed = new Set<string>();
+        let cooldowns = this._mercenaries.cooldowns;
+        const mercenaries = this._mercenaries.mercenaries.map((merc) => {
+            const settled = settleTrialRollover(merc, today, cooldowns);
+            cooldowns = settled.cooldowns;
+            if (settled.departed) {
+                departed.add(merc.uid);
+                events.push(...settled.events);
+                return { ...merc, status: settled.record.status };
+            }
+            return advanceTrialDay(merc).state;
+        });
+        this._mercenaries = {
+            ...this._mercenaries,
+            mercenaries,
+            upkeep: this._mercenaries.upkeep.filter((u) => !departed.has(u.uid)),
+            cooldowns,
+            day: today,
+        };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { day: today, events };
+    }
+
+    /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
+    public availablePoolGeneralIds(generalIds: readonly string[]): string[] {
+        return filterPoolGeneralIds(generalIds, this.mercenaryDay, this._mercenaries.cooldowns);
+    }
+
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
     public setMercenaries(bundle: MercenarySaveBundle): void {
         this._mercenaries = normalizeMercenaryBundle(bundle);
@@ -381,15 +435,15 @@ export class GameSession {
     }
 
     /**
-     * 結義入名冊：傭兵結義轉永久（好感扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
-     * 失敗時不改任何狀態。rarity、stats 由呼叫端傳入（規格未定來源，見 PROG-2-0308）。
+     * 結義入名冊：傭兵結義轉永久（好感滿 60 為門檻，扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
+     * 失敗時不改任何狀態。結義點數從 GCH-06 的餘額（bondPoints）扣除。
      */
-    public async bondMercenaryToRoster(uid: string, template: GeneralConfig, stats: BondStats, rarity: string, today: number): Promise<RosterBondResult & { rosterAdded?: boolean }> {
+    public async bondMercenaryToRoster(uid: string, template: GeneralConfig): Promise<RosterBondResult & { rosterAdded?: boolean }> {
         const mercenary = this._mercenaries.mercenaries.find((m) => m.uid === uid);
         if (!mercenary) {
             return { ok: false, reason: 'not-found', pointsSpent: 0 };
         }
-        const result = bondMercenaryToRoster(mercenary, template, stats, rarity, this._mercenaries.cooldowns, today);
+        const result = bondMercenaryToRoster(mercenary, template, this._bondPoints, this._mercenaries.cooldowns, this.mercenaryDay);
         if (!result.ok || !result.mercenary || !result.general || !result.cooldowns) {
             return result;
         }
@@ -397,9 +451,15 @@ export class GameSession {
             mercenaries: this._mercenaries.mercenaries.map((m) => (m.uid === uid ? result.mercenary! : m)),
             upkeep: this._mercenaries.upkeep.filter((u) => u.uid !== uid),
             cooldowns: result.cooldowns,
+            day: this.mercenaryDay,
         };
+        this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    public get femaleSources(): Readonly<Record<string, FemaleSource>> {
+        return { ...this._femaleSources };
     }
 
     public get tallyCards(): Readonly<Record<string, TigerTallyCard>> {
@@ -571,6 +631,7 @@ export class GameSession {
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
+        this._femaleSources = {};
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
@@ -660,6 +721,11 @@ export class GameSession {
             this._military = { ...this._military, cityTroops: Math.max(0, this._military.cityTroops - resolution.cityTroopsSpent) };
         }
         if (resolution.joined) {
+            // 女俘虜歸入名冊時記下 CAPTIVE 來源（FEM-05 / FEM-01）
+            const captiveSource = captiveFemaleSourceOf({ ...pending.target }, this._clock.state.totalSeasonsElapsed);
+            if (captiveSource) {
+                this._femaleSources = { ...this._femaleSources, [pending.target.id]: createFemaleSource('CAPTIVE', captiveSource.Quality_Grade, captiveSource.Acquired_Season) };
+            }
             // addGenerals 廣播 RosterChanged；監獄狀態另外存檔
             await this.addGenerals([{ ...pending.target }]);
         }
@@ -1235,6 +1301,7 @@ export class GameSession {
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
+        this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._fame = normalizeFame(snapshot.resources?.fame);
