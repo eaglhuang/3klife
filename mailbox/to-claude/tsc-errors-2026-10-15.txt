@@ -1,0 +1,379 @@
+assets/scripts/battle/runtime/BattleRuntimeContract.ts(20,12): error TS2304: Cannot find name 'BattleResult'.
+assets/scripts/battle/shared/BattleTacticBehavior.ts(160,5): error TS18048: 'context' is possibly 'undefined'.
+assets/scripts/battle/skills/adapters/BattleSkillSourceTranslator.ts(66,63): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'SkillSourceType | undefined'.
+  Type 'string' is not assignable to type 'SkillSourceType | undefined'.
+assets/scripts/battle/views/BattleSceneLoader.ts(115,41): error TS2339: Property 'name' does not exist on type 'AudioClip'.
+assets/scripts/ui/components/GradientBackground.ts(4,18): error TS2339: Property 'executeInEditMode' does not exist on type '{ ccclass: (_name?: string | undefined) => (_: any) => void; property: () => (_: any, __: any) => void; requireComponent: () => (_: any, __: any) => void; }'.
+assets/scripts/ui/components/GradientBackground.ts(28,1): error TS1238: Unable to resolve signature of class decorator when called as an expression.
+  The runtime will invoke the decorator with 1 arguments, but the decorator expects 2.
+assets/scripts/ui/components/GradientBackground.ts(28,19): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/GradientBackground.ts(51,29): error TS2339: Property 'getComponent' does not exist on type 'GradientBackground'.
+assets/scripts/ui/components/GradientBackground.ts(51,58): error TS2339: Property 'addComponent' does not exist on type 'GradientBackground'.
+assets/scripts/ui/components/GradientBackground.ts(52,37): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/components/GradientBackground.ts(52,65): error TS2554: Expected 2 arguments, but got 3.
+assets/scripts/ui/components/GradientBackground.ts(61,19): error TS2339: Property 'off' does not exist on type 'Node'.
+assets/scripts/ui/components/GradientBackground.ts(61,38): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/components/GradientBackground.ts(98,26): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/components/GradientBackground.ts(142,45): error TS2339: Property 'getComponent' does not exist on type 'GradientBackground'.
+assets/scripts/ui/components/GradientBackground.ts(142,74): error TS2339: Property 'addComponent' does not exist on type 'GradientBackground'.
+assets/scripts/ui/components/GradientBackground.ts(145,32): error TS2339: Property 'getComponent' does not exist on type 'GradientBackground'.
+assets/scripts/ui/components/GradientBackground.ts(190,87): error TS2339: Property 'PixelFormat' does not exist on type 'typeof Texture2D'.
+assets/scripts/ui/components/GradientBackground.ts(200,34): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/GradientBackground.ts(201,30): error TS2339: Property 'Type' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/ResultPopup.ts(126,24): error TS2339: Property 'type' does not exist on type 'Sprite'.
+assets/scripts/ui/components/ResultPopup.ts(126,38): error TS2339: Property 'Type' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/ResultPopup.ts(127,24): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/components/ResultPopup.ts(127,42): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/ResultPopup.ts(139,23): error TS2339: Property 'emit' does not exist on type 'Node'.
+assets/scripts/ui/components/ResultPopup.ts(146,23): error TS2339: Property 'emit' does not exist on type 'Node'.
+assets/scripts/ui/components/RoundedRectBackground.ts(3,18): error TS2339: Property 'executeInEditMode' does not exist on type '{ ccclass: (_name?: string | undefined) => (_: any) => void; property: () => (_: any, __: any) => void; requireComponent: () => (_: any, __: any) => void; }'.
+assets/scripts/ui/components/RoundedRectBackground.ts(6,1): error TS1238: Unable to resolve signature of class decorator when called as an expression.
+  The runtime will invoke the decorator with 1 arguments, but the decorator expects 2.
+assets/scripts/ui/components/RoundedRectBackground.ts(6,19): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/RoundedRectBackground.ts(10,15): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/RoundedRectBackground.ts(13,15): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/RoundedRectBackground.ts(20,15): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/RoundedRectBackground.ts(23,15): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/RoundedRectBackground.ts(30,5): error TS1329: 'property' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@property()'?
+assets/scripts/ui/components/RoundedRectBackground.ts(33,5): error TS1329: 'property' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@property()'?
+assets/scripts/ui/components/RoundedRectBackground.ts(40,5): error TS1329: 'property' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@property()'?
+assets/scripts/ui/components/RoundedRectBackground.ts(43,5): error TS1329: 'property' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@property()'?
+assets/scripts/ui/components/RoundedRectBackground.ts(53,31): error TS2339: Property 'getComponent' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/components/RoundedRectBackground.ts(53,62): error TS2339: Property 'addComponent' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/components/RoundedRectBackground.ts(54,37): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/components/RoundedRectBackground.ts(54,65): error TS2554: Expected 2 arguments, but got 3.
+assets/scripts/ui/components/RoundedRectBackground.ts(63,19): error TS2339: Property 'off' does not exist on type 'Node'.
+assets/scripts/ui/components/RoundedRectBackground.ts(63,38): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/components/RoundedRectBackground.ts(67,49): error TS2339: Property 'getComponent' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/components/RoundedRectBackground.ts(67,80): error TS2339: Property 'addComponent' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/components/RoundedRectBackground.ts(68,32): error TS2339: Property 'getComponent' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/components/ShadowBackground.ts(3,18): error TS2339: Property 'executeInEditMode' does not exist on type '{ ccclass: (_name?: string | undefined) => (_: any) => void; property: () => (_: any, __: any) => void; requireComponent: () => (_: any, __: any) => void; }'.
+assets/scripts/ui/components/ShadowBackground.ts(22,1): error TS1238: Unable to resolve signature of class decorator when called as an expression.
+  The runtime will invoke the decorator with 1 arguments, but the decorator expects 2.
+assets/scripts/ui/components/ShadowBackground.ts(22,19): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/ShadowBackground.ts(32,29): error TS2339: Property 'getComponent' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/components/ShadowBackground.ts(32,58): error TS2339: Property 'addComponent' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/components/ShadowBackground.ts(33,37): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/components/ShadowBackground.ts(33,65): error TS2554: Expected 2 arguments, but got 3.
+assets/scripts/ui/components/ShadowBackground.ts(42,19): error TS2339: Property 'off' does not exist on type 'Node'.
+assets/scripts/ui/components/ShadowBackground.ts(42,38): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/components/ShadowBackground.ts(70,26): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/components/ShadowBackground.ts(80,45): error TS2339: Property 'getComponent' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/components/ShadowBackground.ts(80,74): error TS2339: Property 'addComponent' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/components/ShadowBackground.ts(83,32): error TS2339: Property 'getComponent' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/components/ShadowBackground.ts(106,87): error TS2339: Property 'PixelFormat' does not exist on type 'typeof Texture2D'.
+assets/scripts/ui/components/ShadowBackground.ts(116,34): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/ShadowBackground.ts(117,30): error TS2339: Property 'Type' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/SolidBackground.ts(3,46): error TS2339: Property 'executeInEditMode' does not exist on type '{ ccclass: (_name?: string | undefined) => (_: any) => void; property: () => (_: any, __: any) => void; requireComponent: () => (_: any, __: any) => void; }'.
+assets/scripts/ui/components/SolidBackground.ts(13,56): error TS2339: Property 'PixelFormat' does not exist on type 'typeof Texture2D'.
+assets/scripts/ui/components/SolidBackground.ts(37,1): error TS1238: Unable to resolve signature of class decorator when called as an expression.
+  The runtime will invoke the decorator with 1 arguments, but the decorator expects 2.
+assets/scripts/ui/components/SolidBackground.ts(37,19): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/SolidBackground.ts(41,15): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/SolidBackground.ts(44,15): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/components/SolidBackground.ts(54,29): error TS2339: Property 'getComponent' does not exist on type 'SolidBackground'.
+assets/scripts/ui/components/SolidBackground.ts(54,58): error TS2339: Property 'addComponent' does not exist on type 'SolidBackground'.
+assets/scripts/ui/components/SolidBackground.ts(58,14): error TS2531: Object is possibly 'null'.
+assets/scripts/ui/components/SolidBackground.ts(59,13): error TS2531: Object is possibly 'null'.
+assets/scripts/ui/components/SolidBackground.ts(59,26): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/components/SolidBackground.ts(59,44): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/SolidBackground.ts(60,13): error TS2531: Object is possibly 'null'.
+assets/scripts/ui/components/SolidBackground.ts(60,26): error TS2339: Property 'type' does not exist on type 'Sprite'.
+assets/scripts/ui/components/SolidBackground.ts(60,40): error TS2339: Property 'Type' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/components/SolidBackground.ts(61,13): error TS2531: Object is possibly 'null'.
+assets/scripts/ui/components/SolidBackground.ts(72,22): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(23,32): error TS2307: Cannot find module './UISkinResolver' or its corresponding type declarations.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(24,39): error TS2307: Cannot find module './UIPreviewStyleBuilder' or its corresponding type declarations.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(25,40): error TS2307: Cannot find module './UIPreviewLayoutBuilder' or its corresponding type declarations.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(26,39): error TS2307: Cannot find module './UISpecTypes' or its corresponding type declarations.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(133,16): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(133,34): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(159,37): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(159,54): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(159,84): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(200,40): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(205,16): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(205,34): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(276,42): error TS2551: Property 'convertToWorldSpaceAR' does not exist on type 'UITransform'. Did you mean 'convertToNodeSpaceAR'?
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(279,42): error TS2551: Property 'convertToWorldSpaceAR' does not exist on type 'UITransform'. Did you mean 'convertToNodeSpaceAR'?
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(294,28): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/_pending-delete/UIPreviewShadowManager.ts(296,48): error TS2339: Property 'activeInHierarchy' does not exist on type 'Node'.
+assets/scripts/ui/core/CompositePanel.ts(525,18): error TS2339: Property 'destroyAllChildren' does not exist on type 'Node'.
+assets/scripts/ui/core/CompositePanel.ts(536,45): error TS2551: Property 'components' does not exist on type 'Node'. Did you mean 'addComponent'?
+assets/scripts/ui/core/CssClipPathMask.ts(1,50): error TS2305: Module '"cc"' has no exported member 'Mask'.
+assets/scripts/ui/core/CssClipPathMask.ts(3,18): error TS2339: Property 'executeInEditMode' does not exist on type '{ ccclass: (_name?: string | undefined) => (_: any) => void; property: () => (_: any, __: any) => void; requireComponent: () => (_: any, __: any) => void; }'.
+assets/scripts/ui/core/CssClipPathMask.ts(12,1): error TS1238: Unable to resolve signature of class decorator when called as an expression.
+  The runtime will invoke the decorator with 1 arguments, but the decorator expects 2.
+assets/scripts/ui/core/CssClipPathMask.ts(12,19): error TS2554: Expected 0 arguments, but got 1.
+assets/scripts/ui/core/CssClipPathMask.ts(15,5): error TS1329: 'property' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@property()'?
+assets/scripts/ui/core/CssClipPathMask.ts(18,5): error TS1329: 'property' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@property()'?
+assets/scripts/ui/core/CssClipPathMask.ts(29,37): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/core/CssClipPathMask.ts(29,65): error TS2554: Expected 2 arguments, but got 3.
+assets/scripts/ui/core/CssClipPathMask.ts(38,19): error TS2339: Property 'off' does not exist on type 'Node'.
+assets/scripts/ui/core/CssClipPathMask.ts(38,38): error TS2339: Property 'SIZE_CHANGED' does not exist on type '{ NODE_DESTROYED: string; }'.
+assets/scripts/ui/core/CssClipPathMask.ts(42,27): error TS2339: Property 'getComponent' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/CssClipPathMask.ts(42,54): error TS2339: Property 'addComponent' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/CssClipPathMask.ts(46,31): error TS2339: Property 'getComponent' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/CssClipPathMask.ts(46,62): error TS2339: Property 'addComponent' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/CssClipPathMask.ts(50,32): error TS2339: Property 'getComponent' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/CssClipPathMask.ts(58,49): error TS2339: Property 'getComponent' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/CssClipPathMask.ts(59,27): error TS2339: Property 'getComponent' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/UINodePool.ts(43,14): error TS2339: Property 'removeFromParent' does not exist on type 'Node'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(231,36): error TS2339: Property 'getChildByPath' does not exist on type 'Node'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(238,95): error TS7006: Parameter 'c' implicitly has an 'any' type.
+assets/scripts/ui/core/UIPreviewBuilder.ts(244,94): error TS7006: Parameter 'c' implicitly has an 'any' type.
+assets/scripts/ui/core/UIPreviewBuilder.ts(292,88): error TS2339: Property 'cellSize' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(293,88): error TS2339: Property 'cellSize' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(465,36): error TS2339: Property 'enabled' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(470,18): error TS2339: Property 'enabled' does not exist on type 'CssClipPathMask'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(636,38): error TS2339: Property 'constraint' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(636,60): error TS2339: Property 'Constraint' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(636,91): error TS2339: Property 'constraintNum' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(637,38): error TS2339: Property 'constraint' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(637,60): error TS2339: Property 'Constraint' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(637,91): error TS2339: Property 'constraintNum' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(639,26): error TS2339: Property 'constraintNum' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(641,64): error TS2339: Property 'constraintNum' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(644,26): error TS2339: Property 'constraintNum' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(647,45): error TS2339: Property 'cellSize' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(648,53): error TS2551: Property 'spacingX' does not exist on type 'Layout'. Did you mean 'spacingY'?
+assets/scripts/ui/core/UIPreviewBuilder.ts(649,26): error TS2339: Property 'paddingLeft' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(650,26): error TS2339: Property 'paddingRight' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(651,43): error TS2339: Property 'cellSize' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(654,26): error TS2551: Property 'paddingBottom' does not exist on type 'Layout'. Did you mean 'paddingTop'?
+assets/scripts/ui/core/UIPreviewBuilder.ts(657,67): error TS2551: Property 'spacingX' does not exist on type 'Layout'. Did you mean 'spacingY'?
+assets/scripts/ui/core/UIPreviewBuilder.ts(670,76): error TS2551: Property 'paddingBottom' does not exist on type 'Layout'. Did you mean 'paddingTop'?
+assets/scripts/ui/core/UIPreviewBuilder.ts(671,40): error TS2339: Property 'paddingLeft' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(671,61): error TS2339: Property 'paddingRight' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(673,55): error TS2339: Property 'paddingLeft' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(673,76): error TS2339: Property 'paddingRight' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(674,61): error TS2551: Property 'paddingBottom' does not exist on type 'Layout'. Did you mean 'paddingTop'?
+assets/scripts/ui/core/UIPreviewBuilder.ts(724,20): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(724,41): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(732,24): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(834,39): error TS2339: Property 'AlignMode' does not exist on type 'typeof Widget'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(912,66): error TS2339: Property 'paddingLeft' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(913,46): error TS2551: Property 'paddingBottom' does not exist on type 'Layout'. Did you mean 'paddingTop'?
+assets/scripts/ui/core/UIPreviewBuilder.ts(913,69): error TS2339: Property 'paddingRight' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewBuilder.ts(914,64): error TS2551: Property 'spacingX' does not exist on type 'Layout'. Did you mean 'spacingY'?
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(1,24): error TS2305: Module '"cc"' has no exported member 'Size'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(76,16): error TS2551: Property 'spacingX' does not exist on type 'Layout'. Did you mean 'spacingY'?
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(78,16): error TS2339: Property 'paddingLeft' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(79,16): error TS2339: Property 'paddingRight' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(81,16): error TS2551: Property 'paddingBottom' does not exist on type 'Layout'. Did you mean 'paddingTop'?
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(86,20): error TS2339: Property 'cellSize' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(90,28): error TS2339: Property 'startAxis' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(90,47): error TS2339: Property 'AxisDirection' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(93,28): error TS2339: Property 'startAxis' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(93,47): error TS2339: Property 'AxisDirection' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(99,28): error TS2339: Property 'constraint' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(99,48): error TS2339: Property 'Constraint' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(102,28): error TS2339: Property 'constraint' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(102,48): error TS2339: Property 'Constraint' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(105,28): error TS2339: Property 'constraint' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(105,48): error TS2339: Property 'Constraint' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(110,24): error TS2339: Property 'constraintNum' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(115,20): error TS2339: Property 'horizontalDirection' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(116,26): error TS2339: Property 'HorizontalDirection' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(117,26): error TS2339: Property 'HorizontalDirection' does not exist on type 'typeof Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(192,20): error TS2339: Property 'enabled' does not exist on type 'Layout'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(255,36): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(275,36): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(324,36): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/UIPreviewLayoutBuilder.ts(349,36): error TS2339: Property 'position' does not exist on type 'Node'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(18,60): error TS2305: Module '"cc"' has no exported member 'ScrollView'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(18,72): error TS2305: Module '"cc"' has no exported member 'ScrollBar'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(18,98): error TS2305: Module '"cc"' has no exported member 'Mask'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(123,16): error TS2339: Property 'target' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(260,20): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(260,38): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(263,24): error TS2339: Property 'target' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(282,24): error TS2339: Property 'target' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(300,24): error TS2339: Property 'target' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(310,24): error TS2339: Property 'target' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(317,16): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(317,37): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(319,16): error TS2339: Property 'trim' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(322,20): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(322,45): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(322,61): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(322,77): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(331,20): error TS2339: Property 'target' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(376,16): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(376,34): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(378,16): error TS2339: Property 'trim' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(380,20): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(380,45): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(380,61): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(380,77): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(17,52): error TS2305: Module '"cc"' has no exported member 'Vec2'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(58,23): error TS2339: Property 'enabled' does not exist on type 'SolidBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(62,24): error TS2339: Property 'enabled' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(66,29): error TS2339: Property 'enabled' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(70,26): error TS2339: Property 'enabled' does not exist on type 'GradientBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(78,23): error TS2339: Property 'enabled' does not exist on type 'SolidBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(82,24): error TS2339: Property 'enabled' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(86,29): error TS2339: Property 'enabled' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(119,24): error TS2339: Property 'enabled' does not exist on type 'GradientBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(137,23): error TS2339: Property 'enabled' does not exist on type 'SolidBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(141,29): error TS2339: Property 'enabled' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(145,26): error TS2339: Property 'enabled' does not exist on type 'GradientBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(159,24): error TS2339: Property 'enabled' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(191,27): error TS2339: Property 'enabled' does not exist on type 'SolidBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(195,29): error TS2339: Property 'enabled' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(207,29): error TS2339: Property 'enabled' does not exist on type 'RoundedRectBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(211,24): error TS2339: Property 'enabled' does not exist on type 'ShadowBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(220,16): error TS2339: Property 'enabled' does not exist on type 'SolidBackground'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(230,16): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(230,34): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(234,20): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(234,45): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(234,61): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(234,77): error TS2339: Property 'color' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(322,16): error TS2339: Property 'sizeMode' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(322,34): error TS2339: Property 'SizeMode' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(327,16): error TS2339: Property 'normalSprite' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(328,16): error TS2339: Property 'pressedSprite' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(329,16): error TS2339: Property 'hoverSprite' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(330,16): error TS2339: Property 'disabledSprite' does not exist on type 'Button'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(368,35): error TS2339: Property 'type' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(368,49): error TS2339: Property 'Type' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(369,35): error TS2339: Property 'type' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(369,49): error TS2339: Property 'Type' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(370,35): error TS2339: Property 'type' does not exist on type 'Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(370,49): error TS2339: Property 'Type' does not exist on type 'typeof Sprite'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(393,15): error TS2339: Property 'spacingX' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(402,19): error TS2339: Property 'outlineColor' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(405,19): error TS2339: Property 'outlineWidth' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(410,19): error TS2339: Property 'enableShadow' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(411,19): error TS2339: Property 'shadowColor' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(412,19): error TS2339: Property 'shadowOffset' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(413,19): error TS2339: Property 'shadowBlur' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(416,15): error TS2339: Property 'isItalic' does not exist on type 'Label'.
+assets/scripts/ui/core/UISkinResolver.ts(185,32): error TS2339: Property 'WHITE' does not exist on type 'typeof Color'.
+assets/scripts/ui/core/UISkinResolver.ts(200,47): error TS2339: Property 'WHITE' does not exist on type 'typeof Color'.
+assets/scripts/ui/core/UITemplateBinder.ts(12,23): error TS2305: Module '"cc"' has no exported member 'ProgressBar'.
+assets/scripts/ui/core/UITemplateBinder.ts(12,52): error TS2305: Module '"cc"' has no exported member 'ScrollView'.
+assets/scripts/ui/layers/UILayer.ts(17,3): error TS1329: 'property' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@property()'?
+assets/scripts/ui/layers/UILayer.ts(53,17): error TS2339: Property 'getComponent' does not exist on type 'UILayer'.
+assets/scripts/ui/layers/UILayer.ts(53,49): error TS2339: Property 'addComponent' does not exist on type 'UILayer'.
+tests/atm-lang-0200-0202.test.ts(4,47): error TS2307: Cannot find module '../packages/core/src/guidance/language-adapter-fallback' or its corresponding type declarations.
+tests/atm-lang-0200-0202.test.ts(5,40): error TS2307: Cannot find module '../packages/core/src/guidance/language-adapter-resolver' or its corresponding type declarations.
+tests/atm-lang-0200-0202.test.ts(6,41): error TS2307: Cannot find module '../packages/cli/src/commands/runtime-adapter-readiness' or its corresponding type declarations.
+tests/atm-lang-0200-0202.test.ts(81,29): error TS7006: Parameter 'message' implicitly has an 'any' type.
+tests/atm-lang-0200-0202.test.ts(104,32): error TS7006: Parameter 'line' implicitly has an 'any' type.
+tests/atm-lang-0300-0302.test.ts(4,69): error TS2307: Cannot find module '../packages/core/src/guidance/legacy-route-delegation' or its corresponding type declarations.
+tests/atm-lang-0300-0302.test.ts(5,54): error TS2307: Cannot find module '../packages/core/src/police/guidance-police-integration' or its corresponding type declarations.
+tests/atm-lang-0300-0302.test.ts(52,34): error TS7006: Parameter 'message' implicitly has an 'any' type.
+tests/atm-lang-0400-0402.test.ts(4,40): error TS2307: Cannot find module '../packages/core/src/guidance/language-adapter-resolver' or its corresponding type declarations.
+tests/atm-lang-0400-0402.test.ts(5,43): error TS2307: Cannot find module '../packages/core/src/guidance/candidates-rank-service' or its corresponding type declarations.
+tests/atm-lang-0400-0402.test.ts(6,32): error TS2307: Cannot find module '../packages/cli/src/commands/candidates' or its corresponding type declarations.
+tests/atm-lang-0400-0402.test.ts(108,36): error TS7006: Parameter 'line' implicitly has an 'any' type.
+tests/atm-lang-0500-0502.test.ts(5,39): error TS2307: Cannot find module '../packages/plugin-sdk/src/language-adapter' or its corresponding type declarations.
+tests/atm-lang-0500-0502.test.ts(6,38): error TS2307: Cannot find module '../packages/plugin-sdk/src/language-adapter' or its corresponding type declarations.
+tests/atm-lang-0600-0602.test.ts(7,8): error TS2307: Cannot find module '../packages/core/src/guidance/atomic-map-decomposition' or its corresponding type declarations.
+tests/atm-lang-0600-0602.test.ts(11,8): error TS2307: Cannot find module '../packages/plugin-sdk/src/language-adapter' or its corresponding type declarations.
+tests/atm-lang-csharp.test.ts(25,36): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(29,36): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(33,36): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(37,36): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(52,36): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(88,23): error TS7006: Parameter 'request' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(100,8): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(111,8): error TS7006: Parameter 'reference' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(124,35): error TS7006: Parameter 'finding' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(129,31): error TS7006: Parameter 'finding' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(142,28): error TS7006: Parameter 'check' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(146,28): error TS7006: Parameter 'check' implicitly has an 'any' type.
+tests/atm-lang-csharp.test.ts(150,28): error TS7006: Parameter 'check' implicitly has an 'any' type.
+tests/BattleAptitude.test.ts(22,10): error TS2300: Duplicate identifier 'TerrainType'.
+tests/BattleAptitude.test.ts(22,23): error TS2300: Duplicate identifier 'TroopType'.
+tests/BattleAptitude.test.ts(26,19): error TS2300: Duplicate identifier 'TerrainType'.
+tests/BattleAptitude.test.ts(26,32): error TS2300: Duplicate identifier 'TroopType'.
+tests/BattleCombatRegression.test.ts(64,34): error TS2345: Argument of type '{ state: BattleState; playerGeneralUnitId: null; enemyGeneralUnitId: null; buildAttackAction: (unit: TroopUnit) => { attackerId: string; targetId: string; } | null; ... 5 more ...; onUnitKilled: () => void; }' is not assignable to parameter of type 'BattleCombatPhaseContext'.
+  Property 'actingFaction' is missing in type '{ state: BattleState; playerGeneralUnitId: null; enemyGeneralUnitId: null; buildAttackAction: (unit: TroopUnit) => { attackerId: string; targetId: string; } | null; ... 5 more ...; onUnitKilled: () => void; }' but required in type 'BattleCombatPhaseContext'.
+tests/BattleCombatRegression.test.ts(245,9): error TS2322: Type '() => void' is not assignable to type '() => TurnSnapshot'.
+  Type 'void' is not assignable to type 'TurnSnapshot'.
+tests/BattleCombatRegression.test.ts(269,9): error TS2322: Type '() => void' is not assignable to type '() => TurnSnapshot'.
+  Type 'void' is not assignable to type 'TurnSnapshot'.
+tests/BattleRoster.test.ts(182,38): error TS2353: Object literal may only specify known properties, and 'isMercenary' does not exist in type 'Partial<BattleRosterGeneral>'.
+tests/BattleRoster.test.ts(183,44): error TS2353: Object literal may only specify known properties, and 'templateFlag' does not exist in type 'Partial<BattleRosterGeneral>'.
+tests/BattleSkillSourceTranslator.test.ts(263,51): error TS18047: 'request' is possibly 'null'.
+tests/BattleSkillSourceTranslator.test.ts(264,39): error TS18047: 'request' is possibly 'null'.
+tests/BattleSkillSourceTranslator.test.ts(265,58): error TS18047: 'request' is possibly 'null'.
+tests/BattleSkillSourceTranslator.test.ts(266,52): error TS18047: 'request' is possibly 'null'.
+tests/BattleSkillSourceTranslator.test.ts(267,25): error TS18047: 'request' is possibly 'null'.
+tests/BloodlineGuarantee.test.ts(37,37): error TS2352: Conversion of type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' to type 'UnveilingGeneral' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' is not comparable to type 'GeneralConfig'.
+    Types of property 'faction' are incompatible.
+      Type '"shu"' is not comparable to type 'Faction'.
+tests/BloodlineGuarantee.test.ts(58,40): error TS2352: Conversion of type '{ id: string; name: string; faction: "shu"; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: never[]; genes: never[]; }' to type 'UnveilingGeneral' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'hp' is missing in type '{ id: string; name: string; faction: "shu"; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: never[]; genes: never[]; }' but required in type 'GeneralConfig'.
+tests/BreedingPreviewPresenter.test.ts(9,5): error TS2322: Type '{ ep: number; resonance: number; outcross: number; affinity: number; fate: number; topTag: string | null; topTagCount: number; familyTradition?: boolean | undefined; rating: string; }' is not assignable to type 'EpBreakdown'.
+  Types of property 'familyTradition' are incompatible.
+    Type 'boolean | undefined' is not assignable to type 'boolean'.
+      Type 'undefined' is not assignable to type 'boolean'.
+tests/CrossSystemIntegration.test.ts(494,31): error TS18048: 'g.level' is possibly 'undefined'.
+tests/CrossSystemIntegration.test.ts(494,47): error TS18048: 'g.level' is possibly 'undefined'.
+tests/CrossSystemIntegration.test.ts(495,21): error TS18048: 'g.level' is possibly 'undefined'.
+tests/InbreedingNegativeTrait.test.ts(21,46): error TS2352: Conversion of type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' to type 'UnveilingGeneral' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' is not comparable to type 'GeneralConfig'.
+    Types of property 'faction' are incompatible.
+      Type '"shu"' is not comparable to type 'Faction'.
+tests/LegacyTally.test.ts(40,128): error TS2353: Object literal may only specify known properties, and 'maxLifespan' does not exist in type 'Partial<TestGeneral>'.
+tests/LegacyTally.test.ts(41,154): error TS2353: Object literal may only specify known properties, and 'maxLifespan' does not exist in type 'Partial<TestGeneral>'.
+tests/MentorTeachingBoundary.test.ts(37,12): error TS2352: Conversion of type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: { ...; }[]; }' to type 'UnveilingGeneral' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: { ...; }[]; }' is not comparable to type 'GeneralConfig'.
+    Types of property 'faction' are incompatible.
+      Type '"shu"' is not comparable to type 'Faction'.
+tests/MercenaryDeparture.test.ts(102,80): error TS2353: Object literal may only specify known properties, and 'frozenDaysLeft' does not exist in type '{ type: string; uid: string; reason?: string | undefined; }'.
+tests/NurtureReportBookLifecycle.test.ts(30,26): error TS2352: Conversion of type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' to type 'UnveilingGeneral' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' is not comparable to type 'GeneralConfig'.
+    Types of property 'faction' are incompatible.
+      Type '"shu"' is not comparable to type 'Faction'.
+tests/ResultPopup.test.ts(16,1): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(17,19): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(18,25): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(45,19): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(55,1): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(60,46): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(98,1): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(102,5): error TS2304: Cannot find name 'beforeEach'.
+tests/ResultPopup.test.ts(106,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(107,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(108,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(111,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(121,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(124,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(133,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(136,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(145,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(148,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(151,26): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(154,15): error TS2551: Property 'onClickReplay' does not exist on type 'ResultPopup'. Did you mean '_onClickReplay'?
+tests/ResultPopup.test.ts(156,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(159,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(162,24): error TS2304: Cannot find name 'jest'.
+tests/ResultPopup.test.ts(165,15): error TS2551: Property 'onClickBack' does not exist on type 'ResultPopup'. Did you mean '_onClickBack'?
+tests/ResultPopup.test.ts(167,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(170,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(181,9): error TS2304: Cannot find name 'expect'.
+tests/ResultPopup.test.ts(184,5): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/ResultPopup.test.ts(186,9): error TS2304: Cannot find name 'expect'.
+tests/SortieDeploy.test.ts(211,83): error TS2304: Cannot find name 'SortieMember'.
+tests/SortieDeploy.test.ts(223,84): error TS2304: Cannot find name 'SortieMember'.
+tests/SortieDeploy.test.ts(237,30): error TS2339: Property 'spent' does not exist on type 'TacticSpendResult'.
+  Property 'spent' does not exist on type '{ ok: false; state: SortieState; reason: "TACTIC_SHORT"; }'.
+tests/SortieDeploy.test.ts(299,9): error TS2531: Object is possibly 'null'.
+tests/SortieDeploy.test.ts(308,9): error TS2531: Object is possibly 'null'.
+tests/StageProgressSave.test.ts(91,40): error TS2345: Argument of type '"player-lose"' is not assignable to parameter of type 'BattleResult'.
+tests/UISpecParser.test.ts(17,1): error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/UISpecParser.test.ts(56,9): error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+tests/WiringBatch0513.test.ts(66,54): error TS2352: Conversion of type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' to type 'UnveilingGeneral' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' is not comparable to type 'GeneralConfig'.
+    Types of property 'faction' are incompatible.
+      Type '"shu"' is not comparable to type 'Faction'.
+tests/WiringBatch0513.test.ts(212,17): error TS2352: Conversion of type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' to type 'UnveilingGeneral' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; faction: "shu"; gender: string; age: number; status: string; hp: number; str: number; int: number; lea: number; pol: number; cha: number; luk: number; hiddenFlags: string[]; genes: never[]; }' is not comparable to type 'GeneralConfig'.
+    Types of property 'faction' are incompatible.
+      Type '"shu"' is not comparable to type 'Faction'.
