@@ -20,6 +20,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
 import { tagMentorSource } from '../systems/MentorSources';
+import { routeRetirement, type RetirementCandidate } from '../systems/RetirementRouting';
 import type { SpiritCard } from '../models/SpiritCard';
 import { isTallyEligible, TigerTallyGeneral } from '../systems/TigerTally';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
@@ -151,6 +152,7 @@ export class LegacyService implements SeasonLifecycle {
             gene_refs: (retired.genes ?? []).map((g) => g.id).filter((id): id is string => !!id),
             parentUids: [retired.fatherId ?? '', retired.motherId ?? ''],
             generalSnapshot: JSON.parse(JSON.stringify(retired)) as GeneralConfig,
+            mentorRoute: routeRetirement(target as RetirementCandidate),
         } as MentorCard, 'Retire');
 
         const cards = await this.getMentorCards();

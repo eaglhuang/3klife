@@ -117,6 +117,27 @@ export function createLegacySuite(): TestSuite {
         assert.isTrue(await adapter.get('player.save') !== null, '退役後應自動存檔');
     });
 
+    suite.test('退役分流（FATE-08）：武職→戰技教官、文職→智識教官、雙職能→全能教官、未定職能→UNKNOWN_CLASS', async () => {
+        const { session } = createSession(new MemoryStorageAdapter(), [
+            makeGeneral('warrior', '男', 66, { primaryClass: 'Warrior' } as Partial<TestGeneral>),
+            makeGeneral('scholar', '男', 66, { primaryClass: 'Scholar' } as Partial<TestGeneral>),
+            makeGeneral('dual', '男', 66, { primaryClass: 'Warrior', subClass: 'Scholar' } as Partial<TestGeneral>),
+            makeGeneral('unknown', '男', 66),
+        ]);
+        const warrior = await session.retireGeneral('warrior');
+        const scholar = await session.retireGeneral('scholar');
+        const dual = await session.retireGeneral('dual');
+        const unknown = await session.retireGeneral('unknown');
+
+        assert.equals('tactic_mentor', warrior.mentorRoute!.destination);
+        assert.equals('WARRIOR', warrior.mentorRoute!.reason);
+        assert.equals('wisdom_mentor', scholar.mentorRoute!.destination);
+        assert.equals('SCHOLAR', scholar.mentorRoute!.reason);
+        assert.equals('all_round_mentor', dual.mentorRoute!.destination);
+        assert.equals('DUAL_CLASS', dual.mentorRoute!.reason);
+        assert.equals('UNKNOWN_CLASS', unknown.mentorRoute!.reason);
+    });
+
     suite.test('一般角色死亡：建立快照而非英靈卡、寫入 L5、教官保留', async () => {
         const adapter = new MemoryStorageAdapter();
         const { session, legacy, events } = createSession(adapter, [
