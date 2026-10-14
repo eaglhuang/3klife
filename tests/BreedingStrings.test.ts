@@ -1,5 +1,5 @@
 import { TestSuite, assert } from './TestRunner';
-import { BREED_TEXT_FALLBACK_ZH_TW, fillBreedText as fill } from '../assets/scripts/ui/core/BreedingTexts';
+import { BREED_TEXT_FALLBACK_ZH_TW, fillBreedText as fill, withBreedFallback } from '../assets/scripts/ui/core/BreedingTexts';
 
 // 結緣字串（PROG-2-0525 / BRD-14、PROG-2-0526 多語）。規格：結緣系統（配種）§H。
 // Unity 對照：像 Localization Table 的單元測試，確認每個 key 存在、佔位符數量正確、代入後文字正確。
@@ -84,6 +84,13 @@ export function createBreedingStringsSuite(): TestSuite {
         for (const { key } of BREED_KEYS) {
             assert.equals(zhTw[key], BREED_TEXT_FALLBACK_ZH_TW[key], key);
         }
+    });
+
+    suite.test('withBreedFallback：語系表回傳 key 本身時退回 zh-TW 預設；有譯文則採用譯文', () => {
+        const notLoaded = withBreedFallback((key) => key);
+        assert.equals('天命開獎！曹丕 五維資質揭曉：', notLoaded('ui.breed.unveil_5', '曹丕'));
+        const loaded = withBreedFallback((key, ...args) => `[譯] ${key} ${args.join(',')}`);
+        assert.equals('[譯] ui.breed.daqi ', loaded('ui.breed.daqi'));
     });
 
     suite.test('單次代入：代入的文字即使含 {n} 也不會被再次替換', () => {

@@ -31,3 +31,13 @@ export function fallbackBreedText(key: string, ...args: string[]): string {
     const template = BREED_TEXT_FALLBACK_ZH_TW[key];
     return template === undefined ? key : fillBreedText(template, args);
 }
+
+/**
+ * 包一層語系查詢：語系表未載入時 i18n.t 會回傳 key 本身，這時改用 zh-TW 預設文案，避免畫面出現原始 key。
+ */
+export function withBreedFallback(lookup: BreedTextLookup): BreedTextLookup {
+    return (key, ...args) => {
+        const localized = lookup(key, ...args);
+        return localized === key ? fallbackBreedText(key, ...args) : localized;
+    };
+}

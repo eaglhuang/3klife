@@ -1257,7 +1257,6 @@ export class GameSession {
         return applied.result;
     }
 
-    /** 攻城戰開戰的壽命消耗（PROG-2-0237）：扣完即存檔；武將不在名冊時回傳 null */
     /** 動態關係互動（KIN-10）：回補親密度，有變動才自動存檔；沒有該對關係回傳空陣列 */
     public async interactDynamicRelation(uidA: string, uidB: string): Promise<DynamicRelation[]> {
         const updated = this.dynamicRelations.interact(uidA, uidB);
@@ -1287,6 +1286,7 @@ export class GameSession {
         return { granted, legacyCount: this._legacyCount };
     }
 
+    /** 攻城戰開戰的壽命消耗（PROG-2-0237）：扣完即存檔；武將不在名冊時回傳 null */
     public async spendSiegeLifespan(generalId: string): Promise<ActiveLifespanResult | null> {
         const result = this.spendLifespan(generalId, 'siege');
         if (result && this._autoSave && this._save) {
