@@ -7,7 +7,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { normalizeGachaPityBook, resolveGachaPityBook } from '../assets/scripts/core/systems/GachaDraw';
-import { createPlayerSaveSnapshot, validatePlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaWalletSave, validatePlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import { createInitialGameTimeState } from '../assets/scripts/core/systems/GameClock';
 
 const TIME = createInitialGameTimeState();
@@ -55,6 +55,22 @@ export function createGachaPityStorageSuite(): TestSuite {
         const result = resolveGachaPityBook(undefined, null);
         assert.equals(0, Object.keys(result.book).length);
         assert.isFalse(result.migrateLegacy);
+    });
+
+    suite.test('錢包存檔往返；舊檔沒有錢包欄位時讀回為 undefined', () => {
+        const withWallet = createPlayerSaveSnapshot(TIME, [], new Date(0), undefined, [], null, 1, undefined, 0, undefined, 0, [], {}, {}, {}, undefined, {}, {}, { gems: 1200, gold: 5000, tickets: 7 });
+        const restored = validatePlayerSaveSnapshot(JSON.parse(JSON.stringify(withWallet)));
+        assert.equals(1200, restored.gachaWallet?.gems ?? -1);
+        assert.equals(7, restored.gachaWallet?.tickets ?? -1);
+        const legacy = validatePlayerSaveSnapshot(JSON.parse(JSON.stringify(createPlayerSaveSnapshot(TIME, [], new Date(0)))));
+        assert.isTrue(legacy.gachaWallet === undefined);
+    });
+
+    suite.test('錢包欄位壞掉時補 0，不會變成負數或 NaN', () => {
+        const wallet = normalizeGachaWalletSave({ gems: -5, gold: 'x', tickets: 3.9 });
+        assert.equals(0, wallet.gems);
+        assert.equals(0, wallet.gold);
+        assert.equals(3, wallet.tickets);
     });
 
     return suite;

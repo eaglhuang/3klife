@@ -7,6 +7,20 @@ import { assert, TestSuite } from './TestRunner';
 import { LocalGachaService } from '../assets/scripts/core/services/LocalGachaService';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import type { GachaPityBook } from '../assets/scripts/core/systems/GachaDraw';
+import type { LocalGachaWalletSnapshot } from '../assets/scripts/core/services/LocalGachaService';
+
+/** 模擬存檔：兩個服務實例共用同一份保底與錢包（真實遊戲由 GameSession 持有） */
+function makeSaveStore() {
+    let pity: GachaPityBook | null = null;
+    let wallet: LocalGachaWalletSnapshot | null = null;
+    return {
+        readPity: () => pity,
+        writePity: (next: GachaPityBook) => { pity = next; },
+        readWallet: () => wallet,
+        writeWallet: (next: LocalGachaWalletSnapshot) => { wallet = next; },
+    };
+}
 
 function lcg(seed: number): () => number {
     let state = seed >>> 0;
@@ -29,10 +43,11 @@ export function createLocalGachaServiceSuite(): TestSuite {
 
     suite.test('保底計數跨服務實例保留：10 抽 + 新實例再 40 抽，第 50 抽必為 SR 以上', async () => {
         const generals = makeGenerals();
-        const a = new LocalGachaService();
+        const store = makeSaveStore();
+        const a = new LocalGachaService(store);
         a.grantCurrency('tickets', 100);
         await a.performTicketSummon(10, generals, { rng: lcg(7) });
-        const b = new LocalGachaService();
+        const b = new LocalGachaService(store);
         const rest = await b.performTicketSummon(40, generals, { rng: lcg(8) });
         assert.notEquals('common', rest[39].rarityTier, '第 50 抽（保底）不能是 R');
     });
@@ -70,6 +85,15 @@ export function createLocalGachaServiceSuite(): TestSuite {
         }
         assert.isTrue(Math.abs(ssr / total - 0.03) < 0.01, `SSR 比例 ${ssr / total}`);
         assert.isTrue(Math.abs(sr / total - 0.1174) < 0.015, `SR 比例 ${sr / total}`);
+    });
+
+    suite.test('錢包跨服務實例保留：入帳後新實例讀到相同餘額（錢包已併入存檔）', () => {
+        const store = makeSaveStore();
+        const a = new LocalGachaService(store);
+        const before = a.getCurrencyAmount('gems');
+        a.grantCurrency('gems', 50);
+        const b = new LocalGachaService(store);
+        assert.equals(before + 50, b.getCurrencyAmount('gems'));
     });
 
     return suite;

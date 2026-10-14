@@ -145,13 +145,22 @@ export class LobbyScene extends Component {
     private _characterDs3TabBindRetryCount = 0;
     private readonly _singlePlayerModeToggleHandles: Array<{ root: Node; label: Label }> = [];
     private readonly _localGachaService = new LocalGachaService({
-        // 保底計數存進存檔（PROG-2-0337）；寫入後順手存檔，失敗不影響抽卡
-        read: () => services().session.gachaPityBook,
-        write: (book) => {
+        // 保底與錢包存進存檔（PROG-2-0337 / 0338）；寫入後順手存檔，失敗不影響抽卡
+        readPity: () => services().session.gachaPityBook,
+        writePity: (book) => {
             services().session.setGachaPityBook(book);
-            void services().session.save().catch(() => undefined);
+            this._saveGachaState();
+        },
+        readWallet: () => services().session.gachaWalletSave,
+        writeWallet: (wallet) => {
+            services().session.setGachaWalletSave(wallet);
+            this._saveGachaState();
         },
     });
+
+    private _saveGachaState(): void {
+        void services().session.save().catch(() => undefined);
+    }
     private _gachaFlowCoordinator: GachaFlowCoordinator | null = null;
     private _gachaPullPending = false;
     private _ready = false;

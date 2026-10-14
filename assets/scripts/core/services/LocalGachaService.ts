@@ -76,6 +76,15 @@ function normalizeWalletValue(value: unknown, fallback: number): number {
     return Math.max(0, resolved);
 }
 
+/** 錢包欄位缺漏或壞掉時用預設值補齊 */
+function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): LocalGachaWalletSnapshot {
+    return {
+        gems: normalizeWalletValue(value.gems, DEFAULT_WALLET.gems),
+        gold: normalizeWalletValue(value.gold, DEFAULT_WALLET.gold),
+        tickets: normalizeWalletValue(value.tickets, DEFAULT_WALLET.tickets),
+    };
+}
+
 function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
     const explicit = general.rarityTier;
     if (explicit) {
@@ -120,20 +129,26 @@ function formatDrawResultText(index: number, general: GeneralConfig, rarityTier:
 }
 
 
-/** 保底計數的存放處（由呼叫端接到存檔）；沒有時只存在記憶體中，例如載入畫面的預覽服務 */
-export interface GachaPityStore {
-    read(): GachaPityBook;
-    write(book: GachaPityBook): void;
+/**
+ * 轉蛋的存放處（保底表與錢包，由呼叫端接到存檔）；沒有時只存在記憶體中，例如載入畫面的預覽服務。
+ * read* 回傳 null 代表存檔裡沒有這筆資料（舊檔），會改讀舊 localStorage 做一次性遷移。
+ */
+export interface GachaSaveStore {
+    readPity(): GachaPityBook | null;
+    writePity(book: GachaPityBook): void;
+    readWallet(): Partial<LocalGachaWalletSnapshot> | null;
+    writeWallet(wallet: LocalGachaWalletSnapshot): void;
 }
 
 export class LocalGachaService {
     private readonly _actionLogStore = ActionLogStore.getInstance();
     private _singlePlayerModeEnabled = this._loadSinglePlayerModeEnabled();
-    private _wallet = this._loadWalletSnapshot();
+    /** 錢包（第一次用到才讀取，避免建構時就碰存檔） */
+    private _walletCache: LocalGachaWalletSnapshot | null = null;
     /** 各池保底計數（poolId → 狀態）；各池獨立計數（轉蛋系統 §保底計算）；第一次用到才讀取，避免建構時就碰存檔 */
     private _pityBookCache: GachaPityBook | null = null;
 
-    constructor(private readonly _pityStore: GachaPityStore | null = null) {}
+    constructor(private readonly _saveStore: GachaSaveStore | null = null) {}
 
     public isSinglePlayerModeEnabled(): boolean {
         return this._singlePlayerModeEnabled;
@@ -160,22 +175,22 @@ export class LocalGachaService {
     }
 
     public getWalletSnapshot(): LocalGachaWalletSnapshot {
-        return { ...this._wallet };
+        return { ...this._walletOf() };
     }
 
     public getCurrencyAmount(currencyKey: GachaCurrencyKey): number {
-        return this._wallet[currencyKey];
+        return this._walletOf()[currencyKey];
     }
 
     public grantCurrency(currencyKey: GachaCurrencyKey, amount: number): number {
         const resolvedAmount = Math.max(0, Math.floor(Number.isFinite(amount) ? amount : 0));
         if (resolvedAmount <= 0) {
-            return this._wallet[currencyKey];
+            return this._walletOf()[currencyKey];
         }
 
-        this._wallet[currencyKey] = Math.max(0, this._wallet[currencyKey] + resolvedAmount);
+        this._walletOf()[currencyKey] = Math.max(0, this._walletOf()[currencyKey] + resolvedAmount);
         this._persistWalletSnapshot();
-        return this._wallet[currencyKey];
+        return this._walletOf()[currencyKey];
     }
 
     /** 非抽卡用途的扣款（例如招募俘虜，PROG-2-0082）；餘額不足時不扣、回傳 false */
@@ -184,7 +199,7 @@ export class LocalGachaService {
         if (cost <= 0) {
             return true;
         }
-        if (this._wallet[currencyKey] < cost) {
+        if (this._walletOf()[currencyKey] < cost) {
             return false;
         }
         this._spendCurrency(currencyKey, cost);
@@ -346,7 +361,7 @@ export class LocalGachaService {
         }
 
         const check = checkWalletBalance(
-            this._wallet[currencyKey],
+            this._walletOf()[currencyKey],
             cost,
             this.isDevAutoTopUpEnabled(),
             DEFAULT_WALLET[currencyKey],
@@ -355,7 +370,7 @@ export class LocalGachaService {
             throw new Error(formatInsufficientMessage(currencyKey, check.shortfall));
         }
         if (check.toppedUpBalance !== undefined) {
-            this._wallet[currencyKey] = check.toppedUpBalance;
+            this._walletOf()[currencyKey] = check.toppedUpBalance;
             this._persistWalletSnapshot();
         }
     }
@@ -365,7 +380,7 @@ export class LocalGachaService {
             return;
         }
 
-        this._wallet[currencyKey] = Math.max(0, this._wallet[currencyKey] - cost);
+        this._walletOf()[currencyKey] = Math.max(0, this._walletOf()[currencyKey] - cost);
         this._persistWalletSnapshot();
     }
 
@@ -378,10 +393,10 @@ export class LocalGachaService {
 
     /** 讀取保底表：存檔優先；存檔沒有、舊 localStorage 有時一次性遷移進存檔（PROG-2-0337） */
     private _loadPityBook(): GachaPityBook {
-        if (!this._pityStore) return {};
-        const { book, migrateLegacy } = resolveGachaPityBook(this._pityStore.read(), this._readLegacyPityBook());
+        if (!this._saveStore) return {};
+        const { book, migrateLegacy } = resolveGachaPityBook(this._saveStore.readPity(), this._readLegacyPityBook());
         if (migrateLegacy) {
-            this._pityStore.write(book);
+            this._saveStore.writePity(book);
             this._clearLegacyPityBook();
         }
         return book;
@@ -406,28 +421,50 @@ export class LocalGachaService {
     }
 
     private _persistPityBook(): void {
-        this._pityStore?.write(this._pityBookOf());
+        this._saveStore?.writePity(this._pityBookOf());
     }
 
-    private _loadWalletSnapshot(): LocalGachaWalletSnapshot {
-        const stored = sys.localStorage.getItem(WALLET_STORAGE_KEY);
-        if (!stored) {
-            return { ...DEFAULT_WALLET };
+    private _walletOf(): LocalGachaWalletSnapshot {
+        if (this._walletCache === null) {
+            this._walletCache = this._loadWalletSnapshot();
         }
+        return this._walletCache;
+    }
 
+    /** 讀取錢包：存檔優先；存檔沒有、舊 localStorage 有時一次性遷移（PROG-2-0338） */
+    private _loadWalletSnapshot(): LocalGachaWalletSnapshot {
+        if (!this._saveStore) return { ...DEFAULT_WALLET };
+        const saved = this._saveStore.readWallet();
+        if (saved) return normalizeWalletSnapshot(saved);
+        const legacy = this._readLegacyWallet();
+        if (legacy) {
+            const migrated = normalizeWalletSnapshot(legacy);
+            this._saveStore.writeWallet(migrated);
+            this._clearLegacyWallet();
+            return migrated;
+        }
+        return { ...DEFAULT_WALLET };
+    }
+
+    /** 舊版把錢包存在 localStorage；只用於一次性遷移 */
+    private _readLegacyWallet(): Partial<LocalGachaWalletSnapshot> | null {
         try {
-            const parsed = JSON.parse(stored) as Partial<LocalGachaWalletSnapshot> | null;
-            return {
-                gems: normalizeWalletValue(parsed?.gems, DEFAULT_WALLET.gems),
-                gold: normalizeWalletValue(parsed?.gold, DEFAULT_WALLET.gold),
-                tickets: normalizeWalletValue(parsed?.tickets, DEFAULT_WALLET.tickets),
-            };
+            const stored = sys.localStorage.getItem(WALLET_STORAGE_KEY);
+            return stored ? JSON.parse(stored) as Partial<LocalGachaWalletSnapshot> : null;
         } catch {
-            return { ...DEFAULT_WALLET };
+            return null;
+        }
+    }
+
+    private _clearLegacyWallet(): void {
+        try {
+            sys.localStorage.removeItem(WALLET_STORAGE_KEY);
+        } catch {
+            // 清不掉也無妨：下次讀取時存檔已有錢包，不會再遷移
         }
     }
 
     private _persistWalletSnapshot(): void {
-        sys.localStorage.setItem(WALLET_STORAGE_KEY, JSON.stringify(this._wallet));
+        this._saveStore?.writeWallet({ ...this._walletOf() });
     }
 }
