@@ -13,19 +13,18 @@
 import {
     NURTURE_TOTAL_ROUNDS,
     TRAINING_KINDS,
+    capAutoRating,
     executeRound,
     type NurtureAction,
-    type NurtureRating,
     type NurtureRoundLog,
     type NurtureSession,
     type TrainingKind,
 } from './NurtureSystem';
 import type { RandomSource } from './GeneralAging';
 
-export { AUTO_NURTURE_STAT_PENALTY, AUTO_NURTURE_TP_PENALTY } from './NurtureSystem';
+export { AUTO_NURTURE_RATING_CAP, AUTO_NURTURE_STAT_PENALTY, AUTO_NURTURE_TP_PENALTY, capAutoRating } from './NurtureSystem';
 
 export const AUTO_NURTURE_TICKET_COST = 1;
-export const AUTO_NURTURE_RATING_CAP: NurtureRating = 'A';
 
 export type AutoNurtureBlockReason = 'LOCKED' | 'NO_TICKET';
 
@@ -50,13 +49,6 @@ export function canStartAutoNurture(unlocked: boolean, tickets: number): AutoNur
 export function consumeAutoNurtureTicket(tickets: number): number | null {
     const check = canStartAutoNurture(true, tickets);
     return check.ok ? tickets - AUTO_NURTURE_TICKET_COST : null;
-}
-
-const RATING_ORDER: readonly NurtureRating[] = ['C', 'B', 'A', 'S'];
-
-/** 自動培育評級上限為 A：S 降為 A，其餘不變。 */
-export function capAutoRating(rating: NurtureRating): NurtureRating {
-    return RATING_ORDER.indexOf(rating) > RATING_ORDER.indexOf(AUTO_NURTURE_RATING_CAP) ? AUTO_NURTURE_RATING_CAP : rating;
 }
 
 /**
@@ -88,7 +80,7 @@ export function runAutoNurtureSeason(
     schedule: readonly NurtureAction[],
     random: RandomSource,
 ): AutoNurtureResult {
-    let current = session;
+    let current: NurtureSession = { ...session, auto: true };
     const logs: NurtureRoundLog[] = [];
     while (current.status === 'active') {
         const action = schedule[current.round];

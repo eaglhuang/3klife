@@ -78,6 +78,14 @@ export const PROWESS_PER_RATING_POINT = 2;
 export const RATING_STAT_CAP = 100;
 export const RATING_THRESHOLDS = { S: 450, A: 350, B: 250 } as const;
 
+/** 自動培育評級上限為 A（shard-a 限制條件）：S 降為 A */
+export const AUTO_NURTURE_RATING_CAP: NurtureRating = 'A';
+const RATING_ORDER: readonly NurtureRating[] = ['C', 'B', 'A', 'S'];
+
+export function capAutoRating(rating: NurtureRating): NurtureRating {
+    return RATING_ORDER.indexOf(rating) > RATING_ORDER.indexOf(AUTO_NURTURE_RATING_CAP) ? AUTO_NURTURE_RATING_CAP : rating;
+}
+
 export type NurtureRating = 'S' | 'A' | 'B' | 'C';
 export type NurtureStatus = 'active' | 'completed' | 'abandoned';
 
@@ -166,6 +174,8 @@ export interface NurtureSession {
     negativeTraitRateBonus?: number;
     log: NurtureRoundLog[];
     status: NurtureStatus;
+    /** 自動培育會話（NUR-14）：畢業評級上限 A */
+    auto?: boolean;
 }
 
 // ── 小工具 ─────────────────────────────────────────────────────────────────
@@ -521,7 +531,8 @@ export function graduate(
     if (session.childId !== child.id) throw new NurtureError(`培育會話屬於 ${session.childId}，不是 ${child.id}`);
 
     const ratingScore = computeRatingScore(session.prowess);
-    const rating = ratingOfScore(ratingScore);
+    // 自動培育（session.auto）評級上限 A
+    const rating = session.auto ? capAutoRating(ratingOfScore(ratingScore)) : ratingOfScore(ratingScore);
     const tags = graduationTags(session.prowess, child.careerClass);
 
     const layers: Partial<Record<keyof GeneralStatsConfig, GeneralDualLayerStatConfig>> = { ...(child.dualLayerStats ?? {}) };

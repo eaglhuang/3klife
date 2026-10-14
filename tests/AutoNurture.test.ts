@@ -4,6 +4,10 @@
  * Unity 對照：像 EditMode 測試，分別驗 AutoPlay 的解鎖 / 道具扣除，以及跑完整場時的懲罰參數。
  */
 import { TestSuite, assert } from './TestRunner';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
+import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import { graduate } from '../assets/scripts/core/systems/NurtureSystem';
 import { chooseFate, unveilGeneral, type UnveilingGeneral } from '../assets/scripts/core/systems/Unveiling';
 import {
     AUTO_NURTURE_STAT_PENALTY,
@@ -121,6 +125,32 @@ export function createAutoNurtureSuite(): TestSuite {
         assert.equals('completed', result.session.status);
         assert.equals(NURTURE_TOTAL_ROUNDS, result.logs.length);
         assert.isTrue(result.logs.every((log) => !log.injured && !log.affectionGained));
+    });
+
+    suite.test('畢業評級上限：自動培育會話即使 prowess 達 S 也只給 A，手動維持 S', () => {
+        const high = (id: string) => ({ ...freshSession(id), status: 'completed' as const, prowess: { str: 1000, int: 1000, lea: 1000, pol: 1000, cha: 1000 } });
+        const manual = graduate(high('manual-grad'), readyChild('manual-grad'));
+        const auto = graduate({ ...high('auto-grad'), auto: true }, readyChild('auto-grad'));
+        assert.equals('S', manual.rating);
+        assert.equals('A', auto.rating);
+    });
+
+    suite.test('自動培育券與主線旗標存檔往返；新遊戲歸零；舊檔缺欄位讀回 0 / false', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const session = new GameSession(3);
+        session.setRosterStore(new InMemoryRosterStore([]));
+        session.setSaveService(new PlayerSaveService(adapter));
+        assert.equals(3, await session.grantAutoNurtureTickets(3));
+        assert.isTrue(await session.consumeAutoNurtureTicket());
+        assert.isTrue(await session.markMainlineNurtureSeasonCleared());
+        const restored = new GameSession(3);
+        restored.setRosterStore(new InMemoryRosterStore([]));
+        restored.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await restored.load());
+        assert.equals(2, restored.autoNurtureTickets);
+        assert.isTrue(restored.mainlineNurtureClearedOnce);
+        assert.isFalse(await new GameSession(3).consumeAutoNurtureTicket(), '沒有券時不扣');
+        assert.equals(2, await restored.grantAutoNurtureTickets(-1), '負數不入帳');
     });
 
     return suite;
