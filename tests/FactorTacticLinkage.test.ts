@@ -6,6 +6,9 @@ import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
 import { TerrainType, Weather } from '../assets/scripts/shared/CommonEnums';
 import {
+    factorBattleEffectsOf,
+    greenTacticSeedGeneIds,
+    type FactorBattleEffectMap,
     GREEN_FACTOR_TP_MULTIPLIER,
     learnTpCost,
     canNavalCombinedAttack,
@@ -58,6 +61,44 @@ export function createFactorGenesWiringSuite(): TestSuite {
     suite.test('玩家部隊出陣時從主將 genes 帶入 factorGenes', () => {
         const source = fs.readFileSync(path.join(root, 'assets/scripts/battle/controllers/BattleController.ts'), 'utf8');
         assert.isTrue(source.includes('unit.factorGenes = this.state.getGeneral(Faction.Player)?.genes ?? [];'), 'tryDeployTroop 沒有帶入 factorGenes');
+    });
+
+    return suite;
+}
+
+// ── 對應表與基因表一致（PROG-2-0584）──
+export function createFactorEffectMapSuite(): TestSuite {
+    const suite = new TestSuite('FactorEffectMap (因子戰場效果對應表 PROG-2-0584)');
+    const root = path.resolve(__dirname, '..');
+    const readJson = (rel: string) => JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
+
+    suite.test('對應表的基因 id 都存在於基因表', () => {
+        const map = readJson('assets/resources/data/master/factor-battle-effect-map.json') as FactorBattleEffectMap;
+        const ids = new Set((readJson('assets/resources/data/master/gene-dictionary.json').data as { id: string }[]).map((g) => g.id));
+        for (const geneIds of Object.values(map.effects)) {
+            for (const id of geneIds) assert.isTrue(ids.has(id), `對應表的 ${id} 不在基因表`);
+        }
+    });
+
+    suite.test('大霧免疫基因是白色（天賦），水戰與林地是粉色（地形適性）', () => {
+        const dict = readJson('assets/resources/data/master/gene-dictionary.json').data as { id: string; color: string }[];
+        const color = (id: string) => dict.find((g) => g.id === id)?.color ?? '';
+        assert.equals('white', color('gene_fog_immune'));
+        assert.equals('pink', color('gene_naval'));
+        assert.equals('pink', color('gene_forest'));
+    });
+
+    suite.test('持有基因才觸發效果；未解鎖或等級 0 不算', () => {
+        const map = readJson('assets/resources/data/master/factor-battle-effect-map.json') as FactorBattleEffectMap;
+        const effects = factorBattleEffectsOf([{ id: 'gene_forest', level: 2 }, { id: 'gene_naval', level: 1, isLocked: true }, { id: 'gene_fog_immune', level: 0 }], map);
+        assert.equals('forest-move-bonus', effects.join(','));
+    });
+
+    suite.test('綠色戰法種子 = 字典中 color 為 green 的基因', () => {
+        const dict = readJson('assets/resources/data/master/gene-dictionary.json').data as { id: string; color: string }[];
+        const green = greenTacticSeedGeneIds(dict);
+        assert.isTrue(green.has('gene_strategy'));
+        assert.isFalse(green.has('gene_naval'));
     });
 
     return suite;

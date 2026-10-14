@@ -34,3 +34,33 @@ export function hitRateInWeather(baseHitRate: number, weather: Weather, hasFogIm
 export function forestMoveBonus(terrain: TerrainType, hasForestAptitude: boolean): number {
     return hasForestAptitude && terrain === TerrainType.Forest ? 1 : 0;
 }
+
+/** 戰場效果的鍵（對應 factor-battle-effect-map.json 的 effects） */
+export type FactorBattleEffect = 'naval-combined-attack' | 'forest-move-bonus' | 'fog-immunity';
+
+/** 因子 → 戰場效果的對應表：效果鍵 → 會觸發該效果的基因 id 清單 */
+export interface FactorBattleEffectMap {
+    effects: Readonly<Record<string, readonly string[]>>;
+}
+
+/** 武將持有的基因（只需要 id；level 為 0 或未解鎖的不算） */
+export interface HeldGene {
+    id?: string;
+    level?: number;
+    isLocked?: boolean;
+}
+
+/** 依對應表找出持有的戰場效果；沒有對應到的效果不列出 */
+export function factorBattleEffectsOf(genes: readonly HeldGene[], map: FactorBattleEffectMap): FactorBattleEffect[] {
+    const held = new Set(genes.filter((gene) => !gene.isLocked && (gene.level ?? 1) > 0).map((gene) => gene.id ?? ''));
+    const effects: FactorBattleEffect[] = [];
+    for (const [effect, geneIds] of Object.entries(map.effects)) {
+        if (geneIds.some((id) => held.has(id))) effects.push(effect as FactorBattleEffect);
+    }
+    return effects;
+}
+
+/** 綠色戰法種子基因 id：字典中 color 為 green 的基因（PM 裁定） */
+export function greenTacticSeedGeneIds(dictionary: readonly { id: string; color: string }[]): Set<string> {
+    return new Set(dictionary.filter((gene) => gene.color === 'green').map((gene) => gene.id));
+}
