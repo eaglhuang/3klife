@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Button, Color, Component, instantiate, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -24,6 +24,7 @@ import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
+import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
@@ -50,6 +51,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { bindGachaActions } from '../core/GachaActionBindings';
+import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
 const { ccclass } = _decorator;
@@ -119,6 +121,7 @@ export class LobbyScene extends Component {
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
+    private _supportCatalog: SupportCatalog | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
     private _fatherTree: BloodlineTreePanel | null = null;
@@ -302,6 +305,18 @@ export class LobbyScene extends Component {
         });
     }
 
+    /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
+    private async _loadSupportCatalog(): Promise<SupportCatalog> {
+        if (this._supportCatalog) return this._supportCatalog;
+        const raw = await new Promise<unknown>((resolve) => {
+            resources.load<JsonAsset>('data/mentor-support-cards', JsonAsset, (err, asset) => {
+                resolve(err || !asset ? null : asset.json);
+            });
+        });
+        this._supportCatalog = parseSupportCatalog(raw ?? []);
+        return this._supportCatalog;
+    }
+
     /**
      * 開獎與培育畫面：以 UCUF JSON（nurture-flow-screen）執行期組裝。
      * 規則全在 NurtureFlowController（純邏輯），這裡只綁按鈕、套 FlowView。
@@ -311,7 +326,7 @@ export class LobbyScene extends Component {
             roster: { getAll: () => services().session.roster },
             unveiling: services().unveiling,
             nurture: services().nurture,
-            loadMentorCards: async () => (await services().legacy?.getMentorCards()) ?? [],
+            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
             persist: async () => {
                 if (services().session.hasSaveService) {
                     await services().session.save();
@@ -354,7 +369,8 @@ export class LobbyScene extends Component {
         this._sessionEventUnsubscribers.push(
             event.on(GAME_SESSION_EVENTS.GeneralUnveiled, (payload?: unknown) => {
                 const unveiled = payload as UnveilingEvent | undefined;
-                const name = services().session.roster.find((g) => g.id === unveiled?.generalId)?.name ?? '子嗣';
+                const unveiledGeneral = services().session.roster.find((g) => g.id === unveiled?.generalId);
+                const name = unveiledGeneral ? formatGeneralDisplayName(unveiledGeneral.name, unveiledGeneral.title) : '子嗣';
                 services().event.emit('SHOW_TOAST', { message: `${name} 滿 5 歲開獎！請到「開獎・培育」選擇宿命`, duration: 3 });
                 this._refreshNurtureFlow();
             }),
@@ -364,7 +380,8 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.GeneralDied, (payload?: unknown) => {
                 const died = payload as AgingEvent | undefined;
                 if (!died) return;
-                const name = services().session.roster.find((g) => g.id === died.generalId)?.name ?? died.generalId;
+                const diedGeneral = services().session.roster.find((g) => g.id === died.generalId);
+                const name = diedGeneral ? formatGeneralDisplayName(diedGeneral.name, diedGeneral.title) : died.generalId;
                 services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
             }),
         );
@@ -1029,6 +1046,14 @@ export class LobbyScene extends Component {
     /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
     private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
         try {
+            // 只有支援卡池抽到的支援卡武將才產生 Gacha 教官卡（PROG-2-0506，PM 裁定）
+            const catalog = await this._loadSupportCatalog();
+            await services().legacy?.addGachaMentors(
+                results.map((entry) => entry.general),
+                catalog,
+                services().session.gameTime,
+                results[0]?.poolId,
+            );
             const { added, duplicates, rebirths } = await services().session.addGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
             const parts: string[] = [];
             if (added.length > 0) {
@@ -2332,7 +2357,7 @@ export class LobbyScene extends Component {
     private _buildMissionDetailGeneralOptions(): MissionGeneralOption[] {
         return this._generals.map((config) => ({
             id: config.id,
-            label: config.name,
+            label: formatGeneralDisplayName(config.name, config.title),
             volunteer: this._isMissionDetailVolunteerGeneral(config),
         }));
     }

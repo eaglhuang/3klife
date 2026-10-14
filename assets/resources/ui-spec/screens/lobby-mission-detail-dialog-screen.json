@@ -32,7 +32,9 @@
       "rewardBaseLabel",
       "rewardPerfectLabel",
       "aiDelegateChecked",
-      "aiDelegateHintLabel"
+      "aiDelegateHintLabel",
+      "envScoutTerrainLine",
+      "envScoutWeatherLine"
     ]
   },
   "content": {

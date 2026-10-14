@@ -16,6 +16,7 @@ export class BattleSkillDamageResolver {
     target: TroopUnit,
     context: BattleSkillExecutionContext,
     hitIndex: number,
+    stageIndex = 0,
   ): number {
     const scaledAttack = this.resolveScaledAttack(profile, caster, hitIndex);
     const rawDefense = profile.ignoreDefense ? 0 : target.getEffectiveDefense() * (target.isShieldWallActive ? 2 : 1);
@@ -33,10 +34,14 @@ export class BattleSkillDamageResolver {
     });
 
     const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], context.getWeather?.() ?? Weather.Clear);
+    const stageMultiplier = profile.hitStageMultipliers?.[stageIndex] ?? 1;
+    const staged = stageMultiplier === 1 ? baseDamage : Math.max(1, Math.floor(baseDamage * stageMultiplier));
+    const weathered = weatherMultiplier === 1 ? staged : Math.max(1, Math.floor(staged * weatherMultiplier));
+
     if (profile.critBonus) {
-      return Math.max(1, Math.floor(baseDamage * weatherMultiplier * (1 + profile.critBonus)));
+      return Math.max(1, Math.floor(weathered * (1 + profile.critBonus)));
     }
-    return baseDamage * weatherMultiplier;
+    return weathered;
   }
 
   private resolveScaledAttack(

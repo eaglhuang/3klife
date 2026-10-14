@@ -2,7 +2,7 @@
  * GeneralGrowth — 六色屬性依年齡階段修正（WBS GEN-11，PROG-2-0553）
  */
 import { assert, TestSuite } from './TestRunner';
-import { agePhaseOf, applyAgeToStats, ageStatMultiplier, SixStats } from '../assets/scripts/core/models/GeneralGrowth';
+import { agePhaseLabel, agePhaseOf, applyAgeToStats, ageStatMultiplier, SixStats } from '../assets/scripts/core/models/GeneralGrowth';
 import { BATTLE_POWER_CONSTANTS } from '../assets/scripts/core/systems/BattlePowerRating';
 
 const BASE: SixStats = { str: 100, int: 80, lea: 90, pol: 70, cha: 60, luk: 50 };
@@ -56,6 +56,14 @@ export function createGeneralGrowthSuite(): TestSuite {
         assert.equals(42, scaled.pol);
         assert.equals(36, scaled.cha);
         assert.equals(30, scaled.luk);
+    });
+
+    suite.test('階段標籤：有年齡給中文階段，沒有年齡回傳 null（詳情保留鎖定文字）', () => {
+        assert.equals('幼兒', agePhaseLabel(3) ?? '');
+        assert.equals('壯年・巔峰', agePhaseLabel(45) ?? '');
+        assert.equals('退役候選', agePhaseLabel(70) ?? '');
+        assert.isTrue(agePhaseLabel(undefined) === null);
+        assert.isTrue(agePhaseLabel(NaN) === null);
     });
 
     return suite;
