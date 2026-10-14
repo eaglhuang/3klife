@@ -20,7 +20,8 @@ import { Camera, view } from "cc";
 import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
-import { validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
+import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
+import { getEliteDeployCap } from '../../core/systems/SortieDeploy';
 import { BattleTutorialHint } from './BattleTutorialHint';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
@@ -205,6 +206,20 @@ export class BattleScene extends Component {
       const support = services().session.getSortieSupportSummary(pg.id);
       const sortieCheck = validateSortieLoadoutReadModel({ Commander_UID: pg.id, Strategist_UID: support.strategist?.id ?? null, Deputy_UID: support.deputy?.id ?? null });
       if (!sortieCheck.ok) UCUFLogger.warn(LogCategory.BATTLE, `[BattleScene] 出征編制 read model 不合法: ${sortieCheck.issues.join(', ')}`);
+      // 戰場狀態 read model（DS-06）：糧草、計謀點、精銳上限與編制，開戰時只記錄不擋戰鬥
+      const battleSnap = services().battle.getSnapshot();
+      const tacticState = this.ctrl.getPlayerTacticPointState();
+      const battleStateCheck = validateBattleStateReadModel({
+        Current_Food: battleSnap.playerFood,
+        Max_Food: services().battle.getMaxFood(),
+        Current_Tactic_Points: tacticState.current ?? 0,
+        Max_Tactic_Points: tacticState.max ?? 0,
+        Elite_Deploy_Cap: getEliteDeployCap(),
+        Active_Elite_Count: 0,
+        Strategist_UID: support.strategist?.id ?? null,
+        Deputy_UID: support.deputy?.id ?? null,
+      });
+      if (!battleStateCheck.ok) UCUFLogger.warn(LogCategory.BATTLE, `[BattleScene] 戰場狀態 read model 不合法: ${battleStateCheck.issues.join(', ')}`);
       this.ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
       // 首戰教學浮窗（PROG-2-0241）：只在教學戰開啟，用既有 toast 顯示
       if (battleParams.tutorial) {

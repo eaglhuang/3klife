@@ -10,6 +10,7 @@ import type {
 } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
+import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
 
 export interface GeneralDetailOverviewData {
     header: {
@@ -45,6 +46,9 @@ export interface GeneralDetailOverviewContentState {
     headerMeta: string;
     rarityLabel: string;
     rarityTier: GeneralDetailRarityTier;
+    /** 商業化 7 色展示層（不回寫戰力）；標籤與色值取自 CommercialRarityBand */
+    commercialRarityLabel: string;
+    commercialRarityColor: string;
     backgroundResource: string;
     overviewModeBadgeLabel: string;
     coreStatsTitle: string;
@@ -211,6 +215,8 @@ export function buildGeneralDetailOverviewContentState(config: GeneralConfig): G
         backgroundResource: resolveGeneralDetailBackgroundResource(config),
         rarityLabel: resolveRarityLabel(config),
         rarityTier: resolveRarityTier(config),
+        commercialRarityLabel: resolveCommercialRarity(config).label,
+        commercialRarityColor: resolveCommercialRarity(config).color,
         overviewModeBadgeLabel: '血脈總覽',
         coreStatsTitle: '核心屬性',
         coreStatsValue: overview.cards.coreStatsSummary,
@@ -538,6 +544,23 @@ function resolveAwakeningProgress(ep: number | undefined): number {
         return 0.35;
     }
     return Math.max(0.08, Math.min(1, ep / 100));
+}
+
+function resolveCommercialRarity(config: GeneralConfig) {
+    return resolveCommercialBand({
+        id: config.id,
+        gender: config.gender,
+        characterCategory: config.characterCategory,
+        str: config.str,
+        int: config.int,
+        lea: config.lea,
+        pol: config.pol,
+        cha: config.cha,
+        troopAptitude: config.troopAptitude,
+        terrainAptitude: config.terrainAptitude,
+        weatherAptitude: config.weatherAptitude,
+        tier: resolveRarityTier(config),
+    });
 }
 
 function resolveRarityLabel(config: GeneralConfig): string {

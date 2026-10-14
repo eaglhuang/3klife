@@ -1,6 +1,8 @@
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import { MercenarySaveBundle } from '../assets/scripts/core/systems/MercenarySaveModel';
+import { ITEM_TRIAL_TICKET } from '../assets/scripts/core/systems/PlayerInventory';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 const BUNDLE: MercenarySaveBundle = {
     mercenaries: [{ uid: 'merc-1', daysLeft: 6, bond: 0, status: 'Trial', generalId: 'gen-1', affection: 0 }],
@@ -66,6 +68,61 @@ export function createGameSessionMercenaryDaySuite(): TestSuite {
         assert.equals(6, session.mercenaryDay);
         const snapshot = session.createSnapshot(new Date(0));
         assert.equals(6, snapshot.mercenaries!.day!);
+    });
+
+    suite.test('傭兵池列資料：試用中顯示倒數與進度，不改存檔包', () => {
+        const session = new GameSession(1);
+        session.setMercenaries({ ...BUNDLE, mercenaries: [{ ...BUNDLE.mercenaries[0], daysLeft: 4, affection: 30 }] });
+        const before = JSON.stringify(session.mercenaries);
+        const rows = session.mercenaryPoolRows();
+        assert.equals(1, rows.length);
+        assert.equals('試用中', rows[0].statusText);
+        assert.equals('剩餘 4 日', rows[0].daysLeftText);
+        assert.equals(1 / 3, rows[0].trialProgress);
+        assert.equals(true, rows[0].canDeploy);
+        assert.equals(before, JSON.stringify(session.mercenaries));
+    });
+
+    suite.test('傭兵池列資料：已離隊無倒數、無薪水紀錄則不可出戰', () => {
+        const session = new GameSession(1);
+        session.setMercenaries({
+            mercenaries: [{ uid: 'merc-x', daysLeft: 0, bond: 0, status: 'Expired', generalId: 'gen-1', affection: 0 }],
+            upkeep: [],
+            cooldowns: [],
+        });
+        const rows = session.mercenaryPoolRows();
+        assert.equals('已離隊', rows[0].statusText);
+        assert.equals('', rows[0].daysLeftText);
+        assert.equals(false, rows[0].canDeploy);
+        assert.equals(false, rows[0].canTeach);
+    });
+
+    suite.test('試用券招募：消耗 1 張券、加入 Trial 傭兵並建立薪水紀錄', async () => {
+        const session = new GameSession(1);
+        await session.addItem(ITEM_TRIAL_TICKET, 1);
+        const template = { id: 'gen-9', str: 50, int: 40, lea: 30, luk: 20, rarityTier: 'rare' } as GeneralConfig;
+        const result = await session.hireTrialMercenary('merc-9', template);
+        assert.equals(true, result.ok);
+        assert.equals(0, session.itemCount(ITEM_TRIAL_TICKET));
+        const bundle = session.mercenaries;
+        assert.equals('Trial', bundle.mercenaries[0].status);
+        assert.equals('gen-9', bundle.mercenaries[0].generalId!);
+        assert.equals('Active', bundle.upkeep[0].status);
+    });
+
+    suite.test('試用券招募：無券或 uid 重複時拒絕，且不扣券、不改傭兵包', async () => {
+        const session = new GameSession(1);
+        const template = { id: 'gen-9', str: 50, int: 40, lea: 30, luk: 20 } as GeneralConfig;
+        const noTicket = await session.hireTrialMercenary('merc-9', template);
+        assert.equals('no-ticket', noTicket.reason!);
+        assert.equals(0, session.mercenaries.mercenaries.length);
+
+        await session.addItem(ITEM_TRIAL_TICKET, 2);
+        await session.hireTrialMercenary('merc-9', template);
+        const dup = await session.hireTrialMercenary('merc-9', template);
+        assert.equals('uid-taken', dup.reason!);
+        assert.equals(1, session.itemCount(ITEM_TRIAL_TICKET));
+        assert.equals(1, session.mercenaries.mercenaries.length);
     });
 
     return suite;

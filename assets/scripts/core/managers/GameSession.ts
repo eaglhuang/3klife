@@ -34,10 +34,12 @@ import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
-import { bondMercenaryToRoster, type RosterBondResult } from '../systems/MercenaryRoster';
+import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
+import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
+import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
-import { filterPoolGeneralIds } from '../systems/MercenaryPoolPresenter';
+import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
@@ -70,10 +72,10 @@ import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
-import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
+import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -232,6 +234,9 @@ function toSortieMember(g: GeneralConfig): SortieMember {
 /** 虎符忠誠度初始值（規格未定，暫定）；武將沒有紀錄時以此起算 */
 const TALLY_LOYALTY_INITIAL = 50;
 
+/** 試用券招募結果：沿用 TrialTicketResult，另加上 uid 重複的拒絕原因。 */
+export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: TrialTicketRejectReason | 'uid-taken' };
+
 /** 單一遊戲日的傭兵結算結果：日序與本日產生的離隊事件（告別信等）。 */
 export interface MercenaryDayReport {
     day: number;
@@ -287,6 +292,8 @@ export class GameSession {
     private _fame = 0;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
+    /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
+    private _tallyFoodDiscountArmed = false;
     /** 傭兵存檔包（試用、薪水、冷卻）；隨存檔保存（MERC-01 接線） */
     private _mercenaries: MercenarySaveBundle = createEmptyMercenaryBundle();
 
@@ -418,6 +425,11 @@ export class GameSession {
         return filterPoolGeneralIds(generalIds, this.mercenaryDay, this._mercenaries.cooldowns);
     }
 
+    /** 傭兵列表的顯示列（倒數、結義進度、按鈕可否）；由目前存檔包推導，不改狀態。 */
+    public mercenaryPoolRows(): MercenaryPoolRow[] {
+        return buildMercenaryPoolRows(this._mercenaries);
+    }
+
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */
     public setMercenaries(bundle: MercenarySaveBundle): void {
         this._mercenaries = normalizeMercenaryBundle(bundle);
@@ -473,6 +485,36 @@ export class GameSession {
     /** 覆寫轉蛋保底表；不寫存檔，由呼叫端決定何時 save */
     public setGachaPityBook(book: Readonly<GachaPityBook>): void {
         this._gachaPity = normalizeGachaPityBook(book);
+    }
+
+    /**
+     * 試用券招募（MERC-02）：消耗背包 1 張試用券，產生 Trial 傭兵並建立薪水紀錄，自動存檔。
+     * uid 已存在、無試用券或武將 id 為空時拒絕，失敗不改任何狀態。uid 由呼叫端提供。
+     */
+    public async hireTrialMercenary(uid: string, template: GeneralConfig): Promise<HireTrialResult> {
+        const wallet = { trialTickets: this.itemCount(ITEM_TRIAL_TICKET) };
+        if (this._mercenaries.mercenaries.some((m) => m.uid === uid)) {
+            return { ok: false, reason: 'uid-taken', wallet };
+        }
+        const result = useTrialTicket(wallet, uid, statsOfTemplate(template), template.id);
+        if (!result.ok || !result.mercenary) {
+            return result;
+        }
+        const inventory = consumeItem(this._inventory, ITEM_TRIAL_TICKET);
+        if (!inventory) {
+            return { ok: false, reason: 'no-ticket', wallet };
+        }
+        this._inventory = inventory;
+        this._mercenaries = {
+            ...this._mercenaries,
+            mercenaries: [...this._mercenaries.mercenaries, result.mercenary],
+            upkeep: [...this._mercenaries.upkeep, createUpkeepState(uid)],
+        };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return result;
     }
 
     public get femaleSources(): Readonly<Record<string, FemaleSource>> {
@@ -784,6 +826,17 @@ export class GameSession {
         return result;
     }
 
+    /**
+     * 取出並清除「季末糧不足，下一場虎符打 8 折」的標記（兵種（虎符）系統 TRP-12）。
+     * 只在戰場真正開局時呼叫一次；預覽出征編制不呼叫，避免吃掉折扣。
+     * 暫定：標記只存在記憶體，讀檔後不保留（規格未定，之後若要保留再進存檔）。
+     */
+    public consumeTallyFoodDiscount(): boolean {
+        const armed = this._tallyFoodDiscountArmed;
+        this._tallyFoodDiscountArmed = false;
+        return armed;
+    }
+
     public get military(): MilitaryReserve {
         return { ...this._military };
     }
@@ -1083,6 +1136,7 @@ export class GameSession {
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
+        this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
         this._military = regenMilitaryOneSeason(this._military);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
@@ -1119,6 +1173,11 @@ export class GameSession {
         }
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
         this._roster.replaceAll(result.roster);
+        const reason = result.card.mentorRoute?.reason;
+        if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
+            // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
+            this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
+        }
         if (this._autoSave && this._save) {
             await this.save();
         }

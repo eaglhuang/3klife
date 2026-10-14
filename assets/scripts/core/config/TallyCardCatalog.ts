@@ -13,7 +13,7 @@ import type {
   BattleSkillTiming,
   SkillSourceType,
 } from '../../shared/SkillRuntimeContract';
-import type { TallyCardData } from '../../shared/TallyCardContract';
+import type { TallyAffinityProfile, TallyCardData } from '../../shared/TallyCardContract';
 
 const TALLY_CARD_ART_RESOURCE_FALLBACK = 'ui/tiger-tally/card-art/troops';
 const TALLY_CARD_ART_RESOURCE_BY_TYPE: Record<TroopType, string> = {
@@ -60,6 +60,8 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
       body: string;
     };
     desc: string;
+    /** TRP-13 虎符適性（選填；未填用預設） */
+    affinity?: TallyAffinityProfile;
     tacticMeta: {
       tacticId: string;
       battleSkillId: string;
@@ -258,6 +260,7 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
       timing: s.tacticMeta.timing,
       desc:        s.desc,
       isDisabled:  false,
+      affinity:    s.affinity,
     } as TallyCardData];
   }));
 }

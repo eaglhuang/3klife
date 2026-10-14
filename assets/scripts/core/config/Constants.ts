@@ -34,7 +34,7 @@ export const TROOP_COUNTER_MAP: Partial<Record<TroopType, TroopType>> = {
 };
 
 export const COUNTER_MULTIPLIER = 1.3;
-export const DISADVANTAGE_MULTIPLIER = 0.7;
+export const DISADVANTAGE_MULTIPLIER = 0.8;
 export const MIN_DAMAGE = 1;
 
 export const TERRAIN_ATTACK_MOD: Record<TerrainType, number> = {
