@@ -25,6 +25,8 @@ import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
 import { JobChangeController } from '../core/JobChangeController';
+import { DomesticPanelController } from '../core/DomesticPanelController';
+import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
@@ -116,7 +118,9 @@ export class LobbyScene extends Component {
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
+    private _domesticHost: UIScreenPreviewHost | null = null;
     private _jobChange: JobChangeController | null = null;
+    private _domestic: DomesticPanelController | null = null;
     private _onboardingHost: UIScreenPreviewHost | null = null;
     private _onboarding: OnboardingFlowController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
@@ -179,6 +183,7 @@ export class LobbyScene extends Component {
         await this._mountNurtureFlow();
         await this._mountBondingSetup();
         await this._mountJobChange();
+        await this._mountDomestic();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
@@ -255,6 +260,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenNurture', handler: () => { this._openNurtureFlow(); } },
             { buttonId: 'btnOpenBonding', handler: () => { void this._openBondingSetup(); } },
             { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
+            { buttonId: 'btnOpenDomestic', handler: () => { this._openDomestic(); } },
         ]);
         this._refreshSeasonHud();
 
@@ -432,6 +438,29 @@ export class LobbyScene extends Component {
     }
 
     /**
+     * 大廳內政畫面：以 UCUF JSON（domestic-screen）執行期組裝。
+     * 5 大任務的規則與同季鎖定在 DomesticTasks / GameSession，這裡只綁按鈕、套 view。
+     */
+    private async _mountDomestic(): Promise<void> {
+        const gacha = this._localGachaService;
+        const domestic = new DomesticPanelController({
+            log: () => services().session.domesticLog,
+            season: () => services().session.gameTime.totalSeasonsElapsed,
+            choose: (taskId: DomesticTaskId) => services().session.chooseDomesticTask(taskId, (amount) => { gacha.grantCurrency('gold', amount); }),
+        });
+        this._domestic = domestic;
+        this._domesticHost = await this._mountPreviewScreenHost('DomesticHost', 'domestic-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeDomestic(); } },
+            { buttonId: 'btnFarming', handler: () => { void this._onClickDomesticTask(domestic, 'farming'); } },
+            { buttonId: 'btnCommerce', handler: () => { void this._onClickDomesticTask(domestic, 'commerce'); } },
+            { buttonId: 'btnDiplomacy', handler: () => { void this._onClickDomesticTask(domestic, 'diplomacy'); } },
+            { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
+            { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
+        ]);
+        this._domesticHost.node.active = false;
+    }
+
+    /**
      * 新手 3 段式引導：首次進大廳且未看完時顯示（PROG-2-0229）。
      * 進度存在 GameSession，每段確認後自動存檔。開場流程本身不在這裡（OPEN-01）。
      */
@@ -482,6 +511,41 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshJobChange();
+    }
+
+    private _openDomestic(): void {
+        const host = this._domesticHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshDomestic();
+    }
+
+    private _closeDomestic(): void {
+        if (this._domesticHost) {
+            this._domesticHost.node.active = false;
+        }
+    }
+
+    private _refreshDomestic(): void {
+        const binder = this._domesticHost?.binder;
+        if (!binder || !this._domestic) {
+            return;
+        }
+        applyFlowView(binder, this._domestic.getFlowView());
+    }
+
+    private async _onClickDomesticTask(domestic: DomesticPanelController, taskId: DomesticTaskId): Promise<void> {
+        try {
+            await domestic.choose(taskId);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 內政任務失敗', error);
+            services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '內政任務失敗', duration: 2.5 });
+        } finally {
+            this._refreshDomestic();
+        }
     }
 
     private _closeJobChange(): void {
