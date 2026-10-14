@@ -60,6 +60,14 @@ export function dynamicRelationForEvent(
     return { ok: true, relation: parsed.value, created: true };
 }
 
+/**
+ * 關係加成是否生效（PM 裁定 2026-10-14）：親密度 > 0 才有加成；歸 0 時關係本身保留（夫妻、親子等身分不變）。
+ * 只判定，不改資料；各加成的實際效果由呼叫端套用。
+ */
+export function isDynamicBonusActive(relation: DynamicRelation): boolean {
+    return relation.intimacy > 0;
+}
+
 export class DynamicRelationBook {
     private readonly relations = new Map<string, DynamicRelation>();
 
