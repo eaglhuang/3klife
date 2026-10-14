@@ -2,7 +2,7 @@
  * ingest-generals-ai.js
  *
  * 從 master/generals-base.json 讀取武將資訊，
- * 為缺少故事欄位的武將生成 historicalAnecdote、bloodlineRumor、storyStripCells，
+ * 為 master/generals-lore.json 尚無 lore 的武將生成 historicalAnecdote、bloodlineRumor、storyStripCells，
  * 輸出至 temp_workspace/raw-ai.json，供 merge-generals-master.js 合入。
  *
  * 用法：
@@ -11,12 +11,11 @@
  * 選項：
  *   --limit <n>  最多處理 n 位武將（預設全部）
  *   --dry-run    印出生成結果但不寫入檔案
- *   --force      重新生成所有武將（含已有故事者）
+ *   --force      重新生成所有武將（含已有 lore 者）
  *
  * 注意：
- *   此工具使用내建範本生成；如需呼叫真實 AI API，
- *   請設定環境變數 OPENAI_API_KEY 並取消下方 AI 區塊的註解。
- *   無 API 金鑰時自動退回至本地模板生成，不整批失敗。
+ *   此工具使用內建範本生成（未接真實 AI API）。已有 lore 的武將不會被重新生成；
+ *   storyStripCells 的 slot 名稱與 runtime 的 GeneralDetailStorySlot 一致。
  */
 
 'use strict';
@@ -28,14 +27,26 @@ const ROOT = path.join(__dirname, '..');
 const MASTER_DIR = path.join(ROOT, 'assets', 'resources', 'data', 'master');
 const GENERALS_BASE = path.join(MASTER_DIR, 'generals-base.json');
 const TEMP_WS = path.join(ROOT, 'temp_workspace');
+const GENERALS_LORE = path.join(MASTER_DIR, 'generals-lore.json');
 const OUTPUT = path.join(TEMP_WS, 'raw-ai.json');
 
 // --- CLI 解析 ---
+const STORY_SLOTS = ['origin', 'faction', 'role', 'awakening', 'bloodline', 'future'];
+
+/**
+ * 解析 --limit <n>；缺值或非正整數時不限制（Infinity），避免 NaN 讓 slice 變成空陣列。
+ */
+function parseLimit(argv) {
+  const idx = argv.indexOf('--limit');
+  if (idx < 0) return Infinity;
+  const n = parseInt(argv[idx + 1], 10);
+  return Number.isInteger(n) && n > 0 ? n : Infinity;
+}
+
 const args = process.argv.slice(2);
 const isDryRun = args.includes('--dry-run');
 const isForce = args.includes('--force');
-const limitIdx = args.indexOf('--limit');
-const limit = limitIdx >= 0 ? parseInt(args[limitIdx + 1], 10) : Infinity;
+const limit = parseLimit(args);
 
 // --- 本地模板生成 ---
 const ROLE_TEMPLATES = {
@@ -64,37 +75,74 @@ const BLOODLINE_TEMPLATES = [
   '據說其出生時天現異象，後人認為乃命中注定的豪傑。',
 ];
 
-function pickRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+function pickRandom(arr, rng) {
+  return arr[Math.floor(rng() * arr.length)];
 }
 
-function generateAnecdote(general) {
+function generateAnecdote(general, rng) {
   const templates = ROLE_TEMPLATES[general.role] || ROLE_TEMPLATES.Combat;
-  return `${general.name}，${pickRandom(templates)}`;
+  return `${general.name}，${pickRandom(templates, rng)}`;
 }
 
-function generateBloodlineRumor(general) {
-  return `${general.name}血脈：${pickRandom(BLOODLINE_TEMPLATES)}`;
+function generateBloodlineRumor(general, rng) {
+  return `${general.name}血脈：${pickRandom(BLOODLINE_TEMPLATES, rng)}`;
 }
 
 function generateStoryStrip(general) {
-  const cells = [
-    { slot: 1, text: `${general.name}年少時便展現過人才華，鄉里無不稱奇。` },
-    { slot: 2, text: `初入仕途，以一件奇事引起上位者注意，從此踏上征途。` },
-    { slot: 3, text: `在一場關鍵之戰中，以智勇雙全之姿力挽狂瀾，奠定名聲。` },
-    { slot: 4, text: `盛年之際，聲名遠播，四方豪傑紛紛前來投效。` },
-    { slot: 5, text: `晚年回望一生，深感亂世之悲，留下「寧教天下人負我」之嘆。` },
-    { slot: 6, text: `身後，人們以詩文紀念其偉業，功績永銘史冊。` },
+  const texts = [
+    `${general.name}年少時便展現過人才華，鄉里無不稱奇。`,
+    `初入仕途，以一件奇事引起上位者注意，從此踏上征途。`,
+    `在一場關鍵之戰中，以智勇雙全之姿力挽狂瀾，奠定名聲。`,
+    `盛年之際，聲名遠播，四方豪傑紛紛前來投效。`,
+    `晚年回望一生，深感亂世之悲，留下「寧教天下人負我」之嘆。`,
+    `身後，人們以詩文紀念其偉業，功績永銘史冊。`,
   ];
-  return cells;
+  return STORY_SLOTS.map((slot, i) => ({ slot, text: texts[i] }));
 }
 
-function needsStory(general) {
+/**
+ * 依武將資訊生成一筆 lore（純函式；隨機來源可注入以便測試）。
+ */
+function buildLore(general, rng = Math.random) {
+  return {
+    id: general.id,
+    historicalAnecdote: generateAnecdote(general, rng),
+    bloodlineRumor: generateBloodlineRumor(general, rng),
+    storyStripCells: generateStoryStrip(general),
+    _source: 'ai-template',
+  };
+}
+
+/**
+ * 驗證一筆 lore 是否符合 runtime 格式；不符時丟出錯誤，由主流程只 WARN 並跳過。
+ */
+function validateLore(lore) {
+  if (!lore.historicalAnecdote || !lore.bloodlineRumor) {
+    throw new Error('缺少 historicalAnecdote 或 bloodlineRumor');
+  }
+  const cells = lore.storyStripCells;
+  if (!Array.isArray(cells) || cells.length !== STORY_SLOTS.length) {
+    throw new Error(`storyStripCells 需為 ${STORY_SLOTS.length} 格`);
+  }
+  cells.forEach((cell, i) => {
+    if (cell.slot !== STORY_SLOTS[i] || !cell.text) {
+      throw new Error(`storyStripCells[${i}] slot 或 text 不符`);
+    }
+  });
+}
+
+/**
+ * 從 generals-lore.json 讀取已有 lore 的武將 id。
+ */
+function loadLoreIds() {
+  if (!fs.existsSync(GENERALS_LORE)) return new Set();
+  const loreObj = JSON.parse(fs.readFileSync(GENERALS_LORE, 'utf-8'));
+  return new Set((Array.isArray(loreObj.data) ? loreObj.data : []).map(x => x.id));
+}
+
+function needsStory(general, loreIds) {
   if (isForce) return true;
-  return !general.historicalAnecdote ||
-         general.historicalAnecdote.includes('待補') ||
-         !general.bloodlineRumor ||
-         !general.storyStripCells;
+  return !loreIds.has(general.id);
 }
 
 // --- 主流程 ---
@@ -122,7 +170,8 @@ async function main() {
     return;
   }
 
-  const toProcess = generals.filter(needsStory).slice(0, limit);
+  const loreIds = loadLoreIds();
+  const toProcess = generals.filter(g => needsStory(g, loreIds)).slice(0, limit);
   console.log(`[INFO]  共 ${generals.length} 筆，需要生成 ${toProcess.length} 筆。\n`);
 
   const results = [];
@@ -131,18 +180,8 @@ async function main() {
 
   for (const g of toProcess) {
     try {
-      const lore = {
-        id: g.id,
-        historicalAnecdote: g.historicalAnecdote && !g.historicalAnecdote.includes('待補')
-          ? g.historicalAnecdote
-          : generateAnecdote(g),
-        bloodlineRumor: g.bloodlineRumor || generateBloodlineRumor(g),
-        storyStripCells: g.storyStripCells && g.storyStripCells.length >= 3
-          ? g.storyStripCells
-          : generateStoryStrip(g),
-        _source: 'ai-template',
-        _generatedAt: new Date().toISOString(),
-      };
+      const lore = { ...buildLore(g), _generatedAt: new Date().toISOString() };
+      validateLore(lore);
       results.push(lore);
       ok++;
       console.log(`[OK]    ${g.name}（${g.id}）生成完成。`);
@@ -173,7 +212,11 @@ async function main() {
   console.log(`[OK]    寫入 ${OUTPUT}`);
 }
 
-main().catch(err => {
-  console.error('[ERROR]', err.message);
-  process.exit(1);
-});
+module.exports = { STORY_SLOTS, parseLimit, buildLore, validateLore, needsStory };
+
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[ERROR]', err.message);
+    process.exit(1);
+  });
+}
