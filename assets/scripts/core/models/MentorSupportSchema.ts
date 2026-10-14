@@ -13,16 +13,25 @@
  *   - Friendship_Bonus / Training_Effect 是 6 格陣列，暫定依「教官星等 ★0~★5」索引；
  *     友情倍率換算成靈感引擎的小數加成：倍率 − 1（1.2 → 0.2）。
  *   - 陣列必須不遞減（星等越高效果不會變差）。
- *   - statBonus 的鍵先照 JSON 原樣保留（規格例子用 STR/AGI，遊戲內培育五格用 str/int/lea/pol/cha），
- *     鍵名對齊方式待策劃定案，本卡不做白名單檢查。
+ *   - Stat_Bonus 與 Training_Slot_Affinity 用規格鍵名（STR/INT/AGI/POL/CHA），解析時對照成培育五格
+ *     （STR→str、INT→int、AGI→lea、POL→pol、CHA→cha）；不認得的鍵名報錯。PM 裁定（2026-10-14，暫定）。
  *   - rarity 只檢查非空字串，稀有度對照表（R/SR/SSR…）待定。
  */
 import { NURTURE_TOTAL_ROUNDS } from '../systems/NurtureSystem';
+import type { TrainingKind } from '../systems/NurtureSystem';
 import { MENTOR_SOURCES, MentorSource } from './MentorCard';
 
 export const SUPPORT_MAX_STAR = 5;
 /** 友情／訓練效果陣列長度：★0 ~ ★5 共 6 格 */
 export const SUPPORT_STAR_TABLE_LENGTH = SUPPORT_MAX_STAR + 1;
+/** 規格鍵名 → 培育五格（PM 裁定 2026-10-14，暫定） */
+export const SPEC_STAT_TO_TRAINING: Readonly<Record<string, TrainingKind>> = {
+    STR: 'str',
+    INT: 'int',
+    AGI: 'lea',
+    POL: 'pol',
+    CHA: 'cha',
+};
 export const PASSIVE_EFFECT_KINDS = ['TP_Bonus', 'Training_Rate', 'Initial_Friendship'] as const;
 export type PassiveEffectKind = typeof PASSIVE_EFFECT_KINDS[number];
 
@@ -50,14 +59,14 @@ export interface SupportCardDef {
     name: string;
     rarity: string;
     teachingStyle: string;
-    statBonus: Readonly<Record<string, number>>;
+    statBonus: Partial<Record<TrainingKind, number>>;
     tacticInspireEvents: readonly TacticInspireEventDef[];
     passiveEffects: readonly PassiveEffectDef[];
     /** 友情倍率，索引 = 教官星等（1.0 = 無加成） */
     friendshipBonus: readonly number[];
     /** 訓練效果倍率，索引 = 教官星等 */
     trainingEffect: readonly number[];
-    trainingSlotAffinity: readonly string[];
+    trainingSlotAffinity: readonly TrainingKind[];
     slotBurstRate: number;
     synergyPartners: readonly string[];
     synergyEventId?: string;
@@ -175,13 +184,15 @@ export function parseSupportCard(raw: unknown): SupportCardParseResult {
     if (!isNonEmptyString(raw.Rarity)) errors.push('Rarity 必須是非空字串');
     if (!isNonEmptyString(raw.Teaching_Style)) errors.push('Teaching_Style 必須是非空字串');
 
-    const statBonus: Record<string, number> = {};
+    const statBonus: Partial<Record<TrainingKind, number>> = {};
     if (!isRecord(raw.Stat_Bonus)) {
         errors.push('Stat_Bonus 必須是物件（屬性鍵 → 數值）');
     } else {
         for (const [key, value] of Object.entries(raw.Stat_Bonus)) {
-            if (!isFiniteNumber(value)) errors.push(`Stat_Bonus.${key} 必須是數字`);
-            else statBonus[key] = value;
+            const kind = SPEC_STAT_TO_TRAINING[key];
+            if (!kind) errors.push(`Stat_Bonus.${key} 不認得（可用 ${Object.keys(SPEC_STAT_TO_TRAINING).join(' / ')}）`);
+            else if (!isFiniteNumber(value)) errors.push(`Stat_Bonus.${key} 必須是數字`);
+            else statBonus[kind] = value;
         }
     }
 
@@ -211,8 +222,15 @@ export function parseSupportCard(raw: unknown): SupportCardParseResult {
     const friendshipBonus = parseStarTable(raw.Friendship_Bonus, 'Friendship_Bonus', errors);
     const trainingEffect = parseStarTable(raw.Training_Effect, 'Training_Effect', errors);
 
-    if (!Array.isArray(raw.Training_Slot_Affinity) || !raw.Training_Slot_Affinity.every(isNonEmptyString)) {
-        errors.push('Training_Slot_Affinity 必須是非空字串陣列');
+    const trainingSlotAffinity: TrainingKind[] = [];
+    if (!Array.isArray(raw.Training_Slot_Affinity)) {
+        errors.push('Training_Slot_Affinity 必須是陣列');
+    } else {
+        for (const key of raw.Training_Slot_Affinity) {
+            const kind = typeof key === 'string' ? SPEC_STAT_TO_TRAINING[key] : undefined;
+            if (!kind) errors.push(`Training_Slot_Affinity 不認得 ${String(key)}（可用 ${Object.keys(SPEC_STAT_TO_TRAINING).join(' / ')}）`);
+            else trainingSlotAffinity.push(kind);
+        }
     }
     if (!isFiniteNumber(raw.Slot_Burst_Rate) || raw.Slot_Burst_Rate < 0 || raw.Slot_Burst_Rate > 1) {
         errors.push('Slot_Burst_Rate 必須在 0~1 之間');
@@ -241,7 +259,7 @@ export function parseSupportCard(raw: unknown): SupportCardParseResult {
             passiveEffects,
             friendshipBonus,
             trainingEffect,
-            trainingSlotAffinity: [...(raw.Training_Slot_Affinity as string[])],
+            trainingSlotAffinity,
             slotBurstRate: raw.Slot_Burst_Rate as number,
             synergyPartners: [...(raw.Synergy_Partners as string[])],
             synergyEventId: raw.Synergy_Event_ID as string | undefined,
