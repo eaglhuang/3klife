@@ -35,6 +35,7 @@ export class BattleHUDComposite extends CompositePanel {
     private readonly _readyWaiters: Array<(ready: boolean) => void> = [];
     /** 暫存 refresh() 在 mount 完成前的呼叫參數，mount 後自動重播 */
     private _pendingRefreshArgs: [number, number, number, number, number, number, number] | null = null;
+    private _playerTallySetLabel: Label  | null = null;
     private _pendingPlayerName: string | null = null;
     private _pendingEnemyName: string | null = null;
     private _pendingPlayerGeneralId: string | null = null;
@@ -101,6 +102,7 @@ export class BattleHUDComposite extends CompositePanel {
         this._sceneGambitBadgeDock = binder.getNode('SceneGambitBadgeDock');
         this._sceneGambitBadgeLabel = binder.getLabel('SceneGambitBadgeLabel');
         this._playerNameLabel     = binder.getLabel('PlayerNameLabel');
+        this._playerTallySetLabel = binder.getLabel('PlayerTallySetLabel');
         this._enemyNameLabel      = binder.getLabel('EnemyNameLabel');
         this._playerFortressLabel = binder.getLabel('PlayerFortressLabel');
         this._enemyFortressLabel  = binder.getLabel('EnemyFortressLabel');
@@ -164,6 +166,11 @@ export class BattleHUDComposite extends CompositePanel {
     public setPlayerName(name: string): void {
         if (!this._buildCompleted) { this._pendingPlayerName = name; return; }
         if (this._playerNameLabel) this._playerNameLabel.string = name;
+    }
+
+    /** 玩家在場的 Set 顯示文字（PROG-2-0580）；沒有 Set 時清空，只是提示、不是持續狀態列 */
+    public setPlayerTallySetLabels(labels: string[]): void {
+        if (this._playerTallySetLabel) this._playerTallySetLabel.string = labels.join('  ');
     }
 
     public setEnemyName(name: string): void {

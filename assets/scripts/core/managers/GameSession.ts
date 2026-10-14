@@ -88,7 +88,9 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../sy
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
-import { DynamicRelationBook } from '../systems/KinDynamicRelations';
+import { DynamicRelationBook, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
+import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
@@ -306,6 +308,10 @@ export class GameSession {
     private _femaleSystem: FemaleSystemState = normalizeFemaleSystemState(undefined);
     /** 轉蛋錢包（PROG-2-0338）；null 代表存檔沒有，讀舊 localStorage 或用預設 */
     private _gachaWallet: GachaWalletSave | null = null;
+    /** 轉蛋資料（保底、錢包）的版本號：每次被改動就加一；轉蛋服務靠它得知自己的快取過期（PROG-2-0608） */
+    private _gachaRevision = 0;
+    /** Legacy_Count（RET-07）：玩家層級的跨世代成就次數 */
+    private _legacyCount = 0;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -519,6 +525,11 @@ export class GameSession {
         return normalizeGachaPityBook(this._gachaPity);
     }
 
+    /** 轉蛋資料版本號；任何寫入（含讀檔、新遊戲、世代成就入帳）都會讓它改變 */
+    public get gachaRevision(): number {
+        return this._gachaRevision;
+    }
+
     /** 轉蛋錢包（唯讀副本）；null 代表存檔沒有 */
     public get gachaWalletSave(): Readonly<GachaWalletSave> | null {
         return this._gachaWallet ? { ...this._gachaWallet } : null;
@@ -527,11 +538,13 @@ export class GameSession {
     /** 覆寫轉蛋錢包；不寫存檔，由呼叫端決定何時 save */
     public setGachaWalletSave(wallet: Readonly<GachaWalletSave>): void {
         this._gachaWallet = normalizeGachaWalletSave(wallet);
+        this._gachaRevision += 1;
     }
 
     /** 覆寫轉蛋保底表；不寫存檔，由呼叫端決定何時 save */
     public setGachaPityBook(book: Readonly<GachaPityBook>): void {
         this._gachaPity = normalizeGachaPityBook(book);
+        this._gachaRevision += 1;
     }
 
     /**
@@ -764,6 +777,8 @@ export class GameSession {
         this._femaleSystem = normalizeFemaleSystemState(undefined);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._gachaWallet = null;
+        this._gachaRevision += 1;
+        this._legacyCount = 0;
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
@@ -1252,7 +1267,6 @@ export class GameSession {
         return applied.result;
     }
 
-    /** 攻城戰開戰的壽命消耗（PROG-2-0237）：扣完即存檔；武將不在名冊時回傳 null */
     /** 動態關係互動（KIN-10）：回補親密度，有變動才自動存檔；沒有該對關係回傳空陣列 */
     public async interactDynamicRelation(uidA: string, uidB: string): Promise<DynamicRelation[]> {
         const updated = this.dynamicRelations.interact(uidA, uidB);
@@ -1262,6 +1276,45 @@ export class GameSession {
         return updated;
     }
 
+    /**
+     * 結緣受孕後的動態關係（KIN-06 / KIN-10）：父母記為夫妻（bonding），父與母各與子嗣記為親子（parentage）。
+     * 同一對同一型別只留第一筆；有新增才自動存檔。回傳三筆記錄結果（順序：夫妻、父子、母子）。
+     */
+    public async recordBreedingRelations(fatherUid: string, motherUid: string, childUid: string): Promise<DynamicRelationResult[]> {
+        const season = this._clock.state.totalSeasonsElapsed;
+        const results = [
+            this.dynamicRelations.record('bonding', fatherUid, motherUid, season),
+            this.dynamicRelations.record('parentage', fatherUid, childUid, season),
+            this.dynamicRelations.record('parentage', motherUid, childUid, season),
+        ];
+        if (results.some((r) => r.ok && r.created) && this._autoSave && this._save) {
+            await this.save();
+        }
+        return results;
+    }
+
+    /** Legacy_Count（RET-07）：跨世代成就次數，唯讀 */
+    public get legacyCount(): number {
+        return this._legacyCount;
+    }
+
+    /**
+     * 世代成就入帳（RET-07）：獎勵加到轉蛋錢包的靈玉，次數累加，有成就才自動存檔。
+     * 錢包為 null（存檔沒有）時以 STARTER_GACHA_WALLET 為基底，避免入帳後起始資源歸零。
+     */
+    public async applyLegacyAchievements(achievements: readonly LegacyAchievement[]): Promise<{ granted: number; legacyCount: number }> {
+        if (achievements.length === 0) return { granted: 0, legacyCount: this._legacyCount };
+        const { wallet, granted } = grantLegacyRewards(this._gachaWallet ?? STARTER_GACHA_WALLET, achievements);
+        this._gachaWallet = normalizeGachaWalletSave(wallet);
+        this._gachaRevision += 1;
+        this._legacyCount += achievements.length;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { granted, legacyCount: this._legacyCount };
+    }
+
+    /** 攻城戰開戰的壽命消耗（PROG-2-0237）：扣完即存檔；武將不在名冊時回傳 null */
     public async spendSiegeLifespan(generalId: string): Promise<ActiveLifespanResult | null> {
         const result = this.spendLifespan(generalId, 'siege');
         if (result && this._autoSave && this._save) {
@@ -1504,7 +1557,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot());
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -1543,12 +1596,14 @@ export class GameSession {
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
         this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
         this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
+        this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
+        this._gachaRevision += 1;
         this._femaleSystem = normalizeFemaleSystemState(snapshot.femaleSystem);
         this._gachaWallet = snapshot.gachaWallet ? normalizeGachaWalletSave(snapshot.gachaWallet) : null;
         this._military = normalizeMilitaryReserve(snapshot.military);

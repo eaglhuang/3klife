@@ -42,6 +42,7 @@ import {
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { mentorFromCard } from '../../core/systems/NurtureSystem';
 import { describeLifecycle } from './GeneralLifecyclePresenter';
+import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 
 /** 培育一次最多帶的教官數（NURTURE_MENTOR_SLOTS）由 NurtureService 把關，這裡只負責挑人 */
 const MAX_AUTO_MENTORS = 6;
@@ -113,6 +114,8 @@ export interface NurtureFlowDeps {
     persist?: () => Promise<unknown>;
     /** 培育回合的壽命消耗（1 月）；正式環境接 GameSession.spendLifespan */
     spendLifespan?: (generalId: string, command: 'nurture') => { events: readonly { type: string }[] } | null;
+    /** 開獎與大器晚成文案（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
+    text?: BreedTextLookup;
 }
 
 export class NurtureFlowController {
@@ -121,6 +124,10 @@ export class NurtureFlowController {
     private _notice = '';
 
     constructor(private readonly _deps: NurtureFlowDeps) {}
+
+    private _t(key: string, ...args: string[]): string {
+        return (this._deps.text ?? fallbackBreedText)(key, ...args);
+    }
 
     // ── 清單 ───────────────────────────────────────────────────────────────
 
@@ -168,7 +175,7 @@ export class NurtureFlowController {
         const updated = this._deps.unveiling.choose(child.id, choice);
         this._notice = choice === 'accept'
             ? `${child.name} 順應天命，成為${CAREER_LABELS[updated.careerClass ?? ''] ?? '？'}`
-            : `${child.name} 逆天而行${updated.fate?.lateBloomer ? '，觸發大器晚成！' : '，成長率 ×0.8'}`;
+            : `${child.name} 逆天而行${updated.fate?.lateBloomer ? `，${this._t('ui.breed.daqi')}` : '，成長率 ×0.8'}`;
         await this._persist();
     }
 
@@ -304,7 +311,7 @@ export class NurtureFlowController {
             actives.fatePanel = true;
             enabled.btnFateAccept = true;
             enabled.btnFateDefy = true;
-            Object.assign(texts, buildFateTexts(child));
+            Object.assign(texts, buildFateTexts(child, this._deps.text ?? fallbackBreedText));
             return { mode: 'fate', childId: child.id, texts, actives, enabled };
         }
 
@@ -380,12 +387,12 @@ function statOf(general: GeneralConfig, key: string): number {
     return (general.stats as Record<string, number | undefined> | undefined)?.[key] ?? 0;
 }
 
-function buildFateTexts(child: UnveilingGeneral): Record<string, string> {
+function buildFateTexts(child: UnveilingGeneral, t: BreedTextLookup): Record<string, string> {
     const recommended = child.fate?.recommended ?? 'Scholar';
     const other = recommended === 'Warrior' ? 'Scholar' : 'Warrior';
     const factors = (child.genes ?? []).filter((gene) => !gene.isLocked);
     return {
-        fateName: child.name,
+        fateName: t('ui.breed.unveil_5', child.name),
         fateAge: `${child.age ?? 5} 歲 · ${describeLifecycle(child).summary} · 開獎於第 ${(child.unveiledSeason ?? 0) + 1} 季`,
         fateStats: UNVEILED_STAT_KEYS.map((key) => `${STAT_LABELS[key]} ${statOf(child, key)}`).join('　'),
         fateFactors: factors.length > 0

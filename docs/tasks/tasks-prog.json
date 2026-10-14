@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 34,
-    "total": 70
+    "open": 35,
+    "total": 71
   },
   "tasks": [
     {
@@ -2674,11 +2674,11 @@
     },
     {
       "id": "PROG-2-0111",
-      "title": "情報度與 AI 委任邏輯（HALL-05 純邏輯）",
+      "title": "情報度與 AI 委任：任務詳情 UI 接線與委任結算紀錄（HALL-05）",
       "owner": "Codex",
       "priority": "P1",
       "status": "ready",
-      "type": "logic",
+      "type": "ui-logic",
       "phase": "M6",
       "created": "2026-10-14",
       "created_by_agent": "claude-haiku-5-5",
@@ -2695,11 +2695,15 @@
         "docs/agent-briefs/tasks/PROG/PROG-2-0111.md"
       ],
       "scopePaths": [
-        "assets/scripts/core/systems/HallIntel.ts",
-        "tests/HallIntel.test.ts",
-        "tests/run-cli.ts"
+        "assets/scripts/ui/components/LobbyMissionDetailDialogComposite.ts",
+        "assets/scripts/ui/core/HallDetailActionStates.ts",
+        "assets/scripts/ui/core/HallExecuteConfirm.ts",
+        "assets/scripts/core/systems/HallDelegationLog.ts",
+        "tests/HallDelegationLog.test.ts",
+        "tests/run-cli.ts",
+        "artifacts/PROG-2-0111/**"
       ],
-      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 範圍更新為 UI 接線與 HallDelegationLog | 阻塞: ATM runtime 登錄待確認"
     },
     {
       "id": "PROG-2-0114",
@@ -2955,6 +2959,35 @@
         "artifacts/PROG-2-0123/**"
       ],
       "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: 等 M6 cc 接線 PR 合併"
+    },
+    {
+      "id": "PROG-2-0124",
+      "title": "實機驗收：虎符出陣成長、戰場 Set 標籤、首戰教學浮窗（#324、#329、#331）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M5-M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "戰場實機驗收，三項已合併到 master。",
+      "related": [],
+      "depends": [
+        "PR #324",
+        "PR #329",
+        "PR #331"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0124.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0124/**"
+      ],
+      "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
     }
   ]
 }

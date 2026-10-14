@@ -52,6 +52,7 @@ import { UI_EVENTS } from "../core/UIEvents";
 import { TallyCardData } from "../../shared/TallyCardContract";
 import type { ToastOptions } from "./ToastMessage";
 import { emitDeployDragDebug, shouldLogDeployDragMove } from "./DeployDragDebug";
+import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
 
 const { ccclass, property } = _decorator;
@@ -127,7 +128,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   private selectedType: TroopType = TroopType.Infantry;
   private selectedUnitName = '';
   /** 目前選的虎符 id（TRP-13）；選一般兵種時為 null */
-  private selectedTallyId: string | null = null;
+  private selectedTally: TallyDeployRef | null = null;
   private selectedSlotIndex = 0;
   private selectedLane: number = 0;
   /** [P2-N6] 當前糧草（原 currentDp，與 TurnSnapshot.playerFood 同步） */
@@ -335,7 +336,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
         }
         this.selectedType = type;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(type);
-        this.selectedTallyId = payload.data.tacticId ?? null;
+        this.selectedTally = tallyDeployRefOf(payload.data);
         this.selectedSlotIndex = payload.index;
         this.updateSelectionLabel();
         this.refreshButtonStates();
@@ -368,7 +369,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
         }
         this.selectedType = type;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(type);
-        this.selectedTallyId = payload.data.tacticId ?? null;
+        this.selectedTally = tallyDeployRefOf(payload.data);
         this.updateSelectionLabel();
         this.refreshButtonStates();
         this.beginDrag(payload.ev, type);
@@ -648,14 +649,14 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   // ─── 兵種選擇 ─────────────────────────────────────────────────────────────
 
   /** 選到虎符時才帶入 tally 參數（TRP-13）；一般兵種回傳 undefined */
-  private _tallyOptions(): { tally: { tallyId: string } } | undefined {
-    return this.selectedTallyId ? { tally: { tallyId: this.selectedTallyId } } : undefined;
+  private _tallyOptions(): { tally: TallyDeployRef } | undefined {
+    return this.selectedTally ? { tally: this.selectedTally } : undefined;
   }
 
   private selectTroop(type: TroopType, slotIndex = 0): void {
     this.selectedType = type;
     this.selectedUnitName = this.toTroopDisplayName(type);
-    this.selectedTallyId = null;
+    this.selectedTally = null;
     this.selectedSlotIndex = slotIndex;
     this.updateSelectionLabel();
     this.updateTroopSelectionVisuals();

@@ -165,8 +165,9 @@ export class BondingSetupController {
         } else {
             const child = result.child!;
             const gender = child.gender === '女' ? '千金' : '麟兒';
-            this._notice = `恭喜主公！${result.father.name} 與 ${result.mother.name} 喜獲${gender}「${child.name}」！`
-                + `${result.mother.name} 已進入待產期（${PREGNANCY_LOCK_SEASONS} 季），子嗣神祕期至 5 歲開獎`;
+            this._notice = this._t('ui.breed.child_born', result.father.name, result.mother.name, gender)
+                + `子嗣名為「${child.name}」。`
+                + this._t('ui.breed.preg_status', result.mother.name, String(PREGNANCY_LOCK_SEASONS));
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
         const deceased = [

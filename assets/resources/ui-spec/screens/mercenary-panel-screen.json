@@ -1,0 +1,17 @@
+{
+  "id": "mercenary-panel-screen",
+  "version": 1,
+  "uiId": "MercenaryPanel",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "mercenary-panel-main",
+  "skin": "mercenary-panel-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

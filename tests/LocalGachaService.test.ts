@@ -33,6 +33,7 @@ function storeOf(session: GameSession) {
         writePity: (book: Parameters<GameSession['setGachaPityBook']>[0]) => session.setGachaPityBook(book),
         readWallet: () => session.gachaWalletSave,
         writeWallet: (wallet: Parameters<GameSession['setGachaWalletSave']>[0]) => session.setGachaWalletSave(wallet),
+        revision: () => session.gachaRevision,
     };
 }
 import type { GachaPityBook } from '../assets/scripts/core/systems/GachaDraw';
@@ -158,6 +159,31 @@ export function createLocalGachaServiceSuite(): TestSuite {
         assert.equals(0, Object.keys(a.gachaPityBook).length, '新遊戲清掉保底');
         const fresh = new LocalGachaService(storeOf(a));
         assert.equals(12, fresh.getCurrencyAmount('tickets'), '新遊戲錢包回預設，不吃舊值');
+    });
+
+    suite.test('世代成就入帳後，轉蛋服務看到新的靈玉；之後花費不會把入帳蓋掉', async () => {
+        resetSyncDevice();
+        const adapter = new MemoryStorageAdapter();
+        const a = newSession(adapter);
+        const svc = new LocalGachaService(storeOf(a));
+        const before = svc.getCurrencyAmount('gems');
+        await a.applyLegacyAchievements([{ id: 'test', reward: { currency: 'premium', amount: 300 } } as never]);
+        assert.equals(before + 300, svc.getCurrencyAmount('gems'), '入帳後服務讀到最新靈玉');
+        svc.grantCurrency('tickets', 5);
+        assert.equals(before + 300, a.gachaWalletSave!.gems, '服務自己的寫入不會蓋掉入帳');
+    });
+
+    suite.test('讀檔後轉蛋服務丟掉舊快取，改用存檔裡的錢包與保底', async () => {
+        resetSyncDevice();
+        const adapter = new MemoryStorageAdapter();
+        const a = newSession(adapter);
+        const svc = new LocalGachaService(storeOf(a));
+        svc.grantCurrency('tickets', 100);
+        await a.save();
+        svc.grantCurrency('tickets', 50);
+        assert.equals(162, svc.getCurrencyAmount('tickets'));
+        assert.isTrue(await a.load(), '讀回上次存檔');
+        assert.equals(112, svc.getCurrencyAmount('tickets'), '讀檔後服務用存檔的錢包，不是舊快取');
     });
 
     return suite;

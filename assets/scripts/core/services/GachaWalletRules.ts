@@ -16,6 +16,15 @@ export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
     oracle: '求籤令',
 };
 
+/** 新檔的起始錢包（原為 LocalGachaService 私有常數，數值不變）；存檔為 null 時的入帳基底 */
+export const STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> = {
+    gems: 1280,
+    gold: 128450,
+    tickets: 12,
+    bronze: 0,
+    oracle: 0,
+};
+
 export interface WalletCheckResult {
     ok: boolean;
     /** 需要補的差額（ok 時為 0） */
