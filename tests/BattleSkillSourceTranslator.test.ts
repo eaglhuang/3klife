@@ -232,6 +232,57 @@ export function createBattleSkillSourceTranslatorSuite(): TestSuite {
         assert.equals('tactic-dragon-pierce', request!.tacticId!);
     });
 
+    suite.test('buildMentorTacticRequest：awakened 戰法槽轉成 SkillSourceType.Mentor（MENT-16）', () => {
+        const translator = createTranslator([
+            {
+                id: 'tactic-mentor-volley',
+                displayName: '師承連弩',
+                battleSkillId: 'mentor-volley',
+                sourceType: SkillSourceType.SeedTactic,
+                targetMode: BattleSkillTargetMode.Line,
+                timing: BattleSkillTiming.ActiveCast,
+            },
+        ]);
+        const general = new GeneralUnit({
+            id: 'mentor-general',
+            name: '教官戰法武將',
+            faction: Faction.Player,
+            hp: 1000,
+            maxSp: 100,
+            initialSp: 100,
+            tacticSlots: [{ slotId: 'slot-1', tacticId: 'tactic-mentor-volley', source: 'awakened' }],
+        });
+
+        const request = translator.buildMentorTacticRequest(general, Faction.Player);
+        assert.isDefined(request);
+        assert.equals(SkillSourceType.Mentor, request!.sourceType);
+        assert.equals('tactic-mentor-volley', request!.tacticId!);
+    });
+
+    suite.test('buildMentorTacticRequest：非 awakened 戰法槽不轉成 Mentor（回傳 null）', () => {
+        const translator = createTranslator([
+            {
+                id: 'tactic-dragon-pierce',
+                displayName: '龍魂突刺',
+                battleSkillId: 'zhao-yun-pierce',
+                sourceType: SkillSourceType.Bloodline,
+                targetMode: BattleSkillTargetMode.Line,
+                timing: BattleSkillTiming.ActiveCast,
+            },
+        ]);
+        const general = new GeneralUnit({
+            id: 'bloodline-only-general',
+            name: '血統武將',
+            faction: Faction.Player,
+            hp: 1000,
+            maxSp: 100,
+            initialSp: 100,
+            tacticSlots: [{ slotId: 'slot-1', tacticId: 'tactic-dragon-pierce', source: 'bloodline' }],
+        });
+
+        assert.equals(null, translator.buildMentorTacticRequest(general, Faction.Player));
+    });
+
     suite.test('buildSceneGambitRequest：可將 battle tactic enum 轉成 global-stage request', () => {
         const translator = createTranslator([]);
         const request = translator.buildSceneGambitRequest(BattleTactic.FloodAttack);
