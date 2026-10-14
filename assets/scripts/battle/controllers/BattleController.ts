@@ -36,7 +36,7 @@ import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
-import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
+import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
 import { describeActiveTallySets } from '../../core/systems/TigerTallySetBonus';
 import type { TacticCondition } from '../../core/systems/TacticCondition';
@@ -95,11 +95,6 @@ async function loadJsonWithFileFallback<T>(resourcePath: string, _relativeFilePa
   } catch {
     return null;
   }
-}
-
-/** 虎符部隊出陣參數（TRP-13）：只帶虎符 id，主將由戰場上的我方主將決定 */
-export interface TallyDeployRef {
-  tallyId: string;
 }
 
 export class BattleController {
@@ -264,14 +259,14 @@ export class BattleController {
    * 虎符目錄查不到或沒有適性資料時，乘數恆為 1。
    */
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
-    const profile = buildTallyCardCatalog().get(ref.tallyId)?.affinity ?? null;
+    const profile = buildTallyCardCatalog().get(ref.templateId)?.affinity ?? null;
     const general = this.state.getGeneral(Faction.Player);
     const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
-    unit.tallyId = ref.tallyId;
-    const info = this.tallyInfoOf(ref.tallyId);
+    unit.tallyId = ref.cardUid;
+    const info = this.tallyInfoOf(ref.cardUid);
     unit.tallyStarMultiplier = starStatMultiplier(info?.star ?? 1);
     unit.tallyTemplateId = info?.templateId ?? null;
-    this._deployedTallyIds.add(ref.tallyId);
+    this._deployedTallyIds.add(ref.cardUid);
     unit.commanderUid = commander?.uid ?? null;
     unit.tallyAffinity = (lane, depth) =>
       resolveTallyDeployMod(profile, commander, this.state.getCell(lane, depth)?.terrain ?? null);

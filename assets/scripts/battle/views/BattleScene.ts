@@ -8,6 +8,7 @@ import {
 } from "../../core/config/Constants";
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
+import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { readCardStarState } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
 import { GeneralUnit } from "../../core/models/GeneralUnit";
@@ -256,7 +257,8 @@ export class BattleScene extends Component {
       });
 
       // 6-2. 填入虎符卡片初始資料（手牌卡組）
-      const initialCards = buildTallyCards(battleParams.selectedCardIds);
+      // 手牌綁到玩家持有的卡片實例（PROG-2-0579）：出陣 uid 才對得上星級與戰後經驗的鍵
+      const initialCards = bindHeldTallyInstances(buildTallyCards(battleParams.selectedCardIds), services().session.tallyCards);
       this.battleScenePanel?.setCards(initialCards);
       this.battleScenePanel?.setUltimateSkills(buildUltimateSkills(pg));
       this.battleScenePanel?.setTacticSummary(buildTacticSummary(pg).label, this.ctrl.getPlayerTacticPointState());
