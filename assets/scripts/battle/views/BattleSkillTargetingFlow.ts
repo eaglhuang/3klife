@@ -15,6 +15,8 @@ import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 /** 待確認目標的技能狀態 */
 export interface PendingSkillTargeting {
   skillId: string;
+  /** 奧義 id；同一戰法可對應多個奧義，用來區分取消判斷與精力扣減 */
+  ultimateId?: string;
   sourceType: SkillSourceType;
   targetMode: BattleSkillTargetMode;
 }
@@ -55,7 +57,7 @@ export class BattleSkillTargetingFlow {
    * 開始技能流程。若技能不需手動選目標，直接發動；
    * 否則進入選目標模式。
    */
-  beginPlayerSkillFlow(skillId: string, sourceType: SkillSourceType, sourceLabel: string): void {
+  beginPlayerSkillFlow(skillId: string, sourceType: SkillSourceType, sourceLabel: string, ultimateId?: string): void {
     const ctrl = this.ctx.getCtrl();
     if (!ctrl) return;
 
@@ -77,14 +79,16 @@ export class BattleSkillTargetingFlow {
     }
 
     // 再次點選同一技能 → 取消
-    if (this.pendingSkillTargeting?.skillId === skillId && this.pendingSkillTargeting.sourceType === sourceType) {
+    if (this.pendingSkillTargeting?.skillId === skillId
+      && this.pendingSkillTargeting.ultimateId === ultimateId
+      && this.pendingSkillTargeting.sourceType === sourceType) {
       this.cancelPendingSkillTargeting(true);
       return;
     }
 
     const targetMode = resolveBattleSkillTargetMode(skillId, BattleSkillTargetMode.EnemyAll);
     if (!this._requiresExplicitTarget(skillId, targetMode)) {
-      const didCast = ctrl.triggerPlayerBattleSkill(skillId, sourceType, { targetMode });
+      const didCast = ctrl.triggerPlayerBattleSkill(skillId, sourceType, { targetMode, ultimateId });
       if (didCast) {
         this.ctx.showToast(`${sourceLabel}已發動`, 1.2);
         this.ctx.refreshBattleViews();
@@ -94,7 +98,7 @@ export class BattleSkillTargetingFlow {
       return;
     }
 
-    this.pendingSkillTargeting = { skillId, sourceType, targetMode };
+    this.pendingSkillTargeting = { skillId, ultimateId, sourceType, targetMode };
     this._syncPendingSkillPreview();
     this.ctx.showToast(this._buildTargetingPrompt(skillId, targetMode), 2.4);
     this.ctx.appendBattleLog(buildBattleSkillAimingMessage(skillId, sourceType));
@@ -126,7 +130,7 @@ export class BattleSkillTargetingFlow {
       const didCast = ctrl.triggerPlayerBattleSkill(
         this.pendingSkillTargeting.skillId,
         this.pendingSkillTargeting.sourceType,
-        { targetMode, targetUnitUid: targetUnit.id },
+        { targetMode, targetUnitUid: targetUnit.id, ultimateId: this.pendingSkillTargeting.ultimateId },
       );
       if (!didCast) {
         this.ctx.showToast(`${sourceLabel}發動失敗，請重新選擇目標`, 1.5);
@@ -142,7 +146,7 @@ export class BattleSkillTargetingFlow {
     const didCast = ctrl.triggerPlayerBattleSkill(
       this.pendingSkillTargeting.skillId,
       this.pendingSkillTargeting.sourceType,
-      { targetMode, targetTileId: `${cell.lane},${cell.depth}` },
+      { targetMode, targetTileId: `${cell.lane},${cell.depth}`, ultimateId: this.pendingSkillTargeting.ultimateId },
     );
     if (!didCast) {
       this.ctx.showToast(`${sourceLabel}發動失敗，請重新選擇格位`, 1.5);

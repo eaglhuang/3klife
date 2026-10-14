@@ -66,6 +66,21 @@ export function createBattleVitalityGateSuite(): TestSuite {
         assert.equals('vitality-restricted', result.blockedReason ?? '');
     });
 
+    suite.test('直接派發：ownerUid 是陣營字串（不是單位 uid）時，仍依該陣營武將的精力擋下', () => {
+        // 直接派發（dispatchDirectBattleSkill）的 ownerUid 填的是陣營，戰場上找不到同名單位
+        const { dispatcher, state } = setupCaster(5, 100);
+        assert.isTrue(state.units.get(Faction.Player) === undefined);
+        const result = dispatcher.executeBattleSkillRequest({
+            sourceType: SkillSourceType.Ultimate,
+            ownerUid: Faction.Player,
+            battleSkillId: 'zhou-yu-inferno',
+            targetMode: 'tile',
+            timing: 'active-cast',
+        } as never);
+        assert.equals(false, result.applied);
+        assert.equals('vitality-restricted', result.blockedReason ?? '');
+    });
+
     suite.test('武將缺精力資料：預設滿值，不因缺值被擋', () => {
         const general = new GeneralUnit({ id: 'no-vit', name: '無精力', faction: Faction.Player, hp: 100 } as never);
         assert.equals(100, general.vitality);

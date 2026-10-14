@@ -237,6 +237,8 @@ export interface SettleBattleRequest {
     season?: number;
     /** 各出戰武將本場表現（擊殺 / 傷害 / 承傷 / 治療）；沒有的武將只記勝敗 */
     performance?: Readonly<Record<string, BattlePerformance>>;
+    /** 戰鬥結束時各武將的精力（已扣奧義成本）；有提供時以此為基準再扣 BATTLE_VITALITY_COST，沒有則用名冊值 */
+    vitalityAfterBattle?: Readonly<Record<string, number>>;
 }
 
 /** 戰後結算：出戰武將扣精力、記戰績與功勳；result 為 ongoing 時原樣回傳 */
@@ -254,7 +256,7 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
         // 試用傭兵（MERC-06）：出戰不計精力、戰績、功勳，名冊原樣保留
         if (isTrialMercenary(general)) return { ...general };
         const g = general as BattleRosterGeneral;
-        const before = vitalityOf(g);
+        const before = request.vitalityAfterBattle?.[g.id] ?? vitalityOf(g);
         const after = Math.max(0, before - BATTLE_VITALITY_COST);
         const previous = g.battleRecord ?? { wins: 0, losses: 0, draws: 0, merit: 0 };
         const merit = BATTLE_MERIT[outcome];

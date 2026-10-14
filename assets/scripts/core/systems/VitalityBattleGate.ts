@@ -54,6 +54,17 @@ export function canPerformAction(band: VitalityBand, action: BattleActionKind): 
     return false;
 }
 
+/**
+ * 施放奧義後的精力扣減：成本 = 精力上限 × 比例（四捨五入），下限 0。
+ * 比例無效（非有限數或 ≤0）或上限無效時不扣，回傳原值，不猜測。
+ */
+export function spendUltimateVitality(current: number, max: number, costPct: number): number {
+    if (!Number.isFinite(current) || !Number.isFinite(max) || max <= 0) return current;
+    if (!Number.isFinite(costPct) || costPct <= 0) return current;
+    const cost = Math.round(max * costPct);
+    return Math.max(0, current - cost);
+}
+
 /** 撤退風險加成：只有耗盡段會提高，其餘為 0 */
 export function retreatRiskBonus(band: VitalityBand): number {
     return band === 'exhausted' ? EXHAUSTED_RETREAT_RISK_BONUS : 0;

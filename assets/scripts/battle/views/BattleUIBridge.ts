@@ -582,7 +582,10 @@ export class BattleUIBridge {
     if (result === 'player-win' && sortie) this._captureEnemyGeneral();
     const stageId = this.ctx.encounterId ?? undefined;
     const deployedTallyIds = this.ctx.ctrl?.deployedTallyIds ?? [];
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds }).then((settlement) => {
+    // 戰鬥結束時主將的精力（已扣奧義成本）是結算的基準，戰後再扣 30（PM 裁定，2026-10-14）
+    const battleVitality = this.ctx.ctrl?.state.playerGeneral?.vitality;
+    const vitalityAfterBattle = battleVitality !== undefined ? { [pgId]: battleVitality } : undefined;
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
@@ -615,7 +618,7 @@ export class BattleUIBridge {
       });
   }
 
-  private _onUltimateSkillSelected(data: { skillId?: string | null }): void {
+  private _onUltimateSkillSelected(data: { skillId?: string | null; ultimateId?: string | null }): void {
     if (!this.ctx.ctrl || this.ctx.isAdvancingTurn) return;
     const skillId = data.skillId ?? null;
     if (!skillId) {
@@ -623,7 +626,7 @@ export class BattleUIBridge {
       return;
     }
 
-    this.ctx.skillTargetingFlow?.beginPlayerSkillFlow(skillId, SkillSourceType.Ultimate, '奧義');
+    this.ctx.skillTargetingFlow?.beginPlayerSkillFlow(skillId, SkillSourceType.Ultimate, '奧義', data.ultimateId ?? undefined);
   }
 
   private _onGlobalBoardTouchEnd(ev: EventTouch): void {

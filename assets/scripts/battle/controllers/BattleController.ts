@@ -16,6 +16,7 @@ import { EnemyAI } from "./EnemyAI";
 import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
+import { findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -161,6 +162,7 @@ export class BattleController {
       getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
       getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
       getTacticConditions: (tacticId) => this.tacticDefinitionMap.get(tacticId)?.tcond as TacticCondition[] | undefined,
+      getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
     },
     this.skillSourceTranslator,
   );

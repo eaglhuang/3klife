@@ -190,6 +190,8 @@ export interface RecordBattleOptions {
     stageId?: string;
     /** 本場出陣的虎符卡片 id；戰後各自累積戰鬥經驗並可能升星（PROG-2-0573） */
     deployedTallyIds?: readonly string[];
+    /** 武將 id → 戰鬥結束時的精力（已扣奧義成本）；結算以此為基準再扣戰後精力 */
+    vitalityAfterBattle?: Readonly<Record<string, number>>;
 }
 
 export interface AddGeneralsResult {
@@ -1496,6 +1498,7 @@ export class GameSession {
             result,
             season: this._clock.state.totalSeasonsElapsed,
             performance: options.performance,
+            vitalityAfterBattle: options.vitalityAfterBattle,
         });
         if (settlement.entries.length === 0) {
             if ((clearChanged || tallyChanged) && this._autoSave && this._save) {
