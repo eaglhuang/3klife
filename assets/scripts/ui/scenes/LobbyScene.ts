@@ -2056,7 +2056,7 @@ export class LobbyScene extends Component {
 
         const availableGenerals = this._buildMissionDetailGeneralOptions();
         const selectedGeneral = this._resolveMissionDetailSmokeGeneral(previewVariant, availableGenerals);
-        // 環境偵察面板（PROG-2-0404）：用大廳目前關卡的真實地形與天氣
+        // 環境偵察面板（PROG-2-0405）：用大廳目前關卡的真實地形與天氣
         const encounter = this._currentEncounter();
         const scout = encounter ? buildEnvScoutLines(buildBattlefieldReconForEncounter(encounter)) : null;
 

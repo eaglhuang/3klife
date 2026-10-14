@@ -97,7 +97,7 @@ export interface BattlefieldReconEncounter {
 }
 
 /**
- * 依關卡資料組出偵察結果（PROG-2-0404）。
+ * 依關卡資料組出偵察結果（PROG-2-0405）。
  * 沒有排程時，預報範圍內整段使用關卡的固定天氣，與戰場開戰時的行為一致（BattleController.initBattle 套用 weather）。
  */
 export function buildBattlefieldReconForEncounter(
