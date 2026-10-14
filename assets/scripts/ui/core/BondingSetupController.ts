@@ -26,6 +26,8 @@ import {
     FATHER_VIGOR_COST,
     isFemale,
     isMale,
+    INBREEDING_VITALITY_MULTIPLIER,
+    isSameBloodline,
     lifetimeBreedingCap,
     MOTHER_VIGOR_COST,
     PREGNANCY_LOCK_SEASONS,
@@ -229,9 +231,12 @@ export class BondingSetupController {
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
             : `無法結緣：${eligibility.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;
+        const inbred = isSameBloodline(father, mother);
         texts.inbreedingLabel = eligibility.commonAncestorDistance !== null
             ? `近親警告：${eligibility.commonAncestorDistance} 代內有共同祖先`
-            : '血緣：3 代內無共同祖先';
+            : inbred
+                ? `${BLOCK_REASON_TEXT.inbreeding}子嗣精力上限 ×${INBREEDING_VITALITY_MULTIPLIER}`
+                : '血緣：3 代內無共同祖先';
         enabled.btnConfirmBond = eligibility.ok;
 
         return { fatherId: father.id, motherId: mother.id, mode, texts, actives, enabled };

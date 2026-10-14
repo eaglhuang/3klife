@@ -205,6 +205,19 @@ export function createBondingSetupSuite(): TestSuite {
         assert.equals(1, rig.saves.count);
     });
 
+    suite.test('同 Bloodline_ID 但無 3 代內共同祖先：不擋結緣，血緣列顯示同源血脈警告與子嗣精力 ×0.7（GEN-12）', async () => {
+        const rig = makeRig([
+            general('kin-a', '男', { age: 40, bloodlineId: 'BL-SHU' }),
+            general('kin-b', '女', { age: 38, bloodlineId: 'BL-SHU' }),
+        ]);
+        await rig.flow.open();
+        rig.flow.selectFather('kin-a');
+        rig.flow.selectMother('kin-b');
+        const view = rig.flow.getView();
+        assert.isTrue(view.texts.inbreedingLabel.startsWith('同源血脈過於濃厚'));
+        assert.isTrue(view.texts.inbreedingLabel.includes('×0.7'));
+    });
+
     suite.test('近親（兄妹）：顯示近親警告與原因，確認不可按；硬按也不扣精力', async () => {
         const rig = makeRig([
             general('dad', '男', { age: 50 }),
