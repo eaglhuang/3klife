@@ -104,6 +104,7 @@ export function createLegacySuite(): TestSuite {
         const card = await session.retireGeneral('old');
 
         assert.equals('mentor-old', card.uid);
+        assert.equals('Retire', card.source!, '退役轉化的教官卡標記為 Retire');
         assert.equals(66, card.retiredAge);
         assert.equals(77, card.ep_snapshot);
         assert.equals('f', card.parentUids[0]);

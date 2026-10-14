@@ -19,6 +19,7 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
+import { tagMentorSource } from '../systems/MentorSources';
 import type { SpiritCard } from '../models/SpiritCard';
 import { isTallyEligible, TigerTallyGeneral } from '../systems/TigerTally';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
@@ -138,7 +139,7 @@ export class LegacyService implements SeasonLifecycle {
         }
 
         const retired: LegacyGeneral = { ...target, isMentorCard: true, retiredSeason: time.totalSeasonsElapsed };
-        const card: MentorCard = {
+        const card = tagMentorSource({
             uid: `mentor-${retired.id}`,
             sourceGeneralId: retired.id,
             name: retired.name,
@@ -150,7 +151,7 @@ export class LegacyService implements SeasonLifecycle {
             gene_refs: (retired.genes ?? []).map((g) => g.id).filter((id): id is string => !!id),
             parentUids: [retired.fatherId ?? '', retired.motherId ?? ''],
             generalSnapshot: JSON.parse(JSON.stringify(retired)) as GeneralConfig,
-        };
+        } as MentorCard, 'Retire');
 
         const cards = await this.getMentorCards();
         await this._adapter.set(STORE_MENTOR_CARDS, [...cards.filter((c) => c.uid !== card.uid), card]);
