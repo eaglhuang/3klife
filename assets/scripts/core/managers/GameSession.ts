@@ -81,6 +81,9 @@ import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
+import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
+import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../systems/DungeonRescue';
+import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
@@ -290,6 +293,7 @@ export class GameSession {
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
+    private _femaleSystem: FemaleSystemState = normalizeFemaleSystemState(undefined);
     /** 轉蛋錢包（PROG-2-0338）；null 代表存檔沒有，讀舊 localStorage 或用預設 */
     private _gachaWallet: GachaWalletSave | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
@@ -474,6 +478,33 @@ export class GameSession {
     }
 
     /** 轉蛋各池保底計數（唯讀副本） */
+    /** 女性來源系統狀態的唯讀副本（傭兵池／救美刷新時間、送禮好感） */
+    public get femaleSystemState(): FemaleSystemState {
+        return normalizeFemaleSystemState(this._femaleSystem);
+    }
+
+    /** 送禮：回傳該武將更新後的好感（0~100） */
+    public giftFemale(uid: string, giftValue: number): number {
+        this._femaleSystem = giftToFemale(this._femaleSystem, uid, giftValue);
+        return this._femaleSystem.giftAffection[uid] ?? 0;
+    }
+
+    /** 傭兵池到期才刷新：未到期回傳 null；到期則記下時間戳並抽出女性池 */
+    public refreshFemalePoolIfDue(candidates: readonly PoolCandidate[], nowMs: number, random: () => number, size = 4): string[] | null {
+        const last = this._femaleSystem.poolRefreshedAtMs;
+        if (last !== null && !isFemalePoolRefreshDue(last, nowMs)) return null;
+        this._femaleSystem = { ...this._femaleSystem, poolRefreshedAtMs: nowMs };
+        return drawFemalePool(candidates, size, random);
+    }
+
+    /** 地下城救美：未到 8 小時回傳 null；到期則記下時間戳並擲出結果 */
+    public rollDungeonRescueIfDue(nowMs: number, random: () => number): RescueOutcome | null {
+        const last = this._femaleSystem.rescueRefreshedAtMs;
+        if (last !== null && !isRescueRefreshDue(last, nowMs)) return null;
+        this._femaleSystem = { ...this._femaleSystem, rescueRefreshedAtMs: nowMs };
+        return rollDungeonRescue(random);
+    }
+
     public get gachaPityBook(): Readonly<GachaPityBook> {
         return normalizeGachaPityBook(this._gachaPity);
     }
@@ -700,6 +731,7 @@ export class GameSession {
         this._tallyCards = {};
         this._femaleSources = {};
         this._gachaPity = {};
+        this._femaleSystem = normalizeFemaleSystemState(undefined);
         this._gachaWallet = null;
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
@@ -1410,6 +1442,7 @@ export class GameSession {
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
             bondPoints: this._bondPoints,
+            femaleSystem: this.femaleSystemState,
         };
     }
 
@@ -1457,6 +1490,7 @@ export class GameSession {
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
+        this._femaleSystem = normalizeFemaleSystemState(snapshot.femaleSystem);
         this._gachaWallet = snapshot.gachaWallet ? normalizeGachaWalletSave(snapshot.gachaWallet) : null;
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
