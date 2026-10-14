@@ -3,6 +3,7 @@ import { Faction, GAME_CONFIG, Weather, BattleTactic } from "../../core/config/C
 import { TerrainType, TerrainGrid } from "../../shared/CommonEnums";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
+import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 
 export interface GridCell {
   lane: number;
@@ -84,6 +85,8 @@ export class BattleState {
   public enemyFortressHp = 500;
   /** 營曜天氣（影響戰場修正預留欄位） */
   public weather: Weather = Weather.Clear;
+  /** 天氣排程（PROG-2-0401）；空陣列代表整場維持 weather */
+  public weatherSchedule: readonly WeatherScheduleEntry[] = [];
   /** 場景戰法（特殊戰場規則預留欄位） */
   public battleTactic: BattleTactic = BattleTactic.Normal;
   public sceneFlags: SceneBattleFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
@@ -122,6 +125,7 @@ export class BattleState {
     this.playerFortressHp = 500;
     this.enemyFortressHp  = 500;
     this.weather     = weather     ?? Weather.Clear;
+    this.weatherSchedule = [];
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
     this.battleEndAnnounced = false;

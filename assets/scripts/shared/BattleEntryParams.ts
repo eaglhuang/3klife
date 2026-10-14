@@ -4,6 +4,13 @@
 
 import { Weather, BattleTactic, TerrainGrid } from './CommonEnums';
 
+/** 天氣排程單一條目（結構與 core/systems/WeatherSchedule 的 WeatherScheduleEntry 相同，shared 不引用 core） */
+export interface WeatherScheduleEntry {
+  turnStart: number;
+  turnEnd: number;
+  weather: Weather;
+}
+
 /** encounters.json 中單一遭遇戰的設定結構 */
 export interface EncounterConfig {
   id: string;
@@ -17,6 +24,8 @@ export interface EncounterConfig {
   battleKind?: 'field' | 'siege';
   /** 天氣條件（可選，預設 Clear） */
   weather?: Weather | string;
+  /** 天氣排程（可選）；有值時每回合依排程切換天氣（PROG-2-0401） */
+  weatherSchedule?: WeatherScheduleEntry[];
   /** 場景戰法（可選，預設 Normal） */
   battleTactic?: BattleTactic;
   /** 我軍裝備 ID 列表（預留） */
@@ -56,6 +65,8 @@ export interface IBattleEntryParams {
 
   /** 天氣 */
   weather: Weather;
+  /** 天氣排程（可選）；覆蓋 encounter 設定（PROG-2-0401） */
+  weatherSchedule?: WeatherScheduleEntry[];
   /** 戰場戰法 */
   battleTactic: BattleTactic;
   /** 背景 ID（覆蓋 encounter 設定；為空時由 encounter 決定） */
