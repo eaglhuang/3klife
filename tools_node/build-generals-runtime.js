@@ -165,7 +165,19 @@ function preserveMergedMap(record, legacy, key) {
   return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
 }
 
+/**
+ * 產出單筆 runtime 武將；白名單欄位以 master 資料為準，白名單外與值為 undefined 的既有欄位
+ * 由 buildRuntimeRecord 從 legacy 保留，避免建置時丟失（例如 originRegion、element、introLine）。
+ */
 function buildRuntimeRecord(baseRecord, loreRecord, storyRecord, legacyRecord) {
+  const record = buildRuntimeRecordCore(baseRecord, loreRecord, storyRecord, legacyRecord);
+  for (const [key, value] of Object.entries(legacyRecord || {})) {
+    if (record[key] === undefined) record[key] = value;
+  }
+  return record;
+}
+
+function buildRuntimeRecordCore(baseRecord, loreRecord, storyRecord, legacyRecord) {
   const merged = { ...baseRecord, ...loreRecord };
   const hp = computeHp(merged);
   const maxSp = computeMaxSp(merged);
@@ -341,4 +353,7 @@ function main() {
   console.log(`[build-generals-runtime] L1 active: ${indexList.filter((x) => x.layerKey === 'L1').length} 筆`);
 }
 
-main();
+module.exports = { buildRuntimeRecord };
+
+if (require.main === module) main();
+
