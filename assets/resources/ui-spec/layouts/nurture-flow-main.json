@@ -934,6 +934,100 @@
                         "styleSlot": "nurture.label.button"
                       }
                     ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnKeepReport",
+                    "id": "btnKeepReport",
+                    "widget": {
+                      "top": 180,
+                      "left": 360
+                    },
+                    "width": 420,
+                    "height": 64,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnKeepReportLabel",
+                        "id": "keepLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 56,
+                        "text": "保留成績單",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnRetake",
+                    "id": "btnRetake",
+                    "widget": {
+                      "top": 260,
+                      "left": 360
+                    },
+                    "width": 420,
+                    "height": 64,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnRetakeLabel",
+                        "id": "retakeLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 56,
+                        "text": "保留並重修",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnCommitReport",
+                    "id": "btnCommitReport",
+                    "widget": {
+                      "top": 340,
+                      "left": 360
+                    },
+                    "width": 420,
+                    "height": 64,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnCommitReportLabel",
+                        "id": "commitLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 56,
+                        "text": "定型（取最新一份）",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "ReportBookLabel",
+                    "id": "reportBookLabel",
+                    "widget": {
+                      "top": 420,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 40,
+                    "styleSlot": "nurture.label.body",
+                    "text": ""
                   }
                 ]
               },
