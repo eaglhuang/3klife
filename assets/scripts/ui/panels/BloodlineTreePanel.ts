@@ -1,6 +1,7 @@
 // @spec-source → DC-3-0004 | 資料中心架構規格書.md §2.3
 import { _decorator, Component, Label, Node } from 'cc';
 import { BloodlineGraph } from '../../core/services/BloodlineGraph';
+import { buildBloodlineTreeSlots, BloodlineTreeSlot } from '../../core/systems/BloodlineTreeSlots';
 
 const { ccclass, property } = _decorator;
 
@@ -46,18 +47,19 @@ export class BloodlineTreePanel extends Component {
         }
 
         // getAncestorChain BFS 排列：index 0-1 = 父母、2-5 = 祖父母、6-13 = 曾祖父母
-        const ancestors = graph.getAncestorChain(uid, 3);
+        const slots = buildBloodlineTreeSlots(graph.getAncestorChain(uid, 3));
 
-        this._fillContainer(this.gen3Container, 'G3', 2, ancestors.slice(0, 2), graph);
-        this._fillContainer(this.gen2Container, 'G2', 4, ancestors.slice(2, 6), graph);
-        this._fillContainer(this.gen1Container, 'G1', 8, ancestors.slice(6, 14), graph);
+        this._fillContainer(this.gen3Container, 'G3', slots.gen3, graph);
+        this._fillContainer(this.gen2Container, 'G2', slots.gen2, graph);
+        this._fillContainer(this.gen1Container, 'G1', slots.gen1, graph);
     }
 
     /** 清除所有祖先樹標籤（切換武將時呼叫） */
     clear(): void {
-        this._fillContainer(this.gen3Container, 'G3', 2, [], BloodlineGraph.getInstance());
-        this._fillContainer(this.gen2Container, 'G2', 4, [], BloodlineGraph.getInstance());
-        this._fillContainer(this.gen1Container, 'G1', 8, [], BloodlineGraph.getInstance());
+        const slots = buildBloodlineTreeSlots([]);
+        this._fillContainer(this.gen3Container, 'G3', slots.gen3, BloodlineGraph.getInstance());
+        this._fillContainer(this.gen2Container, 'G2', slots.gen2, BloodlineGraph.getInstance());
+        this._fillContainer(this.gen1Container, 'G1', slots.gen1, BloodlineGraph.getInstance());
     }
 
     // ---- private ----
@@ -65,13 +67,12 @@ export class BloodlineTreePanel extends Component {
     private _fillContainer(
         container: Node | null,
         prefix: string,
-        count: number,
-        uids: string[],
+        slots: BloodlineTreeSlot[],
         graph: BloodlineGraph
     ): void {
         if (!container) return;
-        for (let i = 0; i < count; i++) {
-            const uid = uids[i];
+        for (let i = 0; i < slots.length; i++) {
+            const uid = slots[i].uid;
             const person = uid ? graph.getPerson(uid) : null;
             const txtNode = container.getChildByPath(`${prefix}_${i}/Txt`);
             if (!txtNode) continue;

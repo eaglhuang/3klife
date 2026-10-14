@@ -501,6 +501,580 @@
                     "styleSlot": "bonding.label.button"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "FatherTree",
+                "width": 330,
+                "height": 260,
+                "widget": {
+                  "left": 16,
+                  "top": 520
+                },
+                "skinSlot": "bonding.slot.bg",
+                "layout": {
+                  "type": "vertical",
+                  "spacing": 8,
+                  "paddingTop": 12,
+                  "paddingBottom": 12,
+                  "paddingLeft": 12,
+                  "paddingRight": 12
+                },
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "Gen3Container",
+                    "width": "100%",
+                    "height": 60,
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 4,
+                      "paddingLeft": 0,
+                      "paddingRight": 0
+                    },
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "G3_0",
+                        "width": 120,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G3_1",
+                        "width": 120,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "Gen2Container",
+                    "width": "100%",
+                    "height": 60,
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 4,
+                      "paddingLeft": 0,
+                      "paddingRight": 0
+                    },
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "G2_0",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G2_1",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G2_2",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G2_3",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "Gen1Container",
+                    "width": "100%",
+                    "height": 66,
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 4,
+                      "paddingLeft": 0,
+                      "paddingRight": 0
+                    },
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "G1_0",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_1",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_2",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_3",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_4",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_5",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_6",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_7",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "MotherTree",
+                "width": 330,
+                "height": 260,
+                "widget": {
+                  "right": 16,
+                  "top": 520
+                },
+                "skinSlot": "bonding.slot.bg",
+                "layout": {
+                  "type": "vertical",
+                  "spacing": 8,
+                  "paddingTop": 12,
+                  "paddingBottom": 12,
+                  "paddingLeft": 12,
+                  "paddingRight": 12
+                },
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "Gen3Container",
+                    "width": "100%",
+                    "height": 60,
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 4,
+                      "paddingLeft": 0,
+                      "paddingRight": 0
+                    },
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "G3_0",
+                        "width": 120,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G3_1",
+                        "width": 120,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "Gen2Container",
+                    "width": "100%",
+                    "height": 60,
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 4,
+                      "paddingLeft": 0,
+                      "paddingRight": 0
+                    },
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "G2_0",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G2_1",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G2_2",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G2_3",
+                        "width": 75,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "container",
+                    "name": "Gen1Container",
+                    "width": "100%",
+                    "height": 66,
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 4,
+                      "paddingLeft": 0,
+                      "paddingRight": 0
+                    },
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "G1_0",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_1",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_2",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_3",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_4",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_5",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_6",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "G1_7",
+                        "width": 36,
+                        "height": 40,
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "Txt",
+                            "width": "100%",
+                            "height": "100%",
+                            "styleSlot": "bonding.label.meta",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
