@@ -12,6 +12,8 @@
  * Unity 對照：像 ScriptableObject 的 OnValidate，資料載入後跑一次檢查，欄位缺了或型別錯就印警告。
  */
 
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
+
 /** 規格 Status ENUM（武將系統 Server 端欄位表） */
 export const GENERAL_STATUSES = ['Active', 'Training', 'Retired', 'Dead'] as const;
 export type GeneralStatus = (typeof GENERAL_STATUSES)[number];
@@ -84,4 +86,20 @@ export function validateGeneralList(records: readonly GeneralSchemaRecord[]): Ar
         if (errors.length > 0) report.push({ id, errors });
     }
     return report;
+}
+
+/**
+ * generals.json 載入時的檢查（PROG-2-0253 接線，MVP-01）：只記 warning，不中斷載入。
+ * 回傳問題筆數，方便測試與呼叫端判斷；logger 可注入，預設走 UCUFLogger。
+ */
+export function warnGeneralSchemaOnLoad(
+    records: readonly GeneralSchemaRecord[],
+    source: string,
+    logger: (message: string) => void = (message) => UCUFLogger.warn(LogCategory.DATA, message),
+): number {
+    const report = validateGeneralList(records);
+    for (const item of report) {
+        logger(`[GeneralSchema] ${source}: ${item.id} → ${item.errors.join('；')}`);
+    }
+    return report.length;
 }
