@@ -10,6 +10,7 @@ import type { Node } from 'cc';
 import { SolidBackground } from '../SolidBackground';
 import { describeLifespan, describeVitality } from '../../core/LifeVitalityPresenter';
 import { describeLifecycle } from '../../core/GeneralLifecyclePresenter';
+import { appendDeathLegacyHint } from '../../core/GachaPoolGuidePresenter';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
@@ -97,7 +98,7 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
         this._set(this._lVitality, vit ? vit.text : this.t('ui.general.basics.unlocked'));
         this._setOptional(this._lVitalityTitle, vit?.statusText ? `精力 · ${vit.statusText}` : '精力');
         this._applyMeter(this._vitalityFill, vit ? vit.ratio : 0, vit ? vit.color : null);
-        this._set(this._lSource, mask(cfg.source, this.t('ui.general.basics.source_unlisted')));
+        this._set(this._lSource, appendDeathLegacyHint(mask(cfg.source, this.t('ui.general.basics.source_unlisted')), cfg.status));
     }
 
     protected override _refreshLabels(): void {

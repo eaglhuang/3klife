@@ -51,6 +51,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
@@ -1661,7 +1662,10 @@ export class LobbyScene extends Component {
             gold: () => { void this._runGachaAction(() => this._runGoldSummon()); },
             ticket: () => { void this._runGachaAction(() => this._runTicketSummon()); },
         }, this, Button.EventType.CLICK);
+        const guideLines = buildGachaPoolGuideLines();
         host.binder.setTexts({
+            GachaDs3_div_8: guideLines.generalSeries,
+            GachaDs3_div_28: guideLines.supportSeries,
             GachaDs3_div_44: '單 抽 ×1', GachaDs3_div_47: '100',
             GachaDs3_div_49: '十 連 ×10', GachaDs3_div_53: '1000',
             GachaDs3_div_55: '金幣召喚（500）', GachaDs3_div_56: '使用召喚券（1）',
