@@ -97,5 +97,34 @@ export function createBattleVitalityGateSuite(): TestSuite {
         assert.isTrue(check.allowed);
     });
 
+    suite.test('撤退失敗鎖回合：被鎖定的部隊發動戰法被擋下，不扣資源，回傳 action-blocked', () => {
+        const state = new BattleState();
+        state.units.set('troop-unit', { id: 'troop-unit', faction: Faction.Player, lane: 0, depth: 0, type: 'infantry', currentHp: 10 } as never);
+        const dispatcher = new BattleSkillDispatcher({ state, isUnitActionBlocked: (id: string) => id === 'troop-unit' } as never, {} as never);
+        const result = dispatcher.executeBattleSkillRequest({
+            sourceType: SkillSourceType.SeedTactic,
+            ownerUid: 'troop-unit',
+            battleSkillId: 'zhou-yu-inferno',
+            targetMode: 'tile',
+            timing: 'active-cast',
+        } as never);
+        assert.equals(false, result.applied);
+        assert.equals('action-blocked', result.blockedReason ?? '');
+        assert.equals('本回合撤退失敗，無法行動', result.battleLogLines[0] ?? '');
+    });
+
+    suite.test('撤退鎖回合不影響其他單位：未鎖定的部隊仍照精力閘門判定', () => {
+        const { state } = setupCaster(5, 100);
+        const dispatcher = new BattleSkillDispatcher({ state, isUnitActionBlocked: (id: string) => id === 'other-unit' } as never, {} as never);
+        const result = dispatcher.executeBattleSkillRequest({
+            sourceType: SkillSourceType.SeedTactic,
+            ownerUid: 'player-unit',
+            battleSkillId: 'zhou-yu-inferno',
+            targetMode: 'tile',
+            timing: 'active-cast',
+        } as never);
+        assert.equals('vitality-restricted', result.blockedReason ?? '');
+    });
+
     return suite;
 }
