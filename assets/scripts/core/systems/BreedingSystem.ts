@@ -29,6 +29,7 @@ import {
     toGeneConfigs,
 } from './FactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
+import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 
@@ -48,7 +49,7 @@ export const EP_RESONANCE_BONUS = 15;
 export const EP_OUTCROSS_BONUS = 20;
 export const EP_AFFINITY_BONUS = 25;
 /** 14 人中同一標籤至少出現在幾位祖先身上才算共鳴 */
-export const EP_RESONANCE_MIN_COUNT = 3;
+export const EP_RESONANCE_MIN_COUNT = KIN_RESONANCE_MIN_COUNT;
 
 /** 同 Bloodline_ID 配對時子嗣 Vitality_Max × 0.7 */
 export const INBREEDING_VITALITY_MULTIPLIER = 0.7;
@@ -288,6 +289,8 @@ export interface EpBreakdown {
     /** 出現在最多位祖先身上的標籤與次數 */
     topTag: string | null;
     topTagCount: number;
+    /** 家風傳承達標（同標籤 ≥5 位祖先）；只判定，不加 EP（KIN-03） */
+    familyTradition: boolean;
     rating: string;
 }
 
@@ -302,30 +305,21 @@ export function computeEpMvp(
     profiles: Map<string, AncestorProfile>,
     isHistoricalPair: boolean,
 ): EpBreakdown {
-    const tagCounts = new Map<string, number>();
-    for (const slot of PEDIGREE_SLOTS) {
+    // 標籤統計統一走 KinRelation.analyzeTagResonance（KIN-03），與相性引擎同一份計法
+    const ancestorTags = PEDIGREE_SLOTS.flatMap((slot) => {
         const uid = pedigree[slot];
-        if (!uid) continue;
-        for (const tag of profiles.get(uid)?.tags ?? []) {
-            tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-        }
-    }
-    let topTag: string | null = null;
-    let topTagCount = 0;
-    for (const [tag, count] of Array.from(tagCounts.entries()).sort((a, b) => a[0].localeCompare(b[0]))) {
-        if (count > topTagCount) {
-            topTag = tag;
-            topTagCount = count;
-        }
-    }
+        return uid ? [profiles.get(uid)?.tags ?? []] : [];
+    });
+    const { topTag, topTagCount, resonance: hasResonance, familyTradition } = analyzeTagResonance(ancestorTags);
 
     const uids = PEDIGREE_SLOTS.map((slot) => pedigree[slot]);
     const allKnown = uids.every((uid) => !!uid);
-    const resonance = topTagCount >= EP_RESONANCE_MIN_COUNT ? EP_RESONANCE_BONUS : 0;
+    // TODO(KIN-03 純血)：14 人全同族 +30 EP，待同族欄位資料定義後實作
+    const resonance = hasResonance ? EP_RESONANCE_BONUS : 0;
     const outcross = allKnown && new Set(uids).size === PEDIGREE_SLOTS.length ? EP_OUTCROSS_BONUS : 0;
     const affinity = isHistoricalPair ? EP_AFFINITY_BONUS : 0;
     const ep = EP_BASE + resonance + outcross + affinity;
-    return { ep, resonance, outcross, affinity, fate: 0, topTag, topTagCount, rating: epRatingLabel(ep) };
+    return { ep, resonance, outcross, affinity, fate: 0, topTag, topTagCount, familyTradition, rating: epRatingLabel(ep) };
 }
 
 /** 運氣系統 §F：天命波動的隨機區間 Random(-0.5, +1.5)（PROG-2-0511） */
