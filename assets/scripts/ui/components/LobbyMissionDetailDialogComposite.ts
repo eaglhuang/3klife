@@ -27,6 +27,8 @@ const { ccclass } = _decorator;
 
 const SCREEN_ID = 'lobby-mission-detail-dialog-screen';
 const CONTENT_PATH = 'ui-spec/content/lobby-mission-detail-dialog-states-v1';
+import { resolveDetailActionStates } from '../core/HallDetailActionStates';
+
 const CONTENT_TAG = 'LobbyMissionDetailDialog';
 const DEFAULT_STATE_KEY = 'smoke-military-partial';
 const DIALOG_ENTER_SCALE = 0.96;
@@ -492,7 +494,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._suppressAiDelegateEvent = false;
 
         this._applyRatios(snapshot);
-        this._refreshActionButtons(snapshot.availableActions);
+        this._refreshActionButtons(snapshot);
         this._setScrollContentBaseHeight();
     }
 
@@ -549,10 +551,14 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         fillTransform.width = Math.max(0, Math.floor(trackWidth * clampedRatio));
     }
 
-    private _refreshActionButtons(availableActions?: LobbyMissionActionKey[]): void {
-        const enabledActions = new Set<LobbyMissionActionKey>(
-            availableActions?.length ? availableActions : (Object.keys(ACTION_BUTTON_IDS) as LobbyMissionActionKey[]),
-        );
+    /** 按鈕啟用規則由 resolveDetailActionStates 統一算出（PROG-2-0457），這裡只套到節點。 */
+    private _refreshActionButtons(snapshot: LobbyMissionDetailDialogSnapshot): void {
+        const { states } = resolveDetailActionStates({
+            availableActions: snapshot.availableActions,
+            intelRevealPercent: snapshot.intelRevealPercent,
+            selectedGeneralId: snapshot.selectedGeneralId,
+            aiDelegateChecked: snapshot.aiDelegateChecked,
+        });
 
         for (const action of Object.keys(ACTION_BUTTON_IDS) as LobbyMissionActionKey[]) {
             const button = this._actionButtons[action];
@@ -560,7 +566,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 continue;
             }
 
-            const enabled = enabledActions.has(action);
+            const enabled = states[action].enabled;
             button.interactable = enabled;
             const opacity = button.node.getComponent(UIOpacity) ?? button.node.addComponent(UIOpacity);
             opacity.opacity = enabled ? 255 : 120;
