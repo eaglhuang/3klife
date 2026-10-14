@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Button, Color, Component, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, Component, instantiate, Label, Node, Sprite, UITransform, Widget } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -1504,6 +1504,62 @@ export class LobbyScene extends Component {
         // gacha-ds3 uses BannerSlide nodes; legacy node names (PoolTabBar etc.) no longer exist
         this._setupGachaPoolCarousel(host);
         this._ensureGachaReturnButton(host);
+        this._ensureMercenaryEntry(host);
+    }
+
+    /** PROG-2-0115：只讀入口；沿用返回按鈕的平面樣式，不新增 spec 或存檔資料。 */
+    private _ensureMercenaryEntry(host: UIScreenPreviewHost): void {
+        const template = host.node.getChildByName('GachaReturnToLobby');
+        if (!template) throw new Error('Mercenary entry requires the gacha return button');
+        let entry = host.node.getChildByName('GachaMercenaryEntry');
+        if (!entry) {
+            entry = instantiate(template);
+            entry.name = 'GachaMercenaryEntry';
+            entry.parent = host.node;
+            entry.getComponent(Widget)!.left = 220;
+            entry.getChildByName('Label')!.getComponent(Label)!.string = '傭兵';
+        }
+        entry.off(Button.EventType.CLICK, undefined, this);
+        entry.on(Button.EventType.CLICK, () => {
+            let panel = host.node.getChildByName('MercenaryPoolPanel');
+            if (!panel) {
+                panel = instantiate(template);
+                panel.name = 'MercenaryPoolPanel';
+                panel.parent = host.node;
+                panel.getComponent(Button)!.destroy();
+                panel.getComponent(UITransform)!.setContentSize(620, 480);
+                const widget = panel.getComponent(Widget)!;
+                widget.left = 24;
+                widget.top = 90;
+                const body = panel.getChildByName('Label')!;
+                body.name = 'MercenaryPoolText';
+                body.getComponent(UITransform)!.setContentSize(560, 350);
+                body.setPosition(0, -20, 0);
+                const label = body.getComponent(Label)!;
+                label.fontSize = 22;
+                label.lineHeight = 32;
+                label.horizontalAlign = Label.HorizontalAlign.LEFT;
+                label.verticalAlign = Label.VerticalAlign.TOP;
+                label.overflow = Label.Overflow.SHRINK;
+                const back = instantiate(template);
+                back.name = 'MercenaryPoolBack';
+                back.parent = panel;
+                const backWidget = back.getComponent(Widget)!;
+                backWidget.isAlignLeft = false;
+                backWidget.isAlignRight = true;
+                backWidget.right = 20;
+                backWidget.top = 16;
+                back.getChildByName('Label')!.getComponent(Label)!.string = '返回轉蛋';
+                back.on(Button.EventType.CLICK, () => { panel!.active = false; }, this);
+            }
+            const rows = services().session.mercenaryPoolRows();
+            const label = panel.getChildByName('MercenaryPoolText')!.getComponent(Label)!;
+            label.string = rows.length === 0 ? '傭兵池\n\n目前沒有傭兵' : '傭兵池\n\n' + rows.map(row =>
+                `${row.uid}　${row.statusText}\n${row.daysLeftText}　結義進度 ${Math.round(row.bondProgress * 100)}%`).join('\n');
+            panel.active = true;
+            panel.setSiblingIndex(host.node.children.length - 1);
+        }, this);
+        entry.setSiblingIndex(host.node.children.length - 1);
     }
 
     /** Unity 對照：執行期補 Button，返回仍由既有 UI navigation stack 管理。 */
