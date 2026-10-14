@@ -327,6 +327,8 @@ export class BattleController {
     }
 
     const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName, { militia: options.militia });
+    // 部隊帶上主將的因子資料（genes 已由 buildBattleConfig 展開進戰場武將），供因子戰法與地形規則讀取
+    unit.factorGenes = this.state.getGeneral(Faction.Player)?.genes ?? [];
     if (options.tally) this.bindTallyAffinity(unit, options.tally);
     this.turnManager.notePlayerDeployment();
     if (this.sortie) {

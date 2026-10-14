@@ -1,5 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Faction, TroopType } from "../config/Constants";
+import type { GeneralGeneConfig } from "./GeneralUnit";
 
 export function resolveTroopDisplayName(type: TroopType): string {
   if (type === TroopType.Cavalry) return '騎兵';
@@ -45,6 +46,8 @@ export class TroopUnit {
 
   // 虎符部隊（TRP-13）：出陣時記下虎符與主將；乘數每次結算時依當下格子的地形算
   public tallyId: string | null = null;
+  /** 主將的因子（genes）；戰場規則（水戰合攻、大霧免疫、林地 +1、綠色 TP）以此判斷（PROG-2-0584） */
+  public factorGenes: readonly GeneralGeneConfig[] = [];
   public commanderUid: string | null = null;
   /** (lane, depth) → 攻防乘數；沒有虎符時為 null，戰力不變 */
   public tallyAffinity: ((lane: number, depth: number) => number) | null = null;
