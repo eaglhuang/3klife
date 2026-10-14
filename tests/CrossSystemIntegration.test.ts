@@ -442,6 +442,36 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.equals('insufficient-points', result.reason ?? '');
         assert.equals('Trial', b.mercenaries.mercenaries[0].status, '失敗時傭兵狀態不變');
         assert.isFalse(b.roster.some((g) => g.id === 'gen-merc'), '失敗時名冊不變');
+
+        // 點數足夠 → 成功：扣點數餘額、好感不扣、入名冊，存檔重開後仍在
+        (b as unknown as { _bondPoints: number })._bondPoints = 150;
+        const ok = await b.bondMercenaryToRoster('merc-r', template);
+        assert.isTrue(ok.ok, '好感滿 60 且點數足夠應成功');
+        assert.equals(100, ok.pointsSpent);
+        assert.equals(50, b.bondPoints, '點數餘額 150 → 50');
+        assert.equals(AFFECTION_CAP, b.mercenaries.mercenaries[0].affection!, '好感不扣');
+        assert.equals('Bonded', b.mercenaries.mercenaries[0].status);
+        assert.isTrue(b.roster.some((g) => g.id === 'gen-merc'), '武將入名冊');
+        await b.save();
+        const c = new GameSession();
+        c.setRosterStore(new InMemoryRosterStore([]));
+        c.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await c.load());
+        assert.equals(50, c.bondPoints, '點數餘額讀檔後一致');
+        assert.isTrue(c.roster.some((g) => g.id === 'gen-merc'), '結義武將讀檔後仍在名冊');
+        assert.equals('Bonded', c.mercenaries.mercenaries[0].status);
+    });
+
+    suite.test('傭兵結義：好感未滿 60 即使點數很多也不能結義，點數與名冊不變', async () => {
+        const session = new GameSession(1);
+        session.setMercenaries({ mercenaries: [{ uid: 'merc-low', daysLeft: 0, bond: 6, status: 'Trial', generalId: 'gen-low', affection: 59 }], upkeep: [], cooldowns: [] });
+        (session as unknown as { _bondPoints: number })._bondPoints = 5000;
+        const template = { id: 'gen-low', name: '傭兵', faction: 'shu', hp: 1000, rarityTier: 'common', str: 70, lea: 60 } as unknown as GeneralConfig;
+        const result = await session.bondMercenaryToRoster('merc-low', template);
+        assert.isFalse(result.ok);
+        assert.equals('affection-not-full', result.reason ?? '');
+        assert.equals(5000, session.bondPoints);
+        assert.equals(0, session.roster.length);
     });
 
     suite.test('結緣＋血統活性：同亂數種子結果完全一致，因子星級不超過 5★、不低於 1★', () => {
