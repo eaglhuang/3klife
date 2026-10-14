@@ -5,7 +5,7 @@
  * 所以這裡用範例資料當 fixture，證明乘數確實不是 1，且會跟著地形變。
  */
 import { assert, TestSuite } from './TestRunner';
-import { resolveTallyDeployMod, TallyCommanderInfo } from '../assets/scripts/core/systems/TallyDeployAffinity';
+import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../assets/scripts/core/systems/TallyDeployAffinity';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { TroopType } from '../assets/scripts/core/config/Constants';
 import { Faction } from '../assets/scripts/shared/CommonEnums';
@@ -82,6 +82,14 @@ export function createTallyDeployAffinitySuite(): TestSuite {
         troop.moveTo(0, 1);
         assert.equals(80, troop.getEffectiveAttack());
         assert.equals(40, troop.getEffectiveDefense());
+    });
+
+    suite.test('主將性別文字轉換：女／female／f → FEMALE，其餘 → MALE', () => {
+        assert.equals('FEMALE', toTallyCommander('g1', '女').gender);
+        assert.equals('FEMALE', toTallyCommander('g1', 'female').gender);
+        assert.equals('MALE', toTallyCommander('g1', '男').gender);
+        assert.equals('MALE', toTallyCommander('g1', undefined).gender);
+        assert.equals('g1', toTallyCommander('g1', '男').uid);
     });
 
     suite.test('TroopUnit：沒有虎符時攻防與原本相同（乘數 1）', () => {

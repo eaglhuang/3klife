@@ -34,7 +34,7 @@ import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoControl
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
-import { resolveTallyDeployMod, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
+import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import {
   BattleSkillTargetMode,
@@ -93,10 +93,9 @@ async function loadJsonWithFileFallback<T>(resourcePath: string, _relativeFilePa
   }
 }
 
-/** 虎符部隊出陣參數（TRP-13）：虎符 id 與主將資料 */
+/** 虎符部隊出陣參數（TRP-13）：只帶虎符 id，主將由戰場上的我方主將決定 */
 export interface TallyDeployRef {
   tallyId: string;
-  commander: TallyCommanderInfo;
 }
 
 export class BattleController {
@@ -257,10 +256,12 @@ export class BattleController {
    */
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
     const profile = buildTallyCardCatalog().get(ref.tallyId)?.affinity ?? null;
+    const general = this.state.getGeneral(Faction.Player);
+    const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
     unit.tallyId = ref.tallyId;
-    unit.commanderUid = ref.commander.uid;
+    unit.commanderUid = commander?.uid ?? null;
     unit.tallyAffinity = (lane, depth) =>
-      resolveTallyDeployMod(profile, ref.commander, this.state.getCell(lane, depth)?.terrain ?? null);
+      resolveTallyDeployMod(profile, commander, this.state.getCell(lane, depth)?.terrain ?? null);
   }
 
   public deployTroop(type: TroopType, lane: number, unitName?: string): TroopUnit | null {

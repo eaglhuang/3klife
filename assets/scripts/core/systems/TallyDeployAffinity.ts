@@ -18,6 +18,16 @@ export interface TallyCommanderInfo {
     clanID?: string;
 }
 
+/**
+ * 由主將資料組出虎符用的主將資訊。性別文字沿用 BreedingSystem 的判斷（男/女、male/female）。
+ * 主將沒有家族欄位時 clanID 留空，家族共鳴不生效。
+ */
+export function toTallyCommander(uid: string, genderText: string | null | undefined): TallyCommanderInfo {
+    const g = (genderText ?? '').trim().toLowerCase();
+    const gender: GeneralGender = g === '女' || g === 'female' || g === 'f' ? 'FEMALE' : 'MALE';
+    return { uid, gender };
+}
+
 /** 規格預設：地形沒填時視為普通（B，乘數 1.0） */
 const DEFAULT_TERRAIN_GRADE: AptitudeGrade = 'B';
 
