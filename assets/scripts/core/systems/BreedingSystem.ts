@@ -328,18 +328,28 @@ export function computeEpMvp(
     return { ep, resonance, outcross, affinity, fate: 0, topTag, topTagCount, rating: epRatingLabel(ep) };
 }
 
-/** 運氣系統 §F：天命波動的隨機區間 Random(-0.5, +1.5)（PROG-2-0511） */
-export const FATE_WAVE_RANDOM_MIN = -0.5;
-export const FATE_WAVE_RANDOM_MAX = 1.5;
+/** 天命波動小區間（PM 裁定 2026-10-14，運氣屬性加入爆發力公式）：運氣平均 > 80 → +5～+15；< 40 → -5～-10；其餘 0 */
+export const FATE_WAVE_HIGH_LUK_THRESHOLD = 80;
+export const FATE_WAVE_LOW_LUK_THRESHOLD = 40;
+export const FATE_WAVE_HIGH_RANGE: readonly [number, number] = [5, 15];
+export const FATE_WAVE_LOW_RANGE: readonly [number, number] = [-10, -5];
 
 /**
- * 天命波動 = LUK × Random(-0.5, +1.5)。LUK 缺省、負數或非有限值視為 0（波動為 0）。
- * 亂數只擲一次，方便測試注入固定序列；LUK 為 0 時不擲骰，避免無謂地改變後續亂數序列。
+ * 天命波動：依父母平均 LUK 落在哪個區間，在區間內均勻擲一次。
+ * 中段（40～80，含邊界）回傳 0 且不擲骰。LUK 缺省、負數或非有限值視為無資料，回傳 0 且不擲骰。
+ * 只在進入區間時才擲骰，避免無謂改變其他測試的亂數序列。
  */
 export function rollFateWave(parentAvgLuk: number, random: RandomSource): number {
-    const luk = Number.isFinite(parentAvgLuk) ? Math.max(0, parentAvgLuk) : 0;
-    if (luk === 0) return 0;
-    return luk * (FATE_WAVE_RANDOM_MIN + random() * (FATE_WAVE_RANDOM_MAX - FATE_WAVE_RANDOM_MIN));
+    if (!Number.isFinite(parentAvgLuk) || parentAvgLuk <= 0) return 0;
+    if (parentAvgLuk > FATE_WAVE_HIGH_LUK_THRESHOLD) {
+        const [min, max] = FATE_WAVE_HIGH_RANGE;
+        return min + random() * (max - min);
+    }
+    if (parentAvgLuk < FATE_WAVE_LOW_LUK_THRESHOLD) {
+        const [min, max] = FATE_WAVE_LOW_RANGE;
+        return min + random() * (max - min);
+    }
+    return 0;
 }
 
 /**
