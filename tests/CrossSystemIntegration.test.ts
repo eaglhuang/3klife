@@ -421,7 +421,7 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.equals(0, Object.keys(b.femaleSources).length, '開新局清空');
     });
 
-    suite.test('傭兵 6 天試用走完後結義：好感停在上限 60，R 級需 100 點仍被擋，傭兵與名冊都不變（規格待決 PROG-2-0308）', async () => {
+    suite.test('傭兵 6 天試用走完後結義：好感停在上限 60 只是門檻，結義點數餘額為 0 時 R 級被擋，傭兵與名冊都不變', async () => {
         const adapter = new MemoryStorageAdapter();
         const a = createSession(adapter, makeRoster());
         let merc = { ...createTrialMercenary('merc-r'), generalId: 'gen-merc', affection: 0 } as ReturnType<typeof createTrialMercenary> & { generalId: string; affection: number };
@@ -438,7 +438,7 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
         assert.isTrue(await b.load());
         const template = { id: 'gen-merc', name: '傭兵', faction: 'shu', hp: 1000 } as unknown as GeneralConfig;
         const result = await b.bondMercenaryToRoster('merc-r', template, { STR: 70, INT: 60, POL: 50, CHR: 50, LUK: 40 }, 'R', 6);
-        assert.isFalse(result.ok, '正式好感上限 60 低於 R 的 100 點，目前無法經點數結義');
+        assert.isFalse(result.ok, '結義點數餘額為 0，付不起 R 的 100 點');
         assert.equals('insufficient-points', result.reason ?? '');
         assert.equals('Trial', b.mercenaries.mercenaries[0].status, '失敗時傭兵狀態不變');
         assert.isFalse(b.roster.some((g) => g.id === 'gen-merc'), '失敗時名冊不變');
