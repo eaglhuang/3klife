@@ -22,7 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
-import { learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
+import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
@@ -1045,16 +1045,23 @@ export class GameSession {
     }
 
     /**
-     * 培育學戰法：TP 門檻（消耗 ×2）、已學、槽位（智力）檢查通過才寫入武將的 learnedTactics 並存檔。
-     * heldTp 由呼叫端傳入（玩家持有的計謀點；TP 池位置待 PM 定案）；hasMatchingGreenFactor 由呼叫端依武將因子判斷。
+     * 培育學戰法（PM 2026-10-14 裁定）：TP 為武將培育中的個人 TP（NurtureSession.tp）。
+     * 綠因子相符時成本 ×0.5 再 ceil；門檻 = 實際成本 ×2；通過後扣實際成本並寫入 learnedTactics。
      */
-    public async learnTactic(generalId: string, tacticId: string, heldTp: number, hasMatchingGreenFactor = false): Promise<TacticLearnCheck> {
+    public async learnTactic(generalId: string, tacticId: string): Promise<TacticLearnCheck> {
         const general = this._roster.getAll().find((g) => g.id === generalId);
         if (!general) return { ok: false, blocked: 'INVALID_TACTIC', learned: [] };
-        // 綠因子相符時 TP 成本 ×0.5，取整採 ceil（PM / coordinator 裁定）
-        const tpCost = Math.ceil(learnTpCost(getTacticTpCost(tacticId), hasMatchingGreenFactor));
-        const check = learnTacticInto(general.learnedTactics ?? [], tacticId, general.int ?? 0, heldTp, tpCost);
+        const state = this._nurture?.getState();
+        const session = state?.sessions.find((s) => s.childId === generalId);
+        if (!state || !session) return { ok: false, blocked: 'NOT_NURTURING', learned: [...(general.learnedTactics ?? [])] };
+        const green = hasMatchingGreenFactor(general.genes, tacticId);
+        const tpCost = Math.ceil(learnTpCost(getTacticTpCost(tacticId), green));
+        const check = learnTacticInto(general.learnedTactics ?? [], tacticId, general.int ?? 0, session.tp, tpCost);
         if (!check.ok) return check;
+        this._nurture!.restoreState({
+            ...state,
+            sessions: state.sessions.map((s) => (s.childId === generalId ? { ...s, tp: s.tp - tpCost } : s)),
+        });
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, learnedTactics: check.learned } : g)));
         if (this._autoSave && this._save) {
             await this.save();
