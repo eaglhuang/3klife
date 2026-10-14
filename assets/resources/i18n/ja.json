@@ -191,5 +191,21 @@
   "ui.breed.child_born": "おめでとうございます！{0} と {1} に{2}が授かりました！",
   "ui.breed.unveil_5": "天命の開示！{0} の五維の資質が明らかに：",
   "ui.breed.daqi": "名士は嘆く：この子は深淵に潜む龍。天機は漏らしてはならぬ。",
-  "ui.breed.ep_display": "推定爆発力：{0}（{1}）"
+  "ui.breed.ep_display": "推定爆発力：{0}（{1}）",
+
+  "_comment_life_copy": "壽命劇本字串（草稿翻譯，待語系審閱）",
+
+  "life.phase.youth": "少年期",
+  "life.phase.prime": "青年期",
+  "life.phase.peak": "壮年期（絶頂）",
+  "life.phase.elder": "老年期",
+  "life.age_display": "{0}（{1}歳）",
+  "life.lifespan_bar": "寿命：{0}/{1}",
+  "life.death_notify": "{0} が逝去、享年{1}歳",
+  "life.script.grow_up": "{0} は少しずつ成長し、頭角を現し始めた！",
+  "life.script.prime": "{0} は壮年の盛り、千の軍勢も退く！",
+  "life.script.elder": "{0} は年老いて力は衰えたが、経験は今も健在だ。",
+  "life.script.retire": "{0} は鎧を掛けて田園に帰り、生涯の学びを後世へ伝えたいと願った。",
+  "life.script.death": "{0} は享年{1}歳、ひとりの名将が散った…",
+  "life.script.afterlife": "{0} の英霊カードと虎符カードは宗祠と軍府に納められた。"
 }

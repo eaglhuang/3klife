@@ -217,5 +217,21 @@
   "ui.breed.child_born": "恭喜主公！{0} 與 {1} 喜獲 {2}！",
   "ui.breed.unveil_5": "天命開獎！{0} 五維資質揭曉：",
   "ui.breed.daqi": "名士嘆：此子潛龍在淵，天機不可洩漏。",
-  "ui.breed.ep_display": "預估爆發力：{0}（{1}）"
+  "ui.breed.ep_display": "預估爆發力：{0}（{1}）",
+
+  "life.phase.youth": "少年期",
+  "life.phase.prime": "青年期",
+  "life.phase.peak": "壯年期（巔峰）",
+  "life.phase.elder": "老年期",
+
+  "life.age_display": "{0}（{1} 歲）",
+  "life.lifespan_bar": "壽命：{0}/{1}",
+  "life.death_notify": "{0} 辭世，享年 {1} 歲",
+
+  "life.script.grow_up": "{0} 漸漸長大，已展露鋒芒！",
+  "life.script.prime": "{0} 正值壯年，千軍辟易！",
+  "life.script.elder": "{0} 年邁力衰，但經驗猶在。",
+  "life.script.retire": "{0} 掛甲歸田，願將畢生所學傳予後人。",
+  "life.script.death": "{0} 享年 {1} 歲，一代名將殞落…",
+  "life.script.afterlife": "{0} 的英靈卡與虎符卡已歸入宗祠與軍府。"
 }

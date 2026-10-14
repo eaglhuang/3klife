@@ -1,5 +1,5 @@
 /**
- * FateBlessing — 紫色因子「天命加護」（FBR-10，PROG-2-0610）測試
+ * FateBlessing — 紫色因子「天命加護」（FBR-10，PROG-2-0613）測試
  */
 import * as fs from 'fs';
 import * as path from 'path';

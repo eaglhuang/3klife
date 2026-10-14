@@ -191,5 +191,21 @@
   "ui.breed.child_born": "恭喜主公！{0} 与 {1} 喜获 {2}！",
   "ui.breed.unveil_5": "天命开奖！{0} 五维资质揭晓：",
   "ui.breed.daqi": "名士叹：此子潜龙在渊，天机不可泄露。",
-  "ui.breed.ep_display": "预估爆发力：{0}（{1}）"
+  "ui.breed.ep_display": "预估爆发力：{0}（{1}）",
+
+  "_comment_life_copy": "壽命劇本字串（草稿翻譯，待語系審閱）",
+
+  "life.phase.youth": "少年期",
+  "life.phase.prime": "青年期",
+  "life.phase.peak": "壮年期（巅峰）",
+  "life.phase.elder": "老年期",
+  "life.age_display": "{0}（{1} 岁）",
+  "life.lifespan_bar": "寿命：{0}/{1}",
+  "life.death_notify": "{0} 辞世，享年 {1} 岁",
+  "life.script.grow_up": "{0} 渐渐长大，已展露锋芒！",
+  "life.script.prime": "{0} 正值壮年，千军辟易！",
+  "life.script.elder": "{0} 年迈力衰，但经验犹在。",
+  "life.script.retire": "{0} 挂甲归田，愿将毕生所学传予后人。",
+  "life.script.death": "{0} 享年 {1} 岁，一代名将殒落…",
+  "life.script.afterlife": "{0} 的英灵卡与虎符卡已归入宗祠与军府。"
 }
