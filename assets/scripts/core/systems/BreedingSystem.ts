@@ -491,6 +491,8 @@ export interface BreedingRequest {
     mother: BreedingGeneral;
     /** 選填：母體來源倍率（femaleSourceConceptionMod，FEM-02）；不傳視為 1 */
     motherConceptionMod?: number;
+    /** 選填：史實配對受孕率倍率（宿敵 0.7，KIN-04）；與母體倍率相乘，不傳視為 1 */
+    historicalConceptionMod?: number;
     pedigree: PedigreeSource;
     random: RandomSource;
     childId: string;
@@ -592,7 +594,8 @@ export function breed(request: BreedingRequest): BreedingResult {
 
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
-    const rate = applyConceptionMod(conceptionRate(request.father, request.mother), request.motherConceptionMod ?? 1);
+    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1);
+    const rate = applyConceptionMod(conceptionRate(request.father, request.mother), conceptionMod);
     if (!eligibility.ok) {
         return { outcome: 'blocked', reasons: eligibility.reasons, conceptionRate: rate, father: request.father, mother: request.mother };
     }
