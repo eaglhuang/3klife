@@ -76,7 +76,7 @@ import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMili
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
-import { createFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -418,6 +418,14 @@ export class GameSession {
         this._mercenaries = normalizeMercenaryBundle(bundle);
     }
 
+    /** 登記或覆寫一位武將的女性來源；格式不合法時回傳 false 且不變動。不寫存檔，由呼叫端決定何時 save。 */
+    public setFemaleSource(generalId: string, source: FemaleSource): boolean {
+        const normalized = normalizeFemaleSource(source);
+        if (generalId.length === 0 || normalized === null) return false;
+        this._femaleSources = { ...this._femaleSources, [generalId]: normalized };
+        return true;
+    }
+
     /**
      * 結義入名冊：傭兵結義轉永久（好感滿 60 為門檻，扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
      * 失敗時不改任何狀態。結義點數從 GCH-06 的餘額（bondPoints）扣除。
@@ -443,7 +451,7 @@ export class GameSession {
     }
 
     public get femaleSources(): Readonly<Record<string, FemaleSource>> {
-        return { ...this._femaleSources };
+        return normalizeFemaleSourcesMap(this._femaleSources);
     }
 
     public get tallyCards(): Readonly<Record<string, TigerTallyCard>> {
