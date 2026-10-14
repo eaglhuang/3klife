@@ -33,13 +33,32 @@ export enum TerrainType {
 /** encounters.json 中的地形配置：terrain[lane][depth] */
 export type TerrainGrid = TerrainType[][];
 
+/** 戰場天氣：規格六種（戰場適性系統.md §天氣適性定義）；值即規格代碼 */
 export enum Weather {
-    Clear     = "clear",
-    Rain      = "rain",
-    Fog       = "fog",
-    Snow      = "snow",
-    Sandstorm = "sandstorm",
-    Night     = "night",
+    Clear   = "SUNNY",
+    Rain    = "RAINY",
+    Fog     = "FOG",
+    Windy   = "WINDY",
+    Night   = "NIGHT",
+    Thunder = "THUNDER",
+}
+
+/** 舊資料的小寫代碼；snow / sandstorm 沒有規格對應，沿用既有暫定（雨 / 大風） */
+const LEGACY_WEATHER_CODES: Readonly<Record<string, Weather>> = {
+    clear: Weather.Clear,
+    rain: Weather.Rain,
+    fog: Weather.Fog,
+    night: Weather.Night,
+    snow: Weather.Rain,
+    sandstorm: Weather.Windy,
+};
+
+/** 把規格代碼或舊字串轉成 Weather；認不得回傳 null（PROG-2-0343） */
+export function normalizeWeather(value: unknown): Weather | null {
+    if (typeof value !== 'string') return null;
+    const exact = (Object.values(Weather) as string[]).find((code) => code === value);
+    if (exact) return exact as Weather;
+    return LEGACY_WEATHER_CODES[value.toLowerCase()] ?? null;
 }
 
 export enum BattleTactic {

@@ -39,12 +39,12 @@ export function createBattleModifiersSuite(): TestSuite {
     });
 
     suite.test('天氣攻防：晴天（clear）對應 SUNNY 的 A 值；沒填的天氣視為 B（0）', () => {
-        near(APTITUDE_MODIFIERS.A.atk, getWeatherMod(PROFILE, 'clear').atk, '晴天 atk');
+        near(APTITUDE_MODIFIERS.A.atk, getWeatherMod(PROFILE, 'SUNNY').atk, '晴天 atk');
         near(0, getWeatherMod(PROFILE, 'rain').atk, '雨天沒填視為 B');
     });
 
     suite.test('RatingEnv：atk + def 加總，平原 S（0.4）、晴天 A（0.2）', () => {
-        const env = buildRatingEnv(PROFILE, 'plain', 'clear');
+        const env = buildRatingEnv(PROFILE, 'plain', 'SUNNY');
         near(APTITUDE_MODIFIERS.S.atk + APTITUDE_MODIFIERS.S.def, env.terrainAtkDefSum, '地形加總');
         near(APTITUDE_MODIFIERS.A.atk + APTITUDE_MODIFIERS.A.def, env.weatherAtkDefSum, '天氣加總');
     });
@@ -78,7 +78,7 @@ export function createBattleModifiersSuite(): TestSuite {
         };
         const troop: RatingTroop = { baseType: 'INFANTRY', attack: 40, defense: 20, move: 3, range: 1, isSpecial: false };
         const support: RatingSupport = { spiritCardPower: null, strategist: null, deputy: null, baseFoodCap: 0 };
-        const env = buildRatingEnv(PROFILE, 'plain', 'clear');
+        const env = buildRatingEnv(PROFILE, 'plain', 'SUNNY');
         // 地形、天氣的加總各乘 0.5，所以 S 地形 0.4×0.5 = 0.2 → ×1.2；A 天氣 0.2×0.5 = 0.1 → ×1.1
         const expectedFactor = 1 + env.terrainAtkDefSum * 0.5;
         const expectedWeather = 1 + env.weatherAtkDefSum * 0.5;

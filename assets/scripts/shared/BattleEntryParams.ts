@@ -16,7 +16,7 @@ export interface EncounterConfig {
   /** 戰場類型（可選，預設野戰）；攻城戰開戰時主將扣攻城壽命（PROG-2-0237） */
   battleKind?: 'field' | 'siege';
   /** 天氣條件（可選，預設 Clear） */
-  weather?: Weather;
+  weather?: Weather | string;
   /** 場景戰法（可選，預設 Normal） */
   battleTactic?: BattleTactic;
   /** 我軍裝備 ID 列表（預留） */
@@ -82,10 +82,10 @@ export const DEFAULT_BATTLE_ENTRY_PARAMS: IBattleEntryParams = {
 const WEATHER_LABEL: Record<Weather, string> = {
   [Weather.Clear]: '晴天',
   [Weather.Rain]: '雨天',
-  [Weather.Fog]: '霧',
-  [Weather.Snow]: '雪',
-  [Weather.Sandstorm]: '沙暴',
+  [Weather.Fog]: '大霧',
+  [Weather.Windy]: '大風',
   [Weather.Night]: '夜戰',
+  [Weather.Thunder]: '雷暴',
 };
 
 const TACTIC_LABEL: Record<BattleTactic, string> = {
