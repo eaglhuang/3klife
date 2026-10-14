@@ -25,6 +25,7 @@ import { PlayerSaveService } from "../services/PlayerSaveService";
 import { LegacyService } from "../services/LegacyService";
 import { PlayerRosterService } from "../services/PlayerRosterService";
 import { BloodlineGraph } from "../services/BloodlineGraph";
+import { HistoricalPairTable } from "../systems/HistoricalPairs";
 import { NurtureService } from "../services/NurtureService";
 import { BreedingService } from "../services/BreedingService";
 import { UnveilingService } from "../services/UnveilingService";
@@ -77,12 +78,15 @@ export class ServiceLoader {
     });
     /** loadFactorDictionary() 載入後的因子字典；結緣產生子嗣時用來補因子名稱與顏色 */
     private factorDictionary: FactorDictionary | undefined;
+    /** loadHistoricalPairs() 載入後的史實配對表（KIN-02）；結緣契合與宿敵受孕率讀它 */
+    private historicalPairs: HistoricalPairTable | undefined;
     /** 結緣（PROG-2-0045）：名冊與血統圖接線，亂數與季度取自 session */
     public readonly breeding = new BreedingService(this.rosterStore, BloodlineGraph.getInstance(), {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         getDictionary: () => this.factorDictionary,
         getFemaleSource: (uid) => this.session.femaleSources[uid] ?? null,
+        getHistoricalPairs: () => this.historicalPairs,
     });
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
     public legacy: LegacyService | null = null;
@@ -196,6 +200,16 @@ export class ServiceLoader {
      * 載入因子字典，讓 5 歲開獎的宿命建議能依因子分武 / 文。
      * 沒載入時宿命建議退回只看五維，不會中斷遊戲。
      */
+    /** 載入暫定史實配對名單（KIN-02）；失敗時退回沒有配對，契合與宿敵效果不生效 */
+    public async loadHistoricalPairs(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<unknown>('data/historical-relations');
+            this.historicalPairs = HistoricalPairTable.load(raw).table;
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] historical-relations.json 載入失敗，史實配對暫不生效:', e);
+        }
+    }
+
     public async loadFactorDictionary(): Promise<void> {
         try {
             const raw = await this.resource.loadJson<{ data?: [] }>('data/master/gene-dictionary');
@@ -213,6 +227,9 @@ export class ServiceLoader {
     public async prepareBreeding(): Promise<void> {
         if (!this.factorDictionary) {
             await this.loadFactorDictionary();
+        }
+        if (!this.historicalPairs) {
+            await this.loadHistoricalPairs();
         }
         await BloodlineGraph.getInstance().loadRegistry();
         this.breeding.syncGraphFromRoster();
