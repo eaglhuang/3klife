@@ -93,6 +93,8 @@ export class GeneralUnit {
   public readonly troopAptitude: Readonly<Record<string, string>>;
   public readonly terrainAptitude: Readonly<Record<string, string>>;
   public readonly weatherAptitude: Readonly<Record<string, string>>;
+  /** 遺傳因子（粉色地形因子影響戰場地形適性，APT-09）；複本 */
+  public readonly genes: GeneralGeneConfig[];
 
   constructor(config: GeneralConfig) {
     this.id = config.id;
@@ -119,6 +121,7 @@ export class GeneralUnit {
     this.troopAptitude = { ...(config.troopAptitude ?? {}) };
     this.terrainAptitude = { ...(config.terrainAptitude ?? {}) };
     this.weatherAptitude = { ...(config.weatherAptitude ?? {}) };
+    this.genes = (config.genes ?? []).map((gene) => ({ ...gene }));
   }
 
   public takeDamage(value: number): void {
