@@ -5,6 +5,7 @@ import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode';
 import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
+import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS } from '../../core/systems/FateBlessing';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -236,6 +237,9 @@ function applyFireAttackTerrain(state: BattleState): void {
 }
 
 function applyRockSlideTerrain(state: BattleState): void {
+  // 天命加護（FBR-10）：落石成功率 = 基礎 + 施放方天命加成；基礎 100% 時必成功
+  const fateLevel = fateBlessingLevel(state.getGeneral(Faction.Player)?.genes ?? []);
+  if (!rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), Math.random())) return;
   for (let lane = 1; lane <= 3; lane++) {
     state.setTileEffect({
       id: `rock-${lane}-4`,

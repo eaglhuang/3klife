@@ -1,5 +1,6 @@
 import { TerrainType, TroopType, Weather } from '../../core/config/Constants';
-import { fireDamageMultiplier } from '../../core/systems/WeatherTacticRestriction';
+import { fireDamageMultiplier, isFireTactic } from '../../core/systems/WeatherTacticRestriction';
+import { fateBlessingLevel, fateDamageMultiplier } from '../../core/systems/FateBlessing';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { TroopUnit } from '../../core/models/TroopUnit';
 import { FormulaSystem } from '../../core/systems/FormulaSystem';
@@ -37,11 +38,16 @@ export class BattleSkillDamageResolver {
     const stageMultiplier = profile.hitStageMultipliers?.[stageIndex] ?? 1;
     const staged = stageMultiplier === 1 ? baseDamage : Math.max(1, Math.floor(baseDamage * stageMultiplier));
     const weathered = weatherMultiplier === 1 ? staged : Math.max(1, Math.floor(staged * weatherMultiplier));
+    // 天命加護（FBR-10）：火計傷害隨施放者的紫色天命等級增加
+    const fateMultiplier = isFireTactic(profile.tags ?? [])
+      ? fateDamageMultiplier(fateBlessingLevel(caster.genes))
+      : 1;
+    const fated = fateMultiplier === 1 ? weathered : Math.max(1, Math.floor(weathered * fateMultiplier));
 
     if (profile.critBonus) {
-      return Math.max(1, Math.floor(weathered * (1 + profile.critBonus)));
+      return Math.max(1, Math.floor(fated * (1 + profile.critBonus)));
     }
-    return weathered;
+    return fated;
   }
 
   private resolveScaledAttack(
