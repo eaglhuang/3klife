@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 36,
-    "total": 72
+    "open": 37,
+    "total": 73
   },
   "tasks": [
     {
@@ -3015,6 +3015,33 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0125/**"
+      ],
+      "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0126",
+      "title": "實機驗收：夜襲與埋伏營帳佔領勝利（#381）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M5-M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "營帳地形格與佔領勝利已合併到 master，cc 接線與實機行為待 Web 版驗收。",
+      "related": [],
+      "depends": [
+        "PR #381"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0126.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0126/**"
       ],
       "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
     }
