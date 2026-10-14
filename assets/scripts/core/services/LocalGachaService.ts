@@ -281,9 +281,6 @@ export class LocalGachaService {
             });
         }
 
-        this._pityBookCache = { ...this._pityBookOf(), [request.poolId]: pity };
-        this._persistPityBook();
-
         const logged = services().sync.pushAction(
             request.actionType,
             {
@@ -306,6 +303,9 @@ export class LocalGachaService {
             throw new Error(`[LocalGachaService] ${request.currencyKey} 召喚紀錄寫入失敗。`);
         }
 
+        // 紀錄寫入成功才算這批抽數：失敗時不扣款，保底計數也不能前進
+        this._pityBookCache = { ...this._pityBookOf(), [request.poolId]: pity };
+        this._persistPityBook();
         this._spendCurrency(request.currencyKey, cost);
 
         return results;
