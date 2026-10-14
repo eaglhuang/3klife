@@ -1,6 +1,12 @@
 import { TestSuite, assert } from './TestRunner';
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
-import { legacyAchievementsOf, LEGACY_MIN_GENERATION_GAP, LEGACY_PREMIUM_REWARD } from '../assets/scripts/core/systems/LegacyAchievement';
+import {
+    grantLegacyRewards,
+    legacyAchievementsOf,
+    LEGACY_MIN_GENERATION_GAP,
+    LEGACY_PREMIUM_REWARD,
+    normalizeLegacyCount,
+} from '../assets/scripts/core/systems/LegacyAchievement';
 
 // 世代成就（PROG-2-0528 / RET-07）。規格：留存系統.md §世代成就。
 // 祖譜：C（後代）→ 父 f → 祖 ff → 曾祖 fff（世代差 3）；母系 m → mm → mmm 同樣是世代差 3。
@@ -91,6 +97,27 @@ export function createLegacyAchievementSuite(): TestSuite {
         const alone = graphWith([]);
         assert.equals(0, legacyAchievementsOf(alone, 'C', genesFrom({ C: ['gene-red'] })).length);
         assert.equals(0, legacyAchievementsOf(fullLineage(), 'C', genesFrom({ fff: ['gene-red'] })).length);
+    });
+
+    suite.test('grantLegacyRewards：只把 premium 獎勵加到靈玉，回傳新錢包且不改傳入物件', () => {
+        const base = { gems: 3, gold: 9, tickets: 1, bronze: 0, oracle: 0 };
+        const achievements = [
+            { descendantUid: 'C', ancestorUid: 'fff', geneId: 'g', generationGap: 3, reward: { currency: 'premium' as const, amount: 100 } },
+            { descendantUid: 'C', ancestorUid: 'mmm', geneId: 'h', generationGap: 3, reward: { currency: 'premium' as const, amount: 100 } },
+        ];
+        const { wallet, granted } = grantLegacyRewards(base, achievements);
+        assert.equals(200, granted);
+        assert.equals(203, wallet.gems);
+        assert.equals(9, wallet.gold);
+        assert.equals(3, base.gems, '傳入的錢包不被修改');
+    });
+
+    suite.test('normalizeLegacyCount：非負整數保留，其餘視為 0', () => {
+        assert.equals(4, normalizeLegacyCount(4));
+        assert.equals(0, normalizeLegacyCount(-1));
+        assert.equals(0, normalizeLegacyCount(1.5));
+        assert.equals(0, normalizeLegacyCount('3'));
+        assert.equals(0, normalizeLegacyCount(undefined));
     });
 
     return suite;

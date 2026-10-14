@@ -7,6 +7,7 @@
  * Unity 對照：像一個 Achievement Rule，輸入後代與祖譜，輸出每個達成的條件與獎勵，不直接發獎。
  */
 import { BloodlineGraph, PEDIGREE_SLOTS, pedigreeSlotGeneration } from '../services/BloodlineGraph';
+import type { GachaWalletSave } from '../services/PlayerSaveService';
 
 /** 世代差門檻（規格：≥ 3） */
 export const LEGACY_MIN_GENERATION_GAP = 3;
@@ -67,4 +68,23 @@ export function legacyAchievementsOf(
     }
 
     return achieved;
+}
+
+/**
+ * 把成就獎勵加到轉蛋錢包的靈玉（gems，即高級貨幣）。純函式：回傳新錢包，不改傳入的物件。
+ * 只計 premium 獎勵；其他幣別目前沒有成就來源。
+ */
+export function grantLegacyRewards(
+    base: Readonly<GachaWalletSave>,
+    achievements: readonly LegacyAchievement[],
+): { wallet: GachaWalletSave; granted: number } {
+    const granted = achievements
+        .filter((a) => a.reward.currency === 'premium')
+        .reduce((sum, a) => sum + a.reward.amount, 0);
+    return { wallet: { ...base, gems: base.gems + granted }, granted };
+}
+
+/** Legacy_Count（跨世代成就次數）：非負整數，壞掉視為 0 */
+export function normalizeLegacyCount(value: unknown): number {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0;
 }
