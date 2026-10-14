@@ -151,3 +151,11 @@ export function formatBattleEntryLog(
 
   return `[${tag}] ${paramTag}為：我軍主將(${pName}) 裝備: ${pEquip}, 帶虎符軍隊: ${cards}, 敵軍 ${eName} 裝備: ${eEquip}, 天氣: ${weather}, 遭遇戰: ${encName}, 戰法: ${tactic}`;
 }
+
+/**
+ * 首戰教學戰（PROG-2-0241）：玩家還沒通關任何關卡時，大廳開的第一場戰鬥開啟教學提示。
+ * 通關過任何一關後就不再是教學戰。
+ */
+export function isTutorialBattle(clearedStageIds: readonly string[]): boolean {
+    return clearedStageIds.length === 0;
+}
