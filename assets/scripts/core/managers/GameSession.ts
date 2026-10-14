@@ -308,6 +308,8 @@ export class GameSession {
     private _femaleSystem: FemaleSystemState = normalizeFemaleSystemState(undefined);
     /** 轉蛋錢包（PROG-2-0338）；null 代表存檔沒有，讀舊 localStorage 或用預設 */
     private _gachaWallet: GachaWalletSave | null = null;
+    /** 轉蛋資料（保底、錢包）的版本號：每次被改動就加一；轉蛋服務靠它得知自己的快取過期（PROG-2-0608） */
+    private _gachaRevision = 0;
     /** Legacy_Count（RET-07）：玩家層級的跨世代成就次數 */
     private _legacyCount = 0;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
@@ -523,6 +525,11 @@ export class GameSession {
         return normalizeGachaPityBook(this._gachaPity);
     }
 
+    /** 轉蛋資料版本號；任何寫入（含讀檔、新遊戲、世代成就入帳）都會讓它改變 */
+    public get gachaRevision(): number {
+        return this._gachaRevision;
+    }
+
     /** 轉蛋錢包（唯讀副本）；null 代表存檔沒有 */
     public get gachaWalletSave(): Readonly<GachaWalletSave> | null {
         return this._gachaWallet ? { ...this._gachaWallet } : null;
@@ -531,11 +538,13 @@ export class GameSession {
     /** 覆寫轉蛋錢包；不寫存檔，由呼叫端決定何時 save */
     public setGachaWalletSave(wallet: Readonly<GachaWalletSave>): void {
         this._gachaWallet = normalizeGachaWalletSave(wallet);
+        this._gachaRevision += 1;
     }
 
     /** 覆寫轉蛋保底表；不寫存檔，由呼叫端決定何時 save */
     public setGachaPityBook(book: Readonly<GachaPityBook>): void {
         this._gachaPity = normalizeGachaPityBook(book);
+        this._gachaRevision += 1;
     }
 
     /**
@@ -768,6 +777,7 @@ export class GameSession {
         this._femaleSystem = normalizeFemaleSystemState(undefined);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._gachaWallet = null;
+        this._gachaRevision += 1;
         this._legacyCount = 0;
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
@@ -1296,6 +1306,7 @@ export class GameSession {
         if (achievements.length === 0) return { granted: 0, legacyCount: this._legacyCount };
         const { wallet, granted } = grantLegacyRewards(this._gachaWallet ?? STARTER_GACHA_WALLET, achievements);
         this._gachaWallet = normalizeGachaWalletSave(wallet);
+        this._gachaRevision += 1;
         this._legacyCount += achievements.length;
         if (this._autoSave && this._save) {
             await this.save();
@@ -1592,6 +1603,7 @@ export class GameSession {
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
+        this._gachaRevision += 1;
         this._femaleSystem = normalizeFemaleSystemState(snapshot.femaleSystem);
         this._gachaWallet = snapshot.gachaWallet ? normalizeGachaWalletSave(snapshot.gachaWallet) : null;
         this._military = normalizeMilitaryReserve(snapshot.military);

@@ -197,6 +197,7 @@ export class LobbyScene extends Component {
             services().session.setGachaWalletSave(wallet);
             this._saveGachaState();
         },
+        revision: () => services().session.gachaRevision,
     });
 
     private _saveGachaState(): void {
