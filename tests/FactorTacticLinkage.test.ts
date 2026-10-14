@@ -17,6 +17,8 @@ import {
     isFogHitGuaranteed,
     forestMoveBonusFor,
     hasBattleEffect,
+    isOrthogonallyAdjacent,
+    NAVAL_COMBINED_DAMAGE_RATIO,
 } from '../assets/scripts/core/systems/FactorTacticLinkage';
 
 export function createFactorTacticLinkageSuite(): TestSuite {
@@ -64,6 +66,14 @@ export function createFactorTacticLinkageSuite(): TestSuite {
         assert.isFalse(hasBattleEffect(['naval-combined-attack'], 'fog-immunity'));
     });
 
+    suite.test('水域合攻：追加傷害倍率 50%，相鄰只算四方向（斜角不算）', () => {
+        assert.equals(0.5, NAVAL_COMBINED_DAMAGE_RATIO);
+        assert.isTrue(isOrthogonallyAdjacent(1, 3, 1, 4));
+        assert.isTrue(isOrthogonallyAdjacent(1, 3, 2, 3));
+        assert.isFalse(isOrthogonallyAdjacent(1, 3, 2, 4));
+        assert.isFalse(isOrthogonallyAdjacent(1, 3, 1, 3));
+    });
+
     return suite;
 }
 
@@ -87,6 +97,14 @@ export function createFactorBattleWiringSuite(): TestSuite {
         const source = read('assets/scripts/battle/runtime/BattleCombatResolver.ts');
         assert.isTrue(source.includes('isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects)'), '命中擲骰沒有接大霧免疫');
         assert.isTrue(source.includes('!fogGuaranteed && !rollHit('), '大霧必中時仍會擲骰');
+    });
+
+    suite.test('水域合攻在攻擊命中後結算，不觸發反擊、不擲命中', () => {
+        const source = read('assets/scripts/battle/runtime/BattleCombatResolver.ts');
+        assert.isTrue(source.includes('this.resolveNavalCombinedFollowUp(attacker, defender, svc);'), 'resolveCombat 沒有呼叫水域合攻');
+        const body = source.slice(source.indexOf('private resolveNavalCombinedFollowUp'), source.indexOf('private findNavalCombinedHelper'));
+        assert.isFalse(body.includes('tryTriggerCounterReaction'), '水域合攻不應觸發反擊');
+        assert.isFalse(body.includes('rollHit('), '水域合攻不應擲命中');
     });
 
     suite.test('自動移動的起始移動力加上林地加成', () => {

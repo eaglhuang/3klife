@@ -60,6 +60,14 @@ export function factorBattleEffectsOf(genes: readonly HeldGene[], map: FactorBat
     return effects;
 }
 
+/** 水域合攻的追加傷害倍率（PM 暫定：相鄰友軍追加一次 50% 傷害，不觸發反擊） */
+export const NAVAL_COMBINED_DAMAGE_RATIO = 0.5;
+
+/** 四方向相鄰（同一條線前後或同一深度左右），斜角不算 */
+export function isOrthogonallyAdjacent(lane: number, depth: number, otherLane: number, otherDepth: number): boolean {
+    return Math.abs(lane - otherLane) + Math.abs(depth - otherDepth) === 1;
+}
+
 /** 部隊是否具有某項戰場效果（呼叫端傳入 factorBattleEffectsOf 的結果） */
 export function hasBattleEffect(effects: readonly string[], effect: FactorBattleEffect): boolean {
     return effects.includes(effect);
