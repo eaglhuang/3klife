@@ -52,6 +52,8 @@ export class GeneralUnit {
   public readonly id: string;
   public readonly name: string;
   public readonly faction: Faction;
+  /** 性別文字（設定檔原值，例如 男／女），虎符適性（TRP-13）用 */
+  public readonly gender?: string;
   public readonly maxHp: number;
   public currentHp: number;
   
@@ -96,6 +98,7 @@ export class GeneralUnit {
     this.id = config.id;
     this.name = config.name;
     this.faction = config.faction;
+    this.gender = config.gender;
     this.maxHp = config.hp;
     this.currentHp = config.hp;
     this.maxSp = config.maxSp ?? 100;

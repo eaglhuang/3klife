@@ -4,10 +4,15 @@ import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
 import { checkWalletBalance, formatInsufficientMessage } from './GachaWalletRules';
+import { drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
     factionFilter?: 'all' | 'player' | 'enemy';
+    /** Up 武將 id 名單（規格：SSR 70% / SR 80% 從 Up 抽）；沒有 Up 時所有桶都走常設 */
+    upGeneralIds?: readonly string[];
+    /** 測試用隨機來源；正式環境用 Math.random */
+    rng?: () => number;
 }
 
 export interface LocalGachaResultEntry {
@@ -24,6 +29,10 @@ export interface LocalGachaWalletSnapshot {
     gems: number;
     gold: number;
     tickets: number;
+    /** 銅錢符（免費貨幣，僅常設池）；PROG-2-0339 新增，舊檔補 0 */
+    bronze: number;
+    /** 求籤令（定向道具，不是池幣）；PROG-2-0339 新增，舊檔補 0 */
+    oracle: number;
 }
 
 interface PerformGachaRequest {
@@ -39,10 +48,13 @@ interface PerformGachaRequest {
 const SINGLE_PLAYER_MODE_KEY = 'ucuf.gacha.single-player-mode';
 const DEV_AUTO_TOPUP_KEY = 'ucuf.gacha.dev-auto-topup';
 const WALLET_STORAGE_KEY = 'ucuf.gacha.wallet.v1';
+const PITY_STORAGE_KEY = 'ucuf.gacha.pity.v1';
 const DEFAULT_WALLET: LocalGachaWalletSnapshot = {
     gems: 1280,
     gold: 128450,
     tickets: 12,
+    bronze: 0,
+    oracle: 0,
 };
 
 function cloneGeneral(general: GeneralConfig): GeneralConfig {
@@ -70,6 +82,17 @@ function normalizeWalletValue(value: unknown, fallback: number): number {
     return Math.max(0, resolved);
 }
 
+/** 錢包欄位缺漏或壞掉時用預設值補齊 */
+function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): LocalGachaWalletSnapshot {
+    return {
+        gems: normalizeWalletValue(value.gems, DEFAULT_WALLET.gems),
+        gold: normalizeWalletValue(value.gold, DEFAULT_WALLET.gold),
+        tickets: normalizeWalletValue(value.tickets, DEFAULT_WALLET.tickets),
+        bronze: normalizeWalletValue(value.bronze, DEFAULT_WALLET.bronze),
+        oracle: normalizeWalletValue(value.oracle, DEFAULT_WALLET.oracle),
+    };
+}
+
 function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
     const explicit = general.rarityTier;
     if (explicit) {
@@ -91,18 +114,49 @@ function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
     }
 }
 
+/** 候選武將分桶：legendary／mythic 為 SSR，epic 為 SR，其餘為 R；Up 名單命中者進 Up 桶 */
+function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly string[]): GachaPool<GeneralConfig> {
+    const up = new Set(upGeneralIds);
+    const ssrUp: GeneralConfig[] = [];
+    const ssrOther: GeneralConfig[] = [];
+    const srUp: GeneralConfig[] = [];
+    const srOther: GeneralConfig[] = [];
+    const rOther: GeneralConfig[] = [];
+    for (const general of candidates) {
+        const tier = inferRarityTier(general);
+        const isUp = up.has(general.id);
+        if (tier === 'legendary' || tier === 'mythic') (isUp ? ssrUp : ssrOther).push(general);
+        else if (tier === 'epic') (isUp ? srUp : srOther).push(general);
+        else rOther.push(general);
+    }
+    return { ssrUp, ssrOther, srUp, srOther, rOther };
+}
+
 function formatDrawResultText(index: number, general: GeneralConfig, rarityTier: GeneralDetailRarityTier): string {
     return `#${index + 1} [${rarityTier}] ${general.name}`;
 }
 
-function compareWeight(left: { weight: number }, right: { weight: number }): number {
-    return right.weight - left.weight;
+
+/**
+ * 轉蛋的存放處（保底表與錢包，由呼叫端接到存檔）；沒有時只存在記憶體中，例如載入畫面的預覽服務。
+ * read* 回傳 null 代表存檔裡沒有這筆資料（舊檔），會改讀舊 localStorage 做一次性遷移。
+ */
+export interface GachaSaveStore {
+    readPity(): GachaPityBook | null;
+    writePity(book: GachaPityBook): void;
+    readWallet(): Partial<LocalGachaWalletSnapshot> | null;
+    writeWallet(wallet: LocalGachaWalletSnapshot): void;
 }
 
 export class LocalGachaService {
     private readonly _actionLogStore = ActionLogStore.getInstance();
     private _singlePlayerModeEnabled = this._loadSinglePlayerModeEnabled();
-    private _wallet = this._loadWalletSnapshot();
+    /** 錢包（第一次用到才讀取，避免建構時就碰存檔） */
+    private _walletCache: LocalGachaWalletSnapshot | null = null;
+    /** 各池保底計數（poolId → 狀態）；各池獨立計數（轉蛋系統 §保底計算）；第一次用到才讀取，避免建構時就碰存檔 */
+    private _pityBookCache: GachaPityBook | null = null;
+
+    constructor(private readonly _saveStore: GachaSaveStore | null = null) {}
 
     public isSinglePlayerModeEnabled(): boolean {
         return this._singlePlayerModeEnabled;
@@ -129,22 +183,22 @@ export class LocalGachaService {
     }
 
     public getWalletSnapshot(): LocalGachaWalletSnapshot {
-        return { ...this._wallet };
+        return { ...this._walletOf() };
     }
 
     public getCurrencyAmount(currencyKey: GachaCurrencyKey): number {
-        return this._wallet[currencyKey];
+        return this._walletOf()[currencyKey];
     }
 
     public grantCurrency(currencyKey: GachaCurrencyKey, amount: number): number {
         const resolvedAmount = Math.max(0, Math.floor(Number.isFinite(amount) ? amount : 0));
         if (resolvedAmount <= 0) {
-            return this._wallet[currencyKey];
+            return this._walletOf()[currencyKey];
         }
 
-        this._wallet[currencyKey] = Math.max(0, this._wallet[currencyKey] + resolvedAmount);
+        this._walletOf()[currencyKey] = Math.max(0, this._walletOf()[currencyKey] + resolvedAmount);
         this._persistWalletSnapshot();
-        return this._wallet[currencyKey];
+        return this._walletOf()[currencyKey];
     }
 
     /** 非抽卡用途的扣款（例如招募俘虜，PROG-2-0082）；餘額不足時不扣、回傳 false */
@@ -153,7 +207,7 @@ export class LocalGachaService {
         if (cost <= 0) {
             return true;
         }
-        if (this._wallet[currencyKey] < cost) {
+        if (this._walletOf()[currencyKey] < cost) {
             return false;
         }
         this._spendCurrency(currencyKey, cost);
@@ -227,14 +281,15 @@ export class LocalGachaService {
 
         this._assertSufficientCurrency(request.currencyKey, cost);
 
-        const weightedCandidates = candidates.map((general) => ({
-            general,
-            weight: this._estimateWeight(general),
-        })).sort(compareWeight);
+        const pool = buildGachaPool(candidates, request.options?.upGeneralIds ?? []);
+        const rng = request.options?.rng ?? Math.random;
+        let pity = normalizeGachaPity(this._pityBookOf()[request.poolId]);
 
         const results: LocalGachaResultEntry[] = [];
         for (let index = 0; index < drawCount; index++) {
-            const picked = this._pickCandidate(weightedCandidates).general;
+            const drawn = drawGeneralOnce(pool, pity, rng);
+            pity = drawn.nextPity;
+            const picked = drawn.item;
             const clonedGeneral = cloneGeneral(picked);
             const rarityTier = inferRarityTier(clonedGeneral);
 
@@ -271,6 +326,9 @@ export class LocalGachaService {
             throw new Error(`[LocalGachaService] ${request.currencyKey} 召喚紀錄寫入失敗。`);
         }
 
+        // 紀錄寫入成功才算這批抽數：失敗時不扣款，保底計數也不能前進
+        this._pityBookCache = { ...this._pityBookOf(), [request.poolId]: pity };
+        this._persistPityBook();
         this._spendCurrency(request.currencyKey, cost);
 
         return results;
@@ -288,37 +346,6 @@ export class LocalGachaService {
             default:
                 return list;
         }
-    }
-
-    private _estimateWeight(general: GeneralConfig): number {
-        const rarityTier = inferRarityTier(general);
-        switch (rarityTier) {
-            case 'mythic':
-                return 1;
-            case 'legendary':
-                return 3;
-            case 'epic':
-                return 8;
-            case 'rare':
-                return 22;
-            case 'common':
-            default:
-                return 60;
-        }
-    }
-
-    private _pickCandidate(weightedCandidates: Array<{ general: GeneralConfig; weight: number }>): { general: GeneralConfig; weight: number } {
-        const totalWeight = weightedCandidates.reduce((total, entry) => total + Math.max(1, entry.weight), 0);
-        let cursor = Math.random() * totalWeight;
-
-        for (const entry of weightedCandidates) {
-            cursor -= Math.max(1, entry.weight);
-            if (cursor <= 0) {
-                return entry;
-            }
-        }
-
-        return weightedCandidates[weightedCandidates.length - 1];
     }
 
     private _loadSinglePlayerModeEnabled(): boolean {
@@ -342,7 +369,7 @@ export class LocalGachaService {
         }
 
         const check = checkWalletBalance(
-            this._wallet[currencyKey],
+            this._walletOf()[currencyKey],
             cost,
             this.isDevAutoTopUpEnabled(),
             DEFAULT_WALLET[currencyKey],
@@ -351,7 +378,7 @@ export class LocalGachaService {
             throw new Error(formatInsufficientMessage(currencyKey, check.shortfall));
         }
         if (check.toppedUpBalance !== undefined) {
-            this._wallet[currencyKey] = check.toppedUpBalance;
+            this._walletOf()[currencyKey] = check.toppedUpBalance;
             this._persistWalletSnapshot();
         }
     }
@@ -361,29 +388,91 @@ export class LocalGachaService {
             return;
         }
 
-        this._wallet[currencyKey] = Math.max(0, this._wallet[currencyKey] - cost);
+        this._walletOf()[currencyKey] = Math.max(0, this._walletOf()[currencyKey] - cost);
         this._persistWalletSnapshot();
     }
 
-    private _loadWalletSnapshot(): LocalGachaWalletSnapshot {
-        const stored = sys.localStorage.getItem(WALLET_STORAGE_KEY);
-        if (!stored) {
-            return { ...DEFAULT_WALLET };
+    private _pityBookOf(): GachaPityBook {
+        if (this._pityBookCache === null) {
+            this._pityBookCache = this._loadPityBook();
         }
+        return this._pityBookCache;
+    }
 
+    /** 讀取保底表：存檔優先；存檔沒有、舊 localStorage 有時一次性遷移進存檔（PROG-2-0337） */
+    private _loadPityBook(): GachaPityBook {
+        if (!this._saveStore) return {};
+        const { book, migrateLegacy } = resolveGachaPityBook(this._saveStore.readPity(), this._readLegacyPityBook());
+        if (migrateLegacy) {
+            this._saveStore.writePity(book);
+            this._clearLegacyPityBook();
+        }
+        return book;
+    }
+
+    /** 舊版把保底存在 localStorage；只用於一次性遷移 */
+    private _readLegacyPityBook(): unknown {
         try {
-            const parsed = JSON.parse(stored) as Partial<LocalGachaWalletSnapshot> | null;
-            return {
-                gems: normalizeWalletValue(parsed?.gems, DEFAULT_WALLET.gems),
-                gold: normalizeWalletValue(parsed?.gold, DEFAULT_WALLET.gold),
-                tickets: normalizeWalletValue(parsed?.tickets, DEFAULT_WALLET.tickets),
-            };
+            const stored = sys.localStorage.getItem(PITY_STORAGE_KEY);
+            return stored ? JSON.parse(stored) : null;
         } catch {
-            return { ...DEFAULT_WALLET };
+            return null;
+        }
+    }
+
+    private _clearLegacyPityBook(): void {
+        try {
+            sys.localStorage.removeItem(PITY_STORAGE_KEY);
+        } catch {
+            // 清不掉也無妨：下次讀取時存檔已有資料，不會再遷移
+        }
+    }
+
+    private _persistPityBook(): void {
+        this._saveStore?.writePity(this._pityBookOf());
+    }
+
+    private _walletOf(): LocalGachaWalletSnapshot {
+        if (this._walletCache === null) {
+            this._walletCache = this._loadWalletSnapshot();
+        }
+        return this._walletCache;
+    }
+
+    /** 讀取錢包：存檔優先；存檔沒有、舊 localStorage 有時一次性遷移（PROG-2-0338） */
+    private _loadWalletSnapshot(): LocalGachaWalletSnapshot {
+        if (!this._saveStore) return { ...DEFAULT_WALLET };
+        const saved = this._saveStore.readWallet();
+        if (saved) return normalizeWalletSnapshot(saved);
+        const legacy = this._readLegacyWallet();
+        if (legacy) {
+            const migrated = normalizeWalletSnapshot(legacy);
+            this._saveStore.writeWallet(migrated);
+            this._clearLegacyWallet();
+            return migrated;
+        }
+        return { ...DEFAULT_WALLET };
+    }
+
+    /** 舊版把錢包存在 localStorage；只用於一次性遷移 */
+    private _readLegacyWallet(): Partial<LocalGachaWalletSnapshot> | null {
+        try {
+            const stored = sys.localStorage.getItem(WALLET_STORAGE_KEY);
+            return stored ? JSON.parse(stored) as Partial<LocalGachaWalletSnapshot> : null;
+        } catch {
+            return null;
+        }
+    }
+
+    private _clearLegacyWallet(): void {
+        try {
+            sys.localStorage.removeItem(WALLET_STORAGE_KEY);
+        } catch {
+            // 清不掉也無妨：下次讀取時存檔已有錢包，不會再遷移
         }
     }
 
     private _persistWalletSnapshot(): void {
-        sys.localStorage.setItem(WALLET_STORAGE_KEY, JSON.stringify(this._wallet));
+        this._saveStore?.writeWallet({ ...this._walletOf() });
     }
 }

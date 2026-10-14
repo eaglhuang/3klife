@@ -297,7 +297,7 @@ export function createGameSessionSuite(): TestSuite {
         const rejected = checkWalletBalance(50, 100, false);
         assert.isTrue(!rejected.ok, '正式模式應拒絕');
         assert.equals(50, rejected.shortfall);
-        assert.equals('玉不足，還差 50', formatInsufficientMessage('gems', rejected.shortfall));
+        assert.equals('靈玉不足，還差 50', formatInsufficientMessage('gems', rejected.shortfall));
 
         const enough = checkWalletBalance(100, 100, false);
         assert.isTrue(enough.ok, '剛好足夠');
