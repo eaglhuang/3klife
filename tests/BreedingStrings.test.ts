@@ -1,22 +1,20 @@
 import { TestSuite, assert } from './TestRunner';
+import { BREED_TEXT_FALLBACK_ZH_TW, fillBreedText as fill } from '../assets/scripts/ui/core/BreedingTexts';
 
-// 結緣字串（PROG-2-0525 / BRD-14）。規格：結緣系統（配種）§H。
+// 結緣字串（PROG-2-0525 / BRD-14、PROG-2-0526 多語）。規格：結緣系統（配種）§H。
 // Unity 對照：像 Localization Table 的單元測試，確認每個 key 存在、佔位符數量正確、代入後文字正確。
 
-function readZhTw(): Record<string, string> {
+function readLocale(locale: string): Record<string, string> {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const fs = require('fs') as typeof import('fs');
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const path = require('path') as typeof import('path');
-    const file = path.resolve(__dirname, '..', 'assets/resources/i18n/zh-TW.json');
+    const file = path.resolve(__dirname, '..', `assets/resources/i18n/${locale}.json`);
     return JSON.parse(fs.readFileSync(file, 'utf8')) as Record<string, string>;
 }
 
-/** 與 I18nSystem.t 相同的代入規則：依序替換 {0}、{1}… */
-function fill(template: string, args: string[]): string {
-    let out = template;
-    args.forEach((arg, i) => { out = out.replace(`{${i}}`, arg); });
-    return out;
+function readZhTw(): Record<string, string> {
+    return readLocale('zh-TW');
 }
 
 const BREED_KEYS: Array<{ key: string; placeholders: number }> = [
@@ -66,6 +64,31 @@ export function createBreedingStringsSuite(): TestSuite {
         assert.equals('天命開獎！曹丕 五維資質揭曉：', fill(table['ui.breed.unveil_5'], ['曹丕']));
         assert.equals('名士嘆：此子潛龍在淵，天機不可洩漏。', table['ui.breed.daqi']);
         assert.equals('預估爆發力：1200（A）', fill(table['ui.breed.ep_display'], ['1200', 'A']));
+    });
+
+    suite.test('簡中、英文、日文同樣齊全六組，佔位符數與 zh-TW 一致', () => {
+        const zhTw = readZhTw();
+        for (const locale of ['zh-CN', 'en', 'ja']) {
+            const table = readLocale(locale);
+            for (const { key, placeholders } of BREED_KEYS) {
+                assert.isTrue(typeof table[key] === 'string' && table[key].length > 0, `${locale} 缺少 ${key}`);
+                const found = (table[key].match(/\{\d+\}/g) ?? []).length;
+                assert.equals(placeholders, found, `${locale} ${key} 佔位符數`);
+                assert.equals((zhTw[key].match(/\{\d+\}/g) ?? []).length, found, `${locale} ${key} 與 zh-TW 不一致`);
+            }
+        }
+    });
+
+    suite.test('程式內預設文案與 zh-TW 語系檔逐字相同', () => {
+        const zhTw = readZhTw();
+        for (const { key } of BREED_KEYS) {
+            assert.equals(zhTw[key], BREED_TEXT_FALLBACK_ZH_TW[key], key);
+        }
+    });
+
+    suite.test('單次代入：代入的文字即使含 {n} 也不會被再次替換', () => {
+        assert.equals('{1} 與 小喬', fill('{0} 與 {1}', ['{1}', '小喬']));
+        assert.equals('x {2}', fill('x {2}', ['a', 'b']), '缺少參數保留原樣');
     });
 
     return suite;

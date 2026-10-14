@@ -183,5 +183,13 @@
   "ui.style_check.primary": "[JA] ui.style_check.primary",
   "ui.style_check.secondary": "[JA] ui.style_check.secondary",
   "ui.style_check.parchment": "[JA] ui.style_check.parchment",
-  "ui.style_check.lorem": "[JA] ui.style_check.lorem"
+  "ui.style_check.lorem": "[JA] ui.style_check.lorem",
+
+  "_comment_ui_breed": "結緣字串（草稿翻譯，待語系審閱）",
+  "ui.breed.confirm": "{0} の気力 {1} と {2} の気力 {3} を消費し、結縁しますか？",
+  "ui.breed.preg_status": "{0} は懐妊期に入りました。{1} 季後に子が生まれます。",
+  "ui.breed.child_born": "おめでとうございます！{0} と {1} に{2}が授かりました！",
+  "ui.breed.unveil_5": "天命の開示！{0} の五維の資質が明らかに：",
+  "ui.breed.daqi": "名士は嘆く：この子は深淵に潜む龍。天機は漏らしてはならぬ。",
+  "ui.breed.ep_display": "推定爆発力：{0}（{1}）"
 }
