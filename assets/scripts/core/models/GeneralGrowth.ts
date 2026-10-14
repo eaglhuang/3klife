@@ -23,6 +23,22 @@ export function agePhaseOf(age: number): AgePhase {
     return 'Over';
 }
 
+/** 年齡階段的中文標籤（武將詳情顯示用） */
+export const AGE_PHASE_LABEL: Record<AgePhase, string> = {
+    Child: '幼兒',
+    Youth: '少年',
+    Prime: '青年',
+    Peak: '壯年・巔峰',
+    Elder: '老年',
+    Over: '退役候選',
+};
+
+/** 武將詳情用的階段標籤；沒有年齡時回傳 null，讓呼叫端保留原本的鎖定文字 */
+export function agePhaseLabel(age: number | undefined): string | null {
+    if (typeof age !== 'number' || !Number.isFinite(age)) return null;
+    return AGE_PHASE_LABEL[agePhaseOf(age)];
+}
+
 /** 該年齡的六色屬性修正係數 */
 export function ageStatMultiplier(age: number): number {
     return BATTLE_POWER_CONSTANTS.AGE_MODIFIER[agePhaseOf(age)];

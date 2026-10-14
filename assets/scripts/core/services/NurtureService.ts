@@ -35,6 +35,7 @@ import {
 } from '../systems/NurtureSystem';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
 import { InspireContext, rollInspireRound } from '../systems/MentorInspiration';
+import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
 import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwakening';
 import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
@@ -358,6 +359,7 @@ export class NurtureService {
             discoveryLevel: hooks.discoveryLevel(),
             mentorRank,
             mentorOnSlot: log.mentorsOnSlot.length > 0,
+            luk: lukOf(roster[index]),
             random: this._rng(),
         });
         if (!result?.ok) return undefined;
@@ -411,7 +413,8 @@ export class NurtureService {
                 childLuk,
                 childBloodlines,
             };
-            for (const key of rollInspireRound(keyed, session.round, ctx, confirmed, random)) {
+            const guaranteed = isBloodlineMatch(child?.name, mentor.familyName) && isBloodlineGuaranteedRound(session.round);
+            for (const key of rollInspireRound(keyed, session.round, ctx, confirmed, random, { guaranteed })) {
                 confirmed.add(key);
                 const event = inspire.events.find((e) => prefix + e.eventId === key)!;
                 triggered.push({ mentorId: mentor.id, eventId: event.eventId, tacticId: event.tacticId });

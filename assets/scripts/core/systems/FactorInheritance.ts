@@ -30,6 +30,15 @@ export const DEFAULT_MAX_INHERITED_FACTORS = 5;
 /** 各世代進入因子池的機率 */
 export const FACTOR_POOL_RATE: Record<1 | 2 | 3, number> = { 1: 1, 2: 0.5, 3: 0.25 };
 
+/**
+ * 運氣系統 §繼承成功率修正（PROG-2-0510，PM 暫定採乘法）：
+ * Rate = Base × (1 + ParentAvgLUK / 100)，封頂 1；LUK 缺省、負數或非有限值視為 0。
+ */
+export function inheritanceLukRate(baseRate: number, parentAvgLuk: number): number {
+    const luk = Number.isFinite(parentAvgLuk) ? Math.max(0, parentAvgLuk) : 0;
+    return Math.min(1, baseRate * (1 + luk / 100));
+}
+
 /** 各世代的星等分布：[低星, 高星, 抽到高星的機率] */
 export const FACTOR_STAR_DISTRIBUTION: Record<1 | 2 | 3, { low: number; high: number; highRate: number }> = {
     1: { low: 3, high: 4, highRate: 0.2 },
@@ -160,6 +169,8 @@ export interface FactorInheritanceOptions {
     dictionary?: FactorDictionary;
     enabledColors?: readonly FactorColor[];
     maxFactors?: number;
+    /** 父母平均 LUK（PROG-2-0510）；缺省為 0，行為與舊版相同 */
+    parentAvgLuk?: number;
 }
 
 export function rollFactorStar(generation: 1 | 2 | 3, random: RandomSource): number {
@@ -186,7 +197,8 @@ export function inheritFactors(sources: AncestorFactorSource[], options: FactorI
             const color = resolveFactorColor(factorId, options.dictionary, gene);
             if (!color || !enabled.has(color)) continue;
 
-            if (options.random() >= FACTOR_POOL_RATE[source.generation]) continue;
+            const poolRate = inheritanceLukRate(FACTOR_POOL_RATE[source.generation], options.parentAvgLuk ?? 0);
+            if (options.random() >= poolRate) continue;
 
             const maxLevel = options.dictionary?.get(factorId)?.maxLevel ?? 5;
             const level = Math.min(maxLevel, rollFactorStar(source.generation, options.random));

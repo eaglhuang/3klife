@@ -1,5 +1,5 @@
 /**
- * WeatherEnum.test.ts — 天氣 enum 改為規格六種與舊字串轉換 headless 測試（PROG-2-0343）
+ * WeatherEnum.test.ts — 天氣 enum 改為規格六種與舊字串轉換 headless 測試（PROG-2-0402）
  *
  * Unity 對照：像 Enum 的 Obsolete 轉換，舊存檔的字串進來時要換成新值。
  */
@@ -7,7 +7,7 @@ import { assert, TestSuite } from './TestRunner';
 import { normalizeWeather, Weather } from '../assets/scripts/shared/CommonEnums';
 
 export function createWeatherEnumSuite(): TestSuite {
-    const suite = new TestSuite('WeatherEnum (天氣規格六種 PROG-2-0343)');
+    const suite = new TestSuite('WeatherEnum (天氣規格六種 PROG-2-0402)');
 
     suite.test('規格代碼原樣通過：SUNNY / RAINY / FOG / WINDY / NIGHT / THUNDER', () => {
         assert.equals(Weather.Clear, normalizeWeather('SUNNY'));

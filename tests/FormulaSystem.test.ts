@@ -177,6 +177,14 @@ export function createFormulaSuite(): TestSuite {
         assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Archer));
     });
 
+    suite.test('反向被剋五組全部 ×0.8（規格：盾被騎、弓被盾、步被弓、槍被步、騎被槍）', () => {
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Shield, TroopType.Cavalry));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Archer, TroopType.Shield));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Archer));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Pikeman, TroopType.Infantry));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Cavalry, TroopType.Pikeman));
+    });
+
     suite.test('機械（工兵）被近戰攻擊 ×1.5；遠程打機械不加成', () => {
         assert.equals(1.5, formula.getCounterMultiplier(TroopType.Cavalry, TroopType.Engineer));
         assert.equals(1.5, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Engineer));

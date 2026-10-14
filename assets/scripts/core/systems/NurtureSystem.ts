@@ -25,6 +25,7 @@ import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
 import { MENTOR_STAR_TABLE } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
+import { surnameOf } from './VirtualAncestorGenerator';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -60,6 +61,14 @@ export const MENTOR_STAR_EFFECT: readonly number[] = MENTOR_STAR_TABLE.map(entry
 
 /** 訓練失敗時獲得負面因子的機率；規格只說「有機率」，暫定 50% */
 export const NEGATIVE_FACTOR_CHANCE = 0.5;
+
+/**
+ * 失敗回合出現負面特質的機率。近親子嗣加成 +50%（血脈理論 §近親劣化），採加法：0.5 + 0.5，上限 1。
+ * 暫定：規格寫「+= 50%」，字面為加法；若企劃要乘法（×1.5），改這裡的公式即可。
+ */
+export function negativeFactorChance(bonus = 0): number {
+    return Math.min(1, NEGATIVE_FACTOR_CHANCE + Math.max(0, bonus));
+}
 export const NEGATIVE_FACTORS: readonly string[] = ['挫敗', '厭學'];
 
 /** 資質層（Talent 0~100）對應實力層（Prowess 0~2000）的上限倍率 */
@@ -153,6 +162,8 @@ export interface NurtureSession {
     /** 即將進行的回合，每位教官站在哪一格（玩家選訓練前就看得到） */
     mentorSlots: Record<string, TrainingKind>;
     negativeFactors: string[];
+    /** 近親子嗣的負面特質出現率加成（BLT-05，舊存檔沒有此欄位視為 0） */
+    negativeTraitRateBonus?: number;
     log: NurtureRoundLog[];
     status: NurtureStatus;
 }
@@ -275,6 +286,7 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         hybridSources: input.hybridSources ? { ...input.hybridSources } : undefined,
         mentorSlots: rollMentorSlots(mentors, input.random),
         negativeFactors: [],
+        negativeTraitRateBonus: Math.max(0, (input.child as { negativeTraitRateBonus?: number }).negativeTraitRateBonus ?? 0),
         affection: 0,
         skipRounds: 0,
         redGeneLevel: redGeneLevelOf(input.child.genes, input.factorDictionary),
@@ -371,7 +383,7 @@ export function executeRound(
 
         if (failed) {
             log.success = false;
-            if (random() < NEGATIVE_FACTOR_CHANCE) {
+            if (random() < negativeFactorChance(session.negativeTraitRateBonus)) {
                 const pool = NEGATIVE_FACTORS.filter((factor) => !session.negativeFactors.includes(factor));
                 if (pool.length > 0) {
                     const factor = pool[Math.min(pool.length - 1, Math.floor(random() * pool.length))];
@@ -565,7 +577,7 @@ export function mentorFromCard(
         specialty,
         stars: overrides.stars ?? 0,
         burstRate: overrides.burstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
-        familyName: overrides.familyName,
+        familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
             ? {
                 inspire: {

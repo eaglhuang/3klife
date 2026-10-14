@@ -71,17 +71,21 @@ export class ProjectedDamageSkillResolver implements BattleSkillResolver {
     const deltas: SkillExecutionResult['deltas'] = [];
     const battleLogLines: string[] = [];
     let hitCount = 0;
+    // 多段技能（如趙家槍法）：每段對全部目標各結算一次，段數由 hitStageMultipliers 決定
+    const stageCount = profile.hitStageMultipliers?.length ?? 1;
 
-    for (const unit of targets) {
-      if (unit.isDead()) {
-        continue;
+    for (let stage = 0; stage < stageCount; stage += 1) {
+      for (const unit of targets) {
+        if (unit.isDead()) {
+          continue;
+        }
+
+        const damage = this.damageResolver.resolveDamage(profile, caster, unit, context, hitCount, stage);
+        hitCount += 1;
+        context.applyDamage(unit, damage, casterFaction);
+        deltas.push({ unitUid: unit.id, deltaHp: -damage });
+        battleLogLines.push(`${profile.battleLogKey ?? request.battleSkillId}:${unit.id}:${damage}`);
       }
-
-      const damage = this.damageResolver.resolveDamage(profile, caster, unit, context, hitCount);
-      hitCount += 1;
-      context.applyDamage(unit, damage, casterFaction);
-      deltas.push({ unitUid: unit.id, deltaHp: -damage });
-      battleLogLines.push(`${profile.battleLogKey ?? request.battleSkillId}:${unit.id}:${damage}`);
     }
 
     if (!hitCount) {
