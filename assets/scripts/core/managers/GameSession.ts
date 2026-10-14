@@ -89,6 +89,7 @@ import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook } from '../systems/KinDynamicRelations';
+import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     BattleResult,
@@ -754,6 +755,7 @@ export class GameSession {
         this._clearedStageIds = [];
         this._favoriteGeneralIds = [];
         this._hallAssignments = {};
+        this.dynamicRelations.restore([]);
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
@@ -1251,6 +1253,15 @@ export class GameSession {
     }
 
     /** 攻城戰開戰的壽命消耗（PROG-2-0237）：扣完即存檔；武將不在名冊時回傳 null */
+    /** 動態關係互動（KIN-10）：回補親密度，有變動才自動存檔；沒有該對關係回傳空陣列 */
+    public async interactDynamicRelation(uidA: string, uidB: string): Promise<DynamicRelation[]> {
+        const updated = this.dynamicRelations.interact(uidA, uidB);
+        if (updated.length > 0 && this._autoSave && this._save) {
+            await this.save();
+        }
+        return updated;
+    }
+
     public async spendSiegeLifespan(generalId: string): Promise<ActiveLifespanResult | null> {
         const result = this.spendLifespan(generalId, 'siege');
         if (result && this._autoSave && this._save) {
@@ -1493,7 +1504,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot());
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -1531,6 +1542,7 @@ export class GameSession {
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
         this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
+        this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };

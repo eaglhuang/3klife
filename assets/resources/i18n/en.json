@@ -183,5 +183,13 @@
   "ui.style_check.primary": "[EN] ui.style_check.primary",
   "ui.style_check.secondary": "[EN] ui.style_check.secondary",
   "ui.style_check.parchment": "[EN] ui.style_check.parchment",
-  "ui.style_check.lorem": "[EN] ui.style_check.lorem"
+  "ui.style_check.lorem": "[EN] ui.style_check.lorem",
+
+  "_comment_ui_breed": "結緣字串（草稿翻譯，待語系審閱）",
+  "ui.breed.confirm": "Spend {0} vigor {1} and {2} vigor {3}. Confirm the union?",
+  "ui.breed.preg_status": "{0} has entered the expecting period; the child will be born in {1} seasons.",
+  "ui.breed.child_born": "Congratulations, my lord! {0} and {1} have been blessed with a {2}!",
+  "ui.breed.unveil_5": "Destiny unveiled! Five-stat results for {0}:",
+  "ui.breed.daqi": "A scholar sighs: this child is a dragon hidden in the deep; heaven's secrets must not be revealed.",
+  "ui.breed.ep_display": "Estimated burst: {0} ({1})"
 }

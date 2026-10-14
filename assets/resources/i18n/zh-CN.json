@@ -183,5 +183,13 @@
   "ui.style_check.primary": "[ZH-CN] 赤火主按鈕",
   "ui.style_check.secondary": "[ZH-CN] 流金次按鈕",
   "ui.style_check.parchment": "[ZH-CN] 宣紙風按鈕",
-  "ui.style_check.lorem": "[ZH-CN] 水墨宣紙 (Ink & Parchment) 與 冷冽金屬 (Steel) 的視覺衝突：建構於 3.8.8 的 2.5D 三國戰場介面。"
+  "ui.style_check.lorem": "[ZH-CN] 水墨宣紙 (Ink & Parchment) 與 冷冽金屬 (Steel) 的視覺衝突：建構於 3.8.8 的 2.5D 三國戰場介面。",
+
+  "_comment_ui_breed": "結緣字串（草稿翻譯，待語系審閱）",
+  "ui.breed.confirm": "消耗 {0} 精力 {1} 与 {2} 精力 {3}，确认结缘？",
+  "ui.breed.preg_status": "{0} 已进入待产期，预计 {1} 季后诞下子嗣",
+  "ui.breed.child_born": "恭喜主公！{0} 与 {1} 喜获 {2}！",
+  "ui.breed.unveil_5": "天命开奖！{0} 五维资质揭晓：",
+  "ui.breed.daqi": "名士叹：此子潜龙在渊，天机不可泄露。",
+  "ui.breed.ep_display": "预估爆发力：{0}（{1}）"
 }

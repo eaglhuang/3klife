@@ -1,6 +1,7 @@
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
+import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
@@ -28,6 +29,27 @@ export class BattleCombatResolver {
   constructor(private readonly context: BattleCombatResolverContext) {}
 
   /** 部隊所在格的適性修正：取同陣營主將的兵種 / 地形 / 天氣適性（PROG-2-0071） */
+  /** 虎符部隊的攻擊乘數：星級 × 同陣營在場 Set 的攻擊加成（PROG-2-0574）；非虎符單位恆為 1 */
+  public getTallyAttackMod(unit: TroopUnit): number {
+    if (!unit.tallyId) return 1;
+    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).atkMod;
+  }
+
+  /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）；非虎符單位恆為 1 */
+  public getTallyDefenseMod(unit: TroopUnit): number {
+    if (!unit.tallyId) return 1;
+    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod;
+  }
+
+  private tallySetMods(faction: Faction): { atkMod: number; defMod: number } {
+    const members: TallySetMember[] = [];
+    for (const unit of this.context.state.units.values()) {
+      if (unit.faction !== faction) continue;
+      members.push({ templateId: unit.tallyTemplateId, alive: unit.currentHp > 0 });
+    }
+    return fieldTallySetMods(members);
+  }
+
   public getUnitAptitude(unit: TroopUnit): ResolvedAptitude {
     const state = this.context.state;
     const cell = state.getCell(unit.lane, unit.depth);
@@ -151,10 +173,10 @@ export class BattleCombatResolver {
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * defender.tallyStarMultiplier;
+    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender);
 
     let damage = svc.formula.calculateDamage({
-      attackerAttack: attacker.getEffectiveAttack() * attacker.tallyStarMultiplier,
+      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker),
       defenderDefense: effectiveDef,
       attackerType: attacker.type,
       defenderType: defender.type,
@@ -504,8 +526,8 @@ export class BattleCombatResolver {
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const counterDamage = svc.formula.calculateDamage({
-      attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * defender.tallyStarMultiplier * reaction.counterRatio)),
-      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker) * attacker.tallyStarMultiplier,
+      attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * this.getTallyAttackMod(defender) * reaction.counterRatio)),
+      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker) * this.getTallyDefenseMod(attacker),
       attackerType: defender.type,
       defenderType: attacker.type,
       attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,

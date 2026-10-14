@@ -27,7 +27,10 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
+import { CountdownState } from '../../core/systems/CountdownManager';
+import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
+import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
@@ -112,6 +115,11 @@ interface GeneralListOpenPayload {
 /** 選卡畫面的卡片按鈕數（對應 lobby-deck-select-main.json 的 btnDeckCard0..3，目前卡片目錄只有 4 張） */
 const DECK_SELECT_SLOTS = 4;
 
+/** 結緣與開獎文案：走 i18n，語系表未載入時退回 zh-TW 預設（PROG-2-0526 / 0527） */
+function breedText(): BreedTextLookup {
+    return withBreedFallback((key, ...args) => services().i18n.t(key, ...args));
+}
+
 interface ScreenButtonBinding {
     buttonId: string;
     handler: () => void;
@@ -133,6 +141,8 @@ export class LobbyScene extends Component {
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
+    /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
+    private _countdownState: CountdownState | null = null;
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
     private _supportCatalog: SupportCatalog | null = null;
@@ -328,6 +338,9 @@ export class LobbyScene extends Component {
             seasonLabel: formatSeasonLabel(time),
             modeLabel: formatModeLabel(time.currentMode),
         });
+        const countdownIcon = buildCountdownIconFlowView(this._countdownState, Date.now());
+        this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
+        this._seasonHudHost?.binder?.setActives(countdownIcon.actives);
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
@@ -352,6 +365,7 @@ export class LobbyScene extends Component {
             unveiling: services().unveiling,
             nurture: services().nurture,
             loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            text: breedText(),
             persist: async () => {
                 if (services().session.hasSaveService) {
                     await services().session.save();
@@ -452,6 +466,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
+            text: breedText(),
         });
         this._bonding = bonding;
 

@@ -5,6 +5,7 @@ import type { BattleState } from '../../models/BattleState';
 import { BattleTurnManager } from '../BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../../shared/BattleTacticBehavior';
 import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
+import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -21,6 +22,8 @@ export interface BattleAutoMovePhaseContext {
   isGeneralUnit(unitId: string): boolean;
   /** 主將適性給的移動修正（PROG-2-0080）；不提供時視為 0 */
   getAptitudeMoveDelta?(unit: TroopUnit): number;
+  /** 位移受阻的傷害（GRD-03，PROG-2-0577）；不提供時受阻只停下、不扣血 */
+  applyForcedMoveDamage?(unit: TroopUnit, damage: number): void;
 }
 
 export function executeBattleAutoMovePhase(context: BattleAutoMovePhaseContext): void {
@@ -167,13 +170,16 @@ function forceMoveUnit(
   context: BattleAutoMovePhaseContext,
   reason: string,
 ): void {
-  for (let index = 0; index < steps; index++) {
-    const nextDepth = unit.depth + dir;
-    const nextCell = context.state.getCell(unit.lane, nextDepth);
-    if (!nextCell || nextCell.occupantId || context.isCellMovementBlocked(unit.lane, nextDepth)) {
-      break;
-    }
+  if (dir !== 1 && dir !== -1) return;
+  // 先算出要推幾格、是否受阻（GRD-03 純邏輯）；受阻傷害依剩餘步數計
+  const plan = resolveForcedMove(unit.depth, dir, steps, (depth) => {
+    const cell = context.state.getCell(unit.lane, depth);
+    return !cell || !!cell.occupantId || context.isCellMovementBlocked(unit.lane, depth);
+  });
 
+  for (let index = 0; index < plan.movedSteps; index++) {
+    const nextDepth = unit.depth + dir;
+    const nextCell = context.state.getCell(unit.lane, nextDepth)!;
     const prevLane = unit.lane;
     const prevDepth = unit.depth;
     context.state.getCell(unit.lane, unit.depth)!.occupantId = null;
@@ -189,6 +195,12 @@ function forceMoveUnit(
       forcedMoveReason: reason,
     });
     context.turnManager.markUnitMoved(unit.id);
+  }
+
+  if (plan.blocked && context.applyForcedMoveDamage) {
+    const ratio = forcedMoveBlockedDamageRatio(plan.remainingSteps);
+    const damage = Math.round(unit.maxHp * ratio);
+    if (damage > 0) context.applyForcedMoveDamage(unit, damage);
   }
 }
 

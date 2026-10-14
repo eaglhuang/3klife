@@ -38,6 +38,7 @@ import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
+import { describeActiveTallySets } from '../../core/systems/TigerTallySetBonus';
 import type { TacticCondition } from '../../core/systems/TacticCondition';
 import {
   BattleSkillTargetMode,
@@ -133,8 +134,8 @@ export class BattleController {
     consumeTileBuff: (unit) => this.tileBuffLifecycleManager.consumeTileBuff(unit),
   });
   private tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
-  /** 虎符卡片實例的星級查詢（由場景注入玩家卡組；沒注入時一律 1★） */
-  public tallyStarOf: (tallyId: string) => number = () => 1;
+  /** 虎符卡片實例的星級與模板 id 查詢（由場景注入玩家卡組；沒注入時一律 1★、無模板） */
+  public tallyInfoOf: (tallyId: string) => { star: number; templateId: string } | null = () => null;
   /** 本場出陣過的虎符 id（PROG-2-0573：戰後依此結算戰鬥經驗） */
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
@@ -267,11 +268,22 @@ export class BattleController {
     const general = this.state.getGeneral(Faction.Player);
     const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
     unit.tallyId = ref.tallyId;
-    unit.tallyStarMultiplier = starStatMultiplier(this.tallyStarOf(ref.tallyId));
+    const info = this.tallyInfoOf(ref.tallyId);
+    unit.tallyStarMultiplier = starStatMultiplier(info?.star ?? 1);
+    unit.tallyTemplateId = info?.templateId ?? null;
     this._deployedTallyIds.add(ref.tallyId);
     unit.commanderUid = commander?.uid ?? null;
     unit.tallyAffinity = (lane, depth) =>
       resolveTallyDeployMod(profile, commander, this.state.getCell(lane, depth)?.terrain ?? null);
+  }
+
+  /** 玩家在場存活的虎符部隊成立的 Set 顯示文字（戰場 UI 用，PROG-2-0575） */
+  public get activePlayerTallySetLabels(): string[] {
+    const ids: string[] = [];
+    for (const unit of this.state.units.values()) {
+      if (unit.faction === Faction.Player && unit.tallyTemplateId && unit.currentHp > 0) ids.push(unit.tallyTemplateId);
+    }
+    return describeActiveTallySets(ids);
   }
 
   /** 本場出陣過的虎符 id，戰後結算戰鬥經驗用 */
@@ -690,6 +702,13 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
+          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
+            attackerId: null,
+            attackerLane: null,
+            attackerDepth: null,
+            damageSource: 'forced-move',
+            allowDamageLink: false,
+          }),
         });
         return {};
       case 'enemy-auto-move':
@@ -702,6 +721,13 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
+          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
+            attackerId: null,
+            attackerLane: null,
+            attackerDepth: null,
+            damageSource: 'forced-move',
+            allowDamageLink: false,
+          }),
         });
         return {};
       case 'player-tile-effect':
