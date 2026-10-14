@@ -78,3 +78,15 @@ export function fieldTallySetMods(members: readonly TallySetMember[]): { atkMod:
     }
     return tallySetMultipliers(ids);
 }
+
+/** 單一 Set 的顯示文字，例如「五虎將（攻 +10% / 防 +10%）」；供戰場 UI 顯示（PROG-2-0575） */
+export function describeTallySet(def: TigerTallySetDef): string {
+    const atkPct = Math.round((def.bonus.atkMod - 1) * 100);
+    const defPct = Math.round((def.bonus.defMod - 1) * 100);
+    return `${def.name}（攻 +${atkPct}% / 防 +${defPct}%）`;
+}
+
+/** 在場虎符部隊成立的 Set 顯示文字清單；沒有 Set 時回空陣列 */
+export function describeActiveTallySets(activeTallyTroopIds: readonly string[]): string[] {
+    return getActiveTallySets(activeTallyTroopIds).map(describeTallySet);
+}

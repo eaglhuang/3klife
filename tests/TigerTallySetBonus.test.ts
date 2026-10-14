@@ -2,7 +2,7 @@
  * TigerTallySetBonus — 虎符陣容 Set 羈絆判定與攻防加成（TRP-14，PROG-2-0570）的純邏輯測試
  */
 import { TestSuite, assert } from './TestRunner';
-import { fieldTallySetMods, getActiveTallySets, tallySetMultipliers } from '../assets/scripts/core/systems/TigerTallySetBonus';
+import { describeActiveTallySets, describeTallySet, fieldTallySetMods, getActiveTallySets, tallySetMultipliers, TIGER_TALLY_SET_DEFS } from '../assets/scripts/core/systems/TigerTallySetBonus';
 
 const FIVE_TIGERS = ['TROOP_CHANGSHAN_DRAGON', 'TROOP_LOYAL_IRON_GUARD', 'TROOP_THUNDER_SQUAD', 'TROOP_GOD_SNIPER', 'TROOP_DIVINE_CAVALRY'];
 const JIANGDONG = ['TROOP_WU_NAVY', 'TROOP_BROCADE_RAIDERS', 'TROOP_FEARLESS_GUARD', 'TROOP_JIANGDONG_GUARD'];
@@ -55,6 +55,12 @@ export function createTigerTallySetBonusSuite(): TestSuite {
         assert.equals(1, round(fieldTallySetMods(oneDead).atkMod));
         const noTally = [...alive.slice(0, 2), { templateId: null, alive: true }];
         assert.equals(1, round(fieldTallySetMods(noTally).atkMod));
+    });
+
+    suite.test('Set 顯示文字：名稱與攻防百分比', () => {
+        assert.equals('五虎將（攻 +10% / 防 +10%）', describeTallySet(TIGER_TALLY_SET_DEFS[0]));
+        assert.equals('五虎將（攻 +10% / 防 +10%）', describeActiveTallySets(FIVE_TIGERS.slice(0, 3))[0]);
+        assert.equals(0, describeActiveTallySets(FIVE_TIGERS.slice(0, 2)).length);
     });
 
     return suite;
