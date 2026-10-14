@@ -30,7 +30,7 @@ import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewAppl
 import { CountdownState } from '../../core/systems/CountdownManager';
 import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
-import { fallbackBreedText } from '../core/BreedingTexts';
+import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
@@ -38,6 +38,9 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS, HALL_DEFAULT_PLAYER } fr
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
+import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
+import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
+import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
@@ -113,9 +116,19 @@ interface GeneralListOpenPayload {
 /** 選卡畫面的卡片按鈕數（對應 lobby-deck-select-main.json 的 btnDeckCard0..3，目前卡片目錄只有 4 張） */
 const DECK_SELECT_SLOTS = 4;
 
+/** 結緣與開獎文案：走 i18n，語系表未載入時退回 zh-TW 預設（PROG-2-0526 / 0527） */
+function breedText(): BreedTextLookup {
+    return withBreedFallback((key, ...args) => services().i18n.t(key, ...args));
+}
+
 interface ScreenButtonBinding {
     buttonId: string;
     handler: () => void;
+}
+
+interface GachaPoolConfigLike {
+    poolType: string;
+    candidateIds?: string[];
 }
 
 @ccclass('LobbyScene')
@@ -142,6 +155,10 @@ export class LobbyScene extends Component {
     private _domesticHost: UIScreenPreviewHost | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
+    private _mercPanelHost: UIScreenPreviewHost | null = null;
+    private _mercPanel: MercenaryPanelController | null = null;
+    private _redFaceHost: UIScreenPreviewHost | null = null;
+    private _redFace: RedFaceShowcaseController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
     private _lobbyHub: LobbyHub | null = null;
@@ -225,6 +242,8 @@ export class LobbyScene extends Component {
         await this._mountJobChange();
         await this._mountDomestic();
         await this._mountHallBoard();
+        await this._mountMercenaryPanel();
+        await this._mountRedFaceShowcase();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
@@ -350,6 +369,7 @@ export class LobbyScene extends Component {
             unveiling: services().unveiling,
             nurture: services().nurture,
             loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            text: breedText(),
             persist: async () => {
                 if (services().session.hasSaveService) {
                     await services().session.save();
@@ -450,11 +470,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
-            // 語系表未載入時 i18n.t 會回傳 key 本身，這時改用 zh-TW 預設文案，避免畫面出現原始 key
-            text: (key, ...args) => {
-                const localized = services().i18n.t(key, ...args);
-                return localized === key ? fallbackBreedText(key, ...args) : localized;
-            },
+            text: breedText(),
         });
         this._bonding = bonding;
 
@@ -616,6 +632,152 @@ export class LobbyScene extends Component {
             ...rowBindings,
         ]);
         this._hallBoardHost.node.active = false;
+    }
+
+    /** 傭兵面板（MERC-07）：隱藏掛載，入口待 PM 指定，對外提供 openMercenaryPanel()。 */
+    private async _mountMercenaryPanel(): Promise<void> {
+        this._mercPanel = new MercenaryPanelController({
+            mercenaries: () => services().session.mercenaries.mercenaries,
+            info: (state) => {
+                const general = this._generals.find(g => g.id === state.generalId);
+                return {
+                    // 原主與稀有度尚無正式來源（暫定），待企劃定後替換
+                    originalOwnerName: '原主未定',
+                    generalName: general?.name ?? state.generalId ?? '未知武將',
+                    rarity: 'R',
+                };
+            },
+            bondPoints: () => services().session.bondPoints,
+            bond: async (uid) => {
+                const state = services().session.mercenaries.mercenaries.find(m => m.uid === uid);
+                const template = this._generals.find(g => g.id === state?.generalId);
+                if (!template) return false;
+                const result = await services().session.bondMercenaryToRoster(uid, template);
+                return result.ok;
+            },
+        });
+        const rowBindings = Array.from({ length: MERC_PANEL_MAX_ROWS }, (_, i) => ({
+            buttonId: `btnMercRow${i}`,
+            handler: () => { this._selectMercenary(i); },
+        }));
+        this._mercPanelHost = await this._mountPreviewScreenHost('MercenaryPanelHost', 'mercenary-panel-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeMercenaryPanel(); } },
+            { buttonId: 'btnMercBond', handler: () => { void this._onClickMercenaryBond(); } },
+            ...rowBindings,
+        ]);
+        this._mercPanelHost.node.active = false;
+    }
+
+    public openMercenaryPanel(): void {
+        const host = this._mercPanelHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshMercenaryPanel();
+    }
+
+    private _closeMercenaryPanel(): void {
+        if (this._mercPanelHost) {
+            this._mercPanelHost.node.active = false;
+        }
+    }
+
+    private _selectMercenary(index: number): void {
+        this._mercPanel?.select(index);
+        this._refreshMercenaryPanel();
+    }
+
+    private async _onClickMercenaryBond(): Promise<void> {
+        if (!this._mercPanel) {
+            return;
+        }
+        try {
+            const ok = await this._mercPanel.bondSelected();
+            if (!ok) {
+                services().event.emit('SHOW_TOAST', { message: '無法結義此傭兵', duration: 2.5 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 傭兵結義失敗', error);
+        } finally {
+            this._refreshMercenaryPanel();
+        }
+    }
+
+    private _refreshMercenaryPanel(): void {
+        const binder = this._mercPanelHost?.binder;
+        if (!binder || !this._mercPanel) {
+            return;
+        }
+        applyFlowView(binder, this._mercPanel.getFlowView());
+    }
+
+    /** 紅顏展示（OPEN-10）：隱藏掛載，入口位置待定，對外提供 openRedFaceShowcase()。 */
+    private async _mountRedFaceShowcase(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaPoolConfigLike[]>('data/gacha-config');
+        const supportCards = await this._loadDataJson<RedFaceCardLike[]>('data/support-cards');
+        const pools = Array.isArray(gachaConfig) ? gachaConfig : [];
+        const supportPool = pools.find(pool => pool.poolType === 'support') ?? null;
+        const heroPoolIds = pools
+            .filter(pool => pool.poolType === 'hero')
+            .flatMap(pool => pool.candidateIds ?? []);
+        this._redFace = new RedFaceShowcaseController({
+            pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
+            cards: () => supportCards ?? [],
+            generalPoolIds: () => heroPoolIds,
+        });
+        const rowBindings = Array.from({ length: RED_FACE_SHOW_MAX_ROWS }, (_, i) => ({
+            buttonId: `btnRedFaceRow${i}`,
+            handler: () => { this._selectRedFace(i); },
+        }));
+        this._redFaceHost = await this._mountPreviewScreenHost('RedFaceShowcaseHost', 'red-face-showcase-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeRedFaceShowcase(); } },
+            ...rowBindings,
+        ]);
+        this._redFaceHost.node.active = false;
+    }
+
+    public openRedFaceShowcase(): void {
+        const host = this._redFaceHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRedFaceShowcase();
+    }
+
+    private _closeRedFaceShowcase(): void {
+        if (this._redFaceHost) {
+            this._redFaceHost.node.active = false;
+        }
+    }
+
+    private _selectRedFace(index: number): void {
+        this._redFace?.select(index);
+        this._refreshRedFaceShowcase();
+    }
+
+    private _refreshRedFaceShowcase(): void {
+        const binder = this._redFaceHost?.binder;
+        if (!binder || !this._redFace) {
+            return;
+        }
+        applyFlowView(binder, this._redFace.getFlowView());
+    }
+
+    private _loadDataJson<T>(path: string): Promise<T | null> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>(path, JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, `[LobbyScene] 資料載入失敗：${path}`, err);
+                    resolve(null);
+                    return;
+                }
+                resolve(asset.json as T);
+            });
+        });
     }
 
     private _loadLobbyHub(): Promise<LobbyHub | null> {

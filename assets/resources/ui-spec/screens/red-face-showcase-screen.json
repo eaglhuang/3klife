@@ -1,0 +1,17 @@
+{
+  "id": "red-face-showcase-screen",
+  "version": 1,
+  "uiId": "RedFaceShowcase",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "red-face-showcase-main",
+  "skin": "red-face-showcase-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

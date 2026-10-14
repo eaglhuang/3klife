@@ -27,6 +27,7 @@ import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeDynamicRelations } from '../systems/KinDynamicRelations';
+import { normalizeLegacyCount } from '../systems/LegacyAchievement';
 import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
@@ -78,6 +79,8 @@ export interface PlayerSaveSnapshot {
     hallAssignments?: Record<string, string>;
     /** 動態關係（KIN-06 / KIN-10）：親密度與關係清單；後加的選填欄位，舊檔讀回為空陣列 */
     dynamicRelations?: DynamicRelation[];
+    /** Legacy_Count（跨世代成就次數，RET-07）；後加的選填欄位，舊檔讀回為 0 */
+    legacyCount?: number;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -211,6 +214,7 @@ export function createPlayerSaveSnapshot(
     favoriteGeneralIds: readonly string[] = [],
     hallAssignments: Readonly<Record<string, string>> = {},
     dynamicRelations: readonly DynamicRelation[] = [],
+    legacyCount = 0,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -237,6 +241,7 @@ export function createPlayerSaveSnapshot(
         ...(normalizeFavoriteGeneralIds(favoriteGeneralIds).length > 0 ? { favoriteGeneralIds: normalizeFavoriteGeneralIds(favoriteGeneralIds) } : {}),
         ...(Object.keys(normalizeHallAssignments(hallAssignments)).length > 0 ? { hallAssignments: normalizeHallAssignments(hallAssignments) } : {}),
         ...(dynamicRelations.length > 0 ? { dynamicRelations: normalizeDynamicRelations(dynamicRelations) } : {}),
+        ...(normalizeLegacyCount(legacyCount) > 0 ? { legacyCount: normalizeLegacyCount(legacyCount) } : {}),
     };
 }
 
@@ -307,6 +312,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.favoriteGeneralIds !== undefined ? { favoriteGeneralIds: normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds) } : {}),
         ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
+        ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
     };
 }
 

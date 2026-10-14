@@ -58,6 +58,8 @@ export interface TallyCardData {
     source?: TallySourceInfo;
     lore?: TallyLoreInfo;
     tacticId?: string;
+    /** 玩家持有的卡片實例 uid（PROG-2-0579）；出陣時以它查星級與戰後經驗，沒綁到持有卡時為 undefined */
+    instanceUid?: string;
     battleSkillId?: string;
     battleSkillSourceType?: SkillSourceType;
     targetMode?: BattleSkillTargetMode;

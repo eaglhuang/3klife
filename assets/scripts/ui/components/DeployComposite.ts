@@ -31,6 +31,7 @@ import { UI_EVENTS } from '../core/UIEvents';
 import { TallyCardData } from '../../shared/TallyCardContract';
 import type { ToastOptions } from './ToastMessage';
 import { emitDeployDragDebug, shouldLogDeployDragMove } from './DeployDragDebug';
+import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
 
 const { ccclass } = _decorator;
@@ -55,7 +56,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   private selectedType: TroopType = TroopType.Infantry;
   private selectedUnitName = '';
   /** 目前選的虎符 id（TRP-13）；選一般兵種時為 null */
-  private selectedTallyId: string | null = null;
+  private selectedTally: TallyDeployRef | null = null;
   private selectedLane = 0;
   private currentDp = GAME_CONFIG.INITIAL_FOOD;
 
@@ -178,7 +179,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
         });
         this.selectedType = payload.data.unitType as TroopType;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(this.selectedType);
-        this.selectedTallyId = payload.data.tacticId ?? null;
+        this.selectedTally = tallyDeployRefOf(payload.data);
         this.updateSelectionLabels();
       },
     );
@@ -194,7 +195,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
         });
         this.selectedType = payload.data.unitType as TroopType;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(this.selectedType);
-        this.selectedTallyId = payload.data.tacticId ?? null;
+        this.selectedTally = tallyDeployRefOf(payload.data);
         this.updateSelectionLabels();
         this.beginDrag(payload.ev, this.selectedType);
       },
@@ -329,8 +330,8 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   }
 
   /** 選到虎符時才帶入 tally 參數（TRP-13）；一般兵種回傳 undefined */
-  private _tallyOptions(): { tally: { tallyId: string } } | undefined {
-    return this.selectedTallyId ? { tally: { tallyId: this.selectedTallyId } } : undefined;
+  private _tallyOptions(): { tally: TallyDeployRef } | undefined {
+    return this.selectedTally ? { tally: this.selectedTally } : undefined;
   }
 
   private onDeployClick(): void {
