@@ -266,6 +266,25 @@ function applyRockSlideTerrain(state: BattleState, context: BattleStartContext):
   }
 }
 
+/**
+ * 營帳（夜襲／埋伏場景，PM 暫定）：不能被攻擊的地形格，固定在敵方後排中央，每場 1 個。
+ * 我方單位在回合結束時站在營帳格上即勝利（見 resolveCampCapture）。場景資料可以用 state.sceneCampPosition 覆寫座標。
+ * 必須最後呼叫：同一格的其他場景裝飾會被覆寫。
+ */
+export const SCENE_CAMP_DEFAULT_POSITION = { lane: 3, depth: GAME_CONFIG.GRID_DEPTH - 1 } as const;
+
+function applySceneCamp(state: BattleState): void {
+  const position = state.sceneCampPosition ?? SCENE_CAMP_DEFAULT_POSITION;
+  state.setTileEffect({
+    id: `scene-camp-${position.lane}-${position.depth}`,
+    lane: position.lane,
+    depth: position.depth,
+    state: 'scene-camp',
+    blocksMovement: false,
+    notes: 'scene-gambit:camp',
+  });
+}
+
 function applyAmbushAttackDecorations(state: BattleState): void {
   for (const cell of state.cells) {
     if (cell.terrain !== TerrainType.Forest) {
@@ -345,6 +364,7 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
     applyStartOfBattle: (state: BattleState) => {
       state.sceneFlags.stealthOpenTurns = 2;
       applyAmbushAttackDecorations(state);
+      applySceneCamp(state);
     },
     advanceTurn: tickAmbushAttackFlags,
     isFactionHiddenFrom: (attackerFaction: Faction, targetFaction: Faction, state: BattleState) => (
@@ -359,6 +379,7 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
       state.sceneFlags.nightRaid = true;
       state.sceneFlags.nightRaidOpenTurns = 2;
       applyNightRaidDecorations(state);
+      applySceneCamp(state);
     },
     advanceTurn: tickNightRaidFlags,
     getEffectiveAttackRange: (unit: TroopUnit, state: BattleState) => {

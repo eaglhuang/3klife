@@ -27,7 +27,7 @@ import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffect
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
-import { resolveBattleVictory } from '../runtime/BattleVictoryResolver';
+import { resolveBattleVictory, resolveCampCapture } from '../runtime/BattleVictoryResolver';
 import { refreshFloodAttackTerrain, resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { services } from "../../core/managers/ServiceLoader";
 import type { BattleRuntimeContext } from '../runtime/BattleRuntimeContext';
@@ -633,6 +633,11 @@ export class BattleController {
     if (result !== 'ongoing') {
       return this.commitBattleResult(result);
     }
+    // 營帳佔領（PM 暫定）：我方單位回合結束時站在營帳格上即勝利
+    const campResult = resolveCampCapture(this.state);
+    if (campResult) {
+      return this.commitBattleResult(campResult);
+    }
     return result;
   }
 
@@ -911,11 +916,18 @@ export class BattleController {
 
   // ─── 階段：敵方部署 ───────────────────────────────────────────────────────
 
+  /**
+   * 覆寫營帳座標（夜襲／埋伏場景資料用）。需在 initBattle() 之前呼叫；null 回到預設（敵方後排中央）。
+   */
+  public configureSceneCamp(position: { lane: number; depth: number } | null): void {
+    this.state.sceneCampPosition = position;
+  }
+
   private applyStartOfBattleSceneGambit(): void {
     resolveBattleTacticBehavior(this.state.battleTactic).applyStartOfBattle(this.state, {
-      // 場景戰法沒有施放者欄位，施放者暫定為玩家主將（PM 暫定）；亂數走戰場種子亂數源
+      // 施放者是場景的施放陣營（state.sceneCaster，預設敵方）；天命取其主將基因，沒有主將時為 0；亂數走戰場種子亂數源
       random: () => services().session.randomSource(),
-      casterGenes: this.state.getGeneral(Faction.Player)?.genes ?? [],
+      casterGenes: this.state.getGeneral(this.state.sceneCaster)?.genes ?? [],
     });
   }
 

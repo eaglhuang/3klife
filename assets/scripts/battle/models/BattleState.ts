@@ -24,7 +24,7 @@ export interface TileBuff {
   rarity: "normal" | "rare";
 }
 
-export type TileEffectState = 'hazard-fire' | 'hazard-rock' | 'river-current' | 'ambush-field' | 'night-raid';
+export type TileEffectState = 'hazard-fire' | 'hazard-rock' | 'river-current' | 'ambush-field' | 'night-raid' | 'scene-camp';
 export type TileEffectMoveDirection = 'forward' | 'backward';
 
 export interface TileEffect {
@@ -93,6 +93,10 @@ export class BattleState {
   /** 場景戰法（特殊戰場規則預留欄位） */
   public battleTactic: BattleTactic = BattleTactic.Normal;
   public sceneFlags: SceneBattleFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
+  /** 場景戰法的施放方（落石等）：天命取此陣營主將的基因，沒有主將時天命為 0；預設敵方（PM 暫定） */
+  public sceneCaster: Faction = Faction.Enemy;
+  /** 營帳格座標覆寫（夜襲／埋伏）；null 時用預設：敵方後排中央（PM 暫定） */
+  public sceneCampPosition: { lane: number; depth: number } | null = null;
   /** 本局是否已對外發出 BattleEnded（勝負判定可重複呼叫，事件只發一次） */
   public battleEndAnnounced = false;
 
