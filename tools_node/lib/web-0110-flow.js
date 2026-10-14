@@ -35,7 +35,7 @@ async function run0110Flow(page, options = {}) {
         }
         const point = await page.evaluate(name => {
             let node;
-            function walk(n) { if (n.activeInHierarchy) { if (n.name === name) node = n; n.children.forEach(walk); } }
+            function walk(n) { if (n.activeInHierarchy) { if (n.name === name && !node) node = n; n.children.forEach(walk); } }
             walk(window.cc.director.getScene());
             const t = node.getComponent('cc.UITransform');
             const p = t.convertToWorldSpaceAR(new window.cc.Vec3(t.width * (.5 - t.anchorX), t.height * (.5 - t.anchorY), 0));
@@ -54,6 +54,8 @@ async function run0110Flow(page, options = {}) {
     for(let i=0;i<3;i++) await click('BtnNextTutorial',500);
     await click('GameplayGacha',1200);
     await mark('gacha-before-mercenary');
+    await click('GachaDs3_div_48',900);
+    await click('GachaPullResult_div_412',900);
     const entry=await page.evaluate(()=>{
         function find(node){
             if(!node.activeInHierarchy)return null;
@@ -80,6 +82,7 @@ async function run0110Flow(page, options = {}) {
     }
     await click('MercenaryPoolBack',500);
     await click('GachaReturnToLobby',1200);
+    await click('LeadGeneralButton0',700);
     await click('OpenDomesticButton',700);
     await mark('domestic-panel');
     if (!Object.values((await state()).labels).some(text => String(text).includes('內政'))) {
@@ -107,7 +110,39 @@ async function run0110Flow(page, options = {}) {
     if (!sandtableEntry) { await mark('sandtable-entry-not-found'); throw Error('0110: 大廳找不到可操作的沙盤入口；壽命、教學戰、出征與血統樹尚未驗證'); }
     await click(sandtableEntry,700);
     await mark('sandtable');
-    return {name:'0110',completed:false,steps,pending:['lifespan','tutorial-battle','sortie','bloodline-tree']};
+    if (!(await state()).labels.HallBoardTitle?.includes('遠征')) throw Error('0110: 天下沙盤入口未切到遠征分頁');
+    await click('BtnHallRow0',900);
+    await mark('expedition-accepted');
+    if (!Object.values((await state()).labels).some(text=>String(text).includes('已接取'))) throw Error('0110: 遠征接取後未標示已接取');
+    const save = await page.evaluate(() => new Promise((resolve,reject)=>{
+        const open=indexedDB.open('3KLifeData');
+        open.onerror=()=>reject(Error('IndexedDB read failed'));
+        open.onsuccess=()=>{
+            const db=open.result;
+            if (!db.objectStoreNames.contains('kv')) { db.close(); reject(Error('player.save store missing')); return; }
+            const tx=db.transaction('kv','readonly'), read=tx.objectStore('kv').get('player.save');
+            read.onsuccess=()=>resolve(read.result?.value || null);
+            read.onerror=()=>reject(Error('player.save read failed'));
+            tx.oncomplete=()=>db.close();
+        };
+    }));
+    if (!save?.leadGeneralId || !Object.values(save.hallAssignments || {}).includes(save.leadGeneralId)) throw Error('0110: 遠征指派未寫入出戰主將');
+    await click('BtnClose',500);
+    await click('OpenSortieButton',700);
+    await mark('sortie-setup');
+    await click('BtnCloseSortie',500);
+    await click('OpenBondingButton',700);
+    await mark('bonding-bloodline-layout');
+    await click('BtnCloseBond',500);
+    await click('GameplayGenerals',1000);
+    await mark('general-list-lifespan-route');
+    await click('Row',1000);
+    await mark('general-detail-lifespan');
+    const detail = await state();
+    const lifespanObserved = Object.entries(detail.labels).filter(([name,text]) => /lifespan/i.test(name) || String(text).includes('壽命'));
+    const pending = ['tutorial-battle','bloodline-tree-readability'];
+    if (lifespanObserved.length===0) pending.push('lifespan-detail-not-visible');
+    return {name:'0110',completed:false,steps,expedition:{leadGeneralId:save.leadGeneralId,assignments:save.hallAssignments},lifespanObserved,pending};
 }
 module.exports={run0110Flow};
 if(require.main===module){require('./web-three-generation-flow').runThreeGenerationFlow=run0110Flow;process.argv.push('--flow','three-generation');require('../run-web-smoke');}
