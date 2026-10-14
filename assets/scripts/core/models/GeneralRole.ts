@@ -10,12 +10,18 @@
 
 export type CanonicalRole = 'Combat' | 'Mentor';
 
-/** 舊資料值 → 規格職能；沒列在這裡的值為待裁決 */
+/**
+ * 舊資料值 → 規格職能；沒列在這裡的值為待裁決。
+ * PM 裁定（暫定）：軍師（Advisor）、名士（Noble）、策士（Planner）一律歸 Combat，教官只由 Support 與退役轉化而來。
+ */
 const ROLE_MAP: Readonly<Record<string, CanonicalRole>> = {
     Combat: 'Combat',
     Commander: 'Combat',
     Warrior: 'Combat',
     Hybrid: 'Combat',
+    Advisor: 'Combat',
+    Planner: 'Combat',
+    Noble: 'Combat',
     Mentor: 'Mentor',
     Support: 'Mentor',
 };

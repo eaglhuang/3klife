@@ -22,22 +22,23 @@ export function createGeneralRoleSuite(): TestSuite {
         assert.isTrue(report.mapped > 0);
     });
 
-    suite.test('真實資料：待裁決的值只限規格未定義的（Advisor、Noble、Planner）', () => {
+    suite.test('真實資料：所有武將都已歸類，沒有待裁決', () => {
         const generals = JSON.parse(fs.readFileSync('assets/resources/data/generals.json', 'utf8')) as Array<{
             id: string;
             role?: unknown;
         }>;
-        const unmappedRaw = new Set(reportRoles(generals).unmapped.map((u) => u.raw));
-        for (const raw of unmappedRaw) {
-            assert.isTrue(['Advisor', 'Noble', 'Planner'].includes(raw), `不該待裁決: ${raw}`);
-        }
+        const unmapped = reportRoles(generals).unmapped;
+        assert.equals(0, unmapped.length, unmapped.map((u) => `${u.id}:${u.raw}`).join(','));
     });
 
     suite.test('歸類：戰鬥類舊值→Combat，教官類舊值（Support）→Mentor，未知值為 null', () => {
         assert.equals('Combat', toCanonicalRole('Combat') ?? '');
         assert.equals('Combat', toCanonicalRole('Commander') ?? '');
         assert.equals('Mentor', toCanonicalRole('Support') ?? '');
-        assert.equals(null, toCanonicalRole('Advisor'));
+        assert.equals('Combat', toCanonicalRole('Advisor') ?? '');
+        assert.equals('Combat', toCanonicalRole('Planner') ?? '');
+        assert.equals('Combat', toCanonicalRole('Noble') ?? '');
+        assert.equals(null, toCanonicalRole('Unknown'));
         assert.equals(null, toCanonicalRole(undefined));
     });
 
