@@ -151,10 +151,10 @@ export class BattleCombatResolver {
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender);
+    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * defender.tallyStarMultiplier;
 
     let damage = svc.formula.calculateDamage({
-      attackerAttack: attacker.getEffectiveAttack(),
+      attackerAttack: attacker.getEffectiveAttack() * attacker.tallyStarMultiplier,
       defenderDefense: effectiveDef,
       attackerType: attacker.type,
       defenderType: defender.type,
@@ -504,8 +504,8 @@ export class BattleCombatResolver {
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const counterDamage = svc.formula.calculateDamage({
-      attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * reaction.counterRatio)),
-      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker),
+      attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * defender.tallyStarMultiplier * reaction.counterRatio)),
+      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker) * attacker.tallyStarMultiplier,
       attackerType: defender.type,
       defenderType: attacker.type,
       attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,

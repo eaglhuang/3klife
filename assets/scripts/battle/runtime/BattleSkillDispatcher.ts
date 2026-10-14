@@ -10,6 +10,7 @@ import { BattleState } from '../models/BattleState';
 import { BattleCombatResolver } from './BattleCombatResolver';
 import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
+import { evaluateCasterTacticConditions, type TacticCondition, type TacticConditionResult } from '../../core/systems/TacticCondition';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver';
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
@@ -36,6 +37,8 @@ export interface BattleSkillDispatcherContext {
   readonly combatResolver: BattleCombatResolver;
   getPlayerGeneralUnitId(): string | null;
   getEnemyGeneralUnitId(): string | null;
+  /** 戰法的 tcond 條件表（TAC-07）；查不到或沒有條件時回 undefined，視為無條件 */
+  getTacticConditions?(tacticId: string): readonly TacticCondition[] | undefined;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -140,7 +143,43 @@ export class BattleSkillDispatcher {
         battleLogLines: [weatherCheck.reason ?? WEATHER_RESTRICTION_TOAST],
       };
     }
+    // 戰法條件（TCOND，PROG-2-0573）：兵種／天氣／鄰格全部成立才發動，不成立同樣不扣資源
+    const conditionCheck = this.checkTacticConditions(request);
+    if (!conditionCheck.ok) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'condition-restricted',
+        deltas: [],
+        battleLogLines: ['戰法條件未達成，無法發動'],
+      };
+    }
     return this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
+  }
+
+  /** 施放者的兵種、天氣與鄰格數量組成 tcond 的評估輸入；施放者不在戰場上（武將）時兵種條件略過 */
+  private checkTacticConditions(request: BattleSkillRequest): TacticConditionResult {
+    const conditions = request.tacticId ? this.context.getTacticConditions?.(request.tacticId) : undefined;
+    if (!conditions || conditions.length === 0) return { ok: true };
+    const { state } = this.context;
+    const caster = state.units.get(request.ownerUid) ?? null;
+    let adjacentAllies = 0;
+    let adjacentEnemies = 0;
+    if (caster) {
+      for (const unit of state.units.values()) {
+        if (unit.id === caster.id || unit.currentHp <= 0) continue;
+        if (Math.abs(unit.lane - caster.lane) > 1 || Math.abs(unit.depth - caster.depth) > 1) continue;
+        if (unit.faction === caster.faction) adjacentAllies += 1;
+        else adjacentEnemies += 1;
+      }
+    }
+    return evaluateCasterTacticConditions(conditions, {
+      casterTroopType: caster?.type ?? null,
+      weather: state.weather,
+      adjacentAllies,
+      adjacentEnemies,
+    });
   }
 
   public buildBattleSkillExecutionContext(): BattleSkillExecutionContext {

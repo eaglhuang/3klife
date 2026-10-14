@@ -31,7 +31,8 @@ export interface HallPlayerState {
     intel: number;
 }
 
-export type HallBoardKey = 'Military' | 'Domestic';
+/** Expedition = 世界沙盤遠征牆，與雙牆共用同一條接取（指派）入口，依沙盤階段過濾。 */
+export type HallBoardKey = 'Military' | 'Domestic' | 'Expedition';
 
 /** 暫定：各難度所需的最低官職（規格只定「官職越高，難度上限越高」，對照表待 PM 確認）。 */
 export const HALL_DIFFICULTY_MIN_RANK: Readonly<Record<string, number>> = Object.freeze({

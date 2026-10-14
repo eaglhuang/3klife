@@ -127,6 +127,33 @@
             ]
           },
           {
+            "type": "button",
+            "name": "BtnHallBoardExpedition",
+            "id": "btnHallBoardExpedition",
+            "widget": {
+              "top": 84,
+              "left": 416
+            },
+            "width": 180,
+            "height": 48,
+            "skinSlot": "hall.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnHallBoardExpeditionLabel",
+                "id": "btnHallBoardExpeditionLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "天下沙盤",
+                "styleSlot": "hall.label.button"
+              }
+            ]
+          },
+          {
             "type": "panel",
             "name": "HallRow0",
             "id": "hallRow0",

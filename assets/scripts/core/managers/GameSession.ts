@@ -47,6 +47,7 @@ import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, r
 import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
+import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { applyTallyConfiscation, applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TigerTallyQuality } from '../models/TigerTallyCard';
@@ -87,6 +88,7 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../sy
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
+import { DynamicRelationBook } from '../systems/KinDynamicRelations';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     BattleResult,
@@ -182,6 +184,8 @@ export interface RecordBattleOptions {
     performance?: Readonly<Record<string, BattlePerformance>>;
     /** 本場的關卡 id；勝利時記入通關紀錄（連環破，PROG-2-0215） */
     stageId?: string;
+    /** 本場出陣的虎符卡片 id；戰後各自累積戰鬥經驗並可能升星（PROG-2-0573） */
+    deployedTallyIds?: readonly string[];
 }
 
 export interface AddGeneralsResult {
@@ -251,6 +255,8 @@ export interface MercenaryDayReport {
 
 export class GameSession {
     private _clock = new GameClock();
+    /** 動態關係表（KIN-10）：目前只在記憶體中，存檔欄位另卡接線 */
+    public readonly dynamicRelations = new DynamicRelationBook();
     private _roster: RosterStore = new InMemoryRosterStore();
     private _save: PlayerSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
@@ -563,6 +569,25 @@ export class GameSession {
 
     public get tallyCards(): Readonly<Record<string, TigerTallyCard>> {
         return { ...this._tallyCards };
+    }
+
+    /**
+     * 戰後把戰鬥經驗寫回出陣的虎符卡片實例（PROG-2-0573）。
+     * 只有有結果的戰鬥會結算（ongoing 不結算）；卡片不存在的 id 略過。回傳是否有卡片被改動。
+     */
+    private _settleTallyBattleExp(deployedTallyIds: readonly string[], result: string): boolean {
+        const outcome = tallyBattleOutcome(result);
+        if (!outcome) return false;
+        let changed = false;
+        const nextCards = { ...this._tallyCards };
+        for (const uid of deployedTallyIds) {
+            const card = nextCards[uid];
+            if (!card) continue;
+            nextCards[uid] = { ...card, ...applyBattleExpToCard(card, outcome) };
+            changed = true;
+        }
+        if (changed) this._tallyCards = nextCards;
+        return changed;
     }
 
     /** 登記君主持有的虎符卡（新取得的卡）；已登記的 uid 不會被覆蓋 */
@@ -1236,6 +1261,8 @@ export class GameSession {
 
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
+        // 動態關係每季衰退（KIN-10）：親密度歸 0 只是加成歸零，關係保留
+        this.dynamicRelations.decaySeason();
         const beforeRoster = this._roster.getAll();
         // 主動扣壽命致死的武將在 beforeRoster 已是陣亡；虎符結算要用扣壽命之前的名冊才認得出「這次才死」
         const deathBaseline = this._preLifespanRoster ?? beforeRoster;
@@ -1396,6 +1423,7 @@ export class GameSession {
             this._clearedStageIds = normalizeClearedStageIds([...this._clearedStageIds, options.stageId]);
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
+        const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
@@ -1403,7 +1431,7 @@ export class GameSession {
             performance: options.performance,
         });
         if (settlement.entries.length === 0) {
-            if (clearChanged && this._autoSave && this._save) {
+            if ((clearChanged || tallyChanged) && this._autoSave && this._save) {
                 await this.save();
             }
             return { ...settlement, awakenings: [] };

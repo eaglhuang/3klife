@@ -8,6 +8,7 @@ import {
 } from "../../core/config/Constants";
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
+import { readCardStarState } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { BattleController } from "../controllers/BattleController";
@@ -144,6 +145,11 @@ export class BattleScene extends Component {
 
       // 2. 建立控制器，載入兵種表
       this.ctrl = new BattleController();
+      // 虎符星級從玩家卡組的卡片實例讀取（PROG-2-0573）；查不到卡時 1★
+      this.ctrl.tallyStarOf = (tallyId) => {
+        const card = services().session.tallyCards[tallyId];
+        return card ? readCardStarState(card).star : 1;
+      };
       await this.ctrl.loadData();
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] BattleController 資料載入完成");
 

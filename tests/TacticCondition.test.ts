@@ -4,6 +4,7 @@
 import { TestSuite, assert } from './TestRunner';
 import { TroopType, Weather } from '../assets/scripts/core/config/Constants';
 import {
+    evaluateCasterTacticConditions,
     evaluateTacticConditions,
     type TacticConditionContext,
 } from '../assets/scripts/core/systems/TacticCondition';
@@ -52,6 +53,18 @@ export function createTacticConditionSuite(): TestSuite {
         assert.isFalse(result.ok);
         if (!result.ok) assert.equals(weatherCond, result.failed);
         assert.isTrue(evaluateTacticConditions([weatherCond, allyCond], ctx({ weather: Weather.Rain, adjacentAllies: 1 })).ok);
+    });
+
+    suite.test('施放者是武將（沒有兵種）時兵種條件略過，天氣條件照常檢查', () => {
+        const conds = [{ kind: 'troopType', allowed: [TroopType.Cavalry] }, { kind: 'weather', allowed: [Weather.Windy] }] as const;
+        assert.isTrue(evaluateCasterTacticConditions(conds, { casterTroopType: null, weather: Weather.Windy, adjacentAllies: 0, adjacentEnemies: 0 }).ok);
+        assert.isFalse(evaluateCasterTacticConditions(conds, { casterTroopType: null, weather: Weather.Clear, adjacentAllies: 0, adjacentEnemies: 0 }).ok);
+    });
+
+    suite.test('施放者是兵種單位時兵種條件照常檢查', () => {
+        const conds = [{ kind: 'troopType', allowed: [TroopType.Cavalry] }] as const;
+        assert.isTrue(evaluateCasterTacticConditions(conds, { casterTroopType: TroopType.Cavalry, weather: Weather.Clear, adjacentAllies: 0, adjacentEnemies: 0 }).ok);
+        assert.isFalse(evaluateCasterTacticConditions(conds, { casterTroopType: TroopType.Infantry, weather: Weather.Clear, adjacentAllies: 0, adjacentEnemies: 0 }).ok);
     });
 
     return suite;
