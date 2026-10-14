@@ -6,6 +6,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import type { UIManagedController } from '../../core/managers/UIManager';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig } from '../../shared/BattleEntryParams';
+import { normalizeWeather } from '../../shared/CommonEnums';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -2507,7 +2508,7 @@ export class LobbyScene extends Component {
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
             selectedCardIds: services().session.deck,
-            weather: encounter.weather ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
+            weather: normalizeWeather(encounter.weather) ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
         };
