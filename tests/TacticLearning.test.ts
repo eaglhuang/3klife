@@ -8,6 +8,7 @@ import { TestSuite, assert } from './TestRunner';
 import {
     TACTIC_LEARN_THRESHOLD_MULTIPLIER,
     canLearnTactic,
+    learnTacticInto,
     tacticLearnThreshold,
 } from '../assets/scripts/core/systems/TacticLearning';
 
@@ -47,6 +48,34 @@ export function createTacticLearningSuite(): TestSuite {
         assert.isFalse(canLearnTactic(Infinity, 30));
         assert.equals(0, tacticLearnThreshold(NaN));
         assert.equals(0, tacticLearnThreshold(Infinity));
+    });
+
+
+    suite.test('學戰法：TP 達門檻、未學過、槽位未滿時寫入新清單', () => {
+        const check = learnTacticInto(['TAC_A'], 'TAC_B', 30, 60, 30);
+        assert.isTrue(check.ok);
+        assert.equals(JSON.stringify(['TAC_A', 'TAC_B']), JSON.stringify(check.learned));
+    });
+
+    suite.test('學戰法：TP 不足（59 < 60）以 TP_SHORT 擋下，清單不變', () => {
+        const check = learnTacticInto([], 'TAC_A', 30, 59, 30);
+        assert.isFalse(check.ok);
+        assert.equals('TP_SHORT', check.blocked!);
+        assert.equals('[]', JSON.stringify(check.learned));
+    });
+
+    suite.test('學戰法：已學過的戰法以 ALREADY_LEARNED 擋下', () => {
+        const check = learnTacticInto(['TAC_A'], 'TAC_A', 30, 999, 30);
+        assert.equals('ALREADY_LEARNED', check.blocked!);
+    });
+
+    suite.test('學戰法：智力 29（1 槽）已學一招時以 SLOT_FULL 擋下；智力 30 起才有第 2 槽', () => {
+        assert.equals('SLOT_FULL', learnTacticInto(['TAC_A'], 'TAC_B', 29, 999, 30).blocked!);
+        assert.isTrue(learnTacticInto(['TAC_A'], 'TAC_B', 30, 999, 30).ok);
+    });
+
+    suite.test('學戰法：空 id 以 INVALID_TACTIC 擋下', () => {
+        assert.equals('INVALID_TACTIC', learnTacticInto([], '', 90, 999, 30).blocked!);
     });
 
     return suite;

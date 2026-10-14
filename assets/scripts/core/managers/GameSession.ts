@@ -22,6 +22,8 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
+import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
@@ -78,7 +80,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
-import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
+import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -1040,6 +1042,24 @@ export class GameSession {
             favorite: favorites.has(g.id),
             assigned: assigned.has(g.id),
         }));
+    }
+
+    /**
+     * 培育學戰法：TP 門檻（消耗 ×2）、已學、槽位（智力）檢查通過才寫入武將的 learnedTactics 並存檔。
+     * heldTp 由呼叫端傳入（玩家持有的計謀點；TP 池位置待 PM 定案）；hasMatchingGreenFactor 由呼叫端依武將因子判斷。
+     */
+    public async learnTactic(generalId: string, tacticId: string, heldTp: number, hasMatchingGreenFactor = false): Promise<TacticLearnCheck> {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return { ok: false, blocked: 'INVALID_TACTIC', learned: [] };
+        // 綠因子相符時 TP 成本 ×0.5，取整採 ceil（PM / coordinator 裁定）
+        const tpCost = Math.ceil(learnTpCost(getTacticTpCost(tacticId), hasMatchingGreenFactor));
+        const check = learnTacticInto(general.learnedTactics ?? [], tacticId, general.int ?? 0, heldTp, tpCost);
+        if (!check.ok) return check;
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, learnedTactics: check.learned } : g)));
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return check;
     }
 
     public get sortieSupport(): SortieSupport {

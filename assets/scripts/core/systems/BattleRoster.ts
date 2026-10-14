@@ -12,6 +12,7 @@
  * Unity 對照：像把玩家的 SaveData 裡的 HeroInstance，轉成戰鬥場景用的 BattleUnitData，
  * 戰鬥結束再用 BattleReport 把結果寫回 HeroInstance（等同 ScriptableObject → Runtime Instance 的來回）。
  */
+import { tacticLoadoutCapacity } from './TacticLoadout';
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig, GeneralTacticSlotConfig } from '../models/GeneralUnit';
 import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
 import { GENERAL_STATUS_DEAD } from './GeneralAging';
@@ -162,10 +163,12 @@ export function computeAttackBonus(general: GeneralConfig): number {
 }
 
 function buildTacticSlots(general: BattleRosterGeneral): GeneralTacticSlotConfig[] {
+    // 槽位上限依智力（規格 §F-7），並不超過全域上限
+    const capacity = Math.min(tacticLoadoutCapacity(general.int ?? 0), BATTLE_TACTIC_SLOT_LIMIT);
     if (general.tacticSlots && general.tacticSlots.length > 0) {
-        return general.tacticSlots.slice(0, BATTLE_TACTIC_SLOT_LIMIT).map((slot) => ({ ...slot }));
+        return general.tacticSlots.slice(0, capacity).map((slot) => ({ ...slot }));
     }
-    const learned = Array.from(new Set(general.learnedTactics ?? [])).slice(0, BATTLE_TACTIC_SLOT_LIMIT);
+    const learned = Array.from(new Set(general.learnedTactics ?? [])).slice(0, capacity);
     return learned.map((tacticId, index) => ({ slotId: `slot-${index + 1}`, tacticId, source: 'learned' as GeneralTacticSlotConfig['source'] }));
 }
 

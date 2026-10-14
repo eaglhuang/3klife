@@ -6,6 +6,8 @@
  *
  * Unity 對照：像 Skill.CanLearn(player)，只回傳 bool，不直接扣錢或改存檔。
  */
+import { tacticLoadoutCapacity } from './TacticLoadout';
+
 export const TACTIC_LEARN_THRESHOLD_MULTIPLIER = 2;
 
 function isUsableNumber(value: number): boolean {
@@ -22,4 +24,32 @@ export function tacticLearnThreshold(tpCost: number): number {
 export function canLearnTactic(heldTp: number, tpCost: number): boolean {
     if (!isUsableNumber(heldTp) || heldTp < 0) return false;
     return heldTp >= tacticLearnThreshold(tpCost);
+}
+
+export type TacticLearnBlock = 'INVALID_TACTIC' | 'ALREADY_LEARNED' | 'TP_SHORT' | 'SLOT_FULL';
+
+export interface TacticLearnCheck {
+    ok: boolean;
+    /** 不可學的原因；ok 時沒有 */
+    blocked?: TacticLearnBlock;
+    /** 學習後的戰法清單（不可學時維持原樣） */
+    learned: string[];
+}
+
+/**
+ * 培育學戰法（純邏輯）：依序檢查 戰法 id → 是否已學 → TP 門檻 → 槽位（智力決定）。
+ * 通過才回傳新清單；不扣 TP（PM 暫定：門檻只判定持有量，不消耗）。
+ */
+export function learnTacticInto(
+    learned: readonly string[],
+    tacticId: string,
+    intelligence: number,
+    heldTp: number,
+    tpCost: number,
+): TacticLearnCheck {
+    if (!tacticId) return { ok: false, blocked: 'INVALID_TACTIC', learned: [...learned] };
+    if (learned.includes(tacticId)) return { ok: false, blocked: 'ALREADY_LEARNED', learned: [...learned] };
+    if (!canLearnTactic(heldTp, tpCost)) return { ok: false, blocked: 'TP_SHORT', learned: [...learned] };
+    if (learned.length >= tacticLoadoutCapacity(intelligence)) return { ok: false, blocked: 'SLOT_FULL', learned: [...learned] };
+    return { ok: true, learned: [...learned, tacticId] };
 }
