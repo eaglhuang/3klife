@@ -11,6 +11,8 @@ import { toCanonicalRole } from '../models/GeneralRole';
 
 export function normalizeRosterRoles<T extends { id: string; role?: unknown }>(generals: readonly T[]): T[] {
     return generals.map((general) => {
+        // 壞資料（null / 非物件）原樣放行，由呼叫端的既有檢查略過，不在這裡丟例外
+        if (general === null || typeof general !== 'object') return general;
         const canonical = toCanonicalRole(general.role);
         return canonical === null ? general : { ...general, role: canonical };
     });
