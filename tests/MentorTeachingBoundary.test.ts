@@ -11,7 +11,8 @@ import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession
 import { mentorFromCard } from '../assets/scripts/core/systems/NurtureSystem';
 import { GameTimeMode } from '../assets/scripts/core/systems/GameClock';
 import { chooseFate, unveilGeneral, UnveilingGeneral } from '../assets/scripts/core/systems/Unveiling';
-import { checkBreedingEligibility, BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
+import { checkBreedingEligibility, conceptionRate, BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
+import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
 import { parseSupportCard, SupportCardDef } from '../assets/scripts/core/models/MentorSupportSchema';
 import type { MentorCard } from '../assets/scripts/core/models/MentorCard';
 import type { GeneralConfig, GeneralGeneConfig } from '../assets/scripts/core/models/GeneralUnit';
@@ -121,6 +122,45 @@ export function createMentorTeachingBoundarySuite(): TestSuite {
             nurture.train('alpha', session.vigor < 40 ? 'rest' : kinds[round % kinds.length]);
         }
         assert.equals(before, JSON.stringify(roster.getAll()[0].genes), '訓練不應改動 genes');
+    });
+
+    suite.test('培育 36 回合（含教官）前後，子嗣祖譜與父母受孕率都不變', () => {
+        const parentOf = (uid: string, gender: '男' | '女') => ({
+            id: uid, name: uid, faction: 'shu', gender, age: 30, hp: 1000, vitality: 200, maxVitality: 200,
+            str: 80, int: 60, lea: 70, pol: 50, cha: 60, luk: 40,
+        }) as unknown as BreedingGeneral;
+        const father = parentOf('fa', '男');
+        const mother = parentOf('mo', '女');
+        const graph = new BloodlineGraph();
+        const person = (uid: string) => ({ uid, template_id: null, name: uid, gene_refs: [] as string[], ep_base: 50, faction: 'shu', is_virtual: false });
+        graph.loadFromData({
+            version: 't',
+            updatedAt: 't',
+            persons: ['alpha', 'fa', 'mo'].map(person),
+            links: [
+                { child_uid: 'alpha', parent_uid: 'fa', relation: 'F' },
+                { child_uid: 'alpha', parent_uid: 'mo', relation: 'M' },
+            ],
+        } as never);
+        const rateBefore = conceptionRate(father, mother);
+        const chainBefore = JSON.stringify(graph.getAncestorChain('alpha'));
+        const pedigreeBefore = JSON.stringify(graph.getPedigree('alpha'));
+
+        const roster = new InMemoryRosterStore([chooseFate(unveilGeneral(child('alpha')).general, 'accept')]);
+        const nurture = new NurtureService(roster, {
+            random: seeded(9), currentSeason: () => 3,
+            currentMode: () => GameTimeMode.Nurture, requireNurtureMode: true,
+        });
+        nurture.startWithCards('alpha', [mentorCard('mentor-guan')]);
+        const kinds = ['str', 'int', 'lea', 'pol', 'cha'] as const;
+        for (let round = 1; round <= 36; round++) {
+            const session = nurture.getSession('alpha')!;
+            nurture.train('alpha', session.vigor < 40 ? 'rest' : kinds[round % kinds.length]);
+        }
+
+        assert.equals(chainBefore, JSON.stringify(graph.getAncestorChain('alpha')), '祖先鏈不變');
+        assert.equals(pedigreeBefore, JSON.stringify(graph.getPedigree('alpha')), '14 人祖譜位置不變');
+        assert.equals(rateBefore, conceptionRate(father, mother), '父母受孕率不因教官培育改變');
     });
 
     return suite;
