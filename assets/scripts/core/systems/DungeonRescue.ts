@@ -34,5 +34,7 @@ export function rollDungeonRescue(random: () => number): RescueOutcome {
 
 /** 救美任務是否可刷新（8 小時） */
 export function isRescueRefreshDue(lastRefreshMs: number, nowMs: number): boolean {
+    // 現在時間比上次還早（裝置時鐘被調回、存檔帶著未來時間戳）視為到期，避免池子被鎖到時鐘追上為止
+    if (nowMs < lastRefreshMs) return true;
     return nowMs - lastRefreshMs >= RESCUE_REFRESH_HOURS * MS_PER_HOUR;
 }

@@ -21,6 +21,8 @@ export interface PoolCandidate {
 
 /** 是否已到刷新時間（滿 8 小時即刷新） */
 export function isFemalePoolRefreshDue(lastRefreshMs: number, nowMs: number): boolean {
+    // 現在時間比上次還早（裝置時鐘被調回、存檔帶著未來時間戳）視為到期，避免池子被鎖到時鐘追上為止
+    if (nowMs < lastRefreshMs) return true;
     return nowMs - lastRefreshMs >= FEMALE_POOL_REFRESH_HOURS * MS_PER_HOUR;
 }
 

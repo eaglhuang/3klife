@@ -78,5 +78,39 @@ export function createLongFlowPatrolSuite(): TestSuite {
         assert.equals(canonical(a.roster), canonical(b.roster), '續玩一季後名冊一致');
     });
 
+    suite.test('女性來源系統狀態（送禮好感、刷新時間）存讀往返；開新局清空；舊存檔沒有欄位時給預設', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = new GameSession();
+        a.setRosterStore(new InMemoryRosterStore([gen('hero', '男', 30)]));
+        a.setSaveService(new PlayerSaveService(adapter));
+        a.startNewGame(5);
+        a.giftFemale('fem-1', 30);
+        a.rollDungeonRescueIfDue(1_000_000, () => 0.5);
+        await a.save();
+
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await b.load());
+        assert.equals(canonical(a.femaleSystemState), canonical(b.femaleSystemState), '讀檔後女性來源狀態一致');
+        assert.equals(null, b.rollDungeonRescueIfDue(1_000_000 + 60_000, () => 0.5), '讀檔後救美冷卻仍在');
+
+        b.startNewGame(6);
+        assert.equals(0, Object.keys(b.femaleSystemState.giftAffection).length, '開新局清空送禮好感');
+        assert.equals(null, b.femaleSystemState.rescueRefreshedAtMs, '開新局清空刷新時間');
+    });
+
+    suite.test('刷新時間戳在未來（時鐘被調回）視為到期；開新局清掉大廳點位', async () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([gen('hero', '男', 30)]));
+        session.startNewGame(9);
+        assert.isTrue(session.rollDungeonRescueIfDue(10_000_000, () => 0.5) !== null, '第一次一定刷新');
+        assert.equals(null, session.rollDungeonRescueIfDue(10_000_000 + 60_000, () => 0.5), '正常情況冷卻中');
+        assert.isTrue(session.rollDungeonRescueIfDue(5_000_000, () => 0.5) !== null, '時鐘倒退視為到期');
+        session.refreshHallSpots(0, () => 0.1);
+        session.startNewGame(10);
+        assert.equals(0, session.hallSpotRows.length, '開新局清空大廳點位');
+    });
+
     return suite;
 }
