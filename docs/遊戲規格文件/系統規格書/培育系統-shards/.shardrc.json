@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "source": "../培育系統.md",
+  "indexTitle": "培育系統規格（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/培育系統.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-d",
+  "shards": [
+    { "name": "shard-a", "title": "A–E 系統描述／目的／套路／TA／功能清單", "pattern": "^[A-E]\\." },
+    { "name": "shard-b", "title": "F 數值模型與公式（含 F-7 戰法槽位）", "pattern": "^F\\." },
+    { "name": "shard-c", "title": "G–J 劇本／字串／Data Schema／名詞", "pattern": "^[G-J]\\." },
+    { "name": "shard-d", "title": "N 血脈補遺／MCQ 決策／雙層數值", "pattern": "." }
+  ]
+}

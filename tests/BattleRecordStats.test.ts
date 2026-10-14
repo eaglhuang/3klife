@@ -65,6 +65,13 @@ export function createBattleRecordStatsSuite(): TestSuite {
         assert.equals('SSR', retireTallyGrade({ wins: 0, losses: 0, kills: 5000 }));
     });
 
+    suite.test('退役評分邊界：剛好低於各門檻（999.999 / 4999.999 / 9999.999）落在下一級', () => {
+        // 分數 = 擊殺×2 + 傷害/1000；傷害 1999 貢獻 1.999，使分數落在門檻之下 0.001
+        assert.equals('N', retireTallyGrade({ wins: 0, losses: 0, kills: 499, totalDamage: 1999 }));
+        assert.equals('R', retireTallyGrade({ wins: 0, losses: 0, kills: 2499, totalDamage: 1999 }));
+        assert.equals('SR', retireTallyGrade({ wins: 0, losses: 0, kills: 4999, totalDamage: 1999 }));
+    });
+
     suite.test('里程碑：達成才回報、不重複；不敗神話需 50 勝 0 敗', () => {
         assert.equals('KILL_100', newlyReachedMilestones({ wins: 1, losses: 0, kills: 100 }).join(','));
         assert.equals('', newlyReachedMilestones({ wins: 1, losses: 0, kills: 150, milestones: ['KILL_100'] }).join(','));

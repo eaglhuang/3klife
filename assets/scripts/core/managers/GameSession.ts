@@ -26,6 +26,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
+import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
@@ -46,7 +47,7 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
@@ -125,6 +126,8 @@ export const GAME_SESSION_EVENTS = {
     LeadGeneralChanged: 'game-session-lead-general-changed',
     /** payload: CountdownState | null（趕路倒數開始或清除；OPEN-11） */
     CountdownChanged: 'game-session-countdown-changed',
+    /** payload: TravelCountdown | null（回合制趕路；存檔欄位 travelCountdown） */
+    TravelChanged: 'game-session-travel-changed',
     /** payload: SortieSupport（參謀官 / 後勤官，PROG-2-0083） */
     SortieSupportChanged: 'game-session-sortie-support-changed',
     /** payload: PlayerSaveSnapshot */
@@ -288,6 +291,8 @@ export class GameSession {
     private _sortieSupport: SortieSupport = { strategistUid: null, deputyUid: null };
     /** 趕路倒數（OPEN-11）；目前未存檔，讀檔後為 null。 */
     private _countdown: CountdownState | null = null;
+    /** 回合制趕路（PROG-2-0475）：每季遞減，歸零即到達並清除；存檔欄位 travelCountdown。 */
+    private _travel: TravelCountdown | null = null;
     private _discoveryLevel = 1;
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
@@ -324,6 +329,8 @@ export class GameSession {
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
     private _fame = 0;
+    /** 點數（溢出轉化積分，MENT-07）；存於 resources.scorePoints */
+    private _scorePoints = 0;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
@@ -786,6 +793,8 @@ export class GameSession {
         this._deck = [];
         this._leadGeneralId = null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
+        this._travel = null;
+        this._countdown = null;
         this._discoveryLevel = 1;
         this._discoveryExp = 0;
         this._inventory = { ...STARTER_INVENTORY };
@@ -807,6 +816,7 @@ export class GameSession {
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
+        this._scorePoints = 0;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -1070,6 +1080,25 @@ export class GameSession {
     /** 目前的趕路倒數（複本）；沒有趕路中的角色時為 null。 */
     public get countdown(): CountdownState | null {
         return this._countdown ? { ...this._countdown } : null;
+    }
+
+    /** 目前的回合制趕路（複本）；沒有趕路中的角色時為 null。 */
+    public get travel(): TravelCountdown | null {
+        return this._travel ? { ...this._travel } : null;
+    }
+
+    /** 開始回合制趕路（接取天下沙盤遠征等事件呼叫）；會覆蓋目前的趕路。 */
+    public startTravel(targetId: string, turns: number): void {
+        this._travel = createTravelCountdown(targetId, turns);
+        this._emit(GAME_SESSION_EVENTS.TravelChanged, this.travel);
+    }
+
+    /** 推進一季：趕路回合減一，歸零即到達並清除。沒有趕路時不動作。 */
+    private _tickTravel(): void {
+        if (!this._travel) return;
+        const next = tickTravelCountdown(this._travel);
+        this._travel = next.remainingTurns > 0 ? next : null;
+        this._emit(GAME_SESSION_EVENTS.TravelChanged, this.travel);
     }
 
     /** 開始趕路倒數（由行軍 / 招募事件呼叫）；會覆蓋目前的倒數。 */
@@ -1367,6 +1396,7 @@ export class GameSession {
 
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
+        this._tickTravel();
         // 動態關係每季衰退（KIN-10）：親密度歸 0 只是加成歸零，關係保留
         this.dynamicRelations.decaySeason();
         const beforeRoster = this._roster.getAll();
@@ -1530,7 +1560,7 @@ export class GameSession {
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
-        const comradeChanged = this._recordBattleComrades(result);
+        const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
@@ -1586,12 +1616,12 @@ export class GameSession {
     }
 
     /**
-     * 共鬥（戰後）：出征編制的主將與參謀官／後勤官各記一筆戰友（battle-comrade）。
-     * 不等多武將出戰；ongoing 不記。回傳是否新增了任何關係（呼叫端負責存檔）。
+     * 共鬥（戰後）：本場有使用出征編制（options.sortie）時，出征主將與參謀官／後勤官各記一筆戰友（battle-comrade）。
+     * 不等多武將出戰；未出征或 ongoing 不記。回傳是否新增了任何關係（呼叫端負責存檔）。
      */
-    private _recordBattleComrades(result: BattleResult): boolean {
+    private _recordBattleComrades(result: BattleResult, usedSortie: boolean): boolean {
         const commander = this._leadGeneralId;
-        if (!commander || result === 'ongoing') return false;
+        if (!usedSortie || !commander || result === 'ongoing') return false;
         const support = this.getSortieSupportSummary(commander);
         const pairs = battleComradePairs(commander, [support.strategist?.id ?? null, support.deputy?.id ?? null]);
         const season = this._clock.state.totalSeasonsElapsed;
@@ -1603,18 +1633,34 @@ export class GameSession {
         return changed;
     }
 
+    /** 點數（溢出轉化積分）唯讀值 */
+    public get scorePoints(): number {
+        return this._scorePoints;
+    }
+
+    /** 入帳點數（MENT-07 溢出轉化）；負數與非整數不入帳，自動存檔時寫回 */
+    public async grantScorePoints(amount: number): Promise<number> {
+        if (!Number.isInteger(amount) || amount <= 0) return this._scorePoints;
+        this._scorePoints += amount;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return this._scorePoints;
+    }
+
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
         const pending = this._pendingLifespanEvents.map((event) => ({ generalId: event.generalId, age: event.age }));
         return {
             ...this._createBaseSnapshot(now),
             military: this.military,
-            resources: { fame: this._fame },
+            resources: { fame: this._fame, scorePoints: this._scorePoints },
             domestic: { ...this._domesticLog },
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
             bondPoints: this._bondPoints,
             femaleSystem: this.femaleSystemState,
+            ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
         };
     }
 
@@ -1649,6 +1695,8 @@ export class GameSession {
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
+        this._travel = normalizeTravelCountdown(snapshot.travelCountdown);
+        this._countdown = null;
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
@@ -1672,6 +1720,7 @@ export class GameSession {
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._fame = normalizeFame(snapshot.resources?.fame);
+        this._scorePoints = normalizeScorePoints(snapshot.resources?.scorePoints);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);

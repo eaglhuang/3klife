@@ -38,6 +38,7 @@ import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
+import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
@@ -837,7 +838,12 @@ export class LobbyScene extends Component {
             return;
         }
         try {
+            const onExpedition = this._hallBoard.board === 'Expedition';
             const ok = await this._hallBoard.accept(index);
+            const leadId = services().session.leadGeneralId;
+            if (ok && onExpedition && leadId) {
+                services().session.startTravel(leadId, EXPEDITION_TRAVEL_TURNS);
+            }
             if (!ok) {
                 services().event.emit('SHOW_TOAST', { message: '無法接取此任務', duration: 2.5 });
             }
