@@ -1,4 +1,4 @@
-// @spec-source → 戰場適性系統.md §J 戰場環境（BattlefieldEnv.Weather_Schedule：Turn_Start / Turn_End / Weather）；PROG-2-0342（WBS APT-06）
+// @spec-source → 戰場適性系統.md §J 戰場環境（BattlefieldEnv.Weather_Schedule：Turn_Start / Turn_End / Weather）；PROG-2-0346（WBS APT-06）
 /**
  * WeatherSchedule — 戰場天氣排程（純邏輯，不依賴 cc）
  *
