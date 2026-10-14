@@ -4,7 +4,7 @@ import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
 import { checkWalletBalance, formatInsufficientMessage } from './GachaWalletRules';
-import { drawGeneralOnce, normalizeGachaPity, type GachaPityState, type GachaPool } from '../systems/GachaDraw';
+import { drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
@@ -120,12 +120,20 @@ function formatDrawResultText(index: number, general: GeneralConfig, rarityTier:
 }
 
 
+/** 保底計數的存放處（由呼叫端接到存檔）；沒有時只存在記憶體中，例如載入畫面的預覽服務 */
+export interface GachaPityStore {
+    read(): GachaPityBook;
+    write(book: GachaPityBook): void;
+}
+
 export class LocalGachaService {
     private readonly _actionLogStore = ActionLogStore.getInstance();
     private _singlePlayerModeEnabled = this._loadSinglePlayerModeEnabled();
     private _wallet = this._loadWalletSnapshot();
-    /** 各池保底計數（poolId → 狀態）；各池獨立計數（轉蛋系統 §保底計算） */
-    private _pityBook: Record<string, GachaPityState> = this._loadPityBook();
+    /** 各池保底計數（poolId → 狀態）；各池獨立計數（轉蛋系統 §保底計算）；第一次用到才讀取，避免建構時就碰存檔 */
+    private _pityBookCache: GachaPityBook | null = null;
+
+    constructor(private readonly _pityStore: GachaPityStore | null = null) {}
 
     public isSinglePlayerModeEnabled(): boolean {
         return this._singlePlayerModeEnabled;
@@ -252,7 +260,7 @@ export class LocalGachaService {
 
         const pool = buildGachaPool(candidates, request.options?.upGeneralIds ?? []);
         const rng = request.options?.rng ?? Math.random;
-        let pity = normalizeGachaPity(this._pityBook[request.poolId]);
+        let pity = normalizeGachaPity(this._pityBookOf()[request.poolId]);
 
         const results: LocalGachaResultEntry[] = [];
         for (let index = 0; index < drawCount; index++) {
@@ -273,7 +281,7 @@ export class LocalGachaService {
             });
         }
 
-        this._pityBook = { ...this._pityBook, [request.poolId]: pity };
+        this._pityBookCache = { ...this._pityBookOf(), [request.poolId]: pity };
         this._persistPityBook();
 
         const logged = services().sync.pushAction(
@@ -361,19 +369,44 @@ export class LocalGachaService {
         this._persistWalletSnapshot();
     }
 
-    private _loadPityBook(): Record<string, GachaPityState> {
+    private _pityBookOf(): GachaPityBook {
+        if (this._pityBookCache === null) {
+            this._pityBookCache = this._loadPityBook();
+        }
+        return this._pityBookCache;
+    }
+
+    /** 讀取保底表：存檔優先；存檔沒有、舊 localStorage 有時一次性遷移進存檔（PROG-2-0337） */
+    private _loadPityBook(): GachaPityBook {
+        if (!this._pityStore) return {};
+        const { book, migrateLegacy } = resolveGachaPityBook(this._pityStore.read(), this._readLegacyPityBook());
+        if (migrateLegacy) {
+            this._pityStore.write(book);
+            this._clearLegacyPityBook();
+        }
+        return book;
+    }
+
+    /** 舊版把保底存在 localStorage；只用於一次性遷移 */
+    private _readLegacyPityBook(): unknown {
         try {
             const stored = sys.localStorage.getItem(PITY_STORAGE_KEY);
-            const parsed = stored ? JSON.parse(stored) as Record<string, unknown> | null : null;
-            if (!parsed || typeof parsed !== 'object') return {};
-            return Object.fromEntries(Object.entries(parsed).map(([poolId, value]) => [poolId, normalizeGachaPity(value)]));
+            return stored ? JSON.parse(stored) : null;
         } catch {
-            return {};
+            return null;
+        }
+    }
+
+    private _clearLegacyPityBook(): void {
+        try {
+            sys.localStorage.removeItem(PITY_STORAGE_KEY);
+        } catch {
+            // 清不掉也無妨：下次讀取時存檔已有資料，不會再遷移
         }
     }
 
     private _persistPityBook(): void {
-        sys.localStorage.setItem(PITY_STORAGE_KEY, JSON.stringify(this._pityBook));
+        this._pityStore?.write(this._pityBookOf());
     }
 
     private _loadWalletSnapshot(): LocalGachaWalletSnapshot {

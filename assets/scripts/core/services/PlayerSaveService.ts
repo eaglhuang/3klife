@@ -25,6 +25,7 @@ import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/Tige
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -74,6 +75,8 @@ export interface PlayerSaveSnapshot {
     femaleSources?: Record<string, FemaleSource>;
     /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
     pendingLifespanDeaths?: PendingLifespanDeath[];
+    /** 轉蛋各池保底計數（poolId → 累計抽數）；後加的選填欄位，舊檔讀回為空（從 0 開始）（PROG-2-0337） */
+    gachaPity?: GachaPityBook;
     /** 名聲等非軍備資源（暫定）；後加的選填欄位，舊檔讀回補 0 */
     resources?: { fame: number };
     /** 內政本季紀錄（同季只能選一項）；後加的選填欄位，舊檔讀回為空紀錄 */
@@ -164,6 +167,7 @@ export function createPlayerSaveSnapshot(
     tallyCards: Readonly<Record<string, TigerTallyCard>> = {},
     mercenaries?: MercenarySaveBundle,
     femaleSources: Readonly<Record<string, FemaleSource>> = {},
+    gachaPity: Readonly<GachaPityBook> = {},
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -184,6 +188,7 @@ export function createPlayerSaveSnapshot(
         tallyCards: normalizeTallyCardsMap(tallyCards),
         femaleSources: normalizeFemaleSourcesMap(femaleSources),
         ...(mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(mercenaries) } : {}),
+        ...(Object.keys(normalizeGachaPityBook(gachaPity)).length > 0 ? { gachaPity: normalizeGachaPityBook(gachaPity) } : {}),
     };
 }
 
@@ -247,6 +252,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
+        ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
     };
 }
 
