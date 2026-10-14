@@ -126,6 +126,8 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   private ctrl: IDeployController | null = null;
   private selectedType: TroopType = TroopType.Infantry;
   private selectedUnitName = '';
+  /** 目前選的虎符 id（TRP-13）；選一般兵種時為 null */
+  private selectedTallyId: string | null = null;
   private selectedSlotIndex = 0;
   private selectedLane: number = 0;
   /** [P2-N6] 當前糧草（原 currentDp，與 TurnSnapshot.playerFood 同步） */
@@ -333,6 +335,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
         }
         this.selectedType = type;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(type);
+        this.selectedTallyId = payload.data.tacticId ?? null;
         this.selectedSlotIndex = payload.index;
         this.updateSelectionLabel();
         this.refreshButtonStates();
@@ -365,6 +368,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
         }
         this.selectedType = type;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(type);
+        this.selectedTallyId = payload.data.tacticId ?? null;
         this.updateSelectionLabel();
         this.refreshButtonStates();
         this.beginDrag(payload.ev, type);
@@ -643,9 +647,15 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
 
   // ─── 兵種選擇 ─────────────────────────────────────────────────────────────
 
+  /** 選到虎符時才帶入 tally 參數（TRP-13）；一般兵種回傳 undefined */
+  private _tallyOptions(): { tally: { tallyId: string } } | undefined {
+    return this.selectedTallyId ? { tally: { tallyId: this.selectedTallyId } } : undefined;
+  }
+
   private selectTroop(type: TroopType, slotIndex = 0): void {
     this.selectedType = type;
     this.selectedUnitName = this.toTroopDisplayName(type);
+    this.selectedTallyId = null;
     this.selectedSlotIndex = slotIndex;
     this.updateSelectionLabel();
     this.updateTroopSelectionVisuals();
@@ -729,7 +739,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
       });
       return;
     }
-    const outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined);
+    const outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
     emitDeployDragDebug("DeployPanel", "deploy-click-result", {
       ok: outcome.ok,
       reason: outcome.reason,

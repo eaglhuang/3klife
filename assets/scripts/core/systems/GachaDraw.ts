@@ -35,6 +35,28 @@ export function normalizeGachaPity(value: unknown): GachaPityState {
     return { pullCount: typeof raw === 'number' && Number.isInteger(raw) && raw >= 0 ? raw : 0 };
 }
 
+/** 各池保底計數（poolId → 狀態）；存檔欄位 gachaPity 的形狀 */
+export type GachaPityBook = Record<string, GachaPityState>;
+
+/** 讀取保底表：存檔有資料就用存檔；存檔空、舊 localStorage 有資料則一次性遷移（PROG-2-0337） */
+export function resolveGachaPityBook(saved: unknown, legacy: unknown): { book: GachaPityBook; migrateLegacy: boolean } {
+    const savedBook = normalizeGachaPityBook(saved);
+    if (Object.keys(savedBook).length > 0) return { book: savedBook, migrateLegacy: false };
+    const legacyBook = normalizeGachaPityBook(legacy);
+    return { book: legacyBook, migrateLegacy: Object.keys(legacyBook).length > 0 };
+}
+
+/** 保底表：壞掉的 poolId 丟棄，計數不合法的池從 0 開始 */
+export function normalizeGachaPityBook(value: unknown): GachaPityBook {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+    const result: GachaPityBook = {};
+    for (const [poolId, entry] of Object.entries(value as Record<string, unknown>)) {
+        if (poolId.length === 0) continue;
+        result[poolId] = normalizeGachaPity(entry);
+    }
+    return result;
+}
+
 /** 武將分桶：稀有度 × 是否 Up；桶內是武將 id 以外的任意項目 */
 export interface GachaPool<T> {
     ssrUp: readonly T[];

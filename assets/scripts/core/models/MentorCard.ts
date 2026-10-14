@@ -9,6 +9,7 @@
  * 之後培育流程只讀它，不再回頭改原本的武將。
  */
 import type { GeneralConfig } from './GeneralUnit';
+import type { RetirementRoute } from '../systems/RetirementRouting';
 
 /** 教官卡來源（教官系統 Schema：Source ENUM）；Gacha=支援卡池，Retire=退役轉化，Capture=戰場俘虜，Mercenary=傭兵結義，Offspring=5 歲分流 */
 export const MENTOR_SOURCES = ['Gacha', 'Retire', 'Capture', 'Mercenary', 'Offspring'] as const;
@@ -35,4 +36,6 @@ export interface MentorCard {
     generalSnapshot: GeneralConfig;
     /** 獲取來源；舊存檔沒有此欄位 */
     source?: MentorSource;
+    /** 退役分流（FATE-08）：教官類型與原因；舊存檔沒有此欄位，reason 為 UNKNOWN_CLASS 時呼叫端不可視為已定案 */
+    mentorRoute?: RetirementRoute;
 }
