@@ -25,7 +25,7 @@ function makeCtx(override: Partial<DamageContext>): DamageContext {
         attackerAttack:  100,
         defenderDefense: 50,
         attackerType:    TroopType.Infantry,
-        defenderType:    TroopType.Archer,
+        defenderType:    TroopType.Shield,  // 步兵與盾兵互不相剋（規格五角），預設中立
         attackerTerrain: TerrainType.Plain,
         defenderTerrain: TerrainType.Plain,
         ...override,
@@ -71,7 +71,7 @@ export function createFormulaSuite(): TestSuite {
         }));
         const counter = formula.calculateDamage(makeCtx({
             attackerType: TroopType.Cavalry,
-            defenderType: TroopType.Infantry,
+            defenderType: TroopType.Shield,  // 騎剋盾（規格五角）
             attackerAttack: 100, defenderDefense: 20,
         }));
         assert.isTrue(counter > neutral, `互剋傷害(${counter}) 應 > 中立傷害(${neutral})`);
@@ -79,14 +79,14 @@ export function createFormulaSuite(): TestSuite {
         assert.equals(110, counter);
     });
 
-    suite.test('被剋弱化：步兵 被騎兵剋，傷害應小於中立', () => {
+    suite.test('被剋弱化：步兵 被弓兵剋，傷害應小於中立', () => {
         const disadvantage = formula.calculateDamage(makeCtx({
             attackerType: TroopType.Infantry,
-            defenderType: TroopType.Cavalry,  // Infantry 被 Cavalry 反剋
+            defenderType: TroopType.Archer,  // Infantry 被 Archer 反剋（弓剋步）
             attackerAttack: 100, defenderDefense: 20,
         }));
-        // 100 * 0.7 - 20 = 50
-        assert.equals(50, disadvantage);
+        // 100 * 0.8 - 20 = 60（規格反向被剋 ×0.8）
+        assert.equals(60, disadvantage);
     });
 
     suite.test('最小傷害防呆：極低攻擊力應回傳 MIN_DAMAGE', () => {
@@ -124,11 +124,11 @@ export function createFormulaSuite(): TestSuite {
     });
 
     suite.test('傷害為整數（floor 驗證）', () => {
-        // 101 * 1.3 - 50 * 1.15 = 131.3 - 57.5 = 73.8 → floor = 73
+        // 101 * 1.3（騎剋盾）- 50 * 1.15（山地）= 131.3 - 57.5 = 73.8 → floor = 73
         const dmg = formula.calculateDamage(makeCtx({
             attackerAttack: 101, defenderDefense: 50,
             attackerType:    TroopType.Cavalry,
-            defenderType:    TroopType.Infantry,
+            defenderType:    TroopType.Shield,  // 騎剋盾（規格五角）
             defenderTerrain: TerrainType.Mountain,
         }));
         assert.equals(dmg, Math.floor(dmg), '傷害必須為整數');
@@ -153,28 +153,44 @@ export function createFormulaSuite(): TestSuite {
 
     // ── getCounterMultiplier ────────────────────────────────────────────────
 
-    suite.test('互剋關係完整：騎兵剋步兵', () => {
-        assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Cavalry, TroopType.Infantry));
+    suite.test('互剋關係完整（規格五角）：騎兵剋盾兵', () => {
+        assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Cavalry, TroopType.Shield));
     });
 
-    suite.test('互剋關係完整：步兵剋盾兵', () => {
-        assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Shield));
-    });
-
-    suite.test('互剋關係完整：盾兵剋弓兵', () => {
+    suite.test('互剋關係完整（規格五角）：盾兵剋弓兵', () => {
         assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Shield, TroopType.Archer));
     });
 
-    suite.test('互剋關係完整：弓兵剋長矛', () => {
-        assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Archer, TroopType.Pikeman));
+    suite.test('互剋關係完整（規格五角）：弓兵剋步兵', () => {
+        assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Archer, TroopType.Infantry));
     });
 
-    suite.test('互剋關係完整：長矛剋騎兵', () => {
+    suite.test('互剋關係完整（規格五角）：步兵剋長矛', () => {
+        assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Pikeman));
+    });
+
+    suite.test('互剋關係完整（規格五角）：長矛剋騎兵', () => {
         assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Pikeman, TroopType.Cavalry));
     });
 
-    suite.test('被剋係數正確：步兵 被騎兵剋', () => {
-        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Cavalry));
+    suite.test('被剋係數：步兵 被弓兵剋（反向 ×0.8）', () => {
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Archer));
+    });
+
+    suite.test('反向被剋五組全部 ×0.8（規格：盾被騎、弓被盾、步被弓、槍被步、騎被槍）', () => {
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Shield, TroopType.Cavalry));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Archer, TroopType.Shield));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Archer));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Pikeman, TroopType.Infantry));
+        assert.equals(DISADVANTAGE_MULTIPLIER, formula.getCounterMultiplier(TroopType.Cavalry, TroopType.Pikeman));
+    });
+
+    suite.test('機械（工兵）被近戰攻擊 ×1.5；遠程打機械不加成', () => {
+        assert.equals(1.5, formula.getCounterMultiplier(TroopType.Cavalry, TroopType.Engineer));
+        assert.equals(1.5, formula.getCounterMultiplier(TroopType.Infantry, TroopType.Engineer));
+        assert.equals(1.5, formula.getCounterMultiplier(TroopType.Pikeman, TroopType.Engineer));
+        assert.equals(1.5, formula.getCounterMultiplier(TroopType.Shield, TroopType.Engineer));
+        assert.equals(1.0, formula.getCounterMultiplier(TroopType.Archer, TroopType.Engineer));
     });
 
     suite.test('無關係數 = 1.0', () => {

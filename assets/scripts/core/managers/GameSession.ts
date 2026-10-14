@@ -42,7 +42,9 @@ import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDe
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
-import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import type { HallCandidate } from '../systems/HallCharacterRoll';
+import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
+import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
@@ -72,15 +74,20 @@ import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
+import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
+import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../systems/DungeonRescue';
+import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
+import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     BattleResult,
     BattleSettlement,
@@ -273,6 +280,12 @@ export class GameSession {
     private _bondPoints = 0;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
+    /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
+    private _favoriteGeneralIds: string[] = [];
+    /** 大廳任務指派：任務 id → 指派武將 id（HALL-07 已派任務權重，PROG-2-0453） */
+    private _hallAssignments: Record<string, string> = {};
+    /** 大廳武將點位的目前狀態（HALL-07，不存檔：讀檔後重新抽） */
+    private _hallSpotState: HallSpotState = EMPTY_HALL_SPOT_STATE;
     /** 武將 id → 虎符忠誠度狀態（TRP-09） */
     private _tallyLoyalty: Record<string, TallyLoyaltyState> = {};
     /** 虎符持有關係（TRP-08）：虎符 uid → 持有武將 id（null 為君主） */
@@ -281,6 +294,11 @@ export class GameSession {
     private _tallyCards: Record<string, TigerTallyCard> = {};
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
     private _femaleSources: Record<string, FemaleSource> = {};
+    /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
+    private _gachaPity: GachaPityBook = {};
+    private _femaleSystem: FemaleSystemState = normalizeFemaleSystemState(undefined);
+    /** 轉蛋錢包（PROG-2-0338）；null 代表存檔沒有，讀舊 localStorage 或用預設 */
+    private _gachaWallet: GachaWalletSave | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -460,6 +478,53 @@ export class GameSession {
         this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    /** 轉蛋各池保底計數（唯讀副本） */
+    /** 女性來源系統狀態的唯讀副本（傭兵池／救美刷新時間、送禮好感） */
+    public get femaleSystemState(): FemaleSystemState {
+        return normalizeFemaleSystemState(this._femaleSystem);
+    }
+
+    /** 送禮：回傳該武將更新後的好感（0~100） */
+    public giftFemale(uid: string, giftValue: number): number {
+        this._femaleSystem = giftToFemale(this._femaleSystem, uid, giftValue);
+        return this._femaleSystem.giftAffection[uid] ?? 0;
+    }
+
+    /** 傭兵池到期才刷新：未到期回傳 null；到期則記下時間戳並抽出女性池 */
+    public refreshFemalePoolIfDue(candidates: readonly PoolCandidate[], nowMs: number, random: () => number, size = 4): string[] | null {
+        const last = this._femaleSystem.poolRefreshedAtMs;
+        if (last !== null && !isFemalePoolRefreshDue(last, nowMs)) return null;
+        this._femaleSystem = { ...this._femaleSystem, poolRefreshedAtMs: nowMs };
+        return drawFemalePool(candidates, size, random);
+    }
+
+    /** 地下城救美：未到 8 小時回傳 null；到期則記下時間戳並擲出結果 */
+    public rollDungeonRescueIfDue(nowMs: number, random: () => number): RescueOutcome | null {
+        const last = this._femaleSystem.rescueRefreshedAtMs;
+        if (last !== null && !isRescueRefreshDue(last, nowMs)) return null;
+        this._femaleSystem = { ...this._femaleSystem, rescueRefreshedAtMs: nowMs };
+        return rollDungeonRescue(random);
+    }
+
+    public get gachaPityBook(): Readonly<GachaPityBook> {
+        return normalizeGachaPityBook(this._gachaPity);
+    }
+
+    /** 轉蛋錢包（唯讀副本）；null 代表存檔沒有 */
+    public get gachaWalletSave(): Readonly<GachaWalletSave> | null {
+        return this._gachaWallet ? { ...this._gachaWallet } : null;
+    }
+
+    /** 覆寫轉蛋錢包；不寫存檔，由呼叫端決定何時 save */
+    public setGachaWalletSave(wallet: Readonly<GachaWalletSave>): void {
+        this._gachaWallet = normalizeGachaWalletSave(wallet);
+    }
+
+    /** 覆寫轉蛋保底表；不寫存檔，由呼叫端決定何時 save */
+    public setGachaPityBook(book: Readonly<GachaPityBook>): void {
+        this._gachaPity = normalizeGachaPityBook(book);
     }
 
     /**
@@ -662,10 +727,15 @@ export class GameSession {
         this._inventory = { ...STARTER_INVENTORY };
         this._oracleCount = 0;
         this._clearedStageIds = [];
+        this._favoriteGeneralIds = [];
+        this._hallAssignments = {};
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
         this._femaleSources = {};
+        this._gachaPity = {};
+        this._femaleSystem = normalizeFemaleSystemState(undefined);
+        this._gachaWallet = null;
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
@@ -680,7 +750,7 @@ export class GameSession {
         const core = starters.find(general => general.id === coreId)!;
         if (!checkDeployable(core, { nurturingIds: this._nurturingIds() }).eligible) throw new Error('[GameSession] 初始核心主將不可出戰');
         this.startNewGame(seed);
-        this._roster.replaceAll(starters);
+        this._roster.replaceAll(normalizeRosterRoles(starters));
         if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
         this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
     }
@@ -846,6 +916,87 @@ export class GameSession {
         }
         this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, generalId);
         return true;
+    }
+
+    /** 收藏武將 id 清單（唯讀副本）。 */
+    public get favoriteGeneralIds(): readonly string[] {
+        return [...this._favoriteGeneralIds];
+    }
+
+    /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
+    public get hallAssignments(): Readonly<Record<string, string>> {
+        return { ...this._hallAssignments };
+    }
+
+    /**
+     * 切換收藏。武將不在名冊時不變更，回傳 ok: false。
+     * 回傳的 favorite 為切換後的狀態。
+     */
+    public async toggleFavorite(generalId: string): Promise<{ ok: boolean; favorite: boolean }> {
+        if (!this._roster.getAll().some((g) => g.id === generalId)) {
+            return { ok: false, favorite: this._favoriteGeneralIds.includes(generalId) };
+        }
+        const favorite = !this._favoriteGeneralIds.includes(generalId);
+        this._favoriteGeneralIds = favorite
+            ? normalizeFavoriteGeneralIds([...this._favoriteGeneralIds, generalId])
+            : this._favoriteGeneralIds.filter((id) => id !== generalId);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, favorite };
+    }
+
+    /**
+     * 大廳任務接取：把任務指派給名冊內的武將（同一任務重派會覆蓋）。
+     * 武將不在名冊或任務 id 為空時回傳 false，不變更。
+     */
+    public async assignHallTask(taskId: string, generalId: string): Promise<boolean> {
+        if (taskId.length === 0 || !this._roster.getAll().some((g) => g.id === generalId)) return false;
+        this._hallAssignments = { ...this._hallAssignments, [taskId]: generalId };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 放棄或完成任務時解除指派；原本沒有指派時回傳 false。 */
+    public async releaseHallTask(taskId: string): Promise<boolean> {
+        if (!(taskId in this._hallAssignments)) return false;
+        const next = { ...this._hallAssignments };
+        delete next[taskId];
+        this._hallAssignments = next;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 目前大廳點位的列資料；沒刷新過時為空陣列。 */
+    public get hallSpotRows(): HallSpotRow[] {
+        return buildHallSpotRows(this._hallSpotState.spotIds, this.hallCandidates());
+    }
+
+    /**
+     * 大廳點位刷新：未滿 60 秒沿用舊點位，到期才依收藏與指派重抽（HALL-07）。
+     * nowSec 由呼叫端傳入（秒），random 回傳 [0,1)。回傳最新列資料。
+     */
+    public refreshHallSpots(nowSec: number, random: () => number, count = 4): HallSpotRow[] {
+        this._hallSpotState = refreshHallCharacterSpots(this._hallSpotState, nowSec, this.hallCandidates(), count, random);
+        return this.hallSpotRows;
+    }
+
+    /**
+     * HALL-07 點位候選清單：收藏與已派任務由 GameSession 既有狀態推導，不另存一份。
+     * 只列名冊內的武將；指派給已離開名冊的武將不計入。
+     */
+    public hallCandidates(): HallCandidate[] {
+        const favorites = new Set(this._favoriteGeneralIds);
+        const assigned = new Set(Object.values(this._hallAssignments));
+        return this._roster.getAll().map((g) => ({
+            id: g.id,
+            favorite: favorites.has(g.id),
+            assigned: assigned.has(g.id),
+        }));
     }
 
     public get sortieSupport(): SortieSupport {
@@ -1146,6 +1297,11 @@ export class GameSession {
         }
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
         this._roster.replaceAll(result.roster);
+        const reason = result.card.mentorRoute?.reason;
+        if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
+            // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
+            this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
+        }
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -1163,7 +1319,7 @@ export class GameSession {
         const duplicates: GeneralConfig[] = [];
         const rebirths: Array<RebirthPullResult & { id: string }> = [];
         let bondPointsGained = 0;
-        for (const general of generals) {
+        for (const general of normalizeRosterRoles(generals)) {
             if (!general || typeof general.id !== 'string') {
                 continue;
             }
@@ -1303,11 +1459,12 @@ export class GameSession {
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
             bondPoints: this._bondPoints,
+            femaleSystem: this.femaleSystemState,
         };
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -1327,7 +1484,7 @@ export class GameSession {
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
-        this._roster.replaceAll(snapshot.roster);
+        this._roster.replaceAll(normalizeRosterRoles(snapshot.roster));
         this._pendingLifespanEvents = (snapshot.pendingLifespanDeaths ?? []).map((death) => ({ type: 'died', generalId: death.generalId, age: death.age }));
         // 讀檔後沒有記憶體中的季結前名冊；待季結死亡者還原為非陣亡，虎符結算才認得出「這次才死」（PROG-2-0223）
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
@@ -1343,10 +1500,16 @@ export class GameSession {
         this._inventory = normalizeInventory(snapshot.inventory);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
+        this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
+        this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
+        this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
+        this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
+        this._femaleSystem = normalizeFemaleSystemState(snapshot.femaleSystem);
+        this._gachaWallet = snapshot.gachaWallet ? normalizeGachaWalletSave(snapshot.gachaWallet) : null;
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._fame = normalizeFame(snapshot.resources?.fame);

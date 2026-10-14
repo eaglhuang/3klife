@@ -20,6 +20,10 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
 import { tagMentorSource } from '../systems/MentorSources';
+import { addGachaMentorCards, GachaMentorTime, SupportCatalog } from '../systems/MentorSupportCatalog';
+import { routeRetirement } from '../systems/RetirementRouting';
+import { retireTallyGrade, type BattleRecordLike } from '../systems/BattleRecordStats';
+import { resolvePrimaryClass, type JobWiringGeneral } from '../systems/JobChangeWiring';
 import type { SpiritCard } from '../models/SpiritCard';
 import { isTallyEligible, TigerTallyGeneral } from '../systems/TigerTally';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
@@ -75,7 +79,7 @@ export interface LegacyServiceOptions {
     archiver?: GeneralArchiver;
 }
 
-type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number };
+type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number; battleRecord?: BattleRecordLike };
 
 /**
  * 明確布林 isHistorical 直接採用，正式資料由 registry uid / is_virtual 產出；
@@ -151,6 +155,11 @@ export class LegacyService implements SeasonLifecycle {
             gene_refs: (retired.genes ?? []).map((g) => g.id).filter((id): id is string => !!id),
             parentUids: [retired.fatherId ?? '', retired.motherId ?? ''],
             generalSnapshot: JSON.parse(JSON.stringify(retired)) as GeneralConfig,
+            retireGrade: retireTallyGrade(target.battleRecord),
+            mentorRoute: routeRetirement({
+                primaryClass: resolvePrimaryClass(target as JobWiringGeneral),
+                subClass: (target as JobWiringGeneral).subClass,
+            }),
         } as MentorCard, 'Retire');
 
         const cards = await this.getMentorCards();
@@ -192,6 +201,15 @@ export class LegacyService implements SeasonLifecycle {
 
     public getArchiver(): GeneralArchiver {
         return this._archiver;
+    }
+
+    /** 轉蛋抽到支援卡武將：把 Gacha 來源的教官卡寫進持有清單；沒有新增則不寫存檔 */
+    public async addGachaMentors(drawn: GeneralConfig[], catalog: SupportCatalog, time: GachaMentorTime, poolId: string | undefined): Promise<MentorCard[]> {
+        await this._ensureReady();
+        const cards = await this.getMentorCards();
+        const next = addGachaMentorCards(cards, drawn, catalog, time, poolId);
+        if (next.length !== cards.length) await this._adapter.set(STORE_MENTOR_CARDS, next);
+        return next;
     }
 
     public async getMentorCards(): Promise<MentorCard[]> {

@@ -385,6 +385,19 @@
                 "styleSlot": "bonding.label.chip"
               },
               {
+                "type": "label",
+                "name": "FactorStage",
+                "id": "factorStage",
+                "widget": {
+                  "bottom": 8,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 20,
+                "text": "",
+                "styleSlot": "bonding.label.meta"
+              },
+              {
                 "type": "panel",
                 "name": "EstimateBox",
                 "widget": {

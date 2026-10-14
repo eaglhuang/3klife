@@ -1,0 +1,799 @@
+{
+  "id": "hall-board-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "HallBoardRoot",
+    "id": "hallBoardRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "HallBoardCard",
+        "id": "hallBoardCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1400,
+        "height": 900,
+        "skinSlot": "hall.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "HallBoardTitle",
+            "id": "hallBoardTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "width": 700,
+            "height": 40,
+            "text": "大廳・任務牆",
+            "styleSlot": "hall.label.title"
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "widget": {
+              "top": 16,
+              "left": 1250
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "hall.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "hall.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnHallBoardMilitary",
+            "id": "btnHallBoardMilitary",
+            "widget": {
+              "top": 84,
+              "left": 32
+            },
+            "width": 180,
+            "height": 48,
+            "skinSlot": "hall.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnHallBoardMilitaryLabel",
+                "id": "btnHallBoardMilitaryLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "軍事",
+                "styleSlot": "hall.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnHallBoardDomestic",
+            "id": "btnHallBoardDomestic",
+            "widget": {
+              "top": 84,
+              "left": 224
+            },
+            "width": 180,
+            "height": 48,
+            "skinSlot": "hall.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnHallBoardDomesticLabel",
+                "id": "btnHallBoardDomesticLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "內政",
+                "styleSlot": "hall.label.button"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "HallRow0",
+            "id": "hallRow0",
+            "widget": {
+              "top": 150,
+              "left": 32
+            },
+            "width": 900,
+            "height": 100,
+            "skinSlot": "hall.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "HallRow0Title",
+                "id": "hallRow0Title",
+                "widget": {
+                  "top": 10,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "HallRow0Meta",
+                "id": "hallRow0Meta",
+                "widget": {
+                  "top": 50,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              },
+              {
+                "type": "label",
+                "name": "HallRow0Status",
+                "id": "hallRow0Status",
+                "widget": {
+                  "top": 14,
+                  "left": 660
+                },
+                "width": 200,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow0",
+                "id": "btnHallRow0",
+                "widget": {
+                  "top": 44,
+                  "left": 700
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow0Label",
+                    "id": "btnHallRow0Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "接取",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "HallRow1",
+            "id": "hallRow1",
+            "widget": {
+              "top": 262,
+              "left": 32
+            },
+            "width": 900,
+            "height": 100,
+            "skinSlot": "hall.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "HallRow1Title",
+                "id": "hallRow1Title",
+                "widget": {
+                  "top": 10,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "HallRow1Meta",
+                "id": "hallRow1Meta",
+                "widget": {
+                  "top": 50,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              },
+              {
+                "type": "label",
+                "name": "HallRow1Status",
+                "id": "hallRow1Status",
+                "widget": {
+                  "top": 14,
+                  "left": 660
+                },
+                "width": 200,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow1",
+                "id": "btnHallRow1",
+                "widget": {
+                  "top": 44,
+                  "left": 700
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow1Label",
+                    "id": "btnHallRow1Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "接取",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "HallRow2",
+            "id": "hallRow2",
+            "widget": {
+              "top": 374,
+              "left": 32
+            },
+            "width": 900,
+            "height": 100,
+            "skinSlot": "hall.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "HallRow2Title",
+                "id": "hallRow2Title",
+                "widget": {
+                  "top": 10,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "HallRow2Meta",
+                "id": "hallRow2Meta",
+                "widget": {
+                  "top": 50,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              },
+              {
+                "type": "label",
+                "name": "HallRow2Status",
+                "id": "hallRow2Status",
+                "widget": {
+                  "top": 14,
+                  "left": 660
+                },
+                "width": 200,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow2",
+                "id": "btnHallRow2",
+                "widget": {
+                  "top": 44,
+                  "left": 700
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow2Label",
+                    "id": "btnHallRow2Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "接取",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "HallRow3",
+            "id": "hallRow3",
+            "widget": {
+              "top": 486,
+              "left": 32
+            },
+            "width": 900,
+            "height": 100,
+            "skinSlot": "hall.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "HallRow3Title",
+                "id": "hallRow3Title",
+                "widget": {
+                  "top": 10,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "HallRow3Meta",
+                "id": "hallRow3Meta",
+                "widget": {
+                  "top": 50,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              },
+              {
+                "type": "label",
+                "name": "HallRow3Status",
+                "id": "hallRow3Status",
+                "widget": {
+                  "top": 14,
+                  "left": 660
+                },
+                "width": 200,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow3",
+                "id": "btnHallRow3",
+                "widget": {
+                  "top": 44,
+                  "left": 700
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow3Label",
+                    "id": "btnHallRow3Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "接取",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "HallRow4",
+            "id": "hallRow4",
+            "widget": {
+              "top": 598,
+              "left": 32
+            },
+            "width": 900,
+            "height": 100,
+            "skinSlot": "hall.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "HallRow4Title",
+                "id": "hallRow4Title",
+                "widget": {
+                  "top": 10,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "HallRow4Meta",
+                "id": "hallRow4Meta",
+                "widget": {
+                  "top": 50,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              },
+              {
+                "type": "label",
+                "name": "HallRow4Status",
+                "id": "hallRow4Status",
+                "widget": {
+                  "top": 14,
+                  "left": 660
+                },
+                "width": 200,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow4",
+                "id": "btnHallRow4",
+                "widget": {
+                  "top": 44,
+                  "left": 700
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow4Label",
+                    "id": "btnHallRow4Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "接取",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "HallRow5",
+            "id": "hallRow5",
+            "widget": {
+              "top": 710,
+              "left": 32
+            },
+            "width": 900,
+            "height": 100,
+            "skinSlot": "hall.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "HallRow5Title",
+                "id": "hallRow5Title",
+                "widget": {
+                  "top": 10,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "HallRow5Meta",
+                "id": "hallRow5Meta",
+                "widget": {
+                  "top": 50,
+                  "left": 20
+                },
+                "width": 620,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              },
+              {
+                "type": "label",
+                "name": "HallRow5Status",
+                "id": "hallRow5Status",
+                "widget": {
+                  "top": 14,
+                  "left": 660
+                },
+                "width": 200,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow5",
+                "id": "btnHallRow5",
+                "widget": {
+                  "top": 44,
+                  "left": 700
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow5Label",
+                    "id": "btnHallRow5Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "接取",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "SpotsHeader",
+            "id": "spotsHeader",
+            "widget": {
+              "top": 96,
+              "left": 968
+            },
+            "width": 400,
+            "height": 36,
+            "text": "大廳・武將點位",
+            "styleSlot": "hall.label.name"
+          },
+          {
+            "type": "panel",
+            "name": "Spot0",
+            "id": "spot0",
+            "widget": {
+              "top": 150,
+              "left": 968
+            },
+            "width": 400,
+            "height": 100,
+            "skinSlot": "hall.spot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Spot0Name",
+                "id": "spot0Name",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Spot0Tag",
+                "id": "spot0Tag",
+                "widget": {
+                  "top": 54,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "Spot1",
+            "id": "spot1",
+            "widget": {
+              "top": 262,
+              "left": 968
+            },
+            "width": 400,
+            "height": 100,
+            "skinSlot": "hall.spot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Spot1Name",
+                "id": "spot1Name",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Spot1Tag",
+                "id": "spot1Tag",
+                "widget": {
+                  "top": 54,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "Spot2",
+            "id": "spot2",
+            "widget": {
+              "top": 374,
+              "left": 968
+            },
+            "width": 400,
+            "height": 100,
+            "skinSlot": "hall.spot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Spot2Name",
+                "id": "spot2Name",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Spot2Tag",
+                "id": "spot2Tag",
+                "widget": {
+                  "top": 54,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "Spot3",
+            "id": "spot3",
+            "widget": {
+              "top": 486,
+              "left": 968
+            },
+            "width": 400,
+            "height": 100,
+            "skinSlot": "hall.spot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Spot3Name",
+                "id": "spot3Name",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "text": "",
+                "styleSlot": "hall.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Spot3Tag",
+                "id": "spot3Tag",
+                "widget": {
+                  "top": 54,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 30,
+                "text": "",
+                "styleSlot": "hall.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "NoticeLabel",
+            "id": "noticeLabel",
+            "widget": {
+              "top": 830,
+              "left": 32
+            },
+            "width": 1000,
+            "height": 40,
+            "text": "",
+            "styleSlot": "hall.label.meta"
+          }
+        ]
+      }
+    ]
+  }
+}

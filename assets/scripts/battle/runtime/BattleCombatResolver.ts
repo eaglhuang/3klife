@@ -4,7 +4,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
-import { hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
+import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
 
 export interface BattleCombatAction {
@@ -31,7 +31,7 @@ export class BattleCombatResolver {
   public getUnitAptitude(unit: TroopUnit): ResolvedAptitude {
     const state = this.context.state;
     const cell = state.getCell(unit.lane, unit.depth);
-    return resolveAptitude(state.getGeneral(unit.faction), {
+    return resolveAptitude(battleAptitudeProfileOf(state.getGeneral(unit.faction)), {
       troopType: unit.type,
       terrain: cell?.terrain ?? TerrainType.Plain,
       weather: state.weather,
@@ -151,7 +151,7 @@ export class BattleCombatResolver {
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.defense * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender);
+    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender);
 
     let damage = svc.formula.calculateDamage({
       attackerAttack: attacker.getEffectiveAttack(),
@@ -505,7 +505,7 @@ export class BattleCombatResolver {
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const counterDamage = svc.formula.calculateDamage({
       attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * reaction.counterRatio)),
-      defenderDefense: attacker.defense * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker),
+      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker),
       attackerType: defender.type,
       defenderType: attacker.type,
       attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,

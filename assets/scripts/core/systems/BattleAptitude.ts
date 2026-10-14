@@ -19,6 +19,8 @@
  * 戰鬥時 DamageCalculator 只要呼叫 Resolve(unit, cell, weather) 取得倍率，不用知道表怎麼排。
  */
 
+import { normalizeWeather } from '../../shared/CommonEnums';
+
 export type AptitudeGrade = 'S' | 'A' | 'B' | 'C' | 'D';
 
 export const APTITUDE_GRADES: readonly AptitudeGrade[] = ['S', 'A', 'B', 'C', 'D'];
@@ -64,16 +66,6 @@ const TERRAIN_KEYS: Readonly<Record<string, readonly string[]>> = {
     desert: ['DESERT'],
 };
 
-/** 天氣：戰場 Weather 與規格六種不完全一致；snow→雨天、sandstorm→大風（暫定） */
-const WEATHER_KEYS: Readonly<Record<string, readonly string[]>> = {
-    clear: ['SUNNY'],
-    rain: ['RAINY'],
-    fog: ['FOG'],
-    night: ['NIGHT'],
-    sandstorm: ['WINDY'],
-    snow: ['RAINY'],
-};
-
 /** 兵種：盾 / 槍 / 醫療歸步兵；器械 = SIEGE（舊資料 ENGINEER）；水軍沒有欄位時視為 B */
 const TROOP_KEYS: Readonly<Record<string, readonly string[]>> = {
     cavalry: ['CAVALRY'],
@@ -116,7 +108,8 @@ export function terrainGradeOf(profile: AptitudeProfile | null | undefined, terr
 }
 
 export function weatherGradeOf(profile: AptitudeProfile | null | undefined, weather: string | null | undefined): AptitudeGrade {
-    return lookup(profile?.weatherAptitude, WEATHER_KEYS[codeOf(weather)]);
+    const code = normalizeWeather(weather);
+    return lookup(profile?.weatherAptitude, code ? [code] : undefined);
 }
 
 export function troopGradeOf(profile: AptitudeProfile | null | undefined, troopType: string | null | undefined): AptitudeGrade {
@@ -219,3 +212,49 @@ export const APTITUDE_GRADE_TEXT: Readonly<Record<AptitudeGrade, string>> = {
     C: '☆☆☆ 不擅長',
     D: '✗ 極差',
 };
+
+// ── 粉色因子接線（APT-09）──────────────────────────────────────────────────
+
+/** 粉色地形因子 id → 地形適性鍵（與 generals.json terrainAptitude 的 key 一致；gene-dictionary 的粉色因子只有這三個） */
+export const PINK_TERRAIN_FACTOR_KEYS: Readonly<Record<string, string>> = {
+    gene_naval: 'WATER',
+    gene_mountain: 'MOUNTAIN',
+    gene_forest: 'FOREST',
+};
+
+export interface PinkAptitudeGene {
+    id?: string;
+    level?: number;
+}
+
+/**
+ * 粉色因子覆寫地形適性：粉色因子存在時，該地形的適性由因子等級決定（規格：適性由粉色因子決定），
+ * 沒有粉色因子的地形保留原值。回傳新物件，不改來源。
+ * 14 人血統的同因子祖先數由呼叫端傳入（key 為因子 id）；沒傳入視為 0，不升級。
+ */
+export function applyPinkTerrainAptitude(
+    base: Readonly<Record<string, string>> | null | undefined,
+    genes: readonly PinkAptitudeGene[] | null | undefined,
+    ancestorCounts: Readonly<Record<string, number>> = {},
+): Record<string, string> {
+    const result: Record<string, string> = { ...(base ?? {}) };
+    for (const gene of genes ?? []) {
+        const id = gene.id ?? '';
+        if (!Object.prototype.hasOwnProperty.call(PINK_TERRAIN_FACTOR_KEYS, id)) continue;
+        const ancestors = Object.prototype.hasOwnProperty.call(ancestorCounts, id) ? ancestorCounts[id] : 0;
+        result[PINK_TERRAIN_FACTOR_KEYS[id]] = pinkFactorAptitude(gene.level ?? 0, ancestors);
+    }
+    return result;
+}
+
+/** 戰場計算適性用的 profile：武將的兵種／天氣適性照舊，地形適性經粉色因子覆寫（APT-09） */
+export function battleAptitudeProfileOf(
+    general: (AptitudeProfile & { genes?: readonly PinkAptitudeGene[] }) | null | undefined,
+): AptitudeProfile | null {
+    if (!general) return null;
+    return {
+        troopAptitude: general.troopAptitude,
+        weatherAptitude: general.weatherAptitude,
+        terrainAptitude: applyPinkTerrainAptitude(general.terrainAptitude, general.genes),
+    };
+}

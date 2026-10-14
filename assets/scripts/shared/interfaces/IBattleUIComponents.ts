@@ -42,7 +42,12 @@ export interface IResultPopupLike {
 }
 
 export interface IDeployController {
-    tryDeployTroop(type: string, lane: number, unitName?: string): { ok: boolean; reason?: string };
+    tryDeployTroop(
+        type: string,
+        lane: number,
+        unitName?: string,
+        options?: { tally?: { tallyId: string } },
+    ): { ok: boolean; reason?: string };
 }
 
 /**
@@ -65,7 +70,8 @@ export interface IBattleScenePanelLike {
     wirePanels(panels: { battleHUD?: any, battleLogPanel?: any }): void;
     setCards(cards: any[]): void;
     setUltimateSkills(skills: any[]): void;
-    setTacticSummary(summary: string, points?: { current?: number; max?: number; enabled: boolean }): void;
+    /** reason：戰法不能施放時的短原因（PROG-2-0408），有值時取代計點行 */
+    setTacticSummary(summary: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null): void;
     appendLog(text: string): void;
     actionCommandComposite?: any;
     actionCommandPanel?: any;

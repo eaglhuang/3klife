@@ -1,0 +1,195 @@
+{
+  "Lobby_Hub": {
+    "Current_Theme": {
+      "Theme_ID": "DEFAULT_DAY",
+      "Day_Night_Mode": "DAY",
+      "Festival_Theme_ID": "NONE",
+      "Background_ID": "HALL_BG_DAY_01",
+      "Overlay_Tint": "#F4D9A5"
+    },
+    "Mission_Boards": {
+      "Military": {
+        "Last_Refresh_At": "2026-10-14T06:00:00",
+        "Tasks": [
+          {
+            "Task_ID": "M-EASY-01",
+            "Task_Title": "剿匪（小股）",
+            "Task_Brief": "附近山寨有流寇，先去探看",
+            "Task_Detail": "附近山寨有流寇，先去探看（範例資料，正式文案待企劃提供）",
+            "Difficulty": "EASY",
+            "Required_Rank": 0,
+            "Intel_Reveal_Percent": 0,
+            "Selected_General_UID": null,
+            "Is_Accepted": false,
+            "Suggested_General_UID": null,
+            "Volunteer_General_UIDs": [],
+            "AI_Assign_Enabled": false,
+            "Available_Actions": [
+              "ASSIGN"
+            ],
+            "Rewards": {
+              "Base": [
+                {
+                  "Type": "GRAIN",
+                  "Amount": 800
+                }
+              ],
+              "Perfect_Bonus": []
+            },
+            "Costs": {
+              "GRAIN": 0,
+              "TROOPS": 0,
+              "SILVER": 0,
+              "TIME_MINUTES": 0
+            }
+          },
+          {
+            "Task_ID": "M-NORMAL-01",
+            "Task_Title": "護送糧車",
+            "Task_Brief": "護送一批糧草到城外營地",
+            "Task_Detail": "護送一批糧草到城外營地（範例資料，正式文案待企劃提供）",
+            "Difficulty": "NORMAL",
+            "Required_Rank": 0,
+            "Intel_Reveal_Percent": 0,
+            "Selected_General_UID": null,
+            "Is_Accepted": false,
+            "Suggested_General_UID": null,
+            "Volunteer_General_UIDs": [],
+            "AI_Assign_Enabled": false,
+            "Available_Actions": [
+              "ASSIGN"
+            ],
+            "Rewards": {
+              "Base": [
+                {
+                  "Type": "GRAIN",
+                  "Amount": 1200
+                },
+                {
+                  "Type": "SILVER",
+                  "Amount": 200
+                }
+              ],
+              "Perfect_Bonus": []
+            },
+            "Costs": {
+              "GRAIN": 0,
+              "TROOPS": 0,
+              "SILVER": 0,
+              "TIME_MINUTES": 0
+            }
+          },
+          {
+            "Task_ID": "M-ELITE-01",
+            "Task_Title": "夜襲敵營",
+            "Task_Brief": "深入敵方營地奪取糧倉",
+            "Task_Detail": "深入敵方營地奪取糧倉（範例資料，正式文案待企劃提供）",
+            "Difficulty": "ELITE",
+            "Required_Rank": 1,
+            "Intel_Reveal_Percent": 0,
+            "Selected_General_UID": null,
+            "Is_Accepted": false,
+            "Suggested_General_UID": null,
+            "Volunteer_General_UIDs": [],
+            "AI_Assign_Enabled": false,
+            "Available_Actions": [
+              "ASSIGN"
+            ],
+            "Rewards": {
+              "Base": [
+                {
+                  "Type": "GRAIN",
+                  "Amount": 1800
+                },
+                {
+                  "Type": "GENERAL_EXP",
+                  "Amount": 300
+                }
+              ],
+              "Perfect_Bonus": []
+            },
+            "Costs": {
+              "GRAIN": 0,
+              "TROOPS": 0,
+              "SILVER": 0,
+              "TIME_MINUTES": 0
+            }
+          }
+        ]
+      },
+      "Domestic": {
+        "Last_Refresh_At": "2026-10-14T06:00:00",
+        "Tasks": [
+          {
+            "Task_ID": "D-EASY-01",
+            "Task_Title": "巡視田畝",
+            "Task_Brief": "到田間查看農務進度",
+            "Task_Detail": "到田間查看農務進度（範例資料，正式文案待企劃提供）",
+            "Difficulty": "EASY",
+            "Required_Rank": 0,
+            "Intel_Reveal_Percent": 0,
+            "Selected_General_UID": null,
+            "Is_Accepted": false,
+            "Suggested_General_UID": null,
+            "Volunteer_General_UIDs": [],
+            "AI_Assign_Enabled": false,
+            "Available_Actions": [
+              "ASSIGN"
+            ],
+            "Rewards": {
+              "Base": [
+                {
+                  "Type": "SILVER",
+                  "Amount": 300
+                }
+              ],
+              "Perfect_Bonus": []
+            },
+            "Costs": {
+              "GRAIN": 0,
+              "TROOPS": 0,
+              "SILVER": 0,
+              "TIME_MINUTES": 0
+            }
+          },
+          {
+            "Task_ID": "D-NORMAL-01",
+            "Task_Title": "整修水利",
+            "Task_Brief": "修築堤防與水渠",
+            "Task_Detail": "修築堤防與水渠（範例資料，正式文案待企劃提供）",
+            "Difficulty": "NORMAL",
+            "Required_Rank": 0,
+            "Intel_Reveal_Percent": 0,
+            "Selected_General_UID": null,
+            "Is_Accepted": false,
+            "Suggested_General_UID": null,
+            "Volunteer_General_UIDs": [],
+            "AI_Assign_Enabled": false,
+            "Available_Actions": [
+              "ASSIGN"
+            ],
+            "Rewards": {
+              "Base": [
+                {
+                  "Type": "GRAIN",
+                  "Amount": 900
+                },
+                {
+                  "Type": "OFFICER_EXP",
+                  "Amount": 100
+                }
+              ],
+              "Perfect_Bonus": []
+            },
+            "Costs": {
+              "GRAIN": 0,
+              "TROOPS": 0,
+              "SILVER": 0,
+              "TIME_MINUTES": 0
+            }
+          }
+        ]
+      }
+    }
+  }
+}

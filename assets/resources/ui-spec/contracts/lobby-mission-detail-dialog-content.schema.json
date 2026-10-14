@@ -41,6 +41,18 @@
       "description": "情報未完整時顯示模糊遮罩；100% 時應隱藏。",
       "bindPath": "ScrollView/ScrollContent/IntelPanel/IntelFogMask"
     },
+    "envScoutTerrainLine": {
+      "type": "string",
+      "required": true,
+      "description": "環境偵察：地形格數一行（PROG-2-0403）。",
+      "bindPath": "ScrollView/ScrollContent/IntelPanel/EnvScoutPanel/EnvScoutTerrainLabel"
+    },
+    "envScoutWeatherLine": {
+      "type": "string",
+      "required": true,
+      "description": "環境偵察：天氣預報一行（PROG-2-0403）。",
+      "bindPath": "ScrollView/ScrollContent/IntelPanel/EnvScoutPanel/EnvScoutWeatherLabel"
+    },
     "intelHintLabel": {
       "type": "string",
       "required": true,
@@ -160,6 +172,8 @@
     "intelBody",
     "intelFogVisible",
     "intelHintLabel",
+    "envScoutTerrainLine",
+    "envScoutWeatherLine",
     "selectedGeneralLabel",
     "volunteerBadgeVisible",
     "volunteerBadgeLabel",

@@ -104,9 +104,10 @@ export class ActionCommandComposite extends CompositePanel {
         this._ultimateSkills = [...skills];
     }
 
-    public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }): void {
+    public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null): void {
+        // 不能施放時顯示原因（PROG-2-0408），否則顯示計點
         this._tacticsSummaryLabel = (label.trim() || '計謀') +
-            (points?.current !== undefined ? `\n點 ${points.current}/${points.max}` : '');
+            (reason ? `\n${reason}` : points?.current !== undefined ? `\n點 ${points.current}/${points.max}` : '');
         this._tacticEnabled = points?.enabled ?? true;
         if (this._tacticsButton) this._tacticsButton.interactable = this._tacticEnabled;
         if (this._tacticsLabel) {

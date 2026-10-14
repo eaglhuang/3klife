@@ -1,0 +1,70 @@
+{
+  "heroes": [
+    {
+      "generalId": "zhang-fei",
+      "originRegion": "幽州涿郡",
+      "coreFactorTags": [
+        "燕人",
+        "蛇矛",
+        "北境血脈"
+      ],
+      "coreFactorTag": "燕人",
+      "introLine": ""
+    },
+    {
+      "generalId": "wei-yan",
+      "originRegion": "義陽",
+      "coreFactorTags": [
+        "義陽",
+        "狂骨",
+        "孤軍"
+      ],
+      "coreFactorTag": "義陽",
+      "introLine": ""
+    },
+    {
+      "generalId": "xiahou-dun",
+      "originRegion": "豫州沛國譙縣",
+      "coreFactorTags": [
+        "譙縣",
+        "獨眼",
+        "宗親"
+      ],
+      "coreFactorTag": "譙縣",
+      "introLine": ""
+    },
+    {
+      "generalId": "zhang-he",
+      "originRegion": "冀州河間國",
+      "coreFactorTags": [
+        "河間",
+        "巧變",
+        "宿將"
+      ],
+      "coreFactorTag": "河間",
+      "introLine": ""
+    },
+    {
+      "generalId": "sun-ce",
+      "originRegion": "揚州吳郡富春",
+      "coreFactorTags": [
+        "富春",
+        "霸王",
+        "水鄉血脈"
+      ],
+      "coreFactorTag": "富春",
+      "introLine": ""
+    },
+    {
+      "generalId": "gan-ning",
+      "originRegion": "益州巴郡臨江",
+      "coreFactorTags": [
+        "巴郡",
+        "鈴聲",
+        "游俠"
+      ],
+      "coreFactorTag": "巴郡",
+      "introLine": ""
+    }
+  ]
+}

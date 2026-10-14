@@ -23,8 +23,25 @@ export interface TallyLoreInfo {
     body?: string;
 }
 
+/** 虎符適性等級（規格 S/A/B/C/D） */
+export type TallyAffinityGradeKey = 'S' | 'A' | 'B' | 'C' | 'D';
+
+/**
+ * 虎符適性資料（TRP-13，全部選填；缺的欄位用預設：地形 B、無家族、無性別偏好、無史實羈絆）。
+ * terrainGrades 的 key 用 TerrainType 的值（plain/mountain/forest/river/fortress/desert）。
+ * 規格寫的「城市」對應遊戲的 fortress（城池／關隘）。
+ */
+export interface TallyAffinityProfile {
+    terrainGrades?: Readonly<Record<string, TallyAffinityGradeKey>>;
+    clanID?: string;
+    genderPref?: 'NONE' | 'MALE' | 'FEMALE';
+    /** 有史實羈絆的武將 uid */
+    historicBonds?: readonly string[];
+}
+
 export interface TallyCardData {
     unitType: string;
+    affinity?: TallyAffinityProfile;
     unitName: string;
     unitSub: string;
     atk:  number;

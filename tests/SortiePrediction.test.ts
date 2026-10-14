@@ -52,5 +52,13 @@ export function createSortiePredictionSuite(): TestSuite {
         assert.equals('敵將資料未載入，暫無預判', sortiePredictText(gen(), null));
     });
 
+    suite.test('年齡接入戰力：老年武將粗估戰力低於壯年，未填年齡維持舊值', () => {
+        const prime = estimateSortiePower(gen({ age: 30 }));
+        const elder = estimateSortiePower(gen({ age: 60 }));
+        const unknown = estimateSortiePower(gen());
+        assert.isTrue(elder < prime);
+        assert.equals(estimateSortiePower(gen({ age: 30 })), unknown);
+    });
+
     return suite;
 }

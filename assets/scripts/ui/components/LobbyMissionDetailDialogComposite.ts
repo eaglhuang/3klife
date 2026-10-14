@@ -56,6 +56,8 @@ const CONTRACT: ContentContractRef = {
         'intelBody',
         'intelFogVisible',
         'intelHintLabel',
+        'envScoutTerrainLine',
+        'envScoutWeatherLine',
         'selectedGeneralLabel',
         'volunteerBadgeVisible',
         'volunteerBadgeLabel',
@@ -84,6 +86,10 @@ export interface LobbyMissionDetailDialogContentState {
     intelBody: string;
     intelFogVisible: boolean;
     intelHintLabel: string;
+    /** 環境偵察：地形格數一行（PROG-2-0403） */
+    envScoutTerrainLine: string;
+    /** 環境偵察：天氣預報一行（PROG-2-0403） */
+    envScoutWeatherLine: string;
     selectedGeneralLabel: string;
     volunteerBadgeVisible: boolean;
     volunteerBadgeLabel: string;
@@ -499,6 +505,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             intelBody: snapshot.intelBody,
             intelFogVisible: snapshot.intelFogVisible,
             intelHintLabel: snapshot.intelHintLabel,
+            envScoutTerrainLine: snapshot.envScoutTerrainLine,
+            envScoutWeatherLine: snapshot.envScoutWeatherLine,
             selectedGeneralLabel: snapshot.selectedGeneralLabel,
             volunteerBadgeVisible: snapshot.volunteerBadgeVisible,
             volunteerBadgeLabel: snapshot.volunteerBadgeLabel,

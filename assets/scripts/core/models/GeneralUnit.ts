@@ -52,6 +52,8 @@ export class GeneralUnit {
   public readonly id: string;
   public readonly name: string;
   public readonly faction: Faction;
+  /** 性別文字（設定檔原值，例如 男／女），虎符適性（TRP-13）用 */
+  public readonly gender?: string;
   public readonly maxHp: number;
   public currentHp: number;
   
@@ -91,11 +93,14 @@ export class GeneralUnit {
   public readonly troopAptitude: Readonly<Record<string, string>>;
   public readonly terrainAptitude: Readonly<Record<string, string>>;
   public readonly weatherAptitude: Readonly<Record<string, string>>;
+  /** 遺傳因子（粉色地形因子影響戰場地形適性，APT-09）；複本 */
+  public readonly genes: GeneralGeneConfig[];
 
   constructor(config: GeneralConfig) {
     this.id = config.id;
     this.name = config.name;
     this.faction = config.faction;
+    this.gender = config.gender;
     this.maxHp = config.hp;
     this.currentHp = config.hp;
     this.maxSp = config.maxSp ?? 100;
@@ -116,6 +121,7 @@ export class GeneralUnit {
     this.troopAptitude = { ...(config.troopAptitude ?? {}) };
     this.terrainAptitude = { ...(config.terrainAptitude ?? {}) };
     this.weatherAptitude = { ...(config.weatherAptitude ?? {}) };
+    this.genes = (config.genes ?? []).map((gene) => ({ ...gene }));
   }
 
   public takeDamage(value: number): void {

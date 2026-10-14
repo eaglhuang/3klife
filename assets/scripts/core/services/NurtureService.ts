@@ -34,6 +34,8 @@ import {
     TrainingKind,
 } from '../systems/NurtureSystem';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
+import { InspireContext, rollInspireRound } from '../systems/MentorInspiration';
+import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
 import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwakening';
 import type { FactorDictionary, InheritedFactor } from '../systems/FactorInheritance';
@@ -103,11 +105,27 @@ export interface NurtureAwakeningHooks {
     onAwakened?: (event: FactorAwakenedEvent) => void;
 }
 
+/** 子嗣 LUK：頂層欄位優先，沒有則讀 stats（與 NurtureSystem.statOf 一致） */
+function lukOf(general: UnveilingGeneral | undefined): number {
+    if (!general) return 0;
+    const top = (general as unknown as Record<string, unknown>).luk;
+    return typeof top === 'number' ? top : general.stats?.luk ?? 0;
+}
+
 export interface NurtureTrainResult {
     session: NurtureSession;
     log: NurtureRoundLog;
     /** 本回合覺醒的因子；沒有則省略 */
     awakening?: FactorAwakenedEvent;
+    /** 本回合新觸發的戰法靈感；沒有則省略 */
+    inspirations?: NurtureInspiration[];
+}
+
+/** 戰法靈感觸發紀錄（給畫面與之後的戰法授予用） */
+export interface NurtureInspiration {
+    mentorId: string;
+    eventId: string;
+    tacticId: string;
 }
 
 export function createEmptyNurtureState(): NurtureState {
@@ -151,6 +169,11 @@ export class NurtureService {
             view[kind] = revealStat(Number(child[kind] ?? 0), level);
         }
         return view;
+    }
+
+    /** 目前保留的成績單份數（0~3），給畫面顯示用 */
+    reportCardCount(childId: string): number {
+        return this._state.reportBooks?.[childId]?.cards.length ?? 0;
     }
 
     getSession(childId: string): NurtureSession | null {
@@ -236,6 +259,9 @@ export class NurtureService {
     train(childId: string, action: NurtureAction): NurtureTrainResult {
         const current = this._requireSession(childId);
         const result: NurtureTrainResult = executeRound(current, action, this._rng());
+        const inspired = action === 'rest' ? { session: result.session, triggered: [] } : this._rollInspirations(childId, result.session);
+        result.session = inspired.session;
+        if (inspired.triggered.length > 0) result.inspirations = inspired.triggered;
         this._replace(result.session);
         const awakening = this._rollAwakening(childId, result.session, result.log);
         if (awakening) result.awakening = awakening;
@@ -253,6 +279,7 @@ export class NurtureService {
         next[index] = result.general;
         this._roster.replaceAll(next);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
+        this._dropReportBook(childId);
         this._options.onGraduated?.(result);
         return result;
     }
@@ -308,6 +335,15 @@ export class NurtureService {
     abandon(childId: string): void {
         const session = this._requireSession(childId);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
+        this._dropReportBook(childId);
+    }
+
+    /** 離開培育（正式畢業／放棄）時銷毀保留的成績單，避免殘卡被下一輪培育誤用 */
+    private _dropReportBook(childId: string): void {
+        if (!this._state.reportBooks?.[childId]) return;
+        const rest = { ...this._state.reportBooks };
+        delete rest[childId];
+        this._state.reportBooks = rest;
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
@@ -323,6 +359,7 @@ export class NurtureService {
             discoveryLevel: hooks.discoveryLevel(),
             mentorRank,
             mentorOnSlot: log.mentorsOnSlot.length > 0,
+            luk: lukOf(roster[index]),
             random: this._rng(),
         });
         if (!result?.ok) return undefined;
@@ -349,6 +386,42 @@ export class NurtureService {
         const session = this.getSession(childId);
         if (!session) throw new NurtureError(`${childId} 沒有進行中的培育`);
         return session;
+    }
+
+    /**
+     * 本回合戰法靈感：只有帶支援卡資料的教官才擲骰；沒有就不碰亂數，行為與舊版相同。
+     * 觸發鍵寫回會話的 inspiredKeys，同場同一事件不會再次觸發。
+     */
+    private _rollInspirations(childId: string, session: NurtureSession): { session: NurtureSession; triggered: NurtureInspiration[] } {
+        const mentors = session.mentors.filter((m) => m.inspire);
+        if (mentors.length === 0) return { session, triggered: [] };
+        const child = this._roster.getAll().find((g) => g.id === childId) as UnveilingGeneral | undefined;
+        const childLuk = lukOf(child);
+        const childBloodlines = child?.bloodlineId ? [child.bloodlineId] : [];
+        const confirmed = new Set(session.inspiredKeys ?? []);
+        const random = this._rng();
+        const triggered: NurtureInspiration[] = [];
+        for (const mentor of mentors) {
+            const inspire = mentor.inspire!;
+            const maxStar = inspire.friendshipBonusByStar.length - 1;
+            const star = Math.min(maxStar, Math.max(0, mentor.stars ?? 0));
+            const prefix = `${mentor.id}:`;
+            const keyed = inspire.events.map((event) => ({ ...event, eventId: prefix + event.eventId }));
+            const ctx: InspireContext = {
+                mentorStar: star,
+                friendshipBonus: inspire.friendshipBonusByStar[star] ?? 0,
+                childLuk,
+                childBloodlines,
+            };
+            const guaranteed = isBloodlineMatch(child?.name, mentor.familyName) && isBloodlineGuaranteedRound(session.round);
+            for (const key of rollInspireRound(keyed, session.round, ctx, confirmed, random, { guaranteed })) {
+                confirmed.add(key);
+                const event = inspire.events.find((e) => prefix + e.eventId === key)!;
+                triggered.push({ mentorId: mentor.id, eventId: event.eventId, tacticId: event.tacticId });
+            }
+        }
+        if (triggered.length === 0) return { session, triggered };
+        return { session: { ...session, inspiredKeys: [...confirmed] }, triggered };
     }
 
     private _replace(session: NurtureSession): void {

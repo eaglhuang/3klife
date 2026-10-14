@@ -10,6 +10,7 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { BattleState, TerrainGrid } from "../models/BattleState";
+import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { EnemyAI } from "./EnemyAI";
 import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
@@ -25,7 +26,7 @@ import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
 import { resolveBattleVictory } from '../runtime/BattleVictoryResolver';
-import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
+import { refreshFloodAttackTerrain, resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { services } from "../../core/managers/ServiceLoader";
 import type { BattleRuntimeContext } from '../runtime/BattleRuntimeContext';
 import type { BattleRuntimePhaseName, BattleRuntimePhaseOutcome } from '../runtime/BattleRuntimeContract';
@@ -34,6 +35,8 @@ import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoControl
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
+import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
+import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import {
   BattleSkillTargetMode,
   SkillSourceType,
@@ -89,6 +92,11 @@ async function loadJsonWithFileFallback<T>(resourcePath: string, _relativeFilePa
   } catch {
     return null;
   }
+}
+
+/** 虎符部隊出陣參數（TRP-13）：只帶虎符 id，主將由戰場上的我方主將決定 */
+export interface TallyDeployRef {
+  tallyId: string;
 }
 
 export class BattleController {
@@ -243,11 +251,30 @@ export class BattleController {
     }
   }
 
+  /**
+   * 虎符部隊（TRP-13）：部隊記下虎符與主將，適性乘數每次結算時依當下格子的地形算。
+   * 虎符目錄查不到或沒有適性資料時，乘數恆為 1。
+   */
+  private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
+    const profile = buildTallyCardCatalog().get(ref.tallyId)?.affinity ?? null;
+    const general = this.state.getGeneral(Faction.Player);
+    const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
+    unit.tallyId = ref.tallyId;
+    unit.commanderUid = commander?.uid ?? null;
+    unit.tallyAffinity = (lane, depth) =>
+      resolveTallyDeployMod(profile, commander, this.state.getCell(lane, depth)?.terrain ?? null);
+  }
+
   public deployTroop(type: TroopType, lane: number, unitName?: string): TroopUnit | null {
     return this.tryDeployTroop(type, lane, unitName).unit;
   }
 
-  public tryDeployTroop(type: TroopType, lane: number, unitName?: string, options: { militia?: boolean } = {}): DeployOutcome {
+  public tryDeployTroop(
+    type: TroopType,
+    lane: number,
+    unitName?: string,
+    options: { militia?: boolean; tally?: TallyDeployRef } = {},
+  ): DeployOutcome {
     if (!this.flowStateMachine.canDeployTroop()) {
       return { ok: false, unit: null, reason: "battle-locked" };
     }
@@ -276,6 +303,7 @@ export class BattleController {
     }
 
     const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName, { militia: options.militia });
+    if (options.tally) this.bindTallyAffinity(unit, options.tally);
     this.turnManager.notePlayerDeployment();
     if (this.sortie) {
       const applied = applyDeploy(this.sortie, unit.id, { troopType: type, militia: options.militia });
@@ -750,6 +778,30 @@ export class BattleController {
     }
   }
 
+  /** 設定天氣排程（PROG-2-0401）：第 1 回合立即套用該回合天氣，之後每回合由 finalizeRuntimeTurnCycle 切換 */
+  public setWeatherSchedule(schedule: readonly WeatherScheduleEntry[]): void {
+    this.state.weatherSchedule = validateWeatherSchedule(schedule);
+    this.state.weather = weatherForTurn(this.state.weatherSchedule, 1);
+    this.refreshFloodForWeather();
+  }
+
+  /** 水攻範圍跟著天氣即時重算（PROG-2-0407）；非水攻戰場不動 */
+  private refreshFloodForWeather(): void {
+    if (this.state.battleTactic === BattleTactic.FloodAttack) refreshFloodAttackTerrain(this.state);
+  }
+
+  /** 依排程套用指定回合的天氣；天氣改變時發出 WeatherChanged 事件。沒有排程時不動 */
+  private applyWeatherForTurn(turn: number): void {
+    const schedule = this.state.weatherSchedule;
+    if (schedule.length === 0) return;
+    const transition = detectWeatherTransition(schedule, turn);
+    this.state.weather = transition.current;
+    if (transition.changed) {
+      services().event.emit(EVENT_NAMES.WeatherChanged, { turn, previous: transition.previous, current: transition.current });
+      this.refreshFloodForWeather();
+    }
+  }
+
   private finalizeRuntimeTurnCycle(): void {
     const svc = services();
     svc.buff.tickBuff();
@@ -763,6 +815,7 @@ export class BattleController {
     }
     if (this.sortie) this.sortie = regenTactic(this.sortie);
     svc.battle.nextTurn();
+    this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
     this.turnManager.refreshForNextTurn();
     this.orderRefusedThisTurn = this.rollOrderRefusal();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
