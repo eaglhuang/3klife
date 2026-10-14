@@ -498,7 +498,22 @@ export class GameSession {
         };
         this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
+        if (added.length > 0) await this.recordMercenaryOath(result.general.id);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    /**
+     * 結義傭兵成功（KIN-06 / 事件 mercenary-oath）：與出戰主將記為義兄弟（DYNAMIC_SWORN）。
+     * 暫定：規格未寫結義對象，先以出戰主將為對象；沒有主將或就是同一人時回傳 null。有新增才自動存檔。
+     */
+    public async recordMercenaryOath(generalUid: string): Promise<DynamicRelationResult | null> {
+        const lead = this._leadGeneralId;
+        if (!lead || lead === generalUid) return null;
+        const result = this.dynamicRelations.record('mercenary-oath', generalUid, lead, this._clock.state.totalSeasonsElapsed);
+        if (result.ok && result.created && this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
     }
 
     /** 轉蛋各池保底計數（唯讀副本） */
