@@ -8,7 +8,8 @@ import {
 import { TroopUnit } from '../../core/models/TroopUnit';
 import { BattleState } from '../models/BattleState';
 import { BattleCombatResolver } from './BattleCombatResolver';
-import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver';
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
@@ -127,6 +128,18 @@ export class BattleSkillDispatcher {
   }
 
   public executeBattleSkillRequest(request: BattleSkillRequest): SkillExecutionResult {
+    // 天氣強約束（PROG-2-0406）：火計在雨／霧／雷暴禁用，不扣任何資源、不進入執行器
+    const weatherCheck = checkTacticWeather(resolveBattleSkillProfile(request.battleSkillId)?.tags ?? [], this.context.state.weather);
+    if (!weatherCheck.allowed) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'weather-restricted',
+        deltas: [],
+        battleLogLines: [weatherCheck.reason ?? WEATHER_RESTRICTION_TOAST],
+      };
+    }
     return this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
   }
 
@@ -150,6 +163,7 @@ export class BattleSkillDispatcher {
       getUnit: (unitId: string) => state.units.get(unitId) ?? null,
       getCasterGeneral: (casterFaction: Faction) => state.getGeneral(casterFaction),
       getTerrain: (lane: number, depth: number) => state.getCell(lane, depth)?.terrain ?? TerrainType.Plain,
+      getWeather: () => state.weather,
       applyDamage: (unit: TroopUnit, damage: number, casterFaction: Faction) => {
         const svc = services();
         combatResolver.applyUnitDamage(unit, damage, casterFaction, {

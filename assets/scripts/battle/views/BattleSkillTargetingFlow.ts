@@ -1,6 +1,7 @@
 import type { BattleController } from '../controllers/BattleController';
 import {
   requiresBattleSkillManualTargeting,
+  resolveBattleSkillProfile,
   resolveBattleSkillTargetMode,
 } from '../skills/BattleSkillProfiles';
 import {
@@ -8,6 +9,7 @@ import {
   getBattleSkillPresentation,
 } from '../../shared/BattleSkillPresentation';
 import { BattleSkillTargetMode, SkillSourceType } from '../../shared/SkillRuntimeContract';
+import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 
 /** 待確認目標的技能狀態 */
@@ -64,6 +66,13 @@ export class BattleSkillTargetingFlow {
     const general = ctrl.state.playerGeneral;
     if (!general?.canUseSkill()) {
       this.ctx.showToast(`${sourceLabel}蓄力中，SP 不足`, 1.5);
+      return;
+    }
+
+    // 天氣強約束（PROG-2-0406）：火計在雨／霧／雷暴不能施放，給出 Toast 並不進入選目標
+    const weatherCheck = checkTacticWeather(resolveBattleSkillProfile(skillId)?.tags ?? [], ctrl.state.weather);
+    if (!weatherCheck.allowed) {
+      this.ctx.showToast(weatherCheck.reason ?? WEATHER_RESTRICTION_TOAST, 1.5);
       return;
     }
 

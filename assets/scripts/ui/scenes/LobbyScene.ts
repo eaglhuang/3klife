@@ -49,6 +49,7 @@ import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { bindGachaActions } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
@@ -239,6 +240,8 @@ export class LobbyScene extends Component {
             this._generals = await services().resource.loadJson<GeneralConfig[]>(
                 'data/generals', { tags: ['LobbyScene'] }
             );
+            // 武將資料格式檢查（MVP-01）：只警告，不中斷大廳載入
+            warnGeneralSchemaOnLoad(this._generals, 'LobbyScene data/generals');
             const encounterEnvelope = await services().resource.loadJson<{ encounters: EncounterConfig[] }>(
                 'data/encounters', { tags: ['LobbyScene'] }
             );

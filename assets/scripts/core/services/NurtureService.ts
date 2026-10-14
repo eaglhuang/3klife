@@ -359,6 +359,7 @@ export class NurtureService {
             discoveryLevel: hooks.discoveryLevel(),
             mentorRank,
             mentorOnSlot: log.mentorsOnSlot.length > 0,
+            luk: lukOf(roster[index]),
             random: this._rng(),
         });
         if (!result?.ok) return undefined;

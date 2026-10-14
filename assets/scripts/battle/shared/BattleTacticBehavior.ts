@@ -4,6 +4,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode';
+import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -51,29 +52,61 @@ export const FLOOD_ATTACK_PUSH_DEPTH_DELTA = 0;
 const FIRE_DAMAGE_PER_TURN = 15;
 const NIGHT_RAID_ATTACK_BONUS = 0.25;
 
-function applyFloodAttackTerrain(state: BattleState): void {
+/** 目前天氣下水攻應淹沒的格子（PROG-2-0406 雨天擴大；PROG-2-0407 依天氣即時重算） */
+function floodAttackCells(weather: BattleState['weather']): Array<{ lane: number; depth: number }> {
+  const cells: Array<{ lane: number; depth: number }> = [];
   for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
     const floodDepthStart = lane === 0 || lane === GAME_CONFIG.GRID_LANES - 1
       ? FLOOD_DEPTH_START + 1
       : FLOOD_DEPTH_START;
-    const floodDepthEnd = lane === 0 || lane === GAME_CONFIG.GRID_LANES - 1
-      ? FLOOD_DEPTH_END
-      : FLOOD_DEPTH_END + 1;
-
+    // 不超過最後一格
+    const floodDepthEnd = Math.min(
+      GAME_CONFIG.GRID_DEPTH - 1,
+      (lane === 0 || lane === GAME_CONFIG.GRID_LANES - 1 ? FLOOD_DEPTH_END : FLOOD_DEPTH_END + 1) + floodDepthBonus(weather),
+    );
     for (let depth = floodDepthStart; depth <= floodDepthEnd; depth++) {
-      const cell = state.getCell(lane, depth);
-      if (!cell) continue;
-
-      cell.terrain = TerrainType.River;
-      state.setTileEffect({
-        id: `flood-${lane}-${depth}`,
-        lane,
-        depth,
-        state: 'river-current',
-        notes: 'scene-gambit:flood-attack',
-      });
+      cells.push({ lane, depth });
     }
   }
+  return cells;
+}
+
+/**
+ * 依目前天氣重算水攻淹沒範圍（PROG-2-0407）：
+ * 範圍外的格子還原成淹沒前的地形；範圍內的格子記下原地形後改成河流。
+ * 可重複呼叫：開戰時與每次天氣改變時都走這裡。
+ */
+export function refreshFloodAttackTerrain(state: BattleState): void {
+  const targets = floodAttackCells(state.weather);
+  const targetKeys = new Set(targets.map(({ lane, depth }) => `${lane},${depth}`));
+
+  for (const [key, original] of Array.from(state.floodOriginalTerrain.entries())) {
+    if (targetKeys.has(key)) continue;
+    const [lane, depth] = key.split(',').map(Number);
+    const cell = state.getCell(lane, depth);
+    if (cell) cell.terrain = original;
+    state.removeTileEffect(lane, depth);
+    state.floodOriginalTerrain.delete(key);
+  }
+
+  for (const { lane, depth } of targets) {
+    const cell = state.getCell(lane, depth);
+    if (!cell) continue;
+    const key = `${lane},${depth}`;
+    if (!state.floodOriginalTerrain.has(key)) state.floodOriginalTerrain.set(key, cell.terrain);
+    cell.terrain = TerrainType.River;
+    state.setTileEffect({
+      id: `flood-${lane}-${depth}`,
+      lane,
+      depth,
+      state: 'river-current',
+      notes: 'scene-gambit:flood-attack',
+    });
+  }
+}
+
+function applyFloodAttackTerrain(state: BattleState): void {
+  refreshFloodAttackTerrain(state);
 }
 
 function advanceFloodAttackTurn(state: BattleState, context?: BattleTurnAdvanceContext): void {

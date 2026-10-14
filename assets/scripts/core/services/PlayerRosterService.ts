@@ -1,6 +1,7 @@
 import { sys } from 'cc';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
+import { genesForSave, genesFromSave, type GeneSaveEntry } from '../models/GeneObject';
 
 const STORAGE_KEY = 'ucuf.player-roster';
 
@@ -12,6 +13,21 @@ function cloneGeneral(general: GeneralConfig): GeneralConfig {
     } catch {
         return { ...general };
     }
+}
+
+/** 遺傳因子存讀（GEN-02 / FBR-02）：讀入時經同一套解析，格式壞掉只警告，不丟整筆武將 */
+function withGenesFromSave(general: GeneralConfig): GeneralConfig {
+    if (general.genes === undefined) return { ...general };
+    const { genes, valid } = genesFromSave(general.genes);
+    if (!valid) {
+        UCUFLogger.warn(LogCategory.DATA, `[PlayerRosterService] ${general.id ?? '(無 id)'} 的因子格式有誤，保留原始資料。`);
+    }
+    return { ...general, genes: genes as GeneralConfig['genes'] };
+}
+
+function withGenesForSave(general: GeneralConfig): GeneralConfig {
+    if (!Array.isArray(general.genes)) return general;
+    return { ...general, genes: genesForSave(general.genes as GeneSaveEntry[]) as GeneralConfig['genes'] };
 }
 
 function ensureLoaded(): void {
@@ -30,7 +46,7 @@ function ensureLoaded(): void {
         cachedRoster = Array.isArray(parsed)
             ? parsed
                 .filter((item) => item && typeof item === 'object')
-                .map((item) => ({ ...(item as GeneralConfig) }))
+                .map((item) => withGenesFromSave(item as GeneralConfig))
             : [];
     } catch (error) {
         cachedRoster = [];
@@ -44,7 +60,7 @@ function persist(): void {
     }
 
     try {
-        sys.localStorage.setItem(STORAGE_KEY, JSON.stringify(cachedRoster));
+        sys.localStorage.setItem(STORAGE_KEY, JSON.stringify(cachedRoster.map(withGenesForSave)));
     } catch (error) {
         UCUFLogger.warn(LogCategory.DATA, '[PlayerRosterService] 名冊寫入失敗。', error);
     }

@@ -42,7 +42,8 @@ import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDe
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
-import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import type { HallCandidate } from '../systems/HallCharacterRoll';
+import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
@@ -278,6 +279,10 @@ export class GameSession {
     private _bondPoints = 0;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
+    /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
+    private _favoriteGeneralIds: string[] = [];
+    /** 大廳任務指派：任務 id → 指派武將 id（HALL-07 已派任務權重，PROG-2-0453） */
+    private _hallAssignments: Record<string, string> = {};
     /** 武將 id → 虎符忠誠度狀態（TRP-09） */
     private _tallyLoyalty: Record<string, TallyLoyaltyState> = {};
     /** 虎符持有關係（TRP-08）：虎符 uid → 持有武將 id（null 為君主） */
@@ -719,6 +724,8 @@ export class GameSession {
         this._inventory = { ...STARTER_INVENTORY };
         this._oracleCount = 0;
         this._clearedStageIds = [];
+        this._favoriteGeneralIds = [];
+        this._hallAssignments = {};
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
@@ -906,6 +913,73 @@ export class GameSession {
         }
         this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, generalId);
         return true;
+    }
+
+    /** 收藏武將 id 清單（唯讀副本）。 */
+    public get favoriteGeneralIds(): readonly string[] {
+        return [...this._favoriteGeneralIds];
+    }
+
+    /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
+    public get hallAssignments(): Readonly<Record<string, string>> {
+        return { ...this._hallAssignments };
+    }
+
+    /**
+     * 切換收藏。武將不在名冊時不變更，回傳 ok: false。
+     * 回傳的 favorite 為切換後的狀態。
+     */
+    public async toggleFavorite(generalId: string): Promise<{ ok: boolean; favorite: boolean }> {
+        if (!this._roster.getAll().some((g) => g.id === generalId)) {
+            return { ok: false, favorite: this._favoriteGeneralIds.includes(generalId) };
+        }
+        const favorite = !this._favoriteGeneralIds.includes(generalId);
+        this._favoriteGeneralIds = favorite
+            ? normalizeFavoriteGeneralIds([...this._favoriteGeneralIds, generalId])
+            : this._favoriteGeneralIds.filter((id) => id !== generalId);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, favorite };
+    }
+
+    /**
+     * 大廳任務接取：把任務指派給名冊內的武將（同一任務重派會覆蓋）。
+     * 武將不在名冊或任務 id 為空時回傳 false，不變更。
+     */
+    public async assignHallTask(taskId: string, generalId: string): Promise<boolean> {
+        if (taskId.length === 0 || !this._roster.getAll().some((g) => g.id === generalId)) return false;
+        this._hallAssignments = { ...this._hallAssignments, [taskId]: generalId };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 放棄或完成任務時解除指派；原本沒有指派時回傳 false。 */
+    public async releaseHallTask(taskId: string): Promise<boolean> {
+        if (!(taskId in this._hallAssignments)) return false;
+        const next = { ...this._hallAssignments };
+        delete next[taskId];
+        this._hallAssignments = next;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /**
+     * HALL-07 點位候選清單：收藏與已派任務由 GameSession 既有狀態推導，不另存一份。
+     * 只列名冊內的武將；指派給已離開名冊的武將不計入。
+     */
+    public hallCandidates(): HallCandidate[] {
+        const favorites = new Set(this._favoriteGeneralIds);
+        const assigned = new Set(Object.values(this._hallAssignments));
+        return this._roster.getAll().map((g) => ({
+            id: g.id,
+            favorite: favorites.has(g.id),
+            assigned: assigned.has(g.id),
+        }));
     }
 
     public get sortieSupport(): SortieSupport {
@@ -1373,7 +1447,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -1409,6 +1483,8 @@ export class GameSession {
         this._inventory = normalizeInventory(snapshot.inventory);
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
+        this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
+        this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
