@@ -68,6 +68,10 @@ export interface PlayerSaveSnapshot {
     prison?: PrisonState<GeneralConfig>;
     /** 已通關的關卡 id（連環破用）；後加的選填欄位，舊檔讀回補空陣列（沒有任何通關紀錄） */
     clearedStageIds?: string[];
+    /** 收藏武將 id 清單（HALL-07 收藏權重）；後加的選填欄位，舊檔讀回補空陣列（PROG-2-0453） */
+    favoriteGeneralIds?: string[];
+    /** 大廳任務指派：任務 id → 指派武將 id（HALL-07 已派任務權重）；後加的選填欄位，舊檔讀回補空物件（PROG-2-0453） */
+    hallAssignments?: Record<string, string>;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -146,6 +150,26 @@ export function normalizeClearedStageIds(value: unknown): string[] {
     return [...seen];
 }
 
+/** 收藏武將 id：去重、略過空字串與非字串；壞資料補空陣列（PROG-2-0453） */
+export function normalizeFavoriteGeneralIds(value: unknown): string[] {
+    if (!Array.isArray(value)) return [];
+    const seen = new Set<string>();
+    for (const id of value) {
+        if (typeof id === 'string' && id.length > 0) seen.add(id);
+    }
+    return [...seen];
+}
+
+/** 大廳任務指派：只保留任務 id 與武將 id 都是非空字串的項目（PROG-2-0453） */
+export function normalizeHallAssignments(value: unknown): Record<string, string> {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+    const out: Record<string, string> = {};
+    for (const [taskId, generalId] of Object.entries(value as Record<string, unknown>)) {
+        if (taskId.length > 0 && typeof generalId === 'string' && generalId.length > 0) out[taskId] = generalId;
+    }
+    return out;
+}
+
 function normalizeDiscoveryLevel(value: unknown): number {
     return typeof value === 'number' && Number.isFinite(value) && value >= 1 ? Math.floor(value) : 1;
 }
@@ -174,6 +198,8 @@ export function createPlayerSaveSnapshot(
     femaleSources: Readonly<Record<string, FemaleSource>> = {},
     gachaPity: Readonly<GachaPityBook> = {},
     gachaWallet?: Readonly<GachaWalletSave> | null,
+    favoriteGeneralIds: readonly string[] = [],
+    hallAssignments: Readonly<Record<string, string>> = {},
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -197,6 +223,8 @@ export function createPlayerSaveSnapshot(
         ...(mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(mercenaries) } : {}),
         ...(Object.keys(normalizeGachaPityBook(gachaPity)).length > 0 ? { gachaPity: normalizeGachaPityBook(gachaPity) } : {}),
         ...(gachaWallet ? { gachaWallet: normalizeGachaWalletSave(gachaWallet) } : {}),
+        ...(normalizeFavoriteGeneralIds(favoriteGeneralIds).length > 0 ? { favoriteGeneralIds: normalizeFavoriteGeneralIds(favoriteGeneralIds) } : {}),
+        ...(Object.keys(normalizeHallAssignments(hallAssignments)).length > 0 ? { hallAssignments: normalizeHallAssignments(hallAssignments) } : {}),
     };
 }
 
@@ -263,6 +291,8 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
         ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
+        ...(snapshot.favoriteGeneralIds !== undefined ? { favoriteGeneralIds: normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds) } : {}),
+        ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
     };
 }
 
