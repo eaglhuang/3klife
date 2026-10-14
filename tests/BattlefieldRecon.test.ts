@@ -1,5 +1,5 @@
 /**
- * BattlefieldRecon — 出戰前環境偵察（APT-12 / PROG-2-0402）的純邏輯測試
+ * BattlefieldRecon — 出戰前環境偵察（APT-12 / PROG-2-0557）的純邏輯測試
  */
 import { TestSuite, assert } from './TestRunner';
 import { buildBattlefieldRecon, RECON_FORECAST_TURNS } from '../assets/scripts/core/systems/BattlefieldRecon';
