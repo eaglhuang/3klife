@@ -17,6 +17,8 @@ import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
+import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
+import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { AgingEvent } from '../../core/systems/GeneralAging';
@@ -2079,9 +2081,13 @@ export class LobbyScene extends Component {
 
         const availableGenerals = this._buildMissionDetailGeneralOptions();
         const selectedGeneral = this._resolveMissionDetailSmokeGeneral(previewVariant, availableGenerals);
+        // 環境偵察面板（PROG-2-0405）：用大廳目前關卡的真實地形與天氣
+        const encounter = this._currentEncounter();
+        const scout = encounter ? buildEnvScoutLines(buildBattlefieldReconForEncounter(encounter)) : null;
 
         await services().ui.open(UIID.LobbyMissionDetailDialog, {
             previewVariant,
+            state: scout ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: scout.weatherLine } : undefined,
             availableGenerals,
             selectedGeneralId: selectedGeneral?.id,
             selectedGeneralLabel: selectedGeneral?.label,
