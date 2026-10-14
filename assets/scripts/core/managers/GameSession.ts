@@ -42,7 +42,7 @@ import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDe
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
-import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
@@ -79,6 +79,7 @@ import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, TALLY_S
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import {
@@ -281,6 +282,10 @@ export class GameSession {
     private _tallyCards: Record<string, TigerTallyCard> = {};
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
     private _femaleSources: Record<string, FemaleSource> = {};
+    /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
+    private _gachaPity: GachaPityBook = {};
+    /** 轉蛋錢包（PROG-2-0338）；null 代表存檔沒有，讀舊 localStorage 或用預設 */
+    private _gachaWallet: GachaWalletSave | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -460,6 +465,26 @@ export class GameSession {
         this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    /** 轉蛋各池保底計數（唯讀副本） */
+    public get gachaPityBook(): Readonly<GachaPityBook> {
+        return normalizeGachaPityBook(this._gachaPity);
+    }
+
+    /** 轉蛋錢包（唯讀副本）；null 代表存檔沒有 */
+    public get gachaWalletSave(): Readonly<GachaWalletSave> | null {
+        return this._gachaWallet ? { ...this._gachaWallet } : null;
+    }
+
+    /** 覆寫轉蛋錢包；不寫存檔，由呼叫端決定何時 save */
+    public setGachaWalletSave(wallet: Readonly<GachaWalletSave>): void {
+        this._gachaWallet = normalizeGachaWalletSave(wallet);
+    }
+
+    /** 覆寫轉蛋保底表；不寫存檔，由呼叫端決定何時 save */
+    public setGachaPityBook(book: Readonly<GachaPityBook>): void {
+        this._gachaPity = normalizeGachaPityBook(book);
     }
 
     /**
@@ -666,6 +691,8 @@ export class GameSession {
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
         this._femaleSources = {};
+        this._gachaPity = {};
+        this._gachaWallet = null;
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
@@ -1312,7 +1339,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -1352,6 +1379,8 @@ export class GameSession {
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
+        this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
+        this._gachaWallet = snapshot.gachaWallet ? normalizeGachaWalletSave(snapshot.gachaWallet) : null;
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._fame = normalizeFame(snapshot.resources?.fame);

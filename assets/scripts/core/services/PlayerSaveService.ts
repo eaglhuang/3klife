@@ -25,6 +25,7 @@ import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/Tige
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 
 export const PLAYER_SAVE_KEY = 'player.save';
@@ -77,6 +78,10 @@ export interface PlayerSaveSnapshot {
     femaleSources?: Record<string, FemaleSource>;
     /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
     pendingLifespanDeaths?: PendingLifespanDeath[];
+    /** 轉蛋各池保底計數（poolId → 累計抽數）；後加的選填欄位，舊檔讀回為空（從 0 開始）（PROG-2-0337） */
+    gachaPity?: GachaPityBook;
+    /** 轉蛋錢包（玉／金幣／召喚券）；後加的選填欄位，舊檔讀回為 undefined（由轉蛋服務改讀舊 localStorage 一次）（PROG-2-0338） */
+    gachaWallet?: GachaWalletSave;
     /** 名聲等非軍備資源（暫定）；後加的選填欄位，舊檔讀回補 0 */
     resources?: { fame: number };
     /** 內政本季紀錄（同季只能選一項）；後加的選填欄位，舊檔讀回為空紀錄 */
@@ -167,6 +172,8 @@ export function createPlayerSaveSnapshot(
     tallyCards: Readonly<Record<string, TigerTallyCard>> = {},
     mercenaries?: MercenarySaveBundle,
     femaleSources: Readonly<Record<string, FemaleSource>> = {},
+    gachaPity: Readonly<GachaPityBook> = {},
+    gachaWallet?: Readonly<GachaWalletSave> | null,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -188,6 +195,8 @@ export function createPlayerSaveSnapshot(
         tallyCards: normalizeTallyCardsMap(tallyCards),
         femaleSources: normalizeFemaleSourcesMap(femaleSources),
         ...(mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(mercenaries) } : {}),
+        ...(Object.keys(normalizeGachaPityBook(gachaPity)).length > 0 ? { gachaPity: normalizeGachaPityBook(gachaPity) } : {}),
+        ...(gachaWallet ? { gachaWallet: normalizeGachaWalletSave(gachaWallet) } : {}),
     };
 }
 
@@ -252,7 +261,29 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
+        ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
+        ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
     };
+}
+
+/** 轉蛋錢包存檔形狀：三個欄位都是非負整數，壞掉的欄位補 0 */
+export interface GachaWalletSave {
+    gems: number;
+    gold: number;
+    tickets: number;
+    /** 銅錢符；舊檔缺欄位補 0（PROG-2-0339） */
+    bronze: number;
+    /** 求籤令；舊檔缺欄位補 0（PROG-2-0339） */
+    oracle: number;
+}
+
+export function normalizeGachaWalletSave(value: unknown): GachaWalletSave {
+    const raw = (value && typeof value === 'object' ? value : {}) as Partial<Record<keyof GachaWalletSave, unknown>>;
+    const pick = (key: keyof GachaWalletSave): number => {
+        const n = Math.floor(Number(raw[key]));
+        return Number.isFinite(n) && n >= 0 ? n : 0;
+    };
+    return { gems: pick('gems'), gold: pick('gold'), tickets: pick('tickets'), bronze: pick('bronze'), oracle: pick('oracle') };
 }
 
 /** 名聲：非負整數，壞掉視為 0 */

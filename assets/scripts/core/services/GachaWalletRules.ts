@@ -5,12 +5,15 @@
  *
  * Unity 對照：像 Shop.TryPurchase()，回傳是否成功，而不是偷偷改玩家錢包。
  */
-export type WalletCurrencyKey = 'gems' | 'gold' | 'tickets';
+/** gems＝靈玉（付費）、tickets＝召喚券、bronze＝銅錢符（免費，僅常設池）、oracle＝求籤令（定向道具，不是池幣） */
+export type WalletCurrencyKey = 'gems' | 'gold' | 'tickets' | 'bronze' | 'oracle';
 
 export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
-    gems: '玉',
+    gems: '靈玉',
     gold: '金幣',
     tickets: '召喚券',
+    bronze: '銅錢符',
+    oracle: '求籤令',
 };
 
 export interface WalletCheckResult {
