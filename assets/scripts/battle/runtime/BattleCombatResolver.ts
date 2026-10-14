@@ -5,6 +5,7 @@ import { fieldTallySetMods, type TallySetMember } from '../../core/systems/Tiger
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
+import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
@@ -548,6 +549,14 @@ export class BattleCombatResolver {
   private canAttackGeneral(unit: TroopUnit): boolean {
     if (this.isFactionHiddenFrom(unit.faction, unit.faction === Faction.Player ? Faction.Enemy : Faction.Player)) {
       return false;
+    }
+    // 掩體格（GRD-04，PROG-2-0595）：敵方武將站在掩體格時，遠程攻擊者不可直接攻擊
+    const enemyGeneral = unit.faction === Faction.Player ? this.context.state.enemyGeneral : this.context.state.playerGeneral;
+    if (enemyGeneral) {
+      const tileState = this.context.state.getTileEffect(enemyGeneral.lane, enemyGeneral.depth)?.state ?? null;
+      if (!canTargetUnderStealth(this.getEffectiveAttackRange(unit), isHiddenOnTile(tileState))) {
+        return false;
+      }
     }
     const generalDepth = unit.faction === Faction.Player ? GAME_CONFIG.GRID_DEPTH : -1;
     const distanceToGeneral = Math.abs(generalDepth - unit.depth);
