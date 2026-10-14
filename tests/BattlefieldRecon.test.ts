@@ -2,7 +2,7 @@
  * BattlefieldRecon — 出戰前環境偵察（APT-12 / PROG-2-0402）的純邏輯測試
  */
 import { TestSuite, assert } from './TestRunner';
-import { buildBattlefieldRecon, RECON_FORECAST_TURNS } from '../assets/scripts/core/systems/BattlefieldRecon';
+import { buildBattlefieldRecon, buildBattlefieldReconForEncounter, RECON_FORECAST_TURNS } from '../assets/scripts/core/systems/BattlefieldRecon';
 import { GAME_CONFIG, Weather } from '../assets/scripts/core/config/Constants';
 import { TerrainType } from '../assets/scripts/shared/CommonEnums';
 
@@ -76,6 +76,34 @@ export function createBattlefieldReconSuite(): TestSuite {
     suite.test('預報回合數為 0 時沒有預報，負數視為 0', () => {
         assert.equals(0, buildBattlefieldRecon({ forecastTurns: 0 }).weather.forecast.length);
         assert.equals(0, buildBattlefieldRecon({ forecastTurns: -4 }).weather.forecast.length);
+    });
+
+    suite.test('關卡沒有排程時，預報整段使用固定天氣（encounters.json 的 weather）', () => {
+        const recon = buildBattlefieldReconForEncounter({ weather: 'FOG', terrain: [[TerrainType.Forest]] }, 3);
+        assert.equals(1, recon.terrain.counts[TerrainType.Forest]);
+        assert.equals(true, recon.weather.forecast.every((f) => f.weather === Weather.Fog));
+        assert.equals(0, recon.weather.changes.length);
+    });
+
+    suite.test('舊的小寫天氣字串會經 normalizeWeather 轉成規格代碼', () => {
+        const recon = buildBattlefieldReconForEncounter({ weather: 'fog' }, 2);
+        assert.equals(true, recon.weather.forecast.every((f) => f.weather === Weather.Fog));
+    });
+
+    suite.test('關卡有排程時優先使用排程，不看固定天氣', () => {
+        const recon = buildBattlefieldReconForEncounter({
+            weather: 'SUNNY',
+            weatherSchedule: [{ turnStart: 2, turnEnd: 2, weather: Weather.Thunder }],
+        }, 3);
+        assert.equals(Weather.Clear, recon.weather.forecast[0].weather);
+        assert.equals(Weather.Thunder, recon.weather.forecast[1].weather);
+        assert.equals(2, recon.weather.changes.length);
+    });
+
+    suite.test('關卡沒有天氣也沒有地形時，回到晴天與平原', () => {
+        const recon = buildBattlefieldReconForEncounter({}, 1);
+        assert.equals(Weather.Clear, recon.weather.forecast[0].weather);
+        assert.equals(GAME_CONFIG.GRID_LANES * GAME_CONFIG.GRID_DEPTH, recon.terrain.counts[TerrainType.Plain]);
     });
 
     return suite;

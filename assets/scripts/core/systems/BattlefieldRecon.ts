@@ -10,7 +10,7 @@
  * Unity 對照：像出征前的沙盤 ScriptableObject，只整理資料給面板讀，不改戰場狀態。
  */
 import { GAME_CONFIG } from '../config/Constants';
-import { TerrainType, type TerrainGrid } from '../../shared/CommonEnums';
+import { normalizeWeather, TerrainType, Weather, type TerrainGrid } from '../../shared/CommonEnums';
 import { weatherForecast, type WeatherForecastItem, type WeatherScheduleEntry } from './WeatherSchedule';
 
 /** 預報回合數（暫定，規格未定） */
@@ -85,4 +85,28 @@ export function buildBattlefieldRecon(options: BuildBattlefieldReconOptions = {}
         terrain: buildTerrain(options.terrain),
         weather: buildWeather(options.schedule ?? [], forecastTurns),
     };
+}
+
+/** 關卡資料的最小形狀（EncounterConfig 的子集），讓偵察不依賴 UI 或載入流程 */
+export interface BattlefieldReconEncounter {
+    terrain?: TerrainGrid;
+    /** 固定天氣（encounters.json 的 weather）；沒有排程時整段使用這個天氣 */
+    weather?: string;
+    /** 天氣排程；有值時優先於固定天氣 */
+    weatherSchedule?: readonly WeatherScheduleEntry[];
+}
+
+/**
+ * 依關卡資料組出偵察結果（PROG-2-0404）。
+ * 沒有排程時，預報範圍內整段使用關卡的固定天氣，與戰場開戰時的行為一致（BattleController.initBattle 套用 weather）。
+ */
+export function buildBattlefieldReconForEncounter(
+    encounter: BattlefieldReconEncounter,
+    forecastTurns: number = RECON_FORECAST_TURNS,
+): BattlefieldRecon {
+    const turns = Math.max(0, Math.floor(forecastTurns));
+    const fixedWeather = normalizeWeather(encounter.weather) ?? Weather.Clear;
+    const schedule = encounter.weatherSchedule
+        ?? (turns > 0 ? [{ turnStart: 1, turnEnd: turns, weather: fixedWeather }] : []);
+    return buildBattlefieldRecon({ terrain: encounter.terrain, schedule, forecastTurns: turns });
 }
