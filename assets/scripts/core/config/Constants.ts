@@ -8,6 +8,8 @@ export const GAME_CONFIG = {
   FOOD_PER_TURN: 10,
   /** [P2-N1] 糧草上限（原 MAX_DP） */
   MAX_FOOD: 50,
+  /** 技能狀態提示（閃現）顯示毫秒數；原本漏定義，HUD 用它算 scheduleOnce 延遲 */
+  SKILL_STATUS_DISPLAY_MS: 2000,
   MAX_PLAYER_DEPLOY_PER_TURN: 1,
   MAX_ENEMY_DEPLOY_PER_TURN: 1,
   TURN_LIMIT: 50,

@@ -11,6 +11,7 @@ import { BattleCombatResolver } from './BattleCombatResolver';
 import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { evaluateCasterTacticConditions, type TacticCondition, type TacticConditionResult } from '../../core/systems/TacticCondition';
+import { canPerformAction, spendUltimateVitality, vitalityBandOf, type BattleActionKind } from '../../core/systems/VitalityBattleGate';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver';
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
@@ -26,6 +27,8 @@ import { services } from '../../core/managers/ServiceLoader';
 
 export interface GeneralSkillCastOptions {
   tacticId?: string | null;
+  /** 奧義的 ultimate id（用來查精力成本；同一戰法可對應多個奧義，只能靠 ultimateId 區分） */
+  ultimateId?: string | null;
   battleSkillId?: string | null;
   targetMode?: BattleSkillTargetMode;
   targetUnitUid?: string | null;
@@ -39,6 +42,8 @@ export interface BattleSkillDispatcherContext {
   getEnemyGeneralUnitId(): string | null;
   /** 戰法的 tcond 條件表（TAC-07）；查不到或沒有條件時回 undefined，視為無條件 */
   getTacticConditions?(tacticId: string): readonly TacticCondition[] | undefined;
+  /** 奧義的精力成本比例（例如 0.05 = 5%）；查不到時不扣精力 */
+  getUltimateVitalityCostPct?(ultimateId: string): number | undefined;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -87,6 +92,7 @@ export class BattleSkillDispatcher {
       ownerUid: casterFaction,
       generalTemplateId: general.id,
       battleSkillId: skillId,
+      ultimateId: options.ultimateId ?? null,
       targetMode: options.targetMode ?? resolveBattleSkillTargetMode(skillId, BattleSkillTargetMode.EnemyAll),
       timing: BattleSkillTiming.ActiveCast,
       targetUnitUid: options.targetUnitUid ?? null,
@@ -155,7 +161,61 @@ export class BattleSkillDispatcher {
         battleLogLines: ['戰法條件未達成，無法發動'],
       };
     }
-    return this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
+    // 精力軟懲罰（LIFE-10，PROG-2-0426）：依施放者武將的精力區間擋下奧義或種子戰法，不扣資源
+    const vitalityCheck = this.checkVitalityGate(request);
+    if (!vitalityCheck.allowed) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'vitality-restricted',
+        deltas: [],
+        battleLogLines: [vitalityCheck.reason],
+      };
+    }
+    const result = this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
+    if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
+      this.spendUltimateCost(request);
+    }
+    return result;
+  }
+
+  /** 奧義生效後扣精力（PROG-2-0429）：只在 applied 時扣，被擋或沒有目標不扣 */
+  private spendUltimateCost(request: BattleSkillRequest): void {
+    if (!request.ultimateId) return;
+    const pct = this.context.getUltimateVitalityCostPct?.(request.ultimateId);
+    if (pct === undefined) return;
+    const general = this.resolveCasterGeneral(request);
+    if (!general) return;
+    general.vitality = spendUltimateVitality(general.vitality, general.maxVitality, pct);
+  }
+
+  /** 解析施放者所屬武將：有施放者單位用單位陣營；否則 ownerUid 本身即陣營（直接派發） */
+  private resolveCasterGeneral(request: BattleSkillRequest) {
+    const caster = this.context.state.units.get(request.ownerUid) ?? null;
+    const faction = caster?.faction ?? (request.ownerUid as Faction);
+    if (faction !== Faction.Player && faction !== Faction.Enemy) return null;
+    return this.context.state.getGeneral(faction);
+  }
+
+  /**
+   * 只擋武將發動的奧義與種子戰法；其他來源（虎符、師承、血統等）不在此閘門內。
+   * 施放者找不到所屬武將或精力資料時放行，不猜測。
+   */
+  private checkVitalityGate(request: BattleSkillRequest): { allowed: boolean; reason: string } {
+    const action: BattleActionKind | null =
+      request.sourceType === SkillSourceType.Ultimate ? 'ultimate-tactic'
+        : request.sourceType === SkillSourceType.SeedTactic ? 'active-tactic'
+          : null;
+    if (!action) return { allowed: true, reason: '' };
+    const general = this.resolveCasterGeneral(request);
+    if (!general) return { allowed: true, reason: '' };
+    const band = vitalityBandOf(general.vitality, general.maxVitality);
+    if (canPerformAction(band, action)) return { allowed: true, reason: '' };
+    return {
+      allowed: false,
+      reason: action === 'ultimate-tactic' ? '精力低迷，無法發動終極戰法' : '精力耗盡，無法發動戰法',
+    };
   }
 
   /** 施放者的兵種、天氣與鄰格數量組成 tcond 的評估輸入；施放者不在戰場上（武將）時兵種條件略過 */

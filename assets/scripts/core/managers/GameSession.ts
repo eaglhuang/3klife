@@ -26,6 +26,8 @@ import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
+import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
+import type { CountdownState } from '../systems/CountdownManager';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
@@ -90,7 +92,7 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../sy
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
-import { DynamicRelationBook, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
@@ -123,6 +125,8 @@ export const GAME_SESSION_EVENTS = {
     BattleSettled: 'game-session-battle-settled',
     /** payload: string | null（出戰主將 id） */
     LeadGeneralChanged: 'game-session-lead-general-changed',
+    /** payload: CountdownState | null（趕路倒數開始或清除；OPEN-11） */
+    CountdownChanged: 'game-session-countdown-changed',
     /** payload: SortieSupport（參謀官 / 後勤官，PROG-2-0083） */
     SortieSupportChanged: 'game-session-sortie-support-changed',
     /** payload: PlayerSaveSnapshot */
@@ -191,6 +195,8 @@ export interface RecordBattleOptions {
     stageId?: string;
     /** 本場出陣的虎符卡片 id；戰後各自累積戰鬥經驗並可能升星（PROG-2-0573） */
     deployedTallyIds?: readonly string[];
+    /** 武將 id → 戰鬥結束時的精力（已扣奧義成本）；結算以此為基準再扣戰後精力 */
+    vitalityAfterBattle?: Readonly<Record<string, number>>;
 }
 
 export interface AddGeneralsResult {
@@ -282,6 +288,8 @@ export class GameSession {
     private _leadGeneralId: string | null = null;
     /** 出征支援（參謀官 / 後勤官）；暫定只存在本次遊玩，不寫存檔 */
     private _sortieSupport: SortieSupport = { strategistUid: null, deputyUid: null };
+    /** 趕路倒數（OPEN-11）；目前未存檔，讀檔後為 null。 */
+    private _countdown: CountdownState | null = null;
     private _discoveryLevel = 1;
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
@@ -492,7 +500,22 @@ export class GameSession {
         };
         this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
+        if (added.length > 0) await this.recordMercenaryOath(result.general.id);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    /**
+     * 結義傭兵成功（KIN-06 / 事件 mercenary-oath）：與出戰主將記為義兄弟（DYNAMIC_SWORN）。
+     * 暫定：規格未寫結義對象，先以出戰主將為對象；沒有主將或就是同一人時回傳 null。有新增才自動存檔。
+     */
+    public async recordMercenaryOath(generalUid: string): Promise<DynamicRelationResult | null> {
+        const lead = this._leadGeneralId;
+        if (!lead || lead === generalUid) return null;
+        const result = this.dynamicRelations.record('mercenary-oath', generalUid, lead, this._clock.state.totalSeasonsElapsed);
+        if (result.ok && result.created && this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
     }
 
     /** 轉蛋各池保底計數（唯讀副本） */
@@ -671,7 +694,9 @@ export class GameSession {
      * 手上的虎符退回君主，符合條件者產出一張陣亡虎符（君主持有）。只改記憶體狀態，由呼叫端的存檔一併寫入。
      */
     private _settleDeaths(before: readonly GeneralConfig[], after: readonly GeneralConfig[], season: number): void {
-        const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before, after, season);
+        // 死亡產卡的兵種：武將資料沒有 troopType 時，由適性推出主兵種（PROG-2-0582）
+        const withTroop = (general: GeneralConfig) => ({ troopType: mainTroopTypeOf(general.troopAptitude), ...general });
+        const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before.map(withTroop), after.map(withTroop), season);
         this._tallyHoldings = result.holdings;
         this._tallyCards = { ...result.cards };
     }
@@ -1067,6 +1092,23 @@ export class GameSession {
             await this.save();
         }
         return check;
+    }
+
+    /** 目前的趕路倒數（複本）；沒有趕路中的角色時為 null。 */
+    public get countdown(): CountdownState | null {
+        return this._countdown ? { ...this._countdown } : null;
+    }
+
+    /** 開始趕路倒數（由行軍 / 招募事件呼叫）；會覆蓋目前的倒數。 */
+    public startCountdown(state: Readonly<CountdownState>): void {
+        this._countdown = { ...state };
+        this._emit(GAME_SESSION_EVENTS.CountdownChanged, this.countdown);
+    }
+
+    /** 清除趕路倒數（角色已抵達並由畫面確認後呼叫）。 */
+    public clearCountdown(): void {
+        this._countdown = null;
+        this._emit(GAME_SESSION_EVENTS.CountdownChanged, null);
     }
 
     public get sortieSupport(): SortieSupport {
@@ -1515,14 +1557,16 @@ export class GameSession {
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
+        const comradeChanged = this._recordBattleComrades(result);
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
             performance: options.performance,
+            vitalityAfterBattle: options.vitalityAfterBattle,
         });
         if (settlement.entries.length === 0) {
-            if ((clearChanged || tallyChanged) && this._autoSave && this._save) {
+            if ((clearChanged || tallyChanged || comradeChanged) && this._autoSave && this._save) {
                 await this.save();
             }
             return { ...settlement, awakenings: [] };
@@ -1566,6 +1610,24 @@ export class GameSession {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
         }
         return record;
+    }
+
+    /**
+     * 共鬥（戰後）：出征編制的主將與參謀官／後勤官各記一筆戰友（battle-comrade）。
+     * 不等多武將出戰；ongoing 不記。回傳是否新增了任何關係（呼叫端負責存檔）。
+     */
+    private _recordBattleComrades(result: BattleResult): boolean {
+        const commander = this._leadGeneralId;
+        if (!commander || result === 'ongoing') return false;
+        const support = this.getSortieSupportSummary(commander);
+        const pairs = battleComradePairs(commander, [support.strategist?.id ?? null, support.deputy?.id ?? null]);
+        const season = this._clock.state.totalSeasonsElapsed;
+        let changed = false;
+        for (const [a, b] of pairs) {
+            const recorded = this.dynamicRelations.record('battle-comrade', a, b, season);
+            if (recorded.ok && recorded.created) changed = true;
+        }
+        return changed;
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
@@ -1627,7 +1689,8 @@ export class GameSession {
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
-        this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
+        // 讀檔回填：舊存檔的虎符卡可能缺 troopType，依名冊武將的主兵種補上（PROG-2-0582）
+        this._tallyCards = backfillTallyTroopTypes(normalizeTallyCardsMap(snapshot.tallyCards), this._roster.getAll());
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
         this._gachaRevision += 1;

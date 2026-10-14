@@ -1,6 +1,8 @@
 /**
  * FactorTacticLinkage — 因子與戰法、地形連動規則（FBR-05，PROG-2-0584）測試
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
 import { TerrainType, Weather } from '../assets/scripts/shared/CommonEnums';
 import {
@@ -17,6 +19,7 @@ export function createFactorTacticLinkageSuite(): TestSuite {
     suite.test('綠色因子相符時學習戰法 TP 減半，否則維持原值', () => {
         assert.equals(GREEN_FACTOR_TP_MULTIPLIER, 0.5);
         assert.equals(40, learnTpCost(80, true));
+        assert.equals(4, learnTpCost(7, true), '奇數減半後無條件進位');
         assert.equals(80, learnTpCost(80, false));
     });
 
@@ -36,6 +39,25 @@ export function createFactorTacticLinkageSuite(): TestSuite {
         assert.equals(1, forestMoveBonus(TerrainType.Forest, true));
         assert.equals(0, forestMoveBonus(TerrainType.Forest, false));
         assert.equals(0, forestMoveBonus(TerrainType.Plain, true));
+    });
+
+    return suite;
+}
+
+// ── 戰場單位帶上主將因子（PROG-2-0584 接線前置）──
+
+export function createFactorGenesWiringSuite(): TestSuite {
+    const suite = new TestSuite('FactorGenesWiring (戰場單位帶上主將因子 PROG-2-0584)');
+    const root = path.resolve(__dirname, '..');
+
+    suite.test('部隊模型有 factorGenes 欄位，預設為空陣列', () => {
+        const source = fs.readFileSync(path.join(root, 'assets/scripts/core/models/TroopUnit.ts'), 'utf8');
+        assert.isTrue(source.includes('public factorGenes: readonly GeneralGeneConfig[] = [];'), 'TroopUnit 沒有 factorGenes 欄位');
+    });
+
+    suite.test('玩家部隊出陣時從主將 genes 帶入 factorGenes', () => {
+        const source = fs.readFileSync(path.join(root, 'assets/scripts/battle/controllers/BattleController.ts'), 'utf8');
+        assert.isTrue(source.includes('unit.factorGenes = this.state.getGeneral(Faction.Player)?.genes ?? [];'), 'tryDeployTroop 沒有帶入 factorGenes');
     });
 
     return suite;

@@ -13,6 +13,7 @@ const { ccclass, property } = _decorator;
 
 export interface UltimateSkillItem {
     skillId: string;
+    ultimateId?: string;
     label: string;
     costSp: number;
 }
@@ -80,7 +81,7 @@ export class UltimateSelectPopupComposite extends CompositePanel {
             const label = btn.addComponent(Label);
             label.string = `${skill.label} (SP ${skill.costSp})`;
             btn.on(Node.EventType.TOUCH_END, () => {
-                services().event.emit(EVENT_NAMES.UltimateSkillSelected, { skillId: skill.skillId });
+                services().event.emit(EVENT_NAMES.UltimateSkillSelected, { skillId: skill.skillId, ultimateId: skill.ultimateId });
                 this.hide();
             });
         }

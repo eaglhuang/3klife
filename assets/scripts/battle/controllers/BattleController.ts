@@ -10,11 +10,13 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { BattleState, TerrainGrid } from "../models/BattleState";
+import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { EnemyAI } from "./EnemyAI";
 import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
+import { findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -160,6 +162,7 @@ export class BattleController {
       getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
       getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
       getTacticConditions: (tacticId) => this.tacticDefinitionMap.get(tacticId)?.tcond as TacticCondition[] | undefined,
+      getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
     },
     this.skillSourceTranslator,
   );
@@ -324,6 +327,8 @@ export class BattleController {
     }
 
     const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName, { militia: options.militia });
+    // 部隊帶上主將的因子資料（genes 已由 buildBattleConfig 展開進戰場武將），供因子戰法與地形規則讀取
+    unit.factorGenes = this.state.getGeneral(Faction.Player)?.genes ?? [];
     if (options.tally) this.bindTallyAffinity(unit, options.tally);
     this.turnManager.notePlayerDeployment();
     if (this.sortie) {
