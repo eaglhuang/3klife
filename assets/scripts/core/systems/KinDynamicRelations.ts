@@ -15,6 +15,10 @@ import {
 
 /** 暫定（規格未寫）：新建動態關係的起始親密度 */
 export const DYNAMIC_RELATION_INITIAL_INTIMACY = 30;
+/** 暫定（規格未寫）：事件建立時寫入的每季衰減值（PROG-2-0521） */
+export const DYNAMIC_RELATION_DECAY_RATE = 2;
+/** 暫定（規格未寫）：一次互動回補的親密度（PROG-2-0521） */
+export const DYNAMIC_RELATION_INTERACT_GAIN = 10;
 
 export type DynamicRelationEventKind = 'battle-comrade' | 'mercenary-oath' | 'bonding' | 'parentage';
 
@@ -50,7 +54,7 @@ export function dynamicRelationForEvent(
         type,
         intimacy: DYNAMIC_RELATION_INITIAL_INTIMACY,
         createdSeason: season,
-        decayRate: 0,
+        decayRate: DYNAMIC_RELATION_DECAY_RATE,
     });
     if (!parsed.ok) return { ok: false, reason: parsed.reason };
     return { ok: true, relation: parsed.value, created: true };
@@ -79,6 +83,31 @@ export class DynamicRelationBook {
 
     size(): number {
         return this.relations.size;
+    }
+
+    /** 每季衰退：每筆依 decayRate 減親密度，下限 0；回傳實際改動的筆數（KIN-10） */
+    decaySeason(): number {
+        let changed = 0;
+        for (const [key, relation] of this.relations) {
+            const next = Math.max(0, relation.intimacy - relation.decayRate);
+            if (next === relation.intimacy) continue;
+            this.relations.set(key, { ...relation, intimacy: next });
+            changed += 1;
+        }
+        return changed;
+    }
+
+    /** 互動回補親密度，上限 100；同一對有多種關係時回補所有型別。沒有關係回傳空陣列（KIN-10） */
+    interact(uidA: string, uidB: string, gain: number = DYNAMIC_RELATION_INTERACT_GAIN): DynamicRelation[] {
+        const pair = pairKeyOf(uidA, uidB);
+        const updated: DynamicRelation[] = [];
+        for (const [key, relation] of this.relations) {
+            if (pairKeyOf(relation.uidA, relation.uidB) !== pair) continue;
+            const next = { ...relation, intimacy: Math.min(100, relation.intimacy + gain) };
+            this.relations.set(key, next);
+            updated.push({ ...next });
+        }
+        return updated;
     }
 
     /** 存檔用快照：回傳新陣列，不共享內部物件 */
