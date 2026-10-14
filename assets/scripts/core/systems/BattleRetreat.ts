@@ -23,6 +23,14 @@ export interface RetreatResolution {
     readonly hpAfter: number;
 }
 
+/** 撤退結果在戰場的後續步驟：脫離、陣亡（失敗且血量歸 0），或留場並鎖當回合 */
+export type RetreatNextStep = 'escape' | 'dead' | 'blocked';
+
+export function retreatNextStep(resolution: RetreatResolution): RetreatNextStep {
+    if (resolution.escaped) return 'escape';
+    return resolution.hpAfter <= 0 ? 'dead' : 'blocked';
+}
+
 /**
  * 結算一次撤退。
  * risk 夾在 0~1；roll 無效（非有限數）時視為 0，負數也視為 0。

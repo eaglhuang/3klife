@@ -35,7 +35,7 @@ import type { BattleRuntimePhaseName, BattleRuntimePhaseOutcome } from '../runti
 import { createBattlePhaseExecutor, type BattlePhaseExecutor } from '../runtime/phases/BattlePhaseExecutor';
 import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoController';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
-import { RETREAT_BASE_RISK, resolveRetreat, type RetreatResolution } from '../../core/systems/BattleRetreat';
+import { RETREAT_BASE_RISK, resolveRetreat, retreatNextStep, type RetreatResolution } from '../../core/systems/BattleRetreat';
 import { retreatRiskOf } from '../../core/systems/RetreatRisk';
 import type { VitalityBand } from '../../core/systems/VitalityBattleGate';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
@@ -368,17 +368,28 @@ export class BattleController {
    * 部隊沒有精力，風險的精力段由指揮武將決定（band，預設 high）。roll 可注入（測試用）。
    * 回傳 null 表示該單位不存在。
    */
-  public attemptRetreat(unitId: string, band: VitalityBand = 'high', roll: number = Math.random()): RetreatResolution | null {
+  public attemptRetreat(
+    unitId: string,
+    band: VitalityBand = 'high',
+    roll: number = services().session.randomSource(),
+  ): RetreatResolution | null {
     const unit = this.state.units.get(unitId);
     if (!unit) return null;
     const result = resolveRetreat(unit.maxHp, unit.currentHp, retreatRiskOf(RETREAT_BASE_RISK, band), roll);
-    if (result.escaped) {
-      this.state.removeUnit(unitId);
-      return result;
+    switch (retreatNextStep(result)) {
+      case 'escape':
+        this.state.removeUnit(unitId);
+        services().buff.clearUnit(unitId);
+        return result;
+      case 'dead':
+        unit.currentHp = 0;
+        this.combatResolver.onUnitKilled(unit, null, services());
+        return result;
+      case 'blocked':
+        unit.currentHp = result.hpAfter;
+        this.turnManager.markUnitActionBlocked(unitId);
+        return result;
     }
-    unit.currentHp = result.hpAfter;
-    this.turnManager.markUnitActionBlocked(unitId);
-    return result;
   }
 
   /**

@@ -9,6 +9,7 @@ import {
     RETREAT_BASE_RISK,
     RETREAT_FAIL_DAMAGE_PCT,
     resolveRetreat,
+    retreatNextStep,
 } from '../assets/scripts/core/systems/BattleRetreat';
 import { BattleTurnManager } from '../assets/scripts/battle/runtime/BattleTurnManager';
 
@@ -49,6 +50,12 @@ export function createBattleRetreatSuite(): TestSuite {
         assert.isTrue(resolveRetreat(100, 50, 0, 0).escaped);
         assert.isFalse(resolveRetreat(100, 50, 5, 0.99).escaped);
         assert.isFalse(resolveRetreat(100, 50, 0.2, Number.NaN).escaped);
+    });
+
+    suite.test('後續步驟：成功脫離；失敗且血量歸 0 為陣亡；失敗但有血留場為鎖回合', () => {
+        assert.equals('escape', retreatNextStep(resolveRetreat(100, 80, 0.2, 0.9)));
+        assert.equals('blocked', retreatNextStep(resolveRetreat(100, 80, 0.2, 0.1)));
+        assert.equals('dead', retreatNextStep(resolveRetreat(100, 10, 0.2, 0.1)));
     });
 
     suite.test('回合閘門：撤退失敗後本回合不能行動，下一回合解除', () => {
