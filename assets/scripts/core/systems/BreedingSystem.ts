@@ -214,6 +214,11 @@ export function parentAgeFactor(age: number | undefined): number {
  * 受孕率（以扣精力前的狀態計算）。
  * Final = min(Base × (1+CHA/200) × (1+LUK/200) × Vitality × Birth_Load × Age_Father × Age_Mother, 0.95)
  */
+/** 套用母體來源倍率後的受孕率，仍不超過上限 0.95（FEM-02） */
+export function applyConceptionMod(rate: number, mod: number): number {
+    return Math.min(rate * (Number.isFinite(mod) && mod > 0 ? mod : 1), CONCEPTION_RATE_CAP);
+}
+
 export function conceptionRate(father: BreedingGeneral, mother: BreedingGeneral): number {
     const chaAvg = (statOf(father, 'cha') + statOf(mother, 'cha')) / 2;
     const lukAvg = (statOf(father, 'luk') + statOf(mother, 'luk')) / 2;
@@ -454,6 +459,8 @@ export interface BreedingRequest {
     /** 選填；舊呼叫端不傳時視為 Standard */
     mode?: BreedingMode;
     mother: BreedingGeneral;
+    /** 選填：母體來源倍率（femaleSourceConceptionMod，FEM-02）；不傳視為 1 */
+    motherConceptionMod?: number;
     pedigree: PedigreeSource;
     random: RandomSource;
     childId: string;
@@ -555,7 +562,7 @@ export function breed(request: BreedingRequest): BreedingResult {
 
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
-    const rate = conceptionRate(request.father, request.mother);
+    const rate = applyConceptionMod(conceptionRate(request.father, request.mother), request.motherConceptionMod ?? 1);
     if (!eligibility.ok) {
         return { outcome: 'blocked', reasons: eligibility.reasons, conceptionRate: rate, father: request.father, mother: request.mother };
     }
