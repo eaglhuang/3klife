@@ -26,6 +26,8 @@ import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/Tige
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { normalizeDynamicRelations } from '../systems/KinDynamicRelations';
+import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
@@ -74,6 +76,8 @@ export interface PlayerSaveSnapshot {
     favoriteGeneralIds?: string[];
     /** 大廳任務指派：任務 id → 指派武將 id（HALL-07 已派任務權重）；後加的選填欄位，舊檔讀回補空物件（PROG-2-0453） */
     hallAssignments?: Record<string, string>;
+    /** 動態關係（KIN-06 / KIN-10）：親密度與關係清單；後加的選填欄位，舊檔讀回為空陣列 */
+    dynamicRelations?: DynamicRelation[];
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -206,6 +210,7 @@ export function createPlayerSaveSnapshot(
     gachaWallet?: Readonly<GachaWalletSave> | null,
     favoriteGeneralIds: readonly string[] = [],
     hallAssignments: Readonly<Record<string, string>> = {},
+    dynamicRelations: readonly DynamicRelation[] = [],
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -231,6 +236,7 @@ export function createPlayerSaveSnapshot(
         ...(gachaWallet ? { gachaWallet: normalizeGachaWalletSave(gachaWallet) } : {}),
         ...(normalizeFavoriteGeneralIds(favoriteGeneralIds).length > 0 ? { favoriteGeneralIds: normalizeFavoriteGeneralIds(favoriteGeneralIds) } : {}),
         ...(Object.keys(normalizeHallAssignments(hallAssignments)).length > 0 ? { hallAssignments: normalizeHallAssignments(hallAssignments) } : {}),
+        ...(dynamicRelations.length > 0 ? { dynamicRelations: normalizeDynamicRelations(dynamicRelations) } : {}),
     };
 }
 
@@ -300,6 +306,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.femaleSystem !== undefined ? { femaleSystem: normalizeFemaleSystemState(snapshot.femaleSystem) } : {}),
         ...(snapshot.favoriteGeneralIds !== undefined ? { favoriteGeneralIds: normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds) } : {}),
         ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
+        ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
     };
 }
 

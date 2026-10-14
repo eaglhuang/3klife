@@ -12,6 +12,8 @@ export const HALL_TASK_ACTIONS = ['RECON', 'EXECUTE', 'WAIT', 'ASSIGN'] as const
 export const HALL_DAY_NIGHT_MODES = ['DAY', 'NIGHT'] as const;
 export const HALL_REWARD_TYPES = ['GRAIN', 'SILVER', 'GENERAL_EXP', 'OFFICER_EXP'] as const;
 export const HALL_BOARD_KEYS = ['Military', 'Domestic'] as const;
+/** 選填的任務牆：世界沙盤遠征（缺省視為沒有遠征任務）。 */
+export const HALL_OPTIONAL_BOARD_KEYS = ['Expedition'] as const;
 
 export type HallDifficulty = (typeof HALL_DIFFICULTIES)[number];
 export type HallTaskAction = (typeof HALL_TASK_ACTIONS)[number];
@@ -53,7 +55,7 @@ export interface LobbyHub {
         Background_ID: string;
         Overlay_Tint: string;
     };
-    Mission_Boards: Record<(typeof HALL_BOARD_KEYS)[number], HallBoard>;
+    Mission_Boards: Record<(typeof HALL_BOARD_KEYS)[number], HallBoard> & Partial<Record<(typeof HALL_OPTIONAL_BOARD_KEYS)[number], HallBoard>>;
 }
 
 export interface LobbyHubIssue {
@@ -189,6 +191,9 @@ export function validateLobbyHub(raw: unknown): LobbyHubValidation {
         for (const key of HALL_BOARD_KEYS) {
             if (!(key in hub.Mission_Boards)) issues.push({ path: `Lobby_Hub.Mission_Boards.${key}`, message: '缺少此任務牆' });
             else checkBoard(issues, `Lobby_Hub.Mission_Boards.${key}`, hub.Mission_Boards[key]);
+        }
+        for (const key of HALL_OPTIONAL_BOARD_KEYS) {
+            if (key in hub.Mission_Boards) checkBoard(issues, `Lobby_Hub.Mission_Boards.${key}`, hub.Mission_Boards[key]);
         }
     }
     return { ok: issues.length === 0, issues };

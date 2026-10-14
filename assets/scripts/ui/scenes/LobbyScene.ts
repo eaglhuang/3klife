@@ -27,7 +27,10 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
+import { CountdownState } from '../../core/systems/CountdownManager';
+import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
+import { fallbackBreedText } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
@@ -126,6 +129,8 @@ export class LobbyScene extends Component {
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
+    /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
+    private _countdownState: CountdownState | null = null;
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
     private _supportCatalog: SupportCatalog | null = null;
@@ -300,6 +305,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
             { buttonId: 'btnOpenDomestic', handler: () => { this._openDomestic(); } },
             { buttonId: 'btnOpenHallBoard', handler: () => { this._openHallBoard(); } },
+            { buttonId: 'btnOpenSandtable', handler: () => { this._openHallBoard('Expedition'); } },
         ]);
         this._refreshSeasonHud();
 
@@ -317,6 +323,9 @@ export class LobbyScene extends Component {
             seasonLabel: formatSeasonLabel(time),
             modeLabel: formatModeLabel(time.currentMode),
         });
+        const countdownIcon = buildCountdownIconFlowView(this._countdownState, Date.now());
+        this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
+        this._seasonHudHost?.binder?.setActives(countdownIcon.actives);
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
@@ -441,6 +450,11 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
+            // 語系表未載入時 i18n.t 會回傳 key 本身，這時改用 zh-TW 預設文案，避免畫面出現原始 key
+            text: (key, ...args) => {
+                const localized = services().i18n.t(key, ...args);
+                return localized === key ? fallbackBreedText(key, ...args) : localized;
+            },
         });
         this._bonding = bonding;
 
@@ -598,6 +612,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { this._closeHallBoard(); } },
             { buttonId: 'btnHallBoardMilitary', handler: () => { this._switchHallBoard('Military'); } },
             { buttonId: 'btnHallBoardDomestic', handler: () => { this._switchHallBoard('Domestic'); } },
+            { buttonId: 'btnHallBoardExpedition', handler: () => { this._switchHallBoard('Expedition'); } },
             ...rowBindings,
         ]);
         this._hallBoardHost.node.active = false;
@@ -622,10 +637,14 @@ export class LobbyScene extends Component {
         });
     }
 
-    private _openHallBoard(): void {
+    /** 開啟任務牆；傳入 board 時直接切到該牆（天下沙盤入口走 Expedition）。 */
+    private _openHallBoard(board?: HallBoardKey): void {
         const host = this._hallBoardHost;
         if (!host) {
             return;
+        }
+        if (board) {
+            this._hallBoard?.switchBoard(board);
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);

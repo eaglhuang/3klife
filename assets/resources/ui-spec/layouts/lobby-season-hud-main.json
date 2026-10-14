@@ -57,6 +57,19 @@
             "styleSlot": "season.hud.label.mode"
           },
           {
+            "type": "label",
+            "name": "CountdownIconLabel",
+            "id": "countdownIconLabel",
+            "widget": {
+              "top": 78,
+              "left": 12,
+              "right": 12
+            },
+            "height": 24,
+            "text": "",
+            "styleSlot": "season.hud.label.mode"
+          },
+          {
             "type": "button",
             "name": "AdvanceSeasonButton",
             "id": "btnAdvanceSeason",
@@ -214,6 +227,33 @@
                 },
                 "height": 24,
                 "text": "任務牆",
+                "styleSlot": "season.hud.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnOpenSandtable",
+            "id": "btnOpenSandtable",
+            "widget": {
+              "bottom": 296,
+              "left": 12,
+              "right": 12
+            },
+            "height": 40,
+            "skinSlot": "season.hud.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenSandtableLabel",
+                "id": "openSandtableLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "天下沙盤",
                 "styleSlot": "season.hud.label.button"
               }
             ]

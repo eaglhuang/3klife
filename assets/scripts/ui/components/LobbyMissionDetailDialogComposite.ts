@@ -28,6 +28,7 @@ const { ccclass } = _decorator;
 const SCREEN_ID = 'lobby-mission-detail-dialog-screen';
 const CONTENT_PATH = 'ui-spec/content/lobby-mission-detail-dialog-states-v1';
 import { resolveDetailActionStates } from '../core/HallDetailActionStates';
+import { applyIntelConfirmChoice, IntelConfirmChoice, resolveExecutePress } from '../core/HallExecuteConfirm';
 
 const CONTENT_TAG = 'LobbyMissionDetailDialog';
 const DEFAULT_STATE_KEY = 'smoke-military-partial';
@@ -137,6 +138,8 @@ export interface LobbyMissionDetailDialogOpenPayload {
     selectedGeneralVolunteer?: boolean;
     onRequestClose?: () => void;
     onActionSelected?: (action: LobbyMissionActionKey, snapshot: LobbyMissionDetailDialogSnapshot) => void | Promise<void>;
+    /** 情報未滿按執行時的「是否再探一次？」選擇（PROG-2-0460）；沒有提供時沿用直接執行。 */
+    onIntelConfirmRequested?: (snapshot: LobbyMissionDetailDialogSnapshot) => Promise<IntelConfirmChoice>;
     onGeneralSelected?: (general: MissionGeneralOption, snapshot: LobbyMissionDetailDialogSnapshot) => void | Promise<void>;
     onAiDelegateChanged?: (checked: boolean, snapshot: LobbyMissionDetailDialogSnapshot) => void | Promise<void>;
 }
@@ -174,6 +177,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     };
     private _suppressAiDelegateEvent = false;
     private _onActionSelected: LobbyMissionDetailDialogOpenPayload['onActionSelected'] | null = null;
+    private _onIntelConfirmRequested: LobbyMissionDetailDialogOpenPayload['onIntelConfirmRequested'] | null = null;
     private _onGeneralSelected: LobbyMissionDetailDialogOpenPayload['onGeneralSelected'] | null = null;
     private _onAiDelegateChanged: LobbyMissionDetailDialogOpenPayload['onAiDelegateChanged'] | null = null;
 
@@ -216,6 +220,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         await this._ensureContentAssets();
 
         this._onActionSelected = payload?.onActionSelected ?? null;
+        this._onIntelConfirmRequested = payload?.onIntelConfirmRequested ?? null;
         this._onGeneralSelected = payload?.onGeneralSelected ?? null;
         this._onAiDelegateChanged = payload?.onAiDelegateChanged ?? null;
         this.onRequestClose = payload?.onRequestClose ?? null;
@@ -820,15 +825,34 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._setDropdownVisible(false);
     }
 
-    private _emitAction(action: LobbyMissionActionKey): void {
+    private async _emitAction(action: LobbyMissionActionKey): Promise<void> {
         const snapshot = this._buildSnapshot();
         if (!snapshot) {
             return;
         }
 
+        if (action === 'execute' && resolveExecutePress(snapshot.intelRevealPercent) === 'ask-intel-confirm') {
+            const choice = this._onIntelConfirmRequested
+                ? await this._onIntelConfirmRequested(snapshot)
+                : 'execute-now';
+            const outcome = applyIntelConfirmChoice(snapshot.intelRevealPercent, choice);
+            if (!outcome.shouldExecute) {
+                return;
+            }
+            if (outcome.shouldRescout) {
+                await this._emitAction('re-scout');
+            }
+            await this._emitActionNow('execute', { ...snapshot, intelRevealPercent: outcome.intelRevealPercent });
+            return;
+        }
+
+        await this._emitActionNow(action, snapshot);
+    }
+
+    private async _emitActionNow(action: LobbyMissionActionKey, snapshot: LobbyMissionDetailDialogSnapshot): Promise<void> {
         this.node.emit('mission-action', { action, snapshot });
         if (this._onActionSelected) {
-            void Promise.resolve(this._onActionSelected(action, snapshot));
+            await this._onActionSelected(action, snapshot);
         }
     }
 
