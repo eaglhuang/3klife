@@ -60,6 +60,14 @@ export function dynamicRelationForEvent(
     return { ok: true, relation: parsed.value, created: true };
 }
 
+/** 存檔讀回時的正規化：逐筆驗證、同一對同型別去重，無效項目略過；非陣列回傳空陣列 */
+export function normalizeDynamicRelations(raw: unknown): DynamicRelation[] {
+    if (!Array.isArray(raw)) return [];
+    const book = new DynamicRelationBook();
+    book.restore(raw);
+    return book.snapshot();
+}
+
 export class DynamicRelationBook {
     private readonly relations = new Map<string, DynamicRelation>();
 
