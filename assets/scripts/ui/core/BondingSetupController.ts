@@ -219,7 +219,7 @@ export class BondingSetupController {
 
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
-        texts.epEstimate = `預估爆發力：${ep.ep}（${ep.rating}）`;
+        texts.epEstimate = `預估爆發力：${ep.ep}（${ep.rating}，不含天命波動）`;
         texts.epDetail = [
             '基礎 50',
             `共鳴 +${ep.resonance}${ep.topTag ? `（${ep.topTag} × ${ep.topTagCount} 人）` : ''}`,
