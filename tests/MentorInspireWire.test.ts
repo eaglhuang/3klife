@@ -148,6 +148,13 @@ export function createMentorInspireWireSuite(): TestSuite {
         assert.equals(1, blooded.nurture.train(blooded.childId, 'str').inspirations?.length ?? 0, '有 ZHAO 血統觸發');
     });
 
+    suite.test('休息回合不擲靈感（PM 裁定，暫定）：只有訓練回合擲', () => {
+        const def = supportWith([{ Event_ID: 'EVT_A', Tactic_ID: 'TAC_A', Trigger_Window: [1, 36], Base_Rate: 1, Min_Star: 0 }]);
+        const { nurture, childId } = startWith([cardWith(def)]);
+        assert.isTrue(nurture.train(childId, 'rest').inspirations === undefined, '休息回合不觸發');
+        assert.equals(1, nurture.train(childId, 'str').inspirations?.length ?? 0, '訓練回合才觸發');
+    });
+
     suite.test('沒有支援卡資料的教官不擲骰：會話不會寫入 inspiredKeys', () => {
         const { nurture, childId } = startWith([cardWith(undefined)]);
         for (let round = 0; round < 6; round++) nurture.train(childId, 'str');

@@ -253,7 +253,7 @@ export class NurtureService {
     train(childId: string, action: NurtureAction): NurtureTrainResult {
         const current = this._requireSession(childId);
         const result: NurtureTrainResult = executeRound(current, action, this._rng());
-        const inspired = this._rollInspirations(childId, result.session);
+        const inspired = action === 'rest' ? { session: result.session, triggered: [] } : this._rollInspirations(childId, result.session);
         result.session = inspired.session;
         if (inspired.triggered.length > 0) result.inspirations = inspired.triggered;
         this._replace(result.session);
