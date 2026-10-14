@@ -9,7 +9,14 @@ import { NurtureService } from '../assets/scripts/core/services/NurtureService';
 import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { GameTimeMode } from '../assets/scripts/core/systems/GameClock';
 import { chooseFate, unveilGeneral, UnveilingGeneral } from '../assets/scripts/core/systems/Unveiling';
-import { isBloodlineMatch, bloodlineTpMultiplier, BLOODLINE_TP_DISCOUNT } from '../assets/scripts/core/systems/BloodlineGuarantee';
+import {
+    isBloodlineMatch,
+    bloodlineTpMultiplier,
+    BLOODLINE_TP_DISCOUNT,
+    BLOODLINE_DEADLINE_ROUND,
+    isBloodlineGuaranteedRound,
+    scaleSpecRoundToImpl,
+} from '../assets/scripts/core/systems/BloodlineGuarantee';
 import { mentorFromCard } from '../assets/scripts/core/systems/NurtureSystem';
 import { parseSupportCard } from '../assets/scripts/core/models/MentorSupportSchema';
 import type { MentorCard } from '../assets/scripts/core/models/MentorCard';
@@ -80,6 +87,17 @@ export function createBloodlineGuaranteeSuite(): TestSuite {
         assert.isTrue(Math.abs(bloodlineTpMultiplier(true) - (1 - BLOODLINE_TP_DISCOUNT)) < 1e-9);
         assert.isTrue(Math.abs(bloodlineTpMultiplier(true) - 0.8) < 1e-9);
         assert.equals(1, bloodlineTpMultiplier(false));
+    });
+
+    suite.test('期限換算：規格 60 回合 → 實作 36 回合；其餘按比例無條件進位', () => {
+        assert.equals(36, scaleSpecRoundToImpl(60));
+        assert.equals(18, scaleSpecRoundToImpl(30));
+        assert.equals(30, scaleSpecRoundToImpl(50));
+        assert.equals(27, scaleSpecRoundToImpl(45));
+        assert.equals(36, BLOODLINE_DEADLINE_ROUND);
+        assert.isTrue(isBloodlineGuaranteedRound(BLOODLINE_DEADLINE_ROUND));
+        assert.isFalse(isBloodlineGuaranteedRound(BLOODLINE_DEADLINE_ROUND + 1), '期限後不保底');
+        assert.isFalse(isBloodlineGuaranteedRound(0), '第 0 回合不保底');
     });
 
     suite.test('mentorFromCard 預設家族名取自卡名的姓（關羽 → 關）', () => {
