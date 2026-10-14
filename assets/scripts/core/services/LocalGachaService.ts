@@ -3,7 +3,7 @@ import type { GeneralConfig, GeneralDetailRarityTier } from '../models/GeneralUn
 import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
-import { checkWalletBalance, formatInsufficientMessage } from './GachaWalletRules';
+import { checkWalletBalance, formatInsufficientMessage, STARTER_GACHA_WALLET } from './GachaWalletRules';
 import { drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
@@ -49,13 +49,7 @@ const SINGLE_PLAYER_MODE_KEY = 'ucuf.gacha.single-player-mode';
 const DEV_AUTO_TOPUP_KEY = 'ucuf.gacha.dev-auto-topup';
 const WALLET_STORAGE_KEY = 'ucuf.gacha.wallet.v1';
 const PITY_STORAGE_KEY = 'ucuf.gacha.pity.v1';
-const DEFAULT_WALLET: LocalGachaWalletSnapshot = {
-    gems: 1280,
-    gold: 128450,
-    tickets: 12,
-    bronze: 0,
-    oracle: 0,
-};
+const DEFAULT_WALLET: LocalGachaWalletSnapshot = { ...STARTER_GACHA_WALLET };
 
 function cloneGeneral(general: GeneralConfig): GeneralConfig {
     try {
