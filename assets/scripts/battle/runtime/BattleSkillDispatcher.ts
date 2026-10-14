@@ -11,7 +11,7 @@ import { BattleCombatResolver } from './BattleCombatResolver';
 import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { evaluateCasterTacticConditions, type TacticCondition, type TacticConditionResult } from '../../core/systems/TacticCondition';
-import { canPerformAction, vitalityBandOf, type BattleActionKind } from '../../core/systems/VitalityBattleGate';
+import { canPerformAction, spendUltimateVitality, vitalityBandOf, type BattleActionKind } from '../../core/systems/VitalityBattleGate';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver';
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
@@ -27,6 +27,8 @@ import { services } from '../../core/managers/ServiceLoader';
 
 export interface GeneralSkillCastOptions {
   tacticId?: string | null;
+  /** 奧義的 ultimate id（用來查精力成本；同一戰法可對應多個奧義，只能靠 ultimateId 區分） */
+  ultimateId?: string | null;
   battleSkillId?: string | null;
   targetMode?: BattleSkillTargetMode;
   targetUnitUid?: string | null;
@@ -40,6 +42,8 @@ export interface BattleSkillDispatcherContext {
   getEnemyGeneralUnitId(): string | null;
   /** 戰法的 tcond 條件表（TAC-07）；查不到或沒有條件時回 undefined，視為無條件 */
   getTacticConditions?(tacticId: string): readonly TacticCondition[] | undefined;
+  /** 奧義的精力成本比例（例如 0.05 = 5%）；查不到時不扣精力 */
+  getUltimateVitalityCostPct?(ultimateId: string): number | undefined;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -88,6 +92,7 @@ export class BattleSkillDispatcher {
       ownerUid: casterFaction,
       generalTemplateId: general.id,
       battleSkillId: skillId,
+      ultimateId: options.ultimateId ?? null,
       targetMode: options.targetMode ?? resolveBattleSkillTargetMode(skillId, BattleSkillTargetMode.EnemyAll),
       timing: BattleSkillTiming.ActiveCast,
       targetUnitUid: options.targetUnitUid ?? null,
@@ -168,7 +173,29 @@ export class BattleSkillDispatcher {
         battleLogLines: [vitalityCheck.reason],
       };
     }
-    return this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
+    const result = this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
+    if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
+      this.spendUltimateCost(request);
+    }
+    return result;
+  }
+
+  /** 奧義生效後扣精力（PROG-2-0429）：只在 applied 時扣，被擋或沒有目標不扣 */
+  private spendUltimateCost(request: BattleSkillRequest): void {
+    if (!request.ultimateId) return;
+    const pct = this.context.getUltimateVitalityCostPct?.(request.ultimateId);
+    if (pct === undefined) return;
+    const general = this.resolveCasterGeneral(request);
+    if (!general) return;
+    general.vitality = spendUltimateVitality(general.vitality, general.maxVitality, pct);
+  }
+
+  /** 解析施放者所屬武將：有施放者單位用單位陣營；否則 ownerUid 本身即陣營（直接派發） */
+  private resolveCasterGeneral(request: BattleSkillRequest) {
+    const caster = this.context.state.units.get(request.ownerUid) ?? null;
+    const faction = caster?.faction ?? (request.ownerUid as Faction);
+    if (faction !== Faction.Player && faction !== Faction.Enemy) return null;
+    return this.context.state.getGeneral(faction);
   }
 
   /**
@@ -181,12 +208,7 @@ export class BattleSkillDispatcher {
         : request.sourceType === SkillSourceType.SeedTactic ? 'active-tactic'
           : null;
     if (!action) return { allowed: true, reason: '' };
-    // 直接派發的 ownerUid 是陣營字串（Faction.Player / Faction.Enemy），不是單位 uid，兩種都要能解析
-    const caster = this.context.state.units.get(request.ownerUid) ?? null;
-    const faction = caster?.faction ?? (request.ownerUid as Faction);
-    const general = faction === Faction.Player || faction === Faction.Enemy
-      ? this.context.state.getGeneral(faction)
-      : null;
+    const general = this.resolveCasterGeneral(request);
     if (!general) return { allowed: true, reason: '' };
     const band = vitalityBandOf(general.vitality, general.maxVitality);
     if (canPerformAction(band, action)) return { allowed: true, reason: '' };

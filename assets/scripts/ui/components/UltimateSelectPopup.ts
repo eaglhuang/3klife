@@ -27,6 +27,8 @@ const { ccclass } = _decorator;
 export interface UltimateSkillItem {
     /** 技能 ID（對應 skills.json） */
     skillId: string;
+    /** 奧義 ID（查精力成本用） */
+    ultimateId?: string;
     /** 顯示名稱 */
     label: string;
     /** SP 消耗（通常 = maxSp） */
@@ -202,7 +204,7 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             costNode.getComponent(Label)!.horizontalAlign = Label.HorizontalAlign.RIGHT;
 
             rowNode.on(Button.EventType.CLICK, () => {
-                services().event.emit(EVENT_NAMES.UltimateSkillSelected, { skillId: skill.skillId });
+                services().event.emit(EVENT_NAMES.UltimateSkillSelected, { skillId: skill.skillId, ultimateId: skill.ultimateId });
                 this.hide();
             }, this);
         });

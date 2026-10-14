@@ -31,12 +31,19 @@ export interface BattleTacticSummary {
 
 export interface UltimateSkillItem {
   skillId: string;
+  /** 奧義 id（查精力成本用，同一戰法可對應多個奧義） */
+  ultimateId?: string;
   label: string;
   costSp: number;
 }
 
 let tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
 let ultimateDefinitionMap = new Map<string, CanonicalUltimateDefinition>();
+
+/** 奧義的精力成本比例（例如 0.05 = 5%）；定義尚未載入或查不到時回傳 undefined（PROG-2-0429） */
+export function findUltimateVitalityCostPct(ultimateId: string): number | undefined {
+  return ultimateDefinitionMap.get(ultimateId)?.vitalityCostPct;
+}
 let battleSkillMetadataPromise: Promise<void> | null = null;
 
 /**
@@ -359,6 +366,7 @@ export function buildUltimateSkills(general: GeneralUnit): UltimateSkillItem[] {
       const skillDef = services().action.getSkill(resolvedSkillId);
       return {
         skillId: resolvedSkillId,
+        ultimateId: slot.ultimateId,
         label: ultimateDef?.name ?? skillDef?.label ?? slot.ultimateId,
         costSp: skillDef?.costSp ?? general.maxSp,
       } as UltimateSkillItem;
