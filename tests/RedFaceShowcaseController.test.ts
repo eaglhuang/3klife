@@ -5,6 +5,7 @@ import {
     RED_FACE_SHOW_MAX_ROWS,
     RedFaceShowcaseController,
     RedFaceShowcaseDeps,
+    toRedFaceTabFlowView,
 } from '../assets/scripts/ui/core/RedFaceShowcaseController';
 import type { RedFaceCardLike } from '../assets/scripts/core/systems/RedFaceShowcase';
 
@@ -122,6 +123,33 @@ export function createRedFaceShowcaseControllerSuite(): TestSuite {
         assert.equals(5, rows.length);
         assert.equals(['da-qiao', 'xiao-qiao', 'zhen-mi'].join(','), rows.slice(0, 3).map(row => row.id).join(','));
         assert.isFalse(rows.some(row => heroIds.includes(row.id)));
+    });
+
+    suite.test('轉蛋 Support 分頁的 FlowView 不含關閉鈕，其餘 key 保留', () => {
+        const full = new RedFaceShowcaseController(makeDeps()).getFlowView();
+        const tab = toRedFaceTabFlowView(full);
+        assert.isFalse('btnCloseLabel' in tab.texts);
+        assert.isFalse('btnClose' in tab.enabled);
+        assert.equals('紅顏池・展示', tab.texts.redFaceTitle);
+        assert.equals(full.texts.redFaceRow0Name, tab.texts.redFaceRow0Name);
+        assert.isTrue(tab.enabled.btnRedFaceRow0);
+    });
+
+    suite.test('Support 分頁 fragment 的節點 name 涵蓋分頁所有 flow key', () => {
+        const fragment = readJson('assets/resources/ui-spec/fragments/layouts/gacha-ds3-support-content.json');
+        const names = new Set<string>();
+        const walk = (node: any): void => {
+            if (!node || typeof node !== 'object') return;
+            if (typeof node.name === 'string') names.add(node.name);
+            for (const child of node.children ?? []) walk(child);
+        };
+        walk(fragment);
+        const view = toRedFaceTabFlowView(new RedFaceShowcaseController(makeDeps()).getFlowView());
+        const keys = [...Object.keys(view.texts), ...Object.keys(view.actives), ...Object.keys(view.enabled)];
+        for (const key of keys) {
+            assert.isTrue(names.has(key), `Support 分頁 fragment 缺少節點 ${key}`);
+        }
+        assert.isTrue(names.has('GachaDs3TabSupport_div_42'), '既有 Support 內容必須保留');
     });
 
     return suite;

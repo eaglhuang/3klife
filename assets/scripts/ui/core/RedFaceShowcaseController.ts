@@ -35,6 +35,18 @@ export interface RedFaceShowcaseDeps {
 
 const CORE_TAG_TEXT = '核心';
 
+/**
+ * 轉蛋 Support 分頁用的 FlowView：分頁沒有關閉鈕，去掉 btnClose / btnCloseLabel。
+ * Unity 對照：同一個 Presenter 輸出，不同容器只挑自己需要的欄位。
+ */
+export function toRedFaceTabFlowView(view: RedFaceShowcaseFlowView): RedFaceShowcaseFlowView {
+    const texts = { ...view.texts };
+    const enabled = { ...view.enabled };
+    delete texts.btnCloseLabel;
+    delete enabled.btnClose;
+    return { texts, actives: view.actives, enabled };
+}
+
 export class RedFaceShowcaseController {
     private _selectedId: string | null = null;
 
