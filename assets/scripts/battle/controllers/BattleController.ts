@@ -901,7 +901,11 @@ export class BattleController {
   // ─── 階段：敵方部署 ───────────────────────────────────────────────────────
 
   private applyStartOfBattleSceneGambit(): void {
-    resolveBattleTacticBehavior(this.state.battleTactic).applyStartOfBattle(this.state);
+    resolveBattleTacticBehavior(this.state.battleTactic).applyStartOfBattle(this.state, {
+      // 場景戰法沒有施放者欄位，施放者暫定為玩家主將（PM 暫定）；亂數走戰場種子亂數源
+      random: () => services().session.randomSource(),
+      casterGenes: this.state.getGeneral(Faction.Player)?.genes ?? [],
+    });
   }
 
   // ─── 階段：特殊行動 ───────────────────────────────────────────────────────

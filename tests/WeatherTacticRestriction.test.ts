@@ -82,7 +82,7 @@ export function createWeatherTacticRestrictionSuite(): TestSuite {
         const deepest = (weather: Weather): number => {
             const state = new BattleState();
             state.weather = weather;
-            behavior.applyStartOfBattle(state);
+            behavior.applyStartOfBattle(state, { random: () => 0, casterGenes: [] });
             let last = -1;
             for (let depth = 0; depth < GAME_CONFIG.GRID_DEPTH; depth++) {
                 if (state.getCell(middleLane, depth)?.terrain === TerrainType.River) last = depth;
