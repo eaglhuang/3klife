@@ -18,9 +18,11 @@ const MASTER_DIR = path.join(DATA_DIR, 'master');
 
 const BASE_PATH = path.join(MASTER_DIR, 'generals-base.json');
 const LORE_PATH = path.join(MASTER_DIR, 'generals-lore.json');
+const LORE_ALIAS_PATH = path.join(MASTER_DIR, 'lore-id-aliases.json');
 const STORIES_PATH = path.join(MASTER_DIR, 'generals-stories.json');
 const RUNTIME_PATH = path.join(DATA_DIR, 'generals.json');
 const INDEX_PATH = path.join(DATA_DIR, 'generals-index.json');
+const { resolveLoreMap } = require('./lore-id-resolver.js');
 
 const ACTIVE_L1_COUNT = 12;
 const STORY_SLOT_MAP = {
@@ -295,7 +297,8 @@ function main() {
     console.log(`[build-generals-runtime] historical-only: ${runtime.length} 筆，僅更新 isHistorical`);
     return;
   }
-  const loreMap = toMap(loreWrapper.data);
+  const loreAliases = fs.existsSync(LORE_ALIAS_PATH) ? JSON.parse(fs.readFileSync(LORE_ALIAS_PATH, 'utf8')) : {};
+  const loreMap = resolveLoreMap(loreWrapper.data, loreAliases);
   const storiesMap = toMap(storiesWrapper.data);
   const legacyMap = toMap(Array.isArray(legacyRuntime) ? legacyRuntime : (legacyRuntime.data || []));
 
