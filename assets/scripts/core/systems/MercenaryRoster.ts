@@ -12,8 +12,9 @@ import { GeneralConfig } from '../models/GeneralUnit';
 import { bondMercenary, MercenaryRejectReason, MercenaryState } from './MercenaryBond';
 import { BondRejectReason, BondStats, bondToPermanent } from './MercenaryBondPermanent';
 import { PoolCooldown, startCooldownAfterBond } from './MercenaryDeparture';
+import { AFFECTION_CAP } from './MercenaryAffection';
 
-export type RosterBondRejectReason = 'not-found' | 'general-mismatch' | MercenaryRejectReason | BondRejectReason;
+export type RosterBondRejectReason = 'not-found' | 'general-mismatch' | 'affection-not-full' | MercenaryRejectReason | BondRejectReason;
 
 export interface RosterBondResult {
     ok: boolean;
@@ -24,6 +25,8 @@ export interface RosterBondResult {
     mercenary?: MercenaryState;
     /** 只有 ok 時有值：加入 30 天冷卻後的冷卻表。 */
     cooldowns?: PoolCooldown[];
+    /** 只有 ok 且有傳入結義點數餘額時有值：扣除後的餘額。 */
+    bondPointsLeft?: number;
     pointsSpent: number;
 }
 
@@ -43,6 +46,8 @@ export function generalFromBondStats(template: Readonly<GeneralConfig>, stats: R
  * - template：generals.json 中與傭兵 generalId 相符的武將模板。
  * - rarity：稀有度（R/SR/SSR/UR），由呼叫端決定來源。
  * - today：目前日序，用來計算 30 天冷卻。
+ * - bondPoints：玩家的結義點數餘額（GCH-06）。有傳入時依 PM 裁定 2026-10-14：好感滿 60 只是門檻，
+ *   費用從點數餘額扣、好感不扣；沒傳時沿用舊行為（以好感當點數）。
  */
 export function bondMercenaryToRoster(
     mercenary: Readonly<MercenaryState>,
@@ -51,6 +56,7 @@ export function bondMercenaryToRoster(
     rarity: string,
     cooldowns: readonly PoolCooldown[],
     today: number,
+    bondPoints?: number,
 ): RosterBondResult {
     const reject = (reason: RosterBondRejectReason): RosterBondResult => ({ ok: false, reason, pointsSpent: 0 });
     if (mercenary.generalId !== template.id) return reject('general-mismatch');
@@ -58,14 +64,17 @@ export function bondMercenaryToRoster(
     const bonded = bondMercenary({ ...mercenary });
     if (!bonded.ok) return reject(bonded.reason!);
 
-    const points = bondToPermanent({ bondPoints: mercenary.affection ?? 0 }, rarity, 'points', stats);
+    if (bondPoints !== undefined && (mercenary.affection ?? 0) < AFFECTION_CAP) return reject('affection-not-full');
+
+    const points = bondToPermanent({ bondPoints: bondPoints ?? mercenary.affection ?? 0 }, rarity, 'points', stats);
     if (!points.ok) return reject(points.reason!);
 
     return {
         ok: true,
         pointsSpent: points.pointsSpent,
         general: generalFromBondStats(template, stats),
-        mercenary: { ...bonded.state, affection: points.wallet.bondPoints },
+        mercenary: bondPoints !== undefined ? { ...bonded.state } : { ...bonded.state, affection: points.wallet.bondPoints },
+        ...(bondPoints !== undefined ? { bondPointsLeft: points.wallet.bondPoints } : {}),
         cooldowns: startCooldownAfterBond(mercenary.uid, today, cooldowns, template.id),
     };
 }

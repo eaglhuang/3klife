@@ -365,7 +365,7 @@ export class GameSession {
     }
 
     /**
-     * 結義入名冊：傭兵結義轉永久（好感扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
+     * 結義入名冊：傭兵結義轉永久（好感滿 60 為門檻，費用從結義點數餘額扣）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
      * 失敗時不改任何狀態。rarity、stats 由呼叫端傳入（規格未定來源，見 PROG-2-0308）。
      */
     public async bondMercenaryToRoster(uid: string, template: GeneralConfig, stats: BondStats, rarity: string, today: number): Promise<RosterBondResult & { rosterAdded?: boolean }> {
@@ -373,7 +373,7 @@ export class GameSession {
         if (!mercenary) {
             return { ok: false, reason: 'not-found', pointsSpent: 0 };
         }
-        const result = bondMercenaryToRoster(mercenary, template, stats, rarity, this._mercenaries.cooldowns, today);
+        const result = bondMercenaryToRoster(mercenary, template, stats, rarity, this._mercenaries.cooldowns, today, this._bondPoints);
         if (!result.ok || !result.mercenary || !result.general || !result.cooldowns) {
             return result;
         }
@@ -382,6 +382,7 @@ export class GameSession {
             upkeep: this._mercenaries.upkeep.filter((u) => u.uid !== uid),
             cooldowns: result.cooldowns,
         };
+        this._bondPoints = result.bondPointsLeft ?? this._bondPoints;
         const { added } = await this.addGenerals([result.general]);
         return { ...result, rosterAdded: added.length > 0 };
     }

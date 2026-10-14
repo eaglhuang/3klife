@@ -50,6 +50,47 @@ export function createGameSessionMercenarySuite(): TestSuite {
         assert.equals(0, session.roster.length);
     });
 
+    const READY = { uid: 'merc-1', daysLeft: 0, bond: 6, status: 'Trial' as const, generalId: 'gen-merc' };
+    const BOND_STATS = { STR: 80, INT: 60, POL: 40, CHR: 70, LUK: 50 };
+    const BOND_TEMPLATE = { id: 'gen-merc', name: '測試', faction: 'shu', hp: 1000 } as unknown as GeneralConfig;
+    const sessionWith = (affection: number, bondPoints: number): GameSession => {
+        const session = new GameSession(1);
+        session.setMercenaries({ mercenaries: [{ ...READY, affection }], upkeep: [], cooldowns: [] });
+        (session as unknown as { _bondPoints: number })._bondPoints = bondPoints;
+        return session;
+    };
+
+    // PM 裁定 2026-10-14：好感滿 60 只是門檻，費用從結義點數餘額扣，好感不扣
+    suite.test('結義：好感滿 60 且點數足夠 → 成功，扣點數餘額、好感不變、武將入名冊', async () => {
+        const session = sessionWith(60, 150);
+        const result = await session.bondMercenaryToRoster('merc-1', BOND_TEMPLATE, BOND_STATS, 'R', 10);
+        assert.isTrue(result.ok);
+        assert.equals(100, result.pointsSpent);
+        assert.equals(50, session.bondPoints, '點數餘額 150 → 50');
+        assert.equals(60, session.mercenaries.mercenaries[0].affection!, '好感不扣');
+        assert.equals('Bonded', session.mercenaries.mercenaries[0].status);
+        assert.isTrue(session.roster.some((g) => g.id === 'gen-merc'));
+    });
+
+    suite.test('結義：好感滿 60 但點數不足 → 被擋，點數、傭兵、名冊都不變', async () => {
+        const session = sessionWith(60, 99);
+        const result = await session.bondMercenaryToRoster('merc-1', BOND_TEMPLATE, BOND_STATS, 'R', 10);
+        assert.isFalse(result.ok);
+        assert.equals('insufficient-points', result.reason!);
+        assert.equals(99, session.bondPoints);
+        assert.equals('Trial', session.mercenaries.mercenaries[0].status);
+        assert.equals(0, session.roster.length);
+    });
+
+    suite.test('結義：點數再多，好感未滿 60 也不能結義', async () => {
+        const session = sessionWith(59, 5000);
+        const result = await session.bondMercenaryToRoster('merc-1', BOND_TEMPLATE, BOND_STATS, 'R', 10);
+        assert.isFalse(result.ok);
+        assert.equals('affection-not-full', result.reason!);
+        assert.equals(5000, session.bondPoints);
+        assert.equals(0, session.roster.length);
+    });
+
     suite.test('startNewGame 會清空傭兵包', () => {
         const session = new GameSession(1);
         session.setMercenaries(BUNDLE);
