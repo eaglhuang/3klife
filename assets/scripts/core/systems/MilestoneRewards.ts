@@ -1,0 +1,51 @@
+// @spec-source → 武將戰績系統.md §里程碑門檻（成就與獎勵表）、§因子覺醒條件；隱藏因子的因子 ID 待因子字典確認，稱號與虎符品質提升的細節待企劃（PM 2026-10-14）
+/**
+ * MilestoneRewards — 里程碑達成後的獎勵內容（純邏輯，不依賴 cc）
+ *
+ * 判定條件已在 BattleRecordStats（BATTLE_MILESTONES / newlyReachedMilestones）。
+ * 本模組只負責「達成後發什麼」：獎勵資料表與依新達成的里程碑組出獎勵清單。
+ *
+ * Unity 對照：像 ScriptableObject 的獎勵表；達成事件只讀取，發放由呼叫端寫入背包。
+ */
+import { newlyReachedMilestones, type BattleRecordLike } from './BattleRecordStats';
+
+export type MilestoneRewardItem =
+    | { readonly kind: 'tacticNote'; readonly count: number }
+    | { readonly kind: 'title'; readonly titleId: string }
+    | { readonly kind: 'tallyQualityUp' }
+    | { readonly kind: 'spiritWallAnimation' }
+    | { readonly kind: 'hiddenFactor'; readonly name: string; readonly color: 'white' | 'red'; readonly factorId: string | null };
+
+/**
+ * 獎勵表（依規格「成就與獎勵」）。
+ * - 稱號 titleId 為暫定佔位，名稱待企劃。
+ * - 隱藏因子 factorId 為 null：因子字典尚無「不敗 / 鐵壁 / 殺意」，待確認後補上（REC-06 阻塞點）。
+ */
+export const MILESTONE_REWARDS: Readonly<Record<string, readonly MilestoneRewardItem[]>> = {
+    KILL_100: [{ kind: 'tacticNote', count: 1 }],
+    KILL_1000: [
+        { kind: 'tacticNote', count: 3 },
+        { kind: 'title', titleId: 'TITLE_KILL_1000_PLACEHOLDER' },
+    ],
+    KILL_10000: [{ kind: 'tallyQualityUp' }, { kind: 'spiritWallAnimation' }],
+    UNDEFEATED_50: [{ kind: 'hiddenFactor', name: '不敗', color: 'white', factorId: null }],
+    GUARDIAN_WALL: [{ kind: 'hiddenFactor', name: '鐵壁', color: 'white', factorId: null }],
+    ASURA: [{ kind: 'hiddenFactor', name: '殺意', color: 'red', factorId: null }],
+};
+
+/** 依里程碑 id 組出獎勵清單，依輸入順序；未知 id 略過 */
+export function rewardsForMilestones(milestoneIds: readonly string[]): MilestoneRewardItem[] {
+    return milestoneIds.flatMap((id) => MILESTONE_REWARDS[id] ?? []);
+}
+
+export interface MilestoneClaim {
+    /** 這次新達成的里程碑 id；呼叫端須把它們寫入 record.milestones，才不會重複發放 */
+    readonly newIds: string[];
+    readonly rewards: MilestoneRewardItem[];
+}
+
+/** 判定新達成的里程碑並組出獎勵；只讀取 record，不修改它 */
+export function claimMilestoneRewards(record: BattleRecordLike): MilestoneClaim {
+    const newIds = newlyReachedMilestones(record);
+    return { newIds, rewards: rewardsForMilestones(newIds) };
+}
