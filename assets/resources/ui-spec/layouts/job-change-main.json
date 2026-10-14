@@ -305,6 +305,33 @@
                   }
                 ],
                 "id": "btnConfirmJob"
+              },
+              {
+                "type": "button",
+                "name": "BtnBuyOrder",
+                "id": "btnBuyOrder",
+                "widget": {
+                  "top": 532,
+                  "hCenter": true
+                },
+                "width": 320,
+                "height": 56,
+                "skinSlot": "job.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnBuyOrderLabel",
+                    "id": "btnBuyOrderLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "購買轉職令（精元 50）",
+                    "styleSlot": "job.label.button"
+                  }
+                ]
               }
             ],
             "id": "contentPanel"

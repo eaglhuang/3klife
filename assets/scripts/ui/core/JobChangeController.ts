@@ -23,6 +23,7 @@ import {
     JobClass,
 } from '../../core/systems/JobChange';
 import { primaryAbilityOf, JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
+import { canAffordOffer, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 
 export const JOB_CHANGE_REJECT_TEXT: Record<JobChangeRejectReason, string> = {
     'too-young': `未滿 ${JOB_CHANGE_MIN_AGE} 歲，尚不能轉職`,
@@ -61,6 +62,10 @@ export interface JobChangeDeps {
     ordersOwned: () => number;
     /** 正式環境接 GameSession.changeJob；回傳 null 代表找不到武將或沒有主職資料 */
     changeJob: (generalId: string, targetSubClass: JobClass) => Promise<JobChangeResult | null>;
+    /** 目前持有的精元（轉職令購買用）；沒有購買入口時可不提供 */
+    gems?: () => number;
+    /** 購買一張轉職令：扣精元並發道具，成功回傳 true（FATE-07）；沒有購買入口時可不提供 */
+    buyOrder?: () => Promise<boolean>;
 }
 
 export class JobChangeController {
@@ -146,6 +151,23 @@ export class JobChangeController {
      * 畫面用的扁平 view：key 與 job-change-main.json 的節點 id 一一對應，
      * 形狀與 BondingSetup 相同，可直接交給 applyFlowView。
      */
+    /** 能不能買轉職令：有購買入口、且精元足夠。 */
+    public canBuyOrder(): boolean {
+        if (!this._deps.buyOrder || !this._deps.gems) return false;
+        return canAffordOffer(JOB_CHANGE_ORDER_OFFER, this._deps.gems());
+    }
+
+    /** 購買一張轉職令；精元不足或沒有購買入口時不呼叫扣款，回傳 false 並寫入提示。 */
+    public async buyOrder(): Promise<boolean> {
+        if (!this.canBuyOrder()) {
+            this._notice = '精元不足，無法購買轉職令';
+            return false;
+        }
+        const ok = await this._deps.buyOrder!();
+        this._notice = ok ? '已購入轉職令 ×1' : '購買失敗，請稍後再試';
+        return ok;
+    }
+
     public getFlowView(): JobChangeFlowView {
         const view = this.getView();
         const general = this._current();
@@ -168,6 +190,7 @@ export class JobChangeController {
                 btnSubWarriorLabel: pick('Warrior', '追加武官'),
                 btnSubScholarLabel: pick('Scholar', '追加文官'),
                 emptyHint: view.blockedText ?? '',
+                btnBuyOrderLabel: `購買轉職令（精元 ${JOB_CHANGE_ORDER_OFFER.price}）`,
             },
             actives: {
                 emptyHint: general === null,
@@ -181,6 +204,7 @@ export class JobChangeController {
                 btnSubWarrior: warrior !== undefined,
                 btnSubScholar: scholar !== undefined,
                 btnConfirmJob: view.confirmEnabled,
+                btnBuyOrder: this.canBuyOrder(),
             },
         };
     }
