@@ -35,7 +35,22 @@ export function bloodlineTpMultiplier(match: boolean): number {
     return match ? 1 - BLOODLINE_TP_DISCOUNT : 1;
 }
 
-/** 保底只給在實作回合數以內的回合（NURTURE_TOTAL_ROUNDS） */
+/** 規格的培育回合數（保底「60 回合前」的基準） */
+export const SPEC_TOTAL_ROUNDS = 60;
+
+/**
+ * 把規格的回合期限換算成實作回合：spec × NURTURE_TOTAL_ROUNDS / SPEC_TOTAL_ROUNDS，無條件進位。
+ * PM 裁定（2026-10-14，暫定）：60 回合換算後為 36，等於整個培育期間。
+ */
+export function scaleSpecRoundToImpl(specRound: number): number {
+    return Math.ceil((specRound * NURTURE_TOTAL_ROUNDS) / SPEC_TOTAL_ROUNDS);
+}
+
+/** 保底期限（實作回合）：規格「60 回合前保證」換算後的回合 */
+export const SPEC_BLOODLINE_DEADLINE_ROUND = 60;
+export const BLOODLINE_DEADLINE_ROUND = scaleSpecRoundToImpl(SPEC_BLOODLINE_DEADLINE_ROUND);
+
+/** 保底只給期限以內的回合 */
 export function isBloodlineGuaranteedRound(round: number): boolean {
-    return round >= 1 && round <= NURTURE_TOTAL_ROUNDS;
+    return round >= 1 && round <= BLOODLINE_DEADLINE_ROUND;
 }
