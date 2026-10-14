@@ -30,7 +30,7 @@ import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewAppl
 import { CountdownState } from '../../core/systems/CountdownManager';
 import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
-import { fallbackBreedText } from '../core/BreedingTexts';
+import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
@@ -112,6 +112,11 @@ interface GeneralListOpenPayload {
 
 /** 選卡畫面的卡片按鈕數（對應 lobby-deck-select-main.json 的 btnDeckCard0..3，目前卡片目錄只有 4 張） */
 const DECK_SELECT_SLOTS = 4;
+
+/** 結緣與開獎文案：走 i18n，語系表未載入時退回 zh-TW 預設（PROG-2-0526 / 0527） */
+function breedText(): BreedTextLookup {
+    return withBreedFallback((key, ...args) => services().i18n.t(key, ...args));
+}
 
 interface ScreenButtonBinding {
     buttonId: string;
@@ -350,6 +355,7 @@ export class LobbyScene extends Component {
             unveiling: services().unveiling,
             nurture: services().nurture,
             loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            text: breedText(),
             persist: async () => {
                 if (services().session.hasSaveService) {
                     await services().session.save();
@@ -450,11 +456,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
-            // 語系表未載入時 i18n.t 會回傳 key 本身，這時改用 zh-TW 預設文案，避免畫面出現原始 key
-            text: (key, ...args) => {
-                const localized = services().i18n.t(key, ...args);
-                return localized === key ? fallbackBreedText(key, ...args) : localized;
-            },
+            text: breedText(),
         });
         this._bonding = bonding;
 
