@@ -247,7 +247,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
         femaleSources: normalizeFemaleSourcesMap(snapshot.femaleSources),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
-        ...(snapshot.resources !== undefined ? { resources: { fame: normalizeFame(snapshot.resources.fame) } } : {}),
+        ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame) } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
