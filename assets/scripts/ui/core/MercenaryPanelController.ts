@@ -54,6 +54,15 @@ export class MercenaryPanelController {
         return rows.find(row => row.uid === this._selectedUid) ?? rows[0] ?? null;
     }
 
+    /** 名牌點擊時呼叫：依 uid 選取；不在列中時回傳 false 且不變動。 */
+    public selectUid(uid: string): boolean {
+        const row = this.rows().find(item => item.uid === uid);
+        if (!row) return false;
+        this._selectedUid = row.uid;
+        this._notice = null;
+        return true;
+    }
+
     /** 點列時呼叫；索引超出列時忽略。 */
     public select(index: number): void {
         const row = this.rows()[index];

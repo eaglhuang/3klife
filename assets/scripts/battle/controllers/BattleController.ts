@@ -35,6 +35,9 @@ import type { BattleRuntimePhaseName, BattleRuntimePhaseOutcome } from '../runti
 import { createBattlePhaseExecutor, type BattlePhaseExecutor } from '../runtime/phases/BattlePhaseExecutor';
 import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoController';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
+import { RETREAT_BASE_RISK, resolveRetreat, retreatNextStep, type RetreatResolution } from '../../core/systems/BattleRetreat';
+import { retreatRiskOf } from '../../core/systems/RetreatRisk';
+import type { VitalityBand } from '../../core/systems/VitalityBattleGate';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import { factorBattleEffectsOf, type FactorBattleEffectMap } from '../../core/systems/FactorTacticLinkage';
@@ -357,6 +360,36 @@ export class BattleController {
     this.sortie = createSortieState(input);
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
+  }
+
+  /**
+   * 部隊撤退（PM 暫定，2026-10-14）：擲骰，命中風險即失敗。
+   * 成功：脫離戰場、保留 HP、不算陣亡、不給戰功；失敗：受最大 HP 20% 傷害、留在場上、當回合不能行動。
+   * 部隊沒有精力，風險的精力段由指揮武將決定（band，預設 high）。roll 可注入（測試用）。
+   * 回傳 null 表示該單位不存在。
+   */
+  public attemptRetreat(
+    unitId: string,
+    band: VitalityBand = 'high',
+    roll: number = services().session.randomSource(),
+  ): RetreatResolution | null {
+    const unit = this.state.units.get(unitId);
+    if (!unit) return null;
+    const result = resolveRetreat(unit.maxHp, unit.currentHp, retreatRiskOf(RETREAT_BASE_RISK, band), roll);
+    switch (retreatNextStep(result)) {
+      case 'escape':
+        this.state.removeUnit(unitId);
+        services().buff.clearUnit(unitId);
+        return result;
+      case 'dead':
+        unit.currentHp = 0;
+        this.combatResolver.onUnitKilled(unit, null, services());
+        return result;
+      case 'blocked':
+        unit.currentHp = result.hpAfter;
+        this.turnManager.markUnitActionBlocked(unitId);
+        return result;
+    }
   }
 
   /**
@@ -879,7 +912,11 @@ export class BattleController {
   // ─── 階段：敵方部署 ───────────────────────────────────────────────────────
 
   private applyStartOfBattleSceneGambit(): void {
-    resolveBattleTacticBehavior(this.state.battleTactic).applyStartOfBattle(this.state);
+    resolveBattleTacticBehavior(this.state.battleTactic).applyStartOfBattle(this.state, {
+      // 場景戰法沒有施放者欄位，施放者暫定為玩家主將（PM 暫定）；亂數走戰場種子亂數源
+      random: () => services().session.randomSource(),
+      casterGenes: this.state.getGeneral(Faction.Player)?.genes ?? [],
+    });
   }
 
   // ─── 階段：特殊行動 ───────────────────────────────────────────────────────

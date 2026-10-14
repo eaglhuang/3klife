@@ -30,7 +30,7 @@ if (typeof window === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const fs = require('fs') as typeof import('fs');
     const SKIP = new Set<string>([
-        'BattleCombatRegression', 'BattleControllerSkillTargeting', 'BattleSkillProfileAutoTargeting',
+        'BattleCombatRegression', 'BattleSkillProfileAutoTargeting',
         'BattleSkillSourceTranslator', 'ResultPopup', 'UISpecParser',
         'ucuf/assetEvictionClosedLoop', 'ucuf/editableTextPanel', 'ucuf/sceneSwitchDispose.integration',
         'ucuf/specVersionDegradation', 'ucuf/validateTaskCardCli',

@@ -5,7 +5,7 @@ import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode';
 import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
-import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS } from '../../core/systems/FateBlessing';
+import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS, type FateHeldGene } from '../../core/systems/FateBlessing';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -37,13 +37,23 @@ export interface BattleTurnAdvanceContext {
   onUnitKilled(unit: TroopUnit, killer: TroopUnit | null, svc: ReturnType<typeof services>): void;
 }
 
+/** 戰場開場時的上下文：亂數走戰場種子亂數源；施放者的基因用來算天命加護（FBR-10） */
+export interface BattleStartContext {
+  random: () => number;
+  casterGenes: readonly FateHeldGene[];
+}
+
 export interface BattleTacticBehavior {
-  applyStartOfBattle(state: BattleState): void;
+  applyStartOfBattle(state: BattleState, context: BattleStartContext): void;
   advanceTurn(state: BattleState, context?: BattleTurnAdvanceContext): void;
   isFactionHiddenFrom(attackerFaction: Faction, targetFaction: Faction, state: BattleState): boolean;
   getEffectiveMoveRange(unit: TroopUnit, state: BattleState): number;
   getEffectiveAttackRange(unit: TroopUnit, state: BattleState): number;
   resolveDamageAdjustment(context: BattleDamageContext): BattleDamageAdjustment;
+  /** 場景對攻擊方命中率的加減（個百分點，SCN-06）；沒有則為 0 */
+  getAccuracyDelta?(attacker: TroopUnit, state: BattleState): number;
+  /** 場景對攻擊方暴擊率的加成（個百分點，SCN-06）；沒有則為 0 */
+  getCritBonus?(attacker: TroopUnit, state: BattleState): number;
 }
 
 const FLOOD_DEPTH_START = 2;
@@ -51,7 +61,9 @@ const FLOOD_DEPTH_END = 4;
 export const FLOOD_ATTACK_PUSH_LANE_DELTA = -1;
 export const FLOOD_ATTACK_PUSH_DEPTH_DELTA = 0;
 const FIRE_DAMAGE_PER_TURN = 15;
-const NIGHT_RAID_ATTACK_BONUS = 0.25;
+/** 夜襲全局命中 -25%、暴擊 +20%（戰法場景規格書；PM 裁定 (a)，以規格為準，取代先制增傷） */
+const NIGHT_RAID_HIT_DELTA = -0.25;
+const NIGHT_RAID_CRIT_BONUS = 0.2;
 
 /** 目前天氣下水攻應淹沒的格子（PROG-2-0406 雨天擴大；PROG-2-0407 依天氣即時重算） */
 function floodAttackCells(weather: BattleState['weather']): Array<{ lane: number; depth: number }> {
@@ -236,10 +248,10 @@ function applyFireAttackTerrain(state: BattleState): void {
   }
 }
 
-function applyRockSlideTerrain(state: BattleState): void {
-  // 天命加護（FBR-10）：落石成功率 = 基礎 + 施放方天命加成；基礎 100% 時必成功
-  const fateLevel = fateBlessingLevel(state.getGeneral(Faction.Player)?.genes ?? []);
-  if (!rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), Math.random())) return;
+function applyRockSlideTerrain(state: BattleState, context: BattleStartContext): void {
+  // 天命加護（FBR-10）：落石成功率 = 基礎 85% + 施放者天命加成，上限 100%；亂數走戰場亂數源
+  const fateLevel = fateBlessingLevel(context.casterGenes);
+  if (!rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), context.random())) return;
   for (let lane = 1; lane <= 3; lane++) {
     state.setTileEffect({
       id: `rock-${lane}-4`,
@@ -290,36 +302,16 @@ function tickAmbushAttackFlags(state: BattleState): void {
   }
 }
 
+/** 夜襲旗標整場生效（全局命中／暴擊）；兩回合的窗口只管敵方遠程視野 */
 function tickNightRaidFlags(state: BattleState): void {
   if (state.sceneFlags.nightRaidOpenTurns > 0) {
     state.sceneFlags.nightRaidOpenTurns = Math.max(0, state.sceneFlags.nightRaidOpenTurns - 1);
-    if (state.sceneFlags.nightRaidOpenTurns === 0) {
-      state.sceneFlags.nightRaid = false;
-    }
   }
 }
 
 function resolveDefaultDamageAdjustment(context: BattleDamageContext): BattleDamageAdjustment {
   return {
     damage: context.baseDamage,
-  };
-}
-
-function resolveNightRaidDamageAdjustment(context: BattleDamageContext): BattleDamageAdjustment {
-  const isOpeningStrike =
-    context.attacker.faction === Faction.Player
-    && context.state.sceneFlags.nightRaid
-    && context.state.sceneFlags.nightRaidOpenTurns > 0;
-
-  if (!isOpeningStrike) {
-    return {
-      damage: context.baseDamage,
-    };
-  }
-
-  return {
-    damage: Math.max(1, Math.floor(context.baseDamage * (1 + NIGHT_RAID_ATTACK_BONUS))),
-    damageSource: context.kind === 'unit' ? 'night-raid-opening-strike' : undefined,
   };
 }
 
@@ -380,7 +372,8 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
 
       return unit.attackRange;
     },
-    resolveDamageAdjustment: resolveNightRaidDamageAdjustment,
+    getAccuracyDelta: (_attacker: TroopUnit, state: BattleState) => (state.sceneFlags.nightRaid ? NIGHT_RAID_HIT_DELTA : 0),
+    getCritBonus: (_attacker: TroopUnit, state: BattleState) => (state.sceneFlags.nightRaid ? NIGHT_RAID_CRIT_BONUS : 0),
   },
 };
 

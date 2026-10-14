@@ -15,8 +15,8 @@ export const FATE_BLESSING_GENE_IDS: readonly string[] = ['gene_destiny', 'gene_
 /** 每級天命加成（PM 暫定 5%） */
 export const FATE_BLESSING_PER_LEVEL = 0.05;
 
-/** 落石基礎成功率（PM 暫定 100%：目前行為不變） */
-export const ROCK_SLIDE_BASE_SUCCESS = 1;
+/** 落石基礎成功率（PM 裁定 85%，天命加成另計） */
+export const ROCK_SLIDE_BASE_SUCCESS = 0.85;
 
 /** 武將持有的基因（只需要 id / level / isLocked） */
 export interface FateHeldGene {

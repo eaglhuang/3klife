@@ -1,0 +1,96 @@
+{
+  "id": "warehouse-panel-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "id": "warehousePanelRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "id": "warehouseCard",
+        "width": 1000,
+        "height": 720,
+        "skinSlot": "wp.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 16,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "id": "warehouseTitle",
+            "width": 944,
+            "height": 48,
+            "text": "武將倉庫",
+            "styleSlot": "wp.label.title"
+          },
+          {
+            "type": "label",
+            "id": "warehouseCapacity",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "wp.label.body"
+          },
+          {
+            "type": "label",
+            "id": "warehouseNotice",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "wp.label.body"
+          },
+          {
+            "type": "button",
+            "id": "btnWarehouseExpand",
+            "width": 320,
+            "height": 64,
+            "skinSlot": "wp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "id": "btnWarehouseExpandLabel",
+                "width": 320,
+                "height": 40,
+                "text": "",
+                "styleSlot": "wp.label.body"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "id": "btnClose",
+            "width": 200,
+            "height": 64,
+            "skinSlot": "wp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "id": "btnCloseLabel",
+                "width": 200,
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "wp.label.body"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
