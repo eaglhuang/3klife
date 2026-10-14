@@ -24,6 +24,8 @@ import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
 import { MENTOR_STAR_TABLE } from './MentorBreakthrough';
+import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
+import { surnameOf } from './VirtualAncestorGenerator';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -93,6 +95,8 @@ export interface TrainingMentor {
     specialty: TrainingKind;
     /** 每回合站在擅長格的機率 0~1（Slot_Burst_Rate） */
     burstRate: number;
+    /** 戰法靈感資料（只有支援卡才有）；friendshipBonusByStar 依星等索引，小數（0.2 = +20%） */
+    inspire?: { events: InspireEvent[]; friendshipBonusByStar: number[] };
 }
 
 export interface NurtureRoundLog {
@@ -141,6 +145,8 @@ export interface NurtureSession {
     hybridRound?: number;
     /** 累積好感次數（舊存檔可能沒有此欄位，視為 0） */
     affection?: number;
+    /** 已觸發的戰法靈感鍵（教官 uid:事件 ID），同場只觸發一次；舊存檔沒有此欄位視為空 */
+    inspiredKeys?: string[];
     /** 尚待跳過的回合數（受傷後設為 1；舊存檔可能沒有此欄位，視為 0） */
     skipRounds?: number;
     /** 開場時未鎖定的紅色因子總級數，影響休息的精力回復（舊存檔視為 0） */
@@ -560,6 +566,14 @@ export function mentorFromCard(
         specialty,
         stars: overrides.stars ?? 0,
         burstRate: overrides.burstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
-        familyName: overrides.familyName,
+        familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
+        ...(card.support
+            ? {
+                inspire: {
+                    events: inspireEventsFromSupport(card.support),
+                    friendshipBonusByStar: card.support.friendshipBonus.map((multiplier) => multiplier - 1),
+                },
+            }
+            : {}),
     };
 }
