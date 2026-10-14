@@ -708,7 +708,7 @@ export class GameSession {
         const core = starters.find(general => general.id === coreId)!;
         if (!checkDeployable(core, { nurturingIds: this._nurturingIds() }).eligible) throw new Error('[GameSession] 初始核心主將不可出戰');
         this.startNewGame(seed);
-        this._roster.replaceAll(starters);
+        this._roster.replaceAll(normalizeRosterRoles(starters));
         if (!await this.setLeadGeneral(coreId)) throw new Error('[GameSession] 無法設定初始核心主將');
         this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
     }
@@ -1196,7 +1196,7 @@ export class GameSession {
         const duplicates: GeneralConfig[] = [];
         const rebirths: Array<RebirthPullResult & { id: string }> = [];
         let bondPointsGained = 0;
-        for (const general of generals) {
+        for (const general of normalizeRosterRoles(generals)) {
             if (!general || typeof general.id !== 'string') {
                 continue;
             }
