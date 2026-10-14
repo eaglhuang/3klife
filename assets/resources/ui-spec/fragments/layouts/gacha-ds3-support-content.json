@@ -632,6 +632,366 @@
               "name": "GachaDs3TabSupport_div_54",
               "width": 408,
               "height": 31
+            },
+            {
+              "type": "container",
+              "name": "redFaceShowcaseRoot",
+              "width": 408,
+              "height": 810,
+              "layout": {
+                "type": "vertical",
+                "justifyContent": "start",
+                "spacingY": 10
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "redFaceTitle",
+                  "width": 408,
+                  "height": 40,
+                  "text": "紅顏池・展示"
+                },
+                {
+                  "type": "label",
+                  "name": "redFaceEmptyLabel",
+                  "width": 408,
+                  "height": 40,
+                  "text": ""
+                },
+                {
+                  "type": "panel",
+                  "name": "redFaceRow0",
+                  "width": 408,
+                  "height": 88,
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "space-between",
+                    "paddingTop": 8,
+                    "paddingRight": 10,
+                    "paddingBottom": 8,
+                    "paddingLeft": 10
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "redFaceRow0Info",
+                      "width": 240,
+                      "height": 72,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "center",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "redFaceRow0Name",
+                          "width": 240,
+                          "height": 30,
+                          "text": ""
+                        },
+                        {
+                          "type": "label",
+                          "name": "redFaceRow0Tag",
+                          "width": 240,
+                          "height": 24,
+                          "text": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "button",
+                      "name": "btnRedFaceRow0",
+                      "width": 120,
+                      "height": 48,
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "btnRedFaceRow0Label",
+                          "width": 120,
+                          "height": 30,
+                          "text": "檢視"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "redFaceRow1",
+                  "width": 408,
+                  "height": 88,
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "space-between",
+                    "paddingTop": 8,
+                    "paddingRight": 10,
+                    "paddingBottom": 8,
+                    "paddingLeft": 10
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "redFaceRow1Info",
+                      "width": 240,
+                      "height": 72,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "center",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "redFaceRow1Name",
+                          "width": 240,
+                          "height": 30,
+                          "text": ""
+                        },
+                        {
+                          "type": "label",
+                          "name": "redFaceRow1Tag",
+                          "width": 240,
+                          "height": 24,
+                          "text": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "button",
+                      "name": "btnRedFaceRow1",
+                      "width": 120,
+                      "height": 48,
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "btnRedFaceRow1Label",
+                          "width": 120,
+                          "height": 30,
+                          "text": "檢視"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "redFaceRow2",
+                  "width": 408,
+                  "height": 88,
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "space-between",
+                    "paddingTop": 8,
+                    "paddingRight": 10,
+                    "paddingBottom": 8,
+                    "paddingLeft": 10
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "redFaceRow2Info",
+                      "width": 240,
+                      "height": 72,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "center",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "redFaceRow2Name",
+                          "width": 240,
+                          "height": 30,
+                          "text": ""
+                        },
+                        {
+                          "type": "label",
+                          "name": "redFaceRow2Tag",
+                          "width": 240,
+                          "height": 24,
+                          "text": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "button",
+                      "name": "btnRedFaceRow2",
+                      "width": 120,
+                      "height": 48,
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "btnRedFaceRow2Label",
+                          "width": 120,
+                          "height": 30,
+                          "text": "檢視"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "redFaceRow3",
+                  "width": 408,
+                  "height": 88,
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "space-between",
+                    "paddingTop": 8,
+                    "paddingRight": 10,
+                    "paddingBottom": 8,
+                    "paddingLeft": 10
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "redFaceRow3Info",
+                      "width": 240,
+                      "height": 72,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "center",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "redFaceRow3Name",
+                          "width": 240,
+                          "height": 30,
+                          "text": ""
+                        },
+                        {
+                          "type": "label",
+                          "name": "redFaceRow3Tag",
+                          "width": 240,
+                          "height": 24,
+                          "text": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "button",
+                      "name": "btnRedFaceRow3",
+                      "width": 120,
+                      "height": 48,
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "btnRedFaceRow3Label",
+                          "width": 120,
+                          "height": 30,
+                          "text": "檢視"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "redFaceRow4",
+                  "width": 408,
+                  "height": 88,
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "space-between",
+                    "paddingTop": 8,
+                    "paddingRight": 10,
+                    "paddingBottom": 8,
+                    "paddingLeft": 10
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "redFaceRow4Info",
+                      "width": 240,
+                      "height": 72,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "center",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "redFaceRow4Name",
+                          "width": 240,
+                          "height": 30,
+                          "text": ""
+                        },
+                        {
+                          "type": "label",
+                          "name": "redFaceRow4Tag",
+                          "width": 240,
+                          "height": 24,
+                          "text": ""
+                        }
+                      ]
+                    },
+                    {
+                      "type": "button",
+                      "name": "btnRedFaceRow4",
+                      "width": 120,
+                      "height": 48,
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "btnRedFaceRow4Label",
+                          "width": 120,
+                          "height": 30,
+                          "text": "檢視"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "redFaceDetail",
+                  "width": 408,
+                  "height": 220,
+                  "layout": {
+                    "type": "vertical",
+                    "justifyContent": "start",
+                    "spacingY": 6,
+                    "paddingTop": 12,
+                    "paddingRight": 14,
+                    "paddingBottom": 12,
+                    "paddingLeft": 14
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "redFaceDetailName",
+                      "width": 380,
+                      "height": 30,
+                      "text": ""
+                    },
+                    {
+                      "type": "label",
+                      "name": "redFaceDetailTags",
+                      "width": 380,
+                      "height": 24,
+                      "text": ""
+                    },
+                    {
+                      "type": "label",
+                      "name": "redFaceDetailLine",
+                      "width": 380,
+                      "height": 120,
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
