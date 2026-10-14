@@ -1,6 +1,8 @@
 import { assert, TestSuite } from './TestRunner';
 import {
+    DYNAMIC_RELATION_DECAY_RATE,
     DYNAMIC_RELATION_INITIAL_INTIMACY,
+    DYNAMIC_RELATION_INTERACT_GAIN,
     DynamicRelationBook,
     DynamicRelationEventKind,
     dynamicRelationForEvent,
@@ -100,6 +102,40 @@ export function createKinDynamicRelationsSuite(): TestSuite {
         assert.equals(4, result.skipped);
         assert.equals(1, book.size());
         assert.equals(0, book.listFor('old-a').length, '舊內容已清空');
+    });
+
+    suite.test('每季衰退依 decayRate 減親密度，下限 0，回傳改動筆數', () => {
+        const book = new DynamicRelationBook();
+        book.record('bonding', 'a', 'b', 1);
+        book.record('battle-comrade', 'c', 'd', 1);
+        const first = book.decaySeason();
+        assert.equals(2, first);
+        assert.equals(DYNAMIC_RELATION_INITIAL_INTIMACY - DYNAMIC_RELATION_DECAY_RATE, book.listFor('a')[0].intimacy);
+        for (let i = 0; i < 30; i++) book.decaySeason();
+        assert.equals(0, book.listFor('a')[0].intimacy, '下限為 0');
+        assert.equals(0, book.decaySeason(), '已到下限不再計入改動');
+    });
+
+    suite.test('互動回補親密度，上限 100，回補同一對所有型別的關係', () => {
+        const book = new DynamicRelationBook();
+        book.record('bonding', 'a', 'b', 1);
+        book.record('battle-comrade', 'b', 'a', 1);
+        book.record('bonding', 'a', 'c', 1);
+        const updated = book.interact('a', 'b');
+        assert.equals(2, updated.length);
+        for (const r of updated) assert.equals(DYNAMIC_RELATION_INITIAL_INTIMACY + DYNAMIC_RELATION_INTERACT_GAIN, r.intimacy);
+        assert.equals(DYNAMIC_RELATION_INITIAL_INTIMACY, book.listFor('a').find((r) => r.uidB === 'c')!.intimacy, '不影響其他配對');
+        book.interact('a', 'b', 500);
+        assert.equals(100, book.interact('a', 'b', 1)[0].intimacy, '上限 100');
+    });
+
+    suite.test('沒有關係的一對互動回傳空陣列；互動後衰退仍依 decayRate 進行', () => {
+        const book = new DynamicRelationBook();
+        assert.equals(0, book.interact('x', 'y').length);
+        book.record('bonding', 'a', 'b', 1);
+        book.interact('a', 'b');
+        book.decaySeason();
+        assert.equals(DYNAMIC_RELATION_INITIAL_INTIMACY + DYNAMIC_RELATION_INTERACT_GAIN - DYNAMIC_RELATION_DECAY_RATE, book.listFor('a')[0].intimacy);
     });
 
     return suite;
