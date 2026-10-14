@@ -1,52 +1,70 @@
 {
   "heroes": [
     {
-      "id": "zhang-fei",
-      "name": "張飛",
-      "title": "萬人敵",
+      "generalId": "zhang-fei",
       "originRegion": "幽州涿郡",
-      "coreFactorTags": ["燕人", "蛇矛", "北境血脈"],
-      "coreFactorTag": "燕人"
+      "coreFactorTags": [
+        "燕人",
+        "蛇矛",
+        "北境血脈"
+      ],
+      "coreFactorTag": "燕人",
+      "introLine": ""
     },
     {
-      "id": "wei-yan",
-      "name": "魏延",
-      "title": "奇策長史",
+      "generalId": "wei-yan",
       "originRegion": "義陽",
-      "coreFactorTags": ["義陽", "狂骨", "孤軍"],
-      "coreFactorTag": "義陽"
+      "coreFactorTags": [
+        "義陽",
+        "狂骨",
+        "孤軍"
+      ],
+      "coreFactorTag": "義陽",
+      "introLine": ""
     },
     {
-      "id": "xiahou-dun",
-      "name": "夏侯惇",
-      "title": "拔矢啖睛",
+      "generalId": "xiahou-dun",
       "originRegion": "豫州沛國譙縣",
-      "coreFactorTags": ["譙縣", "獨眼", "宗親"],
-      "coreFactorTag": "譙縣"
+      "coreFactorTags": [
+        "譙縣",
+        "獨眼",
+        "宗親"
+      ],
+      "coreFactorTag": "譙縣",
+      "introLine": ""
     },
     {
-      "id": "zhang-he",
-      "name": "張郃",
-      "title": "巧變之將",
+      "generalId": "zhang-he",
       "originRegion": "冀州河間國",
-      "coreFactorTags": ["河間", "巧變", "宿將"],
-      "coreFactorTag": "河間"
+      "coreFactorTags": [
+        "河間",
+        "巧變",
+        "宿將"
+      ],
+      "coreFactorTag": "河間",
+      "introLine": ""
     },
     {
-      "id": "sun-ce",
-      "name": "孫策",
-      "title": "江東小霸王",
+      "generalId": "sun-ce",
       "originRegion": "揚州吳郡富春",
-      "coreFactorTags": ["富春", "霸王", "水鄉血脈"],
-      "coreFactorTag": "富春"
+      "coreFactorTags": [
+        "富春",
+        "霸王",
+        "水鄉血脈"
+      ],
+      "coreFactorTag": "富春",
+      "introLine": ""
     },
     {
-      "id": "gan-ning",
-      "name": "甘寧",
-      "title": "錦帆賊",
+      "generalId": "gan-ning",
       "originRegion": "益州巴郡臨江",
-      "coreFactorTags": ["巴郡", "鈴聲", "游俠"],
-      "coreFactorTag": "巴郡"
+      "coreFactorTags": [
+        "巴郡",
+        "鈴聲",
+        "游俠"
+      ],
+      "coreFactorTag": "巴郡",
+      "introLine": ""
     }
   ]
 }

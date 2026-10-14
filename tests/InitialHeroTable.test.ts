@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { validateInitialHeroes } from '../assets/scripts/core/systems/InitialHeroTable';
+import { battleVoiceKeyOf, portraitKeyOf, validateInitialHeroes } from '../assets/scripts/core/systems/InitialHeroTable';
 
 function readJson(relative: string): any {
     return JSON.parse(readFileSync(join(__dirname, '..', relative), 'utf8'));
@@ -21,27 +21,33 @@ function clone(): any {
 export function createInitialHeroTableSuite(): TestSuite {
     const suite = new TestSuite('InitialHeroTable (OPEN-02 初始六名將資料表)');
 
-    suite.test('正式資料檔通過驗證，六人依固定順序回傳', () => {
+    suite.test('正式資料檔通過驗證，六人依固定順序回傳，台詞留空', () => {
         const result = validateInitialHeroes(clone(), knownGeneralIds());
         assert.equals(true, result.ok);
         if (!result.ok) return;
         assert.equals(6, result.heroes.length);
-        assert.equals('zhang-fei', result.heroes[0].id);
+        assert.equals('zhang-fei', result.heroes[0].generalId);
         assert.equals('幽州涿郡', result.heroes[0].originRegion);
         assert.equals('燕人', result.heroes[0].coreFactorTag);
+        assert.equals('', result.heroes[0].introLine);
+    });
+
+    suite.test('立繪與語音鍵依 generalId 推導，格式與既有資料一致', () => {
+        assert.equals('portraits/generals/liu-bei', portraitKeyOf('liu-bei'));
+        assert.equals('audio/voice/generals/liu-bei/battle', battleVoiceKeyOf('liu-bei'));
     });
 
     suite.test('缺少一位初始名將時拒絕', () => {
         const raw = clone();
-        raw.heroes = raw.heroes.filter((h: { id: string }) => h.id !== 'gan-ning');
+        raw.heroes = raw.heroes.filter((h: { generalId: string }) => h.generalId !== 'gan-ning');
         const result = validateInitialHeroes(raw, knownGeneralIds());
         assert.equals(false, result.ok);
         assert.equals(true, !result.ok && result.issues.some(i => i.message.includes('gan-ning')));
     });
 
-    suite.test('武將 id 不在 generals.json 時拒絕', () => {
+    suite.test('generalId 不在 generals.json 時拒絕', () => {
         const raw = clone();
-        raw.heroes[0].id = 'no-such-general';
+        raw.heroes[0].generalId = 'no-such-general';
         const result = validateInitialHeroes(raw, knownGeneralIds());
         assert.equals(false, result.ok);
     });
@@ -54,18 +60,18 @@ export function createInitialHeroTableSuite(): TestSuite {
         assert.equals(true, !result.ok && result.issues.some(i => i.path.endsWith('coreFactorTag')));
     });
 
-    suite.test('出生地或稱號空白時拒絕，並列出全部問題', () => {
+    suite.test('出生地空白或 introLine 非字串時拒絕，並列出全部問題', () => {
         const raw = clone();
         raw.heroes[2].originRegion = '  ';
-        raw.heroes[3].title = '';
+        raw.heroes[3].introLine = 42;
         const result = validateInitialHeroes(raw, knownGeneralIds());
         assert.equals(false, result.ok);
         assert.equals(true, !result.ok && result.issues.length >= 2);
     });
 
-    suite.test('重複 id 時拒絕', () => {
+    suite.test('重複 generalId 時拒絕', () => {
         const raw = clone();
-        raw.heroes[5].id = 'zhang-fei';
+        raw.heroes[5].generalId = 'zhang-fei';
         const result = validateInitialHeroes(raw, knownGeneralIds());
         assert.equals(false, result.ok);
         assert.equals(true, !result.ok && result.issues.some(i => i.message.includes('重複')));

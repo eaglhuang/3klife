@@ -1,21 +1,22 @@
 // @spec-source → WBS v5 OPEN-02（初始六名將資料表）；史實校正與因子標籤清單（初始六將）；開場程式規格書 §3.1 HeroBase（暫定）
 /**
- * InitialHeroTable — 初始六名將資料表的驗證，純 TS，不依賴 cc。
+ * InitialHeroTable — 初始六名將資料表的驗證與鍵值推導，純 TS，不依賴 cc。
  *
- * 資料檔 initial-heroes.json 只放史實欄位（id、名字、稱號、出生地、核心因子標籤）。
- * introLine、portraitKey、battleVoiceKey 與稀有度、屬性規格未給值，這裡不驗證，待內容決定後再補。
- * Unity 對照：像 ScriptableObject 的進場檢查，載入時一次檢查欄位完整，不合格就拒絕整包資料。
+ * 資料檔 initial-heroes.json 只存 generalId 引用與史實欄位（出生地、核心因子標籤）。
+ * 稱號、稀有度、屬性一律以 generals.json 為唯一來源，這裡不重複存。
+ * 立繪與語音 key 依既有命名慣例由 generalId 推導，不另存。
+ * introLine 目前留空字串，等企劃提供台詞再填（PM 裁定，不自行編寫）。
+ * Unity 對照：像 ScriptableObject 只存引用（GUID），顯示資料由 Prefab 本體取得，避免兩處各存一份。
  */
 
 export const INITIAL_HERO_IDS = ['zhang-fei', 'wei-yan', 'xiahou-dun', 'zhang-he', 'sun-ce', 'gan-ning'] as const;
 
 export interface InitialHero {
-    id: string;
-    name: string;
-    title: string;
+    generalId: string;
     originRegion: string;
     coreFactorTags: string[];
     coreFactorTag: string;
+    introLine: string;
 }
 
 export interface InitialHeroIssue {
@@ -26,6 +27,16 @@ export interface InitialHeroIssue {
 export type InitialHeroValidation =
     | { ok: true; heroes: InitialHero[]; issues: [] }
     | { ok: false; heroes: []; issues: InitialHeroIssue[] };
+
+/** 立繪鍵：portraits/generals/<generalId>，與既有資料的 portraitKey 格式一致。 */
+export function portraitKeyOf(generalId: string): string {
+    return `portraits/generals/${generalId}`;
+}
+
+/** 戰鬥語音鍵：audio/voice/generals/<generalId>/battle，與既有資料的 battleVoiceKey 格式一致。 */
+export function battleVoiceKeyOf(generalId: string): string {
+    return `audio/voice/generals/${generalId}/battle`;
+}
 
 type Rec = Record<string, unknown>;
 
@@ -57,17 +68,16 @@ export function validateInitialHeroes(raw: unknown, knownIds: ReadonlySet<string
             issues.push({ path: at, message: '必須為物件' });
             return;
         }
-        const id = entry.id;
-        if (!isNonEmptyString(id)) {
-            issues.push({ path: `${at}.id`, message: '必須為非空字串' });
+        const generalId = entry.generalId;
+        if (!isNonEmptyString(generalId)) {
+            issues.push({ path: `${at}.generalId`, message: '必須為非空字串' });
             return;
         }
-        if (seen.has(id)) issues.push({ path: `${at}.id`, message: `重複的 id ${id}` });
-        seen.add(id);
-        if (!knownIds.has(id)) issues.push({ path: `${at}.id`, message: `generals.json 中找不到 ${id}` });
-        if (!isNonEmptyString(entry.name)) issues.push({ path: `${at}.name`, message: '必須為非空字串' });
-        if (!isNonEmptyString(entry.title)) issues.push({ path: `${at}.title`, message: '必須為非空字串' });
+        if (seen.has(generalId)) issues.push({ path: `${at}.generalId`, message: `重複的 generalId ${generalId}` });
+        seen.add(generalId);
+        if (!knownIds.has(generalId)) issues.push({ path: `${at}.generalId`, message: `generals.json 中找不到 ${generalId}` });
         if (!isNonEmptyString(entry.originRegion)) issues.push({ path: `${at}.originRegion`, message: '必須為非空字串' });
+        if (typeof entry.introLine !== 'string') issues.push({ path: `${at}.introLine`, message: '必須為字串（可為空）' });
 
         const tags = entry.coreFactorTags;
         const tagsValid = Array.isArray(tags) && tags.length > 0 && tags.every(isNonEmptyString);
@@ -77,15 +87,14 @@ export function validateInitialHeroes(raw: unknown, knownIds: ReadonlySet<string
             issues.push({ path: `${at}.coreFactorTag`, message: '主因子必須是 coreFactorTags 之一' });
         }
 
-        if (tagsValid && isNonEmptyString(entry.name) && isNonEmptyString(entry.title) && isNonEmptyString(entry.originRegion)
+        if (tagsValid && isNonEmptyString(entry.originRegion) && typeof entry.introLine === 'string'
             && isNonEmptyString(entry.coreFactorTag) && (tags as string[]).includes(entry.coreFactorTag)) {
-            byId.set(id, {
-                id,
-                name: entry.name,
-                title: entry.title,
+            byId.set(generalId, {
+                generalId,
                 originRegion: entry.originRegion,
                 coreFactorTags: [...(tags as string[])],
                 coreFactorTag: entry.coreFactorTag,
+                introLine: entry.introLine,
             });
         }
     });
