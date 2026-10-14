@@ -25,6 +25,7 @@
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
+import type { CountdownState } from '../systems/CountdownManager';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
@@ -122,6 +123,8 @@ export const GAME_SESSION_EVENTS = {
     BattleSettled: 'game-session-battle-settled',
     /** payload: string | null（出戰主將 id） */
     LeadGeneralChanged: 'game-session-lead-general-changed',
+    /** payload: CountdownState | null（趕路倒數開始或清除；OPEN-11） */
+    CountdownChanged: 'game-session-countdown-changed',
     /** payload: SortieSupport（參謀官 / 後勤官，PROG-2-0083） */
     SortieSupportChanged: 'game-session-sortie-support-changed',
     /** payload: PlayerSaveSnapshot */
@@ -283,6 +286,8 @@ export class GameSession {
     private _leadGeneralId: string | null = null;
     /** 出征支援（參謀官 / 後勤官）；暫定只存在本次遊玩，不寫存檔 */
     private _sortieSupport: SortieSupport = { strategistUid: null, deputyUid: null };
+    /** 趕路倒數（OPEN-11）；目前未存檔，讀檔後為 null。 */
+    private _countdown: CountdownState | null = null;
     private _discoveryLevel = 1;
     private _discoveryExp = 0;
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
@@ -1045,6 +1050,23 @@ export class GameSession {
             favorite: favorites.has(g.id),
             assigned: assigned.has(g.id),
         }));
+    }
+
+    /** 目前的趕路倒數（複本）；沒有趕路中的角色時為 null。 */
+    public get countdown(): CountdownState | null {
+        return this._countdown ? { ...this._countdown } : null;
+    }
+
+    /** 開始趕路倒數（由行軍 / 招募事件呼叫）；會覆蓋目前的倒數。 */
+    public startCountdown(state: Readonly<CountdownState>): void {
+        this._countdown = { ...state };
+        this._emit(GAME_SESSION_EVENTS.CountdownChanged, this.countdown);
+    }
+
+    /** 清除趕路倒數（角色已抵達並由畫面確認後呼叫）。 */
+    public clearCountdown(): void {
+        this._countdown = null;
+        this._emit(GAME_SESSION_EVENTS.CountdownChanged, null);
     }
 
     public get sortieSupport(): SortieSupport {
