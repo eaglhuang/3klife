@@ -1,0 +1,52 @@
+{
+  "heroes": [
+    {
+      "id": "zhang-fei",
+      "name": "張飛",
+      "title": "萬人敵",
+      "originRegion": "幽州涿郡",
+      "coreFactorTags": ["燕人", "蛇矛", "北境血脈"],
+      "coreFactorTag": "燕人"
+    },
+    {
+      "id": "wei-yan",
+      "name": "魏延",
+      "title": "奇策長史",
+      "originRegion": "義陽",
+      "coreFactorTags": ["義陽", "狂骨", "孤軍"],
+      "coreFactorTag": "義陽"
+    },
+    {
+      "id": "xiahou-dun",
+      "name": "夏侯惇",
+      "title": "拔矢啖睛",
+      "originRegion": "豫州沛國譙縣",
+      "coreFactorTags": ["譙縣", "獨眼", "宗親"],
+      "coreFactorTag": "譙縣"
+    },
+    {
+      "id": "zhang-he",
+      "name": "張郃",
+      "title": "巧變之將",
+      "originRegion": "冀州河間國",
+      "coreFactorTags": ["河間", "巧變", "宿將"],
+      "coreFactorTag": "河間"
+    },
+    {
+      "id": "sun-ce",
+      "name": "孫策",
+      "title": "江東小霸王",
+      "originRegion": "揚州吳郡富春",
+      "coreFactorTags": ["富春", "霸王", "水鄉血脈"],
+      "coreFactorTag": "富春"
+    },
+    {
+      "id": "gan-ning",
+      "name": "甘寧",
+      "title": "錦帆賊",
+      "originRegion": "益州巴郡臨江",
+      "coreFactorTags": ["巴郡", "鈴聲", "游俠"],
+      "coreFactorTag": "巴郡"
+    }
+  ]
+}
