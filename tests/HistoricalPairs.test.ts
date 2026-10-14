@@ -102,5 +102,17 @@ export function createHistoricalPairsSuite(): TestSuite {
         assert.isTrue(Math.abs(rivalBreed.conceptionRate - plainBreed.conceptionRate * 0.7) < 1e-9, '宿敵為無配對的 0.7 倍');
     });
 
+    suite.test('惰性表：建立服務時表尚未載入，之後載入即生效；未載入前契合為 0', () => {
+        let table: HistoricalPairTable | undefined;
+        const store = new InMemoryRosterStore([parent('zhou-yu', '男'), parent('xiao-qiao', '女')] as never);
+        const service = new BreedingService(store, graphFor(['zhou-yu', 'xiao-qiao']), {
+            random: () => 0.5,
+            getHistoricalPairs: () => table,
+        });
+        assert.equals(0, service.previewEp('zhou-yu', 'xiao-qiao').affinity);
+        table = HistoricalPairTable.load(readProvisionalTable()).table;
+        assert.equals(25, service.previewEp('zhou-yu', 'xiao-qiao').affinity);
+    });
+
     return suite;
 }

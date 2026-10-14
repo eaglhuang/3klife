@@ -87,6 +87,7 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../sy
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
+import { DynamicRelationBook } from '../systems/KinDynamicRelations';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     BattleResult,
@@ -251,6 +252,8 @@ export interface MercenaryDayReport {
 
 export class GameSession {
     private _clock = new GameClock();
+    /** 動態關係表（KIN-10）：目前只在記憶體中，存檔欄位另卡接線 */
+    public readonly dynamicRelations = new DynamicRelationBook();
     private _roster: RosterStore = new InMemoryRosterStore();
     private _save: PlayerSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
@@ -1236,6 +1239,8 @@ export class GameSession {
 
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
+        // 動態關係每季衰退（KIN-10）：親密度歸 0 只是加成歸零，關係保留
+        this.dynamicRelations.decaySeason();
         const beforeRoster = this._roster.getAll();
         // 主動扣壽命致死的武將在 beforeRoster 已是陣亡；虎符結算要用扣壽命之前的名冊才認得出「這次才死」
         const deathBaseline = this._preLifespanRoster ?? beforeRoster;
