@@ -61,6 +61,10 @@ export class GeneralUnit {
   public readonly maxSp: number;
   public currentSp: number;
 
+  /** 精力上限與目前值（戰場軟懲罰判定用，見 VitalityBattleGate） */
+  public readonly maxVitality: number;
+  public vitality: number;
+
   /** 六色屬性：武力（物理型單挑攻擊力首選）*/
   public readonly str: number;
   /** 六色屬性：智力（謀略型單挗首選）*/
@@ -105,6 +109,9 @@ export class GeneralUnit {
     this.currentHp = config.hp;
     this.maxSp = config.maxSp ?? 100;
     this.currentSp = config.initialSp ?? 0;
+    // 精力（LIFE-10 戰場軟懲罰用）；缺值時視為滿值，與 BondingSetupController 的預設一致
+    this.maxVitality = config.maxVitality ?? config.vitality ?? 100;
+    this.vitality = config.vitality ?? this.maxVitality;
     this.battlePrimarySkillId = config.battlePrimarySkillId ?? config.skillId ?? null;
     this.skillId = this.battlePrimarySkillId;
     this.tacticSlots = [...(config.tacticSlots ?? [])];

@@ -11,6 +11,7 @@ import { BattleCombatResolver } from './BattleCombatResolver';
 import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { evaluateCasterTacticConditions, type TacticCondition, type TacticConditionResult } from '../../core/systems/TacticCondition';
+import { canPerformAction, vitalityBandOf, type BattleActionKind } from '../../core/systems/VitalityBattleGate';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver';
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
@@ -155,7 +156,40 @@ export class BattleSkillDispatcher {
         battleLogLines: ['戰法條件未達成，無法發動'],
       };
     }
+    // 精力軟懲罰（LIFE-10，PROG-2-0426）：依施放者武將的精力區間擋下奧義或種子戰法，不扣資源
+    const vitalityCheck = this.checkVitalityGate(request);
+    if (!vitalityCheck.allowed) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'vitality-restricted',
+        deltas: [],
+        battleLogLines: [vitalityCheck.reason],
+      };
+    }
     return this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
+  }
+
+  /**
+   * 只擋武將發動的奧義與種子戰法；其他來源（虎符、師承、血統等）不在此閘門內。
+   * 施放者找不到所屬武將或精力資料時放行，不猜測。
+   */
+  private checkVitalityGate(request: BattleSkillRequest): { allowed: boolean; reason: string } {
+    const action: BattleActionKind | null =
+      request.sourceType === SkillSourceType.Ultimate ? 'ultimate-tactic'
+        : request.sourceType === SkillSourceType.SeedTactic ? 'active-tactic'
+          : null;
+    if (!action) return { allowed: true, reason: '' };
+    const caster = this.context.state.units.get(request.ownerUid) ?? null;
+    const general = caster ? this.context.state.getGeneral(caster.faction) : null;
+    if (!general) return { allowed: true, reason: '' };
+    const band = vitalityBandOf(general.vitality, general.maxVitality);
+    if (canPerformAction(band, action)) return { allowed: true, reason: '' };
+    return {
+      allowed: false,
+      reason: action === 'ultimate-tactic' ? '精力低迷，無法發動終極戰法' : '精力耗盡，無法發動戰法',
+    };
   }
 
   /** 施放者的兵種、天氣與鄰格數量組成 tcond 的評估輸入；施放者不在戰場上（武將）時兵種條件略過 */
