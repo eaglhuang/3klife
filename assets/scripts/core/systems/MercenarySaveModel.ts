@@ -73,7 +73,9 @@ function readCooldown(raw: unknown): PoolCooldown | null {
     if (!isRecord(raw)) return null;
     const { uid, availableOnDay } = raw;
     if (!isNonEmptyString(uid) || !isCount(availableOnDay)) return null;
-    return { uid, availableOnDay };
+    const cooldown: PoolCooldown = { uid, availableOnDay };
+    if (isNonEmptyString(raw.generalId)) cooldown.generalId = raw.generalId;
+    return cooldown;
 }
 
 function readList<T>(raw: unknown, reader: (item: unknown) => T | null): T[] {

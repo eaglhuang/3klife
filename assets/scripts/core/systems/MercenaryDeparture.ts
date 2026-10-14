@@ -21,12 +21,15 @@ export interface MercenaryRecord {
     uid: string;
     status: DepartureStatus;
     daysLeft: number;
+    generalId?: string;
 }
 
 export interface PoolCooldown {
     uid: string;
     /** 冷卻結束的日序（含）；今日 >= 此值即可再次出現。 */
     availableOnDay: number;
+    /** 選填：所屬武將 id。傭兵池以武將為單位擋冷卻（MERC-05），舊紀錄沒有此欄。 */
+    generalId?: string;
 }
 
 export type DepartureReason = 'trial-expired' | 'upkeep-unpaid';
@@ -48,13 +51,20 @@ function assertDay(day: number): void {
 }
 
 /** 將武將的冷卻紀錄設為 today + 30；同一武將只保留較晚的結束日。回傳新陣列，不改輸入。 */
-export function startPoolCooldown(cooldowns: readonly PoolCooldown[], uid: string, today: number): PoolCooldown[] {
+export function startPoolCooldown(cooldowns: readonly PoolCooldown[], uid: string, today: number, generalId?: string): PoolCooldown[] {
     assertDay(today);
     const availableOnDay = today + POOL_COOLDOWN_DAYS;
     const others = cooldowns.filter(c => c.uid !== uid);
     const existing = cooldowns.find(c => c.uid === uid);
-    const keep = existing && existing.availableOnDay > availableOnDay ? existing : { uid, availableOnDay };
+    const fresh: PoolCooldown = generalId ? { uid, availableOnDay, generalId } : { uid, availableOnDay };
+    const keep = existing && existing.availableOnDay > availableOnDay ? existing : fresh;
     return [...others, keep];
+}
+
+/** 今日武將是否可再次出現在傭兵池：任一冷卻紀錄帶有此武將 id 且尚未結束即擋下（MERC-05 以武將為單位）。 */
+export function isGeneralAvailableForPool(generalId: string, today: number, cooldowns: readonly PoolCooldown[]): boolean {
+    assertDay(today);
+    return !cooldowns.some(c => c.generalId === generalId && today < c.availableOnDay);
 }
 
 /** 今日是否可再次出現在傭兵池（無冷卻紀錄或冷卻已結束）。 */
@@ -79,7 +89,7 @@ export function settleTrialRollover(record: MercenaryRecord, today: number, cool
     if (record.status !== 'Trial' || record.daysLeft > 0) return result;
     result.record = { ...record, status: 'Expired' };
     result.departed = true;
-    result.cooldowns = startPoolCooldown(cooldowns, record.uid, today);
+    result.cooldowns = startPoolCooldown(cooldowns, record.uid, today, record.generalId);
     result.events.push(
         { type: 'departed', uid: record.uid, reason: 'trial-expired' },
         { type: 'farewell-letter', uid: record.uid, textKey: FAREWELL_TEXT_KEY },
@@ -121,6 +131,6 @@ export function settleUpkeepDeparture(
 }
 
 /** 結義成功後同樣開始冷卻；只負責冷卻，不改變傭兵狀態。 */
-export function startCooldownAfterBond(uid: string, today: number, cooldowns: readonly PoolCooldown[]): PoolCooldown[] {
-    return startPoolCooldown(cooldowns, uid, today);
+export function startCooldownAfterBond(uid: string, today: number, cooldowns: readonly PoolCooldown[], generalId?: string): PoolCooldown[] {
+    return startPoolCooldown(cooldowns, uid, today, generalId);
 }
