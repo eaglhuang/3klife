@@ -35,10 +35,11 @@ export function createTigerTallySetBonusSuite(): TestSuite {
         assert.equals(1, round(mult.atkMod));
     });
 
-    suite.test('兩個不同 Set 同時成立時攻防倍率相乘', () => {
+    suite.test('兩個不同 Set 同時成立時攻防加成加法疊加（PM 裁定，不相乘）', () => {
         const mult = tallySetMultipliers([...FIVE_TIGERS.slice(0, 3), ...JIANGDONG.slice(0, 3)]);
-        assert.equals(1.21, round(mult.atkMod));
-        assert.equals(1.155, round(mult.defMod));
+        // 攻：1 + 0.10（五虎將）+ 0.10（江東）= 1.20；防：1 + 0.10 + 0.05 = 1.15
+        assert.equals(1.2, round(mult.atkMod));
+        assert.equals(1.15, round(mult.defMod));
     });
 
     suite.test('沒有任何 Set 成立時倍率為 1', () => {
