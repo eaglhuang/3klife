@@ -42,7 +42,7 @@ export function createGameSessionMercenarySuite(): TestSuite {
             cooldowns: [],
         });
         const template = { id: 'gen-merc', name: '測試', faction: 'shu', hp: 1000, rarityTier: 'common' } as unknown as GeneralConfig;
-        const result = await session.bondMercenaryToRoster('merc-1', template, 0, 10);
+        const result = await session.bondMercenaryToRoster('merc-1', template, 0);
         assert.isFalse(result.ok);
         assert.equals('insufficient-points', result.reason!);
         assert.equals('Trial', session.mercenaries.mercenaries[0].status);

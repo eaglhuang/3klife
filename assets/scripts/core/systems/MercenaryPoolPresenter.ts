@@ -9,6 +9,7 @@
 import { canBondMercenary, MercenaryState, TRIAL_DAYS } from './MercenaryBond';
 import { canDeployMercenary, canTeachMercenary, UpkeepState } from './MercenaryUpkeep';
 import { MercenarySaveBundle } from './MercenarySaveModel';
+import { isGeneralAvailableForPool, PoolCooldown } from './MercenaryDeparture';
 
 export const BOND_MAX = 60;
 
@@ -60,4 +61,9 @@ export function buildMercenaryPoolRows(bundle: MercenarySaveBundle): MercenaryPo
             canTeach: upkeep ? canTeachMercenary(upkeep) : false,
         };
     });
+}
+
+/** 傭兵池選單：只保留不在 30 天冷卻中的武將 id（MERC-05，以武將為單位）；保留原順序。 */
+export function filterPoolGeneralIds(generalIds: readonly string[], today: number, cooldowns: readonly PoolCooldown[]): string[] {
+    return generalIds.filter(id => isGeneralAvailableForPool(id, today, cooldowns));
 }

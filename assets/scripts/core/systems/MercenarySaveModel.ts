@@ -17,6 +17,8 @@ export interface MercenarySaveBundle {
     mercenaries: MercenaryState[];
     upkeep: UpkeepState[];
     cooldowns: PoolCooldown[];
+    /** 選填：傭兵系統的遊戲日計數（從 0 起算）；舊存檔沒有此欄，視為 0。 */
+    day?: number;
 }
 
 const MERC_STATUSES: readonly MercenaryStatus[] = ['Trial', 'Bonded', 'Expired'];
@@ -28,11 +30,13 @@ export function createEmptyMercenaryBundle(): MercenarySaveBundle {
 
 /** 輸出副本，不改輸入。 */
 export function serializeMercenaryBundle(bundle: Readonly<MercenarySaveBundle>): MercenarySaveBundle {
-    return {
+    const out: MercenarySaveBundle = {
         mercenaries: bundle.mercenaries.map(m => ({ ...m })),
         upkeep: bundle.upkeep.map(u => ({ ...u })),
         cooldowns: bundle.cooldowns.map(c => ({ ...c })),
     };
+    if (bundle.day !== undefined) out.day = bundle.day;
+    return out;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -91,9 +95,11 @@ function readList<T>(raw: unknown, reader: (item: unknown) => T | null): T[] {
 /** 讀檔校正：不合法的項目丟棄，整包不會因單一壞資料而失敗；非物件輸入回傳空包。 */
 export function normalizeMercenaryBundle(raw: unknown): MercenarySaveBundle {
     if (!isRecord(raw)) return createEmptyMercenaryBundle();
-    return {
+    const bundle: MercenarySaveBundle = {
         mercenaries: readList(raw.mercenaries, readMercenary),
         upkeep: readList(raw.upkeep, readUpkeep),
         cooldowns: readList(raw.cooldowns, readCooldown),
     };
+    if (isCount(raw.day)) bundle.day = raw.day;
+    return bundle;
 }
