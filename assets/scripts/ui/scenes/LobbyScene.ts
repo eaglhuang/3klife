@@ -299,6 +299,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
             { buttonId: 'btnOpenDomestic', handler: () => { this._openDomestic(); } },
             { buttonId: 'btnOpenHallBoard', handler: () => { this._openHallBoard(); } },
+            { buttonId: 'btnOpenSandtable', handler: () => { this._openHallBoard('Expedition'); } },
         ]);
         this._refreshSeasonHud();
 
@@ -589,6 +590,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { this._closeHallBoard(); } },
             { buttonId: 'btnHallBoardMilitary', handler: () => { this._switchHallBoard('Military'); } },
             { buttonId: 'btnHallBoardDomestic', handler: () => { this._switchHallBoard('Domestic'); } },
+            { buttonId: 'btnHallBoardExpedition', handler: () => { this._switchHallBoard('Expedition'); } },
             ...rowBindings,
         ]);
         this._hallBoardHost.node.active = false;
@@ -613,10 +615,14 @@ export class LobbyScene extends Component {
         });
     }
 
-    private _openHallBoard(): void {
+    /** 開啟任務牆；傳入 board 時直接切到該牆（天下沙盤入口走 Expedition）。 */
+    private _openHallBoard(board?: HallBoardKey): void {
         const host = this._hallBoardHost;
         if (!host) {
             return;
+        }
+        if (board) {
+            this._hallBoard?.switchBoard(board);
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);
