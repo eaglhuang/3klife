@@ -25,6 +25,7 @@ import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/Tige
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 
@@ -88,6 +89,8 @@ export interface PlayerSaveSnapshot {
     domestic?: DomesticSeasonLog;
     /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
     mercenaries?: MercenarySaveBundle;
+    /** 女性來源系統狀態（傭兵池／救美刷新時間、送禮好感）；後加的選填欄位，舊檔讀回預設值（FEM 接線） */
+    femaleSystem?: FemaleSystemState;
     /** 新手 3 段式引導進度；後加的選填欄位，舊檔讀回視為從頭開始（PROG-2-0229） */
     onboarding?: OnboardingState;
     /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
@@ -263,6 +266,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
         ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
+        ...(snapshot.femaleSystem !== undefined ? { femaleSystem: normalizeFemaleSystemState(snapshot.femaleSystem) } : {}),
     };
 }
 
