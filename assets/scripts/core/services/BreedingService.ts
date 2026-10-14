@@ -32,6 +32,7 @@ import {
 } from '../systems/BreedingSystem';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
 import { femaleSourceConceptionMod, type FemaleSource } from '../systems/FemaleSource';
+import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } from '../systems/HistoricalPairs';
 import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
 import type { RandomSource } from '../systems/GeneralAging';
 
@@ -43,6 +44,8 @@ export interface BreedingServiceOptions {
     enabledColors?: readonly FactorColor[];
     maxFactors?: number;
     isHistoricalPair?: AffinityResolver;
+    /** 史實相性配對表（KIN-04）：未指定 isHistoricalPair 時由表推得契合，並提供宿敵受孕率倍率 */
+    historicalPairs?: HistoricalPairTable;
     /** 目前的 totalSeasonsElapsed，寫進子嗣的 birthSeason */
     currentSeason?: () => number;
     /** 子嗣 id 產生器；預設 child-{父}-{母}-{序號} */
@@ -119,7 +122,7 @@ export class BreedingService {
             father,
             mother,
             pedigree: this._graph,
-            isHistoricalPair: this._options.isHistoricalPair,
+            isHistoricalPair: this._historicalResolver(),
             rosterLookup: this._rosterLookup(),
         }).ep;
     }
@@ -155,9 +158,12 @@ export class BreedingService {
             dictionary: this._options.getDictionary?.() ?? this._options.dictionary,
             enabledColors: this._options.enabledColors,
             maxFactors: this._options.maxFactors,
-            isHistoricalPair: this._options.isHistoricalPair,
+            isHistoricalPair: this._historicalResolver(),
             rosterLookup: this._rosterLookup(roster),
             motherConceptionMod: femaleSourceConceptionMod(this._options.getFemaleSource?.(mother.id) ?? null),
+            historicalConceptionMod: this._options.historicalPairs
+                ? conceptionModBetween(this._options.historicalPairs, father.id, mother.id)
+                : undefined,
         });
         if (result.outcome === 'blocked') return result;
 
@@ -177,6 +183,11 @@ export class BreedingService {
             this._roster.replaceAll(generals);
         }
         return pregnancyEnded;
+    }
+
+    private _historicalResolver(): AffinityResolver | undefined {
+        if (this._options.isHistoricalPair) return this._options.isHistoricalPair;
+        return this._options.historicalPairs ? affinityResolverOf(this._options.historicalPairs) : undefined;
     }
 
     private _rosterLookup(roster: GeneralConfig[] = this._roster.getAll()): (uid: string) => GeneralConfig | undefined {
