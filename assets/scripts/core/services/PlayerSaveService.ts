@@ -25,6 +25,7 @@ import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/Tige
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
+import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -38,6 +39,8 @@ export interface PendingLifespanDeath {
 
 export interface PlayerSaveSnapshot {
     schemaVersion: number;
+    /** 存檔 semver 版號（PROG-2-0334）；舊檔沒有此欄位，讀回時依 schemaVersion 補成 n.0.0 */
+    saveVersion?: string;
     /** 選填以相容舊檔；保存目前游標，而非只有起始種子。 */
     randomState?: RandomState;
     /** ISO 時間字串，供 UI 顯示「最後存檔時間」 */
@@ -167,6 +170,7 @@ export function createPlayerSaveSnapshot(
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
+        saveVersion: SAVE_VERSION_LATEST,
         ...(randomState !== undefined ? { randomState: validateRandomState(randomState) } : {}),
         savedAt: now.toISOString(),
         gameTime: GameClock.normalize(gameTime),
@@ -223,6 +227,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     }
     return {
         schemaVersion: snapshot.schemaVersion,
+        saveVersion: saveVersionOf(snapshot),
         ...(snapshot.randomState !== undefined ? { randomState: validateRandomState(snapshot.randomState) } : {}),
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
