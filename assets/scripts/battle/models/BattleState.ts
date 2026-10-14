@@ -83,6 +83,8 @@ export class BattleState {
   public enemyGeneral: GeneralUnit | null = null;
   public playerFortressHp = 500;
   public enemyFortressHp = 500;
+  /** 水攻淹沒前各格的原地形（key = "lane,depth"），重算範圍時用來還原（PROG-2-0407） */
+  public readonly floodOriginalTerrain = new Map<string, TerrainType>();
   /** 營曜天氣（影響戰場修正預留欄位） */
   public weather: Weather = Weather.Clear;
   /** 天氣排程（PROG-2-0401）；空陣列代表整場維持 weather */
@@ -115,6 +117,7 @@ export class BattleState {
     this.damageLinks.clear();
     this.counterReactions.clear();
     this.actionResets.clear();
+    this.floodOriginalTerrain.clear();
     this.cells.forEach(cell => {
       cell.occupantId = null;
       cell.terrain = TerrainType.Plain;
