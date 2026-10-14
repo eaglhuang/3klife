@@ -5,6 +5,7 @@ import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { BattleSkillTargetMode, SkillSourceType } from '../shared/skill-runtime';
 import { TestSuite, assert } from './TestRunner';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
+import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 
 function createGeneral(id: string, faction: Faction, skillId: string): GeneralUnit {
     return new GeneralUnit({
@@ -763,11 +764,13 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         }
     });
 
-    suite.test('NightRaid：前 2 回合我方有先制增傷，敵軍遠程視野縮短 1 格', () => {
+    suite.test('NightRaid：整場命中 -25%、暴擊 +20%（取代先制增傷），敵軍遠程視野縮短 1 格只在前 2 回合', () => {
         const originalRandom = Math.random;
         Math.random = () => 0;
         try {
             services().initialize();
+            // 命中與暴擊走戰場種子亂數源，測試內固定為 0 以確定性地命中
+            services().session.setRandomSource(() => 0);
             const ctrl = new BattleController();
             const playerGeneral = createGeneral('zhang-he', Faction.Player, 'zhang-he-shadow');
             const enemyGeneral = createGeneral('liu-bei', Faction.Enemy, 'liu-bei-rally');
@@ -808,7 +811,10 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
             ctrl.advanceTurn();
             ctrl.finalizeAdvanceTurn();
             assert.equals(0, ctrl.state.sceneFlags.nightRaidOpenTurns);
-            assert.isFalse(ctrl.state.sceneFlags.nightRaid);
+            assert.isTrue(ctrl.state.sceneFlags.nightRaid, '夜襲整場生效，兩回合後仍有命中與暴擊加成');
+            const nightTactic = resolveBattleTacticBehavior(BattleTactic.NightRaid);
+            assert.equals(-0.25, nightTactic.getAccuracyDelta?.(playerUnit, ctrl.state) ?? 0);
+            assert.equals(0.2, nightTactic.getCritBonus?.(playerUnit, ctrl.state) ?? 0);
         } finally {
             Math.random = originalRandom;
         }

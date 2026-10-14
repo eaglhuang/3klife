@@ -24,6 +24,7 @@
  */
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
+import { consumeAutoNurtureTicket } from '../systems/AutoNurture';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
@@ -50,7 +51,7 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
@@ -334,6 +335,10 @@ export class GameSession {
     private _fame = 0;
     /** 點數（溢出轉化積分，MENT-07）；存於 resources.scorePoints */
     private _scorePoints = 0;
+    /** 自動培育券數（NUR-14）；存於 resources.autoNurtureTickets */
+    private _autoNurtureTickets = 0;
+    /** 主線第一次通過培育季後為 true（解鎖自動培育）；存於 resources.mainlineNurtureClearedOnce */
+    private _mainlineNurtureClearedOnce = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
@@ -820,6 +825,8 @@ export class GameSession {
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
         this._scorePoints = 0;
+        this._autoNurtureTickets = 0;
+        this._mainlineNurtureClearedOnce = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -1666,6 +1673,47 @@ export class GameSession {
         return this._scorePoints;
     }
 
+    /** 自動培育券數唯讀值（NUR-14） */
+    public get autoNurtureTickets(): number {
+        return this._autoNurtureTickets;
+    }
+
+    /** 主線第一次通過培育季後為 true，之後不會再變回 false */
+    public get mainlineNurtureClearedOnce(): boolean {
+        return this._mainlineNurtureClearedOnce;
+    }
+
+    /** 入帳自動培育券（只收正整數，自動存檔） */
+    public async grantAutoNurtureTickets(amount: number): Promise<number> {
+        if (!Number.isInteger(amount) || amount <= 0) return this._autoNurtureTickets;
+        this._autoNurtureTickets += amount;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return this._autoNurtureTickets;
+    }
+
+    /** 扣一張自動培育券（NUR-14）；券不足回傳 false 且不扣。 */
+    public async consumeAutoNurtureTicket(): Promise<boolean> {
+        const next = consumeAutoNurtureTicket(this._autoNurtureTickets);
+        if (next === null) return false;
+        this._autoNurtureTickets = next;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 主線通過培育季（NUR-14 解鎖）；已解鎖時不重複存檔 */
+    public async markMainlineNurtureSeasonCleared(): Promise<boolean> {
+        if (this._mainlineNurtureClearedOnce) return true;
+        this._mainlineNurtureClearedOnce = true;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
     /** 入帳點數（MENT-07 溢出轉化）；負數與非整數不入帳，自動存檔時寫回 */
     public async grantScorePoints(amount: number): Promise<number> {
         if (!Number.isInteger(amount) || amount <= 0) return this._scorePoints;
@@ -1681,7 +1729,12 @@ export class GameSession {
         return {
             ...this._createBaseSnapshot(now),
             military: this.military,
-            resources: { fame: this._fame, scorePoints: this._scorePoints },
+            resources: {
+                fame: this._fame,
+                scorePoints: this._scorePoints,
+                autoNurtureTickets: this._autoNurtureTickets,
+                mainlineNurtureClearedOnce: this._mainlineNurtureClearedOnce,
+            },
             domestic: { ...this._domesticLog },
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
@@ -1749,6 +1802,8 @@ export class GameSession {
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._fame = normalizeFame(snapshot.resources?.fame);
         this._scorePoints = normalizeScorePoints(snapshot.resources?.scorePoints);
+        this._autoNurtureTickets = normalizeAutoNurtureTickets(snapshot.resources?.autoNurtureTickets);
+        this._mainlineNurtureClearedOnce = normalizeFlag(snapshot.resources?.mainlineNurtureClearedOnce);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);

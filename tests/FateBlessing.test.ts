@@ -4,10 +4,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
+import { BattleState } from '../assets/scripts/battle/models/BattleState';
+import { BattleTactic } from '../assets/scripts/core/config/Constants';
+import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import {
     FATE_BLESSING_GENE_IDS,
     FATE_BLESSING_PER_LEVEL,
     ROCK_SLIDE_BASE_SUCCESS,
+    type FateHeldGene,
     fateBlessingLevel,
     fateSuccessChance,
     fateDamageMultiplier,
@@ -34,7 +38,9 @@ export function createFateBlessingSuite(): TestSuite {
         assert.equals(0.05, FATE_BLESSING_PER_LEVEL);
         assert.equals(0.6, fateSuccessChance(0.5, 2));
         assert.equals(1, fateSuccessChance(0.9, 5));
-        assert.equals(1, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 0));
+        assert.equals(0.85, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 0), '落石基礎 85%');
+        assert.equals(0.9, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 1), '1 級天命 +5%');
+        assert.equals(1, fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, 4), '上限 100%');
     });
 
     suite.test('傷害倍率 = 1 + 每級 5%；等級 0 時為 1', () => {
@@ -73,7 +79,20 @@ export function createFateBlessingWiringSuite(): TestSuite {
 
     suite.test('落石開場設置前做成功判定，基礎成功率接天命加成', () => {
         const source = read('assets/scripts/battle/shared/BattleTacticBehavior.ts');
-        assert.isTrue(source.includes('rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), Math.random())'), '落石沒有接成功判定');
+        assert.isTrue(source.includes('rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), context.random())'), '落石沒有接成功判定');
+        assert.isTrue(source.includes('const fateLevel = fateBlessingLevel(context.casterGenes);'), '落石天命沒有吃施放者基因');
+    });
+
+    suite.test('落石行為：成功判定吃施放者天命，亂數由傳入的戰場亂數源提供', () => {
+        const rock = resolveBattleTacticBehavior(BattleTactic.RockSlide);
+        const placed = (roll: number, casterGenes: FateHeldGene[]): boolean => {
+            const state = new BattleState();
+            rock.applyStartOfBattle(state, { random: () => roll, casterGenes });
+            return state.getTileEffect(1, 4) !== null;
+        };
+        assert.isTrue(placed(0.84, []), '0.84 < 85% 應成功');
+        assert.isFalse(placed(0.86, []), '0.86 ≥ 85% 應失敗');
+        assert.isTrue(placed(0.86, [{ id: 'gene_luck', level: 2 }]), '天命 2 級 → 95%，0.86 應成功');
     });
 
     return suite;
