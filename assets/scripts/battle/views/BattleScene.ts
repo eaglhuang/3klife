@@ -145,10 +145,10 @@ export class BattleScene extends Component {
 
       // 2. 建立控制器，載入兵種表
       this.ctrl = new BattleController();
-      // 虎符星級從玩家卡組的卡片實例讀取（PROG-2-0573）；查不到卡時 1★
-      this.ctrl.tallyStarOf = (tallyId) => {
+      // 虎符星級與模板 id 從玩家卡組的卡片實例讀取（PROG-2-0573、PROG-2-0574）；查不到卡時 1★、無模板
+      this.ctrl.tallyInfoOf = (tallyId) => {
         const card = services().session.tallyCards[tallyId];
-        return card ? readCardStarState(card).star : 1;
+        return card ? { star: readCardStarState(card).star, templateId: card.templateId } : null;
       };
       await this.ctrl.loadData();
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] BattleController 資料載入完成");

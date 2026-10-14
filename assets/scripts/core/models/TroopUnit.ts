@@ -50,6 +50,8 @@ export class TroopUnit {
   public tallyAffinity: ((lane: number, depth: number) => number) | null = null;
   /** 虎符星級攻防乘數（1 + 星 × 0.08，PROG-2-0573）；沒有虎符時為 1，戰力不變 */
   public tallyStarMultiplier = 1;
+  /** 虎符卡的模板 id（陣容 Set 判定用，PROG-2-0574）；沒有虎符時為 null */
+  public tallyTemplateId: string | null = null;
 
   constructor(id: string, type: TroopType, faction: Faction, stats: TroopStats, name?: string) {
     this.id = id;

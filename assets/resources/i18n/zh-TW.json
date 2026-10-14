@@ -209,5 +209,13 @@
   "ui.style_check.primary": "赤火主按鈕",
   "ui.style_check.secondary": "流金次按鈕",
   "ui.style_check.parchment": "宣紙風按鈕",
-  "ui.style_check.lorem": "水墨宣紙 (Ink & Parchment) 與 冷冽金屬 (Steel) 的視覺衝突：建構於 3.8.8 的 2.5D 三國戰場介面。"
+  "ui.style_check.lorem": "水墨宣紙 (Ink & Parchment) 與 冷冽金屬 (Steel) 的視覺衝突：建構於 3.8.8 的 2.5D 三國戰場介面。",
+
+  "_comment_ui_breed": "結緣字串（規格：結緣系統（配種）§H）。佔位符依規格出現順序為 {0}、{1}…",
+  "ui.breed.confirm": "消耗 {0} 精力 {1} 與 {2} 精力 {3}，確認結緣？",
+  "ui.breed.preg_status": "{0} 已進入待產期，預計 {1} 季後誕下子嗣",
+  "ui.breed.child_born": "恭喜主公！{0} 與 {1} 喜獲 {2}！",
+  "ui.breed.unveil_5": "天命開獎！{0} 五維資質揭曉：",
+  "ui.breed.daqi": "名士嘆：此子潛龍在淵，天機不可洩漏。",
+  "ui.breed.ep_display": "預估爆發力：{0}（{1}）"
 }

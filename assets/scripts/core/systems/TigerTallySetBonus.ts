@@ -50,10 +50,43 @@ export function getActiveTallySets(activeTallyTroopIds: readonly string[]): Tige
     });
 }
 
-/** 所有成立 Set 的攻防倍率（不同 Set 相乘，本卡的設計選擇；無 Set 時為 1） */
+/**
+ * 所有成立 Set 的攻防倍率（PM 裁定：多 Set 同時成立採加法疊加，不相乘）。
+ * 每個 Set 貢獻 (加成 − 1)，合計後加回 1；無 Set 時為 1。
+ */
 export function tallySetMultipliers(activeTallyTroopIds: readonly string[]): { atkMod: number; defMod: number } {
     return getActiveTallySets(activeTallyTroopIds).reduce(
-        (acc, def) => ({ atkMod: acc.atkMod * def.bonus.atkMod, defMod: acc.defMod * def.bonus.defMod }),
+        (acc, def) => ({
+            atkMod: acc.atkMod + (def.bonus.atkMod - 1),
+            defMod: acc.defMod + (def.bonus.defMod - 1),
+        }),
         { atkMod: 1, defMod: 1 },
     );
+}
+
+/** 戰場上的一個我方單位：有虎符才會帶 templateId，陣亡後不計入在場 Set */
+export interface TallySetMember {
+    templateId: string | null;
+    alive: boolean;
+}
+
+/** 同陣營在場虎符部隊的 Set 攻防乘數：只計存活且有虎符的部隊（PROG-2-0574） */
+export function fieldTallySetMods(members: readonly TallySetMember[]): { atkMod: number; defMod: number } {
+    const ids: string[] = [];
+    for (const member of members) {
+        if (member.alive && member.templateId) ids.push(member.templateId);
+    }
+    return tallySetMultipliers(ids);
+}
+
+/** 單一 Set 的顯示文字，例如「五虎將（攻 +10% / 防 +10%）」；供戰場 UI 顯示（PROG-2-0575） */
+export function describeTallySet(def: TigerTallySetDef): string {
+    const atkPct = Math.round((def.bonus.atkMod - 1) * 100);
+    const defPct = Math.round((def.bonus.defMod - 1) * 100);
+    return `${def.name}（攻 +${atkPct}% / 防 +${defPct}%）`;
+}
+
+/** 在場虎符部隊成立的 Set 顯示文字清單；沒有 Set 時回空陣列 */
+export function describeActiveTallySets(activeTallyTroopIds: readonly string[]): string[] {
+    return getActiveTallySets(activeTallyTroopIds).map(describeTallySet);
 }

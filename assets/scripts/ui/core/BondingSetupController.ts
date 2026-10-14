@@ -18,6 +18,7 @@ import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import type { BreedingService } from '../../core/services/BreedingService';
+import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 import {
     BREEDING_MIN_AGE,
     BreedingBlockReason,
@@ -79,6 +80,8 @@ export interface BondingSetupDeps {
     spendLifespan?: (generalId: string, command: 'breeding') => { events: readonly { type: string }[] } | null;
     /** 玩家發現等級，決定父母因子是否顯示名稱；未提供時視為 1（只看得到藍粉） */
     playerDiscoveryLevel?: () => number;
+    /** 結緣畫面文案查詢（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
+    text?: BreedTextLookup;
 }
 
 export class BondingSetupController {
@@ -87,6 +90,10 @@ export class BondingSetupController {
     private _notice = '';
 
     constructor(private readonly _deps: BondingSetupDeps) {}
+
+    private _t(key: string, ...args: string[]): string {
+        return (this._deps.text ?? fallbackBreedText)(key, ...args);
+    }
 
     // ── 清單 ───────────────────────────────────────────────────────────────
 
@@ -158,8 +165,9 @@ export class BondingSetupController {
         } else {
             const child = result.child!;
             const gender = child.gender === '女' ? '千金' : '麟兒';
-            this._notice = `恭喜主公！${result.father.name} 與 ${result.mother.name} 喜獲${gender}「${child.name}」！`
-                + `${result.mother.name} 已進入待產期（${PREGNANCY_LOCK_SEASONS} 季），子嗣神祕期至 5 歲開獎`;
+            this._notice = this._t('ui.breed.child_born', result.father.name, result.mother.name, gender)
+                + `子嗣名為「${child.name}」。`
+                + this._t('ui.breed.preg_status', result.mother.name, String(PREGNANCY_LOCK_SEASONS));
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
         const deceased = [
@@ -221,7 +229,7 @@ export class BondingSetupController {
 
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
-        texts.epEstimate = `預估爆發力：${ep.ep}（${ep.rating}）`;
+        texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
         texts.epDetail = [
             '基礎 50',
             `共鳴 +${ep.resonance}${ep.topTag ? `（${ep.topTag} × ${ep.topTagCount} 人）` : ''}`,
@@ -229,7 +237,7 @@ export class BondingSetupController {
             `契合 +${ep.affinity}`,
         ].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
-        texts.costLabel = `消耗 ${father.name} 精力 ${FATHER_VIGOR_COST} 與 ${mother.name} 精力 ${MOTHER_VIGOR_COST}，確認結緣？`;
+        texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
             : `無法結緣：${eligibility.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')}`;

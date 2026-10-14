@@ -57,6 +57,19 @@
             "styleSlot": "season.hud.label.mode"
           },
           {
+            "type": "label",
+            "name": "CountdownIconLabel",
+            "id": "countdownIconLabel",
+            "widget": {
+              "top": 78,
+              "left": 12,
+              "right": 12
+            },
+            "height": 24,
+            "text": "",
+            "styleSlot": "season.hud.label.mode"
+          },
+          {
             "type": "button",
             "name": "AdvanceSeasonButton",
             "id": "btnAdvanceSeason",

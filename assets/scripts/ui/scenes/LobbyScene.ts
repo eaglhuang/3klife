@@ -27,7 +27,10 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
+import { CountdownState } from '../../core/systems/CountdownManager';
+import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
+import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
@@ -36,6 +39,8 @@ import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
+import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
+import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
@@ -111,9 +116,19 @@ interface GeneralListOpenPayload {
 /** 選卡畫面的卡片按鈕數（對應 lobby-deck-select-main.json 的 btnDeckCard0..3，目前卡片目錄只有 4 張） */
 const DECK_SELECT_SLOTS = 4;
 
+/** 結緣與開獎文案：走 i18n，語系表未載入時退回 zh-TW 預設（PROG-2-0526 / 0527） */
+function breedText(): BreedTextLookup {
+    return withBreedFallback((key, ...args) => services().i18n.t(key, ...args));
+}
+
 interface ScreenButtonBinding {
     buttonId: string;
     handler: () => void;
+}
+
+interface GachaPoolConfigLike {
+    poolType: string;
+    candidateIds?: string[];
 }
 
 @ccclass('LobbyScene')
@@ -127,6 +142,8 @@ export class LobbyScene extends Component {
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
+    /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
+    private _countdownState: CountdownState | null = null;
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
     private _supportCatalog: SupportCatalog | null = null;
@@ -140,6 +157,8 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
+    private _redFaceHost: UIScreenPreviewHost | null = null;
+    private _redFace: RedFaceShowcaseController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
     private _lobbyHub: LobbyHub | null = null;
@@ -224,6 +243,7 @@ export class LobbyScene extends Component {
         await this._mountDomestic();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
+        await this._mountRedFaceShowcase();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
@@ -322,6 +342,9 @@ export class LobbyScene extends Component {
             seasonLabel: formatSeasonLabel(time),
             modeLabel: formatModeLabel(time.currentMode),
         });
+        const countdownIcon = buildCountdownIconFlowView(this._countdownState, Date.now());
+        this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
+        this._seasonHudHost?.binder?.setActives(countdownIcon.actives);
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
@@ -346,6 +369,7 @@ export class LobbyScene extends Component {
             unveiling: services().unveiling,
             nurture: services().nurture,
             loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            text: breedText(),
             persist: async () => {
                 if (services().session.hasSaveService) {
                     await services().session.save();
@@ -446,6 +470,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
+            text: breedText(),
         });
         this._bonding = bonding;
 
@@ -686,6 +711,73 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._mercPanel.getFlowView());
+    }
+
+    /** 紅顏展示（OPEN-10）：隱藏掛載，入口位置待定，對外提供 openRedFaceShowcase()。 */
+    private async _mountRedFaceShowcase(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaPoolConfigLike[]>('data/gacha-config');
+        const supportCards = await this._loadDataJson<RedFaceCardLike[]>('data/support-cards');
+        const pools = Array.isArray(gachaConfig) ? gachaConfig : [];
+        const supportPool = pools.find(pool => pool.poolType === 'support') ?? null;
+        const heroPoolIds = pools
+            .filter(pool => pool.poolType === 'hero')
+            .flatMap(pool => pool.candidateIds ?? []);
+        this._redFace = new RedFaceShowcaseController({
+            pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
+            cards: () => supportCards ?? [],
+            generalPoolIds: () => heroPoolIds,
+        });
+        const rowBindings = Array.from({ length: RED_FACE_SHOW_MAX_ROWS }, (_, i) => ({
+            buttonId: `btnRedFaceRow${i}`,
+            handler: () => { this._selectRedFace(i); },
+        }));
+        this._redFaceHost = await this._mountPreviewScreenHost('RedFaceShowcaseHost', 'red-face-showcase-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeRedFaceShowcase(); } },
+            ...rowBindings,
+        ]);
+        this._redFaceHost.node.active = false;
+    }
+
+    public openRedFaceShowcase(): void {
+        const host = this._redFaceHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRedFaceShowcase();
+    }
+
+    private _closeRedFaceShowcase(): void {
+        if (this._redFaceHost) {
+            this._redFaceHost.node.active = false;
+        }
+    }
+
+    private _selectRedFace(index: number): void {
+        this._redFace?.select(index);
+        this._refreshRedFaceShowcase();
+    }
+
+    private _refreshRedFaceShowcase(): void {
+        const binder = this._redFaceHost?.binder;
+        if (!binder || !this._redFace) {
+            return;
+        }
+        applyFlowView(binder, this._redFace.getFlowView());
+    }
+
+    private _loadDataJson<T>(path: string): Promise<T | null> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>(path, JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, `[LobbyScene] 資料載入失敗：${path}`, err);
+                    resolve(null);
+                    return;
+                }
+                resolve(asset.json as T);
+            });
+        });
     }
 
     private _loadLobbyHub(): Promise<LobbyHub | null> {
