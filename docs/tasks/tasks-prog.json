@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 30,
-    "total": 66
+    "open": 34,
+    "total": 70
   },
   "tasks": [
     {
@@ -2842,6 +2842,119 @@
         "artifacts/PROG-2-0119/**"
       ],
       "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0120",
+      "title": "實機驗收：紅顏展示畫面（#311）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "M6 畫面實機驗收，待 cc 接線 PR 合併後接卡。",
+      "related": [],
+      "depends": [
+        "PR #311",
+        "M6 cc 接線 PR（合併後補號）"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0120.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0120/**"
+      ],
+      "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: 等 M6 cc 接線 PR 合併"
+    },
+    {
+      "id": "PROG-2-0121",
+      "title": "實機驗收：傭兵面板（#312）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "M6 畫面實機驗收，待 cc 接線 PR 合併後接卡。",
+      "related": [],
+      "depends": [
+        "PR #312",
+        "M6 cc 接線 PR（合併後補號）"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0121.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0121/**"
+      ],
+      "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: 等 M6 cc 接線 PR 合併"
+    },
+    {
+      "id": "PROG-2-0122",
+      "title": "實機驗收：趕路倒數圖示（#314）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "M6 畫面實機驗收，待 cc 接線 PR 合併後接卡。",
+      "related": [],
+      "depends": [
+        "PR #314",
+        "M6 cc 接線 PR（合併後補號）"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0122.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0122/**"
+      ],
+      "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: 等 M6 cc 接線 PR 合併"
+    },
+    {
+      "id": "PROG-2-0123",
+      "title": "實機驗收：任務詳情「是否再探一次？」彈窗（#303、#296）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "M6 畫面實機驗收，待 cc 接線 PR 合併後接卡。",
+      "related": [],
+      "depends": [
+        "PR #303",
+        "PR #296",
+        "M6 cc 接線 PR（合併後補號）"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0123.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0123/**"
+      ],
+      "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: 等 M6 cc 接線 PR 合併"
     }
   ]
 }

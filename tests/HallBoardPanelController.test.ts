@@ -135,6 +135,60 @@ export function createHallBoardLayoutSuite(): TestSuite {
         }
     });
 
+    suite.test('天下沙盤遠征牆：依沙盤階段過濾，標題切換，列資料來自 Expedition 牆', () => {
+        const controller = new HallBoardPanelController(makeDeps());
+        controller.switchBoard('Expedition');
+        const rows = controller.rows();
+        assert.equals(1, rows.length);
+        assert.equals('E-EASY-01', rows[0].taskId);
+        const view = controller.getFlowView();
+        assert.equals('天下沙盤・遠征', view.texts.hallBoardTitle);
+        assert.equals(rows[0].title, view.texts.hallRow0Title);
+    });
+
+    suite.test('天下沙盤與雙牆共用同一條接取入口：指派給出戰主將', async () => {
+        const assigned: Array<[string, string]> = [];
+        const controller = new HallBoardPanelController(makeDeps({
+            assign: async (taskId, generalId) => {
+                assigned.push([taskId, generalId]);
+                return true;
+            },
+        }));
+        controller.switchBoard('Expedition');
+        assert.isTrue(await controller.accept(0));
+        assert.equals(1, assigned.length);
+        assert.equals('E-EASY-01', assigned[0][0]);
+        assert.equals('zhang-fei', assigned[0][1]);
+    });
+
+    suite.test('沒有遠征牆的大廳資料：天下沙盤列為空，不拋錯', () => {
+        const noExpedition = (): any => {
+            const copy = JSON.parse(JSON.stringify(hub()));
+            delete copy.Mission_Boards.Expedition;
+            return copy;
+        };
+        const controller = new HallBoardPanelController(makeDeps({ hub: noExpedition }));
+        controller.switchBoard('Expedition');
+        assert.equals(0, controller.rows().length);
+        assert.isFalse(controller.getFlowView().actives.hallRow0);
+    });
+
+    suite.test('flow view 的沙盤分頁鈕與 layout 節點對應，文字標示天下沙盤', () => {
+        const layout = readJson('assets/resources/ui-spec/layouts/hall-board-main.json');
+        const ids = new Set<string>();
+        const walk = (node: any): void => {
+            if (!node || typeof node !== 'object') return;
+            if (typeof node.id === 'string') ids.add(node.id);
+            for (const child of node.children ?? []) walk(child);
+        };
+        walk(layout.root);
+        assert.isTrue(ids.has('btnHallBoardExpedition'));
+        assert.isTrue(ids.has('btnHallBoardExpeditionLabel'));
+        const view = new HallBoardPanelController(makeDeps()).getFlowView();
+        assert.equals('天下沙盤', view.texts.btnHallBoardExpeditionLabel);
+        assert.isTrue(view.enabled.btnHallBoardExpedition);
+    });
+
     suite.test('lobby-hub.json 通過 loadLobbyHub 驗證', () => {
         assert.isTrue(loadLobbyHub(readJson('assets/resources/data/lobby-hub.json')).ok);
     });

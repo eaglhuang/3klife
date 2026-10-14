@@ -1,5 +1,6 @@
 import { assert, TestSuite } from './TestRunner';
 import {
+    isDynamicBonusActive,
     DYNAMIC_RELATION_DECAY_RATE,
     DYNAMIC_RELATION_INITIAL_INTIMACY,
     DYNAMIC_RELATION_INTERACT_GAIN,
@@ -136,6 +137,18 @@ export function createKinDynamicRelationsSuite(): TestSuite {
         book.interact('a', 'b');
         book.decaySeason();
         assert.equals(DYNAMIC_RELATION_INITIAL_INTIMACY + DYNAMIC_RELATION_INTERACT_GAIN - DYNAMIC_RELATION_DECAY_RATE, book.listFor('a')[0].intimacy);
+    });
+
+    suite.test('親密度歸 0：關係保留、加成失效；互動後重新生效（PM 裁定）', () => {
+        const book = new DynamicRelationBook();
+        book.record('bonding', 'a', 'b', 1);
+        for (let i = 0; i < 30; i++) book.decaySeason();
+        const rel = book.listFor('a');
+        assert.equals(1, rel.length, '關係仍在');
+        assert.equals('SPOUSE', rel[0].type, '身分保留');
+        assert.isFalse(isDynamicBonusActive(rel[0]));
+        book.interact('a', 'b');
+        assert.isTrue(isDynamicBonusActive(book.listFor('a')[0]));
     });
 
     return suite;
