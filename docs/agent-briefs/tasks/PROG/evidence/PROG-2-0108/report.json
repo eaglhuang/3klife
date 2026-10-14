@@ -22,5 +22,16 @@
     "threeGenerationCompleted": true,
     "errorCount": 0,
     "scope": "三代診斷，非0108完整驗收"
+  },
+  "rerun": {
+    "completed": false,
+    "errorCount": 1,
+    "cliExit": 1,
+    "observations": 36,
+    "trainingRounds": 24,
+    "injuredRounds": 0,
+    "skippedRounds": 0,
+    "evidence": "rerun-round-evidence.json",
+    "authorization": "PM 2026-10-14 0745，只允許一個自然新局"
   }
 }

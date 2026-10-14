@@ -4,7 +4,16 @@ async function run0108Flow(page, options = {}) {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     const steps = [];
     let injuryObserved = false;
-    const mark = async name => { steps.push(name); if (options.onStep) await options.onStep(name); };
+    const fs = require('fs'), path = require('path');
+    const outIndex = process.argv.indexOf('--out');
+    const evidenceDir = path.resolve(outIndex >= 0 ? process.argv[outIndex + 1] : 'artifacts/PROG-2-0108-rerun');
+    fs.mkdirSync(evidenceDir, { recursive: true });
+    const roundEvidence = [];
+    const mark = async name => {
+        steps.push(name);
+        await page.screenshot({ path: path.join(evidenceDir, `${String(steps.length).padStart(2, '0')}-${name}.png`), fullPage: true });
+        if (options.onStep) await options.onStep(name);
+    };
     async function state() {
         return page.evaluate(() => {
             const labels = {}, buttons = {};
@@ -110,8 +119,21 @@ async function run0108Flow(page, options = {}) {
         }
         for (let i = 0; i < 36; i++) {
             await click(i % 3 === 2 ? 'BtnRest' : 'BtnTrain_str', 180);
-            const labels = (await state()).labels;
-            if (!injuryObserved && Object.values(labels).some(text => String(text).includes('訓練時受傷'))) {
+            const recorded = await page.evaluate(() => new Promise((resolve, reject) => {
+                const request = indexedDB.open('3KLifeData');
+                request.onerror = () => reject(String(request.error));
+                request.onsuccess = () => {
+                    const db = request.result, tx = db.transaction('kv', 'readonly');
+                    const read = tx.objectStore('kv').get('player.save'); let sessions = [];
+                    read.onsuccess = () => { sessions = read.result?.value?.nurture?.sessions || []; };
+                    tx.oncomplete = () => { db.close(); resolve(sessions.map(s => ({ childId: s.childId, round: s.round, log: s.log }))); };
+                    tx.onerror = () => { db.close(); reject(String(tx.error)); };
+                };
+            }));
+            roundEvidence.push({ requestedRound: i + 1, sessions: recorded });
+            fs.writeFileSync(path.join(evidenceDir, 'round-evidence.json'), JSON.stringify(roundEvidence, null, 2), 'utf8');
+            if (!recorded.some(s => s.childId === child.id && s.log?.length)) throw Error('0108: 缺少本回合只讀培育日誌');
+            if (!injuryObserved && recorded.some(s => s.childId === child.id && s.log?.some(log => log.injured === true))) {
                 injuryObserved = true; await mark('natural-injury-observed');
             }
         }
