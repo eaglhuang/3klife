@@ -6,6 +6,7 @@
 import { TestSuite, assert } from './TestRunner';
 import { GAME_SESSION_EVENTS, GameSession, InMemoryRosterStore, SeasonAdvancedPayload } from '../assets/scripts/core/managers/GameSession';
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
+import { ITEM_BAMBOO_SLIP } from '../assets/scripts/core/systems/PlayerInventory';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
 import { LegacyError, LegacyService, STORE_MENTOR_CARDS } from '../assets/scripts/core/services/LegacyService';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
@@ -117,17 +118,19 @@ export function createLegacySuite(): TestSuite {
         assert.isTrue(await adapter.get('player.save') !== null, '退役後應自動存檔');
     });
 
-    suite.test('退役分流（FATE-08）：武職→戰技教官、文職→智識教官、雙職能→全能教官、未定職能→UNKNOWN_CLASS', async () => {
+    suite.test('退役分流（FATE-08）：武職→戰技教官、文職→智識教官、雙職能→全能教官、無主職依能力 fallback（平手歸文）', async () => {
         const { session } = createSession(new MemoryStorageAdapter(), [
             makeGeneral('warrior', '男', 66, { primaryClass: 'Warrior' } as Partial<TestGeneral>),
             makeGeneral('scholar', '男', 66, { primaryClass: 'Scholar' } as Partial<TestGeneral>),
             makeGeneral('dual', '男', 66, { primaryClass: 'Warrior', subClass: 'Scholar' } as Partial<TestGeneral>),
-            makeGeneral('unknown', '男', 66),
+            makeGeneral('fallbackWar', '男', 66),
+            makeGeneral('tie', '男', 66, { str: 50, lea: 50, int: 50, pol: 50 } as Partial<TestGeneral>),
         ]);
         const warrior = await session.retireGeneral('warrior');
         const scholar = await session.retireGeneral('scholar');
         const dual = await session.retireGeneral('dual');
-        const unknown = await session.retireGeneral('unknown');
+        const fallbackWar = await session.retireGeneral('fallbackWar');
+        const tie = await session.retireGeneral('tie');
 
         assert.equals('tactic_mentor', warrior.mentorRoute!.destination);
         assert.equals('WARRIOR', warrior.mentorRoute!.reason);
@@ -135,7 +138,24 @@ export function createLegacySuite(): TestSuite {
         assert.equals('SCHOLAR', scholar.mentorRoute!.reason);
         assert.equals('all_round_mentor', dual.mentorRoute!.destination);
         assert.equals('DUAL_CLASS', dual.mentorRoute!.reason);
-        assert.equals('UNKNOWN_CLASS', unknown.mentorRoute!.reason);
+        assert.equals('tactic_mentor', fallbackWar.mentorRoute!.destination);
+        assert.equals('WARRIOR', fallbackWar.mentorRoute!.reason);
+        assert.equals('wisdom_mentor', tie.mentorRoute!.destination);
+        assert.equals('SCHOLAR', tie.mentorRoute!.reason);
+    });
+
+    suite.test('退役發竹簡（FATE-08，PM 暫定）：文職與雙職能各 1 份，武職不發', async () => {
+        const { session } = createSession(new MemoryStorageAdapter(), [
+            makeGeneral('warrior', '男', 66, { primaryClass: 'Warrior' } as Partial<TestGeneral>),
+            makeGeneral('scholar', '男', 66, { primaryClass: 'Scholar' } as Partial<TestGeneral>),
+            makeGeneral('dual', '男', 66, { primaryClass: 'Warrior', subClass: 'Scholar' } as Partial<TestGeneral>),
+        ]);
+        await session.retireGeneral('warrior');
+        assert.equals(0, session.itemCount(ITEM_BAMBOO_SLIP));
+        await session.retireGeneral('scholar');
+        assert.equals(1, session.itemCount(ITEM_BAMBOO_SLIP));
+        await session.retireGeneral('dual');
+        assert.equals(2, session.itemCount(ITEM_BAMBOO_SLIP));
     });
 
     suite.test('一般角色死亡：建立快照而非英靈卡、寫入 L5、教官保留', async () => {

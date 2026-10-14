@@ -18,11 +18,14 @@ export const ITEM_ORACLE_TOKEN = 'ITEM_ORACLE';
 export const ITEM_JOB_CHANGE_ORDER = 'ITEM_JOB_ORDER';
 /** 試用券（MERC-02 招募 Trial 傭兵；PROG-2-0327 接線）。起始庫存為 0（暫定）。 */
 export const ITEM_TRIAL_TICKET = 'ITEM_TRIAL_TICKET';
+/** 竹簡（文職退役產物，PROG-2-0330；暫定）。起始庫存為 0。 */
+export const ITEM_BAMBOO_SLIP = 'ITEM_BAMBOO_SLIP';
 
 export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_ORACLE_TOKEN]: '求籤令',
     [ITEM_JOB_CHANGE_ORDER]: '轉職令',
     [ITEM_TRIAL_TICKET]: '試用券',
+    [ITEM_BAMBOO_SLIP]: '竹簡',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;

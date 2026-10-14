@@ -72,7 +72,7 @@ import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
@@ -1146,6 +1146,11 @@ export class GameSession {
         }
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
         this._roster.replaceAll(result.roster);
+        const reason = result.card.mentorRoute?.reason;
+        if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
+            // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
+            this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
+        }
         if (this._autoSave && this._save) {
             await this.save();
         }
