@@ -17,6 +17,7 @@ export function createFactorTacticLinkageSuite(): TestSuite {
     suite.test('綠色因子相符時學習戰法 TP 減半，否則維持原值', () => {
         assert.equals(GREEN_FACTOR_TP_MULTIPLIER, 0.5);
         assert.equals(40, learnTpCost(80, true));
+        assert.equals(4, learnTpCost(7, true), '奇數減半後無條件進位');
         assert.equals(80, learnTpCost(80, false));
     });
 
