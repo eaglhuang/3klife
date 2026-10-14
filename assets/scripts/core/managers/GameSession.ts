@@ -24,6 +24,7 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
+import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
@@ -660,7 +661,9 @@ export class GameSession {
      * 手上的虎符退回君主，符合條件者產出一張陣亡虎符（君主持有）。只改記憶體狀態，由呼叫端的存檔一併寫入。
      */
     private _settleDeaths(before: readonly GeneralConfig[], after: readonly GeneralConfig[], season: number): void {
-        const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before, after, season);
+        // 死亡產卡的兵種：武將資料沒有 troopType 時，由適性推出主兵種（PROG-2-0582）
+        const withTroop = (general: GeneralConfig) => ({ troopType: mainTroopTypeOf(general.troopAptitude), ...general });
+        const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before.map(withTroop), after.map(withTroop), season);
         this._tallyHoldings = result.holdings;
         this._tallyCards = { ...result.cards };
     }
@@ -1589,7 +1592,8 @@ export class GameSession {
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
-        this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
+        // 讀檔回填：舊存檔的虎符卡可能缺 troopType，依名冊武將的主兵種補上（PROG-2-0582）
+        this._tallyCards = backfillTallyTroopTypes(normalizeTallyCardsMap(snapshot.tallyCards), this._roster.getAll());
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
         this._femaleSystem = normalizeFemaleSystemState(snapshot.femaleSystem);

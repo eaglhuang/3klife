@@ -97,3 +97,47 @@ export function awardTopTally(
     // 不排序、不改原卡；完全同分時保持輸入順序。
     return best ? { ...best, source: 'reward' } : null;
 }
+
+/** 適性等級由高到低（與 BattleAptitude 的 APTITUDE_GRADES 相同） */
+const TROOP_APTITUDE_RANK = ['S', 'A', 'B', 'C', 'D'];
+/** 兵種代碼的定義順序（同等級時取前面的） */
+const TROOP_TYPE_ORDER: readonly string[] = ['cavalry', 'infantry', 'shield', 'archer', 'pikeman', 'engineer', 'medic', 'navy'];
+
+/**
+ * 武將主兵種 = 適性等級最高的兵種（S>A>B>C>D），同等級取 TroopType 定義順序較前者。
+ * 規格沒有定義主兵種，這是 PM 暫定規則（PROG-2-0582）。沒有可用適性時回 undefined。
+ * troopAptitude 的 key 是大寫兵種代碼（如 CAVALRY），回傳的是 TroopType 的小寫值。
+ */
+export function mainTroopTypeOf(troopAptitude: Readonly<Record<string, string>> | undefined): string | undefined {
+    if (!troopAptitude) return undefined;
+    let best: { type: string; rank: number; order: number } | null = null;
+    for (const [key, grade] of Object.entries(troopAptitude)) {
+        const type = key.toLowerCase();
+        const order = TROOP_TYPE_ORDER.indexOf(type);
+        const rank = TROOP_APTITUDE_RANK.indexOf(String(grade).toUpperCase());
+        if (order < 0 || rank < 0) continue;
+        if (!best || rank < best.rank || (rank === best.rank && order < best.order)) best = { type, rank, order };
+    }
+    return best?.type;
+}
+
+/**
+ * 讀檔回填（PROG-2-0582）：缺 troopType 的虎符卡，依來源武將的主兵種補上。
+ * 已有 troopType、或找不到來源武將時維持原樣；不改動傳入的物件。
+ */
+export function backfillTallyTroopTypes(
+    cards: Readonly<Record<string, TigerTallyCard>>,
+    generals: readonly { id: string; uid?: string; troopAptitude?: Readonly<Record<string, string>> }[],
+): Record<string, TigerTallyCard> {
+    const bySource = new Map<string, string | undefined>();
+    for (const general of generals) {
+        const key = general.uid?.trim() || general.id;
+        if (!bySource.has(key)) bySource.set(key, mainTroopTypeOf(general.troopAptitude));
+    }
+    const out: Record<string, TigerTallyCard> = {};
+    for (const [uid, card] of Object.entries(cards)) {
+        const troopType = card.troopType ?? bySource.get(card.sourceGeneralUid);
+        out[uid] = troopType && troopType !== card.troopType ? { ...card, troopType } : card;
+    }
+    return out;
+}
