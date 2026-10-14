@@ -34,6 +34,8 @@ import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoControl
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
+import { resolveTallyDeployMod, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
+import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import {
   BattleSkillTargetMode,
   SkillSourceType,
@@ -89,6 +91,12 @@ async function loadJsonWithFileFallback<T>(resourcePath: string, _relativeFilePa
   } catch {
     return null;
   }
+}
+
+/** 虎符部隊出陣參數（TRP-13）：虎符 id 與主將資料 */
+export interface TallyDeployRef {
+  tallyId: string;
+  commander: TallyCommanderInfo;
 }
 
 export class BattleController {
@@ -243,11 +251,28 @@ export class BattleController {
     }
   }
 
+  /**
+   * 虎符部隊（TRP-13）：部隊記下虎符與主將，適性乘數每次結算時依當下格子的地形算。
+   * 虎符目錄查不到或沒有適性資料時，乘數恆為 1。
+   */
+  private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
+    const profile = buildTallyCardCatalog().get(ref.tallyId)?.affinity ?? null;
+    unit.tallyId = ref.tallyId;
+    unit.commanderUid = ref.commander.uid;
+    unit.tallyAffinity = (lane, depth) =>
+      resolveTallyDeployMod(profile, ref.commander, this.state.getCell(lane, depth)?.terrain ?? null);
+  }
+
   public deployTroop(type: TroopType, lane: number, unitName?: string): TroopUnit | null {
     return this.tryDeployTroop(type, lane, unitName).unit;
   }
 
-  public tryDeployTroop(type: TroopType, lane: number, unitName?: string, options: { militia?: boolean } = {}): DeployOutcome {
+  public tryDeployTroop(
+    type: TroopType,
+    lane: number,
+    unitName?: string,
+    options: { militia?: boolean; tally?: TallyDeployRef } = {},
+  ): DeployOutcome {
     if (!this.flowStateMachine.canDeployTroop()) {
       return { ok: false, unit: null, reason: "battle-locked" };
     }
@@ -276,6 +301,7 @@ export class BattleController {
     }
 
     const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName, { militia: options.militia });
+    if (options.tally) this.bindTallyAffinity(unit, options.tally);
     this.turnManager.notePlayerDeployment();
     if (this.sortie) {
       const applied = applyDeploy(this.sortie, unit.id, { troopType: type, militia: options.militia });
