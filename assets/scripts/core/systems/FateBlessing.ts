@@ -1,4 +1,4 @@
-// @spec-source → 因子爆發系統.md §MCQ Q39（天命加護）；運氣系統.md（紫色 = 運氣天命）；FBR-10（PROG-2-0610）
+// @spec-source → 因子爆發系統.md §MCQ Q39（天命加護）；運氣系統.md（紫色 = 運氣天命）；FBR-10（PROG-2-0611）
 /**
  * FateBlessing — 紫色因子戰場效果「天命加護」（純邏輯，不依賴 cc）
  *

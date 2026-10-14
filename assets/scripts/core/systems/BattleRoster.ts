@@ -196,6 +196,9 @@ export function buildBattleConfig(general: GeneralConfig, faction: GeneralConfig
         str, int: intel, lea, pol, cha, luk,
         attackBonus: computeAttackBonus(g),
         tacticSlots: buildTacticSlots(g),
+        // 名冊沒存精力欄位時用性別預設（男 120／女 100）；戰場端不能自己猜 100，否則閘門與戰後結算基準會偏離名冊
+        vitality: vitalityOf(g),
+        maxVitality: maxVitalityOf(g),
     };
 }
 

@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 35,
-    "total": 71
+    "open": 36,
+    "total": 72
   },
   "tasks": [
     {
@@ -2986,6 +2986,35 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0124/**"
+      ],
+      "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0125",
+      "title": "實機驗收：精力閘門與奧義扣精力（#336、#339）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M5-M6",
+      "created": "2026-10-14",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "精力閘門與奧義扣精力實機驗收，三項改動已合併到 master。",
+      "related": [],
+      "depends": [
+        "PR #336",
+        "PR #339",
+        "PR #332"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0125.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0125/**"
       ],
       "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
     }
