@@ -2,8 +2,10 @@
  * 里程碑獎勵表與達成後的獎勵組合（REC-05，PROG-2-0438）
  *
  * 鎖住：每個里程碑的獎勵內容與規格一致；新達成才發放、已記錄不重複；未知 id 略過；
- * 隱藏因子在因子字典補上前 factorId 為 null。稱號名稱與因子 ID 為暫定，這裡不鎖其值。
+ * 隱藏因子 factorId 必須存在於因子字典（gene_hidden_*），且顏色與規格一致。稱號名稱為暫定，這裡不鎖其值。
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import {
     MILESTONE_REWARDS,
@@ -26,13 +28,22 @@ export function createMilestoneRewardsSuite(): TestSuite {
         assert.equals('tallyQualityUp,spiritWallAnimation', kinds);
     });
 
-    suite.test('獎勵表：不敗、鐵壁為白色隱藏因子，殺意為紅色隱藏因子；因子 ID 待字典補上', () => {
+    suite.test('獎勵表：不敗、鐵壁為白色隱藏因子，殺意為紅色隱藏因子，因子 ID 對應字典', () => {
         const undefeated = MILESTONE_REWARDS.UNDEFEATED_50[0];
         const wall = MILESTONE_REWARDS.GUARDIAN_WALL[0];
         const asura = MILESTONE_REWARDS.ASURA[0];
-        assert.isTrue(undefeated.kind === 'hiddenFactor' && undefeated.color === 'white' && undefeated.factorId === null);
-        assert.isTrue(wall.kind === 'hiddenFactor' && wall.color === 'white' && wall.factorId === null);
-        assert.isTrue(asura.kind === 'hiddenFactor' && asura.color === 'red' && asura.factorId === null);
+        assert.isTrue(undefeated.kind === 'hiddenFactor' && undefeated.color === 'white' && undefeated.factorId === 'gene_hidden_undefeated');
+        assert.isTrue(wall.kind === 'hiddenFactor' && wall.color === 'white' && wall.factorId === 'gene_hidden_iron_wall');
+        assert.isTrue(asura.kind === 'hiddenFactor' && asura.color === 'red' && asura.factorId === 'gene_hidden_killing_intent');
+
+        const dictPath = path.resolve(__dirname, '../assets/resources/data/master/gene-dictionary.json');
+        const dict = JSON.parse(fs.readFileSync(dictPath, 'utf8')).data as { id: string; color: string; isHidden?: boolean }[];
+        for (const reward of [undefeated, wall, asura]) {
+            if (reward.kind !== 'hiddenFactor') continue;
+            const entry = dict.find((g) => g.id === reward.factorId);
+            assert.isTrue(!!entry && entry.isHidden === true);
+            assert.equals(reward.color, entry!.color);
+        }
     });
 
     suite.test('依里程碑組獎勵：依輸入順序合併，未知 id 略過', () => {

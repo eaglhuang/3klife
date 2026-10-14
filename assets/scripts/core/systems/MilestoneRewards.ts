@@ -14,12 +14,12 @@ export type MilestoneRewardItem =
     | { readonly kind: 'title'; readonly titleId: string }
     | { readonly kind: 'tallyQualityUp' }
     | { readonly kind: 'spiritWallAnimation' }
-    | { readonly kind: 'hiddenFactor'; readonly name: string; readonly color: 'white' | 'red'; readonly factorId: string | null };
+    | { readonly kind: 'hiddenFactor'; readonly name: string; readonly color: 'white' | 'red'; readonly factorId: string };
 
 /**
  * 獎勵表（依規格「成就與獎勵」）。
  * - 稱號 titleId 為暫定佔位，名稱待企劃。
- * - 隱藏因子 factorId 為 null：因子字典尚無「不敗 / 鐵壁 / 殺意」，待確認後補上（REC-06 阻塞點）。
+ * - 隱藏因子 factorId 對應 gene-dictionary.json 的 gene_hidden_*（PM 暫定裁定 2026-10-14，白色／紅色標 provisional，待 KIN-05 裁決後只需改字典）。
  */
 export const MILESTONE_REWARDS: Readonly<Record<string, readonly MilestoneRewardItem[]>> = {
     KILL_100: [{ kind: 'tacticNote', count: 1 }],
@@ -28,9 +28,9 @@ export const MILESTONE_REWARDS: Readonly<Record<string, readonly MilestoneReward
         { kind: 'title', titleId: 'TITLE_KILL_1000_PLACEHOLDER' },
     ],
     KILL_10000: [{ kind: 'tallyQualityUp' }, { kind: 'spiritWallAnimation' }],
-    UNDEFEATED_50: [{ kind: 'hiddenFactor', name: '不敗', color: 'white', factorId: null }],
-    GUARDIAN_WALL: [{ kind: 'hiddenFactor', name: '鐵壁', color: 'white', factorId: null }],
-    ASURA: [{ kind: 'hiddenFactor', name: '殺意', color: 'red', factorId: null }],
+    UNDEFEATED_50: [{ kind: 'hiddenFactor', name: '不敗', color: 'white', factorId: 'gene_hidden_undefeated' }],
+    GUARDIAN_WALL: [{ kind: 'hiddenFactor', name: '鐵壁', color: 'white', factorId: 'gene_hidden_iron_wall' }],
+    ASURA: [{ kind: 'hiddenFactor', name: '殺意', color: 'red', factorId: 'gene_hidden_killing_intent' }],
 };
 
 /** 依里程碑 id 組出獎勵清單，依輸入順序；未知 id 略過 */
