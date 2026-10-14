@@ -54,15 +54,21 @@ export function learnTacticInto(
     return { ok: true, learned: [...learned, tacticId] };
 }
 
-/**
- * 戰法 id → 對應的綠色因子 id（綠因子相符時學習 TP ×0.5）。
- * 目前留空：PM 的「戰場線 #345 對應表」在 #345 中並不存在，需要資料定案後再填。
- */
-export const TACTIC_GREEN_FACTOR_GENE_ID: Readonly<Record<string, string>> = {};
+/** 戰法的因子顏色覆寫表（tacticId → 顏色）。戰法資料沒有 color 欄位時，依戰法類型暫填；目前留空。 */
+export const TACTIC_FACTOR_COLOR_OVERRIDE: Readonly<Record<string, string>> = {};
 
-/** 武將 genes 中是否有與該戰法相符的綠色因子（type 為 green 且 id 等於對應表）。 */
-export function hasMatchingGreenFactor(genes: readonly { type?: string; id?: string }[] | undefined, tacticId: string): boolean {
-    const factorId = TACTIC_GREEN_FACTOR_GENE_ID[tacticId];
-    if (!factorId || !genes) return false;
-    return genes.some((gene) => gene.type === 'green' && gene.id === factorId);
+/** 戰法的因子顏色：有覆寫用覆寫，否則依戰法類型暫填為 green（戰法屬綠色戰法種子，見 FactorInheritance）。 */
+export function tacticFactorColor(tacticId: string): string {
+    return TACTIC_FACTOR_COLOR_OVERRIDE[tacticId] ?? 'green';
+}
+
+/** 武將 genes 中是否持有任一綠色基因（type 為 green，或舊資料的戰法 / tactic-seed）。 */
+const GREEN_GENE_TYPES: ReadonlySet<string> = new Set(['green', '戰法', 'tactic-seed']);
+
+/**
+ * 綠因子折扣條件（PM 2026-10-14 裁定）：戰法的因子顏色為 green，且武將持有任一 green 基因。
+ */
+export function hasMatchingGreenFactor(genes: readonly { type?: string }[] | undefined, tacticId: string): boolean {
+    if (tacticFactorColor(tacticId) !== 'green' || !genes) return false;
+    return genes.some((gene) => GREEN_GENE_TYPES.has(gene.type ?? ''));
 }

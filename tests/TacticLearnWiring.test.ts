@@ -8,7 +8,7 @@ import { TestSuite, assert } from './TestRunner';
 import { GameSession, InMemoryRosterStore, type NurtureStatePort } from '../assets/scripts/core/managers/GameSession';
 import { buildBattleConfig } from '../assets/scripts/core/systems/BattleRoster';
 import { TACTIC_TP_COST_OVERRIDE } from '../assets/scripts/core/systems/SortieDeploy';
-import { TACTIC_GREEN_FACTOR_GENE_ID, hasMatchingGreenFactor } from '../assets/scripts/core/systems/TacticLearning';
+import { hasMatchingGreenFactor, tacticFactorColor } from '../assets/scripts/core/systems/TacticLearning';
 import type { NurtureState } from '../assets/scripts/core/services/NurtureService';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -78,9 +78,7 @@ export function createTacticLearnWiringSuite(): TestSuite {
 
     suite.test('學戰法：綠因子相符時成本 31×0.5 ceil = 16，門檻 32，扣 16', async () => {
         const overrides = TACTIC_TP_COST_OVERRIDE as Record<string, number>;
-        const mapping = TACTIC_GREEN_FACTOR_GENE_ID as Record<string, string>;
         overrides['TAC_G'] = 31;
-        mapping['TAC_G'] = 'GREEN_TAC_01';
         try {
             const general = makeGeneral('lead-1', 60, [], [{ type: 'green', id: 'GREEN_TAC_01' }]);
             const { session, port } = sessionWith(general, 32);
@@ -90,20 +88,15 @@ export function createTacticLearnWiringSuite(): TestSuite {
             assert.equals('TP_SHORT', (await short.session.learnTactic('lead-1', 'TAC_G')).blocked!);
         } finally {
             delete overrides['TAC_G'];
-            delete mapping['TAC_G'];
         }
     });
 
-    suite.test('hasMatchingGreenFactor：需要 type 為 green 且 id 相符；對應表空時永遠不相符', () => {
-        assert.isFalse(hasMatchingGreenFactor([{ type: 'green', id: 'X' }], 'TAC_NONE'));
-        const mapping = TACTIC_GREEN_FACTOR_GENE_ID as Record<string, string>;
-        mapping['TAC_M'] = 'X';
-        try {
-            assert.isTrue(hasMatchingGreenFactor([{ type: 'green', id: 'X' }], 'TAC_M'));
-            assert.isFalse(hasMatchingGreenFactor([{ type: 'red', id: 'X' }], 'TAC_M'));
-        } finally {
-            delete mapping['TAC_M'];
-        }
+    suite.test('綠因子條件：戰法因子顏色為 green 且武將持有任一 green 基因才打折', () => {
+        assert.equals('green', tacticFactorColor('TAC_ANY'));
+        assert.isTrue(hasMatchingGreenFactor([{ type: 'green' }], 'TAC_ANY'));
+        assert.isTrue(hasMatchingGreenFactor([{ type: 'red' }, { type: 'green' }], 'TAC_ANY'));
+        assert.isFalse(hasMatchingGreenFactor([{ type: 'red' }], 'TAC_ANY'));
+        assert.isFalse(hasMatchingGreenFactor(undefined, 'TAC_ANY'));
     });
 
     suite.test('戰場槽位依智力：智力 10 只給 1 槽，即使已學 3 招', () => {
