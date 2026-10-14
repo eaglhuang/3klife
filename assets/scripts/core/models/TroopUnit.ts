@@ -48,6 +48,8 @@ export class TroopUnit {
   public tallyId: string | null = null;
   /** 主將的因子（genes）；戰場規則（水戰合攻、大霧免疫、林地 +1、綠色 TP）以此判斷（PROG-2-0584） */
   public factorGenes: readonly GeneralGeneConfig[] = [];
+  /** 由 factorGenes 依 factor-battle-effect-map 算出的戰場效果鍵（PROG-2-0584）；沒有對應時為空陣列 */
+  public factorEffects: readonly string[] = [];
   public commanderUid: string | null = null;
   /** (lane, depth) → 攻防乘數；沒有虎符時為 null，戰力不變 */
   public tallyAffinity: ((lane: number, depth: number) => number) | null = null;

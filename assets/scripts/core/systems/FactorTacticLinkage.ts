@@ -34,3 +34,56 @@ export function hitRateInWeather(baseHitRate: number, weather: Weather, hasFogIm
 export function forestMoveBonus(terrain: TerrainType, hasForestAptitude: boolean): number {
     return hasForestAptitude && terrain === TerrainType.Forest ? 1 : 0;
 }
+
+/** 戰場效果的鍵（對應 factor-battle-effect-map.json 的 effects） */
+export type FactorBattleEffect = 'naval-combined-attack' | 'forest-move-bonus' | 'fog-immunity';
+
+/** 因子 → 戰場效果的對應表：效果鍵 → 會觸發該效果的基因 id 清單 */
+export interface FactorBattleEffectMap {
+    effects: Readonly<Record<string, readonly string[]>>;
+}
+
+/** 武將持有的基因（只需要 id；level 為 0 或未解鎖的不算） */
+export interface HeldGene {
+    id?: string;
+    level?: number;
+    isLocked?: boolean;
+}
+
+/** 依對應表找出持有的戰場效果；沒有對應到的效果不列出 */
+export function factorBattleEffectsOf(genes: readonly HeldGene[], map: FactorBattleEffectMap): FactorBattleEffect[] {
+    const held = new Set(genes.filter((gene) => !gene.isLocked && (gene.level ?? 1) > 0).map((gene) => gene.id ?? ''));
+    const effects: FactorBattleEffect[] = [];
+    for (const [effect, geneIds] of Object.entries(map.effects)) {
+        if (geneIds.some((id) => held.has(id))) effects.push(effect as FactorBattleEffect);
+    }
+    return effects;
+}
+
+/** 水域合攻的追加傷害倍率（PM 暫定：相鄰友軍追加一次 50% 傷害，不觸發反擊） */
+export const NAVAL_COMBINED_DAMAGE_RATIO = 0.5;
+
+/** 四方向相鄰（同一條線前後或同一深度左右），斜角不算 */
+export function isOrthogonallyAdjacent(lane: number, depth: number, otherLane: number, otherDepth: number): boolean {
+    return Math.abs(lane - otherLane) + Math.abs(depth - otherDepth) === 1;
+}
+
+/** 部隊是否具有某項戰場效果（呼叫端傳入 factorBattleEffectsOf 的結果） */
+export function hasBattleEffect(effects: readonly string[], effect: FactorBattleEffect): boolean {
+    return effects.includes(effect);
+}
+
+/** 攻擊方在大霧天氣且有大霧免疫時，本次命中必中（略過擲骰） */
+export function isFogHitGuaranteed(weather: Weather, effects: readonly string[]): boolean {
+    return weather === Weather.Fog && hasBattleEffect(effects, 'fog-immunity');
+}
+
+/** 依戰場效果決定的林地移動力加成：格子為林地且持有 forest-move-bonus 時 +1 */
+export function forestMoveBonusFor(terrain: TerrainType, effects: readonly string[]): number {
+    return forestMoveBonus(terrain, hasBattleEffect(effects, 'forest-move-bonus'));
+}
+
+/** 綠色戰法種子基因 id：字典中 color 為 green 的基因（PM 裁定） */
+export function greenTacticSeedGeneIds(dictionary: readonly { id: string; color: string }[]): Set<string> {
+    return new Set(dictionary.filter((gene) => gene.color === 'green').map((gene) => gene.id));
+}

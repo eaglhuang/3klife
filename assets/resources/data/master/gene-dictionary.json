@@ -223,6 +223,14 @@
       "maxLevel": 1,
       "defaultTags": ["exclusive", "awakening", "cao-cao"],
       "isHidden": true
+    },
+    {
+      "id": "gene_fog_immune",
+      "displayName": "大霧免疫",
+      "color": "pink",
+      "category": "weather-resist",
+      "maxLevel": 5,
+      "defaultTags": ["weather", "fog", "immunity"]
     }
   ]
 }

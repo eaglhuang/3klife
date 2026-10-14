@@ -7,6 +7,13 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
+import {
+  canNavalCombinedAttack,
+  hasBattleEffect,
+  isFogHitGuaranteed,
+  isOrthogonallyAdjacent,
+  NAVAL_COMBINED_DAMAGE_RATIO,
+} from '../../core/systems/FactorTacticLinkage';
 
 export interface BattleCombatAction {
   attackerId: string;
@@ -163,7 +170,9 @@ export class BattleCombatResolver {
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
     const defenderStealth = getTerrainTroopEffect(defender.type, defenderCell?.terrain ?? TerrainType.Plain).stealthBonus;
     const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth;
-    if (!rollHit(attackerAccuracy, this.hitRandom)) {
+    // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
+    const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
+    if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
       svc.event.emit(EVENT_NAMES.UnitAttackMissed, {
         attackerId: attacker.id,
         targetId: defender.id,
@@ -213,6 +222,56 @@ export class BattleCombatResolver {
     if (!defender.isDead()) {
       this.tryTriggerCounterReaction(defender, attacker, svc);
     }
+    this.resolveNavalCombinedFollowUp(attacker, defender, svc);
+  }
+
+  /**
+   * 水域合攻（PM 暫定，PROG-2-0584）：攻擊方站在河流格且有 naval-combined-attack 時，
+   * 與目標相鄰的一個我方非主將部隊追加一次 50% 傷害，不觸發反擊、不擲命中。
+   * 目標已死或找不到相鄰友軍時不發生。
+   */
+  private resolveNavalCombinedFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
+    if (defender.isDead() || attacker.isDead()) return;
+    const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
+    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'))) return;
+
+    const helper = this.findNavalCombinedHelper(attacker, defender);
+    if (!helper) return;
+    const helperCell = this.context.state.getCell(helper.lane, helper.depth);
+    const dCell = this.context.state.getCell(defender.lane, defender.depth);
+    const baseDamage = svc.formula.calculateDamage({
+      attackerAttack: helper.getEffectiveAttack() * this.getTallyAttackMod(helper),
+      defenderDefense: defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender),
+      attackerType: helper.type,
+      defenderType: defender.type,
+      attackerTerrain: helperCell?.terrain ?? TerrainType.Plain,
+      defenderTerrain: dCell?.terrain ?? TerrainType.Plain,
+      attackerAptitudeMultiplier: this.getUnitAptitude(helper).attackMultiplier,
+      defenderAptitudeMultiplier: this.getUnitAptitude(defender).defenseMultiplier,
+    });
+    const damage = Math.max(1, Math.floor(baseDamage * NAVAL_COMBINED_DAMAGE_RATIO));
+
+    this.applyUnitDamage(defender, damage, attacker.faction, {
+      attackerId: helper.id,
+      attackerLane: helper.lane,
+      attackerDepth: helper.depth,
+      damageSource: 'naval-combined-attack',
+      allowDamageLink: true,
+    });
+  }
+
+  /** 與目標四方向相鄰的我方非主將、存活部隊（固定掃描順序，取第一個） */
+  private findNavalCombinedHelper(attacker: TroopUnit, defender: TroopUnit): TroopUnit | null {
+    const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
+    for (const { dl, dd } of offsets) {
+      const cell = this.context.state.getCell(defender.lane + dl, defender.depth + dd);
+      if (!cell?.occupantId) continue;
+      const unit = this.context.state.units.get(cell.occupantId);
+      if (!unit || unit.id === attacker.id || unit.faction !== attacker.faction) continue;
+      if (unit.isDead() || this.isGeneralUnit(unit.id)) continue;
+      if (isOrthogonallyAdjacent(unit.lane, unit.depth, defender.lane, defender.depth)) return unit;
+    }
+    return null;
   }
 
   public resolveActionResetAfterAttack(

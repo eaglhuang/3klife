@@ -1,10 +1,11 @@
-import { BattleTactic, EVENT_NAMES, Faction, StatusEffect, TroopType } from '../../../core/config/Constants';
+import { BattleTactic, EVENT_NAMES, Faction, StatusEffect, TerrainType, TroopType } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { BattleTurnManager } from '../BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../../shared/BattleTacticBehavior';
 import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
+import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 
 const FORWARD_DIR: Record<Faction, number> = {
@@ -63,6 +64,9 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
   let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty);
   if (!isFloodBattle) {
     remainingMoveBudget += resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth);
+    // 林地適性（PROG-2-0584）：站在林地且有 forest-move-bonus 的部隊移動力 +1
+    const cell = context.state.getCell(unit.lane, unit.depth);
+    remainingMoveBudget += forestMoveBonusFor(cell?.terrain ?? TerrainType.Plain, unit.factorEffects);
   }
 
   while (remainingMoveBudget > 0) {

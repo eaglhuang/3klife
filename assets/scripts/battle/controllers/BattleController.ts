@@ -37,6 +37,7 @@ import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoControl
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
+import { factorBattleEffectsOf, type FactorBattleEffectMap } from '../../core/systems/FactorTacticLinkage';
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
@@ -109,6 +110,8 @@ export class BattleController {
   private orderRefusedThisTurn = false;
   private readonly flowStateMachine = new BattleFlowStateMachine();
   private readonly skillSourceTranslator = new BattleSkillSourceTranslator(() => this.tacticDefinitionMap);
+  /** 因子 → 戰場效果對應表（PROG-2-0584）；讀不到時為空表，部隊不會取得任何因子效果 */
+  private factorEffectMap: FactorBattleEffectMap = { effects: {} };
   public readonly state = new BattleState();
   private readonly enemyAi = new EnemyAI();
   private pendingAdvanceTurnResult: BattleResult | null = null;
@@ -246,6 +249,12 @@ export class BattleController {
       this.tileBuffConfig = tileBuffConfig;
     }
 
+    const factorEffectMap = await loadJsonWithFileFallback<FactorBattleEffectMap>(
+      'data/master/factor-battle-effect-map',
+      'assets/resources/data/master/factor-battle-effect-map.json',
+    );
+    this.factorEffectMap = factorEffectMap ?? { effects: {} };
+
     const tacticLibrary = await loadJsonWithFileFallback<JsonListEnvelope<CanonicalTacticDefinition>>(
       'data/master/tactic-library',
       'assets/resources/data/master/tactic-library.json',
@@ -329,6 +338,7 @@ export class BattleController {
     const unit = this.unitSpawner.spawnUnit(type, Faction.Player, lane, deployDepth, unitName, { militia: options.militia });
     // 部隊帶上主將的因子資料（genes 已由 buildBattleConfig 展開進戰場武將），供因子戰法與地形規則讀取
     unit.factorGenes = this.state.getGeneral(Faction.Player)?.genes ?? [];
+    unit.factorEffects = factorBattleEffectsOf(unit.factorGenes, this.factorEffectMap);
     if (options.tally) this.bindTallyAffinity(unit, options.tally);
     this.turnManager.notePlayerDeployment();
     if (this.sortie) {

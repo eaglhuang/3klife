@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-10-14",
+  "description": "因子 → 戰場效果的對應表（PM 暫定，PROG-2-0584）。之後調整對應只改這份 JSON，不改程式。綠色戰法種子 = 字典中 color 為 green 的基因。",
+  "effects": {
+    "naval-combined-attack": ["gene_naval"],
+    "forest-move-bonus": ["gene_forest"],
+    "fog-immunity": ["gene_fog_immune"]
+  }
+}
