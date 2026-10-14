@@ -6,6 +6,7 @@ import {
     MercenaryPanelController,
     MercenaryPanelDeps,
 } from '../assets/scripts/ui/core/MercenaryPanelController';
+import { buildMercenaryNameplateRows } from '../assets/scripts/ui/core/MercenaryNameplateRows';
 import type { MercenaryState } from '../assets/scripts/core/systems/MercenaryBond';
 
 function readJson(relative: string): any {
@@ -97,6 +98,39 @@ export function createMercenaryPanelControllerSuite(): TestSuite {
         }));
         const controller = new MercenaryPanelController(makeDeps({ mercenaries: () => many }));
         assert.equals(MERC_PANEL_MAX_ROWS, controller.rows().length);
+    });
+
+    suite.test('名牌點擊依 uid 選取；不在名單的 uid 不變動選中項', () => {
+        const controller = new MercenaryPanelController(makeDeps());
+        assert.isTrue(controller.selectUid('m2'));
+        assert.equals('m2', controller.selected()!.uid);
+        assert.isFalse(controller.selectUid('nobody'));
+        assert.equals('m2', controller.selected()!.uid);
+    });
+
+    suite.test('名牌列文字：試用中顯示剩餘日數，已結義與已離隊各自一句', () => {
+        const rows = buildMercenaryNameplateRows(
+            [
+                { uid: 'a', daysLeft: 3, bond: 3, status: 'Trial', generalId: 'zhang-fei' },
+                { uid: 'b', daysLeft: 0, bond: 6, status: 'Bonded', generalId: 'guan-yu' },
+                { uid: 'c', daysLeft: 0, bond: 2, status: 'Expired', generalId: 'liu-bei' },
+            ],
+            (state) => ({ originalOwnerName: '原主未定', generalName: `名${state.generalId}`, rarity: 'R' }),
+        );
+        assert.equals(3, rows.length);
+        assert.equals('名zhang-fei', rows[0].nameText);
+        assert.equals('試用中・剩 3 日', rows[0].statusText);
+        assert.equals('已結義', rows[1].statusText);
+        assert.equals('已離隊', rows[2].statusText);
+        assert.equals('a,b,c', rows.map(row => row.uid).join(','));
+    });
+
+    suite.test('名牌列上限與傭兵面板列數一致', () => {
+        const many: MercenaryState[] = Array.from({ length: 9 }, (_, i) => ({
+            uid: `u${i}`, daysLeft: 1, bond: 1, status: 'Trial', generalId: `g${i}`,
+        }));
+        const rows = buildMercenaryNameplateRows(many, (state) => ({ originalOwnerName: '原主未定', generalName: state.generalId ?? '', rarity: 'R' }));
+        assert.equals(MERC_PANEL_MAX_ROWS, rows.length);
     });
 
     suite.test('layout 節點 id 涵蓋所有 flow key，skin slot 都已定義', () => {

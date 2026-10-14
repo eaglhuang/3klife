@@ -679,6 +679,14 @@ export class LobbyScene extends Component {
         this._refreshMercenaryPanel();
     }
 
+    /** 傭兵名牌點擊：先依 uid 選取，再開面板；uid 不在名單時不開。名牌位置由 cc 端決定（PROG-2-0476）。 */
+    public openMercenaryPanelFromNameplate(uid: string): void {
+        if (!this._mercPanel?.selectUid(uid)) {
+            return;
+        }
+        this.openMercenaryPanel();
+    }
+
     private _closeMercenaryPanel(): void {
         if (this._mercPanelHost) {
             this._mercPanelHost.node.active = false;
