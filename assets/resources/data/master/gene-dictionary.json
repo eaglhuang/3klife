@@ -227,7 +227,7 @@
     {
       "id": "gene_fog_immune",
       "displayName": "大霧免疫",
-      "color": "white",
+      "color": "pink",
       "category": "weather-resist",
       "maxLevel": 5,
       "defaultTags": ["weather", "fog", "immunity"]

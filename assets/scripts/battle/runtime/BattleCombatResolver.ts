@@ -231,7 +231,7 @@ export class BattleCombatResolver {
    * 目標已死或找不到相鄰友軍時不發生。
    */
   private resolveNavalCombinedFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
-    if (defender.isDead()) return;
+    if (defender.isDead() || attacker.isDead()) return;
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'))) return;
 

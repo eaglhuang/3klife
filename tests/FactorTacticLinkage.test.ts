@@ -105,6 +105,7 @@ export function createFactorBattleWiringSuite(): TestSuite {
         const body = source.slice(source.indexOf('private resolveNavalCombinedFollowUp'), source.indexOf('private findNavalCombinedHelper'));
         assert.isFalse(body.includes('tryTriggerCounterReaction'), '水域合攻不應觸發反擊');
         assert.isFalse(body.includes('rollHit('), '水域合攻不應擲命中');
+        assert.isTrue(body.includes('attacker.isDead()'), '攻擊方陣亡時仍結算合攻');
     });
 
     suite.test('自動移動的起始移動力加上林地加成', () => {
@@ -148,10 +149,10 @@ export function createFactorEffectMapSuite(): TestSuite {
         }
     });
 
-    suite.test('大霧免疫基因是白色（天賦），水戰與林地是粉色（地形適性）', () => {
+    suite.test('大霧免疫、水戰與林地都是粉色（地形適性）', () => {
         const dict = readJson('assets/resources/data/master/gene-dictionary.json').data as { id: string; color: string }[];
         const color = (id: string) => dict.find((g) => g.id === id)?.color ?? '';
-        assert.equals('white', color('gene_fog_immune'));
+        assert.equals('pink', color('gene_fog_immune'));
         assert.equals('pink', color('gene_naval'));
         assert.equals('pink', color('gene_forest'));
     });
