@@ -2674,11 +2674,11 @@
     },
     {
       "id": "PROG-2-0111",
-      "title": "情報度與 AI 委任邏輯（HALL-05 純邏輯）",
+      "title": "情報度與 AI 委任：任務詳情 UI 接線與委任結算紀錄（HALL-05）",
       "owner": "Codex",
       "priority": "P1",
       "status": "ready",
-      "type": "logic",
+      "type": "ui-logic",
       "phase": "M6",
       "created": "2026-10-14",
       "created_by_agent": "claude-haiku-5-5",
@@ -2695,11 +2695,15 @@
         "docs/agent-briefs/tasks/PROG/PROG-2-0111.md"
       ],
       "scopePaths": [
-        "assets/scripts/core/systems/HallIntel.ts",
-        "tests/HallIntel.test.ts",
-        "tests/run-cli.ts"
+        "assets/scripts/ui/components/LobbyMissionDetailDialogComposite.ts",
+        "assets/scripts/ui/core/HallDetailActionStates.ts",
+        "assets/scripts/ui/core/HallExecuteConfirm.ts",
+        "assets/scripts/core/systems/HallDelegationLog.ts",
+        "tests/HallDelegationLog.test.ts",
+        "tests/run-cli.ts",
+        "artifacts/PROG-2-0111/**"
       ],
-      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+      "notes": "2026-10-14 | 狀態: ready | 驗證: pending | 變更: 範圍更新為 UI 接線與 HallDelegationLog | 阻塞: ATM runtime 登錄待確認"
     },
     {
       "id": "PROG-2-0114",
