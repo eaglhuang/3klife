@@ -44,6 +44,8 @@ export interface BattleSkillDispatcherContext {
   getTacticConditions?(tacticId: string): readonly TacticCondition[] | undefined;
   /** 奧義的精力成本比例（例如 0.05 = 5%）；查不到時不扣精力 */
   getUltimateVitalityCostPct?(ultimateId: string): number | undefined;
+  /** 撤退失敗、本回合鎖定行動的單位（PROG-2-0441）；未提供時視為沒有鎖定 */
+  isUnitActionBlocked?(unitId: string): boolean;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -159,6 +161,17 @@ export class BattleSkillDispatcher {
         blockedReason: 'condition-restricted',
         deltas: [],
         battleLogLines: ['戰法條件未達成，無法發動'],
+      };
+    }
+    // 撤退失敗鎖回合（PROG-2-0441）：本回合撤退失敗的部隊不能發動戰法或奧義，不扣資源
+    if (this.context.isUnitActionBlocked?.(request.ownerUid)) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'action-blocked',
+        deltas: [],
+        battleLogLines: ['本回合撤退失敗，無法行動'],
       };
     }
     // 精力軟懲罰（LIFE-10，PROG-2-0426）：依施放者武將的精力區間擋下奧義或種子戰法，不扣資源
