@@ -3,7 +3,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { createCountdown } from '../assets/scripts/core/systems/CountdownManager';
-import { buildCountdownIconView, formatRemaining } from '../assets/scripts/core/systems/CountdownIconView';
+import { buildCountdownIconFlowView, buildCountdownIconView, formatRemaining } from '../assets/scripts/core/systems/CountdownIconView';
 
 export function createCountdownIconViewSuite(): TestSuite {
     const suite = new TestSuite('CountdownIconView (OPEN-11 趕路倒數圖示)');
@@ -39,6 +39,16 @@ export function createCountdownIconViewSuite(): TestSuite {
         const view = buildCountdownIconView(state, 0);
         assert.isTrue(view.visible);
         assert.isFalse(view.rushEnabled);
+    });
+
+    suite.test('HUD flow view：沒有倒數時隱藏；趕路中 key 為 countdownIconLabel 並帶文字', () => {
+        const hidden = buildCountdownIconFlowView(null, 0);
+        assert.isFalse(hidden.actives.countdownIconLabel);
+        assert.equals('', hidden.texts.countdownIconLabel);
+        const state = createCountdown('zhang-fei', 0, 90 * 1000, true);
+        const shown = buildCountdownIconFlowView(state, 0);
+        assert.isTrue(shown.actives.countdownIconLabel);
+        assert.equals('01:30', shown.texts.countdownIconLabel);
     });
 
     return suite;
