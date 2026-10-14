@@ -151,7 +151,7 @@ export class BattleCombatResolver {
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.defense * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender);
+    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender);
 
     let damage = svc.formula.calculateDamage({
       attackerAttack: attacker.getEffectiveAttack(),
@@ -505,7 +505,7 @@ export class BattleCombatResolver {
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const counterDamage = svc.formula.calculateDamage({
       attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * reaction.counterRatio)),
-      defenderDefense: attacker.defense * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker),
+      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker),
       attackerType: defender.type,
       defenderType: attacker.type,
       attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,

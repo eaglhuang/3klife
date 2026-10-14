@@ -42,7 +42,12 @@ export interface IResultPopupLike {
 }
 
 export interface IDeployController {
-    tryDeployTroop(type: string, lane: number, unitName?: string): { ok: boolean; reason?: string };
+    tryDeployTroop(
+        type: string,
+        lane: number,
+        unitName?: string,
+        options?: { tally?: { tallyId: string } },
+    ): { ok: boolean; reason?: string };
 }
 
 /**
