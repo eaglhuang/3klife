@@ -1,4 +1,4 @@
-// @spec-source → 戰場適性系統.md §J 名詞定義「環境偵察」、§J BattlefieldEnv（Terrain_Grid / Weather_Schedule）；PROG-2-0402（WBS APT-12）
+// @spec-source → 戰場適性系統.md §J 名詞定義「環境偵察」、§J BattlefieldEnv（Terrain_Grid / Weather_Schedule）；PROG-2-0404（WBS APT-12）
 /**
  * BattlefieldRecon — 出戰前環境偵察（純邏輯，不依賴 cc）
  *
