@@ -181,6 +181,8 @@ export interface NurtureSession {
     status: NurtureStatus;
     /** 本場已觸發的師友羈絆群組 id（一次性，MENT-12） */
     triggeredSynergies?: string[];
+    /** 傳道模式紀錄（MENT-15，對應 Data Schema Mentoring_Mode_Log）：支援教官或英靈傳道 */
+    mentoringModeLog?: Array<{ round: number; mode: 'Support' | 'Legendary_Mentoring'; sourceId: string; skillId?: string }>;
     /** 自動培育會話（NUR-14）：畢業評級上限 A */
     auto?: boolean;
 }
