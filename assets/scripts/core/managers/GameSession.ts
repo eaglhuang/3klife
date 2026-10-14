@@ -43,6 +43,7 @@ import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } f
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
+import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
@@ -283,6 +284,8 @@ export class GameSession {
     private _favoriteGeneralIds: string[] = [];
     /** 大廳任務指派：任務 id → 指派武將 id（HALL-07 已派任務權重，PROG-2-0453） */
     private _hallAssignments: Record<string, string> = {};
+    /** 大廳武將點位的目前狀態（HALL-07，不存檔：讀檔後重新抽） */
+    private _hallSpotState: HallSpotState = EMPTY_HALL_SPOT_STATE;
     /** 武將 id → 虎符忠誠度狀態（TRP-09） */
     private _tallyLoyalty: Record<string, TallyLoyaltyState> = {};
     /** 虎符持有關係（TRP-08）：虎符 uid → 持有武將 id（null 為君主） */
@@ -968,6 +971,20 @@ export class GameSession {
         return true;
     }
 
+    /** 目前大廳點位的列資料；沒刷新過時為空陣列。 */
+    public get hallSpotRows(): HallSpotRow[] {
+        return buildHallSpotRows(this._hallSpotState.spotIds, this.hallCandidates());
+    }
+
+    /**
+     * 大廳點位刷新：未滿 60 秒沿用舊點位，到期才依收藏與指派重抽（HALL-07）。
+     * nowSec 由呼叫端傳入（秒），random 回傳 [0,1)。回傳最新列資料。
+     */
+    public refreshHallSpots(nowSec: number, random: () => number, count = 4): HallSpotRow[] {
+        this._hallSpotState = refreshHallCharacterSpots(this._hallSpotState, nowSec, this.hallCandidates(), count, random);
+        return this.hallSpotRows;
+    }
+
     /**
      * HALL-07 點位候選清單：收藏與已派任務由 GameSession 既有狀態推導，不另存一份。
      * 只列名冊內的武將；指派給已離開名冊的武將不計入。
@@ -1485,6 +1502,7 @@ export class GameSession {
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
         this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
+        this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         this._tallyCards = normalizeTallyCardsMap(snapshot.tallyCards);
