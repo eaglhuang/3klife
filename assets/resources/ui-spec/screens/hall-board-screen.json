@@ -1,0 +1,17 @@
+{
+  "id": "hall-board-screen",
+  "version": 1,
+  "uiId": "HallBoard",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "hall-board-main",
+  "skin": "hall-board-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
