@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Button, Color, Component, instantiate, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -22,6 +22,7 @@ import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
+import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
@@ -118,6 +119,7 @@ export class LobbyScene extends Component {
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
+    private _supportCatalog: SupportCatalog | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
     private _fatherTree: BloodlineTreePanel | null = null;
@@ -301,6 +303,18 @@ export class LobbyScene extends Component {
         });
     }
 
+    /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
+    private async _loadSupportCatalog(): Promise<SupportCatalog> {
+        if (this._supportCatalog) return this._supportCatalog;
+        const raw = await new Promise<unknown>((resolve) => {
+            resources.load<JsonAsset>('data/mentor-support-cards', JsonAsset, (err, asset) => {
+                resolve(err || !asset ? null : asset.json);
+            });
+        });
+        this._supportCatalog = parseSupportCatalog(raw ?? []);
+        return this._supportCatalog;
+    }
+
     /**
      * 開獎與培育畫面：以 UCUF JSON（nurture-flow-screen）執行期組裝。
      * 規則全在 NurtureFlowController（純邏輯），這裡只綁按鈕、套 FlowView。
@@ -310,7 +324,7 @@ export class LobbyScene extends Component {
             roster: { getAll: () => services().session.roster },
             unveiling: services().unveiling,
             nurture: services().nurture,
-            loadMentorCards: async () => (await services().legacy?.getMentorCards()) ?? [],
+            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
             persist: async () => {
                 if (services().session.hasSaveService) {
                     await services().session.save();
