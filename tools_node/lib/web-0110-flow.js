@@ -23,13 +23,16 @@ async function run0110Flow(page, options = {}) {
         });
     }
     async function click(name, settle = 400) {
-        await page.waitForFunction(name => {
+        try { await page.waitForFunction(name => {
             function find(node) {
                 const button = node.getComponent('cc.Button');
                 return (node.name === name && node.activeInHierarchy && button && button.interactable) || node.children.some(find);
             }
             return find(window.cc.director.getScene());
-        }, { timeout }, name);
+        }, { timeout }, name); } catch (error) {
+            await mark(`unavailable-${name}`);
+            throw Error(`0110: 無法操作 ${name}；可見按鈕：${Object.keys((await state()).buttons).join(', ')}`);
+        }
         const point = await page.evaluate(name => {
             let node;
             function walk(n) { if (n.activeInHierarchy) { if (n.name === name) node = n; n.children.forEach(walk); } }
@@ -72,7 +75,39 @@ async function run0110Flow(page, options = {}) {
         if(!found){await mark('mercenary-entry-not-found');throw Error('0110: 已用卡池切換按鈕檢查，仍找不到傭兵池文字與入口');}
     }
     await mark('mercenary-pool');
-    return {name:'0110',completed:false,steps,pending:['domestic','lifespan','tutorial-battle','sortie','sandtable','mission-board','bloodline-tree']};
+    if (!Object.values((await state()).labels).some(text => String(text).includes('傭兵池'))) {
+        throw Error('0110: 傭兵入口未顯示正式列表');
+    }
+    await click('MercenaryPoolBack',500);
+    await click('GachaReturnToLobby',1200);
+    await click('OpenDomesticButton',700);
+    await mark('domestic-panel');
+    if (!Object.values((await state()).labels).some(text => String(text).includes('內政'))) {
+        throw Error('0110: 內政面板沒有可見內政文字');
+    }
+    await click('BtnClose',500);
+    await click('BtnOpenHallBoard',700);
+    await mark('mission-board');
+    if (!Object.values((await state()).labels).some(text => /軍事|內政|任務/.test(String(text)))) {
+        throw Error('0110: 任務板没有可見任務文字');
+    }
+    await click('BtnClose',500);
+    const sandtableEntry = await page.evaluate(() => {
+        function find(node) {
+            if (!node.activeInHierarchy) return null;
+            const button=node.getComponent('cc.Button');
+            const label=node.getComponent('cc.Label');
+            if (button?.interactable && (String(label?.string || '').includes('沙盤') || /sandtable/i.test(node.name))) return node.name;
+            if (button?.interactable && node.children.some(child => String(child.getComponent('cc.Label')?.string || '').includes('沙盤'))) return node.name;
+            for (const child of node.children) { const found=find(child); if(found) return found; }
+            return null;
+        }
+        return find(window.cc.director.getScene());
+    });
+    if (!sandtableEntry) { await mark('sandtable-entry-not-found'); throw Error('0110: 大廳找不到可操作的沙盤入口；壽命、教學戰、出征與血統樹尚未驗證'); }
+    await click(sandtableEntry,700);
+    await mark('sandtable');
+    return {name:'0110',completed:false,steps,pending:['lifespan','tutorial-battle','sortie','bloodline-tree']};
 }
 module.exports={run0110Flow};
 if(require.main===module){require('./web-three-generation-flow').runThreeGenerationFlow=run0110Flow;process.argv.push('--flow','three-generation');require('../run-web-smoke');}
