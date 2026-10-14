@@ -1,6 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Faction, GAME_CONFIG, Weather, BattleTactic } from "../../core/config/Constants";
 import { TerrainType, TerrainGrid } from "../../shared/CommonEnums";
+export type { TerrainGrid };
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";

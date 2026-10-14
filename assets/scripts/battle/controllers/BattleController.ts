@@ -10,6 +10,7 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { BattleState, TerrainGrid } from "../models/BattleState";
+import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { EnemyAI } from "./EnemyAI";
 import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
