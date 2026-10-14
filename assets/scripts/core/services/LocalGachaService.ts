@@ -140,6 +140,8 @@ export interface GachaSaveStore {
     writePity(book: GachaPityBook): void;
     readWallet(): Partial<LocalGachaWalletSnapshot> | null;
     writeWallet(wallet: LocalGachaWalletSnapshot): void;
+    /** 選填：存檔端的轉蛋資料版本號。外部改動（讀檔、新遊戲、成就入帳）會讓它改變，服務據此丟掉過期快取 */
+    revision?(): number;
 }
 
 export class LocalGachaService {
@@ -149,6 +151,8 @@ export class LocalGachaService {
     private _walletCache: LocalGachaWalletSnapshot | null = null;
     /** 各池保底計數（poolId → 狀態）；各池獨立計數（轉蛋系統 §保底計算）；第一次用到才讀取，避免建構時就碰存檔 */
     private _pityBookCache: GachaPityBook | null = null;
+    /** 快取對應的存檔版本號；和存檔端現在的版本不同就代表快取過期 */
+    private _syncedRevision: number | undefined;
 
     constructor(private readonly _saveStore: GachaSaveStore | null = null) {}
 
@@ -386,9 +390,22 @@ export class LocalGachaService {
         this._persistWalletSnapshot();
     }
 
+    /** 存檔端版本變了（讀檔、新遊戲、世代成就入帳）就丟掉快取，下次用到時重讀 */
+    private _dropStaleCaches(): void {
+        const revision = this._saveStore?.revision?.();
+        if (revision !== undefined && revision !== this._syncedRevision) {
+            this._walletCache = null;
+            this._pityBookCache = null;
+            this._syncedRevision = revision;
+        }
+    }
+
     private _pityBookOf(): GachaPityBook {
+        this._dropStaleCaches();
         if (this._pityBookCache === null) {
             this._pityBookCache = this._loadPityBook();
+            // 讀取時的遷移寫入是自己寫的，不算外部改動
+            this._syncedRevision = this._saveStore?.revision?.();
         }
         return this._pityBookCache;
     }
@@ -424,11 +441,14 @@ export class LocalGachaService {
 
     private _persistPityBook(): void {
         this._saveStore?.writePity(this._pityBookOf());
+        this._syncedRevision = this._saveStore?.revision?.();
     }
 
     private _walletOf(): LocalGachaWalletSnapshot {
+        this._dropStaleCaches();
         if (this._walletCache === null) {
             this._walletCache = this._loadWalletSnapshot();
+            this._syncedRevision = this._saveStore?.revision?.();
         }
         return this._walletCache;
     }
@@ -468,5 +488,6 @@ export class LocalGachaService {
 
     private _persistWalletSnapshot(): void {
         this._saveStore?.writeWallet({ ...this._walletOf() });
+        this._syncedRevision = this._saveStore?.revision?.();
     }
 }
