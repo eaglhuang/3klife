@@ -328,5 +328,86 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.isTrue(lobby.includes('GAME_SESSION_EVENTS.GeneralUnveiled'));
     });
 
+    /** 把培育跑到 completed（畢業前），回傳已就緒的 flow */
+    async function runToCompleted(rig: Rig, childId: string): Promise<void> {
+        await rig.flow.chooseFate('accept');
+        await rig.flow.startNurture();
+        const kinds = ['str', 'int', 'lea', 'pol', 'cha'] as const;
+        for (let round = 1; round <= NURTURE_TOTAL_ROUNDS; round++) {
+            const lowVigor = rig.nurture.getSession(childId)!.vigor < 40;
+            await rig.flow.train(lowVigor ? 'rest' : kinds[round % kinds.length]);
+        }
+    }
+
+    suite.test('保留成績單：不寫名冊、畫面顯示份數、最多 3 份', async () => {
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [card('guan')] });
+        await runToCompleted(rig, 'alpha');
+        assert.equals(0, rig.nurture.reportCardCount('alpha'));
+
+        await rig.flow.keepReport();
+        assert.equals(1, rig.nurture.reportCardCount('alpha'));
+        assert.isTrue((rig.roster.getAll()[0] as { graduationRating?: string }).graduationRating === undefined, '保留不寫名冊');
+        assert.isTrue(rig.nurture.getSession('alpha')!.status === 'completed', '保留後會話仍是完成狀態');
+
+        let view = rig.flow.getView();
+        assert.equals('graduate', view.mode);
+        assert.isTrue(view.enabled.btnKeepReport);
+        assert.isTrue(view.enabled.btnRetake);
+        assert.isTrue(view.enabled.btnCommitReport);
+        assert.equals('保留成績單 1 / 3', view.texts.reportBookLabel);
+
+        for (let i = 0; i < 3; i++) await rig.flow.keepReport();
+        assert.equals(3, rig.nurture.reportCardCount('alpha'), '超過 3 份時丟最舊的，只留 3 份');
+        view = rig.flow.getView();
+        assert.equals('保留成績單 3 / 3', view.texts.reportBookLabel);
+    });
+
+    suite.test('沒有保留成績單：重修與定型按鈕不可按，直接呼叫會丟錯', async () => {
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [card('guan')] });
+        await runToCompleted(rig, 'alpha');
+        const view = rig.flow.getView();
+        assert.equals('graduate', view.mode);
+        assert.isFalse(view.enabled.btnRetake);
+        assert.isFalse(view.enabled.btnCommitReport);
+
+        let threwRetake = false;
+        try { await rig.flow.retake(); } catch { threwRetake = true; }
+        assert.isTrue(threwRetake, '沒有成績單時不能重修');
+
+        let threwCommit = false;
+        try { await rig.flow.commitReport(); } catch { threwCommit = true; }
+        assert.isTrue(threwCommit, '沒有成績單時不能定型');
+    });
+
+    suite.test('保留並重修：重新開場，已保留的成績單留著', async () => {
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [card('guan')] });
+        await runToCompleted(rig, 'alpha');
+        await rig.flow.keepReport();
+
+        await rig.flow.retake();
+        assert.equals('active', rig.nurture.getSession('alpha')!.status);
+        assert.equals(1, rig.nurture.reportCardCount('alpha'));
+        const view = rig.flow.getView();
+        assert.equals('train', view.mode);
+        assert.equals('回合 0 / 36', view.texts.nurtureRound);
+    });
+
+    suite.test('定型：取最新一份寫入名冊，其餘成績單與會話一併銷毀', async () => {
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [card('guan')] });
+        await runToCompleted(rig, 'alpha');
+        await rig.flow.keepReport();
+        await rig.flow.keepReport();
+        const before = rig.saves.count;
+
+        await rig.flow.commitReport();
+        const view = rig.flow.getView();
+        assert.equals('report', view.mode);
+        assert.isTrue(view.texts.reportRating.startsWith('評級 '));
+        assert.equals(0, rig.nurture.reportCardCount('alpha'));
+        assert.isTrue(rig.nurture.getSession('alpha') === null, '定型後會話移除');
+        assert.isTrue((rig.roster.getAll()[0] as { graduationRating?: string }).graduationRating !== undefined, '定型後寫入名冊');
+        assert.isTrue(rig.saves.count > before, '定型後存檔');
+    });
+
     return suite;
 }

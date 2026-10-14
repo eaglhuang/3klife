@@ -40,6 +40,7 @@ import {
     UnveilingGeneral,
 } from '../../core/systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
+import { mentorFromCard } from '../../core/systems/NurtureSystem';
 import { describeLifecycle } from './GeneralLifecyclePresenter';
 
 /** 培育一次最多帶的教官數（NURTURE_MENTOR_SLOTS）由 NurtureService 把關，這裡只負責挑人 */
@@ -103,7 +104,8 @@ export interface NurtureFlowDeps {
     unveiling: Pick<UnveilingService, 'choose'>;
     nurture: Pick<
         NurtureService,
-        'checkStart' | 'getSession' | 'startWithCards' | 'train' | 'graduate' | 'abandon' | 'lockedMentorIds' | 'admissionsLeft'
+        | 'checkStart' | 'getSession' | 'startWithCards' | 'train' | 'graduate' | 'abandon' | 'lockedMentorIds' | 'admissionsLeft'
+        | 'keepReport' | 'retake' | 'commitReport' | 'reportCardCount'
     >;
     /** 退役教官卡來源；正式環境接 LegacyService.getMentorCards */
     loadMentorCards: () => Promise<MentorCard[]>;
@@ -202,6 +204,37 @@ export class NurtureFlowController {
         return result;
     }
 
+    /** 保留成績單（不寫入名冊，最多 3 份）；會話保留為完成狀態，可再重修或定型 */
+    async keepReport(): Promise<void> {
+        const child = this._requireSelected();
+        const result = this._deps.nurture.keepReport(child.id);
+        this._report = null;
+        this._notice = `成績單已保留（${this._deps.nurture.reportCardCount(child.id)}/3），評級 ${result.rating}`;
+        await this._persist();
+    }
+
+    /** 保留並重修：重新開場，已保留的成績單不會丟；入學與教官規則同入學 */
+    async retake(): Promise<void> {
+        const child = this._requireSelected();
+        const locked = new Set(this._deps.nurture.lockedMentorIds());
+        const cards = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid)).slice(0, MAX_AUTO_MENTORS);
+        this._deps.nurture.retake(child.id, cards.map((card) => mentorFromCard(card)));
+        this._report = null;
+        this._notice = `${child.name} 重修開場`;
+        await this._persist();
+    }
+
+    /** 定型：從保留的成績單選最新一份正式畢業，寫入名冊，其餘成績單一併銷毀 */
+    async commitReport(): Promise<void> {
+        const child = this._requireSelected();
+        const count = this._deps.nurture.reportCardCount(child.id);
+        if (count === 0) throw new Error(`${child.name} 沒有保留的成績單`);
+        const result = this._deps.nurture.commitReport(child.id, count - 1);
+        this._report = { childId: child.id, name: child.name, result };
+        this._notice = '';
+        await this._persist();
+    }
+
     /** 中途放棄；入學令不退，教官解鎖 */
     async abandon(): Promise<void> {
         const child = this._requireSelected();
@@ -246,6 +279,9 @@ export class NurtureFlowController {
             btnStartNurture: false,
             btnRest: false,
             btnGraduate: false,
+            btnKeepReport: false,
+            btnRetake: false,
+            btnCommitReport: false,
             btnAbandon: false,
             btnDismissReport: false,
         };
@@ -293,7 +329,12 @@ export class NurtureFlowController {
         if (session.status === 'completed') {
             actives.graduateBlock = true;
             enabled.btnGraduate = true;
-            texts.graduateHint = '36 回合完成，按下畢業進行評級結算';
+            enabled.btnKeepReport = true;
+            const kept = this._deps.nurture.reportCardCount(child.id);
+            enabled.btnRetake = kept > 0;
+            enabled.btnCommitReport = kept > 0;
+            texts.reportBookLabel = `保留成績單 ${kept} / 3`;
+            texts.graduateHint = '36 回合完成，可直接畢業，或先保留成績單再重修／定型';
             return { mode: 'graduate', childId: child.id, texts, actives, enabled };
         }
 

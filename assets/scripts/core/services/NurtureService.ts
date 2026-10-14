@@ -170,6 +170,11 @@ export class NurtureService {
         return view;
     }
 
+    /** 目前保留的成績單份數（0~3），給畫面顯示用 */
+    reportCardCount(childId: string): number {
+        return this._state.reportBooks?.[childId]?.cards.length ?? 0;
+    }
+
     getSession(childId: string): NurtureSession | null {
         return this._state.sessions.find((s) => s.childId === childId && s.status !== 'abandoned') ?? null;
     }

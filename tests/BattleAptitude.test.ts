@@ -106,7 +106,7 @@ export function createBattleAptitudeSuite(): TestSuite {
 
     suite.test('FormulaSystem：沒有適性倍率時與舊公式相同；有倍率時乘進攻防', () => {
         const formula = new FormulaSystem();
-        const base = { attackerAttack: 100, defenderDefense: 20, attackerType: TroopType.Infantry, defenderType: TroopType.Archer, attackerTerrain: TerrainType.Plain, defenderTerrain: TerrainType.Plain };
+        const base = { attackerAttack: 100, defenderDefense: 20, attackerType: TroopType.Infantry, defenderType: TroopType.Shield, attackerTerrain: TerrainType.Plain, defenderTerrain: TerrainType.Plain };
         const plain = formula.calculateDamage(base);
         assert.equals(plain, formula.calculateDamage({ ...base, attackerAptitudeMultiplier: 1, defenderAptitudeMultiplier: 1 }));
         assert.equals(Math.floor(100 * 1.2 - 20 * 0.7), formula.calculateDamage({ ...base, attackerAptitudeMultiplier: 1.2, defenderAptitudeMultiplier: 0.7 }));
