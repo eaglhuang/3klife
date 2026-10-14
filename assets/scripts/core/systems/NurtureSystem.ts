@@ -342,6 +342,9 @@ export function executeRound(
         tpGained: 0,
         mentorsOnSlot: [],
         burst: false,
+        // 0112：每回合明確保存旗標，避免序列化省略 undefined；不改擲骰或規則。
+        injured: false,
+        skipped: false,
     };
 
     if ((source.skipRounds ?? 0) > 0) {
