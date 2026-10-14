@@ -38,6 +38,8 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS, HALL_DEFAULT_PLAYER } fr
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
+import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
+import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
@@ -123,6 +125,11 @@ interface ScreenButtonBinding {
     handler: () => void;
 }
 
+interface GachaPoolConfigLike {
+    poolType: string;
+    candidateIds?: string[];
+}
+
 @ccclass('LobbyScene')
 export class LobbyScene extends Component {
 
@@ -147,6 +154,8 @@ export class LobbyScene extends Component {
     private _domesticHost: UIScreenPreviewHost | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
+    private _redFaceHost: UIScreenPreviewHost | null = null;
+    private _redFace: RedFaceShowcaseController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
     private _lobbyHub: LobbyHub | null = null;
@@ -230,6 +239,7 @@ export class LobbyScene extends Component {
         await this._mountJobChange();
         await this._mountDomestic();
         await this._mountHallBoard();
+        await this._mountRedFaceShowcase();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountPrisonerPopup();
@@ -618,6 +628,73 @@ export class LobbyScene extends Component {
             ...rowBindings,
         ]);
         this._hallBoardHost.node.active = false;
+    }
+
+    /** 紅顏展示（OPEN-10）：隱藏掛載，入口位置待定，對外提供 openRedFaceShowcase()。 */
+    private async _mountRedFaceShowcase(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaPoolConfigLike[]>('data/gacha-config');
+        const supportCards = await this._loadDataJson<RedFaceCardLike[]>('data/support-cards');
+        const pools = Array.isArray(gachaConfig) ? gachaConfig : [];
+        const supportPool = pools.find(pool => pool.poolType === 'support') ?? null;
+        const heroPoolIds = pools
+            .filter(pool => pool.poolType === 'hero')
+            .flatMap(pool => pool.candidateIds ?? []);
+        this._redFace = new RedFaceShowcaseController({
+            pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
+            cards: () => supportCards ?? [],
+            generalPoolIds: () => heroPoolIds,
+        });
+        const rowBindings = Array.from({ length: RED_FACE_SHOW_MAX_ROWS }, (_, i) => ({
+            buttonId: `btnRedFaceRow${i}`,
+            handler: () => { this._selectRedFace(i); },
+        }));
+        this._redFaceHost = await this._mountPreviewScreenHost('RedFaceShowcaseHost', 'red-face-showcase-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeRedFaceShowcase(); } },
+            ...rowBindings,
+        ]);
+        this._redFaceHost.node.active = false;
+    }
+
+    public openRedFaceShowcase(): void {
+        const host = this._redFaceHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRedFaceShowcase();
+    }
+
+    private _closeRedFaceShowcase(): void {
+        if (this._redFaceHost) {
+            this._redFaceHost.node.active = false;
+        }
+    }
+
+    private _selectRedFace(index: number): void {
+        this._redFace?.select(index);
+        this._refreshRedFaceShowcase();
+    }
+
+    private _refreshRedFaceShowcase(): void {
+        const binder = this._redFaceHost?.binder;
+        if (!binder || !this._redFace) {
+            return;
+        }
+        applyFlowView(binder, this._redFace.getFlowView());
+    }
+
+    private _loadDataJson<T>(path: string): Promise<T | null> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>(path, JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, `[LobbyScene] 資料載入失敗：${path}`, err);
+                    resolve(null);
+                    return;
+                }
+                resolve(asset.json as T);
+            });
+        });
     }
 
     private _loadLobbyHub(): Promise<LobbyHub | null> {
