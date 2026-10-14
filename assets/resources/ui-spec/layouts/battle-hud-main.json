@@ -106,6 +106,15 @@
             ]
           },
           {
+            "type": "label",
+            "name": "PlayerTallySetLabel",
+            "id": "playerTallySetLabel",
+            "widget": { "top": 92, "left": 30 },
+            "width": 432,
+            "height": 20,
+            "styleSlot": "hud.label.hp"
+          },
+          {
             "type": "container",
             "name": "CenterInfo",
             "widget": {

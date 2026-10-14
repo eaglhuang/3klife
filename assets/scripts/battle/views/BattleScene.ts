@@ -637,6 +637,7 @@ export class BattleScene extends Component {
     const currentGeneral = this.ctrl.state.playerGeneral;
     if (currentGeneral) this.battleScenePanel?.setTacticSummary(
       buildTacticSummary(currentGeneral).label, this.ctrl.getPlayerTacticPointState());
+    this.hud?.setPlayerTallySetLabels?.(this.ctrl.activePlayerTallySetLabels);
     this.updateGridDebug();
     this.boardRenderer?.renderState(this.ctrl.state);
     this.unitRenderer?.renderState(this.ctrl.state);
