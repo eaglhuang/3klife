@@ -2,7 +2,7 @@
 /**
  * EnvScoutPresenter — 環境偵察面板的文字（純邏輯，不依賴 cc）
  *
- * 把 BattlefieldRecon（PROG-2-0557）轉成兩行文字：地形格數、天氣預報。
+ * 把 BattlefieldRecon（PROG-2-0404）轉成兩行文字：地形格數、天氣預報。
  * 只產生字串，不碰節點；節點由 LobbyMissionDetailDialogComposite 綁定。
  *
  * Unity 對照：Presenter 把 Model 轉成 Label 的字串，View 只負責 SetText。
