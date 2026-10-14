@@ -30,10 +30,21 @@ const OUTPUT = path.join(TEMP_WS, 'raw-wiki.json');
 const CACHE = path.join(TEMP_WS, 'wiki-cache.json');
 
 // --- CLI 解析 ---
+const DEFAULT_LIMIT = 50;
+
+/**
+ * 解析 --limit <n>；缺值或非正整數時回退預設值，避免 NaN 讓 slice 變成空陣列。
+ */
+function parseLimit(argv) {
+  const idx = argv.indexOf('--limit');
+  if (idx < 0) return DEFAULT_LIMIT;
+  const n = parseInt(argv[idx + 1], 10);
+  return Number.isInteger(n) && n > 0 ? n : DEFAULT_LIMIT;
+}
+
 const args = process.argv.slice(2);
 const isDryRun = args.includes('--dry-run');
-const limitIdx = args.indexOf('--limit');
-const limit = limitIdx >= 0 ? parseInt(args[limitIdx + 1], 10) : 50;
+const limit = parseLimit(args);
 
 // --- 速率控制 ---
 const RATE_DELAY_MS = 500; // 每次請求間隔
@@ -282,11 +293,6 @@ async function main() {
   console.log('=== ingest-generals-wiki.js ===');
   if (isDryRun) console.log('[INFO]  --dry-run 模式，不寫入檔案。');
 
-  // 確保 temp_workspace 目錄存在
-  if (!fs.existsSync(TEMP_WS)) {
-    fs.mkdirSync(TEMP_WS, { recursive: true });
-  }
-
   // 嘗試讀取快取
   let cache = {};
   if (fs.existsSync(CACHE)) {
@@ -335,6 +341,11 @@ async function main() {
     return;
   }
 
+  // 確保 temp_workspace 目錄存在（dry-run 不建立）
+  if (!fs.existsSync(TEMP_WS)) {
+    fs.mkdirSync(TEMP_WS, { recursive: true });
+  }
+
   // 更新快取
   fs.writeFileSync(CACHE, JSON.stringify(cache, null, 2), 'utf-8');
 
@@ -350,7 +361,11 @@ async function main() {
   console.log(`[OK]    寫入 ${OUTPUT}`);
 }
 
-main().catch(err => {
-  console.error('[ERROR]', err.message);
-  process.exit(1);
-});
+module.exports = { SEED_GENERALS, parseLimit, calcEp, mapToGeneralBase };
+
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[ERROR]', err.message);
+    process.exit(1);
+  });
+}

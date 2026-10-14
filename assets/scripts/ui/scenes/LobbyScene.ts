@@ -38,6 +38,7 @@ import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
+import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
@@ -483,10 +484,18 @@ export class LobbyScene extends Component {
             roster: { getAll: () => services().session.roster },
             ordersOwned: () => services().session.itemCount(ITEM_JOB_CHANGE_ORDER),
             changeJob: (generalId, subClass) => services().session.changeJob(generalId, subClass),
+            gems: () => this._localGachaService.getCurrencyAmount('gem'),
+            buyOrder: async () => {
+                const gacha = this._localGachaService;
+                if (!gacha.spendCurrency('gem', JOB_CHANGE_ORDER_OFFER.price)) return false;
+                await services().session.addItem(ITEM_JOB_CHANGE_ORDER, 1);
+                return true;
+            },
         });
         this._jobChange = jobChange;
         this._jobChangeHost = await this._mountPreviewScreenHost('JobChangeHost', 'job-change-screen', [
             { buttonId: 'btnCloseJob', handler: () => { this._closeJobChange(); } },
+            { buttonId: 'btnBuyOrder', handler: () => { void this._onClickBuyJobOrder(jobChange); } },
             { buttonId: 'btnPrevGeneral', handler: () => { jobChange.cycleGeneral(-1); this._refreshJobChange(); } },
             { buttonId: 'btnNextGeneral', handler: () => { jobChange.cycleGeneral(1); this._refreshJobChange(); } },
             { buttonId: 'btnSubWarrior', handler: () => { jobChange.selectSubClass('Warrior'); this._refreshJobChange(); } },
@@ -655,6 +664,16 @@ export class LobbyScene extends Component {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 接取大廳任務失敗', error);
         } finally {
             this._refreshHallBoard();
+        }
+    }
+
+    private async _onClickBuyJobOrder(jobChange: JobChangeController): Promise<void> {
+        try {
+            await jobChange.buyOrder();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 購買轉職令失敗', error);
+        } finally {
+            this._refreshJobChange();
         }
     }
 

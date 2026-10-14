@@ -1,0 +1,60 @@
+{
+  "provisional": true,
+  "note": "暫定名單（PROG-2-0520）：ID 取自 generals.json，待企劃給正式名單後替換。",
+  "relations": [
+    {
+      "relationId": "HIST_COUPLE_ZHOU_XIAO",
+      "templateA": "zhou-yu",
+      "templateB": "xiao-qiao",
+      "type": "COUPLE",
+      "epBonus": 25,
+      "extraEffects": { "conceptionRateMod": 1.2 },
+      "loreKey": "LORE_REL_COUPLE_ZHOU_XIAO"
+    },
+    {
+      "relationId": "HIST_COUPLE_LIU_SUN",
+      "templateA": "liu-bei",
+      "templateB": "sun-shang-xiang",
+      "type": "COUPLE",
+      "epBonus": 25,
+      "extraEffects": { "conceptionRateMod": 1.2 },
+      "loreKey": "LORE_REL_COUPLE_LIU_SUN"
+    },
+    {
+      "relationId": "HIST_SWORN_LIU_GUAN",
+      "templateA": "liu-bei",
+      "templateB": "guan-yu",
+      "type": "SWORN",
+      "epBonus": 15,
+      "extraEffects": { "comboAttackRateMod": 1.3 },
+      "loreKey": "LORE_REL_SWORN_LIU_GUAN"
+    },
+    {
+      "relationId": "HIST_SWORN_LIU_ZHANG",
+      "templateA": "liu-bei",
+      "templateB": "zhang-fei",
+      "type": "SWORN",
+      "epBonus": 15,
+      "extraEffects": { "comboAttackRateMod": 1.3 },
+      "loreKey": "LORE_REL_SWORN_LIU_ZHANG"
+    },
+    {
+      "relationId": "HIST_SWORN_GUAN_ZHANG",
+      "templateA": "guan-yu",
+      "templateB": "zhang-fei",
+      "type": "SWORN",
+      "epBonus": 15,
+      "extraEffects": { "comboAttackRateMod": 1.3 },
+      "loreKey": "LORE_REL_SWORN_GUAN_ZHANG"
+    },
+    {
+      "relationId": "HIST_RIVAL_CAO_LIU",
+      "templateA": "cao-cao",
+      "templateB": "liu-bei",
+      "type": "RIVAL",
+      "epBonus": -10,
+      "extraEffects": { "conceptionRateMod": 0.7 },
+      "loreKey": "LORE_REL_RIVAL_CAO_LIU"
+    }
+  ]
+}

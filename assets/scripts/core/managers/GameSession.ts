@@ -735,6 +735,7 @@ export class GameSession {
         this._femaleSources = {};
         this._gachaPity = {};
         this._femaleSystem = normalizeFemaleSystemState(undefined);
+        this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._gachaWallet = null;
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();

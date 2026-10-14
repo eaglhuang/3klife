@@ -29,6 +29,7 @@ import {
     toGeneConfigs,
 } from './FactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
+import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 
@@ -48,7 +49,7 @@ export const EP_RESONANCE_BONUS = 15;
 export const EP_OUTCROSS_BONUS = 20;
 export const EP_AFFINITY_BONUS = 25;
 /** 14 人中同一標籤至少出現在幾位祖先身上才算共鳴 */
-export const EP_RESONANCE_MIN_COUNT = 3;
+export const EP_RESONANCE_MIN_COUNT = KIN_RESONANCE_MIN_COUNT;
 
 /** 同 Bloodline_ID 配對時子嗣 Vitality_Max × 0.7 */
 export const INBREEDING_VITALITY_MULTIPLIER = 0.7;
@@ -288,6 +289,8 @@ export interface EpBreakdown {
     /** 出現在最多位祖先身上的標籤與次數 */
     topTag: string | null;
     topTagCount: number;
+    /** 家風傳承達標（同標籤 ≥5 位祖先）；只判定，不加 EP（KIN-03） */
+    familyTradition: boolean;
     rating: string;
 }
 
@@ -302,44 +305,45 @@ export function computeEpMvp(
     profiles: Map<string, AncestorProfile>,
     isHistoricalPair: boolean,
 ): EpBreakdown {
-    const tagCounts = new Map<string, number>();
-    for (const slot of PEDIGREE_SLOTS) {
+    // 標籤統計統一走 KinRelation.analyzeTagResonance（KIN-03），與相性引擎同一份計法
+    const ancestorTags = PEDIGREE_SLOTS.flatMap((slot) => {
         const uid = pedigree[slot];
-        if (!uid) continue;
-        for (const tag of profiles.get(uid)?.tags ?? []) {
-            tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-        }
-    }
-    let topTag: string | null = null;
-    let topTagCount = 0;
-    for (const [tag, count] of Array.from(tagCounts.entries()).sort((a, b) => a[0].localeCompare(b[0]))) {
-        if (count > topTagCount) {
-            topTag = tag;
-            topTagCount = count;
-        }
-    }
+        return uid ? [profiles.get(uid)?.tags ?? []] : [];
+    });
+    const { topTag, topTagCount, resonance: hasResonance, familyTradition } = analyzeTagResonance(ancestorTags);
 
     const uids = PEDIGREE_SLOTS.map((slot) => pedigree[slot]);
     const allKnown = uids.every((uid) => !!uid);
-    const resonance = topTagCount >= EP_RESONANCE_MIN_COUNT ? EP_RESONANCE_BONUS : 0;
+    // TODO(KIN-03 純血)：14 人全同族 +30 EP，待同族欄位資料定義後實作
+    const resonance = hasResonance ? EP_RESONANCE_BONUS : 0;
     const outcross = allKnown && new Set(uids).size === PEDIGREE_SLOTS.length ? EP_OUTCROSS_BONUS : 0;
     const affinity = isHistoricalPair ? EP_AFFINITY_BONUS : 0;
     const ep = EP_BASE + resonance + outcross + affinity;
-    return { ep, resonance, outcross, affinity, fate: 0, topTag, topTagCount, rating: epRatingLabel(ep) };
+    return { ep, resonance, outcross, affinity, fate: 0, topTag, topTagCount, familyTradition, rating: epRatingLabel(ep) };
 }
 
-/** 運氣系統 §F：天命波動的隨機區間 Random(-0.5, +1.5)（PROG-2-0511） */
-export const FATE_WAVE_RANDOM_MIN = -0.5;
-export const FATE_WAVE_RANDOM_MAX = 1.5;
+/** 天命波動小區間（PM 裁定 2026-10-14，運氣屬性加入爆發力公式）：運氣平均 > 80 → +5～+15；< 40 → -5～-10；其餘 0 */
+export const FATE_WAVE_HIGH_LUK_THRESHOLD = 80;
+export const FATE_WAVE_LOW_LUK_THRESHOLD = 40;
+export const FATE_WAVE_HIGH_RANGE: readonly [number, number] = [5, 15];
+export const FATE_WAVE_LOW_RANGE: readonly [number, number] = [-10, -5];
 
 /**
- * 天命波動 = LUK × Random(-0.5, +1.5)。LUK 缺省、負數或非有限值視為 0（波動為 0）。
- * 亂數只擲一次，方便測試注入固定序列；LUK 為 0 時不擲骰，避免無謂地改變後續亂數序列。
+ * 天命波動：依父母平均 LUK 落在哪個區間，在區間內均勻擲一次。
+ * 中段（40～80，含邊界）回傳 0 且不擲骰。LUK 缺省、負數或非有限值視為無資料，回傳 0 且不擲骰。
+ * 只在進入區間時才擲骰，避免無謂改變其他測試的亂數序列。
  */
 export function rollFateWave(parentAvgLuk: number, random: RandomSource): number {
-    const luk = Number.isFinite(parentAvgLuk) ? Math.max(0, parentAvgLuk) : 0;
-    if (luk === 0) return 0;
-    return luk * (FATE_WAVE_RANDOM_MIN + random() * (FATE_WAVE_RANDOM_MAX - FATE_WAVE_RANDOM_MIN));
+    if (!Number.isFinite(parentAvgLuk) || parentAvgLuk <= 0) return 0;
+    if (parentAvgLuk > FATE_WAVE_HIGH_LUK_THRESHOLD) {
+        const [min, max] = FATE_WAVE_HIGH_RANGE;
+        return min + random() * (max - min);
+    }
+    if (parentAvgLuk < FATE_WAVE_LOW_LUK_THRESHOLD) {
+        const [min, max] = FATE_WAVE_LOW_RANGE;
+        return min + random() * (max - min);
+    }
+    return 0;
 }
 
 /**
@@ -487,6 +491,8 @@ export interface BreedingRequest {
     mother: BreedingGeneral;
     /** 選填：母體來源倍率（femaleSourceConceptionMod，FEM-02）；不傳視為 1 */
     motherConceptionMod?: number;
+    /** 選填：史實配對受孕率倍率（宿敵 0.7，KIN-04）；與母體倍率相乘，不傳視為 1 */
+    historicalConceptionMod?: number;
     pedigree: PedigreeSource;
     random: RandomSource;
     childId: string;
@@ -588,7 +594,8 @@ export function breed(request: BreedingRequest): BreedingResult {
 
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
-    const rate = applyConceptionMod(conceptionRate(request.father, request.mother), request.motherConceptionMod ?? 1);
+    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1);
+    const rate = applyConceptionMod(conceptionRate(request.father, request.mother), conceptionMod);
     if (!eligibility.ok) {
         return { outcome: 'blocked', reasons: eligibility.reasons, conceptionRate: rate, father: request.father, mother: request.mother };
     }
