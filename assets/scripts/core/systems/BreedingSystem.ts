@@ -283,6 +283,8 @@ export interface EpBreakdown {
     resonance: number;
     outcross: number;
     affinity: number;
+    /** 天命波動（PROG-2-0511）；預覽不擲骰時為 0 */
+    fate: number;
     /** 出現在最多位祖先身上的標籤與次數 */
     topTag: string | null;
     topTagCount: number;
@@ -323,7 +325,31 @@ export function computeEpMvp(
     const outcross = allKnown && new Set(uids).size === PEDIGREE_SLOTS.length ? EP_OUTCROSS_BONUS : 0;
     const affinity = isHistoricalPair ? EP_AFFINITY_BONUS : 0;
     const ep = EP_BASE + resonance + outcross + affinity;
-    return { ep, resonance, outcross, affinity, topTag, topTagCount, rating: epRatingLabel(ep) };
+    return { ep, resonance, outcross, affinity, fate: 0, topTag, topTagCount, rating: epRatingLabel(ep) };
+}
+
+/** 運氣系統 §F：天命波動的隨機區間 Random(-0.5, +1.5)（PROG-2-0511） */
+export const FATE_WAVE_RANDOM_MIN = -0.5;
+export const FATE_WAVE_RANDOM_MAX = 1.5;
+
+/**
+ * 天命波動 = LUK × Random(-0.5, +1.5)。LUK 缺省、負數或非有限值視為 0（波動為 0）。
+ * 亂數只擲一次，方便測試注入固定序列；LUK 為 0 時不擲骰，避免無謂地改變後續亂數序列。
+ */
+export function rollFateWave(parentAvgLuk: number, random: RandomSource): number {
+    const luk = Number.isFinite(parentAvgLuk) ? Math.max(0, parentAvgLuk) : 0;
+    if (luk === 0) return 0;
+    return luk * (FATE_WAVE_RANDOM_MIN + random() * (FATE_WAVE_RANDOM_MAX - FATE_WAVE_RANDOM_MIN));
+}
+
+/**
+ * 把天命波動套到 EP：波動四捨五入為整數，總分與評級重算；不改輸入。
+ * 重複套用時以 ep.fate 扣回舊值，結果不會疊加。
+ */
+export function applyFateWave(ep: EpBreakdown, wave: number): EpBreakdown {
+    const fate = Number.isFinite(wave) ? Math.round(wave) : 0;
+    const total = ep.ep - ep.fate + fate;
+    return { ...ep, fate, ep: total, rating: epRatingLabel(total) };
 }
 
 /** UI_EP_RATING：≥ 90 天命之子 / 70~89 良才美質 / 50~69 中規中矩 / < 50 命途多舛 */
@@ -578,7 +604,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     mother.breedingCount = (mother.breedingCount ?? 0) + 1;
     mother.pregnancySeasonsLeft = PREGNANCY_LOCK_SEASONS;
 
-    const { pedigree, ep } = previewBreedingEp(request);
+    const { pedigree, ep: previewEp } = previewBreedingEp(request);
     const profiles = collectProfiles(pedigree, request);
     const factors = inheritFactors(buildFactorSources(pedigree, profiles), {
         random: request.random,
@@ -590,6 +616,9 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     const inbred = isSameBloodline(request.father, request.mother);
     const purified = inbred ? applyInbreedingPurification(factors, request.random, request.dictionary) : factors;
     const finalFactors = inbred ? purified : applyWildGeneMutation(purified, request.random, request.dictionary);
+    // 天命波動（PROG-2-0511）：父母平均 LUK × Random(-0.5, 1.5)，在子嗣生成前套用到 EP
+    const parentAvgLuk = (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2;
+    const ep = applyFateWave(previewEp, rollFateWave(parentAvgLuk, request.random));
     const child = createChild({
         id: request.childId,
         father: request.father,

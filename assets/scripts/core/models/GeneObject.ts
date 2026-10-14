@@ -121,3 +121,25 @@ export function parseGeneObjects(json: string): GeneObject[] | null {
         return null;
     }
 }
+
+/** 名冊裡的因子：GeneObject 五欄位，加上 UI 顯示用的選填欄位（存檔時保留） */
+export type GeneSaveEntry = GeneObject & { displayName?: string; description?: string };
+
+/**
+ * 存檔前經 FBR-02 序列化正規化（PROG-2-0550 接線）：欄位與型別統一，顯示用欄位併回。
+ * 序列化失敗（有欄位型別錯）時原樣保留，不丟資料；由讀取端的 warning 負責回報。
+ */
+export function genesForSave(genes: readonly GeneSaveEntry[]): GeneSaveEntry[] {
+    const parsed = parseGeneObjects(serializeGeneObjects(genes));
+    if (!parsed || parsed.length !== genes.length) return genes.map((g) => ({ ...g }));
+    return parsed.map((g, i) => ({ ...genes[i], ...g }));
+}
+
+/** 讀取存檔的因子：經同一套 FBR-02 解析；失敗時回傳 valid=false 與原樣資料 */
+export function genesFromSave(raw: unknown): { genes: GeneSaveEntry[]; valid: boolean } {
+    if (!Array.isArray(raw)) return { genes: [], valid: raw === undefined };
+    const entries = raw.filter((item): item is GeneSaveEntry => !!item && typeof item === 'object');
+    const parsed = parseGeneObjects(JSON.stringify(entries));
+    if (!parsed || parsed.length !== entries.length) return { genes: entries, valid: false };
+    return { genes: parsed.map((g, i) => ({ ...entries[i], ...g })), valid: true };
+}

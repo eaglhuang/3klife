@@ -22,6 +22,7 @@ import type { MentorCard } from '../models/MentorCard';
 import { tagMentorSource } from '../systems/MentorSources';
 import { addGachaMentorCards, GachaMentorTime, SupportCatalog } from '../systems/MentorSupportCatalog';
 import { routeRetirement } from '../systems/RetirementRouting';
+import { retireTallyGrade, type BattleRecordLike } from '../systems/BattleRecordStats';
 import { resolvePrimaryClass, type JobWiringGeneral } from '../systems/JobChangeWiring';
 import type { SpiritCard } from '../models/SpiritCard';
 import { isTallyEligible, TigerTallyGeneral } from '../systems/TigerTally';
@@ -78,7 +79,7 @@ export interface LegacyServiceOptions {
     archiver?: GeneralArchiver;
 }
 
-type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number };
+type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number; battleRecord?: BattleRecordLike };
 
 /**
  * 明確布林 isHistorical 直接採用，正式資料由 registry uid / is_virtual 產出；
@@ -154,6 +155,7 @@ export class LegacyService implements SeasonLifecycle {
             gene_refs: (retired.genes ?? []).map((g) => g.id).filter((id): id is string => !!id),
             parentUids: [retired.fatherId ?? '', retired.motherId ?? ''],
             generalSnapshot: JSON.parse(JSON.stringify(retired)) as GeneralConfig,
+            retireGrade: retireTallyGrade(target.battleRecord),
             mentorRoute: routeRetirement({
                 primaryClass: resolvePrimaryClass(target as JobWiringGeneral),
                 subClass: (target as JobWiringGeneral).subClass,

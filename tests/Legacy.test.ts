@@ -118,6 +118,18 @@ export function createLegacySuite(): TestSuite {
         assert.isTrue(await adapter.get('player.save') !== null, '退役後應自動存檔');
     });
 
+    suite.test('退役戰績等級（REC-07）：依 battleRecord 算 retire_score 分級寫在教官卡上，退役不發虎符', async () => {
+        const { session, events } = createSession(new MemoryStorageAdapter(), [
+            makeGeneral('veteran', '男', 66, { battleRecord: { wins: 0, losses: 0, kills: 5000 } } as Partial<TestGeneral>),
+            makeGeneral('rookie', '男', 66),
+        ]);
+        const veteran = await session.retireGeneral('veteran');
+        const rookie = await session.retireGeneral('rookie');
+        assert.equals('SSR', veteran.retireGrade ?? '');
+        assert.equals('N', rookie.retireGrade ?? '');
+        assert.isTrue(events.every(([name]) => name !== GAME_SESSION_EVENTS.SpiritCardCreated));
+    });
+
     suite.test('退役分流（FATE-08）：武職→戰技教官、文職→智識教官、雙職能→全能教官、無主職依能力 fallback（平手歸文）', async () => {
         const { session } = createSession(new MemoryStorageAdapter(), [
             makeGeneral('warrior', '男', 66, { primaryClass: 'Warrior' } as Partial<TestGeneral>),

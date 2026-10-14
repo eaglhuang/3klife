@@ -1,4 +1,5 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
+import { warnGeneralSchemaOnLoad, type GeneralSchemaRecord } from '../models/GeneralSchema';
 import { JsonAsset, resources } from 'cc';
 import { DataCatalog } from './DataCatalog';
 import { DataStorageAdapter, StorageQueryFilter } from './DataStorageAdapter';
@@ -149,6 +150,10 @@ export class DataPageLoader {
     }
 
     const data = await this._loadJsonArray<T>(resourcePath);
+    // 武將資料只在第一次讀檔時檢查，快取命中不重複警告（MVP-01）
+    if (resourcePath === 'data/generals') {
+      warnGeneralSchemaOnLoad(data as unknown as GeneralSchemaRecord[], 'DataPageLoader data/generals');
+    }
     this._jsonCache.set(resourcePath, data as unknown[]);
     return data;
   }

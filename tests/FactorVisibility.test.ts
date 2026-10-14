@@ -36,12 +36,13 @@ export function createFactorVisibilitySuite(): TestSuite {
         assert.isTrue(isGeneFactorVisible({ type: 'purple', discoveryLevel: 0 }, 1));
         assert.isFalse(isGeneFactorVisible({ type: 'red', discoveryLevel: null }, 44));
     });
-    suite.test('沿用顏色正規化；未知色系包含覆寫仍鎖定', () => {
+    suite.test('沿用顏色正規化；未知色系視為 Lv1（PROG-2-0513 PM 裁定，與 FactorMask 一致）', () => {
         assert.isTrue(isGeneFactorVisible({ type: ' BLUE ' }, 1));
         assert.isTrue(isGeneFactorVisible({ type: '綠' }, 20));
         for (const type of ['unknown', 'toString', '', null, undefined]) {
-            assert.isFalse(isGeneFactorVisible({ type }, 999));
-            assert.isFalse(isGeneFactorVisible({ type, discoveryLevel: 1 }, 999));
+            assert.isTrue(isGeneFactorVisible({ type }, 1), `${String(type)} 在 Lv1 可見`);
+            assert.isTrue(isGeneFactorVisible({ type, discoveryLevel: 1 }, 1));
+            assert.isFalse(isGeneFactorVisible({ type, discoveryLevel: 50 }, 49), '覆寫門檻仍然生效');
         }
     });
     suite.test('不改輸入、回傳不共享，無效單因子門檻鎖定', () => {
