@@ -90,7 +90,7 @@ export const DEFAULT_BATTLE_ENTRY_PARAMS: IBattleEntryParams = {
 
 // ─── 中文映射表（用於 log 輸出）─────────────────────────────────────────────
 
-const WEATHER_LABEL: Record<Weather, string> = {
+export const WEATHER_LABEL: Record<Weather, string> = {
   [Weather.Clear]: '晴天',
   [Weather.Rain]: '雨天',
   [Weather.Fog]: '大霧',
