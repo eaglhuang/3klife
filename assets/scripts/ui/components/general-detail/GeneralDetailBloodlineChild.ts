@@ -15,6 +15,7 @@ import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { mask, formatGene } from './GeneralDetailFormatters';
+import { FactorMaskPresenter } from '../../../core/systems/FactorMaskState';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
@@ -37,6 +38,11 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     private _lParents!:   Label;
     private _lAncestors!: Label;
     private _lGenes:      Label[] = [];
+    /** 因子遮罩的上一次狀態（PROG-2-0513）；justRevealed 交給 View 播亮起動畫 */
+    private _maskPresenter = new FactorMaskPresenter();
+    private _justRevealed: number[] = [];
+    /** 本次資料更新剛解鎖的因子槽位（0-based）；動畫由 View 讀取 */
+    get justRevealedSlots(): readonly number[] { return this._justRevealed; }
     private _lAwakening!: Label;
     private _treePanel: BloodlineTreePanel | null = null;
     _lastData: GeneralConfig | null = null;
@@ -80,6 +86,8 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._set(this._lParents,   `${this.t('ui.general.bloodline.parents')}${mask(cfg.parentsSummary, this.t('ui.general.bloodline.parents_collapsed'))}`);
         this._set(this._lAncestors, `${this.t('ui.general.bloodline.ancestors')}${mask(cfg.ancestorsSummary, this.t('ui.general.bloodline.ancestors_hint'))}`);
 
+        const maskState = this._maskPresenter.update(cfg.id, cfg.genes ?? [], currentDiscoveryLevel());
+        this._justRevealed = maskState.justRevealed;
         for (let i = 0; i < 5; i++) {
             this._set(this._lGenes[i], formatGene(i + 1, cfg.genes?.[i], currentDiscoveryLevel()));
         }

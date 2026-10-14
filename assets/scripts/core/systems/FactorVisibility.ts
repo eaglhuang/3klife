@@ -1,5 +1,5 @@
-// @spec-source → 因子解鎖系統.md；PROG-2-0100 使用者裁決：常數優先，不新增 config。
-import { FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';
+// @spec-source → 因子解鎖系統.md；PROG-2-0100 使用者裁決：常數優先，不新增 config；PROG-2-0513 PM 裁定：未知色系統一視為 Lv1
+import { ALL_FACTOR_COLORS, FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';
 
 export type FactorVisibility =
     | { status: 'visible'; visible: true }
@@ -11,9 +11,31 @@ export interface GeneVisibilityInput {
     discoveryLevel?: number | null;
 }
 
+/** 階段摘要（規格 Visible_Types / Locked_Types）；顏色依 ALL_FACTOR_COLORS 順序。 */
+export interface FactorStageSummary {
+    visibleTypes: FactorColor[];
+    lockedTypes: FactorColor[];
+}
+
 /** 發現等級為整數；非有限值、零或負數依新玩家等級 1 處理。 */
 function normalizedDiscoveryLevel(level: number): number {
     return Number.isFinite(level) ? Math.max(1, Math.floor(level)) : 1;
+}
+
+/**
+ * 單因子的發現門檻，全專案共用這一條規則（FactorMask 與 FactorVisibility 都呼叫它）：
+ * 1. gene.discoveryLevel 有值時優先（出生時寫入的覆寫）；
+ * 2. 已知色系取 FACTOR_DISCOVERY_LEVEL 常數；
+ * 3. 未知或缺失色系視為 Lv1（PM 裁定，與既有遮罩行為一致）。
+ * 別名表可能讀到原型屬性，因此只接受常數表自己的色系鍵。
+ */
+export function requiredDiscoveryLevel(gene: GeneVisibilityInput): number {
+    if (gene.discoveryLevel !== undefined && gene.discoveryLevel !== null) return gene.discoveryLevel;
+    const color = normalizeFactorColor(gene.type);
+    if (typeof color === 'string' && Object.prototype.hasOwnProperty.call(FACTOR_DISCOVERY_LEVEL, color)) {
+        return FACTOR_DISCOVERY_LEVEL[color];
+    }
+    return 1;
 }
 
 /** 每次回傳新物件；鎖定色系附上原常數的門檻，不更改常數或 Session。 */
@@ -29,15 +51,35 @@ export function getFactorVisibility(playerDiscoveryLevel: number): Record<Factor
     return result;
 }
 
+/** 結緣畫面用的階段摘要：玩家等級已開放與尚未開放的色系。 */
+export function factorStageSummary(playerDiscoveryLevel: number): FactorStageSummary {
+    const visibility = getFactorVisibility(playerDiscoveryLevel);
+    const visibleTypes = ALL_FACTOR_COLORS.filter((color) => visibility[color].visible);
+    const lockedTypes = ALL_FACTOR_COLORS.filter((color) => !visibility[color].visible);
+    return { visibleTypes, lockedTypes };
+}
+
+const FACTOR_COLOR_LABEL: Record<FactorColor, string> = {
+    blue: '藍',
+    pink: '粉',
+    green: '綠',
+    white: '白',
+    purple: '紫',
+    red: '紅',
+};
+
+/** 結緣畫面的一行階段摘要，例如「已開放：藍 · 粉｜未開放：綠 · 白 · 紫 · 紅」。 */
+export function factorStageText(playerDiscoveryLevel: number): string {
+    const { visibleTypes, lockedTypes } = factorStageSummary(playerDiscoveryLevel);
+    const names = (colors: FactorColor[]) => (colors.length > 0 ? colors.map((c) => FACTOR_COLOR_LABEL[c]).join(' · ') : '無');
+    return `已開放：${names(visibleTypes)}｜未開放：${names(lockedTypes)}`;
+}
+
 /**
- * 已知色系：gene.discoveryLevel 優先，否則用色系常數，與 FactorAwakening 優先序一致。
- * 未知／缺失色系依本卡要求鎖定（不同於舊覺醒 fallback=1），即使帶覆寫值也不猜色。
- * 無效單因子門檻不讓因子可見；不發事件、不覺醒、不修改輸入。
+ * 單一因子是否看得到（發現等級）。無效門檻（NaN / Infinity）不可見；不發事件、不修改輸入。
+ * 生效與否不在這裡判定，見 FactorMask 的 active。
  */
 export function isGeneFactorVisible(gene: GeneVisibilityInput, playerDiscoveryLevel: number): boolean {
-    const color = normalizeFactorColor(gene.type);
-    // 舊 alias 表可能讀到原型屬性；只接受常數表自身的六個色系鍵。
-    if (typeof color !== 'string' || !Object.prototype.hasOwnProperty.call(FACTOR_DISCOVERY_LEVEL, color)) return false;
-    const requiredLevel = gene.discoveryLevel ?? FACTOR_DISCOVERY_LEVEL[color];
-    return Number.isFinite(requiredLevel) && normalizedDiscoveryLevel(playerDiscoveryLevel) >= requiredLevel;
+    const required = requiredDiscoveryLevel(gene);
+    return Number.isFinite(required) && normalizedDiscoveryLevel(playerDiscoveryLevel) >= required;
 }
