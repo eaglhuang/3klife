@@ -220,7 +220,7 @@
                     "type": "panel",
                     "name": "IntelPanel",
                     "width": "100%",
-                    "height": 240,
+                    "height": 300,
                     "skinSlot": "mission.dialog.section.bg",
                     "layout": {
                       "type": "vertical",
@@ -265,6 +265,35 @@
                             "height": 20,
                             "text": "目前情報仍不完整，派探子再探可看得更清楚",
                             "styleSlot": "mission.dialog.label.muted"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "EnvScoutPanel",
+                        "id": "envScoutPanel",
+                        "width": "100%",
+                        "height": 56,
+                        "_doc": "環境偵察（PROG-2-0403）：地形格數與天氣預報兩行，位於情報區最下方。文字由 EnvScoutPresenter 產生。",
+                        "layout": { "type": "vertical", "spacing": 4 },
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "EnvScoutTerrainLabel",
+                            "id": "envScoutTerrainLabel",
+                            "width": "100%",
+                            "height": 22,
+                            "styleSlot": "mission.dialog.label.body",
+                            "bind": "envScoutTerrainLine"
+                          },
+                          {
+                            "type": "label",
+                            "name": "EnvScoutWeatherLabel",
+                            "id": "envScoutWeatherLabel",
+                            "width": "100%",
+                            "height": 22,
+                            "styleSlot": "mission.dialog.label.body",
+                            "bind": "envScoutWeatherLine"
                           }
                         ]
                       }

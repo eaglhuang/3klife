@@ -1,11 +1,12 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Button, Color, Component, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
 import type { UIManagedController } from '../../core/managers/UIManager';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig } from '../../shared/BattleEntryParams';
+import { normalizeWeather } from '../../shared/CommonEnums';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -16,11 +17,14 @@ import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
+import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
+import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
+import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { BondingSetupController } from '../core/BondingSetupController';
@@ -47,6 +51,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { bindGachaActions } from '../core/GachaActionBindings';
+import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
 const { ccclass } = _decorator;
@@ -116,6 +121,7 @@ export class LobbyScene extends Component {
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
+    private _supportCatalog: SupportCatalog | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
     private _fatherTree: BloodlineTreePanel | null = null;
@@ -299,6 +305,18 @@ export class LobbyScene extends Component {
         });
     }
 
+    /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
+    private async _loadSupportCatalog(): Promise<SupportCatalog> {
+        if (this._supportCatalog) return this._supportCatalog;
+        const raw = await new Promise<unknown>((resolve) => {
+            resources.load<JsonAsset>('data/mentor-support-cards', JsonAsset, (err, asset) => {
+                resolve(err || !asset ? null : asset.json);
+            });
+        });
+        this._supportCatalog = parseSupportCatalog(raw ?? []);
+        return this._supportCatalog;
+    }
+
     /**
      * 開獎與培育畫面：以 UCUF JSON（nurture-flow-screen）執行期組裝。
      * 規則全在 NurtureFlowController（純邏輯），這裡只綁按鈕、套 FlowView。
@@ -308,7 +326,7 @@ export class LobbyScene extends Component {
             roster: { getAll: () => services().session.roster },
             unveiling: services().unveiling,
             nurture: services().nurture,
-            loadMentorCards: async () => (await services().legacy?.getMentorCards()) ?? [],
+            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
             persist: async () => {
                 if (services().session.hasSaveService) {
                     await services().session.save();
@@ -351,7 +369,8 @@ export class LobbyScene extends Component {
         this._sessionEventUnsubscribers.push(
             event.on(GAME_SESSION_EVENTS.GeneralUnveiled, (payload?: unknown) => {
                 const unveiled = payload as UnveilingEvent | undefined;
-                const name = services().session.roster.find((g) => g.id === unveiled?.generalId)?.name ?? '子嗣';
+                const unveiledGeneral = services().session.roster.find((g) => g.id === unveiled?.generalId);
+                const name = unveiledGeneral ? formatGeneralDisplayName(unveiledGeneral.name, unveiledGeneral.title) : '子嗣';
                 services().event.emit('SHOW_TOAST', { message: `${name} 滿 5 歲開獎！請到「開獎・培育」選擇宿命`, duration: 3 });
                 this._refreshNurtureFlow();
             }),
@@ -361,7 +380,8 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.GeneralDied, (payload?: unknown) => {
                 const died = payload as AgingEvent | undefined;
                 if (!died) return;
-                const name = services().session.roster.find((g) => g.id === died.generalId)?.name ?? died.generalId;
+                const diedGeneral = services().session.roster.find((g) => g.id === died.generalId);
+                const name = diedGeneral ? formatGeneralDisplayName(diedGeneral.name, diedGeneral.title) : died.generalId;
                 services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
             }),
         );
@@ -1026,6 +1046,14 @@ export class LobbyScene extends Component {
     /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
     private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
         try {
+            // 只有支援卡池抽到的支援卡武將才產生 Gacha 教官卡（PROG-2-0506，PM 裁定）
+            const catalog = await this._loadSupportCatalog();
+            await services().legacy?.addGachaMentors(
+                results.map((entry) => entry.general),
+                catalog,
+                services().session.gameTime,
+                results[0]?.poolId,
+            );
             const { added, duplicates, rebirths } = await services().session.addGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
             const parts: string[] = [];
             if (added.length > 0) {
@@ -1504,6 +1532,62 @@ export class LobbyScene extends Component {
         // gacha-ds3 uses BannerSlide nodes; legacy node names (PoolTabBar etc.) no longer exist
         this._setupGachaPoolCarousel(host);
         this._ensureGachaReturnButton(host);
+        this._ensureMercenaryEntry(host);
+    }
+
+    /** PROG-2-0115：只讀入口；沿用返回按鈕的平面樣式，不新增 spec 或存檔資料。 */
+    private _ensureMercenaryEntry(host: UIScreenPreviewHost): void {
+        const template = host.node.getChildByName('GachaReturnToLobby');
+        if (!template) throw new Error('Mercenary entry requires the gacha return button');
+        let entry = host.node.getChildByName('GachaMercenaryEntry');
+        if (!entry) {
+            entry = instantiate(template);
+            entry.name = 'GachaMercenaryEntry';
+            entry.parent = host.node;
+            entry.getComponent(Widget)!.left = 220;
+            entry.getChildByName('Label')!.getComponent(Label)!.string = '傭兵';
+        }
+        entry.off(Button.EventType.CLICK, undefined, this);
+        entry.on(Button.EventType.CLICK, () => {
+            let panel = host.node.getChildByName('MercenaryPoolPanel');
+            if (!panel) {
+                panel = instantiate(template);
+                panel.name = 'MercenaryPoolPanel';
+                panel.parent = host.node;
+                panel.getComponent(Button)!.destroy();
+                panel.getComponent(UITransform)!.setContentSize(620, 480);
+                const widget = panel.getComponent(Widget)!;
+                widget.left = 24;
+                widget.top = 90;
+                const body = panel.getChildByName('Label')!;
+                body.name = 'MercenaryPoolText';
+                body.getComponent(UITransform)!.setContentSize(560, 350);
+                body.setPosition(0, -20, 0);
+                const label = body.getComponent(Label)!;
+                label.fontSize = 22;
+                label.lineHeight = 32;
+                label.horizontalAlign = Label.HorizontalAlign.LEFT;
+                label.verticalAlign = Label.VerticalAlign.TOP;
+                label.overflow = Label.Overflow.SHRINK;
+                const back = instantiate(template);
+                back.name = 'MercenaryPoolBack';
+                back.parent = panel;
+                const backWidget = back.getComponent(Widget)!;
+                backWidget.isAlignLeft = false;
+                backWidget.isAlignRight = true;
+                backWidget.right = 20;
+                backWidget.top = 16;
+                back.getChildByName('Label')!.getComponent(Label)!.string = '返回轉蛋';
+                back.on(Button.EventType.CLICK, () => { panel!.active = false; }, this);
+            }
+            const rows = services().session.mercenaryPoolRows();
+            const label = panel.getChildByName('MercenaryPoolText')!.getComponent(Label)!;
+            label.string = rows.length === 0 ? '傭兵池\n\n目前沒有傭兵' : '傭兵池\n\n' + rows.map(row =>
+                `${row.uid}　${row.statusText}\n${row.daysLeftText}　結義進度 ${Math.round(row.bondProgress * 100)}%`).join('\n');
+            panel.active = true;
+            panel.setSiblingIndex(host.node.children.length - 1);
+        }, this);
+        entry.setSiblingIndex(host.node.children.length - 1);
     }
 
     /** Unity 對照：執行期補 Button，返回仍由既有 UI navigation stack 管理。 */
@@ -1997,9 +2081,13 @@ export class LobbyScene extends Component {
 
         const availableGenerals = this._buildMissionDetailGeneralOptions();
         const selectedGeneral = this._resolveMissionDetailSmokeGeneral(previewVariant, availableGenerals);
+        // 環境偵察面板（PROG-2-0405）：用大廳目前關卡的真實地形與天氣
+        const encounter = this._currentEncounter();
+        const scout = encounter ? buildEnvScoutLines(buildBattlefieldReconForEncounter(encounter)) : null;
 
         await services().ui.open(UIID.LobbyMissionDetailDialog, {
             previewVariant,
+            state: scout ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: scout.weatherLine } : undefined,
             availableGenerals,
             selectedGeneralId: selectedGeneral?.id,
             selectedGeneralLabel: selectedGeneral?.label,
@@ -2269,7 +2357,7 @@ export class LobbyScene extends Component {
     private _buildMissionDetailGeneralOptions(): MissionGeneralOption[] {
         return this._generals.map((config) => ({
             id: config.id,
-            label: config.name,
+            label: formatGeneralDisplayName(config.name, config.title),
             volunteer: this._isMissionDetailVolunteerGeneral(config),
         }));
     }
@@ -2451,7 +2539,7 @@ export class LobbyScene extends Component {
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
             selectedCardIds: services().session.deck,
-            weather: encounter.weather ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
+            weather: normalizeWeather(encounter.weather) ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
         };

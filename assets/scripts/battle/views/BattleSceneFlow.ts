@@ -71,6 +71,9 @@ export class BattleSceneFlow {
     this.ctx.setEnemyGeneral(eg);
 
     ctrl.initBattle(pg, eg, terrain, battleParams?.weather, battleParams?.battleTactic);
+    // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
+    const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
+    if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);
     // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
     const sortieInput = buildRosterSortieInput(pg);
     if (sortieInput) ctrl.configureSortie(sortieInput);

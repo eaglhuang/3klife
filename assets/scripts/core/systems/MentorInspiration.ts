@@ -17,6 +17,7 @@
  * Unity 對照：像一組 EventRoller，每回合呼叫一次，只回傳「這回合新觸發的靈感 ID」，不改教官或武將資料。
  */
 import type { RandomSource } from './GeneralAging';
+import type { SupportCardDef } from '../models/MentorSupportSchema';
 
 export const INSPIRE_LUK_DIVISOR = 200;
 
@@ -40,6 +41,24 @@ export interface InspireContext {
     childLuk: number;
     /** 子嗣具備的血統代碼 */
     childBloodlines: readonly string[];
+}
+
+/**
+ * 支援卡的戰法靈感事件 → 引擎用的 InspireEvent（欄位一一對應，不改來源資料）。
+ * bloodlineRequired 只有規格有寫才帶入，避免產生 undefined 欄位。
+ */
+export function inspireEventsFromSupport(def: SupportCardDef): InspireEvent[] {
+    return def.tacticInspireEvents.map((event) => {
+        const mapped: InspireEvent = {
+            eventId: event.eventId,
+            tacticId: event.tacticId,
+            triggerWindow: event.triggerWindow,
+            baseRate: event.baseRate,
+            minStar: event.minStar,
+        };
+        if (event.bloodlineRequired) mapped.bloodlineRequired = event.bloodlineRequired;
+        return mapped;
+    });
 }
 
 export type InspireBlockReason = 'out-of-window' | 'star-too-low' | 'bloodline-missing';
@@ -78,11 +97,17 @@ export function rollInspireRound(
     ctx: InspireContext,
     confirmed: ReadonlySet<string>,
     random: RandomSource,
+    options: { guaranteed?: boolean } = {},
 ): string[] {
     const triggered: string[] = [];
     for (const event of events) {
         if (confirmed.has(event.eventId)) continue;
         if (inspireBlockReasons(event, round, ctx).length > 0) continue;
+        // 保底（世家血脈）：合格即觸發，不擲骰
+        if (options.guaranteed) {
+            triggered.push(event.eventId);
+            continue;
+        }
         if (random() < inspireChance(event, ctx)) triggered.push(event.eventId);
     }
     return triggered;

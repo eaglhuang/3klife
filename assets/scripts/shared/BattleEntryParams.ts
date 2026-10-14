@@ -4,6 +4,13 @@
 
 import { Weather, BattleTactic, TerrainGrid } from './CommonEnums';
 
+/** 天氣排程單一條目（結構與 core/systems/WeatherSchedule 的 WeatherScheduleEntry 相同，shared 不引用 core） */
+export interface WeatherScheduleEntry {
+  turnStart: number;
+  turnEnd: number;
+  weather: Weather;
+}
+
 /** encounters.json 中單一遭遇戰的設定結構 */
 export interface EncounterConfig {
   id: string;
@@ -16,7 +23,9 @@ export interface EncounterConfig {
   /** 戰場類型（可選，預設野戰）；攻城戰開戰時主將扣攻城壽命（PROG-2-0237） */
   battleKind?: 'field' | 'siege';
   /** 天氣條件（可選，預設 Clear） */
-  weather?: Weather;
+  weather?: Weather | string;
+  /** 天氣排程（可選）；有值時每回合依排程切換天氣（PROG-2-0401） */
+  weatherSchedule?: WeatherScheduleEntry[];
   /** 場景戰法（可選，預設 Normal） */
   battleTactic?: BattleTactic;
   /** 我軍裝備 ID 列表（預留） */
@@ -56,6 +65,8 @@ export interface IBattleEntryParams {
 
   /** 天氣 */
   weather: Weather;
+  /** 天氣排程（可選）；覆蓋 encounter 設定（PROG-2-0401） */
+  weatherSchedule?: WeatherScheduleEntry[];
   /** 戰場戰法 */
   battleTactic: BattleTactic;
   /** 背景 ID（覆蓋 encounter 設定；為空時由 encounter 決定） */
@@ -79,13 +90,13 @@ export const DEFAULT_BATTLE_ENTRY_PARAMS: IBattleEntryParams = {
 
 // ─── 中文映射表（用於 log 輸出）─────────────────────────────────────────────
 
-const WEATHER_LABEL: Record<Weather, string> = {
+export const WEATHER_LABEL: Record<Weather, string> = {
   [Weather.Clear]: '晴天',
   [Weather.Rain]: '雨天',
-  [Weather.Fog]: '霧',
-  [Weather.Snow]: '雪',
-  [Weather.Sandstorm]: '沙暴',
+  [Weather.Fog]: '大霧',
+  [Weather.Windy]: '大風',
   [Weather.Night]: '夜戰',
+  [Weather.Thunder]: '雷暴',
 };
 
 const TACTIC_LABEL: Record<BattleTactic, string> = {

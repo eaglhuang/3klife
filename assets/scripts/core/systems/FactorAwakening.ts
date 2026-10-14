@@ -115,6 +115,19 @@ export const NURTURE_PEEK_BASE_CHANCE = 0.08;
 export const NURTURE_PEEK_RANK_STEP = 0.1;
 export const BATTLE_AWAKENING_CHANCE = 0.05;
 export const BATTLE_AWAKENING_SPECIAL_CHANCE = 0.15;
+/** 運氣系統 §LUK 對覺醒速度：Awakening_Speed_Modifier = 1 + LUK / 300（PROG-2-0509） */
+export const LUK_AWAKENING_SPEED_DIVISOR = 300;
+
+/** LUK 覺醒速度修正；非有限值或負數視為 0（修正為 1）。 */
+export function awakeningSpeedModifier(luk: number): number {
+    const safe = Number.isFinite(luk) ? Math.max(0, luk) : 0;
+    return 1 + safe / LUK_AWAKENING_SPEED_DIVISOR;
+}
+
+/** 培育回合覺醒機率 = 窺探基礎率 × 覺醒速度修正，封頂 1。 */
+export function nurtureAwakeningChance(mentorRank: number, luk = 0): number {
+    return Math.min(1, nurturePeekChance(mentorRank) * awakeningSpeedModifier(luk));
+}
 
 /** 戰場候選：一般實戰只開藍粉；滿足特定動作 / 特殊條件才開綠白紫紅 */
 const BATTLE_BASIC_COLORS: readonly FactorColor[] = ['blue', 'pink'];
@@ -163,11 +176,12 @@ export function nurturePeekChance(mentorRank: number): number {
 /** 培育回合覺醒：藍粉 = 培育窺探；綠白 = 教官觸發（需有教官站在所選訓練格） */
 export function rollNurtureAwakening(
     general: GeneralConfig | undefined,
-    input: { discoveryLevel: number; mentorRank: number; mentorOnSlot: boolean; random: () => number },
+    input: { discoveryLevel: number; mentorRank: number; mentorOnSlot: boolean; luk?: number; random: () => number },
 ): AwakeningResult | null {
     const triggers: AwakeningTrigger[] = input.mentorOnSlot ? ['nurture-peek', 'mentor'] : ['nurture-peek'];
     const candidates = listAwakeningCandidates(general, triggers, input.discoveryLevel);
-    return rollAwakening(general, candidates, nurturePeekChance(input.mentorRank), input.discoveryLevel, input.random);
+    const chance = nurtureAwakeningChance(input.mentorRank, input.luk ?? 0);
+    return rollAwakening(general, candidates, chance, input.discoveryLevel, input.random);
 }
 
 /** 因子 id → 因子標籤（正式環境取 gene-dictionary.json 的 defaultTags） */

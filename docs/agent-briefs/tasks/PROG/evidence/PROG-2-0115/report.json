@@ -1,0 +1,24 @@
+{
+  "baseMaster": "8f1616d7b",
+  "viewport": "1920x1080",
+  "errorCount": 0,
+  "cliExit": 0,
+  "flow": {
+    "name": "0115",
+    "completed": true,
+    "steps": [
+      "mercenary-entry",
+      "mercenary-pool"
+    ],
+    "interaction": "actual-pointer",
+    "text": "傭兵池\n\n目前沒有傭兵",
+    "returned": true,
+    "reopened": true,
+    "empty": true
+  },
+  "limitations": [
+    "只驗空名冊，不新增假資料",
+    "非空長清單未實機驗證",
+    "只讀列表，結義／告別不在本卡"
+  ]
+}

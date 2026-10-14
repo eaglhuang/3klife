@@ -585,6 +585,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         dictionary: request.dictionary,
         enabledColors: request.enabledColors,
         maxFactors: request.maxFactors,
+        parentAvgLuk: (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2,
     });
     const inbred = isSameBloodline(request.father, request.mother);
     const purified = inbred ? applyInbreedingPurification(factors, request.random, request.dictionary) : factors;

@@ -8,6 +8,8 @@
  * Unity 對照：戰前 Odds 標籤。主將頭像旁一行百分比；資料不足時顯示提示，不顯示假數字。
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
+import { agePhaseOf } from '../models/GeneralGrowth';
+import { Weather } from '../../shared/CommonEnums';
 import { AptitudeProfile, troopGradeOf } from './BattleAptitude';
 import { predictBattleOutcome, PredictionResult } from './BattlePowerPrediction';
 import { buildRatingEnv } from './BattleModifiers';
@@ -16,7 +18,7 @@ import { calculateBattlePowerRating, RatingGeneral, RatingSupport, RatingTroop }
 /** 粗估用的步兵數值（暫定，與 F-5 兵種基礎無直接對照） */
 export const SORTIE_PREDICT_TROOP: RatingTroop = { baseType: 'INFANTRY', attack: 40, defense: 20, move: 3, range: 1, isSpecial: false };
 export const SORTIE_PREDICT_TERRAIN = 'plain';
-export const SORTIE_PREDICT_WEATHER = 'clear';
+export const SORTIE_PREDICT_WEATHER = Weather.Clear;
 
 const NO_SUPPORT: RatingSupport = { spiritCardPower: null, strategist: null, deputy: null, baseFoodCap: 0 };
 
@@ -38,7 +40,7 @@ function ratingGeneralOf(g: GeneralConfig): RatingGeneral {
         luk: statOf(g, 'luk'),
         cha: statOf(g, 'cha'),
         pol: statOf(g, 'pol'),
-        agePhase: 'Prime',
+        agePhase: typeof g.age === 'number' ? agePhaseOf(g.age) : 'Prime',
         troopAptitude: troopGradeOf(profile, SORTIE_PREDICT_TROOP.baseType),
         reincarnation: 0,
     };

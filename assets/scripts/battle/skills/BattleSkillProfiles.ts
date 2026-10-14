@@ -6,6 +6,8 @@ export type BattleSkillEffectKind = 'damage' | 'heal' | 'control' | 'link' | 'co
 
 export interface BattleSkillProfile {
   battleSkillId: string;
+  /** 戰法標籤（PROG-2-0406）：例如 fire 火計，供天氣強約束判定 */
+  tags?: readonly string[];
   targetMode: BattleSkillTargetMode;
   manualTargeting?: boolean;
   autoAimMode?: BattleSkillAutoAimMode;
@@ -18,6 +20,8 @@ export interface BattleSkillProfile {
   /** 傷害爆擊加成倍率（flat 增益）：final = base * (1 + critBonus)（G-1 百步穿楊：0.5） */
   critBonus?: number;
   maxTargets?: number;
+  /** 多段結算的遞增係數：每段對全部目標各結算一次（趙家槍法 1.0/1.2/1.4） */
+  hitStageMultipliers?: readonly number[];
   falloffRule?: BattleSkillFalloffRule;
   lineLength?: number;
   fanDepth?: number;
@@ -98,8 +102,10 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0.8,
     scalingStat: 'str',
     maxTargets: 4,
-    lineLength: 4,
-    falloffRule: 'linear-step',
+    lineLength: 3,
+    // 三連擊：對直線目標依序三次獨立結算，每段套用遞增係數（戰法系統 G-3：1.0/1.2/1.4）
+    hitStageMultipliers: [1.0, 1.2, 1.4],
+    falloffRule: 'none',
     battleLogKey: 'skill.zhao_yun_pierce.hit',
   },
   'zhuge-liang-storm': {
@@ -116,6 +122,7 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
   },
   'zhou-yu-inferno': {
     battleSkillId: 'zhou-yu-inferno',
+    tags: ['fire'],
     targetMode: BattleSkillTargetMode.Tile,
     manualTargeting: false,
     autoAimMode: 'occupied-tile',

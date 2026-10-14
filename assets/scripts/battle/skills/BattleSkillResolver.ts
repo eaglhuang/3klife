@@ -1,4 +1,4 @@
-import { Faction, StatusEffect, TerrainType } from '../../core/config/Constants';
+import { Faction, StatusEffect, TerrainType, Weather } from '../../core/config/Constants';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../shared/SkillRuntimeContract';
@@ -11,6 +11,8 @@ export interface BattleSkillExecutionContext {
   getUnit(unitId: string): TroopUnit | null;
   getCasterGeneral(casterFaction: Faction): GeneralUnit | null;
   getTerrain(lane: number, depth: number): TerrainType;
+  /** 目前戰場天氣（PROG-2-0406：火計大風 ×2）；舊測試 context 可不提供，視為晴天 */
+  getWeather?(): Weather;
   applyDamage(unit: TroopUnit, damage: number, casterFaction: Faction): void;
   healUnit(unit: TroopUnit, amount: number, casterFaction: Faction): void;
   applyBuff(unit: TroopUnit, effect: StatusEffect, turns: number): void;

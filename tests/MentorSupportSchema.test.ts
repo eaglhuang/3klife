@@ -79,7 +79,9 @@ export function createMentorSupportSchemaSuite(): TestSuite {
         const def = result.value;
         assert.equals('SUP_ZHAO_SSR_01', def.supportId);
         assert.equals('槍法', def.teachingStyle);
-        assert.equals(8, def.statBonus.STR);
+        assert.equals(8, def.statBonus.str);
+        assert.equals(5, def.statBonus.lea, 'AGI 對照到 lea');
+        assert.isTrue(def.trainingSlotAffinity.join(',') === 'str,lea');
         assert.equals(4, def.tacticInspireEvents.length);
         assert.equals('ZHAO', def.tacticInspireEvents[3].bloodlineRequired!);
         assert.isTrue(def.tacticInspireEvents[0].bloodlineRequired === undefined);
@@ -137,6 +139,11 @@ export function createMentorSupportSchemaSuite(): TestSuite {
         const errors = errorsOf(mutate({ Passive_Effects: [{ Effect: 'Luck_Bonus', Value: 1, Min_Star: 7 }] }));
         assert.isTrue(errors.some((e) => e.includes('Passive_Effects[0].Effect')));
         assert.isTrue(errors.some((e) => e.includes('Passive_Effects[0].Min_Star')));
+    });
+
+    suite.test('Stat_Bonus 與 Training_Slot_Affinity 不認得的鍵名會報錯', () => {
+        assert.isTrue(errorsOf(mutate({ Stat_Bonus: { LUK: 3 } })).some((e) => e.includes('LUK')));
+        assert.isTrue(errorsOf(mutate({ Training_Slot_Affinity: ['STR', 'SPD'] })).some((e) => e.includes('SPD')));
     });
 
     suite.test('Role_Boundary 缺少或不是 TeachingOnly 都會被擋（教官不具血統親傳資格）', () => {
