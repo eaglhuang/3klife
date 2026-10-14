@@ -6,7 +6,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
-import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
+import { PlayerSaveService, PLAYER_SAVE_KEY } from '../assets/scripts/core/services/PlayerSaveService';
 import { LegacyService } from '../assets/scripts/core/services/LegacyService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { advanceMercenaryDay, bondMercenary, canBondMercenary, createTrialMercenary, TRIAL_DAYS } from '../assets/scripts/core/systems/MercenaryBond';
@@ -495,6 +495,43 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
             }
         }
         assert.isTrue(sawAboveParents, '300 個種子內至少要有一次血統活性把星級推高到父母最高 4★ 之上');
+    });
+
+    suite.test('舊存檔相容：拿掉所有後加的選填欄位讀檔，補預設值後可續跑 20 季並正常再存', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, makeRoster());
+        await a.setLeadGeneral('hero-a');
+        await a.setDeck(['tactic-1']);
+        for (let i = 0; i < 20; i++) await a.advanceSeason();
+        await a.save();
+
+        const raw = JSON.parse(JSON.stringify(await adapter.get(PLAYER_SAVE_KEY))) as Record<string, unknown>;
+        const core = new Set(['schemaVersion', 'savedAt', 'gameTime', 'roster', 'deck', 'discoveryLevel']);
+        for (const key of Object.keys(raw)) if (!core.has(key)) delete raw[key];
+        await adapter.set(PLAYER_SAVE_KEY, raw);
+
+        const b = createSession(adapter, []);
+        assert.isTrue(await b.load(), '只剩核心欄位的舊檔也要能讀');
+        assert.equals(0, Object.keys(b.femaleSources).length);
+        for (let i = 0; i < 20; i++) await b.advanceSeason();
+        await b.save();
+        const c = createSession(adapter, []);
+        assert.isTrue(await c.load());
+        assert.equals(canonical(snapshotOf(b)), canonical(snapshotOf(c)), '舊檔升級後再存再讀必須一致');
+    });
+
+    suite.test('舊存檔相容：選填欄位型別壞掉時讀檔不當機、退回預設', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, makeRoster());
+        for (let i = 0; i < 3; i++) await a.advanceSeason();
+        await a.save();
+        const raw = JSON.parse(JSON.stringify(await adapter.get(PLAYER_SAVE_KEY))) as Record<string, unknown>;
+        Object.assign(raw, { femaleSources: 'bad', tallyCards: 7, tallyHoldings: [], mercenaries: 'x', onboarding: 5, bondPoints: 'many', domestic: [], resources: null, inventory: 3, pendingLifespanDeaths: 'z' });
+        await adapter.set(PLAYER_SAVE_KEY, raw);
+        const b = createSession(adapter, []);
+        assert.isTrue(await b.load());
+        await b.advanceSeason();
+        await b.save();
     });
 
     return suite;
