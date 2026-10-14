@@ -3,19 +3,19 @@
  * WeatherTacticRestriction — 天氣對戰法的強約束（純邏輯，不依賴 cc）
  *
  * 規則（規格表）：
- *   - 火計／火箭：雨天、大霧、雷暴禁用（HUD 變灰、點擊出 Toast）；大風傷害 ×2。
+ *   - 火計／火箭（帶 fire 標籤）：雨天、大霧、雷暴禁用（HUD 變灰、點擊出 Toast）；大風傷害 ×2。
  *   - 水攻（場景戰法 flood-attack）：雨天範圍擴大。
  *
- * 暫定（待 PM 裁定）：
- *   - 火計類戰法只認 FIRE_TACTIC_IDS；目前只有 tactic-fire-scheme。赤壁焚風等其他火攻不在內。
- *   - 水攻雨天擴大的格數 RAIN_FLOOD_DEPTH_BONUS = 1（規格只寫「範圍擴大」）。
+ * 判定以「標籤」為準，不寫死戰法 ID：呼叫端把戰法的標籤陣列傳進來。
  *
- * 本模組只給判定結果，不改戰場狀態；HUD 變灰與傷害接線由後續卡處理。
+ * 暫定（待 PM 裁定）：水攻雨天擴大 RAIN_FLOOD_DEPTH_BONUS = 1 格（規格只寫「範圍擴大」）。
+ *
+ * 本模組只給判定結果，不改戰場狀態；戰鬥與 HUD 接線在 battle 層處理。
  */
 import { Weather } from '../../shared/CommonEnums';
 
-/** 火計類戰法（暫定清單，見檔頭） */
-export const FIRE_TACTIC_IDS: readonly string[] = ['tactic-fire-scheme'];
+/** 火計類戰法的標籤 */
+export const FIRE_TAG = 'fire';
 
 /** 水攻雨天額外擴大的深度格數（暫定） */
 export const RAIN_FLOOD_DEPTH_BONUS = 1;
@@ -31,21 +31,21 @@ export interface WeatherTacticCheck {
 
 export const WEATHER_RESTRICTION_TOAST = '當前天氣不符合施放限制';
 
-export function isFireTactic(tacticId: string): boolean {
-    return FIRE_TACTIC_IDS.includes(tacticId);
+export function isFireTactic(tags: readonly string[]): boolean {
+    return tags.includes(FIRE_TAG);
 }
 
-/** 判斷某天氣下能否施放某戰法；非火計類一律允許 */
-export function checkTacticWeather(tacticId: string, weather: Weather): WeatherTacticCheck {
-    if (isFireTactic(tacticId) && FIRE_BLOCKED_WEATHER.has(weather)) {
+/** 判斷某天氣下能否施放某戰法（依標籤）；沒有 fire 標籤的一律允許 */
+export function checkTacticWeather(tags: readonly string[], weather: Weather): WeatherTacticCheck {
+    if (isFireTactic(tags) && FIRE_BLOCKED_WEATHER.has(weather)) {
         return { allowed: false, reason: WEATHER_RESTRICTION_TOAST };
     }
     return { allowed: true, reason: null };
 }
 
-/** 火計傷害倍率：大風 ×2，其他天氣 ×1；非火計類恆為 ×1 */
-export function fireDamageMultiplier(tacticId: string, weather: Weather): number {
-    if (!isFireTactic(tacticId)) return 1;
+/** 火計傷害倍率：大風 ×2，其他天氣 ×1；沒有 fire 標籤恆為 ×1 */
+export function fireDamageMultiplier(tags: readonly string[], weather: Weather): number {
+    if (!isFireTactic(tags)) return 1;
     return weather === Weather.Windy ? 2 : 1;
 }
 

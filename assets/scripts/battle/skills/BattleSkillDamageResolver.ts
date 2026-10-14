@@ -1,4 +1,5 @@
-import { TerrainType, TroopType } from '../../core/config/Constants';
+import { TerrainType, TroopType, Weather } from '../../core/config/Constants';
+import { fireDamageMultiplier } from '../../core/systems/WeatherTacticRestriction';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { TroopUnit } from '../../core/models/TroopUnit';
 import { FormulaSystem } from '../../core/systems/FormulaSystem';
@@ -31,10 +32,11 @@ export class BattleSkillDamageResolver {
       attackBonus: caster.attackBonus,
     });
 
+    const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], context.getWeather?.() ?? Weather.Clear);
     if (profile.critBonus) {
-      return Math.max(1, Math.floor(baseDamage * (1 + profile.critBonus)));
+      return Math.max(1, Math.floor(baseDamage * weatherMultiplier * (1 + profile.critBonus)));
     }
-    return baseDamage;
+    return baseDamage * weatherMultiplier;
   }
 
   private resolveScaledAttack(
