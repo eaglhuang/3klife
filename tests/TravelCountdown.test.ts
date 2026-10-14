@@ -1,6 +1,7 @@
 import { assert, TestSuite } from './TestRunner';
 import {
     createTravelCountdown,
+    normalizeTravelCountdown,
     tickTravelCountdown,
     travelStatus,
 } from '../assets/scripts/core/systems/TravelCountdown';
@@ -41,6 +42,14 @@ export function createTravelCountdownSuite(): TestSuite {
             }
             assert.isTrue(threw, `應拒絕 ${bad}`);
         }
+    });
+
+    suite.test('讀回存檔時只接受合法的趕路資料，其餘視為沒有趕路', () => {
+        assert.equals(null, normalizeTravelCountdown(undefined));
+        assert.equals(null, normalizeTravelCountdown({ targetId: '', remainingTurns: 2 }));
+        assert.equals(null, normalizeTravelCountdown({ targetId: 'a', remainingTurns: 0 }));
+        assert.equals(null, normalizeTravelCountdown({ targetId: 'a', remainingTurns: 1.5 }));
+        assert.equals('a', normalizeTravelCountdown({ targetId: 'a', remainingTurns: 2 })!.targetId);
     });
 
     return suite;

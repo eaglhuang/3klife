@@ -35,6 +35,18 @@ export function tickTravelCountdown(state: Readonly<TravelCountdown>): TravelCou
     return { ...state, remainingTurns: Math.max(0, state.remainingTurns - 1) };
 }
 
+/** 接取天下沙盤遠征後的趕來回合數（暫定，規格未定數值）。 */
+export const EXPEDITION_TRAVEL_TURNS = 3;
+
+/** 讀回存檔用：只接受非空 targetId 與正整數剩餘回合；其餘（含 0 = 已到達）視為沒有趕路。 */
+export function normalizeTravelCountdown(value: unknown): TravelCountdown | null {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+    const raw = value as Partial<TravelCountdown>;
+    if (typeof raw.targetId !== 'string' || raw.targetId.length === 0) return null;
+    if (typeof raw.remainingTurns !== 'number' || !Number.isInteger(raw.remainingTurns) || raw.remainingTurns < 1) return null;
+    return { targetId: raw.targetId, remainingTurns: raw.remainingTurns };
+}
+
 /** 依剩餘回合判斷狀態；剩餘為 0 即已到達。 */
 export function travelStatus(state: Readonly<TravelCountdown>): TravelSnapshot {
     if (state.remainingTurns <= 0) return { status: 'arrived', remainingTurns: 0 };
