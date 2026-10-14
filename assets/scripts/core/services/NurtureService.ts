@@ -258,6 +258,7 @@ export class NurtureService {
         next[index] = result.general;
         this._roster.replaceAll(next);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
+        this._dropReportBook(childId);
         this._options.onGraduated?.(result);
         return result;
     }
@@ -313,6 +314,15 @@ export class NurtureService {
     abandon(childId: string): void {
         const session = this._requireSession(childId);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
+        this._dropReportBook(childId);
+    }
+
+    /** 離開培育（正式畢業／放棄）時銷毀保留的成績單，避免殘卡被下一輪培育誤用 */
+    private _dropReportBook(childId: string): void {
+        if (!this._state.reportBooks?.[childId]) return;
+        const rest = { ...this._state.reportBooks };
+        delete rest[childId];
+        this._state.reportBooks = rest;
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
