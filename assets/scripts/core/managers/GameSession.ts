@@ -46,7 +46,7 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
@@ -324,6 +324,8 @@ export class GameSession {
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
     private _fame = 0;
+    /** 點數（溢出轉化積分，MENT-07）；存於 resources.scorePoints */
+    private _scorePoints = 0;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
@@ -807,6 +809,7 @@ export class GameSession {
         this._military = { ...STARTER_MILITARY };
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
+        this._scorePoints = 0;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -1603,12 +1606,27 @@ export class GameSession {
         return changed;
     }
 
+    /** 點數（溢出轉化積分）唯讀值 */
+    public get scorePoints(): number {
+        return this._scorePoints;
+    }
+
+    /** 入帳點數（MENT-07 溢出轉化）；負數與非整數不入帳，自動存檔時寫回 */
+    public async grantScorePoints(amount: number): Promise<number> {
+        if (!Number.isInteger(amount) || amount <= 0) return this._scorePoints;
+        this._scorePoints += amount;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return this._scorePoints;
+    }
+
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
         const pending = this._pendingLifespanEvents.map((event) => ({ generalId: event.generalId, age: event.age }));
         return {
             ...this._createBaseSnapshot(now),
             military: this.military,
-            resources: { fame: this._fame },
+            resources: { fame: this._fame, scorePoints: this._scorePoints },
             domestic: { ...this._domesticLog },
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
@@ -1672,6 +1690,7 @@ export class GameSession {
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._fame = normalizeFame(snapshot.resources?.fame);
+        this._scorePoints = normalizeScorePoints(snapshot.resources?.scorePoints);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
