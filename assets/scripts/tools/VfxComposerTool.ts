@@ -293,14 +293,14 @@ export class VfxComposerTool extends Component {
     private buildPanelContent() {
         const p = this.panel;
         const title = this.mkLabel(p, '⚙ 特效積木組合器', 42, new Color(180, 210, 255, 255));
-        title.setPosition(0, PANEL_H / 2 - 42);
+        title.node.setPosition(0, PANEL_H / 2 - 42);
         this.titleLabel = title.getComponent(Label)!;
 
         const hint = this.mkLabel(p, '點一下就即時預覽；可切換 Quad / Particle Prefab', 24, new Color(120, 140, 180, 200));
-        hint.setPosition(0, PANEL_H / 2 - 96);
+        hint.node.setPosition(0, PANEL_H / 2 - 96);
 
         const statusNode = this.mkLabel(p, '預覽模式：Quad / 錨點：棋盤中心', 22, new Color(150, 230, 200, 220));
-        statusNode.setPosition(0, PANEL_H / 2 - 142);
+        statusNode.node.setPosition(0, PANEL_H / 2 - 142);
         this.statusLabel = statusNode.getComponent(Label)!;
 
         const modeY = PANEL_H / 2 - 198;
@@ -356,7 +356,7 @@ export class VfxComposerTool extends Component {
         this.drawRect(compArea, PANEL_W - 16, compH, new Color(15, 30, 22, 230), 4);
 
         const compHdr = this.mkLabel(compArea, '目前選中積木', 28, new Color(150, 220, 150, 255));
-        compHdr.setPosition(0, compH / 2 - 32);
+        compHdr.node.setPosition(0, compH / 2 - 32);
 
         const previewCard = this.mkNode('SelectedPreviewCard', compArea, LARGE_PREVIEW_SIZE + 18, LARGE_PREVIEW_SIZE + 18);
         previewCard.setPosition(-208, -6);

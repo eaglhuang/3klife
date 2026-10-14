@@ -515,10 +515,10 @@ export class LobbyScene extends Component {
             roster: { getAll: () => services().session.roster },
             ordersOwned: () => services().session.itemCount(ITEM_JOB_CHANGE_ORDER),
             changeJob: (generalId, subClass) => services().session.changeJob(generalId, subClass),
-            gems: () => this._localGachaService.getCurrencyAmount('gem'),
+            gems: () => this._localGachaService.getCurrencyAmount('gems'),
             buyOrder: async () => {
                 const gacha = this._localGachaService;
-                if (!gacha.spendCurrency('gem', JOB_CHANGE_ORDER_OFFER.price)) return false;
+                if (!gacha.spendCurrency('gems', JOB_CHANGE_ORDER_OFFER.price)) return false;
                 await services().session.addItem(ITEM_JOB_CHANGE_ORDER, 1);
                 return true;
             },

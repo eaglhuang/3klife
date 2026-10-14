@@ -245,7 +245,7 @@ export class BattleHUDComposite extends CompositePanel {
             fillNode = new Node('Fill');
             barNode.addChild(fillNode);
             const bg = fillNode.addComponent(SolidBackground);
-            bg.setColor(color);
+            bg.color = color;
             const fillTf = fillNode.addComponent(UITransform);
             fillTf.setContentSize(totalW, totalH);
 

@@ -359,7 +359,7 @@ export class UIPreviewNodeFactory {
 
         if (fit === 'cover') {
             const mask = node.getComponent(Mask) || node.addComponent(Mask);
-            mask.type = Mask.Type.RECT;
+            mask.type = Mask.Type.GRAPHICS_RECT;
         }
 
         const contentNode = new Node(`${node.name}_ImageContent`);
