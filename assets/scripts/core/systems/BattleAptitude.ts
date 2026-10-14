@@ -19,6 +19,8 @@
  * 戰鬥時 DamageCalculator 只要呼叫 Resolve(unit, cell, weather) 取得倍率，不用知道表怎麼排。
  */
 
+import { normalizeWeather } from '../../shared/CommonEnums';
+
 export type AptitudeGrade = 'S' | 'A' | 'B' | 'C' | 'D';
 
 export const APTITUDE_GRADES: readonly AptitudeGrade[] = ['S', 'A', 'B', 'C', 'D'];
@@ -64,16 +66,6 @@ const TERRAIN_KEYS: Readonly<Record<string, readonly string[]>> = {
     desert: ['DESERT'],
 };
 
-/** 天氣：戰場 Weather 與規格六種不完全一致；snow→雨天、sandstorm→大風（暫定） */
-const WEATHER_KEYS: Readonly<Record<string, readonly string[]>> = {
-    clear: ['SUNNY'],
-    rain: ['RAINY'],
-    fog: ['FOG'],
-    night: ['NIGHT'],
-    sandstorm: ['WINDY'],
-    snow: ['RAINY'],
-};
-
 /** 兵種：盾 / 槍 / 醫療歸步兵；器械 = SIEGE（舊資料 ENGINEER）；水軍沒有欄位時視為 B */
 const TROOP_KEYS: Readonly<Record<string, readonly string[]>> = {
     cavalry: ['CAVALRY'],
@@ -116,7 +108,8 @@ export function terrainGradeOf(profile: AptitudeProfile | null | undefined, terr
 }
 
 export function weatherGradeOf(profile: AptitudeProfile | null | undefined, weather: string | null | undefined): AptitudeGrade {
-    return lookup(profile?.weatherAptitude, WEATHER_KEYS[codeOf(weather)]);
+    const code = normalizeWeather(weather);
+    return lookup(profile?.weatherAptitude, code ? [code] : undefined);
 }
 
 export function troopGradeOf(profile: AptitudeProfile | null | undefined, troopType: string | null | undefined): AptitudeGrade {
