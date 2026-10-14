@@ -85,8 +85,8 @@ export function createFormulaSuite(): TestSuite {
             defenderType: TroopType.Cavalry,  // Infantry 被 Cavalry 反剋
             attackerAttack: 100, defenderDefense: 20,
         }));
-        // 100 * 0.7 - 20 = 50
-        assert.equals(50, disadvantage);
+        // 100 * 0.8 - 20 = 60（規格反向被剋 ×0.8）
+        assert.equals(60, disadvantage);
     });
 
     suite.test('最小傷害防呆：極低攻擊力應回傳 MIN_DAMAGE', () => {
@@ -171,6 +171,10 @@ export function createFormulaSuite(): TestSuite {
 
     suite.test('互剋關係完整：長矛剋騎兵', () => {
         assert.equals(COUNTER_MULTIPLIER, formula.getCounterMultiplier(TroopType.Pikeman, TroopType.Cavalry));
+    });
+
+    suite.test('被剋係數與規格一致：反向被剋制為 ×0.8（兵種（虎符）系統.md）', () => {
+        assert.equals(0.8, DISADVANTAGE_MULTIPLIER);
     });
 
     suite.test('被剋係數正確：步兵 被騎兵剋', () => {
