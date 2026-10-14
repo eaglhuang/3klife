@@ -5,7 +5,7 @@ import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode';
 import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
-import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS } from '../../core/systems/FateBlessing';
+import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS, type FateHeldGene } from '../../core/systems/FateBlessing';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -37,8 +37,14 @@ export interface BattleTurnAdvanceContext {
   onUnitKilled(unit: TroopUnit, killer: TroopUnit | null, svc: ReturnType<typeof services>): void;
 }
 
+/** 戰場開場時的上下文：亂數走戰場種子亂數源；施放者的基因用來算天命加護（FBR-10） */
+export interface BattleStartContext {
+  random: () => number;
+  casterGenes: readonly FateHeldGene[];
+}
+
 export interface BattleTacticBehavior {
-  applyStartOfBattle(state: BattleState): void;
+  applyStartOfBattle(state: BattleState, context: BattleStartContext): void;
   advanceTurn(state: BattleState, context?: BattleTurnAdvanceContext): void;
   isFactionHiddenFrom(attackerFaction: Faction, targetFaction: Faction, state: BattleState): boolean;
   getEffectiveMoveRange(unit: TroopUnit, state: BattleState): number;
@@ -236,10 +242,10 @@ function applyFireAttackTerrain(state: BattleState): void {
   }
 }
 
-function applyRockSlideTerrain(state: BattleState): void {
-  // 天命加護（FBR-10）：落石成功率 = 基礎 + 施放方天命加成；基礎 100% 時必成功
-  const fateLevel = fateBlessingLevel(state.getGeneral(Faction.Player)?.genes ?? []);
-  if (!rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), Math.random())) return;
+function applyRockSlideTerrain(state: BattleState, context: BattleStartContext): void {
+  // 天命加護（FBR-10）：落石成功率 = 基礎 85% + 施放者天命加成，上限 100%；亂數走戰場亂數源
+  const fateLevel = fateBlessingLevel(context.casterGenes);
+  if (!rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), context.random())) return;
   for (let lane = 1; lane <= 3; lane++) {
     state.setTileEffect({
       id: `rock-${lane}-4`,
