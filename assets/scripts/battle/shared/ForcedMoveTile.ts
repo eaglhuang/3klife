@@ -41,3 +41,13 @@ export function resolveForcedMove(
     const remainingSteps = total - movedSteps;
     return { finalDepth: depth, movedSteps, blocked: remainingSteps > 0, remainingSteps };
 }
+
+/** 受阻傷害：每剩餘 1 步 = 最大 HP 的 5%，上限 20%（PM 暫定 2026-10-14，待企劃定案） */
+export const FORCED_MOVE_BLOCKED_DAMAGE_PER_STEP = 0.05;
+export const FORCED_MOVE_BLOCKED_DAMAGE_CAP = 0.2;
+
+/** 受阻時的傷害比例（相對最大 HP）；沒有剩餘步數時為 0 */
+export function forcedMoveBlockedDamageRatio(remainingSteps: number): number {
+    const steps = Math.max(0, Math.floor(remainingSteps));
+    return Math.min(FORCED_MOVE_BLOCKED_DAMAGE_CAP, steps * FORCED_MOVE_BLOCKED_DAMAGE_PER_STEP);
+}
