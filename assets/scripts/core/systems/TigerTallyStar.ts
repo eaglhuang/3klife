@@ -47,3 +47,23 @@ export function applyBattleExp(state: TallyStarState, outcome: TallyBattleOutcom
     }
     return { ...state, star, exp };
 }
+
+/** 卡片實例上的星級欄位（PM 裁定：星級存在每張卡實例上，隨卡組存檔） */
+export interface TallyCardStarFields {
+    quality: TigerTallyQuality;
+    stars?: number;
+    battleExp?: number;
+}
+
+/** 讀出卡片的星級狀態；缺欄位預設 1★ / 0 經驗，超出範圍的星級夾到 1~5 */
+export function readCardStarState(card: TallyCardStarFields): TallyStarState {
+    const star = Number.isInteger(card.stars) ? Math.min(5, Math.max(1, card.stars as number)) : 1;
+    const exp = typeof card.battleExp === 'number' && Number.isFinite(card.battleExp) && card.battleExp >= 0 ? card.battleExp : 0;
+    return { quality: card.quality, star, exp };
+}
+
+/** 套用一場戰鬥的經驗到卡片實例，回傳要寫回的兩個欄位 */
+export function applyBattleExpToCard(card: TallyCardStarFields, outcome: TallyBattleOutcome): { stars: number; battleExp: number } {
+    const next = applyBattleExp(readCardStarState(card), outcome);
+    return { stars: next.star, battleExp: next.exp };
+}
