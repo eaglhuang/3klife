@@ -37,7 +37,7 @@ import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenar
 import { bondMercenaryToRoster, type RosterBondResult } from '../systems/MercenaryRoster';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
-import { filterPoolGeneralIds } from '../systems/MercenaryPoolPresenter';
+import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import { createPlayerSaveSnapshot, normalizeClearedStageIds, normalizeFame, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
@@ -411,6 +411,11 @@ export class GameSession {
     /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
     public availablePoolGeneralIds(generalIds: readonly string[]): string[] {
         return filterPoolGeneralIds(generalIds, this.mercenaryDay, this._mercenaries.cooldowns);
+    }
+
+    /** 傭兵列表的顯示列（倒數、結義進度、按鈕可否）；由目前存檔包推導，不改狀態。 */
+    public mercenaryPoolRows(): MercenaryPoolRow[] {
+        return buildMercenaryPoolRows(this._mercenaries);
     }
 
     /** 以校正後的副本取代傭兵存檔包；不寫存檔，由呼叫端決定何時 save。 */

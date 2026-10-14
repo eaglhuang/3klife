@@ -68,5 +68,32 @@ export function createGameSessionMercenaryDaySuite(): TestSuite {
         assert.equals(6, snapshot.mercenaries!.day!);
     });
 
+    suite.test('傭兵池列資料：試用中顯示倒數與進度，不改存檔包', () => {
+        const session = new GameSession(1);
+        session.setMercenaries({ ...BUNDLE, mercenaries: [{ ...BUNDLE.mercenaries[0], daysLeft: 4, affection: 30 }] });
+        const before = JSON.stringify(session.mercenaries);
+        const rows = session.mercenaryPoolRows();
+        assert.equals(1, rows.length);
+        assert.equals('試用中', rows[0].statusText);
+        assert.equals('剩餘 4 日', rows[0].daysLeftText);
+        assert.equals(1 / 3, rows[0].trialProgress);
+        assert.equals(true, rows[0].canDeploy);
+        assert.equals(before, JSON.stringify(session.mercenaries));
+    });
+
+    suite.test('傭兵池列資料：已離隊無倒數、無薪水紀錄則不可出戰', () => {
+        const session = new GameSession(1);
+        session.setMercenaries({
+            mercenaries: [{ uid: 'merc-x', daysLeft: 0, bond: 0, status: 'Expired', generalId: 'gen-1', affection: 0 }],
+            upkeep: [],
+            cooldowns: [],
+        });
+        const rows = session.mercenaryPoolRows();
+        assert.equals('已離隊', rows[0].statusText);
+        assert.equals('', rows[0].daysLeftText);
+        assert.equals(false, rows[0].canDeploy);
+        assert.equals(false, rows[0].canTeach);
+    });
+
     return suite;
 }
