@@ -997,7 +997,9 @@ export class LobbyScene extends Component {
         }
         try {
             const result = await this._bonding.confirm();
-            if (result.outcome === 'conceived') {
+            if (result.outcome === 'conceived' && result.child) {
+                // 結緣的動態關係（夫妻、親子）：KIN-06，有新增才自動存檔
+                await services().session.recordBreedingRelations(result.father.id, result.mother.id, result.child.id);
                 // 子嗣加入名冊：出戰清單與培育畫面跟著刷新
                 this._refreshLeadSelect();
                 this._refreshNurtureFlow();

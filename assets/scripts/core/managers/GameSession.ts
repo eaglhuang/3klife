@@ -88,7 +88,7 @@ import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../sy
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
-import { DynamicRelationBook } from '../systems/KinDynamicRelations';
+import { DynamicRelationBook, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
@@ -1264,6 +1264,23 @@ export class GameSession {
             await this.save();
         }
         return updated;
+    }
+
+    /**
+     * 結緣受孕後的動態關係（KIN-06 / KIN-10）：父母記為夫妻（bonding），父與母各與子嗣記為親子（parentage）。
+     * 同一對同一型別只留第一筆；有新增才自動存檔。回傳三筆記錄結果（順序：夫妻、父子、母子）。
+     */
+    public async recordBreedingRelations(fatherUid: string, motherUid: string, childUid: string): Promise<DynamicRelationResult[]> {
+        const season = this._clock.state.totalSeasonsElapsed;
+        const results = [
+            this.dynamicRelations.record('bonding', fatherUid, motherUid, season),
+            this.dynamicRelations.record('parentage', fatherUid, childUid, season),
+            this.dynamicRelations.record('parentage', motherUid, childUid, season),
+        ];
+        if (results.some((r) => r.ok && r.created) && this._autoSave && this._save) {
+            await this.save();
+        }
+        return results;
     }
 
     /** Legacy_Count（RET-07）：跨世代成就次數，唯讀 */
