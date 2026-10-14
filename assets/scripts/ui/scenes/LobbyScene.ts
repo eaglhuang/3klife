@@ -325,6 +325,9 @@ export class LobbyScene extends Component {
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
             { buttonId: 'btnGraduate', handler: act(() => flow.graduate()) },
+            { buttonId: 'btnKeepReport', handler: act(() => flow.keepReport()) },
+            { buttonId: 'btnRetake', handler: act(() => flow.retake()) },
+            { buttonId: 'btnCommitReport', handler: act(() => flow.commitReport()) },
             { buttonId: 'btnDismissReport', handler: () => { flow.dismissReport(); this._refreshNurtureFlow(); } },
         ]);
 
