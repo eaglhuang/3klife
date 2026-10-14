@@ -112,6 +112,8 @@ export function createKinRelationSuite(): TestSuite {
         assert.equals(ep.topTag, engine.topTag);
         assert.equals(ep.topTagCount, engine.topTagCount);
         assert.equals(engine.resonance ? 15 : 0, ep.resonance);
+        assert.equals(engine.familyTradition, ep.familyTradition);
+        assert.isFalse(ep.familyTradition);
     });
 
     return suite;

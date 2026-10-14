@@ -7,7 +7,8 @@
  *
  * 本檔只做純邏輯。史實資料表（KIN-02）與爆發力接線（KIN-04）另卡處理。
  */
-import { EP_RESONANCE_MIN_COUNT } from './BreedingSystem';
+/** 血脈共鳴門檻：同一標籤至少出現在幾位祖先身上（規格 §F，EP +15）。BreedingSystem 沿用此值 */
+export const KIN_RESONANCE_MIN_COUNT = 3;
 
 /** 史實關係（靜態資料，以 Template_ID 配對） */
 export const HISTORICAL_RELATION_TYPES = ['COUPLE', 'SWORN', 'MASTER_STUDENT', 'RIVAL', 'LORD_VASSAL'] as const;
@@ -127,7 +128,7 @@ export interface TagResonance {
     /** 出現在最多位祖先身上的標籤（並列時取字典序較前者，與 computeEpMvp 相同） */
     topTag: string | null;
     topTagCount: number;
-    /** 血脈共鳴達標（≥ EP_RESONANCE_MIN_COUNT，EP +15） */
+    /** 血脈共鳴達標（≥ KIN_RESONANCE_MIN_COUNT，EP +15） */
     resonance: boolean;
     /** 家風傳承達標（≥ FAMILY_TRADITION_MIN_COUNT）；只判定，Buff 內容待 KIN-11 */
     familyTradition: boolean;
@@ -158,7 +159,7 @@ export function analyzeTagResonance(ancestors: ReadonlyArray<ReadonlyArray<strin
     return {
         topTag,
         topTagCount,
-        resonance: topTagCount >= EP_RESONANCE_MIN_COUNT,
+        resonance: topTagCount >= KIN_RESONANCE_MIN_COUNT,
         familyTradition: topTagCount >= FAMILY_TRADITION_MIN_COUNT,
     };
 }
