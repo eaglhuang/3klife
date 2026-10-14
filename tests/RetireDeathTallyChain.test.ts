@@ -1,0 +1,98 @@
+/**
+ * RetireDeathTallyChain — 出征戰績 → 退役 → 壽命耗盡死亡 → 虎符產出 的一條龍（QA 線整合）
+ *
+ * 缺口：各段單元測試分開驗戰績累計、退役、陣亡產卡；這裡確認戰績真的流進陣亡虎符的品質與兵種，
+ * 退役不產卡，死亡只產一張，存檔往返不遺失。
+ */
+import { assert, TestSuite } from './TestRunner';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { LegacyService } from '../assets/scripts/core/services/LegacyService';
+import { PlayerSaveService, normalizeTallyCardsMap } from '../assets/scripts/core/services/PlayerSaveService';
+import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+
+function general(id: string, age: number, extra: Record<string, unknown> = {}): GeneralConfig {
+    return {
+        id, name: id, faction: 'shu', gender: '男', age, hp: 1000,
+        vitality: 100, maxVitality: 100,
+        str: 80, int: 60, lea: 70, pol: 50, cha: 60, luk: 40,
+        ...extra,
+    } as unknown as GeneralConfig;
+}
+
+function createSession(adapter: MemoryStorageAdapter, roster: GeneralConfig[]): GameSession {
+    const session = new GameSession();
+    session.setRosterStore(new InMemoryRosterStore(roster));
+    session.setSaveService(new PlayerSaveService(adapter));
+    session.setLifecycle(new LegacyService(adapter));
+    session.startNewGame(20261014);
+    session.setRandomSource(() => 0.99);
+    return session;
+}
+
+const canonical = (value: unknown): string => JSON.stringify(value);
+
+export function createRetireDeathTallyChainSuite(): TestSuite {
+    const suite = new TestSuite('RetireDeathTallyChain (出征→退役→死亡→虎符 一條龍)');
+
+    suite.test('戰績累計進陣亡虎符的品質與兵種；退役不產卡；死亡只產一張；存檔往返不遺失', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const roster = [
+            // 剩 3 個月壽命：之後結緣扣 6 個月即死亡
+            general('hero', 59.75, { isHistorical: true, maxLifespan: 60, troopAptitude: { CAVALRY: 'S', INFANTRY: 'B' } }),
+            general('vet', 70, { isHistorical: true, maxLifespan: 90 }),
+        ];
+        const a = createSession(adapter, roster);
+
+        // 出征：三場勝利，每場擊殺 10
+        for (let i = 0; i < 3; i += 1) {
+            await a.recordBattle(['hero'], 'player-win', {
+                performance: { hero: { kills: 10, damageDealt: 0, damageTaken: 0, healingDone: 0 } },
+            });
+        }
+        const record = (a.roster.find((g) => g.id === 'hero') as { battleRecord?: { wins: number; kills?: number } }).battleRecord;
+        assert.equals(3, record?.wins ?? -1);
+        assert.equals(30, record?.kills ?? -1);
+
+        // 退役：不產虎符
+        await a.retireGeneral('vet');
+        assert.equals(0, Object.keys(a.tallyCards).length, '退役不發虎符');
+
+        // 死亡 → 季結產卡
+        const spent = a.spendLifespan('hero', 'breeding');
+        assert.isTrue(spent?.events.some((e) => e.type === 'died') ?? false, '壽命不足應死亡');
+        await a.advanceSeason();
+        const cards = Object.values(a.tallyCards);
+        assert.equals(1, cards.length, '死亡只產一張');
+        const card = cards[0];
+        assert.equals('hero', card.sourceGeneralUid);
+        assert.equals('death', card.source);
+        assert.equals('SSR', card.quality, '3 勝 30 殺 → 戰績分封頂 100，主分數 70 → SSR');
+        assert.equals('cavalry', card.troopType ?? '', '主兵種由適性推出');
+        assert.isTrue(a.tallyHoldings[card.uid] === null, '陣亡虎符由君主持有');
+
+        // 再過一季不重複產卡
+        await a.advanceSeason();
+        assert.equals(1, Object.keys(a.tallyCards).length);
+
+        // 存檔往返
+        const b = new GameSession();
+        b.setRosterStore(new InMemoryRosterStore([]));
+        b.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await b.load());
+        assert.equals(canonical(normalizeTallyCardsMap(a.tallyCards)), canonical(b.tallyCards));
+        assert.equals(canonical(a.tallyHoldings), canonical(b.tallyHoldings));
+    });
+
+    suite.test('沒有出征戰績的名將死亡：仍產卡，但品質只有最低（R）', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, [general('hero', 59.75, { isHistorical: true, maxLifespan: 60 })]);
+        a.spendLifespan('hero', 'breeding');
+        await a.advanceSeason();
+        const cards = Object.values(a.tallyCards);
+        assert.equals(1, cards.length);
+        assert.equals('R', cards[0].quality);
+    });
+
+    return suite;
+}
