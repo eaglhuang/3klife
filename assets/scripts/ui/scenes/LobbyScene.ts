@@ -5,7 +5,7 @@ import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/G
 import { services } from '../../core/managers/ServiceLoader';
 import type { UIManagedController } from '../../core/managers/UIManager';
 import { SceneName } from '../../core/config/Constants';
-import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig } from '../../shared/BattleEntryParams';
+import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
 import { normalizeWeather } from '../../shared/CommonEnums';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
@@ -2771,6 +2771,7 @@ export class LobbyScene extends Component {
             weather: normalizeWeather(encounter.weather) ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
+            tutorial: isTutorialBattle(services().session.clearedStageIds),
         };
     }
 }
