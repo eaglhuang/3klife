@@ -50,13 +50,64 @@ function ok(file, msg) {
 }
 
 // ─────────────────────────── 讀取 rarity-thresholds ────────
-const _rarityThresholds = null;
+let _rarityThresholds = null;
 if (fs.existsSync(RARITY_FILE)) {
   try {
     _rarityThresholds = JSON.parse(fs.readFileSync(RARITY_FILE, 'utf8'));
     console.log(`[INFO]  Loaded rarity-thresholds.json`);
   } catch (e) {
     console.warn(`[WARN]  Cannot parse rarity-thresholds.json: ${e.message}`);
+  }
+}
+
+// ─────────────────────────── 稀有度雙軸重算（GDP-07）────────
+// 與 assets/scripts/core/utils/RarityResolver.ts 的 resolveRarityTier 同規則（不讀資料上的 rarityTier）。
+// 不一致與 legendary 佔比超標只警告，不改資料；修正資料需企劃確認。
+const RARITY_STAT_FIELDS = ['str', 'int', 'lea', 'pol', 'cha', 'luk'];
+const LEGENDARY_SHARE_LIMIT = 0.2;
+
+function tierFromAxis(value, axis, order) {
+  const high = [...order].reverse().filter((t) => t in axis);
+  for (const t of high) if (value >= axis[t]) return t;
+  return 'common';
+}
+
+function rarityByAxes(g, thr) {
+  const overrides = thr.categoryOverrides || {};
+  if (g.characterCategory && overrides[g.characterCategory]) return overrides[g.characterCategory];
+  const order = thr.tierOrder || ['common', 'rare', 'epic', 'legendary', 'mythic'];
+  const exclude = thr.excludeFromAvg || [];
+  const values = RARITY_STAT_FIELDS.filter((f) => !exclude.includes(f))
+    .map((f) => g[f])
+    .filter((v) => typeof v === 'number');
+  const avg5 = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+  const maxStat = Math.max(0, ...RARITY_STAT_FIELDS.map((f) => (typeof g[f] === 'number' ? g[f] : 0)));
+  const byMax = tierFromAxis(maxStat, thr.axes.maxStat, order);
+  const byAvg = tierFromAxis(avg5, thr.axes.avg5, order);
+  return order.indexOf(byMax) >= order.indexOf(byAvg) ? byMax : byAvg;
+}
+
+function checkRarityAxes(fpath, list) {
+  const thr = _rarityThresholds;
+  if (!thr || !thr.axes) {
+    warn(fpath, 'rarity', 'rarity-thresholds.json 未載入，略過雙軸重算');
+    return;
+  }
+  const stored = {};
+  for (const g of list) {
+    if (!g || typeof g !== 'object') continue;
+    const calc = rarityByAxes(g, thr);
+    if (g.rarityTier) {
+      stored[g.rarityTier] = (stored[g.rarityTier] || 0) + 1;
+      if (g.rarityTier !== calc) {
+        warn(fpath, `${g.id}`, `rarityTier 資料為 ${g.rarityTier}，雙軸重算為 ${calc}（待企劃確認）`);
+      }
+    }
+  }
+  const total = list.length || 1;
+  const legendaryShare = (stored.legendary || 0) / total;
+  if (legendaryShare >= LEGENDARY_SHARE_LIMIT) {
+    warn(fpath, 'rarity', `legendary 佔比 ${(legendaryShare * 100).toFixed(1)}%，超過上限 ${LEGENDARY_SHARE_LIMIT * 100}%`);
   }
 }
 
@@ -286,6 +337,7 @@ function validateLegacyFile(fpath) {
       return;
     }
     data.forEach((g, i) => validateGeneral(fpath, g, i));
+    checkRarityAxes(fpath, data);
     ok(fpath, `${data.length} 筆資料`);
   } catch (e) {
     err(fpath, 'parse', `JSON 解析失敗：${e.message}`);
