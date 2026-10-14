@@ -37,6 +37,8 @@ import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
+import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
+import type { TacticCondition } from '../../core/systems/TacticCondition';
 import {
   BattleSkillTargetMode,
   SkillSourceType,
@@ -131,6 +133,10 @@ export class BattleController {
     consumeTileBuff: (unit) => this.tileBuffLifecycleManager.consumeTileBuff(unit),
   });
   private tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
+  /** 虎符卡片實例的星級查詢（由場景注入玩家卡組；沒注入時一律 1★） */
+  public tallyStarOf: (tallyId: string) => number = () => 1;
+  /** 本場出陣過的虎符 id（PROG-2-0573：戰後依此結算戰鬥經驗） */
+  private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
   private sortie: SortieState | null = null;
 
@@ -157,6 +163,7 @@ export class BattleController {
       combatResolver: this.combatResolver,
       getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
       getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
+      getTacticConditions: (tacticId) => this.tacticDefinitionMap.get(tacticId)?.tcond as TacticCondition[] | undefined,
     },
     this.skillSourceTranslator,
   );
@@ -260,9 +267,16 @@ export class BattleController {
     const general = this.state.getGeneral(Faction.Player);
     const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
     unit.tallyId = ref.tallyId;
+    unit.tallyStarMultiplier = starStatMultiplier(this.tallyStarOf(ref.tallyId));
+    this._deployedTallyIds.add(ref.tallyId);
     unit.commanderUid = commander?.uid ?? null;
     unit.tallyAffinity = (lane, depth) =>
       resolveTallyDeployMod(profile, commander, this.state.getCell(lane, depth)?.terrain ?? null);
+  }
+
+  /** 本場出陣過的虎符 id，戰後結算戰鬥經驗用 */
+  public get deployedTallyIds(): readonly string[] {
+    return [...this._deployedTallyIds];
   }
 
   public deployTroop(type: TroopType, lane: number, unitName?: string): TroopUnit | null {

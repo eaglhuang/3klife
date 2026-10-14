@@ -55,9 +55,13 @@ export interface TallyCardStarFields {
     battleExp?: number;
 }
 
-/** 讀出卡片的星級狀態；缺欄位預設 1★ / 0 經驗，超出範圍的星級夾到 1~5 */
+/**
+ * 讀出卡片的星級狀態；缺欄位預設 1★ / 0 經驗。
+ * 星級先夾到 1~5，再依品質封頂夾（R 最高 3★，QA 複查意見 2026-10-14）。
+ */
 export function readCardStarState(card: TallyCardStarFields): TallyStarState {
-    const star = Number.isInteger(card.stars) ? Math.min(5, Math.max(1, card.stars as number)) : 1;
+    const cap = Math.min(5, QUALITY_STAR_CAP[card.quality]);
+    const star = Number.isInteger(card.stars) ? Math.min(cap, Math.max(1, card.stars as number)) : 1;
     const exp = typeof card.battleExp === 'number' && Number.isFinite(card.battleExp) && card.battleExp >= 0 ? card.battleExp : 0;
     return { quality: card.quality, star, exp };
 }
@@ -66,4 +70,12 @@ export function readCardStarState(card: TallyCardStarFields): TallyStarState {
 export function applyBattleExpToCard(card: TallyCardStarFields, outcome: TallyBattleOutcome): { stars: number; battleExp: number } {
     const next = applyBattleExp(readCardStarState(card), outcome);
     return { stars: next.star, battleExp: next.exp };
+}
+
+/** 戰場結果字串轉成虎符戰鬥經驗的結果；尚未結束（ongoing）回 null，不結算 */
+export function tallyBattleOutcome(result: string): TallyBattleOutcome | null {
+    if (result === 'player-win') return 'win';
+    if (result === 'enemy-win') return 'lose';
+    if (result === 'draw') return 'draw';
+    return null;
 }

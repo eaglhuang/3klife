@@ -581,7 +581,8 @@ export class BattleUIBridge {
     const specialActions = actions.length > 0 ? { [pgId]: actions } : undefined;
     if (result === 'player-win' && sortie) this._captureEnemyGeneral();
     const stageId = this.ctx.encounterId ?? undefined;
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId }).then((settlement) => {
+    const deployedTallyIds = this.ctx.ctrl?.deployedTallyIds ?? [];
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);

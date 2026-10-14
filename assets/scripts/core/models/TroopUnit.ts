@@ -48,6 +48,8 @@ export class TroopUnit {
   public commanderUid: string | null = null;
   /** (lane, depth) → 攻防乘數；沒有虎符時為 null，戰力不變 */
   public tallyAffinity: ((lane: number, depth: number) => number) | null = null;
+  /** 虎符星級攻防乘數（1 + 星 × 0.08，PROG-2-0573）；沒有虎符時為 1，戰力不變 */
+  public tallyStarMultiplier = 1;
 
   constructor(id: string, type: TroopType, faction: Faction, stats: TroopStats, name?: string) {
     this.id = id;
