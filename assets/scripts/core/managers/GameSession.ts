@@ -73,7 +73,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
-import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
+import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
@@ -282,6 +282,8 @@ export class GameSession {
     private _fame = 0;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
+    /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
+    private _tallyFoodDiscountArmed = false;
     /** 傭兵存檔包（試用、薪水、冷卻）；隨存檔保存（MERC-01 接線） */
     private _mercenaries: MercenarySaveBundle = createEmptyMercenaryBundle();
 
@@ -757,6 +759,17 @@ export class GameSession {
         return result;
     }
 
+    /**
+     * 取出並清除「季末糧不足，下一場虎符打 8 折」的標記（兵種（虎符）系統 TRP-12）。
+     * 只在戰場真正開局時呼叫一次；預覽出征編制不呼叫，避免吃掉折扣。
+     * 暫定：標記只存在記憶體，讀檔後不保留（規格未定，之後若要保留再進存檔）。
+     */
+    public consumeTallyFoodDiscount(): boolean {
+        const armed = this._tallyFoodDiscountArmed;
+        this._tallyFoodDiscountArmed = false;
+        return armed;
+    }
+
     public get military(): MilitaryReserve {
         return { ...this._military };
     }
@@ -1056,6 +1069,7 @@ export class GameSession {
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
+        this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
         this._military = regenMilitaryOneSeason(this._military);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);

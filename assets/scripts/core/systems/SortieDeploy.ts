@@ -78,6 +78,11 @@ export const TALLY_GRAIN_COST: Readonly<Record<string, Readonly<Record<number, n
 };
 /** 查不到品質 / 星級時的虎符糧耗（規格 getTallyGrainCost 的 fallback） */
 export const TALLY_GRAIN_COST_FALLBACK = 20;
+
+/** 糧草不足折扣（兵種（虎符）系統）：季結算前剩餘糧草少於此值，下一場出征的虎符糧耗打 8 折（不累算） */
+export const TALLY_SHORTAGE_FOOD_THRESHOLD = 50;
+/** 8 折；無條件捨去（PM 暫定 2026-10-14） */
+export const TALLY_SHORTAGE_FOOD_RATE = 0.8;
 /** 虎符部隊投入兵力：品質越高越重（E-15 精銳 1,200~1,500 起；暫定） */
 export const TALLY_TROOP_COST: Readonly<Record<string, number>> = { R: 1200, SR: 1300, SSR: 1400, UR: 1500 };
 
@@ -150,6 +155,8 @@ export interface SortieUnitRecord {
 }
 
 export interface SortieState {
+    /** 本場虎符糧耗是否打 8 折（季末糧不足的下一場）；舊呼叫端不傳即為 false */
+    tallyFoodDiscount?: boolean;
     poolMax: number;
     poolCurrent: number;
     food: number;
@@ -179,6 +186,8 @@ export interface CommandCapacityInput {
 }
 
 export interface CreateSortieInput {
+    /** 季末糧不足，本場虎符糧耗打 8 折（由呼叫端在戰場開局時決定，見 GameSession.consumeTallyFoodDiscount） */
+    tallyFoodDiscount?: boolean;
     commandCapacity: number;
     cityTroops: number;
     stageSortieCap?: number;
@@ -367,6 +376,7 @@ export function createSortieState(input: CreateSortieInput): SortieState {
     const tacticMax = BASE_TACTIC_CAP + nonNegInt(input.strategistBonus?.maxTacticBonus);
     const tacticStart = Math.min(tacticMax, BASE_TACTIC_START + nonNegInt(input.strategistBonus?.startTacticBonus));
     return {
+        tallyFoodDiscount: input.tallyFoodDiscount === true,
         poolMax,
         poolCurrent: poolMax,
         food,
@@ -418,8 +428,14 @@ function activeUnits(state: SortieState): SortieUnitRecord[] {
 }
 
 /** 三種原因全部列出（UI 可各自顯示）；順序：場上已滿 → 軍勢不足 → 糧草不足（同規格 deployUnit 的判定順序） */
+/** 糧不足折扣只套在虎符部隊的糧耗上，無條件捨去 */
+export function discountedDeployCost(cost: DeployCost, request: DeployRequest, state: Pick<SortieState, 'tallyFoodDiscount'>): DeployCost {
+    if (!request.tally || !state.tallyFoodDiscount) return cost;
+    return { ...cost, foodCost: Math.floor(cost.foodCost * TALLY_SHORTAGE_FOOD_RATE) };
+}
+
 export function checkDeploy(state: SortieState, request: DeployRequest): SortieDeployCheck {
-    const cost = getDeployCost(request);
+    const cost = discountedDeployCost(getDeployCost(request), request, state);
     const active = activeUnits(state);
     const reasons: SortieDeployBlockReason[] = [];
     const eliteFull = cost.isElite && active.filter((u) => u.isElite).length >= state.eliteCap;

@@ -252,7 +252,10 @@ export async function createGeneral(id: string, faction: Faction): Promise<Gener
  */
 export function buildRosterSortieInput(general: GeneralUnit): CreateSortieInput | null {
   if (general.faction !== Faction.Player) return null;
-  return services().session.getSortieInput(general.id);
+  const input = services().session.getSortieInput(general.id);
+  if (!input) return null;
+  // 戰場開局才消耗季末糧不足折扣（TRP-12）；預覽不走這裡
+  return { ...input, tallyFoodDiscount: services().session.consumeTallyFoodDiscount() };
 }
 
 /** 主將的虎符忠誠（TRP-09）；沒有紀錄或不是我方時回傳 null（不拒令） */
