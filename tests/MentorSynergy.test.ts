@@ -111,6 +111,12 @@ export function createMentorSynergyWiringSuite(): TestSuite {
         assert.equals(1, second.session.triggeredSynergies!.length);
     });
 
+    suite.test('自動培育不觸發羈絆（規格：自動模式不觸發事件）', () => {
+        const step = executeRound(wiringSession(3, 30), 'str', seq(0.5), { auto: true });
+        assert.equals(undefined, step.log.synergyId);
+        assert.equals(undefined, step.session.triggeredSynergies);
+    });
+
     suite.test('回合上限：第 12 回合可觸發，第 13 回合起不觸發；友情缺值（0）不觸發', () => {
         assert.equals('SYN_GUAN_ZHANG_01', executeRound(wiringSession(11, 30), 'str', seq(0.5)).log.synergyId!);
         assert.equals(undefined, executeRound(wiringSession(12, 30), 'str', seq(0.5)).log.synergyId);

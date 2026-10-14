@@ -79,6 +79,14 @@ export const PROWESS_PER_RATING_POINT = 2;
 export const RATING_STAT_CAP = 100;
 export const RATING_THRESHOLDS = { S: 450, A: 350, B: 250 } as const;
 
+/** 自動培育評級上限為 A（shard-a 限制條件）：S 降為 A */
+export const AUTO_NURTURE_RATING_CAP: NurtureRating = 'A';
+const RATING_ORDER: readonly NurtureRating[] = ['C', 'B', 'A', 'S'];
+
+export function capAutoRating(rating: NurtureRating): NurtureRating {
+    return RATING_ORDER.indexOf(rating) > RATING_ORDER.indexOf(AUTO_NURTURE_RATING_CAP) ? AUTO_NURTURE_RATING_CAP : rating;
+}
+
 export type NurtureRating = 'S' | 'A' | 'B' | 'C';
 export type NurtureStatus = 'active' | 'completed' | 'abandoned';
 
@@ -173,6 +181,8 @@ export interface NurtureSession {
     status: NurtureStatus;
     /** 本場已觸發的師友羈絆群組 id（一次性，MENT-12） */
     triggeredSynergies?: string[];
+    /** 自動培育會話（NUR-14）：畢業評級上限 A */
+    auto?: boolean;
 }
 
 // ── 小工具 ─────────────────────────────────────────────────────────────────
@@ -327,10 +337,21 @@ export function computeStatGain(
     return { base, mentorBonus, synergyBonus, burst, growthModifier: session.growthModifier, gain: Math.max(1, Math.round(raw)) };
 }
 
-export function computeTpGain(mentors: readonly TrainingMentor[]): number {
+export function computeTpGain(mentors: readonly TrainingMentor[], scale = 1): number {
     const bonus = mentors.reduce((sum, mentor) => sum + (mentor.tpBonus / 100) * mentorStarEffect(mentor), 0);
-    return Math.round(BASE_TP_PER_TRAINING * (1 + bonus));
+    return Math.round(BASE_TP_PER_TRAINING * (1 + bonus * scale));
 }
+
+/** 自動培育（NUR-14，shard-b F-5）：訓練獲取量 ×0.7、教官 TP 加成 ×0.5 */
+export const AUTO_NURTURE_STAT_PENALTY = 0.7;
+export const AUTO_NURTURE_TP_PENALTY = 0.5;
+
+export interface ExecuteRoundOptions {
+    /** 自動培育：不擲受傷／好感事件骰，獲取量與教官 TP 加成依 AUTO_* 懲罰 */
+    auto?: boolean;
+}
+
+const NO_ROUND_EVENTS = { injured: false, affection: false } as const;
 
 /**
  * 執行一個回合，回傳新會話與本回合紀錄（不改輸入）。
@@ -341,6 +362,7 @@ export function executeRound(
     source: NurtureSession,
     action: NurtureAction,
     random: RandomSource,
+    options: ExecuteRoundOptions = {},
 ): { session: NurtureSession; log: NurtureRoundLog } {
     if (source.status !== 'active') throw new NurtureError(`培育會話 ${source.sessionId} 已結束（${source.status}）`);
     if (action !== 'rest' && !TRAINING_KINDS.includes(action)) throw new NurtureError(`不合法的訓練：${String(action)}`);
@@ -401,17 +423,18 @@ export function executeRound(
         } else {
             const [minBase, maxBase] = TRAINING_BASE_RANGE[phase];
             const breakdown = computeStatGain(source, action, randInt(random, minBase, maxBase));
+            const gain = options.auto ? Math.max(1, Math.round(breakdown.gain * AUTO_NURTURE_STAT_PENALTY)) : breakdown.gain;
             const cap = source.talent[action] * PROWESS_PER_TALENT;
-            const applied = Math.max(0, Math.min(breakdown.gain, cap - session.prowess[action]));
+            const applied = Math.max(0, Math.min(gain, cap - session.prowess[action]));
             session.prowess[action] += applied;
             log.statGained = applied;
             log.burst = breakdown.burst;
-            log.tpGained = computeTpGain(source.mentors);
+            log.tpGained = computeTpGain(source.mentors, options.auto ? AUTO_NURTURE_TP_PENALTY : 1);
             session.tp += log.tpGained;
         }
 
-        // 受傷 / 好感事件擲骰放在所有結算骰之後，既有的亂數順序不受影響
-        const events = rollNurtureRoundEvents(true, random);
+        // 受傷 / 好感事件擲骰放在所有結算骰之後，既有的亂數順序不受影響；自動培育不觸發事件
+        const events = options.auto ? NO_ROUND_EVENTS : rollNurtureRoundEvents(true, random);
         if (events.injured) {
             // 受傷：本回合訓練無效，實力與 TP 撤回，下一回合跳過
             session.prowess[action] -= log.statGained;
@@ -437,19 +460,21 @@ export function executeRound(
         }
     }
     session.log.push(log);
-    // 師友羈絆（MENT-12）：一次性、回合上限內
-    const synergy = findTriggeredSynergy({
-        round,
-        mentorIds: source.mentors.map((mentor) => mentor.id),
-        friendship: Object.fromEntries(source.mentors.map((mentor) => [mentor.id, mentor.friendship ?? 0])),
-        triggered: session.triggeredSynergies ?? [],
-    });
-    if (synergy) {
-        const bonus = synergyTpBonus(synergy);
-        session.triggeredSynergies = [...(session.triggeredSynergies ?? []), synergy.id];
-        session.tp += bonus;
-        log.tpGained += bonus;
-        log.synergyId = synergy.id;
+    // 師友羈絆（MENT-12）：一次性、回合上限內；自動培育不觸發事件
+    if (!options.auto) {
+        const synergy = findTriggeredSynergy({
+            round,
+            mentorIds: source.mentors.map((mentor) => mentor.id),
+            friendship: Object.fromEntries(source.mentors.map((mentor) => [mentor.id, mentor.friendship ?? 0])),
+            triggered: session.triggeredSynergies ?? [],
+        });
+        if (synergy) {
+            const bonus = synergyTpBonus(synergy);
+            session.triggeredSynergies = [...(session.triggeredSynergies ?? []), synergy.id];
+            session.tp += bonus;
+            log.tpGained += bonus;
+            log.synergyId = synergy.id;
+        }
     }
     if (round >= NURTURE_TOTAL_ROUNDS) {
         session.status = 'completed';
@@ -529,7 +554,8 @@ export function graduate(
     if (session.childId !== child.id) throw new NurtureError(`培育會話屬於 ${session.childId}，不是 ${child.id}`);
 
     const ratingScore = computeRatingScore(session.prowess);
-    const rating = ratingOfScore(ratingScore);
+    // 自動培育（session.auto）評級上限 A
+    const rating = session.auto ? capAutoRating(ratingOfScore(ratingScore)) : ratingOfScore(ratingScore);
     const tags = graduationTags(session.prowess, child.careerClass);
 
     const layers: Partial<Record<keyof GeneralStatsConfig, GeneralDualLayerStatConfig>> = { ...(child.dualLayerStats ?? {}) };

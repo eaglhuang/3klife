@@ -7,6 +7,7 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
+import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
   hasBattleEffect,
@@ -31,7 +32,8 @@ export interface BattleCombatResolverContext {
 
 export class BattleCombatResolver {
   /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
-  public hitRandom: () => number = Math.random;
+  /** 命中與暴擊的擲骰走戰場種子亂數源（Q25），不用 Math.random */
+  public hitRandom: () => number = () => services().session.randomSource();
 
   constructor(private readonly context: BattleCombatResolverContext) {}
 
@@ -169,7 +171,9 @@ export class BattleCombatResolver {
     // 隱蔽（弓兵林地 +20%，PROG-2-0201）：防守方的隱蔽讓攻擊方命中率 −隱蔽值，仍受命中下限約束
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
     const defenderStealth = getTerrainTroopEffect(defender.type, defenderCell?.terrain ?? TerrainType.Plain).stealthBonus;
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth;
+    // 場景命中加成（夜襲 -25%，SCN-06）：加在適性與隱蔽之後
+    const sceneAccuracy = tacticBehavior.getAccuracyDelta?.(attacker, this.context.state) ?? 0;
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth + sceneAccuracy;
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -209,6 +213,12 @@ export class BattleCombatResolver {
     }
     if (svc.buff.hasBuff(attacker.id, StatusEffect.Weak)) {
       damage = Math.max(1, Math.floor(damage * WEAK_ATTACK_MULTIPLIER));
+    }
+
+    // 暴擊（SCN-06）：基礎 5% + 場景加成，暴擊時傷害 ×1.5；擲骰走戰場亂數源
+    const critRate = critRateOf(tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0);
+    if (rollCrit(critRate, this.hitRandom)) {
+      damage = critDamageOf(damage);
     }
 
     this.applyUnitDamage(defender, damage, attacker.faction, {
