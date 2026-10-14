@@ -1,4 +1,4 @@
-// @spec-source → WBS v5 OPEN-05 接 OPEN-01（宿命轉蛋接上新手開場流程）；PROG-2-0339（暫定）
+// @spec-source → WBS v5 OPEN-05 接 OPEN-01（宿命轉蛋接上新手開場流程）；PROG-2-0345（暫定）
 /**
  * DestinyOpening — 把宿命轉蛋接上開場流程控制器，純 TS，不依賴 cc。
  *
