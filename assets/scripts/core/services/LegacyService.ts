@@ -202,10 +202,10 @@ export class LegacyService implements SeasonLifecycle {
     }
 
     /** 轉蛋抽到支援卡武將：把 Gacha 來源的教官卡寫進持有清單；沒有新增則不寫存檔 */
-    public async addGachaMentors(drawn: GeneralConfig[], catalog: SupportCatalog, time: GachaMentorTime): Promise<MentorCard[]> {
+    public async addGachaMentors(drawn: GeneralConfig[], catalog: SupportCatalog, time: GachaMentorTime, poolId: string | undefined): Promise<MentorCard[]> {
         await this._ensureReady();
         const cards = await this.getMentorCards();
-        const next = addGachaMentorCards(cards, drawn, catalog, time);
+        const next = addGachaMentorCards(cards, drawn, catalog, time, poolId);
         if (next.length !== cards.length) await this._adapter.set(STORE_MENTOR_CARDS, next);
         return next;
     }

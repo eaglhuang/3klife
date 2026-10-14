@@ -94,16 +94,30 @@ export function mentorCardFromGachaDraw(general: GeneralConfig, support: Support
 }
 
 /**
+ * 支援卡池的 poolId 清單。PM 裁定（2026-10-14）：目前留空，支援卡池設定待企劃補。
+ * 一般武將池（名將池、紅顏池）不產生教官卡，避免與分池規格衝突。
+ */
+export const SUPPORT_CARD_POOL_IDS: readonly string[] = [];
+
+/** 這個卡池是否為支援卡池（只有支援卡池抽到的支援卡武將才會產生 Gacha 教官卡） */
+export function isSupportCardPool(poolId: string | undefined, supportPoolIds: readonly string[] = SUPPORT_CARD_POOL_IDS): boolean {
+    return !!poolId && supportPoolIds.includes(poolId);
+}
+
+/**
  * 把抽到的武將裡有支援卡的，加進教官持有清單（同 uid 保留舊卡與舊來源，不重複新增）。
- * 回傳新陣列，不改傳入的清單。
+ * 只有支援卡池才會加；一般武將池回傳原清單的副本。回傳新陣列，不改傳入的清單。
  */
 export function addGachaMentorCards(
     holdings: readonly MentorCard[],
     drawn: readonly GeneralConfig[],
     catalog: SupportCatalog,
     time: GachaMentorTime,
+    poolId: string | undefined,
+    supportPoolIds: readonly string[] = SUPPORT_CARD_POOL_IDS,
 ): MentorCard[] {
     let next: MentorCard[] = [...holdings];
+    if (!isSupportCardPool(poolId, supportPoolIds)) return next;
     for (const general of drawn) {
         const support = general ? catalog.byGeneralId.get(general.id) : undefined;
         if (!support) continue;

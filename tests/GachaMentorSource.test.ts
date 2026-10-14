@@ -8,6 +8,7 @@ import {
     addGachaMentorCards,
     mentorCardFromGachaDraw,
     parseSupportCatalog,
+    SUPPORT_CARD_POOL_IDS,
 } from '../assets/scripts/core/systems/MentorSupportCatalog';
 import { mentorFromCard } from '../assets/scripts/core/systems/NurtureSystem';
 import type { MentorCard } from '../assets/scripts/core/models/MentorCard';
@@ -20,6 +21,8 @@ const path = require('path') as typeof import('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const TIME = { currentYear: 2, currentSeason: 1 };
+const SUPPORT_POOL = 'SUPPORT_TEST_POOL';
+const GENERAL_POOL = 'GENERAL_STANDARD_01';
 
 function general(id: string, name: string): GeneralConfig {
     return { id, name, faction: 'shu', str: 90, int: 40, lea: 70, pol: 30, cha: 50, luk: 60, hiddenFlags: [], genes: [] } as unknown as GeneralConfig;
@@ -35,9 +38,9 @@ function catalog() {
 export function createGachaMentorSourceSuite(): TestSuite {
     const suite = new TestSuite('GachaMentorSource (轉蛋支援卡來源 PROG-2-0506)');
 
-    suite.test('抽到支援卡武將：產生 Gacha 來源的教官卡，帶支援資料，時間用抽卡當下', () => {
+    suite.test('支援卡池抽到支援卡武將：產生 Gacha 來源的教官卡，帶支援資料，時間用抽卡當下', () => {
         const drawn = [general('zhao-yun', '趙雲')];
-        const cards = addGachaMentorCards([], drawn, catalog(), TIME);
+        const cards = addGachaMentorCards([], drawn, catalog(), TIME, SUPPORT_POOL, [SUPPORT_POOL]);
         assert.equals(1, cards.length);
         assert.equals('Gacha', cards[0].source!);
         assert.equals('mentor-zhao-yun', cards[0].uid);
@@ -47,25 +50,35 @@ export function createGachaMentorSourceSuite(): TestSuite {
     });
 
     suite.test('抽到非支援卡武將：不產生教官卡', () => {
-        const cards = addGachaMentorCards([], [general('cao-cao', '曹操')], catalog(), TIME);
+        const cards = addGachaMentorCards([], [general('cao-cao', '曹操')], catalog(), TIME, SUPPORT_POOL, [SUPPORT_POOL]);
         assert.equals(0, cards.length);
+    });
+
+    suite.test('一般武將池抽到支援卡武將也不產生教官卡（PM 裁定，分池規格）', () => {
+        const cards = addGachaMentorCards([], [general('zhao-yun', '趙雲')], catalog(), TIME, GENERAL_POOL, [SUPPORT_POOL]);
+        assert.equals(0, cards.length);
+    });
+
+    suite.test('支援卡池設定預設留空：任何卡池都不產生', () => {
+        assert.equals(0, SUPPORT_CARD_POOL_IDS.length);
+        assert.equals(0, addGachaMentorCards([], [general('zhao-yun', '趙雲')], catalog(), TIME, SUPPORT_POOL).length);
     });
 
     suite.test('同一武將重複抽到不重複新增；已有的退役來源卡保留原來源', () => {
         const retired: MentorCard = { ...mentorCardFromGachaDraw(general('zhao-yun', '趙雲'), (catalog().byGeneralId.get('zhao-yun'))!, TIME), source: 'Retire' };
-        const cards = addGachaMentorCards([retired], [general('zhao-yun', '趙雲'), general('zhao-yun', '趙雲')], catalog(), TIME);
+        const cards = addGachaMentorCards([retired], [general('zhao-yun', '趙雲'), general('zhao-yun', '趙雲')], catalog(), TIME, SUPPORT_POOL, [SUPPORT_POOL]);
         assert.equals(1, cards.length);
         assert.equals('Retire', cards[0].source!);
     });
 
     suite.test('不改傳入的持有清單', () => {
         const holdings: MentorCard[] = [];
-        addGachaMentorCards(holdings, [general('zhao-yun', '趙雲')], catalog(), TIME);
+        addGachaMentorCards(holdings, [general('zhao-yun', '趙雲')], catalog(), TIME, SUPPORT_POOL, [SUPPORT_POOL]);
         assert.equals(0, holdings.length);
     });
 
     suite.test('轉蛋產生的教官卡可以直接用於培育（帶靈感資料）', () => {
-        const card = addGachaMentorCards([], [general('zhao-yun', '趙雲')], catalog(), TIME)[0];
+        const card = addGachaMentorCards([], [general('zhao-yun', '趙雲')], catalog(), TIME, SUPPORT_POOL, [SUPPORT_POOL])[0];
         const mentor = mentorFromCard(card);
         assert.isTrue(mentor.inspire !== undefined);
         assert.equals(4, mentor.inspire!.events.length);
