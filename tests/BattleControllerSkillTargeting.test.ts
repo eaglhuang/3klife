@@ -541,8 +541,6 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
 
     suite.test('FloodAttack：敵軍會先完成攻擊，再被水流往左推', () => {
         services().initialize();
-        // 命中判定走戰場亂數源；session seed 預設由 Math.random 產生，測試內固定，避免每次執行結果不同
-        services().session.setRandomSource(() => 0);
         const ctrl = new BattleController();
         const playerGeneral = createGeneral('sun-jian', Faction.Player, 'sun-jian-blade');
         const enemyGeneral = createGeneral('zhang-liao', Faction.Enemy, 'zhang-liao-rush');
