@@ -54,6 +54,8 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   private ctrl: IDeployController | null = null;
   private selectedType: TroopType = TroopType.Infantry;
   private selectedUnitName = '';
+  /** 目前選的虎符 id（TRP-13）；選一般兵種時為 null */
+  private selectedTallyId: string | null = null;
   private selectedLane = 0;
   private currentDp = GAME_CONFIG.INITIAL_FOOD;
 
@@ -176,6 +178,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
         });
         this.selectedType = payload.data.unitType as TroopType;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(this.selectedType);
+        this.selectedTallyId = payload.data.tacticId ?? null;
         this.updateSelectionLabels();
       },
     );
@@ -191,6 +194,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
         });
         this.selectedType = payload.data.unitType as TroopType;
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(this.selectedType);
+        this.selectedTallyId = payload.data.tacticId ?? null;
         this.updateSelectionLabels();
         this.beginDrag(payload.ev, this.selectedType);
       },
@@ -324,6 +328,11 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     }
   }
 
+  /** 選到虎符時才帶入 tally 參數（TRP-13）；一般兵種回傳 undefined */
+  private _tallyOptions(): { tally: { tallyId: string } } | undefined {
+    return this.selectedTallyId ? { tally: { tallyId: this.selectedTallyId } } : undefined;
+  }
+
   private onDeployClick(): void {
     if (!this.ctrl) {
       emitDeployDragDebug('DeployComposite', 'deploy-click-without-controller', {
@@ -332,7 +341,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
       });
       return;
     }
-    const outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined);
+    const outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
     emitDeployDragDebug('DeployComposite', 'deploy-click-result', {
       ok: outcome.ok,
       reason: outcome.reason,

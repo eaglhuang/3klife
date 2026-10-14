@@ -43,6 +43,12 @@ export class TroopUnit {
   // 戰鬥狀態緩存 (可用於結算時的狀態，如盾牆加倍)
   public isShieldWallActive = false;
 
+  // 虎符部隊（TRP-13）：出陣時記下虎符與主將；乘數每次結算時依當下格子的地形算
+  public tallyId: string | null = null;
+  public commanderUid: string | null = null;
+  /** (lane, depth) → 攻防乘數；沒有虎符時為 null，戰力不變 */
+  public tallyAffinity: ((lane: number, depth: number) => number) | null = null;
+
   constructor(id: string, type: TroopType, faction: Faction, stats: TroopStats, name?: string) {
     this.id = id;
     this.type = type;
@@ -71,7 +77,17 @@ export class TroopUnit {
   }
 
   public getEffectiveAttack(): number {
-    return Math.max(1, this.attack + this.attackBonus);
+    return Math.max(1, (this.attack + this.attackBonus) * this.getTallyAffinityMod());
+  }
+
+  /** 防禦（不含盾牆、地形等戰鬥中的加成）；虎符適性乘數在這裡套用 */
+  public getEffectiveDefense(): number {
+    return this.defense * this.getTallyAffinityMod();
+  }
+
+  /** 目前站位的虎符適性乘數；不是虎符部隊時為 1 */
+  public getTallyAffinityMod(): number {
+    return this.tallyAffinity ? this.tallyAffinity(this.lane, this.depth) : 1;
   }
 
   public getEffectiveMaxHp(): number {
