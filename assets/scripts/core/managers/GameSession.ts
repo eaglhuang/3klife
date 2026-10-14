@@ -417,14 +417,14 @@ export class GameSession {
 
     /**
      * 結義入名冊：傭兵結義轉永久（好感滿 60 為門檻，扣結義點數）、寫入武將名冊、進入 30 天冷卻、移除欠薪紀錄，並自動存檔。
-     * 失敗時不改任何狀態。bondPoints 由呼叫端傳入，餘額來源待 GCH-06 接上（見 PROG-2-0308）。
+     * 失敗時不改任何狀態。結義點數從 GCH-06 的餘額（bondPoints）扣除。
      */
-    public async bondMercenaryToRoster(uid: string, template: GeneralConfig, bondPoints: number): Promise<RosterBondResult & { rosterAdded?: boolean }> {
+    public async bondMercenaryToRoster(uid: string, template: GeneralConfig): Promise<RosterBondResult & { rosterAdded?: boolean }> {
         const mercenary = this._mercenaries.mercenaries.find((m) => m.uid === uid);
         if (!mercenary) {
             return { ok: false, reason: 'not-found', pointsSpent: 0 };
         }
-        const result = bondMercenaryToRoster(mercenary, template, bondPoints, this._mercenaries.cooldowns, this.mercenaryDay);
+        const result = bondMercenaryToRoster(mercenary, template, this._bondPoints, this._mercenaries.cooldowns, this.mercenaryDay);
         if (!result.ok || !result.mercenary || !result.general || !result.cooldowns) {
             return result;
         }
@@ -434,6 +434,7 @@ export class GameSession {
             cooldowns: result.cooldowns,
             day: this.mercenaryDay,
         };
+        this._bondPoints -= result.pointsSpent;
         const { added } = await this.addGenerals([result.general]);
         return { ...result, rosterAdded: added.length > 0 };
     }

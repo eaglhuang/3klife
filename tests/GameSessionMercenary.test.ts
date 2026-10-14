@@ -33,7 +33,7 @@ export function createGameSessionMercenarySuite(): TestSuite {
     });
 
     // 成功路徑（扣點、入名冊、冷卻）的數值已由 MercenaryRoster.test.ts 覆蓋。
-    // 結義點數餘額來源（GCH-06）未接上，這裡傳入 0 驗證失敗路徑。
+    // 新存檔的結義點數餘額為 0（GCH-06 溢出入帳才會增加），因此驗證點數不足的失敗路徑。
     suite.test('bondMercenaryToRoster：點數不足 R 的 100 點，傭兵與名冊都不變', async () => {
         const session = new GameSession(1);
         session.setMercenaries({
@@ -42,12 +42,13 @@ export function createGameSessionMercenarySuite(): TestSuite {
             cooldowns: [],
         });
         const template = { id: 'gen-merc', name: '測試', faction: 'shu', hp: 1000, rarityTier: 'common' } as unknown as GeneralConfig;
-        const result = await session.bondMercenaryToRoster('merc-1', template, 0);
+        const result = await session.bondMercenaryToRoster('merc-1', template);
         assert.isFalse(result.ok);
         assert.equals('insufficient-points', result.reason!);
         assert.equals('Trial', session.mercenaries.mercenaries[0].status);
         assert.equals(1, session.mercenaries.upkeep.length);
         assert.equals(0, session.roster.length);
+        assert.equals(0, session.bondPoints);
     });
 
     suite.test('startNewGame 會清空傭兵包', () => {
