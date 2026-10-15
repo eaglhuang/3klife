@@ -25,6 +25,14 @@ export class Label {
     static readonly Overflow        = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
     string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
     isBold = false; font: any = null; lineHeight = 0;
+    declare spacingX: number;
+    declare outlineColor: Color;
+    declare outlineWidth: number;
+    declare enableShadow: boolean;
+    declare shadowColor: Color;
+    declare shadowOffset: any;
+    declare shadowBlur: number;
+    declare isItalic: boolean;
     getComponent<T = any>(_type: (new (...args: any[]) => T) | string): T | null { return null; }
 }
 
@@ -44,6 +52,8 @@ export class Layout {
     declare paddingRight: number;
     declare paddingBottom: number;
     declare startAxis: number;
+    declare horizontalDirection: number;
+    declare enabled: boolean;
     updateLayout(_force?: boolean): void { /* mock */ }
 }
 
@@ -52,6 +62,10 @@ export class Button {
     static readonly Transition = { NONE: 0, COLOR: 1, SPRITE: 2, SCALE: 3 };
     transition = 0; interactable = true; enabled = true;
     declare target: any;
+    declare normalSprite: any;
+    declare pressedSprite: any;
+    declare hoverSprite: any;
+    declare disabledSprite: any;
     node: any = null;
 }
 export class Sprite {
@@ -78,6 +92,15 @@ export class Node {
 
     constructor(public name: string = "") {}
     declare position: Vec3;
+    declare activeInHierarchy: boolean;
+    getChildByPath(path: string): Node | null {
+        let cur: Node | null = this;
+        for (const seg of path.split('/').filter(Boolean)) {
+            cur = cur?.children.find(c => c.name === seg) ?? null;
+            if (!cur) return null;
+        }
+        return cur;
+    }
     emit(event: string, arg?: any): void { this.__emit(event, arg); }
     off(event: string, handler?: (arg?: any) => void, _target?: any): void {
         if (!handler) { this._handlers.delete(event); return; }
@@ -231,6 +254,12 @@ export class Graphics {
     fill(): void { /* mock */ }
     stroke(): void { /* mock */ }
     roundRect(_x: number, _y: number, _w: number, _h: number, _r: number): void { /* mock */ }
+    moveTo(_x: number, _y: number): void { /* mock */ }
+    lineTo(_x: number, _y: number): void { /* mock */ }
+    close(): void { /* mock */ }
+    rect(_x: number, _y: number, _w: number, _h: number): void { /* mock */ }
+    circle(_x: number, _y: number, _r: number): void { /* mock */ }
+    ellipse(_x: number, _y: number, _rx: number, _ry: number): void { /* mock */ }
 }
 export class ParticleSystem {
     startColor: any; play(): void {}
@@ -297,3 +326,9 @@ export declare const utils: any;
 export declare const primitives: any;
 export declare const v3: any;
 export class GradientRange { color = new Color(); }
+
+export class Size { constructor(public width = 0, public height = 0) {} }
+export class Vec2 { constructor(public x = 0, public y = 0) {} }
+export class Mask { [key: string]: any; }
+export class ScrollView { [key: string]: any; }
+export class ScrollBar { [key: string]: any; }
