@@ -22,6 +22,10 @@ export interface BattleSkillExecutionContext {
   getDefenseZoneMultiplier?(unit: TroopUnit): number;
   /** 新增持續防禦區（PROG-2-0761） */
   addFormationZone?(zone: FormationZone): void;
+  /** 位移：目標格是否可站立（PROG-2-0767）；舊測試 context 可不提供，視為不可位移 */
+  isCellFreeForPush?(lane: number, depth: number): boolean;
+  /** 位移：把單位搬到新格（PROG-2-0767） */
+  pushUnitTo?(unit: TroopUnit, lane: number, depth: number): void;
   /** 把指定格設為火場等持續傷害格（PROG-2-0757）；舊測試 context 可不提供 */
   setTileHazard?(cell: { lane: number; depth: number }, damagePerTurn: number): void;
   applyDamage(unit: TroopUnit, damage: number, casterFaction: Faction): void;
