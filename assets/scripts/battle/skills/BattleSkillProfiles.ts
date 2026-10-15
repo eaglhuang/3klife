@@ -2,7 +2,9 @@ import { StatusEffect } from '../../core/config/Constants';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';
 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
-export type BattleSkillEffectKind = 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset';
+export type BattleSkillEffectKind =
+  | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
+  | 'push' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -30,6 +32,20 @@ export interface BattleSkillProfile {
   excludeCenter?: boolean;
   healRatio?: number;
   healFloor?: number;
+  /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
+  chargeMultiplier?: number;
+  /** 毒箭：每回合扣目標最大 HP 的比例（規格 10%） */
+  dotMaxHpRatio?: number;
+  /** 緩速：移動範圍減少的格數（規格 1） */
+  slowAmount?: number;
+  /** 鼓舞：士氣加成（規格 +20） */
+  moraleBonus?: number;
+  /** 結姻連射：額外攻擊次數（規格 +1） */
+  extraHits?: number;
+  /** 強制位移的格數（規格 1～2） */
+  pushSteps?: number;
+  /** 定身回合數（規格 1） */
+  rootTurns?: number;
   statusEffect?: StatusEffect;
   statusTurns?: number;
   linkShareRatio?: number;
