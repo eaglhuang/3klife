@@ -51,6 +51,9 @@ export interface DamageContext {
 }
 
 export class FormulaSystem {
+  /** random：單挑暴擊／閃避的擲骰來源；正式環境傳存檔亂數源（Q25） */
+  constructor(private readonly _random: () => number = Math.random) {}
+
   /**
    * 武將化身（單挑）攻擊力計算。
    * - 物理型（有 str + lea）：STR × 0.7 + LEA × 0.3  ← 對應 E-12
@@ -115,7 +118,7 @@ export class FormulaSystem {
    * 僅用於武將化身單挑對成0（resolveAcceptedGeneralDuel）。
    */
   public rollCrit(luk = 0): boolean {
-    return Math.random() < this.getCritChance(luk);
+    return this._random() < this.getCritChance(luk);
   }
 
   /**
@@ -123,7 +126,7 @@ export class FormulaSystem {
    * 僅用於武將化身對戰（對其中一次攻擊進行閃躲判定）。
    */
   public rollDodge(luk = 0): boolean {
-    return Math.random() < this.getDodgeChance(luk);
+    return this._random() < this.getDodgeChance(luk);
   }
 
   public getCounterMultiplier(attackerType: TroopType, defenderType: TroopType): number {

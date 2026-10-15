@@ -1714,12 +1714,12 @@ export class GameSession {
     /**
      * 自動培育（NUR-14 接線）：解鎖 → 券 → 會話（須進行中）→ 解析排程 → 扣券 → 跑完整季 → 寫回培育狀態並自動存檔。
      * 畢業仍由玩家呼叫 graduate；自動會話的評級上限已在結算時套用。
-     * manualSchedule 為上一次手動排程（缺值時平均分配到最低屬性）；random 預設 Math.random。
+     * manualSchedule 為上一次手動排程（缺值時平均分配到最低屬性）；random 預設走存檔亂數源（Q25）。
      */
     public async runAutoNurture(
         childId: string,
         manualSchedule?: readonly NurtureAction[],
-        random: RandomSource = Math.random,
+        random: RandomSource = () => this._random(),
     ): Promise<{ ok: true; logs: NurtureRoundLog[] } | { ok: false; blocked: AutoNurtureBlockReason | 'NOT_NURTURING' | 'SESSION_ENDED' }> {
         const gate = canStartAutoNurture(isAutoNurtureUnlocked(this._mainlineNurtureClearedOnce), this._autoNurtureTickets);
         if (!gate.ok) return { ok: false, blocked: gate.blocked! };

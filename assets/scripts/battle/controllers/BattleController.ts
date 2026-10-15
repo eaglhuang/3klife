@@ -108,7 +108,7 @@ export class BattleController {
   private readonly turnManager = new BattleTurnManager();
   /** 主將忠誠（TRP-09）；null 表示沒有紀錄，不拒令 */
   private orderLoyalty: number | null = null;
-  private orderRand: () => number = Math.random;
+  private orderRand: () => number = () => services().session.randomSource();
   /** 本回合是否拒絕部署命令（每回合擲一次） */
   private orderRefusedThisTurn = false;
   private readonly flowStateMachine = new BattleFlowStateMachine();
@@ -116,7 +116,7 @@ export class BattleController {
   /** 因子 → 戰場效果對應表（PROG-2-0584）；讀不到時為空表，部隊不會取得任何因子效果 */
   private factorEffectMap: FactorBattleEffectMap = { effects: {} };
   public readonly state = new BattleState();
-  private readonly enemyAi = new EnemyAI();
+  private readonly enemyAi = new EnemyAI(() => services().session.randomSource());
   private pendingAdvanceTurnResult: BattleResult | null = null;
   private pendingEnemyTurnResult: BattleResult | null = null;
   private tileBuffConfig: BattleTileBuffConfig = DEFAULT_BATTLE_TILE_BUFF_CONFIG;
@@ -397,9 +397,9 @@ export class BattleController {
    * 主將忠誠對命令的影響（TRP-09）：忠誠 < 30 時每回合 25% 拒絕執行部署命令。
    * loyalty 為 null 表示沒有忠誠紀錄，不拒令。rand 可注入（測試用）。
    */
-  public configureOrderLoyalty(loyalty: number | null, rand: () => number = Math.random): void {
+  public configureOrderLoyalty(loyalty: number | null, rand?: () => number): void {
     this.orderLoyalty = loyalty;
-    this.orderRand = rand;
+    this.orderRand = rand ?? (() => services().session.randomSource());
     this.orderRefusedThisTurn = this.rollOrderRefusal();
   }
 

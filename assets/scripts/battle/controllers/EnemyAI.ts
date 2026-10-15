@@ -23,6 +23,9 @@ const AI_USABLE_TYPES: TroopType[] = [
 ];
 
 export class EnemyAI {
+  /** random：部署位置與兵種的擲骰來源；正式環境傳存檔亂數源（Q25） */
+  constructor(private readonly _random: () => number = Math.random) {}
+
   /**
    * 根據當前棋盤狀態與可用 DP 決定本回合部署。
    * 策略：以計數器兵種對抗玩家最多的兵種；無對手時隨機。
@@ -43,7 +46,7 @@ export class EnemyAI {
       if (remaining < cost) break;
       remaining -= cost;
 
-      const lane = freeLanes[Math.floor(Math.random() * freeLanes.length)];
+      const lane = freeLanes[Math.floor(this._random() * freeLanes.length)];
       decisions.push({ type, lane });
     }
 
@@ -72,14 +75,14 @@ export class EnemyAI {
 
     // 找出可購買的對抗兵種（TROOP_COUNTER_MAP[counter] === mostCommon 表示 counter 剋 mostCommon）
     // 僅有 AI_COUNTER_STRATEGY_CHANCE 的機率才嘗試對抗；將軍不是全知全能
-    if (mostCommon && Math.random() < GAME_CONFIG.AI_COUNTER_STRATEGY_CHANCE) {
+    if (mostCommon && this._random() < GAME_CONFIG.AI_COUNTER_STRATEGY_CHANCE) {
       for (const aiType of affordable) {
         if (TROOP_COUNTER_MAP[aiType] === mostCommon) return aiType;
       }
     }
 
     // 無法剋制時隨機選
-    return affordable[Math.floor(Math.random() * affordable.length)];
+    return affordable[Math.floor(this._random() * affordable.length)];
   }
 
   private getFreeLanes(state: BattleState, deployDepth: number): number[] {
