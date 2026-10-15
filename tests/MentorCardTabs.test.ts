@@ -7,6 +7,7 @@ import { TestSuite, assert } from './TestRunner';
 import {
     buildMentorCardTabView,
     clampMentorStar,
+    mentorToCardData,
     eventGroupRequiredStar,
     MENTOR_CARD_TAB_LABELS,
     type MentorCardData,
@@ -74,6 +75,15 @@ export function createMentorCardTabsSuite(): TestSuite {
         assert.equals(0, clampMentorStar(NaN));
         assert.equals(2, clampMentorStar(2.9));
         assert.equals(0, eventGroupRequiredStar(1));
+    });
+
+    suite.test('培育教官轉詳情資料：星等帶入，支援效果一列，事件與小插曲暫為空', () => {
+        const data = mentorToCardData({ tpBonus: 20, specialty: 'str', stars: 2 });
+        assert.equals(2, data.star);
+        assert.equals(1, data.effects.length);
+        assert.equals(0, data.events.length);
+        assert.equals(0, data.stories.length);
+        assert.isTrue(data.effects[0].label.includes('TP 加成 +20%'));
     });
 
     return suite;

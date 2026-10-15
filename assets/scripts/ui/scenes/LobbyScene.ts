@@ -410,6 +410,10 @@ export class LobbyScene extends Component {
             { buttonId: 'btnFateDefy', handler: act(() => flow.chooseFate('defy')) },
             { buttonId: 'btnStartNurture', handler: act(() => flow.startNurture()) },
             { buttonId: 'btnAutoNurture', handler: act(() => flow.autoNurture()) },
+            { buttonId: 'btnMentorDetail', handler: () => {
+                const detail = flow.mentorDetail();
+                if (detail) { this.openMentorCardDetail(detail.card, detail.title); }
+            } },
             ...trainBindings,
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
