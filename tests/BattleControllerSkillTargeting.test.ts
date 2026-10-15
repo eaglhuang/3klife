@@ -58,6 +58,19 @@ function createEnemyUnit(id: string, lane: number, depth: number): TroopUnit {
     return unit;
 }
 
+/**
+ * 讓戰場固定，位置斷言才不會隨機偶發失敗：
+ * - freezeBattleRandomness（initBattle 前呼叫）：存檔亂數源固定為 0；地塊增益位置、落石／暴擊等判定都走它。
+ * - silenceEnemyDeploy（initBattle 後呼叫）：敵方糧草歸零。EnemyAI 部署用 Math.random，隨機部署的敵軍會佔位或擋路。
+ */
+function freezeBattleRandomness(): void {
+    services().session.setRandomSource(() => 0);
+}
+
+function silenceEnemyDeploy(ctrl: BattleController): void {
+    (ctrl as unknown as { turnManager: { enemyFood: number } }).turnManager.enemyFood = 0;
+}
+
 export function createBattleControllerSkillTargetingSuite(): TestSuite {
     const suite = new TestSuite('BattleControllerSkillTargeting');
 
@@ -541,10 +554,12 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
 
     suite.test('FloodAttack：敵軍會先完成攻擊，再被水流往左推', () => {
         services().initialize();
+        freezeBattleRandomness();
         const ctrl = new BattleController();
         const playerGeneral = createGeneral('sun-jian', Faction.Player, 'sun-jian-blade');
         const enemyGeneral = createGeneral('zhang-liao', Faction.Enemy, 'zhang-liao-rush');
         ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.FloodAttack);
+        silenceEnemyDeploy(ctrl);
         playerGeneral.currentSp = 0;
         enemyGeneral.currentSp = 0;
 
@@ -558,8 +573,9 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         striker.moveTo(2, 5);
         ctrl.state.addUnit(striker);
 
+        // 血量要夠厚：暴擊也打不死，攻擊後敵軍才會留在原深度；目標死亡時敵軍會繼續前進，斷言就不成立
         const target = new TroopUnit('player-target', TroopType.Infantry, Faction.Player, {
-            hp: 100,
+            hp: 1000,
             attack: 20,
             defense: 0,
             moveRange: 0,
@@ -571,17 +587,19 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         const result = ctrl.resolveEnemyTurn();
 
         assert.equals('ongoing', result);
-        assert.isTrue(target.currentHp < 100);
+        assert.isTrue(target.currentHp < 1000);
         assert.equals(1, striker.lane);
         assert.equals(5, striker.depth);
     });
 
     suite.test('FloodAttack：敵軍被推到最左側邊界時會先前進一格再半血', () => {
         services().initialize();
+        freezeBattleRandomness();
         const ctrl = new BattleController();
         const playerGeneral = createGeneral('sun-jian', Faction.Player, 'sun-jian-blade');
         const enemyGeneral = createGeneral('zhang-liao', Faction.Enemy, 'zhang-liao-rush');
         ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.FloodAttack);
+        silenceEnemyDeploy(ctrl);
         playerGeneral.currentSp = 0;
         enemyGeneral.currentSp = 0;
 
@@ -605,10 +623,12 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
 
     suite.test('FloodAttack：敵軍回合結束前會檢查 river current，水流格上的敵軍會先前進一格再被推走', () => {
         services().initialize();
+        freezeBattleRandomness();
         const ctrl = new BattleController();
         const playerGeneral = createGeneral('sun-jian', Faction.Player, 'sun-jian-blade');
         const enemyGeneral = createGeneral('zhang-liao', Faction.Enemy, 'zhang-liao-rush');
         ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.FloodAttack);
+        silenceEnemyDeploy(ctrl);
 
         const rider = new TroopUnit('enemy-rider', TroopType.Cavalry, Faction.Enemy, {
             hp: 100,
@@ -644,10 +664,12 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         Math.random = () => 0;
         try {
             services().initialize();
+            freezeBattleRandomness();
             const ctrl = new BattleController();
             const playerGeneral = createGeneral('xu-huang', Faction.Player, 'xu-huang-crush');
             const enemyGeneral = createGeneral('ma-chao', Faction.Enemy, 'ma-chao-charge');
             ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.RockSlide);
+            silenceEnemyDeploy(ctrl);
 
             const rockEffect = ctrl.state.getTileEffect(2, 4);
             assert.isDefined(rockEffect);
