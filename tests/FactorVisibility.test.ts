@@ -5,9 +5,9 @@ import { getFactorVisibility, isGeneFactorVisible } from '../assets/scripts/core
 export function createFactorVisibilitySuite(): TestSuite {
     const suite = new TestSuite('FactorVisibility (FUL-01 因子可見性)');
     for (const [level, colors] of [
-        [1, ['blue', 'pink']], [19, ['blue', 'pink']],
-        [20, ['blue', 'pink', 'green', 'white']], [44, ['blue', 'pink', 'green', 'white']],
-        [45, ['blue', 'pink', 'green', 'purple', 'white', 'red']],
+        [1, ['blue', 'pink']], [20, ['blue', 'pink']],
+        [21, ['blue', 'pink', 'green', 'white']], [45, ['blue', 'pink', 'green', 'white']],
+        [46, ['blue', 'pink', 'green', 'purple', 'white', 'red']],
     ] as const) {
         suite.test(`等級 ${level} 的可見色系與鎖定門檻`, () => {
             const result = getFactorVisibility(level);
@@ -30,15 +30,18 @@ export function createFactorVisibilitySuite(): TestSuite {
         }
     });
     suite.test('單因子門檻優先，零門檻不被忽略；null 回到色系', () => {
-        assert.isTrue(isGeneFactorVisible({ type: 'red', discoveryLevel: 5 }, 5));
+        assert.isTrue(isGeneFactorVisible({ type: 'red', discoveryLevel: 5 }, 6));
+        assert.isFalse(isGeneFactorVisible({ type: 'red', discoveryLevel: 5 }, 5), '> 門檻才可見');
         assert.isFalse(isGeneFactorVisible({ type: 'blue', discoveryLevel: 50 }, 49));
-        assert.isTrue(isGeneFactorVisible({ type: 'blue', discoveryLevel: 50 }, 50));
+        assert.isFalse(isGeneFactorVisible({ type: 'blue', discoveryLevel: 50 }, 50));
+        assert.isTrue(isGeneFactorVisible({ type: 'blue', discoveryLevel: 50 }, 51));
         assert.isTrue(isGeneFactorVisible({ type: 'purple', discoveryLevel: 0 }, 1));
         assert.isFalse(isGeneFactorVisible({ type: 'red', discoveryLevel: null }, 44));
     });
     suite.test('沿用顏色正規化；未知色系視為 Lv1（PROG-2-0513 PM 裁定，與 FactorMask 一致）', () => {
         assert.isTrue(isGeneFactorVisible({ type: ' BLUE ' }, 1));
-        assert.isTrue(isGeneFactorVisible({ type: '綠' }, 20));
+        assert.isTrue(isGeneFactorVisible({ type: '綠' }, 21));
+        assert.isFalse(isGeneFactorVisible({ type: '綠' }, 20));
         for (const type of ['unknown', 'toString', '', null, undefined]) {
             assert.isTrue(isGeneFactorVisible({ type }, 1), `${String(type)} 在 Lv1 可見`);
             assert.isTrue(isGeneFactorVisible({ type, discoveryLevel: 1 }, 1));
@@ -47,7 +50,8 @@ export function createFactorVisibilitySuite(): TestSuite {
     });
     suite.test('不改輸入、回傳不共享，無效單因子門檻鎖定', () => {
         const gene = Object.freeze({ type: 'red', discoveryLevel: 45 });
-        assert.isTrue(isGeneFactorVisible(gene, 45));
+        assert.isFalse(isGeneFactorVisible(gene, 45));
+        assert.isTrue(isGeneFactorVisible(gene, 46));
         assert.equals(45, gene.discoveryLevel);
         const first = getFactorVisibility(1);
         first.red = { status: 'visible', visible: true };

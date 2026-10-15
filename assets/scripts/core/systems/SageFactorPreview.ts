@@ -13,6 +13,7 @@
  */
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';
+import { isFactorLevelUnlocked } from './FactorVisibility';
 
 /**
  * 回傳仍鎖住、且目前發現等級還看不到的因子色系（方向）。
@@ -27,7 +28,7 @@ export function previewLockedFactorDirections(general: GeneralConfig | undefined
         const color = normalizeFactorColor(gene.type);
         if (!color) continue;
         const required = gene.discoveryLevel ?? FACTOR_DISCOVERY_LEVEL[color];
-        if (required <= level) continue;
+        if (isFactorLevelUnlocked(level, required)) continue;
         if (!out.includes(color)) out.push(color);
     }
     return out;

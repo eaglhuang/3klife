@@ -40,7 +40,7 @@ export function createSageOracleDirectionHintSuite(): TestSuite {
 
     suite.test('等級到門檻後提示消失，節點不啟用', () => {
         const g = person([{ id: 'b', type: 'green', isLocked: true }]);
-        const view = controllerFor(g, 20).getView();
+        const view = controllerFor(g, 21).getView();
         assert.equals('', view.texts.directionHint);
         assert.isFalse(view.actives.directionHint);
     });

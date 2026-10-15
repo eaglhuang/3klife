@@ -846,6 +846,33 @@
                   },
                   {
                     "type": "button",
+                    "name": "BtnMentorDetail",
+                    "id": "btnMentorDetail",
+                    "widget": {
+                      "top": 232,
+                      "right": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnMentorDetailLabel",
+                        "id": "mentorDetailLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "教官詳情",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
                     "name": "BtnAutoNurture",
                     "id": "btnAutoNurture",
                     "widget": {

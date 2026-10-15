@@ -44,7 +44,7 @@ export function getFactorVisibility(playerDiscoveryLevel: number): Record<Factor
     const result = {} as Record<FactorColor, FactorVisibility>;
     for (const color of Object.keys(FACTOR_DISCOVERY_LEVEL) as FactorColor[]) {
         const requiredLevel = FACTOR_DISCOVERY_LEVEL[color];
-        result[color] = level >= requiredLevel
+        result[color] = isFactorLevelUnlocked(level, requiredLevel)
             ? { status: 'visible', visible: true }
             : { status: 'locked', visible: false, requiredLevel };
     }
@@ -79,7 +79,16 @@ export function factorStageText(playerDiscoveryLevel: number): string {
  * 單一因子是否看得到（發現等級）。無效門檻（NaN / Infinity）不可見；不發事件、不修改輸入。
  * 生效與否不在這裡判定，見 FactorMask 的 active。
  */
+/**
+ * 因子階段解鎖判定（PM 裁定 B，LUK-04）：門檻數值保留，判定為「等級 > 門檻」。
+ * 門檻 ≤ 1 的色系（藍 / 粉）視為 Lv1 起即可見，對應規格「Lv1~20 只見藍粉」。
+ */
+export function isFactorLevelUnlocked(playerLevel: number, requiredLevel: number): boolean {
+    if (requiredLevel <= 1) return playerLevel >= 1;
+    return playerLevel > requiredLevel;
+}
+
 export function isGeneFactorVisible(gene: GeneVisibilityInput, playerDiscoveryLevel: number): boolean {
     const required = requiredDiscoveryLevel(gene);
-    return Number.isFinite(required) && normalizedDiscoveryLevel(playerDiscoveryLevel) >= required;
+    return Number.isFinite(required) && isFactorLevelUnlocked(normalizedDiscoveryLevel(playerDiscoveryLevel), required);
 }

@@ -30,12 +30,29 @@ export type AgingGeneral = GeneralConfig & {
     redGeneLevel?: number;
 };
 
-export type AgingEventType = 'reached-retirement-age' | 'died';
+export type AgingEventType = 'reached-retirement-age' | 'died' | 'entered-growth-stage';
+
+/** 成長階段（LIFE-13 劇本句，PROG-2-0800）：起點年齡含本身；對應 LifeScriptCopy 的 grow-up / prime / elder */
+export type LifeGrowthStage = 'grow-up' | 'prime' | 'elder';
+
+/** 成長階段起點（暫定）：少年 5 歲、壯年巔峰 40 歲、老年 55 歲；青年 15 歲沒有劇本句 */
+export const LIFE_GROWTH_STAGE_STARTS: ReadonlyArray<readonly [LifeGrowthStage, number]> = [
+    ['grow-up', 5], ['prime', 40], ['elder', 55],
+];
+
+/** 本季增齡從 previousAge 到 nextAge 時跨過的成長階段（起點 > previousAge 且 ≤ nextAge） */
+export function growthStagesCrossed(previousAge: number, nextAge: number): LifeGrowthStage[] {
+    return LIFE_GROWTH_STAGE_STARTS
+        .filter(([, start]) => previousAge < start && start <= nextAge)
+        .map(([stage]) => stage);
+}
 
 export interface AgingEvent {
     type: AgingEventType;
     generalId: string;
     age: number;
+    /** 只有 entered-growth-stage 事件會帶 */
+    stage?: LifeGrowthStage;
 }
 
 /** 回傳 [0, 1) 的亂數來源；測試時可注入固定序列 */
@@ -94,6 +111,10 @@ export function ageGeneralsOneSeason(
 
         if (previousAge < RETIREMENT_AGE && general.age >= RETIREMENT_AGE) {
             events.push({ type: 'reached-retirement-age', generalId: general.id, age: general.age });
+        }
+
+        for (const stage of growthStagesCrossed(previousAge, general.age)) {
+            events.push({ type: 'entered-growth-stage', generalId: general.id, age: general.age, stage });
         }
 
         const chance = deathChancePerSeason(general.age, general.maxLifespan);

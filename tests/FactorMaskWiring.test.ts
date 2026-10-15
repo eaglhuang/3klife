@@ -15,13 +15,13 @@ export function createFactorMaskWiringSuite(): TestSuite {
     const suite = new TestSuite('FactorMaskWiring (PROG-2-0275 因子遮罩接線)');
 
     suite.test('結緣用的因子文字：低等級只看得到藍因子名稱，高發現等級後綠因子也顯示', () => {
-        assert.equals(JSON.stringify(['藍因子甲', '??? (Lv20 解鎖)']), JSON.stringify(factorMaskLabels([blue, green], 1)));
-        assert.equals(JSON.stringify(['藍因子甲', '綠因子乙']), JSON.stringify(factorMaskLabels([blue, green], 20)));
+        assert.equals(JSON.stringify(['藍因子甲', '??? (Lv21 解鎖)']), JSON.stringify(factorMaskLabels([blue, green], 1)));
+        assert.equals(JSON.stringify(['藍因子甲', '綠因子乙']), JSON.stringify(factorMaskLabels([blue, green], 21)));
     });
 
     suite.test('詳情因子槽：傳入發現等級後，看不到的因子顯示遮罩並加鎖頭', () => {
         const text = formatGene(2, green, 5);
-        assert.contains(text, '??? (Lv20 解鎖)');
+        assert.contains(text, '??? (Lv21 解鎖)');
         assert.contains(text, '🔒');
     });
 

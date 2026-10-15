@@ -18,6 +18,7 @@ import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { MentorCard } from '../../core/models/MentorCard';
 import type { NurtureBlockReason, NurtureService } from '../../core/services/NurtureService';
+import { mentorToCardData, type MentorCardData } from '../../core/systems/MentorCardTabs';
 import type { UnveilingService } from '../../core/services/UnveilingService';
 import {
     failureRateForVigor,
@@ -307,6 +308,7 @@ export class NurtureFlowController {
         };
         for (const kind of TRAINING_KINDS) enabled[`btnTrain_${kind}`] = false;
         enabled.btnAutoNurture = false;
+        enabled.btnMentorDetail = false;
 
         if (!child) {
             actives.flowEmptyHint = true;
@@ -363,8 +365,22 @@ export class NurtureFlowController {
         enabled.btnRest = true;
         for (const kind of TRAINING_KINDS) enabled[`btnTrain_${kind}`] = true;
         enabled.btnAutoNurture = !!this._deps.autoNurture;
+        enabled.btnMentorDetail = session.mentors.length > 0;
+        texts.mentorDetailLabel = '教官詳情';
         texts.autoNurtureLabel = '自動培育整季';
         return { mode: 'train', childId: child.id, texts, actives, enabled };
+    }
+
+    /**
+     * 教官詳情入口（MENT-13）：回傳目前子嗣第一位教官的詳情資料；沒有教官時回傳 null。
+     * 畫面端拿到後呼叫 LobbyScene.openMentorCardDetail。
+     */
+    mentorDetail(): { title: string; card: MentorCardData } | null {
+        const child = this._resolveSelected();
+        const session = child ? this._deps.nurture.getSession(child.id) : null;
+        const mentor = session?.mentors[0];
+        if (!mentor) return null;
+        return { title: mentor.name, card: mentorToCardData(mentor) };
     }
 
     /**

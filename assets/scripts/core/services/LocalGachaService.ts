@@ -11,7 +11,7 @@ export interface LocalGachaRollOptions {
     factionFilter?: 'all' | 'player' | 'enemy';
     /** Up 武將 id 名單（規格：SSR 70% / SR 80% 從 Up 抽）；沒有 Up 時所有桶都走常設 */
     upGeneralIds?: readonly string[];
-    /** 測試用隨機來源；正式環境用 Math.random */
+    /** 測試用隨機來源；沒指定時用建構時的預設亂數源 */
     rng?: () => number;
 }
 
@@ -154,7 +154,11 @@ export class LocalGachaService {
     /** 快取對應的存檔版本號；和存檔端現在的版本不同就代表快取過期 */
     private _syncedRevision: number | undefined;
 
-    constructor(private readonly _saveStore: GachaSaveStore | null = null) {}
+    /** defaultRng：沒指定 options.rng 時用的亂數源；正式環境傳存檔亂數源（Q25），讀檔不能重抽 */
+    constructor(
+        private readonly _saveStore: GachaSaveStore | null = null,
+        private readonly _defaultRng: () => number = Math.random,
+    ) {}
 
     public isSinglePlayerModeEnabled(): boolean {
         return this._singlePlayerModeEnabled;
@@ -280,7 +284,7 @@ export class LocalGachaService {
         this._assertSufficientCurrency(request.currencyKey, cost);
 
         const pool = buildGachaPool(candidates, request.options?.upGeneralIds ?? []);
-        const rng = request.options?.rng ?? Math.random;
+        const rng = request.options?.rng ?? this._defaultRng;
         let pity = normalizeGachaPity(this._pityBookOf()[request.poolId]);
 
         const results: LocalGachaResultEntry[] = [];
