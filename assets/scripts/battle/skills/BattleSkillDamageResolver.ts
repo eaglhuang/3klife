@@ -21,7 +21,8 @@ export class BattleSkillDamageResolver {
     stageIndex = 0,
   ): number {
     const scaledAttack = this.resolveScaledAttack(profile, caster, hitIndex);
-    const rawDefense = profile.ignoreDefense ? 0 : target.getEffectiveDefense() * (target.isShieldWallActive ? 2 : 1);
+    const zoneMultiplier = context.getDefenseZoneMultiplier?.(target) ?? 1;
+    const rawDefense = profile.ignoreDefense ? 0 : target.getEffectiveDefense() * (target.isShieldWallActive ? 2 : 1) * zoneMultiplier;
     const penetration = profile.defensePenetrationRatio ?? 0;
     const defenderDefense = Math.floor(rawDefense * (1 - penetration));
 

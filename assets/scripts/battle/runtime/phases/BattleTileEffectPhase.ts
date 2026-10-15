@@ -2,6 +2,7 @@ import { Faction } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
+import { advanceFormationZonesOf } from '../../shared/FormationZone';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -26,6 +27,10 @@ export interface BattleTileEffectPhaseContext {
 
 export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseContext): void {
   const svc = services();
+  advanceFormationZonesOf(context.state.formationZones, context.actingFaction, (casterUnitId) => {
+    const caster = context.state.units.get(casterUnitId);
+    return !!caster && !caster.isDead();
+  });
   const killed: TroopUnit[] = [];
   const killedIds = new Set<string>();
 
