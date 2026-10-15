@@ -28,10 +28,6 @@ const ENGINE_TYPES = [
  * 列為已知例外、待 PM 裁定：改資料為引擎支援的 type，或補引擎分支。修正後須從此清單移除。
  */
 const KNOWN_UNHANDLED: Record<string, string> = {
-    sprite: '建議改為 image（待 PM 裁定）',
-    Toggle: '建議改為 button 並處理選取狀態（待 PM 裁定）',
-    popup: '建議改為 panel 或 container（待 PM 裁定）',
-    shadow: '僅出現在 parchment-panel 碎片，建議改為 panel（待 PM 裁定）',
 };
 
 /**
