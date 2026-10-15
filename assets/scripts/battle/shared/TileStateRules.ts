@@ -1,4 +1,4 @@
-import type { TileEffect } from '../models/BattleState';
+import type { TileEffect, TileEffectState } from '../models/BattleState';
 
 /**
  * 格子狀態四類（WBS GRD-01，血統與戰場格子規格）：
@@ -20,6 +20,13 @@ export const TILE_STATE_RULES: Readonly<Record<TileStateKind, TileStateRule>> = 
   'force-move': { kind: 'force-move', damagesOnEnter: false, pushesOnEnter: true, hidesOnEnter: false },
   stealth: { kind: 'stealth', damagesOnEnter: false, pushesOnEnter: false, hidesOnEnter: true },
 };
+
+/** 固定地形格（掩體、營帳）：火場等暫時性格子狀態不覆蓋（PROG-2-0758，PM 暫定） */
+const FIXED_TILE_STATES: ReadonlySet<TileEffectState> = new Set<TileEffectState>(['ambush-field', 'scene-camp']);
+
+export function isFixedTileState(state: TileEffectState): boolean {
+  return FIXED_TILE_STATES.has(state);
+}
 
 /** 由 TileEffect 欄位推導四類之一；沒有效果或只是裝飾的格子為 normal。 */
 export function tileStateKindOf(effect: TileEffect | null | undefined): TileStateKind {
