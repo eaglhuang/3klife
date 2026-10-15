@@ -84,7 +84,8 @@ export function createDestinyPoolSuite(): TestSuite {
     suite.test('尚未鎖定（只選定未確認／只抽未選）不能開新局，名冊不被動到', async () => {
         const options = destinyOptionsFromConfig(heroPoolConfig());
         const rolled = rollDestinyPool(createDestinyGachaState(), options, () => 0.2).state;
-        const selected = selectDestinyGacha(rolled, rolled.rolled[0], options).state;
+        // 真實設定 confirmRequired=false 會在選擇時自動鎖定，這裡要「已選未鎖」狀態所以強制要求確認
+        const selected = selectDestinyGacha(rolled, rolled.rolled[0], { ...options, confirmRequired: true }).state;
         for (const state of [createDestinyGachaState(), rolled, selected]) {
             const session = newSession();
             let failed = false;
