@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-15T23-25-25-175Z-claim-7fd74f2bd58e",
+  "taskId": "PROG-2-0132",
+  "action": "claim",
+  "actorId": "codex-gpt-6",
+  "sessionId": "session-20261015232519-codex-gpt-6-PROG-2-0132-7003aa4b37",
+  "fromStatus": "ready",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0132.json",
+  "taskSha256": "sha256:d9037aa02dac0ebe8636d53e8a9b7708b2736924016aab80972d8580d4cac06b",
+  "createdAt": "2026-10-15T23:25:25.175Z",
+  "command": "node atm.mjs tasks claim"
+}
