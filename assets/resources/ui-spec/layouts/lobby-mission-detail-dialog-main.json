@@ -803,7 +803,7 @@
                 "layout": { "type": "horizontal", "spacing": 12 },
                 "children": [
                   {
-                    "type": "Toggle",
+                    "type": "toggle",
                     "name": "AiDelegateToggle",
                     "id": "aiDelegateToggle",
                     "width": 168,

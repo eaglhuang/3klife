@@ -317,6 +317,7 @@ export class UIPreviewBuilder extends Component {
             case 'panel':           await this.nodeFactory.buildPanel(node, spec);        break;
             case 'label':           await this.nodeFactory.buildLabel(node, spec);        break;
             case 'button':          await this.nodeFactory.buildButton(node, spec);       break;
+            case 'toggle':          await this.nodeFactory.buildToggle(node, spec);       break;
             case 'scroll-list':
             case 'scroll-view': {
                 let scrollW = w;

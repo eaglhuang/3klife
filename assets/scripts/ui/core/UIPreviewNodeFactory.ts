@@ -15,7 +15,7 @@
  *
  * Unity 對照：相當於 UI 元件工廠（UIFactory / UIComponentBuilder helper class）
  */
-import { Node, Label, Sprite, UITransform, Widget, Layout, ScrollView, ScrollBar, Color, Button, Mask } from 'cc';
+import { Node, Label, Sprite, UITransform, Widget, Layout, ScrollView, ScrollBar, Color, Button, Toggle, Mask } from 'cc';
 import { SolidBackground } from '../components/SolidBackground';
 import { UISkinResolver } from './UISkinResolver';
 import { UIPreviewStyleBuilder } from './UIPreviewStyleBuilder';
@@ -121,7 +121,21 @@ export class UIPreviewNodeFactory {
     async buildButton(node: Node, spec: UILayoutNodeSpec): Promise<void> {
         const button = node.getComponent(Button) || node.addComponent(Button);
         button.target = node;
+        await this._buildButtonVisuals(node, spec, button);
+    }
 
+    /**
+     * 建構勾選切換（Toggle）。Cocos Toggle 繼承 Button，外觀與文字沿用 buildButton 流程；
+     * 另掛 Toggle 元件（預設未勾選），勾選變化由 Toggle 在節點上發出 'toggle' 事件。
+     */
+    async buildToggle(node: Node, spec: UILayoutNodeSpec): Promise<void> {
+        const toggle = node.getComponent(Toggle) || node.addComponent(Toggle);
+        toggle.target = node;
+        toggle.isChecked = false;
+        await this._buildButtonVisuals(node, spec, toggle);
+    }
+
+    private async _buildButtonVisuals(node: Node, spec: UILayoutNodeSpec, button: Button): Promise<void> {
         const applied = spec.skinSlot
             ? await this.styleBuilder.applyButtonSkin(node, spec.skinSlot, button)
             : false;
