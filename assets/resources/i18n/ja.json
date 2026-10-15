@@ -221,5 +221,6 @@
   "ui.spirit_codex.close": "閉じる",
   "ui.spirit_codex.count": "英霊 {0} 体",
   "ui.spirit_codex.empty": "英霊カードはまだありません。死後に資格を満たした武将がここに記録されます。",
-  "ui.spirit_codex.more": "他 {0} 体は表示されていません"
+  "ui.spirit_codex.more": "他 {0} 体は表示されていません",
+  "legacy.essence_line": "精華スナップショット：{0}"
 }

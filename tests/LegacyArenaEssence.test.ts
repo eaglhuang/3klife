@@ -5,7 +5,11 @@
  * 英靈卡快照行只讀 legacyEssence。
  */
 import { assert, TestSuite } from './TestRunner';
-import { legacyEssenceLine, legacySnapshotOf } from '../assets/scripts/core/systems/LegacyArena';
+import { LEGACY_ESSENCE_LINE_FALLBACK_ZH_TW, LEGACY_ESSENCE_LINE_KEY, legacyEssenceLine, legacySnapshotOf } from '../assets/scripts/core/systems/LegacyArena';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const fs = require('fs') as typeof import('fs');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('path') as typeof import('path');
 import { grantNurtureTp, type NurtureSession } from '../assets/scripts/core/systems/NurtureSystem';
 
 export function createLegacyArenaEssenceSuite(): TestSuite {
@@ -40,6 +44,20 @@ export function createLegacyArenaEssenceSuite(): TestSuite {
         session.tp -= 5; // 戰法學習直接扣當前 TP，不經 grantNurtureTp
         assert.equals(5, session.tp);
         assert.equals(10, session.totalTp!);
+    });
+
+    suite.test('精華快照行：語系表命中時使用語系表，未命中時退回 zh-TW 預設（PROG-2-0804）', () => {
+        assert.equals('Essence snapshot: 50', legacyEssenceLine(50, (key, value) => `Essence snapshot: ${value}`));
+        assert.equals('精華快照：50', legacyEssenceLine(50, (key) => key));
+    });
+
+    suite.test('精華快照行 zh-TW 預設與語系檔一致，四個語系都有 legacy.essence_line', () => {
+        const zhTw = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets/resources/i18n/zh-TW.json'), 'utf8')) as Record<string, string>;
+        assert.equals(LEGACY_ESSENCE_LINE_FALLBACK_ZH_TW, zhTw[LEGACY_ESSENCE_LINE_KEY]);
+        for (const loc of ['zh-CN', 'en', 'ja']) {
+            const table = JSON.parse(fs.readFileSync(path.join(__dirname, '..', `assets/resources/i18n/${loc}.json`), 'utf8')) as Record<string, string>;
+            assert.isTrue(typeof table[LEGACY_ESSENCE_LINE_KEY] === 'string');
+        }
     });
 
     return suite;

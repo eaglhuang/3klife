@@ -221,5 +221,6 @@
   "ui.spirit_codex.close": "关闭",
   "ui.spirit_codex.count": "英灵 {0} 位",
   "ui.spirit_codex.empty": "尚无英灵卡。武将死后若具备英灵资格，会收录于此。",
-  "ui.spirit_codex.more": "另有 {0} 位未列出"
+  "ui.spirit_codex.more": "另有 {0} 位未列出",
+  "legacy.essence_line": "精华快照：{0}"
 }

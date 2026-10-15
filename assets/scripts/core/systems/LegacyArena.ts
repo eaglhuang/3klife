@@ -40,7 +40,21 @@ export function legacyReviveRestoreOf(snapshot: number, tuning: LegacyArenaTunin
     return Math.floor(snapshot * tuning.reviveRestoreRatio);
 }
 
-/** 英靈卡上顯示的精華快照行：「精華快照：N」（PROG-2-0802） */
-export function legacyEssenceLine(essence: number | undefined): string {
-    return `精華快照：${Number.isFinite(essence) ? Math.max(0, Math.floor(essence as number)) : 0}`;
+/** 精華快照的語系 key（PROG-2-0804）：「精華快照：{0}」 */
+export const LEGACY_ESSENCE_LINE_KEY = 'legacy.essence_line';
+
+/** 語系表沒有該 key 時的 zh-TW 預設（與 resources/i18n/zh-TW.json 同步，測試會比對） */
+export const LEGACY_ESSENCE_LINE_FALLBACK_ZH_TW = '精華快照：{0}';
+
+/** 精華快照數值取整、不為負；缺值或無效輸入為 0 */
+export function legacyEssenceValue(essence: number | undefined): number {
+    return Number.isFinite(essence) ? Math.max(0, Math.floor(essence as number)) : 0;
+}
+
+/** 英靈卡上顯示的精華快照行：語系查詢（缺 key 時退回 zh-TW 預設）（PROG-2-0802 / 0804） */
+export function legacyEssenceLine(essence: number | undefined, lookup?: (key: string, ...args: string[]) => string): string {
+    const value = String(legacyEssenceValue(essence));
+    const localized = lookup?.(LEGACY_ESSENCE_LINE_KEY, value);
+    if (localized !== undefined && localized !== LEGACY_ESSENCE_LINE_KEY) return localized;
+    return LEGACY_ESSENCE_LINE_FALLBACK_ZH_TW.replace('{0}', value);
 }

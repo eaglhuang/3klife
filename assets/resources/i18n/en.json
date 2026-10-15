@@ -221,5 +221,6 @@
   "ui.spirit_codex.close": "Close",
   "ui.spirit_codex.count": "{0} Spirits",
   "ui.spirit_codex.empty": "No Spirit Cards yet. Generals who qualify after death are recorded here.",
-  "ui.spirit_codex.more": "{0} more not shown"
+  "ui.spirit_codex.more": "{0} more not shown",
+  "legacy.essence_line": "Essence snapshot: {0}"
 }

@@ -1,11 +1,11 @@
-// @spec-source → 武將壽命系統.md §名將保值（演武聖境）；英靈卡顯示沿用 LegacyArena 的精華快照行（PROG-2-0803）
+// @spec-source → 武將壽命系統.md §名將保值（演武聖境）；英靈卡顯示沿用 LegacyArena 的精華快照行（PROG-2-0803 / 0804）
 /**
  * SpiritCodexController — 英靈圖鑑：列出已死武將的英靈卡與精華快照（純邏輯，不依賴 cc）
  *
  * 只列 isSpiritRelic 為 true 的正式英靈卡，依歸檔時間新到舊排序；最多列 SPIRIT_CODEX_MAX_ROWS 位，其餘用「另有 N 位」。
  * 文字組合在這裡，View 只把 texts[key] 寫進 Label（key 等於 spirit-codex-main.json 的節點 id）。
  *
- * 暫定：精華快照行目前為中文（legacyEssenceLine），尚未進語系表。
+ * 精華快照行走 legacy.essence_line（PROG-2-0804）。
  * Unity 對照：Presenter。
  */
 import type { SpiritCard } from '../../core/models/SpiritCard';
@@ -43,10 +43,10 @@ export function withSpiritCodexFallback(lookup: SpiritCodexTextLookup): SpiritCo
 }
 
 /** 一列英靈卡的文字：「{名}｜{死亡年} 年｜精華快照：N」 */
-export function spiritCodexRowText(card: SpiritCard): string {
+export function spiritCodexRowText(card: SpiritCard, lookup?: SpiritCodexTextLookup): string {
     const year = card.deathYear ?? card.deathContext?.year;
     const yearText = typeof year === 'number' && Number.isFinite(year) ? `${year} 年` : '年份未知';
-    return `${card.name}｜${yearText}｜${legacyEssenceLine(card.legacyEssence)}`;
+    return `${card.name}｜${yearText}｜${legacyEssenceLine(card.legacyEssence, lookup)}`;
 }
 
 /** 英靈圖鑑面板的全部文字，key 等於 spirit-codex-main.json 的節點 id */
@@ -62,7 +62,7 @@ export function buildSpiritCodexTexts(
     return {
         spiritCodexTitle: lookup('ui.spirit_codex.title'),
         spiritCodexCount: lookup('ui.spirit_codex.count', String(relics.length)),
-        spiritCodexList: shown.length > 0 ? shown.map(spiritCodexRowText).join('\n') : lookup('ui.spirit_codex.empty'),
+        spiritCodexList: shown.length > 0 ? shown.map((card) => spiritCodexRowText(card, lookup)).join('\n') : lookup('ui.spirit_codex.empty'),
         spiritCodexMore: overflow > 0 ? lookup('ui.spirit_codex.more', String(overflow)) : '',
         closeSpiritCodexLabel: lookup('ui.spirit_codex.close'),
     };
