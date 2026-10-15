@@ -7,6 +7,7 @@ import { ProjectedDamageSkillResolver } from './resolvers/ProjectedDamageSkillRe
 import { ResetSkillResolver } from './resolvers/ResetSkillResolver';
 import { RootSkillResolver } from './resolvers/RootSkillResolver';
 import { SlowSkillResolver } from './resolvers/SlowSkillResolver';
+import { MoraleSkillResolver } from './resolvers/MoraleSkillResolver';
 import { FormationZoneSkillResolver } from './resolvers/FormationZoneSkillResolver';
 
 export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
@@ -19,6 +20,7 @@ export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
     new ProjectedDamageSkillResolver(),
     new RootSkillResolver(),
     new SlowSkillResolver(),
+    new MoraleSkillResolver(),
     new FormationZoneSkillResolver(),
   ]);
 }
