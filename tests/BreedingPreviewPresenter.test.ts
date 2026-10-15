@@ -7,7 +7,7 @@ import { buildBreedingPreviewLines } from '../assets/scripts/ui/core/BreedingPre
 
 function ep(over: Partial<EpBreakdown> = {}): EpBreakdown {
     return {
-        ep: 128, resonance: 20, outcross: 8, affinity: 10, fate: 0,
+        ep: 128, resonance: 20, outcross: 8, affinity: 10, fate: 0, familyTradition: false,
         topTag: '勇', topTagCount: 4, rating: '優良',
         ...over,
     };

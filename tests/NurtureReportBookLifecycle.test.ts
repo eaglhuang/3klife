@@ -30,7 +30,7 @@ function unveiledChild(id: string): UnveilingGeneral {
     return unveilGeneral({
         id, name: id, faction: 'shu', gender: '男', age: 5, status: 'Mystery', hp: 800,
         str: 60, int: 50, lea: 55, pol: 40, cha: 45, luk: 30, hiddenFlags: ['mystery-phase'], genes: [],
-    } as UnveilingGeneral).general;
+    } as unknown as UnveilingGeneral).general;
 }
 
 function makeRig(generals: GeneralConfig[]) {

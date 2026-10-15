@@ -38,7 +38,7 @@ function child(id: string): UnveilingGeneral {
         id, name: id, faction: 'shu', gender: '男', age: 5, status: 'Mystery', hp: 800,
         str: 60, int: 50, lea: 55, pol: 40, cha: 45, luk: 30,
         hiddenFlags: ['mystery-phase'], genes: GENES.map((g) => ({ ...g })),
-    } as UnveilingGeneral;
+    } as unknown as UnveilingGeneral;
 }
 
 function supportWithInspire(): SupportCardDef {
