@@ -109,3 +109,29 @@ export function buildMentorCardTabView(card: MentorCardData, tab: MentorCardTab 
         rows: byTab[activeTab],
     };
 }
+
+/** 版面固定列數：與 mentor-card-detail-main.json 的 row_0 … row_5 對應 */
+export const MENTOR_CARD_LAYOUT_ROWS = 6;
+
+/**
+ * 把 view 轉成 cc 端 applier 要的 texts / actives（節點 id 與 mentor-card-detail-main.json 對齊）。
+ * 只做字串與顯示旗標對應，不做規則判斷。
+ */
+export function toMentorCardLayoutState(view: MentorCardTabView, title: string): { texts: Record<string, string>; actives: Record<string, boolean> } {
+    const texts: Record<string, string> = { mentorCardTitle: title };
+    const actives: Record<string, boolean> = {};
+    for (const tab of view.tabs) {
+        const key = tab.id === 'effects' ? 'Effects' : tab.id === 'events' ? 'Events' : 'Story';
+        // 目前頁籤在名稱前加「▸」標示，版面不需要額外的 active 節點
+        texts[`tab${key}Label`] = tab.id === view.activeTab ? `▸ ${tab.label}` : tab.label;
+    }
+    for (let i = 0; i < MENTOR_CARD_LAYOUT_ROWS; i++) {
+        const row = view.rows[i];
+        actives[`row_${i}`] = !!row;
+        if (!row) continue;
+        texts[`rowLabel_${i}`] = row.label;
+        texts[`rowLock_${i}`] = row.lockText ?? '';
+        actives[`rowLock_${i}`] = row.locked;
+    }
+    return { texts, actives };
+}
