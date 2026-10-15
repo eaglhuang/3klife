@@ -197,7 +197,7 @@ export class LobbyScene extends Component {
             this._saveGachaState();
         },
         revision: () => services().session.gachaRevision,
-    });
+    }, () => services().session.randomSource());
 
     private _saveGachaState(): void {
         void services().session.save().catch(() => undefined);

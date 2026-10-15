@@ -61,7 +61,7 @@ function createEnemyUnit(id: string, lane: number, depth: number): TroopUnit {
 /**
  * 讓戰場固定，位置斷言才不會隨機偶發失敗：
  * - freezeBattleRandomness（initBattle 前呼叫）：存檔亂數源固定為 0；地塊增益位置、落石／暴擊等判定都走它。
- * - silenceEnemyDeploy（initBattle 後呼叫）：敵方糧草歸零。EnemyAI 部署用 Math.random，隨機部署的敵軍會佔位或擋路。
+ * - silenceEnemyDeploy（initBattle 後呼叫）：敵方糧草歸零。EnemyAI 部署走存檔亂數源，沒歸零時隨機部署的敵軍會佔位或擋路。
  */
 function freezeBattleRandomness(): void {
     services().session.setRandomSource(() => 0);
@@ -451,40 +451,35 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
     });
 
     suite.test('initBattle：FloodAttack 會在中線建立 river current，且水戰單位每回合只前進一格', () => {
-        const originalRandom = Math.random;
-        Math.random = () => 0;
-        try {
-            services().initialize();
-            const ctrl = new BattleController();
-            const playerGeneral = createGeneral('sun-jian', Faction.Player, 'sun-jian-blade');
-            const enemyGeneral = createGeneral('zhang-liao', Faction.Enemy, 'zhang-liao-rush');
-            ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.FloodAttack);
+        services().initialize();
+        freezeBattleRandomness();
+        const ctrl = new BattleController();
+        const playerGeneral = createGeneral('sun-jian', Faction.Player, 'sun-jian-blade');
+        const enemyGeneral = createGeneral('zhang-liao', Faction.Enemy, 'zhang-liao-rush');
+        ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.FloodAttack);
 
-            const riverCell = ctrl.state.getCell(2, 3);
-            const riverEffect = ctrl.state.getTileEffect(2, 3);
-            assert.equals('river', riverCell!.terrain);
-            assert.isDefined(riverEffect);
-            assert.equals('river-current', riverEffect!.state);
-            assert.isFalse('forcedMoveSteps' in riverEffect!);
+        const riverCell = ctrl.state.getCell(2, 3);
+        const riverEffect = ctrl.state.getTileEffect(2, 3);
+        assert.equals('river', riverCell!.terrain);
+        assert.isDefined(riverEffect);
+        assert.equals('river-current', riverEffect!.state);
+        assert.isFalse('forcedMoveSteps' in riverEffect!);
 
-            const runner = new TroopUnit('player-runner', TroopType.Cavalry, Faction.Player, {
-                hp: 100,
-                attack: 30,
-                defense: 10,
-                moveRange: 2,
-                attackRange: 1,
-            });
-            runner.moveTo(2, 1);
-            ctrl.state.addUnit(runner);
+        const runner = new TroopUnit('player-runner', TroopType.Cavalry, Faction.Player, {
+            hp: 100,
+            attack: 30,
+            defense: 10,
+            moveRange: 2,
+            attackRange: 1,
+        });
+        runner.moveTo(2, 1);
+        ctrl.state.addUnit(runner);
 
-            playerGeneral.currentSp = 0;
-            enemyGeneral.currentSp = 0;
-            ctrl.advanceTurn();
+        playerGeneral.currentSp = 0;
+        enemyGeneral.currentSp = 0;
+        ctrl.advanceTurn();
 
-            assert.equals(2, runner.depth);
-        } finally {
-            Math.random = originalRandom;
-        }
+        assert.equals(2, runner.depth);
     });
 
     suite.test('FloodAttack：站在 river current 上的騎兵也只會前進一格', () => {
@@ -660,39 +655,33 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
     });
 
     suite.test('initBattle：RockSlide 會建立阻擋格，阻止單位往前推進', () => {
-        const originalRandom = Math.random;
-        Math.random = () => 0;
-        try {
-            services().initialize();
-            freezeBattleRandomness();
-            const ctrl = new BattleController();
-            const playerGeneral = createGeneral('xu-huang', Faction.Player, 'xu-huang-crush');
-            const enemyGeneral = createGeneral('ma-chao', Faction.Enemy, 'ma-chao-charge');
-            ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.RockSlide);
-            silenceEnemyDeploy(ctrl);
+        services().initialize();
+        freezeBattleRandomness();
+        const ctrl = new BattleController();
+        const playerGeneral = createGeneral('xu-huang', Faction.Player, 'xu-huang-crush');
+        const enemyGeneral = createGeneral('ma-chao', Faction.Enemy, 'ma-chao-charge');
+        ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.RockSlide);
+        silenceEnemyDeploy(ctrl);
 
-            const rockEffect = ctrl.state.getTileEffect(2, 4);
-            assert.isDefined(rockEffect);
-            assert.isTrue(rockEffect!.blocksMovement === true);
+        const rockEffect = ctrl.state.getTileEffect(2, 4);
+        assert.isDefined(rockEffect);
+        assert.isTrue(rockEffect!.blocksMovement === true);
 
-            const runner = new TroopUnit('player-shield', TroopType.Shield, Faction.Player, {
-                hp: 150,
-                attack: 20,
-                defense: 35,
-                moveRange: 1,
-                attackRange: 1,
-            });
-            runner.moveTo(2, 3);
-            ctrl.state.addUnit(runner);
+        const runner = new TroopUnit('player-shield', TroopType.Shield, Faction.Player, {
+            hp: 150,
+            attack: 20,
+            defense: 35,
+            moveRange: 1,
+            attackRange: 1,
+        });
+        runner.moveTo(2, 3);
+        ctrl.state.addUnit(runner);
 
-            playerGeneral.currentSp = 0;
-            enemyGeneral.currentSp = 0;
-            ctrl.advanceTurn();
+        playerGeneral.currentSp = 0;
+        enemyGeneral.currentSp = 0;
+        ctrl.advanceTurn();
 
-            assert.equals(3, runner.depth);
-        } finally {
-            Math.random = originalRandom;
-        }
+        assert.equals(3, runner.depth);
     });
 
     suite.test('initBattle：FireAttack 會建立持續傷害 hazard tile', () => {
@@ -735,111 +724,100 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
     });
 
     suite.test('AmbushAttack：前 2 回合敵軍會忽略我方隱匿單位，之後恢復索敵', () => {
-        const originalRandom = Math.random;
-        Math.random = () => 0;
-        try {
-            services().initialize();
-            const ctrl = new BattleController();
-            const playerGeneral = createGeneral('huang-zhong', Faction.Player, 'huang-zhong-shot');
-            const enemyGeneral = createGeneral('xiahou-dun', Faction.Enemy, 'xiahou-dun-charge');
-            ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.AmbushAttack);
+        services().initialize();
+        freezeBattleRandomness();
+        const ctrl = new BattleController();
+        const playerGeneral = createGeneral('huang-zhong', Faction.Player, 'huang-zhong-shot');
+        const enemyGeneral = createGeneral('xiahou-dun', Faction.Enemy, 'xiahou-dun-charge');
+        ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.AmbushAttack);
 
-            const hiddenUnit = new TroopUnit('hidden-unit', TroopType.Infantry, Faction.Player, {
-                hp: 120,
-                attack: 10,
-                defense: 10,
-                moveRange: 0,
-                attackRange: 0,
-            });
-            hiddenUnit.moveTo(2, 2);
-            ctrl.state.addUnit(hiddenUnit);
+        const hiddenUnit = new TroopUnit('hidden-unit', TroopType.Infantry, Faction.Player, {
+            hp: 120,
+            attack: 10,
+            defense: 10,
+            moveRange: 0,
+            attackRange: 0,
+        });
+        hiddenUnit.moveTo(2, 2);
+        ctrl.state.addUnit(hiddenUnit);
 
-            const enemyUnit = new TroopUnit('enemy-unit', TroopType.Infantry, Faction.Enemy, {
-                hp: 300,
-                attack: 30,
-                defense: 10,
-                moveRange: 0,
-                attackRange: 1,
-            });
-            enemyUnit.moveTo(2, 3);
-            ctrl.state.addUnit(enemyUnit);
+        const enemyUnit = new TroopUnit('enemy-unit', TroopType.Infantry, Faction.Enemy, {
+            hp: 300,
+            attack: 30,
+            defense: 10,
+            moveRange: 0,
+            attackRange: 1,
+        });
+        enemyUnit.moveTo(2, 3);
+        ctrl.state.addUnit(enemyUnit);
 
-            playerGeneral.currentSp = 0;
-            enemyGeneral.currentSp = 0;
+        playerGeneral.currentSp = 0;
+        enemyGeneral.currentSp = 0;
 
-            const initialHp = hiddenUnit.currentHp;
-            ctrl.advanceTurn();
-            ctrl.finalizeAdvanceTurn();
-            assert.equals(initialHp, hiddenUnit.currentHp);
-            assert.equals(1, ctrl.state.sceneFlags.stealthOpenTurns);
+        const initialHp = hiddenUnit.currentHp;
+        ctrl.advanceTurn();
+        ctrl.finalizeAdvanceTurn();
+        assert.equals(initialHp, hiddenUnit.currentHp);
+        assert.equals(1, ctrl.state.sceneFlags.stealthOpenTurns);
 
-            ctrl.advanceTurn();
-            ctrl.finalizeAdvanceTurn();
-            assert.equals(initialHp, hiddenUnit.currentHp);
-            assert.equals(0, ctrl.state.sceneFlags.stealthOpenTurns);
+        ctrl.advanceTurn();
+        ctrl.finalizeAdvanceTurn();
+        assert.equals(initialHp, hiddenUnit.currentHp);
+        assert.equals(0, ctrl.state.sceneFlags.stealthOpenTurns);
 
-            ctrl.advanceTurn();
-            ctrl.finalizeAdvanceTurn();
-            assert.isTrue(hiddenUnit.currentHp < initialHp);
-        } finally {
-            Math.random = originalRandom;
-        }
+        ctrl.advanceTurn();
+        ctrl.finalizeAdvanceTurn();
+        assert.isTrue(hiddenUnit.currentHp < initialHp);
     });
 
     suite.test('NightRaid：整場命中 -25%、暴擊 +20%（取代先制增傷），敵軍遠程視野縮短 1 格只在前 2 回合', () => {
-        const originalRandom = Math.random;
-        Math.random = () => 0;
-        try {
-            services().initialize();
-            // 命中與暴擊走戰場種子亂數源，測試內固定為 0 以確定性地命中
-            services().session.setRandomSource(() => 0);
-            const ctrl = new BattleController();
-            const playerGeneral = createGeneral('zhang-he', Faction.Player, 'zhang-he-shadow');
-            const enemyGeneral = createGeneral('liu-bei', Faction.Enemy, 'liu-bei-rally');
-            ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.NightRaid);
+        services().initialize();
+        // 命中與暴擊走戰場種子亂數源，測試內固定為 0 以確定性地命中
+        services().session.setRandomSource(() => 0);
+        const ctrl = new BattleController();
+        const playerGeneral = createGeneral('zhang-he', Faction.Player, 'zhang-he-shadow');
+        const enemyGeneral = createGeneral('liu-bei', Faction.Enemy, 'liu-bei-rally');
+        ctrl.initBattle(playerGeneral, enemyGeneral, undefined, undefined, BattleTactic.NightRaid);
 
-            const playerUnit = new TroopUnit('player-archer', TroopType.Archer, Faction.Player, {
-                hp: 100,
-                attack: 30,
-                defense: 10,
-                moveRange: 0,
-                attackRange: 2,
-            });
-            playerUnit.moveTo(2, 2);
-            ctrl.state.addUnit(playerUnit);
+        const playerUnit = new TroopUnit('player-archer', TroopType.Archer, Faction.Player, {
+            hp: 100,
+            attack: 30,
+            defense: 10,
+            moveRange: 0,
+            attackRange: 2,
+        });
+        playerUnit.moveTo(2, 2);
+        ctrl.state.addUnit(playerUnit);
 
-            const enemyUnit = new TroopUnit('enemy-archer', TroopType.Archer, Faction.Enemy, {
-                hp: 200,
-                attack: 20,
-                defense: 10,
-                moveRange: 0,
-                attackRange: 2,
-            });
-            enemyUnit.moveTo(2, 4);
-            ctrl.state.addUnit(enemyUnit);
+        const enemyUnit = new TroopUnit('enemy-archer', TroopType.Archer, Faction.Enemy, {
+            hp: 200,
+            attack: 20,
+            defense: 10,
+            moveRange: 0,
+            attackRange: 2,
+        });
+        enemyUnit.moveTo(2, 4);
+        ctrl.state.addUnit(enemyUnit);
 
-            playerGeneral.currentSp = 0;
-            enemyGeneral.currentSp = 0;
+        playerGeneral.currentSp = 0;
+        enemyGeneral.currentSp = 0;
 
-            const playerInitialHp = playerUnit.currentHp;
-            const enemyInitialHp = enemyUnit.currentHp;
-            ctrl.advanceTurn();
-            ctrl.finalizeAdvanceTurn();
+        const playerInitialHp = playerUnit.currentHp;
+        const enemyInitialHp = enemyUnit.currentHp;
+        ctrl.advanceTurn();
+        ctrl.finalizeAdvanceTurn();
 
-            assert.isTrue(enemyUnit.currentHp < enemyInitialHp);
-            assert.equals(playerInitialHp, playerUnit.currentHp);
-            assert.equals(1, ctrl.state.sceneFlags.nightRaidOpenTurns);
+        assert.isTrue(enemyUnit.currentHp < enemyInitialHp);
+        assert.equals(playerInitialHp, playerUnit.currentHp);
+        assert.equals(1, ctrl.state.sceneFlags.nightRaidOpenTurns);
 
-            ctrl.advanceTurn();
-            ctrl.finalizeAdvanceTurn();
-            assert.equals(0, ctrl.state.sceneFlags.nightRaidOpenTurns);
-            assert.isTrue(ctrl.state.sceneFlags.nightRaid, '夜襲整場生效，兩回合後仍有命中與暴擊加成');
-            const nightTactic = resolveBattleTacticBehavior(BattleTactic.NightRaid);
-            assert.equals(-0.25, nightTactic.getAccuracyDelta?.(playerUnit, ctrl.state) ?? 0);
-            assert.equals(0.2, nightTactic.getCritBonus?.(playerUnit, ctrl.state) ?? 0);
-        } finally {
-            Math.random = originalRandom;
-        }
+        ctrl.advanceTurn();
+        ctrl.finalizeAdvanceTurn();
+        assert.equals(0, ctrl.state.sceneFlags.nightRaidOpenTurns);
+        assert.isTrue(ctrl.state.sceneFlags.nightRaid, '夜襲整場生效，兩回合後仍有命中與暴擊加成');
+        const nightTactic = resolveBattleTacticBehavior(BattleTactic.NightRaid);
+        assert.equals(-0.25, nightTactic.getAccuracyDelta?.(playerUnit, ctrl.state) ?? 0);
+        assert.equals(0.2, nightTactic.getCritBonus?.(playerUnit, ctrl.state) ?? 0);
     });
 
     return suite;

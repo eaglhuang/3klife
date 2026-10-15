@@ -43,7 +43,7 @@ export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
 
     public readonly event = new EventSystem();
-    public readonly formula = new FormulaSystem();
+    public readonly formula = new FormulaSystem(() => this.session.randomSource());
     public readonly pool = new PoolSystem();
     public readonly resource = new ResourceManager();
     /**
