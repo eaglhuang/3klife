@@ -1,5 +1,5 @@
 /**
- * WisdomMeter — 軍師智謀能量累積（WBS v7 SCN-10 純邏輯，PROG-2-0616）
+ * WisdomMeter — 軍師智謀能量累積（WBS v7 SCN-10 純邏輯，PROG-2-0750）
  *
  * 每回合累積 INT × 0.5，滿 100 觸發一次後歸零。
  * 全局增幅效果與 HUD 不在本檔範圍。
