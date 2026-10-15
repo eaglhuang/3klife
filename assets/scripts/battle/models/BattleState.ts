@@ -24,7 +24,7 @@ export interface TileBuff {
   rarity: "normal" | "rare";
 }
 
-export type TileEffectState = 'hazard-fire' | 'hazard-rock' | 'river-current' | 'ambush-field' | 'night-raid' | 'scene-camp';
+export type TileEffectState = 'hazard-fire' | 'hazard-rock' | 'river-current' | 'ambush-field' | 'night-raid' | 'scene-camp' | 'formation-zone';
 export type TileEffectMoveDirection = 'forward' | 'backward';
 
 export interface TileEffect {
@@ -37,6 +37,9 @@ export interface TileEffect {
   forcedMoveDirection?: TileEffectMoveDirection;
   forcedMoveSteps?: number;
   moveRangeDelta?: number;
+  /** 持續防禦區（PROG-2-0760）：站在此格、屬於 zoneFaction 的單位防禦 ×defenseMultiplier */
+  defenseMultiplier?: number;
+  zoneFaction?: Faction;
   notes?: string;
 }
 
