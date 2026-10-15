@@ -30,16 +30,17 @@ export function createSageFactorPreviewSuite(): TestSuite {
         assert.equals(0, previewLockedFactorDirections(g, 1).length);
     });
 
-    suite.test('等級已達門檻時，該色系不再列為提前預覽', () => {
+    suite.test('等級超過門檻後，該色系不再列為提前預覽（> 門檻）', () => {
         const g = general([{ id: 'b', type: 'green', isLocked: true }]);
-        assert.equals(0, previewLockedFactorDirections(g, 20).length);
-        assert.equals(1, previewLockedFactorDirections(g, 19).length);
+        assert.equals(0, previewLockedFactorDirections(g, 21).length);
+        assert.equals(1, previewLockedFactorDirections(g, 20).length);
     });
 
     suite.test('基因自身的 discoveryLevel 優先於色系預設', () => {
         const g = general([{ id: 'x', type: 'blue', isLocked: true, discoveryLevel: 10 }]);
         assert.equals('blue', previewLockedFactorDirections(g, 5).join(','));
-        assert.equals(0, previewLockedFactorDirections(g, 10).length);
+        assert.equals(1, previewLockedFactorDirections(g, 10).length, '等於門檻仍鎖');
+        assert.equals(0, previewLockedFactorDirections(g, 11).length);
     });
 
     suite.test('方向去重、依基因順序；沒有武將回傳空陣列', () => {

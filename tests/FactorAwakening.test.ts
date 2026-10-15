@@ -71,15 +71,15 @@ function pupil(): UnveilingGeneral {
 export function createFactorAwakeningSuite(): TestSuite {
     const suite = new TestSuite('FactorAwakening (因子覺醒 / 紫紅因子)');
 
-    suite.test('discoveryPhase：1~19 → 1、20~44 → 2、45+ → 3', () => {
+    suite.test('discoveryPhase（> 門檻）：1~20 → 1、21~45 → 2、46+ → 3', () => {
         assert.equals(1, discoveryPhase(1));
-        assert.equals(1, discoveryPhase(19));
-        assert.equals(2, discoveryPhase(20));
-        assert.equals(2, discoveryPhase(44));
-        assert.equals(3, discoveryPhase(45));
+        assert.equals(1, discoveryPhase(20));
+        assert.equals(2, discoveryPhase(21));
+        assert.equals(2, discoveryPhase(45));
+        assert.equals(3, discoveryPhase(46));
     });
 
-    suite.test('等級不足：綠要 20、紫要 45', () => {
+    suite.test('等級不足：綠要 > 20、紫要 > 45', () => {
         const kid = child();
         const green = awakenFactor(kid, 'gene_strategy', 'mentor', 19);
         assert.isTrue(!green.ok && green.reason === 'level-too-low');
@@ -99,7 +99,7 @@ export function createFactorAwakeningSuite(): TestSuite {
 
     suite.test('成功覺醒：只改該因子的鎖，不動原物件，事件帶名稱與星等', () => {
         const kid = child();
-        const result = awakenFactor(kid, 'gene_destiny', 'battle', 45);
+        const result = awakenFactor(kid, 'gene_destiny', 'battle', 46);
         assert.isTrue(result.ok);
         if (!result.ok) return;
         assert.equals(false, result.general.genes!.find((g) => g.id === 'gene_destiny')!.isLocked);
@@ -165,8 +165,8 @@ export function createFactorAwakeningSuite(): TestSuite {
     // ── PROG-2-0044：成長來源與事件接線 ──────────────────────────────────
 
     suite.test('覺醒經驗：100 經驗升一級、可連升、跨 20 級換階段、99 級封頂', () => {
-        const up = gainDiscoveryExp({ level: 19, exp: 90 }, 'battle-win');
-        assert.equals(20, up.after.level);
+        const up = gainDiscoveryExp({ level: 20, exp: 90 }, 'battle-win');
+        assert.equals(21, up.after.level);
         assert.equals(20, up.after.exp);
         assert.equals(1, up.levelsGained);
         assert.equals(1, up.phaseBefore);
@@ -188,14 +188,14 @@ export function createFactorAwakeningSuite(): TestSuite {
     suite.test('培育擲骰：綠只在教官站格時可覺醒；沒有候選不消耗亂數', () => {
         const kid = child();
         const noMentor = fixed(0);
-        assert.equals(null, rollNurtureAwakening(kid, { discoveryLevel: 20, mentorRank: 0, mentorOnSlot: false, random: noMentor.random }));
+        assert.equals(null, rollNurtureAwakening(kid, { discoveryLevel: 21, mentorRank: 0, mentorOnSlot: false, random: noMentor.random }));
         assert.equals(0, noMentor.calls(), '藍已解鎖、綠需要教官 → 沒候選');
 
         const miss = fixed(0.09);
-        assert.equals(null, rollNurtureAwakening(kid, { discoveryLevel: 20, mentorRank: 0, mentorOnSlot: true, random: miss.random }));
+        assert.equals(null, rollNurtureAwakening(kid, { discoveryLevel: 21, mentorRank: 0, mentorOnSlot: true, random: miss.random }));
         assert.equals(1, miss.calls(), '0.09 ≥ 0.08 沒觸發，只擲一次');
 
-        const hit = rollNurtureAwakening(kid, { discoveryLevel: 20, mentorRank: 2, mentorOnSlot: true, random: fixed(0.09).random });
+        const hit = rollNurtureAwakening(kid, { discoveryLevel: 21, mentorRank: 2, mentorOnSlot: true, random: fixed(0.09).random });
         assert.isTrue(hit !== null && hit.ok, '2 星教官機率 0.096 > 0.09');
         if (!hit || !hit.ok) return;
         assert.equals('gene_strategy', hit.event.factorId);
@@ -212,10 +212,10 @@ export function createFactorAwakeningSuite(): TestSuite {
         const boosted = rollBattleAwakening(kid, { discoveryLevel: 99, specialAction: true, random: fixed(0.06).random });
         assert.isTrue(boosted !== null && boosted.ok, '特定動作 0.15 > 0.06');
 
-        const low = rollBattleAwakening(kid, { discoveryLevel: 20, specialAction: true, random: fixed(0).random });
+        const low = rollBattleAwakening(kid, { discoveryLevel: 21, specialAction: true, random: fixed(0).random });
         assert.isTrue(low !== null && low.ok);
         if (!low || !low.ok) return;
-        assert.equals('gene_strategy', low.event.factorId, '20 級特定動作：候選只有綠');
+        assert.equals('gene_strategy', low.event.factorId, '21 級特定動作：候選只有綠');
     });
 
     suite.test('GameSession.recordBattle：給經驗、擲覺醒、升級廣播，經驗隨存檔往返', async () => {
@@ -234,13 +234,13 @@ export function createFactorAwakeningSuite(): TestSuite {
         assert.equals(false, session.roster[0].genes![0].isLocked);
         assert.equals(true, session.roster[0].genes![1].isLocked, '敗戰不開紫');
 
-        await session.setDiscoveryLevel(44);
+        await session.setDiscoveryLevel(45);
         await session.gainDiscoveryExp('battle-win', 80);
         const won = await session.recordBattle(['w'], 'player-win', { specialActions: { w: ['last-stand'] } });
-        assert.equals(45, session.discoveryLevel, '80 + 30 = 110 → 升到 45');
+        assert.equals(46, session.discoveryLevel, '80 + 30 = 110 → 升到 46');
         assert.equals(10, session.discoveryExp);
         assert.isDefined(won.discovery);
-        assert.equals('gene_destiny', won.awakenings[0]?.factorId, '升到 45 後同場做出特定動作即可覺醒紫');
+        assert.equals('gene_destiny', won.awakenings[0]?.factorId, '升到 46 後同場做出特定動作即可覺醒紫');
         assert.isTrue(events.includes(GAME_SESSION_EVENTS.DiscoveryLevelChanged));
         assert.equals(2, events.filter((e) => e === GAME_SESSION_EVENTS.FactorAwakened).length);
 
@@ -248,7 +248,7 @@ export function createFactorAwakeningSuite(): TestSuite {
         reloaded.setRosterStore(new InMemoryRosterStore());
         reloaded.setSaveService(new PlayerSaveService(adapter));
         assert.isTrue(await reloaded.load());
-        assert.equals(45, reloaded.discoveryLevel);
+        assert.equals(46, reloaded.discoveryLevel);
         assert.equals(10, reloaded.discoveryExp);
         assert.equals(false, reloaded.roster[0].genes![1].isLocked);
 

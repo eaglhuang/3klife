@@ -3,7 +3,7 @@
  * FactorMask — 因子視覺遮罩與發現等級（純邏輯，不依賴 cc）
  *
  * 兩個旗標分開看：
- *   - revealed（看得到）：玩家等級 ≥ 因子的 Discovery_Level 門檻；看不到時顯示「??? (Lv N 解鎖)」
+ *   - revealed（看得到）：玩家等級 > 因子的 Discovery_Level 門檻（LUK-04）；看不到時顯示「??? (Lv N 解鎖)」，N = 門檻 + 1
  *   - active（生效）：Is_Locked 為 false；看得到但仍鎖住的因子不會生效，要靠覺醒事件點亮
  *
  * 門檻沿用 FactorInheritance 的 FACTOR_DISCOVERY_LEVEL（藍粉 1、綠白 20、紫紅 45）。
@@ -13,7 +13,7 @@
  * Unity 對照：像一個 Sprite 遮罩元件，只回傳「要顯示的文字與狀態」，不碰 Label 節點；畫面層自己套用。
  */
 import { ALL_FACTOR_COLORS, FACTOR_DISCOVERY_LEVEL, FactorColor } from './FactorInheritance';
-import { requiredDiscoveryLevel } from './FactorVisibility';
+import { isFactorLevelUnlocked, requiredDiscoveryLevel } from './FactorVisibility';
 import type { GeneralGeneConfig } from '../models/GeneralUnit';
 
 export interface FactorMaskView {
@@ -35,8 +35,8 @@ export function factorRequiredLevel(gene: GeneralGeneConfig): number {
 /** 單一因子在指定玩家等級下的遮罩狀態；不改輸入 */
 export function factorMaskView(gene: GeneralGeneConfig, playerLevel: number): FactorMaskView {
     const requiredLevel = factorRequiredLevel(gene);
-    const revealed = playerLevel >= requiredLevel;
-    const label = revealed ? gene.displayName ?? gene.id ?? '' : `??? (Lv${requiredLevel} 解鎖)`;
+    const revealed = isFactorLevelUnlocked(playerLevel, requiredLevel);
+    const label = revealed ? gene.displayName ?? gene.id ?? '' : `??? (Lv${requiredLevel + 1} 解鎖)`;
     return { revealed, active: gene.isLocked === false, requiredLevel, label };
 }
 
@@ -47,5 +47,5 @@ export function factorMaskLabels(genes: readonly GeneralGeneConfig[], playerLeve
 
 /** 玩家等級已開放的因子色系，依 ALL_FACTOR_COLORS 順序（Lv1 只有藍粉） */
 export function visibleFactorColors(playerLevel: number): FactorColor[] {
-    return ALL_FACTOR_COLORS.filter((color) => playerLevel >= FACTOR_DISCOVERY_LEVEL[color]);
+    return ALL_FACTOR_COLORS.filter((color) => isFactorLevelUnlocked(playerLevel, FACTOR_DISCOVERY_LEVEL[color]));
 }

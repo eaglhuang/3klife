@@ -10,19 +10,21 @@ import type { GeneralGeneConfig } from '../assets/scripts/core/models/GeneralUni
 export function createFactorMaskSuite(): TestSuite {
     const suite = new TestSuite('FactorMask');
 
-    suite.test('三階段色系：Lv1 只見藍粉，Lv20 開綠白，Lv45 開紫紅', () => {
+    suite.test('三階段色系（> 門檻）：Lv1 只見藍粉，Lv21 開綠白，Lv46 開紫紅', () => {
         assert.equals('blue,pink', visibleFactorColors(1).join(','));
-        assert.equals('blue,pink,green,white', visibleFactorColors(20).join(','));
-        assert.equals('blue,pink,green,purple,white,red', visibleFactorColors(45).join(','));
+        assert.equals('blue,pink', visibleFactorColors(20).join(','));
+        assert.equals('blue,pink,green,white', visibleFactorColors(21).join(','));
+        assert.equals('blue,pink,green,white', visibleFactorColors(45).join(','));
+        assert.equals('blue,pink,green,purple,white,red', visibleFactorColors(46).join(','));
     });
 
     suite.test('未達門檻顯示「??? (Lv N 解鎖)」，達門檻才顯示因子名稱', () => {
         const gene: GeneralGeneConfig = { type: 'purple', id: 'g_dragon', displayName: '紫龍', isLocked: true };
         const hidden = factorMaskView(gene, 30);
         assert.equals(45, hidden.requiredLevel);
-        assert.equals('??? (Lv45 解鎖)', hidden.label);
+        assert.equals('??? (Lv46 解鎖)', hidden.label);
         assert.isFalse(hidden.revealed);
-        const shown = factorMaskView(gene, 45);
+        const shown = factorMaskView(gene, 46);
         assert.equals('紫龍', shown.label);
         assert.isTrue(shown.revealed);
     });

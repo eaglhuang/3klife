@@ -18,6 +18,7 @@
  */
 import type { GeneralConfig, GeneralGeneConfig } from '../models/GeneralUnit';
 import { FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';
+import { isFactorLevelUnlocked } from './FactorVisibility';
 
 export type AwakeningTrigger = 'nurture-peek' | 'battle' | 'mentor' | 'sage';
 
@@ -32,8 +33,8 @@ export const AWAKENING_TRIGGERS_BY_COLOR: Record<FactorColor, readonly Awakening
 
 /** 依 discoveryLevel 回傳目前所在階段 1 / 2 / 3 */
 export function discoveryPhase(discoveryLevel: number): 1 | 2 | 3 {
-    if (discoveryLevel >= FACTOR_DISCOVERY_LEVEL.purple) return 3;
-    if (discoveryLevel >= FACTOR_DISCOVERY_LEVEL.green) return 2;
+    if (isFactorLevelUnlocked(discoveryLevel, FACTOR_DISCOVERY_LEVEL.purple)) return 3;
+    if (isFactorLevelUnlocked(discoveryLevel, FACTOR_DISCOVERY_LEVEL.green)) return 2;
     return 1;
 }
 
