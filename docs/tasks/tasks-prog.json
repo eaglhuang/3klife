@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 38,
-    "total": 74
+    "open": 40,
+    "total": 76
   },
   "tasks": [
     {
@@ -3096,6 +3096,35 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0128/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0129",
+      "title": "實機驗收：自動培育整季與培育畫面按鈕（NUR-14、#399）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M8",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "自動培育整季的 GameSession 接線與培育畫面按鈕已合併，按鈕位置與實機行為待驗收。",
+      "related": [],
+      "depends": [
+        "PR #399",
+        "PROG-2-0548",
+        "PROG-2-0549"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0129.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0129/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
     }
