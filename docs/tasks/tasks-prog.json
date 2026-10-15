@@ -3345,7 +3345,7 @@
       "title": "修復大廳季節 HUD 按鈕超出畫面",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M6",
       "created": "2026-10-15",
@@ -3370,7 +3370,7 @@
         "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
         "artifacts/PROG-2-0137/result.md"
       ],
-      "notes": "2026-10-16 | 狀態: open | 驗證: 0132證據 | 變更: 獨立版面修復 | 阻塞: 無",
+      "notes": "2026-10-16 | 狀態: done | 驗證: 幾何回歸與Web實際開關通過，隔離標準閘門9/9 | 變更: 原生結案301fb19ff，PR483待審 | 阻塞: 完整0132另案驗收",
       "brief": {
         "style": "classic",
         "label": "",

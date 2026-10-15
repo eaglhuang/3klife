@@ -30,6 +30,15 @@ Use this file when:
 
 ## Open Items
 
+- [ ] ATM-BUG-2026-10-16-002: Separate write-ticket acquisition can mask a narrower claim-issued work-admission grant
+  - Status: reproducible workflow friction; normal recovery verified, no framework code change required.
+  - Severity: P2 delivery guidance and diagnostics.
+  - Encountered: PROG-2-0137 evidence delivery after successful Web pointer checks; git commit returned ATM_WRITE_TICKET_SCOPE_VIOLATION despite a newly acquired write-ticket listing all nine files.
+  - Reproduce / detect: Claim a task with an ignored artifact directory, then acquire a separate write-ticket for explicit child files. Compare write-ticket.allowedFiles with task.workAdmissionTicket.grants[file-write].values; the git facade checks the latter. Renewing next --claim alone did not widen this grant.
+  - Impact: Repeated ticket acquisition and misleading scope-repair attempts delay evidence publication. Native taskflow close also leaves tasks-prog.json and the human-readable card status table stale after setting ledger/frontmatter done.
+  - Possible optimization: Name the rejecting authority and provide tasks scope add --claim-first --add <explicit-files> in the error; distinguish separate write tickets from claim admission. Synchronize configured project task projections during close or explicitly report them pending.
+  - Related tasks / commits: PROG-2-0137; normal explicit scope amendment enabled evidence commit 46674f25f; native close 301fb19ff; PR483. No ledger edits or emergency bypass were used.
+
 - [ ] ATM-BUG-2026-07-13-176: Framework-repo task open does not remind agents to author the 3KLife planning card first
   - Status: open
   - Severity: P1 Captain / planning-root workflow friction
