@@ -133,6 +133,19 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     battleLogKey: 'skill.eight_formation.cast',
   },
+  // 緩速（PROG-2-0765）：單體敵軍下一回合移動 -1（規格 G-2 計略）
+  'mentor-slow': {
+    battleSkillId: 'mentor-slow',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'slow',
+    coefficient: 0,
+    maxTargets: 1,
+    slowAmount: 1,
+    statusTurns: 1,
+    battleLogKey: 'skill.mentor_slow.debuff',
+  },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',
     targetMode: BattleSkillTargetMode.Area,
