@@ -68,9 +68,16 @@ export class Prefab { decRef(): void { /* mock */ } }
 
 // ─── Node ───────────────────────────────────────────────────────────────────
 
+export class ProgressBar {
+    [key: string]: any;
+}
+
 export class Node {
     static readonly EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed' };
     public children: Node[] = [];
+    get components(): any[] { return this._components; }
+    destroyAllChildren(): void { /* mock */ }
+    removeFromParent(): void { /* mock */ }
     private _parent: Node | null = null;
     public layer = 1;
     private _handlers = new Map<string, Array<(arg?: any) => void>>();

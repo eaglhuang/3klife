@@ -491,8 +491,8 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
             const b = run();
             assert.equals(canonical(a.child ?? null), canonical(b.child ?? null), `seed ${seed} 重跑結果不同`);
             for (const g of a.child?.genes ?? []) {
-                assert.isTrue(g.level >= 1 && g.level <= 5, `seed ${seed} 因子 ${g.id} 星級 ${g.level} 超出 1~5`);
-                if (g.level > 4) sawAboveParents = true;
+                assert.isTrue((g.level ?? 0) >= 1 && (g.level ?? 0) <= 5, `seed ${seed} 因子 ${g.id} 星級 ${(g.level ?? 0)} 超出 1~5`);
+                if ((g.level ?? 0) > 4) sawAboveParents = true;
             }
         }
         assert.isTrue(sawAboveParents, '300 個種子內至少要有一次血統活性把星級推高到父母最高 4★ 之上');
