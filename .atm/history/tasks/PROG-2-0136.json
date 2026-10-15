@@ -100,8 +100,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T15-38-48-436Z-claim-16a74b80c7bc",
-  "lastTransitionAt": "2026-10-15T15:38:48.436Z",
+  "lastTransitionId": "2026-10-15T15-42-31-653Z-renew-951dce6dbd8c",
+  "lastTransitionAt": "2026-10-15T15:42:31.653Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T15:38:42.047Z",
@@ -110,7 +110,7 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-5bcb9d50d9ce",
     "claimedAt": "2026-10-15T15:38:42.063Z",
-    "heartbeatAt": "2026-10-15T15:38:42.063Z",
+    "heartbeatAt": "2026-10-15T15:42:31.530Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/tasks/PROG-2-0136.json",
@@ -121,11 +121,10 @@
       "tests/OnboardingFlow.test.ts"
     ],
     "state": "active",
-    "intent": "write",
     "laneSession": {
       "laneSessionId": "lane-20261015153842-codex-gpt-6-74e422d35e",
       "status": "active",
-      "source": "minted",
+      "source": "option",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015153842-codex-gpt-6-74e422d35e\""
     }
   },
@@ -134,26 +133,27 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-59ad71c2fa366803",
-    "ticketDigest": "sha256:59ad71c2fa366803550b9bee4cf44f1c199714ab31bac813e98bd7931d995409",
+    "ticketId": "wat-1c4df86e147e50b4",
+    "ticketDigest": "sha256:1c4df86e147e50b4a26d35d18b68bf8c22f120fe61eed7c76e328812b6dac591",
     "taskId": "PROG-2-0136",
     "origin": "claim",
     "actorId": "codex-gpt-6",
     "laneSessionId": "lane-20261015153842-codex-gpt-6-74e422d35e",
     "claimGeneration": "lease-5bcb9d50d9ce",
-    "issuedAt": "2026-10-15T15:38:42.063Z",
-    "expiresAt": "2026-10-15T16:08:42.063Z",
-    "scopeDigest": "sha256:eae1961253a30eafcc604730615af80610e7f529609a54587c84a7a98b67be78",
+    "issuedAt": "2026-10-15T15:42:31.530Z",
+    "expiresAt": "2026-10-15T16:12:31.530Z",
+    "scopeDigest": "sha256:bf3a141fd2b7a1fc769a014da9def6675a3d0ae46ab29e15801125326a13573e",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-10-15T15:38:42.063Z"
+      "selectedAt": "2026-10-15T15:42:31.530Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/PROG-2-0136.*",
+          ".atm/history/evidence/git-head.json",
           ".atm/history/task-events/PROG-2-0136/**",
           ".atm/history/tasks/PROG-2-0136.json",
           "artifacts/PROG-2-0136/**",
@@ -162,7 +162,7 @@
           "docs/tasks/tasks-prog.json",
           "tests/OnboardingFlow.test.ts"
         ],
-        "digest": "sha256:6a490d09801de109c8509cda7cd279d1f1d3d248f9d8f023aaaed748e3e175e3"
+        "digest": "sha256:1c2eef2cb472f51a6a5c1ed28e40ccf933fd8a539b456d70e0c71c7bd1faee76"
       },
       {
         "kind": "lifecycle-operation",
