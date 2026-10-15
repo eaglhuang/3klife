@@ -551,7 +551,10 @@ export class BattleCombatResolver {
       return false;
     }
     // 掩體格（GRD-04，PROG-2-0595）：敵方武將站在掩體格時，遠程攻擊者不可直接攻擊
-    const enemyGeneral = unit.faction === Faction.Player ? this.context.state.enemyGeneral : this.context.state.playerGeneral;
+    const enemyGeneralId = unit.faction === Faction.Player
+      ? this.context.getEnemyGeneralUnitId()
+      : this.context.getPlayerGeneralUnitId();
+    const enemyGeneral = enemyGeneralId ? this.context.state.units.get(enemyGeneralId) : undefined;
     if (enemyGeneral) {
       const tileState = this.context.state.getTileEffect(enemyGeneral.lane, enemyGeneral.depth)?.state ?? null;
       if (!canTargetUnderStealth(this.getEffectiveAttackRange(unit), isHiddenOnTile(tileState))) {
