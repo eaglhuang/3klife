@@ -254,7 +254,9 @@ function fetchWikiSummary(name) {
       res.on('end', () => {
         try {
           const json = JSON.parse(data);
-          resolve(json.extract || null);
+          // 消歧義頁面不取（type 為 disambiguation，或摘要本身是「可以指」列表）
+          if (json.type === 'disambiguation') return resolve(null);
+          resolve(json.extract && !isDisambiguationText(json.extract) ? json.extract : null);
         } catch {
           resolve(null);
         }
@@ -262,6 +264,27 @@ function fetchWikiSummary(name) {
     }).on('error', () => resolve(null))
       .on('timeout', () => resolve(null));
   });
+}
+
+const ANECDOTE_MAX_LENGTH = 200;
+
+/**
+ * 消歧義頁面（「X 可以指：」）不是武將本人的故事，不能當 lore（PROG-2-0807）
+ */
+function isDisambiguationText(text) {
+  return /可以指[：:]/.test(String(text || ''));
+}
+
+/**
+ * 摘要超過上限時，只在句末（。！？）截斷；上限內找不到句末則回傳 null，改用佔位（PROG-2-0807）
+ * 不再把句子硬切在字中間（原本 slice(0, 200) 會留下半句）
+ */
+function cutAtSentenceEnd(text, max = ANECDOTE_MAX_LENGTH) {
+  const trimmed = String(text || '').trim();
+  if (trimmed.length <= max) return trimmed || null;
+  const head = trimmed.slice(0, max);
+  const end = Math.max(head.lastIndexOf('。'), head.lastIndexOf('！'), head.lastIndexOf('？'));
+  return end >= 0 ? head.slice(0, end + 1) : null;
 }
 
 /**
@@ -280,12 +303,16 @@ function mapToGeneralBase(seed, wikiExtract) {
     ...stats,
     ep,
     // historicalAnecdote 填入 wiki 摘要（或佔位）
-    historicalAnecdote: wikiExtract
-      ? wikiExtract.slice(0, 200)
-      : `${seed.name}，三國時期著名人物。（詳細資料待補）`,
+    historicalAnecdote: anecdoteFromExtract(seed, wikiExtract),
     _source: 'wiki',
     _fetchedAt: new Date().toISOString(),
   };
+}
+
+function anecdoteFromExtract(seed, wikiExtract) {
+  const placeholder = `${seed.name}，三國時期著名人物。（詳細資料待補）`;
+  if (!wikiExtract || isDisambiguationText(wikiExtract)) return placeholder;
+  return cutAtSentenceEnd(wikiExtract) || placeholder;
 }
 
 // --- 主流程 ---
@@ -361,7 +388,7 @@ async function main() {
   console.log(`[OK]    寫入 ${OUTPUT}`);
 }
 
-module.exports = { SEED_GENERALS, parseLimit, calcEp, mapToGeneralBase };
+module.exports = { SEED_GENERALS, parseLimit, calcEp, mapToGeneralBase, cutAtSentenceEnd, isDisambiguationText };
 
 if (require.main === module) {
   main().catch(err => {
