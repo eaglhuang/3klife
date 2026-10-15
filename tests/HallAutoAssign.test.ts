@@ -5,6 +5,7 @@ import {
     HallAutoAssignRecord,
     listAssignRecords,
     pickAutoAssignGeneral,
+    settleLatestAssign,
 } from '../assets/scripts/core/systems/HallAutoAssign';
 
 const ENABLED = { taskId: 't1', Intel_Reveal_Percent: 40, AI_Assign_Enabled: true };
@@ -65,6 +66,40 @@ export function createHallAutoAssignSuite(): TestSuite {
         assert.equals(3, log3.length);
         assert.equals('T3,T1', listAssignRecords(log3, 't1').map(r => r.assignedAt).join(','));
         assert.equals('T3,T2,T1', listAssignRecords(log3).map(r => r.assignedAt).join(','));
+    });
+
+    suite.test('結算只套用在同任務最新一筆未結算紀錄，較舊的仍保持未結算', () => {
+        const log0: HallAutoAssignRecord[] = [
+            { taskId: 't1', generalId: 'a', assignedAt: 'T1' },
+            { taskId: 't1', generalId: 'b', assignedAt: 'T2' },
+        ];
+        const result = settleLatestAssign(log0, 't1', 'success', 'S1');
+        assert.isTrue(result.ok);
+        if (!result.ok) return;
+        assert.equals(undefined, result.log[0].outcome);
+        assert.equals('success', result.log[1].outcome ?? '');
+        assert.equals('S1', result.log[1].settledAt ?? '');
+        assert.equals(undefined, log0[1].outcome);
+    });
+
+    suite.test('已結算或沒有該任務的紀錄時拒絕結算', () => {
+        const settled: HallAutoAssignRecord[] = [
+            { taskId: 't1', generalId: 'a', assignedAt: 'T1', outcome: 'failure', settledAt: 'S0' },
+        ];
+        const again = settleLatestAssign(settled, 't1', 'success', 'S1');
+        assert.isFalse(again.ok);
+        assert.equals('no-open-record', (again as { reason: string }).reason);
+        const missing = settleLatestAssign([], 't9', 'success', 'S1');
+        assert.isFalse(missing.ok);
+    });
+
+    suite.test('回看時能看到結算結果與結算時間', () => {
+        const log0: HallAutoAssignRecord[] = [{ taskId: 't1', generalId: 'a', assignedAt: 'T1' }];
+        const result = settleLatestAssign(log0, 't1', 'failure', 'S1');
+        if (!result.ok) return;
+        const [record] = listAssignRecords(result.log, 't1');
+        assert.equals('failure', record.outcome ?? '');
+        assert.equals('S1', record.settledAt ?? '');
     });
 
     return suite;

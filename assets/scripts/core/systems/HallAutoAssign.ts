@@ -16,10 +16,15 @@ export interface HallAutoAssignCandidate {
     power: number;
 }
 
+export type HallAssignOutcome = 'success' | 'failure';
+
 export interface HallAutoAssignRecord {
     taskId: string;
     generalId: string;
     assignedAt: string;
+    /** 結算結果；尚未結算時缺省。由呼叫端依戰鬥結果傳入，本模組不推算。 */
+    outcome?: HallAssignOutcome;
+    settledAt?: string;
 }
 
 export type HallAutoAssignResult =
@@ -69,4 +74,27 @@ export function listAssignRecords(
 ): HallAutoAssignRecord[] {
     const matched = taskId === undefined ? log : log.filter(record => record.taskId === taskId);
     return matched.slice().reverse().map(record => ({ ...record }));
+}
+
+export type HallAssignSettleResult =
+    | { ok: true; log: HallAutoAssignRecord[] }
+    | { ok: false; reason: 'no-open-record' };
+
+/** 結算同一任務最新一筆未結算的委任紀錄；沒有未結算紀錄時拒絕。回傳新陣列，不改動輸入。 */
+export function settleLatestAssign(
+    log: readonly HallAutoAssignRecord[],
+    taskId: string,
+    outcome: HallAssignOutcome,
+    settledAt: string,
+): HallAssignSettleResult {
+    let target = -1;
+    for (let i = log.length - 1; i >= 0; i--) {
+        if (log[i].taskId === taskId && log[i].outcome === undefined) {
+            target = i;
+            break;
+        }
+    }
+    if (target < 0) return { ok: false, reason: 'no-open-record' };
+    const next = log.map((record, i) => (i === target ? { ...record, outcome, settledAt } : { ...record }));
+    return { ok: true, log: next };
 }
