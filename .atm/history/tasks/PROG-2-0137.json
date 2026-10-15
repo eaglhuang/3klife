@@ -14,7 +14,20 @@
     "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
     "docs/agent-briefs/tasks/PROG/PROG-2-0137.md",
     "docs/tasks/tasks-prog.json",
-    "artifacts/PROG-2-0137"
+    "artifacts/PROG-2-0137",
+    ".atm/history/evidence/PROG-2-0137.*",
+    ".atm/history/task-events/PROG-2-0137/**",
+    ".atm/history/tasks/PROG-2-0137.json",
+    "artifacts/PROG-2-0137/check-hud-geometry.js",
+    "artifacts/PROG-2-0137/codex-observation.json",
+    "artifacts/PROG-2-0137/geometry-after.json",
+    "artifacts/PROG-2-0137/geometry-before.log",
+    "artifacts/PROG-2-0137/hud-crop.png",
+    "artifacts/PROG-2-0137/pointer-points.json",
+    "artifacts/PROG-2-0137/result.md",
+    "artifacts/PROG-2-0137/spirit-entry-flow.js",
+    "artifacts/PROG-2-0137/standard-isolated.log",
+    "artifacts/PROG-2-0137/web-entry/report.json"
   ],
   "validators": [],
   "planningRepo": null,
@@ -57,17 +70,17 @@
       "repoIdentity": "https://github.com/eaglhuang/3klife.git",
       "repoRoot": "C:/Users/User/.codex/worktrees/web-verification/3KLife",
       "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-0137.md",
-      "planningCommitSha": "071328cecd66b383ec3c88456d818952ce428757",
+      "planningCommitSha": "16115c36a5e23d28bcfea18227d336f86a899c4c",
       "contentDigest": "sha256:98b301ef3d9cca53b97c13da67d40b636b9a6e2a5cc126ec632ed35f186685f0",
       "amendmentEpoch": 1,
-      "sealedAt": "2026-10-15T23:40:56.535Z"
+      "sealedAt": "2026-10-15T23:42:00.737Z"
     }
   },
   "importedAt": "2026-10-15T23:36:07.330Z",
   "workAdmission": {
     "recoveryMode": "auto",
-    "resolvedRecoveryMode": "disabled",
-    "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+    "resolvedRecoveryMode": "enabled",
+    "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
   },
   "causalGraph": {
     "causalDependencies": [],
@@ -95,21 +108,32 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T23-40-56-663Z-metadata-only-import-11e65bd52c99",
-  "lastTransitionAt": "2026-10-15T23:40:56.663Z",
+  "lastTransitionId": "2026-10-15T23-46-06-376Z-scope-amendment-dfde895570af",
+  "lastTransitionAt": "2026-10-15T23:46:06.376Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
-  "reservedAt": "2026-10-15T23:36:14.423Z",
-  "promotedAt": "2026-10-15T23:36:14.427Z",
+  "reservedAt": "2026-10-15T23:45:59.882Z",
+  "promotedAt": "2026-10-15T23:45:59.887Z",
   "claim": {
     "actorId": "codex-gpt-6",
-    "leaseId": "lease-9b6d51d52ce1",
-    "claimedAt": "2026-10-15T23:36:14.432Z",
-    "heartbeatAt": "2026-10-15T23:36:14.432Z",
+    "leaseId": "lease-c66e1cc37878",
+    "claimedAt": "2026-10-15T23:45:59.893Z",
+    "heartbeatAt": "2026-10-15T23:45:59.893Z",
     "ttlSeconds": 1800,
     "files": [
+      ".atm/history/evidence/PROG-2-0137.*",
+      ".atm/history/task-events/PROG-2-0137/**",
       ".atm/history/tasks/PROG-2-0137.json",
-      "artifacts/PROG-2-0137",
+      "artifacts/PROG-2-0137/check-hud-geometry.js",
+      "artifacts/PROG-2-0137/codex-observation.json",
+      "artifacts/PROG-2-0137/geometry-after.json",
+      "artifacts/PROG-2-0137/geometry-before.log",
+      "artifacts/PROG-2-0137/hud-crop.png",
+      "artifacts/PROG-2-0137/pointer-points.json",
+      "artifacts/PROG-2-0137/result.md",
+      "artifacts/PROG-2-0137/spirit-entry-flow.js",
+      "artifacts/PROG-2-0137/standard-isolated.log",
+      "artifacts/PROG-2-0137/web-entry/report.json",
       "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
       "docs/agent-briefs/tasks/PROG/PROG-2-0137.md",
       "docs/tasks/tasks-prog.json"
@@ -117,10 +141,10 @@
     "state": "active",
     "intent": "write",
     "laneSession": {
-      "laneSessionId": "lane-20261015233614-codex-gpt-6-f9109d5fd4",
+      "laneSessionId": "lane-20261015234600-codex-gpt-6-7c730efb46",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015233614-codex-gpt-6-f9109d5fd4\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015234600-codex-gpt-6-7c730efb46\""
     }
   },
   "startedAt": "2026-10-15T23:36:14.432Z",
@@ -128,34 +152,44 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-21675057e569ceca",
-    "ticketDigest": "sha256:21675057e569ceca97669adffb5bd3189a53645881b1fb0b1fb79ad7e9a5ed29",
+    "ticketId": "wat-8e249b0e697967c7",
+    "ticketDigest": "sha256:8e249b0e697967c774dc537fdbbc74e1fbb365d0b7e8f507c096bd60cb3dee88",
     "taskId": "PROG-2-0137",
     "origin": "claim",
     "actorId": "codex-gpt-6",
-    "laneSessionId": "lane-20261015233614-codex-gpt-6-f9109d5fd4",
-    "claimGeneration": "lease-9b6d51d52ce1",
-    "issuedAt": "2026-10-15T23:36:14.432Z",
-    "expiresAt": "2026-10-16T00:06:14.432Z",
-    "scopeDigest": "sha256:b3017397c9568a29cd3fb527d370fe4e0d578a943dbe135478d545d34294214c",
+    "laneSessionId": "lane-20261015234600-codex-gpt-6-7c730efb46",
+    "claimGeneration": "lease-c66e1cc37878",
+    "issuedAt": "2026-10-15T23:46:06.209Z",
+    "expiresAt": "2026-10-16T00:16:06.209Z",
+    "scopeDigest": "sha256:886e11a226a855dc7865793c885297d403d8a909bb0f0be81bab1978fd31fcc7",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-10-15T23:36:14.432Z"
+      "selectedAt": "2026-10-15T23:46:06.209Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/PROG-2-0137.*",
+          ".atm/history/evidence/git-head.json",
           ".atm/history/task-events/PROG-2-0137/**",
           ".atm/history/tasks/PROG-2-0137.json",
-          "artifacts/PROG-2-0137",
+          "artifacts/PROG-2-0137/check-hud-geometry.js",
+          "artifacts/PROG-2-0137/codex-observation.json",
+          "artifacts/PROG-2-0137/geometry-after.json",
+          "artifacts/PROG-2-0137/geometry-before.log",
+          "artifacts/PROG-2-0137/hud-crop.png",
+          "artifacts/PROG-2-0137/pointer-points.json",
+          "artifacts/PROG-2-0137/result.md",
+          "artifacts/PROG-2-0137/spirit-entry-flow.js",
+          "artifacts/PROG-2-0137/standard-isolated.log",
+          "artifacts/PROG-2-0137/web-entry/report.json",
           "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
           "docs/agent-briefs/tasks/PROG/PROG-2-0137.md",
           "docs/tasks/tasks-prog.json"
         ],
-        "digest": "sha256:ff0f58fdc744cf5fa1cfd239d6d93ac9951552239e9531bb976b10d705aa1509"
+        "digest": "sha256:c7955d774d9105594504d1fdd210a393f496696af7feb3852931e074139042d9"
       },
       {
         "kind": "lifecycle-operation",
@@ -177,19 +211,19 @@
     "deferredForeignResidue": [],
     "recovery": {
       "requestedMode": "auto",
-      "resolvedMode": "disabled",
+      "resolvedMode": "enabled",
       "reasons": [
-        "low-risk-task"
+        "complex-task"
       ],
-      "maxSavePoints": 0,
-      "perTaskByteBudget": 0,
-      "repositoryByteBudget": 0,
-      "handoffTtlSeconds": 0,
+      "maxSavePoints": 2,
+      "perTaskByteBudget": 16777216,
+      "repositoryByteBudget": 268435456,
+      "handoffTtlSeconds": 604800,
       "tempRoot": ".atm/runtime/work-admission-temp",
-      "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+      "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
     }
   },
-  "startedBySessionId": "session-20261015233614-codex-gpt-6-PROG-2-0137-67df24fa5a",
+  "startedBySessionId": "session-20261015234559-codex-gpt-6-PROG-2-0137-2c9d19e4ae",
   "taskDirectionLock": {
     "schemaId": "atm.taskDirectionLock.v1",
     "specVersion": "0.1.0",
@@ -202,6 +236,16 @@
       ".atm/history/evidence/PROG-2-0137.*",
       ".atm/history/task-events/PROG-2-0137/**",
       ".atm/history/tasks/PROG-2-0137.json",
+      "artifacts/PROG-2-0137/check-hud-geometry.js",
+      "artifacts/PROG-2-0137/codex-observation.json",
+      "artifacts/PROG-2-0137/geometry-after.json",
+      "artifacts/PROG-2-0137/geometry-before.log",
+      "artifacts/PROG-2-0137/hud-crop.png",
+      "artifacts/PROG-2-0137/pointer-points.json",
+      "artifacts/PROG-2-0137/result.md",
+      "artifacts/PROG-2-0137/spirit-entry-flow.js",
+      "artifacts/PROG-2-0137/standard-isolated.log",
+      "artifacts/PROG-2-0137/web-entry/report.json",
       "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
       "docs/agent-briefs/tasks/PROG/PROG-2-0137.md",
       "docs/tasks/tasks-prog.json"
@@ -211,14 +255,14 @@
     "allowPlanningMirror": false,
     "promptHash": "b3d983d48c9c25aa917aa01fb6cf70cf0d873049224731c67f7bfb340b67d7f6",
     "actorId": "codex-gpt-6",
-    "sessionId": "session-20261015233614-codex-gpt-6-PROG-2-0137-67df24fa5a",
+    "sessionId": "session-20261015234559-codex-gpt-6-PROG-2-0137-2c9d19e4ae",
     "laneSession": {
-      "laneSessionId": "lane-20261015233614-codex-gpt-6-f9109d5fd4",
+      "laneSessionId": "lane-20261015234600-codex-gpt-6-7c730efb46",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015233614-codex-gpt-6-f9109d5fd4\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015234600-codex-gpt-6-7c730efb46\""
     },
-    "createdAt": "2026-10-15T23:36:20.467Z",
+    "createdAt": "2026-10-15T23:46:06.200Z",
     "status": "active"
   }
 }

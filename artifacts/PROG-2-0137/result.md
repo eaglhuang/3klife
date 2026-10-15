@@ -18,6 +18,8 @@
 - asset-db refresh：localhost:7456 未開啟；改用獨立 CLI 編譯與實際 Web 操作。
 - manifest 生成器會把既有任務總數 321 改為 55，已還原生成物，沒有覆寫他卡狀態。
 - 編碼檢查：PASS。編譯產生的未追蹤 meta 與五份字型 meta 異動已清除／還原。
+- 收尾票券阻擋已解開：原先 write-ticket 為獨立票券，未同步 claim-issued workAdmissionTicket。正常 tasks scope add --claim-first 明列九份證據路徑後，原生票券與認領一致，證據提交 46674f25f 成功。沒有修改 ATM 程式或手改 runtime ledger。
+- 暫存建置／驗證診斷與完整原始圖片另外保留在 artifacts/0137-diagnostics；正式證據清單與裁切圖已提交。
 
 ## Handoff Summary
 
