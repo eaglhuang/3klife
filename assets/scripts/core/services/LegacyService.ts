@@ -25,6 +25,7 @@ import { routeRetirement } from '../systems/RetirementRouting';
 import { retireTallyGrade, type BattleRecordLike } from '../systems/BattleRecordStats';
 import { resolvePrimaryClass, type JobWiringGeneral } from '../systems/JobChangeWiring';
 import type { SpiritCard } from '../models/SpiritCard';
+import { legacySnapshotOf } from '../systems/LegacyArena';
 import { isTallyEligible, TigerTallyGeneral } from '../systems/TigerTally';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import type { GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
@@ -79,7 +80,7 @@ export interface LegacyServiceOptions {
     archiver?: GeneralArchiver;
 }
 
-type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number; battleRecord?: BattleRecordLike };
+type LegacyGeneral = BreedingGeneral & AgingGeneral & { retiredSeason?: number; battleRecord?: BattleRecordLike; totalTp?: number };
 
 /**
  * 明確布林 isHistorical 直接採用，正式資料由 registry uid / is_virtual 產出；
@@ -188,7 +189,11 @@ export class LegacyService implements SeasonLifecycle {
             const isSpiritRelic = previous?.isSpiritRelic ??
                 (isTallyEligible(identity) &&
                     !await this._archiver.hasOtherSpiritRelic(dead.id, dead.templateId));
-            const snapshot = await this._archiver.markSpiritRelic(archived.uid, isSpiritRelic);
+            const marked = await this._archiver.markSpiritRelic(archived.uid, isSpiritRelic);
+            // 演武聖境精華快照（LIFE-11，PROG-2-0802）：Total_TP × 0.5；同 uid 重跑時保留既有值
+            const snapshot = previous?.legacyEssence !== undefined
+                ? marked
+                : await this._archiver.markLegacyEssence(archived.uid, legacySnapshotOf(dead.totalTp ?? 0));
             archivedSnapshots.push(snapshot);
             if (snapshot.isSpiritRelic === true) spiritCards.push(snapshot);
         }
