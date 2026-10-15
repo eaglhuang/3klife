@@ -664,12 +664,7 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
         Math.random = () => 0;
         try {
             services().initialize();
-<<<<<<< ours
             freezeBattleRandomness();
-=======
-            // 落石成功判定走戰場種子亂數源（PROG-2-0613），測試內固定為 0 以確定性地成功
-            services().session.setRandomSource(() => 0);
->>>>>>> theirs
             const ctrl = new BattleController();
             const playerGeneral = createGeneral('xu-huang', Faction.Player, 'xu-huang-crush');
             const enemyGeneral = createGeneral('ma-chao', Faction.Enemy, 'ma-chao-charge');
