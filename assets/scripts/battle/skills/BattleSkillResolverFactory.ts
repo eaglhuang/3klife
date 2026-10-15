@@ -5,6 +5,7 @@ import { HealSkillResolver } from './resolvers/HealSkillResolver';
 import { LinkSkillResolver } from './resolvers/LinkSkillResolver';
 import { ProjectedDamageSkillResolver } from './resolvers/ProjectedDamageSkillResolver';
 import { ResetSkillResolver } from './resolvers/ResetSkillResolver';
+import { RootSkillResolver } from './resolvers/RootSkillResolver';
 
 export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
   return new BattleSkillExecutor([
@@ -14,5 +15,6 @@ export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
     new LinkSkillResolver(),
     new ResetSkillResolver(),
     new ProjectedDamageSkillResolver(),
+    new RootSkillResolver(),
   ]);
 }

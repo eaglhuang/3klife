@@ -126,6 +126,15 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     falloffRule: 'none',
     battleLogKey: 'skill.zhao_yun_pierce.hit',
   },
+  // 長坂雄咆（PROG-2-0764）：本卡只做定身；後退 1 格另開 push 卡（規格 G-1）
+  'tally-changban-root': {
+    battleSkillId: 'tally-changban-root',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'root',
+    coefficient: 0,
+    rootTurns: 1,
+    battleLogKey: 'skill.tally_changban_root.root',
+  },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',
     targetMode: BattleSkillTargetMode.Area,
