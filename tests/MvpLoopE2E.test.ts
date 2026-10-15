@@ -35,11 +35,15 @@ const fs = require('fs') as typeof import('fs');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require('path') as typeof import('path');
 
-/** 真實宿命轉蛋規則與候選池（gacha-config.json 的 hero-pool） */
-function heroPool(): { options: DestinyGachaOptions; candidates: string[] } {
+/**
+ * 宿命轉蛋規則與候選池。規格（新手開場 §6）：宿命池就是六位初始名將；
+ * 十連抽不重複（firstPickOnly），所以抽數封頂在池子大小（6），否則會被 pool-too-small 拒絕。
+ */
+function destinyPool(): { options: DestinyGachaOptions; candidates: string[] } {
     const configs = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/resources/data/gacha-config.json'), 'utf8')) as GachaConfig[];
     const config = configs.find((c) => c.poolId === 'hero-pool')!;
-    return { options: optionsFromGachaConfig(config), candidates: [...config.candidateIds] };
+    const candidates = [...STARTER_GENERAL_IDS] as string[];
+    return { options: { ...optionsFromGachaConfig(config), pickCount: candidates.length }, candidates };
 }
 
 function realGenerals(): GeneralConfig[] {
@@ -57,7 +61,7 @@ function openingConfig(): OpeningFlowConfig {
 
 /** 跑完開場流程：反覆免費洗牌直到十連裡出現想要的那位，選定、確認鎖定；回傳鎖定的 id */
 function runOpeningAndLockDestiny(pickId: string): string {
-    const { options, candidates } = heroPool();
+    const { options, candidates } = destinyPool();
     const flow = new OpeningFlowController(openingConfig());
     flow.start();
     flow.advance({ type: 'intro-done' });
@@ -189,20 +193,30 @@ export function createMvpLoopE2ESuite(): TestSuite {
         assert.equals('young', session.leadGeneralId);
     });
 
-    suite.test('斷點記錄（待 PM 裁決）：宿命轉蛋候選池 20 人，開新局只收「張飛」當核心，其餘一律被拒', async () => {
-        // 規格：玩家反覆洗牌到抽中想要的名將並鎖定；開新局卻限定六位初始名將、且核心必須是 SSR 等效（目前只有張飛）。
-        // 這條測試記錄現況：若 PM 決定放寬（例如六人都算 SSR 等效，或宿命池只放六人），改這裡的預期即可。
-        const { candidates } = heroPool();
-        const accepted: string[] = [];
-        for (const id of candidates) {
+    suite.test('宿命池六位名將，鎖定誰就能開新局當核心、設為主將（原本只有張飛可以，其餘五位報錯）', async () => {
+        for (const id of STARTER_GENERAL_IDS) {
+            const locked = runOpeningAndLockDestiny(id);
+            assert.equals(id, locked);
             const session = createSession(new MemoryStorageAdapter());
-            try {
-                await session.startNewGameWithStarters(1, realGenerals(), { coreGeneralId: id as typeof STARTER_CORE_GENERAL_ID });
-                accepted.push(id);
-            } catch { /* 被拒 */ }
+            await session.startNewGameWithStarters(1, realGenerals(), { coreGeneralId: locked as typeof STARTER_CORE_GENERAL_ID });
+            assert.equals(id, session.leadGeneralId, `${id} 應成為出戰主將`);
+            assert.equals(6, session.roster.length);
         }
-        assert.equals(STARTER_CORE_GENERAL_ID, accepted.join(','), `能當核心的宿命名將：${accepted.join(',')}`);
-        assert.isTrue(candidates.length > STARTER_GENERAL_IDS.length, '宿命池比六位初始名將大');
+    });
+
+    suite.test('宿命池以外的名將不能當新局核心（規格：宿命池就是六位初始名將）', async () => {
+        const session = createSession(new MemoryStorageAdapter());
+        let failed = false;
+        try { await session.startNewGameWithStarters(1, realGenerals(), { coreGeneralId: 'cao-cao' as never }); } catch { failed = true; }
+        assert.isTrue(failed);
+    });
+
+    suite.test('設定現況記錄：gacha-config 的 hero-pool 是 20 位一般名將池、只含 3 位初始名將，不能直接當宿命池', () => {
+        const configs = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/resources/data/gacha-config.json'), 'utf8')) as GachaConfig[];
+        const pool = configs.find((c) => c.poolId === 'hero-pool')!;
+        const starters = pool.candidateIds.filter((id) => (STARTER_GENERAL_IDS as readonly string[]).includes(id));
+        assert.equals(3, starters.length);
+        assert.isTrue(pool.pickCount > STARTER_GENERAL_IDS.length, '十連不重複 > 六位池，直接套用會被 pool-too-small 拒絕');
     });
 
     return suite;
