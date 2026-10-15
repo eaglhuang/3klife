@@ -11,6 +11,8 @@ const ingest = require('../tools_node/ingest-generals-wiki.js') as {
     parseLimit: (argv: string[]) => number;
     calcEp: (stats: Record<'str' | 'int' | 'lea' | 'pol' | 'cha' | 'luk', number>) => number;
     mapToGeneralBase: (seed: { id: string; name: string; faction: string; role?: string }, extract: string | null) => Record<string, unknown>;
+    cutAtSentenceEnd: (text: string, max?: number) => string | null;
+    isDisambiguationText: (text: string) => boolean;
 };
 
 export function createIngestGeneralsWikiSuite(): TestSuite {
@@ -51,16 +53,29 @@ export function createIngestGeneralsWikiSuite(): TestSuite {
         assert.equals(100, ingest.calcEp({ str: 100, int: 100, lea: 100, pol: 100, cha: 100, luk: 100 }));
     });
 
-    suite.test('映射：有摘要時 historicalAnecdote 截斷至 200 字，並帶來源標記', () => {
-        const longText = '甲'.repeat(300);
+    suite.test('映射：有摘要時在句末截斷（200 字內），並帶來源標記', () => {
+        const longText = '甲'.repeat(150) + '。' + '乙'.repeat(300);
         const row = ingest.mapToGeneralBase({ id: 'x', name: '甲某', faction: 'wei', role: 'Support' }, longText);
         assert.equals('x', row.id as string);
         assert.equals('wei', row.faction as string);
         assert.equals('Support', row.role as string);
         assert.equals('男', row.gender as string);
-        assert.equals(200, (row.historicalAnecdote as string).length);
+        assert.equals('甲'.repeat(150) + '。', row.historicalAnecdote as string);
         assert.equals('wiki', row._source as string);
         assert.isTrue(typeof row._fetchedAt === 'string');
+    });
+
+    suite.test('句末截斷：上限內無句末時回傳 null，不留半句', () => {
+        assert.equals(null, ingest.cutAtSentenceEnd('甲'.repeat(300)));
+        assert.equals('甲。', ingest.cutAtSentenceEnd('甲。' + '乙'.repeat(300)));
+        assert.equals('短句。', ingest.cutAtSentenceEnd('短句。'));
+    });
+
+    suite.test('消歧義頁面不當 lore：映射為佔位文字', () => {
+        assert.isTrue(ingest.isDisambiguationText('劉焉可以指： 劉焉 (中山王)'));
+        assert.isFalse(ingest.isDisambiguationText('劉焉（？—194年），字君郎。'));
+        const row = ingest.mapToGeneralBase({ id: 'z', name: '劉焉', faction: 'shu' }, '劉焉可以指： 劉焉 (中山王)');
+        assert.equals('劉焉，三國時期著名人物。（詳細資料待補）', row.historicalAnecdote as string);
     });
 
     suite.test('映射：無摘要時使用佔位文字；缺 role 預設 Combat；六維數值落在 1~99', () => {
