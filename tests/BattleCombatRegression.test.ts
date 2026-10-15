@@ -63,6 +63,7 @@ export function createBattleCombatRegressionSuite(): TestSuite {
 
         executeBattleCombatPhase({
             state,
+            actingFaction: Faction.Player,
             playerGeneralUnitId: null,
             enemyGeneralUnitId: null,
             buildAttackAction: (unit) => {
@@ -242,9 +243,9 @@ export function createBattleCombatRegressionSuite(): TestSuite {
 
         const originalNextTurn = services().battle.nextTurn;
         let nextTurnCalls = 0;
-        services().battle.nextTurn = () => {
+        services().battle.nextTurn = (() => {
             nextTurnCalls += 1;
-        };
+        }) as never;
 
         try {
             ctrl.resolveEnemyTurn();
@@ -266,9 +267,9 @@ export function createBattleCombatRegressionSuite(): TestSuite {
 
         const originalNextTurn = services().battle.nextTurn;
         let nextTurnCalls = 0;
-        services().battle.nextTurn = () => {
+        services().battle.nextTurn = (() => {
             nextTurnCalls += 1;
-        };
+        }) as never;
 
         try {
             ctrl.advanceTurn();
