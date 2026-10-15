@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "source": "../ui/UI-vibe-pipeline.md",
+  "indexTitle": "UI Vibe Pipeline",
+  "indexPath": "docs/ui/UI-vibe-pipeline.md",
+  "type": "markdown-h2",
+  "preambleShard": "ui-core",
+  "defaultShard": "ui-pipeline-tail",
+  "_comment": "Sections routed by the text following '## ' (pattern matches h2 heading sans '## ').",
+  "shards": [
+    {
+      "name": "ui-core",
+      "title": "Core（TL;DR · §1–§3 · §3.1）",
+      "pattern": "^(TL;DR|[1-3]\\.)"
+    },
+    {
+      "name": "ui-json-cocos",
+      "title": "JSON 契約與 Cocos 模組（§4–§6）",
+      "pattern": "^[4-6]\\."
+    },
+    {
+      "name": "ui-skill-ops",
+      "title": "Skill 與分工（§7 · When to Use · Procedure · References · §8–§9）",
+      "pattern": "^(7|8|9)\\.|^(When to Use|Procedure|References|Use this skill|Do not use this skill)"
+    },
+    {
+      "name": "ui-pipeline-tail",
+      "title": "量產與管線（§10–§16）",
+      "pattern": "^1[0-6]\\."
+    }
+  ]
+}
