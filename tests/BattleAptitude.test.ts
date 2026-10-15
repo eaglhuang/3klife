@@ -23,7 +23,7 @@ import { TerrainType, TroopType } from '../assets/scripts/shared/CommonEnums';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { Faction, TerrainType, TroopType, Weather } from '../assets/scripts/core/config/Constants';
+import { Faction, Weather } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { EVENT_NAMES } from '../assets/scripts/core/config/Constants';
 import { executeBattleAutoMovePhase } from '../assets/scripts/battle/runtime/phases/BattleAutoMovePhase';
