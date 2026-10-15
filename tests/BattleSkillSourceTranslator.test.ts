@@ -260,11 +260,11 @@ export function createBattleSkillSourceTranslatorSuite(): TestSuite {
         );
 
         assert.isDefined(request);
-        assert.equals(SkillSourceType.TigerTally, request.sourceType);
-        assert.equals('tiger-charge', request.battleSkillId);
-        assert.equals(BattleSkillTargetMode.EnemySingle, request.targetMode);
-        assert.equals('tiger-tally-cavalry-shock', request.tacticId!);
-        assert.contains(request.notes ?? '', '虎豹騎');
+        assert.equals(SkillSourceType.TigerTally, request!.sourceType);
+        assert.equals('tiger-charge', request!.battleSkillId);
+        assert.equals(BattleSkillTargetMode.EnemySingle, request!.targetMode);
+        assert.equals('tiger-tally-cavalry-shock', request!.tacticId!);
+        assert.contains(request!.notes ?? '', '虎豹騎');
     });
 
     return suite;
