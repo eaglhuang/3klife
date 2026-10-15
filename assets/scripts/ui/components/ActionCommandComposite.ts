@@ -24,6 +24,7 @@ import { _decorator, Button, Color, Label, Node, Sprite, UITransform } from 'cc'
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
+import { TACTIC_REASON_WEATHER } from '../core/TacticAvailabilityPresenter';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UltimateSelectPopup, UltimateSkillItem } from './UltimateSelectPopup';
 import { logBattleUIPosition } from './BattleUIDiag';
@@ -52,6 +53,7 @@ export class ActionCommandComposite extends CompositePanel {
 
     // ── 目前 SP 狀態 ──────────────────────────────────────────
     private _tacticEnabled = true;
+    private _tacticClickable = true;
     private _tacticsButton: Button | null = null;
     private _tacticsEnabledColor: Color | null = null;
     private _maxSp = 100;
@@ -109,7 +111,9 @@ export class ActionCommandComposite extends CompositePanel {
         this._tacticsSummaryLabel = (label.trim() || '計謀') +
             (reason ? `\n${reason}` : points?.current !== undefined ? `\n點 ${points.current}/${points.max}` : '');
         this._tacticEnabled = points?.enabled ?? true;
-        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticEnabled;
+        // 天氣禁用：變灰但保留點擊，讓點擊後的天氣 Toast 出得來（PROG-2-0597）
+        this._tacticClickable = this._tacticEnabled || reason === TACTIC_REASON_WEATHER;
+        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticClickable;
         if (this._tacticsLabel) {
             this._tacticsLabel.string = this._tacticsSummaryLabel;
             if (this._tacticsEnabledColor) this._tacticsLabel.color = this._tacticEnabled
@@ -163,7 +167,7 @@ export class ActionCommandComposite extends CompositePanel {
         // 結束回合、計謀、單挑
         binder.getNode('EndTurnBtn')?.on(Button.EventType.CLICK, this._onEndTurnClick, this);
         this._tacticsButton = binder.getNode('TacticsBtn')?.getComponent(Button) ?? null;
-        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticEnabled;
+        if (this._tacticsButton) this._tacticsButton.interactable = this._tacticClickable;
         binder.getNode('TacticsBtn')?.on(Button.EventType.CLICK, this._onTacticsClick, this);
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
 
@@ -255,7 +259,7 @@ export class ActionCommandComposite extends CompositePanel {
 
     /** 計謀：通知父節點 */
     private _onTacticsClick(): void {
-        if (!this._tacticEnabled) return;
+        if (!this._tacticClickable) return;
         this.node.emit('tactics');
     }
 
