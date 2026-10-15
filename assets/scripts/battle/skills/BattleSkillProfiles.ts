@@ -133,6 +133,19 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     battleLogKey: 'skill.eight_formation.cast',
   },
+  // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
+  'tally-poison-arrow': {
+    battleSkillId: 'tally-poison-arrow',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'dot',
+    coefficient: 0,
+    maxTargets: 1,
+    dotMaxHpRatio: 0.1,
+    statusTurns: 2,
+    battleLogKey: 'skill.tally_poison_arrow.poison',
+  },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',
     targetMode: BattleSkillTargetMode.Area,

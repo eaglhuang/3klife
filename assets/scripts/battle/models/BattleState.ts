@@ -5,6 +5,7 @@ export type { TerrainGrid };
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
+import type { UnitDot } from "../shared/UnitDot";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 
 export interface GridCell {
@@ -77,6 +78,8 @@ export class BattleState {
   public readonly units = new Map<string, TroopUnit>();
   public readonly tileBuffs = new Map<string, TileBuff>();
   public readonly tileEffects = new Map<string, TileEffect>();
+  /** 單位持續傷害（毒箭）：以 unitId 為鍵（PROG-2-0766） */
+  public readonly unitDots = new Map<string, UnitDot>();
   /** 持續防禦區獨立成表：可與同格的火場等格子狀態共存（PROG-2-0761） */
   public readonly formationZones = new Map<string, FormationZone>();
   public readonly damageLinks = new Map<string, DamageLinkState>();
@@ -122,6 +125,7 @@ export class BattleState {
     this.units.clear();
     this.tileBuffs.clear();
     this.tileEffects.clear();
+    this.unitDots.clear();
     this.formationZones.clear();
     this.damageLinks.clear();
     this.counterReactions.clear();
