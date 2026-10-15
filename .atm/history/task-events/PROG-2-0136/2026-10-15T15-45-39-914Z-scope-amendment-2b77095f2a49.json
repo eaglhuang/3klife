@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-15T15-45-39-914Z-scope-amendment-2b77095f2a49",
+  "taskId": "PROG-2-0136",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0136.json",
+  "taskSha256": "sha256:7132c5ebb6be74abcc27ad1f2474bba4e495ef0b1397b11485a11be8d10e3160",
+  "createdAt": "2026-10-15T15:45:39.914Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-0136 --actor codex-gpt-6 --add docs/agent-briefs/tasks/PROG/PROG-2-0136.md --reason \"正式接卡 lifecycle frontmatter 必須提交；原卡已明列此路徑但票券未授予\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "正式接卡 lifecycle frontmatter 必須提交；原卡已明列此路徑但票券未授予"
+  }
+}

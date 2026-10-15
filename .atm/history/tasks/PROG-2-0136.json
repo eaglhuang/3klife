@@ -18,7 +18,10 @@
     "tests/OnboardingFlow.test.ts",
     "artifacts/PROG-2-0136/**",
     "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
-    "docs/tasks/tasks-prog.json"
+    "docs/tasks/tasks-prog.json",
+    ".atm/history/evidence/PROG-2-0136.*",
+    ".atm/history/task-events/PROG-2-0136/**",
+    ".atm/history/tasks/PROG-2-0136.json"
   ],
   "validators": [],
   "planningRepo": null,
@@ -62,10 +65,10 @@
       "repoIdentity": "https://github.com/eaglhuang/3klife.git",
       "repoRoot": "C:/Users/User/.codex/worktrees/web-verification/3KLife",
       "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
-      "planningCommitSha": null,
-      "contentDigest": "sha256:c02c7c703d8e544f6a9649369cb1f9e8bad362a247ab150721c227615518d609",
-      "amendmentEpoch": 0,
-      "sealedAt": "2026-10-15T15:38:38.456Z"
+      "planningCommitSha": "bb2a39c0dd6a7aa8815d34b11c4589971a21e842",
+      "contentDigest": "sha256:8205a5e2fdf2c036b303cc69818cf041e1ccff3859cd124cba7b1dde2606f637",
+      "amendmentEpoch": 1,
+      "sealedAt": "2026-10-15T15:46:21.193Z"
     }
   },
   "importedAt": "2026-10-15T15:38:38.456Z",
@@ -100,8 +103,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T15-42-31-653Z-renew-951dce6dbd8c",
-  "lastTransitionAt": "2026-10-15T15:42:31.653Z",
+  "lastTransitionId": "2026-10-15T15-46-21-386Z-metadata-only-import-0a5371195e80",
+  "lastTransitionAt": "2026-10-15T15:46:21.386Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T15:38:42.047Z",
@@ -113,10 +116,13 @@
     "heartbeatAt": "2026-10-15T15:42:31.530Z",
     "ttlSeconds": 1800,
     "files": [
+      ".atm/history/evidence/PROG-2-0136.*",
+      ".atm/history/task-events/PROG-2-0136/**",
       ".atm/history/tasks/PROG-2-0136.json",
       "artifacts/PROG-2-0136/**",
       "assets/scripts/ui/core/OnboardingFlowController.ts",
       "assets/scripts/ui/scenes/LobbyScene.ts",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
       "docs/tasks/tasks-prog.json",
       "tests/OnboardingFlow.test.ts"
     ],
@@ -133,20 +139,20 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-1c4df86e147e50b4",
-    "ticketDigest": "sha256:1c4df86e147e50b4a26d35d18b68bf8c22f120fe61eed7c76e328812b6dac591",
+    "ticketId": "wat-c2d061bfe218b102",
+    "ticketDigest": "sha256:c2d061bfe218b10242c25275de2595e823980d398084b0077b38b360cd6c4bba",
     "taskId": "PROG-2-0136",
     "origin": "claim",
     "actorId": "codex-gpt-6",
     "laneSessionId": "lane-20261015153842-codex-gpt-6-74e422d35e",
     "claimGeneration": "lease-5bcb9d50d9ce",
-    "issuedAt": "2026-10-15T15:42:31.530Z",
-    "expiresAt": "2026-10-15T16:12:31.530Z",
-    "scopeDigest": "sha256:bf3a141fd2b7a1fc769a014da9def6675a3d0ae46ab29e15801125326a13573e",
+    "issuedAt": "2026-10-15T15:45:39.806Z",
+    "expiresAt": "2026-10-15T16:15:39.806Z",
+    "scopeDigest": "sha256:7997492c21d7094500f6ea68afef8b56551366b5edc2f91f441739efc49ca06e",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-10-15T15:42:31.530Z"
+      "selectedAt": "2026-10-15T15:45:39.806Z"
     },
     "grants": [
       {
@@ -159,10 +165,11 @@
           "artifacts/PROG-2-0136/**",
           "assets/scripts/ui/core/OnboardingFlowController.ts",
           "assets/scripts/ui/scenes/LobbyScene.ts",
+          "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
           "docs/tasks/tasks-prog.json",
           "tests/OnboardingFlow.test.ts"
         ],
-        "digest": "sha256:1c2eef2cb472f51a6a5c1ed28e40ccf933fd8a539b456d70e0c71c7bd1faee76"
+        "digest": "sha256:f312204ecf1e99bfce02a2fe9d7ce84e06996ba1e68d4ce8e40f5de356787ab2"
       },
       {
         "kind": "lifecycle-operation",
@@ -212,22 +219,30 @@
       "artifacts/PROG-2-0136/**",
       "assets/scripts/ui/core/OnboardingFlowController.ts",
       "assets/scripts/ui/scenes/LobbyScene.ts",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
       "docs/tasks/tasks-prog.json",
       "tests/OnboardingFlow.test.ts"
     ],
-    "planningReadOnlyPaths": [],
-    "planningMirrorPaths": [],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/web-verification/3KLife/docs/agent-briefs/tasks/PROG/PROG-2-0136.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/PROG/",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0136.md"
+    ],
     "allowPlanningMirror": false,
     "promptHash": "a14ce5093800083857e29de864280d5987cc05302ba8eff076fae5b6920ef174",
     "actorId": "codex-gpt-6",
-    "sessionId": "session-20261015153842-codex-gpt-6-PROG-2-0136-88c9f3a1ac",
+    "sessionId": null,
     "laneSession": {
       "laneSessionId": "lane-20261015153842-codex-gpt-6-74e422d35e",
       "status": "active",
-      "source": "minted",
+      "source": "option",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015153842-codex-gpt-6-74e422d35e\""
     },
-    "createdAt": "2026-10-15T15:38:48.434Z",
+    "createdAt": "2026-10-15T15:42:31.676Z",
     "status": "active"
   }
 }
