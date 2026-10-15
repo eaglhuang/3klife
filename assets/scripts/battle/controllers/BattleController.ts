@@ -169,6 +169,7 @@ export class BattleController {
       getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
       getTacticConditions: (tacticId) => this.tacticDefinitionMap.get(tacticId)?.tcond as TacticCondition[] | undefined,
       getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
+      isUnitActionBlocked: (unitId) => this.turnManager.isUnitActionBlockedThisTurn(unitId),
     },
     this.skillSourceTranslator,
   );

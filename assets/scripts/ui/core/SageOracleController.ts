@@ -25,6 +25,7 @@ import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { ITEM_DISPLAY_NAMES, ITEM_ORACLE_TOKEN } from '../../core/systems/PlayerInventory';
 import type { FactorPoolEntry } from '../../core/systems/BreedingSystem';
+import { previewLockedFactorDirections } from '../../core/systems/SageFactorPreview';
 import { ProphecyResult, SAGES, SageDefinition, SageDivinationResult, SageId } from '../../core/systems/SageDivination';
 
 export const SAGE_ORDER: readonly SageId[] = ['zhuge-liang', 'pang-tong', 'hua-tuo', 'xu-shao', 'sima-hui', 'zuo-ci'];
@@ -211,6 +212,10 @@ export class SageOracleController {
         const locked = (target.genes ?? []).filter((gene) => gene.isLocked !== false).length;
         const ready = listAwakeningCandidates(target, ['sage'], this._deps.session.discoveryLevel).length;
         texts.targetInfo = `鎖定因子 ${locked} 個 · 目前可占卜 ${ready} 個（覺醒等級 ${this._deps.session.discoveryLevel}）`;
+        // 名士提前預覽（FUL-07，PROG-2-0446）：只顯示還鎖住、等級還看不到的因子方向（色系），不給因子名
+        const directions = previewLockedFactorDirections(target, this._deps.session.discoveryLevel);
+        texts.directionHint = directions.length > 0 ? `未解鎖方向：${directions.map((c) => COLOR_HINT[c]).join('、')}` : '';
+        actives.directionHint = directions.length > 0;
         if (!unlocked) {
             texts.costLabel = lockText;
         } else if (tokens < 1) {

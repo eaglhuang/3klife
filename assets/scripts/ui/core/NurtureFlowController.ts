@@ -64,6 +64,17 @@ const PHASE_LABELS: Record<PhaseBlock, string> = {
 
 const CAREER_LABELS: Record<string, string> = { Warrior: '武官', Scholar: '文官' };
 
+/** 自動培育被擋下時的提示（NUR-14 接線；LOCKED / NO_TICKET 文案由 cc 畫面直接顯示） */
+const AUTO_BLOCK_TEXT: Record<string, string> = {
+    LOCKED: '尚未解鎖自動培育：需先通過一次主線培育季',
+    NO_TICKET: '沒有自動培育券',
+    NOT_NURTURING: '這位子嗣目前沒有進行中的培育',
+    SESSION_ENDED: '這場培育已結束，無法自動培育',
+};
+
+/** GameSession.runAutoNurture 的結果形狀（結構型別，UI 不直接依賴 core/managers） */
+export type AutoNurtureResult = { ok: true; logs: unknown[] } | { ok: false; blocked: string };
+
 const BLOCK_REASON_TEXT: Record<NurtureBlockReason, string> = {
     'child-not-found': '名冊找不到這位子嗣',
     'child-dead': '已經離世',
@@ -102,6 +113,8 @@ interface GraduationReport {
 
 export interface NurtureFlowDeps {
     roster: { getAll(): GeneralConfig[] };
+    /** 自動培育（NUR-14）：正式環境接 GameSession.runAutoNurture；未提供時不顯示按鈕 */
+    autoNurture?: (childId: string) => Promise<AutoNurtureResult>;
     unveiling: Pick<UnveilingService, 'choose'>;
     nurture: Pick<
         NurtureService,
@@ -293,6 +306,7 @@ export class NurtureFlowController {
             btnDismissReport: false,
         };
         for (const kind of TRAINING_KINDS) enabled[`btnTrain_${kind}`] = false;
+        enabled.btnAutoNurture = false;
 
         if (!child) {
             actives.flowEmptyHint = true;
@@ -348,7 +362,23 @@ export class NurtureFlowController {
         actives.trainBlock = true;
         enabled.btnRest = true;
         for (const kind of TRAINING_KINDS) enabled[`btnTrain_${kind}`] = true;
+        enabled.btnAutoNurture = !!this._deps.autoNurture;
+        texts.autoNurtureLabel = '自動培育整季';
         return { mode: 'train', childId: child.id, texts, actives, enabled };
+    }
+
+    /**
+     * 自動培育整季（NUR-14）：成功時寫入提示，被擋下時顯示對應原因，都不改動券數以外的狀態。
+     * 扣券與寫回培育狀態由 GameSession.runAutoNurture 負責。
+     */
+    async autoNurture(): Promise<void> {
+        const child = this._requireSelected();
+        if (!this._deps.autoNurture) return;
+        const result = await this._deps.autoNurture(child.id);
+        this._notice = result.ok
+            ? `自動培育完成（${result.logs.length} 回合），可以畢業了`
+            : AUTO_BLOCK_TEXT[result.blocked] ?? '無法自動培育';
+        await this._persist();
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────

@@ -181,6 +181,8 @@ export interface NurtureSession {
     status: NurtureStatus;
     /** 本場已觸發的師友羈絆群組 id（一次性，MENT-12） */
     triggeredSynergies?: string[];
+    /** 傳道模式紀錄（MENT-15，對應 Data Schema Mentoring_Mode_Log）：支援教官或英靈傳道 */
+    mentoringModeLog?: Array<{ round: number; mode: 'Support' | 'Legendary_Mentoring'; sourceId: string; skillId?: string }>;
     /** 自動培育會話（NUR-14）：畢業評級上限 A */
     auto?: boolean;
 }
@@ -460,19 +462,21 @@ export function executeRound(
         }
     }
     session.log.push(log);
-    // 師友羈絆（MENT-12）：一次性、回合上限內
-    const synergy = findTriggeredSynergy({
-        round,
-        mentorIds: source.mentors.map((mentor) => mentor.id),
-        friendship: Object.fromEntries(source.mentors.map((mentor) => [mentor.id, mentor.friendship ?? 0])),
-        triggered: session.triggeredSynergies ?? [],
-    });
-    if (synergy) {
-        const bonus = synergyTpBonus(synergy);
-        session.triggeredSynergies = [...(session.triggeredSynergies ?? []), synergy.id];
-        session.tp += bonus;
-        log.tpGained += bonus;
-        log.synergyId = synergy.id;
+    // 師友羈絆（MENT-12）：一次性、回合上限內；自動培育不觸發事件
+    if (!options.auto) {
+        const synergy = findTriggeredSynergy({
+            round,
+            mentorIds: source.mentors.map((mentor) => mentor.id),
+            friendship: Object.fromEntries(source.mentors.map((mentor) => [mentor.id, mentor.friendship ?? 0])),
+            triggered: session.triggeredSynergies ?? [],
+        });
+        if (synergy) {
+            const bonus = synergyTpBonus(synergy);
+            session.triggeredSynergies = [...(session.triggeredSynergies ?? []), synergy.id];
+            session.tp += bonus;
+            log.tpGained += bonus;
+            log.synergyId = synergy.id;
+        }
     }
     if (round >= NURTURE_TOTAL_ROUNDS) {
         session.status = 'completed';

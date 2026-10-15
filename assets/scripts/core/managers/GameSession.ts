@@ -24,7 +24,8 @@
  */
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
-import { consumeAutoNurtureTicket } from '../systems/AutoNurture';
+import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
+import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
@@ -83,6 +84,8 @@ import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../sy
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
+import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
@@ -515,6 +518,27 @@ export class GameSession {
         const { added } = await this.addGenerals([result.general]);
         if (added.length > 0) await this.recordMercenaryOath(result.general.id);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    /**
+     * 對武將使用補元散（PROG-2-0444）：扣道具、回復精力、寫回名冊並存檔。
+     * 精力已滿或沒有道具時整體拒絕，背包與名冊都不變；查無武將回傳 no-general。
+     * 上限沿用名冊上的 maxVitality，缺值時用性別基礎值（與 VitalityCap 一致）。
+     */
+    public async usePillOnGeneral(generalId: string, kind: VitalityPillKind): Promise<VitalityPillUseResult | { readonly ok: false; readonly reason: 'no-general' }> {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return { ok: false, reason: 'no-general' };
+        const max = general.maxVitality ?? general.vitality ?? baseVitalityMaxOf(general.gender);
+        const current = general.vitality ?? max;
+        const result = useVitalityPill(this._inventory, current, max, kind);
+        if (!result.ok) return result;
+        this._inventory = result.inventory;
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, vitality: result.vitality, maxVitality: max } : g)));
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
     }
 
     /**
@@ -1681,6 +1705,36 @@ export class GameSession {
     /** 主線第一次通過培育季後為 true，之後不會再變回 false */
     public get mainlineNurtureClearedOnce(): boolean {
         return this._mainlineNurtureClearedOnce;
+    }
+
+    /**
+     * 自動培育（NUR-14 接線）：解鎖 → 券 → 會話（須進行中）→ 解析排程 → 扣券 → 跑完整季 → 寫回培育狀態並自動存檔。
+     * 畢業仍由玩家呼叫 graduate；自動會話的評級上限已在結算時套用。
+     * manualSchedule 為上一次手動排程（缺值時平均分配到最低屬性）；random 預設 Math.random。
+     */
+    public async runAutoNurture(
+        childId: string,
+        manualSchedule?: readonly NurtureAction[],
+        random: RandomSource = Math.random,
+    ): Promise<{ ok: true; logs: NurtureRoundLog[] } | { ok: false; blocked: AutoNurtureBlockReason | 'NOT_NURTURING' | 'SESSION_ENDED' }> {
+        const gate = canStartAutoNurture(isAutoNurtureUnlocked(this._mainlineNurtureClearedOnce), this._autoNurtureTickets);
+        if (!gate.ok) return { ok: false, blocked: gate.blocked! };
+        const state = this._nurture?.getState();
+        const session = state?.sessions.find((s) => s.childId === childId);
+        if (!state || !session) return { ok: false, blocked: 'NOT_NURTURING' };
+        if (session.status !== 'active') return { ok: false, blocked: 'SESSION_ENDED' };
+        const schedule = resolveAutoSchedule(session.prowess, manualSchedule);
+        const run = runAutoNurtureSeason(session, schedule, random);
+        const next = consumeAutoNurtureTicket(this._autoNurtureTickets);
+        this._autoNurtureTickets = next ?? this._autoNurtureTickets;
+        this._nurture!.restoreState({
+            ...state,
+            sessions: state.sessions.map((s) => (s.childId === childId ? run.session : s)),
+        });
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, logs: run.logs };
     }
 
     /** 入帳自動培育券（只收正整數，自動存檔） */
