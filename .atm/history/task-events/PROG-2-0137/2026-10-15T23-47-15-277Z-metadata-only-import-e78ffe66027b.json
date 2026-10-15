@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-15T23-47-15-277Z-metadata-only-import-e78ffe66027b",
+  "taskId": "PROG-2-0137",
+  "action": "metadata-only-import",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0137.json",
+  "taskSha256": "sha256:7f121b433d371858c2962d51a46328b4f5b6a92396aad5054edae915aa877346",
+  "createdAt": "2026-10-15T23:47:15.277Z",
+  "command": "node atm.mjs tasks import --from docs/agent-briefs/tasks/PROG/PROG-2-0137.md --write --metadata-only --preserve-active-claim --actor codex-gpt-6 --json"
+}

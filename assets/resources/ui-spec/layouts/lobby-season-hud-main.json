@@ -27,7 +27,7 @@
           "left": 32
         },
         "width": 320,
-        "height": 232,
+        "height": 504,
         "skinSlot": "season.hud.card.bg",
         "children": [
           {
@@ -236,7 +236,7 @@
             "name": "BtnOpenSandtable",
             "id": "btnOpenSandtable",
             "widget": {
-              "bottom": 296,
+              "bottom": 344,
               "left": 12,
               "right": 12
             },
@@ -263,7 +263,7 @@
             "name": "BtnOpenSpiritCodex",
             "id": "btnOpenSpiritCodex",
             "widget": {
-              "bottom": 344,
+              "bottom": 296,
               "left": 12,
               "right": 12
             },

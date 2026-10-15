@@ -1,0 +1,72 @@
+{
+  "ok": true,
+  "cardHeight": 504,
+  "rects": [
+    {
+      "name": "SeasonLabel",
+      "type": "label",
+      "top": 10,
+      "height": 36
+    },
+    {
+      "name": "ModeLabel",
+      "type": "label",
+      "top": 50,
+      "height": 24
+    },
+    {
+      "name": "CountdownIconLabel",
+      "type": "label",
+      "top": 78,
+      "height": 24
+    },
+    {
+      "name": "AdvanceSeasonButton",
+      "type": "button",
+      "top": 456,
+      "height": 40
+    },
+    {
+      "name": "OpenNurtureButton",
+      "type": "button",
+      "top": 408,
+      "height": 40
+    },
+    {
+      "name": "OpenBondingButton",
+      "type": "button",
+      "top": 360,
+      "height": 40
+    },
+    {
+      "name": "OpenJobChangeButton",
+      "type": "button",
+      "top": 312,
+      "height": 40
+    },
+    {
+      "name": "OpenDomesticButton",
+      "type": "button",
+      "top": 264,
+      "height": 40
+    },
+    {
+      "name": "BtnOpenHallBoard",
+      "type": "button",
+      "top": 216,
+      "height": 40
+    },
+    {
+      "name": "BtnOpenSandtable",
+      "type": "button",
+      "top": 120,
+      "height": 40
+    },
+    {
+      "name": "BtnOpenSpiritCodex",
+      "type": "button",
+      "top": 168,
+      "height": 40
+    }
+  ]
+}

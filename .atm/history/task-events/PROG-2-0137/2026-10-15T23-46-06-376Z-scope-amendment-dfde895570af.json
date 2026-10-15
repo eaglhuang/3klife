@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-15T23-46-06-376Z-scope-amendment-dfde895570af",
+  "taskId": "PROG-2-0137",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0137.json",
+  "taskSha256": "sha256:386e3678519579981ed50b95febe7c9b065d686c3a501a5b53d08c37a657660a",
+  "createdAt": "2026-10-15T23:46:06.376Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-0137 --actor codex-gpt-6 --add \"artifacts/PROG-2-0137/check-hud-geometry.js,artifacts/PROG-2-0137/codex-observation.json,artifacts/PROG-2-0137/geometry-after.json,artifacts/PROG-2-0137/geometry-before.log,artifacts/PROG-2-0137/hud-crop.png,artifacts/PROG-2-0137/pointer-points.json,artifacts/PROG-2-0137/spirit-entry-flow.js,artifacts/PROG-2-0137/standard-isolated.log,artifacts/PROG-2-0137/web-entry/report.json\" --reason \"明列0137既有驗證證據以同步原生票券\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "明列0137既有驗證證據以同步原生票券"
+  }
+}
