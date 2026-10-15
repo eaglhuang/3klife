@@ -284,6 +284,16 @@ export class BattleSkillDispatcher {
         return general ? { lane: general.lane, depth: general.depth } : null;
       },
       getWeather: () => state.weather,
+      setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
+        state.setTileEffect({
+          id: `skill-fire-${cell.lane}-${cell.depth}`,
+          lane: cell.lane,
+          depth: cell.depth,
+          state: 'hazard-fire',
+          damagePerTurn,
+          notes: 'skill:hazard-cross',
+        });
+      },
       applyDamage: (unit: TroopUnit, damage: number, casterFaction: Faction) => {
         const svc = services();
         combatResolver.applyUnitDamage(unit, damage, casterFaction, {

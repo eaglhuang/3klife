@@ -46,6 +46,8 @@ export interface BattleSkillProfile {
   pushSteps?: number;
   /** 定身回合數（規格 1） */
   rootTurns?: number;
+  /** 火計連環：結算後把每個目標及其四向相鄰格設為火場（PROG-2-0757） */
+  hazardCross?: boolean;
   statusEffect?: StatusEffect;
   statusTurns?: number;
   linkShareRatio?: number;

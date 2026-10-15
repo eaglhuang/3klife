@@ -1,9 +1,12 @@
 import { Faction } from '../../../core/config/Constants';
 import { BattleSkillTargetMode, type BattleSkillRequest, type SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
+import { GAME_CONFIG } from '../../../core/config/Constants';
 import { BattleSkillDamageResolver } from '../BattleSkillDamageResolver';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from '../BattleSkillResolver';
 import { BattleSkillTargetSelector } from '../BattleSkillTargetSelector';
+import { crossCellsForAll } from '../SkillGridGeometry';
+import { FIRE_HAZARD_DAMAGE_PER_TURN } from '../SkillEffectFormulas';
 
 export class ProjectedDamageSkillResolver implements BattleSkillResolver {
   constructor(
@@ -97,6 +100,14 @@ export class ProjectedDamageSkillResolver implements BattleSkillResolver {
         deltas: [],
         battleLogLines: [`${request.battleSkillId} skipped because all targets were dead`],
       };
+    }
+
+    // 火計連環（PROG-2-0757）：每個目標的十字相鄰格（含自身）化為火場
+    if (profile.hazardCross && context.setTileHazard) {
+      const centers = targets.map((unit) => ({ lane: unit.lane, depth: unit.depth }));
+      for (const cell of crossCellsForAll(centers, GAME_CONFIG.GRID_LANES, GAME_CONFIG.GRID_DEPTH)) {
+        context.setTileHazard(cell, FIRE_HAZARD_DAMAGE_PER_TURN);
+      }
     }
 
     context.emitSkillEffect(request.battleSkillId, casterFaction);
