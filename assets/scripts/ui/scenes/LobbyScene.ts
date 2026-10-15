@@ -730,6 +730,7 @@ export class LobbyScene extends Component {
      */
     private async _mountOnboardingTutorial(): Promise<void> {
         const onboarding = new OnboardingFlowController({
+            ready: () => !this._isNewPlayer || this._destiny?.started === true,
             state: () => services().session.onboarding,
             acknowledge: (segmentId) => services().session.acknowledgeOnboarding(segmentId),
         });
@@ -946,10 +947,7 @@ export class LobbyScene extends Component {
         applyFlowView(binder, this._redFace.getFlowView());
     }
 
-    /**
-     * 新局宿命轉蛋（OPEN-05）：新玩家（沒有存檔）進大廳時先開，鎖定後開新局並存檔。
-     * 規則全在 DestinyOpeningController（純邏輯），這裡只綁按鈕、套 FlowView。
-     */
+    /** 新局宿命轉蛋（OPEN-05）：規則由 DestinyOpeningController 管理，開局後才顯示引導。 */
     private async _mountDestinyOpening(): Promise<void> {
         const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
         const heroPool = (Array.isArray(gachaConfig) ? gachaConfig : []).find(pool => pool.poolId === 'hero-pool');
@@ -997,6 +995,7 @@ export class LobbyScene extends Component {
     }
 
     private _afterDestinyAction(): void {
+        this._refreshOnboardingTutorial();
         if (this._destiny?.started && this._destinyHost) {
             this._destinyHost.node.active = false;
             if (destinyLockedEvent(this._destiny.state)) {
