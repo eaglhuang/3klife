@@ -8,7 +8,7 @@ import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
-import { zoneDefenseMultiplier } from '../shared/TileStateRules';
+import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
@@ -76,7 +76,7 @@ export class BattleCombatResolver {
   public getUnitTerrainDefenseMultiplier(unit: TroopUnit): number {
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
-    const zone = zoneDefenseMultiplier(this.context.state.getTileEffect(unit.lane, unit.depth), unit.faction);
+    const zone = zoneDefenseMultiplier(this.context.state.getFormationZone(unit.lane, unit.depth), unit.faction);
     return (1 + getTerrainTroopEffect(unit.type, terrain).defenseMult) * zone;
   }
 

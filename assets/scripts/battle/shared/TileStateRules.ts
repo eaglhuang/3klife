@@ -1,4 +1,3 @@
-import type { Faction } from '../../core/config/Constants';
 import type { TileEffect } from '../models/BattleState';
 
 /**
@@ -21,16 +20,6 @@ export const TILE_STATE_RULES: Readonly<Record<TileStateKind, TileStateRule>> = 
   'force-move': { kind: 'force-move', damagesOnEnter: false, pushesOnEnter: true, hidesOnEnter: false },
   stealth: { kind: 'stealth', damagesOnEnter: false, pushesOnEnter: false, hidesOnEnter: true },
 };
-
-/**
- * 持續防禦區的防禦倍率（PROG-2-0760）：只對區域所屬陣營的單位生效，其餘為 1。
- * 格子上沒有防禦區時為 1。
- */
-export function zoneDefenseMultiplier(effect: TileEffect | null | undefined, unitFaction: Faction): number {
-  if (!effect || effect.state !== 'formation-zone') return 1;
-  if (effect.zoneFaction !== unitFaction) return 1;
-  return effect.defenseMultiplier ?? 1;
-}
 
 /** 由 TileEffect 欄位推導四類之一；沒有效果或只是裝飾的格子為 normal。 */
 export function tileStateKindOf(effect: TileEffect | null | undefined): TileStateKind {

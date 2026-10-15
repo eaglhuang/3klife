@@ -16,6 +16,7 @@ import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourc
 import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver';
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
 import { createDefaultBattleSkillExecutor } from '../skills/BattleSkillResolverFactory';
+import { zoneDefenseMultiplier, type FormationZone } from '../shared/FormationZone';
 import {
   BattleSkillTargetMode,
   BattleSkillTiming,
@@ -284,6 +285,11 @@ export class BattleSkillDispatcher {
         return general ? { lane: general.lane, depth: general.depth } : null;
       },
       getWeather: () => state.weather,
+      getCasterUnitId: (casterFaction: Faction) => (casterFaction === Faction.Player
+        ? this.context.getPlayerGeneralUnitId()
+        : this.context.getEnemyGeneralUnitId()),
+      getDefenseZoneMultiplier: (unit: TroopUnit) => zoneDefenseMultiplier(state.getFormationZone(unit.lane, unit.depth), unit.faction),
+      addFormationZone: (zone: FormationZone) => state.setFormationZone(zone),
       setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
         state.setTileEffect({
           id: `skill-fire-${cell.lane}-${cell.depth}`,

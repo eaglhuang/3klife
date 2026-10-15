@@ -4,6 +4,7 @@ import { TerrainType, TerrainGrid } from "../../shared/CommonEnums";
 export type { TerrainGrid };
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
+import type { FormationZone } from "../shared/FormationZone";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 
 export interface GridCell {
@@ -24,7 +25,7 @@ export interface TileBuff {
   rarity: "normal" | "rare";
 }
 
-export type TileEffectState = 'hazard-fire' | 'hazard-rock' | 'river-current' | 'ambush-field' | 'night-raid' | 'scene-camp' | 'formation-zone';
+export type TileEffectState = 'hazard-fire' | 'hazard-rock' | 'river-current' | 'ambush-field' | 'night-raid' | 'scene-camp';
 export type TileEffectMoveDirection = 'forward' | 'backward';
 
 export interface TileEffect {
@@ -37,9 +38,6 @@ export interface TileEffect {
   forcedMoveDirection?: TileEffectMoveDirection;
   forcedMoveSteps?: number;
   moveRangeDelta?: number;
-  /** 持續防禦區（PROG-2-0760）：站在此格、屬於 zoneFaction 的單位防禦 ×defenseMultiplier */
-  defenseMultiplier?: number;
-  zoneFaction?: Faction;
   notes?: string;
 }
 
@@ -79,6 +77,8 @@ export class BattleState {
   public readonly units = new Map<string, TroopUnit>();
   public readonly tileBuffs = new Map<string, TileBuff>();
   public readonly tileEffects = new Map<string, TileEffect>();
+  /** 持續防禦區獨立成表：可與同格的火場等格子狀態共存（PROG-2-0761） */
+  public readonly formationZones = new Map<string, FormationZone>();
   public readonly damageLinks = new Map<string, DamageLinkState>();
   public readonly counterReactions = new Map<string, CounterReactionState>();
   public readonly actionResets = new Map<string, ActionResetState>();
@@ -122,6 +122,7 @@ export class BattleState {
     this.units.clear();
     this.tileBuffs.clear();
     this.tileEffects.clear();
+    this.formationZones.clear();
     this.damageLinks.clear();
     this.counterReactions.clear();
     this.actionResets.clear();
@@ -205,6 +206,14 @@ export class BattleState {
       this.tileBuffs.delete(key);
     }
     return buff;
+  }
+
+  public setFormationZone(zone: FormationZone): void {
+    this.formationZones.set(`${zone.lane},${zone.depth}`, zone);
+  }
+
+  public getFormationZone(lane: number, depth: number): FormationZone | null {
+    return this.formationZones.get(`${lane},${depth}`) ?? null;
   }
 
   public setTileEffect(effect: TileEffect): void {

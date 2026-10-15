@@ -126,6 +126,13 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     falloffRule: 'none',
     battleLogKey: 'skill.zhao_yun_pierce.hit',
   },
+  'eight-formation': {
+    battleSkillId: 'eight-formation',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'tile-buff',
+    coefficient: 0,
+    battleLogKey: 'skill.eight_formation.cast',
+  },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',
     targetMode: BattleSkillTargetMode.Area,
