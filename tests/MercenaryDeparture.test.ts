@@ -99,7 +99,7 @@ export function createMercenaryDepartureSuite(): TestSuite {
 
     suite.test('沒有離隊事件時不產生離隊事件，冷卻不變', () => {
         const before: { uid: string; availableOnDay: number }[] = [{ uid: 'merc-2', availableOnDay: 50 }];
-        const result = settleUpkeepDeparture([{ type: 'frozen', uid: 'merc-1', frozenDaysLeft: 1 }], 10, before);
+        const result = settleUpkeepDeparture([{ type: 'frozen', uid: 'merc-1' }], 10, before);
         assert.isFalse(result.departed);
         assert.equals(0, result.events.length);
         assert.equals(1, result.cooldowns.length);
