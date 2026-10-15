@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 40,
-    "total": 76
+    "open": 42,
+    "total": 78
   },
   "tasks": [
     {
@@ -3127,6 +3127,66 @@
         "artifacts/PROG-2-0129/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0130",
+      "title": "實機驗收：退役回顧與季度戰報（#407、#411、#416）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M1",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "退役回顧資料、版面與大廳掛載已合併，文字、版面與多語系待實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #407",
+        "PR #411",
+        "PR #416"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0130.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0130/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0131",
+      "title": "實機驗收：教官卡詳情版面與畫面掛載（MENT-13、#412／#418）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M1",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "教官卡詳情的三頁籤版面與畫面掛載已合併，入口未接，驗收用除錯入口。",
+      "related": [],
+      "depends": [
+        "PR #412",
+        "PR #418",
+        "PROG-2-0701",
+        "PROG-2-0702",
+        "PROG-2-0703"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0131.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0131/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: 入口按鈕未接"
     }
   ]
 }
