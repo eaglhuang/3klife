@@ -8,6 +8,7 @@ import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
+import { zoneDefenseMultiplier } from '../shared/TileStateRules';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
@@ -71,10 +72,12 @@ export class BattleCombatResolver {
   }
 
   /** 兵種 × 地形防禦倍率（步兵山地 +30%，PROG-2-0200）；沒有規則時為 1 */
+  /** 站位防禦倍率 = 地形兵種加成 × 持續防禦區倍率（PROG-2-0760） */
   public getUnitTerrainDefenseMultiplier(unit: TroopUnit): number {
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
-    return 1 + getTerrainTroopEffect(unit.type, terrain).defenseMult;
+    const zone = zoneDefenseMultiplier(this.context.state.getTileEffect(unit.lane, unit.depth), unit.faction);
+    return (1 + getTerrainTroopEffect(unit.type, terrain).defenseMult) * zone;
   }
 
   /** 移動格數修正 = 適性等級修正 + 兵種 × 地形固定效果（PROG-2-0089） */
