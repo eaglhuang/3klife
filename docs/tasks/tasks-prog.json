@@ -3172,9 +3172,11 @@
       "depends": [
         "PR #412",
         "PR #418",
+        "PR #421",
         "PROG-2-0701",
         "PROG-2-0702",
-        "PROG-2-0703"
+        "PROG-2-0703",
+        "PROG-2-0704"
       ],
       "acceptance": [
         "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
@@ -3186,7 +3188,7 @@
       "scopePaths": [
         "artifacts/PROG-2-0131/**"
       ],
-      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: 入口按鈕未接"
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 補入口驗收步驟（#421） | 阻塞: none"
     }
   ]
 }
