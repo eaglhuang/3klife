@@ -1,3 +1,5 @@
+import type { TrainingMentor } from './NurtureSystem';
+
 /**
  * MentorCardTabs — 教官卡詳情三頁籤與星等鎖頭（MENT-13，純邏輯，不依賴 cc）
  *
@@ -134,4 +136,18 @@ export function toMentorCardLayoutState(view: MentorCardTabView, title: string):
         actives[`rowLock_${i}`] = row.locked;
     }
     return { texts, actives };
+}
+
+/**
+ * 培育中的教官 → 詳情頁資料（入口用）。
+ * 目前培育 session 只帶教官的數值與專長，事件與小插曲資料尚未進 session，
+ * 所以這裡只給支援效果一列；事件 / 小插曲待接入教官卡資料後補上。
+ */
+export function mentorToCardData(mentor: Pick<TrainingMentor, 'tpBonus' | 'specialty' | 'stars'>): MentorCardData {
+    return {
+        star: mentor.stars ?? 0,
+        effects: [{ id: 'SUPPORT_BASE', label: `${mentor.specialty} 專長　TP 加成 +${Math.round(mentor.tpBonus)}%` }],
+        events: [],
+        stories: [],
+    };
 }
