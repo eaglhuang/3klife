@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-15T23-20-15-811Z-scope-amendment-0e9fb36740b3",
+  "taskId": "PROG-2-0134",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0134.json",
+  "taskSha256": "sha256:af40024f83e0b08534f7f60a9a23b3297fe3a7100dd7eec41b3c12cb4a79ff1b",
+  "createdAt": "2026-10-15T23:20:15.811Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-0134 --actor codex-gpt-6 --add \"temp_workspace/wiki-cache.json,temp_workspace/raw-wiki.json,assets/resources/data/master/generals-lore.json\" --reason \"正式 0134 正文已要求清除這 24 筆快取並產出 lore 資料；補齊漏列的檔案路徑，不新增規則或手寫 lore\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "正式 0134 正文已要求清除這 24 筆快取並產出 lore 資料；補齊漏列的檔案路徑，不新增規則或手寫 lore"
+  }
+}

@@ -14,7 +14,14 @@
     "artifacts/PROG-2-0134/**"
   ],
   "scopePaths": [
-    "artifacts/PROG-2-0134/**"
+    "artifacts/PROG-2-0134/**",
+    ".atm/history/evidence/PROG-2-0134.*",
+    ".atm/history/task-events/PROG-2-0134/**",
+    ".atm/history/tasks/PROG-2-0134.json",
+    "assets/resources/data/master/generals-lore.json",
+    "docs/agent-briefs/tasks/PROG/PROG-2-0134.md",
+    "temp_workspace/raw-wiki.json",
+    "temp_workspace/wiki-cache.json"
   ],
   "validators": [],
   "planningRepo": null,
@@ -85,8 +92,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T23-18-00-655Z-claim-987b90b75779",
-  "lastTransitionAt": "2026-10-15T23:18:00.655Z",
+  "lastTransitionId": "2026-10-15T23-20-15-811Z-scope-amendment-0e9fb36740b3",
+  "lastTransitionAt": "2026-10-15T23:20:15.811Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T23:17:54.719Z",
@@ -98,9 +105,14 @@
     "heartbeatAt": "2026-10-15T23:17:54.729Z",
     "ttlSeconds": 1800,
     "files": [
+      ".atm/history/evidence/PROG-2-0134.*",
+      ".atm/history/task-events/PROG-2-0134/**",
       ".atm/history/tasks/PROG-2-0134.json",
       "artifacts/PROG-2-0134/**",
-      "docs/agent-briefs/tasks/PROG/PROG-2-0134.md"
+      "assets/resources/data/master/generals-lore.json",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0134.md",
+      "temp_workspace/raw-wiki.json",
+      "temp_workspace/wiki-cache.json"
     ],
     "state": "active",
     "intent": "write",
@@ -116,32 +128,36 @@
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-716fe1fe0f1a7279",
-    "ticketDigest": "sha256:716fe1fe0f1a72793b03b127be6d50deb70dcbc384015edbadfe93ac8770f408",
+    "ticketId": "wat-31919dcb8e335175",
+    "ticketDigest": "sha256:31919dcb8e335175a58426671216d4dbedffec3282809ff12fa4ad2eec2191d5",
     "taskId": "PROG-2-0134",
     "origin": "claim",
     "actorId": "codex-gpt-6",
     "laneSessionId": "lane-20261015231754-codex-gpt-6-abe07a835d",
     "claimGeneration": "lease-f9f1e92b7f61",
-    "issuedAt": "2026-10-15T23:17:54.729Z",
-    "expiresAt": "2026-10-15T23:47:54.729Z",
-    "scopeDigest": "sha256:b8a9079277ef74a874723fb4a49343e1c448c8e4829cb697044bd1533bb34ccf",
+    "issuedAt": "2026-10-15T23:20:15.705Z",
+    "expiresAt": "2026-10-15T23:50:15.705Z",
+    "scopeDigest": "sha256:2afda80df725c2afb98a9c3bad8123ca69b7d392d81690417ffbe5cfd6ab51f8",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-10-15T23:17:54.729Z"
+      "selectedAt": "2026-10-15T23:20:15.705Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/PROG-2-0134.*",
+          ".atm/history/evidence/git-head.json",
           ".atm/history/task-events/PROG-2-0134/**",
           ".atm/history/tasks/PROG-2-0134.json",
           "artifacts/PROG-2-0134/**",
-          "docs/agent-briefs/tasks/PROG/PROG-2-0134.md"
+          "assets/resources/data/master/generals-lore.json",
+          "docs/agent-briefs/tasks/PROG/PROG-2-0134.md",
+          "temp_workspace/raw-wiki.json",
+          "temp_workspace/wiki-cache.json"
         ],
-        "digest": "sha256:6e78ffabe5a54ad9eee2643b910ca9e2a05c0705acb3746a5aff41758c4cec3a"
+        "digest": "sha256:e50eb7dfb4f8cf6fdaf62ee7f5fa87398d45f11853044ff8222874bc912528e5"
       },
       {
         "kind": "lifecycle-operation",
@@ -189,21 +205,31 @@
       ".atm/history/task-events/PROG-2-0134/**",
       ".atm/history/tasks/PROG-2-0134.json",
       "artifacts/PROG-2-0134/**",
+      "assets/resources/data/master/generals-lore.json",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0134.md",
+      "temp_workspace/raw-wiki.json",
+      "temp_workspace/wiki-cache.json"
+    ],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/web-verification/3KLife/docs/agent-briefs/tasks/PROG/PROG-2-0134.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/PROG/",
       "docs/agent-briefs/tasks/PROG/PROG-2-0134.md"
     ],
-    "planningReadOnlyPaths": [],
-    "planningMirrorPaths": [],
     "allowPlanningMirror": false,
     "promptHash": "9ac264cd5ec34605b1334c40695daf4bf6f971fc51e58e6b4498389094128b6f",
     "actorId": "codex-gpt-6",
-    "sessionId": "session-20261015231754-codex-gpt-6-PROG-2-0134-768106caea",
+    "sessionId": null,
     "laneSession": {
       "laneSessionId": "lane-20261015231754-codex-gpt-6-abe07a835d",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015231754-codex-gpt-6-abe07a835d\""
     },
-    "createdAt": "2026-10-15T23:18:00.654Z",
+    "createdAt": "2026-10-15T23:18:00.662Z",
     "status": "active"
   }
 }

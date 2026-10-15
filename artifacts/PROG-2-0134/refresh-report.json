@@ -1,0 +1,130 @@
+{
+  "checkedAt": "2026-10-15T23:21:30.049Z",
+  "sourceHead": "794beaaae9394f072b84ae2a7b1657377e54f253",
+  "ingestSha256": "19fab5f7ae7ae80dc361d09b6a9c51812fd254732863240ef71616f2774e9a01",
+  "requestedIds": [
+    "guan-yu",
+    "huang-zhong",
+    "taishi-ci",
+    "xu-huang",
+    "cao-ren",
+    "pang-tong",
+    "jiang-wei",
+    "gan-ning",
+    "zhang-zhao",
+    "lu-meng",
+    "dong-zhuo",
+    "liu-yan",
+    "sima-shi",
+    "zhuge-jin",
+    "ma-zhong",
+    "li-yan",
+    "wang-ping",
+    "wang-shuang",
+    "chen-tai",
+    "chen-qun",
+    "liu-bao",
+    "tian-feng",
+    "ju-shou",
+    "han-hao"
+  ],
+  "cacheEntriesRemoved": [],
+  "fetchedCount": 11,
+  "placeholderCount": 0,
+  "reviewIds": [],
+  "stopped": {
+    "id": "liu-yan",
+    "httpStatus": 429,
+    "exitCode": 0
+  },
+  "proxyEnvironmentChanged": false,
+  "proxyBypass": false,
+  "canonicalWrites": false,
+  "complete": false,
+  "receipts": [
+    {
+      "id": "guan-yu",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E9%97%9C%E7%BE%BD",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "c91746f24d4b815eff2dba6a191e48d03542c3fb20304cc8cea05c61d62af056"
+    },
+    {
+      "id": "huang-zhong",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E9%BB%83%E5%BF%A0",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "e6da63318a9cd6a60d2523b007a7593fbda93e0c2dbc240a5593bff21aee579c"
+    },
+    {
+      "id": "taishi-ci",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E5%A4%AA%E5%8F%B2%E6%85%88",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "67d95ed423bdaf06da5683a915fd1bc468c02b7057448829389948932804803e"
+    },
+    {
+      "id": "xu-huang",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E5%BE%90%E6%99%83",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "cb71127dc7b8ce58460fdf9a6174b36a8df78179088f3bf14fc9e3c9a8346cbb"
+    },
+    {
+      "id": "cao-ren",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E6%9B%B9%E4%BB%81",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "6a2b0eab6254b7e72bfe6c2cc3e3dab7a14c3a56b4a1fee9b4e01a6921a7b9e1"
+    },
+    {
+      "id": "pang-tong",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E9%BE%90%E7%B5%B1",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "d612de7a9c87b45edbbc8ec4f448fd3812f723f2ca1f51e3b588f43fb6ece4d0"
+    },
+    {
+      "id": "jiang-wei",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E5%A7%9C%E7%B6%AD",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "2d98fc1bc4cf1f308b73b4499e90c9b6d7462746afb364a7f58b947ab9d9c0ad"
+    },
+    {
+      "id": "gan-ning",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E7%94%98%E5%AF%A7",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "ee4f955599a33fc61314520bf52d5373456f15810d1e1e3e05944065153278fb"
+    },
+    {
+      "id": "zhang-zhao",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E5%BC%B5%E6%98%AD",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "91afb6ad6c4125b5ce9329de3bb5cfd88a0c9842eacaea64e0dc14c847b990f6"
+    },
+    {
+      "id": "lu-meng",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E5%91%82%E8%92%99",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "eff5dacd89e310773340523b30e81becb13fa1b207d63f176dee1f851bf0e161"
+    },
+    {
+      "id": "dong-zhuo",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E8%91%A3%E5%8D%93",
+      "httpStatus": 200,
+      "exitCode": 0,
+      "bodySha256": "37779cb848a5903bec4265644506a93add24e7125a6ae9c522312a91650b7518"
+    },
+    {
+      "id": "liu-yan",
+      "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E5%8A%89%E7%84%89",
+      "httpStatus": 429,
+      "exitCode": 0,
+      "bodySha256": "0c983210bb117257200f266b9ca55a1afb882c5ca5744430246905ee969254db"
+    }
+  ]
+}
