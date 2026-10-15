@@ -72,3 +72,41 @@ export function galleryTotals(groups: GalleryGroup[]): { ownedCount: number; tot
 export function findGalleryGroup(groups: GalleryGroup[], bloodlineId: string): GalleryGroup | null {
     return groups.find((g) => g.bloodlineId === bloodlineId) ?? null;
 }
+
+/** 版面固定槽數：與 general-version-gallery-main.json 的 groupRow_* / cell_* 對應 */
+export const GALLERY_GROUP_SLOTS = 8;
+export const GALLERY_CELL_SLOTS = 6;
+
+export interface GalleryLayoutState {
+    texts: Record<string, string>;
+    actives: Record<string, boolean>;
+}
+
+/**
+ * 把圖鑑轉成 cc 端 applier 要的 texts / actives。左欄列出血源，右欄顯示選中血源的版本格。
+ * 只做字串與顯示旗標對應；選中血源不存在時右欄為空。
+ */
+export function toGalleryLayoutState(groups: GalleryGroup[], selectedBloodlineId: string | null): GalleryLayoutState {
+    const texts: Record<string, string> = { galleryTitle: '同名武將版本圖鑑' };
+    const actives: Record<string, boolean> = {};
+    for (let i = 0; i < GALLERY_GROUP_SLOTS; i++) {
+        const g = groups[i];
+        actives[`groupRow_${i}`] = !!g;
+        if (!g) continue;
+        texts[`groupName_${i}`] = g.displayName;
+        texts[`groupProgress_${i}`] = g.progressText;
+        actives[`groupSelected_${i}`] = g.bloodlineId === selectedBloodlineId;
+    }
+    const selected = findGalleryGroup(groups, selectedBloodlineId ?? '');
+    texts.selectedName = selected ? selected.displayName : '';
+    for (let i = 0; i < GALLERY_CELL_SLOTS; i++) {
+        const e = selected?.entries[i];
+        actives[`cell_${i}`] = !!e;
+        if (!e) continue;
+        texts[`cellName_${i}`] = e.displayName;
+        texts[`cellTitle_${i}`] = e.versionTitle;
+        texts[`cellState_${i}`] = e.owned ? '已擁有' : '未收集';
+        actives[`cellLimited_${i}`] = e.isLimited;
+    }
+    return { texts, actives };
+}
