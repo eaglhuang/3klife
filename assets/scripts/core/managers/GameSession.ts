@@ -24,7 +24,8 @@
  */
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
-import { consumeAutoNurtureTicket } from '../systems/AutoNurture';
+import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
+import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
@@ -1704,6 +1705,36 @@ export class GameSession {
     /** 主線第一次通過培育季後為 true，之後不會再變回 false */
     public get mainlineNurtureClearedOnce(): boolean {
         return this._mainlineNurtureClearedOnce;
+    }
+
+    /**
+     * 自動培育（NUR-14 接線）：解鎖 → 券 → 會話（須進行中）→ 解析排程 → 扣券 → 跑完整季 → 寫回培育狀態並自動存檔。
+     * 畢業仍由玩家呼叫 graduate；自動會話的評級上限已在結算時套用。
+     * manualSchedule 為上一次手動排程（缺值時平均分配到最低屬性）；random 預設 Math.random。
+     */
+    public async runAutoNurture(
+        childId: string,
+        manualSchedule?: readonly NurtureAction[],
+        random: RandomSource = Math.random,
+    ): Promise<{ ok: true; logs: NurtureRoundLog[] } | { ok: false; blocked: AutoNurtureBlockReason | 'NOT_NURTURING' | 'SESSION_ENDED' }> {
+        const gate = canStartAutoNurture(isAutoNurtureUnlocked(this._mainlineNurtureClearedOnce), this._autoNurtureTickets);
+        if (!gate.ok) return { ok: false, blocked: gate.blocked! };
+        const state = this._nurture?.getState();
+        const session = state?.sessions.find((s) => s.childId === childId);
+        if (!state || !session) return { ok: false, blocked: 'NOT_NURTURING' };
+        if (session.status !== 'active') return { ok: false, blocked: 'SESSION_ENDED' };
+        const schedule = resolveAutoSchedule(session.prowess, manualSchedule);
+        const run = runAutoNurtureSeason(session, schedule, random);
+        const next = consumeAutoNurtureTicket(this._autoNurtureTickets);
+        this._autoNurtureTickets = next ?? this._autoNurtureTickets;
+        this._nurture!.restoreState({
+            ...state,
+            sessions: state.sessions.map((s) => (s.childId === childId ? run.session : s)),
+        });
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, logs: run.logs };
     }
 
     /** 入帳自動培育券（只收正整數，自動存檔） */

@@ -377,6 +377,7 @@ export class LobbyScene extends Component {
                 }
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
+            autoNurture: (childId) => services().session.runAutoNurture(childId),
         });
         this._nurtureFlow = flow;
 
@@ -399,6 +400,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnFateAccept', handler: act(() => flow.chooseFate('accept')) },
             { buttonId: 'btnFateDefy', handler: act(() => flow.chooseFate('defy')) },
             { buttonId: 'btnStartNurture', handler: act(() => flow.startNurture()) },
+            { buttonId: 'btnAutoNurture', handler: act(() => flow.autoNurture()) },
             ...trainBindings,
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },

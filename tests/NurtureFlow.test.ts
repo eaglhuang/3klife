@@ -107,6 +107,25 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.isFalse(/from\s+['"]cc['"]/.test(text));
     });
 
+    suite.test('自動培育按鈕（NUR-14）：沒有子嗣時不可按；未提供 autoNurture 依賴時也不可按', () => {
+        const rig = makeRig([]);
+        assert.isFalse(rig.flow.getView().enabled.btnAutoNurture);
+    });
+
+    suite.test('自動培育被擋下時，提示文字對應 NO_TICKET 原因，且不改其他狀態', async () => {
+        const roster = new InMemoryRosterStore([unveiled('auto-ui')]);
+        const flow = new NurtureFlowController({
+            roster,
+            unveiling: new UnveilingService(roster, seeded(3)),
+            nurture: new NurtureService(roster, { random: seeded(7), currentSeason: () => 3 }),
+            loadMentorCards: async () => [],
+            persist: async () => undefined,
+            autoNurture: async () => ({ ok: false, blocked: 'NO_TICKET' }),
+        });
+        await flow.autoNurture();
+        assert.isTrue(flow.getView().texts.flowNotice!.includes('沒有自動培育券'));
+    });
+
     suite.test('沒有開獎子嗣：empty 畫面只顯示提示，按鈕全部不可按', () => {
         const { flow } = makeRig([child('mystery-kid', { age: 3 })]);
         const view = flow.getView();
