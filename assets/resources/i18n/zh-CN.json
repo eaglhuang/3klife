@@ -222,5 +222,11 @@
   "ui.retire_review.report": "战损报告：精力 {0}%",
   "ui.retire_review.quarterly": "本季战报：{0} 精力剩 {1}%，{2}",
   "ui.retire_review.bond_ok": "可进行结缘。",
-  "ui.retire_review.bond_no": "不建议进行结缘。"
+  "ui.retire_review.bond_no": "不建议进行结缘。",
+  "ui.spirit_codex.title": "英灵图鉴",
+  "ui.spirit_codex.close": "关闭",
+  "ui.spirit_codex.count": "英灵 {0} 位",
+  "ui.spirit_codex.empty": "尚无英灵卡。武将死后若具备英灵资格，会收录于此。",
+  "ui.spirit_codex.more": "另有 {0} 位未列出",
+  "legacy.essence_line": "精华快照：{0}"
 }

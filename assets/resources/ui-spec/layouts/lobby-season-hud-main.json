@@ -257,6 +257,33 @@
                 "styleSlot": "season.hud.label.button"
               }
             ]
+          },
+          {
+            "type": "button",
+            "name": "BtnOpenSpiritCodex",
+            "id": "btnOpenSpiritCodex",
+            "widget": {
+              "bottom": 344,
+              "left": 12,
+              "right": 12
+            },
+            "height": 40,
+            "skinSlot": "season.hud.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenSpiritCodexLabel",
+                "id": "openSpiritCodexLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "英靈",
+                "styleSlot": "season.hud.label.button"
+              }
+            ]
           }
         ]
       }

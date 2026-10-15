@@ -1,0 +1,92 @@
+{
+  "id": "spirit-codex-screen.skin",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "codex.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    },
+    "codex.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 246
+    },
+    "codex.slot.bg": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "alpha": 230
+    },
+    "codex.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 160
+    },
+    "codex.button.confirm.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 220
+    },
+    "codex.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 40,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "codex.label.name": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 30,
+      "lineHeight": 38,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "SHRINK"
+    },
+    "codex.label.stats": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "codex.label.meta": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "codex.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "codex.label.log": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "codex.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    }
+  }
+}
