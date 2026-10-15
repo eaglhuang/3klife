@@ -121,6 +121,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralReachedRetirementAge: 'game-session-general-retirement-age',
     /** payload: AgingEvent（type = died） */
     GeneralDied: 'game-session-general-died',
+    /** payload: AgingEvent（type = entered-growth-stage，stage 為 grow-up / prime / elder） */
+    GeneralGrowthStage: 'game-session-general-growth-stage',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
@@ -152,6 +154,13 @@ export const GAME_SESSION_EVENTS = {
     /** payload: DiscoveryGain（只在升級時廣播；phaseAfter > phaseBefore 時 UI 播放新色階解鎖提示） */
     DiscoveryLevelChanged: 'game-session-discovery-level-changed',
 } as const;
+
+/** 季度增齡事件的廣播頻道：死亡、成長階段、退役候選三種 */
+function agingEventChannel(event: AgingEvent): string {
+    if (event.type === 'died') return GAME_SESSION_EVENTS.GeneralDied;
+    if (event.type === 'entered-growth-stage') return GAME_SESSION_EVENTS.GeneralGrowthStage;
+    return GAME_SESSION_EVENTS.GeneralReachedRetirementAge;
+}
 
 /** 名冊來源；正式環境接 PlayerRosterService，測試接記憶體陣列 */
 export interface RosterStore {
@@ -1500,12 +1509,7 @@ export class GameSession {
             this._emit(GAME_SESSION_EVENTS.GeneralUnveiled, event);
         }
         for (const event of aging.events) {
-            this._emit(
-                event.type === 'died'
-                    ? GAME_SESSION_EVENTS.GeneralDied
-                    : GAME_SESSION_EVENTS.GeneralReachedRetirementAge,
-                event,
-            );
+            this._emit(agingEventChannel(event), event);
         }
         for (const card of lifecycle?.spiritCards ?? []) {
             this._emit(GAME_SESSION_EVENTS.SpiritCardCreated, card);
