@@ -42,6 +42,8 @@ export interface SpiritCard {
     rarityTier: SpiritCardRarityTier;
     gene_refs: string[];       // 基因 uid 列表（保留血脈傳承依據）
     ep_snapshot: number;       // 死亡時的最終 EP 值
+    /** 演武聖境精華快照（TP × 0.5，PROG-2-0802）；舊卡缺欄位視為未定，不遷移 */
+    legacyEssence?: number;
     ageAtDeath?: number;       // 死亡年齡（可選）
     deathContext: DeathContext;
     archivedAt: number;        // 歸檔 Unix ms 時間戳
