@@ -1,0 +1,92 @@
+{
+  "id": "retire-review-screen.skin",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "retire.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    },
+    "retire.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 246
+    },
+    "retire.slot.bg": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "alpha": 230
+    },
+    "retire.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 160
+    },
+    "retire.button.confirm.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 220
+    },
+    "retire.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 40,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "retire.label.name": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 30,
+      "lineHeight": 38,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "SHRINK"
+    },
+    "retire.label.stats": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "retire.label.meta": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "retire.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "retire.label.log": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "retire.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    }
+  }
+}

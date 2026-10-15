@@ -207,5 +207,14 @@
   "life.script.elder": "{0} has grown frail with age, yet their experience remains.",
   "life.script.retire": "{0} has hung up their armor and retired, hoping to pass on a lifetime of learning.",
   "life.script.death": "{0} passed away at the age of {1}; a legendary general has fallen…",
-  "life.script.afterlife": "{0}'s Spirit Card and Tiger Tally have been enshrined in the ancestral hall and military archive."
+  "life.script.afterlife": "{0}'s Spirit Card and Tiger Tally have been enshrined in the ancestral hall and military archive.",
+  "ui.retire_review.title": "Retirement Review",
+  "ui.retire_review.close": "Close",
+  "ui.retire_review.report_title": "Quarterly Battle Report",
+  "ui.retire_review.career": "Career: {0} wins, {1} losses, {2} kills",
+  "ui.retire_review.script": "Looking back: {0} wins, {1} enemies slain, {2} guardian power. No regrets.",
+  "ui.retire_review.report": "Battle damage: vitality {0}%",
+  "ui.retire_review.quarterly": "Quarterly report: {0} has {1}% vitality left; {2}",
+  "ui.retire_review.bond_ok": "ready for bonding.",
+  "ui.retire_review.bond_no": "bonding not recommended."
 }

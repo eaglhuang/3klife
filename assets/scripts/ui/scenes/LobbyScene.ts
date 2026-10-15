@@ -26,6 +26,8 @@ import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
+import { MentorCardDetailController } from '../core/MentorCardDetailController';
+import type { MentorCardData, MentorCardTab } from '../../core/systems/MentorCardTabs';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
@@ -49,6 +51,7 @@ import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
+import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
@@ -145,6 +148,9 @@ export class LobbyScene extends Component {
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
+    /** 教官卡詳情（MENT-13）：頁籤與目前卡的狀態 */
+    private _mentorCardHost: UIScreenPreviewHost | null = null;
+    private readonly _mentorCardDetail = new MentorCardDetailController();
     private _supportCatalog: SupportCatalog | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
@@ -164,6 +170,7 @@ export class LobbyScene extends Component {
     private _onboardingHost: UIScreenPreviewHost | null = null;
     private _onboarding: OnboardingFlowController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
+    private _retireReviewHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
     private _prisoner: PrisonerPopupController | null = null;
@@ -238,6 +245,7 @@ export class LobbyScene extends Component {
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
         await this._mountNurtureFlow();
+        await this._mountMentorCardDetail();
         await this._mountBondingSetup();
         await this._mountJobChange();
         await this._mountDomestic();
@@ -246,6 +254,7 @@ export class LobbyScene extends Component {
         await this._mountRedFaceShowcase();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
+        await this._mountRetireReview();
         await this._mountPrisonerPopup();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
@@ -431,6 +440,51 @@ export class LobbyScene extends Component {
                 services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
             }),
         );
+    }
+
+    /**
+     * 教官卡詳情畫面（MENT-13 cc 接線）：以 UCUF JSON（mentor-card-detail-screen）組裝，
+     * 狀態在 MentorCardDetailController，這裡只綁按鈕與套 view。
+     */
+    private async _mountMentorCardDetail(): Promise<void> {
+        const select = (tab: MentorCardTab): (() => void) => () => {
+            this._mentorCardDetail.selectTab(tab);
+            this._refreshMentorCardDetail();
+        };
+        this._mentorCardHost = await this._mountPreviewScreenHost('MentorCardDetailHost', 'mentor-card-detail-screen', [
+            { buttonId: 'btnCloseMentorCard', handler: () => { this._closeMentorCardDetail(); } },
+            { buttonId: 'btnTabEffects', handler: select('effects') },
+            { buttonId: 'btnTabEvents', handler: select('events') },
+            { buttonId: 'btnTabStory', handler: select('story') },
+        ]);
+    }
+
+    /** 開啟某張教官卡的詳情（入口由名冊 / 教官列表接，之後的卡） */
+    public openMentorCardDetail(card: MentorCardData, title: string): void {
+        const host = this._mentorCardHost;
+        if (!host) {
+            return;
+        }
+        this._mentorCardDetail.open(card, title);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshMentorCardDetail();
+    }
+
+    private _closeMentorCardDetail(): void {
+        this._mentorCardDetail.close();
+        if (this._mentorCardHost) {
+            this._mentorCardHost.node.active = false;
+        }
+    }
+
+    private _refreshMentorCardDetail(): void {
+        const binder = this._mentorCardHost?.binder;
+        if (!binder) {
+            return;
+        }
+        const view = this._mentorCardDetail.getView();
+        applyFlowView(binder, { texts: view.texts, actives: view.actives, enabled: {} });
     }
 
     private _openNurtureFlow(): void {
@@ -1123,6 +1177,42 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '俘虜處置失敗', duration: 2.5 });
         } finally {
             this._refreshPrisonerPopup();
+        }
+    }
+
+    /**
+     * 退役回顧面板：以 UCUF JSON（retire-review-screen）執行期組裝。退役成功後名冊發出開啟事件，
+     * 這裡用退役前的武將快照組文字；文字組句在 RetireReviewController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountRetireReview(): Promise<void> {
+        this._retireReviewHost = await this._mountPreviewScreenHost('RetireReviewHost', 'retire-review-screen', [
+            { buttonId: 'btnCloseRetire', handler: () => { this._closeRetireReview(); } },
+        ]);
+        this._sessionEventUnsubscribers.push(
+            services().event.on(RETIRE_REVIEW_OPEN_EVENT, (payload?: unknown) => {
+                const general = (payload as RetireReviewOpenPayload | undefined)?.general;
+                if (general) {
+                    this._openRetireReview(general);
+                }
+            }),
+        );
+    }
+
+    private _openRetireReview(general: GeneralConfig): void {
+        const host = this._retireReviewHost;
+        const binder = host?.binder;
+        if (!host || !binder) {
+            return;
+        }
+        const lookup = withRetireReviewFallback((key, ...args) => services().i18n.t(key, ...args));
+        applyFlowView(binder, { texts: buildRetireReviewTexts(general, lookup), actives: {}, enabled: {} });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeRetireReview(): void {
+        if (this._retireReviewHost) {
+            this._retireReviewHost.node.active = false;
         }
     }
 
@@ -2116,6 +2206,7 @@ export class LobbyScene extends Component {
                 this._closeNurtureFlow();
                 this._closeBondingSetup();
                 this._closeSageOracle();
+                this._closeRetireReview();
                 this._closeSortieSetup();
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = false;

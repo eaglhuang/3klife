@@ -1,0 +1,117 @@
+{
+  "id": "mentor-card-detail-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "MentorCardRoot",
+    "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "children": [
+      {
+        "type": "panel",
+        "name": "MentorCardBackdrop",
+        "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+        "skinSlot": "nurture.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "MentorCardPanel",
+        "id": "mentorCardPanel",
+        "widget": { "hCenter": true, "vCenter": true },
+        "width": 1000,
+        "height": 720,
+        "skinSlot": "nurture.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "MentorCardTitle",
+            "id": "mentorCardTitle",
+            "widget": { "top": 22, "left": 32 },
+            "width": 700,
+            "height": 40,
+            "styleSlot": "nurture.label.title"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseMentorCard",
+            "id": "btnCloseMentorCard",
+            "widget": { "top": 18, "right": 32 },
+            "width": 160,
+            "height": 48,
+            "skinSlot": "nurture.button.rest.bg",
+            "children": [
+              { "type": "label", "name": "CloseMentorCardLabel", "id": "closeMentorCardLabel", "widget": { "vCenter": true, "left": 0, "right": 0 }, "height": 40, "text": "關閉", "styleSlot": "nurture.label.button" }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnTabEffects",
+            "id": "btnTabEffects",
+            "widget": { "top": 90, "left": 32 },
+            "width": 280,
+            "height": 52,
+            "skinSlot": "nurture.button.rest.bg",
+            "children": [
+              { "type": "label", "name": "TabEffectsLabel", "id": "tabEffectsLabel", "widget": { "vCenter": true, "left": 0, "right": 0 }, "height": 44, "styleSlot": "nurture.label.button" }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnTabEvents",
+            "id": "btnTabEvents",
+            "widget": { "top": 90, "left": 332 },
+            "width": 280,
+            "height": 52,
+            "skinSlot": "nurture.button.rest.bg",
+            "children": [
+              { "type": "label", "name": "TabEventsLabel", "id": "tabEventsLabel", "widget": { "vCenter": true, "left": 0, "right": 0 }, "height": 44, "styleSlot": "nurture.label.button" }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnTabStory",
+            "id": "btnTabStory",
+            "widget": { "top": 90, "left": 632 },
+            "width": 280,
+            "height": 52,
+            "skinSlot": "nurture.button.rest.bg",
+            "children": [
+              { "type": "label", "name": "TabStoryLabel", "id": "tabStoryLabel", "widget": { "vCenter": true, "left": 0, "right": 0 }, "height": 44, "styleSlot": "nurture.label.button" }
+            ]
+          },
+          { "type": "panel", "name": "Row0", "id": "row_0", "widget": { "top": 170, "left": 32 }, "width": 936, "height": 64, "skinSlot": "nurture.card.bg", "children": [
+            { "type": "label", "name": "RowLabel0", "id": "rowLabel_0", "widget": { "vCenter": true, "left": 20 }, "width": 600, "height": 40, "styleSlot": "nurture.label.body" },
+            { "type": "label", "name": "RowLock0", "id": "rowLock_0", "widget": { "vCenter": true, "right": 20 }, "width": 300, "height": 40, "styleSlot": "nurture.label.body" }
+          ] },
+          { "type": "panel", "name": "Row1", "id": "row_1", "widget": { "top": 246, "left": 32 }, "width": 936, "height": 64, "skinSlot": "nurture.card.bg", "children": [
+            { "type": "label", "name": "RowLabel1", "id": "rowLabel_1", "widget": { "vCenter": true, "left": 20 }, "width": 600, "height": 40, "styleSlot": "nurture.label.body" },
+            { "type": "label", "name": "RowLock1", "id": "rowLock_1", "widget": { "vCenter": true, "right": 20 }, "width": 300, "height": 40, "styleSlot": "nurture.label.body" }
+          ] },
+          { "type": "panel", "name": "Row2", "id": "row_2", "widget": { "top": 322, "left": 32 }, "width": 936, "height": 64, "skinSlot": "nurture.card.bg", "children": [
+            { "type": "label", "name": "RowLabel2", "id": "rowLabel_2", "widget": { "vCenter": true, "left": 20 }, "width": 600, "height": 40, "styleSlot": "nurture.label.body" },
+            { "type": "label", "name": "RowLock2", "id": "rowLock_2", "widget": { "vCenter": true, "right": 20 }, "width": 300, "height": 40, "styleSlot": "nurture.label.body" }
+          ] },
+          { "type": "panel", "name": "Row3", "id": "row_3", "widget": { "top": 398, "left": 32 }, "width": 936, "height": 64, "skinSlot": "nurture.card.bg", "children": [
+            { "type": "label", "name": "RowLabel3", "id": "rowLabel_3", "widget": { "vCenter": true, "left": 20 }, "width": 600, "height": 40, "styleSlot": "nurture.label.body" },
+            { "type": "label", "name": "RowLock3", "id": "rowLock_3", "widget": { "vCenter": true, "right": 20 }, "width": 300, "height": 40, "styleSlot": "nurture.label.body" }
+          ] },
+          { "type": "panel", "name": "Row4", "id": "row_4", "widget": { "top": 474, "left": 32 }, "width": 936, "height": 64, "skinSlot": "nurture.card.bg", "children": [
+            { "type": "label", "name": "RowLabel4", "id": "rowLabel_4", "widget": { "vCenter": true, "left": 20 }, "width": 600, "height": 40, "styleSlot": "nurture.label.body" },
+            { "type": "label", "name": "RowLock4", "id": "rowLock_4", "widget": { "vCenter": true, "right": 20 }, "width": 300, "height": 40, "styleSlot": "nurture.label.body" }
+          ] },
+          { "type": "panel", "name": "Row5", "id": "row_5", "widget": { "top": 550, "left": 32 }, "width": 936, "height": 64, "skinSlot": "nurture.card.bg", "children": [
+            { "type": "label", "name": "RowLabel5", "id": "rowLabel_5", "widget": { "vCenter": true, "left": 20 }, "width": 600, "height": 40, "styleSlot": "nurture.label.body" },
+            { "type": "label", "name": "RowLock5", "id": "rowLock_5", "widget": { "vCenter": true, "right": 20 }, "width": 300, "height": 40, "styleSlot": "nurture.label.body" }
+          ] }
+        ]
+      }
+    ]
+  }
+}
