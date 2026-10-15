@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "PROG-2-0120",
   "title": "PROG-2-0120",
-  "status": "running",
+  "status": "blocked",
   "milestone": null,
   "dependencies": [],
   "acceptance": [],
@@ -81,8 +81,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T11-20-37-413Z-claim-6c06c4a4e8cc",
-  "lastTransitionAt": "2026-10-15T11:20:37.413Z",
+  "lastTransitionId": "2026-10-15T11-27-34-114Z-block-b6253f16446d",
+  "lastTransitionAt": "2026-10-15T11:27:34.114Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T11:20:31.363Z",
@@ -91,21 +91,21 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-6b859033eeef",
     "claimedAt": "2026-10-15T11:20:31.372Z",
-    "heartbeatAt": "2026-10-15T11:20:31.372Z",
+    "heartbeatAt": "2026-10-15T11:27:34.049Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/tasks/PROG-2-0120.json",
       "artifacts/PROG-2-0120/**",
       "docs/agent-briefs/tasks/PROG/PROG-2-0120.md"
     ],
-    "state": "active",
-    "intent": "write",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20261015112031-codex-gpt-6-acb55ccb5a",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015112031-codex-gpt-6-acb55ccb5a\""
-    }
+    },
+    "reason": "Normal pointer-driven opening reaches Destiny roll but shows pool-too-small; no candidate can be selected, so first-battle red-face showcase cannot be reached. Evidence committed; no game modifications allowed in acceptance card."
   },
   "startedAt": "2026-10-15T11:20:31.372Z",
   "startedByActor": "codex-gpt-6",
@@ -201,5 +201,9 @@
     },
     "createdAt": "2026-10-15T11:20:37.412Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-10-15T11:27:34.049Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261015112031-codex-gpt-6-PROG-2-0120-6fe3340e75",
+  "closeReason": "Normal pointer-driven opening reaches Destiny roll but shows pool-too-small; no candidate can be selected, so first-battle red-face showcase cannot be reached. Evidence committed; no game modifications allowed in acceptance card."
 }
