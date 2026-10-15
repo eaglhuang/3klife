@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-0137",
+  "updatedAt": "2026-10-15T23:39:08.069Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "node artifacts/PROG-2-0137/check-hud-geometry.js",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:714ec8a8d56647a201937009c4b90f40ddbcce7c585310ac43a6cea3db930f66",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-10-15T23:39:08.068Z",
+      "startedAt": "2026-10-15T23:39:07.720Z",
+      "finishedAt": "2026-10-15T23:39:08.068Z",
+      "durationMs": 348,
+      "runnerKind": "dev-source",
+      "sourceCommit": "071328cecd66b383ec3c88456d818952ce428757",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

@@ -57,10 +57,10 @@
       "repoIdentity": "https://github.com/eaglhuang/3klife.git",
       "repoRoot": "C:/Users/User/.codex/worktrees/web-verification/3KLife",
       "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-0137.md",
-      "planningCommitSha": null,
-      "contentDigest": "sha256:5fe6acfefe28d8b5a2ce0b6f6efb03ca19db9ffb23b2807b9c6e800109fc97c8",
-      "amendmentEpoch": 0,
-      "sealedAt": "2026-10-15T23:36:07.330Z"
+      "planningCommitSha": "071328cecd66b383ec3c88456d818952ce428757",
+      "contentDigest": "sha256:98b301ef3d9cca53b97c13da67d40b636b9a6e2a5cc126ec632ed35f186685f0",
+      "amendmentEpoch": 1,
+      "sealedAt": "2026-10-15T23:40:56.535Z"
     }
   },
   "importedAt": "2026-10-15T23:36:07.330Z",
@@ -95,8 +95,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T23-36-20-468Z-claim-10d21ea9086f",
-  "lastTransitionAt": "2026-10-15T23:36:20.468Z",
+  "lastTransitionId": "2026-10-15T23-40-56-663Z-metadata-only-import-11e65bd52c99",
+  "lastTransitionAt": "2026-10-15T23:40:56.663Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T23:36:14.423Z",
