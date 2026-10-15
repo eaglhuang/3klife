@@ -1,188 +1,130 @@
 /**
- * ResultPopup.test.ts — 遷移架構後的單元測試
+ * ResultPopup.test.ts — 戰鬥結算彈窗（headless，run-cli suite）
  *
- * 測試重點：
- *   1. 三層 JSON 規格能被正確載入（透過 mock）
- *   2. showResult 能依據 BattleResult 更新標題、描述
- *   3. 按鈕點擊發出正確的事件
+ * 驗證重點：
+ *   1. showResult 依 BattleResult 寫入正確標題（勝利 / 落敗 / 平局）與描述
+ *   2. details 會接在描述後面
+ *   3. 返回與重玩按鈕發出對應事件，且動畫結束後才隱藏
+ *   4. resetState 清空標題與描述
  *
- * 使用 cc.mock 隔離 Cocos 引擎 API
+ * 不載入規格 JSON：以手寫 binder 與 no-op 動畫取代 UISpecLoader / 建構流程，
+ * 讓測試只關心元件自己的業務邏輯。
+ *
+ * Unity 對照：PlayMode 測試直接掛 PopupController，替換 Animator 為 no-op。
  */
-
-import '../assets/scripts/tools/tests/cc.mock';
+import { Node } from 'cc';
+import { TestSuite, assert } from './TestRunner';
 import { ResultPopup, BattleResult } from '../assets/scripts/ui/components/ResultPopup';
 
-// ── Mock UISpecLoader ────────────────────────────────────────────
-jest.mock('../assets/scripts/ui/core/UISpecLoader', () => ({
-    UISpecLoader: jest.fn().mockImplementation(() => ({
-        loadFullScreen: jest.fn().mockResolvedValue({
-            screen: { id: 'result-popup-screen', uiId: 'ResultPopup' },
-            layout: {
-                id: 'result-popup-main',
-                canvas: { fitWidth: true, fitHeight: true, designWidth: 1920, designHeight: 1024 },
-                root: {
-                    type: 'container',
-                    name: 'ResultPopupRoot',
-                    children: [
-                        {
-                            type: 'panel',
-                            name: 'Card',
-                            children: [
-                                { type: 'label', name: 'TitleLabel', textKey: 'ui.result.victory' },
-                                { type: 'label', name: 'DescLabel', textKey: 'ui.result.title' },
-                            ],
-                        },
-                    ],
-                },
-            },
-            skin: {
-                id: 'result-popup-default',
-                bundle: 'ui_common',
-                atlasPolicy: 'common_popup',
-                slots: {},
-            },
-        }),
-        loadI18n: jest.fn().mockResolvedValue({
-            'ui.result.victory': '勝利',
-            'ui.result.defeat': '落敗',
-            'ui.result.draw': '平局',
-            'ui.result.title': '戰鬥結算',
-        }),
-    })),
-}));
+/** 只實作 ResultPopup 會呼叫到的 UITemplateBinder 介面 */
+class FakeBinder {
+    texts: Record<string, string> = {};
 
-// ── Mock UIPreviewBuilder.buildScreen ────────────────────────────
-jest.mock('../assets/scripts/ui/core/UIPreviewBuilder', () => {
-    const { Node } = require('cc');
-    return {
-        UIPreviewBuilder: class {
-            node = new Node('ResultPopupRoot');
-            skinResolver = { getSpriteFrame: jest.fn().mockResolvedValue(null) };
-            i18nStrings: Record<string, string> = {};
+    setTexts(texts: Record<string, string>): void {
+        Object.assign(this.texts, texts);
+    }
 
-            async buildScreen(_layout: any, _skin: any, i18n: Record<string, string>) {
-                this.i18nStrings = i18n ?? {};
+    getButton(_name: string): null {
+        return null;
+    }
 
-                // 建立 Card > TitleLabel / DescLabel 節點
-                const { Node, Label } = require('cc');
-                const card = new Node('Card');
-                card.parent = this.node;
+    getNode(_name: string): null {
+        return null;
+    }
+}
 
-                const titleNode = new Node('TitleLabel');
-                const titleLabel = titleNode.addComponent(Label);
-                titleLabel.string = '';
-                titleNode.parent = card;
+/** 建立已完成初始化的彈窗，跳過規格載入 */
+function createPopup(): { popup: ResultPopup; binder: FakeBinder } {
+    const popup = new ResultPopup();
+    const binder = new FakeBinder();
+    const internals = popup as unknown as Record<string, unknown>;
 
-                const descNode = new Node('DescLabel');
-                const descLabel = descNode.addComponent(Label);
-                descLabel.string = '';
-                descNode.parent = card;
+    // 真實引擎會在掛載時注入 node；headless 下手動建立
+    internals['node'] = new Node('ResultPopupRoot');
 
-                return this.node;
-            }
-
-            t(key: string): string {
-                return this.i18nStrings[key] ?? key;
-            }
-
-            playEnterTransition(_node: any): void {}
-            playExitTransition(_node: any, _transition: any, cb?: () => void): void {
-                cb?.();
-            }
-            onBuildComplete(_root: any): void {}
-        },
+    internals['i18nStrings'] = {
+        'ui.result.victory': '勝利',
+        'ui.result.defeat': '落敗',
+        'ui.result.draw': '平局',
+        'ui.result.title': '戰鬥結算',
     };
-});
+    internals['_initialized'] = true;
+    internals['_binder'] = binder;
+    internals['playEnterTransition'] = () => {};
+    internals['playExitTransition'] = (_node: unknown, _transition: unknown, cb?: () => void) => cb?.();
+    return { popup, binder };
+}
 
-// ── 測試 ─────────────────────────────────────────────────────────
-describe('ResultPopup', () => {
+export function createResultPopupSuite(): TestSuite {
+    const suite = new TestSuite('ResultPopup (戰鬥結算彈窗)');
 
-    let popup: ResultPopup;
-
-    beforeEach(() => {
-        popup = new ResultPopup();
+    suite.test('BattleResult 只包含勝、負、平三種狀態', () => {
+        const states: BattleResult[] = ['player-win', 'enemy-win', 'draw'];
+        assert.equals(3, states.length);
     });
 
-    it('應正確建立 ResultPopup 實例', () => {
-        expect(popup).toBeDefined();
-        expect(popup.node).toBeDefined();
-    });
-
-    it('showResult(player-win) 應顯示勝利標題', async () => {
-        await popup['_initialize']();
-
+    suite.test('showResult(player-win) 顯示勝利標題與大勝描述', async () => {
+        const { popup, binder } = createPopup();
         await popup.showResult('player-win');
-
-        const titleLabel = popup.node
-            .getChildByName('Card')
-            ?.getChildByName('TitleLabel')
-            ?.getComponent(require('cc').Label);
-
-        expect(titleLabel?.string).toBe('勝利');
+        assert.equals('勝利', binder.texts['TitleLabel']);
+        assert.equals('我方成功擊敗敵軍，取得大勝！', binder.texts['DescLabel']);
     });
 
-    it('showResult(enemy-win) 應顯示落敗標題', async () => {
-        await popup['_initialize']();
+    suite.test('showResult(enemy-win) 顯示落敗標題', async () => {
+        const { popup, binder } = createPopup();
         await popup.showResult('enemy-win');
-
-        const titleLabel = popup.node
-            .getChildByName('Card')
-            ?.getChildByName('TitleLabel')
-            ?.getComponent(require('cc').Label);
-
-        expect(titleLabel?.string).toBe('落敗');
+        assert.equals('落敗', binder.texts['TitleLabel']);
     });
 
-    it('showResult(draw) 應顯示平局標題', async () => {
-        await popup['_initialize']();
+    suite.test('showResult(draw) 顯示平局標題', async () => {
+        const { popup, binder } = createPopup();
         await popup.showResult('draw');
-
-        const titleLabel = popup.node
-            .getChildByName('Card')
-            ?.getChildByName('TitleLabel')
-            ?.getComponent(require('cc').Label);
-
-        expect(titleLabel?.string).toBe('平局');
+        assert.equals('平局', binder.texts['TitleLabel']);
     });
 
-    it('onClickReplay 應發出 replay 事件', async () => {
-        await popup['_initialize']();
-
-        const replayFn = jest.fn();
-        popup.node.on('replay', replayFn);
-
-        popup['onClickReplay']();
-
-        expect(replayFn).toHaveBeenCalled();
+    suite.test('showResult 帶 details 時描述接在第二行', async () => {
+        const { popup, binder } = createPopup();
+        await popup.showResult('enemy-win', '損失 3 座城池');
+        assert.equals('敵方突破防線，再接再厲！\n損失 3 座城池', binder.texts['DescLabel']);
     });
 
-    it('onClickBack 應發出 back 事件', async () => {
-        await popup['_initialize']();
-
-        const backFn = jest.fn();
-        popup.node.on('back', backFn);
-
-        popup['onClickBack']();
-
-        expect(backFn).toHaveBeenCalled();
+    suite.test('showResult 顯示後節點為 active', async () => {
+        const { popup } = createPopup();
+        await popup.showResult('draw');
+        assert.isTrue(popup.node.active);
     });
 
-    it('resetState 應清除標題與描述', async () => {
-        await popup['_initialize']();
+    suite.test('重玩按鈕：動畫結束後隱藏節點並發出 replay', async () => {
+        const { popup } = createPopup();
+        let replayCount = 0;
+        popup.node.on('replay', () => { replayCount++; });
+
+        popup['_onClickReplay']();
+
+        assert.equals(1, replayCount);
+        assert.isFalse(popup.node.active);
+    });
+
+    suite.test('返回按鈕：動畫結束後隱藏節點並發出 back', async () => {
+        const { popup } = createPopup();
+        let backCount = 0;
+        popup.node.on('back', () => { backCount++; });
+
+        popup['_onClickBack']();
+
+        assert.equals(1, backCount);
+        assert.isFalse(popup.node.active);
+    });
+
+    suite.test('resetState 清空標題與描述', async () => {
+        const { popup, binder } = createPopup();
         await popup.showResult('player-win');
 
         popup.resetState();
 
-        const titleLabel = popup.node
-            .getChildByName('Card')
-            ?.getChildByName('TitleLabel')
-            ?.getComponent(require('cc').Label);
-
-        expect(titleLabel?.string).toBe('');
+        assert.equals('', binder.texts['TitleLabel']);
+        assert.equals('', binder.texts['DescLabel']);
     });
 
-    it('BattleResult 型別應包含三種狀態', () => {
-        const validResults: BattleResult[] = ['player-win', 'enemy-win', 'draw'];
-        expect(validResults).toHaveLength(3);
-    });
-});
+    return suite;
+}

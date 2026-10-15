@@ -31,7 +31,7 @@ if (typeof window === 'undefined') {
     const fs = require('fs') as typeof import('fs');
     const SKIP = new Set<string>([
         'BattleCombatRegression', 'BattleSkillProfileAutoTargeting',
-        'BattleSkillSourceTranslator', 'ResultPopup', 'UISpecParser',
+        'BattleSkillSourceTranslator', 'UISpecParser',
         'ucuf/assetEvictionClosedLoop', 'ucuf/editableTextPanel', 'ucuf/sceneSwitchDispose.integration',
         'ucuf/specVersionDegradation', 'ucuf/validateTaskCardCli',
     ]);

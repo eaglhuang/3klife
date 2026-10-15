@@ -13,7 +13,7 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
-import { BattlePerformanceTracker, formatPerformance, milestoneDisplayName } from '../../core/systems/BattleRecordStats';
+import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { buildTacticSummary, loadGeneralConfig } from './BattleSceneLoader';
@@ -590,7 +590,7 @@ export class BattleUIBridge {
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
         for (const milestone of entry.newMilestones) {
-          this.appendLog(`【${milestoneDisplayName(milestone)}】達成！`);
+          this.appendLog(`【${localizedMilestoneName(milestone, key => services().i18n.t(key))}】達成！`);
         }
       }
       for (const awakened of settlement.awakenings) {

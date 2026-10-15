@@ -42,6 +42,8 @@ import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
+import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from '../core/DestinyOpeningController';
+import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { OnboardingFlowController } from '../core/OnboardingFlowController';
@@ -166,6 +168,10 @@ export class LobbyScene extends Component {
     private _mercPanel: MercenaryPanelController | null = null;
     private _redFaceHost: UIScreenPreviewHost | null = null;
     private _redFace: RedFaceShowcaseController | null = null;
+    private _destinyHost: UIScreenPreviewHost | null = null;
+    private _destiny: DestinyOpeningController | null = null;
+    /** 開場沒有讀到存檔＝新玩家，需要先走宿命轉蛋 */
+    private _isNewPlayer = false;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
     private _lobbyHub: LobbyHub | null = null;
@@ -243,7 +249,7 @@ export class LobbyScene extends Component {
         this._detailPanel = detailNode?.getComponent(GeneralDetailComposite) || detailNode?.addComponent(GeneralDetailComposite) || null;
         this._ensureWidget(detailNode);
 
-        await this._loadPlayerSave();
+        this._isNewPlayer = !(await this._loadPlayerSave());
         await this._mountLobbyMainHub();
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
@@ -255,6 +261,7 @@ export class LobbyScene extends Component {
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountRedFaceShowcase();
+        await this._mountDestinyOpening();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountRetireReview();
@@ -319,12 +326,14 @@ export class LobbyScene extends Component {
     }
 
     /** 開場讀檔：沒有存檔就維持新局；壞檔只警告，不覆蓋也不中斷大廳啟動 */
-    private async _loadPlayerSave(): Promise<void> {
+    private async _loadPlayerSave(): Promise<boolean> {
         try {
             const loaded = await services().session.load();
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
+            return loaded;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
+            return false;
         }
     }
 
@@ -865,6 +874,75 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._redFace.getFlowView());
+    }
+
+    /**
+     * 新局宿命轉蛋（OPEN-05）：新玩家（沒有存檔）進大廳時先開，鎖定後開新局並存檔。
+     * 規則全在 DestinyOpeningController（純邏輯），這裡只綁按鈕、套 FlowView。
+     */
+    private async _mountDestinyOpening(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
+        const heroPool = (Array.isArray(gachaConfig) ? gachaConfig : []).find(pool => pool.poolId === 'hero-pool');
+        if (!heroPool) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 找不到 hero-pool 轉蛋設定，略過宿命轉蛋');
+            return;
+        }
+        const session = services().session;
+        this._destiny = new DestinyOpeningController({
+            config: () => heroPool,
+            generals: () => this._generals,
+            session,
+            random: session.randomSource,
+            seed: () => Math.floor(session.randomSource() * 4294967296),
+            onStarted: async () => {
+                if (session.hasSaveService) {
+                    await session.save();
+                }
+                this._refreshSeasonHud();
+            },
+        });
+        const act = (task: () => Promise<unknown> | unknown): (() => void) => () => {
+            void Promise.resolve(task()).then(() => { this._afterDestinyAction(); });
+        };
+        const rowBindings = Array.from({ length: DESTINY_OPENING_MAX_ROWS }, (_, i) => ({
+            buttonId: `btnDestinyRow${i}`,
+            handler: act(() => this._destiny?.select(i)),
+        }));
+        this._destinyHost = await this._mountPreviewScreenHost('DestinyOpeningHost', 'destiny-opening-screen', [
+            { buttonId: 'btnDestinyRoll', handler: act(() => this._destiny?.roll()) },
+            { buttonId: 'btnDestinyReset', handler: act(() => this._destiny?.reset()) },
+            { buttonId: 'btnDestinyConfirm', handler: act(() => this._destiny?.confirm()) },
+            ...rowBindings,
+        ]);
+        if (this._isNewPlayer) {
+            this.openDestinyOpening();
+        }
+    }
+
+    public openDestinyOpening(): void {
+        const host = this._destinyHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshDestinyOpening();
+    }
+
+    private _afterDestinyAction(): void {
+        if (this._destiny?.started && this._destinyHost) {
+            this._destinyHost.node.active = false;
+            return;
+        }
+        this._refreshDestinyOpening();
+    }
+
+    private _refreshDestinyOpening(): void {
+        const binder = this._destinyHost?.binder;
+        if (!binder || !this._destiny) {
+            return;
+        }
+        applyFlowView(binder, this._destiny.getFlowView());
     }
 
     private _loadDataJson<T>(path: string): Promise<T | null> {

@@ -35,6 +35,14 @@ export function totalHitCount(baseHits: number, extraHits: number): number {
     return baseHits + extraHits;
 }
 
+/** 八陣圖：區域內友軍防禦加成 +40%（規格 All_Def +40%，PROG-2-0759） */
+export const FORMATION_DEF_BONUS = 0.4;
+
+/** 八陣圖：站在 3x3 區域內時防禦 = 基礎 × 1.4，區域外維持基礎 */
+export function formationDefense(baseDefense: number, inZone: boolean): number {
+    return inZone ? Math.floor(baseDefense * (1 + FORMATION_DEF_BONUS)) : baseDefense;
+}
+
 /** 單騎破陣：無相鄰友軍時攻擊 ×1.3，否則 ×1 */
 export function soloAttackMultiplier(hasAdjacentAlly: boolean): number {
     return hasAdjacentAlly ? 1 : 1 + SOLO_ATTACK_BONUS;

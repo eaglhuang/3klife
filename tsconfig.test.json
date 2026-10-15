@@ -29,6 +29,8 @@
     "tests/**/*.ts"
   ],
   "exclude": [
-    "tests/TestEntryPoint.ts"
+    "tests/TestEntryPoint.ts",
+    "tests/atm-lang-csharp.test.ts",
+    "assets/scripts/ui/core/_pending-delete/**"
   ]
 }

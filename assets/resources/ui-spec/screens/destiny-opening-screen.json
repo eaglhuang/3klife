@@ -1,0 +1,17 @@
+{
+  "id": "destiny-opening-screen",
+  "version": 1,
+  "uiId": "DestinyOpening",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "destiny-opening-main",
+  "skin": "destiny-opening-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
