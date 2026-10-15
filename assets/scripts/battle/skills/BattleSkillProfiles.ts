@@ -146,6 +146,15 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
   },
+  // 鼓舞（PROG-2-0769）：全隊士氣 +20（規格 G-2）
+  'mentor-morale': {
+    battleSkillId: 'mentor-morale',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    effectKind: 'morale',
+    coefficient: 0,
+    moraleBonus: 20,
+    battleLogKey: 'skill.mentor_morale.buff',
+  },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',
     targetMode: BattleSkillTargetMode.Area,
