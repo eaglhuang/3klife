@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "PROG-2-0137",
   "title": "PROG-2-0137",
-  "status": "running",
+  "status": "done",
   "milestone": null,
   "dependencies": [],
   "acceptance": [],
@@ -73,7 +73,7 @@
       "planningCommitSha": "16115c36a5e23d28bcfea18227d336f86a899c4c",
       "contentDigest": "sha256:98b301ef3d9cca53b97c13da67d40b636b9a6e2a5cc126ec632ed35f186685f0",
       "amendmentEpoch": 1,
-      "sealedAt": "2026-10-15T23:42:00.737Z"
+      "sealedAt": "2026-10-15T23:47:15.137Z"
     }
   },
   "importedAt": "2026-10-15T23:36:07.330Z",
@@ -108,8 +108,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T23-46-06-376Z-scope-amendment-dfde895570af",
-  "lastTransitionAt": "2026-10-15T23:46:06.376Z",
+  "lastTransitionId": "2026-10-15T23-48-05-810Z-close-1f0f93ffc0ca",
+  "lastTransitionAt": "2026-10-15T23:48:05.810Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T23:45:59.882Z",
@@ -118,7 +118,7 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-c66e1cc37878",
     "claimedAt": "2026-10-15T23:45:59.893Z",
-    "heartbeatAt": "2026-10-15T23:45:59.893Z",
+    "heartbeatAt": "2026-10-15T23:48:05.746Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/PROG-2-0137.*",
@@ -138,14 +138,14 @@
       "docs/agent-briefs/tasks/PROG/PROG-2-0137.md",
       "docs/tasks/tasks-prog.json"
     ],
-    "state": "active",
-    "intent": "write",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20261015234600-codex-gpt-6-7c730efb46",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015234600-codex-gpt-6-7c730efb46\""
-    }
+    },
+    "reason": "16115c36a僅包含0137版面修復、結果與同一張0137協作卡；僅承認同卡planning metadata伴隨交付，未授權任何他卡或ATM runner異動"
   },
   "startedAt": "2026-10-15T23:36:14.432Z",
   "startedByActor": "codex-gpt-6",
@@ -264,5 +264,9 @@
     },
     "createdAt": "2026-10-15T23:46:06.200Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-10-15T23:48:05.746Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261015234559-codex-gpt-6-PROG-2-0137-2c9d19e4ae",
+  "closeReason": "16115c36a僅包含0137版面修復、結果與同一張0137協作卡；僅承認同卡planning metadata伴隨交付，未授權任何他卡或ATM runner異動"
 }
