@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "PROG-2-0134",
   "title": "PROG-2-0134",
-  "status": "running",
+  "status": "blocked",
   "milestone": null,
   "dependencies": [],
   "acceptance": [
@@ -92,8 +92,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T23-20-15-811Z-scope-amendment-0e9fb36740b3",
-  "lastTransitionAt": "2026-10-15T23:20:15.811Z",
+  "lastTransitionId": "2026-10-15T23-23-05-187Z-block-d3b3a45446b9",
+  "lastTransitionAt": "2026-10-15T23:23:05.187Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T23:17:54.719Z",
@@ -102,7 +102,7 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-f9f1e92b7f61",
     "claimedAt": "2026-10-15T23:17:54.729Z",
-    "heartbeatAt": "2026-10-15T23:17:54.729Z",
+    "heartbeatAt": "2026-10-15T23:23:05.121Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/PROG-2-0134.*",
@@ -114,14 +114,14 @@
       "temp_workspace/raw-wiki.json",
       "temp_workspace/wiki-cache.json"
     ],
-    "state": "active",
-    "intent": "write",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20261015231754-codex-gpt-6-abe07a835d",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015231754-codex-gpt-6-abe07a835d\""
-    }
+    },
+    "reason": "Wiki returned HTTP 429 at liu-yan after 11/24 fetched; stopped without retry or proxy change; canonical lore unchanged"
   },
   "startedAt": "2026-10-15T23:17:54.729Z",
   "startedByActor": "codex-gpt-6",
@@ -231,5 +231,9 @@
     },
     "createdAt": "2026-10-15T23:18:00.662Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-10-15T23:23:05.121Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261015231754-codex-gpt-6-PROG-2-0134-768106caea",
+  "closeReason": "Wiki returned HTTP 429 at liu-yan after 11/24 fetched; stopped without retry or proxy change; canonical lore unchanged"
 }
