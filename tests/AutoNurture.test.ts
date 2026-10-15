@@ -4,7 +4,8 @@
  * Unity 對照：像 EditMode 測試，分別驗 AutoPlay 的解鎖 / 道具扣除，以及跑完整場時的懲罰參數。
  */
 import { TestSuite, assert } from './TestRunner';
-import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { GameSession, InMemoryRosterStore, type NurtureStatePort } from '../assets/scripts/core/managers/GameSession';
+import type { NurtureState } from '../assets/scripts/core/services/NurtureService';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { graduate } from '../assets/scripts/core/systems/NurtureSystem';
@@ -17,6 +18,7 @@ import {
     createNurtureSession,
     executeRound,
     type NurtureAction,
+    type NurtureSession,
     type TrainingMentor,
 } from '../assets/scripts/core/systems/NurtureSystem';
 import {
@@ -151,6 +153,67 @@ export function createAutoNurtureSuite(): TestSuite {
         assert.isTrue(restored.mainlineNurtureClearedOnce);
         assert.isFalse(await new GameSession(3).consumeAutoNurtureTicket(), '沒有券時不扣');
         assert.equals(2, await restored.grantAutoNurtureTickets(-1), '負數不入帳');
+    });
+
+    return suite;
+}
+
+/** 假培育埠：getState 回傳複本，restoreState 收下新狀態（模擬存檔寫回） */
+function nurturePortWith(session: NurtureSession): NurtureStatePort & { state: NurtureState } {
+    return {
+        state: { sessions: [session], admission: { season: 0, used: 0 } } as unknown as NurtureState,
+        getState() { return JSON.parse(JSON.stringify(this.state)) as NurtureState; },
+        restoreState(next: NurtureState | null | undefined) { if (next) this.state = JSON.parse(JSON.stringify(next)); },
+    };
+}
+
+export function createAutoNurtureWiringSuite(): TestSuite {
+    const suite = new TestSuite('AutoNurtureWiring (自動培育接線 NUR-14 PROG-2-0548)');
+
+    suite.test('未解鎖時 runAutoNurture 回傳 LOCKED，不扣券、不改培育狀態', async () => {
+        const session = new GameSession(3);
+        const port = nurturePortWith(freshSession('lm-child'));
+        session.setNurtureStatePort(port);
+        await session.grantAutoNurtureTickets(1);
+        const result = await session.runAutoNurture('lm-child', undefined, () => 0.5);
+        assert.equals('LOCKED', (result as { blocked: string }).blocked);
+        assert.equals(1, session.autoNurtureTickets);
+        assert.equals('active', port.state.sessions[0].status);
+    });
+
+    suite.test('已解鎖但沒有券 → NO_TICKET', async () => {
+        const session = new GameSession(3);
+        session.setNurtureStatePort(nurturePortWith(freshSession('lm-child')));
+        await session.markMainlineNurtureSeasonCleared();
+        const result = await session.runAutoNurture('lm-child', undefined, () => 0.5);
+        assert.equals('NO_TICKET', (result as { blocked: string }).blocked);
+    });
+
+    suite.test('解鎖且有券：扣 1 張、跑滿 36 回合、會話完成並標記 auto', async () => {
+        const session = new GameSession(3);
+        const port = nurturePortWith(freshSession('lm-child'));
+        session.setNurtureStatePort(port);
+        session.setRosterStore(new InMemoryRosterStore([]));
+        await session.markMainlineNurtureSeasonCleared();
+        await session.grantAutoNurtureTickets(2);
+        const result = await session.runAutoNurture('lm-child', undefined, () => 0.5);
+        assert.isTrue(result.ok);
+        assert.equals(1, session.autoNurtureTickets);
+        assert.equals(36, (result as { logs: unknown[] }).logs.length);
+        const after = port.state.sessions[0];
+        assert.equals('completed', after.status);
+        assert.isTrue(after.auto === true);
+        assert.equals(0, (result as { logs: { injured?: boolean }[] }).logs.filter((log) => log.injured).length);
+    });
+
+    suite.test('找不到培育會話 → NOT_NURTURING，不扣券', async () => {
+        const session = new GameSession(3);
+        session.setNurtureStatePort(nurturePortWith(freshSession('lm-child')));
+        await session.markMainlineNurtureSeasonCleared();
+        await session.grantAutoNurtureTickets(1);
+        const result = await session.runAutoNurture('nobody', undefined, () => 0.5);
+        assert.equals('NOT_NURTURING', (result as { blocked: string }).blocked);
+        assert.equals(1, session.autoNurtureTickets);
     });
 
     return suite;
