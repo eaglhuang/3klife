@@ -216,5 +216,10 @@
   "ui.retire_review.report": "Battle damage: vitality {0}%",
   "ui.retire_review.quarterly": "Quarterly report: {0} has {1}% vitality left; {2}",
   "ui.retire_review.bond_ok": "ready for bonding.",
-  "ui.retire_review.bond_no": "bonding not recommended."
+  "ui.retire_review.bond_no": "bonding not recommended.",
+  "ui.spirit_codex.title": "Spirit Codex",
+  "ui.spirit_codex.close": "Close",
+  "ui.spirit_codex.count": "{0} Spirits",
+  "ui.spirit_codex.empty": "No Spirit Cards yet. Generals who qualify after death are recorded here.",
+  "ui.spirit_codex.more": "{0} more not shown"
 }

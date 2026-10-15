@@ -53,6 +53,7 @@ import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
+import { buildSpiritCodexTexts, withSpiritCodexFallback } from '../core/SpiritCodexController';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
@@ -171,6 +172,7 @@ export class LobbyScene extends Component {
     private _onboarding: OnboardingFlowController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _retireReviewHost: UIScreenPreviewHost | null = null;
+    private _spiritCodexHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
     private _prisoner: PrisonerPopupController | null = null;
@@ -255,6 +257,7 @@ export class LobbyScene extends Component {
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountRetireReview();
+        await this._mountSpiritCodex();
         await this._mountPrisonerPopup();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
@@ -329,6 +332,7 @@ export class LobbyScene extends Component {
         this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
             { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
             { buttonId: 'btnOpenNurture', handler: () => { this._openNurtureFlow(); } },
+            { buttonId: 'btnOpenSpiritCodex', handler: () => { void this._openSpiritCodex(); } },
             { buttonId: 'btnOpenBonding', handler: () => { void this._openBondingSetup(); } },
             { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
             { buttonId: 'btnOpenDomestic', handler: () => { this._openDomestic(); } },
@@ -1208,6 +1212,35 @@ export class LobbyScene extends Component {
         applyFlowView(binder, { texts: buildRetireReviewTexts(general, lookup), actives: {}, enabled: {} });
         host.node.active = true;
         this._bringNodeToFront(host.node);
+    }
+
+    /**
+     * 英靈圖鑑（PROG-2-0803）：以 UCUF JSON（spirit-codex-screen）組裝，從季度 HUD 的「英靈」鈕開啟。
+     * 英靈卡從歸檔層讀取（異步），列表文字在 SpiritCodexController（純邏輯）。
+     */
+    private async _mountSpiritCodex(): Promise<void> {
+        this._spiritCodexHost = await this._mountPreviewScreenHost('SpiritCodexHost', 'spirit-codex-screen', [
+            { buttonId: 'btnCloseSpiritCodex', handler: () => { this._closeSpiritCodex(); } },
+        ]);
+    }
+
+    private async _openSpiritCodex(): Promise<void> {
+        const host = this._spiritCodexHost;
+        const binder = host?.binder;
+        if (!host || !binder) {
+            return;
+        }
+        const cards = (await services().legacy?.getArchiver().getAllSpiritCards()) ?? [];
+        const lookup = withSpiritCodexFallback((key, ...args) => services().i18n.t(key, ...args));
+        applyFlowView(binder, { texts: buildSpiritCodexTexts(cards, lookup), actives: {}, enabled: {} });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeSpiritCodex(): void {
+        if (this._spiritCodexHost) {
+            this._spiritCodexHost.node.active = false;
+        }
     }
 
     private _closeRetireReview(): void {
