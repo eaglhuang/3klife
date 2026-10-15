@@ -3288,7 +3288,7 @@
       "title": "宿命選將完成後才顯示三段式引導",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-10-15",
