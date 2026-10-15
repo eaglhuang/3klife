@@ -1,0 +1,496 @@
+{
+  "id": "destiny-opening-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "DestinyOpeningRoot",
+    "id": "destinyOpeningRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "DestinyOpeningCard",
+        "id": "destinyOpeningCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1400,
+        "height": 920,
+        "skinSlot": "do.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "DestinyTitle",
+            "id": "destinyTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "宿命轉蛋",
+            "styleSlot": "do.label.title",
+            "width": 700
+          },
+          {
+            "type": "label",
+            "name": "DestinyHint",
+            "id": "destinyHint",
+            "widget": {
+              "top": 78,
+              "left": 32
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "do.label.body",
+            "width": 1300
+          },
+          {
+            "type": "label",
+            "name": "DestinyMessage",
+            "id": "destinyMessage",
+            "widget": {
+              "top": 750,
+              "left": 32
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "do.label.meta",
+            "width": 1300
+          },
+          {
+            "type": "label",
+            "name": "DestinyResetCount",
+            "id": "destinyResetCount",
+            "widget": {
+              "top": 838,
+              "left": 1120
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "do.label.meta",
+            "width": 260
+          },
+          {
+            "type": "panel",
+            "name": "DestinyRow0",
+            "id": "destinyRow0",
+            "widget": {
+              "top": 130,
+              "left": 32
+            },
+            "width": 1336,
+            "height": 96,
+            "skinSlot": "do.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DestinyRow0Name",
+                "id": "destinyRow0Name",
+                "widget": {
+                  "top": 28,
+                  "left": 32
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "do.label.name",
+                "width": 900
+              },
+              {
+                "type": "button",
+                "name": "BtnDestinyRow0",
+                "id": "btnDestinyRow0",
+                "widget": {
+                  "vCenter": true,
+                  "right": 24
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "do.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDestinyRow0Label",
+                    "id": "btnDestinyRow0Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇",
+                    "styleSlot": "do.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DestinyRow1",
+            "id": "destinyRow1",
+            "widget": {
+              "top": 242,
+              "left": 32
+            },
+            "width": 1336,
+            "height": 96,
+            "skinSlot": "do.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DestinyRow1Name",
+                "id": "destinyRow1Name",
+                "widget": {
+                  "top": 28,
+                  "left": 32
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "do.label.name",
+                "width": 900
+              },
+              {
+                "type": "button",
+                "name": "BtnDestinyRow1",
+                "id": "btnDestinyRow1",
+                "widget": {
+                  "vCenter": true,
+                  "right": 24
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "do.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDestinyRow1Label",
+                    "id": "btnDestinyRow1Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇",
+                    "styleSlot": "do.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DestinyRow2",
+            "id": "destinyRow2",
+            "widget": {
+              "top": 354,
+              "left": 32
+            },
+            "width": 1336,
+            "height": 96,
+            "skinSlot": "do.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DestinyRow2Name",
+                "id": "destinyRow2Name",
+                "widget": {
+                  "top": 28,
+                  "left": 32
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "do.label.name",
+                "width": 900
+              },
+              {
+                "type": "button",
+                "name": "BtnDestinyRow2",
+                "id": "btnDestinyRow2",
+                "widget": {
+                  "vCenter": true,
+                  "right": 24
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "do.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDestinyRow2Label",
+                    "id": "btnDestinyRow2Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇",
+                    "styleSlot": "do.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DestinyRow3",
+            "id": "destinyRow3",
+            "widget": {
+              "top": 466,
+              "left": 32
+            },
+            "width": 1336,
+            "height": 96,
+            "skinSlot": "do.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DestinyRow3Name",
+                "id": "destinyRow3Name",
+                "widget": {
+                  "top": 28,
+                  "left": 32
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "do.label.name",
+                "width": 900
+              },
+              {
+                "type": "button",
+                "name": "BtnDestinyRow3",
+                "id": "btnDestinyRow3",
+                "widget": {
+                  "vCenter": true,
+                  "right": 24
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "do.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDestinyRow3Label",
+                    "id": "btnDestinyRow3Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇",
+                    "styleSlot": "do.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DestinyRow4",
+            "id": "destinyRow4",
+            "widget": {
+              "top": 578,
+              "left": 32
+            },
+            "width": 1336,
+            "height": 96,
+            "skinSlot": "do.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DestinyRow4Name",
+                "id": "destinyRow4Name",
+                "widget": {
+                  "top": 28,
+                  "left": 32
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "do.label.name",
+                "width": 900
+              },
+              {
+                "type": "button",
+                "name": "BtnDestinyRow4",
+                "id": "btnDestinyRow4",
+                "widget": {
+                  "vCenter": true,
+                  "right": 24
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "do.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDestinyRow4Label",
+                    "id": "btnDestinyRow4Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇",
+                    "styleSlot": "do.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DestinyRow5",
+            "id": "destinyRow5",
+            "widget": {
+              "top": 690,
+              "left": 32
+            },
+            "width": 1336,
+            "height": 96,
+            "skinSlot": "do.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DestinyRow5Name",
+                "id": "destinyRow5Name",
+                "widget": {
+                  "top": 28,
+                  "left": 32
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "do.label.name",
+                "width": 900
+              },
+              {
+                "type": "button",
+                "name": "BtnDestinyRow5",
+                "id": "btnDestinyRow5",
+                "widget": {
+                  "vCenter": true,
+                  "right": 24
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "do.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDestinyRow5Label",
+                    "id": "btnDestinyRow5Label",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "選擇",
+                    "styleSlot": "do.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnDestinyRoll",
+            "id": "btnDestinyRoll",
+            "widget": {
+              "top": 820,
+              "left": 420
+            },
+            "width": 200,
+            "height": 56,
+            "skinSlot": "do.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnDestinyRollLabel",
+                "id": "btnDestinyRollLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "轉蛋",
+                "styleSlot": "do.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnDestinyReset",
+            "id": "btnDestinyReset",
+            "widget": {
+              "top": 820,
+              "left": 640
+            },
+            "width": 200,
+            "height": 56,
+            "skinSlot": "do.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnDestinyResetLabel",
+                "id": "btnDestinyResetLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "重置",
+                "styleSlot": "do.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnDestinyConfirm",
+            "id": "btnDestinyConfirm",
+            "widget": {
+              "top": 820,
+              "left": 860
+            },
+            "width": 200,
+            "height": 56,
+            "skinSlot": "do.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnDestinyConfirmLabel",
+                "id": "btnDestinyConfirmLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "確認",
+                "styleSlot": "do.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
