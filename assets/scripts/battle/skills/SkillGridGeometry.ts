@@ -33,6 +33,11 @@ export function crossCells(lane: number, depth: number, laneCount: number, depth
         .filter((c) => inBounds(c.lane, c.depth, laneCount, depthCount));
 }
 
+/** 多個中心各自的十字範圍（火計連環用）；重疊的格子不去重，由呼叫端決定 */
+export function crossCellsForAll(centers: GridCell[], laneCount: number, depthCount: number): GridCell[] {
+    return centers.flatMap((c) => crossCells(c.lane, c.depth, laneCount, depthCount));
+}
+
 /** 中心周圍 (2r+1)² 格，裁切到棋盤內；radius=1 即 3x3 */
 export function squareCells(lane: number, depth: number, radius: number, laneCount: number, depthCount: number): GridCell[] {
     const cells: GridCell[] = [];
