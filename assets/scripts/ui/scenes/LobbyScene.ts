@@ -43,6 +43,10 @@ import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/Mercenary
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
 import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from '../core/DestinyOpeningController';
+import { OpeningIntroController } from '../core/OpeningIntroController';
+import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
+import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
+import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
@@ -172,6 +176,9 @@ export class LobbyScene extends Component {
     private _destiny: DestinyOpeningController | null = null;
     /** 開場沒有讀到存檔＝新玩家，需要先走宿命轉蛋 */
     private _isNewPlayer = false;
+    private _introHost: UIScreenPreviewHost | null = null;
+    private _intro: OpeningIntroController | null = null;
+    private _openingFlow: OpeningFlowController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
     private _lobbyHub: LobbyHub | null = null;
@@ -262,6 +269,7 @@ export class LobbyScene extends Component {
         await this._mountMercenaryPanel();
         await this._mountRedFaceShowcase();
         await this._mountDestinyOpening();
+        await this._mountOpeningIntro();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
         await this._mountRetireReview();
@@ -914,9 +922,6 @@ export class LobbyScene extends Component {
             { buttonId: 'btnDestinyConfirm', handler: act(() => this._destiny?.confirm()) },
             ...rowBindings,
         ]);
-        if (this._isNewPlayer) {
-            this.openDestinyOpening();
-        }
     }
 
     public openDestinyOpening(): void {
@@ -932,6 +937,9 @@ export class LobbyScene extends Component {
     private _afterDestinyAction(): void {
         if (this._destiny?.started && this._destinyHost) {
             this._destinyHost.node.active = false;
+            if (destinyLockedEvent(this._destiny.state)) {
+                this._openingFlow?.advance(destinyLockedEvent(this._destiny.state)!);
+            }
             return;
         }
         this._refreshDestinyOpening();
@@ -943,6 +951,53 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._destiny.getFlowView());
+    }
+
+    /**
+     * 新玩家開場第一幕（情懷定錨）：沒有存檔時先走 intro 逐頁，翻完才開宿命轉蛋。
+     * 幕序在 NewPlayerOpening，這裡只綁按鈕、套 FlowView，並依目前幕開關兩個面板。
+     */
+    private async _mountOpeningIntro(): Promise<void> {
+        this._intro = new OpeningIntroController();
+        this._openingFlow = createNewPlayerOpeningFlow();
+        this._introHost = await this._mountPreviewScreenHost('OpeningIntroHost', 'opening-intro-screen', [
+            { buttonId: 'btnIntroNext', handler: () => { this._onClickIntroNext(); } },
+        ]);
+        if (this._isNewPlayer) {
+            this._openingFlow.start();
+            this._showIntro();
+        }
+    }
+
+    private _showIntro(): void {
+        const host = this._introHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshIntro();
+    }
+
+    private _onClickIntroNext(): void {
+        if (!this._intro?.next()) {
+            this._refreshIntro();
+            return;
+        }
+        // 第一幕結束：離開 intro，進入宿命轉蛋
+        this._openingFlow?.advance({ type: OPENING_INTRO_DONE });
+        if (this._introHost) {
+            this._introHost.node.active = false;
+        }
+        this.openDestinyOpening();
+    }
+
+    private _refreshIntro(): void {
+        const binder = this._introHost?.binder;
+        if (!binder || !this._intro) {
+            return;
+        }
+        applyFlowView(binder, this._intro.getFlowView());
     }
 
     private _loadDataJson<T>(path: string): Promise<T | null> {

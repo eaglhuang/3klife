@@ -1,0 +1,92 @@
+{
+  "id": "opening-intro-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "OpeningIntroRoot",
+    "id": "openingIntroRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "IntroCard",
+        "id": "introCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1400,
+        "height": 600,
+        "skinSlot": "oi.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "IntroText",
+            "id": "introText",
+            "widget": {
+              "top": 60,
+              "left": 60
+            },
+            "height": 300,
+            "text": "",
+            "styleSlot": "oi.label.body",
+            "width": 1280
+          },
+          {
+            "type": "label",
+            "name": "IntroStep",
+            "id": "introStep",
+            "widget": {
+              "top": 480,
+              "left": 60
+            },
+            "height": 30,
+            "text": "",
+            "styleSlot": "oi.label.meta",
+            "width": 300
+          },
+          {
+            "type": "button",
+            "name": "BtnIntroNext",
+            "id": "btnIntroNext",
+            "widget": {
+              "top": 460,
+              "left": 1060
+            },
+            "width": 280,
+            "height": 64,
+            "skinSlot": "oi.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnIntroNextLabel",
+                "id": "btnIntroNextLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "繼續",
+                "styleSlot": "oi.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
