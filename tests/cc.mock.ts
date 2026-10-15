@@ -3,7 +3,10 @@
  */
 
 export class Vec3 { constructor(public x = 0, public y = 0, public z = 0) {} }
-export class Color { constructor(public r = 255, public g = 255, public b = 255, public a = 255) {} }
+export class Color {
+    constructor(public r = 255, public g = 255, public b = 255, public a = 255) {}
+    declare static WHITE: Color;
+}
 
 // ─── 基礎 UI 類型 (必須在 Node 之前) ──────────────────────────────────────────
 
@@ -13,6 +16,7 @@ export class UITransform {
     getContentSize() { return { width: this.width, height: this.height }; }
     setAnchorPoint(x: number, y: number): void { this.anchorX = x; this.anchorY = y; }
     convertToNodeSpaceAR(_worldPoint: any, _out?: any): any { return _out ?? new Vec3(); }
+    convertToWorldSpaceAR(_nodePoint: any, _out?: any): any { return _out ?? new Vec3(); }
 }
 
 export class Label {
@@ -28,7 +32,18 @@ export class Layout {
     static readonly Type = { NONE: 0, HORIZONTAL: 1, VERTICAL: 2, GRID: 3 };
     static readonly ResizeMode = { NONE: 0, CONTAINER: 1, CHILDREN: 2 };
     static readonly VerticalDirection = { TOP_TO_BOTTOM: 0, BOTTOM_TO_TOP: 1 };
+    declare static Constraint: any;
+    declare static HorizontalDirection: any;
+    declare static AxisDirection: any;
     type = 0; resizeMode = 0; spacingY = 0; paddingTop = 0; verticalDirection = 0; isValid = true;
+    declare constraint: number;
+    declare constraintNum: number;
+    declare cellSize: any;
+    declare spacingX: number;
+    declare paddingLeft: number;
+    declare paddingRight: number;
+    declare paddingBottom: number;
+    declare startAxis: number;
     updateLayout(_force?: boolean): void { /* mock */ }
 }
 
@@ -36,9 +51,18 @@ export class Button {
     static readonly EventType = { CLICK: 'click' };
     static readonly Transition = { NONE: 0, COLOR: 1, SPRITE: 2, SCALE: 3 };
     transition = 0; interactable = true; enabled = true;
+    declare target: any;
     node: any = null;
 }
-export class Sprite { enabled = true; spriteFrame: any = null; }
+export class Sprite {
+    enabled = true; spriteFrame: any = null;
+    declare color: Color;
+    declare sizeMode: number;
+    declare type: number;
+    declare trim: boolean;
+    declare static SizeMode: any;
+    declare static Type: any;
+}
 export class UIOpacity { opacity = 255; }
 export class Prefab { decRef(): void { /* mock */ } }
 
@@ -53,6 +77,13 @@ export class Node {
     private _components: any[] = [];
 
     constructor(public name: string = "") {}
+    declare position: Vec3;
+    emit(event: string, arg?: any): void { this.__emit(event, arg); }
+    off(event: string, handler?: (arg?: any) => void): void {
+        if (!handler) { this._handlers.delete(event); return; }
+        const list = this._handlers.get(event);
+        if (list) this._handlers.set(event, list.filter(h => h !== handler));
+    }
 
     get parent(): Node | null { return this._parent; }
     set parent(v: Node | null) {
@@ -130,6 +161,9 @@ export class Component {
     public node = new Node();
     public isValid = true;
     scheduleOnce(fn: () => void, _delay: number): void { fn(); }
+    declare enabled: boolean;
+    getComponent<T = any>(type: (new (...args: any[]) => T) | string): T | null { return this.node.getComponent(type); }
+    addComponent<T = any>(type: (new (...args: any[]) => T) | string): T { return this.node.addComponent(type); }
 }
 
 export function instantiate(noP: any): Node {
@@ -159,6 +193,7 @@ export const _decorator = {
     ccclass: (_name?: string) => (_: any) => {},
     property: () => (_: any, __: any) => {},
     requireComponent: () => (_: any, __: any) => {},
+    executeInEditMode: () => (_: any) => {},
 };
 
 export const sys = {
@@ -202,12 +237,18 @@ export class AudioClip { name: string = ""; }
 export class CurveRange { constant = 0; }
 export class Vec4 { constructor(public x = 0, public y = 0, public z = 0, public w = 0) {} }
 export class Rect { constructor(public x = 0, public y = 0, public width = 0, public height = 0) {} }
-export class Widget { [key: string]: any; }
+export class Widget {
+    [key: string]: any;
+    declare static AlignMode: any;
+}
 export class Font { [key: string]: any; }
 export class JsonAsset { [key: string]: any; }
 export class Asset { [key: string]: any; }
 export class ImageAsset { [key: string]: any; }
-export class Texture2D { [key: string]: any; }
+export class Texture2D {
+    [key: string]: any;
+    declare static PixelFormat: any;
+}
 export class SpriteFrame { [key: string]: any; }
 export class Material { [key: string]: any; }
 export class EffectAsset { [key: string]: any; }
