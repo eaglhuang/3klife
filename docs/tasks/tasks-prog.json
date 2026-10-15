@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 37,
-    "total": 73
+    "open": 38,
+    "total": 74
   },
   "tasks": [
     {
@@ -3044,6 +3044,33 @@
         "artifacts/PROG-2-0126/**"
       ],
       "notes": "2026-10-14 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0127",
+      "title": "實機驗收：補元散使用流程（PROG-2-0444、#392）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M1",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "補元散使用、精力上限與存檔保留已合併，背包按鈕場景綁定與實機行為待驗收。",
+      "related": [],
+      "depends": [
+        "PR #392"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0127.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0127/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: cc 背包按鈕綁定需 Codex 接線"
     }
   ]
 }
