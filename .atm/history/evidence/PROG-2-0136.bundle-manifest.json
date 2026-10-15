@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-0136",
+  "updatedAt": "2026-10-15T23:13:50.326Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "npx ts-node --transpile-only -r ./tests/register-cc-test-stub.js -r ./tests/register-tsconfig-test-paths.js --project tsconfig.test.json tests/run-cli.ts",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:80005c4e1cf60985c37f8ce09e519bdefc824c84db6ffdc52a600b0f8b5b2276",
+      "stderrSha256": "sha256:3c1901060debc9ae71fa109983aa57f50dd2a26877005af3bcab55f1a2c02b83",
+      "validators": [],
+      "generatedAt": "2026-10-15T23:13:50.324Z",
+      "startedAt": "2026-10-15T23:13:22.580Z",
+      "finishedAt": "2026-10-15T23:13:50.324Z",
+      "durationMs": 27744,
+      "runnerKind": "dev-source",
+      "sourceCommit": "d492996f06cdf1bc6618290d8c018060b23e8f3a",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

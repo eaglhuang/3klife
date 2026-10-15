@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "PROG-2-0136",
   "title": "PROG-2-0136",
-  "status": "running",
+  "status": "done",
   "milestone": null,
   "dependencies": [],
   "acceptance": [],
@@ -103,8 +103,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-15T15-46-21-386Z-metadata-only-import-0a5371195e80",
-  "lastTransitionAt": "2026-10-15T15:46:21.386Z",
+  "lastTransitionId": "2026-10-15T23-14-23-659Z-close-29ce5994891e",
+  "lastTransitionAt": "2026-10-15T23:14:23.659Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T15:38:42.047Z",
@@ -113,7 +113,7 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-5bcb9d50d9ce",
     "claimedAt": "2026-10-15T15:38:42.063Z",
-    "heartbeatAt": "2026-10-15T15:42:31.530Z",
+    "heartbeatAt": "2026-10-15T23:14:23.602Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/PROG-2-0136.*",
@@ -126,33 +126,34 @@
       "docs/tasks/tasks-prog.json",
       "tests/OnboardingFlow.test.ts"
     ],
-    "state": "active",
+    "state": "released",
     "laneSession": {
-      "laneSessionId": "lane-20261015153842-codex-gpt-6-74e422d35e",
+      "laneSessionId": "lane-20261015230704-codex-gpt-6-269718a9a6",
       "status": "active",
-      "source": "option",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015153842-codex-gpt-6-74e422d35e\""
-    }
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015230704-codex-gpt-6-269718a9a6\""
+    },
+    "reason": "closed"
   },
   "startedAt": "2026-10-15T15:38:42.063Z",
   "startedByActor": "codex-gpt-6",
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-c2d061bfe218b102",
-    "ticketDigest": "sha256:c2d061bfe218b10242c25275de2595e823980d398084b0077b38b360cd6c4bba",
+    "ticketId": "wat-59e23de86f5158ac",
+    "ticketDigest": "sha256:59e23de86f5158ac2ddf1cee27bd9ca6bda3f3423d072dfb5e574a8e3d7c1c63",
     "taskId": "PROG-2-0136",
     "origin": "claim",
     "actorId": "codex-gpt-6",
-    "laneSessionId": "lane-20261015153842-codex-gpt-6-74e422d35e",
+    "laneSessionId": "lane-20261015230704-codex-gpt-6-269718a9a6",
     "claimGeneration": "lease-5bcb9d50d9ce",
-    "issuedAt": "2026-10-15T15:45:39.806Z",
-    "expiresAt": "2026-10-15T16:15:39.806Z",
+    "issuedAt": "2026-10-15T23:07:04.197Z",
+    "expiresAt": "2026-10-15T23:37:04.197Z",
     "scopeDigest": "sha256:7997492c21d7094500f6ea68afef8b56551366b5edc2f91f441739efc49ca06e",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-10-15T15:45:39.806Z"
+      "selectedAt": "2026-10-15T23:07:04.197Z"
     },
     "grants": [
       {
@@ -244,5 +245,8 @@
     },
     "createdAt": "2026-10-15T15:42:31.676Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-10-15T23:14:23.602Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261015153842-codex-gpt-6-PROG-2-0136-88c9f3a1ac"
 }
