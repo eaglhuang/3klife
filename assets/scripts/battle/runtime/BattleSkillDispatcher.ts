@@ -16,6 +16,7 @@ import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourc
 import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver';
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
 import { createDefaultBattleSkillExecutor } from '../skills/BattleSkillResolverFactory';
+import { isFixedTileState } from '../shared/TileStateRules';
 import {
   BattleSkillTargetMode,
   BattleSkillTiming,
@@ -285,6 +286,9 @@ export class BattleSkillDispatcher {
       },
       getWeather: () => state.weather,
       setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
+        // 固定地形格（掩體、營帳）不被火場覆蓋；暫時性格子狀態則以新的覆蓋舊的
+        const existing = state.getTileEffect(cell.lane, cell.depth);
+        if (existing && isFixedTileState(existing.state)) return;
         state.setTileEffect({
           id: `skill-fire-${cell.lane}-${cell.depth}`,
           lane: cell.lane,
