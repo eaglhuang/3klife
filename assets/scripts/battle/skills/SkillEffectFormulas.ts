@@ -7,6 +7,8 @@
 export const CHARGE_MULTIPLIER = 2.0;
 export const POISON_MAX_HP_RATIO = 0.1;
 export const SOLO_ATTACK_BONUS = 0.3;
+/** 火場每回合傷害，與 BattleTacticBehavior 的 FIRE_DAMAGE_PER_TURN 同值（PROG-2-0757） */
+export const FIRE_HAZARD_DAMAGE_PER_TURN = 15;
 
 /** 精銳突擊：衝鋒傷害 = 基礎傷害 × 2.0 */
 export function chargeDamage(base: number): number {

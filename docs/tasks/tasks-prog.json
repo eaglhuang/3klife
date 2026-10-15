@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 42,
-    "total": 78
+    "open": 43,
+    "total": 79
   },
   "tasks": [
     {
@@ -3189,6 +3189,37 @@
         "artifacts/PROG-2-0131/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 補入口驗收步驟（#421） | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0132",
+      "title": "實機驗收：英靈圖鑑與精華快照語系（PROG-2-0803、0804、#432）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M1",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "英靈圖鑑畫面、季度 HUD 入口與精華快照三語系已合併，版面與實機行為待驗收。",
+      "related": [],
+      "depends": [
+        "PR #429",
+        "PR #432",
+        "PROG-2-0802",
+        "PROG-2-0803",
+        "PROG-2-0804"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0132.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0132/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 活動任務阻擋"
     }
   ]
 }

@@ -11,8 +11,12 @@ export interface BattleSkillExecutionContext {
   getUnit(unitId: string): TroopUnit | null;
   getCasterGeneral(casterFaction: Faction): GeneralUnit | null;
   getTerrain(lane: number, depth: number): TerrainType;
+  /** 施放者所在格（PROG-2-0756：衝鋒判定直線用）；舊測試 context 可不提供，視為無衝鋒 */
+  getCasterCell?(casterFaction: Faction): { lane: number; depth: number } | null;
   /** 目前戰場天氣（PROG-2-0406：火計大風 ×2）；舊測試 context 可不提供，視為晴天 */
   getWeather?(): Weather;
+  /** 把指定格設為火場等持續傷害格（PROG-2-0757）；舊測試 context 可不提供 */
+  setTileHazard?(cell: { lane: number; depth: number }, damagePerTurn: number): void;
   applyDamage(unit: TroopUnit, damage: number, casterFaction: Faction): void;
   healUnit(unit: TroopUnit, amount: number, casterFaction: Faction): void;
   applyBuff(unit: TroopUnit, effect: StatusEffect, turns: number): void;

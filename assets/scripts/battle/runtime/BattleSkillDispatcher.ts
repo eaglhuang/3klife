@@ -275,7 +275,25 @@ export class BattleSkillDispatcher {
       getUnit: (unitId: string) => state.units.get(unitId) ?? null,
       getCasterGeneral: (casterFaction: Faction) => state.getGeneral(casterFaction),
       getTerrain: (lane: number, depth: number) => state.getCell(lane, depth)?.terrain ?? TerrainType.Plain,
+      getCasterCell: (casterFaction: Faction) => {
+        // 武將資料沒有格子座標，改由武將的戰場單位取位置（同 PROG-2-0755 的做法）
+        const generalId = casterFaction === Faction.Player
+          ? this.context.getPlayerGeneralUnitId()
+          : this.context.getEnemyGeneralUnitId();
+        const general = generalId ? state.units.get(generalId) : undefined;
+        return general ? { lane: general.lane, depth: general.depth } : null;
+      },
       getWeather: () => state.weather,
+      setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
+        state.setTileEffect({
+          id: `skill-fire-${cell.lane}-${cell.depth}`,
+          lane: cell.lane,
+          depth: cell.depth,
+          state: 'hazard-fire',
+          damagePerTurn,
+          notes: 'skill:hazard-cross',
+        });
+      },
       applyDamage: (unit: TroopUnit, damage: number, casterFaction: Faction) => {
         const svc = services();
         combatResolver.applyUnitDamage(unit, damage, casterFaction, {
