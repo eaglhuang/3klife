@@ -1,0 +1,17 @@
+{
+  "id": "mentor-card-detail-screen",
+  "version": 1,
+  "uiId": "MentorCardDetail",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "mentor-card-detail-main",
+  "skin": "nurture-flow-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
