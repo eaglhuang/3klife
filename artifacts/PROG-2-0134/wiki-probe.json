@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-15T23:19:07.031Z",
+  "url": "https://zh.wikipedia.org/api/rest_v1/page/summary/%E6%9B%B9%E6%93%8D",
+  "httpStatus": 200,
+  "exitCode": 0,
+  "bodySha256": "c0d5176c05e4d02fcc540513b2cfdeed90b7953a879280535f1fbfbdc6b1d937",
+  "bodyBytes": 2453,
+  "proxyEnvironmentChanged": false,
+  "proxyBypass": false,
+  "responseBodyPersisted": false,
+  "error": null
+}
