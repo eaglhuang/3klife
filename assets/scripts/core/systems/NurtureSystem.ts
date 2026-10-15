@@ -157,6 +157,8 @@ export interface NurtureSession {
     /** 本場累積的實力層 */
     prowess: Record<TrainingKind, number>;
     tp: number;
+    /** 培育期間累積獲得的 TP 總和（只增不減；受傷撤回時同步扣回；戰法學習消耗不扣，PROG-2-0802） */
+    totalTp?: number;
     growthModifier: number;
     /** 入學時鎖定的教官 */
     mentors: TrainingMentor[];
@@ -432,7 +434,7 @@ export function executeRound(
             log.statGained = applied;
             log.burst = breakdown.burst;
             log.tpGained = computeTpGain(source.mentors, options.auto ? AUTO_NURTURE_TP_PENALTY : 1);
-            session.tp += log.tpGained;
+            grantNurtureTp(session, log.tpGained);
         }
 
         // 受傷 / 好感事件擲骰放在所有結算骰之後，既有的亂數順序不受影響；自動培育不觸發事件
@@ -440,7 +442,7 @@ export function executeRound(
         if (events.injured) {
             // 受傷：本回合訓練無效，實力與 TP 撤回，下一回合跳過
             session.prowess[action] -= log.statGained;
-            session.tp -= log.tpGained;
+            grantNurtureTp(session, -log.tpGained);
             log.statGained = 0;
             log.tpGained = 0;
             log.burst = false;
@@ -473,7 +475,7 @@ export function executeRound(
         if (synergy) {
             const bonus = synergyTpBonus(synergy);
             session.triggeredSynergies = [...(session.triggeredSynergies ?? []), synergy.id];
-            session.tp += bonus;
+            grantNurtureTp(session, bonus);
             log.tpGained += bonus;
             log.synergyId = synergy.id;
         }
@@ -526,12 +528,23 @@ export function graduationTags(prowess: Record<TrainingKind, number>, careerClas
 }
 
 /** 畢業後寫回本體的欄位（比照 BreedingGeneral 以延伸型別承載） */
+/**
+ * 培育 TP 增減（獲得為正、受傷撤回為負）：同步更新當前 TP 與累積 TP（PROG-2-0802）。
+ * 累積 TP 只給演武聖境 Total_TP 用，戰法學習消耗不經過這裡。
+ */
+export function grantNurtureTp(session: NurtureSession, delta: number): void {
+    session.tp += delta;
+    session.totalTp = (session.totalTp ?? 0) + delta;
+}
+
 export type NurtureGraduate = UnveilingGeneral & {
     /** 實力層（Prowess） */
     prowess?: Record<TrainingKind, number>;
     graduationRating?: NurtureRating;
     graduatedSeason?: number;
     nurtureTp?: number;
+    /** 畢業時的培育累積 TP 總和（演武聖境精華快照的 Total_TP，PROG-2-0802） */
+    totalTp?: number;
     negativeFactors?: string[];
 };
 
@@ -572,6 +585,7 @@ export function graduate(
         graduationRating: rating,
         graduatedSeason: season,
         nurtureTp: session.tp,
+        totalTp: session.totalTp ?? 0,
         negativeFactors: [...session.negativeFactors],
         trainingProfile: {
             ...child.trainingProfile,

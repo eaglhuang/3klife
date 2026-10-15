@@ -39,3 +39,8 @@ export function legacyReviveRestoreOf(snapshot: number, tuning: LegacyArenaTunin
     if (!Number.isFinite(snapshot) || snapshot <= 0) return 0;
     return Math.floor(snapshot * tuning.reviveRestoreRatio);
 }
+
+/** 英靈卡上顯示的精華快照行：「精華快照：N」（PROG-2-0802） */
+export function legacyEssenceLine(essence: number | undefined): string {
+    return `精華快照：${Number.isFinite(essence) ? Math.max(0, Math.floor(essence as number)) : 0}`;
+}

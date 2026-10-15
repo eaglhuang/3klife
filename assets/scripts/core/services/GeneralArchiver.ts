@@ -146,6 +146,17 @@ export class GeneralArchiver {
         return card;
     }
 
+    /** 寫入演武聖境精華快照（PROG-2-0802）；只更新 legacyEssence，不改 L5、分類或 GC 路由。 */
+    public async markLegacyEssence(uid: string, legacyEssence: number): Promise<SpiritCard> {
+        const cards = await this.getAllSpiritCards();
+        const index = cards.findIndex(card => card.uid === uid);
+        if (index < 0) throw new Error(`[GeneralArchiver] 找不到歸檔快照 ${uid}`);
+        const marked: SpiritCard = { ...cards[index], legacyEssence };
+        cards[index] = marked;
+        await this.adapter.set(STORE_SPIRIT_CARDS, cards);
+        return marked;
+    }
+
     /** 僅更新快照的正式英靈卡標記，不改 L5、分類或 GC 路由。資格由呼叫端決定。 */
     public async markSpiritRelic(uid: string, isSpiritRelic: boolean): Promise<SpiritCard> {
         const cards = await this.getAllSpiritCards();
