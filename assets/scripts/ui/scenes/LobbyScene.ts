@@ -26,6 +26,8 @@ import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
+import { MentorCardDetailController } from '../core/MentorCardDetailController';
+import type { MentorCardData, MentorCardTab } from '../../core/systems/MentorCardTabs';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
@@ -146,6 +148,9 @@ export class LobbyScene extends Component {
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
+    /** 教官卡詳情（MENT-13）：頁籤與目前卡的狀態 */
+    private _mentorCardHost: UIScreenPreviewHost | null = null;
+    private readonly _mentorCardDetail = new MentorCardDetailController();
     private _supportCatalog: SupportCatalog | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
@@ -240,6 +245,7 @@ export class LobbyScene extends Component {
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
         await this._mountNurtureFlow();
+        await this._mountMentorCardDetail();
         await this._mountBondingSetup();
         await this._mountJobChange();
         await this._mountDomestic();
@@ -434,6 +440,51 @@ export class LobbyScene extends Component {
                 services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
             }),
         );
+    }
+
+    /**
+     * 教官卡詳情畫面（MENT-13 cc 接線）：以 UCUF JSON（mentor-card-detail-screen）組裝，
+     * 狀態在 MentorCardDetailController，這裡只綁按鈕與套 view。
+     */
+    private async _mountMentorCardDetail(): Promise<void> {
+        const select = (tab: MentorCardTab): (() => void) => () => {
+            this._mentorCardDetail.selectTab(tab);
+            this._refreshMentorCardDetail();
+        };
+        this._mentorCardHost = await this._mountPreviewScreenHost('MentorCardDetailHost', 'mentor-card-detail-screen', [
+            { buttonId: 'btnCloseMentorCard', handler: () => { this._closeMentorCardDetail(); } },
+            { buttonId: 'btnTabEffects', handler: select('effects') },
+            { buttonId: 'btnTabEvents', handler: select('events') },
+            { buttonId: 'btnTabStory', handler: select('story') },
+        ]);
+    }
+
+    /** 開啟某張教官卡的詳情（入口由名冊 / 教官列表接，之後的卡） */
+    public openMentorCardDetail(card: MentorCardData, title: string): void {
+        const host = this._mentorCardHost;
+        if (!host) {
+            return;
+        }
+        this._mentorCardDetail.open(card, title);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshMentorCardDetail();
+    }
+
+    private _closeMentorCardDetail(): void {
+        this._mentorCardDetail.close();
+        if (this._mentorCardHost) {
+            this._mentorCardHost.node.active = false;
+        }
+    }
+
+    private _refreshMentorCardDetail(): void {
+        const binder = this._mentorCardHost?.binder;
+        if (!binder) {
+            return;
+        }
+        const view = this._mentorCardDetail.getView();
+        applyFlowView(binder, { texts: view.texts, actives: view.actives, enabled: {} });
     }
 
     private _openNurtureFlow(): void {
