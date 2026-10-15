@@ -20,10 +20,10 @@
  * Unity 對照：在 SortingGroup 外掛 Shadow Caster，或透過 Canvas 層計算位置
  */
 import { Node, Sprite, UITransform, UIOpacity, Layout, Vec3 } from 'cc';
-import { UISkinResolver } from './UISkinResolver';
-import { UIPreviewStyleBuilder } from './UIPreviewStyleBuilder';
-import { UIPreviewLayoutBuilder } from './UIPreviewLayoutBuilder';
-import type { UILayoutNodeSpec } from './UISpecTypes';
+import { UISkinResolver } from '../UISkinResolver';
+import { UIPreviewStyleBuilder } from '../UIPreviewStyleBuilder';
+import { UIPreviewLayoutBuilder } from '../UIPreviewLayoutBuilder';
+import type { UILayoutNodeSpec } from '../UISpecTypes';
 import { UIPreviewDiagnostics } from '../UIPreviewDiagnostics';
 
 /** DetachedShadow 的位置追蹤資料（對應 Unity 的 shadow binding） */
