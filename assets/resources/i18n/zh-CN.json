@@ -210,5 +210,11 @@
   "life.script.afterlife": "{0} 的英灵卡与虎符卡已归入宗祠与军府。",
   "ui.retire_review.title": "退役回顾",
   "ui.retire_review.close": "关闭",
-  "ui.retire_review.report_title": "季度战损报告"
+  "ui.retire_review.report_title": "季度战损报告",
+  "record.milestone.KILL_100": "百人斩",
+  "record.milestone.KILL_1000": "千人斩",
+  "record.milestone.KILL_10000": "万人斩",
+  "record.milestone.UNDEFEATED_50": "不败神话",
+  "record.milestone.GUARDIAN_WALL": "守护之壁",
+  "record.milestone.ASURA": "修罗"
 }

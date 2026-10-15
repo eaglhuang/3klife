@@ -144,6 +144,24 @@ export function milestoneDisplayName(id: string): string {
     return BATTLE_MILESTONES.find((m) => m.id === id)?.displayName ?? id;
 }
 
+/** 里程碑名稱的語系 key：record.milestone.<id>（REC-12，PROG-2-0445） */
+export function milestoneTextKey(id: string): string {
+    return `record.milestone.${id}`;
+}
+
+/** 里程碑名稱的 zh-TW 預設；與 resources/i18n/zh-TW.json 的 record.milestone.* 同步（測試會比對） */
+export const MILESTONE_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = Object.fromEntries(
+    BATTLE_MILESTONES.map((m) => [milestoneTextKey(m.id), m.displayName]),
+);
+
+/** 語系查詢里程碑名稱；語系表沒有該 key 時退回 zh-TW 預設，未知 id 回傳 id 本身 */
+export function localizedMilestoneName(id: string, lookup: (key: string) => string): string {
+    const key = milestoneTextKey(id);
+    const localized = lookup(key);
+    if (localized !== key) return localized;
+    return MILESTONE_TEXT_FALLBACK_ZH_TW[key] ?? id;
+}
+
 // ── 戰績面板 ViewModel（武將詳情「戰績」分頁） ───────────────────────────────
 
 export interface BattleRecordPanelRow {
