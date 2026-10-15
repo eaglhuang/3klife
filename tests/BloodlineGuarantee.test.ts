@@ -38,7 +38,7 @@ function child(id: string, name: string): UnveilingGeneral {
         id, name, faction: 'shu', gender: '男', age: 5, status: 'Mystery', hp: 800,
         str: 60, int: 50, lea: 55, pol: 40, cha: 45, luk: 30,
         hiddenFlags: ['mystery-phase'], genes: [],
-    } as UnveilingGeneral).general, 'accept');
+    } as unknown as UnveilingGeneral).general, 'accept');
 }
 
 /** 基礎率 0 的事件：不保底就永遠不會觸發 */
@@ -55,7 +55,7 @@ function zeroRateCard(): MentorCard {
         uid: 'mentor-guan', sourceGeneralId: 'guan', name: '關羽', faction: 'shu',
         retiredAge: 66, retiredSeason: 4, retiredYear: 2, ep_snapshot: 80, gene_refs: [],
         parentUids: ['f', 'm'],
-        generalSnapshot: unveilGeneral({ id: 'guan', name: '關羽', faction: 'shu', str: 90, int: 40, lea: 70, pol: 30, cha: 50, luk: 60, hiddenFlags: [], genes: [] } as UnveilingGeneral).general as unknown as GeneralConfig,
+        generalSnapshot: unveilGeneral({ id: 'guan', name: '關羽', faction: 'shu', str: 90, int: 40, lea: 70, pol: 30, cha: 50, luk: 60, hiddenFlags: [], genes: [] } as unknown as UnveilingGeneral).general as unknown as GeneralConfig,
         support: support.value,
     } as MentorCard;
 }

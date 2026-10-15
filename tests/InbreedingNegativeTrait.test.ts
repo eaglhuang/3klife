@@ -21,8 +21,8 @@ function child(bonus?: number): UnveilingGeneral {
     const general = chooseFate(unveilGeneral({
         id: 'alpha', name: '阿斗', faction: 'shu', gender: '男', age: 5, status: 'Mystery', hp: 800,
         str: 60, int: 50, lea: 55, pol: 40, cha: 45, luk: 30, hiddenFlags: ['mystery-phase'], genes: [],
-    } as UnveilingGeneral).general, 'accept');
-    return bonus === undefined ? general : ({ ...general, negativeTraitRateBonus: bonus } as UnveilingGeneral);
+    } as unknown as UnveilingGeneral).general, 'accept');
+    return bonus === undefined ? general : ({ ...general, negativeTraitRateBonus: bonus } as unknown as UnveilingGeneral);
 }
 
 export function createInbreedingNegativeTraitSuite(): TestSuite {

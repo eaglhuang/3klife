@@ -6,6 +6,8 @@ import { LinkSkillResolver } from './resolvers/LinkSkillResolver';
 import { ProjectedDamageSkillResolver } from './resolvers/ProjectedDamageSkillResolver';
 import { ResetSkillResolver } from './resolvers/ResetSkillResolver';
 import { DotSkillResolver } from './resolvers/DotSkillResolver';
+import { RootSkillResolver } from './resolvers/RootSkillResolver';
+import { SlowSkillResolver } from './resolvers/SlowSkillResolver';
 import { FormationZoneSkillResolver } from './resolvers/FormationZoneSkillResolver';
 
 export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
@@ -17,6 +19,8 @@ export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
     new ResetSkillResolver(),
     new ProjectedDamageSkillResolver(),
     new DotSkillResolver(),
+    new RootSkillResolver(),
+    new SlowSkillResolver(),
     new FormationZoneSkillResolver(),
   ]);
 }

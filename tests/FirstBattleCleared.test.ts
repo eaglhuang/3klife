@@ -28,7 +28,7 @@ export function createFirstBattleClearedSuite(): TestSuite {
     suite.test('新局為 false；打輸或未結束不會設旗標', async () => {
         const session = await freshSession();
         assert.isFalse(session.firstBattleCleared);
-        await session.recordBattle(['zhang-fei'], 'player-lose');
+        await session.recordBattle(['zhang-fei'], 'enemy-win');
         assert.isFalse(session.firstBattleCleared);
     });
 
