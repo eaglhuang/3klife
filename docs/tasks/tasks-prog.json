@@ -3071,6 +3071,33 @@
         "artifacts/PROG-2-0127/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: cc 背包按鈕綁定需 Codex 接線"
+    },
+    {
+      "id": "PROG-2-0128",
+      "title": "實機驗收：天氣禁用計謀可點擊並彈出 Toast（APT-07、#396）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M5",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "天氣禁用計謀保留點擊並彈出 Toast 的接線已合併，cc 畫面與實機行為待驗收。",
+      "related": [],
+      "depends": [
+        "PR #396"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0128.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0128/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: none"
     }
   ]
 }
