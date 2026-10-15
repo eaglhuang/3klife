@@ -10,7 +10,7 @@
     "widget": { "top": 16, "right": 16 },
     "skinSlot": "netstat.icon.bg",
     "children": [
-      { "type": "sprite", "name": "StatusIcon", "id": "statusIcon", "width": 32, "height": 32, "skinSlot": "netstat.icon.sprite" }
+      { "type": "image", "name": "StatusIcon", "id": "statusIcon", "width": 32, "height": 32, "skinSlot": "netstat.icon.sprite" }
     ]
   }
 }
