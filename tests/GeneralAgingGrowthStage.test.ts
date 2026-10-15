@@ -63,7 +63,7 @@ export function createGeneralAgingGrowthStageSuite(): TestSuite {
         const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8') as string;
         assert.isTrue(lobby.includes('GAME_SESSION_EVENTS.GeneralGrowthStage'));
         assert.isTrue(lobby.includes("this._showLifeScriptToast('retire'"));
-        assert.isTrue(lobby.includes("this._showLifeScriptToast('death'"));
+        assert.isTrue(lobby.includes("this._lifeScriptText('death'"));
     });
 
     return suite;

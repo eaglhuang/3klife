@@ -438,8 +438,9 @@ export class LobbyScene extends Component {
                 if (!died) return;
                 const diedGeneral = services().session.roster.find((g) => g.id === died.generalId);
                 const name = diedGeneral ? formatGeneralDisplayName(diedGeneral.name, diedGeneral.title) : died.generalId;
-                services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
-                this._showLifeScriptToast('death', name, died.age, 4);
+                // 死亡通知與劇本句合併成一則 toast，避免兩則重疊（PM 裁示，PROG-2-0800）
+                const script = this._lifeScriptText('death', name, died.age);
+                services().event.emit('SHOW_TOAST', { message: `${formatDeathNotice(name, died.age)}\n${script}`, duration: 4 });
             }),
             // 成長階段劇本句（LIFE-13，PROG-2-0800）：少年、壯年、老年跨入時顯示
             event.on(GAME_SESSION_EVENTS.GeneralGrowthStage, (payload?: unknown) => {
@@ -458,11 +459,14 @@ export class LobbyScene extends Component {
         );
     }
 
-    /** 壽命劇本句：Key 與參數由 LifeScriptCopy 決定，這裡只經 i18n 查字串並顯示 toast（PROG-2-0800） */
-    private _showLifeScriptToast(event: LifeScriptEvent, name: string, age?: number, duration = 3): void {
+    /** 壽命劇本句：Key 與參數由 LifeScriptCopy 決定，這裡只經 i18n 查字串（PROG-2-0800） */
+    private _lifeScriptText(event: LifeScriptEvent, name: string, age?: number): string {
         const copy = lifeScriptCopy(event, name, age);
-        const message = services().i18n.t(copy.key, ...copy.args);
-        services().event.emit('SHOW_TOAST', { message, duration });
+        return services().i18n.t(copy.key, ...copy.args);
+    }
+
+    private _showLifeScriptToast(event: LifeScriptEvent, name: string, age?: number, duration = 3): void {
+        services().event.emit('SHOW_TOAST', { message: this._lifeScriptText(event, name, age), duration });
     }
 
     /**
