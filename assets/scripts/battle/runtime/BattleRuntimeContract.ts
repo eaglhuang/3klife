@@ -1,3 +1,5 @@
+import type { BattleResult } from '../BattleTypes';
+
 export type { BattleResult } from '../BattleTypes';
 
 export type BattleRuntimePhaseName =

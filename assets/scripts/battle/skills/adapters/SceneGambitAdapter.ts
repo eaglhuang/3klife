@@ -15,7 +15,7 @@ const SCENE_GAMBIT_PROFILE: Partial<Record<BattleTactic, { battleSkillId: string
 };
 
 export class SceneGambitAdapter {
-  public buildRequest(battleTactic: BattleTactic, ownerUid = SkillSourceType.SceneGambit): BattleSkillRequest | null {
+  public buildRequest(battleTactic: BattleTactic, ownerUid: string = SkillSourceType.SceneGambit): BattleSkillRequest | null {
     const mapped = SCENE_GAMBIT_PROFILE[battleTactic];
     if (!mapped) {
       return null;

@@ -157,7 +157,7 @@ function advanceFloodAttackTurn(state: BattleState, context?: BattleTurnAdvanceC
       forcedMove: true,
       forcedMoveReason: 'river-current:advance-turn',
     });
-    context.turnManager.markUnitMoved(unit.id);
+    context?.turnManager.markUnitMoved(unit.id);
 
     if (nextLane === 0) {
       applyFloodAttackBoundaryDamage(unit, context, svc, 'edge');

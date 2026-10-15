@@ -198,7 +198,7 @@ export class AudioSource {
     stop(): void {}
     playOneShot(_clip: AudioClip, _volumeScale?: number): void {}
 }
-export class AudioClip {}
+export class AudioClip { name: string = ""; }
 export class CurveRange { constant = 0; }
 export class Vec4 { constructor(public x = 0, public y = 0, public z = 0, public w = 0) {} }
 export class Rect { constructor(public x = 0, public y = 0, public width = 0, public height = 0) {} }
