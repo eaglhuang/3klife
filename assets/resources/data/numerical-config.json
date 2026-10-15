@@ -1,0 +1,68 @@
+{
+  "NumericalConfig": {
+    "_comment": "所有數值常數集中管理，可透過 JSON 熱更新",
+    "Counter_Table": {
+      "CAVALRY_vs_SHIELD": 1.3,
+      "SHIELD_vs_ARCHER": 1.3,
+      "ARCHER_vs_INFANTRY": 1.3,
+      "INFANTRY_vs_PIKE": 1.3,
+      "PIKE_vs_CAVALRY": 1.3,
+      "MECHANICAL_vs_MELEE": 0.67,
+      "DEFAULT": 1.0
+    },
+    "Aptitude_Efficiency": {
+      "S": 1.2, "A": 1.1, "B": 1.0, "C": 0.9, "D": 0.8
+    },
+    "Aptitude_Stat_Mod": {
+      "S": { "atk_def": 0.20, "move": 1, "acc": 0.15 },
+      "A": { "atk_def": 0.10, "move": 0, "acc": 0.10 },
+      "B": { "atk_def": 0.00, "move": 0, "acc": 0.00 },
+      "C": { "atk_def": -0.10, "move": -1, "acc": 0.00 },
+      "D": { "atk_def": -0.25, "move": -2, "acc": -0.15 }
+    },
+    "Age_Modifier": {
+      "Child": 0, "Youth": 0.6, "Prime": 1.0, "Peak": 1.1, "Elder": 0.8, "Over": 0.5
+    },
+    "Reincarnation_Cap": { "1": 1000, "2": 1100, "3": 1200, "4": 1350, "5": 1500 },
+    "Ult_Base_Power": { "1": 200, "2": 300, "3": 400, "4": 500, "5": 700 },
+    "Ult_Vitality_Cost_Pct": { "1": 0.05, "2": 0.06, "3": 0.07, "4": 0.08, "5": 0.10 },
+    "Vitality_Cost": { "Battle": 30, "Bond_Male": 50, "Bond_Female": 100, "Nurture": 20 },
+    "SP_Per_Kill": 20,
+    "SP_Max": 100,
+    "Crit_Multiplier": 1.5,
+    "Tally_Quality_Threshold": { "SSR": 10000, "SR": 5000, "R": 1000 },
+    "Tally_Quality_Mod": { "UR": 1.5, "SSR": 1.3, "SR": 1.15, "R": 1.0 },
+    "Tally_Star_Cap": { "R": 3, "SR": 4, "SSR": 5, "UR": 5 },
+    "Tally_Star_Exp": { "2": 100, "3": 350 },
+    "Tally_Breakthrough_Gold": { "4": 3000, "5": 10000 },
+    "Tally_Breakthrough_Essence": { "4": 50, "5": 200 },
+    "Tally_Terrain_Affinity_Mod": { "S": 1.2, "A": 1.1, "B": 1.0, "C": 0.9, "D": 0.8 },
+    "Tally_Clan_Resonance_Mod": 1.08,
+    "Tally_Clan_Bond_Mod": 1.05,
+    "Tally_Gender_Match_Mod": 1.06,
+    "Tally_Remove_Loyalty": { "UR": -25, "SSR": -20, "SR": -12, "R": -5 },
+    "Tally_Equip_Loyalty": { "UR": 8, "SSR": 5, "SR": 3, "R": 1 },
+    "Resource_Cap": { "Food": 10000, "Gold": 5000, "Troops": 3000, "Fame": 2000 }
+  },
+  "FormulaRegistry": {
+    "_comment": "公式清單索引，方便策劃追蹤哪些公式存在",
+    "Formulas": [
+      { "ID": "FML_DAMAGE", "Name": "主傷害公式", "Category": "Battle" },
+      { "ID": "FML_HEAL", "Name": "治療公式", "Category": "Battle" },
+      { "ID": "FML_EP", "Name": "EP計算", "Category": "Growth" },
+      { "ID": "FML_VITALITY_RECOVERY", "Name": "精力回復", "Category": "Resource" },
+      { "ID": "FML_RETIRE_SCORE", "Name": "退役評分", "Category": "Growth" },
+      { "ID": "FML_APTITUDE_MOD", "Name": "適性修正", "Category": "Battle" },
+      { "ID": "FML_COUNTER_MOD", "Name": "剋制修正", "Category": "Battle" },
+      { "ID": "FML_ULT_DAMAGE", "Name": "奧義傷害", "Category": "Battle" },
+      { "ID": "FML_NURTURE_GAIN", "Name": "培育屬性成長", "Category": "Growth" },
+      { "ID": "FML_LIFESPAN", "Name": "壽命計算", "Category": "Growth" },
+      { "ID": "FML_LUK_EVENT", "Name": "運氣事件觸發率", "Category": "Event" },
+      { "ID": "FML_BATTLE_POWER", "Name": "主將帶隊總戰力", "Category": "Battle" },
+      { "ID": "FML_BATTLE_PREDICT", "Name": "戰役勝敗預判", "Category": "Battle" },
+      { "ID": "FML_TALLY_UPGRADE", "Name": "虎符星級養成與突破", "Category": "Growth" },
+      { "ID": "FML_TALLY_AFFINITY", "Name": "虎符適性加成（地形/家族/性別）", "Category": "Battle" },
+      { "ID": "FML_TALLY_LOYALTY", "Name": "虎符拔裝忠誠度變化", "Category": "Growth" }
+    ]
+  }
+}
