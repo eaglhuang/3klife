@@ -7,6 +7,7 @@ import { FormulaSystem } from '../../core/systems/FormulaSystem';
 import type { SkillScalingStat } from '../../shared/SkillRuntimeContract';
 import type { BattleSkillExecutionContext } from './BattleSkillResolver';
 import type { BattleSkillProfile } from './BattleSkillProfiles';
+import { isStraightLine } from './SkillGridGeometry';
 
 export class BattleSkillDamageResolver {
   constructor(private readonly formula = new FormulaSystem()) {}
@@ -24,7 +25,7 @@ export class BattleSkillDamageResolver {
     const penetration = profile.defensePenetrationRatio ?? 0;
     const defenderDefense = Math.floor(rawDefense * (1 - penetration));
 
-    const baseDamage = this.formula.calculateDamage({
+    const rawBaseDamage = this.formula.calculateDamage({
       attackerAttack: scaledAttack,
       defenderDefense,
       attackerType: this.resolveVirtualAttackerType(caster),
@@ -33,6 +34,7 @@ export class BattleSkillDamageResolver {
       defenderTerrain: context.getTerrain(target.lane, target.depth),
       attackBonus: caster.attackBonus,
     });
+    const baseDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
 
     const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], context.getWeather?.() ?? Weather.Clear);
     const stageMultiplier = profile.hitStageMultipliers?.[stageIndex] ?? 1;
@@ -48,6 +50,27 @@ export class BattleSkillDamageResolver {
       return Math.max(1, Math.floor(fated * (1 + profile.critBonus)));
     }
     return fated;
+  }
+
+  /**
+   * 精銳突擊衝鋒（PROG-2-0756）：施放者與目標在同一直線上時，基礎傷害 × chargeMultiplier。
+   * 沒有 chargeMultiplier 或缺少施放者位置時維持原傷害。
+   */
+  private applyCharge(
+    profile: BattleSkillProfile,
+    context: BattleSkillExecutionContext,
+    caster: GeneralUnit,
+    target: TroopUnit,
+    baseDamage: number,
+  ): number {
+    if (!profile.chargeMultiplier) {
+      return baseDamage;
+    }
+    const casterCell = context.getCasterCell?.(caster.faction) ?? null;
+    if (!casterCell || !isStraightLine(casterCell, { lane: target.lane, depth: target.depth })) {
+      return baseDamage;
+    }
+    return Math.max(1, Math.floor(baseDamage * profile.chargeMultiplier));
   }
 
   private resolveScaledAttack(
