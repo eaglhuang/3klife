@@ -40,6 +40,18 @@
           },
           {
             "type": "button",
+            "name": "BtnCloseMentorCard",
+            "id": "btnCloseMentorCard",
+            "widget": { "top": 18, "right": 32 },
+            "width": 160,
+            "height": 48,
+            "skinSlot": "nurture.button.rest.bg",
+            "children": [
+              { "type": "label", "name": "CloseMentorCardLabel", "id": "closeMentorCardLabel", "widget": { "vCenter": true, "left": 0, "right": 0 }, "height": 40, "text": "關閉", "styleSlot": "nurture.label.button" }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnTabEffects",
             "id": "btnTabEffects",
             "widget": { "top": 90, "left": 32 },

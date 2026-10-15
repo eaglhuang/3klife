@@ -62,6 +62,14 @@ export function createMentorCardLayoutSuite(): TestSuite {
         }
     });
 
+    suite.test('畫面註冊：screen 指向的 layout / skin 存在，且版面 root 的 id 一致', () => {
+        const screen = readJson<{ layout: string; skin: string }>('assets/resources/ui-spec/screens/mentor-card-detail-screen.json');
+        assert.equals('mentor-card-detail-main', screen.layout);
+        assert.equals('nurture-flow-default', screen.skin);
+        assert.isTrue(fs.existsSync(path.join(ROOT, `assets/resources/ui-spec/layouts/${screen.layout}.json`)));
+        assert.isTrue(fs.existsSync(path.join(ROOT, `assets/resources/ui-spec/skins/${screen.skin}.json`)));
+    });
+
     suite.test('頁籤切換：目前頁籤名稱加「▸」，列格依列數顯示', () => {
         const state = toMentorCardLayoutState(buildMentorCardTabView(CARD, 'events'), '武將');
         assert.equals('▸ 培育事件', state.texts.tabEventsLabel);
