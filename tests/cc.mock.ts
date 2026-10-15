@@ -69,7 +69,7 @@ export class Prefab { decRef(): void { /* mock */ } }
 // ─── Node ───────────────────────────────────────────────────────────────────
 
 export class Node {
-    static readonly EventType = { NODE_DESTROYED: 'node-destroyed' };
+    static readonly EventType = { NODE_DESTROYED: 'node-destroyed', SIZE_CHANGED: 'size-changed' };
     public children: Node[] = [];
     private _parent: Node | null = null;
     public layer = 1;
@@ -79,7 +79,7 @@ export class Node {
     constructor(public name: string = "") {}
     declare position: Vec3;
     emit(event: string, arg?: any): void { this.__emit(event, arg); }
-    off(event: string, handler?: (arg?: any) => void): void {
+    off(event: string, handler?: (arg?: any) => void, _target?: any): void {
         if (!handler) { this._handlers.delete(event); return; }
         const list = this._handlers.get(event);
         if (list) this._handlers.set(event, list.filter(h => h !== handler));
@@ -116,13 +116,13 @@ export class Node {
         this.children = [];
     }
 
-    on(event: string, handler: (arg?: any) => void): void {
+    on(event: string, handler: (arg?: any) => void, _target?: any): void {
         const list = this._handlers.get(event) ?? [];
         list.push(handler);
         this._handlers.set(event, list);
     }
 
-    once(event: string, handler: () => void): void { this.on(event, handler); }
+    once(event: string, handler: () => void, _target?: any): void { this.on(event, handler); }
 
     setPosition(_x: any, _y?: number, _z?: number): void {}
     setWorldPosition(_pos: any): void {}
@@ -189,7 +189,13 @@ export function tween(_target: any) {
 export const Layers = { Enum: { DEFAULT: 1 } };
 export const geometry = {};
 export const gfx = { CullMode: { NONE: 0 } };
-export const _decorator = {
+// 裝飾器同時支援 @x 與 @x(...) 兩種寫法，型別放寬為 any（mock 僅供型別檢查）
+export const _decorator: {
+    ccclass: any;
+    property: any;
+    requireComponent: any;
+    executeInEditMode: any;
+} = {
     ccclass: (_name?: string) => (_: any) => {},
     property: () => (_: any, __: any) => {},
     requireComponent: () => (_: any, __: any) => {},
@@ -217,7 +223,15 @@ export class Camera {
     screenToWorld(_out: any, _screenPos?: any, _w?: number, _h?: number): any { return _out; }
     convertToUINode(_worldPos: any, _uiNode: any, _out?: any): any { return _out; }
 }
-export class Graphics {}
+export class Graphics {
+    declare fillColor: Color;
+    declare strokeColor: Color;
+    declare lineWidth: number;
+    clear(): void { /* mock */ }
+    fill(): void { /* mock */ }
+    stroke(): void { /* mock */ }
+    roundRect(_x: number, _y: number, _w: number, _h: number, _r: number): void { /* mock */ }
+}
 export class ParticleSystem {
     startColor: any; play(): void {}
     /* 以下欄位只做型別佔位，mock 不模擬粒子行為 */
