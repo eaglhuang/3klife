@@ -207,5 +207,8 @@
   "life.script.elder": "{0} は年老いて力は衰えたが、経験は今も健在だ。",
   "life.script.retire": "{0} は鎧を掛けて田園に帰り、生涯の学びを後世へ伝えたいと願った。",
   "life.script.death": "{0} は享年{1}歳、ひとりの名将が散った…",
-  "life.script.afterlife": "{0} の英霊カードと虎符カードは宗祠と軍府に納められた。"
+  "life.script.afterlife": "{0} の英霊カードと虎符カードは宗祠と軍府に納められた。",
+  "ui.retire_review.title": "退役回顧",
+  "ui.retire_review.close": "閉じる",
+  "ui.retire_review.report_title": "季次戦損報告"
 }
