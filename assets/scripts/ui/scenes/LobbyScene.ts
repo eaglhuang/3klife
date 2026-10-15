@@ -53,6 +53,7 @@ import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
+import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
@@ -438,8 +439,30 @@ export class LobbyScene extends Component {
                 const diedGeneral = services().session.roster.find((g) => g.id === died.generalId);
                 const name = diedGeneral ? formatGeneralDisplayName(diedGeneral.name, diedGeneral.title) : died.generalId;
                 services().event.emit('SHOW_TOAST', { message: formatDeathNotice(name, died.age), duration: 3 });
+                this._showLifeScriptToast('death', name, died.age, 4);
+            }),
+            // 成長階段劇本句（LIFE-13，PROG-2-0800）：少年、壯年、老年跨入時顯示
+            event.on(GAME_SESSION_EVENTS.GeneralGrowthStage, (payload?: unknown) => {
+                const grown = payload as AgingEvent | undefined;
+                if (!grown?.stage) return;
+                const grownGeneral = services().session.roster.find((g) => g.id === grown.generalId);
+                const name = grownGeneral ? formatGeneralDisplayName(grownGeneral.name, grownGeneral.title) : grown.generalId;
+                this._showLifeScriptToast(grown.stage, name);
+            }),
+            // 退役劇本句（LIFE-13，PROG-2-0800）：玩家確認退役後顯示
+            event.on(GAME_SESSION_EVENTS.GeneralRetired, (payload?: unknown) => {
+                const card = payload as { name?: string } | undefined;
+                if (!card?.name) return;
+                this._showLifeScriptToast('retire', card.name);
             }),
         );
+    }
+
+    /** 壽命劇本句：Key 與參數由 LifeScriptCopy 決定，這裡只經 i18n 查字串並顯示 toast（PROG-2-0800） */
+    private _showLifeScriptToast(event: LifeScriptEvent, name: string, age?: number, duration = 3): void {
+        const copy = lifeScriptCopy(event, name, age);
+        const message = services().i18n.t(copy.key, ...copy.args);
+        services().event.emit('SHOW_TOAST', { message, duration });
     }
 
     /**
