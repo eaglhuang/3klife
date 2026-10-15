@@ -3,7 +3,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 
 export const STARTER_GENERAL_IDS = ['zhang-fei', 'wei-yan', 'xiahou-dun', 'zhang-he', 'sun-ce', 'gan-ning'] as const;
 export type StarterGeneralId = typeof STARTER_GENERAL_IDS[number];
-/** 招募分級 legendary=SSR；張飛是真實資料中六人唯一 legendary，保留原數值與因子。 */
+/** 預設核心（沒指定時）：張飛是真實資料中六人唯一 legendary(SSR)，保留原數值與因子。 */
 export const STARTER_CORE_GENERAL_ID: StarterGeneralId = 'zhang-fei';
 export interface StarterRosterOptions { coreGeneralId?: StarterGeneralId }
 
@@ -32,6 +32,7 @@ export function buildStarterRoster(generals: readonly GeneralConfig[], options: 
         return copyValue(general);
     });
     const core = roster.find(general => general.id === coreId)!;
-    if (core.rarityTier !== 'legendary' && core.rarityTier !== 'mythic') throw new Error(`[StarterRoster] ${coreId} 未達 SSR 等效分級`);
+    // 規格（新手開場 §6）：宿命轉蛋從這六位挑，玩家選誰誰就是核心（SSR 或等級等效的「初始優勢」由開場給，不看資料表分級）。
+    // 原本要求 core 必須 legendary/mythic，結果六人只有張飛能當核心，其他五位鎖定後開新局報錯；2026-10-15 放寬。
     return roster;
 }

@@ -34,10 +34,11 @@ export function createStarterRosterSuite(): TestSuite {
         roster.pop();
         assert.equals(before, JSON.stringify(source));
     });
-    suite.test('張飛為固定核心 SSR 等效，拒絕低階核心或缺必要欄位', () => {
+    suite.test('預設核心張飛；六位都能當核心，六位以外或缺必要欄位報錯', () => {
         const source = data();
         assert.equals('legendary', buildStarterRoster(source).find(g => g.id === STARTER_CORE_GENERAL_ID)!.rarityTier);
-        throws(() => buildStarterRoster(source, { coreGeneralId: 'xiahou-dun' }));
+        for (const id of STARTER_GENERAL_IDS) assert.equals(6, buildStarterRoster(source, { coreGeneralId: id }).length);
+        throws(() => buildStarterRoster(source, { coreGeneralId: 'cao-cao' as never }));
         for (const key of ['ep', 'str', 'int', 'lea', 'pol', 'cha', 'genes', 'rarityTier', 'characterCategory'] as const) {
             const broken = data();
             delete broken.find(g => g.id === 'wei-yan')![key];

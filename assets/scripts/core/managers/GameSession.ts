@@ -32,7 +32,7 @@ import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameCl
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
-import { ageGeneralsOneSeason, AgingEvent, RandomSource } from '../systems/GeneralAging';
+import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
 import type { JobChangeResult, JobClass } from '../systems/JobChange';
@@ -1489,6 +1489,7 @@ export class GameSession {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
+        this._clearLeadIfGone();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
@@ -1517,6 +1518,20 @@ export class GameSession {
         return payload;
     }
 
+    /**
+     * 主將已退役（變教官卡）、陣亡或不在名冊時，清掉出戰主將指派，避免大廳／出征／大廳榜單繼續指向一個出不了戰的人。
+     * 只處理「永久離場」；精力不足、培育中這類暫時不能出戰的不清，玩家回來還是原主將。
+     */
+    private _clearLeadIfGone(): boolean {
+        const leadId = this._leadGeneralId;
+        if (!leadId) return false;
+        const lead = this._roster.getAll().find((g) => g.id === leadId) as (GeneralConfig & { isMentorCard?: boolean }) | undefined;
+        if (lead && !lead.isMentorCard && !isGeneralDead(lead)) return false;
+        this._leadGeneralId = null;
+        this._emit(GAME_SESSION_EVENTS.LeadGeneralChanged, null);
+        return true;
+    }
+
     /** 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔 */
     public async retireGeneral(generalId: string): Promise<MentorCard> {
         if (!this._lifecycle) {
@@ -1524,6 +1539,7 @@ export class GameSession {
         }
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
         this._roster.replaceAll(result.roster);
+        this._clearLeadIfGone();
         const reason = result.card.mentorRoute?.reason;
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
@@ -1666,6 +1682,7 @@ export class GameSession {
 
         const record: BattleRecordResult = { ...settlement, roster, discovery, awakenings, ...(options.sortie ? { military: this.military } : {}) };
         this._roster.replaceAll(roster);
+        this._clearLeadIfGone();
         this._settleDeaths(beforeRoster, roster, this._clock.state.totalSeasonsElapsed);
         if (this._autoSave && this._save) {
             await this.save();
