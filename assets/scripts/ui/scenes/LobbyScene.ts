@@ -836,6 +836,11 @@ export class LobbyScene extends Component {
             ...rowBindings,
         ]);
         this._redFaceHost.node.active = false;
+        // 新手開場第四幕：首戰通過後第一次回大廳自動展示紅顏；展示時就記下，不重複彈
+        if (services().session.shouldShowOpeningRedFace) {
+            this.openRedFaceShowcase();
+            void services().session.markOpeningRedFaceShown();
+        }
     }
 
     public openRedFaceShowcase(): void {
