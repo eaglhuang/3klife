@@ -83,6 +83,8 @@ import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../sy
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
+import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
@@ -515,6 +517,27 @@ export class GameSession {
         const { added } = await this.addGenerals([result.general]);
         if (added.length > 0) await this.recordMercenaryOath(result.general.id);
         return { ...result, rosterAdded: added.length > 0 };
+    }
+
+    /**
+     * 對武將使用補元散（PROG-2-0444）：扣道具、回復精力、寫回名冊並存檔。
+     * 精力已滿或沒有道具時整體拒絕，背包與名冊都不變；查無武將回傳 no-general。
+     * 上限沿用名冊上的 maxVitality，缺值時用性別基礎值（與 VitalityCap 一致）。
+     */
+    public async usePillOnGeneral(generalId: string, kind: VitalityPillKind): Promise<VitalityPillUseResult | { readonly ok: false; readonly reason: 'no-general' }> {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return { ok: false, reason: 'no-general' };
+        const max = general.maxVitality ?? general.vitality ?? baseVitalityMaxOf(general.gender);
+        const current = general.vitality ?? max;
+        const result = useVitalityPill(this._inventory, current, max, kind);
+        if (!result.ok) return result;
+        this._inventory = result.inventory;
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, vitality: result.vitality, maxVitality: max } : g)));
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
     }
 
     /**
