@@ -236,5 +236,11 @@
   "life.script.afterlife": "{0} 的英靈卡與虎符卡已歸入宗祠與軍府。",
   "ui.retire_review.title": "退役回顧",
   "ui.retire_review.close": "關閉",
-  "ui.retire_review.report_title": "季度戰損報告"
+  "ui.retire_review.report_title": "季度戰損報告",
+  "ui.retire_review.career": "生涯戰績：{0}勝 {1}敗 斬{2}人",
+  "ui.retire_review.script": "回首征途：勝{0}場，斬敵{1}人，承傷{2}——英雄無悔。",
+  "ui.retire_review.report": "戰損報告：精力 {0}%",
+  "ui.retire_review.quarterly": "本季戰報：{0} 精力剩 {1}%，{2}",
+  "ui.retire_review.bond_ok": "可進行結緣。",
+  "ui.retire_review.bond_no": "不建議進行結緣。"
 }

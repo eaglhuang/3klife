@@ -5,7 +5,8 @@
  * 精力在高區才建議結緣。
  */
 import { assert, TestSuite } from './TestRunner';
-import { buildRetireReviewView } from '../assets/scripts/ui/core/RetireReviewController';
+import { buildRetireReviewTexts, buildRetireReviewView, withRetireReviewFallback } from '../assets/scripts/ui/core/RetireReviewController';
+import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine } from '../assets/scripts/core/systems/RetireReviewCopy';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function general(extra: Record<string, unknown>): GeneralConfig {
@@ -34,6 +35,34 @@ export function createRetireReviewControllerSuite(): TestSuite {
         assert.isFalse(view.bondRecommended);
         assert.isTrue(view.careerLine.length > 0);
         assert.isTrue(view.scriptLine.length > 0);
+    });
+
+    suite.test('句子走語系查詢：無語系表時 fallback 與 RetireReviewCopy 組句一致', () => {
+        const record = { wins: 5, losses: 3, kills: 2, totalDamage: 0, guardianPower: 7 };
+        const g = general({ battleRecord: record, vitality: 40, maxVitality: 100 });
+        const texts = buildRetireReviewTexts(g);
+        const report = quarterlyBattleReport('趙雲', 40);
+        assert.equals(retireReviewCareerLine(record), texts.retireCareer);
+        assert.equals(retireReviewScriptLine(record), texts.retireScript);
+        assert.equals(report.reportLine, texts.retireReport);
+        assert.equals(report.scriptLine, texts.retireQuarterly);
+    });
+
+    suite.test('語系查詢拿到占位參數：數值以參數傳入，不在元件內拼字', () => {
+        const lookup = (key: string, ...args: string[]): string => `${key}|${args.join(',')}`;
+        const g = general({ battleRecord: { wins: 5, losses: 3, kills: 2, totalDamage: 0, guardianPower: 7 }, vitality: 40, maxVitality: 100 });
+        const texts = buildRetireReviewTexts(g, lookup);
+        assert.equals('ui.retire_review.career|5,3,2', texts.retireCareer);
+        assert.equals('ui.retire_review.script|5,2,7', texts.retireScript);
+        assert.equals('ui.retire_review.quarterly|趙雲,40,ui.retire_review.bond_no|', texts.retireQuarterly);
+    });
+
+    suite.test('withRetireReviewFallback：語系表回傳 key 本身時改用 zh-TW 預設並帶入參數', () => {
+        const missing = withRetireReviewFallback((key) => key);
+        assert.equals('戰損報告：精力 75%', missing('ui.retire_review.report', '75'));
+        assert.equals('退役回顧', missing('ui.retire_review.title'));
+        const localized = withRetireReviewFallback(() => 'Battle Damage: 75%');
+        assert.equals('Battle Damage: 75%', localized('ui.retire_review.report', '75'));
     });
 
     suite.test('沒有武將時仍回傳完整結構', () => {
