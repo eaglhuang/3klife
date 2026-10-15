@@ -78,7 +78,7 @@ export function rollDestinyGacha(
 ): DestinyGachaResult {
     if (state.phase === 'locked') return reject(state, 'locked');
     if (state.phase === 'rolled') return reject(state, 'already-rolled');
-    const unique = [...new Set(pool)];
+    const unique = Array.from(new Set(pool));
     if (options.firstPickOnly && unique.length < options.pickCount) return reject(state, 'pool-too-small');
 
     const remaining = [...unique];

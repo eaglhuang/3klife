@@ -46,6 +46,25 @@ function makeController(session: GameSession): OnboardingFlowController {
 export function createOnboardingFlowSuite(): TestSuite {
     const suite = new TestSuite('OnboardingFlow (PROG-2-0229 新手 3 段式引導接線)');
 
+    suite.test('宿命開局完成前隱藏且不可提前確認；完成後由第一段開始', async () => {
+        const session = await makeSession(new MemoryStorageAdapter());
+        let ready = false;
+        let acknowledged = 0;
+        const controller = new OnboardingFlowController({
+            state: () => session.onboarding,
+            ready: () => ready,
+            acknowledge: async id => { acknowledged++; return session.acknowledgeOnboarding(id); },
+        });
+        assert.isFalse(controller.shouldShow());
+        assert.equals(null, await controller.next());
+        assert.equals(0, acknowledged);
+        ready = true;
+        assert.isTrue(controller.shouldShow());
+        assert.equals('1 / 3', controller.getFlowView().texts.tutorialStep);
+        await controller.next();
+        assert.equals('2 / 3', controller.getFlowView().texts.tutorialStep);
+    });
+
     suite.test('首次進入顯示第一段，進度 1 / 3', async () => {
         const session = await makeSession(new MemoryStorageAdapter());
         const controller = makeController(session);

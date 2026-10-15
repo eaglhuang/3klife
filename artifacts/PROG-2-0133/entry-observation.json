@@ -1,0 +1,438 @@
+{
+  "name": "PROG-2-0133-opening-order",
+  "completed": false,
+  "interaction": "actual-pointer",
+  "steps": [
+    "BtnStart",
+    "BtnIntroNext",
+    "BtnIntroNext",
+    "BtnIntroNext",
+    "BtnIntroNext",
+    "ORDER_MISMATCH:tutorial-before-destiny"
+  ],
+  "showcaseObserved": false,
+  "final": {
+    "scene": "LobbyScene",
+    "buttons": [
+      {
+        "name": "BtnNextTutorial",
+        "enabled": true
+      },
+      {
+        "name": "__ui-backdrop",
+        "enabled": false
+      },
+      {
+        "name": "LobbyMainScreen_button_1",
+        "enabled": true
+      },
+      {
+        "name": "LobbyMainScreen_button_2",
+        "enabled": true
+      },
+      {
+        "name": "LobbyMainScreen_button_3",
+        "enabled": true
+      },
+      {
+        "name": "GameplayBattle",
+        "enabled": true
+      },
+      {
+        "name": "GameplayGenerals",
+        "enabled": true
+      },
+      {
+        "name": "GameplaySupportCard",
+        "enabled": true
+      },
+      {
+        "name": "GameplayGacha",
+        "enabled": true
+      },
+      {
+        "name": "GameplayShop",
+        "enabled": true
+      },
+      {
+        "name": "GameplayFloodBattle",
+        "enabled": true
+      },
+      {
+        "name": "AdvanceSeasonButton",
+        "enabled": true
+      },
+      {
+        "name": "OpenNurtureButton",
+        "enabled": true
+      },
+      {
+        "name": "OpenBondingButton",
+        "enabled": true
+      },
+      {
+        "name": "OpenJobChangeButton",
+        "enabled": true
+      },
+      {
+        "name": "OpenDomesticButton",
+        "enabled": true
+      },
+      {
+        "name": "BtnOpenHallBoard",
+        "enabled": true
+      },
+      {
+        "name": "BtnOpenSandtable",
+        "enabled": true
+      },
+      {
+        "name": "BtnOpenSpiritCodex",
+        "enabled": true
+      },
+      {
+        "name": "DeckCardButton0",
+        "enabled": true
+      },
+      {
+        "name": "DeckCardButton1",
+        "enabled": true
+      },
+      {
+        "name": "DeckCardButton2",
+        "enabled": true
+      },
+      {
+        "name": "DeckCardButton3",
+        "enabled": true
+      },
+      {
+        "name": "OpenSortieButton",
+        "enabled": true
+      },
+      {
+        "name": "BtnDestinyRoll",
+        "enabled": true
+      },
+      {
+        "name": "BtnDestinyReset",
+        "enabled": false
+      },
+      {
+        "name": "BtnDestinyConfirm",
+        "enabled": false
+      }
+    ],
+    "labels": [
+      {
+        "name": "SubLabel",
+        "text": "（施工中）"
+      },
+      {
+        "name": "TutorialStep",
+        "text": "1 / 3"
+      },
+      {
+        "name": "TutorialText",
+        "text": "你已經獲得第一位宿命之將，也看見了因子的力量。"
+      },
+      {
+        "name": "BtnNextTutorialLabel",
+        "text": "下一步"
+      },
+      {
+        "name": "LobbyMainScreen_div_1",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-1"
+      },
+      {
+        "name": "LobbyMainScreen_div_2",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-2"
+      },
+      {
+        "name": "LobbyMainScreen_div_6",
+        "text": "劉玄德"
+      },
+      {
+        "name": "LobbyMainScreen_div_7",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-7"
+      },
+      {
+        "name": "LobbyMainScreen_div_11",
+        "text": "金"
+      },
+      {
+        "name": "LobbyMainScreen_span_1",
+        "text": "auto.lobby-main-screen.lobby-main-screen-span-1"
+      },
+      {
+        "name": "LobbyMainScreen_span_2",
+        "text": "+"
+      },
+      {
+        "name": "LobbyMainScreen_div_13",
+        "text": "玉"
+      },
+      {
+        "name": "LobbyMainScreen_span_3",
+        "text": "auto.lobby-main-screen.lobby-main-screen-span-3"
+      },
+      {
+        "name": "LobbyMainScreen_span_4",
+        "text": "+"
+      },
+      {
+        "name": "LobbyMainScreen_div_15",
+        "text": "糧"
+      },
+      {
+        "name": "LobbyMainScreen_span_5",
+        "text": "auto.lobby-main-screen.lobby-main-screen-span-5"
+      },
+      {
+        "name": "LobbyMainScreen_span_6",
+        "text": "+"
+      },
+      {
+        "name": "LobbyMainScreen_span_7",
+        "text": "帥"
+      },
+      {
+        "name": "LobbyMainScreen_span_8",
+        "text": "LOBBY"
+      },
+      {
+        "name": "LobbyMainScreen_span_9",
+        "text": "鑑"
+      },
+      {
+        "name": "LobbyMainScreen_span_10",
+        "text": "CODEX"
+      },
+      {
+        "name": "LobbyMainScreen_span_11",
+        "text": "符"
+      },
+      {
+        "name": "LobbyMainScreen_span_12",
+        "text": "GACHA"
+      },
+      {
+        "name": "LobbyMainScreen_span_13",
+        "text": "市"
+      },
+      {
+        "name": "LobbyMainScreen_span_14",
+        "text": "SHOP"
+      },
+      {
+        "name": "LobbyMainScreen_span_15",
+        "text": "信"
+      },
+      {
+        "name": "LobbyMainScreen_span_16",
+        "text": "MAIL"
+      },
+      {
+        "name": "LobbyMainScreen_div_22",
+        "text": "關 羽"
+      },
+      {
+        "name": "LobbyMainScreen_div_23",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-23"
+      },
+      {
+        "name": "LobbyMainScreen_div_27",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-27"
+      },
+      {
+        "name": "LobbyMainScreen_div_28",
+        "text": "LIMITED"
+      },
+      {
+        "name": "LobbyMainScreen_div_29",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-29"
+      },
+      {
+        "name": "LobbyMainScreen_span_17",
+        "text": "auto.lobby-main-screen.lobby-main-screen-span-17"
+      },
+      {
+        "name": "LobbyMainScreen_span_18",
+        "text": "參戰"
+      },
+      {
+        "name": "LobbyMainScreen_div_33",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-33"
+      },
+      {
+        "name": "LobbyMainScreen_div_34",
+        "text": "NEW"
+      },
+      {
+        "name": "LobbyMainScreen_div_35",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-35"
+      },
+      {
+        "name": "LobbyMainScreen_span_19",
+        "text": "auto.lobby-main-screen.lobby-main-screen-span-19"
+      },
+      {
+        "name": "LobbyMainScreen_span_20",
+        "text": "前往"
+      },
+      {
+        "name": "LobbyMainScreen_div_39",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-39"
+      },
+      {
+        "name": "LobbyMainScreen_div_40",
+        "text": "DAILY"
+      },
+      {
+        "name": "LobbyMainScreen_div_41",
+        "text": "auto.lobby-main-screen.lobby-main-screen-div-41"
+      },
+      {
+        "name": "LobbyMainScreen_span_21",
+        "text": "auto.lobby-main-screen.lobby-main-screen-span-21"
+      },
+      {
+        "name": "LobbyMainScreen_span_22",
+        "text": "領取"
+      },
+      {
+        "name": "LobbyMainScreen_div_44",
+        "text": "⚙"
+      },
+      {
+        "name": "LobbyMainScreen_div_45",
+        "text": "♖"
+      },
+      {
+        "name": "LobbyMainScreen_div_46",
+        "text": "☰"
+      },
+      {
+        "name": "GameplayBattleLabel",
+        "text": "戰場"
+      },
+      {
+        "name": "GameplayGeneralsLabel",
+        "text": "武將"
+      },
+      {
+        "name": "GameplaySupportCardLabel",
+        "text": "支援"
+      },
+      {
+        "name": "GameplayGachaLabel",
+        "text": "轉蛋"
+      },
+      {
+        "name": "GameplayShopLabel",
+        "text": "商店"
+      },
+      {
+        "name": "GameplayFloodBattleLabel",
+        "text": "洪戰"
+      },
+      {
+        "name": "SeasonLabel",
+        "text": "第 1 年 1 季"
+      },
+      {
+        "name": "ModeLabel",
+        "text": "治理"
+      },
+      {
+        "name": "AdvanceSeasonLabel",
+        "text": "推進一季"
+      },
+      {
+        "name": "OpenNurtureLabel",
+        "text": "開獎・培育"
+      },
+      {
+        "name": "OpenBondingLabel",
+        "text": "結緣"
+      },
+      {
+        "name": "OpenJobChangeLabel",
+        "text": "成人禮"
+      },
+      {
+        "name": "OpenDomesticLabel",
+        "text": "內政"
+      },
+      {
+        "name": "OpenHallBoardLabel",
+        "text": "任務牆"
+      },
+      {
+        "name": "OpenSandtableLabel",
+        "text": "天下沙盤"
+      },
+      {
+        "name": "OpenSpiritCodexLabel",
+        "text": "英靈"
+      },
+      {
+        "name": "DeckTitleLabel",
+        "text": "出戰卡組 0/4"
+      },
+      {
+        "name": "DeckCardLabel0",
+        "text": "　 虎豹騎（重騎兵）"
+      },
+      {
+        "name": "DeckCardLabel1",
+        "text": "　 陷陣營（重步兵）"
+      },
+      {
+        "name": "DeckCardLabel2",
+        "text": "　 大戟士（防禦盾兵）"
+      },
+      {
+        "name": "DeckCardLabel3",
+        "text": "　 連弩手（遠程弓兵）"
+      },
+      {
+        "name": "LeadTitleLabel",
+        "text": "出戰主將：預設"
+      },
+      {
+        "name": "OpenSortieLabel",
+        "text": "出征編制（參謀／後勤）"
+      },
+      {
+        "name": "DestinyTitle",
+        "text": "宿命轉蛋"
+      },
+      {
+        "name": "DestinyHint",
+        "text": "抽出你的初始名將，選中的人就是核心主將"
+      },
+      {
+        "name": "DestinyMessage",
+        "text": ""
+      },
+      {
+        "name": "DestinyResetCount",
+        "text": "重置 0 次"
+      },
+      {
+        "name": "BtnDestinyRollLabel",
+        "text": "轉蛋"
+      },
+      {
+        "name": "BtnDestinyResetLabel",
+        "text": "重置"
+      },
+      {
+        "name": "BtnDestinyConfirmLabel",
+        "text": "確認"
+      }
+    ]
+  },
+  "limitation": "Stop at first mismatch: tutorial is visible before destiny selection; remaining acceptance steps are unverified."
+}

@@ -14,6 +14,8 @@ import { currentOnboardingSegment, isOnboardingComplete, ONBOARDING_SEGMENTS, On
 import type { FlowViewState } from './NurtureFlowViewApplier';
 
 export interface OnboardingDeps {
+    /** 開場先完成宿命選將；未提供時維持既有存檔的顯示行為。 */
+    ready?: () => boolean;
     /** 目前引導進度（存檔內容） */
     state: () => OnboardingState;
     /** 正式環境接 GameSession.acknowledgeOnboarding */
@@ -25,11 +27,12 @@ export class OnboardingFlowController {
 
     /** 首次進入且尚未看完才顯示 */
     public shouldShow(): boolean {
-        return !isOnboardingComplete(this._deps.state());
+        return (this._deps.ready?.() ?? true) && !isOnboardingComplete(this._deps.state());
     }
 
     /** 按下一步：確認目前段落。已完成或結果失敗時不動作，回傳 null。 */
     public async next(): Promise<OnboardingResult | null> {
+        if (!this.shouldShow()) return null;
         const segment = currentOnboardingSegment(this._deps.state());
         if (!segment) return null;
         const result = await this._deps.acknowledge(segment.id);
