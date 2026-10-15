@@ -345,6 +345,19 @@
                 "styleSlot": "oracle.label.meta"
               },
               {
+                "type": "label",
+                "name": "DirectionHint",
+                "id": "directionHint",
+                "widget": {
+                  "top": 412,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 26,
+                "text": "",
+                "styleSlot": "oracle.label.meta"
+              },
+              {
                 "type": "button",
                 "name": "BtnDivine",
                 "id": "btnDivine",
