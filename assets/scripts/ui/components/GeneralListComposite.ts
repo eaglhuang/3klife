@@ -20,6 +20,7 @@ import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { RetirementFlowController } from '../core/RetirementFlowController';
+import { RETIRE_REVIEW_OPEN_EVENT, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 
 const { ccclass } = _decorator;
 
@@ -671,6 +672,8 @@ export class GeneralListComposite extends CompositePanel {
     }
 
     private async _retireSelected(): Promise<void> {
+        // 退役後武將會轉成教官卡、離開名冊，所以退役前先留快照給退役回顧畫面
+        const retiring = this._retirementFlow.selected;
         const pending = this._retirementFlow.retire();
         this._refreshRetirementToolbar();
         const outcome = await pending;
@@ -678,6 +681,10 @@ export class GeneralListComposite extends CompositePanel {
             const owned = new Map(services().session.roster.map(g => [g.id, g]));
             this._allGenerals = this._allGenerals.map(g => owned.get(g.id) ?? g);
             await this._repopulate();
+            if (retiring) {
+                const payload: RetireReviewOpenPayload = { general: retiring };
+                services().event.emit(RETIRE_REVIEW_OPEN_EVENT, payload);
+            }
         }
         this._refreshRetirementToolbar();
     }

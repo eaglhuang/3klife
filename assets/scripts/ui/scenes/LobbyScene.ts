@@ -49,6 +49,7 @@ import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
+import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
@@ -164,6 +165,7 @@ export class LobbyScene extends Component {
     private _onboardingHost: UIScreenPreviewHost | null = null;
     private _onboarding: OnboardingFlowController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
+    private _retireReviewHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
     private _prisoner: PrisonerPopupController | null = null;
@@ -246,6 +248,7 @@ export class LobbyScene extends Component {
         await this._mountRedFaceShowcase();
         await this._mountOnboardingTutorial();
         await this._mountSageOracle();
+        await this._mountRetireReview();
         await this._mountPrisonerPopup();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
@@ -1123,6 +1126,42 @@ export class LobbyScene extends Component {
             services().event.emit('SHOW_TOAST', { message: error instanceof Error ? error.message : '俘虜處置失敗', duration: 2.5 });
         } finally {
             this._refreshPrisonerPopup();
+        }
+    }
+
+    /**
+     * 退役回顧面板：以 UCUF JSON（retire-review-screen）執行期組裝。退役成功後名冊發出開啟事件，
+     * 這裡用退役前的武將快照組文字；文字組句在 RetireReviewController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountRetireReview(): Promise<void> {
+        this._retireReviewHost = await this._mountPreviewScreenHost('RetireReviewHost', 'retire-review-screen', [
+            { buttonId: 'btnCloseRetire', handler: () => { this._closeRetireReview(); } },
+        ]);
+        this._sessionEventUnsubscribers.push(
+            services().event.on(RETIRE_REVIEW_OPEN_EVENT, (payload?: unknown) => {
+                const general = (payload as RetireReviewOpenPayload | undefined)?.general;
+                if (general) {
+                    this._openRetireReview(general);
+                }
+            }),
+        );
+    }
+
+    private _openRetireReview(general: GeneralConfig): void {
+        const host = this._retireReviewHost;
+        const binder = host?.binder;
+        if (!host || !binder) {
+            return;
+        }
+        const lookup = withRetireReviewFallback((key, ...args) => services().i18n.t(key, ...args));
+        applyFlowView(binder, { texts: buildRetireReviewTexts(general, lookup), actives: {}, enabled: {} });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeRetireReview(): void {
+        if (this._retireReviewHost) {
+            this._retireReviewHost.node.active = false;
         }
     }
 
@@ -2116,6 +2155,7 @@ export class LobbyScene extends Component {
                 this._closeNurtureFlow();
                 this._closeBondingSetup();
                 this._closeSageOracle();
+                this._closeRetireReview();
                 this._closeSortieSetup();
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = false;
