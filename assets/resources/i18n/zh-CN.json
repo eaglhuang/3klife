@@ -216,5 +216,11 @@
   "record.milestone.KILL_10000": "万人斩",
   "record.milestone.UNDEFEATED_50": "不败神话",
   "record.milestone.GUARDIAN_WALL": "守护之壁",
-  "record.milestone.ASURA": "修罗"
+  "record.milestone.ASURA": "修罗",
+  "ui.retire_review.career": "生涯战绩：{0}胜 {1}败 斩{2}人",
+  "ui.retire_review.script": "回首征途：胜{0}场，斩敌{1}人，承伤{2}——英雄无悔。",
+  "ui.retire_review.report": "战损报告：精力 {0}%",
+  "ui.retire_review.quarterly": "本季战报：{0} 精力剩 {1}%，{2}",
+  "ui.retire_review.bond_ok": "可进行结缘。",
+  "ui.retire_review.bond_no": "不建议进行结缘。"
 }
