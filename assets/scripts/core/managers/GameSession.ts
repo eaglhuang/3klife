@@ -143,6 +143,8 @@ export const GAME_SESSION_EVENTS = {
     Saved: 'game-session-saved',
     /** payload: GeneralConfig[]（本次新加入名冊的武將） */
     RosterChanged: 'game-session-roster-changed',
+    /** payload: undefined（第一次打贏戰鬥；新手開場第四幕紅顏的觸發點，只發一次） */
+    FirstBattleCleared: 'game-session-first-battle-cleared',
     /** payload: PlayerSaveSnapshot */
     Loaded: 'game-session-loaded',
     /** payload: string[]（新的出戰卡組） */
@@ -351,6 +353,10 @@ export class GameSession {
     private _autoNurtureTickets = 0;
     /** 主線第一次通過培育季後為 true（解鎖自動培育）；存於 resources.mainlineNurtureClearedOnce */
     private _mainlineNurtureClearedOnce = false;
+    /** 第一次打贏戰鬥後為 true（新手開場第四幕觸發）；舊檔依既有通關紀錄推算，存於 resources.firstBattleCleared */
+    private _firstBattleCleared = false;
+    /** 新手開場第四幕（紅顏登場）已展示過；舊檔已有通關紀錄者視為看過，不補彈。存於 resources.openingRedFaceShown */
+    private _openingRedFaceShown = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
@@ -860,6 +866,8 @@ export class GameSession {
         this._scorePoints = 0;
         this._autoNurtureTickets = 0;
         this._mainlineNurtureClearedOnce = false;
+        this._firstBattleCleared = false;
+        this._openingRedFaceShown = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -1638,6 +1646,8 @@ export class GameSession {
             this._clearedStageIds = normalizeClearedStageIds([...this._clearedStageIds, options.stageId]);
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
+        const firstClear = result === 'player-win' && !this._firstBattleCleared;
+        if (firstClear) this._firstBattleCleared = true;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const settlement = settleBattle(this._roster.getAll(), {
@@ -1648,9 +1658,10 @@ export class GameSession {
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
         if (settlement.entries.length === 0) {
-            if ((clearChanged || tallyChanged || comradeChanged) && this._autoSave && this._save) {
+            if ((clearChanged || firstClear || tallyChanged || comradeChanged) && this._autoSave && this._save) {
                 await this.save();
             }
+            if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
             return { ...settlement, awakenings: [] };
         }
         if (options.sortie) {
@@ -1688,6 +1699,7 @@ export class GameSession {
             await this.save();
         }
         this._emit(GAME_SESSION_EVENTS.BattleSettled, record);
+        if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
         if (discovery) this._emitDiscoveryGain(discovery);
         for (const event of awakenings) {
             this._emit(GAME_SESSION_EVENTS.FactorAwakened, event);
@@ -1721,6 +1733,25 @@ export class GameSession {
     /** 自動培育券數唯讀值（NUR-14） */
     public get autoNurtureTickets(): number {
         return this._autoNurtureTickets;
+    }
+
+    /** 第一次打贏戰鬥後為 true，之後不會再變回 false */
+    public get firstBattleCleared(): boolean {
+        return this._firstBattleCleared;
+    }
+
+    /** 第四幕紅顏該不該彈：首戰已通過且還沒展示過 */
+    public get shouldShowOpeningRedFace(): boolean {
+        return this._firstBattleCleared && !this._openingRedFaceShown;
+    }
+
+    /** 第四幕紅顏已展示：記下並存檔，之後不再自動彈出 */
+    public async markOpeningRedFaceShown(): Promise<void> {
+        if (this._openingRedFaceShown) return;
+        this._openingRedFaceShown = true;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
     }
 
     /** 主線第一次通過培育季後為 true，之後不會再變回 false */
@@ -1809,6 +1840,8 @@ export class GameSession {
                 scorePoints: this._scorePoints,
                 autoNurtureTickets: this._autoNurtureTickets,
                 mainlineNurtureClearedOnce: this._mainlineNurtureClearedOnce,
+                firstBattleCleared: this._firstBattleCleared,
+                openingRedFaceShown: this._openingRedFaceShown,
             },
             domestic: { ...this._domesticLog },
             prison: this.prison,
@@ -1879,6 +1912,10 @@ export class GameSession {
         this._scorePoints = normalizeScorePoints(snapshot.resources?.scorePoints);
         this._autoNurtureTickets = normalizeAutoNurtureTickets(snapshot.resources?.autoNurtureTickets);
         this._mainlineNurtureClearedOnce = normalizeFlag(snapshot.resources?.mainlineNurtureClearedOnce);
+        // 舊檔沒有旗標：已有通關紀錄視為打過首戰，否則 false
+        this._firstBattleCleared = normalizeFlag(snapshot.resources?.firstBattleCleared) || this._clearedStageIds.length > 0;
+        this._openingRedFaceShown = normalizeFlag(snapshot.resources?.openingRedFaceShown)
+            || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
