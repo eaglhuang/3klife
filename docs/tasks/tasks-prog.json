@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 45,
-    "total": 81
+    "open": 46,
+    "total": 82
   },
   "tasks": [
     {
@@ -3281,6 +3281,63 @@
         "artifacts/PROG-2-0134/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: ATM 0088；需能連 wiki 的本機"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0136",
+      "title": "宿命選將完成後才顯示三段式引導",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-15",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-15T15:40:00Z",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "0133 Web 驗收發現引導提前顯示；新玩家等待宿命開局成功，既有存檔維持原行為",
+      "related": [
+        "PROG-2-0133",
+        "PROG-2-0646"
+      ],
+      "depends": [],
+      "acceptance": [
+        "intro 與宿命選將期間隱藏引導",
+        "選將成功後自動顯示",
+        "舊存檔與已完成引導不退化",
+        "行為測試與實機驗證"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/core/OnboardingFlowController.ts",
+        "tests/OnboardingFlow.test.ts",
+        "artifacts/PROG-2-0136/"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
