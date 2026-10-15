@@ -1,0 +1,154 @@
+{
+  "id": "retire-review-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "RetireReviewRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "RetireBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "retire.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "RetireCard",
+        "id": "retireCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1000,
+        "height": 680,
+        "skinSlot": "retire.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "RetireTitle",
+            "id": "retireTitle",
+            "widget": {
+              "top": 24,
+              "left": 40,
+              "right": 40
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "retire.label.title"
+          },
+          {
+            "type": "label",
+            "name": "RetireName",
+            "id": "retireName",
+            "widget": {
+              "top": 80,
+              "left": 40,
+              "right": 40
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "retire.label.name"
+          },
+          {
+            "type": "label",
+            "name": "RetireCareer",
+            "id": "retireCareer",
+            "widget": {
+              "top": 140,
+              "left": 40,
+              "right": 40
+            },
+            "height": 80,
+            "text": "",
+            "styleSlot": "retire.label.stats"
+          },
+          {
+            "type": "label",
+            "name": "RetireScript",
+            "id": "retireScript",
+            "widget": {
+              "top": 230,
+              "left": 40,
+              "right": 40
+            },
+            "height": 80,
+            "text": "",
+            "styleSlot": "retire.label.body"
+          },
+          {
+            "type": "label",
+            "name": "RetireReport",
+            "id": "retireReport",
+            "widget": {
+              "top": 330,
+              "left": 40,
+              "right": 40
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "retire.label.stats"
+          },
+          {
+            "type": "label",
+            "name": "RetireQuarterly",
+            "id": "retireQuarterly",
+            "widget": {
+              "top": 380,
+              "left": 40,
+              "right": 40
+            },
+            "height": 80,
+            "text": "",
+            "styleSlot": "retire.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseRetire",
+            "id": "btnCloseRetire",
+            "widget": {
+              "bottom": 30,
+              "hCenter": true
+            },
+            "width": 240,
+            "height": 60,
+            "skinSlot": "retire.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "CloseRetireLabel",
+                "id": "closeRetireLabel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "text": "",
+                "styleSlot": "retire.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

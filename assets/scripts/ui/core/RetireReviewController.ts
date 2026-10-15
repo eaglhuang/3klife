@@ -39,3 +39,38 @@ export function buildRetireReviewView(general: GeneralConfig | undefined | null)
         bondRecommended: report.bondRecommended,
     };
 }
+
+/** 版面靜態文字的 zh-TW 預設；與 resources/i18n/zh-TW.json 的 ui.retire_review.* 同步（測試會比對） */
+export const RETIRE_REVIEW_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
+    'ui.retire_review.title': '退役回顧',
+    'ui.retire_review.close': '關閉',
+    'ui.retire_review.report_title': '季度戰損報告',
+};
+
+/** 文案查詢：未注入語系表時用 zh-TW 預設，key 不存在時回傳 key 本身 */
+export type RetireReviewTextLookup = (key: string) => string;
+
+export function fallbackRetireReviewText(key: string): string {
+    return RETIRE_REVIEW_TEXT_FALLBACK_ZH_TW[key] ?? key;
+}
+
+/**
+ * 退役回顧面板的全部文字，key 等於 retire-review-main.json 的節點 id。
+ * 靜態標題走語系查詢；戰績與戰報句子沿用 RetireReviewCopy 的組句（尚未進語系表，待後續）。
+ */
+export function buildRetireReviewTexts(
+    general: GeneralConfig | undefined | null,
+    lookup: RetireReviewTextLookup = fallbackRetireReviewText,
+): Record<string, string> {
+    const view = buildRetireReviewView(general);
+    const g = (general ?? {}) as ReviewCarrier;
+    return {
+        retireTitle: lookup('ui.retire_review.title'),
+        retireName: g.name ?? '',
+        retireCareer: view.careerLine,
+        retireScript: view.scriptLine,
+        retireReport: view.reportLine,
+        retireQuarterly: view.quarterlyScriptLine,
+        closeRetireLabel: lookup('ui.retire_review.close'),
+    };
+}

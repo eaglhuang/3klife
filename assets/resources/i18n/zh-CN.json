@@ -207,5 +207,8 @@
   "life.script.elder": "{0} 年迈力衰，但经验犹在。",
   "life.script.retire": "{0} 挂甲归田，愿将毕生所学传予后人。",
   "life.script.death": "{0} 享年 {1} 岁，一代名将殒落…",
-  "life.script.afterlife": "{0} 的英灵卡与虎符卡已归入宗祠与军府。"
+  "life.script.afterlife": "{0} 的英灵卡与虎符卡已归入宗祠与军府。",
+  "ui.retire_review.title": "退役回顾",
+  "ui.retire_review.close": "关闭",
+  "ui.retire_review.report_title": "季度战损报告"
 }
