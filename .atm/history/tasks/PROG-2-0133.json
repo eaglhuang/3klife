@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "PROG-2-0133",
+  "title": "PROG-2-0133",
+  "status": "running",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [
+    "步驟 1 到 13 皆有截圖或錄影；PR 說明寫明 Before/After 與 HEAD。",
+    "版面座標與台詞為暫定，只微調 `destiny-opening-main.json` 與 `opening-intro-main.json` 座標；不改邏輯。",
+    "任一步不符：記錄截圖、節點座標與 HEAD，回報 PM 另開卡。"
+  ],
+  "deliverables": [
+    "artifacts/PROG-2-0133/**"
+  ],
+  "scopePaths": [
+    "artifacts/PROG-2-0133/**"
+  ],
+  "validators": [],
+  "planningRepo": null,
+  "targetRepo": null,
+  "closureAuthority": null,
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/PROG/PROG-2-0133.md",
+    "sectionTitle": "PROG-2-0133",
+    "headingLine": 1,
+    "hash": "ffff2e9441601c7f",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/.codex/worktrees/web-verification/3KLife",
+      "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-0133.md",
+      "planningCommitSha": "ef144b85b2770d89794e9cb6b7e7b6f9df1a62f7",
+      "contentDigest": "sha256:cb70a62bc997857e18c194e386198638142c702f59c5c914d106565e01f40fec",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-10-15T15:33:40.847Z"
+    }
+  },
+  "importedAt": "2026-10-15T15:33:40.847Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "disabled",
+    "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [],
+    "findings": []
+  },
+  "lastTransitionId": "2026-10-15T15-34-05-768Z-claim-ea3e635b0bbf",
+  "lastTransitionAt": "2026-10-15T15:34:05.768Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "codex-gpt-6",
+  "reservedAt": "2026-10-15T15:33:59.266Z",
+  "promotedAt": "2026-10-15T15:33:59.270Z",
+  "claim": {
+    "actorId": "codex-gpt-6",
+    "leaseId": "lease-c4ab0431737f",
+    "claimedAt": "2026-10-15T15:33:59.275Z",
+    "heartbeatAt": "2026-10-15T15:33:59.275Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/PROG-2-0133.json",
+      "artifacts/PROG-2-0133/**",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0133.md"
+    ],
+    "state": "active",
+    "intent": "write",
+    "laneSession": {
+      "laneSessionId": "lane-20261015153359-codex-gpt-6-ed287cc0f7",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015153359-codex-gpt-6-ed287cc0f7\""
+    }
+  },
+  "startedAt": "2026-10-15T15:33:59.275Z",
+  "startedByActor": "codex-gpt-6",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-8b3143b51819c612",
+    "ticketDigest": "sha256:8b3143b51819c6123e3e29cc7d7150ea168a5e6b0b27a3d8f1d1a0c6e3949bb2",
+    "taskId": "PROG-2-0133",
+    "origin": "claim",
+    "actorId": "codex-gpt-6",
+    "laneSessionId": "lane-20261015153359-codex-gpt-6-ed287cc0f7",
+    "claimGeneration": "lease-c4ab0431737f",
+    "issuedAt": "2026-10-15T15:33:59.275Z",
+    "expiresAt": "2026-10-15T16:03:59.275Z",
+    "scopeDigest": "sha256:9c03279f6a59ab063b6a38b758add895a64cc337c1a12b0dc1048fe6a4611f73",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-10-15T15:33:59.275Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".atm/history/evidence/PROG-2-0133.*",
+          ".atm/history/task-events/PROG-2-0133/**",
+          ".atm/history/tasks/PROG-2-0133.json",
+          "artifacts/PROG-2-0133/**",
+          "docs/agent-briefs/tasks/PROG/PROG-2-0133.md"
+        ],
+        "digest": "sha256:7574c7104a3726266d97d4db63097bbcccb78a1cd92ed83508650b4cc0f6c9b2"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "disabled",
+      "reasons": [
+        "low-risk-task"
+      ],
+      "maxSavePoints": 0,
+      "perTaskByteBudget": 0,
+      "repositoryByteBudget": 0,
+      "handoffTtlSeconds": 0,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+    }
+  },
+  "startedBySessionId": "session-20261015153359-codex-gpt-6-PROG-2-0133-bc5729a8dc",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "PROG-2-0133",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/PROG-2-0133.*",
+      ".atm/history/task-events/PROG-2-0133/**",
+      ".atm/history/tasks/PROG-2-0133.json",
+      "artifacts/PROG-2-0133/**",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0133.md"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "1ff6a190aae3e90445e5c5c4f5c5253ebd83da41f11b9ccbd39b49a71cdaf616",
+    "actorId": "codex-gpt-6",
+    "sessionId": "session-20261015153359-codex-gpt-6-PROG-2-0133-bc5729a8dc",
+    "laneSession": {
+      "laneSessionId": "lane-20261015153359-codex-gpt-6-ed287cc0f7",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015153359-codex-gpt-6-ed287cc0f7\""
+    },
+    "createdAt": "2026-10-15T15:34:05.767Z",
+    "status": "active"
+  }
+}
