@@ -950,7 +950,8 @@ export class BattleController {
 
   private randomInt(min: number, max: number): number {
     if (max <= min) return min;
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    // 地塊增益的位置／種類走存檔種子亂數源（Q25），測試才能固定
+    return Math.floor(services().session.randomSource() * (max - min + 1)) + min;
   }
 
   // ─── 武將單挑系統 ─────────────────────────────────────────────────────────
