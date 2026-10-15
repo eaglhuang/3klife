@@ -1,10 +1,10 @@
 import { Faction } from '../../../core/config/Constants';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
-import { applyMorale } from '../SkillEffectFormulas';
+import { castMorale } from '../../shared/Morale';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from '../BattleSkillResolver';
 
-/** 鼓舞（morale，PROG-2-0769）：所有存活友軍士氣 +moraleBonus */
+/** 鼓舞（morale，PROG-2-0769）：所有存活友軍士氣 +moraleBonus，持續 3 回合不疊加（PROG-2-0770） */
 export class MoraleSkillResolver implements BattleSkillResolver {
   public canResolve(request: BattleSkillRequest): boolean {
     return resolveBattleSkillProfile(request.battleSkillId)?.effectKind === 'morale';
@@ -27,8 +27,8 @@ export class MoraleSkillResolver implements BattleSkillResolver {
     const deltas: SkillExecutionResult['deltas'] = [];
     const battleLogLines: string[] = [];
     for (const unit of allies) {
-      unit.morale = applyMorale(unit.morale, bonus);
-      deltas.push({ unitUid: unit.id, notes: `morale:+${bonus}` });
+      castMorale(unit, bonus);
+      deltas.push({ unitUid: unit.id, notes: `morale:+${bonus}:turns:${unit.moraleTurns}` });
       battleLogLines.push(`${profile.battleLogKey ?? request.battleSkillId}:${unit.id}:${unit.morale}`);
     }
 

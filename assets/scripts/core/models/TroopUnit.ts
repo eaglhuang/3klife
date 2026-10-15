@@ -88,6 +88,9 @@ export class TroopUnit {
   /** 士氣（PROG-2-0769，暫定）：每點 +1% 攻擊，預設 0 不影響既有數值 */
   public morale = 0;
 
+  /** 士氣剩餘回合（PROG-2-0770，暫定 3 回合）；0 表示無鼓舞 */
+  public moraleTurns = 0;
+
   public getEffectiveAttack(): number {
     return Math.max(1, (this.attack + this.attackBonus) * this.getTallyAffinityMod() * (1 + this.morale / 100));
   }

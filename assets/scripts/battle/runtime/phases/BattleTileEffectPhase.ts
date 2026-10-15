@@ -3,6 +3,7 @@ import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
+import { advanceMoraleOf } from '../../shared/Morale';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -31,6 +32,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     const caster = context.state.units.get(casterUnitId);
     return !!caster && !caster.isDead();
   });
+  advanceMoraleOf(context.state.units.values(), context.actingFaction);
   const killed: TroopUnit[] = [];
   const killedIds = new Set<string>();
 
