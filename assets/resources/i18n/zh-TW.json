@@ -248,5 +248,11 @@
   "ui.retire_review.report": "戰損報告：精力 {0}%",
   "ui.retire_review.quarterly": "本季戰報：{0} 精力剩 {1}%，{2}",
   "ui.retire_review.bond_ok": "可進行結緣。",
-  "ui.retire_review.bond_no": "不建議進行結緣。"
+  "ui.retire_review.bond_no": "不建議進行結緣。",
+  "ui.spirit_codex.title": "英靈圖鑑",
+  "ui.spirit_codex.close": "關閉",
+  "ui.spirit_codex.count": "英靈 {0} 位",
+  "ui.spirit_codex.empty": "尚無英靈卡。武將死後若具備英靈資格，會收錄於此。",
+  "ui.spirit_codex.more": "另有 {0} 位未列出",
+  "legacy.essence_line": "精華快照：{0}"
 }
