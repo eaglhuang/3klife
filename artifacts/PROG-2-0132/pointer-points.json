@@ -1,0 +1,57 @@
+[
+  {
+    "name": "BtnStart",
+    "x": 960,
+    "y": 620
+  },
+  {
+    "name": "BtnIntroNext",
+    "x": 1460,
+    "y": 732
+  },
+  {
+    "name": "BtnIntroNext",
+    "x": 1460,
+    "y": 732
+  },
+  {
+    "name": "BtnIntroNext",
+    "x": 1460,
+    "y": 732
+  },
+  {
+    "name": "BtnIntroNext",
+    "x": 1460,
+    "y": 732
+  },
+  {
+    "name": "BtnDestinyRoll",
+    "x": 780,
+    "y": 928
+  },
+  {
+    "name": "BtnDestinyRow0",
+    "x": 1514,
+    "y": 258
+  },
+  {
+    "name": "BtnNextTutorial",
+    "x": 960,
+    "y": 690
+  },
+  {
+    "name": "BtnNextTutorial",
+    "x": 960,
+    "y": 690
+  },
+  {
+    "name": "BtnNextTutorial",
+    "x": 960,
+    "y": 690
+  },
+  {
+    "name": "BtnOpenSpiritCodex",
+    "x": 192,
+    "y": -12
+  }
+]
