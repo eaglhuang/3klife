@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 36,
+    "done": 37,
     "in_progress": 2,
     "open": 46,
-    "total": 84
+    "total": 85
   },
   "tasks": [
     {
@@ -3427,6 +3427,64 @@
         "artifacts/PROG-2-0138/result.md"
       ],
       "notes": "2026-10-16 | 狀態: done | 驗證: 教官10案與Web實際指標通過，隔離標準9/9；全套2446通過1失敗3略過 | 變更: 原生結案42c0c3c7d | 阻塞: 前置PR483 HUD重疊另案，完整0131未通過",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0139",
+      "title": "大廳側欄跨卡片重疊修復",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M6",
+      "created": "2026-10-16",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-16T13:51:08Z",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完整headless證實PR483加高HUD後與選卡重疊。保留320寬側欄，入口改兩欄四列，選卡與主將卡順排於下方；確認卡內、卡間及畫布邊界，英靈仍在沙盤下方，不改遊戲規則。",
+      "related": [
+        "PROG-2-0137",
+        "PROG-2-0132"
+      ],
+      "depends": [],
+      "acceptance": [
+        "所有入口與三張卡均在畫布內",
+        "卡內控制項及三卡互不重疊",
+        "保留底部導覽列空間",
+        "英靈仍在沙盤下方且可實際開關",
+        "完整headless零失敗"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
+        "assets/resources/ui-spec/layouts/lobby-deck-select-main.json",
+        "assets/resources/ui-spec/layouts/lobby-lead-select-main.json",
+        "artifacts/PROG-2-0139/result.md"
+      ],
+      "notes": "2026-10-16 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

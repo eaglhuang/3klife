@@ -1,0 +1,235 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "PROG-2-0139",
+  "title": "PROG-2-0139",
+  "status": "running",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [],
+  "deliverables": [
+    "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
+    "assets/resources/ui-spec/layouts/lobby-deck-select-main.json",
+    "assets/resources/ui-spec/layouts/lobby-lead-select-main.json",
+    "artifacts/PROG-2-0139/result.md"
+  ],
+  "scopePaths": [
+    "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
+    "assets/resources/ui-spec/layouts/lobby-deck-select-main.json",
+    "assets/resources/ui-spec/layouts/lobby-lead-select-main.json",
+    "docs/agent-briefs/tasks/PROG/PROG-2-0139.md",
+    "docs/tasks/tasks-prog.json",
+    "artifacts/PROG-2-0139/**"
+  ],
+  "validators": [],
+  "planningRepo": null,
+  "targetRepo": null,
+  "closureAuthority": null,
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "ATM_TASK_IMPORT_EXTRACTION_FIRST_CANDIDATE",
+      "severity": "warning",
+      "field": "atomizationImpact",
+      "message": "Scope touches 1 module(s) over 600 lines but the card declares no atomizationImpact.extractionCandidates. Extraction-first is the ATM default: propose an atom/atom-map extraction (see .agents/skills/atm-atom-map-refactor), or record disposition \"inline\" with an inlineReason approved by a human.",
+      "candidates": [
+        "docs/tasks/tasks-prog.json (3512 lines)"
+      ]
+    }
+  ],
+  "tags": [],
+  "notes": "- 2026-10-16 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/PROG/PROG-2-0139.md",
+    "sectionTitle": "PROG-2-0139",
+    "headingLine": 1,
+    "hash": "98a7ac4027e57915",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/.codex/worktrees/web-verification/3KLife",
+      "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-0139.md",
+      "planningCommitSha": null,
+      "contentDigest": "sha256:383d5c54cca5c460ae87acbb1116f186f8c4763df765c37f27e290d19757173a",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-10-16T13:50:57.827Z"
+    }
+  },
+  "importedAt": "2026-10-16T13:50:57.827Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "disabled",
+    "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [],
+    "findings": []
+  },
+  "lastTransitionId": "2026-10-16T13-51-08-168Z-claim-6bda493d13b5",
+  "lastTransitionAt": "2026-10-16T13:51:08.168Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "codex-gpt-6",
+  "reservedAt": "2026-10-16T13:51:00.477Z",
+  "promotedAt": "2026-10-16T13:51:00.482Z",
+  "claim": {
+    "actorId": "codex-gpt-6",
+    "leaseId": "lease-45e7625651ef",
+    "claimedAt": "2026-10-16T13:51:00.488Z",
+    "heartbeatAt": "2026-10-16T13:51:00.488Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/PROG-2-0139.json",
+      "artifacts/PROG-2-0139/**",
+      "assets/resources/ui-spec/layouts/lobby-deck-select-main.json",
+      "assets/resources/ui-spec/layouts/lobby-lead-select-main.json",
+      "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0139.md",
+      "docs/tasks/tasks-prog.json"
+    ],
+    "state": "active",
+    "intent": "write",
+    "laneSession": {
+      "laneSessionId": "lane-20261016135100-codex-gpt-6-ddb67ac7c2",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261016135100-codex-gpt-6-ddb67ac7c2\""
+    }
+  },
+  "startedAt": "2026-10-16T13:51:00.488Z",
+  "startedByActor": "codex-gpt-6",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-1db53efb1d43bfe7",
+    "ticketDigest": "sha256:1db53efb1d43bfe7d8836ee5bfecf63e2e2d7d22aa2a2cb4e77cef4b7863068b",
+    "taskId": "PROG-2-0139",
+    "origin": "claim",
+    "actorId": "codex-gpt-6",
+    "laneSessionId": "lane-20261016135100-codex-gpt-6-ddb67ac7c2",
+    "claimGeneration": "lease-45e7625651ef",
+    "issuedAt": "2026-10-16T13:51:00.488Z",
+    "expiresAt": "2026-10-16T14:21:00.488Z",
+    "scopeDigest": "sha256:631915cf3f95a6d757028faf541f69535b06f4a5642c25f0bc21ca03f4b65e91",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-10-16T13:51:00.488Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".atm/history/evidence/PROG-2-0139.*",
+          ".atm/history/task-events/PROG-2-0139/**",
+          ".atm/history/tasks/PROG-2-0139.json",
+          "artifacts/PROG-2-0139/**",
+          "assets/resources/ui-spec/layouts/lobby-deck-select-main.json",
+          "assets/resources/ui-spec/layouts/lobby-lead-select-main.json",
+          "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
+          "docs/agent-briefs/tasks/PROG/PROG-2-0139.md",
+          "docs/tasks/tasks-prog.json"
+        ],
+        "digest": "sha256:a059b6faf39f42112bd23d83c0d07bc4d7449f742447d0a5f04b414ce6dab967"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "disabled",
+      "reasons": [
+        "low-risk-task"
+      ],
+      "maxSavePoints": 0,
+      "perTaskByteBudget": 0,
+      "repositoryByteBudget": 0,
+      "handoffTtlSeconds": 0,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+    }
+  },
+  "startedBySessionId": "session-20261016135100-codex-gpt-6-PROG-2-0139-9d8459b56b",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "PROG-2-0139",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/PROG-2-0139.*",
+      ".atm/history/task-events/PROG-2-0139/**",
+      ".atm/history/tasks/PROG-2-0139.json",
+      "artifacts/PROG-2-0139/**",
+      "assets/resources/ui-spec/layouts/lobby-deck-select-main.json",
+      "assets/resources/ui-spec/layouts/lobby-lead-select-main.json",
+      "assets/resources/ui-spec/layouts/lobby-season-hud-main.json",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0139.md",
+      "docs/tasks/tasks-prog.json"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "3719d0d2593bc0449d5a718e8f8e0a48f3df42095b0b27cb8f920650adcb291e",
+    "actorId": "codex-gpt-6",
+    "sessionId": "session-20261016135100-codex-gpt-6-PROG-2-0139-9d8459b56b",
+    "laneSession": {
+      "laneSessionId": "lane-20261016135100-codex-gpt-6-ddb67ac7c2",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261016135100-codex-gpt-6-ddb67ac7c2\""
+    },
+    "createdAt": "2026-10-16T13:51:08.166Z",
+    "status": "active"
+  }
+}
