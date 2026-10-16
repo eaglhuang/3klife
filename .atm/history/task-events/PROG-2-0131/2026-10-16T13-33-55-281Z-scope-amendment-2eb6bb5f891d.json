@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-16T13-33-55-281Z-scope-amendment-2eb6bb5f891d",
+  "taskId": "PROG-2-0131",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0131.json",
+  "taskSha256": "sha256:65a21e8b781dc7c2eab24de89b7c84f9276bd6e939b53a0c1ac66b39185bb197",
+  "createdAt": "2026-10-16T13:33:55.281Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-0131 --actor codex-gpt-6 --add \"artifacts/PROG-2-0131/mentor-entry-flow.js,artifacts/PROG-2-0131/mentor-checks.js,artifacts/PROG-2-0131/review-observation.js,artifacts/PROG-2-0131/mentor-observation.json,artifacts/PROG-2-0131/acceptance-review.json,artifacts/PROG-2-0131/events-crop.png,artifacts/PROG-2-0131/web-entry/report.json,artifacts/PROG-2-0131/result.md\" --reason \"正式0131允許的除錯入口與實際指標驗證證據，明列原生交付票券\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "正式0131允許的除錯入口與實際指標驗證證據，明列原生交付票券"
+  }
+}

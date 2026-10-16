@@ -1,0 +1,27 @@
+{
+  "completed": false,
+  "firstFailedStep": 3,
+  "pass": false,
+  "leaks": [
+    {
+      "name": "RowLabel3",
+      "text": "培育事件測試 4",
+      "lock": "需達 ★3 才可發動"
+    },
+    {
+      "name": "RowLabel4",
+      "text": "培育事件測試 5",
+      "lock": "需達 ★4 才可發動"
+    },
+    {
+      "name": "RowLabel5",
+      "text": "培育事件測試 6",
+      "lock": "需達 ★5 才可發動"
+    }
+  ],
+  "correction": "The initial harness checked star-lock presence but missed locked content visibility. Its steps1to5Passed is not acceptance authority.",
+  "unverified": [
+    "Step 4 visual text fit",
+    "Step 6 real nurture entry with and without a mentor"
+  ]
+}
