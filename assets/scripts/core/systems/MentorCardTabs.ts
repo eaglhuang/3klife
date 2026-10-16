@@ -131,7 +131,7 @@ export function toMentorCardLayoutState(view: MentorCardTabView, title: string):
         const row = view.rows[i];
         actives[`row_${i}`] = !!row;
         if (!row) continue;
-        texts[`rowLabel_${i}`] = row.label;
+        texts[`rowLabel_${i}`] = view.activeTab === 'events' && row.locked ? '' : row.label;
         texts[`rowLock_${i}`] = row.lockText ?? '';
         actives[`rowLock_${i}`] = row.locked;
     }
