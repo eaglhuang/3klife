@@ -1,0 +1,1508 @@
+{
+  "completed": false,
+  "fixture": "Card-authorized debug openMentorCardDetail; no save or nurture data changes",
+  "checks": [
+    {
+      "name": "01-hidden",
+      "nodes": [
+        {
+          "name": "MentorCardDetailHost",
+          "active": false,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        {
+          "name": "MentorCardPanel",
+          "active": false,
+          "rect": {
+            "x": 460,
+            "y": 180,
+            "width": 1000,
+            "height": 720
+          }
+        },
+        {
+          "name": "TabEffectsLabel",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 492,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabEventsLabel",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 792,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabStoryLabel",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1092,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "Row0",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 666,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel0",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 512,
+            "y": 678,
+            "width": 600,
+            "height": 40
+          }
+        },
+        {
+          "name": "RowLock0",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 678,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row1",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 590,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel1",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 512,
+            "y": 602,
+            "width": 600,
+            "height": 40
+          }
+        },
+        {
+          "name": "RowLock1",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 602,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row2",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 514,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel2",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 512,
+            "y": 526,
+            "width": 600,
+            "height": 40
+          }
+        },
+        {
+          "name": "RowLock2",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 526,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row3",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 438,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel3",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 512,
+            "y": 450,
+            "width": 600,
+            "height": 40
+          }
+        },
+        {
+          "name": "RowLock3",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 450,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row4",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 362,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel4",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 512,
+            "y": 374,
+            "width": 600,
+            "height": 40
+          }
+        },
+        {
+          "name": "RowLock4",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 374,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row5",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 286,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel5",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 512,
+            "y": 298,
+            "width": 600,
+            "height": 40
+          }
+        },
+        {
+          "name": "RowLock5",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 298,
+            "width": 300,
+            "height": 40
+          }
+        }
+      ]
+    },
+    {
+      "name": "02-effects",
+      "nodes": [
+        {
+          "name": "MentorCardDetailHost",
+          "active": true,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        {
+          "name": "MentorCardPanel",
+          "active": true,
+          "rect": {
+            "x": 460,
+            "y": 180,
+            "width": 1000,
+            "height": 720
+          }
+        },
+        {
+          "name": "TabEffectsLabel",
+          "active": true,
+          "text": "▸ 支援效果",
+          "rect": {
+            "x": 492,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabEventsLabel",
+          "active": true,
+          "text": "培育事件",
+          "rect": {
+            "x": 792,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabStoryLabel",
+          "active": true,
+          "text": "小插曲",
+          "rect": {
+            "x": 1092,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "Row0",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 666,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel0",
+          "active": true,
+          "text": "支援效果測試 1",
+          "rect": {
+            "x": 512,
+            "y": 681.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock0",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 678,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row1",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 590,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel1",
+          "active": true,
+          "text": "支援效果測試 2",
+          "rect": {
+            "x": 512,
+            "y": 605.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock1",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 602,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row2",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 514,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel2",
+          "active": true,
+          "text": "支援效果測試 3",
+          "rect": {
+            "x": 512,
+            "y": 529.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock2",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 526,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row3",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 438,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel3",
+          "active": true,
+          "text": "支援效果測試 4",
+          "rect": {
+            "x": 512,
+            "y": 453.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock3",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 450,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row4",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 362,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel4",
+          "active": true,
+          "text": "支援效果測試 5",
+          "rect": {
+            "x": 512,
+            "y": 377.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock4",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 374,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row5",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 286,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel5",
+          "active": true,
+          "text": "支援效果測試 6",
+          "rect": {
+            "x": 512,
+            "y": 301.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock5",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 298,
+            "width": 300,
+            "height": 40
+          }
+        }
+      ]
+    },
+    {
+      "name": "03-events",
+      "nodes": [
+        {
+          "name": "MentorCardDetailHost",
+          "active": true,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        {
+          "name": "MentorCardPanel",
+          "active": true,
+          "rect": {
+            "x": 460,
+            "y": 180,
+            "width": 1000,
+            "height": 720
+          }
+        },
+        {
+          "name": "TabEffectsLabel",
+          "active": true,
+          "text": "支援效果",
+          "rect": {
+            "x": 492,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabEventsLabel",
+          "active": true,
+          "text": "▸ 培育事件",
+          "rect": {
+            "x": 792,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabStoryLabel",
+          "active": true,
+          "text": "小插曲",
+          "rect": {
+            "x": 1092,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "Row0",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 666,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel0",
+          "active": true,
+          "text": "培育事件測試 1",
+          "rect": {
+            "x": 512,
+            "y": 681.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock0",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 678,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row1",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 590,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel1",
+          "active": true,
+          "text": "培育事件測試 2",
+          "rect": {
+            "x": 512,
+            "y": 605.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock1",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 602,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row2",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 514,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel2",
+          "active": true,
+          "text": "培育事件測試 3",
+          "rect": {
+            "x": 512,
+            "y": 529.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock2",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 526,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row3",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 438,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel3",
+          "active": true,
+          "text": "培育事件測試 4",
+          "rect": {
+            "x": 512,
+            "y": 453.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock3",
+          "active": true,
+          "text": "需達 ★3 才可發動",
+          "rect": {
+            "x": 1108,
+            "y": 453.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row4",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 362,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel4",
+          "active": true,
+          "text": "培育事件測試 5",
+          "rect": {
+            "x": 512,
+            "y": 377.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock4",
+          "active": true,
+          "text": "需達 ★4 才可發動",
+          "rect": {
+            "x": 1108,
+            "y": 377.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row5",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 286,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel5",
+          "active": true,
+          "text": "培育事件測試 6",
+          "rect": {
+            "x": 512,
+            "y": 301.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock5",
+          "active": true,
+          "text": "需達 ★5 才可發動",
+          "rect": {
+            "x": 1108,
+            "y": 301.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        }
+      ]
+    },
+    {
+      "name": "04-story",
+      "nodes": [
+        {
+          "name": "MentorCardDetailHost",
+          "active": true,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        {
+          "name": "MentorCardPanel",
+          "active": true,
+          "rect": {
+            "x": 460,
+            "y": 180,
+            "width": 1000,
+            "height": 720
+          }
+        },
+        {
+          "name": "TabEffectsLabel",
+          "active": true,
+          "text": "支援效果",
+          "rect": {
+            "x": 492,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabEventsLabel",
+          "active": true,
+          "text": "培育事件",
+          "rect": {
+            "x": 792,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabStoryLabel",
+          "active": true,
+          "text": "▸ 小插曲",
+          "rect": {
+            "x": 1092,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "Row0",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 666,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel0",
+          "active": true,
+          "text": "小插曲測試 1",
+          "rect": {
+            "x": 512,
+            "y": 681.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock0",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 678,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row1",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 590,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel1",
+          "active": true,
+          "text": "小插曲測試 2",
+          "rect": {
+            "x": 512,
+            "y": 605.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock1",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 602,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row2",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 514,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel2",
+          "active": true,
+          "text": "小插曲測試 3",
+          "rect": {
+            "x": 512,
+            "y": 529.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock2",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 526,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row3",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 438,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel3",
+          "active": true,
+          "text": "小插曲測試 4",
+          "rect": {
+            "x": 512,
+            "y": 453.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock3",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 453.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row4",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 362,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel4",
+          "active": true,
+          "text": "小插曲測試 5",
+          "rect": {
+            "x": 512,
+            "y": 377.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock4",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 377.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row5",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 286,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel5",
+          "active": true,
+          "text": "小插曲測試 6",
+          "rect": {
+            "x": 512,
+            "y": 301.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock5",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 301.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        }
+      ]
+    },
+    {
+      "name": "05-closed",
+      "nodes": [
+        {
+          "name": "MentorCardDetailHost",
+          "active": false,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        {
+          "name": "MentorCardPanel",
+          "active": false,
+          "rect": {
+            "x": 460,
+            "y": 180,
+            "width": 1000,
+            "height": 720
+          }
+        },
+        {
+          "name": "TabEffectsLabel",
+          "active": false,
+          "text": "支援效果",
+          "rect": {
+            "x": 492,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabEventsLabel",
+          "active": false,
+          "text": "培育事件",
+          "rect": {
+            "x": 792,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabStoryLabel",
+          "active": false,
+          "text": "▸ 小插曲",
+          "rect": {
+            "x": 1092,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "Row0",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 666,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel0",
+          "active": false,
+          "text": "小插曲測試 1",
+          "rect": {
+            "x": 512,
+            "y": 681.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock0",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 678,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row1",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 590,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel1",
+          "active": false,
+          "text": "小插曲測試 2",
+          "rect": {
+            "x": 512,
+            "y": 605.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock1",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 602,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row2",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 514,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel2",
+          "active": false,
+          "text": "小插曲測試 3",
+          "rect": {
+            "x": 512,
+            "y": 529.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock2",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 526,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row3",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 438,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel3",
+          "active": false,
+          "text": "小插曲測試 4",
+          "rect": {
+            "x": 512,
+            "y": 453.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock3",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 453.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row4",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 362,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel4",
+          "active": false,
+          "text": "小插曲測試 5",
+          "rect": {
+            "x": 512,
+            "y": 377.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock4",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 377.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row5",
+          "active": false,
+          "rect": {
+            "x": 492,
+            "y": 286,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel5",
+          "active": false,
+          "text": "小插曲測試 6",
+          "rect": {
+            "x": 512,
+            "y": 301.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock5",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 301.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        }
+      ]
+    },
+    {
+      "name": "06-reopened",
+      "nodes": [
+        {
+          "name": "MentorCardDetailHost",
+          "active": true,
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        {
+          "name": "MentorCardPanel",
+          "active": true,
+          "rect": {
+            "x": 460,
+            "y": 180,
+            "width": 1000,
+            "height": 720
+          }
+        },
+        {
+          "name": "TabEffectsLabel",
+          "active": true,
+          "text": "▸ 支援效果",
+          "rect": {
+            "x": 492,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabEventsLabel",
+          "active": true,
+          "text": "培育事件",
+          "rect": {
+            "x": 792,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "TabStoryLabel",
+          "active": true,
+          "text": "小插曲",
+          "rect": {
+            "x": 1092,
+            "y": 762,
+            "width": 280,
+            "height": 44
+          }
+        },
+        {
+          "name": "Row0",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 666,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel0",
+          "active": true,
+          "text": "支援效果測試 1",
+          "rect": {
+            "x": 512,
+            "y": 681.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock0",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 678,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row1",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 590,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel1",
+          "active": true,
+          "text": "支援效果測試 2",
+          "rect": {
+            "x": 512,
+            "y": 605.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock1",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 602,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row2",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 514,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel2",
+          "active": true,
+          "text": "支援效果測試 3",
+          "rect": {
+            "x": 512,
+            "y": 529.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock2",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 526,
+            "width": 300,
+            "height": 40
+          }
+        },
+        {
+          "name": "Row3",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 438,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel3",
+          "active": true,
+          "text": "支援效果測試 4",
+          "rect": {
+            "x": 512,
+            "y": 453.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock3",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 453.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row4",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 362,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel4",
+          "active": true,
+          "text": "支援效果測試 5",
+          "rect": {
+            "x": 512,
+            "y": 377.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock4",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 377.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "Row5",
+          "active": true,
+          "rect": {
+            "x": 492,
+            "y": 286,
+            "width": 936,
+            "height": 64
+          }
+        },
+        {
+          "name": "RowLabel5",
+          "active": true,
+          "text": "支援效果測試 6",
+          "rect": {
+            "x": 512,
+            "y": 301.62,
+            "width": 600,
+            "height": 32.75999999999999
+          }
+        },
+        {
+          "name": "RowLock5",
+          "active": false,
+          "text": "",
+          "rect": {
+            "x": 1108,
+            "y": 301.62,
+            "width": 300,
+            "height": 32.75999999999999
+          }
+        }
+      ]
+    }
+  ],
+  "steps1to5Passed": true,
+  "remaining": "Step 6: real nurture training entry with and without assigned mentor remains unverified"
+}
