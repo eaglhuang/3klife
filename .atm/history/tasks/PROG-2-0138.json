@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "PROG-2-0138",
   "title": "PROG-2-0138",
-  "status": "running",
+  "status": "done",
   "milestone": null,
   "dependencies": [],
   "acceptance": [],
@@ -16,7 +16,18 @@
     "tests/MentorCardTabs.test.ts",
     "docs/agent-briefs/tasks/PROG/PROG-2-0138.md",
     "docs/tasks/tasks-prog.json",
-    "artifacts/PROG-2-0138/**"
+    "artifacts/PROG-2-0138/**",
+    ".atm/history/evidence/PROG-2-0138.*",
+    ".atm/history/task-events/PROG-2-0138/**",
+    ".atm/history/tasks/PROG-2-0138.json",
+    "artifacts/PROG-2-0138/events-crop.png",
+    "artifacts/PROG-2-0138/mentor-checks.js",
+    "artifacts/PROG-2-0138/mentor-entry-flow.js",
+    "artifacts/PROG-2-0138/mentor-observation.json",
+    "artifacts/PROG-2-0138/result.md",
+    "artifacts/PROG-2-0138/run-mentor-suite.ts",
+    "artifacts/PROG-2-0138/runtime-verdict.json",
+    "artifacts/PROG-2-0138/web-entry/report.json"
   ],
   "validators": [],
   "planningRepo": null,
@@ -59,17 +70,17 @@
       "repoIdentity": "https://github.com/eaglhuang/3klife.git",
       "repoRoot": "C:/Users/User/.codex/worktrees/web-verification/3KLife",
       "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-0138.md",
-      "planningCommitSha": null,
-      "contentDigest": "sha256:0a1e9818e3e07af85cafbd7bd72fac3519f287df6d3f6ef8046c2f1d5b1b3b47",
-      "amendmentEpoch": 0,
-      "sealedAt": "2026-10-16T13:38:03.639Z"
+      "planningCommitSha": "2846fb56885672ab5616ef51358e22401b1fd701",
+      "contentDigest": "sha256:15110c10894e8c7bb911b35dd6b0acde67573e06a3c2d0423e314d32e2d40a36",
+      "amendmentEpoch": 1,
+      "sealedAt": "2026-10-16T13:45:25.390Z"
     }
   },
   "importedAt": "2026-10-16T13:38:03.639Z",
   "workAdmission": {
     "recoveryMode": "auto",
-    "resolvedRecoveryMode": "disabled",
-    "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+    "resolvedRecoveryMode": "enabled",
+    "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
   },
   "causalGraph": {
     "causalDependencies": [],
@@ -97,8 +108,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-16T13-38-15-188Z-claim-1a4238dba308",
-  "lastTransitionAt": "2026-10-16T13:38:15.188Z",
+  "lastTransitionId": "2026-10-16T13-46-06-834Z-close-3315a2317922",
+  "lastTransitionAt": "2026-10-16T13:46:06.834Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-16T13:38:06.956Z",
@@ -107,59 +118,78 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-bc242fbb6381",
     "claimedAt": "2026-10-16T13:38:06.975Z",
-    "heartbeatAt": "2026-10-16T13:38:06.975Z",
+    "heartbeatAt": "2026-10-16T13:46:06.768Z",
     "ttlSeconds": 1800,
     "files": [
+      ".atm/history/evidence/PROG-2-0138.*",
+      ".atm/history/task-events/PROG-2-0138/**",
       ".atm/history/tasks/PROG-2-0138.json",
       "artifacts/PROG-2-0138/**",
+      "artifacts/PROG-2-0138/events-crop.png",
+      "artifacts/PROG-2-0138/mentor-checks.js",
+      "artifacts/PROG-2-0138/mentor-entry-flow.js",
+      "artifacts/PROG-2-0138/mentor-observation.json",
+      "artifacts/PROG-2-0138/result.md",
+      "artifacts/PROG-2-0138/run-mentor-suite.ts",
+      "artifacts/PROG-2-0138/runtime-verdict.json",
+      "artifacts/PROG-2-0138/web-entry/report.json",
       "assets/scripts/core/systems/MentorCardTabs.ts",
       "docs/agent-briefs/tasks/PROG/PROG-2-0138.md",
       "docs/tasks/tasks-prog.json",
       "tests/MentorCardTabs.test.ts"
     ],
-    "state": "active",
-    "intent": "write",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20261016133807-codex-gpt-6-46889dbbad",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261016133807-codex-gpt-6-46889dbbad\""
-    }
+    },
+    "reason": "closed"
   },
   "startedAt": "2026-10-16T13:38:06.975Z",
   "startedByActor": "codex-gpt-6",
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-c43d97165a1b62c5",
-    "ticketDigest": "sha256:c43d97165a1b62c52856ab5d7f1f731a77615c70cd3ebaca29e43786bef43be0",
+    "ticketId": "wat-e0056dc8957b7d3b",
+    "ticketDigest": "sha256:e0056dc8957b7d3bcebcb6cfd5ef91e20c47592b0a4206dac71a21a03143a609",
     "taskId": "PROG-2-0138",
     "origin": "claim",
     "actorId": "codex-gpt-6",
     "laneSessionId": "lane-20261016133807-codex-gpt-6-46889dbbad",
     "claimGeneration": "lease-bc242fbb6381",
-    "issuedAt": "2026-10-16T13:38:06.975Z",
-    "expiresAt": "2026-10-16T14:08:06.975Z",
-    "scopeDigest": "sha256:ad5e7673668741cb4b1e41defea2db014d2d47bb40d7e351485a4d077d8d3e67",
+    "issuedAt": "2026-10-16T13:45:04.741Z",
+    "expiresAt": "2026-10-16T14:15:04.741Z",
+    "scopeDigest": "sha256:2ba0d38529b20f7cf17ac214ab6db23119f8a48c7bb144df78162c95f4709917",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-10-16T13:38:06.975Z"
+      "selectedAt": "2026-10-16T13:45:04.741Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/PROG-2-0138.*",
+          ".atm/history/evidence/git-head.json",
           ".atm/history/task-events/PROG-2-0138/**",
           ".atm/history/tasks/PROG-2-0138.json",
           "artifacts/PROG-2-0138/**",
+          "artifacts/PROG-2-0138/events-crop.png",
+          "artifacts/PROG-2-0138/mentor-checks.js",
+          "artifacts/PROG-2-0138/mentor-entry-flow.js",
+          "artifacts/PROG-2-0138/mentor-observation.json",
+          "artifacts/PROG-2-0138/result.md",
+          "artifacts/PROG-2-0138/run-mentor-suite.ts",
+          "artifacts/PROG-2-0138/runtime-verdict.json",
+          "artifacts/PROG-2-0138/web-entry/report.json",
           "assets/scripts/core/systems/MentorCardTabs.ts",
           "docs/agent-briefs/tasks/PROG/PROG-2-0138.md",
           "docs/tasks/tasks-prog.json",
           "tests/MentorCardTabs.test.ts"
         ],
-        "digest": "sha256:3a3bc43c0844bb52c7003e1259c18f72d50d83e1a2f607bca51104b9f03b41fc"
+        "digest": "sha256:b8ee2fa746a159532ffb2280d049c7423fe59fdd00951251d74a6949ea5f17e7"
       },
       {
         "kind": "lifecycle-operation",
@@ -181,16 +211,16 @@
     "deferredForeignResidue": [],
     "recovery": {
       "requestedMode": "auto",
-      "resolvedMode": "disabled",
+      "resolvedMode": "enabled",
       "reasons": [
-        "low-risk-task"
+        "complex-task"
       ],
-      "maxSavePoints": 0,
-      "perTaskByteBudget": 0,
-      "repositoryByteBudget": 0,
-      "handoffTtlSeconds": 0,
+      "maxSavePoints": 2,
+      "perTaskByteBudget": 16777216,
+      "repositoryByteBudget": 268435456,
+      "handoffTtlSeconds": 604800,
       "tempRoot": ".atm/runtime/work-admission-temp",
-      "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+      "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
     }
   },
   "startedBySessionId": "session-20261016133806-codex-gpt-6-PROG-2-0138-544bb4bdeb",
@@ -207,24 +237,42 @@
       ".atm/history/task-events/PROG-2-0138/**",
       ".atm/history/tasks/PROG-2-0138.json",
       "artifacts/PROG-2-0138/**",
+      "artifacts/PROG-2-0138/events-crop.png",
+      "artifacts/PROG-2-0138/mentor-checks.js",
+      "artifacts/PROG-2-0138/mentor-entry-flow.js",
+      "artifacts/PROG-2-0138/mentor-observation.json",
+      "artifacts/PROG-2-0138/result.md",
+      "artifacts/PROG-2-0138/run-mentor-suite.ts",
+      "artifacts/PROG-2-0138/runtime-verdict.json",
+      "artifacts/PROG-2-0138/web-entry/report.json",
       "assets/scripts/core/systems/MentorCardTabs.ts",
       "docs/agent-briefs/tasks/PROG/PROG-2-0138.md",
       "docs/tasks/tasks-prog.json",
       "tests/MentorCardTabs.test.ts"
     ],
-    "planningReadOnlyPaths": [],
-    "planningMirrorPaths": [],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/web-verification/3KLife/docs/agent-briefs/tasks/PROG/PROG-2-0138.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/PROG/",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0138.md"
+    ],
     "allowPlanningMirror": false,
     "promptHash": "30e2e9c50dd79a30fabec8096c32580d9e64f4f24e60237db9669c8d17b6d774",
     "actorId": "codex-gpt-6",
-    "sessionId": "session-20261016133806-codex-gpt-6-PROG-2-0138-544bb4bdeb",
+    "sessionId": null,
     "laneSession": {
       "laneSessionId": "lane-20261016133807-codex-gpt-6-46889dbbad",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261016133807-codex-gpt-6-46889dbbad\""
     },
-    "createdAt": "2026-10-16T13:38:15.186Z",
+    "createdAt": "2026-10-16T13:38:15.198Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-10-16T13:46:06.768Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261016133806-codex-gpt-6-PROG-2-0138-544bb4bdeb"
 }

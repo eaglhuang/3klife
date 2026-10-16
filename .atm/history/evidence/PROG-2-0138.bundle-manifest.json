@@ -1,0 +1,25 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-0138",
+  "updatedAt": "2026-10-16T13:41:06.893Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "npx ts-node --transpile-only --project tsconfig.test.json artifacts/PROG-2-0138/run-mentor-suite.ts",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:22968fc3c23771a9642b5959db1b248e81aa8725fc7516d19e951f22ed7f36b0",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-10-16T13:41:06.892Z",
+      "startedAt": "2026-10-16T13:41:05.359Z",
+      "finishedAt": "2026-10-16T13:41:06.892Z",
+      "durationMs": 1533,
+      "runnerKind": "dev-source",
+      "sourceCommit": "2846fb56885672ab5616ef51358e22401b1fd701",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}
