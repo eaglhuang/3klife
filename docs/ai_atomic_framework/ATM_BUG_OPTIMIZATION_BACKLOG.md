@@ -31,13 +31,13 @@ Use this file when:
 ## Open Items
 
 - [ ] ATM-BUG-2026-10-16-003: Standard gate and per-card geometry checks do not prove cross-panel UI separation
-  - Status: verified QA coverage gap; PR483 returned to draft pending a separate game-layout repair.
+  - Status: game regression repaired by PROG-2-0139; verification coverage guidance remains open. PR483 stays draft until its follow-up stack is reviewed.
   - Severity: P1 verification scope / misleading completion confidence.
   - Encountered: Full headless during PROG-2-0138 found the earlier PROG-2-0137 height increase overlaps lobby-deck-select-main, despite standard 9/9 and HUD child-containment checks passing.
   - Reproduce / detect: Run tests/run-cli.ts on the PR483 stack; BondingSetup reports lobby-season-hud-main overlaps lobby-deck-select-main. The focused HUD checker only proves child containment, not sibling panel separation.
   - Impact: A green computational-gate summary can be mistaken for full-game regression evidence; a working entry can still overlap other controls.
   - Possible optimization: Tie layout-changing task validators to relevant cross-panel suites and require a full headless result alongside local geometry; preserve explicit limits in reports. Do not silence the overlap assertion.
-  - Related tasks / commits: PROG-2-0137 / PR483; PROG-2-0138 full headless 2446 passed, 1 failed, 3 skipped; follow-up layout repair required.
+  - Related tasks / commits: PROG-2-0137 / PR483; PROG-2-0138 full headless 2446 passed, 1 failed, 3 skipped; PROG-2-0139 source b72b5fd5a / close 1e511d461 restores 2447 passed, 0 failed, 3 skipped, plus desktop/phone actual-pointer and 2D geometry checks.
 
 - [ ] ATM-BUG-2026-10-16-002: Separate write-ticket acquisition can mask a narrower claim-issued work-admission grant
   - Status: reproducible workflow friction; normal recovery verified, no framework code change required.

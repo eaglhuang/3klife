@@ -1,0 +1,14 @@
+{
+  "taskId": "PROG-2-0139",
+  "target": "lobby-sidebar",
+  "verdict": "pass",
+  "viewports": ["1920x1080", "1280x720"],
+  "cardsInsideViewport": true,
+  "cardsAndBottomNavigationSeparated": true,
+  "visibleHudEntries": 8,
+  "spiritBelowSandtable": true,
+  "spiritPointerOpenClosePassed": true,
+  "browserErrors": 0,
+  "fullHeadless": { "passed": 2447, "failed": 0, "skipped": 3 },
+  "full0131And0132Acceptance": "not-complete"
+}

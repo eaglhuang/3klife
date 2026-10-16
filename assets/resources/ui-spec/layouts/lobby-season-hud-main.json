@@ -27,7 +27,7 @@
           "left": 32
         },
         "width": 320,
-        "height": 504,
+        "height": 312,
         "skinSlot": "season.hud.card.bg",
         "children": [
           {
@@ -75,10 +75,10 @@
             "id": "btnAdvanceSeason",
             "widget": {
               "bottom": 8,
-              "left": 12,
-              "right": 12
+              "left": 164
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
@@ -101,11 +101,11 @@
             "name": "OpenNurtureButton",
             "id": "btnOpenNurture",
             "widget": {
-              "bottom": 56,
-              "left": 12,
-              "right": 12
+              "bottom": 8,
+              "left": 12
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
@@ -128,11 +128,11 @@
             "name": "OpenBondingButton",
             "id": "btnOpenBonding",
             "widget": {
-              "bottom": 104,
-              "left": 12,
-              "right": 12
+              "bottom": 56,
+              "left": 164
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
@@ -155,11 +155,11 @@
             "name": "OpenJobChangeButton",
             "id": "btnOpenJobChange",
             "widget": {
-              "bottom": 152,
-              "left": 12,
-              "right": 12
+              "bottom": 56,
+              "left": 12
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
@@ -182,11 +182,11 @@
             "name": "OpenDomesticButton",
             "id": "btnOpenDomestic",
             "widget": {
-              "bottom": 200,
-              "left": 12,
-              "right": 12
+              "bottom": 104,
+              "left": 164
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
@@ -209,11 +209,11 @@
             "name": "BtnOpenHallBoard",
             "id": "btnOpenHallBoard",
             "widget": {
-              "bottom": 248,
-              "left": 12,
-              "right": 12
+              "bottom": 152,
+              "left": 164
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
@@ -236,11 +236,11 @@
             "name": "BtnOpenSandtable",
             "id": "btnOpenSandtable",
             "widget": {
-              "bottom": 344,
-              "left": 12,
-              "right": 12
+              "bottom": 152,
+              "left": 12
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
@@ -263,11 +263,11 @@
             "name": "BtnOpenSpiritCodex",
             "id": "btnOpenSpiritCodex",
             "widget": {
-              "bottom": 296,
-              "left": 12,
-              "right": 12
+              "bottom": 104,
+              "left": 12
             },
-            "height": 40,
+            "width": 144,
+            "height": 44,
             "skinSlot": "season.hud.button.bg",
             "children": [
               {
