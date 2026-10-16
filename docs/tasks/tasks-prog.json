@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 35,
+    "done": 36,
     "in_progress": 2,
     "open": 46,
-    "total": 83
+    "total": 84
   },
   "tasks": [
     {
@@ -3371,6 +3371,62 @@
         "artifacts/PROG-2-0137/result.md"
       ],
       "notes": "2026-10-16 | 狀態: done | 驗證: 幾何回歸與Web實際開關通過，隔離標準閘門9/9 | 變更: 原生結案301fb19ff，PR483待審 | 阻塞: 完整0132另案驗收",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0138",
+      "title": "鎖定培育事件列只顯示星等提示",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M1",
+      "created": "2026-10-16",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-16T13:38:15Z",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "0131第3步實機發現未解鎖培育事件仍顯示名稱。依正式驗收卡遮蔽事件內容，保留全部事件列與鎖頭提示，不改星等門檻；支援效果頁依規格維持所有效果可見，小插曲不受影響。",
+      "related": [
+        "PROG-2-0131"
+      ],
+      "depends": [],
+      "acceptance": [
+        "未解鎖事件列只顯示星等提示",
+        "解鎖後事件名稱可見",
+        "支援效果鎖定列仍顯示名稱",
+        "小插曲與星等規則不變",
+        "Web實際點擊確認培育事件內容遮蔽"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/MentorCardTabs.ts",
+        "tests/MentorCardTabs.test.ts",
+        "artifacts/PROG-2-0138/result.md"
+      ],
+      "notes": "2026-10-16 | 狀態: done | 驗證: 教官10案與Web實際指標通過，隔離標準9/9；全套2446通過1失敗3略過 | 變更: 原生結案42c0c3c7d | 阻塞: 前置PR483 HUD重疊另案，完整0131未通過",
       "brief": {
         "style": "classic",
         "label": "",

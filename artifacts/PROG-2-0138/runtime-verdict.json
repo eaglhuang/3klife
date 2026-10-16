@@ -1,0 +1,12 @@
+{
+  "taskId": "PROG-2-0138",
+  "target": "mentor-card-detail-screen",
+  "scopeVerdict": "pass",
+  "interaction": "authorized-debug-open-then-actual-pointer",
+  "lockedEventNamesVisible": false,
+  "lockedEffectsNamesVisible": true,
+  "browserErrorCount": 0,
+  "full0131Acceptance": "not-complete",
+  "fullHeadless": { "passed": 2446, "failed": 1, "skipped": 3 },
+  "remainingFailure": "Preceding PR483: lobby HUD overlaps deck selection card"
+}

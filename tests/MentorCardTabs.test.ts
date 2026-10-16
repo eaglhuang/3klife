@@ -10,6 +10,7 @@ import {
     mentorToCardData,
     eventGroupRequiredStar,
     MENTOR_CARD_TAB_LABELS,
+    toMentorCardLayoutState,
     type MentorCardData,
 } from '../assets/scripts/core/systems/MentorCardTabs';
 
@@ -53,6 +54,27 @@ export function createMentorCardTabsSuite(): TestSuite {
     suite.test('支援效果列依 requiredStar 鎖頭：★2 鎖、★3 解鎖', () => {
         assert.equals(true, buildMentorCardTabView(card(2), 'effects').rows[1].locked);
         assert.equals(false, buildMentorCardTabView(card(3), 'effects').rows[1].locked);
+    });
+
+    suite.test('事件頁 ★0 與 ★2 的未解鎖列只顯示星等提示，★5 顯示全部名稱', () => {
+        for (const star of [0, 2, 5]) {
+            const state = toMentorCardLayoutState(buildMentorCardTabView(card(star), 'events'), '教官');
+            for (let row = 0; row < 6; row++) {
+                const locked = row > star;
+                assert.equals(locked ? '' : `戰法${row + 1}`, state.texts[`rowLabel_${row}`]);
+                assert.equals(locked ? `需達 ★${row} 才可發動` : '', state.texts[`rowLock_${row}`]);
+                assert.equals(locked, state.actives[`rowLock_${row}`]);
+            }
+        }
+    });
+
+    suite.test('事件遮蔽不影響鎖定支援效果的名稱與小插曲', () => {
+        const effects = toMentorCardLayoutState(buildMentorCardTabView(card(2), 'effects'), '教官');
+        assert.equals('屬性加成 ×1.1', effects.texts.rowLabel_1);
+        assert.equals(true, effects.actives.rowLock_1);
+        const story = toMentorCardLayoutState(buildMentorCardTabView(card(0), 'story'), '教官');
+        assert.equals('對話一', story.texts.rowLabel_0);
+        assert.equals(false, story.actives.rowLock_0);
     });
 
     suite.test('小插曲不受星等限制', () => {

@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-16T13-45-04-847Z-scope-amendment-e3f7982fe24f",
+  "taskId": "PROG-2-0138",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0138.json",
+  "taskSha256": "sha256:cb3a67d80f4485f427224125fb4d034bc47b457e8bd5f208f2686a1a27ef32b5",
+  "createdAt": "2026-10-16T13:45:04.847Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-0138 --actor codex-gpt-6 --add \"artifacts/PROG-2-0138/run-mentor-suite.ts,artifacts/PROG-2-0138/mentor-entry-flow.js,artifacts/PROG-2-0138/mentor-checks.js,artifacts/PROG-2-0138/mentor-observation.json,artifacts/PROG-2-0138/events-crop.png,artifacts/PROG-2-0138/web-entry/report.json,artifacts/PROG-2-0138/result.md,artifacts/PROG-2-0138/runtime-verdict.json\" --reason \"明列0138回歸與Web實際指標證據\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "明列0138回歸與Web實際指標證據"
+  }
+}
