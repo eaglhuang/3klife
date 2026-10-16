@@ -3455,7 +3455,7 @@
       "title": "大廳側欄跨卡片重疊修復",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M6",
       "created": "2026-10-16",
@@ -3484,7 +3484,7 @@
         "assets/resources/ui-spec/layouts/lobby-lead-select-main.json",
         "artifacts/PROG-2-0139/result.md"
       ],
-      "notes": "2026-10-16 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-10-16 | 狀態: done | 驗證: 全套2447通過3略過零失敗、幾何與桌面手機實際點擊通過、隔離標準9/9 | 變更: 0139原生結案1e511d461 | 阻塞: 前置PR依序待審，完整0131/0132另案",
       "brief": {
         "style": "classic",
         "label": "",
