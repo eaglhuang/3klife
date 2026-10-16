@@ -1,0 +1,99 @@
+{
+  "pass": true,
+  "cards": [
+    {
+      "name": "SeasonHudCard",
+      "x": 32,
+      "y": 120,
+      "width": 320,
+      "height": 312
+    },
+    {
+      "name": "DeckSelectCard",
+      "x": 32,
+      "y": 444,
+      "width": 320,
+      "height": 232
+    },
+    {
+      "name": "LeadSelectCard",
+      "x": 32,
+      "y": 688,
+      "width": 320,
+      "height": 276
+    }
+  ],
+  "buttons": [
+    {
+      "name": "AdvanceSeasonButton",
+      "x": 196,
+      "y": 380,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    },
+    {
+      "name": "OpenNurtureButton",
+      "x": 44,
+      "y": 380,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    },
+    {
+      "name": "OpenBondingButton",
+      "x": 196,
+      "y": 332,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    },
+    {
+      "name": "OpenJobChangeButton",
+      "x": 44,
+      "y": 332,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    },
+    {
+      "name": "OpenDomesticButton",
+      "x": 196,
+      "y": 284,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    },
+    {
+      "name": "BtnOpenHallBoard",
+      "x": 196,
+      "y": 236,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    },
+    {
+      "name": "BtnOpenSandtable",
+      "x": 44,
+      "y": 236,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    },
+    {
+      "name": "BtnOpenSpiritCodex",
+      "x": 44,
+      "y": 284,
+      "width": 144,
+      "height": 44,
+      "type": "button"
+    }
+  ],
+  "navigation": {
+    "name": "GameplayNavigation",
+    "x": 24,
+    "y": 988,
+    "width": 1872,
+    "height": 68
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "completed": true,
+  "interaction": "actual-pointer",
+  "viewports": [
+    {
+      "viewport": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "nodes": [
+        {
+          "name": "GameplayNavigation",
+          "x": 24,
+          "y": 988,
+          "width": 1872,
+          "height": 68
+        },
+        {
+          "name": "SeasonHudCard",
+          "x": 32,
+          "y": 120,
+          "width": 320,
+          "height": 312
+        },
+        {
+          "name": "DeckSelectCard",
+          "x": 32,
+          "y": 444,
+          "width": 320,
+          "height": 232
+        },
+        {
+          "name": "LeadSelectCard",
+          "x": 32,
+          "y": 688,
+          "width": 320,
+          "height": 276
+        }
+      ],
+      "hudButtons": [
+        {
+          "name": "AdvanceSeasonButton",
+          "x": 196,
+          "y": 380,
+          "width": 144,
+          "height": 44
+        },
+        {
+          "name": "OpenNurtureButton",
+          "x": 44,
+          "y": 380,
+          "width": 144,
+          "height": 44
+        },
+        {
+          "name": "OpenBondingButton",
+          "x": 196,
+          "y": 332,
+          "width": 144,
+          "height": 44
+        },
+        {
+          "name": "OpenJobChangeButton",
+          "x": 44,
+          "y": 332,
+          "width": 144,
+          "height": 44
+        },
+        {
+          "name": "OpenDomesticButton",
+          "x": 196,
+          "y": 284,
+          "width": 144,
+          "height": 44
+        },
+        {
+          "name": "BtnOpenHallBoard",
+          "x": 196,
+          "y": 236,
+          "width": 144,
+          "height": 44
+        },
+        {
+          "name": "BtnOpenSandtable",
+          "x": 44,
+          "y": 236,
+          "width": 144,
+          "height": 44
+        },
+        {
+          "name": "BtnOpenSpiritCodex",
+          "x": 44,
+          "y": 284,
+          "width": 144,
+          "height": 44
+        }
+      ],
+      "spiritOpenedAndClosed": true
+    },
+    {
+      "viewport": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 720
+      },
+      "nodes": [
+        {
+          "name": "GameplayNavigation",
+          "x": 16,
+          "y": 658.6666666666666,
+          "width": 1248,
+          "height": 45.33333333333333
+        },
+        {
+          "name": "SeasonHudCard",
+          "x": 21.333333333333332,
+          "y": 80,
+          "width": 213.33333333333331,
+          "height": 208
+        },
+        {
+          "name": "DeckSelectCard",
+          "x": 21.333333333333332,
+          "y": 296,
+          "width": 213.33333333333331,
+          "height": 154.66666666666666
+        },
+        {
+          "name": "LeadSelectCard",
+          "x": 21.333333333333332,
+          "y": 458.6666666666667,
+          "width": 213.33333333333331,
+          "height": 184
+        }
+      ],
+      "hudButtons": [
+        {
+          "name": "AdvanceSeasonButton",
+          "x": 130.66666666666666,
+          "y": 253.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        },
+        {
+          "name": "OpenNurtureButton",
+          "x": 29.333333333333332,
+          "y": 253.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        },
+        {
+          "name": "OpenBondingButton",
+          "x": 130.66666666666666,
+          "y": 221.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        },
+        {
+          "name": "OpenJobChangeButton",
+          "x": 29.333333333333332,
+          "y": 221.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        },
+        {
+          "name": "OpenDomesticButton",
+          "x": 130.66666666666666,
+          "y": 189.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        },
+        {
+          "name": "BtnOpenHallBoard",
+          "x": 130.66666666666666,
+          "y": 157.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        },
+        {
+          "name": "BtnOpenSandtable",
+          "x": 29.333333333333332,
+          "y": 157.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        },
+        {
+          "name": "BtnOpenSpiritCodex",
+          "x": 29.333333333333332,
+          "y": 189.33333333333337,
+          "width": 96,
+          "height": 29.333333333333332
+        }
+      ],
+      "spiritOpenedAndClosed": true
+    }
+  ],
+  "debugProfilerHidden": true
+}
