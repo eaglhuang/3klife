@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "PROG-2-0131",
   "title": "PROG-2-0131",
-  "status": "running",
+  "status": "blocked",
   "milestone": null,
   "dependencies": [],
   "acceptance": [
@@ -13,7 +13,19 @@
     "artifacts/PROG-2-0131/**"
   ],
   "scopePaths": [
-    "artifacts/PROG-2-0131/**"
+    "artifacts/PROG-2-0131/**",
+    ".atm/history/evidence/PROG-2-0131.*",
+    ".atm/history/task-events/PROG-2-0131/**",
+    ".atm/history/tasks/PROG-2-0131.json",
+    "artifacts/PROG-2-0131/acceptance-review.json",
+    "artifacts/PROG-2-0131/events-crop.png",
+    "artifacts/PROG-2-0131/mentor-checks.js",
+    "artifacts/PROG-2-0131/mentor-entry-flow.js",
+    "artifacts/PROG-2-0131/mentor-observation.json",
+    "artifacts/PROG-2-0131/result.md",
+    "artifacts/PROG-2-0131/review-observation.js",
+    "artifacts/PROG-2-0131/web-entry/report.json",
+    "docs/agent-briefs/tasks/PROG/PROG-2-0131.md"
   ],
   "validators": [],
   "planningRepo": null,
@@ -55,8 +67,8 @@
   "importedAt": "2026-10-15T23:50:34.596Z",
   "workAdmission": {
     "recoveryMode": "auto",
-    "resolvedRecoveryMode": "disabled",
-    "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+    "resolvedRecoveryMode": "enabled",
+    "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
   },
   "causalGraph": {
     "causalDependencies": [],
@@ -84,8 +96,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-16T13-30-21-232Z-renew-8a1fb8e8cc14",
-  "lastTransitionAt": "2026-10-16T13:30:21.232Z",
+  "lastTransitionId": "2026-10-16T13-35-14-494Z-block-553d8b236c0c",
+  "lastTransitionAt": "2026-10-16T13:35:14.494Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-15T23:50:54.354Z",
@@ -94,52 +106,72 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-ddf847dff325",
     "claimedAt": "2026-10-15T23:50:54.363Z",
-    "heartbeatAt": "2026-10-16T13:30:21.094Z",
+    "heartbeatAt": "2026-10-16T13:35:14.430Z",
     "ttlSeconds": 1800,
     "files": [
+      ".atm/history/evidence/PROG-2-0131.*",
+      ".atm/history/task-events/PROG-2-0131/**",
       ".atm/history/tasks/PROG-2-0131.json",
       "artifacts/PROG-2-0131/**",
+      "artifacts/PROG-2-0131/acceptance-review.json",
+      "artifacts/PROG-2-0131/events-crop.png",
+      "artifacts/PROG-2-0131/mentor-checks.js",
+      "artifacts/PROG-2-0131/mentor-entry-flow.js",
+      "artifacts/PROG-2-0131/mentor-observation.json",
+      "artifacts/PROG-2-0131/result.md",
+      "artifacts/PROG-2-0131/review-observation.js",
+      "artifacts/PROG-2-0131/web-entry/report.json",
       "docs/agent-briefs/tasks/PROG/PROG-2-0131.md"
     ],
-    "state": "active",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20261016133021-codex-gpt-6-99536f424c",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261016133021-codex-gpt-6-99536f424c\""
-    }
+    },
+    "reason": "正式0131第3步不符：未達星等事件列同時顯示事件內容與鎖頭，保存實機證據並停止驗收；不修改遊戲程式"
   },
   "startedAt": "2026-10-15T23:50:54.363Z",
   "startedByActor": "codex-gpt-6",
   "workAdmissionTicket": {
     "schemaId": "atm.workAdmissionTicket.v1",
     "specVersion": "0.1.0",
-    "ticketId": "wat-3062231a8a761724",
-    "ticketDigest": "sha256:3062231a8a761724c1884091a81a1f7f942a56f9ff1680cdac5a8f2bf7f2b785",
+    "ticketId": "wat-0fa251b036c88b89",
+    "ticketDigest": "sha256:0fa251b036c88b8950bbbeba6f6a364c7077b3dc1e642ea6558dfec6c57736b4",
     "taskId": "PROG-2-0131",
     "origin": "claim",
     "actorId": "codex-gpt-6",
     "laneSessionId": "lane-20261016133021-codex-gpt-6-99536f424c",
     "claimGeneration": "lease-ddf847dff325",
-    "issuedAt": "2026-10-16T13:30:21.094Z",
-    "expiresAt": "2026-10-16T14:00:21.094Z",
-    "scopeDigest": "sha256:ee4ba16d7dbfcc00ccaa9b170a1ec9fd395a681584292b79ad758001d79b7999",
+    "issuedAt": "2026-10-16T13:33:55.165Z",
+    "expiresAt": "2026-10-16T14:03:55.165Z",
+    "scopeDigest": "sha256:5b44ac6e418e82217f2e98f3a20425ff72d283828586d2a3ff2a826ffd372160",
     "runnerSelection": {
       "runnerKind": "frozen",
       "runnerRef": "release/atm-onefile/atm.mjs",
-      "selectedAt": "2026-10-16T13:30:21.094Z"
+      "selectedAt": "2026-10-16T13:33:55.165Z"
     },
     "grants": [
       {
         "kind": "file-write",
         "values": [
           ".atm/history/evidence/PROG-2-0131.*",
+          ".atm/history/evidence/git-head.json",
           ".atm/history/task-events/PROG-2-0131/**",
           ".atm/history/tasks/PROG-2-0131.json",
           "artifacts/PROG-2-0131/**",
+          "artifacts/PROG-2-0131/acceptance-review.json",
+          "artifacts/PROG-2-0131/events-crop.png",
+          "artifacts/PROG-2-0131/mentor-checks.js",
+          "artifacts/PROG-2-0131/mentor-entry-flow.js",
+          "artifacts/PROG-2-0131/mentor-observation.json",
+          "artifacts/PROG-2-0131/result.md",
+          "artifacts/PROG-2-0131/review-observation.js",
+          "artifacts/PROG-2-0131/web-entry/report.json",
           "docs/agent-briefs/tasks/PROG/PROG-2-0131.md"
         ],
-        "digest": "sha256:fd79fac9b9138befa559fedbfdf79abc3500df910a3ac558fccbc6a23602d7a8"
+        "digest": "sha256:8de6e883684d0c5ce41a1c697fbe603c50a6eee9ea124bd37dfbdf4a98ebac93"
       },
       {
         "kind": "lifecycle-operation",
@@ -161,16 +193,16 @@
     "deferredForeignResidue": [],
     "recovery": {
       "requestedMode": "auto",
-      "resolvedMode": "disabled",
+      "resolvedMode": "enabled",
       "reasons": [
-        "low-risk-task"
+        "complex-task"
       ],
-      "maxSavePoints": 0,
-      "perTaskByteBudget": 0,
-      "repositoryByteBudget": 0,
-      "handoffTtlSeconds": 0,
+      "maxSavePoints": 2,
+      "perTaskByteBudget": 16777216,
+      "repositoryByteBudget": 268435456,
+      "handoffTtlSeconds": 604800,
       "tempRoot": ".atm/runtime/work-admission-temp",
-      "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+      "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
     }
   },
   "startedBySessionId": "session-20261015235054-codex-gpt-6-PROG-2-0131-056a107506",
@@ -187,21 +219,40 @@
       ".atm/history/task-events/PROG-2-0131/**",
       ".atm/history/tasks/PROG-2-0131.json",
       "artifacts/PROG-2-0131/**",
+      "artifacts/PROG-2-0131/acceptance-review.json",
+      "artifacts/PROG-2-0131/events-crop.png",
+      "artifacts/PROG-2-0131/mentor-checks.js",
+      "artifacts/PROG-2-0131/mentor-entry-flow.js",
+      "artifacts/PROG-2-0131/mentor-observation.json",
+      "artifacts/PROG-2-0131/result.md",
+      "artifacts/PROG-2-0131/review-observation.js",
+      "artifacts/PROG-2-0131/web-entry/report.json",
       "docs/agent-briefs/tasks/PROG/PROG-2-0131.md"
     ],
-    "planningReadOnlyPaths": [],
-    "planningMirrorPaths": [],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/web-verification/3KLife/docs/agent-briefs/tasks/PROG/PROG-2-0131.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/PROG/",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0131.md"
+    ],
     "allowPlanningMirror": false,
     "promptHash": "c3fa36b174fea6d1b1449bc782796a1ad9de2c8acf82e2fed7dc61e6da8ef161",
     "actorId": "codex-gpt-6",
-    "sessionId": "session-20261015235054-codex-gpt-6-PROG-2-0131-056a107506",
+    "sessionId": null,
     "laneSession": {
-      "laneSessionId": "lane-20261015235054-codex-gpt-6-5cc171a195",
+      "laneSessionId": "lane-20261016133021-codex-gpt-6-99536f424c",
       "status": "active",
       "source": "minted",
-      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261015235054-codex-gpt-6-5cc171a195\""
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261016133021-codex-gpt-6-99536f424c\""
     },
-    "createdAt": "2026-10-15T23:51:00.319Z",
+    "createdAt": "2026-10-16T13:30:21.252Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-10-16T13:35:14.430Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261015235054-codex-gpt-6-PROG-2-0131-056a107506",
+  "closeReason": "正式0131第3步不符：未達星等事件列同時顯示事件內容與鎖頭，保存實機證據並停止驗收；不修改遊戲程式"
 }
