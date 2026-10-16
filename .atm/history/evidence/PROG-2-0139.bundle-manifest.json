@@ -1,0 +1,39 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-0139",
+  "updatedAt": "2026-10-16T13:57:16.167Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "node artifacts/PROG-2-0139/check-sidebar-geometry.js",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:35c078c7057faeca30816d1ee1bf5962ee7a2dee4f15e313ce18f0a393e0abaa",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [],
+      "generatedAt": "2026-10-16T13:54:28.706Z",
+      "startedAt": "2026-10-16T13:54:28.393Z",
+      "finishedAt": "2026-10-16T13:54:28.706Z",
+      "durationMs": 313,
+      "runnerKind": "dev-source",
+      "sourceCommit": "c816a323ef3246fa855a886f8798f687d64b71bf",
+      "cached": false
+    },
+    {
+      "command": "npx ts-node --transpile-only -r ./tests/register-cc-test-stub.js -r ./tests/register-tsconfig-test-paths.js --project tsconfig.test.json tests/run-cli.ts",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:baad1c79c86f499594bf98adae369223b65f4a4803e07c8552bc8257bdb7d50f",
+      "stderrSha256": "sha256:3c1901060debc9ae71fa109983aa57f50dd2a26877005af3bcab55f1a2c02b83",
+      "validators": [],
+      "generatedAt": "2026-10-16T13:57:16.165Z",
+      "startedAt": "2026-10-16T13:57:05.508Z",
+      "finishedAt": "2026-10-16T13:57:16.165Z",
+      "durationMs": 10657,
+      "runnerKind": "dev-source",
+      "sourceCommit": "c816a323ef3246fa855a886f8798f687d64b71bf",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

@@ -1,0 +1,18 @@
+{
+  "schemaId": "atm.taskflowSealAndCommitReceipt.v1",
+  "taskId": "PROG-2-0139",
+  "actorId": "codex-gpt-6",
+  "createdAt": "2026-10-16T13:59:58.548Z",
+  "targetHeadBeforeCommit": "b72b5fd5a274be9335642f269ea624cac26764bf",
+  "planningHeadBeforeCommit": "b72b5fd5a274be9335642f269ea624cac26764bf",
+  "historicalDeliveryRefs": [
+    "b72b5fd5a274be9335642f269ea624cac26764bf"
+  ],
+  "historicalBatchRef": null,
+  "manifestPath": ".atm/history/evidence/PROG-2-0139.seal-and-commit.json",
+  "targetPayloadDigest": "sha256:254ba1d1a6882b2fb9b39441d6ade7ead4c1c8ee18bb9722c559065441e966cd",
+  "targetEvidenceDigest": "sha256:43ba68661821dcc0a4fd95aac95d6b92050cfd1213ff7bb49f0aa1f6a284131f",
+  "planningPayloadDigest": "sha256:3d1d4ddd20cc392c97995213259f3104675caaf0b8bd9e550f8d75839c3044ac",
+  "planningEvidenceDigest": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "sealDigest": "sha256:6bf1dfed220a2e9fa5ca6a5b5423a7b18f5832a861f0262fc7f3725e13e120f6"
+}
