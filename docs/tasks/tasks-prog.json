@@ -3399,7 +3399,7 @@
       "title": "鎖定培育事件列只顯示星等提示",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M1",
       "created": "2026-10-16",
@@ -3426,7 +3426,7 @@
         "tests/MentorCardTabs.test.ts",
         "artifacts/PROG-2-0138/result.md"
       ],
-      "notes": "2026-10-16 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-10-16 | 狀態: done | 驗證: 教官10案與Web實際指標通過，隔離標準9/9；全套2446通過1失敗3略過 | 變更: 原生結案42c0c3c7d | 阻塞: 前置PR483 HUD重疊另案，完整0131未通過",
       "brief": {
         "style": "classic",
         "label": "",
