@@ -1,0 +1,16 @@
+const fs=require('fs'),path=require('path'),cp=require('child_process'),crypto=require('crypto'),assert=require('assert');
+const dir='docs/ai_atomic_framework/backlog-shards',source='docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md';
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const original=cp.execFileSync('git',['show','4fe869f35e5776b1aaf3a33de5d446bee07cd9ad:'+source]);
+const current=fs.readFileSync(source),text=current.toString('utf8');
+const marker=/  - 2026-10-17 \/ PROG-2-0140 reproduction: [^\r\n]+\r\n\r\n/g;const notes=text.match(marker)||[];
+assert.equal(notes.length,1);assert.deepStrictEqual(Buffer.from(text.replace(marker,'')),original,'original history bytes/order changed');
+const cfg=JSON.parse(fs.readFileSync(dir+'/.shardrc.json'));assert.equal(cfg.keepSourceIntact,true);
+const groups=Object.fromEntries(cfg.shards.map(s=>[s.name,[]]));let selected=cfg.preambleShard;
+for(const line of text.split('\n')){if(/^## /.test(line)){const candidates=cfg.shards.filter(s=>new RegExp(s.pattern).test(line.slice(3).trim()));assert.equal(candidates.length,1,'ambiguous/missing section');selected=candidates[0].name;}groups[selected].push(line);}
+for(const s of cfg.shards){const header=['# '+cfg.indexTitle+' — '+s.title,'','> 這是 '+String.fromCharCode(96)+path.basename(cfg.source)+String.fromCharCode(96)+' 的「'+s.title+'」分片。完整索引見 '+String.fromCharCode(96)+cfg.indexPath+String.fromCharCode(96)+'。','',''].join('\n');assert.equal(fs.readFileSync(dir+'/'+s.name+'.md','utf8'),header+groups[s.name].join('\n'));}
+const child=JSON.parse(fs.readFileSync(dir+'/aao-history/.shardrc.json'));const parent=fs.readFileSync(dir+'/aao-history.md','utf8').split('\n');let offset=0;let maxBytes=0;
+assert.equal(child.shards.length,3);for(const s of child.shards){assert.equal(s.range[0],offset);const part=fs.readFileSync(dir+'/aao-history/'+s.name+'.md');assert.equal(part.toString(),parent.slice(s.range[0],s.range[1]+1).join('\n'));assert(part.length<=30*1024);maxBytes=Math.max(maxBytes,part.length);offset=s.range[1]+1;}assert.equal(offset,parent.length);
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(d+'/'+e.name):[d+'/'+e.name]);const files=walk(dir);const before=Object.fromEntries(files.map(f=>[f,hash(fs.readFileSync(f))]));
+cp.execFileSync(process.execPath,['tools_node/shard-manager.js','shard',dir]);cp.execFileSync(process.execPath,['tools_node/shard-manager.js','auto-split',dir]);assert.deepStrictEqual(walk(dir),files);for(const f of files){const b=fs.readFileSync(f);assert.equal(hash(b),before[f],'non-idempotent '+f);assert(!(b[0]===239&&b[1]===187&&b[2]===191),'BOM');assert(!b.toString().includes('\uFFFD'),'replacement character');}assert.deepStrictEqual(fs.readFileSync(source),current);
+const report={task:'PROG-2-0141',pass:true,baseline:'4fe869f35e5776b1aaf3a33de5d446bee07cd9ad',originalSha256:hash(original),currentSha256:hash(current),preservedHistory:true,addedNotes:notes.length,sectionRoutingExact:true,childParts:3,maxChildBytes:maxBytes,idempotent:true,sourceUnchangedByGeneration:true,generatedFiles:files.length};fs.writeFileSync('artifacts/PROG-2-0141/verification.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
