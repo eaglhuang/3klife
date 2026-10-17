@@ -1,0 +1,80 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-0141",
+  "updatedAt": "2026-10-17T01:28:09.983Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [
+    "git diff --check",
+    "node artifacts/PROG-2-0141/verify-backlog.js",
+    "node tools_node/check-doc-shard-health.js",
+    "node tools_node/shard-manager.js validate docs/ai_atomic_framework/backlog-shards"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "node artifacts/PROG-2-0141/verify-backlog.js",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:ad7747afb89275fa9687182bf72fb179e35d8e9c25b2b5faccaec153370dedd4",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node artifacts/PROG-2-0141/verify-backlog.js"
+      ],
+      "generatedAt": "2026-10-17T01:28:03.502Z",
+      "startedAt": "2026-10-17T01:28:03.050Z",
+      "finishedAt": "2026-10-17T01:28:03.502Z",
+      "durationMs": 452,
+      "runnerKind": "dev-source",
+      "sourceCommit": "4fe869f35e5776b1aaf3a33de5d446bee07cd9ad",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/shard-manager.js validate docs/ai_atomic_framework/backlog-shards",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:632caf58be6ec29b147dbc37fbf325ba04bc97901147dba4d9fcdfdfaf4fd066",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/shard-manager.js validate docs/ai_atomic_framework/backlog-shards"
+      ],
+      "generatedAt": "2026-10-17T01:28:05.552Z",
+      "startedAt": "2026-10-17T01:28:05.244Z",
+      "finishedAt": "2026-10-17T01:28:05.552Z",
+      "durationMs": 308,
+      "runnerKind": "dev-source",
+      "sourceCommit": "4fe869f35e5776b1aaf3a33de5d446bee07cd9ad",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/check-doc-shard-health.js",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:21bbd5afd6d9292db5cea4c9b98d4bf3e1f0f417cfdc81405dc2fca5d2cb7650",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/check-doc-shard-health.js"
+      ],
+      "generatedAt": "2026-10-17T01:28:07.844Z",
+      "startedAt": "2026-10-17T01:28:07.295Z",
+      "finishedAt": "2026-10-17T01:28:07.844Z",
+      "durationMs": 549,
+      "runnerKind": "dev-source",
+      "sourceCommit": "4fe869f35e5776b1aaf3a33de5d446bee07cd9ad",
+      "cached": false
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:3b23e4162655652a2bf771ec15762dcba1d91923357572fa86ca7f62533e5bea",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-10-17T01:28:09.982Z",
+      "startedAt": "2026-10-17T01:28:09.562Z",
+      "finishedAt": "2026-10-17T01:28:09.982Z",
+      "durationMs": 420,
+      "runnerKind": "dev-source",
+      "sourceCommit": "4fe869f35e5776b1aaf3a33de5d446bee07cd9ad",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}
