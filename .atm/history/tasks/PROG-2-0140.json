@@ -1,0 +1,346 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "PROG-2-0140",
+  "title": "PROG-2-0140",
+  "status": "done",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [],
+  "deliverables": [
+    "docs/tasks-aao-shards/.shardrc.json",
+    "docs/tasks-aao-shards/README.md",
+    "docs/tasks-aao-shards/aao-0000-0099.json",
+    "docs/tasks-aao-shards/aao-0100-0119.json",
+    "docs/tasks-aao-shards/aao-0120-0139.json",
+    "docs/tasks-aao-shards/aao-0140-0169.json",
+    "docs/tasks-aao-shards/aao-0170-0199.json",
+    "docs/tasks-aao-shards/aao-0200-plus.json",
+    "artifacts/PROG-2-0140/result.md",
+    "artifacts/PROG-2-0140/verify-shards.js",
+    "artifacts/PROG-2-0140/verification.json"
+  ],
+  "scopePaths": [
+    "docs/tasks-aao-shards/**",
+    "docs/agent-briefs/tasks/PROG/PROG-2-0140.md",
+    "docs/tasks/tasks-prog.json",
+    "artifacts/PROG-2-0140/**",
+    ".atm/history/evidence/PROG-2-0140.*",
+    ".atm/history/task-events/PROG-2-0140/**",
+    ".atm/history/tasks/PROG-2-0140.json",
+    "artifacts/PROG-2-0140/result.md",
+    "artifacts/PROG-2-0140/verification.json",
+    "artifacts/PROG-2-0140/verify-shards.js",
+    "docs/tasks-aao-shards/.shardrc.json",
+    "docs/tasks-aao-shards/aao-0000-0099.json",
+    "docs/tasks-aao-shards/aao-0100-0119.json",
+    "docs/tasks-aao-shards/aao-0120-0139.json",
+    "docs/tasks-aao-shards/aao-0140-0169.json",
+    "docs/tasks-aao-shards/aao-0170-0199.json",
+    "docs/tasks-aao-shards/aao-0200-plus.json",
+    "docs/tasks-aao-shards/README.md"
+  ],
+  "validators": [
+    "node artifacts/PROG-2-0140/verify-shards.js",
+    "node tools_node/shard-manager.js validate docs/tasks-aao-shards",
+    "node tools_node/check-doc-shard-health.js",
+    "git diff --check"
+  ],
+  "planningRepo": null,
+  "targetRepo": null,
+  "closureAuthority": null,
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "ATM_TASK_IMPORT_LEGACY_VALIDATOR_PROJECTION",
+      "severity": "warning",
+      "field": "validators",
+      "message": "Command-only validators were projected to 4 advisory legacy case id(s) for migration. Prefer requiredTestCaseIds / testContributions for new cards."
+    },
+    {
+      "code": "ATM_TASK_IMPORT_EXTRACTION_FIRST_CANDIDATE",
+      "severity": "warning",
+      "field": "atomizationImpact",
+      "message": "Scope touches 1 module(s) over 600 lines but the card declares no atomizationImpact.extractionCandidates. Extraction-first is the ATM default: propose an atom/atom-map extraction (see .agents/skills/atm-atom-map-refactor), or record disposition \"inline\" with an inlineReason approved by a human.",
+      "candidates": [
+        "docs/tasks/tasks-prog.json (3570 lines)"
+      ]
+    },
+    {
+      "severity": "info",
+      "code": "ATM_TASK_IMPORT_PLANNING_IN_PROGRESS_CLAIMABLE",
+      "message": "Task PROG-2-0140 declared planning status in-progress; imported target ledger status as ready so an agent can claim it through next --claim."
+    }
+  ],
+  "tags": [],
+  "notes": "- 2026-10-17 | 狀態: in-progress | 驗證: pending | 變更: AAO總表分片前置修復 | 阻塞: none",
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/PROG/PROG-2-0140.md",
+    "sectionTitle": "PROG-2-0140",
+    "headingLine": 1,
+    "hash": "0d79f4be0b917b36",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/.codex/worktrees/web-verification/3KLife",
+      "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-0140.md",
+      "planningCommitSha": "e45b792dddef8ff87bacbc6f45a39a9471cea7c5",
+      "contentDigest": "sha256:416fc43455957d6945b264402e6ff2ffe586151682b66a0f0c5e06b1b61f9545",
+      "amendmentEpoch": 7,
+      "sealedAt": "2026-10-17T01:10:31.012Z"
+    }
+  },
+  "importedAt": "2026-10-17T01:10:15.684Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "enabled",
+    "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "legacyValidatorProjection": [
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_node.artifacts.prog.2.0140.verify.shards.js",
+      "command": "node artifacts/PROG-2-0140/verify-shards.js",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_node.tools.node.shard.manager.js.validate.docs.tasks.aao.shards",
+      "command": "node tools_node/shard-manager.js validate docs/tasks-aao-shards",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_node.tools.node.check.doc.shard.health.js",
+      "command": "node tools_node/check-doc-shard-health.js",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_git.diff.check",
+      "command": "git diff --check",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    }
+  ],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [],
+    "findings": []
+  },
+  "lastTransitionId": "2026-10-17T01-12-50-022Z-close-5a5f83a00732",
+  "lastTransitionAt": "2026-10-17T01:12:50.022Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "claim": {
+    "actorId": "codex-gpt-6",
+    "leaseId": "lease-5763f51483f1",
+    "claimedAt": "2026-10-17T01:10:20.725Z",
+    "heartbeatAt": "2026-10-17T01:12:49.964Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/evidence/PROG-2-0140.*",
+      ".atm/history/task-events/PROG-2-0140/**",
+      ".atm/history/tasks/PROG-2-0140.json",
+      "artifacts/PROG-2-0140/**",
+      "artifacts/PROG-2-0140/result.md",
+      "artifacts/PROG-2-0140/verification.json",
+      "artifacts/PROG-2-0140/verify-shards.js",
+      "docs/tasks-aao-shards/.shardrc.json",
+      "docs/tasks-aao-shards/**",
+      "docs/tasks-aao-shards/aao-0000-0099.json",
+      "docs/tasks-aao-shards/aao-0100-0119.json",
+      "docs/tasks-aao-shards/aao-0120-0139.json",
+      "docs/tasks-aao-shards/aao-0140-0169.json",
+      "docs/tasks-aao-shards/aao-0170-0199.json",
+      "docs/tasks-aao-shards/aao-0200-plus.json",
+      "docs/tasks-aao-shards/README.md",
+      "docs/tasks/tasks-prog.json"
+    ],
+    "state": "released",
+    "laneSession": {
+      "laneSessionId": "lane-20261017005417-codex-gpt-6-ee0002a9aa",
+      "status": "active",
+      "source": "env",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261017005417-codex-gpt-6-ee0002a9aa\""
+    },
+    "reason": "closed"
+  },
+  "owner": "codex-gpt-6",
+  "startedAt": "2026-10-17T01:10:20.725Z",
+  "startedByActor": "codex-gpt-6",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-12dac11fdc0468a2",
+    "ticketDigest": "sha256:12dac11fdc0468a26661ae39fb2f0e5a4badc10567834c6cae69a840ca444208",
+    "taskId": "PROG-2-0140",
+    "origin": "claim",
+    "actorId": "codex-gpt-6",
+    "laneSessionId": "lane-20261017005417-codex-gpt-6-ee0002a9aa",
+    "claimGeneration": "lease-5763f51483f1",
+    "issuedAt": "2026-10-17T01:10:29.515Z",
+    "expiresAt": "2026-10-17T01:40:29.515Z",
+    "scopeDigest": "sha256:3c33e91d974201812d86a0fd440568ce1f7347d06dc529d96081cc62fc1b50fa",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-10-17T01:10:29.515Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".atm/history/evidence/PROG-2-0140.*",
+          ".atm/history/task-events/PROG-2-0140/**",
+          ".atm/history/tasks/PROG-2-0140.json",
+          "artifacts/PROG-2-0140/**",
+          "artifacts/PROG-2-0140/result.md",
+          "artifacts/PROG-2-0140/verification.json",
+          "artifacts/PROG-2-0140/verify-shards.js",
+          "docs/tasks-aao-shards/**",
+          "docs/tasks-aao-shards/.shardrc.json",
+          "docs/tasks-aao-shards/README.md",
+          "docs/tasks-aao-shards/aao-0000-0099.json",
+          "docs/tasks-aao-shards/aao-0100-0119.json",
+          "docs/tasks-aao-shards/aao-0120-0139.json",
+          "docs/tasks-aao-shards/aao-0140-0169.json",
+          "docs/tasks-aao-shards/aao-0170-0199.json",
+          "docs/tasks-aao-shards/aao-0200-plus.json",
+          "docs/tasks/tasks-prog.json"
+        ],
+        "digest": "sha256:f634a9bd27f72702322522b6d3f8c44467e1ab16e0986ff7ec662753de2cbe21"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "enabled",
+      "reasons": [
+        "complex-task"
+      ],
+      "maxSavePoints": 2,
+      "perTaskByteBudget": 16777216,
+      "repositoryByteBudget": 268435456,
+      "handoffTtlSeconds": 604800,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+    }
+  },
+  "startedBySessionId": "session-20261017011020-codex-gpt-6-PROG-2-0140-4356783253",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "PROG-2-0140",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/PROG-2-0140.*",
+      ".atm/history/task-events/PROG-2-0140/**",
+      ".atm/history/tasks/PROG-2-0140.json",
+      "artifacts/PROG-2-0140/**",
+      "artifacts/PROG-2-0140/result.md",
+      "artifacts/PROG-2-0140/verification.json",
+      "artifacts/PROG-2-0140/verify-shards.js",
+      "docs/tasks-aao-shards/.shardrc.json",
+      "docs/tasks-aao-shards/**",
+      "docs/tasks-aao-shards/aao-0000-0099.json",
+      "docs/tasks-aao-shards/aao-0100-0119.json",
+      "docs/tasks-aao-shards/aao-0120-0139.json",
+      "docs/tasks-aao-shards/aao-0140-0169.json",
+      "docs/tasks-aao-shards/aao-0170-0199.json",
+      "docs/tasks-aao-shards/aao-0200-plus.json",
+      "docs/tasks-aao-shards/README.md",
+      "docs/tasks/tasks-prog.json"
+    ],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/web-verification/3KLife/docs/agent-briefs/tasks/PROG/PROG-2-0140.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/PROG/",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0140.md"
+    ],
+    "allowPlanningMirror": false,
+    "promptHash": "c986ca3b83fd79341153899f7402f246b471523e568760f50389e0b2fa521b2f",
+    "actorId": "codex-gpt-6",
+    "sessionId": null,
+    "laneSession": {
+      "laneSessionId": "lane-20261017005417-codex-gpt-6-ee0002a9aa",
+      "status": "active",
+      "source": "env",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261017005417-codex-gpt-6-ee0002a9aa\""
+    },
+    "createdAt": "2026-10-17T01:10:27.768Z",
+    "status": "active"
+  },
+  "closedAt": "2026-10-17T01:12:49.964Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261017011020-codex-gpt-6-PROG-2-0140-4356783253"
+}
