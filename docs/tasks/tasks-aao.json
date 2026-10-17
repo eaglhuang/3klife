@@ -2,10 +2,10 @@
   "shard": "AAO",
   "generated": "2026-06-01",
   "summary": {
-    "done": 2,
+    "done": 10,
     "in_progress": 7,
     "open": 16,
-    "total": 29
+    "total": 33
   },
   "tasks": [
     {
@@ -1459,6 +1459,77 @@
       "planning_repo": "3KLife",
       "target_repo": "AI-Atomic-Framework",
       "closure_authority": "target_repo"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0207",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0207-host-close-projection.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Opt-in host-neutral atomic task close projections",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "Backlog-P1",
+      "created": "2026-10-16",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Configure adopter task JSON and Markdown display projections within the governed close transaction without embedding host paths or labels in framework code.",
+      "related": [
+        "ATM-BUG-2026-10-16-002"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Unconfigured profiles retain existing behavior",
+        "Configured frontmatter body and aggregate agree after close",
+        "Missing or duplicate task matches fail closed before writes",
+        "All close projections roll back on later failure",
+        "Idempotent projection preserves unrelated bytes and Traditional Chinese CRLF",
+        "Correct pre-edit baseline and partial staging remain intact",
+        "Auto-commit includes every projected path"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/taskflow/profile-loader.ts",
+        "packages/cli/src/commands/taskflow/closeback-orchestration.ts",
+        "packages/cli/src/commands/taskflow/close-orchestration.ts",
+        "packages/cli/src/commands/taskflow/implementation.ts",
+        "packages/cli/src/commands/taskflow/commit-bundle-assembly.ts",
+        "packages/cli/src/commands/taskflow/host-close-projection.ts",
+        "tests/cli/taskflow-host-close-projection.test.ts",
+        "packages/cli/src/commands/taskflow/__tests__/profile-loader.spec.ts",
+        "packages/cli/src/commands/taskflow/__tests__/closeback-orchestration.spec.ts",
+        "packages/cli/src/commands/taskflow/__tests__/commit-bundle-assembly.spec.ts",
+        "packages/cli/src/commands/taskflow/__tests__/taskflow-close-atomicity.test.ts",
+        "atomic_workbench/atomization-coverage/path-to-atom-map.json"
+      ],
+      "notes": "2026-10-16 | 狀態: planned | 驗證: pending | 變更: Phase 0 planning only; target repo owns execution and closure | 阻塞: Phase 1 must claim before implementation",
+      "brief": {
+        "style": "harn-rich",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
