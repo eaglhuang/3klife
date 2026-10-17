@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 38,
-    "in_progress": 3,
+    "done": 39,
+    "in_progress": 2,
     "open": 45,
     "total": 86
   },
@@ -3513,7 +3513,7 @@
       "title": "AAO任務總表加入唯讀分片管理",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "maintenance",
       "phase": "M0",
       "created": "2026-10-17",
@@ -3536,13 +3536,17 @@
         "docs/tasks-aao-shards/.shardrc.json",
         "docs/tasks-aao-shards/README.md",
         "docs/tasks-aao-shards/aao-0000-0099.json",
-        "docs/tasks-aao-shards/aao-0100-0139.json",
+        "docs/tasks-aao-shards/aao-0100-0119.json",
+        "docs/tasks-aao-shards/aao-0120-0139.json",
         "docs/tasks-aao-shards/aao-0140-0169.json",
         "docs/tasks-aao-shards/aao-0170-0199.json",
         "docs/tasks-aao-shards/aao-0200-plus.json",
-        "artifacts/PROG-2-0140/result.md"
+        "artifacts/PROG-2-0140/result.md",
+        "artifacts/PROG-2-0140/verify-shards.js",
+        "artifacts/PROG-2-0140/verification.json"
       ],
-      "notes": "2026-10-17 | 狀態: in-progress | 驗證: pending | 變更: AAO總表分片前置修復 | 阻塞: none",
+      "completed_at": "2026-10-17T01:12:49.964Z",
+      "notes": "2026-10-17 | 狀態: done | 驗證: 32筆逐欄一致、來源雜湊不變、冪等及standard9/9 | 變更: source f2bd8f227、原生結案d9717e582 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",
