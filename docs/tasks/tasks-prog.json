@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 39,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 45,
-    "total": 86
+    "total": 87
   },
   "tasks": [
     {
@@ -3560,6 +3560,82 @@
         "validation_cmd": "",
         "rollback_hint": "",
         "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0141",
+      "title": "ATM backlog唯讀分片與當前治理重現紀錄",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "maintenance",
+      "phase": "M0",
+      "created": "2026-10-17",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-17T09:23:42+08:00",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "保留backlog原檔及既有歷史內容，以既有工具產生按章節唯讀分片與大型歷史子分片，補錄0140遇到的實際治理缺口。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+        "docs/ai_atomic_framework/backlog-shards/.shardrc.json",
+        "docs/ai_atomic_framework/backlog-shards/README.md",
+        "docs/ai_atomic_framework/backlog-shards/overview.md",
+        "docs/ai_atomic_framework/backlog-shards/open-items.md",
+        "docs/ai_atomic_framework/backlog-shards/triage.md",
+        "docs/ai_atomic_framework/backlog-shards/aao-history.md",
+        "docs/ai_atomic_framework/backlog-shards/parallel.md",
+        "docs/ai_atomic_framework/backlog-shards/mem.md",
+        "docs/ai_atomic_framework/backlog-shards/plan31.md",
+        "docs/ai_atomic_framework/backlog-shards/sequencing.md",
+        "docs/ai_atomic_framework/backlog-shards/aao-history/.shardrc.json",
+        "docs/ai_atomic_framework/backlog-shards/aao-history/aao-history-part-1.md",
+        "docs/ai_atomic_framework/backlog-shards/aao-history/aao-history-part-2.md",
+        "docs/ai_atomic_framework/backlog-shards/aao-history/aao-history-part-3.md",
+        "artifacts/PROG-2-0141/result.md",
+        "artifacts/PROG-2-0141/verify-backlog.js",
+        "artifacts/PROG-2-0141/verification.json"
+      ],
+      "notes": "2026-10-17 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+      "brief": {
+        "style": "harn-rich",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [
+          "原backlog維持唯一可編輯來源",
+          "歷史文字及順序不得刪改",
+          "不碰ATM framework或遊戲程式"
+        ],
+        "output": [
+          "產出唯讀分片及索引設定",
+          "現有來源僅追加當前重現紀錄",
+          "完整性與冪等及門檻驗證"
+        ],
+        "validation_cmd": "node artifacts/PROG-2-0141/verify-backlog.js\\nnode tools_node/shard-manager.js validate docs/ai_atomic_framework/backlog-shards\\nnode tools_node/check-doc-shard-health.js\\ngit diff --check",
+        "rollback_hint": "依正常ATM流程回復本卡source delivery；不重設其他工作",
+        "execution_steps": [
+          "正常接卡及提交啟動欄位",
+          "依既有工具產生分片",
+          "驗證原始歷史及分片完整",
+          "正常結案"
+        ]
       },
       "harness_evidence": {
         "artifact_paths": [],
