@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "taskCount": 32,
+  "uniqueIds": 32,
+  "allRecordsIdentical": true,
+  "aggregateSha256": "3f90903c2fe5ed225c0acec5ddc8eff01d82f7fc400528ac2b7ea6e88d564f0e",
+  "aggregateBytesUnchanged": true,
+  "idempotent": true,
+  "maxPartBytes": 19017,
+  "parts": [
+    {
+      "path": "docs/tasks-aao-shards/aao-0000-0099.json",
+      "sha256": "becaebbdce1b104e0e580fcb641a4f7e86b09c6394fba1b8cb8137780fccd1c8"
+    },
+    {
+      "path": "docs/tasks-aao-shards/aao-0100-0119.json",
+      "sha256": "8f7a92befe5bda7ed64ebf606b61a411872baa5c041f73bfe710eecf0abe8435"
+    },
+    {
+      "path": "docs/tasks-aao-shards/aao-0120-0139.json",
+      "sha256": "71ca2cd6bdfd96028ece7d0ec7fcb11a56525a696309c3cfdf602babcc95f627"
+    },
+    {
+      "path": "docs/tasks-aao-shards/aao-0140-0169.json",
+      "sha256": "fc4569840ba697d11bc8505e94946630811a9fc86c98a630b492dd355c10bac0"
+    },
+    {
+      "path": "docs/tasks-aao-shards/aao-0170-0199.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "docs/tasks-aao-shards/aao-0200-plus.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ]
+}

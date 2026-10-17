@@ -1,0 +1,543 @@
+[
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0130",
+    "title": "CID-first parallel conflict advisor CLI MVP",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-05",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Open the Phase 0 planning card for the CID-first parallel conflict advisor CLI MVP. This card stays in 3KLife planning only and targets AI-Atomic-Framework for Phase 1 read-only advisor work.",
+    "related": [
+      "TASK-CID-0005",
+      "TASK-AAO-0128",
+      "TASK-AAO-0129"
+    ],
+    "depends": [
+      "TASK-CID-0005"
+    ],
+    "acceptance": [
+      "Phase 0 planning card opens cleanly in 3KLife only.",
+      "Phase 1 stays read-only advisor scope and does not become a scheduler.",
+      "No tasks-cid ledger or shard is created for this card.",
+      "No AI-Atomic-Framework source is touched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0130-cid-first-parallel-conflict-advisor-cli-mvp.task.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-05 | status: open | validation: pending | change: Phase 0 open card for CID-first parallel conflict advisor CLI MVP | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0132",
+    "title": "frozen runner alignment before TASK-AAO-0018 clean redelivery",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "open",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-05",
+    "created_by_agent": "codex-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Open the Phase 0 planning card for frozen runner alignment before TASK-AAO-0018 clean redelivery. This card stays in 3KLife planning only and targets AI-Atomic-Framework for Phase 1 runner sync outputs.",
+    "related": [
+      "TASK-AAO-0018"
+    ],
+    "depends": [],
+    "acceptance": [
+      "npm run build can produce runner outputs.",
+      "node atm.mjs next --prompt \"TASK-AAO-0018 Neutrality scanner staged-only mode clean redelivery\" --json no longer reports ATM_RUNNER_SYNC_REQUIRED.",
+      "TASK-AAO-0018 source deliverables remain untouched by this card."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0132-frozen-runner-alignment-before-task-aao-0018-clean-redelivery.task.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-05 | status: open | validation: pending | change: Phase 0 open card for frozen runner alignment before TASK-AAO-0018 clean redelivery | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0135",
+    "title": "closure/evidence data integrity hardening and import active-claim safety",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-08",
+    "created_by_agent": "captain-incident-review-2026-06-08",
+    "started_at": "2026-06-18T18:00:00+08:00",
+    "started_by_agent": "cursor-gpt-5.2",
+    "completed_at": "2026-06-19T13:43:20+08:00",
+    "completed_by_agent": "cursor-gpt-5.2",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Open the Phase 0 planning card for closure/evidence data integrity hardening and import active-claim safety. Bundles sha256 lowercase normalization, validator error format clarity, repair-closure upstream-evidence-fix, and tasks import preserve-active-claim default.",
+    "related": [
+      "TASK-CID-0018",
+      "TASK-AAO-0123"
+    ],
+    "depends": [
+      "TASK-AAO-0123"
+    ],
+    "acceptance": [
+      "Phase 0 planning card opens cleanly in 3KLife only.",
+      "Evidence and closure-packet writers normalize sha256 hex to lowercase on write.",
+      "validateClosurePacket distinguishes invalidFormat from missing.",
+      "repair-closure fixes upstream evidence before rebuilding closure packet.",
+      "tasks import --write skips active claims by default; --force-overwrite-claims is explicit opt-in.",
+      "No AI-Atomic-Framework source is touched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0135-closure-evidence-integrity-and-import-claim-safety.task.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-19 | status: done | validation: passed | change: governance close historical delivery f0d0e18c3 | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0137",
+    "title": "write-path atomicity and operator diagnostics",
+    "owner": "atm-core",
+    "priority": "P2",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-09",
+    "created_by_agent": "captain-incident-review-2026-06-08",
+    "started_at": "2026-06-19T15:00:00+08:00",
+    "started_by_agent": "cursor-gpt-5.2",
+    "completed_at": "2026-06-19T14:06:33+08:00",
+    "completed_by_agent": "cursor-gpt-5.2",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Open the Phase 0 planning card for close transaction atomicity, runner stale write fail-closed, tasks status triangulation, and scratch output gitignore.",
+    "related": [
+      "TASK-CID-0018",
+      "TASK-AAO-0135",
+      "TASK-AAO-0136"
+    ],
+    "depends": [
+      "TASK-AAO-0135"
+    ],
+    "acceptance": [
+      "Phase 0 planning card opens cleanly in 3KLife only.",
+      "tasks close/reconcile use close-journal transaction with rollback on failure.",
+      "Runner stale blocks write actions; read-only commands pass with warning.",
+      "tasks status triangulates live ledger, transition event, and planning frontmatter.",
+      "next --output defaults to .atm-temp/ and scratch outputs are gitignored.",
+      "No AI-Atomic-Framework source is touched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0137-write-path-atomicity-and-operator-diagnostics.task.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-19 | status: done | validation: passed | change: governance close historical delivery 9aa7ed619 | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0138",
+    "title": "formal task opener and residue finalization UX",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-10",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Open the Phase 0 planning card for official task opener auto-id/path allocation and residue/finalization UX so operators no longer need manual tail scans or ad-hoc historical cleanup reasoning.",
+    "related": [
+      "TASK-AAO-0135",
+      "TASK-AAO-0137",
+      "TASK-AAO-0055",
+      "TASK-AAO-0056"
+    ],
+    "depends": [
+      "TASK-AAO-0135",
+      "TASK-AAO-0137"
+    ],
+    "acceptance": [
+      "ATM provides a governed task opener that does not require manual task id and output path selection in the common case.",
+      "Residual task states are classified into clear buckets with one recommended governed next step each.",
+      "Close/finalization UX explains truth vs residue without encouraging manual .atm/history edits.",
+      "Fail-closed task-ledger governance remains intact.",
+      "No AI-Atomic-Framework source is touched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138-formal-task-opener-and-residue-finalization-ux.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-10 | status: done | validation: passed | change: parent convergence for formal opener + residue/finalization UX via child cards 0138A/B/C | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0138A",
+    "title": "taskflow open delegated opener orchestration contract",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-10",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Implement the taskflow open orchestration contract so ATM has one official formal opener entry, with explicit delegated-governed vs template-only-fallback mode reporting and reuse of tasks new generation.",
+    "related": [
+      "TASK-AAO-0138",
+      "TASK-AAO-0086",
+      "TASK-AAO-0112"
+    ],
+    "depends": [
+      "TASK-AAO-0135",
+      "TASK-AAO-0137"
+    ],
+    "acceptance": [
+      "taskflow open becomes the official operator-facing opener entry.",
+      "ATM explicitly reports delegated-governed vs template-only-fallback mode.",
+      "taskflow open reuses tasks new generation instead of creating a second generator path.",
+      "No host-specific numbering rules are implemented in this slice.",
+      "No AI-Atomic-Framework source is touched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138A-taskflow-open-delegated-opener-orchestration-contract.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-10 | status: done | validation: passed | change: child card for taskflow open orchestration and entry-mode reporting | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0138B",
+    "title": "host opener fallback mode and numbering-path policy surface",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-10",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Define the host-neutral opener policy contract for id allocation, canonical output path resolution, and roster sync mode, while reusing tasks new generation and TASK-AAO-0069 as the only roster sync path.",
+    "related": [
+      "TASK-AAO-0138",
+      "TASK-AAO-0069",
+      "TASK-AAO-0086"
+    ],
+    "depends": [
+      "TASK-AAO-0138A",
+      "TASK-AAO-0069"
+    ],
+    "acceptance": [
+      "ATM core exposes a host-neutral opener policy contract.",
+      "Host opener can provide numbering, path, and roster sync policy decisions.",
+      "Fallback mode is explicit when no host opener is available.",
+      "Roster sync reuses TASK-AAO-0069 direction as the single official write path.",
+      "No AI-Atomic-Framework source is touched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138B-host-opener-fallback-mode-and-numbering-path-policy-surface.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-10 | status: done | validation: passed | change: host-neutral opener policy + tasks roster update wiring | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0138C",
+    "title": "residue classification and finalization operator flow",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-10",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Add an operator-facing residue classification and finalization diagnosis flow that explains truth vs residue and routes each bucket to one governed next command without silent deletion.",
+    "related": [
+      "TASK-AAO-0138",
+      "TASK-AAO-0135",
+      "TASK-AAO-0137",
+      "TASK-AAO-0055",
+      "TASK-AAO-0056"
+    ],
+    "depends": [
+      "TASK-AAO-0135",
+      "TASK-AAO-0137",
+      "TASK-AAO-0138A"
+    ],
+    "acceptance": [
+      "ATM classifies residue into clear operator-facing buckets.",
+      "Each bucket maps to one governed next step.",
+      "Output distinguishes truth, residue, and next command.",
+      "No silent deletion path exists for ambiguous states.",
+      "No AI-Atomic-Framework source is touched in Phase 0."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0138C-residue-classification-and-finalization-operator-flow.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-10 | status: done | validation: passed | change: child card for residue buckets and operator-facing finalization diagnosis flow | residue buckets now route to one governed next command",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0139",
+    "title": "preserve task-id casing across import, close verification, and pre-commit transition checks",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-10",
+    "created_by_agent": "cursor-asp-runner",
+    "started_at": "2026-06-11",
+    "started_by_agent": "cursor-aao139",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Preserve authored task-id casing end-to-end so mixed-case planning cards can be imported, closed, and committed without rewriting ledger filenames or task-events directories.",
+    "related": [
+      "TASK-AAO-0135",
+      "TASK-AAO-0137",
+      "TASK-APO-0030"
+    ],
+    "depends": [
+      "TASK-AAO-0135"
+    ],
+    "acceptance": [
+      "Import keeps authored task-id casing in the persisted ledger record.",
+      "Close verification accepts case-only differences without rolling back a valid close.",
+      "Pre-commit transition pairing accepts staged event paths using case-insensitive matching.",
+      "Legacy uppercase ids remain valid without migration."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0139-task-id-casing-governance.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-11 | status: done | validation: passed | change: AAF c8ad9d5b delivery + c655983b governance; preserve authored casing policy | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]
