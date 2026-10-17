@@ -1,0 +1,185 @@
+[
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0140",
+    "title": "taskflow close planning mirror closeback orchestration",
+    "owner": "atm-core",
+    "priority": "P1",
+    "status": "done",
+    "type": "implementation",
+    "phase": "M17",
+    "created": "2026-06-11",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Make taskflow close the single operator-facing closeback orchestration story so planning-mirror closeback, historical-delivery close, and residue repair are explained through one governed flow instead of split contract and writer cards.",
+    "related": [
+      "TASK-AAO-0138",
+      "TASK-AAO-0138A",
+      "TASK-AAO-0138B",
+      "TASK-AAO-0138C",
+      "TASK-AAO-0069"
+    ],
+    "depends": [
+      "TASK-AAO-0138B",
+      "TASK-AAO-0138C",
+      "TASK-AAO-0069"
+    ],
+    "acceptance": [
+      "taskflow close exists as the official operator-facing closeback orchestration surface.",
+      "The close plan can distinguish normal close, historical-delivery close, planning-mirror repair, and ambiguous/manual-review residue.",
+      "tasks close, tasks reconcile, and residue diagnostics remain the authoritative backends.",
+      "The planning-mirror writer story stays adopter-aware and does not become a second writer.",
+      "This follow-up remains a single card and is not split into separate contract/writer cards."
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0140-taskflow-close-planning-mirror-closeback-orchestration.task.md",
+      "docs/ai_atomic_framework/atm-agent-first-operability/tasks/README.md",
+      "docs/tasks/tasks-aao.json"
+    ],
+    "notes": "2026-06-11 | status: done | validation: passed | change: taskflow close closeback orchestration with planning-mirror writer boundary | blocker: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0157",
+    "title": "Framework auto-stage must honor claim globs and include dirty release mirrors",
+    "owner": "cursor-captain-backlog",
+    "priority": "P0",
+    "status": "in_progress",
+    "type": "implementation",
+    "phase": "Backlog-P0",
+    "created": "2026-07-12",
+    "created_by_agent": "cursor-captain-backlog",
+    "started_at": "2026-07-12T00:30:00.000Z",
+    "started_by_agent": "cursor-captain-backlog",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "ATM-BUG-2026-07-11-108",
+    "description": "Fix framework auto-stage so claim globs such as release/** include dirty release mirrors and fail closed when claim-scoped dirty files remain.",
+    "related": [
+      "ATM-BUG-2026-07-11-108"
+    ],
+    "depends": [],
+    "acceptance": [
+      "Claim globs match concrete dirty paths during framework auto-stage.",
+      "Dirty tracked release mirrors are committed with --auto-stage, not only git-head.jsonl.",
+      "Focused regression covers claim release/** with dirty release mirrors.",
+      "Backlog ATM-BUG-2026-07-11-108 marked Fixed in TASK-AAO-0157."
+    ],
+    "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0157-framework-auto-stage-claim-glob-and-release-mirrors.task.md",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0158",
+    "title": "Governance validator parallelism, progress, and cancellation",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "Backlog-P0",
+    "created": "2026-07-12",
+    "created_by_agent": "codex-backlog-captain",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "ATM-BUG-2026-07-12-122",
+    "description": "Parallelize independent governance-validator fixture groups, surface phase progress, and provide cancellation with durable failure evidence while preserving the full deterministic lane.",
+    "related": [
+      "ATM-BUG-2026-07-12-122"
+    ],
+    "depends": [],
+    "acceptance": [
+      "Independent fixture groups run through a bounded parallel scheduler while shared-state groups remain serialized.",
+      "Progress, cancellation, and failure summaries identify phase ids and elapsed time.",
+      "The warm default lane completes under 30 seconds or retains measured dominant-phase evidence.",
+      "Backlog ATM-BUG-2026-07-12-122 is updated only after command-backed acceptance evidence passes."
+    ],
+    "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0158-governance-validator-parallel-progress-and-cancellation.task.md",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0159",
+    "title": "Scope-aware encoding guard and temporary artifact isolation",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "Backlog-P0",
+    "created": "2026-07-12",
+    "created_by_agent": "codex-backlog-captain",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "ATM-BUG-2026-07-12-123",
+    "description": "Make encoding checks task-scope-aware and classify foreign temporary artifacts without deleting or modifying another actor's files.",
+    "related": [
+      "ATM-BUG-2026-07-12-123"
+    ],
+    "depends": [],
+    "acceptance": [
+      "Claimed or staged task files are checked without foreign temporary artifacts becoming task failures.",
+      "Explicit and whole-worktree modes retain fail-closed malformed-file detection.",
+      "Candidate output distinguishes checked, quarantined temporary, and unsupported files.",
+      "Canonical backlog/map closeback is added only through a later ATM scope amendment after shared ownership releases."
+    ],
+    "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0159-scope-aware-encoding-guard-and-temp-artifact-isolation.task.md",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo"
+  },
+  {
+    "doc_id": "",
+    "id": "TASK-AAO-0160",
+    "title": "Governed commit audit deferral and lease renewal",
+    "owner": "atm-core",
+    "priority": "P0",
+    "status": "planned",
+    "type": "implementation",
+    "phase": "Backlog-P0",
+    "created": "2026-07-12",
+    "created_by_agent": "codex-backlog-captain",
+    "sensor_triggered_by": "ATM-BUG-2026-07-12-124",
+    "description": "Align commit bundle, protected-audit deferral, hook scope checks, and claim lease renewal for long governed commits.",
+    "related": [
+      "ATM-BUG-2026-07-12-124"
+    ],
+    "depends": [],
+    "acceptance": [
+      "Foreign protected audit is deferred without scope drift.",
+      "Task-owned audit is consistently admitted.",
+      "Long evidence or commit paths retain a valid claim lease or provide retry-safe renewal."
+    ],
+    "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0160-governed-commit-audit-deferral-and-lease-renewal.task.md",
+    "planning_repo": "3KLife",
+    "target_repo": "AI-Atomic-Framework",
+    "closure_authority": "target_repo"
+  }
+]

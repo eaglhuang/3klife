@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "source": "../tasks/tasks-aao.json",
+  "indexTitle": "AAO Tasks — Read-only ID Partitions",
+  "type": "json-array",
+  "arrayPath": "tasks",
+  "splitField": "id",
+  "keepSourceIntact": true,
+  "shards": [
+    { "name": "aao-0000-0099", "title": "AAO 0000–0099", "pattern": "^TASK-AAO-00[0-9]{2}[A-Z]*$" },
+    { "name": "aao-0100-0119", "title": "AAO 0100–0119", "pattern": "^TASK-AAO-01[01][0-9][A-Z]*$" },
+    { "name": "aao-0120-0139", "title": "AAO 0120–0139", "pattern": "^TASK-AAO-01[23][0-9][A-Z]*$" },
+    { "name": "aao-0140-0169", "title": "AAO 0140–0169", "pattern": "^TASK-AAO-01[4-6][0-9][A-Z]*$" },
+    { "name": "aao-0170-0199", "title": "AAO 0170–0199", "pattern": "^TASK-AAO-01[7-9][0-9][A-Z]*$" },
+    { "name": "aao-0200-plus", "title": "AAO 0200+ and compatibility IDs", "pattern": "^TASK-AAO-(?:0[2-9][0-9]{2}|[1-9][0-9]{3})[A-Z]*$" }
+  ]
+}

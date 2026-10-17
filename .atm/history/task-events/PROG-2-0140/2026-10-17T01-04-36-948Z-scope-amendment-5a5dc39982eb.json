@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-17T01-04-36-948Z-scope-amendment-5a5dc39982eb",
+  "taskId": "PROG-2-0140",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0140.json",
+  "taskSha256": "sha256:6261576f33237e3ed9a16d7ef8af83b55669de034a74e7d0c69a6056cd977693",
+  "createdAt": "2026-10-17T01:04:36.948Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-0140 --actor codex-gpt-6 --add \"docs/tasks-aao-shards/.shardrc.json,docs/tasks-aao-shards/README.md,docs/tasks-aao-shards/aao-0000-0099.json,docs/tasks-aao-shards/aao-0100-0119.json,docs/tasks-aao-shards/aao-0120-0139.json,docs/tasks-aao-shards/aao-0140-0169.json,docs/tasks-aao-shards/aao-0170-0199.json,docs/tasks-aao-shards/aao-0200-plus.json,artifacts/PROG-2-0140/result.md,artifacts/PROG-2-0140/verify-shards.js,artifacts/PROG-2-0140/verification.json\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
