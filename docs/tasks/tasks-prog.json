@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 39,
-    "in_progress": 3,
+    "done": 40,
+    "in_progress": 2,
     "open": 45,
     "total": 87
   },
@@ -3575,7 +3575,7 @@
       "title": "ATM backlog唯讀分片與當前治理重現紀錄",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "maintenance",
       "phase": "M0",
       "created": "2026-10-17",
@@ -3609,7 +3609,7 @@
         "artifacts/PROG-2-0141/verify-backlog.js",
         "artifacts/PROG-2-0141/verification.json"
       ],
-      "notes": "2026-10-17 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+      "notes": "2026-10-17 | 狀態: done | 驗證: standard 9/9、精確歷史比對與冪等 PASS | 變更: 唯讀分片及治理重現紀錄；source 242fe6247 / close 8cf3e7c68 | 阻塞: none",
       "brief": {
         "style": "harn-rich",
         "label": "",
@@ -3643,7 +3643,8 @@
         "handoff_diff_status": "",
         "trace_artifacts": [],
         "metrics_summary": []
-      }
+      },
+      "completed_at": "\"2026-10-17T01:28:43.960Z\""
     }
   ]
 }
