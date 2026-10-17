@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 37,
-    "in_progress": 2,
-    "open": 46,
-    "total": 85
+    "done": 38,
+    "in_progress": 3,
+    "open": 45,
+    "total": 86
   },
   "tasks": [
     {
@@ -3485,6 +3485,64 @@
         "artifacts/PROG-2-0139/result.md"
       ],
       "notes": "2026-10-16 | 狀態: done | 驗證: 全套2447通過3略過零失敗、幾何與桌面手機實際點擊通過、隔離標準9/9 | 變更: 0139原生結案1e511d461 | 阻塞: 前置PR依序待審，完整0131/0132另案",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0140",
+      "title": "AAO任務總表加入唯讀分片管理",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "maintenance",
+      "phase": "M0",
+      "created": "2026-10-17",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-17T08:53:25+08:00",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為既有tasks-aao.json加入keepSourceIntact的按ID分片，保留aggregate既有讀取契約及所有任務欄位，修復正式開卡doc-shard-health阻擋。0207草稿另案，不混入本次資料提交。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "aggregate byte-for-byte unchanged",
+        "all existing tasks represented exactly once with fields unchanged",
+        "shard validation and doc health pass",
+        "unrelated files preserved"
+      ],
+      "deliverables": [
+        "docs/tasks-aao-shards/.shardrc.json",
+        "docs/tasks-aao-shards/README.md",
+        "docs/tasks-aao-shards/aao-0000-0099.json",
+        "docs/tasks-aao-shards/aao-0100-0139.json",
+        "docs/tasks-aao-shards/aao-0140-0169.json",
+        "docs/tasks-aao-shards/aao-0170-0199.json",
+        "docs/tasks-aao-shards/aao-0200-plus.json",
+        "artifacts/PROG-2-0140/result.md"
+      ],
+      "notes": "2026-10-17 | 狀態: in-progress | 驗證: pending | 變更: AAO總表分片前置修復 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",
