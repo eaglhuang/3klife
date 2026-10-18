@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 18,
-    "total": 35
+    "open": 19,
+    "total": 36
   },
   "tasks": [
     {
@@ -1452,9 +1452,15 @@
       "created_by_agent": "codex-backlog-captain",
       "sensor_triggered_by": "ATM-BUG-2026-07-12-124",
       "description": "Align commit bundle, protected-audit deferral, hook scope checks, and claim lease renewal for long governed commits.",
-      "related": ["ATM-BUG-2026-07-12-124"],
+      "related": [
+        "ATM-BUG-2026-07-12-124"
+      ],
       "depends": [],
-      "acceptance": ["Foreign protected audit is deferred without scope drift.", "Task-owned audit is consistently admitted.", "Long evidence or commit paths retain a valid claim lease or provide retry-safe renewal."],
+      "acceptance": [
+        "Foreign protected audit is deferred without scope drift.",
+        "Task-owned audit is consistently admitted.",
+        "Long evidence or commit paths retain a valid claim lease or provide retry-safe renewal."
+      ],
       "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0160-governed-commit-audit-deferral-and-lease-renewal.task.md",
       "planning_repo": "3KLife",
       "target_repo": "AI-Atomic-Framework",
@@ -1595,6 +1601,39 @@
         "tests/cli/scope-amendment-work-admission-ticket.test.ts"
       ],
       "notes": "2026-10-18 | 狀態: planned | 驗證: pending | 變更: directory glob parity planning only | 阻塞: Phase 1 claim required"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0210",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0210-ticket-glob-sealed-runner-sync.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Sealed runner sync for ticket directory glob parity",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "maintenance",
+      "phase": "Backlog-P1",
+      "created": "2026-10-18",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Publish the official AAF runner from delivered ticket glob parity source through sealed isolated build and steward publication.",
+      "related": [
+        "TASK-AAO-0209"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Published receipt proves sealed source input hash and complete output inventory",
+        "Official runner natively admits directory glob grants",
+        "Foreign WIP remains unchanged under validated publication authority",
+        "Fresh target-owned close preview has no stale-runner blocker or external planning write"
+      ],
+      "deliverables": [
+        "release/atm-onefile/**",
+        "release/atm-root-drop/**",
+        "packages/*/dist/**"
+      ],
+      "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: independent runner publication planning | 阻塞: Phase 1 authority required"
     }
   ]
 }
