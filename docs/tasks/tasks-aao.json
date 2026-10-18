@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 16,
-    "total": 33
+    "open": 17,
+    "total": 34
   },
   "tasks": [
     {
@@ -1530,6 +1530,40 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0208",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0208-sealed-runner-sync.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Sealed runner publication for delivered host close projections",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "maintenance",
+      "phase": "Backlog-P1",
+      "created": "2026-10-18",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Restore the official AAF runner from delivered TASK-AAO-0207 source using isolated sealed build and governed runner-sync publication; preserve foreign WIP.",
+      "related": [
+        "TASK-AAO-0207"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Sealed source SHA or input-tree-equivalent descendant is evidenced",
+        "All foreign output WIP is preserved unless exact official disposition authorizes publication",
+        "Receipt proves source input hash and output inventory",
+        "Fresh official close preview respects target_repo with null planning mirror",
+        "No adopter installation or unrelated source writes"
+      ],
+      "deliverables": [
+        "release/atm-onefile/**",
+        "release/atm-root-drop/**",
+        "packages/*/dist/**"
+      ],
+      "notes": "2026-10-18 | 狀態: planned | 驗證: pending | 變更: independent runner-sync planning | 阻塞: authority and foreign WIP audit required"
     }
   ]
 }
