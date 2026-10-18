@@ -1,6 +1,5 @@
 ---
 id: TASK-AAO-0208
-task_id: TASK-AAO-0208
 title: Sealed runner publication for delivered host close projections
 planning_repo: 3KLife
 target_repo: AI-Atomic-Framework
