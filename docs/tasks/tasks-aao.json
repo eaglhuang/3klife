@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 19,
-    "total": 36
+    "open": 20,
+    "total": 37
   },
   "tasks": [
     {
@@ -1634,6 +1634,37 @@
         "packages/*/dist/**"
       ],
       "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: independent runner publication planning | 阻塞: Phase 1 authority required"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0211",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0211-host-close-projection-imports.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Deduplicate host close projection imports",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "maintenance",
+      "phase": "Backlog-P1",
+      "created": "2026-10-18",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Resolve duplicate imports introduced by host close projection delivery without changing runtime behavior or unrelated CI policy.",
+      "related": [
+        "TASK-AAO-0207"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Only duplicate imports in the two owned files are consolidated",
+        "Focused eslint and host projection fixtures pass",
+        "Typecheck and lint evidence is recorded without suppressing unrelated warnings"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/taskflow/implementation.ts",
+        "tests/cli/taskflow-host-close-projection.test.ts"
+      ],
+      "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: imports-only CI repair planning | 阻塞: Phase 1 claim required"
     }
   ]
 }
